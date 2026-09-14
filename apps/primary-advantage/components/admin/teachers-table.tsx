@@ -54,6 +54,7 @@ import {
   UpdateTeacherRequest,
 } from "@/types/index.d";
 import { useTranslations } from "next-intl";
+import { fetchJsonList } from "@/lib/fetch-json";
 
 // Updated Teacher interface to match API response
 interface Teacher extends Omit<TeacherData, "createdAt"> {
@@ -111,13 +112,10 @@ export function TeachersTable() {
   const fetchTeachers = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("/api/teachers");
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch teachers");
-      }
-
-      const data: TeachersResponse = await response.json();
+      const data = await fetchJsonList<TeachersResponse>(
+        "/api/teachers",
+        "Failed to fetch teachers",
+      );
 
       // Convert API data to component format
       const teachersWithDates = data.teachers.map((teacher) => ({
@@ -701,6 +699,7 @@ export function TeachersTable() {
                           variant="ghost"
                           size="sm"
                           onClick={() => openEditDialog(teacher)}
+                          aria-label={t("editDialog.title")}
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
@@ -708,6 +707,7 @@ export function TeachersTable() {
                           variant="ghost"
                           size="sm"
                           onClick={() => openDeleteDialog(teacher)}
+                          aria-label={t("actions.delete")}
                         >
                           <Trash2 className="text-destructive h-4 w-4" />
                         </Button>

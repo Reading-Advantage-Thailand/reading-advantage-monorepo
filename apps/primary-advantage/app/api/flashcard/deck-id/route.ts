@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { db, eq, and, lte, sql } from '@reading-advantage/db';
-import { flashcardDecks, flashcardCards } from '@reading-advantage/db';
+import { eq, and, lte, sql } from 'drizzle-orm';
+import { flashcardDecks, flashcardCards } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { assertCan, AuthError } from '@reading-advantage/auth';
 
+/**
+ * Returns the caller's sentence flashcard deck id when a due card exists.
+ * @returns The deck id or a structured error response.
+ */
 export async function GET() {
   try {
     const user = await currentUser();
@@ -17,8 +23,28 @@ export async function GET() {
       );
     }
 
+    // Authorization decision via the central policy. Flashcard study serves
+    // any authenticated user; article:read is the matching low-privilege
+    // permission (flashcards derive from articles).
+    try {
+      assertCan(user, "article:read", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json(
+          { success: false, error: "Forbidden" },
+          { status: 403 },
+        );
+      }
+      throw error;
+    }
+
+    const tenantDb = getTenantDB({ schoolId: user.schoolId });
+    // flashcardDecks and flashcardCards are REFERENTIAL (no schoolId);
+    // scoping below uses the caller userId and deckId owner filters.
+    const flashDb = getUnscopedDB("flashcardDecks and flashcardCards have no schoolId; scoped via userId and deckId owner filters");
+
     // Find user's sentence flashcard deck
-    const [deck] = await db.select().from(flashcardDecks)
+    const [deck] = await flashDb.select().from(flashcardDecks)
       .where(
         and(
           eq(flashcardDecks.userId, user.id),
@@ -39,7 +65,7 @@ export async function GET() {
     // a raw SQL filter since `due` is a shared-partial column not in the
     // shared schema yet).
     const now = new Date();
-    const dueCards = await db.select({ id: flashcardCards.id })
+    const dueCards = await flashDb.select({ id: flashcardCards.id })
       .from(flashcardCards)
       .where(
         and(

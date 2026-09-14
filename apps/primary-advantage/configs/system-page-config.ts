@@ -1,28 +1,8 @@
 import { PageConfig } from "@/types";
+import { sharedMainNav } from "./main-nav";
 
 export const systemPageConfig: PageConfig = {
-  mainNav: [
-    {
-      title: "home",
-      href: "/",
-      icon: "HomeIcon",
-    },
-    {
-      title: "about",
-      href: "/about",
-      icon: "InfoIcon",
-    },
-    {
-      title: "contact",
-      href: "/contact",
-      icon: "MailIcon",
-    },
-    {
-      title: "authors",
-      href: "/authors",
-      icon: "UsersIcon",
-    },
-  ],
+  mainNav: [...sharedMainNav],
   sidebarNav: [
     {
       title: "systemdashboard",
@@ -39,10 +19,10 @@ export const systemPageConfig: PageConfig = {
       href: "/system/licenses",
       icon: "KeyIcon",
     },
-    // {
-    //   title: "testing",
-    //   href: "/system/test",
-    //   icon: "LayoutDashboardIcon",
-    // },
+    {
+      title: "testing",
+      href: "/system/test",
+      icon: "LayoutDashboardIcon",
+    },
   ],
 };

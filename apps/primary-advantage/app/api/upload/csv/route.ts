@@ -3,8 +3,11 @@ import { writeFile, mkdir } from "fs/promises";
 import { existsSync, unlink } from "fs";
 import path from "path";
 import { parse } from "csv/sync";
-import { db, eq, and, inArray, or, ilike } from '@reading-advantage/db';
-import { users, schools, roles, classrooms, classroomStudents, classroomTeachers, userRoles } from '@reading-advantage/db';
+import { eq, and, inArray, or, ilike } from 'drizzle-orm';
+import type { DB } from '@reading-advantage/domain';
+import { users, schools, roles, classrooms, classroomStudents, classroomTeachers, userRoles } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
 /**
  * CSV Upload API Route
@@ -40,8 +43,39 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (replaces the inline
+    // allowedRoles gate). Runs before any DB read so denied callers issue
+    // no queries.
+    try {
+      assertCan(authUser, "student:import", { schoolId: authUser.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json(
+          {
+            error: "Insufficient permissions",
+            details: ["Only Admin, System, or Teacher roles can upload CSV files"],
+            userRoles: [authUser.role],
+          },
+          { status: 403 },
+        );
+      }
+      throw error;
+    }
+
+    const tenant = { schoolId: authUser.schoolId ?? null };
+    const tenantDb = getTenantDB(tenant);
+    // roles and schools are EXEMPT; classroomStudents, classroomTeachers,
+    // and userRoles are REFERENTIAL (owner-FK scoped below). The tenant is
+    // unknown until the session user row loads, so that single-row PK
+    // lookup also uses this handle.
+    const globalDb = getUnscopedDB("upload CSV import: roles and schools are EXEMPT; membership and user-role tables are REFERENTIAL; session user lookup runs before the tenant is known");
+    // users and classrooms are FLAT. School staff use the tenant-scoped
+    // handle; SYSTEM actors carry no school, so their global writes use the
+    // escape hatch with the reason above.
+    const staffDb: DB = tenant.schoolId ? tenantDb : globalDb;
+
     // Get current user with school information (replaces Prisma `findUnique({ include: School, roles })`).
-    const [currentUser] = await db.select().from(users)
+    const [currentUser] = await globalDb.select().from(users)
       .where(eq(users.id, authUser.id))
       .limit(1);
 
@@ -49,22 +83,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const allowedRoles = ["ADMIN", "SYSTEM", "TEACHER"];
-    if (!allowedRoles.includes(authUser.role)) {
-      return NextResponse.json(
-        {
-          error: "Insufficient permissions",
-          details: ["Only Admin, System, or Teacher roles can upload CSV files"],
-          userRoles: [authUser.role],
-        },
-        { status: 403 },
-      );
-    }
-
     // Stitch school include via FK.
     let userSchool: { id: string; name: string } | null = null;
     if (currentUser.schoolId) {
-      const [s] = await db.select({ id: schools.id, name: schools.name })
+      const [s] = await globalDb.select({ id: schools.id, name: schools.name })
         .from(schools)
         .where(eq(schools.id, currentUser.schoolId))
         .limit(1);
@@ -190,7 +212,7 @@ export async function POST(request: NextRequest) {
     const errors: string[] = [];
 
     // Get all roles from database (replaces Prisma `role.findMany`).
-    const allRoles = await db.select().from(roles);
+    const allRoles = await globalDb.select().from(roles);
     const roleMap = new Map(
       allRoles.map((role) => [role.name.toLowerCase(), role.id]),
     );
@@ -317,11 +339,11 @@ export async function POST(request: NextRequest) {
         // `createMany` → `db.insert(users).values([...])` (no skipDuplicates equivalent
         // here; we use a single insert per batch). Per-row .returning() not available
         // for batched inserts so we re-fetch the rows that match by email.
-        await db.insert(users).values(batch as any);
+        await staffDb.insert(users).values(batch as any);
 
         // Get the created users to assign roles
         const emails = batch.map((u) => u.email);
-        const insertedUsers = await db.select({ id: users.id, email: users.email })
+        const insertedUsers = await staffDb.select({ id: users.id, email: users.email })
           .from(users)
           .where(inArray(users.email, emails));
         createdUsers.push(...insertedUsers);
@@ -330,11 +352,11 @@ export async function POST(request: NextRequest) {
     }
 
     if (batch.length > 0) {
-      await db.insert(users).values(batch as any);
+      await staffDb.insert(users).values(batch as any);
 
       // Get the created users to assign roles
       const emails = batch.map((u) => u.email);
-      const insertedUsers = await db.select({ id: users.id, email: users.email })
+      const insertedUsers = await staffDb.select({ id: users.id, email: users.email })
         .from(users)
         .where(inArray(users.email, emails));
       createdUsers.push(...insertedUsers);
@@ -362,7 +384,7 @@ export async function POST(request: NextRequest) {
     if (roleAssignments.length > 0) {
       // Drizzle doesn't have a native skipDuplicates insert, so we use
       // onConflictDoNothing on the unique index.
-      await db.insert(userRoles)
+      await globalDb.insert(userRoles)
         .values(roleAssignments as any)
         .onConflictDoNothing();
     }
@@ -403,12 +425,11 @@ export async function POST(request: NextRequest) {
       // Process each classroom
       for (const [classroomName, assignments] of classroomGroups) {
         // Find or create classroom (replaces Prisma `classroom.findFirst`).
-        const [existingClassroom] = await db.select().from(classrooms)
+        // classrooms is FLAT; TenantDB enforces the school scope, so the
+        // duplicate manual school check is removed.
+        const [existingClassroom] = await staffDb.select().from(classrooms)
           .where(
-            and(
-              eq(classrooms.name, classroomName),
-              eq(classrooms.schoolId, currentUser.schoolId as string),
-            ),
+            eq(classrooms.name, classroomName),
           )
           .limit(1);
 
@@ -419,7 +440,7 @@ export async function POST(request: NextRequest) {
             assignments.find((assignment) => assignment.role === "teacher")
               ?.userId ?? currentUser.id;
           // Create new classroom (replaces Prisma `classroom.create`).
-          const [created] = await db.insert(classrooms).values({
+          const [created] = await staffDb.insert(classrooms).values({
             name: classroomName,
             schoolId: currentUser.schoolId as string,
             teacherId: ownerId,
@@ -433,14 +454,14 @@ export async function POST(request: NextRequest) {
         for (const assignment of assignments) {
           if (assignment.role === "student") {
             // Add student to classroom (replaces Prisma `classroomStudent.upsert`).
-            await db.insert(classroomStudents).values({
+            await globalDb.insert(classroomStudents).values({
               classroomId: classroom.id,
               studentId: assignment.userId,
             } as any).onConflictDoNothing();
             studentAssignments++;
           } else if (assignment.role === "teacher") {
             // Add teacher to classroom (replaces Prisma `classroomTeachers.findFirst + create`).
-            const [existingTeacher] = await db.select().from(classroomTeachers)
+            const [existingTeacher] = await globalDb.select().from(classroomTeachers)
               .where(
                 and(
                   eq(classroomTeachers.classroomId, classroom.id),
@@ -450,7 +471,7 @@ export async function POST(request: NextRequest) {
               .limit(1);
 
             if (!existingTeacher) {
-              await db.insert(classroomTeachers).values({
+              await globalDb.insert(classroomTeachers).values({
                 classroomId: classroom.id,
                 teacherId: assignment.userId,
               } as any);

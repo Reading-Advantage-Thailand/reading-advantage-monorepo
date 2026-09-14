@@ -4,8 +4,11 @@ import { existsSync, unlink } from "fs";
 import path from "path";
 import { parse } from "csv/sync";
 import { z } from "zod";
-import { db, eq, and, inArray, or, ilike } from '@reading-advantage/db';
-import { users, schools, classrooms, classroomStudents, classroomTeachers, userRoles, roles } from '@reading-advantage/db';
+import { eq, and, inArray, or, ilike } from 'drizzle-orm';
+import type { DB } from '@reading-advantage/domain';
+import { users, schools, classrooms, classroomStudents, classroomTeachers, userRoles, roles } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
 import { generateRandomClassCode } from "@/lib/utils";
 
@@ -90,27 +93,26 @@ const validateClassroomNameFormat = (className: string): boolean => {
 };
 
 // Helper function to validate classroom names exist in database
+/**
+ * Validates classroom names exist using the caller's query handle.
+ * @param classroomDb Scoped handle for school staff, global for SYSTEM actors.
+ * @param classroomNames Classroom names to validate.
+ * @returns The valid and invalid names.
+ */
 const validateClassroomNames = async (
+  classroomDb: DB,
   classroomNames: string[],
-  schoolId: string | null,
 ): Promise<{ valid: string[]; invalid: string[] }> => {
   if (classroomNames.length === 0) {
     return { valid: [], invalid: [] };
   }
 
   // Batch fetch all classrooms at once (replaces Prisma `classroom.findMany`).
-  const existingClassroomRows = schoolId
-    ? await db.select({ name: classrooms.name })
-      .from(classrooms)
-      .where(
-        and(
-          inArray(classrooms.name, classroomNames),
-          eq(classrooms.schoolId, schoolId),
-        ),
-      )
-    : await db.select({ name: classrooms.name })
-      .from(classrooms)
-      .where(inArray(classrooms.name, classroomNames));
+  // classrooms is FLAT; the scoped handle enforces the school filter, so no
+  // manual school check is needed here.
+  const existingClassroomRows = await classroomDb.select({ name: classrooms.name })
+    .from(classrooms)
+    .where(inArray(classrooms.name, classroomNames));
 
   const existingClassroomNames = new Set(existingClassroomRows.map((c) => c.name));
 
@@ -134,14 +136,9 @@ const createTimer = (label: string) => {
   return {
     log: (operation: string, additionalData?: any) => {
       const elapsed = Date.now() - startTime;
-      console.log(
-        `⏱️  [${label}] ${operation}: ${elapsed}ms`,
-        additionalData || "",
-      );
     },
     end: (totalOperation?: string) => {
       const elapsed = Date.now() - startTime;
-      console.log(`🏁 [${label}] ${totalOperation || "Total"}: ${elapsed}ms`);
       return elapsed;
     },
   };
@@ -154,7 +151,6 @@ const createTimer = (label: string) => {
  */
 export async function POST(request: NextRequest) {
   const apiTimer = createTimer("UPLOAD_CLASSES_API");
-  console.log("🚀 Starting upload classes API request");
 
   try {
     const authTimer = createTimer("AUTH_CHECK");
@@ -164,8 +160,39 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (replaces the inline
+    // allowedRoles gate). Runs before any DB read so denied callers issue
+    // no queries.
+    try {
+      assertCan(authUser, "student:import", { schoolId: authUser.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json(
+          {
+            error: "Insufficient permissions",
+            details: ["Only Admin, System, or Teacher roles can upload CSV files"],
+            userRoles: [authUser.role],
+          },
+          { status: 403 },
+        );
+      }
+      throw error;
+    }
+
+    const tenant = { schoolId: authUser.schoolId ?? null };
+    const tenantDb = getTenantDB(tenant);
+    // roles and schools are EXEMPT; classroomStudents, classroomTeachers,
+    // and userRoles are REFERENTIAL (owner-FK scoped below). The tenant is
+    // unknown until the session user row loads, so that single-row PK
+    // lookup also uses this handle.
+    const globalDb = getUnscopedDB("upload classes import: roles and schools are EXEMPT; membership and user-role tables are REFERENTIAL; session user lookup runs before the tenant is known");
+    // users and classrooms are FLAT. School staff use the tenant-scoped
+    // handle; SYSTEM actors carry no school, so their global writes use the
+    // escape hatch with the reason above.
+    const staffDb: DB = tenant.schoolId ? tenantDb : globalDb;
+
     // Get current user (replaces Prisma `user.findUnique({ include: School, roles })`).
-    const [currentUser] = await db.select().from(users)
+    const [currentUser] = await globalDb.select().from(users)
       .where(eq(users.id, authUser.id))
       .limit(1);
     authTimer.log("User data fetched");
@@ -174,22 +201,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const allowedRoles = ["ADMIN", "SYSTEM", "TEACHER"];
-    if (!allowedRoles.includes(authUser.role)) {
-      return NextResponse.json(
-        {
-          error: "Insufficient permissions",
-          details: ["Only Admin, System, or Teacher roles can upload CSV files"],
-          userRoles: [authUser.role],
-        },
-        { status: 403 },
-      );
-    }
-
     // Stitch school include via FK.
     let userSchool: { id: string; name: string } | null = null;
     if (currentUser.schoolId) {
-      const [s] = await db.select({ id: schools.id, name: schools.name })
+      const [s] = await globalDb.select({ id: schools.id, name: schools.name })
         .from(schools)
         .where(eq(schools.id, currentUser.schoolId))
         .limit(1);
@@ -358,7 +373,6 @@ export async function POST(request: NextRequest) {
     const errors: string[] = [];
 
     if (filename === "students.csv" || filename === "teachers.csv") {
-      console.log("📊 Starting users CSV validation and processing...");
 
       // Pre-process and validate all rows first
       const validatedRows: Array<{
@@ -422,7 +436,7 @@ export async function POST(request: NextRequest) {
 
       let existingUsers: Array<{ email: string | null }> = [];
       if (validEmails.length > 0) {
-        existingUsers = await db.select({ email: users.email })
+        existingUsers = await staffDb.select({ email: users.email })
           .from(users)
           .where(inArray(users.email, validEmails));
       }
@@ -457,8 +471,8 @@ export async function POST(request: NextRequest) {
       };
       if (allClassroomNames.size > 0) {
         classroomValidationResult = await validateClassroomNames(
+          staffDb,
           Array.from(allClassroomNames),
-          currentUser.schoolId,
         );
       }
 
@@ -572,7 +586,6 @@ export async function POST(request: NextRequest) {
       );
     }
     if (filename === "classes.csv") {
-      console.log("🏫 Starting classes CSV validation and processing...");
 
       // Pre-process and validate all rows first
       const validatedRows: Array<{
@@ -632,13 +645,12 @@ export async function POST(request: NextRequest) {
 
       let existingClassrooms: Array<{ name: string }> = [];
       if (validClassroomNames.length > 0) {
-        existingClassrooms = await db.select({ name: classrooms.name })
+        // classrooms is FLAT; TenantDB enforces the school scope, so the
+        // duplicate manual school check is removed.
+        existingClassrooms = await staffDb.select({ name: classrooms.name })
           .from(classrooms)
           .where(
-            and(
-              inArray(classrooms.name, validClassroomNames),
-              eq(classrooms.schoolId, currentUser.schoolId as string),
-            ),
+            inArray(classrooms.name, validClassroomNames),
           );
       }
 
@@ -686,7 +698,6 @@ export async function POST(request: NextRequest) {
       );
     }
     validationTimer.end("Data validation and processing completed");
-    console.log("errors: ", errors);
 
     // If there are validation errors, return them
     if (errors.length > 0) {
@@ -720,9 +731,8 @@ export async function POST(request: NextRequest) {
     let teacherAssignments = 0;
 
     if (filename === "students.csv" || filename === "teachers.csv") {
-      console.log("👥 Starting user creation and assignment processes...");
       // Get all roles from database (replaces Prisma `role.findMany`).
-      const roleRows = await db.select().from(roles);
+      const roleRows = await globalDb.select().from(roles);
       const roleMap = new Map(
         roleRows.map((role) => [role.name.toLowerCase(), role.id]),
       );
@@ -752,12 +762,12 @@ export async function POST(request: NextRequest) {
         if (batch.length >= max) {
           // Create users in batches (replaces Prisma `user.createMany`).
           const batchTimer = createTimer("USER_BATCH_CREATE");
-          await db.insert(users).values(batch as any).onConflictDoNothing();
+          await staffDb.insert(users).values(batch as any).onConflictDoNothing();
           batchTimer.log("User batch created", `Batch size: ${batch.length}`);
 
           // Get the created users to assign roles and classrooms
           const emails = batch.map((u) => u.email);
-          const insertedUsers = await db.select({ id: users.id, email: users.email })
+          const insertedUsers = await staffDb.select({ id: users.id, email: users.email })
             .from(users)
             .where(inArray(users.email, emails));
           createdUsers.push(...insertedUsers);
@@ -769,11 +779,11 @@ export async function POST(request: NextRequest) {
       // Process remaining batch
       if (batch.length > 0) {
         const finalBatchTimer = createTimer("FINAL_USER_BATCH");
-        await db.insert(users).values(batch as any).onConflictDoNothing();
+        await staffDb.insert(users).values(batch as any).onConflictDoNothing();
 
         // Get the created users to assign roles and classrooms
         const emails = batch.map((u) => u.email);
-        const insertedUsers = await db.select({ id: users.id, email: users.email })
+        const insertedUsers = await staffDb.select({ id: users.id, email: users.email })
           .from(users)
           .where(inArray(users.email, emails));
         createdUsers.push(...insertedUsers);
@@ -808,7 +818,7 @@ export async function POST(request: NextRequest) {
       // Create role assignments in batches (replaces Prisma `userRole.createMany`).
       if (roleAssignments.length > 0) {
         const roleTimer = createTimer("ROLE_ASSIGNMENTS");
-        await db.insert(userRoles)
+        await globalDb.insert(userRoles)
           .values(roleAssignments as any)
           .onConflictDoNothing();
         roleTimer.end("Role assignments completed");
@@ -824,7 +834,6 @@ export async function POST(request: NextRequest) {
       studentAssignments = 0;
       teacherAssignments = 0;
 
-      console.log("🎓 Starting classroom assignments...");
 
       // Pre-process data for better performance
       const userRoleMap = new Map<string, string>();
@@ -844,14 +853,13 @@ export async function POST(request: NextRequest) {
       }
 
       // Batch fetch all classrooms at once (replaces Prisma `classroom.findMany`).
+      // classrooms is FLAT; TenantDB enforces the school scope, so the
+      // duplicate manual school check is removed.
       if (uniqueClassroomNames.size > 0) {
-        const classroomRows = await db.select({ id: classrooms.id, name: classrooms.name })
+        const classroomRows = await staffDb.select({ id: classrooms.id, name: classrooms.name })
           .from(classrooms)
           .where(
-            and(
-              inArray(classrooms.name, Array.from(uniqueClassroomNames)),
-              eq(classrooms.schoolId, currentUser.schoolId as string),
-            ),
+            inArray(classrooms.name, Array.from(uniqueClassroomNames)),
           );
 
         for (const classroom of classroomRows) {
@@ -914,7 +922,7 @@ export async function POST(request: NextRequest) {
         );
 
         const existingTeachers = orClauses.length > 0
-          ? await db.select({
+          ? await globalDb.select({
               classroomId: classroomTeachers.classroomId,
               teacherId: classroomTeachers.teacherId,
             })
@@ -937,15 +945,14 @@ export async function POST(request: NextRequest) {
       // Batch create student assignments (replaces Prisma `classroomStudent.createMany`).
       if (studentAssignmentsToCreate.length > 0) {
         try {
-          await db.insert(classroomStudents)
+          await globalDb.insert(classroomStudents)
             .values(studentAssignmentsToCreate as any)
             .onConflictDoNothing();
           studentAssignments = studentAssignmentsToCreate.length;
         } catch (error) {
           // Fallback to individual upserts if batched insert fails
-          console.log("Falling back to individual student upserts...");
           for (const assignment of studentAssignmentsToCreate) {
-            await db.insert(classroomStudents).values({
+            await globalDb.insert(classroomStudents).values({
               classroomId: assignment.classroomId,
               studentId: assignment.studentId,
             } as any).onConflictDoNothing();
@@ -956,7 +963,7 @@ export async function POST(request: NextRequest) {
 
       // Batch create teacher assignments (replaces Prisma `classroomTeachers.createMany`).
       if (teacherAssignmentsToCreate.length > 0) {
-        await db.insert(classroomTeachers)
+        await globalDb.insert(classroomTeachers)
           .values(teacherAssignmentsToCreate as any)
           .onConflictDoNothing();
         teacherAssignments = teacherAssignmentsToCreate.length;
@@ -973,10 +980,9 @@ export async function POST(request: NextRequest) {
     }
 
     if (filename === "classes.csv") {
-      console.log("🏫 Creating classroom records...");
       const classCreationTimer = createTimer("CLASS_CREATION");
       // `createMany` → batched `db.insert(classrooms).values([...])` with skipDuplicates.
-      await db.insert(classrooms)
+      await staffDb.insert(classrooms)
         .values(processedClasses as any)
         .onConflictDoNothing();
       classCreationTimer.end("Classroom creation completed");
@@ -1030,7 +1036,6 @@ export async function POST(request: NextRequest) {
     cleanupTimer.log("Response data prepared");
 
     const totalTime = apiTimer.end("Upload classes API request completed");
-    console.log(`✅ API request completed successfully in ${totalTime}ms`);
 
     return NextResponse.json({
       success: true,

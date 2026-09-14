@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { z } from "zod";
 import { createBrowserAudioClipPorts, createAnswerChoiceAudioController } from "@reading-advantage/advantage-play-kit";
 import { useStudentChallengeRun, useStudentRpg } from "@reading-advantage/advantage-play-kit/react";
@@ -53,6 +55,8 @@ export interface StudentCartridgeHostProps {
   readonly ownerKey?: string;
   /** Optional server-owned class challenge to launch. */
   readonly challengeId?: string;
+  /** Launch phase requested from the page search params. */
+  readonly mode?: "demo" | "briefing";
 }
 
 type HostLoadError = {
@@ -110,7 +114,10 @@ export function StudentCartridgeHost({
   locale,
   ownerKey,
   challengeId,
+  mode = "briefing",
 }: StudentCartridgeHostProps) {
+  const t = useTranslations("ApkHost");
+  const router = useRouter();
   const [cartridge, setCartridge] = useState<StandardExperienceCartridge>();
   const [input, setInput] = useState<GameInput>();
   const [answerAudioResponse, setAnswerAudioResponse] = useState<PreparedReadToSelectAudioVocabularyResponse>();
@@ -377,8 +384,8 @@ export function StudentCartridgeHost({
           <p className="mt-2 text-muted-foreground">{description}</p>
           {supportsAnswerAudio ? (
             <div className="mt-4 flex gap-2" aria-label="Learning mode">
-              <button className={`min-h-12 rounded-lg border px-4 py-2 font-semibold ${effectiveLearningMode === "reading" ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground"}`} type="button" aria-pressed={effectiveLearningMode === "reading"} onClick={() => setLearningMode("reading")}>Read Thai</button>
-              <button className={`min-h-12 rounded-lg border px-4 py-2 font-semibold ${effectiveLearningMode === "answer-audio" ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground"}`} type="button" aria-pressed={effectiveLearningMode === "answer-audio"} onClick={() => setLearningMode("answer-audio")}>Listen to English</button>
+              <button className={`min-h-12 rounded-lg border px-4 py-2 font-semibold ${effectiveLearningMode === "reading" ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground"}`} type="button" aria-pressed={effectiveLearningMode === "reading"} onClick={() => setLearningMode("reading")}>{t("readMode")}</button>
+              <button className={`min-h-12 rounded-lg border px-4 py-2 font-semibold ${effectiveLearningMode === "answer-audio" ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground"}`} type="button" aria-pressed={effectiveLearningMode === "answer-audio"} onClick={() => setLearningMode("answer-audio")}>{t("listenMode")}</button>
             </div>
           ) : null}
         </header>
@@ -388,8 +395,8 @@ export function StudentCartridgeHost({
         >
           {challengeId && !ownerKey ? (
             <p role="alert" className="p-4 text-red-300">
-              <a className="underline text-sky-300" href={`/auth/signin?redirect=${encodeURIComponent(`/${locale}/student/games/apk/${cartridgeId}?challengeId=${challengeId}`)}`}>
-                Sign in to play this challenge
+              <a className="underline text-sky-300" href={`/${locale}/auth/signin?redirect=${encodeURIComponent(`/${locale}/student/games/apk/${cartridgeId}?challengeId=${challengeId}`)}`}>
+                {t("signInToPlayChallenge")}
               </a>
             </p>
           ) : null}
@@ -402,8 +409,8 @@ export function StudentCartridgeHost({
           {loadError ? (
             <div role="alert" className="space-y-3 p-4 text-red-300">
               {loadError.unauthenticated ? (
-                <a className="underline text-sky-300" href={`/auth/signin?redirect=${encodeURIComponent(`/${locale}/student/games/apk/${cartridgeId}${challengeId ? `?challengeId=${challengeId}` : ""}`)}`}>
-                  Sign in to play this game
+                <a className="underline text-sky-300" href={`/${locale}/auth/signin?redirect=${encodeURIComponent(`/${locale}/student/games/apk/${cartridgeId}${challengeId ? `?challengeId=${challengeId}` : ""}`)}`}>
+                  {t("signInToPlayGame")}
                 </a>
               ) : (
                 <>
@@ -434,10 +441,7 @@ export function StudentCartridgeHost({
               edition={edition}
               input={input}
               launchPhase={
-                !challengeId && typeof window !== "undefined"
-                && new URLSearchParams(window.location.search).get("mode") === "demo"
-                  ? "demo"
-                  : "briefing"
+                !challengeId && mode === "demo" ? "demo" : "briefing"
               }
               seed={challengeLaunch?.challenge.seed ?? 29}
               responsive={APK_HOST_RESPONSIVE_OPTIONS}
@@ -489,7 +493,7 @@ export function StudentCartridgeHost({
               }}
               onNavigate={(destination) => {
                 if (destination === "catalog") {
-                  window.location.assign(`/${locale}/student/games`);
+                  router.push("/student/games");
                 }
               }}
             />

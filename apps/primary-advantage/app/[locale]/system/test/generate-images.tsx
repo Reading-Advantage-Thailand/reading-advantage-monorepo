@@ -26,7 +26,13 @@ export default function GenerateImages() {
             if (result.success) {
               toast.success(result.message);
             } else {
-              toast.error(result.message);
+              const message =
+                "message" in result && result.message
+                  ? result.message
+                  : "error" in result && typeof result.error === "string"
+                    ? result.error
+                    : "Failed to generate images";
+              toast.error(message);
             }
           });
         }}

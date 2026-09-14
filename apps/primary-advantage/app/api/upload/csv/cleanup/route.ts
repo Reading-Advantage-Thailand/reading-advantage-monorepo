@@ -2,21 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { unlink, readdir } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
+import { currentUser } from "@/lib/session";
+import { canRunContentTooling, cleanupFileNameSchema } from "@/lib/authorization";
 
 export async function DELETE(request: NextRequest) {
   try {
+    const user = await currentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (!canRunContentTooling(user)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const { searchParams } = new URL(request.url);
     const fileName = searchParams.get("fileName");
 
-    if (!fileName) {
+    const parsed = cleanupFileNameSchema.safeParse(fileName);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "File name is required" },
+        { error: "File name must be a plain basename" },
         { status: 400 },
       );
     }
 
     const tempDir = path.join(process.cwd(), "temp");
-    const filePath = path.join(tempDir, fileName);
+    const filePath = path.join(tempDir, parsed.data);
 
     // Check if file exists
     if (!existsSync(filePath)) {
@@ -42,6 +53,14 @@ export async function DELETE(request: NextRequest) {
 // Clean up old temporary files (older than 24 hours)
 export async function POST() {
   try {
+    const user = await currentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (!canRunContentTooling(user)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const tempDir = path.join(process.cwd(), "temp");
 
     if (!existsSync(tempDir)) {

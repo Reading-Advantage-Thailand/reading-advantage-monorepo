@@ -4,17 +4,18 @@ import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
 import { settingsPageConfig } from "@/configs/settings-page-config";
 import { getCurrentUser } from "@/lib/session";
-import { redirect } from "next/navigation";
 
+/**
+ * Renders the 404 shell for signed-in and anonymous visitors alike.
+ * @param children The not-found page content.
+ * @returns The not-found layout.
+ */
 export default async function NotfoundPageLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const user = await getCurrentUser();
-  if (!user) {
-    return redirect("/auth/signin");
-  }
   return (
     <div className="flex min-h-screen flex-col space-y-6">
       <header className="sticky top-0 z-40 border-b bg-background">
@@ -23,7 +24,9 @@ export default async function NotfoundPageLayout({
           <div className="flex justify-center items-center gap-2">
             <LocaleSwitcher />
             <ThemeToggle />
-            <UserAccountNav user={{ ...user, xp: 0, level: 0, cefrLevel: "", email: null, image: null }} />
+            {user ? (
+              <UserAccountNav user={user} />
+            ) : null}
           </div>
         </div>
       </header>

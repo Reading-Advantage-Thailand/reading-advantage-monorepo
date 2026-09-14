@@ -1,7 +1,7 @@
 import { Header } from "@/components/header";
 import MyClasses from "@/components/teacher/my-classes";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 export default async function MyClassesPage() {
   const t = await getTranslations("TeacherMyClasses.page");

@@ -1,29 +1,9 @@
 import { PageConfig } from "@/types";
 import type { Permission } from "@/lib/permissions";
+import { sharedMainNav } from "./main-nav";
 
 export const adminPageConfig: PageConfig = {
-  mainNav: [
-    {
-      title: "home",
-      href: "/",
-      icon: "HomeIcon",
-    },
-    {
-      title: "about",
-      href: "/about",
-      icon: "InfoIcon",
-    },
-    {
-      title: "contact",
-      href: "/contact",
-      icon: "MailIcon",
-    },
-    {
-      title: "authors",
-      href: "/authors",
-      icon: "UsersIcon",
-    },
-  ],
+  mainNav: [...sharedMainNav],
   sidebarNav: [
     {
       title: "dashboard",

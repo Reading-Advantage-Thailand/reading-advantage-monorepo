@@ -6,20 +6,25 @@ import { ChangeUsernameForm } from "@/components/change-username-form";
 import { UpdateUserLicenseForm } from "@/components/update-user-license";
 import { ArrowLeftIcon, BadgeCheck } from "lucide-react";
 import { Icons } from "@/components/icons";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
 import ChangeRole from "@/components/shared/change-role";
 import { getCurrentUser } from "@/lib/session";
 import { Role } from "@/types/enum";
 import { getTranslations } from "next-intl/server";
 
-export default async function UserProfileSettingsPage() {
+export default async function UserProfileSettingsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const user = await getCurrentUser();
   const t = await getTranslations("Settings.userProfile");
 
   // check if user is not logged in and redirect to signin page
   if (!user) {
-    return redirect("/auth/signin");
+    return redirect({ href: "/auth/signin", locale });
   }
 
   return (
@@ -78,82 +83,8 @@ interface DisplaySettingInfoProps {
 // const handleSendEmailVerification = async () => {
 //   const user = getAuth(firebaseApp).currentUser;
 
-//   if (!user) return;
-//   if (user.emailVerified) {
-//     await fetch(`/api/users/${user.uid}`, {
-//       method: "PUT",
-//       body: JSON.stringify({
-//         emailVerified: true,
-//       }),
-//     })
-//       .catch((err) => {
-//         toast({
-//           title: "Error",
-//           description: "Something went wrong",
-//           variant: "destructive",
-//         });
-//       })
-//       .finally(() => {
-//         toast({
-//           title: "Email verified",
-//           description: "Your email has been verified already",
-//           variant: "destructive",
-//         });
-//       });
-//   }
-//   if (user.emailVerified) {
-//     // refresh page
 
-//     return;
-//   }
-//   sendEmailVerification(user!, {
-//     url: `${process.env.NEXT_PUBLIC_BASE_URL}/settings/user-profile`,
-//     handleCodeInApp: true,
-//   })
-//     .then((user) => {
-//       toast({
-//         title: "Email verification sent",
-//         description: "Please check your email to verify your account",
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       switch (err.code) {
-//         case "auth/too-many-requests":
-//           toast({
-//             title: "Too many requests",
-//             description: "Please try again later",
-//             variant: "destructive",
-//           });
-//           break;
-//         default:
-//           toast({
-//             title: "Error",
-//             description: "Something went wrong",
-//             variant: "destructive",
-//           });
-//           break;
-//       }
-//     });
-// };
 
-// const handleSendResetPassword = (email: string) => {
-//   sendPasswordResetEmail(firebaseAuth, email)
-//     .then(() => {
-//       toast({
-//         title: "Password reset email sent",
-//         description: "Please check your email to reset your password",
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       toast({
-//         title: "Error",
-//         description: "Something went wrong",
-//         variant: "destructive",
-//       });
-//     });
-// };
 
 const DisplaySettingInfo: React.FC<DisplaySettingInfoProps> = ({
   title,

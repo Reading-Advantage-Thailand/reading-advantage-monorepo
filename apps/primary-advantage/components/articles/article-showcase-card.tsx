@@ -60,6 +60,15 @@ const ArticleShowcaseCard = React.forwardRef<HTMLDivElement, Props>(
         {/* <Link href={`/student/read/${article.id}`}> */}
         <div
           onClick={handleReadClick}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleReadClick(e as unknown as React.MouseEvent);
+            }
+          }}
+          role="link"
+          tabIndex={0}
+          aria-label={article.title}
           ref={ref}
           className="flex h-[20rem] cursor-pointer flex-col gap-1 rounded-md bg-black bg-cover bg-center p-3 transition-all duration-300 hover:scale-105"
           style={{
@@ -87,22 +96,35 @@ const ArticleShowcaseCard = React.forwardRef<HTMLDivElement, Props>(
               </Badge>
             </div>
             <div className="flex flex-col items-end gap-2">
-              <div
+              <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsToggle(!isToggle);
                 }}
-                className="cursor-pointer"
+                aria-label={isToggle ? t("hideLessonOption") : t("showLessonOption")}
+                aria-pressed={isToggle}
+                className="cursor-pointer rounded"
               >
                 {isToggle ? (
                   <XIcon className="h-6 w-6 text-red-500" />
                 ) : (
                   <PlayIcon className="h-6 w-6 fill-white stroke-white" />
                 )}
-              </div>
+              </button>
               {isToggle && (
                 <Badge
                   onClick={handlePreviewClick}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handlePreviewClick(
+                        e as unknown as React.MouseEvent,
+                      );
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
                   className="max-w-max cursor-pointer shadow-lg"
                   variant="destructive"
                 >

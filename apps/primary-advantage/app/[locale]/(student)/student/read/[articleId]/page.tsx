@@ -10,7 +10,7 @@ import Sentence, {
   Sentence as SentenceType,
 } from "@/components/articles/sentence";
 import { currentUser } from "@/lib/session";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
 import { saveArticleToFlashcard } from "@/actions/flashcard";
 import AssignButton from "@/components/teacher/assign-button";
 import { getTranslations } from "next-intl/server";
@@ -32,13 +32,14 @@ export async function generateMetadata({
   };
 }
 
-type Params = Promise<{ articleId: string }>;
+type Params = Promise<{ locale: string; articleId: string }>;
 
 export default async function ArticleQuizPage({ params }: { params: Params }) {
   const user = await currentUser();
 
   if (!user) {
-    return redirect("/auth/signin");
+    const { locale } = await params;
+    return redirect({ href: "/auth/signin", locale });
   }
 
   const { articleId } = await params;

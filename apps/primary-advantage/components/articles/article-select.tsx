@@ -24,21 +24,23 @@ export default function ArticleSelect({
 
   const [loading, setLoading] = React.useState(false);
   const [articles, setArticles] = React.useState(initialArticles);
-  const [page, setPage] = React.useState(1);
   const observerRef = React.useRef<HTMLDivElement>(null);
+  const offsetRef = React.useRef(initialArticles.length);
+  const inFlightRef = React.useRef(false);
 
   const selectedType = searchParams.get("type");
   const selectedGenre = searchParams.get("genre");
   const selectedSubgenre = searchParams.get("subgenre");
 
   const loadMore = async () => {
-    if (loading || articles.length >= total) return;
+    if (inFlightRef.current || loading || articles.length >= total) return;
+    inFlightRef.current = true;
     setLoading(true);
 
     try {
       const params = new URLSearchParams({
         limit: "10",
-        offset: String(page * 10),
+        offset: String(offsetRef.current),
         ...(selectedType ? { type: selectedType } : {}),
         ...(selectedGenre ? { genre: selectedGenre } : {}),
         ...(selectedSubgenre ? { subgenre: selectedSubgenre } : {}),
@@ -56,11 +58,12 @@ export default function ArticleSelect({
 
       if (newArticles.length > 0) {
         setArticles((prev) => [...prev, ...newArticles]);
-        setPage((p) => p + 1);
       }
+      offsetRef.current += data.articles.length;
     } catch (error) {
       console.error("Error loading more articles:", error);
     } finally {
+      inFlightRef.current = false;
       setLoading(false);
     }
   };
@@ -89,7 +92,8 @@ export default function ArticleSelect({
   }, [loading, articles.length, total]);
 
   React.useEffect(() => {
-    setPage(1);
+    offsetRef.current = initialArticles.length;
+    inFlightRef.current = false;
     setArticles(initialArticles);
   }, [selectedType, selectedGenre, selectedSubgenre, initialArticles]);
 
@@ -110,8 +114,8 @@ export default function ArticleSelect({
     <div className="space-y-4">
       {articles.length ? (
         <div className="mt-4 grid grid-flow-row gap-4 sm:grid-cols-2">
-          {articles.map((article, index) => (
-            <ArticleShowcaseCard key={index} article={article} />
+          {articles.map((article) => (
+            <ArticleShowcaseCard key={article.id} article={article} />
           ))}
         </div>
       ) : (

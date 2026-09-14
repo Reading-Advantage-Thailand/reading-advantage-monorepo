@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, eq, and, desc, sql } from '@reading-advantage/db';
-import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db';
+import { eq, and, desc, sql } from 'drizzle-orm';
+import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { assertCan, AuthError } from '@reading-advantage/auth';
 import { currentUser } from "@/lib/session";
+import { resolveFlashcardGameXpAward } from "@/lib/authorization";
 import { ActivityType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
+import { shuffle } from "@/lib/shuffle";
+import { toTranslationLanguage } from "@/lib/translation-language";
 
+/**
+ * Returns shuffled cloze tests built from the caller's sentence flashcards.
+ * @param request Request with difficulty and locale query.
+ * @param params Route params carrying the deck id.
+ * @returns The cloze tests or a structured error response.
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ deckId: string }> },
@@ -15,6 +26,18 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy. Flashcard study serves
+    // any authenticated user; article:read is the matching low-privilege
+    // permission (flashcards derive from articles).
+    try {
+      assertCan(user, "article:read", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     const { deckId } = await params;
 
     // Get difficulty from query parameters
@@ -22,9 +45,15 @@ export async function GET(
     const difficulty =
       (searchParams.get("difficulty") as "easy" | "medium" | "hard") ||
       "medium";
+    const locale = searchParams.get("locale") ?? "th";
 
     // Fetch the deck (replaces Prisma `findFirst({ where, include.cards.include.reviews })`).
-    const [deck] = await db.select().from(flashcardDecks)
+    const tenantDb = getTenantDB({ schoolId: user.schoolId });
+    // Flashcard, article, and activity tables are REFERENTIAL (no schoolId);
+    // scoping below uses the caller userId and deckId/cardId owner filters.
+    // Only the users XP increment uses the tenant-scoped handle.
+    const flashDb = getUnscopedDB("flashcardDecks, flashcardCards, cardReviews, articles, userActivity, and xpLogs have no schoolId; scoped via userId, deckId, and cardId owner filters");
+    const [deck] = await flashDb.select().from(flashcardDecks)
       .where(
         and(
           eq(flashcardDecks.id, deckId),
@@ -39,7 +68,7 @@ export async function GET(
     }
 
     // Fetch cards for the deck (shared-partial `type` filter applied client-side).
-    const cardRows = await db.select().from(flashcardCards)
+    const cardRows = await flashDb.select().from(flashcardCards)
       .where(eq(flashcardCards.deckId, deck.id));
     const sentenceCards = (cardRows as any[]).filter(
       (c) => (c.type === undefined || c.type === "SENTENCE"),
@@ -49,7 +78,7 @@ export async function GET(
     const cardIds = sentenceCards.map((c) => c.id);
     const reviewsByCard = new Map<string, any>();
     if (cardIds.length > 0) {
-      const reviewRows = await db.select().from(cardReviews)
+      const reviewRows = await flashDb.select().from(cardReviews)
         .orderBy(desc(cardReviews.reviewedAt));
       for (const r of reviewRows) {
         if (cardIds.includes(r.cardId) && !reviewsByCard.has(r.cardId)) {
@@ -74,37 +103,52 @@ export async function GET(
     const clozeTests = [];
 
     for (const flashcardCard of cardsWithReviews) {
-      // Get the full article with sentences (replaces Prisma `article.findUnique({ select })`).
-      const articleId = (flashcardCard as any).articleId;
+      // Card rows only carry front/back/sourceId; recover the audio slice
+      // and translation from the article snapshot matched by front text.
+      const articleId = flashcardCard.sourceId;
       if (!articleId) continue;
-      const [article] = await db.select({
+      const [article] = await flashDb.select({
         id: articles.id,
         title: articles.title,
+        sentences: articles.sentences,
+        audioUrl: articles.audioUrl,
+        translatedPassage: articles.translatedPassage,
         cefrLevel: articles.cefrLevel,
       })
         .from(articles)
         .where(eq(articles.id, articleId))
         .limit(1);
 
-      if (!article || !(flashcardCard as any).sentence) continue;
+      if (!article || !flashcardCard.front) continue;
+
+      const articleSentences = article.sentences as Array<{
+        sentence: string;
+        startTime: number;
+        endTime: number;
+      }>;
+      const sentenceIndex = articleSentences.findIndex(
+        (s) => s.sentence === flashcardCard.front,
+      );
+      const sentenceData =
+        sentenceIndex === -1 ? undefined : articleSentences[sentenceIndex];
 
       clozeTests.push({
         id: `${article.id}-${flashcardCard.id}-${Date.now()}-${Math.random()}`,
         articleId: article.id,
         articleTitle: article.title,
-        sentence: (flashcardCard as any).sentence,
+        sentence: flashcardCard.front,
         // words: matchingSentence.words,
         blanks: [],
-        translation: (flashcardCard as any).translation,
-        audioUrl: getAudioUrl((flashcardCard as any).audioUrl || ""),
-        startTime: (flashcardCard as any).startTime,
-        endTime: (flashcardCard as any).endTime,
+        translation: (article.translatedPassage as Record<string, string[]> | null)?.[toTranslationLanguage(locale)]?.[sentenceIndex],
+        audioUrl: getAudioUrl(article.audioUrl || ""),
+        startTime: sentenceData?.startTime ?? 0,
+        endTime: sentenceData?.endTime ?? 0,
         difficulty: difficulty,
       });
     }
 
     // Shuffle the cloze tests
-    const shuffledTests = clozeTests.sort(() => Math.random() - 0.5);
+    const shuffledTests = shuffle(clozeTests);
 
     return NextResponse.json({
       clozeTests: shuffledTests,
@@ -120,6 +164,12 @@ export async function GET(
   }
 }
 
+/**
+ * Records a completed cloze test and awards server-side XP.
+ * @param request Request with the game score and timer body.
+ * @param params Route params carrying the deck id.
+ * @returns The success flag or an error response.
+ */
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ deckId: string }> },
@@ -130,27 +180,47 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Authorization decision via the central policy. Flashcard study serves
+  // any authenticated user; article:read is the matching low-privilege
+  // permission (flashcards derive from articles).
+  try {
+    assertCan(user, "article:read", { schoolId: user.schoolId ?? null });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    throw error;
+  }
+
   const { deckId } = await params;
   const { score, timer } = await request.json();
 
-  const xpEarned = Math.floor(score * 2);
+  const tenantDb = getTenantDB({ schoolId: user.schoolId });
+  // userActivity and xpLogs are REFERENTIAL; users is FLAT (tenant-scoped).
+  const flashDb = getUnscopedDB("userActivity and xpLogs have no schoolId; scoped via caller userId and deck targetId");
+
+  // The score counts correct items; clamp it to the deck size server-side
+  // so callers cannot mint XP beyond what the deck contains.
+  const cardRows = await flashDb.select({ id: flashcardCards.id })
+    .from(flashcardCards)
+    .where(eq(flashcardCards.deckId, deckId));
+  const xpEarned = resolveFlashcardGameXpAward(score, cardRows.length);
 
   // Record user activity (replaces Prisma `userActivity.create`).
-  const [userActivityRow] = await db.insert(userActivity).values({
+  const [userActivityRow] = await flashDb.insert(userActivity).values({
     userId: user.id as string,
     activityType: ActivityType.SENTENCE_CLOZE_TEST,
     targetId: deckId,
     timer: timer,
     details: {
       timer: timer,
-      score: score,
       xp: xpEarned,
     },
     completed: true,
   } as any).returning();
 
   // Create XP log entry (replaces Prisma `xPLogs.create`).
-  await db.insert(xpLogs).values({
+  await flashDb.insert(xpLogs).values({
     userId: user.id as string,
     xpEarned: xpEarned,
     activityId: userActivityRow.id,
@@ -158,7 +228,8 @@ export async function POST(
   });
 
   // Increment user XP (replaces Prisma `user.update({ data: { xp: { increment } } })`).
-  await db.update(users)
+  // users is FLAT; TenantDB scopes the increment to the caller's school.
+  await tenantDb.update(users)
     .set({ xp: sql`${users.xp} + ${xpEarned}` })
     .where(eq(users.id, user.id as string));
 
@@ -271,8 +342,7 @@ function createBlanksFromSentence(
   const blankCount = getBlankCount(difficulty);
 
   // Select up to 1 words to blank out randomly
-  const selectedWords = candidateWords
-    .sort(() => Math.random() - 0.5)
+  const selectedWords = shuffle(candidateWords)
     .slice(0, Math.min(blankCount, candidateWords.length));
 
   selectedWords.forEach((wordObj, blankIndex) => {
@@ -301,18 +371,19 @@ function generateOptions(correctAnswer: string, allWords: any[]) {
   const options = [correctAnswer];
 
   // Find similar words from all sentences as distractors
-  const potentialDistractors = allWords
-    .filter(
-      (wordObj) =>
-        wordObj.word &&
-        wordObj.word !== correctAnswer &&
-        wordObj.word.length >= correctAnswer.length - 2 && // Similar length
-        wordObj.word.length <= correctAnswer.length + 2 &&
-        /^[a-zA-Z]+$/.test(wordObj.word), // Only alphabetic words
-    )
-    .map((wordObj) => wordObj.word)
-    .filter((word, index, arr) => arr.indexOf(word) === index) // Remove duplicates
-    .sort(() => Math.random() - 0.5);
+  const potentialDistractors = shuffle(
+    allWords
+      .filter(
+        (wordObj) =>
+          wordObj.word &&
+          wordObj.word !== correctAnswer &&
+          wordObj.word.length >= correctAnswer.length - 2 && // Similar length
+          wordObj.word.length <= correctAnswer.length + 2 &&
+          /^[a-zA-Z]+$/.test(wordObj.word), // Only alphabetic words
+      )
+      .map((wordObj) => wordObj.word)
+      .filter((word, index, arr) => arr.indexOf(word) === index), // Remove duplicates
+  );
 
   // Add up to 3 distractors
   for (let i = 0; i < Math.min(3, potentialDistractors.length); i++) {
@@ -332,7 +403,7 @@ function generateOptions(correctAnswer: string, allWords: any[]) {
   }
 
   // Shuffle the options so correct answer isn't always first
-  return options.sort(() => Math.random() - 0.5);
+  return shuffle(options);
 }
 
 // Helper function to generate generic distractors when we don't have enough from word list

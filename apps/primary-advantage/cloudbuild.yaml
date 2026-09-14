@@ -8,6 +8,7 @@ steps:
       - "asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
       - "."
       - "--build-arg=DATABASE_URL=${_DATABASE_URL}"
+      - "--build-arg=NEXT_PUBLIC_STORAGE_BUCKET_NAME=${_NEXT_PUBLIC_STORAGE_BUCKET_NAME}"
     secretEnv: ["DATABASE_URL"]
 
   # Step 2: Push Docker image
@@ -70,6 +71,7 @@ substitutions:
   _GOOGLE_API_KEY: "GOOGLE_API_KEY"
   _AUDIO_API_KEY: "AUDIO_API_KEY"
   _STORAGE_BUCKET_NAME: "STORAGE_BUCKET_NAME"
+  _NEXT_PUBLIC_STORAGE_BUCKET_NAME: "primary-app-storage"
   _STORAGE_CLIENT_EMAIL: "STORAGE_CLIENT_EMAIL"
   _STORAGE_PRIVATE_KEY: "STORAGE_PRIVATE_KEY"
   _ACCESS_KEY: "ACCESS_KEY"

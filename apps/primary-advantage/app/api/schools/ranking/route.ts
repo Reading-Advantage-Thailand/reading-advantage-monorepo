@@ -4,8 +4,10 @@ import {
   getSchoolLeaderboardController,
 } from "@/server/controllers/schoolController";
 import { currentUser } from "@/lib/session";
-import { db, eq } from '@reading-advantage/db';
-import { users } from '@reading-advantage/db';
+import { eq } from 'drizzle-orm';
+import { users } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { assertCan, AuthError } from '@reading-advantage/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,13 +41,31 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy. The leaderboard serves
+    // any authenticated user; student:read:own is the matching low-privilege
+    // permission.
+    try {
+      assertCan(user, "student:read:own", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     // Get schoolId from query params or user's school
     const { searchParams } = new URL(request.url);
     let schoolId = searchParams.get("schoolId");
 
     if (!schoolId) {
       // If no schoolId provided, use user's school
-      const [userData] = await db.select({ schoolId: users.schoolId })
+      const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
+      // SYSTEM has no schoolId; TenantDB fails closed on FLAT tables, so the
+      // self-record lookup runs through unscoped for SYSTEM callers.
+      const usersDb = user.schoolId
+        ? tenantDb
+        : getUnscopedDB("SYSTEM has no schoolId; self-record lookup by id");
+      const [userData] = await usersDb.select({ schoolId: users.schoolId })
         .from(users)
         .where(eq(users.id, user.id))
         .limit(1);

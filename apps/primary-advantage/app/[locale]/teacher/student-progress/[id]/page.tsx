@@ -2,7 +2,9 @@ import { Header } from "@/components/header";
 import { getTranslations } from "next-intl/server";
 import UserRecentActivity from "@/components/dashboard/user-recent-activity";
 import { fetchUserActivity } from "@/server/controllers/userController";
+import { getUserById } from "@/server/models/userModel";
 import { currentUser } from "@/lib/session";
+import { canReadUserResource } from "@/lib/authorization";
 import AuthErrorPage from "@/app/[locale]/auth/error/page";
 import CEFRLevels from "@/components/dashboard/user-level-indicator";
 import { UserActivityChart } from "@/components/dashboard/user-activity-chart";
@@ -20,6 +22,18 @@ export default async function StudentProgressPage({
   const user = await currentUser();
 
   if (!user) {
+    return <AuthErrorPage />;
+  }
+
+  const target = await getUserById(userId);
+
+  if (
+    !target ||
+    !canReadUserResource(
+      { id: user.id, role: user.role, schoolId: user.schoolId },
+      { id: target.id, schoolId: target.schoolId },
+    )
+  ) {
     return <AuthErrorPage />;
   }
 

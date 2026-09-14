@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import z from "zod";
 import { openai, openaiModel } from "@/utils/openai";
 import { streamText } from "@reading-advantage/ai/internal-sdk";
+import { currentUser } from "@/lib/session";
 
 const createLessonChatbotQuestionSchema = z.object({
   messages: z.array(
@@ -21,10 +22,13 @@ const createLessonChatbotQuestionSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await currentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const param = await request.json();
-    //console.log("Received Params:", param);
     const validatedData = createLessonChatbotQuestionSchema.parse(param);
-    //console.log("Validated Data:", validatedData);
 
     const {
       messages,
@@ -98,7 +102,6 @@ export async function POST(request: NextRequest) {
     Image Description: "${image_description}"${blacklistedQuestionsText}`,
     };
 
-    //console.log("System Message:", systemMessage);
 
     // แปลงข้อความทั้งหมดจาก frontend เป็น messages สำหรับ OpenAI
     const chatMessages = messages.map((msg) => ({
@@ -106,7 +109,6 @@ export async function POST(request: NextRequest) {
       content: msg.text,
     }));
 
-    //console.log("Chat Messages:", chatMessages);
 
     // ส่ง prompt เข้า OpenAI พร้อมประวัติ
     const { textStream } = await streamText({
@@ -124,8 +126,6 @@ export async function POST(request: NextRequest) {
 
     const fullMessage = streamChunks.join("").trim();
 
-    //console.log("Stream Chunks:", streamChunks);
-    //console.log("Full Message:", fullMessage);
 
     return NextResponse.json(
       {

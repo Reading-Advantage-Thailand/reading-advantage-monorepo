@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+// The identity next-intl mock is deliberate: it pins translation keys as the observable contract while variants merge.
 
 import "@testing-library/jest-dom/vitest";
 import { act, render, screen, waitFor } from "@testing-library/react";
@@ -30,6 +31,24 @@ const {
   mockChallengeRetry: vi.fn().mockResolvedValue(undefined),
   mockUseStudentChallengeRun: vi.fn(),
   mockUseStudentRpg: vi.fn(),
+}));
+
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
+}));
+
+vi.mock("@/i18n/navigation", () => ({
+  useRouter: () => ({
+    push: () => undefined,
+    back: () => undefined,
+    refresh: () => undefined,
+    replace: () => undefined,
+  }),
+  usePathname: () => "/",
+  Link: ({ children, href }: { children: ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
 }));
 
 type APKGameHostProps = {
@@ -269,9 +288,9 @@ describe("StudentCartridgeHost", () => {
     const challengeId = "11111111-1111-4111-8111-111111111111";
     render(<StudentCartridgeHost cartridgeId="dragon-flight" challengeId={challengeId} description="Choose the gate." inputMode="vocabulary" locale="th" title="Dragon Flight" />);
 
-    expect(screen.getByRole("link", { name: "Sign in to play this challenge" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "signInToPlayChallenge" })).toHaveAttribute(
       "href",
-      `/auth/signin?redirect=${encodeURIComponent(`/th/student/games/apk/dragon-flight?challengeId=${challengeId}`)}`,
+      `/th/auth/signin?redirect=${encodeURIComponent(`/th/student/games/apk/dragon-flight?challengeId=${challengeId}`)}`,
     );
     expect(mockFetch).not.toHaveBeenCalled();
   });
@@ -535,6 +554,8 @@ describe("StudentCartridgeHost", () => {
         json: vi.fn().mockResolvedValue({
           mode: "vocabulary",
           source: "student-flashcards",
+          requestedTargetLocale: "th",
+          selectedTargetLocales: ["th"],
           content: [{ term: "river", translation: "river" }],
         }),
       });
@@ -557,8 +578,8 @@ describe("StudentCartridgeHost", () => {
     await screen.findByTestId("apk-game-host");
     expect(mockFetch).toHaveBeenCalledWith("/api/v1/apk/content?mode=vocabulary&locale=th",
       expect.objectContaining({ credentials: "same-origin" }));
-    expect(screen.getByRole("button", { name: "Read Thai" })).toHaveClass("min-h-12", "bg-primary");
-    expect(screen.getByRole("button", { name: "Listen to English" })).toHaveClass("min-h-12", "bg-background");
+    expect(screen.getByRole("button", { name: "readMode" })).toHaveClass("min-h-12", "bg-primary");
+    expect(screen.getByRole("button", { name: "listenMode" })).toHaveClass("min-h-12", "bg-background");
   });
 
   it.each(["dragon-flight", "dragon-rider"])(
@@ -667,7 +688,7 @@ describe("StudentCartridgeHost", () => {
       preparedAnswerAudio: { clips: [{ itemPosition: 0, url: "https://audio.example/river.mp3",
         mediaType: "audio/mpeg", sourceLocale: "en-US" }] },
     }) });
-    act(() => screen.getByRole("button", { name: "Listen to English" }).click());
+    act(() => screen.getByRole("button", { name: "listenMode" }).click());
     await waitFor(() => expect(mockFetch).toHaveBeenCalledWith(
       `/api/v1/apk/content?mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=${cartridgeId}`,
       expect.objectContaining({ cache: "no-store", credentials: "same-origin" }),
@@ -681,7 +702,7 @@ describe("StudentCartridgeHost", () => {
     await screen.findByTestId("apk-game-host");
     mockFetch.mockResolvedValueOnce({ ok: false, status: 503,
       json: vi.fn().mockResolvedValue({ error: { message: "English answer audio is unavailable" } }) });
-    act(() => screen.getByRole("button", { name: "Listen to English" }).click());
+    act(() => screen.getByRole("button", { name: "listenMode" }).click());
     expect(await screen.findByRole("button", { name: "Read instead" })).toBeInTheDocument();
     expect(screen.queryByTestId("apk-game-host")).not.toBeInTheDocument();
   });
@@ -695,7 +716,7 @@ describe("StudentCartridgeHost", () => {
     expect(firstSignal.aborted).toBe(false);
     fetchMock.mockImplementationOnce(() => new Promise(() => undefined));
 
-    act(() => screen.getByRole("button", { name: "Listen to English" }).click());
+    act(() => screen.getByRole("button", { name: "listenMode" }).click());
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
     const nextSignal = fetchMock.mock.calls[1][1].signal as AbortSignal;
     expect(firstSignal.aborted).toBe(true);

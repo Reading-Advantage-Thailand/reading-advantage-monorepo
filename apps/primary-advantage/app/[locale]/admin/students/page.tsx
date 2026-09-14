@@ -56,6 +56,8 @@ import {
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useDebounce } from "@/hooks/use-debounce";
+import type { StudentFormData } from "@/types";
 
 // Student interface based on the API response
 interface Student {
@@ -71,13 +73,6 @@ interface Student {
 }
 
 // Form data interface
-interface StudentFormData {
-  name: string;
-  email: string;
-  cefrLevel: string;
-  role: string;
-}
-
 // Statistics interface
 interface Statistics {
   totalStudents: number;
@@ -131,6 +126,7 @@ export default function StudentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedClassroom, setSelectedClassroom] = useState("");
   const [selectedCefrLevel, setSelectedCefrLevel] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   // Dialog states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -154,7 +150,7 @@ export default function StudentsPage() {
         limit: pagination.limit.toString(),
       });
 
-      if (searchQuery) params.append("search", searchQuery);
+      if (debouncedSearchQuery) params.append("search", debouncedSearchQuery);
       if (selectedClassroom) params.append("classroomId", selectedClassroom);
       if (selectedCefrLevel) params.append("cefrLevel", selectedCefrLevel);
 
@@ -206,7 +202,7 @@ export default function StudentsPage() {
 
   useEffect(() => {
     fetchStudents();
-  }, [pagination.page, searchQuery, selectedClassroom, selectedCefrLevel]);
+  }, [pagination.page, debouncedSearchQuery, selectedClassroom, selectedCefrLevel]);
 
   // Handle search with debounce
   const handleSearch = (value: string) => {

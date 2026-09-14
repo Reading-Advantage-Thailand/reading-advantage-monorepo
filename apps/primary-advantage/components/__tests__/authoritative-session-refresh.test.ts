@@ -4,22 +4,17 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const componentPaths = [
-  "articles/questions/sa-question-content.tsx",
+  "articles/questions/written-question-content.tsx",
   "flashcards/flashcard-game.tsx",
   "lesson/games/lesson-sentence-cloze-test.tsx",
-  "lesson/games/lesson-sentence-flashcard.tsx",
-  "lesson/games/lesson-sentence-matching.tsx",
+  "lesson/games/lesson-flashcard-game.tsx",
+  "lesson/games/lesson-matching-game.tsx",
   "lesson/games/lesson-sentence-order.tsx",
   "lesson/games/lesson-sentence-order-word.tsx",
-  "lesson/games/lesson-vocabulary-flashcard-card.tsx",
-  "lesson/games/lesson-vocabulary-matching.tsx",
-  "lesson/pratice/lesson-task-mcq.tsx",
-  "lesson/pratice/lesson-task-saq.tsx",
+  "articles/questions/mc-question-content.tsx",
+  "lesson/practice/lesson-task-saq.tsx",
   "lesson/task/task-lesson-summary.tsx",
-  "pratice/cloze-test-game.tsx",
-  "pratice/matching-game.tsx",
-  "pratice/order-sentences-game.tsx",
-  "pratice/order-words-game.tsx",
+  "practice/matching-game.tsx",
 ];
 
 describe("completion session refresh", () => {

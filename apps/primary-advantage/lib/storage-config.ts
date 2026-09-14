@@ -4,7 +4,10 @@
  */
 
 export const STORAGE_CONFIG = {
-  bucketName: process.env.STORAGE_BUCKET_NAME || "primary-app-storage",
+  bucketName:
+    process.env.NEXT_PUBLIC_STORAGE_BUCKET_NAME ||
+    process.env.STORAGE_BUCKET_NAME ||
+    "primary-app-storage",
   baseUrl: "https://storage.googleapis.com",
 } as const;
 

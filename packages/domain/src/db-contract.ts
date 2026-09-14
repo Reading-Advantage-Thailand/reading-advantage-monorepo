@@ -1,6 +1,6 @@
 import { eq, and } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
-import type { DB } from "@reading-advantage/db";
+import { db, type DB } from "@reading-advantage/db";
 import type { Tenant } from "@reading-advantage/auth";
 import { classifyTable, type TableClassification } from "./tenant-registry.js";
 
@@ -607,4 +607,27 @@ export function createTenantDB(db: DB, tenant: Tenant): TenantDB {
   }) as TenantDB;
 
   return tenantDb;
+}
+
+// ─── Domain-owned DB factory ─────────────────────────────
+
+/**
+ * Returns a tenant-scoped DB handle backed by the shared client. Routes and
+ * handlers use this factory instead of importing the client barrel directly,
+ * so the live `db` handle never enters application code.
+ * @param tenant The tenant context whose schoolId scopes FLAT table queries.
+ * @returns A TenantDB that injects schoolId scoping on FLAT tables.
+ */
+export function getTenantDB(tenant: Tenant): TenantDB {
+  return createTenantDB(db, tenant);
+}
+
+/**
+ * Returns the raw shared DB handle for manual owner-FK scoping. Use this only
+ * for REFERENTIAL tables or EXEMPT tables that need an unscoped query.
+ * @param reason Why the unscoped handle is needed (greppable audit trail).
+ * @returns The raw DB handle without tenant scoping.
+ */
+export function getUnscopedDB(reason: string): DB {
+  return db;
 }

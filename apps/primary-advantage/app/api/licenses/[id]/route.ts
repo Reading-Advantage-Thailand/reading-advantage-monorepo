@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { db, eq } from '@reading-advantage/db';
-import { licenses, schools } from '@reading-advantage/db';
+import { eq } from 'drizzle-orm';
+import { licenses, schools } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
+import { assertCan, AuthError } from "@reading-advantage/auth";
 import { z } from "zod";
-import { subscriptionType } from "@reading-advantage/db";
+import { subscriptionType } from '@reading-advantage/db/schema';
 
 // Derive SubscriptionType as a string-literal union from the Drizzle pgEnum.
 // Replaces the legacy Prisma client enum import.
@@ -31,6 +33,17 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (codifies the inline
+    // ADMIN/SYSTEM gate below).
+    try {
+      assertCan(user, "license:manage", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     if (user.role !== "ADMIN" && user.role !== "SYSTEM") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -38,7 +51,12 @@ export async function GET(
     const { id } = await params;
 
     // Get license by ID (replaces Prisma `findUnique({ include: School })`).
-    const [license] = await db.select().from(licenses)
+    // TenantDB scopes ADMIN reads to their own school; SYSTEM reads any.
+    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
+    const licensesDb = user.schoolId
+      ? tenantDb
+      : getUnscopedDB("SYSTEM reads licenses across all schools; no schoolId");
+    const [license] = await licensesDb.select().from(licenses)
       .where(eq(licenses.id, id))
       .limit(1);
 
@@ -49,7 +67,9 @@ export async function GET(
     // Stitch the School include via FK join.
     let schoolRow: { id: string; name: string } | null = null;
     if (license.schoolId) {
-      const [s] = await db.select({ id: schools.id, name: schools.name })
+      const [s] = await tenantDb
+        .unscoped("schools is EXEMPT; stitched by license.schoolId")
+        .select({ id: schools.id, name: schools.name })
         .from(schools)
         .where(eq(schools.id, license.schoolId))
         .limit(1);
@@ -77,6 +97,17 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (codifies the inline
+    // ADMIN/SYSTEM gate below).
+    try {
+      assertCan(user, "license:manage", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     if (user.role !== "ADMIN" && user.role !== "SYSTEM") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -88,7 +119,11 @@ export async function PUT(
     const validatedData = UpdateLicenseSchema.parse(body);
 
     // Check if license exists (replaces Prisma `findUnique({ where: { id } })`).
-    const [existingLicense] = await db.select().from(licenses)
+    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
+    const licensesDb = user.schoolId
+      ? tenantDb
+      : getUnscopedDB("SYSTEM updates licenses across all schools; no schoolId");
+    const [existingLicense] = await licensesDb.select().from(licenses)
       .where(eq(licenses.id, id))
       .limit(1);
 
@@ -106,7 +141,7 @@ export async function PUT(
     }
 
     // Update license in database (replaces Prisma `update + include.School`).
-    const [updatedLicense] = await db.update(licenses)
+    const [updatedLicense] = await licensesDb.update(licenses)
       .set({
         name: validatedData.name,
         description: validatedData.description,
@@ -124,7 +159,9 @@ export async function PUT(
     // Stitch the School include via FK join.
     let schoolRow: { id: string; name: string } | null = null;
     if (updatedLicense.schoolId) {
-      const [s] = await db.select({ id: schools.id, name: schools.name })
+      const [s] = await tenantDb
+        .unscoped("schools is EXEMPT; stitched by license.schoolId")
+        .select({ id: schools.id, name: schools.name })
         .from(schools)
         .where(eq(schools.id, updatedLicense.schoolId))
         .limit(1);
@@ -180,6 +217,17 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (codifies the inline
+    // ADMIN/SYSTEM gate below).
+    try {
+      assertCan(user, "license:manage", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     if (user.role !== "ADMIN" && user.role !== "SYSTEM") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -187,7 +235,11 @@ export async function DELETE(
     const { id } = await params;
 
     // Check if license exists (replaces Prisma `findUnique({ where: { id } })`).
-    const [existingLicense] = await db.select().from(licenses)
+    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
+    const licensesDb = user.schoolId
+      ? tenantDb
+      : getUnscopedDB("SYSTEM deletes licenses across all schools; no schoolId");
+    const [existingLicense] = await licensesDb.select().from(licenses)
       .where(eq(licenses.id, id))
       .limit(1);
 
@@ -196,7 +248,7 @@ export async function DELETE(
     }
 
     // Delete license (replaces Prisma `delete({ where: { id } })`).
-    await db.delete(licenses)
+    await licensesDb.delete(licenses)
       .where(eq(licenses.id, id));
 
     return NextResponse.json({

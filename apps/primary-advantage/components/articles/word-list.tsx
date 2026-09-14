@@ -48,35 +48,43 @@ export default function WordList({
   words: WordListTimestamp[];
   audioUrl: string;
 }) {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loadError, setLoadError] = useState<boolean>(false);
   const [wordList, setWordList] = useState<WordList[]>([]);
   const locale = useLocale();
   const t = useTranslations("WordList");
   const tc = useTranslations("Components");
 
-  console.log(words);
-
   useEffect(() => {
-    if (words) {
-      let wordList = [];
+    try {
+      if (words) {
+        let wordList = [];
 
-      wordList = words.map((word: WordListTimestamp, index: number) => {
-        const startTime = word?.timeSeconds as number;
-        const endTime =
-          index === words.length - 1
-            ? (word?.timeSeconds as number) + 10
-            : (words[index + 1].timeSeconds as number);
+        wordList = words.map((word: WordListTimestamp, index: number) => {
+          const startTime = word?.timeSeconds as number;
+          const endTime =
+            index === words.length - 1
+              ? (word?.timeSeconds as number) + 10
+              : (words[index + 1].timeSeconds as number);
 
-        return {
-          vocabulary: word?.vocabulary,
-          definition: word?.definition,
-          index,
-          startTime,
-          endTime,
-          audioUrl,
-        };
-      });
-      setWordList(wordList);
+          return {
+            vocabulary: word?.vocabulary,
+            definition: word?.definition,
+            index,
+            startTime,
+            endTime,
+            audioUrl,
+          };
+        });
+        setWordList(wordList);
+      } else {
+        setWordList([]);
+      }
+    } catch (error) {
+      console.error("Error building word list:", error);
+      setLoadError(true);
+    } finally {
+      setLoading(false);
     }
   }, [words, articleId]);
 
@@ -105,7 +113,7 @@ export default function WordList({
             <div className="flex-1 overflow-hidden">
               <div className="flex h-full flex-col">
                 <div className="flex-1 overflow-y-auto px-6 py-4">
-                  {loading && words ? (
+                  {loading ? (
                     <div className="space-y-4">
                       {[...Array(3)].map((_, i) => (
                         <div
@@ -120,7 +128,14 @@ export default function WordList({
                         </div>
                       ))}
                     </div>
-                  ) : (
+                  ) : loadError ? (
+                    <div
+                      role="alert"
+                      className="py-12 text-center text-red-600 dark:text-red-400"
+                    >
+                      <p>{t("loadError")}</p>
+                    </div>
+                  ) : wordList.length > 0 ? (
                     <>
                       <div className="space-y-3">
                         {wordList.map((word, index) => (
@@ -148,11 +163,12 @@ export default function WordList({
 
                                 {/* Definition */}
                                 <p className="text-muted-foreground text-sm leading-relaxed">
-                                  {
-                                    word.definition[
-                                      locale as keyof typeof word.definition
-                                    ]
-                                  }
+                                  {(
+                                    word.definition as unknown as Record<
+                                      string,
+                                      string
+                                    >
+                                  )[locale] || word.definition?.en}
                                 </p>
                               </div>
                             </div>
@@ -160,6 +176,13 @@ export default function WordList({
                         ))}
                       </div>
                     </>
+                  ) : (
+                    <div className="py-12 text-center">
+                      <Book className="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-600" />
+                      <p className="text-gray-500 dark:text-gray-400">
+                        {t("empty")}
+                      </p>
+                    </div>
                   )}
                 </div>
 

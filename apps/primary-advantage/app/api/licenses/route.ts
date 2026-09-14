@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, eq, and, desc, inArray, ilike, or, count } from '@reading-advantage/db';
-import { licenses, schools } from '@reading-advantage/db';
+import { eq, and, desc, inArray, ilike, or, count } from 'drizzle-orm';
+import { licenses, schools } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
+import { assertCan, AuthError } from "@reading-advantage/auth";
 import { z } from "zod";
 import { randomBytes } from "crypto";
 import { currentUser } from "@/lib/session";
 import { generateLicenseKey } from "@/lib/utils";
-import { subscriptionType } from "@reading-advantage/db";
+import { subscriptionType } from '@reading-advantage/db/schema';
 
 // Derive SubscriptionType as a string-literal union from the Drizzle pgEnum.
 // Replaces the legacy Prisma client enum import.
@@ -29,6 +31,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (codifies the inline
+    // ADMIN/SYSTEM gate below).
+    try {
+      assertCan(user, "license:manage", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     if (!user || (user.role !== "ADMIN" && user.role !== "SYSTEM")) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -50,7 +63,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Create license in database (replaces Prisma `license.create`).
-    const [license] = await db.insert(licenses).values({
+    // TenantDB injects the ADMIN's schoolId on FLAT inserts; SYSTEM (no
+    // schoolId) creates licenses for any school via unscoped.
+    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
+    const licensesDb = user.schoolId
+      ? tenantDb
+      : getUnscopedDB("SYSTEM creates licenses across all schools; no schoolId");
+    const [license] = await licensesDb.insert(licenses).values({
       key: licenseKey,
       name: validatedData.name,
       maxUsers: validatedData.maxUsers,
@@ -104,6 +123,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (codifies the inline
+    // ADMIN/SYSTEM gate below).
+    try {
+      assertCan(user, "license:manage", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     if (!user || (user.role !== "ADMIN" && user.role !== "SYSTEM")) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -133,20 +163,26 @@ export async function GET(request: NextRequest) {
     }
 
     // Get licenses with pagination (replaces Prisma `findMany({ where, skip, take, orderBy, include.School })`).
+    // TenantDB scopes ADMIN reads to their own school; SYSTEM (no schoolId)
+    // reads all licenses via unscoped.
+    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
+    const licensesDb = user.schoolId
+      ? tenantDb
+      : getUnscopedDB("SYSTEM lists licenses across all schools; no schoolId");
     const [licenseRows, totalRows] = await Promise.all([
       whereConditions.length > 0
-        ? db.select().from(licenses)
+        ? licensesDb.select().from(licenses)
           .where(and(...whereConditions))
           .orderBy(desc(licenses.createdAt))
           .limit(limit)
           .offset(offset)
-        : db.select().from(licenses)
+        : licensesDb.select().from(licenses)
           .orderBy(desc(licenses.createdAt))
           .limit(limit)
           .offset(offset),
       whereConditions.length > 0
-        ? db.select({ value: count() }).from(licenses).where(and(...whereConditions))
-        : db.select({ value: count() }).from(licenses),
+        ? licensesDb.select({ value: count() }).from(licenses).where(and(...whereConditions))
+        : licensesDb.select({ value: count() }).from(licenses),
     ]);
     const total = Number(totalRows[0]?.value ?? 0);
 
@@ -156,7 +192,9 @@ export async function GET(request: NextRequest) {
       .filter((id): id is string => !!id);
     const uniqueSchoolIds = Array.from(new Set(schoolIds));
     const schoolRows = uniqueSchoolIds.length > 0
-      ? await db.select({
+      ? await tenantDb
+          .unscoped("schools is EXEMPT; stitched by license.schoolId")
+          .select({
           id: schools.id,
           name: schools.name,
         }).from(schools).where(inArray(schools.id, uniqueSchoolIds))
@@ -191,6 +229,17 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (codifies the inline
+    // ADMIN/SYSTEM gate below).
+    try {
+      assertCan(user, "license:manage", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     if (!user || (user.role !== "ADMIN" && user.role !== "SYSTEM")) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -206,7 +255,12 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete license (replaces Prisma `license.delete`).
-    await db.delete(licenses)
+    // TenantDB scopes ADMIN deletes to their own school; SYSTEM deletes any.
+    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
+    const licensesDb = user.schoolId
+      ? tenantDb
+      : getUnscopedDB("SYSTEM deletes licenses across all schools; no schoolId");
+    await licensesDb.delete(licenses)
       .where(eq(licenses.id, id));
 
     return NextResponse.json({ message: "License deleted successfully" });

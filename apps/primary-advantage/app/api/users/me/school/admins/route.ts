@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { db, eq, and } from '@reading-advantage/db';
-import { users, schools, schoolAdmins, userRoles, roles } from '@reading-advantage/db';
+import { eq, and } from 'drizzle-orm';
+import { users, schools, schoolAdmins, userRoles, roles } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { assertCan, AuthError } from '@reading-advantage/auth';
 import { z } from "zod";
 
 const addAdminSchema = z.object({
@@ -17,11 +19,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy. School-admin management
+    // is an admin:users operation; the ownerId gate below still runs.
+    try {
+      assertCan(authUser, "admin:users", { schoolId: authUser.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     const body = await request.json();
     const { userId } = addAdminSchema.parse(body);
 
     // Get current user's school (replaces Prisma `user.findUnique({ include: School })`).
-    const [currentUser] = await db.select().from(users)
+    const tenantDb = getTenantDB({ schoolId: authUser.schoolId ?? null });
+    // SYSTEM has no schoolId; TenantDB fails closed on FLAT tables, so the
+    // self-record lookup runs through unscoped for SYSTEM callers.
+    const usersDb = authUser.schoolId
+      ? tenantDb
+      : getUnscopedDB("SYSTEM has no schoolId; self-record lookup by id");
+    const [currentUser] = await usersDb.select().from(users)
       .where(eq(users.id, authUser.id))
       .limit(1);
 
@@ -31,7 +50,9 @@ export async function POST(request: NextRequest) {
 
     let userSchool: typeof schools.$inferSelect | null = null;
     if (currentUser.schoolId) {
-      const [s] = await db.select().from(schools)
+      const [s] = await tenantDb
+        .unscoped("schools is EXEMPT; looked up by user.schoolId")
+        .select().from(schools)
         .where(eq(schools.id, currentUser.schoolId))
         .limit(1);
       userSchool = s ?? null;
@@ -53,7 +74,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if the target user exists (replaces Prisma `user.findUnique({ include: roles, SchoolAdmins })`).
-    const [targetUser] = await db.select().from(users)
+    // TenantDB scopes the lookup to the owner's school.
+    const [targetUser] = await tenantDb.select().from(users)
       .where(eq(users.id, userId))
       .limit(1);
 
@@ -65,7 +87,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch target user's roles via join.
-    const targetRoleRows = await db.select({
+    const targetRoleRows = await tenantDb
+      .unscoped("userRoles is REFERENTIAL and roles is EXEMPT; stitched by userId")
+      .select({
       roleId: userRoles.roleId,
       roleName: roles.name,
     })
@@ -74,7 +98,7 @@ export async function POST(request: NextRequest) {
       .where(eq(userRoles.userId, userId));
 
     // Fetch target user's existing SchoolAdmins for this school.
-    const existingSchoolAdminRows = await db.select().from(schoolAdmins)
+    const existingSchoolAdminRows = await tenantDb.select().from(schoolAdmins)
       .where(
         and(
           eq(schoolAdmins.userId, userId),
@@ -91,7 +115,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Add user as school admin (replaces Prisma `schoolAdmins.create`).
-    await db.insert(schoolAdmins).values({
+    await tenantDb.insert(schoolAdmins).values({
       schoolId: userSchool.id,
       userId: userId,
     });
@@ -106,22 +130,30 @@ export async function POST(request: NextRequest) {
       const currentRoles = targetRoleRows.map((r) => r.roleName);
       if (currentRoles.includes("user") || currentRoles.includes("teacher")) {
         // Find or create Admin role
-        const [existingAdminRole] = await db.select().from(roles)
+        const [existingAdminRole] = await tenantDb
+          .unscoped("roles is EXEMPT; looked up by name")
+          .select().from(roles)
           .where(eq(roles.name, "admin"))
           .limit(1);
 
         let adminRole = existingAdminRole;
         if (!adminRole) {
-          const [created] = await db.insert(roles).values({ name: "admin" }).returning();
+          const [created] = await tenantDb
+            .unscoped("roles is EXEMPT; created by name")
+            .insert(roles).values({ name: "admin" }).returning();
           adminRole = created;
         }
 
         // Remove all existing roles and set Admin role only
-        await db.delete(userRoles)
+        await tenantDb
+          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
+          .delete(userRoles)
           .where(eq(userRoles.userId, userId));
 
         // Create new Admin role for user
-        await db.insert(userRoles).values({
+        await tenantDb
+          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
+          .insert(userRoles).values({
           userId: userId,
           roleId: adminRole.id,
         });
@@ -131,7 +163,7 @@ export async function POST(request: NextRequest) {
 
     // Associate user with the school if not already associated
     if (targetUser.schoolId !== userSchool.id) {
-      await db.update(users)
+      await tenantDb.update(users)
         .set({ schoolId: userSchool.id })
         .where(eq(users.id, userId));
     }

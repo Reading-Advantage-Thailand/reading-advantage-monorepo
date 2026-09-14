@@ -1,29 +1,9 @@
 import { PageConfig } from "@/types";
 import type { Permission } from "@/lib/permissions";
+import { sharedMainNav } from "./main-nav";
 
 export const teacherPageConfig: PageConfig = {
-  mainNav: [
-    {
-      title: "home",
-      href: "/",
-      icon: "HomeIcon",
-    },
-    {
-      title: "about",
-      href: "/about",
-      icon: "InfoIcon",
-    },
-    {
-      title: "contact",
-      href: "/contact",
-      icon: "MailIcon",
-    },
-    {
-      title: "authors",
-      href: "/authors",
-      icon: "UsersIcon",
-    },
-  ],
+  mainNav: [...sharedMainNav],
   sidebarNav: [
     // Regular navigation item
     {
@@ -53,12 +33,12 @@ export const teacherPageConfig: PageConfig = {
           icon: "ClipboardListIcon",
           requiredPermissions: ["CLASS_MANAGEMENT"],
         },
-        // {
-        //   title: "studentProgress",
-        //   href: "/teacher/student-progress",
-        //   icon: "TrendingUpIcon",
-        //   requiredPermissions: ["REPORTS_ACCESS"],
-        // },
+        {
+          title: "studentProgress",
+          href: "/teacher/student-progress",
+          icon: "TrendingUpIcon",
+          requiredPermissions: ["REPORTS_ACCESS"],
+        },
       ],
     },
 
@@ -74,32 +54,9 @@ export const teacherPageConfig: PageConfig = {
           icon: "ChartColumnBigIcon",
           requiredPermissions: ["REPORTS_ACCESS"],
         },
-        // {
-        //   title: "performanceAnalytics",
-        //   href: "/teacher/reports/analytics",
-        //   icon: "BarChartIcon",
-        //   requiredPermissions: ["REPORTS_ACCESS"],
-        // },
-        // {
-        //   title: "progressTracking",
-        //   href: "/teacher/reports/progress",
-        //   icon: "TrendingUpIcon",
-        //   requiredPermissions: ["REPORTS_ACCESS"],
-        // },
       ],
     },
 
-    // Uncommented items can be added as regular or collapsible sections:
-    // {
-    //   title: "passages",
-    //   href: "/teacher/passages",
-    //   icon: "FileTextIcon",
-    // },
-    // {
-    //   title: "google classroom",
-    //   href: "/teacher/classroom",
-    //   icon: "GraduationCapIcon",
-    // },
     {
       title: "assignments",
       href: "/teacher/assignments",

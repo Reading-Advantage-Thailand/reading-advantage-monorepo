@@ -15,6 +15,11 @@ COPY . .
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
+# NEXT_PUBLIC_* vars are inlined at build time, so the bucket name must be
+# present during the build.
+ARG NEXT_PUBLIC_STORAGE_BUCKET_NAME
+ENV NEXT_PUBLIC_STORAGE_BUCKET_NAME=${NEXT_PUBLIC_STORAGE_BUCKET_NAME}
+
 RUN npm run prisma:generate && npm run build
 
 

@@ -160,10 +160,6 @@ async function seedHostProofSession() {
 
   await seedAuthenticatedStudentContent(STUDENT_USERNAME);
 
-  console.log("Host-proof test session seeded.");
-  console.log(`  Class code: ${CLASS_CODE}`);
-  console.log(`  Student name: ${STUDENT_NAME}`);
-  console.log(`  Student username: ${STUDENT_USERNAME}`);
 }
 
 seedHostProofSession()

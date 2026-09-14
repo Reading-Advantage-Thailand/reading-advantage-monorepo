@@ -49,7 +49,7 @@ export function AdminQuickActions() {
     {
       title: t("quickActions.viewReports"),
       description: t("quickActions.viewReportsDesc"),
-      href: "/admin/dashboard/reports",
+      href: "/admin/dashboard",
       icon: BarChart3,
       variant: "outline" as const,
     },

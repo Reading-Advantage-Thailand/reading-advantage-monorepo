@@ -1,10 +1,12 @@
 import { NextResponse, NextRequest } from "next/server";
-import { db, eq } from '@reading-advantage/db';
-import { users, userRoles, roles } from '@reading-advantage/db';
+import { eq } from 'drizzle-orm';
+import { users, userRoles, roles } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB, type TenantDB } from '@reading-advantage/domain';
+import { assertCan, AuthError } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
+import { isAdminOrSystem, patchUserBodySchema, canAccessSchoolResource, normalizeRole } from "@/lib/authorization";
+import { roleAtLeast, type Role } from "@reading-advantage/auth";
 import bcrypt from "bcryptjs";
-
-// Replace lines 31-47 in your current API with this corrected version:
 
 export async function PATCH(
   request: NextRequest,
@@ -16,18 +18,64 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = (await params).id;
-    const body = await request.json();
-    const { name, email, role, xp, level, cefrLevel, password } = body;
+    // Authorization decision via the central policy (codifies the inline
+    // isAdminOrSystem gate below).
+    try {
+      assertCan(currentUserData, "admin:users", { schoolId: currentUserData.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
 
-    // Verify the target user exists before opening a transaction.
-    const [existingTarget] = await db.select({ id: users.id })
+    if (!isAdminOrSystem(currentUserData)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const userId = (await params).id;
+    const parsed = patchUserBodySchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    }
+    const { name, email, role, xp, level, cefrLevel, password } = parsed.data;
+
+    if (role !== undefined && currentUserData.id === userId) {
+      return NextResponse.json({ error: "Cannot change your own role" }, { status: 403 });
+    }
+
+    // Verify the target user exists and resolve their school scope.
+    const tenantDb = getTenantDB({ schoolId: currentUserData.schoolId ?? null });
+    // SYSTEM has no schoolId; TenantDB fails closed on FLAT tables, so SYSTEM
+    // runs through the raw db via unscoped.
+    const isSystem = normalizeRole(currentUserData.role) === "SYSTEM";
+    const usersDb = isSystem
+      ? getUnscopedDB("SYSTEM manages users across schools; no schoolId")
+      : tenantDb;
+    const [existingTarget] = await usersDb.select({ id: users.id, schoolId: users.schoolId })
       .from(users)
       .where(eq(users.id, userId))
       .limit(1);
 
     if (!existingTarget) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Fail closed: staff without a school cannot write across schools.
+    if (!canAccessSchoolResource(currentUserData, existingTarget.schoolId)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    // Rank check: a caller cannot assign a role above their own level.
+    if (role !== undefined) {
+      const callerRole = normalizeRole(currentUserData.role) as Role;
+      const targetRole = normalizeRole(role) as Role;
+      if (!roleAtLeast(callerRole, targetRole)) {
+        return NextResponse.json(
+          { error: "Cannot assign a role above your own" },
+          { status: 403 },
+        );
+      }
     }
 
     // Build update data object (excluding role for now)
@@ -45,7 +93,13 @@ export async function PATCH(
     }
 
     // Use transaction to handle both user data and role updates
-    const updatedUser = await db.transaction(async (tx) => {
+    const updatedUser = await usersDb.transaction(async (tx) => {
+      // userRoles is REFERENTIAL (no schoolId); scoped via users.schoolId.
+      // The transaction callback is typed as raw DB; TenantDB wraps it at
+      // runtime, so cast to access the unscoped escape hatch.
+      const rawTx = isSystem
+        ? tx
+        : (tx as unknown as TenantDB).unscoped("userRoles is REFERENTIAL; scoped via users.schoolId");
       // Update user data
       if (Object.keys(updateData).length > 0) {
         await tx.update(users)
@@ -65,11 +119,11 @@ export async function PATCH(
         }
 
         // Remove existing roles for this user
-        await tx.delete(userRoles)
+        await rawTx.delete(userRoles)
           .where(eq(userRoles.userId, userId));
 
         // Assign the new role
-        await tx.insert(userRoles).values({
+        await rawTx.insert(userRoles).values({
           userId: userId,
           roleId: roleRecord.id,
         });
@@ -80,7 +134,7 @@ export async function PATCH(
         .where(eq(users.id, userId))
         .limit(1);
 
-      const userRoleRows = await tx.select({
+      const userRoleRows = await rawTx.select({
         roleId: userRoles.roleId,
         roleName: roles.name,
       })

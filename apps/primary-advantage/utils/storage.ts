@@ -46,7 +46,6 @@ export const uploadToBucket = async (
     //   fs.unlinkSync(filePath);
     // }
 
-    console.log(`✅ Uploaded to bucket: ${destination}`);
   } catch (error) {
     console.error("ERROR UPLOADING TO BUCKET: ", error);
     throw error;
@@ -79,9 +78,7 @@ export async function deleteFile(fileName: string): Promise<{
         if (exists) {
           await file.delete();
           results.deleted.push(filePath);
-          console.log(`✅ Deleted: ${filePath}`);
         } else {
-          console.log(`⚠️  File not found: ${filePath}`);
         }
       } catch (error) {
         results.failed.push(filePath);

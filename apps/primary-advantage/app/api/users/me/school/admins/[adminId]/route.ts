@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { db, eq } from '@reading-advantage/db';
-import { users, schools, schoolAdmins, userRoles, roles } from '@reading-advantage/db';
+import { eq } from 'drizzle-orm';
+import { users, schools, schoolAdmins, userRoles, roles } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { assertCan, AuthError } from '@reading-advantage/auth';
 
 // DELETE /api/users/me/school/admins/[adminId] - Remove a school admin
 export async function DELETE(
@@ -15,10 +17,27 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy. School-admin management
+    // is an admin:users operation; the ownerId gate below still runs.
+    try {
+      assertCan(authUser, "admin:users", { schoolId: authUser.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     const adminId = (await params).adminId;
 
     // Get current user's school (replaces Prisma `user.findUnique({ include: School })`).
-    const [currentUser] = await db.select().from(users)
+    const tenantDb = getTenantDB({ schoolId: authUser.schoolId ?? null });
+    // SYSTEM has no schoolId; TenantDB fails closed on FLAT tables, so the
+    // self-record lookup runs through unscoped for SYSTEM callers.
+    const usersDb = authUser.schoolId
+      ? tenantDb
+      : getUnscopedDB("SYSTEM has no schoolId; self-record lookup by id");
+    const [currentUser] = await usersDb.select().from(users)
       .where(eq(users.id, authUser.id))
       .limit(1);
 
@@ -29,7 +48,9 @@ export async function DELETE(
     // Fetch the user's school via FK.
     let userSchool: typeof schools.$inferSelect | null = null;
     if (currentUser.schoolId) {
-      const [s] = await db.select().from(schools)
+      const [s] = await tenantDb
+        .unscoped("schools is EXEMPT; looked up by user.schoolId")
+        .select().from(schools)
         .where(eq(schools.id, currentUser.schoolId))
         .limit(1);
       userSchool = s ?? null;
@@ -51,7 +72,8 @@ export async function DELETE(
     }
 
     // Find the admin record (replaces Prisma `schoolAdmins.findUnique({ include: user })`).
-    const [adminRecord] = await db.select({
+    // TenantDB scopes the lookup to the owner's school.
+    const [adminRecord] = await tenantDb.select({
       admin: schoolAdmins,
       adminUser: users,
     })
@@ -84,17 +106,21 @@ export async function DELETE(
     }
 
     // Remove the admin record (replaces Prisma `schoolAdmins.delete`).
-    await db.delete(schoolAdmins)
+    await tenantDb.delete(schoolAdmins)
       .where(eq(schoolAdmins.id, adminId));
 
-    // Check if the user has any other school admin roles
-    const otherAdminRoles = await db.select().from(schoolAdmins)
+    // Check if the user has any other school admin roles (across all schools).
+    const otherAdminRoles = await tenantDb
+      .unscoped("schoolAdmins role check spans all schools before downgrade")
+      .select().from(schoolAdmins)
       .where(eq(schoolAdmins.userId, adminRecord.admin.userId));
 
     // If user has no other admin roles, optionally downgrade their role
     if (otherAdminRoles.length === 0) {
       // Get user's current roles (replaces Prisma `findUnique({ include: roles })`).
-      const userRoleRows = await db.select({
+      const userRoleRows = await tenantDb
+        .unscoped("userRoles is REFERENTIAL and roles is EXEMPT; stitched by userId")
+        .select({
         roleId: userRoles.roleId,
         roleName: roles.name,
       })
@@ -109,21 +135,29 @@ export async function DELETE(
       // Only downgrade if they only have Admin role and no other admin responsibilities
       if (hasAdminRole && userRoleRows.length === 1) {
         // Find or create Teacher role as default
-        const [existingTeacherRole] = await db.select().from(roles)
+        const [existingTeacherRole] = await tenantDb
+          .unscoped("roles is EXEMPT; looked up by name")
+          .select().from(roles)
           .where(eq(roles.name, "teacher"))
           .limit(1);
 
         let teacherRole = existingTeacherRole;
         if (!teacherRole) {
-          const [created] = await db.insert(roles).values({ name: "teacher" }).returning();
+          const [created] = await tenantDb
+            .unscoped("roles is EXEMPT; created by name")
+            .insert(roles).values({ name: "teacher" }).returning();
           teacherRole = created;
         }
 
         // Remove all roles and set Teacher role
-        await db.delete(userRoles)
+        await tenantDb
+          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
+          .delete(userRoles)
           .where(eq(userRoles.userId, adminRecord.admin.userId));
 
-        await db.insert(userRoles).values({
+        await tenantDb
+          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
+          .insert(userRoles).values({
           userId: adminRecord.admin.userId,
           roleId: teacherRole.id,
         });
@@ -131,7 +165,9 @@ export async function DELETE(
     }
 
     // Remove user's association with the school if they have no other roles
-    const remainingSchoolRoles = await db.select().from(schoolAdmins)
+    const remainingSchoolRoles = await tenantDb
+      .unscoped("schoolAdmins role check spans all schools before removal")
+      .select().from(schoolAdmins)
       .where(
         eq(schoolAdmins.userId, adminRecord.admin.userId),
       );
@@ -141,7 +177,7 @@ export async function DELETE(
     );
 
     if (!stillInThisSchool) {
-      await db.update(users)
+      await tenantDb.update(users)
         .set({ schoolId: null })
         .where(eq(users.id, adminRecord.admin.userId));
     }

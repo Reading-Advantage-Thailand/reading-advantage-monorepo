@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
-import { db, eq, desc, inArray, count } from '@reading-advantage/db';
-import { schools, licenses } from '@reading-advantage/db';
+import { eq, desc, inArray, count } from 'drizzle-orm';
+import { schools, licenses } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
+import { assertCan, AuthError } from "@reading-advantage/auth";
 import { z } from "zod";
 
 const createSchoolSchema = z.object({
@@ -18,6 +20,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (codifies the inline
+    // SYSTEM-only gate below).
+    try {
+      assertCan(currentUser, "system:dashboard:read", { schoolId: currentUser.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json(
+          {
+            error: "Forbidden. Only system administrators can create schools.",
+          },
+          { status: 403 },
+        );
+      }
+      throw error;
+    }
+
     // Check if user has system role (only system admins can create schools)
     if (currentUser.role !== "SYSTEM") {
       return NextResponse.json(
@@ -32,7 +50,10 @@ export async function POST(request: NextRequest) {
     const validatedData = createSchoolSchema.parse(body);
 
     // Check if school with same name already exists (replaces Prisma `school.findFirst`).
-    const [existingSchool] = await db.select().from(schools)
+    const tenantDb = getTenantDB({ schoolId: currentUser.schoolId ?? null });
+    // schools is EXEMPT (intentionally global); SYSTEM has no schoolId.
+    const rawDb = getUnscopedDB("schools is EXEMPT; SYSTEM creates schools globally");
+    const [existingSchool] = await rawDb.select().from(schools)
       .where(eq(schools.name, validatedData.name))
       .limit(1);
 
@@ -44,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the school (replaces Prisma `school.create`).
-    const [school] = await db.insert(schools).values({
+    const [school] = await rawDb.insert(schools).values({
       name: validatedData.name,
       contactName: validatedData.contactName,
       contactEmail: validatedData.contactEmail,
@@ -76,6 +97,22 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy (codifies the inline
+    // SYSTEM-only gate below).
+    try {
+      assertCan(currentUser, "system:dashboard:read", { schoolId: currentUser.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json(
+          {
+            error: "Forbidden. Only system administrators can view schools.",
+          },
+          { status: 403 },
+        );
+      }
+      throw error;
+    }
+
     // Check if user has system role
     if (currentUser.role !== "SYSTEM") {
       return NextResponse.json(
@@ -87,13 +124,16 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch schools (replaces Prisma `findMany({ include: _count, licenses, orderBy })`).
-    const schoolRows = await db.select().from(schools)
+    const tenantDb = getTenantDB({ schoolId: currentUser.schoolId ?? null });
+    // schools is EXEMPT (intentionally global); SYSTEM has no schoolId.
+    const rawDb = getUnscopedDB("schools is EXEMPT; SYSTEM lists schools globally");
+    const schoolRows = await rawDb.select().from(schools)
       .orderBy(desc(schools.createdAt));
 
     // Stitch licenses include for each school.
     const schoolIds = schoolRows.map((s) => s.id);
     const licenseRows = schoolIds.length > 0
-      ? await db.select({
+      ? await rawDb.select({
           schoolId: licenses.schoolId,
           name: licenses.name,
           status: licenses.status,

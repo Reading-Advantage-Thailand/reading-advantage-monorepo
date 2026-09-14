@@ -24,6 +24,7 @@ import { Link } from "@/i18n/navigation";
 
 export function AdminDashboardHeader() {
   const t = useTranslations("AdminDashboard");
+  const tComponents = useTranslations("Components");
 
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -41,7 +42,7 @@ export function AdminDashboardHeader() {
           </Link>
         </Button>
         <Button variant="outline" size="sm" asChild>
-          <Link href="/admin/dashboard/reports">
+          <Link href="/admin/dashboard">
             <Download className="mr-2 h-4 w-4" />
             Reports
           </Link>
@@ -54,7 +55,12 @@ export function AdminDashboardHeader() {
         </Button>
 
         {/* Notifications */}
-        <Button variant="ghost" size="sm" className="relative">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="relative"
+          aria-label={tComponents("showNotifications")}
+        >
           <Bell className="h-4 w-4" />
           <Badge
             variant="destructive"
@@ -76,7 +82,11 @@ export function AdminDashboardHeader() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              aria-label={tComponents("openActionsMenu")}
+            >
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -96,14 +106,14 @@ export function AdminDashboardHeader() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/dashboard/reports">
+              <Link href="/admin/dashboard">
                 <Download className="mr-2 h-4 w-4" />
                 Reports
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/admin/settings">
+              <Link href="/settings/user-profile">
                 <Settings className="mr-2 h-4 w-4" />
                 Settings
               </Link>
@@ -112,7 +122,12 @@ export function AdminDashboardHeader() {
         </DropdownMenu>
 
         {/* Mobile Notifications */}
-        <Button variant="ghost" size="sm" className="relative">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="relative"
+          aria-label={tComponents("showNotifications")}
+        >
           <Bell className="h-4 w-4" />
           <Badge
             variant="destructive"

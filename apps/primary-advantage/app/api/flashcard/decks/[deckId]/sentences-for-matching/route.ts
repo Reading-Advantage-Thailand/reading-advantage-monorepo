@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, eq, and, desc, isNotNull, sql } from '@reading-advantage/db';
-import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db';
+import { eq, and, desc, isNotNull, sql } from 'drizzle-orm';
+import type { DB } from '@reading-advantage/domain';
+import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db/schema';
+import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { assertCan, AuthError } from '@reading-advantage/auth';
 import { currentUser } from "@/lib/session";
+import { resolveFlashcardGameXpAward } from "@/lib/authorization";
 import { ActivityType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
+import { shuffle } from "@/lib/shuffle";
 
+/**
+ * Returns shuffled sentence-matching games from the caller's deck.
+ * @param request Request with the translation language query.
+ * @param params Route params carrying the deck id.
+ * @returns The matching games or a structured error response.
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ deckId: string }> },
@@ -15,6 +26,18 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Authorization decision via the central policy. Flashcard study serves
+    // any authenticated user; article:read is the matching low-privilege
+    // permission (flashcards derive from articles).
+    try {
+      assertCan(user, "article:read", { schoolId: user.schoolId ?? null });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      throw error;
+    }
+
     const { deckId } = await params;
 
     // Get translation language from query parameters
@@ -23,7 +46,12 @@ export async function GET(
       (searchParams.get("language") as "th" | "vi" | "cn" | "tw") || "th";
 
     // Fetch deck (replaces Prisma `findFirst({ where, include.cards.include.reviews })`).
-    const [deck] = await db.select().from(flashcardDecks)
+    const tenantDb = getTenantDB({ schoolId: user.schoolId });
+    // Flashcard, article, and activity tables are REFERENTIAL (no schoolId);
+    // scoping below uses the caller userId and deckId/cardId owner filters.
+    // Only the users XP increment uses the tenant-scoped handle.
+    const flashDb = getUnscopedDB("flashcardDecks, flashcardCards, cardReviews, articles, userActivity, and xpLogs have no schoolId; scoped via userId, deckId, and cardId owner filters");
+    const [deck] = await flashDb.select().from(flashcardDecks)
       .where(
         and(
           eq(flashcardDecks.id, deckId),
@@ -39,7 +67,7 @@ export async function GET(
     // Fetch cards for the deck (shared-partial `due` filter and `articleId.not` filter
     // applied via raw SQL since they're shared-partial columns).
     const now = new Date();
-    const cardRows = await db.select().from(flashcardCards)
+    const cardRows = await flashDb.select().from(flashcardCards)
       .where(
         and(
           eq(flashcardCards.deckId, deck.id),
@@ -55,7 +83,7 @@ export async function GET(
     const cardIds = cardsWithDue.map((c) => c.id);
     const reviewsByCard = new Map<string, any>();
     if (cardIds.length > 0) {
-      const reviewRows = await db.select().from(cardReviews)
+      const reviewRows = await flashDb.select().from(cardReviews)
         .orderBy(desc(cardReviews.reviewedAt));
       for (const r of reviewRows) {
         if (cardIds.includes(r.cardId) && !reviewsByCard.has(r.cardId)) {
@@ -87,6 +115,7 @@ export async function GET(
     // Process sentence cards for sentence-to-translation matching
     if (sentenceCards.length > 0) {
       const translationPairs = await createTranslationPairs(
+        flashDb,
         sentenceCards,
         translationLanguage,
       );
@@ -103,6 +132,7 @@ export async function GET(
     // Process vocabulary cards for word-definition matching (fallback)
     if (vocabularyCards.length > 0 && matchingGames.length === 0) {
       const vocabularyPairs = await createVocabularyPairs(
+        flashDb,
         vocabularyCards,
         translationLanguage,
       );
@@ -116,7 +146,7 @@ export async function GET(
     }
 
     // Shuffle the matching games
-    const shuffledGames = matchingGames.sort(() => Math.random() - 0.5);
+    const shuffledGames = shuffle(matchingGames);
 
     return NextResponse.json({
       matchingGames: shuffledGames,
@@ -131,6 +161,12 @@ export async function GET(
   }
 }
 
+/**
+ * Records a completed sentence-matching game and awards server-side XP.
+ * @param request Request with the game score and timer body.
+ * @param params Route params carrying the deck id.
+ * @returns The success flag or an error response.
+ */
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ deckId: string }> },
@@ -141,27 +177,47 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Authorization decision via the central policy. Flashcard study serves
+  // any authenticated user; article:read is the matching low-privilege
+  // permission (flashcards derive from articles).
+  try {
+    assertCan(user, "article:read", { schoolId: user.schoolId ?? null });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    throw error;
+  }
+
   const { deckId } = await params;
   const { score, timer } = await request.json();
 
-  const xpEarned = Math.floor(score * 2);
+  const tenantDb = getTenantDB({ schoolId: user.schoolId });
+  // userActivity and xpLogs are REFERENTIAL; users is FLAT (tenant-scoped).
+  const flashDb = getUnscopedDB("userActivity and xpLogs have no schoolId; scoped via caller userId and deck targetId");
+
+  // The score counts correct items; clamp it to the deck size server-side
+  // so callers cannot mint XP beyond what the deck contains.
+  const cardRows = await flashDb.select({ id: flashcardCards.id })
+    .from(flashcardCards)
+    .where(eq(flashcardCards.deckId, deckId));
+  const xpEarned = resolveFlashcardGameXpAward(score, cardRows.length);
 
   // Record user activity (replaces Prisma `userActivity.create`).
-  const [userActivityRow] = await db.insert(userActivity).values({
+  const [userActivityRow] = await flashDb.insert(userActivity).values({
     userId: user.id as string,
     activityType: ActivityType.SENTENCE_MATCHING,
     targetId: deckId,
     timer: timer,
     details: {
       timer: timer,
-      score: score,
       xp: xpEarned,
     },
     completed: true,
   } as any).returning();
 
   // Create XP log entry (replaces Prisma `xPLogs.create`).
-  await db.insert(xpLogs).values({
+  await flashDb.insert(xpLogs).values({
     userId: user.id as string,
     xpEarned: xpEarned,
     activityId: userActivityRow.id,
@@ -169,7 +225,8 @@ export async function POST(
   });
 
   // Increment user XP (replaces Prisma `user.update({ data: { xp: { increment } } })`).
-  await db.update(users)
+  // users is FLAT; TenantDB scopes the increment to the caller's school.
+  await tenantDb.update(users)
     .set({ xp: sql`${users.xp} + ${xpEarned}` })
     .where(eq(users.id, user.id as string));
 
@@ -177,7 +234,15 @@ export async function POST(
 }
 
 // Helper function to create vocabulary matching pairs
+/**
+ * Builds word-definition pairs from vocabulary cards and article audio.
+ * @param flashDb Unscoped handle for the REFERENTIAL flashcard/article tables.
+ * @param vocabularyCards Due vocabulary cards owned by the caller.
+ * @param targetLanguage Translation language for the definitions.
+ * @returns The vocabulary matching pairs.
+ */
 async function createVocabularyPairs(
+  flashDb: DB,
   vocabularyCards: any[],
   targetLanguage: string = "th",
 ) {
@@ -188,7 +253,7 @@ async function createVocabularyPairs(
 
     // Get the article for audio data (replaces Prisma `article.findUnique`).
     if (!card.articleId) continue;
-    const [article] = await db.select({
+    const [article] = await flashDb.select({
       id: articles.id,
       title: articles.title,
       audioUrl: articles.audioUrl,
@@ -246,7 +311,15 @@ async function createVocabularyPairs(
 }
 
 // Helper function to generate translation-based pairs
+/**
+ * Builds sentence-translation pairs from sentence cards and articles.
+ * @param flashDb Unscoped handle for the REFERENTIAL flashcard/article tables.
+ * @param sentenceCards Due sentence cards owned by the caller.
+ * @param targetLanguage Translation language for the right-hand content.
+ * @returns The translation matching pairs.
+ */
 async function createTranslationPairs(
+  flashDb: DB,
   sentenceCards: any[],
   targetLanguage: string = "th",
 ) {
@@ -257,7 +330,7 @@ async function createTranslationPairs(
 
     // Get the article for translation data (replaces Prisma `article.findUnique`).
     if (!card.articleId) continue;
-    const [article] = await db.select({
+    const [article] = await flashDb.select({
       id: articles.id,
       title: articles.title,
       sentences: articles.sentences,

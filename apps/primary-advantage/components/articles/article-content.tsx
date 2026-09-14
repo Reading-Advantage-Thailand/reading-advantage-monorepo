@@ -32,6 +32,8 @@ import { toast } from "sonner";
 import { fetchArticleActivity } from "@/actions/article";
 import Image from "next/image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
+import { HIGHLIGHT_CLASSES } from "@/lib/audio-highlight";
+import { toTranslationLanguage } from "@/lib/translation-language";
 
 type Props = {
   article: Article;
@@ -45,12 +47,13 @@ const SUPPORTED_LANGUAGES = {
 };
 
 export default function ArticleContent({ article }: Props) {
+  const locale = useLocale();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSentenceRef = useRef<HTMLSpanElement | null>(null);
   const controlsRef = useRef<HTMLDivElement | null>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const highlightTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState(0);
   const [togglePlayer, setTogglePlayer] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [speed, setSpeed] = useState<string>("1");
@@ -58,17 +61,35 @@ export default function ArticleContent({ article }: Props) {
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState<number>(-1);
   const [translate, setTranslate] = useState<string>("");
   const [isTranslateOpen, setIsTranslateOpen] = useState<boolean>(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("th");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(
+    toTranslationLanguage(locale),
+  );
   const [isPanding, startTransition] = useTransition();
   const t = useTranslations("Components");
   const [isControlsVisible, setIsControlsVisible] = useState<boolean>(true);
   const [isAutoScrollPaused, setIsAutoScrollPaused] = useState<boolean>(false);
+
+  const clearHighlightTimer = React.useCallback(() => {
+    if (highlightTimerRef.current) {
+      clearTimeout(highlightTimerRef.current);
+      highlightTimerRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     if (article.id) {
       fetchArticleActivity(article.id).catch(console.error);
     }
   }, [article.id]);
+
+  useEffect(() => {
+    return () => {
+      if (highlightTimerRef.current) {
+        clearTimeout(highlightTimerRef.current);
+      }
+      audioRef.current?.pause();
+    };
+  }, []);
 
   useEffect(() => {
     if (
@@ -155,20 +176,20 @@ export default function ArticleContent({ article }: Props) {
   const handlePlayPause = async () => {
     if (audioRef.current) {
       if (isPlaying) {
+        clearHighlightTimer();
         audioRef.current.pause();
       } else {
         try {
           await audioRef.current.play();
         } catch (error) {
-          console.log("Error playing audio: ", error);
         }
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
   const handleTogglePlayer = () => {
     if (togglePlayer) {
+      clearHighlightTimer();
       setTogglePlayer(false);
       setIsPlaying(false);
       setCurrentWordIndex(-1);
@@ -210,7 +231,6 @@ export default function ArticleContent({ article }: Props) {
     if (!audio) return;
 
     const newCurrentTime = audio.currentTime;
-    setCurrentTime(newCurrentTime);
 
     const sentences = article.sentences as SentenceTimepoint[];
 
@@ -229,6 +249,7 @@ export default function ArticleContent({ article }: Props) {
         const isNewSentence = foundSentenceIndex !== currentSentenceIndex;
 
         if (isNewSentence) {
+          clearHighlightTimer();
           foundWordIndex = 0;
         } else {
           for (let j = 0; j < sentence.words.length; j++) {
@@ -266,7 +287,10 @@ export default function ArticleContent({ article }: Props) {
             setCurrentWordIndex(intermediateIndex);
             intermediateIndex++;
 
-            setTimeout(highlightIntermediateWords, 100);
+            highlightTimerRef.current = setTimeout(
+              highlightIntermediateWords,
+              100,
+            );
           } else {
             setCurrentWordIndex(foundWordIndex);
           }
@@ -311,22 +335,23 @@ export default function ArticleContent({ article }: Props) {
     sentence: SentenceTimepoint,
   ) => {
     if (wordIndex !== -1 && audioRef.current && sentence.words[wordIndex]) {
+      clearHighlightTimer();
       // Set the audio time
       const startTime = sentence.words[wordIndex].start - 0.1;
       audioRef.current.currentTime = startTime;
 
       setCurrentSentenceIndex(sentenceIndex);
       setCurrentWordIndex(wordIndex);
-      setCurrentTime(startTime);
 
       // Start playing the audio to give user feedback
       if (togglePlayer) {
-        setTimeout(async () => {
+        highlightTimerRef.current = setTimeout(async () => {
           try {
             await audioRef.current?.play();
             setIsPlaying(true);
           } catch (error) {
-            console.log("Error playing audio: ", error);
+          } finally {
+            highlightTimerRef.current = null;
           }
         }, 50);
       }
@@ -358,7 +383,6 @@ export default function ArticleContent({ article }: Props) {
           startTransition(async () => {
             try {
               const res = await saveFlashcard(article.id, [], [sentences]);
-              console.log(res.message);
               if (res.status === 200) {
                 toast.success("Success", {
                   description: `You have saved sentences to flashcard`,
@@ -399,11 +423,12 @@ export default function ArticleContent({ article }: Props) {
             ref={audioRef}
             src={getAudioUrl(article.audioUrl || "")}
             onTimeUpdate={handleTimeUpdate}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
             onEnded={() => {
               setIsPlaying(false);
               setCurrentWordIndex(-1);
               setCurrentSentenceIndex(-1);
-              setCurrentTime(0);
             }}
           />
           <Button
@@ -537,6 +562,7 @@ export default function ArticleContent({ article }: Props) {
                   <Button
                     variant="secondary"
                     className="h-10 w-10 rounded-full p-0"
+                    aria-label={t("seekBack")}
                   >
                     <SkipBackIcon />
                   </Button>
@@ -544,18 +570,23 @@ export default function ArticleContent({ article }: Props) {
                     variant="secondary"
                     className="h-10 w-10 rounded-full p-0"
                     onClick={handlePlayPause}
+                    aria-label={isPlaying ? t("stopAudio") : t("playAudio")}
                   >
                     {isPlaying ? <PauseIcon /> : <PlayIcon />}
                   </Button>
                   <Button
                     variant="secondary"
                     className="h-10 w-10 rounded-full p-0"
+                    aria-label={t("seekForward")}
                   >
                     <SkipForwardIcon />
                   </Button>
                   <div>
-                    <Select defaultValue="1" onValueChange={handleSpeedTime}>
-                      <SelectTrigger className="border-muted-foreground w-20 border">
+                    <Select value={speed} onValueChange={handleSpeedTime}>
+                      <SelectTrigger
+                        className="border-muted-foreground w-20 border"
+                        aria-label={t("playbackSpeed")}
+                      >
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent position="popper">
@@ -597,7 +628,11 @@ export default function ArticleContent({ article }: Props) {
           className="bg-primary text-primary-foreground my-2 rounded p-4 transition-all duration-300"
         >
           <div className="flex items-center justify-between gap-2">
-            <Button variant="secondary" className="h-10 w-10 rounded-full p-0">
+            <Button
+              variant="secondary"
+              className="h-10 w-10 rounded-full p-0"
+              aria-label={t("seekBack")}
+            >
               <SkipBackIcon />
             </Button>
             <Button
@@ -605,15 +640,23 @@ export default function ArticleContent({ article }: Props) {
               variant="secondary"
               className="h-10 w-10 rounded-full p-0"
               onClick={handlePlayPause}
+              aria-label={isPlaying ? t("stopAudio") : t("playAudio")}
             >
               {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </Button>
-            <Button variant="secondary" className="h-10 w-10 rounded-full p-0">
+            <Button
+              variant="secondary"
+              className="h-10 w-10 rounded-full p-0"
+              aria-label={t("seekForward")}
+            >
               <SkipForwardIcon />
             </Button>
             <div>
-              <Select defaultValue="1" onValueChange={handleSpeedTime}>
-                <SelectTrigger className="border-muted-foreground w-20 border">
+              <Select value={speed} onValueChange={handleSpeedTime}>
+                <SelectTrigger
+                  className="border-muted-foreground w-20 border"
+                  aria-label={t("playbackSpeed")}
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent position="popper">
@@ -746,6 +789,22 @@ export default function ArticleContent({ article }: Props) {
                                 sentence,
                               )
                             }
+                            onKeyDown={(e) => {
+                              if (
+                                (e.key === "Enter" || e.key === " ") &&
+                                isActualWord
+                              ) {
+                                e.preventDefault();
+                                handleWordClick(
+                                  sentenceIndex,
+                                  currentPartWordIndex,
+                                  sentence,
+                                );
+                              }
+                            }}
+                            role={isActualWord ? "button" : undefined}
+                            tabIndex={isActualWord ? 0 : undefined}
+                            aria-label={isActualWord ? part : undefined}
                             // onClick={() => {
                             //   if (currentPartWordIndex !== -1 && isActualWord) {
                             //     setCurrentSentenceIndex(sentenceIndex);
@@ -825,6 +884,26 @@ export default function ArticleContent({ article }: Props) {
                               }
                             }
                           }}
+                          onKeyDown={(e) => {
+                            if (
+                              (e.key === "Enter" || e.key === " ") &&
+                              wordIndex !== -1 &&
+                              isActualWord
+                            ) {
+                              e.preventDefault();
+                              setCurrentSentenceIndex(sentenceIndex);
+                              setCurrentWordIndex(wordIndex);
+
+                              // Jump audio to word start time
+                              if (audioRef.current) {
+                                audioRef.current.currentTime =
+                                  sentence.words[wordIndex].start;
+                              }
+                            }
+                          }}
+                          role={isActualWord ? "button" : undefined}
+                          tabIndex={isActualWord ? 0 : undefined}
+                          aria-label={isActualWord ? part : undefined}
                         >
                           {part}
                         </span>
@@ -930,7 +1009,7 @@ export default function ArticleContent({ article }: Props) {
                           ref={isCurrentSentence ? currentSentenceRef : null}
                           className={`font-article rounded px-0.5 text-lg transition-all duration-200 md:text-xl ${
                             sentenceIndex === currentSentenceIndex
-                              ? "bg-blue-300 dark:bg-blue-900/70"
+                              ? HIGHLIGHT_CLASSES.playingSentence
                               : ""
                           }`}
                         >
@@ -996,9 +1075,9 @@ export default function ArticleContent({ article }: Props) {
                                       ? "cursor-pointer rounded transition-colors duration-150"
                                       : "",
                                     isCurrentWord && isPlaying
-                                      ? "bg-blue-500 text-white"
+                                      ? HIGHLIGHT_CLASSES.currentWord
                                       : isActualWord
-                                        ? "hover:bg-blue-200 dark:hover:bg-blue-900/50"
+                                        ? HIGHLIGHT_CLASSES.hoverWord
                                         : "",
                                   )}
                                   onClick={() =>
@@ -1008,6 +1087,22 @@ export default function ArticleContent({ article }: Props) {
                                       sentence as SentenceTimepoint,
                                     )
                                   }
+                                  onKeyDown={(e) => {
+                                    if (
+                                      (e.key === "Enter" || e.key === " ") &&
+                                      isActualWord
+                                    ) {
+                                      e.preventDefault();
+                                      handleWordClick(
+                                        sentenceIndex,
+                                        currentPartWordIndex,
+                                        sentence as SentenceTimepoint,
+                                      );
+                                    }
+                                  }}
+                                  role={isActualWord ? "button" : undefined}
+                                  tabIndex={isActualWord ? 0 : undefined}
+                                  aria-label={isActualWord ? part : undefined}
                                 >
                                   {part}
                                 </span>

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useAuth } from "@reading-advantage/auth-client";
 import {
   DropdownMenu,
@@ -23,6 +23,7 @@ interface UserAccountNavProps {
  export function UserAccountNav({ user }: UserAccountNavProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { logout } = useAuth();
+  const router = useRouter();
   const t = useTranslations("MainNav.usernav");
   const tr = useTranslations("Overall.roles");
 
@@ -86,11 +87,13 @@ interface UserAccountNavProps {
         <div className="text-muted-foreground px-2 py-1.5 text-sm font-semibold">
           {t("navigation")}
         </div>
-        <DropdownMenuItem asChild>
-          <Link href="/student/read" className="flex items-center">
-            <span>{t("studentDashboard")}</span>
-          </Link>
-        </DropdownMenuItem>
+        {user.role === "STUDENT" && (
+          <DropdownMenuItem asChild>
+            <Link href="/student/read" className="flex items-center">
+              <span>{t("studentDashboard")}</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
         {/* {user?.cefrLevel !== "" ? (
           <DropdownMenuItem asChild>
             <Link href="/student/read" className="flex items-center">
@@ -156,7 +159,7 @@ interface UserAccountNavProps {
             event.preventDefault();
             setIsLoading(true);
             await logout();
-            window.location.href = "/";
+            router.push("/");
             setIsLoading(false);
           }}
         >

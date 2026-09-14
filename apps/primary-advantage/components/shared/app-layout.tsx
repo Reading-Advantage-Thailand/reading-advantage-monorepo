@@ -1,7 +1,6 @@
 import { MainNav } from "@/components/nav/main-nav";
 import { UserAccountNav } from "@/components/nav/user-account-nav";
 import { SidebarNav } from "@/components/nav/sidebar-nav";
-import ProgressBar from "@/components/progress-bar-xp";
 import { MainNavItem, SidebarNavItem } from "@/types";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
@@ -16,7 +15,6 @@ interface AppLayoutProps {
   children?: React.ReactNode;
   mainNavConfig: MainNavItem[];
   sidebarNavConfig?: SidebarNavItem[];
-  disableProgressBar?: boolean;
   disableSidebar?: boolean;
   disableLeaderboard?: boolean;
 }
@@ -29,7 +27,6 @@ export default async function AppLayout({
   children,
   mainNavConfig,
   sidebarNavConfig,
-  disableProgressBar,
   disableSidebar = false,
   disableLeaderboard = false,
 }: AppLayoutProps) {
@@ -61,7 +58,7 @@ export default async function AppLayout({
           <div className="flex items-center justify-center gap-2">
             <LocaleSwitcher />
             <ThemeToggle />
-            <UserAccountNav user={{ ...user, xp: 0, level: 0, cefrLevel: "", email: null, image: null }} />
+            <UserAccountNav user={user} />
           </div>
         </div>
       </header>
@@ -70,7 +67,7 @@ export default async function AppLayout({
           "container",
           disableSidebar
             ? "flex flex-1 gap-12"
-            : "flexl-1 flex flex-col gap-4 lg:flex-row",
+            : "flex-1 flex flex-col gap-4 lg:flex-row",
         )}
       >
         {!disableSidebar && (

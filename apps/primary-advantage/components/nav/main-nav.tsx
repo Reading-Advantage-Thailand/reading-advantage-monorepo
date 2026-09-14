@@ -61,6 +61,8 @@ export function MainNav({ children, items }: MainNavProps) {
       <button
         className="flex items-center space-x-2 md:hidden"
         onClick={() => setShowMobileMenu(!showMobileMenu)}
+        aria-label={t("menu")}
+        aria-expanded={showMobileMenu}
       >
         {showMobileMenu ? <X className="text-cyan-500" /> : <Icons.logo />}
         <MenuIcon className="h-4 w-4 text-cyan-500" />

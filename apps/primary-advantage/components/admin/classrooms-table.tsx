@@ -52,6 +52,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { generateRandomClassCode } from "@/lib/utils";
+import { fetchJsonList } from "@/lib/fetch-json";
 
 interface Classroom {
   id: string;
@@ -110,13 +111,10 @@ export function ClassroomsTable() {
   const fetchClassrooms = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("/api/classroom");
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch classrooms");
-      }
-
-      const data = await response.json();
+      const data = await fetchJsonList<{ classrooms?: unknown }>(
+        "/api/classroom",
+        "Failed to fetch classrooms",
+      );
 
       // Extract classrooms array from the response
       if (data.classrooms && Array.isArray(data.classrooms)) {
@@ -456,7 +454,11 @@ export function ClassroomsTable() {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
+                          <Button
+                            variant="ghost"
+                            className="h-8 w-8 p-0"
+                            aria-label={t("actions")}
+                          >
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>

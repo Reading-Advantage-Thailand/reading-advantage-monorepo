@@ -1,28 +1,8 @@
 import { PageConfig } from "@/types";
+import { sharedMainNav } from "./main-nav";
 
 export const studentPageConfig: PageConfig = {
-  mainNav: [
-    {
-      title: "home",
-      href: "/",
-      icon: "HomeIcon",
-    },
-    {
-      title: "about",
-      href: "/about",
-      icon: "InfoIcon",
-    },
-    {
-      title: "contact",
-      href: "/contact",
-      icon: "MailIcon",
-    },
-    {
-      title: "authors",
-      href: "/authors",
-      icon: "UsersIcon",
-    },
-  ],
+  mainNav: [...sharedMainNav],
   sidebarNav: [
     {
       title: "read",
@@ -30,12 +10,6 @@ export const studentPageConfig: PageConfig = {
       icon: "BookIcon",
       requiredPermissions: ["STUDENT_ACCESS"],
     },
-    // {
-    //   title: "stories",
-    //   href: "/student/stories",
-    //   icon: "BookAIcon",
-    //   requiredPermissions: ["STUDENT_ACCESS"],
-    // },
     {
       title: "games",
       href: "/student/games",

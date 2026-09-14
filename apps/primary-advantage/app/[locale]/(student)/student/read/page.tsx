@@ -14,7 +14,7 @@ import { fetchArticles } from "@/server/controllers/articleController";
 import { cleanGenre, cn, sanitizeTranslationKey } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { GoToTop } from "@/components/go-to-top";
-import { translateAndStoreSentences } from "@/server/utils/genaretors/sentence-translator";
+import { translateAndStoreSentences } from "@/server/utils/generators/sentence-translator";
 import { getTranslations } from "next-intl/server";
 import { currentUser } from "@/lib/session";
 

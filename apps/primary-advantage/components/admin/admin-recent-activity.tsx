@@ -36,69 +36,20 @@ export function AdminRecentActivity() {
   const t = useTranslations("AdminDashboard");
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        // In a real app, this would fetch from an API
-        // For now, we'll simulate with mock data
-        const mockActivities: ActivityItem[] = [
-          {
-            id: "1",
-            type: "teacher_added",
-            user: {
-              name: "Sarah Johnson",
-              email: "sarah.j@school.edu",
-              avatar: "/avatars/sarah.jpg",
-            },
-            description: "New teacher registered",
-            timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-          },
-          {
-            id: "2",
-            type: "article_created",
-            user: {
-              name: "Admin System",
-              email: "system@primary-advantage.com",
-            },
-            description: "Created new article: 'The Magic Forest'",
-            timestamp: new Date(Date.now() - 1000 * 60 * 45), // 45 minutes ago
-          },
-          {
-            id: "3",
-            type: "class_created",
-            user: {
-              name: "Michael Chen",
-              email: "m.chen@school.edu",
-            },
-            description: "Created new classroom: Grade 3A",
-            timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-          },
-          {
-            id: "4",
-            type: "user_created",
-            user: {
-              name: "Emma Wilson",
-              email: "emma.w@school.edu",
-            },
-            description: "Student account created",
-            timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
-          },
-          {
-            id: "5",
-            type: "system_update",
-            user: {
-              name: "System Admin",
-              email: "admin@primary-advantage.com",
-            },
-            description: "System maintenance completed",
-            timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6), // 6 hours ago
-          },
-        ];
-
-        setActivities(mockActivities);
+        const response = await fetch("/api/admin/recent-activity");
+        if (!response.ok) {
+          throw new Error("Failed to fetch recent activity");
+        }
+        const data = await response.json();
+        setActivities(data.activities ?? []);
       } catch (error) {
         console.error("Failed to fetch activities:", error);
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
@@ -143,6 +94,17 @@ export function AdminRecentActivity() {
 
   if (loading) {
     return <RecentActivitySkeleton />;
+  }
+
+  if (loadError) {
+    return (
+      <div
+        role="alert"
+        className="rounded-md border border-red-200 bg-red-50 p-4 text-center text-red-700"
+      >
+        {t("recentActivity.loadError")}
+      </div>
+    );
   }
 
   return (

@@ -1,11 +1,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FlashcardDashboard from "@/components/flashcards/flashcard-dashboard";
-import SentencesOrderingPage from "@/components/pratice/order-sentences-page";
-import ClozeTestPage from "@/components/pratice/cloze-test-page";
-import OrderWordPage from "@/components/pratice/order-words-page";
+import SentencesOrderingPage from "@/components/practice/order-sentences-page";
+import ClozeTestPage from "@/components/practice/cloze-test-page";
+import OrderWordPage from "@/components/practice/order-words-page";
 import ManageTab from "@/components/manage-tab";
 import { getAllSentenceCards } from "@/actions/flashcard";
-import MatchingGamePage from "@/components/pratice/matching-page";
+import MatchingGamePage from "@/components/practice/matching-page";
 import { getTranslations } from "next-intl/server";
 
 export default async function SentencesPage() {

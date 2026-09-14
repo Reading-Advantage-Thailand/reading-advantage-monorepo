@@ -12,8 +12,13 @@
  * respectively, then reconcile the server response before refreshing the list.
  */
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { render, screen, waitFor, within, fireEvent } from "@testing-library/react";
+import { screen, waitFor, within, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
+import {
+  renderWithMessages,
+  testMessages,
+} from "../../../../components/__tests__/helpers/render-with-messages";
 
 const mockPush = vi.fn();
 
@@ -21,17 +26,10 @@ vi.mock("@/i18n/navigation", () => ({
   useRouter: () => ({ push: mockPush, back: vi.fn() }),
 }));
 
-vi.mock("next-intl", () => ({
-  useTranslations: () =>
-    (key: string, params?: Record<string, unknown>) => {
-      if (params && typeof params === "object") {
-        return `${key}:${Object.values(params).join(":")}`;
-      }
-      return key;
-    },
-}));
-
 import StudentsPage from "../students/page";
+
+/** Real English copy for the AdminStudents namespace. */
+const studentCopy = testMessages.en.AdminStudents;
 
 const EMPTY_RESPONSE = {
   students: [],
@@ -65,7 +63,7 @@ describe("admin students CRUD live server calls", () => {
   it("POSTs to /api/students when adding a student", async () => {
     const fetchSpy = mockFetch();
 
-    render(<StudentsPage />);
+    renderWithMessages(<StudentsPage />);
 
     await waitFor(() => {
       expect(fetchSpy).toHaveBeenCalledWith(
@@ -73,13 +71,19 @@ describe("admin students CRUD live server calls", () => {
       );
     });
 
-    const addButton = screen.getByRole("button", { name: /actions\.addStudent/i });
+    const addButton = screen.getByRole("button", {
+      name: studentCopy.actions.addStudent,
+    });
     await userEvent.click(addButton);
 
-    const nameInput = screen.getByPlaceholderText("form.namePlaceholder");
+    const nameInput = screen.getByPlaceholderText(
+      studentCopy.form.namePlaceholder,
+    );
     fireEvent.change(nameInput, { target: { value: "Alice Smith" } });
 
-    const saveButton = screen.getByRole("button", { name: /actions\.saveStudent/i });
+    const saveButton = screen.getByRole("button", {
+      name: studentCopy.actions.saveStudent,
+    });
     await userEvent.click(saveButton);
 
     await waitFor(() => {
@@ -114,7 +118,7 @@ describe("admin students CRUD live server calls", () => {
       pagination: { page: 1, limit: 10, total: 1, totalPages: 1 },
     });
 
-    render(<StudentsPage />);
+    renderWithMessages(<StudentsPage />);
 
     await waitFor(() => {
       expect(screen.getByText("Bob Jones")).toBeDefined();
@@ -127,7 +131,9 @@ describe("admin students CRUD live server calls", () => {
     const nameInput = screen.getByDisplayValue("Bob Jones");
     fireEvent.change(nameInput, { target: { value: "Bob Updated" } });
 
-    const saveButton = screen.getByRole("button", { name: /actions\.saveChanges/i });
+    const saveButton = screen.getByRole("button", {
+      name: studentCopy.actions.saveChanges,
+    });
     await userEvent.click(saveButton);
 
     await waitFor(() => {
@@ -162,7 +168,7 @@ describe("admin students CRUD live server calls", () => {
       pagination: { page: 1, limit: 10, total: 1, totalPages: 1 },
     });
 
-    render(<StudentsPage />);
+    renderWithMessages(<StudentsPage />);
 
     await waitFor(() => {
       expect(screen.getByText("Carol White")).toBeDefined();
@@ -172,7 +178,9 @@ describe("admin students CRUD live server calls", () => {
     const [, deleteTrigger] = within(row).getAllByRole("button");
     await userEvent.click(deleteTrigger);
 
-    const confirmButton = screen.getByRole("button", { name: /actions\.delete$/i });
+    const confirmButton = screen.getByRole("button", {
+      name: studentCopy.actions.delete,
+    });
     await userEvent.click(confirmButton);
 
     await waitFor(() => {

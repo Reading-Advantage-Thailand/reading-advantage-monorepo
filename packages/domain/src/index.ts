@@ -24,9 +24,12 @@ export * as rpg from "./rpg/index.js";
 export * from "./sales-mastery.js";
 export {
   createTenantDB,
+  getTenantDB,
+  getUnscopedDB,
   type TenantDB,
   TenantScopeError,
 } from "./db-contract.js";
+export type { DB } from "@reading-advantage/db";
 export { classifyTable, type TableClassification } from "./tenant-registry.js";
 export {
   resolveCodecampCompanyPrincipal,

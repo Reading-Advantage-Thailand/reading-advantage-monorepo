@@ -12,11 +12,5 @@ export const settingsPageConfig: PageConfig = {
       title: "schoolProfile",
       href: "/settings/school-profile",
     },
-    // {
-    //     title: "Localization",
-    //     href: '/settings/localization',
-    //     icon: "globe",
-    //     disabled: true,
-    // },
   ],
 };

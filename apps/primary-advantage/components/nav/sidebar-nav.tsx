@@ -42,7 +42,6 @@ export function SidebarNav({ items, user }: SidebarNavProps) {
   const tSubItem = useTranslations("Sidebar.subItem");
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
-  // console.log("SidebarNav Debug - Current User:", currentUser);
 
   const toggleSection = (sectionKey: string) => {
     setOpenSections((prev) => ({

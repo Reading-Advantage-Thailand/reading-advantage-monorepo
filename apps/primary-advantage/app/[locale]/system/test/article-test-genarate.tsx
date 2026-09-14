@@ -13,7 +13,9 @@ export default function ArticleTestGenerate() {
   const handleGenerate = async () => {
     startTransition(async () => {
       generateArticle(amount).then((result) => {
-        if (result[0].error) {
+        if (!Array.isArray(result)) {
+          toast.error(result.error);
+        } else if (result[0]?.error) {
           toast.error(result[0].error);
         } else {
           toast.success("Articles generated successfully");
@@ -23,10 +25,8 @@ export default function ArticleTestGenerate() {
   };
 
   const handleGenerateNew = async () => {
-    console.log("generate new");
     startTransition(async () => {
       generateArticleNew(amount).then((result) => {
-        console.log(result);
       });
     });
   };

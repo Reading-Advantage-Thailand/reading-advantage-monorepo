@@ -23,6 +23,33 @@ type Props = {
   className?: string;
 };
 
+/**
+ * Static Tailwind classes per role colour. Tailwind cannot extract
+ * interpolated class names, so every variant is listed literally.
+ */
+const ROLE_COLOR_CLASSES: Record<string, { hover: string; selected: string }> =
+  {
+    blue: {
+      hover: "hover:dark:bg-blue-900",
+      selected: "dark:bg-blue-900 hover:dark:bg-blue-800",
+    },
+    red: {
+      hover: "hover:dark:bg-red-900",
+      selected: "dark:bg-red-900 hover:dark:bg-red-800",
+    },
+  };
+
+/**
+ * Resolves the static colour classes for a role colour key.
+ * @param color Colour key from the role definition.
+ * @param selected Whether the role is currently selected.
+ * @returns Static Tailwind classes for the colour.
+ */
+function roleColorClasses(color: string, selected: boolean): string {
+  const entry = ROLE_COLOR_CLASSES[color] ?? ROLE_COLOR_CLASSES.blue;
+  return selected ? `${entry?.hover} ${entry?.selected}` : (entry?.hover ?? "");
+}
+
 export default function ChangeRole({ userId, userRole, className }: Props) {
   const roles = [
     {
@@ -82,7 +109,6 @@ export default function ChangeRole({ userId, userRole, className }: Props) {
       // update user session token
       //   await update({ user: { role: selectedRole } })
       //     .then(() => {
-      //       console.log("Role updated in session.");
       //     })
       //     .catch((error) => {
       //       console.error("Failed to update role in session.", error);
@@ -170,9 +196,19 @@ const RoleSelectionItem = ({
   return (
     <div
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={title}
+      aria-pressed={isSelected}
       className={cn(
-        `shadow-2x hover:shadow-3x relative cursor-pointer overflow-hidden rounded-lg border hover:dark:bg-${color}-900`,
-        isSelected && `dark:bg-${color}-900 hover:dark:bg-${color}-800`,
+        "shadow-2x hover:shadow-3x relative cursor-pointer overflow-hidden rounded-lg border",
+        roleColorClasses(color, isSelected),
       )}
     >
       <div className="flex flex-col justify-between rounded-md p-3">

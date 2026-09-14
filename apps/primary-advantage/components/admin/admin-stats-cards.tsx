@@ -9,7 +9,7 @@ interface AdminStats {
   totalTeachers: number;
   totalStudents: number;
   totalArticles: number;
-  monthlyGrowth: number;
+  monthlyGrowth: number | null;
 }
 
 export function AdminStatsCards() {
@@ -18,39 +18,40 @@ export function AdminStatsCards() {
     totalTeachers: 0,
     totalStudents: 0,
     totalArticles: 0,
-    monthlyGrowth: 0,
+    monthlyGrowth: null,
   });
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Simulate API calls to get stats
         const [teachersRes, studentsRes, articlesRes] = await Promise.all([
           fetch("/api/teachers?count=true"),
           fetch("/api/students?count=true"),
           fetch("/api/articles?count=true"),
         ]);
 
+        if (!teachersRes.ok || !studentsRes.ok || !articlesRes.ok) {
+          throw new Error("Failed to fetch admin stats");
+        }
+
         const teachersData = await teachersRes.json();
         const studentsData = await studentsRes.json();
         const articlesData = await articlesRes.json();
 
+        // /api/teachers and /api/students return pagination.total;
+        // /api/articles returns totalArticles. Growth has no live source,
+        // so it stays null and renders as an em dash.
         setStats({
-          totalTeachers: teachersData.total || 0,
-          totalStudents: studentsData.total || 0,
-          totalArticles: articlesData.total || 0,
-          monthlyGrowth: 12.5, // This would come from analytics
+          totalTeachers: teachersData.pagination?.total ?? 0,
+          totalStudents: studentsData.pagination?.total ?? 0,
+          totalArticles: articlesData.totalArticles ?? 0,
+          monthlyGrowth: null,
         });
       } catch (error) {
         console.error("Failed to fetch admin stats:", error);
-        // Set fallback data
-        setStats({
-          totalTeachers: 25,
-          totalStudents: 340,
-          totalArticles: 156,
-          monthlyGrowth: 8.2,
-        });
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
@@ -83,7 +84,7 @@ export function AdminStatsCards() {
     },
     {
       title: t("stats.growth"),
-      value: `${stats.monthlyGrowth}%`,
+      value: stats.monthlyGrowth === null ? "—" : `${stats.monthlyGrowth}%`,
       icon: TrendingUp,
       description: t("stats.growthDesc"),
       color: "text-orange-600",
@@ -92,6 +93,17 @@ export function AdminStatsCards() {
 
   if (loading) {
     return <StatsCardsSkeleton />;
+  }
+
+  if (loadError) {
+    return (
+      <div
+        role="alert"
+        className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700"
+      >
+        {t("stats.loadError")}
+      </div>
+    );
   }
 
   return (
