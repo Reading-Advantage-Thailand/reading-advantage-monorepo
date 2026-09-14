@@ -296,11 +296,15 @@ describe("FR-4 game results expose aria-live", () => {
       const chip = within(bankSection).getAllByRole("button")[0];
       fireEvent.click(chip);
     }
-    fireEvent.click(screen.getByRole("button", { name: /check/i }));
+    // A lucky shuffle can complete the sentence, which auto-announces;
+    // otherwise the check button reveals the result.
+    const check = screen.queryByRole("button", { name: /check/i });
+    if (check) fireEvent.click(check);
 
-    const region = document.querySelector('[aria-live="polite"]');
-    await waitFor(() => expect(region).not.toBeNull());
-    expect(region!.textContent).toMatch(/correct|try again/i);
+    await waitFor(() => {
+      const region = document.querySelector('[aria-live="polite"]');
+      expect(region?.textContent).toMatch(/perfect|not quite/i);
+    });
   });
 
   it("announces the cloze result", async () => {
