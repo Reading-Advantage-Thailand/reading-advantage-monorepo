@@ -1,7 +1,14 @@
 // @vitest-environment node
-import { readFileSync } from "node:fs";
-import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+// The pure-function describes below already test runtime behavior. The seven
+// static source-grep cases formerly in this file converted to behavioral
+// tests: AudioButton interval-freedom lives in
+// components/__tests__/audio-button-behavior.test.tsx, hook load/pause in
+// hooks/__tests__/use-audio-segment.test.tsx, hook-driven play/pause in
+// components/__tests__/aria-labels-i18n.test.tsx, reader highlight timers in
+// the article-content/task-reading highlight behavior tests, flashcard field
+// mapping in actions/__tests__/flashcard-ordering-fields.behavior.test.ts,
+// and sentence-order cleanup in
+// components/lesson/games/__tests__/sentence-order-unmount.behavior.test.tsx.
 import { describe, expect, it } from "vitest";
 import {
   HIGHLIGHT_CLASSES,
@@ -12,10 +19,6 @@ import {
   resolveSegmentEnd,
   shouldStopSegment,
 } from "@/lib/audio-highlight";
-
-const here = dirname(fileURLToPath(import.meta.url));
-const appRoot = resolve(here, "../..");
-const read = (rel: string) => readFileSync(resolve(appRoot, rel), "utf-8");
 
 describe("resolveSegmentEnd", () => {
   it("treats a missing end timestamp as play-to-end", () => {
@@ -126,47 +129,5 @@ describe("HIGHLIGHT_CLASSES", () => {
     for (const cls of Object.values(HIGHLIGHT_CLASSES)) {
       expect(cls).toMatch(/dark:/);
     }
-  });
-});
-
-describe("audio component contracts (static)", () => {
-  it("has no setInterval in audio-button.tsx", () => {
-    expect(read("components/audio-button.tsx")).not.toMatch(/setInterval/);
-  });
-
-  it("audio-button is a thin button over useAudioSegment", () => {
-    expect(read("components/audio-button.tsx")).toMatch(/useAudioSegment/);
-  });
-
-  it("the shared hook calls load() when the URL changes", () => {
-    expect(read("hooks/useAudioSegment.ts")).toMatch(/\.load\(\)/);
-  });
-
-  it("the shared hook pauses on unmount", () => {
-    expect(read("hooks/useAudioSegment.ts")).toMatch(/\.pause\(\)/);
-  });
-
-  it("holds the highlight timer in a ref in all three readers", () => {
-    for (const f of [
-      "components/articles/article-content.tsx",
-      "components/lesson/task/task-reading.tsx",
-    ]) {
-      const src = read(f);
-      expect(src).toMatch(/highlightTimerRef/);
-      expect(src).toMatch(/clearTimeout/);
-    }
-  });
-
-  it("shares audio field names between flashcard actions and games", () => {
-    const actions = read("actions/flashcard.ts");
-    expect(actions).toMatch(/\.\.\.mapOrderingSentenceFields\(\{/);
-    expect(actions).not.toMatch(/\btranslation\s*:/);
-    expect(actions).not.toMatch(/\baudioUrl\s*:/);
-  });
-
-  it("pauses audio inside sentence-order cleanup", () => {
-    expect(read("components/lesson/games/lesson-sentence-order.tsx")).toMatch(
-      /audio\.pause\(\)/,
-    );
   });
 });
