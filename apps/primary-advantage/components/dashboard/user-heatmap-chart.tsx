@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { UserActivityLog } from "@/types";
+import { UserActivityLog, UserActiviryChartProps } from "@/types";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
@@ -42,10 +42,6 @@ function formatDataHeatmap(article: UserActivityLog[]) {
   );
 
   return converDatetoSting;
-}
-
-interface UserActiviryChartProps {
-  data: UserActivityLog[];
 }
 
 export default function UserActivityHeatMap({ data }: UserActiviryChartProps) {

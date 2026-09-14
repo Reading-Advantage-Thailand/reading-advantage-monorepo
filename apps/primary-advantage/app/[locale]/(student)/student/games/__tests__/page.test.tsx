@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+// The identity next-intl/server mock stays: the page is a server component and every assertion here is structural (link counts, hrefs, owner scoping), not user-facing copy.
 
 import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
@@ -7,10 +8,14 @@ import { describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ getCurrentUser: vi.fn() }));
 
-vi.mock("next/link", () => ({
-  default: ({ children, href }: { children: ReactNode; href: string }) => (
+vi.mock("@/i18n/navigation", () => ({
+  Link: ({ children, href }: { children: ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
+}));
+
+vi.mock("next-intl/server", () => ({
+  getTranslations: async () => (key: string) => key,
 }));
 
 vi.mock("@reading-advantage/game-cartridges", () => ({

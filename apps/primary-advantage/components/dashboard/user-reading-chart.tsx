@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserActivityLog } from "@/types";
+import { UserActivityLog, UserActiviryChartProps } from "@/types";
 import { ActivityType } from "@/types/enum";
 import { useTranslations } from "next-intl";
 
@@ -39,10 +39,6 @@ const chartConfig = {
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
-
-interface UserActiviryChartProps {
-  data: UserActivityLog[];
-}
 
 const ReadingStatsChart = ({ data }: UserActiviryChartProps) => {
   const { resolvedTheme } = useTheme();

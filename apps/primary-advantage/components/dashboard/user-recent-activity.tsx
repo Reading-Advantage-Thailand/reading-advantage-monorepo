@@ -15,14 +15,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { UserActivityLog } from "@/types";
+import { UserActivityLog, UserActiviryChartProps } from "@/types";
 import { useFormatDate } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { ChevronsUpDownIcon, CheckCircleIcon, ClockIcon } from "lucide-react";
-
-interface UserActiviryChartProps {
-  data: UserActivityLog[];
-}
 
 export default function UserRecentActivity({ data }: UserActiviryChartProps) {
   const [isOpen, setIsOpen] = React.useState(false);

@@ -7,10 +7,11 @@ import { getCurrentUser } from "@/lib/session";
 
 type AuthenticatedApkPageProps = {
   params: Promise<{ locale: string; cartridgeId: string }>;
-  searchParams?: Promise<{ challengeId?: string | string[] }>;
+  searchParams?: Promise<{ challengeId?: string | string[]; mode?: string | string[] }>;
 };
 
 const challengeIdSchema = z.string().uuid();
+const modeSchema = z.enum(["demo", "briefing"]);
 
 /**
  * Renders one live catalog cartridge on the Primary student game route.
@@ -28,6 +29,10 @@ export default async function PrimaryApkGamePage({
     ? { success: true as const, data: undefined }
     : challengeIdSchema.safeParse(query.challengeId);
   if (!challengeIdResult.success) notFound();
+  const modeResult = query.mode === undefined
+    ? { success: true as const, data: "briefing" as const }
+    : modeSchema.safeParse(query.mode);
+  if (!modeResult.success) notFound();
   const user = await getCurrentUser();
   const ownerKey = user?.role === "STUDENT" && user.schoolId
     ? `${user.schoolId}:${user.id}`
@@ -41,6 +46,7 @@ export default async function PrimaryApkGamePage({
       locale={locale}
       ownerKey={ownerKey}
       challengeId={challengeIdResult.data}
+      mode={modeResult.data}
       title={catalogEntry.title}
     />
   );

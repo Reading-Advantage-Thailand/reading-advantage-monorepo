@@ -1,8 +1,22 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { CARTRIDGE_CHALLENGE_CAPABILITIES, cartridgeCatalog, getCartridgeCatalogEntry } from "@reading-advantage/game-cartridges";
 import { StudentChallengeCatalogPanel, StudentRpgCatalogPanel } from "@reading-advantage/advantage-play-kit/react";
+import { getTranslations } from "next-intl/server";
 
 import { getCurrentUser } from "@/lib/session";
+
+/**
+ * Page metadata for the student games catalog.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "StudentGames" });
+  return { title: t("title"), description: t("description") };
+}
 
 /**
  * Lists live APK catalog titles on the real Primary student games route.
@@ -10,6 +24,7 @@ import { getCurrentUser } from "@/lib/session";
  */
 export default async function PrimaryStudentGamesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "StudentGames" });
   const user = await getCurrentUser();
   const ownerKey = user?.role === "STUDENT" && user.schoolId
     ? `${user.schoolId}:${user.id}`
@@ -22,9 +37,9 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-8">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold">Student games</h1>
+        <h1 className="text-3xl font-bold">{t("title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Play the live Advantage Play Kit catalog. Each card opens the authenticated APK route.
+          {t("description")}
         </p>
       </header>
       <div className="mb-8">

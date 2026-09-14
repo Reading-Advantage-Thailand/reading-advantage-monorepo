@@ -94,20 +94,6 @@ function formatDataForDays(articles: UserXpLog[], lastmonth: number) {
 
 //   startDate.setMonth(startDate.getMonth() - lastmonth);
 
-//   const monthNames = [
-//     "January",
-//     "February",
-//     "March",
-//     "April",
-//     "May",
-//     "June",
-//     "July",
-//     "August",
-//     "September",
-//     "October",
-//     "November",
-//     "December",
-//   ];
 
 //   const totalXp: { [key: string]: number } = {};
 
@@ -140,19 +126,6 @@ function formatDataForDays(articles: UserXpLog[], lastmonth: number) {
 //     //   }
 //     // }
 
-//     // // Handle the case where a month has 0 XP
-//     // let lastMonthXp = 0;
-//     // const data = Object.keys(totalXp).map((month) => {
-//     //   if (totalXp[month] === 0) {
-//     //     totalXp[month] = lastMonthXp;
-//     //   } else {
-//     //     lastMonthXp = totalXp[month];
-//     //   }
-//     //   return {
-//     //     month: `${month}`,
-//     //     xpoverall: totalXp[month],
-//     //   };
-//     // });
 
 //     return data;
 //   }
