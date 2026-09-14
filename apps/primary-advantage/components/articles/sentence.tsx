@@ -14,7 +14,7 @@ import { Button } from "../ui/button";
 import { FileTextIcon } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import AudioButton from "../audio-button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export interface Sentence {
   sentence: string;
@@ -37,31 +37,42 @@ export default function Sentence({
   sentences: Sentence[];
   audioUrl: string;
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [sentenceList, setSentenceList] = useState<Sentence[]>([]);
+  const locale = useLocale();
   const t = useTranslations("Components");
 
   useEffect(() => {
-    if (sentences) {
-      let sentencesList = [];
+    try {
+      if (sentences) {
+        let sentencesList = [];
 
-      sentencesList = sentences.map((sentence: Sentence, index: number) => {
-        const startTime = sentence?.timeSeconds as number;
-        const endTime =
-          index === sentences.length - 1
-            ? (sentence?.timeSeconds as number) + 10
-            : (sentences[index + 1].timeSeconds as number);
+        sentencesList = sentences.map((sentence: Sentence, index: number) => {
+          const startTime = sentence?.timeSeconds as number;
+          const endTime =
+            index === sentences.length - 1
+              ? (sentence?.timeSeconds as number) + 10
+              : (sentences[index + 1].timeSeconds as number);
 
-        return {
-          sentence: sentence?.sentence,
-          translation: sentence?.translation,
-          index,
-          startTime,
-          endTime,
-          audioUrl,
-        };
-      });
-      setSentenceList(sentencesList);
+          return {
+            sentence: sentence?.sentence,
+            translation: sentence?.translation,
+            index,
+            startTime,
+            endTime,
+            audioUrl,
+          };
+        });
+        setSentenceList(sentencesList);
+      } else {
+        setSentenceList([]);
+      }
+    } catch (error) {
+      console.error("Error building sentence list:", error);
+      setLoadError(true);
+    } finally {
+      setLoading(false);
     }
   }, [sentences, audioUrl]);
 
@@ -90,7 +101,7 @@ export default function Sentence({
             <div className="flex-1 overflow-hidden">
               <div className="flex h-full flex-col">
                 <div className="flex-1 overflow-y-auto px-6 py-4">
-                  {loading && sentences ? (
+                  {loading ? (
                     <div className="space-y-4">
                       {[...Array(3)].map((_, i) => (
                         <div
@@ -105,7 +116,14 @@ export default function Sentence({
                         </div>
                       ))}
                     </div>
-                  ) : (
+                  ) : loadError ? (
+                    <div
+                      role="alert"
+                      className="py-12 text-center text-red-600 dark:text-red-400"
+                    >
+                      <p>{t("loadError")}</p>
+                    </div>
+                  ) : sentenceList.length > 0 ? (
                     <>
                       <div className="space-y-3">
                         {sentenceList.map((list, index) => (
@@ -133,7 +151,9 @@ export default function Sentence({
 
                                 {/* Definition */}
                                 <p className="text-muted-foreground text-sm leading-relaxed">
-                                  {list.translation.th}
+                                  {(list.translation as Record<string, string>)[
+                                    locale
+                                  ] || list.sentence}
                                 </p>
                               </div>
                             </div>
@@ -141,6 +161,13 @@ export default function Sentence({
                         ))}
                       </div>
                     </>
+                  ) : (
+                    <div className="py-12 text-center">
+                      <FileTextIcon className="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-600" />
+                      <p className="text-gray-500 dark:text-gray-400">
+                        {t("emptyList")}
+                      </p>
+                    </div>
                   )}
                 </div>
                 {/* Footer */}
