@@ -68,7 +68,7 @@ vi.mock("../ui/data-table", () => ({
   ),
 }));
 
-import type { AssignmentStudent } from "@/types";
+import type { AssignmentStudent } from "../student-assignment-table";
 import { HistoryTable } from "../dashboard/history-table";
 import Assignments from "../teacher/assignments";
 import StudentAssignmentTable from "../student-assignment-table";
@@ -212,19 +212,49 @@ describe("live tables through one DataTable shell", () => {
     const initialAssignments: AssignmentStudent[] = [
       {
         id: "row-1",
-        assignmentId: "a1",
         studentId: "user-1",
         status: "IN_PROGRESS",
-        startedAt: new Date(0),
-        completedAt: new Date(0),
+        score: null,
+        startedAt: null,
+        assignmentId: "a1",
+        createdAt: new Date(0).toISOString(),
+        completedAt: null,
+        assignment: {
+          id: "a1",
+          classroomId: "c1",
+          articleId: "article-1",
+          lessonId: null,
+          title: "Assign One",
+          type: "lesson",
+          description: null,
+          dueDate: null,
+          createdAt: new Date(0).toISOString(),
+          teacherId: "teacher-1",
+          teacherName: "Teacher",
+        },
       },
       {
         id: "row-2",
-        assignmentId: "a2",
         studentId: "user-1",
         status: "COMPLETED",
-        startedAt: new Date(0),
-        completedAt: new Date(0),
+        score: 90,
+        startedAt: null,
+        assignmentId: "a2",
+        createdAt: new Date(0).toISOString(),
+        completedAt: new Date(0).toISOString(),
+        assignment: {
+          id: "a2",
+          classroomId: "c1",
+          articleId: "article-2",
+          lessonId: null,
+          title: "Assign Two",
+          type: "lesson",
+          description: null,
+          dueDate: null,
+          createdAt: new Date(0).toISOString(),
+          teacherId: "teacher-1",
+          teacherName: "Teacher",
+        },
       },
     ];
     renderWithMessages(
