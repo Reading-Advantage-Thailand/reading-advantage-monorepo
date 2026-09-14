@@ -22,29 +22,29 @@ radius is the HTTP surface, covered by the new route-level tests._
 
 ## Phase 2: Test (Red)
 
-- [ ] Task 4: FR-2 route tests — session-authoritative school
-    - [ ] upload/csv: session school A + divergent DB-row school → rows written under A
-    - [ ] upload/classes: same divergence case
-    - [ ] Session without school context → existing rejection status unchanged (both routes)
-- [ ] Task 5: FR-3 route tests — duplicate handling
-    - [ ] File with duplicate emails → 200, first row wins, `skippedDuplicate` correct
-    - [ ] Email already in DB → 200, `skippedExisting` correct, no 500
-    - [ ] Response validates against `CsvUploadSummary`
+- [x] Task 4: FR-2 route tests — session-authoritative school
+    - [x] upload/csv: session school A + divergent DB-row school → rows written under A
+    - [x] upload/classes: same divergence case
+    - [x] Session without school context → existing rejection status unchanged (both routes)
+- [x] Task 5: FR-3 route tests — duplicate handling
+    - [x] File with duplicate emails → 200, first row wins, `skippedDuplicate` correct
+    - [x] Email already in DB → 200, `skippedExisting` correct, no 500
+    - [x] Response validates against `CsvUploadSummary`
 - [x] Task 6: FR-1 batch 1 replacements — `authorization-hardening-static`
     - [x] Write behavioral replacements (route-level handler invocation per lessons-learned 2026-06-24)
     - [x] Old grep assertions still green alongside (no deletion in Phase 2)
 
 ## Phase 3: Implement (Green + per-batch conversion)
 
-- [ ] Task 7: FR-2 — session-authoritative `schoolId` in `upload/csv` and `upload/classes`
-    - [ ] Replace DB-row school stamping with session-derived `schoolId`
-    - [ ] Align `upload/csv/cleanup` if it shares the pattern
-    - [ ] Task 4 tests green
-- [ ] Task 8: FR-3 — duplicate-safe CSV insert
-    - [ ] In-file dedupe (first row wins)
-    - [ ] Conflict-safe insert with per-row skip
-    - [ ] Return `CsvUploadSummary` with 200
-    - [ ] Task 5 tests green
+- [x] Task 7: FR-2 — session-authoritative `schoolId` in `upload/csv` and `upload/classes`
+    - [x] Replace DB-row school stamping with session-derived `schoolId`
+    - [x] Align `upload/csv/cleanup` if it shares the pattern
+    - [x] Task 4 tests green
+- [x] Task 8: FR-3 — duplicate-safe CSV insert
+    - [x] In-file dedupe (first row wins)
+    - [x] Conflict-safe insert with per-row skip
+    - [x] Return `CsvUploadSummary` with 200
+    - [x] Task 5 tests green
 - [x] Task 9: FR-1 batch 1 conversion — `authorization-hardening-static`
     - [x] Replacements green; delete old grep assertions in the same commit
 - [ ] Task 10: FR-1 batch 2 — `broken-ux-fixes`
