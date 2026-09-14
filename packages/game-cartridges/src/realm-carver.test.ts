@@ -645,6 +645,7 @@ describe("Realm Carver bespoke territory cartridge", () => {
     const words = captured.words.map((word, index) => ({
       ...word,
       status: index === 0 ? "captured" as const : "active" as const,
+      visible: index !== 0,
       position: { x: index === 0 ? 1 : index === 1 ? 2 : 4, y: index === 0 ? 2 : 1 },
       x: index === 0 ? 1 : index === 1 ? 2 : 4,
       y: index === 0 ? 2 : 1,

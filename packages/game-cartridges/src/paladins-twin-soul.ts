@@ -537,6 +537,7 @@ function resultFor(
 
 function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
+  let activeComposition = context.composition;
   let previousKeys = new Set<string>();
   let currentDimensions: { width: number; height: number } = { ...PALADINS_TWIN_SOUL_CANVAS };
   let currentPointerInScene = (clientX: number, clientY: number): Readonly<{ x: number; y: number }> => ({
@@ -743,7 +744,10 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
     view.progress.setText(
       `${Math.min(state.wave, state.targetCount)}/${state.targetCount}  ♥ ${state.player.hp}/${state.player.maxHp}  ×${state.player.fireStrength}`,
     ).setPosition(28, displayPosition(56));
-    view.feedback.setText("").setPosition(28, height - 68);
+    const formationNotice = activeComposition?.profile === "compact"
+      ? "Compact formation"
+      : "";
+    view.feedback.setText(formationNotice).setPosition(28, height - 68);
     view.instructions.setText("").setPosition(28, height - 36);
   };
 
@@ -823,7 +827,7 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
         context.controller.restore(value.game);
       },
       apkRecompose: (nextComposition: PaladinsTwinSoulSceneContext["composition"]): void => {
-        void nextComposition;
+        activeComposition = nextComposition;
       },
     },
   };

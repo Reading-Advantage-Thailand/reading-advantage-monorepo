@@ -563,7 +563,7 @@ describe("RPG Battle bespoke cartridge", () => {
     inputController.setSnapshot(inputSnapshot({ pressed: ["Backspace"] }));
     scene.update.call(host.host, 0, 0);
 
-    for (const code of ["KeyV", "KeyA", "KeyL", "KeyI", "KeyE", "KeyN", "KeyT", "KeyE"]) {
+    for (const code of ["KeyB", "KeyR", "KeyA", "KeyV", "KeyE"]) {
       inputController.setSnapshot(inputSnapshot({ pressed: [code], keys: [code] }));
       scene.update.call(host.host, 0, 0);
     }

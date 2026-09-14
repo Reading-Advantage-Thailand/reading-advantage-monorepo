@@ -871,7 +871,9 @@ export function createDungeonLiberatorController(
     if (!prisoner || prisoner.collected || prisoner.fleeing) return emptyAction();
 
     const expectedWord = sentences[sentenceIndex]!.words[wordIndex];
-    const correct = prisoner.word === expectedWord;
+    const isDecoy = prisoner.id.startsWith(TUTORIAL_DECOY_PREFIX)
+      || prisoner.orderIndex < 0;
+    const correct = !isDecoy && prisoner.word === expectedWord;
     accountant.recordAttempt({ correct });
     if (!correct) {
       lastOutcome = "incorrect";
@@ -1355,14 +1357,21 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
     if (!scene.add || !resources) return;
     const signature = state.prisoners.map((prisoner) => `${prisoner.id}:${prisoner.word}:${prisoner.collected}:${prisoner.fleeing}`).join("|");
     if (signature === wordSignature) return;
-    for (const label of wordLabels) label.destroy();
+    if (wordLabels.length === state.prisoners.length) {
+      state.prisoners.forEach((prisoner, index) => {
+        const visibleWord = prisoner.collected || prisoner.fleeing ? "" : prisoner.word;
+        wordLabels[index]?.setText(visibleWord);
+      });
+    } else {
+      for (const label of wordLabels) label.destroy();
+      wordLabels = state.prisoners.map((prisoner) => scene.add!.text(0, 0, prisoner.collected ? "" : prisoner.word, {
+        fontFamily: "Arial",
+        fontSize: "17px",
+        color: "#fff7ed",
+        align: "center",
+      }));
+    }
     wordSignature = signature;
-     wordLabels = state.prisoners.map((prisoner) => scene.add!.text(0, 0, prisoner.collected ? "" : prisoner.word, {
-      fontFamily: "Arial",
-      fontSize: "17px",
-      color: "#fff7ed",
-      align: "center",
-    }));
   };
 
   const updateView = (scene: PhaserSceneLike): void => {

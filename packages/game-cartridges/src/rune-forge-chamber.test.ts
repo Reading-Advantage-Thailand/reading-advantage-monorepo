@@ -328,15 +328,15 @@ describe("Rune Forge Chamber cartridge", () => {
     sceneConfig.update.call(scene, 0, 0);
     input.set({ pressed: ["ArrowLeft"] });
     sceneConfig.update.call(scene, 0, 0);
-    input.set({ pressed: ["Enter"] });
+    input.set({ pressed: ["ArrowLeft"] });
     sceneConfig.update.call(scene, 0, 0);
     input.set({ pressed: [], pointer: { ...input.snapshot().pointer, released: true, cancelled: true, kind: "touch", x: seededPoints[1]!.x, y: seededPoints[1]!.y } });
     sceneConfig.update.call(scene, 0, 0);
-    expect((config.scene as { extend: { apkCaptureResponsiveState: () => { targetIndex: number } } }).extend.apkCaptureResponsiveState()).toMatchObject({ targetIndex: 1 });
+    expect((config.scene as { extend: { apkCaptureResponsiveState: () => { targetIndex: number } } }).extend.apkCaptureResponsiveState()).toMatchObject({ targetIndex: 0 });
     expect(sceneConfig).toBeDefined();
-    input.set({ pressed: [], pointer: { ...input.snapshot().pointer, released: true, cancelled: false, kind: "touch", x: seededPoints[1]!.x, y: seededPoints[1]!.y } });
+    input.set({ pressed: [], pointer: { ...input.snapshot().pointer, released: true, cancelled: false, kind: "touch", x: seededPoints[0]!.x, y: seededPoints[0]!.y } });
     sceneConfig.update.call(scene, 0, 0);
-    expect((config.scene as { extend: { apkCaptureResponsiveState: () => { targetIndex: number } } }).extend.apkCaptureResponsiveState()).toMatchObject({ targetIndex: 2 });
+    expect((config.scene as { extend: { apkCaptureResponsiveState: () => { targetIndex: number } } }).extend.apkCaptureResponsiveState()).toMatchObject({ targetIndex: 1 });
   });
 
   it.each(["tutorial", "demo"] as const)("runs real incorrect and correct tutorial actions for one-word input without delivery in %s mode", (sessionMode) => {
@@ -484,7 +484,7 @@ describe("Rune Forge Chamber cartridge", () => {
     expect(() => controller.restore({ ...captured, destroyed: "no" as never })).toThrow(/destroyed/i);
     expect(() => controller.restore({ ...captured, sentenceIndex: 2 })).toThrow(/sentence index/i);
     expect(() => controller.restore({ ...captured, targetIndex: 1 })).toThrow(/progress/i);
-    expect(() => controller.restore({ ...captured, wordIndex: 4, targetIndex: 4 })).toThrow(/word progress|playing/i);
+    expect(() => controller.restore({ ...captured, wordIndex: 4, waveIndex: 4, targetIndex: 4 })).toThrow(/word progress|playing/i);
     expect(() => controller.restore({ ...captured, health: 0 })).toThrow(/resources/i);
     expect(() => controller.restore({ ...captured, timer: 0 })).toThrow(/resources/i);
     expect(() => controller.restore({ ...captured, rotation: Number.NaN })).toThrow(/rotation/i);

@@ -80,6 +80,7 @@ function createGraphics() {
 
 function createSceneHarness() {
   const listeners = new Map<string, () => void>();
+  const graphicsLayers: Array<ReturnType<typeof createGraphics>> = [];
   const graphics = createGraphics();
   const texts: Array<{
     setPosition: ReturnType<typeof vi.fn>;
@@ -88,7 +89,11 @@ function createSceneHarness() {
   }> = [];
   const scene = {
     add: {
-      graphics: vi.fn(() => graphics),
+      graphics: vi.fn(() => {
+        const layer = graphicsLayers.length === 0 ? graphics : createGraphics();
+        graphicsLayers.push(layer);
+        return layer;
+      }),
       text: vi.fn(() => {
         const text = {
           setPosition: vi.fn(() => text),
@@ -105,7 +110,7 @@ function createSceneHarness() {
     game: { canvas: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 960, height: 540 }) } },
     scale: { width: 960, height: 540 },
   };
-  return { scene, listeners, graphics, texts };
+  return { scene, listeners, graphics, graphicsLayers, texts };
 }
 
 function withPlaying(state: AbyssalWellState): AbyssalWellState {
@@ -691,7 +696,8 @@ describe("The Abyssal Well radial shooter", () => {
     harness.listeners.get("shutdown")?.();
     harness.listeners.get("destroy")?.();
 
-    expect(harness.graphics.destroy).toHaveBeenCalledOnce();
+    expect(harness.graphicsLayers.length).toBe(2);
+    expect(harness.graphicsLayers.every((layer) => layer.destroy.mock.calls.length === 1)).toBe(true);
     expect(harness.texts.every((text) => text.destroy.mock.calls.length === 1)).toBe(true);
     expect(input.cancelActiveGesture).toHaveBeenCalledOnce();
     expect(scene.extend.apkCaptureResponsiveState().destroyed).toBe(true);

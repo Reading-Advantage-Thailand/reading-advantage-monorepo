@@ -491,7 +491,10 @@ function resolveCollisions(state: AbyssalWellState, previousState = state): Abys
     const enemy = enemies[enemyIndex]!;
     projectiles.splice(projectileIndex, 1);
     enemies.splice(enemyIndex, 1);
-    const correct = enemy.word === state.words[targetIndex];
+    const correct = enemy.wordIndex >= targetIndex
+      && enemy.wordIndex < state.words.length
+      && state.words.slice(targetIndex, enemy.wordIndex).every((word) => word === enemy.word)
+      && enemy.word === state.words[enemy.wordIndex];
     totalAttempts += 1;
     lastOutcome = correct ? "correct" : "incorrect";
     if (correct) {

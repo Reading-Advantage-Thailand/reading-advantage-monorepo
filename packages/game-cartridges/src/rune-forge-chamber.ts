@@ -611,13 +611,6 @@ export function createRuneForgeChamberController(
       || circle.selected !== state.runes[index]?.selected)) {
       throw new Error("Rune Forge Chamber circle alias content is invalid");
     }
-    const expectedNextRuneId = state.phase === "playing"
-      ? state.runes.find((rune) => rune.word === state.answer)?.id
-      : undefined;
-    if (state.nextRuneId !== expectedNextRuneId) throw new Error("Rune Forge Chamber next rune is invalid");
-    if (state.cursorRuneId !== undefined && !state.runes.some((rune) => rune.id === state.cursorRuneId)) {
-      throw new Error("Rune Forge Chamber cursor rune is invalid");
-    }
     state.runes.forEach((rune, index) => {
       const expected = expectedRunes[index];
       if (!expected || rune.id !== expected.id || rune.word !== expected.word) {
@@ -626,6 +619,16 @@ export function createRuneForgeChamberController(
       if (rune.orderIndex !== expected.orderIndex || rune.label !== rune.word || rune.orbitRadius !== RUNE_FORGE_CHAMBER_ORBIT_RADIUS) {
         throw new Error("Rune Forge Chamber rune metadata is invalid");
       }
+    });
+    const expectedNextRuneId = state.phase === "playing"
+      ? state.runes.find((rune) => rune.word === state.answer)?.id
+      : undefined;
+    if (state.nextRuneId !== expectedNextRuneId) throw new Error("Rune Forge Chamber next rune is invalid");
+    if (state.cursorRuneId !== undefined && !state.runes.some((rune) => rune.id === state.cursorRuneId)) {
+      throw new Error("Rune Forge Chamber cursor rune is invalid");
+    }
+    state.runes.forEach((rune, index) => {
+      const expected = expectedRunes[index]!;
       if (!Number.isFinite(rune.angle) || Math.abs(rune.angle - (expected.angle + state.rotation)) > 0.000001 || rune.selected) {
         throw new Error("Rune Forge Chamber rune progress is invalid");
       }

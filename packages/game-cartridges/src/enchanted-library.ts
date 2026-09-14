@@ -1522,7 +1522,7 @@ export function createEnchantedLibraryCartridge(): StandardExperienceCartridge {
   const standardExperience = createCartridgeStandardExperience({
     id: ENCHANTED_LIBRARY_ID,
     title: "Enchanted Library",
-    description: "Collect English books, restore mana, and protect the stacks from spirits.",
+    description: "Match Thai prompts with English books, restore mana, and protect the stacks from spirits.",
     inputMode: "vocabulary",
     objective: "Collect the matching English word once for every Thai prompt before the library timer ends.",
     mechanicInstruction: "Hold the library and drag to steer toward the matching English word. Use the shield button, Space, or Enter to block spirits.",
@@ -1552,7 +1552,7 @@ export function createEnchantedLibraryCartridge(): StandardExperienceCartridge {
     manifest: {
       id: ENCHANTED_LIBRARY_ID,
       title: "Enchanted Library",
-      description: "Collect English books, restore mana, and protect the stacks from spirits.",
+      description: "Match Thai prompts with English books, restore mana, and protect the stacks from spirits.",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["enchanted-library/arcane-shelves"],

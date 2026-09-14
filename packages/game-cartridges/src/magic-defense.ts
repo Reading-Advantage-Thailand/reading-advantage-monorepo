@@ -1509,7 +1509,7 @@ export function createMagicDefenseCartridge(): StandardExperienceCartridge {
   const standardExperience = createCartridgeStandardExperience({
     id: MAGIC_DEFENSE_ID,
     title: "Magic Defense",
-    description: "Choose English answers for Thai targets to protect the castle.",
+    description: "Choose translation lanes to protect the castle from incoming magic.",
     inputMode: "vocabulary",
     objective: "Defend all castles by selecting each English answer.",
     mechanicInstruction: "Type the English answer before its missile reaches the castle.",
@@ -1526,7 +1526,7 @@ export function createMagicDefenseCartridge(): StandardExperienceCartridge {
     manifest: {
       id: MAGIC_DEFENSE_ID,
       title: "Magic Defense",
-      description: "Choose English answers for Thai targets to protect the castle.",
+      description: "Choose translation lanes to protect the castle from incoming magic.",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["legacy-catalog/magic-defense/arcane-castle"],

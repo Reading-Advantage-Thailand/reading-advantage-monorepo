@@ -357,7 +357,7 @@ export function createSpellweaversRunCartridge(): StandardExperienceCartridge {
   const standardExperience = createCartridgeStandardExperience({
     id: SPELLWEAVERS_RUN_ID,
     title: "Spellweaver's Run",
-    description: "Change lanes to collect falling English words in sentence order.",
+    description: "Change lanes to collect falling word orbs in sentence order.",
     inputMode: "sentence",
     objective: "Collect each English sentence word for the Thai prompt.",
     mechanicInstruction: "Choose the lane that carries the next English word.",
@@ -373,7 +373,7 @@ export function createSpellweaversRunCartridge(): StandardExperienceCartridge {
     manifest: {
       id: SPELLWEAVERS_RUN_ID,
       title: "Spellweaver's Run",
-      description: "Change lanes to collect falling English words in sentence order.",
+      description: "Change lanes to collect falling word orbs in sentence order.",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: ["spellweavers-run/player-lane"],
