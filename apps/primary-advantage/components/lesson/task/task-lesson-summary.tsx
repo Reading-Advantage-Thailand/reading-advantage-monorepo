@@ -53,10 +53,10 @@ export default function TaskLessonSummary({
     saqScore: 0,
   });
   const [showCelebration, setShowCelebration] = useState(false);
-  const wordList = article?.sentencsAndWordsForFlashcard?.[0]
-    ?.words as WordList[];
-  const sentenceList = article?.sentencsAndWordsForFlashcard?.[0]
-    ?.sentence as Sentence[];
+  const wordList = (article?.sentencsAndWordsForFlashcard?.[0]
+    ?.words as WordList[] | undefined) ?? [];
+  const sentenceList = (article?.sentencsAndWordsForFlashcard?.[0]
+    ?.sentence as Sentence[] | undefined) ?? [];
   const router = useRouter();
   const t = useTranslations("Lesson.Summary");
   const { user, refresh } = useAuth();
