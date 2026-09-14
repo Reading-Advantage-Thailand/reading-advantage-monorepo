@@ -1,6 +1,6 @@
 "use client";
 
-import React, {
+import {
   useState,
   useRef,
   useEffect,
@@ -13,11 +13,9 @@ import { QuizContext } from "@/contexts/question-context";
 import { useTranslations } from "next-intl";
 import {
   TaskIntroduction,
-  TaskPreviewVocabulary,
-  TaskFirstReading,
+  TaskCollection,
   TaskVocabularyCollection,
-  TaskDeepReading,
-  TaskSentenceCollection,
+  TaskReading,
   TaskMultipleChoice,
   TaskShortAnswer,
   TaskVocabularyFlashcards,
@@ -47,12 +45,57 @@ export interface LessonAssignmentProps {
   classroom?: Classroom | null;
 }
 
+/**
+ * Renders the lesson elapsed time without remounting on parent renders.
+ * @param props Elapsed seconds.
+ * @returns The formatted timer label.
+ */
+function LessonTimer({ seconds }: { seconds: number }) {
+  return (
+    <div className="text-sm font-medium">
+      {`${Math.floor(seconds / 60)}m ${seconds % 60}s`}
+    </div>
+  );
+}
+
+/**
+ * Data source for the lesson progress bar.
+ */
+export type LessonProgressSource = "assignment" | "article";
+
+export interface LessonProgressBarProps {
+  source: LessonProgressSource;
+  assignment?: LessonAssignmentProps | null;
+  article?: Article | null;
+}
+
+export interface StandaloneLessonProps {
+  article: Article;
+}
+
+/**
+ * Renders the lesson task sequence with progress tracking.
+ * @param source Whether the lesson runs from an assignment or a standalone article.
+ * @param assignment Assignment carrying the article for assignment lessons.
+ * @param articleProp Standalone article for article lessons.
+ * @returns The lesson progress bar.
+ */
 export default function LessonProgressBar({
+  source,
   assignment,
-}: {
-  assignment: LessonAssignmentProps;
-}) {
+  article: articleProp,
+}: LessonProgressBarProps) {
   const t = useTranslations("Lesson");
+  const tComponents = useTranslations("Components");
+  const article = (
+    source === "assignment" ? assignment?.article : articleProp
+  ) as Article | null;
+  const resolvedArticleId =
+    source === "assignment" ? assignment?.articleId : articleProp?.id;
+  const progressBase =
+    source === "assignment"
+      ? `/api/assignments/${assignment?.id}`
+      : `/api/lessons/${articleProp?.id}`;
   const [isExpanded, setIsExpanded] = useState(false);
   const [maxHeight, setMaxHeight] = useState("0px");
   const contentRef = useRef<HTMLDivElement>(null);
@@ -89,7 +132,7 @@ export default function LessonProgressBar({
 
         setPhaseLoading(true);
         const response = await fetch(
-          `/api/assignments/${assignment?.id}/progress`,
+          `${progressBase}/progress`,
         );
 
         if (!isMounted) return;
@@ -105,7 +148,9 @@ export default function LessonProgressBar({
 
           // Update phase on initial load
           if (isMounted) {
-            setCurrentTask(taskNumber);
+            setCurrentTask(
+              source === "article" && taskNumber === 0 ? 1 : taskNumber,
+            );
             setTimer(data.userLessonProgress.timeSpent as number);
             // Pause timer if on lesson summary
             if (taskNumber === 14) {
@@ -144,48 +189,7 @@ export default function LessonProgressBar({
       isMounted = false;
       clearTimeout(timeoutId);
     };
-  }, [initialLoadComplete, assignment?.id, setTimer, setPaused]);
-
-  // const updatePhaseCompletion = useCallback(
-  //   (phaseIndex: number, isComplete: boolean) => {
-  //     setPhaseCompletion((prev) => {
-  //       const updated = [...prev];
-  //       if (updated[phaseIndex] !== isComplete) {
-  //         updated[phaseIndex] = isComplete;
-  //         return updated;
-  //       }
-  //       return prev; // Return previous state if no change to prevent unnecessary re-renders
-  //     });
-  //   },
-  //   [],
-  // );
-
-  // useEffect(() => {
-  //   const logActivity = async () => {
-  //     if (currentPhase === 14) {
-  //       await fetch(`/api/v1/users/${userId}/activitylog`, {
-  //         method: "PUT",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify({
-  //           articleId: article.id,
-  //           activityType: ActivityType.LessonRead,
-  //           activityStatus: ActivityStatus.Completed,
-  //           timeTaken: elapsedTime,
-  //           details: {
-  //             title: article.title,
-  //             level: article.ra_level,
-  //             cefr_level: article.cefr_level,
-  //             type: article.type,
-  //             genre: article.genre,
-  //             subgenre: article.subgenre,
-  //           },
-  //         }),
-  //       });
-  //     }
-  //   };
-
-  //   logActivity();
-  // }, [currentPhase, userId, article, elapsedTime]);
+  }, [initialLoadComplete, progressBase, setTimer, setPaused, source]);
 
   const startLesson = async () => {
     try {
@@ -203,11 +207,11 @@ export default function LessonProgressBar({
 
       setPhaseLoading(true);
 
-      const response = await fetch(`/api/assignments/${assignment?.id}`, {
+      const response = await fetch(`${progressBase}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          articleId: assignment?.articleId,
+          articleId: resolvedArticleId,
           progress: Math.round((1 / 14) * 100),
           timeSpent: 0,
         }),
@@ -274,39 +278,18 @@ export default function LessonProgressBar({
       setPhaseLoading(true);
 
       if (newTask === 7) {
-        await saveArticleToFlashcard(assignment?.articleId as string);
+        await saveArticleToFlashcard(resolvedArticleId as string);
       }
-      // Handle final phase logging
-      // if (Phase === 13) {
-      //   await fetch(`/api/v1/users/${userId}/activitylog`, {
-      //     method: "PUT",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({
-      //       articleId: article.id,
-      //       activityType: ActivityType.LessonRead,
-      //       activityStatus: ActivityStatus.Completed,
-      //       timeTaken: elapsedTime,
-      //       details: {
-      //         title: article.title,
-      //         level: article.ra_level,
-      //         cefr_level: article.cefr_level,
-      //         type: article.type,
-      //         genre: article.genre,
-      //         subgenre: article.subgenre,
-      //       },
-      //     }),
-      //   });
-      // }
 
       if (newTask === 14) {
         setPaused(true);
       }
 
-      const response = await fetch(`/api/assignments/${assignment?.id}`, {
+      const response = await fetch(`${progressBase}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          articleId: assignment?.articleId,
+          articleId: resolvedArticleId,
           progress: Math.round((newTask / 14) * 100),
           timeSpent: timer,
         }),
@@ -383,56 +366,56 @@ export default function LessonProgressBar({
       case 1:
         return (
           <TaskIntroduction
-            article={assignment?.article as Article}
+            article={article as Article}
             onCompleteChange={() => {}}
           />
         );
       case 2:
         return (
-          <TaskPreviewVocabulary article={assignment?.article as Article} />
+          <TaskCollection article={article as Article} kind="vocabulary" />
         );
       case 3:
-        return <TaskFirstReading article={assignment?.article as Article} />;
+        return <TaskReading article={article as Article} enableTranslation={false} />;
       case 4:
         return (
-          <TaskVocabularyCollection article={assignment?.article as Article} />
+          <TaskVocabularyCollection article={article as Article} />
         );
       case 5:
-        return <TaskDeepReading article={assignment?.article as Article} />;
+        return <TaskReading article={article as Article} enableTranslation />;
       case 6:
         return (
-          <TaskSentenceCollection article={assignment?.article as Article} />
+          <TaskCollection article={article as Article} kind="sentence" />
         );
       case 7:
-        return <TaskMultipleChoice article={assignment?.article as Article} />;
+        return <TaskMultipleChoice article={article as Article} />;
       case 8:
-        return <TaskShortAnswer article={assignment?.article as Article} />;
+        return <TaskShortAnswer article={article as Article} />;
       case 9:
         return (
           <TaskVocabularyFlashcards
-            articleId={assignment?.articleId as string}
+            articleId={resolvedArticleId as string}
           />
         );
       case 10:
         return (
-          <TaskVocabularyMatching articleId={assignment?.articleId as string} />
+          <TaskVocabularyMatching articleId={resolvedArticleId as string} />
         );
       case 11:
         return (
-          <TaskSentenceFlashcards articleId={assignment?.articleId as string} />
+          <TaskSentenceFlashcards articleId={resolvedArticleId as string} />
         );
       case 12:
         return (
-          <TaskSentenceActivities articleId={assignment?.articleId as string} />
+          <TaskSentenceActivities articleId={resolvedArticleId as string} />
         );
       case 13:
         return (
-          <TaskLanguageQuestions article={assignment?.article as Article} />
+          <TaskLanguageQuestions article={article as Article} />
         );
       case 14:
         return (
           <TaskLessonSummary
-            article={assignment?.article as Article}
+            article={article as Article}
             timerSpent={timer}
           />
         );
@@ -489,40 +472,7 @@ export default function LessonProgressBar({
   };
 
   const skipTask = async (Task: number) => {
-    // if (Phase === 13) {
-    //   await fetch(`/api/v1/users/${userId}/activitylog`, {
-    //     method: "PUT",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       articleId: article.id,
-    //       activityType: ActivityType.LessonRead,
-    //       activityStatus: ActivityStatus.Completed,
-    //       timeTaken: elapsedTime,
-    //       details: {
-    //         title: article.title,
-    //         level: article.ra_level,
-    //         cefr_level: article.cefr_level,
-    //         type: article.type,
-    //         genre: article.genre,
-    //         subgenre: article.subgenre,
-    //       },
-    //     }),
-    //   });
-    // }
     setCurrentTask(Task + 1);
-
-    // const url = classroomId
-    //   ? `/api/v1/lesson/${userId}?articleId=${articleId}&classroomId=${classroomId}`
-    //   : `/api/v1/lesson/${userId}?articleId=${articleId}`;
-
-    // await fetch(url, {
-    //   method: "PUT",
-    //   body: JSON.stringify({
-    //     phase: Phase,
-    //     status: 2,
-    //     elapsedTime: elapsedTime,
-    //   }),
-    // });
   };
 
   useEffect(() => {
@@ -530,15 +480,6 @@ export default function LessonProgressBar({
       setMaxHeight(isExpanded ? `${contentRef.current.scrollHeight}px` : "0px");
     }
   }, [isExpanded]);
-
-  const LessonTimer = React.memo(() => {
-    return (
-      <div className="text-sm font-medium">
-        {`${Math.floor(timer / 60)}m ${timer % 60}s`}
-      </div>
-    );
-  });
-  LessonTimer.displayName = "LessonTimer";
 
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
@@ -700,7 +641,7 @@ export default function LessonProgressBar({
                 {currentTask >= 2 && currentTask < 14 && (
                   <div className="flex items-center gap-2 rounded-lg bg-white/20 px-3 py-1">
                     <Timer className="h-4 w-4" />
-                    <LessonTimer />
+                    <LessonTimer seconds={timer} />
                   </div>
                 )}
               </div>
@@ -729,6 +670,8 @@ export default function LessonProgressBar({
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsExpanded(!isExpanded)}
+                    aria-label={tComponents("toggleDetails")}
+                    aria-expanded={isExpanded}
                   >
                     {isExpanded ? (
                       <ChevronUp className="h-4 w-4" />

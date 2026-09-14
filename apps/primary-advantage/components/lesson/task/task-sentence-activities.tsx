@@ -9,10 +9,11 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import LessonSentenceOrder from "../games/lesson-sentence-order";
-import LessonSentenceClozeTest from "../games/lesson-sentence-cloze-test";
-import LessonSentenceOrderWord from "../games/lesson-sentence-order-word";
-import LessonSentenceMatching from "../games/lesson-sentence-matching";
+import OrderSentenceGame from "../games/lesson-sentence-order";
+import SentenceClozeGame from "../games/lesson-sentence-cloze-test";
+import OrderWordGame from "../games/lesson-sentence-order-word";
+import LessonMatchingGame from "../games/lesson-matching-game";
+import { FlashcardType } from "@/types/enum";
 import { useTranslations } from "next-intl";
 
 interface AssignmentActivity {
@@ -31,19 +32,31 @@ export default function TaskSentenceActivities({
   const [completedActivities, setCompletedActivities] =
     useState<AssignmentActivity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [reloadToken, setReloadToken] = useState(0);
   const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
 
   // Check for completed activities
   useEffect(() => {
     const fetchCompletedActivities = async () => {
-      const response = await fetch(`/api/assignments/activity/${articleId}`);
-      const data = await response.json();
+      setLoadError(false);
+      try {
+        const response = await fetch(`/api/assignments/activity/${articleId}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch activity progress");
+        }
+        const data = await response.json();
 
-      setCompletedActivities(data.assignmentActivity);
-      setIsLoading(false);
+        setCompletedActivities(data.assignmentActivity);
+      } catch (error) {
+        console.error("Error fetching completed activities:", error);
+        setLoadError(true);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchCompletedActivities();
-  }, [articleId]);
+  }, [articleId, reloadToken]);
 
   // // Order Sentences Activity
   if (selectedActivity === "order-sentences") {
@@ -64,7 +77,7 @@ export default function TaskSentenceActivities({
 
         {/* Order Sentences Component */}
 
-        <LessonSentenceOrder articleId={articleId} />
+        <OrderSentenceGame source="lesson" articleId={articleId} />
       </div>
     );
   }
@@ -87,7 +100,7 @@ export default function TaskSentenceActivities({
         </div>
 
         {/* Cloze Test Component */}
-        <LessonSentenceClozeTest articleId={articleId} />
+        <SentenceClozeGame source="lesson" articleId={articleId} />
       </div>
     );
   }
@@ -111,7 +124,7 @@ export default function TaskSentenceActivities({
 
         {/* Order Words Component */}
 
-        <LessonSentenceOrderWord articleId={articleId} />
+        <OrderWordGame source="lesson" articleId={articleId} />
       </div>
     );
   }
@@ -136,7 +149,7 @@ export default function TaskSentenceActivities({
         {/* Matching Component */}
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-zinc-200 shadow-lg dark:border-gray-700 dark:bg-gray-900">
           <div className="p-6">
-            <LessonSentenceMatching articleId={articleId} />
+            <LessonMatchingGame articleId={articleId} cardKind={FlashcardType.SENTENCE} />
           </div>
         </div>
       </div>
@@ -156,6 +169,32 @@ export default function TaskSentenceActivities({
           <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
             {t("loading")}
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="mx-auto max-w-4xl space-y-6">
+        <div
+          role="alert"
+          className="space-y-4 rounded-2xl border border-red-200 bg-red-50 p-8 text-center dark:border-red-800 dark:bg-red-950"
+        >
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {t("title")}
+          </h1>
+          <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
+            {t("loadError")}
+          </p>
+          <Button
+            onClick={() => {
+              setIsLoading(true);
+              setReloadToken((token) => token + 1);
+            }}
+          >
+            {t("retry")}
+          </Button>
         </div>
       </div>
     );

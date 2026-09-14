@@ -56,6 +56,7 @@ import StudentUnenrollmentButton from "./student-unenrollment-button";
 import ClassroomNavigation from "./classroom-navigation";
 import StudentCefrLevelSetter from "./student-cefr-level-setter";
 import ClassCodeGenerator from "./class-code-generator";
+import { getCefrLevelColor } from "@/lib/cefr";
 
 interface StudentData {
   id: string;
@@ -85,11 +86,209 @@ interface ClassroomData {
 
 // type ViewMode = "grid" | "list";
 
+/**
+ * Translation function passed into hoisted row components.
+ */
+type RosterTranslator = (
+  key: string,
+  values?: Record<string, string | number>,
+) => string;
+
+/**
+ * Derives avatar initials from a student record.
+ * @param student Student record.
+ * @returns Up to two uppercase initials.
+ */
+function getStudentInitials(student: StudentData): string {
+  if (!student.display_name)
+    return student.email?.charAt(0).toUpperCase() || "?";
+  return student.display_name
+    .split(" ")
+    .map((word) => word.charAt(0))
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
+}
+
+/**
+ * Resolves the level badge colour for a student level.
+ * @param level Numeric student level.
+ * @returns Tailwind background class.
+ */
+function getLevelColor(level?: number): string {
+  if (!level) return "bg-gray-500";
+  if (level <= 10) return "bg-green-500";
+  if (level <= 20) return "bg-blue-500";
+  if (level <= 30) return "bg-purple-500";
+  return "bg-orange-500";
+}
+
+/**
+ * Formats a last-activity timestamp as relative text.
+ * @param lastActivity ISO timestamp, or null when never active.
+ * @param t Active translator.
+ * @returns Relative activity label.
+ */
+function formatLastActivity(
+  lastActivity: string | null,
+  t: RosterTranslator,
+): string {
+  if (!lastActivity) return t("activity.none");
+  const date = new Date(lastActivity);
+  const now = new Date();
+  const diffInDays = Math.floor(
+    (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
+  );
+
+  if (diffInDays === 0) return t("activity.today");
+  if (diffInDays === 1) return t("activity.yesterday");
+  if (diffInDays < 7) return t("activity.daysAgo", { count: diffInDays });
+  if (diffInDays < 30)
+    return t("activity.weeksAgo", { count: Math.floor(diffInDays / 7) });
+  return date.toLocaleDateString();
+}
+
+interface StudentRowProps {
+  student: StudentData;
+  classroomId: string;
+  classroomName: string;
+  t: RosterTranslator;
+  onViewProgress: (studentId: string) => void;
+  onRequestReset: (studentId: string) => void;
+  onDataChange: () => void;
+}
+
+/**
+ * Renders one student row without remounting on parent renders.
+ * @param props Student record and row callbacks.
+ * @returns The student row card.
+ */
+function StudentRow({
+  student,
+  classroomId,
+  classroomName,
+  t,
+  onViewProgress,
+  onRequestReset,
+  onDataChange,
+}: StudentRowProps) {
+  const tComponents = useTranslations("Components");
+  return (
+    <Card>
+      <CardContent>
+        <div className="flex items-center gap-4">
+          <Avatar className="flex-shrink-0">
+            <AvatarFallback
+              className={`text-white ${getLevelColor(student.level)}`}
+            >
+              {getStudentInitials(student)}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+              <div className="min-w-0 flex-1">
+                <h3 className="truncate font-medium">
+                  {student.display_name || "No name"}
+                </h3>
+                <p className="truncate text-sm text-gray-500">
+                  {student.email}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              {student.cefrLevel && (
+                <Badge
+                  variant="secondary"
+                  className={`text-xs ${getCefrLevelColor(student.cefrLevel)}`}
+                >
+                  {student.cefrLevel}
+                </Badge>
+              )}
+              {student.level && (
+                <Badge variant="outline" className="text-xs">
+                  <GraduationCap className="mr-1 h-3 w-3" />
+                  {t("labels.level", { level: student.level })}
+                </Badge>
+              )}
+              {student.xp && (
+                <Badge variant="outline" className="text-xs">
+                  <Star className="mr-1 h-3 w-3" />
+                  {student.xp}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 text-sm text-gray-500">
+              <Activity className="h-3 w-3" />
+              {formatLastActivity(student.last_activity, t)}
+            </div>
+            <StudentUnenrollmentButton
+              student={{
+                id: student.id,
+                name: student.display_name,
+                email: student.email,
+              }}
+              classroomId={classroomId}
+              classroomName={classroomName}
+              onStudentUnenrolled={onDataChange}
+              buttonSize="sm"
+              buttonVariant="outline"
+            />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  aria-label={tComponents("openActionsMenu")}
+                >
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onViewProgress(student.id)}>
+                  <TrendingUp className="mr-1 h-4 w-4" />
+                  {t("actions.viewProgress")}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <div>
+                  <StudentCefrLevelSetter
+                    studentId={student.id}
+                    studentName={
+                      student.display_name || t("labels.studentDefault")
+                    }
+                    currentCefrLevel={student.cefrLevel || "A0-"}
+                    onUpdate={onDataChange}
+                  />
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => onRequestReset(student.id)}
+                  className="text-orange-600"
+                >
+                  <RotateCcw className="mr-1 h-4 w-4" />
+                  Reset Progress
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function EnhancedClassRoster() {
   const router = useRouter();
   const params = useParams();
   const classroomId = params?.classroomId as string;
   const t = useTranslations("Teacher.EnhancedClassRoster");
+  const tComponents = useTranslations("Components");
 
   // State management
   const [classroom, setClassroom] = useState<ClassroomData | null>(null);
@@ -104,7 +303,10 @@ export default function EnhancedClassRoster() {
 
   // Fetch classroom and student data
   const fetchClassroomData = async () => {
-    if (!classroomId) return;
+    if (!classroomId) {
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
@@ -139,54 +341,6 @@ export default function EnhancedClassRoster() {
   useEffect(() => {
     fetchClassroomData();
   }, [classroomId]);
-
-  // Utility functions
-  const getStudentInitials = (student: StudentData) => {
-    if (!student.display_name)
-      return student.email?.charAt(0).toUpperCase() || "?";
-    return student.display_name
-      .split(" ")
-      .map((word) => word.charAt(0))
-      .join("")
-      .substring(0, 2)
-      .toUpperCase();
-  };
-
-  const getLevelColor = (level?: number) => {
-    if (!level) return "bg-gray-500";
-    if (level <= 10) return "bg-green-500";
-    if (level <= 20) return "bg-blue-500";
-    if (level <= 30) return "bg-purple-500";
-    return "bg-orange-500";
-  };
-
-  const getCefrLevelColor = (cefrLevel?: string | null) => {
-    if (!cefrLevel) return "bg-gray-100 text-gray-800";
-    const level = cefrLevel.toLowerCase();
-    if (level.startsWith("a1")) return "bg-red-100 text-red-800";
-    if (level.startsWith("a2")) return "bg-orange-100 text-orange-800";
-    if (level.startsWith("b1")) return "bg-yellow-100 text-yellow-800";
-    if (level.startsWith("b2")) return "bg-green-100 text-green-800";
-    if (level.startsWith("c1")) return "bg-blue-100 text-blue-800";
-    if (level.startsWith("c2")) return "bg-purple-100 text-purple-800";
-    return "bg-gray-100 text-gray-800";
-  };
-
-  const formatLastActivity = (lastActivity: string | null) => {
-    if (!lastActivity) return t("activity.none");
-    const date = new Date(lastActivity);
-    const now = new Date();
-    const diffInDays = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
-    );
-
-    if (diffInDays === 0) return t("activity.today");
-    if (diffInDays === 1) return t("activity.yesterday");
-    if (diffInDays < 7) return t("activity.daysAgo", { count: diffInDays });
-    if (diffInDays < 30)
-      return t("activity.weeksAgo", { count: Math.floor(diffInDays / 7) });
-    return date.toLocaleDateString();
-  };
 
   // Handler functions
   const handleResetProgress = async () => {
@@ -272,18 +426,6 @@ export default function EnhancedClassRoster() {
     );
   }
 
-  // Student card component for grid view
-  // const StudentCard = ({ student }: { student: StudentData }) => (
-  //   <Card className="transition-all duration-200 hover:shadow-md">
-  //     <CardContent className="p-4">
-  //       <div className="flex items-start gap-3">
-  //         <Avatar className="h-12 w-12 flex-shrink-0">
-  //           <AvatarFallback
-  //             className={`text-white ${getLevelColor(student.level)}`}
-  //           >
-  //             {getStudentInitials(student)}
-  //           </AvatarFallback>
-  //         </Avatar>
 
   //         <div className="min-w-0 flex-1">
   //           <h3 className="truncate font-medium text-gray-900">
@@ -291,28 +433,6 @@ export default function EnhancedClassRoster() {
   //           </h3>
   //           <p className="truncate text-sm text-gray-500">{student.email}</p>
 
-  //           <div className="mt-2 flex flex-wrap gap-1">
-  //             {student.cefrLevel && (
-  //               <Badge
-  //                 variant="secondary"
-  //                 className={`text-xs ${getCefrLevelColor(student.cefrLevel)}`}
-  //               >
-  //                 {student.cefrLevel}
-  //               </Badge>
-  //             )}
-  //             {student.level && (
-  //               <Badge variant="outline" className="text-xs">
-  //                 <GraduationCap className="mr-1 h-3 w-3" />
-  //                 Lvl {student.level}
-  //               </Badge>
-  //             )}
-  //             {student.xp && (
-  //               <Badge variant="outline" className="text-xs">
-  //                 <Star className="mr-1 h-3 w-3" />
-  //                 {student.xp}
-  //               </Badge>
-  //             )}
-  //           </div>
 
   //           <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
   //             <Activity className="h-3 w-3" />
@@ -320,259 +440,9 @@ export default function EnhancedClassRoster() {
   //           </div>
   //         </div>
 
-  //         <DropdownMenu>
-  //           <DropdownMenuTrigger asChild>
-  //             <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-  //               <MoreVertical className="h-4 w-4" />
-  //             </Button>
-  //           </DropdownMenuTrigger>
-  //           <DropdownMenuContent align="end">
-  //             <DropdownMenuItem onClick={() => handleViewProgress(student.id)}>
-  //               <TrendingUp className="mr-2 h-4 w-4" />
-  //               View Progress
-  //             </DropdownMenuItem>
-  //             <DropdownMenuSeparator />
-  //             <DropdownMenuItem
-  //               onClick={() => {
-  //                 setSelectedStudentId(student.id);
-  //                 setResetDialogOpen(true);
-  //               }}
-  //               className="text-orange-600"
-  //             >
-  //               <RotateCcw className="mr-2 h-4 w-4" />
-  //               Reset Progress
-  //             </DropdownMenuItem>
-  //           </DropdownMenuContent>
-  //         </DropdownMenu>
-  //       </div>
 
-  //       <div className="mt-3 flex gap-2">
-  //         <StudentUnenrollmentButton
-  //           student={{
-  //             id: student.id,
-  //             name: student.display_name,
-  //             email: student.email,
-  //           }}
-  //           classroomId={classroom.id}
-  //           classroomName={classroom.classroomName}
-  //           onStudentUnenrolled={fetchClassroomData}
-  //           buttonSize="sm"
-  //           buttonVariant="outline"
-  //         />
-  //       </div>
-  //     </CardContent>
-  //   </Card>
-  // );
 
-  // Student row component for list view
-  const StudentRow = ({ student }: { student: StudentData }) => (
-    <Card>
-      <CardContent>
-        {/* <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Avatar className="flex-shrink-0">
-              <AvatarFallback
-                className={`text-white ${getLevelColor(student.level)}`}
-              >
-                {getStudentInitials(student)}
-              </AvatarFallback>
-            </Avatar>
-
-            <div>
-              <div>
-                <h3 className="truncate font-medium">
-                  {student.display_name || t("labels.noName")}
-                </h3>
-                <p className="truncate text-sm text-gray-500">
-                  {student.email}
-                </p>
-              </div>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                {student.cefrLevel && (
-                  <Badge
-                    variant="secondary"
-                    className={`text-xs ${getCefrLevelColor(student.cefrLevel)}`}
-                  >
-                    {student.cefrLevel}
-                  </Badge>
-                )}
-                {student.level && (
-                  <Badge variant="outline" className="text-xs">
-                    <GraduationCap className="mr-1 h-3 w-3" />
-                    Lvl {student.level}
-                  </Badge>
-                )}
-                {student.xp && (
-                  <Badge variant="outline" className="text-xs">
-                    <Star className="mr-1 h-3 w-3" />
-                    {student.xp}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <Activity className="h-3 w-3" />
-              {formatLastActivity(student.last_activity)}
-            </div>
-            <div className="flex items-center gap-2">
-              <StudentUnenrollmentButton
-                student={{
-                  id: student.id,
-                  name: student.display_name,
-                  email: student.email,
-                }}
-                classroomId={classroom.id}
-                classroomName={classroom.classroomName}
-                onStudentUnenrolled={fetchClassroomData}
-                buttonSize="sm"
-                buttonVariant="outline"
-              />
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => handleViewProgress(student.id)}
-                  >
-                    <TrendingUp className="mr-2 h-4 w-4" />
-                    View Progress
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <div className="px-1">
-                    <StudentCefrLevelSetter
-                      studentId={student.id}
-                      studentName={student.display_name || "Student"}
-                      currentCefrLevel={student.cefrLevel || "A1-"}
-                      onUpdate={fetchClassroomData}
-                    />
-                  </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setSelectedStudentId(student.id);
-                      setResetDialogOpen(true);
-                    }}
-                    className="text-orange-600"
-                  >
-                    <RotateCcw className="mr-2 h-4 w-4" />
-                    Reset Progress
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </div> */}
-        <div className="flex items-center gap-4">
-          <Avatar className="flex-shrink-0">
-            <AvatarFallback
-              className={`text-white ${getLevelColor(student.level)}`}
-            >
-              {getStudentInitials(student)}
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-              <div className="min-w-0 flex-1">
-                <h3 className="truncate font-medium">
-                  {student.display_name || "No name"}
-                </h3>
-                <p className="truncate text-sm text-gray-500">
-                  {student.email}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              {student.cefrLevel && (
-                <Badge
-                  variant="secondary"
-                  className={`text-xs ${getCefrLevelColor(student.cefrLevel)}`}
-                >
-                  {student.cefrLevel}
-                </Badge>
-              )}
-              {student.level && (
-                <Badge variant="outline" className="text-xs">
-                  <GraduationCap className="mr-1 h-3 w-3" />
-                  {t("labels.level", { level: student.level })}
-                </Badge>
-              )}
-              {student.xp && (
-                <Badge variant="outline" className="text-xs">
-                  <Star className="mr-1 h-3 w-3" />
-                  {student.xp}
-                </Badge>
-              )}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-sm text-gray-500">
-              <Activity className="h-3 w-3" />
-              {formatLastActivity(student.last_activity)}
-            </div>
-            <StudentUnenrollmentButton
-              student={{
-                id: student.id,
-                name: student.display_name,
-                email: student.email,
-              }}
-              classroomId={classroom.id}
-              classroomName={classroom.classroomName}
-              onStudentUnenrolled={fetchClassroomData}
-              buttonSize="sm"
-              buttonVariant="outline"
-            />
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => handleViewProgress(student.id)}
-                >
-                  <TrendingUp className="mr-1 h-4 w-4" />
-                  {t("actions.viewProgress")}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <div>
-                  <StudentCefrLevelSetter
-                    studentId={student.id}
-                    studentName={
-                      student.display_name || t("labels.studentDefault")
-                    }
-                    currentCefrLevel={student.cefrLevel || "A0-"}
-                    onUpdate={fetchClassroomData}
-                  />
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedStudentId(student.id);
-                    setResetDialogOpen(true);
-                  }}
-                  className="text-orange-600"
-                >
-                  <RotateCcw className="mr-1 h-4 w-4" />
-                  Reset Progress
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+  // Student rows render from the module-scope StudentRow below.
 
   return (
     <div className="space-y-6">
@@ -653,7 +523,19 @@ export default function EnhancedClassRoster() {
       ) : (
         <div className="space-y-4">
           {filteredStudents.map((student) => (
-            <StudentRow key={student.id} student={student} />
+            <StudentRow
+              key={student.id}
+              student={student}
+              classroomId={classroom.id}
+              classroomName={classroom.classroomName}
+              t={t}
+              onViewProgress={handleViewProgress}
+              onRequestReset={(studentId) => {
+                setSelectedStudentId(studentId);
+                setResetDialogOpen(true);
+              }}
+              onDataChange={fetchClassroomData}
+            />
           ))}
         </div>
       )}

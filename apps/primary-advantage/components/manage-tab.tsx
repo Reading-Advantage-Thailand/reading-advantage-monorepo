@@ -4,25 +4,8 @@ import React, { startTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Header } from "./header";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { DataTable } from "@/components/ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,12 +34,6 @@ interface ManageTabProps {
 export default function ManageTab({ data }: ManageTabProps) {
   const t = useTranslations("SentencesPage.manage");
   const formatDate = useFormatDate();
-  const [sorting, setSorting] = React.useState<SortingState>([
-    { id: "createdAt", desc: true },
-  ]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
   const [sentences, setSentences] = React.useState<Sentence[]>(data);
 
   const columns: ColumnDef<Sentence>[] = [
@@ -102,7 +79,11 @@ export default function ManageTab({ data }: ManageTabProps) {
         return (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button size="sm" variant="destructive">
+              <Button
+                size="sm"
+                variant="destructive"
+                aria-label={t("deleteDialog.delete")}
+              >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </AlertDialogTrigger>
@@ -137,21 +118,6 @@ export default function ManageTab({ data }: ManageTabProps) {
     },
   ];
 
-  const table = useReactTable({
-    data: sentences,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-    },
-  });
-
   const handleDelete = async (id: string) => {
     startTransition(async () => {
       const result = await deleteFlashcardCard(id);
@@ -168,86 +134,44 @@ export default function ManageTab({ data }: ManageTabProps) {
     <div className="space-y-6">
       <Header heading={t("heading")} text={t("description")} />
       <div className="flex flex-col gap-4">
-        <div className="flex items-center py-4">
-          <Input
-            placeholder={t("searchPlaceholder")}
-            value={
-              (table.getColumn("front")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("front")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-        </div>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    {t("noResults")}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {t("pagination.previous")}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {t("pagination.next")}
-          </Button>
-        </div>
+
+        <DataTable
+          columns={columns}
+          data={sentences}
+          emptyText={t("noResults")}
+          initialSorting={[{ id: "createdAt", desc: true }]}
+          filterColumnId="front"
+          toolbar={({ filterValue, setFilterValue }) => (
+            <div className="flex items-center py-4">
+              <Input
+                placeholder={t("searchPlaceholder")}
+                value={filterValue}
+                onChange={(event) => setFilterValue(event.target.value)}
+                className="max-w-sm"
+              />
+            </div>
+          )}
+          footer={({ previousPage, nextPage, canPreviousPage, canNextPage }) => (
+            <div className="flex items-center justify-end space-x-2 py-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => previousPage()}
+                disabled={!canPreviousPage}
+              >
+                {t("pagination.previous")}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => nextPage()}
+                disabled={!canNextPage}
+              >
+                {t("pagination.next")}
+              </Button>
+            </div>
+          )}
+        />
       </div>
     </div>
   );

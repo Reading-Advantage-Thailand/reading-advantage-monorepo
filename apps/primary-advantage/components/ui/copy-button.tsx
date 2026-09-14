@@ -7,8 +7,13 @@ import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
+/**
+ * Writes a value to the clipboard.
+ * @param value Text to copy.
+ * @returns The pending clipboard write.
+ */
 export function copyToClipboardWithMeta(value: string) {
-  navigator.clipboard.writeText(value);
+  return navigator.clipboard.writeText(value);
 }
 
 export function CopyButton({

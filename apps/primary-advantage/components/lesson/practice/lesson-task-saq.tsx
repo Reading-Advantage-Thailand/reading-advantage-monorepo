@@ -1,6 +1,6 @@
 "use client";
 
-import { Article, SAQuestion } from "@/types";
+import { Article, SAQuestion, SAQFeedback } from "@/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Loader2, MessageSquare, CheckCircle } from "lucide-react";
@@ -24,11 +24,7 @@ import {
 } from "@/components/ui/form";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@reading-advantage/auth-client";
-
-interface SAQFeedback {
-  score: number;
-  feedback: string;
-}
+import { shuffle } from "@/lib/shuffle";
 
 interface LessonSAQProps {
   article: Article;
@@ -44,8 +40,7 @@ function LessonSAQContent({ article }: { article: Article }) {
   const { user, refresh } = useAuth();
   useEffect(() => {
     if (article.shortAnswerQuestions) {
-      const randomQuestions = article.shortAnswerQuestions
-        .sort(() => Math.random() - 0.5)
+      const randomQuestions = shuffle(article.shortAnswerQuestions)
         .slice(0, 1);
 
       setQuestions({ ...randomQuestions[0] });

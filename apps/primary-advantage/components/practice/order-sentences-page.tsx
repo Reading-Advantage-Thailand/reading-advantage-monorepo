@@ -1,22 +1,22 @@
-import { ClozeTestGame } from "@/components/pratice/cloze-test-game";
-import { getFlashcardDeckId } from "@/actions/pratice";
+import { OrderSentenceGame } from "@/components/lesson/games/lesson-sentence-order";
+import { getFlashcardDeckId } from "@/actions/practice";
 import { Header } from "@/components/header";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTranslations } from "next-intl/server";
 
-export default async function ClozeTestPage() {
-  const t = await getTranslations("SentencesPage.clozeTestGame");
+export default async function SentencesOrderingPage() {
   const deckResult = await getFlashcardDeckId();
+  const t = await getTranslations("SentencesPage.sentenceOrder");
 
   if (!deckResult.success) {
     return (
       <div className="space-y-6">
-        <Header heading={t("title")} text={t("description")} />
+        <Header heading={t("title")} text={t("descriptionNodeck")} />
         <Card>
           <CardContent className="p-6 text-center">
             <p className="text-muted-foreground">{deckResult.error}</p>
             <p className="text-muted-foreground mt-2 text-sm">
-              {t("noDeck.message")}
+              {t("contentNoDeck")}
             </p>
           </CardContent>
         </Card>
@@ -24,5 +24,5 @@ export default async function ClozeTestPage() {
     );
   }
 
-  return <ClozeTestGame deckId={deckResult.deckId} />;
+  return <OrderSentenceGame source="deck" deckId={deckResult.deckId} />;
 }

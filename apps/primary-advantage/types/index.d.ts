@@ -156,7 +156,7 @@ export interface SaveSentenceAndWordFlashcard {
   words: WordListTimestamp[];
 }
 
-interface TimePoint {
+export interface TimePoint {
   timeSeconds: number;
   markName: string;
   index?: number;
@@ -579,4 +579,84 @@ export interface ArticleResponse {
       audioUrl: string;
     }[];
   };
+}
+
+/**
+ * Student row shown in classroom enrollment flows.
+ */
+export interface Student {
+  id: string;
+  name: string | null;
+  email: string | null;
+  cefrLevel?: string | null;
+  level?: number;
+  xp?: number;
+}
+
+/**
+ * School admin membership with the nested user.
+ */
+export interface SchoolAdmin {
+  id: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+/**
+ * Form data for creating or editing a student.
+ */
+export interface StudentFormData {
+  name: string;
+  email: string;
+  cefrLevel: string;
+  role: string;
+}
+
+/**
+ * Pagination metadata returned with table data.
+ */
+export type PaginationInfo = {
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  limit: number;
+};
+
+/**
+ * Short-answer feedback scored by the reviewer.
+ */
+export interface SAQFeedback {
+  score: number;
+  feedback: string;
+}
+
+/**
+ * Props for the user activity dashboard charts.
+ */
+export interface UserActiviryChartProps {
+  data: UserActivityLog[];
+}
+
+/**
+ * License row with its school for admin tables.
+ */
+export type LicenseWithSchool = LicenseRow & {
+  School?: {
+    id: string;
+    name: string;
+  } | null;
+};
+
+/**
+ * A left-right pair match in matching games.
+ */
+export interface UserMatch {
+  leftId: string;
+  rightId: string;
+  isCorrect: boolean;
 }

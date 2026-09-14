@@ -311,6 +311,7 @@ export default function LessonLanguageQuestion({
                       <Button
                         disabled
                         className="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-white shadow-lg transition-all duration-200 hover:from-indigo-600 hover:to-purple-700"
+                        aria-label={t("loading.conversation")}
                       >
                         <Loader2 className="h-5 w-5 animate-spin" />
                       </Button>
@@ -329,6 +330,7 @@ export default function LessonLanguageQuestion({
                       type="button"
                       variant="outline"
                       className="rounded-xl border-2 border-gray-300 px-3 py-3 transition-all duration-200 hover:border-gray-400 sm:px-4 dark:border-gray-600 dark:hover:border-gray-500"
+                      aria-label={t("buttons.skip")}
                     >
                       <span className="hidden sm:inline">
                         {t("buttons.skip")}

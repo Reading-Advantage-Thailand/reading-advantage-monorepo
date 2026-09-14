@@ -138,6 +138,7 @@ export function AddAdminDialog({
                 onClick={searchUsers}
                 disabled={isSearching || !searchQuery.trim()}
                 size="sm"
+                aria-label={t("searchUsers")}
               >
                 {isSearching ? (
                   <Icons.spinner className="h-4 w-4 animate-spin" />

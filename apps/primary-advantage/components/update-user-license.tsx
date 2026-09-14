@@ -46,7 +46,6 @@ export function UpdateUserLicenseForm({
   const router = useRouter();
   //   const date = new Date(expired);
 
-  //console.log(form.formState.isValid);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {

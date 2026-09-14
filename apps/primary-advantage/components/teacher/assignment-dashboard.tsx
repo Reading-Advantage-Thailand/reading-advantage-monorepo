@@ -170,6 +170,7 @@ const SkeletonStudentsList = () => (
 
 export default function AssignmentDashboard() {
   const t = useTranslations("Teacher.AssignmentDashboard");
+  const tComponents = useTranslations("Components");
   const locale = useLocale();
   const [assignment, setAssignment] = useState<Assignment>({
     meta: {
@@ -214,6 +215,9 @@ export default function AssignmentDashboard() {
       const assignmentId = params.id as string;
 
       const response = await fetch(`/api/assignments?id=${assignmentId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch assignment");
+      }
       const data = await response.json();
 
       setAssignment(data);
@@ -784,6 +788,8 @@ export default function AssignmentDashboard() {
                             ? "bg-primary border-primary text-primary-foreground"
                             : "border-muted-foreground hover:border-primary"
                         }`}
+                        aria-label={tComponents("selectStudent")}
+                        aria-pressed={isSelected}
                       >
                         {isSelected && <Check className="h-4 w-4" />}
                       </button>

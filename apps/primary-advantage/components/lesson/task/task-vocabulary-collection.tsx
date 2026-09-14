@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BookmarkIcon, VolumeXIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import AudioButton from "@/components/audio-button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface WordList {
   vocabulary: string;
@@ -25,6 +25,7 @@ export default function TaskVocabularyCollection({
   article: Article;
 }) {
   const t = useTranslations("Lesson.PreviewVocabulary");
+  const locale = useLocale();
   const [loading, setLoading] = useState(true);
   const [wordList, setWordList] = useState<WordList[]>([]);
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null);
@@ -43,8 +44,6 @@ export default function TaskVocabularyCollection({
             ? (word?.timeSeconds as number) + 10
             : (words[index + 1].timeSeconds as number);
 
-        setLoading(false);
-
         return {
           vocabulary: word?.vocabulary,
           definition: word?.definition,
@@ -56,6 +55,7 @@ export default function TaskVocabularyCollection({
       });
       setWordList(wordList);
     }
+    setLoading(false);
   }, [words]);
 
   const handleWordClick = (index: number) => {
@@ -106,6 +106,15 @@ export default function TaskVocabularyCollection({
                       : "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600"
                   }`}
                   onClick={() => handleWordClick(index)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleWordClick(index);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={word.vocabulary}
                 >
                   <div className="flex items-start gap-4">
                     {/* Word */}
@@ -145,7 +154,9 @@ export default function TaskVocabularyCollection({
                         }`}
                       >
                         <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                          {word.definition?.th}
+                          {(
+                            word.definition as unknown as Record<string, string>
+                          )[locale] || word.definition?.en}
                         </p>
                       </div>
                     </div>

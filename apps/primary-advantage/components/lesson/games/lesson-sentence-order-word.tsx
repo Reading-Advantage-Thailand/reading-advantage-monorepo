@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useTranslations } from "next-intl";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,12 +34,15 @@ import {
   Languages,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toTranslationLanguage } from "@/lib/translation-language";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { getLessonOrderingWords } from "@/actions/flashcard";
 import { ActivityType, UserXpEarned } from "@/types/enum";
 import { updateUserActivity } from "@/actions/user";
 import { useAuth } from "@reading-advantage/auth-client";
+import { getWordSegment } from "@/lib/audio-highlight";
+import { formatTime } from "@/lib/format-time";
 
 interface OrderWordData {
   id: string;
@@ -99,13 +102,75 @@ const SUPPORTED_LANGUAGES = {
   tw: "🇹🇼 Chinese (Traditional)",
 };
 
-export default function LessonSentenceOrderWord({
+/**
+ * Data source for the sentence order-word game.
+ */
+export type OrderWordGameSource = "lesson" | "deck";
+
+/**
+ * Per-source strings and flags for the sentence order-word game.
+ */
+export interface OrderWordLabels {
+  /** Whether to render the page Header on the start and gameplay screens. */
+  showHeader: boolean;
+  /** Label for the back-to-menu button on the completion screen. */
+  backToMenu: string;
+  /** Label for the play-again button on the completion screen. */
+  playAgain: string;
+  /** Text shown while the next sentence group loads. */
+  loadingNextChallenge: string;
+  /** Resolves a language code to its display name for this variant. */
+  languageName: (code: string) => string;
+}
+
+function OrderWordGameBody({
+  source,
   articleId,
+  deckId,
+  sentences = [],
 }: {
-  articleId: string;
+  source: OrderWordGameSource;
+  articleId?: string;
+  deckId?: string;
+  sentences?: OrderWordData[];
 }) {
   const t = useTranslations("SentencesPage.orderWordGame");
+  const locale = useLocale();
   const router = useRouter();
+  const isDeck = source === "deck";
+  const getLanguageName = useCallback(
+    (code: string) => {
+      const languageMap: Record<string, string> = {
+        th: t("startScreen.language.thai"),
+        vi: t("startScreen.language.vietnamese"),
+        cn: t("startScreen.language.chineseSimplified"),
+        tw: t("startScreen.language.chineseTraditional"),
+      };
+      return languageMap[code] || code;
+    },
+    [t],
+  );
+  const labels: OrderWordLabels = {
+    showHeader: isDeck,
+    backToMenu: isDeck ? t("complete.backToMenu") : t("backToMenu"),
+    playAgain: isDeck ? t("complete.playAgain") : t("playAgain"),
+    loadingNextChallenge: isDeck
+      ? t("loadingNextChallenge")
+      : "Loading next challenge...",
+    languageName: (code) =>
+      isDeck
+        ? getLanguageName(code)
+        : SUPPORTED_LANGUAGES[code as keyof typeof SUPPORTED_LANGUAGES],
+  };
+  const languageOptions = isDeck
+    ? (["th", "vi", "cn", "tw"] as const).map((code) => ({
+        code,
+        name: getLanguageName(code),
+      }))
+    : Object.entries(SUPPORTED_LANGUAGES).map(([code, name]) => ({
+        code,
+        name,
+      }));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedWords, setSelectedWords] = useState<ClickableWord[]>([]);
   const [availableWords, setAvailableWords] = useState<ClickableWord[]>([]);
@@ -125,26 +190,67 @@ export default function LessonSentenceOrderWord({
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
 
   // Translation language (selected before game starts)
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("th");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(
+    toTranslationLanguage(locale),
+  );
 
-  const [activeSentences, setActiveSentences] = useState<OrderWordData[]>([]);
+  const [activeSentences, setActiveSentences] = useState<OrderWordData[]>(
+    isDeck ? sentences : [],
+  );
 
   const { user, refresh } = useAuth();
 
-  useEffect(() => {
-    if (articleId) {
-      loadSentencesFromDeck();
-    }
-  }, [articleId]);
+  const activeAudioRef = useRef<HTMLAudioElement | null>(null);
+  const hintAudioStopRef = useRef<(() => void) | null>(null);
 
-  const loadSentencesFromDeck = async () => {
+  useEffect(() => {
+    return () => {
+      hintAudioStopRef.current?.();
+      hintAudioStopRef.current = null;
+      activeAudioRef.current?.pause();
+      activeAudioRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isDeck) {
+      if (articleId) {
+        loadLessonSentences();
+      }
+    } else if (deckId && sentences.length === 0) {
+      loadDeckSentences();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDeck, articleId, deckId]);
+
+  const loadLessonSentences = async () => {
     setIsLoading(true);
     try {
-      const response = (await getLessonOrderingWords(articleId)) as {
+      const response = (await getLessonOrderingWords(articleId as string)) as {
         sentences: OrderWordData[];
         totalSentences: number;
       };
       setActiveSentences(response.sentences || []);
+    } catch (error) {
+      console.error("Error loading sentences:", error);
+      toast.error(t("toast.failedToLoadSentences"));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadDeckSentences = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/flashcard/decks/${deckId}/words-for-ordering`,
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setActiveSentences(data.sentences || []);
+      } else {
+        toast.error(t("toast.failedToLoad"));
+      }
     } catch (error) {
       console.error("Error loading sentences:", error);
       toast.error(t("toast.failedToLoadSentences"));
@@ -158,15 +264,23 @@ export default function LessonSentenceOrderWord({
     [activeSentences, currentIndex],
   );
 
-  // Timer effect
+  // Game clock (setTimeout chain; no polling interval)
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isPlaying && !gameComplete) {
-      interval = setInterval(() => {
+    if (!isPlaying || gameComplete) return;
+    let cancelled = false;
+    let timeout: NodeJS.Timeout;
+    const schedule = () => {
+      timeout = setTimeout(() => {
+        if (cancelled) return;
         setTimer((prev) => prev + 1);
+        schedule();
       }, 1000);
-    }
-    return () => clearInterval(interval);
+    };
+    schedule();
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
   }, [isPlaying, gameComplete]);
 
   // Shuffle words function
@@ -261,28 +375,34 @@ export default function LessonSentenceOrderWord({
     setIsPlaying(true);
     toast.success(
       t("toast.gameStarted", {
-        language:
-          SUPPORTED_LANGUAGES[
-            selectedLanguage as keyof typeof SUPPORTED_LANGUAGES
-          ],
+        language: labels.languageName(selectedLanguage),
       }),
     );
-  }, [selectedLanguage, t]);
+  }, [selectedLanguage, t, labels]);
 
   const handleNext = useCallback(async () => {
     if (currentIndex < activeSentences.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
       setGameComplete(true);
-      await updateUserActivity(
-        articleId,
-        ActivityType.SENTENCE_WORD_ORDERING,
-        UserXpEarned.SENTENCE_WORD_ORDERING,
-        timer,
-        {
-          score: UserXpEarned.SENTENCE_WORD_ORDERING,
-        },
-      );
+      if (!isDeck) {
+        await updateUserActivity(
+          articleId as string,
+          ActivityType.SENTENCE_WORD_ORDERING,
+          timer,
+          {
+            score: UserXpEarned.SENTENCE_WORD_ORDERING,
+          },
+        );
+      } else {
+        await fetch(`/api/flashcard/decks/${deckId}/words-for-ordering`, {
+          method: "POST",
+          body: JSON.stringify({
+            score: score,
+            timer: timer,
+          }),
+        });
+      }
       setIsPlaying(false);
       await refresh();
     }
@@ -343,18 +463,13 @@ export default function LessonSentenceOrderWord({
   const handleLanguageChange = useCallback(
     (value: string) => {
       setSelectedLanguage(value);
-      const language =
-        SUPPORTED_LANGUAGES[value as keyof typeof SUPPORTED_LANGUAGES];
-      toast.success(t("toast.languageSet", { language }));
+      toast.success(
+        t("toast.languageSet", { language: labels.languageName(value) }),
+      );
     },
-    [t],
+    [t, labels],
   );
 
-  const formatTime = useCallback((seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  }, []);
 
   const progress = useMemo(
     () =>
@@ -405,27 +520,59 @@ export default function LessonSentenceOrderWord({
   const playHintAudio = useCallback(async () => {
     if (!currentSentence?.words || isPlayingHintAudio) return;
 
+    const wordIndex = Math.min(
+      selectedWords.length,
+      currentSentence.words.length - 1,
+    );
+    const targetWord = getWordSegment(currentSentence.words, wordIndex);
+    if (!targetWord?.audioUrl || targetWord.startTime === undefined) return;
+
     setIsPlayingHintAudio(true);
     // toast.success("Playing correct word order audio 🔊");
 
     try {
-      await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         const audio = new Audio();
-        let timeoutId: NodeJS.Timeout;
+        activeAudioRef.current = audio;
+        let timeoutId: NodeJS.Timeout | null = null;
+        let settled = false;
 
         const cleanup = () => {
           audio.pause();
-          if (timeoutId) clearTimeout(timeoutId);
+          if (activeAudioRef.current === audio) {
+            activeAudioRef.current = null;
+          }
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+          }
           audio.removeEventListener("loadeddata", handleLoadedData);
           audio.removeEventListener("seeked", handleSeeked);
           audio.removeEventListener("timeupdate", handleTimeUpdate);
           audio.removeEventListener("ended", handleEnded);
           audio.removeEventListener("error", handleError);
+          if (hintAudioStopRef.current === finish) {
+            hintAudioStopRef.current = null;
+          }
+        };
+
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          resolve(void 0);
+        };
+
+        const fail = (error: unknown) => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          reject(error);
         };
 
         const handleLoadedData = () => {
           audio.removeEventListener("loadeddata", handleLoadedData);
-          audio.currentTime = currentSentence.words[currentIndex].startTime!;
+          audio.currentTime = targetWord.startTime!;
         };
 
         const handleSeeked = () => {
@@ -440,37 +587,30 @@ export default function LessonSentenceOrderWord({
 
         const handleTimeUpdate = () => {
           const tolerance = 0.5;
-          if (
-            audio.currentTime + tolerance >=
-            currentSentence.words[currentIndex].endTime!
-          ) {
-            cleanup();
-            resolve(void 0);
+          if (audio.currentTime + tolerance >= targetWord.endTime!) {
+            finish();
           }
         };
 
         const handleEnded = () => {
-          cleanup();
-          resolve(void 0);
+          finish();
         };
 
         const handleError = (error: any) => {
-          cleanup();
-          reject(error);
+          fail(error);
         };
+
+        hintAudioStopRef.current = finish;
 
         audio.addEventListener("loadeddata", handleLoadedData);
         audio.addEventListener("seeked", handleSeeked);
         audio.addEventListener("ended", handleEnded);
         audio.addEventListener("error", handleError);
 
-        timeoutId = setTimeout(() => {
-          cleanup();
-          resolve(void 0);
-        }, 5000);
+        timeoutId = setTimeout(finish, 5000);
 
         audio.preload = "auto";
-        audio.src = currentSentence.words[currentIndex].audioUrl!;
+        audio.src = targetWord.audioUrl!;
         audio.load();
       });
     } catch (error) {
@@ -479,7 +619,7 @@ export default function LessonSentenceOrderWord({
       // toast.success("Audio sequence completed! 🎵");
       setIsPlayingHintAudio(false);
     }
-  }, [currentSentence, isPlayingHintAudio]);
+  }, [currentSentence, isPlayingHintAudio, selectedWords.length]);
 
   const formedSentence = useMemo(() => {
     return selectedWords.map((word) => word.text).join(" ");
@@ -546,10 +686,7 @@ export default function LessonSentenceOrderWord({
             </p>
             <p className="text-muted-foreground text-sm">
               {t("complete.usingTranslations", {
-                language:
-                  SUPPORTED_LANGUAGES[
-                    selectedLanguage as keyof typeof SUPPORTED_LANGUAGES
-                  ],
+                language: labels.languageName(selectedLanguage),
               })}
             </p>
           </div>
@@ -600,11 +737,11 @@ export default function LessonSentenceOrderWord({
               className="flex-1"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
-              {t("backToMenu")}
+              {labels.backToMenu}
             </Button>
             <Button onClick={handleRestartGame} size="lg" className="flex-1">
               <RotateCcw className="mr-2 h-4 w-4" />
-              {t("playAgain")}
+              {labels.playAgain}
             </Button>
           </div>
         </div>
@@ -616,6 +753,10 @@ export default function LessonSentenceOrderWord({
   if (!isPlaying) {
     return (
       <div className="container mx-auto max-w-4xl space-y-8 px-4">
+        {labels.showHeader && (
+          <Header heading={t("title")} text={t("descriptionShort")} />
+        )}
+
         <Card className="mx-auto max-w-2xl">
           <CardHeader className="pb-6 text-center">
             <CardTitle className="text-2xl">{t("startScreen.title")}</CardTitle>
@@ -706,10 +847,10 @@ export default function LessonSentenceOrderWord({
                   </div>
                 </SelectTrigger>
                 <SelectContent position="popper" className="max-h-60">
-                  {Object.entries(SUPPORTED_LANGUAGES).map(([code, name]) => (
-                    <SelectItem key={code} value={code}>
+                  {languageOptions.map((option) => (
+                    <SelectItem key={option.code} value={option.code}>
                       <div className="flex items-center gap-2">
-                        <span>{name}</span>
+                        <span>{option.name}</span>
                       </div>
                     </SelectItem>
                   ))}
@@ -717,10 +858,7 @@ export default function LessonSentenceOrderWord({
               </Select>
               <p className="text-muted-foreground text-sm">
                 {t("startScreen.language.description", {
-                  language:
-                    SUPPORTED_LANGUAGES[
-                      selectedLanguage as keyof typeof SUPPORTED_LANGUAGES
-                    ],
+                  language: labels.languageName(selectedLanguage),
                 })}
               </p>
             </div>
@@ -737,10 +875,7 @@ export default function LessonSentenceOrderWord({
               {activeSentences.length === 0
                 ? t("startScreen.noSentences")
                 : t("startScreen.startButton", {
-                    language:
-                      SUPPORTED_LANGUAGES[
-                        selectedLanguage as keyof typeof SUPPORTED_LANGUAGES
-                      ],
+                    language: labels.languageName(selectedLanguage),
                   })}
             </Button>
           </CardContent>
@@ -754,7 +889,7 @@ export default function LessonSentenceOrderWord({
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="space-y-4 text-center">
           <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
-          <p className="text-muted-foreground">Loading next challenge...</p>
+          <p className="text-muted-foreground">{labels.loadingNextChallenge}</p>
         </div>
       </div>
     );
@@ -762,6 +897,15 @@ export default function LessonSentenceOrderWord({
 
   return (
     <div className="container mx-auto max-w-4xl space-y-4 px-4">
+      {labels.showHeader && (
+        <Header
+          heading={t("gameplay.title")}
+          text={t("gameplay.instruction", {
+            language: labels.languageName(selectedLanguage),
+          })}
+        />
+      )}
+
       {/* Progress Bar */}
       <div className="space-y-2">
         <div className="text-muted-foreground flex items-center justify-between text-sm">
@@ -888,10 +1032,7 @@ export default function LessonSentenceOrderWord({
                   <Languages className="h-4 w-4 text-green-600" />
                   <span className="text-sm font-medium text-green-800 dark:text-green-200">
                     {t("gameplay.translationLabel", {
-                      language:
-                        SUPPORTED_LANGUAGES[
-                          selectedLanguage as keyof typeof SUPPORTED_LANGUAGES
-                        ],
+                      language: labels.languageName(selectedLanguage),
                     })}
                   </span>
                 </div>
@@ -1028,6 +1169,7 @@ export default function LessonSentenceOrderWord({
           {/* Result Display */}
           {showResult && (
             <Card
+              aria-live="polite"
               className={cn(
                 "border-2",
                 isCorrect
@@ -1123,3 +1265,32 @@ export default function LessonSentenceOrderWord({
     </div>
   );
 }
+
+/**
+ * Renders the lesson or deck sentence order-word game.
+ * @param source Whether to load sentences from a lesson article or a flashcard deck.
+ * @param articleId Article id for lesson games.
+ * @param deckId Deck id for deck games.
+ * @param sentences Prefetched deck sentences.
+ * @returns The sentence order-word game.
+ */
+export function OrderWordGame({
+  source,
+  articleId,
+  deckId,
+  sentences,
+}: {
+  source: OrderWordGameSource;
+  articleId?: string;
+  deckId?: string;
+  sentences?: OrderWordData[];
+}) {
+  if (source === "deck") {
+    return (
+      <OrderWordGameBody source="deck" deckId={deckId} sentences={sentences} />
+    );
+  }
+  return <OrderWordGameBody source="lesson" articleId={articleId} />;
+}
+
+export default OrderWordGame;

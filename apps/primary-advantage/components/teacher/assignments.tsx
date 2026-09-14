@@ -1,13 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableHead,
-} from "@/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table";
+import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,18 +9,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -41,6 +24,8 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronDownIcon } from "lucide-react";
+import { useDebounce } from "@/hooks/use-debounce";
+import type { PaginationInfo } from "@/types";
 
 type Assignment = {
   articleId: string;
@@ -62,15 +47,6 @@ type Assignment = {
   }[];
 };
 
-type PaginationInfo = {
-  currentPage: number;
-  totalPages: number;
-  totalCount: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-  limit: number;
-};
-
 interface Classroom {
   id: string;
   name: string;
@@ -78,9 +54,6 @@ interface Classroom {
 
 export default function Assignments() {
   const t = useTranslations("Teacher.Assignments");
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [selectedClassroom, setSelectedClassroom] = useState<string>("");
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -97,22 +70,6 @@ export default function Assignments() {
 
   const pathname = usePathname();
   const router = useRouter();
-
-  const useDebounce = (value: string, delay: number) => {
-    const [debouncedValue, setDebouncedValue] = useState(value);
-
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
-
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [value, delay]);
-
-    return debouncedValue;
-  };
 
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
 
@@ -192,25 +149,6 @@ export default function Assignments() {
       ),
     },
   ];
-
-  const table = useReactTable({
-    data: assignments,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    manualPagination: true,
-    manualFiltering: true,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
-  });
 
   const fetchAssignments = async (
     classroomId: string,
@@ -311,28 +249,27 @@ export default function Assignments() {
 
   useEffect(() => {
     const init = async () => {
-      if (!classrooms.length) {
-        await fetchClassrooms();
-      }
+      const rooms = await fetchClassrooms();
 
       const pathSegments = pathname.split("/");
       const currentClassroomId = pathSegments[3];
 
       if (
         currentClassroomId &&
-        classrooms.some((c) => c.id === currentClassroomId)
+        rooms.some((c) => c.id === currentClassroomId)
       ) {
         setSelectedClassroom(currentClassroomId);
         await fetchAssignments(currentClassroomId, 1);
       }
     };
 
-    async function fetchClassrooms() {
+    async function fetchClassrooms(): Promise<Classroom[]> {
       const res = await fetch("/api/classroom");
       const data = await res.json();
-      setClassrooms(data.classrooms);
+      setClassrooms(data.classrooms ?? []);
+      return data.classrooms ?? [];
     }
-    fetchClassrooms();
+    init();
   }, []);
 
   return (
@@ -369,28 +306,11 @@ export default function Assignments() {
         )}
       </div>
 
-      <div className="rounded-md border">
-        <Table style={{ tableLayout: "fixed", width: "100%" }}>
-          <TableHeader className="font-bold">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {selectedClassroom ? (
-              isLoading ? (
-                Array.from({ length: 5 }).map((_, index) => (
+      <DataTable
+        columns={columns}
+        data={assignments}
+        loading={!!selectedClassroom && isLoading}
+        loadingContent={Array.from({ length: 5 }).map((_, index) => (
                   <TableRow key={`loading-${index}`}>
                     <TableCell>
                       <Skeleton className="h-6 w-[250px]" />
@@ -408,115 +328,58 @@ export default function Assignments() {
                       <Skeleton className="mx-auto h-8 w-[100px]" />
                     </TableCell>
                   </TableRow>
-                ))
-              ) : assignments?.length ? (
-                assignments.map((row, index) => (
-                  <TableRow key={`${row.articleId}-${index}`}>
-                    <TableCell>
-                      <div className="ml-4">{row.meta.title}</div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-center">
-                        {new Date(row.meta.createdAt).toLocaleString()}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-center">
-                        {new Date(row.meta.dueDate).toLocaleDateString()}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-center">{row.students.length}</div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-center">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="default" className="ml-auto">
-                              {t("table.actions.actions")}
-                              <ChevronDownIcon className="ml-2 h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="start">
-                            <DropdownMenuItem
-                              onClick={() => {
-                                router.push(`assignments/${row.meta.id}`);
-                              }}
-                            >
-                              {t("table.actions.details")}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    {t("empty.noAssignments")}
-                  </TableCell>
-                </TableRow>
-              )
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  {t("empty.selectClassroom")}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Custom pagination */}
-      <div className="flex items-center justify-between">
-        <div className="text-muted-foreground text-sm">
-          {t("pagination.showing", {
-            from: Math.min(
-              (pagination.currentPage - 1) * pagination.limit + 1,
-              pagination.totalCount,
-            ),
-            to: Math.min(
-              pagination.currentPage * pagination.limit,
-              pagination.totalCount,
-            ),
-            total: pagination.totalCount,
-          })}
-        </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrevPage}
-            disabled={!pagination.hasPrevPage || isLoading}
-          >
-            {t("pagination.previous")}
-          </Button>
-          <div className="flex items-center gap-1">
-            <span className="text-sm">
-              {t("pagination.pageOf", {
-                page: pagination.currentPage,
-                totalPages: pagination.totalPages,
+                ))}
+        emptyText={
+          selectedClassroom ? t("empty.noAssignments") : t("empty.selectClassroom")
+        }
+        manualPagination
+        manualFiltering
+        tableStyle={{ tableLayout: "fixed", width: "100%" }}
+        headerClassName="font-bold"
+        footer={
+          <div className="flex items-center justify-between">
+            <div className="text-muted-foreground text-sm">
+              {t("pagination.showing", {
+                from: Math.min(
+                  (pagination.currentPage - 1) * pagination.limit + 1,
+                  pagination.totalCount,
+                ),
+                to: Math.min(
+                  pagination.currentPage * pagination.limit,
+                  pagination.totalCount,
+                ),
+                total: pagination.totalCount,
               })}
-            </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePrevPage}
+                disabled={!pagination.hasPrevPage || isLoading}
+              >
+                {t("pagination.previous")}
+              </Button>
+              <div className="flex items-center gap-1">
+                <span className="text-sm">
+                  {t("pagination.pageOf", {
+                    page: pagination.currentPage,
+                    totalPages: pagination.totalPages,
+                  })}
+                </span>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleNextPage}
+                disabled={!pagination.hasNextPage || isLoading}
+              >
+                {t("pagination.next")}
+              </Button>
+            </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNextPage}
-            disabled={!pagination.hasNextPage || isLoading}
-          >
-            {t("pagination.next")}
-          </Button>
-        </div>
-      </div>
+        }
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   UserXpEarned,
 } from "@/types/enum";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   GraduationCap,
@@ -23,7 +24,10 @@ import {
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { VOCABULARY_LANGUAGES } from "../../flashcards/deck-view";
+import {
+  SENTENCE_LANGUAGES,
+  VOCABULARY_LANGUAGES,
+} from "../../flashcards/deck-view";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -36,41 +40,157 @@ import { Separator } from "@/components/ui/separator";
 import { getLessonFlashcards } from "@/actions/flashcard";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { toTranslationLanguage } from "@/lib/translation-language";
 import { toast } from "sonner";
 import { updateUserActivity } from "@/actions/user";
-import { useTranslations } from "next-intl";
 import { useAuth } from "@reading-advantage/auth-client";
+import { shuffle } from "@/lib/shuffle";
+import type { UserMatch } from "@/types";
 
 // Type definitions
-interface VocabularyPair {
+interface MatchingSourceCard {
   id: string;
+  sentence: string;
   word: string;
-  definition: string;
+  translation: Record<string, string>;
+  definition: Record<string, string>;
   audioUrl?: string;
   startTime?: number;
   endTime?: number;
 }
 
-interface UserMatch {
-  leftId: string;
-  rightId: string;
-  isCorrect: boolean;
+interface MatchingPair {
+  id: string;
+  front: string;
+  back: string;
+  audioUrl?: string;
+  startTime?: number;
+  endTime?: number;
 }
 
-export default function LessonVocabularyMatching({
+/**
+ * Static per-variant configuration for the matching game.
+ */
+export interface MatchingVariantConfig {
+  /** Card kind requested from the lesson flashcards action. */
+  requestKind: FlashcardType;
+  /** Activity type reported when the round auto-completes. */
+  activityType: ActivityType;
+  /** XP score reported when the round auto-completes. */
+  activityScore: UserXpEarned;
+  /** Language choices offered on the start screen. */
+  languageOptions: typeof SENTENCE_LANGUAGES | typeof VOCABULARY_LANGUAGES;
+  /** Whether the initial language comes from the locale. */
+  languageFromLocale: boolean;
+  /** Reads the left-column text from a raw flashcard. */
+  readFront: (card: MatchingSourceCard) => string;
+  /** Reads the right-column text from a raw flashcard. */
+  readBack: (card: MatchingSourceCard, language: string) => string;
+}
+
+/** Sentence-matching variant configuration. */
+export const SENTENCE_MATCHING_CONFIG: MatchingVariantConfig = {
+  requestKind: FlashcardType.SENTENCE,
+  activityType: ActivityType.SENTENCE_MATCHING,
+  activityScore: UserXpEarned.SENTENCE_MATCHING,
+  languageOptions: SENTENCE_LANGUAGES,
+  languageFromLocale: true,
+  readFront: (card) => card.sentence,
+  readBack: (card, language) => card.translation[language],
+};
+
+/** Vocabulary-matching variant configuration. */
+export const VOCABULARY_MATCHING_CONFIG: MatchingVariantConfig = {
+  requestKind: FlashcardType.VOCABULARY,
+  activityType: ActivityType.VOCABULARY_MATCHING,
+  activityScore: UserXpEarned.VOCABULARY_MATCHING,
+  languageOptions: VOCABULARY_LANGUAGES,
+  languageFromLocale: false,
+  readFront: (card) => card.word,
+  readBack: (card, language) => card.definition[language],
+};
+
+function MatchingGameBody({
   articleId,
+  cardKind,
 }: {
   articleId: string;
+  cardKind: FlashcardType;
 }) {
-  const t = useTranslations("Lesson.VocabularyMatching");
+  const isVocabulary = cardKind === FlashcardType.VOCABULARY;
+  const config: MatchingVariantConfig = isVocabulary
+    ? VOCABULARY_MATCHING_CONFIG
+    : SENTENCE_MATCHING_CONFIG;
+  const t = useTranslations(
+    isVocabulary ? "Lesson.VocabularyMatching" : "SentencesPage.matchingGame",
+  );
+  const tCards = useTranslations("SentencesPage.sentencesCard");
+  const locale = useLocale();
+  /**
+   * Resolved per-variant strings. Static text comes from the variant
+   * namespaces; counters render live values.
+   */
+  const labels = isVocabulary
+    ? {
+        loadErrorToast: t("toast.failedToLoad"),
+        errorTitle: t("error.title"),
+        errorDescription: t("error.description"),
+        noCardsTitle: t("noCards.title"),
+        noCardsDescription: t("noCards.description"),
+        startTitle: t("start.title"),
+        startSubtitle: t("start.subtitle"),
+        languageTitle: t("start.languageLabel"),
+        translationsHint: t("start.languageHint"),
+        startButton: t("start.startButton"),
+        completeTitle: t("completed.title"),
+        completeSubtitle: t("completed.subtitle"),
+        xpEarned: t("completed.xpEarned"),
+        completedLabel: t("completed.completed"),
+        gameTitle: t("game.title"),
+        gameInstruction: t("game.instruction"),
+        leftColumn: t("game.columns.words"),
+        rightColumn: t("game.columns.definitions"),
+        resultAllCorrect: t("results.perfect"),
+        finishButton: t("buttons.completeActivity"),
+        pairsProgress: (matched: number, total: number) =>
+          `${matched}/${total} matched`,
+        correctCount: (correct: number, total: number) =>
+          `${correct}/${total} correct`,
+      }
+    : {
+        loadErrorToast: t("toast.failedToLoadData"),
+        errorTitle: t("toast.failedToLoadData"),
+        errorDescription: t("toast.failedToLoad"),
+        noCardsTitle: t("noDeck.error"),
+        noCardsDescription: t("noDeck.message"),
+        startTitle: t("startScreen.title"),
+        startSubtitle: t("startScreen.subtitle"),
+        languageTitle: t("startScreen.language.title"),
+        translationsHint: t("gameplay.translations", { language: "" }),
+        startButton: t("startScreen.startButton"),
+        completeTitle: t("complete.title"),
+        completeSubtitle: t("complete.subtitle", { count: 1 }),
+        xpEarned: tCards("xpEarned"),
+        completedLabel: tCards("completed"),
+        gameTitle: `📚 ${t("gameplay.title")}`,
+        gameInstruction: t("gameplay.instruction"),
+        leftColumn: t("itemTypes.sentence"),
+        rightColumn: t("itemTypes.translation"),
+        resultAllCorrect: t("results.allCorrect"),
+        finishButton: t("buttons.finishGame"),
+        pairsProgress: (matched: number, total: number) =>
+          t("gameplay.pairsProgress", { matched, total }),
+        correctCount: (correct: number, total: number) =>
+          t("gameplay.correctCount", { correct, total }),
+      };
   // Game state
   const [gameState, setGameState] = useState<GameState>(GameState.Starting);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
-  const [vocabularyPairs, setVocabularyPairs] = useState<VocabularyPair[]>([]);
-  const [shuffledDefinitions, setShuffledDefinitions] = useState<
-    VocabularyPair[]
-  >([]);
-  const { user, refresh } = useAuth();
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(
+    config.languageFromLocale ? toTranslationLanguage(locale) : "en",
+  );
+  const [vocabularyPairs, setVocabularyPairs] = useState<MatchingPair[]>([]);
+  const [shuffledDefinitions, setShuffledDefinitions] = useState<MatchingPair[]>([]);
+
   // Matching state
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
   const [userMatches, setUserMatches] = useState<UserMatch[]>([]);
@@ -78,11 +198,12 @@ export default function LessonVocabularyMatching({
   const [showResult, setShowResult] = useState(false);
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const { user, refresh } = useAuth();
 
   // Helper states
   const [score, setScore] = useState(0);
 
-  const languageOptions = VOCABULARY_LANGUAGES;
+  const languageOptions = config.languageOptions;
 
   // Callback functions
   const handlePairSelect = useCallback(
@@ -118,7 +239,7 @@ export default function LessonVocabularyMatching({
         toast.error(t("results.incorrectMatch"));
       }
     },
-    [vocabularyPairs, isCompleted],
+    [vocabularyPairs, isCompleted, t],
   );
 
   const handleLeftItemClick = useCallback(
@@ -140,9 +261,9 @@ export default function LessonVocabularyMatching({
   const handleShowAnswers = useCallback(() => {
     setShowCorrectAnswers(true);
     toast.info(t("results.showAnswers"));
-  }, []);
+  }, [t]);
 
-  const handleComplete = useCallback(() => {
+  const handleComplete = useCallback(async () => {
     setGameState(GameState.Completed);
   }, []);
 
@@ -159,15 +280,15 @@ export default function LessonVocabularyMatching({
       try {
         const response = await getLessonFlashcards(
           articleId,
-          FlashcardType.VOCABULARY,
+          config.requestKind,
         );
 
         if (response.success && response.cards && response.cards.length > 0) {
           // Transform flashcards to vocabulary pairs
-          const pairs: VocabularyPair[] = response.cards.map((card: any) => ({
+          const pairs: MatchingPair[] = response.cards.map((card: any) => ({
             id: card.id,
-            word: card.word,
-            definition: card.definition[selectedLanguage],
+            front: config.readFront(card),
+            back: config.readBack(card, selectedLanguage),
             audioUrl: card.audioUrl,
             startTime: card.startTime,
             endTime: card.endTime,
@@ -176,7 +297,7 @@ export default function LessonVocabularyMatching({
           setVocabularyPairs(pairs);
 
           // Shuffle definitions for the right column
-          const shuffled = [...pairs].sort(() => Math.random() - 0.5);
+          const shuffled = shuffle(pairs);
           setShuffledDefinitions(shuffled);
 
           setGameState(GameState.Starting);
@@ -186,7 +307,7 @@ export default function LessonVocabularyMatching({
       } catch (error) {
         console.error("Error loading flashcards:", error);
         setGameState(GameState.Error);
-        toast.error(t("toast.failedToLoad"));
+        toast.error(labels.loadErrorToast);
       }
     };
 
@@ -203,15 +324,9 @@ export default function LessonVocabularyMatching({
   // Auto-complete check
   useEffect(() => {
     const handleComplete = async () => {
-      await updateUserActivity(
-        articleId,
-        ActivityType.VOCABULARY_MATCHING,
-        UserXpEarned.VOCABULARY_MATCHING,
-        0,
-        {
-          score: UserXpEarned.VOCABULARY_MATCHING,
-        },
-      );
+      await updateUserActivity(articleId, config.activityType, 0, {
+        score: config.activityScore,
+      });
       await refresh();
     };
     if (
@@ -278,10 +393,8 @@ export default function LessonVocabularyMatching({
                 <GraduationCap className="h-12 w-12 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div className="space-y-2 text-center">
-                <h3 className="text-lg font-semibold">{t("noCards.title")}</h3>
-                <p className="text-muted-foreground">
-                  {t("noCards.description")}
-                </p>
+                <h3 className="text-lg font-semibold">{labels.noCardsTitle}</h3>
+                <p className="text-muted-foreground">{labels.noCardsDescription}</p>
               </div>
             </div>
           </CardContent>
@@ -301,9 +414,11 @@ export default function LessonVocabularyMatching({
                 <XCircle className="h-12 w-12 text-red-600 dark:text-red-400" />
               </div>
               <div className="space-y-2 text-center">
-                <h3 className="text-lg font-semibold">{t("error.title")}</h3>
+                <h3 className="text-lg font-semibold">
+                  {labels.errorTitle}
+                </h3>
                 <p className="text-muted-foreground">
-                  {t("error.description")}
+                  {labels.errorDescription}
                 </p>
               </div>
               <Button
@@ -333,14 +448,18 @@ export default function LessonVocabularyMatching({
                 <GraduationCap className="h-12 w-12 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold">{t("start.title")}</h3>
-                <p className="text-muted-foreground">{t("start.subtitle")}</p>
+                <h3 className="text-xl font-semibold">
+                  {labels.startTitle}
+                </h3>
+                <p className="text-muted-foreground">
+                  {labels.startSubtitle}
+                </p>
                 <div className="flex flex-col items-center justify-center gap-4">
                   <div className="w-full max-w-md space-y-4">
                     <div className="flex items-center justify-center gap-2">
                       <Languages className="h-5 w-5 text-indigo-500" />
                       <Label className="text-base font-semibold">
-                        {t("start.languageLabel")}
+                        {labels.languageTitle}
                       </Label>
                     </div>
                     <Select
@@ -402,7 +521,7 @@ export default function LessonVocabularyMatching({
                       </SelectContent>
                     </Select>
                     <p className="text-muted-foreground text-center text-xs">
-                      {t("start.languageHint")}
+                      {labels.translationsHint}
                     </p>
                   </div>
                   <Button
@@ -411,7 +530,7 @@ export default function LessonVocabularyMatching({
                     className="w-full max-w-md"
                   >
                     <Play className="mr-2 h-4 w-4" />
-                    {t("start.startButton")}
+                    {labels.startButton}
                   </Button>
                 </div>
               </div>
@@ -441,10 +560,10 @@ export default function LessonVocabularyMatching({
                 </div>
                 <div className="space-y-2">
                   <h2 className="bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-3xl font-bold text-transparent">
-                    {t("completed.title")}
+                    {labels.completeTitle}
                   </h2>
                   <p className="text-lg text-gray-600 dark:text-gray-400">
-                    {t("completed.subtitle")}
+                    {labels.completeSubtitle}
                   </p>
                 </div>
               </div>
@@ -458,7 +577,7 @@ export default function LessonVocabularyMatching({
                     20
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("completed.xpEarned")}
+                    {labels.xpEarned}
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -466,7 +585,7 @@ export default function LessonVocabularyMatching({
                     5/5
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("completed.completed")}
+                    {labels.completedLabel}
                   </div>
                 </div>
               </div>
@@ -486,11 +605,16 @@ export default function LessonVocabularyMatching({
       <div className="space-y-2">
         <div className="text-muted-foreground flex items-center justify-between text-sm">
           <span>
-            {userMatches.length}/{vocabularyPairs.length} matched
+            {labels.pairsProgress(
+              userMatches.length,
+              vocabularyPairs.length,
+            )}
           </span>
           <span>
-            {userMatches.filter((m) => m.isCorrect).length}/
-            {vocabularyPairs.length} correct
+            {labels.correctCount(
+              userMatches.filter((m) => m.isCorrect).length,
+              vocabularyPairs.length,
+            )}
           </span>
         </div>
         <Progress value={progress} className="h-2" />
@@ -500,9 +624,9 @@ export default function LessonVocabularyMatching({
         <CardHeader>
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="space-y-3">
-              <CardTitle className="text-xl">{t("game.title")}</CardTitle>
+              <CardTitle className="text-xl">{labels.gameTitle}</CardTitle>
               <p className="text-muted-foreground text-sm">
-                {t("game.instruction")}
+                {labels.gameInstruction}
               </p>
             </div>
           </div>
@@ -516,7 +640,7 @@ export default function LessonVocabularyMatching({
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full bg-blue-500" />
-                  <h3 className="font-medium">{t("game.columns.words")}</h3>
+                  <h3 className="font-medium">{labels.leftColumn}</h3>
                 </div>
                 <div className="space-y-2">
                   {vocabularyPairs.map((pair) => {
@@ -555,7 +679,7 @@ export default function LessonVocabularyMatching({
                             <XCircle className="h-4 w-4 flex-shrink-0 text-red-600" />
                           )}
                           <span className="text-base leading-relaxed font-semibold break-words">
-                            {pair.word}
+                            {pair.front}
                           </span>
                         </div>
                       </Button>
@@ -570,7 +694,7 @@ export default function LessonVocabularyMatching({
                   <div className="flex items-center gap-2">
                     <div className="h-3 w-3 flex-shrink-0 rounded-full bg-green-500" />
                     <h3 className="font-medium">
-                      {t("game.columns.definitions")}
+                      {labels.rightColumn}
                     </h3>
                   </div>
                   {selectedLanguage &&
@@ -629,7 +753,7 @@ export default function LessonVocabularyMatching({
                             <XCircle className="h-4 w-4 flex-shrink-0 text-red-600" />
                           )}
                           <span className="text-sm leading-relaxed break-words">
-                            {pair.definition}
+                            {pair.back}
                           </span>
                         </div>
                       </Button>
@@ -643,6 +767,7 @@ export default function LessonVocabularyMatching({
           {/* Result card */}
           {showResult && (
             <Card
+              aria-live="polite"
               className={cn(
                 "border-2",
                 userMatches.every((m) => m.isCorrect)
@@ -660,7 +785,7 @@ export default function LessonVocabularyMatching({
                     )}
                     <h3 className="text-lg font-semibold">
                       {userMatches.every((m) => m.isCorrect)
-                        ? t("results.perfect")
+                        ? labels.resultAllCorrect
                         : t("results.partialCorrect", {
                             correct: userMatches.filter((m) => m.isCorrect)
                               .length,
@@ -685,12 +810,12 @@ export default function LessonVocabularyMatching({
                                 </span>
                                 <p className="flex-1">
                                   <span className="font-semibold">
-                                    {pair.word}
+                                    {pair.front}
                                   </span>
                                   <span className="text-muted-foreground mx-2">
                                     →
                                   </span>
-                                  <span>{pair.definition}</span>
+                                  <span>{pair.back}</span>
                                 </p>
                               </div>
                             ))}
@@ -721,7 +846,7 @@ export default function LessonVocabularyMatching({
 
             {isCompleted && userMatches.every((m) => m.isCorrect) && (
               <Button onClick={handleComplete} className="flex-1">
-                {t("buttons.completeActivity")}
+                {labels.finishButton}
               </Button>
             )}
           </div>
@@ -730,3 +855,21 @@ export default function LessonVocabularyMatching({
     </div>
   );
 }
+
+/**
+ * Renders the lesson sentence or vocabulary matching game.
+ * @param articleId Article the pairs belong to.
+ * @param cardKind Whether to match sentences or vocabulary.
+ * @returns The lesson matching game.
+ */
+export function LessonMatchingGame({
+  articleId,
+  cardKind,
+}: {
+  articleId: string;
+  cardKind: FlashcardType;
+}) {
+  return <MatchingGameBody articleId={articleId} cardKind={cardKind} />;
+}
+
+export default LessonMatchingGame;

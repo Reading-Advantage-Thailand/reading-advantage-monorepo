@@ -39,6 +39,51 @@ import {
 import { ActivityType, FlashcardType, UserXpEarned } from "@/types/enum";
 import { updateUserActivity } from "@/actions/user";
 import { useAuth } from "@reading-advantage/auth-client";
+import { formatTime } from "@/lib/format-time";
+import { shouldStopSegment } from "@/lib/audio-highlight";
+
+/**
+ * Data source for the sentence order-sentences game.
+ */
+export type OrderSentenceGameSource = "lesson" | "deck";
+
+/** Hardcoded perfect-order toast kept for the deck variant. */
+export const DECK_ORDER_PERFECT_TOAST = "Perfect! Correct sentence order! 🎉";
+
+/** Hardcoded retry toast kept for the deck variant. */
+export const DECK_ORDER_RETRY_TOAST = "Not quite right. Try again! 💪";
+
+/** Hardcoded reveal toast kept for the deck variant. */
+export const DECK_ORDER_REVEAL_TOAST = "Correct order revealed! 📖";
+
+/** Hardcoded audio-start toast shared by both variants. */
+export const ORDER_AUDIO_START_TOAST =
+  "Playing correct order audio sequence 🔊";
+
+/** Hardcoded audio-done toast shared by both variants. */
+export const ORDER_AUDIO_DONE_TOAST = "Audio sequence completed! 🎵";
+
+/**
+ * Per-source strings that differ between the lesson and deck variants.
+ */
+export interface OrderGameLabels {
+  /** Toast shown when the order is correct. */
+  perfectToast: string;
+  /** Toast shown when a manual answer check fails. */
+  checkErrorToast: string;
+  /** Toast shown when the correct order is revealed. */
+  showAnswerToast: string;
+  /** Suffix after the score fraction on the progress bar. */
+  scoreSuffix: string;
+  /** Label under the hint lightbulb icon. */
+  hintsTitle: string;
+  /** Badge text for tokens sitting in the correct position. */
+  correctBadge: string;
+  /** Fallback text while the next challenge loads. */
+  loadingNextChallenge: string;
+  /** Whether the complete screen offers a back-to-menu action. */
+  showBackButton: boolean;
+}
 
 interface OrderSentenceData {
   id: string;
@@ -66,6 +111,8 @@ interface OrderSentenceData {
 }
 
 interface OrderSentenceGameProps {
+  source: OrderSentenceGameSource;
+  articleId?: string;
   deckId?: string;
   sentences?: OrderSentenceData[];
 }
@@ -86,13 +133,47 @@ interface DraggableSentence {
   isFromFlashcard?: boolean;
 }
 
-export default function LessonSentenceOrder({
+/**
+ * Renders the lesson or deck sentence order-sentences game.
+ * @param source Whether to load sentences from a lesson article or a flashcard deck.
+ * @param articleId Article id for lesson games.
+ * @param deckId Deck id for deck games.
+ * @param sentences Prefetched deck sentences.
+ * @returns The sentence order-sentences game.
+ */
+export function OrderSentenceGame({
+  source,
   articleId,
-}: {
-  articleId: string;
-}) {
+  deckId,
+  sentences = [],
+}: OrderSentenceGameProps) {
   const t = useTranslations("SentencesPage.sentenceOrder");
   const router = useRouter();
+  const isDeck = source === "deck";
+
+  // Source deltas isolated here; the game body below is fully shared.
+  const labels: OrderGameLabels = isDeck
+    ? {
+        perfectToast: DECK_ORDER_PERFECT_TOAST,
+        checkErrorToast: DECK_ORDER_RETRY_TOAST,
+        showAnswerToast: DECK_ORDER_REVEAL_TOAST,
+        scoreSuffix: "correct",
+        hintsTitle: `${t("hints.title")}:`,
+        correctBadge: `✓ ${t("correctAnswer")}`,
+        loadingNextChallenge: t("loadingNextChallenge"),
+        showBackButton: true,
+      }
+    : {
+        perfectToast: t("perfectCorrectOrder"),
+        checkErrorToast: t("notQuiteRight"),
+        showAnswerToast: t("correctOrder"),
+        scoreSuffix: t("correct"),
+        hintsTitle: t("hints.title"),
+        correctBadge: "✓ Correct",
+        loadingNextChallenge: "Loading next challenge...",
+        showBackButton: false,
+      };
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userOrder, setUserOrder] = useState<DraggableSentence[]>([]);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -107,6 +188,7 @@ export default function LessonSentenceOrder({
   );
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hintAudioStopRef = useRef<(() => void) | null>(null);
   // Add flag to track if user has made any moves
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isPlayingHintAudio, setIsPlayingHintAudio] = useState(false);
@@ -115,20 +197,39 @@ export default function LessonSentenceOrder({
   const [highlightHintsEnabled, setHighlightHintsEnabled] = useState(false);
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
 
+  // Live refs so the finish handler posts current values with stable deps.
+  const scoreRef = useRef(score);
+  scoreRef.current = score;
+  const timerRef = useRef(timer);
+  timerRef.current = timer;
+
   const [activeSentences, setActiveSentences] = useState<OrderSentenceData[]>(
-    [],
+    isDeck ? sentences : [],
   );
 
   useEffect(() => {
-    if (articleId) {
-      loadSentencesFromDeck();
-    }
-  }, [articleId]);
+    return () => {
+      hintAudioStopRef.current?.();
+      hintAudioStopRef.current = null;
+      audioRef.current?.pause();
+    };
+  }, []);
 
-  const loadSentencesFromDeck = async () => {
+  useEffect(() => {
+    if (!isDeck) {
+      if (articleId) {
+        loadLessonSentences();
+      }
+    } else if (deckId && sentences.length === 0) {
+      loadDeckSentences();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDeck, articleId, deckId]);
+
+  const loadLessonSentences = async () => {
     setIsLoading(true);
     try {
-      const response = (await getLessonOrderingSentences(articleId)) as {
+      const response = (await getLessonOrderingSentences(articleId as string)) as {
         sentenceGroups: OrderSentenceData[];
         totalGroups: number;
       };
@@ -142,20 +243,48 @@ export default function LessonSentenceOrder({
     }
   };
 
+  const loadDeckSentences = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/flashcard/decks/${deckId}/sentences-for-ordering`,
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setActiveSentences(data.sentenceGroups || []);
+      } else {
+        toast.error("Failed to load sentences from flashcard deck");
+      }
+    } catch (error) {
+      console.error("Error loading sentences:", error);
+      toast.error("Failed to load sentences");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const currentSentenceGroup = useMemo(
     () => activeSentences[currentIndex],
     [activeSentences, currentIndex],
   );
 
-  // Timer effect
+  // Game clock (setTimeout chain; no polling interval)
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isPlaying && !gameComplete) {
-      interval = setInterval(() => {
+    if (!isPlaying || gameComplete) return;
+    let cancelled = false;
+    let timeout: NodeJS.Timeout;
+    const schedule = () => {
+      timeout = setTimeout(() => {
+        if (cancelled) return;
         setTimer((prev) => prev + 1);
+        schedule();
       }, 1000);
-    }
-    return () => clearInterval(interval);
+    };
+    schedule();
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
   }, [isPlaying, gameComplete]);
 
   // Fixed shuffle sentences function
@@ -221,7 +350,7 @@ export default function LessonSentenceOrder({
         setIsCompleted(true);
         setShowResult(true);
         setScore((prev) => prev + 1);
-        toast.success(t("perfectCorrectOrder"));
+        toast.success(labels.perfectToast);
       }
     }
   }, [
@@ -229,6 +358,7 @@ export default function LessonSentenceOrder({
     currentSentenceGroup?.correctOrder,
     isCompleted,
     hasUserInteracted,
+    labels.perfectToast,
   ]);
 
   // Drag handlers
@@ -282,6 +412,33 @@ export default function LessonSentenceOrder({
     setDragOverIndex(null);
   }, []);
 
+  const moveSentence = useCallback(
+    (index: number, direction: -1 | 1) => {
+      if (isCompleted) return;
+      const target = index + direction;
+      if (target < 0 || target >= userOrder.length) return;
+      const newOrder = [...userOrder];
+      const [removed] = newOrder.splice(index, 1);
+      newOrder.splice(target, 0, removed);
+      setUserOrder(newOrder);
+      setHasUserInteracted(true);
+    },
+    [isCompleted, userOrder],
+  );
+
+  const handleItemKeyDown = useCallback(
+    (e: React.KeyboardEvent, index: number) => {
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        moveSentence(index, -1);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        moveSentence(index, 1);
+      }
+    },
+    [moveSentence],
+  );
+
   const handleStartGame = useCallback(() => {
     setIsPlaying(true);
   }, []);
@@ -289,21 +446,30 @@ export default function LessonSentenceOrder({
   const handleNext = useCallback(async () => {
     if (currentIndex < activeSentences.length - 1) {
       setCurrentIndex((prev) => prev + 1);
+      return;
+    }
+    setGameComplete(true);
+    if (isDeck) {
+      await fetch(`/api/flashcard/decks/${deckId}/sentences-for-ordering`, {
+        method: "POST",
+        body: JSON.stringify({
+          score: scoreRef.current,
+          timer: timerRef.current,
+        }),
+      });
     } else {
-      setGameComplete(true);
       await updateUserActivity(
-        articleId,
+        articleId as string,
         ActivityType.SENTENCE_ORDERING,
-        UserXpEarned.SENTENCE_ORDERING,
-        timer,
+        timerRef.current,
         {
           score: UserXpEarned.SENTENCE_ORDERING,
         },
       );
-      setIsPlaying(false);
-      await refresh();
     }
-  }, [currentIndex, activeSentences.length]);
+    setIsPlaying(false);
+    await refresh();
+  }, [currentIndex, activeSentences.length, isDeck, articleId, deckId, refresh]);
 
   const handleRestart = useCallback(() => {
     if (currentSentenceGroup?.sentences) {
@@ -331,11 +497,16 @@ export default function LessonSentenceOrder({
 
     if (isCorrect) {
       setScore((prev) => prev + 1);
-      toast.success(t("perfectCorrectOrder"));
+      toast.success(labels.perfectToast);
     } else {
-      toast.error(t("notQuiteRight"));
+      toast.error(labels.checkErrorToast);
     }
-  }, [userOrder, currentSentenceGroup?.correctOrder]);
+  }, [
+    userOrder,
+    currentSentenceGroup?.correctOrder,
+    labels.perfectToast,
+    labels.checkErrorToast,
+  ]);
 
   const handleRestartGame = useCallback(() => {
     setCurrentIndex(0);
@@ -348,8 +519,12 @@ export default function LessonSentenceOrder({
 
   const handleShowAnswer = useCallback(() => {
     setShowCorrectOrder(true);
-    toast.info(t("correctOrder"));
-  }, []);
+    toast.info(labels.showAnswerToast);
+  }, [labels.showAnswerToast]);
+
+  const handleBack = useCallback(() => {
+    router.back();
+  }, [router]);
 
   // const handleLanguageChange = (value: string) => {
   //   setSelectedLanguage(value);
@@ -358,11 +533,6 @@ export default function LessonSentenceOrder({
   //   toast.success(`Translation language changed to ${language.name}`);
   // };
 
-  const formatTime = useCallback((seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  }, []);
 
   const progress = useMemo(
     () =>
@@ -413,7 +583,9 @@ export default function LessonSentenceOrder({
       return;
 
     setIsPlayingHintAudio(true);
-    toast.success("Playing correct order audio sequence 🔊");
+    if (isDeck) {
+      toast.success(ORDER_AUDIO_START_TOAST);
+    }
 
     try {
       const audio = audioRef.current;
@@ -425,7 +597,6 @@ export default function LessonSentenceOrder({
         )
         .filter(Boolean);
 
-      console.log("correctOrderSentences", correctOrderSentences);
 
       if (correctOrderSentences.length === 0) {
         toast.error("No sentences found for audio playback");
@@ -437,19 +608,6 @@ export default function LessonSentenceOrder({
       const lastSentence =
         correctOrderSentences[correctOrderSentences.length - 1];
 
-      console.log(`📊 Debug - Playing continuous audio:`, {
-        firstSentence: {
-          text: firstSentence?.text,
-          startTime: firstSentence?.startTime,
-          audioUrl: firstSentence?.audioUrl,
-        },
-        lastSentence: {
-          text: lastSentence?.text,
-          endTime: lastSentence?.endTime,
-          audioUrl: lastSentence?.audioUrl,
-        },
-        totalSentences: correctOrderSentences.length,
-      });
 
       // Check if we have valid audio data
       if (
@@ -461,17 +619,44 @@ export default function LessonSentenceOrder({
         return;
       }
 
+      if (!isDeck) {
+        toast.success(ORDER_AUDIO_START_TOAST);
+      }
+
       // Play continuous audio from start of first sentence to end of last sentence
       await new Promise<void>((resolve) => {
-        let intervalRef: NodeJS.Timeout | null = null;
+        let fallbackId: NodeJS.Timeout | null = null;
+        let settled = false;
+
+        const handleTimeUpdate = () => {
+          // Stop at the end of the last sentence (native timeupdate drive)
+          if (
+            shouldStopSegment(audio.currentTime, lastSentence.endTime, 0.0005)
+          ) {
+            audio.pause();
+            finish();
+          }
+        };
 
         const cleanup = () => {
-          if (intervalRef) {
-            clearInterval(intervalRef);
-            intervalRef = null;
+          audio.pause();
+          if (fallbackId) {
+            clearTimeout(fallbackId);
+            fallbackId = null;
           }
           audio.removeEventListener("canplaythrough", handleCanPlay);
           audio.removeEventListener("error", handleError);
+          audio.removeEventListener("timeupdate", handleTimeUpdate);
+          if (hintAudioStopRef.current === finish) {
+            hintAudioStopRef.current = null;
+          }
+        };
+
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          resolve();
         };
 
         const handleCanPlay = () => {
@@ -483,26 +668,18 @@ export default function LessonSentenceOrder({
           audio
             .play()
             .then(() => {
-              const tolerance = 0.0005;
-              intervalRef = setInterval(() => {
-                // Stop at the end of the last sentence
-                if (audio.currentTime + tolerance >= lastSentence.endTime!) {
-                  audio.pause();
-                  cleanup();
-                  resolve(void 0);
-                }
-              }, 50);
+              audio.addEventListener("timeupdate", handleTimeUpdate);
             })
             .catch(() => {
-              cleanup();
-              resolve();
+              finish();
             });
         };
 
         const handleError = () => {
-          cleanup();
-          resolve();
+          finish();
         };
+
+        hintAudioStopRef.current = finish;
 
         audio.addEventListener("canplaythrough", handleCanPlay);
         audio.addEventListener("error", handleError);
@@ -510,21 +687,18 @@ export default function LessonSentenceOrder({
         audio.src = firstSentence.audioUrl!;
         audio.load();
 
-        // Fallback timeout
-        setTimeout(() => {
-          cleanup();
-          resolve();
-        }, 10000);
+        // Fallback timeout held in the same cleanup path
+        fallbackId = setTimeout(finish, 10000);
       });
 
-      toast.success("Audio sequence completed! 🎵");
+      toast.success(ORDER_AUDIO_DONE_TOAST);
     } catch (error) {
       console.error("Error playing hint audio:", error);
       toast.error("Failed to play hint audio");
     } finally {
       setIsPlayingHintAudio(false);
     }
-  }, [currentSentenceGroup, isPlayingHintAudio]);
+  }, [currentSentenceGroup, isPlayingHintAudio, isDeck]);
 
   // Loading state
   if (isLoading) {
@@ -603,6 +777,17 @@ export default function LessonSentenceOrder({
 
           {/* Action Buttons */}
           <div className="mx-auto flex max-w-md flex-col gap-4 sm:flex-row">
+            {labels.showBackButton && (
+              <Button
+                onClick={handleBack}
+                size="lg"
+                variant="outline"
+                className="flex-1"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                {t("backToMenu")}
+              </Button>
+            )}
             <Button onClick={handleRestartGame} size="lg" className="flex-1">
               <RotateCcw className="mr-2 h-4 w-4" />
               {t("playAgain")}
@@ -702,7 +887,7 @@ export default function LessonSentenceOrder({
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="space-y-4 text-center">
           <Loader2 className="text-primary mx-auto h-8 w-8 animate-spin" />
-          <p className="text-muted-foreground">Loading next challenge...</p>
+          <p className="text-muted-foreground">{labels.loadingNextChallenge}</p>
         </div>
       </div>
     );
@@ -723,7 +908,7 @@ export default function LessonSentenceOrder({
           </span>
           <div className="flex items-center gap-4">
             <span>
-              {score}/{activeSentences.length} {t("correct")}
+              {score}/{activeSentences.length} {labels.scoreSuffix}
             </span>
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
@@ -755,7 +940,7 @@ export default function LessonSentenceOrder({
           <div className="bg-muted/30 flex flex-wrap items-center gap-3 rounded-lg border p-4">
             <div className="flex items-center gap-2">
               <Lightbulb className="h-4 w-4 text-yellow-500" />
-              <span className="text-sm font-medium">{t("hints.title")}</span>
+              <span className="text-sm font-medium">{labels.hintsTitle}</span>
             </div>
 
             {/* Highlight Toggle */}
@@ -842,6 +1027,14 @@ export default function LessonSentenceOrder({
                         onDragLeave={handleDragLeave}
                         onDrop={(e) => handleDrop(e, index)}
                         onDragEnd={handleDragEnd}
+                        tabIndex={isCompleted ? -1 : 0}
+                        role="button"
+                        aria-label={t("reorderAriaLabel", {
+                          sentence: item.text,
+                          position: index + 1,
+                          total: userOrder.length,
+                        })}
+                        onKeyDown={(e) => handleItemKeyDown(e, index)}
                         className={cn(
                           "group relative rounded-lg border-2 p-4 transition-all duration-200",
                           "cursor-move select-none",
@@ -909,7 +1102,7 @@ export default function LessonSentenceOrder({
                                     variant="secondary"
                                     className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                                   >
-                                    ✓ Correct
+                                    {labels.correctBadge}
                                   </Badge>
                                 )}
                             </div>
@@ -926,6 +1119,7 @@ export default function LessonSentenceOrder({
           {/* Result Display */}
           {showResult && (
             <Card
+              aria-live="polite"
               className={cn(
                 "border-2",
                 isCorrect
@@ -1030,3 +1224,5 @@ export default function LessonSentenceOrder({
     </div>
   );
 }
+
+export default OrderSentenceGame;

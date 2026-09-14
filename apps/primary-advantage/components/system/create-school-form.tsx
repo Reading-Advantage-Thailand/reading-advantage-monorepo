@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Icons } from "@/components/icons";
 import { Building2, User, Mail } from "lucide-react";
 
@@ -55,6 +56,7 @@ export function CreateSchoolForm({
   onCancel,
 }: CreateSchoolFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations("SchoolForm");
 
   const form = useForm<SchoolFormData>({
     resolver: zodResolver(schoolFormSchema),
@@ -91,18 +93,16 @@ export function CreateSchoolForm({
 
       const school = await response.json();
 
-      toast.success("School created successfully!", {
-        description: `${school.name} has been added to the system.`,
+      toast.success(t("createSuccess"), {
+        description: t("createSuccessDescription", { name: school.name }),
       });
 
       form.reset();
       onSuccess?.();
     } catch (error) {
-      toast.error("Failed to create school", {
+      toast.error(t("createError"), {
         description:
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred.",
+          error instanceof Error ? error.message : t("fallbackError"),
       });
     } finally {
       setIsLoading(false);
@@ -119,17 +119,17 @@ export function CreateSchoolForm({
             <FormItem>
               <FormLabel className="flex items-center gap-2">
                 <Building2 className="h-4 w-4" />
-                School Name
+                {t("name")}
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter school name"
+                  placeholder={t("namePlaceholder")}
                   {...field}
                   disabled={isLoading}
                 />
               </FormControl>
               <FormDescription>
-                The official name of the school or institution.
+                {t("nameDescription")}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -143,17 +143,17 @@ export function CreateSchoolForm({
             <FormItem>
               <FormLabel className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                Contact Name
+                {t("contactName")}
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter contact person's name (optional)"
+                  placeholder={t("contactNamePlaceholder")}
                   {...field}
                   disabled={isLoading}
                 />
               </FormControl>
               <FormDescription>
-                The name of the primary contact person for this school.
+                {t("contactNameDescription")}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -167,18 +167,18 @@ export function CreateSchoolForm({
             <FormItem>
               <FormLabel className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                Contact Email
+                {t("contactEmail")}
               </FormLabel>
               <FormControl>
                 <Input
                   type="email"
-                  placeholder="Enter contact email (optional)"
+                  placeholder={t("contactEmailPlaceholder")}
                   {...field}
                   disabled={isLoading}
                 />
               </FormControl>
               <FormDescription>
-                The email address of the primary contact person.
+                {t("contactEmailDescription")}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -193,14 +193,14 @@ export function CreateSchoolForm({
               onClick={onCancel}
               disabled={isLoading}
             >
-              Cancel
+              {t("cancel")}
             </Button>
           )}
           <Button type="submit" disabled={isLoading}>
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Create School
+            {t("create")}
           </Button>
         </div>
       </form>

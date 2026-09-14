@@ -2,7 +2,8 @@
 
 import { Book } from "lucide-react";
 import React from "react";
-import LessonVocabularyMatching from "../games/lesson-vocabulary-matching";
+import LessonMatchingGame from "../games/lesson-matching-game";
+import { FlashcardType } from "@/types/enum";
 import { useTranslations } from "next-intl";
 
 export default function TaskVocabularyMatching({
@@ -30,7 +31,7 @@ export default function TaskVocabularyMatching({
       {/* Matching Component */}
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-zinc-200 shadow-lg dark:border-gray-700 dark:bg-gray-900">
         <div className="p-6">
-          <LessonVocabularyMatching articleId={articleId as string} />
+          <LessonMatchingGame articleId={articleId} cardKind={FlashcardType.VOCABULARY} />
         </div>
       </div>
     </div>

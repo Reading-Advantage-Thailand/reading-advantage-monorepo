@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Header } from "../header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,10 +35,14 @@ import {
   CornerDownRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toTranslationLanguage } from "@/lib/translation-language";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@reading-advantage/auth-client";
+import { formatTime } from "@/lib/format-time";
+import { shuffle } from "@/lib/shuffle";
+import type { UserMatch } from "@/types";
 
 // Language options for translation matching
 const TRANSLATION_LANGUAGES = {
@@ -98,16 +102,11 @@ interface MatchingGameProps {
   gameData?: MatchingGameData[];
 }
 
-interface UserMatch {
-  leftId: string;
-  rightId: string;
-  isCorrect: boolean;
-}
-
 export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
   // ALL HOOKS MUST BE DECLARED AT THE TOP LEVEL - NO CONDITIONAL HOOKS
   const router = useRouter();
   const t = useTranslations("SentencesPage.matchingGame");
+  const locale = useLocale();
 
   // State hooks - always called in the same order
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -121,17 +120,27 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<
     "th" | "vi" | "cn" | "tw"
-  >("th");
+  >(toTranslationLanguage(locale));
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [hintsEnabled, setHintsEnabled] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
   const [rawGameData, setRawGameData] = useState<MatchingGameData[]>([]);
+  const [loadError, setLoadError] = useState(false);
   const [activeGameData, setActiveGameData] =
     useState<MatchingGameData[]>(gameData);
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
   const { user, refresh } = useAuth();
+
+  const activeAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    return () => {
+      activeAudioRef.current?.pause();
+      activeAudioRef.current = null;
+    };
+  }, []);
 
   // Callback hooks - always called in the same order
   const generatePairsForGame = useCallback(
@@ -141,7 +150,7 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
     ): MatchingGameData[] => {
       // For translation matching, we use all available pairs
       return gameData.map((game) => {
-        const shuffledPairs = [...game.pairs].sort(() => Math.random() - 0.5);
+        const shuffledPairs = shuffle(game.pairs);
 
         return {
           ...game,
@@ -209,6 +218,7 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
 
   const loadGameDataFromDeck = useCallback(async () => {
     setIsLoading(true);
+    setLoadError(false);
     try {
       const response = await fetch(
         `/api/flashcard/decks/${deckId}/sentences-for-matching?language=${selectedLanguage}`,
@@ -217,10 +227,12 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
         const data = await response.json();
         setRawGameData(data.matchingGames || []);
       } else {
+        setLoadError(true);
         toast.error(t("toast.failedToLoad"));
       }
     } catch (error) {
       console.error("Error loading matching data:", error);
+      setLoadError(true);
       toast.error(t("toast.failedToLoadData"));
     } finally {
       setIsLoading(false);
@@ -300,11 +312,6 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
     router.back();
   }, [router]);
 
-  const formatTime = useCallback((seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  }, []);
 
   const playAudio = useCallback(async () => {
     const currentGame = activeGameData[currentIndex];
@@ -320,10 +327,14 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
     try {
       await new Promise((resolve, reject) => {
         const audio = new Audio();
+        activeAudioRef.current = audio;
         let timeoutId: NodeJS.Timeout;
 
         const cleanup = () => {
           audio.pause();
+          if (activeAudioRef.current === audio) {
+            activeAudioRef.current = null;
+          }
           if (timeoutId) clearTimeout(timeoutId);
           audio.removeEventListener("loadeddata", handleLoadedData);
           audio.removeEventListener("seeked", handleSeeked);
@@ -444,9 +455,7 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
 
   const shuffledRightItems = useMemo(() => {
     if (!currentGame) return [];
-    return [...currentGame.pairs.map((pair) => pair.right)].sort(
-      () => Math.random() - 0.5,
-    );
+    return shuffle(currentGame.pairs.map((pair) => pair.right));
   }, [currentGame?.pairs]);
 
   // Effect hooks - always called in the same order
@@ -617,6 +626,40 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
 
   // Start screen
   if (!isPlaying) {
+    if (loadError && activeGameData.length === 0) {
+      return (
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <div role="alert" className="space-y-4 text-center">
+            <p className="text-lg font-medium">{t("toast.failedToLoad")}</p>
+            <Button onClick={loadGameDataFromDeck} size="lg">
+              <RotateCcw className="mr-2 h-4 w-4" />
+              {t("buttons.tryAgain")}
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    if (
+      deckId &&
+      activeGameData.length === 0 &&
+      gameData.length === 0 &&
+      rawGameData.length === 0
+    ) {
+      return (
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <div className="space-y-4 text-center">
+            <p className="text-lg font-medium">{t("noDeck.error")}</p>
+            <p className="text-muted-foreground">{t("noDeck.message")}</p>
+            <Button onClick={handleBack} size="lg" variant="outline">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {t("complete.backToMenu")}
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="container mx-auto max-w-4xl space-y-8 px-4">
         <Header heading={t("title")} text={t("descriptionShort")} />
@@ -768,6 +811,44 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
   }
 
   if (!currentGame) {
+    if (loadError) {
+      return (
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <div role="alert" className="space-y-4 text-center">
+            <p className="text-lg font-medium">{t("toast.failedToLoad")}</p>
+            <Button onClick={loadGameDataFromDeck} size="lg" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t("startScreen.loadingButton")}
+                </>
+              ) : (
+                <>
+                  <RotateCcw className="mr-2 h-4 w-4" />
+                  {t("buttons.tryAgain")}
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    if (!isLoading) {
+      return (
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <div className="space-y-4 text-center">
+            <p className="text-lg font-medium">{t("noDeck.error")}</p>
+            <p className="text-muted-foreground">{t("noDeck.message")}</p>
+            <Button onClick={handleBack} size="lg" variant="outline">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {t("complete.backToMenu")}
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="space-y-4 text-center">
@@ -1008,6 +1089,7 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
 
           {showResult && (
             <Card
+              aria-live="polite"
               className={cn(
                 "border-2",
                 userMatches.every((m) => m.isCorrect)

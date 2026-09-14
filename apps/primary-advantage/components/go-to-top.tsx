@@ -4,12 +4,15 @@ import { ArrowUp } from "lucide-react";
 import { buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export function GoToTop() {
+  const t = useTranslations("Components");
   return (
     <div className="fixed right-4 bottom-4 z-50">
       <Link
         href="#"
+        aria-label={t("backToTop")}
         onClick={(e) => {
           e.preventDefault();
           window.scrollTo({ top: 0, behavior: "smooth" });

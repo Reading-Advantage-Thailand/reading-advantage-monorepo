@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import { copyToClipboardWithMeta } from "@/components/ui/copy-button";
 
 interface ClassroomNavigationProps {
   classroom: {
@@ -46,6 +47,7 @@ export default function ClassroomNavigation({
 }: ClassroomNavigationProps) {
   const router = useRouter();
   const t = useTranslations("Teacher.ClassroomNavigation");
+  const tComponents = useTranslations("Components");
   const [showPassword, setShowPassword] = useState(false);
 
   const navigationItems = [
@@ -84,7 +86,7 @@ export default function ClassroomNavigation({
     if (!classroom.classCode) return;
 
     try {
-      await navigator.clipboard.writeText(classroom.classCode);
+      await copyToClipboardWithMeta(classroom.classCode);
       toast.success(t("toast.copyClassCodeSuccess"));
     } catch (error) {
       console.error("Failed to copy class code:", error);
@@ -96,7 +98,7 @@ export default function ClassroomNavigation({
     if (!classroom.passwordStudents) return;
 
     try {
-      await navigator.clipboard.writeText(classroom.passwordStudents);
+      await copyToClipboardWithMeta(classroom.passwordStudents);
       toast.success(t("toast.copyPasswordSuccess"));
     } catch (error) {
       console.error("Failed to copy password:", error);
@@ -126,6 +128,7 @@ export default function ClassroomNavigation({
               variant="ghost"
               size="sm"
               className="h-8 w-8 p-0 sm:hidden"
+              aria-label={t("actions.backToClassrooms")}
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -153,6 +156,14 @@ export default function ClassroomNavigation({
                 {classroom.classCode && (
                   <Badge
                     onClick={handleCopyCode}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleCopyCode();
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
                     variant="outline"
                     className="ml-2 cursor-pointer text-xs"
                   >
@@ -174,6 +185,9 @@ export default function ClassroomNavigation({
                         title={
                           showPassword ? t("password.hide") : t("password.show")
                         }
+                        aria-label={
+                          showPassword ? t("password.hide") : t("password.show")
+                        }
                       >
                         {showPassword ? (
                           <EyeOff className="size-3" />
@@ -188,6 +202,7 @@ export default function ClassroomNavigation({
                         className="size-6 p-0"
                         onClick={handleCopyPassword}
                         title={t("password.copy")}
+                        aria-label={t("password.copy")}
                       >
                         <Copy className="size-3" />
                       </Button>
@@ -212,6 +227,7 @@ export default function ClassroomNavigation({
                   variant={item.current ? "default" : "ghost"}
                   size="sm"
                   className="gap-2"
+                  aria-label={item.label}
                 >
                   <Icon className="h-4 w-4" />
                   <span className="hidden lg:block">{item.label}</span>
@@ -223,7 +239,12 @@ export default function ClassroomNavigation({
           {/* Mobile dropdown menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2 sm:hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 sm:hidden"
+                aria-label={tComponents("openActionsMenu")}
+              >
                 <Users className="h-4 w-4" />
                 <ChevronDown className="h-4 w-4" />
               </Button>
@@ -262,6 +283,7 @@ export default function ClassroomNavigation({
               variant="outline"
               size="sm"
               className="hidden gap-2 sm:flex"
+              aria-label={t("actions.back")}
             >
               <ArrowLeft className="h-4 w-4" />
               <span className="hidden lg:block">{t("actions.back")}</span>

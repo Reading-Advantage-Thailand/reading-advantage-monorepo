@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import LessonVocabularyFlashcardGame from "../games/lesson-vocabulary-flashcard-card";
+import LessonFlashcardGame from "../games/lesson-flashcard-game";
+import { FlashcardType } from "@/types/enum";
 import { Book } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -30,7 +31,7 @@ export default function TaskVocabularyFlashcards({
       {/* Vocabulary Flashcard Component */}
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-zinc-200 shadow-lg dark:border-gray-700 dark:bg-gray-900">
         <div className="p-6">
-          <LessonVocabularyFlashcardGame articleId={articleId as string} />
+          <LessonFlashcardGame articleId={articleId as string} cardKind={FlashcardType.VOCABULARY} />
         </div>
       </div>
     </div>

@@ -44,15 +44,7 @@ import { AddAdminDialog } from "./add-admin-dialog";
 import { useAuth } from "@reading-advantage/auth-client";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-
-interface SchoolAdmin {
-  id: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}
+import type { SchoolAdmin } from "@/types";
 
 interface License {
   id: string;
@@ -508,6 +500,7 @@ export function SchoolDetail({
                             variant="destructive"
                             size="sm"
                             disabled={removingAdminId === admin.id}
+                            aria-label={t("delete")}
                           >
                             {removingAdminId === admin.id ? (
                               <Loader2 className="h-4 w-4 animate-spin" />

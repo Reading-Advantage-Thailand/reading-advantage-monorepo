@@ -7,7 +7,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { getQuestionsByArticleId } from "@/server/models/articleModel";
 import { ActivityType, QuestionState } from "@/types/enum";
-import SAQuestionContent from "./sa-question-content";
+import { WrittenQuestionContent } from "./written-question-content";
 import QuestionHeader from "./question-header";
 import { QuizContextProvider } from "@/contexts/question-context";
 import { QuestionResponse, SAQuestion } from "@/types";
@@ -65,7 +65,8 @@ export default async function SAQuestionCard({
           disabled={false}
         >
           <QuizContextProvider>
-            <SAQuestionContent
+            <WrittenQuestionContent
+              kind="sa"
               articleId={articleId}
               questions={questionsData.questions as SAQuestion}
             />

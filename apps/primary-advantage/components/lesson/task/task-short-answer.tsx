@@ -1,7 +1,7 @@
 "use client";
 
 import { Book } from "lucide-react";
-import LessonSAQ from "../pratice/lesson-task-saq";
+import LessonSAQ from "../practice/lesson-task-saq";
 import { Article } from "@/types";
 import { useTranslations } from "next-intl";
 

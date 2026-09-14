@@ -29,6 +29,7 @@ import { useRouter } from "@/i18n/navigation";
 import { FlashcardGameInline } from "./flashcard-game";
 import { getDeckCards } from "@/actions/flashcard";
 import { toast } from "sonner";
+import { toTranslationLanguage } from "@/lib/translation-language";
 import {
   Select,
   SelectContent,
@@ -36,7 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface SingleDeckViewInlineProps {
   deck: {
@@ -123,11 +124,12 @@ export function SingleDeckViewInline({
   deckType,
 }: SingleDeckViewInlineProps) {
   const router = useRouter();
+  const locale = useLocale();
   const [isPlaying, setIsPlaying] = useState(false);
   const [gameCards, setGameCards] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>(
-    deck.type === "VOCABULARY" ? "en" : "th",
+    deck.type === "VOCABULARY" ? "en" : toTranslationLanguage(locale),
   );
   const t = useTranslations("SentencesPage.sentencesCard");
   const tVocabulary = useTranslations("VocabularyPage");
@@ -158,7 +160,7 @@ export function SingleDeckViewInline({
   const handleGameComplete = () => {
     setIsPlaying(false);
     setGameCards([]);
-    window.location.reload();
+    router.refresh();
   };
 
   const handleBackToDeck = () => {
@@ -477,7 +479,7 @@ export function SingleDeckViewInline({
             <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="outline"
-                onClick={() => window.location.reload()}
+                onClick={() => router.refresh()}
                 className="h-12"
               >
                 <RefreshCw className="mr-2 h-4 w-4" />

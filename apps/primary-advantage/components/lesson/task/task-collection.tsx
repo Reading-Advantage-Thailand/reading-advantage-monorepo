@@ -4,64 +4,117 @@ import React, { useEffect, useState } from "react";
 import { BookmarkIcon, VolumeXIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import AudioButton from "@/components/audio-button";
-import { useTranslations, useLocale } from "next-intl";
+import { Sentence } from "@/components/articles/sentence";
+import { useLocale, useTranslations } from "next-intl";
 
-interface WordList {
-  vocabulary: string;
-  definition: {
-    en: string;
-    th: string;
-    cn: string;
-    tw: string;
-    vi: string;
-  };
+/**
+ * Collection task kind.
+ */
+export type CollectionTaskKind = "vocabulary" | "sentence";
+
+interface CollectionItem {
+  text: string;
+  definition: Record<string, string> | null;
   startTime: number;
   endTime: number;
-  audioUrl: string;
+  audioUrl?: string;
 }
 
-export default function TaskPreviewVocabulaty({
+/**
+ * Renders the vocabulary preview or sentence collection task.
+ * @param article Article the collection belongs to.
+ * @param kind Whether to collect vocabulary or sentences.
+ * @returns The collection task.
+ */
+export function TaskCollection({
   article,
+  kind,
 }: {
   article: Article;
+  kind: CollectionTaskKind;
 }) {
-  const t = useTranslations("Lesson.PreviewVocabulary");
+  const tVocabulary = useTranslations("Lesson.PreviewVocabulary");
+  const tSentence = useTranslations("Lesson.SentenceCollection");
+  const t = kind === "vocabulary" ? tVocabulary : tSentence;
   const locale = useLocale();
   const [loading, setLoading] = useState(true);
-  const [wordList, setWordList] = useState<WordList[]>([]);
+  const [items, setItems] = useState<CollectionItem[]>([]);
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null);
   const words = article?.sentencsAndWordsForFlashcard?.[0]
     ?.words as WordListTimestamp[];
   const wordsUrl = article?.sentencsAndWordsForFlashcard?.[0]?.wordsUrl;
+  const sentences = article?.sentencsAndWordsForFlashcard?.[0]
+    ?.sentence as Sentence[];
+  const audioUrl =
+    article?.sentencsAndWordsForFlashcard?.[0]?.audioSentencesUrl;
 
   useEffect(() => {
-    if (words) {
-      let wordList: WordList[] = [];
+    if (kind === "vocabulary") {
+      if (words) {
+        setItems(
+          words.map((word: WordListTimestamp, index: number) => {
+            const startTime = word?.timeSeconds as number;
+            const endTime =
+              index === words.length - 1
+                ? (word?.timeSeconds as number) + 10
+                : (words[index + 1].timeSeconds as number);
 
-      wordList = words.map((word: WordListTimestamp, index: number) => {
-        const startTime = word?.timeSeconds as number;
-        const endTime =
-          index === words.length - 1
-            ? (word?.timeSeconds as number) + 10
-            : (words[index + 1].timeSeconds as number);
+            return {
+              text: word?.vocabulary,
+              definition:
+                (word?.definition as unknown as Record<string, string>) ??
+                null,
+              startTime,
+              endTime,
+              audioUrl: wordsUrl as string,
+            };
+          }),
+        );
+      }
+    } else if (sentences) {
+      setItems(
+        sentences.map((sentence: Sentence, index: number) => {
+          const startTime = sentence?.timeSeconds as number;
+          const endTime =
+            index === sentences.length - 1
+              ? (sentence?.timeSeconds as number) + 10
+              : (sentences[index + 1].timeSeconds as number);
 
-        setLoading(false);
-
-        return {
-          vocabulary: word?.vocabulary,
-          definition: word?.definition,
-          index,
-          startTime,
-          endTime,
-          audioUrl: wordsUrl as string,
-        };
-      });
-      setWordList(wordList);
+          return {
+            text: sentence?.sentence,
+            definition:
+              ((sentence as unknown as { translation?: Record<string, string> | null })
+                ?.translation ?? null) as Record<string, string> | null,
+            startTime,
+            endTime,
+            audioUrl,
+          };
+        }),
+      );
     }
-  }, [words]);
+    setLoading(false);
+  }, [kind, words, wordsUrl, sentences, audioUrl]);
 
   const handleWordClick = (index: number) => {
     setActiveWordIndex(activeWordIndex === index ? null : index);
+  };
+
+  const getLocalizedTranslation = (
+    translation?: Record<string, string> | null,
+    fallback?: string,
+  ) => {
+    if (!translation) return fallback ?? "";
+    if (locale === "en") return fallback ?? "";
+    if (translation[locale]) return translation[locale] as string;
+    // Fallback chain
+    return (
+      translation.th ||
+      translation.vi ||
+      translation.cn ||
+      translation.tw ||
+      fallback ||
+      ""
+    );
   };
 
   return (
@@ -97,9 +150,9 @@ export default function TaskPreviewVocabulaty({
                 </div>
               ))}
             </div>
-          ) : wordList && wordList.length > 0 ? (
+          ) : items && items.length > 0 ? (
             <div className="grid max-h-[500px] gap-4 overflow-y-auto pr-2">
-              {wordList.map((word, index) => (
+              {items.map((item, index) => (
                 <div
                   key={index}
                   className={`group cursor-pointer rounded-xl border-2 p-4 transition-all duration-300 hover:shadow-md ${
@@ -108,22 +161,31 @@ export default function TaskPreviewVocabulaty({
                       : "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600"
                   }`}
                   onClick={() => handleWordClick(index)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleWordClick(index);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={item.text}
                 >
                   <div className="flex items-start gap-4">
                     {/* Word */}
                     <div className="flex-shrink-0">
                       <span className="inline-flex items-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 px-3 py-1 text-sm font-bold text-white">
-                        {word.vocabulary}
+                        {item.text}
                       </span>
                     </div>
 
                     {/* Audio Button */}
                     <div className="mt-1 flex-shrink-0">
-                      {word?.startTime !== undefined && word?.audioUrl ? (
+                      {item?.startTime !== undefined && item?.audioUrl ? (
                         <AudioButton
-                          audioUrl={word.audioUrl}
-                          startTimestamp={word.startTime}
-                          endTimestamp={word.endTime}
+                          audioUrl={item.audioUrl}
+                          startTimestamp={item.startTime}
+                          endTimestamp={item.endTime}
                         />
                       ) : (
                         <div
@@ -147,9 +209,14 @@ export default function TaskPreviewVocabulaty({
                         }`}
                       >
                         <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                          {(
-                            word.definition as unknown as Record<string, string>
-                          )[(locale as string) || "en"] || word.definition?.en}
+                          {kind === "vocabulary"
+                            ? (item.definition as unknown as Record<string, string>)?.[
+                                (locale as string) || "en"
+                              ] || (item.definition as unknown as { en?: string })?.en
+                            : getLocalizedTranslation(
+                                item.definition,
+                                item.text,
+                              )}
                         </p>
                       </div>
                     </div>
@@ -167,11 +234,11 @@ export default function TaskPreviewVocabulaty({
       </div>
 
       {/* Progress Indicator */}
-      {wordList.length > 0 && (
+      {items.length > 0 && (
         <div className="rounded-xl border border-gray-200 bg-zinc-200 p-4 dark:border-gray-700 dark:bg-gray-900">
           <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
             <span>{t("progress")}</span>
-            <span>{t("wordsToLearn", { count: wordList.length })}</span>
+            <span>{t("wordsToLearn", { count: items.length })}</span>
           </div>
           <div className="mt-2 h-2 rounded-full bg-gray-200 dark:bg-gray-700">
             <div
@@ -184,3 +251,5 @@ export default function TaskPreviewVocabulaty({
     </div>
   );
 }
+
+export default TaskCollection;

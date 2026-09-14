@@ -26,6 +26,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
+import { useAuth } from "@reading-advantage/auth-client";
+import { useRouter } from "@/i18n/navigation";
 
 const schoolFormSchema = z.object({
   name: z
@@ -60,26 +62,44 @@ interface School {
   contactEmail?: string;
 }
 
-interface EditSchoolFormProps {
-  school: School;
+/**
+ * School form editing mode.
+ */
+export type SchoolFormMode = "edit" | "create";
+
+interface SchoolFormProps {
+  mode: SchoolFormMode;
+  school?: School;
   onSuccess: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
 }
 
-export function EditSchoolForm({
+/**
+ * Renders the create or edit school form.
+ * @param mode Whether the form edits an existing school or creates one.
+ * @param school Existing school for edit mode.
+ * @param onSuccess Called after a successful save.
+ * @param onCancel Called when editing is cancelled.
+ * @returns The school form.
+ */
+export function SchoolForm({
+  mode,
   school,
   onSuccess,
   onCancel,
-}: EditSchoolFormProps) {
+}: SchoolFormProps) {
+  const isEdit = mode === "edit";
   const [isLoading, setIsLoading] = useState(false);
+  const { refresh } = useAuth();
+  const router = useRouter();
   const t = useTranslations("Settings.schoolProfile");
 
   const form = useForm<SchoolFormData>({
     resolver: zodResolver(schoolFormSchema),
     defaultValues: {
-      name: school.name,
-      contactName: school.contactName || "",
-      contactEmail: school.contactEmail || "",
+      name: isEdit ? (school?.name ?? "") : "",
+      contactName: isEdit ? school?.contactName || "" : "",
+      contactEmail: isEdit ? school?.contactEmail || "" : "",
     },
   });
 
@@ -95,7 +115,7 @@ export function EditSchoolForm({
       };
 
       const response = await fetch(`/api/users/me/school`, {
-        method: "PATCH",
+        method: isEdit ? "PATCH" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -104,18 +124,36 @@ export function EditSchoolForm({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to update school");
+        throw new Error(
+          errorData.message ||
+            (isEdit ? "Failed to update school" : "Failed to create school"),
+        );
       }
 
-      const updatedSchool = await response.json();
+      const savedSchool = await response.json();
 
-      toast.success("School updated successfully!", {
-        description: `${updatedSchool.name} has been updated.`,
-      });
+      if (isEdit) {
+        toast.success("School updated successfully!", {
+          description: `${savedSchool.name} has been updated.`,
+        });
 
-      onSuccess();
+        onSuccess();
+      } else {
+        if (savedSchool.roleUpgraded) {
+          await refresh();
+        }
+
+        toast.success("School created successfully!", {
+          description: savedSchool.roleUpgraded
+            ? `${savedSchool.name} has been created and you've been upgraded to admin to access admin features.`
+            : `${savedSchool.name} has been created and associated with your account.`,
+        });
+
+        form.reset();
+        onSuccess();
+      }
     } catch (error) {
-      toast.error("Failed to update school", {
+      toast.error(isEdit ? "Failed to update school" : "Failed to create school", {
         description:
           error instanceof Error
             ? error.message
@@ -123,6 +161,9 @@ export function EditSchoolForm({
       });
     } finally {
       setIsLoading(false);
+      if (!isEdit) {
+        router.refresh();
+      }
     }
   };
 
@@ -131,9 +172,9 @@ export function EditSchoolForm({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Building2 className="h-5 w-5" />
-          {t("editSchool")}
+          {isEdit ? t("editSchool") : t("createSchool")}
         </CardTitle>
-        <CardDescription>{t("editSchoolDescription")}</CardDescription>
+        <CardDescription>{isEdit ? t("editSchoolDescription") : t("createSchoolDescription")}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -212,19 +253,21 @@ export function EditSchoolForm({
             />
 
             <div className="flex justify-end gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onCancel}
-                disabled={isLoading}
-              >
-                {t("cancel")}
-              </Button>
+              {onCancel && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onCancel}
+                  disabled={isLoading}
+                >
+                  {t("cancel")}
+                </Button>
+              )}
               <Button type="submit" disabled={isLoading}>
                 {isLoading && (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {t("updateSchoolButton")}
+                {isEdit ? t("updateSchoolButton") : t("createSchoolButton")}
               </Button>
             </div>
           </form>

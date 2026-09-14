@@ -11,7 +11,7 @@ import {
 import { QuizContextProvider } from "@/contexts/question-context";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getQuestionsByArticleId } from "@/server/models/articleModel";
-import MCQuestionContent from "./mc-question-content";
+import { MCQContent } from "./mc-question-content";
 import QuestionHeader from "./question-header";
 import { Button } from "@/components/ui/button";
 import { retakeQuiz } from "@/actions/question";
@@ -76,7 +76,8 @@ export default async function MCQuestionCard({
           disabled={false}
         >
           <QuizContextProvider>
-            <MCQuestionContent
+            <MCQContent
+              mode="article"
               articleId={articleId}
               questions={questionsData.questions as MCQuestion[]}
             />

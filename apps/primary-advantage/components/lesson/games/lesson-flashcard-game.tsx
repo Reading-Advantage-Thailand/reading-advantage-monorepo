@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useTransition,
-  useContext,
-} from "react";
+import { useState, useEffect, useTransition, useContext } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,41 +9,26 @@ import { Separator } from "@/components/ui/separator";
 import {
   Trophy,
   Clock,
-  Play,
-  Pause,
   RotateCcw,
   Eye,
-  Volume2,
   ThumbsUp,
   ThumbsDown,
   AlertTriangle,
   Zap,
-  SkipForward,
   Target,
   Brain,
   Lightbulb,
   GraduationCap,
   Sparkles,
   Star,
-  CheckCircle,
-  BookOpen,
-  AlertCircle,
-  RefreshCw,
   Languages,
   RefreshCcwIcon,
-  Loader2,
 } from "lucide-react";
-import { useLocale } from "next-intl";
-import {
-  Card as FsrsCard,
-  Rating,
-  fsrs,
-  generatorParameters,
-  Grade,
-} from "ts-fsrs";
+import { useLocale, useTranslations } from "next-intl";
+import { Rating } from "ts-fsrs";
 import { toast } from "sonner";
 import AudioButton from "@/components/audio-button";
-import { getLessonFlashcards } from "@/actions/flashcard";
+import { getLessonFlashcards, reviewCard } from "@/actions/flashcard";
 import { ActivityType, FlashcardType, UserXpEarned } from "@/types/enum";
 import {
   Select,
@@ -58,14 +37,16 @@ import {
   SelectContent,
   SelectTrigger,
 } from "@/components/ui/select";
-import { SENTENCE_LANGUAGES } from "../../flashcards/deck-view";
+import {
+  SENTENCE_LANGUAGES,
+  VOCABULARY_LANGUAGES,
+} from "../../flashcards/deck-view";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import { reviewCard } from "@/actions/flashcard";
+import { toTranslationLanguage } from "@/lib/translation-language";
 import { QuizContext, QuizContextProvider } from "@/contexts/question-context";
 import { updateUserActivity } from "@/actions/user";
-import { useTranslations } from "next-intl";
 import { useAuth } from "@reading-advantage/auth-client";
+import { formatTimePadded } from "@/lib/format-time";
 
 enum GameState {
   LOADING = "LOADING",
@@ -91,64 +72,231 @@ interface CompletionData {
   completionDate?: string;
 }
 
-interface FlashcardWord {
+/**
+ * Single lesson flashcard shape covering both variants.
+ * Sentence cards fill sentence/translation; vocabulary cards fill word/definition.
+ */
+export interface LessonFlashcard {
   id: string;
-  sentence: string;
-  translation: Record<string, string>;
   state: string;
   startTime?: number;
   endTime?: number;
   audioUrl?: string;
+  sentence?: string;
+  word?: string;
+  translation?: Record<string, string>;
+  definition?: Record<string, string>;
 }
 
-function LessonSentenceFlashcardCardContent({
+/**
+ * Translation keys for every divergent label slot in the flashcard flow.
+ * Each kind keeps its own namespace and key strings exactly as before.
+ */
+export interface LessonFlashcardLabels {
+  completeTitle: string;
+  completeSubtitle: string;
+  completeXp: string;
+  completeTime: string;
+  completeCount: string;
+  loadingTitle: string;
+  loadingSubtitle: string;
+  errorTitle: string;
+  errorDescription: string;
+  errorRetry: string;
+  emptyTitle: string;
+  emptyDescription: string;
+  startTitle: string;
+  startSubtitle: string;
+  startLanguageLabel: string;
+  startLanguageNote: string;
+  startButton: string;
+  headerTitle: string;
+  headerProgress: string;
+  headerProgressLabel: string;
+  headerPercent: string;
+  badgeType: string;
+  badgeNew: string;
+  badgeLearning: string;
+  badgeReview: string;
+  badgeRelearning: string;
+  ratingPrompt: string;
+  ratingAgain: string;
+  ratingHard: string;
+  ratingGood: string;
+  ratingEasy: string;
+  thinkPrompt: string;
+  showAnswer: string;
+  statsCompleted: string;
+  statsRemaining: string;
+  statsTotal: string;
+}
+
+/**
+ * Per-kind configuration driving the parameterized flashcard game.
+ * Holds the fetch kind, card field accessors, language options,
+ * label namespace keys, and finish payload for one card kind.
+ */
+export interface LessonFlashcardConfig {
+  /** Card kind passed to getLessonFlashcards. */
+  flashcardType: FlashcardType;
+  /** Activity reported to updateUserActivity on round end. */
+  activityType: ActivityType;
+  /** XP shown and reported on round end. */
+  xp: UserXpEarned;
+  /** next-intl namespace holding this kind's keys. */
+  namespace: string;
+  /** Initial translation language for the given locale. */
+  initialLanguage: (locale: string) => string;
+  /** Language options for the start-screen selector. */
+  languages: Record<
+    string,
+    { code: string; name: string; flag: string; nativeName: string }
+  >;
+  /** Front (prompt) text of a card. */
+  getFront: (card: LessonFlashcard) => string;
+  /** Back (answer) text of a card in the selected language. */
+  getBack: (card: LessonFlashcard, language: string) => string;
+  /** Divergent label keys for this kind. */
+  labels: LessonFlashcardLabels;
+}
+
+/**
+ * Per-kind configs for the lesson flashcard game.
+ * Sentence keeps the SentenceFlashcards namespace with a locale-derived
+ * initial language; vocabulary keeps Lesson.VocabularyFlashcards with "en".
+ */
+export const LESSON_FLASHCARD_CONFIGS: Record<
+  FlashcardType,
+  LessonFlashcardConfig
+> = {
+  [FlashcardType.SENTENCE]: {
+    flashcardType: FlashcardType.SENTENCE,
+    activityType: ActivityType.SENTENCE_FLASHCARDS,
+    xp: UserXpEarned.SENTENCE_FLASHCARDS,
+    namespace: "SentenceFlashcards",
+    initialLanguage: (locale) => toTranslationLanguage(locale),
+    languages: SENTENCE_LANGUAGES,
+    getFront: (card) => card.sentence ?? "",
+    getBack: (card, language) => card.translation?.[language] ?? "",
+    labels: {
+      completeTitle: "complete.title",
+      completeSubtitle: "complete.subtitle",
+      completeXp: "complete.xpEarned",
+      completeTime: "complete.timeTaken",
+      completeCount: "complete.completedLabel",
+      loadingTitle: "loading.title",
+      loadingSubtitle: "loading.subtitle",
+      errorTitle: "error.title",
+      errorDescription: "error.description",
+      errorRetry: "error.retry",
+      emptyTitle: "empty.title",
+      emptyDescription: "empty.description",
+      startTitle: "start.title",
+      startSubtitle: "start.subtitle",
+      startLanguageLabel: "start.language",
+      startLanguageNote: "start.languageNote",
+      startButton: "start.startButton",
+      headerTitle: "header.title",
+      headerProgress: "header.progress",
+      headerProgressLabel: "header.progressLabel",
+      headerPercent: "header.percentComplete",
+      badgeType: "badge.typeSentence",
+      badgeNew: "badge.new",
+      badgeLearning: "badge.learning",
+      badgeReview: "badge.review",
+      badgeRelearning: "badge.relearning",
+      ratingPrompt: "rating.prompt",
+      ratingAgain: "rating.again",
+      ratingHard: "rating.hard",
+      ratingGood: "rating.good",
+      ratingEasy: "rating.easy",
+      thinkPrompt: "prompt.thinkAndReveal",
+      showAnswer: "buttons.showAnswer",
+      statsCompleted: "stats.completed",
+      statsRemaining: "stats.remaining",
+      statsTotal: "stats.total",
+    },
+  },
+  [FlashcardType.VOCABULARY]: {
+    flashcardType: FlashcardType.VOCABULARY,
+    activityType: ActivityType.VOCABULARY_FLASHCARDS,
+    xp: UserXpEarned.VOCABULARY_FLASHCARDS,
+    namespace: "Lesson.VocabularyFlashcards",
+    initialLanguage: () => "en",
+    languages: VOCABULARY_LANGUAGES,
+    getFront: (card) => card.word ?? "",
+    getBack: (card, language) => card.definition?.[language] ?? "",
+    labels: {
+      completeTitle: "completion.title",
+      completeSubtitle: "completion.subtitle",
+      completeXp: "completion.xpEarned",
+      completeTime: "completion.timeTaken",
+      completeCount: "completion.completed",
+      loadingTitle: "loading.title",
+      loadingSubtitle: "loading.description",
+      errorTitle: "error.title",
+      errorDescription: "error.description",
+      errorRetry: "common.tryAgain",
+      emptyTitle: "empty.title",
+      emptyDescription: "empty.description",
+      startTitle: "start.title",
+      startSubtitle: "start.description",
+      startLanguageLabel: "start.translationLanguage",
+      startLanguageNote: "start.translationHint",
+      startButton: "start.startButton",
+      headerTitle: "playing.header",
+      headerProgress: "playing.cardOf",
+      headerProgressLabel: "playing.progress",
+      headerPercent: "playing.percentComplete",
+      badgeType: "playing.badgeVocabulary",
+      badgeNew: "playing.state.new",
+      badgeLearning: "playing.state.learning",
+      badgeReview: "playing.state.review",
+      badgeRelearning: "playing.state.relearning",
+      ratingPrompt: "playing.rating.prompt",
+      ratingAgain: "playing.rating.again",
+      ratingHard: "playing.rating.hard",
+      ratingGood: "playing.rating.good",
+      ratingEasy: "playing.rating.easy",
+      thinkPrompt: "playing.thinkPrompt",
+      showAnswer: "playing.showAnswer",
+      statsCompleted: "stats.completed",
+      statsRemaining: "stats.remaining",
+      statsTotal: "stats.total",
+    },
+  },
+};
+
+function LessonFlashcardView({
   articleId,
+  cardKind,
 }: {
   articleId: string;
+  cardKind: FlashcardType;
 }) {
-  const t = useTranslations("SentenceFlashcards");
+  const config = LESSON_FLASHCARD_CONFIGS[cardKind];
+  const labels = config.labels;
+  const t = useTranslations(config.namespace);
+  const locale = useLocale();
   // State management
   const [gameState, setGameState] = useState<GameState>(GameState.LOADING);
-  const [words, setWords] = useState<FlashcardWord[]>([]);
+  const [words, setWords] = useState<LessonFlashcard[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [startTime, setStartTime] = useState<number | null>(null);
-  const [isTimerRunning, setIsTimerRunning] = useState(true);
-  const [completionData, setCompletionData] = useState<CompletionData | null>(
-    null,
-  );
-  const [sessionStats, setSessionStats] = useState<SessionStats>({
-    correct: 0,
-    incorrect: 0,
-    total: 0,
-    accuracy: 0,
-  });
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("th");
-  const [isPending, startTransition] = useTransition();
   const [completedCards, setCompletedCards] = useState(0);
-  const [sessionComplete, setSessionComplete] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(() =>
+    config.initialLanguage(locale),
+  );
+  const [isPending, startTransition] = useTransition();
+  const [completionData] = useState<CompletionData | null>(null);
   const [cardRating, setCardRating] = useState<{ [cardId: string]: Rating }>(
     {},
   );
   const { timer, setPaused } = useContext(QuizContext);
-  const { user, refresh } = useAuth();
+  const { refresh } = useAuth();
 
   // Computed values
   const currentCard = words[currentCardIndex];
-
-  // Utility functions
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const calculateAccuracy = (correct: number, total: number): number => {
-    return total > 0 ? Math.round((correct / total) * 100) : 0;
-  };
 
   const loadGameData = async () => {
     try {
@@ -162,10 +310,10 @@ function LessonSentenceFlashcardCardContent({
 
       const response = await getLessonFlashcards(
         articleId,
-        FlashcardType.SENTENCE,
+        config.flashcardType,
       );
 
-      setWords(response.cards as FlashcardWord[]);
+      setWords(response.cards as LessonFlashcard[]);
       setGameState(GameState.START_GAME);
       //   setCurrentCardIndex(0);
       //   setStartTime(Date.now());
@@ -214,17 +362,18 @@ function LessonSentenceFlashcardCardContent({
           const allSuccess = results.every((r) => r.success);
 
           if (allSuccess) {
-            setSessionComplete(true);
             await updateUserActivity(
               articleId,
-              ActivityType.SENTENCE_FLASHCARDS,
-              UserXpEarned.SENTENCE_FLASHCARDS,
+              config.activityType,
               timer,
               {
+                // Pinned quirk: reports the pre-rating state, so the final
+                // card's rating is excluded here while reviewCard above still
+                // saves every rating. Preserved exactly as characterized.
                 details: {
                   cardRating,
                 },
-                score: UserXpEarned.SENTENCE_FLASHCARDS,
+                score: config.xp,
               },
             );
             await refresh();
@@ -252,15 +401,6 @@ function LessonSentenceFlashcardCardContent({
     (completionData && completionData.isExistingCompletion);
 
   if (shouldShowCompletion) {
-    // Create default completion data if missing
-    const safeCompletionData = completionData || {
-      xpEarned: 20,
-      timeTaken: 0,
-      sessionStats: { correct: 0, incorrect: 0, total: 0, accuracy: 0 },
-      isExistingCompletion: true,
-      completionDate: new Date().toISOString(),
-    };
-
     return (
       <div className="space-y-6">
         <Card className="overflow-hidden border-emerald-200 bg-gradient-to-br from-emerald-50 via-emerald-50 to-emerald-100 pb-14 dark:border-emerald-800 dark:from-emerald-950/20 dark:via-emerald-950/20 dark:to-emerald-950/30">
@@ -279,10 +419,10 @@ function LessonSentenceFlashcardCardContent({
                 </div>
                 <div className="space-y-2">
                   <h2 className="bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-3xl font-bold text-transparent">
-                    {t("complete.title")}
+                    {t(labels.completeTitle)}
                   </h2>
                   <p className="text-lg text-gray-600 dark:text-gray-400">
-                    {t("complete.subtitle")}
+                    {t(labels.completeSubtitle)}
                   </p>
                 </div>
               </div>
@@ -293,18 +433,18 @@ function LessonSentenceFlashcardCardContent({
               <div className="flex items-center justify-between gap-4">
                 <div className="space-y-2">
                   <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                    {UserXpEarned.SENTENCE_FLASHCARDS}
+                    {config.xp}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("complete.xpEarned")}
+                    {t(labels.completeXp)}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                    {formatTime(timer)}
+                    {formatTimePadded(timer)}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("complete.timeTaken")}
+                    {t(labels.completeTime)}
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -312,7 +452,7 @@ function LessonSentenceFlashcardCardContent({
                     {completedCards}/{words.length}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("complete.completedLabel")}
+                    {t(labels.completeCount)}
                   </div>
                 </div>
               </div>
@@ -338,10 +478,10 @@ function LessonSentenceFlashcardCardContent({
               </div>
               <div className="space-y-2 text-center">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  {t("loading.title")}
+                  {t(labels.loadingTitle)}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {t("loading.subtitle")}
+                  {t(labels.loadingSubtitle)}
                 </p>
               </div>
             </div>
@@ -361,15 +501,15 @@ function LessonSentenceFlashcardCardContent({
               <AlertTriangle className="mx-auto h-16 w-16 text-red-500" />
               <div className="space-y-2">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                  {t("error.title")}
+                  {t(labels.errorTitle)}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {t("error.description")}
+                  {t(labels.errorDescription)}
                 </p>
               </div>
               <Button onClick={loadGameData} size="lg" variant="outline">
                 <RotateCcw className="mr-2 h-4 w-4" />
-                {t("error.retry")}
+                {t(labels.errorRetry)}
               </Button>
             </div>
           </CardContent>
@@ -388,10 +528,10 @@ function LessonSentenceFlashcardCardContent({
               <AlertTriangle className="mx-auto h-12 w-12 text-orange-500" />
               <div className="space-y-2">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  {t("empty.title")}
+                  {t(labels.emptyTitle)}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {t("empty.description")}
+                  {t(labels.emptyDescription)}
                 </p>
               </div>
             </div>
@@ -404,7 +544,7 @@ function LessonSentenceFlashcardCardContent({
   // Calculate progress
   const progress = (currentCardIndex / words.length) * 100;
 
-  const languageOptions = SENTENCE_LANGUAGES;
+  const languageOptions = config.languages;
 
   if (gameState === GameState.START_GAME) {
     return (
@@ -416,14 +556,14 @@ function LessonSentenceFlashcardCardContent({
                 <GraduationCap className="h-12 w-12 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold">{t("start.title")}</h3>
-                <p>{t("start.subtitle")}</p>
+                <h3 className="text-xl font-semibold">{t(labels.startTitle)}</h3>
+                <p>{t(labels.startSubtitle)}</p>
                 <div className="flex flex-col items-center justify-center gap-4">
                   <div className="w-full max-w-md space-y-4">
                     <div className="flex items-center justify-center gap-2">
                       <Languages className="h-5 w-5 text-indigo-500" />
                       <Label className="text-base font-semibold">
-                        {t("start.language")}
+                        {t(labels.startLanguageLabel)}
                       </Label>
                     </div>
                     <Select
@@ -482,11 +622,11 @@ function LessonSentenceFlashcardCardContent({
                       </SelectContent>
                     </Select>
                     <p className="text-muted-foreground text-xs">
-                      {t("start.languageNote")}
+                      {t(labels.startLanguageNote)}
                     </p>
                   </div>
                   <Button onClick={() => setGameState(GameState.PLAYING)}>
-                    {t("start.startButton")}
+                    {t(labels.startButton)}
                   </Button>
                 </div>
               </div>
@@ -506,10 +646,10 @@ function LessonSentenceFlashcardCardContent({
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <CardTitle className="text-xl font-bold text-emerald-800 dark:text-emerald-200">
-                {t("header.title")}
+                {t(labels.headerTitle)}
               </CardTitle>
               <p className="text-sm text-emerald-700 dark:text-emerald-300">
-                {t("header.progress", {
+                {t(labels.headerProgress, {
                   current: currentCardIndex + 1,
                   total: words.length,
                 })}
@@ -522,7 +662,7 @@ function LessonSentenceFlashcardCardContent({
               >
                 <Clock className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 <span className="font-mono text-emerald-800 dark:text-emerald-200">
-                  {formatTime(timer)}
+                  {formatTimePadded(timer)}
                 </span>
               </Badge>
             </div>
@@ -533,10 +673,10 @@ function LessonSentenceFlashcardCardContent({
             <Progress value={progress} className="h-3" />
             <div className="flex items-center justify-between text-sm">
               <span className="text-emerald-700 dark:text-emerald-300">
-                {t("header.progressLabel")}
+                {t(labels.headerProgressLabel)}
               </span>
               <span className="font-medium text-emerald-800 dark:text-emerald-200">
-                {t("header.percentComplete", { percent: Math.round(progress) })}
+                {t(labels.headerPercent, { percent: Math.round(progress) })}
               </span>
             </div>
           </div>
@@ -554,7 +694,7 @@ function LessonSentenceFlashcardCardContent({
                 className="bg-emerald-600 px-3 py-1 text-sm font-medium text-white hover:bg-emerald-700"
               >
                 <GraduationCap className="mr-2 h-4 w-4" />
-                {t("badge.typeSentence")}
+                {t(labels.badgeType)}
               </Badge>
               <Badge
                 variant="outline"
@@ -563,26 +703,26 @@ function LessonSentenceFlashcardCardContent({
                 {currentCard.state === "NEW" && (
                   <>
                     <Lightbulb className="mr-2 h-4 w-4 text-yellow-500" />
-                    {t("badge.new")}
+                    {t(labels.badgeNew)}
                   </>
                 )}
 
                 {currentCard.state === "LEARNING" && (
                   <>
                     <Brain className="mr-2 h-4 w-4 text-blue-500" />
-                    {t("badge.learning")}
+                    {t(labels.badgeLearning)}
                   </>
                 )}
                 {currentCard.state === "REVIEW" && (
                   <>
                     <Target className="mr-2 h-4 w-4 text-green-500" />
-                    {t("badge.review")}
+                    {t(labels.badgeReview)}
                   </>
                 )}
                 {currentCard.state === "RELEARNING" && (
                   <>
                     <RefreshCcwIcon className="mr-2 h-4 w-4 text-green-500" />
-                    {t("badge.relearning")}
+                    {t(labels.badgeRelearning)}
                   </>
                 )}
               </Badge>
@@ -592,7 +732,7 @@ function LessonSentenceFlashcardCardContent({
             <div className="space-y-6 text-center">
               <div className="space-y-4">
                 <h2 className="text-5xl font-bold text-emerald-700 drop-shadow-sm dark:text-emerald-300">
-                  {currentCard.sentence}
+                  {config.getFront(currentCard)}
                 </h2>
                 <div className="flex justify-center gap-3">
                   {currentCard.audioUrl && (
@@ -613,7 +753,7 @@ function LessonSentenceFlashcardCardContent({
               <div className="space-y-8">
                 <div className="space-y-6 text-center">
                   <h3 className="text-3xl font-medium text-gray-700 dark:text-gray-300">
-                    {currentCard.translation[selectedLanguage]}
+                    {config.getBack(currentCard, selectedLanguage)}
                   </h3>
                 </div>
 
@@ -621,7 +761,7 @@ function LessonSentenceFlashcardCardContent({
                 <div className="space-y-6">
                   <div className="text-center">
                     <p className="text-lg text-gray-600 dark:text-gray-400">
-                      {t("rating.prompt")}
+                      {t(labels.ratingPrompt)}
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -633,7 +773,7 @@ function LessonSentenceFlashcardCardContent({
                     >
                       <ThumbsDown className="mb-2 h-6 w-6 text-red-500" />
                       <span className="text-sm font-medium">
-                        {t("rating.again")}
+                        {t(labels.ratingAgain)}
                       </span>
                     </Button>
                     <Button
@@ -644,7 +784,7 @@ function LessonSentenceFlashcardCardContent({
                     >
                       <AlertTriangle className="mb-2 h-6 w-6 text-orange-500" />
                       <span className="text-sm font-medium">
-                        {t("rating.hard")}
+                        {t(labels.ratingHard)}
                       </span>
                     </Button>
                     <Button
@@ -655,7 +795,7 @@ function LessonSentenceFlashcardCardContent({
                     >
                       <ThumbsUp className="mb-2 h-6 w-6 text-green-500" />
                       <span className="text-sm font-medium">
-                        {t("rating.good")}
+                        {t(labels.ratingGood)}
                       </span>
                     </Button>
                     <Button
@@ -666,7 +806,7 @@ function LessonSentenceFlashcardCardContent({
                     >
                       <Zap className="mb-2 h-6 w-6 text-blue-500" />
                       <span className="text-sm font-medium">
-                        {t("rating.easy")}
+                        {t(labels.ratingEasy)}
                       </span>
                     </Button>
                   </div>
@@ -676,7 +816,7 @@ function LessonSentenceFlashcardCardContent({
               <div className="space-y-8 text-center">
                 <div className="space-y-6">
                   <p className="text-lg text-gray-600 dark:text-gray-400">
-                    {t("prompt.thinkAndReveal")}
+                    {t(labels.thinkPrompt)}
                   </p>
                   <Button
                     onClick={handleShowAnswer}
@@ -684,7 +824,7 @@ function LessonSentenceFlashcardCardContent({
                     className="h-16 bg-gradient-to-r from-emerald-600 to-emerald-700 px-12 text-lg text-white shadow-lg hover:from-emerald-700 hover:to-emerald-800"
                   >
                     <Eye className="mr-3 h-6 w-6" />
-                    {t("buttons.showAnswer")}
+                    {t(labels.showAnswer)}
                   </Button>
                 </div>
               </div>
@@ -701,21 +841,21 @@ function LessonSentenceFlashcardCardContent({
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-green-500"></div>
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t("stats.completed", { count: completedCards })}
+                  {t(labels.statsCompleted, { count: completedCards })}
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-blue-500"></div>
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {t("stats.remaining", {
+                  {t(labels.statsRemaining, {
                     count: words.length - completedCards - 1,
                   })}
                 </span>
               </div>
             </div>
             <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
-              {t("stats.total", { count: words.length })}
+              {t(labels.statsTotal, { count: words.length })}
             </div>
           </div>
         </CardContent>
@@ -724,14 +864,29 @@ function LessonSentenceFlashcardCardContent({
   );
 }
 
-export default function LessonSentenceFlashcardGame({
+/**
+ * Card kind served by the lesson flashcard game.
+ */
+export type LessonFlashcardKind = FlashcardType;
+
+/**
+ * Renders the lesson sentence or vocabulary flashcard game.
+ * @param articleId Article the cards belong to.
+ * @param cardKind Whether to show sentence or vocabulary cards.
+ * @returns The lesson flashcard game.
+ */
+export function LessonFlashcardGame({
   articleId,
+  cardKind,
 }: {
   articleId: string;
+  cardKind: FlashcardType;
 }) {
   return (
     <QuizContextProvider>
-      <LessonSentenceFlashcardCardContent articleId={articleId} />
+      <LessonFlashcardView articleId={articleId} cardKind={cardKind} />
     </QuizContextProvider>
   );
 }
+
+export default LessonFlashcardGame;

@@ -9,7 +9,7 @@ import { getQuestionsByArticleId } from "@/server/models/articleModel";
 import { ActivityType, QuestionState } from "@/types/enum";
 import QuestionHeader from "./question-header";
 import { QuizContextProvider } from "@/contexts/question-context";
-import LAQuestionContent from "./la-question-content";
+import { WrittenQuestionContent } from "./written-question-content";
 import { LAQuestion, QuestionResponse } from "@/types";
 import { getTranslations } from "next-intl/server";
 
@@ -65,7 +65,8 @@ export default async function LAQuestionCard({
           disabled={false}
         >
           <QuizContextProvider>
-            <LAQuestionContent
+            <WrittenQuestionContent
+              kind="la"
               articleId={articleId}
               questions={questionsData.questions as LAQuestion}
             />

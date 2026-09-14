@@ -1,11 +1,11 @@
-import { MatchingGame } from "@/components/pratice/matching-game";
-import { getFlashcardDeckId } from "@/actions/pratice";
+import { OrderWordGame } from "@/components/lesson/games/lesson-sentence-order-word";
+import { getFlashcardDeckId } from "@/actions/practice";
 import { Header } from "@/components/header";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTranslations } from "next-intl/server";
 
-export default async function MatchingGamePage() {
-  const t = await getTranslations("SentencesPage.matchingGame");
+export default async function WordsOrderingPage() {
+  const t = await getTranslations("SentencesPage.orderWordGame");
   const deckResult = await getFlashcardDeckId();
 
   if (!deckResult.success) {
@@ -24,5 +24,5 @@ export default async function MatchingGamePage() {
     );
   }
 
-  return <MatchingGame deckId={deckResult.deckId} />;
+  return <OrderWordGame source="deck" deckId={deckResult.deckId} />;
 }

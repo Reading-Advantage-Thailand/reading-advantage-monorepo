@@ -4,12 +4,44 @@ import LessonProgressBar, {
 } from "./lesson-progress-bar";
 import { BookOpenIcon, GraduationCapIcon } from "lucide-react";
 import getAssignmentById from "@/server/models/assignmentModel";
+import { getArticleForLesson } from "@/server/models/lessonModel";
 import { QuizContextProvider } from "@/contexts/question-context";
 import { getTranslations } from "next-intl/server";
+import { Article } from "@/types";
 
-export default async function LessonCard({ id }: { id: string }) {
+/**
+ * Data source for the lesson card.
+ */
+export type LessonCardSource = "assignment" | "article";
+
+/**
+ * Renders the lesson header and task sequence for an assignment or article.
+ * @param source Whether the lesson runs from an assignment or a standalone article.
+ * @param id Assignment id for assignment lessons.
+ * @param articleId Article id for article lessons.
+ * @returns The lesson card.
+ */
+export default async function LessonCard({
+  source,
+  id,
+  articleId,
+}: {
+  source: LessonCardSource;
+  id?: string;
+  articleId?: string;
+}) {
   const t = await getTranslations("Lesson");
-  const assignment = await getAssignmentById(id);
+  const assignment =
+    source === "assignment" && id ? await getAssignmentById(id) : null;
+  const standaloneArticle =
+    source === "article" && articleId
+      ? await getArticleForLesson(articleId)
+      : null;
+  const title =
+    source === "assignment"
+      ? (assignment as unknown as { article?: { title?: string } } | null)
+          ?.article?.title
+      : (standaloneArticle as unknown as Article | null)?.title;
 
   return (
     <div className="w-full">
@@ -43,7 +75,7 @@ export default async function LessonCard({ id }: { id: string }) {
           {/* Article Title */}
           <div className="rounded-xl border-l-4 border-blue-500 bg-gradient-to-r from-gray-300 to-blue-300 p-4 dark:from-gray-800 dark:to-blue-950">
             <h2 className="text-xl leading-tight font-semibold text-gray-900 dark:text-white">
-              {assignment?.article?.title}
+              {title}
             </h2>
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
               {t("header.cta", {
@@ -58,7 +90,9 @@ export default async function LessonCard({ id }: { id: string }) {
       {/* Main Lesson Content */}
       <QuizContextProvider>
         <LessonProgressBar
+          source={source}
           assignment={assignment as unknown as LessonAssignmentProps}
+          article={standaloneArticle as unknown as Article}
         />
       </QuizContextProvider>
     </div>

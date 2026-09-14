@@ -127,7 +127,7 @@ export function FlashcardGameInline({
     const accuracy = Math.round((completedCards / cards.length) * 100);
 
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="container mx-auto max-w-4xl px-4 py-8" aria-live="polite">
         <div className="space-y-8 text-center">
           {/* Trophy Animation */}
           <div className="relative">
@@ -249,6 +249,15 @@ export function FlashcardGameInline({
           <div
             className="relative h-[500px] cursor-pointer"
             onClick={handleFlipCard}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleFlipCard();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={t("flipCard")}
             style={{ perspective: "1000px" }}
           >
             <div

@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { QrCode, Copy, RefreshCw, Calendar, Users } from "lucide-react";
 import { format } from "date-fns";
+import { copyToClipboardWithMeta } from "@/components/ui/copy-button";
 
 interface ClassCodeGeneratorProps {
   classroomId: string;
@@ -79,7 +80,7 @@ export default function ClassCodeGenerator({
     if (!classCode) return;
 
     try {
-      await navigator.clipboard.writeText(classCode);
+      await copyToClipboardWithMeta(classCode);
       toast.success(t("toast.copyCodeSuccess"));
     } catch (error) {
       console.error("Failed to copy class code:", error);
@@ -103,7 +104,7 @@ export default function ClassCodeGenerator({
     });
 
     try {
-      await navigator.clipboard.writeText(instructions);
+      await copyToClipboardWithMeta(instructions);
       toast.success(t("toast.copyInstructionsSuccess"));
     } catch (error) {
       console.error("Failed to copy instructions:", error);
@@ -199,6 +200,7 @@ export default function ClassCodeGenerator({
                       className="h-6 w-6 p-0"
                       onClick={handleCopyCode}
                       title={t("fields.password.copyTitle")}
+                      aria-label={t("fields.password.copyTitle")}
                     >
                       <Copy className="h-3 w-3" />
                     </Button>

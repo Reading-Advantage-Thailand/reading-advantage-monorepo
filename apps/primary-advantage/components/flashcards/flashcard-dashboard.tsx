@@ -1,11 +1,11 @@
 // components/flashcards/flashcard-dashboard.tsx
 import React from "react";
-import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { getDashboardData } from "@/actions/flashcard";
 import { SingleDeckViewInline } from "./deck-view";
+import { DashboardRetryButton } from "./dashboard-retry-button";
 import { EmptyDashboard } from "./empty-deck";
 import { Header } from "../header";
 import { getTranslations } from "next-intl/server";
@@ -78,14 +78,7 @@ export default async function FlashcardDashboard({
             </Card>
 
             {/* Action Button */}
-            <Button
-              onClick={() => window.location.reload()}
-              variant="outline"
-              className="h-12 px-6"
-            >
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Try Again
-            </Button>
+            <DashboardRetryButton />
           </div>
         </div>
       </div>

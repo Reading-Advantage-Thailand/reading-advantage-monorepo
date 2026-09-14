@@ -185,7 +185,6 @@ export default function Home() {
   const [userRating, setUserRating] = useState(3.5); // Example initial rating with half-star
 
   const handleRatingChange = (newRating: number) => {
-    console.log('User rated:', newRating);
     setUserRating(newRating);
     // You can send this rating to your backend here
   };

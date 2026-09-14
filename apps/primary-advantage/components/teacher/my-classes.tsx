@@ -1,14 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableHead,
-} from "@/components/ui/table";
+import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -32,18 +25,7 @@ import {
   PencilIcon,
   MoreHorizontalIcon,
 } from "lucide-react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import {
   Dialog,
   DialogContent,
@@ -117,13 +99,10 @@ type Classes = {
 
 export default function MyClasses() {
   const t = useTranslations("TeacherMyClasses");
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+
+
+
+
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [coursesOpen, setCoursesOpen] = useState<boolean>(false);
@@ -142,7 +121,6 @@ export default function MyClasses() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("API Response:", data); // Debug log
       setClassrooms(data.classrooms || []);
     } catch (error) {
       console.error("Error fetching classrooms:", error);
@@ -234,17 +212,6 @@ export default function MyClasses() {
   const columns: ColumnDef<Classes>[] = [
     {
       accessorKey: "name",
-      // header: ({ column }) => {
-      //   return (
-      //     <Button
-      //       variant="ghost"
-      //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      //     >
-      //       {/* {tc("className")} */}Class Name
-      //       <ChevronsUpDownIcon className="ml-2 h-4 w-4" />
-      //     </Button>
-      //   );
-      // },
       header: () => {
         return <div>{t("table.headers.className")}</div>;
       },
@@ -252,7 +219,7 @@ export default function MyClasses() {
         const classroomName: string = row.getValue("name");
         const checkImported = row.original.importedFromGoogle;
         return (
-          <div className="captoliza flex gap-4">
+          <div className="capitalize flex gap-4">
             {classroomName ? classroomName : "Unknown"}{" "}
             {checkImported ? (
               <Link href={row.original.alternateLink || "#"} target="_blank">
@@ -276,7 +243,7 @@ export default function MyClasses() {
         );
       },
       cell: ({ row }) => (
-        <div className="captoliza text-center">{row.getValue("classCode")}</div>
+        <div className="capitalize text-center">{row.getValue("classCode")}</div>
       ),
     },
     {
@@ -287,7 +254,7 @@ export default function MyClasses() {
         );
       },
       cell: ({ row }) => (
-        <div className="captoliza text-center">
+        <div className="capitalize text-center">
           {row.original?.students?.length || 0}
         </div>
       ),
@@ -298,7 +265,7 @@ export default function MyClasses() {
         return <div className="text-center">{t("table.headers.grade")}</div>;
       },
       cell: ({ row }) => (
-        <div className="captoliza text-center">{row.getValue("grade")}</div>
+        <div className="capitalize text-center">{row.getValue("grade")}</div>
       ),
     },
     {
@@ -370,56 +337,9 @@ export default function MyClasses() {
     },
   ];
 
-  const table = useReactTable({
-    data: classrooms,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
-
-  // const syncClassroom = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const lastUrl = window.location.pathname;
-  //     const response = await fetch(
-  //       `/api/classroom/oauth2/classroom/courses?redirect=${encodeURIComponent(
-  //         lastUrl,
-  //       )}`,
-  //       {
-  //         method: "GET",
-  //       },
-  //     );
 
   //     const data = await response.json();
 
-  //     if (response.ok && data.courses) {
-  //       const newCourses = data.courses.filter(
-  //         (course: Schema$Course) =>
-  //           !classrooms.some((cls) => cls.googleClassroomId === course.id),
-  //       );
-  //       setImportState(0);
-  //       setCourses(newCourses);
-  //       setCoursesOpen(true);
-  //     } else {
-  //       window.location.href = data.authUrl;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching courses:", error);
-  //   }
-  //   setLoading(false);
-  // };
 
   // async function handleImportCourses() {
   //   try {
@@ -444,15 +364,21 @@ export default function MyClasses() {
   return (
     <>
       <div className="flex flex-col gap-4">
-        <div className="flex items-end justify-between">
-          <Input
-            placeholder={t("search.placeholder")}
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+        <DataTable
+          columns={columns}
+          data={classrooms}
+          emptyText={t("table.empty")}
+          headerClassName="font-bold"
+          filterColumnId="name"
+          toolbar={({ filterValue, setFilterValue }) => (
+            <div className="flex items-end justify-between">
+              <Input
+                placeholder={t("search.placeholder")}
+                value={filterValue}
+                onChange={(event) => setFilterValue(event.target.value)}
+                className="max-w-sm"
+              />
+
           <div className="flex items-end space-x-2">
             <div className="flex-col space-y-2">
               <p className="text-xs opacity-70">{t("import.fromLabel")}</p>
@@ -483,77 +409,31 @@ export default function MyClasses() {
             </div>
             <CreateClass onClassCreated={fetchClassrooms} />
           </div>
-        </div>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader className="font-bold">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    {t("table.empty")}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-end space-x-2">
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {t("pagination.previous")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {t("pagination.next")}
-            </Button>
-          </div>
-        </div>
+            </div>
+          )}
+          footer={({ previousPage, nextPage, canPreviousPage, canNextPage }) => (
+            <div className="flex items-center justify-end space-x-2">
+              <div className="space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => previousPage()}
+                  disabled={!canPreviousPage}
+                >
+                  {t("pagination.previous")}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => nextPage()}
+                  disabled={!canNextPage}
+                >
+                  {t("pagination.next")}
+                </Button>
+              </div>
+            </div>
+          )}
+        />
       </div>
 
       <Dialog open={coursesOpen} onOpenChange={setCoursesOpen}>

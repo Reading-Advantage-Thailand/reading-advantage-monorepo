@@ -1,14 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableHead,
-} from "@/components/ui/table";
+import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -24,18 +17,7 @@ import {
   TrendingUp,
   RotateCcw,
 } from "lucide-react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Header } from "../header";
 import { useRouter } from "@/i18n/navigation";
@@ -75,13 +57,6 @@ type MyStudentProps = {
 
 export default function MyStudents() {
   const t = useTranslations("teacher.myStudents");
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
   // const t = useScopedI18n("components.articleRecordsTable");
   // const ts = useScopedI18n("components.myStudent");
   const router = useRouter();
@@ -168,7 +143,7 @@ export default function MyStudents() {
       cell: ({ row }) => {
         const studentName: string = row.getValue("display_name");
         return (
-          <div className="captoliza ml-4">
+          <div className="capitalize ml-4">
             {studentName ? studentName : t("unknown.student")}
           </div>
         );
@@ -182,7 +157,7 @@ export default function MyStudents() {
       cell: ({ row }) => {
         const studentEmail: string = row.getValue("email");
         return (
-          <div className="captoliza">
+          <div className="capitalize">
             {studentEmail ? studentEmail : t("unknown.email")}
           </div>
         );
@@ -291,108 +266,47 @@ export default function MyStudents() {
     },
   ];
 
-  const table = useReactTable({
-    data: students,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
-
   return (
     <>
       <div className="flex flex-col gap-4">
-        <Input
-          placeholder={t("search.placeholder")}
-          value={
-            (table.getColumn("display_name")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("display_name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
+        <DataTable
+          columns={columns}
+          data={students}
+          emptyText={t("table.empty")}
+          tableStyle={{ tableLayout: "fixed", width: "100%" }}
+          headerClassName="font-bold"
+          filterColumnId="display_name"
+          toolbar={({ filterValue, setFilterValue }) => (
+            <Input
+              placeholder={t("search.placeholder")}
+              value={filterValue}
+              onChange={(event) => setFilterValue(event.target.value)}
+              className="max-w-sm"
+            />
+          )}
+          footer={({ previousPage, nextPage, canPreviousPage, canNextPage }) => (
+            <div className="flex items-center justify-end space-x-2">
+              <div className="space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => previousPage()}
+                  disabled={!canPreviousPage}
+                >
+                  {t("pagination.previous")}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => nextPage()}
+                  disabled={!canNextPage}
+                >
+                  {t("pagination.next")}
+                </Button>
+              </div>
+            </div>
+          )}
         />
-        <div className="rounded-md border">
-          <Table style={{ tableLayout: "fixed", width: "100%" }}>
-            <TableHeader className="font-bold">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    {t("table.empty")}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-end space-x-2">
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {t("pagination.previous")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {t("pagination.next")}
-            </Button>
-          </div>
-        </div>
       </div>
       <Dialog
         open={isResetModalOpen}

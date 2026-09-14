@@ -18,16 +18,32 @@ import {
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
-import { useTranslations } from "next-intl";
+import { HIGHLIGHT_CLASSES } from "@/lib/audio-highlight";
+import { useLocale, useTranslations } from "next-intl";
 
-export default function TaskFirstReading({ article }: { article: Article }) {
+/**
+ * Shared first/deep reading task with optional translation overlay.
+ * @param article Article shown in the reader.
+ * @param enableTranslation Whether the translation overlay is available.
+ * @returns The reading task.
+ */
+export function TaskReading({
+  article,
+  enableTranslation,
+}: {
+  article: Article;
+  enableTranslation: boolean;
+}) {
   const t = useTranslations("Lesson.Reading");
+  const tComponents = useTranslations("Components");
+  const locale = useLocale();
   const [readingSpeed, setReadingSpeed] = useState("1");
   const [currentWordIndex, setCurrentWordIndex] = useState<number>(-1);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState<number>(-1);
   const currentSentenceRef = useRef<HTMLSpanElement | null>(null);
   const [isAudioLoaded, setIsAudioLoaded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const highlightTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [selectedSentence, setSelectedSentence] = useState<number | null>(null);
@@ -37,61 +53,46 @@ export default function TaskFirstReading({ article }: { article: Article }) {
     .split("\n\n")
     .filter((p) => p.trim() !== "");
 
-  // useEffect(() => {
-  //   // Initialize audio
-  //   if (article.audioUrl) {
-  //     // ใช้ URL แบบเดียวกันกับ phase2-vocabulary-preview
-  //     let fullAudioUrl = getAudioUrl(article.audioUrl);
+  const clearHighlightTimer = React.useCallback(() => {
+    if (highlightTimerRef.current) {
+      clearTimeout(highlightTimerRef.current);
+      highlightTimerRef.current = null;
+    }
+  }, []);
 
-  //     console.log("fullAudioUrl", fullAudioUrl);
-
-  //     // เพิ่มการตรวจสอบ URL format
-  //     // if (!fullAudioUrl.startsWith("http")) {
-  //     //   fullAudioUrl = `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_URL}/${audioUrl}`;
-  //     // }
-
-  //     const audio = new Audio(fullAudioUrl);
-  //     audio.preload = "metadata";
-  //     audio.onloadeddata = () => {
-  //       setIsAudioLoaded(true);
-  //     };
-  //     audio.onerror = () => {
-  //       console.error(`Audio failed to load: ${fullAudioUrl}`);
-  //       setIsAudioLoaded(false);
-  //     };
-  //     audioRef.current = audio;
-  //   }
-
-  //   return () => {
-  //     if (audioRef.current) {
-  //       audioRef.current.pause();
-  //     }
-  //   };
-  // }, [article.audioUrl]);
+  useEffect(() => {
+    return () => {
+      if (highlightTimerRef.current) {
+        clearTimeout(highlightTimerRef.current);
+      }
+      audioRef.current?.pause();
+    };
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !article) return;
 
-    const handleLoadedMetadata = () => {
+    const applyPlaybackRate = () => {
       audio.playbackRate = Number(readingSpeed);
     };
 
-    audio.addEventListener("timeupdate", handleLoadedMetadata);
+    // Apply immediately on rate change and again when new metadata loads.
+    applyPlaybackRate();
+    audio.addEventListener("loadedmetadata", applyPlaybackRate);
 
     return () => {
-      audio.removeEventListener("timeupdate", handleLoadedMetadata);
+      audio.removeEventListener("loadedmetadata", applyPlaybackRate);
     };
   }, [readingSpeed]);
 
   const handlePlayPause = () => {
     if (audioRef.current) {
       if (isPlaying) {
+        clearHighlightTimer();
         audioRef.current.pause();
-        setIsPlaying(false);
       } else {
         audioRef.current.play();
-        setIsPlaying(true);
         handleTimeUpdate();
       }
     }
@@ -120,6 +121,7 @@ export default function TaskFirstReading({ article }: { article: Article }) {
         const isNewSentence = foundSentenceIndex !== currentSentenceIndex;
 
         if (isNewSentence) {
+          clearHighlightTimer();
           foundWordIndex = 0;
         } else {
           for (let j = 0; j < sentence.words.length; j++) {
@@ -157,7 +159,10 @@ export default function TaskFirstReading({ article }: { article: Article }) {
             setCurrentWordIndex(intermediateIndex);
             intermediateIndex++;
 
-            setTimeout(highlightIntermediateWords, 100);
+            highlightTimerRef.current = setTimeout(
+              highlightIntermediateWords,
+              100,
+            );
           } else {
             setCurrentWordIndex(foundWordIndex);
           }
@@ -176,6 +181,7 @@ export default function TaskFirstReading({ article }: { article: Article }) {
     sentence: SentenceTimepoint,
   ) => {
     if (wordIndex !== -1 && audioRef.current && sentence.words[wordIndex]) {
+      clearHighlightTimer();
       // Set the audio time
       const startTime = sentence.words[wordIndex].start - 0.1;
       audioRef.current.currentTime = startTime;
@@ -191,8 +197,6 @@ export default function TaskFirstReading({ article }: { article: Article }) {
     setShowTranslation(newShowTranslation);
   };
 
-  console.log(article);
-
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       {/* ลบ modal overlay ออก */}
@@ -202,7 +206,7 @@ export default function TaskFirstReading({ article }: { article: Article }) {
           <Book className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
         </div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          {t("deepTitle")}
+          {enableTranslation ? t("deepTitle") : t("firstTitle")}
         </h1>
         <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
           {t("subtitle")}
@@ -217,6 +221,9 @@ export default function TaskFirstReading({ article }: { article: Article }) {
             ref={audioRef}
             src={getAudioUrl(article.audioUrl || "")}
             onTimeUpdate={handleTimeUpdate}
+            onLoadedData={() => setIsAudioLoaded(true)}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
             onEnded={() => {
               setIsPlaying(false);
               setCurrentWordIndex(-1);
@@ -262,6 +269,7 @@ export default function TaskFirstReading({ article }: { article: Article }) {
           </div>
 
           {/* Translation Toggle */}
+          {enableTranslation && (
           <Button
             variant={showTranslation ? "default" : "outline"}
             size="sm"
@@ -271,6 +279,7 @@ export default function TaskFirstReading({ article }: { article: Article }) {
             {showTranslation ? "🌐 " : "🌍 "}
             {showTranslation ? t("translation.on") : t("translation.off")}
           </Button>
+          )}
 
           {/* Highlight Toggle */}
           {/* <Button
@@ -302,7 +311,8 @@ export default function TaskFirstReading({ article }: { article: Article }) {
       <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-zinc-200 shadow-lg dark:border-gray-700 dark:bg-gray-900">
         <div className="max-w-none p-4 sm:p-8 lg:p-12">
           {/* Translation overlay inside content */}
-          {showTranslation &&
+          {enableTranslation &&
+            showTranslation &&
             selectedSentence !== null &&
             article.sentences?.[selectedSentence] && (
               <div className="pointer-events-none absolute inset-0 z-[100]">
@@ -344,12 +354,18 @@ export default function TaskFirstReading({ article }: { article: Article }) {
                     <button
                       className="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white transition-colors hover:bg-red-600"
                       onClick={() => setSelectedSentence(null)}
+                      aria-label={tComponents("closeButton")}
                     >
                       ×
                     </button>
                   </div>
                   <div className="leading-relaxed text-wrap">
-                    {article.translatedPassage?.th?.[selectedSentence]}
+                    {(
+                      article.translatedPassage as Record<
+                        string,
+                        string[]
+                      > | null
+                    )?.[locale]?.[selectedSentence]}
                   </div>
                 </div>
               </div>
@@ -430,22 +446,42 @@ export default function TaskFirstReading({ article }: { article: Article }) {
                           <span
                             key={sentenceIndex}
                             ref={(el) => {
-                              sentenceRefs.current[sentenceIndex] = el;
+                              if (enableTranslation) {
+                                sentenceRefs.current[sentenceIndex] = el;
+                              }
                               if (isCurrentSentence) {
                                 currentSentenceRef.current = el;
                               }
                             }}
                             className={`font-article rounded px-0.5 text-lg transition-all duration-200 md:text-xl ${
                               sentenceIndex === currentSentenceIndex
-                                ? "bg-blue-300 dark:bg-blue-900/70"
+                                ? HIGHLIGHT_CLASSES.playingSentence
                                 : ""
-                            } ${showTranslation ? "cursor-pointer hover:bg-yellow-200 dark:hover:bg-yellow-900/30" : ""}`}
+                            } ${enableTranslation && showTranslation ? "cursor-pointer hover:bg-yellow-200 dark:hover:bg-yellow-900/30" : ""}`}
                             onClick={(e) => {
-                              if (showTranslation) {
+                              if (enableTranslation && showTranslation) {
                                 e.stopPropagation();
                                 setSelectedSentence(sentenceIndex);
                               }
                             }}
+                            onKeyDown={(e) => {
+                              if (
+                                (e.key === "Enter" || e.key === " ") &&
+                                enableTranslation &&
+                                showTranslation
+                              ) {
+                                e.preventDefault();
+                                setSelectedSentence(sentenceIndex);
+                              }
+                            }}
+                            role={
+                              enableTranslation && showTranslation
+                                ? "button"
+                                : undefined
+                            }
+                            tabIndex={
+                              enableTranslation && showTranslation ? 0 : undefined
+                            }
                           >
                             {(() => {
                               // ... existing word rendering logic ...
@@ -509,14 +545,40 @@ export default function TaskFirstReading({ article }: { article: Article }) {
                                         ? "cursor-pointer rounded transition-colors duration-150"
                                         : "",
                                       isCurrentWord
-                                        ? "bg-blue-500 text-white"
+                                        ? HIGHLIGHT_CLASSES.currentWord
                                         : isActualWord && !showTranslation
-                                          ? "hover:bg-blue-200 dark:hover:bg-blue-900/50"
+                                          ? HIGHLIGHT_CLASSES.hoverWord
                                           : "",
                                     )}
-                                    onClick={(e) => {
-                                      if (!showTranslation && isActualWord) {
-                                        e.stopPropagation();
+                                    onClick={
+                                      enableTranslation
+                                        ? (e) => {
+                                            if (
+                                              !showTranslation &&
+                                              isActualWord
+                                            ) {
+                                              e.stopPropagation();
+                                              handleWordClick(
+                                                sentenceIndex,
+                                                currentPartWordIndex,
+                                                sentence as SentenceTimepoint,
+                                              );
+                                            }
+                                          }
+                                        : () =>
+                                            handleWordClick(
+                                              sentenceIndex,
+                                              currentPartWordIndex,
+                                              sentence as SentenceTimepoint,
+                                            )
+                                    }
+                                    onKeyDown={(e) => {
+                                      if (
+                                        (e.key === "Enter" ||
+                                          e.key === " ") &&
+                                        isActualWord
+                                      ) {
+                                        e.preventDefault();
                                         handleWordClick(
                                           sentenceIndex,
                                           currentPartWordIndex,
@@ -524,6 +586,15 @@ export default function TaskFirstReading({ article }: { article: Article }) {
                                         );
                                       }
                                     }}
+                                    role={
+                                      isActualWord ? "button" : undefined
+                                    }
+                                    tabIndex={
+                                      isActualWord ? 0 : undefined
+                                    }
+                                    aria-label={
+                                      isActualWord ? part : undefined
+                                    }
                                   >
                                     {part}
                                   </span>

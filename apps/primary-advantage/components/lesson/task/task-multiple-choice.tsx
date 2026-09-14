@@ -3,7 +3,7 @@
 import React from "react";
 import { Book } from "lucide-react";
 import { Article } from "@/types";
-import LessonMCQContent from "../pratice/lesson-task-mcq";
+import { MCQContent } from "@/components/articles/questions/mc-question-content";
 import { useTranslations } from "next-intl";
 
 export default function TaskMultipleChoice({ article }: { article: Article }) {
@@ -27,7 +27,7 @@ export default function TaskMultipleChoice({ article }: { article: Article }) {
       {/* MCQ Component */}
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-zinc-200 shadow-lg dark:border-gray-700 dark:bg-gray-900">
         <div className="p-6">
-          <LessonMCQContent article={article} />
+          <MCQContent mode="lesson" article={article} />
         </div>
       </div>
     </div>

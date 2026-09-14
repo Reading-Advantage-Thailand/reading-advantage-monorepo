@@ -133,6 +133,15 @@ export default function ClassroomSelector() {
             key={classroom.id}
             className="cursor-pointer transition-all duration-200 hover:scale-[1.01] hover:shadow-md"
             onClick={() => handleClassroomClick(classroom.id)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleClassroomClick(classroom.id);
+              }
+            }}
+            role="link"
+            tabIndex={0}
+            aria-label={classroom.name}
           >
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">

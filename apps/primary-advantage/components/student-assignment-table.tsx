@@ -1,26 +1,11 @@
 "use client";
-import React, { act, useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableHead,
-} from "@/components/ui/table";
+import React, { useEffect, useRef, useState } from "react";
+import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDownIcon } from "lucide-react";
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
   VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Header } from "./header";
@@ -29,7 +14,10 @@ import { format } from "date-fns";
 import { enUS, th, zhCN, zhTW, vi } from "date-fns/locale";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import type { PaginationInfo } from "@/types";
 
 /**
  * Status values for student assignment progress. Mirrors the Prisma
@@ -61,7 +49,8 @@ interface Assignment {
   teacherName: string | null;
 }
 
-interface AssignmentStudent {
+/** One student-assignment row with its nested assignment. */
+export interface AssignmentStudent {
   id: string;
   studentId: string;
   status: AssignmentStatusValue | null;
@@ -73,27 +62,172 @@ interface AssignmentStudent {
   assignment: Assignment;
 }
 
-type PaginationInfo = {
-  currentPage: number;
-  totalPages: number;
-  totalCount: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-  limit: number;
-};
+interface DueDateStatusInfo {
+  status: string;
+  variant: "destructive" | "secondary" | "outline" | "default";
+  text: string;
+}
 
-export default function StudentAssignmentTable() {
-  const [sorting, setSorting] = React.useState<SortingState>([
-    {
-      id: "createdAt",
-      desc: true,
-    },
-  ]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
+interface AssignmentDetailDialogProps {
+  assignment: AssignmentStudent | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  dueDateStatus: DueDateStatusInfo | null;
+  assignByLabel: string;
+  onGoToLesson: (assignmentId: string) => void;
+}
+
+/**
+ * Shows assignment details on small screens without remounting per render.
+ * @param props Selected assignment and dialog controls.
+ * @returns The detail dialog, or null when nothing is selected.
+ */
+function AssignmentDetailDialog({
+  assignment,
+  open,
+  onOpenChange,
+  dueDateStatus,
+  assignByLabel,
+  onGoToLesson,
+}: AssignmentDetailDialogProps) {
+  const t = useTranslations("Assignment.studentAssignmentTable");
+
+  if (!assignment) return null;
+
+  const dueDate = assignment.assignment.dueDate;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className="max-h-[90vh] max-w-[90vw] overflow-y-auto sm:max-w-[425px]"
+        onPointerDownOutside={(e) => e.preventDefault()}
+      >
+        <div className="space-y-4">
+          {/* Description */}
+          <div>
+            <h4 className="text-muted-foreground mb-2 text-sm font-medium">
+              {t("description")}
+            </h4>
+            <p className="text-sm">
+              {assignment.assignment.description || "No description provided"}
+            </p>
+          </div>
+
+          {/* Created Date */}
+          <div>
+            <h4 className="text-muted-foreground mb-2 text-sm font-medium">
+              {t("createAt")}
+            </h4>
+            <p className="text-sm">
+              {format(new Date(assignment.createdAt), "MMM dd, yyyy", {
+                locale: enUS,
+              })}
+            </p>
+          </div>
+
+          {/* Due Date */}
+          <div>
+            <h4 className="text-muted-foreground mb-2 text-sm font-medium">
+              {t("dueDate")}
+            </h4>
+            <div className="flex items-center gap-2">
+              <p className="text-sm">
+                {dueDate
+                  ? format(new Date(dueDate), "MMM dd, yyyy", { locale: enUS })
+                  : "No due date"}
+              </p>
+              {dueDateStatus &&
+                assignment.status !== AssignmentStatus.COMPLETED && (
+                  <Badge variant={dueDateStatus.variant} className="text-xs">
+                    {dueDateStatus.text}
+                  </Badge>
+                )}
+            </div>
+          </div>
+
+          {/* Status */}
+          <div>
+            <h4 className="text-muted-foreground mb-2 text-sm font-medium">
+              {t("status")}
+            </h4>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">
+                {/* {getStatusIcon(assignment.status as number)} */}
+              </span>
+              <span className="text-sm">
+                {/* {getStatusText(assignment.status as number)} */}
+              </span>
+            </div>
+          </div>
+
+          {/* Assigned By */}
+          <div>
+            <h4 className="text-muted-foreground mb-2 text-sm font-medium">
+              {assignByLabel}
+            </h4>
+            <p className="text-sm">
+              {assignment.assignment.teacherName || "Unknown Teacher"}
+            </p>
+          </div>
+
+          {/* Action Button */}
+          <div className="pt-4">
+            <Button
+              onClick={() => {
+                onGoToLesson(assignment.assignment.id);
+              }}
+              className="w-full"
+            >
+              {t("goToLesson")}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
+}
+
+/**
+ * Student assignment table. Renders server-fetched initial rows when given
+ * and refetches from the API only for user actions (filters, search, paging).
+ * @param initialAssignments Assignments fetched on the server page.
+ * @param initialPagination Pagination fetched on the server page.
+ * @returns The student assignment table.
+ */
+export default function StudentAssignmentTable({
+  initialAssignments,
+  initialPagination,
+}: {
+  initialAssignments?: AssignmentStudent[];
+  initialPagination?: PaginationInfo;
+}) {
   const user = useCurrentUser();
 
+  const [assignments, setAssignments] = useState<AssignmentStudent[]>(
+    initialAssignments ?? [],
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dueDateFilter, setDueDateFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [pagination, setPagination] = useState<PaginationInfo>(
+    initialPagination ?? {
+      currentPage: 1,
+      totalPages: 1,
+      totalCount: 0,
+      hasNextPage: false,
+      hasPrevPage: false,
+      limit: 10,
+    },
+  );
+  // The server page already fetched the first page, so skip the effect's
+  // initial run and only fetch for later user actions.
+  const isFirstFetch = useRef(initialAssignments !== undefined);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedAssignment, setSelectedAssignment] =
+    useState<AssignmentStudent | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
       "assignment.description": false,
@@ -101,27 +235,9 @@ export default function StudentAssignmentTable() {
       "assignment.teacherName": false,
       actions: false,
     });
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [assignments, setAssignments] = useState<AssignmentStudent[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [dueDateFilter, setDueDateFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [pagination, setPagination] = useState<PaginationInfo>({
-    currentPage: 1,
-    totalPages: 1,
-    totalCount: 0,
-    hasNextPage: false,
-    hasPrevPage: false,
-    limit: 10,
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedAssignment, setSelectedAssignment] =
-    useState<AssignmentStudent | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const t = useTranslations("Assignment.studentAssignmentTable");
   const tComponents = useTranslations("Components");
+  const router = useRouter();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -139,22 +255,6 @@ export default function StudentAssignmentTable() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const useDebounce = (value: string, delay: number) => {
-    const [debouncedValue, setDebouncedValue] = useState(value);
-
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
-
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [value, delay]);
-
-    return debouncedValue;
-  };
-
   const debouncedSearchQuery = useDebounce(searchQuery, 1000);
 
   const getDueDateStatus = (dueDate: string) => {
@@ -167,29 +267,25 @@ export default function StudentAssignmentTable() {
       return {
         status: "overdue",
         variant: "destructive" as const,
-        // text: `${t("overdue")}`,
-        text: "Overdue",
+        text: t("overdue"),
       };
     } else if (daysDiff === 0) {
       return {
         status: "today",
         variant: "secondary" as const,
-        // text: `${t("dueToday")}`,
-        text: "Due Today",
+        text: t("dueToday"),
       };
     } else if (daysDiff <= 3) {
       return {
         status: "soon",
         variant: "outline" as const,
-        // text: `${t("daysLeft", { daysDiff: daysDiff })}`,
-        text: `Days Left: ${daysDiff}`,
+        text: t("daysLeft", { daysDiff: daysDiff }),
       };
     } else {
       return {
         status: "upcoming",
         variant: "default" as const,
-        // stext: `${t("daysLeft", { daysDiff: daysDiff })}`,
-        text: `Days Left: ${daysDiff}`,
+        text: t("daysLeft", { daysDiff: daysDiff }),
       };
     }
   };
@@ -276,8 +372,7 @@ export default function StudentAssignmentTable() {
                 column.toggleSorting(column.getIsSorted() === "asc")
               }
             >
-              {/* {t("dueDate")} */}
-              Due Date
+              {t("dueDate")}
               <ChevronsUpDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -327,17 +422,13 @@ export default function StudentAssignmentTable() {
         const getStatusText = (status: AssignmentStatusValue | null) => {
           switch (status) {
             case AssignmentStatus.NOT_STARTED:
-              //   return `${t("notFinished")}`;
-              return "Not Finished";
+              return t("notFinished");
             case AssignmentStatus.IN_PROGRESS:
-              //   return `${t("inProgress")}`;
-              return "In Progress";
+              return t("inProgress");
             case AssignmentStatus.COMPLETED:
-              //   return `${t("done")}`;
-              return "Done";
+              return t("done");
             default:
-              //   return `${t("notFinished")}`;
-              return "Not Finished";
+              return t("notFinished");
           }
         };
 
@@ -376,9 +467,7 @@ export default function StudentAssignmentTable() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() =>
-                (window.location.href = `/student/lesson/${assignment.id}`)
-              }
+              onClick={() => router.push(`/student/lesson/${assignment.id}`)}
             >
               {t("goToLesson")}
             </Button>
@@ -477,6 +566,10 @@ export default function StudentAssignmentTable() {
   };
 
   useEffect(() => {
+    if (isFirstFetch.current) {
+      isFirstFetch.current = false;
+      return;
+    }
     const fetchData = async () => {
       setLoading(true);
       await fetchAssignment(
@@ -524,26 +617,6 @@ export default function StudentAssignmentTable() {
     }
   };
 
-  const table = useReactTable({
-    data: assignments,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    manualPagination: true,
-    manualFiltering: true,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
-
   const handleRowClick = (assignment: AssignmentStudent) => {
     if (isMobile) {
       setSelectedAssignment(assignment);
@@ -551,107 +624,10 @@ export default function StudentAssignmentTable() {
     }
   };
 
-  const AssignmentDetailDialog = () => {
-    if (!selectedAssignment) return null;
-
-    const dueDate = selectedAssignment.assignment.dueDate;
-    const dueDateStatus = dueDate ? getDueDateStatus(dueDate) : null;
-
-    return (
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent
-          className="max-h-[90vh] max-w-[90vw] overflow-y-auto sm:max-w-[425px]"
-          onPointerDownOutside={(e) => e.preventDefault()}
-        >
-          <div className="space-y-4">
-            {/* Description */}
-            <div>
-              <h4 className="text-muted-foreground mb-2 text-sm font-medium">
-                {/* {t("assignmentDescription")} */}Assignment Description
-              </h4>
-              <p className="text-sm">
-                {selectedAssignment.assignment.description ||
-                  "No description provided"}
-              </p>
-            </div>
-
-            {/* Created Date */}
-            <div>
-              <h4 className="text-muted-foreground mb-2 text-sm font-medium">
-                {/* {t("createAt")} */}Create At
-              </h4>
-              <p className="text-sm">
-                {format(
-                  new Date(selectedAssignment.createdAt),
-                  "MMM dd, yyyy",
-                  {
-                    locale: enUS,
-                  },
-                )}
-              </p>
-            </div>
-
-            {/* Due Date */}
-            <div>
-              <h4 className="text-muted-foreground mb-2 text-sm font-medium">
-                {/* {t("dueDate")} */}Due Date
-              </h4>
-              <div className="flex items-center gap-2">
-                <p className="text-sm">
-                  {dueDate
-                    ? format(new Date(dueDate), "MMM dd, yyyy", { locale: enUS })
-                    : "No due date"}
-                </p>
-                {dueDateStatus &&
-                  selectedAssignment.status !== AssignmentStatus.COMPLETED && (
-                  <Badge variant={dueDateStatus.variant} className="text-xs">
-                    {dueDateStatus.text}
-                  </Badge>
-                  )}
-              </div>
-            </div>
-
-            {/* Status */}
-            <div>
-              <h4 className="text-muted-foreground mb-2 text-sm font-medium">
-                {/* {t("status")} */}Status
-              </h4>
-              <div className="flex items-center gap-2">
-                <span className="text-lg">
-                  {/* {getStatusIcon(selectedAssignment.status as number)} */}
-                </span>
-                <span className="text-sm">
-                  {/* {getStatusText(selectedAssignment.status as number)} */}
-                </span>
-              </div>
-            </div>
-
-            {/* Assigned By */}
-            <div>
-              <h4 className="text-muted-foreground mb-2 text-sm font-medium">
-                {t("assignBy")}
-              </h4>
-              <p className="text-sm">
-                {selectedAssignment.assignment.teacherName || "Unknown Teacher"}
-              </p>
-            </div>
-
-            {/* Action Button */}
-            <div className="pt-4">
-              <Button
-                onClick={() => {
-                  window.location.href = `/student/lesson/${selectedAssignment.assignment.id}`;
-                }}
-                className="w-full"
-              >
-                {/* {t("goToLesson")} */}Go To Lesson
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  };
+  const selectedDueDate = selectedAssignment?.assignment.dueDate ?? null;
+  const dialogDueDateStatus = selectedDueDate
+    ? getDueDateStatus(selectedDueDate)
+    : null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -693,65 +669,24 @@ export default function StudentAssignmentTable() {
       {searchQuery !== debouncedSearchQuery && (
         <div className="text-muted-foreground text-sm">{t("searching")}</div>
       )}
-      <div className="overflow-x-auto rounded-md border">
-        <Table className="min-w-full">
-          <TableHeader className="font-bold">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className="px-2 py-3 text-xs sm:text-sm"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => handleRowClick(row.original)}
-                  className={isMobile ? "hover:bg-muted/50 cursor-pointer" : ""}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="px-2 py-3 text-xs sm:text-sm"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center text-xs sm:text-sm"
-                >
-                  {loading ? t("loadingAssignments") : t("noAssignmentsFound")}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
+      <DataTable
+        columns={columns}
+        data={assignments}
+        loading={false}
+        emptyText={loading ? t("loadingAssignments") : t("noAssignmentsFound")}
+        manualPagination
+        manualFiltering
+        initialSorting={[{ id: "createdAt", desc: true }]}
+        columnVisibility={columnVisibility}
+        onColumnVisibilityChange={setColumnVisibility}
+        onRowClick={isMobile ? handleRowClick : undefined}
+        wrapperClassName="overflow-x-auto rounded-md border"
+        tableClassName="min-w-full"
+        headerClassName="font-bold"
+        headClassName="px-2 py-3 text-xs sm:text-sm"
+        cellClassName="px-2 py-3 text-xs sm:text-sm"
+        rowClassName={isMobile ? "hover:bg-muted/50 cursor-pointer" : ""}
+        footer={
       <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="flex items-center space-x-2">
           <Button
@@ -775,7 +710,19 @@ export default function StudentAssignmentTable() {
         </div>
       </div>
 
-      <AssignmentDetailDialog />
+        }
+      />
+
+      <AssignmentDetailDialog
+        assignment={selectedAssignment}
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        dueDateStatus={dialogDueDateStatus}
+        assignByLabel={t("assignedBy")}
+        onGoToLesson={(assignmentId) =>
+          router.push(`/student/lesson/${assignmentId}`)
+        }
+      />
     </div>
   );
 }

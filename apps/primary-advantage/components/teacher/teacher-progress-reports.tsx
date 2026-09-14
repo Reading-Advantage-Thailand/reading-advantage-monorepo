@@ -329,6 +329,15 @@ export default function TeacherProgressReports({
                       key={student.id}
                       className="hover:bg-muted flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors"
                       onClick={() => setSelectedStudent(student.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedStudent(student.id);
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={student.display_name}
                     >
                       <div className="flex items-center gap-3">
                         <div>
@@ -365,80 +374,8 @@ export default function TeacherProgressReports({
         //   <TabsContent value="overview" className="space-y-4">
         //     {/* Statistics Cards */}
 
-        //     {/* Level Distribution */}
-        //     <Card>
-        //       <CardHeader>
-        //         <CardTitle>CEFR Level Distribution</CardTitle>
-        //       </CardHeader>
-        //       <CardContent>
-        //         <div className="flex flex-wrap gap-2">
-        //           {Object.entries(classroomStats.levelCounts).map(
-        //             ([level, count]) => (
-        //               <Badge
-        //                 key={level}
-        //                 variant="outline"
-        //                 className="px-3 py-1"
-        //               >
-        //                 {level}: {count} students
-        //               </Badge>
-        //             ),
-        //           )}
-        //         </div>
-        //       </CardContent>
-        //     </Card>
-        //   </TabsContent>
 
-        //   <TabsContent value="students" className="space-y-4">
-        //     <Card>
-        //       <CardHeader>
-        //         <CardTitle>Student List</CardTitle>
-        //       </CardHeader>
-        //       <CardContent>
-        //         <div className="space-y-2">
-        //           {filteredStudents.map((student) => (
-        //             <div
-        //               key={student.id}
-        //               className="hover:bg-muted flex cursor-pointer items-center justify-between rounded-lg border p-3 transition-colors"
-        //               onClick={() => setSelectedStudent(student.id)}
-        //             >
-        //               <div className="flex items-center gap-3">
-        //                 <div>
-        //                   <div className="font-medium">
-        //                     {student.display_name}
-        //                   </div>
-        //                   <div className="text-muted-foreground text-sm">
-        //                     {student.email}
-        //                   </div>
-        //                 </div>
-        //               </div>
-        //               <div className="flex items-center gap-2">
-        //                 <Badge variant="secondary">
-        //                   {student.cefrLevel || "A0"}
-        //                 </Badge>
-        //                 <div className="text-muted-foreground text-sm">
-        //                   {student.xp || 0} XP
-        //                 </div>
-        //               </div>
-        //             </div>
-        //           ))}
-        //         </div>
-        //       </CardContent>
-        //     </Card>
-        //   </TabsContent>
 
-        //   {/* <TabsContent value="performance" className="space-y-4">
-        //     <Card>
-        //       <CardHeader>
-        //         <CardTitle>Performance Analytics</CardTitle>
-        //       </CardHeader>
-        //       <CardContent>
-        //         <div className="text-muted-foreground py-8 text-center">
-        //           Select a student to view detailed performance analytics
-        //         </div>
-        //       </CardContent>
-        //     </Card>
-        //   </TabsContent> */}
-        // </Tabs>
       )}
     </div>
   );

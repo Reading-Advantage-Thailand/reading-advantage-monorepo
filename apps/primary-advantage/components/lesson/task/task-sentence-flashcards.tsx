@@ -2,7 +2,8 @@
 
 import { Book } from "lucide-react";
 import React from "react";
-import LessonSentenceFlashcardGame from "../games/lesson-sentence-flashcard";
+import LessonFlashcardGame from "../games/lesson-flashcard-game";
+import { FlashcardType } from "@/types/enum";
 import { useTranslations } from "next-intl";
 
 export default function TaskSentenceFlashcards({
@@ -28,7 +29,7 @@ export default function TaskSentenceFlashcards({
       </div>
 
       {/* Sentence Flashcard Component */}
-      <LessonSentenceFlashcardGame articleId={articleId} />
+      <LessonFlashcardGame articleId={articleId} cardKind={FlashcardType.SENTENCE} />
     </div>
   );
 }

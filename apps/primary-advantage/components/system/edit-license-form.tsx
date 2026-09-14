@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Icons } from "@/components/icons";
 import {
   Select,
@@ -37,6 +38,7 @@ import {
 } from "@/components/ui/popover";
 import type { InferSelectModel } from "drizzle-orm";
 import { licenses } from "@reading-advantage/db";
+import type { LicenseWithSchool } from "@/types";
 
 /**
  * License row type inferred from the Drizzle `licenses` table
@@ -46,13 +48,6 @@ import { licenses } from "@reading-advantage/db";
 type License = InferSelectModel<typeof licenses>;
 
 // Extended license type with school info
-type LicenseWithSchool = License & {
-  School?: {
-    id: string;
-    name: string;
-  } | null;
-};
-
 const FormSchema = z.object({
   name: z
     .string()
@@ -97,6 +92,7 @@ export function EditLicenseForm({
 }: EditLicenseFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [schools, setSchools] = useState<any[]>([]);
+  const t = useTranslations("LicenseForm");
 
   // Calculate expiry days from current license
   const getExpiryDays = (startDate: Date, expiryDate: Date | null) => {
@@ -145,24 +141,22 @@ export function EditLicenseForm({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to update license");
+        throw new Error(errorData.error || t("updateError"));
       }
 
       const result = await response.json();
 
-      toast.success("License updated successfully!", {
-        description: `License "${data.name}" has been updated.`,
+      toast.success(t("updateSuccess"), {
+        description: t("updateSuccessDescription", { name: data.name }),
       });
 
       // Call success callback
       onSuccess?.();
     } catch (error) {
       console.error("Error updating license:", error);
-      toast.error("Failed to update license", {
+      toast.error(t("updateError"), {
         description:
-          error instanceof Error
-            ? error.message
-            : "Please try again or contact support if the problem persists.",
+          error instanceof Error ? error.message : t("fallbackError"),
       });
     } finally {
       setIsLoading(false);
@@ -197,13 +191,13 @@ export function EditLicenseForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>License Name</FormLabel>
+                <FormLabel>{t("name")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter license name" {...field} />
+                  <Input placeholder={t("namePlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
                 <FormDescription>
-                  A descriptive name for this license
+                  {t("nameDescription")}
                 </FormDescription>
               </FormItem>
             )}
@@ -214,21 +208,21 @@ export function EditLicenseForm({
             name="status"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Status</FormLabel>
+                <FormLabel>{t("status")}</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select license status" />
+                      <SelectValue placeholder={t("statusPlaceholder")} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                    <SelectItem value="expired">Expired</SelectItem>
+                    <SelectItem value="active">{t("statusActive")}</SelectItem>
+                    <SelectItem value="inactive">{t("statusInactive")}</SelectItem>
+                    <SelectItem value="expired">{t("statusExpired")}</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
-                <FormDescription>Current status of the license</FormDescription>
+                <FormDescription>{t("statusDescription")}</FormDescription>
               </FormItem>
             )}
           />
@@ -240,7 +234,7 @@ export function EditLicenseForm({
             name="schoolId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>School</FormLabel>
+                <FormLabel>{t("school")}</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={(value) =>
@@ -250,12 +244,12 @@ export function EditLicenseForm({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a School" />
+                        <SelectValue placeholder={t("schoolPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="no-school">
-                        No School (General License)
+                        {t("noSchool")}
                       </SelectItem>
                       {schools.map((school) => (
                         <SelectItem key={school.id} value={school.id}>
@@ -267,7 +261,7 @@ export function EditLicenseForm({
                 </FormControl>
                 <FormMessage />
                 <FormDescription>
-                  The school that this license is assigned to
+                  {t("schoolDescription")}
                 </FormDescription>
               </FormItem>
             )}
@@ -278,25 +272,25 @@ export function EditLicenseForm({
             name="subscriptionType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Subscription Type</FormLabel>
+                <FormLabel>{t("subscriptionType")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value.toLowerCase()}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select subscription type" />
+                      <SelectValue placeholder={t("subscriptionPlaceholder")} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="basic">Basic</SelectItem>
-                    <SelectItem value="premium">Premium</SelectItem>
-                    <SelectItem value="enterprise">Enterprise</SelectItem>
+                    <SelectItem value="basic">{t("subBasic")}</SelectItem>
+                    <SelectItem value="premium">{t("subPremium")}</SelectItem>
+                    <SelectItem value="enterprise">{t("subEnterprise")}</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
                 <FormDescription>
-                  The subscription type for this license
+                  {t("subscriptionDescription")}
                 </FormDescription>
               </FormItem>
             )}
@@ -309,7 +303,7 @@ export function EditLicenseForm({
             name="maxUsers"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Maximum Users</FormLabel>
+                <FormLabel>{t("maxUsers")}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -320,7 +314,7 @@ export function EditLicenseForm({
                 </FormControl>
                 <FormMessage />
                 <FormDescription>
-                  Maximum number of users allowed for this license
+                  {t("maxUsersDescription")}
                 </FormDescription>
               </FormItem>
             )}
@@ -331,7 +325,7 @@ export function EditLicenseForm({
             name="startDate"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Start Date</FormLabel>
+                <FormLabel>{t("startDate")}</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -345,7 +339,7 @@ export function EditLicenseForm({
                         {field.value ? (
                           format(field.value, "PPP")
                         ) : (
-                          <span>Pick a date</span>
+                          <span>{t("pickDate")}</span>
                         )}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
@@ -362,7 +356,7 @@ export function EditLicenseForm({
                 </Popover>
                 <FormMessage />
                 <FormDescription>
-                  When this license becomes active
+                  {t("startDateDescription")}
                 </FormDescription>
               </FormItem>
             )}
@@ -373,37 +367,36 @@ export function EditLicenseForm({
           control={form.control}
           name="expiryDays"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Expiry Duration</FormLabel>
-              <Select
-                onValueChange={(value) =>
-                  field.onChange(
-                    value === "no-expiry" ? undefined : Number(value),
-                  )
-                }
-                value={field.value ? field.value.toString() : "no-expiry"}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select expiry duration" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="no-expiry">No expiry</SelectItem>
-                  <SelectItem value="30">30 days</SelectItem>
-                  <SelectItem value="90">90 days</SelectItem>
-                  <SelectItem value="180">180 days (6 months)</SelectItem>
-                  <SelectItem value="365">365 days (1 year)</SelectItem>
-                  <SelectItem value="730">730 days (2 years)</SelectItem>
-                  <SelectItem value="1095">1095 days (3 years)</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-              <FormDescription>
-                License will expire after this many days from start date. Select
-                &quot;No expiry&quot; for permanent licenses.
-              </FormDescription>
-            </FormItem>
+              <FormItem>
+                <FormLabel>{t("expiryDuration")}</FormLabel>
+                <Select
+                  onValueChange={(value) =>
+                    field.onChange(
+                      value === "no-expiry" ? undefined : Number(value),
+                    )
+                  }
+                  value={field.value ? field.value.toString() : "no-expiry"}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t("expiryPlaceholder")} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="no-expiry">{t("noExpiry")}</SelectItem>
+                    <SelectItem value="30">{t("days", { count: 30 })}</SelectItem>
+                    <SelectItem value="90">{t("days", { count: 90 })}</SelectItem>
+                    <SelectItem value="180">{t("months6")}</SelectItem>
+                    <SelectItem value="365">{t("year1")}</SelectItem>
+                    <SelectItem value="730">{t("years2")}</SelectItem>
+                    <SelectItem value="1095">{t("years3")}</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+                <FormDescription>
+                  {t("expiryDescription")}
+                </FormDescription>
+              </FormItem>
           )}
         />
 
@@ -412,7 +405,7 @@ export function EditLicenseForm({
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Update License
+            {t("update")}
           </Button>
 
           <Button
@@ -421,7 +414,7 @@ export function EditLicenseForm({
             onClick={onCancel}
             disabled={isLoading}
           >
-            Cancel
+            {t("cancel")}
           </Button>
         </div>
       </form>
