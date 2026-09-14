@@ -13,12 +13,12 @@ radius is the HTTP surface, covered by the new route-level tests._
     - [ ] Run the FR-1.4 grep over `apps/primary-advantage --glob "*.test.*"` and list every source-string assertion
     - [ ] Assign each to a domain batch keyed to its originating track file (`authorization-hardening-static`, `broken-ux-fixes`, `loading-state-invariants`, `structural-alignment`, `component-deduplication`, `audio-highlight`, `aria-labels-i18n`, stragglers)
     - [ ] Write `measure/tracks/primary_test_hygiene_upload_fixes_20260914/grep-test-inventory.md` with batch, file, assertion count, and planned behavioral replacement per entry
-- [ ] Task 2: Define the CSV upload summary contract
-    - [ ] Zod schema `CsvUploadSummary` (`inserted`, `skippedDuplicate`, `skippedExisting` counts) colocated per the track-6 `/schema` convention
-    - [ ] Export from the upload/csv schema module
-- [ ] Task 3: Define the session-school policy
-    - [ ] Document in the track: session is the sole `schoolId` source for upload writes; DB-row school is never consulted for stamping
-    - [ ] Identify the exact stamping sites in `upload/csv/route.ts` and `upload/classes/route.ts`; audit `upload/csv/cleanup/route.ts`
+- [x] Task 2: Define the CSV upload summary contract
+    - [x] Zod schema `CsvUploadSummary` (`inserted`, `skippedDuplicate`, `skippedExisting` counts) colocated per the track-6 `/schema` convention
+    - [x] Export from the upload/csv schema module
+- [x] Task 3: Define the session-school policy
+    - [x] Document in the track: session is the sole `schoolId` source for upload writes; DB-row school is never consulted for stamping
+    - [x] Identify the exact stamping sites in `upload/csv/route.ts` and `upload/classes/route.ts`; audit `upload/csv/cleanup/route.ts`
 
 ## Phase 2: Test (Red)
 
