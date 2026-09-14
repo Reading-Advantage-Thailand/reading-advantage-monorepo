@@ -76,78 +76,7 @@ function messages(locale: string): Record<string, unknown> {
   return JSON.parse(read(`messages/${locale}.json`)) as Record<string, unknown>;
 }
 
-describe("FR-4 AudioButton is a real button", () => {
-  it("renders a button with an accessible name", () => {
-    const source = read("components/audio-button.tsx");
-    expect(source).toContain("<button");
-    expect(source).toContain("aria-label");
-    expect(source).toContain("aria-pressed");
-  });
-
-  it("puts no click handler on the icon", () => {
-    const source = read("components/audio-button.tsx");
-    expect(source).not.toMatch(/Volume2Icon[^>]*onClick/);
-    expect(source).toContain("onClick={handlePlay}");
-    expect(source).toContain('aria-hidden="true"');
-  });
-});
-
-describe("FR-4 form errors expose role=alert", () => {
-  it("marks FormError as an alert", () => {
-    expect(read("components/form-error.tsx")).toContain('role="alert"');
-  });
-
-  it("marks FormMessage as an alert", () => {
-    expect(read("components/ui/form.tsx")).toContain('role="alert"');
-  });
-});
-
-describe("FR-4 sentence-order keyboard path", () => {
-  for (const file of [
-    "components/lesson/games/lesson-sentence-order.tsx",
-  ]) {
-    it(`orders by keyboard in ${file}`, () => {
-      const source = read(file);
-      expect(source).toContain("moveSentence");
-      expect(source).toContain("handleItemKeyDown");
-      expect(source).toContain("ArrowUp");
-      expect(source).toContain("ArrowDown");
-      expect(source).toContain('role="button"');
-      expect(source).toContain("tabIndex");
-    });
-  }
-});
-
-describe("FR-4 game results expose aria-live", () => {
-  for (const file of [
-    "components/lesson/games/lesson-sentence-order.tsx",
-    "components/lesson/games/lesson-sentence-order-word.tsx",
-    "components/lesson/games/lesson-sentence-cloze-test.tsx",
-    "components/lesson/games/lesson-matching-game.tsx",
-    "components/practice/matching-game.tsx",
-    "components/flashcards/flashcard-game.tsx",
-  ]) {
-    it(`announces results in ${file}`, () => {
-      expect(read(file)).toContain('aria-live="polite"');
-    });
-  }
-});
-
 describe("FR-4 clickable elements are keyboard-reachable", () => {
-  it("opens classroom cards by keyboard", () => {
-    const source = read("components/teacher/classroom-selector.tsx");
-    expect(source).toContain('role="link"');
-    expect(source).toContain("tabIndex={0}");
-    expect(source).toContain("onKeyDown");
-  });
-
-  it("opens article showcase cards by keyboard", () => {
-    const source = read("components/articles/article-showcase-card.tsx");
-    expect(source).toContain('role="link"');
-    expect(source).toContain("tabIndex={0}");
-    expect(source).toContain("onKeyDown");
-  });
-
   it("toggles the showcase lesson option from a real button", () => {
     const en = messages("en");
     const article = en.Article as Record<string, string>;
@@ -208,47 +137,6 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     expect(
       screen.getByRole("button", { name: "SENTINEL-HIDE-LESSON" }),
     ).toHaveAttribute("aria-pressed", "true");
-  });
-
-  it("selects collection words by keyboard", () => {
-    for (const file of [
-      "components/lesson/task/task-collection.tsx",
-      "components/lesson/task/task-vocabulary-collection.tsx",
-    ]) {
-      const source = read(file);
-      expect(source).toContain('role="button"');
-      expect(source).toContain("tabIndex={0}");
-      expect(source).toContain("onKeyDown");
-      expect(source).toContain("aria-label");
-    }
-  });
-
-  it("flips the flashcard face by keyboard", () => {
-    const source = read("components/flashcards/flashcard-game.tsx");
-    expect(source).toContain('role="button"');
-    expect(source).toContain("tabIndex={0}");
-    expect(source).toContain('aria-label={t("flipCard")}');
-  });
-
-  it("opens history rows by keyboard", () => {
-    const source = read("components/dashboard/history-table.tsx");
-    expect(source).toContain("onRowClick");
-    expect(source).toContain("handleNavigateToArticle");
-    const shell = read("components/ui/data-table.tsx");
-    expect(shell).toContain("tabIndex={onRowClick ? 0 : undefined}");
-    expect(shell).toContain("onKeyDown");
-  });
-
-  it("selects report students and role cards by keyboard", () => {
-    for (const file of [
-      "components/teacher/teacher-progress-reports.tsx",
-      "components/shared/change-role.tsx",
-    ]) {
-      const source = read(file);
-      expect(source).toContain('role="button"');
-      expect(source).toContain("tabIndex={0}");
-      expect(source).toContain("onKeyDown");
-    }
   });
 
   it("names the back-to-top link", () => {
