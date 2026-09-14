@@ -21,6 +21,7 @@ describe("Primary host-proof Playwright configuration", () => {
     );
   });
 
+  // Config pin: validates next.config.ts allows the dev origin (config content, not source structure).
   it("allows the local Kimi browser origin during development", () => {
     const source = readFileSync(resolve(process.cwd(), "next.config.ts"), "utf-8");
 

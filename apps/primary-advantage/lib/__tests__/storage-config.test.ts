@@ -62,6 +62,7 @@ describe("storage-config URL construction", () => {
 });
 
 describe("storage-config env documentation (config validation)", () => {
+  // Config pin: validates .env.example documents the bucket entry (data content, not source structure).
   it("documents a non-empty NEXT_PUBLIC_STORAGE_BUCKET_NAME entry in .env.example", () => {
     const envExample = readFileSync(
       resolve(import.meta.dirname, "../../.env.example"),

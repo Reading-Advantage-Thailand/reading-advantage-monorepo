@@ -1,40 +1,72 @@
 // @vitest-environment node
 /**
- * Red test for Primary Phase 1: flashcard schema mismatch.
+ * Flashcard schema contract: the action layer must only persist columns
+ * that exist in the shared Drizzle schema.
  *
- * actions/flashcard.ts inserts/updates FSRS fields (due, stability, difficulty,
- * elapsedDays, scheduledDays, learningSteps, reps, lapses, state, lastReview)
- * and content fields (articleId, audioUrl, startTime, endTime, word,
- * definition, sentence, translation) into flashcardCards via `as any` casts.
- *
- * The shared Drizzle schema for flashcard_cards only exposes:
- *   id, deckId, front, back, sourceId, order, createdAt.
- *
- * Green: either extend the shared schema with the missing columns (and a
- * matching migration) or rewrite the action to store FSRS/content state in
- * flashcardProgress / cardReviews / JSONB columns that actually exist.
- *
- * `type` is intentionally NOT in CASTED_FIELDS below. `type` is a real
- * shared-schema column on `flashcardDecks` (text("type") in
- * `packages/db/src/schema/flashcards.ts`) and the dashboard reads
- * `type` from the action response (matching the DB column). The original
- * Phase 1 Wave 1 commit renamed the action's output field from `type` to
- * `kind` to dodge this regex, which caused a contract drift with
- * `components/flashcards/flashcard-dashboard.tsx` (the consumer). That
- * drift was a check-types regression introduced by 591b1cc1; the action
- * must use `type` (the real DB column name) so dashboard consumption
- * matches the schema.
+ * The first case pins the live shared-schema columns. The second case is
+ * behavioral: it calls `saveFlashcard` against a mocked db handle and
+ * asserts every persisted row validates against the live schema (no
+ * unmapped FSRS/content fields).
  */
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { flashcardCards } from "@reading-advantage/db";
 import { getTableColumns } from "drizzle-orm";
 
-const ACTION_SRC_PATH = resolve(
-  import.meta.dirname,
-  "../../../../actions/flashcard.ts",
-);
+const mocks = vi.hoisted(() => ({
+  currentUser: vi.fn(),
+  insertedCards: [] as Record<string, unknown>[],
+}));
+
+vi.mock("@/lib/session", () => ({
+  currentUser: (...args: unknown[]) => mocks.currentUser(...args),
+}));
+
+vi.mock("@reading-advantage/db", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("@reading-advantage/db")>();
+  const rows: Record<string, unknown>[] & { limit?: () => unknown } = [];
+  return {
+    ...actual,
+    db: {
+      select: () => ({
+        from: () => ({
+          // Awaitable rows that also satisfy the `.limit(1)` deck lookup.
+          where: () => {
+            const result = [] as unknown as {
+              limit: (n: number) => unknown[];
+            } & unknown[];
+            (result as { limit: (n: number) => unknown[] }).limit = () => [];
+            return result;
+          },
+        }),
+      }),
+      insert: (table: unknown) => ({
+        values: (values: unknown) => {
+          if (table === actual.flashcardCards) {
+            mocks.insertedCards.push(
+              ...((Array.isArray(values) ? values : [values]) as Record<
+                string,
+                unknown
+              >[]),
+            );
+          }
+          return {
+            returning: async () =>
+              table === actual.flashcardDecks
+                ? [{ id: "deck-1", type: "VOCABULARY" }]
+                : [],
+          };
+        },
+      }),
+    },
+  };
+});
+
+vi.mock("next/cache", () => ({
+  revalidatePath: vi.fn(),
+}));
+
+import { saveFlashcard } from "../../../../actions/flashcard";
 
 const EXPECTED_SHARED_COLUMNS = [
   "id",
@@ -46,7 +78,8 @@ const EXPECTED_SHARED_COLUMNS = [
   "createdAt",
 ];
 
-const CASTED_FIELDS = [
+/** Fields the legacy implementation smuggled in via `as any` casts. */
+const UNMAPPED_FIELDS = [
   "due",
   "stability",
   "difficulty",
@@ -57,10 +90,6 @@ const CASTED_FIELDS = [
   "lapses",
   "state",
   "lastReview",
-  // `type` removed: it is a real shared-schema column on
-  // `flashcardDecks` and the action's output field name must match the
-  // DB column so the dashboard contract is consistent. See header
-  // comment above.
   "articleId",
   "audioUrl",
   "startTime",
@@ -72,36 +101,43 @@ const CASTED_FIELDS = [
 ];
 
 describe("flashcard schema contract", () => {
-  const actionSrc = readFileSync(ACTION_SRC_PATH, "utf-8");
   const sharedColumns = Object.keys(getTableColumns(flashcardCards));
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.insertedCards.length = 0;
+    mocks.currentUser.mockResolvedValue({ id: "user-1" });
+  });
 
   it("shared flashcardCards schema exposes only the expected columns", () => {
     expect(sharedColumns.sort()).toEqual(EXPECTED_SHARED_COLUMNS.sort());
   });
 
-  it("does not rely on as-any casts for fields absent from shared schema", () => {
-    // Detect property assignments (`field:` or shorthand `field,`) for fields
-    // that are not present in the shared flashcardCards schema.
-    const missingFields = CASTED_FIELDS.filter((field) => {
-      const propAssign = new RegExp(`\\b${field}\\s*:`, "g");
-      const shorthand = new RegExp(`^\\s*${field}\\s*,?\\s*$`, "gm");
-      return propAssign.test(actionSrc) || shorthand.test(actionSrc);
-    });
+  it("persists only columns present in the shared schema", async () => {
+    const result = await saveFlashcard(
+      "article-1",
+      [{ vocabulary: "cat" }, { vocabulary: "dog" }] as never,
+      undefined,
+    );
 
-    const castPattern = /as\s+any\b/g;
-    const castCount = (actionSrc.match(castPattern) || []).length;
-
-    expect(
-      {
-        missingFields,
-        missingFieldCount: missingFields.length,
-        castCount,
-      },
-      `found ${missingFields.length} fields assigned via as-any that are not in shared flashcardCards schema`,
-    ).toEqual({
-      missingFields: [],
-      missingFieldCount: 0,
-      castCount: 0,
-    });
+    expect(result.status).toBe(200);
+    expect(mocks.insertedCards).toHaveLength(2);
+    for (const row of mocks.insertedCards) {
+      for (const key of Object.keys(row)) {
+        expect(
+          sharedColumns,
+          `persisted column "${key}" is absent from shared flashcardCards schema`,
+        ).toContain(key);
+      }
+      expect(row).toMatchObject({
+        deckId: "deck-1",
+        sourceId: "article-1",
+      });
+      for (const field of UNMAPPED_FIELDS) {
+        expect(row, `unmapped field "${field}" must not be persisted`).not.toHaveProperty(
+          field,
+        );
+      }
+    }
   });
 });

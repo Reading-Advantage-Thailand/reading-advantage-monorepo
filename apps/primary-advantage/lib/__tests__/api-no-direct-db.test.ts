@@ -10,6 +10,8 @@
  * Routes that still carried the direct import when this ratchet landed are
  * listed in DIRECT_DB_BASELINE. The list only shrinks: when a route migrates
  * off the client barrel, its entry must be removed in the same change.
+ *
+ * Architecture ratchet: intentionally static. Do not convert to behavioral test.
  */
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync, readdirSync } from "fs";

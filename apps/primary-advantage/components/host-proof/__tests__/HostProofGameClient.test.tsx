@@ -5,10 +5,9 @@
 import "@testing-library/jest-dom";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { HostProofGameClient } from "../HostProofGameClient";
+
+const qcLoadState = vi.hoisted(() => ({ evaluated: false }));
 
 const mockResize = vi.fn();
 const mockDispatch = vi.fn();
@@ -40,16 +39,19 @@ const fakeCartridge = {
   },
 };
 
-vi.mock("@reading-advantage/game-cartridges/qc", () => ({
-  loadExistingCoreQcCartridge: vi.fn(async (id: string) => {
+vi.mock("@reading-advantage/game-cartridges/qc", () => {
+  qcLoadState.evaluated = true;
+  return {
+    loadExistingCoreQcCartridge: vi.fn(async (id: string) => {
     if (
       !["dragon-flight", "magic-defense", "dungeon-liberator", "sorcerer-ziggurat", "astral-mage"].includes(id)
     ) {
       throw new Error(`Unknown cartridge ${id}`);
     }
     return fakeCartridge;
-  }),
-}));
+    }),
+  };
+});
 
 describe("HostProofGameClient", () => {
   beforeEach(() => {
@@ -68,6 +70,18 @@ describe("HostProofGameClient", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  // Bundle-split probe: importing the client must not evaluate the QC
+  // loader (no static import); mounting it must (dynamic import in the
+  // load effect). Runs first so no earlier render trips the flag.
+  it("loads the QC cartridge lazily after mount, not through a static import", async () => {
+    expect(qcLoadState.evaluated).toBe(false);
+
+    render(<HostProofGameClient />);
+    await screen.findByTestId("host-proof-game-container");
+
+    expect(qcLoadState.evaluated).toBe(true);
   });
 
   it("calls session.resize on mount and preserves profile across cartridge switches", async () => {
@@ -117,18 +131,6 @@ describe("HostProofGameClient", () => {
     });
   });
 
-  it("only imports the QC loader through a dynamic import", () => {
-    const componentSource = readFileSync(
-      resolve(dirname(fileURLToPath(import.meta.url)), "..", "HostProofGameClient.tsx"),
-      "utf-8",
-    );
-
-    const staticImport = /import\s+.*\s+from\s+["']@reading-advantage\/game-cartridges\/qc["']/.test(componentSource);
-    const dynamicImport = /import\s*\(\s*["']@reading-advantage\/game-cartridges\/qc["']\s*\)/.test(componentSource);
-
-    expect(staticImport).toBe(false);
-    expect(dynamicImport).toBe(true);
-  });
   it("reuses an attempt id for retries, creates one on replay, and navigates accepted bindings", async () => {
     const fetchMock = vi.fn(async (input: unknown, init?: RequestInit) => {
       if (String(input).includes("?limit=50")) {
