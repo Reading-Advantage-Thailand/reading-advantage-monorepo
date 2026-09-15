@@ -4,6 +4,9 @@ This file tracks all major tracks for the project.
 
 ---
 
+- [ ] **Track: Primary Browser QA Fixes** *Link: [./tracks/primary_browser_qa_fixes_20260915/](./tracks/primary_browser_qa_fixes_20260915/)*
+  Fix the eight defects found by the 2026-09-15 parallel browser QA sweep (sign-in crash, article crash, dead sidebar links, i18n key, admin 403, Realm Carver cap, locale toggle, Import Data routing).
+
 - [~] **Track: APK Arcade Portfolio Refactor** *Link: [./tracks/apk_arcade_portfolio_refactor_20260908/](./tracks/apk_arcade_portfolio_refactor_20260908/)*
   Plan the complete game rebuild, shared arcade experience, listening, progression, and social play. Sol medium handoff is complete; implementation remains planned.
 

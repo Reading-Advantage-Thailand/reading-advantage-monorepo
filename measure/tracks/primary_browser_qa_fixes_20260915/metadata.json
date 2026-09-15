@@ -1,0 +1,10 @@
+{
+  "track_id": "primary_browser_qa_fixes_20260915",
+  "type": "bug",
+  "status": "planned",
+  "created_at": "2026-09-15T12:45:00Z",
+  "updated_at": "2026-09-15T12:45:00Z",
+  "description": "Fix the defects found by the 2026-09-15 parallel browser QA sweep: student sign-in crash, article view crash, dead sidebar links, missing Sidebar.games i18n key, admin API 403 role gating, Realm Carver word cap, locale toggle navigation, and Import Data students-tab routing.",
+  "estimated_tasks": 8,
+  "deviation_notes": "Source findings: measure/qa/browser-20260915/{t1..t6}/REPORT.md. FR-3 needs reproduction first because T2 and T6 reported contradictory nav behavior. FR-5 must preserve tenant scoping; the 403 came from legacy user_roles/school_admins join-table checks that createCredentialAccount never populates."
+}
