@@ -1,0 +1,13 @@
+Track reading_qa_article_detail_20260918: article detail returned 400 for every seeded article.
+
+Changed: server/services/article-service.ts — getArticleForReader now accepts nullable type/imageDescription (fallbacks "Article" and ""), and both fields are removed from the guard condition and invalids map. Added __tests__/services/article-service.test.ts.
+
+Why: both columns are nullable in packages/db/src/schema/content.ts and seeded rows store null, so the detail guard rejected all articles while the list endpoint served them.
+
+Verification:
+- Red: 2/2 tests failed on unpatched source (ok=false; invalids.type=true).
+- Green: 2/2 passed after fix.
+- Full jest: 148/150 suites, 1050/1053 tests passed. 2 failing suites (__tests__/controllers/post-activity-log-idempotency.test.ts, components/apk/StudentCartridgeHost.test.tsx) reproduce with the fix stashed => pre-existing.
+- check-types: 8 pre-existing APK errors, none in changed files.
+- Live: login demo-student-b1 = HTTP 200; GET /api/v1/articles/27b82010-21b0-4c0b-ac32-8aa965753042 = HTTP 200 with type "Article" and image_description "".
+- Deviation: prescribed commit subject (120 chars) exceeded commitlint header-max-length 100; used 97-char equivalent subject.
