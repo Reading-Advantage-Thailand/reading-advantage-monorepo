@@ -1,0 +1,11 @@
+{
+  "track_id": "reading_qa_article_detail_20260918",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-09-18T00:00:00Z",
+  "updated_at": "2026-09-18T00:00:00Z",
+  "description": "Fix the HTTP 400 on GET /api/v1/articles/{uuid}: the article detail guard rejects schema-nullable type and imageDescription fields, so no article can be opened. Browser QA 2026-09-16, P0.",
+  "estimated_tasks": 4,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

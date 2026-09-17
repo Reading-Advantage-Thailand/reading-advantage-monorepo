@@ -452,6 +452,28 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
+## Reading Advantage QA P0 Program (created 2026-09-18)
+
+> Three P0 bug tracks from the 2026-09-16/17 sequential browser QA of
+> `apps/reading-advantage` (evidence: `/tmp/opencode/qa-reports/SUMMARY.md`).
+> Execute sequentially; two tracks touch the flashcard controller family.
+> The two list-endpoint text=uuid join fixes from the same QA session sit
+> uncommitted in the working tree and stay outside these tracks.
+
+- [ ] **Track: Reading QA — Article Detail 400** *Link: [./tracks/reading_qa_article_detail_20260918/](./tracks/reading_qa_article_detail_20260918/)*
+  Fix the HTTP 400 on `GET /api/v1/articles/{uuid}`: the detail guard rejects
+  schema-nullable `type` and `imageDescription`, so no article can be opened.
+
+- [ ] **Track: Reading QA — Vocabulary Flashcard Content** *Link: [./tracks/reading_qa_vocab_flashcards_20260918/](./tracks/reading_qa_vocab_flashcards_20260918/)*
+  Fix empty vocabulary flashcards: the study-card projection drops the word
+  payload, so cards render "No word" / "No translation".
+
+- [ ] **Track: Reading QA — SRS Review Persistence** *Link: [./tracks/reading_qa_srs_persistence_20260918/](./tracks/reading_qa_srs_persistence_20260918/)*
+  Fix review persistence: rated sessions do not advance FSRS fields, due
+  counters, the activity log, or XP.
+
+---
+
 ## Primary Advantage UX and Security Refactor Program (created 2026-09-12)
 
 > Six implementation tracks derived from the 2026-09-12 five-theme audit of
