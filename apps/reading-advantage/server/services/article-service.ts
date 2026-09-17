@@ -79,11 +79,9 @@ export async function getArticleForReader(
 
     if (
       !article.summary ||
-      !article.imageDescription ||
       !article.passage ||
       !article.createdAt ||
       (article.rating !== 0 && !article.rating) ||
-      !article.type ||
       !article.title ||
       !article.cefrLevel ||
       !article.raLevel ||
@@ -97,11 +95,9 @@ export async function getArticleForReader(
         message: "Article fields are not correct",
         invalids: {
           summary: !article.summary,
-          image_description: !article.imageDescription,
           passage: !article.passage,
           created_at: !article.createdAt,
           average_rating: !article.rating && article.rating !== 0,
-          type: !article.type,
           title: !article.title,
           cefr_level: !article.cefrLevel,
           ra_level: !article.raLevel,
@@ -114,13 +110,13 @@ export async function getArticleForReader(
 
     const formattedArticle: FormattedArticle = {
       id: article.id,
-      type: article.type,
+      type: article.type ?? "Article",
       genre: article.genre,
       subgenre: article.subGenre,
       title: article.title,
       summary: article.summary,
       passage: article.passage,
-      image_description: article.imageDescription,
+      image_description: article.imageDescription ?? "",
       cefr_level: article.cefrLevel,
       ra_level: article.raLevel,
       average_rating: article.rating || 0,
