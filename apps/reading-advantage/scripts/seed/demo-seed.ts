@@ -424,18 +424,19 @@ async function generateSRSFlashcards(students: UserRow[]) {
     for (let i = 0; i < wordCount; i++) {
       const article = articleList[Math.floor(Math.random() * articleList.length)];
 
-      // Sample words for flashcards
+      // Sample words for flashcards — canonical shape the flashcard game
+      // reads: { vocabulary, definition } (components/vocabulary/types.ts).
       const sampleWords = [
-        { word: "example", translation: "ตัวอย่าง" },
-        { word: "important", translation: "สำคัญ" },
-        { word: "understand", translation: "เข้าใจ" },
-        { word: "knowledge", translation: "ความรู้" },
-        { word: "practice", translation: "ฝึกฝน" },
-        { word: "improve", translation: "ปรับปรุง" },
-        { word: "develop", translation: "พัฒนา" },
-        { word: "achieve", translation: "บรรลุ" },
-        { word: "success", translation: "ความสำเร็จ" },
-        { word: "challenge", translation: "ความท้าทาย" },
+        { vocabulary: "example", definition: { en: "a thing serving as a model", th: "ตัวอย่าง" } },
+        { vocabulary: "important", definition: { en: "having great value", th: "สำคัญ" } },
+        { vocabulary: "understand", definition: { en: "to know the meaning of", th: "เข้าใจ" } },
+        { vocabulary: "knowledge", definition: { en: "information and understanding", th: "ความรู้" } },
+        { vocabulary: "practice", definition: { en: "repeated exercise to improve skill", th: "ฝึกฝน" } },
+        { vocabulary: "improve", definition: { en: "to make or become better", th: "ปรับปรุง" } },
+        { vocabulary: "develop", definition: { en: "to grow or cause to grow", th: "พัฒนา" } },
+        { vocabulary: "achieve", definition: { en: "to succeed in doing something", th: "บรรลุ" } },
+        { vocabulary: "success", definition: { en: "the accomplishment of a goal", th: "ความสำเร็จ" } },
+        { vocabulary: "challenge", definition: { en: "a difficult task to test ability", th: "ความท้าทาย" } },
       ];
 
       const wordData = sampleWords[i % sampleWords.length];

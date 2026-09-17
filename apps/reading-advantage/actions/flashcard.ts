@@ -203,6 +203,21 @@ export async function getUserFlashcardDecks() {
   }
 }
 
+// Normalize legacy word payloads saved as `{ word, translation }` (demo-seed
+// shape) into the canonical `{ vocabulary, definition }` shape the flashcard
+// game reads (precedent: lesson-controller.ts maps `vocabulary || word`).
+// The translation language is unknown for legacy rows, so it is kept under the
+// `th` key used by demo data; `getTranslation` falls back to the first value.
+function normalizeWordPayload(word: any) {
+  if (!word || typeof word !== "object" || word.vocabulary) return word;
+  if (typeof word.word !== "string") return word;
+  return {
+    ...word,
+    vocabulary: word.word,
+    definition: word.definition ?? (word.translation ? { th: word.translation } : undefined),
+  };
+}
+
 // Get cards for a specific deck (vocabulary or sentences)
 export async function getDeckCards(deckId: string) {
   try {
@@ -212,13 +227,17 @@ export async function getDeckCards(deckId: string) {
     }
 
     let allCards: any[] = [];
-    
+
     if (deckId === 'vocabulary') {
-      allCards = await db
+      const rows = await db
         .select()
         .from(userWordRecords)
         .where(eq(userWordRecords.userId, user.id))
         .orderBy(desc(userWordRecords.createdAt));
+      allCards = rows.map((row: any) => ({
+        ...row,
+        word: normalizeWordPayload(row.word),
+      }));
     } else if (deckId === 'sentences') {
       allCards = await db
         .select()
