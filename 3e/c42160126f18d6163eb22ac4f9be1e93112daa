@@ -1,0 +1,12 @@
+Track reading_qa_vocab_flashcards_20260918 — vocabulary flashcards rendered 'No word'/'No translation'.
+
+DIAGNOSIS: No projection drops the payload. deck-view.tsx -> getDeckCards() (actions/flashcard.ts) selects the full user_word_records row including the word jsonb. The loss point is a key-shape mismatch: flashcard-game.tsx:539/586 reads word.vocabulary and word.definition (canonical per components/vocabulary/types.ts), but scripts/seed/demo-seed.ts:428-463 wrote { word, translation }. 62 of 66 user_word_records rows have the legacy shape; all 11 rows of demo-student-b1 are affected.
+
+CHANGES:
+- actions/flashcard.ts: normalizeWordPayload() maps legacy { word, translation } to canonical { vocabulary, definition: { th } } in the vocabulary branch of getDeckCards only; sentence branch untouched; counters/stats untouched (precedent: lesson-controller.ts:430 maps vocabulary || word).
+- scripts/seed/demo-seed.ts: sampleWords now seeded in canonical { vocabulary, definition: { en, th } } shape so new demo rows are correct.
+- __tests__/actions/flashcard-word-payload.test.ts: unit tests over the mocked DB (Red first: legacy-row assertion failed on word.vocabulary === undefined; Green after fix; canonical passthrough and sentence-untouched guards).
+
+VERIFICATION:
+- jest (new file): 3/3 pass. Full app suite: 2 failed (known baselines post-activity-log-idempotency, StudentCartridgeHost), 149 passed — no delta. check-types: 8 tsc errors, all pre-existing APK baselines — no delta.
+- Live on port 3100 as demo-student-b1 (Playwright, cookie session, no ratings submitted): vocabulary deck 'Start Studying (6 cards)' card 1 renders word 'example' with definition 'ตัวอย่าง', no 'No word'/'No translation'; sentence deck on /student/sentences 'Start Studying (2 cards)' card 1 renders 'Never give up.' Screenshots in /tmp/opencode/vocab-card-question.png, vocab-card-answer.png, sentence-card-question.png. DB FSRS state unchanged after verification.
