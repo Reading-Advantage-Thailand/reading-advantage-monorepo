@@ -1,0 +1,11 @@
+{
+  "track_id": "reading_qa_lesson_seed_20260918",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-09-18T00:00:00Z",
+  "updated_at": "2026-09-18T00:00:00Z",
+  "description": "Make the demo seed complete and idempotent: fix the xp_logs unique-constraint crash and seed full lesson content (readable passages, image descriptions, MCQ/SA/LA questions, Thai translations) so the lesson page has data to render.",
+  "estimated_tasks": 5,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

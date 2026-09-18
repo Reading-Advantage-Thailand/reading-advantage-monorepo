@@ -1,0 +1,11 @@
+{
+  "track_id": "reading_mem_metrics_cache_20260918",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-09-18T00:00:00Z",
+  "updated_at": "2026-09-18T00:00:00Z",
+  "description": "Bound the metrics cache from the 2026-09-18 memory audit (item 3, S2, S3): three module-level Maps grow without limit and clear() leaks the counter map. Copy the bounded-cache design from packages/api dashboard-cache.",
+  "estimated_tasks": 3,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

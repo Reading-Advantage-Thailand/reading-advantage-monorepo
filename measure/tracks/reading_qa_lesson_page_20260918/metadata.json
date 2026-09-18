@@ -1,0 +1,11 @@
+{
+  "track_id": "reading_qa_lesson_page_20260918",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-09-18T00:00:00Z",
+  "updated_at": "2026-09-18T00:00:00Z",
+  "description": "Fix the article lesson page code defects from owner manual verification: questions endpoints 500, translate endpoint 404, activitylog 400, missing selectType.types.* i18n keys, and missing graceful states for absent image/audio/translation.",
+  "estimated_tasks": 6,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

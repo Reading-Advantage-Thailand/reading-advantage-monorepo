@@ -477,6 +477,71 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
+## Reading QA Follow-Up Program (created 2026-09-18)
+
+> Owner manual verification on 2026-09-18 rejected the lesson page: no image,
+> audio, translation, or questions; about 20 browser issues. Server evidence:
+> questions endpoints 500, translate 404, activitylog 400, 240 missing-i18n
+> log hits, and 0 rows in every question table. L2 fixes code; L1 fixes data.
+> Execute L2 first.
+
+- [ ] **Track: Reading QA — Lesson Page Code Defects** *Link: [./tracks/reading_qa_lesson_page_20260918/](./tracks/reading_qa_lesson_page_20260918/)*
+  Fix the questions-endpoint 500s, the translate 404, the lesson activitylog
+  400, the missing `selectType.types.*` keys, and graceful states for absent
+  image/audio/translation.
+
+- [ ] **Track: Reading QA — Lesson Seed Completeness** *Link: [./tracks/reading_qa_lesson_seed_20260918/](./tracks/reading_qa_lesson_seed_20260918/)*
+  Make the demo seed complete and idempotent: fix the `xp_logs` crash and seed
+  readable passages, image descriptions, MCQ/SA/LA questions, and Thai
+  translations.
+
+---
+
+## Student-Route Memory Optimization Program (created 2026-09-18)
+
+> Source: the 2026-09-18 "Read + Primary Advantage Student Routes" memory
+> audit — 47 findings (25 server, 22 client), static analysis, every item
+> cites file:line. Wave 1 takes audit items 8 and 3 (small, low-risk, large
+> effect). The audit's deploy-path caveat gates the container work:
+> `apps/reading-advantage/cloudbuild.yaml:63` builds a `./web` context that
+> does not exist in this repo, so confirm the real deploy pipeline before
+> audit item 1 or the standalone-output rewrite.
+
+- [ ] **Track: Memory — Client Quick Wins** *Link: [./tracks/reading_mem_client_quick_20260918/](./tracks/reading_mem_client_quick_20260918/)*
+  Release article audio buffers, stop the audio cache-buster, close the
+  AudioContext, release per-sound Audio objects, reset the game store
+  (audit item 8; C13, C14, C21).
+
+- [ ] **Track: Memory — Bound the Metrics Cache** *Link: [./tracks/reading_mem_metrics_cache_20260918/](./tracks/reading_mem_metrics_cache_20260918/)*
+  Bound the three unbounded Maps in `lib/cache/metrics.ts` with FIFO eviction
+  and make `clear()` complete (audit item 3; S2, S3).
+
+### Queued (planned — spec on pickup)
+
+- [ ] **Track: Memory — Lazy Lesson Bundles** *(reading_mem_lazy_bundles_20260918 — planned)*
+  next/dynamic per lesson phase and the four phase-10 games; lazy recharts on
+  the dashboard; swap MUI Rating and lodash imports on student paths; add a
+  bundle analyzer baseline (audit item 5; C1, C5, C6, C17-C22).
+- [ ] **Track: Memory — i18n Namespace Split** *(reading_mem_i18n_namespaces_20260918 — planned)*
+  Send each layout only the translation namespaces it uses instead of the full
+  294 KB Thai catalogue, both apps; walk every student route afterwards
+  (audit item 2; C3, C4, S14).
+- [ ] **Track: Memory — Sprite Sheet Resize** *(reading_mem_sprites_20260918 — planned)*
+  Resize the seven 1024×1024 game PNGs to drawn size, convert to WebP, and
+  scale the fixed crop offsets (audit item 4; C2).
+- [ ] **Track: Memory — Student Query Bounds** *(reading_mem_query_bounds_20260918 — planned)*
+  Add limits, column lists, and SQL-side filters to the student endpoints that
+  read whole tables (audit item 6; S4-S10).
+- [ ] **Track: Memory — Runtime and Container Limits** *(reading_mem_runtime_limits_20260918 — planned, blocked)*
+  Heap limit, Cloud Run memory/concurrency/instance settings, standalone
+  output. Precondition: confirm the real deploy path (audit items 1, 7; S24).
+- [ ] **Track: Memory — Shared Package Barrels** *(reading_mem_shared_barrels_20260918 — planned)*
+  Per-app router composition, domain `db-contract` subpath imports, play-kit
+  `./audio` subpath plus `sideEffects: false`; remove the eight unused
+  packages from configs (audit shared-packages A and B).
+
+---
+
 ## Primary Advantage UX and Security Refactor Program (created 2026-09-12)
 
 > Six implementation tracks derived from the 2026-09-12 five-theme audit of
