@@ -183,7 +183,12 @@ function resolveActivityTarget(
   data: Record<string, any>,
   activityType: ActivityType,
 ): string | null {
-  const directTarget = [data.articleId, data.storyId, data.contentId].find(
+  const directTarget = [
+    data.targetId,
+    data.articleId,
+    data.storyId,
+    data.contentId,
+  ].find(
     (value) => typeof value === "string" && value.trim() !== "",
   ) as string | undefined;
   if (!directTarget) return null;

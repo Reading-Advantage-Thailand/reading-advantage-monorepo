@@ -11,19 +11,25 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({
-        message: "Unauthorized",
-        status: 403,
-      });
+      return NextResponse.json(
+        {
+          message: "Unauthorized",
+          status: 403,
+        },
+        { status: 403 }
+      );
     }
 
     const { cardId, rating, type } = await request.json();
 
     if (!cardId || !rating || !type) {
-      return NextResponse.json({
-        message: "Missing required fields: cardId, rating, type",
-        status: 400,
-      });
+      return NextResponse.json(
+        {
+          message: "Missing required fields: cardId, rating, type",
+          status: 400,
+        },
+        { status: 400 }
+      );
     }
 
     const isVocabulary = type === "vocabulary";
@@ -52,20 +58,40 @@ export async function POST(request: NextRequest) {
     }
 
     if (!currentCard || currentCard.userId !== user.id) {
-      return NextResponse.json({
-        message: "Card not found or unauthorized",
-        status: 404,
-      });
+      return NextResponse.json(
+        {
+          message: "Card not found or unauthorized",
+          status: 404,
+        },
+        { status: 404 }
+      );
     }
 
     // Calculate next review using FSRS
     const f = fsrs(generatorParameters());
     const now = new Date();
 
+    // Rows saved before any review carry stability 0 with seed-written
+    // difficulty. ts-fsrs only auto-initializes the exact (0, 0) input and
+    // rejects anything else below its minimums (difficulty < 1 or
+    // stability < 0.001), which threw FSRSValidationError and silently
+    // dropped the review. Normalize stored values into the accepted input
+    // domain: uninitialized memory takes the standard fresh-card path
+    // (initial difficulty/stability come from the user's rating), and
+    // sub-floor difficulty is clamped to the domain minimum.
+    let difficulty = currentCard.difficulty;
+    let stability = currentCard.stability;
+    if (!(stability >= 0.001)) {
+      difficulty = 0;
+      stability = 0;
+    } else if (difficulty < 1) {
+      difficulty = 1;
+    }
+
     const cardObj = {
       due: new Date(currentCard.due),
-      stability: currentCard.stability,
-      difficulty: currentCard.difficulty,
+      stability,
+      difficulty,
       elapsed_days: currentCard.elapsedDays,
       scheduled_days: currentCard.scheduledDays,
       reps: currentCard.reps,
@@ -121,15 +147,21 @@ export async function POST(request: NextRequest) {
         .where(eq(userSentenceRecords.id, cardId));
     }
 
-    return NextResponse.json({
-      message: "Card progress updated",
-      status: 200,
-    });
+    return NextResponse.json(
+      {
+        message: "Card progress updated",
+        status: 200,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error updating flashcard progress:", error);
-    return NextResponse.json({
-      message: "Internal server error",
-      status: 500,
-    });
+    return NextResponse.json(
+      {
+        message: "Internal server error",
+        status: 500,
+      },
+      { status: 500 }
+    );
   }
 }
