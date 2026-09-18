@@ -1,11 +1,11 @@
 {
   "track_id": "reading_qa_srs_persistence_20260918",
   "type": "bug",
-  "status": "new",
+  "status": "in-progress",
   "created_at": "2026-09-18T00:00:00Z",
   "updated_at": "2026-09-18T00:00:00Z",
-  "description": "Fix SRS review persistence: after rated review sessions the FSRS row fields, due counters, activity log, and XP do not change. Browser QA 2026-09-17, P0.",
+  "description": "Fix SRS review persistence: seeded cards carry an FSRS-invalid memory state that the rating route swallowed as HTTP 200, and the activity log rejected the flashcard targetId, so reviews, activity, and XP never persisted. Browser QA 2026-09-17, P0.",
   "estimated_tasks": 5,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 5,
+  "deviation_notes": "Two root causes: (1) rating route returned HTTP 200 on FSRSValidationError for stability-0 seeded cards — now normalizes uninitialized memory to fresh-card init, clamps sub-floor difficulty, and returns real statuses; (2) resolveActivityTarget ignored explicit top-level targetId so every flashcard XP post got 400 — now accepted. Review H1: targetId acceptance widens tech-debt F-D5 fake-target XP farming; registry row amended, expedite the server-side target verification fix. Red test shipped inside the fix commit rather than a red-only commit. Implemented 2026-09-18 (commit 191b546). Owner manual verification pending."
 }

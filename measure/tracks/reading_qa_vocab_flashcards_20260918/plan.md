@@ -24,10 +24,14 @@ All file paths are relative to `apps/reading-advantage/` unless noted.
   columns, which the seed populates correctly. Fix: normalize the payload in the vocabulary branch of
   `getDeckCards` (precedent: `lesson-controller.ts:424-435` maps `vocabulary: wordData.vocabulary || wordData.word`)
   and correct the demo-seed sample shape so new rows are canonical.
-- [ ] Task: Write the failing unit test
-  - [ ] Test the diagnosed projection function. Mock the DB layer with Jest mocks.
-  - [ ] Assert each vocabulary card carries word text and translation (FR-2).
-  - [ ] Run the test. Confirm it fails (Red). Record the failure.
+- [x] Task: Write the failing unit test
+  - [x] Test the diagnosed projection function. Mock the DB layer with Jest mocks.
+  - [x] Assert each vocabulary card carries word text and translation (FR-2).
+  - [x] Run the test. Confirm it fails (Red). Record the failure.
+
+  **Red note (2026-09-18):** `carries word text and translation on legacy { word, translation } rows`
+  failed with `Expected: "string" / Received: "undefined"` on `card.word.vocabulary` before the fix.
+  (Boxes ticked at review closeout; the Red evidence was recorded in the commit note.)
 
 ## Phase 2: Green
 

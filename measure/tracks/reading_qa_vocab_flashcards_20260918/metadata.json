@@ -1,11 +1,11 @@
 {
   "track_id": "reading_qa_vocab_flashcards_20260918",
   "type": "bug",
-  "status": "new",
+  "status": "in-progress",
   "created_at": "2026-09-18T00:00:00Z",
   "updated_at": "2026-09-18T00:00:00Z",
-  "description": "Fix empty vocabulary flashcards: cards render literal 'No word' and 'No translation' because the vocabulary card projection drops the word payload. Browser QA 2026-09-17, P0.",
+  "description": "Fix empty vocabulary flashcards: cards render literal 'No word' and 'No translation' because the study-card payload uses a legacy key shape the reader does not recognize. Browser QA 2026-09-17, P0.",
   "estimated_tasks": 5,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 5,
+  "deviation_notes": "Root cause was a stored-payload key-shape mismatch, not a missing join. Fix normalizes legacy {word, translation} to canonical {vocabulary, definition} in getDeckCards and corrects the demo seed. Live verification used Playwright because getDeckCards is a server action with no HTTP route. Review L1: legacy translations stored under definition.th (language assumed Thai). Review L2: 62 legacy rows still render empty in game controllers (magic-defense, rpg-battle, dragon-flight, wizard-zombie, rune-match) — candidate shared normalizeWordPayload helper. Implemented 2026-09-18 (commit 3ec4216). Owner manual verification pending."
 }

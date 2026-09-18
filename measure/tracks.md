@@ -460,17 +460,20 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > The two list-endpoint text=uuid join fixes from the same QA session sit
 > uncommitted in the working tree and stay outside these tracks.
 
-- [ ] **Track: Reading QA — Article Detail 400** *Link: [./tracks/reading_qa_article_detail_20260918/](./tracks/reading_qa_article_detail_20260918/)*
+- [~] **Track: Reading QA — Article Detail 400** *Link: [./tracks/reading_qa_article_detail_20260918/](./tracks/reading_qa_article_detail_20260918/)*
   Fix the HTTP 400 on `GET /api/v1/articles/{uuid}`: the detail guard rejects
   schema-nullable `type` and `imageDescription`, so no article can be opened.
+  *Implemented 2026-09-18 (commit `10c74f1`, live 200 verified); independent review compliant, no findings; owner manual verification pending.*
 
-- [ ] **Track: Reading QA — Vocabulary Flashcard Content** *Link: [./tracks/reading_qa_vocab_flashcards_20260918/](./tracks/reading_qa_vocab_flashcards_20260918/)*
-  Fix empty vocabulary flashcards: the study-card projection drops the word
-  payload, so cards render "No word" / "No translation".
+- [~] **Track: Reading QA — Vocabulary Flashcard Content** *Link: [./tracks/reading_qa_vocab_flashcards_20260918/](./tracks/reading_qa_vocab_flashcards_20260918/)*
+  Fix empty vocabulary flashcards: the study-card payload uses a legacy key shape
+  the reader does not recognize, so cards render "No word" / "No translation".
+  *Implemented 2026-09-18 (commit `3ec4216`, live card content verified); review compliant with two Low findings recorded in metadata; owner manual verification pending.*
 
-- [ ] **Track: Reading QA — SRS Review Persistence** *Link: [./tracks/reading_qa_srs_persistence_20260918/](./tracks/reading_qa_srs_persistence_20260918/)*
+- [~] **Track: Reading QA — SRS Review Persistence** *Link: [./tracks/reading_qa_srs_persistence_20260918/](./tracks/reading_qa_srs_persistence_20260918/)*
   Fix review persistence: rated sessions do not advance FSRS fields, due
   counters, the activity log, or XP.
+  *Implemented 2026-09-18 (commit `191b546`, live persistence verified); review found one High — `targetId` acceptance widens tech-debt F-D5 fake-target XP farming (registry row amended, follow-up owed); owner manual verification pending.*
 
 ---
 
