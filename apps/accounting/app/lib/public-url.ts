@@ -1,4 +1,5 @@
-const DEFAULT_ACCOUNTING_ORIGIN = "https://accounting.reading-advantage.com";
+export const DEFAULT_ACCOUNTING_ORIGIN =
+  "https://accounting.reading-advantage.com";
 const LOCAL_HOSTNAMES = new Set(["127.0.0.1", "::1", "localhost"]);
 
 /**

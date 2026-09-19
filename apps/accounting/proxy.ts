@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getPublicUrl } from "./app/lib/public-url";
+import {
+  DEFAULT_ACCOUNTING_ORIGIN,
+  getPublicUrl,
+} from "./app/lib/public-url";
 
 const ACCOUNTING_SESSION_COOKIE = "__Host-ra_accounting_session";
 
@@ -33,10 +36,7 @@ export async function proxy(request: NextRequest) {
     try {
       loginUrl = getPublicUrl(request, "/login");
     } catch {
-      loginUrl = new URL(
-        "/login",
-        "https://accounting.reading-advantage.com",
-      );
+      loginUrl = new URL("/login", DEFAULT_ACCOUNTING_ORIGIN);
     }
     loginUrl.searchParams.set("returnTo", pathname + search);
     return NextResponse.redirect(loginUrl);

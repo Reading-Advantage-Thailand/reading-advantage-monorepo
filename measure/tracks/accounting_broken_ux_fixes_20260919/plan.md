@@ -8,6 +8,6 @@
 - [x] Task: Call `router.refresh()` after an approval and after a rejection. Source: `docs/accounting-ux-refactor-plan.md` §5; Issues: `app/_components/pending-submissions-list.tsx:110-123` — 4e35807c4
 - [x] Task: Clear `idempotencyKeyRef` in the 409 branch of the submission form. Source: `docs/accounting-ux-refactor-plan.md` §5; Issues: `app/_components/new-submission-form.tsx:234-240` — 60f36deac
 - [x] Task: Use `buildSignInHref` in the login page. Source: `docs/accounting-ux-refactor-plan.md` §4.2; Issues: `app/lib/sign-in-href.ts`, `app/login/page.tsx:16-18` — 7cff32fbb
-- [ ] Task: Export `DEFAULT_ACCOUNTING_ORIGIN` and import it in `proxy.ts`. Source: `docs/accounting-ux-refactor-plan.md` §4.2; Issues: `app/lib/public-url.ts:1`, `proxy.ts:38`
+- [x] Task: Export `DEFAULT_ACCOUNTING_ORIGIN` and import it in `proxy.ts`. Source: `docs/accounting-ux-refactor-plan.md` §4.2; Issues: `app/lib/public-url.ts:1`, `proxy.ts:38`
 - [ ] Task: Delete the `as string` cast in the reject route. Source: `docs/accounting-ux-refactor-plan.md` §3; Issues: `app/api/submissions/[id]/reject/route.ts:135`
 - [ ] Task: Replace the `null` Suspense fallback on the login page. Source: `docs/accounting-ux-refactor-plan.md` §4.3; Issues: `app/login/page.tsx:45`
