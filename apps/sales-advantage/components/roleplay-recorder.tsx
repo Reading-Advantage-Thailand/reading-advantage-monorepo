@@ -45,6 +45,7 @@ export function RoleplayRecorder({
   const [duration, setDuration] = useState(0);
   const [consentGiven, setConsentGiven] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startTimeRef = useRef<number>(0);
   const audioUrlRef = useRef<string | null>(null);
@@ -53,13 +54,34 @@ export function RoleplayRecorder({
     audioUrlRef.current = null;
     if (url) URL.revokeObjectURL(url);
   }, []);
+  const stopActiveResources = useCallback(() => {
+    const recorder = mediaRecorderRef.current;
+    if (recorder && recorder.state !== "inactive") {
+      recorder.ondataavailable = null;
+      recorder.onstop = null;
+      recorder.stop();
+    }
+    mediaRecorderRef.current = null;
 
-  useEffect(() => revokeAudioUrl, [revokeAudioUrl]);
+    const stream = mediaStreamRef.current;
+    mediaStreamRef.current = null;
+    stream?.getTracks().forEach((track) => {
+      if (track.readyState === "live") track.stop();
+    });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      revokeAudioUrl();
+      stopActiveResources();
+    };
+  }, [revokeAudioUrl, stopActiveResources]);
 
   async function startRecording() {
     setError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
       chunksRef.current = [];
       const mimeType = MediaRecorder.isTypeSupported("audio/webm")
         ? "audio/webm"
@@ -79,6 +101,8 @@ export function RoleplayRecorder({
         setAudioUrl(nextAudioUrl);
         setDuration(Math.round((Date.now() - startTimeRef.current) / 1000));
         stream.getTracks().forEach((t) => t.stop());
+        mediaStreamRef.current = null;
+        mediaRecorderRef.current = null;
         setState("recorded");
       };
       startTimeRef.current = Date.now();

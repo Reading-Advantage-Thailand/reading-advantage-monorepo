@@ -21,9 +21,10 @@ describe("RoleplayRecorder recording type", () => {
   const getUserMedia = vi.fn();
   const createObjectURL = vi.fn();
   const revokeObjectURL = vi.fn();
+  const stopTrack = vi.fn();
   let lastOnStop: (() => void) | null = null;
   const stream = {
-    getTracks: vi.fn(() => [{ stop: vi.fn() }]),
+    getTracks: vi.fn(() => [{ readyState: "live", stop: stopTrack }]),
   } as unknown as MediaStream;
 
   beforeEach(() => {
@@ -35,6 +36,7 @@ describe("RoleplayRecorder recording type", () => {
     createObjectURL.mockReset();
     createObjectURL.mockReturnValue("blob:roleplay");
     revokeObjectURL.mockReset();
+    stopTrack.mockReset();
     lastOnStop = null;
     Object.defineProperty(URL, "createObjectURL", {
       configurable: true,
@@ -52,6 +54,7 @@ describe("RoleplayRecorder recording type", () => {
       "MediaRecorder",
       class MockMediaRecorder {
         static isTypeSupported = vi.fn(() => true);
+        state = "recording";
         ondataavailable: ((event: BlobEvent) => void) | null = null;
 
         set onstop(handler: (() => void) | null) {
@@ -152,5 +155,18 @@ describe("RoleplayRecorder recording type", () => {
     unmount();
 
     expect(revokeObjectURL).toHaveBeenCalledWith("blob:roleplay");
+  });
+
+  it("stops the active recorder and microphone track on unmount", async () => {
+    const { unmount } = render(<RoleplayRecorder scenario={scenario} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "record" }));
+    await waitFor(() => expect(start).toHaveBeenCalled());
+
+    unmount();
+    unmount();
+
+    expect(stop).toHaveBeenCalledTimes(1);
+    expect(stopTrack).toHaveBeenCalledTimes(1);
   });
 });
