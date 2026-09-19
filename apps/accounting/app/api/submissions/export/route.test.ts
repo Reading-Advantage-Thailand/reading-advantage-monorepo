@@ -80,6 +80,14 @@ const approvedThbSubmission = {
   evidenceReference: `private-evidence://${COMPANY_ID}/submissions/0002/ticket.pdf`,
 };
 
+const approvedJpySubmission = {
+  ...approvedNonThbSubmission,
+  id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbc",
+  money: { amountMinor: "10000", currency: "JPY" },
+  settledThbAmount: "230000",
+  payee: "Tokyo Vendor",
+};
+
 const pendingSubmission = {
   ...approvedNonThbSubmission,
   id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
@@ -178,6 +186,14 @@ describe("GET /api/submissions/export", () => {
 
     expect(body).toContain("520500");
     expect(body).toContain("34.70");
+  });
+
+  it("passes the source currency to derived rate calculation", async () => {
+    mocks.listAccountingSubmissions.mockResolvedValue([approvedJpySubmission]);
+    const response = await GET(new Request(ROUTE_URL));
+    const body = await response.text();
+
+    expect(body).toContain(",10000,230000,0.23,");
   });
 
   it("neutralizes spreadsheet formulas in text cells", async () => {

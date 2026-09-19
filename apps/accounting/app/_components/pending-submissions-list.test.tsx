@@ -50,6 +50,14 @@ const pendingThbSubmission: AccountingSubmission = {
   evidenceReference: `private-evidence://${COMPANY_ID}/submissions/0003/ticket.pdf`,
 };
 
+const pendingJpySubmission: AccountingSubmission = {
+  ...pendingUsdSubmission,
+  id: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeef",
+  money: { amountMinor: "10000", currency: "JPY" },
+  settledThbAmount: "230000",
+  payee: "Tokyo Vendor",
+};
+
 const approvedSubmission: AccountingSubmission = {
   ...pendingUsdSubmission,
   id: APPROVED_ID,
@@ -253,5 +261,17 @@ describe("PendingSubmissionsList", () => {
     expect(screen.getByText("4500 THB")).toBeInTheDocument();
     expect(screen.queryByText("34.70")).not.toBeInTheDocument();
     expect(screen.queryByText(/derived rate/i)).not.toBeInTheDocument();
+  });
+
+  it("passes the source currency to derived rate calculation", () => {
+    render(
+      <PendingSubmissionsList
+        submissions={[pendingJpySubmission]}
+        actorRole="OWNER"
+      />,
+    );
+
+    expect(screen.getByText("Tokyo Vendor")).toBeInTheDocument();
+    expect(screen.getByText("0.23")).toBeInTheDocument();
   });
 });

@@ -219,6 +219,7 @@ export function PendingSubmissionsList({
                   ? derivedRate(
                       submission.money.amountMinor,
                       submission.settledThbAmount,
+                      submission.money.currency,
                     )
                   : "";
               return (

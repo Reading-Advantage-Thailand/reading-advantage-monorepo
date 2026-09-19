@@ -103,7 +103,11 @@ export async function GET(request: Request): Promise<Response> {
     const rate =
       submission.money.currency === "THB" || !submission.settledThbAmount
         ? ""
-        : derivedRate(submission.money.amountMinor, submission.settledThbAmount);
+        : derivedRate(
+            submission.money.amountMinor,
+            submission.settledThbAmount,
+            submission.money.currency,
+          );
     const submittedDate = submission.submittedAt.slice(0, 10);
     lines.push(
       [
