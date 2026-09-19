@@ -1,0 +1,9 @@
+Task: Give each scene a stable React key.
+
+Summary: Added local scene identities and preserved them across load, generate, add, remove, and reorder operations. Replaced index keys without changing persisted script data.
+
+Files: apps/marketing/app/campaigns/[id]/video/page.tsx; apps/marketing/app/__tests__/phase-2-stable-scene-key.test.ts
+
+Why: Index keys can attach component state to the wrong scene after reorder or removal.
+
+Verification: focused stable-key test passed; agent video tests, type check, and lint passed.
