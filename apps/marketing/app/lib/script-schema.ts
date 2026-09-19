@@ -8,8 +8,17 @@ const scriptSceneSchema = z
   })
   .strict();
 
+/** Minimum scene count accepted by the script contract. */
+export const MIN_SCRIPT_SCENES = 5;
+
+/** Maximum scene count accepted by the script contract. */
+export const MAX_SCRIPT_SCENES = 7;
+
 /** Validates the persisted structural contract for a 5–7 scene script. */
-export const scriptSchema = z.array(scriptSceneSchema).min(5).max(7);
+export const scriptSchema = z
+  .array(scriptSceneSchema)
+  .min(MIN_SCRIPT_SCENES)
+  .max(MAX_SCRIPT_SCENES);
 
 /**
  * Reports whether Thai letters form a meaningful majority of narration.
