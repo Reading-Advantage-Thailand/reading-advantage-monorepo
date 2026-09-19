@@ -96,8 +96,7 @@ export function RoleplayRecorder({
         credentials: "same-origin",
       });
       if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(txt || t("errors.uploadFailed"));
+        throw new Error(t("errors.uploadFailed"));
       }
       const data = await res.json();
       setResult(data.evaluation);
