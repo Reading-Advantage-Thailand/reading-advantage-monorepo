@@ -25,12 +25,9 @@ export default function LessonPage({
 }) {
   const { id } = use(params);
   const t = useTranslations("lesson");
-  const {
-    data: lesson,
-    isLoading,
-    error,
-    refetch,
-  } = trpc.sales.lesson.useQuery({ lessonId: id });
+  const { data: lesson, isLoading, error } = trpc.sales.lesson.useQuery({
+    lessonId: id,
+  });
   const [marked, setMarked] = useState(false);
   const utils = trpc.useUtils();
   const markComplete = trpc.sales.markTheoryLessonComplete.useMutation({
@@ -40,7 +37,6 @@ export default function LessonPage({
         utils.sales.lesson.invalidate({ lessonId: id }),
         utils.sales.dashboard.invalidate(),
       ]);
-      await refetch();
     },
   });
 
