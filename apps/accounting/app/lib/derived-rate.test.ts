@@ -15,10 +15,13 @@ describe("derivedRate", () => {
     // source 2000, settled 1010 → 0.505 → half-up to 0.51
     expect(derivedRate("2000", "1010")).toBe("0.51");
   });
-  it("rejects a non-positive-integer string", () => {
-    expect(() => derivedRate("0", "100")).toThrow();
+  it("returns an empty string for a non-positive source amount", () => {
+    expect(derivedRate("0", "100")).toBe("");
+    expect(derivedRate("-1", "100")).toBe("");
+  });
+  it("rejects a non-positive-integer settled amount", () => {
     expect(() => derivedRate("100", "abc")).toThrow();
-    expect(() => derivedRate("-1", "100")).toThrow();
+    expect(() => derivedRate("100", "0")).toThrow();
   });
   it("preserves trailing zeros in the fraction", () => {
     expect(derivedRate("100", "20000")).toBe("200.00");

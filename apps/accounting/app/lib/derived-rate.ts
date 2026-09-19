@@ -3,15 +3,15 @@
  * Pure display-time helper; never authoritative, never persisted.
  * @param sourceAmountMinor Positive integer source amount in minor units.
  * @param settledThbMinor Positive integer settled THB amount in minor units.
- * @returns The derived rate as a fixed 2dp decimal string (e.g. "34.70").
- * @throws When either input is not a positive integer string.
+ * @returns The derived rate as a fixed 2dp decimal string, or an empty string when the source amount is not positive.
+ * @throws When the settled amount is not a positive integer string.
  */
 export function derivedRate(
   sourceAmountMinor: string,
   settledThbMinor: string,
 ): string {
   if (!/^[1-9][0-9]*$/u.test(sourceAmountMinor)) {
-    throw new Error("sourceAmountMinor must be a positive integer string");
+    return "";
   }
   if (!/^[1-9][0-9]*$/u.test(settledThbMinor)) {
     throw new Error("settledThbMinor must be a positive integer string");
