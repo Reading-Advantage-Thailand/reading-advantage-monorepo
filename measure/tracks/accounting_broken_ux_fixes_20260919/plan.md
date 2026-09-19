@@ -10,4 +10,4 @@
 - [x] Task: Use `buildSignInHref` in the login page. Source: `docs/accounting-ux-refactor-plan.md` §4.2; Issues: `app/lib/sign-in-href.ts`, `app/login/page.tsx:16-18` — 7cff32fbb
 - [x] Task: Export `DEFAULT_ACCOUNTING_ORIGIN` and import it in `proxy.ts`. Source: `docs/accounting-ux-refactor-plan.md` §4.2; Issues: `app/lib/public-url.ts:1`, `proxy.ts:38` — 925852b69
 - [x] Task: Delete the `as string` cast in the reject route. Source: `docs/accounting-ux-refactor-plan.md` §3; Issues: `app/api/submissions/[id]/reject/route.ts:135` — 1e3b2d19e
-- [ ] Task: Replace the `null` Suspense fallback on the login page. Source: `docs/accounting-ux-refactor-plan.md` §4.3; Issues: `app/login/page.tsx:45`
+- [x] Task: Replace the `null` Suspense fallback on the login page. Source: `docs/accounting-ux-refactor-plan.md` §4.3; Issues: `app/login/page.tsx:45` — d4c9b80b4

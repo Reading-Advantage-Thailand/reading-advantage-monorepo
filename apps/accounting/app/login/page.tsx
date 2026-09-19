@@ -25,11 +25,7 @@ function LoginContent() {
   const errorMessage = error ? LOGIN_ERRORS[error] : undefined;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-8">
-      <h1 className="text-3xl font-bold">Accounting sign in</h1>
-      <p className="text-muted-foreground">
-        Use your company account to access the accounting workspace.
-      </p>
+    <>
       {errorMessage ? (
         <p role="alert" className="text-sm font-medium text-red-700">
           {errorMessage}
@@ -38,7 +34,15 @@ function LoginContent() {
       <Button asChild>
         <a href={signInHref}>Sign in with Company SSO</a>
       </Button>
-    </main>
+    </>
+  );
+}
+
+function LoginFallbackButton() {
+  return (
+    <Button asChild>
+      <a href="/api/auth/company/start">Sign in with Company SSO</a>
+    </Button>
   );
 }
 
@@ -48,8 +52,14 @@ function LoginContent() {
  */
 export default function LoginPage() {
   return (
-    <Suspense fallback={null}>
-      <LoginContent />
-    </Suspense>
+    <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-8">
+      <h1 className="text-3xl font-bold">Accounting sign in</h1>
+      <p className="text-muted-foreground">
+        Use your company account to access the accounting workspace.
+      </p>
+      <Suspense fallback={<LoginFallbackButton />}>
+        <LoginContent />
+      </Suspense>
+    </main>
   );
 }
