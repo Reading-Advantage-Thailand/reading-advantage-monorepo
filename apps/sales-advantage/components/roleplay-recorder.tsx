@@ -210,7 +210,10 @@ export function RoleplayRecorder({
 
         {state === "error" && (
           <div className="space-y-3">
-            <div className="rounded-lg border border-destructive bg-destructive/10 p-4 text-sm text-destructive">
+            <div
+              role="alert"
+              className="rounded-lg border border-destructive bg-destructive/10 p-4 text-sm text-destructive"
+            >
               {error}
             </div>
             <Button onClick={reset} variant="outline" className="w-full">
