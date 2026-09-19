@@ -1,0 +1,1 @@
+Task: Add runtime security headers. Added Vinext-compatible headers() rules for API and page responses, with focused configuration coverage. Files: apps/marketing/next.config.ts; apps/marketing/app/__tests__/runtime-headers.test.ts. Focused test passed.
