@@ -41,8 +41,9 @@ function jsonResponse(payload: unknown, status = 200): Response {
 
 describe("Accounts administration console", () => {
   beforeEach(() => {
+    let operationId = 0;
     vi.stubGlobal("crypto", {
-      randomUUID: () => "operation-00000000-0000-4000-8000-000000000001",
+      randomUUID: () => `operation-${++operationId}`,
     });
   });
 
@@ -114,5 +115,132 @@ describe("Accounts administration console", () => {
         status: "SUSPENDED",
       });
     });
+  });
+
+  it("reuses a create key while pending and clears it after success", async () => {
+    const postResponses: Array<(response: Response) => void> = [];
+    const fetchMock = vi.fn(
+      (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (url === "/api/admin/employees" && (init?.method ?? "GET") === "GET") {
+          return Promise.resolve(jsonResponse({ employees: [admin] }));
+        }
+        return new Promise<Response>((resolve) => postResponses.push(resolve));
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<AccountsConsole employee={admin} />);
+    await screen.findByRole("heading", { name: "Directory" });
+    const form = screen.getByRole("button", { name: /create identity/i }).closest("form");
+    if (!form) throw new Error("Create form was not rendered.");
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Display name" }), {
+      target: { value: "New Employee" },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Username" }), {
+      target: { value: "new-employee" },
+    });
+    fireEvent.change(screen.getByLabelText("Initial password"), {
+      target: { value: "long-enough-password" },
+    });
+    fireEvent.submit(form);
+    fireEvent.submit(form);
+
+    await waitFor(() => expect(postResponses).toHaveLength(2));
+    const createCalls = fetchMock.mock.calls.filter(([url, options]) =>
+      String(url) === "/api/admin/employees" && options?.method === "POST",
+    );
+    const firstKey = JSON.parse(String(createCalls[0]?.[1]?.body)).idempotencyKey;
+    const secondKey = JSON.parse(String(createCalls[1]?.[1]?.body)).idempotencyKey;
+    expect(secondKey).toBe(firstKey);
+
+    postResponses.shift()?.(jsonResponse({ employee: admin }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(4));
+    postResponses.shift()?.(jsonResponse({ employee: admin }));
+    await waitFor(() => expect(screen.getByText(/Employee created\./)).toBeInTheDocument());
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Display name" }), {
+      target: { value: "Another Employee" },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Username" }), {
+      target: { value: "another-employee" },
+    });
+    fireEvent.change(screen.getByLabelText("Initial password"), {
+      target: { value: "another-long-password" },
+    });
+    fireEvent.submit(form);
+    await waitFor(() => expect(postResponses).toHaveLength(1));
+    const nextCreateCall = fetchMock.mock.calls.at(-1);
+    const nextKey = JSON.parse(String(nextCreateCall?.[1]?.body)).idempotencyKey;
+    expect(nextKey).not.toBe(firstKey);
+  });
+
+  it("disables a role checkbox while its update is pending", async () => {
+    let resolveRole: (response: Response) => void = () => undefined;
+    const roleResponse = new Promise<Response>((resolve) => { resolveRole = resolve; });
+    const fetchMock = vi.fn(
+      (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (url === "/api/admin/employees" && (init?.method ?? "GET") === "GET") {
+          return Promise.resolve(jsonResponse({ employees: [admin] }));
+        }
+        if (url.endsWith("/roles")) return roleResponse;
+        return Promise.resolve(jsonResponse({ employee: admin }));
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<AccountsConsole employee={admin} />);
+    await screen.findByRole("heading", { name: "Directory" });
+    const roleCheckbox = screen.getByRole("checkbox", { name: "SALES_REP" });
+
+    fireEvent.click(roleCheckbox);
+    expect(roleCheckbox).toBeDisabled();
+
+    resolveRole(jsonResponse({ employee: admin }));
+    await waitFor(() => expect(roleCheckbox).not.toBeDisabled());
+  });
+
+  it("scopes role idempotency keys to the employee and role control", async () => {
+    const roleResponses: Array<(response: Response) => void> = [];
+    const fetchMock = vi.fn(
+      (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (url === "/api/admin/employees" && (init?.method ?? "GET") === "GET") {
+          return Promise.resolve(jsonResponse({ employees: [admin] }));
+        }
+        if (url.endsWith("/roles")) {
+          return new Promise<Response>((resolve) => roleResponses.push(resolve));
+        }
+        return Promise.resolve(jsonResponse({ employee: admin }));
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<AccountsConsole employee={admin} />);
+    await screen.findByRole("heading", { name: "Directory" });
+    const salesRep = screen.getByRole("checkbox", { name: "SALES_REP" });
+    const marketingMember = screen.getByRole("checkbox", { name: "MEMBER" });
+
+    fireEvent.click(salesRep);
+    await waitFor(() => expect(roleResponses).toHaveLength(1));
+    const roleCalls = () => fetchMock.mock.calls.filter(([url]) => String(url).endsWith("/roles"));
+    const firstKey = JSON.parse(String(roleCalls()[0]?.[1]?.body)).idempotencyKey;
+    roleResponses.shift()?.(jsonResponse({ message: "temporary failure" }, 500));
+    await waitFor(() => expect(salesRep).not.toBeDisabled());
+
+    fireEvent.click(salesRep);
+    await waitFor(() => expect(roleResponses).toHaveLength(1));
+    const retryKey = JSON.parse(String(roleCalls()[1]?.[1]?.body)).idempotencyKey;
+    expect(retryKey).toBe(firstKey);
+
+    fireEvent.click(marketingMember);
+    await waitFor(() => expect(roleResponses).toHaveLength(2));
+    const otherRoleKey = JSON.parse(String(roleCalls()[2]?.[1]?.body)).idempotencyKey;
+    expect(otherRoleKey).not.toBe(firstKey);
+    roleResponses.shift()?.(jsonResponse({ employee: admin }));
+    roleResponses.shift()?.(jsonResponse({ employee: admin }));
+    await waitFor(() => expect(screen.getByText(/roles updated/i)).toBeInTheDocument());
   });
 });

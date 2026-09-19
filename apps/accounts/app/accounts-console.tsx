@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 
 import type { Employee } from "@reading-advantage/backend";
 
@@ -43,6 +43,16 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
   const [selectedId, setSelectedId] = useState(employee.id);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
+  const [pendingId, setPendingId] = useState<string | null>(null);
+  const operationKeysRef = useRef<Record<string, string | null>>({});
+
+  function getOperationKey(prefix: string): string {
+    return operationKeysRef.current[prefix] ?? (operationKeysRef.current[prefix] = operationKey(prefix));
+  }
+
+  function clearOperationKey(prefix: string): void {
+    operationKeysRef.current[prefix] = null;
+  }
 
   const refresh = useCallback(async () => {
     if (!isAdmin) return;
@@ -72,25 +82,30 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
         appRoles: provisioning
           ? { [provisioning.applicationKey]: [provisioning.roleKey] }
           : {},
-        idempotencyKey: operationKey("employee-create"),
+        idempotencyKey: getOperationKey("employee-create"),
       });
       formElement.reset();
+      clearOperationKey("employee-create");
       setNotice("Employee created. The initial credential was not retained in this view.");
       setError("");
       await refresh();
     } catch (caught) { setError((caught as Error).message); }
   }
 
-  async function setRoles(applicationKey: string, roleKeys: string[]) {
+  async function setRoles(applicationKey: string, roleKeys: string[], roleId: string) {
     if (!selected) return;
+    const operationKeyPrefix = `role-change:${selected.id}:${roleId}`;
+    setPendingId(roleId);
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/roles`, "PUT", {
-        applicationKey, roleKeys, idempotencyKey: operationKey("role-change"),
+        applicationKey, roleKeys, idempotencyKey: getOperationKey(operationKeyPrefix),
       });
+      clearOperationKey(operationKeyPrefix);
       setNotice(`${applicationKey} roles updated without changing other applications.`);
       setError("");
       await refresh();
     } catch (caught) { setError((caught as Error).message); }
+    finally { setPendingId(null); }
   }
 
   async function setCompanyAdmin(enabled: boolean) {
@@ -103,8 +118,9 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/company-roles`, "PUT", {
         roleKeys: enabled ? ["EMPLOYEE", "COMPANY_ADMIN"] : ["EMPLOYEE"],
-        idempotencyKey: operationKey("company-role-change"),
+        idempotencyKey: getOperationKey("company-role-change"),
       });
+      clearOperationKey("company-role-change");
       setNotice("Company authority updated without changing product access.");
       setError("");
       await refresh();
@@ -118,8 +134,9 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
     )) return;
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/status`, "PATCH", {
-        status, idempotencyKey: operationKey("status-change"),
+        status, idempotencyKey: getOperationKey("status-change"),
       });
+      clearOperationKey("status-change");
       setNotice(status === "SUSPENDED" ? "Employee suspended and active sessions revoked." : "Employee restored.");
       setError("");
       await refresh();
@@ -136,9 +153,10 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
     )) return;
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/credential`, "PUT", {
-        newPassword: value, idempotencyKey: operationKey("credential-reset"),
+        newPassword: value, idempotencyKey: getOperationKey("credential-reset"),
       });
       formElement.reset();
+      clearOperationKey("credential-reset");
       setNotice("Credential replaced and all sessions revoked. The password is no longer displayed.");
       setError("");
     } catch (caught) { setError((caught as Error).message); }
@@ -151,8 +169,9 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
     )) return;
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/sessions`, "DELETE", {
-        idempotencyKey: operationKey("session-revoke"),
+        idempotencyKey: getOperationKey("session-revoke"),
       });
+      clearOperationKey("session-revoke");
       setNotice("All Accounts and application sessions were revoked.");
       setError("");
     } catch (caught) { setError((caught as Error).message); }
@@ -243,10 +262,11 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
                     <legend><a href={app.href}>{app.label} ↗</a></legend>
                     {app.roles.map((role) => {
                       const checked = selected.appRoles[app.key]?.includes(role) ?? false;
+                      const roleId = `${app.key}:${role}`;
                       return <label key={role} className="role-check">
-                        <input type="checkbox" checked={checked} onChange={() => {
+                        <input type="checkbox" checked={checked} disabled={pendingId === roleId} onChange={() => {
                           const existing = selected.appRoles[app.key] ?? [];
-                          void setRoles(app.key, checked ? existing.filter((item) => item !== role) : [...existing, role]);
+                          void setRoles(app.key, checked ? existing.filter((item) => item !== role) : [...existing, role], roleId);
                         }} />
                         <span>{role}</span>
                       </label>;
