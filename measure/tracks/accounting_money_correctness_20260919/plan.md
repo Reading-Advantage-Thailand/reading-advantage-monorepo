@@ -7,4 +7,4 @@
 - [x] (8aa186aed) Task: Format review list amounts as currency, not as minor units. Source: `docs/accounting-ux-refactor-plan.md` §2.4; Issues: `app/_components/pending-submissions-list.tsx:238,244`
 - [x] (022bd294d) Task: Convert `submittedAt` to the business time zone in the export filter. Source: `docs/accounting-ux-refactor-plan.md` §2.3; Issues: `app/api/submissions/export/route.ts:78,107`, `packages/backend/src/modules/accounting/postgres-submission-repository.ts:57-58`
 - [x] (022bd294d) Task: Replace the offset test fixture with a UTC fixture at the day boundary. Source: `docs/accounting-ux-refactor-plan.md` §2.3; Issues: `app/api/submissions/export/route.test.ts:100,232`
-- [ ] Task: Add a major-unit preview under the submission form amount field. Source: `docs/accounting-ux-refactor-plan.md` §2.4; Issues: `app/_components/new-submission-form.tsx:356,378`
+- [x] (b986e0595) Task: Add a major-unit preview under the submission form amount field. Source: `docs/accounting-ux-refactor-plan.md` §2.4; Issues: `app/_components/new-submission-form.tsx:356,378`
