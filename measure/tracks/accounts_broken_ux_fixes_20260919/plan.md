@@ -2,7 +2,7 @@
 
 ## Phase 1: Broken UX Fixes
 
-- [ ] Task: Reject a backslash in the `returnTo` check in `app/page.tsx`. Source: `docs/accounts-ux-refactor-plan.md` §3.1; Issues: `app/page.tsx:15-17`
+- [x] Task: Reject a backslash in the `returnTo` check in `app/page.tsx`. Source: `docs/accounts-ux-refactor-plan.md` §3.1; Issues: `app/page.tsx:15-17` — 8bb06d57e
 - [ ] Task: Wrap the sign-in fetch in `try` and `finally`. Source: `docs/accounts-ux-refactor-plan.md` §3.2; Issues: `app/sign-in-panel.tsx:15-26`
 - [ ] Task: Wrap `logout` in `try` and `catch`. Source: `docs/accounts-ux-refactor-plan.md` §4.2; Issues: `app/accounts-console.tsx:153-172`
 - [ ] Task: Clear `error` at the start of each console handler. Source: `docs/accounts-ux-refactor-plan.md` §4.2; Issues: `app/accounts-console.tsx:135-175`

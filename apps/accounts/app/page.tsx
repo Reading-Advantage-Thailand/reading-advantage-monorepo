@@ -13,6 +13,7 @@ export default async function AccountsPage(props: {
 }) {
   const [employee, search] = await Promise.all([currentEmployee(), props.searchParams]);
   const returnTo = search.returnTo?.startsWith("/") && !search.returnTo.startsWith("//")
+    && !search.returnTo.includes("\\")
     ? search.returnTo
     : "/";
   const provisioning =
