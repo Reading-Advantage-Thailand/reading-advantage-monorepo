@@ -155,10 +155,14 @@ export default function CampaignsPage() {
         >
           <h2>{t("campaigns.newCampaign")}</h2>
           <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", marginBottom: "4px" }}>
+            <label
+              htmlFor="marketing-campaign-type"
+              style={{ display: "block", marginBottom: "4px" }}
+            >
               {t("campaigns.type")}
             </label>
             <select
+              id="marketing-campaign-type"
               value={newCampaign.type}
               onChange={(e) =>
                 setNewCampaign({
@@ -178,10 +182,14 @@ export default function CampaignsPage() {
             </select>
           </div>
           <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", marginBottom: "4px" }}>
+            <label
+              htmlFor="marketing-campaign-app"
+              style={{ display: "block", marginBottom: "4px" }}
+            >
               {t("campaigns.app")}
             </label>
             <select
+              id="marketing-campaign-app"
               value={newCampaign.app}
               onChange={(e) =>
                 setNewCampaign({ ...newCampaign, app: e.target.value })
@@ -201,10 +209,14 @@ export default function CampaignsPage() {
             </select>
           </div>
           <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", marginBottom: "4px" }}>
+            <label
+              htmlFor="marketing-campaign-name"
+              style={{ display: "block", marginBottom: "4px" }}
+            >
               {t("campaigns.name")}
             </label>
             <input
+              id="marketing-campaign-name"
               type="text"
               value={newCampaign.name}
               onChange={(e) =>

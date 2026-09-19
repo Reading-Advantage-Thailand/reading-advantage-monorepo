@@ -282,11 +282,13 @@ export default function SettingsPage() {
 
         <div style={{ marginBottom: "16px" }}>
           <label
+            htmlFor="marketing-settings-provider"
             style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}
           >
             {t("settings.provider")}
           </label>
           <select
+            id="marketing-settings-provider"
             value={provider}
             onChange={(e) => {
               const nextProvider = e.target.value;
@@ -310,11 +312,13 @@ export default function SettingsPage() {
 
         <div style={{ marginBottom: "16px" }}>
           <label
+            htmlFor="marketing-settings-model"
             style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}
           >
             {t("settings.modelName")}
           </label>
           <input
+            id="marketing-settings-model"
             type="text"
             value={modelName}
             onChange={(e) => setModelName(e.target.value)}
@@ -330,6 +334,7 @@ export default function SettingsPage() {
 
         <div style={{ marginBottom: "16px" }}>
           <label
+            htmlFor="marketing-settings-api-key"
             style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}
           >
             {t("settings.apiKey")}{" "}
@@ -346,6 +351,7 @@ export default function SettingsPage() {
             )}
           </label>
           <input
+            id="marketing-settings-api-key"
             type="password"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
@@ -370,11 +376,13 @@ export default function SettingsPage() {
 
         <div style={{ marginBottom: "16px" }}>
           <label
+            htmlFor="marketing-settings-mmx-path"
             style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}
           >
             {t("settings.mmxPath")}
           </label>
           <input
+            id="marketing-settings-mmx-path"
             type="text"
             value={mmxPath}
             onChange={(e) => setMmxPath(e.target.value)}
