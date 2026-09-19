@@ -1,0 +1,9 @@
+Task: Revoke every blob URL in reset and on unmount.
+
+Summary: Tracked the owned recording URL, revoked it during reset and unmount, and prevented duplicate revocation. Added reset and unmount tests.
+
+Files: apps/sales-advantage/components/roleplay-recorder.tsx; apps/sales-advantage/components/roleplay-recorder.test.tsx
+
+Why: Each retry leaked a browser blob URL.
+
+Verification: focused recorder tests passed (6 tests); agent type check and lint passed.
