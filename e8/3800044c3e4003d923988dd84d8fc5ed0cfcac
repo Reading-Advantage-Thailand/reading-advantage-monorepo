@@ -1,0 +1,9 @@
+Task: Add a readJson guard around response.json().
+
+Summary: Guarded JSON parsing for malformed and empty responses. Preserved valid server messages and added fallback coverage.
+
+Files: apps/accounts/app/accounts-console.tsx; apps/accounts/app/accounts-console.test.tsx
+
+Why: Non-JSON failures previously threw a parsing error that hid the operation message.
+
+Verification: focused Accounts console tests passed (9 tests); agent type checks and lint passed.
