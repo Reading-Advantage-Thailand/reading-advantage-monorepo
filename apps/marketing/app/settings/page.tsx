@@ -52,7 +52,10 @@ export default function SettingsPage() {
       );
       return;
     }
-    if (role !== "ADMIN") return;
+    if (role !== "ADMIN") {
+      setLoading(false);
+      return;
+    }
 
     async function loadSettings() {
       try {
