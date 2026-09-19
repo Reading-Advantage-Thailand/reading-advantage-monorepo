@@ -1,0 +1,9 @@
+Tasks: Add the currency exponent to derivedRate through Intl.NumberFormat. Pass the currency at both derivedRate call sites.
+
+Summary: Made rate calculations aware of ISO currency exponents. Passed each submission currency from the review list and CSV export. Added USD, JPY, and KWD regression coverage.
+
+Files: apps/accounting/app/lib/derived-rate.ts; apps/accounting/app/lib/derived-rate.test.ts; apps/accounting/app/api/submissions/export/route.ts; apps/accounting/app/api/submissions/export/route.test.ts; apps/accounting/app/_components/pending-submissions-list.tsx; apps/accounting/app/_components/pending-submissions-list.test.tsx
+
+Why: Source amounts use currency-specific minor units. A fixed two-digit exponent produced incorrect rates for currencies such as JPY and KWD.
+
+Verification: CI=true pnpm exec vitest run app/lib/derived-rate.test.ts app/api/submissions/export/route.test.ts app/_components/pending-submissions-list.test.tsx (30 passed); accounting type check passed.
