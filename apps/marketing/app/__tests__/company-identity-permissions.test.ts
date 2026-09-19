@@ -158,7 +158,6 @@ describe("Marketing protected-route permission inventory", () => {
     const publicHandlers = new Set<RouteHandlerKey>([
       "GET /api/auth/callback",
       "GET /api/auth/company/start",
-      "POST /api/auth/login",
       "POST /api/auth/logout",
       "GET /api/auth/session",
       "GET /api/health/db",

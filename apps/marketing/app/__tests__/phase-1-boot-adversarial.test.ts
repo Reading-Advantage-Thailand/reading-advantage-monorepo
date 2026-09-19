@@ -103,20 +103,6 @@ describe("Phase 1 Adversarial: Vinext Scaffold hardening", () => {
     });
   });
 
-  describe("Retired product-local login boundary", () => {
-    it("login route refuses local credentials and points only to Accounts", async () => {
-      const src = stripComments(
-        readText("app/api/auth/login/route.ts"),
-      );
-      expect(src).not.toMatch(/request\.json\(\)/);
-      expect(src).not.toMatch(/z\.object\(/);
-      expect(src).not.toMatch(/safeParse/);
-      expect(src).not.toMatch(/handleLogin|password|username/);
-      expect(src).toContain("/api/auth/company/start");
-      expect(src).toMatch(/status:\s*409/);
-    });
-  });
-
   describe("Substring-assertion hardening (lib/*.ts)", () => {
     it("app/lib/db.ts has a REAL export of `db`, not a comment", () => {
       const raw = readText("app/lib/db.ts");

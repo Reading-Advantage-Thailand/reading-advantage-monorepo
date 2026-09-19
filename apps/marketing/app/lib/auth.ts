@@ -15,7 +15,6 @@
  * defers per-row scoping to a follow-up cycle if `schoolId`/`ownerId`
  * columns are added to the marketing tables.
  */
-import type { Role } from "@reading-advantage/auth";
 
 import {
   getMarketingOidcClient,
@@ -27,17 +26,6 @@ import {
   hasMarketingPermission,
   type MarketingPermission,
 } from "./marketing-permissions";
-
-const LEGACY_MARKETING_ROLES: ReadonlySet<Role> = new Set(["ADMIN"]);
-
-/**
- * Reports whether a shared-auth role may use the interim Marketing boundary.
- * @param role The authenticated shared role to evaluate.
- * @returns Whether the role is explicitly admitted before company-identity cutover.
- */
-export function hasLegacyMarketingAccess(role: Role): boolean {
-  return LEGACY_MARKETING_ROLES.has(role);
-}
 
 /**
  * Requires an active Accounts-issued Marketing MEMBER or ADMIN session.

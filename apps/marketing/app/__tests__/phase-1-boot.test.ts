@@ -145,7 +145,6 @@ describe("Phase 1: Vinext Scaffold + Monorepo Integration boot smoke", () => {
 
   describe("Auth API routes (Phase 1 task 3 sub-contract)", () => {
     it.each([
-      ["@/api/auth/login/route", "POST"],
       ["@/api/auth/logout/route", "POST"],
       ["@/api/auth/session/route", "GET"],
     ])(
@@ -163,15 +162,6 @@ describe("Phase 1: Vinext Scaffold + Monorepo Integration boot smoke", () => {
       },
       30000,
     );
-
-    it("login route retires product-local credentials and directs callers to Accounts", () => {
-      const route = readText(
-        resolve(APP_ROOT, "app/api/auth/login/route.ts"),
-      );
-      expect(route).toContain("/api/auth/company/start");
-      expect(route).toMatch(/status:\s*409/);
-      expect(route).not.toMatch(/handleLogin|@reading-advantage\/api\/routes\/auth/);
-    });
 
     it("session route resolves the host-only token through Accounts introspection", () => {
       const route = readText(

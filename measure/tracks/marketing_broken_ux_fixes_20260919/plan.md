@@ -10,5 +10,5 @@
 - [x] (3d85d0fa3) Task: Add `aria-label` to the two scene move buttons. Source: `docs/marketing-ux-refactor-plan.md` §3.1; Issues: `app/campaigns/[id]/video/page.tsx:792,809`
 - [x] (f5038cb80) Task: Import `nextCampaignStatuses` in `app/campaigns/[id]/page.tsx` and delete the inline copy. Source: `docs/marketing-ux-refactor-plan.md` §5; Issues: `app/campaigns/[id]/page.tsx:23-28`, `app/lib/campaign-status.ts:3-8`
 - [x] (55f6490f6) Task: Add `.next` to `.gitignore` and to the `tsconfig.json` exclude list. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `tsconfig.json:12-13`, stale `.next/types/` directory
-- [x] Task: Clear `loading` in the settings early-return branch. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/settings/page.tsx:53`
-- [ ] Task: Delete `app/api/auth/login/route.ts` and `hasLegacyMarketingAccess`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/api/auth/login/route.ts`, `app/lib/auth.ts:31,38-40`
+- [x] (b54d74329) Task: Clear `loading` in the settings early-return branch. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/settings/page.tsx:53`
+- [x] Task: Delete `app/api/auth/login/route.ts` and `hasLegacyMarketingAccess`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/api/auth/login/route.ts`, `app/lib/auth.ts:31,38-40`
