@@ -233,7 +233,7 @@ describe("NewSubmissionForm", () => {
     expect(secondKey).toBe(firstKey);
   });
 
-  it("keeps the idempotency key after a conflict so the next attempt remains a conflict", async () => {
+  it("generates a new idempotency key after a conflict", async () => {
     fetchMock
       .mockResolvedValueOnce(
         jsonResponse(
@@ -259,7 +259,7 @@ describe("NewSubmissionForm", () => {
 
     fireEvent.submit(form);
     const conflictMessage =
-      "This submission conflicts with an earlier request. Reload the page to start a separate submission.";
+      "This submission conflicts with an earlier request. Submit again to start a separate submission.";
     expect(
       await screen.findByRole("alert", { name: conflictMessage }),
     ).toBeInTheDocument();
@@ -274,7 +274,7 @@ describe("NewSubmissionForm", () => {
     const secondKey = (secondRequest.headers as Record<string, string>)[
       "idempotency-key"
     ];
-    expect(secondKey).toBe(firstKey);
+    expect(secondKey).not.toBe(firstKey);
     expect(
       screen.getByRole("alert", { name: conflictMessage }),
     ).toBeInTheDocument();

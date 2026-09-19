@@ -6,7 +6,7 @@
 - [x] Task: Accept an HTTP loopback origin in `configuredOrigin` outside production. Source: `docs/accounting-ux-refactor-plan.md` §4.1; Issues: `app/lib/public-url.ts:28-45,87-94`, `packages/auth/src/company-identity/environment.ts:145-160` — 2b3519e06
 - [x] Task: Return an empty string from `derivedRate` for a non-positive source amount. Source: `docs/accounting-ux-refactor-plan.md` §2.2; Issues: `app/lib/derived-rate.ts:13-18`, `packages/backend/src/modules/finance-operations/contracts.ts:5` — 5405aeae5
 - [x] Task: Call `router.refresh()` after an approval and after a rejection. Source: `docs/accounting-ux-refactor-plan.md` §5; Issues: `app/_components/pending-submissions-list.tsx:110-123` — 4e35807c4
-- [ ] Task: Clear `idempotencyKeyRef` in the 409 branch of the submission form. Source: `docs/accounting-ux-refactor-plan.md` §5; Issues: `app/_components/new-submission-form.tsx:234-240`
+- [x] Task: Clear `idempotencyKeyRef` in the 409 branch of the submission form. Source: `docs/accounting-ux-refactor-plan.md` §5; Issues: `app/_components/new-submission-form.tsx:234-240` — 60f36deac
 - [ ] Task: Use `buildSignInHref` in the login page. Source: `docs/accounting-ux-refactor-plan.md` §4.2; Issues: `app/lib/sign-in-href.ts`, `app/login/page.tsx:16-18`
 - [ ] Task: Export `DEFAULT_ACCOUNTING_ORIGIN` and import it in `proxy.ts`. Source: `docs/accounting-ux-refactor-plan.md` §4.2; Issues: `app/lib/public-url.ts:1`, `proxy.ts:38`
 - [ ] Task: Delete the `as string` cast in the reject route. Source: `docs/accounting-ux-refactor-plan.md` §3; Issues: `app/api/submissions/[id]/reject/route.ts:135`
