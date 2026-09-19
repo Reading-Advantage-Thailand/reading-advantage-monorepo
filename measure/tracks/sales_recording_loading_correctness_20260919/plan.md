@@ -5,7 +5,7 @@
 - [x] (86d2583a8) Task: Select the recording type with `MediaRecorder.isTypeSupported`. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:56`
 - [x] (9297803ed) Task: Separate the device error from the permission error in `startRecording`. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:72-75`
 - [x] (2019e81cb) Task: Revoke every blob URL in `reset()` and on unmount. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:63,113-120`
-- [ ] Task: Stop the recorder and every microphone track on unmount. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:89-90`
+- [x] (916b60623) Task: Stop the recorder and every microphone track on unmount. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:89-90`
 - [ ] Task: Move `retentionDays` to the server. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:92`, `app/api/roleplay-attempts/route.ts:144-162`
 - [ ] Task: Report a failed audio upload to the user. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `app/api/roleplay-attempts/route.ts:194-205,251`
 - [ ] Task: Add `isLoading` and `error` branches to the admin curriculum page. Source: `docs/sales-advantage-ux-refactor-plan.md` §5; Issues: `app/[locale]/admin/curriculum/page.tsx:20`, `app/[locale]/admin/page.tsx:45-56`

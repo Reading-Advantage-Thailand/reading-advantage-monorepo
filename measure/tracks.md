@@ -19,7 +19,7 @@ This file tracks all major tracks for the project.
   Repair the broken user-experience items from the Sales Advantage UX audit.
 - [ ] **Track: Sales Advantage Session Contract Correctness** *Link: [./tracks/sales_session_contract_correctness_20260919/](./tracks/sales_session_contract_correctness_20260919/)*
   Separate anonymous sessions from forbidden Sales identities in the session contract.
-- [ ] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
+- [~] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
   Repair recording cleanup, upload errors, loading states, and request cancellation.
 - [ ] **Track: Sales Advantage Duplication Removal** *Link: [./tracks/sales_duplication_removal_20260919/](./tracks/sales_duplication_removal_20260919/)*
   Remove duplicated helpers, tests, dependencies, messages, and unused theme code.
@@ -28,7 +28,7 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: Accounts Broken UX Fixes** *Link: [./tracks/accounts_broken_ux_fixes_20260919/](./tracks/accounts_broken_ux_fixes_20260919/)*
   Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures.
-- [ ] **Track: Accounts Console Write Correctness** *Link: [./tracks/accounts_console_write_correctness_20260919/](./tracks/accounts_console_write_correctness_20260919/)*
+- [~] **Track: Accounts Console Write Correctness** *Link: [./tracks/accounts_console_write_correctness_20260919/](./tracks/accounts_console_write_correctness_20260919/)*
   Make console writes idempotent, pending-aware, refresh-safe, and resistant to lost role updates.
 - [ ] **Track: Accounts Loading State Correctness** *Link: [./tracks/accounts_loading_state_correctness_20260919/](./tracks/accounts_loading_state_correctness_20260919/)*
   Distinguish directory loading, empty, failed, malformed-input, and readiness states.
@@ -39,7 +39,7 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: Accounting Broken UX Fixes** *Link: [./tracks/accounting_broken_ux_fixes_20260919/](./tracks/accounting_broken_ux_fixes_20260919/)*
   Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects.
-- [ ] **Track: Accounting Money Correctness** *Link: [./tracks/accounting_money_correctness_20260919/](./tracks/accounting_money_correctness_20260919/)*
+- [~] **Track: Accounting Money Correctness** *Link: [./tracks/accounting_money_correctness_20260919/](./tracks/accounting_money_correctness_20260919/)*
   Correct currency exponents, date zones, minor-unit display, and major-unit previews.
 - [ ] **Track: Accounting Loading State Correctness** *Link: [./tracks/accounting_loading_state_correctness_20260919/](./tracks/accounting_loading_state_correctness_20260919/)*
   Add error recovery, server-side pending filtering, and export date controls.
@@ -52,7 +52,7 @@ This file tracks all major tracks for the project.
   Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code.
 - [ ] **Track: Marketing Runtime Header Correctness** *Link: [./tracks/marketing_runtime_header_correctness_20260919/](./tracks/marketing_runtime_header_correctness_20260919/)*
   Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating.
-- [ ] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
+- [~] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
   Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior.
 - [ ] **Track: Marketing Duplication Removal** *Link: [./tracks/marketing_duplication_removal_20260919/](./tracks/marketing_duplication_removal_20260919/)*
   Remove duplicated authentication, application, campaign, AI, health, status, and navigation code.
