@@ -232,7 +232,7 @@ describe("PendingSubmissionsList", () => {
     expect(screen.queryByRole("button", { name: /reject/i })).not.toBeInTheDocument();
   });
 
-  it("does not render approved or rejected submissions in the pending list", () => {
+  it("renders the submissions supplied by the server", () => {
     render(
       <PendingSubmissionsList
         submissions={[
@@ -245,8 +245,8 @@ describe("PendingSubmissionsList", () => {
     );
 
     expect(screen.getByText("Bangkok Taxi Cooperative")).toBeInTheDocument();
-    expect(screen.queryByText("Approved Vendor")).not.toBeInTheDocument();
-    expect(screen.queryByText("Rejected Vendor")).not.toBeInTheDocument();
+    expect(screen.getByText("Approved Vendor")).toBeInTheDocument();
+    expect(screen.getByText("Rejected Vendor")).toBeInTheDocument();
   });
 
   it("does not render a derived rate cell for a THB submission", () => {

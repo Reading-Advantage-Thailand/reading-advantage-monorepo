@@ -150,4 +150,21 @@ describe("HomePage", () => {
     ).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /approve/i })).not.toBeInTheDocument();
   });
+
+  it("passes only pending submissions to the client list", async () => {
+    mocks.listAccountingSubmissions.mockResolvedValue([
+      pendingSubmission,
+      {
+        ...pendingSubmission,
+        id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+        status: "approved",
+        payee: "Approved Vendor",
+      },
+    ]);
+
+    render(await HomePage());
+
+    expect(screen.getByText("Bangkok Taxi Cooperative")).toBeInTheDocument();
+    expect(screen.queryByText("Approved Vendor")).not.toBeInTheDocument();
+  });
 });

@@ -2,13 +2,23 @@ import type { JSX } from "react";
 import { accountingSessionUser } from "@/app/lib/company-oidc";
 import { getAccountingSessionOrRedirect } from "@/app/lib/auth";
 import { listAccountingSubmissions } from "@/app/lib/submissions";
-import type { AccountingActor } from "@reading-advantage/backend/accounting";
+import type {
+  AccountingActor,
+  AccountingSubmission,
+} from "@reading-advantage/backend/accounting";
 import { NewSubmissionForm } from "./_components/new-submission-form";
 import { PendingSubmissionsList } from "./_components/pending-submissions-list";
 
 type AccountingSessionUser = NonNullable<
   ReturnType<typeof accountingSessionUser>
 >;
+
+/** Returns only pending submissions for the client review list. */
+function pendingOnly(
+  submissions: readonly AccountingSubmission[],
+): readonly AccountingSubmission[] {
+  return submissions.filter((submission) => submission.status === "pending");
+}
 
 /**
  * Maps the session user to a domain actor.
@@ -45,7 +55,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <NewSubmissionForm />
-          <PendingSubmissionsList submissions={submissions} actorRole={actor.role} />
+          <PendingSubmissionsList submissions={pendingOnly(submissions)} actorRole={actor.role} />
         </div>
       </div>
     </main>

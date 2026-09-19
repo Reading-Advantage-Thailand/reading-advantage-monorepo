@@ -96,13 +96,6 @@ function actionErrorMessage(status: number, body: unknown): string {
   return messageFromBody(body, "We could not update this submission.");
 }
 
-/** Returns only pending submissions from a visible list. */
-function pendingOnly(
-  submissions: readonly AccountingSubmission[],
-): readonly AccountingSubmission[] {
-  return submissions.filter((submission) => submission.status === "pending");
-}
-
 /**
  * Renders pending submissions for the signed-in accounting actor.
  * @param props Visible submissions and the actor role.
@@ -113,7 +106,7 @@ export function PendingSubmissionsList({
   actorRole,
 }: PendingSubmissionsListProps): JSX.Element {
   const [submissions, setSubmissions] = useState<readonly AccountingSubmission[]>(
-    () => pendingOnly(submissionsProp),
+    submissionsProp,
   );
   const [actionMessage, setActionMessage] = useState<ActionMessage | null>(null);
   const [actingId, setActingId] = useState<string | null>(null);
@@ -122,7 +115,7 @@ export function PendingSubmissionsList({
   const router = useRouter();
 
   useEffect(() => {
-    setSubmissions(pendingOnly(submissionsProp));
+    setSubmissions(submissionsProp);
   }, [submissionsProp]);
 
   const canExport = actorRole === "OWNER" || actorRole === "ACCOUNTANT";
