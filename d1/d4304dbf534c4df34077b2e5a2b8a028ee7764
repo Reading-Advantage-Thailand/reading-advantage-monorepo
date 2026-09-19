@@ -1,0 +1,9 @@
+Task: Make the topic editor a controlled input with a Save button.
+
+Summary: Replaced blur-based uncontrolled editing with controlled topic text and an explicit save action. Preserved topic behavior and added an interaction test.
+
+Files: apps/marketing/app/campaigns/[id]/video/page.tsx; apps/marketing/app/__tests__/phase-2-topic-editor.test.tsx
+
+Why: Blur-save behavior could lose edits and gave no clear commit action.
+
+Verification: focused editor test passed; agent targeted tests, i18n tests, type check, and lint passed.
