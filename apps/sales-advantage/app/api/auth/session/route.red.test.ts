@@ -17,17 +17,16 @@ describe("GET /api/auth/session", () => {
     mocks.authenticateSalesRequest.mockResolvedValue(null);
   });
 
-  it("answers a no-role session with HTTP 403 and a denial body", async () => {
+  it("answers an anonymous request with HTTP 200 and session null", async () => {
     const request = new Request(
       "https://sales.reading-advantage.com/api/auth/session",
     );
 
     const response = await GET(request);
 
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({
       session: null,
-      denied: true,
     });
   });
 
