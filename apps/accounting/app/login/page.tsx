@@ -4,6 +4,8 @@ import { Button } from "@reading-advantage/ui";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
+import { buildSignInHref } from "@/app/lib/sign-in-href";
+
 const LOGIN_ERRORS: Readonly<Record<string, string>> = {
   forbidden: "Your company account does not have access to Accounting.",
   sso: "Company sign-in failed. Try signing in again.",
@@ -13,8 +15,12 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const returnTo = searchParams?.get("returnTo");
   const error = searchParams?.get("error");
+  const queryIndex = returnTo?.indexOf("?") ?? -1;
   const signInHref = returnTo
-    ? `/api/auth/company/start?${new URLSearchParams({ returnTo }).toString()}`
+    ? buildSignInHref(
+        queryIndex === -1 ? returnTo : returnTo.slice(0, queryIndex),
+        queryIndex === -1 ? "" : returnTo.slice(queryIndex),
+      )
     : "/api/auth/company/start";
   const errorMessage = error ? LOGIN_ERRORS[error] : undefined;
 
