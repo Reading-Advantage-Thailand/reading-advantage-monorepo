@@ -1,0 +1,9 @@
+Task: Change the four topic handlers to the functional state form.
+
+Summary: Converted approve, reject, edit, and save handlers to functional topic updates. Preserved topic order and selection behavior.
+
+Files: apps/marketing/app/campaigns/[id]/video/page.tsx; apps/marketing/app/__tests__/phase-2-topic-functional-state.test.ts
+
+Why: Closure-based updates could discard changes during rapid updates.
+
+Verification: focused functional-state test passed; agent targeted tests, type check, and lint passed.
