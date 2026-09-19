@@ -292,4 +292,39 @@ describe("Accounts administration console", () => {
 
     resolveFirstRole(jsonResponse({ employee: currentEmployee }));
   });
+
+  it.each([
+    ["malformed HTML", () => new Response("<html>failure</html>", { status: 500 }), "The operation could not be completed."],
+    ["empty", () => new Response(null, { status: 500 }), "The operation could not be completed."],
+    ["valid JSON", () => jsonResponse({ message: "Server unavailable" }, 500), "Server unavailable"],
+  ])("shows the expected message for %s error responses", async (_label, responseFactory, expectedMessage) => {
+    const fetchMock = vi.fn(
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (url === "/api/admin/employees" && (init?.method ?? "GET") === "GET") {
+          return jsonResponse({ employees: [admin] });
+        }
+        return responseFactory();
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<AccountsConsole employee={admin} />);
+    await screen.findByRole("heading", { name: "Directory" });
+    const form = screen.getByRole("button", { name: /create identity/i }).closest("form");
+    if (!form) throw new Error("Create form was not rendered.");
+    fireEvent.change(screen.getByRole("textbox", { name: "Display name" }), {
+      target: { value: "New Employee" },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Username" }), {
+      target: { value: "new-employee" },
+    });
+    fireEvent.change(screen.getByLabelText("Initial password"), {
+      target: { value: "long-enough-password" },
+    });
+
+    fireEvent.submit(form);
+
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent(expectedMessage));
+  });
 });

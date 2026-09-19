@@ -14,14 +14,31 @@ function operationKey(prefix: string): string {
   return `${prefix}-${crypto.randomUUID()}`;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+async function readJson(response: Response): Promise<unknown> {
+  try {
+    return await response.json();
+  } catch {
+    return undefined;
+  }
+}
+
 async function jsonRequest(url: string, method: string, body?: unknown) {
   const response = await fetch(url, {
     method,
     headers: body === undefined ? undefined : { "Content-Type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
-  const payload = await response.json();
-  if (!response.ok) throw new Error(payload.message || "The operation could not be completed.");
+  const payload = await readJson(response);
+  if (!response.ok) {
+    const message = isRecord(payload) && typeof payload.message === "string" && payload.message
+      ? payload.message
+      : "The operation could not be completed.";
+    throw new Error(message);
+  }
   return payload;
 }
 
@@ -57,7 +74,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
   const refresh = useCallback(async () => {
     if (!isAdmin) return;
     try {
-      const payload = await jsonRequest("/api/admin/employees", "GET");
+      const payload = await jsonRequest("/api/admin/employees", "GET") as { employees: Employee[] };
       setEmployees(payload.employees);
       setError("");
     } catch (caught) { setError((caught as Error).message); }
@@ -97,8 +114,8 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
     const operationKeyPrefix = `role-change:${selected.id}:${roleId}`;
     setPendingId(roleId);
     try {
-      const payload = await jsonRequest("/api/admin/employees", "GET");
-      const current = (payload.employees as Employee[]).find((item) => item.id === selected.id);
+      const payload = await jsonRequest("/api/admin/employees", "GET") as { employees: Employee[] };
+      const current = payload.employees.find((item) => item.id === selected.id);
       if (!current) return;
       const existing = current.appRoles[applicationKey] ?? [];
       const nextRoleKeys = existing.includes(role)
