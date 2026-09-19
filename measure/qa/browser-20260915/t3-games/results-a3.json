@@ -1,0 +1,1112 @@
+{
+  "user": "qa-student-a3",
+  "games": [
+    {
+      "id": "dragon-flight",
+      "startedAt": "2026-09-15T00:11:45.677Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 183,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 178,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [
+        {
+          "status": 200,
+          "payload": {
+            "xpEarned": 2,
+            "activityId": "game:dragon-flight:1e795907-01ce-45fb-9d18-8ceda93598a2",
+            "duplicate": false,
+            "status": 200
+          }
+        }
+      ],
+      "apiErrors": [],
+      "xpEarned": 2,
+      "saveStatus": 200,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nDragon Flight\n\nChoose English gates, grow the dragon flock, and face the guardian.\n\nRead Thai\nListen to English\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n100\nAccuracy\n25%\nCorrect\n1/4\nConfirmed XP\n2\n\nPixel art assets by ElvGames\n\nPlay againExit",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 70418
+    },
+    {
+      "id": "astral-mage",
+      "startedAt": "2026-09-15T00:12:56.174Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 71,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 74,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 72,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nAstral Mage\n\nMove a mage through a star arena and cast sentence words in order.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 63977
+    },
+    {
+      "id": "sorcerer-ziggurat",
+      "startedAt": "2026-09-15T00:14:00.405Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 70,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 74,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 70,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nThe Sorcerer's Ziggurat\n\nClimb adjacent rune cubes to rebuild each sentence in order.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 64228
+    },
+    {
+      "id": "dragon-rider",
+      "startedAt": "2026-09-15T00:15:04.645Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 182,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 170,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [
+        {
+          "status": 200,
+          "payload": {
+            "xpEarned": 2,
+            "activityId": "game:dragon-rider:b93d5d0c-7d0c-4090-9f32-c733ca7dd7ec",
+            "duplicate": false,
+            "status": 200
+          }
+        }
+      ],
+      "apiErrors": [],
+      "xpEarned": 2,
+      "saveStatus": 200,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nDragon Rider\n\nChoose English gates, grow the dragon flock, and face the guardian.\n\nRead Thai\nListen to English\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n100\nAccuracy\n25%\nCorrect\n1/4\nConfirmed XP\n2\n\nPixel art assets by ElvGames\n\nPlay againExit",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 61740
+    },
+    {
+      "id": "spellweavers-run",
+      "startedAt": "2026-09-15T00:16:06.392Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 58,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 57,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 55,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nSpellweaver's Run\n\nChange lanes to collect falling word orbs in sentence order.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 59969
+    },
+    {
+      "id": "shadow-gate-dungeon",
+      "startedAt": "2026-09-15T00:17:06.362Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 53,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 52,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 52,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nShadow Gate Dungeon\n\nExplore the dungeon and collect ordered word crystals before opening the gate.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 60898
+    },
+    {
+      "id": "labyrinth-goblin-king",
+      "startedAt": "2026-09-15T00:18:07.277Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [
+        {
+          "status": 200,
+          "payload": {
+            "xpEarned": 0,
+            "activityId": "game:labyrinth-goblin-king:049d4131-ed9d-4157-8610-c27c51b1529a",
+            "duplicate": false,
+            "status": 200
+          }
+        }
+      ],
+      "apiErrors": [],
+      "xpEarned": 0,
+      "saveStatus": 200,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nLabyrinth of the Goblin King\n\nNavigate the maze, collect ordered word orbs, and avoid goblin hazards.\n\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/0\nConfirmed XP\n0\n\nPixel art assets by ElvGames\n\nPlay againExit",
+      "resultTextVisible": true,
+      "verdict": "FAIL",
+      "reason": "Canvas not readable",
+      "durationMs": 24333
+    },
+    {
+      "id": "griffin-riders-escape",
+      "startedAt": "2026-09-15T00:18:31.695Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 61,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 61,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 62,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nGriffin Rider's Escape\n\nSwitch sky lanes and pass through sentence gates in order.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 60345
+    },
+    {
+      "id": "castle-defense",
+      "startedAt": "2026-09-15T00:19:32.192Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 90,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 91,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 91,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nCastle Defense\n\nBuild a castle defense by placing sentence words in order.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 62873
+    },
+    {
+      "id": "magic-defense",
+      "startedAt": "2026-09-15T00:20:35.076Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 78,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 82,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [
+        {
+          "status": 200,
+          "payload": {
+            "xpEarned": 1,
+            "activityId": "game:magic-defense:faad165c-d18e-4e6c-8ec9-92b25ebb868e",
+            "duplicate": false,
+            "status": 200
+          }
+        }
+      ],
+      "apiErrors": [],
+      "xpEarned": 1,
+      "saveStatus": 200,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nMagic Defense\n\nChoose translation lanes to protect the castle from incoming magic.\n\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/2\nConfirmed XP\n1\n\nPixel art assets by ElvGames\n\nPlay againExit",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 57639
+    },
+    {
+      "id": "rpg-battle",
+      "startedAt": "2026-09-15T00:21:32.721Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 127,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nRPG Battle\n\nDefeat a fantasy enemy by translating vocabulary in a turn-based duel.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 19463
+    },
+    {
+      "id": "wizard-vs-zombie",
+      "startedAt": "2026-09-15T00:21:52.188Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        },
+        {
+          "kind": "warning",
+          "text": "Texture \"%s\" has no frame \"%s\" apk:catalog-standard-pack:wizard-floor 1"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 124,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 0.8849826388888888
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 130,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 0.8849826388888888
+      },
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [
+        {
+          "status": 200,
+          "payload": {
+            "xpEarned": 0,
+            "activityId": "game:wizard-vs-zombie:08472ab3-d113-4b3c-b2ed-337188c6c6ba",
+            "duplicate": false,
+            "status": 200
+          }
+        }
+      ],
+      "apiErrors": [],
+      "xpEarned": 0,
+      "saveStatus": 200,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nWizard vs Zombie\n\nMatch Thai words to their English meanings while you avoid zombies.\n\nRead Thai\nListen to English\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/0\nConfirmed XP\n0\n\nPixel art assets by ElvGames\n\nPlay againExit",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 44531
+    },
+    {
+      "id": "enchanted-library",
+      "startedAt": "2026-09-15T00:22:36.774Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 70,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 69,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 71,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nEnchanted Library\n\nMatch Thai prompts with English books, restore mana, and protect the stacks from spirits.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 61053
+    },
+    {
+      "id": "rune-match",
+      "startedAt": "2026-09-15T00:23:37.832Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 99,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nRune Match\n\nMatch adjacent vocabulary runes to defeat a monster.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 19531
+    },
+    {
+      "id": "alchemists-synthesis",
+      "startedAt": "2026-09-15T00:23:57.364Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 60,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 63,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 63,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nAlchemist's Synthesis\n\nSelect the term that matches each translation before the cauldron cools.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 60943
+    },
+    {
+      "id": "potion-rush",
+      "startedAt": "2026-09-15T00:24:58.316Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 137,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 148,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 162,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nPotion Rush\n\nBrew sentence ingredients in order and serve the waiting customers.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 62419
+    },
+    {
+      "id": "dungeon-liberator",
+      "startedAt": "2026-09-15T00:26:00.738Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 66,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 66,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 66,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nDungeon Liberator\n\nMove through a torchlit dungeon and rescue sentence prisoners in order.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 63179
+    },
+    {
+      "id": "rune-forge-chamber",
+      "startedAt": "2026-09-15T00:27:03.918Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 76,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 79,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [
+        {
+          "status": 200,
+          "payload": {
+            "xpEarned": 2,
+            "activityId": "game:rune-forge-chamber:0b5ee041-6fb2-485d-bd4f-a03f360d42f2",
+            "duplicate": false,
+            "status": 200
+          }
+        }
+      ],
+      "apiErrors": [],
+      "xpEarned": 2,
+      "saveStatus": 200,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nRune Forge Chamber\n\nForge ordered sentence words as orbiting runes inside a living chamber.\n\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n100\nAccuracy\n25%\nCorrect\n1/4\nConfirmed XP\n2\n\nPixel art assets by ElvGames\n\nPlay againExit",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 57050
+    },
+    {
+      "id": "village-guardian",
+      "startedAt": "2026-09-15T00:28:01.056Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 74,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 75,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 72,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nVillage Guardian\n\nGuide ordered villagers through danger and into sanctuary.\n\nGame ready\nPause game\nMute game\nRestart game\nExit game",
+      "resultTextVisible": false,
+      "verdict": "PASS",
+      "durationMs": 61190
+    },
+    {
+      "id": "abyssal-well",
+      "startedAt": "2026-09-15T00:29:02.252Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 44,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 65,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [],
+      "apiErrors": [],
+      "xpEarned": null,
+      "saveStatus": null,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nThe Abyssal Well\n\nRotate around a dark well and shoot ordered word enemies before they reach the rim.\n\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n100\nAccuracy\n50%\nCorrect\n1/2\n\nGame progress could not be confirmed in time.\n\nRetry save\n\nPixel art assets by ElvGames\n\nPlay again without savingExit",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 59858
+    },
+    {
+      "id": "archers-revenge",
+      "startedAt": "2026-09-15T00:30:02.114Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 54,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 59,
+        "nonWhiteRatio": 1,
+        "nonBlackRatio": 1
+      },
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [
+        {
+          "status": 200,
+          "payload": {
+            "xpEarned": 1,
+            "activityId": "game:archers-revenge:e5fa46a8-d09a-4514-8779-79f841c96591",
+            "duplicate": false,
+            "status": 200
+          }
+        }
+      ],
+      "apiErrors": [],
+      "xpEarned": 1,
+      "saveStatus": 200,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nArcher's Revenge\n\nAim a precision archer at the translation target and break enemy formations.\n\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/11\nConfirmed XP\n1\n\nPixel art assets by ElvGames\n\nPlay againExit",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 62789
+    },
+    {
+      "id": "storm-castle-tower",
+      "startedAt": "2026-09-15T00:31:04.912Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "verdict": "BLOCKED",
+      "reason": "",
+      "durationMs": 25491
+    },
+    {
+      "id": "griffin-sky-joust",
+      "startedAt": "2026-09-15T00:31:30.433Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "stats10s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 82,
+        "nonWhiteRatio": 0.9973958333333334,
+        "nonBlackRatio": 1
+      },
+      "stats20s": {
+        "hasCanvas": true,
+        "readable": true,
+        "uniqueColors": 84,
+        "nonWhiteRatio": 0.9852430555555556,
+        "nonBlackRatio": 1
+      },
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [
+        {
+          "status": 200,
+          "payload": {
+            "xpEarned": 1,
+            "activityId": "game:griffin-sky-joust:c3fd700a-6993-4eeb-b0f2-62569f4a1893",
+            "duplicate": false,
+            "status": 200
+          }
+        }
+      ],
+      "apiErrors": [],
+      "xpEarned": 1,
+      "saveStatus": 200,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nGriffin Sky-Joust\n\nRide a griffin through the clouds and strike airborne word knights in sentence order.\n\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/2\nConfirmed XP\n1\n\nPixel art assets by ElvGames\n\nPlay againExit",
+      "resultTextVisible": true,
+      "verdict": "PASS",
+      "durationMs": 72279
+    },
+    {
+      "id": "realm-carver",
+      "startedAt": "2026-09-15T00:32:42.745Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "verdict": "FAIL",
+      "reason": "locator.waitFor: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator('[data-apk-canvas-host] canvas').first() to be visible\n",
+      "durationMs": 110099
+    },
+    {
+      "id": "paladins-twin-soul",
+      "startedAt": "2026-09-15T00:34:33.543Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "verdict": "BLOCKED",
+      "reason": "",
+      "durationMs": 21230
+    },
+    {
+      "id": "devourer-slime",
+      "startedAt": "2026-09-15T00:34:54.779Z",
+      "logs": [
+        {
+          "kind": "error",
+          "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+        }
+      ],
+      "resultScreen": true,
+      "statsEnd": {
+        "hasCanvas": true,
+        "readable": false
+      },
+      "completionCalls": [
+        {
+          "status": 200,
+          "payload": {
+            "xpEarned": 0,
+            "activityId": "game:devourer-slime:6d8d1a48-096a-4569-abdc-432d978d6ea0",
+            "duplicate": false,
+            "status": 200
+          }
+        }
+      ],
+      "apiErrors": [],
+      "xpEarned": 0,
+      "saveStatus": 200,
+      "bodyText": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-student-a3\nRead\nSidebar.Games\nAssignments\nSentences\nVocabulary\nReports\nHistory\n\nLeaderboard\n\nQA School A\n\nSeptember 2026\n\nRank\tName\tXP\tRoom\nNo data available for this month\n\nSTUDENT GAME\n\nDevourer Slime\n\nEat ordered words, grow larger, and overpower the knights in your path.\n\nGame complete\n\nSESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/0\nConfirmed XP\n0\n\nPixel art assets by ElvGames\n\nPlay againExit",
+      "resultTextVisible": true,
+      "verdict": "FAIL",
+      "reason": "Canvas not readable",
+      "durationMs": 33965
+    }
+  ],
+  "catalog": {
+    "cards": [
+      {
+        "href": "/en/student/games/apk/dragon-flight",
+        "title": "Dragon Flight",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/astral-mage",
+        "title": "Astral Mage",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/sorcerer-ziggurat",
+        "title": "The Sorcerer's Ziggurat",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/dragon-rider",
+        "title": "Dragon Rider",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/spellweavers-run",
+        "title": "Spellweaver's Run",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/shadow-gate-dungeon",
+        "title": "Shadow Gate Dungeon",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/labyrinth-goblin-king",
+        "title": "Labyrinth of the Goblin King",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/griffin-riders-escape",
+        "title": "Griffin Rider's Escape",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/castle-defense",
+        "title": "Castle Defense",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/magic-defense",
+        "title": "Magic Defense",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/rpg-battle",
+        "title": "RPG Battle",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/wizard-vs-zombie",
+        "title": "Wizard vs Zombie",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/enchanted-library",
+        "title": "Enchanted Library",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/rune-match",
+        "title": "Rune Match",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/alchemists-synthesis",
+        "title": "Alchemist's Synthesis",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/potion-rush",
+        "title": "Potion Rush",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/dungeon-liberator",
+        "title": "Dungeon Liberator",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/rune-forge-chamber",
+        "title": "Rune Forge Chamber",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/village-guardian",
+        "title": "Village Guardian",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/abyssal-well",
+        "title": "The Abyssal Well",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/archers-revenge",
+        "title": "Archer's Revenge",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/storm-castle-tower",
+        "title": "Storm the Castle Tower",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/griffin-sky-joust",
+        "title": "Griffin Sky-Joust",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/realm-carver",
+        "title": "Realm Carver",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/paladins-twin-soul",
+        "title": "Paladin's Twin-Soul",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/devourer-slime",
+        "title": "Devourer Slime",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/haunted-library",
+        "title": "The Haunted Library",
+        "hasImage": false
+      },
+      {
+        "href": "/en/student/games/apk/gryphon-patrol",
+        "title": "Gryphon Patrol",
+        "hasImage": false
+      }
+    ],
+    "brokenImages": [],
+    "imageCount": 5,
+    "challengePanelText": "Class challenges\nClass \nQA Class A\n\nLoading challenges…\n\nDragon Flight\n\nChoose English gates, grow the dragon flock, and face the guardian.\n\nAstral Mage\n\nMove a mage through a star arena and cast sentence words in order.\n\nThe Sorcerer's Ziggurat\n\nClimb adjacent rune cubes to rebuild each sentence in order.\n\nDragon Rider\n\nChoose English gates, grow the dragon flock, and face the guardian.\n\nSpellwea"
+  },
+  "catalogConsoleErrors": [
+    "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Obj"
+  ]
+}

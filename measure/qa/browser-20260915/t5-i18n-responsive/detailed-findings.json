@@ -1,0 +1,85 @@
+[
+  {
+    "test": "Thai landing page",
+    "hasThai": true,
+    "status": "PASS"
+  },
+  {
+    "test": "Thai signin page",
+    "hasThai": true,
+    "status": "PASS"
+  },
+  {
+    "test": "Locale switcher en→th",
+    "urlBefore": "http://localhost:3000/en",
+    "urlAfter": "http://localhost:3000/en",
+    "switched": false,
+    "status": "FAIL"
+  },
+  {
+    "test": "English dashboard loaded",
+    "status": "PASS"
+  },
+  {
+    "test": "Thai dashboard",
+    "hasThai": true,
+    "untranslatedKeys": [],
+    "status": "PASS"
+  },
+  {
+    "test": "Thai my-classes",
+    "hasThai": true,
+    "status": "PASS"
+  },
+  {
+    "test": "Responsive: landing at mobile",
+    "hasHorizontalScroll": false,
+    "status": "PASS"
+  },
+  {
+    "test": "Responsive: signin at mobile",
+    "hasHorizontalScroll": false,
+    "status": "PASS"
+  },
+  {
+    "test": "Responsive: dashboard at mobile",
+    "hasHorizontalScroll": false,
+    "status": "PASS"
+  },
+  {
+    "test": "Responsive: landing at tablet",
+    "hasHorizontalScroll": false,
+    "status": "PASS"
+  },
+  {
+    "test": "Responsive: signin at tablet",
+    "hasHorizontalScroll": false,
+    "status": "PASS"
+  },
+  {
+    "test": "Responsive: dashboard at tablet",
+    "hasHorizontalScroll": false,
+    "status": "PASS"
+  },
+  {
+    "test": "Responsive: landing at desktop",
+    "hasHorizontalScroll": false,
+    "status": "PASS"
+  },
+  {
+    "test": "Responsive: signin at desktop",
+    "hasHorizontalScroll": false,
+    "status": "PASS"
+  },
+  {
+    "test": "Responsive: dashboard at desktop",
+    "hasHorizontalScroll": false,
+    "status": "PASS"
+  },
+  {
+    "test": "Thai page links maintain /th prefix",
+    "issuesFound": 0,
+    "issues": [],
+    "status": "PASS"
+  }
+]

@@ -1,0 +1,118 @@
+{
+  "tabs": {
+    "before": {
+      "active": "Student",
+      "sel": "true"
+    },
+    "after": {
+      "active": "BUTTON \"Teacher\"",
+      "selStudent": "false",
+      "tabs": [
+        "Student:sel=false:tabindex=-1",
+        "Teacher:sel=true:tabindex=0"
+      ],
+      "panelText": ""
+    },
+    "escapeOk": true
+  },
+  "sidebarEnter": {
+    "urlAfterEnterOnRead": "http://localhost:3000/en/student/games"
+  },
+  "games": {
+    "mains": [
+      {
+        "cls": "flex w-full flex-1 flex-col overflow-hidden",
+        "hidden": false,
+        "dialog": false
+      },
+      {
+        "cls": "mx-auto w-full max-w-5xl px-4 py-8",
+        "hidden": false,
+        "dialog": false
+      }
+    ],
+    "emptyHeadings": [
+      {
+        "tag": "H2",
+        "hidden": false,
+        "inDialog": false,
+        "html": "<h2 style=\"margin: 0px; font-family: var(--apk-reward-display-font, 'Courier New', monospace);\">Wizard rewards</h2>"
+      },
+      {
+        "tag": "H3",
+        "hidden": false,
+        "inDialog": false,
+        "html": "<h3 style=\"margin: 0px;\">Apprentice Wand</h3>"
+      },
+      {
+        "tag": "H3",
+        "hidden": false,
+        "inDialog": false,
+        "html": "<h3 style=\"margin: 0px;\">Graveyard Staff</h3>"
+      },
+      {
+        "tag": "H3",
+        "hidden": false,
+        "inDialog": false,
+        "html": "<h3 style=\"margin: 0px;\">Echo Staff</h3>"
+      }
+    ],
+    "cardImgs": [
+      {
+        "alt": "logo",
+        "linkName": "Primary Advantage"
+      }
+    ],
+    "sidebar": [
+      {
+        "text": "Read",
+        "href": "#",
+        "nav": null
+      },
+      {
+        "text": "Sidebar.Games",
+        "href": "#",
+        "nav": null
+      },
+      {
+        "text": "Assignments",
+        "href": "#",
+        "nav": null
+      },
+      {
+        "text": "Sentences",
+        "href": "#",
+        "nav": null
+      },
+      {
+        "text": "Vocabulary",
+        "href": "#",
+        "nav": null
+      },
+      {
+        "text": "Reports",
+        "href": "#",
+        "nav": null
+      },
+      {
+        "text": "History",
+        "href": "#",
+        "nav": null
+      }
+    ],
+    "sidebarNavLabels": [
+      null,
+      null
+    ]
+  },
+  "readDivs": [
+    {
+      "role": "link",
+      "text": "CEFR Level : 0\n\nQA Game Content B"
+    },
+    {
+      "role": "link",
+      "text": "CEFR Level : 0\n\nQA Game Content A"
+    }
+  ]
+}

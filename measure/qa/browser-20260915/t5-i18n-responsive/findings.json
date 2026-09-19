@@ -1,0 +1,8 @@
+{
+  "findings": [
+    "FAIL: Locale switcher did not change URL to /th",
+    "PASS: All internal links maintain /th prefix"
+  ],
+  "consoleErrors": [],
+  "timestamp": "2026-09-14T23:49:55.297Z"
+}

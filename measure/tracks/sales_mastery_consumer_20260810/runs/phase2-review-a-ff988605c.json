@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "track_id": "sales_mastery_consumer_20260810",
+  "phase": "Phase 2 — company tenant mapping and durable projection",
+  "role": "Measure Review A correctness/architecture",
+  "audited_head_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+  "phase_base_sha": "fd581f3dcd15e7b7b632875862aaecb596719621",
+  "role_base_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "source_commit": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+  "red_commits": [
+    "52ff43a7619af4b8e2397df3d780b20295a6f449",
+    "b6ab9306a7d153321e1e35daa6e7f00bb966085c"
+  ],
+  "head_start_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+  "head_end_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+  "head_advanced_during_run": false,
+  "sales_path_drift_after_audited_head": false,
+  "sales_drift_proof": {
+    "command": "git diff --name-status ff988605ca8207b37c36f54dcee7e3cb529ee1ec..ff988605ca8207b37c36f54dcee7e3cb529ee1ec -- packages/domain/src/sales-mastery.ts",
+    "result": "empty",
+    "non_sales_commits": [],
+    "non_sales_paths": []
+  },
+  "decision": "FAIL",
+  "summary": "The focused tests pass, but the candidate retains an unsafe legacy bypass and does not make durable projection atomic.",
+  "findings": [
+    {
+      "id": "SMC-P2-RA-007",
+      "severity": "High",
+      "title": "The legacy constructor bypasses the trusted Company Identity boundary.",
+      "file": "packages/domain/src/sales-mastery.ts",
+      "lines": "608-691, 1961-1999",
+      "evidence": [
+        "The public constructor accepts { database, mastery } and selects legacy mode without a Company Identity verifier.",
+        "The legacy parser checks only structural claims, the Sales audience, the organization key, and a Sales role.",
+        "The legacy claim schema accepts any URL issuer and any positive expiration value without checking current time.",
+        "An independent runtime probe used an attacker issuer and expiration value 1, then received an applied projection receipt.",
+        "The graph found no production caller, but the adapter is exported from both domain barrels and remains publicly callable."
+      ],
+      "impact": "An expired or wrong-issuer claim can mutate Mastery through the public legacy path. This violates the fail-closed identity contract.",
+      "required_fix": "Expose only the trusted constructor. Require every operation to call the Company Identity verifier and derive the learner scope from its result."
+    },
+    {
+      "id": "SMC-P2-RA-008",
+      "severity": "High",
+      "title": "Durable Mastery commit and Sales receipt insertion are not atomic.",
+      "file": "packages/domain/src/sales-mastery.ts",
+      "lines": "1511-1705, 1723-1803",
+      "evidence": [
+        "ensureBindingAndOutbox commits the mapping and outbox row in one database transaction.",
+        "deliverDatabase calls readSnapshot and commitMasteryEvidence after that transaction returns.",
+        "insertReceipt uses a separate database insert after the Mastery provider commits.",
+        "A crash or receipt failure between those operations leaves Mastery evidence applied without a Sales receipt."
+      ],
+      "impact": "Durable replay and audit state can diverge. Recovery depends on a later retry instead of the required atomic outbox boundary.",
+      "required_fix": "Use one shared transaction-aware persistence boundary for the Mastery mutation and Sales receipt, or implement an explicit durable handoff protocol."
+    }
+  ],
+  "control_audit": {
+    "company_identity_trust": "FAIL overall; trusted mode passes, while legacy mode bypasses verification",
+    "tenant_mapping": "PASS in focused tests; trusted mapping uses the verified organization and excludes Codecamp namespace",
+    "activity_binding": "PASS for reviewed coordinates and unknown-coordinate rejection",
+    "idempotency_equal_replay": "PASS in the 20-test legacy domain suite and trusted Review A suite",
+    "idempotency_conflicting_replay": "PASS in focused domain tests",
+    "durable_atomicity": "FAIL; Mastery commit and receipt insertion use separate boundaries",
+    "provider_errors": "PASS for tested database and Mastery failures; messages do not expose provider details",
+    "roleplay_fail_closed": "PASS for the current release; roleplay bindings remain pending evaluator eligibility",
+    "two_mode_isolation": "PASS; mixed and incomplete constructor options fail before dependency access",
+    "yagni": "FAIL concern; the legacy path has no production graph callers and duplicates an unsafe boundary",
+    "jsdoc": "PASS for changed exported interfaces, types, class, schemas, constants, and factory",
+    "graph_callers": "PASS with no production callers found for createSalesMasteryProjection",
+    "A6_registry_claims": "PASS; the plan remains in progress and this receipt makes no phase acceptance claim"
+  },
+  "checks": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-mastery-projection.red.test.ts src/__tests__/sales-phase2-review-a.red.test.ts src/__tests__/sales-phase2-mode-isolation.red.test.ts --maxWorkers=1 (cwd packages/domain)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "3 files passed; 43 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-audio-validation-privacy.test.ts src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-company-organization.test.ts src/__tests__/sales-contract-nullability.test.ts src/__tests__/sales-mutations.test.ts src/__tests__/sales-progression.test.ts src/__tests__/sales-queries.test.ts src/__tests__/sales-roleplay-evaluator.test.ts --maxWorkers=1 (cwd packages/domain)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "8 files passed; 71 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-mastery-tenant.integration.test.ts --maxWorkers=1 (cwd packages/db)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "5 safe artifact tests passed; 15 PostgreSQL tests skipped because PG_TEST_URL was absent."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-phase2-review-a-durable.red.test.ts --maxWorkers=1 (cwd packages/db)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The file was skipped because PG_TEST_URL was absent."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit (cwd packages/domain)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "No diagnostics."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit (cwd packages/db)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "No diagnostics."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc (cwd packages/domain)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Domain build passed."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --project tsconfig.build.json (cwd packages/db)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "DB build passed."
+    },
+    {
+      "command": "../../node_modules/.bin/eslint src/sales-mastery.ts (cwd packages/domain)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The changed source file passed targeted lint."
+    },
+    {
+      "command": "node_modules/.bin/prettier --check on the candidate source and related Red files (cwd repository)",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "All selected files used Prettier style."
+    },
+    {
+      "command": "git diff --check ff988605c^ ff988605c",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The exact candidate commit contains one source file and no whitespace errors."
+    },
+    {
+      "command": "git diff --name-only ff988605c^ ff988605c -- packages/knowledge-space-core packages/knowledge-space-practice packages/practice-core packages/srs-engine packages/sales-knowledge packages/mastery-runtime-compat",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The immutable shared-package diff was empty."
+    },
+    {
+      "command": "git hash-object packages/domain/src/sales-mastery.ts compared with git rev-parse ff988605c:packages/domain/src/sales-mastery.ts",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Both blob hashes were f7e4953d8a605c16795d0a840059fab7c45c719b."
+    },
+    {
+      "command": "SHA-256 parity for the three Red files against commits 52ff43a76 and b6ab9306a",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "All working Red file hashes matched their authoritative commit blobs."
+    },
+    {
+      "command": "build-graph callers and inspect for createSalesMasteryProjection and changed exports",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The fresh graph found no production callers for createSalesMasteryProjection."
+    },
+    {
+      "command": "Live PostgreSQL 16 behavior tests with PG_TEST_URL",
+      "result": "not-run",
+      "explanation": "PG_TEST_URL was absent. Safe database artifact tests ran instead."
+    }
+  ],
+  "reviewed_inputs": [
+    "measure/tracks/sales_mastery_consumer_20260810/spec.md",
+    "measure/tracks/sales_mastery_consumer_20260810/plan.md",
+    "measure/tracks/sales_mastery_consumer_20260810/test-strategy-phase2.md",
+    "measure/tracks/sales_mastery_consumer_20260810/phase2-review-a-red-remediation-evidence-20260817.md",
+    "packages/domain/src/sales-mastery.ts",
+    "packages/domain/src/__tests__/sales-mastery-projection.red.test.ts",
+    "packages/domain/src/__tests__/sales-phase2-review-a.red.test.ts",
+    "packages/domain/src/__tests__/sales-phase2-mode-isolation.red.test.ts",
+    "packages/db/src/__tests__/sales-mastery-tenant.integration.test.ts",
+    "packages/db/src/__tests__/sales-phase2-review-a-durable.red.test.ts",
+    "packages/db/src/schema/sales-mastery.ts",
+    "packages/db/drizzle/0053_sales_mastery_tenant_mapping.sql",
+    "packages/domain/src/mastery/drizzle-mastery-persistence.ts",
+    "packages/domain/src/company-identity-principal.ts",
+    "packages/sales-knowledge/src/bindings.ts",
+    "graph.db"
+  ],
+  "known_limitations": [
+    "Live PostgreSQL 16 behavior and failure-window tests did not run because PG_TEST_URL was absent.",
+    "The worktree contained unrelated dirty and untracked paths. The review preserved them.",
+    "Aggregate repository tests were not run because the Phase 2 strategy requires focused gates and documents aggregate failures.",
+    "The graph found no production caller. Dynamic Red imports remain outside the graph caller result."
+  ],
+  "changed_files": [
+    "measure/tracks/sales_mastery_consumer_20260810/runs/phase2-review-a-ff988605c.json"
+  ],
+  "production_source_modified": false,
+  "MEASURE_AGENT_RESULT": {
+    "role": "review-a",
+    "status": "FAIL",
+    "track": "sales_mastery_consumer_20260810",
+    "phase": "Phase 2 — company tenant mapping and durable projection",
+    "audited_head_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+    "phase_base_sha": "fd581f3dcd15e7b7b632875862aaecb596719621",
+    "role_base_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+    "source_commit": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+    "handoff": "Fix High findings before Phase 2 acceptance. This receipt makes no phase acceptance claim."
+  }
+}

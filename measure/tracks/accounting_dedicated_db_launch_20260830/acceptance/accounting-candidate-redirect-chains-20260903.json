@@ -1,0 +1,220 @@
+{
+  "candidateRevision": "accounting-00005-bup",
+  "callbackTransport": "Canonical-host requests were replayed against the IAM-gated candidate with the canonical forwarded host because domain mapping is a post-acceptance gate.",
+  "cases": [
+    {
+      "name": "unauthenticated-deep-link",
+      "status": "pass",
+      "finalUrl": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login?returnTo=%2Freports%3Fmonth%3D2026-09",
+      "assertion": "Redirected to login with the exact deep-link returnTo.",
+      "redirectChain": [
+        {
+          "location": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login?returnTo=%2Freports%3Fmonth%3D2026-09",
+          "method": "GET",
+          "status": 307,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/reports?month=2026-09"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login?returnTo=%2Freports%3Fmonth%3D2026-09"
+        }
+      ]
+    },
+    {
+      "name": "malformed-return-to",
+      "status": "pass",
+      "finalUrl": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login",
+      "assertion": "Returned 307 with root fallback and no 5xx response.",
+      "redirectChain": [
+        {
+          "location": "https://accounting.reading-advantage.com/api/auth/company/start?returnTo=%2F",
+          "method": "GET",
+          "status": 307,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/api/auth/company/start?returnTo=https%3A%2F%2Fevil.example.com"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login"
+        }
+      ]
+    },
+    {
+      "name": "preview-handoff-completed-sign-in",
+      "status": "pass",
+      "finalUrl": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/",
+      "assertion": "Candidate handed off to the callback origin and completed Accounting sign-in.",
+      "redirectChain": [
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://accounts.reading-advantage.com/"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://accounts.reading-advantage.com/"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login?returnTo=%2F"
+        },
+        {
+          "location": "https://accounting.reading-advantage.com/api/auth/company/start?returnTo=%2F",
+          "method": "GET",
+          "status": 307,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/api/auth/company/start?returnTo=%2F"
+        },
+        {
+          "location": "https://accounts.reading-advantage.com/api/oidc/authorize?client_id=accounting-web&redirect_uri=https%3A%2F%2Faccounting.reading-advantage.com%2Fapi%2Fauth%2Fcallback&response_type=code&scope=openid+profile&state=%5Bredacted%5D&nonce=%5Bredacted%5D&code_challenge=%5Bredacted%5D&code_challenge_method=S256",
+          "method": "GET",
+          "status": 307,
+          "url": "https://accounting.reading-advantage.com/api/auth/company/start?returnTo=%2F"
+        },
+        {
+          "location": "https://accounting.reading-advantage.com/api/auth/callback?code=%5Bredacted%5D&state=%5Bredacted%5D",
+          "method": "GET",
+          "status": 307,
+          "url": "https://accounts.reading-advantage.com/api/oidc/authorize?client_id=accounting-web&redirect_uri=https%3A%2F%2Faccounting.reading-advantage.com%2Fapi%2Fauth%2Fcallback&response_type=code&scope=openid+profile&state=%5Bredacted%5D&nonce=%5Bredacted%5D&code_challenge=%5Bredacted%5D&code_challenge_method=S256"
+        },
+        {
+          "location": "https://accounting.reading-advantage.com/",
+          "method": "GET",
+          "status": 307,
+          "url": "https://accounting.reading-advantage.com/api/auth/callback?code=%5Bredacted%5D&state=%5Bredacted%5D"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/"
+        }
+      ]
+    },
+    {
+      "name": "forbidden-no-role",
+      "status": "pass",
+      "finalUrl": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login?error=forbidden",
+      "assertion": "No-role identity reached the persistent visible forbidden message.",
+      "redirectChain": [
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://accounts.reading-advantage.com/"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://accounts.reading-advantage.com/"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login?returnTo=%2F"
+        },
+        {
+          "location": "https://accounting.reading-advantage.com/api/auth/company/start?returnTo=%2F",
+          "method": "GET",
+          "status": 307,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/api/auth/company/start?returnTo=%2F"
+        },
+        {
+          "location": "https://accounts.reading-advantage.com/api/oidc/authorize?client_id=accounting-web&redirect_uri=https%3A%2F%2Faccounting.reading-advantage.com%2Fapi%2Fauth%2Fcallback&response_type=code&scope=openid+profile&state=%5Bredacted%5D&nonce=%5Bredacted%5D&code_challenge=%5Bredacted%5D&code_challenge_method=S256",
+          "method": "GET",
+          "status": 307,
+          "url": "https://accounting.reading-advantage.com/api/auth/company/start?returnTo=%2F"
+        },
+        {
+          "location": "https://accounting.reading-advantage.com/api/auth/callback?code=%5Bredacted%5D&state=%5Bredacted%5D",
+          "method": "GET",
+          "status": 307,
+          "url": "https://accounts.reading-advantage.com/api/oidc/authorize?client_id=accounting-web&redirect_uri=https%3A%2F%2Faccounting.reading-advantage.com%2Fapi%2Fauth%2Fcallback&response_type=code&scope=openid+profile&state=%5Bredacted%5D&nonce=%5Bredacted%5D&code_challenge=%5Bredacted%5D&code_challenge_method=S256"
+        },
+        {
+          "location": "https://accounting.reading-advantage.com/login?error=forbidden",
+          "method": "GET",
+          "status": 307,
+          "url": "https://accounting.reading-advantage.com/api/auth/callback?code=%5Bredacted%5D&state=%5Bredacted%5D"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login?error=forbidden"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login?error=forbidden"
+        }
+      ]
+    },
+    {
+      "name": "authenticated-expense-submission",
+      "status": "pass",
+      "finalUrl": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/",
+      "assertion": "Expense with private evidence succeeded and appeared in the pending list.",
+      "redirectChain": [
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://accounts.reading-advantage.com/"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://accounts.reading-advantage.com/"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/login?returnTo=%2F"
+        },
+        {
+          "location": "https://accounting.reading-advantage.com/api/auth/company/start?returnTo=%2F",
+          "method": "GET",
+          "status": 307,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/api/auth/company/start?returnTo=%2F"
+        },
+        {
+          "location": "https://accounts.reading-advantage.com/api/oidc/authorize?client_id=accounting-web&redirect_uri=https%3A%2F%2Faccounting.reading-advantage.com%2Fapi%2Fauth%2Fcallback&response_type=code&scope=openid+profile&state=%5Bredacted%5D&nonce=%5Bredacted%5D&code_challenge=%5Bredacted%5D&code_challenge_method=S256",
+          "method": "GET",
+          "status": 307,
+          "url": "https://accounting.reading-advantage.com/api/auth/company/start?returnTo=%2F"
+        },
+        {
+          "location": "https://accounting.reading-advantage.com/api/auth/callback?code=%5Bredacted%5D&state=%5Bredacted%5D",
+          "method": "GET",
+          "status": 307,
+          "url": "https://accounts.reading-advantage.com/api/oidc/authorize?client_id=accounting-web&redirect_uri=https%3A%2F%2Faccounting.reading-advantage.com%2Fapi%2Fauth%2Fcallback&response_type=code&scope=openid+profile&state=%5Bredacted%5D&nonce=%5Bredacted%5D&code_challenge=%5Bredacted%5D&code_challenge_method=S256"
+        },
+        {
+          "location": "https://accounting.reading-advantage.com/",
+          "method": "GET",
+          "status": 307,
+          "url": "https://accounting.reading-advantage.com/api/auth/callback?code=%5Bredacted%5D&state=%5Bredacted%5D"
+        },
+        {
+          "location": null,
+          "method": "GET",
+          "status": 200,
+          "url": "https://candidate---accounting-hxamzdhgwa-as.a.run.app/"
+        }
+      ]
+    }
+  ]
+}

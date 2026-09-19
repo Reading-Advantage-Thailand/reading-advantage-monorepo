@@ -1,0 +1,228 @@
+{
+  "summary": [
+    {
+      "case": 1,
+      "verdict": "PASS",
+      "detail": "dashboard/landing=http://localhost:3000/en/teacher/my-classes; QA Class A visible=true; code QACLASSA visible=true; a '3' count cell present=true"
+    },
+    {
+      "case": 2,
+      "verdict": "PASS",
+      "detail": "card visible=true; roster students: [{\"s\":\"qa-student-a1\",\"present\":true},{\"s\":\"qa-student-a2\",\"present\":true},{\"s\":\"qa-student-a3\",\"present\":true}]"
+    },
+    {
+      "case": 3,
+      "verdict": "PASS",
+      "detail": "create status=201 (201 Created accepted); row visible=true; cleanup: DELETE /api/classroom/a30b5023-fe85-4b85-a099-52ae66e6ecf8 -> 200; row gone=true"
+    },
+    {
+      "case": 4,
+      "verdict": "PASS",
+      "detail": "views exercised (empty state = BLOCKED per spec): [{\"view\":\"reports\",\"crashed\":false,\"empty\":false},{\"view\":\"student-progress\",\"crashed\":false,\"forbidden\":false,\"empty\":false,\"showsStudent\":true},{\"view\":\"assignments\",\"crashed\":false,\"empty\":false,\"pickedClass\":true}]"
+    },
+    {
+      "case": 6,
+      "verdict": "PASS",
+      "detail": "teacher GET /admin/dashboard landed at http://localhost:3000/en/unauthorized; looksLikeRedirect/403=true; looksLike500=false"
+    },
+    {
+      "case": 5,
+      "verdict": "FAIL",
+      "detail": "MULTI-TENANT LEAK: NO — no qa-teacher-b / qa-student-b1 rendered. Management APIs for ADMIN: teachers=403, students=403, classrooms=403 (403 — user-management lists cannot load for qa-admin-a; legacy userRoles/schoolAdmins gate). UI text shows teacher-a:false, admin-a:true, student-a1:false. Licenses: /system/licenses is SYSTEM-only and redirected ADMIN to /unauthorized."
+    },
+    {
+      "case": 7,
+      "verdict": "PASS",
+      "detail": "school-profile at http://localhost:3000/en/settings/school-profile; rendered length=431; form-like content=true; no saves performed"
+    }
+  ],
+  "results": {
+    "consoleErrors": {
+      "case1 dashboard redirect": [],
+      "case2 my-classes": [],
+      "case2 class roster": [],
+      "case3 my-classes for create": [],
+      "case3 post-cleanup": [],
+      "case4 reports": [],
+      "case4 student detail": [],
+      "case4 assignments": [],
+      "case6 teacher -> admin": [
+        "TypeError: Failed to fetch\n    at fetchAssignments (http://localhost:3000/_next/static/chunks/apps_primary-advantage_0f8377e._.js:828:36)\n    at Object.handleClassChange (http://localhost:3000/_next/static/chunks/apps_primary-advantage_0f8377e._.js:872:19)\n    at useControllableState.useCallback[setValue] [as onValueChange] (http://localhost:3000/_next/static/chunks/node_modules_1frhz-y._.js:2118:42)\n    at handleSelect (http://localhost:3000/_next/static/chunks/node_modules_0t60t_4._.js:4874:21)\n    at http://localhost:3000/_next/static/chunks/node_modules_0t60t_4._.js:4913:61\n    at handleEvent (http://localhost:3000/_next/static/chunks/node_modules_1frhz-y._.js:1799:37)\n    at executeDispatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10329:13)\n    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)\n    at processDispatchQueue (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10355:41)\n    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10633:13\n    at batchedUpdates$1 (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:2253:44)\n    at dispatchEventForPluginEventSystem (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10431:9)\n    at dispatchEvent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:13002:37)\n    at dispatchDiscreteEvent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:12984:64)",
+        "TypeError: Failed to fetch\n    at fetchAssignments (http://localhost:3000/_next/static/chunks/apps_primary-advantage_0f8377e._.js:828:36)\n    at Assignments.useEffect (http://localhost:3000/_next/static/chunks/apps_primary-advantage_0f8377e._.js:902:17)\n    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15087:22)\n    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)\n    at commitHookEffectListMount (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:7255:167)\n    at commitHookPassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:7290:60)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8689:33)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8750:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8750:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8693:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8693:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8750:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8750:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8750:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8750:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8750:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8688:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)\n    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8693:17)\n    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:8676:316)"
+      ],
+      "case5 admin dashboard": [],
+      "case5 admin teachers": [
+        "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+        "Error fetching teachers: Error: Failed to fetch teachers\n    at fetchJsonList (http://localhost:3000/_next/static/chunks/apps_primary-advantage_1nhe5rk._.js:799:15)\n    at async fetchTeachers (http://localhost:3000/_next/static/chunks/apps_primary-advantage_1nhe5rk._.js:892:26)",
+        "🔍 Classrooms fetch error: {\"error\":\"Forbidden - Admin access required\"}",
+        "🔍 Error fetching classrooms: Error: Failed to fetch classrooms: 403 {\"error\":\"Forbidden - Admin access required\"}\n    at fetchClassrooms (http://localhost:3000/_next/static/chunks/apps_primary-advantage_1nhe5rk._.js:915:23)"
+      ],
+      "case5 admin students": [
+        "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+        "Error fetching classrooms: Error: Failed to fetch classrooms: 403 Forbidden\n    at fetchClassrooms (http://localhost:3000/_next/static/chunks/apps_primary-advantage_01lmybl._.js:1095:23)",
+        "API Error Response: {\"error\":\"Forbidden - Admin access required\"}",
+        "Error fetching students: Error: Failed to fetch students: 403 Forbidden\n    at fetchStudents (http://localhost:3000/_next/static/chunks/apps_primary-advantage_01lmybl._.js:1077:23)"
+      ],
+      "case5 dashboard/teachers": [],
+      "case5 system licenses": [],
+      "case7 school-profile": []
+    },
+    "pageErrors": {
+      "case1 dashboard redirect": [],
+      "case2 my-classes": [],
+      "case2 class roster": [],
+      "case3 my-classes for create": [],
+      "case3 post-cleanup": [],
+      "case4 reports": [],
+      "case4 student detail": [],
+      "case4 assignments": [],
+      "case6 teacher -> admin": [],
+      "case5 admin dashboard": [],
+      "case5 admin teachers": [],
+      "case5 admin students": [],
+      "case5 dashboard/teachers": [],
+      "case5 system licenses": [],
+      "case7 school-profile": []
+    },
+    "failedRequests": {
+      "case1 dashboard redirect": [],
+      "case2 my-classes": [],
+      "case2 class roster": [],
+      "case3 my-classes for create": [],
+      "case3 post-cleanup": [],
+      "case4 reports": [],
+      "case4 student detail": [],
+      "case4 assignments": [],
+      "case6 teacher -> admin": [
+        "GET http://localhost:3000/api/teachers/assignments?classroomId=828838c2-322e-435a-84b5-539dab1594e8&page=1&limit=10 :: net::ERR_ABORTED"
+      ],
+      "case5 admin dashboard": [],
+      "case5 admin teachers": [],
+      "case5 admin students": [],
+      "case5 dashboard/teachers": [],
+      "case5 system licenses": [],
+      "case7 school-profile": []
+    },
+    "apiStatuses": {
+      "case1 dashboard redirect": [],
+      "case2 my-classes": [],
+      "case2 class roster": [],
+      "case3 my-classes for create": [],
+      "case3 post-cleanup": [],
+      "case4 reports": [],
+      "case4 student detail": [],
+      "case4 assignments": [],
+      "case6 teacher -> admin": [],
+      "case5 admin dashboard": [],
+      "case5 admin teachers": [
+        "403 GET /api/teachers",
+        "403 GET /api/classrooms"
+      ],
+      "case5 admin students": [
+        "403 GET /api/classrooms",
+        "403 GET /api/students?page=1&limit=10"
+      ],
+      "case5 dashboard/teachers": [],
+      "case5 system licenses": [],
+      "case7 school-profile": []
+    },
+    "bodyText": {
+      "case1 dashboard redirect": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-teacher-a\nMy Classes\nMy Students\nReports\nAssignments\nMy Classes\n\nManage and view your classrooms\n\nClass challenges\n\nImport a new class from\n\nGoogle Classroom\n  New Classroom\nClass Name\n\t\nClass Code\n\t\nStudent Count\n\t\nGrade\n\t\nActions\n\n\nQA Class A\n\t\nQACLASSA\n\t\n3\n\t\n4\n\t\nActions\nPreviousNext",
+      "case2 my-classes": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-teacher-a\nMy Classes\nMy Students\nReports\nAssignments\nMy Classes\n\nManage and view your classrooms\n\nClass challenges\n\nImport a new class from\n\nGoogle Classroom\n  New Classroom\nClass Name\n\t\nClass Code\n\t\nStudent Count\n\t\nGrade\n\t\nActions\n\n\nQA Class A\n\t\nQACLASSA\n\t\n3\n\t\n4\n\t\nActions\nPreviousNext",
+      "case2 class roster": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-teacher-a\nMy Classes\nMy Students\nReports\nAssignments\nQA Class A\n3 students\n•\nGrade 4\nClass Code: QACLASSA\nPassword: ••••••••\nClass Roster\nReports\nSettings\nBack\nStudents List\nGenerate Password\nEnroll Student\nQ\nqa-student-a1\n\nqa-student-a1@qatest.local\n\nA1-\nLvl 1\n0\nNo activity\nQ\nqa-student-a2\n\nqa-student-a2@qatest.local\n\nA1-\nLvl 1\n0\nNo activity\nQ\nqa-student-a3\n\nqa-student-a3@qatest.local\n\nA1-\nLvl 1\n0\nNo activity",
+      "case3 my-classes for create": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-teacher-a\nMy Classes\nMy Students\nReports\nAssignments\nMy Classes\n\nManage and view your classrooms\n\nClass challenges\n\nImport a new class from\n\nGoogle Classroom\n  New Classroom\nClass Name\n\t\nClass Code\n\t\nStudent Count\n\t\nGrade\n\t\nActions\n\n\nQA Class A\n\t\nQACLASSA\n\t\n3\n\t\n4\n\t\nActions\nPreviousNext",
+      "case3 post-cleanup": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-teacher-a\nMy Classes\nMy Students\nReports\nAssignments\nMy Classes\n\nManage and view your classrooms\n\nClass challenges\n\nImport a new class from\n\nGoogle Classroom\n  New Classroom\nClass Name\n\t\nClass Code\n\t\nStudent Count\n\t\nGrade\n\t\nActions\n\n\nQA Class A\n\t\nQACLASSA\n\t\n3\n\t\n4\n\t\nActions\nPreviousNext",
+      "case4 reports": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-teacher-a\nMy Classes\nMy Students\nReports\nOverview Reports\nAssignments\nReports\n\nView student progress and classroom analytics\n\nAll Classrooms\nTotal Students\n3\n\nAll classrooms\n\nAverage XP\n0\n\nExperience points per student\n\nMost Common Level\nA1-\n\nCEFR proficiency level\n\nActive This Week\n0%\n\n0 of 3 students\n\nStudent List\nqa-student-a1\nqa-student-a1@qatest.local\nA1-\n0 XP\nqa-student-a2\nqa-student-a2@qatest.local\nA1-\n0 XP\nqa-student-a3\nqa-student-a3@qatest.local\nA1-\n0 XP",
+      "case4 student detail": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-teacher-a\nMy Classes\nMy Students\nReports\nAssignments\nProgress for qa-student-a1\nRecent Activity\nExpaned\nActivity Progress\nIn Progress\n\n0\n\nCompleted\n\n0\n\nDate Range\nSep 09, 2026 - Sep 15, 2026\nXP Earned\nXP Overall\nMarch 2026 - September 2026\nReading Stats Chart\nSelected\nType\nCEFR Level\nYour Level : A1-\nYou're beginning to recognize more words and simple phrases beyond the very basics. You can follow short, simple directions and understand basic phrases and sentences about things you need.\nActivity Heatmap\nSeptember 2026\nSu\nMo\nTu\nWe\nTh\nFr\nSa\n30\n31\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n1\n2\n3",
+      "case4 assignments": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-teacher-a\nMy Classes\nMy Students\nReports\nAssignments\nAssignments\nSelect a Classroom\nAssignment\n\t\nCreated On\n\t\nDue Date\n\t\nStudents\n\t\nActions\n\nPlease select a classroom to view assignments\nShowing 0 to 0 of 0 assignments\nPrevious\nPage 1 of 1\nNext",
+      "case6 teacher -> admin": "Unauthorized\n\nYour account does not have access to this page.\n\nBack to home",
+      "case5 admin dashboard": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-admin-a\nDashboard\nAdmin\nTeachers\nStudents And Classes\nImport Data\nArticle Creation\nAdmin Dashboard\n\nAdmin Dashboard Description\n\nTotal Students\nData unavailable\n\nLive count wiring pending the multi-tenant scoping track.\n\nTotal Teachers\nData unavailable\n\nLive count wiring pending the multi-tenant scoping track.\n\nActive This Week\nData unavailable\n\nLive activity wiring pending the activity-log track.\n\nWeekly Active Users\n\n327\n\n+12% from last week\n\nArticles Read\n\n187\n\n+8% from last week\n\nQuestions Answered\n\n1,168\n\n+15% from last week\n\nAvg Engagement\n\n73%\n\n-3% from last week\n\nWeekly Activity Overview\nDaily activity metrics for students and teachers over the past week\nMon\nTue\nWed\nThu\nFri\nSat\nSun\n0\n20\n40\n60\n80\nContent Activity\nArticles read and questions answered throughout the week\nMon\nTue\nWed\nThu\nFri\nSat\nSun\n0\n70\n140\n210\n280\nClass Engagement Metrics\nAverage engagement scores across different learning activities\n0\n1\n2\n3\n4\nReading\nVocabulary\nGrammar\nListening\nSpeaking\nReading",
+      "case5 admin teachers": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-admin-a\nDashboard\nTeachers\nAll Teachers\nAdd Teacher\nStudents And Classes\nImport Data\nArticle Creation\nTeacher Management\n\nManage teachers and their access to the system\n\nTotal Teachers\n0\n\nActive in the system\n\nTotal Students\n0\n\nAcross all teachers\n\nTotal Classes\n0\n\nActive classes\n\nTeachers List\nAdd Teacher\nTeacher\tEmail\tRole\tAssigned Classrooms\tStudents\tClasses\tJoined\tActions\n\n\nNo teachers found\n\nFailed to load classrooms: Failed to fetch classrooms: 403 {\"error\":\"Forbidden - Admin access required\"}\nFailed to load teachers data",
+      "case5 admin students": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-admin-a\nDashboard\nTeachers\nStudents And Classes\nAll Students\nAdd Student\nClassrooms\nImport Data\nArticle Creation\nStudent Management\n\nManage students and their progress\n\nTotal Students\n0\n\nAll classrooms\n\nAverage XP\n0\n\nExperience points per student\n\nMost Common Level\nA0-\n\nCEFR proficiency level\n\nActive This Week\n0%\n\n0 of 0 students\n\nStudents Management\nAdd Student\nFilter by classroom\nCEFR Level\nName\tEmail\tClass Name\tCEFR Level\tXP\tRole\tActions\nNo students found matching your criteria.",
+      "case5 dashboard/teachers": "Primary Advantage\nHome\nAbout\nContact\nAuthors\nToggle Locale\nToggle theme\nqa-admin-a\nDashboard\nAdmin\nTeachers\nStudents And Classes\nImport Data\nArticle Creation\nTeachers Management\n\nManage teachers and their access to the system",
+      "case5 system licenses": "Unauthorized\n\nYour account does not have access to this page.\n\nBack to home",
+      "case7 school-profile": "Primary Advantage\nToggle Locale\nToggle theme\nqa-admin-a\nBack\nUser Profile\nSchool Profile\nSchool Profile\n\nManage your school information\n\nSchool Information\nView and manage your school details.\nEdit School\nSchool Name\n\nQA School A\n\nCreated At\n\nSeptember 15th, 2026\n\nUpdated At\n\nSeptember 15th, 2026\n\nTotal Users\n6 users\nTotal Admins\n0 admins\nLicense Information\nDetails about your school's license and subscription\n\nNo license found"
+    },
+    "screenshots": [
+      "t4-01-teacher-dashboard.png",
+      "t4-02a-my-classes.png",
+      "t4-02b-class-roster.png",
+      "t4-03a-class-created.png",
+      "t4-03b-after-delete.png",
+      "t4-04a-reports.png",
+      "t4-04b-student-progress.png",
+      "t4-04c-assignments-empty.png",
+      "t4-04d-assignments-class-selected.png",
+      "t4-06-teacher-admin-boundary.png",
+      "t4-05a-admin-dashboard.png",
+      "t4-05b-admin-teachers.png",
+      "t4-05c-admin-students.png",
+      "t4-05d-dashboard-teachers.png",
+      "t4-05e-licenses.png",
+      "t4-07-school-settings.png"
+    ]
+  },
+  "log": [
+    "api login qa-teacher-a: status 200",
+    "--- case1 dashboard redirect: GET http://localhost:3000/en/teacher/dashboard",
+    "    -> http://localhost:3000/en/teacher/my-classes",
+    "screenshot: t4-01-teacher-dashboard.png",
+    "[PASS] CASE 1: dashboard/landing=http://localhost:3000/en/teacher/my-classes; QA Class A visible=true; code QACLASSA visible=true; a '3' count cell present=true",
+    "--- case2 my-classes: GET http://localhost:3000/en/teacher/my-classes",
+    "    -> http://localhost:3000/en/teacher/my-classes",
+    "screenshot: t4-02a-my-classes.png",
+    "QA Class A id from /api/classroom: 828838c2-322e-435a-84b5-539dab1594e8",
+    "--- case2 class roster: GET http://localhost:3000/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8",
+    "    -> http://localhost:3000/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8",
+    "screenshot: t4-02b-class-roster.png",
+    "[PASS] CASE 2: card visible=true; roster students: [{\"s\":\"qa-student-a1\",\"present\":true},{\"s\":\"qa-student-a2\",\"present\":true},{\"s\":\"qa-student-a3\",\"present\":true}]",
+    "--- case3 my-classes for create: GET http://localhost:3000/en/teacher/my-classes",
+    "    -> http://localhost:3000/en/teacher/my-classes",
+    "create-area buttons: [\"Google Classroom\",\"New Classroom\"]",
+    "create POST status: 201",
+    "screenshot: t4-03a-class-created.png",
+    "DELETE /api/classroom/a30b5023-fe85-4b85-a099-52ae66e6ecf8 -> 200",
+    "--- case3 post-cleanup: GET http://localhost:3000/en/teacher/my-classes",
+    "    -> http://localhost:3000/en/teacher/my-classes",
+    "screenshot: t4-03b-after-delete.png",
+    "[PASS] CASE 3: create status=201 (201 Created accepted); row visible=true; cleanup: DELETE /api/classroom/a30b5023-fe85-4b85-a099-52ae66e6ecf8 -> 200; row gone=true",
+    "--- case4 reports: GET http://localhost:3000/en/teacher/reports?classroomId=828838c2-322e-435a-84b5-539dab1594e8",
+    "    -> http://localhost:3000/en/teacher/reports?classroomId=828838c2-322e-435a-84b5-539dab1594e8",
+    "screenshot: t4-04a-reports.png",
+    "qa-student-a1 id: 55271a44-5acd-4065-b1a9-11672a22eb55",
+    "--- case4 student detail: GET http://localhost:3000/en/teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55",
+    "    -> http://localhost:3000/en/teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55",
+    "screenshot: t4-04b-student-progress.png",
+    "--- case4 assignments: GET http://localhost:3000/en/teacher/assignments",
+    "    -> http://localhost:3000/en/teacher/assignments",
+    "screenshot: t4-04c-assignments-empty.png",
+    "screenshot: t4-04d-assignments-class-selected.png",
+    "[PASS] CASE 4: views exercised (empty state = BLOCKED per spec): [{\"view\":\"reports\",\"crashed\":false,\"empty\":false},{\"view\":\"student-progress\",\"crashed\":false,\"forbidden\":false,\"empty\":false,\"showsStudent\":true},{\"view\":\"assignments\",\"crashed\":false,\"empty\":false,\"pickedClass\":true}]",
+    "--- case6 teacher -> admin: GET http://localhost:3000/en/admin/dashboard",
+    "    -> http://localhost:3000/en/unauthorized",
+    "screenshot: t4-06-teacher-admin-boundary.png",
+    "[PASS] CASE 6: teacher GET /admin/dashboard landed at http://localhost:3000/en/unauthorized; looksLikeRedirect/403=true; looksLike500=false",
+    "api login qa-admin-a: status 200",
+    "--- case5 admin dashboard: GET http://localhost:3000/en/admin/dashboard",
+    "    -> http://localhost:3000/en/admin/dashboard",
+    "screenshot: t4-05a-admin-dashboard.png",
+    "--- case5 admin teachers: GET http://localhost:3000/en/admin/teachers",
+    "    -> http://localhost:3000/en/admin/teachers",
+    "screenshot: t4-05b-admin-teachers.png",
+    "--- case5 admin students: GET http://localhost:3000/en/admin/students",
+    "    -> http://localhost:3000/en/admin/students",
+    "screenshot: t4-05c-admin-students.png",
+    "--- case5 dashboard/teachers: GET http://localhost:3000/en/admin/dashboard/teachers",
+    "    -> http://localhost:3000/en/admin/dashboard/teachers",
+    "screenshot: t4-05d-dashboard-teachers.png",
+    "--- case5 system licenses: GET http://localhost:3000/en/system/licenses",
+    "    -> http://localhost:3000/en/unauthorized",
+    "screenshot: t4-05e-licenses.png",
+    "admin API probes -> teachers:403 students:403 classrooms:403",
+    "[FAIL] CASE 5: MULTI-TENANT LEAK: NO — no qa-teacher-b / qa-student-b1 rendered. Management APIs for ADMIN: teachers=403, students=403, classrooms=403 (403 — user-management lists cannot load for qa-admin-a; legacy userRoles/schoolAdmins gate). UI text shows teacher-a:false, admin-a:true, student-a1:false. Licenses: /system/licenses is SYSTEM-only and redirected ADMIN to /unauthorized.",
+    "--- case7 school-profile: GET http://localhost:3000/en/settings/school-profile",
+    "    -> http://localhost:3000/en/settings/school-profile",
+    "screenshot: t4-07-school-settings.png",
+    "[PASS] CASE 7: school-profile at http://localhost:3000/en/settings/school-profile; rendered length=431; form-like content=true; no saves performed"
+  ]
+}

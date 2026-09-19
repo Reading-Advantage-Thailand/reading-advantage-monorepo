@@ -1,0 +1,72 @@
+{
+  "schema_version": "apk-legacy-traversal-phase2-binding-owner-receipt.v1",
+  "receipt_id": "apk_legacy_traversal_cutover_20260727_phase2_binding_owner_receipt_20260817",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "phase": "Phase 2 binding freeze",
+  "status": "accepted-for-implementation-evidence-only",
+  "recorded_at": "2026-08-17T00:03:20Z",
+  "decided_by": "project-owner",
+  "authority": "explicit-user-project-owner-instruction",
+  "current_head": "d01a4a0cf4975bb2dfee4698b513f1279a50264d",
+  "title_ids": [
+    "dragon-rider",
+    "spellweavers-run",
+    "shadow-gate-dungeon",
+    "labyrinth-goblin-king",
+    "griffin-riders-escape"
+  ],
+  "dossier_bindings": [
+    {
+      "title_id": "dragon-rider",
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-dossiers/dragon-rider.json",
+      "sha256": "4dc4d0b6ec806a65d87c7bd2299cb22cec08ed66d67c1f1bef483d6c8166acdc"
+    },
+    {
+      "title_id": "spellweavers-run",
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-dossiers/spellweavers-run.json",
+      "sha256": "36672b7d40c43368e3591aaae067edf9881f49825e94edd56aad48283b2274ec"
+    },
+    {
+      "title_id": "shadow-gate-dungeon",
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-dossiers/shadow-gate-dungeon.json",
+      "sha256": "7451f879f0c85e6e65503e07998f0c053e06535efe161a437ce07cc63d90e395"
+    },
+    {
+      "title_id": "labyrinth-goblin-king",
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-dossiers/labyrinth-goblin-king.json",
+      "sha256": "4ab4d64aedf631d961e3ab000cbba921ae3307729f0319e3eb59bad86a071ac1"
+    },
+    {
+      "title_id": "griffin-riders-escape",
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-dossiers/griffin-riders-escape.json",
+      "sha256": "2c76f118de752f9bbbea9cd250b6455bd7af0a6635daf94a62bc1a308e6eccfe"
+    }
+  ],
+  "decision_matrix": {
+    "reuse_canonical": [
+      "dragon-rider",
+      "shadow-gate-dungeon",
+      "labyrinth-goblin-king"
+    ],
+    "ingest_canonical": ["spellweavers-run", "griffin-riders-escape"],
+    "blocked": []
+  },
+  "owner_statement": "approved for implementation using only dossier-bound evidence; tracked and SHA-256-matched bytes authorize canonical reuse but not deployment or host adoption; missing source bytes require creation or ingestion of a canonical asset matching the dossier descriptor before use; approval does not claim ingestion complete.",
+  "authorization": {
+    "implementation_authorized_for_dossier_bound_evidence": true,
+    "missing_bytes_must_be_ingested_before_use": true,
+    "presence_claimed": false,
+    "adoption_claimed": false,
+    "asset_ingestion_claimed": false,
+    "production_use_authorized": false,
+    "cutover_authorized": false,
+    "retirement_authorized": false,
+    "deployment_authorized": false
+  },
+  "hash_governance": {
+    "dossier_set_is_exhaustive": true,
+    "dossier_digest_algorithm": "SHA-256",
+    "dossier_drift_invalidates_receipt": true,
+    "receipt_does_not_authorize_presence_or_adoption": true
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "The candidate passes the focused security and boundary review with no blocking or nonblocking findings.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Candidate 48e6575dca6ff8314196a78100b6ddd3a6dd5c59 has Red commit a0a10035db9c274cd5d49cd8fa770ee9873466fc as its parent.",
+    "The candidate changes exactly two source files: contact configuration and contact-page locale data.",
+    "contact.ts keeps the raw TikTok handle and safe https and tel href values in contactDetails.",
+    "The English, Thai, and Chinese locale fields contain platform phrases without the raw TikTok handle.",
+    "The candidate leaves ContactPage, Footer, ContactForm, and the reviewed contact tests unchanged from the Red parent.",
+    "ContactPage renders the localized platform phrase and contactDetails.tiktokLabel as React text.",
+    "ContactForm retains only the existing mailto submission path and makes no backend or adapter claim.",
+    "The candidate diff contains no provider, tenant, database, route, dependency, raw HTML, or injection-path change.",
+    "All reviewed worktree blobs match their candidate commit blobs.",
+    "The focused test run passed 11/11 tests. Existing React DOM warnings appeared in unrelated reviewed components.",
+    "Current HEAD is d01a4a0cf4975bb2dfee4698b513f1279a50264d and has no reviewed www source drift from the candidate.",
+    "The current dirty tree contains unrelated APK, Phase 5 pricing, Measure, and package work, which this review did not change."
+  ],
+  "commands": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-4-contact-copy.red.test.tsx src/__tests__/phase-4-contact-authority.red.test.tsx src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "Three files and 11 tests passed. Existing React DOM warnings were nonblocking."
+    },
+    {
+      "command": "python3 inline committed contact boundary assertions",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "The exact file scope, safe href literals, locale separation, unchanged render/form blobs, and forbidden-token checks passed."
+    },
+    {
+      "command": "git diff --check a0a10035db9c274cd5d49cd8fa770ee9873466fc 48e6575dca6ff8314196a78100b6ddd3a6dd5c59",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "The committed two-file diff has no whitespace errors."
+    },
+    {
+      "command": "build-graph inspect ./graph.db contactDetails; build-graph callers ./graph.db contactDetails",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "The graph is fresh. No exported signature changed, so no breaking caller update is required."
+    }
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/config/contact.ts",
+    "apps/www-reading-advantage/src/locales/pages/contact.ts"
+  ],
+  "security_review": {
+    "centralized_contact_authority": {
+      "verdict": "pass",
+      "detail": "The authority suite passed 3/3. Raw contact values remain in contactDetails, and locale authority fields contain no raw duplicates."
+    },
+    "safe_href_values": {
+      "verdict": "pass",
+      "detail": "The candidate preserves the configured https TikTok URL, tel phone href, and mailto rendering path."
+    },
+    "locale_config_separation": {
+      "verdict": "pass",
+      "detail": "Locales contain translated platform phrases. contactDetails contains the raw handle."
+    },
+    "raw_html_or_injection_path": {
+      "verdict": "pass",
+      "detail": "The candidate changes data literals only. It adds no raw HTML sink, dynamic markup, or executable input path."
+    },
+    "contact_form_backend_boundary": {
+      "verdict": "pass",
+      "detail": "ContactForm remains unchanged and submits through its existing encoded mailto path. No backend claim was added."
+    },
+    "provider_or_tenant_boundary": {
+      "verdict": "pass",
+      "detail": "The exact two-file diff adds no provider, authentication, database, tenant, or adapter boundary."
+    }
+  },
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "role": "Review B security and boundary",
+  "track": "wave5_public_surface_completion_20260628",
+  "phase": "Phase 4 natural contact-copy remediation",
+  "baseline_source_sha": "48e6575dca6ff8314196a78100b6ddd3a6dd5c59",
+  "red_commit_sha": "a0a10035db9c274cd5d49cd8fa770ee9873466fc",
+  "candidate_sha": "48e6575dca6ff8314196a78100b6ddd3a6dd5c59",
+  "audited_head_sha": "d01a4a0cf4975bb2dfee4698b513f1279a50264d",
+  "head_start_sha": "d01a4a0cf4975bb2dfee4698b513f1279a50264d",
+  "head_end_sha": "d01a4a0cf4975bb2dfee4698b513f1279a50264d",
+  "head_advanced": false,
+  "reviewed_blobs": {
+    "apps/www-reading-advantage/src/config/contact.ts": "a803b4f763a571b08083f290f3630649fc3622d2",
+    "apps/www-reading-advantage/src/locales/pages/contact.ts": "9b8f64b116da7991e97d3254389af27cc9fcdbfe",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/contact/page.tsx": "155662213d7e33d6bf4bf2a12c48ee2f6c32c24e",
+    "apps/www-reading-advantage/src/components/contact/contact-form.tsx": "ea929d54c9e48054fcc700adc5eee82fcaa06e1e",
+    "apps/www-reading-advantage/src/components/common/footer.tsx": "8eefbd0471914e8db55ca35b9c413c75b6e330b5",
+    "apps/www-reading-advantage/src/__tests__/phase-4-contact-copy.red.test.tsx": "7820e42c1507e7b83f5b46d1802389755cfcb51b",
+    "apps/www-reading-advantage/src/__tests__/phase-4-contact-authority.red.test.tsx": "a552eacd7da61b5db895c92683761dc0efe59cc6",
+    "apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx": "6b6d860c843c193eac2d940ba9516e5f80359ed1"
+  },
+  "head_drift": {
+    "start": "d01a4a0cf4975bb2dfee4698b513f1279a50264d",
+    "end": "d01a4a0cf4975bb2dfee4698b513f1279a50264d",
+    "commits_after_candidate": [
+      "b0b77862c7484135951b67d5eedebc8d512d92db test(finance): reject poison receipt keys (track_id: company_finance_operations_20260810)",
+      "f6d1ed5a6e7d71caa60b5b822364294c405e181a test(sales): reject legacy Mastery bypass (track_id: sales_mastery_consumer_20260810)",
+      "c40b5b5d40660eb80976e2ada5e0717ab5ce681d test(www): define truthful pricing claims (track_id: wave5_public_surface_completion_20260628)",
+      "d01a4a0cf4975bb2dfee4698b513f1279a50264d test(backend): require owned job registration (track_id: durable_job_worker_platform_20260713)"
+    ],
+    "committed_files_after_candidate": [
+      "apps/www-reading-advantage/src/__tests__/phase-5-pricing-legal.red.test.tsx",
+      "packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts",
+      "packages/backend/src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts",
+      "packages/domain/src/__tests__/sales-mastery-projection.red.test.ts",
+      "packages/domain/src/__tests__/sales-phase2-review-a.red.test.ts"
+    ],
+    "reviewed_www_source_drift": "none",
+    "scope_note": "Committed drift is outside this review except for the unrelated Phase 5 Red test."
+  },
+  "dirty_tree_disclosure": {
+    "snapshot": "before report artifact creation",
+    "status_entries": 1443,
+    "status_counts": {
+      "worktree_deleted": 6,
+      "worktree_modified": 47,
+      "untracked": 1390
+    },
+    "top_level_counts": {
+      ".opencode": 1221,
+      "apps": 164,
+      "measure": 16,
+      "packages": 42
+    },
+    "named_www_files": [
+      "apps/www-reading-advantage/src/components/features/comparison-table.tsx",
+      "apps/www-reading-advantage/src/locales/components/comparison-table.ts",
+      "apps/www-reading-advantage/src/locales/components/pricing-table.ts"
+    ],
+    "review_target_files_dirty": [],
+    "scope_note": "APK paths, current Phase 5 pricing files, Measure files, and unrelated work were not changed."
+  },
+  "known_limitations": [
+    "Browser runtime verification was not run because this review used the smallest focused checks requested.",
+    "The focused Phase 4 run emitted existing React DOM warnings in unrelated reviewed components.",
+    "This report does not assess Phase 5 pricing or legal work, APK paths, or overall Phase 4 or track completion."
+  ],
+  "MEASURE_AGENT_RESULT": "PASS"
+}

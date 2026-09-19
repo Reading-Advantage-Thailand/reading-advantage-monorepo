@@ -1,0 +1,11 @@
+{
+  "track_id": "apk_arcade_portfolio_refactor_20260908",
+  "type": "refactor",
+  "status": "in_progress",
+  "created_at": "2026-09-08",
+  "updated_at": "2026-09-08",
+  "description": "Refactor APK and the complete game portfolio with shared arcade screens, listening, RPG progression, and social play.",
+  "estimated_tasks": 81,
+  "actual_tasks": null,
+  "deviation_notes": "Owner requested a detailed plan and Sol medium subagent handoff. Existing discussion supplies requirements; no repeated specification approval was requested."
+}

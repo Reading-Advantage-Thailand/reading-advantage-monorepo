@@ -1,0 +1,50 @@
+# Plan
+
+- [x] Process cellar doors and 32 approved house parts.
+- [x] Prepare farming extras, village doors, and small cave minerals for one review.
+- [x] Apply owner corrections and process the approved three-sheet batch: 107 crops.
+- [x] Prepare medium cave minerals, city doors, and castle doors: 48 animation strips.
+- [x] Process batch 2: 48 approved animation strips.
+- [x] Prepare batch 3: large minerals, mountain animations, and dungeon doors.
+- [x] Process batch 3: 56 approved animation strips.
+- [x] Prepare batch 4: castle candles, marshland animations, and grassland animations.
+- [x] Process batch 4: 50 approved animation strips.
+- [x] Prepare batch 5: desert animations, Christmas objects, and Halloween objects.
+- [x] Process batch 5: 177 approved cuts.
+- [x] Prepare batch 6: blacksmith, remastered Christmas, and remastered Halloween.
+- [x] Process batch 6: 217 approved cuts.
+- [x] Prepare batch 7: castle parts, desert houses, and remastered blacksmith.
+- [x] Process batch 7: 323 approved cuts.
+- [x] Count the remaining native sheets: 84 await review or completion.
+- [x] Prepare batch 8: spring, summer, and autumn forests.
+- [x] Process batch 8: 306 approved cuts.
+- [x] Prepare batch 9: six sheets, as the owner requested.
+- [x] Process batch 9: 1,534 approved crops and 931 reuses.
+- [x] Prepare batch 10: five animated terrain sheets and the remastered castle.
+- [x] Process batch 10: 267 approved cuts and two reuses.
+- [x] Prepare batch 11: four ground sheets, dungeon lava, and rogue water.
+- [x] Process batch 11: 1,077 approved cuts and 33 reuses.
+- [x] Prepare batch 12: cavern, farming ground, water, hell, sanctuary, and crypt.
+- [x] Process batch 12: 696 approved cuts and 189 reuses.
+- [x] Prepare batch 13: four mountain sheets and two fortress sheets.
+- [x] Process corrected batch 13: 1,398 approved cuts and 1,513 reuses.
+- [x] Prepare batch 14: paired forest, magma dungeon, and dark castle sheets.
+- [x] Process corrected batch 14: 1,662 approved cuts and 770 reuses.
+- [x] Prepare batch 15: six village sheets.
+- [x] Process batch 15: 1,639 approved cuts and 252 reuses.
+- [x] Prepare batch 16: six cave and mine sheets.
+- [x] Process corrected batch 16: 2,166 approved cuts and 363 reuses.
+- [x] Prepare batch 17: grasslands, marshlands, mountains, desert, remastered grasslands, and dreams.
+- [x] Process corrected batch 17: 2,076 approved cuts and 920 reuses.
+- [x] Prepare batch 18: two city sheets, two dungeon sheets, and two overworld sheets.
+- [x] Process batch 18: 3,344 approved cuts and 2,607 exact reuses.
+- [x] Prepare batch 19: jungle trees, jungle, wasteland, ancient ruins, graveyard, and harbor.
+- [x] Process batch 19: 2,141 approved cuts and 809 exact reuses.
+- [x] Prepare batch 20: Godot ground, Godot water, Lost City, Atlantis, Pyramid, and Temple.
+- [x] Process batch 20: 2,534 approved cuts and 712 exact reuses.
+- [x] Prepare batch 21: four interiors, marketplace, and ruins.
+- [x] Process corrected batch 21: 4,708 approved cuts and 1,150 exact reuses.
+- [x] Prepare batch 22: normal houses, winter houses, and rogue village.
+- [x] Process batch 22: 716 approved cuts and 281 exact reuses.
+- [x] Finish central house parts and small house props.
+- [x] Complete the native sheet queue through batch 22.

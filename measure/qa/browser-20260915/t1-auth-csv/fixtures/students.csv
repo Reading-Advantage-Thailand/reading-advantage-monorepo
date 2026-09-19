@@ -1,0 +1,5 @@
+name,email,role,classroom_name
+Dup One,dup.browser@example.com,student,QA Class B
+Dup Two,dup.browser@example.com,student,QA Class B
+Mixed Cased,MixedCase.Browser@Example.COM,student,QA Class B
+New Student,newstudent.browser@example.com,student,QA Class B

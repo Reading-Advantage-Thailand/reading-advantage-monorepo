@@ -1,0 +1,368 @@
+{
+  "schema_version": "apk-legacy-defense-task1-source-readiness-manifest.v1",
+  "track_id": "apk_legacy_defense_cutover_20260727",
+  "task": "Task 1: source/readiness manifest preparation",
+  "status": "evidence-only",
+  "archive_resolution_rule": "For each predecessor, archive_preferred_path is the only consumable local path after archival. receipt_declared_path is retained solely to reconcile immutable receipt text and is not a fallback.",
+  "source_bindings": {
+    "accepted_readiness_receipt": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "receipt_declared_path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+    },
+    "phase1_crosswalk": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "receipt_declared_path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+    },
+    "identity_ledger": {
+      "archive_preferred_path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+    },
+    "action_defense_source_evidence": {
+      "archive_preferred_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80"
+    }
+  },
+  "readiness_boundary": {
+    "receipt_status": "accepted-active",
+    "authorized_child_work_only": true,
+    "cohort_currently_ready": false,
+    "cartridge_cutover_authorized": false,
+    "meaning": "The receipt removes only the denominator/readiness predecessor block for this four-title child track. It does not satisfy Task 1 or any downstream task."
+  },
+  "titles": [
+    {
+      "title_id": "castle-defense",
+      "title": "Castle Defense",
+      "assignment_index": 3,
+      "source_identity_id": "sentence/castle-defense",
+      "identity_record_index": 10,
+      "cohort": "Action and defense",
+      "classification": "source_identity",
+      "crosswalk_locator": {
+        "assignment_index": 3,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/3"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/10"
+        }
+      },
+      "legacy_source_records": {
+        "aliases": [
+          {
+            "alias": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+            "evidence": {
+              "blob_sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+              "range": {
+                "end_line": 261,
+                "sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          },
+          {
+            "alias": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+            "evidence": {
+              "blob_sha256": "fc6ead3439a8118004f48420e8fa94eb316b74ac8f186fb27c1e9c024fd9a653",
+              "path": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+              "range": {
+                "end_line": 274,
+                "sha256": "fc6ead3439a8118004f48420e8fa94eb316b74ac8f186fb27c1e9c024fd9a653",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "routes": [
+          {
+            "evidence": {
+              "blob_sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+              "range": {
+                "end_line": 261,
+                "sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            },
+            "route": "/student/games/sentence/castle-defense"
+          },
+          {
+            "evidence": {
+              "blob_sha256": "fc6ead3439a8118004f48420e8fa94eb316b74ac8f186fb27c1e9c024fd9a653",
+              "path": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+              "range": {
+                "end_line": 274,
+                "sha256": "fc6ead3439a8118004f48420e8fa94eb316b74ac8f186fb27c1e9c024fd9a653",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            },
+            "route": "/apps/reading-advantage/app/student/games/sentence/castle-defense"
+          }
+        ],
+        "source_states": [
+          {
+            "evidence": {
+              "blob_sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx",
+              "range": {
+                "end_line": 261,
+                "sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            },
+            "source_class": "current-page-source"
+          }
+        ]
+      },
+      "legacy_source_records_status": "observation-only-not-adoption-or-approval"
+    },
+    {
+      "title_id": "wizard-vs-zombie",
+      "title": "Wizard vs Zombie",
+      "assignment_index": 5,
+      "source_identity_id": "vocabulary/wizard-vs-zombie",
+      "identity_record_index": 26,
+      "cohort": "Action and defense",
+      "classification": "source_identity",
+      "crosswalk_locator": {
+        "assignment_index": 5,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/5"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/26"
+        }
+      },
+      "legacy_source_records": {
+        "aliases": [
+          {
+            "alias": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+            "evidence": {
+              "blob_sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+              "range": {
+                "end_line": 122,
+                "sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          },
+          {
+            "alias": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+            "evidence": {
+              "blob_sha256": "eb2c97ed11dd23d42c37cede903d314203e925ec269632f5fa40b21399fe2766",
+              "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+              "range": {
+                "end_line": 159,
+                "sha256": "eb2c97ed11dd23d42c37cede903d314203e925ec269632f5fa40b21399fe2766",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "routes": [
+          {
+            "evidence": {
+              "blob_sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+              "range": {
+                "end_line": 122,
+                "sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            },
+            "route": "/student/games/vocabulary/wizard-vs-zombie"
+          },
+          {
+            "evidence": {
+              "blob_sha256": "eb2c97ed11dd23d42c37cede903d314203e925ec269632f5fa40b21399fe2766",
+              "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+              "range": {
+                "end_line": 159,
+                "sha256": "eb2c97ed11dd23d42c37cede903d314203e925ec269632f5fa40b21399fe2766",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            },
+            "route": "/apps/reading-advantage/app/student/games/vocabulary/wizard-vs-zombie"
+          }
+        ],
+        "source_states": [
+          {
+            "evidence": {
+              "blob_sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx",
+              "range": {
+                "end_line": 122,
+                "sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            },
+            "source_class": "current-page-source"
+          }
+        ]
+      },
+      "legacy_source_records_status": "observation-only-not-adoption-or-approval"
+    },
+    {
+      "title_id": "village-guardian",
+      "title": "Village Guardian",
+      "assignment_index": 6,
+      "source_identity_id": "sentence/village-guardian",
+      "identity_record_index": 18,
+      "cohort": "Action and defense",
+      "classification": "source_identity",
+      "crosswalk_locator": {
+        "assignment_index": 6,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/6"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/18"
+        }
+      },
+      "legacy_source_records": {
+        "aliases": [
+          {
+            "alias": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx",
+            "evidence": {
+              "blob_sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx",
+              "range": {
+                "end_line": 216,
+                "sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "routes": [
+          {
+            "evidence": {
+              "blob_sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx",
+              "range": {
+                "end_line": 216,
+                "sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            },
+            "route": "/student/games/sentence/village-guardian"
+          }
+        ],
+        "source_states": [
+          {
+            "evidence": {
+              "blob_sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx",
+              "range": {
+                "end_line": 216,
+                "sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e",
+                "start_line": 1
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            },
+            "source_class": "current-page-source"
+          }
+        ]
+      },
+      "legacy_source_records_status": "observation-only-not-adoption-or-approval"
+    },
+    {
+      "title_id": "storm-castle-tower",
+      "title": "Storm the Castle Tower",
+      "assignment_index": 8,
+      "source_identity_id": "catalog/storm-castle-tower",
+      "identity_record_index": 9,
+      "cohort": "Action and defense",
+      "classification": "source_identity",
+      "crosswalk_locator": {
+        "assignment_index": 8,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/8"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/9"
+        }
+      },
+      "legacy_source_records": {
+        "aliases": [
+          {
+            "alias": "storm-castle-tower",
+            "evidence": {
+              "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+              "path": "apps/advantage-games/src/lib/gameCards.ts",
+              "range": {
+                "end_line": 161,
+                "sha256": "553c98b7f1d8392adb0712f4c6e084b9211bfa5afc73c324dda7c66ab378e22c",
+                "start_line": 161
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "routes": [],
+        "source_states": [
+          {
+            "evidence": {
+              "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+              "path": "apps/advantage-games/src/lib/gameCards.ts",
+              "range": {
+                "end_line": 21,
+                "sha256": "1bb87c651eb95259dd69e219178d99b1baa41858e62d4a95e9824d3386904d5a",
+                "start_line": 21
+              },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            },
+            "source_class": "catalog-withdrawn-registration"
+          }
+        ]
+      },
+      "legacy_source_records_status": "observation-only-not-adoption-or-approval"
+    }
+  ],
+  "claims": {
+    "semantic_adoption_claimed": false,
+    "selected_assets_claimed": false,
+    "asset_suitability_claimed": false,
+    "asset_adoption_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false,
+    "release_authority_granted": false
+  },
+  "required_before_any_adoption_or_cutover": [
+    "accepted Asset Contract v2 output",
+    "accepted per-title/per-role suitability and canonical-ingestion dossier",
+    "accepted semantic adoption binding",
+    "deterministic cartridge revalidation and selected-output proof",
+    "Advantage Games, Reading, and Primary host proof with authoritative completion persistence",
+    "exact legacy retirement disposition plus independent review and product-owner acceptance"
+  ],
+  "revocation_rule": "Any bound-byte, roster, title-identity, locator, source-observation, or authority-boundary drift invalidates this Task 1 evidence-only manifest; remediation must publish a successor record rather than mutate archived predecessor evidence."
+}

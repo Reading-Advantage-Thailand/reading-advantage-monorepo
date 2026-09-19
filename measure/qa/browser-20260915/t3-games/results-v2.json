@@ -1,0 +1,494 @@
+{
+  "startedAt": "2026-09-15T12:11:08.294Z",
+  "passes": {
+    "a3": {
+      "retests": {
+        "storm-castle-tower": {
+          "id": "storm-castle-tower",
+          "startedAt": "2026-09-15T12:11:28.299Z",
+          "logs": [
+            {
+              "key": "error:IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:364",
+              "kind": "error",
+              "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compi",
+              "count": 2
+            }
+          ],
+          "statsStart": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 68,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "stats10s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 86,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "resultText": "SESSION COMPLETE\n\nTry again\nScore\n100\nAccuracy\n100%\nCorrect\n1/1\nConfirmed XP\n4\n\nPixel art assets by ElvGames\n\nPlay againExit",
+          "resultVisible": true,
+          "endedAfterMs": 19287,
+          "statsEnd": {
+            "hasCanvas": true,
+            "readable": false
+          },
+          "completionCalls": [
+            {
+              "status": 200,
+              "payload": {
+                "xpEarned": 4,
+                "activityId": "game:storm-castle-tower:fbb2e9e8-1c20-4921-8fc7-54e7962f5349",
+                "duplicate": false,
+                "status": 200
+              },
+              "challengeRunId": null
+            }
+          ],
+          "apiErrors": [],
+          "verdict": "PASS",
+          "durationMs": 47409
+        },
+        "paladins-twin-soul": {
+          "id": "paladins-twin-soul",
+          "startedAt": "2026-09-15T12:12:15.709Z",
+          "logs": [
+            {
+              "key": "error:IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:364",
+              "kind": "error",
+              "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compi",
+              "count": 1
+            }
+          ],
+          "statsStart": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 39,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "resultText": "SESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/2\nConfirmed XP\n1\n\nPixel art assets by ElvGames\n\nPlay againExit",
+          "resultVisible": true,
+          "endedAfterMs": 3754,
+          "statsEnd": {
+            "hasCanvas": true,
+            "readable": false
+          },
+          "completionCalls": [
+            {
+              "status": 200,
+              "payload": {
+                "xpEarned": 1,
+                "activityId": "game:paladins-twin-soul:b521c1e6-7049-4dd9-8bb3-312aa9007a22",
+                "duplicate": false,
+                "status": 200
+              },
+              "challengeRunId": null
+            }
+          ],
+          "apiErrors": [],
+          "verdict": "PASS",
+          "durationMs": 22364
+        },
+        "haunted-library": {
+          "id": "haunted-library",
+          "startedAt": "2026-09-15T12:18:24.857Z",
+          "logs": [],
+          "statsStart": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 118,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "resultText": "SESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/0\nConfirmed XP\n0\n\nPixel art assets by ElvGames\n\nPlay againExit",
+          "resultVisible": true,
+          "endedAfterMs": 7779,
+          "statsEnd": {
+            "hasCanvas": true,
+            "readable": false
+          },
+          "completionCalls": [
+            {
+              "status": 200,
+              "payload": {
+                "xpEarned": 0,
+                "activityId": "game:haunted-library:2b5d4200-f375-49b2-8887-17a99d8f136d",
+                "duplicate": false,
+                "status": 200
+              },
+              "challengeRunId": null
+            }
+          ],
+          "apiErrors": [],
+          "verdict": "PASS",
+          "durationMs": 40454
+        },
+        "gryphon-patrol": {
+          "id": "gryphon-patrol",
+          "startedAt": "2026-09-15T12:19:05.320Z",
+          "logs": [],
+          "statsStart": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 122,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "stats10s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 120,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "stats20s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 130,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "motionAt20s": 0.09022785039941902,
+          "resultText": "SESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/3\nConfirmed XP\n1\n\nPixel art assets by ElvGames\n\nPlay againExit",
+          "resultVisible": true,
+          "endedAfterMs": 34451,
+          "statsEnd": {
+            "hasCanvas": true,
+            "readable": false
+          },
+          "completionCalls": [
+            {
+              "status": 200,
+              "payload": {
+                "xpEarned": 1,
+                "activityId": "game:gryphon-patrol:16d8722f-3c66-4c79-ad9a-861e92888809",
+                "duplicate": false,
+                "status": 200
+              },
+              "challengeRunId": null
+            }
+          ],
+          "apiErrors": [],
+          "verdict": "PASS",
+          "durationMs": 57843
+        },
+        "rpg-battle": {
+          "id": "rpg-battle",
+          "startedAt": "2026-09-15T12:20:03.167Z",
+          "logs": [],
+          "statsStart": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 127,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "stats10s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 137,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "stats20s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 127,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "motionAt20s": 0.002027732389251997,
+          "resultVisible": false,
+          "endedAfterMs": null,
+          "statsEnd": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 139,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "completionCalls": [],
+          "apiErrors": [],
+          "verdict": "PASS",
+          "durationMs": 70800
+        },
+        "rune-match": {
+          "id": "rune-match",
+          "startedAt": "2026-09-15T12:21:13.967Z",
+          "logs": [],
+          "statsStart": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 99,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "stats10s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 98,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "stats20s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 102,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "motionAt20s": 0.0032203159041394335,
+          "resultVisible": false,
+          "endedAfterMs": null,
+          "statsEnd": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 108,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "completionCalls": [],
+          "apiErrors": [],
+          "verdict": "PASS",
+          "durationMs": 71736
+        },
+        "realm-carver": {
+          "id": "realm-carver",
+          "verdict": "FAIL",
+          "reason": "Game could not start: Realm Carver supports at most 100 sentence words",
+          "practiceMountedCanvas": false,
+          "practiceAlerts": "Game could not start: Realm Carver supports at most 100 sentence words | ",
+          "supersededBy": "focus.realm-carver",
+          "durationMs": null
+        }
+      },
+      "challenge": {
+        "startedAt": "2026-09-15T12:24:35.556Z",
+        "href": "/en/student/games/apk/wizard-vs-zombie?challengeId=d0d22313-d43c-4edb-9b33-eb75d0cc5e9e",
+        "logs": [
+          {
+            "key": "error:IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:364",
+            "kind": "error",
+            "text": "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonymous>)\n    at SidebarNav (http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2489:40)\n    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compi",
+            "count": 1
+          },
+          {
+            "key": "warning:Texture \"%s\" has no frame \"%s\" apk:catalog-standard-pack:wizard-floor 1",
+            "kind": "warning",
+            "text": "Texture \"%s\" has no frame \"%s\" apk:catalog-standard-pack:wizard-floor 1",
+            "count": 1
+          }
+        ],
+        "statsStart": {
+          "hasCanvas": true,
+          "readable": true,
+          "uniqueColors": 124,
+          "nonWhiteRatio": 1,
+          "nonBlackRatio": 0.8849826388888888
+        },
+        "stats10s": {
+          "hasCanvas": true,
+          "readable": true,
+          "uniqueColors": 131,
+          "nonWhiteRatio": 1,
+          "nonBlackRatio": 0.8849826388888888
+        },
+        "resultText": "SESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/0\nConfirmed XP\n0\n\nPixel art assets by ElvGames\n\nPlay againExit",
+        "resultVisible": true,
+        "endedAfterMs": 17751,
+        "statsEnd": {
+          "hasCanvas": true,
+          "readable": false
+        },
+        "completionCalls": [
+          {
+            "status": 200,
+            "payload": {
+              "xpEarned": 0,
+              "activityId": "game:wizard-vs-zombie:2a3690ae-11a6-47c2-b96a-6a4784ea1d30",
+              "duplicate": false,
+              "status": 200
+            },
+            "challengeRunId": "bf636615-a2a2-47a7-9289-57f0ebd48e89"
+          }
+        ],
+        "apiErrors": [],
+        "verdict": "PASS",
+        "durationMs": 124255
+      },
+      "catalogPanel": "Class challenges\nClass \nQA Class A\nQA Wizard Sprint\nWizard vs Zombie\nClass progress: 0/10\nActive\n9/14/2026 – 9/22/2026\nPlay challenge",
+      "focus": {
+        "realm-carver": {
+          "logs": [
+            "error: IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:"
+          ],
+          "guardAfterPlay": "Game could not start: Realm Carver supports at most 100 sentence words",
+          "scoredCanvasStats": {
+            "readable": false
+          },
+          "canvasVisibleAfterPlay": false,
+          "tutorialCanvasVisible": false,
+          "tutorialAlerts": "Game could not start: Realm Carver supports at most 100 sentence words | ",
+          "tutorialStatus": "Game briefing ready"
+        },
+        "rpg-battle-defeat": {
+          "logs": [
+            "error: IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:"
+          ],
+          "resultVisible": false,
+          "verdict": "FAIL",
+          "error": "locator.innerText: Timeout 120000ms exceeded.\nCall log:\n  - waiting for locator('section[aria-label=\\'Game result\\']').first()\n"
+        },
+        "rpg-battle-defeat-v2": {
+          "id": "rpg-battle",
+          "logs": [
+            "error: IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:"
+          ],
+          "reachedResult": true,
+          "clicks": 16,
+          "resultText": "SESSION COMPLETE\n\nTry again\nScore\n600\nAccuracy\n38%\nCorrect\n6/16\nConfirmed XP\n7\n\nPixel art assets by ElvGames\n\nPlay againExit",
+          "completionCalls": [
+            {
+              "status": 200,
+              "payload": {
+                "xpEarned": 7,
+                "activityId": "game:rpg-battle:c93c2dff-c43a-40b1-9baf-125a2f94f31c",
+                "duplicate": false,
+                "status": 200
+              }
+            }
+          ],
+          "apiErrors": [],
+          "bodyTail": "SESSION COMPLETE\n\nTry again\nScore\n600\nAccuracy\n38%\nCorrect\n6/16\nConfirmed XP\n7\n\nPixel art assets by ElvGames\n\nPlay againExit",
+          "verdict": "PASS"
+        },
+        "abyssal-well-retry": {
+          "id": "abyssal-well",
+          "logs": [
+            "error: IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:"
+          ],
+          "reachedResult": true,
+          "clicks": 5,
+          "resultText": "SESSION COMPLETE\n\nTry again\nScore\n100\nAccuracy\n100%\nCorrect\n1/1\nConfirmed XP\n4\n\nPixel art assets by ElvGames\n\nPlay againExit",
+          "completionCalls": [
+            {
+              "status": 200,
+              "payload": {
+                "xpEarned": 4,
+                "activityId": "game:abyssal-well:60eb1a13-280e-4c24-af38-31ddc6456a53",
+                "duplicate": false,
+                "status": 200
+              }
+            }
+          ],
+          "apiErrors": [],
+          "bodyTail": "SESSION COMPLETE\n\nTry again\nScore\n100\nAccuracy\n100%\nCorrect\n1/1\nConfirmed XP\n4\n\nPixel art assets by ElvGames\n\nPlay againExit",
+          "verdict": "PASS"
+        }
+      }
+    },
+    "b1": {
+      "games": {
+        "wizard-vs-zombie": {
+          "id": "wizard-vs-zombie",
+          "startedAt": "2026-09-15T12:26:39.817Z",
+          "logs": [
+            {
+              "key": "warning:Texture \"%s\" has no frame \"%s\" apk:catalog-standard-pack:wizard-floor 1",
+              "kind": "warning",
+              "text": "Texture \"%s\" has no frame \"%s\" apk:catalog-standard-pack:wizard-floor 1",
+              "count": 1
+            }
+          ],
+          "statsStart": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 117,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 0.8849826388888888
+          },
+          "stats10s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 124,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 0.8849826388888888
+          },
+          "stats20s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 127,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 0.8849826388888888
+          },
+          "motionAt20s": 0.004736860021786493,
+          "resultText": "SESSION COMPLETE\n\nTry again\nScore\n0\nAccuracy\n0%\nCorrect\n0/0\nConfirmed XP\n0\n\nPixel art assets by ElvGames\n\nPlay againExit",
+          "resultVisible": true,
+          "endedAfterMs": 25754,
+          "statsEnd": {
+            "hasCanvas": true,
+            "readable": false
+          },
+          "completionCalls": [
+            {
+              "status": 200,
+              "payload": {
+                "xpEarned": 0,
+                "activityId": "game:wizard-vs-zombie:d0413018-87c5-4388-bf30-2049a265f8c6",
+                "duplicate": false,
+                "status": 200
+              },
+              "challengeRunId": null
+            }
+          ],
+          "apiErrors": [],
+          "verdict": "PASS",
+          "durationMs": 49611
+        },
+        "castle-defense": {
+          "id": "castle-defense",
+          "startedAt": "2026-09-15T12:27:29.430Z",
+          "logs": [],
+          "statsStart": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 90,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "stats10s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 91,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "stats20s": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 90,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "motionAt20s": 0.0001236837327523602,
+          "resultVisible": false,
+          "endedAfterMs": null,
+          "statsEnd": {
+            "hasCanvas": true,
+            "readable": true,
+            "uniqueColors": 91,
+            "nonWhiteRatio": 1,
+            "nonBlackRatio": 1
+          },
+          "completionCalls": [],
+          "apiErrors": [],
+          "verdict": "PASS",
+          "durationMs": 72538
+        }
+      }
+    }
+  }
+}

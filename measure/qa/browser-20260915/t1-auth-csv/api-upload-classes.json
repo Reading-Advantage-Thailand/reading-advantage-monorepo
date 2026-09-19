@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "message": "Classes uploaded and created successfully",
+  "fileName": "4db79ec7-f739-43cc-a7ea-8b01a9dd9ac8_classes.csv",
+  "filePath": "/home/daniebo/Desktop/reading-advantage-monorepo/apps/primary-advantage/temp/4db79ec7-f739-43cc-a7ea-8b01a9dd9ac8_classes.csv",
+  "originalName": "classes.csv",
+  "size": 35,
+  "timestamp": 1789431694113,
+  "stats": {
+    "totalRows": 1,
+    "errors": 0,
+    "processedClasses": 1,
+    "createdClassrooms": 0
+  },
+  "performanceStats": {
+    "totalExecutionTime": 632,
+    "processedAt": "2026-09-15T00:21:34.573Z"
+  },
+  "schoolInfo": {
+    "id": "c74be1bd-7e83-41d2-a5e4-4e06e3294f1f",
+    "name": "QA School B",
+    "note": "All imported classes have been assigned to this school"
+  },
+  "classrooms": [],
+  "note": "Classes created successfully. You can now import students and teachers to assign them to these classes."
+}

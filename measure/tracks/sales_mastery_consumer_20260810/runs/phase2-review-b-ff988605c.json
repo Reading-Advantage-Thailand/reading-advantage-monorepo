@@ -1,0 +1,350 @@
+{
+  "schema_version": 1,
+  "track_id": "sales_mastery_consumer_20260810",
+  "phase": "Phase 2 — company tenant mapping and durable projection",
+  "role": "fresh independent Review B security and tenancy reviewer",
+  "phase_base_sha": "fd581f3dcd15e7b7b632875862aaecb596719621",
+  "role_base_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "red_commit_sha": "52ff43a7619af4b8e2397df3d780b20295a6f449",
+  "red_commit_shas": [
+    "52ff43a7619af4b8e2397df3d780b20295a6f449",
+    "b6ab9306a7d153321e1e35daa6e7f00bb966085c"
+  ],
+  "candidate_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+  "candidate_parent_sha": "1fdd9162d800ff0514bcff3d7ebf3ed82b4c0b00",
+  "audited_head_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+  "audit_start_head_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+  "verification_head_start_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+  "verification_head_end_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+  "head_advanced_during_audit": false,
+  "status": "FAIL",
+  "decision": "FAIL",
+  "summary": "Trusted mode improves scope checks, but legacy bypass, fabricated attempt identities, and non-atomic receipts block security acceptance.",
+  "current_head_acceptance": "withheld",
+  "phase_or_track_completion_claim": false,
+  "production_code_modified_by_review": false,
+  "tests_modified_by_review": false,
+  "plans_modified_by_review": false,
+  "baselines_modified_by_review": false,
+  "commit_created": false,
+  "report_is_unstaged": true,
+  "security_applicability": "applicable",
+  "reviewed_inputs": [
+    "measure/index.md",
+    "measure/workflow.md",
+    "measure/product-guidelines.md",
+    "measure/tech-stack.md",
+    "measure/lessons-learned.md",
+    "measure/code_styleguides/general.md",
+    "measure/code_styleguides/typescript.md",
+    "measure/code_styleguides/javascript.md",
+    "measure/tracks/sales_mastery_consumer_20260810/spec.md",
+    "measure/tracks/sales_mastery_consumer_20260810/plan.md",
+    "measure/tracks/sales_mastery_consumer_20260810/test-strategy-phase2.md",
+    "measure/tracks/sales_mastery_consumer_20260810/phase2-review-b-green-remediation-evidence-20260816.md",
+    "packages/domain/src/sales-mastery.ts",
+    "packages/domain/src/__tests__/sales-mastery-projection.red.test.ts",
+    "packages/domain/src/__tests__/sales-phase2-mode-isolation.red.test.ts",
+    "packages/domain/src/__tests__/sales-phase2-review-a.red.test.ts",
+    "packages/domain/src/company-identity-principal.ts",
+    "packages/domain/src/mastery/drizzle-mastery-persistence.ts",
+    "packages/domain/src/mastery/persistence-contracts.ts",
+    "packages/domain/src/mastery/persistence-ports.ts",
+    "packages/db/src/schema/sales-mastery.ts",
+    "packages/db/drizzle/0053_sales_mastery_tenant_mapping.sql",
+    "packages/db/src/__tests__/sales-mastery-tenant.integration.test.ts",
+    "packages/sales-knowledge/src/bindings.ts",
+    "packages/sales-knowledge/src/generator.ts",
+    "packages/sales-knowledge/src/contracts.ts"
+  ],
+  "scope_audit": {
+    "candidate_commit": "The candidate changes only packages/domain/src/sales-mastery.ts.",
+    "red_commits": "52ff43a76 changes the authoritative projection Red tests. b6ab9306a adds constructor mode Red tests.",
+    "candidate_tree": "aae1618065d06731cd497c0f13dc822b0686098b",
+    "candidate_source_blob": "f7e4953d8a605c16795d0a840059fab7c45c719b",
+    "candidate_source_sha256": "2d5c47466565acf7620a76b829cac0d0e3909c4524b7c534577aa81bf5baa49c",
+    "candidate_source_diff_sha256": "36aa01bd24cc648acaf9985133a2693f51a1810a04832327be116d16896cd09d",
+    "red_52_tree": "d80e9f2b5feb742a2040a9c7eaa910e748267f4e",
+    "red_52_projection_test_sha256": "063fd81e65c9e92c25aaebe8fdacdf77254679092aad22be7a7ceb25a0461ebf",
+    "red_b6_tree": "db795832d2a409c05049030370bc3df0958e1710",
+    "red_b6_mode_test_sha256": "61f2d0289a7302f4c1001faac7951a5380dcf5ef7cae3518ddf55ffff23765cc",
+    "excluded_scope": [
+      "packages/db/src/__tests__/sales-phase2-mr-007-atomicity.red.test.ts",
+      "APK paths",
+      "unrelated dirty paths"
+    ],
+    "range_note": "The review used the supplied candidate and Red commits. It did not review or change excluded worktree paths."
+  },
+  "boundary_assessment": {
+    "trusted_identity_every_boundary": {
+      "status": "PASS",
+      "details": "Trusted resolve, project, read, and retry paths call the verifier and use its returned organization and principal scope."
+    },
+    "exact_school_organization_principal_scope": {
+      "status": "PASS_WITH_LIVE_LIMIT",
+      "details": "Mapping, outbox queries, factory scope, and Mastery records use the mapped school, verified organization, and verified principal. Live adapter proof was skipped without PG_TEST_URL."
+    },
+    "cross_organization_reads_writes_replay": {
+      "status": "PASS_WITH_LIVE_LIMIT",
+      "details": "Memory checks and database constraints deny cross-organization reads, writes, source attempts, and idempotency reuse. The live adapter suite did not run."
+    },
+    "mixed_mode_rejection": {
+      "status": "PASS",
+      "details": "The constructor rejects mixed dependencies and incomplete trusted dependencies before database or provider access."
+    },
+    "legacy_limitation": {
+      "status": "FAIL",
+      "details": "The public legacy constructor accepts locally parsed caller claims, injects a direct Mastery port, and enables an unreviewed fallback."
+    },
+    "strict_payloads": {
+      "status": "PASS_WITH_LEGACY_EXCEPTION",
+      "details": "Trusted payloads reject unknown fields and raw or audio values. Legacy mode accepts one unreviewed compatibility coordinate."
+    },
+    "replay_conflicts": {
+      "status": "PASS_WITH_LIVE_LIMIT",
+      "details": "Equal replay, conflicting replay, retry, and concurrency checks pass in memory. Durable live replay proof did not run."
+    },
+    "safe_errors": {
+      "status": "PASS",
+      "details": "Verifier and provider failures map to stable provider-neutral errors without provider messages."
+    },
+    "roleplay_pending_state": {
+      "status": "PASS",
+      "details": "Current Sales roleplay bindings remain pending, so roleplay projection requires consent but then fails closed as ineligible."
+    },
+    "mapping_and_outbox_transaction": {
+      "status": "PASS",
+      "details": "Mapping and outbox creation share the ensureBindingAndOutbox transaction."
+    },
+    "mastery_commit_and_receipt_transaction": {
+      "status": "FAIL",
+      "details": "The candidate adds no transaction joining the Mastery commit and Sales receipt. This review makes no new atomicity claim."
+    },
+    "receipt_integrity_schema": {
+      "status": "PASS_NOT_CANDIDATE_SCOPE",
+      "details": "The existing migration and schema contain the composite receipt-to-outbox foreign key. The candidate does not change those files."
+    },
+    "immutable_source_attempt": {
+      "status": "FAIL",
+      "details": "The source attempt identity is a caller-supplied nonblank string. No immutable Sales attempt record is resolved before projection."
+    },
+    "current_head_acceptance": {
+      "status": "withheld",
+      "reason": "Blocking findings remain. This receipt makes no current-head acceptance or phase-completion claim."
+    }
+  },
+  "findings": [
+    {
+      "id": "SALES-P2-RB-001",
+      "severity": "Critical",
+      "title": "Legacy mode bypasses trusted identity and reviewed activity admission.",
+      "files": [
+        "packages/domain/src/sales-mastery.ts:184-204",
+        "packages/domain/src/sales-mastery.ts:624-692",
+        "packages/domain/src/sales-mastery.ts:1961-2000"
+      ],
+      "context": "Legacy mode parses caller claims locally. It does not verify signatures, issuer trust, or expiration. It injects direct Mastery and enables the legacy activity fallback.",
+      "evidence": [
+        "A fileless probe accepted an identity with exp=1 and resolved a Mastery tenant.",
+        "The fallback accepts sales.value-proposition and quiz.recognition even though the current Sales binding package has no such coordinate.",
+        "The restored Red projection suite uses legacy mode, so its valid projection does not prove the trusted boundary."
+      ],
+      "impact": "A caller can use an expired or forged claim and unreviewed evidence to mutate Mastery through the public projection seam.",
+      "required_fix": "Remove legacy mode from the production export, or require the verifier and scoped factory in every mode. Remove the legacy fallback."
+    },
+    {
+      "id": "SALES-P2-RB-002",
+      "severity": "High",
+      "title": "Source attempts are not bound to immutable Sales attempt records.",
+      "files": [
+        "packages/domain/src/sales-mastery.ts:148-170",
+        "packages/domain/src/sales-mastery.ts:414-486",
+        "packages/domain/src/sales-mastery.ts:979-1024"
+      ],
+      "context": "sourceAttemptId only requires a nonblank string. The projection does not resolve an immutable quiz attempt or roleplay evaluation owned by the verified organization and principal.",
+      "evidence": [
+        "The source uses input.sourceAttemptId as audit.sourceId and as the Mastery submissionId.",
+        "Roleplay evaluator attemptId and attemptDigest are shape-checked but are not matched to sourceAttemptId or a stored attempt.",
+        "The current pending roleplay state blocks current roleplay projection, but fabricated quiz attempt identities remain accepted."
+      ],
+      "impact": "An authorized caller can submit a fabricated attempt identity with an approved coordinate and create mastery evidence.",
+      "required_fix": "Resolve the immutable source attempt server-side. Verify its organization, principal, activity, result, and release before projection."
+    },
+    {
+      "id": "SALES-P2-RB-003",
+      "severity": "High",
+      "title": "Mastery commit and Sales receipt insertion are separate transactions.",
+      "files": [
+        "packages/domain/src/sales-mastery.ts:1511-1705",
+        "packages/domain/src/sales-mastery.ts:1723-1804"
+      ],
+      "context": "ensureBindingAndOutbox commits mapping and outbox rows first. deliverDatabase then commits Mastery and inserts the Sales receipt in separate operations.",
+      "evidence": [
+        "mastery.commitMasteryEvidence runs before insertReceipt.",
+        "insertReceipt calls the root database insert after the Mastery adapter transaction returns.",
+        "A process failure between these calls leaves a Mastery commit without a Sales receipt."
+      ],
+      "impact": "The durable projection can lose its receipt boundary after an applied Mastery mutation. Retry recovery cannot guarantee one atomic projection record.",
+      "required_fix": "Use a shared transaction-capable Mastery boundary for Mastery rows, the commit, the receipt, and the outbox, or add an explicit durable delivery protocol."
+    }
+  ],
+  "blocking_findings": [
+    "SALES-P2-RB-001",
+    "SALES-P2-RB-002",
+    "SALES-P2-RB-003"
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Trusted Company Identity verification ran on all four public operation paths in the focused Red tests.",
+    "The focused domain security run passed 43 tests across three files.",
+    "The safe Sales PostgreSQL artifact run passed 5 tests and skipped 15 live tests without PG_TEST_URL.",
+    "The focused durable Review A file skipped its live test because PG_TEST_URL was unset.",
+    "The current schema and migration contain the composite receipt integrity foreign key.",
+    "The candidate source and worktree source hashes match exactly.",
+    "The fileless legacy probe accepted an expired identity, which confirms the legacy finding.",
+    "The graph is fresh and reports no caller edge for createSalesMasteryProjection.",
+    "The browser check is not applicable because the candidate has no frontend changes."
+  ],
+  "checks": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-mastery-projection.red.test.ts src/__tests__/sales-phase2-mode-isolation.red.test.ts src/__tests__/sales-phase2-review-a.red.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "3 files and 43 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-mastery-tenant.integration.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "5 safe artifact tests passed and 15 PostgreSQL tests skipped without PG_TEST_URL."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-phase2-review-a-durable.red.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The live PostgreSQL test was skipped because PG_TEST_URL was unset."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The domain package type check passed."
+    },
+    {
+      "command": "../../node_modules/.bin/eslint src/sales-mastery.ts src/__tests__/sales-mastery-projection.red.test.ts src/__tests__/sales-phase2-mode-isolation.red.test.ts src/__tests__/sales-phase2-review-a.red.test.ts",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Focused lint passed."
+    },
+    {
+      "command": "git diff --check ff988605c^ ff988605c -- packages/domain/src/sales-mastery.ts; git diff --quiet ff988605c -- packages/domain/src/sales-mastery.ts; test \"$(git rev-parse HEAD)\" = ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Candidate HEAD, source bytes, and whitespace checks matched."
+    },
+    {
+      "command": "git diff-tree --no-commit-id --name-status -r ff988605c; git diff-tree --no-commit-id --name-status -r 52ff43a76; git diff-tree --no-commit-id --name-status -r b6ab9306a",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The candidate changed one source file. The supplied Red commits changed only the stated Red files."
+    },
+    {
+      "command": "git rev-parse ff988605c^{tree}; git show ff988605c:packages/domain/src/sales-mastery.ts | sha256sum; git diff ff988605c^ ff988605c -- packages/domain/src/sales-mastery.ts | sha256sum; git show 52ff43a76:packages/domain/src/__tests__/sales-mastery-projection.red.test.ts | sha256sum; git show b6ab9306a:packages/domain/src/__tests__/sales-phase2-mode-isolation.red.test.ts | sha256sum",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Exact candidate tree, source, diff, and Red test hashes were recorded in scope_audit."
+    },
+    {
+      "command": "node --import tsx --input-type=module -e '<fileless legacy expiry probe>'",
+      "result": "failed",
+      "exit_code": 0,
+      "explanation": "The probe accepted exp=1 and resolved a tenant through legacy mode. This is the blocking legacy finding."
+    },
+    {
+      "command": "build-graph stats ./graph.db; build-graph inspect ./graph.db createSalesMasteryProjection; build-graph callers ./graph.db createSalesMasteryProjection",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Graph freshness passed. The symbol was present and no caller edge was reported."
+    },
+    {
+      "command": "jq empty measure/tracks/sales_mastery_consumer_20260810/runs/phase2-review-b-ff988605c.json",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The audit JSON is valid."
+    }
+  ],
+  "test_strategy_violations": [
+    "The committed projection Red suite uses legacy mode and the legacy fallback for its valid projection.",
+    "No live PostgreSQL adapter projection test ran because PG_TEST_URL was unset.",
+    "No test resolves a caller-supplied sourceAttemptId to an immutable Sales attempt record."
+  ],
+  "live_contract_violations": [
+    "Legacy mode accepts locally parsed claims without trusted verification.",
+    "Source attempt identity is not bound to an immutable organization-owned attempt.",
+    "Mastery commit and Sales receipt insertion do not share one transaction."
+  ],
+  "prod_wiring_violations": [
+    "The public constructor still exposes a direct Mastery legacy mode."
+  ],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "known_limitations": [
+    "Live PostgreSQL behavior was unavailable without PG_TEST_URL.",
+    "The browser check was skipped because this candidate has no frontend changes.",
+    "The review did not change MR-007, APK, source, tests, plans, or unrelated worktree paths.",
+    "The report is candidate-scoped and makes no phase or track completion claim."
+  ],
+  "candidate_changed_files": [
+    "packages/domain/src/sales-mastery.ts"
+  ],
+  "red_changed_files": [
+    "packages/domain/src/__tests__/sales-mastery-projection.red.test.ts",
+    "packages/domain/src/__tests__/sales-phase2-review-a.red.test.ts",
+    "packages/domain/src/__tests__/sales-phase2-mode-isolation.red.test.ts"
+  ],
+  "files_written": [
+    "measure/tracks/sales_mastery_consumer_20260810/runs/phase2-review-b-ff988605c.json"
+  ],
+  "metadata": {
+    "current_head_acceptance": {
+      "status": "withheld",
+      "current_head_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+      "audited_head_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+      "reason": "Blocking Critical and High findings remain. This report does not accept the current head."
+    },
+    "candidate_source_matches_worktree": true,
+    "unrelated_dirty_paths_preserved": true,
+    "source_modified_by_review": false,
+    "tests_modified_by_review": false,
+    "plans_modified_by_review": false,
+    "commit_created": false,
+    "report_is_unstaged": true
+  },
+  "MEASURE_AGENT_RESULT": {
+    "marker": "MEASURE_AGENT_RESULT",
+    "role": "fresh independent Review B security and tenancy reviewer",
+    "status": "FAIL",
+    "track": "sales_mastery_consumer_20260810",
+    "phase": "Phase 2 — company tenant mapping and durable projection",
+    "candidate_commit": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+    "red_commits": [
+      "52ff43a7619af4b8e2397df3d780b20295a6f449",
+      "b6ab9306a7d153321e1e35daa6e7f00bb966085c"
+    ],
+    "audited_head_sha": "ff988605ca8207b37c36f54dcee7e3cb529ee1ec",
+    "blocking_findings": [
+      "SALES-P2-RB-001",
+      "SALES-P2-RB-002",
+      "SALES-P2-RB-003"
+    ],
+    "current_head_acceptance": "withheld",
+    "phase_or_track_completion_claim": false,
+    "source_modified": false,
+    "tests_modified": false,
+    "plans_modified": false,
+    "commit_created": false,
+    "report_is_unstaged": true,
+    "completion_claim": "none"
+  }
+}

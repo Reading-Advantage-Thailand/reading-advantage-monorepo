@@ -13,6 +13,52 @@ This file tracks all major tracks for the project.
 - [x] **Track: Architectural Priorities** *Link: [./tracks/architecture_priorities_20260908/](./tracks/architecture_priorities_20260908/)*
   Reduce repeated verification, narrow Domain imports, and consolidate shared authentication behavior.
 
+## Active Tracks (created 2026-09-19)
+
+- [ ] **Track: Sales Advantage Broken UX Fixes** *Link: [./tracks/sales_broken_ux_fixes_20260919/](./tracks/sales_broken_ux_fixes_20260919/)*
+  Repair the broken user-experience items from the Sales Advantage UX audit.
+- [ ] **Track: Sales Advantage Session Contract Correctness** *Link: [./tracks/sales_session_contract_correctness_20260919/](./tracks/sales_session_contract_correctness_20260919/)*
+  Separate anonymous sessions from forbidden Sales identities in the session contract.
+- [ ] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
+  Repair recording cleanup, upload errors, loading states, and request cancellation.
+- [ ] **Track: Sales Advantage Duplication Removal** *Link: [./tracks/sales_duplication_removal_20260919/](./tracks/sales_duplication_removal_20260919/)*
+  Remove duplicated helpers, tests, dependencies, messages, and unused theme code.
+- [ ] **Track: Sales Advantage Structural Alignment** *Link: [./tracks/sales_structural_alignment_20260919/](./tracks/sales_structural_alignment_20260919/)*
+  Align shared authentication helpers, locale handling, keyboard access, announcements, and administrator navigation.
+
+- [ ] **Track: Accounts Broken UX Fixes** *Link: [./tracks/accounts_broken_ux_fixes_20260919/](./tracks/accounts_broken_ux_fixes_20260919/)*
+  Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures.
+- [ ] **Track: Accounts Console Write Correctness** *Link: [./tracks/accounts_console_write_correctness_20260919/](./tracks/accounts_console_write_correctness_20260919/)*
+  Make console writes idempotent, pending-aware, refresh-safe, and resistant to lost role updates.
+- [ ] **Track: Accounts Loading State Correctness** *Link: [./tracks/accounts_loading_state_correctness_20260919/](./tracks/accounts_loading_state_correctness_20260919/)*
+  Distinguish directory loading, empty, failed, malformed-input, and readiness states.
+- [ ] **Track: Accounts Duplication Removal** *Link: [./tracks/accounts_duplication_removal_20260919/](./tracks/accounts_duplication_removal_20260919/)*
+  Share safe-path, JSON-body, and route-handler boundary helpers without hiding capabilities.
+- [ ] **Track: Accounts Structural Alignment** *Link: [./tracks/accounts_structural_alignment_20260919/](./tracks/accounts_structural_alignment_20260919/)*
+  Align package exports, server-owned catalogues, confirmation controls, visual contrast, and authorization coverage.
+
+- [ ] **Track: Accounting Broken UX Fixes** *Link: [./tracks/accounting_broken_ux_fixes_20260919/](./tracks/accounting_broken_ux_fixes_20260919/)*
+  Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects.
+- [ ] **Track: Accounting Money Correctness** *Link: [./tracks/accounting_money_correctness_20260919/](./tracks/accounting_money_correctness_20260919/)*
+  Correct currency exponents, date zones, minor-unit display, and major-unit previews.
+- [ ] **Track: Accounting Loading State Correctness** *Link: [./tracks/accounting_loading_state_correctness_20260919/](./tracks/accounting_loading_state_correctness_20260919/)*
+  Add error recovery, server-side pending filtering, and export date controls.
+- [ ] **Track: Accounting Duplication Removal** *Link: [./tracks/accounting_duplication_removal_20260919/](./tracks/accounting_duplication_removal_20260919/)*
+  Consolidate repeated route helpers and library test locations.
+- [ ] **Track: Accounting Structural Alignment** *Link: [./tracks/accounting_structural_alignment_20260919/](./tracks/accounting_structural_alignment_20260919/)*
+  Align origin checks, security headers, history views, and settled-currency validation.
+
+- [ ] **Track: Marketing Broken UX Fixes** *Link: [./tracks/marketing_broken_ux_fixes_20260919/](./tracks/marketing_broken_ux_fixes_20260919/)*
+  Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code.
+- [ ] **Track: Marketing Runtime Header Correctness** *Link: [./tracks/marketing_runtime_header_correctness_20260919/](./tracks/marketing_runtime_header_correctness_20260919/)*
+  Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating.
+- [ ] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
+  Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior.
+- [ ] **Track: Marketing Duplication Removal** *Link: [./tracks/marketing_duplication_removal_20260919/](./tracks/marketing_duplication_removal_20260919/)*
+  Remove duplicated authentication, application, campaign, AI, health, status, and navigation code.
+- [ ] **Track: Marketing Structural Alignment** *Link: [./tracks/marketing_structural_alignment_20260919/](./tracks/marketing_structural_alignment_20260919/)*
+  Align shared helpers, page boundaries, forms, metadata, application maps, and settings contracts.
+
 ## Current Focus (owner-confirmed 2026-08-10)
 
 Multiple programs are in flight. Use this portfolio order when selecting work:

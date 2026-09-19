@@ -1,0 +1,14 @@
+# Plan
+
+## Phase 1: Broken UX Fixes
+
+- [ ] Task: Await `params` in `app/api/campaigns/[id]/route.ts`. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `app/api/campaigns/[id]/route.ts:50,57,98,105`
+- [ ] Task: Keep the mask out of the settings API key input value. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/settings/page.tsx:337-339`, `app/lib/settings-update.ts:26-30`
+- [ ] Task: Disable Add Scene at 7 scenes and Delete at 5 scenes. Source: `docs/marketing-ux-refactor-plan.md` §3.1; Issues: `app/campaigns/[id]/video/page.tsx:811,888-900`, `app/lib/script-schema.ts:12`
+- [ ] Task: Add a pending state to Create, Save Settings, Save Approved Topics, and the status buttons. Source: `docs/marketing-ux-refactor-plan.md` §4 and §5; Issues: `app/settings/page.tsx:396-408`, `app/campaigns/page.tsx:219-231`, `app/campaigns/[id]/video/page.tsx:667`, `app/campaigns/[id]/page.tsx:191-206`
+- [ ] Task: Give the seven unlabeled inputs an `id` and an `htmlFor`. Source: `docs/marketing-ux-refactor-plan.md` §4 and §5; Issues: `app/settings/page.tsx:273,301,321,361`, `app/campaigns/page.tsx:154,177,200`
+- [ ] Task: Add `aria-label` to the two scene move buttons. Source: `docs/marketing-ux-refactor-plan.md` §3.1; Issues: `app/campaigns/[id]/video/page.tsx:792,809`
+- [ ] Task: Import `nextCampaignStatuses` in `app/campaigns/[id]/page.tsx` and delete the inline copy. Source: `docs/marketing-ux-refactor-plan.md` §5; Issues: `app/campaigns/[id]/page.tsx:23-28`, `app/lib/campaign-status.ts:3-8`
+- [ ] Task: Add `.next` to `.gitignore` and to the `tsconfig.json` exclude list. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `tsconfig.json:12-13`, stale `.next/types/` directory
+- [ ] Task: Clear `loading` in the settings early-return branch. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/settings/page.tsx:53`
+- [ ] Task: Delete `app/api/auth/login/route.ts` and `hasLegacyMarketingAccess`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/api/auth/login/route.ts`, `app/lib/auth.ts:31,38-40`

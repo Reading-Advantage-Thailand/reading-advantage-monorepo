@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "role": "Review C UX/API",
+  "track": "wave5_public_surface_completion_20260628",
+  "phase": "Phase 4 natural contact-copy remediation",
+  "baseline_source_sha": "48e6575dca6ff8314196a78100b6ddd3a6dd5c59",
+  "red_commit_sha": "a0a10035db9c274cd5d49cd8fa770ee9873466fc",
+  "candidate_sha": "48e6575dca6ff8314196a78100b6ddd3a6dd5c59",
+  "audited_head_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+  "head_start_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+  "head_end_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+  "head_advanced": true,
+  "summary": "The candidate passes the focused UX/API review for natural TikTok copy. No blocking or nonblocking finding remains.",
+  "target_verdict": "PASS",
+  "current_www_verdict": "PASS; reviewed www source matches the candidate.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "ux_api_review": {
+    "exact_rendered_copy": {
+      "status": "PASS",
+      "evidence": [
+        "English renders \"Follow us on TikTok @reading.advantage\".",
+        "Thai renders \"ติดตามเราบน TikTok @reading.advantage\".",
+        "Chinese renders \"在 TikTok 关注我们 @reading.advantage\"."
+      ]
+    },
+    "accessible_link_naming": {
+      "status": "PASS",
+      "evidence": [
+        "The rendered test finds the social link by role and the TikTok accessible name.",
+        "The link text contains one platform phrase and one centralized handle."
+      ]
+    },
+    "duplicate_phrase_avoidance": {
+      "status": "PASS",
+      "evidence": [
+        "Each rendered locale contains exactly one TikTok occurrence.",
+        "Each rendered locale contains exactly one @reading.advantage occurrence."
+      ]
+    },
+    "centralized_handle_use": {
+      "status": "PASS",
+      "evidence": [
+        "contactDetails.tiktokLabel stores @reading.advantage in contact.ts.",
+        "The three locale TikTok phrases contain no raw handle.",
+        "ContactPage combines the localized phrase with contactDetails.tiktokLabel."
+      ]
+    },
+    "locale_parity": {
+      "status": "PASS",
+      "evidence": [
+        "The pages.contact dictionaries have 25 matching leaf keys across en, th, and zh."
+      ]
+    },
+    "contact_form_ownership": {
+      "status": "PASS",
+      "evidence": [
+        "The candidate does not change ContactForm.",
+        "ContactForm retains its existing mailto path through contactDetails.supportEmail.",
+        "The candidate adds no backend or adapter ownership claim."
+      ]
+    }
+  },
+  "evidence": [
+    "The candidate parent is a0a10035db9c274cd5d49cd8fa770ee9873466fc.",
+    "The candidate diff contains exactly contact.ts and pages/contact.ts.",
+    "ContactPage renders t(\"social.tiktok\") and contactDetails.tiktokLabel in one link.",
+    "The contact-copy contract asserts exact English, Thai, and Chinese rendered text.",
+    "The contact-copy contract asserts the accessible link name and one occurrence of TikTok and the handle.",
+    "The contact-authority contract passed 3/3 and rejects raw contact duplicates in all locale authority fields.",
+    "The combined focused Phase 4 run passed 11/11 tests.",
+    "The locale parity probe passed with 25 matching pages.contact leaf keys.",
+    "ContactPage, Footer, and ContactForm blobs match the candidate commit.",
+    "Current HEAD adds unrelated commits after the candidate, with no reviewed www source drift."
+  ],
+  "commands": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-4-contact-copy.red.test.tsx --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "One file and four tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-4-contact-authority.red.test.tsx src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx src/__tests__/phase-4-contact-copy.red.test.tsx --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "Three files and 11 tests passed. Existing React DOM warnings were unrelated."
+    },
+    {
+      "command": "../../node_modules/.bin/tsx -e <pages.contact locale parity probe>",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "The en, th, and zh dictionaries matched across 25 leaf keys."
+    },
+    {
+      "command": "python3 <candidate scope and reviewed blob assertions>",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "The two-file candidate scope and five reviewed source blobs matched."
+    },
+    {
+      "command": "git diff --check a0a10035db9c274cd5d49cd8fa770ee9873466fc 48e6575dca6ff8314196a78100b6ddd3a6dd5c59",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "The candidate diff has no whitespace errors."
+    }
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/config/contact.ts",
+    "apps/www-reading-advantage/src/locales/pages/contact.ts"
+  ],
+  "reviewed_blobs": {
+    "apps/www-reading-advantage/src/config/contact.ts": "a803b4f763a571b08083f290f3630649fc3622d2",
+    "apps/www-reading-advantage/src/locales/pages/contact.ts": "9b8f64b116da7991e97d3254389af27cc9fcdbfe",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/contact/page.tsx": "155662213d7e33d6bf4bf2a12c48ee2f6c32c24e",
+    "apps/www-reading-advantage/src/components/contact/contact-form.tsx": "ea929d54c9e48054fcc700adc5eee82fcaa06e1e",
+    "apps/www-reading-advantage/src/components/common/footer.tsx": "8eefbd0471914e8db55ca35b9c413c75b6e330b5",
+    "apps/www-reading-advantage/src/__tests__/phase-4-contact-copy.red.test.tsx": "7820e42c1507e7b83f5b46d1802389755cfcb51b",
+    "apps/www-reading-advantage/src/__tests__/phase-4-contact-authority.red.test.tsx": "a552eacd7da61b5db895c92683761dc0efe59cc6",
+    "apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx": "6b6d860c843c193eac2d940ba9516e5f80359ed1"
+  },
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "browser_review": {
+    "status": "NOT_RUN",
+    "reason": "A live browser was not started because a local server could modify the worktree."
+  },
+  "head_drift": {
+    "start": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+    "end": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+    "commits_after_candidate": [
+      "b0b77862c7484135951b67d5eedebc8d512d92db test(finance): reject poison receipt keys (track_id: company_finance_operations_20260810)",
+      "f6d1ed5a6e7d71caa60b5b822364294c405e181a test(sales): reject legacy Mastery bypass (track_id: sales_mastery_consumer_20260810)",
+      "c40b5b5d40660eb80976e2ada5e0717ab5ce681d test(www): define truthful pricing claims (track_id: wave5_public_surface_completion_20260628)",
+      "d01a4a0cf4975bb2dfee4698b513f1279a50264d test(backend): require owned job registration (track_id: durable_job_worker_platform_20260713)",
+      "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d fix(finance): reject poison receipt keys (track_id: company_finance_operations_20260810)"
+    ],
+    "reviewed_www_source_drift": "none"
+  },
+  "dirty_tree_disclosure": {
+    "snapshot": "before report artifact creation",
+    "status_entries": 167,
+    "scope_note": "Existing dirty paths include APK, Phase 5 pricing, Measure, and unrelated package work. This review changed none of them."
+  },
+  "known_limitations": [
+    "Browser evidence was not run.",
+    "The combined focused run emitted existing React DOM warnings in unrelated components.",
+    "This report does not assess Phase 5 pricing, APK paths, or overall track completion."
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "MEASURE_AGENT_RESULT": "PASS"
+}

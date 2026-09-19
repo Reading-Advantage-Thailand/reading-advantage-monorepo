@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "track_id": "durable_job_worker_platform_20260713",
+  "phase": "Phase 3: PostgreSQL Adapter Implementation",
+  "role": "measure-review-a",
+  "phase_base_sha": "fd581f3dcd15e7b7b632875862aaecb596719621",
+  "role_base_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+  "source_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "red_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+  "audited_head_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "audit_start_head_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "verification_head_start_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "verification_head_end_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "head_advanced_during_audit": false,
+  "status": "FAIL",
+  "decision": "FAIL",
+  "current_head_acceptance": "withheld",
+  "current_head_acceptance_reason": "Required architecture checks are not green. This report makes no Phase 3 acceptance claim.",
+  "production_code_modified_by_review": false,
+  "commit_created": false,
+  "summary": "The two-file ownership contract passes its core Red checks, but stale architecture fixtures and a policy-hash gate block acceptance.",
+  "scope": "Exact two-file contract: the corrected Red test at 8c49120b1 and the ownership-map Green at 101f35336.",
+  "contract_applicability": {
+    "backend_contract_review": "applicable",
+    "security_boundary_review": "applicable",
+    "browser_review": "N/A — no frontend files changed.",
+    "live_database_review": "N/A — this review covers ownership configuration and tests only."
+  },
+  "reviewed_inputs": [
+    "measure/tracks/durable_job_worker_platform_20260713/spec.md",
+    "measure/tracks/durable_job_worker_platform_20260713/plan.md",
+    "measure/tracks/durable_job_worker_platform_20260713/test-strategy.md",
+    "packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts",
+    "packages/architecture-enforcement/src/config/ownership-map.v1.json",
+    "packages/architecture-enforcement/src/config/database-counterexamples.v1.json",
+    "packages/architecture-enforcement/src/__tests__/analyzer-counterexamples.red.test.ts",
+    "packages/architecture-enforcement/src/__tests__/ownership-map.test.ts",
+    "packages/architecture-enforcement/src/__tests__/architecture-check.test.ts",
+    "packages/architecture-enforcement/src/architecture-check.ts",
+    "packages/architecture-enforcement/src/analyzer.ts",
+    "packages/architecture-enforcement/src/config/baselines/database.v1.json",
+    "packages/domain/src/tenant-registry.ts",
+    "packages/db/src/__tests__/durable-jobs-schema-migration.red.test.ts",
+    "packages/db/src/__tests__/durable-jobs-schema-pg16.red.test.ts",
+    "packages/domain/src/__tests__/tenant-coverage.test.ts"
+  ],
+  "scope_audit": {
+    "tenant_registration": "PASS — the tenant registry stayed unchanged; both durable tables classify as REFERENTIAL at runtime; tenant coverage passed 12/12.",
+    "query_only_enforcement": "PASS — DURABLE_JOB_DATABASE_BOUNDARY contains only query-call.",
+    "out_of_root_query_detection": "PASS — the corrected Red executes a real durable_jobs query outside approved roots and observes one query-call finding.",
+    "production_exception": "PASS — no exception covers tenant-registry.ts or another production path; one existing schema-test exception remains exact.",
+    "ownership_roots": "PASS — the rule names database-schema, database-migrations, and postgres-job-adapter only; resolvedTargetRoots is empty.",
+    "analyzer_immutability": "PASS — the candidate changes no analyzer source.",
+    "baseline_addition": "PASS — the candidate changes no baseline file and adds no baseline entry.",
+    "architecture_focused_suite": "FAIL — the full architecture package suite reports two stale static-import expectations.",
+    "full_checker": "FAIL — the checker exits 2 before analysis because the database baseline ruleset hash is stale after the policy change.",
+    "phase_4_ac_10": "NOT REVIEWED — this report does not treat Phase 4 AC-10 as Phase 3 completion."
+  },
+  "schema_parity": {
+    "status": "PASS",
+    "details": "The immutable migration Red passed 11 tests, and the transition fixture suite passed 6 tests."
+  },
+  "caller_compatibility": {
+    "status": "PASS_WITH_NO_CHANGED_EXPORTED_SYMBOLS",
+    "details": "The diff changes configuration and a test only. The fresh graph has no caller edges for inspected architecture symbols."
+  },
+  "anti_pattern_audit": {
+    "A3_digit_only_counts": "PASS — test results use labeled totals.",
+    "A4_vacuous_pass": "PASS — the Red executes the query and asserts the analyzer finding.",
+    "A5_false_claim_vs_test_reality": "PASS_WITH_FAILURE_DISCLOSURE — the report records the two failing architecture tests and the full-checker hash failure."
+  },
+  "graph_blast_radius": {
+    "status": "PASS_WITH_NO_CHANGED_EXPORTED_SYMBOLS",
+    "graph_available": true,
+    "graph_stats": "34233 nodes; 59982 edges; 3707 files",
+    "inspected_symbols": ["loadOwnershipMap", "analyzeArchitectureSources"],
+    "caller_result": "No graph caller edges were reported. No changed exported symbol requires caller updates."
+  },
+  "findings": [
+    {
+      "id": "DWP3-RA-H1",
+      "severity": "High",
+      "title": "The query-only policy leaves two architecture counterexample expectations stale.",
+      "file": "packages/architecture-enforcement/src/config/database-counterexamples.v1.json",
+      "lines": "73-80, 96-103",
+      "related_lines": [
+        "packages/architecture-enforcement/src/config/ownership-map.v1.json:64-66",
+        "packages/architecture-enforcement/src/__tests__/analyzer-counterexamples.red.test.ts:42-55"
+      ],
+      "detail": "The Green removes static-import from DURABLE_JOB_DATABASE_BOUNDARY. Two durable-table fixtures still require static-import and query-call.",
+      "reproduction": "The architecture package suite exited 1 with 209 passed and 2 failed. Both failures occur at analyzer-counterexamples.red.test.ts:55.",
+      "impact": "The architecture test gate is not green after the ownership policy change.",
+      "required_disposition": "Synchronize the two durable-table fixture expectations with query-only enforcement in a separately reviewed change."
+    },
+    {
+      "id": "DWP3-RA-H2",
+      "severity": "High",
+      "title": "The full checker rejects the stale database policy hash.",
+      "file": "packages/architecture-enforcement/src/config/baselines/database.v1.json",
+      "lines": "2-5",
+      "related_lines": [
+        "packages/architecture-enforcement/src/config/ownership-map.v1.json:64-66",
+        "packages/architecture-enforcement/src/architecture-check.ts:104-109"
+      ],
+      "detail": "The ownership map changes policy semantics, but database.v1.json still stores the previous ruleset hash 44425a89.",
+      "reproduction": "The full checker exited 2 with database baseline ruleset hash does not match current policy. Stored hash is 44425a89; current hash is f8082426.",
+      "classification": "This is a policy-hash synchronization failure. It is not a baseline addition, and it does not prove Phase 4 AC-10.",
+      "impact": "The required full checker cannot pass for this exact two-file contract.",
+      "required_disposition": "Use a separately reviewed policy-hash reconciliation or an explicit accepted gate disposition. Do not add baseline entries in this review."
+    }
+  ],
+  "checks": [
+    {
+      "command": "CI=true node node_modules/vitest/vitest.mjs run packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts",
+      "exit_code": 0,
+      "result": "passed — 2 tests"
+    },
+    {
+      "command": "CI=true node node_modules/vitest/vitest.mjs run packages/db/src/__tests__/durable-jobs-schema-migration.red.test.ts packages/db/src/__tests__/durable-jobs-transition-fixtures.test.ts",
+      "exit_code": 0,
+      "result": "passed — 17 tests"
+    },
+    {
+      "command": "CI=true node node_modules/vitest/vitest.mjs run packages/db/src/__tests__/durable-jobs-schema-pg16.red.test.ts",
+      "exit_code": 0,
+      "result": "passed — 2 tests and 1 safe-default skip; no database contact"
+    },
+    {
+      "command": "CI=true node node_modules/vitest/vitest.mjs run packages/domain/src/__tests__/tenant-coverage.test.ts",
+      "exit_code": 0,
+      "result": "passed — 12 tests"
+    },
+    {
+      "command": "CI=true node node_modules/vitest/vitest.mjs run packages/architecture-enforcement/src/__tests__/ownership-map.test.ts packages/architecture-enforcement/src/__tests__/database-counterexamples.test.ts packages/architecture-enforcement/src/__tests__/architecture-check.test.ts packages/architecture-enforcement/src/__tests__/architecture-cli.test.ts",
+      "exit_code": 0,
+      "result": "passed — 23 focused architecture tests"
+    },
+    {
+      "command": "CI=true node node_modules/vitest/vitest.mjs run packages/architecture-enforcement/src/__tests__",
+      "exit_code": 1,
+      "result": "failed — 209 passed and 2 failed; both failures are stale static-import expectations in analyzer-counterexamples.red.test.ts"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit -p packages/backend/tsconfig.test.json && node node_modules/typescript/bin/tsc --noEmit -p packages/architecture-enforcement/tsconfig.json && node node_modules/typescript/bin/tsc --noEmit -p packages/db/tsconfig.json",
+      "exit_code": 0,
+      "result": "passed — backend tests, architecture enforcement, and database typechecks"
+    },
+    {
+      "command": "node node_modules/tsx/dist/cli.mjs -e '<JSON parse and ownership invariant validation>'",
+      "exit_code": 0,
+      "result": "passed — ownership map and both architecture baselines are valid JSON; query-only policy and exact roots match"
+    },
+    {
+      "command": "git diff-tree --no-commit-id --name-only -r 8c49120b1; git diff-tree --no-commit-id --name-only -r 101f35336; git diff --check 8c49120b1 101f35336 -- <two contract files>",
+      "exit_code": 0,
+      "result": "passed — the Red commit contains only the Red test; the Green commit contains only the ownership map; scoped diff check is clean"
+    },
+    {
+      "command": "git diff --name-only 8c49120b1 101f35336 -- packages/architecture-enforcement/src/analyzer.ts packages/architecture-enforcement/src/config/baselines packages/domain/src/tenant-registry.ts packages/db/src/__tests__/durable-jobs-schema-migration.red.test.ts",
+      "exit_code": 0,
+      "result": "passed — no analyzer, baseline, tenant-registry, or immutable schema Red diff"
+    },
+    {
+      "command": "node node_modules/tsx/dist/cli.mjs packages/architecture-enforcement/src/architecture-check-cli.ts",
+      "exit_code": 2,
+      "result": "failed as classified — database baseline ruleset hash does not match current policy; checker stops before repository analysis"
+    },
+    {
+      "command": "computeRulesetHash(loadOwnershipMap(), 'database') compared with packages/architecture-enforcement/src/config/baselines/database.v1.json",
+      "exit_code": 0,
+      "result": "passed probe — stored 44425a89f8db3b63; current f8082426f005c5d8; mismatch is caused by the findingKinds change"
+    },
+    {
+      "command": "build-graph stats ./graph.db; build-graph callers ./graph.db loadOwnershipMap; build-graph callers ./graph.db analyzeArchitectureSources",
+      "exit_code": 0,
+      "result": "passed — graph is fresh; no caller edges require review"
+    },
+    {
+      "command": "git status --short -- <reviewed source, test, analyzer, baseline, tenant-registry, and schema paths>",
+      "exit_code": 0,
+      "result": "passed — reviewed paths remained clean; unrelated dirty work was preserved"
+    }
+  ],
+  "evidence": [
+    "HEAD equals source_sha 101f35336 and did not advance during review.",
+    "Commit 8c49120b1 changes only durable-job-architecture.red.test.ts.",
+    "Commit 101f35336 changes only ownership-map.v1.json.",
+    "The corrected Red passes runtime REFERENTIAL classification for durableJobs and durableJobAuditEvents.",
+    "The corrected Red requires findingKinds to equal query-call and rejects a tenant-registry production exception.",
+    "The corrected Red executes a durable_jobs query from its own out-of-root test source and observes the query-call finding.",
+    "The ownership map names three exact roots and no resolved target root.",
+    "Tenant coverage passes 12/12, and the immutable schema Red passes 11/11.",
+    "The architecture package has two failures because old fixtures still require static-import evidence.",
+    "The full checker fails at the ruleset-hash guard before it analyzes repository findings.",
+    "No reviewer source, test, plan, baseline, APK path, or unrelated file changed."
+  ],
+  "changed_files": [
+    "measure/tracks/durable_job_worker_platform_20260713/phase3-h1-review-a-101f35336.json"
+  ],
+  "test_strategy_violations": [
+    "The architecture counterexample matrix is not synchronized with the query-only ownership policy."
+  ],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "blocking_findings": ["DWP3-RA-H1", "DWP3-RA-H2"],
+  "nonblocking_findings": [],
+  "retry_recommendation": "none",
+  "known_limitations": [
+    "The full checker stops at the ruleset-hash guard, so it does not produce a full repository finding count.",
+    "This review ran the schema PostgreSQL suite in safe-default mode; the live PG16 gate was outside this two-file scope.",
+    "The working tree contains unrelated dirty and untracked paths. The reviewer did not alter them.",
+    "No browser check was needed because the reviewed files contain no frontend code."
+  ],
+  "confidence": "high",
+  "MEASURE_AGENT_RESULT": {
+    "role": "measure-review-a",
+    "status": "complete",
+    "track": "durable_job_worker_platform_20260713",
+    "phase": "Phase 3: PostgreSQL Adapter Implementation",
+    "source_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+    "red_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+    "audited_head_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+    "decision": "FAIL",
+    "blocking_findings": ["DWP3-RA-H1", "DWP3-RA-H2"],
+    "nonblocking_findings": [],
+    "phase_or_track_completion_claim": false,
+    "production_code_modified": false,
+    "commit_created": false
+  }
+}

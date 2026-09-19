@@ -1,0 +1,135 @@
+{
+  "schema_version": "apk-existing-action-task2-suitability-disposition.v1",
+  "track_id": "apk_existing_action_cutover_20260727",
+  "task": "Task 2: suitability disposition before implementation",
+  "status": "blocked-reviewed-asset-contract-v2-owner-receipt",
+  "bound_inputs": {
+    "task1_source_readiness_manifest": {
+      "path": "measure/tracks/apk_existing_action_cutover_20260727/task1-source-readiness-manifest-v1.json",
+      "sha256": "d90983b305172874cdb3e7eb16b72189e5d35122041437efcb51ad099b84b827"
+    },
+    "asset_contract_v2_outer_receipt": {
+      "path": "measure/archive/apk_asset_contract_v2_20260728/v2-owner-acceptance-v1.json",
+      "sha256": "98f6c6d3b98d615d3b30b0eaa4581eb5b5e2636705e25cb87f9fe3e5d3b958b3"
+    },
+    "asset_contract_v2_current_byte_independent_review": {
+      "path": "measure/archive/apk_asset_contract_v2_20260728/current-byte-independent-review-v3.json",
+      "sha256": "88bb3f98fd96ac394bb086add856304011a48b058f8dd2b2af1678c33f5e8ba8"
+    }
+  },
+  "asset_contract_v2_reacceptance": {
+    "outer_receipt_status": "stale-acceptance-revoked-by-implementation-drift",
+    "current_byte_independent_review_accepted": true,
+    "product_owner_successor_receipt_present": false,
+    "recursive_binding_mismatches": [
+      {
+        "path": "packages/advantage-play-kit/src/assets/asset-contract-v2.ts",
+        "expected_sha256": "f4530e834751eebe4480f360852cc36ffd9d561afdf3826d4c77ea3c51193cc5",
+        "current_sha256": "96f745479559ae35b918204738073eec183d05b2e9c79556b00217bd07fb2da2"
+      },
+      {
+        "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts",
+        "expected_sha256": "6dd8e046b9aa21814e1d370aea4358ff1bf320b72bb064486cf00c2f62efd62f",
+        "current_sha256": "0c5aa44959c9c91af4aa64d3531457ef5c073d2182c0a4fb5d3aa31161ac43df"
+      },
+      {
+        "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx",
+        "expected_sha256": "8d5a158ba8db738c0bd90c00974f4fbae8cf912d32a162fa41bd829cafd69686",
+        "current_sha256": "2e5e26ae5b3a1879ef3adddd8e3facc69d3f53575c07252d96565952d15ea058"
+      }
+    ]
+  },
+  "titles": [
+    {
+      "title_id": "archers-revenge",
+      "title": "Archer's Revenge",
+      "status": "blocked-pending-asset-contract-v2-reacceptance",
+      "semantic_roles": [],
+      "physical_behavior_descriptors": [],
+      "suitability_decision": null,
+      "legacy_source_paths": [],
+      "candidate_paths": [],
+      "legacy_retirement_candidates": [],
+      "preserve_assets": true
+    },
+    {
+      "title_id": "paladins-twin-soul",
+      "title": "Paladin's Twin-Soul",
+      "status": "blocked-pending-asset-contract-v2-reacceptance",
+      "semantic_roles": [],
+      "physical_behavior_descriptors": [],
+      "suitability_decision": null,
+      "legacy_source_paths": [],
+      "candidate_paths": [],
+      "legacy_retirement_candidates": [],
+      "preserve_assets": true
+    },
+    {
+      "title_id": "griffin-sky-joust",
+      "title": "Griffin Sky-Joust",
+      "status": "blocked-pending-asset-contract-v2-reacceptance",
+      "semantic_roles": [],
+      "physical_behavior_descriptors": [],
+      "suitability_decision": null,
+      "legacy_source_paths": [],
+      "candidate_paths": [],
+      "legacy_retirement_candidates": [],
+      "preserve_assets": true
+    },
+    {
+      "title_id": "gryphon-patrol",
+      "title": "Gryphon Patrol",
+      "status": "blocked-pending-asset-contract-v2-reacceptance",
+      "semantic_roles": [],
+      "physical_behavior_descriptors": [],
+      "suitability_decision": null,
+      "legacy_source_paths": [],
+      "candidate_paths": [],
+      "legacy_retirement_candidates": [],
+      "preserve_assets": true
+    },
+    {
+      "title_id": "realm-carver",
+      "title": "Realm Carver",
+      "status": "blocked-pending-asset-contract-v2-reacceptance",
+      "semantic_roles": [],
+      "physical_behavior_descriptors": [],
+      "suitability_decision": null,
+      "legacy_source_paths": [],
+      "candidate_paths": [],
+      "legacy_retirement_candidates": [],
+      "preserve_assets": true
+    }
+  ],
+  "authorization": {
+    "owner_approved_title_adoption_evidence_present": false,
+    "asset_selection_authorized": false,
+    "asset_ingestion_authorized": false,
+    "title_adoption_authorized": false,
+    "implementation_authorized": false,
+    "production_exposure_authorized": false,
+    "host_proof_claimed": false,
+    "retirement_authorized": false,
+    "cutover_authorized": false
+  },
+  "claims": {
+    "semantic_roles_frozen": false,
+    "physical_behavior_descriptors_frozen": false,
+    "suitability_decisions_accepted": false,
+    "asset_adoption_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false
+  },
+  "retirement_disposition": {
+    "candidate_paths": [],
+    "deletion_paths": [],
+    "candidate_count": 0,
+    "deletion_count": 0,
+    "deletion_authorized": false
+  },
+  "red_boundary": "The disposition remains non-consumable because reviewed Asset Contract v2 bytes lack a product-owner successor receipt."
+}

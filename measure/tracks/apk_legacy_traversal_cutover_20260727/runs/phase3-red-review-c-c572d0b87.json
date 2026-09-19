@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "role": "Measure Review C",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "phase": "Phase 3 Red mechanics, responsive, and learning contracts",
+  "audited_head_sha": "c572d0b8713dd09fb3e86761c54467b46ccba142",
+  "phase_base_sha": "5baf6cc9241985f08616e54ff570a0913e631018",
+  "role_base_sha": "1e8d070c4eae91a0bac946864e58f2715e729517",
+  "head_start_sha": "c572d0b8713dd09fb3e86761c54467b46ccba142",
+  "head_end_sha": "6738dc037093a54459e26bdfff3f8553881b5141",
+  "head_advanced_during_audit": true,
+  "head_drift": {
+    "command": "git diff --name-status c572d0b87..6738dc037 -- APK track and Phase 3 test paths",
+    "result": "empty",
+    "unrelated_commit": "6738dc037 test(www): enforce contact authority red"
+  },
+  "decision": "PASS",
+  "current_head_acceptance": "PASS_FOR_PHASE_3_RED_ONLY",
+  "production_code_modified_by_review": false,
+  "commit_created": false,
+  "review_a": {
+    "status": "NOT_PRESENT_AT_AUDITED_HEAD",
+    "expected_artifact": "final Phase 3 Review A result",
+    "available_prior_evidence": [
+      "measure/tracks/apk_legacy_traversal_cutover_20260727/phase3-red-evidence-20260816.md",
+      "measure/tracks/apk_legacy_traversal_cutover_20260727/orchestration/phase3-mid-red-role.log"
+    ],
+    "authority": "This audit does not claim Review A completion."
+  },
+  "owner_acceptance": {
+    "status": "PENDING",
+    "required_before_green": true,
+    "title_count": 5,
+    "receipt": null,
+    "recorded_separately": true
+  },
+  "contract_audit": {
+    "api_applicability": {
+      "status": "PASS",
+      "evidence": [
+        "All fifteen tests use the public advantage-play-kit API and the public game-cartridges catalog boundary.",
+        "The tests preserve five scoped titles and do not add app-local APIs.",
+        "The empty catalog produces the intended Red boundary failures."
+      ]
+    },
+    "createGameConfig_context": {
+      "status": "PASS_WITH_FIXTURE_NOTE",
+      "evidence": [
+        "Each test checks manifest id and input mode before calling createGameConfig.",
+        "Each test supplies input, edition, complete, diagnostic, and inputController context fields.",
+        "Each test rejects a configuration without a Phaser scene entry.",
+        "The runtime factory forwards the same context fields to createGameConfig."
+      ],
+      "note": "The Red helper uses {} as RuntimeEdition. Green should replace this cast with a valid non-authoritative edition fixture."
+    },
+    "input_abi": {
+      "status": "PASS",
+      "evidence": [
+        "Runtime selects vocabularyInputSchema or sentenceInputSchema from manifest.inputMode.",
+        "The fixtures use the canonical term and translation array shape.",
+        "Mechanics tests normalize every declared keyboard code to a bounded InputActionId.",
+        "No wrapper or legacy id field enters the cartridge input fixture."
+      ]
+    },
+    "completion_abi": {
+      "status": "PASS_WITH_SCOPE_NOTE",
+      "evidence": [
+        "Runtime validates cartridge completion through gameResultsSchema before host delivery.",
+        "Learning tests verify at-most-once completion through createCompletionLatch.",
+        "The shared runtime tests verify invalid results and exactly-once host delivery.",
+        "The Red tests do not execute a cartridge completion callback because the catalog is intentionally empty."
+      ]
+    },
+    "responsive_contract_parity": {
+      "status": "PASS",
+      "evidence": [
+        "All five titles test compact 390x844 and wide 1440x900 compositions.",
+        "All five tests inspect geometry and require supported compact and wide profiles.",
+        "All five tests verify pause, gesture cancellation, recompose, state restore, diagnostics, and resume order.",
+        "The shared runtime exposes state capture and restoration without canvas recreation."
+      ]
+    },
+    "learning_result_semantics": {
+      "status": "PASS_WITH_SCOPE_NOTE",
+      "evidence": [
+        "Each learning test rejects a wrong candidate without progress.",
+        "Each learning test advances every target in order and checks completion count.",
+        "Each learning test checks correct answers, attempts, accuracy, and score.",
+        "Each learning test checks one completion delivery.",
+        "The shared result-accounting tests own the detailed XP formula contract."
+      ]
+    },
+    "renderer_coupling": {
+      "status": "PASS",
+      "evidence": [
+        "No Phase 3 test imports Phaser or a renderer implementation.",
+        "The renderer remains behind createPhaserGameFactory and GameFactory.",
+        "The tests assert only the Phaser-compatible scene configuration boundary."
+      ]
+    },
+    "asset_authority": {
+      "status": "PASS",
+      "evidence": [
+        "The catalog remains empty and exposes no title loader.",
+        "All five Phase 2 dossiers remain candidate records with fifteen blocked decisions.",
+        "All selected asset unions are empty, whole-pack delivery is false, and fallback is none.",
+        "All five owner-acceptance records remain pending.",
+        "Phase 3 evidence explicitly grants no adoption, ingestion, implementation, cutover, or Green authority."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "APK-P3-RC-001",
+      "severity": "Low",
+      "title": "Red context uses an invalid edition cast",
+      "files": ["packages/game-cartridges/src/legacy-traversal-*.test.ts"],
+      "context": "The tests pass {} as RuntimeEdition although the context contract requires a validated edition.",
+      "impact": "A Green cartridge may fail on fixture shape before its scene contract runs.",
+      "recommendation": "Use a valid test edition fixture without treating it as asset adoption evidence."
+    },
+    {
+      "id": "APK-P3-RC-002",
+      "severity": "Low",
+      "title": "Cartridge completion is deferred by the Red boundary",
+      "files": [
+        "packages/game-cartridges/src/legacy-traversal-*.learning.test.ts"
+      ],
+      "context": "The tests verify the shared latch but cannot observe a cartridge result while the public catalog is empty.",
+      "impact": "Green must prove the cartridge emits the five-field GameResults ABI.",
+      "recommendation": "Keep the current Red boundary and add a cartridge result assertion during Green."
+    }
+  ],
+  "checks": [
+    {
+      "command": "CI=true pnpm exec vitest run packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts",
+      "result": "passed_as_expected_red",
+      "exit_code": 1,
+      "evidence": "15 files collected; 15 tests failed at the empty public catalog boundary."
+    },
+    {
+      "command": "./node_modules/.bin/tsc --noEmit -p packages/game-cartridges/tsconfig.json",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "command": "./node_modules/.bin/eslint --config packages/game-cartridges/eslint.config.mjs packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "command": "./node_modules/.bin/prettier --check measure/tracks/apk_legacy_traversal_cutover_20260727/phase3-red-fixtures.json packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check 5baf6cc92..c572d0b87 -- audited Phase 3 fixture and test paths",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "command": "git rev-parse HEAD at audit start and end",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Start was c572d0b8713dd09fb3e86761c54467b46ccba142; end was 6738dc037093a54459e26bdfff3f8553881b5141."
+    },
+    {
+      "command": "git diff --name-status 1e8d070c4..c572d0b87 -- APK track and Phase 3 test paths",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "No APK track or Phase 3 test path drift occurred after role_base_sha."
+    },
+    {
+      "command": "git diff --name-status c572d0b87..6738dc037 -- APK track and Phase 3 test paths",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "The later www commit changed no audited APK path."
+    }
+  ],
+  "browser_review": {
+    "status": "NOT_APPLICABLE_BEFORE_GREEN",
+    "reason": "Browser review starts after cartridge Green."
+  },
+  "reviewed_inputs": [
+    "measure/index.md",
+    "measure/workflow.md",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/spec.md",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/test-strategy.md",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/phase3-red-evidence-20260816.md",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/phase3-red-fixtures.json",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-freeze-red-evidence-20260816.md",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-freeze-green-evidence-20260816.md",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-freeze-red-remediation-evidence-20260816.md",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-dossiers/*.json",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/orchestration/phase3-mid-red-role.log",
+    "packages/advantage-play-kit/src/runtime/types.ts",
+    "packages/advantage-play-kit/src/runtime/runtime.ts",
+    "packages/advantage-play-kit/src/runtime/input.ts",
+    "packages/advantage-play-kit/src/runtime/phaser-factory.ts",
+    "packages/advantage-play-kit/src/systems/result-accounting.ts",
+    "packages/advantage-play-kit/src/systems/language-target-progression.ts",
+    "packages/advantage-play-kit/src/systems/single-completion.ts",
+    "packages/advantage-play-kit/src/systems/input-actions.ts",
+    "packages/advantage-play-kit/src/responsive/responsive-composition.ts",
+    "packages/game-cartridges/src/catalog.ts",
+    "packages/game-cartridges/src/catalog.test.ts",
+    "packages/game-contracts/src/educational-io.ts",
+    "packages/game-contracts/src/completion.ts",
+    "packages/game-contracts/src/index.ts",
+    "packages/game-cartridges/src/legacy-traversal-*.test.ts"
+  ],
+  "known_limitations": [
+    "The final Review A result artifact was not present at audited HEAD.",
+    "The Red batch does not prove live cartridge behavior, asset loading, host persistence, or browser behavior.",
+    "Unrelated working-tree changes were preserved."
+  ],
+  "changed_files": [
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/runs/phase3-red-review-c-c572d0b87.json",
+    "measure/tracks/apk_legacy_traversal_cutover_20260727/runs/phase3-red-review-c-c572d0b87.log"
+  ],
+  "MEASURE_AGENT_RESULT": {
+    "role": "review-c",
+    "status": "PASS",
+    "track": "apk_legacy_traversal_cutover_20260727",
+    "phase": "Phase 3 Red mechanics, responsive, and learning contracts",
+    "decision": "PASS",
+    "audited_head_sha": "c572d0b8713dd09fb3e86761c54467b46ccba142",
+    "phase_base_sha": "5baf6cc9241985f08616e54ff570a0913e631018",
+    "role_base_sha": "1e8d070c4eae91a0bac946864e58f2715e729517",
+    "blocking_findings": [],
+    "nonblocking_findings": ["APK-P3-RC-001", "APK-P3-RC-002"],
+    "owner_acceptance": "PENDING; recorded separately; Green remains withheld",
+    "browser_review": "NOT_APPLICABLE_BEFORE_GREEN",
+    "production_code_modified": false,
+    "commit_created": false
+  }
+}

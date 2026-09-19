@@ -1,0 +1,103 @@
+{
+  "consoleErrors": {
+    "case1a-teacher-ui-login": [
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    ],
+    "case2-session": [
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    ],
+    "case1c-logout": [
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    ],
+    "case1b-invalid-password": [
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    ],
+    "case1d-unauth-redirect": [
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    ],
+    "case1e-student-unauthorized": [
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    ],
+    "case3a-teacher-import-ui": [
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    ],
+    "case3b-admin-import-ui": [
+      "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+    ],
+    "case4-classes-csv": []
+  },
+  "screenshots": [
+    "t1-01-teacher-ui-login-validation.png",
+    "t1-02-teacher-landing.png",
+    "t1-02b-teacher-dashboard-redirect.png",
+    "t1-02c-teacher-dashboard.png",
+    "t1-03-session-after-reload.png",
+    "t1-04-after-logout.png",
+    "t1-05-invalid-password-error.png",
+    "t1-06-unauth-redirect-to-signin.png",
+    "t1-07-student-unauthorized-page.png",
+    "t1-08-teacher-admin-import-data.png",
+    "t1-09-admin-import-data-ui.png",
+    "t1-10-ui-upload-result.png",
+    "t1-11-api-upload-csv-first.png",
+    "t1-12-api-upload-csv-reupload.png",
+    "t1-13-api-upload-classes.png"
+  ],
+  "notes": [
+    "--- signin page: GET http://localhost:3000/en/auth/signin",
+    "    -> http://localhost:3000/en/auth/signin",
+    "UI login request fired: NO (client-side validation blocked)",
+    "form text after attempt: \"Welcome to Primary Advantage |  | Enter your email below to login to your account |  | Email | Password | Forgot your password? | Login | Or continue with | Login with Google | Don't have an account? Sign up\"",
+    "api login qa-teacher-b: status 200",
+    "--- teacher landing /en: GET http://localhost:3000/en",
+    "    -> http://localhost:3000/en",
+    "--- teacher /en/dashboard: GET http://localhost:3000/en/dashboard",
+    "    -> http://localhost:3000/en/unauthorized",
+    "--- teacher /en/teacher/dashboard: GET http://localhost:3000/en/teacher/dashboard",
+    "    -> http://localhost:3000/en/teacher/my-classes",
+    "URL after reload: http://localhost:3000/en/teacher/my-classes",
+    "session survives reload: true",
+    "session_token: {\"httpOnly\":true,\"secure\":false,\"sameSite\":\"Lax\",\"path\":\"/\",\"expiry\":1790036386.098}",
+    "--- nav to /en for logout menu: GET http://localhost:3000/en",
+    "    -> http://localhost:3000/en",
+    "logout API status: 200",
+    "URL after logout: http://localhost:3000/en",
+    "URL after logout settle: http://localhost:3000/en",
+    "session_token after logout: cleared",
+    "WARN: logout did not land on sign-in URL",
+    "--- signin for invalid password: GET http://localhost:3000/en/auth/signin",
+    "    -> http://localhost:3000/en/auth/signin",
+    "invalid-password login API status: 401",
+    "error shown: \"Invalid username or password\"",
+    "api login qa-teacher-b: status 401",
+    "api invalid password status: 401 body: {\"message\":\"Invalid username or password\"}",
+    "--- unauth /en/teacher/my-classes: GET http://localhost:3000/en/teacher/my-classes",
+    "    -> http://localhost:3000/en/auth/signin?callbackUrl=%2Fen%2Fteacher%2Fmy-classes",
+    "--- student signin: GET http://localhost:3000/en/auth/signin",
+    "    -> http://localhost:3000/en/auth/signin",
+    "api login qa-student-b1: status 200",
+    "student session landing check",
+    "--- student /en/teacher/my-classes: GET http://localhost:3000/en/teacher/my-classes",
+    "    -> http://localhost:3000/en/unauthorized",
+    "page contains 'Unauthorized': true",
+    "api login qa-teacher-b: status 200",
+    "--- teacher /en/admin/import-data: GET http://localhost:3000/en/admin/import-data",
+    "    -> http://localhost:3000/en/unauthorized",
+    "api login qa-admin-b: status 200",
+    "--- admin /en/admin/import-data: GET http://localhost:3000/en/admin/import-data",
+    "    -> http://localhost:3000/en/admin/import-data",
+    "import button text: \"Import Data\"",
+    "UI upload response: 400 http://localhost:3000/api/upload/classes",
+    "UI upload JSON: {\"error\":\"Validation failed\",\"details\":[\"Row 3: Duplicate email 'dup.browser@example.com' within the same upload\"],\"validatedRows\":0,\"totalRows\":4}",
+    "api/upload/csv first upload: status status() {\n        return this._initializer.status;\n      }",
+    "api/upload/csv first upload JSON: {\"error\":\"Validation failed\",\"details\":[\"Row 2: Role 'student' not found in database\",\"Row 3: Role 'student' not found in database\",\"Row 4: Role 'student' not found in database\",\"Row 5: Role 'student' not found in database\"],\"validatedRows\":0,\"totalRows\":4}",
+    "api/upload/csv re-upload: status status() {\n        return this._initializer.status;\n      }",
+    "api/upload/csv re-upload JSON: {\"error\":\"Validation failed\",\"details\":[\"Row 2: Role 'student' not found in database\",\"Row 3: Role 'student' not found in database\",\"Row 4: Role 'student' not found in database\",\"Row 5: Role 'student' not found in database\"],\"validatedRows\":0,\"totalRows\":4}",
+    "api/upload/classes classes.csv: status status() {\n        return this._initializer.status;\n      }",
+    "api/upload/classes classes.csv JSON: {\"success\":true,\"message\":\"Classes uploaded and created successfully\",\"fileName\":\"4db79ec7-f739-43cc-a7ea-8b01a9dd9ac8_classes.csv\",\"filePath\":\"/home/daniebo/Desktop/reading-advantage-monorepo/apps/primary-advantage/temp/4db79ec7-f739-43cc-a7ea-8b01a9dd9ac8_classes.csv\",\"originalName\":\"classes.csv\",\"size\":35,\"timestamp\":1789431694113,\"stats\":{\"totalRows\":1,\"errors\":0,\"processedClasses\":1,\"createdClassrooms\":0},\"performanceStats\":{\"totalExecutionTime\":632,\"processedAt\":\"2026-09-15T00:21:34.573Z\"},\"schoolInfo\":{\"id\":\"c74be1bd-7e83-41d2-a5e4-4e06e3294f1f\",\"name\":\"QA School B\",\"note\":\"All imported classes have been assigned to this school\"},\"classrooms\":[],\"note\":\"Classes created successfully. You can now import students and teachers to assign them to these classes.\"}"
+  ]
+}

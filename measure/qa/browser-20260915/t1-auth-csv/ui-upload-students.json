@@ -1,0 +1,8 @@
+{
+  "error": "Validation failed",
+  "details": [
+    "Row 3: Duplicate email 'dup.browser@example.com' within the same upload"
+  ],
+  "validatedRows": 0,
+  "totalRows": 4
+}

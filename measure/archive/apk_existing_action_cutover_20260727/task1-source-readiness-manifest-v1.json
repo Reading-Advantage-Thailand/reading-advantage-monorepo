@@ -1,0 +1,262 @@
+{
+  "schema_version": "apk-existing-action-task1-source-readiness-manifest.v1",
+  "track_id": "apk_existing_action_cutover_20260727",
+  "task": "Task 1: source/readiness manifest preparation",
+  "status": "evidence-only",
+  "archive_resolution_rule": "For each predecessor, archive_preferred_path is the only consumable local path after archival. receipt_declared_path is retained solely to reconcile the immutable receipt text and is not a fallback.",
+  "source_bindings": {
+    "accepted_readiness_receipt": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "receipt_declared_path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+    },
+    "phase1_crosswalk": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "receipt_declared_path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+    },
+    "identity_ledger": {
+      "archive_preferred_path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+    },
+    "action_defense_evidence": {
+      "archive_preferred_path": "measure/archive/apk_corpus_audit_action_defense_20260712/accepted-cohort-manifest-t4-v2.json",
+      "sha256": "824850257f5eaa2f2bb2d786ddedc5d6cbd03d7b088b00400c0d1d7a11feac80"
+    },
+    "special_historical_evidence": {
+      "archive_preferred_path": "measure/archive/apk_corpus_audit_special_historical_20260712/cohort-accepted-manifest-20260722.json",
+      "sha256": "4186dfd20fcef683a1a33664a1ffa9d4350280fbee31fe56d553fa0f5a87b2b0"
+    }
+  },
+  "readiness_boundary": {
+    "receipt_status": "accepted-active",
+    "authorized_child_work_only": true,
+    "cohort_currently_ready": false,
+    "cartridge_cutover_authorized": false,
+    "meaning": "The receipt removes only the denominator/readiness predecessor block for this five-title child track. It does not satisfy Task 1 or any downstream task."
+  },
+  "titles": [
+    {
+      "title_id": "archers-revenge",
+      "title": "Archer's Revenge",
+      "assignment_index": 7,
+      "source_identity_id": "catalog/archers-revenge",
+      "identity_record_index": 0,
+      "evidence_binding": "action_defense_evidence",
+      "crosswalk_locator": {
+        "assignment_index": 7,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/7"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/0"
+        }
+      },
+      "identity_ledger_locator": {
+        "catalog_evidence": {
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 154,
+            "end_line": 154,
+            "sha256": "8ac12ade5fff141d2ba3c7f27a4f2fc67e80f6229319d16c1caa4c33c7764d5e"
+          }
+        },
+        "source_state": {
+          "source_class": "catalog-withdrawn-registration",
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 22,
+            "end_line": 22,
+            "sha256": "a198e2e408083828619945e71608caf6b2a5a7a753b80330923063eeb975be2c"
+          }
+        }
+      }
+    },
+    {
+      "title_id": "paladins-twin-soul",
+      "title": "Paladin's Twin-Soul",
+      "assignment_index": 9,
+      "source_identity_id": "catalog/paladins-twin-soul",
+      "identity_record_index": 5,
+      "evidence_binding": "action_defense_evidence",
+      "crosswalk_locator": {
+        "assignment_index": 9,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/9"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/5"
+        }
+      },
+      "identity_ledger_locator": {
+        "catalog_evidence": {
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 182,
+            "end_line": 182,
+            "sha256": "ef2bf8d071f64cd786b87607890a9dbc3a9bd4e8ea5cae906cddde47a5f8dc67"
+          }
+        },
+        "source_state": {
+          "source_class": "catalog-withdrawn-registration",
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 23,
+            "end_line": 23,
+            "sha256": "dff44c5ae92c04614832a9bbf3cf23435bfd9d3e97285799d2fc6eb73a2af75d"
+          }
+        }
+      }
+    },
+    {
+      "title_id": "griffin-sky-joust",
+      "title": "Griffin Sky-Joust",
+      "assignment_index": 24,
+      "source_identity_id": "catalog/griffin-sky-joust",
+      "identity_record_index": 3,
+      "evidence_binding": "special_historical_evidence",
+      "crosswalk_locator": {
+        "assignment_index": 24,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/24"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/3"
+        }
+      },
+      "identity_ledger_locator": {
+        "catalog_evidence": {
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 168,
+            "end_line": 168,
+            "sha256": "2c339a97aceb8e347decf28e3ff24ffb96c55c3046d56603e1c77ec9d4a1228b"
+          }
+        },
+        "source_state": {
+          "source_class": "catalog-withdrawn-registration",
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 24,
+            "end_line": 24,
+            "sha256": "ab3d55f0add4231d759efffef9dda99063277e4ff4801265b0e3cf1b14370467"
+          }
+        }
+      }
+    },
+    {
+      "title_id": "gryphon-patrol",
+      "title": "Gryphon Patrol",
+      "assignment_index": 10,
+      "source_identity_id": "catalog/gryphon-patrol",
+      "identity_record_index": 4,
+      "evidence_binding": "action_defense_evidence",
+      "crosswalk_locator": {
+        "assignment_index": 10,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/10"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/4"
+        }
+      },
+      "identity_ledger_locator": {
+        "catalog_evidence": {
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 226,
+            "end_line": 226,
+            "sha256": "e6b636ceb7a57b9f7bad2c9f1ef27d2ce2a48ef316cd164a088cfae662e8d25e"
+          }
+        },
+        "source_state": {
+          "source_class": "catalog-withdrawn-registration",
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 25,
+            "end_line": 25,
+            "sha256": "40e9ecf511e38baa9ffaaa82c617aac1116675fa715f5a95767a8b9043baf62c"
+          }
+        }
+      }
+    },
+    {
+      "title_id": "realm-carver",
+      "title": "Realm Carver",
+      "assignment_index": 25,
+      "source_identity_id": "catalog/realm-carver",
+      "identity_record_index": 6,
+      "evidence_binding": "special_historical_evidence",
+      "crosswalk_locator": {
+        "assignment_index": 25,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/25"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/6"
+        }
+      },
+      "identity_ledger_locator": {
+        "catalog_evidence": {
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 175,
+            "end_line": 175,
+            "sha256": "8283edfeaffa7a85035165f35dc2edbddc7712412dd520f2e62f1d5617051487"
+          }
+        },
+        "source_state": {
+          "source_class": "catalog-withdrawn-registration",
+          "path": "apps/advantage-games/src/lib/gameCards.ts",
+          "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+          "range": {
+            "start_line": 26,
+            "end_line": 26,
+            "sha256": "a7486f707bafc941086aab32a4c3b6514cd5a40e0eacafede7cd7a7e119e5271"
+          }
+        }
+      }
+    }
+  ],
+  "claims": {
+    "semantic_adoption_claimed": false,
+    "asset_selection_claimed": false,
+    "asset_suitability_claimed": false,
+    "asset_adoption_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false,
+    "release_authority_granted": false
+  },
+  "required_before_any_adoption_or_cutover": [
+    "accepted Asset Contract v2 output",
+    "accepted per-title/per-role suitability and canonical-ingestion dossier",
+    "accepted semantic adoption binding",
+    "deterministic cartridge revalidation and selected-output proof",
+    "Advantage Games, Reading, and Primary host proof with authoritative completion persistence",
+    "exact legacy retirement disposition plus independent review and product-owner acceptance"
+  ],
+  "revocation_rule": "Any bound-byte, roster, title-identity, locator, or authority-boundary drift invalidates this Task 1 evidence-only manifest; remediation must publish a successor record rather than mutating the archived predecessor."
+}

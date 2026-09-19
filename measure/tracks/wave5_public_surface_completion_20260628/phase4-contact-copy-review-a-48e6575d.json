@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "The two-file candidate passes natural-copy, contact-authority, and relevant Phase 3 regression checks. No scoped correctness defect is present.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Commit a0a10035db9c274cd5d49cd8fa770ee9873466fc is the parent of candidate 48e6575dca6ff8314196a78100b6ddd3a6dd5c59.",
+    "The candidate diff contains exactly two source files: contact configuration and contact-page locale data.",
+    "apps/www-reading-advantage/src/config/contact.ts:6 stores the raw handle @reading.advantage. Other contact authority values remain unchanged at lines 2-5 and 7-8.",
+    "apps/www-reading-advantage/src/locales/pages/contact.ts:30,72,113 stores the English, Thai, and Chinese TikTok platform phrases without the raw handle.",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/contact/page.tsx:187-196 renders one localized phrase and one contactDetails.tiktokLabel value in the TikTok link.",
+    "The immutable Red test blob is 7820e42c1507e7b83f5b46d1802389755cfcb51b at a0a10035db9c274cd5d49cd8fa770ee9873466fc, candidate 48e6575dca6ff8314196a78100b6ddd3a6dd5c59, and current HEAD.",
+    "The Red test lines 59-76 assert the raw config handle, exact locale phrases, exact rendered text, and one occurrence each of TikTok and the handle.",
+    "apps/www-reading-advantage/src/components/contact/contact-form.tsx:8 and 48 still use contactDetails for the mailto authority. The candidate does not change this file.",
+    "The contact-authority test passed 3/3 and the Phase 4 accessibility, navigation, and contact test passed 4/4. The focused natural-copy test passed 4/4.",
+    "The Phase 3 regression passed 10/10 with the accepted 60000 millisecond test timeout. The default five-second timeout failed only at the existing Science caller check in phase-3-i18n.red.test.ts:252-254.",
+    "Reviewed source and test paths are clean in the worktree and match their candidate blobs. The current HEAD is d01a4a0cf, with no relevant source drift after candidate 48e6575dca6ff8314196a78100b6ddd3a6dd5c59."
+  ],
+  "commands": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-4-contact-copy.red.test.tsx --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "1 file and 4 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-4-contact-authority.red.test.tsx --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "1 file and 3 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-4-contact-authority.red.test.tsx src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "2 files and 7 tests passed. Existing React DOM warnings appeared in unrelated reviewed components."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-3-i18n.red.test.ts src/__tests__/phase-3-group-b-types.test.ts --maxWorkers=1",
+      "result": "failed",
+      "exit_code": 1,
+      "details": "The existing Science caller test timed out at its five-second default."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-3-i18n.red.test.ts src/__tests__/phase-3-group-b-types.test.ts --maxWorkers=1 --testTimeout=60000",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "2 files and 10 tests passed."
+    },
+    {
+      "command": "git diff --check a0a10035db9c274cd5d49cd8fa770ee9873466fc 48e6575dca6ff8314196a78100b6ddd3a6dd5c59",
+      "result": "passed",
+      "exit_code": 0,
+      "details": "The committed two-file source diff has no whitespace errors."
+    }
+  ],
+  "changed_files": [
+    "apps/www-reading-advantage/src/config/contact.ts",
+    "apps/www-reading-advantage/src/locales/pages/contact.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "role": "Review A correctness",
+  "track": "wave5_public_surface_completion_20260628",
+  "phase": "Phase 4 natural contact-copy remediation",
+  "baseline_source_sha": "48e6575dca6ff8314196a78100b6ddd3a6dd5c59",
+  "red_commit_sha": "a0a10035db9c274cd5d49cd8fa770ee9873466fc",
+  "candidate_sha": "48e6575dca6ff8314196a78100b6ddd3a6dd5c59",
+  "audited_head_sha": "d01a4a0cf",
+  "head_start_sha": "d01a4a0cf",
+  "head_end_sha": "d01a4a0cf",
+  "head_advanced": false,
+  "reviewed_blobs": {
+    "apps/www-reading-advantage/src/config/contact.ts": "a803b4f763a571b08083f290f3630649fc3622d2",
+    "apps/www-reading-advantage/src/locales/pages/contact.ts": "9b8f64b116da7991e97d3254389af27cc9fcdbfe",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/contact/page.tsx": "155662213d7e33d6bf4bf2a12c48ee2f6c32c24e",
+    "apps/www-reading-advantage/src/components/contact/contact-form.tsx": "ea929d54c9e48054fcc700adc5eee82fcaa06e1e",
+    "apps/www-reading-advantage/src/components/common/footer.tsx": "8eefbd0471914e8db55ca35b9c413c75b6e330b5",
+    "apps/www-reading-advantage/src/__tests__/phase-4-contact-copy.red.test.tsx": "7820e42c1507e7b83f5b46d1802389755cfcb51b",
+    "apps/www-reading-advantage/src/__tests__/phase-4-contact-authority.red.test.tsx": "a552eacd7da61b5db895c92683761dc0efe59cc6"
+  },
+  "dirty_tree_disclosure": {
+    "snapshot": "before report artifact creation",
+    "status_entries": 1435,
+    "status_counts": {
+      "worktree_deleted": 6,
+      "worktree_modified": 44,
+      "untracked": 1385
+    },
+    "top_level_counts": {
+      ".opencode": 1218,
+      "apps": 164,
+      "measure": 15,
+      "packages": 38
+    },
+    "path_groups": [
+      ".opencode/goals: 2 deleted, 1216 untracked",
+      "apps/advantage-games: 6 modified, 149 untracked",
+      "apps/codecamp-advantage: 4 deleted, 2 modified",
+      "apps/www-reading-advantage: 3 modified",
+      "measure: 8 modified or deleted, 7 untracked",
+      "packages/advantage-play-kit: 13 modified, 3 untracked",
+      "packages/backend: 2 modified",
+      "packages/db: 1 modified",
+      "packages/domain: 4 modified, 3 untracked",
+      "packages/game-cartridges: 5 modified, 7 untracked"
+    ],
+    "named_www_files": [
+      "apps/www-reading-advantage/src/components/features/comparison-table.tsx",
+      "apps/www-reading-advantage/src/locales/components/comparison-table.ts",
+      "apps/www-reading-advantage/src/locales/components/pricing-table.ts"
+    ],
+    "scope_note": "All listed dirty paths are outside this review. APK paths, Marketing Phase 5 files, Measure files, and unrelated work were not changed."
+  },
+  "known_limitations": [
+    "The Phase 4 combined diagnostic emitted existing React DOM warnings in unrelated components.",
+    "This report does not assess browser behavior, Phase 5 pricing work, APK paths, or overall Phase 4 or track completion."
+  ]
+}

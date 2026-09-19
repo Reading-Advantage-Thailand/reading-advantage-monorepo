@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "track_id": "company_finance_operations_20260810",
+  "phase": "Phase 2 — controlled operational imports",
+  "role": "measure-review-c",
+  "phase_base_sha": "8fa71b33b79a3090941f884f037564baa0322dbb",
+  "role_base_sha": "4f80636c8d9823f8c640232c1ee315d3e225bfb6",
+  "audited_head_sha": "cac10174c02167f36420e17f4ef6fc70578b9702",
+  "audit_start_head_sha": "cac10174c02167f36420e17f4ef6fc70578b9702",
+  "verification_head_start_sha": "11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7",
+  "verification_head_end_sha": "11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7",
+  "head_advanced_during_audit": true,
+  "finance_path_drift_after_audited_head": false,
+  "decision": "FAIL",
+  "current_head_acceptance": "withheld",
+  "summary": "The required checks pass, but Finance rejects the real Company Identity attestor result shape.",
+  "contract_applicability": {
+    "backend_contract_review": "applicable",
+    "security_boundary_review": "applicable",
+    "browser_review": "N/A — no UI, route, browser, or app-layer wiring changed; this phase adds only backend Finance contracts, a barrel export, and tests.",
+    "live_database_review": "N/A — the THB implementation has no database, migration, or provider adapter change."
+  },
+  "reviewed_inputs": [
+    "measure/tracks/company_finance_operations_20260810/spec.md",
+    "measure/tracks/company_finance_operations_20260810/plan.md",
+    "measure/tracks/company_finance_operations_20260810/test-strategy-phase2-thb.md",
+    "measure/tracks/company_finance_operations_20260810/phase2-final-trust-binding-review-a-v2-20260814.json",
+    "measure/tracks/company_finance_operations_20260810/phase2-final-trust-binding-review-b-v2-20260814.json",
+    "measure/tracks/company_finance_operations_20260810/phase2-thb-architecture-review-a-remediation-20260816.md",
+    "measure/tracks/company_finance_operations_20260810/phase2-thb-review-b-green-remediation-20260816.md",
+    "measure/tracks/company_finance_operations_20260810/phase2-thb-replay-green-remediation-20260815.md",
+    "packages/backend/src/modules/finance-operations/thb-valuation.ts",
+    "packages/backend/src/modules/finance-operations/index.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts",
+    "packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts",
+    "packages/backend/src/modules/company-identity/index.ts"
+  ],
+  "public_export_audit": {
+    "status": "PASS_WITH_FINDING",
+    "expected_runtime_exports": [
+      "financeThbConversionEvidenceSchema",
+      "createFinanceThbValuationPreparer",
+      "classifyFinanceThbValuationReplay"
+    ],
+    "observed_runtime_exports": [
+      "FinanceThbValuationError",
+      "classifyFinanceThbValuationReplay",
+      "createFinanceThbValuationPreparer",
+      "financeThbConversionEvidenceSchema",
+      "financeThbPolicyApprovalScopeSchema"
+    ],
+    "caller_compatibility": "FAIL — the public Company Identity attestor returns a full receipt, while Finance accepts only a three-field receipt.",
+    "transport_neutrality": "PASS — the implementation imports only node:util.types and zod, and uses injected attestor and evidence ports.",
+    "app_layer_wiring": "PASS — no production app caller or app-layer wiring exists for the THB exports."
+  },
+  "shape_audit": {
+    "request": "FAIL — own __proto__ keys can disappear during capture before strict parsing.",
+    "result": "FAIL — the strict attestor result receipt shape is incompatible with the public Company Identity result.",
+    "error": "PASS — FinanceThbValuationError exposes stable codes and does not include dependency text.",
+    "replay": "FAIL — an own __proto__ key can disappear and produce replay instead of conflict.",
+    "injected_ports": "PASS — attestor verification precedes evidence access, and both dependencies are injected."
+  },
+  "ordering_audit": {
+    "attestor_before_evidence": "PASS — the implementation awaits verify before getEvidence.",
+    "unknown_request_key_order": "PASS for ordinary keys — unknown keys reject before attestor access.",
+    "caller_only_conversion_fields": "PASS for the tested fields — the attestor runs, then Finance rejects them before evidence access."
+  },
+  "findings": [
+    {
+      "id": "THB-C-001",
+      "severity": "High",
+      "title": "Finance rejects the public Company Identity attestor result.",
+      "file": "packages/backend/src/modules/finance-operations/thb-valuation.ts",
+      "lines": "37-41, 56-67, 318-320",
+      "detail": "Finance defines a strict receipt with only decisionId, contentDigest, and scope. Company Identity returns its full FinanceThbPolicyApprovalReceipt with receipt version, signer, decision evidence, rules, validity, replay identity, and audit fields. A real allow or replay result therefore fails FinanceThbValuationError with FINANCE_THB_POLICY_APPROVAL_INVALID before evidence access.",
+      "strategy_evidence": "test-strategy-phase2-thb.md:98-105 requires Finance to consume the public Company Identity attestor and forbids a duplicate receipt verifier.",
+      "reproduction": "A provider-neutral probe returned the Company Identity receipt shape and received FINANCE_THB_POLICY_APPROVAL_INVALID with zero evidence reads.",
+      "impact": "A real Company Identity caller cannot prepare a THB valuation.",
+      "required_disposition": "Remediate the Finance-to-Company-Identity result boundary before acceptance."
+    },
+    {
+      "id": "THB-C-002",
+      "severity": "Medium",
+      "title": "Capture can bypass strict unknown-key rejection for __proto__.",
+      "file": "packages/backend/src/modules/finance-operations/thb-valuation.ts",
+      "lines": "150-176, 318-320, 385-408",
+      "detail": "capture assigns captured values with output[key] = value. An own enumerable __proto__ key with a primitive value is not retained as an own key. Strict request and evidence schemas then accept the remaining shape. The replay classifier also returns replay for operands that contain this unknown key.",
+      "reproduction": "A request with own __proto__: \"secret\" reached the attestor. Evidence with the same key was accepted. Replay operands with the key returned {status: replay}.",
+      "impact": "The required strict request, evidence, and replay contracts do not reject every unknown key.",
+      "required_disposition": "Preserve every own key during capture or reject the key before schema parsing."
+    },
+    {
+      "id": "THB-C-003",
+      "severity": "Low",
+      "title": "The THB strategy status is stale after Green implementation evidence.",
+      "file": "measure/tracks/company_finance_operations_20260810/test-strategy-phase2-thb.md",
+      "lines": "3-15",
+      "detail": "The strategy says the THB task is [~] because Red tests are active. The plan marks the implementation task [x]. Owner rate-source, rounding, and effective-date decisions remain deferred, but the strategy does not distinguish that policy gate from implementation status.",
+      "impact": "The active strategy can misstate the current implementation state.",
+      "required_disposition": "Reconcile the status text without claiming owner policy acceptance."
+    }
+  ],
+  "evidence_review": {
+    "final_review_a": "phase2-final-trust-binding-review-a-v2-20260814.json passed for the earlier controlled-import trust-binding scope, not the THB implementation.",
+    "final_review_b": "phase2-final-trust-binding-review-b-v2-20260814.json passed for the earlier controlled-import security scope, not the THB implementation.",
+    "thb_remediation_evidence": "The THB architecture and Review B remediation logs record their focused Green checks. They do not remove the caller-shape finding in this independent Review C audit."
+  },
+  "checks": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts --pool=threads --maxWorkers=1",
+      "exit_code": 0,
+      "result": "PASS — 2 files, 61 tests"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts --pool=threads --maxWorkers=1",
+      "exit_code": 0,
+      "result": "PASS — 1 file, 11 tests"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/postgres-boundary-exports.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts --pool=threads --maxWorkers=1",
+      "exit_code": 0,
+      "result": "PASS — 5 files, 25 tests"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit -p tsconfig.json",
+      "exit_code": 0,
+      "result": "PASS — production typecheck"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json",
+      "exit_code": 0,
+      "result": "PASS — test typecheck"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc",
+      "exit_code": 0,
+      "result": "PASS — backend build"
+    },
+    {
+      "command": "../../node_modules/.bin/eslint src/modules/finance-operations",
+      "exit_code": 0,
+      "result": "PASS — Finance lint"
+    },
+    {
+      "command": "build-graph update ./graph.db <five Finance paths>; build-graph callers ./graph.db createFinanceThbValuationPreparer; build-graph callers ./graph.db classifyFinanceThbValuationReplay; build-graph callers ./graph.db financeThbConversionEvidenceSchema",
+      "exit_code": 0,
+      "result": "PASS — graph updated; no caller edges reported. Direct code search found no production caller outside the Finance tests."
+    },
+    {
+      "command": "git diff --check cac10174c02167f36420e17f4ef6fc70578b9702..11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7 -- packages/backend/src/modules/finance-operations measure/tracks/company_finance_operations_20260810",
+      "exit_code": 0,
+      "result": "PASS — no scoped whitespace errors and no Finance-path drift after audited HEAD"
+    }
+  ],
+  "head_evidence": {
+    "audit_start": "cac10174c02167f36420e17f4ef6fc70578b9702",
+    "advance": "11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7 added unrelated APK documentation and source evidence commits.",
+    "finance_drift_proof": "git diff --name-status cac10174c02167f36420e17f4ef6fc70578b9702..11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7 -- packages/backend/src/modules/finance-operations measure/tracks/company_finance_operations_20260810 returned no paths.",
+    "verification_start": "11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7",
+    "verification_end": "11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7",
+    "acceptance": "Current-head acceptance is withheld because HEAD advanced beyond audited_head_sha."
+  },
+  "production_code_modified_by_review": false,
+  "commit_created": false,
+  "changed_files": [
+    "measure/tracks/company_finance_operations_20260810/thb-review-c-cac10174c.json",
+    "measure/tracks/company_finance_operations_20260810/orchestration/thb-review-c-cac10174c.log"
+  ],
+  "confidence": "high"
+}

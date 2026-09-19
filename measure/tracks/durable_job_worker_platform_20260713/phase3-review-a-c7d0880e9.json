@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "track_id": "durable_job_worker_platform_20260713",
+  "phase": "Phase 3: PostgreSQL Adapter Implementation",
+  "role": "measure-review-a",
+  "phase_base_sha": "fd581f3dcd15e7b7b632875862aaecb596719621",
+  "role_base_sha": "b9e1657a087b1b0a9667452d2240f95c905a8526",
+  "source_sha": "8b5ace214f569f0b96e54d12e66df1398ee4e256",
+  "audited_head_sha": "c7d0880e9bfdbe52ca8c06a914d44c4854fbc7ad",
+  "audit_start_head_sha": "c7d0880e9bfdbe52ca8c06a914d44c4854fbc7ad",
+  "verification_head_start_sha": "c7d0880e9bfdbe52ca8c06a914d44c4854fbc7ad",
+  "verification_head_end_sha": "c7d0880e9bfdbe52ca8c06a914d44c4854fbc7ad",
+  "head_advanced_during_audit": false,
+  "decision": "FAIL",
+  "current_head_acceptance": "withheld",
+  "production_code_modified_by_review": false,
+  "commit_created": false,
+  "reviewed_inputs": [
+    "measure/tracks/durable_job_worker_platform_20260713/spec.md",
+    "measure/tracks/durable_job_worker_platform_20260713/plan.md",
+    "measure/tracks/durable_job_worker_platform_20260713/test-strategy.md",
+    "measure/tracks/durable_job_worker_platform_20260713/phase-3-jr-green-20260816.md",
+    "measure/tracks/durable_job_worker_platform_20260713/task-6-task-7-independent-rereview-20260814.md",
+    "measure/tracks/durable_job_worker_platform_20260713/task-9-postreview-green-evidence-20260816.md",
+    "measure/tracks/durable_job_worker_platform_20260713/task-10-independent-review-result-20260813.json",
+    "packages/db/src/schema/jobs.ts",
+    "packages/db/drizzle/0052_durable_jobs.sql",
+    "packages/db/src/sentinels.ts",
+    "packages/db/src/schema/index.ts",
+    "packages/domain/src/tenant-registry.ts",
+    "packages/backend/src/jobs/adapters/postgres/index.ts",
+    "packages/backend/src/jobs/__tests__/postgres16-concurrency.red.test.ts",
+    "packages/backend/src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts",
+    "packages/backend/src/jobs/__tests__/postgres-adapter-repair-contract.test.ts",
+    "packages/db/src/__tests__/durable-jobs-schema-pg16.red.test.ts",
+    "packages/db/src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts",
+    "packages/db/src/__tests__/durable-jobs-schema-migration.red.test.ts",
+    "packages/db/src/__tests__/durable-jobs-transition-fixtures.test.ts",
+    "packages/db/src/__tests__/fixtures/durable-job-transition-counterexamples.ts"
+  ],
+  "scope_audit": {
+    "task_11": "FAIL — schema, migration, sentinels, exports, and tenant coverage pass, but the architecture gate reports durable-job findings in the tenant registry.",
+    "task_12": "PASS for implemented adapter behavior — live tests prove scoped enqueue, duplicate identity, atomic claims, and lock skipping.",
+    "task_13": "FAIL for complete evidence — stale CAS, retry, DLQ, and replay pass, but positive heartbeat and live rerun promotion are not proved.",
+    "task_14": "FAIL — the required architecture gate fails, and the live adapter suite does not execute the frozen T5-H3 transition races."
+  },
+  "schema_parity": {
+    "status": "PASS_WITH_SCOPE_NOTE",
+    "details": "The Drizzle checks match migration 0052 bounds and state invariants. Drizzle check, source governance, and the live three-test catalog suite passed."
+  },
+  "tenant_classification": {
+    "status": "PASS",
+    "details": "The six durable tables are REFERENTIAL. Tenant coverage passed 12/12, and live claim, lease, reclaim, and replay scope tests passed."
+  },
+  "caller_compatibility": {
+    "status": "PASS_WITH_NO_PRODUCTION_CALLERS",
+    "details": "Graph callers returned no edges for createDurableJobQueuePort. Direct search found only tests and no Phase 4 adapter consumer."
+  },
+  "migration_truth": {
+    "status": "PASS_WITH_TEST_LIMITATION",
+    "details": "Migration 0052, journal, sentinels, role hardening, catalog metadata, and required checks passed. Audit mutation execution is not tested live."
+  },
+  "anti_pattern_audit": {
+    "A3_digit_only_counts": "PASS — evidence uses labeled counts, and the recorded focused commands reproduced them.",
+    "A4_vacuous_pass": "PASS — live tests use real PostgreSQL, dynamic adapter loading, named fixtures, and two verified sessions.",
+    "A5_false_claim_vs_test_reality": "FAIL — focused counts reproduce, but the architecture summary omits two durable-job findings and the heartbeat evidence is incomplete."
+  },
+  "graph_blast_radius": {
+    "status": "PASS_WITH_NO_CALLER_EDGES",
+    "graph_available": true,
+    "graph_stats": "32679 nodes; 57496 edges; 3522 files",
+    "inspected_symbols": ["createDurableJobQueuePort", "durableJobs", "durableJobStateEnum", "durableJobTenantModeEnum"],
+    "caller_result": "No graph caller edges for the adapter factory or inspected table symbols. Direct search found no production adapter caller."
+  },
+  "findings": [
+    {
+      "id": "DWP3-RA-H1",
+      "severity": "High",
+      "summary": "The required architecture gate reports new durable-job boundary findings.",
+      "file": "packages/domain/src/tenant-registry.ts:197-228",
+      "context": "The architecture check exits 1 with 701 findings and 141 additions. It reports two DURABLE_JOB_DATABASE_BOUNDARY static imports for the tenant registry. The approved ownership roots exclude this path, and the baseline has no durable_jobs entry. The Phase 3 evidence calls all findings unrelated, which is not supported by the command output.",
+      "impact": "The plan verification command is not green, so Task 11 and Task 14 cannot claim a clean architecture gate.",
+      "suggestion": "Resolve the reviewed ownership or baseline disposition, then rerun the architecture check before acceptance."
+    },
+    {
+      "id": "DWP3-RA-H2",
+      "severity": "High",
+      "summary": "The live adapter suite omits the frozen T5-H3 enqueue and transition races.",
+      "file": "measure/tracks/durable_job_worker_platform_20260713/task-6-red-schema-counterexamples-20260722.md:60-64",
+      "context": "The accepted fixture note assigns live adapter execution to Task 9 for queue moves, changed maxima, complete last-commit-wins snapshots, and settle/fail/reclaim lock orders. The live Task 9 file does not execute these scenarios. The only rerun promotion checks are fake-database checks in postgres-adapter-repair-contract.test.ts.",
+      "impact": "Task 14 claims transition tests Green without real PostgreSQL proof for active enqueue coalescing and promotion races.",
+      "suggestion": "Execute every frozen T5-H3 scenario on the two-connection PG16 harness before accepting Phase 3."
+    },
+    {
+      "id": "DWP3-RA-M1",
+      "severity": "Medium",
+      "summary": "Positive PostgreSQL heartbeat extension is not tested.",
+      "file": "packages/backend/src/jobs/adapters/postgres/index.ts:453-481",
+      "context": "The live concurrency suite tests stale, expired, and wrong-tenant heartbeat rejection. It does not claim a valid lease, call heartbeat with the current token, and verify the new expiry. Unit tests only accept the extended result shape. The evidence says heartbeat was proved without this positive path.",
+      "impact": "A regression in valid lease renewal could pass the Phase 3 focused gates.",
+      "suggestion": "Add one live claim, heartbeat, independent expiry read, and settlement test."
+    },
+    {
+      "id": "DWP3-RA-M2",
+      "severity": "Medium",
+      "summary": "Append-only audit enforcement is checked as metadata, not as a live mutation rejection.",
+      "file": "packages/db/src/__tests__/durable-jobs-schema-pg16.red.test.ts:598-695",
+      "context": "The schema suite checks trigger names, owners, event masks, function configuration, grants, and PUBLIC privileges. It does not attempt UPDATE, DELETE, or TRUNCATE on either audit table. The role suite also checks catalog grants without a privilege-negative operation.",
+      "impact": "A trigger that exists but does not reject mutation could pass the Phase 3 schema gates.",
+      "suggestion": "Add live UPDATE, DELETE, and TRUNCATE rejection checks under the approved role setup."
+    },
+    {
+      "id": "DWP3-RA-L1",
+      "severity": "Low",
+      "summary": "The Phase 3 plan does not pass Prettier check.",
+      "file": "measure/tracks/durable_job_worker_platform_20260713/plan.md",
+      "context": "Prettier check passes for the reviewed source and evidence file but reports plan.md as unformatted. The phase evidence claims source formatting, not plan formatting.",
+      "impact": "The plan remains inconsistent with the repository formatting gate.",
+      "suggestion": "Format plan.md in a tracked plan-only change."
+    }
+  ],
+  "checks": [
+    {
+      "command": "git rev-parse HEAD",
+      "exit_code": 0,
+      "result": "PASS — start and end HEAD equal c7d0880e9bfdbe52ca8c06a914d44c4854fbc7ad."
+    },
+    {
+      "command": "env -u DATABASE_URL -u DIRECT_DATABASE_URL DURABLE_JOB_PG16_TEST_OPT_IN=1 DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=<guarded-url> CI=true node ../../node_modules/vitest/vitest.mjs run src/__tests__/durable-jobs-schema-pg16.red.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 3/3 PG16 schema tests."
+    },
+    {
+      "command": "env -u DATABASE_URL -u DIRECT_DATABASE_URL DURABLE_JOB_PG16_TEST_OPT_IN=1 DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=<guarded-url> CI=true node ../../node_modules/vitest/vitest.mjs run src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 1/1 PG16 role test on a clean role snapshot."
+    },
+    {
+      "command": "env -u DATABASE_URL -u DIRECT_DATABASE_URL DURABLE_JOB_PG16_TEST_OPT_IN=1 DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=<guarded-url> CI=true node ../../node_modules/vitest/vitest.mjs run src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 19/19 Task 9 PG16 tests."
+    },
+    {
+      "command": "env -u DATABASE_URL -u DIRECT_DATABASE_URL DURABLE_JOB_PG16_TEST_OPT_IN=1 DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=<guarded-url> CI=true node ../../node_modules/vitest/vitest.mjs run src/jobs/__tests__/postgres16-concurrency.red.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 13/13 concurrency and reclaim PG16 tests."
+    },
+    {
+      "command": "env -u DURABLE_JOB_PG16_TEST_OPT_IN -u DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL -u DATABASE_URL -u DIRECT_DATABASE_URL CI=true node ../../node_modules/vitest/vitest.mjs run src/jobs/__tests__",
+      "exit_code": 0,
+      "result": "PASS — 68 passed and 26 skipped."
+    },
+    {
+      "command": "env -u DURABLE_JOB_PG16_TEST_OPT_IN -u DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL -u DATABASE_URL -u DIRECT_DATABASE_URL CI=true node ../../node_modules/vitest/vitest.mjs run src/__tests__/durable-jobs-schema-migration.red.test.ts src/__tests__/durable-jobs-transition-fixtures.test.ts src/__tests__/durable-jobs-schema-pg16.red.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 19 passed and 1 skipped."
+    },
+    {
+      "command": "CI=true node ../../node_modules/vitest/vitest.mjs run src/__tests__/durable-jobs-schema-migration.red.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 11/11 migration schema contract tests."
+    },
+    {
+      "command": "CI=true node ../../node_modules/vitest/vitest.mjs run src/__tests__/tenant-coverage.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 12/12 tenant coverage tests."
+    },
+    {
+      "command": "CI=true node ../../node_modules/vitest/vitest.mjs run src/__tests__/wave2-migration-seed-governance.test.ts src/__tests__/migration-ledger-gap-validation.test.ts src/__tests__/migration-sql.test.ts src/__tests__/drizzle045-migration-format.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 74/74 selected migration governance tests."
+    },
+    {
+      "command": "node ../../node_modules/drizzle-kit/bin.cjs check",
+      "exit_code": 0,
+      "result": "PASS — Drizzle migration files are consistent."
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit -p packages/db/tsconfig.json; node node_modules/typescript/bin/tsc --noEmit -p packages/backend/tsconfig.json; node node_modules/typescript/bin/tsc --noEmit -p packages/backend/tsconfig.test.json",
+      "exit_code": 0,
+      "result": "PASS — database production, backend production, and backend test type checks."
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --project packages/db/tsconfig.build.json; node node_modules/typescript/bin/tsc --project packages/backend/tsconfig.json",
+      "exit_code": 0,
+      "result": "PASS — database and backend builds."
+    },
+    {
+      "command": "node ../../node_modules/eslint/bin/eslint.js . (packages/db); node ../../node_modules/eslint/bin/eslint.js . (packages/backend)",
+      "exit_code": 0,
+      "result": "PASS — backend has no errors; database has 0 errors and 9 existing warnings."
+    },
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --check packages/db/src/schema/jobs.ts packages/backend/src/jobs/adapters/postgres/index.ts measure/tracks/durable_job_worker_platform_20260713/phase-3-jr-green-20260816.md",
+      "exit_code": 0,
+      "result": "PASS — reviewed source and evidence formatting."
+    },
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --check measure/tracks/durable_job_worker_platform_20260713/plan.md",
+      "exit_code": 1,
+      "result": "FAIL — plan.md is not formatted."
+    },
+    {
+      "command": "git diff --check fd581f3dc..HEAD -- measure/tracks/durable_job_worker_platform_20260713 packages/db/src/schema/jobs.ts packages/db/src/schema/index.ts packages/db/src/sentinels.ts packages/domain/src/tenant-registry.ts packages/backend/src/jobs services/worker",
+      "exit_code": 0,
+      "result": "PASS — no scoped whitespace errors."
+    },
+    {
+      "command": "node node_modules/tsx/dist/cli.mjs packages/architecture-enforcement/src/architecture-check-cli.ts",
+      "exit_code": 1,
+      "result": "FAIL — 701 findings, 141 additions, and 2 durable-job tenant-registry boundary additions."
+    },
+    {
+      "command": "env -u DATABASE_URL -u DIRECT_DATABASE_URL node node_modules/tsx/dist/cli.mjs packages/db/scripts/migration-ledger-doctor.ts --check --required-migration 0052_durable_jobs",
+      "exit_code": 2,
+      "result": "PASS_EXPECTED_FAIL_CLOSED — no database URL is accepted."
+    },
+    {
+      "command": "build-graph stats ./graph.db; build-graph inspect ./graph.db createDurableJobQueuePort; build-graph callers ./graph.db createDurableJobQueuePort",
+      "exit_code": 0,
+      "result": "PASS — graph is available, the factory is inspected, and no caller edge is reported."
+    },
+    {
+      "command": "git status --short --branch",
+      "exit_code": 0,
+      "result": "PASS — no audited Phase 3 path is dirty; unrelated dirty paths were preserved."
+    }
+  ],
+  "known_limitations": [
+    "The pnpm wrapper attempted registry resolution and was killed by the network timeout. Direct binaries passed the package checks.",
+    "The repository has unrelated dirty paths and a pre-existing PostgreSQL 16 container. The reviewer did not modify them.",
+    "The reviewer used a new PG16 container for the live checks and verified zero scratch databases, zero durable-job roles, and server version 160014 before removal.",
+    "The repository-wide architecture check remains non-green with 699 findings and 139 additions outside the durable-job tenant-registry finding."
+  ],
+  "remediation_review": {
+    "reviewed_at": "2026-08-16",
+    "scope": "working tree remediation after the Phase 3 Review A decision",
+    "source_head_sha": "c7d0880e9bfdbe52ca8c06a914d44c4854fbc7ad",
+    "head_advanced": false,
+    "decision": "FAIL",
+    "current_head_acceptance": "withheld",
+    "production_code_modified": true,
+    "commit_created": false,
+    "resolved_findings": [
+      "DWP3-RA-H1: the tenant registry no longer emits durable-job boundary findings.",
+      "DWP3-RA-H2: live Task 9 now covers all frozen T5-H3 snapshot and lock-order scenarios.",
+      "DWP3-RA-M1: live positive heartbeat extension now verifies persisted expiry and settlement.",
+      "DWP3-RA-M2: live UPDATE, DELETE, and TRUNCATE attempts now fail on both audit tables.",
+      "DWP3-RA-L1: the Phase 3 plan now passes the Prettier check."
+    ],
+    "remaining_blocker": {
+      "id": "DWP3-RA-H3",
+      "severity": "High",
+      "summary": "The required repository-wide architecture gate remains non-green.",
+      "context": "The architecture check exits 1 with 699 findings and 139 additions. No durable-job tenant-registry addition remains.",
+      "impact": "Task 14 and Phase 3 acceptance remain withheld until the repository debt has a reviewed disposition.",
+      "suggestion": "Review the remaining architecture debt in its owning tracks, then rerun the architecture check."
+    },
+    "verification": {
+      "live_task_9": "PASS — 28/28 PostgreSQL 16 enqueue, retry, DLQ, replay, T5-H3 snapshot, and lock-order tests.",
+      "live_concurrency": "PASS — 14/14 PostgreSQL 16 concurrency, heartbeat, and reclaim tests.",
+      "live_schema": "PASS — 4/4 PostgreSQL 16 schema and append-only audit mutation tests.",
+      "tenant_coverage": "PASS — 12/12 tenant coverage tests.",
+      "migration_and_fixtures": "PASS — 17 selected migration and transition-fixture tests.",
+      "architecture_unit_tests": "PASS — 10/10 ownership-map and architecture-check tests.",
+      "drizzle_check": "PASS — Drizzle migration files are consistent.",
+      "type_checks": "PASS — domain and architecture-enforcement type checks.",
+      "format_and_diff": "PASS — focused Prettier and git diff checks.",
+      "architecture_check": "FAIL — exit 1 with 699 findings and 139 additions."
+    }
+  },
+  "changed_files": [
+    "measure/tracks/durable_job_worker_platform_20260713/phase3-review-a-c7d0880e9.json",
+    "measure/tracks/durable_job_worker_platform_20260713/orchestration/phase3-review-a-c7d0880e9.log"
+  ],
+  "measure_agent_result": {
+    "role": "measure-review-a",
+    "status": "complete",
+    "track": "durable_job_worker_platform_20260713",
+    "phase": "Phase 3: PostgreSQL Adapter Implementation",
+    "decision": "FAIL",
+    "phase_base_sha": "fd581f3dc",
+    "role_base_sha": "b9e1657a0",
+    "source_sha": "8b5ace214",
+    "audited_head_sha": "c7d0880e9",
+    "blocking_findings": ["DWP3-RA-H1", "DWP3-RA-H2"],
+    "known_limitations": "Heartbeat positive path, live T5-H3 transitions, and audit mutation negatives need focused evidence.",
+    "production_code_modified": false,
+    "commit_created": false
+  }
+}

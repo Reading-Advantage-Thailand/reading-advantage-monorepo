@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "track_id": "company_finance_operations_20260810",
+  "phase": "Phase 2 — controlled operational imports",
+  "role": "measure-adversarial-testing",
+  "implementation_commit": "0adff98cc",
+  "requested_current_head": "c572d0b87",
+  "verification_head": "c572d0b8713dd09fb3e86761c54467b46ccba142",
+  "decision": "PASS",
+  "summary": "All 29 adversarial tests and all required Finance gates passed after the identity-rate correction.",
+  "committed_adversarial_tests_preserved": true,
+  "source_and_adversarial_test_drift": false,
+  "finance_path_drift": {
+    "detected": true,
+    "range": "0adff98cc..c572d0b87",
+    "paths": [
+      "measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-adversarial-jr-green-role.log",
+      "measure/tracks/company_finance_operations_20260810/phase2-thb-adversarial-green-20260816.md"
+    ],
+    "assessment": "Expected Finance evidence drift only. No Finance source or committed adversarial-test drift occurred."
+  },
+  "numeric_one_probe": {
+    "status": "PASS",
+    "one_forms": ["1", "1.0", "1.00"],
+    "trailing_zero_products": "accepted with exact source text",
+    "huge_scale": "4096 fractional zeros accepted",
+    "malformed_forms_rejected": [
+      "1e0",
+      "01.0",
+      "1.",
+      "+1",
+      "NaN",
+      "Infinity",
+      " 1"
+    ],
+    "exact_thb_amount": "98765432101234567890.000 remained unchanged"
+  },
+  "checks": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/thb-adversarial.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "PASS — 29 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts src/modules/finance-operations/__tests__/thb-adversarial.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "PASS — 94 tests passed across 3 files."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "PASS — 11 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/postgres-boundary-exports.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "PASS — 25 tests passed across 5 regression files."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit -p tsconfig.json && ../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json",
+      "exit_code": 0,
+      "result": "PASS — production and test TypeScript checks passed."
+    },
+    {
+      "command": "../../node_modules/.bin/eslint src/modules/finance-operations",
+      "exit_code": 0,
+      "result": "PASS — Finance lint passed."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc",
+      "exit_code": 0,
+      "result": "PASS — backend build passed."
+    },
+    {
+      "command": "../../node_modules/.bin/prettier --check src/modules/finance-operations/thb-valuation.ts src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts src/modules/finance-operations/__tests__/thb-adversarial.test.ts",
+      "exit_code": 0,
+      "result": "PASS — all reviewed Finance files matched Prettier."
+    },
+    {
+      "command": "git diff --check 0adff98cc..c572d0b87 -- packages/backend/src/modules/finance-operations measure/tracks/company_finance_operations_20260810 && git diff --check",
+      "exit_code": 0,
+      "result": "PASS — Finance drift and working-tree diff checks completed without whitespace errors."
+    },
+    {
+      "command": "Read-only numeric-one, huge-scale, malformed-decimal, and exact-amount probe",
+      "exit_code": 0,
+      "result": "PASS — 1, 1.0, 1.00, 4096 fractional zeros, 7 malformed forms, and exact THB preservation verified."
+    }
+  ],
+  "production_source_modified": false,
+  "tests_modified": false,
+  "plans_modified": false,
+  "commit_created": false,
+  "files_written": [
+    "measure/tracks/company_finance_operations_20260810/runs/adversarial-rerun-20260816-0adff98c.json",
+    "measure/tracks/company_finance_operations_20260810/runs/adversarial-rerun-20260816-0adff98c.log"
+  ],
+  "known_limitations": [
+    "The Finance implementation has no database or provider change, so live database verification was not applicable.",
+    "Unrelated dirty paths were preserved."
+  ]
+}

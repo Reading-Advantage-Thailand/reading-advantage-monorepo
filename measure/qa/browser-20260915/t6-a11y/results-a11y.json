@@ -1,0 +1,1284 @@
+{
+  "base": "http://localhost:3000",
+  "user": "qa-student-a1",
+  "axe": "skipped (@axe-core/playwright not installed)",
+  "pages": {
+    "p1-landing": {
+      "url": "http://localhost:3000/en",
+      "finalUrl": "http://localhost:3000/en",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "landmarks": {
+        "main": 1,
+        "header": 1,
+        "banner": 0,
+        "footer": 1,
+        "contentinfo": 0,
+        "nav": 2,
+        "bannerText": [
+          null
+        ]
+      },
+      "headings": {
+        "count": 25,
+        "h1": 1,
+        "order": [
+          {
+            "level": "h1",
+            "text": "Primary Advantage"
+          },
+          {
+            "level": "h2",
+            "text": "Help Young Students Become Amazing Readers with AI-Powered Fun!"
+          },
+          {
+            "level": "h2",
+            "text": "Cool Features"
+          },
+          {
+            "level": "h3",
+            "text": "Fun Story Adventures"
+          },
+          {
+            "level": "h3",
+            "text": "Understand the Story"
+          },
+          {
+            "level": "h3",
+            "text": "Just Right Reading Levels"
+          },
+          {
+            "level": "h3",
+            "text": "Learn New Words"
+          },
+          {
+            "level": "h3",
+            "text": "Listen Along"
+          },
+          {
+            "level": "h3",
+            "text": "See How You're Growing"
+          },
+          {
+            "level": "h3",
+            "text": "Make It Yours"
+          },
+          {
+            "level": "h3",
+            "text": "Help for Teachers"
+          },
+          {
+            "level": "h2",
+            "text": "Why Schools Love Primary Advantage"
+          },
+          {
+            "level": "h3",
+            "text": "Become a Super Reader"
+          },
+          {
+            "level": "h3",
+            "text": "Your Own Reading Path"
+          },
+          {
+            "level": "h3",
+            "text": "Stories You'll Love"
+          },
+          {
+            "level": "h3",
+            "text": "Watch Your Reading Power Grow"
+          },
+          {
+            "level": "h3",
+            "text": "Learn Lots of New Words"
+          },
+          {
+            "level": "h3",
+            "text": "Easy to Use Anywhere"
+          },
+          {
+            "level": "h3",
+            "text": "Great for Schools"
+          },
+          {
+            "level": "h3",
+            "text": "More Time for Teaching Fun"
+          },
+          {
+            "level": "h2",
+            "text": "Let's Get in Touch"
+          },
+          {
+            "level": "h2",
+            "text": "Ready for a Primary Adventure?"
+          },
+          {
+            "level": "h2",
+            "text": "ABOUT"
+          },
+          {
+            "level": "h2",
+            "text": "LEGAL"
+          },
+          {
+            "level": "h2",
+            "text": "CONTACT"
+          }
+        ],
+        "skips": []
+      },
+      "skipLink": {
+        "candidates": []
+      },
+      "images": {
+        "imgs": [
+          {
+            "alt": "logo",
+            "hidden": null,
+            "src": "/primary-advantage.png"
+          },
+          {
+            "alt": "logo",
+            "hidden": null,
+            "src": "/primary-advantage.png"
+          },
+          {
+            "alt": "logo",
+            "hidden": null,
+            "src": "/primary-advantage.png"
+          }
+        ],
+        "svgNoTitle": 21,
+        "svgAriaHidden": 18
+      },
+      "form": null,
+      "keyboard": {
+        "focusableSteps": 22,
+        "reachedEnd": true,
+        "possibleTrapAtStep": 9,
+        "allVisible": true,
+        "focusIndicators": [
+          {
+            "step": 0,
+            "el": "A \"Primary Advantage\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 3,
+            "el": "A \"Contact\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 6,
+            "el": "A \"Get Started Now!\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 11,
+            "el": "TEXTAREA \"\"",
+            "outline": "1px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+          },
+          {
+            "step": 14,
+            "el": "A \"About Us\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 17,
+            "el": "A \"Privacy Policy\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 20,
+            "el": "A \"Primary Advantage™\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 23,
+            "el": "BUTTON \"Toggle Locale\"",
+            "outline": "3px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+          }
+        ],
+        "focusShot1": "p1-landing-focus-1.png :: A \"Primary Advantage\" outline=1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=none",
+        "focusShot2": "p1-landing-focus-2.png :: A \"Get Started Now!\" outline=1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=none",
+        "focusShot3": "p1-landing-focus-3.png :: BUTTON \"Toggle Locale\" outline=3px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0"
+      },
+      "contrast": {
+        "body": {
+          "fg": "lab(2.75381 0 0)",
+          "bg": "lab(100 0 0)",
+          "ratio": 1.54
+        },
+        "buttons": [
+          {
+            "text": "Primary Advantage",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Home",
+            "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "About",
+            "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Contact",
+            "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Authors",
+            "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Login",
+            "fg": "lab(7.78201 -0.0000149012 0)",
+            "bg": "lab(96.52 -0.0000298023 0.0000119209)",
+            "ratio": 1.49
+          },
+          {
+            "text": "Get Started Now!",
+            "fg": "rgb(255, 255, 255)",
+            "bg": "rgb(23, 37, 84)",
+            "ratio": 14.69
+          },
+          {
+            "text": "Select an option",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37
+          },
+          {
+            "text": "Send Message",
+            "fg": "lab(98.26 0 0)",
+            "bg": "lab(7.78201 -0.0000149012 0)",
+            "ratio": 1.51
+          },
+          {
+            "text": "Get Started Now!",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37
+          },
+          {
+            "text": "Primary Advantage",
+            "fg": "rgb(255, 255, 255)",
+            "bg": "rgb(23, 37, 84)",
+            "ratio": 14.69
+          },
+          {
+            "text": "About Us",
+            "fg": "lab(65.9269 -0.832707 -8.17473)",
+            "bg": "rgb(23, 37, 84)",
+            "ratio": 1.15
+          },
+          {
+            "text": "Features",
+            "fg": "lab(65.9269 -0.832707 -8.17473)",
+            "bg": "rgb(23, 37, 84)",
+            "ratio": 1.15
+          },
+          {
+            "text": "Support",
+            "fg": "lab(65.9269 -0.832707 -8.17473)",
+            "bg": "rgb(23, 37, 84)",
+            "ratio": 1.15
+          },
+          {
+            "text": "Privacy Policy",
+            "fg": "lab(65.9269 -0.832707 -8.17473)",
+            "bg": "rgb(23, 37, 84)",
+            "ratio": 1.15
+          }
+        ],
+        "mutedCandidates": [
+          {
+            "text": "Read and learn at school or at home, whenever you ",
+            "fg": "lab(65.9269 -0.832707 -8.17473)",
+            "bg": "rgb(29, 46, 100)",
+            "ratio": 1.31,
+            "size": "14px"
+          },
+          {
+            "text": "Get in touch with us to learn more about our platf",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37,
+            "size": "14px"
+          },
+          {
+            "text": "Select an option",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37,
+            "size": "14px"
+          },
+          {
+            "text": "© 2026 Primary Advantage™ All Rights Reserved.",
+            "fg": "lab(65.9269 -0.832707 -8.17473)",
+            "bg": "rgb(23, 37, 84)",
+            "ratio": 1.15,
+            "size": "14px"
+          }
+        ]
+      },
+      "escape": {
+        "menus": 0,
+        "disclosures": [
+          "Menu",
+          "Select an option",
+          "Toggle Locale"
+        ],
+        "test": {
+          "error": "TimeoutError: elementHandle.click: Timeout 30000ms exceeded.\nCall log:\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not visible\n    - re"
+        }
+      }
+    },
+    "p2-signin": {
+      "url": "http://localhost:3000/en/auth/signin",
+      "finalUrl": "http://localhost:3000/en/auth/signin",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "landmarks": {
+        "main": 0,
+        "header": 0,
+        "banner": 0,
+        "footer": 0,
+        "contentinfo": 0,
+        "nav": 0,
+        "bannerText": []
+      },
+      "headings": {
+        "count": 1,
+        "h1": 1,
+        "order": [
+          {
+            "level": "h1",
+            "text": "Welcome to Primary Advantage"
+          }
+        ],
+        "skips": []
+      },
+      "skipLink": {
+        "candidates": []
+      },
+      "images": {
+        "imgs": [
+          {
+            "alt": "Image",
+            "hidden": null,
+            "src": "/_next/image?url=%2Flogin-image.png&w=1080&q=75"
+          },
+          {
+            "alt": "logo",
+            "hidden": null,
+            "src": "/primary-advantage.png"
+          }
+        ],
+        "svgNoTitle": 2,
+        "svgAriaHidden": 2
+      },
+      "form": {
+        "inputs": [
+          {
+            "type": "text",
+            "name": "classroomCode",
+            "id": "_R_4r5esnekned9etb_-form-item",
+            "hasLabel": true,
+            "labelText": "Classroom Code",
+            "ariaLabel": null,
+            "labelledby": null,
+            "describedby": "_R_4r5esnekned9etb_-form-item-description",
+            "required": false,
+            "placeholder": ""
+          }
+        ],
+        "liveRegions": [
+          {
+            "role": null,
+            "live": "polite",
+            "text": ""
+          }
+        ],
+        "submitButtons": [
+          "Next"
+        ],
+        "emptySubmitFiredLogin": false,
+        "afterEmptySubmit": {
+          "validationMessages": [],
+          "alerts": [
+            "Classroom code is required"
+          ],
+          "firstInvalidFocused": "INPUT[type=text]"
+        }
+      },
+      "keyboard": {
+        "focusableSteps": 1,
+        "reachedEnd": true,
+        "possibleTrapAtStep": -1,
+        "allVisible": true,
+        "focusIndicators": [
+          {
+            "step": 0,
+            "el": "BUTTON \"Next\"",
+            "outline": "2px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+          }
+        ],
+        "focusShot1": "p2-signin-focus-1.png :: BUTTON \"Next\" outline=2px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0"
+      },
+      "contrast": {
+        "body": {
+          "fg": "lab(2.75381 0 0)",
+          "bg": "lab(100 0 0)",
+          "ratio": 1.54
+        },
+        "buttons": [
+          {
+            "text": "Primary Advantage",
+            "fg": "rgb(255, 255, 255)",
+            "bg": "lab(96.52 -0.0000298023 0.0000119209)",
+            "ratio": 13.97
+          },
+          {
+            "text": "Student",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Teacher",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(96.52 -0.0000298023 0.0000119209)",
+            "ratio": 1.5
+          },
+          {
+            "text": "Next",
+            "fg": "lab(98.26 0 0)",
+            "bg": "oklab(0.205 -0.00000207871 0.00000478327 / 0.9)",
+            "ratio": 1.52
+          }
+        ],
+        "mutedCandidates": [
+          {
+            "text": "Enter your Classroom Code",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(98.1434 -0.369519 -1.05966)",
+            "ratio": 1.35,
+            "size": "14px"
+          },
+          {
+            "text": "Classroom code is required",
+            "fg": "lab(48.4493 77.4328 61.5452)",
+            "bg": "lab(98.1434 -0.369519 -1.05966)",
+            "ratio": 1.49,
+            "size": "14px"
+          }
+        ]
+      },
+      "escape": {
+        "menus": 0,
+        "disclosures": [],
+        "test": {
+          "note": "no expandable menu trigger found; Escape N/A"
+        }
+      }
+    },
+    "p3-dashboard": {
+      "url": "http://localhost:3000/en/student",
+      "finalUrl": "http://localhost:3000/en/student",
+      "consoleErrors": [
+        "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonym"
+      ],
+      "pageErrors": [],
+      "landmarks": {
+        "main": 1,
+        "header": 1,
+        "banner": 0,
+        "footer": 0,
+        "contentinfo": 0,
+        "nav": 0,
+        "bannerText": [
+          null
+        ]
+      },
+      "headings": {
+        "count": 2,
+        "h1": 2,
+        "order": [
+          {
+            "level": "h1",
+            "text": "404"
+          },
+          {
+            "level": "h1",
+            "text": "Page not found"
+          }
+        ],
+        "skips": []
+      },
+      "skipLink": {
+        "candidates": []
+      },
+      "images": {
+        "imgs": [
+          {
+            "alt": "logo",
+            "hidden": null,
+            "src": "/primary-advantage.png"
+          },
+          {
+            "alt": "logo",
+            "hidden": null,
+            "src": "/primary-advantage.png"
+          }
+        ],
+        "svgNoTitle": 5,
+        "svgAriaHidden": 5
+      },
+      "form": null,
+      "keyboard": {
+        "focusableSteps": 5,
+        "reachedEnd": true,
+        "possibleTrapAtStep": -1,
+        "allVisible": true,
+        "focusIndicators": [
+          {
+            "step": 0,
+            "el": "A \"Primary Advantage\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 1,
+            "el": "BUTTON \"Toggle Locale\"",
+            "outline": "3px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+          },
+          {
+            "step": 2,
+            "el": "BUTTON \"Toggle theme\"",
+            "outline": "3px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+          },
+          {
+            "step": 3,
+            "el": "BUTTON \"Go Back\"",
+            "outline": "1px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+          },
+          {
+            "step": 4,
+            "el": "A \"Return to website\"",
+            "outline": "1px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0"
+          }
+        ],
+        "focusShot1": "p3-dashboard-focus-1.png :: A \"Primary Advantage\" outline=1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=none",
+        "focusShot2": "p3-dashboard-focus-2.png :: BUTTON \"Toggle theme\" outline=3px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0",
+        "focusShot3": "p3-dashboard-focus-3.png :: A \"Return to website\" outline=1px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0"
+      },
+      "contrast": {
+        "body": {
+          "fg": "lab(2.75381 0 0)",
+          "bg": "lab(100 0 0)",
+          "ratio": 1.54
+        },
+        "buttons": [
+          {
+            "text": "Primary Advantage",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Toggle Locale",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Toggle theme",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Go Back",
+            "fg": "lab(98.2596 -0.247031 -0.706708)",
+            "bg": "lab(8.11897 0.811279 -12.254)",
+            "ratio": 1.49
+          },
+          {
+            "text": "Return to website",
+            "fg": "lab(8.11897 0.811279 -12.254)",
+            "bg": "rgb(255, 255, 255)",
+            "ratio": 20.6
+          }
+        ],
+        "mutedCandidates": [
+          {
+            "text": "Toggle Locale",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "Toggle theme",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          }
+        ]
+      },
+      "escape": {
+        "menus": 0,
+        "disclosures": [
+          "Menu",
+          "Toggle Locale"
+        ],
+        "test": {
+          "error": "TimeoutError: elementHandle.click: Timeout 30000ms exceeded.\nCall log:\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not visible\n    - re"
+        }
+      }
+    },
+    "p4-games": {
+      "url": "http://localhost:3000/en/student/games",
+      "finalUrl": "http://localhost:3000/en/student/games",
+      "consoleErrors": [
+        "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3677:28)\n    at translateFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3705:24)\n    at http://localhost:3000/_next/static/chunks/_1us4yzi._.js:2699:55\n    at Array.map (<anonym"
+      ],
+      "pageErrors": [],
+      "landmarks": {
+        "main": 2,
+        "header": 3,
+        "banner": 0,
+        "footer": 0,
+        "contentinfo": 0,
+        "nav": 2,
+        "bannerText": [
+          null,
+          null,
+          null
+        ]
+      },
+      "headings": {
+        "count": 34,
+        "h1": 1,
+        "order": [
+          {
+            "level": "h1",
+            "text": "Student games"
+          },
+          {
+            "level": "h2",
+            "text": ""
+          },
+          {
+            "level": "h3",
+            "text": ""
+          },
+          {
+            "level": "h3",
+            "text": ""
+          },
+          {
+            "level": "h3",
+            "text": ""
+          },
+          {
+            "level": "h2",
+            "text": "Class challenges"
+          },
+          {
+            "level": "h2",
+            "text": "Dragon Flight"
+          },
+          {
+            "level": "h2",
+            "text": "Astral Mage"
+          },
+          {
+            "level": "h2",
+            "text": "The Sorcerer's Ziggurat"
+          },
+          {
+            "level": "h2",
+            "text": "Dragon Rider"
+          },
+          {
+            "level": "h2",
+            "text": "Spellweaver's Run"
+          },
+          {
+            "level": "h2",
+            "text": "Shadow Gate Dungeon"
+          },
+          {
+            "level": "h2",
+            "text": "Labyrinth of the Goblin King"
+          },
+          {
+            "level": "h2",
+            "text": "Griffin Rider's Escape"
+          },
+          {
+            "level": "h2",
+            "text": "Castle Defense"
+          },
+          {
+            "level": "h2",
+            "text": "Magic Defense"
+          },
+          {
+            "level": "h2",
+            "text": "RPG Battle"
+          },
+          {
+            "level": "h2",
+            "text": "Wizard vs Zombie"
+          },
+          {
+            "level": "h2",
+            "text": "Enchanted Library"
+          },
+          {
+            "level": "h2",
+            "text": "Rune Match"
+          },
+          {
+            "level": "h2",
+            "text": "Alchemist's Synthesis"
+          },
+          {
+            "level": "h2",
+            "text": "Potion Rush"
+          },
+          {
+            "level": "h2",
+            "text": "Dungeon Liberator"
+          },
+          {
+            "level": "h2",
+            "text": "Rune Forge Chamber"
+          },
+          {
+            "level": "h2",
+            "text": "Village Guardian"
+          }
+        ],
+        "skips": []
+      },
+      "skipLink": {
+        "candidates": [
+          {
+            "text": "Read",
+            "href": "#",
+            "visibleOnFocus": {
+              "position": "static",
+              "left": "auto",
+              "top": "auto",
+              "clip": "auto"
+            }
+          },
+          {
+            "text": "Sidebar.Games",
+            "href": "#",
+            "visibleOnFocus": {
+              "position": "static",
+              "left": "auto",
+              "top": "auto",
+              "clip": "auto"
+            }
+          },
+          {
+            "text": "Assignments",
+            "href": "#",
+            "visibleOnFocus": {
+              "position": "static",
+              "left": "auto",
+              "top": "auto",
+              "clip": "auto"
+            }
+          },
+          {
+            "text": "Sentences",
+            "href": "#",
+            "visibleOnFocus": {
+              "position": "static",
+              "left": "auto",
+              "top": "auto",
+              "clip": "auto"
+            }
+          },
+          {
+            "text": "Vocabulary",
+            "href": "#",
+            "visibleOnFocus": {
+              "position": "static",
+              "left": "auto",
+              "top": "auto",
+              "clip": "auto"
+            }
+          },
+          {
+            "text": "Reports",
+            "href": "#",
+            "visibleOnFocus": {
+              "position": "static",
+              "left": "auto",
+              "top": "auto",
+              "clip": "auto"
+            }
+          },
+          {
+            "text": "History",
+            "href": "#",
+            "visibleOnFocus": {
+              "position": "static",
+              "left": "auto",
+              "top": "auto",
+              "clip": "auto"
+            }
+          }
+        ],
+        "activated": {
+          "href": "#",
+          "activeAfter": "A#.group hover:bg-accent hover:text-accent-",
+          "hash": ""
+        }
+      },
+      "images": {
+        "imgs": [
+          {
+            "alt": "logo",
+            "hidden": null,
+            "src": "/primary-advantage.png"
+          },
+          {
+            "alt": "logo",
+            "hidden": null,
+            "src": "/primary-advantage.png"
+          },
+          {
+            "alt": "",
+            "hidden": null,
+            "src": "/assets/apk/standard-pack-qc/rpg-apprentice-wand.png"
+          },
+          {
+            "alt": "",
+            "hidden": null,
+            "src": "/assets/apk/standard-pack-qc/rpg-graveyard-staff.png"
+          },
+          {
+            "alt": "",
+            "hidden": null,
+            "src": "/assets/apk/standard-pack-qc/rpg-echo-staff.png"
+          }
+        ],
+        "svgNoTitle": 17,
+        "svgAriaHidden": 16
+      },
+      "form": null,
+      "keyboard": {
+        "focusableSteps": 38,
+        "reachedEnd": true,
+        "possibleTrapAtStep": -1,
+        "allVisible": false,
+        "focusIndicators": [
+          {
+            "step": 0,
+            "el": "A \"Sidebar.Games\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 5,
+            "el": "A \"History\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 10,
+            "el": "A \"Astral Mage\n\nMove a mage through a star arena and \"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 15,
+            "el": "A \"Labyrinth of the Goblin King\n\nNavigate the maze, c\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 20,
+            "el": "A \"Wizard vs Zombie\n\nMatch Thai words to their Englis\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 25,
+            "el": "A \"Dungeon Liberator\n\nMove through a torchlit dungeon\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 30,
+            "el": "A \"Storm the Castle Tower\n\nClimb a four-column castle\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          },
+          {
+            "step": 35,
+            "el": "A \"The Haunted Library\n\nOpen ordered word doors acros\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          }
+        ],
+        "focusShot1": "p4-games-focus-1.png :: A \"Sidebar.Games\" outline=1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=none",
+        "focusShot2": "p4-games-focus-2.png :: A \"RPG Battle\n\nDefeat a fantasy enemy by translating \" outline=1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=none",
+        "focusShot3": "p4-games-focus-3.png :: NEXTJS-PORTAL \"\" outline=3px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=none"
+      },
+      "contrast": {
+        "body": {
+          "fg": "lab(2.75381 0 0)",
+          "bg": "lab(100 0 0)",
+          "ratio": 1.54
+        },
+        "buttons": [
+          {
+            "text": "Primary Advantage",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Home",
+            "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "About",
+            "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Contact",
+            "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Authors",
+            "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Toggle Locale",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Toggle theme",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Read",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Sidebar.Games",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Assignments",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Sentences",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Vocabulary",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Reports",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "History",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          },
+          {
+            "text": "Play challenge",
+            "fg": "rgb(4, 17, 31)",
+            "bg": "rgb(34, 211, 238)",
+            "ratio": 10.51
+          }
+        ],
+        "mutedCandidates": [
+          {
+            "text": "Toggle Locale",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "Toggle theme",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "Read",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "Sidebar.Games",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "Assignments",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "Sentences",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "Vocabulary",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "Reports",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "History",
+            "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54,
+            "size": "14px"
+          },
+          {
+            "text": "September 2026",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37,
+            "size": "14px"
+          },
+          {
+            "text": "Climb adjacent rune cubes to rebuild each sentence",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37,
+            "size": "14px"
+          },
+          {
+            "text": "Change lanes to collect falling word orbs in sente",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37,
+            "size": "14px"
+          },
+          {
+            "text": "Switch sky lanes and pass through sentence gates i",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37,
+            "size": "14px"
+          },
+          {
+            "text": "Build a castle defense by placing sentence words i",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37,
+            "size": "14px"
+          },
+          {
+            "text": "Match adjacent vocabulary runes to defeat a monste",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37,
+            "size": "14px"
+          },
+          {
+            "text": "Guide ordered villagers through danger and into sa",
+            "fg": "lab(48.496 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.37,
+            "size": "14px"
+          },
+          {
+            "text": "You don't have permission to access this page",
+            "fg": "lab(98.26 0 0)",
+            "bg": "lab(7.78201 -0.0000149012 0)",
+            "ratio": 1.51,
+            "size": "12px"
+          },
+          {
+            "text": "You don't have permission to access this page",
+            "fg": "lab(98.26 0 0)",
+            "bg": "lab(7.78201 -0.0000149012 0)",
+            "ratio": 1.51,
+            "size": "12px"
+          },
+          {
+            "text": "You don't have permission to access this page",
+            "fg": "lab(98.26 0 0)",
+            "bg": "lab(7.78201 -0.0000149012 0)",
+            "ratio": 1.51,
+            "size": "12px"
+          }
+        ]
+      },
+      "escape": {
+        "menus": 0,
+        "disclosures": [
+          "Menu",
+          "Toggle Locale"
+        ],
+        "test": {
+          "error": "TimeoutError: elementHandle.click: Timeout 30000ms exceeded.\nCall log:\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not visible\n    - re"
+        }
+      }
+    },
+    "p5-redirect-check": {
+      "from": "/en/teacher/my-classes",
+      "landed": "http://localhost:3000/en/unauthorized"
+    },
+    "p5-unauthorized": {
+      "url": "http://localhost:3000/en/unauthorized",
+      "finalUrl": "http://localhost:3000/en/unauthorized",
+      "consoleErrors": [],
+      "pageErrors": [],
+      "landmarks": {
+        "main": 0,
+        "header": 0,
+        "banner": 0,
+        "footer": 0,
+        "contentinfo": 0,
+        "nav": 0,
+        "bannerText": []
+      },
+      "headings": {
+        "count": 1,
+        "h1": 1,
+        "order": [
+          {
+            "level": "h1",
+            "text": "Unauthorized"
+          }
+        ],
+        "skips": []
+      },
+      "skipLink": {
+        "candidates": []
+      },
+      "images": {
+        "imgs": [],
+        "svgNoTitle": 0,
+        "svgAriaHidden": 0
+      },
+      "form": null,
+      "keyboard": {
+        "focusableSteps": 1,
+        "reachedEnd": true,
+        "possibleTrapAtStep": -1,
+        "allVisible": true,
+        "focusIndicators": [
+          {
+            "step": 0,
+            "el": "A \"Back to home\"",
+            "outline": "1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+            "boxShadow": "none"
+          }
+        ],
+        "focusShot1": "p5-unauthorized-focus-1.png :: A \"Back to home\" outline=1px auto oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) shadow=none"
+      },
+      "contrast": {
+        "body": {
+          "fg": "lab(2.75381 0 0)",
+          "bg": "lab(100 0 0)",
+          "ratio": 1.54
+        },
+        "buttons": [
+          {
+            "text": "Back to home",
+            "fg": "lab(2.75381 0 0)",
+            "bg": "lab(100 0 0)",
+            "ratio": 1.54
+          }
+        ],
+        "mutedCandidates": []
+      },
+      "escape": {
+        "menus": 0,
+        "disclosures": [],
+        "test": {
+          "note": "no expandable menu trigger found; Escape N/A"
+        }
+      }
+    }
+  }
+}

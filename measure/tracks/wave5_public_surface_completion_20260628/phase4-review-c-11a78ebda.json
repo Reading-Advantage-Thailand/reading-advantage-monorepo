@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "role": "Review C",
+  "track": "wave5_public_surface_completion_20260628",
+  "phase": "Phase 4 Accessibility, Navigation, and Contact",
+  "phase_base_sha": "9d6b3af2608f0df7733197692a642905953c71f4",
+  "role_base_sha": "01069b4aa",
+  "candidate_sha": "2d09d3450",
+  "audited_head_sha": "11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7",
+  "head_start_sha": "11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7",
+  "head_end_sha": "6b40fae978194fabe2c3dacea21ee546475da6c0",
+  "head_advanced": true,
+  "summary": "The candidate passes all blocking review gates. A medium contact centralization gap remains, and current HEAD has no www source drift.",
+  "target_verdict": "PASS",
+  "current_www_verdict": "PASS; no www source drift exists after the candidate.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "RC-P4-001",
+      "severity": "medium",
+      "title": "Contact display values are not single-source",
+      "files": [
+        "apps/www-reading-advantage/src/config/contact.ts:1-9",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/contact/page.tsx:90-112",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/contact/page.tsx:187-195",
+        "apps/www-reading-advantage/src/locales/pages/contact.ts:10-18",
+        "apps/www-reading-advantage/src/locales/pages/contact.ts:25-29"
+      ],
+      "context": "The contact page displays the email, phone number, and TikTok handle from locale data. The same values also exist in contactDetails.",
+      "impact": "A configuration change can update links while leaving visible contact values stale.",
+      "recommendation": "Use contactDetails for raw contact values and keep only translated labels in locale messages.",
+      "test_gap": "The Phase 4 test checks supportEmail parity but does not check phoneNumber or the TikTok handle."
+    },
+    {
+      "id": "RC-P4-002",
+      "severity": "low",
+      "title": "The configured navigation list has no production caller",
+      "files": [
+        "apps/www-reading-advantage/src/config/navigation.ts:5-81",
+        "apps/www-reading-advantage/src/components/layout/header.tsx:25-66"
+      ],
+      "context": "The Header creates a separate localized navigation array. The config navigation export is used by the contact form for productLinks, not by the Header.",
+      "impact": "Future navigation edits can update the config list without updating the primary Header navigation.",
+      "recommendation": "Choose one production navigation source and add a caller contract for its Services entry."
+    },
+    {
+      "id": "RC-P4-003",
+      "severity": "low",
+      "title": "Focused tests emit existing React DOM warnings",
+      "files": [
+        "apps/www-reading-advantage/src/components/marketing/mastery-advantage-graph.tsx",
+        "apps/www-reading-advantage/src/components/blog/blog-pagination.tsx",
+        "apps/www-reading-advantage/src/components/layout/header.tsx"
+      ],
+      "context": "The Phase 4 run reports SVG attribute, localized-link scroll, and mocked-image priority warnings.",
+      "impact": "The warnings do not fail tests, but they reduce diagnostic clarity.",
+      "recommendation": "Handle these warnings in a later UI cleanup or browser review."
+    }
+  ],
+  "contract_audit": {
+    "keyboard_scrollport": {
+      "status": "PASS",
+      "evidence": [
+        "HorizontalStrip uses overflow-x-auto on the scrollport.",
+        "The scrollport has tabIndex 0, role region, and a direct accessible name.",
+        "Native keyboard scrolling remains browser-dependent and was not duplicated here."
+      ]
+    },
+    "comparison_semantics_and_locale_parity": {
+      "status": "PASS",
+      "evidence": [
+        "Comparison marks expose localized semantic labels for included, unavailable, and partial states.",
+        "Visible comparison glyphs use aria-hidden true.",
+        "The en, th, and zh comparison locale object shapes match exactly.",
+        "The parity probe reported all three semantic label sets."
+      ]
+    },
+    "faq_disclosure": {
+      "status": "PASS",
+      "evidence": [
+        "Each button sets aria-expanded and aria-controls.",
+        "Each panel id matches the button aria-controls value.",
+        "Each panel aria-labelledby value matches the button id.",
+        "Collapsed panels use aria-hidden true and open panels use aria-hidden false.",
+        "The focused Phase 4 suite passed the collapsed and open state checks."
+      ]
+    },
+    "services_navigation": {
+      "status": "PASS_WITH_CALLER_NOTE",
+      "evidence": [
+        "The config navigation list contains /services.",
+        "The en, th, and zh header locale arrays contain /services.",
+        "The rendered Header exposes a Services link with /services.",
+        "The Header and config list are separate production contracts."
+      ]
+    },
+    "centralized_contact_data": {
+      "status": "PASS_WITH_GAP",
+      "evidence": [
+        "Footer, contact page links, and ContactForm mailto use contactDetails.",
+        "Contact page visible contact values still come from pages/contact locale data.",
+        "The locale file repeats supportEmail, phoneNumber, and the TikTok handle."
+      ]
+    },
+    "callers": {
+      "status": "PASS_WITH_CALLER_NOTE",
+      "evidence": [
+        "Graph render edges identify ReadingAdvantage as a HorizontalStrip caller.",
+        "Graph render edges identify FeaturesPage as a ComparisonTable caller.",
+        "Graph render edges identify StorytimeAdvantage and ZhongwenAdvantage as FAQAccordion callers.",
+        "Static import search identifies contact page, footer, and ContactForm as contactDetails callers.",
+        "No changed component signature has an unupdated production caller."
+      ]
+    },
+    "route_rendering": {
+      "status": "PASS",
+      "evidence": [
+        "The focused Phase 4 suite rendered the contact page and footer without test failures.",
+        "The production Next build compiled and generated the reviewed marketing route set.",
+        "The build completed TypeScript, page data, and static page generation without errors.",
+        "Browser console and network review remain separate and were not duplicated."
+      ]
+    }
+  },
+  "caller_inventory": {
+    "HorizontalStrip": [
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/reading-advantage/page.tsx",
+      "apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx"
+    ],
+    "ComparisonTable": [
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/features/page.tsx",
+      "apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx"
+    ],
+    "FAQAccordion": [
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx",
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx",
+      "apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx"
+    ],
+    "contactDetails": [
+      "apps/www-reading-advantage/src/app/[locale]/(marketing)/contact/page.tsx",
+      "apps/www-reading-advantage/src/components/common/footer.tsx",
+      "apps/www-reading-advantage/src/components/contact/contact-form.tsx",
+      "apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx"
+    ],
+    "navigation": [
+      "apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx"
+    ]
+  },
+  "commands": [
+    "CI=true pnpm exec vitest run src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx --maxWorkers=1: exit 0; 4/4 passed",
+    "CI=true pnpm exec vitest run src/__tests__/phase-3-i18n.red.test.ts src/__tests__/phase-3-group-b-types.test.ts --maxWorkers=1 --testTimeout=30000: exit 0; 10/10 passed",
+    "pnpm exec tsc --noEmit -p tsconfig.json: exit 0",
+    "pnpm exec tsc --noEmit --incremental false -p tsconfig.json: exit 0",
+    "pnpm exec eslint .: exit 0",
+    "pnpm exec prettier --check <15 reviewed www paths>: exit 0",
+    "../../node_modules/.bin/next build: exit 0; reviewed routes compiled and generated",
+    "pnpm run build: environment diagnostic failed during registry retries before Next build; direct next build passed",
+    "git diff --check 9d6b3af2608f0df7733197692a642905953c71f4..2d09d3450 -- reviewed scope: exit 0",
+    "comparison locale parity probe: exit 0; en/th and en/zh shapes matched",
+    "build-graph stats and caller queries: exit 0; graph was available and render callers were identified"
+  ],
+  "head_drift": {
+    "start": "11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7",
+    "end": "6b40fae978194fabe2c3dacea21ee546475da6c0",
+    "commits_after_audited_head": [
+      "b3793951022bd071fe2b3f94e5361f686439f03a fix(apk): correct Spellweaver asset pointer",
+      "bdbf9e8c33d758063527b3b53443bb3b3a885054 test(db): correct rerun fixture constraint",
+      "6b40fae978194fabe2c3dacea21ee546475da6c0 docs(measure): record rerun fixture Red handoff"
+    ],
+    "www_drift_from_candidate": "none",
+    "track_drift_after_candidate": [
+      "measure/tracks/wave5_public_surface_completion_20260628/phase-4-review-a-jr-green-20260816.md",
+      "measure/tracks/wave5_public_surface_completion_20260628/plan.md"
+    ],
+    "verdict_rule": "The target verdict applies to candidate 2d09d3450. Current HEAD has no www source drift, so the current www verdict matches."
+  },
+  "browser_review": {
+    "status": "NOT_RUN",
+    "reason": "Browser review is separately applicable later. This audit did not duplicate it."
+  },
+  "changed_files": [
+    "apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/contact/page.tsx",
+    "apps/www-reading-advantage/src/components/blog/blog-pagination.tsx",
+    "apps/www-reading-advantage/src/components/blog/table-of-contents.tsx",
+    "apps/www-reading-advantage/src/components/common/footer.tsx",
+    "apps/www-reading-advantage/src/components/contact/contact-form.tsx",
+    "apps/www-reading-advantage/src/components/features/comparison-table.tsx",
+    "apps/www-reading-advantage/src/components/marketing/mastery-advantage-graph.tsx",
+    "apps/www-reading-advantage/src/components/pricing/pricing-table.tsx",
+    "apps/www-reading-advantage/src/components/ui/faq-accordion.tsx",
+    "apps/www-reading-advantage/src/components/ui/horizontal-strip.tsx",
+    "apps/www-reading-advantage/src/config/contact.ts",
+    "apps/www-reading-advantage/src/config/navigation.ts",
+    "apps/www-reading-advantage/src/locales/components/common/header.ts",
+    "apps/www-reading-advantage/src/locales/components/comparison-table.ts",
+    "measure/tracks/wave5_public_surface_completion_20260628/plan.md",
+    "measure/tracks/wave5_public_surface_completion_20260628/phase-4-review-a-jr-green-20260816.md"
+  ],
+  "MEASURE_AGENT_RESULT": "PASS"
+}

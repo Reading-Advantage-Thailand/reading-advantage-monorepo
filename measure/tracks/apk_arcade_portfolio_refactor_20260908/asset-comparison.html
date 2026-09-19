@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wizard vs. Zombie Art Comparison</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #100e16; color: #f7f2ff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; }
+    main { width: min(1180px, 100%); margin: auto; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.65rem, 4vw, 2.5rem); }
+    h2 { margin: 0 0 12px; font-size: 1.2rem; }
+    p { color: #c9c1d4; max-width: 78ch; }
+    .decision { border-left: 4px solid #78e6b0; padding: 10px 14px; background: #18251f; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin: 24px 0; }
+    article { background: #1b1722; border: 1px solid #3b3348; border-radius: 14px; padding: 14px; }
+    article.recommended { border-color: #78e6b0; box-shadow: 0 0 0 1px #78e6b055; }
+    .scene { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 10px; border: 1px solid #554a65; image-rendering: pixelated; }
+    .baseline { background: url('../../../apps/advantage-games/public/assets/apk/standard-pack-qc/asset-2bd2454d7f15581b.png') repeat; background-size: 96px; }
+    .crypt { background: url('../../../packages/advantage-play-kit/assets/standard/top-down/native/rogue-adventure-world/processed/ra-crypt-review-parts/ra-crypt-review-parts-floor-1-2.png') repeat; background-size: 48px; }
+    .alternate { background: #28202b; }
+    .sprite { position: absolute; image-rendering: pixelated; object-fit: contain; }
+    .player-sheet, .enemy-sheet { position: absolute; width: 32px; height: 32px; overflow: hidden; transform: scale(2); transform-origin: top left; image-rendering: pixelated; }
+    .player-sheet { width: 24px; height: 24px; background: url('../../../packages/advantage-play-kit/assets/standard/top-down/native/fantasy-dreamland-world/fantasy-dreamland-reborn/characters/fdr-character-009-walk-source-57fff2d7a6ee.png') 0 0 / auto no-repeat; }
+    .enemy-sheet { width: 48px; height: 48px; transform: scale(1.5); background: url('../../../packages/advantage-play-kit/assets/standard/top-down/native/rogue-adventure-world/enemies/enemy023/enemy-023-a-source-bbf3d938f27f.png') 0 0 / auto no-repeat; }
+    .tomb-animation { position: absolute; width: 16px; height: 32px; overflow: hidden; transform: scale(2); transform-origin: top left; background: url('../../../packages/advantage-play-kit/assets/standard/top-down/native/rogue-adventure-world/processed/ra-crypt-review-parts/ra-crypt-review-parts-moss-tomb-animation-640.png') 0 0 / auto no-repeat; animation: tomb 1s steps(4) infinite; }
+    .flame-animation { position: absolute; width: 16px; height: 32px; overflow: hidden; transform: scale(2); transform-origin: top left; background: url('../../../packages/advantage-play-kit/assets/standard/top-down/native/farming-game-world/processed/fg-dark-castle-review-parts/fg-dark-castle-review-parts-flame-pedestal-animation-400.png') 0 0 / auto no-repeat; animation: flame .8s steps(8) infinite; }
+    @keyframes tomb { to { background-position-x: -64px; } }
+    @keyframes flame { to { background-position-x: -128px; } }
+    .hud { position: absolute; inset: 10px 10px auto 10px; display: flex; justify-content: space-between; gap: 8px; }
+    .label, .ability { color: white; background: #120f18dd; border: 1px solid #8d819d; border-radius: 8px; padding: 7px 9px; font-weight: 700; font-size: 12px; }
+    .ability { border-color: #77ddff; color: #bcefff; }
+    .facts { padding-left: 20px; color: #d4cddd; }
+    .path { overflow-wrap: anywhere; font-family: ui-monospace, monospace; font-size: 11px; color: #aaa0b6; }
+    .strip { width: 100%; max-height: 120px; object-fit: contain; background: #302b38; image-rendering: pixelated; }
+    details { margin-top: 18px; padding: 12px; background: #17131d; border-radius: 10px; }
+    @media (max-width: 500px) { body { padding: 12px; } .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Wizard vs. Zombie art comparison</h1>
+  <p class="decision"><strong>Recommendation:</strong> Use Rogue crypt terrain with FDR character 009 and Rogue enemy 023.</p>
+  <section class="grid">
+    <article>
+      <h2>Current accepted baseline</h2>
+      <div class="scene baseline">
+        <div class="hud"><span class="label">Find: lantern</span><span class="ability">Shockwave 3</span></div>
+        <img class="sprite" style="left:10%;bottom:8%;width:58px" src="../../../apps/advantage-games/public/assets/apk/standard-pack-qc/asset-7c5e82a0799b849e.png" alt="Current grave">
+        <img class="sprite" style="left:45%;bottom:22%;width:96px" src="../../../apps/advantage-games/public/assets/apk/standard-pack-qc/asset-f11c375c7ba47fc0.png" alt="Current side-facing mage sheet">
+        <img class="sprite" style="right:12%;bottom:12%;width:70px" src="../../../apps/advantage-games/public/assets/apk/standard-pack-qc/asset-4ccca6ed296c77d4.png" alt="Current static enemy">
+      </div>
+      <ul class="facts"><li>Clear wizard identity</li><li>Conflicting actor orientation</li><li>Static enemy</li></ul>
+    </article>
+    <article class="recommended">
+      <h2>Rogue crypt recommendation</h2>
+      <div class="scene crypt">
+        <div class="hud"><span class="label">Find: lantern</span><span class="ability">Shockwave 3</span></div>
+        <img class="sprite" style="left:9%;bottom:8%;width:48px" src="../../../packages/advantage-play-kit/assets/standard/top-down/native/rogue-adventure-world/processed/ra-crypt-review-parts/ra-crypt-review-parts-stone-tombstone-2-1.png" alt="Rogue crypt tombstone">
+        <div class="tomb-animation" style="left:30%;bottom:15%" aria-label="Animated crypt tomb"></div>
+        <div class="player-sheet" style="left:49%;bottom:25%" aria-label="FDR character 009"></div>
+        <div class="enemy-sheet" style="right:16%;bottom:18%" aria-label="Rogue enemy 023"></div>
+      </div>
+      <ul class="facts"><li>One map family</li><li>Compatible 16-pixel and 32-pixel scale</li><li>Directional actor coverage</li></ul>
+    </article>
+    <article>
+      <h2>Halloween and castle comparison</h2>
+      <div class="scene alternate">
+        <div class="hud"><span class="label">Find: lantern</span><span class="ability">Shockwave 3</span></div>
+        <img class="sprite" style="left:3%;bottom:0;width:96px" src="../../../packages/advantage-play-kit/assets/standard/top-down/native/fantasy-dreamland-world/processed/remastered-halloween/remastered-halloween-large-bare-tree-64-0.png" alt="Halloween bare tree">
+        <img class="sprite" style="left:38%;bottom:4%;width:96px" src="../../../packages/advantage-play-kit/assets/standard/top-down/native/farming-game-world/processed/fg-dark-castle-review-parts/fg-dark-castle-review-parts-wall-rounded-tall.png" alt="Dark castle wall">
+        <div class="flame-animation" style="right:19%;bottom:16%" aria-label="Animated flame pedestal"></div>
+      </div>
+      <ul class="facts"><li>Strong individual landmarks</li><li>Conflicting brown and red palettes</li><li>Large props reduce route space</li></ul>
+    </article>
+  </section>
+  <details>
+    <summary>Actor sheet evidence</summary>
+    <p>FDR character 009 provides a 128×416 complete sheet with mixed cell sizes. The playable game uses its separate 24-pixel walking sheet.</p>
+    <img class="strip" src="../../../packages/advantage-play-kit/assets/standard/top-down/native/fantasy-dreamland-world/characters/spritesheets/fdr-character-009-complete-source-71dc19e0b6fd.png" alt="FDR character 009 complete sheet">
+    <p class="path">packages/advantage-play-kit/assets/standard/top-down/native/fantasy-dreamland-world/characters/spritesheets/fdr-character-009-complete-source-71dc19e0b6fd.png</p>
+    <p>Rogue enemy 023 provides a 288×288 directional skeleton sheet.</p>
+    <img class="strip" src="../../../packages/advantage-play-kit/assets/standard/top-down/native/rogue-adventure-world/enemies/enemy023/enemy-023-a-source-bbf3d938f27f.png" alt="Rogue enemy 023 complete sheet">
+    <p class="path">packages/advantage-play-kit/assets/standard/top-down/native/rogue-adventure-world/enemies/enemy023/enemy-023-a-source-bbf3d938f27f.png</p>
+  </details>
+</main>
+</body>
+</html>

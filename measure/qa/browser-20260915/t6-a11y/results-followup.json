@@ -1,0 +1,622 @@
+{
+  "p1_tabSequence": [
+    "A[] \"Primary Advantage\" tabindex=0 vis=true",
+    "A[] \"Home\" tabindex=0 vis=true",
+    "A[] \"About\" tabindex=0 vis=true",
+    "A[] \"Contact\" tabindex=0 vis=true",
+    "A[] \"Authors\" tabindex=0 vis=true",
+    "A[] \"Login\" tabindex=0 vis=true",
+    "A[] \"Get Started Now!\" tabindex=0 vis=true",
+    "INPUT[text] \"\" tabindex=0 vis=true",
+    "INPUT[text] \"\" tabindex=0 vis=true",
+    "INPUT[email] \"\" tabindex=0 vis=true",
+    "BUTTON[button] \"Select an option\" tabindex=0 vis=true",
+    "TEXTAREA[textarea] \"\" tabindex=0 vis=true",
+    "BUTTON[submit] \"Send Message\" tabindex=0 vis=true",
+    "A[] \"Get Started Now!\" tabindex=0 vis=true",
+    "A[] \"About Us\" tabindex=0 vis=true",
+    "A[] \"Features\" tabindex=0 vis=true",
+    "A[] \"Support\" tabindex=0 vis=true",
+    "A[] \"Privacy Policy\" tabindex=0 vis=true",
+    "A[] \"Terms & Conditions\" tabindex=0 vis=true",
+    "A[] \"Email: admin@reading-advantage.com\" tabindex=0 vis=true",
+    "A[] \"Primary Advantage™\" tabindex=0 vis=true",
+    "A[] \"GitHub\" tabindex=0 vis=true",
+    "BUTTON[submit] \"Toggle theme\" tabindex=0 vis=true",
+    "BUTTON[button] \"Toggle Locale\" tabindex=0 vis=true",
+    null
+  ],
+  "p2_focusables": [
+    {
+      "tag": "A",
+      "type": null,
+      "role": null,
+      "text": "Primary Advantage",
+      "tabIndex": 0,
+      "disabled": false,
+      "visible": true,
+      "display": "flex",
+      "visibility": "visible",
+      "labelled": false
+    },
+    {
+      "tag": "DIV",
+      "type": null,
+      "role": "tablist",
+      "text": "Student\nTeacher",
+      "tabIndex": 0,
+      "disabled": false,
+      "visible": true,
+      "display": "flex",
+      "visibility": "visible",
+      "labelled": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "role": "tab",
+      "text": "Student",
+      "tabIndex": -1,
+      "disabled": false,
+      "visible": true,
+      "display": "flex",
+      "visibility": "visible",
+      "labelled": false
+    },
+    {
+      "tag": "BUTTON",
+      "type": "button",
+      "role": "tab",
+      "text": "Teacher",
+      "tabIndex": -1,
+      "disabled": false,
+      "visible": true,
+      "display": "flex",
+      "visibility": "visible",
+      "labelled": false
+    },
+    {
+      "tag": "DIV",
+      "type": null,
+      "role": "tabpanel",
+      "text": "Welcome to Primary Advantage\n\nEnter your",
+      "tabIndex": 0,
+      "disabled": false,
+      "visible": true,
+      "display": "block",
+      "visibility": "visible",
+      "labelled": true
+    },
+    {
+      "tag": "INPUT",
+      "type": "text",
+      "role": null,
+      "text": "",
+      "tabIndex": 0,
+      "disabled": false,
+      "visible": true,
+      "display": "flex",
+      "visibility": "visible",
+      "labelled": true
+    },
+    {
+      "tag": "BUTTON",
+      "type": "submit",
+      "role": null,
+      "text": "Next",
+      "tabIndex": 0,
+      "disabled": false,
+      "visible": true,
+      "display": "flex",
+      "visibility": "visible",
+      "labelled": false
+    },
+    {
+      "tag": "DIV",
+      "type": null,
+      "role": "tabpanel",
+      "text": "",
+      "tabIndex": 0,
+      "disabled": false,
+      "visible": false,
+      "display": "none",
+      "visibility": "visible",
+      "labelled": true
+    },
+    {
+      "tag": "SECTION",
+      "type": null,
+      "role": null,
+      "text": "Notifications alt+T",
+      "tabIndex": -1,
+      "disabled": false,
+      "visible": false,
+      "display": "block",
+      "visibility": "visible",
+      "labelled": true
+    }
+  ],
+  "p2_tabSequence": [
+    "A \"Primary Advantage\"",
+    "BUTTON \"Student\"",
+    "DIV \"Welcome to Primary Advantage\n\n\"",
+    "INPUT \"\"",
+    "BUTTON \"Next\"",
+    null
+  ],
+  "p2_inputFocusStyle": {
+    "outline": "1px none oklab(0.707999 -0.00000712276 0.0000166297 / 0.5)",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.707999 -0.00000712276 0.0000166297 / 0.5) 0px 0px 0px 3px, rgba(0, 0, 0, 0.05) 0px 1px 2px",
+    "border": "1px solid lab(66.128 -0.0000298023 0.0000119209)"
+  },
+  "contrast_p1": {
+    "samples": [
+      {
+        "label": "body",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Primary Advantage\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Home\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"About\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"Contact\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"Authors\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"Login\"",
+        "fg": "lab(7.78201 -0.0000149012 0)",
+        "bg": "lab(96.52 -0.0000298023 0.0000119209)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 16.44
+      },
+      {
+        "label": "btn/link:\"Get Started Now!\"",
+        "fg": "rgb(255, 255, 255)",
+        "bg": "rgb(23, 37, 84)",
+        "size": "20px",
+        "weight": "400",
+        "ratio": 14.69
+      },
+      {
+        "label": "btn/link:\"Select an option\"",
+        "fg": "lab(48.496 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "400",
+        "ratio": 4.74
+      },
+      {
+        "label": "btn/link:\"Send Message\"",
+        "fg": "lab(98.26 0 0)",
+        "bg": "lab(7.78201 -0.0000149012 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 17.18
+      },
+      {
+        "label": "btn/link:\"Get Started Now!\"",
+        "fg": "lab(48.496 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "400",
+        "ratio": 4.74
+      }
+    ]
+  },
+  "contrast_p2": {
+    "samples": [
+      {
+        "label": "body",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Primary Advantage\"",
+        "fg": "rgb(255, 255, 255)",
+        "bg": "lab(96.52 -0.0000298023 0.0000119209)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 1.09
+      },
+      {
+        "label": "btn/link:\"Student\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Teacher\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(96.52 -0.0000298023 0.0000119209)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 18.16
+      },
+      {
+        "label": "btn/link:\"Next\"",
+        "fg": "lab(98.26 0 0)",
+        "bg": "lab(7.78201 -0.0000149012 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 17.18
+      }
+    ]
+  },
+  "contrast_p5": {
+    "samples": [
+      {
+        "label": "body",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Back to home\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 19.8
+      }
+    ]
+  },
+  "escape_locale": {
+    "count": 1,
+    "opened": {
+      "expanded": 1,
+      "menus": 1
+    },
+    "after": {
+      "expanded": 0,
+      "menus": 0,
+      "focus": "BUTTON"
+    }
+  },
+  "dashboard_login": 200,
+  "dashboard": {
+    "finalUrl": "http://localhost:3000/en/student/read",
+    "landmarks": {
+      "main": 1,
+      "header": 1,
+      "footer": 0,
+      "nav": 2
+    },
+    "headings": [
+      "H1:\"Article Selection\""
+    ],
+    "consoleErrors": [
+      "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:36",
+      "IntlError: MISSING_MESSAGE: Could not resolve `Sidebar.games` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:3647:23)\n    at translateBaseFn (http://localhost:3000/_next/static/chunks/node_modules_0etn680._.js:36"
+    ],
+    "tabSequence": [
+      "A \"Primary Advantage\" outline=1px/auto",
+      "A \"Home\" outline=1px/auto",
+      "A \"About\" outline=1px/auto",
+      "A \"Contact\" outline=1px/auto",
+      "A \"Authors\" outline=1px/auto",
+      "BUTTON \"Toggle Locale\" outline=2px/none",
+      "BUTTON \"Toggle theme\" outline=2px/none",
+      "A \"Read\" outline=1px/auto",
+      "A \"Sidebar.Games\" outline=1px/auto",
+      "A \"Assignments\" outline=1px/auto",
+      "A \"Sentences\" outline=1px/auto",
+      "A \"Vocabulary\" outline=1px/auto",
+      "A \"Reports\" outline=1px/auto",
+      "A \"History\" outline=1px/auto",
+      "A \"Fiction\" outline=2px/none",
+      "A \"Nonfiction\" outline=3px/none",
+      "DIV \"CEFR Level : 0\n\nQA Game Content B\" outline=3px/auto",
+      "BUTTON \"Show lesson option\" outline=1px/auto",
+      "DIV \"CEFR Level : 0\n\nQA Game Content A\" outline=3px/auto",
+      "BUTTON \"Show lesson option\" outline=1px/auto",
+      "A \"Back to top\" outline=1px/none",
+      "NEXTJS-PORTAL \"\" outline=3px/none",
+      "NEXTJS-PORTAL \"\" outline=3px/none",
+      null
+    ],
+    "escape": {
+      "menuCount": 0
+    }
+  },
+  "contrast_p3b": {
+    "samples": [
+      {
+        "label": "body",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Primary Advantage\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Home\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"About\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"Contact\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"Authors\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"Toggle Locale\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Toggle theme\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Read\"",
+        "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 2.3
+      },
+      {
+        "label": "btn/link:\"Sidebar.Games\"",
+        "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 2.3
+      },
+      {
+        "label": "btn/link:\"Assignments\"",
+        "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 2.3
+      }
+    ]
+  },
+  "games_forensics": {
+    "mains": [
+      "flex w-full flex-1 flex-col overflow-hidden",
+      "mx-auto w-full max-w-5xl px-4 py-8"
+    ],
+    "emptyHeadings": [
+      "H2. outer=<h2 style=\"margin: 0px; font-family: var(--apk-reward-display-font, 'Courier New', monospace);\">Wizard rewards</h2>",
+      "H3. outer=<h3 style=\"margin: 0px;\">Apprentice Wand</h3>",
+      "H3. outer=<h3 style=\"margin: 0px;\">Graveyard Staff</h3>",
+      "H3. outer=<h3 style=\"margin: 0px;\">Echo Staff</h3>"
+    ],
+    "sidebarLinks": [
+      {
+        "text": "Home",
+        "href": "/en"
+      },
+      {
+        "text": "About",
+        "href": "/en/about"
+      },
+      {
+        "text": "Contact",
+        "href": "/en/contact"
+      },
+      {
+        "text": "Authors",
+        "href": "/en/authors"
+      },
+      {
+        "text": "Read",
+        "href": "#"
+      },
+      {
+        "text": "Sidebar.Games",
+        "href": "#"
+      },
+      {
+        "text": "Assignments",
+        "href": "#"
+      },
+      {
+        "text": "Sentences",
+        "href": "#"
+      },
+      {
+        "text": "Vocabulary",
+        "href": "#"
+      },
+      {
+        "text": "Reports",
+        "href": "#"
+      },
+      {
+        "text": "History",
+        "href": "#"
+      }
+    ],
+    "cardImgAlts": [
+      {
+        "alt": "",
+        "src": "ssets/apk/standard-pack-qc/rpg-apprentice-wand.png"
+      },
+      {
+        "alt": "",
+        "src": "ssets/apk/standard-pack-qc/rpg-graveyard-staff.png"
+      },
+      {
+        "alt": "",
+        "src": "/assets/apk/standard-pack-qc/rpg-echo-staff.png"
+      }
+    ]
+  },
+  "contrast_p4": {
+    "samples": [
+      {
+        "label": "body",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Primary Advantage\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "16px",
+        "weight": "400",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Home\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"About\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"Contact\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"Authors\"",
+        "fg": "oklab(0.145 -0.00000143796 0.00000340492 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "18px",
+        "weight": "500",
+        "ratio": 5.25
+      },
+      {
+        "label": "btn/link:\"Toggle Locale\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Toggle theme\"",
+        "fg": "lab(2.75381 0 0)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 19.8
+      },
+      {
+        "label": "btn/link:\"Read\"",
+        "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 2.3
+      },
+      {
+        "label": "btn/link:\"Sidebar.Games\"",
+        "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 2.3
+      },
+      {
+        "label": "btn/link:\"Assignments\"",
+        "fg": "oklab(0.555999 -0.00000530481 0.000012964 / 0.6)",
+        "bg": "lab(100 0 0)",
+        "size": "14px",
+        "weight": "500",
+        "ratio": 2.3
+      }
+    ]
+  }
+}

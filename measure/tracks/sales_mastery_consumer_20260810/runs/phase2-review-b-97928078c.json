@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "track_id": "sales_mastery_consumer_20260810",
+  "phase": "Phase 2 — company tenant mapping and durable projection",
+  "role": "Measure Review B",
+  "audited_head_sha": "97928078cf64d44ffd4c6d90889a642f44abd313",
+  "phase_base_sha": "fd581f3dcd15e7b7b632875862aaecb596719621",
+  "role_base_sha": "3d66149bf3d5a0b68f0ac2861ce6392bdb0112c8",
+  "source_commit": "0559d48890191a068a15d2ae1cce6c4a1d4660ce",
+  "head_start_sha": "fa384d8af94fe0a682857d0e56c0086e892d9ea9",
+  "head_end_sha": "c572d0b8713dd09fb3e86761c54467b46ccba142",
+  "head_advanced_during_run": true,
+  "sales_path_drift_after_audited_head": false,
+  "sales_drift_proof": {
+    "command": "git diff --name-status 97928078c..c572d0b -- packages/db/drizzle packages/db/src/schema/sales-mastery.ts packages/db/src/sentinels.ts packages/domain/src/sales-mastery.ts packages/domain/src/tenant-registry.ts packages/domain/src/__tests__/sales-mastery-projection.red.test.ts packages/db/src/__tests__/sales-mastery-tenant.integration.test.ts packages/db/src/__tests__/sales-mastery-postgres16-harness.ts packages/sales-knowledge packages/mastery-runtime-compat apps/sales-advantage measure/tracks/sales_mastery_consumer_20260810",
+    "result": "empty",
+    "non_sales_commits": [
+      "fa384d8af test(db): add Phase 3 Review A PG16 Red coverage",
+      "ee5442654 fix(backend): promote durable enqueue snapshots",
+      "c572d0b87 docs(backend): record enqueue Green evidence"
+    ],
+    "non_sales_paths": [
+      "measure/tracks/durable_job_worker_platform_20260713/**",
+      "packages/backend/src/jobs/adapters/postgres/index.ts",
+      "packages/backend/src/jobs/__tests__/**",
+      "packages/db/src/__tests__/durable-jobs-schema-pg16.red.test.ts"
+    ]
+  },
+  "decision": "FAIL",
+  "summary": "The focused gates pass, but Review B found trust, provenance, replay, and transaction-boundary defects.",
+  "findings": [
+    {
+      "id": "SALES-RB-001",
+      "severity": "Critical",
+      "title": "Cross-organization source identities can be replayed under another organization.",
+      "file": "packages/domain/src/sales-mastery.ts",
+      "lines": "817-892, 913-1010",
+      "evidence": [
+        "The memory key combines the current organization and idempotency key.",
+        "The database uniqueness keys combine mastery tenant and idempotency or source attempt.",
+        "A second organization with its own principal can submit the first organization's sourceAttemptId and idempotencyKey and receive applied status.",
+        "The direct probe returned crossOrganizationReuse=applied."
+      ],
+      "impact": "The required cross-organization replay and evidence-reuse denial is not enforced.",
+      "required_fix": "Bind source attempts and idempotency identities to a trusted organization-owned source record or enforce a global immutable origin registry."
+    },
+    {
+      "id": "SALES-RB-002",
+      "severity": "High",
+      "title": "The projection accepts claims without Sales role or canonical organization authorization.",
+      "file": "packages/domain/src/sales-mastery.ts",
+      "lines": "25-41, 272-323",
+      "evidence": [
+        "The local schema requires ACTIVE status and aud=sales, but it does not require SALES_REP or SALES_ADMIN.",
+        "The local schema accepts any valid organization key.",
+        "The existing resolveSalesCompanyPrincipal path rejects non-internal organizations and roleless identities.",
+        "The direct probe resolved a tenant for an empty role list and other-company organization key."
+      ],
+      "impact": "A structurally valid but unauthorized identity can create a mapping and project mastery evidence.",
+      "required_fix": "Require the trusted Company Identity principal result and enforce the exact Sales role and organization policy before mapping."
+    },
+    {
+      "id": "SALES-RB-003",
+      "severity": "High",
+      "title": "The projection does not validate reviewed activity bindings or roleplay consent.",
+      "file": "packages/domain/src/sales-mastery.ts",
+      "lines": "70-105, 325-354, 515-669",
+      "evidence": [
+        "The payload checks only three nonblank strings and a score range.",
+        "The implementation does not load or validate the accepted Sales bindings package.",
+        "The implementation does not validate attempt immutability, evaluator provenance, consent, or retention status.",
+        "A payload with sales.unknown.objective, sales.unknown.variant, and unapproved-rubric returned applied status.",
+        "The Phase 1 acceptance marks all roleplays pending until an approved evaluator and immutable-attempt verifier exist."
+      ],
+      "impact": "A2 fails, and unapproved or non-consented evidence can mutate KST/SRS state.",
+      "required_fix": "Validate the exact activity binding and attempt record before projection, then require the consent and retention gate for roleplay evidence."
+    },
+    {
+      "id": "SALES-RB-004",
+      "severity": "High",
+      "title": "Receipt columns are not bound to the referenced outbox row in PostgreSQL.",
+      "file": "packages/db/drizzle/0053_sales_mastery_tenant_mapping.sql",
+      "lines": "60-78",
+      "evidence": [
+        "The receipt table has a single-column outbox foreign key.",
+        "The receipt organization, tenant, learner, and idempotency columns have no composite foreign key or consistency check against the outbox row.",
+        "The adapter treats receipt existence for an outbox ID as completion."
+      ],
+      "impact": "A direct database writer can attach a foreign organization or learner projection receipt to an outbox row.",
+      "required_fix": "Add a composite receipt-to-outbox foreign key and matching checks for organization, tenant, learner, and idempotency identity."
+    },
+    {
+      "id": "SALES-RB-005",
+      "severity": "High",
+      "title": "Outbox creation, mastery commit, and receipt insertion are not one atomic transaction.",
+      "file": "packages/domain/src/sales-mastery.ts",
+      "lines": "882-892, 1025-1045",
+      "evidence": [
+        "ensureOutbox commits its transaction before the Mastery adapter runs.",
+        "The Mastery commit and receipt insert run in separate operations.",
+        "A process failure between the Mastery commit and receipt insert leaves an applied commit without a Sales receipt."
+      ],
+      "impact": "The Finance-proven atomic outbox contract is not met, and recovery depends on a later retry.",
+      "required_fix": "Use one shared transaction boundary for the outbox, Mastery commit, and receipt, or add a durable delivery state with an atomic commit protocol."
+    },
+    {
+      "id": "SALES-RB-006",
+      "severity": "Medium",
+      "title": "Historical migrations were edited instead of receiving an additive repair migration.",
+      "files": [
+        "packages/db/drizzle/0013_prisma_drizzle_schema_unification.sql",
+        "packages/db/drizzle/0018_audit_events.sql"
+      ],
+      "lines": "Existing procedural migration split markers",
+      "evidence": [
+        "The live PostgreSQL 16 chain now passes after nested breakpoints were removed.",
+        "The source changes alter migrations that may already exist in deployed databases.",
+        "No new migration records the repair for databases that already applied those migration tags."
+      ],
+      "impact": "New databases and existing databases can have different historical migration bytes.",
+      "required_fix": "Use a serial additive repair migration or record an explicit compatibility decision for already-applied databases."
+    }
+  ],
+  "control_audit": {
+    "company_identity_trust": "FAIL",
+    "organization_mapping_immutability": "PASS",
+    "cross_organization_reads": "PASS in focused tests; durable receipt integrity remains incomplete",
+    "cross_organization_writes": "FAIL",
+    "cross_organization_replay": "FAIL",
+    "caller_selected_tenant_rejection": "PASS",
+    "codecamp_namespace_isolation": "PASS",
+    "equal_replay": "PASS in domain and live outbox tests",
+    "conflicting_replay": "PASS in domain and live outbox tests",
+    "retry": "PASS in focused tests; atomicity finding remains",
+    "concurrency": "PASS for tested mapping and outbox rows",
+    "append_only_outbox_and_triggers": "PASS in live PostgreSQL 16 tests",
+    "safe_errors": "PASS for focused adapter errors",
+    "migration_chain": "PASS on disposable PostgreSQL 16",
+    "tenant_classification": "PASS, 12 tests",
+    "A2_consent_gate": "FAIL",
+    "A6_registry_claims": "PASS; tracks.md remains in progress and this receipt does not claim acceptance"
+  },
+  "checks": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-mastery-projection.red.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "14 tests passed."
+    },
+    {
+      "command": "PG_TEST_URL=postgresql://durable_test_admin@127.0.0.1:5432/durable_job_test_admin_local CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-mastery-tenant.integration.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "PostgreSQL 16.14 passed 13 tests."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-mastery-tenant.integration.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Five safe artifact tests passed and eight live tests skipped without PG_TEST_URL."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/company-identity-principal.test.ts src/__tests__/sales-company-organization.test.ts src/__tests__/sales-authorization-idors.test.ts src/__tests__/sales-contract-nullability.test.ts src/__tests__/sales-queries.test.ts src/__tests__/sales-mutations.test.ts src/__tests__/sales-progression.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "87 focused Sales authorization and tenant regression tests passed. This superset covers the recorded 58-test regression claim."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/schema.test.ts src/__tests__/mastery-persistence-schema.test.ts src/__tests__/sales-schema-parity.test.ts src/__tests__/schema-parity.test.ts src/__tests__/drizzle045-schema-compile.test.ts src/__tests__/migration-sql.test.ts src/__tests__/migration-runner.test.ts src/__tests__/migration-ledger-gap-validation.test.ts src/__tests__/migration-ceiling-adversarial.test.ts src/__tests__/drizzle045-migration-format.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Ten migration and schema files passed with 261 tests."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/tenant-coverage.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "12 tenant coverage tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase0-security-remediation.test.ts src/__tests__/phase0-adversarial.test.ts src/__tests__/sales-runtime-admission.red.test.ts src/__tests__/runtime-manifest.test.ts src/__tests__/codecamp-proof.test.ts src/__tests__/release-artifact.test.ts --maxWorkers=1",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "Six Phase 0 security, adversarial, admission, and compatibility files passed with 63 tests."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit in domain, db, sales-knowledge, and mastery-runtime-compat",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "All four focused type checks passed."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc build in domain, db, sales-knowledge, and mastery-runtime-compat",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "All four focused builds passed."
+    },
+    {
+      "command": "../../node_modules/.bin/eslint on touched domain, db, sales-knowledge, and mastery-runtime-compat paths",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "All focused lint checks passed."
+    },
+    {
+      "command": "node_modules/.bin/prettier --check on touched source, test, and evidence paths",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "All selected source, test, log, and evidence paths passed."
+    },
+    {
+      "command": "node_modules/.bin/prettier --check measure/tracks/sales_mastery_consumer_20260810/plan.md",
+      "result": "failed",
+      "exit_code": 1,
+      "explanation": "The historical plan has unrelated indentation drift. The audit did not modify it."
+    },
+    {
+      "command": "git diff --check on scoped Sales paths and the immutable shared-package diff guard",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "No whitespace errors occurred, and the shared engine and Sales knowledge diff was empty."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/mastery-persistence.drizzle.test.ts --maxWorkers=1",
+      "result": "failed",
+      "exit_code": 1,
+      "explanation": "Eleven tests stopped at the pre-existing PGlite reset failure caused by the Finance append-only trigger."
+    }
+  ],
+  "reviewed_inputs": [
+    "measure/tracks/sales_mastery_consumer_20260810/spec.md",
+    "measure/tracks/sales_mastery_consumer_20260810/plan.md",
+    "measure/tracks/sales_mastery_consumer_20260810/test-strategy-phase2.md",
+    "measure/tracks/sales_mastery_consumer_20260810/phase2-review-a-red-remediation-evidence-20260816.md",
+    "measure/tracks/sales_mastery_consumer_20260810/phase2-green-remediation-evidence-20260816.md",
+    "measure/tracks/sales_mastery_consumer_20260810/orchestration/phase2-review-a-mid-red-remediation-role.log",
+    "measure/tracks/sales_mastery_consumer_20260810/orchestration/phase2-mid-red-role.log",
+    "measure/tracks/sales_mastery_consumer_20260810/orchestration/phase2-jr-green-role.log",
+    "measure/tracks/sales_mastery_consumer_20260810/orchestration/phase2-jr-green-remediation-role.log",
+    "packages/db/drizzle/0053_sales_mastery_tenant_mapping.sql",
+    "packages/db/src/schema/sales-mastery.ts",
+    "packages/domain/src/sales-mastery.ts",
+    "packages/domain/src/tenant-registry.ts",
+    "packages/domain/src/__tests__/sales-mastery-projection.red.test.ts",
+    "packages/db/src/__tests__/sales-mastery-tenant.integration.test.ts",
+    "packages/db/src/__tests__/sales-mastery-postgres16-harness.ts",
+    "packages/backend/src/modules/company-identity/contracts.ts",
+    "packages/domain/src/company-identity-principal.ts",
+    "packages/sales-knowledge/src/bindings.ts",
+    "packages/sales-knowledge/src/graph.ts",
+    "packages/sales-knowledge/src/validation.ts",
+    "packages/domain/src/mastery/drizzle-mastery-persistence.ts",
+    "packages/db/src/sentinels.ts"
+  ],
+  "known_limitations": [
+    "The audit ran in a shared worktree. Later commits changed durable-job paths only.",
+    "The full domain PGlite persistence suite remains red from an unrelated Finance trigger reset failure.",
+    "The plan Prettier check remains red from historical indentation outside this audit."
+  ],
+  "changed_files": [
+    "measure/tracks/sales_mastery_consumer_20260810/runs/phase2-review-b-97928078c.json",
+    "measure/tracks/sales_mastery_consumer_20260810/runs/phase2-review-b-97928078c.log"
+  ],
+  "production_source_modified": false,
+  "MEASURE_AGENT_RESULT": {
+    "role": "review-b",
+    "status": "FAIL",
+    "track": "sales_mastery_consumer_20260810",
+    "phase": "Phase 2 — company tenant mapping and durable projection",
+    "audited_head_sha": "97928078cf64d44ffd4c6d90889a642f44abd313",
+    "phase_base_sha": "fd581f3dcd15e7b7b632875862aaecb596719621",
+    "role_base_sha": "3d66149bf3d5a0b68f0ac2861ce6392bdb0112c8",
+    "source_commit": "0559d48890191a068a15d2ae1cce6c4a1d4660ce",
+    "handoff": "Remediate Critical and High findings before acceptance."
+  }
+}

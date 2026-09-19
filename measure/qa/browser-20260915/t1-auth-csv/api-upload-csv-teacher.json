@@ -1,0 +1,31 @@
+{
+  "status": 200,
+  "body": {
+    "success": true,
+    "inserted": 0,
+    "skippedDuplicate": 1,
+    "skippedExisting": 3,
+    "message": "File uploaded and users created successfully",
+    "fileName": "bf829af2-7e21-494a-9ee3-a89731dcb9ac_students.csv",
+    "filePath": "/home/daniebo/Desktop/reading-advantage-monorepo/apps/primary-advantage/temp/bf829af2-7e21-494a-9ee3-a89731dcb9ac_students.csv",
+    "originalName": "students.csv",
+    "size": 256,
+    "timestamp": 1789431976740,
+    "stats": {
+      "totalRows": 4,
+      "processedUsers": 3,
+      "createdUsers": 0,
+      "roleAssignments": 0,
+      "classroomsCreated": 0,
+      "studentAssignments": 0,
+      "teacherAssignments": 0,
+      "errors": 0
+    },
+    "schoolInfo": {
+      "id": "c74be1bd-7e83-41d2-a5e4-4e06e3294f1f",
+      "name": "QA School B",
+      "note": "All imported users have been assigned to this school"
+    },
+    "note": "Users created with default values: password=null, cefrLevel=A0-, level=1, xp=0"
+  }
+}

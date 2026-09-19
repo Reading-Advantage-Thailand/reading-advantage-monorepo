@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "track_id": "durable_job_worker_platform_20260713",
+  "phase": "Phase 3: PostgreSQL Adapter Implementation",
+  "role": "fresh independent Review B security and boundary reviewer",
+  "phase_base_sha": "fd581f3dcd15e7b7b632875862aaecb596719621",
+  "role_base_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "red_commit_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+  "candidate_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "audited_head_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "audit_start_head_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "verification_head_start_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "verification_head_end_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+  "head_advanced_during_audit": false,
+  "status": "FAIL",
+  "decision": "FAIL",
+  "summary": "The candidate closes tenant-registry Red, but broad backend roots permit durable access and architecture gates remain blocked.",
+  "current_head_acceptance": "withheld",
+  "phase_or_track_completion_claim": false,
+  "production_code_modified_by_review": false,
+  "tests_modified_by_review": false,
+  "plans_modified_by_review": false,
+  "baselines_modified_by_review": false,
+  "commit_created": false,
+  "report_is_unstaged": true,
+  "reviewed_inputs": [
+    "measure/index.md",
+    "measure/workflow.md",
+    "measure/product-guidelines.md",
+    "measure/tech-stack.md",
+    "measure/code_styleguides/general.md",
+    "measure/code_styleguides/typescript.md",
+    "measure/code_styleguides/javascript.md",
+    "measure/lessons-learned.md",
+    "measure/tracks/durable_job_worker_platform_20260713/spec.md",
+    "measure/tracks/durable_job_worker_platform_20260713/plan.md",
+    "measure/tracks/durable_job_worker_platform_20260713/test-strategy.md",
+    "packages/architecture-enforcement/src/config/ownership-map.v1.json",
+    "packages/architecture-enforcement/src/config/baselines/database.v1.json",
+    "packages/architecture-enforcement/src/analyzer.ts",
+    "packages/architecture-enforcement/src/inventory.ts",
+    "packages/architecture-enforcement/src/ownership-map.ts",
+    "packages/architecture-enforcement/src/architecture-check.ts",
+    "packages/architecture-enforcement/src/__tests__/ownership-map.test.ts",
+    "packages/architecture-enforcement/src/__tests__/analyzer-counterexamples.red.test.ts",
+    "packages/architecture-enforcement/src/__tests__/analyzer-resolution.test.ts",
+    "packages/architecture-enforcement/src/__tests__/inventory.test.ts",
+    "packages/architecture-enforcement/src/__tests__/database-counterexamples.test.ts",
+    "packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts",
+    "packages/domain/src/tenant-registry.ts",
+    "packages/backend/src/jobs/adapters/postgres/index.ts",
+    "packages/webhooks/src/review-worker.ts",
+    "packages/domain/src/codecamp/intern-accounts.ts",
+    "packages/domain/src/codecamp/review-jobs.ts"
+  ],
+  "scope_audit": {
+    "candidate_commit": "The candidate changes only the DURABLE_JOB_DATABASE_BOUNDARY findingKinds list.",
+    "red_commit": "The corrected Red test requires query-call evidence and a tenant-registry ownership check.",
+    "range_note": "The 8c49120b1..101f35336 range also contains unrelated c7a4d9bf8 web changes. Those changes were excluded.",
+    "tenant_registry": "Tenant-registry table registration is classification only. It is not persistence or a query root.",
+    "phase4_disposition": "Legacy review-worker and intern-accounts queries remain Phase 4 work. They are not baseline acceptance."
+  },
+  "boundary_assessment": {
+    "durable_rule": {
+      "status": "FAIL",
+      "details": "The durable rule now selects only query-call. Its exact roots remain database-schema, database-migrations, and postgres-job-adapter."
+    },
+    "general_database_rule": {
+      "status": "PASS_WITH_SCOPE_LIMIT",
+      "details": "DATABASE_BOUNDARY still selects static, namespace, dynamic, CommonJS, re-export, client-construction, query-call, and environment evidence. Its approved domain and backend roots are broader than the exact durable adapter root."
+    },
+    "tenant_registry": {
+      "status": "PASS",
+      "details": "The focused architecture contract passed. The tenant registry has no DURABLE_JOB_DATABASE_BOUNDARY query finding."
+    },
+    "approved_query_roots": {
+      "status": "PASS",
+      "details": "Ownership-map tests allowed durable queries in schema, migrations, and the exact PostgreSQL adapter. They denied worker, webhook, app, non-adapter backend, and near-match adapter paths."
+    }
+  },
+  "combined_rule_probe": {
+    "outside_general_root": {
+      "status": "PASS",
+      "details": "A temporary source probe produced DATABASE_BOUNDARY findings for static, namespace, dynamic, CommonJS, re-export, and client-construction database access. The temporary root was removed."
+    },
+    "inside_general_backend_root": {
+      "status": "FAIL",
+      "details": "A temporary packages/backend/src/jobs/rogue.ts probe produced only the named static table query finding. Namespace, dynamic, CommonJS, re-export, and raw postgres client access to durable_jobs produced no durable finding. The temporary root was removed."
+    },
+    "static_named_table_query": "Detected by DURABLE_JOB_DATABASE_BOUNDARY query-call.",
+    "namespace_table_query": "Not detected inside the broad general backend root.",
+    "dynamic_table_query": "Not detected inside the broad general backend root.",
+    "commonjs_table_query": "Not detected inside the broad general backend root.",
+    "reexported_table": "Not detected inside the broad general backend root.",
+    "raw_client_durable_query": "Not detected inside the broad general backend root."
+  },
+  "findings": [
+    {
+      "id": "DWP3-RB-H1",
+      "severity": "High",
+      "title": "Exact durable query ownership is bypassable inside general backend roots.",
+      "file": "packages/architecture-enforcement/src/config/ownership-map.v1.json:6-87",
+      "context": "DATABASE_BOUNDARY allows packages/backend/src/ and packages/domain/src/. The durable rule selects only query-call. A non-adapter backend file can use namespace, dynamic, CommonJS, or re-export access. A raw postgres client can issue SELECT * FROM durable_jobs without a durable finding.",
+      "impact": "The combined policy does not prove that durable-table queries stay in database schema, migrations, or the exact PostgreSQL adapter.",
+      "suggestion": "Preserve durable-rule detection for all database access forms, or add complete table-taint analysis. Narrow general database roots when required."
+    },
+    {
+      "id": "DWP3-RB-H2",
+      "severity": "High",
+      "title": "The candidate invalidates the database baseline ruleset hash.",
+      "file": "packages/architecture-enforcement/src/config/ownership-map.v1.json:60-87; packages/architecture-enforcement/src/config/baselines/database.v1.json:4",
+      "context": "The baseline hash is 44425a89f8db3b6394e4a3c4117ede1154656abea8d0ccaf0f9eb5807e6acbdc. The current policy hash is f8082426f005c5d87eff24f1fbf9e955652d2f5b4138524a9509aac6508f1570. The architecture check exits 2 before debt comparison.",
+      "impact": "The repository architecture gate cannot run. No baseline acceptance is supported by this candidate.",
+      "suggestion": "Keep the baseline unchanged in this review. Obtain a separate reviewed baseline disposition, then rerun the architecture gate."
+    },
+    {
+      "id": "DWP3-RB-H3",
+      "severity": "High",
+      "title": "The database counterexample matrix is red under the combined policy.",
+      "file": "packages/architecture-enforcement/src/__tests__/analyzer-counterexamples.red.test.ts:38-55",
+      "context": "The focused matrix run passed 41 tests and failed database-webhook-job-table and database-worker-job-table. Their manifests require static-import findings from the durable rule. The candidate moved import findings to DATABASE_BOUNDARY, so the test filters out valid combined-policy findings.",
+      "impact": "The focused architecture test suite fails. It does not verify the combined rule set for these two bypass cases.",
+      "suggestion": "Update the matrix contract in a separate test lease to assert both rule IDs and their required evidence. Do not change the baseline in that lease."
+    }
+  ],
+  "blocking_findings": [
+    "DWP3-RB-H1",
+    "DWP3-RB-H2",
+    "DWP3-RB-H3"
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "The corrected Red architecture test passed 2/2 tests at candidate HEAD.",
+    "The focused architecture matrix failed 2 tests because it filters out valid DATABASE_BOUNDARY findings.",
+    "The combined-rule probe found all six general import and construction findings outside general roots.",
+    "The backend-root probe found only the named static table query and missed five indirect or raw access forms.",
+    "The baseline hash comparison differs between 44425a89f8db3b6394e4a3c4117ede1154656abea8d0ccaf0f9eb5807e6acbdc and f8082426f005c5d87eff24f1fbf9e955652d2f5b4138524a9509aac6508f1570.",
+    "The actual legacy review-worker, intern-accounts, and admin review-jobs sources contain durable access outside the exact adapter root."
+  ],
+  "test_strategy_violations": [
+    "The database counterexample matrix does not assert the combined DATABASE_BOUNDARY and DURABLE_JOB_DATABASE_BOUNDARY result.",
+    "No committed fixture tests indirect durable table access from a broad general backend root."
+  ],
+  "live_contract_violations": [
+    "Namespace, dynamic, CommonJS, re-export, and raw postgres durable access can avoid the durable query finding inside packages/backend/src/ outside the exact adapter."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
+  "deferred_phase4_work": {
+    "status": "OPEN_NOT_BASELINE_ACCEPTED",
+    "owner_phase": "Phase 4: Worker Service and review_jobs Adoption",
+    "tasks": [
+      "Task 16: Adapt or reversibly migrate review_jobs through the backend PostgreSQL adapter.",
+      "Task 17: Run compatibility, shadow-equivalence, webhook, restart, and rollback drills."
+    ],
+    "review_worker": {
+      "file": "packages/webhooks/src/review-worker.ts",
+      "durable_access": [
+        "259-292: reviewJobs insert and conflict update",
+        "459-477: raw SQL claim with FOR UPDATE SKIP LOCKED",
+        "534-545: raw SQL visibility reclaim",
+        "642-648: reviewJobs settlement select",
+        "909-915: reviewJobs settlement select",
+        "1117-1126: reviewJobs settlement update"
+      ],
+      "disposition": "Legacy direct persistence remains Phase 4 work. It is not accepted by the Phase 3 baseline."
+    },
+    "intern_accounts": {
+      "file": "packages/domain/src/codecamp/intern-accounts.ts",
+      "durable_access": [
+        "218-223: reviewJobs status query in listInterns",
+        "364-369: reviewJobs status query in getInternProgress"
+      ],
+      "disposition": "Legacy review-status reads remain Phase 4 work. They are not accepted by the Phase 3 baseline."
+    },
+    "admin_review_jobs": {
+      "file": "packages/domain/src/codecamp/review-jobs.ts",
+      "durable_access": [
+        "83-89: listDeadReviewJobs query",
+        "146-158: requeueReviewJob update"
+      ],
+      "disposition": "Legacy admin queue access remains Phase 4 work. It is not accepted by the Phase 3 baseline."
+    }
+  },
+  "checks": [
+    {
+      "command": "CI=true node node_modules/vitest/vitest.mjs run packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 2/2 tests passed."
+    },
+    {
+      "command": "CI=true node node_modules/vitest/vitest.mjs run packages/architecture-enforcement/src/__tests__/ownership-map.test.ts packages/architecture-enforcement/src/__tests__/analyzer-counterexamples.red.test.ts packages/architecture-enforcement/src/__tests__/analyzer-resolution.test.ts packages/architecture-enforcement/src/__tests__/inventory.test.ts packages/architecture-enforcement/src/__tests__/database-counterexamples.test.ts",
+      "exit_code": 1,
+      "result": "FAIL — 41 passed and 2 failed. The failures are database-webhook-job-table and database-worker-job-table evidence expectations."
+    },
+    {
+      "command": "CI=true node node_modules/vitest/vitest.mjs run packages/architecture-enforcement/src/__tests__/architecture-check.test.ts packages/architecture-enforcement/src/__tests__/contracts.test.ts packages/architecture-enforcement/src/__tests__/baseline-validation.test.ts",
+      "exit_code": 0,
+      "result": "PASS — 35/35 tests passed."
+    },
+    {
+      "command": "node node_modules/tsx/dist/cli.mjs packages/architecture-enforcement/src/architecture-check-cli.ts",
+      "exit_code": 2,
+      "result": "FAIL — database baseline ruleset hash does not match current policy."
+    },
+    {
+      "command": "Temporary combined-rule analyzer probes for outside-root and backend-root static, namespace, dynamic, CommonJS, re-export, and client construction cases",
+      "exit_code": 0,
+      "result": "PASS — outside general roots were denied by DATABASE_BOUNDARY. The backend-root probe exposed the DWP3-RB-H1 bypass. Temporary roots were removed."
+    },
+    {
+      "command": "Temporary analyzer probe for packages/webhooks/src/review-worker.ts, packages/domain/src/codecamp/intern-accounts.ts, and packages/domain/src/codecamp/review-jobs.ts",
+      "exit_code": 0,
+      "result": "PASS — no parse errors. Durable query findings were present at the reviewed legacy sites."
+    },
+    {
+      "command": "git diff --check 8c49120b1..101f35336 -- packages/architecture-enforcement/src/config/ownership-map.v1.json",
+      "exit_code": 0,
+      "result": "PASS — no whitespace errors."
+    },
+    {
+      "command": "build-graph stats ./graph.db; build-graph callers ./graph.db createDurableJobQueuePort",
+      "exit_code": 0,
+      "result": "PASS — graph available with 34233 nodes, 59982 edges, and 3707 files. No caller edge was reported. No exported TypeScript symbol changed in the candidate."
+    },
+    {
+      "command": "git status --short for reviewed source, test, plan, baseline, and report paths",
+      "exit_code": 0,
+      "result": "PASS — reviewed source, test, plan, and baseline paths were clean before report creation. Unrelated dirty work was preserved."
+    }
+  ],
+  "schema_parity": {
+    "status": "NOT_APPLICABLE",
+    "details": "The candidate changes ownership policy only. It changes no schema, migration, adapter implementation, or tenant classification."
+  },
+  "caller_compatibility": {
+    "status": "PASS_WITH_NO_EXPORTED_SIGNATURE_CHANGE",
+    "details": "The candidate changes JSON policy only. No exported TypeScript signature changed."
+  },
+  "anti_pattern_audit": {
+    "A3_digit_only_counts": "PASS — counts include labels and named test cases.",
+    "A4_vacuous_pass": "PASS — probes used real analyzer code and non-empty temporary sources.",
+    "A5_false_claim_vs_test_reality": "FAIL — the corrected Red test passes, but the counterexample matrix and repository architecture gate are not green."
+  },
+  "known_limitations": [
+    "The review did not change or accept the database baseline.",
+    "The full repository test suite was not run because the focused boundary gates already failed.",
+    "The browser check was skipped because the candidate has no frontend changes.",
+    "Unrelated working-tree changes, APK paths, plans, tests, baselines, and source files were preserved."
+  ],
+  "candidate_changed_files": [
+    "packages/architecture-enforcement/src/config/ownership-map.v1.json"
+  ],
+  "red_changed_files": [
+    "packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts"
+  ],
+  "files_written": [
+    "measure/tracks/durable_job_worker_platform_20260713/phase3-review-b-101f35336.json"
+  ],
+  "MEASURE_AGENT_RESULT": {
+    "role": "fresh independent Review B security and boundary reviewer",
+    "status": "FAIL",
+    "track": "durable_job_worker_platform_20260713",
+    "phase": "Phase 3: PostgreSQL Adapter Implementation",
+    "candidate_commit": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+    "red_commit": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+    "audited_head_sha": "101f353361eb25e4eb4600f6a88cb9ca0912fae8",
+    "blocking_findings": [
+      "DWP3-RB-H1",
+      "DWP3-RB-H2",
+      "DWP3-RB-H3"
+    ],
+    "nonblocking_findings": [],
+    "files_written": [
+      "measure/tracks/durable_job_worker_platform_20260713/phase3-review-b-101f35336.json"
+    ],
+    "source_modified": false,
+    "tests_modified": false,
+    "plans_modified": false,
+    "baselines_modified": false,
+    "commit_created": false,
+    "report_is_unstaged": true,
+    "phase_or_track_completion_claim": false,
+    "completion_claim": "none"
+  }
+}
