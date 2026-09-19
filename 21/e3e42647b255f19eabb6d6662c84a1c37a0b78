@@ -1,0 +1,1 @@
+Task: Align the Vite @ alias with the Vitest path resolver. Added an absolute path.resolve alias and focused config coverage.
