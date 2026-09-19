@@ -1,0 +1,9 @@
+Tasks: Hold one idempotency key per form in a useRef and clear it after success. Add a pendingId state and disable the control while its request runs.
+
+Summary: Reused operation keys across retries, cleared them after success, isolated role keys by employee and control, and disabled an active role checkbox during its request.
+
+Files: apps/accounts/app/accounts-console.tsx; apps/accounts/app/accounts-console.test.tsx
+
+Why: Fresh keys defeated retry idempotency. Active controls also allowed repeated writes before refresh completed.
+
+Verification: CI=true pnpm exec vitest run --config vitest.config.ts app/accounts-console.test.tsx (5 passed); agent type checks and lint passed.
