@@ -1,0 +1,9 @@
+Task: Show actualCount in the topic shortfall message.
+
+Summary: Included the filtered topic count in the structured shortfall message. Preserved the status and count fields.
+
+Files: apps/marketing/app/api/video/research-topics/route.ts; apps/marketing/app/__tests__/workflow-correctness.test.ts
+
+Why: The previous message hid useful shortfall detail already present in the response.
+
+Verification: workflow correctness tests passed (7 tests); agent targeted tests, type check, and lint passed.
