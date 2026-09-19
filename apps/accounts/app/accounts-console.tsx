@@ -92,13 +92,20 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
     } catch (caught) { setError((caught as Error).message); }
   }
 
-  async function setRoles(applicationKey: string, roleKeys: string[], roleId: string) {
+  async function setRoles(applicationKey: string, role: string, roleId: string) {
     if (!selected) return;
     const operationKeyPrefix = `role-change:${selected.id}:${roleId}`;
     setPendingId(roleId);
     try {
+      const payload = await jsonRequest("/api/admin/employees", "GET");
+      const current = (payload.employees as Employee[]).find((item) => item.id === selected.id);
+      if (!current) return;
+      const existing = current.appRoles[applicationKey] ?? [];
+      const nextRoleKeys = existing.includes(role)
+        ? existing.filter((item) => item !== role)
+        : [...existing, role];
       await jsonRequest(`/api/admin/employees/${selected.id}/roles`, "PUT", {
-        applicationKey, roleKeys, idempotencyKey: getOperationKey(operationKeyPrefix),
+        applicationKey, roleKeys: nextRoleKeys, idempotencyKey: getOperationKey(operationKeyPrefix),
       });
       clearOperationKey(operationKeyPrefix);
       setNotice(`${applicationKey} roles updated without changing other applications.`);
@@ -265,8 +272,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
                       const roleId = `${app.key}:${role}`;
                       return <label key={role} className="role-check">
                         <input type="checkbox" checked={checked} disabled={pendingId === roleId} onChange={() => {
-                          const existing = selected.appRoles[app.key] ?? [];
-                          void setRoles(app.key, checked ? existing.filter((item) => item !== role) : [...existing, role], roleId);
+                          void setRoles(app.key, role, roleId);
                         }} />
                         <span>{role}</span>
                       </label>;

@@ -243,4 +243,53 @@ describe("Accounts administration console", () => {
     roleResponses.shift()?.(jsonResponse({ employee: admin }));
     await waitFor(() => expect(screen.getByText(/roles updated/i)).toBeInTheDocument());
   });
+
+  it("refetches current roles before building a role update", async () => {
+    const roleEmployee: Employee = {
+      ...admin,
+      appRoles: { marketing: ["ADMIN"], sales: [] },
+    };
+    let currentEmployee = roleEmployee;
+    let resolveFirstRole: (response: Response) => void = () => undefined;
+    let roleRequestCount = 0;
+    const fetchMock = vi.fn(
+      (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (url === "/api/admin/employees" && (init?.method ?? "GET") === "GET") {
+          return Promise.resolve(jsonResponse({ employees: [currentEmployee] }));
+        }
+        if (url.endsWith("/roles")) {
+          roleRequestCount += 1;
+          const body = JSON.parse(String(init?.body));
+          currentEmployee = {
+            ...currentEmployee,
+            appRoles: { ...currentEmployee.appRoles, sales: body.roleKeys },
+          };
+          if (roleRequestCount === 1) {
+            return new Promise<Response>((resolve) => { resolveFirstRole = resolve; });
+          }
+          return Promise.resolve(jsonResponse({ employee: currentEmployee }));
+        }
+        return Promise.resolve(jsonResponse({ employee: currentEmployee }));
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<AccountsConsole employee={roleEmployee} />);
+    await screen.findByRole("heading", { name: "Directory" });
+    const salesRep = screen.getByRole("checkbox", { name: "SALES_REP" });
+    const salesAdmin = screen.getByRole("checkbox", { name: "SALES_ADMIN" });
+
+    fireEvent.click(salesRep);
+    await waitFor(() => expect(roleRequestCount).toBe(1));
+    fireEvent.click(salesAdmin);
+    await waitFor(() => expect(roleRequestCount).toBe(2));
+
+    const roleCalls = fetchMock.mock.calls.filter(([url]) => String(url).endsWith("/roles"));
+    expect(JSON.parse(String(roleCalls[1]?.[1]?.body))).toMatchObject({
+      roleKeys: ["SALES_REP", "SALES_ADMIN"],
+    });
+
+    resolveFirstRole(jsonResponse({ employee: currentEmployee }));
+  });
 });
