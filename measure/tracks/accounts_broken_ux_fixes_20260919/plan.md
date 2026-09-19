@@ -9,4 +9,4 @@
 - [x] Task: Confirm the grant of `COMPANY_ADMIN`, not only its removal. Source: `docs/accounts-ux-refactor-plan.md` §4.1; Issues: `app/accounts-console.tsx:94-98` — b999e444f
 - [x] Task: Delete the `?? employees[0]` fallback. Source: `docs/accounts-ux-refactor-plan.md` §4.1; Issues: `app/accounts-console.tsx:58` — b128fee42
 - [x] Task: Add a `:focus-visible` rule for `.employee-item`. Source: `docs/accounts-ux-refactor-plan.md` §7; Issues: `app/globals.css:60` — b17e651c1
-- [ ] Task: Wrap the OIDC logout route in `try` and `catch`. Source: `docs/accounts-ux-refactor-plan.md` §5; Issues: `app/api/oidc/logout/route.ts:15-31`
+- [x] Task: Wrap the OIDC logout route in `try` and `catch`. Source: `docs/accounts-ux-refactor-plan.md` §5; Issues: `app/api/oidc/logout/route.ts:15-31` — 09e766570
