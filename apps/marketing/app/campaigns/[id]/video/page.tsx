@@ -8,11 +8,7 @@ import {
   reorderScenes as reorderScenesFn,
   type Scene,
 } from "@/lib/scene-editor";
-import {
-  MAX_SCRIPT_SCENES,
-  MIN_SCRIPT_SCENES,
-  scriptSchema,
-} from "@/lib/script-schema";
+import { scriptSchema } from "@/lib/script-schema";
 import { APPS, APP_NAMES } from "@/lib/apps";
 import { getMarketingAppName, getMarketingMessage as t } from "@/lib/i18n";
 import { redirectToLogin } from "@/lib/login-redirect";
@@ -814,17 +810,13 @@ export default function VideoProductionPage() {
                         </button>
                         <button
                           onClick={() => handleRemoveScene(index)}
-                          disabled={script.length <= MIN_SCRIPT_SCENES}
                           style={{
                             padding: "2px 6px",
                             backgroundColor: "#f44336",
                             color: "#fff",
                             border: "none",
                             borderRadius: "4px",
-                            cursor:
-                              script.length <= MIN_SCRIPT_SCENES
-                                ? "not-allowed"
-                                : "pointer",
+                            cursor: "pointer",
                           }}
                         >
                           {t("video.delete")}
@@ -895,17 +887,13 @@ export default function VideoProductionPage() {
                 ))}
                 <button
                   onClick={handleAddScene}
-                  disabled={script.length >= MAX_SCRIPT_SCENES}
                   style={{
                     padding: "8px 16px",
                     backgroundColor: "#FF9800",
                     color: "#fff",
                     border: "none",
                     borderRadius: "4px",
-                    cursor:
-                      script.length >= MAX_SCRIPT_SCENES
-                        ? "not-allowed"
-                        : "pointer",
+                    cursor: "pointer",
                   }}
                 >
                   {t("video.addScene")}
