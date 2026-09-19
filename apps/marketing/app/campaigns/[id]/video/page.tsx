@@ -281,22 +281,27 @@ export default function VideoProductionPage() {
   };
 
   const handleApprove = (id: string) => {
-    setTopics(topics.map((t) => (t.id === id ? { ...t, approved: true } : t)));
+    setTopics((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, approved: true } : t)),
+    );
   };
 
   const handleReject = (id: string) => {
-    setTopics(topics.filter((t) => t.id !== id));
+    setTopics((prev) => prev.filter((t) => t.id !== id));
   };
 
   const handleEdit = (id: string) => {
-    setTopics(topics.map((t) => (t.id === id ? { ...t, editing: true } : t)));
+    setTopics((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, editing: true } : t)),
+    );
   };
 
   const handleSaveEdit = (id: string, newText: string) => {
     setTopics(
-      topics.map((t) =>
-        t.id === id ? { ...t, text: newText, editing: false } : t,
-      ),
+      (prev) =>
+        prev.map((t) =>
+          t.id === id ? { ...t, text: newText, editing: false } : t,
+        ),
     );
   };
 
