@@ -1,0 +1,1 @@
+Task: Set no-store private cache headers on eight authenticated route-handler files. Added shared response helpers and coverage for each listed handler. Focused test passed.
