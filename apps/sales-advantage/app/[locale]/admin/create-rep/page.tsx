@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@reading-advantage/ui";
 import { Button } from "@reading-advantage/ui";
-import { ArrowLeft, ExternalLink, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
 
 const accountsProvisioningUrl = new URL(
   "/",
@@ -50,7 +50,6 @@ export default function CreateRepPage() {
             <Button asChild className="w-full">
               <a href={accountsProvisioningUrl.toString()}>
                 {t("openAccounts")}
-                <ExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
               </a>
             </Button>
           </div>
