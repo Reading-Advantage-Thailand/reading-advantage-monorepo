@@ -10,4 +10,4 @@
 - [x] Task: Use `t("uploading")` during the roleplay upload state (a426594). Source: `docs/sales-advantage-ux-refactor-plan.md` §6; Issues: `components/roleplay-recorder.tsx:198`, `messages/en.json:226-227`
 - [x] Task: Delete the `ExternalLink` icon on the create-rep link, or open that link in a new tab (9b9fbea). Source: `docs/sales-advantage-ux-refactor-plan.md` §5; Issues: `app/[locale]/admin/create-rep/page.tsx:51-54`
 - [x] Task: Delete `app/api/lesson-complete/route.ts` (c3bba89). Source: `docs/sales-advantage-ux-refactor-plan.md` §4; Issues: `app/api/lesson-complete/route.ts:17-21`
-- [x] Task: Delete the raw response body from the roleplay upload error. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:99-100,214`
+- [x] Task: Delete the raw response body from the roleplay upload error (2062a90). Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:99-100,214`
