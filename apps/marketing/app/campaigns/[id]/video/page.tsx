@@ -40,6 +40,17 @@ const emptyScene: Scene = {
   motionDirection: t("video.defaultMotionDirection"),
 };
 
+let nextSceneId = 0;
+
+/**
+ * Creates an ID used only for the current scene editor session.
+ * @returns A unique local scene ID.
+ */
+function createSceneId(): string {
+  nextSceneId += 1;
+  return `scene-${nextSceneId}`;
+}
+
 /**
  * Reads a server-provided message from a bad-request response.
  * @param response The failed response to inspect.
@@ -82,6 +93,7 @@ export default function VideoProductionPage() {
 
   const [activeTopicId, setActiveTopicId] = useState<string | null>(null);
   const [script, setScript] = useState<Scene[]>([]);
+  const [sceneIds, setSceneIds] = useState<string[]>([]);
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savingTopics, setSavingTopics] = useState(false);
@@ -206,7 +218,9 @@ export default function VideoProductionPage() {
       },
     ]);
     setActiveTopicId(topicId);
-    setScript(project.script.map((scene) => ({ ...scene })));
+    const projectScript = project.script.map((scene) => ({ ...scene }));
+    setScript(projectScript);
+    setSceneIds(projectScript.map(() => createSceneId()));
     setSavedProjectId(project.id);
     setProjectMessage(t("video.projectLoaded", { id: project.id }));
   };
@@ -363,6 +377,7 @@ export default function VideoProductionPage() {
         return;
       }
       setScript(parsedScript.data);
+      setSceneIds(parsedScript.data.map(() => createSceneId()));
     } catch {
       setWorkflowError(t("video.scriptFailed"));
     } finally {
@@ -378,15 +393,32 @@ export default function VideoProductionPage() {
 
   const handleAddScene = () => {
     setScript((prev) => addSceneFn(prev, { ...emptyScene }));
+    setSceneIds((prev) => [...prev, createSceneId()]);
   };
 
   const handleRemoveScene = (index: number) => {
     setScript((prev) => removeSceneFn(prev, index));
+    setSceneIds((prev) => prev.filter((_, sceneIndex) => sceneIndex !== index));
   };
 
   const handleMoveScene = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= script.length) return;
     setScript((prev) => reorderScenesFn(prev, fromIndex, toIndex));
+    setSceneIds((prev) => {
+      if (
+        fromIndex < 0 ||
+        fromIndex >= prev.length ||
+        toIndex < 0 ||
+        toIndex >= prev.length ||
+        fromIndex === toIndex
+      ) {
+        return [...prev];
+      }
+      const next = [...prev];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return next;
+    });
   };
 
   const handleSaveScript = async () => {
@@ -792,7 +824,7 @@ export default function VideoProductionPage() {
               <div style={{ marginTop: "16px", display: "grid", gap: "12px" }}>
                 {script.map((scene, index) => (
                   <div
-                    key={index}
+                    key={sceneIds[index]}
                     style={{
                       padding: "16px",
                       backgroundColor: "#f9f9f9",
