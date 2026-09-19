@@ -1,0 +1,9 @@
+Task: Refetch the employee before building the role array.
+
+Summary: Read the current employee directory before each role toggle. Built the replacement role array from the latest server state. Added concurrent-toggle regression coverage.
+
+Files: apps/accounts/app/accounts-console.tsx; apps/accounts/app/accounts-console.test.tsx
+
+Why: Building from stale UI state could overwrite a recent role change.
+
+Verification: focused Accounts console tests passed (6 tests); agent type checks and lint passed.
