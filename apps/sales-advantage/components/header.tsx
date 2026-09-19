@@ -38,7 +38,12 @@ export function Header() {
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
           {isAuthenticated ? (
-            <Button variant="ghost" size="sm" onClick={() => logout()}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => logout()}
+              aria-label={t("logout")}
+            >
               <LogOut className="h-4 w-4" />
             </Button>
           ) : null}
