@@ -1,0 +1,9 @@
+Task: Format review list amounts as currency, not as minor units.
+
+Summary: Added exact BigInt currency formatting for original and settled amounts. Covered USD, THB, JPY, negative values, and values beyond Number.MAX_SAFE_INTEGER.
+
+Files: apps/accounting/app/_components/pending-submissions-list.tsx; apps/accounting/app/_components/pending-submissions-list.test.tsx
+
+Why: Raw minor units confused reviewers. Number conversion could also corrupt large finance values.
+
+Verification: focused review-list tests passed (11 tests); agent type check passed.
