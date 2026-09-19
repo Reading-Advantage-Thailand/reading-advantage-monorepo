@@ -47,14 +47,15 @@ const campaignClientColumns = {
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const guard = await requireMarketingPermission(request, "campaign:read");
   if (!guard.ok) {
     return guard.response;
   }
 
-  const campaignId = campaignIdSchema.safeParse(params.id);
+  const { id } = await params;
+  const campaignId = campaignIdSchema.safeParse(id);
   if (!campaignId.success) {
     return NextResponse.json(
       { message: "Invalid campaign identifier" },
@@ -95,14 +96,15 @@ export async function GET(
  */
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const guard = await requireMarketingPermission(request, "campaign:update");
   if (!guard.ok) {
     return guard.response;
   }
 
-  const campaignId = campaignIdSchema.safeParse(params.id);
+  const { id } = await params;
+  const campaignId = campaignIdSchema.safeParse(id);
   if (!campaignId.success) {
     return NextResponse.json(
       { message: "Invalid campaign identifier" },

@@ -2,7 +2,7 @@
 
 ## Phase 1: Broken UX Fixes
 
-- [ ] Task: Await `params` in `app/api/campaigns/[id]/route.ts`. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `app/api/campaigns/[id]/route.ts:50,57,98,105`
+- [x] (287bc6a16) Task: Await `params` in `app/api/campaigns/[id]/route.ts`. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `app/api/campaigns/[id]/route.ts:50,57,98,105`
 - [ ] Task: Keep the mask out of the settings API key input value. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/settings/page.tsx:337-339`, `app/lib/settings-update.ts:26-30`
 - [ ] Task: Disable Add Scene at 7 scenes and Delete at 5 scenes. Source: `docs/marketing-ux-refactor-plan.md` §3.1; Issues: `app/campaigns/[id]/video/page.tsx:811,888-900`, `app/lib/script-schema.ts:12`
 - [ ] Task: Add a pending state to Create, Save Settings, Save Approved Topics, and the status buttons. Source: `docs/marketing-ux-refactor-plan.md` §4 and §5; Issues: `app/settings/page.tsx:396-408`, `app/campaigns/page.tsx:219-231`, `app/campaigns/[id]/video/page.tsx:667`, `app/campaigns/[id]/page.tsx:191-206`
