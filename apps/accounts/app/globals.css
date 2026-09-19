@@ -59,6 +59,7 @@ h1 em { color: var(--signal); font-weight: 400; }
 .employee-list { max-height: 390px; overflow: auto; }
 .employee-item { border: 0; border-bottom: 1px solid var(--line); background: transparent; width: 100%; text-align: left; display: flex; gap: 14px; align-items: center; padding: 17px 20px; }
 .employee-item.selected { background: var(--ink); color: var(--paper); }
+.employee-item:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 .employee-item span { display: grid; gap: 4px; }
 .employee-item b { font-size: 11px; }
 .employee-item small { font-size: 9px; opacity: .62; }
