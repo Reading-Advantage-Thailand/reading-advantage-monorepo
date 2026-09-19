@@ -1,0 +1,1 @@
+Task: Filter pending submissions on the server. Moved the pending-status filter to the server page and updated tests to prevent approved records from reaching the client.
