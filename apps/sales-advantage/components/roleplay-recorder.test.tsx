@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { RoleplayRecorder } from "./roleplay-recorder";
 
@@ -19,6 +19,9 @@ describe("RoleplayRecorder recording type", () => {
   const stop = vi.fn();
   const recorderConstructor = vi.fn();
   const getUserMedia = vi.fn();
+  const createObjectURL = vi.fn();
+  const revokeObjectURL = vi.fn();
+  let lastOnStop: (() => void) | null = null;
   const stream = {
     getTracks: vi.fn(() => [{ stop: vi.fn() }]),
   } as unknown as MediaStream;
@@ -29,6 +32,18 @@ describe("RoleplayRecorder recording type", () => {
     start.mockReset();
     stop.mockReset();
     getUserMedia.mockReset();
+    createObjectURL.mockReset();
+    createObjectURL.mockReturnValue("blob:roleplay");
+    revokeObjectURL.mockReset();
+    lastOnStop = null;
+    Object.defineProperty(URL, "createObjectURL", {
+      configurable: true,
+      value: createObjectURL,
+    });
+    Object.defineProperty(URL, "revokeObjectURL", {
+      configurable: true,
+      value: revokeObjectURL,
+    });
     Object.defineProperty(navigator, "mediaDevices", {
       configurable: true,
       value: { getUserMedia: getUserMedia.mockResolvedValue(stream) },
@@ -38,7 +53,14 @@ describe("RoleplayRecorder recording type", () => {
       class MockMediaRecorder {
         static isTypeSupported = vi.fn(() => true);
         ondataavailable: ((event: BlobEvent) => void) | null = null;
-        onstop: (() => void) | null = null;
+
+        set onstop(handler: (() => void) | null) {
+          lastOnStop = handler;
+        }
+
+        get onstop() {
+          return lastOnStop;
+        }
 
         constructor(...args: unknown[]) {
           recorderConstructor(...args);
@@ -102,5 +124,33 @@ describe("RoleplayRecorder recording type", () => {
     expect((await screen.findByRole("alert")).textContent).toContain(
       "micError",
     );
+  });
+
+  it("revokes the owned blob URL when reset runs", async () => {
+    const { unmount } = render(<RoleplayRecorder scenario={scenario} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "record" }));
+    await waitFor(() => expect(start).toHaveBeenCalled());
+    act(() => lastOnStop?.());
+    await screen.findByLabelText("listen");
+
+    fireEvent.click(screen.getByRole("button", { name: "retry" }));
+
+    expect(revokeObjectURL).toHaveBeenCalledWith("blob:roleplay");
+    unmount();
+    expect(revokeObjectURL).toHaveBeenCalledTimes(1);
+  });
+
+  it("revokes the owned blob URL when the recorder unmounts", async () => {
+    const { unmount } = render(<RoleplayRecorder scenario={scenario} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "record" }));
+    await waitFor(() => expect(start).toHaveBeenCalled());
+    act(() => lastOnStop?.());
+    await screen.findByLabelText("listen");
+
+    unmount();
+
+    expect(revokeObjectURL).toHaveBeenCalledWith("blob:roleplay");
   });
 });

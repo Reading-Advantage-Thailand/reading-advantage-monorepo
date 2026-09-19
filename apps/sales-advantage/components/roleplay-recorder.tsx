@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@reading-advantage/ui";
 import {
@@ -47,6 +47,14 @@ export function RoleplayRecorder({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startTimeRef = useRef<number>(0);
+  const audioUrlRef = useRef<string | null>(null);
+  const revokeAudioUrl = useCallback(() => {
+    const url = audioUrlRef.current;
+    audioUrlRef.current = null;
+    if (url) URL.revokeObjectURL(url);
+  }, []);
+
+  useEffect(() => revokeAudioUrl, [revokeAudioUrl]);
 
   async function startRecording() {
     setError(null);
@@ -65,7 +73,10 @@ export function RoleplayRecorder({
       mr.onstop = () => {
         const blob = new Blob(chunksRef.current, { type: "audio/webm" });
         setAudioBlob(blob);
-        setAudioUrl(URL.createObjectURL(blob));
+        revokeAudioUrl();
+        const nextAudioUrl = URL.createObjectURL(blob);
+        audioUrlRef.current = nextAudioUrl;
+        setAudioUrl(nextAudioUrl);
         setDuration(Math.round((Date.now() - startTimeRef.current) / 1000));
         stream.getTracks().forEach((t) => t.stop());
         setState("recorded");
@@ -121,6 +132,7 @@ export function RoleplayRecorder({
   function reset() {
     setState("idle");
     setAudioBlob(null);
+    revokeAudioUrl();
     setAudioUrl(null);
     setResult(null);
     setError(null);
