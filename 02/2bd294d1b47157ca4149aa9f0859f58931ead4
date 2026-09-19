@@ -1,0 +1,9 @@
+Tasks: Convert submittedAt to the business time zone in the export filter. Replace the offset fixture with a UTC boundary fixture.
+
+Summary: Added configured business-date conversion for filtering and CSV dates. Replaced the offset fixture with a UTC timestamp that crosses the Bangkok day boundary.
+
+Files: apps/accounting/app/api/submissions/export/route.ts; apps/accounting/app/api/submissions/export/route.test.ts
+
+Why: UTC date prefixes can differ from the accounting business date.
+
+Verification: export route tests passed (12 tests); agent type check passed.
