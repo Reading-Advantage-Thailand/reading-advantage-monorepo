@@ -35,6 +35,7 @@ export default function SettingsPage() {
     null,
   );
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [pageError, setPageError] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
@@ -161,6 +162,7 @@ export default function SettingsPage() {
   const handleSave = async () => {
     setPageError(null);
     setSaveMessage(null);
+    setSaving(true);
     try {
       const settingsUpdate = prepareMarketingSettingsUpdate({
         "llm.provider": provider,
@@ -190,6 +192,8 @@ export default function SettingsPage() {
       setSaveMessage(t("settings.saved"));
     } catch {
       setPageError(t("settings.saveFailed"));
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -402,16 +406,17 @@ export default function SettingsPage() {
           </button>
           <button
             onClick={handleSave}
+            disabled={saving}
             style={{
               padding: "8px 16px",
               backgroundColor: "#4CAF50",
               color: "#fff",
               border: "none",
               borderRadius: "4px",
-              cursor: "pointer",
+              cursor: saving ? "not-allowed" : "pointer",
             }}
           >
-            {t("settings.save")}
+            {saving ? t("settings.saving") : t("settings.save")}
           </button>
         </div>
 

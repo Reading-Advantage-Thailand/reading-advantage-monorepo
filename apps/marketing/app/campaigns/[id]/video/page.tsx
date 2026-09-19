@@ -55,6 +55,7 @@ export default function VideoProductionPage() {
   const [script, setScript] = useState<Scene[]>([]);
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [savingTopics, setSavingTopics] = useState(false);
   const [savedProjectId, setSavedProjectId] = useState<string | null>(null);
   const [projects, setProjects] = useState<VideoProject[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(false);
@@ -257,6 +258,7 @@ export default function VideoProductionPage() {
   const handleSaveTopics = async () => {
     setWorkflowError(null);
     setWorkflowMessage(null);
+    setSavingTopics(true);
     try {
       const approvedTopics = topics.filter((t) => t.approved);
       const res = await fetch("/api/video/save-topics", {
@@ -284,6 +286,8 @@ export default function VideoProductionPage() {
       setWorkflowMessage(t("video.topicsSaved"));
     } catch {
       setWorkflowError(t("video.saveTopicsFailed"));
+    } finally {
+      setSavingTopics(false);
     }
   };
 
@@ -669,6 +673,7 @@ export default function VideoProductionPage() {
             {topics.some((t) => t.approved) && (
               <button
                 onClick={handleSaveTopics}
+                disabled={savingTopics}
                 style={{
                   marginTop: "16px",
                   padding: "8px 16px",
@@ -676,10 +681,12 @@ export default function VideoProductionPage() {
                   color: "#fff",
                   border: "none",
                   borderRadius: "4px",
-                  cursor: "pointer",
+                  cursor: savingTopics ? "not-allowed" : "pointer",
                 }}
               >
-                {t("video.saveApprovedTopics")}
+                {savingTopics
+                  ? t("video.saving")
+                  : t("video.saveApprovedTopics")}
               </button>
             )}
           </div>

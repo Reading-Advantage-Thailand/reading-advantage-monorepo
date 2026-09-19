@@ -36,6 +36,7 @@ export default function CampaignDetailPage() {
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   useEffect(() => {
     if (params?.id) {
@@ -80,6 +81,7 @@ export default function CampaignDetailPage() {
     if (!campaign) return;
     setError(null);
     setMessage(null);
+    setUpdatingStatus(true);
     try {
       const res = await fetch(`/api/campaigns/${campaign.id}`, {
         method: "PATCH",
@@ -115,6 +117,8 @@ export default function CampaignDetailPage() {
       );
     } catch {
       setError(t("campaigns.updateFailed"));
+    } finally {
+      setUpdatingStatus(false);
     }
   };
 
@@ -191,18 +195,21 @@ export default function CampaignDetailPage() {
                 <button
                   key={status}
                   onClick={() => handleStatusChange(status)}
+                  disabled={updatingStatus}
                   style={{
                     padding: "8px 16px",
                     backgroundColor: "#1a1a2e",
                     color: "#fff",
                     border: "none",
                     borderRadius: "4px",
-                    cursor: "pointer",
+                    cursor: updatingStatus ? "not-allowed" : "pointer",
                   }}
                 >
-                  {t("campaigns.moveTo", {
-                    status: getMarketingStatusLabel(status),
-                  })}
+                  {updatingStatus
+                    ? t("campaigns.updating")
+                    : t("campaigns.moveTo", {
+                        status: getMarketingStatusLabel(status),
+                      })}
                 </button>
               ))}
             </div>

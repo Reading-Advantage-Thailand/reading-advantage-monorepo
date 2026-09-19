@@ -28,6 +28,7 @@ export default function CampaignsPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
   const [newCampaign, setNewCampaign] = useState<{
     type: "video" | "infocard";
     app: string;
@@ -74,6 +75,7 @@ export default function CampaignsPage() {
   const handleCreate = async () => {
     setError(null);
     setMessage(null);
+    setCreating(true);
     try {
       const res = await fetch("/api/campaigns", {
         method: "POST",
@@ -100,6 +102,8 @@ export default function CampaignsPage() {
       await fetchCampaigns();
     } catch {
       setError(t("campaigns.createFailed"));
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -218,16 +222,17 @@ export default function CampaignsPage() {
           <div style={{ display: "flex", gap: "12px" }}>
             <button
               onClick={handleCreate}
+              disabled={creating}
               style={{
                 padding: "8px 16px",
                 backgroundColor: "#4CAF50",
                 color: "#fff",
                 border: "none",
                 borderRadius: "4px",
-                cursor: "pointer",
+                cursor: creating ? "not-allowed" : "pointer",
               }}
             >
-              {t("campaigns.create")}
+              {creating ? t("campaigns.creating") : t("campaigns.create")}
             </button>
             <button
               onClick={() => setShowCreate(false)}

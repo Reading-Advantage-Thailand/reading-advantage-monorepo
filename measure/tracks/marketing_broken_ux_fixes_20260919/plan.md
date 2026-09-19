@@ -2,10 +2,10 @@
 
 ## Phase 1: Broken UX Fixes
 
-- [x] (287bc6a16) Task: Await `params` in `app/api/campaigns/[id]/route.ts`. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `app/api/campaigns/[id]/route.ts:50,57,98,105`
-- [x] (7f9c519aa) Task: Keep the mask out of the settings API key input value. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/settings/page.tsx:337-339`, `app/lib/settings-update.ts:26-30`
-- [x] Task: Disable Add Scene at 7 scenes and Delete at 5 scenes. Source: `docs/marketing-ux-refactor-plan.md` §3.1; Issues: `app/campaigns/[id]/video/page.tsx:811,888-900`, `app/lib/script-schema.ts:12`
-- [ ] Task: Add a pending state to Create, Save Settings, Save Approved Topics, and the status buttons. Source: `docs/marketing-ux-refactor-plan.md` §4 and §5; Issues: `app/settings/page.tsx:396-408`, `app/campaigns/page.tsx:219-231`, `app/campaigns/[id]/video/page.tsx:667`, `app/campaigns/[id]/page.tsx:191-206`
+- [x] (ca2aac4ac) Task: Await `params` in `app/api/campaigns/[id]/route.ts`. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `app/api/campaigns/[id]/route.ts:50,57,98,105`
+- [x] (99c39952b) Task: Keep the mask out of the settings API key input value. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/settings/page.tsx:337-339`, `app/lib/settings-update.ts:26-30`
+- [x] (7241283f3) Task: Disable Add Scene at 7 scenes and Delete at 5 scenes. Source: `docs/marketing-ux-refactor-plan.md` §3.1; Issues: `app/campaigns/[id]/video/page.tsx:811,888-900`, `app/lib/script-schema.ts:12`
+- [x] Task: Add a pending state to Create, Save Settings, Save Approved Topics, and the status buttons. Source: `docs/marketing-ux-refactor-plan.md` §4 and §5; Issues: `app/settings/page.tsx:396-408`, `app/campaigns/page.tsx:219-231`, `app/campaigns/[id]/video/page.tsx:667`, `app/campaigns/[id]/page.tsx:191-206`
 - [ ] Task: Give the seven unlabeled inputs an `id` and an `htmlFor`. Source: `docs/marketing-ux-refactor-plan.md` §4 and §5; Issues: `app/settings/page.tsx:273,301,321,361`, `app/campaigns/page.tsx:154,177,200`
 - [ ] Task: Add `aria-label` to the two scene move buttons. Source: `docs/marketing-ux-refactor-plan.md` §3.1; Issues: `app/campaigns/[id]/video/page.tsx:792,809`
 - [ ] Task: Import `nextCampaignStatuses` in `app/campaigns/[id]/page.tsx` and delete the inline copy. Source: `docs/marketing-ux-refactor-plan.md` §5; Issues: `app/campaigns/[id]/page.tsx:23-28`, `app/lib/campaign-status.ts:3-8`

@@ -59,6 +59,7 @@ const messages = {
     "settings.testing": "Testing...",
     "settings.testConnection": "Test Connection",
     "settings.save": "Save Settings",
+    "settings.saving": "Saving...",
     "settings.testForbidden":
       "Error: administrator access is required to test connections.",
     "settings.testFailed":
@@ -82,6 +83,8 @@ const messages = {
     "campaigns.name": "Name",
     "campaigns.namePlaceholder": "Campaign name",
     "campaigns.create": "Create",
+    "campaigns.creating": "Creating...",
+    "campaigns.updating": "Updating...",
     "campaigns.cancel": "Cancel",
     "campaigns.video": "Video",
     "campaigns.infocard": "Infocard",
