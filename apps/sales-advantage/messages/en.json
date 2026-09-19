@@ -59,6 +59,7 @@
     "evaluating": "Evaluating...",
     "retry": "Try Again",
     "micDenied": "Please allow microphone access",
+    "micError": "No microphone was found. Please connect a microphone and try again.",
     "consentLabel": "Consent to recording",
     "consentText": "I consent to my audio being recorded, evaluated by AI, and stored for up to 30 days for coaching purposes.",
     "errors": {

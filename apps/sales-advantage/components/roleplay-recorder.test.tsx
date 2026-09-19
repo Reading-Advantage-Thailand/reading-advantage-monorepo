@@ -18,6 +18,7 @@ describe("RoleplayRecorder recording type", () => {
   const start = vi.fn();
   const stop = vi.fn();
   const recorderConstructor = vi.fn();
+  const getUserMedia = vi.fn();
   const stream = {
     getTracks: vi.fn(() => [{ stop: vi.fn() }]),
   } as unknown as MediaStream;
@@ -27,9 +28,10 @@ describe("RoleplayRecorder recording type", () => {
     recorderConstructor.mockReset();
     start.mockReset();
     stop.mockReset();
+    getUserMedia.mockReset();
     Object.defineProperty(navigator, "mediaDevices", {
       configurable: true,
-      value: { getUserMedia: vi.fn().mockResolvedValue(stream) },
+      value: { getUserMedia: getUserMedia.mockResolvedValue(stream) },
     });
     vi.stubGlobal(
       "MediaRecorder",
@@ -70,5 +72,35 @@ describe("RoleplayRecorder recording type", () => {
     await waitFor(() => expect(start).toHaveBeenCalled());
     expect(MediaRecorder.isTypeSupported).toHaveBeenCalledWith("audio/webm");
     expect(recorderConstructor).toHaveBeenCalledWith(stream);
+  });
+
+  it("shows the permission error when microphone access is denied", async () => {
+    getUserMedia.mockReset();
+    getUserMedia.mockRejectedValueOnce(
+      new DOMException("Permission denied", "NotAllowedError"),
+    );
+
+    render(<RoleplayRecorder scenario={scenario} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "record" }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain(
+      "micDenied",
+    );
+  });
+
+  it("shows the device error when no microphone is available", async () => {
+    getUserMedia.mockReset();
+    getUserMedia.mockRejectedValueOnce(
+      new DOMException("No microphone", "NotFoundError"),
+    );
+
+    render(<RoleplayRecorder scenario={scenario} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "record" }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain(
+      "micError",
+    );
   });
 });

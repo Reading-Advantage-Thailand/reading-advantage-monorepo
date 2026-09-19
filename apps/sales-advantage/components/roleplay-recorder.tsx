@@ -75,7 +75,11 @@ export function RoleplayRecorder({
       mr.start();
       setState("recording");
     } catch (err) {
-      setError(t("micDenied"));
+      setError(
+        err instanceof DOMException && err.name === "NotAllowedError"
+          ? t("micDenied")
+          : t("micError"),
+      );
       setState("error");
     }
   }
