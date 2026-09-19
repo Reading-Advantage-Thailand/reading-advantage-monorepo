@@ -26,6 +26,7 @@ interface Campaign {
 export default function CampaignsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [showCreate, setShowCreate] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
@@ -44,6 +45,7 @@ export default function CampaignsPage() {
   }, []);
 
   const fetchCampaigns = async () => {
+    setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/campaigns");
@@ -69,6 +71,8 @@ export default function CampaignsPage() {
       setCampaigns(data as Campaign[]);
     } catch {
       setError(t("campaigns.loadFailed"));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -263,7 +267,12 @@ export default function CampaignsPage() {
       )}
 
       <div style={{ marginTop: "24px", display: "grid", gap: "16px" }}>
-        {campaigns.map((campaign) => (
+        {loading ? (
+          <p role="status">{t("campaigns.loading")}</p>
+        ) : !error && campaigns.length === 0 ? (
+          <p>{t("campaigns.empty")}</p>
+        ) : (
+          campaigns.map((campaign) => (
           <Link
             key={campaign.id}
             href={`/campaigns/${campaign.id}`}
@@ -323,7 +332,8 @@ export default function CampaignsPage() {
               </div>
             </div>
           </Link>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

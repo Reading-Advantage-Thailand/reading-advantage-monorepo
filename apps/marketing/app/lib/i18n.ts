@@ -76,6 +76,7 @@ const messages = {
     "campaigns.created": "Campaign created.",
     "campaigns.createFailed": "Failed to create campaign. Please try again.",
     "campaigns.title": "Campaigns",
+    "campaigns.empty": "No campaigns yet.",
     "campaigns.createCampaign": "Create Campaign",
     "campaigns.newCampaign": "New Campaign",
     "campaigns.type": "Type",
