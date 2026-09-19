@@ -76,6 +76,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
       });
       formElement.reset();
       setNotice("Employee created. The initial credential was not retained in this view.");
+      setError("");
       await refresh();
     } catch (caught) { setError((caught as Error).message); }
   }
@@ -87,6 +88,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
         applicationKey, roleKeys, idempotencyKey: operationKey("role-change"),
       });
       setNotice(`${applicationKey} roles updated without changing other applications.`);
+      setError("");
       await refresh();
     } catch (caught) { setError((caught as Error).message); }
   }
@@ -102,6 +104,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
         idempotencyKey: operationKey("company-role-change"),
       });
       setNotice("Company authority updated without changing product access.");
+      setError("");
       await refresh();
     } catch (caught) { setError((caught as Error).message); }
   }
@@ -116,6 +119,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
         status, idempotencyKey: operationKey("status-change"),
       });
       setNotice(status === "SUSPENDED" ? "Employee suspended and active sessions revoked." : "Employee restored.");
+      setError("");
       await refresh();
     } catch (caught) { setError((caught as Error).message); }
   }
@@ -134,6 +138,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
       });
       formElement.reset();
       setNotice("Credential replaced and all sessions revoked. The password is no longer displayed.");
+      setError("");
     } catch (caught) { setError((caught as Error).message); }
   }
 
@@ -147,6 +152,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
         idempotencyKey: operationKey("session-revoke"),
       });
       setNotice("All Accounts and application sessions were revoked.");
+      setError("");
     } catch (caught) { setError((caught as Error).message); }
   }
 
