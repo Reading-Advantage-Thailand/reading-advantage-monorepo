@@ -1,0 +1,9 @@
+Task: Separate microphone device errors from permission errors.
+
+Summary: Classified NotAllowedError as a permission failure. Other microphone acquisition failures now use a localized device message. Added English and Thai messages with focused tests.
+
+Files: apps/sales-advantage/components/roleplay-recorder.tsx; apps/sales-advantage/components/roleplay-recorder.test.tsx; apps/sales-advantage/messages/en.json; apps/sales-advantage/messages/th.json
+
+Why: Users who granted permission could receive incorrect permission guidance when the device failed.
+
+Verification: focused recorder and locale parity tests passed (7 tests); agent type check passed.
