@@ -63,7 +63,8 @@ describe("Marketing settings secret preservation", () => {
   it("includes a validated explicit apiKey replacement", async () => {
     render(<SettingsPage />);
 
-    const apiKeyInput = await screen.findByDisplayValue("••••");
+    const apiKeyInput = await screen.findByPlaceholderText("••••");
+    expect(apiKeyInput).toHaveValue("");
     fireEvent.change(apiKeyInput, { target: { value: "sk-replacement-123" } });
     fireEvent.click(screen.getByRole("button", { name: "Save Settings" }));
 
@@ -78,7 +79,8 @@ describe("Marketing settings secret preservation", () => {
   it("blocks Test Connection while the apiKey is masked and posts only an explicit replacement", async () => {
     render(<SettingsPage />);
 
-    const apiKeyInput = await screen.findByDisplayValue("••••");
+    const apiKeyInput = await screen.findByPlaceholderText("••••");
+    expect(apiKeyInput).toHaveValue("");
     const testButton = screen.getByRole("button", {
       name: "Test Connection",
     });
@@ -108,7 +110,7 @@ describe("Marketing settings secret preservation", () => {
   it("selects the validated OpenRouter routing model and posts the complete connection payload", async () => {
     render(<SettingsPage />);
 
-    await screen.findByDisplayValue("••••");
+    await screen.findByPlaceholderText("••••");
     fireEvent.change(screen.getByRole("combobox"), {
       target: { value: "openrouter" },
     });
@@ -116,7 +118,7 @@ describe("Marketing settings secret preservation", () => {
       screen.getByDisplayValue("nvidia/nemotron-3-ultra-550b-a55b:free"),
     ).toBeInTheDocument();
 
-    fireEvent.change(screen.getByDisplayValue("••••"), {
+    fireEvent.change(screen.getByPlaceholderText("••••"), {
       target: { value: "openrouter-test-secret" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Test Connection" }));

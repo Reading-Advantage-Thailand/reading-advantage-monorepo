@@ -28,6 +28,7 @@ export default function SettingsPage() {
   const [provider, setProvider] = useState("google");
   const [modelName, setModelName] = useState("");
   const [apiKey, setApiKey] = useState("");
+  const [apiKeyConfigured, setApiKeyConfigured] = useState(false);
   const [mmxPath, setMmxPath] = useState("");
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<TestConnectionResult | null>(
@@ -83,8 +84,14 @@ export default function SettingsPage() {
         } else if (storedProvider === "openrouter") {
           setModelName(OPENROUTER_DEFAULT_MODEL);
         }
-        if (typeof settingValues["llm.apiKey"] === "string")
-          setApiKey(settingValues["llm.apiKey"]);
+        const storedApiKey = settingValues["llm.apiKey"];
+        if (typeof storedApiKey === "string") {
+          if (storedApiKey === MARKETING_MASKED_SECRET) {
+            setApiKeyConfigured(true);
+          } else {
+            setApiKey(storedApiKey);
+          }
+        }
         if (typeof settingValues["tools.mmxPath"] === "string")
           setMmxPath(settingValues["tools.mmxPath"]);
       } catch {
@@ -240,7 +247,7 @@ export default function SettingsPage() {
    * When the API returns a masked placeholder for a secret key, the input
    * shows the placeholder and the user must provide a new value to update.
    */
-  const isApiKeyMasked = apiKey === MARKETING_MASKED_SECRET;
+  const isApiKeyMasked = apiKeyConfigured;
 
   return (
     <div>
