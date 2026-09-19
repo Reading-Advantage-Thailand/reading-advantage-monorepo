@@ -158,6 +158,8 @@ const messages = {
     "video.selectedForScript": "Selected for Script",
     "video.useForScript": "Use for Script",
     "video.saveApprovedTopics": "Save Approved Topics",
+    "video.moveSceneUp": "Move scene up",
+    "video.moveSceneDown": "Move scene down",
     "video.stepGenerate": "Step 3: Generate Script",
     "video.approveTopicFirst": "Approve a topic in Step 2 first.",
     "video.generateDescription":

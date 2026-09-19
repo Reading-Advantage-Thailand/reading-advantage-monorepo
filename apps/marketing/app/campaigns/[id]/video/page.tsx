@@ -791,6 +791,7 @@ export default function VideoProductionPage() {
                         <button
                           onClick={() => handleMoveScene(index, index - 1)}
                           disabled={index === 0}
+                          aria-label={t("video.moveSceneUp")}
                           style={{
                             padding: "2px 6px",
                             backgroundColor: "#9E9E9E",
@@ -805,6 +806,7 @@ export default function VideoProductionPage() {
                         <button
                           onClick={() => handleMoveScene(index, index + 1)}
                           disabled={index === script.length - 1}
+                          aria-label={t("video.moveSceneDown")}
                           style={{
                             padding: "2px 6px",
                             backgroundColor: "#9E9E9E",

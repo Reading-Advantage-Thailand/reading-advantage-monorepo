@@ -221,7 +221,7 @@ describe("Phase 7: Campaign Video Page — component interactions", () => {
         expect(screen.getByText(/Scene 1/)).toBeInTheDocument(),
       );
 
-      const moveDownButtons = screen.getAllByRole("button", { name: "↓" });
+      const moveDownButtons = screen.getAllByRole("button", { name: "Move scene down" });
       fireEvent.click(moveDownButtons[0]);
 
       await waitFor(() => {
