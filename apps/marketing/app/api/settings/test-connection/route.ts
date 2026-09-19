@@ -12,11 +12,11 @@
  *
  * @see apps/marketing/app/lib/auth.ts
  */
-import { NextResponse } from "next/server";
 import { createAIClient } from "@reading-advantage/ai";
 import { requireMarketingPermission } from "@/lib/auth";
 import { redactSecrets } from "@/lib/redact";
 import { settingsTestConnectionSchema } from "@/lib/settings-schema";
+import { noStoreJson, withNoStore } from "@/lib/response";
 
 /**
  * POST /api/settings/test-connection — validate an LLM connection.
@@ -26,14 +26,14 @@ import { settingsTestConnectionSchema } from "@/lib/settings-schema";
 export async function POST(request: Request) {
   const guard = await requireMarketingPermission(request, "settings:test-connection");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Invalid JSON body" },
       { status: 400 },
     );
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
 
   const parsed = settingsTestConnectionSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: "Invalid connection test payload",
         error: parsed.error.message,
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       maxTokens: 50,
     });
 
-    return NextResponse.json({ success: true, response: result });
+    return noStoreJson({ success: true, response: result });
   } catch (error) {
     // Defense-in-depth: the AI SDK sometimes echoes the supplied API key
     // back in the thrown error. Redact any caller-supplied secret values
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     const rawMessage =
       error instanceof Error ? error.message : "Connection failed";
     const sanitized = redactSecrets(rawMessage, [apiKey]);
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: sanitized,
       },

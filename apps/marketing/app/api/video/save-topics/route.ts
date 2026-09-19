@@ -6,12 +6,12 @@
  * transaction. One conflict-safe batch insert prevents concurrent requests
  * from creating normalized duplicates.
  */
-import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { pastTopics } from "@reading-advantage/db/schema";
 import { deduplicateTopics, normalizeTopic } from "@/lib/topic-dedup";
 import { requireMarketingPermission } from "@/lib/auth";
 import { saveTopicsSchema } from "@/lib/topic-schema";
+import { noStoreJson, withNoStore } from "@/lib/response";
 
 /**
  * Persists approved topics in one conflict-safe transaction.
@@ -21,19 +21,19 @@ import { saveTopicsSchema } from "@/lib/topic-schema";
 export async function POST(request: Request) {
   const guard = await requireMarketingPermission(request, "video:topics:save");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
+    return noStoreJson({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const parsed = saveTopicsSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: "Invalid topics payload",
         error: parsed.error.message,
@@ -71,12 +71,12 @@ export async function POST(request: Request) {
         .returning({ normalizedKey: pastTopics.normalizedKey });
     });
 
-    return NextResponse.json({
+    return noStoreJson({
       success: true,
       insertedCount: inserted.length,
     });
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to save topics" },
       { status: 500 },
     );

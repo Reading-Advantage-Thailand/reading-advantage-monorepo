@@ -18,12 +18,12 @@
  * @see apps/marketing/app/lib/auth.ts
  * @see apps/marketing/app/lib/campaign-schema.ts
  */
-import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { campaigns } from "@reading-advantage/db/schema";
 import { desc } from "drizzle-orm";
 import { requireMarketingPermission } from "@/lib/auth";
 import { createCampaignSchema } from "@/lib/campaign-schema";
+import { noStoreJson, withNoStore } from "@/lib/response";
 
 const campaignClientColumns = {
   id: campaigns.id,
@@ -43,7 +43,7 @@ const campaignClientColumns = {
 export async function GET(request: Request) {
   const guard = await requireMarketingPermission(request, "campaign:list");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   try {
@@ -51,9 +51,9 @@ export async function GET(request: Request) {
       .select(campaignClientColumns)
       .from(campaigns)
       .orderBy(desc(campaigns.createdAt));
-    return NextResponse.json(allCampaigns);
+    return noStoreJson(allCampaigns);
   } catch (error) {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to load campaigns" },
       { status: 500 },
     );
@@ -71,19 +71,19 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const guard = await requireMarketingPermission(request, "campaign:create");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
+    return noStoreJson({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const parsed = createCampaignSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: "Invalid campaign payload",
         error: parsed.error.message,
@@ -110,9 +110,9 @@ export async function POST(request: Request) {
         createdBy: guard.session.user.id,
       })
       .returning(campaignClientColumns);
-    return NextResponse.json(campaign);
+    return noStoreJson(campaign);
   } catch (error) {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to create campaign" },
       { status: 500 },
     );

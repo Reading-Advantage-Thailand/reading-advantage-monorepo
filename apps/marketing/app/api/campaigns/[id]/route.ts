@@ -19,7 +19,6 @@
  * @see apps/marketing/app/lib/auth.ts
  * @see apps/marketing/app/lib/campaign-schema.ts
  */
-import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { campaigns } from "@reading-advantage/db/schema";
 import { eq } from "drizzle-orm";
@@ -29,6 +28,7 @@ import {
 } from "@/lib/campaign-status";
 import { requireMarketingPermission } from "@/lib/auth";
 import { campaignIdSchema, updateCampaignSchema } from "@/lib/campaign-schema";
+import { noStoreJson, withNoStore } from "@/lib/response";
 
 const campaignClientColumns = {
   id: campaigns.id,
@@ -51,13 +51,13 @@ export async function GET(
 ) {
   const guard = await requireMarketingPermission(request, "campaign:read");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   const { id } = await params;
   const campaignId = campaignIdSchema.safeParse(id);
   if (!campaignId.success) {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Invalid campaign identifier" },
       { status: 400 },
     );
@@ -70,15 +70,15 @@ export async function GET(
       .where(eq(campaigns.id, campaignId.data));
 
     if (!campaign) {
-      return NextResponse.json(
+      return noStoreJson(
         { message: "Campaign not found" },
         { status: 404 },
       );
     }
 
-    return NextResponse.json(campaign);
+    return noStoreJson(campaign);
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to load campaign" },
       { status: 500 },
     );
@@ -100,13 +100,13 @@ export async function PATCH(
 ) {
   const guard = await requireMarketingPermission(request, "campaign:update");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   const { id } = await params;
   const campaignId = campaignIdSchema.safeParse(id);
   if (!campaignId.success) {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Invalid campaign identifier" },
       { status: 400 },
     );
@@ -116,12 +116,12 @@ export async function PATCH(
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
+    return noStoreJson({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const parsed = updateCampaignSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: "Invalid campaign update payload",
         error: parsed.error.message,
@@ -139,14 +139,14 @@ export async function PATCH(
       .where(eq(campaigns.id, campaignId.data));
 
     if (!existing) {
-      return NextResponse.json(
+      return noStoreJson(
         { message: "Campaign not found" },
         { status: 404 },
       );
     }
 
     if (!isValidCampaignStatusTransition(existing.status, nextStatus)) {
-      return NextResponse.json(
+      return noStoreJson(
         {
           message: `Invalid status transition: cannot transition from ${existing.status} to ${nextStatus}`,
         },
@@ -165,15 +165,15 @@ export async function PATCH(
       .returning(campaignClientColumns);
 
     if (!updated) {
-      return NextResponse.json(
+      return noStoreJson(
         { message: "Campaign not found" },
         { status: 404 },
       );
     }
 
-    return NextResponse.json(updated);
+    return noStoreJson(updated);
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to update campaign" },
       { status: 500 },
     );

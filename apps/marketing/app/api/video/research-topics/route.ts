@@ -20,7 +20,6 @@
  * @see apps/marketing/app/lib/topic-schema.ts
  * @see apps/marketing/app/lib/redact.ts
  */
-import { NextResponse } from "next/server";
 import { createAIClient } from "@/lib/ai";
 import { db } from "@/lib/db";
 import { pastTopics, settings } from "@reading-advantage/db/schema";
@@ -34,6 +33,7 @@ import {
 } from "@/lib/topic-schema";
 import { redactSecrets } from "@/lib/redact";
 import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
+import { noStoreJson, withNoStore } from "@/lib/response";
 
 /**
  * POST /api/video/research-topics — read LLM settings + past topics,
@@ -48,14 +48,14 @@ import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
 export async function POST(request: Request) {
   const guard = await requireMarketingPermission(request, "video:topics:research");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Invalid JSON body" },
       { status: 400 },
     );
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
 
   const parsed = researchTopicsSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: "Invalid research-topics payload",
         error: parsed.error.message,
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
     const aiConfig = resolveMarketingAIConfig(settingsMap);
     apiKey = aiConfig?.apiKey;
     if (!aiConfig) {
-      return NextResponse.json(
+      return noStoreJson(
         { message: "LLM not configured. Please set up API key in Settings." },
         { status: 400 },
       );
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
     const resultJson: unknown = JSON.parse(result);
     const topicValidation = researchedTopicListSchema.safeParse(resultJson);
     if (!topicValidation.success) {
-      return NextResponse.json(
+      return noStoreJson(
         { message: "LLM did not return a valid topic list" },
         { status: 500 },
       );
@@ -145,7 +145,7 @@ export async function POST(request: Request) {
       pastTopicsList,
     ).slice(0, 5);
     if (filtered.length < 5) {
-      return NextResponse.json(
+      return noStoreJson(
         {
           code: "TOPIC_RESEARCH_SHORTFALL",
           message: `Topic research produced fewer than five distinct new topics (${filtered.length} found)`,
@@ -156,11 +156,11 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ topics: filtered });
+    return noStoreJson({ topics: filtered });
   } catch (error) {
     const rawMessage =
       error instanceof Error ? error.message : "Failed to research topics";
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: redactSecrets(rawMessage, [apiKey]),
       },

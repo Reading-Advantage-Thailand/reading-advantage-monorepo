@@ -11,13 +11,13 @@
  *
  * @see apps/marketing/app/lib/auth.ts
  */
-import { NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { videoProjects } from "@reading-advantage/db/schema";
 import { scriptSchema } from "@/lib/script-schema";
 import { requireMarketingPermission } from "@/lib/auth";
+import { noStoreJson, withNoStore } from "@/lib/response";
 
 const idSchema = z
   .string()
@@ -60,14 +60,14 @@ export async function GET(request: Request) {
   // prettier-ignore
   const guard = await requireMarketingPermission(request, "video:projects:list");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   const url = new URL(request.url);
   const campaignId = idSchema.safeParse(url.searchParams.get("campaignId"));
 
   if (!campaignId.success) {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "A valid campaignId query parameter is required" },
       { status: 400 },
     );
@@ -79,9 +79,9 @@ export async function GET(request: Request) {
       .from(videoProjects)
       .where(eq(videoProjects.campaignId, campaignId.data));
 
-    return NextResponse.json(projects);
+    return noStoreJson(projects);
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to list video projects" },
       { status: 500 },
     );
@@ -97,19 +97,19 @@ export async function POST(request: Request) {
   // prettier-ignore
   const guard = await requireMarketingPermission(request, "video:projects:create");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
+    return noStoreJson({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const validation = projectWriteSchema.safeParse(body);
   if (!validation.success) {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Invalid project payload" },
       { status: 400 },
     );
@@ -124,9 +124,9 @@ export async function POST(request: Request) {
       })
       .returning(projectClientColumns);
 
-    return NextResponse.json(project);
+    return noStoreJson(project);
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to save video project" },
       { status: 500 },
     );
@@ -142,19 +142,19 @@ export async function PATCH(request: Request) {
   // prettier-ignore
   const guard = await requireMarketingPermission(request, "video:projects:update");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
+    return noStoreJson({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const validation = projectUpdateSchema.safeParse(body);
   if (!validation.success) {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Invalid project payload" },
       { status: 400 },
     );
@@ -172,15 +172,15 @@ export async function PATCH(request: Request) {
       .returning(projectClientColumns);
 
     if (!project) {
-      return NextResponse.json(
+      return noStoreJson(
         { message: "Video project not found" },
         { status: 404 },
       );
     }
 
-    return NextResponse.json(project);
+    return noStoreJson(project);
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to update video project" },
       { status: 500 },
     );

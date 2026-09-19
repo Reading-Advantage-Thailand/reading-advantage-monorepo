@@ -16,7 +16,6 @@
  * @see apps/marketing/app/lib/auth.ts
  * @see apps/marketing/app/lib/encryption.ts
  */
-import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { settings } from "@reading-advantage/db/schema";
 import { encrypt } from "@/lib/encryption";
@@ -27,6 +26,7 @@ import {
   MARKETING_MASKED_SECRET,
   prepareMarketingSettingsUpdate,
 } from "@/lib/settings-update";
+import { noStoreJson, withNoStore } from "@/lib/response";
 
 /**
  * GET /api/settings — list all settings with secret values masked.
@@ -41,7 +41,7 @@ import {
 export async function GET(request: Request) {
   const guard = await requireMarketingPermission(request, "settings:read");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   try {
@@ -55,9 +55,9 @@ export async function GET(request: Request) {
         isMarketingSecretSetting(s.key) ? MARKETING_MASKED_SECRET : s.value,
       ]),
     );
-    return NextResponse.json(settingsMap);
+    return noStoreJson(settingsMap);
   } catch (error) {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to load settings" },
       { status: 500 },
     );
@@ -77,14 +77,14 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const guard = await requireMarketingPermission(request, "settings:write");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Invalid JSON body" },
       { status: 400 },
     );
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
 
   const parsed = settingsPostSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: "Invalid settings payload",
         error: parsed.error.message,
@@ -116,9 +116,9 @@ export async function POST(request: Request) {
         });
     }
 
-    return NextResponse.json({ success: true });
+    return noStoreJson({ success: true });
   } catch (error) {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Failed to save settings" },
       { status: 500 },
     );

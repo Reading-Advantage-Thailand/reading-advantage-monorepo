@@ -22,7 +22,6 @@
  * @see apps/marketing/app/lib/script-request-schema.ts
  * @see apps/marketing/app/lib/redact.ts
  */
-import { NextResponse } from "next/server";
 import { createAIClient } from "@/lib/ai";
 import { db } from "@/lib/db";
 import { settings } from "@reading-advantage/db/schema";
@@ -40,6 +39,7 @@ import { requireMarketingPermission } from "@/lib/auth";
 import { generateScriptSchema } from "@/lib/script-request-schema";
 import { redactSecrets } from "@/lib/redact";
 import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
+import { noStoreJson, withNoStore } from "@/lib/response";
 
 
 /**
@@ -70,14 +70,14 @@ function parseScriptResponse(response: string): Script | null {
 export async function POST(request: Request) {
   const guard = await requireMarketingPermission(request, "video:script:generate");
   if (!guard.ok) {
-    return guard.response;
+    return withNoStore(guard.response);
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
+    return noStoreJson(
       { message: "Invalid JSON body" },
       { status: 400 },
     );
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
 
   const parsed = generateScriptSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: "Invalid script request payload",
         error: parsed.error.message,
@@ -116,7 +116,7 @@ export async function POST(request: Request) {
     const aiConfig = resolveMarketingAIConfig(settingsMap);
     apiKey = aiConfig?.apiKey;
     if (!aiConfig) {
-      return NextResponse.json(
+      return noStoreJson(
         { message: "LLM not configured. Please set up API key in Settings." },
         { status: 400 },
       );
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
 
     const initialScript = parseScriptResponse(result);
     if (!initialScript) {
-      return NextResponse.json(
+      return noStoreJson(
         { message: "LLM response failed script schema validation" },
         { status: 500 },
       );
@@ -141,7 +141,7 @@ export async function POST(request: Request) {
 
     const thaiValidation = thaiNarrationScriptSchema.safeParse(initialScript);
     if (thaiValidation.success) {
-      return NextResponse.json({ script: thaiValidation.data });
+        return noStoreJson({ script: thaiValidation.data });
     }
 
     const repairedResult = await aiClient.generateText({
@@ -154,11 +154,11 @@ export async function POST(request: Request) {
         repairedScript,
       );
       if (repairedValidation.success) {
-        return NextResponse.json({ script: repairedValidation.data });
+        return noStoreJson({ script: repairedValidation.data });
       }
     }
 
-    return NextResponse.json(
+    return noStoreJson(
       {
         code: "THAI_NARRATION_REQUIRED",
         message: "Generated script narration must be Thai in every scene",
@@ -169,7 +169,7 @@ export async function POST(request: Request) {
   } catch (error) {
     const rawMessage =
       error instanceof Error ? error.message : "Failed to generate script";
-    return NextResponse.json(
+    return noStoreJson(
       {
         message: redactSecrets(rawMessage, [apiKey]),
       },
