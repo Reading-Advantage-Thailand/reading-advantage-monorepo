@@ -9,6 +9,7 @@ import {
   getMarketingStatusLabel,
 } from "@/lib/i18n";
 import { redirectToLogin } from "@/lib/login-redirect";
+import { nextCampaignStatuses } from "@/lib/campaign-status";
 
 interface Campaign {
   id: string;
@@ -19,13 +20,6 @@ interface Campaign {
   createdAt: string;
   updatedAt: string;
 }
-
-const statusTransitions: Record<string, string[]> = {
-  draft: ["in-progress"],
-  "in-progress": ["complete"],
-  complete: ["archived"],
-  archived: [],
-};
 
 /**
  * Renders the detail view for one Marketing campaign.
@@ -130,7 +124,7 @@ export default function CampaignDetailPage() {
     );
   }
 
-  const availableTransitions = statusTransitions[campaign.status] || [];
+  const availableTransitions = nextCampaignStatuses(campaign.status);
 
   return (
     <div>
