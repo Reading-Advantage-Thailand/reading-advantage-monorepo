@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { JSX } from "react";
 import type { AccountingSubmission } from "@reading-advantage/backend/accounting";
@@ -94,6 +95,7 @@ export function PendingSubmissionsList({
   const [actingId, setActingId] = useState<string | null>(null);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     setSubmissions(pendingOnly(submissionsProp));
@@ -123,6 +125,7 @@ export function PendingSubmissionsList({
       );
       setRejectingId((current) => (current === submissionId ? null : current));
       setActionMessage({ kind: "success", text: "Approved" });
+      router.refresh();
     } catch {
       setActionMessage({
         kind: "error",
@@ -161,6 +164,7 @@ export function PendingSubmissionsList({
       setRejectingId(null);
       setRejectReason("");
       setActionMessage({ kind: "success", text: "Rejected" });
+      router.refresh();
     } catch {
       setActionMessage({
         kind: "error",

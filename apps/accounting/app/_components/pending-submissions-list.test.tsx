@@ -66,6 +66,14 @@ const rejectedSubmission: AccountingSubmission = {
 
 const fetchMock = vi.fn();
 
+const navigation = vi.hoisted(() => ({
+  refresh: vi.fn(),
+}));
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: navigation.refresh }),
+}));
+
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -76,6 +84,7 @@ function jsonResponse(body: unknown, status = 200): Response {
 describe("PendingSubmissionsList", () => {
   beforeEach(() => {
     fetchMock.mockReset();
+    navigation.refresh.mockReset();
     fetchMock.mockResolvedValue(jsonResponse({ status: "approved" }));
     vi.stubGlobal("fetch", fetchMock);
   });
@@ -126,6 +135,7 @@ describe("PendingSubmissionsList", () => {
       screen.queryByText("Bangkok Taxi Cooperative"),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(/approved/i);
+    expect(navigation.refresh).toHaveBeenCalledTimes(1);
   });
 
   it("requires a reject reason and posts a non-blank reason", async () => {
@@ -164,6 +174,7 @@ describe("PendingSubmissionsList", () => {
       screen.queryByText("Bangkok Taxi Cooperative"),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(/rejected/i);
+    expect(navigation.refresh).toHaveBeenCalledTimes(1);
   });
 
   it("keeps the submission and shows an error when approve returns 404", async () => {
@@ -183,6 +194,7 @@ describe("PendingSubmissionsList", () => {
       await screen.findByRole("alert"),
     ).toBeInTheDocument();
     expect(screen.getByText("Bangkok Taxi Cooperative")).toBeInTheDocument();
+    expect(navigation.refresh).not.toHaveBeenCalled();
   });
 
   it("renders a STAFF actor's own submissions without approve or reject buttons", () => {
