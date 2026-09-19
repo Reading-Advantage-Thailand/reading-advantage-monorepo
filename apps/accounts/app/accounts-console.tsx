@@ -183,6 +183,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
       clearOperationKey("credential-reset");
       setNotice("Credential replaced and all sessions revoked. The password is no longer displayed.");
       setError("");
+      await refresh();
     } catch (caught) { setError((caught as Error).message); }
   }
 
@@ -198,6 +199,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
       clearOperationKey("session-revoke");
       setNotice("All Accounts and application sessions were revoked.");
       setError("");
+      await refresh();
     } catch (caught) { setError((caught as Error).message); }
   }
 

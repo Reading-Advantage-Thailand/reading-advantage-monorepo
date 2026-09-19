@@ -327,4 +327,34 @@ describe("Accounts administration console", () => {
 
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent(expectedMessage));
   });
+
+  it("refreshes employees after credential reset and session revocation", async () => {
+    const fetchMock = vi.fn(
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        if (String(input) === "/api/admin/employees" && (init?.method ?? "GET") === "GET") {
+          return jsonResponse({ employees: [admin] });
+        }
+        return jsonResponse({ employee: admin });
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+
+    render(<AccountsConsole employee={admin} />);
+    await screen.findByRole("heading", { name: "Directory" });
+    const resetForm = screen.getByRole("button", { name: "RESET CREDENTIAL" }).closest("form");
+    if (!resetForm) throw new Error("Reset form was not rendered.");
+    fireEvent.change(screen.getByLabelText("New password"), {
+      target: { value: "new-long-enough-password" },
+    });
+    fireEvent.submit(resetForm);
+
+    const employeeGets = () => fetchMock.mock.calls.filter(([url, options]) =>
+      String(url) === "/api/admin/employees" && (options?.method ?? "GET") === "GET",
+    );
+    await waitFor(() => expect(employeeGets()).toHaveLength(2));
+
+    fireEvent.click(screen.getByRole("button", { name: "REVOKE ALL SESSIONS" }));
+    await waitFor(() => expect(employeeGets()).toHaveLength(3));
+  });
 });
