@@ -53,6 +53,30 @@ function messageFromBody(body: unknown, fallback: string): string {
   return fallback;
 }
 
+/** Formats a minor-unit amount as a localized currency value. */
+function formatMinorAmount(amountMinor: string, currency: string): string {
+  const formatter = new Intl.NumberFormat("en", {
+    style: "currency",
+    currency,
+  });
+  const exponent = formatter.resolvedOptions().maximumFractionDigits ?? 2;
+  const amount = BigInt(amountMinor);
+  const isNegative = amount < 0n;
+  const absoluteAmount = isNegative ? -amount : amount;
+  const scale = 10n ** BigInt(exponent);
+  const major = absoluteAmount / scale;
+  if (exponent === 0) {
+    return `${isNegative ? "-" : ""}${formatter.format(major)}`;
+  }
+  const fraction = absoluteAmount % scale;
+  const fractionText = fraction.toString().padStart(exponent, "0");
+  const formatted = formatter
+    .formatToParts(major)
+    .map((part) => (part.type === "fraction" ? fractionText : part.value))
+    .join("");
+  return `${isNegative ? "-" : ""}${formatted}`;
+}
+
 /**
  * Maps an approve or reject HTTP status to a user-facing message.
  * @param status HTTP status from the review route.
@@ -240,13 +264,18 @@ export function PendingSubmissionsList({
                         <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-4">
                           <dt className="font-medium">Original amount</dt>
                           <dd>
-                            {submission.money.amountMinor} {submission.money.currency}
+                            {formatMinorAmount(
+                              submission.money.amountMinor,
+                              submission.money.currency,
+                            )}
                           </dd>
                         </div>
                         {submission.settledThbAmount ? (
                           <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-4">
                             <dt className="font-medium">Settled THB amount</dt>
-                            <dd>{submission.settledThbAmount} THB</dd>
+                            <dd>
+                              {formatMinorAmount(submission.settledThbAmount, "THB")}
+                            </dd>
                           </div>
                         ) : null}
                         {showDerivedRate && derivedRateValue ? (

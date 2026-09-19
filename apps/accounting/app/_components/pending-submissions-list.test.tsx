@@ -112,8 +112,8 @@ describe("PendingSubmissionsList", () => {
     expect(screen.getByText("Bangkok Taxi Cooperative")).toBeInTheDocument();
     expect(screen.getByText(/Bill/i)).toBeInTheDocument();
     expect(screen.getByText(/travel/i)).toBeInTheDocument();
-    expect(screen.getByText("15000 USD")).toBeInTheDocument();
-    expect(screen.getByText("520500 THB")).toBeInTheDocument();
+    expect(screen.getByText("$150.00")).toBeInTheDocument();
+    expect(screen.getByText(/THB\s+5,205\.00/u)).toBeInTheDocument();
     expect(screen.getByText("34.70")).toBeInTheDocument();
     expect(screen.getByText(EVIDENCE_REFERENCE)).toBeInTheDocument();
   });
@@ -258,7 +258,7 @@ describe("PendingSubmissionsList", () => {
     );
 
     expect(screen.getByText("Bangkok Metro")).toBeInTheDocument();
-    expect(screen.getByText("4500 THB")).toBeInTheDocument();
+    expect(screen.getByText(/THB\s+45\.00/u)).toBeInTheDocument();
     expect(screen.queryByText("34.70")).not.toBeInTheDocument();
     expect(screen.queryByText(/derived rate/i)).not.toBeInTheDocument();
   });
@@ -272,6 +272,49 @@ describe("PendingSubmissionsList", () => {
     );
 
     expect(screen.getByText("Tokyo Vendor")).toBeInTheDocument();
+    expect(screen.getByText("¥10,000")).toBeInTheDocument();
+    expect(screen.getByText(/THB\s+2,300\.00/u)).toBeInTheDocument();
     expect(screen.getByText("0.23")).toBeInTheDocument();
+  });
+
+  it("preserves large minor-unit values while formatting currency", () => {
+    render(
+      <PendingSubmissionsList
+        submissions={[
+          {
+            ...pendingUsdSubmission,
+            id: "ffffffff-ffff-4fff-8fff-fffffffffff0",
+            money: {
+              amountMinor: "900719925474099301",
+              currency: "USD",
+            },
+            settledThbAmount: undefined,
+            payee: "Large Value Vendor",
+          },
+        ]}
+        actorRole="OWNER"
+      />,
+    );
+
+    expect(screen.getByText("$9,007,199,254,740,993.01")).toBeInTheDocument();
+  });
+
+  it("preserves the sign for negative minor-unit values", () => {
+    render(
+      <PendingSubmissionsList
+        submissions={[
+          {
+            ...pendingUsdSubmission,
+            id: "ffffffff-ffff-4fff-8fff-fffffffffff1",
+            money: { amountMinor: "-45", currency: "USD" },
+            settledThbAmount: undefined,
+            payee: "Credit Vendor",
+          },
+        ]}
+        actorRole="OWNER"
+      />,
+    );
+
+    expect(screen.getByText("-$0.45")).toBeInTheDocument();
   });
 });
