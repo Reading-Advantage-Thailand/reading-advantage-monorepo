@@ -1,0 +1,1 @@
+Task: Add app/error.tsx. Added a root error boundary with a retry button and a rendering test.
