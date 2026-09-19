@@ -1,0 +1,9 @@
+Task: Select the recording type with MediaRecorder.isTypeSupported.
+
+Summary: Added a browser capability check for audio/webm. The recorder now uses the browser default when audio/webm is unsupported. Added tests for supported and unsupported paths.
+
+Files: apps/sales-advantage/components/roleplay-recorder.tsx; apps/sales-advantage/components/roleplay-recorder.test.tsx
+
+Why: Safari and iOS can reject audio/webm. The fallback prevents recording startup failures.
+
+Verification: CI=true pnpm exec vitest run --config vitest.config.ts components/roleplay-recorder.test.tsx (2 passed); agent type check passed.
