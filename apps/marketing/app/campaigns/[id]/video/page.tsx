@@ -41,6 +41,35 @@ const emptyScene: Scene = {
 };
 
 /**
+ * Reads a server-provided message from a bad-request response.
+ * @param response The failed response to inspect.
+ * @param fallback The message to use when the response has no message.
+ * @returns The server message for HTTP 400 responses or the fallback.
+ */
+async function readBadRequestMessage(
+  response: Response,
+  fallback: string,
+): Promise<string> {
+  if (response.status !== 400) return fallback;
+
+  try {
+    const data: unknown = await response.json();
+    if (
+      data &&
+      typeof data === "object" &&
+      "message" in data &&
+      typeof data.message === "string"
+    ) {
+      return data.message;
+    }
+  } catch {
+    return fallback;
+  }
+
+  return fallback;
+}
+
+/**
  * Renders the Marketing video-production workflow.
  * @returns The topic, script, and scene editing interface.
  */
@@ -203,7 +232,9 @@ export default function VideoProductionPage() {
         return;
       }
       if (!res.ok) {
-        setWorkflowError(t("video.researchFailed"));
+        setWorkflowError(
+          await readBadRequestMessage(res, t("video.researchFailed")),
+        );
         return;
       }
       const data: unknown = await res.json();
