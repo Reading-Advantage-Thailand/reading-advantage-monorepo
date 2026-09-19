@@ -102,10 +102,10 @@ const rejectedSubmission = {
   payee: "Rejected Vendor",
 };
 
-const inRangeOffsetSubmission = {
+const inRangeUtcBoundarySubmission = {
   ...approvedNonThbSubmission,
   id: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
-  submittedAt: "2026-08-15T02:00:00+07:00",
+  submittedAt: "2026-08-14T23:00:00Z",
   payee: "Offset Vendor",
 };
 
@@ -245,19 +245,20 @@ describe("GET /api/submissions/export", () => {
     expect(body).not.toContain("Rejected Vendor");
   });
 
-  it("filters by inclusive from/to using the local submittedAt date prefix (non-UTC offset aware)", async () => {
+  it("filters by inclusive from/to using the Bangkok date for UTC submissions", async () => {
     mocks.listAccountingSubmissions.mockResolvedValue([
-      inRangeOffsetSubmission,
+      inRangeUtcBoundarySubmission,
       inRangeNormalSubmission,
       outRangeBeforeSubmission,
       outRangeAfterSubmission,
     ]);
     const response = await GET(
-      new Request(`${ROUTE_URL}?from=2026-08-01&to=2026-08-31`),
+      new Request(`${ROUTE_URL}?from=2026-08-15&to=2026-08-31`),
     );
     const body = await response.text();
 
     expect(body).toContain("Offset Vendor");
+    expect(body).toContain(",2026-08-15,Offset Vendor,");
     expect(body).toContain("Normal Vendor");
     expect(body).not.toContain("Before Vendor");
     expect(body).not.toContain("After Vendor");

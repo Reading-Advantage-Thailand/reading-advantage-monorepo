@@ -2,7 +2,7 @@
  * CSV export of approved accounting submissions.
  *
  * Filters `listAccountingSubmissions` to `status === "approved"` and an
- * optional inclusive local-date range (`from`/`to` via `submittedAt.slice(0,10)`),
+ * optional inclusive local-date range (`from`/`to` via the business time zone),
  * then emits a BOM-free UTF-8 CSV with CRLF line endings. OWNER and ACCOUNTANT
  * may export; STAFF is denied with 403.
  */
@@ -42,6 +42,17 @@ function jsonResponse(body: unknown, status: number): Response {
   });
 }
 
+/** Converts an ISO submission timestamp to the configured business date. */
+function businessDate(submittedAt: string): string {
+  const timeZone = process.env.ACCOUNTING_TIME_ZONE ?? "Asia/Bangkok";
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(submittedAt));
+}
+
 /**
  * Handles GET /api/submissions/export: CSV export of approved submissions.
  * @param request Request carrying optional from/to query params.
@@ -75,7 +86,7 @@ export async function GET(request: Request): Promise<Response> {
 
   const filtered = submissions.filter((submission) => {
     if (submission.status !== "approved") return false;
-    const localDate = submission.submittedAt.slice(0, 10);
+    const localDate = businessDate(submission.submittedAt);
     if (parsed.data.from && localDate < parsed.data.from) return false;
     if (parsed.data.to && localDate > parsed.data.to) return false;
     return true;
@@ -108,7 +119,7 @@ export async function GET(request: Request): Promise<Response> {
             submission.settledThbAmount,
             submission.money.currency,
           );
-    const submittedDate = submission.submittedAt.slice(0, 10);
+    const submittedDate = businessDate(submission.submittedAt);
     lines.push(
       [
         escapeText(submission.id),
