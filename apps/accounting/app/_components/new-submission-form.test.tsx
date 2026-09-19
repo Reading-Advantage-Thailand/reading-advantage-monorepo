@@ -91,6 +91,36 @@ describe("NewSubmissionForm", () => {
     expect(screen.getByLabelText("Evidence file")).toBeRequired();
   });
 
+  it("previews the amount in major units for the selected currency", () => {
+    render(<NewSubmissionForm />);
+
+    fireEvent.change(screen.getByLabelText("Amount in minor units"), {
+      target: { value: "12345" },
+    });
+    expect(screen.getByText(/THB\s+123\.45/u)).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Currency (3-letter code)"), {
+      target: { value: "JPY" },
+    });
+    expect(screen.getByText(/Major-unit preview:\s+¥12,345/u)).toBeInTheDocument();
+  });
+
+  it("keeps the form rendered without a preview for a partial currency", () => {
+    render(<NewSubmissionForm />);
+
+    fireEvent.change(screen.getByLabelText("Amount in minor units"), {
+      target: { value: "12345" },
+    });
+    fireEvent.change(screen.getByLabelText("Currency (3-letter code)"), {
+      target: { value: "TH" },
+    });
+
+    expect(
+      screen.getByRole("form", { name: "Submission form" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Major-unit preview:/u)).not.toBeInTheDocument();
+  });
+
   it("shows the settled THB field only for non-THB currencies", () => {
     render(<NewSubmissionForm />);
 

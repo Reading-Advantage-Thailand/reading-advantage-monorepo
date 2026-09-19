@@ -85,6 +85,30 @@ function messageFromBody(body: unknown, fallback: string): string {
   return fallback;
 }
 
+/** Formats valid minor-unit digits as a major-unit currency value. */
+function formatMinorCurrency(amountMinor: string, currency: string): string {
+  if (!/^\d+$/u.test(amountMinor)) return "";
+  try {
+    const formatter = new Intl.NumberFormat("en", {
+      style: "currency",
+      currency,
+    });
+    const exponent = formatter.resolvedOptions().maximumFractionDigits ?? 2;
+    const amount = BigInt(amountMinor);
+    const scale = 10n ** BigInt(exponent);
+    const major = amount / scale;
+    if (exponent === 0) return formatter.format(major);
+    const fraction = amount % scale;
+    const fractionText = fraction.toString().padStart(exponent, "0");
+    return formatter
+      .formatToParts(major)
+      .map((part) => (part.type === "fraction" ? fractionText : part.value))
+      .join("");
+  } catch {
+    return "";
+  }
+}
+
 /** Converts a validated API field error object into the local field-error map. */
 function fieldErrorsFromBody(body: unknown): FieldErrors {
   if (!isRecord(body) || !isRecord(body.fieldErrors)) {
@@ -166,12 +190,14 @@ function FieldError({
 export function NewSubmissionForm() {
   const router = useRouter();
   const [currency, setCurrency] = useState("THB");
+  const [amountMinor, setAmountMinor] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formMessage, setFormMessage] = useState<FormMessage | null>(null);
   const idempotencyKeyRef = useRef<string | null>(null);
 
   const isNonThbCurrency = currency.length === 3 && currency !== "THB";
+  const amountPreview = formatMinorCurrency(amountMinor, currency);
 
   /** Sends one submission as multipart form data to the existing API route. */
   async function handleSubmit(
@@ -218,6 +244,7 @@ export function NewSubmissionForm() {
         router.refresh();
         form.reset();
         setCurrency("THB");
+        setAmountMinor("");
         idempotencyKeyRef.current = null;
         return;
       }
@@ -359,8 +386,10 @@ export function NewSubmissionForm() {
                   id="amountMinor"
                   name="amountMinor"
                   required
+                  value={amountMinor}
                   inputMode="numeric"
                   pattern="[1-9][0-9]*"
+                  onChange={(event) => setAmountMinor(event.target.value)}
                   aria-describedby={
                     errorsForField("amountMinor", fieldErrors).length > 0
                       ? "amountMinor-error"
@@ -375,6 +404,11 @@ export function NewSubmissionForm() {
                       : undefined
                   }
                 />
+                {amountPreview ? (
+                  <p className="text-xs text-muted-foreground" aria-live="polite">
+                    Major-unit preview: {amountPreview}
+                  </p>
+                ) : null}
                 <p className="text-xs text-muted-foreground">
                   Use the smallest currency unit, such as satang for THB.
                 </p>
