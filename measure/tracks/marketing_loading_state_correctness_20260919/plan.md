@@ -2,7 +2,7 @@
 
 ## Phase 1: Loading State Correctness
 
-- [ ] Task: Add a loading state and an empty state to the campaigns list. Source: `docs/marketing-ux-refactor-plan.md` §5; Issues: `app/campaigns/page.tsx:27`
+- [x] (c8395b002) Task: Add a loading state and an empty state to the campaigns list. Source: `docs/marketing-ux-refactor-plan.md` §5; Issues: `app/campaigns/page.tsx:27`
 - [ ] Task: Show the server `message` on a 400 in the video workflow. Source: `docs/marketing-ux-refactor-plan.md` §3.3; Issues: `app/api/video/research-topics/route.ts:96-101`, `app/campaigns/[id]/video/page.tsx:200-203`
 - [ ] Task: Show `actualCount` in the shortfall message. Source: `docs/marketing-ux-refactor-plan.md` §3.3; Issues: `app/api/video/research-topics/route.ts:147-157`
 - [ ] Task: Give each scene a stable React key. Source: `docs/marketing-ux-refactor-plan.md` §3.1; Issues: `app/campaigns/[id]/video/page.tsx:753`
