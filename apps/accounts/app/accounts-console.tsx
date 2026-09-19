@@ -151,8 +151,10 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
   }
 
   async function logout() {
-    await jsonRequest("/api/session/logout", "POST");
-    window.location.assign("/");
+    try {
+      await jsonRequest("/api/session/logout", "POST");
+      window.location.assign("/");
+    } catch (caught) { setError((caught as Error).message); }
   }
 
   return (
