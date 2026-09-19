@@ -29,8 +29,12 @@ function configuredOrigin(value: string | undefined): string | undefined {
   if (!value) return undefined;
   try {
     const url = new URL(value);
+    const isLocalHttp =
+      process.env.NODE_ENV !== "production" &&
+      url.protocol === "http:" &&
+      LOCAL_HOSTNAMES.has(url.hostname);
     if (
-      url.protocol !== "https:" ||
+      (url.protocol !== "https:" && !isLocalHttp) ||
       url.username ||
       url.password ||
       url.search ||
