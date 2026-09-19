@@ -20,7 +20,7 @@ export function Header() {
             <span>Sales Advantage</span>
           </Link>
           {isAuthenticated && (
-            <nav className="hidden gap-4 text-sm md:flex">
+            <nav className="flex gap-4 text-sm">
               <Link href="/" className="hover:text-primary transition-colors">
                 {t("dashboard")}
               </Link>
