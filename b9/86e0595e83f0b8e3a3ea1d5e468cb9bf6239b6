@@ -1,0 +1,9 @@
+Task: Add a major-unit preview under the submission form amount field.
+
+Summary: Added an exact BigInt currency preview using the selected currency exponent. Invalid and partial currency input safely hides the preview. The submitted minor-unit value remains unchanged.
+
+Files: apps/accounting/app/_components/new-submission-form.tsx; apps/accounting/app/_components/new-submission-form.test.tsx
+
+Why: Users entered minor units without seeing the major-unit meaning.
+
+Verification: focused submission-form tests passed (15 tests); agent type check passed.
