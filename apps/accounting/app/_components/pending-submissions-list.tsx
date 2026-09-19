@@ -96,6 +96,15 @@ function actionErrorMessage(status: number, body: unknown): string {
   return messageFromBody(body, "We could not update this submission.");
 }
 
+/** Builds the export link for an optional inclusive date range. */
+function buildExportHref(from: string, to: string): string {
+  const params = new URLSearchParams();
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
+  const query = params.toString();
+  return query ? `/api/submissions/export?${query}` : "/api/submissions/export";
+}
+
 /**
  * Renders pending submissions for the signed-in accounting actor.
  * @param props Visible submissions and the actor role.
@@ -112,6 +121,8 @@ export function PendingSubmissionsList({
   const [actingId, setActingId] = useState<string | null>(null);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -202,12 +213,38 @@ export function PendingSubmissionsList({
       </CardHeader>
       <CardContent className="space-y-4">
         {canExport ? (
-          <a
-            href="/api/submissions/export"
-            className="inline-block text-sm font-medium text-primary underline"
-          >
-            Export approved submissions (CSV)
-          </a>
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+            <div className="space-y-1">
+              <label htmlFor="export-from" className="text-sm font-medium">
+                From
+              </label>
+              <input
+                id="export-from"
+                type="date"
+                value={fromDate}
+                onChange={(event) => setFromDate(event.target.value)}
+                className={controlClassName}
+              />
+            </div>
+            <div className="space-y-1">
+              <label htmlFor="export-to" className="text-sm font-medium">
+                To
+              </label>
+              <input
+                id="export-to"
+                type="date"
+                value={toDate}
+                onChange={(event) => setToDate(event.target.value)}
+                className={controlClassName}
+              />
+            </div>
+            <a
+              href={buildExportHref(fromDate, toDate)}
+              className="inline-block text-sm font-medium text-primary underline"
+            >
+              Export approved submissions (CSV)
+            </a>
+          </div>
         ) : null}
         {actionMessage ? (
           <p

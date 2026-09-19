@@ -232,6 +232,27 @@ describe("PendingSubmissionsList", () => {
     expect(screen.queryByRole("button", { name: /reject/i })).not.toBeInTheDocument();
   });
 
+  it("adds selected dates to the export link", () => {
+    render(
+      <PendingSubmissionsList
+        submissions={[pendingUsdSubmission]}
+        actorRole="OWNER"
+      />,
+    );
+
+    fireEvent.change(screen.getByLabelText("From"), {
+      target: { value: "2026-08-01" },
+    });
+    fireEvent.change(screen.getByLabelText("To"), {
+      target: { value: "2026-08-31" },
+    });
+
+    expect(screen.getByRole("link", { name: /export approved submissions/i })).toHaveAttribute(
+      "href",
+      "/api/submissions/export?from=2026-08-01&to=2026-08-31",
+    );
+  });
+
   it("renders the submissions supplied by the server", () => {
     render(
       <PendingSubmissionsList
