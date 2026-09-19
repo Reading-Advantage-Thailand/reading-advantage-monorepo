@@ -1,0 +1,9 @@
+Task: Call refresh after a credential reset and after a session revocation.
+
+Summary: Refreshed the employee directory after both successful account writes. Added regression coverage for both handlers.
+
+Files: apps/accounts/app/accounts-console.tsx; apps/accounts/app/accounts-console.test.tsx
+
+Why: The console could show stale account and session state after successful operations.
+
+Verification: focused Accounts console tests passed (10 tests); agent type checks and lint passed.
