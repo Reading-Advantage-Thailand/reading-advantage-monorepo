@@ -2,7 +2,7 @@
 
 ## Phase 1: Recording Loading Correctness
 
-- [ ] Task: Select the recording type with `MediaRecorder.isTypeSupported`. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:56`
+- [x] (86d2583a8) Task: Select the recording type with `MediaRecorder.isTypeSupported`. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:56`
 - [ ] Task: Separate the device error from the permission error in `startRecording`. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:72-75`
 - [ ] Task: Revoke every blob URL in `reset()` and on unmount. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:63,113-120`
 - [ ] Task: Stop the recorder and every microphone track on unmount. Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:89-90`
