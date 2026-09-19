@@ -12,21 +12,26 @@ export function SignInPanel({ returnTo }: Readonly<{ returnTo: string }>) {
     setBusy(true);
     setMessage("");
     const form = new FormData(event.currentTarget);
-    const response = await fetch("/api/session/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: form.get("username"),
-        password: form.get("password"),
-        clientId: "accounts",
-      }),
-    });
-    setBusy(false);
-    if (!response.ok) {
-      setMessage("The sign-in details could not be verified. Please try again.");
-      return;
+    try {
+      const response = await fetch("/api/session/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: form.get("username"),
+          password: form.get("password"),
+          clientId: "accounts",
+        }),
+      });
+      if (!response.ok) {
+        setMessage("The sign-in details could not be verified. Please try again.");
+        return;
+      }
+      window.location.assign(returnTo);
+    } catch {
+      setMessage("The sign-in could not be completed. Please try again.");
+    } finally {
+      setBusy(false);
     }
-    window.location.assign(returnTo);
   }
 
   return (
