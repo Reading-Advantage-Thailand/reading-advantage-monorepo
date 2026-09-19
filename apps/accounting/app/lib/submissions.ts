@@ -219,7 +219,7 @@ export interface RejectAccountingSubmissionRequest {
   /** Identifier of the submission to reject. */
   readonly submissionId: string;
   /** Reason for the rejection. */
-  readonly reason: string;
+  readonly reason: string | undefined;
 }
 
 /**

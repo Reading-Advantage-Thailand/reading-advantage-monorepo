@@ -132,7 +132,7 @@ export async function POST(
     const submission = await rejectAccountingSubmission({
       actor,
       submissionId,
-      reason: reason as string,
+      reason,
     });
     return jsonResponse(submission, 200);
   } catch (error) {

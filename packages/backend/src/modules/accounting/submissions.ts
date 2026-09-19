@@ -397,7 +397,7 @@ export async function rejectAccountingSubmission(request: {
   readonly repository: AccountingSubmissionRepository;
   readonly actor: AccountingActor;
   readonly submissionId: string;
-  readonly reason: string;
+  readonly reason: string | undefined;
 }): Promise<AccountingSubmission> {
   requireOwnerRole(request.actor);
 
