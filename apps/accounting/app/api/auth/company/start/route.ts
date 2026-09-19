@@ -33,12 +33,14 @@ export async function GET(request: Request): Promise<NextResponse> {
     returnTo = "/";
   }
   let publicOrigin: URL;
+  let callbackOrigin: URL;
   try {
     publicOrigin = getPublicOrigin(request);
+    callbackOrigin = getAccountingCallbackOrigin();
   } catch {
-    publicOrigin = getAccountingCallbackOrigin();
+    callbackOrigin = getAccountingCallbackOrigin();
+    publicOrigin = callbackOrigin;
   }
-  const callbackOrigin = getAccountingCallbackOrigin();
   if (publicOrigin.origin !== callbackOrigin.origin) {
     const handoffUrl = new URL(requestUrl.pathname, callbackOrigin);
     handoffUrl.searchParams.set("returnTo", returnTo);
