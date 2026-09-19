@@ -1,0 +1,9 @@
+Task: Show the server message on a 400 in the video workflow.
+
+Summary: Added guarded parsing for 400 response messages in topic research. Kept generic text for all other failures. Added 400 and 503 regression tests.
+
+Files: apps/marketing/app/campaigns/[id]/video/page.tsx; apps/marketing/app/__tests__/phase-2-video-error-message.test.tsx
+
+Why: The server provides actionable setup guidance for bad requests, but the page replaced it with generic text.
+
+Verification: CI=true pnpm exec vitest run app/__tests__/phase-2-video-error-message.test.tsx (2 passed); agent regression tests, type check, and lint passed.
