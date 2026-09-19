@@ -7,6 +7,6 @@
 - [x] Task: Wrap `logout` in `try` and `catch`. Source: `docs/accounts-ux-refactor-plan.md` §4.2; Issues: `app/accounts-console.tsx:153-172` — ec82f5a74
 - [x] Task: Clear `error` at the start of each console handler. Source: `docs/accounts-ux-refactor-plan.md` §4.2; Issues: `app/accounts-console.tsx:135-175` — 452787aec
 - [x] Task: Confirm the grant of `COMPANY_ADMIN`, not only its removal. Source: `docs/accounts-ux-refactor-plan.md` §4.1; Issues: `app/accounts-console.tsx:94-98` — b999e444f
-- [ ] Task: Delete the `?? employees[0]` fallback. Source: `docs/accounts-ux-refactor-plan.md` §4.1; Issues: `app/accounts-console.tsx:58`
+- [x] Task: Delete the `?? employees[0]` fallback. Source: `docs/accounts-ux-refactor-plan.md` §4.1; Issues: `app/accounts-console.tsx:58` — b128fee42
 - [ ] Task: Add a `:focus-visible` rule for `.employee-item`. Source: `docs/accounts-ux-refactor-plan.md` §7; Issues: `app/globals.css:60`
 - [ ] Task: Wrap the OIDC logout route in `try` and `catch`. Source: `docs/accounts-ux-refactor-plan.md` §5; Issues: `app/api/oidc/logout/route.ts:15-31`

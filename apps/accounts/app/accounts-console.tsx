@@ -55,7 +55,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
 
   useEffect(() => { void refresh(); }, [refresh]);
   const selected = useMemo(
-    () => employees.find((item) => item.id === selectedId) ?? employees[0],
+    () => employees.find((item) => item.id === selectedId),
     [employees, selectedId],
   );
 
@@ -216,7 +216,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
           </aside>
 
           <article className="detail-panel">
-            {selected && <>
+            {selected ? <>
               <div className="identity-heading">
                 <div className="monogram">{selected.displayName.split(/\s+/).map((part) => part[0]).join("").slice(0, 2)}</div>
                 <div><p className="eyebrow">EMPLOYEE RECORD</p><h2>{selected.displayName}</h2><span>@{selected.username}</span></div>
@@ -267,7 +267,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
                   <button className="quiet-action">RESET CREDENTIAL</button>
                 </form>
               </section>
-            </>}
+            </> : <p className="select-employee-empty">Select an employee.</p>}
           </article>
         </div>
       )}
