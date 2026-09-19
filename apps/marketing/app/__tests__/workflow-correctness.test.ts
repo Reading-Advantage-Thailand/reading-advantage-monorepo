@@ -218,7 +218,8 @@ describe("Marketing topic research cardinality contract", () => {
     expect(response.status).toBe(422);
     await expect(response.json()).resolves.toEqual({
       code: "TOPIC_RESEARCH_SHORTFALL",
-      message: "Topic research produced fewer than five distinct new topics",
+      message:
+        "Topic research produced fewer than five distinct new topics (4 found)",
       expectedCount: 5,
       actualCount: 4,
     });

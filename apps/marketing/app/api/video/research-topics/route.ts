@@ -148,7 +148,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           code: "TOPIC_RESEARCH_SHORTFALL",
-          message: "Topic research produced fewer than five distinct new topics",
+          message: `Topic research produced fewer than five distinct new topics (${filtered.length} found)`,
           expectedCount: 5,
           actualCount: filtered.length,
         },
