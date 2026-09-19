@@ -303,7 +303,7 @@ describe("Campaign identifier boundary", () => {
     const { GET } = await import("@/api/campaigns/[id]/route");
 
     const response = await GET(request("/api/campaigns/not-a-uuid"), {
-      params: { id: "not-a-uuid" },
+      params: Promise.resolve({ id: "not-a-uuid" }),
     });
 
     expect(response.status).toBe(400);

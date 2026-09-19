@@ -285,7 +285,7 @@ describe("Phase 7: verified audit identity persistence", () => {
       jsonRequest("http://localhost/api/campaigns/" + CAMPAIGN_ID, "PATCH", {
         status: "in-progress",
       }),
-      { params: { id: CAMPAIGN_ID } },
+      { params: Promise.resolve({ id: CAMPAIGN_ID }) },
     );
 
     expect(setMock).toHaveBeenCalledWith(
@@ -359,7 +359,7 @@ describe("Phase 7: actor input rejection before writes", () => {
               updatedBy: SPOOFED_USER_ID,
             },
           ),
-          { params: { id: CAMPAIGN_ID } },
+          { params: Promise.resolve({ id: CAMPAIGN_ID }) },
         ),
     ],
     [
@@ -428,7 +428,7 @@ describe("Phase 7: MEMBER response minimization", () => {
     await expectResponseWithoutActors(
       await getCampaign(
         new Request("http://localhost/api/campaigns/" + CAMPAIGN_ID),
-        { params: { id: CAMPAIGN_ID } },
+        { params: Promise.resolve({ id: CAMPAIGN_ID }) },
       ),
     );
     expectClientMap(selectMock.mock.calls[0]?.[0], campaignClientKeys);
@@ -460,7 +460,7 @@ describe("Phase 7: MEMBER response minimization", () => {
         jsonRequest("http://localhost/api/campaigns/" + CAMPAIGN_ID, "PATCH", {
           status: "in-progress",
         }),
-        { params: { id: CAMPAIGN_ID } },
+        { params: Promise.resolve({ id: CAMPAIGN_ID }) },
       ),
     );
     expectClientMap(returningMock.mock.calls[0]?.[0], campaignClientKeys);

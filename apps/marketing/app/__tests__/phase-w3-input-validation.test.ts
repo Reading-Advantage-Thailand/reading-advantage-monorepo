@@ -327,7 +327,7 @@ describe("Phase 2D: Routes reject malformed input with 400 (RED at baseline)", (
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: "invalid-status" }),
       }),
-      { params: { id: CAMPAIGN_ID } },
+      { params: Promise.resolve({ id: CAMPAIGN_ID }) },
     );
 
     expect(response.status).toBe(400);

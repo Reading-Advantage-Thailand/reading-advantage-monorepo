@@ -217,7 +217,7 @@ describe("Phase 4: Campaign Management — CRUD integration (task 6: create/list
     const { GET } = await import("@/api/campaigns/[id]/route");
     const response = await GET(
       authedRequest(`http://localhost/api/campaigns/${mockCampaign.id}`),
-      { params: { id: mockCampaign.id } },
+      { params: Promise.resolve({ id: mockCampaign.id }) },
     );
     expect(response.status).toBe(200);
     const body = (await response.json()) as typeof mockCampaign;
@@ -232,7 +232,7 @@ describe("Phase 4: Campaign Management — CRUD integration (task 6: create/list
     const { GET } = await import("@/api/campaigns/[id]/route");
     const response = await GET(
       authedRequest(`http://localhost/api/campaigns/${mockCampaign.id}`),
-      { params: { id: mockCampaign.id } },
+      { params: Promise.resolve({ id: mockCampaign.id }) },
     );
     expect(response.status).toBe(404);
   });
@@ -253,7 +253,7 @@ describe("Phase 4: Campaign Management — CRUD integration (task 6: create/list
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: "in-progress" }),
       }),
-      { params: { id: mockCampaign.id } },
+      { params: Promise.resolve({ id: mockCampaign.id }) },
     );
 
     // At HEAD this returns 200 because the route accepts any status.
@@ -349,7 +349,7 @@ describe("Phase 4: Campaign Management — status-transition state machine (task
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: "complete" }),
       }),
-      { params: { id: mockCampaign.id } },
+      { params: Promise.resolve({ id: mockCampaign.id }) },
     );
 
     expect(response.status).toBe(400);
@@ -377,7 +377,7 @@ describe("Phase 4: Campaign Management — status-transition state machine (task
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: "in-progress" }),
       }),
-      { params: { id: mockCampaign.id } },
+      { params: Promise.resolve({ id: mockCampaign.id }) },
     );
 
     expect(response.status).toBe(400);

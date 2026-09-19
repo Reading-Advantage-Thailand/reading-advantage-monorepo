@@ -152,7 +152,7 @@ describe("Phase 2C: Campaigns auth — unauthenticated boundary (RED at baseline
 
     const response = await GET(
       unauthedRequest(`http://localhost/api/campaigns/${CAMPAIGN_ID}`),
-      { params: { id: CAMPAIGN_ID } },
+      { params: Promise.resolve({ id: CAMPAIGN_ID }) },
     );
 
     expect(response.status).toBe(401);
@@ -172,7 +172,7 @@ describe("Phase 2C: Campaigns auth — unauthenticated boundary (RED at baseline
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: "in-progress" }),
       }),
-      { params: { id: CAMPAIGN_ID } },
+      { params: Promise.resolve({ id: CAMPAIGN_ID }) },
     );
 
     expect(response.status).toBe(401);
@@ -225,7 +225,7 @@ describe("Phase 2C: Campaigns auth — authenticated positive controls", () => {
 
     const response = await GET(
       authedRequest(`http://localhost/api/campaigns/${CAMPAIGN_ID}`),
-      { params: { id: CAMPAIGN_ID } },
+      { params: Promise.resolve({ id: CAMPAIGN_ID }) },
     );
 
     expect(response.status).toBe(200);
@@ -247,7 +247,7 @@ describe("Phase 2C: Campaigns auth — authenticated positive controls", () => {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ status: "in-progress" }),
       }),
-      { params: { id: CAMPAIGN_ID } },
+      { params: Promise.resolve({ id: CAMPAIGN_ID }) },
     );
 
     expect(response.status).toBe(200);
