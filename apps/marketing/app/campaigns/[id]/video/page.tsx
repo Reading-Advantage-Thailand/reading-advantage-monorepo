@@ -296,11 +296,17 @@ export default function VideoProductionPage() {
     );
   };
 
-  const handleSaveEdit = (id: string, newText: string) => {
+  const handleTopicChange = (id: string, text: string) => {
+    setTopics((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, text } : t)),
+    );
+  };
+
+  const handleSaveEdit = (id: string) => {
     setTopics(
       (prev) =>
         prev.map((t) =>
-          t.id === id ? { ...t, text: newText, editing: false } : t,
+          t.id === id ? { ...t, editing: false } : t,
         ),
     );
   };
@@ -649,17 +655,34 @@ export default function VideoProductionPage() {
                   }}
                 >
                   {topic.editing ? (
-                    <input
-                      type="text"
-                      defaultValue={topic.text}
-                      onBlur={(e) => handleSaveEdit(topic.id, e.target.value)}
-                      style={{
-                        flex: 1,
-                        padding: "8px",
-                        borderRadius: "4px",
-                        border: "1px solid #ccc",
-                      }}
-                    />
+                    <>
+                      <input
+                        type="text"
+                        value={topic.text}
+                        onChange={(e) =>
+                          handleTopicChange(topic.id, e.target.value)
+                        }
+                        style={{
+                          flex: 1,
+                          padding: "8px",
+                          borderRadius: "4px",
+                          border: "1px solid #ccc",
+                        }}
+                      />
+                      <button
+                        onClick={() => handleSaveEdit(topic.id)}
+                        style={{
+                          padding: "4px 8px",
+                          backgroundColor: "#4CAF50",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {t("video.saveScript")}
+                      </button>
+                    </>
                   ) : (
                     <span>{topic.text}</span>
                   )}
