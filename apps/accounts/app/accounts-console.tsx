@@ -95,8 +95,10 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
 
   async function setCompanyAdmin(enabled: boolean) {
     if (!selected) return;
-    if (!enabled && !window.confirm(
-      `Remove company administrator authority from ${selected.displayName}?`,
+    if (!window.confirm(
+      enabled
+        ? `Grant company administrator authority to ${selected.displayName}?`
+        : `Remove company administrator authority from ${selected.displayName}?`,
     )) return;
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/company-roles`, "PUT", {
