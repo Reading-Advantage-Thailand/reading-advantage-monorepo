@@ -1,0 +1,9 @@
+Task: Add a loading state and an empty state to the campaigns list.
+
+Summary: Added an explicit loading status during campaign requests. Added a localized empty message after a successful empty response. Preserved the existing failure state.
+
+Files: apps/marketing/app/campaigns/page.tsx; apps/marketing/app/lib/i18n.ts; apps/marketing/app/__tests__/phase-2-campaigns-loading.test.tsx
+
+Why: The list previously rendered a blank page during loading and after an empty response.
+
+Verification: CI=true pnpm exec vitest run app/__tests__/phase-2-campaigns-loading.test.tsx (1 passed); agent regression tests, type check, and lint passed.
