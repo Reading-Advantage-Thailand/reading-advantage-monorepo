@@ -116,7 +116,10 @@ describe("QuizComponent", () => {
     });
 
     expect(screen.getByRole("alert").textContent).toContain("submitFailed");
-    expect(screen.getByRole("button", { name: "submit" }).disabled).toBe(false);
+    const submitButton = screen.getByRole("button", {
+      name: "submit",
+    }) as HTMLButtonElement;
+    expect(submitButton.disabled).toBe(false);
   });
 
   it("disables the submit button while the mutation is pending", () => {

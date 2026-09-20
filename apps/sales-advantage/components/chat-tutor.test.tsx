@@ -87,7 +87,7 @@ describe("ChatTutor accessibility", () => {
 
   it("aborts the chat request when the component unmounts", async () => {
     activeChatCopy = enMessages.chat;
-    let abortSignal: AbortSignal | undefined;
+    let abortSignal: AbortSignal | null | undefined;
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockImplementation((_input, init) => {
