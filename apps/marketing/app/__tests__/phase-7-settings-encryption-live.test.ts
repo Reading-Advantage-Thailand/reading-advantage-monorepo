@@ -5,6 +5,10 @@
  * Exercises POST and GET through the route boundary against PGlite, then
  * inspects the raw persisted value directly, then independently decrypts it
  * to prove a lossless production-helper round trip.
+ *
+ * The settings schema only accepts the four keys the settings page writes,
+ * so legacy secret keys are asserted to be rejected with 400 before any
+ * DB write.
  */
 
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -48,9 +52,9 @@ import { GET, POST } from "@/api/settings/route";
 
 const SECRET_CASES = [
   ["llm.apiKey", "sk-phase7-live-api-key-12345"],
-  ["provider.secret", "phase7-live-provider-secret"],
-  ["oauth.token", "phase7-live-oauth-token"],
 ] as const;
+
+const REJECTED_LEGACY_KEYS = ["provider.secret", "oauth.token"] as const;
 
 let testDb: TestDb;
 
@@ -113,6 +117,26 @@ describe("Phase 7.2: settings encryption live invariant", () => {
       const responseBody = (await getResponse.json()) as Record<string, string>;
       expect(responseBody[key]).toBe("••••");
       expect(JSON.stringify(responseBody)).not.toContain(plaintext);
+    },
+  );
+
+  it.each(REJECTED_LEGACY_KEYS)(
+    "rejects legacy secret key %s with 400 before any DB write",
+    async (key) => {
+      const postResponse = await POST(
+        authedRequest("http://localhost/api/settings", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ [key]: "phase7-live-legacy-secret" }),
+        }),
+      );
+
+      expect(postResponse.status).toBe(400);
+
+      const rawRows = await testDb.db.execute(
+        sql`SELECT value FROM settings WHERE key = ${key}`,
+      );
+      expect(rawRows.rows).toHaveLength(0);
     },
   );
 });

@@ -274,6 +274,20 @@ describe("Settings connection Zod boundary", () => {
     ).toBe(false);
   });
 
+  it("accepts only the four keys the settings page writes", async () => {
+    const { settingsPostSchema } = await import("@/lib/settings-schema");
+
+    expect(
+      settingsPostSchema.safeParse({ "llm.provider": "google" }).success,
+    ).toBe(true);
+    expect(
+      settingsPostSchema.safeParse({ "llm.model": "v".repeat(8_193) }).success,
+    ).toBe(false);
+    expect(
+      settingsPostSchema.safeParse({ "rogue.key": "value" }).success,
+    ).toBe(false);
+  });
+
   it("rejects unsupported providers and unknown fields", async () => {
     const { settingsTestConnectionSchema } = await import(
       "@/lib/settings-schema"

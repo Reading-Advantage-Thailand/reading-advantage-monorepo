@@ -3,18 +3,24 @@ import { z } from "zod";
 /**
  * Zod schema for `POST /api/settings` bodies.
  *
- * The settings table stores arbitrary key/value pairs. Values are encrypted
- * at rest by `apps/marketing/app/lib/encryption`; the wire format here is
- * a flat object of `Record<string, string>`. Non-object payloads and
- * non-string values are rejected before any DB insert.
+ * The settings page writes exactly four keys: `llm.provider`, `llm.model`,
+ * `llm.apiKey`, and `tools.mmxPath`. The route persists those keys into the
+ * shared `settings` table, so the contract rejects any other key. Values
+ * are encrypted at rest by `apps/marketing/app/lib/encryption`; the wire
+ * format is a flat object of `Record<string, string>`. Non-object payloads,
+ * unknown keys, and non-string values are rejected before any DB insert.
  */
+const MARKETING_SETTING_VALUE_SCHEMA = z.string().max(8_192);
+
 export const settingsPostSchema = z
-  .record(z.string().min(1).max(100), z.string().max(8_192))
+  .strictObject({
+    "llm.provider": MARKETING_SETTING_VALUE_SCHEMA.optional(),
+    "llm.model": MARKETING_SETTING_VALUE_SCHEMA.optional(),
+    "llm.apiKey": MARKETING_SETTING_VALUE_SCHEMA.optional(),
+    "tools.mmxPath": MARKETING_SETTING_VALUE_SCHEMA.optional(),
+  })
   .refine((obj) => Object.keys(obj).length > 0, {
     message: "At least one setting entry is required",
-  })
-  .refine((obj) => Object.keys(obj).length <= 20, {
-    message: "At most 20 setting entries are allowed",
   });
 
 export type SettingsPostBody = z.infer<typeof settingsPostSchema>;

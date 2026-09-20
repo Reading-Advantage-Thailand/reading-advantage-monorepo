@@ -109,7 +109,13 @@ export async function POST(request: Request) {
   }
 
   try {
-    const settingsToWrite = prepareMarketingSettingsUpdate(parsed.data);
+    const settingsToWrite = prepareMarketingSettingsUpdate(
+      Object.fromEntries(
+        Object.entries(parsed.data).filter(
+          (entry): entry is [string, string] => entry[1] !== undefined,
+        ),
+      ),
+    );
     for (const [key, value] of Object.entries(settingsToWrite)) {
       const storedValue = isMarketingSecretSetting(key)
         ? encrypt(value)
