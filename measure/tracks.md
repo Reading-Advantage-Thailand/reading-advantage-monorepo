@@ -54,8 +54,8 @@ This file tracks all major tracks for the project.
   Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating. **Implemented 2026-09-20 (5/5 tasks, 535 tests green, tsc and eslint clean); manual verification pending.**
 - [x] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
   Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior. **Implemented 2026-09-20 (10/10 tasks, 34 scoped tests green, tsc clean); manual verification pending.**
-- [ ] **Track: Marketing Duplication Removal** *Link: [./tracks/marketing_duplication_removal_20260919/](./tracks/marketing_duplication_removal_20260919/)*
-  Remove duplicated authentication, application, campaign, AI, health, status, and navigation code.
+- [x] **Track: Marketing Duplication Removal** *Link: [./tracks/marketing_duplication_removal_20260919/](./tracks/marketing_duplication_removal_20260919/)*
+  Remove duplicated authentication, application, campaign, AI, health, status, and navigation code. **Implemented 2026-09-20 (10/10 tasks, 151 scoped tests green, tsc and eslint clean); manual verification pending.**
 - [ ] **Track: Marketing Structural Alignment** *Link: [./tracks/marketing_structural_alignment_20260919/](./tracks/marketing_structural_alignment_20260919/)*
   Align shared helpers, page boundaries, forms, metadata, application maps, and settings contracts.
 
