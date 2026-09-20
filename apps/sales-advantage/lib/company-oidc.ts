@@ -26,6 +26,15 @@ export interface ResolvedSalesRequestPrincipal {
   };
 }
 
+/** Outcome returned while resolving the current Sales application session. */
+export type SalesRequestAuthenticationResult =
+  | { readonly kind: "no-session" }
+  | { readonly kind: "no-sales-role" }
+  | {
+      readonly kind: "authenticated";
+      readonly principal: ResolvedSalesRequestPrincipal;
+    };
+
 /** Host-only opaque Sales application-session cookie. */
 export const SALES_SESSION_COOKIE = "__Host-ra_sales_session";
 /** Host-only short-lived Sales authorization transaction cookie. */
@@ -148,19 +157,22 @@ function readLegacySalesToken(request: Request): string | undefined {
     : undefined;
 }
 
-/**
- * Resolves a legacy credential session through its exact app-local Sales mapping.
- * @param request Request carrying legacy session evidence.
- * @returns Company-scoped Sales principal or null.
+ /**
+  * Resolves a legacy credential session through its exact app-local Sales mapping.
+  * @param request Request carrying legacy session evidence.
+ * @returns The authentication outcome for the legacy session.
  */
 async function authenticateLegacySalesRequest(
   request: Request,
-): Promise<ResolvedSalesRequestPrincipal | null> {
+): Promise<SalesRequestAuthenticationResult> {
   const token = readLegacySalesToken(request);
-  if (!token) return null;
+  if (!token) return { kind: "no-session" };
   const session = await validateSession(db, token);
-  if (!session) return null;
-  return resolveLegacySalesCompanyPrincipal(db, session.user.id);
+  if (!session) return { kind: "no-session" };
+  const principal = await resolveLegacySalesCompanyPrincipal(db, session.user.id);
+  return principal
+    ? { kind: "authenticated", principal }
+    : { kind: "no-sales-role" };
 }
 
 /**
@@ -179,15 +191,19 @@ export async function salesSessionUser(
 /**
  * Resolves a request's active Accounts session into its durable Sales principal.
  * @param request Request carrying the host-only Sales application cookie.
- * @returns Mapped local Sales principal, or null when the session is absent or inactive.
+ * @returns The authentication outcome for the Sales application session.
  */
 export async function authenticateSalesRequest(
   request: Request,
-): Promise<ResolvedSalesRequestPrincipal | null> {
+): Promise<SalesRequestAuthenticationResult> {
   if (isLegacySalesAuthEnabled())
     return authenticateLegacySalesRequest(request);
   const token = readSalesCookie(request, SALES_SESSION_COOKIE);
-  if (!token) return null;
+  if (!token) return { kind: "no-session" };
   const session = await getSalesOidcClient().introspect(token);
-  return session ? salesSessionUser(session.identity) : null;
+  if (!session) return { kind: "no-session" };
+  const principal = await salesSessionUser(session.identity);
+  return principal
+    ? { kind: "authenticated", principal }
+    : { kind: "no-sales-role" };
 }

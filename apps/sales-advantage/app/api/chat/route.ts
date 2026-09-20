@@ -5,7 +5,10 @@ import {
 import { getAIClient } from "@reading-advantage/ai";
 import { authorizeSalesChat } from "@reading-advantage/domain/sales";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { authenticateSalesRequest } from "@/lib/company-oidc";
+import {
+  authenticateSalesRequest,
+  type ResolvedSalesRequestPrincipal,
+} from "@/lib/company-oidc";
 import { z } from "zod";
 
 export const runtime = "nodejs";
@@ -47,7 +50,13 @@ function sanitizeContextId(value: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const principal = await authenticateSalesRequest(request);
+    const result = await authenticateSalesRequest(request);
+    const principal =
+      result && "user" in result
+        ? (result as unknown as ResolvedSalesRequestPrincipal)
+        : result?.kind === "authenticated"
+          ? result.principal
+          : null;
     if (!principal) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
