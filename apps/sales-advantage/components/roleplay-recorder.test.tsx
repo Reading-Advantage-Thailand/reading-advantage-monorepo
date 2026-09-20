@@ -169,4 +169,39 @@ describe("RoleplayRecorder recording type", () => {
     expect(stop).toHaveBeenCalledTimes(1);
     expect(stopTrack).toHaveBeenCalledTimes(1);
   });
+
+  it("warns when the server reports a failed audio upload", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        attemptId: "attempt-1",
+        evaluation: {
+          overallScore: 50,
+          passed: false,
+          criteria: [],
+          summary: "Summary",
+          strengths: [],
+          weaknesses: [],
+          suggestedNextAction: "Next",
+        },
+        audioUploadFailed: true,
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<RoleplayRecorder scenario={scenario} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "record" }));
+    await waitFor(() => expect(start).toHaveBeenCalled());
+    act(() => lastOnStop?.());
+    fireEvent.click(screen.getByRole("checkbox", { name: "consentLabel" }));
+    fireEvent.click(screen.getByRole("button", { name: "submit" }));
+
+    expect(await screen.findByRole("alert")).toBeTruthy();
+    expect(screen.getByRole("alert").textContent).toContain(
+      "errors.audioSaveFailed",
+    );
+
+    vi.unstubAllGlobals();
+  });
 });

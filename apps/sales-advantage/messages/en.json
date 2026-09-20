@@ -65,7 +65,8 @@
     "consentText": "I consent to my audio being recorded, evaluated by AI, and stored for up to 30 days for coaching purposes.",
     "errors": {
       "uploadFailed": "Failed to upload audio",
-      "evaluationFailed": "Evaluation failed. Try again."
+      "evaluationFailed": "Evaluation failed. Try again.",
+      "audioSaveFailed": "Your evaluation is complete, but the audio could not be saved."
     }
   },
   "result": {

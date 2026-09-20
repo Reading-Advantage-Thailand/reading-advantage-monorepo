@@ -257,6 +257,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       attemptId: result.attempt?.id ?? null,
       evaluation: result.evaluation ?? null,
+      ...(audioUploadSucceeded ? {} : { audioUploadFailed: true }),
     });
   } catch (error) {
     if (uploadedObject) {

@@ -361,6 +361,26 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
     expect(capturedRetention).toBe(30);
   });
 
+  it("reports audioUploadFailed=true when storage.put rejects so the client can warn the user", async () => {
+    mockGetRoleplayEvaluationContext.mockResolvedValue(makeEvaluationCtx([]));
+    mockGetStorageClient.mockReturnValue({
+      put: vi.fn().mockRejectedValue(new Error("simulated S3 500")),
+    });
+    mockSubmitRoleplayAttempt.mockResolvedValue({
+      attempt: { id: "attempt-1" },
+      evaluation: { overallScore: 0, passed: false },
+    });
+
+    const response = await POST(makeRequest(buildAudioFormData()));
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({
+      attemptId: "attempt-1",
+      evaluation: { overallScore: 0, passed: false },
+      audioUploadFailed: true,
+    });
+  });
+
   it("FR-4: returns 404 when the scenario is not found (no orphan attempt is created)", async () => {
     mockGetRoleplayEvaluationContext.mockResolvedValue({
       scenario: undefined,

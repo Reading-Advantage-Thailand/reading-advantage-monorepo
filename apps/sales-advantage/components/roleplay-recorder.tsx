@@ -44,6 +44,7 @@ export function RoleplayRecorder({
   >(null);
   const [duration, setDuration] = useState(0);
   const [consentGiven, setConsentGiven] = useState(false);
+  const [audioUploadFailed, setAudioUploadFailed] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -143,6 +144,7 @@ export function RoleplayRecorder({
       }
       const data = await res.json();
       setResult(data.evaluation);
+      setAudioUploadFailed(data.audioUploadFailed === true);
       setState("evaluated");
     } catch (err) {
       setError(
@@ -160,6 +162,7 @@ export function RoleplayRecorder({
     setResult(null);
     setError(null);
     setConsentGiven(false);
+    setAudioUploadFailed(false);
   }
 
   return (
@@ -244,6 +247,14 @@ export function RoleplayRecorder({
 
         {state === "evaluated" && result && (
           <div className="space-y-3">
+            {audioUploadFailed && (
+              <div
+                role="alert"
+                className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-4 text-sm text-amber-600"
+              >
+                {t("errors.audioSaveFailed")}
+              </div>
+            )}
             <RoleplayResult result={result} />
             <Button onClick={reset} variant="outline" className="w-full gap-2">
               <RotateCcw className="h-4 w-4" /> {t("retry")}
