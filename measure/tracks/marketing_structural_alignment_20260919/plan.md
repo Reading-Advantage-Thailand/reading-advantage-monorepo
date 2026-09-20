@@ -6,6 +6,6 @@
   - Note: shared home created at `packages/auth/src/public-url.ts` with the `@reading-advantage/auth/public-url` subpath export; Marketing consumes it. The Sales migration (`apps/sales-advantage`) stays deferred to the open `sales_marketing_sso_parity_20260829` tech-debt entry.
 - [x] (ef46d8a49) Task: Split `app/campaigns/[id]/video/page.tsx` into topic, script, and scene editor steps. Source: `docs/marketing-ux-refactor-plan.md` §3; Issues: `app/campaigns/[id]/video/page.tsx:45,106-107`
 - [x] (0464d5281) Task: Wrap every data entry screen in a `<form>`. Source: `docs/marketing-ux-refactor-plan.md` §5 and §6; Issues: `app/campaigns/page.tsx:142-246`, `app/campaigns/page.tsx:245-248`
-- [ ] Task: Add a `metadata` export to each page. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/layout.tsx:7-10`
+- [x] (ebcb89b2c) Task: Add a `metadata` export to each page. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/layout.tsx:7-10`
 - [ ] Task: Replace the index binding between `APPS`, colors, and names. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/lib/apps.ts:27-33`
 - [ ] Task: Constrain `settingsPostSchema` to the four keys the page writes. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/lib/settings-schema.ts:12`, `app/api/settings/route.ts:106-117`
