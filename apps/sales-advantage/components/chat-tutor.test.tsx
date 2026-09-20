@@ -84,4 +84,38 @@ describe("ChatTutor accessibility", () => {
       { timeout: 1000 },
     );
   });
+
+  it("aborts the chat request when the component unmounts", async () => {
+    activeChatCopy = enMessages.chat;
+    let abortSignal: AbortSignal | undefined;
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation((_input, init) => {
+        abortSignal = init?.signal;
+        return new Promise<Response>(() => {});
+      });
+
+    const { unmount } = render(<ChatTutor />);
+    const input = screen.getByPlaceholderText(activeChatCopy.placeholder);
+
+    fireEvent.change(input, { target: { value: "How should I open?" } });
+    fireEvent.click(screen.getByRole("button", { name: activeChatCopy.send }));
+
+    await waitFor(
+      () => {
+        expect(fetchMock).toHaveBeenCalledWith(
+          "/api/chat",
+          expect.objectContaining({ method: "POST" }),
+        );
+      },
+      { timeout: 1000 },
+    );
+
+    expect(abortSignal).toBeDefined();
+    expect(abortSignal?.aborted).toBe(false);
+
+    unmount();
+
+    expect(abortSignal?.aborted).toBe(true);
+  });
 });

@@ -28,10 +28,15 @@ export function ChatTutor({
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    return () => abortRef.current?.abort();
+  }, []);
 
   async function send() {
     if (!input.trim() || streaming) return;
@@ -39,6 +44,8 @@ export function ChatTutor({
     setMessages((m) => [...m, userMsg, { role: "assistant", content: "" }]);
     setInput("");
     setStreaming(true);
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     try {
       const res = await fetch("/api/chat", {
@@ -49,6 +56,7 @@ export function ChatTutor({
           lessonId,
           moduleId,
         }),
+        signal: controller.signal,
       });
       if (!res.ok || !res.body) throw new Error("chat failed");
       const reader = res.body.getReader();
@@ -64,13 +72,15 @@ export function ChatTutor({
           return copy;
         });
       }
-    } catch (err) {
+    } catch {
+      if (controller.signal.aborted) return;
       setMessages((m) => {
         const copy = [...m];
         copy[copy.length - 1] = { role: "assistant", content: "[Error: chat unavailable]" };
         return copy;
       });
     } finally {
+      if (abortRef.current === controller) abortRef.current = null;
       setStreaming(false);
     }
   }
