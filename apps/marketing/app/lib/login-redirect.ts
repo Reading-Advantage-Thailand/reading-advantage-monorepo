@@ -2,32 +2,10 @@
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
-
-/**
- * Reports whether a value contains a control character.
- * @param value Value to inspect.
- * @returns Whether the value contains a control character.
- */
-function hasControlCharacter(value: string): boolean {
-  return Array.from(value).some((character) => {
-    const code = character.codePointAt(0);
-    return code !== undefined && (code <= 0x1f || code === 0x7f);
-  });
-}
-
-/**
- * Reports whether a value has malformed percent encoding.
- * @param value Value to inspect.
- * @returns Whether percent encoding is malformed.
- */
-function hasMalformedPercentEncoding(value: string): boolean {
-  try {
-    decodeURIComponent(value);
-    return false;
-  } catch {
-    return true;
-  }
-}
+import {
+  hasControlCharacter,
+  hasMalformedPercentEncoding,
+} from "@reading-advantage/auth/public-url";
 
 /**
  * Checks whether a pathname with query is safe for a local return path.
