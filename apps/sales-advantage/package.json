@@ -38,7 +38,6 @@
     "lucide-react": "catalog:",
     "next": "16.2.9",
     "next-intl": "catalog:",
-    "next-themes": "catalog:",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-markdown": "^10.1.0",
