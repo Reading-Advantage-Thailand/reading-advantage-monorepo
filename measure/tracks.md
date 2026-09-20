@@ -15,8 +15,8 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
-- [ ] **Track: Sales Advantage Broken UX Fixes** *Link: [./tracks/sales_broken_ux_fixes_20260919/](./tracks/sales_broken_ux_fixes_20260919/)*
-  Repair the broken user-experience items from the Sales Advantage UX audit.
+- [x] **Track: Sales Advantage Broken UX Fixes** *Link: [./tracks/sales_broken_ux_fixes_20260919/](./tracks/sales_broken_ux_fixes_20260919/)*
+  Repair the broken user-experience items from the Sales Advantage UX audit. **Implemented 2026-09-20 (9/9 tasks, 267 tests green); manual verification pending.**
 - [ ] **Track: Sales Advantage Session Contract Correctness** *Link: [./tracks/sales_session_contract_correctness_20260919/](./tracks/sales_session_contract_correctness_20260919/)*
   Separate anonymous sessions from forbidden Sales identities in the session contract.
 - [~] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
@@ -26,10 +26,10 @@ This file tracks all major tracks for the project.
 - [ ] **Track: Sales Advantage Structural Alignment** *Link: [./tracks/sales_structural_alignment_20260919/](./tracks/sales_structural_alignment_20260919/)*
   Align shared authentication helpers, locale handling, keyboard access, announcements, and administrator navigation.
 
-- [ ] **Track: Accounts Broken UX Fixes** *Link: [./tracks/accounts_broken_ux_fixes_20260919/](./tracks/accounts_broken_ux_fixes_20260919/)*
-  Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures.
-- [~] **Track: Accounts Console Write Correctness** *Link: [./tracks/accounts_console_write_correctness_20260919/](./tracks/accounts_console_write_correctness_20260919/)*
-  Make console writes idempotent, pending-aware, refresh-safe, and resistant to lost role updates.
+- [x] **Track: Accounts Broken UX Fixes** *Link: [./tracks/accounts_broken_ux_fixes_20260919/](./tracks/accounts_broken_ux_fixes_20260919/)*
+  Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures. **Implemented 2026-09-20 (8/8 tasks, 93 tests green); manual verification pending.**
+- [x] **Track: Accounts Console Write Correctness** *Link: [./tracks/accounts_console_write_correctness_20260919/](./tracks/accounts_console_write_correctness_20260919/)*
+  Make console writes idempotent, pending-aware, refresh-safe, and resistant to lost role updates. **Implemented 2026-09-20 (5/5 tasks); manual verification pending.**
 - [ ] **Track: Accounts Loading State Correctness** *Link: [./tracks/accounts_loading_state_correctness_20260919/](./tracks/accounts_loading_state_correctness_20260919/)*
   Distinguish directory loading, empty, failed, malformed-input, and readiness states.
 - [ ] **Track: Accounts Duplication Removal** *Link: [./tracks/accounts_duplication_removal_20260919/](./tracks/accounts_duplication_removal_20260919/)*
@@ -37,19 +37,19 @@ This file tracks all major tracks for the project.
 - [ ] **Track: Accounts Structural Alignment** *Link: [./tracks/accounts_structural_alignment_20260919/](./tracks/accounts_structural_alignment_20260919/)*
   Align package exports, server-owned catalogues, confirmation controls, visual contrast, and authorization coverage.
 
-- [ ] **Track: Accounting Broken UX Fixes** *Link: [./tracks/accounting_broken_ux_fixes_20260919/](./tracks/accounting_broken_ux_fixes_20260919/)*
-  Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects.
-- [~] **Track: Accounting Money Correctness** *Link: [./tracks/accounting_money_correctness_20260919/](./tracks/accounting_money_correctness_20260919/)*
-  Correct currency exponents, date zones, minor-unit display, and major-unit previews.
-- [ ] **Track: Accounting Loading State Correctness** *Link: [./tracks/accounting_loading_state_correctness_20260919/](./tracks/accounting_loading_state_correctness_20260919/)*
-  Add error recovery, server-side pending filtering, and export date controls.
+- [x] **Track: Accounting Broken UX Fixes** *Link: [./tracks/accounting_broken_ux_fixes_20260919/](./tracks/accounting_broken_ux_fixes_20260919/)*
+  Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects. **Implemented 2026-09-20 (9/9 tasks, 245 tests green, one pre-existing auth-import timeout); manual verification pending.**
+- [x] **Track: Accounting Money Correctness** *Link: [./tracks/accounting_money_correctness_20260919/](./tracks/accounting_money_correctness_20260919/)*
+  Correct currency exponents, date zones, minor-unit display, and major-unit previews. **Implemented 2026-09-20 (6/6 tasks); manual verification pending.**
+- [x] **Track: Accounting Loading State Correctness** *Link: [./tracks/accounting_loading_state_correctness_20260919/](./tracks/accounting_loading_state_correctness_20260919/)*
+  Add error recovery, server-side pending filtering, and export date controls. **Implemented 2026-09-20 (3/3 tasks, 18 scoped tests green); manual verification pending.**
 - [ ] **Track: Accounting Duplication Removal** *Link: [./tracks/accounting_duplication_removal_20260919/](./tracks/accounting_duplication_removal_20260919/)*
   Consolidate repeated route helpers and library test locations.
 - [ ] **Track: Accounting Structural Alignment** *Link: [./tracks/accounting_structural_alignment_20260919/](./tracks/accounting_structural_alignment_20260919/)*
   Align origin checks, security headers, history views, and settled-currency validation.
 
-- [ ] **Track: Marketing Broken UX Fixes** *Link: [./tracks/marketing_broken_ux_fixes_20260919/](./tracks/marketing_broken_ux_fixes_20260919/)*
-  Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code.
+- [x] **Track: Marketing Broken UX Fixes** *Link: [./tracks/marketing_broken_ux_fixes_20260919/](./tracks/marketing_broken_ux_fixes_20260919/)*
+  Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code. **Implemented 2026-09-20 (10/10 tasks, 520 tests green); manual verification pending.**
 - [ ] **Track: Marketing Runtime Header Correctness** *Link: [./tracks/marketing_runtime_header_correctness_20260919/](./tracks/marketing_runtime_header_correctness_20260919/)*
   Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating.
 - [~] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
