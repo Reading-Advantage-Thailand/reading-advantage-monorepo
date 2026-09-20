@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   exchange: vi.fn(),
+  logout: vi.fn(),
   readMarketingCookie: vi.fn(),
   publicOrigin: vi.fn(),
 }));
@@ -10,7 +11,10 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/company-oidc", () => ({
   MARKETING_SESSION_COOKIE: "__Host-ra_marketing_session",
   MARKETING_TRANSACTION_COOKIE: "__Host-ra_marketing_oidc_tx",
-  getMarketingOidcClient: () => ({ exchange: mocks.exchange }),
+   getMarketingOidcClient: () => ({
+     exchange: mocks.exchange,
+     logout: mocks.logout,
+   }),
   readMarketingCookie: mocks.readMarketingCookie,
 }));
 vi.mock("@/lib/public-url", () => ({
@@ -34,9 +38,11 @@ describe("GET /api/auth/callback", () => {
     mocks.readMarketingCookie.mockReturnValue("sealed-transaction");
     mocks.exchange.mockResolvedValue({
       accessToken: "company-token",
+      identity: { roles: ["MEMBER"] },
       expiresAt: new Date(Date.now() + 60_000).toISOString(),
       returnTo: "/campaigns/123",
     });
+    mocks.logout.mockResolvedValue(true);
     mocks.publicOrigin.mockReturnValue(new URL(callbackOrigin));
     vi.stubEnv("NODE_ENV", "test");
   });
@@ -93,5 +99,24 @@ describe("GET /api/auth/callback", () => {
     expect(response.headers.get("location")).toBe(
       `${previewOrigin}/campaigns/123`,
     );
+  });
+
+  it("rejects a callback identity without a Marketing role", async () => {
+    mocks.exchange.mockResolvedValue({
+      accessToken: "company-token",
+      identity: { roles: ["SALES_ADMIN"] },
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      returnTo: "/campaigns/123",
+    });
+
+    const response = await GET(request());
+    const setCookie = response.headers.get("set-cookie") ?? "";
+
+    expect(response.headers.get("location")).toBe(
+      `${callbackOrigin}/login?error=forbidden`,
+    );
+    expect(setCookie).toContain("__Host-ra_marketing_session=;");
+    expect(setCookie).not.toContain("__Host-ra_marketing_session=company-token");
+    expect(mocks.logout).toHaveBeenCalledWith("company-token");
   });
 });

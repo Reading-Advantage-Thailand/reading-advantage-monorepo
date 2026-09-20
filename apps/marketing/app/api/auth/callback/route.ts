@@ -6,19 +6,22 @@ import {
   MARKETING_TRANSACTION_COOKIE,
   readMarketingCookie,
 } from "@/lib/company-oidc";
+import { resolveMarketingRole } from "@/lib/marketing-permissions";
 import { getPublicOrigin } from "@/lib/public-url";
 
 /**
- * Expires the Marketing transaction cookie with its original attributes.
+ * Expires a Marketing host-only cookie with its original attributes.
  * @param response Response that receives the expired cookie.
+ * @param name Cookie name to expire.
  * @param secure Whether the browser-visible origin uses HTTPS.
  * @returns Nothing.
  */
-function expireTransactionCookie(
+function expireCookie(
   response: NextResponse,
+  name: string,
   secure: boolean,
 ): void {
-  response.cookies.set(MARKETING_TRANSACTION_COOKIE, "", {
+  response.cookies.set(name, "", {
     expires: new Date(0),
     httpOnly: true,
     maxAge: 0,
@@ -40,7 +43,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const response = NextResponse.redirect(
       new URL("/login?error=sso", publicOrigin),
     );
-    expireTransactionCookie(response, secure);
+    expireCookie(response, MARKETING_TRANSACTION_COOKIE, secure);
     return response;
   }
   try {
@@ -49,6 +52,17 @@ export async function GET(request: Request): Promise<NextResponse> {
       state,
       sealedTransaction: transaction,
     });
+    if (!resolveMarketingRole(session.identity.roles)) {
+      try {
+        await getMarketingOidcClient().logout(session.accessToken);
+      } catch {}
+      const response = NextResponse.redirect(
+        new URL("/login?error=forbidden", publicOrigin),
+      );
+      expireCookie(response, MARKETING_SESSION_COOKIE, secure);
+      expireCookie(response, MARKETING_TRANSACTION_COOKIE, secure);
+      return response;
+    }
     const response = NextResponse.redirect(new URL(session.returnTo, publicOrigin));
     response.cookies.set(MARKETING_SESSION_COOKIE, session.accessToken, {
       httpOnly: true,
@@ -59,11 +73,11 @@ export async function GET(request: Request): Promise<NextResponse> {
         (new Date(session.expiresAt).getTime() - Date.now()) / 1000,
       )),
     });
-    expireTransactionCookie(response, secure);
+    expireCookie(response, MARKETING_TRANSACTION_COOKIE, secure);
     return response;
   } catch {
     const response = NextResponse.redirect(new URL("/login?error=sso", publicOrigin));
-    expireTransactionCookie(response, secure);
+    expireCookie(response, MARKETING_TRANSACTION_COOKIE, secure);
     return response;
   }
 }
