@@ -1,0 +1,1 @@
+Task: Catch logout rejection and show a translated alert. Added local header state, English and Thai logoutError messages, and a Vitest rejection test. The shared auth-client package remains unchanged. Files: apps/sales-advantage/components/header.tsx, components/header.test.tsx, messages/en.json, messages/th.json.
