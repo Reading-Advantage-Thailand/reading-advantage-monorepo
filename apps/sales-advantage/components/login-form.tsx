@@ -56,7 +56,7 @@ export function LoginForm() {
       await login(username, password);
     } catch (loginError) {
       setError(
-        loginError instanceof Error ? loginError.message : "Login failed",
+        loginError instanceof Error ? loginError.message : t("error"),
       );
     } finally {
       setSubmitting(false);
@@ -80,7 +80,7 @@ export function LoginForm() {
           ) : legacyMode ? (
             <form className="space-y-4" onSubmit={submitLegacy}>
               <label className="block text-sm">
-                Username
+                {t("username")}
                 <input
                   className="mt-1 w-full rounded border px-3 py-2"
                   name="username"
@@ -91,7 +91,7 @@ export function LoginForm() {
                 />
               </label>
               <label className="block text-sm">
-                Password
+                {t("password")}
                 <input
                   className="mt-1 w-full rounded border px-3 py-2"
                   name="password"

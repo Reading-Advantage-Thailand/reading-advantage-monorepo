@@ -5,12 +5,9 @@
   },
   "navigation": {
     "dashboard": "Dashboard",
-    "modules": "Modules",
     "admin": "Admin",
     "logout": "Logout",
-    "logoutError": "Sign out failed. Please try again.",
-    "login": "Login",
-    "chat": "Chat"
+    "logoutError": "Sign out failed. Please try again."
   },
   "login": {
     "title": "Sign In",
@@ -23,10 +20,6 @@
   },
   "dashboard": {
     "title": "Your Dashboard",
-    "resume": "Resume",
-    "moduleProgress": "Progress",
-    "bestScore": "Best Score",
-    "quizScore": "Quiz Score",
     "noProgress": "No progress yet",
     "completeModuleFirst": "Complete {module} first",
     "lessons": "lessons",
@@ -79,13 +72,11 @@
     "weaknesses": "Areas to Improve",
     "suggestedAction": "Suggested Action",
     "criteria": "Evaluation Criteria",
-    "transcript": "Transcript",
-    "attempts": "Attempt History"
+    "transcript": "Transcript"
   },
   "quiz": {
     "submit": "Submit",
     "score": "Score",
-    "passThreshold": "Pass Threshold",
     "passed": "Passed!",
     "failed": "Not passed. Try again.",
     "explanation": "Explanation",
@@ -94,8 +85,7 @@
   "chat": {
     "placeholder": "Ask a question...",
     "title": "Sales Coach AI",
-    "send": "Send",
-    "systemPrompt": "You are a sales coaching expert for Reading Advantage. Answer questions about sales techniques, objection handling, and product positioning."
+    "send": "Send"
   },
   "admin": {
     "title": "Admin Dashboard",

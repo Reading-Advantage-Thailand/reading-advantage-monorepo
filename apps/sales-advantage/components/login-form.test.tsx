@@ -35,7 +35,7 @@ describe("Sales LoginForm auth mode", () => {
       "Checking sign-in mode",
     );
     expect(screen.queryByRole("link")).toBeNull();
-    expect(screen.queryByLabelText("Username")).toBeNull();
+    expect(screen.queryByLabelText("username")).toBeNull();
   });
 
   it("shows and submits credentials only in explicit legacy-school mode", async () => {
@@ -48,10 +48,10 @@ describe("Sales LoginForm auth mode", () => {
     );
     render(<LoginForm />);
 
-    fireEvent.change(await screen.findByLabelText("Username"), {
+    fireEvent.change(await screen.findByLabelText("username"), {
       target: { value: "legacy-rep" },
     });
-    fireEvent.change(screen.getByLabelText("Password"), {
+    fireEvent.change(screen.getByLabelText("password"), {
       target: { value: "secret" },
     });
     fireEvent.submit(
@@ -78,6 +78,6 @@ describe("Sales LoginForm auth mode", () => {
     expect(link.getAttribute("href")).toBe(
       "/api/auth/company/start?returnTo=%2Fen",
     );
-    expect(screen.queryByLabelText("Username")).toBeNull();
+    expect(screen.queryByLabelText("username")).toBeNull();
   });
 });
