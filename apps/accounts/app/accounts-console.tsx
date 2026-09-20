@@ -9,6 +9,14 @@ import { readJson } from "@/lib/server/read-json";
 
 type DirectoryStatus = "loading" | "ready" | "failed";
 
+/** One destructive action waiting for an inline confirmation. */
+interface PendingConfirmation {
+  /** Question shown to the administrator, naming the affected employee. */
+  readonly message: string;
+  /** Write executed when the administrator confirms. */
+  readonly perform: () => Promise<void>;
+}
+
 function operationKey(prefix: string): string {
   return `${prefix}-${crypto.randomUUID()}`;
 }
@@ -57,6 +65,7 @@ export function AccountsConsole({ employee, initialEmployees, provisioning, appl
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [confirmation, setConfirmation] = useState<PendingConfirmation | null>(null);
   const operationKeysRef = useRef<Record<string, string | null>>({});
 
   function getOperationKey(prefix: string): string {
@@ -88,6 +97,10 @@ export function AccountsConsole({ employee, initialEmployees, provisioning, appl
     () => employees.find((item) => item.id === selectedId),
     [employees, selectedId],
   );
+
+  useEffect(() => {
+    setConfirmation(null);
+  }, [selectedId]);
 
   async function createEmployee(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -135,13 +148,8 @@ export function AccountsConsole({ employee, initialEmployees, provisioning, appl
     finally { setPendingId(null); }
   }
 
-  async function setCompanyAdmin(enabled: boolean) {
+  async function performCompanyRoleChange(enabled: boolean) {
     if (!selected) return;
-    if (!window.confirm(
-      enabled
-        ? `Grant company administrator authority to ${selected.displayName}?`
-        : `Remove company administrator authority from ${selected.displayName}?`,
-    )) return;
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/company-roles`, "PUT", {
         roleKeys: enabled ? ["EMPLOYEE", "COMPANY_ADMIN"] : ["EMPLOYEE"],
@@ -154,11 +162,18 @@ export function AccountsConsole({ employee, initialEmployees, provisioning, appl
     } catch (caught) { setError((caught as Error).message); }
   }
 
-  async function setStatus(status: "ACTIVE" | "SUSPENDED") {
+  function setCompanyAdmin(enabled: boolean) {
     if (!selected) return;
-    if (status === "SUSPENDED" && !window.confirm(
-      `Suspend ${selected.displayName} and revoke every active session?`,
-    )) return;
+    setConfirmation({
+      message: enabled
+        ? `Grant company administrator authority to ${selected.displayName}?`
+        : `Remove company administrator authority from ${selected.displayName}?`,
+      perform: () => performCompanyRoleChange(enabled),
+    });
+  }
+
+  async function performStatusChange(status: "ACTIVE" | "SUSPENDED") {
+    if (!selected) return;
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/status`, "PATCH", {
         status, idempotencyKey: getOperationKey("status-change"),
@@ -170,14 +185,31 @@ export function AccountsConsole({ employee, initialEmployees, provisioning, appl
     } catch (caught) { setError((caught as Error).message); }
   }
 
-  async function resetCredential(event: FormEvent<HTMLFormElement>) {
+  function setStatus(status: "ACTIVE" | "SUSPENDED") {
+    if (!selected) return;
+    if (status === "ACTIVE") {
+      void performStatusChange("ACTIVE");
+      return;
+    }
+    setConfirmation({
+      message: `Suspend ${selected.displayName} and revoke every active session?`,
+      perform: () => performStatusChange("SUSPENDED"),
+    });
+  }
+
+  function resetCredential(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!selected) return;
     const formElement = event.currentTarget;
     const value = new FormData(formElement).get("newPassword");
-    if (!window.confirm(
-      `Replace ${selected.displayName}'s credential and revoke every active session?`,
-    )) return;
+    setConfirmation({
+      message: `Replace ${selected.displayName}'s credential and revoke every active session?`,
+      perform: () => performCredentialReset(formElement, value),
+    });
+  }
+
+  async function performCredentialReset(formElement: HTMLFormElement, value: FormDataEntryValue | null) {
+    if (!selected) return;
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/credential`, "PUT", {
         newPassword: value, idempotencyKey: getOperationKey("credential-reset"),
@@ -190,11 +222,16 @@ export function AccountsConsole({ employee, initialEmployees, provisioning, appl
     } catch (caught) { setError((caught as Error).message); }
   }
 
-  async function revokeSessions() {
+  function revokeSessions() {
     if (!selected) return;
-    if (!window.confirm(
-      `Revoke every Accounts and application session for ${selected.displayName}?`,
-    )) return;
+    setConfirmation({
+      message: `Revoke every Accounts and application session for ${selected.displayName}?`,
+      perform: () => performSessionRevocation(),
+    });
+  }
+
+  async function performSessionRevocation() {
+    if (!selected) return;
     try {
       await jsonRequest(`/api/admin/employees/${selected.id}/sessions`, "DELETE", {
         idempotencyKey: getOperationKey("session-revoke"),
@@ -204,6 +241,12 @@ export function AccountsConsole({ employee, initialEmployees, provisioning, appl
       setError("");
       await refresh();
     } catch (caught) { setError((caught as Error).message); }
+  }
+
+  function confirmPendingAction() {
+    const pending = confirmation;
+    setConfirmation(null);
+    void pending?.perform();
   }
 
   async function logout() {
@@ -317,6 +360,15 @@ export function AccountsConsole({ employee, initialEmployees, provisioning, appl
                   <input name="newPassword" type="password" minLength={12} placeholder="New password" aria-label="New password" required />
                   <button className="quiet-action">RESET CREDENTIAL</button>
                 </form>
+                {confirmation && (
+                  <div className="confirm-row" role="alert">
+                    <p>{confirmation.message}</p>
+                    <div className="confirm-actions">
+                      <button className="primary-action" onClick={confirmPendingAction}>CONFIRM</button>
+                      <button className="quiet-action" onClick={() => setConfirmation(null)}>CANCEL</button>
+                    </div>
+                  </div>
+                )}
               </section>
             </> : <p className="select-employee-empty">Select an employee.</p>}
           </article>

@@ -149,7 +149,6 @@ describe("Accounts administration console", () => {
       },
     );
     vi.stubGlobal("fetch", fetchMock);
-    vi.spyOn(window, "confirm").mockReturnValue(true);
 
     render(<AccountsConsole employee={admin} applications={catalogue} />);
     await screen.findByRole("heading", { name: "Directory" });
@@ -170,18 +169,124 @@ describe("Accounts administration console", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: "SUSPEND IDENTITY" }));
+    fireEvent.click(screen.getByRole("button", { name: "CONFIRM" }));
     await waitFor(() => {
       const statusCall = fetchMock.mock.calls.find(([url]) =>
         String(url).endsWith("/status"),
       );
       expect(statusCall).toBeDefined();
-      expect(window.confirm).toHaveBeenCalledWith(
-        "Suspend Company Owner and revoke every active session?",
-      );
       expect(JSON.parse(String(statusCall?.[1]?.body))).toMatchObject({
         status: "SUSPENDED",
       });
     });
+  });
+
+  it("confirms suspension inline before any write", async () => {
+    const fetchMock = vi.fn(
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (
+          url === "/api/admin/employees" &&
+          (init?.method ?? "GET") === "GET"
+        ) {
+          return jsonResponse({ employees: [admin] });
+        }
+        return jsonResponse({ employee: admin });
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<AccountsConsole employee={admin} applications={catalogue} />);
+    await screen.findByRole("button", { name: "Select Company Owner, active" });
+
+    fireEvent.click(screen.getByRole("button", { name: "SUSPEND IDENTITY" }));
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Suspend Company Owner and revoke every active session?",
+    );
+    expect(statusCalls()).toHaveLength(0);
+
+    fireEvent.click(screen.getByRole("button", { name: "CANCEL" }));
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(statusCalls()).toHaveLength(0);
+
+    fireEvent.click(screen.getByRole("button", { name: "SUSPEND IDENTITY" }));
+    fireEvent.click(screen.getByRole("button", { name: "CONFIRM" }));
+    await waitFor(() => expect(statusCalls()).toHaveLength(1));
+
+    function statusCalls() {
+      return fetchMock.mock.calls.filter(([url]) => String(url).endsWith("/status"));
+    }
+  });
+
+  it("asks inline before granting company administrator authority", async () => {
+    const fetchMock = vi.fn(
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (
+          url === "/api/admin/employees" &&
+          (init?.method ?? "GET") === "GET"
+        ) {
+          return jsonResponse({ employees: [admin] });
+        }
+        return jsonResponse({ employee });
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(
+      <AccountsConsole
+        employee={admin}
+        initialEmployees={[admin, employee]}
+        applications={catalogue}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Select Sales Representative, active" }));
+    const toggle = screen.getByRole("checkbox", { name: /Company administrator/ });
+    expect(toggle).not.toBeChecked();
+
+    fireEvent.click(toggle);
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Grant company administrator authority to Sales Representative?",
+    );
+    expect(companyRoleCalls()).toHaveLength(0);
+    expect(toggle).not.toBeChecked();
+
+    fireEvent.click(screen.getByRole("button", { name: "CONFIRM" }));
+    await waitFor(() => expect(companyRoleCalls()).toHaveLength(1));
+    expect(JSON.parse(String(companyRoleCalls()[0]?.[1]?.body))).toMatchObject({
+      roleKeys: ["EMPLOYEE", "COMPANY_ADMIN"],
+    });
+
+    function companyRoleCalls() {
+      return fetchMock.mock.calls.filter(([url]) => String(url).endsWith("/company-roles"));
+    }
+  });
+
+  it("clears a pending confirmation when the selected employee changes", async () => {
+    const peer: Employee = {
+      ...admin,
+      id: "33333333-3333-4333-8333-333333333333",
+      username: "peer",
+      displayName: "Second Employee",
+    };
+    const fetchMock = vi.fn(async () => jsonResponse({ employee: admin }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(
+      <AccountsConsole
+        employee={admin}
+        initialEmployees={[admin, peer]}
+        applications={catalogue}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "SUSPEND IDENTITY" }));
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Select Second Employee, active" }));
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "CONFIRM" })).not.toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("reuses a create key while pending and clears it after success", async () => {
@@ -405,7 +510,6 @@ describe("Accounts administration console", () => {
       },
     );
     vi.stubGlobal("fetch", fetchMock);
-    vi.spyOn(window, "confirm").mockReturnValue(true);
 
     render(<AccountsConsole employee={admin} applications={catalogue} />);
     await screen.findByRole("heading", { name: "Directory" });
@@ -415,6 +519,7 @@ describe("Accounts administration console", () => {
       target: { value: "new-long-enough-password" },
     });
     fireEvent.submit(resetForm);
+    fireEvent.click(screen.getByRole("button", { name: "CONFIRM" }));
 
     const employeeGets = () => fetchMock.mock.calls.filter(([url, options]) =>
       String(url) === "/api/admin/employees" && (options?.method ?? "GET") === "GET",
@@ -422,6 +527,7 @@ describe("Accounts administration console", () => {
     await waitFor(() => expect(employeeGets()).toHaveLength(2));
 
     fireEvent.click(screen.getByRole("button", { name: "REVOKE ALL SESSIONS" }));
+    fireEvent.click(screen.getByRole("button", { name: "CONFIRM" }));
     await waitFor(() => expect(employeeGets()).toHaveLength(3));
   });
 });
