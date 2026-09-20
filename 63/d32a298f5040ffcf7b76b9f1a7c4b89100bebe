@@ -1,0 +1,5 @@
+Task: Return 400 for malformed JSON bodies.
+
+Files: apps/accounts/lib/server/http.ts; seven Accounts route files; apps/accounts/app/api/malformed-json.test.ts.
+
+The shared body reader rejects malformed, null, array, and primitive JSON bodies. Route tests cover all seven call sites.
