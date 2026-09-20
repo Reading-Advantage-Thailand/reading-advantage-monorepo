@@ -47,6 +47,7 @@
     "lockedLessonTitle": "Lesson locked",
     "unavailableTitle": "Lesson unavailable",
     "unavailableDescription": "We could not load this lesson. Return to the dashboard and try again.",
+    "completeFailed": "We could not mark this lesson complete. Please try again.",
     "moduleUnavailableTitle": "Module unavailable",
     "moduleUnavailableDescription": "We could not load this module. Return to the dashboard and try again."
   },
@@ -87,7 +88,8 @@
     "passThreshold": "Pass Threshold",
     "passed": "Passed!",
     "failed": "Not passed. Try again.",
-    "explanation": "Explanation"
+    "explanation": "Explanation",
+    "submitFailed": "Submitting your quiz failed. Please try again."
   },
   "chat": {
     "placeholder": "Ask a question...",
@@ -151,6 +153,7 @@
     "accountsHandoffTitle": "Employee identities are provisioned in Accounts",
     "accountsHandoffDescription": "Continue to Accounts with Sales Advantage and SALES_REP preselected. Accounts creates the company identity and its initial credential in one audited workflow.",
     "accountsAuthorityBoundary": "Only a company administrator can complete identity provisioning. Sales administrators retain product oversight but cannot create or reset company credentials.",
-    "openAccounts": "Continue to Accounts"
+    "openAccounts": "Continue to Accounts",
+    "approveFailed": "We could not approve this item. Please try again."
   }
 }

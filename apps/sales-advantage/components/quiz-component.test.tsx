@@ -16,6 +16,8 @@ const mutationState = vi.hoisted(() => ({
         }>;
       }) => void)
     | null,
+  onError: null as (() => void) | null,
+  isPending: false,
 }));
 
 vi.mock("next-intl", () => ({
@@ -28,9 +30,11 @@ vi.mock("@/lib/trpc", () => ({
       submitQuiz: {
         useMutation: (options: {
           onSuccess: typeof mutationState.onSuccess;
+          onError: typeof mutationState.onError;
         }) => {
           mutationState.onSuccess = options.onSuccess;
-          return { mutate: mutationState.mutate, isPending: false };
+          mutationState.onError = options.onError;
+          return { mutate: mutationState.mutate, isPending: mutationState.isPending };
         },
       },
     },
@@ -41,6 +45,8 @@ describe("QuizComponent", () => {
   beforeEach(() => {
     mutationState.mutate.mockReset();
     mutationState.onSuccess = null;
+    mutationState.onError = null;
+    mutationState.isPending = false;
   });
 
   it("submits selected answers and renders server-returned grading feedback", () => {
@@ -84,5 +90,55 @@ describe("QuizComponent", () => {
     expect(
       screen.getByText("Discovery comes before presenting a solution."),
     ).toBeTruthy();
+  });
+
+  it("renders an alert when the quiz submission fails", () => {
+    render(
+      <QuizComponent
+        lessonId="lesson-1"
+        questions={[
+          {
+            id: "question-1",
+            question: "What should the rep ask first?",
+            optionsJson: ["A discovery question", "A pricing question"],
+          },
+        ]}
+      />,
+    );
+
+    fireEvent.click(screen.getByLabelText("A discovery question"));
+    fireEvent.click(screen.getByRole("button", { name: "submit" }));
+
+    expect(screen.queryByRole("alert")).toBeNull();
+
+    act(() => {
+      mutationState.onError?.();
+    });
+
+    expect(screen.getByRole("alert").textContent).toContain("submitFailed");
+    expect(screen.getByRole("button", { name: "submit" }).disabled).toBe(false);
+  });
+
+  it("disables the submit button while the mutation is pending", () => {
+    mutationState.isPending = true;
+
+    render(
+      <QuizComponent
+        lessonId="lesson-1"
+        questions={[
+          {
+            id: "question-1",
+            question: "What should the rep ask first?",
+            optionsJson: ["A discovery question", "A pricing question"],
+          },
+        ]}
+      />,
+    );
+    fireEvent.click(screen.getByLabelText("A discovery question"));
+
+    const submitButton = screen.getByRole("button", {
+      name: "submit",
+    }) as HTMLButtonElement;
+    expect(submitButton.disabled).toBe(true);
   });
 });

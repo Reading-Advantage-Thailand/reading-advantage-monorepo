@@ -29,15 +29,18 @@ export default function LessonPage({
     lessonId: id,
   });
   const [marked, setMarked] = useState(false);
+  const [completeError, setCompleteError] = useState(false);
   const utils = trpc.useUtils();
   const markComplete = trpc.sales.markTheoryLessonComplete.useMutation({
     onSuccess: async () => {
+      setCompleteError(false);
       setMarked(true);
       await Promise.all([
         utils.sales.lesson.invalidate({ lessonId: id }),
         utils.sales.dashboard.invalidate(),
       ]);
     },
+    onError: () => setCompleteError(true),
   });
 
   if (error) {
@@ -91,12 +94,22 @@ export default function LessonPage({
                   <span>{t("completed")}</span>
                 </div>
               ) : (
-                <Button
-                  onClick={() => markComplete.mutate({ lessonId: id })}
-                  disabled={markComplete.isPending}
-                >
-                  {t("markComplete")}
-                </Button>
+                <div className="space-y-2">
+                  <Button
+                    onClick={() => {
+                      setCompleteError(false);
+                      markComplete.mutate({ lessonId: id });
+                    }}
+                    disabled={markComplete.isPending}
+                  >
+                    {t("markComplete")}
+                  </Button>
+                  {completeError && (
+                    <p role="alert" className="text-sm text-destructive">
+                      {t("completeFailed")}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           </CardContent>

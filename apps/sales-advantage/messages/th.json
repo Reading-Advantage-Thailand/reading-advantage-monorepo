@@ -47,6 +47,7 @@
     "lockedLessonTitle": "บทเรียนถูกล็อก",
     "unavailableTitle": "ยังไม่สามารถเปิดบทเรียนนี้ได้",
     "unavailableDescription": "ไม่สามารถโหลดบทเรียนนี้ได้ กรุณากลับไปยังแดชบอร์ดแล้วลองอีกครั้ง",
+    "completeFailed": "ไม่สามารถทำเครื่องหมายว่าเรียนเสร็จได้ กรุณาลองอีกครั้ง",
     "moduleUnavailableTitle": "ไม่สามารถเปิดหมวดบทเรียนได้",
     "moduleUnavailableDescription": "ไม่สามารถโหลดหมวดบทเรียนนี้ได้ กรุณากลับไปยังแดชบอร์ดแล้วลองอีกครั้ง"
   },
@@ -87,7 +88,8 @@
     "passThreshold": "เกณฑ์ผ่าน",
     "passed": "ผ่าน!",
     "failed": "ไม่ผ่าน กรุณาลองใหม่",
-    "explanation": "คำอธิบาย"
+    "explanation": "คำอธิบาย",
+    "submitFailed": "ส่งคำตอบไม่สำเร็จ กรุณาลองอีกครั้ง"
   },
   "chat": {
     "placeholder": "พิมพ์คำถามของคุณ...",
@@ -151,6 +153,7 @@
     "accountsHandoffTitle": "จัดการบัญชีพนักงานผ่าน Accounts",
     "accountsHandoffDescription": "ไปที่ Accounts โดยระบบจะเลือก Sales Advantage และสิทธิ์ SALES_REP ไว้ให้ Accounts จะสร้างตัวตนบริษัทและรหัสผ่านเริ่มต้นในขั้นตอนที่ตรวจสอบย้อนหลังได้",
     "accountsAuthorityBoundary": "เฉพาะผู้ดูแลบริษัทเท่านั้นที่สร้างตัวตนพนักงานได้ ผู้ดูแลฝ่ายขายยังจัดการงานขายได้ แต่ไม่สามารถสร้างหรือรีเซ็ตรหัสผ่านของบริษัท",
-    "openAccounts": "ไปที่ Accounts"
+    "openAccounts": "ไปที่ Accounts",
+    "approveFailed": "ไม่สามารถอนุมัติรายการนี้ได้ กรุณาลองอีกครั้ง"
   }
 }

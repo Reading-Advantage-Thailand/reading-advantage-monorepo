@@ -26,6 +26,7 @@ export function QuizComponent({
 }) {
   const t = useTranslations("quiz");
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState(false);
   const [result, setResult] = useState<{
     score: number;
     passed: boolean;
@@ -36,10 +37,15 @@ export function QuizComponent({
     }>;
   } | null>(null);
   const submitQuiz = trpc.sales.submitQuiz.useMutation({
-    onSuccess: (data) => setResult(data),
+    onSuccess: (data) => {
+      setSubmitError(false);
+      setResult(data);
+    },
+    onError: () => setSubmitError(true),
   });
 
   function submit() {
+    setSubmitError(false);
     submitQuiz.mutate({ lessonId, answers });
   }
 
@@ -128,6 +134,11 @@ export function QuizComponent({
             </div>
           </div>
         ))}
+        {submitError && (
+          <p role="alert" className="text-sm text-destructive">
+            {t("submitFailed")}
+          </p>
+        )}
         <Button
           onClick={submit}
           disabled={

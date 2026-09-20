@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { trpc } from "@/lib/trpc";
 import { Link } from "@/i18n/navigation";
@@ -19,10 +20,13 @@ export default function CurriculumPage() {
   const utils = trpc.useUtils();
   const { data: curriculum, isLoading, error } =
     trpc.sales.admin.curriculum.useQuery();
+  const [approveError, setApproveError] = useState(false);
   const approve = trpc.sales.admin.approveContent.useMutation({
     onSuccess: async () => {
+      setApproveError(false);
       await utils.sales.admin.curriculum.invalidate();
     },
+    onError: () => setApproveError(true),
   });
 
   return (
@@ -46,6 +50,11 @@ export default function CurriculumPage() {
         </div>
       ) : (
         <div className="space-y-4">
+          {approveError && (
+            <p role="alert" className="text-sm text-destructive">
+              {t("approveFailed")}
+            </p>
+          )}
         {(curriculum?.modules ?? []).map((module) => (
           <Card key={module.id}>
             <CardHeader>
@@ -62,6 +71,7 @@ export default function CurriculumPage() {
                     title={lesson.title}
                     detail={t(lesson.type)}
                     reviewStatus={lesson.reviewStatus}
+                    approveDisabled={approve.isPending}
                     onApprove={() => approve.mutate({ lessonId: lesson.id })}
                   />
                 ))}
@@ -81,6 +91,7 @@ export default function CurriculumPage() {
                   title={rubric.name}
                   detail={t("rubric")}
                   reviewStatus={rubric.reviewStatus}
+                  approveDisabled={approve.isPending}
                   onApprove={() => approve.mutate({ rubricId: rubric.id })}
                 />
               ))}
@@ -97,11 +108,13 @@ function ReviewRow({
   title,
   detail,
   reviewStatus,
+  approveDisabled,
   onApprove,
 }: {
   title: string;
   detail: string;
   reviewStatus: "draft" | "reviewed" | "approved";
+  approveDisabled: boolean;
   onApprove: () => void;
 }) {
   const t = useTranslations("admin");
@@ -119,7 +132,7 @@ function ReviewRow({
         ) : (
           <>
             <Badge variant="outline">{t(reviewStatus)}</Badge>
-            <Button size="sm" onClick={onApprove}>
+            <Button size="sm" onClick={onApprove} disabled={approveDisabled}>
               {t("approve")}
             </Button>
           </>
