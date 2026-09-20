@@ -11,4 +11,4 @@
 - [x] (dce524539) Task: Add `isLoading` and `error` branches to the admin curriculum page. Source: `docs/sales-advantage-ux-refactor-plan.md` §5; Issues: `app/[locale]/admin/curriculum/page.tsx:20`, `app/[locale]/admin/page.tsx:45-56`
 - [x] (da248745d) Task: Add `onError` and a pending state to the approve, quiz, and lesson completion mutations. Source: `docs/sales-advantage-ux-refactor-plan.md` §4 and §5; Issues: `app/[locale]/admin/curriculum/page.tsx:21-25,109`, `components/quiz-component.tsx:38-40`, `app/[locale]/lesson/[id]/page.tsx:36-45`
 - [x] (12c6f685b) Task: Add an `AbortController` to the chat request. Source: `docs/sales-advantage-ux-refactor-plan.md` §4; Issues: `components/chat-tutor.tsx:44-66`
-- [ ] Task: Add one `error.tsx` and one `not-found.tsx`. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `app/layout.tsx:8-14`
+- [x] (eb8105c36) Task: Add one `error.tsx` and one `not-found.tsx`. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `app/layout.tsx:8-14`
