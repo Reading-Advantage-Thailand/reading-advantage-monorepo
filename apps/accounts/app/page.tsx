@@ -1,4 +1,5 @@
 import { getIdentityComposition } from "@/lib/server/identity";
+import { applicationCatalogue } from "@/lib/server/application-catalogue";
 import { isSafeReturnTo } from "@/lib/server/safe-return-path";
 import {
   companyIdentityRouteHandlers,
@@ -66,6 +67,7 @@ export default async function AccountsPage(props: {
           employee={employee}
           initialEmployees={initialEmployees}
           provisioning={provisioning}
+          applications={applicationCatalogue()}
         />
       ) : (
         <SignInPanel returnTo={returnTo} />

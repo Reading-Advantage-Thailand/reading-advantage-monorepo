@@ -4,15 +4,10 @@ import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } fro
 
 import type { Employee } from "@reading-advantage/backend";
 
+import type { CataloguedApplication } from "@/lib/server/application-catalogue";
 import { readJson } from "@/lib/server/read-json";
 
 type DirectoryStatus = "loading" | "ready" | "failed";
-
-const APPLICATIONS = [
-  { key: "marketing", label: "Marketing", href: "https://marketing.reading-advantage.com", roles: ["MEMBER", "ADMIN"] },
-  { key: "sales", label: "Sales Advantage", href: "https://sales.reading-advantage.com", roles: ["SALES_REP", "SALES_ADMIN"] },
-  { key: "codecamp", label: "Codecamp", href: "https://codecamp.reading-advantage.com", roles: ["STUDENT", "INTERN", "TEACHER", "ADMIN"] },
-] as const;
 
 function operationKey(prefix: string): string {
   return `${prefix}-${crypto.randomUUID()}`;
@@ -47,10 +42,11 @@ export interface ProvisioningHandoff {
 }
 
 /** Refined employee directory and independent application-role administration surface. */
-export function AccountsConsole({ employee, initialEmployees, provisioning }: Readonly<{
+export function AccountsConsole({ employee, initialEmployees, provisioning, applications }: Readonly<{
   employee: Employee;
   initialEmployees?: Employee[];
   provisioning?: ProvisioningHandoff;
+  applications: readonly CataloguedApplication[];
 }>) {
   const isAdmin = employee.companyRoles.includes("COMPANY_ADMIN");
   const [employees, setEmployees] = useState<Employee[]>(initialEmployees ?? []);
@@ -231,7 +227,7 @@ export function AccountsConsole({ employee, initialEmployees, provisioning }: Re
       {!isAdmin ? (
         <div className="access-ledger">
           <h2>Your application ledger</h2>
-          {APPLICATIONS.map((app) => (
+          {applications.map((app) => (
             <div className="ledger-row" key={app.key}>
               <a href={app.href}>{app.label} ↗</a>
               <b>{employee.appRoles[app.key]?.join(" · ") || "NO ACCESS"}</b>
@@ -293,7 +289,7 @@ export function AccountsConsole({ employee, initialEmployees, provisioning }: Re
               </label>
               <section className="role-matrix">
                 <div className="section-title"><span>02</span><h3>Application assignments</h3></div>
-                {APPLICATIONS.map((app) => (
+                {applications.map((app) => (
                   <fieldset key={app.key}>
                     <legend><a href={app.href}>{app.label} ↗</a></legend>
                     {app.roles.map((role) => {

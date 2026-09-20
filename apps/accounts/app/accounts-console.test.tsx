@@ -12,6 +12,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Employee } from "@reading-advantage/backend";
 
+import type { CataloguedApplication } from "@/lib/server/application-catalogue";
+
 import { AccountsConsole } from "./accounts-console";
 
 const admin: Employee = {
@@ -31,6 +33,12 @@ const employee: Employee = {
   companyRoles: ["EMPLOYEE"],
   appRoles: { sales: ["SALES_REP"] },
 };
+
+const catalogue: CataloguedApplication[] = [
+  { key: "marketing", label: "Marketing", href: "https://marketing.example.test", roles: ["MEMBER", "ADMIN"] },
+  { key: "sales", label: "Sales Advantage", href: "https://sales.example.test", roles: ["SALES_REP", "SALES_ADMIN"] },
+  { key: "codecamp", label: "Codecamp", href: "https://codecamp.example.test", roles: ["STUDENT", "INTERN", "TEACHER", "ADMIN"] },
+];
 
 function jsonResponse(payload: unknown, status = 200): Response {
   return new Response(JSON.stringify(payload), {
@@ -54,18 +62,40 @@ describe("Accounts administration console", () => {
   });
 
   it("shows application access but no identity controls to an ordinary employee", () => {
-    render(<AccountsConsole employee={employee} />);
+    render(<AccountsConsole employee={employee} applications={catalogue} />);
 
     expect(
       screen.getByRole("heading", { name: "Your application ledger" }),
     ).toBeInTheDocument();
     expect(screen.getByText("SALES_REP")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Sales Advantage ↗" })).toHaveAttribute(
+      "href",
+      "https://sales.example.test",
+    );
     expect(
       screen.queryByRole("heading", { name: "Directory" }),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /create identity/i }),
     ).not.toBeInTheDocument();
+  });
+
+  it("offers exactly the role vocabulary the server catalogue supplies", () => {
+    const serverVocabulary: CataloguedApplication[] = [
+      { key: "sales", label: "Sales Advantage", href: "https://sales.example.test", roles: ["SALES_REP", "SALES_AUDITOR"] },
+    ];
+
+    render(
+      <AccountsConsole
+        employee={admin}
+        initialEmployees={[admin]}
+        applications={serverVocabulary}
+      />,
+    );
+
+    expect(screen.getByRole("checkbox", { name: "SALES_AUDITOR" })).toBeInTheDocument();
+    expect(screen.queryByRole("checkbox", { name: "SALES_ADMIN" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("checkbox", { name: "MEMBER" })).not.toBeInTheDocument();
   });
 
   it("distinguishes loading and failed employee directory states", async () => {
@@ -75,7 +105,7 @@ describe("Accounts administration console", () => {
     });
     vi.stubGlobal("fetch", vi.fn(() => pendingEmployees));
 
-    render(<AccountsConsole employee={admin} />);
+    render(<AccountsConsole employee={admin} applications={catalogue} />);
 
     expect(screen.getByText("Loading employees…")).toBeInTheDocument();
     resolveEmployees(new Response("failure", { status: 500 }));
@@ -88,7 +118,7 @@ describe("Accounts administration console", () => {
       vi.fn(async () => jsonResponse({ employees: [] })),
     );
 
-    render(<AccountsConsole employee={admin} />);
+    render(<AccountsConsole employee={admin} applications={catalogue} />);
 
     expect(await screen.findByText("No employees found.")).toBeInTheDocument();
   });
@@ -97,7 +127,9 @@ describe("Accounts administration console", () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
 
-    render(<AccountsConsole employee={admin} initialEmployees={[admin]} />);
+    render(
+      <AccountsConsole employee={admin} initialEmployees={[admin]} applications={catalogue} />,
+    );
 
     expect(screen.getByRole("button", { name: "Select Company Owner, active" })).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
@@ -119,7 +151,7 @@ describe("Accounts administration console", () => {
     vi.stubGlobal("fetch", fetchMock);
     vi.spyOn(window, "confirm").mockReturnValue(true);
 
-    render(<AccountsConsole employee={admin} />);
+    render(<AccountsConsole employee={admin} applications={catalogue} />);
     await screen.findByRole("heading", { name: "Directory" });
     await screen.findByRole("button", { name: "Select Company Owner, active" });
 
@@ -165,7 +197,7 @@ describe("Accounts administration console", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    render(<AccountsConsole employee={admin} />);
+    render(<AccountsConsole employee={admin} applications={catalogue} />);
     await screen.findByRole("heading", { name: "Directory" });
     const form = screen.getByRole("button", { name: /create identity/i }).closest("form");
     if (!form) throw new Error("Create form was not rendered.");
@@ -226,7 +258,7 @@ describe("Accounts administration console", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    render(<AccountsConsole employee={admin} />);
+    render(<AccountsConsole employee={admin} applications={catalogue} />);
     await screen.findByRole("heading", { name: "Directory" });
     const roleCheckbox = screen.getByRole("checkbox", { name: "SALES_REP" });
 
@@ -253,7 +285,7 @@ describe("Accounts administration console", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    render(<AccountsConsole employee={admin} />);
+    render(<AccountsConsole employee={admin} applications={catalogue} />);
     await screen.findByRole("heading", { name: "Directory" });
     const salesRep = screen.getByRole("checkbox", { name: "SALES_REP" });
     const marketingMember = screen.getByRole("checkbox", { name: "MEMBER" });
@@ -310,7 +342,7 @@ describe("Accounts administration console", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    render(<AccountsConsole employee={roleEmployee} />);
+    render(<AccountsConsole employee={roleEmployee} applications={catalogue} />);
     await screen.findByRole("heading", { name: "Directory" });
     const salesRep = screen.getByRole("checkbox", { name: "SALES_REP" });
     const salesAdmin = screen.getByRole("checkbox", { name: "SALES_ADMIN" });
@@ -344,7 +376,7 @@ describe("Accounts administration console", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    render(<AccountsConsole employee={admin} />);
+    render(<AccountsConsole employee={admin} applications={catalogue} />);
     await screen.findByRole("heading", { name: "Directory" });
     const form = screen.getByRole("button", { name: /create identity/i }).closest("form");
     if (!form) throw new Error("Create form was not rendered.");
@@ -375,7 +407,7 @@ describe("Accounts administration console", () => {
     vi.stubGlobal("fetch", fetchMock);
     vi.spyOn(window, "confirm").mockReturnValue(true);
 
-    render(<AccountsConsole employee={admin} />);
+    render(<AccountsConsole employee={admin} applications={catalogue} />);
     await screen.findByRole("heading", { name: "Directory" });
     const resetForm = screen.getByRole("button", { name: "RESET CREDENTIAL" }).closest("form");
     if (!resetForm) throw new Error("Reset form was not rendered.");
