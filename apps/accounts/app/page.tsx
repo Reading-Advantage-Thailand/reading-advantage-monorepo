@@ -16,7 +16,7 @@ import { SignInPanel } from "./sign-in-panel";
 
 async function firstEmployeeList(): Promise<Employee[]> {
   const composition = await getIdentityComposition();
-  return companyIdentityRouteHandlers.employeesList(() =>
+  return companyIdentityRouteHandlers.employeesList(async () =>
     composition.executor.execute<Employee[]>({
       capabilityId: companyIdentityCapabilityIds.listEmployees,
       input: {},
