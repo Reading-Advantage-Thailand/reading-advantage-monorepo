@@ -12,6 +12,8 @@ import {
 } from "@/lib/company-oidc";
 import { z } from "zod";
 
+import { routing } from "@/i18n/routing";
+
 export const runtime = "nodejs";
 
 const messageSchema = z.object({
@@ -23,6 +25,7 @@ const chatInputSchema = z.object({
   messages: z.array(messageSchema).min(1).max(50),
   lessonId: z.string().optional(),
   moduleId: z.string().optional(),
+  locale: z.enum(routing.locales).optional(),
 });
 
 const BARE_MARKER_SPOOF = /(^|\s)(REP|COACH):/gi;
@@ -88,7 +91,8 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    const { messages, lessonId, moduleId } = parsed.data;
+    const { messages, lessonId, moduleId, locale } = parsed.data;
+    const outputLocale = locale ?? routing.defaultLocale;
 
     const systemPrompt = [
       "You are an expert sales coach for Reading Advantage Thailand, drawing from:",
@@ -101,7 +105,9 @@ export async function POST(request: NextRequest) {
       "Focus on: discovery questions, listening, framing value in the buyer's language,",
       "handling objections without discounting, asking for the order.",
       "",
-      "Always respond in Thai (ภาษาไทย).",
+      outputLocale === "th"
+        ? "Always respond in Thai (ภาษาไทย)."
+        : "Always respond in English.",
       "Be concise (under 200 words) and give practical examples.",
       lessonId ? `Lesson context: ${sanitizeContextId(lessonId)}.` : "",
       moduleId ? `Module context: ${sanitizeContextId(moduleId)}.` : "",

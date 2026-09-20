@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@reading-advantage/ui";
 import { Input } from "@reading-advantage/ui";
 import { Button } from "@reading-advantage/ui";
@@ -24,6 +24,7 @@ export function ChatTutor({
   moduleId?: string;
 }) {
   const t = useTranslations("chat");
+  const locale = useLocale();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -55,6 +56,7 @@ export function ChatTutor({
           messages: [...messages, userMsg],
           lessonId,
           moduleId,
+          locale,
         }),
         signal: controller.signal,
       });

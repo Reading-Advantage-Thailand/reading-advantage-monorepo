@@ -12,9 +12,11 @@ const localeCopies: Array<{ locale: string; copy: ChatCopy }> = [
 ];
 
 let activeChatCopy: ChatCopy = enMessages.chat;
+let activeLocale = "en";
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: keyof ChatCopy) => activeChatCopy[key],
+  useLocale: () => activeLocale,
 }));
 
 describe("ChatTutor accessibility", () => {
@@ -45,6 +47,7 @@ describe("ChatTutor accessibility", () => {
 
   it("submits the enabled button to the chat API", async () => {
     activeChatCopy = thMessages.chat;
+    activeLocale = "th";
     let resolveFetch!: (response: Response) => void;
     const pendingFetch = new Promise<Response>((resolve) => {
       resolveFetch = resolve;
@@ -70,6 +73,8 @@ describe("ChatTutor accessibility", () => {
       },
       { timeout: 1000 },
     );
+    const requestInit = fetchMock.mock.calls[0][1] as { body: string };
+    expect(JSON.parse(requestInit.body)).toMatchObject({ locale: "th" });
     expect((button as HTMLButtonElement).disabled).toBe(true);
     expect((input as HTMLInputElement).disabled).toBe(true);
 
