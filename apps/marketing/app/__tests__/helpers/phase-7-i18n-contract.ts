@@ -41,6 +41,9 @@ const FORBIDDEN_IMPORTS = new Set(
 );
 const SAFE_BROWSER_IMPORTS = new Set([
   "@reading-advantage/db/marketing-constants",
+  // Dedicated Edge/browser-safe subpath of the shared auth package: it
+  // imports no Node built-ins and exists for exactly this client use.
+  "@reading-advantage/auth/public-url",
 ]);
 const VISIBLE_ATTRIBUTES = new Set("alt placeholder title".split(" "));
 const VISIBLE_ARIA_ATTRIBUTES = new Set(

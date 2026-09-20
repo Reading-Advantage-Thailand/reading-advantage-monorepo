@@ -14,6 +14,11 @@ const messages = {
     "metadata.title": "Marketing Production Platform",
     "metadata.description":
       "Human-in-the-loop marketing production for Reading Advantage",
+    "metadata.loginTitle": "Sign in",
+    "metadata.settingsTitle": "Settings",
+    "metadata.campaignsTitle": "Campaigns",
+    "metadata.campaignDetailTitle": "Campaign detail",
+    "metadata.videoTitle": "Video production",
     "home.title": "Marketing Production Platform",
     "home.description":
       "Welcome to the Reading Advantage marketing production system.",
