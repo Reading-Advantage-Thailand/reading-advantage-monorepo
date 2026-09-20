@@ -58,7 +58,7 @@ function createModule(completedLessons: number, lessonCount: number) {
  * @returns A locked module response accepted by the dashboard page.
  */
 function createLockedModule(
-  overrides: Partial<ReturnType<typeof createModule>> = {},
+  overrides: { prerequisiteModuleSlug?: string | null } = {},
 ) {
   return {
     ...createModule(0, 5),

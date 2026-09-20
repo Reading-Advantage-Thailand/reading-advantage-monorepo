@@ -93,9 +93,10 @@ describe("Module lesson list accessibility", () => {
     await renderModulePage();
 
     expect(screen.getByText("1. Discovery Basics")).toBeTruthy();
-    expect(
-      screen.getByRole("link", { name: /Discovery Basics/ }),
-    ).toHaveAttribute("href", "/lesson/lesson-1");
+    const unlockedLink = screen.getByRole("link", {
+      name: /Discovery Basics/,
+    });
+    expect(unlockedLink.getAttribute("href")).toBe("/lesson/lesson-1");
   });
 
   it("renders a locked lesson as a focusable disabled card with a visible reason", async () => {
