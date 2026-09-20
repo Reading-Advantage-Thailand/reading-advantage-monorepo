@@ -1,0 +1,1 @@
+Follow-up: Stabilized the beforeunload assertion by waiting for the effect to register, preventing timing-sensitive failures when scoped tests run together.
