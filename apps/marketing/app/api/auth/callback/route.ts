@@ -55,7 +55,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     if (!resolveMarketingRole(session.identity.roles)) {
       try {
         await getMarketingOidcClient().logout(session.accessToken);
-      } catch {}
+      } catch (error) {
+        void error;
+      }
       const response = NextResponse.redirect(
         new URL("/login?error=forbidden", publicOrigin),
       );
