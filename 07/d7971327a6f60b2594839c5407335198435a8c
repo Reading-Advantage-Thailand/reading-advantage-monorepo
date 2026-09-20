@@ -1,0 +1,1 @@
+Task: Decide the Marketing page gate policy. Added a proxy that redirects requests without the Marketing session cookie and preserves returnTo; backend role checks remain authoritative. Focused proxy tests passed.
