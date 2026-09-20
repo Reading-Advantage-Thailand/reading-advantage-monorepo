@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import Link from "next/link";
 import { APPS, APP_COLORS } from "@/lib/apps";
 import {
@@ -70,7 +70,8 @@ export default function CampaignsPage() {
     }
   };
 
-  const handleCreate = async () => {
+  const handleCreate = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setError(null);
     setMessage(null);
     const controller = new AbortController();
@@ -142,7 +143,8 @@ export default function CampaignsPage() {
       )}
 
       {showCreate && (
-        <div
+        <form
+          onSubmit={handleCreate}
           style={{
             marginTop: "24px",
             padding: "24px",
@@ -221,6 +223,7 @@ export default function CampaignsPage() {
                 setNewCampaign({ ...newCampaign, name: e.target.value })
               }
               placeholder={t("campaigns.namePlaceholder")}
+              required
               style={{
                 width: "100%",
                 padding: "8px",
@@ -231,8 +234,8 @@ export default function CampaignsPage() {
           </div>
           <div style={{ display: "flex", gap: "12px" }}>
             <button
-              onClick={handleCreate}
-              disabled={creating}
+              type="submit"
+              disabled={creating || newCampaign.name.trim().length === 0}
               style={{
                 padding: "8px 16px",
                 backgroundColor: "#4CAF50",
@@ -245,6 +248,7 @@ export default function CampaignsPage() {
               {creating ? t("campaigns.creating") : t("campaigns.create")}
             </button>
             <button
+              type="button"
               onClick={() => setShowCreate(false)}
               style={{
                 padding: "8px 16px",
@@ -257,7 +261,7 @@ export default function CampaignsPage() {
               {t("campaigns.cancel")}
             </button>
           </div>
-        </div>
+        </form>
       )}
 
       <div style={{ marginTop: "24px", display: "grid", gap: "16px" }}>

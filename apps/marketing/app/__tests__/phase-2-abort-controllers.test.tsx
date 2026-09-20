@@ -128,6 +128,10 @@ describe("page-level fetches pass an AbortSignal", () => {
     fireEvent.click(screen.getByRole("button", { name: /create campaign/i }));
     await screen.findByRole("button", { name: "Create" });
 
+    fireEvent.change(screen.getByLabelText(/name/i), {
+      target: { value: "Test campaign" },
+    });
+
     fetchMock.mockClear();
     fireEvent.click(screen.getByRole("button", { name: "Create" }));
 
