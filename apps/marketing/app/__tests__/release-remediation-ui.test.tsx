@@ -49,15 +49,11 @@ describe("Marketing application authorization surface", () => {
     expect(screen.queryByText("Protected Marketing content")).not.toBeInTheDocument();
   });
 
-  it("hides the Settings home action from Marketing members", () => {
-    useAuthMock.mockReturnValue({ user: { role: "MEMBER" } });
-
+  it("renders the home page without any action links", () => {
     render(<MarketingHomePage />);
 
-    expect(
-      screen.queryByRole("link", { name: "Settings" }),
-    ).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Campaigns" })).toBeInTheDocument();
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
 
   it("shows Settings navigation only to Marketing administrators", () => {
