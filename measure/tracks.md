@@ -56,8 +56,8 @@ This file tracks all major tracks for the project.
   Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior. **Implemented 2026-09-20 (10/10 tasks, 34 scoped tests green, tsc clean); manual verification pending.**
 - [x] **Track: Marketing Duplication Removal** *Link: [./tracks/marketing_duplication_removal_20260919/](./tracks/marketing_duplication_removal_20260919/)*
   Remove duplicated authentication, application, campaign, AI, health, status, and navigation code. **Implemented 2026-09-20 (10/10 tasks, 151 scoped tests green, tsc and eslint clean); manual verification pending.**
-- [ ] **Track: Marketing Structural Alignment** *Link: [./tracks/marketing_structural_alignment_20260919/](./tracks/marketing_structural_alignment_20260919/)*
-  Align shared helpers, page boundaries, forms, metadata, application maps, and settings contracts.
+- [x] **Track: Marketing Structural Alignment** *Link: [./tracks/marketing_structural_alignment_20260919/](./tracks/marketing_structural_alignment_20260919/)*
+  Align shared helpers, page boundaries, forms, metadata, application maps, and settings contracts. **Implemented 2026-09-20 (6/6 tasks, 80 scoped tests green, tsc and eslint clean); settings POST contract narrowed to four writable keys (legacy keys now 400); CI must build `packages/auth` before marketing tests; manual verification pending.**
 
 ## Current Focus (owner-confirmed 2026-08-10)
 
