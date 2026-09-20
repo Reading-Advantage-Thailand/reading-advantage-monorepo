@@ -1,0 +1,1 @@
+Task: Enforce the Marketing role during the OIDC callback. Unauthorized identities are revoked, local cookies expire, and the callback redirects with forbidden. Focused callback tests passed.
