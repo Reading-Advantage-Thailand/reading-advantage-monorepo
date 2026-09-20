@@ -93,6 +93,7 @@ export default function VideoProductionPage() {
 
   const [activeTopicId, setActiveTopicId] = useState<string | null>(null);
   const [script, setScript] = useState<Scene[]>([]);
+  const [hasUnsavedScript, setHasUnsavedScript] = useState(false);
   const [sceneIds, setSceneIds] = useState<string[]>([]);
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -115,6 +116,53 @@ export default function VideoProductionPage() {
       void fetchProjects(campaignId);
     }
   }, [params?.id]);
+
+  useEffect(() => {
+    if (!hasUnsavedScript) return;
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedScript]);
+
+  useEffect(() => {
+    if (!hasUnsavedScript) return;
+
+    const handleNavigation = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const link = target.closest("a");
+      if (!link || link.target === "_blank") return;
+
+      const href = link.getAttribute("href");
+      if (!href || href.startsWith("#")) return;
+
+      const destination = new URL(href, window.location.href);
+      if (
+        destination.origin !== window.location.origin ||
+        destination.href === window.location.href
+      ) {
+        return;
+      }
+
+      if (!window.confirm(t("video.unsavedChanges"))) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+
+    document.addEventListener("click", handleNavigation, true);
+    return () => document.removeEventListener("click", handleNavigation, true);
+  }, [hasUnsavedScript]);
 
   const fetchCampaign = async (id: string) => {
     setWorkflowError(null);
@@ -220,6 +268,7 @@ export default function VideoProductionPage() {
     setActiveTopicId(topicId);
     const projectScript = project.script.map((scene) => ({ ...scene }));
     setScript(projectScript);
+    setHasUnsavedScript(false);
     setSceneIds(projectScript.map(() => createSceneId()));
     setSavedProjectId(project.id);
     setProjectMessage(t("video.projectLoaded", { id: project.id }));
@@ -388,6 +437,7 @@ export default function VideoProductionPage() {
         return;
       }
       setScript(parsedScript.data);
+      setHasUnsavedScript(true);
       setSceneIds(parsedScript.data.map(() => createSceneId()));
     } catch {
       setWorkflowError(t("video.scriptFailed"));
@@ -397,23 +447,27 @@ export default function VideoProductionPage() {
   };
 
   const handleSceneChange = (index: number, patch: Partial<Scene>) => {
+    setHasUnsavedScript(true);
     setScript((prev) =>
       prev.map((scene, i) => (i === index ? { ...scene, ...patch } : scene)),
     );
   };
 
   const handleAddScene = () => {
+    setHasUnsavedScript(true);
     setScript((prev) => addSceneFn(prev, { ...emptyScene }));
     setSceneIds((prev) => [...prev, createSceneId()]);
   };
 
   const handleRemoveScene = (index: number) => {
+    setHasUnsavedScript(true);
     setScript((prev) => removeSceneFn(prev, index));
     setSceneIds((prev) => prev.filter((_, sceneIndex) => sceneIndex !== index));
   };
 
   const handleMoveScene = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= script.length) return;
+    setHasUnsavedScript(true);
     setScript((prev) => reorderScenesFn(prev, fromIndex, toIndex));
     setSceneIds((prev) => {
       if (
@@ -484,6 +538,7 @@ export default function VideoProductionPage() {
       const project = data as VideoProject;
       setSavedProjectId(project.id);
       setSelectedProjectId(project.id);
+      setHasUnsavedScript(false);
       setProjects((current) => {
         const withoutSaved = current.filter((item) => item.id !== project.id);
         return [...withoutSaved, { ...project, topic: topic.text, script }];

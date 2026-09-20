@@ -141,6 +141,8 @@ const messages = {
       "The project was saved but returned an invalid response.",
     "video.projectUpdated": "Updated project {id}",
     "video.projectSaved": "Saved as project {id}",
+    "video.unsavedChanges":
+      "You have unsaved script changes. Leave this page anyway?",
     "video.title": "Video Production: {name}",
     "video.existingProjects": "Existing Projects",
     "video.existingProjectsLabel": "Existing projects",
