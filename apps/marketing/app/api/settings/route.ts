@@ -27,6 +27,7 @@ import {
   prepareMarketingSettingsUpdate,
 } from "@/lib/settings-update";
 import { noStoreJson, withNoStore } from "@/lib/response";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 
 /**
  * GET /api/settings — list all settings with secret values masked.
@@ -57,6 +58,12 @@ export async function GET(request: Request) {
     );
     return noStoreJson(settingsMap);
   } catch (error) {
+    logStructuredError({
+      event: "marketing_settings_load_failed",
+      requestId: request.headers.get("x-request-id") ?? null,
+      error,
+      fields: { method: request.method, route: "/api/settings" },
+    });
     return noStoreJson(
       { message: "Failed to load settings" },
       { status: 500 },
@@ -118,6 +125,12 @@ export async function POST(request: Request) {
 
     return noStoreJson({ success: true });
   } catch (error) {
+    logStructuredError({
+      event: "marketing_settings_save_failed",
+      requestId: request.headers.get("x-request-id") ?? null,
+      error,
+      fields: { method: request.method, route: "/api/settings" },
+    });
     return noStoreJson(
       { message: "Failed to save settings" },
       { status: 500 },
