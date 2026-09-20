@@ -1,0 +1,5 @@
+Task: Load the first employee list on the server.
+
+Files: apps/accounts/app/page.tsx; apps/accounts/app/page.test.tsx; apps/accounts/app/accounts-console.tsx; apps/accounts/app/accounts-console.test.tsx.
+
+The page loads administrator employees through the reviewed route binding. The console accepts initial data and keeps refresh for writes.
