@@ -7,7 +7,11 @@ type RootErrorProps = {
   readonly reset: () => void;
 };
 
-/** Renders a recovery view for an accounting workspace error. */
+/**
+ * Renders a recovery view for an accounting workspace error.
+ * @param props Error boundary properties.
+ * @returns The error recovery view.
+ */
 export default function RootError({ reset }: RootErrorProps): JSX.Element {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-8">
