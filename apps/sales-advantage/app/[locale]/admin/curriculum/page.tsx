@@ -17,7 +17,8 @@ import { ArrowLeft, CheckCircle2 } from "lucide-react";
 export default function CurriculumPage() {
   const t = useTranslations("admin");
   const utils = trpc.useUtils();
-  const { data: curriculum } = trpc.sales.admin.curriculum.useQuery();
+  const { data: curriculum, isLoading, error } =
+    trpc.sales.admin.curriculum.useQuery();
   const approve = trpc.sales.admin.approveContent.useMutation({
     onSuccess: async () => {
       await utils.sales.admin.curriculum.invalidate();
@@ -33,7 +34,18 @@ export default function CurriculumPage() {
         <ArrowLeft className="h-4 w-4" /> {t("backToAdmin")}
       </Link>
       <h1 className="mb-6 text-3xl font-bold">{t("curriculum")}</h1>
-      <div className="space-y-4">
+      {error ? (
+        <p role="alert" className="text-sm text-destructive">
+          {t("reportingUnavailable")}
+        </p>
+      ) : isLoading ? (
+        <div className="space-y-2">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-24 animate-pulse rounded bg-muted" />
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-4">
         {(curriculum?.modules ?? []).map((module) => (
           <Card key={module.id}>
             <CardHeader>
@@ -75,7 +87,8 @@ export default function CurriculumPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
