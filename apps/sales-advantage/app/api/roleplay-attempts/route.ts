@@ -13,6 +13,7 @@ import {
 import { getStorageClient } from "@reading-advantage/storage";
 import { getAIClient } from "@reading-advantage/ai";
 import { checkRoleplayRateLimit } from "@/lib/rate-limit";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 import type { StorageClient } from "@reading-advantage/storage";
 import { randomUUID } from "node:crypto";
 import {
@@ -188,16 +189,16 @@ export async function POST(request: NextRequest) {
       audioUploadSucceeded = true;
       uploadedObject = { storage, key: storageKey };
     } catch (storageErr) {
-      console.error(
-        JSON.stringify({
-          level: "error",
-          event: "sales_roleplay_storage_failed",
+      logStructuredError({
+        event: "sales_roleplay_storage_failed",
+        error: storageErr,
+        fields: {
           detail:
             storageErr instanceof Error
               ? storageErr.message
               : String(storageErr),
-        }),
-      );
+        },
+      });
     }
 
     // Build the AI evaluator with scenario/rubric/canonical-excerpts closure.
@@ -264,26 +265,25 @@ export async function POST(request: NextRequest) {
       try {
         await uploadedObject.storage.delete(uploadedObject.key);
       } catch (cleanupError) {
-        console.error(
-          JSON.stringify({
-            level: "error",
-            event: "sales_roleplay_audio_cleanup_failed",
+        logStructuredError({
+          event: "sales_roleplay_audio_cleanup_failed",
+          error: cleanupError,
+          fields: {
             detail:
               cleanupError instanceof Error
                 ? cleanupError.message
                 : String(cleanupError),
-          }),
-        );
+          },
+        });
       }
     }
-    console.error(
-      JSON.stringify({
-        level: "error",
-        event: "sales_roleplay_submit_failed",
-        errorName: error instanceof Error ? error.name : "UnknownError",
+    logStructuredError({
+      event: "sales_roleplay_submit_failed",
+      error,
+      fields: {
         detail: error instanceof Error ? error.message : String(error),
-      }),
-    );
+      },
+    });
     return NextResponse.json(
       {
         error: "ROLEPLAY_EVALUATION_FAILED",

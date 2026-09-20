@@ -5,6 +5,7 @@ import {
 import { getAIClient } from "@reading-advantage/ai";
 import { authorizeSalesChat } from "@reading-advantage/domain/sales";
 import { checkChatRateLimit } from "@/lib/rate-limit";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 import {
   authenticateSalesRequest,
   type ResolvedSalesRequestPrincipal,
@@ -132,7 +133,7 @@ export async function POST(request: NextRequest) {
 
     return stream.toDataStreamResponse();
   } catch (error) {
-    console.error("Chat error:", error);
+    logStructuredError({ event: "sales_chat_failed", error });
     return NextResponse.json({ error: "Chat unavailable" }, { status: 500 });
   }
 }
