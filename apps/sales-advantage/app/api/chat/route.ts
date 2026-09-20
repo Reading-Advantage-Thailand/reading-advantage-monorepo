@@ -4,7 +4,7 @@ import {
 } from "@reading-advantage/auth";
 import { getAIClient } from "@reading-advantage/ai";
 import { authorizeSalesChat } from "@reading-advantage/domain/sales";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkChatRateLimit } from "@/lib/rate-limit";
 import {
   authenticateSalesRequest,
   type ResolvedSalesRequestPrincipal,
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { user } = principal;
-    const rateLimit = checkRateLimit(`sales:chat:${user.id}`, 30, 60_000);
+    const rateLimit = checkChatRateLimit(user.id);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: "Rate limit exceeded" },

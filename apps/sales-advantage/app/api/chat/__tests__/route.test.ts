@@ -24,7 +24,7 @@ vi.mock("@reading-advantage/ai", () => ({
 }));
 
 vi.mock("@/lib/rate-limit", () => ({
-  checkRateLimit: vi.fn().mockReturnValue({ allowed: true }),
+  checkChatRateLimit: vi.fn().mockReturnValue({ allowed: true }),
 }));
 
 import { POST } from "../route";
@@ -148,6 +148,8 @@ describe("POST /api/chat — FR-1 authorization gate", () => {
 
     expect(response.status).toBe(200);
     expect(mockStreamText).toHaveBeenCalled();
+    const { checkChatRateLimit } = await import("@/lib/rate-limit");
+    expect(checkChatRateLimit).toHaveBeenCalledWith("rep-1");
   });
 });
 
