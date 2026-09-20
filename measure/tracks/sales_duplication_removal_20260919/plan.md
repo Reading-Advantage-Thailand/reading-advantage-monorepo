@@ -2,7 +2,7 @@
 
 ## Phase 1: Duplication Removal
 
-- [ ] Task: Delete or call `checkChatRateLimit`. Source: `docs/sales-advantage-ux-refactor-plan.md` §8; Issues: `lib/rate-limit.ts:71-74`, `app/api/chat/route.ts:56`
+- [x] Task: Delete or call `checkChatRateLimit`. Source: `docs/sales-advantage-ux-refactor-plan.md` §8; Issues: `lib/rate-limit.ts:71-74`, `app/api/chat/route.ts:56` (f41d909b6)
 - [ ] Task: Replace the two `console.error` forms with `logStructuredError`. Source: `docs/sales-advantage-ux-refactor-plan.md` §8; Issues: `app/api/chat/route.ts:126`, `app/api/roleplay-attempts/route.ts:282`, `app/api/auth/callback/route.ts:88`
 - [ ] Task: Merge the two proxy test files and the two session route test files. Source: `docs/sales-advantage-ux-refactor-plan.md` §8; Issues: `lib/proxy.test.ts:1`, `lib/__tests__/proxy.test.ts:1`, `app/api/auth/session/route.test.ts:1`, `app/api/auth/session/route.red.test.ts:1`
 - [ ] Task: Delete the eleven unused dependencies and add `drizzle-orm`. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `scripts/sales-curriculum-seed.ts:24`, `scripts/static-seed.ts:15`
