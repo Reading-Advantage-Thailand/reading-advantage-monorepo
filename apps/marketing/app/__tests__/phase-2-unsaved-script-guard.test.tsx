@@ -1,6 +1,12 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import VideoProductionPage from "@/campaigns/[id]/video/page";
 
@@ -70,10 +76,11 @@ describe("unsaved script guard", () => {
     stubVideoFetch();
     await createUnsavedScript();
 
-    const event = new Event("beforeunload", { cancelable: true });
-    window.dispatchEvent(event);
-
-    expect(event.defaultPrevented).toBe(true);
+    await waitFor(() => {
+      const event = new Event("beforeunload", { cancelable: true });
+      window.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    });
   });
 
   it("asks before an internal navigation and cancels when declined", async () => {
