@@ -1,0 +1,5 @@
+Task: Log unexpected token and readiness branches.
+
+Files: apps/accounts/lib/server/identity.ts; token route and test; ready route and test.
+
+The existing capability logger now records unexpected token failures and readiness failures without exposing error details.
