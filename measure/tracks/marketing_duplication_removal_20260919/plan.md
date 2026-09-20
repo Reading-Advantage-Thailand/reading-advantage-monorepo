@@ -10,5 +10,5 @@
 - [x] Task: Move `campaignClientColumns` and the `Campaign` interface into shared files. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/api/campaigns/route.ts:28-36`, `app/api/campaigns/[id]/route.ts:33-41`, `app/campaigns/page.tsx:13-20`, `app/campaigns/[id]/page.tsx:13-21` (5a52d1c0c)
 - [x] Task: Extract one `campaignStatusColor(status)` map. Source: `docs/marketing-ux-refactor-plan.md` §5; Issues: `app/campaigns/page.tsx:293-300`, `app/campaigns/[id]/page.tsx:171-178` (57793bbfd)
 - [x] Task: Delete `app/api/health/db/route.ts` or replace it with a liveness route. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/api/health/db/route.ts:6`, `app/api/ready/route.ts:83` (0e13f103c)
-- [ ] Task: Rename the eleven shadowing `t` parameters in the video page. Source: `docs/marketing-ux-refactor-plan.md` §3.2; Issues: `app/campaigns/[id]/video/page.tsx:234,238,242,247,257,263,287,355,433,434,665`
+- [x] Task: Rename the eleven shadowing `t` parameters in the video page. Source: `docs/marketing-ux-refactor-plan.md` §3.2; Issues: `app/campaigns/[id]/video/page.tsx:234,238,242,247,257,263,287,355,433,434,665` (929101daf)
 - [ ] Task: Delete the duplicated link block from `app/page.tsx`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/page.tsx:17-44`, `app/marketing-app-shell.tsx:74-99`
