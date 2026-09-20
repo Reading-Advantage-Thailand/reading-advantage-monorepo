@@ -8,7 +8,7 @@
  * organization identity — never from the request.
  */
 import { requireAccountingSession } from "@/app/lib/auth";
-import type { accountingSessionUser } from "@/app/lib/company-oidc";
+import { actorFromUser, jsonResponse } from "@/app/lib/route-helpers";
 import {
   deletePrivateEvidence,
   readPrivateEvidence,
@@ -20,45 +20,12 @@ import {
 } from "@/app/lib/submissions";
 import { AccountingSubmissionError } from "@reading-advantage/backend/accounting";
 import type {
-  AccountingActor,
   AccountingSubmissionInput,
 } from "@reading-advantage/backend/accounting";
 import {
   accountingSubmissionEvidenceReferenceSchema,
   accountingSubmissionIdempotencyKeySchema,
 } from "@reading-advantage/backend/accounting";
-
-/** Session user projection produced by the accounting guard. */
-type AccountingSessionUser = NonNullable<
-  ReturnType<typeof accountingSessionUser>
->;
-
-/**
- * Maps the guard's session user to a domain actor; the company scope derives
- * from the session's organization identity, never from request input.
- * @param user Verified accounting session user.
- * @returns Domain actor carrying account, company, and role.
- */
-function actorFromUser(user: AccountingSessionUser): AccountingActor {
-  return {
-    accountId: user.id,
-    companyId: user.organizationId,
-    role: user.role,
-  };
-}
-
-/**
- * Serializes a JSON response body.
- * @param body Response payload.
- * @param status HTTP status code.
- * @returns JSON response with a no-store-friendly content type.
- */
-function jsonResponse(body: unknown, status: number): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "content-type": "application/json" },
-  });
-}
 
 type AccountingErrorSnapshot =
   | {

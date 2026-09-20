@@ -7,40 +7,10 @@
  * may export; STAFF is denied with 403.
  */
 import { requireAccountingSession } from "@/app/lib/auth";
-import type { accountingSessionUser } from "@/app/lib/company-oidc";
 import { derivedRate } from "@/app/lib/derived-rate";
+import { actorFromUser, jsonResponse } from "@/app/lib/route-helpers";
 import { listAccountingSubmissions } from "@/app/lib/submissions";
-import type { AccountingActor } from "@reading-advantage/backend/accounting";
 import { z } from "zod";
-
-/** Session user projection produced by the accounting guard. */
-type AccountingSessionUser = NonNullable<ReturnType<typeof accountingSessionUser>>;
-
-/**
- * Maps the guard's session user to a domain actor.
- * @param user Verified accounting session user.
- * @returns Domain actor carrying account, company, and role.
- */
-function actorFromUser(user: AccountingSessionUser): AccountingActor {
-  return {
-    accountId: user.id,
-    companyId: user.organizationId,
-    role: user.role,
-  };
-}
-
-/**
- * Serializes a JSON response body.
- * @param body Response payload.
- * @param status HTTP status code.
- * @returns JSON response.
- */
-function jsonResponse(body: unknown, status: number): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "content-type": "application/json" },
-  });
-}
 
 /** Converts an ISO submission timestamp to the configured business date. */
 function businessDate(submittedAt: string): string {

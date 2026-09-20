@@ -6,95 +6,15 @@
  * and persistence decisions live in the domain via `@/app/lib/submissions`.
  */
 import { requireAccountingSession } from "@/app/lib/auth";
-import type { accountingSessionUser } from "@/app/lib/company-oidc";
+import {
+  actorFromUser,
+  getSubmissionId,
+  isForbiddenError,
+  isInvalidInputError,
+  isNotFoundError,
+  jsonResponse,
+} from "@/app/lib/route-helpers";
 import { approveAccountingSubmission } from "@/app/lib/submissions";
-import type { AccountingActor } from "@reading-advantage/backend/accounting";
-
-/** Session user projection produced by the accounting guard. */
-type AccountingSessionUser = NonNullable<
-  ReturnType<typeof accountingSessionUser>
->;
-
-/**
- * Maps the guard's session user to a domain actor.
- * @param user Verified accounting session user.
- * @returns Domain actor carrying account, company, and role.
- */
-function actorFromUser(user: AccountingSessionUser): AccountingActor {
-  return {
-    accountId: user.id,
-    companyId: user.organizationId,
-    role: user.role,
-  };
-}
-
-/**
- * Serializes a JSON response body.
- * @param body Response payload.
- * @param status HTTP status code.
- * @returns JSON response.
- */
-function jsonResponse(body: unknown, status: number): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "content-type": "application/json" },
-  });
-}
-
-/**
- * Narrows an unknown thrown value to the route-ready domain invalid-input rejection.
- * @param error Unknown thrown value.
- * @returns True when the error carries a fieldErrors map to return as 400.
- */
-function isInvalidInputError(
-  error: unknown,
-): error is Error & { readonly fieldErrors: Record<string, string[]> } {
-  return (
-    error instanceof Error &&
-    error.name === "AccountingSubmissionError" &&
-    (error as { readonly reason?: unknown }).reason === "invalid-input" &&
-    typeof (error as { readonly fieldErrors?: unknown }).fieldErrors ===
-      "object"
-  );
-}
-
-/**
- * Checks whether the error is a domain forbidden rejection.
- * @param error Unknown thrown value.
- * @returns True when the error is forbidden.
- */
-function isForbiddenError(error: unknown): boolean {
-  return (
-    error instanceof Error &&
-    error.name === "AccountingSubmissionError" &&
-    (error as { readonly reason?: unknown }).reason === "forbidden"
-  );
-}
-
-/**
- * Checks whether the error is a domain not-found rejection.
- * @param error Unknown thrown value.
- * @returns True when the error is not-found.
- */
-function isNotFoundError(error: unknown): boolean {
-  return (
-    error instanceof Error &&
-    error.name === "AccountingSubmissionError" &&
-    (error as { readonly reason?: unknown }).reason === "not-found"
-  );
-}
-
-/**
- * Resolves the submission id from the route context.
- * @param context Route context carrying the id param.
- * @returns The submission identifier.
- */
-async function getSubmissionId(context: {
-  params: { id: string } | Promise<{ id: string }>;
-}): Promise<string> {
-  const params = await (context.params as Promise<{ id: string }>);
-  return (params as { id: string }).id;
-}
 
 /**
  * Handles POST /api/submissions/[id]/approve: OWNER-only approval of a pending submission.
