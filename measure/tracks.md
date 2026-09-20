@@ -17,8 +17,8 @@ This file tracks all major tracks for the project.
 
 - [x] **Track: Sales Advantage Broken UX Fixes** *Link: [./tracks/sales_broken_ux_fixes_20260919/](./tracks/sales_broken_ux_fixes_20260919/)*
   Repair the broken user-experience items from the Sales Advantage UX audit. **Implemented 2026-09-20 (9/9 tasks, 267 tests green); manual verification pending.**
-- [ ] **Track: Sales Advantage Session Contract Correctness** *Link: [./tracks/sales_session_contract_correctness_20260919/](./tracks/sales_session_contract_correctness_20260919/)*
-  Separate anonymous sessions from forbidden Sales identities in the session contract.
+- [x] **Track: Sales Advantage Session Contract Correctness** *Link: [./tracks/sales_session_contract_correctness_20260919/](./tracks/sales_session_contract_correctness_20260919/)*
+  Separate anonymous sessions from forbidden Sales identities in the session contract. **Implemented 2026-09-20 (4/4 tasks, 272 tests green on branch, merged to master); manual verification pending.**
 - [~] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
   Repair recording cleanup, upload errors, loading states, and request cancellation.
 - [ ] **Track: Sales Advantage Duplication Removal** *Link: [./tracks/sales_duplication_removal_20260919/](./tracks/sales_duplication_removal_20260919/)*
@@ -52,8 +52,8 @@ This file tracks all major tracks for the project.
   Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code. **Implemented 2026-09-20 (10/10 tasks, 520 tests green); manual verification pending.**
 - [x] **Track: Marketing Runtime Header Correctness** *Link: [./tracks/marketing_runtime_header_correctness_20260919/](./tracks/marketing_runtime_header_correctness_20260919/)*
   Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating. **Implemented 2026-09-20 (5/5 tasks, 535 tests green, tsc and eslint clean); manual verification pending.**
-- [~] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
-  Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior.
+- [x] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
+  Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior. **Implemented 2026-09-20 (10/10 tasks, 34 scoped tests green, tsc clean); manual verification pending.**
 - [ ] **Track: Marketing Duplication Removal** *Link: [./tracks/marketing_duplication_removal_20260919/](./tracks/marketing_duplication_removal_20260919/)*
   Remove duplicated authentication, application, campaign, AI, health, status, and navigation code.
 - [ ] **Track: Marketing Structural Alignment** *Link: [./tracks/marketing_structural_alignment_20260919/](./tracks/marketing_structural_alignment_20260919/)*
