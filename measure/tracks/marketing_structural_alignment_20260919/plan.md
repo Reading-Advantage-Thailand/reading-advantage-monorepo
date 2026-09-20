@@ -8,4 +8,4 @@
 - [x] (0464d5281) Task: Wrap every data entry screen in a `<form>`. Source: `docs/marketing-ux-refactor-plan.md` §5 and §6; Issues: `app/campaigns/page.tsx:142-246`, `app/campaigns/page.tsx:245-248`
 - [x] (ebcb89b2c) Task: Add a `metadata` export to each page. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/layout.tsx:7-10`
 - [x] (77bace02e) Task: Replace the index binding between `APPS`, colors, and names. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/lib/apps.ts:27-33`
-- [ ] Task: Constrain `settingsPostSchema` to the four keys the page writes. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/lib/settings-schema.ts:12`, `app/api/settings/route.ts:106-117`
+- [x] (f4b8b8b0a) Task: Constrain `settingsPostSchema` to the four keys the page writes. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/lib/settings-schema.ts:12`, `app/api/settings/route.ts:106-117`
