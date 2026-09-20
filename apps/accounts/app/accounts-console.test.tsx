@@ -93,6 +93,16 @@ describe("Accounts administration console", () => {
     expect(await screen.findByText("No employees found.")).toBeInTheDocument();
   });
 
+  it("uses the server employee list for the first render", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<AccountsConsole employee={admin} initialEmployees={[admin]} />);
+
+    expect(screen.getByRole("button", { name: "Select Company Owner, active" })).toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("scopes role changes to one application and confirms lifecycle suspension", async () => {
     const fetchMock = vi.fn(
       async (input: RequestInfo | URL, init?: RequestInit) => {

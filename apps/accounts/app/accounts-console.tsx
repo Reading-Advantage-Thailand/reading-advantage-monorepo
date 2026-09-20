@@ -53,13 +53,16 @@ export interface ProvisioningHandoff {
 }
 
 /** Refined employee directory and independent application-role administration surface. */
-export function AccountsConsole({ employee, provisioning }: Readonly<{
+export function AccountsConsole({ employee, initialEmployees, provisioning }: Readonly<{
   employee: Employee;
+  initialEmployees?: Employee[];
   provisioning?: ProvisioningHandoff;
 }>) {
   const isAdmin = employee.companyRoles.includes("COMPANY_ADMIN");
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [directoryStatus, setDirectoryStatus] = useState<DirectoryStatus>("loading");
+  const [employees, setEmployees] = useState<Employee[]>(initialEmployees ?? []);
+  const [directoryStatus, setDirectoryStatus] = useState<DirectoryStatus>(
+    isAdmin && initialEmployees === undefined ? "loading" : "ready",
+  );
   const [selectedId, setSelectedId] = useState(employee.id);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
@@ -88,7 +91,9 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
     }
   }, [isAdmin]);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useEffect(() => {
+    if (initialEmployees === undefined) void refresh();
+  }, [initialEmployees, refresh]);
   const selected = useMemo(
     () => employees.find((item) => item.id === selectedId),
     [employees, selectedId],
