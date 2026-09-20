@@ -10,16 +10,7 @@ import {
 } from "@/lib/i18n";
 import { useHandleAuthFailure } from "@/lib/login-redirect";
 import { nextCampaignStatuses } from "@/lib/campaign-status";
-
-interface Campaign {
-  id: string;
-  type: "video" | "infocard";
-  app: string;
-  name: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Campaign } from "@/lib/campaign-schema";
 
 /**
  * Renders the detail view for one Marketing campaign.

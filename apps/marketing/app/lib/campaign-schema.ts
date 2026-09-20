@@ -3,6 +3,7 @@ import {
   appEnum,
   campaignStatusEnum,
   campaignTypeEnum,
+  campaigns,
 } from "@reading-advantage/db/schema";
 
 /**
@@ -20,6 +21,28 @@ const campaignStatusValues = campaignStatusEnum.enumValues;
 
 /** Schema for a campaign UUID supplied as a route parameter. */
 export const campaignIdSchema = z.string().uuid();
+
+/** Columns returned to Marketing clients for one campaign row. */
+export const campaignClientColumns = {
+  id: campaigns.id,
+  type: campaigns.type,
+  app: campaigns.app,
+  name: campaigns.name,
+  status: campaigns.status,
+  createdAt: campaigns.createdAt,
+  updatedAt: campaigns.updatedAt,
+};
+
+/** One Marketing campaign as returned by the campaigns API. */
+export interface Campaign {
+  id: string;
+  type: "video" | "infocard";
+  app: string;
+  name: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 /**
  * Schema for creating a campaign. `type`, `app`, and `name` are required;

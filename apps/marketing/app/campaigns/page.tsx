@@ -9,15 +9,7 @@ import {
   getMarketingStatusLabel,
 } from "@/lib/i18n";
 import { useHandleAuthFailure } from "@/lib/login-redirect";
-
-interface Campaign {
-  id: string;
-  type: "video" | "infocard";
-  app: string;
-  name: string;
-  status: string;
-  createdAt: string;
-}
+import type { Campaign } from "@/lib/campaign-schema";
 
 /**
  * Renders the Marketing campaigns page.

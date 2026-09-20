@@ -257,3 +257,43 @@ describe("Phase 7.1: shared APPS catalog", () => {
     );
   });
 });
+
+describe("Phase 7.1: shared campaign client contract", () => {
+  it("serves both campaign routes from one shared client column set", () => {
+    const routeSources = ["api/campaigns/route.ts", "api/campaigns/[id]/route.ts"].map(
+      appSource,
+    );
+
+    for (const source of routeSources) {
+      expect(source).toMatch(
+        /import\s*\{[^}]*\bcampaignClientColumns\b[^}]*\}\s*from\s*["']@\/lib\/campaign-schema["']/,
+      );
+      expect(source).not.toMatch(/const\s+campaignClientColumns\s*=\s*\{/);
+    }
+
+    const sharedSchemaSource = appSource("lib/campaign-schema.ts");
+    expect(sharedSchemaSource).toMatch(
+      /export\s+const\s+campaignClientColumns\s*=\s*\{/,
+    );
+    expect(sharedSchemaSource).toMatch(
+      /export\s+interface\s+Campaign\s*\{/,
+    );
+  });
+
+  it("imports the shared Campaign type instead of hand-declared page copies", () => {
+    const pageSources = [
+      "campaigns/page.tsx",
+      "campaigns/[id]/page.tsx",
+      "campaigns/[id]/video/page.tsx",
+    ].map(appSource);
+
+    for (const source of pageSources) {
+      expect(source).not.toMatch(/interface\s+Campaign\s*\{/);
+      expect(source).toMatch(
+        /import\s+type\s+\{\s*Campaign\s*\}\s*from\s*["']@\/lib\/campaign-schema["']/,
+      );
+    }
+
+    expect(pageSources[2]).not.toMatch(/useState<any>\(null\)/);
+  });
+});

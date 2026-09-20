@@ -22,19 +22,12 @@ import { db } from "@/lib/db";
 import { campaigns } from "@reading-advantage/db/schema";
 import { desc } from "drizzle-orm";
 import { requireMarketingPermission } from "@/lib/auth";
-import { createCampaignSchema } from "@/lib/campaign-schema";
+import {
+  campaignClientColumns,
+  createCampaignSchema,
+} from "@/lib/campaign-schema";
 import type { MarketingApp } from "@/lib/apps";
 import { noStoreJson, withNoStore } from "@/lib/response";
-
-const campaignClientColumns = {
-  id: campaigns.id,
-  type: campaigns.type,
-  app: campaigns.app,
-  name: campaigns.name,
-  status: campaigns.status,
-  createdAt: campaigns.createdAt,
-  updatedAt: campaigns.updatedAt,
-};
 
 /**
  * GET /api/campaigns — list campaigns ordered by `createdAt` desc.

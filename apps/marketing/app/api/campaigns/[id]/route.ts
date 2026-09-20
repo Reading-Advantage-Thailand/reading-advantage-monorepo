@@ -27,18 +27,12 @@ import {
   isValidCampaignStatusTransition,
 } from "@/lib/campaign-status";
 import { requireMarketingPermission } from "@/lib/auth";
-import { campaignIdSchema, updateCampaignSchema } from "@/lib/campaign-schema";
+import {
+  campaignClientColumns,
+  campaignIdSchema,
+  updateCampaignSchema,
+} from "@/lib/campaign-schema";
 import { noStoreJson, withNoStore } from "@/lib/response";
-
-const campaignClientColumns = {
-  id: campaigns.id,
-  type: campaigns.type,
-  app: campaigns.app,
-  name: campaigns.name,
-  status: campaigns.status,
-  createdAt: campaigns.createdAt,
-  updatedAt: campaigns.updatedAt,
-};
 
 /**
  * GET /api/campaigns/[id] — fetch a single campaign by id.

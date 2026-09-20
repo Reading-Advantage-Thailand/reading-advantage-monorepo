@@ -16,6 +16,7 @@ import {
 import { APPS } from "@/lib/apps";
 import { getMarketingAppName, getMarketingMessage as t } from "@/lib/i18n";
 import { useHandleAuthFailure } from "@/lib/login-redirect";
+import type { Campaign } from "@/lib/campaign-schema";
 
 interface Topic {
   id: string;
@@ -87,7 +88,7 @@ async function readBadRequestMessage(
 export default function VideoProductionPage() {
   const handleAuthFailure = useHandleAuthFailure();
   const params = useParams();
-  const [campaign, setCampaign] = useState<any>(null);
+  const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedApp, setSelectedApp] = useState("reading-advantage");
@@ -189,8 +190,8 @@ export default function VideoProductionPage() {
         setWorkflowError(t("video.invalidCampaign"));
         return;
       }
-      setCampaign(data);
-      setSelectedApp((data as { app: string }).app);
+      setCampaign(data as Campaign);
+      setSelectedApp((data as Campaign).app);
     } catch {
       setWorkflowError(t("video.loadFailed"));
     }
