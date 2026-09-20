@@ -324,31 +324,31 @@ export default function VideoProductionPage() {
 
   const handleApprove = (id: string) => {
     setTopics((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, approved: true } : t)),
+      prev.map((topic) => (topic.id === id ? { ...topic, approved: true } : topic)),
     );
   };
 
   const handleReject = (id: string) => {
-    setTopics((prev) => prev.filter((t) => t.id !== id));
+    setTopics((prev) => prev.filter((topic) => topic.id !== id));
   };
 
   const handleEdit = (id: string) => {
     setTopics((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, editing: true } : t)),
+      prev.map((topic) => (topic.id === id ? { ...topic, editing: true } : topic)),
     );
   };
 
   const handleTopicChange = (id: string, text: string) => {
     setTopics((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, text } : t)),
+      prev.map((topic) => (topic.id === id ? { ...topic, text } : topic)),
     );
   };
 
   const handleSaveEdit = (id: string) => {
     setTopics(
       (prev) =>
-        prev.map((t) =>
-          t.id === id ? { ...t, editing: false } : t,
+        prev.map((topic) =>
+          topic.id === id ? { ...topic, editing: false } : topic,
         ),
     );
   };
@@ -358,13 +358,13 @@ export default function VideoProductionPage() {
     setWorkflowMessage(null);
     setSavingTopics(true);
     try {
-      const approvedTopics = topics.filter((t) => t.approved);
+      const approvedTopics = topics.filter((topic) => topic.approved);
       const res = await fetch("/api/video/save-topics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           app: selectedApp,
-          topics: approvedTopics.map((t) => t.text),
+          topics: approvedTopics.map((topic) => topic.text),
         }),
       });
       if (handleAuthFailure(res)) {
@@ -387,7 +387,7 @@ export default function VideoProductionPage() {
   };
 
   const handleGenerateScript = async () => {
-    const topic = topics.find((t) => t.id === activeTopicId);
+    const topic = topics.find((topic) => topic.id === activeTopicId);
     if (!topic) return;
     setGenerating(true);
     setWorkflowError(null);
@@ -475,7 +475,7 @@ export default function VideoProductionPage() {
 
   const handleSaveScript = async () => {
     if (!campaign?.id || !activeTopicId) return;
-    const topic = topics.find((t) => t.id === activeTopicId);
+    const topic = topics.find((topic) => topic.id === activeTopicId);
     if (!topic) return;
 
     const method = selectedProjectId ? "PATCH" : "POST";
@@ -551,8 +551,8 @@ export default function VideoProductionPage() {
     );
   }
 
-  const approvedTopics = topics.filter((t) => t.approved);
-  const activeTopic = topics.find((t) => t.id === activeTopicId);
+  const approvedTopics = topics.filter((topic) => topic.approved);
+  const activeTopic = topics.find((topic) => topic.id === activeTopicId);
 
   return (
     <div>
@@ -800,7 +800,7 @@ export default function VideoProductionPage() {
                 </div>
               ))}
             </div>
-            {topics.some((t) => t.approved) && (
+            {topics.some((topic) => topic.approved) && (
               <button
                 onClick={handleSaveTopics}
                 disabled={savingTopics}
