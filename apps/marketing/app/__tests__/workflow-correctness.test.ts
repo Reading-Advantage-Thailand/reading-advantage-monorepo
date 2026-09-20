@@ -44,7 +44,7 @@ vi.mock("@/lib/ai", () => ({
 }));
 
 vi.mock("@/lib/ai-credentials", () => ({
-  resolveMarketingAIConfig: () => ({
+  loadMarketingAIClient: () => ({
     provider: "openai",
     model: "test-model",
     apiKey: "test-api-key",
@@ -175,9 +175,7 @@ describe("Marketing generated-script Thai narration contract", () => {
 describe("Marketing topic research cardinality contract", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.selectWhere
-      .mockResolvedValueOnce(settingsRows)
-      .mockResolvedValueOnce([{ topic: "Old Topic" }]);
+    mocks.selectWhere.mockResolvedValue([{ topic: "Old Topic" }]);
   });
 
   it("deduplicates before capping and returns five topics when the model supplies enough", async () => {

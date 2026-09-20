@@ -1,4 +1,7 @@
 import type { AIConfig, AIProvider } from "@reading-advantage/ai";
+import { settings } from "@reading-advantage/db/schema";
+import { eq, or } from "drizzle-orm";
+import { db } from "@/lib/db";
 import { decrypt } from "@/lib/encryption";
 
 /** AI providers supported by the Marketing application. */
@@ -89,4 +92,28 @@ export function resolveMarketingAIConfig(
     model: storedModel || undefined,
     apiKey,
   };
+}
+
+/**
+ * Reads the persisted LLM settings and resolves the Marketing AI adapter configuration.
+ * @returns A complete AI configuration, or null when no provider key is available.
+ * @throws When a persisted credential cannot be authenticated and decrypted.
+ */
+export async function loadMarketingAIClient(): Promise<AIConfig | null> {
+  const llmSettings = await db
+    .select()
+    .from(settings)
+    .where(
+      or(
+        eq(settings.key, "llm.provider"),
+        eq(settings.key, "llm.model"),
+        eq(settings.key, "llm.apiKey"),
+      ),
+    );
+
+  const settingsMap = Object.fromEntries(
+    llmSettings.map((s: { key: string; value: string }) => [s.key, s.value]),
+  );
+
+  return resolveMarketingAIConfig(settingsMap);
 }

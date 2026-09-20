@@ -22,8 +22,8 @@
  */
 import { createAIClient } from "@/lib/ai";
 import { db } from "@/lib/db";
-import { pastTopics, settings } from "@reading-advantage/db/schema";
-import { eq, or } from "drizzle-orm";
+import { pastTopics } from "@reading-advantage/db/schema";
+import { eq } from "drizzle-orm";
 import { buildTopicResearchPrompt } from "@/lib/topic-research";
 import { deduplicateTopics } from "@/lib/topic-dedup";
 import { requireMarketingPermission } from "@/lib/auth";
@@ -32,7 +32,7 @@ import {
   researchTopicsSchema,
 } from "@/lib/topic-schema";
 import { redactSecrets } from "@/lib/redact";
-import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
+import { loadMarketingAIClient } from "@/lib/ai-credentials";
 import type { MarketingApp } from "@/lib/apps";
 import { noStoreJson, withNoStore } from "@/lib/response";
 
@@ -77,22 +77,7 @@ export async function POST(request: Request) {
   try {
     const { app } = parsed.data;
 
-    const llmSettings = await db
-      .select()
-      .from(settings)
-      .where(
-        or(
-          eq(settings.key, "llm.provider"),
-          eq(settings.key, "llm.model"),
-          eq(settings.key, "llm.apiKey"),
-        ),
-      );
-
-    const settingsMap = Object.fromEntries(
-      llmSettings.map((s: { key: string; value: string }) => [s.key, s.value]),
-    );
-
-    const aiConfig = resolveMarketingAIConfig(settingsMap);
+    const aiConfig = await loadMarketingAIClient();
     apiKey = aiConfig?.apiKey;
     if (!aiConfig) {
       return noStoreJson(

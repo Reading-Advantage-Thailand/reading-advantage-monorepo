@@ -23,9 +23,6 @@
  * @see apps/marketing/app/lib/redact.ts
  */
 import { createAIClient } from "@/lib/ai";
-import { db } from "@/lib/db";
-import { settings } from "@reading-advantage/db/schema";
-import { or, eq } from "drizzle-orm";
 import {
   buildScriptGenerationPrompt,
   buildThaiNarrationRepairPrompt,
@@ -38,7 +35,7 @@ import {
 import { requireMarketingPermission } from "@/lib/auth";
 import { generateScriptSchema } from "@/lib/script-request-schema";
 import { redactSecrets } from "@/lib/redact";
-import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
+import { loadMarketingAIClient } from "@/lib/ai-credentials";
 import { noStoreJson, withNoStore } from "@/lib/response";
 
 
@@ -98,22 +95,7 @@ export async function POST(request: Request) {
   try {
     const { app, topic } = parsed.data;
 
-    const llmSettings = await db
-      .select()
-      .from(settings)
-      .where(
-        or(
-          eq(settings.key, "llm.provider"),
-          eq(settings.key, "llm.model"),
-          eq(settings.key, "llm.apiKey"),
-        ),
-      );
-
-    const settingsMap = Object.fromEntries(
-      llmSettings.map((s: { key: string; value: string }) => [s.key, s.value]),
-    );
-
-    const aiConfig = resolveMarketingAIConfig(settingsMap);
+    const aiConfig = await loadMarketingAIClient();
     apiKey = aiConfig?.apiKey;
     if (!aiConfig) {
       return noStoreJson(
