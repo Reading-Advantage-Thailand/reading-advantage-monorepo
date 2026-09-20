@@ -98,4 +98,17 @@ describe("Sales landing sign-in errors", () => {
 
     expect(screen.queryByRole("alert")).toBeNull();
   });
+
+  it("renders the forbidden message from the auth client state", () => {
+    mocks.useSearchParams.mockReturnValue(new URLSearchParams());
+    mocks.auth.isAuthenticated = true;
+    mocks.auth.isForbidden = true;
+
+    render(<HomePage />);
+
+    expect(screen.getByRole("alert").textContent).toContain("errorForbidden");
+    expect(mocks.dashboardQuery).toHaveBeenCalledWith(undefined, {
+      enabled: false,
+    });
+  });
 });
