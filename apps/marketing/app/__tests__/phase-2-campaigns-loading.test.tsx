@@ -4,6 +4,10 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import CampaignsPage from "@/campaigns/page";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+}));
+
 vi.mock("@reading-advantage/auth-client", () => ({
   useAuth: () => ({
     user: { role: "ADMIN" },

@@ -1,3 +1,8 @@
+"use client";
+
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
+
 /**
  * Reports whether a value contains a control character.
  * @param value Value to inspect.
@@ -54,4 +59,27 @@ export function redirectToLogin(pathnameWithQuery: string): string {
     ? pathnameWithQuery
     : "/";
   return `/login?${new URLSearchParams({ returnTo }).toString()}`;
+}
+
+/**
+ * Builds the shared authentication-failure handler for Marketing pages.
+ * The returned callback sends unauthenticated sessions and HTTP 401
+ * responses to the login screen with the current path preserved as
+ * `returnTo`, and keeps the client-side history instead of forcing a full
+ * page reload.
+ * @returns A callback that redirects on a missing session or an HTTP 401
+ * response and reports whether it redirected.
+ */
+export function useHandleAuthFailure(): (response?: Response) => boolean {
+  const router = useRouter();
+  return useCallback(
+    (response?: Response): boolean => {
+      if (response && response.status !== 401) return false;
+      router.replace(
+        redirectToLogin(`${window.location.pathname}${window.location.search}`),
+      );
+      return true;
+    },
+    [router],
+  );
 }

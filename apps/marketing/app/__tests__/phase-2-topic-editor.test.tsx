@@ -12,6 +12,7 @@ const campaign = {
 
 vi.mock("next/navigation", () => ({
   useParams: () => ({ id: campaign.id }),
+  useRouter: () => ({ replace: vi.fn() }),
 }));
 
 function jsonResponse(body: unknown, status = 200): Response {

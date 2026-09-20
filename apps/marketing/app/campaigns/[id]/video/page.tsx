@@ -15,7 +15,7 @@ import {
 } from "@/lib/script-schema";
 import { APPS, APP_NAMES } from "@/lib/apps";
 import { getMarketingAppName, getMarketingMessage as t } from "@/lib/i18n";
-import { redirectToLogin } from "@/lib/login-redirect";
+import { useHandleAuthFailure } from "@/lib/login-redirect";
 
 interface Topic {
   id: string;
@@ -85,6 +85,7 @@ async function readBadRequestMessage(
  * @returns The topic, script, and scene editing interface.
  */
 export default function VideoProductionPage() {
+  const handleAuthFailure = useHandleAuthFailure();
   const params = useParams();
   const [campaign, setCampaign] = useState<any>(null);
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -168,10 +169,7 @@ export default function VideoProductionPage() {
     setWorkflowError(null);
     try {
       const res = await fetch(`/api/campaigns/${id}`);
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {
@@ -205,10 +203,7 @@ export default function VideoProductionPage() {
       const res = await fetch(
         `/api/video/projects?campaignId=${encodeURIComponent(campaignId)}`,
       );
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {
@@ -284,10 +279,7 @@ export default function VideoProductionPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ app: selectedApp }),
       });
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {
@@ -374,10 +366,7 @@ export default function VideoProductionPage() {
           topics: approvedTopics.map((t) => t.text),
         }),
       });
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {
@@ -412,10 +401,7 @@ export default function VideoProductionPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ app: selectedApp, topic: topic.text }),
       });
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {
@@ -506,10 +492,7 @@ export default function VideoProductionPage() {
           script,
         }),
       });
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {

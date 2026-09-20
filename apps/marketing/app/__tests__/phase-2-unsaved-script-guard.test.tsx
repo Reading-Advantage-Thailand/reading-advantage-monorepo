@@ -24,6 +24,7 @@ const script = Array.from({ length: 5 }, (_, index) => ({
 
 vi.mock("next/navigation", () => ({
   useParams: () => ({ id: campaign.id }),
+  useRouter: () => ({ replace: vi.fn() }),
 }));
 
 function jsonResponse(body: unknown, status = 200): Response {

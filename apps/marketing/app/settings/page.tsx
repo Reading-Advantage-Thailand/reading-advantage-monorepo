@@ -8,7 +8,7 @@ import {
   preservesExistingMarketingSecret,
 } from "@/lib/settings-update";
 import { getMarketingMessage as t } from "@/lib/i18n";
-import { redirectToLogin } from "@/lib/login-redirect";
+import { useHandleAuthFailure } from "@/lib/login-redirect";
 
 const OPENROUTER_DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free";
 
@@ -23,6 +23,7 @@ type TestConnectionResult = {
  * @returns The settings form and connection status controls.
  */
 export default function SettingsPage() {
+  const handleAuthFailure = useHandleAuthFailure();
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const role = user?.role ?? null;
   const [provider, setProvider] = useState("google");
@@ -47,9 +48,7 @@ export default function SettingsPage() {
   useEffect(() => {
     if (isAuthLoading) return;
     if (!isAuthenticated) {
-      window.location.href = redirectToLogin(
-        `${window.location.pathname}${window.location.search}`,
-      );
+      handleAuthFailure();
       return;
     }
     if (role !== "ADMIN") {
@@ -62,10 +61,7 @@ export default function SettingsPage() {
     async function loadSettings() {
       try {
         const res = await fetch("/api/settings", { signal: controller.signal });
-        if (res.status === 401) {
-          window.location.href = redirectToLogin(
-            `${window.location.pathname}${window.location.search}`,
-          );
+        if (handleAuthFailure(res)) {
           return;
         }
         if (res.status === 403) {
@@ -109,7 +105,7 @@ export default function SettingsPage() {
     }
     void loadSettings();
     return () => controller.abort();
-  }, [isAuthenticated, isAuthLoading, role]);
+  }, [isAuthenticated, isAuthLoading, role, handleAuthFailure]);
 
   const requiresExplicitApiKey = preservesExistingMarketingSecret(
     "llm.apiKey",
@@ -134,10 +130,7 @@ export default function SettingsPage() {
         body: JSON.stringify({ provider, modelName, apiKey }),
         signal: controller.signal,
       });
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {
@@ -187,10 +180,7 @@ export default function SettingsPage() {
         body: JSON.stringify(settingsUpdate),
         signal: controller.signal,
       });
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {

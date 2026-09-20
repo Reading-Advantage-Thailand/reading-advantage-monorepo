@@ -16,6 +16,7 @@ import VideoProductionPage from "@/campaigns/[id]/video/page";
 // without requiring a full App Router runtime.
 vi.mock("next/navigation", () => ({
   useParams: () => ({ id: "campaign-1111-2222-3333" }),
+  useRouter: () => ({ replace: vi.fn() }),
 }));
 
 const campaign = {

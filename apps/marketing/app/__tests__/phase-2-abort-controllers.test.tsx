@@ -19,6 +19,7 @@ const campaignId = "11111111-1111-4111-8111-111111111111";
 
 vi.mock("next/navigation", () => ({
   useParams: () => ({ id: campaignId }),
+  useRouter: () => ({ replace: vi.fn() }),
 }));
 
 function jsonResponse(body: unknown, status = 200): Response {

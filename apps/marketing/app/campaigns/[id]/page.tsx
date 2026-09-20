@@ -8,7 +8,7 @@ import {
   getMarketingMessage as t,
   getMarketingStatusLabel,
 } from "@/lib/i18n";
-import { redirectToLogin } from "@/lib/login-redirect";
+import { useHandleAuthFailure } from "@/lib/login-redirect";
 import { nextCampaignStatuses } from "@/lib/campaign-status";
 
 interface Campaign {
@@ -26,6 +26,7 @@ interface Campaign {
  * @returns The campaign detail and status-management interface.
  */
 export default function CampaignDetailPage() {
+  const handleAuthFailure = useHandleAuthFailure();
   const params = useParams();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -44,10 +45,7 @@ export default function CampaignDetailPage() {
     setError(null);
     try {
       const res = await fetch(`/api/campaigns/${id}`, signal ? { signal } : undefined);
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {
@@ -87,10 +85,7 @@ export default function CampaignDetailPage() {
         body: JSON.stringify({ status: newStatus }),
         signal: controller.signal,
       });
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {

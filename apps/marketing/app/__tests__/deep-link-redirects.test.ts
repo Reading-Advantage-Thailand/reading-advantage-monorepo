@@ -30,7 +30,7 @@ describe("Marketing deep-link call sites", () => {
       const source = readAppSource(relativePath);
 
       expect(source).toMatch(/from ["']@\/lib\/login-redirect["']/);
-      expect(source).toMatch(/\bredirectToLogin\s*\(/);
+      expect(source).toMatch(/\bhandleAuthFailure\s*\(/);
       expect(source).not.toMatch(
         /window\.location\.href\s*=\s*["']\/login["']/,
       );

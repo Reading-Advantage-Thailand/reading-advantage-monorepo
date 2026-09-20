@@ -20,6 +20,10 @@ import { MarketingAppShell } from "@/marketing-app-shell";
 import MarketingHomePage from "@/page";
 import SettingsPage from "@/settings/page";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn() }),
+}));
+
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();

@@ -4,6 +4,14 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import SettingsPage from "@/settings/page";
 
+const { routerStub } = vi.hoisted(() => ({
+  routerStub: { replace: vi.fn() },
+}));
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => routerStub,
+}));
+
 vi.mock("@reading-advantage/auth-client", () => ({
   useAuth: () => ({
     user: { role: "ADMIN" },

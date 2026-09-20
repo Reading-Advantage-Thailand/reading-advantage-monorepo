@@ -8,7 +8,7 @@ import {
   getMarketingMessage as t,
   getMarketingStatusLabel,
 } from "@/lib/i18n";
-import { redirectToLogin } from "@/lib/login-redirect";
+import { useHandleAuthFailure } from "@/lib/login-redirect";
 
 interface Campaign {
   id: string;
@@ -24,6 +24,7 @@ interface Campaign {
  * @returns The campaigns list and creation interface.
  */
 export default function CampaignsPage() {
+  const handleAuthFailure = useHandleAuthFailure();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [showCreate, setShowCreate] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -51,10 +52,7 @@ export default function CampaignsPage() {
     setError(null);
     try {
       const res = await fetch("/api/campaigns", signal ? { signal } : undefined);
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {
@@ -91,10 +89,7 @@ export default function CampaignsPage() {
         body: JSON.stringify(newCampaign),
         signal: controller.signal,
       });
-      if (res.status === 401) {
-        window.location.href = redirectToLogin(
-          `${window.location.pathname}${window.location.search}`,
-        );
+      if (handleAuthFailure(res)) {
         return;
       }
       if (res.status === 403) {
