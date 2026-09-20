@@ -53,6 +53,21 @@ function createModule(completedLessons: number, lessonCount: number) {
 }
 
 /**
+ * Creates a locked dashboard module fixture.
+ * @param overrides Field overrides applied to the base module.
+ * @returns A locked module response accepted by the dashboard page.
+ */
+function createLockedModule(
+  overrides: Partial<ReturnType<typeof createModule>> = {},
+) {
+  return {
+    ...createModule(0, 5),
+    isLocked: true,
+    ...overrides,
+  };
+}
+
+/**
  * Renders the dashboard with English translations.
  * @returns The rendered dashboard utilities.
  */
@@ -101,5 +116,37 @@ describe("Sales dashboard progress summary", () => {
     renderDashboard();
 
     expect(screen.getByText(enMessages.dashboard.noProgress)).toBeTruthy();
+  });
+
+  it("renders a locked module as a focusable disabled card with a visible reason", () => {
+    mocks.dashboard.mockReturnValue({
+      data: [createLockedModule({ prerequisiteModuleSlug: "intro" })],
+      isLoading: false,
+      error: null,
+    });
+
+    renderDashboard();
+
+    const lockedCard = screen.getByRole("button", { name: /Foundations/ });
+    expect(lockedCard.getAttribute("aria-disabled")).toBe("true");
+    expect(screen.getByText("Complete intro first")).toBeTruthy();
+  });
+
+  it("shows the generic lock reason when no prerequisite module exists", () => {
+    mocks.dashboard.mockReturnValue({
+      data: [createLockedModule()],
+      isLoading: false,
+      error: null,
+    });
+
+    renderDashboard();
+
+    const lockedCard = screen.getByRole("button", { name: /Foundations/ });
+    expect(lockedCard.getAttribute("aria-disabled")).toBe("true");
+    expect(
+      screen.getByText(
+        enMessages.lesson.lockedModuleDescription,
+      ),
+    ).toBeTruthy();
   });
 });

@@ -18,6 +18,7 @@ import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
   const t = useTranslations("dashboard");
+  const lessonT = useTranslations("lesson");
   const loginT = useTranslations("login");
   const signInError = useSearchParams().get("error");
   const { isAuthenticated, isForbidden, isLoading: authLoading } = useAuth();
@@ -118,6 +119,11 @@ export default function HomePage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {modules.map((module) => {
           const locked = module.isLocked;
+          const lockedReason = module.prerequisiteModuleSlug
+            ? t("completeModuleFirst", {
+                module: module.prerequisiteModuleSlug,
+              })
+            : lessonT("lockedModuleDescription");
           const progressLabel = t("progressLabel", {
             completed: module.completedLessons,
             total: module.lessonCount,
@@ -168,24 +174,24 @@ export default function HomePage() {
                       style={{ width: `${module.progress}%` }}
                     />
                   </div>
+                  {locked && (
+                    <p className="text-xs text-muted-foreground">
+                      {lockedReason}
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>
           );
           return locked ? (
-            <div
+            <button
               key={module.id}
+              type="button"
               aria-disabled="true"
-              title={
-                module.prerequisiteModuleSlug
-                  ? t("completeModuleFirst", {
-                      module: module.prerequisiteModuleSlug,
-                    })
-                  : undefined
-              }
+              className="block h-full w-full cursor-default rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               {card}
-            </div>
+            </button>
           ) : (
             <Link key={module.id} href={`/module/${module.slug}`}>
               {card}

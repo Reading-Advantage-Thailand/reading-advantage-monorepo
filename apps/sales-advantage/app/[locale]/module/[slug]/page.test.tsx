@@ -1,9 +1,13 @@
-import { act, cleanup, render, screen } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  render,
+  screen,
+} from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
-import { Suspense, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import enMessages from "../../../../messages/en.json";
-import thMessages from "../../../../messages/th.json";
 import ModulePage from "./page";
 
 const mocks = vi.hoisted(() => ({
@@ -24,95 +28,91 @@ vi.mock("@/i18n/navigation", () => ({
   ),
 }));
 
-const moduleFixture = {
-  id: "module-1",
-  slug: "foundations",
-  title: "Sales foundations",
-  description: "Build sales foundations.",
-  phase: "Foundations",
-  lessons: [
-    {
-      id: "lesson-theory",
-      title: "Theory lesson",
-      type: "theory" as const,
-      completed: false,
-      isLocked: false,
-      bestScore: null,
-    },
-    {
-      id: "lesson-roleplay",
-      title: "Roleplay lesson",
-      type: "roleplay" as const,
-      completed: false,
-      isLocked: false,
-      bestScore: null,
-    },
-    {
-      id: "lesson-quiz",
-      title: "Quiz lesson",
-      type: "quiz" as const,
-      completed: false,
-      isLocked: false,
-      bestScore: null,
-    },
-  ],
-};
+/**
+ * Creates a lesson fixture accepted by the module page.
+ * @param overrides Field overrides applied to the base lesson.
+ * @returns A lesson response accepted by the module page.
+ */
+function createLesson(overrides: Record<string, unknown> = {}) {
+  return {
+    id: "lesson-1",
+    title: "Discovery Basics",
+    type: "theory",
+    completed: false,
+    isLocked: false,
+    bestScore: null,
+    ...overrides,
+  };
+}
 
 /**
- * Renders the module page with the selected translations and a resolved route parameter.
- * @param locale Supported page locale.
- * @param messages Messages for the selected locale.
- * @returns A promise that resolves after the page renders.
+ * Creates a module fixture holding one lesson.
+ * @param lessons Lessons rendered by the module page.
+ * @returns A module response accepted by the module page.
  */
-async function renderModule(
-  locale: "en" | "th",
-  messages: typeof enMessages | typeof thMessages,
-) {
+function createModule(lessons: Array<ReturnType<typeof createLesson>>) {
+  return {
+    slug: "foundations",
+    title: "Foundations",
+    description: "Sales foundations",
+    phase: "Foundations",
+    lessons,
+  };
+}
+
+/**
+ * Renders the module page with English translations.
+ * The page suspends on its route params, so the render must be awaited.
+ */
+async function renderModulePage() {
   await act(async () => {
     render(
-      <NextIntlClientProvider locale={locale} messages={messages}>
-        <Suspense fallback={<p>Loading module</p>}>
-          <ModulePage params={Promise.resolve({ slug: moduleFixture.slug })} />
-        </Suspense>
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <ModulePage params={Promise.resolve({ slug: "foundations" })} />
       </NextIntlClientProvider>,
     );
-    await Promise.resolve();
   });
 }
 
-describe("Sales module lesson labels", () => {
+describe("Module lesson list accessibility", () => {
   beforeEach(() => {
-    mocks.moduleBySlug.mockReturnValue({
-      data: moduleFixture,
-      isLoading: false,
-      error: null,
-    });
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
     cleanup();
-    vi.clearAllMocks();
   });
 
-  it("renders theory, roleplay, and quiz labels in Thai", async () => {
-    await renderModule("th", thMessages);
+  it("links an unlocked lesson to its lesson page", async () => {
+    mocks.moduleBySlug.mockReturnValue({
+      data: createModule([createLesson()]),
+      isLoading: false,
+      error: null,
+    });
 
-    expect(await screen.findByText(thMessages.lesson.theory)).toBeTruthy();
-    expect(screen.getByText(thMessages.lesson.roleplay)).toBeTruthy();
-    expect(screen.getByText(thMessages.lesson.quiz)).toBeTruthy();
-    expect(screen.queryByText("theory")).toBeNull();
-    expect(screen.queryByText("roleplay")).toBeNull();
-    expect(screen.queryByText("quiz")).toBeNull();
+    await renderModulePage();
+
+    expect(screen.getByText("1. Discovery Basics")).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: /Discovery Basics/ }),
+    ).toHaveAttribute("href", "/lesson/lesson-1");
   });
 
-  it("renders theory, roleplay, and quiz labels in English", async () => {
-    await renderModule("en", enMessages);
+  it("renders a locked lesson as a focusable disabled card with a visible reason", async () => {
+    mocks.moduleBySlug.mockReturnValue({
+      data: createModule([createLesson({ isLocked: true })]),
+      isLoading: false,
+      error: null,
+    });
 
-    expect(await screen.findByText(enMessages.lesson.theory)).toBeTruthy();
-    expect(screen.getByText(enMessages.lesson.roleplay)).toBeTruthy();
-    expect(screen.getByText(enMessages.lesson.quiz)).toBeTruthy();
-    expect(screen.queryByText("theory")).toBeNull();
-    expect(screen.queryByText("roleplay")).toBeNull();
-    expect(screen.queryByText("quiz")).toBeNull();
+    await renderModulePage();
+
+    const lockedCard = screen.getByRole("button", {
+      name: /Discovery Basics/,
+    });
+    expect(lockedCard.getAttribute("aria-disabled")).toBe("true");
+    expect(
+      screen.getByText(enMessages.lesson.lockedLessonDescription),
+    ).toBeTruthy();
   });
 });

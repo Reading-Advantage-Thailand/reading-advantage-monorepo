@@ -5,6 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { Link } from "@/i18n/navigation";
 import {
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
@@ -114,16 +115,24 @@ export default function ModulePage({
                   <Badge variant="outline">{lesson.bestScore}/100</Badge>
                 )}
               </CardHeader>
+              {locked && (
+                <CardContent>
+                  <p className="text-xs text-muted-foreground">
+                    {t("lockedLessonDescription")}
+                  </p>
+                </CardContent>
+              )}
             </Card>
           );
           return locked ? (
-            <div
+            <button
               key={lesson.id}
+              type="button"
               aria-disabled="true"
-              title={t("lockedLessonDescription")}
+              className="block w-full cursor-default rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               {card}
-            </div>
+            </button>
           ) : (
             <Link key={lesson.id} href={`/lesson/${lesson.id}`}>
               {card}
