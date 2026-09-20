@@ -1,0 +1,1 @@
+Task: Render the forbidden sign-in state. The landing page now reads isForbidden, avoids the dashboard query, and shows login.errorForbidden with the login form. Added a regression test for auth-client forbidden state. Files: apps/sales-advantage/app/[locale]/page.tsx and page.red.test.tsx.
