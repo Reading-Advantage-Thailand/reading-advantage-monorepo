@@ -342,4 +342,16 @@ describe("Accounts company-identity route registry", () => {
     expect(backendPublicApi).not.toHaveProperty("getCapabilityRequestContext");
     expect(companyIdentityRouteHandlers).not.toHaveProperty("run");
   });
+
+  it("imports the route adapter through the backend package boundary", async () => {
+    const source = readFileSync(
+      resolve(dirname(fileURLToPath(import.meta.url)), "company-identity-route-bindings.ts"),
+      "utf8",
+    );
+
+    expect(source).toContain(
+      '@reading-advantage/backend/company-identity/accounts-route-adapter',
+    );
+    expect(source).not.toMatch(/from\s+"\.\..*packages\/backend/);
+  });
 });

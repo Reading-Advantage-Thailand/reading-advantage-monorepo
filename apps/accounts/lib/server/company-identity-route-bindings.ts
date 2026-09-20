@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { createCompanyIdentityRouteAdapter } from "../../../../packages/backend/dist/modules/company-identity/internal-route-adapter.js";
+import { createCompanyIdentityRouteAdapter } from "@reading-advantage/backend/company-identity/accounts-route-adapter";
 
 const backendRouteAdapter = createCompanyIdentityRouteAdapter();
 

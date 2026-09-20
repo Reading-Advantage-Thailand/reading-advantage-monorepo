@@ -19,6 +19,7 @@ describe("@reading-advantage/backend package scaffold", () => {
     expect(Object.keys(manifest.exports ?? {}).sort()).toEqual([
       ".",
       "./accounting",
+      "./company-identity/accounts-route-adapter",
       "./company-identity/internal-route-adapter",
       "./finance-operations",
       "./jobs",
@@ -26,6 +27,9 @@ describe("@reading-advantage/backend package scaffold", () => {
     ]);
     expect(manifest.exports).toHaveProperty(".");
     expect(manifest.exports).toHaveProperty("./accounting");
+    expect(manifest.exports).toHaveProperty(
+      "./company-identity/accounts-route-adapter",
+    );
     expect(manifest.exports).toHaveProperty(
       "./company-identity/internal-route-adapter",
     );

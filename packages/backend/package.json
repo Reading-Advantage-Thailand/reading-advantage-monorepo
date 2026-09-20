@@ -27,6 +27,10 @@
     "./company-identity/internal-route-adapter": {
       "types": "./dist/modules/company-identity/public-route-adapter.d.ts",
       "import": "./dist/modules/company-identity/public-route-adapter.js"
+    },
+    "./company-identity/accounts-route-adapter": {
+      "types": "./dist/modules/company-identity/internal-route-adapter.d.ts",
+      "import": "./dist/modules/company-identity/internal-route-adapter.js"
     }
   },
   "files": [
