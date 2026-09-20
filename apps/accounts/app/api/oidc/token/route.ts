@@ -10,6 +10,7 @@ import {
 
 /** Exchanges one authorization code for an opaque app session and signed ID token. */
 export async function POST(request: Request): Promise<NextResponse> {
+  let logUnexpected: (() => void) | undefined;
   try {
     const form = await request.formData();
     const basic = request.headers.get("authorization");
@@ -25,16 +26,18 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
     const result = await companyIdentityRouteHandlers.token(
       () =>
-        getIdentityComposition().then((composition) =>
-          composition.service.exchangeCode({
+        getIdentityComposition().then((composition) => {
+          logUnexpected = () =>
+            composition.logger?.warn("accounts.oidc.token.unexpected_failure");
+          return composition.service.exchangeCode({
             grantType: form.get("grant_type"),
             code: form.get("code"),
             clientId: basicClientId ?? form.get("client_id"),
             clientSecret: basicSecret ?? form.get("client_secret") ?? undefined,
             redirectUri: form.get("redirect_uri"),
             codeVerifier: form.get("code_verifier"),
-          }),
-        ),
+          });
+        }),
     );
     return NextResponse.json(
       {
@@ -65,6 +68,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       error instanceof CompanyIdentityError &&
       (error.code === "AUTHORIZATION_CODE_INVALID" ||
         error.code === "SESSION_INVALID");
+    if (!invalidGrant) logUnexpected?.();
     return NextResponse.json(
       { error: invalidGrant ? "invalid_grant" : "invalid_request" },
       { status: 400, headers: { "Cache-Control": "no-store" } },

@@ -3,15 +3,19 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const { probeDatabase } = vi.hoisted(() => ({
   probeDatabase: vi.fn<() => Promise<void>>(),
 }));
+const warn = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/server/identity", () => ({
-  getIdentityComposition: vi.fn(async () => ({ probeDatabase })),
+  getIdentityComposition: vi.fn(async () => ({ probeDatabase, logger: { warn } })),
 }));
 
 import { GET } from "./route";
 
 describe("Accounts readiness route", () => {
-  beforeEach(() => probeDatabase.mockReset());
+  beforeEach(() => {
+    probeDatabase.mockReset();
+    warn.mockReset();
+  });
 
   it("reports the identity database as ready after a live probe", async () => {
     probeDatabase.mockResolvedValueOnce();
@@ -41,5 +45,6 @@ describe("Accounts readiness route", () => {
       service: "accounts",
     });
     expect(response.headers.get("Cache-Control")).toBe("no-store");
+    expect(warn).toHaveBeenCalledWith("accounts.ready.unexpected_failure");
   });
 });

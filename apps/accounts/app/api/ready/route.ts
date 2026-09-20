@@ -14,8 +14,11 @@ import {
 export async function GET(): Promise<NextResponse> {
   return companyIdentityRouteHandlers.ready(
     async () => {
+      let logUnexpected: (() => void) | undefined;
       try {
         const identity = await getIdentityComposition();
+        logUnexpected = () =>
+          identity.logger?.warn("accounts.ready.unexpected_failure");
         await identity.probeDatabase();
         return NextResponse.json(
           {
@@ -26,6 +29,7 @@ export async function GET(): Promise<NextResponse> {
           { headers: { "Cache-Control": "no-store" } },
         );
       } catch {
+        logUnexpected?.();
         return NextResponse.json(
           { status: "unavailable", service: "accounts" },
           { status: 503, headers: { "Cache-Control": "no-store" } },

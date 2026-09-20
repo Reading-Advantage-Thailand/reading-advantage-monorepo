@@ -13,6 +13,7 @@ import {
   fingerprintSecret,
   projectSecretSafeAuditMetadata,
   type CapabilityExecutor,
+  type CapabilityLogger,
   type CompanyIdentityService,
   type IdentityPublicJwk,
 } from "@reading-advantage/backend";
@@ -30,6 +31,7 @@ import { createAccountsCapabilityTelemetry } from "./telemetry";
 interface IdentityComposition {
   readonly service: CompanyIdentityService;
   readonly executor: CapabilityExecutor;
+  readonly logger: CapabilityLogger;
   readonly cookie: ReturnType<typeof createCompanyIdentityCookieConfig>;
   readonly issuerUrl: string;
   readonly jwk: IdentityPublicJwk;
@@ -219,6 +221,7 @@ export async function getIdentityComposition(): Promise<IdentityComposition> {
     return {
       service,
       executor,
+      logger: telemetry.logger,
       cookie,
       issuerUrl: issuer.issuerUrl,
       jwk: signer.jwk(),
