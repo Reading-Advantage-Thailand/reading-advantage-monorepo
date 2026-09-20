@@ -20,9 +20,9 @@ export default function HomePage() {
   const t = useTranslations("dashboard");
   const loginT = useTranslations("login");
   const signInError = useSearchParams().get("error");
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isForbidden, isLoading: authLoading } = useAuth();
   const { data, isLoading, error } = trpc.sales.dashboard.useQuery(undefined, {
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && !isForbidden,
   });
   const messageKey =
     signInError === "sso"
@@ -36,6 +36,17 @@ export default function HomePage() {
       <>
         <p role="alert" className="mx-auto mt-6 max-w-sm text-destructive">
           {loginT(messageKey)}
+        </p>
+        <LoginForm />
+      </>
+    );
+  }
+
+  if (isForbidden) {
+    return (
+      <>
+        <p role="alert" className="mx-auto mt-6 max-w-sm text-destructive">
+          {loginT("errorForbidden")}
         </p>
         <LoginForm />
       </>

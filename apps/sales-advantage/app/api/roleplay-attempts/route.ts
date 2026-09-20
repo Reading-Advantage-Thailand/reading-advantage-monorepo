@@ -15,7 +15,10 @@ import { getAIClient } from "@reading-advantage/ai";
 import { checkRoleplayRateLimit } from "@/lib/rate-limit";
 import type { StorageClient } from "@reading-advantage/storage";
 import { randomUUID } from "node:crypto";
-import { authenticateSalesRequest } from "@/lib/company-oidc";
+import {
+  authenticateSalesRequest,
+  type ResolvedSalesRequestPrincipal,
+} from "@/lib/company-oidc";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -23,7 +26,13 @@ export const maxDuration = 60;
 export async function POST(request: NextRequest) {
   let uploadedObject: { storage: StorageClient; key: string } | undefined;
   try {
-    const principal = await authenticateSalesRequest(request);
+    const authResult = await authenticateSalesRequest(request);
+    const principal =
+      authResult && "user" in authResult
+        ? (authResult as unknown as ResolvedSalesRequestPrincipal)
+        : authResult?.kind === "authenticated"
+          ? authResult.principal
+          : null;
     if (!principal) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

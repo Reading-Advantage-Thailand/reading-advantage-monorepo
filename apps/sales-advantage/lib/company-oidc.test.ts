@@ -120,9 +120,10 @@ describe("Sales company session projection", () => {
       },
     );
 
-    await expect(authenticateSalesRequest(request)).resolves.toEqual(
-      mappedLegacyPrincipal,
-    );
+    await expect(authenticateSalesRequest(request)).resolves.toEqual({
+      kind: "authenticated",
+      principal: mappedLegacyPrincipal,
+    });
     expect(mocks.validateSession).toHaveBeenCalledWith(
       { kind: "database" },
       "legacy-cookie-token",
@@ -153,6 +154,16 @@ describe("Sales company session projection", () => {
       { headers: { cookie: "session_token=legacy-cookie-token" } },
     );
 
-    await expect(authenticateSalesRequest(request)).resolves.toBeNull();
+    await expect(authenticateSalesRequest(request)).resolves.toEqual({
+      kind: "no-sales-role",
+    });
+  });
+
+  it("reports no session when no authentication evidence is present", async () => {
+    await expect(
+      authenticateSalesRequest(
+        new Request("https://sales.reading-advantage.com/api/auth/session"),
+      ),
+    ).resolves.toEqual({ kind: "no-session" });
   });
 });

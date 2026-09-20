@@ -1,4 +1,7 @@
-import { authenticateSalesRequest } from "@/lib/company-oidc";
+import {
+  authenticateSalesRequest,
+  type ResolvedSalesRequestPrincipal,
+} from "@/lib/company-oidc";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -16,9 +19,15 @@ export default async function AdminLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const [requestHeaders, { locale }] = await Promise.all([headers(), params]);
-  const principal = await authenticateSalesRequest(
+  const result = await authenticateSalesRequest(
     new Request("http://sales.internal/admin", { headers: requestHeaders }),
   );
+  const principal =
+    result && "user" in result
+      ? (result as unknown as ResolvedSalesRequestPrincipal)
+      : result?.kind === "authenticated"
+        ? result.principal
+        : null;
 
   if (principal?.user.role !== "SALES_ADMIN") {
     redirect(`/${locale}`);
