@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } fro
 
 import type { Employee } from "@reading-advantage/backend";
 
+type DirectoryStatus = "loading" | "ready" | "failed";
+
 const APPLICATIONS = [
   { key: "marketing", label: "Marketing", href: "https://marketing.reading-advantage.com", roles: ["MEMBER", "ADMIN"] },
   { key: "sales", label: "Sales Advantage", href: "https://sales.reading-advantage.com", roles: ["SALES_REP", "SALES_ADMIN"] },
@@ -57,6 +59,7 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
 }>) {
   const isAdmin = employee.companyRoles.includes("COMPANY_ADMIN");
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [directoryStatus, setDirectoryStatus] = useState<DirectoryStatus>("loading");
   const [selectedId, setSelectedId] = useState(employee.id);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
@@ -73,11 +76,16 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
 
   const refresh = useCallback(async () => {
     if (!isAdmin) return;
+    setDirectoryStatus("loading");
     try {
       const payload = await jsonRequest("/api/admin/employees", "GET") as { employees: Employee[] };
       setEmployees(payload.employees);
+      setDirectoryStatus("ready");
       setError("");
-    } catch (caught) { setError((caught as Error).message); }
+    } catch (caught) {
+      setDirectoryStatus("failed");
+      setError((caught as Error).message);
+    }
   }, [isAdmin]);
 
   useEffect(() => { void refresh(); }, [refresh]);
@@ -236,7 +244,10 @@ export function AccountsConsole({ employee, provisioning }: Readonly<{
           <aside className="directory-panel">
             <div className="panel-heading"><span>01</span><h2>Directory</h2><b>{employees.length}</b></div>
             <div className="employee-list" aria-label="Employees">
-              {employees.map((item) => (
+              {directoryStatus === "loading" && <p role="status">Loading employees…</p>}
+              {directoryStatus === "failed" && <p role="alert">Unable to load employees.</p>}
+              {directoryStatus === "ready" && employees.length === 0 && <p>No employees found.</p>}
+              {directoryStatus === "ready" && employees.map((item) => (
                 <button key={item.id} aria-pressed={selected?.id === item.id}
                   aria-label={`Select ${item.displayName}, ${item.status.toLowerCase()}`}
                   className={selected?.id === item.id ? "employee-item selected" : "employee-item"}

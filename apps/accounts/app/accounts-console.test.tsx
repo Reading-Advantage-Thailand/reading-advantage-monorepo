@@ -68,6 +68,31 @@ describe("Accounts administration console", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("distinguishes loading and failed employee directory states", async () => {
+    let resolveEmployees: (response: Response) => void = () => undefined;
+    const pendingEmployees = new Promise<Response>((resolve) => {
+      resolveEmployees = resolve;
+    });
+    vi.stubGlobal("fetch", vi.fn(() => pendingEmployees));
+
+    render(<AccountsConsole employee={admin} />);
+
+    expect(screen.getByText("Loading employees…")).toBeInTheDocument();
+    resolveEmployees(new Response("failure", { status: 500 }));
+    await screen.findByText("Unable to load employees.");
+  });
+
+  it("distinguishes an empty employee directory from a loading directory", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse({ employees: [] })),
+    );
+
+    render(<AccountsConsole employee={admin} />);
+
+    expect(await screen.findByText("No employees found.")).toBeInTheDocument();
+  });
+
   it("scopes role changes to one application and confirms lifecycle suspension", async () => {
     const fetchMock = vi.fn(
       async (input: RequestInfo | URL, init?: RequestInit) => {
