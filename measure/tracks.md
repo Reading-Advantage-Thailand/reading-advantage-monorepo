@@ -43,8 +43,8 @@ This file tracks all major tracks for the project.
   Correct currency exponents, date zones, minor-unit display, and major-unit previews. **Implemented 2026-09-20 (6/6 tasks); manual verification pending.**
 - [x] **Track: Accounting Loading State Correctness** *Link: [./tracks/accounting_loading_state_correctness_20260919/](./tracks/accounting_loading_state_correctness_20260919/)*
   Add error recovery, server-side pending filtering, and export date controls. **Implemented 2026-09-20 (3/3 tasks, 18 scoped tests green); manual verification pending.**
-- [ ] **Track: Accounting Duplication Removal** *Link: [./tracks/accounting_duplication_removal_20260919/](./tracks/accounting_duplication_removal_20260919/)*
-  Consolidate repeated route helpers and library test locations.
+- [x] **Track: Accounting Duplication Removal** *Link: [./tracks/accounting_duplication_removal_20260919/](./tracks/accounting_duplication_removal_20260919/)*
+  Consolidate repeated route helpers and library test locations. **Implemented 2026-09-20 (2/2 tasks, 78 scoped tests green, tsc and eslint clean); manual verification pending.**
 - [ ] **Track: Accounting Structural Alignment** *Link: [./tracks/accounting_structural_alignment_20260919/](./tracks/accounting_structural_alignment_20260919/)*
   Align origin checks, security headers, history views, and settled-currency validation.
 
