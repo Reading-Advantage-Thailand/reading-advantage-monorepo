@@ -3,7 +3,9 @@ import { z } from "zod";
 /** Shared Finance boundary predicate that rejects empty and whitespace-only strings. */
 const nonBlankStringSchema = z.string().regex(/\S/u);
 const minorUnitSchema = z.string().regex(/^(?:0|[1-9][0-9]*|-[1-9][0-9]*)$/u);
-const currencySchema = z.string().regex(/^[A-Z]{3}$/u);
+/** Currencies the business settles; every other ISO-4217 code is rejected. */
+const settledCurrencies = ["THB", "USD", "JPY"] as const;
+const currencySchema = z.enum(settledCurrencies);
 const internalEvidenceReferencePattern =
   /^private-evidence:\/\/([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)(?:\/[A-Za-z0-9._~-]+)+$/u;
 

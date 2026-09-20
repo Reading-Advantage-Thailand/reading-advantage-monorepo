@@ -3,12 +3,13 @@ import { describe, expect, it } from "vitest";
 import { financeMoneyInputSchema } from "../contracts.js";
 
 describe("finance operations foundation contracts", () => {
-  it("accepts signed base-10 integer minor units and uppercase three-letter currencies only", () => {
+  it("accepts signed base-10 integer minor units and settled currencies only", () => {
     for (const amountMinor of ["0", "250", "-250"]) {
-      expect(
-        financeMoneyInputSchema.safeParse({ amountMinor, currency: "THB" })
-          .success,
-      ).toBe(true);
+      for (const currency of ["THB", "USD", "JPY"]) {
+        expect(
+          financeMoneyInputSchema.safeParse({ amountMinor, currency }).success,
+        ).toBe(true);
+      }
     }
 
     for (const amountMinor of [
@@ -29,7 +30,7 @@ describe("finance operations foundation contracts", () => {
       ).toBe(false);
     }
 
-    for (const currency of ["thb", "TH", "THBB", "TH$"]) {
+    for (const currency of ["thb", "TH", "THBB", "TH$", "KWD", "XXX", "EUR"]) {
       expect(
         financeMoneyInputSchema.safeParse({ amountMinor: "250", currency })
           .success,
