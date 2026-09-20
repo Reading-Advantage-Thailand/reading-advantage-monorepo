@@ -14,7 +14,7 @@ import { GET } from "./route";
 describe("GET /api/auth/session", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.authenticateSalesRequest.mockResolvedValue(null);
+    mocks.authenticateSalesRequest.mockResolvedValue({ kind: "no-session" });
   });
 
   it("returns 200 with session null when the adapter finds no session", async () => {
@@ -33,8 +33,11 @@ describe("GET /api/auth/session", () => {
   it("returns the principal from the explicitly selected auth adapter", async () => {
     const user = { id: "sales:subject", role: "SALES_REP" };
     mocks.authenticateSalesRequest.mockResolvedValue({
-      user,
-      scope: { kind: "company", applicationKey: "sales" },
+      kind: "authenticated",
+      principal: {
+        user,
+        scope: { kind: "company", applicationKey: "sales" },
+      },
     });
 
     const response = await GET(
@@ -42,5 +45,18 @@ describe("GET /api/auth/session", () => {
     );
 
     await expect(response.json()).resolves.toEqual({ session: { user } });
+  });
+
+  it("returns 403 with session null when the Sales role is absent", async () => {
+    mocks.authenticateSalesRequest.mockResolvedValue({
+      kind: "no-sales-role",
+    });
+
+    const response = await GET(
+      new Request("https://sales.reading-advantage.com/api/auth/session"),
+    );
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({ session: null });
   });
 });
