@@ -10,5 +10,5 @@
 - [x] (d1d4304db) Task: Make the topic editor a controlled input with a Save button. Source: `docs/marketing-ux-refactor-plan.md` §3.2; Issues: `app/campaigns/[id]/video/page.tsx:576-586`
 - [x] (be91906) Task: Add an `AbortController` to each page-level fetch effect. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/settings/page.tsx:48,59,121,170`, `app/campaigns/page.tsx:50,84`, `app/campaigns/[id]/page.tsx:51,90`
 - [x] (70f840e) Task: Add one `app/error.tsx` and one `app/global-error.tsx`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/layout.tsx:301-302`
-- [ ] Task: Warn the user before leaving with an unsaved script. Source: `docs/marketing-ux-refactor-plan.md` §3.3; Issues: `app/campaigns/[id]/video/page.tsx:181`
+- [x] (900ff6b) Task: Warn the user before leaving with an unsaved script. Source: `docs/marketing-ux-refactor-plan.md` §3.3; Issues: `app/campaigns/[id]/video/page.tsx:181`
 - [ ] Task: Log the two settings failures with `logStructuredError`. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/api/settings/route.ts:59,120`, `apps/sales-advantage` structured logging usage
