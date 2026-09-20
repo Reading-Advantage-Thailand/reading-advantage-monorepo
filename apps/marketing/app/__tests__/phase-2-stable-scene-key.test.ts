@@ -8,7 +8,7 @@ const pagePath = resolve(
   "campaigns",
   "[id]",
   "video",
-  "page.tsx",
+  "scene-editor.tsx",
 );
 
 describe("video scene identity", () => {

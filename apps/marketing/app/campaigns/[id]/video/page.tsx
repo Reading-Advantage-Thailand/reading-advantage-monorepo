@@ -7,23 +7,13 @@ import {
   removeScene as removeSceneFn,
   reorderScenes as reorderScenesFn,
 } from "@/lib/scene-editor";
-import {
-  MAX_SCRIPT_SCENES,
-  MIN_SCRIPT_SCENES,
-  scriptSchema,
-  type ScriptScene,
-} from "@/lib/script-schema";
-import { APPS } from "@/lib/apps";
-import { getMarketingAppName, getMarketingMessage as t } from "@/lib/i18n";
+import { scriptSchema, type ScriptScene } from "@/lib/script-schema";
+import { getMarketingMessage as t } from "@/lib/i18n";
 import { useHandleAuthFailure } from "@/lib/login-redirect";
 import type { Campaign } from "@/lib/campaign-schema";
-
-interface Topic {
-  id: string;
-  text: string;
-  approved: boolean;
-  editing: boolean;
-}
+import { SceneEditor } from "./scene-editor";
+import { ScriptStep } from "./script-step";
+import { TopicStep, type Topic } from "./topic-step";
 
 interface VideoProject {
   id: string;
@@ -618,442 +608,47 @@ export default function VideoProductionPage() {
         )}
       </section>
 
-      <div
-        style={{
-          marginTop: "24px",
-          padding: "24px",
-          backgroundColor: "#fff",
-          borderRadius: "8px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h2>{t("video.stepSelectApp")}</h2>
-        <select
-          value={selectedApp}
-          onChange={(e) => setSelectedApp(e.target.value)}
-          style={{
-            padding: "8px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-            marginTop: "8px",
-          }}
-        >
-          {APPS.map((key) => (
-            <option key={key} value={key}>
-              {getMarketingAppName(key)}
-            </option>
-          ))}
-        </select>
-      </div>
+      <TopicStep
+        selectedApp={selectedApp}
+        onSelectApp={setSelectedApp}
+        researching={loading}
+        topics={topics}
+        activeTopicId={activeTopicId}
+        savingTopics={savingTopics}
+        hasApprovedTopics={approvedTopics.length > 0}
+        onResearch={handleResearchTopics}
+        onApprove={handleApprove}
+        onReject={handleReject}
+        onEdit={handleEdit}
+        onTopicChange={handleTopicChange}
+        onSaveEdit={handleSaveEdit}
+        onSaveTopics={handleSaveTopics}
+        onSelectTopic={setActiveTopicId}
+      />
 
-      <div
-        style={{
-          marginTop: "24px",
-          padding: "24px",
-          backgroundColor: "#fff",
-          borderRadius: "8px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-        }}
+      <ScriptStep
+        hasApprovedTopics={approvedTopics.length > 0}
+        activeTopicText={activeTopic?.text ?? null}
+        hasScript={script.length > 0}
+        generating={generating}
+        saving={saving}
+        selectedProjectId={selectedProjectId}
+        savedProjectId={savedProjectId}
+        projectMessage={projectMessage}
+        onGenerate={handleGenerateScript}
+        onSaveScript={handleSaveScript}
       >
-        <h2>{t("video.stepResearch")}</h2>
-        <p>
-          {t("video.researchDescription", {
-            app: getMarketingAppName(selectedApp),
-          })}
-        </p>
-        <button
-          onClick={handleResearchTopics}
-          disabled={loading}
-          style={{
-            padding: "8px 16px",
-            backgroundColor: "#1a1a2e",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: loading ? "not-allowed" : "pointer",
-            marginTop: "8px",
-          }}
-        >
-          {loading ? t("video.researching") : t("video.researchTopics")}
-        </button>
-
-        {topics.length > 0 && (
-          <div style={{ marginTop: "16px" }}>
-            <h3>{t("video.proposedTopics")}</h3>
-            <div style={{ display: "grid", gap: "12px", marginTop: "8px" }}>
-              {topics.map((topic) => (
-                <div
-                  key={topic.id}
-                  style={{
-                    padding: "16px",
-                    backgroundColor: topic.approved ? "#e8f5e9" : "#f5f5f5",
-                    borderRadius: "8px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  {topic.editing ? (
-                    <>
-                      <input
-                        type="text"
-                        value={topic.text}
-                        onChange={(e) =>
-                          handleTopicChange(topic.id, e.target.value)
-                        }
-                        style={{
-                          flex: 1,
-                          padding: "8px",
-                          borderRadius: "4px",
-                          border: "1px solid #ccc",
-                        }}
-                      />
-                      <button
-                        onClick={() => handleSaveEdit(topic.id)}
-                        style={{
-                          padding: "4px 8px",
-                          backgroundColor: "#4CAF50",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        {t("video.saveScript")}
-                      </button>
-                    </>
-                  ) : (
-                    <span>{topic.text}</span>
-                  )}
-                  <div
-                    style={{ display: "flex", gap: "8px", marginLeft: "16px" }}
-                  >
-                    {!topic.approved && (
-                      <>
-                        <button
-                          onClick={() => handleApprove(topic.id)}
-                          style={{
-                            padding: "4px 8px",
-                            backgroundColor: "#4CAF50",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {t("video.approve")}
-                        </button>
-                        <button
-                          onClick={() => handleEdit(topic.id)}
-                          style={{
-                            padding: "4px 8px",
-                            backgroundColor: "#FF9800",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {t("video.edit")}
-                        </button>
-                        <button
-                          onClick={() => handleReject(topic.id)}
-                          style={{
-                            padding: "4px 8px",
-                            backgroundColor: "#f44336",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {t("video.reject")}
-                        </button>
-                      </>
-                    )}
-                    {topic.approved && (
-                      <>
-                        <span style={{ color: "#4CAF50" }}>
-                          {t("video.approved")}
-                        </span>
-                        <button
-                          onClick={() => setActiveTopicId(topic.id)}
-                          style={{
-                            padding: "4px 8px",
-                            backgroundColor:
-                              activeTopicId === topic.id
-                                ? "#1a1a2e"
-                                : "#9E9E9E",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {activeTopicId === topic.id
-                            ? t("video.selectedForScript")
-                            : t("video.useForScript")}
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-            {topics.some((topic) => topic.approved) && (
-              <button
-                onClick={handleSaveTopics}
-                disabled={savingTopics}
-                style={{
-                  marginTop: "16px",
-                  padding: "8px 16px",
-                  backgroundColor: "#4CAF50",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: savingTopics ? "not-allowed" : "pointer",
-                }}
-              >
-                {savingTopics
-                  ? t("video.saving")
-                  : t("video.saveApprovedTopics")}
-              </button>
-            )}
-          </div>
+        {script.length > 0 && (
+          <SceneEditor
+            script={script}
+            sceneIds={sceneIds}
+            onSceneChange={handleSceneChange}
+            onAddScene={handleAddScene}
+            onRemoveScene={handleRemoveScene}
+            onMoveScene={handleMoveScene}
+          />
         )}
-      </div>
-
-      <div
-        style={{
-          marginTop: "24px",
-          padding: "24px",
-          backgroundColor: "#fff",
-          borderRadius: "8px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h2>{t("video.stepGenerate")}</h2>
-        {approvedTopics.length === 0 ? (
-          <p>{t("video.approveTopicFirst")}</p>
-        ) : (
-          <>
-            <p>{t("video.generateDescription")}</p>
-            {activeTopic && (
-              <p data-testid="selected-topic">
-                <strong>{t("video.selectedTopic")}</strong> {activeTopic.text}
-              </p>
-            )}
-            <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
-              <button
-                onClick={handleGenerateScript}
-                disabled={generating || !activeTopicId}
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#1a1a2e",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: generating ? "not-allowed" : "pointer",
-                }}
-              >
-                {generating ? t("video.generating") : t("video.generateScript")}
-              </button>
-              {script.length > 0 && (
-                <button
-                  onClick={handleSaveScript}
-                  disabled={saving}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#4CAF50",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: saving ? "not-allowed" : "pointer",
-                  }}
-                >
-                  {saving
-                    ? selectedProjectId
-                      ? t("video.updating")
-                      : t("video.saving")
-                    : selectedProjectId
-                      ? t("video.updateScript")
-                      : t("video.saveScript")}
-                </button>
-              )}
-            </div>
-            {savedProjectId && !projectMessage && (
-              <p style={{ color: "#4CAF50", marginTop: "8px" }}>
-                {t("video.projectReady", { id: savedProjectId })}
-              </p>
-            )}
-
-            {script.length > 0 && (
-              <div style={{ marginTop: "16px", display: "grid", gap: "12px" }}>
-                {script.map((scene, index) => (
-                  <div
-                    key={sceneIds[index]}
-                    style={{
-                      padding: "16px",
-                      backgroundColor: "#f9f9f9",
-                      borderRadius: "8px",
-                      border: "1px solid #eee",
-                    }}
-                    draggable
-                    onDragStart={(e) =>
-                      e.dataTransfer.setData("text/plain", String(index))
-                    }
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={(e) => {
-                      const from = Number(e.dataTransfer.getData("text/plain"));
-                      handleMoveScene(from, index);
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "8px",
-                      }}
-                    >
-                      <strong>{t("video.scene", { number: index + 1 })}</strong>
-                      <div style={{ display: "flex", gap: "4px" }}>
-                        <button
-                          onClick={() => handleMoveScene(index, index - 1)}
-                          disabled={index === 0}
-                          aria-label={t("video.moveSceneUp")}
-                          style={{
-                            padding: "2px 6px",
-                            backgroundColor: "#9E9E9E",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: index === 0 ? "not-allowed" : "pointer",
-                          }}
-                        >
-                          ↑
-                        </button>
-                        <button
-                          onClick={() => handleMoveScene(index, index + 1)}
-                          disabled={index === script.length - 1}
-                          aria-label={t("video.moveSceneDown")}
-                          style={{
-                            padding: "2px 6px",
-                            backgroundColor: "#9E9E9E",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor:
-                              index === script.length - 1
-                                ? "not-allowed"
-                                : "pointer",
-                          }}
-                        >
-                          ↓
-                        </button>
-                        <button
-                          onClick={() => handleRemoveScene(index)}
-                          disabled={script.length <= MIN_SCRIPT_SCENES}
-                          style={{
-                            padding: "2px 6px",
-                            backgroundColor: "#f44336",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor:
-                              script.length <= MIN_SCRIPT_SCENES
-                                ? "not-allowed"
-                                : "pointer",
-                          }}
-                        >
-                          {t("video.delete")}
-                        </button>
-                      </div>
-                    </div>
-                    <label style={{ display: "block", marginTop: "8px" }}>
-                      <span style={{ fontSize: "12px", color: "#666" }}>
-                        {t("video.narration")}
-                      </span>
-                      <textarea
-                        value={scene.narration}
-                        onChange={(e) =>
-                          handleSceneChange(index, {
-                            narration: e.target.value,
-                          })
-                        }
-                        rows={2}
-                        style={{
-                          width: "100%",
-                          padding: "6px",
-                          borderRadius: "4px",
-                          border: "1px solid #ccc",
-                        }}
-                      />
-                    </label>
-                    <label style={{ display: "block", marginTop: "8px" }}>
-                      <span style={{ fontSize: "12px", color: "#666" }}>
-                        {t("video.imagePrompt")}
-                      </span>
-                      <textarea
-                        value={scene.imagePrompt}
-                        onChange={(e) =>
-                          handleSceneChange(index, {
-                            imagePrompt: e.target.value,
-                          })
-                        }
-                        rows={2}
-                        style={{
-                          width: "100%",
-                          padding: "6px",
-                          borderRadius: "4px",
-                          border: "1px solid #ccc",
-                        }}
-                      />
-                    </label>
-                    <label style={{ display: "block", marginTop: "8px" }}>
-                      <span style={{ fontSize: "12px", color: "#666" }}>
-                        {t("video.motionDirection")}
-                      </span>
-                      <input
-                        type="text"
-                        value={scene.motionDirection}
-                        onChange={(e) =>
-                          handleSceneChange(index, {
-                            motionDirection: e.target.value,
-                          })
-                        }
-                        style={{
-                          width: "100%",
-                          padding: "6px",
-                          borderRadius: "4px",
-                          border: "1px solid #ccc",
-                        }}
-                      />
-                    </label>
-                  </div>
-                ))}
-                <button
-                  onClick={handleAddScene}
-                  disabled={script.length >= MAX_SCRIPT_SCENES}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#FF9800",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor:
-                      script.length >= MAX_SCRIPT_SCENES
-                        ? "not-allowed"
-                        : "pointer",
-                  }}
-                >
-                  {t("video.addScene")}
-                </button>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+      </ScriptStep>
     </div>
   );
 }

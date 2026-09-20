@@ -196,6 +196,7 @@ describe("Phase 7.1: shared APPS catalog", () => {
     const sharedAppsSource = readFileSync(modulePath, "utf8");
     const campaignsSource = appSource("campaigns/page.tsx");
     const videoSource = appSource("campaigns/[id]/video/page.tsx");
+    const topicStepSource = appSource("campaigns/[id]/video/topic-step.tsx");
 
     expect(sharedAppsSource).toMatch(
       /(?:import|export)\s*\{[^}]*\bAPPS\b[^}]*\}\s*from\s*["']@reading-advantage\/db\/marketing-constants["']/,
@@ -216,7 +217,7 @@ describe("Phase 7.1: shared APPS catalog", () => {
     expect(campaignsSource).toMatch(
       /APP_COLORS[\s\S]*from\s+["']@\/lib\/apps["']/,
     );
-    expect(videoSource).toMatch(
+    expect(topicStepSource).toMatch(
       /getMarketingAppName[\s\S]*from\s+["']@\/lib\/i18n["']/,
     );
     expect(campaignsSource).not.toMatch(/const\s+APP_COLORS\s*:/);

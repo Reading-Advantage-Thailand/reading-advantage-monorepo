@@ -137,8 +137,8 @@ describe("Phase 5: Topic Research — wiring invariants (tasks 1-4)", () => {
   // source-regex assertions (build system already verifies file presence;
   // the source-regex asserts nothing about runtime behavior).
 
-  it("video production page renders the 8-product app selector", () => {
-    const src = readText("app/campaigns/[id]/video/page.tsx");
+  it("video topic step renders the 8-product app selector", () => {
+    const src = readText("app/campaigns/[id]/video/topic-step.tsx");
     expect(src).toMatch(/\bAPPS\b[\s\S]*from\s+["']@\/lib\/apps["']/);
     expect(src).toMatch(/APPS\.map/);
     expect(src).toMatch(/getMarketingAppName/);
@@ -146,9 +146,12 @@ describe("Phase 5: Topic Research — wiring invariants (tasks 1-4)", () => {
   });
 
   it("video production page exposes a Research Topics button", () => {
-    const src = readText("app/campaigns/[id]/video/page.tsx");
-    expect(src).toMatch(/t\("video\.researchTopics"\)/);
-    expect(src).toMatch(/handleResearchTopics/);
+    expect(
+      readText("app/campaigns/[id]/video/topic-step.tsx"),
+    ).toMatch(/t\("video\.researchTopics"\)/);
+    expect(readText("app/campaigns/[id]/video/page.tsx")).toMatch(
+      /handleResearchTopics/,
+    );
   });
 
   it("apps/marketing/app/api/video/research-topics/route.ts exports POST", async () => {

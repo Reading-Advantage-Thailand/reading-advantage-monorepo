@@ -184,9 +184,12 @@ describe("Phase 6: Script Generation — wiring invariants (tasks 1-3)", () => {
   // source-regex assertions (build system already verifies file presence).
 
   it("video production page exposes Step 3: Generate Script", () => {
-    const src = readText("app/campaigns/[id]/video/page.tsx");
-    expect(src).toMatch(/t\("video\.generateScript"\)/);
-    expect(src).toMatch(/handleGenerateScript/);
+    expect(
+      readText("app/campaigns/[id]/video/script-step.tsx"),
+    ).toMatch(/t\("video\.generateScript"\)/);
+    expect(readText("app/campaigns/[id]/video/page.tsx")).toMatch(
+      /handleGenerateScript/,
+    );
   });
 
   it("video production page exposes scene editor controls", () => {
