@@ -19,8 +19,8 @@ This file tracks all major tracks for the project.
   Repair the broken user-experience items from the Sales Advantage UX audit. **Implemented 2026-09-20 (9/9 tasks, 267 tests green); manual verification pending.**
 - [x] **Track: Sales Advantage Session Contract Correctness** *Link: [./tracks/sales_session_contract_correctness_20260919/](./tracks/sales_session_contract_correctness_20260919/)*
   Separate anonymous sessions from forbidden Sales identities in the session contract. **Implemented 2026-09-20 (4/4 tasks, 272 tests green on branch, merged to master); manual verification pending.**
-- [~] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
-  Repair recording cleanup, upload errors, loading states, and request cancellation.
+- [x] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
+  Repair recording cleanup, upload errors, loading states, and request cancellation. **Implemented 2026-09-20 (10/10 tasks, 42 scoped tests green, tsc and eslint clean); manual verification pending.**
 - [ ] **Track: Sales Advantage Duplication Removal** *Link: [./tracks/sales_duplication_removal_20260919/](./tracks/sales_duplication_removal_20260919/)*
   Remove duplicated helpers, tests, dependencies, messages, and unused theme code.
 - [ ] **Track: Sales Advantage Structural Alignment** *Link: [./tracks/sales_structural_alignment_20260919/](./tracks/sales_structural_alignment_20260919/)*
