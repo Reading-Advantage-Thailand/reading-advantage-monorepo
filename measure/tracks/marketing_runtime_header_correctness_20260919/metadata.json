@@ -1,11 +1,11 @@
 {
   "track_id": "marketing_runtime_header_correctness_20260919",
   "type": "bug",
-  "status": "new",
+  "status": "completed",
   "created_at": "2026-09-19T00:00:00Z",
-  "updated_at": "2026-09-19T00:00:00Z",
+  "updated_at": "2026-09-20T04:50:00Z",
   "description": "Repair the runtime and header correctness items identified by the Marketing user-experience refactor plan.",
   "estimated_tasks": 5,
-  "actual_tasks": null,
+  "actual_tasks": 5,
   "deviation_notes": ""
 }

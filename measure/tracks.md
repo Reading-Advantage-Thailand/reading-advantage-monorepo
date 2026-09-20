@@ -50,8 +50,8 @@ This file tracks all major tracks for the project.
 
 - [x] **Track: Marketing Broken UX Fixes** *Link: [./tracks/marketing_broken_ux_fixes_20260919/](./tracks/marketing_broken_ux_fixes_20260919/)*
   Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code. **Implemented 2026-09-20 (10/10 tasks, 520 tests green); manual verification pending.**
-- [ ] **Track: Marketing Runtime Header Correctness** *Link: [./tracks/marketing_runtime_header_correctness_20260919/](./tracks/marketing_runtime_header_correctness_20260919/)*
-  Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating.
+- [x] **Track: Marketing Runtime Header Correctness** *Link: [./tracks/marketing_runtime_header_correctness_20260919/](./tracks/marketing_runtime_header_correctness_20260919/)*
+  Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating. **Implemented 2026-09-20 (5/5 tasks, 535 tests green, tsc and eslint clean); manual verification pending.**
 - [~] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
   Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior.
 - [ ] **Track: Marketing Duplication Removal** *Link: [./tracks/marketing_duplication_removal_20260919/](./tracks/marketing_duplication_removal_20260919/)*
