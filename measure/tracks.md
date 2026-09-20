@@ -34,8 +34,8 @@ This file tracks all major tracks for the project.
   Distinguish directory loading, empty, failed, malformed-input, and readiness states. **Implemented 2026-09-20 (5/5 tasks, 34 scoped tests green, tsc and eslint clean); manual verification pending.**
 - [x] **Track: Accounts Duplication Removal** *Link: [./tracks/accounts_duplication_removal_20260919/](./tracks/accounts_duplication_removal_20260919/)*
   Share safe-path, JSON-body, and route-handler boundary helpers without hiding capabilities. **Implemented 2026-09-20 (4/4 tasks, 65 scoped tests green, tsc clean in both apps); cross-app helper imports from `apps/accounts` into `apps/accounting` were introduced per plan; manual verification pending.**
-- [ ] **Track: Accounts Structural Alignment** *Link: [./tracks/accounts_structural_alignment_20260919/](./tracks/accounts_structural_alignment_20260919/)*
-  Align package exports, server-owned catalogues, confirmation controls, visual contrast, and authorization coverage.
+- [x] **Track: Accounts Structural Alignment** *Link: [./tracks/accounts_structural_alignment_20260919/](./tracks/accounts_structural_alignment_20260919/)*
+  Align package exports, server-owned catalogues, confirmation controls, visual contrast, and authorization coverage. **Implemented 2026-09-20 (6/6 tasks, 56 scoped tests green, admin routes at 100% coverage, tsc and eslint clean); manual verification pending.**
 
 - [x] **Track: Accounting Broken UX Fixes** *Link: [./tracks/accounting_broken_ux_fixes_20260919/](./tracks/accounting_broken_ux_fixes_20260919/)*
   Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects. **Implemented 2026-09-20 (9/9 tasks, 245 tests green, one pre-existing auth-import timeout); manual verification pending.**
