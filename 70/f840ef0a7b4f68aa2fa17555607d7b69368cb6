@@ -1,0 +1,1 @@
+Task: Add Marketing route and root error boundaries. Added retry handling for route errors and retry/home actions for root errors, with focused component tests. Verification: ../../node_modules/.bin/vitest run app/__tests__/phase-2-error-boundaries.test.tsx; node_modules/.bin/eslint --config apps/marketing/eslint.config.mjs <changed files>.
