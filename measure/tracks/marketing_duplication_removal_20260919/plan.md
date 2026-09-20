@@ -2,7 +2,7 @@
 
 ## Phase 1: Duplication Removal
 
-- [ ] Task: Extract one `handleAuthFailure(response)` helper and call it from all 14 sites. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/settings/page.tsx:48,59,121,170`, `app/campaigns/page.tsx:50,84`, `app/campaigns/[id]/page.tsx:51,90`, `app/campaigns/[id]/video/page.tsx:78,115,191,267,303,374`
+- [x] Task: Extract one `handleAuthFailure(response)` helper and call it from all 14 sites. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/settings/page.tsx:48,59,121,170`, `app/campaigns/page.tsx:50,84`, `app/campaigns/[id]/page.tsx:51,90`, `app/campaigns/[id]/video/page.tsx:78,115,191,267,303,374` (84c82c06d)
 - [ ] Task: Export one `MarketingApp` type and delete the three hand-written unions. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/api/campaigns/route.ts:100-108`, `app/api/video/research-topics/route.ts:109-118`, `app/api/video/save-topics/route.ts:47-55`
 - [ ] Task: Delete `APP_NAME_VALUES` and `APP_NAMES`. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/lib/apps.ts:16-25`, `app/lib/i18n.ts:177-184`
 - [ ] Task: Delete `Scene` and use `ScriptScene`. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/lib/scene-editor.ts:1-5`, `app/lib/script-schema.ts:48`
