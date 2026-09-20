@@ -4,6 +4,7 @@ import { getIdentityComposition } from "@/lib/server/identity";
 import {
   identityAuthenticationEvidence,
   identityErrorResponse,
+  readJsonBody,
   requireSameOrigin,
 } from "@/lib/server/http";
 import {
@@ -37,7 +38,7 @@ export async function GET(): Promise<NextResponse> {
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     await requireSameOrigin(request);
-    const body = await request.json();
+    const body = await readJsonBody(request);
     const employee = await companyIdentityRouteHandlers.employeesCreate(
       async () =>
         (await getIdentityComposition()).executor.execute<Employee>({

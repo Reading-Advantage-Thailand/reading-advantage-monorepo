@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getIdentityComposition } from "@/lib/server/identity";
 import {
   identityErrorResponse,
+  readJsonBody,
   requestIpAddress,
   requireSameOrigin,
 } from "@/lib/server/http";
@@ -16,7 +17,7 @@ import {
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     await requireSameOrigin(request);
-    const body = await request.json();
+    const body = await readJsonBody(request);
     const composition = await getIdentityComposition();
     const result = await companyIdentityRouteHandlers.login(
       async () =>

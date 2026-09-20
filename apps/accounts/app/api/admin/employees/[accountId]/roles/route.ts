@@ -4,6 +4,7 @@ import { getIdentityComposition } from "@/lib/server/identity";
 import {
   identityAuthenticationEvidence,
   identityErrorResponse,
+  readJsonBody,
   requireSameOrigin,
 } from "@/lib/server/http";
 import {
@@ -24,7 +25,7 @@ export async function PUT(
     await requireSameOrigin(request);
     const [{ accountId }, body, evidence] = await Promise.all([
       context.params,
-      request.json(),
+      readJsonBody(request),
       identityAuthenticationEvidence(),
     ]);
     const employee = await companyIdentityRouteHandlers.employeeApplicationRoles(

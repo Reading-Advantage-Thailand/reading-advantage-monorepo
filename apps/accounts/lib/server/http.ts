@@ -13,6 +13,24 @@ export async function requireSameOrigin(request: Request): Promise<void> {
   if (origin !== expected) throw new CompanyIdentityError("FORBIDDEN", "Request origin is invalid.");
 }
 
+/** Parses a JSON object body and rejects malformed or non-object payloads. */
+export async function readJsonBody(request: Request): Promise<Record<string, unknown>> {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    throw Object.assign(new Error("Request body must be valid JSON."), {
+      code: "INVALID_INPUT" as const,
+    });
+  }
+  if (typeof body !== "object" || body === null || Array.isArray(body)) {
+    throw Object.assign(new Error("Request body must be a JSON object."), {
+      code: "INVALID_INPUT" as const,
+    });
+  }
+  return body as Record<string, unknown>;
+}
+
 /** Returns the currently signed-in employee, or null for an anonymous request. */
 export async function currentEmployee(): Promise<Employee | null> {
   const composition = await getIdentityComposition();
