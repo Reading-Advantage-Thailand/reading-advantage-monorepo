@@ -29,6 +29,18 @@ describe("Sales browser proxy SSO redirects", () => {
     delete process.env.SALES_AUTH_MODE;
   });
 
+  it("uses only the company application cookie in company mode", async () => {
+    const accepted = await proxy(
+      createRequest("/en/admin", "__Host-ra_sales_session=company-token"),
+    );
+    expect(accepted.status).toBe(200);
+
+    const rejected = await proxy(
+      createRequest("/en/admin", "session_token=legacy-token"),
+    );
+    expect(rejected.status).toBe(307);
+  });
+
   it("redirects an unauthenticated protected request to the company start route", async () => {
     const response = await proxy(createRequest("/th/module/1"));
     const location = new URL(response.headers.get("location")!);
@@ -76,6 +88,14 @@ describe("Sales browser proxy SSO redirects", () => {
       createRequest("/en/admin", "session_token=legacy-token"),
     );
     expect(accepted.status).toBe(200);
+    await expect(
+      proxy(
+        createRequest("/en/module/onboarding", "session_token=legacy-token"),
+      ),
+    ).resolves.toMatchObject({ status: 200 });
+    await expect(
+      proxy(createRequest("/en/lesson/lesson-1", "session_token=legacy-token")),
+    ).resolves.toMatchObject({ status: 200 });
 
     const rejected = await proxy(
       createRequest("/en/admin", "__Host-ra_sales_session=company-token"),

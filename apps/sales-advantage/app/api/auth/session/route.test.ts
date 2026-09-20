@@ -44,6 +44,7 @@ describe("GET /api/auth/session", () => {
       new Request("https://sales.reading-advantage.com/api/auth/session"),
     );
 
+    expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ session: { user } });
   });
 
