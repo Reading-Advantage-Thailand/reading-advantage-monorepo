@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@reading-advantage/ui";
 import { readJson } from "../../../accounts/lib/server/read-json";
+import { formatMinorAmount } from "@/app/lib/format-minor-amount";
 import { derivedRate } from "@/app/lib/derived-rate";
 
 /** Props for the pending submissions list. */
@@ -43,30 +44,6 @@ function messageFromBody(body: unknown, fallback: string): string {
     return body.message;
   }
   return fallback;
-}
-
-/** Formats a minor-unit amount as a localized currency value. */
-function formatMinorAmount(amountMinor: string, currency: string): string {
-  const formatter = new Intl.NumberFormat("en", {
-    style: "currency",
-    currency,
-  });
-  const exponent = formatter.resolvedOptions().maximumFractionDigits ?? 2;
-  const amount = BigInt(amountMinor);
-  const isNegative = amount < 0n;
-  const absoluteAmount = isNegative ? -amount : amount;
-  const scale = 10n ** BigInt(exponent);
-  const major = absoluteAmount / scale;
-  if (exponent === 0) {
-    return `${isNegative ? "-" : ""}${formatter.format(major)}`;
-  }
-  const fraction = absoluteAmount % scale;
-  const fractionText = fraction.toString().padStart(exponent, "0");
-  const formatted = formatter
-    .formatToParts(major)
-    .map((part) => (part.type === "fraction" ? fractionText : part.value))
-    .join("");
-  return `${isNegative ? "-" : ""}${formatted}`;
 }
 
 /**

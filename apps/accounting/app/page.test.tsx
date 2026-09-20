@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import HomePage from "./page";
@@ -51,6 +51,25 @@ vi.mock("./_components/pending-submissions-list", () => ({
             {submission.money.amountMinor} {submission.money.currency}
           </p>
           <p>{submission.evidenceReference}</p>
+        </article>
+      ))}
+    </section>
+  ),
+}));
+
+vi.mock("./_components/submission-history-list", () => ({
+  SubmissionHistoryList: ({
+    submissions,
+  }: {
+    readonly submissions: readonly {
+      readonly id: string;
+      readonly payee: string;
+    }[];
+  }) => (
+    <section aria-label="Submission history">
+      {submissions.map((submission) => (
+        <article key={submission.id}>
+          <p>{submission.payee}</p>
         </article>
       ))}
     </section>
@@ -164,7 +183,41 @@ describe("HomePage", () => {
 
     render(await HomePage());
 
-    expect(screen.getByText("Bangkok Taxi Cooperative")).toBeInTheDocument();
-    expect(screen.queryByText("Approved Vendor")).not.toBeInTheDocument();
+    const pendingSection = screen.getByRole("region", {
+      name: "Pending submissions",
+    });
+    expect(within(pendingSection).getByText("Bangkok Taxi Cooperative")).toBeInTheDocument();
+    expect(
+      within(pendingSection).queryByText("Approved Vendor"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("passes only approved and rejected submissions to the history view", async () => {
+    mocks.listAccountingSubmissions.mockResolvedValue([
+      pendingSubmission,
+      {
+        ...pendingSubmission,
+        id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+        status: "approved",
+        payee: "Approved Vendor",
+      },
+      {
+        ...pendingSubmission,
+        id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+        status: "rejected",
+        payee: "Rejected Vendor",
+      },
+    ]);
+
+    render(await HomePage());
+
+    const historySection = screen.getByRole("region", {
+      name: "Submission history",
+    });
+    expect(within(historySection).getByText("Approved Vendor")).toBeInTheDocument();
+    expect(within(historySection).getByText("Rejected Vendor")).toBeInTheDocument();
+    expect(
+      within(historySection).queryByText("Bangkok Taxi Cooperative"),
+    ).not.toBeInTheDocument();
   });
 });

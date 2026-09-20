@@ -5,12 +5,20 @@ import { listAccountingSubmissions } from "@/app/lib/submissions";
 import type { AccountingSubmission } from "@reading-advantage/backend/accounting";
 import { NewSubmissionForm } from "./_components/new-submission-form";
 import { PendingSubmissionsList } from "./_components/pending-submissions-list";
+import { SubmissionHistoryList } from "./_components/submission-history-list";
 
 /** Returns only pending submissions for the client review list. */
 function pendingOnly(
   submissions: readonly AccountingSubmission[],
 ): readonly AccountingSubmission[] {
   return submissions.filter((submission) => submission.status === "pending");
+}
+
+/** Returns only decided submissions for the client history view. */
+function decidedOnly(
+  submissions: readonly AccountingSubmission[],
+): readonly AccountingSubmission[] {
+  return submissions.filter((submission) => submission.status !== "pending");
 }
 
 /**
@@ -39,6 +47,8 @@ export default async function HomePage(): Promise<JSX.Element> {
           <NewSubmissionForm />
           <PendingSubmissionsList submissions={pendingOnly(submissions)} actorRole={actor.role} />
         </div>
+
+        <SubmissionHistoryList submissions={decidedOnly(submissions)} />
       </div>
     </main>
   );
