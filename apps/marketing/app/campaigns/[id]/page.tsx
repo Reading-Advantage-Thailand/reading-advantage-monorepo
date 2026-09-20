@@ -33,15 +33,17 @@ export default function CampaignDetailPage() {
   const [updatingStatus, setUpdatingStatus] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
     if (params?.id) {
-      fetchCampaign(params.id as string);
+      void fetchCampaign(params.id as string, controller.signal);
     }
+    return () => controller.abort();
   }, [params?.id]);
 
-  const fetchCampaign = async (id: string) => {
+  const fetchCampaign = async (id: string, signal?: AbortSignal) => {
     setError(null);
     try {
-      const res = await fetch(`/api/campaigns/${id}`);
+      const res = await fetch(`/api/campaigns/${id}`, signal ? { signal } : undefined);
       if (res.status === 401) {
         window.location.href = redirectToLogin(
           `${window.location.pathname}${window.location.search}`,
@@ -67,6 +69,7 @@ export default function CampaignDetailPage() {
       }
       setCampaign(data as Campaign);
     } catch {
+      if (signal?.aborted) return;
       setError(t("campaigns.detailLoadFailed"));
     }
   };
@@ -75,12 +78,14 @@ export default function CampaignDetailPage() {
     if (!campaign) return;
     setError(null);
     setMessage(null);
+    const controller = new AbortController();
     setUpdatingStatus(true);
     try {
       const res = await fetch(`/api/campaigns/${campaign.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
+        signal: controller.signal,
       });
       if (res.status === 401) {
         window.location.href = redirectToLogin(
@@ -110,9 +115,10 @@ export default function CampaignDetailPage() {
         t("campaigns.moved", { status: getMarketingStatusLabel(newStatus) }),
       );
     } catch {
+      if (controller.signal.aborted) return;
       setError(t("campaigns.updateFailed"));
     } finally {
-      setUpdatingStatus(false);
+      if (!controller.signal.aborted) setUpdatingStatus(false);
     }
   };
 

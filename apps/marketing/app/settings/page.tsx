@@ -57,9 +57,11 @@ export default function SettingsPage() {
       return;
     }
 
+    const controller = new AbortController();
+
     async function loadSettings() {
       try {
-        const res = await fetch("/api/settings");
+        const res = await fetch("/api/settings", { signal: controller.signal });
         if (res.status === 401) {
           window.location.href = redirectToLogin(
             `${window.location.pathname}${window.location.search}`,
@@ -99,12 +101,14 @@ export default function SettingsPage() {
         if (typeof settingValues["tools.mmxPath"] === "string")
           setMmxPath(settingValues["tools.mmxPath"]);
       } catch {
+        if (controller.signal.aborted) return;
         setPageError(t("settings.loadFailed"));
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
-    loadSettings();
+    void loadSettings();
+    return () => controller.abort();
   }, [isAuthenticated, isAuthLoading, role]);
 
   const requiresExplicitApiKey = preservesExistingMarketingSecret(
@@ -122,11 +126,13 @@ export default function SettingsPage() {
     }
     setTesting(true);
     setTestResult(null);
+    const controller = new AbortController();
     try {
       const res = await fetch("/api/settings/test-connection", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ provider, modelName, apiKey }),
+        signal: controller.signal,
       });
       if (res.status === 401) {
         window.location.href = redirectToLogin(
@@ -153,12 +159,13 @@ export default function SettingsPage() {
         message: t("settings.testSuccessful"),
       });
     } catch {
+      if (controller.signal.aborted) return;
       setTestResult({
         status: "error",
         message: t("settings.connectionFailed"),
       });
     } finally {
-      setTesting(false);
+      if (!controller.signal.aborted) setTesting(false);
     }
   };
 
@@ -166,6 +173,7 @@ export default function SettingsPage() {
     setPageError(null);
     setSaveMessage(null);
     setSaving(true);
+    const controller = new AbortController();
     try {
       const settingsUpdate = prepareMarketingSettingsUpdate({
         "llm.provider": provider,
@@ -177,6 +185,7 @@ export default function SettingsPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(settingsUpdate),
+        signal: controller.signal,
       });
       if (res.status === 401) {
         window.location.href = redirectToLogin(
@@ -194,9 +203,10 @@ export default function SettingsPage() {
       }
       setSaveMessage(t("settings.saved"));
     } catch {
+      if (controller.signal.aborted) return;
       setPageError(t("settings.saveFailed"));
     } finally {
-      setSaving(false);
+      if (!controller.signal.aborted) setSaving(false);
     }
   };
 

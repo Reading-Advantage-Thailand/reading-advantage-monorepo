@@ -41,14 +41,16 @@ export default function CampaignsPage() {
   });
 
   useEffect(() => {
-    fetchCampaigns();
+    const controller = new AbortController();
+    fetchCampaigns(controller.signal);
+    return () => controller.abort();
   }, []);
 
-  const fetchCampaigns = async () => {
+  const fetchCampaigns = async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/campaigns");
+      const res = await fetch("/api/campaigns", signal ? { signal } : undefined);
       if (res.status === 401) {
         window.location.href = redirectToLogin(
           `${window.location.pathname}${window.location.search}`,
@@ -70,21 +72,24 @@ export default function CampaignsPage() {
       }
       setCampaigns(data as Campaign[]);
     } catch {
+      if (signal?.aborted) return;
       setError(t("campaigns.loadFailed"));
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   };
 
   const handleCreate = async () => {
     setError(null);
     setMessage(null);
+    const controller = new AbortController();
     setCreating(true);
     try {
       const res = await fetch("/api/campaigns", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newCampaign),
+        signal: controller.signal,
       });
       if (res.status === 401) {
         window.location.href = redirectToLogin(
@@ -103,11 +108,12 @@ export default function CampaignsPage() {
       setShowCreate(false);
       setNewCampaign({ type: "video", app: "reading-advantage", name: "" });
       setMessage(t("campaigns.created"));
-      await fetchCampaigns();
+      await fetchCampaigns(controller.signal);
     } catch {
+      if (controller.signal.aborted) return;
       setError(t("campaigns.createFailed"));
     } finally {
-      setCreating(false);
+      if (!controller.signal.aborted) setCreating(false);
     }
   };
 
