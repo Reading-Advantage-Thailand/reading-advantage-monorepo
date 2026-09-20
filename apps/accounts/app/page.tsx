@@ -1,4 +1,5 @@
 import { getIdentityComposition } from "@/lib/server/identity";
+import { isSafeReturnTo } from "@/lib/server/safe-return-path";
 import {
   companyIdentityRouteHandlers,
 } from "@/lib/server/company-identity-route-bindings";
@@ -37,9 +38,13 @@ export default async function AccountsPage(props: {
   const initialEmployees = employee?.companyRoles.includes("COMPANY_ADMIN")
     ? await firstEmployeeList()
     : undefined;
-  const returnTo = search.returnTo?.startsWith("/") && !search.returnTo.startsWith("//")
-    && !search.returnTo.includes("\\")
-    ? search.returnTo
+  const candidateReturnTo = search.returnTo ?? "";
+  const queryIndex = candidateReturnTo.indexOf("?");
+  const returnTo = isSafeReturnTo(
+    queryIndex === -1 ? candidateReturnTo : candidateReturnTo.slice(0, queryIndex),
+    queryIndex === -1 ? "" : candidateReturnTo.slice(queryIndex),
+  )
+    ? candidateReturnTo
     : "/";
   const provisioning =
     search.application === "sales" && search.role === "SALES_REP"
