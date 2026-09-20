@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@reading-advantage/ui";
+import { readJson } from "../../../accounts/lib/server/read-json";
 import { derivedRate } from "@/app/lib/derived-rate";
 
 /** Props for the pending submissions list. */
@@ -34,15 +35,6 @@ type ActionMessage = {
 /** Checks whether an unknown value is a record. */
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
-}
-
-/** Reads a JSON response without exposing a parser exception to the UI. */
-async function readJson(response: Response): Promise<unknown> {
-  try {
-    return await response.json();
-  } catch {
-    return undefined;
-  }
 }
 
 /** Returns a safe message from an API error body or a local fallback. */

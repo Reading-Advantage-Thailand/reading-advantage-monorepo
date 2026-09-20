@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } fro
 
 import type { Employee } from "@reading-advantage/backend";
 
+import { readJson } from "@/lib/server/read-json";
+
 type DirectoryStatus = "loading" | "ready" | "failed";
 
 const APPLICATIONS = [
@@ -18,14 +20,6 @@ function operationKey(prefix: string): string {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
-}
-
-async function readJson(response: Response): Promise<unknown> {
-  try {
-    return await response.json();
-  } catch {
-    return undefined;
-  }
 }
 
 async function jsonRequest(url: string, method: string, body?: unknown) {
