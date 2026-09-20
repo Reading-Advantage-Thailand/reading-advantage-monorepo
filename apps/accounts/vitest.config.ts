@@ -12,6 +12,8 @@ export default defineConfig({
       include: [
         "app/api/health/route.ts",
         "app/api/ready/route.ts",
+        "app/api/admin/employees/route.ts",
+        "app/api/admin/employees/**/route.ts",
         "lib/server/telemetry.ts",
       ],
       thresholds: {
