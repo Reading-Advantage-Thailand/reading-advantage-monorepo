@@ -1,0 +1,1 @@
+Task: Update both session route test files. Each file now distinguishes no-session (200 with session null), no-sales-role (403 with session null), and authenticated (200 with user) outcomes. Files: apps/sales-advantage/app/api/auth/session/route.test.ts and route.red.test.ts.
