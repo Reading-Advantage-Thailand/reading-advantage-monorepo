@@ -329,6 +329,22 @@ describe("Phase 4: Campaign Management — status-transition state machine (task
     },
   );
 
+  it.each([
+    ["draft", "#e0e0e0"],
+    ["in-progress", "#fff3e0"],
+    ["complete", "#e8f5e9"],
+    ["archived", "#f3e5f5"],
+    ["unknown-status", "#f3e5f5"],
+  ])(
+    "campaignStatusColor(%s) returns %s",
+    async (status, expected) => {
+      const { campaignStatusColor } = await import(
+        "../lib/campaign-status.js"
+      );
+      expect(campaignStatusColor(status)).toBe(expected);
+    },
+  );
+
   it("PATCH /api/campaigns/[id] rejects invalid status transitions with 400", async () => {
     const { db } = await import("@reading-advantage/db");
     const selectChain = makeSelectChainMock([{ ...mockCampaign, status: "draft" }]);

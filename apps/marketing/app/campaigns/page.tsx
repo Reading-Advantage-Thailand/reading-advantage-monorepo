@@ -9,6 +9,7 @@ import {
   getMarketingStatusLabel,
 } from "@/lib/i18n";
 import { useHandleAuthFailure } from "@/lib/login-redirect";
+import { campaignStatusColor } from "@/lib/campaign-status";
 import type { Campaign } from "@/lib/campaign-schema";
 
 /**
@@ -309,14 +310,7 @@ export default function CampaignsPage() {
               <div
                 style={{
                   padding: "4px 8px",
-                  backgroundColor:
-                    campaign.status === "draft"
-                      ? "#e0e0e0"
-                      : campaign.status === "in-progress"
-                        ? "#fff3e0"
-                        : campaign.status === "complete"
-                          ? "#e8f5e9"
-                          : "#f3e5f5",
+                  backgroundColor: campaignStatusColor(campaign.status),
                   borderRadius: "4px",
                   fontSize: "12px",
                 }}
