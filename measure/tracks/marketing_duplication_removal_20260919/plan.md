@@ -11,4 +11,4 @@
 - [x] Task: Extract one `campaignStatusColor(status)` map. Source: `docs/marketing-ux-refactor-plan.md` §5; Issues: `app/campaigns/page.tsx:293-300`, `app/campaigns/[id]/page.tsx:171-178` (57793bbfd)
 - [x] Task: Delete `app/api/health/db/route.ts` or replace it with a liveness route. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/api/health/db/route.ts:6`, `app/api/ready/route.ts:83` (0e13f103c)
 - [x] Task: Rename the eleven shadowing `t` parameters in the video page. Source: `docs/marketing-ux-refactor-plan.md` §3.2; Issues: `app/campaigns/[id]/video/page.tsx:234,238,242,247,257,263,287,355,433,434,665` (929101daf)
-- [ ] Task: Delete the duplicated link block from `app/page.tsx`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/page.tsx:17-44`, `app/marketing-app-shell.tsx:74-99`
+- [x] Task: Delete the duplicated link block from `app/page.tsx`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/page.tsx:17-44`, `app/marketing-app-shell.tsx:74-99` (34e68aed9)
