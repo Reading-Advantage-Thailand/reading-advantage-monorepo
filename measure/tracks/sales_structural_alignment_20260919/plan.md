@@ -8,4 +8,4 @@
 - [x] (d24a63bb4) Task: Pass the active locale into `/api/chat` and select the output language from it. Source: `docs/sales-advantage-ux-refactor-plan.md` §6; Issues: `components/chat-tutor.tsx:44-66`, `app/api/chat/route.ts:94`
 - [x] (2d8b55310) Task: Give the locked module and lesson cards a keyboard path. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `app/[locale]/page.tsx:165-177`, `app/[locale]/module/[slug]/page.tsx:119-126`
 - [x] (c76a96340, swept into concurrent accounting closeout commit) Task: Add `aria-live` to the quiz result, roleplay result, and chat message list. Source: `docs/sales-advantage-ux-refactor-plan.md` §3 and §4; Issues: `components/roleplay-result.tsx:103-107`, `components/quiz-component.tsx:46-99`, `components/chat-tutor.tsx:86-101`
-- [ ] Task: Remove the second Accounts introspection on administrator page navigation. Source: `docs/sales-advantage-ux-refactor-plan.md` §5; Issues: `app/[locale]/admin/layout.tsx:19-21`
+- [x] (5b9ac657a) Task: Remove the second Accounts introspection on administrator page navigation. Source: `docs/sales-advantage-ux-refactor-plan.md` §5; Issues: `app/[locale]/admin/layout.tsx:19-21`
