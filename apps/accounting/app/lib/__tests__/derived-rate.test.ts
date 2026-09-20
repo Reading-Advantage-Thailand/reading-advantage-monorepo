@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { derivedRate } from "./derived-rate";
+import { derivedRate } from "../derived-rate";
 
 describe("derivedRate", () => {
   it("computes 2dp half-up for $150.00 / ฿5,205.00", () => {
