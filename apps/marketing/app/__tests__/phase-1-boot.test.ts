@@ -21,36 +21,15 @@
  *      reverted before closeout.
  *
  *   2. **Live boot smoke (Phase 1 task 8 — verification):** runtime checks
- *      that the `/login` page component imports and that the DB health
- *      endpoint returns the expected responses when the DB is reachable or
- *      failing. These prove live behavior beyond static file inspection.
+ *      that the `/login` page component imports and that the liveness
+ *      endpoint reports the process as alive. These prove live behavior
+ *      beyond static file inspection.
  */
 
-import { describe, expect, it, vi, type Mock } from "vitest";
+import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-
-// Mock the Drizzle client so the DB health smoke is deterministic and does
-// not require a live Postgres connection during Phase 1 unit tests.
-vi.mock("@reading-advantage/db", async () => {
-  const actual = await vi.importActual<typeof import("@reading-advantage/db")>(
-    "@reading-advantage/db",
-  );
-  return {
-    ...actual,
-    sql: Object.assign(
-      (strings: TemplateStringsArray, ...values: unknown[]) => ({
-        strings,
-        values,
-      }),
-      { raw: (strings: TemplateStringsArray) => strings },
-    ),
-    db: {
-      execute: vi.fn(),
-    },
-  };
-});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -181,28 +160,15 @@ describe("Phase 1: Vinext Scaffold + Monorepo Integration boot smoke", () => {
       expect(typeof LoginPage).toBe("function");
     });
 
-    it("GET /api/health/db returns 200 when the DB is reachable", async () => {
-      const { db } = await import("@reading-advantage/db");
-      (db.execute as Mock).mockResolvedValueOnce([{ "?column?": 1 }]);
-
-      const { GET } = await import("@/api/health/db/route");
+    it("GET /api/health reports the Marketing process as alive", async () => {
+      const { GET } = await import("@/api/health/route");
       const response = await GET();
       expect(response.status).toBe(200);
-      expect(await response.json()).toEqual({ status: "ok" });
-    });
-
-    it("GET /api/health/db returns 500 when the DB ping fails", async () => {
-      const { db } = await import("@reading-advantage/db");
-      (db.execute as Mock).mockRejectedValueOnce(
-        new Error("connection refused"),
-      );
-
-      const { GET } = await import("@/api/health/db/route");
-      const response = await GET();
-      expect(response.status).toBe(500);
-      const body = await response.json();
-      expect(body.status).toBe("error");
-      expect(body.message).toBe("Database ping failed");
+      expect(response.headers.get("Cache-Control")).toBe("no-store");
+      expect(await response.json()).toEqual({
+        status: "alive",
+        service: "marketing",
+      });
     });
   });
 });

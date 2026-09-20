@@ -4,10 +4,12 @@ import { describe, expect, it, vi } from "vitest";
 import { verifyMarketingRelease } from "./verify-marketing-release";
 
 describe("Marketing public release verification", () => {
-  it("accepts database health and exact Accounts-backed readiness", async () => {
+  it("accepts process liveness and exact Accounts-backed readiness", async () => {
     const fetchImplementation = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(Response.json({ status: "ok" }))
+      .mockResolvedValueOnce(
+        Response.json({ status: "alive", service: "marketing" }),
+      )
       .mockResolvedValueOnce(
         Response.json({
           status: "ready",
@@ -27,13 +29,15 @@ describe("Marketing public release verification", () => {
       fetchImplementation.mock.calls.map(
         ([url]) => new URL(String(url)).pathname,
       ),
-    ).toEqual(["/api/health/db", "/api/ready"]);
+    ).toEqual(["/api/health", "/api/ready"]);
   });
 
   it("rejects readiness that does not confirm Accounts", async () => {
     const fetchImplementation = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(Response.json({ status: "ok" }))
+      .mockResolvedValueOnce(
+        Response.json({ status: "alive", service: "marketing" }),
+      )
       .mockResolvedValueOnce(
         Response.json({
           status: "ready",

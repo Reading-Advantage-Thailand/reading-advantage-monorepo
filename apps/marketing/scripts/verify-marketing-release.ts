@@ -14,7 +14,10 @@ const environmentSchema = z.object({
     ),
 });
 
-const healthSchema = z.object({ status: z.literal("ok") });
+const healthSchema = z.object({
+  status: z.literal("alive"),
+  service: z.literal("marketing"),
+});
 
 const readinessSchema = z.object({
   status: z.literal("ready"),
@@ -67,7 +70,7 @@ async function fetchValidated<T>(
 }
 
 /**
- * Verifies public database health and Accounts-backed Marketing readiness.
+ * Verifies public process liveness and Accounts-backed Marketing readiness.
  * @param input Marketing release origin.
  * @param fetchImplementation Fetch implementation used for transport and tests.
  * @returns Non-sensitive evidence identifying the completed checks.
@@ -85,7 +88,7 @@ export async function verifyMarketingRelease(
 
   await fetchValidated(
     fetchImplementation,
-    new URL("/api/health/db", baseUrl),
+    new URL("/api/health", baseUrl),
     healthSchema,
     requestId,
   );

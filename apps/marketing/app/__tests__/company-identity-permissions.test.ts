@@ -160,7 +160,7 @@ describe("Marketing protected-route permission inventory", () => {
       "GET /api/auth/company/start",
       "POST /api/auth/logout",
       "GET /api/auth/session",
-      "GET /api/health/db",
+      "GET /api/health",
       "GET /api/ready",
     ]);
     const protectedHandlers = new Set<RouteHandlerKey>(

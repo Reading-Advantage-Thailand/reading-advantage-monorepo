@@ -58,7 +58,7 @@ echo ""
 echo "── API health ──"
 
 check "Auth session (no cookie)" GET  "/api/auth/session"  200
-check "DB health"                GET  "/api/health/db"     200
+check "Liveness"                 GET  "/api/health"       200
 check "Settings (no auth)"       GET  "/api/settings"      401
 check "Campaigns list (no auth)" GET  "/api/campaigns"     401
 
