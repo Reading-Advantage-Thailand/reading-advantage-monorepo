@@ -16,21 +16,6 @@ const APP_COLOR_VALUES = [
   "#607D8B",
 ] as const;
 
-const APP_NAME_VALUES = [
-  "Reading Advantage",
-  "Primary Advantage",
-  "Storytime",
-  "Math Advantage",
-  "Science Advantage",
-  "STEM Advantage",
-  "Zhongwen Advantage",
-  "Tutor Advantage",
-] as const;
-
 export const APP_COLORS: Record<(typeof APPS)[number], string> = Object.fromEntries(
   APPS.map((app, index) => [app, APP_COLOR_VALUES[index] ?? "#607D8B"]),
-) as Record<(typeof APPS)[number], string>;
-
-export const APP_NAMES: Record<(typeof APPS)[number], string> = Object.fromEntries(
-  APPS.map((app, index) => [app, APP_NAME_VALUES[index] ?? app]),
 ) as Record<(typeof APPS)[number], string>;

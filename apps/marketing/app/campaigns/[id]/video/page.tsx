@@ -13,7 +13,7 @@ import {
   MIN_SCRIPT_SCENES,
   scriptSchema,
 } from "@/lib/script-schema";
-import { APPS, APP_NAMES } from "@/lib/apps";
+import { APPS } from "@/lib/apps";
 import { getMarketingAppName, getMarketingMessage as t } from "@/lib/i18n";
 import { useHandleAuthFailure } from "@/lib/login-redirect";
 
@@ -639,7 +639,7 @@ export default function VideoProductionPage() {
         >
           {APPS.map((key) => (
             <option key={key} value={key}>
-              {getMarketingAppName(key) || APP_NAMES[key]}
+              {getMarketingAppName(key)}
             </option>
           ))}
         </select>

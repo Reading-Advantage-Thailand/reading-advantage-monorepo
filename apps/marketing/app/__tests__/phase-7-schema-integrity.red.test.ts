@@ -203,34 +203,26 @@ describe("Phase 7.1: shared APPS catalog", () => {
     expect(sharedAppsSource).not.toMatch(/@reading-advantage\/db\/schema/);
     expect(sharedAppsSource).not.toMatch(/drizzle-orm/);
     expect(sharedAppsSource).not.toMatch(/(?:export\s+)?const\s+APPS\s*=\s*\[/);
-    for (const mapName of ["APP_COLORS", "APP_NAMES"]) {
-      const declaration = sharedAppsSource.match(
-        new RegExp(
-          `export\\s+const\\s+${mapName}\\b[\\s\\S]*?(?=\\nexport\\s+const|$)`,
-        ),
-      );
-      expect(
-        declaration,
-        `${mapName} is not exported from the shared module`,
-      ).not.toBeNull();
-      expect(declaration?.[0]).toMatch(/\bAPPS\b/);
-    }
+    const colorDeclaration = sharedAppsSource.match(
+      /export\s+const\s+APP_COLORS\b[\s\S]*?(?=\nexport\s+const|$)/,
+    );
+    expect(
+      colorDeclaration,
+      "APP_COLORS is not exported from the shared module",
+    ).not.toBeNull();
+    expect(colorDeclaration?.[0]).toMatch(/\bAPPS\b/);
+    expect(sharedAppsSource).not.toMatch(/APP_NAME_VALUES|APP_NAMES/);
 
     expect(campaignsSource).toMatch(
       /APP_COLORS[\s\S]*from\s+["']@\/lib\/apps["']/,
     );
-    expect(videoSource).toMatch(/APP_NAMES[\s\S]*from\s+["']@\/lib\/apps["']/);
+    expect(videoSource).toMatch(
+      /getMarketingAppName[\s\S]*from\s+["']@\/lib\/i18n["']/,
+    );
     expect(campaignsSource).not.toMatch(/const\s+APP_COLORS\s*:/);
-    expect(videoSource).not.toMatch(/const\s+APP_NAMES\s*:/);
+    expect(videoSource).not.toMatch(/APP_NAMES/);
 
-    for (const mapName of ["APP_COLORS", "APP_NAMES"]) {
-      const declaration = sharedAppsSource.match(
-        new RegExp(
-          `export\\s+const\\s+${mapName}\\b[\\s\\S]*?(?=\\nexport\\s+const|$)`,
-        ),
-      );
-      expect(declaration?.[0]).toMatch(/Object\.fromEntries\(\s*APPS\.map\(/);
-    }
+    expect(colorDeclaration?.[0]).toMatch(/Object\.fromEntries\(\s*APPS\.map\(/);
   });
 
   it("derives route app values from one shared MarketingApp type", () => {
