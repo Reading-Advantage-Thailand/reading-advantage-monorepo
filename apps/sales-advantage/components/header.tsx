@@ -5,11 +5,22 @@ import { useAuth } from "@reading-advantage/auth-client";
 import { Button } from "@reading-advantage/ui";
 import { Mic, Shield, LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { LanguageSwitcher } from "./language-switcher";
 
 export function Header() {
   const t = useTranslations("navigation");
   const { user, isAuthenticated, logout } = useAuth();
+  const [logoutError, setLogoutError] = useState(false);
+
+  async function handleLogout() {
+    setLogoutError(false);
+    try {
+      await logout();
+    } catch {
+      setLogoutError(true);
+    }
+  }
 
   return (
     <header className="border-b">
@@ -37,11 +48,16 @@ export function Header() {
         </div>
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
+          {logoutError ? (
+            <p role="alert" className="text-sm text-destructive">
+              {t("logoutError")}
+            </p>
+          ) : null}
           {isAuthenticated ? (
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => logout()}
+              onClick={handleLogout}
               aria-label={t("logout")}
             >
               <LogOut className="h-4 w-4" />

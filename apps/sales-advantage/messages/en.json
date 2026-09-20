@@ -8,6 +8,7 @@
     "modules": "Modules",
     "admin": "Admin",
     "logout": "Logout",
+    "logoutError": "Sign out failed. Please try again.",
     "login": "Login",
     "chat": "Chat"
   },
