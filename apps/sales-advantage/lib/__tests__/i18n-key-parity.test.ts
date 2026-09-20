@@ -4,44 +4,52 @@ import { describe, expect, it } from "vitest";
 import enMessages from "../../messages/en.json";
 import thMessages from "../../messages/th.json";
 
-const NEW_SALES_ERROR_KEYS = [
-  "login.errorSso",
-  "login.errorForbidden",
-] as const;
+type MessageTree = Record<string, unknown>;
 
-/** Reads a nested value from a locale dictionary by dot path. */
-function readAt(
-  messages: Record<string, unknown>,
-  path: string,
-): string | undefined {
-  let current: unknown = messages;
-  for (const segment of path.split(".")) {
-    if (!current || typeof current !== "object") return undefined;
-    current = (current as Record<string, unknown>)[segment];
-  }
-  return typeof current === "string" ? current : undefined;
+/**
+ * Collects every leaf key from a nested locale dictionary by dot path.
+ * @param tree Nested locale dictionary.
+ * @param prefix Dot path of the parent node.
+ * @returns Every leaf key, including nested segments.
+ */
+function collectMessageKeys(tree: MessageTree, prefix = ""): string[] {
+  return Object.entries(tree).flatMap(([segment, value]) => {
+    const key = prefix ? `${prefix}.${segment}` : segment;
+    return value !== null && typeof value === "object"
+      ? collectMessageKeys(value as MessageTree, key)
+      : [key];
+  });
 }
 
-describe("Sales sign-in error key parity", () => {
-  const locales = [
-    ["en", enMessages],
-    ["th", thMessages],
-  ] as const;
-
-  for (const [locale, messages] of locales) {
-    it(`defines every new sign-in error key in ${locale}`, () => {
-      for (const key of NEW_SALES_ERROR_KEYS) {
-        expect(readAt(messages as Record<string, unknown>, key), `${locale}: ${key}`)
-          .toBeTruthy();
-      }
-    });
+/**
+ * Reads a leaf value from a locale dictionary by dot path.
+ * @param messages Nested locale dictionary.
+ * @param key Dot path of the message.
+ * @returns The leaf value, or undefined when a segment is missing.
+ */
+function readAt(messages: MessageTree, key: string): unknown {
+  let current: unknown = messages;
+  for (const segment of key.split(".")) {
+    if (!current || typeof current !== "object") return undefined;
+    current = (current as MessageTree)[segment];
   }
+  return current;
+}
 
-  it("defines the same new keys in both locales", () => {
-    for (const key of NEW_SALES_ERROR_KEYS) {
-      const en = readAt(enMessages as Record<string, unknown>, key);
-      const th = readAt(thMessages as Record<string, unknown>, key);
-      expect(Boolean(en), key).toBe(Boolean(th));
+describe("Sales message dictionary key parity", () => {
+  const enKeys = collectMessageKeys(enMessages as MessageTree).sort();
+  const thKeys = collectMessageKeys(thMessages as MessageTree).sort();
+
+  it("defines the exact same key set in both locales", () => {
+    expect(thKeys).toEqual(enKeys);
+  });
+
+  it("defines every key as a non-empty string in both locales", () => {
+    for (const key of enKeys) {
+      expect(readAt(enMessages as MessageTree, key), `en: ${key}`).toBeTruthy();
+    }
+    for (const key of thKeys) {
+      expect(readAt(thMessages as MessageTree, key), `th: ${key}`).toBeTruthy();
     }
   });
 });
