@@ -5,17 +5,17 @@ export { APPS };
 /** One Marketing application identifier from the shared app catalog. */
 export type MarketingApp = (typeof APPS)[number];
 
-const APP_COLOR_VALUES = [
-  "#4CAF50",
-  "#2196F3",
-  "#9C27B0",
-  "#FF9800",
-  "#00BCD4",
-  "#E91E63",
-  "#F44336",
-  "#607D8B",
-] as const;
-
-export const APP_COLORS: Record<(typeof APPS)[number], string> = Object.fromEntries(
-  APPS.map((app, index) => [app, APP_COLOR_VALUES[index] ?? "#607D8B"]),
-) as Record<(typeof APPS)[number], string>;
+/**
+ * Badge colors keyed by application identifier, not by catalog index, so a
+ * reorder or an addition in the shared app catalog cannot shift colors.
+ */
+export const APP_COLORS: Record<MarketingApp, string> = {
+  "reading-advantage": "#4CAF50",
+  "primary-advantage": "#2196F3",
+  storytime: "#9C27B0",
+  "math-advantage": "#FF9800",
+  "science-advantage": "#00BCD4",
+  "stem-advantage": "#E91E63",
+  "zhongwen-advantage": "#F44336",
+  "tutor-advantage": "#607D8B",
+};

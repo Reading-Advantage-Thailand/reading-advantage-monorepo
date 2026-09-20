@@ -211,7 +211,13 @@ describe("Phase 7.1: shared APPS catalog", () => {
       colorDeclaration,
       "APP_COLORS is not exported from the shared module",
     ).not.toBeNull();
-    expect(colorDeclaration?.[0]).toMatch(/\bAPPS\b/);
+    expect(colorDeclaration?.[0]).toMatch(/Record<\s*MarketingApp\s*,\s*string\s*>/);
+    expect(colorDeclaration?.[0]).toMatch(
+      /"reading-advantage":\s*"#4CAF50"/,
+    );
+    expect(colorDeclaration?.[0]).not.toMatch(
+      /Object\.fromEntries\(\s*APPS\.map\(/,
+    );
     expect(sharedAppsSource).not.toMatch(/APP_NAME_VALUES|APP_NAMES/);
 
     expect(campaignsSource).toMatch(
@@ -222,8 +228,6 @@ describe("Phase 7.1: shared APPS catalog", () => {
     );
     expect(campaignsSource).not.toMatch(/const\s+APP_COLORS\s*:/);
     expect(videoSource).not.toMatch(/APP_NAMES/);
-
-    expect(colorDeclaration?.[0]).toMatch(/Object\.fromEntries\(\s*APPS\.map\(/);
   });
 
   it("derives route app values from one shared MarketingApp type", () => {
