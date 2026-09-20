@@ -23,6 +23,7 @@ import { campaigns } from "@reading-advantage/db/schema";
 import { desc } from "drizzle-orm";
 import { requireMarketingPermission } from "@/lib/auth";
 import { createCampaignSchema } from "@/lib/campaign-schema";
+import type { MarketingApp } from "@/lib/apps";
 import { noStoreJson, withNoStore } from "@/lib/response";
 
 const campaignClientColumns = {
@@ -97,15 +98,7 @@ export async function POST(request: Request) {
       .insert(campaigns)
       .values({
         type: parsed.data.type as "video" | "infocard",
-        app: parsed.data.app as
-          | "reading-advantage"
-          | "primary-advantage"
-          | "storytime"
-          | "math-advantage"
-          | "science-advantage"
-          | "stem-advantage"
-          | "zhongwen-advantage"
-          | "tutor-advantage",
+        app: parsed.data.app as MarketingApp,
         name: parsed.data.name,
         createdBy: guard.session.user.id,
       })

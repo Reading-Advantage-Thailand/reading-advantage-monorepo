@@ -233,6 +233,25 @@ describe("Phase 7.1: shared APPS catalog", () => {
     }
   });
 
+  it("derives route app values from one shared MarketingApp type", () => {
+    const routeSources = [
+      "api/campaigns/route.ts",
+      "api/video/research-topics/route.ts",
+      "api/video/save-topics/route.ts",
+    ].map(appSource);
+
+    for (const source of routeSources) {
+      expect(source).toMatch(/as\s+MarketingApp\b/);
+      expect(source).toMatch(/["']@\/lib\/apps["']/);
+      expect(source).not.toMatch(/"tutor-advantage"\s*\|/);
+    }
+
+    const sharedAppsText = appSource("lib/apps.ts");
+    expect(sharedAppsText).toMatch(
+      /export\s+type\s+MarketingApp\s*=\s*\(typeof\s+APPS\)\[number\]/,
+    );
+  });
+
   it("keeps the VideoProject response audit fields aligned with the schema", () => {
     const videoSource = appSource("campaigns/[id]/video/page.tsx");
     expect(videoSource).toMatch(

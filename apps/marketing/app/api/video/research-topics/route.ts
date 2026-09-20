@@ -33,6 +33,7 @@ import {
 } from "@/lib/topic-schema";
 import { redactSecrets } from "@/lib/redact";
 import { resolveMarketingAIConfig } from "@/lib/ai-credentials";
+import type { MarketingApp } from "@/lib/apps";
 import { noStoreJson, withNoStore } from "@/lib/response";
 
 /**
@@ -103,20 +104,7 @@ export async function POST(request: Request) {
     const existingTopics = await db
       .select()
       .from(pastTopics)
-      .where(
-        eq(
-          pastTopics.app,
-          app as
-            | "reading-advantage"
-            | "primary-advantage"
-            | "storytime"
-            | "math-advantage"
-            | "science-advantage"
-            | "stem-advantage"
-            | "zhongwen-advantage"
-            | "tutor-advantage",
-        ),
-      );
+      .where(eq(pastTopics.app, app as MarketingApp));
 
     const pastTopicsList = existingTopics.map(
       (t: { topic: string }) => t.topic,

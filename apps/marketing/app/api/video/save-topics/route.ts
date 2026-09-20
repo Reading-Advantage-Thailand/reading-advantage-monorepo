@@ -11,6 +11,7 @@ import { pastTopics } from "@reading-advantage/db/schema";
 import { deduplicateTopics, normalizeTopic } from "@/lib/topic-dedup";
 import { requireMarketingPermission } from "@/lib/auth";
 import { saveTopicsSchema } from "@/lib/topic-schema";
+import type { MarketingApp } from "@/lib/apps";
 import { noStoreJson, withNoStore } from "@/lib/response";
 
 /**
@@ -44,15 +45,7 @@ export async function POST(request: Request) {
 
   try {
     const { app, topics } = parsed.data;
-    const appEnum = app as
-      | "reading-advantage"
-      | "primary-advantage"
-      | "storytime"
-      | "math-advantage"
-      | "science-advantage"
-      | "stem-advantage"
-      | "zhongwen-advantage"
-      | "tutor-advantage";
+    const appEnum = app as MarketingApp;
 
     const values = deduplicateTopics(topics, []).map((topic) => ({
       app: appEnum,

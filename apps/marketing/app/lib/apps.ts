@@ -2,6 +2,9 @@ import { APPS } from "@reading-advantage/db/marketing-constants";
 
 export { APPS };
 
+/** One Marketing application identifier from the shared app catalog. */
+export type MarketingApp = (typeof APPS)[number];
+
 const APP_COLOR_VALUES = [
   "#4CAF50",
   "#2196F3",
