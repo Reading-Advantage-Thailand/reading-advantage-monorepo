@@ -7,4 +7,4 @@
 - [x] Task: Merge the two proxy test files and the two session route test files. Source: `docs/sales-advantage-ux-refactor-plan.md` §8; Issues: `lib/proxy.test.ts:1`, `lib/__tests__/proxy.test.ts:1`, `app/api/auth/session/route.test.ts:1`, `app/api/auth/session/route.red.test.ts:1` (a42ab1626)
 - [x] Task: Delete the eleven unused dependencies and add `drizzle-orm`. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `scripts/sales-curriculum-seed.ts:24`, `scripts/static-seed.ts:15` (032c3e7b5)
 - [x] Task: Decide the theme policy and delete the unused half. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `app/globals.css:4,55-84` (8d2e8cbb1)
-- [ ] Task: Delete the fifteen unused message keys, or connect each one. Source: `docs/sales-advantage-ux-refactor-plan.md` §6; Issues: `messages/en.json:93`, `components/roleplay-recorder.tsx:198`
+- [x] Task: Delete the fifteen unused message keys, or connect each one. Source: `docs/sales-advantage-ux-refactor-plan.md` §6; Issues: `messages/en.json:93`, `components/roleplay-recorder.tsx:198` (c0db2b07d)
