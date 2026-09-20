@@ -30,8 +30,8 @@ This file tracks all major tracks for the project.
   Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures. **Implemented 2026-09-20 (8/8 tasks, 93 tests green); manual verification pending.**
 - [x] **Track: Accounts Console Write Correctness** *Link: [./tracks/accounts_console_write_correctness_20260919/](./tracks/accounts_console_write_correctness_20260919/)*
   Make console writes idempotent, pending-aware, refresh-safe, and resistant to lost role updates. **Implemented 2026-09-20 (5/5 tasks); manual verification pending.**
-- [ ] **Track: Accounts Loading State Correctness** *Link: [./tracks/accounts_loading_state_correctness_20260919/](./tracks/accounts_loading_state_correctness_20260919/)*
-  Distinguish directory loading, empty, failed, malformed-input, and readiness states.
+- [x] **Track: Accounts Loading State Correctness** *Link: [./tracks/accounts_loading_state_correctness_20260919/](./tracks/accounts_loading_state_correctness_20260919/)*
+  Distinguish directory loading, empty, failed, malformed-input, and readiness states. **Implemented 2026-09-20 (5/5 tasks, 34 scoped tests green, tsc and eslint clean); manual verification pending.**
 - [ ] **Track: Accounts Duplication Removal** *Link: [./tracks/accounts_duplication_removal_20260919/](./tracks/accounts_duplication_removal_20260919/)*
   Share safe-path, JSON-body, and route-handler boundary helpers without hiding capabilities.
 - [ ] **Track: Accounts Structural Alignment** *Link: [./tracks/accounts_structural_alignment_20260919/](./tracks/accounts_structural_alignment_20260919/)*
