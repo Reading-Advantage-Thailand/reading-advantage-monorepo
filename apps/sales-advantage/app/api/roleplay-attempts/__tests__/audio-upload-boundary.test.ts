@@ -258,7 +258,7 @@ describe("POST /api/roleplay-attempts audio upload boundary", () => {
     ).toHaveBeenCalledTimes(0);
   });
 
-  it("rejects invalid retentionDays with structured 400 before storage/provider", async () => {
+  it("ignores client-supplied retentionDays and uses a server-defined constant", async () => {
     const storagePut = vi.fn().mockResolvedValue({ key: "ok" });
     mockGetStorageClient.mockReturnValue({ put: storagePut });
 
@@ -266,26 +266,22 @@ describe("POST /api/roleplay-attempts audio upload boundary", () => {
       type: "audio/webm",
     });
 
-    for (const retentionValue of [null, "", "0", "366", "abc"]) {
+    for (const retentionValue of [null, "", "0", "366", "abc", "1", "365"]) {
       const response = await POST(
         makeRequest(makeFormWithPrivacy(audio, "1000", "true", retentionValue)),
       );
 
-      expect(response.status, `retention='${retentionValue}' must be rejected with 400`).toBe(400);
-      const body = await response.json();
-      expect(body.field, `retention='${retentionValue}' must fail at retentionDays field`).toBe("retentionDays");
+      expect(
+        response.status,
+        `retention='${retentionValue}' must succeed because the server controls retention`,
+      ).toBe(200);
     }
 
-    expect(storagePut, "storage.put call count on rejected retention").toHaveBeenCalledTimes(0);
-    expect(mockGetAIClient, "getAIClient call count on rejected retention").toHaveBeenCalledTimes(0);
+    expect(storagePut, "storage put call count on ignored retention").toHaveBeenCalledTimes(7);
     expect(
       mockSubmitRoleplayAttempt,
-      "submitRoleplayAttempt call count on rejected retention",
-    ).toHaveBeenCalledTimes(0);
-    expect(
-      mockGetRoleplayEvaluationContext,
-      "getRoleplayEvaluationContext call count on rejected retention",
-    ).toHaveBeenCalledTimes(0);
+      "submitRoleplayAttempt call count on ignored retention",
+    ).toHaveBeenCalledTimes(7);
   });
 
   it("rejects non-file audio before storage and provider calls", async () => {
@@ -322,17 +318,15 @@ describe("POST /api/roleplay-attempts audio upload boundary", () => {
     expect(mockGetAIClient).not.toHaveBeenCalled();
   });
 
-  it("rejects fractional and suffixed integers before provider calls", async () => {
+  it("rejects fractional and suffixed integers for durationMs before provider calls", async () => {
     const audio = new File(["audio"], "audio.webm", { type: "audio/webm" });
 
-    for (const [field, durationMs, retentionDays] of [
-      ["durationMs", "1000.5", "30"],
-      ["durationMs", "30days", "30"],
-      ["retentionDays", "1000", "30.5"],
-      ["retentionDays", "1000", "30days"],
+    for (const [field, durationMs] of [
+      ["durationMs", "1000.5"],
+      ["durationMs", "30days"],
     ] as const) {
       const response = await POST(
-        makeRequest(makeFormWithPrivacy(audio, durationMs, "true", retentionDays)),
+        makeRequest(makeFormWithPrivacy(audio, durationMs, "true", "30")),
       );
 
       expect(response.status).toBe(400);

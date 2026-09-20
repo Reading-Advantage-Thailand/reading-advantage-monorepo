@@ -133,7 +133,6 @@ export function RoleplayRecorder({
       fd.append("audio", audioBlob, "attempt.webm");
       fd.append("durationMs", String(duration * 1000));
       fd.append("consentGiven", "true");
-      fd.append("retentionDays", "30");
       const res = await fetch("/api/roleplay-attempts", {
         method: "POST",
         body: fd,

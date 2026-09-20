@@ -337,6 +337,30 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
     });
   });
 
+  it("uses a server-defined retentionDays and ignores any value sent by the client", async () => {
+    mockGetRoleplayEvaluationContext.mockResolvedValue(makeEvaluationCtx([]));
+    mockGetStorageClient.mockReturnValue({
+      put: vi.fn().mockResolvedValue({ key: "ok" }),
+    });
+
+    let capturedRetention: number | undefined;
+    mockSubmitRoleplayAttempt.mockImplementation(
+      async (_ctx: unknown, input: { retentionDays?: number }) => {
+        capturedRetention = input.retentionDays;
+        return {
+          attempt: { id: "attempt-1" },
+          evaluation: { overallScore: 0, passed: false },
+        };
+      },
+    );
+
+    const form = buildAudioFormData();
+    form.set("retentionDays", "365");
+    const response = await POST(makeRequest(form));
+    expect(response.status).toBe(200);
+    expect(capturedRetention).toBe(30);
+  });
+
   it("FR-4: returns 404 when the scenario is not found (no orphan attempt is created)", async () => {
     mockGetRoleplayEvaluationContext.mockResolvedValue({
       scenario: undefined,

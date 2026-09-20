@@ -23,6 +23,13 @@ import {
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+/**
+ * Server-defined retention window for a roleplay audio upload. Matches
+ * the consent copy in `messages/{en,th}.json` under `roleplay.consentText`.
+ * The client must not authoritatively select this value.
+ */
+const ROLEPLAY_RETENTION_DAYS = 30;
+
 export async function POST(request: NextRequest) {
   let uploadedObject: { storage: StorageClient; key: string } | undefined;
   try {
@@ -60,7 +67,6 @@ export async function POST(request: NextRequest) {
     const audioFileRaw = formData.get("audio");
     const durationMsRaw = formData.get("durationMs");
     const consentGivenRaw = formData.get("consentGiven");
-    const retentionDaysRaw = formData.get("retentionDays");
 
     if (typeof scenarioIdRaw !== "string" || scenarioIdRaw.trim() === "") {
       return NextResponse.json(
@@ -146,25 +152,6 @@ export async function POST(request: NextRequest) {
           error: "INVALID_AUDIO",
           field: "consentGiven",
           message: "explicit consent is required before audio evaluation",
-        },
-        { status: 400 },
-      );
-    }
-    const retentionDays =
-      typeof retentionDaysRaw === "string" && /^[1-9]\d*$/u.test(retentionDaysRaw)
-        ? Number(retentionDaysRaw)
-        : NaN;
-    if (
-      !Number.isFinite(retentionDays) ||
-      !Number.isInteger(retentionDays) ||
-      retentionDays < 1 ||
-      retentionDays > 365
-    ) {
-      return NextResponse.json(
-        {
-          error: "INVALID_AUDIO",
-          field: "retentionDays",
-          message: "retentionDays must be an integer in [1,365]",
         },
         { status: 400 },
       );
@@ -261,7 +248,7 @@ export async function POST(request: NextRequest) {
         durationMs,
         audio: { buffer, mimeType },
         consentGiven: true,
-        retentionDays,
+        retentionDays: ROLEPLAY_RETENTION_DAYS,
         evaluate: wrappedEvaluate,
       },
     );
