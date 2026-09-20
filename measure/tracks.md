@@ -21,8 +21,8 @@ This file tracks all major tracks for the project.
   Separate anonymous sessions from forbidden Sales identities in the session contract. **Implemented 2026-09-20 (4/4 tasks, 272 tests green on branch, merged to master); manual verification pending.**
 - [x] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
   Repair recording cleanup, upload errors, loading states, and request cancellation. **Implemented 2026-09-20 (10/10 tasks, 42 scoped tests green, tsc and eslint clean); manual verification pending.**
-- [ ] **Track: Sales Advantage Duplication Removal** *Link: [./tracks/sales_duplication_removal_20260919/](./tracks/sales_duplication_removal_20260919/)*
-  Remove duplicated helpers, tests, dependencies, messages, and unused theme code.
+- [x] **Track: Sales Advantage Duplication Removal** *Link: [./tracks/sales_duplication_removal_20260919/](./tracks/sales_duplication_removal_20260919/)*
+  Remove duplicated helpers, tests, dependencies, messages, and unused theme code. **Implemented 2026-09-20 (6/6 tasks, 49 scoped tests green, tsc and eslint clean); `pnpm-lock.yaml` regeneration pending (pnpm segfaults on this machine); manual verification pending.**
 - [ ] **Track: Sales Advantage Structural Alignment** *Link: [./tracks/sales_structural_alignment_20260919/](./tracks/sales_structural_alignment_20260919/)*
   Align shared authentication helpers, locale handling, keyboard access, announcements, and administrator navigation.
 
