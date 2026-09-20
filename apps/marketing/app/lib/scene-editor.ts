@@ -1,14 +1,10 @@
-export interface Scene {
-  narration: string;
-  imagePrompt: string;
-  motionDirection: string;
-}
+import type { ScriptScene } from "@/lib/script-schema";
 
 export function reorderScenes(
-  scenes: Scene[],
+  scenes: ScriptScene[],
   fromIndex: number,
   toIndex: number,
-): Scene[] {
+): ScriptScene[] {
   if (
     fromIndex < 0 ||
     fromIndex >= scenes.length ||
@@ -24,11 +20,11 @@ export function reorderScenes(
   return next;
 }
 
-export function addScene(scenes: Scene[], scene: Scene): Scene[] {
+export function addScene(scenes: ScriptScene[], scene: ScriptScene): ScriptScene[] {
   return [...scenes, scene];
 }
 
-export function removeScene(scenes: Scene[], index: number): Scene[] {
+export function removeScene(scenes: ScriptScene[], index: number): ScriptScene[] {
   if (index < 0 || index >= scenes.length) {
     return [...scenes];
   }

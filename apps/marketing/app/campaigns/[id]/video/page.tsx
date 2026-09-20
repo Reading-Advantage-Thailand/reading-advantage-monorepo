@@ -6,12 +6,12 @@ import {
   addScene as addSceneFn,
   removeScene as removeSceneFn,
   reorderScenes as reorderScenesFn,
-  type Scene,
 } from "@/lib/scene-editor";
 import {
   MAX_SCRIPT_SCENES,
   MIN_SCRIPT_SCENES,
   scriptSchema,
+  type ScriptScene,
 } from "@/lib/script-schema";
 import { APPS } from "@/lib/apps";
 import { getMarketingAppName, getMarketingMessage as t } from "@/lib/i18n";
@@ -28,13 +28,13 @@ interface VideoProject {
   id: string;
   campaignId: string;
   topic: string;
-  script: Scene[];
+  script: ScriptScene[];
   status: "draft" | "in-progress" | "complete";
   createdAt?: string;
   updatedAt: string;
 }
 
-const emptyScene: Scene = {
+const emptyScene: ScriptScene = {
   narration: "",
   imagePrompt: "",
   motionDirection: t("video.defaultMotionDirection"),
@@ -93,7 +93,7 @@ export default function VideoProductionPage() {
   const [selectedApp, setSelectedApp] = useState("reading-advantage");
 
   const [activeTopicId, setActiveTopicId] = useState<string | null>(null);
-  const [script, setScript] = useState<Scene[]>([]);
+  const [script, setScript] = useState<ScriptScene[]>([]);
   const [hasUnsavedScript, setHasUnsavedScript] = useState(false);
   const [sceneIds, setSceneIds] = useState<string[]>([]);
   const [generating, setGenerating] = useState(false);
@@ -432,7 +432,7 @@ export default function VideoProductionPage() {
     }
   };
 
-  const handleSceneChange = (index: number, patch: Partial<Scene>) => {
+  const handleSceneChange = (index: number, patch: Partial<ScriptScene>) => {
     setHasUnsavedScript(true);
     setScript((prev) =>
       prev.map((scene, i) => (i === index ? { ...scene, ...patch } : scene)),
