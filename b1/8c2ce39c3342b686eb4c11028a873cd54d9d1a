@@ -1,0 +1,5 @@
+Task: Add error and not-found boundaries.
+
+Files: apps/accounts/app/error.tsx; apps/accounts/app/error.test.tsx; apps/accounts/app/not-found.tsx; apps/accounts/app/not-found.test.tsx.
+
+The boundaries provide clear recovery actions. The error boundary retries the route and links home without exposing error details.
