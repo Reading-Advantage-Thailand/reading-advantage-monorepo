@@ -45,6 +45,17 @@ describe("ChatTutor accessibility", () => {
     },
   );
 
+  it("announces new chat messages through a polite live region", () => {
+    activeChatCopy = enMessages.chat;
+    render(<ChatTutor />);
+
+    const liveRegion = document.querySelector('[aria-live="polite"]');
+    expect(liveRegion).toBeTruthy();
+    expect(liveRegion?.contains(screen.getByPlaceholderText(activeChatCopy.placeholder))).toBe(
+      false,
+    );
+  });
+
   it("submits the enabled button to the chat API", async () => {
     activeChatCopy = thMessages.chat;
     activeLocale = "th";

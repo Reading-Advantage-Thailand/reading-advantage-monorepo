@@ -95,7 +95,10 @@ export function ChatTutor({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mb-3 max-h-96 space-y-3 overflow-y-auto">
+        <div
+          className="mb-3 max-h-96 space-y-3 overflow-y-auto"
+          aria-live="polite"
+        >
           {messages.length === 0 && (
             <p className="text-sm text-muted-foreground">Ask anything about sales technique.</p>
           )}

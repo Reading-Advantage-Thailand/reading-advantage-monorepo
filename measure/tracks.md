@@ -45,8 +45,8 @@ This file tracks all major tracks for the project.
   Add error recovery, server-side pending filtering, and export date controls. **Implemented 2026-09-20 (3/3 tasks, 18 scoped tests green); manual verification pending.**
 - [x] **Track: Accounting Duplication Removal** *Link: [./tracks/accounting_duplication_removal_20260919/](./tracks/accounting_duplication_removal_20260919/)*
   Consolidate repeated route helpers and library test locations. **Implemented 2026-09-20 (2/2 tasks, 78 scoped tests green, tsc and eslint clean); manual verification pending.**
-- [ ] **Track: Accounting Structural Alignment** *Link: [./tracks/accounting_structural_alignment_20260919/](./tracks/accounting_structural_alignment_20260919/)*
-  Align origin checks, security headers, history views, and settled-currency validation.
+- [x] **Track: Accounting Structural Alignment** *Link: [./tracks/accounting_structural_alignment_20260919/](./tracks/accounting_structural_alignment_20260919/)*
+  Align origin checks, security headers, history views, and settled-currency validation. **Implemented 2026-09-20 (4/4 tasks, 92 app + 52 backend scoped tests green, tsc clean); `currencySchema` narrowed to THB/USD/JPY in `packages/backend` — confirm the allowlist; manual verification pending.**
 
 - [x] **Track: Marketing Broken UX Fixes** *Link: [./tracks/marketing_broken_ux_fixes_20260919/](./tracks/marketing_broken_ux_fixes_20260919/)*
   Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code. **Implemented 2026-09-20 (10/10 tasks, 520 tests green); manual verification pending.**

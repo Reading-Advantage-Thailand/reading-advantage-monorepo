@@ -52,7 +52,7 @@ export function QuizComponent({
   if (result) {
     return (
       <Card>
-        <CardHeader>
+        <CardHeader aria-live="polite">
           <div className="flex items-center justify-between">
             <CardTitle>{t("score")}</CardTitle>
             <Badge variant={result.passed ? "default" : "destructive"}>

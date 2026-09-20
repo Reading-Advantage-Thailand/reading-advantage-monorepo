@@ -27,7 +27,7 @@ export function RoleplayResult({ result }: { result: Result }) {
 
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-3" aria-live="polite">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">{t("score")}</CardTitle>
           <Badge variant={result.passed ? "default" : "destructive"}>

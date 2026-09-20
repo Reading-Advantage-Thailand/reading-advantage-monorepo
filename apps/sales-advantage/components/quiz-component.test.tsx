@@ -88,6 +88,9 @@ describe("QuizComponent", () => {
 
     expect(screen.getByText("100%")).toBeTruthy();
     expect(
+      screen.getByText("100%").closest('[aria-live="polite"]'),
+    ).toBeTruthy();
+    expect(
       screen.getByText("Discovery comes before presenting a solution."),
     ).toBeTruthy();
   });

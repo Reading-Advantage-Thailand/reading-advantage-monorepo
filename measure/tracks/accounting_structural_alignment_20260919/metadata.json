@@ -1,11 +1,11 @@
 {
   "track_id": "accounting_structural_alignment_20260919",
   "type": "bug",
-  "status": "new",
+  "status": "completed",
   "created_at": "2026-09-19T00:00:00Z",
-  "updated_at": "2026-09-19T00:00:00Z",
+  "updated_at": "2026-09-20T07:00:00Z",
   "description": "Repair the structural alignment items identified by the Accounting user-experience refactor plan.",
   "estimated_tasks": 4,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 4,
+  "deviation_notes": "currencySchema narrowed to THB/USD/JPY enum; owner should confirm the allowlist."
 }
