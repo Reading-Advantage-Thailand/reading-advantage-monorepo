@@ -6,7 +6,7 @@ import {
   getAccountingOidcClient,
   readAccountingCookie,
 } from "@/app/lib/company-oidc";
-import { getPublicOrigin } from "@/app/lib/public-url";
+import { requireSameOrigin } from "@/app/lib/route-helpers";
 
 /**
  * Expires the Accounting session cookie with its host-only attributes.
@@ -26,22 +26,10 @@ function expireSessionCookie(response: NextResponse, secure: boolean): void {
 }
 
 /** Revokes and clears only the Accounting application session. */
-export async function POST(request: Request): Promise<NextResponse> {
-  let publicOrigin: URL;
-  try {
-    publicOrigin = getPublicOrigin(request);
-  } catch {
-    return NextResponse.json(
-      { message: "Invalid request origin" },
-      { status: 403 },
-    );
-  }
-  if (request.headers.get("origin") !== publicOrigin.origin) {
-    return NextResponse.json(
-      { message: "Invalid request origin" },
-      { status: 403 },
-    );
-  }
+export async function POST(request: Request): Promise<Response> {
+  const origin = requireSameOrigin(request);
+  if (!origin.ok) return origin.response;
+  const publicOrigin = origin.publicOrigin;
   const secure =
     process.env.NODE_ENV === "production" || publicOrigin.protocol === "https:";
   const token = readAccountingCookie(request, ACCOUNTING_SESSION_COOKIE);

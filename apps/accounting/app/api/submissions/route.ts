@@ -8,7 +8,11 @@
  * organization identity — never from the request.
  */
 import { requireAccountingSession } from "@/app/lib/auth";
-import { actorFromUser, jsonResponse } from "@/app/lib/route-helpers";
+import {
+  actorFromUser,
+  jsonResponse,
+  requireSameOrigin,
+} from "@/app/lib/route-helpers";
 import {
   deletePrivateEvidence,
   readPrivateEvidence,
@@ -208,6 +212,8 @@ function isSupportedEvidenceType(contentType: string): boolean {
 export async function POST(request: Request): Promise<Response> {
   const guard = await requireAccountingSession(request);
   if (!guard.ok) return guard.response;
+  const origin = requireSameOrigin(request);
+  if (!origin.ok) return origin.response;
   const actor = actorFromUser(guard.session.user);
 
   const rawIdempotencyKey = request.headers.get("idempotency-key");

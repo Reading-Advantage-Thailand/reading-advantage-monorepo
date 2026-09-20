@@ -1,10 +1,42 @@
 import type { accountingSessionUser } from "@/app/lib/company-oidc";
 import type { AccountingActor } from "@reading-advantage/backend/accounting";
+import { getPublicOrigin } from "@/app/lib/public-url";
 
 /** Session user projection produced by the accounting guard. */
 export type AccountingSessionUser = NonNullable<
   ReturnType<typeof accountingSessionUser>
 >;
+
+/** Outcome of the same-origin check for a state-changing route. */
+export type SameOriginCheck =
+  | { readonly ok: true; readonly publicOrigin: URL }
+  | { readonly ok: false; readonly response: Response };
+
+/**
+ * Requires the request `Origin` header to match the approved public origin.
+ * Mirrors the check in `app/api/auth/logout/route.ts` for every
+ * state-changing finance route.
+ * @param request Incoming state-changing request.
+ * @returns The approved public origin on success, or a 403 response to return.
+ */
+export function requireSameOrigin(request: Request): SameOriginCheck {
+  let publicOrigin: URL;
+  try {
+    publicOrigin = getPublicOrigin(request);
+  } catch {
+    return {
+      ok: false,
+      response: jsonResponse({ message: "Invalid request origin" }, 403),
+    };
+  }
+  if (request.headers.get("origin") !== publicOrigin.origin) {
+    return {
+      ok: false,
+      response: jsonResponse({ message: "Invalid request origin" }, 403),
+    };
+  }
+  return { ok: true, publicOrigin };
+}
 
 /**
  * Maps the guard's session user to a domain actor; the company scope derives

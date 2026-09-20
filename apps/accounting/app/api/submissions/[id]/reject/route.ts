@@ -14,6 +14,7 @@ import {
   isInvalidInputError,
   isNotFoundError,
   jsonResponse,
+  requireSameOrigin,
 } from "@/app/lib/route-helpers";
 import { rejectAccountingSubmission } from "@/app/lib/submissions";
 
@@ -29,6 +30,8 @@ export async function POST(
 ): Promise<Response> {
   const guard = await requireAccountingSession(request);
   if (!guard.ok) return guard.response;
+  const origin = requireSameOrigin(request);
+  if (!origin.ok) return origin.response;
   const actor = actorFromUser(guard.session.user);
 
   const submissionId = await getSubmissionId(context);

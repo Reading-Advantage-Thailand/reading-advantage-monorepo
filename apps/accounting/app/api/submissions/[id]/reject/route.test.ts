@@ -87,10 +87,10 @@ function notFoundError(): Error {
   });
 }
 
-function rejectRequest(body: unknown): Request {
+function rejectRequest(body: unknown, origin = "http://localhost"): Request {
   return new Request(`http://localhost/api/submissions/${SUBMISSION_ID}/reject`, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", origin },
     body: JSON.stringify(body),
   });
 }
@@ -127,6 +127,29 @@ describe("POST /api/submissions/[id]/reject", () => {
     await expect(response.json()).resolves.toEqual({
       message: "Accounting access required",
     });
+    expect(mocks.rejectAccountingSubmission).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 for a cross-origin POST before touching the domain", async () => {
+    const response = await POST(
+      rejectRequest({ reason: "Blurry receipt" }, "https://phishing.example"),
+      rejectContext(),
+    );
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({
+      message: "Invalid request origin",
+    });
+    expect(mocks.rejectAccountingSubmission).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 when the origin header is missing", async () => {
+    const response = await POST(
+      rejectRequest({ reason: "Blurry receipt" }, ""),
+      rejectContext(),
+    );
+
+    expect(response.status).toBe(403);
     expect(mocks.rejectAccountingSubmission).not.toHaveBeenCalled();
   });
 

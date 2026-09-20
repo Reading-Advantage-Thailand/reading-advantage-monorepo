@@ -176,6 +176,7 @@ function postRequest(
     readonly file?: File;
     readonly files?: readonly File[];
     readonly idempotencyKey?: string | null;
+    readonly origin?: string;
   } = {},
 ): Request {
   const form = new FormData();
@@ -191,10 +192,10 @@ function postRequest(
       : options.idempotencyKey;
   return new Request(ROUTE_URL, {
     method: "POST",
-    headers:
-      idempotencyKey !== null
-        ? { "idempotency-key": idempotencyKey }
-        : undefined,
+    headers: {
+      ...(idempotencyKey !== null ? { "idempotency-key": idempotencyKey } : {}),
+      origin: options.origin ?? "http://localhost",
+    },
     body: form,
   });
 }
@@ -243,6 +244,32 @@ describe("POST /api/submissions", () => {
     await expect(response.json()).resolves.toEqual({
       message: "Accounting access required",
     });
+    expect(mocks.putPrivateEvidence).not.toHaveBeenCalled();
+    expect(mocks.submitAccountingSubmissionWithOutcome).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 for a cross-origin POST before storing evidence", async () => {
+    const response = await POST(
+      postRequest(expenseFields, {
+        file: evidenceFile(),
+        origin: "https://phishing.example",
+      }),
+    );
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({
+      message: "Invalid request origin",
+    });
+    expect(mocks.putPrivateEvidence).not.toHaveBeenCalled();
+    expect(mocks.submitAccountingSubmissionWithOutcome).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 when the origin header is missing", async () => {
+    const response = await POST(
+      postRequest(expenseFields, { file: evidenceFile(), origin: "" }),
+    );
+
+    expect(response.status).toBe(403);
     expect(mocks.putPrivateEvidence).not.toHaveBeenCalled();
     expect(mocks.submitAccountingSubmissionWithOutcome).not.toHaveBeenCalled();
   });
