@@ -1,0 +1,5 @@
+Task: Add loading, ready, and failed directory states.
+
+Files: apps/accounts/app/accounts-console.tsx; apps/accounts/app/accounts-console.test.tsx.
+
+The console now separates loading, ready-empty, and failed employee directory states. Tests cover all three states.
