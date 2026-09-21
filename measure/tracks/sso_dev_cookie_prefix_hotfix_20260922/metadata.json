@@ -1,0 +1,11 @@
+{
+  "track_id": "sso_dev_cookie_prefix_hotfix_20260922",
+  "type": "bug",
+  "status": "in-progress",
+  "created_at": "2026-09-22T00:00:00Z",
+  "updated_at": "2026-09-22T00:00:00Z",
+  "description": "Local SSO sign-in is impossible in a real browser for accounting, sales, marketing, and codecamp: the __Host- OIDC transaction/session cookies are set without Secure over plain-HTTP dev, and browsers reject __Host- cookies without Secure. Found by owner manual verification S2.1 on 2026-09-22.",
+  "estimated_tasks": 3,
+  "actual_tasks": 4,
+  "deviation_notes": "Implemented 2026-09-22 (commits b3f984565, 57e2c7bb0, 3759ec9a1, 83db19662; suites green: accounting 271, sales 293, marketing 572, codecamp 1112). Live AC-1/AC-2 verified 2026-09-22. Discovered during the 2026-09 fix-wave owner manual verification (session S2, check S2.1). Blocks local verification sessions S2, S3, S4."
+}
