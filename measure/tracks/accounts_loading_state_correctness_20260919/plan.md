@@ -7,3 +7,8 @@
 - [x] (a242a27b) Task: Add `app/error.tsx` and `app/not-found.tsx`. Source: `docs/accounts-ux-refactor-plan.md` §9; Issues: `app/page.tsx:14`, `app/error.tsx`, `app/not-found.tsx`
 - [x] (4220d06a) Task: Return 400 for malformed JSON bodies in the seven routes. Source: `docs/accounts-ux-refactor-plan.md` §5; Issues: `app/api/admin/employees/route.ts:40`, `app/api/admin/employees/[accountId]/roles/route.ts:27`, `app/api/admin/employees/[accountId]/company-roles/route.ts:27`, `app/api/admin/employees/[accountId]/credential/route.ts:24`, `app/api/admin/employees/[accountId]/sessions/route.ts:24`, `app/api/admin/employees/[accountId]/status/route.ts:24`, `app/api/session/login/route.ts:19`
 - [x] (b36fa3db) Task: Log the unexpected branch in the token route and in the ready route. Source: `docs/accounts-ux-refactor-plan.md` §5; Issues: `app/api/oidc/token/route.ts:64-71`, `app/api/ready/route.ts:59`
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev server (port 3007) with Docker Postgres `company_identity`; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S1 in the 2026-09-22 verification run (20 checks, all passed). Two non-blocking findings filed in `measure/tech-debt.md` (same-tick role-toggle race; dev-only React eval/CSP console warning). Confirmed by explicit product-owner yes on 2026-09-22.

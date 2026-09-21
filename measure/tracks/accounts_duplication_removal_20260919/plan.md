@@ -6,3 +6,8 @@
 - [x] Task: Move the `readJson` helper into a shared location. Source: `docs/accounts-ux-refactor-plan.md` §4.2; Issues: `apps/accounting/app/_components/pending-submissions-list.tsx:39-45` (473d7ef91)
 - [x] Task: Extract one `readJsonBody(request)` helper for the seven route handlers. Source: `docs/accounts-ux-refactor-plan.md` §5; Issues: `app/api/admin/employees/route.ts:40`, `app/api/session/login/route.ts:19` (983f87233)
 - [x] Task: Keep the five admin routes as five files. Source: `docs/accounts-ux-refactor-plan.md` §5; Issues: `app/api/admin/employees/route.ts:39`, `app/api/admin/employees/[accountId]/roles/route.ts:24`, `app/api/admin/employees/[accountId]/company-roles/route.ts:24` (no-op: 2ec48b0f2)
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev server (port 3007) with Docker Postgres `company_identity`; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S1 in the 2026-09-22 verification run (20 checks, all passed). Two non-blocking findings filed in `measure/tech-debt.md` (same-tick role-toggle race; dev-only React eval/CSP console warning). Confirmed by explicit product-owner yes on 2026-09-22.

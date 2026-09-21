@@ -8,3 +8,8 @@
 - [x] (0543197ca) Task: Replace `window.confirm` with an inline confirmation row. Source: `docs/accounts-ux-refactor-plan.md` §4.2; Issues: `app/accounts-console.tsx:96,111,128,142`
 - [x] (3434ad653) Task: Correct the contrast of `--signal` and raise the nine small text rules to 12px. Source: `docs/accounts-ux-refactor-plan.md` §7; Issues: `app/globals.css:5,63-64,68,78-82,92`
 - [x] (cf4831064) Task: Add an authorization test per admin route and widen the coverage include list. Source: `docs/accounts-ux-refactor-plan.md` §8; Issues: `vitest.config.ts:14-20`, `app/accounts-console.test.tsx`, `app/api/admin/employees/route.test.ts`
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev server (port 3007) with Docker Postgres `company_identity`; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S1 in the 2026-09-22 verification run (20 checks, all passed). Two non-blocking findings filed in `measure/tech-debt.md` (same-tick role-toggle race; dev-only React eval/CSP console warning). Confirmed by explicit product-owner yes on 2026-09-22.

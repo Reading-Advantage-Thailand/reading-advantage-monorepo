@@ -27,15 +27,15 @@ This file tracks all major tracks for the project.
   Align shared authentication helpers, locale handling, keyboard access, announcements, and administrator navigation. **Implemented 2026-09-20 (5/6 tasks, 35 scoped tests green, tsc and eslint clean). Task 1 (shared `packages/auth` helper move) deferred — needs a dedicated cross-app track, registered in tech-debt; Task 6 recorded as tech-debt (App Router layout constraint). Manual verification pending.**
 
 - [x] **Track: Accounts Broken UX Fixes** *Link: [./tracks/accounts_broken_ux_fixes_20260919/](./tracks/accounts_broken_ux_fixes_20260919/)*
-  Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures. **Implemented 2026-09-20 (8/8 tasks, 93 tests green); manual verification pending.**
+  Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures. **Implemented 2026-09-20 (8/8 tasks, 93 tests green); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Accounts Console Write Correctness** *Link: [./tracks/accounts_console_write_correctness_20260919/](./tracks/accounts_console_write_correctness_20260919/)*
-  Make console writes idempotent, pending-aware, refresh-safe, and resistant to lost role updates. **Implemented 2026-09-20 (5/5 tasks); manual verification pending.**
+  Make console writes idempotent, pending-aware, refresh-safe, and resistant to lost role updates. **Implemented 2026-09-20 (5/5 tasks); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Accounts Loading State Correctness** *Link: [./tracks/accounts_loading_state_correctness_20260919/](./tracks/accounts_loading_state_correctness_20260919/)*
-  Distinguish directory loading, empty, failed, malformed-input, and readiness states. **Implemented 2026-09-20 (5/5 tasks, 34 scoped tests green, tsc and eslint clean); manual verification pending.**
+  Distinguish directory loading, empty, failed, malformed-input, and readiness states. **Implemented 2026-09-20 (5/5 tasks, 34 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Accounts Duplication Removal** *Link: [./tracks/accounts_duplication_removal_20260919/](./tracks/accounts_duplication_removal_20260919/)*
-  Share safe-path, JSON-body, and route-handler boundary helpers without hiding capabilities. **Implemented 2026-09-20 (4/4 tasks, 65 scoped tests green, tsc clean in both apps); cross-app helper imports from `apps/accounts` into `apps/accounting` were introduced per plan; manual verification pending.**
+  Share safe-path, JSON-body, and route-handler boundary helpers without hiding capabilities. **Implemented 2026-09-20 (4/4 tasks, 65 scoped tests green, tsc clean in both apps); cross-app helper imports from `apps/accounts` into `apps/accounting` were introduced per plan; owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Accounts Structural Alignment** *Link: [./tracks/accounts_structural_alignment_20260919/](./tracks/accounts_structural_alignment_20260919/)*
-  Align package exports, server-owned catalogues, confirmation controls, visual contrast, and authorization coverage. **Implemented 2026-09-20 (6/6 tasks, 56 scoped tests green, admin routes at 100% coverage, tsc and eslint clean); manual verification pending.**
+  Align package exports, server-owned catalogues, confirmation controls, visual contrast, and authorization coverage. **Implemented 2026-09-20 (6/6 tasks, 56 scoped tests green, admin routes at 100% coverage, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
 
 - [x] **Track: Accounting Broken UX Fixes** *Link: [./tracks/accounting_broken_ux_fixes_20260919/](./tracks/accounting_broken_ux_fixes_20260919/)*
   Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects. **Implemented 2026-09-20 (9/9 tasks, 245 tests green, one pre-existing auth-import timeout); manual verification pending.**
