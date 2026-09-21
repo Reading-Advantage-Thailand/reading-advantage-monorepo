@@ -3,11 +3,11 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
 import { isLegacySalesAuthEnabled } from "./lib/auth-mode";
+import { SALES_SESSION_COOKIE } from "./lib/company-oidc";
 import { resolveRequestLocale } from "./lib/locale-resolution";
 import { getPublicOrigin, getPublicUrl } from "./lib/public-url";
 import { buildSignInHref } from "./lib/sign-in-href";
 
-const SALES_SESSION_COOKIE = "__Host-ra_sales_session";
 const LEGACY_SESSION_COOKIE = "session_token";
 const intlMiddleware = createIntlMiddleware(routing);
 

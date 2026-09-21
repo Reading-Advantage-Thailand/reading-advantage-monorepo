@@ -7,6 +7,7 @@ vi.mock("next-intl/middleware", () => ({
 }));
 
 import { proxy, config } from "../../proxy";
+import { SALES_SESSION_COOKIE } from "../company-oidc";
 
 function createRequest(
   pathname: string,
@@ -31,7 +32,7 @@ describe("Sales browser proxy SSO redirects", () => {
 
   it("uses only the company application cookie in company mode", async () => {
     const accepted = await proxy(
-      createRequest("/en/admin", "__Host-ra_sales_session=company-token"),
+      createRequest("/en/admin", `${SALES_SESSION_COOKIE}=company-token`),
     );
     expect(accepted.status).toBe(200);
 
@@ -98,7 +99,7 @@ describe("Sales browser proxy SSO redirects", () => {
     ).resolves.toMatchObject({ status: 200 });
 
     const rejected = await proxy(
-      createRequest("/en/admin", "__Host-ra_sales_session=company-token"),
+      createRequest("/en/admin", `${SALES_SESSION_COOKIE}=company-token`),
     );
     expect(rejected.status).toBe(307);
   });

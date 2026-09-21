@@ -35,10 +35,25 @@ export type SalesRequestAuthenticationResult =
       readonly principal: ResolvedSalesRequestPrincipal;
     };
 
-/** Host-only opaque Sales application-session cookie. */
-export const SALES_SESSION_COOKIE = "__Host-ra_sales_session";
-/** Host-only short-lived Sales authorization transaction cookie. */
-export const SALES_TRANSACTION_COOKIE = "__Host-ra_sales_oidc_tx";
+/**
+ * Resolves a Sales OIDC cookie name for the current runtime environment.
+ * @param baseName Unprefixed Sales OIDC cookie name.
+ * @returns Cookie name with the host-only prefix in production.
+ */
+export function resolveSalesCookieName(
+  baseName: "ra_sales_session" | "ra_sales_oidc_tx",
+): string {
+  return process.env.NODE_ENV === "production"
+    ? `__Host-${baseName}`
+    : baseName;
+}
+
+/** Sales application-session cookie. */
+export const SALES_SESSION_COOKIE = resolveSalesCookieName("ra_sales_session");
+/** Short-lived Sales authorization transaction cookie. */
+export const SALES_TRANSACTION_COOKIE = resolveSalesCookieName(
+  "ra_sales_oidc_tx",
+);
 
 let config:
   | ReturnType<typeof createCompanyIdentityServiceAuthConfig>
