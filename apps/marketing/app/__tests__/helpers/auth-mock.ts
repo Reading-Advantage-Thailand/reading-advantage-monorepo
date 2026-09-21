@@ -23,6 +23,8 @@
  */
 import { vi } from "vitest";
 
+import { MARKETING_SESSION_COOKIE } from "@/lib/company-oidc";
+
 /** Known session token shared across all marketing route tests. */
 export const KNOWN_TOKEN = "w3-known-session-token";
 
@@ -74,7 +76,7 @@ export function authedInit(init: RequestInit = {}): RequestInit {
     ...init,
     headers: {
       ...(init.headers ?? {}),
-      Cookie: `__Host-ra_marketing_session=${KNOWN_TOKEN}`,
+      Cookie: `${MARKETING_SESSION_COOKIE}=${KNOWN_TOKEN}`,
     },
   };
 }

@@ -18,6 +18,8 @@ vi.mock("@/lib/company-oidc", async () => {
   };
 });
 
+import { MARKETING_SESSION_COOKIE } from "@/lib/company-oidc";
+
 interface CloudBuildStep {
   id?: string;
   name?: string;
@@ -71,7 +73,7 @@ describe("Marketing production access boundary", () => {
     const { requireMarketingSession } = await import("@/lib/auth");
     const result = await requireMarketingSession(
       new Request("https://marketing.reading-advantage.com/api/campaigns", {
-        headers: { cookie: "__Host-ra_marketing_session=valid-token" },
+        headers: { cookie: `${MARKETING_SESSION_COOKIE}=valid-token` },
       }),
     );
 
@@ -99,7 +101,9 @@ describe("Marketing production access boundary", () => {
       const { requireMarketingSession } = await import("@/lib/auth");
       const result = await requireMarketingSession(
         new Request("https://marketing.reading-advantage.com/api/campaigns", {
-          headers: { cookie: "__Host-ra_marketing_session=non-marketing-token" },
+          headers: {
+            cookie: `${MARKETING_SESSION_COOKIE}=non-marketing-token`,
+          },
         }),
       );
 

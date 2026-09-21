@@ -7,10 +7,27 @@ import {
 
 import { resolveMarketingRole } from "./marketing-permissions";
 
-/** Host-only opaque Marketing application-session cookie. */
-export const MARKETING_SESSION_COOKIE = "__Host-ra_marketing_session";
-/** Host-only short-lived Marketing authorization transaction cookie. */
-export const MARKETING_TRANSACTION_COOKIE = "__Host-ra_marketing_oidc_tx";
+/**
+ * Resolves a Marketing OIDC cookie name for the current runtime environment.
+ * @param baseName Unprefixed Marketing OIDC cookie name.
+ * @returns Cookie name with the host-only prefix in production.
+ */
+export function resolveMarketingCookieName(
+  baseName: "ra_marketing_session" | "ra_marketing_oidc_tx",
+): string {
+  return process.env.NODE_ENV === "production"
+    ? `__Host-${baseName}`
+    : baseName;
+}
+
+/** Marketing application-session cookie. */
+export const MARKETING_SESSION_COOKIE = resolveMarketingCookieName(
+  "ra_marketing_session",
+);
+/** Short-lived Marketing authorization transaction cookie. */
+export const MARKETING_TRANSACTION_COOKIE = resolveMarketingCookieName(
+  "ra_marketing_oidc_tx",
+);
 
 let config: ReturnType<typeof createCompanyIdentityServiceAuthConfig> | undefined;
 let client: ReturnType<typeof createCompanyOidcClient> | undefined;

@@ -35,6 +35,8 @@ vi.mock("@reading-advantage/ai", () => ({
   createAIClient: createAIClientMock,
 }));
 
+import { MARKETING_SESSION_COOKIE } from "@/lib/company-oidc";
+
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const marketingAppRoot = resolve(currentDirectory, "..");
 
@@ -58,7 +60,7 @@ function activeSession(roles: readonly string[]) {
 
 function request(path = "/api/campaigns"): Request {
   return new Request(`https://marketing.reading-advantage.com${path}`, {
-    headers: { cookie: "__Host-ra_marketing_session=valid-token" },
+    headers: { cookie: `${MARKETING_SESSION_COOKIE}=valid-token` },
   });
 }
 
@@ -203,7 +205,7 @@ describe("Marketing settings administrator boundary", () => {
       new Request("https://marketing.reading-advantage.com/api/settings", {
         method: "POST",
         headers: {
-          cookie: "__Host-ra_marketing_session=valid-token",
+          cookie: `${MARKETING_SESSION_COOKIE}=valid-token`,
           "content-type": "application/json",
         },
         body: JSON.stringify({ "llm.provider": "openai" }),
@@ -224,7 +226,7 @@ describe("Marketing settings administrator boundary", () => {
         {
           method: "POST",
           headers: {
-            cookie: "__Host-ra_marketing_session=valid-token",
+          cookie: `${MARKETING_SESSION_COOKIE}=valid-token`,
             "content-type": "application/json",
           },
           body: JSON.stringify({

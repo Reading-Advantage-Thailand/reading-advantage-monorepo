@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { MARKETING_SESSION_COOKIE } from "./app/lib/company-oidc";
 
-const MARKETING_SESSION_COOKIE = "__Host-ra_marketing_session";
 const protectedPathPattern = /^\/(?:settings|campaigns)(?:\/|$)/;
 
 /**

@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { describe, expect, it } from "vitest";
 
+import { MARKETING_SESSION_COOKIE } from "../lib/company-oidc";
 import { config, proxy } from "../../proxy";
 
 describe("Marketing protected page gate", () => {
@@ -18,7 +19,7 @@ describe("Marketing protected page gate", () => {
   it("continues visitors with a Marketing session cookie", () => {
     const response = proxy(
       new NextRequest("https://marketing.example/campaigns", {
-        headers: { cookie: "__Host-ra_marketing_session=token" },
+        headers: { cookie: `${MARKETING_SESSION_COOKIE}=token` },
       }),
     );
 
