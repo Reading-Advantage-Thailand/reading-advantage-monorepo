@@ -7,10 +7,27 @@ import {
 import { db } from "@reading-advantage/db";
 import { resolveCodecampCompanyPrincipal } from "@reading-advantage/domain";
 
-/** Host-only opaque Codecamp application-session cookie. */
-export const CODECAMP_SESSION_COOKIE = "__Host-ra_codecamp_session";
-/** Host-only short-lived Codecamp authorization transaction cookie. */
-export const CODECAMP_TRANSACTION_COOKIE = "__Host-ra_codecamp_oidc_tx";
+/**
+ * Resolves a Codecamp OIDC cookie name for the current runtime environment.
+ * @param baseName Unprefixed Codecamp OIDC cookie name.
+ * @returns Cookie name with the host-only prefix in production.
+ */
+export function resolveCodecampCookieName(
+  baseName: "ra_codecamp_session" | "ra_codecamp_oidc_tx",
+): string {
+  return process.env.NODE_ENV === "production"
+    ? `__Host-${baseName}`
+    : baseName;
+}
+
+/** Codecamp application-session cookie. */
+export const CODECAMP_SESSION_COOKIE = resolveCodecampCookieName(
+  "ra_codecamp_session",
+);
+/** Short-lived Codecamp authorization transaction cookie. */
+export const CODECAMP_TRANSACTION_COOKIE = resolveCodecampCookieName(
+  "ra_codecamp_oidc_tx",
+);
 
 let client: ReturnType<typeof createCompanyOidcClient> | undefined;
 
