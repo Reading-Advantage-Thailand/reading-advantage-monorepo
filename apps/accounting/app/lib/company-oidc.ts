@@ -4,10 +4,27 @@ import {
   type CompanyOidcIdentity,
 } from "@reading-advantage/auth/company-identity";
 
-/** Host-only opaque Accounting application-session cookie. */
-export const ACCOUNTING_SESSION_COOKIE = "__Host-ra_accounting_session";
-/** Host-only short-lived Accounting authorization transaction cookie. */
-export const ACCOUNTING_TRANSACTION_COOKIE = "__Host-ra_accounting_oidc_tx";
+/**
+ * Resolves an Accounting OIDC cookie name for the current runtime environment.
+ * @param baseName Unprefixed Accounting OIDC cookie name.
+ * @returns Cookie name with the host-only prefix in production.
+ */
+export function resolveAccountingCookieName(
+  baseName: "ra_accounting_session" | "ra_accounting_oidc_tx",
+): string {
+  return process.env.NODE_ENV === "production"
+    ? `__Host-${baseName}`
+    : baseName;
+}
+
+/** Accounting application-session cookie. */
+export const ACCOUNTING_SESSION_COOKIE = resolveAccountingCookieName(
+  "ra_accounting_session",
+);
+/** Short-lived Accounting authorization transaction cookie. */
+export const ACCOUNTING_TRANSACTION_COOKIE = resolveAccountingCookieName(
+  "ra_accounting_oidc_tx",
+);
 
 /** Accounting application roles issued by Accounts for the accounting audience. */
 export type AccountingRole = "OWNER" | "ACCOUNTANT" | "STAFF";

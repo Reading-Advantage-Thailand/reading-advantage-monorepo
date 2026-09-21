@@ -2,15 +2,15 @@
 import { NextRequest } from "next/server";
 import { describe, expect, it } from "vitest";
 
+import { ACCOUNTING_SESSION_COOKIE } from "./app/lib/company-oidc";
 import { proxy } from "./proxy";
 
-const SESSION_COOKIE = "__Host-ra_accounting_session";
 const ORIGIN = "http://localhost:3000";
 
 function accountingRequest(pathname: string, withSession = false): NextRequest {
   return new NextRequest(`${ORIGIN}${pathname}`, {
     headers: withSession
-      ? { cookie: `${SESSION_COOKIE}=opaque-session-token` }
+      ? { cookie: `${ACCOUNTING_SESSION_COOKIE}=opaque-session-token` }
       : undefined,
   });
 }

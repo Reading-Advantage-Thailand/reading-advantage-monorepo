@@ -4,8 +4,7 @@ import {
   DEFAULT_ACCOUNTING_ORIGIN,
   getPublicUrl,
 } from "./app/lib/public-url";
-
-const ACCOUNTING_SESSION_COOKIE = "__Host-ra_accounting_session";
+import { ACCOUNTING_SESSION_COOKIE } from "./app/lib/company-oidc";
 
 /**
  * Routes unauthenticated browsers hitting protected Accounting pages to the

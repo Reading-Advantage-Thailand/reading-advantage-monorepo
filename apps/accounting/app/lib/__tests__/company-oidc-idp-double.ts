@@ -10,6 +10,8 @@ import { generateKeyPairSync, sign as signRsa } from "node:crypto";
 
 import { vi } from "vitest";
 
+import { resolveAccountingCookieName } from "../company-oidc";
+
 /** In-memory Accounts issuer served by the fetch double. */
 export const ISSUER = "https://accounts.reading-advantage.test";
 /** Public origin of the accounting app under test. */
@@ -22,10 +24,14 @@ export const CLIENT_ID = "accounting-web";
 export const CLIENT_SECRET = "accounting-test-client-secret-0123456789";
 /** Audience claim Accounts issues for the accounting application. */
 export const AUDIENCE = "accounting";
-/** Host-only opaque accounting application-session cookie. */
-export const SESSION_COOKIE = "__Host-ra_accounting_session";
-/** Host-only short-lived accounting authorization transaction cookie. */
-export const TRANSACTION_COOKIE = "__Host-ra_accounting_oidc_tx";
+/** Accounting application-session cookie. */
+export const SESSION_COOKIE = resolveAccountingCookieName(
+  "ra_accounting_session",
+);
+/** Short-lived accounting authorization transaction cookie. */
+export const TRANSACTION_COOKIE = resolveAccountingCookieName(
+  "ra_accounting_oidc_tx",
+);
 /** Opaque access token the IdP double issues from its token endpoint. */
 export const OPAQUE_ACCESS_TOKEN =
   "accounting-opaque-access-token-0123456789abcdef";
