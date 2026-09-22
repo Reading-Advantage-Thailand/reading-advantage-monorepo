@@ -466,6 +466,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [~] **Track: SSO Dev Cookie Prefix Hotfix** *Link: [./tracks/sso_dev_cookie_prefix_hotfix_20260922/](./tracks/sso_dev_cookie_prefix_hotfix_20260922/)*
   Real browsers reject the `__Host-` OIDC cookies without `Secure`, so local plain-HTTP SSO sign-in cannot complete for accounting, sales, marketing, or codecamp. Found by owner manual verification S2.1 on 2026-09-22; blocks local sessions S2–S4.
 
+- [x] **Track: Reading Article List UUID Cast Hotfix** *Link: [./tracks/reading_article_list_uuid_cast_hotfix_20260923/](./tracks/reading_article_list_uuid_cast_hotfix_20260923/)*
+  The read-page article list joined `userActivity.targetId` (text) to `articles.id` (uuid) without a cast, so the list was empty for signed-in students. Found by owner manual verification S5.1 on 2026-09-23; fixed with an `::text` cast and live-verified.
+
 - [~] **Track: Marketing Shortfall Count Hotfix** *Link: [./tracks/marketing_shortfall_count_hotfix_20260922/](./tracks/marketing_shortfall_count_hotfix_20260922/)*
   The 422 topic-shortfall response carries the count but the client only reads 400 bodies. Found by owner manual verification S3.10 on 2026-09-22.
 

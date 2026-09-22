@@ -152,7 +152,7 @@ export async function getSearchArticles(req: ExtendedNextRequest) {
       .leftJoin(
         userActivity,
         and(
-          eq(userActivity.targetId, articles.id),
+          eq(userActivity.targetId, sql`${articles.id}::text`),
           eq(userActivity.userId, userId),
           eq(userActivity.activityType, "ARTICLE_READ"),
         ),

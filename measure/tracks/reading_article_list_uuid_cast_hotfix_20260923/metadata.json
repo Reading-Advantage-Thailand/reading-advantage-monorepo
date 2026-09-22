@@ -1,0 +1,11 @@
+{
+  "track_id": "reading_article_list_uuid_cast_hotfix_20260923",
+  "type": "bug",
+  "status": "completed",
+  "created_at": "2026-09-23T00:00:00Z",
+  "updated_at": "2026-09-23T00:00:00Z",
+  "description": "The student read page article list was empty for signed-in students. getSearchArticles joined userActivity.targetId (text) to articles.id (uuid) without a cast, so Postgres rejected the query (42883). Defect introduced by the Prisma-to-Drizzle migration in edf87e4cf. Found by owner manual verification S5.1 on 2026-09-23.",
+  "estimated_tasks": 2,
+  "actual_tasks": 2,
+  "deviation_notes": "One-line cast fix. Live-verified in the browser during owner manual verification session S5."
+}
