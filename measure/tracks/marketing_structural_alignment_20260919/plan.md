@@ -9,3 +9,8 @@
 - [x] (ebcb89b2c) Task: Add a `metadata` export to each page. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/layout.tsx:7-10`
 - [x] (77bace02e) Task: Replace the index binding between `APPS`, colors, and names. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/lib/apps.ts:27-33`
 - [x] (f4b8b8b0a) Task: Constrain `settingsPostSchema` to the four keys the page writes. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/lib/settings-schema.ts:12`, `app/api/settings/route.ts:106-117`
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev (vinext, port 3008) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S3 in the 2026-09-22 verification run (16 checks). Owner confirmed the /settings + /campaigns gate policy. One partial defect found: the 422 topic-shortfall count never reaches the UI (client reads server messages only for HTTP 400) — fixed in hotfix track marketing_shortfall_count_hotfix_20260922. Confirmed by explicit product-owner yes on 2026-09-22.

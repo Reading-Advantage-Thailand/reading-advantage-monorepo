@@ -49,15 +49,15 @@ This file tracks all major tracks for the project.
   Align origin checks, security headers, history views, and settled-currency validation. **Implemented 2026-09-20 (4/4 tasks, 92 app + 52 backend scoped tests green, tsc clean); `currencySchema` narrowed to THB/USD/JPY in `packages/backend` — confirm the allowlist; owner manual verification PASSED 2026-09-22.**
 
 - [x] **Track: Marketing Broken UX Fixes** *Link: [./tracks/marketing_broken_ux_fixes_20260919/](./tracks/marketing_broken_ux_fixes_20260919/)*
-  Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code. **Implemented 2026-09-20 (10/10 tasks, 520 tests green); manual verification pending.**
+  Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code. **Implemented 2026-09-20 (10/10 tasks, 520 tests green); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Marketing Runtime Header Correctness** *Link: [./tracks/marketing_runtime_header_correctness_20260919/](./tracks/marketing_runtime_header_correctness_20260919/)*
-  Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating. **Implemented 2026-09-20 (5/5 tasks, 535 tests green, tsc and eslint clean); manual verification pending.**
+  Align runtime parameters, security headers, cache headers, aliases, role checks, and route gating. **Implemented 2026-09-20 (5/5 tasks, 535 tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Marketing Loading State Correctness** *Link: [./tracks/marketing_loading_state_correctness_20260919/](./tracks/marketing_loading_state_correctness_20260919/)*
-  Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior. **Implemented 2026-09-20 (10/10 tasks, 34 scoped tests green, tsc clean); manual verification pending.**
+  Repair loading, error, cancellation, stable-key, editing, logging, and unsaved-state behavior. **Implemented 2026-09-20 (10/10 tasks, 34 scoped tests green, tsc clean); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Marketing Duplication Removal** *Link: [./tracks/marketing_duplication_removal_20260919/](./tracks/marketing_duplication_removal_20260919/)*
-  Remove duplicated authentication, application, campaign, AI, health, status, and navigation code. **Implemented 2026-09-20 (10/10 tasks, 151 scoped tests green, tsc and eslint clean); manual verification pending.**
+  Remove duplicated authentication, application, campaign, AI, health, status, and navigation code. **Implemented 2026-09-20 (10/10 tasks, 151 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Marketing Structural Alignment** *Link: [./tracks/marketing_structural_alignment_20260919/](./tracks/marketing_structural_alignment_20260919/)*
-  Align shared helpers, page boundaries, forms, metadata, application maps, and settings contracts. **Implemented 2026-09-20 (6/6 tasks, 80 scoped tests green, tsc and eslint clean); settings POST contract narrowed to four writable keys (legacy keys now 400); CI must build `packages/auth` before marketing tests; manual verification pending.**
+  Align shared helpers, page boundaries, forms, metadata, application maps, and settings contracts. **Implemented 2026-09-20 (6/6 tasks, 80 scoped tests green, tsc and eslint clean); settings POST contract narrowed to four writable keys (legacy keys now 400); CI must build `packages/auth` before marketing tests; owner manual verification PASSED 2026-09-22.**
 
 ## Current Focus (owner-confirmed 2026-08-10)
 
@@ -465,6 +465,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [~] **Track: SSO Dev Cookie Prefix Hotfix** *Link: [./tracks/sso_dev_cookie_prefix_hotfix_20260922/](./tracks/sso_dev_cookie_prefix_hotfix_20260922/)*
   Real browsers reject the `__Host-` OIDC cookies without `Secure`, so local plain-HTTP SSO sign-in cannot complete for accounting, sales, marketing, or codecamp. Found by owner manual verification S2.1 on 2026-09-22; blocks local sessions S2–S4.
+
+- [~] **Track: Marketing Shortfall Count Hotfix** *Link: [./tracks/marketing_shortfall_count_hotfix_20260922/](./tracks/marketing_shortfall_count_hotfix_20260922/)*
+  The 422 topic-shortfall response carries the count but the client only reads 400 bodies. Found by owner manual verification S3.10 on 2026-09-22.
 
 - [ ] **Track: Sales and Marketing SSO Parity and Demo Accounts** *Link: [./tracks/sales_marketing_sso_parity_20260829/](./tracks/sales_marketing_sso_parity_20260829/)*
   Port the Codecamp SSO redirect repair to Sales and Marketing: carry the destination through sign-in, stop overwriting the language cookie, port the forwarding-origin approval with the Codecamp callback-origin handoff, fail cleanly on unsafe return paths, surface sign-in errors, deny   no-role sessions, and provision demo-only acceptance accounts with generated credentials. Part of the five-app launch program; this is the SSO hard gate. Plan reviewed and approved 2026-08-29 (reviews/plan-review-a-2026-08-29-r5.json: pass).

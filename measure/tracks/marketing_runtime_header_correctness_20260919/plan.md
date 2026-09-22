@@ -7,3 +7,8 @@
 - [x] (21e3e42) Task: Change the `vite.config.ts` alias to use `path.resolve`. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `vite.config.ts:8`, `vitest.config.ts:12`
 - [x] (384f47f) Task: Add the Marketing role check to the callback route. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/api/auth/callback/route.ts:46-63`, `apps/sales-advantage/app/api/auth/callback/route.ts:54-74`
 - [x] (07d7971) Task: Decide the gate policy for `/settings` and `/campaigns`. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `app/settings`, `app/campaigns`, `apps/sales-advantage/proxy.ts:30-46`
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev (vinext, port 3008) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S3 in the 2026-09-22 verification run (16 checks). Owner confirmed the /settings + /campaigns gate policy. One partial defect found: the 422 topic-shortfall count never reaches the UI (client reads server messages only for HTTP 400) — fixed in hotfix track marketing_shortfall_count_hotfix_20260922. Confirmed by explicit product-owner yes on 2026-09-22.

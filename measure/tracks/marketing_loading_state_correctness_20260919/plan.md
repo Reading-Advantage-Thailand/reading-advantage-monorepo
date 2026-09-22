@@ -12,3 +12,8 @@
 - [x] (70f840e) Task: Add one `app/error.tsx` and one `app/global-error.tsx`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/layout.tsx:301-302`
 - [x] (900ff6b) Task: Warn the user before leaving with an unsaved script. Source: `docs/marketing-ux-refactor-plan.md` §3.3; Issues: `app/campaigns/[id]/video/page.tsx:181`
 - [x] (bede6d0) Task: Log the two settings failures with `logStructuredError`. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/api/settings/route.ts:59,120`, `apps/sales-advantage` structured logging usage
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev (vinext, port 3008) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S3 in the 2026-09-22 verification run (16 checks). Owner confirmed the /settings + /campaigns gate policy. One partial defect found: the 422 topic-shortfall count never reaches the UI (client reads server messages only for HTTP 400) — fixed in hotfix track marketing_shortfall_count_hotfix_20260922. Confirmed by explicit product-owner yes on 2026-09-22.

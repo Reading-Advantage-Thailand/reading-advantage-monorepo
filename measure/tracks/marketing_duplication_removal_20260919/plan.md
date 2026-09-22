@@ -12,3 +12,8 @@
 - [x] Task: Delete `app/api/health/db/route.ts` or replace it with a liveness route. Source: `docs/marketing-ux-refactor-plan.md` §7; Issues: `app/api/health/db/route.ts:6`, `app/api/ready/route.ts:83` (0e13f103c)
 - [x] Task: Rename the eleven shadowing `t` parameters in the video page. Source: `docs/marketing-ux-refactor-plan.md` §3.2; Issues: `app/campaigns/[id]/video/page.tsx:234,238,242,247,257,263,287,355,433,434,665` (929101daf)
 - [x] Task: Delete the duplicated link block from `app/page.tsx`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/page.tsx:17-44`, `app/marketing-app-shell.tsx:74-99` (34e68aed9)
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev (vinext, port 3008) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S3 in the 2026-09-22 verification run (16 checks). Owner confirmed the /settings + /campaigns gate policy. One partial defect found: the 422 topic-shortfall count never reaches the UI (client reads server messages only for HTTP 400) — fixed in hotfix track marketing_shortfall_count_hotfix_20260922. Confirmed by explicit product-owner yes on 2026-09-22.

@@ -1,0 +1,11 @@
+{
+  "track_id": "marketing_shortfall_count_hotfix_20260922",
+  "type": "bug",
+  "status": "in-progress",
+  "created_at": "2026-09-22T00:00:00Z",
+  "updated_at": "2026-09-22T00:00:00Z",
+  "description": "Marketing video workflow: the 422 topic-shortfall response carries actualCount in its message, but readBadRequestMessage only reads the body for HTTP 400, so the count never reaches the user. Found by owner manual verification S3.10 on 2026-09-22.",
+  "estimated_tasks": 1,
+  "actual_tasks": 1,
+  "deviation_notes": "Implemented 2026-09-22 (commit d67cb8c06; marketing suite 573 green). Verified by code review + new 422 unit test; live 422 requires a real AI provider, out of local scope. Implementing commit eaf897cc5 (marketing_loading_state_correctness_20260919) changed only the server message; the client display half of docs/marketing-ux-refactor-plan.md section 3.3 item 2 was missing."
+}

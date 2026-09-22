@@ -12,3 +12,8 @@
 - [x] (55f6490f6) Task: Add `.next` to `.gitignore` and to the `tsconfig.json` exclude list. Source: `docs/marketing-ux-refactor-plan.md` §2; Issues: `tsconfig.json:12-13`, stale `.next/types/` directory
 - [x] (b54d74329) Task: Clear `loading` in the settings early-return branch. Source: `docs/marketing-ux-refactor-plan.md` §4; Issues: `app/settings/page.tsx:53`
 - [x] (1f5668f4b) Task: Delete `app/api/auth/login/route.ts` and `hasLegacyMarketingAccess`. Source: `docs/marketing-ux-refactor-plan.md` §6; Issues: `app/api/auth/login/route.ts`, `app/lib/auth.ts:31,38-40`
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev (vinext, port 3008) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S3 in the 2026-09-22 verification run (16 checks). Owner confirmed the /settings + /campaigns gate policy. One partial defect found: the 422 topic-shortfall count never reaches the UI (client reads server messages only for HTTP 400) — fixed in hotfix track marketing_shortfall_count_hotfix_20260922. Confirmed by explicit product-owner yes on 2026-09-22.
