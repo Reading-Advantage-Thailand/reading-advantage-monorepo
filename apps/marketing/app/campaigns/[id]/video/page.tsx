@@ -43,16 +43,16 @@ function createSceneId(): string {
 }
 
 /**
- * Reads a server-provided message from a bad-request response.
+ * Reads a server-provided message from a workflow error response.
  * @param response The failed response to inspect.
  * @param fallback The message to use when the response has no message.
- * @returns The server message for HTTP 400 responses or the fallback.
+ * @returns The server message for HTTP 400 or 422 responses or the fallback.
  */
 async function readBadRequestMessage(
   response: Response,
   fallback: string,
 ): Promise<string> {
-  if (response.status !== 400) return fallback;
+  if (response.status !== 400 && response.status !== 422) return fallback;
 
   try {
     const data: unknown = await response.json();

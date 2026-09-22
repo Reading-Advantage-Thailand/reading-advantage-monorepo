@@ -59,6 +59,41 @@ describe("video topic research error messages", () => {
     );
   });
 
+  it("shows the server shortfall count for a 422 response", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = input.toString();
+        if (url.includes(`/api/campaigns/${campaign.id}`)) {
+          return jsonResponse(campaign);
+        }
+        if (url.includes("/api/video/projects")) return jsonResponse([]);
+        if (url.includes("/api/video/research-topics")) {
+          return jsonResponse(
+            {
+              code: "TOPIC_RESEARCH_SHORTFALL",
+              message:
+                "Topic research produced fewer than five distinct new topics (2 found)",
+              expectedCount: 5,
+              actualCount: 2,
+            },
+            422,
+          );
+        }
+        return jsonResponse({ message: "Not found" }, 404);
+      }),
+    );
+
+    render(<VideoProductionPage />);
+    expect(
+      await screen.findByText(`Video Production: ${campaign.name}`),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Research Topics" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("2 found");
+  });
+
   it("keeps the generic message for non-400 research failures", async () => {
     vi.stubGlobal(
       "fetch",
