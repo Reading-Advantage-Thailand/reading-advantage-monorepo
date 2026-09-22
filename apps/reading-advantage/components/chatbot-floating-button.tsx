@@ -45,12 +45,12 @@ export default function ChatBotFloatingChatButton({ article }: Props) {
       setLoading(true); // Start loading
 
       try {
-        const questionListMAQ = mcQuestion.results.map((item) => item.question);
+        const questionListMAQ = mcQuestion?.results?.map((item) => item.question) ?? [];
         const blacklistedQuestions = [
           ...questionListMAQ,
           saQuestion?.result?.question,
           laqQuestion?.result?.question,
-        ];
+        ].filter((q): q is string => typeof q === "string" && q.length > 0);
 
         const resOpenAi = await fetch(`/api/v1/assistant/chatbot`, {
           method: "POST",

@@ -472,6 +472,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [x] **Track: Matching Word Payload Shape Hotfix** *Link: [./tracks/matching_word_shape_hotfix_20260923/](./tracks/matching_word_shape_hotfix_20260923/)*
   The vocabulary Matching tab rendered empty cards for legacy `{ word, translation }` word payloads; the fetcher read only the canonical shape. Same bug class as reading_qa_vocab_flashcards_20260918. Found by owner manual verification S5.3 on 2026-09-23; fixed with shape normalization and live-verified.
 
+- [x] **Track: Chatbot Question Store Hotfix** *Link: [./tracks/chatbot_question_store_hotfix_20260923/](./tracks/chatbot_question_store_hotfix_20260923/)*
+  The floating chatbot could not send on article read pages: a poisoned question store made `mcQuestion.results.map` throw, then `blacklistedQuestions` serialized undefined entries as null and failed the API schema. Found by owner manual verification S5.5 on 2026-09-23; fixed with defensive chaining and payload filtering, live-verified.
+
 - [~] **Track: Marketing Shortfall Count Hotfix** *Link: [./tracks/marketing_shortfall_count_hotfix_20260922/](./tracks/marketing_shortfall_count_hotfix_20260922/)*
   The 422 topic-shortfall response carries the count but the client only reads 400 bodies. Found by owner manual verification S3.10 on 2026-09-22.
 
