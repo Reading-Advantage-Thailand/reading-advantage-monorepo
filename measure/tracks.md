@@ -16,15 +16,15 @@ This file tracks all major tracks for the project.
 ## Active Tracks (created 2026-09-19)
 
 - [x] **Track: Sales Advantage Broken UX Fixes** *Link: [./tracks/sales_broken_ux_fixes_20260919/](./tracks/sales_broken_ux_fixes_20260919/)*
-  Repair the broken user-experience items from the Sales Advantage UX audit. **Implemented 2026-09-20 (9/9 tasks, 267 tests green); manual verification pending.**
+  Repair the broken user-experience items from the Sales Advantage UX audit. **Implemented 2026-09-20 (9/9 tasks, 267 tests green); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Sales Advantage Session Contract Correctness** *Link: [./tracks/sales_session_contract_correctness_20260919/](./tracks/sales_session_contract_correctness_20260919/)*
-  Separate anonymous sessions from forbidden Sales identities in the session contract. **Implemented 2026-09-20 (4/4 tasks, 272 tests green on branch, merged to master); manual verification pending.**
+  Separate anonymous sessions from forbidden Sales identities in the session contract. **Implemented 2026-09-20 (4/4 tasks, 272 tests green on branch, merged to master); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Sales Advantage Recording and Loading Correctness** *Link: [./tracks/sales_recording_loading_correctness_20260919/](./tracks/sales_recording_loading_correctness_20260919/)*
-  Repair recording cleanup, upload errors, loading states, and request cancellation. **Implemented 2026-09-20 (10/10 tasks, 42 scoped tests green, tsc and eslint clean); manual verification pending.**
+  Repair recording cleanup, upload errors, loading states, and request cancellation. **Implemented 2026-09-20 (10/10 tasks, 42 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Sales Advantage Duplication Removal** *Link: [./tracks/sales_duplication_removal_20260919/](./tracks/sales_duplication_removal_20260919/)*
-  Remove duplicated helpers, tests, dependencies, messages, and unused theme code. **Implemented 2026-09-20 (6/6 tasks, 49 scoped tests green, tsc and eslint clean); `pnpm-lock.yaml` regeneration pending (pnpm segfaults on this machine); manual verification pending.**
+  Remove duplicated helpers, tests, dependencies, messages, and unused theme code. **Implemented 2026-09-20 (6/6 tasks, 49 scoped tests green, tsc and eslint clean); `pnpm-lock.yaml` regeneration pending (pnpm segfaults on this machine); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Sales Advantage Structural Alignment** *Link: [./tracks/sales_structural_alignment_20260919/](./tracks/sales_structural_alignment_20260919/)*
-  Align shared authentication helpers, locale handling, keyboard access, announcements, and administrator navigation. **Implemented 2026-09-20 (5/6 tasks, 35 scoped tests green, tsc and eslint clean). Task 1 (shared `packages/auth` helper move) deferred — needs a dedicated cross-app track, registered in tech-debt; Task 6 recorded as tech-debt (App Router layout constraint). Manual verification pending.**
+  Align shared authentication helpers, locale handling, keyboard access, announcements, and administrator navigation. **Implemented 2026-09-20 (5/6 tasks, 35 scoped tests green, tsc and eslint clean). Task 1 (shared `packages/auth` helper move) deferred — needs a dedicated cross-app track, registered in tech-debt; Task 6 recorded as tech-debt (App Router layout constraint); owner manual verification PASSED 2026-09-22.**
 
 - [x] **Track: Accounts Broken UX Fixes** *Link: [./tracks/accounts_broken_ux_fixes_20260919/](./tracks/accounts_broken_ux_fixes_20260919/)*
   Repair unsafe redirects, dead sign-out behavior, stale errors, focus, and logout failures. **Implemented 2026-09-20 (8/8 tasks, 93 tests green); owner manual verification PASSED 2026-09-22.**

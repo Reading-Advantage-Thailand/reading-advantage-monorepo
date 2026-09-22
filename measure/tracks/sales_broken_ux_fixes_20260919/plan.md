@@ -11,3 +11,8 @@
 - [x] Task: Delete the `ExternalLink` icon on the create-rep link, or open that link in a new tab (6210c60). Source: `docs/sales-advantage-ux-refactor-plan.md` §5; Issues: `app/[locale]/admin/create-rep/page.tsx:51-54`
 - [x] Task: Delete `app/api/lesson-complete/route.ts` (96b1628). Source: `docs/sales-advantage-ux-refactor-plan.md` §4; Issues: `app/api/lesson-complete/route.ts:17-21`
 - [x] Task: Delete the raw response body from the roleplay upload error (aceab68). Source: `docs/sales-advantage-ux-refactor-plan.md` §3; Issues: `components/roleplay-recorder.tsx:99-100,214`
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev server (port 3005) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S4 in the 2026-09-22 verification run (14 checks, all passed). Locale behavior verified live (th → Thai chat response in UI; en → English). Local setup gaps fixed during the session (sales .env.local pointed at an empty sales_advantage DB; COMPANY_AUTH_* vars added; chat model free tier discontinued upstream — switched to a working free model). One Low finding filed in tech-debt: AI stream failure surfaces as an empty assistant bubble. Confirmed by explicit product-owner yes on 2026-09-22.

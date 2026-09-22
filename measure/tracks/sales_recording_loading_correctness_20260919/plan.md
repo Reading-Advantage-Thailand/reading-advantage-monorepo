@@ -12,3 +12,8 @@
 - [x] (da248745d) Task: Add `onError` and a pending state to the approve, quiz, and lesson completion mutations. Source: `docs/sales-advantage-ux-refactor-plan.md` §4 and §5; Issues: `app/[locale]/admin/curriculum/page.tsx:21-25,109`, `components/quiz-component.tsx:38-40`, `app/[locale]/lesson/[id]/page.tsx:36-45`
 - [x] (12c6f685b) Task: Add an `AbortController` to the chat request. Source: `docs/sales-advantage-ux-refactor-plan.md` §4; Issues: `components/chat-tutor.tsx:44-66`
 - [x] (eb8105c36) Task: Add one `error.tsx` and one `not-found.tsx`. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `app/layout.tsx:8-14`
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev server (port 3005) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S4 in the 2026-09-22 verification run (14 checks, all passed). Locale behavior verified live (th → Thai chat response in UI; en → English). Local setup gaps fixed during the session (sales .env.local pointed at an empty sales_advantage DB; COMPANY_AUTH_* vars added; chat model free tier discontinued upstream — switched to a working free model). One Low finding filed in tech-debt: AI stream failure surfaces as an empty assistant bubble. Confirmed by explicit product-owner yes on 2026-09-22.

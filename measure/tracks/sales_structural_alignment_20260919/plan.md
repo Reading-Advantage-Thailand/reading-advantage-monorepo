@@ -9,3 +9,8 @@
 - [x] (2d8b55310) Task: Give the locked module and lesson cards a keyboard path. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `app/[locale]/page.tsx:165-177`, `app/[locale]/module/[slug]/page.tsx:119-126`
 - [x] (c76a96340, swept into concurrent accounting closeout commit) Task: Add `aria-live` to the quiz result, roleplay result, and chat message list. Source: `docs/sales-advantage-ux-refactor-plan.md` §3 and §4; Issues: `components/roleplay-result.tsx:103-107`, `components/quiz-component.tsx:46-99`, `components/chat-tutor.tsx:86-101`
 - [x] (5b9ac657a) Task: Remove the second Accounts introspection on administrator page navigation. Source: `docs/sales-advantage-ux-refactor-plan.md` §5; Issues: `app/[locale]/admin/layout.tsx:19-21`
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev server (port 3005) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S4 in the 2026-09-22 verification run (14 checks, all passed). Locale behavior verified live (th → Thai chat response in UI; en → English). Local setup gaps fixed during the session (sales .env.local pointed at an empty sales_advantage DB; COMPANY_AUTH_* vars added; chat model free tier discontinued upstream — switched to a working free model). One Low finding filed in tech-debt: AI stream failure surfaces as an empty assistant bubble. Confirmed by explicit product-owner yes on 2026-09-22.

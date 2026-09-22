@@ -8,3 +8,8 @@
 - [x] Task: Delete the eleven unused dependencies and add `drizzle-orm`. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `scripts/sales-curriculum-seed.ts:24`, `scripts/static-seed.ts:15` (032c3e7b5)
 - [x] Task: Decide the theme policy and delete the unused half. Source: `docs/sales-advantage-ux-refactor-plan.md` §7; Issues: `app/globals.css:4,55-84` (8d2e8cbb1)
 - [x] Task: Delete the fifteen unused message keys, or connect each one. Source: `docs/sales-advantage-ux-refactor-plan.md` §6; Issues: `messages/en.json:93`, `components/roleplay-recorder.tsx:198` (c0db2b07d)
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev server (port 3005) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S4 in the 2026-09-22 verification run (14 checks, all passed). Locale behavior verified live (th → Thai chat response in UI; en → English). Local setup gaps fixed during the session (sales .env.local pointed at an empty sales_advantage DB; COMPANY_AUTH_* vars added; chat model free tier discontinued upstream — switched to a working free model). One Low finding filed in tech-debt: AI stream failure surfaces as an empty assistant bubble. Confirmed by explicit product-owner yes on 2026-09-22.
