@@ -101,9 +101,13 @@ export async function fetchVocabularyMatchingWords(
 
   const words: MatchingWord[] = [];
   for (const item of matching) {
+    const text = item?.word?.vocabulary ?? item?.word?.word;
+    const match =
+      item?.word?.definition?.[currentLocale] ?? item?.word?.translation;
+    if (!text || !match) continue;
     words.push({
-      text: item?.word?.vocabulary,
-      match: item?.word?.definition?.[currentLocale],
+      text,
+      match,
     });
   }
   return words;

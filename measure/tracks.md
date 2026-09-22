@@ -469,6 +469,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [x] **Track: Reading Article List UUID Cast Hotfix** *Link: [./tracks/reading_article_list_uuid_cast_hotfix_20260923/](./tracks/reading_article_list_uuid_cast_hotfix_20260923/)*
   The read-page article list joined `userActivity.targetId` (text) to `articles.id` (uuid) without a cast, so the list was empty for signed-in students. Found by owner manual verification S5.1 on 2026-09-23; fixed with an `::text` cast and live-verified.
 
+- [x] **Track: Matching Word Payload Shape Hotfix** *Link: [./tracks/matching_word_shape_hotfix_20260923/](./tracks/matching_word_shape_hotfix_20260923/)*
+  The vocabulary Matching tab rendered empty cards for legacy `{ word, translation }` word payloads; the fetcher read only the canonical shape. Same bug class as reading_qa_vocab_flashcards_20260918. Found by owner manual verification S5.3 on 2026-09-23; fixed with shape normalization and live-verified.
+
 - [~] **Track: Marketing Shortfall Count Hotfix** *Link: [./tracks/marketing_shortfall_count_hotfix_20260922/](./tracks/marketing_shortfall_count_hotfix_20260922/)*
   The 422 topic-shortfall response carries the count but the client only reads 400 bodies. Found by owner manual verification S3.10 on 2026-09-22.
 

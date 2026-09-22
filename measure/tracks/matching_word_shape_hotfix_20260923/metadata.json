@@ -1,0 +1,11 @@
+{
+  "track_id": "matching_word_shape_hotfix_20260923",
+  "type": "bug",
+  "status": "completed",
+  "created_at": "2026-09-23T00:00:00Z",
+  "updated_at": "2026-09-23T00:00:00Z",
+  "description": "The vocabulary Matching tab rendered ten empty card buttons for users with legacy { word, translation } word payloads. fetchVocabularyMatchingWords read only the canonical { vocabulary, definition } shape. Same bug class as reading_qa_vocab_flashcards_20260918, in a file that track did not cover. Found by owner manual verification S5.3 on 2026-09-23.",
+  "estimated_tasks": 2,
+  "actual_tasks": 2,
+  "deviation_notes": "Normalization follows the normalizeWordPayload precedent. Live-verified in the browser during owner manual verification session S5."
+}

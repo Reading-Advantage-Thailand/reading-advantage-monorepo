@@ -7,7 +7,9 @@
 
 import { render, screen, waitFor } from "@testing-library/react";
 
-import Matching from "@/components/matching";
+import Matching, {
+  fetchVocabularyMatchingWords,
+} from "@/components/matching";
 import type { Sentence } from "@/components/practic/types";
 
 jest.mock("@/locales/client", () => ({
@@ -82,6 +84,94 @@ describe("Matching empty and error states", () => {
     render(<Matching userId="user-1" />);
 
     await waitFor(() => expect(screen.getByText("toast.error")).toBeInTheDocument());
+    expect(document.querySelector(".animate-pulse")).toBeNull();
+  });
+});
+
+/**
+ * The `user_word_records.word` jsonb column holds two shapes: the canonical
+ * `{ vocabulary, definition }` shape and the legacy `{ word, translation }`
+ * shape saved by demo seeds. The vocabulary matching game must render cards
+ * for both and drop rows that match neither shape.
+ */
+
+function makeLegacyRow(index: number) {
+  return {
+    id: `word-${index}`,
+    due: "2099-01-01",
+    word: { word: `Legacy ${index}`, translation: `คำศัพท์ ${index}` },
+  };
+}
+
+function makeCanonicalRow(index: number) {
+  return {
+    id: `word-${index}`,
+    due: "2099-01-01",
+    word: {
+      vocabulary: `Canonical ${index}`,
+      definition: { en: `meaning ${index}`, th: `ความหมาย ${index}` },
+    },
+  };
+}
+
+describe("Matching vocabulary word payload shapes", () => {
+  beforeEach(() => {
+    (globalThis.fetch as jest.Mock) = jest.fn();
+  });
+
+  it("renders legacy-shape rows as cards with the word text and translation", async () => {
+    const rows = Array.from({ length: 5 }, (_, i) => makeLegacyRow(i));
+    (globalThis.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ word: rows }),
+    });
+
+    render(
+      <Matching userId="user-1" fetchWords={fetchVocabularyMatchingWords} />
+    );
+
+    await waitFor(() => expect(screen.getByText("Legacy 0")).toBeInTheDocument());
+    expect(screen.getByText("คำศัพท์ 0")).toBeInTheDocument();
+    expect(document.querySelector(".animate-pulse")).toBeNull();
+  });
+
+  it("renders canonical-shape rows as cards with the vocabulary and definition", async () => {
+    const rows = Array.from({ length: 5 }, (_, i) => makeCanonicalRow(i));
+    (globalThis.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ word: rows }),
+    });
+
+    render(
+      <Matching userId="user-1" fetchWords={fetchVocabularyMatchingWords} />
+    );
+
+    await waitFor(() =>
+      expect(screen.getByText("Canonical 0")).toBeInTheDocument()
+    );
+    expect(screen.getByText("meaning 0")).toBeInTheDocument();
+    expect(document.querySelector(".animate-pulse")).toBeNull();
+  });
+
+  it("filters out rows that match neither payload shape", async () => {
+    const rows = [
+      ...Array.from({ length: 5 }, (_, i) => makeLegacyRow(i)),
+      { id: "junk-1", due: "2099-01-01", word: { foo: "Junk One" } },
+      { id: "junk-2", due: "2099-01-01", word: null },
+    ];
+    (globalThis.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ word: rows }),
+    });
+
+    render(
+      <Matching userId="user-1" fetchWords={fetchVocabularyMatchingWords} />
+    );
+
+    await waitFor(() => expect(screen.getByText("Legacy 0")).toBeInTheDocument());
+    expect(screen.queryByText("Junk One")).not.toBeInTheDocument();
+    expect(screen.queryByText("foo")).not.toBeInTheDocument();
+    expect(screen.getAllByText(/^Legacy \d$/)).toHaveLength(5);
     expect(document.querySelector(".animate-pulse")).toBeNull();
   });
 });
