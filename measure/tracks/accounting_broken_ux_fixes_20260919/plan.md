@@ -11,3 +11,8 @@
 - [x] Task: Export `DEFAULT_ACCOUNTING_ORIGIN` and import it in `proxy.ts`. Source: `docs/accounting-ux-refactor-plan.md` §4.2; Issues: `app/lib/public-url.ts:1`, `proxy.ts:38` — 925852b69
 - [x] Task: Delete the `as string` cast in the reject route. Source: `docs/accounting-ux-refactor-plan.md` §3; Issues: `app/api/submissions/[id]/reject/route.ts:135` — 1e3b2d19e
 - [x] Task: Replace the `null` Suspense fallback on the login page. Source: `docs/accounting-ux-refactor-plan.md` §4.3; Issues: `app/login/page.tsx:45` — d4c9b80b4
+
+
+## Owner Manual Verification — PASSED 2026-09-22
+
+Environment: local dev server (port 3010) with Docker Postgres `accounting` DB and a local S3 mock for evidence storage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence checklist: session S2 in the 2026-09-22 verification run (15 checks, all passed). Owner confirmed the THB/USD/JPY currency allowlist. One blocking defect was found and fixed during the session (sso_dev_cookie_prefix_hotfix_20260922: __Host- OIDC cookies rejected by browsers in plain-HTTP dev). Confirmed by explicit product-owner yes on 2026-09-22.

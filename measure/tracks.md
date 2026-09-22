@@ -38,15 +38,15 @@ This file tracks all major tracks for the project.
   Align package exports, server-owned catalogues, confirmation controls, visual contrast, and authorization coverage. **Implemented 2026-09-20 (6/6 tasks, 56 scoped tests green, admin routes at 100% coverage, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
 
 - [x] **Track: Accounting Broken UX Fixes** *Link: [./tracks/accounting_broken_ux_fixes_20260919/](./tracks/accounting_broken_ux_fixes_20260919/)*
-  Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects. **Implemented 2026-09-20 (9/9 tasks, 245 tests green, one pre-existing auth-import timeout); manual verification pending.**
+  Repair local sign-in, derived-rate, refresh, idempotency, redirect, and login-rendering defects. **Implemented 2026-09-20 (9/9 tasks, 245 tests green, one pre-existing auth-import timeout); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Accounting Money Correctness** *Link: [./tracks/accounting_money_correctness_20260919/](./tracks/accounting_money_correctness_20260919/)*
-  Correct currency exponents, date zones, minor-unit display, and major-unit previews. **Implemented 2026-09-20 (6/6 tasks); manual verification pending.**
+  Correct currency exponents, date zones, minor-unit display, and major-unit previews. **Implemented 2026-09-20 (6/6 tasks); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Accounting Loading State Correctness** *Link: [./tracks/accounting_loading_state_correctness_20260919/](./tracks/accounting_loading_state_correctness_20260919/)*
-  Add error recovery, server-side pending filtering, and export date controls. **Implemented 2026-09-20 (3/3 tasks, 18 scoped tests green); manual verification pending.**
+  Add error recovery, server-side pending filtering, and export date controls. **Implemented 2026-09-20 (3/3 tasks, 18 scoped tests green); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Accounting Duplication Removal** *Link: [./tracks/accounting_duplication_removal_20260919/](./tracks/accounting_duplication_removal_20260919/)*
-  Consolidate repeated route helpers and library test locations. **Implemented 2026-09-20 (2/2 tasks, 78 scoped tests green, tsc and eslint clean); manual verification pending.**
+  Consolidate repeated route helpers and library test locations. **Implemented 2026-09-20 (2/2 tasks, 78 scoped tests green, tsc and eslint clean); owner manual verification PASSED 2026-09-22.**
 - [x] **Track: Accounting Structural Alignment** *Link: [./tracks/accounting_structural_alignment_20260919/](./tracks/accounting_structural_alignment_20260919/)*
-  Align origin checks, security headers, history views, and settled-currency validation. **Implemented 2026-09-20 (4/4 tasks, 92 app + 52 backend scoped tests green, tsc clean); `currencySchema` narrowed to THB/USD/JPY in `packages/backend` — confirm the allowlist; manual verification pending.**
+  Align origin checks, security headers, history views, and settled-currency validation. **Implemented 2026-09-20 (4/4 tasks, 92 app + 52 backend scoped tests green, tsc clean); `currencySchema` narrowed to THB/USD/JPY in `packages/backend` — confirm the allowlist; owner manual verification PASSED 2026-09-22.**
 
 - [x] **Track: Marketing Broken UX Fixes** *Link: [./tracks/marketing_broken_ux_fixes_20260919/](./tracks/marketing_broken_ux_fixes_20260919/)*
   Repair scene limits, masked settings, pending controls, labels, stale artifacts, and dead login code. **Implemented 2026-09-20 (10/10 tasks, 520 tests green); manual verification pending.**
@@ -462,6 +462,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [~] **Track: Codecamp SSO Redirect Repair** *Link: [./tracks/codecamp_sso_redirect_repair_20260820/](./tracks/codecamp_sso_redirect_repair_20260820/)*
   Repair the company SSO redirect chain: carry the destination through sign-in, stop overwriting the learner's language cookie, honor the Cloud Run forwarding hop in every auth route, and surface sign-in errors.
+
+- [~] **Track: SSO Dev Cookie Prefix Hotfix** *Link: [./tracks/sso_dev_cookie_prefix_hotfix_20260922/](./tracks/sso_dev_cookie_prefix_hotfix_20260922/)*
+  Real browsers reject the `__Host-` OIDC cookies without `Secure`, so local plain-HTTP SSO sign-in cannot complete for accounting, sales, marketing, or codecamp. Found by owner manual verification S2.1 on 2026-09-22; blocks local sessions S2–S4.
 
 - [ ] **Track: Sales and Marketing SSO Parity and Demo Accounts** *Link: [./tracks/sales_marketing_sso_parity_20260829/](./tracks/sales_marketing_sso_parity_20260829/)*
   Port the Codecamp SSO redirect repair to Sales and Marketing: carry the destination through sign-in, stop overwriting the language cookie, port the forwarding-origin approval with the Codecamp callback-origin handoff, fail cleanly on unsafe return paths, surface sign-in errors, deny   no-role sessions, and provision demo-only acceptance accounts with generated credentials. Part of the five-app launch program; this is the SSO hard gate. Plan reviewed and approved 2026-08-29 (reviews/plan-review-a-2026-08-29-r5.json: pass).
