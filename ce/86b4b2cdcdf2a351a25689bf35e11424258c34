@@ -1,0 +1,5 @@
+Owner Manual Verification — PASSED 2026-09-22 (session S1, 20/20 checks).
+Environment: local dev server (accounts app, port 3007) with Docker Postgres; browser-driven via Kimi WebBridge; verify-admin local account.
+Manual verification: sign-in/sign-out, session persistence, role-based redirects, password change, error surfaces — all live-checked.
+Findings: filed in measure/tech-debt.md (session S1 items).
+Confirmation: explicit product-owner yes on 2026-09-22.
