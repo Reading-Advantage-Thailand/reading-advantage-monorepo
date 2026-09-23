@@ -104,6 +104,8 @@ export default {
       migrationFailed: "遷移失敗",
       invalidEmailOrPassword: "無效的郵箱或密碼",
       failedToSignInAfterMigration: "遷移後登入失敗",
+      usernameLabel: "使用者名稱",
+      passwordLabel: "密碼",
       emailPlaceholder: "name@example.com",
       passwordPlaceholder: "密碼",
     },
@@ -233,6 +235,24 @@ export default {
       },
     },
     student: {
+      goalsPage: {
+        title: "學習目標",
+        subtitle: "設定目標，追蹤進度，在學習旅程中保持動力",
+        totalGoals: "總目標數",
+        onTrack: "按計畫進行",
+        behindSchedule: "{count} 項落後於計畫",
+        completionRate: "完成率",
+        active: "進行中",
+        completed: "已完成",
+        activeCount: "{count} 項進行中",
+        all: "全部",
+        newGoal: "新增目標",
+        noGoalsYet: "尚無目標",
+        emptyStateDescription: "建立您的第一個學習目標，開始追蹤進度",
+        createFirstGoal: "建立第一個目標",
+        loadError: "載入目標失敗",
+        loadErrorDescription: "載入目標時發生問題，請稍後再試。",
+      },
       dashboard: {
         xpVelocity: {
           title: "XP 速度",

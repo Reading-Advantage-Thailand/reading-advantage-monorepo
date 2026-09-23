@@ -109,6 +109,8 @@ export default {
       migrationFailed: "Migration failed",
       invalidEmailOrPassword: "Invalid email or password",
       failedToSignInAfterMigration: "Failed to sign in after migration",
+      usernameLabel: "Username",
+      passwordLabel: "Password",
       emailPlaceholder: "name@example.com",
       passwordPlaceholder: "password",
     },
@@ -254,6 +256,27 @@ export default {
       },
     },
     student: {
+      goalsPage: {
+        title: "Learning Goals",
+        subtitle:
+          "Set goals, track progress, and stay motivated on your learning journey",
+        totalGoals: "Total Goals",
+        onTrack: "On Track",
+        behindSchedule: "{count} behind schedule",
+        completionRate: "Completion Rate",
+        active: "Active",
+        completed: "Completed",
+        activeCount: "{count} active",
+        all: "All",
+        newGoal: "New Goal",
+        noGoalsYet: "No goals yet",
+        emptyStateDescription:
+          "Create your first learning goal to start tracking your progress",
+        createFirstGoal: "Create Your First Goal",
+        loadError: "Failed to load goals",
+        loadErrorDescription:
+          "Something went wrong while loading your goals. Please try again later.",
+      },
       dashboard: {
         xpVelocity: {
           title: "XP Velocity",

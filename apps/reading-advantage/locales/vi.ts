@@ -107,6 +107,8 @@ export default {
       migrationFailed: "Di chuyển thất bại",
       invalidEmailOrPassword: "Email hoặc mật khẩu không hợp lệ",
       failedToSignInAfterMigration: "Đăng nhập sau khi di chuyển thất bại",
+      usernameLabel: "Tên đăng nhập",
+      passwordLabel: "Mật khẩu",
       emailPlaceholder: "name@example.com",
       passwordPlaceholder: "mật khẩu",
     },
@@ -251,6 +253,27 @@ export default {
       },
     },
     student: {
+      goalsPage: {
+        title: "Mục tiêu học tập",
+        subtitle:
+          "Đặt mục tiêu, theo dõi tiến độ và giữ động lực trên hành trình học tập của bạn",
+        totalGoals: "Tổng số mục tiêu",
+        onTrack: "Đúng tiến độ",
+        behindSchedule: "{count} mục tiêu chậm tiến độ",
+        completionRate: "Tỷ lệ hoàn thành",
+        active: "Đang thực hiện",
+        completed: "Đã hoàn thành",
+        activeCount: "{count} đang thực hiện",
+        all: "Tất cả",
+        newGoal: "Mục tiêu mới",
+        noGoalsYet: "Chưa có mục tiêu nào",
+        emptyStateDescription:
+          "Tạo mục tiêu học tập đầu tiên của bạn để bắt đầu theo dõi tiến độ",
+        createFirstGoal: "Tạo mục tiêu đầu tiên",
+        loadError: "Không thể tải mục tiêu",
+        loadErrorDescription:
+          "Đã xảy ra lỗi khi tải mục tiêu của bạn. Vui lòng thử lại sau.",
+      },
       dashboard: {
         xpVelocity: {
           title: "Tốc độ XP",

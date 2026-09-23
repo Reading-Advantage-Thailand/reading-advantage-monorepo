@@ -40,7 +40,7 @@ export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
         <div className="grid gap-2">
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="username">
-              Username
+              {t('pages.signInForm.usernameLabel')}
             </Label>
             <Input
               id="username"
@@ -57,7 +57,7 @@ export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
           </div>
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="password">
-              Password
+              {t('pages.signInForm.passwordLabel')}
             </Label>
             <Input
               id="password"

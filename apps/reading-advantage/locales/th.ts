@@ -108,6 +108,8 @@ export default {
       migrationFailed: "การย้ายล้มเหลว",
       invalidEmailOrPassword: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
       failedToSignInAfterMigration: "เข้าสู่ระบบหลังการย้ายล้มเหลว",
+      usernameLabel: "ชื่อผู้ใช้",
+      passwordLabel: "รหัสผ่าน",
       emailPlaceholder: "name@example.com",
       passwordPlaceholder: "รหัสผ่าน",
     },
@@ -251,6 +253,27 @@ export default {
       },
     },
     student: {
+      goalsPage: {
+        title: "เป้าหมายการเรียนรู้",
+        subtitle:
+          "ตั้งเป้าหมาย ติดตามความคืบหน้า และรักษาแรงจูงใจในการเรียนรู้ของคุณ",
+        totalGoals: "เป้าหมายทั้งหมด",
+        onTrack: "ตามแผน",
+        behindSchedule: "{count} ตามหลังกำหนด",
+        completionRate: "อัตราการสำเร็จ",
+        active: "กำลังดำเนินการ",
+        completed: "เสร็จสมบูรณ์",
+        activeCount: "{count} ที่กำลังดำเนินการ",
+        all: "ทั้งหมด",
+        newGoal: "เป้าหมายใหม่",
+        noGoalsYet: "ยังไม่มีเป้าหมาย",
+        emptyStateDescription:
+          "สร้างเป้าหมายการเรียนรู้แรกของคุณเพื่อเริ่มติดตามความคืบหน้า",
+        createFirstGoal: "สร้างเป้าหมายแรกของคุณ",
+        loadError: "โหลดเป้าหมายไม่สำเร็จ",
+        loadErrorDescription:
+          "เกิดข้อผิดพลาดขณะโหลดเป้าหมายของคุณ กรุณาลองอีกครั้งภายหลัง",
+      },
       dashboard: {
         xpVelocity: {
           title: "ความเร็ว XP",

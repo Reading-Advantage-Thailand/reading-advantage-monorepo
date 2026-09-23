@@ -475,6 +475,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [x] **Track: Chatbot Question Store Hotfix** *Link: [./tracks/chatbot_question_store_hotfix_20260923/](./tracks/chatbot_question_store_hotfix_20260923/)*
   The floating chatbot could not send on article read pages: a poisoned question store made `mcQuestion.results.map` throw, then `blacklistedQuestions` serialized undefined entries as null and failed the API schema. Found by owner manual verification S5.5 on 2026-09-23; fixed with defensive chaining and payload filtering, live-verified.
 
+- [x] **Track: Goals and Signin i18n Hotfix** *Link: [./tracks/goals_signin_i18n_hotfix_20260923/](./tracks/goals_signin_i18n_hotfix_20260923/)*
+  The student goals page and signin labels kept hardcoded English after the structural track's FR-6. Added the `pages.student.goalsPage` scope and signin label keys in all five locales. Found by owner manual verification S5.19 on 2026-09-23; live-verified in Thai.
+
 - [~] **Track: Marketing Shortfall Count Hotfix** *Link: [./tracks/marketing_shortfall_count_hotfix_20260922/](./tracks/marketing_shortfall_count_hotfix_20260922/)*
   The 422 topic-shortfall response carries the count but the client only reads 400 bodies. Found by owner manual verification S3.10 on 2026-09-22.
 

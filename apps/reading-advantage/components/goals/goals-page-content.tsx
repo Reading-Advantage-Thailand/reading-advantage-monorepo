@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Plus, Target, TrendingUp, CheckCircle2, AlertCircle } from "lucide-react";
+import { useScopedI18n } from "@/locales/client";
 import { GoalCard } from "./goal-card";
 import { CreateGoalDialog } from "./create-goal-dialog";
 import { GoalRecommendations } from "./goal-recommendations";
@@ -43,6 +44,7 @@ export default function GoalsPageContent({
   initialGoals,
   initialSummary,
 }: GoalsPageContentProps) {
+  const t = useScopedI18n("pages.student.goalsPage");
   const [goals, setGoals] = React.useState<Goal[]>(initialGoals);
   const [summary, setSummary] = React.useState<GoalSummary | null>(initialSummary);
   const [showCreateDialog, setShowCreateDialog] = React.useState(false);
@@ -89,33 +91,37 @@ export default function GoalsPageContent({
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total Goals</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                {t("totalGoals")}
+              </CardTitle>
               <Target className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{summary.totalGoals}</div>
               <p className="text-xs text-muted-foreground">
-                {summary.activeGoals} active
+                {t("activeCount", { count: summary.activeGoals })}
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">On Track</CardTitle>
+              <CardTitle className="text-sm font-medium">{t("onTrack")}</CardTitle>
               <TrendingUp className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{summary.onTrackGoals}</div>
               <p className="text-xs text-muted-foreground">
-                {summary.behindScheduleGoals} behind schedule
+                {t("behindSchedule", { count: summary.behindScheduleGoals })}
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                {t("completionRate")}
+              </CardTitle>
               <CheckCircle2 className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
@@ -136,27 +142,27 @@ export default function GoalsPageContent({
             size="sm"
             onClick={() => setFilter("all")}
           >
-            All
+            {t("all")}
           </Button>
           <Button
             variant={filter === "active" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("active")}
           >
-            Active
+            {t("active")}
           </Button>
           <Button
             variant={filter === "completed" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("completed")}
           >
-            Completed
+            {t("completed")}
           </Button>
         </div>
 
         <Button onClick={() => setShowCreateDialog(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          New Goal
+          {t("newGoal")}
         </Button>
       </div>
 
@@ -166,13 +172,13 @@ export default function GoalsPageContent({
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Target className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No goals yet</h3>
+              <h3 className="text-lg font-semibold mb-2">{t("noGoalsYet")}</h3>
               <p className="text-muted-foreground text-center mb-4">
-                Create your first learning goal to start tracking your progress
+                {t("emptyStateDescription")}
               </p>
               <Button onClick={() => setShowCreateDialog(true)}>
                 <Plus className="mr-2 h-4 w-4" />
-                Create Your First Goal
+                {t("createFirstGoal")}
               </Button>
             </CardContent>
           </Card>

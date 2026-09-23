@@ -1,0 +1,11 @@
+{
+  "track_id": "goals_signin_i18n_hotfix_20260923",
+  "type": "bug",
+  "status": "completed",
+  "created_at": "2026-09-23T00:00:00Z",
+  "updated_at": "2026-09-23T00:00:00Z",
+  "description": "Student goals page and signin form labels kept hardcoded English after structural_ux_alignment_20260911 FR-6. Thai users saw English strings. Added the pages.student.goalsPage scope and signin label keys in all five locales and wired both surfaces. Found by owner manual verification S5.19 on 2026-09-23.",
+  "estimated_tasks": 3,
+  "actual_tasks": 3,
+  "deviation_notes": "cn/tw/vi locale files also required the keys (invariant test). Live-verified in Thai locale during session S5."
+}

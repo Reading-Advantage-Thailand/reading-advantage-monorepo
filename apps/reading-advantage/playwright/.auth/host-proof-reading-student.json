@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "session_token",
+      "value": "b3ce1329729e59207081314c3efa330129dba8058899217176d57872a38c19e7",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1789510561.781,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "NEXT_LOCALE",
+      "value": "en",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}

@@ -102,6 +102,8 @@ export default {
       migrationFailed: "迁移失败",
       invalidEmailOrPassword: "无效的邮箱或密码",
       failedToSignInAfterMigration: "迁移后登录失败",
+      usernameLabel: "用户名",
+      passwordLabel: "密码",
       emailPlaceholder: "name@example.com",
       passwordPlaceholder: "密码",
     },
@@ -231,6 +233,24 @@ export default {
       },
     },
     student: {
+      goalsPage: {
+        title: "学习目标",
+        subtitle: "设定目标，跟踪进度，在学习旅程中保持动力",
+        totalGoals: "总目标数",
+        onTrack: "按计划进行",
+        behindSchedule: "{count} 项落后于计划",
+        completionRate: "完成率",
+        active: "进行中",
+        completed: "已完成",
+        activeCount: "{count} 项进行中",
+        all: "全部",
+        newGoal: "新建目标",
+        noGoalsYet: "暂无目标",
+        emptyStateDescription: "创建你的第一个学习目标，开始跟踪进度",
+        createFirstGoal: "创建第一个目标",
+        loadError: "加载目标失败",
+        loadErrorDescription: "加载目标时出现问题，请稍后再试。",
+      },
       dashboard: {
         xpVelocity: {
           title: "XP 速度",
