@@ -56,7 +56,6 @@ async function fetchActivityData(timeframe: string, schoolId?: string | null, cl
           createdAt: userActivity.createdAt,
           timer: userActivity.timer,
           userCreatedAt: users.createdAt,
-          classroomStudentId: classroomStudents.id,
         })
         .from(userActivity)
         .innerJoin(users, eq(userActivity.userId, users.id))
@@ -68,7 +67,8 @@ async function fetchActivityData(timeframe: string, schoolId?: string | null, cl
     timer: activity.timer,
     user: {
       createdAt: activity.userCreatedAt,
-      studentClassrooms: activity.classroomStudentId ? [{ id: activity.classroomStudentId }] : [],
+      studentClassrooms:
+        'classroomStudentId' in activity && activity.classroomStudentId ? [{ id: activity.classroomStudentId }] : [],
     },
   }));
 
