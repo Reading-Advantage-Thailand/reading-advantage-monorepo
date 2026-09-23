@@ -1,0 +1,6 @@
+Owner Manual Verification — PASSED 2026-09-22 (session S4, 14/14 checks).
+Environment: local dev server (sales app, port 3005) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions.
+Manual verification: session contract (anonymous vs Sales identities), recording upload + loading correctness, locale behavior (th -> Thai, en -> English chat responses), duplication-removal surfaces.
+Local setup fixed in-session: sales .env.local pointed at an empty sales_advantage DB; COMPANY_AUTH_* vars added; chat model free tier discontinued upstream (switched to a working free model).
+Findings: one Low filed in measure/tech-debt.md (AI stream failure surfaces as an empty assistant bubble).
+Confirmation: explicit product-owner yes on 2026-09-22.
