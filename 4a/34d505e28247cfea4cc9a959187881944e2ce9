@@ -1,0 +1,5 @@
+Owner Manual Verification — PASSED 2026-09-22 (session S2, 15/15 checks).
+Environment: local dev server (accounting app, port 3010) with Docker Postgres reading_advantage; mock S3 on :9000 for evidence uploads; browser-driven via Kimi WebBridge with direct DB assertions.
+Manual verification: OIDC sign-in round-trip, expense/bill submission with evidence, settlement THB valuation, approval flows, currency allowlist (owner-confirmed THB/USD/JPY), shortfall 422 body handling.
+Findings fixed in-session: __Host- cookie prefix rejected on plain-HTTP dev (sso_dev_cookie_prefix_hotfix_20260922); 422 shortfall body unread (marketing_shortfall_count_hotfix_20260922).
+Confirmation: explicit product-owner yes on 2026-09-22.
