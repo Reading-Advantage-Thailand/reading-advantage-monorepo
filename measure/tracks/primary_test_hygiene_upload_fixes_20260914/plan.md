@@ -9,10 +9,10 @@ radius is the HTTP surface, covered by the new route-level tests._
 
 ## Phase 1: Contract & Schema Definition
 
-- [ ] Task 1: Enumerate the 97 source-grep tests and publish the batch map
-    - [ ] Run the FR-1.4 grep over `apps/primary-advantage --glob "*.test.*"` and list every source-string assertion
-    - [ ] Assign each to a domain batch keyed to its originating track file (`authorization-hardening-static`, `broken-ux-fixes`, `loading-state-invariants`, `structural-alignment`, `component-deduplication`, `audio-highlight`, `aria-labels-i18n`, stragglers)
-    - [ ] Write `measure/tracks/primary_test_hygiene_upload_fixes_20260914/grep-test-inventory.md` with batch, file, assertion count, and planned behavioral replacement per entry
+- [x] Task 1: Enumerate the 97 source-grep tests and publish the batch map (7fa7b3f)
+    - [x] Run the FR-1.4 grep over `apps/primary-advantage --glob "*.test.*"` and list every source-string assertion
+    - [x] Assign each to a domain batch keyed to its originating track file (`authorization-hardening-static`, `broken-ux-fixes`, `loading-state-invariants`, `structural-alignment`, `component-deduplication`, `audio-highlight`, `aria-labels-i18n`, stragglers)
+    - [x] Write `measure/tracks/primary_test_hygiene_upload_fixes_20260914/grep-test-inventory.md` with batch, file, assertion count, and planned behavioral replacement per entry
 - [x] Task 2: Define the CSV upload summary contract
     - [x] Zod schema `CsvUploadSummary` (`inserted`, `skippedDuplicate`, `skippedExisting` counts) colocated per the track-6 `/schema` convention
     - [x] Export from the upload/csv schema module
@@ -73,3 +73,7 @@ _(Adapted: `measure/generate.sh` and `measure/doctor.sh` do not exist in this re
 - [x] Task 17: Registry updates
     - [x] Rewrite the three resolved bullets in `docs/primary-advantage-ux-refactor-plan.md` "Known limitations"
     - [x] Mark inventory file complete; update `metadata.json` (`actual_tasks`, deviation notes if any)
+
+## Owner Manual Verification — PASSED 2026-09-23
+
+Environment: local dev server (port 3015) against Docker Postgres primary_advantage; signed in as QA teacher (school A); browser-driven via Kimi WebBridge with direct DB assertions. Evidence: session S6 in the 2026-09-23 verification run (3 checks, all passed). S6.1: a CSV with three in-file duplicate emails plus one pre-existing email returned 200 with `inserted:1, skippedDuplicate:2, skippedExisting:1` — no 500. S6.2: the new user, classroom, and membership rows all carry the session school; a cross-school probe (same-name classroom planted in school B) created a new school-A classroom and left school B's row untouched. S6.3: the converted upload test batch (`vitest run app/api/upload`) is 6 files / 19 tests green, and the remaining `readFileSync` test files match the track-documented justified set. Local setup fix needed before the session: the pooled `DATABASE_URL` in `apps/primary-advantage/.env` carried a Prisma-style `?schema=public` that PgBouncer rejects (FATAL 08P01 on session lookup) — removed in the uncommitted local env. Confirmed by explicit product-owner yes on 2026-09-23.
