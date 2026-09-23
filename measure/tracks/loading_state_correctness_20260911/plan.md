@@ -31,7 +31,7 @@ All file paths are relative to `apps/reading-advantage/`.
 - [x] 3c60af3 Task: FR-9 explicit empty and error states in `matching.tsx`
 - [x] 3c60af3 Task: Run new tests until green; run `pnpm turbo run test --filter=reading-advantage` and `check-types`
   - Verification ran via `CI=true npx jest` (862 passed; only the two known pre-existing failures remain) and `npx tsc --noEmit` (no new errors in touched files; remaining errors belong to another track's uncommitted APK work).
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — PASSED 2026-09-23: session S5 checks S5.12-S5.15 (owner manual verification run 2026-09-23): teacher assignments table reaches page 2 (12 seeded rows, cleaned up); showcase grid issues exactly one translate request per card per locale — zero-on-revisit unverifiable locally because Google Translate credentials point to a missing file (all calls 500 and retry); system dashboard renders fully after the unjoined-column hotfix (7d7873d52); empty matching deck shows an explicit empty state with zero skeletons. Confirmed by explicit product-owner yes on 2026-09-23.
 
 ## Phase 4: Generate Docs & Doctor
 

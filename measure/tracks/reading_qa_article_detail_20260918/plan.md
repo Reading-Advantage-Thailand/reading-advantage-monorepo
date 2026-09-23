@@ -32,3 +32,7 @@ All file paths are relative to `apps/reading-advantage/` unless noted.
   - [x] Commit subject: `fix(reading): allow null type and imageDescription (track_id: reading_qa_article_detail_20260918)`. Deviation: the originally drafted 120-char subject exceeded the commitlint header-max-length of 100, so a 97-char equivalent was used.
   - [x] Attach the task summary with `git notes add` on the commit.
   - [x] Mark all tasks `[x]` with the commit SHA (7 chars) in this plan: `10c74f1`.
+
+## Owner Manual Verification — PASSED 2026-09-23
+
+Environment: local dev server (port 3000) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence: S5.21: /en/student/read/<articleId> renders the full article (Article 25 sample), no HTTP 400. Confirmed by explicit product-owner yes on 2026-09-23.

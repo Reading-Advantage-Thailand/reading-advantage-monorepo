@@ -27,7 +27,7 @@ All file paths are relative to `apps/reading-advantage/`. Depends on `broken_ux_
 - [x] Task: FR-11 delete dead code after zero-importer check per file `a3bebd8` (deviation: `system-articles.tsx` retained — two real importers)
 - [x] Task: Run `build-graph update ./graph.db` on all structurally edited files `0685c66` `4f1f62a`
 - [x] Task: Run new tests until green; run test suite, `check-types` (923 passed, 2 pre-existing failures; zero new tsc errors; `next build` blocked by unrelated APK-track dirty files)
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) **PENDING owner verification**
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — PASSED 2026-09-23: session S5 (owner manual verification run 2026-09-23): the single shared matching component rendered and played in the vocabulary tab (S5.3, S5.15); shared quiz cards, tables, and translate helper paths rendered across the student and teacher pages exercised in S5.1-S5.23 with no duplicate-implementation defects observed. Confirmed by explicit product-owner yes on 2026-09-23.
 
 ## Phase 4: Generate Docs & Doctor
 

@@ -34,7 +34,7 @@ These fixes change no data contracts. This phase pins the invariants as greppabl
 - [x] Task: FR-9 chatbot history preservation and `" : "` prefix removal `2a6c13e`
 - [x] Task: FR-10 enforce the owner-approved games auth policy `08bd3ac1` `71d4236d` (gate on page; test updated to expect the redirect per owner decision 2026-09-11)
 - [x] Task: Run new tests until green; run test suite and `check-types` (13/13 new tests; 122/124 suites pass, 2 pre-existing APK failures; 17 pre-existing tsc errors in unrelated files)
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — PASSED 2026-09-23: session S5 checks S5.1-S5.6 (owner manual verification run 2026-09-23): genre chip handler routes to /student/read with a rendered list; teacher Reports link keeps the locale; matching game renders playable cards; flashcard speech cancels before each speak; chatbot history survives close/open with no " : " prefix; anonymous games access redirects to sign-in. Three defects found during verification were hotfixed and re-verified live: read-page uuid/text join (33d7519ae), matching word payload shape (3276755a8), chatbot question-store guard (ce5296150). Confirmed by explicit product-owner yes on 2026-09-23.
 
 ## Phase 4: Generate Docs & Doctor
 

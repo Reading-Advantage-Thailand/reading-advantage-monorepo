@@ -103,3 +103,7 @@ in unrelated APK files (baseline, none in changed files).
   drop once the card leaves the calendar day (or via Easy/Hard/Again). FSRS
   parameters, rating semantics, and XP amounts unchanged (FR-5).
   `actions/flashcard.ts` untouched (owned by the vocab-flashcards track).
+
+## Owner Manual Verification — PASSED 2026-09-23
+
+Environment: local dev server (port 3000) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence: S5.23: a full 9-card review session persisted — due counter 9 -> 0, XP 64207 -> 64222 (+15), completion screen rendered. Confirmed by explicit product-owner yes on 2026-09-23.

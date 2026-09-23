@@ -72,3 +72,7 @@ All file paths are relative to `apps/reading-advantage/` unless noted.
   - [x] Commit subject: `fix(reading): restore flashcard word payload (track_id: reading_qa_vocab_flashcards_20260918)` — shortened from the plan draft to satisfy commitlint `header-max-length` (94 chars). Commit `3ec4216`.
   - [x] Attach the task summary with `git notes add` on the commit.
   - [x] Mark all tasks `[x]` with the commit SHA (7 chars) in this plan. Code commit: `3ec4216`.
+
+## Owner Manual Verification — PASSED 2026-09-23
+
+Environment: local dev server (port 3000) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions. Evidence: S5.22: the flashcard game shows the real word (example) and its Thai translation (ตัวอย่าง) after Show Answer; legacy {word, translation} rows render correctly. Confirmed by explicit product-owner yes on 2026-09-23.

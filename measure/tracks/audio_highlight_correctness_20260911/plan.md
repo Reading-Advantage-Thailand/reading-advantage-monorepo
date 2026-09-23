@@ -31,7 +31,7 @@ All file paths are relative to `apps/reading-advantage/`.
 - [x] Task: FR-7 shared highlight-class constant; apply in article and stories content components (c839061)
 - [x] Task: FR-8 stories save-to-flashcard awaits translation and saves four languages (5542974)
 - [x] Task: Run new tests until green; run `pnpm turbo run test --filter=reading-advantage` and `check-types`
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) — PASSED 2026-09-23: session S5 checks S5.7-S5.11 (owner manual verification run 2026-09-23): highlight advances sequentially 0->1->2 with no skipped sentences under simulated timeupdate (seed-article TTS audio 403s locally — environment gap); playbackRate changes at 1.5x/2x leave audio.currentTime untouched (no sentence restart); playing/hover/selected use three distinct colors (amber/emerald/blue) from the shared constants in both article and stories views; useAudioSegment pause halts without restart and leaks no intervals; stories save-to-flashcard awaits all four translations in one click (code-verified; no stories seeded locally). Confirmed by explicit product-owner yes on 2026-09-23.
 
 ## Phase 4: Generate Docs & Doctor
 
