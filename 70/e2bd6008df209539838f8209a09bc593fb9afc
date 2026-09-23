@@ -1,0 +1,5 @@
+Owner Manual Verification — PASSED 2026-09-22 (session S3, 15/16 checks).
+Environment: local dev server (marketing app, port 3008, vinext) with Docker Postgres; browser-driven via Kimi WebBridge.
+Manual verification: page renders, forms, gating policy (owner-confirmed), locale behavior, runtime header correctness.
+Findings: filed in measure/tech-debt.md (session S3 items).
+Confirmation: explicit product-owner yes on 2026-09-22.
