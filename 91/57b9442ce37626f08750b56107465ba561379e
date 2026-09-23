@@ -1,0 +1,5 @@
+Owner Manual Verification — PASSED 2026-09-23 (session S6, 3/3 checks).
+Environment: local dev server (primary app, port 3015) with Docker Postgres primary_advantage; signed in as QA teacher (school A); browser-driven via Kimi WebBridge with direct DB assertions.
+Manual verification: S6.1 duplicate-email CSV returns 200 with inserted/skippedDuplicate/skippedExisting summary (no 500); S6.2 writes land under the session school, cross-school probe clean (same-name classroom in school B untouched); S6.3 converted upload test batch green (6 files / 19 tests).
+Local setup fixed in-session: pooled DATABASE_URL carried Prisma-style ?schema=public rejected by PgBouncer (uncommitted env fix).
+Confirmation: explicit product-owner yes on 2026-09-23.
