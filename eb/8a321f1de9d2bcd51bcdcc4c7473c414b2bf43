@@ -1,0 +1,6 @@
+Owner Manual Verification — PASSED 2026-09-23 (session S5, 23 checks: 21 PASS, 2 PARTIAL, 0 FAIL).
+Environment: local dev server (reading app, port 3000) with Docker Postgres reading_advantage; browser-driven via Kimi WebBridge with direct DB assertions.
+Manual verification: genre navigation, teacher reports link, matching game, flashcard speech cancel, chatbot history, games auth, highlight tracking, speed-switch no-restart, highlight colors, audio pause semantics, stories save, assignments pagination, showcase translate dedup, system dashboard, empty states, server-side dashboard/goals data, cross-school guard, server placement XP, Thai locale, keyboard/a11y, article detail 200, flashcard content, SRS persistence (XP 64207 -> 64222 live).
+Partials accepted by owner: S5.13 zero-on-revisit unverifiable (local Google Translate credentials point to a missing file); S5.16 residual client fetches in sidebar-goals-widget and activity-timeline (outside FR-1 listed files).
+Defects found and hotfixed in-session: 33d7519ae (uuid/text join), 3276755a8 (matching word shape), ce5296150 (chatbot question store), 3f85a13a4 (goals/signin i18n), 7d7873d52 (system metrics join). Out-of-scope findings filed in measure/tech-debt.md.
+Confirmation: explicit product-owner yes on 2026-09-23.
