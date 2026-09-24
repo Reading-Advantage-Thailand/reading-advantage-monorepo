@@ -1,56 +1,34 @@
-# Use the official Node.js 20 Alpine image for smaller size
-FROM node:22-alpine AS builder
+# syntax=docker/dockerfile:1
 
+FROM node:22-alpine AS base
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@11.8.0 --activate
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json package-lock.json* ./
-RUN npm ci
+FROM base AS deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .pnpmfile.cjs ./
+COPY apps ./apps
+COPY packages ./packages
+RUN pnpm install --frozen-lockfile
 
-COPY . .
-
-# Generate Prisma client and run Next.js build
-# DATABASE_URL is needed during build for Prisma client generation
-# It will be provided via Cloud Build's secretEnv or substitutions
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
-
-# NEXT_PUBLIC_* vars are inlined at build time, so the bucket name must be
-# present during the build.
+FROM deps AS builder
+ENV NODE_ENV=production
+# NEXT_PUBLIC_* vars are inlined at build time; the bucket name must be present.
 ARG NEXT_PUBLIC_STORAGE_BUCKET_NAME
 ENV NEXT_PUBLIC_STORAGE_BUCKET_NAME=${NEXT_PUBLIC_STORAGE_BUCKET_NAME}
+RUN pnpm turbo run build --filter=primary-advantage
 
-RUN npm run prisma:generate && npm run build
-
-
-
-# Use a smaller image for production deployment
 FROM node:22-alpine AS runner
-
-WORKDIR /app
-
-# Set environment variables for Next.js production
+ENV HOSTNAME=0.0.0.0
 ENV NODE_ENV=production
-# Set host to 0.0.0.0 for Cloud Run
-ENV HOSTNAME="0.0.0.0"
-# Set port to 3000 for Cloud Run
-ENV PORT=3000
-
-# Copy necessary files from the builder stage
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
-# Copy Prisma schema and generated client for runtime
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-
-# Copy data directory containing JSON prompt files
-COPY --from=builder /app/data ./data
-
-# Expose the port
-EXPOSE 3000
-
-# Start the Next.js application
-CMD ["npm", "run", "start"]
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=8080
+WORKDIR /app
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+COPY --from=builder --chown=nextjs:nodejs /app/apps/primary-advantage/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/primary-advantage/.next/static ./apps/primary-advantage/.next/static
+USER nextjs
+EXPOSE 8080
+CMD ["node", "apps/primary-advantage/server.js"]
