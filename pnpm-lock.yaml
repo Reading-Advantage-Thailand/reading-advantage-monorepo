@@ -2590,6 +2590,9 @@ importers:
 
   packages/backend:
     dependencies:
+      '@reading-advantage/auth':
+        specifier: workspace:*
+        version: link:../auth
       '@reading-advantage/db':
         specifier: workspace:*
         version: link:../db
