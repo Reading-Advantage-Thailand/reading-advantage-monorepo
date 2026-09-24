@@ -150,7 +150,7 @@ export function createSpellweaversRunController(
 
   return Object.freeze({
     snapshot,
-    choose(action): SpellweaversRunSelection {
+    choose(action: InputActionId): SpellweaversRunSelection {
       const lane = SPELLWEAVERS_RUN_ACTIONS.indexOf(action as typeof SPELLWEAVERS_RUN_ACTIONS[number]);
       if (destroyed || phase !== "running" || lane < 0) {
         return { accepted: false, correct: false, progressed: false, completed: phase === "victory", snapshot: snapshot() };
@@ -158,7 +158,7 @@ export function createSpellweaversRunController(
       playerLane = lane;
       return { accepted: true, correct: false, progressed: false, completed: false, snapshot: snapshot() };
     },
-    tick(deltaMs): SpellweaversRunSnapshot {
+    tick(deltaMs: number): SpellweaversRunSnapshot {
       if (!destroyed && phase === "running") {
         orbProgress += Math.max(0, Math.min(deltaMs, 250)) * SPELLWEAVERS_RUN_ORB_SPEED / 1000;
         if (orbProgress >= 240) {
@@ -186,7 +186,7 @@ export function createSpellweaversRunController(
       return snapshot();
     },
     capture: snapshot,
-    restore(state): void {
+    restore(state: SpellweaversRunSnapshot): void {
       if (typeof state !== "object" || state === null) throw new Error("Spellweaver's Run responsive state is invalid");
       const expectedIndex = Number.isInteger(state.targetIndex) && state.targetIndex >= 0 && state.targetIndex <= targets.length;
       const validCounters = Number.isInteger(state.correctAnswers) && state.correctAnswers === state.targetIndex

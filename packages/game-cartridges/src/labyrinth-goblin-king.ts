@@ -168,7 +168,7 @@ export function createLabyrinthGoblinKingController(input: unknown, deliver: Com
     const sentence = sentences[Math.min(sentenceIndex, sentences.length - 1)]!;
     return Object.freeze({ seed, phase, sentenceIndex, sentenceCount: sentences.length, targetIndex, sentenceWordCount: sentence.words.length, prompt: sentence.prompt, answer: sentence.words[Math.min(targetIndex, sentence.words.length - 1)]!, builtSentence: sentence.words.slice(0, targetIndex).join(" "), player: Object.freeze({ ...player }), orbs: Object.freeze(orbs.map((orb) => Object.freeze({ ...orb }))), goblins: Object.freeze(goblins.map((goblin) => Object.freeze({ ...goblin }))), stepAccumulatorMs, mazeSteps, spawnWave, correctAnswers, totalAttempts, score, goblinsEaten, ...(lastOutcome ? { lastOutcome } : {}), destroyed });
   };
-  const finish = (outcome: GameTerminalOutcome): void => {
+  const finish = (outcome: Exclude<GameTerminalOutcome, "complete">): void => {
     phase = outcome; const accuracy = totalAttempts === 0 ? 0 : correctAnswers / totalAttempts;
     completion.complete(gameResultsSchema.parse({ correctAnswers, totalAttempts, accuracy, score, xp: calculateXp({ correctAnswers, totalAttempts, accuracy }, { xpPerCorrect: 20, xpPerAccuracyPoint: 10 }) }));
   };
@@ -213,8 +213,8 @@ export function createLabyrinthGoblinKingController(input: unknown, deliver: Com
     });
   };
   return Object.freeze({ snapshot,
-    queueDirection(direction) { if (!destroyed && phase === "playing" && ["up", "down", "left", "right"].includes(direction)) player = { ...player, queuedDirection: direction }; },
-    tick(deltaMs) {
+    queueDirection(direction: LabyrinthDirection) { if (!destroyed && phase === "playing" && ["up", "down", "left", "right"].includes(direction)) player = { ...player, queuedDirection: direction }; },
+    tick(deltaMs: number) {
       if (destroyed || phase !== "playing") return snapshot(); const elapsed = Math.max(0, Math.min(deltaMs, 250)); stepAccumulatorMs += elapsed; player = { ...player, invulnerabilityMs: Math.max(0, player.invulnerabilityMs - elapsed), auraMs: Math.max(0, player.auraMs - elapsed) };
       if (player.auraMs === 0 && goblins.some((goblin) => goblin.fleeing)) goblins = goblins.map((goblin) => ({ ...goblin, fleeing: false }));
       while (stepAccumulatorMs >= LABYRINTH_STEP_MS && phase === "playing") {
@@ -225,7 +225,7 @@ export function createLabyrinthGoblinKingController(input: unknown, deliver: Com
       }
       return snapshot();
     }, capture: snapshot,
-    restore(state) {
+    restore(state: LabyrinthGoblinKingSnapshot) {
       if (typeof state !== "object" || state === null) throw new Error("Labyrinth responsive state is invalid");
       const validSentence = Number.isInteger(state.sentenceIndex) && state.sentenceIndex >= 0 && state.sentenceIndex < sentences.length;
       if (!validSentence) throw new Error("Labyrinth responsive state is invalid");
@@ -258,7 +258,7 @@ function createScene(context: CartridgeGameConfigContext, controller: LabyrinthG
   const cleanup = () => { controller.destroy(); graphics?.destroy(); prompt?.destroy(); status?.destroy(); labels.forEach((label) => label.destroy()); ground?.destroy(); playerImage?.destroy(); enemyImages.forEach((image) => image.destroy()); enemyImages.clear(); };
   const render = (scene: S) => { if (!graphics || !prompt || !status) return; const state = controller.snapshot(); const { width, height } = size(scene); const transform = mazeTransform(width, height); const { scale, offsetX: ox, offsetY: oy } = transform;
     graphics.clear().fillStyle(0x111827, 1).fillRect(0, 0, width, 130); if (!ground) graphics.fillStyle(0x111827, 1).fillRect(0, 130, width, height - 130); for (let row = 0; row < 15; row += 1) for (let column = 0; column < 11; column += 1) graphics.fillStyle(mazeWall(column, row) ? 0x334155 : 0x111827, mazeWall(column, row) ? 1 : 0.28).fillRect(ox + column * 32 * scale, oy + row * 32 * scale, 32 * scale, 32 * scale);
-    state.orbs.forEach((orb, index) => { const { x, y } = scenePoint(orb, width, height); const wrapped = wrapWord(orb.word); const cardHeight = Math.max(44, wrapped.split("\n").length * 18 + 10); graphics.fillStyle(LABYRINTH_ORB_COLOR, 1).fillRoundedRect(x - 35, y - cardHeight / 2, 70, cardHeight, 9); labels[index]?.setText(wrapped).setPosition(x, y - cardHeight / 2 + 5); });
+    state.orbs.forEach((orb, index) => { const { x, y } = scenePoint(orb, width, height); const wrapped = wrapWord(orb.word); const cardHeight = Math.max(44, wrapped.split("\n").length * 18 + 10); graphics!.fillStyle(LABYRINTH_ORB_COLOR, 1).fillRoundedRect(x - 35, y - cardHeight / 2, 70, cardHeight, 9); labels[index]?.setText(wrapped).setPosition(x, y - cardHeight / 2 + 5); });
     prompt.setText(state.prompt).setPosition(width / 2, 18); status.setText(state.phase === "victory" ? state.builtSentence : `${state.builtSentence}${state.builtSentence ? "  " : ""}${state.targetIndex + 1}/${state.sentenceWordCount}  ♥${state.player.lives}`).setPosition(width / 2, 82);
     const rectWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
     const displayed = Math.max(0.1, rectWidth / width);

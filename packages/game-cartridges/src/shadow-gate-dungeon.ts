@@ -178,12 +178,12 @@ export function createShadowGateDungeonController(input: unknown, deliver: Compl
   };
   return Object.freeze({
     snapshot,
-    setMovement(x, y): void {
+    setMovement(x: number, y: number): void {
       if (destroyed || phase === "victory") return;
       const magnitude = Math.hypot(x, y);
       movement = magnitude > 1 ? { x: x / magnitude, y: y / magnitude } : { x, y };
     },
-    tick(deltaMs): ShadowGateDungeonSnapshot {
+    tick(deltaMs: number): ShadowGateDungeonSnapshot {
       if (destroyed || phase === "victory") return snapshot();
       const elapsedMs = Math.max(0, Math.min(deltaMs, 100));
       const seconds = elapsedMs / 1000;
@@ -220,7 +220,7 @@ export function createShadowGateDungeonController(input: unknown, deliver: Compl
       return snapshot();
     },
     capture: snapshot,
-    restore(state): void {
+    restore(state: ShadowGateDungeonSnapshot): void {
       if (typeof state !== "object" || state === null) throw new Error("Shadow Gate Dungeon responsive state is invalid");
       const countersValid = Number.isInteger(state.targetIndex) && state.targetIndex >= 0 && state.targetIndex <= targets.length
         && Number.isInteger(state.correctAnswers) && state.correctAnswers === state.targetIndex
