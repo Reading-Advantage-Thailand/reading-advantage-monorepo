@@ -478,6 +478,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [x] **Track: Goals and Signin i18n Hotfix** *Link: [./tracks/goals_signin_i18n_hotfix_20260923/](./tracks/goals_signin_i18n_hotfix_20260923/)*
   The student goals page and signin labels kept hardcoded English after the structural track's FR-6. Added the `pages.student.goalsPage` scope and signin label keys in all five locales. Found by owner manual verification S5.19 on 2026-09-23; live-verified in Thai.
 
+- [x] **Track: Primary Dockerfile Modernization Hotfix** *Link: [./tracks/primary_dockerfile_modernization_hotfix_20260925/](./tracks/primary_dockerfile_modernization_hotfix_20260925/)*
+  The primary production deploy used a pre-monorepo Dockerfile (npm, prisma, app-dir context) that could not build the current app. Rewrote it to the pnpm/standalone pattern and fixed the cloudbuild deploy step; deployed 2026-09-25.
+
+- [x] **Track: Game Cartridges Build Hotfix** *Link: [./tracks/game_cartridges_build_hotfix_20260925/](./tracks/game_cartridges_build_hotfix_20260925/)*
+  `tsc -p tsconfig.build.json` for `@reading-advantage/game-cartridges` failed with 25 errors on master (Object.freeze contextual-typing loss, one outcome widening), blocking the primary deploy. Fixed with type-level annotations only; deployed 2026-09-25.
+
 - [x] **Track: Backend Auth Dependency Hotfix** *Link: [./tracks/backend_auth_dependency_hotfix_20260924/](./tracks/backend_auth_dependency_hotfix_20260924/)*
   `packages/backend` imported `@reading-advantage/auth/company-identity` without declaring the dependency, so turbo raced auth/backend builds and the accounts image build failed (TS2307). Found during the 2026-09-24 production redeploy; fixed by declaring the workspace dependency and syncing the lockfile.
 
