@@ -1,0 +1,7 @@
+{
+  "track_id": "backend_auth_dependency_hotfix_20260924",
+  "type": "bug",
+  "status": "completed",
+  "created": "2026-09-24",
+  "app": "packages/backend"
+}
