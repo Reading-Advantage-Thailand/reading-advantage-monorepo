@@ -891,6 +891,9 @@ importers:
       '@reading-advantage/storage':
         specifier: workspace:*
         version: link:../../packages/storage
+      '@reading-advantage/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -1680,18 +1683,6 @@ importers:
 
   apps/sales-advantage:
     dependencies:
-      '@ai-sdk/google':
-        specifier: 'catalog:'
-        version: 2.0.76(zod@3.25.76)
-      '@ai-sdk/openai':
-        specifier: 'catalog:'
-        version: 2.0.108(zod@3.25.76)
-      '@ai-sdk/react':
-        specifier: 'catalog:'
-        version: 2.0.206(react@19.2.7)(zod@3.25.76)
-      '@hookform/resolvers':
-        specifier: 'catalog:'
-        version: 5.4.0(react-hook-form@7.80.0(react@19.2.7))
       '@node-rs/argon2':
         specifier: 'catalog:'
         version: 2.0.2
@@ -1740,15 +1731,9 @@ importers:
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.18.0(typescript@5.9.3)
-      ai:
-        specifier: 'catalog:'
-        version: 5.0.204(zod@3.25.76)
-      class-variance-authority:
-        specifier: 'catalog:'
-        version: 0.7.1
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
+      drizzle-orm:
+        specifier: 0.45.2
+        version: 0.45.2(@electric-sql/pglite@0.5.3)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(pg@8.22.0)(postgres@3.4.9)
       lucide-react:
         specifier: 'catalog:'
         version: 0.562.0(react@19.2.7)
@@ -1758,42 +1743,27 @@ importers:
       next-intl:
         specifier: 'catalog:'
         version: 4.13.0(next@16.2.9(@opentelemetry/api@1.9.1)(@playwright/test@1.61.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
-      next-themes:
-        specifier: 'catalog:'
-        version: 0.4.6(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react:
         specifier: 19.2.7
         version: 19.2.7
       react-dom:
         specifier: 19.2.7
         version: 19.2.7(react@19.2.7)
-      react-hook-form:
-        specifier: 'catalog:'
-        version: 7.80.0(react@19.2.7)
       react-markdown:
         specifier: ^10.1.0
         version: 10.1.0(@types/react@19.2.2)(react@19.2.7)
       remark-gfm:
         specifier: 'catalog:'
         version: 4.0.1
-      sonner:
-        specifier: 'catalog:'
-        version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       superjson:
         specifier: 'catalog:'
         version: 2.2.6
-      tailwind-merge:
-        specifier: 'catalog:'
-        version: 3.6.0
       tw-animate-css:
         specifier: 'catalog:'
         version: 1.4.0
       zod:
         specifier: 'catalog:'
         version: 3.25.76
-      zustand:
-        specifier: 'catalog:'
-        version: 5.0.14(@types/react@19.2.2)(immer@11.1.8)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
     devDependencies:
       '@tailwindcss/postcss':
         specifier: 'catalog:'
