@@ -2,6 +2,7 @@ import { Link } from "@/locales/navigation";
 import { Mail } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { Button } from "@/components/ui/button";
+import { MasteryAdvantageGraph } from "@/components/marketing/mastery-advantage-graph";
 import { MasteryHeroVideo } from "@/components/marketing/mastery-hero-video";
 import {
   MasteryPathPanel,
@@ -88,6 +89,42 @@ export default async function MasteryAdvantagePage() {
     },
   ];
 
+  const graphLabels = {
+    idle: t("explorer.labels.idle"),
+    forgetting: t("explorer.labels.forgetting"),
+    reviewing: t("explorer.labels.reviewing"),
+    reviewed: t("explorer.labels.reviewed"),
+    reviewedTag: t("explorer.labels.reviewedTag"),
+    ready: t("explorer.labels.ready"),
+    readyTag: t("explorer.labels.readyTag"),
+    learning: t("explorer.labels.learning"),
+    unlocked: t("explorer.labels.unlocked"),
+    expandedOne: t("explorer.labels.expandedOne"),
+    expandedMany: t("explorer.labels.expandedMany"),
+    pathUpdated: t("explorer.labels.pathUpdated"),
+    svgLabel: t("explorer.labels.svgLabel"),
+    example: t("explorer.labels.example"),
+    planned: t("explorer.labels.planned"),
+    tabsLabel: t("explorer.labels.tabsLabel"),
+    controlsLabel: t("explorer.labels.controlsLabel"),
+    play: t("explorer.labels.play"),
+    pause: t("explorer.labels.pause"),
+    previous: t("explorer.labels.previous"),
+    next: t("explorer.labels.next"),
+    stepOf: t("explorer.labels.stepOf"),
+    whatsNext: t("explorer.labels.whatsNext"),
+    nextTitle: t("explorer.labels.nextTitle"),
+    nextHere: t("explorer.labels.nextHere"),
+    nextReady: t("explorer.labels.nextReady"),
+    nextNone: t("explorer.labels.nextNone"),
+    states: {
+      mastered: t("explorer.labels.states.mastered"),
+      here: t("explorer.labels.states.here"),
+      ready: t("explorer.labels.states.ready"),
+      locked: t("explorer.labels.states.locked"),
+    },
+  };
+
   const steps = ["lesson", "tag", "graph"] as const;
 
   return (
@@ -151,6 +188,21 @@ export default async function MasteryAdvantagePage() {
                 description={t("spacedRepetition.description")}
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* EXPLORE THE GRAPH */}
+      <section className="border-y border-[#dad4c8] bg-white py-24 md:py-32">
+        <div className="container mx-auto max-w-5xl px-4">
+          <SectionHeader
+            eyebrow={t("explorer.eyebrow")}
+            title={t("explorer.title")}
+            description={t("explorer.description")}
+            className="mb-10"
+          />
+          <div className="overflow-hidden rounded-3xl border border-[#dad4c8] shadow-[0_24px_60px_-24px_rgba(12,20,55,0.35)]">
+            <MasteryAdvantageGraph interactive labels={graphLabels} className="w-full" />
           </div>
         </div>
       </section>

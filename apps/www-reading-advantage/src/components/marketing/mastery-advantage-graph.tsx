@@ -1,251 +1,221 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   DOMAINS,
   DOMAIN_META,
   graphData,
+  type Domain,
+  type GraphData,
 } from "./mastery-advantage-graph-data";
 
-const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+export interface MasteryGraphLabels {
+  idle: string;
+  forgetting: string;
+  reviewing: string;
+  reviewed: string;
+  reviewedTag: string;
+  ready: string;
+  readyTag: string;
+  learning: string;
+  unlocked: string;
+  expandedOne: string;
+  expandedMany: string;
+  pathUpdated: string;
+  svgLabel: string;
+  example: string;
+  planned: string;
+  tabsLabel: string;
+  controlsLabel: string;
+  play: string;
+  pause: string;
+  previous: string;
+  next: string;
+  stepOf: string;
+  whatsNext: string;
+  nextTitle: string;
+  nextHere: string;
+  nextReady: string;
+  nextNone: string;
+  states: { mastered: string; here: string; ready: string; locked: string };
+}
 
-interface FloatingLabel {
-  id: number;
-  x: number;
-  y: number;
-  text: string;
+export const DEFAULT_GRAPH_LABELS: MasteryGraphLabels = {
+  idle: "Mastery Advantage ®",
+  forgetting: "About to forget — reviewing before it fades",
+  reviewing: "Reviewing…",
+  reviewed: "Reviewed! Memory secured.",
+  reviewedTag: "Reviewed! ✓",
+  ready: "Ready to learn — prerequisites mastered",
+  readyTag: "Ready to learn!",
+  learning: "Learning…",
+  unlocked: "Skill unlocked! Recalculating your path…",
+  expandedOne: "{n} new skill unlocked — your path just expanded",
+  expandedMany: "{n} new skills unlocked — your path just expanded",
+  pathUpdated: "Your path has been updated",
+  svgLabel: "Mastery Advantage knowledge graph",
+  example: "Illustrative example, not real student data.",
+  planned: "Planned, no date",
+  tabsLabel: "Choose a subject",
+  controlsLabel: "Graph controls",
+  play: "Play",
+  pause: "Pause",
+  previous: "Previous step",
+  next: "Next step",
+  stepOf: "Step {current} of {total}",
+  whatsNext: "What is next",
+  nextTitle: "What is next for this student",
+  nextHere: "You are here: {cluster}",
+  nextReady: "{cluster}: {n} ready",
+  nextNone: "No skills are ready yet.",
+  states: {
+    mastered: "Mastered",
+    here: "You are here",
+    ready: "Ready",
+    locked: "Locked",
+  },
+};
+
+/** Domains whose Advantage product is a planned book line with no date. */
+const PLANNED: ReadonlySet<Domain> = new Set([
+  "storytime",
+  "math",
+  "science",
+  "stem",
+  "zhongwen",
+]);
+
+type NodeState = "mastered" | "ready" | "current" | "locked" | "forgetting" | "refreshed";
+
+interface Step {
+  caption: string;
   color: string;
+  overrides: Record<number, NodeState>;
+  cursor?: { x: number; y: number };
+  tag?: { x: number; y: number; text: string; color: string };
+  dwell: number;
+}
+
+const fmt = (s: string, vars: Record<string, string | number>) =>
+  s.replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? ""));
+
+/** Builds the scripted lesson-to-unlock sequence for one domain as a list of steps. */
+export function buildSteps(d: GraphData, L: MasteryGraphLabels): Step[] {
+  const { forgetIdx, currentIdx, learnIdx, newReady } = d;
+  const f = d.nodes[forgetIdx];
+  const c = d.nodes[currentIdx];
+  const l = learnIdx != null ? d.nodes[learnIdx] : null;
+  const amber = "#d97706";
+  const gold = "#f5b942";
+  const green = "#34d399";
+  const steps: Step[] = [
+    { caption: L.idle, color: "", overrides: {}, dwell: 1800 },
+    {
+      caption: L.forgetting,
+      color: amber,
+      overrides: { [forgetIdx]: "forgetting" },
+      cursor: { x: c.x, y: c.y },
+      dwell: 1400,
+    },
+    {
+      caption: L.reviewing,
+      color: amber,
+      overrides: { [forgetIdx]: "forgetting" },
+      cursor: { x: f.x, y: f.y },
+      dwell: 1100,
+    },
+    {
+      caption: L.reviewed,
+      color: green,
+      overrides: { [forgetIdx]: "refreshed" },
+      cursor: { x: f.x, y: f.y },
+      tag: { x: f.x, y: f.y - f.r - 30, text: L.reviewedTag, color: green },
+      dwell: 1400,
+    },
+  ];
+  if (!l) return steps;
+
+  const reviewed = { [forgetIdx]: "mastered" } as Record<number, NodeState>;
+  steps.push(
+    {
+      caption: L.ready,
+      color: gold,
+      overrides: reviewed,
+      cursor: { x: c.x, y: c.y },
+      tag: { x: l.x, y: l.y - l.r - 30, text: L.readyTag, color: gold },
+      dwell: 1600,
+    },
+    {
+      caption: L.learning,
+      color: gold,
+      overrides: reviewed,
+      cursor: { x: l.x, y: l.y },
+      dwell: 1100,
+    },
+  );
+  const unlocked = { ...reviewed, [currentIdx]: "mastered", [learnIdx]: "current" } as Record<number, NodeState>;
+  steps.push({
+    caption: L.unlocked,
+    color: "#818cf8",
+    overrides: unlocked,
+    dwell: 1200,
+  });
+  const n = newReady.length;
+  const expanded = { ...unlocked };
+  for (const i of newReady) expanded[i] = "ready";
+  steps.push({
+    caption:
+      n === 0 ? L.pathUpdated : fmt(n === 1 ? L.expandedOne : L.expandedMany, { n }),
+    color: green,
+    overrides: expanded,
+    dwell: 3200,
+  });
+  return steps;
+}
+
+/** Returns the label of the cluster whose ellipse contains the node most deeply. */
+function clusterOf(d: GraphData, i: number): string {
+  const n = d.nodes[i];
+  let best = d.clusters[0];
+  let bestScore = Infinity;
+  for (const c of d.clusters) {
+    const score = ((n.x - c.cx) / c.rx) ** 2 + ((n.y - c.cy) / c.ry) ** 2;
+    if (score < bestScore) {
+      bestScore = score;
+      best = c;
+    }
+  }
+  return best.label;
 }
 
 export function MasteryAdvantageGraph({
   className = "",
+  interactive = false,
+  labels = DEFAULT_GRAPH_LABELS,
 }: {
   className?: string;
+  /** Show domain tabs, step controls, hover details and the "what is next" view. */
+  interactive?: boolean;
+  labels?: MasteryGraphLabels;
 }) {
   const [domainIndex, setDomainIndex] = useState(0);
-  const [caption, setCaption] = useState({
-    text: "Mastery Advantage ®",
-    color: "",
-  });
-  const [nodeOverrides, setNodeOverrides] = useState<Record<number, string>>(
-    {},
-  );
-  const [floatingLabels, setFloatingLabels] = useState<FloatingLabel[]>([]);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const [showNext, setShowNext] = useState(false);
+  const [hovered, setHovered] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const cursorRef = useRef<SVGGElement>(null);
-  const runningRef = useRef(false);
-  const abortRef = useRef(false);
-  const domainIndexRef = useRef(0);
-  const labelIdRef = useRef(0);
-
-  domainIndexRef.current = domainIndex;
+  const uid = useId();
 
   const domain = DOMAINS[domainIndex];
   const meta = DOMAIN_META[domain];
   const data = graphData[domain];
 
-  /* ── Cursor travel (RAF + direct DOM) ── */
-  const travelCursor = (
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    ms: number,
-  ) => {
-    return new Promise<void>((resolve) => {
-      const el = cursorRef.current;
-      if (!el) {
-        resolve();
-        return;
-      }
-      el.style.display = "block";
+  const steps = useMemo(() => buildSteps(data, labels), [data, labels]);
+  const step = steps[Math.min(stepIndex, steps.length - 1)];
 
-      const mx = (x1 + x2) / 2;
-      const my = (y1 + y2) / 2;
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-      const len = Math.sqrt(dx * dx + dy * dy) || 1;
-      const s = Math.min(60, len * 0.38);
-      const cpX = mx - (dy / len) * s;
-      const cpY = my + (dx / len) * s;
-
-      const t0 = performance.now();
-      function tick(now: number) {
-        if (abortRef.current) {
-          if (el) el.style.display = "none";
-          resolve();
-          return;
-        }
-        const t = Math.min((now - t0) / ms, 1);
-        const e = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-        const m = 1 - e;
-        const x = m * m * x1 + 2 * m * e * cpX + e * e * x2;
-        const y = m * m * y1 + 2 * m * e * cpY + e * e * y2;
-        if (el) el.setAttribute("transform", `translate(${x} ${y})`);
-        if (t < 1) requestAnimationFrame(tick);
-        else {
-          if (el) el.style.display = "none";
-          resolve();
-        }
-      }
-      requestAnimationFrame(tick);
-    });
-  };
-
-  /* ── Demo sequence ── */
-  const runDemo = async () => {
-    if (runningRef.current || !isVisible) return;
-    runningRef.current = true;
-    abortRef.current = false;
-
-    const d = graphData[DOMAINS[domainIndexRef.current]];
-    const { forgetIdx, currentIdx, learnIdx, newReady } = d;
-    const fN = d.nodes[forgetIdx];
-    const cN = d.nodes[currentIdx];
-    const lN = learnIdx != null ? d.nodes[learnIdx] : null;
-
-    const addLabel = (x: number, y: number, text: string, color: string) => {
-      const id = ++labelIdRef.current;
-      setFloatingLabels((prev) => [...prev, { id, x, y, text, color }]);
-      return id;
-    };
-    const removeLabel = (id: number) => {
-      setFloatingLabels((prev) => prev.filter((l) => l.id !== id));
-    };
-
-    // Phase 1: forgetting
-    setCaption({
-      text: "About to forget — reviewing before it fades",
-      color: "#d97706",
-    });
-    setNodeOverrides({ [forgetIdx]: "forgetting" });
-    await delay(900);
-    if (abortRef.current) return;
-
-    // Phase 2: travel to forgetting node
-    if (fN && cN) {
-      setCaption({ text: "Reviewing…", color: "#d97706" });
-      await travelCursor(cN.x, cN.y, fN.x, fN.y, 860);
-    }
-    if (abortRef.current) return;
-
-    // Phase 3: refreshed
-    setCaption({ text: "Reviewed! Memory secured.", color: "#34d399" });
-    const lid1 = fN
-      ? addLabel(fN.x, fN.y - fN.r - 30, "Reviewed! ✓", "#34d399")
-      : 0;
-    setNodeOverrides((prev) => ({ ...prev, [forgetIdx]: "refreshed" }));
-    await delay(700);
-    if (abortRef.current) return;
-    setNodeOverrides((prev) => ({ ...prev, [forgetIdx]: "mastered" }));
-    await delay(700);
-    if (abortRef.current) return;
-    removeLabel(lid1);
-
-    // Phase 4: travel back
-    if (fN && cN) {
-      await travelCursor(fN.x, fN.y, cN.x, cN.y, 800);
-    }
-    if (abortRef.current) return;
-    await delay(480);
-    if (abortRef.current) return;
-
-    if (!lN) {
-      runningRef.current = false;
-      return;
-    }
-
-    // Phase 5: ready to learn
-    setCaption({
-      text: "Ready to learn — prerequisites mastered",
-      color: "#f5b942",
-    });
-    const lid2 = addLabel(lN.x, lN.y - lN.r - 30, "Ready to learn!", "#f5b942");
-    await delay(700);
-    if (abortRef.current) return;
-    removeLabel(lid2);
-
-    // Phase 6: learning
-    setCaption({ text: "Learning…", color: "#f5b942" });
-    if (cN && lN) {
-      await travelCursor(cN.x, cN.y, lN.x, lN.y, 900);
-    }
-    if (abortRef.current) return;
-
-    // Phase 7: skill unlocked
-    setNodeOverrides((prev) => ({
-      ...prev,
-      [currentIdx]: "mastered",
-      [learnIdx]: "current",
-    }));
-    setCaption({
-      text: "Skill unlocked! Recalculating your path…",
-      color: "#818cf8",
-    });
-    await delay(520);
-    if (abortRef.current) return;
-
-    // Phase 8: cascade newly unlocked nodes
-    for (let i = 0; i < newReady.length; i++) {
-      setTimeout(() => {
-        if (abortRef.current) return;
-        setNodeOverrides((prev) => ({ ...prev, [newReady[i]]: "ready" }));
-      }, i * 320);
-    }
-    await delay(newReady.length * 320 + 500);
-    if (abortRef.current) return;
-
-    // Phase 9: hold
-    const n = newReady.length;
-    setCaption({
-      text:
-        n > 0
-          ? `${n} new skill${n !== 1 ? "s" : ""} unlocked — your path just expanded`
-          : "Your path has been updated",
-      color: "#34d399",
-    });
-    await delay(2500);
-
-    // Reset
-    setCaption({ text: "Mastery Advantage ®", color: "" });
-    setNodeOverrides({});
-    setFloatingLabels([]);
-    runningRef.current = false;
-  };
-
-  /* ── Main loop: run demo, then advance domain ── */
-  useEffect(() => {
-    if (!isVisible) return;
-    let cancelled = false;
-
-    async function loop() {
-      while (!cancelled) {
-        await runDemo();
-        if (cancelled) break;
-        await delay(800); // brief pause between apps
-        if (cancelled) break;
-        setDomainIndex((i) => (i + 1) % DOMAINS.length);
-        // reset transient state for the new domain
-        setCaption({ text: "Mastery Advantage ®", color: "" });
-        setNodeOverrides({});
-        setFloatingLabels([]);
-        await delay(400);
-      }
-    }
-
-    loop();
-
-    return () => {
-      cancelled = true;
-      abortRef.current = true;
-      runningRef.current = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVisible]);
-
-  /* ── IntersectionObserver ── */
+  /* ── Visibility ── */
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -257,14 +227,54 @@ export function MasteryAdvantageGraph({
     return () => obs.disconnect();
   }, []);
 
-  /* ── Reset when domain changes externally ── */
+  /* ── Start paused for visitors who prefer reduced motion ── */
   useEffect(() => {
-    setCaption({ text: "Mastery Advantage ®", color: "" });
-    setNodeOverrides({});
-    setFloatingLabels([]);
-    runningRef.current = false;
-    abortRef.current = true;
-  }, [domainIndex]);
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setPlaying(false);
+    }
+  }, []);
+
+  /* ── Autoplay: advance one step after its dwell time ── */
+  useEffect(() => {
+    if (!playing || !isVisible || showNext) return;
+    const id = setTimeout(() => {
+      if (stepIndex < steps.length - 1) {
+        setStepIndex(stepIndex + 1);
+      } else if (interactive) {
+        setStepIndex(0);
+      } else {
+        // Decorative loop cycles through the subjects.
+        setDomainIndex((i) => (i + 1) % DOMAINS.length);
+        setStepIndex(0);
+      }
+    }, step.dwell);
+    return () => clearTimeout(id);
+  }, [playing, isVisible, showNext, stepIndex, steps.length, step.dwell, interactive]);
+
+  const selectDomain = (i: number) => {
+    setDomainIndex(i);
+    setStepIndex(0);
+    setHovered(null);
+  };
+
+  const go = (delta: number) => {
+    setPlaying(false);
+    setStepIndex((i) => Math.max(0, Math.min(steps.length - 1, i + delta)));
+  };
+
+  const onTabKey = (e: React.KeyboardEvent, i: number) => {
+    const move = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (move === undefined && e.key !== "Home" && e.key !== "End") return;
+    e.preventDefault();
+    const next =
+      e.key === "Home"
+        ? 0
+        : e.key === "End"
+          ? DOMAINS.length - 1
+          : (i + (move as number) + DOMAINS.length) % DOMAINS.length;
+    selectDomain(next);
+    document.getElementById(`${uid}-tab-${next}`)?.focus();
+  };
 
   /* ── Derived styles ── */
   const cssVars = useMemo(
@@ -277,11 +287,76 @@ export function MasteryAdvantageGraph({
     [meta],
   );
 
-  const effectiveState = (idx: number) =>
-    nodeOverrides[idx] || data.nodes[idx].state;
+  const effectiveState = (idx: number): NodeState =>
+    step.overrides[idx] || data.nodes[idx].state;
+
+  const readyByCluster = useMemo(() => {
+    const counts = new Map<string, number>();
+    let here: string | null = null;
+    data.nodes.forEach((_, i) => {
+      const s = step.overrides[i] || data.nodes[i].state;
+      if (s === "ready") {
+        const cl = clusterOf(data, i);
+        counts.set(cl, (counts.get(cl) ?? 0) + 1);
+      }
+      if (s === "current") here = clusterOf(data, i);
+    });
+    return { counts, here };
+  }, [data, step]);
+
+  const stateLabel = (s: NodeState) =>
+    s === "mastered" || s === "refreshed"
+      ? labels.states.mastered
+      : s === "current"
+        ? labels.states.here
+        : s === "ready"
+          ? labels.states.ready
+          : s === "forgetting"
+            ? labels.states.mastered
+            : labels.states.locked;
+
+  const hoveredNode = hovered != null ? data.nodes[hovered] : null;
+  const caption = { text: step.caption, color: step.color };
+  const cursor = step.cursor;
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
+      {interactive && (
+        <div
+          role="tablist"
+          aria-label={labels.tabsLabel}
+          className="flex flex-wrap gap-1 px-3 py-2 border-b border-white/5"
+          style={{ background: "rgba(10,16,28,0.98)" }}
+        >
+          {DOMAINS.map((d, i) => {
+            const selected = i === domainIndex;
+            return (
+              <button
+                key={d}
+                type="button"
+                role="tab"
+                id={`${uid}-tab-${i}`}
+                aria-selected={selected}
+                aria-controls={`${uid}-panel`}
+                tabIndex={selected ? 0 : -1}
+                onClick={() => selectDomain(i)}
+                onKeyDown={(e) => onTabKey(e, i)}
+                className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
+                  selected ? "text-white" : "text-white/70 hover:text-white"
+                }`}
+                style={{
+                  borderBottom: `2px solid ${selected ? DOMAIN_META[d].mastered : "transparent"}`,
+                }}
+              >
+                {DOMAIN_META[d].label.replace(" Advantage", "")}
+                {PLANNED.has(d) && (
+                  <span className="sr-only">{`, ${labels.planned}`}</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
       {/* Status bar */}
       <div
         role="status"
@@ -300,13 +375,14 @@ export function MasteryAdvantageGraph({
 
       <svg
         role="img"
-        aria-label="Mastery Advantage knowledge graph"
+        aria-label={labels.svgLabel}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1000 1000"
         preserveAspectRatio="xMidYMid meet"
         className="mastery-advantage-graph block h-auto w-full"
-        data-animate={isVisible ? "true" : "false"}
+        data-animate={isVisible && playing ? "true" : "false"}
         data-domain={domain}
+        id={interactive ? `${uid}-panel` : undefined}
         style={cssVars as React.CSSProperties}
       >
         <style>{`
@@ -561,6 +637,11 @@ export function MasteryAdvantageGraph({
                 className="ma-node"
                 data-state={state}
                 transform={`translate(${n.x} ${n.y})`}
+                opacity={
+                  showNext && state !== "ready" && state !== "current" ? 0.3 : 1
+                }
+                onMouseEnter={interactive ? () => setHovered(i) : undefined}
+                onMouseLeave={interactive ? () => setHovered(null) : undefined}
                 filter={
                   n.glow && state === "current"
                     ? "url(#ma-glow-strong)"
@@ -604,56 +685,139 @@ export function MasteryAdvantageGraph({
 
         {/* Cursor */}
         <g
-          ref={cursorRef}
-          style={{ display: "none" }}
+          aria-hidden="true"
+          style={{
+            transform: cursor ? `translate(${cursor.x}px, ${cursor.y}px)` : undefined,
+            opacity: cursor ? 1 : 0,
+            transition: "transform .8s ease-in-out, opacity .3s",
+          }}
           filter="url(#ma-glow-soft)"
         >
           <circle r="13" fill="#fff" opacity="0.35" />
           <circle r="6" fill="#fff" />
         </g>
 
-        {/* Floating annotation labels */}
-        <g>
-          {floatingLabels.map((l) => {
-            const w = l.text.length * 7.5 + 24;
+        {/* Floating annotation label */}
+        <g aria-hidden="true">
+          {step.tag && (() => {
+            const w = step.tag.text.length * 7.5 + 24;
             return (
-              <g key={l.id} transform={`translate(${l.x} ${l.y})`}>
-                <rect
-                  x={-w / 2}
-                  y={-14}
-                  width={w}
-                  height={22}
-                  rx={4}
-                  fill="#0b1220"
-                  opacity="0.9"
-                />
+              <g transform={`translate(${step.tag.x} ${step.tag.y})`}>
+                <rect x={-w / 2} y={-14} width={w} height={22} rx={4} fill="#0b1220" opacity="0.9" />
                 <text
                   textAnchor="middle"
                   y={3}
                   fontSize="12"
                   fontWeight="700"
                   fontFamily="ui-sans-serif,system-ui,sans-serif"
-                  fill={l.color || "#fff"}
+                  fill={step.tag.color || "#fff"}
                 >
-                  {l.text}
+                  {step.tag.text}
                 </text>
               </g>
             );
-          })}
+          })()}
         </g>
 
-        {/* "You are here" label */}
+        {/* "You are here" label follows the current node */}
         <g>
-          <text
-            className="ma-node-label"
-            x={data.label.x}
-            y={data.label.y}
-            textAnchor="middle"
-          >
-            {data.label.text}
-          </text>
+          {data.nodes.map((n, k) =>
+            effectiveState(k) === "current" ? (
+              <text
+                key={`here-${k}`}
+                className="ma-node-label"
+                x={n.x}
+                y={n.y - n.r - 12}
+                textAnchor="middle"
+              >
+                {labels.states.here}
+              </text>
+            ) : null,
+          )}
         </g>
+
+        {/* Hover details (mouse only; the "what is next" panel serves keyboard users) */}
+        {hoveredNode && hovered != null && (
+          <g aria-hidden="true" transform={`translate(${hoveredNode.x} ${hoveredNode.y + hoveredNode.r + 26})`} pointerEvents="none">
+            {(() => {
+              const text = `${stateLabel(effectiveState(hovered))} · ${clusterOf(data, hovered)}`;
+              const w = text.length * 7.2 + 24;
+              return (
+                <>
+                  <rect x={-w / 2} y={-15} width={w} height={24} rx={5} fill="#0b1220" stroke="rgba(255,255,255,0.25)" />
+                  <text textAnchor="middle" y={2} fontSize="13" fontWeight="600" fill="#fff">
+                    {text}
+                  </text>
+                </>
+              );
+            })()}
+          </g>
+        )}
       </svg>
+
+      {interactive && (
+        <div
+          className="border-t border-white/5 px-4 py-3 text-white"
+          style={{ background: "rgba(10,16,28,0.98)" }}
+        >
+          <div
+            role="group"
+            aria-label={labels.controlsLabel}
+            className="flex flex-wrap items-center gap-2"
+          >
+            {[
+              { label: labels.previous, onClick: () => go(-1), disabled: stepIndex === 0, text: "◀" },
+              { label: playing ? labels.pause : labels.play, onClick: () => setPlaying((p) => !p), disabled: false, text: playing ? "❚❚" : "▶" },
+              { label: labels.next, onClick: () => go(1), disabled: stepIndex >= steps.length - 1, text: "▶▶" },
+            ].map((b) => (
+              <button
+                key={b.label}
+                type="button"
+                aria-label={b.label}
+                title={b.label}
+                disabled={b.disabled}
+                onClick={b.onClick}
+                className="h-9 min-w-9 rounded-md border border-white/25 px-2 text-xs font-semibold hover:bg-white/10 disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+              >
+                <span aria-hidden="true">{b.text}</span>
+              </button>
+            ))}
+            <button
+              type="button"
+              aria-pressed={showNext}
+              onClick={() => setShowNext((v) => !v)}
+              className={`h-9 rounded-md border px-3 text-xs font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
+                showNext ? "border-[#fbbf24] bg-[#fbbf24] text-[#1a1208]" : "border-white/25 hover:bg-white/10"
+              }`}
+            >
+              {labels.whatsNext}
+            </button>
+            <span className="ml-auto text-xs text-white/70">
+              {fmt(labels.stepOf, { current: stepIndex + 1, total: steps.length })}
+            </span>
+          </div>
+
+          {showNext && (
+            <div className="mt-3 rounded-lg border border-white/15 p-3 text-sm" role="region" aria-label={labels.nextTitle}>
+              <p className="font-semibold">{labels.nextTitle}</p>
+              <ul className="mt-2 space-y-1 text-white/85">
+                {readyByCluster.here && (
+                  <li>{fmt(labels.nextHere, { cluster: readyByCluster.here })}</li>
+                )}
+                {[...readyByCluster.counts].map(([cluster, n]) => (
+                  <li key={cluster}>{fmt(labels.nextReady, { cluster, n })}</li>
+                ))}
+                {readyByCluster.counts.size === 0 && <li>{labels.nextNone}</li>}
+              </ul>
+            </div>
+          )}
+
+          <p className="mt-3 text-xs text-white/70">
+            {PLANNED.has(domain) ? `${labels.planned}. ` : ""}
+            {labels.example}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
