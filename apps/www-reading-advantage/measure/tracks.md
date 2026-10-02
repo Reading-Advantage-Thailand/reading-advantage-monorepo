@@ -211,3 +211,9 @@ _Link: [./archive/video_pipeline_fix_20260429/](./archive/video_pipeline_fix_202
   *Link: [./tracks/pr_website_alignment_20260501/](./tracks/pr_website_alignment_20260501/)*
 
 ---
+
+---
+
+## [~] Track: Experience Primary Advantage (embedded game demo)
+
+_Link: [./measure/tracks/primary_experience_demo_20261002/](./measure/tracks/primary_experience_demo_20261002/)_

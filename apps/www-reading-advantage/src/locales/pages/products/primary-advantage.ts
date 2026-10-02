@@ -132,6 +132,16 @@ export const en = {
     platformInAction: "Platform in Action",
     impact: "Impact",
   },
+  experience: {
+    eyebrow: "Try it now",
+    heading: "Experience Primary Advantage",
+    description: "Read a short story, tap a word to see its Thai meaning, listen to the story read aloud, then play a game that uses the words. This demo has four sample stories, one for each level.",
+    play: "Play the demo",
+    fullscreen: "Open full screen",
+    hint: "Works best on a computer, tablet, or phone with sound on.",
+    frameTitle: "Primary Advantage game demo",
+    posterAlt: "Two children in a story picture from the Primary Advantage demo",
+  },
 } as const;
 
 export const th = {
@@ -268,6 +278,16 @@ export const th = {
     platformInAction: "แพลตฟอร์มในการใช้งาน",
     impact: "ผลกระทบ",
   },
+  experience: {
+    eyebrow: "ลองเล่นเลย",
+    heading: "สัมผัสประสบการณ์ Primary Advantage",
+    description: "อ่านเรื่องสั้น แตะคำเพื่อดูความหมายภาษาไทย ฟังเรื่องที่อ่านออกเสียงให้ แล้วเล่นเกมที่ใช้คำศัพท์จากเรื่อง เดโมนี้มีเรื่องตัวอย่าง 4 เรื่อง ระดับละ 1 เรื่อง",
+    play: "เล่นเดโม",
+    fullscreen: "เปิดเต็มหน้าจอ",
+    hint: "เล่นได้ดีที่สุดบนคอมพิวเตอร์ แท็บเล็ต หรือโทรศัพท์ โดยเปิดเสียง",
+    frameTitle: "เดโมเกม Primary Advantage",
+    posterAlt: "เด็กสองคนในภาพประกอบเรื่องจากเดโม Primary Advantage",
+  },
 } as const;
 
 export const zh = {
@@ -403,5 +423,15 @@ export const zh = {
     keyFeatures: "主要特点",
     platformInAction: "平台实战",
     impact: "影响力",
+  },
+  experience: {
+    eyebrow: "立即试玩",
+    heading: "体验 Primary Advantage",
+    description: "阅读一个短故事，点击单词查看泰语释义，听故事朗读，然后玩一个使用这些单词的游戏。此演示包含四个示例故事，每个级别一个。",
+    play: "开始演示",
+    fullscreen: "全屏打开",
+    hint: "在电脑、平板或手机上开启声音效果最佳。",
+    frameTitle: "Primary Advantage 游戏演示",
+    posterAlt: "Primary Advantage 演示中故事插图里的两个孩子",
   },
 } as const;
