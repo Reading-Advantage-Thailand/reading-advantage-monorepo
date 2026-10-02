@@ -4,6 +4,18 @@ This file tracks all major tracks for project. Each track has its own detailed p
 
 ---
 
+## [ ] Track: www Asset Pipeline
+
+**Status:** In progress 2026-10-02
+
+**Type:** chore | **Estimated Tasks:** 8
+
+**Description:** Convert vetted PR-repo images, logos, and videos into web-sized files with a typed manifest.
+
+_Link: [./measure/tracks/www_asset_pipeline_20261002/](./measure/tracks/www_asset_pipeline_20261002/)_
+
+---
+
 ## [ ] Track: www Copy Truth Pass
 
 **Status:** In progress 2026-10-02

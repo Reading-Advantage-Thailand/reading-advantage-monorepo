@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60" role="img" aria-label="Primary Advantage">
+  <title>Primary Advantage</title>
+  <desc>Wordmark for Primary Advantage, the grades 3–6 English product (accent Cyan 400).</desc>
+  <g fill="#0f172a" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="700">
+    <text x="0" y="36" font-size="28" letter-spacing="-0.5">Primary</text>
+    <text x="0" y="56" font-size="14" font-weight="500" fill="#22d3ee" letter-spacing="0.5">ADVANTAGE</text>
+  </g>
+</svg>

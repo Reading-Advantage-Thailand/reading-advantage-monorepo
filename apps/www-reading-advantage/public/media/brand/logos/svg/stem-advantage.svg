@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60" role="img" aria-label="STEM Advantage">
+  <title>STEM Advantage</title>
+  <desc>Wordmark for STEM Advantage, the grades 4–12 STEM product (accent Indigo 400). Note: STEM is the K–12 product; CodeCamp Advantage is the separate adult 15-week bootcamp.</desc>
+  <g fill="#0f172a" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="700">
+    <text x="0" y="36" font-size="28" letter-spacing="-0.5">STEM</text>
+    <text x="0" y="56" font-size="14" font-weight="500" fill="#818cf8" letter-spacing="0.5">ADVANTAGE</text>
+  </g>
+</svg>

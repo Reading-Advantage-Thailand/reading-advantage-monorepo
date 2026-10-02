@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60" role="img" aria-label="CodeCamp Advantage">
+  <title>CodeCamp Advantage</title>
+  <desc>Wordmark for CodeCamp Advantage, the adult 15-week full-stack engineering bootcamp (accent Lime 400, per Q-BR-05 resolution 2026-06-24). Note: distinct from STEM Advantage (the K–12 product).</desc>
+  <g fill="#0f172a" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="700">
+    <text x="0" y="36" font-size="22" letter-spacing="-0.5">CodeCamp</text>
+    <text x="0" y="56" font-size="14" font-weight="500" fill="#a3e635" letter-spacing="0.5">ADVANTAGE</text>
+  </g>
+</svg>

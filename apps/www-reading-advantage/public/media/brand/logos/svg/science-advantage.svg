@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60" role="img" aria-label="Science Advantage">
+  <title>Science Advantage</title>
+  <desc>Wordmark for Science Advantage, the K–12 science product (accent Rose 400).</desc>
+  <g fill="#0f172a" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="700">
+    <text x="0" y="36" font-size="26" letter-spacing="-0.5">Science</text>
+    <text x="0" y="56" font-size="14" font-weight="500" fill="#fb7185" letter-spacing="0.5">ADVANTAGE</text>
+  </g>
+</svg>

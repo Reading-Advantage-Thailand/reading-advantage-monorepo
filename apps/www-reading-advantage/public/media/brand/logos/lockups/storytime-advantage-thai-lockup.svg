@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 100" width="320" height="100" role="img" aria-label="Storytime Advantage Thai tagline lockup">
+  <title>Storytime Advantage — Thai tagline lockup</title>
+  <desc>Wordmark + Thai tagline (นวัตกรรมใหม่ เพื่ออนาคต = "New innovation for the future") for Storytime Advantage. Use in Thai-market materials.</desc>
+  <g font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="700">
+    <text x="0" y="36" font-size="26" letter-spacing="-0.5" fill="#0f172a">Storytime</text>
+    <text x="0" y="56" font-size="14" font-weight="500" fill="#fbbf24" letter-spacing="0.5">ADVANTAGE</text>
+    <text x="0" y="90" font-size="14" font-weight="500" fill="#475569" font-family="Sarabun, 'IBM Plex Sans Thai', system-ui, sans-serif">นวัตกรรมใหม่ เพื่ออนาคต</text>
+  </g>
+</svg>

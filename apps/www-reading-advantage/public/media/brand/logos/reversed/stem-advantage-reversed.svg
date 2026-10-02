@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60" role="img" aria-label="Stem Advantage (reversed, white on dark)">
+  <title>Stem Advantage — Reversed</title>
+  <desc>White-on-dark wordmark for Stem Advantage; use on dark backgrounds. Accent: #818cf8.</desc>
+  <rect width="240" height="60" fill="#0f172a"/>
+  <g font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="700">
+    <text x="0" y="36" font-size="28" letter-spacing="-0.5" fill="#ffffff">Stem</text>
+    <text x="0" y="56" font-size="14" font-weight="500" fill="#818cf8" letter-spacing="0.5">ADVANTAGE</text>
+  </g>
+</svg>
