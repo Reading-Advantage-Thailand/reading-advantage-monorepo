@@ -26,7 +26,14 @@ vi.mock("@/locales/client", () => ({
 const EN_CURRENT_PRICING = "Contact us for current pricing";
 const COPY_REVIEW_FLOOR = { year: 2026, month: 9 } as const;
 const CURRENCY_NUMBER_RE =
-  /(?:(?:THB|USD|EUR|GBP|CNY)\s?[\d,.]+|[\d,.]+\s?(?:THB|USD|EUR|GBP|CNY)|(?:US\$|[$€£¥฿])\s?[\d,.]+)/i;
+  /(?:(?:THB|USD|EUR|GBP|CNY)\s?[\d,.]+|[\d,.]+\s?(?:THB|USD|EUR|GBP|CNY|baht|บาท|泰铢)|(?:US\$|[$€£¥฿])\s?[\d,.]+)/i;
+/** Owner-approved amounts (Daniel, 2026-10-02): App-Only, Blended Learning, Tutor Advantage. */
+const APPROVED_AMOUNT_RE = /(?<![\d,.])(?:1,000|1,500|3,000)\s?(?:baht|บาท|泰铢)/gi;
+
+/** Returns text with the approved baht amounts removed. */
+function withoutApprovedAmounts(text: string): string {
+  return text.replace(APPROVED_AMOUNT_RE, "");
+}
 
 const guaranteePatterns = [
   {
@@ -52,6 +59,7 @@ const guaranteePatterns = [
 type LocaleSurface = {
   locale: "en" | "th" | "zh";
   expectedPricing: string;
+  expectedQuotation: string;
   copyReviewLabel: RegExp;
   evaluationPattern: RegExp;
   pricing: unknown;
@@ -64,6 +72,7 @@ const publicLocales: LocaleSurface[] = [
   {
     locale: "en",
     expectedPricing: EN_CURRENT_PRICING,
+    expectedQuotation: "Contact us for a quotation",
     copyReviewLabel: /^Copy reviewed:/,
     evaluationPattern:
       /low-risk|structured onboarding|currently in development|accepting inquiries|progress tracking|quality assurance/i,
@@ -75,6 +84,7 @@ const publicLocales: LocaleSurface[] = [
   {
     locale: "th",
     expectedPricing: "ติดต่อเราเพื่อสอบถามราคาปัจจุบัน",
+    expectedQuotation: "ติดต่อเราเพื่อขอใบเสนอราคา",
     copyReviewLabel: /^ทบทวนข้อความเมื่อ:/,
     evaluationPattern:
       /ความเสี่ยงต่ำ|การเริ่มต้นที่มีโครงสร้าง|อยู่ในระหว่างพัฒนา|รับคำขอ|ติดตามความก้าวหน้า|รับรองคุณภาพ/i,
@@ -86,6 +96,7 @@ const publicLocales: LocaleSurface[] = [
   {
     locale: "zh",
     expectedPricing: "联系我们获取当前价格",
+    expectedQuotation: "联系我们获取报价",
     copyReviewLabel: /^文案审核日期：/,
     evaluationPattern: /低风险|结构化|开发阶段|接受.*询问|进度跟踪|质量保证/i,
     pricing: zhPricing,
@@ -129,13 +140,13 @@ function hasString(value: unknown, expected: string): boolean {
 /** Finds missing or English-fallback pricing copy in one locale. */
 function findLocaleDrift(locale: LocaleSurface): string[] {
   const violations: string[] = [];
-  if (!hasString(locale.pricing, locale.expectedPricing)) {
+  if (!hasString(locale.pricing, locale.expectedQuotation)) {
     violations.push(`${locale.locale}:pricing`);
   }
   if (!hasString(locale.comparison, locale.expectedPricing)) {
     violations.push(`${locale.locale}:comparison`);
   }
-  if (locale.locale !== "en" && hasString(locale.pricing, EN_CURRENT_PRICING)) {
+  if (locale.locale !== "en" && hasString(locale.pricing, "Contact us for a quotation")) {
     violations.push(`${locale.locale}:pricing-English-fallback`);
   }
   if (
@@ -221,14 +232,23 @@ afterEach(() => {
 
 describe("Wave 5 Phase 5 pricing and legal claims", () => {
   it.each(publicLocales)(
-    "$locale pricing renders localized current-pricing copy without numeric amounts",
-    ({ pricing, expectedPricing }) => {
+    "$locale pricing renders approved baht amounts and a localized quotation link, and no other amounts",
+    ({ pricing, expectedQuotation }) => {
       clientWiring.messages = pricing;
       const rendered = render(<PricingTable />);
       const text = rendered.container.textContent ?? "";
 
-      expect(rendered.container).toHaveTextContent(expectedPricing);
-      expect(text).not.toMatch(CURRENCY_NUMBER_RE);
+      expect(rendered.container).toHaveTextContent(expectedQuotation);
+      expect(text).toMatch(/1,000/);
+      expect(text).toMatch(/1,500/);
+      expect(text).toMatch(/3,000/);
+      expect(withoutApprovedAmounts(text)).not.toMatch(CURRENCY_NUMBER_RE);
+      expect(
+        rendered.container.querySelector('a[href$="/contact"]'),
+      ).not.toBeNull();
+      expect(
+        rendered.container.querySelector('a[href$="/products/tutor-advantage"]'),
+      ).not.toBeNull();
     },
   );
 
@@ -302,7 +322,13 @@ describe("Wave 5 Phase 5 pricing and legal claims", () => {
 
   it("detects currency-code pricing counterexamples", () => {
     for (const amount of ["THB 120", "USD36", "36 EUR", "GBP 60", "CNY120"]) {
-      expect(amount).toMatch(CURRENCY_NUMBER_RE);
+      expect(withoutApprovedAmounts(amount)).toMatch(CURRENCY_NUMBER_RE);
+    }
+    for (const amount of ["2,000 baht", "$36", "1,200 บาท", "36 USD", "1,000 THB"]) {
+      expect(withoutApprovedAmounts(amount)).toMatch(CURRENCY_NUMBER_RE);
+    }
+    for (const amount of ["1,000 baht", "1,500 บาท", "3,000 泰铢"]) {
+      expect(withoutApprovedAmounts(amount)).not.toMatch(CURRENCY_NUMBER_RE);
     }
   });
 
@@ -313,7 +339,7 @@ describe("Wave 5 Phase 5 pricing and legal claims", () => {
   it("detects English fallback copy in a non-English locale counterexample", () => {
     const counterexample: LocaleSurface = {
       ...publicLocales[1],
-      pricing: { currentPricing: EN_CURRENT_PRICING },
+      pricing: { currentPricing: "Contact us for a quotation" },
       comparison: { currentPricing: EN_CURRENT_PRICING },
     };
 

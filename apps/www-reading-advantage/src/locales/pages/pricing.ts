@@ -1,7 +1,7 @@
 export const en = {
     hero: {
-        title: 'Reading Advantage Price Tier Comparison',
-        description: 'See what each Reading Advantage app tier includes',
+        title: 'Reading Advantage Pricing',
+        description: 'See what App-Only, Blended Learning and Managed Service include, and what each costs',
     },
     cta: {
         title: 'Want to learn more?',
@@ -11,7 +11,7 @@ export const en = {
     trustSignals: {
         noHiddenFees: {
             title: 'Clear Pricing',
-            description: 'Contact us for current pricing',
+            description: 'Prices in Thai baht, per student, per year. Managed Service by quotation',
         },
         instantSetup: {
             title: 'Simple Setup',
@@ -30,8 +30,8 @@ export const en = {
 
 export const th = {
     hero: {
-        title: 'เปรียบเทียบราคาของ Reading Advantage',
-        description: 'ดูว่าแอป Reading Advantage แต่ละระดับมีอะไรบ้าง',
+        title: 'ราคาของ Reading Advantage',
+        description: 'ดูว่า App-Only, Blended Learning และ Managed Service มีอะไรบ้าง และราคาเท่าไร',
     },
     cta: {
         title: 'อยากทราบข้อมูลเพิ่มเติมหรือไม่?',
@@ -41,7 +41,7 @@ export const th = {
     trustSignals: {
         noHiddenFees: {
             title: 'ราคาชัดเจน',
-            description: 'ติดต่อเราเพื่อสอบถามราคาปัจจุบัน',
+            description: 'ราคาเป็นเงินบาท ต่อผู้เรียน ต่อปี Managed Service ขอใบเสนอราคา',
         },
         instantSetup: {
             title: 'ตั้งค่าง่าย',
@@ -60,8 +60,8 @@ export const th = {
 
 export const zh = {
     hero: {
-        title: 'Reading Advantage 价格层级比较',
-        description: '了解 Reading Advantage 应用各层级包含的内容',
+        title: 'Reading Advantage 价格',
+        description: '了解 App-Only、Blended Learning 和 Managed Service 包含的内容及价格',
     },
     cta: {
         title: '想了解更多吗？',
@@ -71,7 +71,7 @@ export const zh = {
     trustSignals: {
         noHiddenFees: {
             title: '定价清晰',
-            description: '联系我们获取当前价格',
+            description: '价格以泰铢计，每位学生每年。Managed Service 需报价',
         },
         instantSetup: {
             title: '简易设置',
