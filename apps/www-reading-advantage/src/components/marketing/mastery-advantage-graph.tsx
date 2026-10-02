@@ -191,11 +191,14 @@ function clusterOf(d: GraphData, i: number): string {
 export function MasteryAdvantageGraph({
   className = "",
   interactive = false,
+  pauseControl = false,
   labels = DEFAULT_GRAPH_LABELS,
 }: {
   className?: string;
   /** Show domain tabs, step controls, hover details and the "what is next" view. */
   interactive?: boolean;
+  /** Show only a play/pause button on the decorative loop. */
+  pauseControl?: boolean;
   labels?: MasteryGraphLabels;
 }) {
   const [domainIndex, setDomainIndex] = useState(0);
@@ -320,7 +323,7 @@ export function MasteryAdvantageGraph({
   const cursor = step.cursor;
 
   return (
-    <div ref={containerRef} className={`relative ${className}`}>
+    <div ref={containerRef} className={`relative ${interactive ? "bg-[#0b1220]" : ""} ${className}`}>
       {interactive && (
         <div
           role="tablist"
@@ -371,6 +374,17 @@ export function MasteryAdvantageGraph({
         >
           {caption.text}
         </span>
+        {pauseControl && !interactive && (
+          <button
+            type="button"
+            aria-label={playing ? labels.pause : labels.play}
+            title={playing ? labels.pause : labels.play}
+            onClick={() => setPlaying((p) => !p)}
+            className="ml-auto h-8 min-w-8 rounded-md border border-white/25 px-2 text-[10px] font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+          >
+            <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>
+          </button>
+        )}
       </div>
 
       <svg
@@ -379,7 +393,7 @@ export function MasteryAdvantageGraph({
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1000 1000"
         preserveAspectRatio="xMidYMid meet"
-        className="mastery-advantage-graph block h-auto w-full"
+        className={`mastery-advantage-graph block h-auto w-full ${interactive ? "max-h-[68vh]" : ""}`}
         data-animate={isVisible && playing ? "true" : "false"}
         data-domain={domain}
         id={interactive ? `${uid}-panel` : undefined}

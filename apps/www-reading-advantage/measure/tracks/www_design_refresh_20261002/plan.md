@@ -16,4 +16,7 @@
 - [x] Step-based graph: subject tabs, play/pause, previous/next step, hover details, "What is next" view
 - [x] Mastery page "Explore the graph" section; home inset stays a decorative loop
 - [x] en, th, zh strings; "Illustrative example, not real student data." always visible
-- [ ] Browser screenshots at 1440 and 390 (extension was not connected; HTML checked only)
+- [x] Home graph localized, pause button added
+- [x] Level labels: Reading A1− to A2+, Primary Pre-A1 to A2 (A2 ceiling)
+- [x] Mastery page duplicate heading changed
+- [ ] Screenshots: only en desktop Mastery explorer seen; home, th, zh and 390 px still open

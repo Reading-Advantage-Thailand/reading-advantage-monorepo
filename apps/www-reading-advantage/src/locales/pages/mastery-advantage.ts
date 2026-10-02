@@ -66,7 +66,7 @@ export const en = {
     },
     adaptivePath: {
         eyebrow: "Adaptive learning paths",
-        title: "Always know what's next.",
+        title: "One path for every student.",
         description:
             "Every student follows a unique path through the skill graph. The system surfaces the next ready-to-learn skill based on what they've already mastered — no gaps, no redundancy.",
     },
@@ -251,7 +251,7 @@ export const th = {
     },
     adaptivePath: {
         eyebrow: "เส้นทางการเรียนรู้แบบปรับตัว",
-        title: "รู้ว่าต้องเรียนอะไรถัดไปเสมอ",
+        title: "เส้นทางเฉพาะของนักเรียนแต่ละคน",
         description:
             "นักเรียนทุกคนทำตามเส้นทางที่ไม่ซ้ำกันผ่านกราฟทักษะ ระบบแสดงทักษะถัดไปที่พร้อมเรียนตามสิ่งที่พวกเขาเรียนรู้แล้ว — ไม่มีช่องว่าง ไม่มีซ้ำซ้อน",
     },
@@ -436,7 +436,7 @@ export const zh = {
     },
     adaptivePath: {
         eyebrow: "自适应学习路径",
-        title: "始终知道下一步。",
+        title: "每名学生都有自己的路径。",
         description:
             "每个学生都遵循技能图中的独特路径。系统根据他们已经掌握的内容展示下一个准备好学习的技能——没有差距，没有冗余。",
     },

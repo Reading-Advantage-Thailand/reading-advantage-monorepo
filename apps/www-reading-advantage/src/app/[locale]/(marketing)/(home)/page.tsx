@@ -3,6 +3,7 @@ import { ArrowRight, Mail, GitBranch, Clock, Target, Mic } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { Button } from "@/components/ui/button";
 import { MasteryAdvantageGraph } from "@/components/marketing/mastery-advantage-graph";
+import { graphLabelsFrom } from "@/components/marketing/mastery-graph-labels";
 import { SiteImageView } from "@/components/marketing/site-image";
 import { SectionHeader } from "@/components/marketing/section-header";
 import { HomeLiveCard, HomeRoadmapCard } from "@/components/marketing/home-product-cards";
@@ -43,6 +44,8 @@ export default async function Home({
 }) {
   await params;
   const t = await getScopedI18n("pages.home");
+  const tm = await getScopedI18n("pages.masteryAdvantage");
+  const graphLabels = graphLabelsFrom((key) => tm(key as never));
 
   const thaiFeatures = [
     {
@@ -172,7 +175,7 @@ export default async function Home({
                   />
                 </div>
                 <figure className="absolute -bottom-0 left-4 w-[40%] sm:w-[32%] sm:-bottom-8 sm:-left-6 overflow-hidden rounded-2xl border border-[#dad4c8] bg-white shadow-[0_16px_40px_-16px_rgba(12,20,55,0.4)]">
-                  <MasteryAdvantageGraph className="w-full h-auto" />
+                  <MasteryAdvantageGraph className="w-full h-auto" labels={graphLabels} pauseControl />
                   <figcaption className="sr-only">{t("v2.hero.graphLabel")}</figcaption>
                 </figure>
               </div>

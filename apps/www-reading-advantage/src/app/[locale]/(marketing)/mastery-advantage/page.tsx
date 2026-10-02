@@ -3,6 +3,7 @@ import { Mail } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { Button } from "@/components/ui/button";
 import { MasteryAdvantageGraph } from "@/components/marketing/mastery-advantage-graph";
+import { graphLabelsFrom } from "@/components/marketing/mastery-graph-labels";
 import { MasteryHeroVideo } from "@/components/marketing/mastery-hero-video";
 import {
   MasteryPathPanel,
@@ -89,41 +90,7 @@ export default async function MasteryAdvantagePage() {
     },
   ];
 
-  const graphLabels = {
-    idle: t("explorer.labels.idle"),
-    forgetting: t("explorer.labels.forgetting"),
-    reviewing: t("explorer.labels.reviewing"),
-    reviewed: t("explorer.labels.reviewed"),
-    reviewedTag: t("explorer.labels.reviewedTag"),
-    ready: t("explorer.labels.ready"),
-    readyTag: t("explorer.labels.readyTag"),
-    learning: t("explorer.labels.learning"),
-    unlocked: t("explorer.labels.unlocked"),
-    expandedOne: t("explorer.labels.expandedOne"),
-    expandedMany: t("explorer.labels.expandedMany"),
-    pathUpdated: t("explorer.labels.pathUpdated"),
-    svgLabel: t("explorer.labels.svgLabel"),
-    example: t("explorer.labels.example"),
-    planned: t("explorer.labels.planned"),
-    tabsLabel: t("explorer.labels.tabsLabel"),
-    controlsLabel: t("explorer.labels.controlsLabel"),
-    play: t("explorer.labels.play"),
-    pause: t("explorer.labels.pause"),
-    previous: t("explorer.labels.previous"),
-    next: t("explorer.labels.next"),
-    stepOf: t("explorer.labels.stepOf"),
-    whatsNext: t("explorer.labels.whatsNext"),
-    nextTitle: t("explorer.labels.nextTitle"),
-    nextHere: t("explorer.labels.nextHere"),
-    nextReady: t("explorer.labels.nextReady"),
-    nextNone: t("explorer.labels.nextNone"),
-    states: {
-      mastered: t("explorer.labels.states.mastered"),
-      here: t("explorer.labels.states.here"),
-      ready: t("explorer.labels.states.ready"),
-      locked: t("explorer.labels.states.locked"),
-    },
-  };
+  const graphLabels = graphLabelsFrom((key) => t(key as never));
 
   const steps = ["lesson", "tag", "graph"] as const;
 
