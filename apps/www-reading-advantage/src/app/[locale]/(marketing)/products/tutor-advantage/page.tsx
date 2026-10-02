@@ -1,25 +1,19 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import { Link } from "@/locales/navigation";
-import {
-  Bot,
-  Microscope,
-  Handshake,
-  Gem,
-  ArrowRight,
-  Sparkles,
-  ClipboardCheck,
-  UserCog,
-  TrendingUp,
-} from "lucide-react";
+import { ArrowRight, Check, Mic } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
-import { StepFlow } from "@/components/ui/step-flow";
+import { siteImages, siteLogos } from "@/lib/site-assets";
+import { SiteImageView } from "@/components/marketing/site-image";
+import { SectionHeader } from "@/components/marketing/section-header";
+import { TutorClassStepper } from "@/components/marketing/tutor-class-stepper";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { MarketingSvg } from "@/components/marketing/marketing-svg";
-import type { Locale } from "@/config/locale-config";
+import { FAQAccordion } from "@/components/ui/faq-accordion";
+
+const PRINTED_STEPS = 13;
+const PHASE_COUNT = 18;
+const BOOK_ART = [siteImages.primaryBook, siteImages.primaryBookWarm, siteImages.classroomStudentsApp];
+const BOOK_LOGOS = [siteLogos.primary.color, siteLogos.primary.color, siteLogos.reading.color];
 
 /**
  * Builds metadata for the localized Tutor Advantage route.
@@ -54,389 +48,324 @@ export default async function TutorAdvantage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  await params;
   const t = await getScopedI18n("pages.products.tutorAdvantage");
+  // Indexed keys are built at run time, so the typed key union does not apply.
+  const key = t as unknown as (k: string) => string;
+
+  const phases = Array.from({ length: PHASE_COUNT }, (_, i) => ({
+    title: key(`classTour.phases.${i}.title`),
+    description: key(`classTour.phases.${i}.description`),
+  }));
+  const faqItems = Array.from({ length: 6 }, (_, i) => ({
+    question: key(`faq.items.${i}.question`),
+    answer: key(`faq.items.${i}.answer`),
+  }));
+  const books = [0, 1, 2].map((i) => ({
+    name: key(`books.items.${i}.name`),
+    series: key(`books.items.${i}.series`),
+    alt: key(`books.items.${i}.alt`),
+  }));
+  const roleKeys = [0, 1, 2, 3];
+  const reedyKeys = [0, 1, 2, 3];
 
   return (
-    <main className="overflow-x-hidden">
-      {/* Hero Section - Inline with emerald gradient */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
-        <Image
-          src="/images/hero-tutor-advantage.jpg"
-          alt={t("heroAlt")}
-          fill
-          sizes="100vw"
-          className="object-cover"
-          priority
+    <main className="overflow-x-hidden bg-[#fbfaf6]">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-emerald-950 text-white">
+        <div
+          aria-hidden="true"
+          className="absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-emerald-500/25 blur-[120px]"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-300 to-emerald-800 opacity-90" />
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
-        <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl py-24">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-bold mb-6">
-                <Sparkles className="w-4 h-4" />
-                {t("hero.comingSoon")}
-              </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                {t("hero.title")}
-              </h1>
-              <p className="text-xl md:text-2xl leading-relaxed mb-4 text-emerald-50">
-                {t("hero.subtitle")}
-              </p>
-              <p className="text-lg md:text-xl leading-relaxed mb-8 text-emerald-100">
-                {t("hero.description")}
-              </p>
+        <div className="container relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-4 pb-16 pt-28 sm:px-6 md:py-24 lg:grid-cols-12 lg:gap-14 lg:px-8">
+          <div className="lg:col-span-6">
+            <div className="mb-8 inline-block rounded-2xl bg-[#0f172a] p-4 ring-1 ring-emerald-300/40">
+              <img
+                src={siteLogos.tutor.reversed}
+                alt={t("logoAlt")}
+                className="h-12 w-auto md:h-14"
+              />
+            </div>
+            <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-950">
+              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-emerald-900 motion-safe:animate-pulse" />
+              {t("hero.comingSoon")}
+            </p>
+            <h1 className="mb-6 text-4xl font-semibold leading-[1.05] tracking-[-0.02em] sm:text-5xl lg:text-6xl">
+              {t("hero.title")}
+            </h1>
+            <p className="mb-3 text-xl font-medium text-emerald-100 md:text-2xl">{t("hero.subtitle")}</p>
+            <p className="mb-8 max-w-xl text-base leading-relaxed text-emerald-50 md:text-lg">
+              {t("hero.description")}
+            </p>
+            <div className="mb-8 border-l-4 border-emerald-300 pl-4">
+              <p className="text-2xl font-semibold text-white">{t("heroExtra.price")}</p>
+              <p className="text-sm text-emerald-100">{t("heroExtra.priceNote")}</p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 bg-white text-emerald-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-emerald-50"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-8 py-3 text-base font-semibold text-emerald-950 shadow-lg transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-950 motion-reduce:transition-none"
               >
-                {t("cta.buttons.register")}
-                <ArrowRight className="w-5 h-5" />
+                {t("heroExtra.cta")}
+                <ArrowRight className="h-5 w-5" aria-hidden="true" />
               </Link>
+              <a
+                href="#become-a-tutor"
+                className="inline-flex min-h-12 items-center justify-center rounded-full border-2 border-emerald-200 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-950"
+              >
+                {t("heroExtra.ctaTutor")}
+              </a>
             </div>
-            <div className="lg:col-span-5 flex justify-center lg:justify-end">
-              <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-4 shadow-2xl">
-                <Image
-                  src="/tutor-advantage.png"
-                  alt={t("logoAlt")}
-                  width={350}
-                  height={350}
-                  className="w-48 h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl"
-                  priority
-                />
-              </div>
+          </div>
+          <div className="lg:col-span-6">
+            <div className="overflow-hidden rounded-[2rem] border border-white/20 shadow-2xl">
+              <SiteImageView
+                image={siteImages.classroomSmallGroup}
+                alt={t("heroExtra.imageAlt")}
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+                className="h-auto w-full"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Adaptive Learning Path — SVG Visualization */}
-      <section className="py-24 bg-white border-y border-[#dad4c8]">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-emerald-600 mb-4 block">
-                {t("adaptiveEngine.eyebrow")}
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                {t("adaptiveEngine.heading")}
-              </h2>
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
-                {t("adaptiveEngine.description")}
-              </p>
+      {/* Facts */}
+      <section aria-label={t("heroExtra.factsLabel")} className="border-b border-[#e5e1d6] bg-white">
+        <dl className="container mx-auto grid max-w-5xl grid-cols-1 gap-6 px-4 py-10 text-center sm:grid-cols-3">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex flex-col">
+              <dt className="order-2 text-sm font-medium text-slate-600">{t(`stats.${i}.label` as "stats.0.label")}</dt>
+              <dd className="text-4xl font-semibold text-emerald-900">{t(`stats.${i}.value` as "stats.0.value")}</dd>
             </div>
-            <div className="lg:col-span-7">
-              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
-                <MarketingSvg
-                  baseName="ra-marketing-tutor-advantage"
-                  locale={locale as Locale}
-                  className="w-full h-auto"
-                  alt={t("adaptiveEngine.alt")}
-                />
-              </div>
-            </div>
-          </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* Inside one class */}
+      <section className="py-20 md:py-28" data-testid="process-flow">
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionHeader
+            eyebrow={t("classTour.eyebrow")}
+            title={t("classTour.heading")}
+            description={t("classTour.description")}
+            accent="text-emerald-800"
+            className="mb-12"
+          />
+          <TutorClassStepper
+            phases={phases}
+            printedCount={PRINTED_STEPS}
+            printedGroup={t("classTour.printedGroup")}
+            addedGroup={t("classTour.addedGroup")}
+            stepOf={t("classTour.stepOf")}
+            addedTag={t("classTour.addedTag")}
+            prev={t("classTour.prev")}
+            next={t("classTour.next")}
+            listLabel={t("classTour.listLabel")}
+          />
         </div>
       </section>
 
-      {/* How It Works — Full-Width Color Room (Emerald) */}
-      <section className="relative py-24 bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
-        <div
-          className="absolute top-20 left-20 w-[500px] h-[500px] bg-emerald-400/20 rounded-full blur-[150px]"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-emerald-300/20 rounded-full blur-[120px]"
-          aria-hidden="true"
-        />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-emerald-200 mb-4 block text-center">
-              {t("eyebrows.theProcess")}
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-              {t("eyebrows.howItWorks")}
-            </h2>
-            <StepFlow
-              data-testid="process-flow"
-              variant="emerald"
-              steps={[
-                {
-                  title: t("steps.0.title"),
-                  description: t("steps.0.description"),
-                  icon: <ClipboardCheck className="w-6 h-6" />,
-                },
-                {
-                  title: t("steps.1.title"),
-                  description: t("steps.1.description"),
-                  icon: <UserCog className="w-6 h-6" />,
-                },
-                {
-                  title: t("steps.2.title"),
-                  description: t("steps.2.description"),
-                  icon: <TrendingUp className="w-6 h-6" />,
-                },
-              ]}
+      {/* Three books */}
+      <section className="bg-emerald-50 py-20 md:py-28">
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionHeader
+            eyebrow={t("books.eyebrow")}
+            title={t("books.heading")}
+            description={t("books.description")}
+            accent="text-emerald-800"
+            className="mb-12"
+          />
+          <ul className="grid gap-6 md:grid-cols-3">
+            {books.map((book, i) => (
+              <li
+                key={book.name}
+                className="overflow-hidden rounded-3xl border border-emerald-200 bg-white shadow-sm"
+              >
+                <SiteImageView
+                  image={BOOK_ART[i]}
+                  alt={book.alt}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="aspect-[4/3] w-full object-cover"
+                />
+                <div className="p-6">
+                  <img src={BOOK_LOGOS[i]} alt="" className="mb-4 h-8 w-auto" />
+                  <h3 className="text-xl font-semibold text-slate-950">{book.name}</h3>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 text-sm text-slate-700">{t("books.note")}</p>
+        </div>
+      </section>
+
+      {/* Reedy */}
+      <section className="relative overflow-hidden bg-emerald-950 py-20 pb-36 text-white md:py-28 md:pb-40">
+        <div className="container relative z-10 mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <SectionHeader
+              eyebrow={t("reedyBlock.eyebrow")}
+              title={t("reedyBlock.heading")}
+              description={t("reedyBlock.description")}
+              tone="dark"
+              accent="text-emerald-300"
+              className="mb-8 [&_p:last-child]:text-emerald-50"
             />
-          </div>
-        </div>
-      </section>
-
-      {/* AI-Powered Personalization — Asymmetric 5/7 Reversed */}
-      <section className="bg-white py-24">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
-            <div className="lg:col-span-5 order-2 lg:order-1">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-3xl blur-3xl -translate-y-4" />
-                <div className="relative bg-white rounded-3xl shadow-2xl border border-emerald-100 p-4 rotate-[-2deg]">
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                    <Image
-                      src="/images/tutor-advantage-hero.jpg"
-                      alt={t("platformAlt")}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 40vw"
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="lg:col-span-7 order-1 lg:order-2">
-              <span className="uppercase tracking-widest text-xs font-semibold text-emerald-600 mb-4 block">
-                {t("eyebrows.aiPoweredPersonalization")}
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight">
-                {t("valuePropositions.features.0.title")}
-              </h2>
-              <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                {t("valuePropositions.features.0.points.0")}
-              </p>
-              <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                {t("valuePropositions.features.0.points.1")}
-              </p>
-              <p className="text-lg text-slate-600 leading-relaxed mb-8">
-                {t("valuePropositions.features.0.points.2")}
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                  <Bot className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900">
-                    {t("valuePropositions.features.1.title")}
-                  </h4>
-                  <p className="text-sm text-slate-500">
-                    {t("valuePropositions.features.1.points.0")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Platform Features — Overlapping Section */}
-      <OverlappingSection
-        background="bg-white"
-        data-testid="overlapping-section"
-      >
-        <div className="container mx-auto px-4 py-24">
-          <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-emerald-600 mb-4 block text-center">
-              {t("eyebrows.platformFeatures")}
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-center text-slate-900 mb-16">
-              {t("platformFeatures.heading")}
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  title: t("platformFeatures.features.0.title"),
-                  description: t("platformFeatures.features.0.description"),
-                  padding: "p-10",
-                },
-                {
-                  title: t("platformFeatures.features.1.title"),
-                  description: t("platformFeatures.features.1.description"),
-                  padding: "p-8",
-                },
-                {
-                  title: t("platformFeatures.features.2.title"),
-                  description: t("platformFeatures.features.2.description"),
-                  padding: "p-12",
-                },
-                {
-                  title: t("platformFeatures.features.3.title"),
-                  description: t("platformFeatures.features.3.description"),
-                  padding: "p-8",
-                },
-                {
-                  title: t("platformFeatures.features.4.title"),
-                  description: t("platformFeatures.features.4.description"),
-                  padding: "p-10",
-                },
-                {
-                  title: t("platformFeatures.features.5.title"),
-                  description: t("platformFeatures.features.5.description"),
-                  padding: "p-12",
-                },
-              ].map((feature) => (
-                <Card
-                  key={feature.title}
-                  padding={feature.padding}
-                  className="border-emerald-100 hover:border-emerald-200 hover:shadow-2xl hover:-translate-y-2 bg-gradient-to-br from-emerald-50 to-white"
-                >
-                  <h3 className="text-xl font-bold mb-3 text-slate-900">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    {feature.description}
-                  </p>
-                </Card>
+            <ul className="space-y-4">
+              {reedyKeys.map((i) => (
+                <li key={i} className="flex gap-3 text-base leading-relaxed text-emerald-50">
+                  <Mic className="mt-1 h-5 w-5 flex-shrink-0 text-emerald-300" aria-hidden="true" />
+                  <span>{t(`reedyBlock.points.${i}` as "reedyBlock.points.0")}</span>
+                </li>
               ))}
+            </ul>
+          </div>
+          <div className="lg:col-span-5">
+            <div className="overflow-hidden rounded-3xl border border-white/20 shadow-2xl">
+              <SiteImageView
+                image={siteImages.chibiOakClearing}
+                alt={t("reedyBlock.alt")}
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="h-auto w-full"
+              />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* What is in a class package */}
+      <OverlappingSection background="bg-[#fbfaf6]" data-testid="overlapping-section">
+        <div className="container mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-24">
+          <h2 className="mb-12 text-3xl font-semibold tracking-[-0.02em] text-slate-950 md:text-4xl">
+            {t("platformFeatures.heading")}
+          </h2>
+          <ul className="grid gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <li key={i} className="flex gap-4">
+                <span className="mt-1 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-emerald-800 text-white">
+                  <Check className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="mb-1 text-lg font-semibold text-slate-950">
+                    {t(`platformFeatures.features.${i}.title` as "platformFeatures.features.0.title")}
+                  </h3>
+                  <p className="leading-relaxed text-slate-700">
+                    {t(`platformFeatures.features.${i}.description` as "platformFeatures.features.0.description")}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </OverlappingSection>
 
-      {/* Trust Signals — Floating testimonial cards */}
-      <section className="relative py-24 bg-gradient-to-br from-emerald-700 via-emerald-700 to-emerald-800 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
-        <div
-          className="absolute top-20 left-20 w-[500px] h-[500px] bg-emerald-500/20 rounded-full blur-[150px]"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-emerald-400/20 rounded-full blur-[120px]"
-          aria-hidden="true"
-        />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-emerald-200 mb-4 block text-center">
-              {t("eyebrows.trustedByEducators")}
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-              {t("trustSignals.heading")}
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: Microscope,
-                  title: t("trustSignals.items.0.title"),
-                  description: t("trustSignals.items.0.description"),
-                  offset: "md:-translate-y-4",
-                },
-                {
-                  icon: Handshake,
-                  title: t("trustSignals.items.1.title"),
-                  description: t("trustSignals.items.1.description"),
-                  offset: "md:translate-y-6",
-                },
-                {
-                  icon: Gem,
-                  title: t("trustSignals.items.2.title"),
-                  description: t("trustSignals.items.2.description"),
-                  offset: "md:-translate-y-2",
-                },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  data-testid="testimonial-card"
-                  className={`bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:border-white/30 transition-all duration-300 hover:-translate-y-2 shadow-xl ${item.offset}`}
-                >
-                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                    <item.icon className="w-7 h-7 text-white" strokeWidth={2} />
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-white">
-                    {item.title}
-                  </h3>
-                  <p className="text-emerald-100 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
+      {/* Become a tutor */}
+      <section id="become-a-tutor" className="scroll-mt-24 bg-emerald-50 py-20 md:py-28">
+        <div className="container mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-12">
+          <div className="order-2 lg:order-1 lg:col-span-5">
+            <div className="overflow-hidden rounded-3xl border border-emerald-200 shadow-lg">
+              <SiteImageView
+                image={siteImages.tutorQuestion}
+                alt={t("tutorRole.alt")}
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="h-auto w-full"
+              />
             </div>
+          </div>
+          <div className="order-1 lg:order-2 lg:col-span-7">
+            <SectionHeader
+              eyebrow={t("tutorRole.eyebrow")}
+              title={t("tutorRole.heading")}
+              description={t("tutorRole.description")}
+              accent="text-emerald-800"
+              className="mb-8"
+            />
+            <ul className="mb-8 space-y-3">
+              {roleKeys.map((i) => (
+                <li key={i} className="flex gap-3 leading-relaxed text-slate-800">
+                  <Check className="mt-1 h-5 w-5 flex-shrink-0 text-emerald-800" aria-hidden="true" />
+                  <span>{t(`tutorRole.points.${i}` as "tutorRole.points.0")}</span>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/contact"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-900 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
+            >
+              {t("tutorRole.cta")}
+              <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Stats + CTA Combined */}
+      {/* Honest basics */}
+      <section className="py-20 md:py-24">
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+          <SectionHeader
+            eyebrow={t("commitments.eyebrow")}
+            title={t("trustSignals.heading")}
+            accent="text-emerald-800"
+            className="mb-10"
+          />
+          <div className="grid gap-6 md:grid-cols-3">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                data-testid="testimonial-card"
+                className="rounded-3xl border border-[#e5e1d6] bg-white p-8"
+              >
+                <h3 className="mb-3 text-xl font-semibold text-slate-950">
+                  {t(`trustSignals.items.${i}.title` as "trustSignals.items.0.title")}
+                </h3>
+                <p className="leading-relaxed text-slate-700">
+                  {t(`trustSignals.items.${i}.description` as "trustSignals.items.0.description")}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="bg-white py-20 md:py-24">
+        <div className="container mx-auto max-w-3xl px-4 sm:px-6">
+          <SectionHeader
+            eyebrow={t("faq.eyebrow")}
+            title={t("faq.heading")}
+            accent="text-emerald-800"
+            className="mb-10"
+          />
+          <FAQAccordion items={faqItems} variant="emerald" />
+        </div>
+      </section>
+
+      {/* Final CTA */}
       <section
-        className="relative py-24 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white overflow-hidden"
+        className="relative overflow-hidden bg-emerald-950 py-20 text-white md:py-24"
         data-testid="combined-stats-cta"
       >
-        <div
-          className="absolute top-20 left-20 w-[500px] h-[500px] bg-emerald-400/30 rounded-full blur-[150px]"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-emerald-300/30 rounded-full blur-[120px]"
-          aria-hidden="true"
-        />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <span className="uppercase tracking-widest text-xs font-semibold text-emerald-200 mb-4 block">
-              {t("eyebrows.readyToStart")}
-            </span>
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 mb-16">
-              <div className="text-center">
-                <div className="text-5xl md:text-6xl font-bold text-white mb-2">
-                  {t("stats.0.value")}
-                </div>
-                <div className="text-emerald-200 font-medium">
-                  {t("stats.0.label")}
-                </div>
-              </div>
-              <div className="hidden md:block w-px h-20 bg-emerald-400/40" />
-              <div className="text-center">
-                <div className="text-5xl md:text-6xl font-bold text-white mb-2">
-                  {t("stats.1.value")}
-                </div>
-                <div className="text-emerald-200 font-medium">
-                  {t("stats.1.label")}
-                </div>
-              </div>
-              <div className="hidden md:block w-px h-20 bg-emerald-400/40" />
-              <div className="text-center">
-                <div className="text-5xl md:text-6xl font-bold text-white mb-2">
-                  {t("stats.2.value")}
-                </div>
-                <div className="text-emerald-200 font-medium">
-                  {t("stats.2.label")}
-                </div>
-              </div>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              {t("cta.heading")}
-            </h2>
-            <p className="text-xl md:text-2xl mb-12 text-emerald-100 max-w-2xl mx-auto">
-              {t("cta.description")}
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button
-                asChild
-                variant="white"
-                className="px-10 py-5 rounded-2xl font-bold text-lg"
-              >
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2"
-                >
-                  {t("cta.buttons.register")}
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="px-10 py-5 rounded-2xl font-bold text-lg border-2 border-white text-white hover:bg-white hover:text-emerald-700"
-              >
-                <Link href="/contact">{t("cta.buttons.apply")}</Link>
-              </Button>
-            </div>
+        <div className="container relative z-10 mx-auto max-w-4xl px-4 text-center">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
+            {t("eyebrows.readyToStart")}
+          </p>
+          <h2 className="mb-6 text-4xl font-semibold tracking-[-0.02em] md:text-5xl">{t("cta.heading")}</h2>
+          <p className="mx-auto mb-10 max-w-2xl text-lg text-emerald-50">{t("cta.description")}</p>
+          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+            <Link
+              href="/contact"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-8 py-3 text-base font-semibold text-emerald-950 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-950"
+            >
+              {t("cta.buttons.register")}
+              <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border-2 border-emerald-200 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-emerald-950"
+            >
+              {t("cta.buttons.apply")}
+            </Link>
           </div>
         </div>
       </section>

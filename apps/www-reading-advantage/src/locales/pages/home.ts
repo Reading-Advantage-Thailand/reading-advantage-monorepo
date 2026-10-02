@@ -1,4 +1,59 @@
 export const en = {
+    v2: {
+        hero: {
+            imageAlt: "A printed workbook and a tablet shown together, with the skill graph that links them.",
+            graphLabel: "Skill graph",
+            stats: {
+                lessons: "Lessons in every printed workbook",
+                scope: "CEFR range of the active program",
+                scopeValue: "Pre-A1 to A2",
+            },
+        },
+        tutor: {
+            channel: "Channel for families",
+            imageAlt: "A tutor and a small group of students work together on a printed workbook.",
+            bookAlt: "A printed Primary Advantage workbook open on a table.",
+            booksLabel: "On sale now",
+            priceLabel: "Class package from",
+            price: "3,000 baht",
+            priceNote: "One class package covers one workbook. The price adapts to the market.",
+            bookNames: {
+                primary2: "Primary Advantage Origins 2",
+                primary31: "Primary Advantage Origins 3.1",
+                reading2: "Reading Advantage Origins 2",
+            },
+            reedyLabel: "Reedy voice practice",
+        },
+        engine: {
+            imageAlt: "A cluster of linked skills, with each skill in one of four mastery states.",
+            eyebrowStep: "Step",
+        },
+        products: {
+            liveLabel: "Live now",
+            liveNote: "The same printed books reach students through two channels: Tutor Advantage for families and Blended Learning for schools.",
+            cta: "View product",
+            primary: {
+                description: "Story-led workbooks and an app for young English learners.",
+                meta: "15 CEFR-aligned levels. The active program runs to A2.",
+            },
+            reading: {
+                description: "Extensive-reading workbooks and an app for English learners.",
+                meta: "18 CEFR-aligned levels. The active program runs to A2.",
+            },
+            codecamp: {
+                description: "A full-stack engineering bootcamp for adults. Mastery Advantage runs inside it.",
+                meta: "About 12 to 15 weeks.",
+            },
+            roadmapLabel: "On our roadmap",
+            roadmapNote: "These product lines are planned. We give no dates.",
+            roadmapTag: "Planned",
+        },
+        schools: {
+            imageAlt: "A teacher at the board while students work from printed workbooks and tablets.",
+            blended: "Blended Learning means printed workbooks plus the digital app, with teacher training. Schools use the same books as families.",
+            cta: "Talk to us about Blended Learning",
+        },
+    },
     kstSrs: "KST+SRS",
     challengeLabel: "Challenge {num}",
     hero: {
@@ -27,7 +82,7 @@ export const en = {
         eyebrow: "The engine",
         title: "Knowledge Space Theory meets Spaced Repetition.",
         description:
-            "Two research-backed systems working together: KST maps every skill dependency so the system always knows what's next, and FSRS schedules each review at the moment before forgetting — so nothing is lost and nothing is wasted.",
+            "Two research-backed systems working together: KST maps every skill dependency so the system always knows what's next, and FSRS schedules each review shortly before a student is likely to forget.",
         cta: "Learn more about Mastery Advantage",
         pillars: {
             kst: {
@@ -36,11 +91,11 @@ export const en = {
             },
             srs: {
                 title: "Spaced Repetition (FSRS)",
-                description: "Free Spaced Repetition Scheduler calibrates each review interval to the individual. Items surface at the optimal moment — not too early, not too late.",
+                description: "Free Spaced Repetition Scheduler calibrates each review interval to the individual. Items come back shortly before a student is likely to forget them.",
             },
             placement: {
                 title: "Adaptive Placement",
-                description: "Students are placed at their true level from day one through edge-calibrated assessment. No placement tests, no guessing — just data.",
+                description: "Placement uses edge-calibrated assessment to find the level where a student is ready to learn. Adaptive features for Primary Advantage are targeted for May 2027.",
             },
         },
     },
@@ -168,6 +223,61 @@ export const en = {
 };
 
 export const th = {
+    v2: {
+        hero: {
+            imageAlt: "สมุดงานที่พิมพ์และแท็บเล็ตวางคู่กัน พร้อมกราฟทักษะที่เชื่อมทั้งสองเข้าด้วยกัน",
+            graphLabel: "กราฟทักษะ",
+            stats: {
+                lessons: "บทเรียนในสมุดงานที่พิมพ์ทุกเล่ม",
+                scope: "ช่วง CEFR ของโปรแกรมที่ใช้งานอยู่",
+                scopeValue: "Pre-A1 ถึง A2",
+            },
+        },
+        tutor: {
+            channel: "ช่องทางสำหรับครอบครัว",
+            imageAlt: "ติวเตอร์และนักเรียนกลุ่มเล็กเรียนด้วยกันจากสมุดงานที่พิมพ์",
+            bookAlt: "สมุดงาน Primary Advantage ที่พิมพ์แล้ววางเปิดอยู่บนโต๊ะ",
+            booksLabel: "วางจำหน่ายแล้ว",
+            priceLabel: "แพ็กเกจคลาสเริ่มต้น",
+            price: "3,000 บาท",
+            priceNote: "หนึ่งแพ็กเกจคลาสครอบคลุมสมุดงานหนึ่งเล่ม ราคาปรับตามตลาด",
+            bookNames: {
+                primary2: "Primary Advantage Origins 2",
+                primary31: "Primary Advantage Origins 3.1",
+                reading2: "Reading Advantage Origins 2",
+            },
+            reedyLabel: "ฝึกพูดกับ Reedy",
+        },
+        engine: {
+            imageAlt: "กลุ่มทักษะที่เชื่อมโยงกัน โดยแต่ละทักษะอยู่ในหนึ่งในสี่สถานะความชำนาญ",
+            eyebrowStep: "ขั้นที่",
+        },
+        products: {
+            liveLabel: "เปิดใช้งานแล้ว",
+            liveNote: "สมุดงานเล่มเดียวกันถึงนักเรียนผ่านสองช่องทาง: Tutor Advantage สำหรับครอบครัว และ Blended Learning สำหรับโรงเรียน",
+            cta: "ดูผลิตภัณฑ์",
+            primary: {
+                description: "สมุดงานที่เล่าเป็นเรื่องราวและแอปสำหรับผู้เรียนภาษาอังกฤษวัยเยาว์",
+                meta: "15 ระดับที่สอดคล้อง CEFR โปรแกรมที่ใช้งานอยู่ถึงระดับ A2",
+            },
+            reading: {
+                description: "สมุดงานอ่านปริมาณมากและแอปสำหรับผู้เรียนภาษาอังกฤษ",
+                meta: "18 ระดับที่สอดคล้อง CEFR โปรแกรมที่ใช้งานอยู่ถึงระดับ A2",
+            },
+            codecamp: {
+                description: "บูตแคมป์วิศวกรรมซอฟต์แวร์แบบฟูลสแตกสำหรับผู้ใหญ่ โดยมี Mastery Advantage ทำงานอยู่ภายใน",
+                meta: "ประมาณ 12 ถึง 15 สัปดาห์",
+            },
+            roadmapLabel: "อยู่ในแผนงานของเรา",
+            roadmapNote: "สายผลิตภัณฑ์เหล่านี้อยู่ในแผน เรายังไม่กำหนดวันที่",
+            roadmapTag: "อยู่ในแผน",
+        },
+        schools: {
+            imageAlt: "ครูยืนหน้ากระดานขณะที่นักเรียนเรียนจากสมุดงานที่พิมพ์และแท็บเล็ต",
+            blended: "Blended Learning คือสมุดงานที่พิมพ์ร่วมกับแอปดิจิทัล พร้อมการอบรมครู โรงเรียนใช้สมุดงานเล่มเดียวกับที่ครอบครัวใช้",
+            cta: "คุยกับเราเรื่อง Blended Learning",
+        },
+    },
     kstSrs: "KST+SRS",
     challengeLabel: "Challenge 0{num}",
     hero: {
@@ -196,7 +306,7 @@ export const th = {
         eyebrow: "เครื่องยนต์",
         title: "Knowledge Space Theory พบกับ Spaced Repetition",
         description:
-            "สองระบบที่พิสูจน์ด้วยงานวิจัยทำงานร่วมกัน: KST ทำแผนที่การพึ่งพาทักษะทุกระดับเพื่อให้ระบบรู้ว่าอะไรคือขั้นตอนถัดไป และ FSRS จัดตารางทบทวนแต่ละครั้งในช่วงเวลาก่อนที่จะลืม — ไม่มีอะไรหายไปและไม่มีอะไรเสียเปล่า",
+            "สองระบบที่พิสูจน์ด้วยงานวิจัยทำงานร่วมกัน: KST ทำแผนที่การพึ่งพาทักษะทุกระดับเพื่อให้ระบบรู้ว่าอะไรคือขั้นตอนถัดไป และ FSRS จัดตารางทบทวนแต่ละครั้งก่อนที่นักเรียนมีแนวโน้มจะลืม",
         cta: "เรียนรู้เพิ่มเติมเกี่ยวกับ Mastery Advantage",
         pillars: {
             kst: {
@@ -205,11 +315,11 @@ export const th = {
             },
             srs: {
                 title: "Spaced Repetition (FSRS)",
-                description: "Free Spaced Repetition Scheduler ปรับช่วงทบทวนแต่ละครั้งให้เหมาะกับแต่ละคน เนื้อหาจะแสดงในช่วงเวลาที่เหมาะสม — ไม่เร็วเกินไป ไม่ช้าเกินไป",
+                description: "Free Spaced Repetition Scheduler ปรับช่วงทบทวนแต่ละครั้งให้เหมาะกับแต่ละคน เนื้อหาจะกลับมาให้ทบทวนก่อนที่นักเรียนมีแนวโน้มจะลืม",
             },
             placement: {
                 title: "การจัดตำแหน่งแบบปรับตัว",
-                description: "นักเรียนถูกจัดอยู่ในระดับที่แท้จริงตั้งแต่วันแรกผ่านการประเมินที่ปรับขอบเขต ไม่มีแบบทดสอบจัดตำแหน่ง ไม่มีเดา — มีเพียงข้อมูล",
+                description: "การจัดตำแหน่งใช้การประเมินที่ปรับขอบเขตเพื่อหาระดับที่นักเรียนพร้อมเรียน ฟีเจอร์ปรับตัวสำหรับ Primary Advantage ตั้งเป้าไว้ที่เดือนพฤษภาคม 2027",
             },
         },
     },
@@ -337,6 +447,61 @@ export const th = {
 };
 
 export const zh = {
+    v2: {
+        hero: {
+            imageAlt: "并排摆放的纸质练习册和平板电脑，以及连接两者的技能图谱。",
+            graphLabel: "技能图谱",
+            stats: {
+                lessons: "每本纸质练习册的课时",
+                scope: "当前课程的 CEFR 范围",
+                scopeValue: "Pre-A1 至 A2",
+            },
+        },
+        tutor: {
+            channel: "面向家庭的渠道",
+            imageAlt: "一位导师和一小组学生一起使用纸质练习册学习。",
+            bookAlt: "摊开在桌上的 Primary Advantage 纸质练习册。",
+            booksLabel: "现已发售",
+            priceLabel: "课程包起价",
+            price: "3,000 泰铢",
+            priceNote: "一个课程包对应一本练习册。价格会随市场调整。",
+            bookNames: {
+                primary2: "Primary Advantage Origins 2",
+                primary31: "Primary Advantage Origins 3.1",
+                reading2: "Reading Advantage Origins 2",
+            },
+            reedyLabel: "Reedy 口语练习",
+        },
+        engine: {
+            imageAlt: "一组相互连接的技能，每项技能处于四种掌握状态之一。",
+            eyebrowStep: "步骤",
+        },
+        products: {
+            liveLabel: "已上线",
+            liveNote: "同一套纸质书通过两个渠道到达学生：面向家庭的 Tutor Advantage 和面向学校的 Blended Learning。",
+            cta: "查看产品",
+            primary: {
+                description: "以故事为主线的练习册和应用，面向年幼的英语学习者。",
+                meta: "15 个对齐 CEFR 的级别。当前课程到 A2。",
+            },
+            reading: {
+                description: "面向英语学习者的泛读练习册和应用。",
+                meta: "18 个对齐 CEFR 的级别。当前课程到 A2。",
+            },
+            codecamp: {
+                description: "面向成年人的全栈工程训练营。Mastery Advantage 在其中运行。",
+                meta: "约 12 至 15 周。",
+            },
+            roadmapLabel: "路线图中",
+            roadmapNote: "这些产品线在计划中，我们不给出日期。",
+            roadmapTag: "计划中",
+        },
+        schools: {
+            imageAlt: "老师站在黑板前，学生使用纸质练习册和平板电脑学习。",
+            blended: "Blended Learning 是纸质练习册加数字应用，并包含教师培训。学校使用的书与家庭使用的相同。",
+            cta: "咨询 Blended Learning",
+        },
+    },
     kstSrs: "KST+SRS",
     challengeLabel: "挑战 {num}",
     hero: {
@@ -365,7 +530,7 @@ export const zh = {
         eyebrow: "引擎",
         title: "知识空间理论遇见间隔重复。",
         description:
-            "两个经过研究验证的系统协同工作：KST 映射每个技能依赖关系，让系统始终知道下一步是什么；FSRS 在遗忘之前安排每次复习——不丢失任何东西，也不浪费任何东西。",
+            "两个经过研究验证的系统协同工作：KST 映射每个技能依赖关系，让系统始终知道下一步是什么；FSRS 在学生可能遗忘之前安排每次复习。",
         cta: "了解更多关于 Mastery Advantage",
         pillars: {
             kst: {
@@ -374,11 +539,11 @@ export const zh = {
             },
             srs: {
                 title: "间隔重复（FSRS）",
-                description: "自由间隔重复调度器为每个人校准每次复习间隔。项目在最佳时刻出现——不太早，不太晚。",
+                description: "自由间隔重复调度器为每个人校准每次复习间隔。项目会在学生可能遗忘之前重新出现。",
             },
             placement: {
                 title: "自适应分班",
-                description: "学生从第一天起就通过边缘校准评估被放置在真实水平。没有分班测试，没有猜测——只有数据。",
+                description: "分班使用边缘校准评估，找出学生准备好学习的水平。Primary Advantage 的自适应功能目标是 2027 年 5 月。",
             },
         },
     },

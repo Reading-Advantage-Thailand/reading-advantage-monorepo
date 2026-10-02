@@ -2,9 +2,15 @@ import { Link } from "@/locales/navigation";
 import { Mail } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { Button } from "@/components/ui/button";
-import { MarketingSvg } from "@/components/marketing/marketing-svg";
+import { MasteryHeroVideo } from "@/components/marketing/mastery-hero-video";
+import {
+  MasteryPathPanel,
+  MasteryProgressPanel,
+  MasteryReviewPanel,
+} from "@/components/marketing/mastery-panels";
+import { SectionHeader } from "@/components/marketing/section-header";
+import { siteLogos, siteVideos } from "@/lib/site-assets";
 import { buildMarketingMetadata } from "@/lib/seo";
-import type { Locale } from "@/config/locale-config";
 import type { Metadata } from "next";
 
 /**
@@ -32,251 +38,222 @@ export async function generateMetadata({
 
 /**
  * Renders the localized Mastery Advantage marketing page.
- * @param params The locale route parameters.
  * @returns The localized Mastery Advantage page.
  */
-export default async function MasteryAdvantagePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
+export default async function MasteryAdvantagePage() {
   const t = await getScopedI18n("pages.masteryAdvantage");
 
-  const products = [
+  const states = {
+    mastered: t("states.mastered"),
+    here: t("states.here"),
+    ready: t("states.ready"),
+    locked: t("states.locked"),
+  };
+
+  const pillars = [
+    { title: t("technicalOverview.pillars.kst.title"), description: t("technicalOverview.pillars.kst.description") },
+    { title: t("technicalOverview.pillars.fsrs.title"), description: t("technicalOverview.pillars.fsrs.description") },
+    { title: t("technicalOverview.pillars.edgeCalibration.title"), description: t("technicalOverview.pillars.edgeCalibration.description") },
+    { title: t("technicalOverview.pillars.placement.title"), description: t("technicalOverview.pillars.placement.description") },
+    { title: t("technicalOverview.pillars.proficiency.title"), description: t("technicalOverview.pillars.proficiency.description") },
+  ];
+
+  const runs = [
     {
-      key: "reading-advantage",
-      name: "Reading Advantage",
-      color: "bg-sky-100 text-sky-800 border-sky-200",
+      key: "codecamp",
+      logo: siteLogos.codecamp.color,
+      logoAlt: t("powersEveryProduct.cards.codecamp.logoAlt"),
+      status: t("powersEveryProduct.cards.codecamp.status"),
+      description: t("powersEveryProduct.cards.codecamp.description"),
+      badge: "bg-emerald-100 text-emerald-900",
+      bar: "bg-[#22c55e]",
     },
     {
-      key: "primary-advantage",
-      name: "Primary Advantage",
-      color: "bg-sky-50 text-sky-700 border-sky-100",
+      key: "primary",
+      logo: siteLogos.primary.color,
+      logoAlt: t("powersEveryProduct.cards.primary.logoAlt"),
+      status: t("powersEveryProduct.cards.primary.status"),
+      description: t("powersEveryProduct.cards.primary.description"),
+      badge: "bg-amber-100 text-amber-900",
+      bar: "bg-[#fbbf24]",
     },
     {
-      key: "storytime-advantage",
-      name: "Storytime Advantage",
-      color: "bg-amber-50 text-amber-700 border-amber-100",
-    },
-    {
-      key: "math-advantage",
-      name: "Math Advantage",
-      color: "bg-orange-50 text-orange-700 border-orange-100",
-    },
-    {
-      key: "science-advantage",
-      name: "Science Advantage",
-      color: "bg-rose-50 text-rose-700 border-rose-100",
-    },
-    {
-      key: "stem-advantage",
-      name: "STEM Advantage",
-      color: "bg-indigo-50 text-indigo-700 border-indigo-100",
-    },
-    {
-      key: "zhongwen-advantage",
-      name: "Zhongwen Advantage",
-      color: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-100",
-    },
-    {
-      key: "tutor-advantage",
-      name: "Tutor Advantage",
-      color: "bg-violet-50 text-violet-700 border-violet-100",
-    },
-    {
-      key: "codecamp-advantage",
-      name: "CodeCamp Advantage",
-      color: "bg-purple-50 text-purple-700 border-purple-100",
+      key: "reading",
+      logo: siteLogos.reading.color,
+      logoAlt: t("powersEveryProduct.cards.reading.logoAlt"),
+      status: t("powersEveryProduct.cards.reading.status"),
+      description: t("powersEveryProduct.cards.reading.description"),
+      badge: "bg-slate-200 text-slate-800",
+      bar: "bg-[#0c1437]",
     },
   ];
 
-  const pillars = [
-    {
-      title: t("technicalOverview.pillars.kst.title"),
-      description: t("technicalOverview.pillars.kst.description"),
-    },
-    {
-      title: t("technicalOverview.pillars.fsrs.title"),
-      description: t("technicalOverview.pillars.fsrs.description"),
-    },
-    {
-      title: t("technicalOverview.pillars.edgeCalibration.title"),
-      description: t("technicalOverview.pillars.edgeCalibration.description"),
-    },
-    {
-      title: t("technicalOverview.pillars.placement.title"),
-      description: t("technicalOverview.pillars.placement.description"),
-    },
-    {
-      title: t("technicalOverview.pillars.proficiency.title"),
-      description: t("technicalOverview.pillars.proficiency.description"),
-    },
-  ];
+  const steps = ["lesson", "tag", "graph"] as const;
 
   return (
     <main className="overflow-x-hidden bg-[#faf9f7] text-black">
-      {/* ─────────────────────────────────────────────────────────────
-          HERO — Adaptive path
-         ───────────────────────────────────────────────────────────── */}
-      <section className="relative pt-28 md:pt-36 pb-24 md:pb-32">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <div className="lg:col-span-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 mb-8">
-                {t("hero.eyebrow")}
-              </p>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-[-0.03em] text-black mb-8">
-                {t("hero.title")}
-              </h1>
-              <p className="text-lg md:text-xl leading-relaxed text-[#55534e] max-w-xl">
-                {t("hero.description")}
-              </p>
-            </div>
-
-            <div className="lg:col-span-6">
-              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-[rgba(0,0,0,0.1)_0px_1px_1px,rgba(0,0,0,0.04)_0px_-1px_1px_inset,rgba(0,0,0,0.05)_0px_-0.5px_1px]">
-                <MarketingSvg
-                  baseName="ma-marketing-adaptive-path"
-                  locale={locale as Locale}
-                  className="w-full h-auto"
-                  alt={t("altTexts.adaptivePath")}
-                />
-              </div>
-            </div>
+      {/* HERO with muted looping background video */}
+      <section className="relative isolate overflow-hidden bg-[#0c1437] pb-24 pt-32 text-white md:pb-32 md:pt-44">
+        <MasteryHeroVideo
+          src={siteVideos.masteryBloom.src}
+          poster={siteVideos.masteryBloom.poster}
+          playLabel={t("video.play")}
+          pauseLabel={t("video.pause")}
+        />
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0c1437] via-[#0c1437]/85 to-[#0c1437]/30" />
+        <div className="container relative z-10 mx-auto max-w-6xl px-4">
+          <div className="max-w-2xl">
+            <p className="mb-8 text-xs font-semibold uppercase tracking-[0.18em] text-[#fbbf24]">{t("hero.eyebrow")}</p>
+            <h1 className="mb-8 text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-white md:text-6xl lg:text-7xl">
+              {t("hero.title")}
+            </h1>
+            <p className="max-w-xl text-lg leading-relaxed text-[#dbe2ff] md:text-xl">{t("hero.description")}</p>
           </div>
         </div>
       </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          SPACED REPETITION
-         ───────────────────────────────────────────────────────────── */}
-      <section className="py-24 md:py-32 bg-white border-y border-[#dad4c8]">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <div className="lg:col-span-6 order-2 lg:order-1">
-              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-[rgba(0,0,0,0.1)_0px_1px_1px,rgba(0,0,0,0.04)_0px_-1px_1px_inset,rgba(0,0,0,0.05)_0px_-0.5px_1px]">
-                <MarketingSvg
-                  baseName="ma-marketing-spaced-repetition"
-                  locale={locale as Locale}
-                  className="w-full h-auto"
-                  alt={t("altTexts.spacedRepetition")}
-                />
-              </div>
-            </div>
-
-            <div className="lg:col-span-6 order-1 lg:order-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 mb-8">
-                {t("spacedRepetition.eyebrow")}
-              </p>
-              <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-6">
-                {t("spacedRepetition.title")}
-              </h2>
-              <p className="text-base md:text-lg leading-relaxed text-[#55534e]">
-                {t("spacedRepetition.description")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────────
-          PROGRESS TRACKING
-         ───────────────────────────────────────────────────────────── */}
+      {/* WHAT'S NEXT */}
       <section className="py-24 md:py-32">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 mb-8">
-                {t("progress.eyebrow")}
-              </p>
-              <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-6">
-                {t("progress.title")}
-              </h2>
-              <p className="text-base md:text-lg leading-relaxed text-[#55534e]">
-                {t("progress.description")}
-              </p>
+              <SectionHeader
+                eyebrow={t("adaptivePath.eyebrow")}
+                title={t("adaptivePath.title")}
+                description={t("adaptivePath.description")}
+              />
             </div>
-
             <div className="lg:col-span-6">
-              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-[rgba(0,0,0,0.1)_0px_1px_1px,rgba(0,0,0,0.04)_0px_-1px_1px_inset,rgba(0,0,0,0.05)_0px_-0.5px_1px]">
-                <MarketingSvg
-                  baseName="ma-marketing-progress"
-                  locale={locale as Locale}
-                  className="w-full h-auto"
-                  alt={t("altTexts.progressTracking")}
-                />
-              </div>
+              <MasteryPathPanel label={t("panels.path.label")} caption={t("panels.path.caption")} states={states} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          TECHNICAL OVERVIEW
-         ───────────────────────────────────────────────────────────── */}
-      <section className="py-24 md:py-32 bg-white border-y border-[#dad4c8]">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <header className="max-w-2xl mb-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 mb-6">
-              {t("technicalOverview.eyebrow")}
-            </p>
-            <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-6">
-              {t("technicalOverview.title")}
-            </h2>
-            <p className="text-base md:text-lg leading-relaxed text-[#55534e]">
-              {t("technicalOverview.description")}
-            </p>
-          </header>
+      {/* REVIEW AT THE RIGHT TIME */}
+      <section className="border-y border-[#dad4c8] bg-white py-24 md:py-32">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+            <div className="order-2 lg:order-1 lg:col-span-6">
+              <MasteryReviewPanel
+                label={t("panels.review.label")}
+                caption={t("panels.review.caption")}
+                states={states}
+                axisMemory={t("panels.review.axisMemory")}
+                axisTime={t("panels.review.axisTime")}
+                reviewDue={t("panels.review.reviewDue")}
+              />
+            </div>
+            <div className="order-1 lg:order-2 lg:col-span-6">
+              <SectionHeader
+                eyebrow={t("spacedRepetition.eyebrow")}
+                title={t("spacedRepetition.title")}
+                description={t("spacedRepetition.description")}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
-          <ol className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#dad4c8] border border-[#dad4c8] rounded-2xl overflow-hidden">
-            {pillars.map((item, i) => (
-              <li key={item.title} className="bg-white p-8 flex flex-col gap-4">
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">
-                  0{i + 1}
+      {/* PROGRESS YOU CAN SEE */}
+      <section className="py-24 md:py-32">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-6">
+              <SectionHeader
+                eyebrow={t("progress.eyebrow")}
+                title={t("progress.title")}
+                description={t("progress.description")}
+              />
+            </div>
+            <div className="lg:col-span-6">
+              <MasteryProgressPanel
+                label={t("panels.progress.label")}
+                caption={t("panels.progress.caption")}
+                states={states}
+                example={t("panels.progress.example")}
+                skills={[
+                  t("panels.progress.skills.a"),
+                  t("panels.progress.skills.b"),
+                  t("panels.progress.skills.c"),
+                  t("panels.progress.skills.d"),
+                ]}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW A LESSON IS TAGGED */}
+      <section className="border-y border-[#dad4c8] bg-white py-24 md:py-32">
+        <div className="container mx-auto max-w-6xl px-4">
+          <SectionHeader
+            eyebrow={t("tagged.eyebrow")}
+            title={t("tagged.title")}
+            description={t("tagged.description")}
+            className="mb-14"
+          />
+          <ol className="grid gap-6 md:grid-cols-3">
+            {steps.map((step, i) => (
+              <li key={step} className="relative rounded-2xl border border-[#dad4c8] bg-[#faf9f7] p-7">
+                <span className="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#0c1437] text-sm font-semibold text-[#fbbf24]">
+                  {i + 1}
                 </span>
-                <h3 className="text-xl font-semibold tracking-tight text-black">
-                  {item.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-[#55534e]">
-                  {item.description}
-                </p>
+                <h3 className="mb-3 text-xl font-semibold tracking-tight text-black">{t(`tagged.steps.${step}.title`)}</h3>
+                <p className="text-sm leading-relaxed text-[#55534e]">{t(`tagged.steps.${step}.description`)}</p>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          POWERS EVERY PRODUCT
-         ───────────────────────────────────────────────────────────── */}
+      {/* TECHNICAL OVERVIEW */}
       <section className="py-24 md:py-32">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <header className="max-w-2xl mb-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 mb-6">
-              {t("powersEveryProduct.eyebrow")}
-            </p>
-            <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-6">
-              {t("powersEveryProduct.title")}
-            </h2>
-            <p className="text-base md:text-lg leading-relaxed text-[#55534e]">
-              {t("powersEveryProduct.description")}
-            </p>
-          </header>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.map((product) => (
-              <Link
-                key={product.key}
-                href={`/products/${product.key}`}
-                className={`flex items-center justify-center p-6 rounded-2xl border ${product.color} hover:shadow-md hover:-translate-y-1 transition-all duration-200`}
+        <div className="container mx-auto max-w-6xl px-4">
+          <SectionHeader
+            eyebrow={t("technicalOverview.eyebrow")}
+            title={t("technicalOverview.title")}
+            description={t("technicalOverview.description")}
+            className="mb-16"
+          />
+          <ol className="grid gap-px overflow-hidden rounded-2xl border border-[#dad4c8] bg-[#dad4c8] md:grid-cols-2 lg:grid-cols-6">
+            {pillars.map((item, i) => (
+              <li
+                key={item.title}
+                className={`flex flex-col gap-4 bg-white p-8 ${i < 3 ? "lg:col-span-2" : "lg:col-span-3"} ${i === 4 ? "md:col-span-2" : ""}`}
               >
-                <span className="text-sm font-semibold text-center">
-                  {product.name}
-                </span>
-              </Link>
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">0{i + 1}</span>
+                <h3 className="text-xl font-semibold tracking-tight text-black">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-[#55534e]">{item.description}</p>
+              </li>
             ))}
-          </div>
+          </ol>
+        </div>
+      </section>
+
+      {/* WHERE IT RUNS */}
+      <section className="border-y border-[#dad4c8] bg-white py-24 md:py-32">
+        <div className="container mx-auto max-w-6xl px-4">
+          <SectionHeader
+            eyebrow={t("powersEveryProduct.eyebrow")}
+            title={t("powersEveryProduct.title")}
+            description={t("powersEveryProduct.description")}
+            className="mb-14"
+          />
+          <ul className="m-0 grid list-none gap-6 p-0 md:grid-cols-3">
+            {runs.map((run) => (
+              <li key={run.key} className="flex flex-col overflow-hidden rounded-2xl border border-[#dad4c8] bg-[#faf9f7]">
+                <div className={`h-1.5 ${run.bar}`} />
+                <div className="flex flex-1 flex-col gap-5 p-7">
+                  <div className="flex items-center justify-between gap-3">
+                    <img src={run.logo} alt={run.logoAlt} className="h-12 w-auto max-w-[60%]" />
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${run.badge}`}>{run.status}</span>
+                  </div>
+                  <p className="text-sm leading-relaxed text-[#55534e]">{run.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

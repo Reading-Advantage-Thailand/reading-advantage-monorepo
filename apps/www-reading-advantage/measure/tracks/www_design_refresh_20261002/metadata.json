@@ -1,0 +1,11 @@
+{
+  "track_id": "www_design_refresh_20261002",
+  "type": "feature",
+  "status": "in_progress",
+  "created_at": "2026-10-02T23:30:00Z",
+  "updated_at": "2026-10-02T23:30:00Z",
+  "description": "Visual refresh of the home, Tutor Advantage, and Mastery Advantage pages using the new site assets, brand tokens, and shared components.",
+  "estimated_tasks": 12,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

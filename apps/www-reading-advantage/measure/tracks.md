@@ -4,6 +4,18 @@ This file tracks all major tracks for project. Each track has its own detailed p
 
 ---
 
+## [ ] Track: www Design Refresh
+
+**Status:** In progress 2026-10-02
+
+**Type:** feature | **Estimated Tasks:** 12
+
+**Description:** Visual refresh of the home, Tutor Advantage, and Mastery Advantage pages.
+
+_Link: [./measure/tracks/www_design_refresh_20261002/](./measure/tracks/www_design_refresh_20261002/)_
+
+---
+
 ## [ ] Track: www Asset Pipeline
 
 **Status:** In progress 2026-10-02

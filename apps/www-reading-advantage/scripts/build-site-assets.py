@@ -45,6 +45,11 @@ IMAGES = {
     "chibiForestPoster": (FF + "posters/the-enchanted-forest-chibi-quest.jpg", "chibi", ["primary", "tutor"]),
     "chibiVaultPoster": (FF + "posters/the-vault-chibi-quest.jpg", "chibi", ["primary", "tutor"]),
     "chibiOakClearing": (FF + "chibi-quest-old-oak-clearing-3q-render.png", "chibi", ["primary", "tutor"]),
+    # AI-made Thai classroom images (confirmed AI-made by Daniel, 2026-10-02). The white-teacher image is excluded.
+    "classroomSmallGroup": ("images/small-group.png", "classroom", ["any"]),
+    "classroomStudentsApp": ("images/students-engaging-with-app.png", "classroom", ["any"]),
+    "classroomTeacherBoard": ("images/teacher-at-board.png", "classroom", ["blended", "reading"]),
+    "classroomBlended": ("images/reading-advantage-blended-learning-classroom.jpg", "classroom", ["blended", "any"]),
     "screenArticleReading": (SS + "01-2026-06-11-article-reading-full-page.png", "screens", ["reading"]),
     "screenGamesLibrary": (SS + "03-2026-06-11-games-library-full-page.png", "screens", ["reading"]),
     "screenMagicDefense": (SS + "04-2026-06-11-game-magic-defense-full-page.png", "screens", ["reading"]),

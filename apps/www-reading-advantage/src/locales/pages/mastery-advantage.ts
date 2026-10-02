@@ -10,6 +10,60 @@ export const en = {
         spacedRepetition: "Spaced repetition visualization",
         progressTracking: "Progress tracking visualization",
     },
+    video: {
+        play: "Play background video",
+        pause: "Pause background video",
+    },
+    states: {
+        mastered: "Mastered",
+        here: "You are here",
+        ready: "Ready",
+        locked: "Locked",
+    },
+    panels: {
+        path: {
+            label: "Skill graph",
+            caption: "Mastered skills open the skills that depend on them. Locked skills wait for their prerequisites.",
+        },
+        review: {
+            label: "Review timing",
+            caption: "Each review is scheduled for the individual student, before the memory fades.",
+            axisMemory: "Memory",
+            axisTime: "Time",
+            reviewDue: "Review due",
+        },
+        progress: {
+            label: "Skill progress",
+            caption: "One view shows what each student has mastered, what is ready, and what is still locked.",
+            example: "Illustrative example, not real student data.",
+            skills: {
+                a: "Skill A",
+                b: "Skill B",
+                c: "Skill C",
+                d: "Skill D",
+            },
+        },
+    },
+    tagged: {
+        eyebrow: "Tagged content",
+        title: "How a lesson is tagged.",
+        description:
+            "Every printed workbook has 14 lessons. We tag each lesson to skills in the Mastery Advantage knowledge graph. The same tags connect the workbook to its digital twin.",
+        steps: {
+            lesson: {
+                title: "A workbook lesson",
+                description: "The lesson stays a printed, teacher-led lesson with its own activities and reading.",
+            },
+            tag: {
+                title: "Tagged to skills",
+                description: "Each lesson links to the skills it teaches and practices. Skills align to CEFR levels.",
+            },
+            graph: {
+                title: "Placed in the graph",
+                description: "The graph orders skills by prerequisite, so the engine knows which skills are ready next.",
+            },
+        },
+    },
     adaptivePath: {
         eyebrow: "Adaptive learning paths",
         title: "Always know what's next.",
@@ -61,6 +115,23 @@ export const en = {
         title: "Live in CodeCamp Advantage. Entering Primary Advantage.",
         description:
             "Mastery Advantage runs in production for CodeCamp Advantage. It is entering Primary Advantage through tagged content. Our live product lines are Primary Advantage, Reading Advantage, and CodeCamp Advantage.",
+        cards: {
+            codecamp: {
+                status: "Live",
+                logoAlt: "CodeCamp Advantage logo",
+                description: "Mastery Advantage runs in production for CodeCamp Advantage.",
+            },
+            primary: {
+                status: "Entering",
+                logoAlt: "Primary Advantage logo",
+                description: "Entering through tagged content. Shadow mode runs in semester 2 2026. Adaptive features are targeted for May 2027.",
+            },
+            reading: {
+                status: "Not yet",
+                logoAlt: "Reading Advantage logo",
+                description: "Not in Reading Advantage today. It follows after Primary Advantage, with no date.",
+            },
+        },
     },
     cta: {
         eyebrow: "See it in action",
@@ -82,6 +153,60 @@ export const th = {
         adaptivePath: "ภาพจำลองเส้นทางการเรียนรู้แบบปรับตัว",
         spacedRepetition: "ภาพจำลองการทบทวนแบบเว้นช่วง",
         progressTracking: "ภาพจำลองการติดตามความก้าวหน้า",
+    },
+    video: {
+        play: "เล่นวิดีโอพื้นหลัง",
+        pause: "หยุดวิดีโอพื้นหลัง",
+    },
+    states: {
+        mastered: "เชี่ยวชาญแล้ว",
+        here: "คุณอยู่ที่นี่",
+        ready: "พร้อมเรียน",
+        locked: "ล็อกอยู่",
+    },
+    panels: {
+        path: {
+            label: "กราฟทักษะ",
+            caption: "ทักษะที่เชี่ยวชาญแล้วจะเปิดทักษะที่ต่อยอดจากมัน ทักษะที่ล็อกอยู่รอข้อกำหนดเบื้องต้นของตัวเอง",
+        },
+        review: {
+            label: "จังหวะการทบทวน",
+            caption: "การทบทวนแต่ละครั้งถูกกำหนดเวลาให้เหมาะกับนักเรียนแต่ละคน ก่อนที่ความจำจะจางลง",
+            axisMemory: "ความจำ",
+            axisTime: "เวลา",
+            reviewDue: "ถึงเวลาทบทวน",
+        },
+        progress: {
+            label: "ความก้าวหน้าของทักษะ",
+            caption: "มุมมองเดียวแสดงสิ่งที่นักเรียนแต่ละคนเชี่ยวชาญแล้ว สิ่งที่พร้อมเรียน และสิ่งที่ยังล็อกอยู่",
+            example: "ตัวอย่างประกอบ ไม่ใช่ข้อมูลนักเรียนจริง",
+            skills: {
+                a: "ทักษะ A",
+                b: "ทักษะ B",
+                c: "ทักษะ C",
+                d: "ทักษะ D",
+            },
+        },
+    },
+    tagged: {
+        eyebrow: "เนื้อหาที่ติดแท็ก",
+        title: "บทเรียนถูกติดแท็กอย่างไร",
+        description:
+            "หนังสือแบบฝึกหัดพิมพ์ทุกเล่มมี 14 บทเรียน เราติดแท็กแต่ละบทเรียนเข้ากับทักษะในกราฟความรู้ของ Mastery Advantage แท็กชุดเดียวกันเชื่อมหนังสือกับฉบับดิจิทัล",
+        steps: {
+            lesson: {
+                title: "บทเรียนในหนังสือ",
+                description: "บทเรียนยังเป็นบทเรียนที่พิมพ์และมีครูนำ พร้อมกิจกรรมและบทอ่านของตัวเอง",
+            },
+            tag: {
+                title: "ติดแท็กกับทักษะ",
+                description: "แต่ละบทเรียนเชื่อมกับทักษะที่สอนและฝึก ทักษะสอดคล้องกับระดับ CEFR",
+            },
+            graph: {
+                title: "วางในกราฟ",
+                description: "กราฟเรียงทักษะตามข้อกำหนดเบื้องต้น เครื่องยนต์จึงรู้ว่าทักษะใดพร้อมเรียนถัดไป",
+            },
+        },
     },
     adaptivePath: {
         eyebrow: "เส้นทางการเรียนรู้แบบปรับตัว",
@@ -134,6 +259,23 @@ export const th = {
         title: "ใช้งานจริงใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage",
         description:
             "Mastery Advantage ทำงานในระบบจริงของ CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก สายผลิตภัณฑ์ที่เปิดใช้งานแล้วคือ Primary Advantage, Reading Advantage และ CodeCamp Advantage",
+        cards: {
+            codecamp: {
+                status: "ใช้งานจริง",
+                logoAlt: "โลโก้ CodeCamp Advantage",
+                description: "Mastery Advantage ทำงานในระบบจริงของ CodeCamp Advantage",
+            },
+            primary: {
+                status: "กำลังเข้าสู่",
+                logoAlt: "โลโก้ Primary Advantage",
+                description: "กำลังเข้าสู่ผ่านเนื้อหาที่ติดแท็ก โหมดเงา (shadow mode) ทำงานในภาคเรียนที่ 2 ปี 2026 ฟีเจอร์ปรับตัวตั้งเป้าไว้ที่เดือนพฤษภาคม 2027",
+            },
+            reading: {
+                status: "ยังไม่มี",
+                logoAlt: "โลโก้ Reading Advantage",
+                description: "ปัจจุบันยังไม่มีใน Reading Advantage จะตามหลัง Primary Advantage โดยยังไม่มีกำหนดวัน",
+            },
+        },
     },
     cta: {
         eyebrow: "ดูการทำงานจริง",
@@ -155,6 +297,60 @@ export const zh = {
         adaptivePath: "自适应学习路径可视化",
         spacedRepetition: "间隔重复可视化",
         progressTracking: "进度追踪可视化",
+    },
+    video: {
+        play: "播放背景视频",
+        pause: "暂停背景视频",
+    },
+    states: {
+        mastered: "已掌握",
+        here: "你在这里",
+        ready: "可以学习",
+        locked: "未解锁",
+    },
+    panels: {
+        path: {
+            label: "技能图",
+            caption: "已掌握的技能会开启依赖它们的技能。未解锁的技能在等待自己的先决条件。",
+        },
+        review: {
+            label: "复习时机",
+            caption: "每次复习都按学生个人情况安排，在记忆淡去之前进行。",
+            axisMemory: "记忆",
+            axisTime: "时间",
+            reviewDue: "该复习了",
+        },
+        progress: {
+            label: "技能进度",
+            caption: "一个视图展示每个学生已掌握什么、什么已可学习、什么仍未解锁。",
+            example: "示意图，并非真实学生数据。",
+            skills: {
+                a: "技能 A",
+                b: "技能 B",
+                c: "技能 C",
+                d: "技能 D",
+            },
+        },
+    },
+    tagged: {
+        eyebrow: "已标记的内容",
+        title: "一节课如何被标记。",
+        description:
+            "每本印刷练习册有 14 节课。我们把每节课标记到 Mastery Advantage 知识图中的技能。同样的标记把练习册与它的数字版连接起来。",
+        steps: {
+            lesson: {
+                title: "一节练习册课程",
+                description: "这节课仍然是由教师带领的印刷课程，有自己的活动和阅读材料。",
+            },
+            tag: {
+                title: "标记到技能",
+                description: "每节课链接到它教授和练习的技能。技能与 CEFR 等级对应。",
+            },
+            graph: {
+                title: "放入图中",
+                description: "图按先决条件排列技能，所以引擎知道下一步哪些技能已可学习。",
+            },
+        },
     },
     adaptivePath: {
         eyebrow: "自适应学习路径",
@@ -207,6 +403,23 @@ export const zh = {
         title: "已在 CodeCamp Advantage 中上线，正进入 Primary Advantage。",
         description:
             "Mastery Advantage 已在 CodeCamp Advantage 的生产环境中运行，并正通过已标记的内容进入 Primary Advantage。我们已上线的产品线是 Primary Advantage、Reading Advantage 和 CodeCamp Advantage。",
+        cards: {
+            codecamp: {
+                status: "已上线",
+                logoAlt: "CodeCamp Advantage 标志",
+                description: "Mastery Advantage 已在 CodeCamp Advantage 的生产环境中运行。",
+            },
+            primary: {
+                status: "正在进入",
+                logoAlt: "Primary Advantage 标志",
+                description: "正通过已标记的内容进入。影子模式在 2026 年第二学期运行。自适应功能的目标时间是 2027 年 5 月。",
+            },
+            reading: {
+                status: "暂未",
+                logoAlt: "Reading Advantage 标志",
+                description: "目前 Reading Advantage 中没有。它将在 Primary Advantage 之后跟进，暂无日期。",
+            },
+        },
     },
     cta: {
         eyebrow: "查看实际操作",
