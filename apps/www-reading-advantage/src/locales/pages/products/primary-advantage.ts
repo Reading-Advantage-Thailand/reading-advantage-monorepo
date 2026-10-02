@@ -1,8 +1,8 @@
 export const en = {
   hero: {
     title: "Primary Advantage",
-    subtitle: "Grades 3-6 Literacy Development",
-    description: "Developmentally appropriate extensive reading application designed specifically for grades 3-6, built on CEFR-aligned curriculum and powered by advanced AI technology."
+    subtitle: "English reading for young learners, Pre-A1 to A2.",
+    description: "An extensive reading app and printed workbooks for young learners, built on a CEFR-aligned curriculum. The active scope runs from Pre-A1 to A2."
   },
   keyFeatures: {
     heading: "Key Features",
@@ -10,33 +10,33 @@ export const en = {
       {
         title: "CEFR-Aligned Curriculum",
         items: [
-          "Cambridge Young Learners vocabulary from Pre-A1 to A2",
-          "Cambridge for Schools vocabulary up to B1 (PET)",
-          "Comprehensive literacy progression for grades 3-6"
+          "Active scope from Pre-A1 to A2, with three sublevels in each CEFR band",
+          "Printed workbooks of 14 lessons, each with a digital twin in the app",
+          "Reading, vocabulary, and writing tasks in every lesson"
         ]
       },
       {
         title: "Age-Appropriate Design",
         items: [
-          "Developmentally suitable for upper primary students",
-          "Engaging interface designed for grades 3-6",
-          "Builds foundation for secondary school success"
+          "Stories and activities written for young learners",
+          "A clear, simple interface for children",
+          "Builds a foundation for the next stage of English study"
         ]
       },
       {
-        title: "AI-Powered Learning",
+        title: "AI-Assisted Learning",
         items: [
-          "Personalized 1-on-1 tutoring via our internal model adapter",
-          "Intelligent writing feedback via our internal model adapter",
-          "Adaptive learning paths based on student progress"
+          "AI-assisted writing feedback",
+          "Content tagged to the Mastery Advantage knowledge graph",
+          "Spaced-repetition vocabulary review"
         ]
       }
     ]
   },
   cefrSection: {
     heading: "CEFR Alignment",
-    title: "Cambridge English Framework",
-    description: "Primary Advantage follows the internationally recognized CEFR framework, ensuring students progress through standardized language levels.",
+    title: "CEFR Levels",
+    description: "Primary Advantage is CEFR-aligned. Students move through the levels from Pre-A1 to A2, with three sublevels in each band.",
     levels: [
       {
         description: "Beginning readers building foundational vocabulary"
@@ -53,7 +53,7 @@ export const en = {
     ]
   },
   cefrLevels: {
-    grades: "Grades",
+    grades: "Active levels",
     aligned: "Aligned",
   },
   support: "Support",
@@ -69,8 +69,8 @@ export const en = {
         description: "Available in English, Thai, and Chinese with seamless language switching."
       },
       {
-        title: "Interactive AI Tutor",
-        description: "On-demand AI-powered tutoring assistance for reading comprehension and vocabulary."
+        title: "AI Reading Assistant",
+        description: "On-demand AI help with reading comprehension and vocabulary."
       },
       {
         title: "Sentence Building Activities",
@@ -82,48 +82,39 @@ export const en = {
       },
       {
         title: "Spaced Repetition System",
-        description: "Smart flashcard system using SRS to optimize vocabulary retention."
+        description: "A flashcard system that uses spaced repetition to support vocabulary retention."
       }
     ]
   },
   aiTechnology: {
-    heading: "Advanced AI Technology",
+    heading: "AI in Primary Advantage",
     gemini: {
-      title: "Adaptive AI Tutoring",
-      description: "Provides personalized 1-on-1 tutoring, adapting to each student's learning pace and style."
+      title: "Knowledge-Graph Practice",
+      description: "Content is tagged to the Mastery Advantage knowledge graph. Adaptive features are still in development."
     },
-    gpt5: {
-      title: "AI Writing Feedback",
-      description: "Delivers intelligent, contextual feedback on writing assignments to improve skills."
+    writingFeedback: {
+      title: "AI-Assisted Writing Feedback",
+      description: "AI-assisted feedback on writing assignments helps students see what to improve."
     }
   },
   resultsSection: {
     heading: "Evidence-Based Methodology",
-    title: "Curriculum-Aligned Learning Gains",
-    description: "Extensive reading programs like Primary Advantage are designed around the CEFR-aligned curriculum and built for measurable classroom outcomes. Specific efficacy gains depend on implementation fidelity and consistent classroom use.",
-    stats: [
-      {
-        value: "85%",
-        label: "Weekly Active Usage"
-      },
-      {
-        value: "100%",
-        label: "Curriculum Alignment"
-      }
-    ]
+    title: "Built on Extensive Reading Research",
+    description: "Primary Advantage uses the extensive-reading methodology that controlled research has found effective. Results vary with implementation quality and reading volume, so we report outcomes school by school.",
+    stats: []
   },
   cta: {
-    heading: "Ready to Transform Your Students' Literacy Journey?",
-    description: "Join schools across Thailand using Primary Advantage to build strong foundations for academic success.",
+    heading: "Bring Primary Advantage to Your School",
+    description: "Primary Advantage is in use at one school today, Boonyathat in Kalasin. Contact us to talk about Blended Learning, which pairs printed workbooks with the app.",
     buttons: {
-      signUp: "Contact for Pilot Program",
+      signUp: "Contact Us",
       freeTrial: "Learn More"
     }
   },
   adaptiveEngine: {
     eyebrow: "Adaptive Engine",
-    heading: "Primary literacy paths, adapted to every young learner",
-    description: "Powered by Mastery Advantage — the KST + SRS engine that maps every literacy skill and schedules practice at the perfect moment.",
+    heading: "Primary practice, tagged to the Mastery Advantage graph",
+    description: "Mastery Advantage is the KST + FSRS engine that maps skills and schedules practice. It is entering Primary Advantage through tagged content.",
     alt: "Primary Advantage adaptive learning visualization",
   },
   eyebrows: {
@@ -147,8 +138,8 @@ export const en = {
 export const th = {
   hero: {
     title: "Primary Advantage",
-    subtitle: "พัฒนาการรู้หนังสือชั้นประถมศึกษาปีที่ 3-6",
-    description: "แอปพลิเคชันการอ่านเชิงขยายที่ออกแบบมาเพื่อชั้นประถมศึกษาปีที่ 3-6 โดยเฉพาะ สร้างบนพื้นฐานหลักสูตรที่สอดคล้องกับ CEFR และขับเคลื่อนด้วยเทคโนโลยี AI ขั้นสูง"
+    subtitle: "การอ่านภาษาอังกฤษสำหรับผู้เรียนวัยเด็ก ระดับ Pre-A1 ถึง A2",
+    description: "แอปการอ่านเชิงขยายและหนังสือแบบฝึกหัดฉบับพิมพ์สำหรับผู้เรียนวัยเด็ก สร้างบนหลักสูตรที่สอดคล้องกับ CEFR ขอบเขตที่ใช้งานอยู่คือ Pre-A1 ถึง A2"
   },
   keyFeatures: {
     heading: "คุณสมบัติหลัก",
@@ -156,33 +147,33 @@ export const th = {
       {
         title: "หลักสูตรที่สอดคล้องกับ CEFR",
         items: [
-          "คำศัพท์ Cambridge Young Learners จากระดับ Pre-A1 ถึง A2",
-          "คำศัพท์ Cambridge for Schools ถึงระดับ B1 (PET)",
-          "การพัฒนาการรู้หนังสือที่ครอบคลุมสำหรับชั้นประถมศึกษาปีที่ 3-6"
+          "ขอบเขตที่ใช้งานอยู่คือ Pre-A1 ถึง A2 โดยแต่ละระดับ CEFR มี 3 ระดับย่อย",
+          "หนังสือแบบฝึกหัดฉบับพิมพ์ 14 บทเรียน แต่ละเล่มมีฉบับดิจิทัลคู่กันในแอป",
+          "ทุกบทเรียนมีกิจกรรมการอ่าน คำศัพท์ และการเขียน"
         ]
       },
       {
         title: "การออกแบบที่เหมาะสมกับวัย",
         items: [
-          "เหมาะสมกับนักเรียนประถมศึกษาตอนปลายตามวัย",
-          "ส่วนติดต่อที่น่าสนใจสำหรับชั้นประถมศึกษาปีที่ 3-6",
-          "สร้างพื้นฐานสำหรับความสำเร็จในระดับมัธยมศึกษา"
+          "เรื่องและกิจกรรมที่เขียนขึ้นสำหรับผู้เรียนวัยเด็ก",
+          "หน้าจอที่ชัดเจนและใช้งานง่ายสำหรับเด็ก",
+          "สร้างพื้นฐานสำหรับการเรียนภาษาอังกฤษในขั้นต่อไป"
         ]
       },
       {
-        title: "การเรียนรู้ที่ขับเคลื่อนด้วย AI",
+        title: "การเรียนรู้ที่มี AI ช่วย",
         items: [
-          "การสอนพิเศษส่วนตัว 1 ต่อ 1 ผ่านอะแดปเตอร์โมเดลภายในของเรา",
-          "ข้อเสนอแนะการเขียนอัจฉริยะผ่านอะแดปเตอร์โมเดลภายในของเรา",
-          "เส้นทางการเรียนรู้ที่ปรับเปลี่ยนตามความก้าวหน้าของนักเรียน"
+          "AI ช่วยให้ข้อเสนอแนะงานเขียน",
+          "เนื้อหาที่ติดแท็กกับกราฟความรู้ของ Mastery Advantage",
+          "ทบทวนคำศัพท์ด้วยการทบทวนแบบเว้นช่วง"
         ]
       }
     ]
   },
   cefrSection: {
     heading: "การสอดคล้องกับ CEFR",
-    title: "กรอบงาน Cambridge English",
-    description: "Primary Advantage ทำตามกรอบการทำงาน CEFR ที่ได้รับการยอมรับในระดับสากล ทำให้มั่นใจได้ว่านักเรียนจะก้าวหน้าผ่านระดับภาษามาตรฐาน",
+    title: "ระดับ CEFR",
+    description: "Primary Advantage สอดคล้องกับ CEFR นักเรียนก้าวหน้าผ่านระดับตั้งแต่ Pre-A1 ถึง A2 โดยแต่ละระดับมี 3 ระดับย่อย",
     levels: [
       {
         description: "ผู้อ่านเริ่มต้นที่สร้างคำศัพท์พื้นฐาน"
@@ -199,7 +190,7 @@ export const th = {
     ]
   },
   cefrLevels: {
-    grades: "ชั้นเรียน",
+    grades: "ระดับที่ใช้งานอยู่",
     aligned: "สอดคล้อง",
   },
   support: "สนับสนุน",
@@ -215,8 +206,8 @@ export const th = {
         description: "มีให้ใช้งานในภาษาอังกฤษ ไทย และจีน พร้อมการสลับภาษาที่ราบรื่น"
       },
       {
-        title: "ผู้สอน AI แบบโต้ตอบ",
-        description: "ความช่วยเหลือด้านการสอนพิเศษด้วย AI ตามต้องการสำหรับการอ่านเข้าใจและคำศัพท์"
+        title: "ผู้ช่วยการอ่านด้วย AI",
+        description: "ความช่วยเหลือจาก AI ตามต้องการสำหรับการอ่านเข้าใจและคำศัพท์"
       },
       {
         title: "กิจกรรมสร้างประโยค",
@@ -228,48 +219,39 @@ export const th = {
       },
       {
         title: "ระบบการทบทวนด้วยช่วงเวลา",
-        description: "ระบบแฟลชการ์ดอัจฉริยะที่ใช้ SRS เพื่อเพิ่มประสิทธิภาพการจดจำคำศัพท์"
+        description: "ระบบแฟลชการ์ดที่ใช้การทบทวนแบบเว้นช่วงเพื่อช่วยในการจดจำคำศัพท์"
       }
     ]
   },
   aiTechnology: {
-    heading: "เทคโนโลยี AI ขั้นสูง",
+    heading: "AI ใน Primary Advantage",
     gemini: {
-      title: "การสอนพิเศษด้วย AI แบบปรับตัว",
-      description: "ให้การสอนพิเศษส่วนตัว 1 ต่อ 1 ปรับเปลี่ยนตามความเร็วและสไตล์การเรียนรู้ของนักเรียนแต่ละคน"
+      title: "การฝึกตามกราฟความรู้",
+      description: "เนื้อหาติดแท็กกับกราฟความรู้ของ Mastery Advantage ส่วนฟีเจอร์แบบปรับตัวยังอยู่ระหว่างการพัฒนา"
     },
-    gpt5: {
-      title: "ข้อเสนอแนะการเขียนด้วย AI",
-      description: "ส่งมอบข้อเสนอแนะที่ชาญฉลาดและเหมาะสมกับบริบทสำหรับงานเขียนเพื่อพัฒนาทักษะ"
+    writingFeedback: {
+      title: "ข้อเสนอแนะงานเขียนโดยมี AI ช่วย",
+      description: "AI ช่วยให้ข้อเสนอแนะงานเขียน เพื่อให้นักเรียนเห็นว่าควรปรับปรุงอะไร"
     }
   },
   resultsSection: {
     heading: "ระเบียบวิธีที่อิงหลักสูตร",
-    title: "ผลการเรียนรู้ที่สอดคล้องกับหลักสูตร",
-    description: "โปรแกรมการอ่านแบบกว้างเช่น Primary Advantage ถูกออกแบบให้สอดคล้องกับหลักสูตร CEFR และสร้างขึ้นเพื่อผลลัพธ์ในห้องเรียนที่วัดได้ ผลลัพธ์ด้านประสิทธิภาพเฉพาะขึ้นอยู่กับความสม่ำเสมอในการใช้งานและการใช้งานในห้องเรียนอย่างต่อเนื่อง",
-    stats: [
-      {
-        value: "85%",
-        label: "การใช้งานต่อสัปดาห์"
-      },
-      {
-        value: "100%",
-        label: "สอดคล้องกับหลักสูตร"
-      }
-    ]
+    title: "สร้างบนงานวิจัยด้านการอ่านเชิงขยาย",
+    description: "Primary Advantage ใช้วิธีการอ่านเชิงขยายที่งานวิจัยแบบควบคุมพบว่ามีประสิทธิภาพ ผลลัพธ์ขึ้นอยู่กับคุณภาพการนำไปใช้และปริมาณการอ่าน เราจึงรายงานผลเป็นรายโรงเรียน",
+    stats: []
   },
   cta: {
-    heading: "พร้อมที่จะเปลี่ยนแปลงการเดินทางการรู้หนังสือของนักเรียนของคุณหรือไม่?",
-    description: "ร่วมกับโรงเรียนทั่วประเทศไทยที่ใช้ Primary Advantage เพื่อสร้างพื้นฐานที่แข็งแกร่งสำหรับความสำเร็จทางการศึกษา",
+    heading: "นำ Primary Advantage ไปใช้ในโรงเรียนของคุณ",
+    description: "ปัจจุบันมีโรงเรียนหนึ่งแห่งที่ใช้ Primary Advantage คือโรงเรียน Boonyathat จังหวัดกาฬสินธุ์ ติดต่อเราเพื่อพูดคุยเรื่อง Blended Learning ซึ่งใช้หนังสือแบบฝึกหัดฉบับพิมพ์ร่วมกับแอป",
     buttons: {
-      signUp: "ติดต่อสำหรับโปรแกรมทดลอง",
+      signUp: "ติดต่อเรา",
       freeTrial: "เรียนรู้เพิ่มเติม"
     }
   },
   adaptiveEngine: {
     eyebrow: "เครื่องยนต์ปรับตัว",
-    heading: "เส้นทางการรู้หนังสือระดับประถม ที่ปรับให้เข้ากับผู้เรียนทุกคน",
-    description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการรู้หนังสือทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+    heading: "การฝึกระดับประถม ที่ติดแท็กกับกราฟ Mastery Advantage",
+    description: "Mastery Advantage คือเครื่องยนต์ KST + FSRS ที่จัดทำแผนที่ทักษะและกำหนดเวลาฝึกฝน กำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก",
     alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Primary Advantage",
   },
   eyebrows: {
@@ -293,8 +275,8 @@ export const th = {
 export const zh = {
   hero: {
     title: "Primary Advantage",
-    subtitle: "3-6 年级读写能力发展",
-    description: "专为 3-6 年级设计的发展性适当的泛读应用，基于 CEFR 对齐的课程，由先进 AI 技术驱动。"
+    subtitle: "面向低龄学习者的英语阅读，Pre-A1 至 A2",
+    description: "面向低龄学习者的泛读应用和纸质练习册，基于与 CEFR 对齐的课程。当前主要范围为 Pre-A1 至 A2。"
   },
   keyFeatures: {
     heading: "主要特点",
@@ -302,33 +284,33 @@ export const zh = {
       {
         title: "CEFR 对齐课程",
         items: [
-          "剑桥少儿英语词汇从 Pre-A1 到 A2",
-          "剑桥学校英语词汇到 B1 (PET)",
-          "3-6 年级全面读写发展"
+          "当前主要范围为 Pre-A1 至 A2，每个 CEFR 级别分三个子级",
+          "每册纸质练习册含 14 节课，应用内有对应的数字版本",
+          "每节课都包含阅读、词汇和写作任务"
         ]
       },
       {
         title: "适龄设计",
         items: [
-          "适合高年级小学生的发展阶段",
-          "为 3-6 年级设计的引人入胜界面",
-          "为中学成功奠定基础"
+          "为低龄学习者编写的故事和活动",
+          "清晰、简单的儿童界面",
+          "为下一阶段的英语学习打好基础"
         ]
       },
       {
-        title: "AI 驱动学习",
+        title: "AI 辅助学习",
         items: [
-          "通过我们的内部模型适配器提供个性化一对一辅导",
-          "通过我们的内部模型适配器提供智能写作反馈",
-          "基于学生进度的自适应学习路径"
+          "AI 辅助的写作反馈",
+          "内容已标记到 Mastery Advantage 知识图谱",
+          "间隔重复词汇复习"
         ]
       }
     ]
   },
   cefrSection: {
     heading: "CEFR 对齐",
-    title: "剑桥英语框架",
-    description: "Primary Advantage 遵循国际认可的 CEFR 框架，确保学生通过标准化语言水平进步。",
+    title: "CEFR 级别",
+    description: "Primary Advantage 与 CEFR 对齐。学生从 Pre-A1 逐级学到 A2，每个级别分三个子级。",
     levels: [
       {
         description: "建立基础词汇的初学者读者"
@@ -345,7 +327,7 @@ export const zh = {
     ]
   },
   cefrLevels: {
-    grades: "年级",
+    grades: "当前级别",
     aligned: "对齐",
   },
   support: "支持",
@@ -361,8 +343,8 @@ export const zh = {
         description: "提供英语、泰语和中文，支持无缝语言切换。"
       },
       {
-        title: "交互式 AI 导师",
-        description: "按需 AI 驱动的辅导支持，帮助阅读理解和词汇学习。"
+        title: "AI 阅读助手",
+        description: "按需提供 AI 帮助，辅助阅读理解和词汇学习。"
       },
       {
         title: "句子构建活动",
@@ -374,48 +356,39 @@ export const zh = {
       },
       {
         title: "间隔重复系统",
-        description: "使用 SRS 优化词汇保留的智能抽认卡系统。"
+        description: "使用间隔重复帮助巩固词汇记忆的抽认卡系统。"
       }
     ]
   },
   aiTechnology: {
-    heading: "先进 AI 技术",
+    heading: "Primary Advantage 中的 AI",
     gemini: {
-      title: "自适应 AI 辅导",
-      description: "提供个性化一对一辅导，适应每个学生的学习进度和风格。"
+      title: "基于知识图谱的练习",
+      description: "内容已标记到 Mastery Advantage 知识图谱。自适应功能仍在开发中。"
     },
-    gpt5: {
-      title: "AI 写作反馈",
-      description: "提供智能、情境化的写作作业反馈，提高技能。"
+    writingFeedback: {
+      title: "AI 辅助写作反馈",
+      description: "AI 辅助的写作作业反馈，帮助学生看到需要改进的地方。"
     }
   },
   resultsSection: {
     heading: "基于课程的方法",
-    title: "与课程对齐的学习提升",
-    description: "像 Primary Advantage 这样的泛读程序围绕 CEFR 对齐课程设计，为可衡量的课堂成果而构建。具体的效能提升取决于实施保真度和持续的课堂使用。",
-    stats: [
-      {
-        value: "85%",
-        label: "每周活跃使用率"
-      },
-      {
-        value: "100%",
-        label: "课程对齐"
-      }
-    ]
+    title: "建立在泛读研究之上",
+    description: "Primary Advantage 采用经对照研究证明有效的泛读方法。结果取决于实施质量和阅读量，因此我们按学校逐一报告成果。",
+    stats: []
   },
   cta: {
-    heading: "准备好改变您学生的读写之旅了吗？",
-    description: "加入泰国各地使用 Primary Advantage 的学校，为学术成功建立坚实基础。",
+    heading: "把 Primary Advantage 带到您的学校",
+    description: "目前有一所学校在使用 Primary Advantage，即加拉信府的 Boonyathat 学校。欢迎联系我们了解混合学习（Blended Learning），即纸质练习册与应用相结合。",
     buttons: {
-      signUp: "联系试点项目",
+      signUp: "联系我们",
       freeTrial: "了解更多"
     }
   },
   adaptiveEngine: {
     eyebrow: "自适应引擎",
-    heading: "为每位小学生量身定制的初级读写路径",
-    description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项读写技能并在最佳时刻安排练习。",
+    heading: "标记到 Mastery Advantage 图谱的小学练习",
+    description: "Mastery Advantage 是映射技能并安排练习的 KST + FSRS 引擎，正通过已标记的内容进入 Primary Advantage。",
     alt: "Primary Advantage 自适应学习可视化",
   },
   eyebrows: {

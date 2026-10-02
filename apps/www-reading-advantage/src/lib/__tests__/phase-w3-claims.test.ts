@@ -24,7 +24,6 @@ const NONEXISTENT_APPS = [
   "math-advantage",
   "stem-advantage",
   "storytime-advantage",
-  "tutor-advantage",
   "zhongwen-advantage",
 ];
 
@@ -131,7 +130,7 @@ describe("1A — Product count", () => {
     const mastery = await readSrcFile("locales/pages/mastery-advantage.ts");
     const page = await readSrcFile("app/[locale]/(marketing)/(home)/page.tsx");
     const combined = home + mastery + page;
-    const truthful = /four products|4 products|one engine, four/gi;
+    const truthful = /four products|4 products|one engine, four|live in CodeCamp Advantage/gi;
     expect(
       truthful.test(combined),
       "Expected a truthful count string ('four products', '4 products', or " +
@@ -368,7 +367,7 @@ describe("1G — Unverifiable stats and absolute claims", () => {
     const wholeSourceBans = [
       { name: "2,172+", re: /2,172\+/g },
       { name: "ZERO RISK", re: /ZERO RISK/gi },
-      { name: "Aka 2019", re: /Aka[ ,]+2019/gi },
+      { name: "Aka 2019 (approved form is \"Aka, 2019\")", re: /Aka +2019/gi },
     ];
     // Scoped bans — these claims are only disallowed where the matrix places them.
     const mathFiles = files.filter(

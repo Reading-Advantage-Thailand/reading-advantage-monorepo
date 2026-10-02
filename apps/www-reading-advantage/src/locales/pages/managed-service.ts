@@ -1,12 +1,12 @@
 export const en = {
   hero: {
     title: "Managed Service",
-    subtitle: "The White-Glove Solution",
+    subtitle: "Planned Service",
     description:
       "We provide the technology and the teachers for complete English department outsourcing.",
-    badge: "COMING 2027",
+    badge: "NOT YET AVAILABLE",
     primaryCta: "Learn More",
-    secondaryCta: "Get Notified",
+    secondaryCta: "Register Interest",
   },
   overview: {
     badge: "LOW-RISK ONBOARDING",
@@ -18,7 +18,7 @@ export const en = {
     strongText: "Student enrollment and scheduling. We handle the rest.",
     items: [
       "No recruiting headaches - we provide certified teachers",
-      "No curriculum gaps - standardized, proven materials",
+      "No curriculum gaps - standardized, CEFR-aligned materials",
       "No technology worries - complete platform included",
       "No training burden - comprehensive support provided",
     ],
@@ -37,29 +37,29 @@ export const en = {
     ],
   },
   benefits: {
-    badge: "PROVEN RESULTS",
-    title: "Measurable Outcomes",
+    badge: "PROGRESS TRACKING",
+    title: "Progress and Quality Review",
     description:
       "Every managed service program includes progress tracking and scheduled quality assurance reviews.",
     items: [
       "Progress tracking with detailed dashboards",
       "Regular quality assurance observations",
       "Parent/guardian progress reports",
-      "Aligned with CEFR standards",
+      "CEFR-aligned",
     ],
   },
   roadmap: {
-    title: "Launching 2027",
+    title: "Not Yet Available",
     badge: "ROADMAP",
     description:
-      "Our Managed Service is currently in development. We're accepting inquiries from interested schools and will contact you as the launch date approaches.",
-    targetLabel: "Target Launch",
-    targetDate: "May 2027",
+      "Managed Service is not yet available. Whether we launch it depends on school demand. We accept inquiries from interested schools, and we set no date.",
+    targetLabel: "Status",
+    targetDate: "Depends on school demand",
   },
   cta: {
-    title: "Get Notified",
+    title: "Register Interest",
     button1: "View All Services",
-    button2: "Get Notified",
+    button2: "Register Interest",
   },
   images: {
     dashboardAlt: "Teacher Dashboard",
@@ -71,12 +71,12 @@ export const en = {
 export const th = {
   hero: {
     title: "บริการจัดการแบบครบวงจร",
-    subtitle: "โซลูชันแบบไขมือขาว",
+    subtitle: "บริการที่วางแผนไว้",
     description:
       "เรามอบทั้งเทคโนโลยีและครูสำหรับการจัดการแผนกวิชาภาษาอังกฤษแบบครบวงจรภายนอก",
-    badge: "มาปี 2027",
+    badge: "ยังไม่เปิดให้บริการ",
     primaryCta: "เรียนรู้เพิ่มเติม",
-    secondaryCta: "รับการแจ้งเตือน",
+    secondaryCta: "ลงทะเบียนความสนใจ",
   },
   overview: {
     badge: "ความเสี่ยงต่ำในการเริ่มต้น",
@@ -88,7 +88,7 @@ export const th = {
     strongText: "การลงทะเบียนนักเรียนและตารางเรียน เราดูแลที่ส่วนที่เหลือ",
     items: [
       "ไม่ต้องปวดหัวกับการสรรหาครู - เราจัดหาครูที่ได้รับการรับรอง",
-      "ไม่มีช่องว่างในหลักสูตร - วัสดุที่ได้มาตรฐานและผ่านการพิสูจน์แล้ว",
+      "ไม่มีช่องว่างในหลักสูตร - วัสดุมาตรฐานที่สอดคล้องกับ CEFR",
       "ไม่ต้องกังวลเรื่องเทคโนโลยี - มีแพลตฟอร์มครบถ้วน",
       "ไม่มีภาระการฝึกอบรม - การสนับสนุนแบบครบวงจร",
     ],
@@ -107,29 +107,29 @@ export const th = {
     ],
   },
   benefits: {
-    badge: "ผลลัพธ์ที่พิสูจน์ได้",
-    title: "ผลลัพธ์ที่วัดได้",
+    badge: "การติดตามความก้าวหน้า",
+    title: "การติดตามความก้าวหน้าและการทบทวนคุณภาพ",
     description:
       "โปรแกรมบริการจัดการแบบครบวงจรมีการติดตามความก้าวหน้าและการรับรองคุณภาพตามกำหนดเวลา",
     items: [
       "การติดตามความก้าวหน้าด้วยแดชบอร์ดที่ละเอียด",
       "การสังเกตคุณภาพอย่างสม่ำเสมอ",
       "รายงานความก้าวหน้าให้ผู้ปกครอง/นักเรียน",
-      "จัดแนวกับมาตรฐาน CEFR",
+      "สอดคล้องกับ CEFR",
     ],
   },
   roadmap: {
-    title: "เปิดตัวปี 2027",
+    title: "ยังไม่เปิดให้บริการ",
     badge: "แผนงาน",
     description:
-      "บริการจัดการแบบครบวงจรของเราอยู่ในระหว่างพัฒนา เรากำลังรับคำขอเสนอจากโรงเรียนที่สนใจและจะติดต่อตอกใกลที่วันเปิดตัวเข้าใกล้",
-    targetLabel: "วันเปิดตัวเป้าหมาย",
-    targetDate: "พฤษภาคม 2027",
+      "บริการจัดการแบบครบวงจรยังไม่เปิดให้บริการ การเปิดบริการขึ้นอยู่กับความต้องการของโรงเรียน เรารับคำถามจากโรงเรียนที่สนใจ และเรายังไม่กำหนดวันเปิด",
+    targetLabel: "สถานะ",
+    targetDate: "ขึ้นอยู่กับความต้องการของโรงเรียน",
   },
   cta: {
-    title: "รับการแจ้งเตือน",
+    title: "ลงทะเบียนความสนใจ",
     button1: "ดูบริการทั้งหมด",
-    button2: "รับการแจ้งเตือน",
+    button2: "ลงทะเบียนความสนใจ",
   },
   images: {
     dashboardAlt: "แดชบอร์ดครูผู้สอน",
@@ -141,11 +141,11 @@ export const th = {
 export const zh = {
   hero: {
     title: "托管服务",
-    subtitle: "白手套解决方案",
+    subtitle: "规划中的服务",
     description: "我们同时提供技术和教师，实现完整的英语部门外包。",
-    badge: "2027年",
+    badge: "暂未提供",
     primaryCta: "了解更多",
-    secondaryCta: "获取通知",
+    secondaryCta: "登记兴趣",
   },
   overview: {
     badge: "结构化实施支持",
@@ -157,7 +157,7 @@ export const zh = {
     strongText: "学生注册和排程。我们处理其余部分。",
     items: [
       "无需头疼招聘 - 我们提供认证教师",
-      "没有课程缺口 - 标准化且经过验证的材料",
+      "没有课程缺口 - 标准化且符合CEFR标准的材料",
       "无需担心技术 - 提供完整平台",
       "无需培训负担 - 提供全面支持",
     ],
@@ -175,8 +175,8 @@ export const zh = {
     ],
   },
   benefits: {
-    badge: "经过验证的结果",
-    title: "可衡量的成果",
+    badge: "进度跟踪",
+    title: "进度与质量审查",
     description: "每个托管服务项目都包括进度跟踪和定期质量保证审查。",
     items: [
       "通过详细仪表板进行进度跟踪",
@@ -186,17 +186,17 @@ export const zh = {
     ],
   },
   roadmap: {
-    title: "2027年推出",
+    title: "暂未提供",
     badge: "路线图",
     description:
-      "我们的托管服务目前处于开发阶段。我们接受感兴趣学校的询问，并将在启动日期临近时与您联系。",
-    targetLabel: "目标启动",
-    targetDate: "2027年5月",
+      "托管服务暂未提供。是否推出取决于学校需求。我们接受感兴趣学校的询问，目前没有确定日期。",
+    targetLabel: "状态",
+    targetDate: "取决于学校需求",
   },
   cta: {
-    title: "获取通知",
+    title: "登记兴趣",
     button1: "查看所有服务",
-    button2: "获取通知",
+    button2: "登记兴趣",
   },
   images: {
     dashboardAlt: "教师仪表板",

@@ -13,7 +13,7 @@ export const en = {
         primary: {
             title: "Primary Advantage",
             gradeRange: "Grades 3-6",
-            description: "Accelerate fluency with leveled fiction and nonfiction libraries, bilingual scaffolds, and AI reading coaches.",
+            description: "Accelerate fluency with leveled fiction and nonfiction libraries, bilingual scaffolds, and printed workbooks.",
             ctaLabel: "Discover Primary",
         },
         reading: {
@@ -21,6 +21,12 @@ export const en = {
             gradeRange: "Grades 7-12",
             description: "Deliver college-ready comprehension practice with progress analytics, independent reading paths, and teacher dashboards.",
             ctaLabel: "Visit Reading",
+        },
+        tutor: {
+            title: "Tutor Advantage",
+            gradeRange: "Families, direct",
+            description: "A tutor-led class network. A local tutor teaches one workbook in each class package, from 3,000 baht. On sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, and Reading Advantage Origins 2.",
+            ctaLabel: "Explore Tutor Advantage",
         },
     },
     cta: {
@@ -43,7 +49,7 @@ export const th = {
         primary: {
             title: "Primary Advantage",
             gradeRange: "ประถมศึกษาตอนปลาย (ป.3-ป.6)",
-            description: "เร่งการอ่านคล่องด้วยคลังเนื้อหา FICTION และ Non-Fiction แบบแบ่งระดับ มีสื่อสองภาษาและโค้ชการอ่านด้วย AI",
+            description: "เร่งการอ่านคล่องด้วยคลังเนื้อหา FICTION และ Non-Fiction แบบแบ่งระดับ มีสื่อสองภาษาและเวิร์กบุ๊กที่พิมพ์เป็นเล่ม",
             ctaLabel: "ทำความรู้จัก Primary",
         },
         reading: {
@@ -51,6 +57,12 @@ export const th = {
             gradeRange: "มัธยมศึกษาตอนต้น-ปลาย (ม.1-ม.6)",
             description: "เตรียมความพร้อมสู่มหาวิทยาลัยด้วยการฝึกการอ่านเชิงลึก ระบบวิเคราะห์ความก้าวหน้า และแดชบอร์ดสำหรับครู",
             ctaLabel: "เยี่ยมชม Reading",
+        },
+        tutor: {
+            title: "Tutor Advantage",
+            gradeRange: "สำหรับครอบครัว (ซื้อโดยตรง)",
+            description: "เครือข่ายคลาสที่สอนโดยติวเตอร์ ติวเตอร์ในพื้นที่สอนหนึ่งเวิร์กบุ๊กในแต่ละแพ็กเกจคลาส ราคาเริ่มต้น 3,000 บาท วางจำหน่ายแล้ว: Primary Advantage Origins 2, Primary Advantage Origins 3.1 และ Reading Advantage Origins 2",
+            ctaLabel: "ทำความรู้จัก Tutor Advantage",
         },
     },
     cta: {
@@ -73,7 +85,7 @@ export const zh = {
         primary: {
             title: "Primary Advantage",
             gradeRange: "三至六年级",
-            description: "利用分级小说与非虚构库、双语支架以及 AI 阅读教练，加速提升阅读流利度。",
+            description: "利用分级小说与非虚构库、双语支架以及印刷练习册，加速提升阅读流利度。",
             ctaLabel: "探索 Primary",
         },
         reading: {
@@ -81,6 +93,12 @@ export const zh = {
             gradeRange: "七至十二年级",
             description: "通过大学预备级别的阅读理解训练、进度分析和教师仪表板，支持自主阅读之旅。",
             ctaLabel: "访问 Reading",
+        },
+        tutor: {
+            title: "Tutor Advantage",
+            gradeRange: "家庭直接购买",
+            description: "由导师授课的班级网络。每个课程包由本地导师讲授一本练习册，3,000 泰铢起。在售：Primary Advantage Origins 2、Primary Advantage Origins 3.1 和 Reading Advantage Origins 2。",
+            ctaLabel: "了解 Tutor Advantage",
         },
     },
     cta: {

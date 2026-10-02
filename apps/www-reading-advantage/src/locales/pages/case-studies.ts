@@ -3,7 +3,7 @@ export const en = {
         badge: "ILLUSTRATIVE EXAMPLES",
         title: "Case Studies",
         subtitle: "Illustrative Scenarios",
-        description: "The scenarios below are illustrative examples of how Reading Advantage can be used in classroom settings. They are not specific outcomes from named institutions. Real case studies with verified results will be published with partner consent and anonymization decisions.",
+        description: "The scenarios below are illustrative examples of how Reading Advantage can be used in classroom settings. They are not specific outcomes from named institutions. We have one active school today, Boonyathat in Kalasin, on Primary Advantage. We will publish real case studies with verified results only with the school's consent.",
     },
     implementationPeriod: "Implementation Period: ",
     highlights: "Key Highlights:",
@@ -11,7 +11,7 @@ export const en = {
         studentsEngaged: "Students actively engaged with Reading Advantage app on tablets during classroom activity",
         teacherAssistance: "Teacher providing personalized assistance to students using Reading Advantage platform",
         collaborativeGroup: "Small collaborative group learning session with students working together",
-        teacherDashboard: "Teacher analytics dashboard displaying real-time student progress data and performance metrics",
+        teacherDashboard: "Teacher analytics dashboard displaying student progress data",
         studentWorkbook: "Physical student workbook with structured reading exercises and guided activities",
     },
     testimonial: {
@@ -21,7 +21,7 @@ export const en = {
     schools: [
         {
             name: "Illustrative example — not a real school",
-            type: "Private school, Bangkok (illustrative)",
+            type: "A school using Primary Advantage (illustrative)",
             duration: "6 months (illustrative)",
             outcomes: {
                 heading: "Outcome Categories",
@@ -42,21 +42,21 @@ export const en = {
                 },
             },
             testimonial: {
-                quote: "Reading Advantage can transform how teachers approach English instruction. The reduction in prep time would allow teachers to focus on what matters most - supporting individual students' learning journeys. (Illustrative example)",
+                quote: "No teacher testimonial is published yet. Real teacher feedback will appear here with consent. (Illustrative example)",
                 author: "Illustrative teacher",
                 role: "English Teacher",
                 school: "Illustrative example",
             },
             highlights: [
-                "Reduced weekly lesson preparation time (illustrative)",
-                "Increased student engagement and motivation (illustrative)",
-                "Improved reading comprehension scores (illustrative)",
-                "Data-driven insights for targeted interventions (illustrative)",
+                "What we would measure: weekly lesson preparation time (illustrative)",
+                "What we would measure: student engagement (illustrative)",
+                "What we would measure: reading benchmark scores before and after (illustrative)",
+                "What we would measure: reading volume per student (illustrative)",
             ],
         },
         {
             name: "Illustrative example — not a real school",
-            type: "Private school, Chiang Mai (illustrative)",
+            type: "A school using Blended Learning (illustrative)",
             duration: "4 months (illustrative)",
             outcomes: {
                 heading: "Outcome Categories",
@@ -77,22 +77,22 @@ export const en = {
                 },
             },
             testimonial: {
-                quote: "The structured approach to extensive reading has the potential to give students confidence in English. (Illustrative example)",
+                quote: "No teacher testimonial is published yet. Real teacher feedback will appear here with consent. (Illustrative example)",
                 author: "Illustrative teacher",
                 role: "English Teacher",
                 school: "Illustrative example",
             },
             highlights: [
-                "Confident facilitation of extensive reading sessions (illustrative)",
-                "Students choose articles aligned with their interests (illustrative)",
-                "Comprehensive dashboards track every learner's progress (illustrative)",
-                "Minimal technology requirements — works with any device ratio (illustrative)",
+                "What we would observe: how consistently teachers run reading sessions (illustrative)",
+                "What we would observe: students choose their own articles (illustrative)",
+                "What we would measure: progress per learner on the dashboard (illustrative)",
+                "What we would record: device availability in the classroom (illustrative)",
             ],
         },
     ],
     methodology: {
         title: "How We Measure Success",
-        description: "Our case studies use rigorous, data-driven approaches to demonstrate authentic learning outcomes.",
+        description: "When we publish case studies, we will report these measures for each school, because results vary by implementation quality and reading volume.",
         methods: [
             {
                 title: "Pre/Post Benchmark Testing",
@@ -113,8 +113,8 @@ export const en = {
         ],
     },
     cta: {
-        title: "Ready to See Your School's Success Story?",
-        description: "Join our growing network of Thai schools delivering exceptional English education.",
+        title: "Want to Talk About Your School?",
+        description: "Contact us to talk about Blended Learning or Tutor Advantage.",
         button: "Contact Us for a Demo",
     },
 };
@@ -124,7 +124,7 @@ export const th = {
         badge: "ตัวอย่างเชิงอธิบาย",
         title: "กรณีศึกษา",
         subtitle: "สถานการณ์ตัวอย่างเชิงอธิบาย",
-        description: "สถานการณ์ด้านล่างนี้เป็นตัวอย่างเชิงอธิบายวิธีการใช้ Reading Advantage ในห้องเรียน มิใช่ผลลัพธ์เฉพาะจากโรงเรียนที่ระบุชื่อ กรณีศึกษาจริงพร้อมผลลัพธ์ที่ตรวจสอบได้จะถูกเผยแพร่พร้อมการยินยอมจากโรงเรียนและการตัดสินใจเกี่ยวกับการไม่เปิดเผยตัวตน",
+        description: "สถานการณ์ด้านล่างนี้เป็นตัวอย่างเชิงอธิบายวิธีการใช้ Reading Advantage ในห้องเรียน มิใช่ผลลัพธ์เฉพาะจากโรงเรียนที่ระบุชื่อ ปัจจุบันเรามีโรงเรียนที่ใช้งานอยู่ 1 แห่ง คือ บุญญาทัศน์ จังหวัดกาฬสินธุ์ ใช้ Primary Advantage เราจะเผยแพร่กรณีศึกษาจริงพร้อมผลลัพธ์ที่ตรวจสอบได้เมื่อโรงเรียนยินยอมเท่านั้น",
     },
     implementationPeriod: "ระยะเวลาการนำไปใช้: ",
     highlights: "จุดเด่นหลัก:",
@@ -132,7 +132,7 @@ export const th = {
         studentsEngaged: "นักเรียนมีส่วนร่วมอย่างมากกับแอป Reading Advantage บนแท็บเล็ตในกิจกรรมห้องเรียน",
         teacherAssistance: "ครูให้ความช่วยเหลือเฉพาะบุคคลแก่นักเรียนโดยใช้แพลตฟอร์ม Reading Advantage",
         collaborativeGroup: "กลุ่มการเรียนรู้ร่วมมือขนาดเล็กที่นักเรียนทำงานร่วมกัน",
-        teacherDashboard: "แดชบอร์ดการวิเคราะห์ของครูแสดงข้อมูลความก้าวหน้าของนักเรียนแบบเรียลไทม์และตัวชี้วัดประสิทธิภาพ",
+        teacherDashboard: "แดชบอร์ดการวิเคราะห์ของครูแสดงข้อมูลความก้าวหน้าของนักเรียน",
         studentWorkbook: "หนังสือแบบฝึกหัดนักเรียนทางกายภาพพร้อมแบบฝึกหัดการอ่านที่มีโครงสร้างและกิจกรรมแนะนำ",
     },
     testimonial: {
@@ -142,7 +142,7 @@ export const th = {
     schools: [
         {
             name: "ตัวอย่างเชิงอธิบาย — ไม่ใช่โรงเรียนจริง",
-            type: "โรงเรียนเอกชน, กรุงเทพฯ (ตัวอย่าง)",
+            type: "โรงเรียนที่ใช้ Primary Advantage (ตัวอย่าง)",
             duration: "6 เดือน (ตัวอย่าง)",
             outcomes: {
                 heading: "หมวดผลลัพธ์",
@@ -163,21 +163,21 @@ export const th = {
                 },
             },
             testimonial: {
-                quote: "Reading Advantage สามารถเปลี่ยนแปลงวิธีที่ครูเข้าใกล้การสอนภาษาอังกฤษ การลดเวลาเตรียมการสอนจะทำให้ครูสามารถมุ่งเน้นสิ่งที่สำคัญที่สุด - การสนับสนุนเส้นทางการเรียนรู้ของนักเรียนแต่ละคน (ตัวอย่างเชิงอธิบาย)",
+                quote: "ยังไม่มีคำรับรองจากครูที่เผยแพร่ ความคิดเห็นจริงจากครูจะแสดงที่นี่เมื่อได้รับความยินยอม (ตัวอย่างเชิงอธิบาย)",
                 author: "ครูตัวอย่าง",
                 role: "ครูสอนภาษาอังกฤษ",
                 school: "ตัวอย่างเชิงอธิบาย",
             },
             highlights: [
-                "ลดเวลาเตรียมการสอนรายสัปดาห์ (ตัวอย่าง)",
-                "เพิ่มการมีส่วนร่วมและแรงจูงใจของนักเรียน (ตัวอย่าง)",
-                "ปรับปรุงคะแนนความเข้าใจการอ่าน (ตัวอย่าง)",
-                "ข้อมูลเชิงลึกสำหรับการแทรกแซงที่มุ่งเป้า (ตัวอย่าง)",
+                "สิ่งที่เราจะวัด: เวลาเตรียมการสอนรายสัปดาห์ (ตัวอย่าง)",
+                "สิ่งที่เราจะวัด: การมีส่วนร่วมของนักเรียน (ตัวอย่าง)",
+                "สิ่งที่เราจะวัด: คะแนนมาตรฐานการอ่านก่อนและหลัง (ตัวอย่าง)",
+                "สิ่งที่เราจะวัด: ปริมาณการอ่านต่อนักเรียน (ตัวอย่าง)",
             ],
         },
         {
             name: "ตัวอย่างเชิงอธิบาย — ไม่ใช่โรงเรียนจริง",
-            type: "โรงเรียนเอกชน, เชียงใหม่ (ตัวอย่าง)",
+            type: "โรงเรียนที่ใช้ Blended Learning (ตัวอย่าง)",
             duration: "4 เดือน (ตัวอย่าง)",
             outcomes: {
                 heading: "หมวดผลลัพธ์",
@@ -198,22 +198,22 @@ export const th = {
                 },
             },
             testimonial: {
-                quote: "แนวทางที่มีโครงสร้างในการอ่านแบบกว้างขวางมีศักยภาพที่จะมอบความมั่นใจในภาษาอังกฤษให้นักเรียน (ตัวอย่างเชิงอธิบาย)",
+                quote: "ยังไม่มีคำรับรองจากครูที่เผยแพร่ ความคิดเห็นจริงจากครูจะแสดงที่นี่เมื่อได้รับความยินยอม (ตัวอย่างเชิงอธิบาย)",
                 author: "ครูตัวอย่าง",
                 role: "ครูสอนภาษาอังกฤษ",
                 school: "ตัวอย่างเชิงอธิบาย",
             },
             highlights: [
-                "การอำนวยความสะดวกในการอ่านแบบกว้างขวางอย่างมั่นใจ (ตัวอย่าง)",
-                "นักเรียนเลือกบทความที่ตรงกับความสนใจของตน (ตัวอย่าง)",
-                "แดชบอร์ดครอบคลุมติดตามความก้าวหน้าของผู้เรียนทุกคน (ตัวอย่าง)",
-                "ความต้องการเทคโนโลยีขั้นต่ำ - ทำงานได้กับอัตราอุปกรณ์ใดๆ (ตัวอย่าง)",
+                "สิ่งที่เราจะสังเกต: ความสม่ำเสมอที่ครูจัดเซสชันการอ่าน (ตัวอย่าง)",
+                "สิ่งที่เราจะสังเกต: นักเรียนเลือกบทความเอง (ตัวอย่าง)",
+                "สิ่งที่เราจะวัด: ความก้าวหน้ารายบุคคลบนแดชบอร์ด (ตัวอย่าง)",
+                "สิ่งที่เราจะบันทึก: จำนวนอุปกรณ์ในห้องเรียน (ตัวอย่าง)",
             ],
         },
     ],
     methodology: {
         title: "วิธีที่เราวัดความสำเร็จ",
-        description: "กรณีศึกษาของเราใช้แนวทางที่ขับเคลื่อนด้วยข้อมูลและเข้มงวดเพื่อสาธิตผลลัพธ์การเรียนรู้ที่แท้จริง",
+        description: "เมื่อเผยแพร่กรณีศึกษา เราจะรายงานตัวชี้วัดเหล่านี้ของแต่ละโรงเรียน เพราะผลลัพธ์ขึ้นอยู่กับคุณภาพการนำไปใช้และปริมาณการอ่าน",
         methods: [
             {
                 title: "การทดสอบเกณฑ์มาตรฐานก่อนและหลัง",
@@ -234,8 +234,8 @@ export const th = {
         ],
     },
     cta: {
-        title: "พร้อมที่จะเห็นเรื่องราวความสำเร็จของโรงเรียนคุณหรือยัง?",
-        description: "เข้าร่วมเครือข่ายที่เติบโตของโรงเรียนไทยที่ส่งมอบการศึกษาภาษาอังกฤษอย่างยอดเยี่ยม",
+        title: "อยากคุยเรื่องโรงเรียนของคุณหรือไม่?",
+        description: "ติดต่อเราเพื่อคุยเรื่อง Blended Learning หรือ Tutor Advantage",
         button: "ติดต่อเราเพื่อการสาธิต",
     },
 };
@@ -245,7 +245,7 @@ export const zh = {
         badge: "说明性示例",
         title: "案例研究",
         subtitle: "说明性场景",
-        description: "以下场景是 Reading Advantage 在课堂环境中使用方式的说明性示例。它们并非来自具名学校的具体成果。带有验证结果的真实案例研究将在获得学校同意和匿名化决定后发布。",
+        description: "以下场景是 Reading Advantage 在课堂环境中使用方式的说明性示例。它们并非来自具名学校的具体成果。我们目前有 1 所在用学校：加拉信府的 Boonyathat，使用 Primary Advantage。只有在学校同意后，我们才会发布带有验证结果的真实案例研究。",
     },
     implementationPeriod: "实施周期: ",
     highlights: "主要亮点:",
@@ -253,7 +253,7 @@ export const zh = {
         studentsEngaged: "学生在课堂活动中使用平板电脑积极使用Reading Advantage应用",
         teacherAssistance: "教师使用Reading Advantage平台为学生提供个性化协助",
         collaborativeGroup: "小型协作学习小组，学生共同学习",
-        teacherDashboard: "教师分析仪表板显示实时学生进度数据和绩效指标",
+        teacherDashboard: "教师分析仪表板显示学生进度数据",
         studentWorkbook: "实体学生练习册，包含结构化阅读练习和指导活动",
     },
     testimonial: {
@@ -263,7 +263,7 @@ export const zh = {
     schools: [
         {
             name: "说明性示例 — 非真实学校",
-            type: "私立学校，曼谷（说明性）",
+            type: "使用 Primary Advantage 的学校（说明性）",
             duration: "6个月（说明性）",
             outcomes: {
                 heading: "结果类别",
@@ -284,21 +284,21 @@ export const zh = {
                 },
             },
             testimonial: {
-                quote: "Reading Advantage 可以改变教师进行英语教学的方式。备课时间的减少将使教师能够专注于最重要的事情——支持学生的个性化学习旅程。（说明性示例）",
+                quote: "目前尚未发布教师评价。获得同意后，真实的教师反馈将显示在此处。（说明性示例）",
                 author: "说明性教师",
                 role: "英语教师",
                 school: "说明性示例",
             },
             highlights: [
-                "减少每周备课时间（说明性）",
-                "提高了学生的参与度和动力（说明性）",
-                "改善了阅读理解分数（说明性）",
-                "数据驱动的针对性干预（说明性）",
+                "我们将衡量：每周备课时间（说明性）",
+                "我们将衡量：学生参与度（说明性）",
+                "我们将衡量：前后阅读基准分数（说明性）",
+                "我们将衡量：每名学生的阅读量（说明性）",
             ],
         },
         {
             name: "说明性示例 — 非真实学校",
-            type: "私立学校，清迈（说明性）",
+            type: "使用 Blended Learning 的学校（说明性）",
             duration: "4个月（说明性）",
             outcomes: {
                 heading: "结果类别",
@@ -319,22 +319,22 @@ export const zh = {
                 },
             },
             testimonial: {
-                quote: "结构化的泛读方法有潜力给学生带来英语方面的信心。（说明性示例）",
+                quote: "目前尚未发布教师评价。获得同意后，真实的教师反馈将显示在此处。（说明性示例）",
                 author: "说明性教师",
                 role: "英语教师",
                 school: "说明性示例",
             },
             highlights: [
-                "自信地促进泛读会话（说明性）",
-                "学生选择符合自己兴趣的文章（说明性）",
-                "综合仪表板跟踪每位学习者的进度（说明性）",
-                "最低技术要求 — 适用于任何设备比例（说明性）",
+                "我们将观察：教师开展阅读课的一致性（说明性）",
+                "我们将观察：学生自选文章（说明性）",
+                "我们将衡量：仪表板上每位学习者的进度（说明性）",
+                "我们将记录：课堂设备数量（说明性）",
             ],
         },
     ],
     methodology: {
         title: "我们如何衡量成功",
-        description: "我们的案例研究使用严格的数据驱动方法来展示真实的学习成果。",
+        description: "发布案例研究时，我们会报告每所学校的这些指标，因为成果会因实施质量和阅读量而异。",
         methods: [
             {
                 title: "实施前/后基准测试",
@@ -346,7 +346,7 @@ export const zh = {
             },
             {
                 title: "Big 4 保真度观察",
-                description: "定期对 adherence 到我们的四个质量协议支柱的课堂观察进行评分。",
+                description: "定期课堂观察，对教师遵循四项质量协议的程度评分。",
             },
             {
                 title: "教师反馈分析",
@@ -355,8 +355,8 @@ export const zh = {
         ],
     },
     cta: {
-        title: "准备好看到您学校的成功故事了吗？",
-        description: "加入我们不断发展的提供卓越英语教育的泰国学校网络。",
+        title: "想谈谈您的学校吗？",
+        description: "联系我们，了解 Blended Learning 或 Tutor Advantage。",
         button: "联系我们进行演示",
     },
 };

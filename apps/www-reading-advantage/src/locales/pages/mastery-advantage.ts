@@ -3,7 +3,7 @@ export const en = {
         eyebrow: "Mastery Advantage",
         title: "Always know what's next.",
         description:
-            "The proprietary adaptive engine that powers every Reading Advantage product — combining Knowledge Space Theory with Spaced Repetition to place, teach, and track every student.",
+            "The adaptive engine behind our curriculum — combining Knowledge Space Theory with FSRS spaced repetition to place, teach, and track each student.",
     },
     altTexts: {
         adaptivePath: "Adaptive learning path visualization",
@@ -18,7 +18,7 @@ export const en = {
     },
     spacedRepetition: {
         eyebrow: "Spaced repetition",
-        title: "Review at the perfect moment.",
+        title: "Review at the right moment.",
         description:
             "FSRS calibrates each review interval to the individual. Items resurface at the moment before forgetting — so retention compounds and nothing is lost.",
     },
@@ -32,7 +32,7 @@ export const en = {
         eyebrow: "How it works",
         title: "The technology behind the engine.",
         description:
-            "Mastery Advantage combines two research-backed systems into a single adaptive engine that places students, schedules reviews, and tracks proficiency across every product.",
+            "Mastery Advantage combines two research-backed systems into a single adaptive engine that places students, schedules reviews, and tracks proficiency across our products.",
         pillars: {
             kst: {
                 title: "Knowledge Space Theory",
@@ -40,7 +40,7 @@ export const en = {
             },
             fsrs: {
                 title: "FSRS Scheduling",
-                description: "The Free Spaced Repetition Scheduler models each student's memory for every skill. After each interaction, it updates the predicted retention and schedules the next review at the optimal interval — balancing efficiency and retention.",
+                description: "The Free Spaced Repetition Scheduler models each student's memory for every skill. After each interaction, it updates the predicted retention and schedules the next review at the right interval — balancing efficiency and retention.",
             },
             edgeCalibration: {
                 title: "Edge Calibration",
@@ -57,10 +57,10 @@ export const en = {
         },
     },
     powersEveryProduct: {
-        eyebrow: "Powers every product",
-        title: "One engine. Four products today — and a roadmap for more.",
+        eyebrow: "Where it runs",
+        title: "Live in CodeCamp Advantage. Entering Primary Advantage.",
         description:
-            "The same Mastery Advantage engine powers every product — from Reading Advantage to CodeCamp Advantage. Four Reading Advantage products are live today; more subject-area products are on our roadmap.",
+            "Mastery Advantage runs in production for CodeCamp Advantage. It is entering Primary Advantage through tagged content. Our live product lines are Primary Advantage, Reading Advantage, and CodeCamp Advantage.",
     },
     cta: {
         eyebrow: "See it in action",
@@ -76,7 +76,7 @@ export const th = {
         eyebrow: "Mastery Advantage",
         title: "รู้ว่าต้องเรียนอะไรถัดไปเสมอ",
         description:
-            "เครื่องยนต์ปรับตัวที่เป็นทรัพย์สินทางปัญญาซึ่งขับเคลื่อนผลิตภัณฑ์ Reading Advantage ทุกตัว — ผสมผสาน Knowledge Space Theory กับ Spaced Repetition เพื่อจัดตำแหน่ง สอน และติดตามนักเรียนทุกคน",
+            "เครื่องยนต์ปรับตัวเบื้องหลังหลักสูตรของเรา — ผสมผสาน Knowledge Space Theory กับการทบทวนแบบเว้นช่วง FSRS เพื่อจัดตำแหน่ง สอน และติดตามนักเรียนแต่ละคน",
     },
     altTexts: {
         adaptivePath: "ภาพจำลองเส้นทางการเรียนรู้แบบปรับตัว",
@@ -91,7 +91,7 @@ export const th = {
     },
     spacedRepetition: {
         eyebrow: "การทบทวนแบบเว้นช่วง",
-        title: "ทบทวนในช่วงเวลาที่เหมาะสม",
+        title: "ทบทวนในเวลาที่เหมาะสม",
         description:
             "FSRS ปรับช่วงทบทวนแต่ละครั้งให้เหมาะกับแต่ละคน เนื้อหาจะแสดงซ้ำในช่วงเวลาก่อนที่จะลืม — ทำให้การจำสะสมและไม่มีอะไรหายไป",
     },
@@ -105,7 +105,7 @@ export const th = {
         eyebrow: "วิธีการทำงาน",
         title: "เทคโนโลยีเบื้องหลังเครื่องยนต์",
         description:
-            "Mastery Advantage ผสมผสานสองระบบที่พิสูจน์ด้วยงานวิจัยเป็นเครื่องยนต์ปรับตัวเดียวที่จัดตำแหน่งนักเรียน จัดตารางทบทวน และติดตามความชำนาญในทุกผลิตภัณฑ์",
+            "Mastery Advantage ผสมผสานสองระบบที่พิสูจน์ด้วยงานวิจัยเป็นเครื่องยนต์ปรับตัวเดียวที่จัดตำแหน่งนักเรียน จัดตารางทบทวน และติดตามความชำนาญในผลิตภัณฑ์ของเรา",
         pillars: {
             kst: {
                 title: "Knowledge Space Theory",
@@ -130,10 +130,10 @@ export const th = {
         },
     },
     powersEveryProduct: {
-        eyebrow: "ขับเคลื่อนทุกผลิตภัณฑ์",
-        title: "เครื่องยนต์เดียว สี่ผลิตภัณฑ์ที่เปิดใช้งานแล้ววันนี้ — และมีแผนงานสำหรับเพิ่มเติม",
+        eyebrow: "ใช้งานที่ไหนบ้าง",
+        title: "ใช้งานจริงใน CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage",
         description:
-            "เครื่องยนต์ Mastery Advantage เดียวกันขับเคลื่อนทุกผลิตภัณฑ์ — ตั้งแต่ Reading Advantage ถึง CodeCamp Advantage Reading Advantage มีผลิตภัณฑ์ที่เปิดใช้งานแล้วสี่ตัววันนี้ และผลิตภัณฑ์สาขาวิชาอื่นๆ อยู่ในแผนงานของเรา",
+            "Mastery Advantage ทำงานในระบบจริงของ CodeCamp Advantage และกำลังเข้าสู่ Primary Advantage ผ่านเนื้อหาที่ติดแท็ก สายผลิตภัณฑ์ที่เปิดใช้งานแล้วคือ Primary Advantage, Reading Advantage และ CodeCamp Advantage",
     },
     cta: {
         eyebrow: "ดูการทำงานจริง",
@@ -149,7 +149,7 @@ export const zh = {
         eyebrow: "Mastery Advantage",
         title: "始终知道下一步。",
         description:
-            "为所有 Reading Advantage 产品提供动力的专有自适应引擎——结合知识空间理论与间隔重复，为每个学生进行分班、教学和追踪。",
+            "我们课程背后的自适应引擎——结合知识空间理论与 FSRS 间隔重复，为每个学生进行分班、教学和追踪。",
     },
     altTexts: {
         adaptivePath: "自适应学习路径可视化",
@@ -164,9 +164,9 @@ export const zh = {
     },
     spacedRepetition: {
         eyebrow: "间隔重复",
-        title: "在最佳时刻复习。",
+        title: "在合适的时刻复习。",
         description:
-            "FSRS 为每个人校准每次复习间隔。项目在遗忘之前重新出现——所以记忆不断积累， nothing 丢失。",
+            "FSRS 为每个人校准每次复习间隔。项目在遗忘之前重新出现——所以记忆不断积累，没有任何内容丢失。",
     },
     progress: {
         eyebrow: "进度追踪",
@@ -178,7 +178,7 @@ export const zh = {
         eyebrow: "工作原理",
         title: "引擎背后的技术。",
         description:
-            "Mastery Advantage 将两个经过研究验证的系统结合为单一自适应引擎，为学生分班、安排复习并追踪每个产品的熟练度。",
+            "Mastery Advantage 将两个经过研究验证的系统结合为单一自适应引擎，为学生分班、安排复习并追踪我们产品中的熟练度。",
         pillars: {
             kst: {
                 title: "知识空间理论",
@@ -186,7 +186,7 @@ export const zh = {
             },
             fsrs: {
                 title: "FSRS 调度",
-                description: "自由间隔重复调度器为每个学生建模每项技能的记忆。每次交互后，它会更新预测保留率并在最佳间隔安排下次复习——平衡效率和保留率。",
+                description: "自由间隔重复调度器为每个学生建模每项技能的记忆。每次交互后，它会更新预测保留率并在合适的间隔安排下次复习——平衡效率和保留率。",
             },
             edgeCalibration: {
                 title: "边缘校准",
@@ -203,10 +203,10 @@ export const zh = {
         },
     },
     powersEveryProduct: {
-        eyebrow: "驱动每个产品",
-        title: "一个引擎，今天四个产品——更多已在路线图中。",
+        eyebrow: "应用范围",
+        title: "已在 CodeCamp Advantage 中上线，正进入 Primary Advantage。",
         description:
-            "相同的 Mastery Advantage 引擎为每个产品提供动力——从 Reading Advantage 到 CodeCamp Advantage。今天已有四个 Reading Advantage 产品上线，更多学科产品已在我们的路线图中。",
+            "Mastery Advantage 已在 CodeCamp Advantage 的生产环境中运行，并正通过已标记的内容进入 Primary Advantage。我们已上线的产品线是 Primary Advantage、Reading Advantage 和 CodeCamp Advantage。",
     },
     cta: {
         eyebrow: "查看实际操作",

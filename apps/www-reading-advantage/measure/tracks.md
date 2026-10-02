@@ -4,6 +4,18 @@ This file tracks all major tracks for project. Each track has its own detailed p
 
 ---
 
+## [ ] Track: www Copy Truth Pass
+
+**Status:** In progress 2026-10-02
+
+**Type:** chore | **Estimated Tasks:** 14
+
+**Description:** Align en, th and zh copy with the 2026-09-30 strategy and the outcome-claims policy. Add a Tutor Advantage hero on the home page.
+
+_Link: [./measure/tracks/www_copy_truth_pass_20261002/](./measure/tracks/www_copy_truth_pass_20261002/)_
+
+---
+
 ## [x] Track: CodeCamp Live Product Page Alignment
 
 **Status:** Completed and archived 2026-07-15

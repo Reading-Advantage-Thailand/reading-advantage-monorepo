@@ -1,10 +1,10 @@
 export const en = {
   hero: {
-    title: "AI-Powered Language Learning",
+    title: "AI-Assisted English Reading",
     subtitle:
-      "Experience personalized extensive reading with advanced AI technology",
+      "Extensive reading with a large article library and interactive practice",
     description:
-      "Our AI-powered platform adapts to your learning journey, providing personalized content and interactive activities for optimal language acquisition. Reading Advantage also offers a Blended Learning option with teacher-led classes and student workbooks.",
+      "Reading Advantage offers English articles with audio, translations, and vocabulary practice. Blended Learning pairs teacher-led classes with student workbooks. No school uses Reading Advantage yet. It is available through Tutor Advantage class packages as Reading Advantage Origins 2.",
   },
   blendedLearning: {
     buttonLabel: "Blended Learning",
@@ -21,9 +21,9 @@ export const en = {
       {
         title: "Extensive Article Library",
         items: [
-          "Over 3,000 articles available",
-          "60 new pieces added daily",
-          "Content for every learning level",
+          "Over 10,000 articles in the library",
+          "18 CEFR-aligned levels",
+          "The active program covers A1 to A2",
         ],
       },
       {
@@ -51,7 +51,7 @@ export const en = {
       {
         title: "Extensive Article Selection",
         description:
-          "Browse through thousands of articles across various topics and difficulty levels.",
+          "Browse a large library of articles across many topics and levels.",
       },
       {
         title: "Multi-Language Support",
@@ -76,18 +76,18 @@ export const en = {
       {
         title: "SRS Flashcard System",
         description:
-          "Master vocabulary efficiently with our spaced repetition system.",
+          "Practice vocabulary with a spaced repetition system.",
       },
     ],
   },
   resultsSection: {
     heading: "Evidence-Based Methodology",
-    title: "Research-Backed Methodology",
+    title: "Built on Extensive Reading Research",
     description:
-      "Reading Advantage is built on decades of classroom research supporting extensive reading over traditional grammar instruction for reading outcomes. Specific efficacy gains vary by implementation fidelity and consistent classroom use.",
+      "Reading Advantage uses the extensive-reading methodology that controlled research has found effective. Results vary with implementation quality and reading volume.",
     stats: [
-      { value: "3000+", label: "Articles Available" },
-      { value: "60+", label: "New Articles Daily" },
+      { value: "10,000+", label: "Articles in the Library" },
+      { value: "18", label: "CEFR-Aligned Levels" },
       { value: "AI", label: "Reading Assistant" },
     ],
   },
@@ -113,11 +113,11 @@ export const en = {
     ],
   },
   technicalHighlights: {
-    heading: "Technical Excellence",
+    heading: "Technology",
     features: [
       {
         title: "AI-Powered",
-        description: "Advanced content generation and adaptation",
+        description: "AI-assisted content generation and adaptation",
       },
       {
         title: "Multi-Language",
@@ -135,8 +135,8 @@ export const en = {
   },
   games: {
     newBadge: "NEW!",
-    heading: "🎮 Exciting Vocabulary Games",
-    description: "Make learning vocabulary fun with our engaging games!",
+    heading: "🎮 Vocabulary Games",
+    description: "Practice vocabulary through play.",
     games: [
       {
         title: "Magic Defense",
@@ -164,19 +164,19 @@ export const en = {
     ],
   },
   cta: {
-    heading: "Transform Your Language Learning Journey",
+    heading: "Start Reading in English",
     description:
-      "Start using Reading Advantage today and experience the power of AI-enhanced learning",
+      "Reading Advantage is available through Tutor Advantage class packages. Schools can ask us about Blended Learning.",
     buttons: {
-      signUp: "Sign Up Your School",
-      freeTrial: "Start Free Trial",
+      signUp: "Contact Us",
+      freeTrial: "Learn More",
     },
   },
   adaptiveEngine: {
     eyebrow: "Adaptive Engine",
-    heading: "Personalized reading paths for every student",
+    heading: "Reading practice built to connect to a knowledge graph",
     description:
-      "Powered by Mastery Advantage — the KST + SRS engine that maps every reading skill and schedules practice at the perfect moment.",
+      "Mastery Advantage is the KST + FSRS engine that maps skills and schedules practice. Reading Advantage articles are being regenerated against the same graph.",
     alt: "Reading Advantage adaptive learning visualization",
   },
   eyebrows: {
@@ -208,11 +208,11 @@ export const en = {
 
 export const th = {
   hero: {
-    title: "การเรียนรู้ภาษาที่ขับเคลื่อนด้วย AI",
+    title: "การอ่านภาษาอังกฤษที่มี AI ช่วย",
     subtitle:
-      "สัมผัสการอ่านแบบกว้างขวางที่ปรับแต่งเฉพาะบุคคลด้วยเทคโนโลยี AI ที่ล้ำสมัย",
+      "การอ่านเชิงขยายพร้อมคลังบทความขนาดใหญ่และกิจกรรมฝึกแบบโต้ตอบ",
     description:
-      "แพลตฟอร์มของเราปรับให้เข้ากับการเรียนรู้ของคุณโดยเฉพาะมอบเนื้อหาและกิจกรรมแบบอินเทอร์แอคทีฟเพื่อการพัฒนาทักษะภาษาอย่างมีประสิทธิภาพ Reading Advantage ยังมีตัวเลือกการเรียนแบบผสมผสานซึ่งรวมการสอนโดยครูและหนังสือนักเรียน",
+      "Reading Advantage มีบทความภาษาอังกฤษพร้อมเสียง คำแปล และการฝึกคำศัพท์ Blended Learning ใช้การสอนโดยครูร่วมกับหนังสือแบบฝึกหัดของนักเรียน ยังไม่มีโรงเรียนใดใช้ Reading Advantage ขณะนี้มีให้เรียนผ่านแพ็กเกจคลาสของ Tutor Advantage ในชื่อ Reading Advantage Origins 2",
   },
   blendedLearning: {
     buttonLabel: "การเรียนแบบผสมผสาน",
@@ -229,9 +229,9 @@ export const th = {
       {
         title: "ห้องสมุดบทความที่กว้างขวาง",
         items: [
-          "บทความมากกว่า 3,000 บทความ",
-          "เพิ่มเนื้อหาใหม่ 60 ชิ้นทุกวัน",
-          "เนื้อหาสำหรับทุกระดับการเรียนรู้",
+          "คลังบทความมากกว่า 10,000 บทความ",
+          "18 ระดับที่สอดคล้องกับ CEFR",
+          "โปรแกรมที่ใช้งานอยู่ครอบคลุมระดับ A1 ถึง A2",
         ],
       },
       {
@@ -259,7 +259,7 @@ export const th = {
       {
         title: "การเลือกบทความที่หลากหลาย",
         description:
-          "เรียกดูบทความนับพันในหัวข้อต่างๆ และระดับความยากที่หลากหลาย",
+          "เรียกดูคลังบทความขนาดใหญ่ในหัวข้อและระดับที่หลากหลาย",
       },
       {
         title: "รองรับหลายภาษา",
@@ -282,18 +282,18 @@ export const th = {
       },
       {
         title: "ระบบบัตรคำแบบ SRS",
-        description: "เรียนรู้คำศัพท์อย่างมีประสิทธิภาพด้วยระบบทบทวนระยะห่าง",
+        description: "ฝึกคำศัพท์ด้วยระบบทบทวนแบบเว้นช่วง",
       },
     ],
   },
   resultsSection: {
     heading: "ระเบียบวิธีที่อิงหลักฐานเชิงประจักษ์",
-    title: "ระเบียบวิธีที่ได้รับการสนับสนุนจากการวิจัย",
+    title: "สร้างบนงานวิจัยด้านการอ่านเชิงขยาย",
     description:
-      "Reading Advantage สร้างขึ้นบนงานวิจัยด้านการศึกษาในห้องเรียนหลายทศวรรษที่สนับสนุนการอ่านแบบกว้างเหนือการสอนไวยากรณ์แบบดั้งเดิมสำหรับผลลัพธ์ด้านการอ่าน ผลลัพธ์ด้านประสิทธิภาพเฉพาะจะแตกต่างกันไปตามความสม่ำเสมอในการใช้งานและการใช้งานในห้องเรียนอย่างต่อเนื่อง",
+      "Reading Advantage ใช้วิธีการอ่านเชิงขยายที่งานวิจัยแบบควบคุมพบว่ามีประสิทธิภาพ ผลลัพธ์ขึ้นอยู่กับคุณภาพการนำไปใช้และปริมาณการอ่าน",
     stats: [
-      { value: "3000+", label: "บทความที่มีอยู่" },
-      { value: "60+", label: "บทความใหม่ทุกวัน" },
+      { value: "10,000+", label: "บทความในคลัง" },
+      { value: "18", label: "ระดับที่สอดคล้องกับ CEFR" },
       { value: "AI", label: "ผู้ช่วยการอ่าน" },
     ],
   },
@@ -319,11 +319,11 @@ export const th = {
     ],
   },
   technicalHighlights: {
-    heading: "ความเป็นเลิศทางเทคนิค",
+    heading: "เทคโนโลยี",
     features: [
       {
         title: "ขับเคลื่อนด้วย AI",
-        description: "การสร้างและปรับเนื้อหาขั้นสูง",
+        description: "AI ช่วยสร้างและปรับเนื้อหา",
       },
       {
         title: "รองรับหลายภาษา",
@@ -341,9 +341,9 @@ export const th = {
   },
   games: {
     newBadge: "มาใหม่!",
-    heading: "🎮 เกมคำศัพท์ที่น่าสนใจ",
+    heading: "🎮 เกมคำศัพท์",
     description:
-      "ทำให้การเรียนรู้คำศัพท์เป็นเรื่องสนุกด้วยเกมที่น่าตื่นเต้นของเรา!",
+      "ฝึกคำศัพท์ผ่านการเล่นเกม",
     games: [
       {
         title: "Magic Defense",
@@ -369,19 +369,19 @@ export const th = {
     ],
   },
   cta: {
-    heading: "เปลี่ยนแปลงเส้นทางการเรียนรู้ภาษาของคุณ",
+    heading: "เริ่มอ่านภาษาอังกฤษ",
     description:
-      "เริ่มใช้ Reading Advantage วันนี้และสัมผัสพลังของการเรียนรู้ที่ขับเคลื่อนด้วย AI",
+      "Reading Advantage มีให้เรียนผ่านแพ็กเกจคลาสของ Tutor Advantage โรงเรียนสอบถามเราเรื่อง Blended Learning ได้",
     buttons: {
-      signUp: "สมัครโรงเรียนของคุณ",
-      freeTrial: "เริ่มทดลองใช้ฟรี",
+      signUp: "ติดต่อเรา",
+      freeTrial: "เรียนรู้เพิ่มเติม",
     },
   },
   adaptiveEngine: {
     eyebrow: "เครื่องยนต์ปรับตัว",
-    heading: "เส้นทางการอ่านที่ปรับแต่งเฉพาะบุคคลสำหรับนักเรียนทุกคน",
+    heading: "การฝึกอ่านที่สร้างมาเพื่อเชื่อมกับกราฟความรู้",
     description:
-      "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการอ่านทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+      "Mastery Advantage คือเครื่องยนต์ KST + FSRS ที่จัดทำแผนที่ทักษะและกำหนดเวลาฝึกฝน บทความ Reading Advantage กำลังถูกสร้างใหม่ให้ตรงกับกราฟเดียวกัน",
     alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Reading Advantage",
   },
   eyebrows: {
@@ -413,10 +413,10 @@ export const th = {
 
 export const zh = {
   hero: {
-    title: "AI 驱动的语言学习",
-    subtitle: "通过先进的 AI 技术体验个性化的广泛阅读",
+    title: "AI 辅助的英语阅读",
+    subtitle: "拥有大型文章库和互动练习的泛读",
     description:
-      "我们的 AI 驱动平台会根据您的学习旅程进行调整，提供个性化内容和互动活动，助力语言学习。Reading Advantage 还提供混合学习模式，包括教师主导的课程和学生练习册。",
+      "Reading Advantage 提供带音频、翻译和词汇练习的英语文章。混合学习（Blended Learning）将教师主导的课程与学生练习册相结合。目前还没有学校使用 Reading Advantage，可通过 Tutor Advantage 课程包以 Reading Advantage Origins 2 的形式学习。",
   },
   blendedLearning: {
     buttonLabel: "混合学习",
@@ -433,9 +433,9 @@ export const zh = {
       {
         title: "丰富的文章库",
         items: [
-          "超过 3,000 篇文章",
-          "每天新增 60 篇",
-          "适合各个学习水平的内容",
+          "文章库超过 10,000 篇文章",
+          "18 个与 CEFR 对齐的级别",
+          "当前主要范围涵盖 A1 至 A2",
         ],
       },
       {
@@ -458,7 +458,7 @@ export const zh = {
     features: [
       {
         title: "丰富的文章选择",
-        description: "浏览数千篇涵盖各种主题和难度级别的文章。",
+        description: "浏览涵盖各种主题和级别的大型文章库。",
       },
       {
         title: "多语言支持",
@@ -479,18 +479,18 @@ export const zh = {
       },
       {
         title: "SRS 闪卡系统",
-        description: "使用间隔重复系统高效掌握词汇。",
+        description: "通过间隔重复系统练习词汇。",
       },
     ],
   },
   resultsSection: {
     heading: "基于证据的方法",
-    title: "有研究支持的方法论",
+    title: "建立在泛读研究之上",
     description:
-      "Reading Advantage 基于数十年的课堂教学研究建立，支持广泛阅读优于传统语法教学。具体的效能提升取决于实施保真度和持续的课堂使用。",
+      "Reading Advantage 采用经对照研究证明有效的泛读方法。结果取决于实施质量和阅读量。",
     stats: [
-      { value: "3000+", label: "可用文章" },
-      { value: "60+", label: "每日新增文章" },
+      { value: "10,000+", label: "文章库文章数" },
+      { value: "18", label: "与 CEFR 对齐的级别" },
       { value: "AI", label: "阅读助手" },
     ],
   },
@@ -508,11 +508,11 @@ export const zh = {
     ],
   },
   technicalHighlights: {
-    heading: "技术卓越",
+    heading: "技术",
     features: [
       {
         title: "AI 驱动",
-        description: "高级内容生成和适配",
+        description: "AI 辅助的内容生成和适配",
       },
       {
         title: "多语言支持",
@@ -530,8 +530,8 @@ export const zh = {
   },
   games: {
     newBadge: "全新推出！",
-    heading: "🎮 令人兴奋的词汇游戏",
-    description: "通过我们引人入胜的游戏让学习词汇变得有趣！",
+    heading: "🎮 词汇游戏",
+    description: "在游戏中练习词汇。",
     games: [
       {
         title: "Magic Defense",
@@ -556,18 +556,18 @@ export const zh = {
     ],
   },
   cta: {
-    heading: "改变您的语言学习之旅",
-    description: "立即使用 Reading Advantage，体验 AI 增强学习的强大功能",
+    heading: "开始英语阅读",
+    description: "可通过 Tutor Advantage 课程包学习 Reading Advantage。学校可向我们咨询混合学习（Blended Learning）。",
     buttons: {
-      signUp: "为您的学校注册",
-      freeTrial: "开始免费试用",
+      signUp: "联系我们",
+      freeTrial: "了解更多",
     },
   },
   adaptiveEngine: {
     eyebrow: "自适应引擎",
-    heading: "为每位学生量身定制的个性化阅读路径",
+    heading: "为连接知识图谱而构建的阅读练习",
     description:
-      "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项阅读技能并在最佳时刻安排练习。",
+      "Mastery Advantage 是映射技能并安排练习的 KST + FSRS 引擎。Reading Advantage 的文章正在按同一图谱重新生成。",
     alt: "Reading Advantage 自适应学习可视化",
   },
   eyebrows: {

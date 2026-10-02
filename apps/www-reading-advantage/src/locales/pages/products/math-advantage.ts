@@ -2,23 +2,23 @@ export const en = {
     hero: {
         title: "Math Advantage",
         subtitle: "On Our Roadmap · Planned",
-        description: "Math Advantage is on our product roadmap. We are designing a personalized math tutoring experience that will combine proven teaching methods with our internal model adapter, planned for grades 7-12.",
+        description: "Math Advantage is on our product roadmap. It is a planned math book line with a printed workbook and a digital twin, tagged to the Mastery Advantage knowledge graph. It has no release date.",
         comingSoon: "On Our Roadmap",
     },
     heroAlt: "Interactive digital math learning environment",
     logoAlt: "Math Advantage Logo",
-    problemGenerationAlt: "Math Advantage platform showing AI-powered problem generation",
+    problemGenerationAlt: "Math Advantage problem generation concept",
     statsBenefits: {
-        fasterLearning: "Faster Learning",
-        confidenceBoost: "Confidence Boost",
-        aiSupport: "AI Support",
+        fasterLearning: "Step-by-Step Learning",
+        confidenceBoost: "Build Confidence",
+        aiSupport: "Digital Support",
     },
     keyFeatures: {
         heading: "Key Features",
         smartProblemGeneration: {
             title: "Smart Problem Generation",
             points: [
-                "Customized practice problems matching your skill level",
+                "Practice problems matched to your skill level",
                 "Real-world application problems",
                 "Progressive difficulty scaling",
             ],
@@ -28,24 +28,24 @@ export const en = {
             points: [
                 '"I do, We do, You do" teaching method',
                 "Clear concept progression",
-                "Aligned with educational standards",
+                "Clear progression by level",
             ],
         },
         aiPoweredSupport: {
-            title: "AI-Powered Support",
+            title: "Digital Support",
             points: [
-                "Personalized explanations",
+                "Worked explanations",
                 "Dynamic visualizations",
-                "Instant feedback and guidance",
+                "Feedback and guidance",
             ],
         },
     },
     subjectCoverage: {
-        heading: "Comprehensive Coverage",
+        heading: "Planned Subject Areas",
         subjects: ["Arithmetic", "Algebra", "Geometry", "Trigonometry", "Calculus", "Statistics"],
     },
     benefits: {
-        heading: "Why Choose Math Advantage?",
+        heading: "What Math Advantage Plans to Offer",
         reasons: [
             {
                 icon: "💪",
@@ -54,39 +54,39 @@ export const en = {
             },
             {
                 icon: "⏰",
-                title: "On-Demand Availability",
+                title: "Learn Anywhere",
                 description: "Learn whenever you want, wherever you are.",
             },
             {
                 icon: "🎯",
-                title: "Instant Support",
-                description: "Get immediate help when you're stuck.",
+                title: "Support When Stuck",
+                description: "Get help when you are stuck.",
             },
             {
                 icon: "📊",
                 title: "Track Progress",
-                description: "Monitor your improvement with detailed analytics.",
+                description: "Monitor your progress with progress reports.",
             },
         ],
     },
     cta: {
-        heading: "Ready to Transform Your Math Journey?",
-        description: "Math Advantage is on our roadmap. Join our waitlist to be notified when we have news to share.",
-        button: "Join Waitlist",
+        heading: "Interested in Math Advantage?",
+        description: "Math Advantage is on our roadmap. It has no release date. Tell us what you need.",
+        button: "Tell Us You Are Interested",
         contactUs: "Contact Us",
     },
     adaptiveEngine: {
         eyebrow: "Adaptive Engine",
-        heading: "Personalized math paths for every student",
-        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every math skill and schedules practice at the perfect moment.",
+        heading: "Math paths built on mastery data",
+        description: "Built on Mastery Advantage, the engine that uses Knowledge Space Theory and FSRS spaced repetition to map skills and schedule practice.",
         alt: "Math Advantage adaptive learning visualization",
     },
     eyebrows: {
         subjectsCovered: "Subjects Covered",
         smartProblemGeneration: "Smart Problem Generation",
         benefits: "Benefits",
-        results: "Results",
-        provenImpact: "Proven Impact",
+        results: "Progress",
+        provenImpact: "What to Expect",
     },
 };
 
@@ -94,23 +94,23 @@ export const th = {
     hero: {
         title: "แมธแอดแวนเทจ",
         subtitle: "อยู่ในแผนงานของเรา · กำลังวางแผน",
-        description: "แมธแอดแวนเทจอยู่ในแผนงานผลิตภัณฑ์ของเรา เรากำลังออกแบบประสบการณ์การสอนคณิตศาสตร์เฉพาะบุคคลที่จะผสมผสานวิธีการสอนที่ได้รับการพิสูจน์แล้วกับอะแดปเตอร์โมเดลภายในของเรา มีแผนสำหรับชั้นมัธยมศึกษาป.1-ป.6",
+        description: "แมธแอดแวนเทจอยู่ในแผนงานผลิตภัณฑ์ของเรา เป็นชุดหนังสือคณิตศาสตร์ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage ยังไม่มีกำหนดวันเปิดตัว",
         comingSoon: "อยู่ในแผนงาน",
     },
     heroAlt: "สภาพแวดล้อมการเรียนรู้คณิตศาสตร์ดิจิทัลแบบโต้ตอบ",
     logoAlt: "โลโก้ Math Advantage",
-    problemGenerationAlt: "แพลตฟอร์ม Math Advantage แสดงการสร้างโจทย์ที่ขับเคลื่อนด้วย AI",
+    problemGenerationAlt: "แนวคิดการสร้างโจทย์ของ Math Advantage",
     statsBenefits: {
-        fasterLearning: "การเรียนรู้ที่เร็วขึ้น",
-        confidenceBoost: "เพิ่มความมั่นใจ",
-        aiSupport: "การสนับสนุน AI",
+        fasterLearning: "เรียนรู้ทีละขั้น",
+        confidenceBoost: "สร้างความมั่นใจ",
+        aiSupport: "การสนับสนุนดิจิทัล",
     },
     keyFeatures: {
         heading: "คุณสมบัติเด่น",
         smartProblemGeneration: {
             title: "การสร้างโจทย์อัจฉริยะ",
             points: [
-                "โจทย์ที่ปรับแต่งให้เหมาะกับระดับทักษะของคุณ",
+                "โจทย์ที่เหมาะกับระดับทักษะของคุณ",
                 "โจทย์ที่สอดคล้องกับการใช้งานในชีวิตจริง",
                 "ปรับความยากตามลำดับขั้น",
             ],
@@ -120,24 +120,24 @@ export const th = {
             points: [
                 'วิธีการสอนแบบ "ฉันทำ, เราทำ, คุณทำ"',
                 "ความก้าวหน้าของแนวคิดที่ชัดเจน",
-                "สอดคล้องกับมาตรฐานการศึกษา",
+                "ลำดับความก้าวหน้าที่ชัดเจนตามระดับ",
             ],
         },
         aiPoweredSupport: {
-            title: "การสนับสนุนด้วย AI",
+            title: "การสนับสนุนดิจิทัล",
             points: [
-                "คำอธิบายแบบเฉพาะบุคคล",
+                "คำอธิบายวิธีทำทีละขั้น",
                 "ภาพเคลื่อนไหวเชิงพลวัต",
-                "คำแนะนำและคำติชมทันที",
+                "คำแนะนำและคำติชม",
             ],
         },
     },
     subjectCoverage: {
-        heading: "ความครอบคลุมที่ครบถ้วน",
+        heading: "หัวข้อที่วางแผนไว้",
         subjects: ["เลขคณิต", "พีชคณิต", "เรขาคณิต", "ตรีโกณมิติ", "แคลคูลัส", "สถิติ"],
     },
     benefits: {
-        heading: "ทำไมต้องเลือกแมธแอดแวนเทจ?",
+        heading: "สิ่งที่ Math Advantage วางแผนจะมอบให้",
         reasons: [
             {
                 icon: "💪",
@@ -146,39 +146,39 @@ export const th = {
             },
             {
                 icon: "⏰",
-                title: "พร้อมให้บริการตามต้องการ",
+                title: "เรียนได้ทุกที่",
                 description: "เรียนได้ทุกที่ทุกเวลา",
             },
             {
                 icon: "🎯",
-                title: "การสนับสนุนทันที",
-                description: "ได้รับความช่วยเหลือทันทีเมื่อคุณติดขัด",
+                title: "ช่วยเมื่อติดขัด",
+                description: "ได้รับความช่วยเหลือเมื่อคุณติดขัด",
             },
             {
                 icon: "📊",
                 title: "ติดตามความก้าวหน้า",
-                description: "ตรวจสอบการพัฒนาด้วยการวิเคราะห์ที่ละเอียด",
+                description: "ตรวจสอบความก้าวหน้าด้วยรายงานความก้าวหน้า",
             },
         ],
     },
     cta: {
-        heading: "พร้อมเปลี่ยนเส้นทางการเรียนคณิตศาสตร์ของคุณแล้วหรือยัง?",
-        description: "แมธแอดแวนเทจอยู่ในแผนงานของเรา เข้าร่วมรายชื่อรอเพื่อรับแจ้งเมื่อเรามีข่าวสารมาแบ่งปัน",
-        button: "เข้าร่วมรายชื่อรอ",
+        heading: "สนใจ Math Advantage หรือไม่?",
+        description: "แมธแอดแวนเทจอยู่ในแผนงานของเรา ยังไม่มีกำหนดวันเปิดตัว บอกเราว่าคุณต้องการอะไร",
+        button: "บอกเราว่าคุณสนใจ",
         contactUs: "ติดต่อเรา",
     },
     adaptiveEngine: {
         eyebrow: "เครื่องยนต์ปรับตัว",
-        heading: "เส้นทางคณิตศาสตร์ที่ปรับแต่งเฉพาะบุคคลสำหรับนักเรียนทุกคน",
-        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะคณิตศาสตร์ทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+        heading: "เส้นทางคณิตศาสตร์ที่สร้างจากข้อมูลความเชี่ยวชาญ",
+        description: "สร้างบน Mastery Advantage เครื่องยนต์ที่ใช้ทฤษฎีปริภูมิความรู้และการทบทวนแบบ FSRS เพื่อจัดทำแผนที่ทักษะและกำหนดเวลาฝึกฝน",
         alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Math Advantage",
     },
     eyebrows: {
         subjectsCovered: "วิชาที่ครอบคลุม",
         smartProblemGeneration: "การสร้างโจทย์อัจฉริยะ",
         benefits: "ประโยชน์",
-        results: "ผลลัพธ์",
-        provenImpact: "ผลกระทบจริง",
+        results: "ความก้าวหน้า",
+        provenImpact: "สิ่งที่คาดหวัง",
     },
 };
 
@@ -186,23 +186,23 @@ export const zh = {
     hero: {
         title: "数学优势",
         subtitle: "我们路线图中 · 规划中",
-        description: "数学优势在我们的产品路线图中。我们正在设计个性化的数学辅导体验，将成熟的教学方法与我们内部模型适配器相结合，规划面向7-12年级。",
+        description: "数学优势在我们的产品路线图中。这是计划中的数学图书系列，包含纸质练习册和数字版本，对接 Mastery Advantage 知识图谱，暂无发布日期。",
         comingSoon: "路线图中",
     },
     heroAlt: "交互式数字数学学习环境",
     logoAlt: "Math Advantage 标志",
-    problemGenerationAlt: "Math Advantage 平台展示AI驱动的题目生成",
+    problemGenerationAlt: "Math Advantage 题目生成概念",
     statsBenefits: {
-        fasterLearning: "学习更快",
-        confidenceBoost: "信心提升",
-        aiSupport: "AI 支持",
+        fasterLearning: "循序渐进学习",
+        confidenceBoost: "建立信心",
+        aiSupport: "数字支持",
     },
     keyFeatures: {
         heading: "主要功能",
         smartProblemGeneration: {
             title: "智能题目生成",
             points: [
-                "定制化练习题，匹配您的技能水平",
+                "匹配您技能水平的练习题",
                 "真实应用问题",
                 "难度逐步提升",
             ],
@@ -212,24 +212,24 @@ export const zh = {
             points: [
                 '"我做，我们做，你做"教学方法',
                 "清晰的概念进展",
-                "符合教育标准",
+                "按级别清晰进阶",
             ],
         },
         aiPoweredSupport: {
-            title: "AI 驱动支持",
+            title: "数字支持",
             points: [
-                "个性化解释",
+                "分步讲解",
                 "动态可视化",
-                "即时反馈和指导",
+                "反馈和指导",
             ],
         },
     },
     subjectCoverage: {
-        heading: "全面覆盖",
+        heading: "计划涵盖的内容",
         subjects: ["算术", "代数", "几何", "三角学", "微积分", "统计学"],
     },
     benefits: {
-        heading: "为什么选择数学优势?",
+        heading: "数学优势计划提供什么",
         reasons: [
             {
                 icon: "💪",
@@ -238,38 +238,38 @@ export const zh = {
             },
             {
                 icon: "⏰",
-                title: "按需可用",
+                title: "随处学习",
                 description: "随时随地学习",
             },
             {
                 icon: "🎯",
-                title: "即时支持",
-                description: "遇到问题时即时获得帮助",
+                title: "卡住时有支持",
+                description: "遇到问题时获得帮助",
             },
             {
                 icon: "📊",
                 title: "跟踪进度",
-                description: "通过详细分析监控您的改进",
+                description: "通过进度报告了解您的进度",
             },
         ],
     },
     cta: {
-        heading: "准备好改变您的数学旅程了吗？",
-        description: "数学优势在我们的路线图中。加入候补名单，以便在我们有消息分享时获得通知。",
-        button: "加入候补名单",
+        heading: "对数学优势感兴趣吗？",
+        description: "数学优势在我们的路线图中。暂无发布日期，欢迎告诉我们您的需求。",
+        button: "告诉我们您感兴趣",
         contactUs: "联系我们",
     },
     adaptiveEngine: {
         eyebrow: "自适应引擎",
-        heading: "为每位学生量身定制的个性化数学路径",
-        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项数学技能并在最佳时刻安排练习。",
+        heading: "基于掌握度数据的数学路径",
+        description: "基于 Mastery Advantage，该引擎使用知识空间理论和 FSRS 间隔重复来映射技能并安排练习。",
         alt: "Math Advantage 自适应学习可视化",
     },
     eyebrows: {
         subjectsCovered: "涵盖科目",
         smartProblemGeneration: "智能题目生成",
         benefits: "优势",
-        results: "成果",
-        provenImpact: "实证效果",
+        results: "进度",
+        provenImpact: "可期待的内容",
     },
 };

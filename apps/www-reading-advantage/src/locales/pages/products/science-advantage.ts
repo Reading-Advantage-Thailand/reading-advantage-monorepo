@@ -2,37 +2,37 @@ export const en = {
   metadata: {
     title: "Science Advantage - Reading Advantage Thailand",
     description:
-      "NGSS-aligned K-12 science education platform with interactive lessons, AI-powered recommendations, and real-time teacher intervention alerts.",
+      "Science Advantage is a planned science book line with a printed workbook and a digital twin. It is built but not released, and it is on our roadmap.",
   },
   hero: {
     title: "Science Advantage",
-    subtitle: "NGSS-Aligned K-12 Science Education Platform",
+    subtitle: "A Science Workbook Line on Our Roadmap",
     description:
-      "Interactive science learning with adaptive AI recommendations, real-time progress tracking, and teacher intervention tools.",
-    badge: "Early Access",
-    comingSoon: "Coming Soon",
+      "A printed science workbook with a digital twin, tagged to the Mastery Advantage knowledge graph. It is built but not yet released.",
+    badge: "On our roadmap",
+    comingSoon: "On our roadmap",
     cta: "Request Demo",
     secondaryCta: "Learn More",
   },
   heroAlt: "Digital science discovery platform",
   logoAlt: "Science Advantage Logo",
   coreValue: {
-    heading: "Transforming Science Education",
+    heading: "A Science Line Built on the Same Model",
     features: [
       {
-        title: "NGSS-Aligned Curriculum",
+        title: "Structured Curriculum",
         description:
-          "Full coverage of Next Generation Science Standards with structured lessons and assessments",
+          "Structured lessons and assessments in a printed workbook with a digital twin",
       },
       {
-        title: "AI-Powered Learning",
+        title: "Mastery Tracking",
         description:
-          "Adaptive recommendations and mastery tracking personalized for each student",
+          "Mastery tracking through the Mastery Advantage knowledge graph",
       },
       {
-        title: "Real-Time Intervention",
+        title: "Teacher Insight",
         description:
-          "Teacher alerts for at-risk students with actionable insights",
+          "Teacher views that show which students need extra support",
       },
     ],
   },
@@ -53,12 +53,12 @@ export const en = {
       {
         title: "Track Your Progress",
         description:
-          "XP, levels, streaks, and badges gamify your learning journey",
+          "XP, levels, streaks, and badges support your learning",
       },
       {
-        title: "AI Recommendations",
+        title: "Lesson Suggestions",
         description:
-          "Get personalized lesson suggestions based on your mastery profile",
+          "Get lesson suggestions based on your mastery profile",
       },
     ],
   },
@@ -67,9 +67,9 @@ export const en = {
     subtitle: "Data-driven insights to support every student",
     features: [
       {
-        title: "Intervention Alerts",
+        title: "Support Notices",
         description:
-          "Real-time notifications for students who need extra support",
+          "Notices for students who need extra support",
       },
       {
         title: "Class Analytics",
@@ -93,36 +93,36 @@ export const en = {
       {
         title: "Interactive Curriculum",
         points: [
-          "NGSS-aligned lessons with quizzes",
+          "Structured lessons with quizzes",
           "Mastery-based progression",
           "Multi-tenant school support",
           "Grade-appropriate content",
         ],
       },
       {
-        title: "AI-Powered Insights",
+        title: "Mastery Insights",
         points: [
-          "Adaptive lesson recommendations",
+          "Lesson recommendations from mastery data",
           "Automated mastery updates",
-          "Personalized learning paths",
-          "Performance predictions",
+          "Mastery-based learning paths",
+          "Progress views for teachers",
         ],
       },
       {
         title: "Assessment Tools",
         points: [
           "Integrated lesson quizzes",
-          "Real-time progress tracking",
-          "Standards alignment reports",
+          "Progress tracking",
+          "CEFR-aligned reading levels where relevant",
           "Automated feedback",
         ],
       },
     ],
   },
   cta: {
-    heading: "Ready to Transform Your Science Classroom?",
+    heading: "Interested in Science Advantage?",
     description:
-      "Get early access to Science Advantage and bring NGSS-aligned, AI-powered science education to your school.",
+      "Science Advantage is on our roadmap. It has no release date. Contact us to tell us what you need.",
     buttons: {
       requestDemo: "Request Demo",
       contactSales: "Contact Sales",
@@ -136,7 +136,7 @@ export const en = {
         points: [
           "Curriculum integration",
           "Teacher tools",
-          "NGSS-aligned instruction",
+          "Structured science instruction",
           "Progress visibility",
         ],
       },
@@ -152,8 +152,8 @@ export const en = {
       {
         title: "Students",
         points: [
-          "Personalized learning paths",
-          "Interactive science lessons",
+          "Mastery-based learning paths",
+          "Science lessons with a workbook and app",
           "Engaging science activities",
           "Mastery-based progress",
         ],
@@ -161,23 +161,23 @@ export const en = {
     ],
   },
   waitlist: {
-    heading: "Join Our Waitlist",
-    description: "Be the first to access Science Advantage",
+    heading: "Tell Us You Are Interested",
+    description: "Science Advantage has no release date. We will keep your email for news.",
     form: {
       placeholder: "Enter your email",
-      button: "Join Waitlist",
+      button: "Send",
     },
   },
   adaptiveEngine: {
     eyebrow: "Adaptive Engine",
-    heading: "Inquiry-based science, personalized for every student",
+    heading: "Inquiry-based science, tagged to the knowledge graph",
     description:
-      "Powered by Mastery Advantage — the KST + SRS engine that maps every science skill and schedules practice at the perfect moment.",
+      "Built on Mastery Advantage, the engine that uses Knowledge Space Theory and FSRS spaced repetition to map skills and schedule practice.",
     alt: "Science Advantage adaptive learning visualization",
   },
   eyebrows: {
     whyScienceAdvantage: "WHY SCIENCE ADVANTAGE",
-    ngssAligned: "NGSS ALIGNED",
+    ngssAligned: "ON OUR ROADMAP",
     builtFor: "BUILT FOR",
   },
 };
@@ -186,37 +186,37 @@ export const th = {
   metadata: {
     title: "Science Advantage - Reading Advantage Thailand",
     description:
-      "แพลตฟอร์มการศึกษาวิทยาศาสตร์ K-12 ที่สอดคล้องกับมาตรฐาน NGSS พร้อมบทเรียนเชิงโต้ตอบ การแนะนำด้วย AI และการแจ้งเตือนการแทรกแซงครูแบบเรียลไทม์",
+      "Science Advantage เป็นหนังสือชุดวิทยาศาสตร์ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล สร้างเสร็จแล้วแต่ยังไม่เปิดตัว อยู่ในแผนงานของเรา",
   },
   hero: {
     title: "Science Advantage",
-    subtitle: "แพลตฟอร์มการศึกษาวิทยาศาสตร์ K-12 สอดคล้อง NGSS",
+    subtitle: "ชุดหนังสือวิทยาศาสตร์ในแผนงานของเรา",
     description:
-      "การเรียนรู้วิทยาศาสตร์แบบโต้ตอบด้วยการแนะนำ AI ที่ปรับตัวได้ การติดตามความก้าวหน้าแบบเรียลไทม์ และเครื่องมือแทรกแซงของครู",
-    badge: "เข้าถึงล่วงหน้า",
-    comingSoon: "เร็ว ๆ นี้",
+      "แบบฝึกหัดวิทยาศาสตร์เล่มพิมพ์พร้อมเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage สร้างเสร็จแล้วแต่ยังไม่เปิดตัว",
+    badge: "อยู่ในแผนงานของเรา",
+    comingSoon: "อยู่ในแผนงานของเรา",
     cta: "ขอสาธิต",
     secondaryCta: "เรียนรู้เพิ่มเติม",
   },
   heroAlt: "แพลตฟอร์มค้นพบวิทยาศาสตร์ดิจิทัล",
   logoAlt: "โลโก้ Science Advantage",
   coreValue: {
-    heading: "เปลี่ยนแปลงการศึกษาวิทยาศาสตร์",
+    heading: "ชุดวิทยาศาสตร์บนโมเดลเดียวกัน",
     features: [
       {
-        title: "หลักสูตรสอดคล้อง NGSS",
+        title: "หลักสูตรที่มีโครงสร้าง",
         description:
-          "ครอบคลุมมาตรฐานวิทยาศาสตร์รุ่นใหม่อย่างครบถ้วนพร้อมบทเรียนและการประเมินที่มีโครงสร้าง",
+          "บทเรียนและการประเมินที่มีโครงสร้างในแบบฝึกหัดเล่มพิมพ์พร้อมเวอร์ชันดิจิทัล",
       },
       {
-        title: "การเรียนรู้ด้วย AI",
+        title: "การติดตามความเชี่ยวชาญ",
         description:
-          "การแนะนำที่ปรับตัวได้และการติดตามความเชี่ยวชาญสำหรับนักเรียนแต่ละคน",
+          "ติดตามความเชี่ยวชาญผ่านกราฟความรู้ Mastery Advantage",
       },
       {
-        title: "การแทรกแซงแบบเรียลไทม์",
+        title: "ข้อมูลสำหรับครู",
         description:
-          "การแจ้งเตือนครูสำหรับนักเรียนที่เสี่ยงพร้อมข้อมูลเชิงลึกที่ใช้งานได้",
+          "มุมมองสำหรับครูที่แสดงว่านักเรียนคนใดต้องการการสนับสนุนเพิ่มเติม",
       },
     ],
   },
@@ -237,11 +237,11 @@ export const th = {
       {
         title: "ติดตามความก้าวหน้า",
         description:
-          "XP, ระดับ, สตรีค และแบดจ์ทำให้การเดินทางการเรียนรู้ของคุณสนุกขึ้น",
+          "XP ระดับ สตรีค และแบดจ์ช่วยสนับสนุนการเรียนรู้ของคุณ",
       },
       {
-        title: "การแนะนำด้วย AI",
-        description: "รับคำแนะนำบทเรียนส่วนบุคคลตามโปรไฟล์ความเชี่ยวชาญของคุณ",
+        title: "คำแนะนำบทเรียน",
+        description: "รับคำแนะนำบทเรียนตามโปรไฟล์ความเชี่ยวชาญของคุณ",
       },
     ],
   },
@@ -250,9 +250,9 @@ export const th = {
     subtitle: "ข้อมูลเชิงลึกที่ขับเคลื่อนด้วยข้อมูลเพื่อสนับสนุนนักเรียนทุกคน",
     features: [
       {
-        title: "การแจ้งเตือนการแทรกแซง",
+        title: "การแจ้งเตือนการสนับสนุน",
         description:
-          "การแจ้งเตือนแบบเรียลไทม์สำหรับนักเรียนที่ต้องการการสนับสนุนเพิ่มเติม",
+          "การแจ้งเตือนสำหรับนักเรียนที่ต้องการการสนับสนุนเพิ่มเติม",
       },
       {
         title: "การวิเคราะห์ชั้นเรียน",
@@ -275,36 +275,36 @@ export const th = {
       {
         title: "หลักสูตรเชิงโต้ตอบ",
         points: [
-          "บทเรียนสอดคล้อง NGSS พร้อมแบบทดสอบ",
+          "บทเรียนที่มีโครงสร้างพร้อมแบบทดสอบ",
           "ความก้าวหน้าตามความเชี่ยวชาญ",
           "รองรับหลายโรงเรียน",
           "เนื้อหาตามระดับชั้น",
         ],
       },
       {
-        title: "ข้อมูลเชิงลึกด้วย AI",
+        title: "ข้อมูลความเชี่ยวชาญ",
         points: [
-          "การแนะนำบทเรียนที่ปรับตัวได้",
+          "คำแนะนำบทเรียนจากข้อมูลความเชี่ยวชาญ",
           "การอัปเดตความเชี่ยวชาญอัตโนมัติ",
-          "เส้นทางการเรียนรู้ส่วนบุคคล",
-          "การคาดการณ์ประสิทธิภาพ",
+          "เส้นทางการเรียนรู้ตามความเชี่ยวชาญ",
+          "มุมมองความก้าวหน้าสำหรับครู",
         ],
       },
       {
         title: "เครื่องมือประเมินผล",
         points: [
           "แบบทดสอบบทเรียนที่ผสานรวม",
-          "การติดตามความก้าวหน้าแบบเรียลไทม์",
-          "รายงานการสอดคล้องมาตรฐาน",
+          "การติดตามความก้าวหน้า",
+          "ระดับการอ่านที่สอดคล้อง CEFR เมื่อเกี่ยวข้อง",
           "ข้อเสนอแนะอัตโนมัติ",
         ],
       },
     ],
   },
   cta: {
-    heading: "พร้อมเปลี่ยนแปลงห้องเรียนวิทยาศาสตร์ของคุณหรือยัง?",
+    heading: "สนใจ Science Advantage หรือไม่?",
     description:
-      "เข้าถึง Science Advantage ล่วงหน้าและนำการศึกษาวิทยาศาสตร์ที่ขับเคลื่อนด้วย AI สอดคล้อง NGSS มาสู่โรงเรียนของคุณ",
+      "Science Advantage อยู่ในแผนงานของเรา และยังไม่มีกำหนดวันเปิดตัว ติดต่อเราเพื่อบอกสิ่งที่คุณต้องการ",
     buttons: {
       requestDemo: "ขอสาธิต",
       contactSales: "ติดต่อฝ่ายขาย",
@@ -318,7 +318,7 @@ export const th = {
         points: [
           "การผสานหลักสูตร",
           "เครื่องมือสำหรับครู",
-          "การเรียนการสอนวิทยาศาสตร์ตาม NGSS",
+          "การสอนวิทยาศาสตร์ที่มีโครงสร้าง",
           "เห็นความก้าวหน้าของนักเรียน",
         ],
       },
@@ -335,7 +335,7 @@ export const th = {
         title: "นักเรียน",
         points: [
           "เส้นทางการเรียนรู้เฉพาะบุคคล",
-          "บทเรียนวิทยาศาสตร์แบบโต้ตอบ",
+          "บทเรียนวิทยาศาสตร์ด้วยแบบฝึกหัดและแอป",
           "กิจกรรมวิทยาศาสตร์ที่น่าสนใจ",
           "ความก้าวหน้าตามความเชี่ยวชาญ",
         ],
@@ -343,23 +343,23 @@ export const th = {
     ],
   },
   waitlist: {
-    heading: "เข้าร่วมรายชื่อรอ",
-    description: "เป็นกลุ่มแรกที่เข้าถึง Science Advantage",
+    heading: "บอกเราว่าคุณสนใจ",
+    description: "Science Advantage ยังไม่มีกำหนดวันเปิดตัว เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
     form: {
       placeholder: "กรอกอีเมลของคุณ",
-      button: "เข้าร่วมรายชื่อรอ",
+      button: "บอกเราว่าคุณสนใจ",
     },
   },
   adaptiveEngine: {
     eyebrow: "เครื่องยนต์ปรับตัว",
-    heading: "วิทยาศาสตร์จากการสอบถาม ปรับแต่งสำหรับนักเรียนทุกคน",
+    heading: "วิทยาศาสตร์เชิงสืบเสาะ เชื่อมกับกราฟความรู้",
     description:
-      "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะวิทยาศาสตร์ทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+      "สร้างบน Mastery Advantage เครื่องยนต์ที่ใช้ทฤษฎีปริภูมิความรู้และการทบทวนแบบ FSRS เพื่อจัดทำแผนที่ทักษะและกำหนดเวลาฝึกฝน",
     alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Science Advantage",
   },
   eyebrows: {
     whyScienceAdvantage: "ทำไมต้อง SCIENCE ADVANTAGE",
-    ngssAligned: "สอดคล้อง NGSS",
+    ngssAligned: "อยู่ในแผนงานของเรา",
     builtFor: "สร้างขึ้นสำหรับ",
   },
 };
@@ -368,34 +368,34 @@ export const zh = {
   metadata: {
     title: "Science Advantage - Reading Advantage Thailand",
     description:
-      "符合NGSS标准的K-12科学教育平台，提供互动课程、AI智能推荐和实时教师干预警报。",
+      "Science Advantage 是计划中的科学图书系列，包含纸质练习册和数字版本。已开发完成但尚未发布，在我们的路线图上。",
   },
   hero: {
     title: "Science Advantage",
-    subtitle: "符合NGSS标准的K-12科学教育平台",
+    subtitle: "路线图上的科学练习册系列",
     description:
-      "互动式科学学习，配备自适应AI推荐、实时进度跟踪和教师干预工具。",
-    badge: "抢先体验",
-    comingSoon: "即将推出",
+      "纸质科学练习册配数字版本，对接 Mastery Advantage 知识图谱。已开发完成，尚未发布。",
+    badge: "在我们的路线图上",
+    comingSoon: "在我们的路线图上",
     cta: "申请演示",
     secondaryCta: "了解更多",
   },
   heroAlt: "数字科学发现平台",
   logoAlt: "Science Advantage 标志",
   coreValue: {
-    heading: "改变科学教育",
+    heading: "基于同一模式的科学系列",
     features: [
       {
-        title: "符合NGSS的课程",
-        description: "全面覆盖下一代科学标准，提供结构化课程和评估",
+        title: "结构化课程",
+        description: "纸质练习册配数字版本，包含结构化课程和评估",
       },
       {
-        title: "AI驱动的学习",
-        description: "为每位学生量身定制的自适应推荐和掌握度跟踪",
+        title: "掌握度跟踪",
+        description: "通过 Mastery Advantage 知识图谱跟踪掌握度",
       },
       {
-        title: "实时干预",
-        description: "为有风险的学生提供教师警报和可操作的见解",
+        title: "教师洞察",
+        description: "教师视图显示哪些学生需要额外支持",
       },
     ],
   },
@@ -413,11 +413,11 @@ export const zh = {
       },
       {
         title: "跟踪您的进度",
-        description: "XP、等级、连续学习天数和徽章让您的学习之旅充满乐趣",
+        description: "XP、等级、连续学习天数和徽章支持您的学习",
       },
       {
-        title: "AI推荐",
-        description: "根据您的掌握度档案获取个性化课程建议",
+        title: "课程建议",
+        description: "根据您的掌握度档案获取课程建议",
       },
     ],
   },
@@ -426,8 +426,8 @@ export const zh = {
     subtitle: "数据驱动的洞察，支持每一位学生",
     features: [
       {
-        title: "干预警报",
-        description: "为需要额外支持的学生提供实时通知",
+        title: "支持提醒",
+        description: "为需要额外支持的学生提供通知",
       },
       {
         title: "班级分析",
@@ -449,31 +449,31 @@ export const zh = {
       {
         title: "互动课程",
         points: [
-          "符合NGSS标准的课程，配有测验",
+          "结构化课程，配有测验",
           "基于掌握度的进阶",
           "多租户学校支持",
           "年级适宜的内容",
         ],
       },
       {
-        title: "AI智能洞察",
+        title: "掌握度洞察",
         points: [
-          "自适应课程推荐",
+          "基于掌握度数据的课程推荐",
           "自动掌握度更新",
-          "个性化学习路径",
-          "表现预测",
+          "基于掌握度的学习路径",
+          "教师进度视图",
         ],
       },
       {
         title: "评估工具",
-        points: ["综合课程测验", "实时进度跟踪", "标准一致性报告", "自动反馈"],
+        points: ["综合课程测验", "进度跟踪", "相关时对应 CEFR 阅读级别", "自动反馈"],
       },
     ],
   },
   cta: {
-    heading: "准备好改变您的科学课堂了吗？",
+    heading: "对 Science Advantage 感兴趣吗？",
     description:
-      "抢先体验Science Advantage，将符合NGSS标准、AI驱动的科学教育带到您的学校。",
+      "Science Advantage 在我们的路线图上，暂无发布日期。欢迎联系我们，告诉我们您的需求。",
     buttons: {
       requestDemo: "申请演示",
       contactSales: "联系销售",
@@ -487,7 +487,7 @@ export const zh = {
         points: [
           "课程整合",
           "教师工具",
-          "符合NGSS的科学教学",
+          "结构化科学教学",
           "学生进度可视化",
         ],
       },
@@ -499,7 +499,7 @@ export const zh = {
         title: "学生",
         points: [
           "个性化学习路径",
-          "互动科学课程",
+          "练习册加应用的科学课程",
           "引人入胜的科学活动",
           "基于掌握度的学习进阶",
         ],
@@ -507,23 +507,23 @@ export const zh = {
     ],
   },
   waitlist: {
-    heading: "加入我们的候补名单",
-    description: "抢先体验 Science Advantage",
+    heading: "告诉我们您感兴趣",
+    description: "Science Advantage 暂无发布日期。我们会保留您的邮箱以便通知动态。",
     form: {
       placeholder: "请输入您的邮箱",
-      button: "加入候补名单",
+      button: "提交",
     },
   },
   adaptiveEngine: {
     eyebrow: "自适应引擎",
-    heading: "基于探究的科学教育，为每位学生个性化",
+    heading: "基于探究的科学教育，对接知识图谱",
     description:
-      "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项科学技能并在最佳时刻安排练习。",
+      "基于 Mastery Advantage，该引擎使用知识空间理论和 FSRS 间隔重复来映射技能并安排练习。",
     alt: "Science Advantage 自适应学习可视化",
   },
   eyebrows: {
     whyScienceAdvantage: "为什么选择 SCIENCE ADVANTAGE",
-    ngssAligned: "NGSS 对齐",
+    ngssAligned: "在我们的路线图上",
     builtFor: "专为",
   },
 };

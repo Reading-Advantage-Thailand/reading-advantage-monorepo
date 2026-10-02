@@ -4,7 +4,6 @@ import HeroSection from "@/components/marketing/hero-section";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FloatingPill } from "@/components/ui/floating-pill";
 import { StepFlow } from "@/components/ui/step-flow";
-import { Card, CardContent } from "@/components/ui/card";
 import { getScopedI18n } from "@/locales/server";
 import { Mail, BookOpen, Target, Zap } from "lucide-react";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
@@ -123,10 +122,6 @@ export default async function PrimaryAdvantage({
       title: "A2",
       description: t("cefrSection.levels.2.description"),
     },
-    {
-      title: "B1",
-      description: t("cefrSection.levels.3.description"),
-    },
   ];
 
   return (
@@ -137,7 +132,7 @@ export default async function PrimaryAdvantage({
         description={`${t("hero.subtitle")} ${t("hero.description")}`}
         ctaButton={{
           text: t("cta.buttons.signUp"),
-          href: "mailto:support@reading-advantage.com?subject=Primary Advantage Inquiry&body=Hi team,%0A%0AI'm interested in learning more about Primary Advantage for my school/organization.%0A%0APlease provide more information about:%0A- Pricing options (100 baht per student per month)%0A- Free pilot term%0A- Technical requirements%0A%0AThank you!",
+          href: "mailto:support@reading-advantage.com?subject=Primary Advantage Inquiry&body=Hi team,%0A%0AI'm interested in learning more about Primary Advantage for my school/organization.%0A%0APlease provide more information about:%0A- Blended Learning and App-Only options%0A- Technical requirements%0A%0AThank you!",
           variant: "primary",
           icon: <Mail className="w-5 h-5" />,
         }}
@@ -255,7 +250,7 @@ export default async function PrimaryAdvantage({
               {/* Floating feature badges */}
               <div className="absolute -top-4 -right-4 animate-in fade-in zoom-in duration-700">
                 <FloatingPill
-                  value="3-6"
+                  value="1-9"
                   label={t("cefrLevels.grades")}
                   variant="cyan"
                   size="sm"
@@ -353,7 +348,7 @@ export default async function PrimaryAdvantage({
         </div>
       </OverlappingSection>
 
-      {/* Stats — Single large + 2 smaller staggered */}
+      {/* Methodology note */}
       <section className="py-24 bg-gradient-to-br from-cyan-50 to-sky-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -364,51 +359,14 @@ export default async function PrimaryAdvantage({
               {t("resultsSection.heading")}
             </h2>
           </div>
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            {/* Small supporting card (left, staggered up) */}
-            <div data-testid="stat-card" className="md:-translate-y-8">
-              <Card className="text-center p-8 border-cyan-100">
-                <CardContent className="p-0">
-                  <div className="text-4xl md:text-5xl font-bold text-cyan-700 mb-2">
-                    {t("resultsSection.stats.0.value")}
-                  </div>
-                  <p className="text-slate-600 font-medium">
-                    {t("resultsSection.stats.0.label")}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Large central card */}
-            <div data-testid="stat-card" className="md:scale-110 z-10">
-              <Card className="text-center p-10 border-cyan-200 shadow-xl bg-gradient-to-br from-white to-cyan-50">
-                <CardContent className="p-0">
-                  <div className="text-5xl md:text-6xl font-bold text-cyan-700 mb-2">
-                    {t("resultsSection.stats.1.value")}
-                  </div>
-                  <p className="text-slate-600 font-medium text-lg">
-                    {t("resultsSection.stats.1.label")}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          <p className="max-w-3xl mx-auto text-center text-lg leading-relaxed text-slate-600">
+            {t("resultsSection.description")}
+          </p>
         </div>
       </section>
 
       {/* Final CTA */}
       <section className="py-24 bg-gradient-to-br from-cyan-600 via-cyan-700 to-cyan-800 text-white relative overflow-hidden">
-        <div className="absolute top-10 left-10 animate-bounce duration-[3000ms]">
-          <FloatingPill value="AI" label="Powered" variant="sky" size="sm" />
-        </div>
-        <div className="absolute bottom-10 right-10 animate-bounce duration-[4000ms]">
-          <FloatingPill
-            value="AI"
-            label={t("support")}
-            variant="cyan"
-            size="sm"
-          />
-        </div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             {t("cta.heading")}
@@ -418,7 +376,7 @@ export default async function PrimaryAdvantage({
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <a
-              href="mailto:support@reading-advantage.com?subject=Primary Advantage Inquiry&body=Hi team,%0A%0AI'm interested in learning more about Primary Advantage for my school/organization.%0A%0APlease provide more information about:%0A- Pricing options (100 baht per student per month)%0A- Free pilot term%0A- Technical requirements%0A%0AThank you!"
+              href="mailto:support@reading-advantage.com?subject=Primary Advantage Inquiry&body=Hi team,%0A%0AI'm interested in learning more about Primary Advantage for my school/organization.%0A%0APlease provide more information about:%0A- Blended Learning and App-Only options%0A- Technical requirements%0A%0AThank you!"
               className="bg-white hover:bg-cyan-50 text-cyan-800 px-10 py-4 rounded-2xl font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-xl inline-flex items-center justify-center gap-3"
             >
               {t("cta.buttons.signUp")}

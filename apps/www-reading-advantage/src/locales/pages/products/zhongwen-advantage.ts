@@ -1,18 +1,18 @@
 export const en = {
   hero: {
-    title: "The Future of Chinese Learning",
+    title: "Chinese Learning, Planned",
     subtitle: "On Our Roadmap · Planned",
     description:
-      "Zhongwen Advantage is on our product roadmap — planned to combine HSK standards with our adaptive learning engine.",
+      "Zhongwen Advantage is on our roadmap. It is planned as a workbook line tagged to the Mastery Advantage knowledge graph. It has no release date.",
     badge: "On Our Roadmap",
-    ctaButton: "Join Waitlist",
+    ctaButton: "Tell Us You Are Interested",
     alt: "Digital Chinese language learning with cultural elements",
   },
   adaptiveEngine: {
     eyebrow: "Adaptive Engine",
-    heading: "Chinese learning paths, adapted to every student",
+    heading: "Chinese learning paths built on mastery data",
     description:
-      "Powered by Mastery Advantage — the KST + SRS engine that maps every language skill and schedules practice at the perfect moment.",
+      "Built on Mastery Advantage, the engine that uses Knowledge Space Theory and FSRS spaced repetition to map skills and schedule practice.",
     alt: "Zhongwen Advantage adaptive learning visualization",
   },
   eyebrows: {
@@ -27,40 +27,40 @@ export const en = {
     levelLabel: "Level {level}",
     mapsToHsk13: "Maps to HSK 1-3",
     mapsToHsk46: "Maps to HSK 4-6",
-    aiProgression: "AI Progression",
+    aiProgression: "Mastery-Based Progression",
     hskLevels: "HSK Levels",
     hskLabel: "HSK {level}",
     standardizedCertification: "Standardized Certification",
     alt: "Chinese calligraphy and learning materials",
-    confidence: "Master Chinese with Confidence",
+    confidence: "Learn Chinese Step by Step",
     readingLibrary: "Extensive reading library",
-    aiTutoring: "AI-powered tutoring",
+    aiTutoring: "Practice scheduled by mastery data",
     culturalImmersion: "Cultural immersion content",
   },
   interactiveLearning: {
-    heading: "Engaging, Adaptive Learning Experience",
+    heading: "Workbook and App, Working Together",
     description:
-      "Our interactive learning system combines cutting-edge technology with proven pedagogical methods to deliver an unparalleled Chinese learning experience.",
+      "The plan pairs a printed workbook with a digital twin, so students practice on paper and in the app.",
   },
   forEducators: {
-    heading: "Powerful Tools for Teachers",
+    heading: "Tools for Teachers",
   },
   faq: {
     heading: "Frequently Asked Questions",
   },
   waitlist: {
-    joinWaitlist: "Join the Waitlist",
+    joinWaitlist: "Tell Us You Are Interested",
     description:
-      "Be the first to experience Zhongwen Advantage when we launch.",
+      "Zhongwen Advantage has no release date. We will keep your email for news.",
     emailPlaceholder: "Enter your email",
-    subscribe: "Subscribe",
+    subscribe: "Send",
   },
   cta: {
     heading: "Start Your Chinese Learning Journey",
     description:
-      "Join our waitlist and be the first to experience the future of Chinese education.",
+      "Zhongwen Advantage is on our roadmap. Tell us what you need.",
     buttons: {
-      joinWaitlist: "Join Waitlist",
+      joinWaitlist: "Tell Us You Are Interested",
       learnMore: "Learn More",
     },
   },
@@ -68,19 +68,19 @@ export const en = {
 
 export const th = {
   hero: {
-    title: "อนาคตของการเรียนภาษาจีน",
+    title: "การเรียนภาษาจีน ในแผนงาน",
     subtitle: "อยู่ในแผนงาน · กำลังวางแผน",
     description:
-      "Zhongwen Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา — วางแผนที่จะผสมผสานมาตรฐาน HSK กับเครื่องยนต์การเรียนรู้แบบปรับตัวของเรา",
+      "Zhongwen Advantage อยู่ในแผนงานของเรา วางแผนเป็นชุดแบบฝึกหัดที่เชื่อมกับกราฟความรู้ Mastery Advantage และยังไม่มีกำหนดวันเปิดตัว",
     badge: "อยู่ในแผนงาน",
-    ctaButton: "ลงชื่อรอ",
+    ctaButton: "บอกเราว่าคุณสนใจ",
     alt: "การเรียนรู้ภาษาจีนดิจิทัลพร้อมองค์ประกอบทางวัฒนธรรม",
   },
   adaptiveEngine: {
     eyebrow: "เครื่องยนต์ปรับตัว",
-    heading: "เส้นทางการเรียนภาษาจีน ปรับให้เข้ากับนักเรียนทุกคน",
+    heading: "เส้นทางการเรียนภาษาจีนที่สร้างจากข้อมูลความเชี่ยวชาญ",
     description:
-      "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะภาษาทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+      "สร้างบน Mastery Advantage เครื่องยนต์ที่ใช้ทฤษฎีปริภูมิความรู้และการทบทวนแบบ FSRS เพื่อจัดทำแผนที่ทักษะและกำหนดเวลาฝึกฝน",
     alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Zhongwen Advantage",
   },
   eyebrows: {
@@ -95,40 +95,40 @@ export const th = {
     levelLabel: "ระดับ {level}",
     mapsToHsk13: "เชื่อมโยงกับ HSK 1-3",
     mapsToHsk46: "เชื่อมโยงกับ HSK 4-6",
-    aiProgression: "ความก้าวหน้าด้วย AI",
+    aiProgression: "ความก้าวหน้าตามความเชี่ยวชาญ",
     hskLevels: "ระดับ HSK",
     hskLabel: "HSK {level}",
     standardizedCertification: "ใบรับรองมาตรฐาน",
     alt: "การเขียนพู่กันจีนและสื่อการเรียนรู้",
-    confidence: "เชี่ยวชาญภาษาจีนอย่างมั่นใจ",
+    confidence: "เรียนภาษาจีนทีละขั้น",
     readingLibrary: "ห้องสมุดอ่านเสริม",
-    aiTutoring: "ติวเตอร์ด้วย AI",
+    aiTutoring: "การฝึกฝนที่จัดตามข้อมูลความเชี่ยวชาญ",
     culturalImmersion: "เนื้อหาการจุ่มวัฒนธรรม",
   },
   interactiveLearning: {
-    heading: "ประสบการณ์การเรียนรู้ที่น่าสนใจและปรับตัวได้",
+    heading: "แบบฝึกหัดและแอปทำงานร่วมกัน",
     description:
-      "ระบบการเรียนรู้แบบโต้ตอบของเราผสมผสานเทคโนโลยีล้ำสมัยกับวิธีการสอนที่พิสูจน์แล้วเพื่อมอบประสบการณ์การเรียนภาษาจีนที่ไม่มีใครเทียบได้",
+      "แผนคือจับคู่แบบฝึกหัดเล่มพิมพ์กับเวอร์ชันดิจิทัล เพื่อให้นักเรียนฝึกทั้งบนกระดาษและในแอป",
   },
   forEducators: {
-    heading: "เครื่องมือที่ทรงพลังสำหรับครู",
+    heading: "เครื่องมือสำหรับครู",
   },
   faq: {
     heading: "คำถามที่พบบ่อย",
   },
   waitlist: {
-    joinWaitlist: "ลงชื่อในรายชื่อรอ",
+    joinWaitlist: "บอกเราว่าคุณสนใจ",
     description:
-      "เป็นคนแรกที่จะได้สัมผัส Zhongwen Advantage เมื่อเราเปิดตัว",
+      "Zhongwen Advantage ยังไม่มีกำหนดวันเปิดตัว เราจะเก็บอีเมลของคุณไว้เพื่อแจ้งข่าว",
     emailPlaceholder: "ป้อนอีเมลของคุณ",
-    subscribe: "สมัครสมาชิก",
+    subscribe: "ส่ง",
   },
   cta: {
     heading: "เริ่มต้นการเดินทางเรียนภาษาจีนของคุณ",
     description:
-      "เข้าร่วมรายชื่อรอของเราและเป็นคนแรกที่จะได้สัมผัสอนาคตของการศึกษาภาษาจีน",
+      "Zhongwen Advantage อยู่ในแผนงานของเรา บอกเราว่าคุณต้องการอะไร",
     buttons: {
-      joinWaitlist: "ลงชื่อรอ",
+      joinWaitlist: "บอกเราว่าคุณสนใจ",
       learnMore: "เรียนรู้เพิ่มเติม",
     },
   },
@@ -136,19 +136,19 @@ export const th = {
 
 export const zh = {
   hero: {
-    title: "中文学习的未来",
+    title: "规划中的中文学习",
     subtitle: "我们路线图中 · 规划中",
     description:
-      "Zhongwen Advantage 在我们的产品路线图中 — 计划将 HSK 标准与我们的自适应学习引擎相结合。",
+      "Zhongwen Advantage 在我们的路线图上，计划做成对接 Mastery Advantage 知识图谱的练习册系列，暂无发布日期。",
     badge: "我们路线图中",
-    ctaButton: "加入候补名单",
+    ctaButton: "告诉我们您感兴趣",
     alt: "数字化中文学习与文化元素",
   },
   adaptiveEngine: {
     eyebrow: "自适应引擎",
-    heading: "为每位学生量身定制的中文学习路径",
+    heading: "基于掌握度数据的中文学习路径",
     description:
-      "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项语言技能并在最佳时刻安排练习。",
+      "基于 Mastery Advantage，该引擎使用知识空间理论和 FSRS 间隔重复来映射技能并安排练习。",
     alt: "Zhongwen Advantage 自适应学习可视化",
   },
   eyebrows: {
@@ -163,38 +163,38 @@ export const zh = {
     levelLabel: "级别 {level}",
     mapsToHsk13: "对应 HSK 1-3",
     mapsToHsk46: "对应 HSK 4-6",
-    aiProgression: "AI 进阶",
+    aiProgression: "基于掌握度的进阶",
     hskLevels: "HSK 级别",
     hskLabel: "HSK {level}",
     standardizedCertification: "标准化认证",
     alt: "中国书法与学习材料",
-    confidence: "自信掌握中文",
+    confidence: "一步一步学中文",
     readingLibrary: "广泛的阅读库",
-    aiTutoring: "AI 辅导",
+    aiTutoring: "按掌握度数据安排练习",
     culturalImmersion: "文化沉浸内容",
   },
   interactiveLearning: {
-    heading: "引人入胜、自适应的学习体验",
+    heading: "练习册与应用协同",
     description:
-      "我们的互动学习系统结合尖端技术与经过验证的教学方法，提供无与伦比的中文学习体验。",
+      "计划将纸质练习册与数字版本配对，学生可在纸上和应用中练习。",
   },
   forEducators: {
-    heading: "为教师提供强大工具",
+    heading: "为教师提供的工具",
   },
   faq: {
     heading: "常见问题",
   },
   waitlist: {
-    joinWaitlist: "加入候补名单",
-    description: "成为首批体验 Zhongwen Advantage 的用户。",
+    joinWaitlist: "告诉我们您感兴趣",
+    description: "Zhongwen Advantage 暂无发布日期。我们会保留您的邮箱以便通知动态。",
     emailPlaceholder: "请输入您的邮箱",
-    subscribe: "订阅",
+    subscribe: "提交",
   },
   cta: {
     heading: "开启您的中文学习之旅",
-    description: "加入我们的候补名单，成为首批体验中文教育未来的人。",
+    description: "Zhongwen Advantage 在我们的路线图上，欢迎告诉我们您的需求。",
     buttons: {
-      joinWaitlist: "加入候补名单",
+      joinWaitlist: "告诉我们您感兴趣",
       learnMore: "了解更多",
     },
   },

@@ -1,7 +1,7 @@
 export const en = {
     hero: {
         title: "Platform Features",
-        description: "Compare Reading Advantage with other leading reading programs",
+        description: "What each Reading Advantage app tier includes",
     },
     table: {
         lastUpdated: "Copy reviewed: September 2026",
@@ -138,33 +138,33 @@ export const en = {
             aiTutor: "coming-soon",
         },
         21: {
-            name: "AI-driven personalized learning paths",
+            name: "Learning paths driven by mastery data",
             basic: false,
             aiEnhanced: false,
             aiTutor: "coming-soon",
         },
         22: {
-            name: "Detailed AI-powered analytics on student performance",
+            name: "Detailed analytics on student performance",
             basic: false,
             aiEnhanced: false,
             aiTutor: "coming-soon",
         },
         23: {
-            name: "AI-generated content tailored to individual student needs",
+            name: "AI-generated content matched to student level",
             basic: false,
             aiEnhanced: false,
             aiTutor: "coming-soon",
         },
         24: {
-            name: "Virtual AI writing tutor for real-time assistance",
+            name: "Virtual AI writing tutor",
             basic: false,
             aiEnhanced: false,
             aiTutor: "coming-soon",
         },
     },
     cta: {
-        title: "Ready to experience the difference?",
-        description: "Start your journey with Reading Advantage today",
+        title: "Want to see Reading Advantage?",
+        description: "Contact us to talk about Reading Advantage",
         button: "Get Started",
     },
     comingSoon: "Coming Soon",
@@ -173,7 +173,7 @@ export const en = {
 export const th = {
     hero: {
         title: "คุณสมบัติของแพลตฟอร์ม",
-        description: "เปรียบเทียบ Reading Advantage กับโปรแกรมการอ่านชั้นนำอื่น ๆ",
+        description: "สิ่งที่ Reading Advantage แต่ละระดับของแอปมีให้",
     },
     table: {
         lastUpdated: "ทบทวนข้อความเมื่อ: กันยายน 2026",
@@ -310,33 +310,33 @@ export const th = {
             aiTutor: "เร็วๆ นี้",
         },
         21: {
-            name: "เส้นทางการเรียนรู้เฉพาะบุคคลที่ขับเคลื่อนด้วย AI",
+            name: "เส้นทางการเรียนรู้ที่ขับเคลื่อนด้วยข้อมูลความเชี่ยวชาญ",
             basic: false,
             aiEnhanced: false,
             aiTutor: "เร็วๆ นี้",
         },
         22: {
-            name: "การวิเคราะห์ผลการเรียนของนักเรียนที่ขับเคลื่อนด้วย AI",
+            name: "การวิเคราะห์ผลการเรียนของนักเรียนโดยละเอียด",
             basic: false,
             aiEnhanced: false,
             aiTutor: "เร็วๆ นี้",
         },
         23: {
-            name: "เนื้อหาที่สร้างขึ้นโดย AI สำหรับความต้องการเฉพาะของนักเรียนแต่ละคน",
+            name: "เนื้อหาที่ AI สร้างให้ตรงกับระดับของนักเรียน",
             basic: false,
             aiEnhanced: false,
             aiTutor: "เร็วๆ นี้",
         },
         24: {
-            name: "ติวเตอร์การเขียนเสมือนจริงที่ใช้ AI ช่วยเหลือแบบเรียลไทม์",
+            name: "ติวเตอร์การเขียนเสมือนจริงที่ใช้ AI",
             basic: false,
             aiEnhanced: false,
             aiTutor: "เร็วๆ นี้",
         },
     },
     cta: {
-        title: "พร้อมสัมผัสความแตกต่างหรือยัง?",
-        description: "เริ่มต้นการเดินทางกับ Reading Advantage วันนี้",
+        title: "อยากดู Reading Advantage หรือไม่?",
+        description: "ติดต่อเราเพื่อคุยเรื่อง Reading Advantage",
         button: "เริ่มต้นใช้งาน",
     },
     comingSoon: "เร็ว ๆ นี้",
@@ -345,7 +345,7 @@ export const th = {
 export const zh = {
     hero: {
         title: "平台功能",
-        description: "比较 Reading Advantage 与其他领先的阅读项目",
+        description: "Reading Advantage 各应用层级包含的内容",
     },
     table: {
         lastUpdated: "文案审核日期：2026年9月",
@@ -482,33 +482,33 @@ export const zh = {
             aiTutor: "即将推出",
         },
         21: {
-            name: "AI 驱动的个性化学习路径",
+            name: "由掌握度数据驱动的学习路径",
             basic: false,
             aiEnhanced: false,
             aiTutor: "即将推出",
         },
         22: {
-            name: "关于学生表现的详细 AI 分析",
+            name: "关于学生表现的详细分析",
             basic: false,
             aiEnhanced: false,
             aiTutor: "即将推出",
         },
         23: {
-            name: "AI 生成的内容以满足单个学生的需求",
+            name: "按学生水平匹配的 AI 生成内容",
             basic: false,
             aiEnhanced: false,
             aiTutor: "即将推出",
         },
         24: {
-            name: "虚拟 AI 写作导师提供实时协助",
+            name: "虚拟 AI 写作导师",
             basic: false,
             aiEnhanced: false,
             aiTutor: "即将推出",
         },
     },
     cta: {
-        title: "准备好体验不同了吗？",
-        description: "今天就开始您的 Reading Advantage 之旅",
+        title: "想了解 Reading Advantage 吗？",
+        description: "联系我们，了解 Reading Advantage",
         button: "开始使用",
     },
     comingSoon: "即将推出",

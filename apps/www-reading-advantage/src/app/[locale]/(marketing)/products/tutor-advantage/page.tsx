@@ -164,18 +164,18 @@ export default async function TutorAdvantage({
               variant="emerald"
               steps={[
                 {
-                  title: "Assess",
-                  description: t("valuePropositions.features.0.points.0"),
+                  title: t("steps.0.title"),
+                  description: t("steps.0.description"),
                   icon: <ClipboardCheck className="w-6 h-6" />,
                 },
                 {
-                  title: "Personalize",
-                  description: t("valuePropositions.features.1.points.0"),
+                  title: t("steps.1.title"),
+                  description: t("steps.1.description"),
                   icon: <UserCog className="w-6 h-6" />,
                 },
                 {
-                  title: "Progress",
-                  description: t("valuePropositions.features.2.points.0"),
+                  title: t("steps.2.title"),
+                  description: t("steps.2.description"),
                   icon: <TrendingUp className="w-6 h-6" />,
                 },
               ]}
@@ -384,28 +384,28 @@ export default async function TutorAdvantage({
             <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 mb-16">
               <div className="text-center">
                 <div className="text-5xl md:text-6xl font-bold text-white mb-2">
-                  A1–B2
+                  {t("stats.0.value")}
                 </div>
                 <div className="text-emerald-200 font-medium">
-                  {t("eyebrows.cefrCoverage")}
+                  {t("stats.0.label")}
                 </div>
               </div>
               <div className="hidden md:block w-px h-20 bg-emerald-400/40" />
               <div className="text-center">
                 <div className="text-5xl md:text-6xl font-bold text-white mb-2">
-                  2025
+                  {t("stats.1.value")}
                 </div>
                 <div className="text-emerald-200 font-medium">
-                  {t("eyebrows.launchingSoon")}
+                  {t("stats.1.label")}
                 </div>
               </div>
               <div className="hidden md:block w-px h-20 bg-emerald-400/40" />
               <div className="text-center">
                 <div className="text-5xl md:text-6xl font-bold text-white mb-2">
-                  AI
+                  {t("stats.2.value")}
                 </div>
                 <div className="text-emerald-200 font-medium">
-                  {t("eyebrows.poweredLearning")}
+                  {t("stats.2.label")}
                 </div>
               </div>
             </div>

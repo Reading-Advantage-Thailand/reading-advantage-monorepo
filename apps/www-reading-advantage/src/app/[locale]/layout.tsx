@@ -8,14 +8,14 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://reading-advantage.com"),
   title: "Reading Advantage (Thailand) - Innovative EdTech Solutions",
   description:
-    "Reading Advantage Thailand - Leading provider of AI-enhanced learning solutions for language learning, coding, and education technology.",
+    "Printed workbooks and a digital twin, tagged to the Mastery Advantage knowledge graph, taught by local tutors or in schools.",
   keywords:
-    "education technology, AI learning, language learning, coding bootcamp, Thailand education",
+    "curriculum publisher, printed workbooks, English learning, Tutor Advantage, coding bootcamp, Thailand education",
   authors: [{ name: "Reading Advantage Thailand" }],
   openGraph: {
     title: "Reading Advantage Thailand - Innovative EdTech Solutions",
     description:
-      "Revolutionizing education with AI-enhanced learning solutions",
+      "Printed workbooks and a digital twin, tagged to the Mastery Advantage knowledge graph, taught by local tutors or in schools.",
     images: ["/images/teacher-at-board.png"],
     url: "https://reading-advantage.com",
   },

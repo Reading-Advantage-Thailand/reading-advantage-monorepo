@@ -2,39 +2,39 @@ export const en = {
   metadata: {
     title: "Storytime Advantage - On Our Roadmap | Reading Advantage Thailand",
     description:
-      "Storytime Advantage is on the Reading Advantage product roadmap — planned K-3 early literacy curriculum combining digital innovation with hands-on learning. No launch date confirmed.",
+      "Storytime Advantage is on the Reading Advantage product roadmap — planned K-3 early literacy book line with a printed workbook and a digital twin. No launch date.",
   },
   hero: {
-    title: "The Future of Early Literacy Education",
-    subtitle: "Complete K-3 Literacy Curriculum",
+    title: "Early Literacy, Planned",
+    subtitle: "A Planned K-3 Literacy Book Line",
     description:
-      "Storytime Advantage is a complete K-3 literacy curriculum planned for our roadmap — designed to balance digital innovation with hands-on learning.",
+      "Storytime Advantage is a K-3 literacy book line on our roadmap. It has no release date. It is planned to pair printed books with a digital twin.",
     comingSoon: "On Our Roadmap",
   },
   heroAlt: "Digital storytelling experience",
   classroomAlt: "Storytime Advantage Classroom",
   coreValue: {
-    heading: "Complete Literacy Curriculum Solution",
+    heading: "A Literacy Line in Print and Digital",
     features: [
       {
-        title: "180-Day Structure",
+        title: "Structured Lessons",
         description:
-          "Comprehensive curriculum aligned with educational standards and designed for classroom success",
+          "A planned structured curriculum for early readers",
       },
       {
         title: "Balanced Approach",
         description:
-          "Perfect blend of digital tools and traditional hands-on learning methods",
+          "Printed materials and digital tools used together",
       },
       {
         title: "Complete Support",
         description:
-          "Comprehensive resources for teachers, students, and administrators",
+          "Resources planned for teachers and students",
       },
     ],
   },
   keyFeatures: {
-    heading: "Comprehensive Feature Set",
+    heading: "Planned Features",
     features: [
       {
         title: "Digital Components",
@@ -57,11 +57,11 @@ export const en = {
     ],
   },
   teacherTools: {
-    heading: "Powerful Teacher Tools",
+    heading: "Planned Teacher Tools",
     tools: [
       {
         title: "Lesson Planning",
-        description: "Comprehensive planning tools and resources",
+        description: "Planning tools and resources",
         icon: "📝",
       },
       {
@@ -82,12 +82,12 @@ export const en = {
       {
         question: "When will Storytime Advantage launch?",
         answer:
-          "Storytime Advantage is on our product roadmap. Join our waitlist and we will notify you when we have news to share.",
+          "Storytime Advantage is on our product roadmap. It has no release date. Tell us what you need.",
       },
       {
         question: "What are the technical requirements?",
         answer:
-          "Storytime Advantage will be accessible on any modern web browser, with mobile apps available for iOS and Android tablets.",
+          "Storytime Advantage is planned as printed books with a digital twin that runs in a web browser. Technical details will come when the product is closer to release.",
       },
       {
         question: "What will the Storytime Advantage curriculum include?",
@@ -102,24 +102,24 @@ export const en = {
       {
         question: "How can I receive Storytime Advantage updates?",
         answer:
-          "Join our waitlist to receive updates when we share new roadmap or launch information.",
+          "Tell us you are interested and we will share news when we have it.",
       },
     ],
   },
   cta: {
-    heading: "Be the First to Experience Storytime Advantage",
+    heading: "Interested in Storytime Advantage?",
     description:
-      "Storytime Advantage is on our roadmap. Join our waitlist and we will share updates as development progresses.",
+      "Storytime Advantage is on our roadmap. It has no release date. Tell us what you need.",
     buttons: {
-      joinWaitlist: "Join Waitlist",
+      joinWaitlist: "Tell Us You Are Interested",
       learnMore: "Learn More",
     },
   },
   adaptiveEngine: {
     eyebrow: "Adaptive Engine",
-    heading: "Early literacy paths, adapted to every young learner",
+    heading: "Early literacy paths built on mastery data",
     description:
-      "Powered by Mastery Advantage — the KST + SRS engine that maps every literacy skill and schedules practice at the perfect moment.",
+      "Built on Mastery Advantage, the engine that uses Knowledge Space Theory and FSRS spaced repetition to map skills and schedule practice.",
     alt: "Storytime Advantage adaptive learning visualization",
   },
   eyebrows: {
@@ -134,38 +134,38 @@ export const th = {
   metadata: {
     title: "Storytime Advantage - อยู่ในแผนงาน | Reading Advantage Thailand",
     description:
-      "Storytime Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — หลักสูตรการรู้หนังสือ K-3 ที่วางแผนไว้ซึ่งผสมผสานนวัตกรรมดิจิทัลกับการเรียนรู้เชิงปฏิบัติ ยังไม่ยืนยันวันเปิดตัว",
+      "Storytime Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — ชุดหนังสือการรู้หนังสือ K-3 ที่วางแผนไว้ มีแบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล ยังไม่มีกำหนดวันเปิดตัว",
   },
   hero: {
-    title: "อนาคตของการศึกษาการรู้หนังสือขั้นต้น",
-    subtitle: "หลักสูตรการรู้หนังสือ K-3 แบบสมบูรณ์",
+    title: "การรู้หนังสือขั้นต้น ในแผนงาน",
+    subtitle: "ชุดหนังสือการรู้หนังสือ K-3 ที่วางแผนไว้",
     description:
-      "Storytime Advantage เป็นหลักสูตรการรู้หนังสือ K-3 แบบสมบูรณ์ที่วางแผนไว้ในแผนงานของเรา — ออกแบบมาเพื่อสมดุลระหว่างนวัตกรรมดิจิทัลกับการเรียนรู้เชิงปฏิบัติ",
+      "Storytime Advantage เป็นชุดหนังสือการรู้หนังสือ K-3 ในแผนงานของเรา ยังไม่มีกำหนดวันเปิดตัว วางแผนให้หนังสือเล่มพิมพ์ทำงานคู่กับเวอร์ชันดิจิทัล",
     comingSoon: "อยู่ในแผนงาน",
   },
   heroAlt: "ประสบการณ์การเล่าเรื่องดิจิทัล",
   classroomAlt: "ห้องเรียน Storytime Advantage",
   coreValue: {
-    heading: "โซลูชันหลักสูตรการรู้หนังสือแบบครบวงจร",
+    heading: "ชุดการรู้หนังสือทั้งแบบพิมพ์และดิจิทัล",
     features: [
       {
-        title: "โครงสร้าง 180 วัน",
+        title: "บทเรียนที่มีโครงสร้าง",
         description:
-          "หลักสูตรที่ครอบคลุม สอดคล้องกับมาตรฐานการศึกษา และออกแบบมาเพื่อความสำเร็จในห้องเรียน",
+          "หลักสูตรที่มีโครงสร้างสำหรับผู้เริ่มอ่านที่วางแผนไว้",
       },
       {
         title: "แนวทางที่สมดุล",
         description:
-          "การผสมผสานอย่างลงตัวระหว่างเครื่องมือดิจิทัลและวิธีการเรียนรู้เชิงปฏิบัติแบบดั้งเดิม",
+          "ใช้สื่อสิ่งพิมพ์และเครื่องมือดิจิทัลร่วมกัน",
       },
       {
         title: "การสนับสนุนที่ครบถ้วน",
-        description: "ทรัพยากรที่ครอบคลุมสำหรับครู นักเรียน และผู้บริหาร",
+        description: "ทรัพยากรที่วางแผนไว้สำหรับครูและนักเรียน",
       },
     ],
   },
   keyFeatures: {
-    heading: "ชุดคุณสมบัติที่ครอบคลุม",
+    heading: "คุณสมบัติที่วางแผนไว้",
     features: [
       {
         title: "ส่วนประกอบดิจิทัล",
@@ -188,11 +188,11 @@ export const th = {
     ],
   },
   teacherTools: {
-    heading: "เครื่องมือที่ทรงพลังสำหรับครู",
+    heading: "เครื่องมือสำหรับครูที่วางแผนไว้",
     tools: [
       {
         title: "การวางแผนบทเรียน",
-        description: "เครื่องมือและทรัพยากรการวางแผนที่ครอบคลุม",
+        description: "เครื่องมือและทรัพยากรสำหรับการวางแผน",
         icon: "📝",
       },
       {
@@ -214,12 +214,12 @@ export const th = {
       {
         question: "Storytime Advantage จะเปิดตัวเมื่อใด?",
         answer:
-          "Storytime Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา เข้าร่วมรายชื่อรอและเราจะแจ้งให้คุณทราบเมื่อเรามีข่าวสารมาแบ่งปัน",
+          "Storytime Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา ยังไม่มีกำหนดวันเปิดตัว บอกเราว่าคุณต้องการอะไร",
       },
       {
         question: "ข้อกำหนดทางเทคนิคคืออะไร?",
         answer:
-          "Storytime Advantage สามารถเข้าถึงได้ผ่านเว็บเบราว์เซอร์สมัยใหม่ทุกชนิด และมีแอปมือถือสำหรับแท็บเล็ต iOS และ Android",
+          "Storytime Advantage วางแผนเป็นหนังสือเล่มพิมพ์พร้อมเวอร์ชันดิจิทัลที่ใช้ผ่านเว็บเบราว์เซอร์ เราจะแจ้งรายละเอียดทางเทคนิคเมื่อใกล้เปิดตัว",
       },
       {
         question: "หลักสูตร Storytime Advantage จะประกอบด้วยอะไรบ้าง?",
@@ -234,24 +234,24 @@ export const th = {
       {
         question: "ฉันจะรับข่าวสารอัปเดตของ Storytime Advantage ได้อย่างไร?",
         answer:
-          "เข้าร่วมรายชื่อรอเพื่อรับข่าวสารเมื่อเรามีข้อมูลใหม่เกี่ยวกับแผนงานหรือวันเปิดตัว",
+          "บอกเราว่าคุณสนใจ แล้วเราจะแบ่งปันข่าวเมื่อมี",
       },
     ],
   },
   cta: {
-    heading: "เป็นคนแรกที่ได้สัมผัส Storytime Advantage",
+    heading: "สนใจ Storytime Advantage หรือไม่?",
     description:
-      "Storytime Advantage อยู่ในแผนงานของเรา เข้าร่วมรายชื่อรอและเราจะแบ่งปันการอัปเดตเมื่อการพัฒนาก้าวหน้า",
+      "Storytime Advantage อยู่ในแผนงานของเรา ยังไม่มีกำหนดวันเปิดตัว บอกเราว่าคุณต้องการอะไร",
     buttons: {
-      joinWaitlist: "เข้าร่วมรายชื่อรอ",
+      joinWaitlist: "บอกเราว่าคุณสนใจ",
       learnMore: "เรียนรู้เพิ่มเติม",
     },
   },
   adaptiveEngine: {
     eyebrow: "เครื่องยนต์ปรับตัว",
-    heading: "เส้นทางการรู้หนังสือตอนต้น ปรับให้เข้ากับผู้เรียนทุกคน",
+    heading: "เส้นทางการรู้หนังสือตอนต้นที่สร้างจากข้อมูลความเชี่ยวชาญ",
     description:
-      "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการรู้หนังสือทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+      "สร้างบน Mastery Advantage เครื่องยนต์ที่ใช้ทฤษฎีปริภูมิความรู้และการทบทวนแบบ FSRS เพื่อจัดทำแผนที่ทักษะและกำหนดเวลาฝึกฝน",
     alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Storytime Advantage",
   },
   eyebrows: {
@@ -266,36 +266,36 @@ export const zh = {
   metadata: {
     title: "Storytime Advantage - 我们路线图中 | 阅读优势泰国",
     description:
-      "Storytime Advantage 在 Reading Advantage 产品路线图中 — 计划中的 K-3 早期识字课程，结合数字创新与实践学习。暂未确认发布日期。",
+      "Storytime Advantage 在 Reading Advantage 产品路线图中 — 计划中的 K-3 早期识字图书系列，包含纸质练习册和数字版本。暂无发布日期。",
   },
   hero: {
-    title: "早期识字教育的未来",
-    subtitle: "完整的 K-3 识字课程",
+    title: "规划中的早期识字",
+    subtitle: "计划中的 K-3 识字图书系列",
     description:
-      "Storytime Advantage 是一套计划中的完整 K-3 识字课程——在我们的路线图中，旨在平衡数字创新与实践学习。",
+      "Storytime Advantage 是我们路线图上的 K-3 识字图书系列，暂无发布日期。计划让纸质书与数字版本配合使用。",
     comingSoon: "我们路线图中",
   },
   heroAlt: "数字故事叙述体验",
   classroomAlt: "Storytime Advantage 教室",
   coreValue: {
-    heading: "完整的识字课程解决方案",
+    heading: "纸质与数字并行的识字系列",
     features: [
       {
-        title: "180 天课程结构",
-        description: "与教育标准一致，专为课堂成功设计的全面课程",
+        title: "结构化课程",
+        description: "为早期读者计划的结构化课程",
       },
       {
         title: "平衡的教学方法",
-        description: "数字工具与传统实践学习方法的完美结合",
+        description: "纸质材料与数字工具配合使用",
       },
       {
         title: "全面支持",
-        description: "为教师、学生和管理员提供的综合资源",
+        description: "为教师和学生计划的资源",
       },
     ],
   },
   keyFeatures: {
-    heading: "全面的功能集",
+    heading: "计划中的功能",
     features: [
       {
         title: "数字组件",
@@ -308,11 +308,11 @@ export const zh = {
     ],
   },
   teacherTools: {
-    heading: "强大的教师工具",
+    heading: "计划中的教师工具",
     tools: [
       {
         title: "课程规划",
-        description: "全面的规划工具和资源",
+        description: "规划工具和资源",
         icon: "📝",
       },
       {
@@ -333,12 +333,12 @@ export const zh = {
       {
         question: "Storytime Advantage 什么时候推出？",
         answer:
-          "Storytime Advantage 在我们的产品路线图中。加入候补名单，我们有消息时将通知您。",
+          "Storytime Advantage 在我们的产品路线图中。暂无发布日期，欢迎告诉我们您的需求。",
       },
       {
         question: "技术要求是什么？",
         answer:
-          "Storytime Advantage 可通过任何现代网络浏览器访问，并提供适用于 iOS 和 Android 平板电脑的移动应用。",
+          "Storytime Advantage 计划做成纸质书加可在网页浏览器中使用的数字版本。技术细节将在临近发布时说明。",
       },
       {
         question: "Storytime Advantage 课程包括哪些内容？",
@@ -353,24 +353,24 @@ export const zh = {
       {
         question: "如何获取 Storytime Advantage 的最新消息？",
         answer:
-          "加入候补名单，当我们分享新的路线图或发布日期信息时，您会收到通知。",
+          "告诉我们您感兴趣，有消息时我们会与您分享。",
       },
     ],
   },
   cta: {
-    heading: "成为首批体验 Storytime Advantage 的人",
+    heading: "对 Storytime Advantage 感兴趣吗？",
     description:
-      "Storytime Advantage 在我们的路线图中。加入候补名单，随着开发进展我们将分享更新。",
+      "Storytime Advantage 在我们的路线图中。暂无发布日期，欢迎告诉我们您的需求。",
     buttons: {
-      joinWaitlist: "加入候补名单",
+      joinWaitlist: "告诉我们您感兴趣",
       learnMore: "了解更多",
     },
   },
   adaptiveEngine: {
     eyebrow: "自适应引擎",
-    heading: "为每位年轻学习者量身定制的早期读写路径",
+    heading: "基于掌握度数据的早期读写路径",
     description:
-      "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项读写技能并在最佳时刻安排练习。",
+      "基于 Mastery Advantage，该引擎使用知识空间理论和 FSRS 间隔重复来映射技能并安排练习。",
     alt: "Storytime Advantage 自适应学习可视化",
   },
   eyebrows: {

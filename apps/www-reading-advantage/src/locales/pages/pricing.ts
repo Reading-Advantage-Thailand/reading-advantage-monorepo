@@ -1,25 +1,25 @@
 export const en = {
     hero: {
         title: 'Reading Advantage Price Tier Comparison',
-        description: 'Choose the perfect plan for your learning journey',
+        description: 'See what each Reading Advantage app tier includes',
     },
     cta: {
-        title: 'Ready to get started?',
-        description: 'Contact us for a free trial or demo',
+        title: 'Want to learn more?',
+        description: 'Contact us to request a demo',
         button: 'Request Demo',
     },
     trustSignals: {
         noHiddenFees: {
-            title: 'No Hidden Fees',
-            description: 'Transparent pricing with everything included',
+            title: 'Clear Pricing',
+            description: 'Contact us for current pricing',
         },
         instantSetup: {
-            title: 'Instant Setup',
-            description: 'Get started in minutes, not days',
+            title: 'Simple Setup',
+            description: 'We help you get started',
         },
         dedicatedSupport: {
             title: 'Dedicated Support',
-            description: 'Expert help whenever you need it',
+            description: 'Our team supports teachers and tutors',
         },
     },
     pricingPlans: {
@@ -31,25 +31,25 @@ export const en = {
 export const th = {
     hero: {
         title: 'เปรียบเทียบราคาของ Reading Advantage',
-        description: 'เลือกแผนที่เหมาะสมสำหรับการเรียนรู้ของคุณ',
+        description: 'ดูว่าแอป Reading Advantage แต่ละระดับมีอะไรบ้าง',
     },
     cta: {
-        title: 'พร้อมที่จะเริ่มหรือยัง?',
-        description: 'ติดต่อเราเพื่อทดลองใช้หรือดูตัวอย่างฟรี',
-        button: 'ขอทดลองใช้',
+        title: 'อยากทราบข้อมูลเพิ่มเติมหรือไม่?',
+        description: 'ติดต่อเราเพื่อขอดูตัวอย่าง',
+        button: 'ขอดูตัวอย่าง',
     },
     trustSignals: {
         noHiddenFees: {
-            title: 'ไม่มีค่าธรรมเนียมแอบแฝง',
-            description: 'ราคาโปร่งใส รวมทุกอย่างไว้แล้ว',
+            title: 'ราคาชัดเจน',
+            description: 'ติดต่อเราเพื่อสอบถามราคาปัจจุบัน',
         },
         instantSetup: {
-            title: 'ตั้งค่าทันที',
-            description: 'เริ่มต้นในไม่กี่นาที ไม่ใช่วัน',
+            title: 'ตั้งค่าง่าย',
+            description: 'เราช่วยคุณเริ่มต้นใช้งาน',
         },
         dedicatedSupport: {
             title: 'ทีมสนับสนุนเฉพาะ',
-            description: 'ความช่วยเหลือจากผู้เชี่ยวชาญเมื่อคุณต้องการ',
+            description: 'ทีมของเราสนับสนุนครูและติวเตอร์',
         },
     },
     pricingPlans: {
@@ -61,25 +61,25 @@ export const th = {
 export const zh = {
     hero: {
         title: 'Reading Advantage 价格层级比较',
-        description: '为您的学习之旅选择完美计划',
+        description: '了解 Reading Advantage 应用各层级包含的内容',
     },
     cta: {
-        title: '准备好开始了吗？',
-        description: '联系我们，获取免费试用或演示',
+        title: '想了解更多吗？',
+        description: '联系我们申请演示',
         button: '申请演示',
     },
     trustSignals: {
         noHiddenFees: {
-            title: '无隐藏费用',
-            description: '透明定价，一切包含在内',
+            title: '定价清晰',
+            description: '联系我们获取当前价格',
         },
         instantSetup: {
-            title: '即时设置',
-            description: '几分钟内开始，而非几天',
+            title: '简易设置',
+            description: '我们帮助您开始使用',
         },
         dedicatedSupport: {
             title: '专属支持',
-            description: '专家随时为您提供帮助',
+            description: '我们的团队为教师和导师提供支持',
         },
     },
     pricingPlans: {

@@ -1,12 +1,12 @@
 export const en = {
     metadata: {
         title: "STEM Advantage - On Our Roadmap | Reading Advantage Thailand",
-        description: "STEM Advantage is on the Reading Advantage product roadmap — planned K-12 STEM learning experience (75% coding, 25% STEM integration). No launch date confirmed.",
+        description: "STEM Advantage is on the Reading Advantage product roadmap — planned K-12 coding and STEM book line. No launch date.",
     },
     hero: {
-        title: "Comprehensive K-12 Coding Education",
-        subtitle: "75% Coding + 25% STEM Integration",
-        description: "STEM Advantage is on our product roadmap — planned K-12 STEM learning experience for the modern classroom.",
+        title: "K-12 Coding and STEM, Planned",
+        subtitle: "A Planned Coding and STEM Book Line",
+        description: "STEM Advantage is on our product roadmap — planned K-12 coding and STEM book line with no release date. Not to be confused with CodeCamp Advantage, our live adult bootcamp.",
         comingSoon: "On Our Roadmap",
     },
     heroAlt: "Digital STEM workspace",
@@ -19,13 +19,13 @@ export const en = {
                 points: [
                     "Block-based to text programming",
                     "Natural skill progression",
-                    "180-day learning path",
+                    "Step-by-step learning path",
                 ],
             },
             {
                 title: "Interactive Learning",
                 points: [
-                    "Real-time coding environment",
+                    "Coding environment in the browser",
                     "Immediate feedback",
                     "Automated assessment",
                 ],
@@ -79,9 +79,9 @@ export const en = {
             {
                 title: "For Schools",
                 points: [
-                    "Complete STEM solution",
+                    "Coding and STEM in one line",
                     "Web-based accessibility",
-                    "Educational standards alignment",
+                    "Clear progression by level",
                 ],
             },
         ],
@@ -92,26 +92,26 @@ export const en = {
             "Works on any internet-connected device",
             "Web browser-based - no special software needed",
             "Cloud-based progress tracking",
-            "Compatible with major school IT systems",
+            "Light requirements for school IT",
         ],
     },
     cta: {
         heading: "Get Started with STEM Advantage",
-        description: "STEM Advantage is on our roadmap. Join our waitlist to be notified when we have news to share.",
+        description: "STEM Advantage is on our roadmap. It has no release date. Tell us what you need.",
         buttons: {
-            earlyAccess: "Request Early Access",
+            earlyAccess: "Tell Us You Are Interested",
             partnerships: "School Partnerships",
         },
     },
     adaptiveEngine: {
         eyebrow: "Adaptive Engine",
-        heading: "Project-based STEM learning, adapted to each student",
-        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every STEM skill and schedules practice at the perfect moment.",
+        heading: "Project-based STEM learning, built on mastery data",
+        description: "Built on Mastery Advantage, the engine that uses Knowledge Space Theory and FSRS spaced repetition to map skills and schedule practice.",
         alt: "STEM Advantage adaptive learning visualization",
     },
     eyebrows: {
         gradeLevels: "GRADE LEVELS",
-        codingStem: "75% CODING, 25% STEM",
+        codingStem: "CODING AND STEM",
         benefits: "BENEFITS",
         technicalRequirements: "TECHNICAL REQUIREMENTS",
     },
@@ -120,12 +120,12 @@ export const en = {
 export const th = {
     metadata: {
         title: "STEM Advantage - อยู่ในแผนงาน | Reading Advantage Thailand",
-        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — ประสบการณ์การเรียนรู้ STEM K-12 ที่วางแผนไว้ (75% การเขียนโค้ด, 25% การบูรณาการ STEM) ยังไม่ยืนยันวันเปิดตัว",
+        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของ Reading Advantage — ชุดหนังสือการเขียนโค้ดและ STEM ที่วางแผนไว้ ยังไม่มีกำหนดวันเปิดตัว",
     },
     hero: {
-        title: "การศึกษาการเขียนโปรแกรม K-12 แบบครบวงจร",
-        subtitle: "75% การเขียนโปรแกรม + 25% การบูรณาการ STEM",
-        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา — ประสบการณ์การเรียนรู้ STEM K-12 ที่วางแผนไว้สำหรับห้องเรียนยุคใหม่",
+        title: "การเขียนโค้ดและ STEM สำหรับ K-12 ในแผนงาน",
+        subtitle: "ชุดหนังสือการเขียนโค้ดและ STEM ที่วางแผนไว้",
+        description: "STEM Advantage อยู่ในแผนงานผลิตภัณฑ์ของเรา — ชุดหนังสือการเขียนโค้ดและ STEM สำหรับ K-12 ที่วางแผนไว้ ยังไม่มีกำหนดวันเปิดตัว ไม่ใช่ CodeCamp Advantage ซึ่งเป็นบูตแคมป์สำหรับผู้ใหญ่ที่เปิดให้บริการแล้ว",
         comingSoon: "อยู่ในแผนงาน",
     },
     heroAlt: "พื้นที่ทำงาน STEM ดิจิทัล",
@@ -138,13 +138,13 @@ export const th = {
                 points: [
                     "เริ่มต้นจากบล็อกสู่การเขียนโปรแกรมแบบข้อความ",
                     "ความก้าวหน้าทางทักษะตามธรรมชาติ",
-                    "เส้นทางการเรียนรู้ 180 วัน",
+                    "เส้นทางการเรียนรู้ทีละขั้น",
                 ],
             },
             {
                 title: "การเรียนรู้เชิงโต้ตอบ",
                 points: [
-                    "สภาพแวดล้อมการเขียนโค้ดแบบเรียลไทม์",
+                    "สภาพแวดล้อมการเขียนโค้ดบนเบราว์เซอร์",
                     "คำติชมทันที",
                     "การประเมินอัตโนมัติ",
                 ],
@@ -198,9 +198,9 @@ export const th = {
             {
                 title: "สำหรับโรงเรียน",
                 points: [
-                    "โซลูชัน STEM แบบครบวงจร",
+                    "การเขียนโค้ดและ STEM ในชุดเดียว",
                     "การเข้าถึงผ่านเว็บ",
-                    "สอดคล้องกับมาตรฐานการศึกษา",
+                    "ลำดับความก้าวหน้าที่ชัดเจนตามระดับ",
                 ],
             },
         ],
@@ -211,26 +211,26 @@ export const th = {
             "ใช้งานได้บนทุกอุปกรณ์ที่เชื่อมต่ออินเทอร์เน็ต",
             "ใช้ผ่านเว็บเบราว์เซอร์ - ไม่ต้องการซอฟต์แวร์พิเศษ",
             "การติดตามความก้าวหน้าแบบคลาวด์",
-            "เข้ากันได้กับระบบ IT ของโรงเรียนหลัก",
+            "ข้อกำหนดด้าน IT ของโรงเรียนที่ไม่หนัก",
         ],
     },
     cta: {
         heading: "เริ่มต้นกับ STEM Advantage",
-        description: "STEM Advantage อยู่ในแผนงานของเรา เข้าร่วมรายชื่อรอเพื่อรับแจ้งเมื่อเรามีข่าวสารมาแบ่งปัน",
+        description: "STEM Advantage อยู่ในแผนงานของเรา ยังไม่มีกำหนดวันเปิดตัว บอกเราว่าคุณต้องการอะไร",
         buttons: {
-            earlyAccess: "ขอการเข้าถึงล่วงหน้า",
+            earlyAccess: "บอกเราว่าคุณสนใจ",
             partnerships: "พันธมิตรกับโรงเรียน",
         },
     },
     adaptiveEngine: {
         eyebrow: "เครื่องยนต์ปรับตัว",
-        heading: "การเรียนรู้ STEM แบบโครงการ ปรับให้เข้ากับนักเรียนแต่ละคน",
-        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะ STEM ทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+        heading: "การเรียนรู้ STEM แบบโครงการ สร้างจากข้อมูลความเชี่ยวชาญ",
+        description: "สร้างบน Mastery Advantage เครื่องยนต์ที่ใช้ทฤษฎีปริภูมิความรู้และการทบทวนแบบ FSRS เพื่อจัดทำแผนที่ทักษะและกำหนดเวลาฝึกฝน",
         alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ STEM Advantage",
     },
     eyebrows: {
         gradeLevels: "ระดับชั้นเรียน",
-        codingStem: "75% การเขียนโค้ด, 25% STEM",
+        codingStem: "การเขียนโค้ดและ STEM",
         benefits: "ประโยชน์",
         technicalRequirements: "ข้อกำหนดทางเทคนิค",
     },
@@ -239,12 +239,12 @@ export const th = {
 export const zh = {
     metadata: {
         title: "STEM Advantage - 我们路线图中 | Reading Advantage Thailand",
-        description: "STEM Advantage 在 Reading Advantage 产品路线图中 — 计划中的 K-12 STEM 学习体验（75% 编程 + 25% STEM 集成）。暂未确认发布日期。",
+        description: "STEM Advantage 在 Reading Advantage 产品路线图中 — 计划中的 K-12 编程与 STEM 图书系列。暂无发布日期。",
     },
     hero: {
-        title: "全面的 K-12 编程教育",
-        subtitle: "75% 编程 + 25% STEM 集成",
-        description: "STEM Advantage 在我们的产品路线图中 — 为现代课堂设计的计划中 K-12 STEM 学习体验。",
+        title: "规划中的 K-12 编程与 STEM",
+        subtitle: "计划中的编程与 STEM 图书系列",
+        description: "STEM Advantage 在我们的产品路线图中 — 计划中的 K-12 编程与 STEM 图书系列，暂无发布日期。它不是 CodeCamp Advantage，后者是已上线的成人训练营。",
         comingSoon: "我们路线图中",
     },
     heroAlt: "数字 STEM 工作区",
@@ -257,13 +257,13 @@ export const zh = {
                 points: [
                     "从基于块的编程到文本编程",
                     "自然的技能进展",
-                    "180 天学习路径",
+                    "循序渐进的学习路径",
                 ],
             },
             {
                 title: "互动学习",
                 points: [
-                    "实时编程环境",
+                    "浏览器内的编程环境",
                     "即时反馈",
                     "自动评估",
                 ],
@@ -317,9 +317,9 @@ export const zh = {
             {
                 title: "针对学校",
                 points: [
-                    "完整的 STEM 解决方案",
+                    "编程与 STEM 合为一个系列",
                     "基于网络的访问",
-                    "符合教育标准",
+                    "按级别清晰进阶",
                 ],
             },
         ],
@@ -330,26 +330,26 @@ export const zh = {
             "适用于任何联网设备",
             "基于网页浏览器 - 无需特殊软件",
             "基于云的进度跟踪",
-            "兼容主要的学校 IT 系统",
+            "对学校 IT 要求不高",
         ],
     },
     cta: {
         heading: "开始使用 STEM Advantage",
-        description: "STEM Advantage 在我们的路线图中。加入候补名单，以便在我们有消息分享时获得通知。",
+        description: "STEM Advantage 在我们的路线图中。暂无发布日期，欢迎告诉我们您的需求。",
         buttons: {
-            earlyAccess: "申请提前访问",
+            earlyAccess: "告诉我们您感兴趣",
             partnerships: "学校合作",
         },
     },
     adaptiveEngine: {
         eyebrow: "自适应引擎",
-        heading: "基于项目的 STEM 学习，为每位学生量身定制",
-        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项 STEM 技能并在最佳时刻安排练习。",
+        heading: "基于项目的 STEM 学习，建立在掌握度数据上",
+        description: "基于 Mastery Advantage，该引擎使用知识空间理论和 FSRS 间隔重复来映射技能并安排练习。",
         alt: "STEM Advantage 自适应学习可视化",
     },
     eyebrows: {
         gradeLevels: "年级水平",
-        codingStem: "75% 编程, 25% STEM",
+        codingStem: "编程与 STEM",
         benefits: "优势",
         technicalRequirements: "技术要求",
     },

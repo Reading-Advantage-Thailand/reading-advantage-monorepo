@@ -6,7 +6,7 @@ import { buildMarketingMetadata } from "@/lib/seo";
 import { getScopedI18n } from "@/locales/server";
 import type { Metadata } from "next";
 import { Link } from "@/locales/navigation";
-import { ArrowRight, BookMarked, GraduationCap, BookOpen } from "lucide-react";
+import { ArrowRight, BookMarked, GraduationCap, BookOpen, Users } from "lucide-react";
 
 /**
  * Builds metadata for the localized Products route.
@@ -72,6 +72,17 @@ export default async function ProductsPage() {
       description: t("gradeBands.reading.description"),
       ctaLabel: t("gradeBands.reading.ctaLabel"),
     },
+    {
+      key: "tutor",
+      href: "/products/tutor-advantage",
+      icon: Users,
+      bgColor: "from-emerald-50 to-emerald-100",
+      badgeColor: "bg-emerald-500",
+      title: t("gradeBands.tutor.title"),
+      gradeRange: t("gradeBands.tutor.gradeRange"),
+      description: t("gradeBands.tutor.description"),
+      ctaLabel: t("gradeBands.tutor.ctaLabel"),
+    },
   ];
 
   return (
@@ -100,7 +111,7 @@ export default async function ProductsPage() {
         className="relative py-24 warm-section overflow-hidden"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {gradeBands.map((band, index) => (
               <div
                 key={band.key}

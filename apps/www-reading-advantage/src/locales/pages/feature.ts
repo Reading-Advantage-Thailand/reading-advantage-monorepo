@@ -1,41 +1,41 @@
 export const en = {
     hero: {
-        eyebrow: "AI-Powered Platform",
+        eyebrow: "Workbook and App",
         title: "Platform Features",
-        heading: "Personalized Learning at Scale",
-        description: "Compare Reading Advantage with other leading reading programs",
-        descriptionFull: "Our advanced AI engine adapts to every learner in real time, generating content matched to their exact reading level, interests, and learning goals.",
+        heading: "Printed Workbooks and a Digital Twin",
+        description: "What the Reading Advantage platform includes",
+        descriptionFull: "Reading Advantage pairs printed workbooks with a digital twin, tagged to the Mastery Advantage knowledge graph. Articles are written at CEFR-aligned reading levels.",
         alt: "Students using Reading Advantage app",
     },
     features: {
         0: {
-            title: "AI-Powered Content",
-            description: "Our advanced AI technologies generate personalized content tailored to each learner's needs and preferences.",
+            title: "Leveled Content",
+            description: "Articles are generated with Google Gemini and OpenAI models, chosen per task, at CEFR-aligned reading levels.",
         },
         1: {
-            title: "Personalized Learning",
-            description: "Our platforms adapt to individual learner needs, providing a customized educational experience for optimal results.",
+            title: "Mastery-Based Learning",
+            description: "Mastery Advantage uses Knowledge Space Theory and FSRS spaced repetition to schedule practice.",
         },
         2: {
             title: "Interactive Exercises",
-            description: "Engage with our interactive simulations, quizzes, and exercises designed to reinforce learning and boost retention.",
+            description: "Engage with our interactive simulations, quizzes, and exercises designed to reinforce learning.",
         },
         3: {
             title: "Progress Tracking",
-            description: "Comprehensive analytics and reporting features allow learners and educators to monitor progress and identify areas for improvement.",
+            description: "Comprehensive analytics and reporting features allow learners and educators to monitor progress and see where students need support.",
         },
         4: {
-            title: "Cross-Platform Access",
-            description: "Access our educational content anytime, anywhere with our web, mobile, and tablet applications.",
+            title: "Web Access",
+            description: "Access our educational content anytime, anywhere in a web browser.",
         },
         5: {
-            title: "Global Community",
-            description: "Connect with learners worldwide, share experiences, and participate in collaborative learning opportunities.",
+            title: "Translation Support",
+            description: "Learners can read word and sentence translations in Thai, Chinese, and Vietnamese.",
         },
     },
     cta: {
-        title: "Ready to experience the difference?",
-        description: "Start your journey with Reading Advantage today",
+        title: "Want to see Reading Advantage?",
+        description: "Contact us to talk about Reading Advantage",
         button: "Get Started",
     },
     platformFeatures: {
@@ -44,48 +44,48 @@ export const en = {
     },
     comparison: {
         heading: "Comparison",
-        subheading: "How We Compare",
+        subheading: "What Is Included",
     },
 };
 
 export const th = {
     hero: {
-        eyebrow: "แพลตฟอร์มที่ขับเคลื่อนด้วย AI",
+        eyebrow: "แบบฝึกหัดและแอป",
         title: "คุณสมบัติของแพลตฟอร์ม",
-        heading: "การเรียนรู้เฉพาะบุคคลในระดับใหญ่",
-        description: "เปรียบเทียบ Reading Advantage กับโปรแกรมการอ่านชั้นนำอื่น ๆ",
-        descriptionFull: "เครื่องยนต์ AI ขั้นสูงของเราปรับตัวเข้ากับผู้เรียนทุกคนแบบเรียลไทม์ สร้างเนื้อหาที่ตรงกับระดับการอ่าน ความสนใจ และเป้าหมายการเรียนรู้ของพวกเขา",
+        heading: "แบบฝึกหัดเล่มพิมพ์และเวอร์ชันดิจิทัล",
+        description: "สิ่งที่แพลตฟอร์ม Reading Advantage มีให้",
+        descriptionFull: "Reading Advantage จับคู่แบบฝึกหัดเล่มพิมพ์กับเวอร์ชันดิจิทัล เชื่อมกับกราฟความรู้ Mastery Advantage บทความเขียนตามระดับการอ่านที่สอดคล้อง CEFR",
         alt: "นักเรียนใช้แอป Reading Advantage",
     },
     features: {
         0: {
-            title: "เนื้อหาขับเคลื่อนด้วย AI",
-            description: "เทคโนโลยี AI ขั้นสูงของเราสร้างเนื้อหาเฉพาะบุคคลที่ปรับให้เหมาะสมกับความต้องการและความชอบของผู้เรียนแต่ละคน",
+            title: "เนื้อหาแบ่งตามระดับ",
+            description: "บทความสร้างด้วยโมเดลของ Google Gemini และ OpenAI ที่เลือกตามงาน ในระดับการอ่านที่สอดคล้อง CEFR",
         },
         1: {
-            title: "การเรียนรู้เฉพาะบุคคล",
-            description: "แพลตฟอร์มของเราปรับตามความต้องการของผู้เรียนแต่ละคน เพื่อมอบประสบการณ์การศึกษาที่ปรับแต่งเพื่อผลลัพธ์ที่ดีที่สุด",
+            title: "การเรียนรู้ตามความเชี่ยวชาญ",
+            description: "Mastery Advantage ใช้ทฤษฎีปริภูมิความรู้และการทบทวนแบบ FSRS เพื่อกำหนดเวลาฝึกฝน",
         },
         2: {
             title: "แบบฝึกหัดโต้ตอบ",
-            description: "มีส่วนร่วมกับการจำลองแบบโต้ตอบ คำถามแบบทดสอบ และแบบฝึกหัดที่ออกแบบมาเพื่อเสริมการเรียนรู้และเพิ่มการจดจำ",
+            description: "มีส่วนร่วมกับการจำลองแบบโต้ตอบ คำถามแบบทดสอบ และแบบฝึกหัดที่ออกแบบมาเพื่อเสริมการเรียนรู้",
         },
         3: {
             title: "การติดตามความก้าวหน้า",
-            description: "ฟีเจอร์การวิเคราะห์และรายงานอย่างครอบคลุมช่วยให้ผู้เรียนและครูสามารถติดตามความคืบหน้าและระบุพื้นที่ที่ต้องปรับปรุง",
+            description: "ฟีเจอร์การวิเคราะห์และรายงานอย่างครอบคลุมช่วยให้ผู้เรียนและครูสามารถติดตามความคืบหน้าและเห็นว่านักเรียนต้องการการสนับสนุนตรงไหน",
         },
         4: {
-            title: "เข้าถึงได้ทุกแพลตฟอร์ม",
-            description: "เข้าถึงเนื้อหาการศึกษาได้ทุกที่ทุกเวลาผ่านเว็บ มือถือ และแท็บเล็ต",
+            title: "เข้าถึงผ่านเว็บ",
+            description: "เข้าถึงเนื้อหาการศึกษาผ่านเว็บเบราว์เซอร์",
         },
         5: {
-            title: "ชุมชนระดับโลก",
-            description: "เชื่อมต่อกับผู้เรียนทั่วโลก แบ่งปันประสบการณ์ และเข้าร่วมโอกาสการเรียนรู้แบบร่วมมือกัน",
+            title: "การแปลภาษา",
+            description: "ผู้เรียนดูคำแปลของคำและประโยคเป็นภาษาไทย จีน และเวียดนามได้",
         },
     },
     cta: {
-        title: "พร้อมสัมผัสความแตกต่างหรือยัง?",
-        description: "เริ่มต้นการเดินทางกับ Reading Advantage วันนี้",
+        title: "อยากดู Reading Advantage หรือไม่?",
+        description: "ติดต่อเราเพื่อคุยเรื่อง Reading Advantage",
         button: "เริ่มต้นใช้งาน",
     },
     platformFeatures: {
@@ -94,48 +94,48 @@ export const th = {
     },
     comparison: {
         heading: "การเปรียบเทียบ",
-        subheading: "เราเปรียบเทียบอย่างไร",
+        subheading: "สิ่งที่รวมอยู่",
     },
 };
 
 export const zh = {
     hero: {
-        eyebrow: "AI驱动平台",
+        eyebrow: "练习册与应用",
         title: "平台功能",
-        heading: "大规模个性化学习",
-        description: "比较 Reading Advantage 与其他领先的阅读项目",
-        descriptionFull: "我们先进的AI引擎实时适应每位学习者，生成与其阅读水平、兴趣和学习目标完全匹配的内容。",
+        heading: "纸质练习册与数字版本",
+        description: "Reading Advantage 平台包含的内容",
+        descriptionFull: "Reading Advantage 将纸质练习册与数字版本配对，对接 Mastery Advantage 知识图谱。文章按符合 CEFR 的阅读级别编写。",
         alt: "学生使用Reading Advantage应用",
     },
     features: {
         0: {
-            title: "AI驱动内容",
-            description: "我们的先进AI技术生成个性化内容，针对每位学习者的需求和偏好量身定制。",
+            title: "分级内容",
+            description: "文章由 Google Gemini 和 OpenAI 模型按任务选择生成，对应符合 CEFR 的阅读级别。",
         },
         1: {
-            title: "个性化学习",
-            description: "我们的平台适应每个学习者的需求，提供定制的教育体验以实现最佳效果。",
+            title: "基于掌握度的学习",
+            description: "Mastery Advantage 使用知识空间理论和 FSRS 间隔重复来安排练习。",
         },
         2: {
             title: "互动练习",
-            description: "通过我们的互动模拟、测验和练习，强化学习并提高记忆力。",
+            description: "通过我们的互动模拟、测验和练习，强化学习。",
         },
         3: {
             title: "进度追踪",
-            description: "全面的分析和报告功能使学习者和教育者能够监控进度并确定需要改进的领域。",
+            description: "全面的分析和报告功能使学习者和教育者能够监控进度并了解学生在哪些方面需要支持。",
         },
         4: {
-            title: "跨平台访问",
-            description: "通过网络、手机和平板应用随时随地访问我们的教育内容。",
+            title: "网页访问",
+            description: "通过网页浏览器访问我们的教育内容。",
         },
         5: {
-            title: "全球社区",
-            description: "与全球学习者连接，分享经验，并参与协作学习机会。",
+            title: "翻译支持",
+            description: "学习者可查看词语和句子的泰语、中文和越南语翻译。",
         },
     },
     cta: {
-        title: "准备好体验不同了吗？",
-        description: "今天就开始您的 Reading Advantage 之旅",
+        title: "想了解 Reading Advantage 吗？",
+        description: "联系我们，了解 Reading Advantage",
         button: "开始使用",
     },
     platformFeatures: {
@@ -144,6 +144,6 @@ export const zh = {
     },
     comparison: {
         heading: "对比",
-        subheading: "我们的比较优势",
+        subheading: "包含的内容",
     },
 };

@@ -1,74 +1,74 @@
 export const en = {
     heading: "Tutor Advantage (TA)",
-    description: "Launch your tutoring business with built-in mentorship, AI lesson tools, and company-led coaching seminars.",
+    description: "Teach English classes in your community from printed workbooks. Tutor Advantage is a tutor-led class network with a commission model.",
     features: [
         {
-            title: "Mentor Match",
-            description: "Get paired with an experienced TA mentor to secure first clients and refine your playbook",
+            title: "Printed Workbooks",
+            description: "Teach from Primary Advantage and Reading Advantage workbooks. One class package covers one workbook",
         },
         {
-            title: "AI Lesson Studio",
-            description: "Plan and adapt sessions in minutes with curriculum-aligned prompts and progress summaries",
+            title: "Fixed Class Plan",
+            description: "Each class follows an 18-phase plan with flashcards, two games, and a pair conversation",
         },
         {
-            title: "Company Seminars",
-            description: "Join live seminars that spotlight top tutors, new resources, and proven motivation tactics",
+            title: "Reedy Voice Practice",
+            description: "Your students practice speaking with Reedy on the lessons they finished. Reedy is live in Tutor Advantage only",
         },
         {
-            title: "Flexible Growth Paths",
-            description: "Earn from 1:1 sessions, group intensives, or by coaching new tutors as your network expands",
+            title: "Commission Model",
+            description: "Earn commission on the class packages you teach and on the tutors you bring into the network, under a unilevel model",
         }
     ],
     joinButton: "Join Our Network",
-    joinCaption: "We’ll connect you with your mentor tutor within 48 hours."
+    joinCaption: "Class packages for families start from 3,000 baht."
 }
 
 export const th = {
-    heading: "ข้อได้เปรียบของติวเตอร์ (TA)",
-    description: "เริ่มต้นธุรกิจติวเตอร์ของคุณด้วยเมนเทอร์คู่ใจ เครื่องมือบทเรียน AI และสัมมนาจากบริษัท.",
+    heading: "Tutor Advantage (TA)",
+    description: "สอนภาษาอังกฤษในชุมชนของคุณจากเวิร์กบุ๊กที่พิมพ์เป็นเล่ม Tutor Advantage คือเครือข่ายคลาสที่สอนโดยติวเตอร์ พร้อมโมเดลคอมมิชชัน",
     features: [
         {
-            title: "จับคู่เมนเทอร์",
-            description: "จับคู่กับเมนเทอร์ TA ที่มีประสบการณ์เพื่อหาลูกค้าชุดแรกและต่อยอดรูปแบบการสอน",
+            title: "เวิร์กบุ๊กพิมพ์เป็นเล่ม",
+            description: "สอนจากเวิร์กบุ๊ก Primary Advantage และ Reading Advantage หนึ่งแพ็กเกจคลาสใช้หนึ่งเวิร์กบุ๊ก",
         },
         {
-            title: "สตูดิโอบทเรียน AI",
-            description: "วางแผนและปรับบทเรียนได้ภายในไม่กี่นาที พร้อมพรอมต์ตามหลักสูตรและสรุปความก้าวหน้า",
+            title: "แผนคลาสที่กำหนดไว้",
+            description: "ทุกคลาสทำตามแผน 18 ช่วง มีแฟลชการ์ด เกมสองเกม และการสนทนาเป็นคู่",
         },
         {
-            title: "สัมมนาจากบริษัท",
-            description: "เข้าร่วมสัมมนาที่นำเสนอครูยอดเยี่ยม เครื่องมือใหม่ และกลยุทธ์สร้างแรงจูงใจ",
+            title: "ฝึกพูดกับ Reedy",
+            description: "นักเรียนของคุณฝึกพูดกับ Reedy ในบทเรียนที่เรียนจบแล้ว Reedy ใช้ได้ใน Tutor Advantage เท่านั้น",
         },
         {
-            title: "ช่องทางเติบโตหลากหลาย",
-            description: "สร้างรายได้จากสอนเดี่ยว กลุ่ม หรือโค้ชน้องใหม่เมื่อเครือข่ายคุณเติบโต",
+            title: "โมเดลคอมมิชชัน",
+            description: "รับค่าคอมมิชชันจากแพ็กเกจคลาสที่คุณสอน และจากติวเตอร์ที่คุณชวนเข้าเครือข่าย ตามโมเดลยูนิเลเวล",
         }
     ],
     joinButton: "เข้าร่วมเครือข่ายของเรา",
-    joinCaption: "เราจะจับคู่คุณกับเมนเทอร์ภายใน 48 ชั่วโมง"
+    joinCaption: "แพ็กเกจคลาสสำหรับครอบครัวเริ่มต้น 3,000 บาท"
 }
 
 export const zh = {
-    heading: "导师优势 (TA)",
-    description: "借助导师配对、AI 课程工具与公司主导的研讨会，启动您的辅导事业。",
+    heading: "Tutor Advantage (TA)",
+    description: "使用印刷练习册，在您的社区讲授英语班。Tutor Advantage 是由导师授课的班级网络，采用佣金模式。",
     features: [
         {
-            title: "导师配对",
-            description: "与资深 TA 导师结队，帮助您获取首批学员并完善教学方案",
+            title: "印刷练习册",
+            description: "使用 Primary Advantage 和 Reading Advantage 练习册授课，一个课程包对应一本练习册",
         },
         {
-            title: "AI 课程工作室",
-            description: "借助对齐课程标准的提示与进度摘要，几分钟内完成课程规划",
+            title: "固定课堂流程",
+            description: "每节课按 18 个阶段进行，包含单词卡、两个游戏和双人对话",
         },
         {
-            title: "公司研讨会",
-            description: "参加研讨会，了解优秀导师案例、新资源与激励策略",
+            title: "Reedy 口语练习",
+            description: "您的学生在已完成的课程上与 Reedy 练习口语。Reedy 仅在 Tutor Advantage 中提供",
         },
         {
-            title: "多元成长路径",
-            description: "通过一对一、小组课程或指导新导师的方式实现收入增长",
+            title: "佣金模式",
+            description: "按多级（unilevel）模式，从您讲授的课程包以及您带入网络的导师中获得佣金",
         }
     ],
     joinButton: "加入我们的网络",
-    joinCaption: "我们将在 48 小时内为您匹配导师"
+    joinCaption: "面向家庭的课程包 3,000 泰铢起"
 }

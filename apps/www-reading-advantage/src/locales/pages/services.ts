@@ -10,14 +10,14 @@ export const en = {
   services: [
     {
       name: "Blended Learning Model",
-      status: "Launching May 2026",
-      statusBadge: "COMING SOON",
+      status: "Available now",
+      statusBadge: "ACTIVE",
       description:
-        "Physical workbooks combined with digital app - the best of both worlds for Thai classrooms.",
+        "Printed workbooks plus the app, with teacher training, for Thai classrooms.",
       features: [
-        "15 CEFR levels (A1-C1) available",
-        "Sample workbooks available January 2026",
-        "Empower Thai teachers to deliver native-standard English",
+        "CEFR-aligned workbooks for the Pre-A1 to A2 active program",
+        "Printed now: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2",
+        "Support Thai teachers to deliver structured, CEFR-aligned English lessons",
         "Lesson plans and teacher guides included",
         "2-day onboarding and support",
         "Integrated workbook + app learning system",
@@ -28,10 +28,10 @@ export const en = {
     },
     {
       name: "Managed Service",
-      status: "Coming 2027",
+      status: "Not yet available",
       statusBadge: "ROADMAP",
       description:
-        "The white-glove solution: We provide the technology AND the teacher for complete English department outsourcing.",
+        "Planned service: we provide the technology and the teacher for complete English department outsourcing. It depends on school demand.",
       features: [
         "Fully outsourced English department",
         "Structured onboarding and implementation review",
@@ -80,9 +80,9 @@ export const en = {
     },
   ],
   cta: {
-    title: "Ready to Transform Your English Program?",
+    title: "Ready to Improve Your English Program?",
     description:
-      "Contact us to discuss which service model works best for your school.",
+      "Contact us to discuss which service model fits your school.",
     button: "Get in Touch",
   },
 };
@@ -99,14 +99,14 @@ export const th = {
   services: [
     {
       name: "รูปแบบการเรียนแบบผสมผสาน",
-      status: "เปิดตัวเดือนพฤษภาคม 2026",
-      statusBadge: "เร็วๆ นี้",
+      status: "พร้อมให้บริการแล้ว",
+      statusBadge: "ใช้งาน",
       description:
-        "หนังสือแบบฝึกหัดทางกายภาพผสมกับแอปดิจิทัล - สิ่งที่ดีที่สุดจากทั้งสองโลกสำหรับห้องเรียนไทย",
+        "หนังสือแบบฝึกหัดที่พิมพ์เป็นเล่มคู่กับแอป พร้อมการอบรมครู สำหรับห้องเรียนไทย",
       features: [
-        "15 ระดับ CEFR (A1-C1) พร้อมใช้งาน",
-        "ตัวอย่างหนังสือแบบฝึกหัดพร้อมใช้งานมกราคม 2026",
-        "มอบพลังให้ครูไทยสามารถสอนภาษาอังกฤษในระดับมาตรฐานเนทีฟได้",
+        "หนังสือแบบฝึกหัดที่สอดคล้องกับ CEFR สำหรับโปรแกรมระดับ Pre-A1 ถึง A2",
+        "พิมพ์แล้ว: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2",
+        "สนับสนุนครูไทยให้สอนภาษาอังกฤษอย่างเป็นขั้นตอนตามแนว CEFR",
         "มีแผนการสอนและคู่มือครูพร้อม",
         "การฝึกอบรมเริ่มต้น 2 วันและการสนับสนุน",
         "ระบบการเรียนรู้แบบผสมผสานหนังสือแบบฝึกหัด + แอป",
@@ -117,10 +117,10 @@ export const th = {
     },
     {
       name: "บริการจัดการแบบครบวงจร",
-      status: "มาปี 2027",
+      status: "ยังไม่เปิดให้บริการ",
       statusBadge: "แผนงาน",
       description:
-        "โซลูชันแบบไขมือขาว: เรามอบทั้งเทคโนโลยีและครูสำหรับการจัดการแผนกวิชาภาษาอังกฤษแบบครบวงจรภายนอก",
+        "บริการที่วางแผนไว้: เรามอบทั้งเทคโนโลยีและครูสำหรับการจัดการแผนกวิชาภาษาอังกฤษแบบครบวงจร ขึ้นอยู่กับความต้องการของโรงเรียน",
       features: [
         "แผนกวิชาภาษาอังกฤษแบบจัดการภายนอกทั้งหมด",
         "การเริ่มต้นใช้งานอย่างเป็นขั้นตอน",
@@ -169,9 +169,9 @@ export const th = {
     },
   ],
   cta: {
-    title: "พร้อมที่จะปฏิวัติโปรแกรมภาษาอังกฤษของคุณหรือยัง?",
+    title: "พร้อมพัฒนาโปรแกรมภาษาอังกฤษของคุณหรือยัง?",
     description:
-      "ติดต่อเราเพื่อหารือเกี่ยวกับรูปแบบบริการใดที่เหมาะสมกับโรงเรียนของคุณ",
+      "ติดต่อเราเพื่อหารือว่ารูปแบบบริการใดเหมาะกับโรงเรียนของคุณ",
     button: "ติดต่อเรา",
   },
 };
@@ -188,14 +188,14 @@ export const zh = {
   services: [
     {
       name: "混合学习模式",
-      status: "2026年5月推出",
-      statusBadge: "即将推出",
+      status: "现已提供",
+      statusBadge: "活跃",
       description:
-        "实体练习册结合数字应用程序 - 为泰国课堂提供两全其美的解决方案。",
+        "印刷练习册加应用程序，并提供教师培训，服务泰国课堂。",
       features: [
-        "15个CEFR级别（A1-C1）可用",
-        "2026年1月提供练习册样本",
-        "赋能泰国教师提供母语标准英语",
+        "符合CEFR标准的练习册，覆盖Pre-A1至A2的现行课程",
+        "已印刷：Primary Advantage Origins 2、Primary Advantage Origins 3.1、Reading Advantage Origins 2",
+        "支持泰国教师开展结构化、符合CEFR标准的英语课程",
         "包含教案和教师指南",
         "2天入职和支持",
         "集成练习册+应用学习系统",
@@ -206,10 +206,10 @@ export const zh = {
     },
     {
       name: "托管服务",
-      status: "2027年",
+      status: "暂未提供",
       statusBadge: "路线图",
       description:
-        "白手套解决方案：我们同时提供技术和教师，实现完整的英语部门外包。",
+        "规划中的服务：我们同时提供技术和教师，实现完整的英语部门外包。是否推出取决于学校需求。",
       features: [
         "完全外包英语部门",
         "结构化的入门和实施审查",
@@ -257,8 +257,8 @@ export const zh = {
     },
   ],
   cta: {
-    title: "准备好变革您的英语课程了吗？",
-    description: "联系我们讨论哪种服务模式最适合您的学校。",
+    title: "准备好改进您的英语课程了吗？",
+    description: "联系我们讨论哪种服务模式适合您的学校。",
     button: "联系我们",
   },
 };

@@ -141,7 +141,7 @@ export default async function Home({
               <dl className="mt-16 grid grid-cols-3 gap-6 pt-8 border-t border-[#dad4c8] max-w-xl">
                 <div>
                   <dd className="text-3xl md:text-4xl font-semibold tracking-tight text-black">
-                    4
+                    3
                   </dd>
                   <dt className="text-xs uppercase tracking-wider text-[#9f9b93] mt-2">
                     {t("hero.stats.products")}
@@ -170,6 +170,41 @@ export default async function Home({
               <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-[rgba(0,0,0,0.1)_0px_1px_1px,rgba(0,0,0,0.04)_0px_-1px_1px_inset,rgba(0,0,0,0.05)_0px_-0.5px_1px]">
                 <MasteryAdvantageGraph className="w-full h-auto" />
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────
+          TUTOR ADVANTAGE — direct-to-family channel
+         ───────────────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-24 bg-emerald-50 border-y border-emerald-100">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-800 mb-6">
+                {t("tutor.eyebrow")}
+              </p>
+              <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-6">
+                {t("tutor.title")}
+              </h2>
+              <p className="text-base md:text-lg leading-relaxed text-[#55534e] mb-8">
+                {t("tutor.description")}
+              </p>
+              <Button variant="default" asChild>
+                <Link href="/products/tutor-advantage">
+                  {t("tutor.cta")}
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
+            </div>
+            <div className="lg:col-span-5 flex flex-col gap-4">
+              <p className="rounded-2xl border border-emerald-200 bg-white p-6 text-sm leading-relaxed text-[#55534e]">
+                {t("tutor.books")}
+              </p>
+              <p className="rounded-2xl border border-emerald-200 bg-white p-6 text-sm leading-relaxed text-[#55534e]">
+                {t("tutor.reedy")}
+              </p>
             </div>
           </div>
         </div>
