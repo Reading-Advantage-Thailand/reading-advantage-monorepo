@@ -1,7 +1,7 @@
 import argon2 from "@node-rs/argon2";
 import bcrypt from "bcryptjs";
-import { eq, and } from "drizzle-orm";
-import { accounts } from "@reading-advantage/db/schema";
+import { eq, and, isNull } from "drizzle-orm";
+import { accounts, users } from "@reading-advantage/db/schema";
 import type { PostgresJsDatabase } from "@reading-advantage/db";
 import type * as schema from "@reading-advantage/db/schema";
 
@@ -84,32 +84,42 @@ export async function rehashOnLogin(
 /**
  * Adopts a legacy `users.password` hash into the credential `accounts` row.
  * The legacy Primary Advantage build stored hashes only on the users table.
- * The caller already verified the password. A bcrypt hash becomes Argon2id.
+ * The function verifies the password against the legacy hash before it writes.
+ * A bcrypt hash becomes Argon2id. A credential row that already holds a password stays unchanged.
+ * The credential write and the removal of `users.password` happen in one transaction.
  * @param db - Database client (Drizzle instance)
  * @param userId - The user who owns the credential
- * @param password - The plaintext password that the caller verified
+ * @param password - The plaintext password to verify and adopt
  * @param legacyHash - The hash read from `users.password`
- * @returns Nothing. The account row is created or updated.
+ * @returns True if the password matched and the legacy hash was adopted, false if nothing was written.
  */
 export async function adoptLegacyPassword(
   db: Db,
   userId: string,
   password: string,
   legacyHash: string,
-): Promise<void> {
+): Promise<boolean> {
+  if (!(await verifyPassword(password, legacyHash))) {
+    return false;
+  }
   const hash = legacyHash.startsWith("$argon2id$")
     ? legacyHash
     : await argon2.hash(password, ARGON2ID_OPTS);
-  await db
-    .insert(accounts)
-    .values({
-      id: `${userId}_credential`,
-      userId,
-      providerId: "credential",
-      password: hash,
-    })
-    .onConflictDoUpdate({
-      target: [accounts.userId, accounts.providerId],
-      set: { password: hash, updatedAt: new Date() },
-    });
+  await db.transaction(async (tx) => {
+    await tx
+      .insert(accounts)
+      .values({
+        id: `${userId}_credential`,
+        userId,
+        providerId: "credential",
+        password: hash,
+      })
+      .onConflictDoUpdate({
+        target: [accounts.userId, accounts.providerId],
+        set: { password: hash, updatedAt: new Date() },
+        setWhere: isNull(accounts.password),
+      });
+    await tx.update(users).set({ password: null }).where(eq(users.id, userId));
+  });
+  return true;
 }
