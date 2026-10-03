@@ -57,7 +57,7 @@ export function MasteryHeroVideo({ src, poster, playLabel, pauseLabel }: Mastery
         type="button"
         onClick={toggle}
         aria-label={playing ? pauseLabel : playLabel}
-        className="absolute bottom-4 right-4 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/40 bg-[#0c1437]/80 text-white backdrop-blur transition-colors hover:bg-[#0c1437] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        className="absolute bottom-4 right-4 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/40 bg-site-navy/80 text-white backdrop-blur transition-colors hover:bg-site-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
       >
         {playing ? <Pause className="h-5 w-5" aria-hidden="true" /> : <Play className="h-5 w-5" aria-hidden="true" />}
       </button>

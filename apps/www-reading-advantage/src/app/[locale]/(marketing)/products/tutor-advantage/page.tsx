@@ -79,7 +79,7 @@ export default async function TutorAdvantage({
         />
         <div className="container relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-4 pb-16 pt-28 sm:px-6 md:py-24 lg:grid-cols-12 lg:gap-14 lg:px-8">
           <div className="lg:col-span-6">
-            <div className="mb-8 inline-block rounded-2xl bg-[#0f172a] p-4 ring-1 ring-emerald-300/40">
+            <div className="mb-8 inline-block rounded-2xl bg-slate-900 p-4 ring-1 ring-emerald-300/40">
               <img
                 src={siteLogos.tutor.reversed}
                 alt={t("logoAlt")}

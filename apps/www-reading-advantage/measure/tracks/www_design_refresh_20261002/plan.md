@@ -25,5 +25,6 @@
 - [x] Install `@shadcn/lint` in www-reading-advantage only; register in `eslint.config.mjs` (warnings)
 - [x] Site neutral and Mastery state tokens in `globals.css`; `components.json` css path fixed
 - [x] `docs/design-rules.md` and an AGENTS.md pointer
-- [ ] Migrate the ~1,000 existing warnings (hex to tokens first), then raise rules to `error`
+- [x] Hex to tokens: 84 classes in 16 files (warnings 1,002 to 921)
+- [ ] Migrate the rest (679 raw colors, 178 arbitrary values, 39 inline styles), then raise rules to `error`
 - [ ] Fix `prose` classes (no CSS is generated for them)

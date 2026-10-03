@@ -49,19 +49,19 @@ function Legend({ labels, states }: { labels: MasteryStateLabels; states: StateK
 
 function PanelShell({ texture, label, caption, children }: PanelShellProps) {
   return (
-    <figure className="relative isolate overflow-hidden rounded-3xl border border-[#1e2a66] bg-[#0c1437] text-white shadow-[0_24px_60px_-30px_rgba(12,20,55,0.8)] m-0">
+    <figure className="relative isolate overflow-hidden rounded-3xl border border-[#1e2a66] bg-site-navy text-white shadow-[0_24px_60px_-30px_rgba(12,20,55,0.8)] m-0">
       <SiteImageView
         image={siteImages[texture]}
         alt=""
         sizes="(min-width: 1024px) 560px, 100vw"
         className="absolute inset-0 -z-10 h-full w-full object-cover opacity-30"
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#0c1437]/40 via-[#0c1437]/70 to-[#0c1437]/95" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-site-navy/40 via-site-navy/70 to-site-navy/95" />
       <div className="p-5 sm:p-7">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#fbbf24]">{label}</p>
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-mastery-ready">{label}</p>
         {children}
       </div>
-      <figcaption className="border-t border-white/10 bg-[#0c1437]/80 px-5 py-4 text-sm leading-relaxed text-[#dbe2ff] sm:px-7">
+      <figcaption className="border-t border-white/10 bg-site-navy/80 px-5 py-4 text-sm leading-relaxed text-[#dbe2ff] sm:px-7">
         {caption}
       </figcaption>
     </figure>
@@ -191,7 +191,7 @@ export function MasteryProgressPanel({
     <PanelShell texture="masteryGrid" label={label} caption={caption}>
       <ul className="m-0 mb-4 flex list-none flex-col gap-3 p-0">
         {rows.map((row) => (
-          <li key={row.name} className="rounded-2xl border border-white/15 bg-[#0c1437]/70 p-4">
+          <li key={row.name} className="rounded-2xl border border-white/15 bg-site-navy/70 p-4">
             <div className="mb-3 flex items-center justify-between gap-3">
               <span className="font-semibold text-white">{row.name}</span>
               <span className="inline-flex items-center gap-2 text-xs text-[#dbe2ff]">

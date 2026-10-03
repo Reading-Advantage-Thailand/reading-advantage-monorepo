@@ -26,7 +26,7 @@ export function ExperienceDemo({ text }: ExperienceDemoProps) {
 
   return (
     <div className="w-full">
-      <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl border border-[#dad4c8] bg-slate-900 shadow-xl sm:aspect-[4/3] sm:max-w-4xl">
+      <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl border border-site-border bg-slate-900 shadow-xl sm:aspect-[4/3] sm:max-w-4xl">
         {playing ? (
           <iframe
             src={DEMO_URL}

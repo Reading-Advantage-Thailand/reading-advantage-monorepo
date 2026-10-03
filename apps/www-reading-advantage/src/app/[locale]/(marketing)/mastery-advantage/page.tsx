@@ -68,7 +68,7 @@ export default async function MasteryAdvantagePage() {
       status: t("powersEveryProduct.cards.codecamp.status"),
       description: t("powersEveryProduct.cards.codecamp.description"),
       badge: "bg-emerald-100 text-emerald-900",
-      bar: "bg-[#22c55e]",
+      bar: "bg-mastery-mastered",
     },
     {
       key: "primary",
@@ -77,7 +77,7 @@ export default async function MasteryAdvantagePage() {
       status: t("powersEveryProduct.cards.primary.status"),
       description: t("powersEveryProduct.cards.primary.description"),
       badge: "bg-amber-100 text-amber-900",
-      bar: "bg-[#fbbf24]",
+      bar: "bg-mastery-ready",
     },
     {
       key: "reading",
@@ -86,7 +86,7 @@ export default async function MasteryAdvantagePage() {
       status: t("powersEveryProduct.cards.reading.status"),
       description: t("powersEveryProduct.cards.reading.description"),
       badge: "bg-slate-200 text-slate-800",
-      bar: "bg-[#0c1437]",
+      bar: "bg-site-navy",
     },
   ];
 
@@ -95,19 +95,19 @@ export default async function MasteryAdvantagePage() {
   const steps = ["lesson", "tag", "graph"] as const;
 
   return (
-    <main className="overflow-x-hidden bg-[#faf9f7] text-black">
+    <main className="overflow-x-hidden bg-site-page text-black">
       {/* HERO with muted looping background video */}
-      <section className="relative isolate overflow-hidden bg-[#0c1437] pb-24 pt-32 text-white md:pb-32 md:pt-44">
+      <section className="relative isolate overflow-hidden bg-site-navy pb-24 pt-32 text-white md:pb-32 md:pt-44">
         <MasteryHeroVideo
           src={siteVideos.masteryBloom.src}
           poster={siteVideos.masteryBloom.poster}
           playLabel={t("video.play")}
           pauseLabel={t("video.pause")}
         />
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0c1437] via-[#0c1437]/85 to-[#0c1437]/30" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-site-navy via-site-navy/85 to-site-navy/30" />
         <div className="container relative z-10 mx-auto max-w-6xl px-4">
           <div className="max-w-2xl">
-            <p className="mb-8 text-xs font-semibold uppercase tracking-[0.18em] text-[#fbbf24]">{t("hero.eyebrow")}</p>
+            <p className="mb-8 text-xs font-semibold uppercase tracking-[0.18em] text-mastery-ready">{t("hero.eyebrow")}</p>
             <h1 className="mb-8 text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-white md:text-6xl lg:text-7xl">
               {t("hero.title")}
             </h1>
@@ -135,7 +135,7 @@ export default async function MasteryAdvantagePage() {
       </section>
 
       {/* REVIEW AT THE RIGHT TIME */}
-      <section className="border-y border-[#dad4c8] bg-white py-24 md:py-32">
+      <section className="border-y border-site-border bg-white py-24 md:py-32">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="order-2 lg:order-1 lg:col-span-6">
@@ -160,7 +160,7 @@ export default async function MasteryAdvantagePage() {
       </section>
 
       {/* EXPLORE THE GRAPH */}
-      <section className="border-y border-[#dad4c8] bg-white py-24 md:py-32">
+      <section className="border-y border-site-border bg-white py-24 md:py-32">
         <div className="container mx-auto max-w-5xl px-4">
           <SectionHeader
             eyebrow={t("explorer.eyebrow")}
@@ -168,7 +168,7 @@ export default async function MasteryAdvantagePage() {
             description={t("explorer.description")}
             className="mb-10"
           />
-          <div className="overflow-hidden rounded-3xl border border-[#dad4c8] shadow-[0_24px_60px_-24px_rgba(12,20,55,0.35)]">
+          <div className="overflow-hidden rounded-3xl border border-site-border shadow-[0_24px_60px_-24px_rgba(12,20,55,0.35)]">
             <MasteryAdvantageGraph interactive labels={graphLabels} className="w-full" />
           </div>
         </div>
@@ -204,7 +204,7 @@ export default async function MasteryAdvantagePage() {
       </section>
 
       {/* HOW A LESSON IS TAGGED */}
-      <section className="border-y border-[#dad4c8] bg-white py-24 md:py-32">
+      <section className="border-y border-site-border bg-white py-24 md:py-32">
         <div className="container mx-auto max-w-6xl px-4">
           <SectionHeader
             eyebrow={t("tagged.eyebrow")}
@@ -214,12 +214,12 @@ export default async function MasteryAdvantagePage() {
           />
           <ol className="grid gap-6 md:grid-cols-3">
             {steps.map((step, i) => (
-              <li key={step} className="relative rounded-2xl border border-[#dad4c8] bg-[#faf9f7] p-7">
-                <span className="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#0c1437] text-sm font-semibold text-[#fbbf24]">
+              <li key={step} className="relative rounded-2xl border border-site-border bg-site-page p-7">
+                <span className="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-full bg-site-navy text-sm font-semibold text-mastery-ready">
                   {i + 1}
                 </span>
                 <h3 className="mb-3 text-xl font-semibold tracking-tight text-black">{t(`tagged.steps.${step}.title`)}</h3>
-                <p className="text-sm leading-relaxed text-[#55534e]">{t(`tagged.steps.${step}.description`)}</p>
+                <p className="text-sm leading-relaxed text-site-body">{t(`tagged.steps.${step}.description`)}</p>
               </li>
             ))}
           </ol>
@@ -235,7 +235,7 @@ export default async function MasteryAdvantagePage() {
             description={t("technicalOverview.description")}
             className="mb-16"
           />
-          <ol className="grid gap-px overflow-hidden rounded-2xl border border-[#dad4c8] bg-[#dad4c8] md:grid-cols-2 lg:grid-cols-6">
+          <ol className="grid gap-px overflow-hidden rounded-2xl border border-site-border bg-site-border md:grid-cols-2 lg:grid-cols-6">
             {pillars.map((item, i) => (
               <li
                 key={item.title}
@@ -243,7 +243,7 @@ export default async function MasteryAdvantagePage() {
               >
                 <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">0{i + 1}</span>
                 <h3 className="text-xl font-semibold tracking-tight text-black">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-[#55534e]">{item.description}</p>
+                <p className="text-sm leading-relaxed text-site-body">{item.description}</p>
               </li>
             ))}
           </ol>
@@ -251,7 +251,7 @@ export default async function MasteryAdvantagePage() {
       </section>
 
       {/* WHERE IT RUNS */}
-      <section className="border-y border-[#dad4c8] bg-white py-24 md:py-32">
+      <section className="border-y border-site-border bg-white py-24 md:py-32">
         <div className="container mx-auto max-w-6xl px-4">
           <SectionHeader
             eyebrow={t("powersEveryProduct.eyebrow")}
@@ -261,14 +261,14 @@ export default async function MasteryAdvantagePage() {
           />
           <ul className="m-0 grid list-none gap-6 p-0 md:grid-cols-3">
             {runs.map((run) => (
-              <li key={run.key} className="flex flex-col overflow-hidden rounded-2xl border border-[#dad4c8] bg-[#faf9f7]">
+              <li key={run.key} className="flex flex-col overflow-hidden rounded-2xl border border-site-border bg-site-page">
                 <div className={`h-1.5 ${run.bar}`} />
                 <div className="flex flex-1 flex-col gap-5 p-7">
                   <div className="flex items-center justify-between gap-3">
                     <img src={run.logo} alt={run.logoAlt} className="h-12 w-auto max-w-[60%]" />
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${run.badge}`}>{run.status}</span>
                   </div>
-                  <p className="text-sm leading-relaxed text-[#55534e]">{run.description}</p>
+                  <p className="text-sm leading-relaxed text-site-body">{run.description}</p>
                 </div>
               </li>
             ))}

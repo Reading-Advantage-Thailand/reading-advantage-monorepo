@@ -801,7 +801,7 @@ export function MasteryAdvantageGraph({
               aria-pressed={showNext}
               onClick={() => setShowNext((v) => !v)}
               className={`h-9 rounded-md border px-3 text-xs font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
-                showNext ? "border-[#fbbf24] bg-[#fbbf24] text-[#1a1208]" : "border-white/25 hover:bg-white/10"
+                showNext ? "border-mastery-ready bg-mastery-ready text-[#1a1208]" : "border-white/25 hover:bg-white/10"
               }`}
             >
               {labels.whatsNext}

@@ -102,7 +102,7 @@ export default async function ReadingAdvantage() {
       />
 
       {/* Adaptive Learning Path — SVG Visualization */}
-      <section className="py-24 bg-white border-y border-[#dad4c8]">
+      <section className="py-24 bg-white border-y border-site-border">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
@@ -117,7 +117,7 @@ export default async function ReadingAdvantage() {
               </p>
             </div>
             <div className="lg:col-span-7">
-              <div className="relative rounded-3xl overflow-hidden border border-[#dad4c8] bg-white shadow-lg">
+              <div className="relative rounded-3xl overflow-hidden border border-site-border bg-white shadow-lg">
                 <MarketingSvgClient
                   baseName="ra-marketing-reading-advantage"
                   className="w-full h-auto"
