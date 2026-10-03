@@ -55,6 +55,7 @@ export default {
       rewardAll: '⭐ Every look is unlocked for this hero!',
       rewardHint: 'Get 3 stars to unlock new hero colors!',
       again: 'Play again',
+      done: 'Done',
       other: 'Another game',
       classBoss: 'Help your class ⚔️',
       default: 'default',

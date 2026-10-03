@@ -9,6 +9,13 @@ import { MODEL_PACK_VERSION, editionModelIndex, modelEditionOf, modelPackRoot, m
 
 export type { GLTF };
 
+/** Fetches and validates one pack manifest (`<base>packs/<id>/<version>/pack.json`). */
+export async function fetchModelPack(base: string, id: string, version: string = MODEL_PACK_VERSION): Promise<ModelPack> {
+  const res = await fetch(`${base}${modelPackRoot(id, version)}/pack.json`);
+  if (!res.ok) throw new Error(`model pack "${id}": ${res.status} ${res.statusText}`);
+  return modelPackSchema.parse(await res.json());
+}
+
 export class ModelLoader {
   private readonly gltf = new GLTFLoader();
   private readonly models = new Map<string, Promise<GLTF>>();
@@ -32,10 +39,7 @@ export class ModelLoader {
       ids.map(async (id) => {
         let p = this.packs.get(id);
         if (!p) {
-          p = fetch(`${this.base}${modelPackRoot(id, version)}/pack.json`).then(async (res) => {
-            if (!res.ok) throw new Error(`model pack "${id}": ${res.status} ${res.statusText}`);
-            return modelPackSchema.parse(await res.json());
-          });
+          p = fetchModelPack(this.base, id, version);
           p.catch(() => this.packs.delete(id));
           this.packs.set(id, p);
         }

@@ -12,7 +12,7 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "allowJs": false,
-    "jsx": "preserve"
+    "jsx": "react-jsx"
   },
   "include": [
     "src"

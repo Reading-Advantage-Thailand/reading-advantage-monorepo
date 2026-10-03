@@ -68,6 +68,16 @@
       "types": "./dist/avatar/price.d.ts",
       "import": "./dist/avatar/price.js",
       "default": "./dist/avatar/price.js"
+    },
+    "./host": {
+      "types": "./dist/host/index.d.ts",
+      "import": "./dist/host/index.js",
+      "default": "./dist/host/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "default": "./dist/react/index.js"
     }
   },
   "files": [
@@ -94,6 +104,11 @@
     "@vitest/coverage-v8": "catalog:",
     "jsdom": "catalog:",
     "typescript": "5.9.3",
-    "vitest": "4.1.8"
+    "vitest": "4.1.8",
+    "@types/react": "19.2.2",
+    "react": "19.2.7"
+  },
+  "peerDependencies": {
+    "react": "19.2.7"
   }
 }

@@ -1,0 +1,231 @@
+/**
+ * Plays one story game in a page element: briefing, the game (3D or 2D by device and setting),
+ * then the results. It is the app-side counterpart of the standalone demo host, without the
+ * lobby, the selector, or the simulated class boss: the app owns story choice and persistence.
+ *
+ * The caller passes the cartridge (loaded), the story, the base URL that serves `packs/` and
+ * `assets/apk/`, and gets `onComplete` once per run with the APK completion triple.
+ */
+import { AudioBus, installAudioUnlock } from '../audio/index.js';
+import {
+  assetPackSchema,
+  CARTRIDGE_3D_RUNTIME_API_VERSION,
+  modelEditionOf,
+  spritePackRoot,
+  validateEdition,
+  type AssetPackManifest,
+  type GameResults,
+  type Catalog,
+  type GameTerminalOutcome,
+  type RuntimeEdition,
+  type RuntimeEdition3D,
+  type StoryGameEvidence,
+  type StoryInput,
+} from '../contracts/index.js';
+import { checkDevice } from '../device/gate.js';
+import {
+  createCartridgeMounter,
+  createPhaserGameFactory,
+  createThreeGameFactory,
+  selectRenderer,
+  type Cartridge,
+  type Composition3D,
+  type MountedGame,
+  type RendererSetting,
+} from '../factory/index.js';
+import { installCss } from '../hud/css.js';
+import { createI18n } from '../i18n/catalog.js';
+import { fetchModelPack } from '../stage/loader.js';
+import { sheetBindings } from '../view2d/sheets.js';
+import { renderBriefing } from './briefing.js';
+import hostCss from './host.css.js';
+import themeCss from '../hud/theme.css.js';
+import { renderGate } from './gate-screen.js';
+import { renderResults } from './results.js';
+
+/** The one 2D sprite pack every game's 2D edition binds from. */
+export const PACK_2D = 'primary-chibi-2d';
+
+export interface StoryGameOptions {
+  /** The element the host draws into (cleared first). */
+  container: HTMLElement;
+  cartridge: Cartridge;
+  /** The icon shown on the briefing. */
+  icon?: string;
+  story: StoryInput;
+  /** URL prefix that serves `packs/` and `assets/apk/` (ends with a slash). */
+  assetBase: string;
+  /** `'phaser'` forces the 2D view; `'auto'` picks by device. */
+  setting?: RendererSetting;
+  hero?: string;
+  /** Helper mode (easier). */
+  helper?: boolean;
+  /** Hero id to the color preset the student unlocked. */
+  looks?: Readonly<Record<string, string>>;
+  /** The host's own catalog (briefing, results, gate text) and any extra catalogs. */
+  catalogs: readonly Catalog[];
+  /** Skip the briefing and start at once. */
+  skipBriefing?: boolean;
+  onComplete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence): void;
+  onExit(): void;
+  onDiagnostic?(event: unknown): void;
+}
+
+export interface StoryGameSession {
+  readonly diagnostics: readonly unknown[];
+  /** The mounted game, once started. */
+  mounted(): MountedGame | null;
+  destroy(): Promise<void>;
+}
+
+const randomSeed = (): number => (Math.random() * 0x7fffffff) >>> 0;
+
+async function edition2dOf(assetBase: string, cartridge: Cartridge): Promise<RuntimeEdition> {
+  const res = await fetch(`${assetBase}${spritePackRoot(PACK_2D).slice(1)}/pack.json`);
+  if (!res.ok) throw new Error(`pack ${PACK_2D}: HTTP ${res.status}`);
+  const pack = assetPackSchema.parse(await res.json()) as AssetPackManifest;
+  const required = cartridge.manifest.requiredAssetBindings;
+  const edition = { id: 'standard', title: 'Primary Chibi 2D', runtimeApiVersion: CARTRIDGE_3D_RUNTIME_API_VERSION, pack, bindings: sheetBindings(pack, required), tuning: { speed: 1, targetScale: 1, collisionScale: 1, intensity: 1 } };
+  return validateEdition(edition, required, CARTRIDGE_3D_RUNTIME_API_VERSION);
+}
+
+async function edition3dOf(assetBase: string, cartridge: Cartridge): Promise<RuntimeEdition3D> {
+  const packs = Object.fromEntries(await Promise.all(cartridge.manifest.packs.map(async (id) => [id, await fetchModelPack(assetBase, id)] as const)));
+  return modelEditionOf(packs, cartridge.manifest.requiredModelBindings);
+}
+
+export function startStoryGame(options: StoryGameOptions): StoryGameSession {
+  const { container, cartridge, story, assetBase } = options;
+  const diagnostics: unknown[] = [];
+  const report = (event: unknown): void => {
+    diagnostics.push(event);
+    options.onDiagnostic?.(event);
+  };
+  installCss('apk3d-theme', themeCss);
+  installCss('apk3d-story-host', hostCss);
+  const i18n = createI18n([...options.catalogs, cartridge.strings], { onMissing: (key) => report({ level: 'warning', code: 'apk3d/i18n-missing-key', message: key }) });
+  const t = i18n.t;
+  const audio = new AudioBus();
+  const stopUnlock = installAudioUnlock(audio);
+  const mount = createCartridgeMounter({ three: createThreeGameFactory({ base: assetBase, gate: () => checkDevice() }), phaser: createPhaserGameFactory() });
+  const compact = window.matchMedia('(orientation: portrait), (max-width: 699px)');
+  const composition = (): Composition3D => ({ profile: compact.matches ? 'compact' : 'wide', safe: { x: 0, y: 0, width: container.clientWidth || innerWidth, height: container.clientHeight || innerHeight } });
+  const onCompose = (): void => mounted?.recompose(composition());
+  compact.addEventListener('change', onCompose);
+
+  container.innerHTML = '';
+  container.classList.add('apk3d-story-host');
+  const screen = document.createElement('div');
+  screen.className = 'apk3d-screen';
+  const gameEl = document.createElement('div');
+  gameEl.className = 'apk3d-play';
+  container.append(screen, gameEl);
+
+  let mounted: MountedGame | null = null;
+  let destroyed = false;
+  let starting = false;
+
+  const show = (): void => {
+    gameEl.classList.remove('on');
+    screen.classList.add('on');
+  };
+
+  async function start(): Promise<void> {
+    if (starting || destroyed) return;
+    starting = true;
+    try {
+      const verdict = checkDevice({ requirements: cartridge.manifest.device });
+      const pick = selectRenderer(cartridge.manifest, verdict, options.setting ?? 'auto');
+      if (!pick) {
+        renderGate(screen, verdict.status === 'unsupported' ? verdict.reason : undefined, t);
+        screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());
+        show();
+        return;
+      }
+      const [edition2d, edition3d] = await Promise.all([
+        pick.renderer === 'phaser' ? edition2dOf(assetBase, cartridge) : Promise.resolve(undefined),
+        edition3dOf(assetBase, cartridge).catch((err: unknown): RuntimeEdition3D => {
+          report({ level: 'error', code: 'apk3d/edition-3d', message: String(err) });
+          return { id: 'standard', title: 'Primary Chibi', runtimeApiVersion: CARTRIDGE_3D_RUNTIME_API_VERSION, packs: {}, bindings: {}, tuning: { speed: 1, intensity: 1 } };
+        }),
+      ]);
+      if (destroyed) return;
+      screen.classList.remove('on');
+      gameEl.innerHTML = '';
+      gameEl.classList.add('on');
+      const run = { game: cartridge.manifest.id, story: story.id };
+      mounted = await mount({
+        renderer: pick.renderer,
+        container: gameEl,
+        cartridge,
+        input: story,
+        edition3d,
+        ...(edition2d ? { edition2d, resolveUrl: (pack: AssetPackManifest, file: { path: string }) => `${assetBase}${pack.root.slice(1)}/${file.path}` } : {}),
+        seed: randomSeed(),
+        sessionMode: 'playing',
+        composition: composition(),
+        i18n: i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!),
+        audio,
+        options: { helper: options.helper ?? true, hero: options.hero ?? 'knight', looks: { ...(options.looks ?? {}) } },
+        host: {
+          toggleMute: () => {
+            audio.setMuted(!audio.muted);
+            mounted?.setMuted(audio.muted);
+            return audio.muted;
+          },
+        },
+        complete: (result, outcome, evidence) => {
+          options.onComplete(result, outcome, evidence);
+          renderResults(screen, { ...run, result, evidence }, t);
+          screen.querySelector('[data-again]')?.addEventListener('click', () => void again());
+          screen.querySelector('[data-done]')?.addEventListener('click', () => options.onExit());
+          void stopGame().then(show);
+        },
+        diagnostic: report,
+      });
+      mounted.start();
+    } catch (err) {
+      report({ level: 'error', code: 'apk3d/start-failed', message: String(err) });
+      renderGate(screen, undefined, t);
+      screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());
+      show();
+    } finally {
+      starting = false;
+    }
+  }
+
+  async function stopGame(): Promise<void> {
+    const current = mounted;
+    mounted = null;
+    if (current) await current.destroy().catch((err: unknown) => report({ level: 'warning', code: 'apk3d/destroy-failed', message: String(err) }));
+  }
+
+  async function again(): Promise<void> {
+    await stopGame();
+    await start();
+  }
+
+  const showBriefing = (): void => {
+    const b = cartridge.briefing(i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!), story);
+    renderBriefing(screen, b, story, cartridge.manifest, options.icon ?? '🎮', t);
+    screen.classList.add('on');
+    screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());
+    screen.querySelector('[data-start]')?.addEventListener('click', () => void start());
+  };
+
+  if (options.skipBriefing) void start();
+  else showBriefing();
+
+  return {
+    diagnostics,
+    mounted: () => mounted,
+    async destroy() {
+      destroyed = true;
+      compact.removeEventListener('change', onCompose);
+      stopUnlock();
+      await stopGame();
+      container.innerHTML = '';
+      container.classList.remove('apk3d-story-host');
+    },
+  };
+}
