@@ -1,5 +1,5 @@
 import { Role } from "@/types/enum";
-import { ROLES, ROLE_HIERARCHY as AUTH_ROLE_HIERARCHY } from "@reading-advantage/auth";
+import { ROLES, ROLE_HIERARCHY as AUTH_ROLE_HIERARCHY } from "@reading-advantage/auth/roles";
 
 // Permission types for different navigation items
 export type Permission =
