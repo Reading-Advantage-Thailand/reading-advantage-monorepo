@@ -368,6 +368,21 @@
       "types": "./dist/rune-forge-chamber/strings.en.d.ts",
       "import": "./dist/rune-forge-chamber/strings.en.js",
       "default": "./dist/rune-forge-chamber/strings.en.js"
+    },
+    "./dragon-rider": {
+      "types": "./dist/dragon-rider/index.d.ts",
+      "import": "./dist/dragon-rider/index.js",
+      "default": "./dist/dragon-rider/index.js"
+    },
+    "./dragon-rider/manifest": {
+      "types": "./dist/dragon-rider/manifest.d.ts",
+      "import": "./dist/dragon-rider/manifest.js",
+      "default": "./dist/dragon-rider/manifest.js"
+    },
+    "./dragon-rider/strings": {
+      "types": "./dist/dragon-rider/strings.en.d.ts",
+      "import": "./dist/dragon-rider/strings.en.js",
+      "default": "./dist/dragon-rider/strings.en.js"
     }
   },
   "files": [

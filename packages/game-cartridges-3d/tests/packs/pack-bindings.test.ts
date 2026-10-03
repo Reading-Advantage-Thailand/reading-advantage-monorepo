@@ -47,6 +47,8 @@ import { manifest as abyssalWell } from '../../src/abyssal-well/manifest.js';
 import { WELL_MODELS } from '../../src/abyssal-well/view/well.js';
 import { manifest as runeForgeChamber } from '../../src/rune-forge-chamber/manifest.js';
 import { FORGE_MODELS } from '../../src/rune-forge-chamber/view/forge.js';
+import { manifest as dragonRider } from '../../src/dragon-rider/manifest.js';
+import { RIDER_MODELS } from '../../src/dragon-rider/view/land.js';
 import { manifest as potionRush } from '../../src/potion-rush/manifest.js';
 import { SHOP_MODELS } from '../../src/potion-rush/view/shop.js';
 import { HEROES } from '../../src/shared/battle/stage2d.js';
@@ -79,6 +81,7 @@ const GAMES = {
   'griffin-sky-joust': { manifest: griffinSkyJoust, named: SCENE_MODELS },
   'abyssal-well': { manifest: abyssalWell, named: WELL_MODELS },
   'rune-forge-chamber': { manifest: runeForgeChamber, named: FORGE_MODELS },
+  'dragon-rider': { manifest: dragonRider, named: RIDER_MODELS },
   'rpg-battle': { manifest: rpgBattle, named: vaultModels() },
   'paladins-twin-soul': { manifest: paladinsTwinSoul, named: vaultModels() },
   'rune-match': { manifest: runeMatch, named: vaultModels() },

@@ -71,6 +71,7 @@ export const GAME_LOADS: Readonly<Record<string, GameModelLoad>> = {
   'griffin-sky-joust': { models: ['dragon-fire', 'giant-bat', 'oak-tree', 'pine-tree', 'rock-cluster', 'bush'], hero: true },
   'abyssal-well': { models: ['boulder', 'candle-cluster', 'crystal-cluster', 'dead-tree', 'dirt-ground', 'goblin-warrior', 'lantern', 'mushroom-cluster', 'rock-cluster', 'skeleton', 'slime', 'well'], hero: true },
   'rune-forge-chamber': { models: ['wood-floor', 'plaster-wall', 'plaster-wall-window', 'shelf', 'fireplace', 'workbench', 'crystal-cluster', 'candle-cluster', 'barrel', 'crate', 'sack', 'lantern'], hero: true },
+  'dragon-rider': { models: ['dragon-fire', 'pine-tree', 'oak-tree', 'rock-cluster', 'boulder', 'bush'], hero: true },
   'potion-rush': { packs: ['potion-shop'], models: ['farmer', 'villager', 'innkeeper', 'guard', 'druid', 'orc-warrior', 'goblin-warrior', 'skeleton'], hero: true },
   'dragon-flight': {
     models: ['ancient-oak', 'barn', 'boulder', 'bush', 'cottage', 'dragon-fire', 'farm-field', 'fence', 'fern', 'hay-bale', 'oak-tree', 'pine-tree', 'rock-cluster', 'well', 'wildflowers', 'grass-ground', 'forest-ground', 'river-straight', 'arch', 'gate'],
