@@ -383,6 +383,21 @@
       "types": "./dist/dragon-rider/strings.en.d.ts",
       "import": "./dist/dragon-rider/strings.en.js",
       "default": "./dist/dragon-rider/strings.en.js"
+    },
+    "./griffin-riders-escape": {
+      "types": "./dist/griffin-riders-escape/index.d.ts",
+      "import": "./dist/griffin-riders-escape/index.js",
+      "default": "./dist/griffin-riders-escape/index.js"
+    },
+    "./griffin-riders-escape/manifest": {
+      "types": "./dist/griffin-riders-escape/manifest.d.ts",
+      "import": "./dist/griffin-riders-escape/manifest.js",
+      "default": "./dist/griffin-riders-escape/manifest.js"
+    },
+    "./griffin-riders-escape/strings": {
+      "types": "./dist/griffin-riders-escape/strings.en.d.ts",
+      "import": "./dist/griffin-riders-escape/strings.en.js",
+      "default": "./dist/griffin-riders-escape/strings.en.js"
     }
   },
   "files": [
