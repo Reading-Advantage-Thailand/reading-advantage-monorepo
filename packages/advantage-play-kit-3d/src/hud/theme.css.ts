@@ -38,11 +38,17 @@ export default `/*
   --safe-b: env(safe-area-inset-bottom, 0px);
 }
 
-* {
+/* The :where() keeps the specificity of the button rule at zero, as the old global button rule had, so a
+   game's own button styles (word tags, buttons of the HUD) always win over it. */
+/* Page-level rules apply only to a standalone page (html.apk3d-page) or inside the game host. They
+   must not reach a host app (Primary Advantage), whose own theme owns html, body, and buttons. */
+html.apk3d-page *,
+.apk3d-story-host,
+.apk3d-story-host * {
   box-sizing: border-box;
 }
-html,
-body {
+html.apk3d-page,
+html.apk3d-page body {
   margin: 0;
   height: 100%;
   background: var(--night);
@@ -51,7 +57,13 @@ body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
 }
-button {
+.apk3d-story-host {
+  background: var(--night);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-tap-highlight-color: transparent;
+}
+:where(html.apk3d-page, .apk3d-story-host, .apk3d-hud) button {
   font: inherit;
   color: inherit;
   cursor: pointer;

@@ -59,7 +59,7 @@ export interface StoryGameOptions {
   /** `'phaser'` forces the 2D view; `'auto'` picks by device. */
   setting?: RendererSetting;
   hero?: string;
-  /** Helper mode (easier). */
+  /** Helper mode (easier: highlights the right answer). Off by default. */
   helper?: boolean;
   /** Hero id to the color preset the student unlocked. */
   looks?: Readonly<Record<string, string>>;
@@ -176,7 +176,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
         composition: composition(),
         i18n: i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!),
         audio,
-        options: { helper: options.helper ?? true, hero: options.hero ?? 'knight', looks: { ...(options.looks ?? {}) } },
+        options: { helper: options.helper ?? false, hero: options.hero ?? 'knight', looks: { ...(options.looks ?? {}) } },
         host: {
           toggleMute: () => {
             audio.setMuted(!audio.muted);
