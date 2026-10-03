@@ -3,8 +3,8 @@
 Owner lane: A. Starts first. Merge to the integration branch before other lanes rebase.
 
 ## Phase 0: Verify the audit (2 h)
-- [ ] Re-count `bcryptjs`, direct `drizzle-orm`, and tsc errors from a real run (the audit used grep only)
-- [ ] Record the Primary database state: ledger doctor output, missing user columns
+- [x] Re-count `bcryptjs`, direct `drizzle-orm`, and tsc errors from a real run (the audit used grep only) (a6a919730)
+- [x] Record the Primary database state: ledger doctor output, missing user columns (a6a919730)
 
 ## Phase 1: Type gate (FR-1)
 - [ ] Remove the flag, list all tsc errors, fix them in batches
@@ -12,19 +12,19 @@ Owner lane: A. Starts first. Merge to the integration branch before other lanes 
 - [ ] Add `check-types` to CI
 
 ## Phase 2: Auth and passwords (FR-2, FR-3)
-- [ ] Browser-verify the 09-12 authorization tracks; write failing tests for any gap
+- [x] Browser-verify the 09-12 authorization tracks; write failing tests for any gap (590435b65, caf2b2ef8; AC-3 system actions unit-tested only, no SYSTEM login exists)
 - [x] Swap permissions to `@reading-advantage/auth` (b3bf3ef0e)
 - [x] Dual-read bcrypt/argon2 with rehash on login, with tests for both formats (b3bf3ef0e)
 
 ## Phase 3: Database (FR-4, FR-5, FR-8)
-- [ ] Additive migration for the missing user columns
-- [ ] Wire doctor + gate in `cloudbuild.yaml`
+- [x] Additive migration for the missing user columns — not needed for Primary (evidence/phase0-audit-recount.md)
+- [x] Wire doctor + gate in `cloudbuild.yaml` (546e9d330, 950cb8764, 4bb1876ee)
 - [ ] Write the Tutor read test and run it on a restored production copy
 - [ ] Check id mapping and `articleId` resolution for Tutor
 
 ## Phase 4: Defects (FR-6, FR-7)
 - [ ] Sept 15 QA FR-1..FR-8 with regression tests
-- [ ] streak, paused clause, upload routes
+- [ ] streak, paused clause, upload routes; school-B assignment read returns 500, must be 403
 - [ ] Housekeeping and the tech-debt entry
 
 ## Gates
