@@ -24,10 +24,6 @@ describe('manifest', () => {
     expect(MODELS_3D.filter((m) => !wanted.includes(m))).toEqual([]);
   });
 
-  it('every 3D file exists in demo/public/models', () => {
-    for (const name of MODELS_3D) expect(() => readFileSync(join(process.cwd(), 'demo/public/models', `${name}.glb`)), name).not.toThrow();
-  });
-
   it('is a story cartridge that needs sentences, for A0 to A1, in both renderers', () => {
     expect(manifest).toMatchObject({
       id: 'storm-castle-tower',

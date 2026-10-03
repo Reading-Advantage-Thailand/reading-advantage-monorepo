@@ -392,7 +392,7 @@ describe('contract', () => {
   it('every event type is named once, and the core has no clock or Math.random', () => {
     expect(new Set(STORM_CASTLE_TOWER_EVENT_TYPES).size).toBe(STORM_CASTLE_TOWER_EVENT_TYPES.length);
     for (const file of ['sim.ts', 'content.ts', 'evidence.ts', 'types.ts']) {
-      const source = readFileSync(join(process.cwd(), 'src/games/storm-castle-tower/core', file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+      const source = readFileSync(join(process.cwd(), 'src/storm-castle-tower/core', file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
       expect(source, file).not.toMatch(/Math\.random|Date\.now|performance\.now|setTimeout/);
     }
   });
