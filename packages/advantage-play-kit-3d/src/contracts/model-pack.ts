@@ -66,6 +66,7 @@ export const GAME_LOADS: Readonly<Record<string, GameModelLoad>> = {
   'realm-carver': { models: ['bandit', 'boulder', 'bush', 'fence', 'forest-ground', 'goblin-warrior', 'grass-ground', 'mushroom-cluster', 'oak-tree', 'pine-tree', 'rock-cluster', 'slime', 'wildflowers'], hero: true },
   'alchemists-synthesis': { models: ['wood-floor', 'plaster-wall', 'plaster-wall-window', 'shelf', 'bottle', 'fireplace', 'candle-cluster', 'cauldron', 'barrel', 'crate', 'sack', 'lantern', 'counter', 'mushroom', 'apple', 'pumpkin', 'crystal-cluster', 'bread'], hero: true },
   'enchanted-library': { models: ['candle-cluster', 'chandelier', 'lantern', 'plaster-wall', 'plaster-wall-window', 'shelf', 'skeleton', 'wood-floor'], hero: true },
+  'gryphon-patrol': { models: ['dragon-fire', 'giant-bat', 'oak-tree', 'pine-tree', 'ancient-oak', 'bush', 'fern', 'wildflowers', 'boulder', 'rock-cluster', 'cottage', 'barn', 'well', 'hay-bale'], hero: true },
   'potion-rush': { packs: ['potion-shop'], models: ['farmer', 'villager', 'innkeeper', 'guard', 'druid', 'orc-warrior', 'goblin-warrior', 'skeleton'], hero: true },
   'dragon-flight': {
     models: ['ancient-oak', 'barn', 'boulder', 'bush', 'cottage', 'dragon-fire', 'farm-field', 'fence', 'fern', 'hay-bale', 'oak-tree', 'pine-tree', 'rock-cluster', 'well', 'wildflowers', 'grass-ground', 'forest-ground', 'river-straight', 'arch', 'gate'],

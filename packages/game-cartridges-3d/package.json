@@ -293,6 +293,21 @@
       "types": "./dist/enchanted-library/strings.en.d.ts",
       "import": "./dist/enchanted-library/strings.en.js",
       "default": "./dist/enchanted-library/strings.en.js"
+    },
+    "./gryphon-patrol": {
+      "types": "./dist/gryphon-patrol/index.d.ts",
+      "import": "./dist/gryphon-patrol/index.js",
+      "default": "./dist/gryphon-patrol/index.js"
+    },
+    "./gryphon-patrol/manifest": {
+      "types": "./dist/gryphon-patrol/manifest.d.ts",
+      "import": "./dist/gryphon-patrol/manifest.js",
+      "default": "./dist/gryphon-patrol/manifest.js"
+    },
+    "./gryphon-patrol/strings": {
+      "types": "./dist/gryphon-patrol/strings.en.d.ts",
+      "import": "./dist/gryphon-patrol/strings.en.js",
+      "default": "./dist/gryphon-patrol/strings.en.js"
     }
   },
   "files": [
