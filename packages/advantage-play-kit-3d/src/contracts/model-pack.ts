@@ -61,6 +61,7 @@ export const GAME_LOADS: Readonly<Record<string, GameModelLoad>> = {
   'archers-revenge': { packs: ['sunken-vault'], models: ['skeleton', 'giant-bat', 'mimic', 'dragon-fire'], hero: true },
   'astral-mage': { models: ['crystal-cluster', 'candle-cluster', 'lantern', 'dirt-ground', 'boulder', 'rock-cluster', 'dead-tree', 'pine-tree', 'mushroom-cluster'], hero: true },
   'spellweavers-run': { models: ['ancient-oak', 'arch', 'boulder', 'bush', 'fern', 'gate', 'oak-tree', 'pine-tree', 'rock-cluster', 'wildflowers'], hero: true },
+  'haunted-library': { models: ['candle-cluster', 'chandelier', 'door', 'giant-bat', 'lantern', 'plaster-wall', 'plaster-wall-window', 'shelf', 'skeleton', 'torch-sconce', 'wood-floor'], hero: true },
   'potion-rush': { packs: ['potion-shop'], models: ['farmer', 'villager', 'innkeeper', 'guard', 'druid', 'orc-warrior', 'goblin-warrior', 'skeleton'], hero: true },
   'dragon-flight': {
     models: ['ancient-oak', 'barn', 'boulder', 'bush', 'cottage', 'dragon-fire', 'farm-field', 'fence', 'fern', 'hay-bale', 'oak-tree', 'pine-tree', 'rock-cluster', 'well', 'wildflowers', 'grass-ground', 'forest-ground', 'river-straight', 'arch', 'gate'],

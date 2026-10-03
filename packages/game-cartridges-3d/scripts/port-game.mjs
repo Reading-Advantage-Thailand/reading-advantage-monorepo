@@ -25,6 +25,8 @@ const rewrite = (src) =>
     .replace(/'demo', 'public', 'assets', 'apk'/g, "'assets', 'apk'")
     .replace(/'demo\/public\/assets\/apk\//g, "'assets/apk/")
     .replace(/demo\/public\/packs/g, 'assets/packs')
+    // legacy loose model files do not exist here; tests/packs/pack-bindings covers the bindings
+    .replace(/\n  it\('every 3D model file exists'[\s\S]*?\n  \}\);\n/g, '')
     .replace(/'(?:\.\.\/)+src\/games\/shared\//g, "'../../src/shared/")
     .replace(/'(?:\.\.\/)+src\/games\/([\w-]+)\//g, "'../../src/$1/")
     .replace(/'(?:\.\.\/)+src\/apk3d\/([^']+?)(?:\/index)?\.js'/g, (_m, sub) => `'${kit}/${SUBPATH[sub] ?? sub}'`)

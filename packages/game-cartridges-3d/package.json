@@ -218,6 +218,21 @@
       "types": "./dist/spellweavers-run/strings.en.d.ts",
       "import": "./dist/spellweavers-run/strings.en.js",
       "default": "./dist/spellweavers-run/strings.en.js"
+    },
+    "./haunted-library": {
+      "types": "./dist/haunted-library/index.d.ts",
+      "import": "./dist/haunted-library/index.js",
+      "default": "./dist/haunted-library/index.js"
+    },
+    "./haunted-library/manifest": {
+      "types": "./dist/haunted-library/manifest.d.ts",
+      "import": "./dist/haunted-library/manifest.js",
+      "default": "./dist/haunted-library/manifest.js"
+    },
+    "./haunted-library/strings": {
+      "types": "./dist/haunted-library/strings.en.d.ts",
+      "import": "./dist/haunted-library/strings.en.js",
+      "default": "./dist/haunted-library/strings.en.js"
     }
   },
   "files": [
