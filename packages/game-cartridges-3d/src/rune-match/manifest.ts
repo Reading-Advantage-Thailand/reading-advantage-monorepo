@@ -22,6 +22,9 @@ export const FILES_2D: readonly string[] = [
   ...Object.entries(ENEMY_CLIPS_2D).flatMap(([kind, clips]) => clips.map((c) => `${kind}.${c}`)),
 ];
 
+/** The models the 3D view loads, by Forge asset name: the keys of `RuntimeEdition3D.bindings`. It plays on the shared battle stage, so the list is the Monster Encounters one. */
+export const MODELS_3D: readonly string[] = ['altar', 'arch', 'barrel', 'bone-pile', 'brazier', 'candle-cluster', 'cauldron', 'cell-bars', 'chains', 'cleric', 'crate', 'crystal-cluster', 'door', 'dragon-fire', 'floor', 'floor-cracked', 'gate', 'giant-bat', 'gold-pile', 'hanging-cage', 'knight', 'mimic', 'moss-tuft', 'mushroom-cluster', 'pillar', 'rubble', 'sarcophagus', 'skeleton', 'stairs', 'torch-sconce', 'treasure-chest', 'walkway', 'wall', 'wall-corner', 'wizard'];
+
 export const manifest = validateCartridge3DManifest({
   id: 'rune-match',
   title: 'Rune Match',
@@ -34,8 +37,8 @@ export const manifest = validateCartridge3DManifest({
   levels: ['Pre-A1', 'A0', 'A0+', 'A1'],
   needs: { vocabulary: 6 },
   requiredAssetBindings: [...FILES_2D],
-  requiredModelBindings: [],
-  packs: ['heroes', 'sunken-vault', 'dungeon-monsters'],
+  requiredModelBindings: [...MODELS_3D],
+  packs: ['heroes', 'dungeon-monsters', 'sunken-vault', 'potion-shop', 'outdoor-props'],
   capabilities: [...APK3D_CAPABILITIES],
   device: {},
   budget: { firstLoadBytes: 4_000_000, totalBytes: 6_000_000 },

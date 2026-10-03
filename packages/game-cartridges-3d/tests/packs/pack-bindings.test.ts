@@ -18,6 +18,7 @@ import { CHURCHYARD_MODELS } from '../../src/hero-vs-zombie/view/churchyard.js';
 import { manifest as labyrinth } from '../../src/labyrinth/manifest.js';
 import { MAZE_MODELS } from '../../src/labyrinth/view/maze.js';
 import { manifest as monsterEncounters } from '../../src/monster-encounters/manifest.js';
+import { manifest as runeMatch } from '../../src/rune-match/manifest.js';
 import { manifest as potionRush } from '../../src/potion-rush/manifest.js';
 import { SHOP_MODELS } from '../../src/potion-rush/view/shop.js';
 import { HEROES } from '../../src/shared/battle/stage2d.js';
@@ -36,6 +37,7 @@ const GAMES = {
   'devourer-slime': { manifest: devourerSlime, named: CLEARING_MODELS },
   'hero-vs-zombie': { manifest: heroVsZombie, named: CHURCHYARD_MODELS },
   'monster-encounters': { manifest: monsterEncounters, named: vaultModels() },
+  'rune-match': { manifest: runeMatch, named: vaultModels() },
 } as const;
 
 describe('3D editions', () => {

@@ -70,7 +70,7 @@ export const GAME_LOADS: Readonly<Record<string, GameModelLoad>> = {
     hero: true,
   },
   labyrinth: { models: ['arch', 'floor', 'floor-cracked', 'gate', 'pillar', 'torch-sconce', 'wall', 'goblin-warrior'], hero: true },
-  'rune-match': {},
+  'rune-match': { packs: ['sunken-vault'], models: ['skeleton', 'giant-bat', 'mimic', 'dragon-fire'], hero: true },
 };
 
 /** What the generator measures in one runtime GLB. */

@@ -78,6 +78,11 @@
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js",
       "default": "./dist/react/index.js"
+    },
+    "./i18n/scan": {
+      "types": "./dist/i18n/scan.d.ts",
+      "import": "./dist/i18n/scan.js",
+      "default": "./dist/i18n/scan.js"
     }
   },
   "files": [
