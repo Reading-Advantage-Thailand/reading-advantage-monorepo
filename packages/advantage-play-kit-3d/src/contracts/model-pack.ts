@@ -58,6 +58,9 @@ export const GAME_LOADS: Readonly<Record<string, GameModelLoad>> = {
   'rpg-battle': { packs: ['sunken-vault'], models: ['skeleton', 'giant-bat', 'mimic', 'dragon-fire'], hero: true },
   'paladins-twin-soul': { packs: ['sunken-vault'], models: ['skeleton', 'giant-bat', 'mimic', 'dragon-fire'], hero: true },
   'village-guardian': { models: ['ancient-oak', 'bandit', 'barn', 'bush', 'cottage', 'druid', 'farm-field', 'farmer', 'fence', 'goblin-warrior', 'grass-ground', 'guard', 'hay-bale', 'innkeeper', 'oak-tree', 'pine-tree', 'rock-cluster', 'villager', 'well', 'wildflowers'], hero: true },
+  'archers-revenge': { packs: ['sunken-vault'], models: ['skeleton', 'giant-bat', 'mimic', 'dragon-fire'], hero: true },
+  'astral-mage': { models: ['crystal-cluster', 'candle-cluster', 'lantern', 'dirt-ground', 'boulder', 'rock-cluster', 'dead-tree', 'pine-tree', 'mushroom-cluster'], hero: true },
+  'spellweavers-run': { models: ['ancient-oak', 'arch', 'boulder', 'bush', 'fern', 'gate', 'oak-tree', 'pine-tree', 'rock-cluster', 'wildflowers'], hero: true },
   'potion-rush': { packs: ['potion-shop'], models: ['farmer', 'villager', 'innkeeper', 'guard', 'druid', 'orc-warrior', 'goblin-warrior', 'skeleton'], hero: true },
   'dragon-flight': {
     models: ['ancient-oak', 'barn', 'boulder', 'bush', 'cottage', 'dragon-fire', 'farm-field', 'fence', 'fern', 'hay-bale', 'oak-tree', 'pine-tree', 'rock-cluster', 'well', 'wildflowers', 'grass-ground', 'forest-ground', 'river-straight', 'arch', 'gate'],

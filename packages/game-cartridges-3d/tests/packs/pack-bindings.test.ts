@@ -23,6 +23,11 @@ import { manifest as villageGuardian } from '../../src/village-guardian/manifest
 import { VILLAGE_MODELS } from '../../src/village-guardian/view/village.js';
 import { manifest as monsterEncounters } from '../../src/monster-encounters/manifest.js';
 import { manifest as runeMatch } from '../../src/rune-match/manifest.js';
+import { manifest as archersRevenge } from '../../src/archers-revenge/manifest.js';
+import { manifest as astralMage } from '../../src/astral-mage/manifest.js';
+import { CIRCLE_MODELS } from '../../src/astral-mage/view/circle.js';
+import { manifest as spellweaversRun } from '../../src/spellweavers-run/manifest.js';
+import { RUN_MODELS } from '../../src/spellweavers-run/view/land.js';
 import { manifest as potionRush } from '../../src/potion-rush/manifest.js';
 import { SHOP_MODELS } from '../../src/potion-rush/view/shop.js';
 import { HEROES } from '../../src/shared/battle/stage2d.js';
@@ -42,6 +47,9 @@ const GAMES = {
   'hero-vs-zombie': { manifest: heroVsZombie, named: CHURCHYARD_MODELS },
   'monster-encounters': { manifest: monsterEncounters, named: vaultModels() },
   'village-guardian': { manifest: villageGuardian, named: VILLAGE_MODELS },
+  'archers-revenge': { manifest: archersRevenge, named: vaultModels() },
+  'astral-mage': { manifest: astralMage, named: CIRCLE_MODELS },
+  'spellweavers-run': { manifest: spellweaversRun, named: RUN_MODELS },
   'rpg-battle': { manifest: rpgBattle, named: vaultModels() },
   'paladins-twin-soul': { manifest: paladinsTwinSoul, named: vaultModels() },
   'rune-match': { manifest: runeMatch, named: vaultModels() },

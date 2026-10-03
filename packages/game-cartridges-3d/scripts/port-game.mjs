@@ -24,6 +24,7 @@ const rewrite = (src) =>
     .replace(/'demo', 'public', 'packs'/g, "'assets', 'packs'")
     .replace(/'demo', 'public', 'assets', 'apk'/g, "'assets', 'apk'")
     .replace(/'demo\/public\/assets\/apk\//g, "'assets/apk/")
+    .replace(/demo\/public\/packs/g, 'assets/packs')
     .replace(/'(?:\.\.\/)+src\/games\/shared\//g, "'../../src/shared/")
     .replace(/'(?:\.\.\/)+src\/games\/([\w-]+)\//g, "'../../src/$1/")
     .replace(/'(?:\.\.\/)+src\/apk3d\/([^']+?)(?:\/index)?\.js'/g, (_m, sub) => `'${kit}/${SUBPATH[sub] ?? sub}'`)

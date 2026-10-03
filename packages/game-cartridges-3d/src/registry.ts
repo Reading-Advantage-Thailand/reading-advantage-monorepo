@@ -13,6 +13,12 @@ import { manifest as paladinsTwinSoul } from './paladins-twin-soul/manifest.js';
 import paladinsTwinSoulStrings from './paladins-twin-soul/strings.en.js';
 import { manifest as villageGuardian } from './village-guardian/manifest.js';
 import villageGuardianStrings from './village-guardian/strings.en.js';
+import { manifest as archersRevenge } from './archers-revenge/manifest.js';
+import archersRevengeStrings from './archers-revenge/strings.en.js';
+import { manifest as astralMage } from './astral-mage/manifest.js';
+import astralMageStrings from './astral-mage/strings.en.js';
+import { manifest as spellweaversRun } from './spellweavers-run/manifest.js';
+import spellweaversRunStrings from './spellweavers-run/strings.en.js';
 import { manifest as runeMatch } from './rune-match/manifest.js';
 import runeMatchStrings from './rune-match/strings.en.js';
 import { manifest as labyrinth } from './labyrinth/manifest.js';
@@ -140,10 +146,37 @@ export const GAMES: GameEntry[] = [
     manifest: villageGuardian,
     load: () => import('./village-guardian/index.js').then((m) => m.cartridge),
   },
+  {
+    id: 'archers-revenge',
+    icon: '🏹',
+    tint: ['#22c55e', '#14532d'],
+    titleKey: 'archersRevenge.title',
+    pitchKey: 'archersRevenge.pitch',
+    manifest: archersRevenge,
+    load: () => import('./archers-revenge/index.js').then((m) => m.cartridge),
+  },
+  {
+    id: 'astral-mage',
+    icon: '🔮',
+    tint: ['#c4b5fd', '#4c1d95'],
+    titleKey: 'astralMage.title',
+    pitchKey: 'astralMage.pitch',
+    manifest: astralMage,
+    load: () => import('./astral-mage/index.js').then((m) => m.cartridge),
+  },
+  {
+    id: 'spellweavers-run',
+    icon: '🪄',
+    tint: ['#a78bfa', '#4c1d95'],
+    titleKey: 'spellweaversRun.title',
+    pitchKey: 'spellweaversRun.pitch',
+    manifest: spellweaversRun,
+    load: () => import('./spellweavers-run/index.js').then((m) => m.cartridge),
+  },
 ];
 
 /** The English catalogs of every game (the host merges them with its own). */
-export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings];
+export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings];
 
 export const playable = (g: GameEntry): boolean => !!g.load && !!g.manifest;
 

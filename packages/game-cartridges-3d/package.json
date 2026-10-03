@@ -173,6 +173,51 @@
       "types": "./dist/village-guardian/strings.en.d.ts",
       "import": "./dist/village-guardian/strings.en.js",
       "default": "./dist/village-guardian/strings.en.js"
+    },
+    "./archers-revenge": {
+      "types": "./dist/archers-revenge/index.d.ts",
+      "import": "./dist/archers-revenge/index.js",
+      "default": "./dist/archers-revenge/index.js"
+    },
+    "./archers-revenge/manifest": {
+      "types": "./dist/archers-revenge/manifest.d.ts",
+      "import": "./dist/archers-revenge/manifest.js",
+      "default": "./dist/archers-revenge/manifest.js"
+    },
+    "./archers-revenge/strings": {
+      "types": "./dist/archers-revenge/strings.en.d.ts",
+      "import": "./dist/archers-revenge/strings.en.js",
+      "default": "./dist/archers-revenge/strings.en.js"
+    },
+    "./astral-mage": {
+      "types": "./dist/astral-mage/index.d.ts",
+      "import": "./dist/astral-mage/index.js",
+      "default": "./dist/astral-mage/index.js"
+    },
+    "./astral-mage/manifest": {
+      "types": "./dist/astral-mage/manifest.d.ts",
+      "import": "./dist/astral-mage/manifest.js",
+      "default": "./dist/astral-mage/manifest.js"
+    },
+    "./astral-mage/strings": {
+      "types": "./dist/astral-mage/strings.en.d.ts",
+      "import": "./dist/astral-mage/strings.en.js",
+      "default": "./dist/astral-mage/strings.en.js"
+    },
+    "./spellweavers-run": {
+      "types": "./dist/spellweavers-run/index.d.ts",
+      "import": "./dist/spellweavers-run/index.js",
+      "default": "./dist/spellweavers-run/index.js"
+    },
+    "./spellweavers-run/manifest": {
+      "types": "./dist/spellweavers-run/manifest.d.ts",
+      "import": "./dist/spellweavers-run/manifest.js",
+      "default": "./dist/spellweavers-run/manifest.js"
+    },
+    "./spellweavers-run/strings": {
+      "types": "./dist/spellweavers-run/strings.en.d.ts",
+      "import": "./dist/spellweavers-run/strings.en.js",
+      "default": "./dist/spellweavers-run/strings.en.js"
     }
   },
   "files": [
