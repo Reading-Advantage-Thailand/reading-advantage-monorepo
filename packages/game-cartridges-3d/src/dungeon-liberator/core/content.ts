@@ -1,0 +1,74 @@
+/**
+ * Dungeon Liberator content: the shift's rooms from a story. A `StoryInput` keeps its sentence
+ * ids and paragraphs for the evidence; a plain APK `SentenceInput` gets ids `s-1`, `s-2`, ...
+ * and words from `term.split(' ')`. A room takes a sentence of 3 to 7 words; the shift is up to
+ * 5 rooms in a seeded order (fewer when the story has fewer such sentences).
+ */
+import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
+import { VILLAGER_KINDS, type RoomSentence, type VillagerKind } from './types.js';
+
+/** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
+export type DungeonLiberatorInput = StoryInput | SentenceInput;
+
+export function isSentenceInput(input: DungeonLiberatorInput): input is SentenceInput {
+  return Array.isArray(input);
+}
+
+/** A sentence as the shift needs it: id, text, words, and the reading look-back paragraph. */
+export interface ShiftSentence {
+  id: string;
+  text: string;
+  words: string[];
+  translation?: string;
+  paragraph?: number;
+}
+
+/** The words a room can hold: 3 to 7 villagers. */
+export const ROOM_WORDS = { min: 3, max: 7 } as const;
+
+/** The sentences of the input, in the input's order. Sentences with fewer than 2 words are skipped. */
+export function sentencesOf(input: DungeonLiberatorInput): ShiftSentence[] {
+  if (isSentenceInput(input)) {
+    return input
+      .map((item, i) => {
+        const text = item.term.trim();
+        const words = text.split(/\s+/).filter((w) => w.length > 0);
+        const sentence: ShiftSentence = { id: `s-${i + 1}`, text, words };
+        if (item.translation.trim().length > 0) sentence.translation = item.translation;
+        return sentence;
+      })
+      .filter((s) => s.words.length >= 2);
+  }
+  return input.sentences.map((s) => {
+    const sentence: ShiftSentence = { id: s.id, text: s.text, words: s.words.slice() };
+    if (s.translation !== undefined) sentence.translation = s.translation;
+    if (s.paragraph !== undefined) sentence.paragraph = s.paragraph;
+    return sentence;
+  });
+}
+
+/**
+ * The sentences a room can take: those of 3 to 7 words. When the input has none of that
+ * length, every sentence qualifies (a short APK list still plays).
+ */
+export function roomSentencesOf(input: DungeonLiberatorInput): ShiftSentence[] {
+  const all = sentencesOf(input);
+  const fit = all.filter((s) => s.words.length >= ROOM_WORDS.min && s.words.length <= ROOM_WORDS.max);
+  return fit.length > 0 ? fit : all;
+}
+
+/** The villager kinds of a room: the seeded list, cycled when the sentence has more words than kinds. */
+export function villagerKindsOf(rng: Rng, count: number): VillagerKind[] {
+  const kinds: VillagerKind[] = [];
+  while (kinds.length < count) kinds.push(...rng.shuffle(VILLAGER_KINDS));
+  return kinds.slice(0, count);
+}
+
+/** The rooms of a shift: up to `maxRooms` sentences, each once, in a seeded order. */
+export function shiftOf(input: DungeonLiberatorInput, rng: Rng, maxRooms: number): RoomSentence[] {
+  return rng
+    .shuffle(roomSentencesOf(input))
+    .slice(0, Math.max(0, maxRooms))
+    .map((s, i) => ({ ...s, roomId: `room-${i + 1}`, refusals: 0, started: false, cleared: false }));
+}

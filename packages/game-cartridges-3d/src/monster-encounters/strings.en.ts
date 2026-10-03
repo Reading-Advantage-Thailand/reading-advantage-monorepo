@@ -1,0 +1,45 @@
+/** English UI text of Monster Encounters (catalog scope `monsterEncounters`). */
+export default {
+  monsterEncounters: {
+    title: 'Monster Encounters',
+    pitch: 'Use the story’s words to beat the monsters.',
+    subtitle: 'Turn-based battle',
+    briefing: {
+      objective: 'Help the Knight, the Wizard, and the Cleric clear the Sunken Vault.',
+      instructions: {
+        read: { title: 'Read the challenge', description: 'Each turn, one hero needs a word, a sentence, or an answer from the story.' },
+        answer: { title: 'Answer to attack', description: 'A right answer is a hit. The Cleric’s right answers also heal.' },
+        look: { title: 'Look back', description: 'Not sure? Tap 📖 Story to read the story again. There is no timer.' },
+      },
+      controls: { touch: { label: 'Tap', action: 'Choose an answer or a word' }, pointer: { label: 'Click', action: 'Choose an answer or a word' } },
+      learningPreview: 'Words and sentences from your story',
+      tip: 'A wrong answer comes back later, so you can try it again.',
+      start: 'Start the quest ⚔️',
+    },
+    hud: {
+      place: 'The Sunken Vault',
+      progress: '{index}/{count} · {name}',
+      courage: 'Courage',
+      story: '📖 Story',
+      turn: '{name}’s turn',
+      again: 'Try this one again',
+      ask: {
+        word: 'What does this word mean?',
+        fill: 'Which word goes in the gap?',
+        sentence: 'Tap the words to make the sentence.',
+        question: 'Answer the question about the story.',
+      },
+      tray: { empty: 'Tap the words in order', clear: 'Clear', check: 'Check ✓' },
+      right: 'Great! ✓',
+      wrong: 'Not quite. The answer is <b>{answer}</b>',
+      lookInStory: '📖 Look in the story',
+      continue: 'Continue',
+      miss: 'Miss!',
+      courageLost: '-1 ❤',
+      courageGained: '+1 ❤',
+      rest: { title: 'Take a deep breath', text: 'The heroes rest together and feel brave again.' },
+      victory: { title: 'Victory!', text: 'The Sunken Vault is safe.' },
+    },
+    heroes: { knight: 'Knight', wizard: 'Wizard', cleric: 'Cleric' },
+  },
+} as const;

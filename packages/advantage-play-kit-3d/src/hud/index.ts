@@ -4,3 +4,4 @@ export { attachJoystick, type Joystick, type JoystickOptions } from './joystick.
 export { HudRoot, type PopKind } from './root.js';
 export { Board, type BoardCell, type Cell } from './board.js';
 export { arrange, Banner, Card, choose, feedback, markChoice, pips, sentenceBar, type ArrangeLabels, type ChoiceOption, type FeedbackAction } from './widgets.js';
+export { installCss } from './css.js';

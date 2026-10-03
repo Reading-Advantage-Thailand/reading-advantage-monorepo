@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "id": "fun-day-at-the-beach",
+  "title": "Fun Day at the Beach",
+  "series": "Origins 2",
+  "lesson": 4,
+  "level": "A0",
+  "genre": "Seasonal & Weather",
+  "paragraphs": [
+    {
+      "text": "This is Mia. She is a girl. This is Tom. He is a boy. This is Pip. Pip is a dog. They are friends. They are at the beach. The sun is big. The sun is warm. This is good sun. They see sand. Sand is yellow.",
+      "translation": "นี่คือเมีย เธอเป็นเด็กผู้หญิง นี่คือทอม เขาเป็นเด็กผู้ชาย นี่คือปิ๊ป ปิ๊ปเป็นสุนัข พวกเขาเป็นเพื่อนกัน พวกเขาอยู่ที่ชายหาด ดวงอาทิตย์ดวงใหญ่ ดวงอาทิตย์อบอุ่น นี่คือแดดที่ดี พวกเขาเห็นทราย ทรายเป็นสีเหลือง"
+    },
+    {
+      "text": "This sand is soft. Mia likes sand. She plays in sand. She builds a castle. This castle is big. Tom likes sand. He plays in sand. He builds a castle too. This castle is big. Pip looks at the castle. Pip is happy. Pip runs on sand. Mia likes water.",
+      "translation": "ทรายนี้อ่อนนุ่ม เมียชอบทราย เธอเล่นทราย เธอสร้างปราสาท ปราสาทนี้ใหญ่ ทอมชอบทราย เขาเล่นทราย เขาสร้างปราสาทด้วย ปราสาทนี้ใหญ่ ปิ๊ปมองดูปราสาท ปิ๊ปมีความสุข ปิ๊ปวิ่งบนทราย เมียชอบน้ำ"
+    },
+    {
+      "text": "She swims in water. The water is blue. Tom likes water. He swims in water. The water is cool. Pip likes water. Pip runs in water. Pip sees a fish. This is fun. They are happy. This is a good day.",
+      "translation": "เธอว่ายน้ำในน้ำ น้ำเป็นสีฟ้า ทอมชอบน้ำ เขาว่ายน้ำในน้ำ น้ำเย็นสบาย ปิ๊ปชอบน้ำ ปิ๊ปวิ่งในน้ำ ปิ๊ปเห็นปลา นี่คือความสนุก พวกเขามีความสุข นี่คือวันที่ดี"
+    }
+  ],
+  "images": [
+    "img-1.webp",
+    "img-2.webp",
+    "img-3.webp"
+  ],
+  "vocabulary": [
+    {
+      "id": "w-beach",
+      "term": "beach",
+      "translation": "ชายหาด",
+      "definition": "An area of sand or small stones next to the sea."
+    },
+    {
+      "id": "w-warm",
+      "term": "warm",
+      "translation": "อบอุ่น",
+      "definition": "A little bit hot in a pleasant way."
+    },
+    {
+      "id": "w-sand",
+      "term": "sand",
+      "translation": "ทราย",
+      "definition": "Tiny grains of crushed rock found at the beach."
+    },
+    {
+      "id": "w-soft",
+      "term": "soft",
+      "translation": "นุ่ม",
+      "definition": "Easy to press and not hard."
+    },
+    {
+      "id": "w-builds",
+      "term": "builds",
+      "translation": "สร้าง",
+      "definition": "To make something by putting parts together."
+    },
+    {
+      "id": "w-castle",
+      "term": "castle",
+      "translation": "ปราสาท",
+      "definition": "A big building, often made of sand for fun."
+    },
+    {
+      "id": "w-happy",
+      "term": "happy",
+      "translation": "มีความสุข",
+      "definition": "Feeling good and full of joy."
+    },
+    {
+      "id": "w-swims",
+      "term": "swims",
+      "translation": "ว่ายน้ำ",
+      "definition": "To move through water by moving your body."
+    },
+    {
+      "id": "w-cool",
+      "term": "cool",
+      "translation": "เย็นสบาย",
+      "definition": "Slightly cold in a way that feels good."
+    },
+    {
+      "id": "w-friends",
+      "term": "friends",
+      "translation": "เพื่อนๆ",
+      "definition": "People who like to spend time and play together."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "This is Mia.",
+      "words": [
+        "This",
+        "is",
+        "Mia."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "This sand is soft.",
+      "words": [
+        "This",
+        "sand",
+        "is",
+        "soft."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-3",
+      "text": "She is a girl.",
+      "words": [
+        "She",
+        "is",
+        "a",
+        "girl."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-4",
+      "text": "This is Tom.",
+      "words": [
+        "This",
+        "is",
+        "Tom."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-5",
+      "text": "He is a boy.",
+      "words": [
+        "He",
+        "is",
+        "a",
+        "boy."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-6",
+      "text": "This is Pip.",
+      "words": [
+        "This",
+        "is",
+        "Pip."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-7",
+      "text": "Mia likes sand.",
+      "words": [
+        "Mia",
+        "likes",
+        "sand."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-8",
+      "text": "She plays in sand.",
+      "words": [
+        "She",
+        "plays",
+        "in",
+        "sand."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-9",
+      "text": "She builds a castle.",
+      "words": [
+        "She",
+        "builds",
+        "a",
+        "castle."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-10",
+      "text": "She swims in water.",
+      "words": [
+        "She",
+        "swims",
+        "in",
+        "water."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-11",
+      "text": "The water is blue.",
+      "words": [
+        "The",
+        "water",
+        "is",
+        "blue."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-12",
+      "text": "Tom likes water.",
+      "words": [
+        "Tom",
+        "likes",
+        "water."
+      ],
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "They are at the ___.",
+      "answer": "beach",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "The sun is ___.",
+      "answer": "warm",
+      "paragraph": 0
+    },
+    {
+      "id": "f-3",
+      "sentence": "They see ___.",
+      "answer": "sand",
+      "paragraph": 0
+    },
+    {
+      "id": "f-4",
+      "sentence": "This sand is ___.",
+      "answer": "soft",
+      "paragraph": 1
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "Is Pip happy?",
+      "options": [
+        "yes",
+        "no",
+        "maybe"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q-2",
+      "question": "Who is Pip?",
+      "options": [
+        "a dog",
+        "a boy",
+        "a girl"
+      ],
+      "answer": 0,
+      "paragraph": 0
+    },
+    {
+      "id": "q-3",
+      "question": "Where are Mia and Tom?",
+      "options": [
+        "at the beach",
+        "in the house",
+        "in the school"
+      ],
+      "answer": 0,
+      "paragraph": 0
+    },
+    {
+      "id": "q-4",
+      "question": "What color is the sand?",
+      "options": [
+        "blue",
+        "yellow",
+        "red"
+      ],
+      "answer": 1,
+      "paragraph": 0
+    }
+  ],
+  "source": {
+    "file": "primary/origins-2-a0/04-Fun Day at the Beach _workbook.json",
+    "url": "https://primary.reading-advantage.com/student/read/cmgqx6jsj02n6t79bndt5dfz3"
+  }
+}

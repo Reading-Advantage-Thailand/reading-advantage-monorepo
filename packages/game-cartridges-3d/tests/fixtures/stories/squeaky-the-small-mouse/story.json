@@ -1,0 +1,316 @@
+{
+  "schemaVersion": 1,
+  "id": "squeaky-the-small-mouse",
+  "title": "Squeaky, the Small Mouse",
+  "series": "Origins 3.1",
+  "lesson": 14,
+  "level": "A0",
+  "genre": "Animal Adventures",
+  "paragraphs": [
+    {
+      "text": "This is Squeaky. Squeaky is a mouse. Squeaky is very small. Squeaky is a brown mouse. Squeaky has a home. Squeaky's home is under a big tree. Squeaky likes her home. Her home is warm. Squeaky sees green grass. Squeaky sees red flowers. Squeaky is happy here. Squeaky is a happy mouse. One day, Squeaky sees food.",
+      "translation": "นี่คือสควีกี้ สควีกี้เป็นหนู สควีกี้ตัวเล็กมาก สควีกี้เป็นหนูสีน้ำตาล สควีกี้มีบ้าน บ้านของสควีกี้อยู่ใต้ต้นไม้ใหญ่ สควีกี้ชอบบ้านของเธอ บ้านของเธออบอุ่น สควีกี้เห็นหญ้าสีเขียว สควีกี้เห็นดอกไม้สีแดง สควีกี้มีความสุขที่นี่ สควีกี้เป็นหนูที่มีความสุข วันหนึ่ง สควีกี้เห็นอาหาร"
+    },
+    {
+      "text": "The food is big cheese. The cheese is yellow. The cheese is very big. The big cheese is in a big box. The box is a brown box. The box is very big. Other mice see the box. Other mice are big mice. Big mice want the cheese. Big mice are sad. Big mice are not in the box. The big box is closed for big mice. Squeaky looks at the box.",
+      "translation": "อาหารคือชีสชิ้นใหญ่ ชีสเป็นสีเหลือง ชีสชิ้นใหญ่มาก ชีสชิ้นใหญ่อยู่ในกล่องใหญ่ กล่องเป็นกล่องสีน้ำตาล กล่องใหญ่มาก หนูตัวอื่นเห็นกล่อง หนูตัวอื่นเป็นหนูตัวใหญ่ หนูตัวใหญ่ต้องการชีส หนูตัวใหญ่เสียใจ หนูตัวใหญ่ไม่ได้อยู่ในกล่อง กล่องใหญ่ปิดสำหรับหนูตัวใหญ่ สควีกี้มองไปที่กล่อง"
+    },
+    {
+      "text": "Squeaky sees a small hole. The small hole is on the brown box. Squeaky is a small mouse. Squeaky runs to the hole. Squeaky goes in the hole. Squeaky is in the box. Squeaky is in the big box. Squeaky gets the big yellow cheese. Squeaky eats the cheese. Squeaky is very happy. Squeaky is a clever mouse. Small is very good. Small is special.",
+      "translation": "สควีกี้เห็นรูเล็กๆ รูเล็กๆ อยู่บนกล่องสีน้ำตาล สควีกี้เป็นหนูตัวเล็ก สควีกี้วิ่งไปที่รู สควีกี้เข้าไปในรู สควีกี้อยู่ในกล่อง สควีกี้อยู่ในกล่องใหญ่ สควีกี้ได้ชีสสีเหลืองชิ้นใหญ่ สควีกี้กินชีส สควีกี้มีความสุขมาก สควีกี้เป็นหนูที่ฉลาด การเป็นตัวเล็กนั้นดีมาก การเป็นตัวเล็กนั้นพิเศษ"
+    }
+  ],
+  "images": [
+    "img-1.webp",
+    "img-2.webp",
+    "img-3.webp"
+  ],
+  "vocabulary": [
+    {
+      "id": "w-mouse",
+      "term": "mouse",
+      "translation": "หนู",
+      "definition": "A small furry animal with a long tail."
+    },
+    {
+      "id": "w-home",
+      "term": "home",
+      "translation": "บ้าน",
+      "definition": "The place where someone lives."
+    },
+    {
+      "id": "w-under",
+      "term": "under",
+      "translation": "ใต้",
+      "definition": "In or to a lower position than something."
+    },
+    {
+      "id": "w-warm",
+      "term": "warm",
+      "translation": "อบอุ่น",
+      "definition": "A little bit hot in a pleasant way."
+    },
+    {
+      "id": "w-grass",
+      "term": "grass",
+      "translation": "หญ้า",
+      "definition": "A common green plant that grows on the ground."
+    },
+    {
+      "id": "w-flower",
+      "term": "flower",
+      "translation": "ดอกไม้",
+      "definition": "The colorful part of a plant."
+    },
+    {
+      "id": "w-cheese",
+      "term": "cheese",
+      "translation": "ชีส",
+      "definition": "A yellow or white food made from milk."
+    },
+    {
+      "id": "w-closed",
+      "term": "closed",
+      "translation": "ปิด",
+      "definition": "Not open so that people or things cannot go through."
+    },
+    {
+      "id": "w-hole",
+      "term": "hole",
+      "translation": "รู",
+      "definition": "An empty space or opening in something solid."
+    },
+    {
+      "id": "w-clever",
+      "term": "clever",
+      "translation": "ฉลาด",
+      "definition": "Quick to learn and understand things."
+    },
+    {
+      "id": "w-special",
+      "term": "special",
+      "translation": "พิเศษ",
+      "definition": "Better, greater, or different from what is usual."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "This is Squeaky.",
+      "words": [
+        "This",
+        "is",
+        "Squeaky."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "The food is big cheese.",
+      "words": [
+        "The",
+        "food",
+        "is",
+        "big",
+        "cheese."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-3",
+      "text": "Squeaky is a mouse.",
+      "words": [
+        "Squeaky",
+        "is",
+        "a",
+        "mouse."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-4",
+      "text": "Squeaky is very small.",
+      "words": [
+        "Squeaky",
+        "is",
+        "very",
+        "small."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-5",
+      "text": "Squeaky is a brown mouse.",
+      "words": [
+        "Squeaky",
+        "is",
+        "a",
+        "brown",
+        "mouse."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-6",
+      "text": "Squeaky has a home.",
+      "words": [
+        "Squeaky",
+        "has",
+        "a",
+        "home."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-7",
+      "text": "The cheese is yellow.",
+      "words": [
+        "The",
+        "cheese",
+        "is",
+        "yellow."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-8",
+      "text": "The cheese is very big.",
+      "words": [
+        "The",
+        "cheese",
+        "is",
+        "very",
+        "big."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-9",
+      "text": "The big cheese is in a big box.",
+      "words": [
+        "The",
+        "big",
+        "cheese",
+        "is",
+        "in",
+        "a",
+        "big",
+        "box."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-10",
+      "text": "Squeaky sees a small hole.",
+      "words": [
+        "Squeaky",
+        "sees",
+        "a",
+        "small",
+        "hole."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-11",
+      "text": "The small hole is on the brown box.",
+      "words": [
+        "The",
+        "small",
+        "hole",
+        "is",
+        "on",
+        "the",
+        "brown",
+        "box."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-12",
+      "text": "Squeaky is a small mouse.",
+      "words": [
+        "Squeaky",
+        "is",
+        "a",
+        "small",
+        "mouse."
+      ],
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "Squeaky is a ___.",
+      "answer": "mouse",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "Squeaky has a ___.",
+      "answer": "home",
+      "paragraph": 0
+    },
+    {
+      "id": "f-3",
+      "sentence": "Squeaky's home is ___ a big tree.",
+      "answer": "under",
+      "paragraph": 0
+    },
+    {
+      "id": "f-4",
+      "sentence": "Her home is ___.",
+      "answer": "warm",
+      "paragraph": 0
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "What is Squeaky?",
+      "options": [
+        "a cat",
+        "a mouse",
+        "a dog"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "q-2",
+      "question": "Where is Squeaky's home?",
+      "options": [
+        "in a box",
+        "under a big tree",
+        "on a flower"
+      ],
+      "answer": 1,
+      "paragraph": 0
+    },
+    {
+      "id": "q-3",
+      "question": "What food does Squeaky see?",
+      "options": [
+        "apple",
+        "cheese",
+        "grass"
+      ],
+      "answer": 1,
+      "paragraph": 1
+    },
+    {
+      "id": "q-4",
+      "question": "What color is the cheese?",
+      "options": [
+        "red",
+        "yellow",
+        "green"
+      ],
+      "answer": 1
+    }
+  ],
+  "source": {
+    "file": "primary/origins-3.1-a0/14-Squeaky, the Small Mouse _workbook.json",
+    "url": "https://primary.reading-advantage.com/student/read/cmgqwaqno01zlt79bff8rxuri"
+  }
+}

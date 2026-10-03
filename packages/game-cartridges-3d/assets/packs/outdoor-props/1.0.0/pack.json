@@ -1,0 +1,242 @@
+{
+ "id": "outdoor-props",
+ "version": "1.0.0",
+ "root": "packs/outdoor-props/1.0.0",
+ "files": {
+  "ancient-oak": {
+   "id": "ancient-oak",
+   "path": "ancient-oak.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 134156,
+   "triangles": 2500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/ancient-oak.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "ffce7d2",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "boulder": {
+   "id": "boulder",
+   "path": "boulder.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 114892,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/boulder.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2b1f1c9",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "bush": {
+   "id": "bush",
+   "path": "bush.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 186252,
+   "triangles": 2648,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/bush.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "fafdb4f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "campfire-out": {
+   "id": "campfire-out",
+   "path": "campfire-out.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 105580,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/campfire-out.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "ffce7d2",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "dead-tree": {
+   "id": "dead-tree",
+   "path": "dead-tree.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 108904,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/dead-tree.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "ffce7d2",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "fern": {
+   "id": "fern",
+   "path": "fern.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 122244,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/fern.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "3cf9bdf",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "mushroom-cluster": {
+   "id": "mushroom-cluster",
+   "path": "mushroom-cluster.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 147260,
+   "triangles": 1508,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/mushroom-cluster.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "oak-tree": {
+   "id": "oak-tree",
+   "path": "oak-tree.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 49936,
+   "triangles": 4013,
+   "textureSize": 0,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/oak-tree.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2b1f1c9",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "pine-tree": {
+   "id": "pine-tree",
+   "path": "pine-tree.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 134860,
+   "triangles": 2500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/pine-tree.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "fafdb4f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "rock-cluster": {
+   "id": "rock-cluster",
+   "path": "rock-cluster.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 89344,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/rock-cluster.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f55715f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "tall-grass": {
+   "id": "tall-grass",
+   "path": "tall-grass.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 143752,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/tall-grass.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "ffce7d2",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "tree-stump": {
+   "id": "tree-stump",
+   "path": "tree-stump.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 119708,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/tree-stump.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "ffce7d2",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "wildflowers": {
+   "id": "wildflowers",
+   "path": "wildflowers.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 135528,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/wildflowers.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "fafdb4f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  }
+ },
+ "byteSize": 1592416
+}

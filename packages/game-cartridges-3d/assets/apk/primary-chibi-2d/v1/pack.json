@@ -1,0 +1,9151 @@
+{
+ "id": "primary-chibi-2d",
+ "version": "1.0.0",
+ "root": "/assets/apk/primary-chibi-2d/v1",
+ "files": {
+  "prop.apple": {
+   "id": "prop.apple",
+   "path": "props/apple.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 16,
+   "height": 16,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 338,
+   "sha256": "936c4c1ff8fdf5a89ed3a2ca39450b04bb794c6f4d2fa96e4cf6b63bbeb37434",
+   "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6875
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/apple.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.arch": {
+   "id": "prop.arch",
+   "path": "props/arch.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 244,
+   "height": 244,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 6061,
+   "sha256": "950a342386395219bd39366d17efafb0c048d9fe48ab8566ad7a1fe835ed8f6e",
+   "grid": {
+    "frameWidth": 244,
+    "frameHeight": 244,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7213114754098361
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/arch.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "bandit.attack": {
+   "id": "bandit.attack",
+   "path": "sprites/bandit/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 744,
+   "height": 496,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 30478,
+   "sha256": "a03cde7a02d68352bad20171462d9027faba7c2def44602ffe3e8bad50ddf1e6",
+   "grid": {
+    "frameWidth": 124,
+    "frameHeight": 124,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6854838709677419
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/bandit.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "bandit.death": {
+   "id": "bandit.death",
+   "path": "sprites/bandit/death.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 1080,
+   "height": 720,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 34440,
+   "sha256": "40f457e7b6513a3186e1970fc66180f4181bd53f4730c9f1825ee8538623539b",
+   "grid": {
+    "frameWidth": 180,
+    "frameHeight": 180,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "death.s": {
+     "name": "death.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.w": {
+     "name": "death.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.n": {
+     "name": "death.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.e": {
+     "name": "death.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6277777777777778
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/bandit.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "bandit.hit": {
+   "id": "bandit.hit",
+   "path": "sprites/bandit/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 792,
+   "height": 528,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 29548,
+   "sha256": "8912e0df23634a055a96db93f99f7cf2a5021719fab3867b089be7086066c9bc",
+   "grid": {
+    "frameWidth": 132,
+    "frameHeight": 132,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6742424242424242
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/bandit.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "bandit.idle": {
+   "id": "bandit.idle",
+   "path": "sprites/bandit/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 672,
+   "height": 448,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 30090,
+   "sha256": "f99c4a1f3a4339d4f1380d60da5583855e8b9929d4c0eb7d072dcb7563e3fbd7",
+   "grid": {
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7053571428571429
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/bandit.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "bandit.walk": {
+   "id": "bandit.walk",
+   "path": "sprites/bandit/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 696,
+   "height": 464,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 28585,
+   "sha256": "f742d40c77c4ca6c908856056f42aac6b3e84be8398aa7dade6b4bf3dee29cde",
+   "grid": {
+    "frameWidth": 116,
+    "frameHeight": 116,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6982758620689655
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/bandit.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.bottle": {
+   "id": "prop.bottle",
+   "path": "props/bottle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 20,
+   "height": 20,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 274,
+   "sha256": "da701b6b297682dc2c5cf195c4806c48c54ee631c95bc395eb5d13913715e257",
+   "grid": {
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.75
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/bottle.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.boulder": {
+   "id": "prop.boulder",
+   "path": "props/boulder.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 128,
+   "height": 128,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 2634,
+   "sha256": "fb126a7b50b3bdd629375f1d05d69e7b2f3da0c644331fa2721da4d9ab4d9c42",
+   "grid": {
+    "frameWidth": 128,
+    "frameHeight": 128,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.640625
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/boulder.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.bread": {
+   "id": "prop.bread",
+   "path": "props/bread.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 36,
+   "height": 36,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 601,
+   "sha256": "790238374b44200eed58fad9ed3a666fa097781e5ed351a63317f782f0c6b2d5",
+   "grid": {
+    "frameWidth": 36,
+    "frameHeight": 36,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6111111111111112
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/bread.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.bush": {
+   "id": "prop.bush",
+   "path": "props/bush.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 104,
+   "height": 104,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 3049,
+   "sha256": "a6fb25cdfacb76fc9ea7bc044f7ea58156913da1ca90eb374d1f83a121f84f89",
+   "grid": {
+    "frameWidth": 104,
+    "frameHeight": 104,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6538461538461539
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/bush.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.cauldron": {
+   "id": "prop.cauldron",
+   "path": "props/cauldron.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 108,
+   "height": 108,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 2914,
+   "sha256": "4f281dbbddfe8dd9e00af20694bf7c2727b111b4b866e1e67e671f32f1a0e6b9",
+   "grid": {
+    "frameWidth": 108,
+    "frameHeight": 108,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6944444444444444
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/cauldron.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "cleric.attack": {
+   "id": "cleric.attack",
+   "path": "sprites/cleric/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 984,
+   "height": 1312,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 82179,
+   "sha256": "c9c6e41ec4c5eb74f9c7ce358365a730df8293248b91ced8a0d6de6c7474a038",
+   "grid": {
+    "frameWidth": 164,
+    "frameHeight": 164,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.sw": {
+     "name": "attack.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.nw": {
+     "name": "attack.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.ne": {
+     "name": "attack.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.se": {
+     "name": "attack.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6402439024390244
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/cleric.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "cleric.attack2": {
+   "id": "cleric.attack2",
+   "path": "sprites/cleric/attack2.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 792,
+   "height": 1056,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 73588,
+   "sha256": "06569d60096469922ea815156b8afaab971e4e99444729ebc48f15aaeba76e04",
+   "grid": {
+    "frameWidth": 132,
+    "frameHeight": 132,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "attack2.s": {
+     "name": "attack2.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.sw": {
+     "name": "attack2.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.w": {
+     "name": "attack2.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.nw": {
+     "name": "attack2.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.n": {
+     "name": "attack2.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.ne": {
+     "name": "attack2.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.e": {
+     "name": "attack2.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.se": {
+     "name": "attack2.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6666666666666666
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/cleric.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "cleric.hit": {
+   "id": "cleric.hit",
+   "path": "sprites/cleric/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 840,
+   "height": 1120,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 67648,
+   "sha256": "cc89acadba74e5a91a4d7478c61488c0c25542ec29bf5f24ac0ea42a3e5f973b",
+   "grid": {
+    "frameWidth": 140,
+    "frameHeight": 140,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.sw": {
+     "name": "hit.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.nw": {
+     "name": "hit.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.ne": {
+     "name": "hit.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.se": {
+     "name": "hit.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6571428571428571
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/cleric.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "cleric.idle": {
+   "id": "cleric.idle",
+   "path": "sprites/cleric/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 720,
+   "height": 960,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 70738,
+   "sha256": "77ad80932273886a0d0a1ca4f281f9b74ea7e27f30ffaf3682d2e2b08b77f037",
+   "grid": {
+    "frameWidth": 120,
+    "frameHeight": 120,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.sw": {
+     "name": "idle.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.nw": {
+     "name": "idle.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.ne": {
+     "name": "idle.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.se": {
+     "name": "idle.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6833333333333333
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/cleric.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "cleric.run": {
+   "id": "cleric.run",
+   "path": "sprites/cleric/run.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 792,
+   "height": 1056,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 74484,
+   "sha256": "bbb68c9f7ffdbcd869d32f676577143f77b0b6f1e270f3254bb02c903e520912",
+   "grid": {
+    "frameWidth": 132,
+    "frameHeight": 132,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "run.s": {
+     "name": "run.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.sw": {
+     "name": "run.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.w": {
+     "name": "run.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.nw": {
+     "name": "run.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.n": {
+     "name": "run.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.ne": {
+     "name": "run.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.e": {
+     "name": "run.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.se": {
+     "name": "run.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6666666666666666
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/cleric.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "cleric.victory": {
+   "id": "cleric.victory",
+   "path": "sprites/cleric/victory.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 840,
+   "height": 1120,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 86518,
+   "sha256": "05c75ae4a1866f5f85300dda1de7ca365f6092a7512701a0b5bc0cbbface7eda",
+   "grid": {
+    "frameWidth": 140,
+    "frameHeight": 140,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "victory.s": {
+     "name": "victory.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.sw": {
+     "name": "victory.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.w": {
+     "name": "victory.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.nw": {
+     "name": "victory.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.n": {
+     "name": "victory.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.ne": {
+     "name": "victory.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.e": {
+     "name": "victory.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.se": {
+     "name": "victory.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6785714285714286
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/cleric.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "cleric.walk": {
+   "id": "cleric.walk",
+   "path": "sprites/cleric/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 768,
+   "height": 1024,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 70460,
+   "sha256": "a398a283ca52c18c20b4303d2c3a9c3b0af4f5c40c1ddd8fd27fbfee72f85d81",
+   "grid": {
+    "frameWidth": 128,
+    "frameHeight": 128,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.sw": {
+     "name": "walk.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.nw": {
+     "name": "walk.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.ne": {
+     "name": "walk.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.se": {
+     "name": "walk.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.671875
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/cleric.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.cottage": {
+   "id": "prop.cottage",
+   "path": "props/cottage.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 308,
+   "height": 308,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 20642,
+   "sha256": "2f0ffc64ccc197935f0dce36e066f06fff7c4b95dbd8705383c21d0fe8141504",
+   "grid": {
+    "frameWidth": 308,
+    "frameHeight": 308,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.672077922077922
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/cottage.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.crystal-cluster": {
+   "id": "prop.crystal-cluster",
+   "path": "props/crystal-cluster.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 48,
+   "height": 48,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 1027,
+   "sha256": "fd43c171d8bc43d70c6e251f39c5d2932f917200b5b2973c0202d83fdc244ea0",
+   "grid": {
+    "frameWidth": 48,
+    "frameHeight": 48,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7083333333333334
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/crystal-cluster.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "dragon-fire.attack": {
+   "id": "dragon-fire.attack",
+   "path": "sprites/dragon-fire/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 816,
+   "height": 1088,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 80294,
+   "sha256": "12eaeb5901e7749c7ad68251dfa285a456680bea68a42bb9c79690ba0da75083",
+   "grid": {
+    "frameWidth": 136,
+    "frameHeight": 136,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.sw": {
+     "name": "attack.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.nw": {
+     "name": "attack.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.ne": {
+     "name": "attack.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.se": {
+     "name": "attack.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6764705882352942
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/dragon-fire.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "dragon-fire.death": {
+   "id": "dragon-fire.death",
+   "path": "sprites/dragon-fire/death.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 1032,
+   "height": 1376,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 100957,
+   "sha256": "f1dcf002a82fdf0128f8cab389bdb657bec196ac97157030791349a99dddd43f",
+   "grid": {
+    "frameWidth": 172,
+    "frameHeight": 172,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "death.s": {
+     "name": "death.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.sw": {
+     "name": "death.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.w": {
+     "name": "death.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.nw": {
+     "name": "death.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.n": {
+     "name": "death.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.ne": {
+     "name": "death.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.e": {
+     "name": "death.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.se": {
+     "name": "death.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6337209302325582
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/dragon-fire.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "dragon-fire.fly": {
+   "id": "dragon-fire.fly",
+   "path": "sprites/dragon-fire/fly.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 936,
+   "height": 1248,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 77456,
+   "sha256": "a64ee1eec3817e590a26cf236bc768131a4627df6b0b19f7db827e34dc3c29bf",
+   "grid": {
+    "frameWidth": 156,
+    "frameHeight": 156,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "fly.s": {
+     "name": "fly.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.sw": {
+     "name": "fly.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.w": {
+     "name": "fly.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.nw": {
+     "name": "fly.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.n": {
+     "name": "fly.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.ne": {
+     "name": "fly.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.e": {
+     "name": "fly.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.se": {
+     "name": "fly.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6987179487179487
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/dragon-fire.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "dragon-fire.hit": {
+   "id": "dragon-fire.hit",
+   "path": "sprites/dragon-fire/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 816,
+   "height": 1088,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 79599,
+   "sha256": "07702d9e0e471ffc53e6fbaf384cdbab15383fcd67689a469fe897910e2fc930",
+   "grid": {
+    "frameWidth": 136,
+    "frameHeight": 136,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.sw": {
+     "name": "hit.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.nw": {
+     "name": "hit.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.ne": {
+     "name": "hit.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.se": {
+     "name": "hit.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6691176470588235
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/dragon-fire.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "dragon-fire.idle": {
+   "id": "dragon-fire.idle",
+   "path": "sprites/dragon-fire/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 840,
+   "height": 1120,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 80014,
+   "sha256": "ca755f1b5022bea75d84ee1214e939926ed71de4c721f5703e370e444a464a6c",
+   "grid": {
+    "frameWidth": 140,
+    "frameHeight": 140,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.sw": {
+     "name": "idle.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.nw": {
+     "name": "idle.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.ne": {
+     "name": "idle.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.se": {
+     "name": "idle.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6642857142857143
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/dragon-fire.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "dragon-fire.roar": {
+   "id": "dragon-fire.roar",
+   "path": "sprites/dragon-fire/roar.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 840,
+   "height": 1120,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 79478,
+   "sha256": "622c9e723dbc5613dfc22cc39d361aa270adb6dc7d7f0814432b5b4d7c814707",
+   "grid": {
+    "frameWidth": 140,
+    "frameHeight": 140,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "roar.s": {
+     "name": "roar.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.sw": {
+     "name": "roar.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.w": {
+     "name": "roar.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.nw": {
+     "name": "roar.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.n": {
+     "name": "roar.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.ne": {
+     "name": "roar.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.e": {
+     "name": "roar.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.se": {
+     "name": "roar.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6714285714285714
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/dragon-fire.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "dragon-fire.walk": {
+   "id": "dragon-fire.walk",
+   "path": "sprites/dragon-fire/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 864,
+   "height": 1152,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 66780,
+   "sha256": "ca009473bd02edafe73855dc6443c9f85bb746bf1dfd60f2f339f4c9a5017d05",
+   "grid": {
+    "frameWidth": 144,
+    "frameHeight": 144,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.sw": {
+     "name": "walk.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.nw": {
+     "name": "walk.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.ne": {
+     "name": "walk.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.se": {
+     "name": "walk.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6666666666666666
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/dragon-fire.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "druid.idle": {
+   "id": "druid.idle",
+   "path": "sprites/druid/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 816,
+   "height": 544,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 44860,
+   "sha256": "a5715a2a2ac0b1fe7a5ae814253f25c83a961a58eac3151e8797fa9c3e21aa13",
+   "grid": {
+    "frameWidth": 136,
+    "frameHeight": 136,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6838235294117647
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/druid.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "druid.victory": {
+   "id": "druid.victory",
+   "path": "sprites/druid/victory.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 840,
+   "height": 560,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 43313,
+   "sha256": "2253d6f3c4cd230dbd20492aa39761e7e4826e9df70c9025e36131356c3f4e13",
+   "grid": {
+    "frameWidth": 140,
+    "frameHeight": 140,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "victory.s": {
+     "name": "victory.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.w": {
+     "name": "victory.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.n": {
+     "name": "victory.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.e": {
+     "name": "victory.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6857142857142857
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/druid.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "druid.walk": {
+   "id": "druid.walk",
+   "path": "sprites/druid/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 792,
+   "height": 528,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 39194,
+   "sha256": "45cabff7a15f3ca35df5dde7230ccad3d384d4a24b02a9f0adc556282e7ff99c",
+   "grid": {
+    "frameWidth": 132,
+    "frameHeight": 132,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6893939393939394
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/druid.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "farmer.idle": {
+   "id": "farmer.idle",
+   "path": "sprites/farmer/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 696,
+   "height": 464,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 33035,
+   "sha256": "4d2e7cecfd82a68bafa7f77642a5f557c2bfe6f4aa0a37b5172c17cfae72f4e2",
+   "grid": {
+    "frameWidth": 116,
+    "frameHeight": 116,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6982758620689655
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/farmer.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "farmer.talk": {
+   "id": "farmer.talk",
+   "path": "sprites/farmer/talk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 696,
+   "height": 464,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 32395,
+   "sha256": "778c7bd34cbaca83efe9253c12e776aae8b4401f20e88555584616784a43bd25",
+   "grid": {
+    "frameWidth": 116,
+    "frameHeight": 116,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "talk.s": {
+     "name": "talk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "talk.w": {
+     "name": "talk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "talk.n": {
+     "name": "talk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "talk.e": {
+     "name": "talk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6982758620689655
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/farmer.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "farmer.walk": {
+   "id": "farmer.walk",
+   "path": "sprites/farmer/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 696,
+   "height": 464,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 31566,
+   "sha256": "aeccd8729e0d427d3f3312cdccdf87e0d3ca5544bc90bed224abede7eefdcd17",
+   "grid": {
+    "frameWidth": 116,
+    "frameHeight": 116,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6982758620689655
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/farmer.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "farmer.wave": {
+   "id": "farmer.wave",
+   "path": "sprites/farmer/wave.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 696,
+   "height": 464,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 22219,
+   "sha256": "176ccd70dcfb45d18086aeff56c580bda8078083933a38163bff0731ab435597",
+   "grid": {
+    "frameWidth": 116,
+    "frameHeight": 116,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "wave.s": {
+     "name": "wave.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "wave.w": {
+     "name": "wave.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "wave.n": {
+     "name": "wave.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "wave.e": {
+     "name": "wave.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6982758620689655
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/farmer.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.fence": {
+   "id": "prop.fence",
+   "path": "props/fence.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 160,
+   "height": 160,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 2024,
+   "sha256": "582a7376aa2bc5ff7cca88b618c16d94e58972e90f454d663af71fc5af9e0710",
+   "grid": {
+    "frameWidth": 160,
+    "frameHeight": 160,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.65625
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/fence.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.fern": {
+   "id": "prop.fern",
+   "path": "props/fern.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 80,
+   "height": 80,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 984,
+   "sha256": "43368757b619702097f6efa3aedd3ffe1a78202d5f617706655764fd7168893f",
+   "grid": {
+    "frameWidth": 80,
+    "frameHeight": 80,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.65
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/fern.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "giant-bat.attack": {
+   "id": "giant-bat.attack",
+   "path": "sprites/giant-bat/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 816,
+   "height": 544,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 23313,
+   "sha256": "1514c0d1d375f6b0f59a2d70dee8141deebe454352e3c539d6797e20bd06f6ab",
+   "grid": {
+    "frameWidth": 136,
+    "frameHeight": 136,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6764705882352942
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/giant-bat.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "giant-bat.death": {
+   "id": "giant-bat.death",
+   "path": "sprites/giant-bat/death.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 720,
+   "height": 480,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 29300,
+   "sha256": "fcf67f850da3c2b64b6612dbb2ded48e3c8f2c42f4098963225759b3f3fe686c",
+   "grid": {
+    "frameWidth": 120,
+    "frameHeight": 120,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "death.s": {
+     "name": "death.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.w": {
+     "name": "death.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.n": {
+     "name": "death.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.e": {
+     "name": "death.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6833333333333333
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/giant-bat.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "giant-bat.fly": {
+   "id": "giant-bat.fly",
+   "path": "sprites/giant-bat/fly.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 672,
+   "height": 448,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 26284,
+   "sha256": "836bdb4cb8e77deefe3607ab0a584735a0dead025944e1cb126441cf760ac0fe",
+   "grid": {
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "fly.s": {
+     "name": "fly.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.w": {
+     "name": "fly.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.n": {
+     "name": "fly.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "fly.e": {
+     "name": "fly.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6964285714285714
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/giant-bat.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "giant-bat.hit": {
+   "id": "giant-bat.hit",
+   "path": "sprites/giant-bat/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 696,
+   "height": 464,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 24572,
+   "sha256": "3d17a94fcac3b28f411cbddd0fa5dfb3bb092a688630fcf11b9b865c0c250530",
+   "grid": {
+    "frameWidth": 116,
+    "frameHeight": 116,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6896551724137931
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/giant-bat.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "giant-bat.idle": {
+   "id": "giant-bat.idle",
+   "path": "sprites/giant-bat/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 672,
+   "height": 448,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 26539,
+   "sha256": "88cb9ed5013499539b42389a072707a082645237d84f428d4cba33126c87adac",
+   "grid": {
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6964285714285714
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/giant-bat.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "giant-bat.screech": {
+   "id": "giant-bat.screech",
+   "path": "sprites/giant-bat/screech.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 720,
+   "height": 480,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 24330,
+   "sha256": "5c95868fdafa4fa27eb814adb992e3c019f05c0ccd747156109b505c293e92f8",
+   "grid": {
+    "frameWidth": 120,
+    "frameHeight": 120,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "screech.s": {
+     "name": "screech.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "screech.w": {
+     "name": "screech.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "screech.n": {
+     "name": "screech.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "screech.e": {
+     "name": "screech.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/giant-bat.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "goblin-warrior.idle": {
+   "id": "goblin-warrior.idle",
+   "path": "sprites/goblin-warrior/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 576,
+   "height": 384,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 24624,
+   "sha256": "444a45c4b4d7a670bf9859400e7ae34e3c944b82282971c636ecc4ade2266bf2",
+   "grid": {
+    "frameWidth": 96,
+    "frameHeight": 96,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.71875
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/goblin-warrior.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "goblin-warrior.taunt": {
+   "id": "goblin-warrior.taunt",
+   "path": "sprites/goblin-warrior/taunt.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 648,
+   "height": 432,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 24956,
+   "sha256": "f794fc6c39f602440c3aa78136b2947e1da8064c535577a39d4b68c499ab2fa5",
+   "grid": {
+    "frameWidth": 108,
+    "frameHeight": 108,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "taunt.s": {
+     "name": "taunt.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "taunt.w": {
+     "name": "taunt.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "taunt.n": {
+     "name": "taunt.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "taunt.e": {
+     "name": "taunt.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6944444444444444
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/goblin-warrior.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "goblin-warrior.walk": {
+   "id": "goblin-warrior.walk",
+   "path": "sprites/goblin-warrior/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 576,
+   "height": 384,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 26177,
+   "sha256": "ceef1b0f854181dc83d9e039ec589947419dc48f985520e2b61c93117f557485",
+   "grid": {
+    "frameWidth": 96,
+    "frameHeight": 96,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.71875
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/goblin-warrior.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "guard.idle": {
+   "id": "guard.idle",
+   "path": "sprites/guard/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 648,
+   "height": 432,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 29209,
+   "sha256": "9823afebf2c1930e52b5d82d06a1b61e5242fdedcad45a80ba3e231bfb83a7f8",
+   "grid": {
+    "frameWidth": 108,
+    "frameHeight": 108,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7407407407407407
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/guard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "guard.salute": {
+   "id": "guard.salute",
+   "path": "sprites/guard/salute.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 672,
+   "height": 448,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 25843,
+   "sha256": "dc83a87b387dbf072b1a07f7b55a6d5072703500407d77a2cd5232e1d81ba30c",
+   "grid": {
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "salute.s": {
+     "name": "salute.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "salute.w": {
+     "name": "salute.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "salute.n": {
+     "name": "salute.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "salute.e": {
+     "name": "salute.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7410714285714286
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/guard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "guard.walk": {
+   "id": "guard.walk",
+   "path": "sprites/guard/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 648,
+   "height": 432,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 29255,
+   "sha256": "0ae39cf1a46ee036b722ed510cb8081a34f8ec18f46c2fc62f3edac4a728cadf",
+   "grid": {
+    "frameWidth": 108,
+    "frameHeight": 108,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.75
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/guard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.hay-bale": {
+   "id": "prop.hay-bale",
+   "path": "props/hay-bale.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 104,
+   "height": 104,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 2625,
+   "sha256": "a56b6ab3edc8169e149425e83b1b087a2366f0f80f30d5c4daaff3f5de342673",
+   "grid": {
+    "frameWidth": 104,
+    "frameHeight": 104,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6923076923076923
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/hay-bale.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "innkeeper.idle": {
+   "id": "innkeeper.idle",
+   "path": "sprites/innkeeper/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 600,
+   "height": 400,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 25988,
+   "sha256": "154be27c0655f8dd007bb6a29078edf54cac6f61a3080cb2c2a45b1dfd75d11f",
+   "grid": {
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.73
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/innkeeper.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "innkeeper.talk": {
+   "id": "innkeeper.talk",
+   "path": "sprites/innkeeper/talk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 600,
+   "height": 400,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 25229,
+   "sha256": "a3b493bb7e4b39c97a36b3def126adcee223f06d6d5ae5593010a606f6b8d310",
+   "grid": {
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "talk.s": {
+     "name": "talk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "talk.w": {
+     "name": "talk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "talk.n": {
+     "name": "talk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "talk.e": {
+     "name": "talk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.73
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/innkeeper.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "innkeeper.walk": {
+   "id": "innkeeper.walk",
+   "path": "sprites/innkeeper/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 600,
+   "height": 400,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 25181,
+   "sha256": "79d1efa055051d2e152094c87433c264892349b4682423f7537b83af2779d543",
+   "grid": {
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.73
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/innkeeper.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "innkeeper.wave": {
+   "id": "innkeeper.wave",
+   "path": "sprites/innkeeper/wave.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 600,
+   "height": 400,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 17791,
+   "sha256": "394f251bc48f5ce70156d6d4ebf4f5b16c83a02f725e88fe0eccf1ee214347c7",
+   "grid": {
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "wave.s": {
+     "name": "wave.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "wave.w": {
+     "name": "wave.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "wave.n": {
+     "name": "wave.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "wave.e": {
+     "name": "wave.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.73
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/innkeeper.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "knight.attack": {
+   "id": "knight.attack",
+   "path": "sprites/knight/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 840,
+   "height": 1120,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 70628,
+   "sha256": "e86dbb2a557a6584a2ba97d3f4c013628838762ce7cb82c01131f49d7883e766",
+   "grid": {
+    "frameWidth": 140,
+    "frameHeight": 140,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.sw": {
+     "name": "attack.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.nw": {
+     "name": "attack.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.ne": {
+     "name": "attack.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.se": {
+     "name": "attack.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6928571428571428
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/knight.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "knight.attack2": {
+   "id": "knight.attack2",
+   "path": "sprites/knight/attack2.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 792,
+   "height": 1056,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 67504,
+   "sha256": "49751c47c6185601fa048a8ea63f7b42db05f0bdb69866eba8d85ce59665082f",
+   "grid": {
+    "frameWidth": 132,
+    "frameHeight": 132,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "attack2.s": {
+     "name": "attack2.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.sw": {
+     "name": "attack2.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.w": {
+     "name": "attack2.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.nw": {
+     "name": "attack2.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.n": {
+     "name": "attack2.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.ne": {
+     "name": "attack2.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.e": {
+     "name": "attack2.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.se": {
+     "name": "attack2.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7045454545454546
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/knight.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "knight.hit": {
+   "id": "knight.hit",
+   "path": "sprites/knight/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 768,
+   "height": 1024,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 68594,
+   "sha256": "41865f4caabafe18a613f80e113a8966ba50b7793ab6a6a18bef84c5a4f45190",
+   "grid": {
+    "frameWidth": 128,
+    "frameHeight": 128,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.sw": {
+     "name": "hit.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.nw": {
+     "name": "hit.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.ne": {
+     "name": "hit.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.se": {
+     "name": "hit.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7109375
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/knight.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "knight.idle": {
+   "id": "knight.idle",
+   "path": "sprites/knight/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 720,
+   "height": 960,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 71011,
+   "sha256": "615717cfef1607a443a72a1668c2b1c0668a025736f818831dc4c36b0f8c9110",
+   "grid": {
+    "frameWidth": 120,
+    "frameHeight": 120,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.sw": {
+     "name": "idle.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.nw": {
+     "name": "idle.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.ne": {
+     "name": "idle.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.se": {
+     "name": "idle.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.725
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/knight.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "knight.run": {
+   "id": "knight.run",
+   "path": "sprites/knight/run.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 768,
+   "height": 1024,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 72595,
+   "sha256": "9483541c46b9417316cad5bcc530defbc45ca6b5a472d41264a941ad54dad08b",
+   "grid": {
+    "frameWidth": 128,
+    "frameHeight": 128,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "run.s": {
+     "name": "run.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.sw": {
+     "name": "run.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.w": {
+     "name": "run.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.nw": {
+     "name": "run.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.n": {
+     "name": "run.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.ne": {
+     "name": "run.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.e": {
+     "name": "run.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.se": {
+     "name": "run.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7109375
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/knight.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "knight.victory": {
+   "id": "knight.victory",
+   "path": "sprites/knight/victory.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 720,
+   "height": 960,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 65020,
+   "sha256": "5b331fc33d8f49ee6dda1924dc69fda3c2fea6b1155a0cf0d4f5d8bb391cd9fd",
+   "grid": {
+    "frameWidth": 120,
+    "frameHeight": 120,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "victory.s": {
+     "name": "victory.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.sw": {
+     "name": "victory.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.w": {
+     "name": "victory.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.nw": {
+     "name": "victory.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.n": {
+     "name": "victory.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.ne": {
+     "name": "victory.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.e": {
+     "name": "victory.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.se": {
+     "name": "victory.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.725
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/knight.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "knight.walk": {
+   "id": "knight.walk",
+   "path": "sprites/knight/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 744,
+   "height": 992,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 69161,
+   "sha256": "faa2118a738e05bb6f8f8e14315fd4d107ecf6f67393ac3f3d5cd473c2876cf2",
+   "grid": {
+    "frameWidth": 124,
+    "frameHeight": 124,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.sw": {
+     "name": "walk.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.nw": {
+     "name": "walk.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.ne": {
+     "name": "walk.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.se": {
+     "name": "walk.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.717741935483871
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/knight.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "mimic.attack": {
+   "id": "mimic.attack",
+   "path": "sprites/mimic/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 672,
+   "height": 448,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 37757,
+   "sha256": "8948d4e9a742e204c9f8475b286f1de0bac182505836d75bf49ba9e599a98184",
+   "grid": {
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6696428571428571
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/mimic.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "mimic.death": {
+   "id": "mimic.death",
+   "path": "sprites/mimic/death.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 648,
+   "height": 432,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 41686,
+   "sha256": "7cbe03b3b382c3bce36b4eec0b6939de32f3c29fceeb5d8ab72e096e1de0f094",
+   "grid": {
+    "frameWidth": 108,
+    "frameHeight": 108,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "death.s": {
+     "name": "death.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.w": {
+     "name": "death.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.n": {
+     "name": "death.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.e": {
+     "name": "death.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6851851851851852
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/mimic.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "mimic.hit": {
+   "id": "mimic.hit",
+   "path": "sprites/mimic/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 624,
+   "height": 416,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 34709,
+   "sha256": "c7c401a65827ec66c46c1afc3e4203f5cfddb5581ae0151fb41c009d975b583b",
+   "grid": {
+    "frameWidth": 104,
+    "frameHeight": 104,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6826923076923077
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/mimic.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "mimic.idle": {
+   "id": "mimic.idle",
+   "path": "sprites/mimic/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 600,
+   "height": 400,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 34637,
+   "sha256": "fcf7f96e85a1f5b1c5be87ebe66a19fe630fa348c0321ebf4c9788f24f62d532",
+   "grid": {
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.69
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/mimic.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "mimic.reveal": {
+   "id": "mimic.reveal",
+   "path": "sprites/mimic/reveal.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 600,
+   "height": 400,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 36653,
+   "sha256": "c792cfd13bc6c7840da7013fa196dc936574aca5637fca80d35427b3f375a5fa",
+   "grid": {
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "reveal.s": {
+     "name": "reveal.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "reveal.w": {
+     "name": "reveal.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "reveal.n": {
+     "name": "reveal.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "reveal.e": {
+     "name": "reveal.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.71
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/mimic.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "mimic.walk": {
+   "id": "mimic.walk",
+   "path": "sprites/mimic/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 648,
+   "height": 432,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 33476,
+   "sha256": "4955e2b0f5f2bbd79d3b742b0efc556635f60fa1851a5cfc199d93f6d03288ad",
+   "grid": {
+    "frameWidth": 108,
+    "frameHeight": 108,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6851851851851852
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/mimic.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.mushroom": {
+   "id": "prop.mushroom",
+   "path": "props/mushroom.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 40,
+   "height": 40,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 1071,
+   "sha256": "cbf68c126edff6b8344f4e4f2ee2cd6772296e116a6bd3d275440ec789ccf69a",
+   "grid": {
+    "frameWidth": 40,
+    "frameHeight": 40,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.625
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/mushroom.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.oak-tree": {
+   "id": "prop.oak-tree",
+   "path": "props/oak-tree.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 476,
+   "height": 476,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 21018,
+   "sha256": "5aab5cb0a5a125e49cb540c1df743ad0da809abefd94f536ef8cb262bf736eec",
+   "grid": {
+    "frameWidth": 476,
+    "frameHeight": 476,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7121848739495799
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/oak-tree.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "orc-warrior.idle": {
+   "id": "orc-warrior.idle",
+   "path": "sprites/orc-warrior/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 792,
+   "height": 528,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 36401,
+   "sha256": "7a69899d554422b6c1083fa9c106ffca32a6348147ee4464134bc36ade3674fe",
+   "grid": {
+    "frameWidth": 132,
+    "frameHeight": 132,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6818181818181818
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/orc-warrior.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "orc-warrior.roar": {
+   "id": "orc-warrior.roar",
+   "path": "sprites/orc-warrior/roar.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 816,
+   "height": 544,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 35054,
+   "sha256": "f9dc7c412d1eb99eaa43009fe6b8fcb61bbf91d715a57b48db9c0ee3c06f0e8e",
+   "grid": {
+    "frameWidth": 136,
+    "frameHeight": 136,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "roar.s": {
+     "name": "roar.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.w": {
+     "name": "roar.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.n": {
+     "name": "roar.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "roar.e": {
+     "name": "roar.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6838235294117647
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/orc-warrior.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "orc-warrior.walk": {
+   "id": "orc-warrior.walk",
+   "path": "sprites/orc-warrior/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 816,
+   "height": 544,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 37045,
+   "sha256": "65e04db8591f5d84f5c1eaaaa8e22a56cd9fc716f2490069fb04175154b94310",
+   "grid": {
+    "frameWidth": 136,
+    "frameHeight": 136,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6764705882352942
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/orc-warrior.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.pine-tree": {
+   "id": "prop.pine-tree",
+   "path": "props/pine-tree.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 488,
+   "height": 488,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 23833,
+   "sha256": "a3c7d2c74d3e00983cd91c4b6d001eac2ff5164ee1e7f9e67ec4ed3033c41b14",
+   "grid": {
+    "frameWidth": 488,
+    "frameHeight": 488,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7336065573770492
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/pine-tree.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.pumpkin": {
+   "id": "prop.pumpkin",
+   "path": "props/pumpkin.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 52,
+   "height": 52,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 1242,
+   "sha256": "1fb004efb53ada14e9d20e5d6a41b3cb8f21bd79f5c2347117d79e6d21e74a99",
+   "grid": {
+    "frameWidth": 52,
+    "frameHeight": 52,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6538461538461539
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/pumpkin.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.rock-cluster": {
+   "id": "prop.rock-cluster",
+   "path": "props/rock-cluster.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 108,
+   "height": 108,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 2791,
+   "sha256": "9ea0c0a049488786c1a6af8efbe6927aaffb08d2750917cdac40aa615f820d98",
+   "grid": {
+    "frameWidth": 108,
+    "frameHeight": 108,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.5740740740740741
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/rock-cluster.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "skeleton.attack": {
+   "id": "skeleton.attack",
+   "path": "sprites/skeleton/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 672,
+   "height": 448,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 30306,
+   "sha256": "4ca189ad312cc9fa1c715a6ae5f2411ac1c2bc0dad48eabe6e46cb8efb1a55bf",
+   "grid": {
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6964285714285714
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/skeleton.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "skeleton.death": {
+   "id": "skeleton.death",
+   "path": "sprites/skeleton/death.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 888,
+   "height": 592,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 36654,
+   "sha256": "fe0e5761dd521e7ff914cc599761d588ba015cba51f9f62d67de76a7e2b2181c",
+   "grid": {
+    "frameWidth": 148,
+    "frameHeight": 148,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "death.s": {
+     "name": "death.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.w": {
+     "name": "death.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.n": {
+     "name": "death.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.e": {
+     "name": "death.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6486486486486487
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/skeleton.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "skeleton.hit": {
+   "id": "skeleton.hit",
+   "path": "sprites/skeleton/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 672,
+   "height": 448,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 28919,
+   "sha256": "afbb04d4686dec03fba57765cc96dd7908c042795c71d386c41fcee7d4516f5f",
+   "grid": {
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6964285714285714
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/skeleton.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "skeleton.idle": {
+   "id": "skeleton.idle",
+   "path": "sprites/skeleton/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 576,
+   "height": 384,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 28931,
+   "sha256": "a2ea8b3f9619f0dcec4b4c54b1a33277ee3730785d0bf68fedfe8ea26575e671",
+   "grid": {
+    "frameWidth": 96,
+    "frameHeight": 96,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7291666666666666
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/skeleton.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "skeleton.rise": {
+   "id": "skeleton.rise",
+   "path": "sprites/skeleton/rise.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 888,
+   "height": 592,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 37908,
+   "sha256": "9a78059faffc47bbaf54bc9bd76038be8deb088f94e356bfcb7a759e7588a7b0",
+   "grid": {
+    "frameWidth": 148,
+    "frameHeight": 148,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "rise.s": {
+     "name": "rise.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "rise.w": {
+     "name": "rise.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "rise.n": {
+     "name": "rise.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "rise.e": {
+     "name": "rise.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6486486486486487
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/skeleton.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "skeleton.walk": {
+   "id": "skeleton.walk",
+   "path": "sprites/skeleton/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 600,
+   "height": 400,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 31566,
+   "sha256": "f481f54014867bdd80b65a8107286bf4dc828adb69f78fbf8b77575042394b93",
+   "grid": {
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.72
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/skeleton.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "slime.attack": {
+   "id": "slime.attack",
+   "path": "sprites/slime/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 840,
+   "height": 560,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 34544,
+   "sha256": "e52f7150463ce851c22722bcb896f37b9e1f2f59be2fe805855f3e4302bc95a5",
+   "grid": {
+    "frameWidth": 140,
+    "frameHeight": 140,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6285714285714286
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/slime.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "slime.death": {
+   "id": "slime.death",
+   "path": "sprites/slime/death.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 648,
+   "height": 432,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 32535,
+   "sha256": "cdb5a9bdc0dd300f2b29993ba9d52ad63fa8d237d32d76b13036148be80ab4af",
+   "grid": {
+    "frameWidth": 108,
+    "frameHeight": 108,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "death.s": {
+     "name": "death.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.w": {
+     "name": "death.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.n": {
+     "name": "death.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.e": {
+     "name": "death.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6388888888888888
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/slime.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "slime.hit": {
+   "id": "slime.hit",
+   "path": "sprites/slime/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 552,
+   "height": 368,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 26518,
+   "sha256": "e0e5eb22d82f0a01c3cd7961ff1c2db4a23519ac016789b638d23ce5564fc8c0",
+   "grid": {
+    "frameWidth": 92,
+    "frameHeight": 92,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6630434782608695
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/slime.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "slime.idle": {
+   "id": "slime.idle",
+   "path": "sprites/slime/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 552,
+   "height": 368,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 30563,
+   "sha256": "992ce90cadaef0e12ee7260219c217d753710e6b8964d8878ef6aeb175c6df35",
+   "grid": {
+    "frameWidth": 92,
+    "frameHeight": 92,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6630434782608695
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/slime.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "slime.spit": {
+   "id": "slime.spit",
+   "path": "sprites/slime/spit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 552,
+   "height": 368,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 29252,
+   "sha256": "2e96dad10105c9176cfccf642cf5a6fbfc0dcb678d6bbb864a7f359c8d8a6945",
+   "grid": {
+    "frameWidth": 92,
+    "frameHeight": 92,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "spit.s": {
+     "name": "spit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "spit.w": {
+     "name": "spit.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "spit.n": {
+     "name": "spit.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "spit.e": {
+     "name": "spit.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6630434782608695
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/slime.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "slime.walk": {
+   "id": "slime.walk",
+   "path": "sprites/slime/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 576,
+   "height": 384,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 33180,
+   "sha256": "70b32c09b724824c24b776713c9050821dabba7b1414cdfb265b358177738756",
+   "grid": {
+    "frameWidth": 96,
+    "frameHeight": 96,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6666666666666666
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/slime.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "villager.idle": {
+   "id": "villager.idle",
+   "path": "sprites/villager/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 576,
+   "height": 384,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 25494,
+   "sha256": "bc480f75d1334984c28dd0bd35701f9e1f121d3f7d88291a4d777fe2b38d5ba8",
+   "grid": {
+    "frameWidth": 96,
+    "frameHeight": 96,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.71875
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/villager.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "villager.talk": {
+   "id": "villager.talk",
+   "path": "sprites/villager/talk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 576,
+   "height": 384,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 23862,
+   "sha256": "a3c466c9e32bc371f7cc10d8cb4cb64281ffffdbda77b7a205b2deaf0d1226f7",
+   "grid": {
+    "frameWidth": 96,
+    "frameHeight": 96,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "talk.s": {
+     "name": "talk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "talk.w": {
+     "name": "talk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "talk.n": {
+     "name": "talk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "talk.e": {
+     "name": "talk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.71875
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/villager.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "villager.walk": {
+   "id": "villager.walk",
+   "path": "sprites/villager/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 576,
+   "height": 384,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 24587,
+   "sha256": "09ff3757868e1e2d0e7aeea99f29207f09e37e848da86fa8b9ddcdb0cc9a3f66",
+   "grid": {
+    "frameWidth": 96,
+    "frameHeight": 96,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.71875
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/villager.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "villager.wave": {
+   "id": "villager.wave",
+   "path": "sprites/villager/wave.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 576,
+   "height": 384,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 17430,
+   "sha256": "2d8f13c15e7ac74ceca0ff92d5cb954bb58e63e9420054aae04128d162b3b45c",
+   "grid": {
+    "frameWidth": 96,
+    "frameHeight": 96,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "wave.s": {
+     "name": "wave.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "wave.w": {
+     "name": "wave.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "wave.n": {
+     "name": "wave.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "wave.e": {
+     "name": "wave.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.71875
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/villager.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.well": {
+   "id": "prop.well",
+   "path": "props/well.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 280,
+   "height": 280,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 8967,
+   "sha256": "1ac712de92df2ac349364a0d2c2559c20e98bdfe28950070e946c6e850c8aba5",
+   "grid": {
+    "frameWidth": 280,
+    "frameHeight": 280,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.7142857142857143
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/well.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "prop.wildflowers": {
+   "id": "prop.wildflowers",
+   "path": "props/wildflowers.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 72,
+   "height": 72,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 2360,
+   "sha256": "d69ee95bb78aa342fc1229b8914a9c2d9bd04ccac4a1ae1659ff0975d35f46e8",
+   "grid": {
+    "frameWidth": 72,
+    "frameHeight": 72,
+    "columns": 1,
+    "rows": 1,
+    "frameCount": 1
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6527777777777778
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/wildflowers.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "wizard.attack": {
+   "id": "wizard.attack",
+   "path": "sprites/wizard/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 1176,
+   "height": 1568,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 91620,
+   "sha256": "e8bfb0818fc53e26db61d7d2583bca71cf879e7bd92ba9e9a872aa798c82c6fb",
+   "grid": {
+    "frameWidth": 196,
+    "frameHeight": 196,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.sw": {
+     "name": "attack.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.nw": {
+     "name": "attack.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.ne": {
+     "name": "attack.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.se": {
+     "name": "attack.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6275510204081632
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/wizard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "wizard.attack2": {
+   "id": "wizard.attack2",
+   "path": "sprites/wizard/attack2.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 816,
+   "height": 1088,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 83893,
+   "sha256": "e01c6122274b105d8665023d443688de76ebe408ba8548a295ca5fae33c883a0",
+   "grid": {
+    "frameWidth": 136,
+    "frameHeight": 136,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "attack2.s": {
+     "name": "attack2.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.sw": {
+     "name": "attack2.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.w": {
+     "name": "attack2.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.nw": {
+     "name": "attack2.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.n": {
+     "name": "attack2.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.ne": {
+     "name": "attack2.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.e": {
+     "name": "attack2.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack2.se": {
+     "name": "attack2.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6838235294117647
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/wizard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "wizard.hit": {
+   "id": "wizard.hit",
+   "path": "sprites/wizard/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 840,
+   "height": 1120,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 80762,
+   "sha256": "21133af55a9bfb35dc18c130c1f6254699bb38bb1d53bd4076b4299ad6682383",
+   "grid": {
+    "frameWidth": 140,
+    "frameHeight": 140,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.sw": {
+     "name": "hit.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.nw": {
+     "name": "hit.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.ne": {
+     "name": "hit.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.se": {
+     "name": "hit.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6714285714285714
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/wizard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "wizard.idle": {
+   "id": "wizard.idle",
+   "path": "sprites/wizard/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 744,
+   "height": 992,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 84509,
+   "sha256": "66a237a710a2c57a092e595652f9e6475cc444159c70bbeec56fdc2f2067338a",
+   "grid": {
+    "frameWidth": 124,
+    "frameHeight": 124,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.sw": {
+     "name": "idle.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.nw": {
+     "name": "idle.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.ne": {
+     "name": "idle.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.se": {
+     "name": "idle.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6935483870967742
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/wizard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "wizard.run": {
+   "id": "wizard.run",
+   "path": "sprites/wizard/run.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 840,
+   "height": 1120,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 87553,
+   "sha256": "71c7045ed0b32d39f492634e1b88277a0a02e886e0d7f6cac16b3a189068de52",
+   "grid": {
+    "frameWidth": 140,
+    "frameHeight": 140,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "run.s": {
+     "name": "run.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.sw": {
+     "name": "run.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.w": {
+     "name": "run.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.nw": {
+     "name": "run.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.n": {
+     "name": "run.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.ne": {
+     "name": "run.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.e": {
+     "name": "run.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "run.se": {
+     "name": "run.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6785714285714286
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/wizard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "wizard.victory": {
+   "id": "wizard.victory",
+   "path": "sprites/wizard/victory.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 936,
+   "height": 1248,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 100207,
+   "sha256": "d4baddf1aaec90fd958ad53d9c113919ac2cae89d84898f197011341ef03719f",
+   "grid": {
+    "frameWidth": 156,
+    "frameHeight": 156,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "victory.s": {
+     "name": "victory.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.sw": {
+     "name": "victory.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.w": {
+     "name": "victory.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.nw": {
+     "name": "victory.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.n": {
+     "name": "victory.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.ne": {
+     "name": "victory.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.e": {
+     "name": "victory.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "victory.se": {
+     "name": "victory.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6923076923076923
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/wizard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "wizard.walk": {
+   "id": "wizard.walk",
+   "path": "sprites/wizard/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 768,
+   "height": 1024,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 80775,
+   "sha256": "93c2ab568fa04130b36ace76bc8e7ff637c00fda5c33ad38618f4078d0ce47e6",
+   "grid": {
+    "frameWidth": 128,
+    "frameHeight": 128,
+    "columns": 6,
+    "rows": 8,
+    "frameCount": 48
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.sw": {
+     "name": "walk.sw",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.nw": {
+     "name": "walk.nw",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.ne": {
+     "name": "walk.ne",
+     "frames": [
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.se": {
+     "name": "walk.se",
+     "frames": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6875
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/wizard.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "zombie.attack": {
+   "id": "zombie.attack",
+   "path": "sprites/zombie/attack.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 696,
+   "height": 464,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 26977,
+   "sha256": "e88cd595273889becb29beacf2454e221b480f0233b1ff8a180c2d41871f7bff",
+   "grid": {
+    "frameWidth": 116,
+    "frameHeight": 116,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "attack.s": {
+     "name": "attack.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.w": {
+     "name": "attack.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.n": {
+     "name": "attack.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "attack.e": {
+     "name": "attack.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6896551724137931
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/zombie.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "zombie.death": {
+   "id": "zombie.death",
+   "path": "sprites/zombie/death.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 912,
+   "height": 608,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 31947,
+   "sha256": "074902594583ec9bd23deabf47ed0e46255bbe382fd118d94c87805a47f17419",
+   "grid": {
+    "frameWidth": 152,
+    "frameHeight": 152,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "death.s": {
+     "name": "death.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.w": {
+     "name": "death.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.n": {
+     "name": "death.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "death.e": {
+     "name": "death.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6447368421052632
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/zombie.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "zombie.hit": {
+   "id": "zombie.hit",
+   "path": "sprites/zombie/hit.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 672,
+   "height": 448,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 27087,
+   "sha256": "21bc774775d317d4218352e1608b11b5cf783f4655b24746502feb7462ef33ab",
+   "grid": {
+    "frameWidth": 112,
+    "frameHeight": 112,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "hit.s": {
+     "name": "hit.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.w": {
+     "name": "hit.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.n": {
+     "name": "hit.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "hit.e": {
+     "name": "hit.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6964285714285714
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/zombie.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "zombie.idle": {
+   "id": "zombie.idle",
+   "path": "sprites/zombie/idle.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 600,
+   "height": 400,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 27889,
+   "sha256": "cc442116cbe0357a7673dbe2ed2d1d8d36fa415c4202e33501c81ee19ed7f3a1",
+   "grid": {
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "idle.s": {
+     "name": "idle.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.w": {
+     "name": "idle.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.n": {
+     "name": "idle.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "idle.e": {
+     "name": "idle.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.72
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/zombie.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "zombie.rise": {
+   "id": "zombie.rise",
+   "path": "sprites/zombie/rise.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 744,
+   "height": 496,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 21625,
+   "sha256": "649352856207802254a60520d6a05689d13039a18aefceb009b03f0f194e0826",
+   "grid": {
+    "frameWidth": 124,
+    "frameHeight": 124,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "rise.s": {
+     "name": "rise.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "rise.w": {
+     "name": "rise.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "rise.n": {
+     "name": "rise.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    },
+    "rise.e": {
+     "name": "rise.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 12,
+     "repeat": 0
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.6774193548387096
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/zombie.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "zombie.walk": {
+   "id": "zombie.walk",
+   "path": "sprites/zombie/walk.png",
+   "kind": "spritesheet",
+   "view": "isometric",
+   "width": 600,
+   "height": 400,
+   "format": "png",
+   "alpha": true,
+   "byteSize": 30877,
+   "sha256": "65e2385cc1407b1fcbaa0bd18d9e5162651edb40d85a503ecb598871c7d65f30",
+   "grid": {
+    "frameWidth": 100,
+    "frameHeight": 100,
+    "columns": 6,
+    "rows": 4,
+    "frameCount": 24
+   },
+   "animations": {
+    "walk.s": {
+     "name": "walk.s",
+     "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.w": {
+     "name": "walk.w",
+     "frames": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.n": {
+     "name": "walk.n",
+     "frames": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    },
+    "walk.e": {
+     "name": "walk.e",
+     "frames": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+     ],
+     "frameRate": 10,
+     "repeat": -1
+    }
+   },
+   "origin": {
+    "x": 0.5,
+    "y": 0.72
+   },
+   "provenance": {
+    "source": "advantage-forge/assets/zombie.ts",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "background.devourer-slime": {
+   "id": "background.devourer-slime",
+   "path": "backgrounds/devourer-slime.png",
+   "kind": "image",
+   "view": "world",
+   "width": 1216,
+   "height": 1093,
+   "format": "png",
+   "alpha": false,
+   "byteSize": 238948,
+   "sha256": "d71db26c1134b314b029043feefa8bc8e71014491ae743f32f14ea7f08141916",
+   "provenance": {
+    "source": "advantage-forge/src/games/devourer-slime/view (the 3D set, baked)",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "background.dungeon-liberator": {
+   "id": "background.dungeon-liberator",
+   "path": "backgrounds/dungeon-liberator.png",
+   "kind": "image",
+   "view": "world",
+   "width": 845,
+   "height": 615,
+   "format": "png",
+   "alpha": false,
+   "byteSize": 196792,
+   "sha256": "35ac967b3aadd32aa6c0e76bb463013215ee81681c9baeecec084333a88d2d8e",
+   "provenance": {
+    "source": "advantage-forge/src/games/dungeon-liberator/view (the 3D set, baked)",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "background.hero-vs-zombie": {
+   "id": "background.hero-vs-zombie",
+   "path": "backgrounds/hero-vs-zombie.png",
+   "kind": "image",
+   "view": "world",
+   "width": 998,
+   "height": 812,
+   "format": "png",
+   "alpha": false,
+   "byteSize": 202703,
+   "sha256": "293804b1eaa96c2da1467f77ff54495b48f2eaf02b737f654d2f3dabfda79b1e",
+   "provenance": {
+    "source": "advantage-forge/src/games/hero-vs-zombie/view (the 3D set, baked)",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "background.labyrinth-1": {
+   "id": "background.labyrinth-1",
+   "path": "backgrounds/labyrinth-1.png",
+   "kind": "image",
+   "view": "world",
+   "width": 1254,
+   "height": 770,
+   "format": "png",
+   "alpha": false,
+   "byteSize": 152482,
+   "sha256": "a428e2556c4b7d5e4f08659803021f3e13664706ad002f7e6d517492208f9f57",
+   "provenance": {
+    "source": "advantage-forge/src/games/labyrinth-1/view (the 3D set, baked)",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "background.labyrinth-2": {
+   "id": "background.labyrinth-2",
+   "path": "backgrounds/labyrinth-2.png",
+   "kind": "image",
+   "view": "world",
+   "width": 1254,
+   "height": 770,
+   "format": "png",
+   "alpha": false,
+   "byteSize": 157656,
+   "sha256": "d23ac5c3e9e21240d203064d7e87a16686e5ad3d87d4d36717eec4f86ff3e975",
+   "provenance": {
+    "source": "advantage-forge/src/games/labyrinth-2/view (the 3D set, baked)",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "background.labyrinth-3": {
+   "id": "background.labyrinth-3",
+   "path": "backgrounds/labyrinth-3.png",
+   "kind": "image",
+   "view": "world",
+   "width": 1254,
+   "height": 770,
+   "format": "png",
+   "alpha": false,
+   "byteSize": 156284,
+   "sha256": "5edd0fa9f0d3d508686500e20dc3d2666ce84a40fab07d39ee6c08a3d7fe1cc2",
+   "provenance": {
+    "source": "advantage-forge/src/games/labyrinth-3/view (the 3D set, baked)",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "background.monster-encounters": {
+   "id": "background.monster-encounters",
+   "path": "backgrounds/monster-encounters.png",
+   "kind": "image",
+   "view": "world",
+   "width": 589,
+   "height": 661,
+   "format": "png",
+   "alpha": false,
+   "byteSize": 133944,
+   "sha256": "8e3558a8b0c9f65ac9ac63dda3f204c3431f1e69d712364dcc3d4efc43478380",
+   "provenance": {
+    "source": "advantage-forge/src/games/monster-encounters/view (the 3D set, baked)",
+    "license": "AGPL-3.0-or-later"
+   }
+  },
+  "background.potion-rush": {
+   "id": "background.potion-rush",
+   "path": "backgrounds/potion-rush.png",
+   "kind": "image",
+   "view": "world",
+   "width": 666,
+   "height": 432,
+   "format": "png",
+   "alpha": false,
+   "byteSize": 95713,
+   "sha256": "6eadc1b4fd733e38638a73267f2e66197fa6f346bf6e4d2a9ff2524be72894fc",
+   "provenance": {
+    "source": "advantage-forge/src/games/potion-rush/view (the 3D set, baked)",
+    "license": "AGPL-3.0-or-later"
+   }
+  }
+ }
+}

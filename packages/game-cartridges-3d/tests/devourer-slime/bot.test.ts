@@ -1,0 +1,51 @@
+/** The QC bot plays a whole shift within a step limit, on the state alone, steering a few times per second. */
+import { describe, expect, it } from 'vitest';
+import { createRecorder } from '@reading-advantage/advantage-play-kit-3d/sim';
+import { createDevourerSlime, type DevourerSlimeEvent } from '../../src/devourer-slime/core/index.js';
+import { nextSteer } from '../../src/devourer-slime/qc/bot.js';
+import { LONG_STORY, STORY, ofType, stepsOf } from './helpers.js';
+
+const LIMIT_STEPS = stepsOf(6 * 60_000);
+/** The bot steers every 5 steps (6 times per second), as the QC driver does. */
+const STEER_EVERY = 5;
+
+describe('bot', () => {
+  it.each(
+    [1, 2, 3, 4, 5, 6, 7, 8].flatMap((seed) =>
+      (['pip-is-brave', 'the-school-garden'] as const).map((story) => [seed, seed % 2 === 0, story] as const),
+    ),
+  )('seed %i helper %s plays %s to the end', { timeout: 30_000 }, (seed, helper, storyId) => {
+    const story = storyId === 'pip-is-brave' ? STORY : LONG_STORY;
+    const sim = createRecorder(seed, createDevourerSlime(story, { seed, helper }));
+    const events: DevourerSlimeEvent[] = [];
+    let steps = 0;
+    while (sim.state.phase === 'playing' && steps < LIMIT_STEPS) {
+      if (steps % STEER_EVERY === 0) {
+        const c = nextSteer(sim.state);
+        if (c) events.push(...sim.dispatch(c));
+      }
+      events.push(...sim.tick());
+      steps += 1;
+    }
+    expect(sim.state.phase).toBe('complete');
+    expect(steps).toBeLessThan(LIMIT_STEPS);
+    expect(ofType(events, 'shiftComplete')).toHaveLength(1);
+    expect(sim.state.shift.every((s) => s.complete)).toBe(true);
+    // The bot reads: few wrong words (a brush past another bubble in a crowded 7-word round).
+    expect(ofType(events, 'wordSpat').length).toBeLessThanOrEqual(sim.state.sentences * 2);
+    expect(ofType(events, 'powerStarted').length).toBeGreaterThan(0);
+  });
+
+  it('returns null with nothing to do, and stops while the next bubble is spat', () => {
+    const sim = createDevourerSlime(STORY, { seed: 1, helper: false });
+    const c = nextSteer(sim.state)!;
+    expect(c.type).toBe('steer');
+    expect(Math.hypot(c.x, c.z)).toBeCloseTo(1);
+    sim.state.bubbles.find((b) => b.index === 0)!.spatMs = 500;
+    expect(nextSteer(sim.state)).toEqual({ type: 'steer', x: 0, z: 0 });
+    sim.state.slime.bumpedMs = 100;
+    expect(nextSteer(sim.state)).toBeNull();
+    expect(nextSteer(createDevourerSlime([], { seed: 1, helper: false }).state)).toBeNull();
+  });
+});
+

@@ -1,0 +1,160 @@
+{
+  "name": "@reading-advantage/game-cartridges-3d",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./potion-rush": {
+      "types": "./dist/potion-rush/index.d.ts",
+      "import": "./dist/potion-rush/index.js",
+      "default": "./dist/potion-rush/index.js"
+    },
+    "./potion-rush/manifest": {
+      "types": "./dist/potion-rush/manifest.d.ts",
+      "import": "./dist/potion-rush/manifest.js",
+      "default": "./dist/potion-rush/manifest.js"
+    },
+    "./potion-rush/strings": {
+      "types": "./dist/potion-rush/strings.en.d.ts",
+      "import": "./dist/potion-rush/strings.en.js",
+      "default": "./dist/potion-rush/strings.en.js"
+    },
+    "./dragon-flight": {
+      "types": "./dist/dragon-flight/index.d.ts",
+      "import": "./dist/dragon-flight/index.js",
+      "default": "./dist/dragon-flight/index.js"
+    },
+    "./dragon-flight/manifest": {
+      "types": "./dist/dragon-flight/manifest.d.ts",
+      "import": "./dist/dragon-flight/manifest.js",
+      "default": "./dist/dragon-flight/manifest.js"
+    },
+    "./dragon-flight/strings": {
+      "types": "./dist/dragon-flight/strings.en.d.ts",
+      "import": "./dist/dragon-flight/strings.en.js",
+      "default": "./dist/dragon-flight/strings.en.js"
+    },
+    "./dungeon-liberator": {
+      "types": "./dist/dungeon-liberator/index.d.ts",
+      "import": "./dist/dungeon-liberator/index.js",
+      "default": "./dist/dungeon-liberator/index.js"
+    },
+    "./dungeon-liberator/manifest": {
+      "types": "./dist/dungeon-liberator/manifest.d.ts",
+      "import": "./dist/dungeon-liberator/manifest.js",
+      "default": "./dist/dungeon-liberator/manifest.js"
+    },
+    "./dungeon-liberator/strings": {
+      "types": "./dist/dungeon-liberator/strings.en.d.ts",
+      "import": "./dist/dungeon-liberator/strings.en.js",
+      "default": "./dist/dungeon-liberator/strings.en.js"
+    },
+    "./devourer-slime": {
+      "types": "./dist/devourer-slime/index.d.ts",
+      "import": "./dist/devourer-slime/index.js",
+      "default": "./dist/devourer-slime/index.js"
+    },
+    "./devourer-slime/manifest": {
+      "types": "./dist/devourer-slime/manifest.d.ts",
+      "import": "./dist/devourer-slime/manifest.js",
+      "default": "./dist/devourer-slime/manifest.js"
+    },
+    "./devourer-slime/strings": {
+      "types": "./dist/devourer-slime/strings.en.d.ts",
+      "import": "./dist/devourer-slime/strings.en.js",
+      "default": "./dist/devourer-slime/strings.en.js"
+    },
+    "./hero-vs-zombie": {
+      "types": "./dist/hero-vs-zombie/index.d.ts",
+      "import": "./dist/hero-vs-zombie/index.js",
+      "default": "./dist/hero-vs-zombie/index.js"
+    },
+    "./hero-vs-zombie/manifest": {
+      "types": "./dist/hero-vs-zombie/manifest.d.ts",
+      "import": "./dist/hero-vs-zombie/manifest.js",
+      "default": "./dist/hero-vs-zombie/manifest.js"
+    },
+    "./hero-vs-zombie/strings": {
+      "types": "./dist/hero-vs-zombie/strings.en.d.ts",
+      "import": "./dist/hero-vs-zombie/strings.en.js",
+      "default": "./dist/hero-vs-zombie/strings.en.js"
+    },
+    "./labyrinth": {
+      "types": "./dist/labyrinth/index.d.ts",
+      "import": "./dist/labyrinth/index.js",
+      "default": "./dist/labyrinth/index.js"
+    },
+    "./labyrinth/manifest": {
+      "types": "./dist/labyrinth/manifest.d.ts",
+      "import": "./dist/labyrinth/manifest.js",
+      "default": "./dist/labyrinth/manifest.js"
+    },
+    "./labyrinth/strings": {
+      "types": "./dist/labyrinth/strings.en.d.ts",
+      "import": "./dist/labyrinth/strings.en.js",
+      "default": "./dist/labyrinth/strings.en.js"
+    },
+    "./monster-encounters": {
+      "types": "./dist/monster-encounters/index.d.ts",
+      "import": "./dist/monster-encounters/index.js",
+      "default": "./dist/monster-encounters/index.js"
+    },
+    "./monster-encounters/manifest": {
+      "types": "./dist/monster-encounters/manifest.d.ts",
+      "import": "./dist/monster-encounters/manifest.js",
+      "default": "./dist/monster-encounters/manifest.js"
+    },
+    "./monster-encounters/strings": {
+      "types": "./dist/monster-encounters/strings.en.d.ts",
+      "import": "./dist/monster-encounters/strings.en.js",
+      "default": "./dist/monster-encounters/strings.en.js"
+    },
+    "./rune-match": {
+      "types": "./dist/rune-match/index.d.ts",
+      "import": "./dist/rune-match/index.js",
+      "default": "./dist/rune-match/index.js"
+    },
+    "./rune-match/manifest": {
+      "types": "./dist/rune-match/manifest.d.ts",
+      "import": "./dist/rune-match/manifest.js",
+      "default": "./dist/rune-match/manifest.js"
+    },
+    "./rune-match/strings": {
+      "types": "./dist/rune-match/strings.en.d.ts",
+      "import": "./dist/rune-match/strings.en.js",
+      "default": "./dist/rune-match/strings.en.js"
+    },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "assets"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@reading-advantage/advantage-play-kit": "workspace:*",
+    "@reading-advantage/advantage-play-kit-3d": "workspace:*",
+    "@reading-advantage/game-contracts": "workspace:*",
+    "phaser": "catalog:",
+    "three": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@types/three": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "jsdom": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}

@@ -1,0 +1,266 @@
+{
+ "id": "folk",
+ "version": "1.0.0",
+ "root": "packs/folk/1.0.0",
+ "files": {
+  "bandit": {
+   "id": "bandit",
+   "path": "bandit.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 299484,
+   "triangles": 8000,
+   "textureSize": 384,
+   "skinned": true,
+   "clips": [
+    "attack",
+    "death",
+    "hit",
+    "idle",
+    "run",
+    "taunt",
+    "walk"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/bandit.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0b8ca3f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "druid": {
+   "id": "druid",
+   "path": "druid.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 534584,
+   "triangles": 13250,
+   "textureSize": 384,
+   "skinned": true,
+   "clips": [
+    "attack",
+    "attack2",
+    "death",
+    "hit",
+    "idle",
+    "run",
+    "victory",
+    "walk"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/druid.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ba1537",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "farmer": {
+   "id": "farmer",
+   "path": "farmer.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 300284,
+   "triangles": 8000,
+   "textureSize": 384,
+   "skinned": true,
+   "clips": [
+    "idle",
+    "run",
+    "talk",
+    "walk",
+    "wave",
+    "work"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/farmer.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "a712dae",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "goblin-warrior": {
+   "id": "goblin-warrior",
+   "path": "goblin-warrior.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 316552,
+   "triangles": 8000,
+   "textureSize": 384,
+   "skinned": true,
+   "clips": [
+    "attack",
+    "death",
+    "hit",
+    "idle",
+    "run",
+    "taunt",
+    "walk"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/goblin-warrior.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "7c791bc",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "guard": {
+   "id": "guard",
+   "path": "guard.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 316104,
+   "triangles": 8000,
+   "textureSize": 384,
+   "skinned": true,
+   "clips": [
+    "attack",
+    "death",
+    "hit",
+    "idle",
+    "run",
+    "salute",
+    "walk"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/guard.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2b3774a",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "innkeeper": {
+   "id": "innkeeper",
+   "path": "innkeeper.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 356312,
+   "triangles": 8000,
+   "textureSize": 384,
+   "skinned": true,
+   "clips": [
+    "idle",
+    "run",
+    "talk",
+    "walk",
+    "wave",
+    "work"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/innkeeper.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "8183775",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "orc-warrior": {
+   "id": "orc-warrior",
+   "path": "orc-warrior.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 511408,
+   "triangles": 10494,
+   "textureSize": 384,
+   "skinned": true,
+   "clips": [
+    "attack",
+    "attack2",
+    "death",
+    "hit",
+    "idle",
+    "roar",
+    "run",
+    "walk"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/orc-warrior.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "e0a8313",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "slime": {
+   "id": "slime",
+   "path": "slime.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 228500,
+   "triangles": 7998,
+   "textureSize": 512,
+   "skinned": true,
+   "clips": [
+    "attack",
+    "death",
+    "hit",
+    "idle",
+    "spit",
+    "walk"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/slime.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2c508eb",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "villager": {
+   "id": "villager",
+   "path": "villager.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 379240,
+   "triangles": 8000,
+   "textureSize": 384,
+   "skinned": true,
+   "clips": [
+    "idle",
+    "run",
+    "talk",
+    "walk",
+    "wave",
+    "work"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/villager.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "32d2562",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "zombie": {
+   "id": "zombie",
+   "path": "zombie.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 352128,
+   "triangles": 7996,
+   "textureSize": 512,
+   "skinned": true,
+   "clips": [
+    "attack",
+    "death",
+    "hit",
+    "idle",
+    "rise",
+    "run",
+    "walk"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/zombie.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "de45603",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  }
+ },
+ "byteSize": 3594596
+}
