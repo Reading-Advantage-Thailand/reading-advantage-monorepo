@@ -18,11 +18,13 @@
 
 - [x] Browser QC in 3D and 2D for all eight games (0 errors, 0 legacy requests).
 - [ ] Repository graph rebuild and `architecture-enforcement` run.
+- [ ] Pull request, review, and deployment (the owner approves each).
 
 ## Phase 4: Legacy rewrites
 
-- [ ] rpg-battle, paladins-twin-soul, village-guardian (agents active).
-- [ ] The other 18 legacy games (see `docs/apk-2d3d-program.md` in the demo repository).
+- [x] All 21 legacy rewrites exist in the demo repository and in `game-cartridges-3d` (29 games in all). Browser QC passes in 3D and 2D for each (software GL).
+- [ ] `babel-architect` has no cartridge and no rewrite.
+- [ ] Real touch-device checks and layout tuning for the 21 new games.
 
 ## Debt
 
