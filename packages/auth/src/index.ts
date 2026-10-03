@@ -42,6 +42,7 @@ export {
   adoptLegacyPassword,
   ARGON2ID_OPTS,
 } from "./password.js";
+export { passwordSchema, PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } from "./password-schema.js";
 
 // Interim first-party credential compatibility adapter
 export {
