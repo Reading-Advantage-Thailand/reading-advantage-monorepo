@@ -143,6 +143,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   }
 
   function create(this: Phaser.Scene): void {
+    // Phaser calls create() with the scene as `this`.
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const scene = this;
     const L = layoutFor(scene.scale.width, scene.scale.height);
     const ppm = PROJECTION.ppm;
