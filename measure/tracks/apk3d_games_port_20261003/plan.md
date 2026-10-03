@@ -26,6 +26,12 @@
 - [ ] `babel-architect` has no cartridge and no rewrite.
 - [ ] Real touch-device checks and layout tuning for the 21 new games.
 
+## Phase 5: Game input (owner, 2026-10-04)
+
+- [x] Play-test edits of 3 October moved to Forge (Forge 89a4769) and came back through `port-game.mjs`. Forge stays the source of the games.
+- [ ] Replace the story picker. The games must read the student's saved vocabulary and sentences (`userWordRecords`, `userSentenceRecords`), chosen by memory state. The Forge track `game_flashcard_input_20261004` has the spec and the open decisions.
+- [ ] Rebase on `master` when the input change is done. The base `apk3d-port` carries 18 unrelated `www` commits.
+
 ## Debt
 
 - `kit-3d` keeps copies of `apk.ts` and `sprite-asset.ts` contracts. Replace them with imports.
