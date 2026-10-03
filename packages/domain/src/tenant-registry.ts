@@ -176,6 +176,7 @@ import {
   companyProductPrincipals,
   standardPackSuccessorCommitments,
   standardPackSuccessorAdmissionReceipts,
+  primaryLegacyIdMap,
 } from "@reading-advantage/db";
 import {
   accountingSubmissions,
@@ -188,6 +189,8 @@ register(verificationTokens, "EXEMPT");
 // Looked up by id from `userRoles`; not school-scoped.
 register(roles, "EXEMPT");
 
+// Legacy cuid -> uuid remap for the Primary cutover; keyed by legacy table name, not tenant data.
+register(primaryLegacyIdMap, "EXEMPT");
 register(auditEvents, "EXEMPT");
 register(schools, "EXEMPT");
 register(accounts, "EXEMPT");

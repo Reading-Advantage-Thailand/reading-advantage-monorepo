@@ -16,7 +16,7 @@
  * cross-app coordination and are documented in the Phase 1 audit report.
  */
 import {
-  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique,
+  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique, primaryKey, index,
 } from "drizzle-orm/pg-core";
 import { users, schools } from "./users.js";
 import { articles } from "./content.js";
@@ -231,3 +231,22 @@ export const leaderboards = pgTable("leaderboards", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+// ─── Legacy ID map ────────────────────────────────────────
+
+/**
+ * Maps legacy Primary cuid keys to the new uuid keys (cutover decision D2).
+ * `table_name` holds the LEGACY table name (for example `article`). The
+ * `tutor_compat` views read it to show legacy ids to Tutor. Not tenant data.
+ */
+export const primaryLegacyIdMap = pgTable(
+  "primary_legacy_id_map",
+  {
+    tableName: text("table_name").notNull(),
+    legacyId: text("legacy_id").notNull(),
+    newId: uuid("new_id").notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.tableName, t.legacyId] }),
+    index("primary_legacy_id_map_new_id_idx").on(t.tableName, t.newId),
+  ],
+);
