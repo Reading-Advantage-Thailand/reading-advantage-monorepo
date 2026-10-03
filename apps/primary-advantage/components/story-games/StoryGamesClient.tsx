@@ -80,7 +80,7 @@ export function StoryGamesClient() {
       const body = storyCompletionInput(playing.game.id, result, evidence, {
         startedAt: playing.startedAt,
         now: Date.now(),
-        helper: true,
+        helper: false,
         victory: outcome !== "defeat",
         idempotencyKey: crypto.randomUUID(),
       });
@@ -101,6 +101,7 @@ export function StoryGamesClient() {
           story={playing.story}
           icon={playing.game.icon}
           assetBase="/"
+          helper={false}
           setting={flat ? "phaser" : "auto"}
           catalogs={[hostStrings]}
           className="h-full w-full"
