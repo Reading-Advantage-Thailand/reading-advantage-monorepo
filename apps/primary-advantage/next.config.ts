@@ -17,7 +17,6 @@ const nextConfig: NextConfig = {
     "@reading-advantage/game-cartridges",
     "@reading-advantage/game-contracts",
   ],
-  typescript: { ignoreBuildErrors: true },
   images: {
     remotePatterns: [
       {
