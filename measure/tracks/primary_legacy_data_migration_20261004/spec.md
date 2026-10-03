@@ -34,7 +34,9 @@ program did not own this work. Rehearsal 1 (Oct 8-9) needs the ETL.
   up in `primary_legacy_id_map`, and redirect to the UUID URL.
 - FR-5 (A9, D8): A script gives each migrated teacher a credential account with
   `username = lower(email)` (D6) and a random temporary password, and writes a
-  hand-out list (outside git) for the team. A nullable column marks the password as
+  hand-out list (outside git) for the team. The script also covers every migrated account
+  whose password hash is not bcrypt or Argon2id (the 4 scrypt accounts in the April
+  backup), because scrypt verification is dropped. A nullable column marks the password as
   temporary. After a sign-in with a temporary password the teacher must set a new
   password before any other page; the temporary password then stops working.
 - FR-6 (A8): The teacher sign-in page says "Username or email" and accepts either.
