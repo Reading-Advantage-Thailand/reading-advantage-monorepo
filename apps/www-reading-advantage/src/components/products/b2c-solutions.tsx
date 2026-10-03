@@ -69,7 +69,7 @@ export default function B2CSolutions() {
                 hover:shadow-lg hover:-translate-y-1 transition-all duration-300
                 animate-in fade-in slide-in-from-left-4 duration-500
               `}
-              style={{ animationDelay: `${index * 100}ms` }}
+              style={{ "--delay": `${index * 100}ms` }}
             >
               <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
                 <feature.icon className="w-8 h-8 text-white" strokeWidth={1.5} />
@@ -112,7 +112,7 @@ export default function B2CSolutions() {
                     <li
                       key={key}
                       className="flex items-start text-slate-700 animate-in fade-in slide-in-from-left-4 duration-300"
-                      style={{ animationDelay: `${300 + index * 50}ms` }}
+                      style={{ "--delay": `${300 + index * 50}ms` }}
                     >
                       <span className="w-2 h-2 bg-sky-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                       <span className="leading-relaxed">{t(key)}</span>
@@ -132,7 +132,7 @@ export default function B2CSolutions() {
                     <li
                       key={key}
                       className="flex items-start text-slate-700 animate-in fade-in slide-in-from-left-4 duration-300"
-                      style={{ animationDelay: `${500 + index * 50}ms` }}
+                      style={{ "--delay": `${500 + index * 50}ms` }}
                     >
                       <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                       <span className="leading-relaxed">{t(key)}</span>

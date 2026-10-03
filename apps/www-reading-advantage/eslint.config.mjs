@@ -28,7 +28,7 @@ const eslintConfig = [
     },
   },
   {
-    // Design-system rules (@shadcn/lint). Pilot: warnings only, marketing UI.
+    // Design-system rules (@shadcn/lint). Errors: the marketing UI has no violations.
     files: ["src/**/*.{tsx,jsx}"],
     ignores: ["src/**/*.test.tsx", "src/__tests__/**", "src/components/ui/**"],
     plugins: { shadcn },
@@ -39,28 +39,28 @@ const eslintConfig = [
     },
     rules: {
       "shadcn/no-raw-colors": [
-        "warn",
+        "error",
         {
           message:
             'Use a theme color, not "{{className}}". Site neutrals: site-page, site-body, site-border, site-navy. Mastery states: mastery-mastered, mastery-here, mastery-ready, mastery-locked. Others: {{tokens}}. Add new colors to {{file}}.',
         },
       ],
       "shadcn/no-arbitrary-values": [
-        "warn",
+        "error",
         {
           message:
             'Do not use the arbitrary value "{{className}}". Use a scale class or a theme token. Site neutrals are site-page, site-body, site-border and site-navy. Declare a repeated value once in {{file}}.',
         },
       ],
       "shadcn/no-inline-styles": [
-        "warn",
+        "error",
         {
           allow: ["--*"],
           message:
             "Style with classes. Use an inline style only to set a CSS custom property or a value that is computed at run time.",
         },
       ],
-      "shadcn/no-unknown-classes": "warn",
+      "shadcn/no-unknown-classes": "error",
     },
   },
   {

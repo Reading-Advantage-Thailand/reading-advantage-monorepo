@@ -137,7 +137,7 @@ export default async function Services() {
                 <div
                   key={service.name}
                   className="group relative bg-gradient-to-br from-white to-sky-50 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 animate-in fade-in slide-in-from-bottom-8"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  style={{ "--delay": `${index * 100}ms` }}
                 >
                   {/* Status Badge */}
                   <div className="absolute top-4 right-4 z-10">

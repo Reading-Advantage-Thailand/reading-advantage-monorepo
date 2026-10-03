@@ -16,7 +16,7 @@ export default function ProductCard({ title, gradeRange, description, href, ctaL
   return (
     <div
       className="group h-full animate-in fade-in slide-in-from-bottom-8 duration-500 transition-all duration-300 hover:-translate-y-1"
-      style={{ animationDelay: `${index * 100}ms` }}
+      style={{ "--delay": `${index * 100}ms` }}
     >
       <div className="h-full p-8 rounded-2xl modern-card border-0 shadow-card hover:shadow-lg transition-all duration-300">
         <div className="text-sm font-semibold uppercase tracking-wide text-sky-800 mb-3">

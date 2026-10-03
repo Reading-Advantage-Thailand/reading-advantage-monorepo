@@ -23,7 +23,7 @@ export function HomeLiveCard({ href, logo, name, description, meta, cta, accent 
       data-testid={`home-live-${name.toLowerCase().replace(/\s+/g, "-")}`}
       className="group relative flex flex-col overflow-hidden rounded-3xl border border-site-border bg-white p-7 shadow-sm outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-black motion-safe:transition-transform motion-safe:hover:-translate-y-1 hover:shadow-lg"
     >
-      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1.5" style={{ backgroundColor: accent }} />
+      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1.5 bg-product-accent" style={{ "--accent": accent }} />
       <img src={logo} alt={name} width={240} height={60} className="mb-6 h-12 w-auto self-start" />
       <p className="mb-3 text-base leading-relaxed text-black">{description}</p>
       <p className="mb-8 text-sm leading-relaxed text-site-body">{meta}</p>

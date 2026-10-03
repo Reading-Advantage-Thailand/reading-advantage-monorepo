@@ -159,7 +159,7 @@ export default async function BlendedLearning() {
                 <div
                   key={index}
                   className="bg-white rounded-3xl p-8 border border-sky-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-8 duration-700"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  style={{ "--delay": `${index * 100}ms` }}
                 >
                   <CheckCircle className="w-12 h-12 text-sky-800 mb-4" />
                   <h3 className="text-xl font-bold text-slate-900 mb-3">
@@ -235,7 +235,7 @@ export default async function BlendedLearning() {
                 <div
                   key={level}
                   className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-6 border border-white/20 hover:border-white/40 transition-all duration-300 hover:bg-white/20 animate-in fade-in slide-in-from-bottom-8 duration-700"
-                  style={{ animationDelay: `${index * 50}ms` }}
+                  style={{ "--delay": `${index * 50}ms` }}
                 >
                   <div className="text-3xl font-bold text-white mb-2">
                     {level}
@@ -294,7 +294,7 @@ export default async function BlendedLearning() {
                 <div
                   key={item.title}
                   className="bg-gradient-to-br from-sky-50 to-sky-50 rounded-3xl p-8 border border-sky-100 hover:border-sky-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  style={{ "--delay": `${index * 100}ms` }}
                 >
                   <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-sky-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                     {onboardingIcons[item.icon] ?? onboardingIcons.Target}

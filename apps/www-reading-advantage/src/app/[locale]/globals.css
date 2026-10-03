@@ -67,6 +67,8 @@
   --color-mastery-locked: #0c1437;
   --color-mastery-axis: #6f7fc0;
   --color-mastery-label: #dbe2ff;
+  --color-graph-bar: #0a101c;
+  --shadow-locked-ring: inset 0 0 0 1.5px #8c9bd6;
 
   /* Product accent ramps: tints (50-200), strong accent (600) and Tutor dark band.
      Values are the Tailwind defaults, so declaring them changes no rendering. */
@@ -465,4 +467,60 @@ main {
 
 @utility grid-cols-icon-row {
   grid-template-columns: 52px 1fr;
+}
+
+/* Inline styles may only set custom properties. These rules read them. */
+[style*="--delay"] {
+  animation-delay: var(--delay);
+}
+
+@utility parallax-bg {
+  transform: translateY(var(--parallax-y, 0px)) scale(1.1);
+}
+
+@utility bg-product-accent {
+  background-color: var(--accent);
+}
+
+@utility tab-underline {
+  border-bottom: 2px solid var(--tab-accent, transparent);
+}
+
+@utility text-caption {
+  color: var(--caption-color, rgb(255 255 255 / 0.9));
+}
+
+@utility w-pct {
+  width: var(--pct, 0%);
+}
+
+@utility transition-paint {
+  transition:
+    fill 0.5s,
+    stroke 0.5s;
+}
+
+/* Mastery graph: values that vary per node, cluster and cursor position. */
+.ma-cluster-label[data-color] {
+  fill: color-mix(in srgb, var(--cluster-color) 80%, transparent);
+}
+
+.ma-node:not([data-state="forgetting"]):not([data-state="refreshed"]) .ma-node-fill[data-custom] {
+  fill: var(--node-fill);
+}
+
+.ma-node:not([data-state="forgetting"]):not([data-state="refreshed"]) .ma-node-ring[data-custom] {
+  stroke: var(--node-ring);
+}
+
+.ma-cursor {
+  transform: translate(var(--cx, 0px), var(--cy, 0px));
+  opacity: 0;
+  transition:
+    transform 0.8s ease-in-out,
+    opacity 0.3s;
+}
+
+.ma-cursor[data-active="true"] {
+  opacity: 1;
 }

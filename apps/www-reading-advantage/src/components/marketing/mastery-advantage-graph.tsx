@@ -210,6 +210,7 @@ export function MasteryAdvantageGraph({
   const [isVisible, setIsVisible] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const lastCursor = useRef({ x: 0, y: 0 });
   const uid = useId();
 
   const domain = DOMAINS[domainIndex];
@@ -280,17 +281,6 @@ export function MasteryAdvantageGraph({
     document.getElementById(`${uid}-tab-${next}`)?.focus();
   };
 
-  /* ── Derived styles ── */
-  const cssVars = useMemo(
-    () => ({
-      "--ma-node-mastered": meta.mastered,
-      "--ma-node-mastered-ring": meta.ring,
-      "--ma-edge-active": meta.edge,
-      "--ma-node-current-ring": meta.currentRing,
-    }),
-    [meta],
-  );
-
   const effectiveState = (idx: number): NodeState =>
     step.overrides[idx] || data.nodes[idx].state;
 
@@ -322,6 +312,7 @@ export function MasteryAdvantageGraph({
   const hoveredNode = hovered != null ? data.nodes[hovered] : null;
   const caption = { text: step.caption, color: step.color };
   const cursor = step.cursor;
+  if (cursor) lastCursor.current = cursor;
 
   return (
     <div ref={containerRef} className={`relative ${interactive ? "bg-slate-900" : ""} ${className}`}>
@@ -329,8 +320,7 @@ export function MasteryAdvantageGraph({
         <div
           role="tablist"
           aria-label={labels.tabsLabel}
-          className="flex flex-wrap gap-1 px-3 py-2 border-b border-white/5"
-          style={{ background: "rgba(10,16,28,0.98)" }}
+          className="flex flex-wrap gap-1 px-3 py-2 border-b border-white/5 bg-graph-bar/98"
         >
           {DOMAINS.map((d, i) => {
             const selected = i === domainIndex;
@@ -345,11 +335,11 @@ export function MasteryAdvantageGraph({
                 tabIndex={selected ? 0 : -1}
                 onClick={() => selectDomain(i)}
                 onKeyDown={(e) => onTabKey(e, i)}
-                className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
+                className={`tab-underline rounded-md px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
                   selected ? "text-white" : "text-white/70 hover:text-white"
                 }`}
                 style={{
-                  borderBottom: `2px solid ${selected ? DOMAIN_META[d].mastered : "transparent"}`,
+                  "--tab-accent": selected ? DOMAIN_META[d].mastered : "transparent",
                 }}
               >
                 {DOMAIN_META[d].label.replace(" Advantage", "")}
@@ -366,12 +356,11 @@ export function MasteryAdvantageGraph({
         role="status"
         aria-live="polite"
         aria-atomic="true"
-        className="flex items-center px-6 py-3.5 min-h-14 border-b border-white/5"
-        style={{ background: "rgba(10,16,28,0.98)" }}
+        className="flex items-center px-6 py-3.5 min-h-14 border-b border-white/5 bg-graph-bar/98"
       >
         <span
-          className="text-sm md:text-base font-extrabold tracking-tight transition-colors duration-300"
-          style={{ color: caption.color || "rgba(255,255,255,0.9)" }}
+          className="text-caption text-sm md:text-base font-extrabold tracking-tight transition-colors duration-300"
+          style={{ "--caption-color": caption.color || undefined }}
         >
           {caption.text}
         </span>
@@ -398,7 +387,12 @@ export function MasteryAdvantageGraph({
         data-animate={isVisible && playing ? "true" : "false"}
         data-domain={domain}
         id={interactive ? `${uid}-panel` : undefined}
-        style={cssVars as React.CSSProperties}
+        style={{
+          "--ma-node-mastered": meta.mastered,
+          "--ma-node-mastered-ring": meta.ring,
+          "--ma-edge-active": meta.edge,
+          "--ma-node-current-ring": meta.currentRing,
+        }}
       >
 
         <defs>
@@ -509,7 +503,7 @@ export function MasteryAdvantageGraph({
               fill={c.color ? `${c.color}18` : "var(--ma-cluster-fill)"}
               stroke={c.color ? `${c.color}70` : "var(--ma-cluster-stroke)"}
               strokeDasharray="3 5"
-              style={{ transition: "fill .5s, stroke .5s" }}
+              className="transition-paint"
             />
           ))}
         </g>
@@ -520,10 +514,11 @@ export function MasteryAdvantageGraph({
             <text
               key={`cl-${i}`}
               className="ma-cluster-label"
+              data-color={c.color ? "" : undefined}
               x={c.cx}
               y={c.labelY}
               textAnchor="middle"
-              style={c.color ? { fill: `${c.color}cc` } : undefined}
+              style={{ "--cluster-color": c.color }}
             >
               {c.label}
             </text>
@@ -576,24 +571,14 @@ export function MasteryAdvantageGraph({
                 <circle
                   className="ma-node-fill"
                   r={n.r}
-                  style={
-                    n.fillColor &&
-                    state !== "forgetting" &&
-                    state !== "refreshed"
-                      ? { fill: n.fillColor, transition: "fill .5s" }
-                      : undefined
-                  }
+                  data-custom={n.fillColor ? "" : undefined}
+                  style={{ "--node-fill": n.fillColor }}
                 />
                 <circle
                   className="ma-node-ring"
                   r={n.r + (state === "current" ? 6 : 4)}
-                  style={
-                    n.ringColor &&
-                    state !== "forgetting" &&
-                    state !== "refreshed"
-                      ? { stroke: n.ringColor, transition: "stroke .5s" }
-                      : undefined
-                  }
+                  data-custom={n.ringColor ? "" : undefined}
+                  style={{ "--node-ring": n.ringColor }}
                 />
                 <use
                   href={iconId}
@@ -611,10 +596,11 @@ export function MasteryAdvantageGraph({
         {/* Cursor */}
         <g
           aria-hidden="true"
+          className="ma-cursor"
+          data-active={cursor ? "true" : "false"}
           style={{
-            transform: cursor ? `translate(${cursor.x}px, ${cursor.y}px)` : undefined,
-            opacity: cursor ? 1 : 0,
-            transition: "transform .8s ease-in-out, opacity .3s",
+            "--cx": `${lastCursor.current.x}px`,
+            "--cy": `${lastCursor.current.y}px`,
           }}
           filter="url(#ma-glow-soft)"
         >
@@ -682,8 +668,7 @@ export function MasteryAdvantageGraph({
 
       {interactive && (
         <div
-          className="border-t border-white/5 px-4 py-3 text-white"
-          style={{ background: "rgba(10,16,28,0.98)" }}
+          className="border-t border-white/5 px-4 py-3 text-white bg-graph-bar/98"
         >
           <div
             role="group"

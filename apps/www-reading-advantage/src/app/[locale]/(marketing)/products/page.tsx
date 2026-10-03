@@ -116,7 +116,7 @@ export default async function ProductsPage() {
               <div
                 key={band.key}
                 className="group h-full animate-in fade-in slide-in-from-bottom-8 duration-700"
-                style={{ animationDelay: `${index * 150}ms` }}
+                style={{ "--delay": `${index * 150}ms` }}
               >
                 <div
                   className={`h-full p-8 rounded-2xl bg-gradient-to-br ${band.bgColor} border-0`}

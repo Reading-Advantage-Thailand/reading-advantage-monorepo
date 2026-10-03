@@ -331,7 +331,7 @@ export default async function CaseStudies() {
                 <div
                   key={method.title}
                   className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/10 transition-all duration-300 hover:border-white/20 hover:bg-white/15 animate-in fade-in slide-in-from-bottom-8 duration-700"
-                  style={{ animationDelay: `${index * 150}ms` }}
+                  style={{ "--delay": `${index * 150}ms` }}
                 >
                   <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-amber-400 rounded-2xl flex items-center justify-center mb-6 shadow-xl">
                     <BarChart3 className="w-8 h-8 text-white" />

@@ -61,4 +61,4 @@ Provide guardrails for AI/human collaborator pairs adopting the git-workflow mig
 ## Design rules
 
 Before UI work, read `docs/design-rules.md`. After changes, run `pnpm --filter www-reading-advantage lint`
-and fix every `shadcn/*` warning in the files you touched.
+and fix every `shadcn/*` error in the files you touched.

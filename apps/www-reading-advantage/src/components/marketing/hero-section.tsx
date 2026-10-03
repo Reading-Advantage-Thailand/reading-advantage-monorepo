@@ -112,8 +112,8 @@ export default function HeroSection({
             alt={backgroundImage.alt}
             fill
             sizes="100vw"
-            className="object-cover transition-transform will-change-transform"
-            style={{ transform: `translateY(${parallaxY}px) scale(1.1)` }}
+            className="object-cover transition-transform will-change-transform parallax-bg"
+            style={{ "--parallax-y": `${parallaxY}px` }}
             priority
           />
         </div>
@@ -121,8 +121,7 @@ export default function HeroSection({
 
       {/* Gradient overlay — solid when no bg image, semi-transparent when bg image present */}
       <div
-        className={`absolute inset-0 ${gradientStyles} ${backgroundImage ? "opacity-90" : ""}`}
-        style={{ zIndex: backgroundImage ? 10 : 0 }}
+        className={`absolute inset-0 ${gradientStyles} ${backgroundImage ? "z-10 opacity-90" : "z-0"}`}
       />
 
       <div className="container relative z-20 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl">

@@ -426,7 +426,7 @@ export default async function ReadingAdvantage() {
           <div
             key={game.title}
             className="snap-start flex-shrink-0 w-75 group relative bg-white rounded-3xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl border border-sky-100"
-            style={{ animationDelay: `${index * 150}ms` }}
+            style={{ "--delay": `${index * 150}ms` }}
           >
             <div className="relative aspect-square overflow-hidden">
               <Image

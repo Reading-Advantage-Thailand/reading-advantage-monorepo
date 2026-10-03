@@ -75,7 +75,7 @@ export default async function TutorAdvantage() {
                   hover:bg-white/40 hover:-translate-y-1 hover:shadow-lg transition-all duration-300
                   animate-in fade-in slide-in-from-bottom-4 duration-500
                 `}
-                style={{ animationDelay: `${300 + index * 100}ms` }}
+                style={{ "--delay": `${300 + index * 100}ms` }}
               >
                 <div
                   className={`

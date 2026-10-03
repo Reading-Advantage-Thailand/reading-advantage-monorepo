@@ -201,7 +201,7 @@ export default async function B2BSolutions() {
                       ? "col-span-full lg:col-span-2"
                       : ""
                   } animate-in fade-in zoom-in-95 duration-500`}
-                  style={{ animationDelay: `${baseDelay}ms` }}
+                  style={{ "--delay": `${baseDelay}ms` }}
                 >
                   <div
                     className={`
@@ -273,7 +273,7 @@ export default async function B2BSolutions() {
                           key={`${product.key}-${featureIndex}`}
                           className="flex items-start animate-in fade-in slide-in-from-left-4 duration-300"
                           style={{
-                            animationDelay: `${baseDelay + featureIndex * 50}ms`,
+                            "--delay": `${baseDelay + featureIndex * 50}ms`,
                           }}
                         >
                           <ArrowRight
@@ -312,7 +312,7 @@ export default async function B2BSolutions() {
                 {product.key === "readingAdvantage" && (
                   <div
                     className="animate-in fade-in zoom-in-95 duration-500"
-                    style={{ animationDelay: `${baseDelay + 50}ms` }}
+                    style={{ "--delay": `${baseDelay + 50}ms` }}
                   >
                     <div className="relative h-full flex flex-col items-center justify-center overflow-hidden p-8 rounded-2xl bg-white border border-sky-200 shadow-md hover:shadow-lg hover:-translate-y-2 transition-all duration-300">
                       <div className="absolute inset-0 z-0">

@@ -21,15 +21,19 @@ type PanelShellProps = {
   children: ReactNode;
 };
 
+/** Static class names so Tailwind can see each state color. */
+const STATE_BG: Record<StateKey, string> = {
+  mastered: "bg-mastery-mastered",
+  here: "bg-mastery-here",
+  ready: "bg-mastery-ready",
+  locked: "bg-mastery-locked",
+};
+
 function Swatch({ state }: { state: StateKey }) {
   return (
     <span
       aria-hidden="true"
-      className="inline-block h-3 w-3 rounded-full"
-      style={{
-        backgroundColor: MASTERY_COLORS[state],
-        boxShadow: state === "locked" ? "inset 0 0 0 1.5px #8c9bd6" : undefined,
-      }}
+      className={`inline-block h-3 w-3 rounded-full ${STATE_BG[state]} ${state === "locked" ? "shadow-locked-ring" : ""}`}
     />
   );
 }
@@ -199,7 +203,7 @@ export function MasteryProgressPanel({
               </span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-white/10">
-              <div className="h-full rounded-full" style={{ width: `${row.pct}%`, backgroundColor: MASTERY_COLORS[row.state] }} />
+              <div className={`h-full w-pct rounded-full ${STATE_BG[row.state]}`} style={{ "--pct": `${row.pct}%` }} />
             </div>
           </li>
         ))}

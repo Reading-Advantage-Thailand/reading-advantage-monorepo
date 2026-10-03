@@ -2,9 +2,9 @@
 
 Source: the site redesign (track `www_design_refresh_20261002`) and `DESIGN.md`.
 Agents and people must follow these rules. Run `pnpm --filter www-reading-advantage lint`
-after each UI change and fix every `shadcn/*` warning in the files you touched.
+after each UI change and fix every `shadcn/*` error in the files you touched.
 
-## Enforced by `@shadcn/lint` (warnings in the pilot)
+## Enforced by `@shadcn/lint` (errors)
 
 | Rule | Do not | Do |
 | ---- | ------ | -- |
@@ -29,6 +29,6 @@ after each UI change and fix every `shadcn/*` warning in the files you touched.
 
 ## Existing code
 
-The pilot reports about 1,000 warnings. They are the migration list. Do not add new ones.
-When you edit a file, clear its warnings in the same change. Raise the rules to `error`
-when the count reaches zero.
+The four rules are errors. The count is zero, so lint fails on a new violation.
+Inline styles may only set CSS custom properties (`style={{ "--delay": "100ms" }}`);
+a class or a rule in `globals.css` reads the property.
