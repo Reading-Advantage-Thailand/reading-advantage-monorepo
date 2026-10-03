@@ -72,7 +72,7 @@ export default async function ManagedService() {
           </div>
         }
         description={
-          <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-slate-600">
+          <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-site-body">
             {t("hero.description")}
           </p>
         }
@@ -116,10 +116,10 @@ export default async function ManagedService() {
               <h2 className="text-3xl font-bold text-slate-900 mt-2 mb-4 tracking-tight">
                 {t("overview.title")}
               </h2>
-              <p className="text-slate-600 leading-relaxed mb-4">
+              <p className="text-site-body leading-relaxed mb-4">
                 {t("overview.description")}
               </p>
-              <p className="text-slate-600 leading-relaxed mb-6">
+              <p className="text-site-body leading-relaxed mb-6">
                 <strong>{t("overview.strong")}</strong>{" "}
                 {t("overview.strongText")}
               </p>
@@ -192,7 +192,7 @@ export default async function ManagedService() {
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mt-2 mb-8 tracking-tight">
                 {t("benefits.title")}
               </h2>
-              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+              <p className="text-lg text-site-body mb-8 leading-relaxed">
                 {t("benefits.description")}
               </p>
               <ul className="space-y-4">
@@ -227,7 +227,7 @@ export default async function ManagedService() {
           <h2 className="text-4xl md:text-5xl font-bold mt-2 mb-8 tracking-tight">
             {t("roadmap.title")}
           </h2>
-          <p className="text-xl md:text-2xl text-slate-300 mb-12 leading-relaxed">
+          <p className="text-xl md:text-2xl text-site-border mb-12 leading-relaxed">
             {t("roadmap.description")}
           </p>
 

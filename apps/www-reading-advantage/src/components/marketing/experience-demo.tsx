@@ -51,7 +51,7 @@ export function ExperienceDemo({ text }: ExperienceDemoProps) {
           </button>
         )}
       </div>
-      <div className="mx-auto mt-4 flex max-w-4xl flex-col items-center justify-between gap-2 text-sm text-slate-600 sm:flex-row">
+      <div className="mx-auto mt-4 flex max-w-4xl flex-col items-center justify-between gap-2 text-sm text-site-body sm:flex-row">
         <span>{text.hint}</span>
         <a
           href={DEMO_URL}

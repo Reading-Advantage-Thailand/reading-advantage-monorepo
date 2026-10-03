@@ -51,7 +51,7 @@ export default async function ContactPage() {
         description={
           <div>
             <p className="text-xl text-sky-700 mb-2">{t("description")}</p>
-            <p className="text-lg text-slate-600">{t("subtitle")}</p>
+            <p className="text-lg text-site-body">{t("subtitle")}</p>
           </div>
         }
         ctaButton={{
@@ -85,7 +85,7 @@ export default async function ContactPage() {
               <h3 className="text-xl font-bold text-sky-900 mb-3">
                 {t("email.title")}
               </h3>
-              <p className="text-slate-600 mb-6">{t("email.description")}</p>
+              <p className="text-site-body mb-6">{t("email.description")}</p>
               <Button asChild>
                 <a href={`mailto:${contactDetails.supportEmail}`}>
                   {contactDetails.supportEmail}
@@ -102,7 +102,7 @@ export default async function ContactPage() {
               <h3 className="text-xl font-bold text-amber-900 mb-3">
                 {t("phone.title")}
               </h3>
-              <p className="text-slate-600 mb-6">{t("phone.description")}</p>
+              <p className="text-site-body mb-6">{t("phone.description")}</p>
               <Button
                 variant="outline"
                 className="border-amber-500 text-amber-700 hover:bg-amber-50"
@@ -123,7 +123,7 @@ export default async function ContactPage() {
               <h3 className="text-xl font-bold text-sky-900 mb-3">
                 {t("location.title")}
               </h3>
-              <p className="text-slate-600 mb-6">{t("location.description")}</p>
+              <p className="text-site-body mb-6">{t("location.description")}</p>
               <p className="text-sky-700 font-semibold">{t("location.city")}</p>
             </div>
           </div>
@@ -144,14 +144,14 @@ export default async function ContactPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             {/* Business Hours */}
-            <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-lg animate-in fade-in slide-in-from-left-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl flex items-center justify-center mb-6">
-                <Clock className="w-8 h-8 text-slate-600" />
+            <div className="bg-white border border-site-border rounded-3xl p-8 shadow-lg animate-in fade-in slide-in-from-left-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-light-frost to-site-border rounded-2xl flex items-center justify-center mb-6">
+                <Clock className="w-8 h-8 text-site-body" />
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-4">
                 {t("hours.title")}
               </h3>
-              <p className="text-slate-600 mb-3">{t("hours.description")}</p>
+              <p className="text-site-body mb-3">{t("hours.description")}</p>
               <p className="text-3xl font-bold text-sky-600">
                 {t("hours.time")}
               </p>

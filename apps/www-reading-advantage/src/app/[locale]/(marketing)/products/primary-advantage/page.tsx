@@ -163,7 +163,7 @@ export default async function PrimaryAdvantage({
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
               {t("experience.heading")}
             </h2>
-            <p className="text-base md:text-lg leading-relaxed text-slate-600">
+            <p className="text-base md:text-lg leading-relaxed text-site-body">
               {t("experience.description")}
             </p>
           </div>
@@ -190,7 +190,7 @@ export default async function PrimaryAdvantage({
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
                 {t("adaptiveEngine.heading")}
               </h2>
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+              <p className="text-base md:text-lg leading-relaxed text-site-body">
                 {t("adaptiveEngine.description")}
               </p>
             </div>
@@ -288,7 +288,7 @@ export default async function PrimaryAdvantage({
                         {feature.items.map((item) => (
                           <li
                             key={item}
-                            className="flex items-start gap-2 text-slate-600"
+                            className="flex items-start gap-2 text-site-body"
                           >
                             <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mt-2 flex-shrink-0" />
                             <span>{item}</span>
@@ -359,7 +359,7 @@ export default async function PrimaryAdvantage({
               {t("resultsSection.heading")}
             </h2>
           </div>
-          <p className="max-w-3xl mx-auto text-center text-lg leading-relaxed text-slate-600">
+          <p className="max-w-3xl mx-auto text-center text-lg leading-relaxed text-site-body">
             {t("resultsSection.description")}
           </p>
         </div>

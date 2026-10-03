@@ -85,7 +85,7 @@ export default async function MasteryAdvantagePage() {
       logoAlt: t("powersEveryProduct.cards.reading.logoAlt"),
       status: t("powersEveryProduct.cards.reading.status"),
       description: t("powersEveryProduct.cards.reading.description"),
-      badge: "bg-slate-200 text-slate-800",
+      badge: "bg-site-border text-slate-800",
       bar: "bg-site-navy",
     },
   ];

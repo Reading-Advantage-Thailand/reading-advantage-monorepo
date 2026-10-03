@@ -59,7 +59,7 @@ const StepFlow = React.forwardRef<HTMLDivElement, StepFlowProps>(
                 <h4 className={cn("mt-4 font-bold text-lg", v.text)}>
                   {step.title}
                 </h4>
-                <p className="mt-2 text-sm text-slate-600 max-w-xs">
+                <p className="mt-2 text-sm text-site-body max-w-xs">
                   {step.description}
                 </p>
               </div>
@@ -90,7 +90,7 @@ const StepFlow = React.forwardRef<HTMLDivElement, StepFlowProps>(
                 <h4 className={cn("font-bold text-lg", v.text)}>
                   {step.title}
                 </h4>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-1 text-sm text-site-body">
                   {step.description}
                 </p>
               </div>

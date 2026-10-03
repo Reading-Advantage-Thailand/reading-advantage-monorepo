@@ -64,9 +64,9 @@ const variantStyles: Record<
     icon: "text-emerald-600",
   },
   slate: {
-    border: "border-slate-200",
-    accent: "bg-slate-50",
-    icon: "text-slate-600",
+    border: "border-site-border",
+    accent: "bg-site-page",
+    icon: "text-site-body",
   },
 };
 
@@ -121,7 +121,7 @@ const FAQAccordion = React.forwardRef<HTMLDivElement, FAQAccordionProps>(
                   isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
                 )}
               >
-                <div className="px-6 pb-6 text-slate-600 leading-relaxed">
+                <div className="px-6 pb-6 text-site-body leading-relaxed">
                   {item.answer}
                 </div>
               </div>

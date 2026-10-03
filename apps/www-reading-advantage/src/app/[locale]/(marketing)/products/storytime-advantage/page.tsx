@@ -181,7 +181,7 @@ export default async function StorytimeAdvantage({
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
                 {t("adaptiveEngine.heading")}
               </h2>
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+              <p className="text-base md:text-lg leading-relaxed text-site-body">
                 {t("adaptiveEngine.description")}
               </p>
             </div>
@@ -230,7 +230,7 @@ export default async function StorytimeAdvantage({
                     {feature.points.map((point, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <div className="w-2 h-2 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
-                        <span className="text-slate-600 leading-relaxed">
+                        <span className="text-site-body leading-relaxed">
                           {point}
                         </span>
                       </li>
@@ -284,7 +284,7 @@ export default async function StorytimeAdvantage({
                         <h3 className="text-xl font-bold mb-2 text-slate-900">
                           {item.title}
                         </h3>
-                        <p className="text-slate-600 leading-relaxed">
+                        <p className="text-site-body leading-relaxed">
                           {item.description}
                         </p>
                       </div>
@@ -345,7 +345,7 @@ export default async function StorytimeAdvantage({
                   <h3 className="text-xl font-bold mb-4 text-center text-slate-900">
                     {resource.title}
                   </h3>
-                  <p className="text-slate-600 leading-relaxed text-center">
+                  <p className="text-site-body leading-relaxed text-center">
                     {resource.description}
                   </p>
                 </div>

@@ -125,7 +125,7 @@ export function ComparisonTable() {
     <div className="max-w-full overflow-x-auto">
       <div className="mb-8">
         <h2 className="text-3xl font-bold mb-4">{t("title")}</h2>
-        <p className="text-gray-600">{t("lastUpdated")}</p>
+        <p className="text-site-body">{t("lastUpdated")}</p>
       </div>
       <table className="w-full bg-white shadow-lg rounded-lg overflow-hidden">
         <thead className="bg-sky-100">
@@ -148,9 +148,9 @@ export function ComparisonTable() {
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y divide-site-border">
           {comparisonData.map((row, index) => (
-            <tr key={index} className="hover:bg-gray-50">
+            <tr key={index} className="hover:bg-site-page">
               <td className="px-6 py-4">{row.feature}</td>
               <td
                 className={`px-6 py-4 text-center ${row.readingAdvantage.className}`}

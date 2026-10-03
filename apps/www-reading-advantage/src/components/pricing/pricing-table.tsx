@@ -92,7 +92,7 @@ export function PricingTable() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <p className="text-right mb-4 text-gray-600">{t("table.lastUpdated")}</p>
+      <p className="text-right mb-4 text-site-body">{t("table.lastUpdated")}</p>
       <p className="mb-4 text-slate-700">{t("table.unitNote")}</p>
 
       <div

@@ -112,7 +112,7 @@ export default async function ReadingAdvantage() {
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
                 {t("adaptiveEngine.heading")}
               </h2>
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+              <p className="text-base md:text-lg leading-relaxed text-site-body">
                 {t("adaptiveEngine.description")}
               </p>
             </div>
@@ -284,7 +284,7 @@ export default async function ReadingAdvantage() {
                     <h3 className="text-xl font-bold text-slate-900 mb-2">
                       {t("teacherTools.tools.0.title")}
                     </h3>
-                    <p className="text-slate-600">
+                    <p className="text-site-body">
                       {t("teacherTools.tools.0.items.0")}
                     </p>
                   </div>
@@ -297,7 +297,7 @@ export default async function ReadingAdvantage() {
                     <h3 className="text-xl font-bold text-slate-900 mb-2">
                       {t("blendedLearning.studentWorkbooks.title")}
                     </h3>
-                    <p className="text-slate-600">
+                    <p className="text-site-body">
                       {t("blendedLearning.studentWorkbooks.description")}
                     </p>
                   </div>
@@ -310,7 +310,7 @@ export default async function ReadingAdvantage() {
                     <h3 className="text-xl font-bold text-slate-900 mb-2">
                       {t("technicalHighlights.features.0.title")}
                     </h3>
-                    <p className="text-slate-600">
+                    <p className="text-site-body">
                       {t("technicalHighlights.features.0.description")}
                     </p>
                   </div>
@@ -374,7 +374,7 @@ export default async function ReadingAdvantage() {
                   ].map((item, index) => (
                     <li
                       key={index}
-                      className="flex items-start gap-2 text-slate-600"
+                      className="flex items-start gap-2 text-site-body"
                     >
                       <div className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
                       {item}
@@ -395,7 +395,7 @@ export default async function ReadingAdvantage() {
                   ].map((item, index) => (
                     <li
                       key={index}
-                      className="flex items-start gap-2 text-slate-600"
+                      className="flex items-start gap-2 text-site-body"
                     >
                       <div className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
                       {item}
@@ -442,7 +442,7 @@ export default async function ReadingAdvantage() {
               <h3 className="text-xl font-bold text-slate-900 mb-2">
                 {game.title}
               </h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <p className="text-site-body text-sm leading-relaxed">
                 {game.description}
               </p>
             </div>

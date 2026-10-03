@@ -13,7 +13,7 @@ export default async function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className=" font-semibold text-lg mb-4">{t("heading")}</h3>
-              <p className="text-slate-600 ">{t("description")}</p>
+              <p className="text-site-body ">{t("description")}</p>
             </div>
             <div>
               <h3 className=" font-semibold text-lg mb-4">
@@ -23,7 +23,7 @@ export default async function Footer() {
                 <li>
                   <Link
                     href="/about"
-                    className="text-slate-600 hover:text-black transition-colors "
+                    className="text-site-body hover:text-black transition-colors "
                   >
                     {t("quickLinks.links.about")}
                   </Link>
@@ -31,7 +31,7 @@ export default async function Footer() {
                 <li>
                   <Link
                     href="/products"
-                    className="text-slate-600 hover:text-black transition-colors "
+                    className="text-site-body hover:text-black transition-colors "
                   >
                     {t("quickLinks.links.products")}
                   </Link>
@@ -39,7 +39,7 @@ export default async function Footer() {
                 <li>
                   <Link
                     href="/services"
-                    className="text-slate-600 hover:text-black transition-colors "
+                    className="text-site-body hover:text-black transition-colors "
                   >
                     {t("quickLinks.links.services")}
                   </Link>
@@ -47,7 +47,7 @@ export default async function Footer() {
                 <li>
                   <Link
                     href="/case-studies"
-                    className="text-slate-600 hover:text-black transition-colors "
+                    className="text-site-body hover:text-black transition-colors "
                   >
                     {t("quickLinks.links.caseStudies")}
                   </Link>
@@ -55,7 +55,7 @@ export default async function Footer() {
                 <li>
                   <Link
                     href="/contact"
-                    className="text-slate-600 hover:text-black transition-colors "
+                    className="text-site-body hover:text-black transition-colors "
                   >
                     {t("quickLinks.links.contact")}
                   </Link>
@@ -66,7 +66,7 @@ export default async function Footer() {
               <h3 className=" font-semibold text-lg mb-4">
                 {t("contactUs.title")}
               </h3>
-              <ul className="space-y-2 text-slate-600 ">
+              <ul className="space-y-2 text-site-body ">
                 <li>
                   {t("contactUs.email")}: {contactDetails.supportEmail}
                 </li>
@@ -89,7 +89,7 @@ export default async function Footer() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-sky-100 mt-8 pt-8 text-center text-slate-600 ">
+          <div className="border-t border-sky-100 mt-8 pt-8 text-center text-site-body ">
             <p>
               &copy; {new Date().getFullYear()} Reading Advantage Thailand. All
               rights reserved.

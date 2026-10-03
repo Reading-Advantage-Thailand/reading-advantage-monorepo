@@ -119,7 +119,7 @@ export default async function ScienceAdvantage({
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
                 {t("adaptiveEngine.heading")}
               </h2>
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+              <p className="text-base md:text-lg leading-relaxed text-site-body">
                 {t("adaptiveEngine.description")}
               </p>
             </div>
@@ -228,7 +228,7 @@ export default async function ScienceAdvantage({
                 <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
                   {t("keyFeatures.heading")}
                 </h2>
-                <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                <p className="text-lg text-site-body leading-relaxed mb-8">
                   {t("hero.description")}
                 </p>
               </div>
@@ -284,7 +284,7 @@ export default async function ScienceAdvantage({
                       {feature.points.map((point, i) => (
                         <li key={i} className="flex items-start gap-3">
                           <Check className="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-slate-600 leading-relaxed">
+                          <span className="text-site-body leading-relaxed">
                             {point.replace(/^[✓•]\s*/, "")}
                           </span>
                         </li>
@@ -299,10 +299,10 @@ export default async function ScienceAdvantage({
       </section>
 
       {/* Target Audience — 2-column editorial layout */}
-      <section className="bg-slate-50 py-24">
+      <section className="bg-site-page py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-slate-500 block mb-4">
+            <span className="uppercase tracking-widest text-xs font-semibold text-site-body block mb-4">
               {t("eyebrows.builtFor")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-16">
@@ -347,7 +347,7 @@ export default async function ScienceAdvantage({
                 <Card
                   key={audience.title}
                   padding="p-10"
-                  className="bg-white border-slate-100 hover:border-rose-200 hover:shadow-xl"
+                  className="bg-white border-light-frost hover:border-rose-200 hover:shadow-xl"
                 >
                   <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                     <audience.icon
@@ -362,7 +362,7 @@ export default async function ScienceAdvantage({
                     {audience.points.map((point, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <Check className="w-4 h-4 text-rose-500 mt-1 flex-shrink-0" />
-                        <span className="text-slate-600 leading-relaxed">
+                        <span className="text-site-body leading-relaxed">
                           {point.replace(/^[•]\s*/, "")}
                         </span>
                       </li>
@@ -391,7 +391,7 @@ export default async function ScienceAdvantage({
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900">
               {t("waitlist.heading")}
             </h2>
-            <p className="text-xl text-slate-600 mb-12 max-w-xl mx-auto">
+            <p className="text-xl text-site-body mb-12 max-w-xl mx-auto">
               {t("waitlist.description")}
             </p>
             <div className="bg-white rounded-3xl shadow-xl border border-rose-100 p-8">

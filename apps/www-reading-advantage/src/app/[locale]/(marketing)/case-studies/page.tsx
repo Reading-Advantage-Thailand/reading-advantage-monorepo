@@ -109,7 +109,7 @@ export default async function CaseStudies() {
       {/* School Case Studies */}
       {schools.map((school, index) => (
         <section
-          key={school.name}
+          key={`${index}-${school.name}`}
           className={`relative py-24 ${index % 2 === 0 ? "bg-white" : "bg-gradient-to-br from-sky-50 via-white to-amber-50"}`}
         >
           <div className="container mx-auto px-4">
@@ -124,7 +124,7 @@ export default async function CaseStudies() {
                   <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-2">
                     {school.name}
                   </h2>
-                  <p className="text-lg text-slate-600">
+                  <p className="text-lg text-site-body">
                     {t("implementationPeriod")}
                     {school.duration}
                   </p>
@@ -186,7 +186,7 @@ export default async function CaseStudies() {
                           {school.outcomes.readingImprovement.title}
                         </h4>
                       </div>
-                      <p className="text-sm text-slate-600 mb-3">
+                      <p className="text-sm text-site-body mb-3">
                         {school.outcomes.readingImprovement.description}
                       </p>
                       <div className="text-2xl font-bold text-sky-600">
@@ -204,7 +204,7 @@ export default async function CaseStudies() {
                           {school.outcomes.readingVolume.title}
                         </h4>
                       </div>
-                      <p className="text-sm text-slate-600 mb-3">
+                      <p className="text-sm text-site-body mb-3">
                         {school.outcomes.readingVolume.description}
                       </p>
                       <div className="text-2xl font-bold text-amber-600">
@@ -222,7 +222,7 @@ export default async function CaseStudies() {
                           {school.outcomes.fidelity.title}
                         </h4>
                       </div>
-                      <p className="text-sm text-slate-600 mb-3">
+                      <p className="text-sm text-site-body mb-3">
                         {school.outcomes.fidelity.description}
                       </p>
                       <div className="text-2xl font-bold text-green-600">
@@ -258,7 +258,7 @@ export default async function CaseStudies() {
                         <div className="font-bold text-lg text-slate-900">
                           {school.testimonial.author}
                         </div>
-                        <div className="text-sm text-slate-600">
+                        <div className="text-sm text-site-body">
                           {school.testimonial.role}
                         </div>
                       </div>
@@ -268,7 +268,7 @@ export default async function CaseStudies() {
                         quote: school.testimonial.quote,
                       })}
                     </p>
-                    <div className="mt-4 text-sm text-slate-600">
+                    <div className="mt-4 text-sm text-site-body">
                       {t("testimonial.attribution", {
                         school: school.testimonial.school,
                       })}
@@ -321,7 +321,7 @@ export default async function CaseStudies() {
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
                 {t("methodology.title")}
               </h2>
-              <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-site-border max-w-3xl mx-auto leading-relaxed">
                 {t("methodology.description")}
               </p>
             </div>
@@ -339,7 +339,7 @@ export default async function CaseStudies() {
                   <h3 className="text-2xl font-bold text-white mb-4">
                     {method.title}
                   </h3>
-                  <p className="text-slate-300 leading-relaxed">
+                  <p className="text-site-border leading-relaxed">
                     {method.description}
                   </p>
                 </div>

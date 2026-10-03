@@ -115,7 +115,7 @@ export default async function StemAdvantage({
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
                 {t("adaptiveEngine.heading")}
               </h2>
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+              <p className="text-base md:text-lg leading-relaxed text-site-body">
                 {t("adaptiveEngine.description")}
               </p>
             </div>
@@ -199,7 +199,7 @@ export default async function StemAdvantage({
                     {t("coreFeatures.heading")}
                   </span>
                 </div>
-                <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                <p className="text-lg text-site-body leading-relaxed mb-8">
                   {t("hero.description")}
                 </p>
                 <div className="space-y-6">
@@ -243,7 +243,7 @@ export default async function StemAdvantage({
                         <h4 className="text-lg font-bold text-slate-900 mb-1">
                           {feature.title}
                         </h4>
-                        <p className="text-slate-600 leading-relaxed">
+                        <p className="text-site-body leading-relaxed">
                           {feature.points.join(" • ")}
                         </p>
                       </div>
@@ -339,7 +339,7 @@ export default async function StemAdvantage({
       <section className="bg-white py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-slate-500 block mb-4">
+            <span className="uppercase tracking-widest text-xs font-semibold text-site-body block mb-4">
               {t("eyebrows.technicalRequirements")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-12">

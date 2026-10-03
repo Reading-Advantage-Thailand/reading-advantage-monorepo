@@ -125,7 +125,7 @@ export default async function FeaturesPage() {
                 <h3 className="text-xl font-bold mb-4 text-slate-900">
                   {t(`features.${index as IndexRange}.title`)}
                 </h3>
-                <p className="text-slate-600 leading-relaxed">
+                <p className="text-site-body leading-relaxed">
                   {t(`features.${index as IndexRange}.description`)}
                 </p>
               </div>

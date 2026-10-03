@@ -136,7 +136,7 @@ export default async function TutorAdvantage({
         <dl className="container mx-auto grid max-w-5xl grid-cols-1 gap-6 px-4 py-10 text-center sm:grid-cols-3">
           {[0, 1, 2].map((i) => (
             <div key={i} className="flex flex-col">
-              <dt className="order-2 text-sm font-medium text-slate-600">{t(`stats.${i}.label` as "stats.0.label")}</dt>
+              <dt className="order-2 text-sm font-medium text-site-body">{t(`stats.${i}.label` as "stats.0.label")}</dt>
               <dd className="text-4xl font-semibold text-emerald-900">{t(`stats.${i}.value` as "stats.0.value")}</dd>
             </div>
           ))}
@@ -191,7 +191,7 @@ export default async function TutorAdvantage({
                 />
                 <div className="p-6">
                   <img src={BOOK_LOGOS[i]} alt="" className="mb-4 h-8 w-auto" />
-                  <h3 className="text-xl font-semibold text-slate-950">{book.name}</h3>
+                  <h3 className="text-xl font-semibold text-slate-900">{book.name}</h3>
                 </div>
               </li>
             ))}
@@ -237,7 +237,7 @@ export default async function TutorAdvantage({
       {/* What is in a class package */}
       <OverlappingSection background="bg-[#fbfaf6]" data-testid="overlapping-section">
         <div className="container mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-24">
-          <h2 className="mb-12 text-3xl font-semibold tracking-[-0.02em] text-slate-950 md:text-4xl">
+          <h2 className="mb-12 text-3xl font-semibold tracking-[-0.02em] text-slate-900 md:text-4xl">
             {t("platformFeatures.heading")}
           </h2>
           <ul className="grid gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
@@ -247,7 +247,7 @@ export default async function TutorAdvantage({
                   <Check className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 className="mb-1 text-lg font-semibold text-slate-950">
+                  <h3 className="mb-1 text-lg font-semibold text-slate-900">
                     {t(`platformFeatures.features.${i}.title` as "platformFeatures.features.0.title")}
                   </h3>
                   <p className="leading-relaxed text-slate-700">
@@ -316,7 +316,7 @@ export default async function TutorAdvantage({
                 data-testid="testimonial-card"
                 className="rounded-3xl border border-[#e5e1d6] bg-white p-8"
               >
-                <h3 className="mb-3 text-xl font-semibold text-slate-950">
+                <h3 className="mb-3 text-xl font-semibold text-slate-900">
                   {t(`trustSignals.items.${i}.title` as "trustSignals.items.0.title")}
                 </h3>
                 <p className="leading-relaxed text-slate-700">

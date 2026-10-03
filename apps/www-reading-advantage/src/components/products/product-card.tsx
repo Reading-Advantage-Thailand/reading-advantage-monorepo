@@ -22,10 +22,10 @@ export default function ProductCard({ title, gradeRange, description, href, ctaL
         <div className="text-sm font-semibold uppercase tracking-wide text-sky-600 mb-3">
           {gradeRange}
         </div>
-        <h3 className="text-2xl font-bold mb-4 text-gray-800 group-hover:text-sky-700 transition-colors">
+        <h3 className="text-2xl font-bold mb-4 text-slate-900 group-hover:text-sky-700 transition-colors">
           {title}
         </h3>
-        <p className="text-gray-600 mb-8 leading-relaxed flex-grow">{description}</p>
+        <p className="text-site-body mb-8 leading-relaxed flex-grow">{description}</p>
         <Link
           href={href}
           className="inline-flex items-center gap-2 font-semibold text-sky-600 hover:text-sky-800 group-hover:gap-3 transition-all duration-300"

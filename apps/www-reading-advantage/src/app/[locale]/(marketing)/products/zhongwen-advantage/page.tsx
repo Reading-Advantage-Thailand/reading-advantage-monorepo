@@ -175,7 +175,7 @@ export default async function ZhongwenAdvantage({
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
                 {t("adaptiveEngine.heading")}
               </h2>
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+              <p className="text-base md:text-lg leading-relaxed text-site-body">
                 {t("adaptiveEngine.description")}
               </p>
             </div>
@@ -341,7 +341,7 @@ export default async function ZhongwenAdvantage({
                 <h2 className="text-4xl md:text-5xl font-bold mb-8 text-slate-900">
                   {t("interactiveLearning.heading")}
                 </h2>
-                <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                <p className="text-lg text-site-body leading-relaxed mb-8">
                   {t("interactiveLearning.description")}
                 </p>
                 <div className="space-y-4">
@@ -352,7 +352,7 @@ export default async function ZhongwenAdvantage({
                   ].map((point, i) => (
                     <div key={i} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-fuchsia-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-600 leading-relaxed">
+                      <span className="text-site-body leading-relaxed">
                         {point}
                       </span>
                     </div>
@@ -375,7 +375,7 @@ export default async function ZhongwenAdvantage({
                     <h3 className="text-2xl font-bold mb-4 text-slate-900">
                       {feature.title}
                     </h3>
-                    <p className="text-slate-600 leading-relaxed">
+                    <p className="text-site-body leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
@@ -411,7 +411,7 @@ export default async function ZhongwenAdvantage({
                   <h3 className="text-xl font-bold mb-4 text-center text-slate-900">
                     {feature.title}
                   </h3>
-                  <p className="text-slate-600 leading-relaxed text-center flex-1">
+                  <p className="text-site-body leading-relaxed text-center flex-1">
                     {feature.description}
                   </p>
                 </div>
@@ -439,16 +439,16 @@ export default async function ZhongwenAdvantage({
               <h3 className="text-2xl font-bold text-center mb-4 text-slate-900">
                 {t("waitlist.joinWaitlist")}
               </h3>
-              <p className="text-slate-600 text-center mb-8">
+              <p className="text-site-body text-center mb-8">
                 {t("waitlist.description")}
               </p>
               <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
                 <div className="relative flex-1">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-site-body/60" />
                   <input
                     type="email"
                     placeholder={t("waitlist.emailPlaceholder")}
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl border border-fuchsia-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent"
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl border border-fuchsia-200 bg-white text-slate-900 placeholder:text-site-body focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent"
                   />
                 </div>
                 <button

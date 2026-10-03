@@ -62,7 +62,7 @@ export default async function PricingPage() {
               <h3 className="text-lg font-bold text-slate-900 mb-2">
                 {t("trustSignals.noHiddenFees.title")}
               </h3>
-              <p className="text-slate-600 text-sm">
+              <p className="text-site-body text-sm">
                 {t("trustSignals.noHiddenFees.description")}
               </p>
             </div>
@@ -73,7 +73,7 @@ export default async function PricingPage() {
               <h3 className="text-lg font-bold text-slate-900 mb-2">
                 {t("trustSignals.instantSetup.title")}
               </h3>
-              <p className="text-slate-600 text-sm">
+              <p className="text-site-body text-sm">
                 {t("trustSignals.instantSetup.description")}
               </p>
             </div>
@@ -84,7 +84,7 @@ export default async function PricingPage() {
               <h3 className="text-lg font-bold text-slate-900 mb-2">
                 {t("trustSignals.dedicatedSupport.title")}
               </h3>
-              <p className="text-slate-600 text-sm">
+              <p className="text-site-body text-sm">
                 {t("trustSignals.dedicatedSupport.description")}
               </p>
             </div>

@@ -57,7 +57,7 @@ export default async function AboutPage() {
             <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
               {t("sections.labels.introduction")}
             </span>
-            <p className="text-lg text-slate-600 leading-relaxed">
+            <p className="text-lg text-site-body leading-relaxed">
               {t("sections.introduction.description")}
             </p>
           </div>
@@ -93,7 +93,7 @@ export default async function AboutPage() {
               <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
                 {t("sections.mission.title")}
               </h2>
-              <p className="text-slate-600 mb-8 leading-relaxed">
+              <p className="text-site-body mb-8 leading-relaxed">
                 {t("sections.mission.description")}
               </p>
 
@@ -102,7 +102,7 @@ export default async function AboutPage() {
               </h3>
               <ul className="space-y-3">
                 {([0, 1, 2, 3, 4] as const).map((i) => (
-                  <li key={i} className="flex items-start gap-3 text-slate-600">
+                  <li key={i} className="flex items-start gap-3 text-site-body">
                     <span className="w-2 h-2 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
                     {t(`sections.vision.list.${i}`)}
                   </li>
@@ -151,7 +151,7 @@ export default async function AboutPage() {
                   {([0, 1, 2, 3, 4] as const).map((i) => (
                     <li
                       key={i}
-                      className="flex items-start gap-3 text-slate-600"
+                      className="flex items-start gap-3 text-site-body"
                     >
                       <span className="w-2 h-2 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
                       {t(`sections.technology.list.${i}`)}
@@ -167,7 +167,7 @@ export default async function AboutPage() {
                   {([0, 1, 2, 3, 4] as const).map((i) => (
                     <li
                       key={i}
-                      className="flex items-start gap-3 text-slate-600"
+                      className="flex items-start gap-3 text-site-body"
                     >
                       <span className="w-2 h-2 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
                       {t(`sections.impact.list.${i}`)}
@@ -210,7 +210,7 @@ export default async function AboutPage() {
                   <h3 className="font-bold text-xl mb-3 text-slate-900">
                     {t(`sections.values.list.${i as 0 | 1 | 2}.title`)}
                   </h3>
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-site-body leading-relaxed">
                     {t(`sections.values.list.${i as 0 | 1 | 2}.description`)}
                   </p>
                 </div>
@@ -230,7 +230,7 @@ export default async function AboutPage() {
             <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
               {t("sections.research.title")}
             </h2>
-            <p className="text-lg text-slate-600 leading-relaxed">
+            <p className="text-lg text-site-body leading-relaxed">
               {t("sections.research.description")}
             </p>
           </div>
@@ -248,7 +248,7 @@ export default async function AboutPage() {
               <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
                 {t("sections.bigFour.title")}
               </h2>
-              <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg text-site-body max-w-3xl mx-auto leading-relaxed">
                 {t("sections.bigFour.description")}
               </p>
             </div>
@@ -264,7 +264,7 @@ export default async function AboutPage() {
                   <h3 className="font-bold text-xl mb-3 text-slate-900">
                     {t(`sections.bigFour.list.${i}.title`)}
                   </h3>
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-site-body leading-relaxed">
                     {t(`sections.bigFour.list.${i}.description`)}
                   </p>
                 </div>
@@ -284,7 +284,7 @@ export default async function AboutPage() {
             <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
               {t("sections.positioning.title")}
             </h2>
-            <p className="text-lg text-slate-600 leading-relaxed">
+            <p className="text-lg text-site-body leading-relaxed">
               {t("sections.positioning.description")}
             </p>
           </div>

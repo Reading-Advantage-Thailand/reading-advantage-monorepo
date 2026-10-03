@@ -78,7 +78,7 @@ export default async function BlendedLearning() {
             <h2 className="text-2xl md:text-3xl text-slate-900 mb-4 font-semibold leading-relaxed">
               {t("hero.subtitle")}
             </h2>
-            <p className="text-xl md:text-2xl text-slate-600 max-w-3xl leading-relaxed">
+            <p className="text-xl md:text-2xl text-site-body max-w-3xl leading-relaxed">
               {t("hero.description")}
             </p>
           </>
@@ -115,10 +115,10 @@ export default async function BlendedLearning() {
                 <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight tracking-tight">
                   {t("overview.heading")}
                 </h2>
-                <p className="text-lg text-slate-600 mb-6 leading-relaxed">
+                <p className="text-lg text-site-body mb-6 leading-relaxed">
                   {t("overview.description")}
                 </p>
-                <p className="text-lg text-slate-600 mb-6 leading-relaxed">
+                <p className="text-lg text-site-body mb-6 leading-relaxed">
                   <strong>{t("overview.strong")}</strong>{" "}
                   {t("overview.strongText")}
                 </p>
@@ -184,7 +184,7 @@ export default async function BlendedLearning() {
                 <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight tracking-tight">
                   {t("forTeachers.title")}
                 </h2>
-                <p className="text-lg text-slate-600 mb-6 leading-relaxed">
+                <p className="text-lg text-site-body mb-6 leading-relaxed">
                   {t("forTeachers.description")}
                 </p>
                 <ul className="space-y-4 mb-8">
@@ -284,7 +284,7 @@ export default async function BlendedLearning() {
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
                 {t("onboarding.subtitle")}
               </h2>
-              <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-site-body max-w-3xl mx-auto leading-relaxed">
                 {t("onboarding.description")}
               </p>
             </div>
@@ -302,7 +302,7 @@ export default async function BlendedLearning() {
                   <h3 className="text-2xl font-bold text-slate-900 mb-4">
                     {item.title}
                   </h3>
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-site-body leading-relaxed">
                     {item.description}
                   </p>
                 </div>

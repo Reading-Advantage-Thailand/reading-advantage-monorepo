@@ -152,7 +152,7 @@ export default async function MathAdvantage({
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
                 {t("adaptiveEngine.heading")}
               </h2>
-              <p className="text-base md:text-lg leading-relaxed text-slate-600">
+              <p className="text-base md:text-lg leading-relaxed text-site-body">
                 {t("adaptiveEngine.description")}
               </p>
             </div>
@@ -234,7 +234,7 @@ export default async function MathAdvantage({
                     <div className="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Check className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-lg text-slate-600">{point}</span>
+                    <span className="text-lg text-site-body">{point}</span>
                   </li>
                 ))}
               </ul>
@@ -300,7 +300,7 @@ export default async function MathAdvantage({
                     <h3 className="text-xl font-bold text-white mb-2">
                       {benefit.title}
                     </h3>
-                    <p className="text-slate-300 leading-relaxed">
+                    <p className="text-site-border leading-relaxed">
                       {benefit.description}
                     </p>
                   </div>
@@ -348,7 +348,7 @@ export default async function MathAdvantage({
               />
             </div>
           </div>
-          <p className="mt-12 text-center text-sm text-slate-600 max-w-2xl mx-auto">
+          <p className="mt-12 text-center text-sm text-site-body max-w-2xl mx-auto">
             Math Advantage is on our product roadmap. Specific efficacy stats
             will be published when the product is generally available and has
             verified evidence.

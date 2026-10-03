@@ -152,11 +152,11 @@ export default function HeroSection({
 
             {/* Description */}
             {typeof description === "string" ? (
-              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed mb-8 text-slate-400">
+              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed mb-8 text-site-body">
                 {description}
               </p>
             ) : (
-              <div className="text-xl md:text-2xl lg:text-3xl leading-relaxed mb-8 text-slate-400">
+              <div className="text-xl md:text-2xl lg:text-3xl leading-relaxed mb-8 text-site-body">
                 {description}
               </div>
             )}

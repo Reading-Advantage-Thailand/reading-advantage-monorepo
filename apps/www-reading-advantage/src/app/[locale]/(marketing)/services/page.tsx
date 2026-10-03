@@ -147,7 +147,7 @@ export default async function Services() {
                           ? "bg-green-100 text-green-700"
                           : service.statusTone === "upcoming"
                             ? "bg-amber-100 text-amber-700"
-                            : "bg-slate-200 text-slate-700"
+                            : "bg-site-border text-slate-700"
                       }`}
                     >
                       {service.statusBadge}
@@ -177,7 +177,7 @@ export default async function Services() {
                       {service.name}
                     </h3>
 
-                    <p className="text-slate-600 mb-6 leading-relaxed">
+                    <p className="text-site-body mb-6 leading-relaxed">
                       {service.description}
                     </p>
 

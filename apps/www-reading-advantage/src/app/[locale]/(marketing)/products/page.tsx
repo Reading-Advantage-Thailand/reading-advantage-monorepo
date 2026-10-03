@@ -129,7 +129,7 @@ export default async function ProductsPage() {
                   </div>
 
                   {/* Grade range badge */}
-                  <div className="text-sm font-semibold uppercase tracking-wide text-slate-600 mb-3">
+                  <div className="text-sm font-semibold uppercase tracking-wide text-site-body mb-3">
                     {band.gradeRange}
                   </div>
 

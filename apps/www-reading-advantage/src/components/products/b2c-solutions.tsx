@@ -54,7 +54,7 @@ export default function B2CSolutions() {
               {t("title")}
             </span>
           </h2>
-          <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl text-site-body max-w-4xl mx-auto leading-relaxed">
             {t("description")}
           </p>
         </div>
@@ -75,7 +75,7 @@ export default function B2CSolutions() {
                 <feature.icon className="w-8 h-8 text-white" strokeWidth={1.5} />
               </div>
               <h3 className="text-2xl font-bold mb-3 text-slate-900">{feature.title}</h3>
-              <p className="text-slate-600 leading-relaxed">{feature.description}</p>
+              <p className="text-site-body leading-relaxed">{feature.description}</p>
             </div>
           ))}
         </div>
@@ -93,7 +93,7 @@ export default function B2CSolutions() {
               </div>
               <div className="flex-1">
                 <h3 className="text-3xl font-bold mb-2 text-slate-900">{t("codecamp.title")}</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <p className="text-site-body leading-relaxed">
                   {t("description")}
                 </p>
               </div>
