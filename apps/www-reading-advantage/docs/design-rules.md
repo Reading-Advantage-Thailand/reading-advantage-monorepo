@@ -9,7 +9,7 @@ after each UI change and fix every `shadcn/*` warning in the files you touched.
 | Rule | Do not | Do |
 | ---- | ------ | -- |
 | `shadcn/no-raw-colors` | Use palette classes such as `text-slate-600` or `bg-sky-50`. | Use a theme color. Site neutrals: `site-page`, `site-body`, `site-border`, `site-navy`. Mastery states: `mastery-mastered`, `mastery-here`, `mastery-ready`, `mastery-locked`. Product accents are the declared `emerald`, `cyan`, `sky`, `amber`, `orange`, `rose`, `indigo`, `fuchsia` shades. |
-| `shadcn/no-arbitrary-values` | Write `border-[#dad4c8]`, `rounded-[40px]`, `w-[500px]`, `tracking-[0.18em]`. | Use a scale class or a theme token. Declare a value that repeats in `src/app/[locale]/globals.css`. |
+| `shadcn/no-arbitrary-values` | Write `border-[#dad4c8]`, `rounded-[40px]`, `w-[500px]`, `tracking-[0.18em]`. | Use a scale class (`w-125`, `aspect-4/3`, `w-2/5`) or a theme token. Existing tokens: `tracking-eyebrow`, `tracking-eyebrow-wide`, `blur-glow`, `rounded-panel`, `shadow-panel`, `shadow-float`, `leading-display`, `text-display`, `text-2xs`, `bg-grid-pattern`, `min-h-hero`. Declare a value that repeats in `src/app/[locale]/globals.css`. |
 | `shadcn/no-inline-styles` | Use `style={{...}}` or a `<style>` element for static design. | Use classes. An inline style may only set a CSS custom property or a value computed at run time. |
 | `shadcn/no-unknown-classes` | Use a class that Tailwind cannot generate, such as `prose`. | Fix the spelling, or declare the class with `@utility`. |
 
