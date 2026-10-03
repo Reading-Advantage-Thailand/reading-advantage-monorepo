@@ -20,3 +20,10 @@
 - [x] Level labels: Reading A1− to A2+, Primary Pre-A1 to A2 (A2 ceiling)
 - [x] Mastery page duplicate heading changed
 - [ ] Screenshots: only en desktop Mastery explorer seen; home, th, zh and 390 px still open
+
+## Phase 5: Design-rule lint pilot
+- [x] Install `@shadcn/lint` in www-reading-advantage only; register in `eslint.config.mjs` (warnings)
+- [x] Site neutral and Mastery state tokens in `globals.css`; `components.json` css path fixed
+- [x] `docs/design-rules.md` and an AGENTS.md pointer
+- [ ] Migrate the ~1,000 existing warnings (hex to tokens first), then raise rules to `error`
+- [ ] Fix `prose` classes (no CSS is generated for them)

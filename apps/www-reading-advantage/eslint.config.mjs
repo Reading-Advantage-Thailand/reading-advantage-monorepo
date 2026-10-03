@@ -1,4 +1,5 @@
 import { baseConfig, ignores } from "@reading-advantage/config/eslint";
+import { plugin as shadcn } from "@shadcn/lint";
 
 const eslintConfig = [
   { ignores: [...ignores, "scripts/", "e2e/", "revideo/"] },
@@ -24,6 +25,42 @@ const eslintConfig = [
           ],
         },
       ],
+    },
+  },
+  {
+    // Design-system rules (@shadcn/lint). Pilot: warnings only, marketing UI.
+    files: ["src/**/*.{tsx,jsx}"],
+    ignores: ["src/**/*.test.tsx", "src/__tests__/**", "src/components/ui/**"],
+    plugins: { shadcn },
+    settings: {
+      shadcn: {
+        note: "See DESIGN.md and docs/design-rules.md for the design rules.",
+      },
+    },
+    rules: {
+      "shadcn/no-raw-colors": [
+        "warn",
+        {
+          message:
+            'Use a theme color, not "{{className}}". Site neutrals: site-page, site-body, site-border, site-navy. Mastery states: mastery-mastered, mastery-here, mastery-ready, mastery-locked. Others: {{tokens}}. Add new colors to {{file}}.',
+        },
+      ],
+      "shadcn/no-arbitrary-values": [
+        "warn",
+        {
+          message:
+            'Do not use the arbitrary value "{{className}}". Use a scale class or a theme token. Site neutrals are site-page, site-body, site-border and site-navy. Declare a repeated value once in {{file}}.',
+        },
+      ],
+      "shadcn/no-inline-styles": [
+        "warn",
+        {
+          allow: ["--*"],
+          message:
+            "Style with classes. Use an inline style only to set a CSS custom property or a value that is computed at run time.",
+        },
+      ],
+      "shadcn/no-unknown-classes": "warn",
     },
   },
   {

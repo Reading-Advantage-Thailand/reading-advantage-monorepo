@@ -29,7 +29,6 @@
     "@radix-ui/react-slot": "catalog:",
     "@reading-advantage/ui": "workspace:*",
     "@reading-advantage/utils": "workspace:*",
-
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
     "github-slugger": "^2.0.0",
@@ -53,12 +52,13 @@
     "unified": "^11.0.5"
   },
   "devDependencies": {
-    "@reading-advantage/config": "workspace:*",
     "@playwright/test": "catalog:",
+    "@reading-advantage/config": "workspace:*",
     "@revideo/2d": "^0.10.4",
     "@revideo/core": "^0.10.4",
     "@revideo/renderer": "^0.10.4",
     "@revideo/vite-plugin": "^0.10.4",
+    "@shadcn/lint": "^0.2.0",
     "@tailwindcss/postcss": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",

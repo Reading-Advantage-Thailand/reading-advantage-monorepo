@@ -56,6 +56,16 @@
   --color-dark-border: #525a69;
   --color-light-frost: #eff1f3;
 
+  /* Site neutrals and Mastery graph states (www_design_refresh_20261002). */
+  --color-site-page: #faf9f7;
+  --color-site-body: #55534e;
+  --color-site-border: #dad4c8;
+  --color-site-navy: #0c1437;
+  --color-mastery-mastered: #22c55e;
+  --color-mastery-here: #ffffff;
+  --color-mastery-ready: #fbbf24;
+  --color-mastery-locked: #0c1437;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

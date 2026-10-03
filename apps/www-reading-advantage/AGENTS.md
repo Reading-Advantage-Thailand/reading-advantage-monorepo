@@ -57,3 +57,8 @@ Provide guardrails for AI/human collaborator pairs adopting the git-workflow mig
 - PR comments for technical review.
 - Shared migration report (`docs/migration/<date>-migration.md`) for ongoing findings.
 
+
+## Design rules
+
+Before UI work, read `docs/design-rules.md`. After changes, run `pnpm --filter www-reading-advantage lint`
+and fix every `shadcn/*` warning in the files you touched.
