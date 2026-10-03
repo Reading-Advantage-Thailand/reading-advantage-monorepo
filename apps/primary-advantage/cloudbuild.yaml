@@ -34,7 +34,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0060_primary_legacy_id_map"
+      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0061_tutor_compat_views"
     secretEnv:
       - "DATABASE_URL"
 
