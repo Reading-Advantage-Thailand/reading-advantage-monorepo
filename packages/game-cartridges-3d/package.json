@@ -139,7 +139,8 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "sync:assets": "node scripts/sync-assets.mjs"
   },
   "dependencies": {
     "@reading-advantage/advantage-play-kit": "workspace:*",

@@ -46,6 +46,13 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
         <StudentRpgCatalogPanel ownerKey={ownerKey} />
         <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames} />
       </div>
+      <Link
+        className="mb-6 block rounded-lg border border-primary p-4 hover:bg-primary/5"
+        href="/student/games/story"
+      >
+        <h2 className="text-lg font-semibold">{t("storyLink")}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{t("storyLinkDescription")}</p>
+      </Link>
       <ul className="grid gap-4 sm:grid-cols-2">
         {cartridgeCatalog.map((entry) => (
           <li key={entry.id}>

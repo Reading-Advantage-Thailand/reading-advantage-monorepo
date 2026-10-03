@@ -50,3 +50,8 @@ cloud-sql-proxy
 service-account.json
 /docs
 /logs
+# 3D game assets synced from packages/game-cartridges-3d (pnpm sync:3d-assets)
+/public/packs
+/public/stories
+/public/assets/apk/primary-chibi-2d
+/public/assets/apk3d

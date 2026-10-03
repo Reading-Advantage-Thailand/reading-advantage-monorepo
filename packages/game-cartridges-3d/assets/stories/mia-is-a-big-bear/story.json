@@ -1,0 +1,683 @@
+{
+  "schemaVersion": 1,
+  "id": "mia-is-a-big-bear",
+  "title": "Mia Is a Big Bear",
+  "series": "Level 3",
+  "lesson": 1,
+  "level": "A0+",
+  "genre": "Animals",
+  "paragraphs": [
+    {
+      "text": "Mia is at Lily's house. They play an animal game. They have fun. \"I am a big bear,\" says Mia. Her body is big and brown. \"Look at my big arms!\" says Mia. \"Now I am a bat,\" says Lily. She opens her arms and runs. \"Look at me, Mia!\" \"You are a good bat!\" says Mia.",
+      "translation": "มีอาอยู่ที่บ้านของลิลลี่ พวกเธอเล่นเกมสัตว์ พวกเธอสนุกกัน \"ฉันเป็นหมีตัวใหญ่\" มีอาพูด ตัวของเธอใหญ่และเป็นสีน้ำตาล \"ดูแขนใหญ่ๆ ของฉันสิ!\" มีอาพูด \"ตอนนี้ฉันเป็นค้างคาว\" ลิลลี่พูด เธอกางแขนออกแล้ววิ่ง \"ดูฉันสิ มีอา!\" \"เธอเป็นค้างคาวที่เก่งมาก!\" มีอาพูด"
+    },
+    {
+      "text": "Pip comes to the room. He sees the big bear. \"Woof! Woof!\" says Pip. Mia stops. Pip runs behind the sofa. He looks at Mia with big eyes. \"Is Pip sad?\" asks Lily. \"Pip, it is me,\" says Mia. \"It is a game!\"",
+      "translation": "ปิ๊ปเดินเข้ามาในห้อง เขาเห็นหมีตัวใหญ่ \"โฮ่ง! โฮ่ง!\" ปิ๊ปเห่า มีอาหยุด ปิ๊ปวิ่งไปหลังโซฟา เขามองมีอาด้วยตากลมโต \"ปิ๊ปเสียใจหรือเปล่า\" ลิลลี่ถาม \"ปิ๊ป นี่ฉันเอง\" มีอาพูด \"นี่เป็นแค่เกมนะ!\""
+    },
+    {
+      "text": "Mia sits on the floor. \"Come here, Pip,\" she says. Pip looks at her face. Then he comes to her. Mia says, \"Sorry, Pip.\" She holds his small head. \"Woof!\" says Pip. Pip is happy now. Lily smiles. \"Is Pip a bear?\" asks Lily. \"No, Pip is a dog!\" says Mia.",
+      "translation": "มีอานั่งลงบนพื้น \"มานี่สิ ปิ๊ป\" เธอพูด ปิ๊ปมองหน้าของเธอ แล้วเขาก็เดินมาหาเธอ มีอาพูดว่า \"ขอโทษนะ ปิ๊ป\" เธอจับหัวเล็กๆ ของเขาเบาๆ \"โฮ่ง!\" ปิ๊ปเห่า ตอนนี้ปิ๊ปมีความสุข ลิลลี่ยิ้ม \"ปิ๊ปเป็นหมีหรือเปล่า\" ลิลลี่ถาม \"ไม่ใช่ ปิ๊ปเป็นหมา!\" มีอาพูด"
+    }
+  ],
+  "images": [
+    "img-1.webp",
+    "img-2.webp",
+    "img-3.webp"
+  ],
+  "vocabulary": [
+    {
+      "id": "w-animal",
+      "term": "animal",
+      "translation": "สัตว์",
+      "definition": "A living thing like a dog, a bird, or a bear."
+    },
+    {
+      "id": "w-bear",
+      "term": "bear",
+      "translation": "หมี",
+      "definition": "A big animal with brown or black hair."
+    },
+    {
+      "id": "w-bat",
+      "term": "bat",
+      "translation": "ค้างคาว",
+      "definition": "A small animal that flies in the night."
+    },
+    {
+      "id": "w-arm",
+      "term": "arm",
+      "translation": "แขน",
+      "definition": "The part of your body between your shoulder and your hand."
+    },
+    {
+      "id": "w-body",
+      "term": "body",
+      "translation": "ร่างกาย, ตัว",
+      "definition": "All of a person or an animal, from the head to the feet."
+    },
+    {
+      "id": "w-sofa",
+      "term": "sofa",
+      "translation": "โซฟา",
+      "definition": "A big soft seat for two or three people."
+    },
+    {
+      "id": "w-floor",
+      "term": "floor",
+      "translation": "พื้น (ในห้อง)",
+      "definition": "The flat part of a room under your feet."
+    },
+    {
+      "id": "w-eye",
+      "term": "eye",
+      "translation": "ตา",
+      "definition": "You see with it."
+    },
+    {
+      "id": "w-face",
+      "term": "face",
+      "translation": "ใบหน้า",
+      "definition": "The front of your head, with eyes, a nose, and a mouth."
+    },
+    {
+      "id": "w-head",
+      "term": "head",
+      "translation": "ศีรษะ, หัว",
+      "definition": "The part of the body above the neck."
+    },
+    {
+      "id": "w-sorry",
+      "term": "Sorry",
+      "translation": "ขอโทษ",
+      "definition": "You say it when you are sad about a bad thing you did."
+    },
+    {
+      "id": "w-game",
+      "term": "game",
+      "translation": "เกม",
+      "definition": "Something you play with other people."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "Mia is at Lily's house.",
+      "words": [
+        "Mia",
+        "is",
+        "at",
+        "Lily's",
+        "house."
+      ],
+      "translation": "มีอาอยู่ที่บ้านของลิลลี่",
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "They play an animal game.",
+      "words": [
+        "They",
+        "play",
+        "an",
+        "animal",
+        "game."
+      ],
+      "translation": "พวกเธอเล่นเกมสัตว์",
+      "paragraph": 0
+    },
+    {
+      "id": "s-3",
+      "text": "They have fun.",
+      "words": [
+        "They",
+        "have",
+        "fun."
+      ],
+      "translation": "พวกเธอสนุกกัน",
+      "paragraph": 0
+    },
+    {
+      "id": "s-4",
+      "text": "Her body is big and brown.",
+      "words": [
+        "Her",
+        "body",
+        "is",
+        "big",
+        "and",
+        "brown."
+      ],
+      "translation": "ตัวของเธอใหญ่และเป็นสีน้ำตาล",
+      "paragraph": 0
+    },
+    {
+      "id": "s-5",
+      "text": "Pip comes to the room.",
+      "words": [
+        "Pip",
+        "comes",
+        "to",
+        "the",
+        "room."
+      ],
+      "translation": "ปิ๊ปเดินเข้ามาในห้อง",
+      "paragraph": 1
+    },
+    {
+      "id": "s-6",
+      "text": "He sees the big bear.",
+      "words": [
+        "He",
+        "sees",
+        "the",
+        "big",
+        "bear."
+      ],
+      "translation": "เขาเห็นหมีตัวใหญ่",
+      "paragraph": 1
+    },
+    {
+      "id": "s-7",
+      "text": "Pip runs behind the sofa.",
+      "words": [
+        "Pip",
+        "runs",
+        "behind",
+        "the",
+        "sofa."
+      ],
+      "translation": "ปิ๊ปวิ่งไปหลังโซฟา",
+      "paragraph": 1
+    },
+    {
+      "id": "s-8",
+      "text": "He looks at Mia with big eyes.",
+      "words": [
+        "He",
+        "looks",
+        "at",
+        "Mia",
+        "with",
+        "big",
+        "eyes."
+      ],
+      "translation": "เขามองมีอาด้วยตากลมโต",
+      "paragraph": 1
+    },
+    {
+      "id": "s-9",
+      "text": "Mia sits on the floor.",
+      "words": [
+        "Mia",
+        "sits",
+        "on",
+        "the",
+        "floor."
+      ],
+      "translation": "มีอานั่งลงบนพื้น",
+      "paragraph": 2
+    },
+    {
+      "id": "s-10",
+      "text": "Pip looks at her face.",
+      "words": [
+        "Pip",
+        "looks",
+        "at",
+        "her",
+        "face."
+      ],
+      "translation": "ปิ๊ปมองหน้าของเธอ",
+      "paragraph": 2
+    },
+    {
+      "id": "s-11",
+      "text": "Then he comes to her.",
+      "words": [
+        "Then",
+        "he",
+        "comes",
+        "to",
+        "her."
+      ],
+      "translation": "แล้วเขาก็เดินมาหาเธอ",
+      "paragraph": 2
+    },
+    {
+      "id": "s-12",
+      "text": "Pip is happy now.",
+      "words": [
+        "Pip",
+        "is",
+        "happy",
+        "now."
+      ],
+      "translation": "ตอนนี้ปิ๊ปมีความสุข",
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "They play an ___ game.",
+      "answer": "animal",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "\"I am a big ___,\" says Mia.",
+      "answer": "bear",
+      "paragraph": 0
+    },
+    {
+      "id": "f-3",
+      "sentence": "\"Now I am a ___,\" says Lily.",
+      "answer": "bat",
+      "paragraph": 0
+    },
+    {
+      "id": "f-4",
+      "sentence": "Look at my big ___!",
+      "answer": "arms",
+      "paragraph": 0
+    },
+    {
+      "id": "f-5",
+      "sentence": "Her ___ is big and brown.",
+      "answer": "body",
+      "paragraph": 0
+    },
+    {
+      "id": "f-6",
+      "sentence": "Pip runs behind the ___.",
+      "answer": "sofa",
+      "paragraph": 1
+    },
+    {
+      "id": "f-7",
+      "sentence": "Mia sits on the ___.",
+      "answer": "floor",
+      "paragraph": 2
+    },
+    {
+      "id": "f-8",
+      "sentence": "He looks at Mia with big ___.",
+      "answer": "eyes",
+      "paragraph": 1
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "What is Mia in the game?",
+      "options": [
+        "a dog",
+        "a bird",
+        "a bat",
+        "a bear"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-2",
+      "question": "What is Lily in the game?",
+      "options": [
+        "a cat",
+        "a frog",
+        "a bear",
+        "a bat"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-3",
+      "question": "Where does Pip run?",
+      "options": [
+        "under the bed",
+        "to the door",
+        "into the garden",
+        "behind the sofa"
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-4",
+      "question": "What does Lily open?",
+      "options": [
+        "her shoes",
+        "her bag",
+        "her hat",
+        "her arms"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-5",
+      "question": "What does Pip say?",
+      "options": [
+        "\"Grr!\"",
+        "\"Good night!\"",
+        "\"Hello!\"",
+        "\"Woof! Woof!\""
+      ],
+      "answer": 3
+    },
+    {
+      "id": "q-6",
+      "question": "What does Lily ask?",
+      "options": [
+        "\"Is Pip red?\"",
+        "\"Is Pip happy?\"",
+        "\"Is Pip big?\"",
+        "\"Is Pip sad?\""
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-7",
+      "question": "Where does Mia sit?",
+      "options": [
+        "on the sofa",
+        "on the bed",
+        "on a chair",
+        "on the floor"
+      ],
+      "answer": 3,
+      "paragraph": 2
+    },
+    {
+      "id": "q-8",
+      "question": "What does Mia say to Pip?",
+      "options": [
+        "\"Come here, Pip.\"",
+        "\"Thank you, Pip.\"",
+        "\"Good night, Pip.\"",
+        "\"Sorry, Pip.\""
+      ],
+      "answer": 3,
+      "paragraph": 2
+    },
+    {
+      "id": "q-9",
+      "question": "What does Mia hold?",
+      "options": [
+        "Pip's tail",
+        "Pip's bag",
+        "Pip's ball",
+        "Pip's head"
+      ],
+      "answer": 3,
+      "paragraph": 2
+    },
+    {
+      "id": "q-10",
+      "question": "What is Pip?",
+      "options": [
+        "a bear",
+        "a boy",
+        "a bat",
+        "a dog"
+      ],
+      "answer": 3,
+      "paragraph": 2
+    }
+  ],
+  "source": {
+    "file": "content/primary/bank-3/b001.json",
+    "translationsGenerated": true
+  },
+  "audio": {
+    "article": "article.mp3",
+    "sentences": [
+      {
+        "text": "Mia is at Lily's house.",
+        "start": 0,
+        "end": 2.244,
+        "paragraph": 0
+      },
+      {
+        "text": "They play an animal game.",
+        "start": 2.694,
+        "end": 4.253,
+        "paragraph": 0
+      },
+      {
+        "text": "They have fun.",
+        "start": 4.703,
+        "end": 6.242,
+        "paragraph": 0
+      },
+      {
+        "text": "\"I am a big bear,\" says Mia.",
+        "start": 6.692,
+        "end": 9.996,
+        "paragraph": 0
+      },
+      {
+        "text": "Her body is big and brown.",
+        "start": 10.446,
+        "end": 13.45,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Look at my big arms!\" says Mia.",
+        "start": 13.9,
+        "end": 16.743,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Now I am a bat,\" says Lily.",
+        "start": 17.193,
+        "end": 20.642,
+        "paragraph": 0
+      },
+      {
+        "text": "She opens her arms and runs.",
+        "start": 21.092,
+        "end": 23.559,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Look at me, Mia!\"",
+        "start": 24.009,
+        "end": 25.713,
+        "paragraph": 0
+      },
+      {
+        "text": "\"You are a good bat!\" says Mia.",
+        "start": 26.163,
+        "end": 29.474,
+        "paragraph": 0
+      },
+      {
+        "text": "Pip comes to the room.",
+        "start": 30.374,
+        "end": 32.28,
+        "paragraph": 1
+      },
+      {
+        "text": "He sees the big bear.",
+        "start": 32.73,
+        "end": 34.587,
+        "paragraph": 1
+      },
+      {
+        "text": "\"Woof! Woof!\" says Pip.",
+        "start": 35.037,
+        "end": 38.453,
+        "paragraph": 1
+      },
+      {
+        "text": "Mia stops.",
+        "start": 38.903,
+        "end": 40.199,
+        "paragraph": 1
+      },
+      {
+        "text": "Pip runs behind the sofa.",
+        "start": 40.649,
+        "end": 42.755,
+        "paragraph": 1
+      },
+      {
+        "text": "He looks at Mia with big eyes.",
+        "start": 43.205,
+        "end": 45.863,
+        "paragraph": 1
+      },
+      {
+        "text": "\"Is Pip sad?\" asks Lily.",
+        "start": 46.313,
+        "end": 49.084,
+        "paragraph": 1
+      },
+      {
+        "text": "\"Pip, it is me,\" says Mia.",
+        "start": 49.534,
+        "end": 52.465,
+        "paragraph": 1
+      },
+      {
+        "text": "\"It is a game!\"",
+        "start": 52.915,
+        "end": 54.568,
+        "paragraph": 1
+      },
+      {
+        "text": "Mia sits on the floor.",
+        "start": 55.468,
+        "end": 57.625,
+        "paragraph": 2
+      },
+      {
+        "text": "\"Come here, Pip,\" she says.",
+        "start": 58.075,
+        "end": 60.522,
+        "paragraph": 2
+      },
+      {
+        "text": "Pip looks at her face.",
+        "start": 60.972,
+        "end": 62.569,
+        "paragraph": 2
+      },
+      {
+        "text": "Then he comes to her.",
+        "start": 63.019,
+        "end": 64.772,
+        "paragraph": 2
+      },
+      {
+        "text": "Mia says, \"Sorry, Pip.\"",
+        "start": 65.222,
+        "end": 68.014,
+        "paragraph": 2
+      },
+      {
+        "text": "She holds his small head.",
+        "start": 68.464,
+        "end": 70.787,
+        "paragraph": 2
+      },
+      {
+        "text": "\"Woof!\" says Pip.",
+        "start": 71.237,
+        "end": 73.434,
+        "paragraph": 2
+      },
+      {
+        "text": "Pip is happy now.",
+        "start": 73.884,
+        "end": 75.603,
+        "paragraph": 2
+      },
+      {
+        "text": "Lily smiles.",
+        "start": 76.053,
+        "end": 77.727,
+        "paragraph": 2
+      },
+      {
+        "text": "\"Is Pip a bear?\" asks Lily.",
+        "start": 78.177,
+        "end": 81.068,
+        "paragraph": 2
+      },
+      {
+        "text": "\"No, Pip is a dog!\" says Mia.",
+        "start": 81.518,
+        "end": 84.737,
+        "paragraph": 2
+      }
+    ],
+    "words": "words.mp3",
+    "wordTimes": [
+      {
+        "text": "animal",
+        "start": 0,
+        "end": 0.819
+      },
+      {
+        "text": "bear",
+        "start": 1.519,
+        "end": 2.322
+      },
+      {
+        "text": "bat",
+        "start": 3.022,
+        "end": 3.616
+      },
+      {
+        "text": "arm",
+        "start": 4.316,
+        "end": 5.166
+      },
+      {
+        "text": "body",
+        "start": 5.866,
+        "end": 6.783
+      },
+      {
+        "text": "sofa",
+        "start": 7.483,
+        "end": 8.602
+      },
+      {
+        "text": "floor",
+        "start": 9.302,
+        "end": 10.29
+      },
+      {
+        "text": "eye",
+        "start": 10.99,
+        "end": 11.59
+      },
+      {
+        "text": "face",
+        "start": 12.29,
+        "end": 13.084
+      },
+      {
+        "text": "head",
+        "start": 13.784,
+        "end": 14.678
+      },
+      {
+        "text": "sorry",
+        "start": 15.378,
+        "end": 16.335
+      },
+      {
+        "text": "game",
+        "start": 17.035,
+        "end": 17.81
+      }
+    ]
+  }
+}

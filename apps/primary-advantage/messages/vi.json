@@ -2690,7 +2690,24 @@
   },
   "StudentGames": {
     "title": "Trò chơi học sinh",
-    "description": "Chơi danh mục Advantage Play Kit trực tiếp. Mỗi thẻ mở tuyến APK đã xác thực."
+    "description": "Chơi danh mục Advantage Play Kit trực tiếp. Mỗi thẻ mở tuyến APK đã xác thực.",
+    "storyLink": "Story adventures",
+    "storyLinkDescription": "Read a story, then play it as a 3D game."
+  },
+  "StoryGames": {
+    "title": "Story adventures",
+    "description": "Pick a story, then play it as a 3D game. Older phones play the 2D version.",
+    "chooseStory": "Choose a story",
+    "chooseGame": "Choose a game",
+    "loading": "Loading stories…",
+    "noGame": "No game fits this story yet. Choose another story.",
+    "flat": "2D mode (older phones)",
+    "save": {
+      "saving": "Saving your result…",
+      "saved": "Result saved",
+      "error": "Could not save your result"
+    },
+    "link": "Story adventures"
   },
   "Footer": {
     "tagline": "Mang lại trải nghiệm học tiếng Anh tốt nhất.",
