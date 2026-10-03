@@ -4,8 +4,13 @@ Runs in its own worktree, in parallel with Lane A. Its migrations come after Lan
 user-columns migration; Lane A merges to the integration branch first.
 
 ## Phase 0: Inventory (read only)
-- [ ] Map each legacy Prisma table (`~/Desktop/primary-advantage/prisma/schema.prisma`) to its shared-schema target; list the §6 tables with no target and propose a target or "dropped, because"
-- [ ] Find a restored legacy database copy to test against, or record who must provide one
+- [x] Map each legacy Prisma table (`~/Desktop/primary-advantage/prisma/schema.prisma`) to its shared-schema target; list the §6 tables with no target and propose a target or "dropped, because"
+- [x] Find a restored legacy database copy to test against, or record who must provide one
+
+Phase 0 result: [inventory.md](./inventory.md). Only the April dump exists
+(`Backup_Primary_2026-04-29.sql`, git-ignored, main checkout); a fresh backup is needed.
+Open risks for Phase 2: story-chapter MCQs (22,720 rows) have no link target; flashcard
+FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 
 ## Phase 1: ID map and Tutor views (FR-1, FR-2) — unblocks Lane A's Tutor read test
 - [ ] Additive migration for `primary_legacy_id_map`
