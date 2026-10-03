@@ -18,12 +18,25 @@ steps:
       - "push"
       - "asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
 
-  # Step 3: Run database migrations
-  # - name: "asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
-  #   id: "migrate-database"
-  #   entrypoint: "npx"
-  #   args: ["prisma", "migrate", "deploy"]
-  #   secretEnv: ["DATABASE_URL"]
+  # Step 3: Migrate the database, then fail closed unless the ledger matches
+  # the journal and the latest migration is applied. Both run before deploy.
+  - name: "node:22-slim"
+    id: "migrate-db"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
+    secretEnv:
+      - "DATABASE_URL"
+
+  - name: "node:22-slim"
+    id: "doctor-check"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0059_game_challenges"
+    secretEnv:
+      - "DATABASE_URL"
 
   # Step 4: Deploy to Cloud Run
   - name: "gcr.io/cloud-builders/gcloud"
@@ -54,6 +67,11 @@ steps:
       - "--set-env-vars=PROJECT_ID=${_PROJECT_ID}"
       - "--set-env-vars=NODE_ENV=${_NODE_ENV}"
       - "--set-env-vars=AUTH_TRUST_HOST=true"
+
+availableSecrets:
+  secretManager:
+    - versionName: "projects/$PROJECT_ID/secrets/${_DATABASE_URL}/versions/latest"
+      env: "DATABASE_URL"
 
 # Substitutions
 substitutions:

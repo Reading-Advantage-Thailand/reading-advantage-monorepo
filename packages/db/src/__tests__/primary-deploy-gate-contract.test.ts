@@ -1,0 +1,63 @@
+/**
+ * Contract: Primary's Cloud Build migrates the database and runs the ledger
+ * doctor against the latest journal migration before it deploys
+ * (primary_cutover_blockers_20261003, FR-4).
+ */
+import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+const CLOUDBUILD = readFileSync(
+  join(PACKAGE_ROOT, "../../apps/primary-advantage/cloudbuild.yaml"),
+  "utf8",
+);
+const JOURNAL = JSON.parse(
+  readFileSync(join(PACKAGE_ROOT, "drizzle/meta/_journal.json"), "utf8"),
+) as { entries: { tag: string }[] };
+const LATEST_TAG = JOURNAL.entries[JOURNAL.entries.length - 1]!.tag;
+
+/** Splits the Cloud Build file into step blocks keyed by step id. */
+function stepBlocks(): Map<string, string> {
+  const blocks = new Map<string, string>();
+  for (const block of CLOUDBUILD.split(/\n\s*-\s*name:\s*/).slice(1)) {
+    const id = block.match(/id:\s*"([^"]+)"/)?.[1];
+    if (id) blocks.set(id, block);
+  }
+  return blocks;
+}
+
+describe("Primary Cloud Build migration gate", () => {
+  const ids = [...stepBlocks().keys()];
+
+  it("migrates, then runs the doctor, before deploy-cloudrun", () => {
+    const migrate = ids.indexOf("migrate-db");
+    const doctor = ids.indexOf("doctor-check");
+    const deploy = ids.indexOf("deploy-cloudrun");
+    expect(migrate).toBeGreaterThanOrEqual(0);
+    expect(doctor).toBeGreaterThan(migrate);
+    expect(deploy).toBeGreaterThan(doctor);
+  });
+
+  it("runs `pnpm --filter @reading-advantage/db migrate` with the DB secret", () => {
+    const block = stepBlocks().get("migrate-db") ?? "";
+    expect(block).toContain("pnpm --filter @reading-advantage/db migrate");
+    expect(block).toMatch(/secretEnv:\s*\n\s*-\s*"DATABASE_URL"/);
+  });
+
+  it("requires the latest journal migration in the doctor check", () => {
+    const block = stepBlocks().get("doctor-check") ?? "";
+    expect(block).toContain(
+      `pnpm --filter @reading-advantage/db doctor --check --required-migration ${LATEST_TAG}`,
+    );
+    expect(block).toMatch(/secretEnv:\s*\n\s*-\s*"DATABASE_URL"/);
+  });
+
+  it("declares the DATABASE_URL secret and keeps no Prisma step", () => {
+    expect(CLOUDBUILD).toMatch(
+      /availableSecrets:[\s\S]*secrets\/\$\{_DATABASE_URL\}\/versions\/latest"\s*\n\s*env:\s*"DATABASE_URL"/,
+    );
+    expect(CLOUDBUILD).not.toMatch(/prisma/i);
+  });
+});
