@@ -104,12 +104,31 @@ describe('the board', () => {
       expect(findTargetMove(board, target!.itemId)).not.toBeNull();
       expect(board.flat().every((r) => r.id.startsWith('r') && (r.kind !== 'word' || (r.wordId && r.text)))).toBe(true);
       expect(new Set(board.flat().map((r) => r.id)).size).toBe(sim.state.rows * sim.state.cols);
-      // Every word rune shows a meaning of the story.
+      // Every word rune shows the term or the translation of its word.
       for (const rune of board.flat()) {
         if (rune.kind !== 'word') continue;
-        expect(sim.state.targets.find((t) => t.id === rune.wordId)!.translation).toBe(rune.text);
+        const word = sim.state.targets.find((t) => t.id === rune.wordId)!;
+        expect([word.term, word.translation]).toContain(rune.text);
       }
     }
+  });
+
+  it('mixes both languages: prompts use either language and the runes of one word use both', () => {
+    const reverseSeen = new Set<boolean>();
+    const shown = new Set<string>();
+    for (const seed of SEEDS) {
+      const sim = create(seed, false);
+      for (const t of sim.state.targets) reverseSeen.add(t.reverse);
+      const first = sim.state.targets[0]!;
+      expect(sim.state.target!.term).toBe(first.reverse ? first.translation : first.term);
+      for (const rune of sim.state.board.flat()) {
+        if (rune.kind !== 'word') continue;
+        const word = sim.state.targets.find((t) => t.id === rune.wordId)!;
+        shown.add(rune.text === word.term ? 'term' : 'translation');
+      }
+    }
+    expect(reverseSeen).toEqual(new Set([true, false]));
+    expect(shown).toEqual(new Set(['term', 'translation']));
   });
 
   it.each(SEEDS)('seed %i: after every settled board there is a move that makes the target line', (seed) => {

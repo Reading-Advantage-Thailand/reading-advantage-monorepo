@@ -26,7 +26,7 @@ export function wordsOf(input: RuneMatchInput): { id: string; term: string; tran
 export function targetsOf(input: RuneMatchInput, rng: Rng): TargetWord[] {
   return rng
     .shuffle(wordsOf(input))
-    .map((w) => ({ ...w, attempts: 0, correctFirstTry: false, solved: false }));
+    .map((w) => ({ ...w, reverse: false, attempts: 0, correctFirstTry: false, solved: false }));
 }
 
 /**

@@ -11,8 +11,8 @@ import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { createFixedStepLoop, createManualClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { Actor2D, Arena2D, banner, COLORS, depthOf, fitGameSize, Joystick2D, popup, recolorTag, registerSheetAnimations, StatusBar2D, tag, WordPanel2D } from '@reading-advantage/advantage-play-kit-3d/view2d';
-import { createDevourerSlime, evidenceOf, scoreOf, type DevourerSlimeCommand, type DevourerSlimeEvent, type DevourerSlimeState } from '../core/index.js';
+import { Actor2D, Arena2D, banner, COLORS, depthOf, fitGameSize, Joystick2D, popup, recolorTag, registerSheetAnimations, StatusBar2D, tag, text, WordPanel2D } from '@reading-advantage/advantage-play-kit-3d/view2d';
+import { createDevourerSlime, evidenceOf, scoreOf, TUNING, type DevourerSlimeCommand, type DevourerSlimeEvent, type DevourerSlimeState } from '../core/index.js';
 import { FILES_2D, GUARD_CLIPS_2D, SLIME_CLIPS_2D } from '../manifest.js';
 import { nextSteer } from '../qc/bot.js';
 import strings from '../strings.en.js';
@@ -49,8 +49,6 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   }
 
   function create(this: Phaser.Scene): void {
-    // Phaser calls create() with the scene as `this`.
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const scene = this;
     const { width: W, height: H } = scene.scale;
     const startedAt = performance.now();
@@ -69,6 +67,30 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     arena.follow(sim.state.slime.x, sim.state.slime.z, 0, true);
 
     // ---------------------------------------------------------------- HUD
+    // The power-up: a big countdown badge with a draining bar under the word panel, and a pulsing frame
+    // around the screen (red in the last 2 s).
+    const powerFrame = scene.add.graphics().setScrollFactor(0).setDepth(19_000).setVisible(false);
+    const powerBox = scene.add.graphics();
+    const powerLabel = text(scene, 0, -10, '', 28, '#2b1d3a').setOrigin(0.5);
+    const powerBadge = scene.add.container(W / 2, 150, [powerBox, powerLabel]).setScrollFactor(0).setDepth(19_500).setVisible(false);
+    const drawPower = (ms: number, time: number): void => {
+      const powered = ms > 0;
+      powerFrame.setVisible(powered);
+      powerBadge.setVisible(powered);
+      if (!powered) return;
+      const low = ms < 2000;
+      const blink = low ? (Math.floor(time / 125) % 2 === 0 ? 1 : 0.55) : 0.75 + 0.25 * Math.sin(time / 110);
+      const color = low ? 0xff5a4a : 0xffd84a;
+      powerFrame.clear().lineStyle(14, color, blink).strokeRect(7, 7, W - 14, H - 14).setAlpha(1);
+      const w = Math.min(W - 32, 270);
+      powerBox.clear();
+      powerBox.fillStyle(0xffffff, 1).fillRoundedRect(-w / 2 - 4, -34, w + 8, 76, 26);
+      powerBox.fillStyle(color, 1).fillRoundedRect(-w / 2, -30, w, 68, 22);
+      powerBox.fillStyle(low ? 0xffffff : 0x2b1d3a, 0.35).fillRoundedRect(-w / 2 + 14, 20, w - 28, 10, 5);
+      powerBox.fillStyle(low ? 0xffffff : 0x2b1d3a, 1).fillRoundedRect(-w / 2 + 14, 20, Math.max(8, (w - 28) * Math.min(1, ms / TUNING.powerMs)), 10, 5);
+      powerLabel.setText(t('power', { seconds: Math.ceil(ms / 1000) })).setColor(low ? '#ffffff' : '#2b1d3a');
+      powerBadge.setPosition(W / 2, panel.bottom + 46).setScale(1 + 0.04 * Math.sin(time / 130));
+    };
     const status = new StatusBar2D(scene, t('place'));
     if (ctx.host?.toggleMute) {
       const icon = status.icon('🔊', () => icon.setText(ctx.host?.toggleMute?.() ? '🔇' : '🔊'));
@@ -156,8 +178,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         const next = s.helper && b.index === s.next && !b.eaten;
         recolorTag(view.tag, next ? COLORS.purple : COLORS.tagFill, next ? COLORS.gold : 0xffffff);
       }
-      const power = s.slime.poweredMs > 0 ? ` ${t('power', { seconds: Math.ceil(s.slime.poweredMs / 1000) })}` : '';
-      status.set(t('sentence', { index: Math.min(s.sentence + 1, s.sentences), total: s.sentences }), `${t('size')} ${s.slime.size.toFixed(1)}${power}`);
+      status.set(t('sentence', { index: Math.min(s.sentence + 1, s.sentences), total: s.sentences }), `${t('size')} ${s.slime.size.toFixed(1)}`);
     }
 
     // ---------------------------------------------------------------- events
@@ -210,6 +231,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         }
         case 'powerStarted': {
           audio.play('victory');
+          void banner(scene, t('powerBannerTitle'), t('powerBannerText'), 2.4);
+          scene.cameras.main.shake(300, 0.006);
           const at = slimeTop();
           popup(scene, at.x, at.y, t('powerUp'), 'good');
           break;
@@ -273,7 +296,6 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     const manual = createManualClock();
     const loop = createFixedStepLoop<DevourerSlimeState, DevourerSlimeCommand, DevourerSlimeEvent>(sim, { render: (events) => events.forEach(handle) }, manual.clock);
     let last = 0;
-    let shownSecs = 0;
     frame = (time: number) => {
       manual.run(time);
       const dt = Math.min(0.1, last ? (time - last) / 1000 : 0);
@@ -293,10 +315,11 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       const glow = ms > 0 && (ms >= 2000 || Math.floor(ms / 150) % 2 === 0);
       if (glow) slime.sprite.setTint(0xffe27a);
       else slime.sprite.clearTint();
-      const secs = Math.ceil(ms / 1000);
-      if (secs !== shownSecs) {
-        shownSecs = secs;
-        drawHud();
+      drawPower(ms, time);
+      // Every guard pulses cyan while it can be eaten.
+      for (const g of guards.values()) {
+        if (ms > 0 && Math.floor(time / 180) % 2 === 0) g.sprite.setTint(0x7ff3ff);
+        else g.sprite.clearTint();
       }
       for (const g of guards.values()) g.update(dt);
       for (const b of s.bubbles) {

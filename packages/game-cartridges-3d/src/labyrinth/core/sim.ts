@@ -46,9 +46,10 @@ export const TUNING = {
   /** The most sentences in one shift. */
   maxSentences: 5,
   heroSpeed: 3,
-  goblinSpeed: 2,
-  /** Goblin speed in the last sentences (see `isLastSentence`). */
-  goblinSpeedLast: 2.4,
+  /** Goblin chase speed in the first sentence: half the old fixed speed of 2. */
+  goblinSpeed: 1,
+  /** Each later sentence makes the goblins this much faster (compounding); by sentence 5 they reach about 2. */
+  goblinSpeedGrowth: 1.2,
   /** A fleeing goblin (the aura, the open gate). */
   goblinFleeSpeed: 1.5,
   /** A goblin walking home after a bump. */
@@ -95,8 +96,8 @@ export function goblinCountFor(index: number, count: number): number {
   return isLastSentence(index, count) ? TUNING.goblinsLast : TUNING.goblins;
 }
 
-export function goblinSpeedFor(index: number, count: number): number {
-  return isLastSentence(index, count) ? TUNING.goblinSpeedLast : TUNING.goblinSpeed;
+export function goblinSpeedFor(index: number, _count: number): number {
+  return TUNING.goblinSpeed * TUNING.goblinSpeedGrowth ** index;
 }
 
 /** The orb with the next word of the sentence, or null (the gate is open, or no shift). */

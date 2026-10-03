@@ -25,11 +25,14 @@ export const TUNING = {
   slots: 3,
   /** The most orders in one shift. */
   maxOrders: 8,
-  /** Belt speed as a fraction of the belt per second. */
-  beltSpeed: 0.09,
-  /** Speed added per served order, and the cap of the sum. */
-  speedUpPerOrder: 0.08,
-  speedUpMax: 0.4,
+  /** Belt speed at the start, as a fraction of the belt per second: 60% of the old start of 0.09. */
+  beltSpeed: 0.054,
+  /**
+   * Speed added per served order (a share of the start speed), and the cap of the sum. The belt
+   * reaches 0.126, the old top speed, after 6 served orders.
+   */
+  speedUpPerOrder: 2 / 9,
+  speedUpMax: 4 / 3,
   /** Helper mode multiplies the belt speed by this. */
   helperSpeedFactor: 0.75,
   /** An ingredient spawns this often; the first one after `firstSpawnMs`. */

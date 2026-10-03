@@ -71,8 +71,6 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   }
 
   function create(this: Phaser.Scene): void {
-    // Phaser calls create() with the scene as `this`.
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const scene = this;
     const { width: W, height: H } = scene.scale;
     const portrait = H > W;
@@ -165,11 +163,18 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     const dragon = dragonSprite(DRAGON_SCALE);
     const dragonShadow = shadowOf(DRAGON_SCALE / 0.8);
     const flock: { sprite: Phaser.GameObjects.Sprite; shadow: Phaser.GameObjects.Ellipse; home: { x: number; y: number; z: number } }[] = [];
-    /** V formation behind the dragon: slot k of the flock (as the 3D view). */
+    /**
+     * The flock in a grid behind the dragon: slot n of the flock. Each row holds as many columns as
+     * fit in the width of the screen (a portrait phone fits one on each side, a wide screen more),
+     * so no dragon is off screen; later rows sit deeper and a little higher.
+     */
     const flockOffset = (n: number) => {
-      const row = Math.floor(n / 2) + 1;
+      const columns = Math.max(1, Math.floor((W / 2 / k - 0.7) / 0.9));
+      const perRow = columns * 2;
+      const row = Math.floor(n / perRow) + 1;
+      const column = Math.floor((n % perRow) / 2) + 1;
       const side = n % 2 ? 1 : -1;
-      return { x: side * row * 1.2, y: 0.35 * row, z: row * 1.6 };
+      return { x: side * column * 0.9, y: 0.35 * row, z: row * 1.6 };
     };
     function addFlockDragon(): void {
       const n = flock.length;

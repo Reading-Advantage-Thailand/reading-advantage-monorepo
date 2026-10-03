@@ -2,13 +2,13 @@
 export default {
   runeMatch: {
     title: 'Rune Match',
-    pitch: 'Swap the runes to match the word’s meaning.',
+    pitch: 'Swap the runes to match the word in English and Thai.',
     subtitle: 'Match three',
     briefing: {
-      objective: 'Help the heroes beat the monsters: find the meaning of each word on the rune board.',
+      objective: 'Help the heroes beat the monsters: find every word on the rune board, in English and in Thai.',
       instructions: {
-        find: { title: 'Read the word', description: 'The word to find shows above the board. Every rune shows a meaning.' },
-        swap: { title: 'Swap to match', description: 'Swap two runes next to each other. Make a line of three runes with the right meaning.' },
+        find: { title: 'Read the word', description: 'The word to find shows above the board. The runes show English or Thai words.' },
+        swap: { title: 'Swap to match', description: 'Swap two runes next to each other. Make a line of three runes that mean the same word.' },
         look: { title: 'Power runes', description: 'A heart rune line gives courage back. A shield rune line stops the next strike. There is no timer.' },
       },
       controls: { touch: { label: 'Drag or tap', action: 'Drag a rune to its neighbor, or tap two neighbors' }, pointer: { label: 'Drag or click', action: 'Drag a rune to its neighbor, or click two neighbors' } },
@@ -21,7 +21,7 @@ export default {
       progress: '{index}/{count} · {name}',
       courage: 'Courage',
       story: '📖 Story',
-      find: 'Find the meaning of',
+      find: 'Find this word:',
       shield: '🛡',
       blocked: 'Blocked!',
       courageLost: '-1 ❤',

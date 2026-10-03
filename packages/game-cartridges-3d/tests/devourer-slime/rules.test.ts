@@ -234,9 +234,9 @@ describe('eating words', () => {
     // The slime keeps its size and place; the new bubbles keep away from it.
     expect(sim.state.slime.size).toBeCloseTo(1 + TUNING.growPerWord * sentence.words.length);
     for (const b of sim.state.bubbles) expect(distance(b, sim.state.slime)).toBeGreaterThanOrEqual(TUNING.bubbleKeepOutSlime);
-    // The events of the step come in order: eaten, complete, started.
-    const last = events.slice(-3).map((e) => e.type);
-    expect(last).toEqual(['wordEaten', 'sentenceComplete', 'sentenceStarted']);
+    // The events of the step come in order: eaten, complete, powered, started.
+    const last = events.slice(-4).map((e) => e.type);
+    expect(last).toEqual(['wordEaten', 'sentenceComplete', 'powerStarted', 'sentenceStarted']);
   });
 });
 
@@ -307,23 +307,24 @@ describe('guards', () => {
     expect(ofType(events, 'slimeBumped')).toHaveLength(1);
   });
 
-  it('the slime is powered after five right words, for a countdown, then it is back to its start size', () => {
+  it('a finished sentence powers the slime for a countdown, then it is back to its start size', () => {
     const sim = create(3);
     parkGuards(sim);
-    // Sentences of 3 to 4 words: eat on across sentences until the slime outgrows a guard.
-    let eaten = 0;
-    let started: ReturnType<typeof ofType<'powerStarted'>> = [];
-    while (sim.state.phase === 'playing' && started.length === 0) {
-      const b = nextBubbleOf(sim.state)!;
-      started = ofType(eat(sim, b.id), 'powerStarted');
-      eaten += 1;
-      if (eaten === 4) expect(sim.state.slime.poweredMs).toBe(0);
+    // Eating most of a sentence does not power the slime, however big it grows.
+    const first = sim.state.shift[0]!.words.length;
+    for (let i = 0; i < first - 1; i++) {
+      const events = eat(sim, nextBubbleOf(sim.state)!.id);
+      expect(ofType(events, 'powerStarted')).toHaveLength(0);
     }
-    expect(eaten).toBe(5);
-    expect(started).toEqual([{ type: 'powerStarted', durationMs: TUNING.powerMs, size: sim.state.slime.size }]);
-    expect(sim.state.slime.size).toBeGreaterThan(TUNING.guardSize);
+    expect(sim.state.slime.poweredMs).toBe(0);
+    // The last word of the sentence starts the power in the same step, before the next sentence.
+    const events = eat(sim, nextBubbleOf(sim.state)!.id);
+    const types = events.map((e) => e.type);
+    expect(ofType(events, 'powerStarted')).toEqual([{ type: 'powerStarted', durationMs: TUNING.powerMs, size: sim.state.slime.size }]);
+    expect(types.indexOf('sentenceComplete')).toBeLessThan(types.indexOf('powerStarted'));
+    expect(types.indexOf('powerStarted')).toBeLessThan(types.indexOf('sentenceStarted'));
     expect(sim.state.slime.poweredMs).toBe(TUNING.powerMs);
-    // The countdown runs on game steps; more right words do not restart it.
+    // The countdown runs on game steps; eating on does not restart it.
     tickN(sim, 10);
     expect(sim.state.slime.poweredMs).toBeCloseTo(TUNING.powerMs - 10 * STEP_MS, 3);
     // At zero the slime is back to its start size, and the end is announced once.
@@ -331,9 +332,17 @@ describe('guards', () => {
     while (sim.state.slime.poweredMs > 0 && sim.state.phase === 'playing') ended.push(...ofType(sim.tick(), 'powerEnded'));
     expect(ended).toEqual([{ type: 'powerEnded', size: TUNING.minSize }]);
     expect(sim.state.slime.size).toBe(TUNING.minSize);
-    // A guard now bumps the slime again, and the power must be earned again.
+    // A guard now bumps the slime again, until the next sentence is finished.
     wakeGuard(sim, 0, 0, 0);
     expect(ofType(sim.tick(), 'slimeBumped')).toHaveLength(1);
+  });
+
+  it('the last sentence ends the shift without a power-up', () => {
+    const sim = create(21);
+    parkGuards(sim);
+    const all = [];
+    while (sim.state.phase === 'playing') all.push(...eatAll(sim));
+    expect(ofType(all, 'powerStarted')).toHaveLength(sim.state.sentences - 1);
   });
 });
 

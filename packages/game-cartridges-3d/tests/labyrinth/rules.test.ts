@@ -349,12 +349,15 @@ describe('goblins', () => {
     expect(ofType(tickN(sim, 1), 'heroBumped')).toHaveLength(1);
   });
 
-  it('the last sentences have three faster goblins', () => {
+  it('the last sentences have three goblins, and every sentence is 20% faster than the one before', () => {
     expect([0, 1, 2, 3, 4].map((i) => isLastSentence(i, 5))).toEqual([false, false, false, true, true]);
     expect([0, 1, 2].map((i) => isLastSentence(i, 3))).toEqual([false, false, true]);
     expect([0, 1].map((i) => isLastSentence(i, 2))).toEqual([false, false]);
     expect(goblinCountFor(4, 5)).toBe(TUNING.goblinsLast);
-    expect(goblinSpeedFor(4, 5)).toBe(TUNING.goblinSpeedLast);
+    expect(goblinSpeedFor(0, 5)).toBe(1);
+    expect(goblinSpeedFor(1, 5)).toBeCloseTo(1.2, 5);
+    expect(goblinSpeedFor(4, 5)).toBeCloseTo(1.2 ** 4, 5);
+    expect(goblinSpeedFor(4, 5)).toBeLessThan(2.1);
     const sim = create(2);
     for (let i = 0; i < 3; i++) buildSentence(sim);
     expect(sim.state.sentence).toBe(3);

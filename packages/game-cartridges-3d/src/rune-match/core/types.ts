@@ -26,7 +26,7 @@ export interface Cell {
 
 export type RuneKind = 'word' | 'heal' | 'shield';
 
-/** One rune on the board. A word rune shows `text`, the meaning of the story word `wordId`. */
+/** One rune on the board. A word rune shows `text`, the term or the translation of the story word `wordId`. */
 export interface Rune {
   /** Unique within the run ("r17"); the view keys its rune objects by it. */
   id: string;
@@ -41,6 +41,12 @@ export interface TargetWord {
   id: string;
   term: string;
   translation: string;
+  /**
+   * True when the prompt shows the translation (a Thai prompt); false when it shows the term. Each
+   * word has its own seeded direction. The runes of a word show the term or the translation at
+   * random, so the player must recall which runes mean the prompt in either language.
+   */
+  reverse: boolean;
   /** Line-making swaps while this word was the target. */
   attempts: number;
   /** True when the first line made for this word was its own line. */
@@ -67,7 +73,7 @@ export interface RuneMatchState {
   targets: TargetWord[];
   targetIndex: number;
   targetCount: number;
-  /** The word to find now; null after the last one. */
+  /** The word to find now; null after the last one. `term` is the prompt text the player reads. */
   target: { itemId: string; term: string } | null;
   /**
    * The word ids the board draws from, in slot order: the target first, then the decoys. A new

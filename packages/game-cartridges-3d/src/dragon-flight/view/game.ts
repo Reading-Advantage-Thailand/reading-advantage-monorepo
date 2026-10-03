@@ -50,11 +50,17 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const dragon = stage.addActor(new Actor('dragon-fire', dragonGltf, stage.timeline, { idle: 'fly', scale: DRAGON_SCALE }));
   dragon.placeAt(0, CRUISE_Y, 0, 180);
   const flock: Actor[] = [];
-  /** V formation behind the dragon: slot k of the flock. */
+  /**
+   * V formation in front of the dragon, narrow and deep: slot k of the flock. The camera sits close
+   * behind the dragon, so a V behind it or a wide V leaves most of the flock off screen (a portrait
+   * phone sees about one dragon on each side). Rows go away from the camera, where the view is
+   * wider: a row sits 0.38 m wider and 1.2 m deeper than the one before, so ten dragons (five
+   * rows) stay inside a portrait view and a wide view alike.
+   */
   const flockOffset = (k: number): THREE.Vector3 => {
     const row = Math.floor(k / 2) + 1;
     const side = k % 2 ? 1 : -1;
-    return new THREE.Vector3(side * row * 0.95, 0.35 * row, row * 1.25);
+    return new THREE.Vector3(side * row * 0.38, 0.1 * row, -row * 1.2);
   };
   function addFlockDragon(fromSide = true): void {
     const a = stage.addActor(new Actor('dragon-fire', dragonGltf, stage.timeline, { idle: 'fly', scale: FLOCK_SCALE, phase: Math.random() }));

@@ -101,15 +101,16 @@ describe('customers and the belt', () => {
     sim.tick();
     brew(sim, 0);
     sim.dispatch({ type: 'serve', cauldron: 0 });
-    expect(sim.state.beltSpeed).toBeCloseTo(TUNING.beltSpeed * 1.08);
-    // The cap: 5 orders would be +40%, 8 orders stay at +40%.
+    expect(sim.state.beltSpeed).toBeCloseTo(TUNING.beltSpeed * (1 + 2 / 9));
+    // The start is 60% of the old speed; the cap is the old top speed 0.126, reached after 6 orders and kept to the 8th.
+    expect(TUNING.beltSpeed).toBeCloseTo(0.054);
     const played = create(11);
     while (played.state.phase === 'playing') {
       for (let c = nextDrop(played.state); c; c = nextDrop(played.state)) played.dispatch(c);
       played.tick();
     }
     expect(played.state.served).toBe(8);
-    expect(played.state.beltSpeed).toBeCloseTo(TUNING.beltSpeed * 1.4);
+    expect(played.state.beltSpeed).toBeCloseTo(0.126);
   });
 });
 

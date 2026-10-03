@@ -171,7 +171,7 @@ export class RuneMatchPlayer {
       case 'targetShown':
         this.targetId = ev.itemId;
         p.showTarget(ev.term);
-        if (state.helper) p.board.restyle(this.cells(state.board));
+        p.board.restyle(this.cells(state.board));
         break;
       case 'swapped':
         p.sfx('swap');

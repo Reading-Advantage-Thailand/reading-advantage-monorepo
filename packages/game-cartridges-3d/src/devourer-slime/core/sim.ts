@@ -4,7 +4,7 @@
  * a round clearing; the slime eats them in order and grows 8% per right word; a wrong bubble is
  * spat 1.5 m away and the slime shrinks 3% (never below its start size); guards patrol and
  * bounce off the edge; a guard bigger than the slime pushes it back for 0.8 s and costs 5% size;
- * a slime that grows past a guard is powered for a countdown and swallows guards for coins (then
+ * a finished sentence powers the slime for a countdown, and it swallows guards for coins (then
  * it is back to its start size); an eaten guard is back at once at a spawn point far from the
  * slime. No lives, no defeat.
  */
@@ -41,9 +41,9 @@ export const TUNING = {
   /** Guards: 2 in Helper mode, 3 otherwise. */
   guardsHelper: 2,
   guards: 3,
-  /** Guard size on the slime's scale; a slime that grows past it is powered. */
+  /** Guard size on the slime's scale. */
   guardSize: 1.35,
-  /** The power-up lasts this long, then the slime is back to its start size. */
+  /** A finished sentence powers the slime this long; then it is back to its start size. */
   powerMs: 8000,
   /** Radius of a body of size 1 (slime and guards). */
   bodyRadius: 0.45,
@@ -218,6 +218,9 @@ export function createDevourerSlime(input: DevourerSlimeInput, options: Devourer
       events.push({ type: 'shiftComplete', sentences: state.sentences, size: state.slime.size });
       return;
     }
+    // A finished sentence powers the slime for a countdown (a power already running starts over).
+    state.slime.poweredMs = TUNING.powerMs;
+    events.push({ type: 'powerStarted', durationMs: TUNING.powerMs, size: state.slime.size });
     state.sentence += 1;
     startSentence(events);
   };
@@ -282,10 +285,6 @@ export function createDevourerSlime(input: DevourerSlimeInput, options: Devourer
         state.eaten += 1;
         s.size += TUNING.growPerWord;
         events.push({ type: 'wordEaten', id: b.id, index: b.index, size: s.size });
-        if (s.poweredMs === 0 && s.size > TUNING.guardSize) {
-          s.poweredMs = TUNING.powerMs;
-          events.push({ type: 'powerStarted', durationMs: TUNING.powerMs, size: s.size });
-        }
         if (state.next >= sentence.words.length) {
           completeSentence(events);
           return;

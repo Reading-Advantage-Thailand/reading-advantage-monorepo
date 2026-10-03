@@ -155,6 +155,13 @@ export function findTargetMove(board: Rune[][], wordId: string): { a: Cell; b: C
 export function createRuneMatch(input: RuneMatchInput, options: RuneMatchOptions): RuneMatchSimulation {
   const rng: Rng = createRng(options.seed);
   const targets = targetsOf(input, rng);
+  // The language choices have their own stream, so the order of the words and the board do not change.
+  const languageRng: Rng = createRng(options.seed ^ 0x9e3779b9);
+  for (const t of targets) t.reverse = languageRng.next() < 0.5;
+  /** The text the player reads to find a word: the translation, or the term when the word is reversed. */
+  const promptOf = (w: TargetWord): string => (w.reverse ? w.translation : w.term);
+  /** The text of one rune: the term or the translation, at random, so a line of one word mixes both languages. */
+  const runeTextOf = (w: TargetWord): string => (languageRng.next() < 0.5 ? w.term : w.translation);
   const monsters = monstersOf(targets.length, TUNING.wordsPerMonster);
   const decoys = options.helper ? TUNING.helperDecoys : TUNING.decoys;
   const first = targets[0];
@@ -168,7 +175,7 @@ export function createRuneMatch(input: RuneMatchInput, options: RuneMatchOptions
     targets,
     targetIndex: 0,
     targetCount: targets.length,
-    target: first ? { itemId: first.id, term: first.term } : null,
+    target: first ? { itemId: first.id, term: promptOf(first) } : null,
     palette: first ? paletteOf(targets, first.id, decoys, rng) : [],
     monster: monsters[0] ? { ...monsters[0] } : null,
     monsterIndex: 0,
@@ -191,7 +198,7 @@ export function createRuneMatch(input: RuneMatchInput, options: RuneMatchOptions
     state.spawned += 1;
     const id = `r${state.spawned}`;
     if (key === 'heal' || key === 'shield') return { id, kind: key };
-    return { id, kind: 'word', wordId: key, text: wordById.get(key)!.translation };
+    return { id, kind: 'word', wordId: key, text: runeTextOf(wordById.get(key)!) };
   };
 
   /** A new rune whose key is not in `forbid`: a heal or shield rune sometimes, else a palette word. */
@@ -342,10 +349,10 @@ export function createRuneMatch(input: RuneMatchInput, options: RuneMatchOptions
     }
     state.targetIndex += 1;
     const next = currentTarget();
-    state.target = next ? { itemId: next.id, term: next.term } : null;
+    state.target = next ? { itemId: next.id, term: promptOf(next) } : null;
     if (next) {
       if (!state.palette.includes(next.id)) state.palette[state.palette.indexOf(word.id)] = next.id;
-      events.push({ type: 'targetShown', itemId: next.id, term: next.term });
+      events.push({ type: 'targetShown', itemId: next.id, term: promptOf(next) });
     }
   };
 

@@ -10,9 +10,12 @@ import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage
 import { attachJoystick, esc, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor, burst, FollowRig, Walker } from '@reading-advantage/advantage-play-kit-3d/stage';
-import { createDevourerSlime, evidenceOf, scoreOf, type DevourerSlimeCommand, type DevourerSlimeEvent, type DevourerSlimeState } from '../core/index.js';
+import { createDevourerSlime, evidenceOf, scoreOf, TUNING, type DevourerSlimeCommand, type DevourerSlimeEvent, type DevourerSlimeState } from '../core/index.js';
 import { nextSteer } from '../qc/bot.js';
 import { buildClearing, CLEARING_MODELS } from './clearing.js';
+import devourer_powerCss from './devourer-power.css.js';
+import { installCss } from '@reading-advantage/advantage-play-kit-3d/hud';
+installCss('devourer-power', devourer_powerCss);
 
 /** Model scale per unit of `size` (the slime model is 0.8 m wide; the rules' radius is 0.45 m x size). */
 const SLIME_SCALE = 1.13;
@@ -53,10 +56,16 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   status.innerHTML = `
     <div class="place"><small>${esc(t('place'))}</small><span data-sentence></span></div>
     <div class="meter">${esc(t('size'))}<b data-size>1.0</b></div>
-    <div class="meter power" data-power hidden></div>
     ${ctx.host.openStory ? `<button class="book" data-story>${esc(t('story'))}</button>` : ''}
     ${ctx.host.toggleMute ? `<button class="book" data-mute aria-label="Sound">🔊</button>` : ''}`;
   hud.el.prepend(status);
+  // The power-up: a big countdown badge with a draining bar, and a pulsing frame around the screen.
+  const powerFrame = document.createElement('div');
+  powerFrame.className = 'power-frame';
+  const powerBadge = document.createElement('div');
+  powerBadge.className = 'power-badge';
+  powerBadge.innerHTML = '<span data-power-text></span><span class="bar"><i></i></span>';
+  hud.el.append(powerFrame, powerBadge);
   status.querySelector('[data-story]')?.addEventListener('click', () => ctx.host.openStory?.());
   const mute = status.querySelector<HTMLButtonElement>('[data-mute]');
   mute?.addEventListener('click', () => (mute.textContent = ctx.host.toggleMute?.() ? '🔇' : '🔊'));
@@ -132,19 +141,41 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     status.querySelector('[data-size]')!.textContent = s.slime.size.toFixed(1);
   }
 
-  /** The power-up countdown in the HUD, and a gold glow on the slime that blinks in the last two seconds. */
-  const powerEl = status.querySelector<HTMLElement>('[data-power]')!;
+  /**
+   * The power-up, shown four ways: the gold countdown badge with its draining bar, the pulsing frame
+   * around the screen (red in the last 2 s), the gold glow on the slime (it blinks in the last 2 s),
+   * and a cyan pulse on every guard, which the slime can now swallow.
+   */
+  const powerText = powerBadge.querySelector<HTMLElement>('[data-power-text]')!;
+  const powerBar = powerBadge.querySelector<HTMLElement>('.bar i')!;
   let glowing = false;
   function drawPower(): void {
     const ms = sim.state.slime.poweredMs;
-    powerEl.hidden = ms === 0;
-    if (ms > 0) powerEl.textContent = t('power', { seconds: Math.ceil(ms / 1000) });
-    const on = ms > 0 && (ms >= 2000 || Math.floor(ms / 150) % 2 === 0);
-    if (on === glowing) return;
-    glowing = on;
-    for (const m of slime.actor.materials) {
-      m.emissive.setRGB(on ? 1 : 0, on ? 0.8 : 0, on ? 0.15 : 0);
-      m.emissiveIntensity = on ? 0.6 : 0;
+    const powered = ms > 0;
+    const low = powered && ms < 2000;
+    powerBadge.classList.toggle('on', powered);
+    powerBadge.classList.toggle('low', low);
+    powerFrame.classList.toggle('on', powered);
+    powerFrame.classList.toggle('low', low);
+    if (powered) {
+      powerText.textContent = t('power', { seconds: Math.ceil(ms / 1000) });
+      powerBar.style.width = `${Math.min(100, (ms / TUNING.powerMs) * 100)}%`;
+    }
+    const on = powered && (ms >= 2000 || Math.floor(ms / 150) % 2 === 0);
+    if (on !== glowing) {
+      glowing = on;
+      for (const m of slime.actor.materials) {
+        m.emissive.setRGB(on ? 1 : 0, on ? 0.8 : 0, on ? 0.15 : 0);
+        m.emissiveIntensity = on ? 0.9 : 0;
+      }
+    }
+    // Every guard pulses cyan while it can be eaten.
+    const pulse = powered ? 0.35 + 0.3 * Math.sin(stageMs / 120) : 0;
+    for (const g of guards.values()) {
+      for (const m of g.actor.materials) {
+        m.emissive.setRGB(0, powered ? 0.9 : 0, powered ? 1 : 0);
+        m.emissiveIntensity = pulse;
+      }
     }
   }
 
@@ -186,10 +217,17 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
         guards.get(ev.guardId)?.play('attack');
         break;
       }
-      case 'powerStarted':
+      case 'powerStarted': {
         audio.play('victory');
+        void hud.banner.show(t('powerBannerTitle'), t('powerBannerText'), 2.4);
+        stage.shake(0.07, 0.4);
+        slime.play('attack', 1.2);
+        const at = slime.actor.root.position.clone().add(new THREE.Vector3(0, 0.6, 0));
+        void burst(stage, at, 0xffd84a, 28, 1.2);
+        void burst(stage, at, 0xfff2a8, 16, 0.8);
         hud.popup(slimeTop(), t('powerUp'), 'good');
         break;
+      }
       case 'powerEnded':
         hud.popup(slimeTop(), t('powerDown'), 'miss');
         break;
