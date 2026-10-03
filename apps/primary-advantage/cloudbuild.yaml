@@ -18,8 +18,18 @@ steps:
       - "push"
       - "asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
 
-  # Step 3: Migrate the database, then fail closed unless the ledger matches
-  # the journal and the latest migration is applied. Both run before deploy.
+  # Step 3: Read-only guard first: never migrate the legacy Primary database
+  # (Tutor reads it). Then migrate, then fail closed unless the ledger matches
+  # the journal and the latest migration is applied. All run before deploy.
+  - name: "node:22-slim"
+    id: "refuse-legacy-db"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db refuse-legacy-db"
+    secretEnv:
+      - "DATABASE_URL"
+
   - name: "node:22-slim"
     id: "migrate-db"
     entrypoint: "bash"

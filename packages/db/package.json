@@ -58,6 +58,7 @@
     "studio": "drizzle-kit studio",
     "seed:codecamp": "tsx src/seed/codecamp-seed.ts",
     "doctor": "tsx scripts/migration-ledger-doctor.ts",
+    "refuse-legacy-db": "tsx scripts/refuse-legacy-db.ts",
     "company-identity:generate": "drizzle-kit generate --config company-identity/drizzle.config.ts",
     "company-identity:migrate": "tsx src/company-identity/commands/migrate.ts",
     "company-identity:doctor": "tsx src/company-identity/commands/doctor.ts",

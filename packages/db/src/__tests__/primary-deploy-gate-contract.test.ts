@@ -31,7 +31,13 @@ function stepBlocks(): Map<string, string> {
 describe("Primary Cloud Build migration gate", () => {
   const ids = [...stepBlocks().keys()];
 
-  it("migrates, then runs the doctor, before deploy-cloudrun", () => {
+  it("refuses a legacy database, migrates, runs the doctor, then deploys", () => {
+    const refuse = ids.indexOf("refuse-legacy-db");
+    expect(refuse).toBeGreaterThanOrEqual(0);
+    expect(ids.indexOf("migrate-db")).toBeGreaterThan(refuse);
+    const guard = stepBlocks().get("refuse-legacy-db") ?? "";
+    expect(guard).toContain("pnpm --filter @reading-advantage/db refuse-legacy-db");
+    expect(guard).toMatch(/secretEnv:\s*\n\s*-\s*"DATABASE_URL"/);
     const migrate = ids.indexOf("migrate-db");
     const doctor = ids.indexOf("doctor-check");
     const deploy = ids.indexOf("deploy-cloudrun");
