@@ -1118,4 +1118,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys.
 
 - [ ] **Track: Primary Reedy Preview** *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
-  Reedy in Primary, 8 minutes per student per month, Forge avatar, usage views.
+  Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.
+
+- [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*
+  ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.

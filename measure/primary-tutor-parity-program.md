@@ -22,6 +22,15 @@ so the build must be tested and rehearsed before he leaves.
 | C | [primary_ux_rework_20261003](./tracks/primary_ux_rework_20261003/) | A Phase 1 (type gate) |
 | D+E | [primary_teacher_books_lesson_support_20261003](./tracks/primary_teacher_books_lesson_support_20261003/) | C shell for the UI half; data half is independent |
 | F | [primary_reedy_preview_20261003](./tracks/primary_reedy_preview_20261003/) | B (`authStrength`), C (meter slot) |
+| M | [primary_legacy_data_migration_20261004](./tracks/primary_legacy_data_migration_20261004/) | A (migration numbering, credential helper); added 2026-10-04 |
+
+Lane M (added 2026-10-04) owns the unowned tasks of the
+[cutover migration spec](../docs/deployment/primary-cutover-migration-spec.md): the ETL and
+ID map (A6), the Tutor compatibility views (A7), old article links (A5), teacher
+"Username or email" sign-in (A8), and teacher credentials with a forced password change
+(A9). After cutover the only sign-in is username and password; there is no Google
+sign-in. All teachers use Google today, so every teacher needs a new credential
+before go-live.
 
 ## Rules for every lane
 
@@ -92,3 +101,6 @@ client, and one TTS provider (M each); share the APK host and audio hooks (L);
 4. Per-session cap of 180 seconds (default).
 5. Primary QR deep link: confirmed 2026-10-04 as `primary.reading-advantage.com/b/<book>/<n>` (Workbooks `content/primary/README.md`).
 6. Teacher guide language: decided 2026-10-04. Thai when the UI locale is Thai, English otherwise. Source is Workbooks.
+7. Scrypt verification: dropped 2026-10-04 (teachers have no passwords today).
+8. Teacher temporary passwords: decided 2026-10-04. Forced change at first sign-in. The team hands out the list.
+9. ID map table name: `primary_legacy_id_map` (decided 2026-10-04).
