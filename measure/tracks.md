@@ -1104,3 +1104,18 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [x] **Track: APK Named Asset Cuts** *Link: [./tracks/apk_named_asset_cuts_20260907/](./tracks/apk_named_asset_cuts_20260907/)*
   Prepare several sheets per review batch and process approved cuts.
+
+- [ ] **Track: Primary Cutover Blockers** *Link: [./tracks/primary_cutover_blockers_20261003/](./tracks/primary_cutover_blockers_20261003/)*
+  Type gate, authorization, argon2, migration gate, Tutor read test, Sept 15 QA defects. Absorbs primary_browser_qa_fixes_20260915.
+
+- [ ] **Track: Primary Student Login** *Link: [./tracks/primary_student_login_20261003/](./tracks/primary_student_login_20261003/)*
+  Teacher-started code, name list, picture password, QR card, username/password, auth strength.
+
+- [ ] **Track: Primary UX Rework** *Link: [./tracks/primary_ux_rework_20261003/](./tracks/primary_ux_rework_20261003/)*
+  Brand tokens, one navigation, student home, redesigned screens, accessibility.
+
+- [ ] **Track: Primary Class Books and Teacher Lesson Support** *Link: [./tracks/primary_teacher_books_lesson_support_20261003/](./tracks/primary_teacher_books_lesson_support_20261003/)*
+  Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys.
+
+- [ ] **Track: Primary Reedy Preview** *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
+  Reedy in Primary, 8 minutes per student per month, Forge avatar, usage views.

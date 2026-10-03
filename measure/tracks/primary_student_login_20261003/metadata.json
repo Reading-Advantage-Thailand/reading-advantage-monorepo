@@ -1,0 +1,10 @@
+{
+  "track_id": "primary_student_login_20261003",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-10-03T00:00:00Z",
+  "updated_at": "2026-10-03T00:00:00Z",
+  "description": "Student login for 20-30 student classes: teacher-started code, name list, 3-picture password, QR login card, and a username/password fallback. Reedy and profile changes require a full sign-in.",
+  "estimated_tasks": 16,
+  "deviation_notes": "Replaces the code-plus-name-only flow. Schema is additive only. Depends on primary_cutover_blockers_20261003 Phase 2 (argon2 hashing). Design reasoning: advantage-pr/12-operations/primary-tutor-parity-gap-list.md section 0 and the 2026-10-03 login proposal."
+}

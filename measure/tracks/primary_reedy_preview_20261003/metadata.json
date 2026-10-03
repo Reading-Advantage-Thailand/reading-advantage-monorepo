@@ -1,0 +1,10 @@
+{
+  "track_id": "primary_reedy_preview_20261003",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-10-03T00:00:00Z",
+  "updated_at": "2026-10-03T00:00:00Z",
+  "description": "Reedy voice practice in Primary Advantage, live at cutover and marked Preview. 8 minutes per student per month, visible to students, usage visible to teachers. Uses an Advantage Forge avatar model.",
+  "estimated_tasks": 22,
+  "deviation_notes": "Daniel 2026-10-03: live at cutover as Preview; 8 min per month (one minute twice a week); school collects parent consent on paper; no in-app consent trail; avatar from Advantage Forge. Tutor Reedy code is the reference and is NOT modified. Unit cost reference is a local simulation (USD 0.028 per minute); measure before launch. Depends on primary_student_login_20261003 (authStrength) and primary_ux_rework_20261003 (meter slot)."
+}

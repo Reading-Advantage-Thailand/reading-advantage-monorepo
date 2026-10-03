@@ -1,0 +1,10 @@
+{
+  "track_id": "primary_cutover_blockers_20261003",
+  "type": "chore",
+  "status": "planned",
+  "created_at": "2026-10-03T00:00:00Z",
+  "updated_at": "2026-10-03T00:00:00Z",
+  "description": "Clear every item that blocks the Primary Advantage cutover (Oct 14-16): type gate, authorization, password hashing, migration deploy gate, Tutor read test, and the open Sept 15 QA defects.",
+  "estimated_tasks": 14,
+  "deviation_notes": "Absorbs primary_browser_qa_fixes_20260915 (status planned, not done). Parent program: measure/primary-tutor-parity-program.md. Source audit: advantage-pr/12-operations/primary-tutor-parity-gap-list.md section 6 (subagent counts, unverified until Phase 0)."
+}
