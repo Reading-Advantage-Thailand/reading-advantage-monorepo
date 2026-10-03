@@ -475,8 +475,9 @@ export function StudentCartridgeHost({
               onComplete={handleComplete}
               onLifecycleTransition={(transition) => {
                 if (transition.to === "playing") startedAtRef.current = Date.now();
-                if (transition.event === "replay"
-                  || (transition.to === "playing" && transition.from !== "paused")) {
+                // Pause and resume go through the runtime handle and never emit a lifecycle
+                // transition, so every transition into "playing" starts a new RPG session.
+                if (transition.event === "replay" || transition.to === "playing") {
                   rpg.beginSession();
                 }
                 if (transition.from === "results" && transition.event === "replay") {
