@@ -29,7 +29,11 @@ vi.mock("@reading-advantage/db", async () => ({
     insert: mocks.insert,
   },
 }));
-vi.mock("bcryptjs", () => ({ default: { hash: vi.fn() } }));
+const credentialMocks = vi.hoisted(() => ({
+  hashNewPassword: vi.fn().mockResolvedValue("$argon2id$new"),
+  upsertCredentialAccount: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock("@/server/utils/credentials", () => credentialMocks);
 
 import { PATCH } from "../route";
 
@@ -166,6 +170,37 @@ describe("PATCH /api/users/[id] role rank check", () => {
       });
     },
   );
+
+  it("hashes a new password with argon2 and mirrors it to the credential account", async () => {
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    selectQueue = [
+      [{ id: "student-1", schoolId: "school-a" }],
+      [
+        {
+          id: "student-1",
+          name: "Old Name",
+          email: "old@example.com",
+          xp: 10,
+          level: 3,
+          cefrLevel: "B1",
+        },
+      ],
+      [],
+    ];
+
+    const { request, context } = patchRequest("student-1", {
+      password: "new-password-1",
+    });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(200);
+    expect(credentialMocks.hashNewPassword).toHaveBeenCalledWith("new-password-1");
+    expect(credentialMocks.upsertCredentialAccount).toHaveBeenCalledWith(
+      expect.anything(),
+      "student-1",
+      "$argon2id$new",
+    );
+  });
 
   it("lets a SYSTEM caller assign SYSTEM", async () => {
     mocks.currentUser.mockResolvedValue(systemCaller);

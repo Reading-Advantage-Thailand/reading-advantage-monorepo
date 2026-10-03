@@ -17,7 +17,7 @@ import {
   userActivity,
   xpLogs,
 } from '@reading-advantage/db';
-import bcrypt from "bcryptjs";
+import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount } from "@/server/utils/credentials";
 import {
   StudentData,
   CreateStudentInput,
@@ -307,8 +307,8 @@ export const createStudent = async (params: {
 
     // Generate password if not provided
     const hashedPassword = password
-      ? bcrypt.hashSync(password, 10)
-      : bcrypt.hashSync(Math.random().toString(36).slice(-8), 10);
+      ? await hashNewPassword(password)
+      : await generateRandomPasswordHash();
 
     // Create the new student (and role + optional classroom link) in a tx.
     const newStudentId = await db.transaction(async (tx) => {
@@ -326,6 +326,8 @@ export const createStudent = async (params: {
         xp: 0,
         level: 1,
       }).returning({ id: users.id });
+
+      await upsertCredentialAccount(tx, created.id, hashedPassword);
 
       await tx.insert(userRoles).values({
         userId: created.id,
@@ -458,8 +460,10 @@ export const updateStudent = async (
     if (updateData.name) updatePayload.name = updateData.name;
     if (updateData.email) updatePayload.email = updateData.email;
     if (updateData.cefrLevel) updatePayload.cefrLevel = updateData.cefrLevel;
+    let newPasswordHash: string | undefined;
     if (updateData.password) {
-      updatePayload.password = bcrypt.hashSync(updateData.password, 10);
+      newPasswordHash = await hashNewPassword(updateData.password);
+      updatePayload.password = newPasswordHash;
     }
 
     // Update the student (and optionally their classroom link) in a tx.
@@ -468,6 +472,10 @@ export const updateStudent = async (
         await tx.update(users)
           .set(updatePayload)
           .where(eq(users.id, id));
+      }
+
+      if (newPasswordHash) {
+        await upsertCredentialAccount(tx, id, newPasswordHash);
       }
 
       if (updateData.classroomId !== undefined) {

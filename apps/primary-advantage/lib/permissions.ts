@@ -1,4 +1,5 @@
 import { Role } from "@/types/enum";
+import { ROLES, ROLE_HIERARCHY as AUTH_ROLE_HIERARCHY } from "@reading-advantage/auth";
 
 // Permission types for different navigation items
 export type Permission =
@@ -13,13 +14,25 @@ export type Permission =
   | "REPORTS_ACCESS"
   | "CLASS_MANAGEMENT";
 
-// Role hierarchy mapping
-const ROLE_HIERARCHY: Record<string, number> = {
-  [Role.student]: 1,
-  [Role.teacher]: 2,
-  [Role.admin]: 3,
-  [Role.system]: 4,
-};
+/** Roles that take part in the Primary Advantage hierarchy. */
+const HIERARCHY_ROLES: readonly string[] = [
+  ROLES.STUDENT,
+  ROLES.TEACHER,
+  ROLES.ADMIN,
+  ROLES.SYSTEM,
+];
+
+/**
+ * Returns the shared hierarchy level for a Primary Advantage role.
+ * Roles outside the Primary hierarchy (sales, intern, unknown) get level 0.
+ * @param role The role in any casing.
+ * @returns The level from `@reading-advantage/auth`, or 0.
+ */
+function hierarchyLevel(role: string | undefined): number {
+  const key = (role ?? "").toUpperCase();
+  if (!HIERARCHY_ROLES.includes(key)) return 0;
+  return AUTH_ROLE_HIERARCHY[key as keyof typeof AUTH_ROLE_HIERARCHY] ?? 0;
+}
 
 // Permission requirements mapping
 const PERMISSION_REQUIREMENTS: Record<
@@ -131,10 +144,8 @@ export function hasPermission(
 
   // Check hierarchy level if specified
   if (requirement.minHierarchyLevel) {
-    const userLevel = userRole ? ROLE_HIERARCHY[userRole] : 0;
-    const roleLevel = Math.max(
-      ...userRoles.map((role) => ROLE_HIERARCHY[role] || 0),
-    );
+    const userLevel = hierarchyLevel(userRole);
+    const roleLevel = Math.max(0, ...userRoles.map((role) => hierarchyLevel(role)));
     const maxLevel = Math.max(userLevel, roleLevel);
 
     if (maxLevel >= requirement.minHierarchyLevel) {
@@ -192,8 +203,8 @@ export function getEffectiveRole(
   // Find highest role in hierarchy
   const allRoles = userRole ? [userRole, ...userRoles] : userRoles;
   const highestRole = allRoles.reduce((highest, current) => {
-    const currentLevel = ROLE_HIERARCHY[current] || 0;
-    const highestLevel = ROLE_HIERARCHY[highest] || 0;
+    const currentLevel = hierarchyLevel(current);
+    const highestLevel = hierarchyLevel(highest);
     return currentLevel > highestLevel ? current : highest;
   }, Role.student);
 
@@ -234,7 +245,11 @@ export function canAccessRoute(
 /**
  * Roles allowed to manage classrooms and students.
  */
-export const STAFF_ROLES: readonly string[] = ["TEACHER", "ADMIN", "SYSTEM"];
+export const STAFF_ROLES: readonly string[] = [
+  ROLES.TEACHER,
+  ROLES.ADMIN,
+  ROLES.SYSTEM,
+];
 
 /**
  * Checks whether a role belongs to classroom staff.

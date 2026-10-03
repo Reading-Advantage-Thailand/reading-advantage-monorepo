@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { hashPassword, verifyPassword, rehashOnLogin, ARGON2ID_OPTS } from "../password.js";
+import { hashPassword, verifyPassword, rehashOnLogin, adoptLegacyPassword, ARGON2ID_OPTS } from "../password.js";
 
 describe("password", () => {
   // Crypto tests involve real Argon2id/bcrypt hashing which is hardware-dependent.
@@ -228,5 +228,41 @@ describe("Phase 2 — Task 12: FR-3 rehashOnLogin filters UPDATE by providerId =
         "userId would be overwritten with the new Argon2id hash — a " +
         "destructive cross-provider bug.",
     ).toBe(true);
+  });
+  describe("adoptLegacyPassword", () => {
+    function createMockDb() {
+      const onConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
+      const values = vi.fn().mockReturnValue({ onConflictDoUpdate });
+      const insert = vi.fn().mockReturnValue({ values });
+      return {
+        db: { insert } as unknown as Parameters<typeof adoptLegacyPassword>[0],
+        values,
+        onConflictDoUpdate,
+      };
+    }
+
+    it("upserts an argon2id credential account from a legacy bcrypt users.password", async () => {
+      const { db, values, onConflictDoUpdate } = createMockDb();
+      const bcrypt = await import("bcryptjs");
+      const legacy = await bcrypt.hash("testPassword", 10);
+
+      await adoptLegacyPassword(db, "user-1", "testPassword", legacy);
+
+      const row = values.mock.calls[0][0];
+      expect(row.userId).toBe("user-1");
+      expect(row.providerId).toBe("credential");
+      expect(row.password.startsWith("$argon2id$")).toBe(true);
+      expect(await verifyPassword("testPassword", row.password)).toBe(true);
+      expect(onConflictDoUpdate).toHaveBeenCalled();
+    });
+
+    it("keeps an existing argon2id hash unchanged", async () => {
+      const { db, values } = createMockDb();
+      const hash = await hashPassword("testPassword");
+
+      await adoptLegacyPassword(db, "user-1", "testPassword", hash);
+
+      expect(values.mock.calls[0][0].password).toBe(hash);
+    });
   });
 });

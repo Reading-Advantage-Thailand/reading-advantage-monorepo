@@ -39,6 +39,7 @@ export {
   hashPassword,
   verifyPassword,
   rehashOnLogin,
+  adoptLegacyPassword,
   ARGON2ID_OPTS,
 } from "./password.js";
 

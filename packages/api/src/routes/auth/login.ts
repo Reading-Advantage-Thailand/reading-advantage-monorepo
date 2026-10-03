@@ -10,6 +10,7 @@ import {
   resetLimit,
   SESSION_COOKIE_NAME,
   rehashOnLogin,
+  adoptLegacyPassword,
   recordAuditEvent,
   configurePostgresRateLimiter,
   type Role,
@@ -86,7 +87,7 @@ export async function handleLogin(request: NextRequest) {
 
     // Find user by username — wrap DB operations so that connection/query
     // failures surface as 503 (infrastructure) rather than 401 (credential).
-    let user: { id: string; username: string; name: string | null; role: Role; schoolId: string | null } | undefined;
+    let user: { id: string; username: string; name: string | null; role: Role; schoolId: string | null; password?: string | null } | undefined;
     try {
       const result = await db
         .select()
@@ -139,8 +140,17 @@ export async function handleLogin(request: NextRequest) {
       );
     }
 
+    // Legacy Primary Advantage rows keep the hash on users.password only.
+    // Fall back to it when no credential account holds a password.
+    let storedHash: string | null = account?.password ?? null;
+    let adoptLegacyHash = false;
+    if (!storedHash && user.password) {
+      storedHash = user.password;
+      adoptLegacyHash = true;
+    }
+
     // FR-4: account-not-found or no-password timing fix
-    if (!account || !account.password) {
+    if (!storedHash) {
       await verifyPassword(password, DUMMY_HASH);
       await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
@@ -155,7 +165,7 @@ export async function handleLogin(request: NextRequest) {
     // Verify password
     let valid: boolean;
     try {
-      valid = await verifyPassword(password, account.password);
+      valid = await verifyPassword(password, storedHash);
     } catch (verifyErr) {
       console.error("Login verify error:", verifyErr instanceof Error ? verifyErr.message : "Unknown");
       await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
@@ -190,7 +200,11 @@ export async function handleLogin(request: NextRequest) {
 
     // One-shot bcrypt → Argon2id migration (non-blocking)
     try {
-      await rehashOnLogin(db, user.id, password, account.password);
+      if (adoptLegacyHash) {
+        await adoptLegacyPassword(db, user.id, password, storedHash);
+      } else {
+        await rehashOnLogin(db, user.id, password, storedHash);
+      }
     } catch (rehashErr) {
       // Log but don't block login — user can retry on next login
       console.warn("Password rehash failed (non-blocking):", rehashErr instanceof Error ? rehashErr.message : "Unknown");

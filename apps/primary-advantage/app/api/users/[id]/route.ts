@@ -6,7 +6,7 @@ import { assertCan, AuthError } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
 import { isAdminOrSystem, patchUserBodySchema, canAccessSchoolResource, normalizeRole } from "@/lib/authorization";
 import { roleAtLeast, type Role } from "@reading-advantage/auth";
-import bcrypt from "bcryptjs";
+import { hashNewPassword, upsertCredentialAccount } from "@/server/utils/credentials";
 
 export async function PATCH(
   request: NextRequest,
@@ -87,9 +87,10 @@ export async function PATCH(
     if (cefrLevel !== undefined) updateData.cefrLevel = cefrLevel;
 
     // Handle password hashing if password is provided
+    let newPasswordHash: string | undefined;
     if (password !== undefined) {
-      const saltRounds = 12;
-      updateData.password = await bcrypt.hash(password, saltRounds);
+      newPasswordHash = await hashNewPassword(password);
+      updateData.password = newPasswordHash;
     }
 
     // Use transaction to handle both user data and role updates
@@ -105,6 +106,11 @@ export async function PATCH(
         await tx.update(users)
           .set(updateData)
           .where(eq(users.id, userId));
+      }
+
+      // The shared login reads accounts.password, so mirror the new hash there.
+      if (newPasswordHash) {
+        await upsertCredentialAccount(tx, userId, newPasswordHash);
       }
 
       // Handle role update if specified

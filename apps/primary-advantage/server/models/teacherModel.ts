@@ -14,7 +14,7 @@ import {
   userRoles,
   schools,
 } from '@reading-advantage/db';
-import bcrypt from "bcryptjs";
+import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount } from "@/server/utils/credentials";
 import {
   TeacherData,
   CreateTeacherInput,
@@ -410,8 +410,8 @@ export const createTeacher = async (params: {
 
     // Generate password if not provided
     const hashedPassword = password
-      ? bcrypt.hashSync(password, 10)
-      : bcrypt.hashSync(Math.random().toString(36).slice(-8), 10);
+      ? await hashNewPassword(password)
+      : await generateRandomPasswordHash();
 
     // Validate classroom IDs if provided
     if (classroomIds && classroomIds.length > 0) {
@@ -445,6 +445,8 @@ export const createTeacher = async (params: {
         password: hashedPassword,
         schoolId,
       }).returning();
+
+      await upsertCredentialAccount(tx, user.id, hashedPassword);
 
       await tx.insert(userRoles).values({
         userId: user.id,
@@ -608,19 +610,24 @@ async function updateExistingTeacherToSchool(params: {
     }
 
     // Update the existing teacher in a transaction
+    const newPasswordHash = password ? await hashNewPassword(password) : undefined;
     await db.transaction(async (tx) => {
       const updateData: any = {
         name,
         schoolId,
       };
 
-      if (password) {
-        updateData.password = bcrypt.hashSync(password, 10);
+      if (newPasswordHash) {
+        updateData.password = newPasswordHash;
       }
 
       await tx.update(users)
         .set(updateData)
         .where(eq(users.id, existingUser.id));
+
+      if (newPasswordHash) {
+        await upsertCredentialAccount(tx, existingUser.id, newPasswordHash);
+      }
 
       // Look up the user's current roles to decide if we need to rotate them.
       const currentRoleRows = await tx.select({ name: roles.name })
@@ -748,8 +755,10 @@ export const updateTeacher = async (
     if (updateData.name) updatePayload.name = updateData.name;
     if (updateData.email) updatePayload.email = updateData.email;
     if (updateData.cefrLevel) updatePayload.cefrLevel = updateData.cefrLevel;
+    let newPasswordHash: string | undefined;
     if (updateData.password) {
-      updatePayload.password = bcrypt.hashSync(updateData.password, 10);
+      newPasswordHash = await hashNewPassword(updateData.password);
+      updatePayload.password = newPasswordHash;
     }
 
     // Update the teacher and handle classroom assignments in a transaction
@@ -758,6 +767,10 @@ export const updateTeacher = async (
         await tx.update(users)
           .set(updatePayload)
           .where(eq(users.id, id));
+      }
+
+      if (newPasswordHash) {
+        await upsertCredentialAccount(tx, id, newPasswordHash);
       }
 
       // Handle role update if specified

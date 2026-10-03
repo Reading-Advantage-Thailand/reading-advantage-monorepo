@@ -80,3 +80,36 @@ export async function rehashOnLogin(
 
   return { migrated: true };
 }
+
+/**
+ * Adopts a legacy `users.password` hash into the credential `accounts` row.
+ * The legacy Primary Advantage build stored hashes only on the users table.
+ * The caller already verified the password. A bcrypt hash becomes Argon2id.
+ * @param db - Database client (Drizzle instance)
+ * @param userId - The user who owns the credential
+ * @param password - The plaintext password that the caller verified
+ * @param legacyHash - The hash read from `users.password`
+ * @returns Nothing. The account row is created or updated.
+ */
+export async function adoptLegacyPassword(
+  db: Db,
+  userId: string,
+  password: string,
+  legacyHash: string,
+): Promise<void> {
+  const hash = legacyHash.startsWith("$argon2id$")
+    ? legacyHash
+    : await argon2.hash(password, ARGON2ID_OPTS);
+  await db
+    .insert(accounts)
+    .values({
+      id: `${userId}_credential`,
+      userId,
+      providerId: "credential",
+      password: hash,
+    })
+    .onConflictDoUpdate({
+      target: [accounts.userId, accounts.providerId],
+      set: { password: hash, updatedAt: new Date() },
+    });
+}

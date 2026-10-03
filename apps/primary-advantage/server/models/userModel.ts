@@ -16,7 +16,7 @@ import {
   userRoles,
 } from '@reading-advantage/db';
 import { ActivityType } from "@/types/enum";
-import bcrypt from "bcryptjs";
+import { hashNewPassword, upsertCredentialAccount } from "@/server/utils/credentials";
 
 /**
  * Creates a user with the required identity fields.
@@ -37,7 +37,7 @@ export const createUser = async (data: {
       };
     }
 
-    const hashedPassword = bcrypt.hashSync(data.password, 10);
+    const hashedPassword = await hashNewPassword(data.password);
 
     // Find the User role
     const [userRole] = await db.select({ id: roles.id })
@@ -63,6 +63,8 @@ export const createUser = async (data: {
         role: "STUDENT",
         password: hashedPassword,
       }).returning();
+
+      await upsertCredentialAccount(tx, user.id, hashedPassword);
 
       // Assign the User role to the new user
       await tx.insert(userRoles).values({

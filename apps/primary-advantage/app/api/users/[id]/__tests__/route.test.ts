@@ -21,7 +21,11 @@ vi.mock("@reading-advantage/db", async () => ({
   db: { select: mocks.select, transaction: mocks.transaction },
   eq: vi.fn(() => ({})),
 }));
-vi.mock("bcryptjs", () => ({ default: { hash: vi.fn() } }));
+const credentialMocks = vi.hoisted(() => ({
+  hashNewPassword: vi.fn().mockResolvedValue("$argon2id$new"),
+  upsertCredentialAccount: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock("@/server/utils/credentials", () => credentialMocks);
 
 import { PATCH } from "../route";
 

@@ -69,6 +69,20 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at timestamp NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS accounts (
+  id text PRIMARY KEY,
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  provider_id text NOT NULL,
+  password text,
+  access_token text,
+  refresh_token text,
+  access_token_expires_at timestamp,
+  refresh_token_expires_at timestamp,
+  created_at timestamp NOT NULL DEFAULT now(),
+  updated_at timestamp NOT NULL DEFAULT now(),
+  CONSTRAINT accounts_user_provider_unique UNIQUE (user_id, provider_id)
+);
+
 CREATE TABLE IF NOT EXISTS roles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name text NOT NULL,
@@ -260,6 +274,7 @@ CREATE TABLE IF NOT EXISTS student_assignments (
 `;
 
 const TABLES = [
+  "accounts",
   "article_activity_logs",
   "lesson_progress",
   "long_answer_questions",
