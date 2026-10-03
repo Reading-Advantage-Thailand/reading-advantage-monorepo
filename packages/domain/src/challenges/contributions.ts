@@ -175,7 +175,9 @@ function matchesChallengeModality(
   const rawEvidence = completion.metadata?.learningEvidence;
   if (modality === "reading") return rawEvidence === undefined;
   const evidence = learningEvidenceSchema.safeParse(rawEvidence);
-  if (!evidence.success || evidence.data.effectiveModality !== "read-to-select-audio") return false;
+  if (!evidence.success
+    || !("effectiveModality" in evidence.data)
+    || evidence.data.effectiveModality !== "read-to-select-audio") return false;
   if (evidence.data.itemCount !== contentItemCount
     || evidence.data.questions.length !== contentItemCount
     || evidence.data.questions.some(({ selectionAttempts }) =>

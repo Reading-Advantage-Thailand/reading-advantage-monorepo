@@ -16,6 +16,56 @@ export type {
   VocabularyItem,
 } from "./educational-io.js";
 
+/** Public story input contract and its derived vocabulary and sentence inputs. */
+export {
+  CEFR_LEVELS,
+  baseLevel,
+  cefrLevelSchema,
+  normalizeCefrLevel,
+  parseStoryIndex,
+  parseStoryInput,
+  storyFillSchema,
+  storyIndexEntrySchema,
+  storyIndexSchema,
+  storyInputSchema,
+  storyParagraphSchema,
+  storyQuestionSchema,
+  storySentenceSchema,
+  storySourceSchema,
+  storyVocabularySchema,
+  toSentenceInput,
+  toStoryIndexEntry,
+  toVocabularyInput,
+} from "./story-input.js";
+
+/** Public story input types. */
+export type {
+  CefrLevel,
+  StoryFill,
+  StoryIndexEntry,
+  StoryInput,
+  StoryParagraph,
+  StoryQuestion,
+  StorySentence,
+  StoryVocabulary,
+} from "./story-input.js";
+
+/** Public story-game completion evidence contract. */
+export {
+  MAX_STORY_GAME_EVIDENCE_ITEMS,
+  practiceOf,
+  storyGameEvidenceItemSchema,
+  storyGameEvidenceSchema,
+  storyItemKindSchema,
+} from "./evidence.js";
+
+/** Public story-game completion evidence types. */
+export type {
+  StoryGameEvidence,
+  StoryGameEvidenceItem,
+  StoryItemKind,
+} from "./evidence.js";
+
 /** Public host completion mapping boundary. */
 export {
   gameCompletionInputSchema,

@@ -3,6 +3,7 @@ import type {
   GameResults,
   LearningEvidence,
   SentenceInput,
+  StoryInput,
   VocabularyInput,
 } from "@reading-advantage/game-contracts";
 
@@ -26,7 +27,10 @@ export const APK_RUNTIME_API_VERSION = "1.0.0";
 export type GameTerminalOutcome = "victory" | "defeat" | "complete";
 
 /** Canonical learning content accepted by a cartridge launch. */
-export type GameInput = VocabularyInput | SentenceInput;
+export type GameInput = VocabularyInput | SentenceInput | StoryInput;
+
+/** Educational input mode a cartridge declares in its manifest. */
+export type GameInputMode = "vocabulary" | "sentence" | "story";
 
 /** Provenance attached to every edition asset. */
 export interface AssetProvenance {
@@ -222,7 +226,7 @@ export interface RuntimeCartridgeManifest {
   /** APK runtime API version required by the cartridge. */
   runtimeApiVersion: string;
   /** Educational input mode. */
-  inputMode: "vocabulary" | "sentence";
+  inputMode: GameInputMode;
   /** Semantic bindings that every edition must provide. */
   requiredAssetBindings: readonly string[];
   /** Phaser capability families exercised by the cartridge. */

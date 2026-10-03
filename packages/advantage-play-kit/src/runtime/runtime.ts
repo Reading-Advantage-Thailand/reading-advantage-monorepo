@@ -1,14 +1,12 @@
 import {
   gameResultsSchema,
   learningEvidenceSchema,
-  sentenceInputSchema,
   type GameResults,
   type LearningEvidence,
-  vocabularyInputSchema,
 } from "@reading-advantage/game-contracts";
 
 import { validateEdition } from "../editions/editions.js";
-import { validateRuntimeCartridgeManifest } from "./cartridge-manifest.js";
+import { inputSchemaFor, validateRuntimeCartridgeManifest } from "./cartridge-manifest.js";
 import { APKRuntimeError, toAPKRuntimeError } from "./errors.js";
 import { createInputController } from "./input.js";
 import {
@@ -105,9 +103,7 @@ export async function mountCartridge(
     );
   }
 
-  const inputSchema =
-    cartridge.manifest.inputMode === "sentence" ? sentenceInputSchema : vocabularyInputSchema;
-  const parsedInput = inputSchema.safeParse(options.input);
+  const parsedInput = inputSchemaFor(cartridge.manifest.inputMode).safeParse(options.input);
   if (!parsedInput.success) {
     throw new APKRuntimeError("INVALID_GAME_INPUT", "Cartridge input validation failed", {
       issues: parsedInput.error.issues,
@@ -382,7 +378,7 @@ export async function mountCartridge(
         return;
       }
       evidence = parsedEvidence.data;
-      if (answerAudio && evidence.declaredModality === "read-to-select-audio") {
+      if (answerAudio && "declaredModality" in evidence && evidence.declaredModality === "read-to-select-audio") {
         const attempts = evidence.questions.flatMap((question) => question.selectionAttempts);
         const submittedAttempts = attempts.filter((attempt) => attempt.submitted);
         const completedQuestions = submittedAttempts.filter((attempt) => attempt.completedQuestion);
