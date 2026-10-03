@@ -13,8 +13,8 @@ Owner lane: A. Starts first. Merge to the integration branch before other lanes 
 
 ## Phase 2: Auth and passwords (FR-2, FR-3)
 - [ ] Browser-verify the 09-12 authorization tracks; write failing tests for any gap
-- [ ] Swap permissions to `@reading-advantage/auth`
-- [ ] Dual-read bcrypt/argon2 with rehash on login, with tests for both formats
+- [x] Swap permissions to `@reading-advantage/auth` (b3bf3ef0e)
+- [x] Dual-read bcrypt/argon2 with rehash on login, with tests for both formats (b3bf3ef0e)
 
 ## Phase 3: Database (FR-4, FR-5, FR-8)
 - [ ] Additive migration for the missing user columns

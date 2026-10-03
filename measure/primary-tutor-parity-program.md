@@ -87,8 +87,8 @@ client, and one TTS provider (M each); share the APK host and audio hooks (L);
 ## Open questions
 
 1. Integration base branch (above).
-2. Reedy: which Forge model is the avatar?
-3. Reedy: unlock after one completed lesson (default), and no rollover of unused minutes (default).
+2. Reedy avatar: decided 2026-10-04. It is the student's own avatar from the avatar customization plans.
+3. Reedy unlock: decided 2026-10-04. Reedy is a standard activity at the end of each lesson. Default: no rollover of unused minutes.
 4. Per-session cap of 180 seconds (default).
-5. Is the Primary QR deep-link pattern `primary.reading-advantage.com/b/<book>/<n>`? Unverified.
-6. Teacher guide language: Thai and English (default).
+5. Primary QR deep link: confirmed 2026-10-04 as `primary.reading-advantage.com/b/<book>/<n>` (Workbooks `content/primary/README.md`).
+6. Teacher guide language: decided 2026-10-04. Thai when the UI locale is Thai, English otherwise. Source is Workbooks.

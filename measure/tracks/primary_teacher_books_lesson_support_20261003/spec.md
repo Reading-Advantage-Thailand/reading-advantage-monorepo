@@ -40,10 +40,13 @@ is optional.
   student-facing claims.
 
 ### Lesson support (teacher-led mode)
-- FR-8: Teacher guide per lesson in Thai and English: the 13 steps grouped into the
-  four periods, with teacher actions, teacher language, student actions, and watch-fors.
-  Content comes from `~/Desktop/Workbooks` (`dashboard/i18n/en.ts`, `th.ts`, and the
-  Teacher guide folder). Do not rewrite the scripts. Import them.
+- FR-8: Teacher guide per lesson: the 13 steps grouped into the four periods, with
+  teacher actions, teacher language, student actions, and watch-fors. The UI language
+  switcher selects the language: Thai when the locale is Thai, English for every other
+  locale. The same rule applies to the guide overlay and the lesson tracker. Content
+  comes from `~/Desktop/Workbooks` (`dashboard/lib/teacher-manual/i18n/en.ts` and
+  `th.ts`, and the `Teacher guide` folder, which has `step-N.md` and `step-N-th.md`).
+  Do not rewrite the scripts. Import them.
 - FR-9: Guide overlay for the live lesson, one step at a time, with a tip (port
   `TutorGuidePlan` and `TutorGuideOverlay` ideas; strip tutor and payment concepts).
 - FR-10: Lesson rehearsal page: the teacher sees the student view of each step.
@@ -58,7 +61,9 @@ is optional.
   student screen where the step has a digital part.
 - FR-15: In-app teacher manual page and a short how-to for first-time teachers.
   Printable aids (lesson plan, answer key) are an extra: P2 priority.
-- FR-16: QR deep links from the printed book to the lesson (verify the pattern first).
+- FR-16: QR deep links from the printed book to the lesson. The pattern is confirmed in
+  `Workbooks/content/primary/README.md`: `https://primary.reading-advantage.com/b/<book>/<n>`
+  (for example `o3-2/5`). Primary must serve `/b/<book>/<n>` and route to the lesson.
 
 ## Rules
 
@@ -82,5 +87,5 @@ change the Tutor-read tables.
 
 - Teacher assigns Primary Advantage Origins 3.2 to a class and sees its 14 lessons.
 - A student completes lesson 1 steps and the class grid updates within one minute.
-- Each of the 13 steps has guidance in Thai and English, checked against the Workbooks source.
+- Each of the 13 steps has guidance in Thai (Thai locale) and English (other locales), checked against the Workbooks source.
 - Tutor read test still passes after the import.
