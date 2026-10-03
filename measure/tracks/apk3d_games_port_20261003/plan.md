@@ -16,8 +16,7 @@
 
 ## Phase 3: Verification
 
-- [x] Browser QC in 3D for the first seven games.
-- [ ] Browser QC in 3D for the last game and in 2D for all games.
+- [x] Browser QC in 3D and 2D for all eight games (0 errors, 0 legacy requests).
 - [ ] Repository graph rebuild and `architecture-enforcement` run.
 
 ## Phase 4: Legacy rewrites
