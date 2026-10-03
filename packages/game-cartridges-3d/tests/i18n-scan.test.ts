@@ -49,7 +49,7 @@ describe('source scan', () => {
       const scan = scanKeys(readFileSync(file, 'utf8'));
       for (const { key, line } of missingKeys(catalog, scan, basesFor(file))) problems.push(`${relative(ROOT, file)}:${line}: t('${key}') is not in the catalog`);
     }
-    expect(games.size).toBe(23);
+    expect(games.size).toBe(24);
     expect(problems).toEqual([]);
   });
 

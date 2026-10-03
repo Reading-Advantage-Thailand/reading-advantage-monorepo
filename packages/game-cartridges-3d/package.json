@@ -353,6 +353,21 @@
       "types": "./dist/abyssal-well/strings.en.d.ts",
       "import": "./dist/abyssal-well/strings.en.js",
       "default": "./dist/abyssal-well/strings.en.js"
+    },
+    "./rune-forge-chamber": {
+      "types": "./dist/rune-forge-chamber/index.d.ts",
+      "import": "./dist/rune-forge-chamber/index.js",
+      "default": "./dist/rune-forge-chamber/index.js"
+    },
+    "./rune-forge-chamber/manifest": {
+      "types": "./dist/rune-forge-chamber/manifest.d.ts",
+      "import": "./dist/rune-forge-chamber/manifest.js",
+      "default": "./dist/rune-forge-chamber/manifest.js"
+    },
+    "./rune-forge-chamber/strings": {
+      "types": "./dist/rune-forge-chamber/strings.en.d.ts",
+      "import": "./dist/rune-forge-chamber/strings.en.js",
+      "default": "./dist/rune-forge-chamber/strings.en.js"
     }
   },
   "files": [
