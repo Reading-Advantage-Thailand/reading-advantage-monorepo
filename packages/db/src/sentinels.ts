@@ -513,4 +513,24 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       },
     ],
   },
+  "0060_primary_legacy_id_map": {
+    tag: "0060_primary_legacy_id_map",
+    kind: "table",
+    target: "primary_legacy_id_map",
+  },
+  "0061_tutor_compat_views": {
+    tag: "0061_tutor_compat_views",
+    kind: "all",
+    target: "tutor_compat.article",
+    allOf: [
+      "article",
+      "multiple_choice_questions",
+      "short_answer_questions",
+      "sentencs_and_words_for_flashcard",
+    ].map((view) => ({
+      tag: "0061_tutor_compat_views",
+      kind: "table" as const,
+      target: `tutor_compat.${view}`,
+    })),
+  },
 };
