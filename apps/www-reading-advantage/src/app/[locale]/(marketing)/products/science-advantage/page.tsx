@@ -58,7 +58,7 @@ export default async function ScienceAdvantage({
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section - Inline with rose gradient */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+      <section className="relative min-h-hero flex items-center overflow-hidden">
         <Image
           src="/images/hero-science-advantage.jpg"
           alt={t("heroAlt")}
@@ -68,7 +68,7 @@ export default async function ScienceAdvantage({
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-br from-rose-300 to-rose-800 opacity-90" />
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl py-24">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-7 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -150,7 +150,7 @@ export default async function ScienceAdvantage({
             <div className="grid md:grid-cols-3 gap-8">
               <Card
                 padding="p-12"
-                className="rounded-[40px] bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
+                className="rounded-panel bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
                 data-testid="value-card"
               >
                 <div className="w-16 h-16 bg-gradient-to-br from-rose-300 to-rose-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
@@ -165,7 +165,7 @@ export default async function ScienceAdvantage({
               </Card>
               <Card
                 padding="p-12"
-                className="rounded-[40px] bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
+                className="rounded-panel bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
                 data-testid="value-card"
               >
                 <div className="w-16 h-16 bg-gradient-to-br from-rose-300 to-rose-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
@@ -180,7 +180,7 @@ export default async function ScienceAdvantage({
               </Card>
               <Card
                 padding="p-12"
-                className="rounded-[40px] bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
+                className="rounded-panel bg-white/10 backdrop-blur-sm border-rose-200/30 text-white hover:-translate-y-2 hover:shadow-2xl"
                 data-testid="value-card"
               >
                 <div className="w-16 h-16 bg-gradient-to-br from-rose-300 to-rose-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">

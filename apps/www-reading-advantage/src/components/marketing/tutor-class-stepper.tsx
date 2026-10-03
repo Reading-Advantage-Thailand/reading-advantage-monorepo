@@ -74,7 +74,7 @@ export function TutorClassStepper({
             { label: addedGroup, from: printedCount, to: phases.length },
           ].map((group) => (
             <div key={group.label}>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-eyebrow text-emerald-800">
                 {group.label}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -136,13 +136,13 @@ export function TutorClassStepper({
           aria-live="polite"
           className="rounded-3xl border border-emerald-200 bg-white p-6 shadow-sm sm:p-8 lg:sticky lg:top-24"
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-eyebrow text-emerald-800">
             {isPrinted ? stepOf.replace("#", String(active + 1)) : addedTag}
           </p>
           <h3 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900 md:text-3xl">
             {phase.title}
           </h3>
-          <p className="min-h-[5.5rem] text-base leading-relaxed text-slate-700 md:text-lg">
+          <p className="min-h-22 text-base leading-relaxed text-slate-700 md:text-lg">
             {phase.description}
           </p>
           <div className="mt-6 flex items-center justify-between gap-3 border-t border-emerald-100 pt-5">

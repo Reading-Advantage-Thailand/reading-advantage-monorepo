@@ -109,6 +109,21 @@
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
+  --radius-panel: 2.5rem;
+
+  --tracking-eyebrow: 0.18em;
+  --tracking-eyebrow-wide: 0.24em;
+  --leading-display: 1.05;
+  --text-display: 5rem;
+  --text-2xs: 0.6875rem;
+
+  --blur-glow: 120px;
+  --blur-glow-lg: 150px;
+
+  --shadow-panel: 0 24px 60px -24px rgb(12 20 55 / 0.35);
+  --shadow-panel-deep: 0 24px 60px -30px rgb(12 20 55 / 0.8);
+  --shadow-float: 0 16px 40px -16px rgb(12 20 55 / 0.4);
+  --shadow-panel-emerald: 0 24px 60px -28px rgb(6 95 70 / 0.5);
 }
 
 :root {
@@ -410,4 +425,44 @@ main {
     transform: scale(1.25);
     opacity: 0.05;
   }
+}
+
+/* Repeated layout and background patterns (replace arbitrary values). */
+@utility bg-grid-pattern {
+  background-image: url("/grid-pattern.svg");
+}
+
+@utility bg-grid-amber {
+  background-image:
+    linear-gradient(rgb(251 191 36 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(251 191 36 / 0.07) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+@utility bg-glow-sky {
+  background-image: radial-gradient(60% 60% at 80% 20%, rgb(56 189 248 / 0.16), transparent);
+}
+
+@utility min-h-hero {
+  min-height: 70vh;
+}
+
+@utility min-h-hero-sm {
+  min-height: 50vh;
+}
+
+@utility max-h-graph {
+  max-height: 68vh;
+}
+
+@utility grid-cols-split-start {
+  grid-template-columns: 0.8fr 1.2fr;
+}
+
+@utility grid-cols-split-even {
+  grid-template-columns: 1.05fr 0.95fr;
+}
+
+@utility grid-cols-icon-row {
+  grid-template-columns: 52px 1fr;
 }

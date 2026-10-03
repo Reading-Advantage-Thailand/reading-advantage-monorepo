@@ -55,7 +55,7 @@ export function HomeRoadmapCard({ href, logo, name, tag }: RoadmapCardProps) {
       className="flex flex-col items-start gap-3 rounded-2xl border border-dashed border-site-border bg-transparent p-4 outline-none transition-colors hover:bg-white focus-visible:ring-2 focus-visible:ring-black"
     >
       <img src={logo} alt={name} width={240} height={60} className="h-10 w-auto opacity-70" />
-      <span className="rounded-full bg-[#efece5] px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-site-body">
+      <span className="rounded-full bg-site-page px-2.5 py-0.5 text-2xs font-semibold uppercase tracking-wider text-site-body">
         {tag}
       </span>
     </Link>

@@ -9,7 +9,7 @@ export default async function Footer() {
   return (
     <footer className="bg-sky-50 text-slate-700 py-12 border-t border-sky-100">
       <div className="container mx-auto px-4">
-        <div className="bg-white rounded-[40px] border border-sky-100 p-8 md:p-12 shadow-xl">
+        <div className="bg-white rounded-panel border border-sky-100 p-8 md:p-12 shadow-xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className=" font-semibold text-lg mb-4">{t("heading")}</h3>

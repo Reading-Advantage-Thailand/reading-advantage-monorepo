@@ -29,6 +29,7 @@
 - [x] Raw-color step 1: 35 ramp tokens declared with Tailwind default values (raw colors 676 to 327, no page edits)
 - [x] Raw-color step 2: neutrals (slate, gray, stone) to site tokens; light text on dark sections to site-border/site-page (raw colors 327 to 177)
 - [x] Raw-color steps 3-5: shades 500/700/900 collapsed, blue/green/yellow/teal to product families, 85 light-background text uses to -800, SVG hex to token variables, dead classes replaced (raw colors 177 to 0)
-- [ ] Migrate the rest (679 raw colors, 178 arbitrary values, 39 inline styles), then raise rules to `error`
+- [x] Arbitrary values: tracking, blur, radius, shadow, leading and text sizes as theme tokens; grid, hero-height and split-column patterns as utilities; scale classes for sizes and fractions; one-off hex snapped to tokens (178 to 0)
+- [ ] Inline styles (37 warnings), then raise rules to `error`
 - [x] `prose` and `prose-lg` defined as `@utility` in globals.css (blog body and About story); no dependency added
 - [x] Unknown classes cleared (14 to 0): dead classes removed, graph and panel `<style>` moved to globals.css; graph controls use lucide icons

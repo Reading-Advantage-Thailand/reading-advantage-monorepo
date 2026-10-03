@@ -121,7 +121,7 @@ export default async function StorytimeAdvantage({
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section - Inline with amber gradient */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+      <section className="relative min-h-hero flex items-center overflow-hidden">
         <Image
           src="/images/hero-storytime-advantage.jpg"
           alt={t("heroAlt")}
@@ -131,7 +131,7 @@ export default async function StorytimeAdvantage({
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-br from-amber-300 to-amber-800 opacity-90" />
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl py-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-7">

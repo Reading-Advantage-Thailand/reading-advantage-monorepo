@@ -214,8 +214,8 @@ export default async function BlendedLearning() {
       {/* Levels Section */}
       <section className="relative py-24 bg-gradient-to-br from-slate-900 via-sky-800 to-sky-800 text-white overflow-hidden">
         <div className="absolute inset-0 bg-white/5 backdrop-blur-sm" />
-        <div className="absolute top-20 right-20 w-[500px] h-[500px] bg-sky-400/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-sky-400/10 rounded-full blur-[120px]" />
+        <div className="absolute top-20 right-20 w-125 h-125 bg-sky-400/10 rounded-full blur-glow-lg" />
+        <div className="absolute bottom-20 left-20 w-100 h-100 bg-sky-400/10 rounded-full blur-glow" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center animate-in fade-in duration-700">
@@ -314,8 +314,8 @@ export default async function BlendedLearning() {
 
       {/* CTA Section */}
       <section className="relative py-24 bg-gradient-to-br from-sky-400 via-sky-600 to-sky-600 text-white overflow-hidden">
-        <div className="absolute top-20 left-20 w-[500px] h-[500px] bg-sky-400/30 rounded-full blur-[150px]" />
-        <div className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-sky-400/30 rounded-full blur-[120px]" />
+        <div className="absolute top-20 left-20 w-125 h-125 bg-sky-400/30 rounded-full blur-glow-lg" />
+        <div className="absolute bottom-20 right-20 w-100 h-100 bg-sky-400/30 rounded-full blur-glow" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center animate-in fade-in slide-in-from-bottom-8 duration-700">

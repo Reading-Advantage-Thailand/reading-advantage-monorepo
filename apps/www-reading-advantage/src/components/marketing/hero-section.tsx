@@ -64,7 +64,7 @@ const getBadgeVariantStyles = (
 };
 
 const getHeightStyles = (height: NonNullable<HeroProps["height"]>): string => {
-  return height === "tall" ? "min-h-[85vh]" : "min-h-[70vh]";
+  return height === "tall" ? "min-h-[85vh]" : "min-h-hero";
 };
 
 export default function HeroSection({
@@ -185,7 +185,7 @@ export default function HeroSection({
           </div>
         ) : (
           /* Left-aligned layout with optional logo (asymmetric) */
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[50vh]">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-hero-sm">
             {/* Text Content */}
             <div
               className={`lg:col-span-7 ${productLogo ? "xl:col-span-7" : ""} z-20`}
@@ -274,7 +274,7 @@ export default function HeroSection({
             {/* Legacy Floating Image (fallback) */}
             {!productLogo && floatingImage && (
               <div className="hidden xl:block lg:col-span-5 z-10">
-                <div className="relative rounded-[32px] overflow-hidden shadow-2xl">
+                <div className="relative rounded-4xl overflow-hidden shadow-2xl">
                   <Image
                     src={floatingImage.src}
                     alt={floatingImage.alt}

@@ -36,7 +36,7 @@ function Swatch({ state }: { state: StateKey }) {
 
 function Legend({ labels, states }: { labels: MasteryStateLabels; states: StateKey[] }) {
   return (
-    <ul className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-[#dbe2ff]">
+    <ul className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-mastery-label">
       {states.map((state) => (
         <li key={state} className="inline-flex items-center gap-2">
           <Swatch state={state} />
@@ -49,7 +49,7 @@ function Legend({ labels, states }: { labels: MasteryStateLabels; states: StateK
 
 function PanelShell({ texture, label, caption, children }: PanelShellProps) {
   return (
-    <figure className="relative isolate overflow-hidden rounded-3xl border border-[#1e2a66] bg-site-navy text-white shadow-[0_24px_60px_-30px_rgba(12,20,55,0.8)] m-0">
+    <figure className="relative isolate overflow-hidden rounded-3xl border border-slate-700 bg-site-navy text-white shadow-panel-deep m-0">
       <SiteImageView
         image={siteImages[texture]}
         alt=""
@@ -58,10 +58,10 @@ function PanelShell({ texture, label, caption, children }: PanelShellProps) {
       />
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-site-navy/40 via-site-navy/70 to-site-navy/95" />
       <div className="p-5 sm:p-7">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-mastery-ready">{label}</p>
+        <p className="mb-4 text-xs font-semibold uppercase tracking-eyebrow text-mastery-ready">{label}</p>
         {children}
       </div>
-      <figcaption className="border-t border-white/10 bg-site-navy/80 px-5 py-4 text-sm leading-relaxed text-[#dbe2ff] sm:px-7">
+      <figcaption className="border-t border-white/10 bg-site-navy/80 px-5 py-4 text-sm leading-relaxed text-mastery-label sm:px-7">
         {caption}
       </figcaption>
     </figure>
@@ -193,7 +193,7 @@ export function MasteryProgressPanel({
           <li key={row.name} className="rounded-2xl border border-white/15 bg-site-navy/70 p-4">
             <div className="mb-3 flex items-center justify-between gap-3">
               <span className="font-semibold text-white">{row.name}</span>
-              <span className="inline-flex items-center gap-2 text-xs text-[#dbe2ff]">
+              <span className="inline-flex items-center gap-2 text-xs text-mastery-label">
                 <Swatch state={row.state} />
                 {states[row.state]}
               </span>
@@ -204,7 +204,7 @@ export function MasteryProgressPanel({
           </li>
         ))}
       </ul>
-      <p className="text-xs italic text-[#b9c4f0]">{example}</p>
+      <p className="text-xs italic text-mastery-label">{example}</p>
     </PanelShell>
   );
 }

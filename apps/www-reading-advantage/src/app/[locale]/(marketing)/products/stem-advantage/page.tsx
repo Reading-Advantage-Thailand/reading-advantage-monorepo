@@ -56,7 +56,7 @@ export default async function StemAdvantage({
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section - Inline with indigo gradient */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+      <section className="relative min-h-hero flex items-center overflow-hidden">
         <Image
           src="/images/hero-stem-advantage.jpg"
           alt={t("heroAlt")}
@@ -66,7 +66,7 @@ export default async function StemAdvantage({
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-300 to-indigo-800 opacity-90" />
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl py-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="lg:col-span-7">
@@ -190,7 +190,7 @@ export default async function StemAdvantage({
               <div className="lg:col-span-7">
                 <div className="mb-8">
                   <span
-                    className="text-[80px] md:text-[96px] font-bold leading-none text-indigo-800 block"
+                    className="text-display md:text-8xl font-bold leading-none text-indigo-800 block"
                     data-testid="oversized-stat"
                   >
                     75%

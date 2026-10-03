@@ -210,7 +210,7 @@ export default async function PrimaryAdvantage({
 
       {/* CEFR Aligned — Full-Width Color Room */}
       <section className="py-24 bg-gradient-to-r from-cyan-400 via-cyan-600 to-cyan-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-cyan-100 mb-4 block">
@@ -238,7 +238,7 @@ export default async function PrimaryAdvantage({
           >
             {/* Image LEFT (5 cols) */}
             <div className="lg:col-span-5 relative">
-              <div className="relative aspect-[4/3] rounded-[40px] overflow-hidden shadow-xl">
+              <div className="relative aspect-4/3 rounded-panel overflow-hidden shadow-xl">
                 <Image
                   src="/images/primary-advantage-hero.jpg"
                   alt="Primary Advantage"
@@ -325,7 +325,7 @@ export default async function PrimaryAdvantage({
             {platformFeatures.map((feature, index) => (
               <div
                 key={feature.title}
-                className={`relative aspect-[4/3] rounded-3xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                className={`relative aspect-4/3 rounded-3xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
                   index % 2 === 0 ? "-rotate-2" : "rotate-2"
                 }`}
               >

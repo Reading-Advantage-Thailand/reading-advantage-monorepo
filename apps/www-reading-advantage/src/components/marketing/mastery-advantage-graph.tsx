@@ -324,7 +324,7 @@ export function MasteryAdvantageGraph({
   const cursor = step.cursor;
 
   return (
-    <div ref={containerRef} className={`relative ${interactive ? "bg-[#0b1220]" : ""} ${className}`}>
+    <div ref={containerRef} className={`relative ${interactive ? "bg-slate-900" : ""} ${className}`}>
       {interactive && (
         <div
           role="tablist"
@@ -366,7 +366,7 @@ export function MasteryAdvantageGraph({
         role="status"
         aria-live="polite"
         aria-atomic="true"
-        className="flex items-center px-6 py-3.5 min-h-[56px] border-b border-white/5"
+        className="flex items-center px-6 py-3.5 min-h-14 border-b border-white/5"
         style={{ background: "rgba(10,16,28,0.98)" }}
       >
         <span
@@ -381,7 +381,7 @@ export function MasteryAdvantageGraph({
             aria-label={playing ? labels.pause : labels.play}
             title={playing ? labels.pause : labels.play}
             onClick={() => setPlaying((p) => !p)}
-            className="ml-auto h-8 min-w-8 rounded-md border border-white/25 px-2 text-[10px] font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+            className="ml-auto h-8 min-w-8 rounded-md border border-white/25 px-2 text-2xs font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
           >
             {playing ? <Pause aria-hidden="true" className="mx-auto h-3 w-3" /> : <Play aria-hidden="true" className="mx-auto h-3 w-3" />}
           </button>
@@ -394,7 +394,7 @@ export function MasteryAdvantageGraph({
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1000 1000"
         preserveAspectRatio="xMidYMid meet"
-        className={`mastery-advantage-graph block h-auto w-full ${interactive ? "max-h-[68vh]" : ""}`}
+        className={`mastery-advantage-graph block h-auto w-full ${interactive ? "max-h-graph" : ""}`}
         data-animate={isVisible && playing ? "true" : "false"}
         data-domain={domain}
         id={interactive ? `${uid}-panel` : undefined}
@@ -712,7 +712,7 @@ export function MasteryAdvantageGraph({
               aria-pressed={showNext}
               onClick={() => setShowNext((v) => !v)}
               className={`h-9 rounded-md border px-3 text-xs font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
-                showNext ? "border-mastery-ready bg-mastery-ready text-[#1a1208]" : "border-white/25 hover:bg-white/10"
+                showNext ? "border-mastery-ready bg-mastery-ready text-slate-900" : "border-white/25 hover:bg-white/10"
               }`}
             >
               {labels.whatsNext}

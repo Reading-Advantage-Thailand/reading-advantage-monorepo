@@ -70,12 +70,12 @@ export default async function TutorAdvantage({
   const reedyKeys = [0, 1, 2, 3];
 
   return (
-    <main className="overflow-x-hidden bg-[#fbfaf6]">
+    <main className="overflow-x-hidden bg-site-page">
       {/* Hero */}
       <section className="relative overflow-hidden bg-emerald-950 text-white">
         <div
           aria-hidden="true"
-          className="absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-emerald-400/25 blur-[120px]"
+          className="absolute -right-32 -top-32 h-112 w-112 rounded-full bg-emerald-400/25 blur-glow"
         />
         <div className="container relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-4 pb-16 pt-28 sm:px-6 md:py-24 lg:grid-cols-12 lg:gap-14 lg:px-8">
           <div className="lg:col-span-6">
@@ -90,7 +90,7 @@ export default async function TutorAdvantage({
               <span aria-hidden="true" className="h-2 w-2 rounded-full bg-emerald-900 motion-safe:animate-pulse" />
               {t("hero.comingSoon")}
             </p>
-            <h1 className="mb-6 text-4xl font-semibold leading-[1.05] tracking-[-0.02em] sm:text-5xl lg:text-6xl">
+            <h1 className="mb-6 text-4xl font-semibold leading-display tracking-tight sm:text-5xl lg:text-6xl">
               {t("hero.title")}
             </h1>
             <p className="mb-3 text-xl font-medium text-emerald-100 md:text-2xl">{t("hero.subtitle")}</p>
@@ -118,7 +118,7 @@ export default async function TutorAdvantage({
             </div>
           </div>
           <div className="lg:col-span-6">
-            <div className="overflow-hidden rounded-[2rem] border border-white/20 shadow-2xl">
+            <div className="overflow-hidden rounded-4xl border border-white/20 shadow-2xl">
               <SiteImageView
                 image={siteImages.classroomSmallGroup}
                 alt={t("heroExtra.imageAlt")}
@@ -132,7 +132,7 @@ export default async function TutorAdvantage({
       </section>
 
       {/* Facts */}
-      <section aria-label={t("heroExtra.factsLabel")} className="border-b border-[#e5e1d6] bg-white">
+      <section aria-label={t("heroExtra.factsLabel")} className="border-b border-site-border bg-white">
         <dl className="container mx-auto grid max-w-5xl grid-cols-1 gap-6 px-4 py-10 text-center sm:grid-cols-3">
           {[0, 1, 2].map((i) => (
             <div key={i} className="flex flex-col">
@@ -187,7 +187,7 @@ export default async function TutorAdvantage({
                   image={BOOK_ART[i]}
                   alt={book.alt}
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="aspect-[4/3] w-full object-cover"
+                  className="aspect-4/3 w-full object-cover"
                 />
                 <div className="p-6">
                   <img src={BOOK_LOGOS[i]} alt="" className="mb-4 h-8 w-auto" />
@@ -235,9 +235,9 @@ export default async function TutorAdvantage({
       </section>
 
       {/* What is in a class package */}
-      <OverlappingSection background="bg-[#fbfaf6]" data-testid="overlapping-section">
+      <OverlappingSection background="bg-site-page" data-testid="overlapping-section">
         <div className="container mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-24">
-          <h2 className="mb-12 text-3xl font-semibold tracking-[-0.02em] text-slate-900 md:text-4xl">
+          <h2 className="mb-12 text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
             {t("platformFeatures.heading")}
           </h2>
           <ul className="grid gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
@@ -314,7 +314,7 @@ export default async function TutorAdvantage({
               <div
                 key={i}
                 data-testid="testimonial-card"
-                className="rounded-3xl border border-[#e5e1d6] bg-white p-8"
+                className="rounded-3xl border border-site-border bg-white p-8"
               >
                 <h3 className="mb-3 text-xl font-semibold text-slate-900">
                   {t(`trustSignals.items.${i}.title` as "trustSignals.items.0.title")}
@@ -347,10 +347,10 @@ export default async function TutorAdvantage({
         data-testid="combined-stats-cta"
       >
         <div className="container relative z-10 mx-auto max-w-4xl px-4 text-center">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-eyebrow text-emerald-300">
             {t("eyebrows.readyToStart")}
           </p>
-          <h2 className="mb-6 text-4xl font-semibold tracking-[-0.02em] md:text-5xl">{t("cta.heading")}</h2>
+          <h2 className="mb-6 text-4xl font-semibold tracking-tight md:text-5xl">{t("cta.heading")}</h2>
           <p className="mx-auto mb-10 max-w-2xl text-lg text-emerald-50">{t("cta.description")}</p>
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Link

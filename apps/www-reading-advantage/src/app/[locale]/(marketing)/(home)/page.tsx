@@ -109,7 +109,7 @@ export default async function Home({
     { key: "placement", Icon: Target },
   ] as const;
 
-  const eyebrow = "text-xs font-semibold uppercase tracking-[0.18em]";
+  const eyebrow = "text-xs font-semibold uppercase tracking-eyebrow";
 
   return (
     <main className="overflow-x-hidden bg-site-page text-black">
@@ -117,13 +117,13 @@ export default async function Home({
       <section className="relative pt-28 md:pt-36 pb-20 md:pb-28">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(60%_60%_at_80%_20%,rgba(56,189,248,0.16),transparent)]"
+          className="pointer-events-none absolute inset-x-0 top-0 h-130 bg-glow-sky"
         />
         <div className="container relative mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-14 items-center">
             <div className="lg:col-span-6">
               <p className={`${eyebrow} text-sky-800 mb-8`}>{t("hero.eyebrow")}</p>
-              <h1 className="text-4xl sm:text-5xl lg:text-[60px] xl:text-[68px] font-semibold leading-[1.04] tracking-[-0.03em] text-black mb-8">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-display tracking-tight text-black mb-8">
                 {t("hero.title")}
               </h1>
               <p className="text-lg md:text-xl leading-relaxed text-site-body max-w-xl mb-10">
@@ -165,7 +165,7 @@ export default async function Home({
 
             <div className="lg:col-span-6">
               <div className="relative pb-10 sm:pb-0">
-                <div className="overflow-hidden rounded-3xl border border-site-border bg-white shadow-[0_24px_60px_-24px_rgba(12,20,55,0.35)]">
+                <div className="overflow-hidden rounded-3xl border border-site-border bg-white shadow-panel">
                   <SiteImageView
                     image={siteImages.workbookTabletCutaway}
                     alt={t("v2.hero.imageAlt")}
@@ -174,7 +174,7 @@ export default async function Home({
                     className="w-full h-auto"
                   />
                 </div>
-                <figure className="absolute -bottom-0 left-4 w-[40%] sm:w-[32%] sm:-bottom-8 sm:-left-6 overflow-hidden rounded-2xl border border-site-border bg-white shadow-[0_16px_40px_-16px_rgba(12,20,55,0.4)]">
+                <figure className="absolute -bottom-0 left-4 w-2/5 sm:w-1/3 sm:-bottom-8 sm:-left-6 overflow-hidden rounded-2xl border border-site-border bg-white shadow-float">
                   <MasteryAdvantageGraph className="w-full h-auto" labels={graphLabels} pauseControl />
                   <figcaption className="sr-only">{t("v2.hero.graphLabel")}</figcaption>
                 </figure>
@@ -191,7 +191,7 @@ export default async function Home({
             <div className="lg:col-span-6 order-2 lg:order-1">
               <img src={siteLogos.tutor.color} alt="Tutor Advantage" width={240} height={60} className="h-16 w-auto mb-6" />
               <p className={`${eyebrow} text-emerald-800 mb-5`}>{t("v2.tutor.channel")}</p>
-              <h2 className="text-4xl md:text-5xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-6">
+              <h2 className="text-4xl md:text-5xl font-semibold leading-display tracking-tight text-black mb-6">
                 {t("tutor.title")}
               </h2>
               <p className="text-base md:text-lg leading-relaxed text-site-body mb-8">
@@ -235,7 +235,7 @@ export default async function Home({
 
             <div className="lg:col-span-6 order-1 lg:order-2">
               <div className="relative pb-10 sm:pb-0">
-                <div className="overflow-hidden rounded-3xl border border-emerald-200 bg-white shadow-[0_24px_60px_-28px_rgba(6,95,70,0.5)]">
+                <div className="overflow-hidden rounded-3xl border border-emerald-200 bg-white shadow-panel-emerald">
                   <SiteImageView
                     image={siteImages.classroomSmallGroup}
                     alt={t("v2.tutor.imageAlt")}
@@ -243,7 +243,7 @@ export default async function Home({
                     className="w-full h-auto"
                   />
                 </div>
-                <div className="absolute bottom-0 right-4 w-[46%] sm:-bottom-8 sm:-right-4 sm:w-[40%] overflow-hidden rounded-2xl border-4 border-emerald-50 bg-white shadow-xl">
+                <div className="absolute bottom-0 right-4 w-1/2 sm:-bottom-8 sm:-right-4 sm:w-2/5 overflow-hidden rounded-2xl border-4 border-emerald-50 bg-white shadow-xl">
                   <SiteImageView
                     image={siteImages.primaryBook}
                     alt={t("v2.tutor.bookAlt")}
@@ -281,7 +281,7 @@ export default async function Home({
                 image={siteImages.masteryClusterHero}
                 alt={t("v2.engine.imageAlt")}
                 sizes="(min-width: 1024px) 560px, 100vw"
-                className="w-full h-auto scale-[1.5]"
+                className="w-full h-auto scale-150"
               />
             </div>
           </div>
@@ -296,7 +296,7 @@ export default async function Home({
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sky-100 text-sky-800">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
-                  <span aria-hidden="true" className="text-5xl font-semibold tracking-tight text-[#e6e1d6]">
+                  <span aria-hidden="true" className="text-5xl font-semibold tracking-tight text-site-border">
                     {i + 1}
                   </span>
                 </div>
@@ -322,7 +322,7 @@ export default async function Home({
             className="mb-14"
           />
 
-          <h3 className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-black">
+          <h3 className="mb-2 text-sm font-semibold uppercase tracking-eyebrow text-black">
             {t("v2.products.liveLabel")}
           </h3>
           <p className="mb-6 max-w-2xl text-sm leading-relaxed text-site-body">
@@ -343,7 +343,7 @@ export default async function Home({
             ))}
           </div>
 
-          <h3 className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-site-body">
+          <h3 className="mb-2 text-sm font-semibold uppercase tracking-eyebrow text-site-body">
             {t("v2.products.roadmapLabel")}
           </h3>
           <p className="mb-6 text-sm text-site-body">{t("v2.products.roadmapNote")}</p>
@@ -390,7 +390,7 @@ export default async function Home({
                 key={item.title}
                 className="border border-sky-800 rounded-2xl p-8 bg-sky-800/40"
               >
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300 mb-6 block">
+                <span className="text-xs font-semibold uppercase tracking-eyebrow text-sky-300 mb-6 block">
                   {t("challengeLabel", { num: i + 1 })}
                 </span>
                 <h3 className="text-xl font-semibold tracking-tight text-white mb-4">
@@ -416,7 +416,7 @@ export default async function Home({
         <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-site-page via-site-page/50 to-transparent" />
         <div className="container relative mx-auto px-4 max-w-4xl text-center">
           <p className={`${eyebrow} text-sky-800 mb-6`}>{t("impact.eyebrow")}</p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-8">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-display tracking-tight text-black mb-8">
             {t("impact.title")}
           </h2>
           <p className="text-lg md:text-xl leading-relaxed text-site-body mb-12 max-w-2xl mx-auto">

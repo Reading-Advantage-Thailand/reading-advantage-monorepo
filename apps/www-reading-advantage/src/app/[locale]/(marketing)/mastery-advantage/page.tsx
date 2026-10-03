@@ -107,11 +107,11 @@ export default async function MasteryAdvantagePage() {
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-site-navy via-site-navy/85 to-site-navy/30" />
         <div className="container relative z-10 mx-auto max-w-6xl px-4">
           <div className="max-w-2xl">
-            <p className="mb-8 text-xs font-semibold uppercase tracking-[0.18em] text-mastery-ready">{t("hero.eyebrow")}</p>
-            <h1 className="mb-8 text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-white md:text-6xl lg:text-7xl">
+            <p className="mb-8 text-xs font-semibold uppercase tracking-eyebrow text-mastery-ready">{t("hero.eyebrow")}</p>
+            <h1 className="mb-8 text-5xl font-semibold leading-display tracking-tight text-white md:text-6xl lg:text-7xl">
               {t("hero.title")}
             </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-[#dbe2ff] md:text-xl">{t("hero.description")}</p>
+            <p className="max-w-xl text-lg leading-relaxed text-mastery-label md:text-xl">{t("hero.description")}</p>
           </div>
         </div>
       </section>
@@ -168,7 +168,7 @@ export default async function MasteryAdvantagePage() {
             description={t("explorer.description")}
             className="mb-10"
           />
-          <div className="overflow-hidden rounded-3xl border border-site-border shadow-[0_24px_60px_-24px_rgba(12,20,55,0.35)]">
+          <div className="overflow-hidden rounded-3xl border border-site-border shadow-panel">
             <MasteryAdvantageGraph interactive labels={graphLabels} className="w-full" />
           </div>
         </div>
@@ -241,7 +241,7 @@ export default async function MasteryAdvantagePage() {
                 key={item.title}
                 className={`flex flex-col gap-4 bg-white p-8 ${i < 3 ? "lg:col-span-2" : "lg:col-span-3"} ${i === 4 ? "md:col-span-2" : ""}`}
               >
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-800">0{i + 1}</span>
+                <span className="text-xs font-semibold uppercase tracking-eyebrow text-sky-800">0{i + 1}</span>
                 <h3 className="text-xl font-semibold tracking-tight text-black">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-site-body">{item.description}</p>
               </li>
@@ -265,7 +265,7 @@ export default async function MasteryAdvantagePage() {
                 <div className={`h-1.5 ${run.bar}`} />
                 <div className="flex flex-1 flex-col gap-5 p-7">
                   <div className="flex items-center justify-between gap-3">
-                    <img src={run.logo} alt={run.logoAlt} className="h-12 w-auto max-w-[60%]" />
+                    <img src={run.logo} alt={run.logoAlt} className="h-12 w-auto max-w-3/5" />
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${run.badge}`}>{run.status}</span>
                   </div>
                   <p className="text-sm leading-relaxed text-site-body">{run.description}</p>
@@ -281,10 +281,10 @@ export default async function MasteryAdvantagePage() {
          ───────────────────────────────────────────────────────────── */}
       <section className="py-24 md:py-32 bg-sky-800 text-white">
         <div className="container mx-auto px-4 max-w-4xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300 mb-6">
+          <p className="text-xs font-semibold uppercase tracking-eyebrow text-sky-300 mb-6">
             {t("cta.eyebrow")}
           </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-[-0.02em] text-white mb-8">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-display tracking-tight text-white mb-8">
             {t("cta.title")}
           </h2>
           <p className="text-lg md:text-xl leading-relaxed text-sky-100 mb-12 max-w-2xl mx-auto">

@@ -134,13 +134,13 @@ export default async function ReadingAdvantage() {
         className="relative py-24 bg-gradient-to-br from-sky-600 via-sky-600 to-sky-800 text-white overflow-hidden"
         id="platform"
       >
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div
-          className="absolute top-20 left-20 w-[500px] h-[500px] bg-sky-400/20 rounded-full blur-[150px]"
+          className="absolute top-20 left-20 w-125 h-125 bg-sky-400/20 rounded-full blur-glow-lg"
           aria-hidden="true"
         />
         <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-sky-400/20 rounded-full blur-[120px]"
+          className="absolute bottom-20 right-20 w-100 h-100 bg-sky-400/20 rounded-full blur-glow"
           aria-hidden="true"
         />
 
@@ -184,7 +184,7 @@ export default async function ReadingAdvantage() {
                             {t("devices.tablet")}
                           </h3>
                         </div>
-                        <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
+                        <div className="relative aspect-3/4 rounded-xl overflow-hidden">
                           <Image
                             src="/images/reading-advantage-demo.png"
                             alt={t("altText.tablet")}
@@ -201,7 +201,7 @@ export default async function ReadingAdvantage() {
                             {t("devices.mobile")}
                           </h3>
                         </div>
-                        <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
+                        <div className="relative aspect-3/4 rounded-xl overflow-hidden">
                           <Image
                             src="/images/app-on-phone.png"
                             alt={t("altText.mobile")}
@@ -330,7 +330,7 @@ export default async function ReadingAdvantage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-sky-100 to-sky-100 rounded-3xl blur-3xl -translate-y-4 translate-x-4" />
                 <div className="relative bg-gradient-to-br from-sky-50 to-sky-50 border border-sky-100 rounded-3xl p-6">
                   <div className="space-y-6">
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
+                    <div className="relative aspect-3/4 rounded-2xl overflow-hidden shadow-lg">
                       <Image
                         src="/images/blended-learning.png"
                         alt={t("altText.blendedLearningTeacher")}
@@ -339,7 +339,7 @@ export default async function ReadingAdvantage() {
                         className="object-cover"
                       />
                     </div>
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
+                    <div className="relative aspect-3/4 rounded-2xl overflow-hidden shadow-lg">
                       <Image
                         src="/images/workbook-cover.png"
                         alt={t("altText.blendedLearningWorkbook")}
@@ -355,7 +355,7 @@ export default async function ReadingAdvantage() {
           </div>
 
           {/* Teacher Tools — Dashed border container */}
-          <div className="mt-16 border-dashed border-2 border-sky-200 rounded-[40px] p-8 md:p-12 bg-white/50">
+          <div className="mt-16 border-dashed border-2 border-sky-200 rounded-panel p-8 md:p-12 bg-white/50">
             <h3 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
               <GraduationCap className="w-7 h-7 text-sky-800" />
               {t("teacherTools.heading")}
@@ -425,7 +425,7 @@ export default async function ReadingAdvantage() {
         {games.map((game, index) => (
           <div
             key={game.title}
-            className="snap-start flex-shrink-0 w-[300px] group relative bg-white rounded-3xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl border border-sky-100"
+            className="snap-start flex-shrink-0 w-75 group relative bg-white rounded-3xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl border border-sky-100"
             style={{ animationDelay: `${index * 150}ms` }}
           >
             <div className="relative aspect-square overflow-hidden">
@@ -494,11 +494,11 @@ export default async function ReadingAdvantage() {
       {/* Final CTA */}
       <section className="relative py-24 bg-gradient-to-br from-sky-400 via-sky-600 to-sky-600 text-white overflow-hidden">
         <div
-          className="absolute top-20 left-20 w-[500px] h-[500px] bg-sky-400/30 rounded-full blur-[150px]"
+          className="absolute top-20 left-20 w-125 h-125 bg-sky-400/30 rounded-full blur-glow-lg"
           aria-hidden="true"
         />
         <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-sky-400/30 rounded-full blur-[120px]"
+          className="absolute bottom-20 right-20 w-100 h-100 bg-sky-400/30 rounded-full blur-glow"
           aria-hidden="true"
         />
 
@@ -537,7 +537,7 @@ export default async function ReadingAdvantage() {
               <div className="relative">
                 <div className="absolute inset-0 bg-white/10 rounded-3xl blur-3xl -translate-y-4" />
                 <div className="relative bg-white/5 backdrop-blur-sm border border-white/20 rounded-3xl p-6">
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+                  <div className="relative aspect-4/3 rounded-2xl overflow-hidden">
                     <Image
                       src="/images/students-at-board.png"
                       alt={t("altText.studentsAtBoard")}

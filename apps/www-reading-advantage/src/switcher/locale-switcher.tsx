@@ -31,7 +31,7 @@ export function LocaleSwitcher() {
       defaultValue={currentLocale}
       onValueChange={(locale) => changeLocale(locale as Locale)}
     >
-      <SelectTrigger className="w-[100px] bg-white border-sky-100 text-black focus:ring-[rgb(20,110,245)] focus:ring-offset-2 focus:ring-offset-sky-50  font-medium">
+      <SelectTrigger className="w-25 bg-white border-sky-100 text-black focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-sky-50  font-medium">
         <SelectValue placeholder={t("select")} />
       </SelectTrigger>
       <SelectContent>

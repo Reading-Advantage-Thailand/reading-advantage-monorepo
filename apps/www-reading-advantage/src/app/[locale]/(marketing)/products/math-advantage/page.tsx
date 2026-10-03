@@ -94,7 +94,7 @@ export default async function MathAdvantage({
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section — Already done, keep as-is */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+      <section className="relative min-h-hero flex items-center overflow-hidden">
         <Image
           src="/images/hero-math-advantage.jpg"
           alt={t("heroAlt")}
@@ -104,7 +104,7 @@ export default async function MathAdvantage({
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-br from-orange-300 to-orange-800 opacity-90" />
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl py-24">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-7 animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -172,7 +172,7 @@ export default async function MathAdvantage({
 
       {/* Subject Coverage — Full-Width Color Room (Orange) */}
       <section className="py-24 bg-gradient-to-r from-orange-400 via-orange-400 to-orange-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <span className="uppercase tracking-widest text-xs font-semibold text-orange-100 mb-4 block">
@@ -242,7 +242,7 @@ export default async function MathAdvantage({
 
             {/* Illustration RIGHT (5 cols) */}
             <div className="lg:col-span-5 relative">
-              <div className="relative aspect-square rounded-[40px] overflow-hidden shadow-xl">
+              <div className="relative aspect-square rounded-panel overflow-hidden shadow-xl">
                 <Image
                   src="/images/math-advantage-hero.jpg"
                   alt={t("problemGenerationAlt")}
@@ -358,7 +358,7 @@ export default async function MathAdvantage({
 
       {/* Final CTA — Full-width orange gradient */}
       <section className="py-24 bg-gradient-to-br from-orange-600 via-orange-600 to-amber-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             {t("cta.heading")}

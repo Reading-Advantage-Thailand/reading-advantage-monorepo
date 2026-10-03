@@ -115,7 +115,7 @@ export default async function ZhongwenAdvantage({
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section - Inline with fuchsia gradient */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
+      <section className="relative min-h-hero flex items-center overflow-hidden">
         <Image
           src="/images/hero-zhongwen-advantage.jpg"
           alt={t("hero.alt")}
@@ -125,7 +125,7 @@ export default async function ZhongwenAdvantage({
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-300 to-fuchsia-800 opacity-90" />
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl py-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-7">
@@ -364,7 +364,7 @@ export default async function ZhongwenAdvantage({
                   <div
                     key={feature.title}
                     data-testid="editorial-card"
-                    className="bg-gradient-to-br from-fuchsia-50 to-white rounded-[40px] p-10 border border-fuchsia-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                    className="bg-gradient-to-br from-fuchsia-50 to-white rounded-panel p-10 border border-fuchsia-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   >
                     <div className="w-14 h-14 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                       <feature.icon
@@ -400,7 +400,7 @@ export default async function ZhongwenAdvantage({
               {educatorFeatures.map((feature) => (
                 <div
                   key={feature.title}
-                  className="bg-white rounded-3xl p-10 border border-fuchsia-100 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[320px] flex flex-col"
+                  className="bg-white rounded-3xl p-10 border border-fuchsia-100 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-80 flex flex-col"
                 >
                   <div className="w-14 h-14 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-2xl flex items-center justify-center mb-6 shadow-md mx-auto">
                     <feature.icon

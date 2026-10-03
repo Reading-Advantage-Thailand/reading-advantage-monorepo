@@ -60,7 +60,7 @@ export default async function FeaturesPage() {
 
       {/* Feature Highlight — Asymmetric 7/5 */}
       <section className="relative py-24 bg-gradient-to-br from-sky-600 via-sky-600 to-sky-800 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-10" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
             <div className="lg:col-span-7">
