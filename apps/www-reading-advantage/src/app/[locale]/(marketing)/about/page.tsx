@@ -74,7 +74,7 @@ export default async function AboutPage() {
             <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
               {t("sections.story.title")}
             </h2>
-            <div className="prose lg:prose-lg text-slate-600">
+            <div className="prose lg:prose-lg">
               <p className="mb-4">{t("sections.story.paragraphs.0")}</p>
               <p className="mb-4">{t("sections.story.paragraphs.1")}</p>
             </div>

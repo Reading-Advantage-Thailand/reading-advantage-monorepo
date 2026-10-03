@@ -27,4 +27,5 @@
 - [x] `docs/design-rules.md` and an AGENTS.md pointer
 - [x] Hex to tokens: 84 classes in 16 files (warnings 1,002 to 921)
 - [ ] Migrate the rest (679 raw colors, 178 arbitrary values, 39 inline styles), then raise rules to `error`
-- [ ] Fix `prose` classes (no CSS is generated for them)
+- [x] `prose` and `prose-lg` defined as `@utility` in globals.css (blog body and About story); no dependency added
+- [ ] Dead classes with no CSS: `warm-section`, `warm-card`, `animate-pulse-slow`, `animate-float`. Move graph `<style>` classes (`ma-*`, `mastery-pulse-ring`) to globals.css

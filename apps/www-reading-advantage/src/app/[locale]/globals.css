@@ -165,3 +165,98 @@ main {
 .brand-text-gradient {
   @apply bg-gradient-to-r from-sky-500 to-sky-600 bg-clip-text text-transparent;
 }
+
+/* Rich-text body for rendered article HTML and long copy. Replaces the missing typography plugin. */
+@utility prose {
+  color: var(--color-site-body);
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 65ch;
+
+  & > :first-child {
+    margin-top: 0;
+  }
+  & p {
+    margin-block: 1.25em;
+  }
+  & h1,
+  & h2,
+  & h3,
+  & h4 {
+    color: var(--color-site-navy);
+    font-weight: 700;
+    line-height: 1.25;
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+  }
+  & h1 {
+    font-size: 2em;
+  }
+  & h2 {
+    font-size: 1.5em;
+  }
+  & h3 {
+    font-size: 1.25em;
+  }
+  & a {
+    color: var(--color-sky-900);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  & strong {
+    color: var(--color-site-navy);
+    font-weight: 600;
+  }
+  & ul {
+    list-style: disc;
+    padding-inline-start: 1.5em;
+    margin-block: 1.25em;
+  }
+  & ol {
+    list-style: decimal;
+    padding-inline-start: 1.5em;
+    margin-block: 1.25em;
+  }
+  & li {
+    margin-block: 0.5em;
+  }
+  & blockquote {
+    border-inline-start: 4px solid var(--color-site-border);
+    padding-inline-start: 1em;
+    margin-block: 1.5em;
+    font-style: italic;
+  }
+  & img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    margin-block: 2em;
+  }
+  & code {
+    background: var(--color-light-frost);
+    border-radius: 0.25rem;
+    padding: 0.1em 0.35em;
+    font-size: 0.9em;
+  }
+  & pre {
+    background: var(--color-site-navy);
+    color: var(--color-site-page);
+    border-radius: 0.75rem;
+    padding: 1em 1.25em;
+    margin-block: 1.5em;
+    overflow-x: auto;
+  }
+  & pre code {
+    background: transparent;
+    padding: 0;
+  }
+  & hr {
+    border-color: var(--color-site-border);
+    margin-block: 2.5em;
+  }
+}
+
+@utility prose-lg {
+  font-size: 1.125rem;
+  line-height: 1.78;
+}
