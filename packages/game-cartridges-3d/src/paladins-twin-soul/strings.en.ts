@@ -1,0 +1,41 @@
+/** English UI text of Paladin's Twin Soul (catalog scope `paladinsTwinSoul`). */
+export default {
+  paladinsTwinSoul: {
+    title: 'Paladin’s Twin Soul',
+    pitch: 'Find the shade that holds the word and free the twin soul.',
+    subtitle: 'Free the twin soul',
+    briefing: {
+      objective: 'Help the paladin free the twin soul. A shade holds each soul: find the shade with the right word.',
+      instructions: {
+        find: { title: 'Read the meaning', description: 'A meaning shows on the card. A soul with this meaning is in the grip of one shade.' },
+        strike: { title: 'Strike the right shade', description: 'Every shade shows an English word. Tap the shade with the word for the meaning.' },
+        look: { title: 'Take your time', description: 'A wrong shade falls, so fewer shades are left to try. There is no timer.' },
+      },
+      controls: { touch: { label: 'Tap', action: 'Tap a shade to strike it' }, pointer: { label: 'Click', action: 'Click a shade to strike it' } },
+      learningPreview: 'Words from your story',
+      tip: 'A wrong shade falls and costs one courage. Courage always comes back.',
+      start: 'Free the souls ✨',
+    },
+    hud: {
+      place: 'The Sunken Vault',
+      progress: '{index}/{count} · {name}',
+      courage: 'Courage',
+      twins: 'Twin souls',
+      twinCount: '{freed}/{count}',
+      story: '📖 Story',
+      find: 'Which shade holds this meaning?',
+      again: 'Try another shade',
+      captured: 'A shade holds a soul!',
+      freed: 'Soul free!',
+      freedFirst: 'Soul free! ✨',
+      points: '+{points}',
+      shadeFell: 'Not this one',
+      courageLost: '-1 ❤',
+      rest: { title: 'Take a deep breath', text: 'The heroes rest together and feel brave again.' },
+      victory: { title: 'Victory!', text: 'Every twin soul is free.' },
+      intro: 'A new monster wakes up!',
+    },
+    monsters: { skeleton: 'Skeleton', mimic: 'Mimic', 'dragon-fire': 'Fire Dragon' },
+    heroes: { knight: 'Paladin', wizard: 'Wizard', cleric: 'Cleric' },
+  },
+} as const;

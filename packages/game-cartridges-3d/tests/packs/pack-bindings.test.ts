@@ -17,6 +17,10 @@ import { manifest as heroVsZombie } from '../../src/hero-vs-zombie/manifest.js';
 import { CHURCHYARD_MODELS } from '../../src/hero-vs-zombie/view/churchyard.js';
 import { manifest as labyrinth } from '../../src/labyrinth/manifest.js';
 import { MAZE_MODELS } from '../../src/labyrinth/view/maze.js';
+import { manifest as paladinsTwinSoul } from '../../src/paladins-twin-soul/manifest.js';
+import { manifest as rpgBattle } from '../../src/rpg-battle/manifest.js';
+import { manifest as villageGuardian } from '../../src/village-guardian/manifest.js';
+import { VILLAGE_MODELS } from '../../src/village-guardian/view/village.js';
 import { manifest as monsterEncounters } from '../../src/monster-encounters/manifest.js';
 import { manifest as runeMatch } from '../../src/rune-match/manifest.js';
 import { manifest as potionRush } from '../../src/potion-rush/manifest.js';
@@ -37,6 +41,9 @@ const GAMES = {
   'devourer-slime': { manifest: devourerSlime, named: CLEARING_MODELS },
   'hero-vs-zombie': { manifest: heroVsZombie, named: CHURCHYARD_MODELS },
   'monster-encounters': { manifest: monsterEncounters, named: vaultModels() },
+  'village-guardian': { manifest: villageGuardian, named: VILLAGE_MODELS },
+  'rpg-battle': { manifest: rpgBattle, named: vaultModels() },
+  'paladins-twin-soul': { manifest: paladinsTwinSoul, named: vaultModels() },
   'rune-match': { manifest: runeMatch, named: vaultModels() },
 } as const;
 

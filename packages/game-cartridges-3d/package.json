@@ -128,6 +128,51 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./rpg-battle": {
+      "types": "./dist/rpg-battle/index.d.ts",
+      "import": "./dist/rpg-battle/index.js",
+      "default": "./dist/rpg-battle/index.js"
+    },
+    "./rpg-battle/manifest": {
+      "types": "./dist/rpg-battle/manifest.d.ts",
+      "import": "./dist/rpg-battle/manifest.js",
+      "default": "./dist/rpg-battle/manifest.js"
+    },
+    "./rpg-battle/strings": {
+      "types": "./dist/rpg-battle/strings.en.d.ts",
+      "import": "./dist/rpg-battle/strings.en.js",
+      "default": "./dist/rpg-battle/strings.en.js"
+    },
+    "./paladins-twin-soul": {
+      "types": "./dist/paladins-twin-soul/index.d.ts",
+      "import": "./dist/paladins-twin-soul/index.js",
+      "default": "./dist/paladins-twin-soul/index.js"
+    },
+    "./paladins-twin-soul/manifest": {
+      "types": "./dist/paladins-twin-soul/manifest.d.ts",
+      "import": "./dist/paladins-twin-soul/manifest.js",
+      "default": "./dist/paladins-twin-soul/manifest.js"
+    },
+    "./paladins-twin-soul/strings": {
+      "types": "./dist/paladins-twin-soul/strings.en.d.ts",
+      "import": "./dist/paladins-twin-soul/strings.en.js",
+      "default": "./dist/paladins-twin-soul/strings.en.js"
+    },
+    "./village-guardian": {
+      "types": "./dist/village-guardian/index.d.ts",
+      "import": "./dist/village-guardian/index.js",
+      "default": "./dist/village-guardian/index.js"
+    },
+    "./village-guardian/manifest": {
+      "types": "./dist/village-guardian/manifest.d.ts",
+      "import": "./dist/village-guardian/manifest.js",
+      "default": "./dist/village-guardian/manifest.js"
+    },
+    "./village-guardian/strings": {
+      "types": "./dist/village-guardian/strings.en.d.ts",
+      "import": "./dist/village-guardian/strings.en.js",
+      "default": "./dist/village-guardian/strings.en.js"
     }
   },
   "files": [
