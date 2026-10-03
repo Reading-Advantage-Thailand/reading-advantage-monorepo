@@ -108,7 +108,7 @@ export default async function ProductsPage() {
       {/* Grade Bands - Enhanced cards with warm themes */}
       <section
         id="products"
-        className="relative py-24 warm-section overflow-hidden"
+        className="relative py-24 overflow-hidden"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
@@ -119,7 +119,7 @@ export default async function ProductsPage() {
                 style={{ animationDelay: `${index * 150}ms` }}
               >
                 <div
-                  className={`h-full p-8 rounded-2xl bg-gradient-to-br ${band.bgColor} warm-card border-0`}
+                  className={`h-full p-8 rounded-2xl bg-gradient-to-br ${band.bgColor} border-0`}
                 >
                   {/* Icon with glow */}
                   <div

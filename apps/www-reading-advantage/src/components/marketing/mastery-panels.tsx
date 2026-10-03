@@ -130,7 +130,6 @@ export function MasteryPathPanel({ label, caption, states }: { label: string; ca
         ))}
       </svg>
       <Legend labels={states} states={["mastered", "here", "ready", "locked"]} />
-      <style>{`@media (prefers-reduced-motion: no-preference){.mastery-pulse-ring{transform-box:fill-box;transform-origin:center;animation:mastery-pulse 2.6s ease-in-out infinite}}@keyframes mastery-pulse{0%,100%{transform:scale(1);opacity:.18}50%{transform:scale(1.25);opacity:.05}}`}</style>
     </PanelShell>
   );
 }

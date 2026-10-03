@@ -33,8 +33,8 @@ export default async function TutorAdvantage() {
   return (
     <section className="relative py-16 md:py-24 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 overflow-hidden">
       {/* Floating decorative elements */}
-      <div className="absolute top-20 left-20 w-64 h-64 bg-white/10 rounded-full blur-[80px] animate-pulse-slow pointer-events-none" />
-      <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-300/20 rounded-full blur-[100px] animate-float pointer-events-none" />
+      <div className="absolute top-20 left-20 w-64 h-64 bg-white/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-300/20 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl">
         {/* Main glass card */}

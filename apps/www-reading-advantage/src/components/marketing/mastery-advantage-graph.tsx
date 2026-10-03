@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import {
   DOMAINS,
   DOMAIN_META,
@@ -382,7 +383,7 @@ export function MasteryAdvantageGraph({
             onClick={() => setPlaying((p) => !p)}
             className="ml-auto h-8 min-w-8 rounded-md border border-white/25 px-2 text-[10px] font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
           >
-            <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>
+            {playing ? <Pause aria-hidden="true" className="mx-auto h-3 w-3" /> : <Play aria-hidden="true" className="mx-auto h-3 w-3" />}
           </button>
         )}
       </div>
@@ -399,96 +400,6 @@ export function MasteryAdvantageGraph({
         id={interactive ? `${uid}-panel` : undefined}
         style={cssVars as React.CSSProperties}
       >
-        <style>{`
-          .mastery-advantage-graph {
-            --ma-bg: #0b1220;
-            --ma-bg-soft: #131c30;
-            --ma-grid: rgba(255,255,255,0.04);
-            --ma-node-locked: #2a3552;
-            --ma-node-locked-ring: #3a4870;
-            --ma-node-ready: #f5b942;
-            --ma-node-ready-ring: #ffd27a;
-            --ma-node-current: #ffffff;
-            --ma-edge: rgba(255,255,255,0.08);
-            --ma-cluster-fill: rgba(255,255,255,0.025);
-            --ma-cluster-stroke: rgba(255,255,255,0.08);
-            --ma-label: rgba(255,255,255,0.85);
-            --ma-label-muted: rgba(255,255,255,0.45);
-            --ma-cluster-label: rgba(255,255,255,0.5);
-            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-          }
-
-          .ma-node circle.ma-node-fill { fill: var(--ma-node-locked); transition: fill .5s ease; }
-          .ma-node circle.ma-node-ring { fill: none; stroke: var(--ma-node-locked-ring); stroke-width: 1.5; transition: stroke .5s ease, stroke-width .5s ease; }
-          .ma-node .ma-node-icon       { fill: var(--ma-label-muted); transition: fill .5s ease, opacity .5s ease; opacity: 0.6; }
-
-          .ma-node[data-state="ready"] circle.ma-node-fill    { fill: var(--ma-node-ready); }
-          .ma-node[data-state="ready"] circle.ma-node-ring    { stroke: var(--ma-node-ready-ring); stroke-width: 2; }
-          .ma-node[data-state="ready"] .ma-node-icon          { fill: #1a1208; opacity: 1; }
-
-          .ma-node[data-state="mastered"] circle.ma-node-fill { fill: var(--ma-node-mastered); }
-          .ma-node[data-state="mastered"] circle.ma-node-ring { stroke: var(--ma-node-mastered-ring); stroke-width: 2; }
-          .ma-node[data-state="mastered"] .ma-node-icon       { fill: #0a2018; opacity: 1; }
-
-          .ma-node[data-state="current"] circle.ma-node-fill  { fill: var(--ma-node-current); }
-          .ma-node[data-state="current"] circle.ma-node-ring  { stroke: var(--ma-node-current-ring); stroke-width: 3; }
-          .ma-node[data-state="current"] .ma-node-icon        { fill: #0b1220; opacity: 1; }
-
-          .ma-node[data-state="forgetting"] circle.ma-node-fill { fill: #4a2f08 !important; opacity: .6; transition: fill .35s, opacity .35s; }
-          .ma-node[data-state="forgetting"] circle.ma-node-ring { stroke: #d97706 !important; stroke-width: 1.5 !important; animation: ma-flicker .85s ease-in-out infinite !important; }
-
-          .ma-node[data-state="refreshed"] circle.ma-node-fill  { fill: #ffffff !important; transition: fill .05s; }
-          .ma-node[data-state="refreshed"] circle.ma-node-ring  { stroke: #ffffff !important; stroke-opacity: 1 !important; animation: ma-pop .55s ease-out forwards !important; transform-origin: center; transform-box: fill-box; }
-
-          .ma-node-label { fill: var(--ma-label); font-size: 13px; font-weight: 500; letter-spacing: 0.01em; }
-          .ma-cluster-label { fill: var(--ma-cluster-label); font-size: 18px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; transition: fill .5s ease; }
-
-          .ma-edge { stroke: var(--ma-edge); stroke-width: 1.25; fill: none; }
-          .ma-edge-active-line {
-            stroke: var(--ma-edge-active);
-            stroke-width: 2.5; fill: none;
-            stroke-linecap: round;
-            filter: url(#ma-glow-soft);
-          }
-
-          .mastery-advantage-graph[data-animate="true"] .ma-node[data-state="ready"] circle.ma-node-ring {
-            animation: ma-pulse 2.4s ease-in-out infinite;
-            transform-origin: center; transform-box: fill-box;
-          }
-          .mastery-advantage-graph[data-animate="true"] .ma-node[data-state="current"] circle.ma-node-ring {
-            animation: ma-pulse-strong 1.8s ease-in-out infinite;
-            transform-origin: center; transform-box: fill-box;
-          }
-          .mastery-advantage-graph[data-animate="true"] .ma-edge-active-line {
-            stroke-dasharray: 8 6;
-            animation: ma-flow 1.8s linear infinite;
-          }
-
-          @keyframes ma-pulse {
-            0%, 100% { stroke-opacity: 0.6; stroke-width: 2; }
-            50%      { stroke-opacity: 1;   stroke-width: 3.5; }
-          }
-          @keyframes ma-pulse-strong {
-            0%, 100% { stroke-opacity: 0.8; stroke-width: 3; }
-            50%      { stroke-opacity: 1;   stroke-width: 5; }
-          }
-          @keyframes ma-flow {
-            to { stroke-dashoffset: -28; }
-          }
-          @keyframes ma-flicker {
-            0%,100% { stroke-opacity: .25; stroke-width: 1; }
-            50%      { stroke-opacity: 1;   stroke-width: 4.5; }
-          }
-          @keyframes ma-pop {
-            0%   { stroke-width: 22; stroke-opacity: 1;  transform: scale(1.9); }
-            60%  { stroke-width: 7;  stroke-opacity: .9; transform: scale(1.1); }
-            100% { stroke-width: 2.5; stroke-opacity: .7; transform: scale(1); }
-          }
-
-          @media (prefers-reduced-motion: reduce) {
-            .mastery-advantage-graph[data-animate="true"] * { animation: none !important; }
-          }
-        `}</style>
 
         <defs>
           <radialGradient id="ma-bg-gradient" cx="50%" cy="40%" r="70%">
@@ -780,9 +691,9 @@ export function MasteryAdvantageGraph({
             className="flex flex-wrap items-center gap-2"
           >
             {[
-              { label: labels.previous, onClick: () => go(-1), disabled: stepIndex === 0, text: "◀" },
-              { label: playing ? labels.pause : labels.play, onClick: () => setPlaying((p) => !p), disabled: false, text: playing ? "❚❚" : "▶" },
-              { label: labels.next, onClick: () => go(1), disabled: stepIndex >= steps.length - 1, text: "▶▶" },
+              { label: labels.previous, onClick: () => go(-1), disabled: stepIndex === 0, icon: SkipBack },
+              { label: playing ? labels.pause : labels.play, onClick: () => setPlaying((p) => !p), disabled: false, icon: playing ? Pause : Play },
+              { label: labels.next, onClick: () => go(1), disabled: stepIndex >= steps.length - 1, icon: SkipForward },
             ].map((b) => (
               <button
                 key={b.label}
@@ -793,7 +704,7 @@ export function MasteryAdvantageGraph({
                 onClick={b.onClick}
                 className="h-9 min-w-9 rounded-md border border-white/25 px-2 text-xs font-semibold hover:bg-white/10 disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
               >
-                <span aria-hidden="true">{b.text}</span>
+                <b.icon aria-hidden="true" className="mx-auto h-4 w-4" />
               </button>
             ))}
             <button
