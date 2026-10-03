@@ -65,6 +65,8 @@
   --color-mastery-here: #ffffff;
   --color-mastery-ready: #fbbf24;
   --color-mastery-locked: #0c1437;
+  --color-mastery-axis: #6f7fc0;
+  --color-mastery-label: #dbe2ff;
 
   /* Product accent ramps: tints (50-200), strong accent (600) and Tutor dark band.
      Values are the Tailwind defaults, so declaring them changes no rendering. */

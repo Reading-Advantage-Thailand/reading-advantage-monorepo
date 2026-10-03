@@ -96,7 +96,7 @@ export function TutorClassStepper({
                       tabIndex={selected ? 0 : -1}
                       onClick={() => go(index)}
                       onKeyDown={(event) => onKeyDown(event, index)}
-                      className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2 motion-reduce:transition-none ${
+                      className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800 focus-visible:ring-offset-2 motion-reduce:transition-none ${
                         selected
                           ? "border-emerald-900 bg-emerald-900 text-white"
                           : printed
@@ -150,7 +150,7 @@ export function TutorClassStepper({
               type="button"
               onClick={() => go(active - 1)}
               disabled={active === 0}
-              className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full border border-emerald-300 px-3 text-sm font-medium text-emerald-950 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 disabled:opacity-40"
+              className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full border border-emerald-300 px-3 text-sm font-medium text-emerald-950 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800 disabled:opacity-40"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               {prev}
@@ -162,7 +162,7 @@ export function TutorClassStepper({
               type="button"
               onClick={() => go(active + 1)}
               disabled={active === last}
-              className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-emerald-900 px-3 text-sm font-medium text-white transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2 disabled:opacity-40"
+              className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-emerald-900 px-3 text-sm font-medium text-white transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800 focus-visible:ring-offset-2 disabled:opacity-40"
             >
               {next}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />

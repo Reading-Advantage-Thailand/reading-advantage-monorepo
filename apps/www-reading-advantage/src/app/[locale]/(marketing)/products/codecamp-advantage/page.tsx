@@ -76,7 +76,7 @@ export default async function CodecampAdvantage({
     <main className="overflow-x-hidden bg-[#f6f2e9] text-slate-900">
       <section className="relative isolate overflow-hidden bg-slate-900 text-white">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(251,191,36,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,0.07)_1px,transparent_1px)] bg-[size:42px_42px]" />
-        <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-amber-500/20 blur-3xl" />
+        <div className="absolute -right-24 top-0 h-96 w-96 rounded-full bg-amber-400/20 blur-3xl" />
         <div className="relative mx-auto grid max-w-7xl gap-14 px-5 py-20 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
           <div>
             <div className="mb-7 inline-flex items-center gap-2 border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300">
@@ -199,7 +199,7 @@ export default async function CodecampAdvantage({
       >
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="max-w-3xl">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-amber-700">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-amber-800">
               {t("curriculum.eyebrow")}
             </p>
             <h2 className="mt-4 text-4xl font-black tracking-[-0.04em] sm:text-5xl">
@@ -220,7 +220,7 @@ export default async function CodecampAdvantage({
                 className="border-b border-r border-site-border bg-white p-7"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold uppercase tracking-widest text-amber-700">
+                  <span className="font-mono text-xs font-bold uppercase tracking-widest text-amber-800">
                     {t(`curriculum.phases.${phase.key}.name`)}
                   </span>
                   <span className="font-mono text-xs text-site-body">
@@ -243,7 +243,7 @@ export default async function CodecampAdvantage({
                         key={module}
                         className="flex gap-3 text-sm leading-5 text-slate-700"
                       >
-                        <span className="font-mono text-amber-700">
+                        <span className="font-mono text-amber-800">
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         {module}
@@ -285,7 +285,7 @@ export default async function CodecampAdvantage({
               className="flex flex-col justify-between border-2 border-slate-900 bg-white p-8 sm:p-10"
             >
               <div>
-                <div className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-700">
+                <div className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-800">
                   <Code2 className="h-5 w-5" />
                   {t("curriculum.spotlights.apk.label")}
                 </div>
@@ -340,7 +340,7 @@ export default async function CodecampAdvantage({
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <GraduationCap className="h-12 w-12 text-amber-600" />
+              <GraduationCap className="h-12 w-12 text-amber-800" />
               <h2 className="mt-6 text-4xl font-black tracking-[-0.04em]">
                 {t("pedagogy.heading")}
               </h2>

@@ -53,11 +53,11 @@ const getBadgeVariantStyles = (
     case "sky":
       return "bg-sky-100 text-sky-800 border-sky-200";
     case "green":
-      return "bg-green-100 text-green-800 border-green-200";
+      return "bg-emerald-100 text-emerald-800 border-emerald-200";
     case "rose":
       return "bg-rose-100 text-rose-800 border-rose-200";
     case "yellow":
-      return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      return "bg-amber-100 text-amber-800 border-amber-200";
     default:
       return "bg-amber-100 text-amber-800 border-amber-200";
   }

@@ -27,41 +27,41 @@ const variantStyles: Record<
   string,
   { border: string; accent: string; icon: string }
 > = {
-  sky: { border: "border-sky-200", accent: "bg-sky-50", icon: "text-sky-600" },
+  sky: { border: "border-sky-200", accent: "bg-sky-50", icon: "text-sky-800" },
   cyan: {
     border: "border-cyan-200",
     accent: "bg-cyan-50",
-    icon: "text-cyan-600",
+    icon: "text-cyan-800",
   },
   orange: {
     border: "border-orange-200",
     accent: "bg-orange-50",
-    icon: "text-orange-600",
+    icon: "text-orange-800",
   },
   rose: {
     border: "border-rose-200",
     accent: "bg-rose-50",
-    icon: "text-rose-600",
+    icon: "text-rose-800",
   },
   indigo: {
     border: "border-indigo-200",
     accent: "bg-indigo-50",
-    icon: "text-indigo-600",
+    icon: "text-indigo-800",
   },
   amber: {
     border: "border-amber-200",
     accent: "bg-amber-50",
-    icon: "text-amber-600",
+    icon: "text-amber-800",
   },
   fuchsia: {
     border: "border-fuchsia-200",
     accent: "bg-fuchsia-50",
-    icon: "text-fuchsia-600",
+    icon: "text-fuchsia-800",
   },
   emerald: {
     border: "border-emerald-200",
     accent: "bg-emerald-50",
-    icon: "text-emerald-600",
+    icon: "text-emerald-800",
   },
   slate: {
     border: "border-site-border",
@@ -96,7 +96,7 @@ const FAQAccordion = React.forwardRef<HTMLDivElement, FAQAccordionProps>(
                 id={`faq-question-${index}`}
                 type="button"
                 onClick={() => toggle(index)}
-                className="w-full flex items-center justify-between p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500"
+                className="w-full flex items-center justify-between p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-400"
                 aria-expanded={isOpen}
                 aria-controls={`faq-answer-${index}`}
               >

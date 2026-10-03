@@ -50,7 +50,7 @@ export default async function ContactPage() {
         title={t("title")}
         description={
           <div>
-            <p className="text-xl text-sky-700 mb-2">{t("description")}</p>
+            <p className="text-xl text-sky-800 mb-2">{t("description")}</p>
             <p className="text-lg text-site-body">{t("subtitle")}</p>
           </div>
         }
@@ -68,10 +68,10 @@ export default async function ContactPage() {
       <section className="py-24 px-4 bg-sky-50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-700 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
               {t("getInTouch")}
             </span>
-            <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
+            <h2 className="text-4xl font-bold text-sky-800 tracking-tight">
               {t("connectWithUs")}
             </h2>
           </div>
@@ -80,9 +80,9 @@ export default async function ContactPage() {
             {/* Email Card */}
             <div className="bg-white border border-sky-100 rounded-3xl p-8 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-in fade-in">
               <div className="w-16 h-16 bg-gradient-to-br from-sky-100 to-sky-200 rounded-2xl flex items-center justify-center mb-6">
-                <Mail className="w-8 h-8 text-sky-600" />
+                <Mail className="w-8 h-8 text-sky-800" />
               </div>
-              <h3 className="text-xl font-bold text-sky-900 mb-3">
+              <h3 className="text-xl font-bold text-sky-800 mb-3">
                 {t("email.title")}
               </h3>
               <p className="text-site-body mb-6">{t("email.description")}</p>
@@ -97,15 +97,15 @@ export default async function ContactPage() {
             {/* Phone Card */}
             <div className="bg-white border border-amber-100 rounded-3xl p-8 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-in fade-in">
               <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl flex items-center justify-center mb-6">
-                <Phone className="w-8 h-8 text-amber-600" />
+                <Phone className="w-8 h-8 text-amber-800" />
               </div>
-              <h3 className="text-xl font-bold text-amber-900 mb-3">
+              <h3 className="text-xl font-bold text-amber-800 mb-3">
                 {t("phone.title")}
               </h3>
               <p className="text-site-body mb-6">{t("phone.description")}</p>
               <Button
                 variant="outline"
-                className="border-amber-500 text-amber-700 hover:bg-amber-50"
+                className="border-amber-400 text-amber-800 hover:bg-amber-50"
                 asChild
               >
                 <a href={contactDetails.phoneHref}>
@@ -118,13 +118,13 @@ export default async function ContactPage() {
             {/* Location Card */}
             <div className="bg-white border border-sky-100 rounded-3xl p-8 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-in fade-in">
               <div className="w-16 h-16 bg-gradient-to-br from-sky-100 to-sky-200 rounded-2xl flex items-center justify-center mb-6">
-                <MapPin className="w-8 h-8 text-sky-600" />
+                <MapPin className="w-8 h-8 text-sky-800" />
               </div>
-              <h3 className="text-xl font-bold text-sky-900 mb-3">
+              <h3 className="text-xl font-bold text-sky-800 mb-3">
                 {t("location.title")}
               </h3>
               <p className="text-site-body mb-6">{t("location.description")}</p>
-              <p className="text-sky-700 font-semibold">{t("location.city")}</p>
+              <p className="text-sky-800 font-semibold">{t("location.city")}</p>
             </div>
           </div>
         </div>
@@ -134,10 +134,10 @@ export default async function ContactPage() {
       <section className="py-24 px-4 bg-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-700 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
               {t("connectWithUs")}
             </span>
-            <h2 className="text-3xl font-bold text-sky-900 tracking-tight">
+            <h2 className="text-3xl font-bold text-sky-800 tracking-tight">
               {t("stayConnected")}
             </h2>
           </div>
@@ -152,13 +152,13 @@ export default async function ContactPage() {
                 {t("hours.title")}
               </h3>
               <p className="text-site-body mb-3">{t("hours.description")}</p>
-              <p className="text-3xl font-bold text-sky-600">
+              <p className="text-3xl font-bold text-sky-800">
                 {t("hours.time")}
               </p>
             </div>
 
             {/* Social Media & Line QR */}
-            <div className="bg-gradient-to-br from-sky-900 to-sky-800 rounded-3xl p-8 shadow-xl text-white animate-in fade-in slide-in-from-right-8">
+            <div className="bg-gradient-to-br from-sky-800 to-sky-800 rounded-3xl p-8 shadow-xl text-white animate-in fade-in slide-in-from-right-8">
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
                 <MessageCircle className="w-8 h-8" />
               </div>
@@ -201,7 +201,7 @@ export default async function ContactPage() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="py-24 px-4 bg-sky-900">
+      <section className="py-24 px-4 bg-sky-800">
         <div className="container mx-auto text-center animate-in fade-in">
           <h2 className="text-3xl font-bold text-white mb-4">{t("title")}</h2>
           <p className="text-xl text-sky-100 mb-8 max-w-2xl mx-auto">

@@ -157,7 +157,7 @@ export default async function PrimaryAdvantage({
       <section className="py-24 bg-sky-50">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-12 max-w-3xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-cyan-800 mb-4 block">
               {t("experience.eyebrow")}
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
@@ -184,7 +184,7 @@ export default async function PrimaryAdvantage({
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-cyan-800 mb-4 block">
                 {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
@@ -209,7 +209,7 @@ export default async function PrimaryAdvantage({
       </section>
 
       {/* CEFR Aligned — Full-Width Color Room */}
-      <section className="py-24 bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-700 text-white relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-r from-cyan-400 via-cyan-600 to-cyan-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
@@ -268,7 +268,7 @@ export default async function PrimaryAdvantage({
 
             {/* Text RIGHT (7 cols) */}
             <div className="lg:col-span-7">
-              <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-cyan-800 mb-4 block">
                 {t("eyebrows.keyFeatures")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8">
@@ -277,7 +277,7 @@ export default async function PrimaryAdvantage({
               <div className="space-y-8">
                 {features.map((feature) => (
                   <div key={feature.title} className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center flex-shrink-0 shadow-lg">
                       <feature.icon className="w-6 h-6 text-white" />
                     </div>
                     <div>
@@ -290,7 +290,7 @@ export default async function PrimaryAdvantage({
                             key={item}
                             className="flex items-start gap-2 text-site-body"
                           >
-                            <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mt-2 flex-shrink-0" />
+                            <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full mt-2 flex-shrink-0" />
                             <span>{item}</span>
                           </li>
                         ))}
@@ -314,7 +314,7 @@ export default async function PrimaryAdvantage({
       >
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-cyan-800 mb-4 block">
               {t("eyebrows.platformInAction")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
@@ -352,7 +352,7 @@ export default async function PrimaryAdvantage({
       <section className="py-24 bg-gradient-to-br from-cyan-50 to-sky-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="uppercase tracking-widest text-xs font-semibold text-cyan-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-cyan-800 mb-4 block">
               {t("eyebrows.impact")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
@@ -366,7 +366,7 @@ export default async function PrimaryAdvantage({
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 bg-gradient-to-br from-cyan-600 via-cyan-700 to-cyan-800 text-white relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-cyan-600 via-cyan-600 to-cyan-800 text-white relative overflow-hidden">
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             {t("cta.heading")}

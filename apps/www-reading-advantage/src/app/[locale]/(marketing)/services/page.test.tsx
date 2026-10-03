@@ -30,10 +30,10 @@ const localeMessages = { en, th, zh };
 type Locale = keyof typeof localeMessages;
 
 const toneCases = [
-  { serviceIndex: 0, className: "bg-amber-100 text-amber-700" },
+  { serviceIndex: 0, className: "bg-amber-100 text-amber-800" },
   { serviceIndex: 1, className: "bg-site-border text-slate-700" },
-  { serviceIndex: 2, className: "bg-green-100 text-green-700" },
-  { serviceIndex: 3, className: "bg-green-100 text-green-700" },
+  { serviceIndex: 2, className: "bg-emerald-100 text-emerald-800" },
+  { serviceIndex: 3, className: "bg-emerald-100 text-emerald-800" },
 ] as const;
 
 afterEach(() => {

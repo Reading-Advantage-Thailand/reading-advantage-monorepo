@@ -19,13 +19,13 @@ export interface FloatingPillProps
 }
 
 const variantStyles: Record<string, { bg: string; text: string; border: string }> = {
-  sky: { bg: "bg-sky-50", text: "text-sky-900", border: "border-sky-200" },
-  cyan: { bg: "bg-cyan-50", text: "text-cyan-900", border: "border-cyan-200" },
-  orange: { bg: "bg-orange-50", text: "text-orange-900", border: "border-orange-200" },
-  rose: { bg: "bg-rose-50", text: "text-rose-900", border: "border-rose-200" },
-  indigo: { bg: "bg-indigo-50", text: "text-indigo-900", border: "border-indigo-200" },
-  amber: { bg: "bg-amber-50", text: "text-amber-900", border: "border-amber-200" },
-  fuchsia: { bg: "bg-fuchsia-50", text: "text-fuchsia-900", border: "border-fuchsia-200" },
+  sky: { bg: "bg-sky-50", text: "text-sky-800", border: "border-sky-200" },
+  cyan: { bg: "bg-cyan-50", text: "text-cyan-800", border: "border-cyan-200" },
+  orange: { bg: "bg-orange-50", text: "text-orange-800", border: "border-orange-200" },
+  rose: { bg: "bg-rose-50", text: "text-rose-800", border: "border-rose-200" },
+  indigo: { bg: "bg-indigo-50", text: "text-indigo-800", border: "border-indigo-200" },
+  amber: { bg: "bg-amber-50", text: "text-amber-800", border: "border-amber-200" },
+  fuchsia: { bg: "bg-fuchsia-50", text: "text-fuchsia-800", border: "border-fuchsia-200" },
   emerald: { bg: "bg-emerald-50", text: "text-emerald-900", border: "border-emerald-200" },
   slate: { bg: "bg-site-page", text: "text-slate-900", border: "border-site-border" },
 };

@@ -131,7 +131,7 @@ describe("Phase 4 browser regression contracts", () => {
     ];
     const contrastSafe =
       eyebrows.length === 2 &&
-      eyebrows.every((eyebrow) => eyebrow.classList.contains("text-sky-700"));
+      eyebrows.every((eyebrow) => eyebrow.classList.contains("text-sky-800"));
 
     expect
       .soft(

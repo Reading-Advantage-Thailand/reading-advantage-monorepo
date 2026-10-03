@@ -124,10 +124,10 @@ export default async function Services() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                 {t("hero.heading")}
               </span>
-              <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
+              <h2 className="text-4xl font-bold text-sky-800 tracking-tight">
                 {t("hero.subheading")}
               </h2>
             </div>
@@ -144,9 +144,9 @@ export default async function Services() {
                     <div
                       className={`px-3 py-1 rounded-full text-xs font-bold ${
                         service.statusTone === "active"
-                          ? "bg-green-100 text-green-700"
+                          ? "bg-emerald-100 text-emerald-800"
                           : service.statusTone === "upcoming"
-                            ? "bg-amber-100 text-amber-700"
+                            ? "bg-amber-100 text-amber-800"
                             : "bg-site-border text-slate-700"
                       }`}
                     >
@@ -185,7 +185,7 @@ export default async function Services() {
                     <ul className="space-y-3 mb-6">
                       {service.features.map((feature, i) => (
                         <li key={i} className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-sky-500 flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-5 h-5 text-sky-800 flex-shrink-0 mt-0.5" />
                           <span className="text-slate-700 text-sm leading-relaxed">
                             {feature}
                           </span>
@@ -208,13 +208,13 @@ export default async function Services() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-24 bg-gradient-to-br from-sky-500 via-blue-600 to-sky-700 text-white overflow-hidden">
+      <section className="relative py-24 bg-gradient-to-br from-sky-400 via-sky-600 to-sky-600 text-white overflow-hidden">
         <div
           className="absolute top-20 left-20 w-[500px] h-[500px] bg-sky-400/30 rounded-full blur-[150px]"
           aria-hidden="true"
         />
         <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-blue-400/30 rounded-full blur-[120px]"
+          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-sky-400/30 rounded-full blur-[120px]"
           aria-hidden="true"
         />
 

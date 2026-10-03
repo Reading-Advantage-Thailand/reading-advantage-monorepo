@@ -86,7 +86,7 @@ export default async function ScienceAdvantage({
               </p>
               <Link
                 href="#waitlist"
-                className="inline-flex items-center gap-2 bg-white text-rose-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-rose-50"
+                className="inline-flex items-center gap-2 bg-white text-rose-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-rose-50"
               >
                 {t("hero.cta")}
                 <ArrowRight className="w-5 h-5" />
@@ -113,7 +113,7 @@ export default async function ScienceAdvantage({
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-rose-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-rose-800 mb-4 block">
                 {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
@@ -138,7 +138,7 @@ export default async function ScienceAdvantage({
       </section>
 
       {/* Core Value Proposition — Full-Width Color Room (Rose) */}
-      <section className="bg-gradient-to-br from-rose-500 via-rose-600 to-rose-700 py-24">
+      <section className="bg-gradient-to-br from-rose-400 via-rose-600 to-rose-600 py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-rose-100 block mb-4">
@@ -220,7 +220,7 @@ export default async function ScienceAdvantage({
       <section className="bg-white py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-rose-600 block mb-4">
+            <span className="uppercase tracking-widest text-xs font-semibold text-rose-800 block mb-4">
               {t("eyebrows.ngssAligned")}
             </span>
             <div className="grid lg:grid-cols-12 gap-12 items-start">
@@ -270,7 +270,7 @@ export default async function ScienceAdvantage({
                     className="bg-gradient-to-br from-rose-50 to-white rounded-3xl p-8 border border-rose-100"
                   >
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl flex items-center justify-center shadow-md">
+                      <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-rose-600 rounded-xl flex items-center justify-center shadow-md">
                         <feature.icon
                           className="w-6 h-6 text-white"
                           strokeWidth={2}
@@ -283,7 +283,7 @@ export default async function ScienceAdvantage({
                     <ul className="space-y-3">
                       {feature.points.map((point, i) => (
                         <li key={i} className="flex items-start gap-3">
-                          <Check className="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" />
+                          <Check className="w-5 h-5 text-rose-800 mt-0.5 flex-shrink-0" />
                           <span className="text-site-body leading-relaxed">
                             {point.replace(/^[✓•]\s*/, "")}
                           </span>
@@ -349,7 +349,7 @@ export default async function ScienceAdvantage({
                   padding="p-10"
                   className="bg-white border-light-frost hover:border-rose-200 hover:shadow-xl"
                 >
-                  <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
+                  <div className="w-14 h-14 bg-gradient-to-br from-rose-400 to-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                     <audience.icon
                       className="w-7 h-7 text-white"
                       strokeWidth={2}
@@ -361,7 +361,7 @@ export default async function ScienceAdvantage({
                   <ul className="space-y-3">
                     {audience.points.map((point, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <Check className="w-4 h-4 text-rose-500 mt-1 flex-shrink-0" />
+                        <Check className="w-4 h-4 text-rose-800 mt-1 flex-shrink-0" />
                         <span className="text-site-body leading-relaxed">
                           {point.replace(/^[•]\s*/, "")}
                         </span>
@@ -399,11 +399,11 @@ export default async function ScienceAdvantage({
                 <input
                   type="email"
                   placeholder={t("waitlist.form.placeholder")}
-                  className="flex-1 px-6 py-4 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent text-lg"
+                  className="flex-1 px-6 py-4 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent text-lg"
                 />
                 <button
                   type="submit"
-                  className="bg-gradient-to-r from-rose-500 to-rose-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:from-rose-600 hover:to-rose-700 hover:shadow-lg hover:-translate-y-1"
+                  className="bg-gradient-to-r from-rose-400 to-rose-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:from-rose-600 hover:to-rose-600 hover:shadow-lg hover:-translate-y-1"
                 >
                   {t("waitlist.form.button")}
                 </button>

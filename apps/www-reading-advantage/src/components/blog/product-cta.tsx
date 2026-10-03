@@ -37,7 +37,7 @@ export async function ProductCTA({
       </p>
       <Link
         href={product}
-        className="inline-flex items-center gap-2 font-semibold text-sky-600 hover:text-sky-800 transition-all duration-300"
+        className="inline-flex items-center gap-2 font-semibold text-sky-800 hover:text-sky-800 transition-all duration-300"
       >
         <span>{t("action", { product: productName })}</span>
         <ArrowRight className="h-5 w-5" aria-hidden="true" />

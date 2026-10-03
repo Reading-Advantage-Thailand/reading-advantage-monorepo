@@ -20,7 +20,7 @@ export async function ContactCTA({ locale: _locale }: ContactCTAProps) {
       <p className="text-slate-700 mb-4">{t("description")}</p>
       <Link
         href="/contact"
-        className="inline-flex items-center gap-2 font-semibold text-amber-600 hover:text-amber-800 transition-all duration-300"
+        className="inline-flex items-center gap-2 font-semibold text-amber-800 hover:text-amber-800 transition-all duration-300"
       >
         <span>{t("action")}</span>
         <ArrowRight className="h-5 w-5" aria-hidden="true" />

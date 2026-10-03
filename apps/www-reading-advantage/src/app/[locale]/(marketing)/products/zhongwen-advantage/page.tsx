@@ -144,7 +144,7 @@ export default async function ZhongwenAdvantage({
               </p>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 bg-white text-fuchsia-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-fuchsia-50"
+                className="inline-flex items-center gap-2 bg-white text-fuchsia-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-fuchsia-50"
               >
                 {t("hero.ctaButton")}
                 <ArrowRight className="w-5 h-5" />
@@ -169,7 +169,7 @@ export default async function ZhongwenAdvantage({
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-800 mb-4 block">
                 {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
@@ -194,7 +194,7 @@ export default async function ZhongwenAdvantage({
       </section>
 
       {/* Full-Width Color Room (Fuchsia) - Level Mapping */}
-      <section className="bg-gradient-to-br from-fuchsia-500 via-fuchsia-600 to-fuchsia-700 py-24">
+      <section className="bg-gradient-to-br from-fuchsia-400 via-fuchsia-600 to-fuchsia-600 py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-100 mb-4 block text-center">
@@ -333,7 +333,7 @@ export default async function ZhongwenAdvantage({
       <section className="bg-white py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-800 mb-4 block">
               {t("eyebrows.interactiveLearning")}
             </span>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -351,7 +351,7 @@ export default async function ZhongwenAdvantage({
                     "Personalized learning paths based on HSK standards",
                   ].map((point, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-fuchsia-500 rounded-full mt-2 flex-shrink-0" />
+                      <div className="w-2 h-2 bg-fuchsia-400 rounded-full mt-2 flex-shrink-0" />
                       <span className="text-site-body leading-relaxed">
                         {point}
                       </span>
@@ -366,7 +366,7 @@ export default async function ZhongwenAdvantage({
                     data-testid="editorial-card"
                     className="bg-gradient-to-br from-fuchsia-50 to-white rounded-[40px] p-10 border border-fuchsia-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   >
-                    <div className="w-14 h-14 bg-gradient-to-br from-fuchsia-500 to-fuchsia-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
+                    <div className="w-14 h-14 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                       <feature.icon
                         className="w-7 h-7 text-white"
                         strokeWidth={2}
@@ -390,7 +390,7 @@ export default async function ZhongwenAdvantage({
       <section className="bg-gradient-to-br from-fuchsia-50 via-fuchsia-50 to-white py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block text-center">
+            <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-800 mb-4 block text-center">
               {t("eyebrows.forEducators")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-slate-900">
@@ -402,7 +402,7 @@ export default async function ZhongwenAdvantage({
                   key={feature.title}
                   className="bg-white rounded-3xl p-10 border border-fuchsia-100 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[320px] flex flex-col"
                 >
-                  <div className="w-14 h-14 bg-gradient-to-br from-fuchsia-500 to-fuchsia-600 rounded-2xl flex items-center justify-center mb-6 shadow-md mx-auto">
+                  <div className="w-14 h-14 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-2xl flex items-center justify-center mb-6 shadow-md mx-auto">
                     <feature.icon
                       className="w-7 h-7 text-white"
                       strokeWidth={2}
@@ -426,7 +426,7 @@ export default async function ZhongwenAdvantage({
         <div className="container mx-auto px-4 max-w-3xl">
           <div data-testid="combined-faq-waitlist" className="space-y-16">
             <div>
-              <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-600 mb-4 block text-center">
+              <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-800 mb-4 block text-center">
                 {t("eyebrows.questions")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-slate-900">
@@ -448,12 +448,12 @@ export default async function ZhongwenAdvantage({
                   <input
                     type="email"
                     placeholder={t("waitlist.emailPlaceholder")}
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl border border-fuchsia-200 bg-white text-slate-900 placeholder:text-site-body focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent"
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl border border-fuchsia-200 bg-white text-slate-900 placeholder:text-site-body focus:outline-none focus:ring-2 focus:ring-fuchsia-400 focus:border-transparent"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 bg-fuchsia-600 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300 hover:bg-fuchsia-700 hover:-translate-y-1 shadow-lg"
+                  className="inline-flex items-center justify-center gap-2 bg-fuchsia-600 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300 hover:bg-fuchsia-800 hover:-translate-y-1 shadow-lg"
                 >
                   {t("waitlist.subscribe")}
                   <ArrowRight className="w-5 h-5" />
@@ -465,7 +465,7 @@ export default async function ZhongwenAdvantage({
       </section>
 
       {/* Final CTA */}
-      <section className="bg-gradient-to-br from-fuchsia-600 via-fuchsia-600 to-fuchsia-700 text-white py-24">
+      <section className="bg-gradient-to-br from-fuchsia-600 via-fuchsia-600 to-fuchsia-600 text-white py-24">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-fuchsia-100 mb-4 block">
@@ -480,14 +480,14 @@ export default async function ZhongwenAdvantage({
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-white text-fuchsia-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
+                className="inline-flex items-center justify-center gap-2 bg-white text-fuchsia-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
               >
                 {t("cta.buttons.joinWaitlist")}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-fuchsia-700"
+                className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-fuchsia-800"
               >
                 {t("cta.buttons.learnMore")}
               </Link>

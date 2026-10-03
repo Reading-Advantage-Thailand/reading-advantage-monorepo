@@ -57,7 +57,7 @@ export function ExperienceDemo({ text }: ExperienceDemoProps) {
           href={DEMO_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 font-semibold text-cyan-700 hover:text-cyan-900"
+          className="inline-flex items-center gap-2 font-semibold text-cyan-800 hover:text-cyan-800"
         >
           {text.fullscreen}
           <ExternalLink className="h-4 w-4" aria-hidden="true" />

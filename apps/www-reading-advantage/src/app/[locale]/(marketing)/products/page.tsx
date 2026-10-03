@@ -44,7 +44,7 @@ export default async function ProductsPage() {
       href: "/products/storytime-advantage",
       icon: BookMarked,
       bgColor: "from-amber-50 to-amber-100",
-      badgeColor: "bg-amber-500",
+      badgeColor: "bg-amber-400",
       title: t("gradeBands.storytime.title"),
       gradeRange: t("gradeBands.storytime.gradeRange"),
       description: t("gradeBands.storytime.description"),
@@ -55,7 +55,7 @@ export default async function ProductsPage() {
       href: "/products/primary-advantage",
       icon: GraduationCap,
       bgColor: "from-orange-50 to-orange-100",
-      badgeColor: "bg-orange-500",
+      badgeColor: "bg-orange-400",
       title: t("gradeBands.primary.title"),
       gradeRange: t("gradeBands.primary.gradeRange"),
       description: t("gradeBands.primary.description"),
@@ -66,7 +66,7 @@ export default async function ProductsPage() {
       href: "/products/reading-advantage",
       icon: BookOpen,
       bgColor: "from-sky-50 to-sky-100",
-      badgeColor: "bg-sky-500",
+      badgeColor: "bg-sky-400",
       title: t("gradeBands.reading.title"),
       gradeRange: t("gradeBands.reading.gradeRange"),
       description: t("gradeBands.reading.description"),
@@ -77,7 +77,7 @@ export default async function ProductsPage() {
       href: "/products/tutor-advantage",
       icon: Users,
       bgColor: "from-emerald-50 to-emerald-100",
-      badgeColor: "bg-emerald-500",
+      badgeColor: "bg-emerald-400",
       title: t("gradeBands.tutor.title"),
       gradeRange: t("gradeBands.tutor.gradeRange"),
       description: t("gradeBands.tutor.description"),
@@ -134,7 +134,7 @@ export default async function ProductsPage() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-3xl font-bold mb-4 text-slate-900 group-hover:text-sky-700 transition-colors">
+                  <h3 className="text-3xl font-bold mb-4 text-slate-900 group-hover:text-sky-800 transition-colors">
                     {band.title}
                   </h3>
 
@@ -146,7 +146,7 @@ export default async function ProductsPage() {
                   {/* CTA Link */}
                   <Link
                     href={band.href}
-                    className="inline-flex items-center gap-2 font-semibold text-sky-600 hover:text-sky-800 group-hover:gap-3 transition-all duration-300"
+                    className="inline-flex items-center gap-2 font-semibold text-sky-800 hover:text-sky-800 group-hover:gap-3 transition-all duration-300"
                   >
                     <span>{band.ctaLabel}</span>
                     <ArrowRight

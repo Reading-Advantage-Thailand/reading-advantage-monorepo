@@ -31,7 +31,7 @@ export default async function TutorAdvantage() {
   ];
 
   return (
-    <section className="relative py-16 md:py-24 bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 overflow-hidden">
+    <section className="relative py-16 md:py-24 bg-gradient-to-br from-emerald-400 via-emerald-400 to-emerald-400 overflow-hidden">
       {/* Floating decorative elements */}
       <div className="absolute top-20 left-20 w-64 h-64 bg-white/10 rounded-full blur-[80px] pointer-events-none" />
       <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-300/20 rounded-full blur-[100px] pointer-events-none" />
@@ -79,7 +79,7 @@ export default async function TutorAdvantage() {
               >
                 <div
                   className={`
-                    w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl
+                    w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-400 rounded-2xl
                     flex items-center justify-center mb-4 shadow-lg
                     group-hover:scale-110 transition-transform duration-300
                   `}
@@ -107,7 +107,7 @@ export default async function TutorAdvantage() {
               asChild
               className={`
                 font-semibold px-10 py-4 rounded-xl
-                bg-white text-emerald-700 hover:bg-emerald-50
+                bg-white text-emerald-800 hover:bg-emerald-50
                 border-2 border-emerald-300 hover:border-emerald-400
                 hover:-translate-y-0.5 hover:shadow-lg
                 transition-all duration-300 inline-flex items-center gap-2

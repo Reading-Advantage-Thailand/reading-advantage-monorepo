@@ -76,7 +76,7 @@ export default async function MasteryAdvantagePage() {
       logoAlt: t("powersEveryProduct.cards.primary.logoAlt"),
       status: t("powersEveryProduct.cards.primary.status"),
       description: t("powersEveryProduct.cards.primary.description"),
-      badge: "bg-amber-100 text-amber-900",
+      badge: "bg-amber-100 text-amber-800",
       bar: "bg-mastery-ready",
     },
     {
@@ -241,7 +241,7 @@ export default async function MasteryAdvantagePage() {
                 key={item.title}
                 className={`flex flex-col gap-4 bg-white p-8 ${i < 3 ? "lg:col-span-2" : "lg:col-span-3"} ${i === 4 ? "md:col-span-2" : ""}`}
               >
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">0{i + 1}</span>
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-800">0{i + 1}</span>
                 <h3 className="text-xl font-semibold tracking-tight text-black">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-site-body">{item.description}</p>
               </li>
@@ -279,7 +279,7 @@ export default async function MasteryAdvantagePage() {
       {/* ─────────────────────────────────────────────────────────────
           CTA
          ───────────────────────────────────────────────────────────── */}
-      <section className="py-24 md:py-32 bg-sky-900 text-white">
+      <section className="py-24 md:py-32 bg-sky-800 text-white">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300 mb-6">
             {t("cta.eyebrow")}
@@ -295,7 +295,7 @@ export default async function MasteryAdvantagePage() {
             size="lg"
             variant="default"
             asChild
-            className="bg-white text-sky-900 hover:bg-sky-50"
+            className="bg-white text-sky-800 hover:bg-sky-50"
           >
             <Link href="/contact">
               <Mail className="w-5 h-5" />

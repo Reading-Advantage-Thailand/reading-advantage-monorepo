@@ -150,7 +150,7 @@ export default async function StorytimeAdvantage({
               </p>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 bg-white text-amber-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-amber-50"
+                className="inline-flex items-center gap-2 bg-white text-amber-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-amber-50"
               >
                 {t("cta.buttons.joinWaitlist")}
                 <ArrowRight className="w-5 h-5" />
@@ -175,7 +175,7 @@ export default async function StorytimeAdvantage({
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-4 block">
                 {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
@@ -200,7 +200,7 @@ export default async function StorytimeAdvantage({
       </section>
 
       {/* Full-Width Color Room (Amber) - Key Features */}
-      <section className="bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 py-24">
+      <section className="bg-gradient-to-br from-amber-400 via-amber-400 to-amber-600 py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <p className="uppercase tracking-widest text-xs font-semibold text-amber-100 mb-6 text-center">
@@ -217,7 +217,7 @@ export default async function StorytimeAdvantage({
                     index === 0 ? "relative z-10" : "-ml-6 relative z-0"
                   }`}
                 >
-                  <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
+                  <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                     <feature.icon
                       className="w-7 h-7 text-white"
                       strokeWidth={2}
@@ -229,7 +229,7 @@ export default async function StorytimeAdvantage({
                   <ul className="space-y-4">
                     {feature.points.map((point, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0" />
                         <span className="text-site-body leading-relaxed">
                           {point}
                         </span>
@@ -247,7 +247,7 @@ export default async function StorytimeAdvantage({
       <section className="bg-white py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <p className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-6">
+            <p className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-6">
               {t("eyebrows.k3Curriculum")}
             </p>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -274,7 +274,7 @@ export default async function StorytimeAdvantage({
                     },
                   ].map((item) => (
                     <div key={item.title} className="flex gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
+                      <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
                         <item.icon
                           className="w-6 h-6 text-white"
                           strokeWidth={2}
@@ -321,7 +321,7 @@ export default async function StorytimeAdvantage({
       >
         <div className="container mx-auto px-4 py-24">
           <div className="max-w-6xl mx-auto">
-            <p className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-6 text-center">
+            <p className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-6 text-center">
               {t("eyebrows.teacherResources")}
             </p>
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-slate-900">
@@ -336,7 +336,7 @@ export default async function StorytimeAdvantage({
                     index === 1 ? "mt-5" : ""
                   }`}
                 >
-                  <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mb-6 shadow-md mx-auto">
+                  <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center mb-6 shadow-md mx-auto">
                     <resource.icon
                       className="w-7 h-7 text-white"
                       strokeWidth={2}
@@ -358,7 +358,7 @@ export default async function StorytimeAdvantage({
       {/* FAQ Accordion */}
       <section className="bg-white py-24">
         <div className="container mx-auto px-4 max-w-3xl">
-          <p className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-6 text-center">
+          <p className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-6 text-center">
             {t("eyebrows.frequentlyAskedQuestions")}
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-slate-900">
@@ -373,7 +373,7 @@ export default async function StorytimeAdvantage({
       </section>
 
       {/* Final CTA */}
-      <section className="bg-gradient-to-br from-amber-600 via-amber-600 to-amber-700 text-white py-24">
+      <section className="bg-gradient-to-br from-amber-600 via-amber-600 to-amber-600 text-white py-24">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-5xl md:text-6xl font-bold mb-6">
@@ -385,14 +385,14 @@ export default async function StorytimeAdvantage({
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-white text-amber-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
+                className="inline-flex items-center justify-center gap-2 bg-white text-amber-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
               >
                 {t("cta.buttons.joinWaitlist")}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-amber-700"
+                className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-amber-800"
               >
                 {t("cta.buttons.learnMore")}
               </Link>

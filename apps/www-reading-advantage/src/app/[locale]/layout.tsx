@@ -37,7 +37,7 @@ export default async function RootLayout({
   const messages = await getMessages();
   return (
     <html lang={locale} suppressHydrationWarning={true}>
-      <body className="bg-sky-50 text-sky-900 min-h-screen font-sans">
+      <body className="bg-sky-50 text-sky-800 min-h-screen font-sans">
         <LocaleProvider locale={locale} messages={messages}>
           {children}
         </LocaleProvider>

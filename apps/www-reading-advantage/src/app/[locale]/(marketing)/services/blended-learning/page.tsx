@@ -100,7 +100,7 @@ export default async function BlendedLearning() {
         }}
         height="medium"
         alignment="left"
-        customGradient="bg-gradient-to-br from-sky-50 via-sky-100 to-blue-100"
+        customGradient="bg-gradient-to-br from-sky-50 via-sky-100 to-sky-100"
       />
 
       {/* Overview Section */}
@@ -109,7 +109,7 @@ export default async function BlendedLearning() {
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-12 gap-16 items-center animate-in fade-in slide-in-from-bottom-8 duration-700">
               <div className="lg:col-span-7">
-                <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+                <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                   {t("overview.title")}
                 </span>
                 <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight tracking-tight">
@@ -124,8 +124,8 @@ export default async function BlendedLearning() {
                 </p>
               </div>
               <div className="relative lg:col-span-5">
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-100 to-blue-100 rounded-3xl blur-3xl -translate-y-4 -translate-x-4" />
-                <div className="relative bg-gradient-to-br from-sky-50 to-blue-50 rounded-3xl p-8">
+                <div className="absolute inset-0 bg-gradient-to-br from-sky-100 to-sky-100 rounded-3xl blur-3xl -translate-y-4 -translate-x-4" />
+                <div className="relative bg-gradient-to-br from-sky-50 to-sky-50 rounded-3xl p-8">
                   <Image
                     src="/images/workbook-cover.png"
                     alt={t("altTexts.studentWorkbook")}
@@ -146,7 +146,7 @@ export default async function BlendedLearning() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 animate-in fade-in duration-700">
-              <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-4 block">
                 {t("features.badge")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
@@ -161,7 +161,7 @@ export default async function BlendedLearning() {
                   className="bg-white rounded-3xl p-8 border border-sky-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-8 duration-700"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <CheckCircle className="w-12 h-12 text-sky-500 mb-4" />
+                  <CheckCircle className="w-12 h-12 text-sky-800 mb-4" />
                   <h3 className="text-xl font-bold text-slate-900 mb-3">
                     {feature}
                   </h3>
@@ -178,7 +178,7 @@ export default async function BlendedLearning() {
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-16 items-center animate-in fade-in slide-in-from-bottom-8 duration-700">
               <div>
-                <span className="uppercase tracking-widest text-xs font-semibold text-amber-600 mb-4 block">
+                <span className="uppercase tracking-widest text-xs font-semibold text-amber-800 mb-4 block">
                   {t("forTeachers.badge")}
                 </span>
                 <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight tracking-tight">
@@ -190,7 +190,7 @@ export default async function BlendedLearning() {
                 <ul className="space-y-4 mb-8">
                   {challenges.map((challenge, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-6 h-6 text-emerald-800 flex-shrink-0 mt-0.5" />
                       <span className="text-slate-700">{challenge}</span>
                     </li>
                   ))}
@@ -212,10 +212,10 @@ export default async function BlendedLearning() {
       </section>
 
       {/* Levels Section */}
-      <section className="relative py-24 bg-gradient-to-br from-slate-900 via-sky-900 to-blue-900 text-white overflow-hidden">
+      <section className="relative py-24 bg-gradient-to-br from-slate-900 via-sky-800 to-sky-800 text-white overflow-hidden">
         <div className="absolute inset-0 bg-white/5 backdrop-blur-sm" />
-        <div className="absolute top-20 right-20 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px]" />
+        <div className="absolute top-20 right-20 w-[500px] h-[500px] bg-sky-400/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-sky-400/10 rounded-full blur-[120px]" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center animate-in fade-in duration-700">
@@ -278,7 +278,7 @@ export default async function BlendedLearning() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 animate-in fade-in duration-700">
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                 {t("onboarding.title")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
@@ -293,10 +293,10 @@ export default async function BlendedLearning() {
               {onboardingItems.map((item, index) => (
                 <div
                   key={item.title}
-                  className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-3xl p-8 border border-sky-100 hover:border-sky-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700"
+                  className="bg-gradient-to-br from-sky-50 to-sky-50 rounded-3xl p-8 border border-sky-100 hover:border-sky-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-sky-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                     {onboardingIcons[item.icon] ?? onboardingIcons.Target}
                   </div>
                   <h3 className="text-2xl font-bold text-slate-900 mb-4">
@@ -313,9 +313,9 @@ export default async function BlendedLearning() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-24 bg-gradient-to-br from-sky-500 via-blue-600 to-sky-700 text-white overflow-hidden">
+      <section className="relative py-24 bg-gradient-to-br from-sky-400 via-sky-600 to-sky-600 text-white overflow-hidden">
         <div className="absolute top-20 left-20 w-[500px] h-[500px] bg-sky-400/30 rounded-full blur-[150px]" />
-        <div className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-blue-400/30 rounded-full blur-[120px]" />
+        <div className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-sky-400/30 rounded-full blur-[120px]" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -341,7 +341,7 @@ export default async function BlendedLearning() {
               <Button
                 variant="outline"
                 size="lg"
-                className="text-xl px-14 py-6 rounded-3xl border-2 border-white text-white hover:bg-white hover:text-sky-700 font-bold"
+                className="text-xl px-14 py-6 rounded-3xl border-2 border-white text-white hover:bg-white hover:text-sky-800 font-bold"
                 asChild
               >
                 <Link href="/case-studies">

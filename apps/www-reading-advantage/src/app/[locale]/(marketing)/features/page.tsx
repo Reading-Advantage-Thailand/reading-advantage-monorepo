@@ -59,7 +59,7 @@ export default async function FeaturesPage() {
       />
 
       {/* Feature Highlight — Asymmetric 7/5 */}
-      <section className="relative py-24 bg-gradient-to-br from-sky-600 via-sky-700 to-sky-800 overflow-hidden">
+      <section className="relative py-24 bg-gradient-to-br from-sky-600 via-sky-600 to-sky-800 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
@@ -105,10 +105,10 @@ export default async function FeaturesPage() {
       <section className="py-24 bg-sky-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
               {t("platformFeatures.heading")}
             </span>
-            <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
+            <h2 className="text-4xl font-bold text-sky-800 tracking-tight">
               {t("platformFeatures.subheading")}
             </h2>
           </div>
@@ -135,10 +135,10 @@ export default async function FeaturesPage() {
           {/* Comparison Table */}
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                 {t("comparison.heading")}
               </span>
-              <h2 className="text-3xl font-bold text-sky-900 tracking-tight">
+              <h2 className="text-3xl font-bold text-sky-800 tracking-tight">
                 {t("comparison.subheading")}
               </h2>
             </div>

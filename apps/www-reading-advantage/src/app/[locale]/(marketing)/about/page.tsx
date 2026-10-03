@@ -54,7 +54,7 @@ export default async function AboutPage() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
               {t("sections.labels.introduction")}
             </span>
             <p className="text-lg text-site-body leading-relaxed">
@@ -68,10 +68,10 @@ export default async function AboutPage() {
       <section className="py-24 bg-sky-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
               {t("sections.labels.ourStory")}
             </span>
-            <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
+            <h2 className="text-4xl font-bold mb-6 text-sky-800 tracking-tight">
               {t("sections.story.title")}
             </h2>
             <div className="prose lg:prose-lg">
@@ -87,23 +87,23 @@ export default async function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-12 gap-12 items-start max-w-6xl mx-auto">
             <div className="lg:col-span-7">
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                 {t("sections.labels.missionVision")}
               </span>
-              <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
+              <h2 className="text-4xl font-bold mb-6 text-sky-800 tracking-tight">
                 {t("sections.mission.title")}
               </h2>
               <p className="text-site-body mb-8 leading-relaxed">
                 {t("sections.mission.description")}
               </p>
 
-              <h3 className="text-2xl font-bold mb-4 text-sky-900">
+              <h3 className="text-2xl font-bold mb-4 text-sky-800">
                 {t("sections.vision.title")}
               </h3>
               <ul className="space-y-3">
                 {([0, 1, 2, 3, 4] as const).map((i) => (
                   <li key={i} className="flex items-start gap-3 text-site-body">
-                    <span className="w-2 h-2 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
+                    <span className="w-2 h-2 bg-sky-400 rounded-full mt-2 flex-shrink-0" />
                     {t(`sections.vision.list.${i}`)}
                   </li>
                 ))}
@@ -135,16 +135,16 @@ export default async function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                 {t("sections.labels.technologyImpact")}
               </span>
-              <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
+              <h2 className="text-4xl font-bold text-sky-800 tracking-tight">
                 {t("sections.labels.builtForResults")}
               </h2>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-white rounded-3xl p-8 shadow-lg border border-sky-100">
-                <h3 className="text-2xl font-bold mb-6 text-sky-900">
+                <h3 className="text-2xl font-bold mb-6 text-sky-800">
                   {t("sections.technology.title")}
                 </h3>
                 <ul className="space-y-3">
@@ -153,14 +153,14 @@ export default async function AboutPage() {
                       key={i}
                       className="flex items-start gap-3 text-site-body"
                     >
-                      <span className="w-2 h-2 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
+                      <span className="w-2 h-2 bg-sky-400 rounded-full mt-2 flex-shrink-0" />
                       {t(`sections.technology.list.${i}`)}
                     </li>
                   ))}
                 </ul>
               </div>
               <div className="bg-white rounded-3xl p-8 shadow-lg border border-sky-100">
-                <h3 className="text-2xl font-bold mb-6 text-sky-900">
+                <h3 className="text-2xl font-bold mb-6 text-sky-800">
                   {t("sections.impact.title")}
                 </h3>
                 <ul className="space-y-3">
@@ -169,7 +169,7 @@ export default async function AboutPage() {
                       key={i}
                       className="flex items-start gap-3 text-site-body"
                     >
-                      <span className="w-2 h-2 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
+                      <span className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0" />
                       {t(`sections.impact.list.${i}`)}
                     </li>
                   ))}
@@ -185,17 +185,17 @@ export default async function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                 {t("sections.labels.ourValues")}
               </span>
-              <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
+              <h2 className="text-4xl font-bold text-sky-800 tracking-tight">
                 {t("sections.values.title")}
               </h2>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 { icon: Target, color: "from-sky-400 to-sky-600" },
-                { icon: Heart, color: "from-amber-400 to-orange-500" },
+                { icon: Heart, color: "from-amber-400 to-orange-400" },
                 { icon: Lightbulb, color: "from-emerald-400 to-emerald-600" },
               ].map((item, i) => (
                 <div
@@ -224,10 +224,10 @@ export default async function AboutPage() {
       <section className="py-24 bg-sky-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
               {t("sections.labels.research")}
             </span>
-            <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
+            <h2 className="text-4xl font-bold mb-6 text-sky-800 tracking-tight">
               {t("sections.research.title")}
             </h2>
             <p className="text-lg text-site-body leading-relaxed">
@@ -242,10 +242,10 @@ export default async function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                 {t("sections.labels.qualityProtocol")}
               </span>
-              <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
+              <h2 className="text-4xl font-bold mb-6 text-sky-800 tracking-tight">
                 {t("sections.bigFour.title")}
               </h2>
               <p className="text-lg text-site-body max-w-3xl mx-auto leading-relaxed">
@@ -278,10 +278,10 @@ export default async function AboutPage() {
       <section className="py-24 bg-sky-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
               {t("sections.labels.positioning")}
             </span>
-            <h2 className="text-4xl font-bold mb-6 text-sky-900 tracking-tight">
+            <h2 className="text-4xl font-bold mb-6 text-sky-800 tracking-tight">
               {t("sections.positioning.title")}
             </h2>
             <p className="text-lg text-site-body leading-relaxed">

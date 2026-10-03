@@ -82,7 +82,7 @@ export function PricingTable() {
     }
     if (isContact) {
       return (
-        <Link href="/contact" className="text-sky-700 underline font-medium">
+        <Link href="/contact" className="text-sky-800 underline font-medium">
           {value}
         </Link>
       );
@@ -144,7 +144,7 @@ export function PricingTable() {
         <p className="text-slate-700 mb-4">{t("tutorCard.description")}</p>
         <Link
           href="/products/tutor-advantage"
-          className="text-sky-700 underline font-medium"
+          className="text-sky-800 underline font-medium"
         >
           {t("tutorCard.link")}
         </Link>

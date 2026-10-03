@@ -104,7 +104,7 @@ export function Header() {
                 <SheetTitle className="text-black ">
                   {h("navigationMenu")}
                 </SheetTitle>
-                <SheetDescription className="text-warm-charcoal">
+                <SheetDescription className="text-site-navy">
                   {h("navigationDescription")}
                 </SheetDescription>
               </SheetHeader>
@@ -115,7 +115,7 @@ export function Header() {
                       key={link.href}
                       href={link.href}
                       className={`text-lg px-3 py-2 rounded-lg hover:bg-sky-100 transition-colors  font-medium ${
-                        pathname === link.href ? "bg-oat-light" : ""
+                        pathname === link.href ? "bg-site-page" : ""
                       }`}
                       onClick={() => setIsOpen(false)}
                     >

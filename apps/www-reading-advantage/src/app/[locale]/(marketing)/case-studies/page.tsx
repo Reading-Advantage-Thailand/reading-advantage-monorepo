@@ -172,14 +172,14 @@ export default async function CaseStudies() {
                 {/* Measurable Outcomes */}
                 <div className="bg-gradient-to-br from-white to-sky-50 rounded-3xl p-10 border border-sky-100 shadow-xl mb-12">
                   <h3 className="text-3xl font-bold text-slate-900 mb-8 flex items-center gap-3">
-                    <BarChart3 className="w-8 h-8 text-sky-600" />
+                    <BarChart3 className="w-8 h-8 text-sky-800" />
                     {school.outcomes.heading}
                   </h3>
                   <div className="grid md:grid-cols-3 gap-6">
                     {/* Reading Improvement */}
                     <div className="bg-white rounded-2xl p-6 border border-sky-100 shadow-lg">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-blue-500 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-sky-400 rounded-xl flex items-center justify-center">
                           <TrendingUp className="w-6 h-6 text-white" />
                         </div>
                         <h4 className="font-bold text-xl text-slate-900">
@@ -189,7 +189,7 @@ export default async function CaseStudies() {
                       <p className="text-sm text-site-body mb-3">
                         {school.outcomes.readingImprovement.description}
                       </p>
-                      <div className="text-2xl font-bold text-sky-600">
+                      <div className="text-2xl font-bold text-sky-800">
                         {school.outcomes.readingImprovement.delta}
                       </div>
                     </div>
@@ -197,7 +197,7 @@ export default async function CaseStudies() {
                     {/* Reading Volume */}
                     <div className="bg-white rounded-2xl p-6 border border-sky-100 shadow-lg">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-400 rounded-xl flex items-center justify-center">
                           <BookOpen className="w-6 h-6 text-white" />
                         </div>
                         <h4 className="font-bold text-xl text-slate-900">
@@ -207,7 +207,7 @@ export default async function CaseStudies() {
                       <p className="text-sm text-site-body mb-3">
                         {school.outcomes.readingVolume.description}
                       </p>
-                      <div className="text-2xl font-bold text-amber-600">
+                      <div className="text-2xl font-bold text-amber-800">
                         {school.outcomes.readingVolume.metric}
                       </div>
                     </div>
@@ -215,7 +215,7 @@ export default async function CaseStudies() {
                     {/* Fidelity Score */}
                     <div className="bg-white rounded-2xl p-6 border border-sky-100 shadow-lg">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center">
                           <Target className="w-6 h-6 text-white" />
                         </div>
                         <h4 className="font-bold text-xl text-slate-900">
@@ -225,7 +225,7 @@ export default async function CaseStudies() {
                       <p className="text-sm text-site-body mb-3">
                         {school.outcomes.fidelity.description}
                       </p>
-                      <div className="text-2xl font-bold text-green-600">
+                      <div className="text-2xl font-bold text-emerald-800">
                         {school.outcomes.fidelity.score}
                       </div>
                     </div>
@@ -241,7 +241,7 @@ export default async function CaseStudies() {
                     <ul className="space-y-3">
                       {school.highlights.map((highlight, i) => (
                         <li key={i} className="flex items-start gap-3">
-                          <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-6 h-6 text-emerald-800 flex-shrink-0 mt-0.5" />
                           <span className="text-slate-700">{highlight}</span>
                         </li>
                       ))}
@@ -249,9 +249,9 @@ export default async function CaseStudies() {
                   </div>
 
                   {/* Teacher Testimonial */}
-                  <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl p-8 border border-sky-100">
+                  <div className="bg-gradient-to-br from-sky-50 to-sky-50 rounded-2xl p-8 border border-sky-100">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-blue-500 rounded-full flex items-center justify-center">
+                      <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-sky-400 rounded-full flex items-center justify-center">
                         <Users className="w-6 h-6 text-white" />
                       </div>
                       <div>
@@ -305,13 +305,13 @@ export default async function CaseStudies() {
 
       {/* Methodology Section */}
       <section className="relative py-24 bg-slate-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-900/50 via-amber-900/50 to-slate-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-sky-800/50 via-amber-800/50 to-slate-900" />
         <div
-          className="absolute top-20 right-20 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[150px]"
+          className="absolute top-20 right-20 w-[500px] h-[500px] bg-sky-400/10 rounded-full blur-[150px]"
           aria-hidden="true"
         />
         <div
-          className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px]"
+          className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-amber-400/10 rounded-full blur-[120px]"
           aria-hidden="true"
         />
 
@@ -350,13 +350,13 @@ export default async function CaseStudies() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-24 bg-gradient-to-br from-sky-500 via-blue-600 to-sky-700 text-white overflow-hidden">
+      <section className="relative py-24 bg-gradient-to-br from-sky-400 via-sky-600 to-sky-600 text-white overflow-hidden">
         <div
           className="absolute top-20 left-20 w-[500px] h-[500px] bg-sky-400/30 rounded-full blur-[150px]"
           aria-hidden="true"
         />
         <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-blue-400/30 rounded-full blur-[120px]"
+          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-sky-400/30 rounded-full blur-[120px]"
           aria-hidden="true"
         />
 
@@ -370,7 +370,7 @@ export default async function CaseStudies() {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-4 bg-white text-sky-700 px-14 py-6 rounded-3xl hover:bg-sky-50 transition-all duration-300 shadow-2xl hover:shadow-white/30 hover:-translate-y-2 font-bold text-xl animate-in fade-in duration-700 delay-300 hover:scale-105"
+              className="inline-flex items-center gap-4 bg-white text-sky-800 px-14 py-6 rounded-3xl hover:bg-sky-50 transition-all duration-300 shadow-2xl hover:shadow-white/30 hover:-translate-y-2 font-bold text-xl animate-in fade-in duration-700 delay-300 hover:scale-105"
             >
               {t("cta.button")}
               <ArrowRight className="w-8 h-8" />

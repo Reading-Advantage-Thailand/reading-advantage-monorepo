@@ -84,7 +84,7 @@ export default async function StemAdvantage({
               </p>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 bg-white text-indigo-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-indigo-50"
+                className="inline-flex items-center gap-2 bg-white text-indigo-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-indigo-50"
               >
                 {t("cta.buttons.earlyAccess")}
                 <ArrowRight className="w-5 h-5" />
@@ -109,7 +109,7 @@ export default async function StemAdvantage({
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-indigo-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-indigo-800 mb-4 block">
                 {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
@@ -134,7 +134,7 @@ export default async function StemAdvantage({
       </section>
 
       {/* Grade Level Breakdown — Full-Width Color Room (Indigo) */}
-      <section className="bg-gradient-to-br from-indigo-500 via-indigo-600 to-indigo-700 py-24">
+      <section className="bg-gradient-to-br from-indigo-400 via-indigo-600 to-indigo-600 py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <span className="uppercase tracking-widest text-xs font-semibold text-indigo-100 block mb-4">
@@ -172,7 +172,7 @@ export default async function StemAdvantage({
       <section className="bg-white py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-indigo-600 block mb-4">
+            <span className="uppercase tracking-widest text-xs font-semibold text-indigo-800 block mb-4">
               {t("eyebrows.codingStem")}
             </span>
             <div className="grid lg:grid-cols-12 gap-12 items-center">
@@ -190,7 +190,7 @@ export default async function StemAdvantage({
               <div className="lg:col-span-7">
                 <div className="mb-8">
                   <span
-                    className="text-[80px] md:text-[96px] font-bold leading-none text-indigo-600 block"
+                    className="text-[80px] md:text-[96px] font-bold leading-none text-indigo-800 block"
                     data-testid="oversized-stat"
                   >
                     75%
@@ -233,7 +233,7 @@ export default async function StemAdvantage({
                     },
                   ].map((feature) => (
                     <div key={feature.title} className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
+                      <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
                         <feature.icon
                           className="w-6 h-6 text-white"
                           strokeWidth={2}
@@ -259,7 +259,7 @@ export default async function StemAdvantage({
       {/* Benefits — Overlapping Section */}
       <OverlappingSection
         overlapAmount="-mt-20"
-        background="bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-800"
+        background="bg-gradient-to-br from-indigo-600 via-indigo-600 to-indigo-800"
         topRadius="rounded-t-[40px]"
         data-testid="overlapping-section"
       >
@@ -311,7 +311,7 @@ export default async function StemAdvantage({
                   className="bg-white/10 backdrop-blur-sm border-indigo-200/30 text-white hover:-translate-y-1 hover:shadow-xl"
                   data-testid="benefit-card"
                 >
-                  <div className="w-14 h-14 bg-gradient-to-br from-indigo-400 to-indigo-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <div className="w-14 h-14 bg-gradient-to-br from-indigo-400 to-indigo-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                     <group.icon
                       className="w-7 h-7 text-white"
                       strokeWidth={2}
@@ -354,7 +354,7 @@ export default async function StemAdvantage({
                   t("technicalRequirements.points.3"),
                 ].map((requirement, i) => (
                   <li key={i} className="flex items-center gap-4 text-lg">
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
                       <Check className="w-5 h-5 text-white" strokeWidth={3} />
                     </div>
                     <span className="text-slate-700">{requirement}</span>
@@ -367,7 +367,7 @@ export default async function StemAdvantage({
       </section>
 
       {/* Final CTA */}
-      <section className="bg-gradient-to-br from-indigo-600 via-indigo-600 to-indigo-700 text-white py-24">
+      <section className="bg-gradient-to-br from-indigo-600 via-indigo-600 to-indigo-600 text-white py-24">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
@@ -379,14 +379,14 @@ export default async function StemAdvantage({
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 bg-white text-indigo-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
+                className="inline-flex items-center justify-center gap-2 bg-white text-indigo-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
               >
                 {t("cta.buttons.earlyAccess")}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-indigo-700"
+                className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-indigo-800"
               >
                 {t("cta.buttons.partnerships")}
               </Link>

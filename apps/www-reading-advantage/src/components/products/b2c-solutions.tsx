@@ -65,8 +65,8 @@ export default function B2CSolutions() {
             <div
               key={feature.title}
               className={`
-                bg-white rounded-2xl p-8 shadow-modern
-                hover:shadow-modern-lg hover:-translate-y-1 transition-all duration-300
+                bg-white rounded-2xl p-8 shadow-md
+                hover:shadow-lg hover:-translate-y-1 transition-all duration-300
                 animate-in fade-in slide-in-from-left-4 duration-500
               `}
               style={{ animationDelay: `${index * 100}ms` }}
@@ -82,13 +82,13 @@ export default function B2CSolutions() {
 
         {/* Codecamp Highlight Card */}
         <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-          <div className="relative bg-white rounded-3xl p-10 shadow-modern-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+          <div className="relative bg-white rounded-3xl p-10 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
             {/* Gradient background decoration */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-sky-400/10 to-cyan-500/10 rounded-full blur-3xl -translate-y-32 translate-x-32 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-sky-400/10 to-cyan-400/10 rounded-full blur-3xl -translate-y-32 translate-x-32 pointer-events-none" />
 
             {/* Header */}
             <div className="flex items-start gap-6 mb-8 relative z-10">
-              <div className="w-20 h-20 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl">
+              <div className="w-20 h-20 bg-gradient-to-br from-sky-400 to-cyan-400 rounded-2xl flex items-center justify-center shadow-xl">
                 <Code className="w-10 h-10 text-white" strokeWidth={1.5} />
               </div>
               <div className="flex-1">
@@ -103,7 +103,7 @@ export default function B2CSolutions() {
             <div className="grid md:grid-cols-2 gap-8 mb-8 relative z-10">
               {/* Highlights */}
               <div>
-                <h4 className="text-xl font-bold mb-4 text-sky-700 flex items-center gap-2">
+                <h4 className="text-xl font-bold mb-4 text-sky-800 flex items-center gap-2">
                   <ArrowRight className="w-5 h-5" strokeWidth={2} />
                   {t("codecamp.highlightsTitle")}
                 </h4>
@@ -114,7 +114,7 @@ export default function B2CSolutions() {
                       className="flex items-start text-slate-700 animate-in fade-in slide-in-from-left-4 duration-300"
                       style={{ animationDelay: `${300 + index * 50}ms` }}
                     >
-                      <span className="w-2 h-2 bg-sky-500 rounded-full mt-2 mr-3 flex-shrink-0" />
+                      <span className="w-2 h-2 bg-sky-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                       <span className="leading-relaxed">{t(key)}</span>
                     </li>
                   ))}
@@ -123,7 +123,7 @@ export default function B2CSolutions() {
 
               {/* Outcomes */}
               <div>
-                <h4 className="text-xl font-bold mb-4 text-cyan-700 flex items-center gap-2">
+                <h4 className="text-xl font-bold mb-4 text-cyan-800 flex items-center gap-2">
                   <ArrowRight className="w-5 h-5" strokeWidth={2} />
                   {t("codecamp.outcomesTitle")}
                 </h4>
@@ -134,7 +134,7 @@ export default function B2CSolutions() {
                       className="flex items-start text-slate-700 animate-in fade-in slide-in-from-left-4 duration-300"
                       style={{ animationDelay: `${500 + index * 50}ms` }}
                     >
-                      <span className="w-2 h-2 bg-cyan-500 rounded-full mt-2 mr-3 flex-shrink-0" />
+                      <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3 flex-shrink-0" />
                       <span className="leading-relaxed">{t(key)}</span>
                     </li>
                   ))}
@@ -147,7 +147,7 @@ export default function B2CSolutions() {
               <Button
                 asChild
                 size="lg"
-                className="bg-gradient-to-r from-sky-500 to-cyan-500 text-white px-8 py-4 rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 font-semibold"
+                className="bg-gradient-to-r from-sky-400 to-cyan-400 text-white px-8 py-4 rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 font-semibold"
               >
                 <Link href="/products/codecamp-advantage" className="inline-flex items-center gap-2">
                   {t("codecamp.applyNow")}

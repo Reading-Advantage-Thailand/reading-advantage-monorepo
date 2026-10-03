@@ -618,8 +618,8 @@ export function MasteryAdvantageGraph({
           }}
           filter="url(#ma-glow-soft)"
         >
-          <circle r="13" fill="#fff" opacity="0.35" />
-          <circle r="6" fill="#fff" />
+          <circle r="13" fill="var(--color-white)" opacity="0.35" />
+          <circle r="6" fill="var(--color-white)" />
         </g>
 
         {/* Floating annotation label */}
@@ -628,7 +628,7 @@ export function MasteryAdvantageGraph({
             const w = step.tag.text.length * 7.5 + 24;
             return (
               <g transform={`translate(${step.tag.x} ${step.tag.y})`}>
-                <rect x={-w / 2} y={-14} width={w} height={22} rx={4} fill="#0b1220" opacity="0.9" />
+                <rect x={-w / 2} y={-14} width={w} height={22} rx={4} fill="var(--color-slate-900)" opacity="0.9" />
                 <text
                   textAnchor="middle"
                   y={3}
@@ -669,8 +669,8 @@ export function MasteryAdvantageGraph({
               const w = text.length * 7.2 + 24;
               return (
                 <>
-                  <rect x={-w / 2} y={-15} width={w} height={24} rx={5} fill="#0b1220" stroke="rgba(255,255,255,0.25)" />
-                  <text textAnchor="middle" y={2} fontSize="13" fontWeight="600" fill="#fff">
+                  <rect x={-w / 2} y={-15} width={w} height={24} rx={5} fill="var(--color-slate-900)" stroke="var(--color-white)" strokeOpacity={0.25} />
+                  <text textAnchor="middle" y={2} fontSize="13" fontWeight="600" fill="var(--color-white)">
                     {text}
                   </text>
                 </>

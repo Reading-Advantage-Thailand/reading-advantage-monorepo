@@ -23,14 +23,14 @@ export interface StepFlowProps
 }
 
 const variantStyles: Record<string, { dot: string; line: string; text: string }> = {
-  sky: { dot: "bg-sky-500", line: "bg-sky-300", text: "text-sky-700" },
-  cyan: { dot: "bg-cyan-500", line: "bg-cyan-300", text: "text-cyan-700" },
-  orange: { dot: "bg-orange-500", line: "bg-orange-300", text: "text-orange-700" },
-  rose: { dot: "bg-rose-500", line: "bg-rose-300", text: "text-rose-700" },
-  indigo: { dot: "bg-indigo-500", line: "bg-indigo-300", text: "text-indigo-700" },
-  amber: { dot: "bg-amber-500", line: "bg-amber-300", text: "text-amber-700" },
-  fuchsia: { dot: "bg-fuchsia-500", line: "bg-fuchsia-300", text: "text-fuchsia-700" },
-  emerald: { dot: "bg-emerald-500", line: "bg-emerald-300", text: "text-emerald-700" },
+  sky: { dot: "bg-sky-400", line: "bg-sky-300", text: "text-sky-800" },
+  cyan: { dot: "bg-cyan-400", line: "bg-cyan-300", text: "text-cyan-800" },
+  orange: { dot: "bg-orange-400", line: "bg-orange-300", text: "text-orange-800" },
+  rose: { dot: "bg-rose-400", line: "bg-rose-300", text: "text-rose-800" },
+  indigo: { dot: "bg-indigo-400", line: "bg-indigo-300", text: "text-indigo-800" },
+  amber: { dot: "bg-amber-400", line: "bg-amber-300", text: "text-amber-800" },
+  fuchsia: { dot: "bg-fuchsia-400", line: "bg-fuchsia-300", text: "text-fuchsia-800" },
+  emerald: { dot: "bg-emerald-400", line: "bg-emerald-300", text: "text-emerald-800" },
   slate: { dot: "bg-slate-500", line: "bg-slate-300", text: "text-slate-700" },
 };
 

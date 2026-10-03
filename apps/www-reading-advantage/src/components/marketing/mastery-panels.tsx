@@ -116,8 +116,8 @@ export function MasteryPathPanel({ label, caption, states }: { label: string; ca
           <g key={n.id}>
             {n.state === "here" ? (
               <>
-                <circle cx={n.x} cy={n.y} r={26} fill="#ffffff" opacity={0.18} className="mastery-pulse-ring" />
-                <circle cx={n.x} cy={n.y} r={19} fill="none" stroke="#ffffff" strokeWidth={1.5} opacity={0.7} />
+                <circle cx={n.x} cy={n.y} r={26} fill="var(--color-white)" opacity={0.18} className="mastery-pulse-ring" />
+                <circle cx={n.x} cy={n.y} r={19} fill="none" stroke="var(--color-white)" strokeWidth={1.5} opacity={0.7} />
               </>
             ) : null}
             <circle
@@ -147,23 +147,23 @@ export function MasteryReviewPanel({
   return (
     <PanelShell texture="masteryPulse" label={label} caption={caption}>
       <svg viewBox="0 0 460 250" className="mb-5 h-auto w-full" role="presentation" aria-hidden="true">
-        <line x1="40" y1="20" x2="40" y2="205" stroke="#6f7fc0" strokeWidth="1.5" />
-        <line x1="40" y1="205" x2="445" y2="205" stroke="#6f7fc0" strokeWidth="1.5" />
-        <line x1="40" y1="150" x2="445" y2="150" stroke="#fbbf24" strokeWidth="1" strokeDasharray="4 5" opacity="0.7" />
+        <line x1="40" y1="20" x2="40" y2="205" stroke="var(--color-mastery-axis)" strokeWidth="1.5" />
+        <line x1="40" y1="205" x2="445" y2="205" stroke="var(--color-mastery-axis)" strokeWidth="1.5" />
+        <line x1="40" y1="150" x2="445" y2="150" stroke="var(--color-mastery-ready)" strokeWidth="1" strokeDasharray="4 5" opacity="0.7" />
         <path
           d="M40 40 Q 85 135 150 150 L150 40 Q 215 105 290 150 L290 40 Q 365 85 440 120"
           fill="none" stroke={MASTERY_COLORS.mastered} strokeWidth="3" strokeLinejoin="round" strokeLinecap="round"
         />
         {[150, 290].map((x) => (
           <g key={x}>
-            <circle cx={x} cy={150} r={8} fill={MASTERY_COLORS.ready} stroke="#0c1437" strokeWidth="3" />
-            <circle cx={x} cy={40} r={6} fill={MASTERY_COLORS.mastered} stroke="#0c1437" strokeWidth="3" />
+            <circle cx={x} cy={150} r={8} fill={MASTERY_COLORS.ready} stroke="var(--color-site-navy)" strokeWidth="3" />
+            <circle cx={x} cy={40} r={6} fill={MASTERY_COLORS.mastered} stroke="var(--color-site-navy)" strokeWidth="3" />
           </g>
         ))}
-        <circle cx={40} cy={40} r={6} fill={MASTERY_COLORS.mastered} stroke="#0c1437" strokeWidth="3" />
-        <text x="158" y="172" fill="#fbbf24" fontSize="12" fontWeight="600">{reviewDue}</text>
-        <text x="46" y="16" fill="#dbe2ff" fontSize="12">{axisMemory}</text>
-        <text x="445" y="226" fill="#dbe2ff" fontSize="12" textAnchor="end">{axisTime}</text>
+        <circle cx={40} cy={40} r={6} fill={MASTERY_COLORS.mastered} stroke="var(--color-site-navy)" strokeWidth="3" />
+        <text x="158" y="172" fill="var(--color-mastery-ready)" fontSize="12" fontWeight="600">{reviewDue}</text>
+        <text x="46" y="16" fill="var(--color-mastery-label)" fontSize="12">{axisMemory}</text>
+        <text x="445" y="226" fill="var(--color-mastery-label)" fontSize="12" textAnchor="end">{axisTime}</text>
       </svg>
       <Legend labels={states} states={["mastered", "ready"]} />
     </PanelShell>

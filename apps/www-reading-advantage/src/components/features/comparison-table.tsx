@@ -65,7 +65,7 @@ export function ComparisonTable() {
       readingAdvantage: {
         value: "✔",
         title: t("descriptions.fiction.readingAdvantage"),
-        className: "text-green-600",
+        className: "text-emerald-800",
       },
       ...competitorCells,
     },
@@ -74,7 +74,7 @@ export function ComparisonTable() {
       readingAdvantage: {
         value: "✔",
         title: t("descriptions.nonfiction.readingAdvantage"),
-        className: "text-green-600",
+        className: "text-emerald-800",
       },
       ...competitorCells,
     },
@@ -83,7 +83,7 @@ export function ComparisonTable() {
       readingAdvantage: {
         value: "✔",
         title: t("descriptions.includesReadingMaterial.readingAdvantage"),
-        className: "text-green-600",
+        className: "text-emerald-800",
       },
       ...competitorCells,
     },
@@ -99,7 +99,7 @@ export function ComparisonTable() {
       readingAdvantage: {
         value: "✔",
         title: t("descriptions.audioSupport.readingAdvantage"),
-        className: "text-green-600",
+        className: "text-emerald-800",
       },
       ...competitorCells,
     },
@@ -108,7 +108,7 @@ export function ComparisonTable() {
       readingAdvantage: {
         value: "✔",
         title: t("descriptions.aiAssistant.readingAdvantage"),
-        className: "text-green-600",
+        className: "text-emerald-800",
       },
       ...competitorCells,
     },

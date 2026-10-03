@@ -63,7 +63,7 @@ const productConfigs: ProductConfigList = [
     badgeKey: "products.readingAdvantage.badge",
     gradientFrom: "from-sky-400",
     gradientTo: "to-sky-600",
-    accentColor: "text-sky-700",
+    accentColor: "text-sky-800",
   },
   {
     key: "primaryAdvantage",
@@ -73,8 +73,8 @@ const productConfigs: ProductConfigList = [
     layout: "standard",
     badgeType: "new",
     gradientFrom: "from-sky-300",
-    gradientTo: "to-sky-500",
-    accentColor: "text-sky-700",
+    gradientTo: "to-sky-400",
+    accentColor: "text-sky-800",
   },
   {
     key: "scienceAdvantage",
@@ -85,7 +85,7 @@ const productConfigs: ProductConfigList = [
     badgeKey: "products.scienceAdvantage.badge",
     gradientFrom: "from-rose-400",
     gradientTo: "to-rose-600",
-    accentColor: "text-rose-700",
+    accentColor: "text-rose-800",
   },
   {
     key: "mathAdvantage",
@@ -96,7 +96,7 @@ const productConfigs: ProductConfigList = [
     badgeKey: "products.mathAdvantage.badge",
     gradientFrom: "from-orange-400",
     gradientTo: "to-orange-600",
-    accentColor: "text-orange-700",
+    accentColor: "text-orange-800",
   },
   {
     key: "zhongwenAdvantage",
@@ -118,7 +118,7 @@ const productConfigs: ProductConfigList = [
     badgeKey: "products.storytimeAdvantage.badge",
     gradientFrom: "from-amber-400",
     gradientTo: "to-amber-600",
-    accentColor: "text-amber-700",
+    accentColor: "text-amber-800",
   },
   {
     key: "stemAdvantage",
@@ -129,7 +129,7 @@ const productConfigs: ProductConfigList = [
     badgeKey: "products.stemAdvantage.badge",
     gradientFrom: "from-indigo-400",
     gradientTo: "to-indigo-600",
-    accentColor: "text-indigo-700",
+    accentColor: "text-indigo-800",
   },
   {
     key: "codecampAdvantage",
@@ -138,8 +138,8 @@ const productConfigs: ProductConfigList = [
     icon: Code,
     badgeKey: "products.codecampAdvantage.badge",
     gradientFrom: "from-fuchsia-400",
-    gradientTo: "to-indigo-500",
-    accentColor: "text-fuchsia-700",
+    gradientTo: "to-indigo-400",
+    accentColor: "text-fuchsia-800",
   },
 ];
 
@@ -207,8 +207,8 @@ export default async function B2BSolutions() {
                     className={`
                       relative flex h-full flex-col overflow-hidden p-8 rounded-2xl
                       bg-gradient-to-br ${product.bgColor}
-                      backdrop-blur-sm border border-white/20 shadow-modern
-                      hover:shadow-modern-lg hover:-translate-y-2 transition-all duration-300
+                      backdrop-blur-sm border border-white/20 shadow-md
+                      hover:shadow-lg hover:-translate-y-2 transition-all duration-300
                     `}
                   >
                     {/* Gradient overlay */}
@@ -314,7 +314,7 @@ export default async function B2BSolutions() {
                     className="animate-in fade-in zoom-in-95 duration-500"
                     style={{ animationDelay: `${baseDelay + 50}ms` }}
                   >
-                    <div className="relative h-full flex flex-col items-center justify-center overflow-hidden p-8 rounded-2xl bg-white border border-sky-200 shadow-modern hover:shadow-modern-lg hover:-translate-y-2 transition-all duration-300">
+                    <div className="relative h-full flex flex-col items-center justify-center overflow-hidden p-8 rounded-2xl bg-white border border-sky-200 shadow-md hover:shadow-lg hover:-translate-y-2 transition-all duration-300">
                       <div className="absolute inset-0 z-0">
                         <Image
                           src="/images/blended-learning.png"
@@ -325,7 +325,7 @@ export default async function B2BSolutions() {
                         />
                       </div>
                       <div className="absolute inset-0 z-10 bg-gradient-to-br from-white/40 to-white/20" />
-                      <div className="relative z-20 text-center space-y-3 bg-white/80 backdrop-blur-xs rounded-2xl px-6 py-4 shadow-modern border border-white/50">
+                      <div className="relative z-20 text-center space-y-3 bg-white/80 backdrop-blur-xs rounded-2xl px-6 py-4 shadow-md border border-white/50">
                         <p className="text-lg font-semibold text-slate-800">
                           {t("seeSuccessStories")}
                         </p>

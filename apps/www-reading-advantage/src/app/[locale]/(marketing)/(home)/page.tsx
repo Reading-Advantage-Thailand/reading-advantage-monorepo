@@ -122,7 +122,7 @@ export default async function Home({
         <div className="container relative mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-14 items-center">
             <div className="lg:col-span-6">
-              <p className={`${eyebrow} text-sky-700 mb-8`}>{t("hero.eyebrow")}</p>
+              <p className={`${eyebrow} text-sky-800 mb-8`}>{t("hero.eyebrow")}</p>
               <h1 className="text-4xl sm:text-5xl lg:text-[60px] xl:text-[68px] font-semibold leading-[1.04] tracking-[-0.03em] text-black mb-8">
                 {t("hero.title")}
               </h1>
@@ -139,7 +139,7 @@ export default async function Home({
                 </Button>
                 <Link
                   href="/mastery-advantage"
-                  className="text-sm font-medium text-black border-b border-site-border pb-0.5 hover:border-sky-500 transition-colors"
+                  className="text-sm font-medium text-black border-b border-site-border pb-0.5 hover:border-sky-400 transition-colors"
                 >
                   {t("hero.secondaryCta")} →
                 </Link>
@@ -293,7 +293,7 @@ export default async function Home({
                 className="relative flex flex-col gap-4 rounded-3xl border border-site-border bg-site-page p-8"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sky-100 text-sky-900">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sky-100 text-sky-800">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <span aria-hidden="true" className="text-5xl font-semibold tracking-tight text-[#e6e1d6]">
@@ -362,7 +362,7 @@ export default async function Home({
       </section>
 
       {/* SCHOOLS: Blended Learning */}
-      <section className="py-24 md:py-32 bg-sky-900 text-white">
+      <section className="py-24 md:py-32 bg-sky-800 text-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 items-center mb-14">
             <SectionHeader
@@ -374,7 +374,7 @@ export default async function Home({
             >
               <p className="mt-6 text-sm leading-relaxed text-sky-100">{t("v2.schools.blended")}</p>
             </SectionHeader>
-            <div className="lg:col-span-6 overflow-hidden rounded-3xl border border-sky-700">
+            <div className="lg:col-span-6 overflow-hidden rounded-3xl border border-sky-800">
               <SiteImageView
                 image={siteImages.classroomBlended}
                 alt={t("v2.schools.imageAlt")}
@@ -388,7 +388,7 @@ export default async function Home({
             {thaiFeatures.map((item, i) => (
               <article
                 key={item.title}
-                className="border border-sky-700 rounded-2xl p-8 bg-sky-900/40"
+                className="border border-sky-800 rounded-2xl p-8 bg-sky-800/40"
               >
                 <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300 mb-6 block">
                   {t("challengeLabel", { num: i + 1 })}
@@ -415,7 +415,7 @@ export default async function Home({
         />
         <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-site-page via-site-page/50 to-transparent" />
         <div className="container relative mx-auto px-4 max-w-4xl text-center">
-          <p className={`${eyebrow} text-sky-700 mb-6`}>{t("impact.eyebrow")}</p>
+          <p className={`${eyebrow} text-sky-800 mb-6`}>{t("impact.eyebrow")}</p>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-[-0.02em] text-black mb-8">
             {t("impact.title")}
           </h2>
@@ -432,7 +432,7 @@ export default async function Home({
             </Button>
             <Link
               href="/mastery-advantage"
-              className="text-sm font-medium text-black border-b border-site-border pb-0.5 hover:border-sky-500 transition-colors"
+              className="text-sm font-medium text-black border-b border-site-border pb-0.5 hover:border-sky-400 transition-colors"
             >
               {t("impact.secondaryCta")} →
             </Link>

@@ -66,7 +66,7 @@ export default async function ManagedService() {
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-slate-900 leading-tight mb-4 tracking-tight">
               {t("hero.title")}
             </h1>
-            <h2 className="text-2xl md:text-3xl text-sky-700 font-semibold leading-relaxed">
+            <h2 className="text-2xl md:text-3xl text-sky-800 font-semibold leading-relaxed">
               {t("hero.subtitle")}
             </h2>
           </div>
@@ -110,7 +110,7 @@ export default async function ManagedService() {
                 className="rounded-3xl shadow-xl mb-8"
               />
 
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800">
                 {t("overview.badge")}
               </span>
               <h2 className="text-3xl font-bold text-slate-900 mt-2 mb-4 tracking-tight">
@@ -126,25 +126,25 @@ export default async function ManagedService() {
 
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-emerald-800 flex-shrink-0 mt-0.5" />
                   <span className="text-slate-700">
                     {t("overview.items.0")}
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-emerald-800 flex-shrink-0 mt-0.5" />
                   <span className="text-slate-700">
                     {t("overview.items.1")}
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-emerald-800 flex-shrink-0 mt-0.5" />
                   <span className="text-slate-700">
                     {t("overview.items.2")}
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-emerald-800 flex-shrink-0 mt-0.5" />
                   <span className="text-slate-700">
                     {t("overview.items.3")}
                   </span>
@@ -154,7 +154,7 @@ export default async function ManagedService() {
 
             {/* Right — Features List */}
             <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-amber-600">
+              <span className="uppercase tracking-widest text-xs font-semibold text-amber-800">
                 {t("features.badge")}
               </span>
               <h2 className="text-3xl font-bold text-slate-900 mt-2 mb-8 tracking-tight">
@@ -167,7 +167,7 @@ export default async function ManagedService() {
                     key={i}
                     className="flex items-center gap-4 bg-white rounded-3xl p-5 border border-sky-100"
                   >
-                    <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-sky-400 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                       <Users className="w-6 h-6 text-white" />
                     </div>
                     <h4 className="text-lg font-bold text-slate-900">
@@ -186,7 +186,7 @@ export default async function ManagedService() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid md:grid-cols-2 gap-16">
             <div>
-              <span className="uppercase tracking-widest text-xs font-semibold text-amber-600">
+              <span className="uppercase tracking-widest text-xs font-semibold text-amber-800">
                 {t("benefits.badge")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mt-2 mb-8 tracking-tight">
@@ -198,7 +198,7 @@ export default async function ManagedService() {
               <ul className="space-y-4">
                 {benefitItems.map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-6 h-6 text-emerald-800 flex-shrink-0 mt-0.5" />
                     <span className="text-slate-700">{item}</span>
                   </li>
                 ))}

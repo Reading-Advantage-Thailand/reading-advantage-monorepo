@@ -90,7 +90,7 @@ export default async function ReadingAdvantage() {
           src: "/images/students-at-board.png",
           alt: "Students at interactive display board using Reading Advantage platform",
         }}
-        customGradient="bg-gradient-to-br from-sky-400 to-sky-900"
+        customGradient="bg-gradient-to-br from-sky-400 to-sky-800"
         productLogo={{
           src: "/reading-advantage.jpg",
           alt: "Reading Advantage Logo",
@@ -106,7 +106,7 @@ export default async function ReadingAdvantage() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                 {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
@@ -131,7 +131,7 @@ export default async function ReadingAdvantage() {
 
       {/* Platform Features — Full-Width Color Room (Sky) */}
       <section
-        className="relative py-24 bg-gradient-to-br from-sky-600 via-sky-700 to-sky-800 text-white overflow-hidden"
+        className="relative py-24 bg-gradient-to-br from-sky-600 via-sky-600 to-sky-800 text-white overflow-hidden"
         id="platform"
       >
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
@@ -140,7 +140,7 @@ export default async function ReadingAdvantage() {
           aria-hidden="true"
         />
         <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-blue-400/20 rounded-full blur-[120px]"
+          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-sky-400/20 rounded-full blur-[120px]"
           aria-hidden="true"
         />
 
@@ -268,7 +268,7 @@ export default async function ReadingAdvantage() {
         <div className="container mx-auto px-4 py-24">
           <div className="grid lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-7">
-              <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
                 {t("eyebrows.blendedLearning")}
               </span>
               <h2 className="text-4xl md:text-5xl font-semibold text-slate-900 mb-8 leading-tight">
@@ -319,7 +319,7 @@ export default async function ReadingAdvantage() {
 
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-3 bg-gradient-to-r from-sky-500 to-blue-500 text-white px-10 py-5 rounded-2xl hover:from-sky-600 hover:to-blue-600 transition-all duration-300 shadow-xl hover:shadow-sky-500/30 hover:-translate-y-1 font-bold text-lg"
+                className="inline-flex items-center gap-3 bg-gradient-to-r from-sky-400 to-sky-400 text-white px-10 py-5 rounded-2xl hover:from-sky-600 hover:to-sky-600 transition-all duration-300 shadow-xl hover:shadow-sky-400/30 hover:-translate-y-1 font-bold text-lg"
               >
                 {t("cta.buttons.signUp")}
                 <ArrowRight className="w-6 h-6" />
@@ -327,8 +327,8 @@ export default async function ReadingAdvantage() {
             </div>
             <div className="lg:col-span-5">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-100 to-blue-100 rounded-3xl blur-3xl -translate-y-4 translate-x-4" />
-                <div className="relative bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-100 rounded-3xl p-6">
+                <div className="absolute inset-0 bg-gradient-to-br from-sky-100 to-sky-100 rounded-3xl blur-3xl -translate-y-4 translate-x-4" />
+                <div className="relative bg-gradient-to-br from-sky-50 to-sky-50 border border-sky-100 rounded-3xl p-6">
                   <div className="space-y-6">
                     <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
                       <Image
@@ -357,13 +357,13 @@ export default async function ReadingAdvantage() {
           {/* Teacher Tools — Dashed border container */}
           <div className="mt-16 border-dashed border-2 border-sky-200 rounded-[40px] p-8 md:p-12 bg-white/50">
             <h3 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
-              <GraduationCap className="w-7 h-7 text-sky-600" />
+              <GraduationCap className="w-7 h-7 text-sky-800" />
               {t("teacherTools.heading")}
             </h3>
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl p-6 border border-sky-100">
+              <div className="bg-gradient-to-br from-sky-50 to-sky-50 rounded-2xl p-6 border border-sky-100">
                 <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
-                  <Check className="w-5 h-5 text-sky-600" />
+                  <Check className="w-5 h-5 text-sky-800" />
                   {t("teacherTools.tools.0.title")}
                 </h4>
                 <ul className="space-y-2">
@@ -376,15 +376,15 @@ export default async function ReadingAdvantage() {
                       key={index}
                       className="flex items-start gap-2 text-site-body"
                     >
-                      <div className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
+                      <div className="w-1.5 h-1.5 bg-sky-400 rounded-full mt-2 flex-shrink-0" />
                       {item}
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl p-6 border border-sky-100">
+              <div className="bg-gradient-to-br from-sky-50 to-sky-50 rounded-2xl p-6 border border-sky-100">
                 <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
-                  <Check className="w-5 h-5 text-sky-600" />
+                  <Check className="w-5 h-5 text-sky-800" />
                   {t("teacherTools.tools.1.title")}
                 </h4>
                 <ul className="space-y-2">
@@ -397,7 +397,7 @@ export default async function ReadingAdvantage() {
                       key={index}
                       className="flex items-start gap-2 text-site-body"
                     >
-                      <div className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
+                      <div className="w-1.5 h-1.5 bg-sky-400 rounded-full mt-2 flex-shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -415,7 +415,7 @@ export default async function ReadingAdvantage() {
         data-testid="games-strip"
       >
         <div className="container mx-auto px-4 mb-8 w-full">
-          <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-2 block">
+          <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-2 block">
             {t("eyebrows.educationalGames")}
           </span>
           <h2 className="text-4xl md:text-5xl font-semibold text-slate-900">
@@ -454,7 +454,7 @@ export default async function ReadingAdvantage() {
       <section className="relative py-24 bg-white overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block text-center">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block text-center">
               {t("eyebrows.results")}
             </span>
             <h2 className="text-4xl md:text-5xl font-semibold text-slate-900 mb-16 text-center">
@@ -492,13 +492,13 @@ export default async function ReadingAdvantage() {
       </section>
 
       {/* Final CTA */}
-      <section className="relative py-24 bg-gradient-to-br from-sky-500 via-blue-600 to-sky-700 text-white overflow-hidden">
+      <section className="relative py-24 bg-gradient-to-br from-sky-400 via-sky-600 to-sky-600 text-white overflow-hidden">
         <div
           className="absolute top-20 left-20 w-[500px] h-[500px] bg-sky-400/30 rounded-full blur-[150px]"
           aria-hidden="true"
         />
         <div
-          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-blue-400/30 rounded-full blur-[120px]"
+          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-sky-400/30 rounded-full blur-[120px]"
           aria-hidden="true"
         />
 
@@ -518,7 +518,7 @@ export default async function ReadingAdvantage() {
               <div className="flex flex-wrap gap-4">
                 <a
                   href="mailto:support@reading-advantage.com?subject=Reading Advantage Inquiry&body=Hi team,%0A%0AI'm interested in learning more about Reading Advantage for my school/organization.%0A%0APlease provide more information about:%0A- Pricing options%0A- Implementation timeline%0A- Technical requirements%0A%0AThank you!"
-                  className="inline-flex items-center gap-4 bg-white text-sky-700 px-10 py-5 rounded-3xl hover:bg-sky-50 transition-all duration-300 shadow-2xl hover:shadow-white/30 hover:-translate-y-2 font-bold text-lg"
+                  className="inline-flex items-center gap-4 bg-white text-sky-800 px-10 py-5 rounded-3xl hover:bg-sky-50 transition-all duration-300 shadow-2xl hover:shadow-white/30 hover:-translate-y-2 font-bold text-lg"
                 >
                   <Mail className="w-6 h-6" />
                   {t("cta.buttons.signUp")}
@@ -526,7 +526,7 @@ export default async function ReadingAdvantage() {
 
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-3 border-2 border-white text-white px-10 py-5 rounded-3xl hover:bg-white hover:text-sky-700 transition-all duration-300 font-bold text-lg hover:scale-105"
+                  className="inline-flex items-center gap-3 border-2 border-white text-white px-10 py-5 rounded-3xl hover:bg-white hover:text-sky-800 transition-all duration-300 font-bold text-lg hover:scale-105"
                 >
                   <ArrowRight className="w-6 h-6" />
                   {t("cta.buttons.freeTrial")}

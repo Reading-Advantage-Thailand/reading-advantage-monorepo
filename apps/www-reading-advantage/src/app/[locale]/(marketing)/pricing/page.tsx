@@ -67,7 +67,7 @@ export default async function PricingPage() {
               </p>
             </div>
             <div className="bg-white rounded-3xl p-8 shadow-lg text-center hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-lg">
+              <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-lg">
                 <Zap className="w-7 h-7" />
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2">
@@ -96,10 +96,10 @@ export default async function PricingPage() {
       <section className="py-24">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-800 mb-4 block">
               {t("pricingPlans.heading")}
             </span>
-            <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
+            <h2 className="text-4xl font-bold text-sky-800 tracking-tight">
               {t("pricingPlans.subheading")}
             </h2>
           </div>

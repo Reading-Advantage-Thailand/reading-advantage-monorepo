@@ -75,7 +75,7 @@ export default async function TutorAdvantage({
       <section className="relative overflow-hidden bg-emerald-950 text-white">
         <div
           aria-hidden="true"
-          className="absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-emerald-500/25 blur-[120px]"
+          className="absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-emerald-400/25 blur-[120px]"
         />
         <div className="container relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-4 pb-16 pt-28 sm:px-6 md:py-24 lg:grid-cols-12 lg:gap-14 lg:px-8">
           <div className="lg:col-span-6">
@@ -291,7 +291,7 @@ export default async function TutorAdvantage({
             </ul>
             <Link
               href="/contact"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-900 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-900 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800 focus-visible:ring-offset-2"
             >
               {t("tutorRole.cta")}
               <ArrowRight className="h-5 w-5" aria-hidden="true" />

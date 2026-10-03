@@ -108,7 +108,7 @@ export default async function MathAdvantage({
         <div className="container relative z-10 px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl py-24">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-7 animate-in fade-in slide-in-from-bottom-8 duration-700">
-              <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-bold mb-6">
+              <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-bold mb-6">
                 {t("hero.comingSoon")}
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
@@ -119,7 +119,7 @@ export default async function MathAdvantage({
               </p>
               <Link
                 href="mailto:support@reading-advantage.com?subject=Math Advantage Inquiry&body=Hi team,%0A%0AI'm interested in learning more about Math Advantage for my school/organization.%0A%0APlease provide more information about:%0A- Pricing options%0A- Implementation timeline%0A- Technical requirements%0A%0AThank you!"
-                className="inline-flex items-center gap-2 bg-white text-orange-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-orange-50"
+                className="inline-flex items-center gap-2 bg-white text-orange-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg hover:bg-orange-50"
               >
                 {t("cta.button")}
                 <ArrowRight className="w-5 h-5" />
@@ -146,7 +146,7 @@ export default async function MathAdvantage({
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             <div className="lg:col-span-5">
-              <span className="uppercase tracking-widest text-xs font-semibold text-orange-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-orange-800 mb-4 block">
                 {t("adaptiveEngine.eyebrow")}
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
@@ -171,7 +171,7 @@ export default async function MathAdvantage({
       </section>
 
       {/* Subject Coverage — Full-Width Color Room (Orange) */}
-      <section className="py-24 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 text-white relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-r from-orange-400 via-orange-400 to-orange-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
@@ -222,7 +222,7 @@ export default async function MathAdvantage({
           >
             {/* Text LEFT (7 cols) */}
             <div className="lg:col-span-7">
-              <span className="uppercase tracking-widest text-xs font-semibold text-orange-600 mb-4 block">
+              <span className="uppercase tracking-widest text-xs font-semibold text-orange-800 mb-4 block">
                 {t("eyebrows.smartProblemGeneration")}
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
@@ -231,7 +231,7 @@ export default async function MathAdvantage({
               <ul className="space-y-4">
                 {smartPoints.map((point) => (
                   <li key={point} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 rounded-full bg-orange-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Check className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-lg text-site-body">{point}</span>
@@ -290,7 +290,7 @@ export default async function MathAdvantage({
                 padding="p-8"
               >
                 <CardContent className="p-0 flex items-start gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-400 flex items-center justify-center flex-shrink-0">
                     <benefit.icon
                       className="w-7 h-7 text-white"
                       strokeWidth={2}
@@ -315,7 +315,7 @@ export default async function MathAdvantage({
       <section className="py-24 bg-gradient-to-br from-orange-50 to-amber-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="uppercase tracking-widest text-xs font-semibold text-orange-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-orange-800 mb-4 block">
               {t("eyebrows.results")}
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900">
@@ -357,7 +357,7 @@ export default async function MathAdvantage({
       </section>
 
       {/* Final CTA — Full-width orange gradient */}
-      <section className="py-24 bg-gradient-to-br from-orange-600 via-orange-700 to-amber-700 text-white relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-orange-600 via-orange-600 to-amber-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -369,14 +369,14 @@ export default async function MathAdvantage({
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
               href="mailto:support@reading-advantage.com?subject=Math Advantage Inquiry&body=Hi team,%0A%0AI'm interested in learning more about Math Advantage for my school/organization.%0A%0APlease provide more information about:%0A- Pricing options%0A- Implementation timeline%0A- Technical requirements%0A%0AThank you!"
-              className="inline-flex items-center justify-center gap-2 bg-white text-orange-700 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
+              className="inline-flex items-center justify-center gap-2 bg-white text-orange-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-lg"
             >
               {t("cta.button")}
               <ArrowRight className="w-5 h-5" />
             </a>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-orange-700"
+              className="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:bg-white hover:text-orange-800"
             >
               <Check className="w-5 h-5" />
               {t("cta.contactUs")}
