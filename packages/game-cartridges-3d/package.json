@@ -233,6 +233,21 @@
       "types": "./dist/haunted-library/strings.en.d.ts",
       "import": "./dist/haunted-library/strings.en.js",
       "default": "./dist/haunted-library/strings.en.js"
+    },
+    "./shadow-gate-dungeon": {
+      "types": "./dist/shadow-gate-dungeon/index.d.ts",
+      "import": "./dist/shadow-gate-dungeon/index.js",
+      "default": "./dist/shadow-gate-dungeon/index.js"
+    },
+    "./shadow-gate-dungeon/manifest": {
+      "types": "./dist/shadow-gate-dungeon/manifest.d.ts",
+      "import": "./dist/shadow-gate-dungeon/manifest.js",
+      "default": "./dist/shadow-gate-dungeon/manifest.js"
+    },
+    "./shadow-gate-dungeon/strings": {
+      "types": "./dist/shadow-gate-dungeon/strings.en.d.ts",
+      "import": "./dist/shadow-gate-dungeon/strings.en.js",
+      "default": "./dist/shadow-gate-dungeon/strings.en.js"
     }
   },
   "files": [

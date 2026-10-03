@@ -21,6 +21,8 @@ import { manifest as spellweaversRun } from './spellweavers-run/manifest.js';
 import spellweaversRunStrings from './spellweavers-run/strings.en.js';
 import { manifest as hauntedLibrary } from './haunted-library/manifest.js';
 import hauntedLibraryStrings from './haunted-library/strings.en.js';
+import { manifest as shadowGateDungeon } from './shadow-gate-dungeon/manifest.js';
+import shadowGateDungeonStrings from './shadow-gate-dungeon/strings.en.js';
 import { manifest as runeMatch } from './rune-match/manifest.js';
 import runeMatchStrings from './rune-match/strings.en.js';
 import { manifest as labyrinth } from './labyrinth/manifest.js';
@@ -184,10 +186,19 @@ export const GAMES: GameEntry[] = [
     manifest: hauntedLibrary,
     load: () => import('./haunted-library/index.js').then((m) => m.cartridge),
   },
+  {
+    id: 'shadow-gate-dungeon',
+    icon: '🔮',
+    tint: ['#a78bfa', '#312e81'],
+    titleKey: 'shadowGateDungeon.title',
+    pitchKey: 'shadowGateDungeon.pitch',
+    manifest: shadowGateDungeon,
+    load: () => import('./shadow-gate-dungeon/index.js').then((m) => m.cartridge),
+  },
 ];
 
 /** The English catalogs of every game (the host merges them with its own). */
-export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings];
+export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings];
 
 export const playable = (g: GameEntry): boolean => !!g.load && !!g.manifest;
 
