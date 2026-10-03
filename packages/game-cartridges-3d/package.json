@@ -398,6 +398,21 @@
       "types": "./dist/griffin-riders-escape/strings.en.d.ts",
       "import": "./dist/griffin-riders-escape/strings.en.js",
       "default": "./dist/griffin-riders-escape/strings.en.js"
+    },
+    "./castle-defense": {
+      "types": "./dist/castle-defense/index.d.ts",
+      "import": "./dist/castle-defense/index.js",
+      "default": "./dist/castle-defense/index.js"
+    },
+    "./castle-defense/manifest": {
+      "types": "./dist/castle-defense/manifest.d.ts",
+      "import": "./dist/castle-defense/manifest.js",
+      "default": "./dist/castle-defense/manifest.js"
+    },
+    "./castle-defense/strings": {
+      "types": "./dist/castle-defense/strings.en.d.ts",
+      "import": "./dist/castle-defense/strings.en.js",
+      "default": "./dist/castle-defense/strings.en.js"
     }
   },
   "files": [

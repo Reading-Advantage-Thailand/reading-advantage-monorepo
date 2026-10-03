@@ -1,0 +1,41 @@
+/** English UI text of Castle Defense (catalog scope `castleDefense`). */
+export default {
+  castleDefense: {
+    title: 'Castle Defense',
+    pitch: 'Build each sentence word by word to raise towers that guard the castle.',
+    subtitle: 'Raise the towers',
+    briefing: {
+      objective: 'Defend the castle of the Sunken Vault: build each story sentence word by word, and its tower beats the attackers at the gate.',
+      instructions: {
+        read: { title: 'Read the meaning', description: 'The card shows the meaning of one sentence and the words you have built so far.' },
+        build: { title: 'Pick the next word', description: 'Tap the word that comes next in the sentence. The right word joins the sentence.' },
+        tower: { title: 'Place the tower', description: 'When the sentence is built, tap a post of the wall. Its hero raises a tower and the towers fire. There is no timer.' },
+      },
+      controls: { touch: { label: 'Tap', action: 'Tap a word or a post' }, pointer: { label: 'Click', action: 'Click a word or a post' } },
+      learningPreview: 'Sentences from your story',
+      tip: 'A wrong word fails, and an attacker hurts the castle. If every heart is lost, the heroes rest and the castle stands strong again.',
+      start: 'Defend the castle 🏰',
+    },
+    hud: {
+      place: 'The Sunken Vault',
+      progress: 'Wave {wave}/{count} · {done}/{size}',
+      hearts: 'Castle',
+      story: '📖 Story',
+      buildThe: 'Build the sentence: pick the next word',
+      blank: '___',
+      right: 'Yes! ✓',
+      blocked: 'Not that word! Try another.',
+      castleHit: '-1 ❤',
+      intro: 'Attackers at the gate!',
+      placeThe: 'The sentence is built! Place its tower on a post',
+      post: '{hero} post',
+      level: 'Tower level {level}',
+      empty: 'Free post',
+      towerBuilt: 'Tower!',
+      rest: { title: 'Take a deep breath', text: 'The heroes rest together, and the castle stands strong again.' },
+      victory: { title: 'Victory!', text: 'Every tower stands. The castle is safe.' },
+    },
+    monsters: { skeleton: 'Soldiers', mimic: 'Tanks', 'dragon-fire': 'Dragon' },
+    heroes: { knight: 'Knight', wizard: 'Wizard', cleric: 'Cleric' },
+  },
+} as const;

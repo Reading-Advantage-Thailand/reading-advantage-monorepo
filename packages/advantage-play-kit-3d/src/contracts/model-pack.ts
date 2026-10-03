@@ -73,6 +73,7 @@ export const GAME_LOADS: Readonly<Record<string, GameModelLoad>> = {
   'rune-forge-chamber': { models: ['wood-floor', 'plaster-wall', 'plaster-wall-window', 'shelf', 'fireplace', 'workbench', 'crystal-cluster', 'candle-cluster', 'barrel', 'crate', 'sack', 'lantern'], hero: true },
   'dragon-rider': { models: ['dragon-fire', 'pine-tree', 'oak-tree', 'rock-cluster', 'boulder', 'bush'], hero: true },
   'griffin-riders-escape': { models: ['dragon-fire', 'giant-bat', 'oak-tree', 'pine-tree', 'bush', 'fern', 'wildflowers', 'boulder', 'rock-cluster', 'cottage', 'well', 'hay-bale'], hero: true },
+  'castle-defense': { models: ['altar', 'arch', 'barrel', 'bone-pile', 'brazier', 'candle-cluster', 'cauldron', 'cell-bars', 'chains', 'crate', 'crystal-cluster', 'door', 'dragon-fire', 'floor', 'floor-cracked', 'gate', 'giant-bat', 'gold-pile', 'hanging-cage', 'mimic', 'moss-tuft', 'mushroom-cluster', 'pillar', 'rubble', 'sarcophagus', 'skeleton', 'stairs', 'torch-sconce', 'treasure-chest', 'walkway', 'wall', 'wall-corner'], hero: true },
   'potion-rush': { packs: ['potion-shop'], models: ['farmer', 'villager', 'innkeeper', 'guard', 'druid', 'orc-warrior', 'goblin-warrior', 'skeleton'], hero: true },
   'dragon-flight': {
     models: ['ancient-oak', 'barn', 'boulder', 'bush', 'cottage', 'dragon-fire', 'farm-field', 'fence', 'fern', 'hay-bale', 'oak-tree', 'pine-tree', 'rock-cluster', 'well', 'wildflowers', 'grass-ground', 'forest-ground', 'river-straight', 'arch', 'gate'],
