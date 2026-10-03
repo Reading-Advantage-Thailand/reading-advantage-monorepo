@@ -248,6 +248,21 @@
       "types": "./dist/shadow-gate-dungeon/strings.en.d.ts",
       "import": "./dist/shadow-gate-dungeon/strings.en.js",
       "default": "./dist/shadow-gate-dungeon/strings.en.js"
+    },
+    "./realm-carver": {
+      "types": "./dist/realm-carver/index.d.ts",
+      "import": "./dist/realm-carver/index.js",
+      "default": "./dist/realm-carver/index.js"
+    },
+    "./realm-carver/manifest": {
+      "types": "./dist/realm-carver/manifest.d.ts",
+      "import": "./dist/realm-carver/manifest.js",
+      "default": "./dist/realm-carver/manifest.js"
+    },
+    "./realm-carver/strings": {
+      "types": "./dist/realm-carver/strings.en.d.ts",
+      "import": "./dist/realm-carver/strings.en.js",
+      "default": "./dist/realm-carver/strings.en.js"
     }
   },
   "files": [

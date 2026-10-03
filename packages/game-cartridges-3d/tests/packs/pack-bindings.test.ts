@@ -32,6 +32,8 @@ import { manifest as hauntedLibrary } from '../../src/haunted-library/manifest.j
 import { LIBRARY_MODELS } from '../../src/haunted-library/view/library.js';
 import { manifest as shadowGateDungeon } from '../../src/shadow-gate-dungeon/manifest.js';
 import { DUNGEON_MODELS } from '../../src/shadow-gate-dungeon/view/dungeon.js';
+import { manifest as realmCarver } from '../../src/realm-carver/manifest.js';
+import { REALM_MODELS } from '../../src/realm-carver/view/realm.js';
 import { manifest as potionRush } from '../../src/potion-rush/manifest.js';
 import { SHOP_MODELS } from '../../src/potion-rush/view/shop.js';
 import { HEROES } from '../../src/shared/battle/stage2d.js';
@@ -56,6 +58,7 @@ const GAMES = {
   'spellweavers-run': { manifest: spellweaversRun, named: RUN_MODELS },
   'haunted-library': { manifest: hauntedLibrary, named: LIBRARY_MODELS },
   'shadow-gate-dungeon': { manifest: shadowGateDungeon, named: DUNGEON_MODELS },
+  'realm-carver': { manifest: realmCarver, named: REALM_MODELS },
   'rpg-battle': { manifest: rpgBattle, named: vaultModels() },
   'paladins-twin-soul': { manifest: paladinsTwinSoul, named: vaultModels() },
   'rune-match': { manifest: runeMatch, named: vaultModels() },
