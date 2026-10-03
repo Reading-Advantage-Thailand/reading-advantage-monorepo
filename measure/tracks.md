@@ -1104,3 +1104,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [x] **Track: APK Named Asset Cuts** *Link: [./tracks/apk_named_asset_cuts_20260907/](./tracks/apk_named_asset_cuts_20260907/)*
   Prepare several sheets per review batch and process approved cuts.
+
+- [ ] **Track: APK 3D Games Port** *Link: [./tracks/apk3d_games_port_20261003/](./tracks/apk3d_games_port_20261003/)*
+  Port the dual-renderer story games into the monorepo and offer them in Primary Advantage.
