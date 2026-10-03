@@ -413,6 +413,21 @@
       "types": "./dist/castle-defense/strings.en.d.ts",
       "import": "./dist/castle-defense/strings.en.js",
       "default": "./dist/castle-defense/strings.en.js"
+    },
+    "./sorcerer-ziggurat": {
+      "types": "./dist/sorcerer-ziggurat/index.d.ts",
+      "import": "./dist/sorcerer-ziggurat/index.js",
+      "default": "./dist/sorcerer-ziggurat/index.js"
+    },
+    "./sorcerer-ziggurat/manifest": {
+      "types": "./dist/sorcerer-ziggurat/manifest.d.ts",
+      "import": "./dist/sorcerer-ziggurat/manifest.js",
+      "default": "./dist/sorcerer-ziggurat/manifest.js"
+    },
+    "./sorcerer-ziggurat/strings": {
+      "types": "./dist/sorcerer-ziggurat/strings.en.d.ts",
+      "import": "./dist/sorcerer-ziggurat/strings.en.js",
+      "default": "./dist/sorcerer-ziggurat/strings.en.js"
     }
   },
   "files": [
