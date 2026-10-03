@@ -8,7 +8,7 @@ import * as THREE from 'three';
 import { toGameResults, type StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
-import { smooth } from '@reading-advantage/advantage-play-kit-3d/stage/timeline';
+import { smooth } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { Actor, burst, FollowRig } from '@reading-advantage/advantage-play-kit-3d/stage';
 import {
   createSorcererZiggurat,

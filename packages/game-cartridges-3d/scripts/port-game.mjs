@@ -10,6 +10,9 @@ const pkg = join(import.meta.dirname, '..');
 const kit = '@reading-advantage/advantage-play-kit-3d';
 
 /** Kit modules that the kit exports under a shorter subpath. */
+const kitExports = Object.keys(JSON.parse(readFileSync(join(pkg, '..', 'advantage-play-kit-3d', 'package.json'), 'utf8')).exports);
+/** A deep kit path the kit does not export falls back to its folder index (stage/timeline -> stage). */
+const subpathOf = (sub) => SUBPATH[sub] ?? (kitExports.includes('./' + sub) || !kitExports.includes('./' + sub.split('/')[0]) ? sub : sub.split('/')[0]);
 const SUBPATH = { 'i18n/catalog': 'i18n', 'contracts/model-pack': 'contracts' };
 
 const walk = (dir) =>
@@ -29,8 +32,8 @@ const rewrite = (src) =>
     .replace(/\n  it\('every (?:3D )?model file exists[^']*'[\s\S]*?\n  \}\);\n/g, '')
     .replace(/'(?:\.\.\/)+src\/games\/shared\//g, "'../../src/shared/")
     .replace(/'(?:\.\.\/)+src\/games\/([\w-]+)\//g, "'../../src/$1/")
-    .replace(/'(?:\.\.\/)+src\/apk3d\/([^']+?)(?:\/index)?\.js'/g, (_m, sub) => `'${kit}/${SUBPATH[sub] ?? sub}'`)
-    .replace(/'((?:\.\.\/)+)apk3d\/([^']+?)(?:\/index)?\.js'/g, (_m, _up, sub) => `'${kit}/${SUBPATH[sub] ?? sub}'`);
+    .replace(/'(?:\.\.\/)+src\/apk3d\/([^']+?)(?:\/index)?\.js'/g, (_m, sub) => `'${kit}/${subpathOf(sub)}'`)
+    .replace(/'((?:\.\.\/)+)apk3d\/([^']+?)(?:\/index)?\.js'/g, (_m, _up, sub) => `'${kit}/${subpathOf(sub)}'`);
 
 const copy = (from, to, filter) => {
   if (!existsSync(from)) return;
