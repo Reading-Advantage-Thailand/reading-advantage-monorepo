@@ -338,6 +338,21 @@
       "types": "./dist/griffin-sky-joust/strings.en.d.ts",
       "import": "./dist/griffin-sky-joust/strings.en.js",
       "default": "./dist/griffin-sky-joust/strings.en.js"
+    },
+    "./abyssal-well": {
+      "types": "./dist/abyssal-well/index.d.ts",
+      "import": "./dist/abyssal-well/index.js",
+      "default": "./dist/abyssal-well/index.js"
+    },
+    "./abyssal-well/manifest": {
+      "types": "./dist/abyssal-well/manifest.d.ts",
+      "import": "./dist/abyssal-well/manifest.js",
+      "default": "./dist/abyssal-well/manifest.js"
+    },
+    "./abyssal-well/strings": {
+      "types": "./dist/abyssal-well/strings.en.d.ts",
+      "import": "./dist/abyssal-well/strings.en.js",
+      "default": "./dist/abyssal-well/strings.en.js"
     }
   },
   "files": [

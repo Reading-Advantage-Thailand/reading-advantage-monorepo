@@ -35,6 +35,8 @@ import { manifest as magicDefense } from './magic-defense/manifest.js';
 import magicDefenseStrings from './magic-defense/strings.en.js';
 import { manifest as griffinSkyJoust } from './griffin-sky-joust/manifest.js';
 import griffinSkyJoustStrings from './griffin-sky-joust/strings.en.js';
+import { manifest as abyssalWell } from './abyssal-well/manifest.js';
+import abyssalWellStrings from './abyssal-well/strings.en.js';
 import { manifest as runeMatch } from './rune-match/manifest.js';
 import runeMatchStrings from './rune-match/strings.en.js';
 import { manifest as labyrinth } from './labyrinth/manifest.js';
@@ -261,10 +263,19 @@ export const GAMES: GameEntry[] = [
     manifest: griffinSkyJoust,
     load: () => import('./griffin-sky-joust/index.js').then((m) => m.cartridge),
   },
+  {
+    id: 'abyssal-well',
+    icon: '🕳️',
+    tint: ['#1e3a5f', '#0b1a2e'],
+    titleKey: 'abyssalWell.title',
+    pitchKey: 'abyssalWell.pitch',
+    manifest: abyssalWell,
+    load: () => import('./abyssal-well/index.js').then((m) => m.cartridge),
+  },
 ];
 
 /** The English catalogs of every game (the host merges them with its own). */
-export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings, enchantedLibraryStrings, gryphonPatrolStrings, magicDefenseStrings, griffinSkyJoustStrings];
+export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings, enchantedLibraryStrings, gryphonPatrolStrings, magicDefenseStrings, griffinSkyJoustStrings, abyssalWellStrings];
 
 export const playable = (g: GameEntry): boolean => !!g.load && !!g.manifest;
 

@@ -19,7 +19,7 @@ const args = process.argv.slice(2);
 const flat = args.includes("--2d");
 const shotsAt = args.indexOf("--shots");
 const shots = shotsAt >= 0 ? args[shotsAt + 1] : join(here, "shots");
-const ALL = ["monster-encounters", "rune-match", "labyrinth", "potion-rush", "dragon-flight", "dungeon-liberator", "devourer-slime", "hero-vs-zombie", "rpg-battle", "paladins-twin-soul", "village-guardian", "archers-revenge", "astral-mage", "spellweavers-run", "haunted-library", "shadow-gate-dungeon", "realm-carver", "alchemists-synthesis", "enchanted-library", "gryphon-patrol", "magic-defense", "griffin-sky-joust"];
+const ALL = ["monster-encounters", "rune-match", "labyrinth", "potion-rush", "dragon-flight", "dungeon-liberator", "devourer-slime", "hero-vs-zombie", "rpg-battle", "paladins-twin-soul", "village-guardian", "archers-revenge", "astral-mage", "spellweavers-run", "haunted-library", "shadow-gate-dungeon", "realm-carver", "alchemists-synthesis", "enchanted-library", "gryphon-patrol", "magic-defense", "griffin-sky-joust", "abyssal-well"];
 const games = args.filter((a, i) => !a.startsWith("--") && args[i - 1] !== "--shots");
 mkdirSync(shots, { recursive: true });
 execFileSync("node", [join(here, "..", "scripts", "sync-assets.mjs"), join(here, "public")], { stdio: "inherit" });
