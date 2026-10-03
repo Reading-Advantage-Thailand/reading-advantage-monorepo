@@ -27,6 +27,8 @@ import { manifest as realmCarver } from './realm-carver/manifest.js';
 import realmCarverStrings from './realm-carver/strings.en.js';
 import { manifest as alchemistsSynthesis } from './alchemists-synthesis/manifest.js';
 import alchemistsSynthesisStrings from './alchemists-synthesis/strings.en.js';
+import { manifest as enchantedLibrary } from './enchanted-library/manifest.js';
+import enchantedLibraryStrings from './enchanted-library/strings.en.js';
 import { manifest as runeMatch } from './rune-match/manifest.js';
 import runeMatchStrings from './rune-match/strings.en.js';
 import { manifest as labyrinth } from './labyrinth/manifest.js';
@@ -217,10 +219,19 @@ export const GAMES: GameEntry[] = [
     manifest: alchemistsSynthesis,
     load: () => import('./alchemists-synthesis/index.js').then((m) => m.cartridge),
   },
+  {
+    id: 'enchanted-library',
+    icon: '📖',
+    tint: ['#7c3aed', '#1e1535'],
+    titleKey: 'enchantedLibrary.title',
+    pitchKey: 'enchantedLibrary.pitch',
+    manifest: enchantedLibrary,
+    load: () => import('./enchanted-library/index.js').then((m) => m.cartridge),
+  },
 ];
 
 /** The English catalogs of every game (the host merges them with its own). */
-export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings];
+export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings, enchantedLibraryStrings];
 
 export const playable = (g: GameEntry): boolean => !!g.load && !!g.manifest;
 

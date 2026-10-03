@@ -278,6 +278,21 @@
       "types": "./dist/alchemists-synthesis/strings.en.d.ts",
       "import": "./dist/alchemists-synthesis/strings.en.js",
       "default": "./dist/alchemists-synthesis/strings.en.js"
+    },
+    "./enchanted-library": {
+      "types": "./dist/enchanted-library/index.d.ts",
+      "import": "./dist/enchanted-library/index.js",
+      "default": "./dist/enchanted-library/index.js"
+    },
+    "./enchanted-library/manifest": {
+      "types": "./dist/enchanted-library/manifest.d.ts",
+      "import": "./dist/enchanted-library/manifest.js",
+      "default": "./dist/enchanted-library/manifest.js"
+    },
+    "./enchanted-library/strings": {
+      "types": "./dist/enchanted-library/strings.en.d.ts",
+      "import": "./dist/enchanted-library/strings.en.js",
+      "default": "./dist/enchanted-library/strings.en.js"
     }
   },
   "files": [
