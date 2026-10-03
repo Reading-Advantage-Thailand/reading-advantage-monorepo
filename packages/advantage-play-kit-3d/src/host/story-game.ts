@@ -35,6 +35,7 @@ import {
 } from '../factory/index.js';
 import { installCss } from '../hud/css.js';
 import { createI18n } from '../i18n/catalog.js';
+import { Stage3D } from '../stage/index.js';
 import { fetchModelPack } from '../stage/loader.js';
 import { sheetBindings } from '../view2d/sheets.js';
 import { renderBriefing } from './briefing.js';
@@ -122,6 +123,8 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
   container.append(screen, gameEl);
 
   let mounted: MountedGame | null = null;
+  /** The 3D stage of the run in progress; the host owns it and disposes it with the game. */
+  let stage: Stage3D | null = null;
   let destroyed = false;
   let starting = false;
 
@@ -154,9 +157,16 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
       gameEl.innerHTML = '';
       gameEl.classList.add('on');
       const run = { game: cartridge.manifest.id, story: story.id };
+      if (pick.renderer === 'three') {
+        const canvas = document.createElement('canvas');
+        canvas.className = 'apk3d-canvas';
+        gameEl.append(canvas);
+        stage = new Stage3D(canvas, { base: assetBase, tier: verdict.status === 'lite' ? 'low' : verdict.tier });
+      }
       mounted = await mount({
         renderer: pick.renderer,
         container: gameEl,
+        ...(stage ? { stage } : {}),
         cartridge,
         input: story,
         edition3d,
@@ -198,6 +208,9 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
     const current = mounted;
     mounted = null;
     if (current) await current.destroy().catch((err: unknown) => report({ level: 'warning', code: 'apk3d/destroy-failed', message: String(err) }));
+    stage?.dispose();
+    stage = null;
+    gameEl.innerHTML = '';
   }
 
   async function again(): Promise<void> {

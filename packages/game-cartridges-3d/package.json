@@ -140,7 +140,8 @@
     "lint": "eslint src/",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "sync:assets": "node scripts/sync-assets.mjs"
+    "sync:assets": "node scripts/sync-assets.mjs",
+    "qc:browser": "node qc/run.mjs"
   },
   "dependencies": {
     "@reading-advantage/advantage-play-kit": "workspace:*",
@@ -156,6 +157,8 @@
     "@vitest/coverage-v8": "catalog:",
     "jsdom": "catalog:",
     "typescript": "5.9.3",
-    "vitest": "4.1.8"
+    "vitest": "4.1.8",
+    "vite": "catalog:",
+    "@playwright/test": "catalog:"
   }
 }
