@@ -12,6 +12,7 @@ import {
   preparedReadToSelectAudioVocabularyResponseSchema,
   sentenceInputSchema,
   vocabularyInputSchema,
+  type GameCompletionInput,
   type GameResults,
   type LearningEvidence,
   type PreparedReadToSelectAudioVocabularyResponse,
@@ -151,13 +152,14 @@ export function StudentCartridgeHost({
     idempotencyKey?: string;
     request?: ReturnType<typeof mapGameResultsToCompletionInput> & { readonly challengeRunId?: string };
     challengeRunId?: string;
-    difficulty: "easy" | "medium" | "hard";
+    difficulty: GameCompletionInput["difficulty"];
     challengeModality?: unknown;
   } | undefined>(undefined);
-  if (!completionSessionRef.current
-    || completionSessionRef.current.configKey !== completionConfigKey
-    || completionSessionRef.current.input !== input) {
-    completionSessionRef.current = {
+  let completionSession = completionSessionRef.current;
+  if (!completionSession
+    || completionSession.configKey !== completionConfigKey
+    || completionSession.input !== input) {
+    completionSession = completionSessionRef.current = {
       configKey: completionConfigKey,
       input,
       challengeRunId: challengeLaunch?.runId,
@@ -165,7 +167,6 @@ export function StudentCartridgeHost({
       challengeModality: challengeLaunch?.challenge.modality,
     };
   }
-  const completionSession = completionSessionRef.current;
   const edition = useMemo(
     () => (cartridge
       ? createCatalogStandardEdition(
