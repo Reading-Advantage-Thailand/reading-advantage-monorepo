@@ -323,6 +323,21 @@
       "types": "./dist/magic-defense/strings.en.d.ts",
       "import": "./dist/magic-defense/strings.en.js",
       "default": "./dist/magic-defense/strings.en.js"
+    },
+    "./griffin-sky-joust": {
+      "types": "./dist/griffin-sky-joust/index.d.ts",
+      "import": "./dist/griffin-sky-joust/index.js",
+      "default": "./dist/griffin-sky-joust/index.js"
+    },
+    "./griffin-sky-joust/manifest": {
+      "types": "./dist/griffin-sky-joust/manifest.d.ts",
+      "import": "./dist/griffin-sky-joust/manifest.js",
+      "default": "./dist/griffin-sky-joust/manifest.js"
+    },
+    "./griffin-sky-joust/strings": {
+      "types": "./dist/griffin-sky-joust/strings.en.d.ts",
+      "import": "./dist/griffin-sky-joust/strings.en.js",
+      "default": "./dist/griffin-sky-joust/strings.en.js"
     }
   },
   "files": [
