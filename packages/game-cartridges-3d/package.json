@@ -308,6 +308,21 @@
       "types": "./dist/gryphon-patrol/strings.en.d.ts",
       "import": "./dist/gryphon-patrol/strings.en.js",
       "default": "./dist/gryphon-patrol/strings.en.js"
+    },
+    "./magic-defense": {
+      "types": "./dist/magic-defense/index.d.ts",
+      "import": "./dist/magic-defense/index.js",
+      "default": "./dist/magic-defense/index.js"
+    },
+    "./magic-defense/manifest": {
+      "types": "./dist/magic-defense/manifest.d.ts",
+      "import": "./dist/magic-defense/manifest.js",
+      "default": "./dist/magic-defense/manifest.js"
+    },
+    "./magic-defense/strings": {
+      "types": "./dist/magic-defense/strings.en.d.ts",
+      "import": "./dist/magic-defense/strings.en.js",
+      "default": "./dist/magic-defense/strings.en.js"
     }
   },
   "files": [

@@ -40,6 +40,7 @@ import { manifest as enchantedLibrary } from '../../src/enchanted-library/manife
 import { HALL_MODELS } from '../../src/enchanted-library/view/hall.js';
 import { manifest as gryphonPatrol } from '../../src/gryphon-patrol/manifest.js';
 import { SKY_MODELS } from '../../src/gryphon-patrol/view/sky.js';
+import { manifest as magicDefense } from '../../src/magic-defense/manifest.js';
 import { manifest as potionRush } from '../../src/potion-rush/manifest.js';
 import { SHOP_MODELS } from '../../src/potion-rush/view/shop.js';
 import { HEROES } from '../../src/shared/battle/stage2d.js';
@@ -68,6 +69,7 @@ const GAMES = {
   'alchemists-synthesis': { manifest: alchemistsSynthesis, named: LAB_MODELS },
   'enchanted-library': { manifest: enchantedLibrary, named: HALL_MODELS },
   'gryphon-patrol': { manifest: gryphonPatrol, named: SKY_MODELS },
+  'magic-defense': { manifest: magicDefense, named: vaultModels() },
   'rpg-battle': { manifest: rpgBattle, named: vaultModels() },
   'paladins-twin-soul': { manifest: paladinsTwinSoul, named: vaultModels() },
   'rune-match': { manifest: runeMatch, named: vaultModels() },

@@ -31,6 +31,8 @@ import { manifest as enchantedLibrary } from './enchanted-library/manifest.js';
 import enchantedLibraryStrings from './enchanted-library/strings.en.js';
 import { manifest as gryphonPatrol } from './gryphon-patrol/manifest.js';
 import gryphonPatrolStrings from './gryphon-patrol/strings.en.js';
+import { manifest as magicDefense } from './magic-defense/manifest.js';
+import magicDefenseStrings from './magic-defense/strings.en.js';
 import { manifest as runeMatch } from './rune-match/manifest.js';
 import runeMatchStrings from './rune-match/strings.en.js';
 import { manifest as labyrinth } from './labyrinth/manifest.js';
@@ -239,10 +241,19 @@ export const GAMES: GameEntry[] = [
     manifest: gryphonPatrol,
     load: () => import('./gryphon-patrol/index.js').then((m) => m.cartridge),
   },
+  {
+    id: 'magic-defense',
+    icon: '🏰',
+    tint: ['#a78bfa', '#312e81'],
+    titleKey: 'magicDefense.title',
+    pitchKey: 'magicDefense.pitch',
+    manifest: magicDefense,
+    load: () => import('./magic-defense/index.js').then((m) => m.cartridge),
+  },
 ];
 
 /** The English catalogs of every game (the host merges them with its own). */
-export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings, enchantedLibraryStrings, gryphonPatrolStrings];
+export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings, enchantedLibraryStrings, gryphonPatrolStrings, magicDefenseStrings];
 
 export const playable = (g: GameEntry): boolean => !!g.load && !!g.manifest;
 
