@@ -90,7 +90,7 @@ export default async function MasteryAdvantagePage() {
     },
   ];
 
-  const graphLabels = graphLabelsFrom((key) => t(key as never));
+  const graphLabels = graphLabelsFrom((key, values) => t(key as never, values as never));
 
   const steps = ["lesson", "tag", "graph"] as const;
 

@@ -492,8 +492,8 @@ export function MasteryAdvantageGraph({
 
         <defs>
           <radialGradient id="ma-bg-gradient" cx="50%" cy="40%" r="70%">
-            <stop offset="0%" stop-color="var(--ma-bg-soft)" />
-            <stop offset="100%" stop-color="var(--ma-bg)" />
+            <stop offset="0%" stopColor="var(--ma-bg-soft)" />
+            <stop offset="100%" stopColor="var(--ma-bg)" />
           </radialGradient>
           <pattern
             id="ma-grid-pattern"
@@ -507,7 +507,7 @@ export function MasteryAdvantageGraph({
               d="M 40 0 L 0 0 0 40"
               fill="none"
               stroke="var(--ma-grid)"
-              stroke-width="1"
+              strokeWidth="1"
             />
           </pattern>
           <filter
@@ -543,17 +543,17 @@ export function MasteryAdvantageGraph({
             x2="100%"
             y2="0%"
           >
-            <stop offset="0%" stop-color="var(--ma-node-mastered)" />
-            <stop offset="100%" stop-color="var(--ma-node-current-ring)" />
+            <stop offset="0%" stopColor="var(--ma-node-mastered)" />
+            <stop offset="100%" stopColor="var(--ma-node-current-ring)" />
           </linearGradient>
           <symbol id="ma-icon-check" viewBox="0 0 20 20">
             <path
               d="M5 10.5 L8.5 14 L15 7"
               fill="none"
               stroke="currentColor"
-              stroke-width="2.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </symbol>
           <symbol id="ma-icon-spark" viewBox="0 0 20 20">
@@ -575,7 +575,7 @@ export function MasteryAdvantageGraph({
               d="M7.5 9 V7 a2.5 2.5 0 0 1 5 0 V9"
               fill="none"
               stroke="currentColor"
-              stroke-width="1.4"
+              strokeWidth="1.4"
             />
           </symbol>
         </defs>

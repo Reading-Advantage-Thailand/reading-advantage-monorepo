@@ -9,10 +9,15 @@ const KEYS = [
 
 const STATES = ["mastered", "here", "ready", "locked"] as const;
 
+/** Placeholders the client fills in; next-intl returns them unchanged when passed as values. */
+const KEEP = { n: "{n}", current: "{current}", total: "{total}", cluster: "{cluster}" };
+
 /** Builds the graph labels from a translator scoped to `pages.masteryAdvantage`. */
-export function graphLabelsFrom(t: (key: string) => string): MasteryGraphLabels {
+export function graphLabelsFrom(
+  t: (key: string, values?: Record<string, string>) => string,
+): MasteryGraphLabels {
   const labels = Object.fromEntries(
-    KEYS.map((k) => [k, t(`explorer.labels.${k}`)]),
+    KEYS.map((k) => [k, t(`explorer.labels.${k}`, KEEP)]),
   ) as Record<(typeof KEYS)[number], string>;
   const states = Object.fromEntries(
     STATES.map((k) => [k, t(`explorer.labels.states.${k}`)]),

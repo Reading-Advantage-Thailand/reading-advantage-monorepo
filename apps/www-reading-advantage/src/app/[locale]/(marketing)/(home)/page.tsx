@@ -45,7 +45,7 @@ export default async function Home({
   await params;
   const t = await getScopedI18n("pages.home");
   const tm = await getScopedI18n("pages.masteryAdvantage");
-  const graphLabels = graphLabelsFrom((key) => tm(key as never));
+  const graphLabels = graphLabelsFrom((key, values) => tm(key as never, values as never));
 
   const thaiFeatures = [
     {
