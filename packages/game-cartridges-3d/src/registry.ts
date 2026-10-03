@@ -25,6 +25,8 @@ import { manifest as shadowGateDungeon } from './shadow-gate-dungeon/manifest.js
 import shadowGateDungeonStrings from './shadow-gate-dungeon/strings.en.js';
 import { manifest as realmCarver } from './realm-carver/manifest.js';
 import realmCarverStrings from './realm-carver/strings.en.js';
+import { manifest as alchemistsSynthesis } from './alchemists-synthesis/manifest.js';
+import alchemistsSynthesisStrings from './alchemists-synthesis/strings.en.js';
 import { manifest as runeMatch } from './rune-match/manifest.js';
 import runeMatchStrings from './rune-match/strings.en.js';
 import { manifest as labyrinth } from './labyrinth/manifest.js';
@@ -206,10 +208,19 @@ export const GAMES: GameEntry[] = [
     manifest: realmCarver,
     load: () => import('./realm-carver/index.js').then((m) => m.cartridge),
   },
+  {
+    id: 'alchemists-synthesis',
+    icon: '🧪',
+    tint: ['#ffb454', '#7c4a12'],
+    titleKey: 'alchemistsSynthesis.title',
+    pitchKey: 'alchemistsSynthesis.pitch',
+    manifest: alchemistsSynthesis,
+    load: () => import('./alchemists-synthesis/index.js').then((m) => m.cartridge),
+  },
 ];
 
 /** The English catalogs of every game (the host merges them with its own). */
-export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings];
+export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings];
 
 export const playable = (g: GameEntry): boolean => !!g.load && !!g.manifest;
 

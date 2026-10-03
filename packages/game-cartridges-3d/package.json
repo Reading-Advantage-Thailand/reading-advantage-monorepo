@@ -263,6 +263,21 @@
       "types": "./dist/realm-carver/strings.en.d.ts",
       "import": "./dist/realm-carver/strings.en.js",
       "default": "./dist/realm-carver/strings.en.js"
+    },
+    "./alchemists-synthesis": {
+      "types": "./dist/alchemists-synthesis/index.d.ts",
+      "import": "./dist/alchemists-synthesis/index.js",
+      "default": "./dist/alchemists-synthesis/index.js"
+    },
+    "./alchemists-synthesis/manifest": {
+      "types": "./dist/alchemists-synthesis/manifest.d.ts",
+      "import": "./dist/alchemists-synthesis/manifest.js",
+      "default": "./dist/alchemists-synthesis/manifest.js"
+    },
+    "./alchemists-synthesis/strings": {
+      "types": "./dist/alchemists-synthesis/strings.en.d.ts",
+      "import": "./dist/alchemists-synthesis/strings.en.js",
+      "default": "./dist/alchemists-synthesis/strings.en.js"
     }
   },
   "files": [
