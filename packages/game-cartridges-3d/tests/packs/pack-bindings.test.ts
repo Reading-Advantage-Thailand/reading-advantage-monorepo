@@ -54,6 +54,8 @@ import { ESCAPE_MODELS } from '../../src/griffin-riders-escape/view/land.js';
 import { manifest as castleDefense } from '../../src/castle-defense/manifest.js';
 import { manifest as sorcererZiggurat } from '../../src/sorcerer-ziggurat/manifest.js';
 import { ZIGGURAT_MODELS } from '../../src/sorcerer-ziggurat/view/ziggurat.js';
+import { manifest as stormCastleTower } from '../../src/storm-castle-tower/manifest.js';
+import { TOWER_MODELS } from '../../src/storm-castle-tower/view/tower.js';
 import { manifest as potionRush } from '../../src/potion-rush/manifest.js';
 import { SHOP_MODELS } from '../../src/potion-rush/view/shop.js';
 import { HEROES } from '../../src/shared/battle/stage2d.js';
@@ -90,6 +92,7 @@ const GAMES = {
   'griffin-riders-escape': { manifest: griffinRidersEscape, named: ESCAPE_MODELS },
   'castle-defense': { manifest: castleDefense, named: vaultModels() },
   'sorcerer-ziggurat': { manifest: sorcererZiggurat, named: ZIGGURAT_MODELS },
+  'storm-castle-tower': { manifest: stormCastleTower, named: TOWER_MODELS },
   'rpg-battle': { manifest: rpgBattle, named: vaultModels() },
   'paladins-twin-soul': { manifest: paladinsTwinSoul, named: vaultModels() },
   'rune-match': { manifest: runeMatch, named: vaultModels() },

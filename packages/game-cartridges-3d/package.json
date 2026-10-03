@@ -428,6 +428,21 @@
       "types": "./dist/sorcerer-ziggurat/strings.en.d.ts",
       "import": "./dist/sorcerer-ziggurat/strings.en.js",
       "default": "./dist/sorcerer-ziggurat/strings.en.js"
+    },
+    "./storm-castle-tower": {
+      "types": "./dist/storm-castle-tower/index.d.ts",
+      "import": "./dist/storm-castle-tower/index.js",
+      "default": "./dist/storm-castle-tower/index.js"
+    },
+    "./storm-castle-tower/manifest": {
+      "types": "./dist/storm-castle-tower/manifest.d.ts",
+      "import": "./dist/storm-castle-tower/manifest.js",
+      "default": "./dist/storm-castle-tower/manifest.js"
+    },
+    "./storm-castle-tower/strings": {
+      "types": "./dist/storm-castle-tower/strings.en.d.ts",
+      "import": "./dist/storm-castle-tower/strings.en.js",
+      "default": "./dist/storm-castle-tower/strings.en.js"
     }
   },
   "files": [

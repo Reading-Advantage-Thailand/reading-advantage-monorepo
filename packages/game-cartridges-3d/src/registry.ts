@@ -47,6 +47,8 @@ import { manifest as castleDefense } from './castle-defense/manifest.js';
 import castleDefenseStrings from './castle-defense/strings.en.js';
 import { manifest as sorcererZiggurat } from './sorcerer-ziggurat/manifest.js';
 import sorcererZigguratStrings from './sorcerer-ziggurat/strings.en.js';
+import { manifest as stormCastleTower } from './storm-castle-tower/manifest.js';
+import stormCastleTowerStrings from './storm-castle-tower/strings.en.js';
 import { manifest as runeMatch } from './rune-match/manifest.js';
 import runeMatchStrings from './rune-match/strings.en.js';
 import { manifest as labyrinth } from './labyrinth/manifest.js';
@@ -327,10 +329,19 @@ export const GAMES: GameEntry[] = [
     manifest: sorcererZiggurat,
     load: () => import('./sorcerer-ziggurat/index.js').then((m) => m.cartridge),
   },
+  {
+    id: 'storm-castle-tower',
+    icon: '🏰',
+    tint: ['#4f6bd8', '#161d2e'],
+    titleKey: 'stormCastleTower.title',
+    pitchKey: 'stormCastleTower.pitch',
+    manifest: stormCastleTower,
+    load: () => import('./storm-castle-tower/index.js').then((m) => m.cartridge),
+  },
 ];
 
 /** The English catalogs of every game (the host merges them with its own). */
-export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings, enchantedLibraryStrings, gryphonPatrolStrings, magicDefenseStrings, griffinSkyJoustStrings, abyssalWellStrings, runeForgeChamberStrings, dragonRiderStrings, griffinRidersEscapeStrings, castleDefenseStrings, sorcererZigguratStrings];
+export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings, enchantedLibraryStrings, gryphonPatrolStrings, magicDefenseStrings, griffinSkyJoustStrings, abyssalWellStrings, runeForgeChamberStrings, dragonRiderStrings, griffinRidersEscapeStrings, castleDefenseStrings, sorcererZigguratStrings, stormCastleTowerStrings];
 
 export const playable = (g: GameEntry): boolean => !!g.load && !!g.manifest;
 
