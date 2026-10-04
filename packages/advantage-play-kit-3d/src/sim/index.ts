@@ -17,3 +17,4 @@ export {
 } from './simulation.js';
 export * from './motion.js';
 export * from './arena.js';
+export { SPREAD_GAP, spreadBoxes, type SpreadBox } from './spread.js';

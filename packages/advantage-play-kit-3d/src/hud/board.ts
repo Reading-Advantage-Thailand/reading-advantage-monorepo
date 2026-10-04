@@ -30,6 +30,21 @@ interface Tile {
 const hex = (c: number): string => `#${c.toString(16).padStart(6, '0')}`;
 const pause = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
+/** The width of `text` in em in the tile font (a canvas measure; the CSS fits the font to the tile). */
+const widths = new Map<string, number>();
+let measure: CanvasRenderingContext2D | null | undefined;
+function emWidth(text: string, family: string): number {
+  const key = `${family}|${text}`;
+  const known = widths.get(key);
+  if (known !== undefined) return known;
+  measure ??= document.createElement('canvas').getContext('2d');
+  if (!measure) return text.length * 0.6;
+  measure.font = `700 100px ${family}`;
+  const em = measure.measureText(text).width / 100;
+  widths.set(key, em);
+  return em;
+}
+
 export class Board {
   readonly el: HTMLElement;
   private readonly tiles = new Map<string, Tile>();
@@ -37,6 +52,9 @@ export class Board {
   private dragFrom: { tile: Tile; x: number; y: number } | null = null;
   /** False while an animation runs: input waits. */
   enabled = true;
+  private readonly resized: ResizeObserver | null;
+  /** The tile font family, Latin and Thai (the Thai tiles use their own font list). */
+  private readonly families = new Map<boolean, string>();
 
   constructor(
     parent: HTMLElement,
@@ -52,6 +70,14 @@ export class Board {
     this.el.addEventListener('pointermove', (e) => this.move(e));
     this.el.addEventListener('pointerup', () => this.release());
     this.el.addEventListener('pointercancel', () => (this.dragFrom = null));
+    // The tile size in CSS pixels, for the font fit in the CSS (`--tile`, and `--em` per tile).
+    this.resized = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => this.el.style.setProperty('--tile', `${this.el.clientWidth / this.cols - 6}px`));
+    this.resized?.observe(this.el);
+    // Measured before the theme fonts loaded, the widths are the fallback font's: measure again.
+    void document.fonts?.ready.then(() => {
+      widths.clear();
+      for (const t of this.tiles.values()) this.paint(t);
+    });
   }
 
   /** Every tile's center (CSS pixels) with its cell and id. */
@@ -133,6 +159,7 @@ export class Board {
   }
 
   destroy(): void {
+    this.resized?.disconnect();
     this.el.remove();
     this.tiles.clear();
   }
@@ -173,9 +200,12 @@ export class Board {
     const text = t.cell.text;
     t.el.style.background = hex(t.cell.color);
     t.el.classList.toggle('glow', !!t.cell.glow);
-    t.el.classList.toggle('th', hasThai(text));
-    t.el.classList.toggle('long', text.length > 6);
+    const th = hasThai(text);
+    t.el.classList.toggle('th', th);
     t.el.innerHTML = `<span>${esc(text)}</span>`;
+    let family = this.families.get(th);
+    if (family === undefined) this.families.set(th, (family = getComputedStyle(t.el).fontFamily));
+    t.el.style.setProperty('--em', emWidth(text, family).toFixed(3));
   }
 
   // ---------------------------------------------------------------- input: drag or tap-then-tap

@@ -60,7 +60,7 @@ export interface MountOptions extends Omit<
 export function createCartridgeMounter(
   factories: CartridgeMounterFactories,
 ): (options: MountOptions) => Promise<MountedGame> {
-  return async (options) => {
+  const mountOne = async (options: MountOptions): Promise<MountedGame> => {
     const { renderer, cartridge, edition3d, edition2d, complete, stage, ...rest } = options;
     if (renderer === 'three') {
       if (!isThreeCartridge(cartridge))
@@ -159,5 +159,60 @@ export function createCartridgeMounter(
         }
       },
     };
+  };
+  return async (options) => {
+    const game = await mountOne(options);
+    return options.cartridge.manifest.orientation === 'portrait' ? guardOrientation(options.container, game) : game;
+  };
+}
+
+/** A phone on its side: too short for a game whose manifest says portrait. */
+const SHORT_LANDSCAPE = '(orientation: landscape) and (max-height: 500px)';
+
+/**
+ * A portrait game on a short landscape screen (a phone on its side) has no room for its layout:
+ * a cover shows a phone and a turn arrow (no words, so it needs no strings), and the game pauses
+ * until the student turns the device. A tablet or a computer in landscape is not short.
+ */
+export function guardOrientation(container: HTMLElement, game: MountedGame): MountedGame {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return game;
+  const query = window.matchMedia(SHORT_LANDSCAPE);
+  const cover = document.createElement('div');
+  cover.className = 'apk3d-turn';
+  cover.setAttribute('aria-hidden', 'true');
+  cover.style.cssText =
+    'position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(18,26,44,0.94);color:#fff;font-size:64px;line-height:1;touch-action:none';
+  cover.innerHTML = '<span style="display:inline-block;transform:rotate(-90deg)">📱</span><span style="font-size:44px">↻</span>';
+  if (getComputedStyle(container).position === 'static') container.style.position = 'relative';
+  container.append(cover);
+  // Only a pause the cover made is resumed (the host may pause the game for its own reasons).
+  let paused = false;
+  const apply = (): void => {
+    cover.style.display = query.matches ? 'flex' : 'none';
+    if (query.matches && !paused) {
+      paused = true;
+      game.pause();
+    } else if (!query.matches && paused) {
+      paused = false;
+      game.resume();
+    }
+  };
+  apply();
+  query.addEventListener('change', apply);
+  return {
+    ...game,
+    pause: () => {
+      paused = false;
+      game.pause();
+    },
+    resume: () => {
+      if (!query.matches) game.resume();
+      else paused = true;
+    },
+    destroy: async () => {
+      query.removeEventListener('change', apply);
+      cover.remove();
+      await game.destroy();
+    },
   };
 }

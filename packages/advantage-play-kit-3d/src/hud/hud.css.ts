@@ -405,6 +405,16 @@ export default `/*
   color: var(--purple);
   text-decoration: underline;
 }
+/* A Thai label keeps each word whole: Thai has no spaces, so a narrow label broke inside a word. */
+.anchored.th {
+  white-space: nowrap;
+  max-width: none;
+}
+/* A label at the screen edge keeps its arrow on its line. */
+.anchored[data-edge='left'],
+.anchored[data-edge='right'] {
+  white-space: nowrap;
+}
 /* A word tag in an arena game; a pinned tag at the screen edge gets an arrow. */
 .arena-tag {
   position: absolute;
@@ -426,22 +436,22 @@ export default `/*
 .arena-tag.done {
   display: none;
 }
-.arena-tag[data-edge='left']::before,
-.arena-tag[data-edge='right']::after,
-.arena-tag[data-edge='up']::before,
-.arena-tag[data-edge='down']::after {
+.anchored[data-edge='left']::before,
+.anchored[data-edge='right']::after,
+.anchored[data-edge='up']::before,
+.anchored[data-edge='down']::after {
   color: var(--gold);
 }
-.arena-tag[data-edge='left']::before {
+.anchored[data-edge='left']::before {
   content: '◀ ';
 }
-.arena-tag[data-edge='right']::after {
+.anchored[data-edge='right']::after {
   content: ' ▶';
 }
-.arena-tag[data-edge='up']::before {
+.anchored[data-edge='up']::before {
   content: '▲ ';
 }
-.arena-tag[data-edge='down']::after {
+.anchored[data-edge='down']::after {
   content: ' ▼';
 }
 
@@ -471,19 +481,17 @@ export default `/*
   transition: left 0.16s ease-in-out, top 0.16s ease-in-out, transform 0.26s, opacity 0.26s;
   overflow: hidden;
 }
-.board .rune.long {
-  font-size: clamp(10px, 2.9vw, 15px);
-}
 .board .rune.th {
   font-family: 'Mali', 'Noto Sans Thai', system-ui, sans-serif;
   /* Thai has no spaces: keep one word on one line and shrink it, never break inside a word. */
-  font-size: clamp(9px, 2.3vw, 13px);
   white-space: nowrap;
   word-break: keep-all;
   overflow-wrap: normal;
 }
-.board .rune.th.long {
-  font-size: clamp(8px, 2vw, 11px);
+/* The word fits its tile: \`--tile\` is the tile width and \`--em\` the word's width in em (board.ts). */
+.board .rune span {
+  font-size: min(clamp(12px, 3.6vw, 18px), calc((var(--tile, 60px) - 12px) / var(--em, 3)));
+  white-space: nowrap;
 }
 .board .rune.glow {
   box-shadow: 0 0 0 4px rgba(255, 244, 168, 0.75), inset 0 6px 0 rgba(255, 255, 255, 0.18);

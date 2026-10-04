@@ -4,6 +4,7 @@
  * round buttons. Every text comes from the caller (the game's catalog), as in the 3D HUD.
  */
 import type * as Phaser from 'phaser';
+import { spreadBoxes } from '../sim/index.js';
 
 export const FONT = "'Fredoka', 'Mali', 'Noto Sans Thai', system-ui, sans-serif";
 export const COLORS = { ink: '#2b1d3a', paper: 0xfffdf7, night: 0x121a2c, gold: 0xffd84a, green: 0x2fa84f, red: 0xe0452f, purple: 0x6a3fd1, tagFill: 0x2b1d3a };
@@ -17,8 +18,51 @@ export function text(scene: Phaser.Scene, x: number, y: number, value: string, s
     .setResolution(2);
 }
 
-/** A rounded tag with text (a word on an item, a meaning on a gate); centered on its container. */
-export function tag(scene: Phaser.Scene, value: string, size = 20, fill = COLORS.tagFill, border = 0xffffff): Phaser.GameObjects.Container {
+/**
+ * Tags that move apart where they overlap (see sim/spread.ts). The game keeps placing each tag
+ * where it wants it; after the scene's update, the spread shifts it up or down (eased). `base` is
+ * the y the game gave, `set` the y the spread wrote last.
+ */
+const spreading = new WeakMap<Phaser.Scene, Map<Phaser.GameObjects.Container, { base: number; set: number; shift: number }>>();
+
+function spreadTags(scene: Phaser.Scene): void {
+  const tags = spreading.get(scene);
+  if (!tags) return;
+  const live: { c: Phaser.GameObjects.Container; s: { base: number; set: number; shift: number } }[] = [];
+  for (const [c, s] of tags) {
+    if (!c.scene) {
+      tags.delete(c);
+      continue;
+    }
+    if (c.y !== s.set) s.base = c.y;
+    // A hidden tag, a tag in a container, and the tag the student drags keep the game's place.
+    if (!c.visible || c.alpha === 0 || c.parentContainer || (c.input?.dragState ?? 0) > 0) {
+      s.shift = 0;
+      c.y = s.set = s.base;
+      continue;
+    }
+    live.push({ c, s });
+  }
+  if (live.length === 0) return;
+  const view = scene.cameras.main.worldView;
+  const boxes = live.map(({ c, s }) => {
+    const w = c.width * c.scaleX;
+    const h = c.height * c.scaleY;
+    return { x: c.x, y: s.base + h / 2, w, h, minY: view.y + h + 4, maxY: view.bottom - 4 };
+  });
+  const ys = live.length > 1 ? spreadBoxes(boxes) : boxes.map((b) => b.y);
+  live.forEach(({ c, s }, i) => {
+    const target = ys[i]! - boxes[i]!.y;
+    s.shift = Math.abs(target - s.shift) < 0.5 ? target : s.shift + (target - s.shift) * 0.3;
+    c.y = s.set = s.base + s.shift;
+  });
+}
+
+/**
+ * A rounded tag with text (a word on an item, a meaning on a gate); centered on its container.
+ * Tags of one scene move apart where they overlap (`spread`, on by default).
+ */
+export function tag(scene: Phaser.Scene, value: string, size = 20, fill = COLORS.tagFill, border = 0xffffff, spread = true): Phaser.GameObjects.Container {
   const label = text(scene, 0, 0, value, size).setOrigin(0.5);
   const w = Math.max(44, label.width + 24);
   const h = Math.max(38, label.height + 12);
@@ -28,6 +72,21 @@ export function tag(scene: Phaser.Scene, value: string, size = 20, fill = COLORS
   box.lineStyle(3, border, 1).strokeRoundedRect(-w / 2, -h / 2, w, h, 12);
   const c = scene.add.container(0, 0, [box, label]);
   c.setSize(w, h);
+  if (spread) {
+    let tags = spreading.get(scene);
+    if (!tags) {
+      const made = new Map<Phaser.GameObjects.Container, { base: number; set: number; shift: number }>();
+      spreading.set(scene, (tags = made));
+      const run = (): void => spreadTags(scene);
+      scene.events.on('postupdate', run);
+      scene.events.once('shutdown', () => {
+        scene.events.off('postupdate', run);
+        made.clear();
+        spreading.delete(scene);
+      });
+    }
+    tags.set(c, { base: 0, set: 0, shift: 0 });
+  }
   return c;
 }
 
@@ -96,8 +155,11 @@ export class StatusBar2D {
   }
 
   set(value: string, right: string): void {
-    this.value.setText(value);
+    this.value.setText(value).setScale(1);
     this.right.setText(right);
+    // A long value (a phone, many meters) shrinks into the room left of the right text.
+    const room = this.right.x - this.right.width - 12 - this.value.x;
+    if (room > 0 && this.value.width > room) this.value.setScale(room / this.value.width);
   }
 
   /** A small round button at the right end (the story book, the sound); returns its label. */

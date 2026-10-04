@@ -162,23 +162,25 @@ export class Board2D {
   private add(cell: BoardCell, row: number, col: number): Tile {
     const { x, y } = this.center({ row, col });
     const bg = this.scene.add.graphics();
+    // A word never breaks inside: it shrinks to fit the tile (Thai has no spaces; a long English
+    // word broke as "lanter / n"). A phrase wraps at its spaces only.
+    const fit = this.size - 8;
+    const thai = THAI.test(cell.text);
+    const phrase = !thai && cell.text.includes(' ');
     const label = this.scene.add
       .text(0, 0, cell.text, {
         fontFamily: FONT,
-        fontSize: `${cell.text.length > 7 ? 13 : cell.text.length > 4 ? 15 : 18}px`,
+        fontSize: `${thai ? 15 : 18}px`,
         fontStyle: '700',
         color: '#ffffff',
         align: 'center',
-        // Thai has no spaces: shrink the word to fit on one line instead of breaking inside it.
-        ...(THAI.test(cell.text) ? {} : { wordWrap: { width: this.size - 8, useAdvancedWrap: true } }),
+        ...(phrase ? { wordWrap: { width: fit } } : {}),
       })
       .setResolution(2)
       .setOrigin(0.5)
       .setStroke('#00000055', 3);
-    if (THAI.test(cell.text)) {
-      let px = 15;
-      while (label.width > this.size - 8 && px > 8) label.setFontSize(`${--px}px`);
-    }
+    let px = thai ? 15 : 18;
+    while (label.width > fit && px > 8) label.setFontSize(`${--px}px`);
     const box = this.scene.add.container(x, y, [bg, label]).setSize(this.size, this.size).setScrollFactor(0).setDepth(this.depth);
     const t: Tile = { box, bg, label, cell, row, col };
     this.paint(t, false);
