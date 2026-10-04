@@ -4,9 +4,9 @@ Owner lane: C. Edits to `globals.css`, nav, and `packages/ui` belong to this lan
 Other lanes request changes here and do not edit these files.
 
 ## Phase 0: Screen inventory and audit (2 h)
-- [ ] List every route with a screenshot at 375/768/1280 (agents, vision review)
-- [ ] Rank problems per screen: broken, confusing, ugly
-- [ ] Choose the order of screens by student traffic
+- [x] List every route with a screenshot at 375/768/1280 (agents, vision review) — 50 routes in `measure/qa/browser-2026-10-05/phase0/inventory.json`; PNGs kept out of Git
+- [x] Rank problems per screen: broken, confusing, ugly — see [audit.md](audit.md) sections 1-2
+- [x] Choose the order of screens by student traffic — see [audit.md](audit.md) section 3
 
 ## Phase 1: Foundation
 - [ ] Tokens and fonts (FR-1)

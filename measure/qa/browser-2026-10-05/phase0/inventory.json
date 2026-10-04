@@ -1,0 +1,1599 @@
+{
+  "public /": {
+    "role": "public",
+    "route": "/",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client"
+        ],
+        "shot": "public-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-1280.png",
+        "axe": [
+          "critical button-name (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "public /about": {
+    "role": "public",
+    "route": "/about",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/about",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-about-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/about",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-about-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/about",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-about-1280.png",
+        "axe": [
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "public /authors": {
+    "role": "public",
+    "route": "/authors",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/authors",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-authors-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/authors",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-authors-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/authors",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-authors-1280.png",
+        "axe": [
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "public /contact": {
+    "role": "public",
+    "route": "/contact",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/contact",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-contact-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/contact",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-contact-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/contact",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-contact-1280.png",
+        "axe": [
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "public /privacy-policy": {
+    "role": "public",
+    "route": "/privacy-policy",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/privacy-policy",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-privacy-policy-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/privacy-policy",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-privacy-policy-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/privacy-policy",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-privacy-policy-1280.png",
+        "axe": [
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "public /terms": {
+    "role": "public",
+    "route": "/terms",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/terms",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-terms-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/terms",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-terms-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/terms",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-terms-1280.png",
+        "axe": [
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "public /auth/signin": {
+    "role": "public",
+    "route": "/auth/signin",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/auth/signin",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-signin-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/auth/signin",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-signin-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/auth/signin",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-signin-1280.png",
+        "axe": []
+      }
+    }
+  },
+  "public /auth/card": {
+    "role": "public",
+    "route": "/auth/card",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/auth/card",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-card-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/auth/card",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-card-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/auth/card",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-card-1280.png",
+        "axe": []
+      }
+    }
+  },
+  "public /auth/forgot-password": {
+    "role": "public",
+    "route": "/auth/forgot-password",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/auth/forgot-password",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-forgot-password-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/auth/forgot-password",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-forgot-password-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/auth/forgot-password",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-forgot-password-1280.png",
+        "axe": []
+      }
+    }
+  },
+  "public /auth/error": {
+    "role": "public",
+    "route": "/auth/error",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/auth/error",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-error-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/auth/error",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-error-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/auth/error",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-auth-error-1280.png",
+        "axe": []
+      }
+    }
+  },
+  "public /unauthorized": {
+    "role": "public",
+    "route": "/unauthorized",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/unauthorized",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-unauthorized-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/unauthorized",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-unauthorized-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/unauthorized",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "public-unauthorized-1280.png",
+        "axe": []
+      }
+    }
+  },
+  "student /student/read": {
+    "role": "student",
+    "route": "/student/read",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/student/read",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-read-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/student/read",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-read-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/student/read",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-read-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "student /student/read/577addb8-4fb2-4b60-adeb-d52236d2c4c2": {
+    "role": "student",
+    "route": "/student/read/577addb8-4fb2-4b60-adeb-d52236d2c4c2",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/student/read/577addb8-4fb2-4b60-adeb-d52236d2c4c2",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "%o\n\n%s Error: No questions found for article 577addb8-4fb2-4b60-adeb-d52236d2c4c2 and type MC_QUESTION\n    at getQuestionsByArticleId (about://React/Server/file",
+          "Error: No questions found for article 577addb8-4fb2-4b60-adeb-d52236d2c4c2 and type MC_QUESTION\n    at getQuestionsByArticleId (about://React/Server/file:///hom"
+        ],
+        "shot": "student-student-read-id-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/student/read/577addb8-4fb2-4b60-adeb-d52236d2c4c2",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "%o\n\n%s Error: No questions found for article 577addb8-4fb2-4b60-adeb-d52236d2c4c2 and type MC_QUESTION\n    at getQuestionsByArticleId (about://React/Server/file",
+          "Error: No questions found for article 577addb8-4fb2-4b60-adeb-d52236d2c4c2 and type MC_QUESTION\n    at getQuestionsByArticleId (about://React/Server/file:///hom"
+        ],
+        "shot": "student-student-read-id-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/student/read/577addb8-4fb2-4b60-adeb-d52236d2c4c2",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "%o\n\n%s Error: No questions found for article 577addb8-4fb2-4b60-adeb-d52236d2c4c2 and type MC_QUESTION\n    at getQuestionsByArticleId (about://React/Server/file",
+          "Error: No questions found for article 577addb8-4fb2-4b60-adeb-d52236d2c4c2 and type MC_QUESTION\n    at getQuestionsByArticleId (about://React/Server/file:///hom"
+        ],
+        "shot": "student-student-read-id-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "student /student/lesson/577addb8-4fb2-4b60-adeb-d52236d2c4c2": {
+    "role": "student",
+    "route": "/student/lesson/577addb8-4fb2-4b60-adeb-d52236d2c4c2",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/student/lesson/577addb8-4fb2-4b60-adeb-d52236d2c4c2",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+        ],
+        "shot": "student-student-lesson-id-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/student/lesson/577addb8-4fb2-4b60-adeb-d52236d2c4c2",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+        ],
+        "shot": "student-student-lesson-id-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/student/lesson/577addb8-4fb2-4b60-adeb-d52236d2c4c2",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+        ],
+        "shot": "student-student-lesson-id-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (4)"
+        ]
+      }
+    }
+  },
+  "student /student/assignments": {
+    "role": "student",
+    "route": "/student/assignments",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/student/assignments",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+        ],
+        "shot": "student-student-assignments-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/student/assignments",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client"
+        ],
+        "shot": "student-student-assignments-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/student/assignments",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-assignments-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)",
+          "critical select-name (2)"
+        ]
+      }
+    }
+  },
+  "student /student/games": {
+    "role": "student",
+    "route": "/student/games",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/student/games",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-games-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/student/games",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-games-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/student/games",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-games-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "student /student/history": {
+    "role": "student",
+    "route": "/student/history",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/student/history",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-history-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/student/history",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Error fetching reminder reread data: TypeError: Failed to fetch\n    at HistoryTable.useCallback[fetchData] (http://localhost:3100/_next/static/chunks/apps_prima",
+          "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client"
+        ],
+        "shot": "student-student-history-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/student/history",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Error fetching article records: TypeError: Failed to fetch\n    at HistoryTable.useCallback[fetchData] (http://localhost:3100/_next/static/chunks/apps_primary-ad"
+        ],
+        "shot": "student-student-history-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "student /student/reports": {
+    "role": "student",
+    "route": "/student/reports",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/student/reports",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.activityType.SENTENCE_FLASHCARDS` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http",
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.level.description.A0-` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhos"
+        ],
+        "shot": "student-student-reports-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/student/reports",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.activityType.SENTENCE_FLASHCARDS` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http",
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.level.description.A0-` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhos"
+        ],
+        "shot": "student-student-reports-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/student/reports",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.activityType.SENTENCE_FLASHCARDS` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http",
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.level.description.A0-` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhos"
+        ],
+        "shot": "student-student-reports-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "critical button-name (1)",
+          "serious color-contrast (7)"
+        ]
+      }
+    }
+  },
+  "student /student/sentences": {
+    "role": "student",
+    "route": "/student/sentences",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/student/sentences",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-sentences-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/student/sentences",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-sentences-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/student/sentences",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-sentences-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (3)"
+        ]
+      }
+    }
+  },
+  "student /student/vocabulary": {
+    "role": "student",
+    "route": "/student/vocabulary",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/student/vocabulary",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-vocabulary-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/student/vocabulary",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-vocabulary-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/student/vocabulary",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-student-vocabulary-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (3)"
+        ]
+      }
+    }
+  },
+  "student /settings/user-profile": {
+    "role": "student",
+    "route": "/settings/user-profile",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/settings/user-profile",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-settings-user-profile-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/settings/user-profile",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-settings-user-profile-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/settings/user-profile",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "student-settings-user-profile-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/dashboard": {
+    "role": "teacher",
+    "route": "/teacher/dashboard",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/my-classes",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-dashboard-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/my-classes",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-dashboard-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/my-classes",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-dashboard-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/my-classes": {
+    "role": "teacher",
+    "route": "/teacher/my-classes",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/my-classes",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-my-classes-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/my-classes",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-my-classes-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/my-classes",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-my-classes-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/my-students": {
+    "role": "teacher",
+    "route": "/teacher/my-students",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/my-students",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-my-students-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/my-students",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-my-students-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/my-students",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-my-students-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/class-roster": {
+    "role": "teacher",
+    "route": "/teacher/class-roster",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8": {
+    "role": "teacher",
+    "route": "/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "critical button-name (3)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/class-sheet": {
+    "role": "teacher",
+    "route": "/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/class-sheet",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/class-sheet",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-class-sheet-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/class-sheet",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-class-sheet-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/class-sheet",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-class-sheet-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/qr-cards": {
+    "role": "teacher",
+    "route": "/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/qr-cards",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/qr-cards",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-qr-cards-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/qr-cards",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-qr-cards-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/qr-cards",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-qr-cards-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/enrollment": {
+    "role": "teacher",
+    "route": "/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/enrollment",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/enrollment",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-enrollment-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/enrollment",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-enrollment-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/enrollment",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-class-roster-id-enrollment-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "critical button-name (3)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/assignments": {
+    "role": "teacher",
+    "route": "/teacher/assignments",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/assignments",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-assignments-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/assignments",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-assignments-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/assignments",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-assignments-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "critical button-name (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000b": {
+    "role": "teacher",
+    "route": "/teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000b",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000b",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-assignments-id-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000b",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-assignments-id-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000b",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-assignments-id-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (4)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/reports": {
+    "role": "teacher",
+    "route": "/teacher/reports",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/reports",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-reports-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/reports",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-reports-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/reports",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-reports-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "critical button-name (1)",
+          "serious color-contrast (3)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55": {
+    "role": "teacher",
+    "route": "/teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.activityType.SENTENCE_FLASHCARDS` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http",
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.level.description.A0-` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhos"
+        ],
+        "shot": "teacher-teacher-student-progress-id-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.activityType.SENTENCE_FLASHCARDS` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http",
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.level.description.A0-` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhos"
+        ],
+        "shot": "teacher-teacher-student-progress-id-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.activityType.SENTENCE_FLASHCARDS` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http",
+          "IntlError: MISSING_MESSAGE: Could not resolve `Reports.level.description.A0-` in messages for locale `en`.\n    at getFallbackFromErrorAndNotify (http://localhos"
+        ],
+        "shot": "teacher-teacher-student-progress-id-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "critical button-name (1)",
+          "serious color-contrast (6)"
+        ]
+      }
+    }
+  },
+  "teacher /teacher/game-challenges": {
+    "role": "teacher",
+    "route": "/teacher/game-challenges",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/teacher/game-challenges",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-game-challenges-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/teacher/game-challenges",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-game-challenges-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/teacher/game-challenges",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "teacher-teacher-game-challenges-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "admin /admin": {
+    "role": "admin",
+    "route": "/admin",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (5)"
+        ]
+      }
+    }
+  },
+  "admin /admin/dashboard": {
+    "role": "admin",
+    "route": "/admin/dashboard",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-dashboard-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-dashboard-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-dashboard-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (5)"
+        ]
+      }
+    }
+  },
+  "admin /admin/dashboard/students": {
+    "role": "admin",
+    "route": "/admin/dashboard/students",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard/students",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-dashboard-students-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard/students",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-dashboard-students-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard/students",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-dashboard-students-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "admin /admin/dashboard/teachers": {
+    "role": "admin",
+    "route": "/admin/dashboard/teachers",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard/teachers",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-dashboard-teachers-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard/teachers",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-dashboard-teachers-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/dashboard/teachers",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-dashboard-teachers-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "admin /admin/students": {
+    "role": "admin",
+    "route": "/admin/students",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/students",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-students-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/students",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Error fetching classrooms: TypeError: Failed to fetch\n    at fetchClassrooms (http://localhost:3100/_next/static/chunks/apps_primary-advantage_01lmybl._.js:1092",
+          "Error fetching students: TypeError: Failed to fetch\n    at fetchStudents (http://localhost:3100/_next/static/chunks/apps_primary-advantage_01lmybl._.js:1073:36)"
+        ],
+        "shot": "admin-admin-students-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/students",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Error fetching classrooms: TypeError: Failed to fetch\n    at fetchClassrooms (http://localhost:3100/_next/static/chunks/apps_primary-advantage_01lmybl._.js:1092",
+          "Error fetching students: TypeError: Failed to fetch\n    at fetchStudents (http://localhost:3100/_next/static/chunks/apps_primary-advantage_01lmybl._.js:1073:36)",
+          "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client"
+        ],
+        "shot": "admin-admin-students-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "critical button-name (2)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "admin /admin/students/add": {
+    "role": "admin",
+    "route": "/admin/students/add",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/students/add",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-students-add-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/students/add",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-students-add-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/students/add",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-students-add-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "admin /admin/students/classrooms": {
+    "role": "admin",
+    "route": "/admin/students/classrooms",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/students/classrooms",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-students-classrooms-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/students/classrooms",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-students-classrooms-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/students/classrooms",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-students-classrooms-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "admin /admin/teachers": {
+    "role": "admin",
+    "route": "/admin/teachers",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/teachers",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-teachers-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/teachers",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-teachers-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/teachers",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-teachers-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "admin /admin/teachers/add": {
+    "role": "admin",
+    "route": "/admin/teachers/add",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/teachers/add",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-teachers-add-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/teachers/add",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client"
+        ],
+        "shot": "admin-admin-teachers-add-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/teachers/add",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-teachers-add-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "critical button-name (2)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "admin /admin/import-data": {
+    "role": "admin",
+    "route": "/admin/import-data",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/import-data",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-import-data-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/import-data",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-import-data-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/import-data",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-import-data-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "admin /admin/article-creation": {
+    "role": "admin",
+    "route": "/admin/article-creation",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/admin/article-creation",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-article-creation-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/admin/article-creation",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-article-creation-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/admin/article-creation",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-admin-article-creation-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "critical button-name (3)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "admin /settings/school-profile": {
+    "role": "admin",
+    "route": "/settings/school-profile",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/settings/school-profile",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-settings-school-profile-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/settings/school-profile",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-settings-school-profile-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/settings/school-profile",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "admin-settings-school-profile-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "system /system/dashboard": {
+    "role": "system",
+    "route": "/system/dashboard",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/system/dashboard",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-dashboard-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/system/dashboard",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-dashboard-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/system/dashboard",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-dashboard-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "system /system/licenses": {
+    "role": "system",
+    "route": "/system/licenses",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/system/licenses",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-licenses-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/system/licenses",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Failed to fetch licenses: TypeError: Failed to fetch\n    at LicenseTable.useEffect.fetchLicenses (http://localhost:3100/_next/static/chunks/apps_primary-advanta"
+        ],
+        "shot": "system-system-licenses-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/system/licenses",
+        "overflowPx": 0,
+        "consoleErrors": [
+          "Failed to fetch licenses: TypeError: Failed to fetch\n    at LicenseTable.useEffect.fetchLicenses (http://localhost:3100/_next/static/chunks/apps_primary-advanta"
+        ],
+        "shot": "system-system-licenses-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (2)"
+        ]
+      }
+    }
+  },
+  "system /system/licenses/create-licenses": {
+    "role": "system",
+    "route": "/system/licenses/create-licenses",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/system/licenses/create-licenses",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-licenses-create-licenses-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/system/licenses/create-licenses",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-licenses-create-licenses-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/system/licenses/create-licenses",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-licenses-create-licenses-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  },
+  "system /system/schools": {
+    "role": "system",
+    "route": "/system/schools",
+    "widths": {
+      "375": {
+        "status": 200,
+        "finalPath": "/en/system/schools",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-schools-375.png"
+      },
+      "768": {
+        "status": 200,
+        "finalPath": "/en/system/schools",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-schools-768.png"
+      },
+      "1280": {
+        "status": 200,
+        "finalPath": "/en/system/schools",
+        "overflowPx": 0,
+        "consoleErrors": [],
+        "shot": "system-system-schools-1280.png",
+        "axe": [
+          "critical aria-allowed-attr (1)",
+          "serious color-contrast (1)"
+        ]
+      }
+    }
+  }
+}
