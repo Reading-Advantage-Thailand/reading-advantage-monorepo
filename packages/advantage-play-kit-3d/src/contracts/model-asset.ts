@@ -14,6 +14,8 @@ export const MODEL_LICENSE = 'AGPL-3.0-or-later';
 
 /** The tool that writes pack manifests; provenance names it so a hand-edited pack is visible. */
 export const MODEL_PACK_TOOL = 'scripts/apk3d-models.ts';
+/** Every tool that writes pack manifests: the game model packs and the avatar pack. */
+export const MODEL_PACK_TOOLS = [MODEL_PACK_TOOL, 'scripts/avatar-pack.ts'] as const;
 
 export const modelProvenanceSchema = z
   .object({
@@ -22,7 +24,7 @@ export const modelProvenanceSchema = z
     license: z.literal(MODEL_LICENSE),
     /** Git sha of the source at build time. */
     forgeCommit: z.string().regex(/^[0-9a-f]{7,40}$/),
-    tool: z.literal(MODEL_PACK_TOOL),
+    tool: z.enum(MODEL_PACK_TOOLS),
   })
   .strict();
 
