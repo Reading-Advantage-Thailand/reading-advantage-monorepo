@@ -62,3 +62,8 @@ export const rotateCard = teacherHandler(sl.rotateCardTokenInput, ({ user, meta,
 export const issueCards = teacherHandler(sl.issueCardTokensInput, async ({ user, meta, input }) => ({
   cards: await sl.issueClassCardTokens({ db, user, meta, input }),
 }));
+
+/** POST: teacher reads the live sign-in roster of the class (status, setting, students). */
+export const readRoster = teacherHandler(sl.classLoginRosterInput, ({ user, input }) =>
+  sl.getClassLoginRoster({ db, user, input }),
+);

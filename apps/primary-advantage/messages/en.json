@@ -2770,5 +2770,27 @@
     "createSuccessDescription": "{name} has been added to the system.",
     "createError": "Failed to create school",
     "fallbackError": "An unexpected error occurred."
+  },
+  "ClassLogin": {
+    "title": "Class sign-in",
+    "loading": "Loading class sign-in…",
+    "errors": {
+      "signedOut": "Your sign-in has ended. Sign in again.",
+      "forbidden": "You cannot manage this class.",
+      "notFound": "We cannot find this class or student.",
+      "rateLimited": "Too many tries. Wait a few minutes and try again.",
+      "unavailable": "No free code right now. Try again.",
+      "generic": "Something went wrong. Try again."
+    },
+    "session": {
+      "start": "Start class",
+      "startHelp": "Start the class to show a sign-in code for your students.",
+      "codeLabel": "Class code",
+      "codeAria": "Class code {code}",
+      "openUntil": "Open until {time}",
+      "openNoCode": "The class is open until {time}. The code shows only once. Press New code to show a code.",
+      "newCode": "New code",
+      "end": "End class"
+    }
   }
 }

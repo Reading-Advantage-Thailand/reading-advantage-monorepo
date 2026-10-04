@@ -7,3 +7,4 @@ export * from "./usernames.js";
 export { STUDENT_LOGIN_LIMITS } from "./rate-limits.js";
 export * from "./picture-password.js";
 export * from "./session.js";
+export * from "./roster.js";

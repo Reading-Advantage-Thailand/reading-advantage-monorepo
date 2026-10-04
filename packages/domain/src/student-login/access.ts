@@ -5,10 +5,11 @@ import type { UserContext } from "@reading-advantage/auth";
 import { createTenantDB, type TenantDB } from "../db-contract.js";
 import { StudentLoginError } from "./errors.js";
 
-/** A class the actor may manage, with its school and picture-password setting. */
+/** A class the actor may manage, with its school, name, and picture-password setting. */
 export interface ManagedClassroom {
   id: string;
   schoolId: string;
+  name: string;
   picturePasswordEnabled: boolean;
 }
 
@@ -35,6 +36,7 @@ export async function authorizeClassroom(
     .select({
       id: classrooms.id,
       schoolId: classrooms.schoolId,
+      name: classrooms.name,
       teacherId: classrooms.teacherId,
       archived: classrooms.archived,
       picturePasswordEnabled: classrooms.picturePasswordEnabled,
@@ -53,7 +55,7 @@ export async function authorizeClassroom(
     if (!member) throw new StudentLoginError("forbidden", "Not allowed.");
   }
   return {
-    classroom: { id: row.id, schoolId: row.schoolId, picturePasswordEnabled: row.picturePasswordEnabled },
+    classroom: { id: row.id, schoolId: row.schoolId, name: row.name, picturePasswordEnabled: row.picturePasswordEnabled },
     tenantDb,
   };
 }

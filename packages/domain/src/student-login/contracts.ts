@@ -109,6 +109,32 @@ export const rotateCardTokenInput = z.object({
 /** Request from a teacher for QR card tokens for the students that have none. */
 export const issueCardTokensInput = z.object({ classroomId: z.string().uuid() });
 
+/** Request from a teacher for the live sign-in roster of a class. */
+export const classLoginRosterInput = z.object({ classroomId: z.string().uuid() });
+
+/**
+ * Live sign-in roster of a class for its teacher (FR-4). It holds no hash and no token:
+ * `hasPicturePassword` and `hasCardToken` only tell whether one exists.
+ */
+export const classLoginRosterOutput = z.object({
+  classroomName: z.string(),
+  picturePasswordEnabled: z.boolean(),
+  openSession: z.object({ id: z.string().uuid(), expiresAt: z.coerce.date() }).nullable(),
+  students: z.array(
+    z
+      .object({
+        userId: z.string().min(1),
+        name: z.string(),
+        username: z.string(),
+        hasPicturePassword: z.boolean(),
+        hasCardToken: z.boolean(),
+        signedIn: z.boolean(),
+        lastSeenAt: z.coerce.date().nullable(),
+      })
+      .strict(),
+  ),
+});
+
 /** Result of a student sign-in through a class code or a QR card. */
 export const studentSignInOutput = z.object({
   user: z.object({ id: z.string().min(1), role: z.literal("STUDENT") }),
@@ -143,3 +169,7 @@ export type StudentSignInOutput = z.infer<typeof studentSignInOutput>;
 export type RotateCardTokenInput = z.infer<typeof rotateCardTokenInput>;
 /** Input type of {@link issueCardTokensInput}. */
 export type IssueCardTokensInput = z.infer<typeof issueCardTokensInput>;
+/** Input type of {@link classLoginRosterInput}. */
+export type ClassLoginRosterInput = z.infer<typeof classLoginRosterInput>;
+/** Output type of {@link classLoginRosterOutput}. */
+export type ClassLoginRosterOutput = z.infer<typeof classLoginRosterOutput>;

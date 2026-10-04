@@ -10,6 +10,7 @@ const domain = vi.hoisted(() => ({
   signInWithCardToken: vi.fn(),
   rotateCardToken: vi.fn(),
   issueClassCardTokens: vi.fn(),
+  getClassLoginRoster: vi.fn(),
 }));
 
 vi.mock("@reading-advantage/db", async (orig) => ({ ...(await orig<typeof import("@reading-advantage/db")>()), db: {} }));
@@ -25,7 +26,7 @@ vi.mock("@reading-advantage/domain", async (orig) => {
 });
 
 import { studentLogin } from "@reading-advantage/domain";
-import { startClass, enterCode, pictureSignIn, qrSignIn, rotateCard, issueCards } from "../student-login/handlers";
+import { startClass, enterCode, pictureSignIn, qrSignIn, rotateCard, issueCards, readRoster } from "../student-login/handlers";
 
 const CLASS_ID = "11111111-1111-4111-8111-111111111111";
 const post = (url: string, body: unknown) =>
@@ -155,5 +156,24 @@ describe("QR card handlers", () => {
     getCurrentSession.mockResolvedValue(teacherSession);
     domain.issueClassCardTokens.mockResolvedValue([]);
     expect((await issueCards(post("/issue", { classroomId: CLASS_ID }))).status).toBe(200);
+  });
+});
+
+describe("roster handler", () => {
+  it("returns 401 without a session and 400 for a bad class id", async () => {
+    getCurrentSession.mockResolvedValue(null);
+    expect((await readRoster(post("/roster", { classroomId: CLASS_ID }))).status).toBe(401);
+    getCurrentSession.mockResolvedValue(teacherSession);
+    expect((await readRoster(post("/roster", { classroomId: "nope" }))).status).toBe(400);
+    expect(domain.getClassLoginRoster).not.toHaveBeenCalled();
+  });
+
+  it("returns the roster of the use-case for the signed-in teacher", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.getClassLoginRoster.mockResolvedValue({ classroomName: "P3A", picturePasswordEnabled: true, openSession: null, students: [] });
+    const res = await readRoster(post("/roster", { classroomId: CLASS_ID }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).classroomName).toBe("P3A");
+    expect(domain.getClassLoginRoster).toHaveBeenCalledWith(expect.objectContaining({ user: teacherSession.user, input: { classroomId: CLASS_ID } }));
   });
 });
