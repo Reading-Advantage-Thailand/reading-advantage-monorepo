@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "next dev",
     "dev-turbo": "next dev --turbopack",
-    "build": "next build",
+    "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
     "start": "next start",
     "lint": "eslint .",
-    "check-types": "tsc --noEmit",
+    "check-types": "NODE_OPTIONS=--max-old-space-size=6144 tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
