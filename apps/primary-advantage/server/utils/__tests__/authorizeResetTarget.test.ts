@@ -23,7 +23,7 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   return { ...actual, db: dbProxy };
 });
 
-import { authorizeResetTarget, callerEffectiveRank } from "../auth";
+import { authorizeResetTarget, callerEffectiveRank, decideResetTarget } from "../auth";
 
 const SCHOOL_A = "00000000-0000-0000-0000-0000000000a1";
 const SCHOOL_B = "00000000-0000-0000-0000-0000000000b1";
@@ -99,6 +99,14 @@ describe("authorizeResetTarget", () => {
     await seedUser("student", "STUDENT", SCHOOL_A);
     expect(await authorizeResetTarget(principal("co", "TEACHER", SCHOOL_A), principal("other-admin", "TEACHER", SCHOOL_A))).toBe(false);
     expect(await authorizeResetTarget(principal("co", "TEACHER", SCHOOL_A), principal("student", "STUDENT", SCHOOL_A))).toBe(true);
+  });
+
+  it("returns the effective actor rank for a co-admin with a legacy admin row", async () => {
+    await seedUser("co", "TEACHER", SCHOOL_A);
+    await giveRole("co", "admin");
+    await seedUser("student", "STUDENT", SCHOOL_A);
+    expect(await decideResetTarget(principal("co", "TEACHER", SCHOOL_A), principal("student", "STUDENT", SCHOOL_A)))
+      .toEqual({ allowed: true, actorRole: "ADMIN" });
   });
 
   it("lets a teacher reset a same-school student", async () => {

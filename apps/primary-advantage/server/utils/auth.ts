@@ -172,16 +172,29 @@ interface ResetPrincipal {
  * The actor must outrank the target by effective rank, legacy rows included.
  * @param actor The session user who asks for the reset.
  * @param target The account whose password would change.
+ * @returns The verdict, plus the actor effective rank when the schools match.
+ */
+export async function decideResetTarget(
+  actor: ResetPrincipal,
+  target: ResetPrincipal,
+): Promise<{ allowed: boolean; actorRole?: string }> {
+  if (!actor.schoolId || !target.schoolId || actor.schoolId !== target.schoolId) return { allowed: false };
+  const actorRank = await loadTargetEffectiveRank(actor.id, actor.role, "ignore", actor.schoolId);
+  const targetRank = await loadTargetEffectiveRank(target.id, target.role);
+  return { allowed: canSetPasswordFor(actorRank, targetRank), actorRole: actorRank };
+}
+
+/**
+ * Decides whether a session actor may reset the password of a target account.
+ * @param actor The session user who asks for the reset.
+ * @param target The account whose password would change.
  * @returns True when the reset is allowed.
  */
 export async function authorizeResetTarget(
   actor: ResetPrincipal,
   target: ResetPrincipal,
 ): Promise<boolean> {
-  if (!actor.schoolId || !target.schoolId || actor.schoolId !== target.schoolId) return false;
-  const actorRank = await loadTargetEffectiveRank(actor.id, actor.role, "ignore", actor.schoolId);
-  const targetRank = await loadTargetEffectiveRank(target.id, target.role);
-  return canSetPasswordFor(actorRank, targetRank);
+  return (await decideResetTarget(actor, target)).allowed;
 }
 
 /**

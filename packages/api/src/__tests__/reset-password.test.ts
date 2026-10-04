@@ -28,7 +28,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { handleResetPassword, createResetPasswordHandler } from "../routes/auth/reset-password.js";
-import { requireAuth, requireRole, hashPassword, revokeAllUserSessions, AuthError } from "@reading-advantage/auth";
+import { requireAuth, requireRole, hashPassword, revokeAllUserSessions, recordAuditEvent, AuthError } from "@reading-advantage/auth";
 
 const mockDb = vi.hoisted(() => ({
   select: vi.fn(),
@@ -525,6 +525,27 @@ describe("authorizeTarget path: atomic reset and no existence oracle", () => {
     const handler = createResetPasswordHandler({ authorizeTarget: () => true });
     const response = await handler(jsonRequest("/api/auth/reset-password", body, "tok"));
     expect(response.status).toBe(500);
+  });
+
+  it("logs the effective actor rank that authorizeTarget returns (L-2)", async () => {
+    setActorSession("co-admin", "TEACHER", "school-1");
+    mockDb.select
+      .mockReturnValueOnce(targetRow("STUDENT", "school-1"))
+      .mockReturnValueOnce(selectResult([{ id: "target-1_credential" }]));
+    const tx = {
+      update: vi.fn().mockReturnValue({ set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue(undefined) }) }),
+      delete: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue(undefined) }),
+    };
+    mockDb.transaction.mockImplementationOnce(async (fn: (t: typeof tx) => Promise<unknown>) => fn(tx));
+    const handler = createResetPasswordHandler({
+      authorizeTarget: () => ({ allowed: true, actorRole: "ADMIN" }),
+    });
+    const response = await handler(jsonRequest("/api/auth/reset-password", body, "tok"));
+    expect(response.status).toBe(200);
+    expect(vi.mocked(recordAuditEvent)).toHaveBeenCalledWith(
+      expect.objectContaining({ actorUserId: "co-admin", actorRole: "ADMIN" }),
+      expect.objectContaining({ action: "auth:password_reset" }),
+    );
   });
 
   it("answers an unknown id and another school's id with the same status and body (L-3)", async () => {
