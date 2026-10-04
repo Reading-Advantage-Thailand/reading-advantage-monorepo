@@ -290,7 +290,7 @@ export function StudentCartridgeHost({
         setCartridge(loadedCartridge);
         // Realm Carver throws above its word cap; trim whole cards host-side.
         setInput(cartridgeId === "realm-carver" && inputMode === "sentence"
-          ? capRealmCarverSentences(parsedInput.data as { term: string }[])
+          ? capRealmCarverSentences(parsedInput.data as z.infer<typeof sentenceInputSchema>)
           : parsedInput.data);
         setAnswerAudioResponse(prepared?.data);
         setLoadedLearningMode(effectiveLearningMode);
