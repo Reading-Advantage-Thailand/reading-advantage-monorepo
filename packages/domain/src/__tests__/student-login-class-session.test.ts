@@ -168,12 +168,12 @@ describe("getNameListForCode", () => {
     const store = makeStore();
     const db = createMockDb({ selectSequence: [[]] });
     await expect(getNameListForCode({ db: asDb(db), store, ip: "9.9.9.9", input: { code: "ABCDEF" }, now: NOW })).rejects.toMatchObject({ code: "invalid_code" });
-    expect(store.map.get("username:student-code-miss-global")?.failedCount).toBe(1);
+    expect(store.map.get("student-code-miss-global:all")?.failedCount).toBe(1);
   });
 
   it("stops code entry from an IP above the limit before any lookup", async () => {
     const store = makeStore();
-    store.map.set("ip:9.9.9.9", { failedCount: STUDENT_LOGIN_LIMITS.ip.maxAttempts, windowStart: Date.now() });
+    store.map.set("student-code-ip:9.9.9.9", { failedCount: STUDENT_LOGIN_LIMITS.ip.maxAttempts, windowStart: Date.now() });
     const db = createMockDb({ selectSequence: [[session]] });
     await expect(getNameListForCode({ db: asDb(db), store, ip: "9.9.9.9", input: { code: "ABCDEF" }, now: NOW })).rejects.toMatchObject({ code: "rate_limited" });
     expect(db.select).not.toHaveBeenCalled();
@@ -181,14 +181,14 @@ describe("getNameListForCode", () => {
 
   it("stops all code entry when the global miss bucket is full", async () => {
     const store = makeStore();
-    store.map.set("username:student-code-miss-global", { failedCount: STUDENT_LOGIN_LIMITS.globalMiss.maxAttempts, windowStart: Date.now() });
+    store.map.set("student-code-miss-global:all", { failedCount: STUDENT_LOGIN_LIMITS.globalMiss.maxAttempts, windowStart: Date.now() });
     const db = createMockDb({ selectSequence: [[session]] });
     await expect(getNameListForCode({ db: asDb(db), store, ip: "5.5.5.5", input: { code: "ABCDEF" }, now: NOW })).rejects.toMatchObject({ code: "rate_limited" });
   });
 
   it("stops requests for a class above the class limit", async () => {
     const store = makeStore();
-    store.map.set(`username:student-code-class:${CLASS_ID}`, { failedCount: STUDENT_LOGIN_LIMITS.classroom.maxAttempts, windowStart: Date.now() });
+    store.map.set(`student-code-class:${CLASS_ID}`, { failedCount: STUDENT_LOGIN_LIMITS.classroom.maxAttempts, windowStart: Date.now() });
     const db = createMockDb({ selectSequence: [[session]] });
     await expect(getNameListForCode({ db: asDb(db), store, ip: "5.5.5.5", input: { code: "ABCDEF" }, now: NOW })).rejects.toMatchObject({ code: "rate_limited" });
   });

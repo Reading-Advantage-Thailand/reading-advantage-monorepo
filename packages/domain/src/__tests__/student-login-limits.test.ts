@@ -11,10 +11,12 @@ import {
   STUDENT_LOGIN_LIMITS,
   guardClassAttempt,
   guardCodeEntry,
+  recordCardMiss,
   recordCodeMiss,
 } from "../student-login/rate-limits.js";
 import { StudentLoginError } from "../student-login/errors.js";
 import { auditStudentLogin } from "../student-login/audit.js";
+import { resetLimit, configureRateLimiter } from "@reading-advantage/auth";
 import { makeStore } from "./student-login-helpers.js";
 
 const recordAuditEvent = vi.hoisted(() => vi.fn());
@@ -71,6 +73,21 @@ describe("rate limits", () => {
     for (let i = 0; i < STUDENT_LOGIN_LIMITS.classroom.maxAttempts; i++) await guardClassAttempt(store, "c1");
     await expect(guardClassAttempt(store, "c1")).rejects.toMatchObject({ code: "rate_limited" });
     await expect(guardClassAttempt(store, "c2")).resolves.toBeUndefined();
+  });
+
+  it("uses key namespaces that normal login cannot build or reset", async () => {
+    const store = makeStore();
+    await guardCodeEntry(store, "1.1.1.1");
+    await recordCodeMiss(store);
+    await guardClassAttempt(store, "c1");
+    await recordCardMiss(store, "1.1.1.1");
+    const keys = [...store.map.keys()];
+    expect(keys).toHaveLength(4);
+    for (const key of keys) expect(key).not.toMatch(/^(ip|username):/);
+    // A successful password login resets the `ip` and `username` buckets only.
+    configureRateLimiter({ store });
+    await resetLimit("1.1.1.1", "1.1.1.1");
+    expect(keys.every((k) => store.map.has(k))).toBe(true);
   });
 
   it("sets retryAfterSeconds on a block", async () => {

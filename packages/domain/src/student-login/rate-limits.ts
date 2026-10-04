@@ -13,7 +13,11 @@ export const STUDENT_LOGIN_LIMITS = {
   cardMiss: { windowMs: 10 * 60 * 1000, maxAttempts: 30 } satisfies RateLimitConfig,
 } as const;
 
-const GLOBAL_MISS_KEY = "username:student-code-miss-global";
+/**
+ * Student-login buckets use their own key prefixes. Normal login builds only `username:` and `ip:`
+ * keys, so no password login can produce or reset a student-login bucket.
+ */
+const GLOBAL_MISS_KEY = "student-code-miss-global:all";
 
 function limited(retriesAfter: number | undefined): StudentLoginError {
   return new StudentLoginError("rate_limited", "Too many attempts. Try again later.", retriesAfter ?? 60);
@@ -27,7 +31,7 @@ function limited(retriesAfter: number | undefined): StudentLoginError {
  * @throws {StudentLoginError} With code `rate_limited` when a bucket is full.
  */
 export async function guardCodeEntry(store: RateLimitStore, ip: string | null): Promise<void> {
-  const ipResult = await consumeRateLimit(store, `ip:${ip ?? "unknown"}`, STUDENT_LOGIN_LIMITS.ip);
+  const ipResult = await consumeRateLimit(store, `student-code-ip:${ip ?? "unknown"}`, STUDENT_LOGIN_LIMITS.ip);
   if (!ipResult.allowed) throw limited(ipResult.retriesAfter);
   const now = Date.now();
   const entry = await store.get(GLOBAL_MISS_KEY);
@@ -56,13 +60,13 @@ export async function recordCodeMiss(store: RateLimitStore): Promise<void> {
 export async function guardClassAttempt(store: RateLimitStore, classroomId: string): Promise<void> {
   const result = await consumeRateLimit(
     store,
-    `username:student-code-class:${classroomId}`,
+    `student-code-class:${classroomId}`,
     STUDENT_LOGIN_LIMITS.classroom,
   );
   if (!result.allowed) throw limited(result.retriesAfter);
 }
 
-const cardMissKey = (ip: string | null) => `username:student-card-miss:${ip ?? "unknown"}`;
+const cardMissKey = (ip: string | null) => `student-card-miss:${ip ?? "unknown"}`;
 
 /**
  * Checks that the IP has not used up its failed card scans. It does not count the request.
