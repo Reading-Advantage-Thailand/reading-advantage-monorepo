@@ -41,7 +41,7 @@ export function ClassLoginPanel({ classroomId }: ClassLoginPanelProps) {
         )}
         {roster ? (
           <>
-            <ClassSessionControl classroomId={classroomId} openSession={roster.openSession} onChange={refresh} />
+            <ClassSessionControl classroomId={classroomId} openSession={roster.openSession} fetchedAt={fetchedAt} onChange={refresh} />
             <PicturePasswordSetting classroomId={classroomId} enabled={roster.picturePasswordEnabled} onChange={refresh} />
             <div className="flex flex-wrap gap-4 text-sm">
               <Link href={`/teacher/class-roster/${classroomId}/class-sheet`} className="underline">

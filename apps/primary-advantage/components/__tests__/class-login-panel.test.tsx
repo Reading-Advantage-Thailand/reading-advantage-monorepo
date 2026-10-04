@@ -82,6 +82,27 @@ describe("ClassLoginPanel", () => {
     expect(rosterCalls()).toBe(3);
   });
 
+  it.each([401, 403, 404])("stops polling after a %i response", async (status) => {
+    fetchMock.mockImplementation(() => respond(status, { code: "x" }));
+    renderWithMessages(<ClassLoginPanel classroomId={CLASS_ID} />);
+    await flush();
+    expect(rosterCalls()).toBe(1);
+    await act(async () => void vi.advanceTimersByTime(30_000));
+    await flush();
+    await act(async () => void document.dispatchEvent(new Event("visibilitychange")));
+    await flush();
+    expect(rosterCalls()).toBe(1);
+  });
+
+  it("keeps polling after a server error", async () => {
+    fetchMock.mockImplementation(() => respond(500, { message: "Internal server error" }));
+    renderWithMessages(<ClassLoginPanel classroomId={CLASS_ID} />);
+    await flush();
+    await act(async () => void vi.advanceTimersByTime(10_000));
+    await flush();
+    expect(rosterCalls()).toBe(2);
+  });
+
   it("announces a load error", async () => {
     fetchMock.mockImplementation(() => respond(403, { code: "forbidden" }));
     renderWithMessages(<ClassLoginPanel classroomId={CLASS_ID} />);

@@ -30,6 +30,7 @@ import { studentLogin } from "@reading-advantage/domain";
 import { startClass, enterCode, pictureSignIn, qrSignIn, rotateCard, issueCards, readRoster, resetPasswords } from "../student-login/handlers";
 
 const CLASS_ID = "11111111-1111-4111-8111-111111111111";
+const SESSION_ID = "33333333-3333-4333-8333-333333333333";
 const post = (url: string, body: unknown) =>
   new NextRequest(`http://localhost${url}`, { method: "POST", body: JSON.stringify(body), headers: { "content-type": "application/json" } });
 const teacherSession = { authStrength: "full", user: { id: "t1", role: "TEACHER", schoolId: "s1" } };
@@ -58,12 +59,20 @@ describe("teacher handlers", () => {
 
   it("calls the use-case and returns its result", async () => {
     getCurrentSession.mockResolvedValue(teacherSession);
-    domain.startClassSession.mockResolvedValue({ sessionId: "s", code: "ABCDEF", expiresAt: "2026-10-05T00:00:00.000Z" });
+    domain.startClassSession.mockResolvedValue({ sessionId: SESSION_ID, code: "ABCDEF", expiresAt: "2026-10-05T00:00:00.000Z" });
     const res = await startClass(post("/x", { classroomId: CLASS_ID }));
     expect(res.status).toBe(200);
     expect((await res.json()).code).toBe("ABCDEF");
     expect(res.headers.get("Cache-Control")).toBe("no-store");
     expect(domain.startClassSession).toHaveBeenCalledWith(expect.objectContaining({ user: teacherSession.user, actor: { ip: "1.2.3.4", userAgent: null } }));
+  });
+
+  it("parses the start result with its contract and drops unknown fields", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.startClassSession.mockResolvedValue({ sessionId: SESSION_ID, code: "ABCDEF", expiresAt: new Date(), codeHash: "leak" });
+    const res = await startClass(post("/x", { classroomId: CLASS_ID }));
+    expect(res.status).toBe(200);
+    expect(await res.text()).not.toContain("leak");
   });
 
   it("maps a forbidden error to 403", async () => {
@@ -179,6 +188,21 @@ describe("roster handler", () => {
     expect((await res.json()).classroomName).toBe("P3A");
     expect(domain.getClassLoginRoster).toHaveBeenCalledWith(expect.objectContaining({ user: teacherSession.user, input: { classroomId: CLASS_ID } }));
   });
+
+  it("parses the roster with its contract before it returns it", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    const student = { userId: "u1", name: "Ann", username: "p3a1", hasPicturePassword: true, hasCardToken: false, signedIn: false, lastSeenAt: null };
+    domain.getClassLoginRoster.mockResolvedValue({ classroomName: "P3A", picturePasswordEnabled: true, openSession: null, students: [student], schoolSecret: "leak" });
+    const ok = await readRoster(post("/roster", { classroomId: CLASS_ID }));
+    expect(ok.status).toBe(200);
+    expect(await ok.text()).not.toContain("leak");
+
+    // A student row is strict: an unknown field (for example a hash) fails the contract.
+    domain.getClassLoginRoster.mockResolvedValue({ classroomName: "P3A", picturePasswordEnabled: true, openSession: null, students: [{ ...student, cardTokenHash: "leak" }] });
+    const bad = await readRoster(post("/roster", { classroomId: CLASS_ID }));
+    expect(bad.status).toBe(500);
+    expect(await bad.text()).not.toContain("leak");
+  });
 });
 
 describe("class password reset handler", () => {
@@ -198,6 +222,18 @@ describe("class password reset handler", () => {
     expect(domain.resetClassPasswords).toHaveBeenCalledWith(
       expect.objectContaining({ user: teacherSession.user, meta: { ip: "1.2.3.4", userAgent: null }, store: expect.anything(), input: { classroomId: CLASS_ID } }),
     );
+  });
+
+  it("parses the class sheet with its contract before it returns it", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.resetClassPasswords.mockResolvedValue({
+      classroomName: "P3A",
+      students: [{ userId: "u1", name: "Ann", username: "p3a1", password: "abcd2345", passwordHash: "leak" }],
+      failed: [],
+    });
+    const res = await resetPasswords(post("/reset", { classroomId: CLASS_ID }));
+    expect(res.status).toBe(500);
+    expect(await res.text()).not.toContain("leak");
   });
 
   it("maps a rate limit to 429 with Retry-After", async () => {

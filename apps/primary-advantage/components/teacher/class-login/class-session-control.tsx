@@ -5,27 +5,34 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { errorKey, postStudentLogin, type ClassLoginErrorKey, type ClassRoster } from "./api";
 
+/** Result of the start route: the one-time code of the new session and its end time. */
+type StartResult = { sessionId: string; code: string; expiresAt: string };
+
 /** Props of {@link ClassSessionControl}. */
 export interface ClassSessionControlProps {
   /** The class to start or end. */
   classroomId: string;
   /** The open class session from the live roster, or null when the class is not open. */
   openSession: ClassRoster["openSession"];
+  /** Time in milliseconds of the last successful roster read. */
+  fetchedAt: number;
   /** Reads the roster again after a start or an end. */
   onChange: () => Promise<void> | void;
 }
 
 /**
  * Start/End class control (FR-1). Start shows the class code once, big enough to project on a
- * board, with its end time. New code replaces the open code. The server stores only a hash of the
- * code, so after a page reload the control asks the teacher to make a new code.
- * @param props The class, its open session, and the refresh callback.
+ * board, with its end time. New code replaces the open code. The new code stays on screen until a
+ * successful roster read after the start reports another session or none, so a failed read does not
+ * hide it. The server stores only a hash of the code, so after a page reload the control asks the
+ * teacher to make a new code.
+ * @param props The class, its open session, the time of the last roster read, and the refresh callback.
  * @returns The control.
  */
-export function ClassSessionControl({ classroomId, openSession, onChange }: ClassSessionControlProps) {
+export function ClassSessionControl({ classroomId, openSession, fetchedAt, onChange }: ClassSessionControlProps) {
   const t = useTranslations("ClassLogin");
   const format = useFormatter();
-  const [started, setStarted] = useState<{ sessionId: string; code: string; expiresAt: string } | null>(null);
+  const [started, setStarted] = useState<(StartResult & { at: number }) | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ClassLoginErrorKey | null>(null);
 
@@ -34,7 +41,8 @@ export function ClassSessionControl({ classroomId, openSession, onChange }: Clas
     setError(null);
     try {
       if (action === "start") {
-        setStarted(await postStudentLogin<{ sessionId: string; code: string; expiresAt: string }>("class-session/start", { classroomId }));
+        const result = await postStudentLogin<StartResult>("class-session/start", { classroomId });
+        setStarted({ ...result, at: Date.now() });
       } else {
         await postStudentLogin("class-session/end", { classroomId });
         setStarted(null);
@@ -47,8 +55,8 @@ export function ClassSessionControl({ classroomId, openSession, onChange }: Clas
     }
   }
 
-  // Show the code while the roster still reports the session it belongs to.
-  const shown = started && (busy || openSession?.id === started.sessionId) ? started : null;
+  // Show the code until a successful roster read made after the start reports another session or none.
+  const shown = started && (busy || fetchedAt <= started.at || openSession?.id === started.sessionId) ? started : null;
   const expiresAt = shown?.expiresAt ?? openSession?.expiresAt;
   const time = expiresAt ? format.dateTime(new Date(expiresAt), { hour: "numeric", minute: "2-digit" }) : "";
 

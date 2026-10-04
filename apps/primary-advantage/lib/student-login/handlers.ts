@@ -3,8 +3,8 @@ import { studentLogin as sl } from "@reading-advantage/domain";
 import { signInResponse, studentHandler, studentLoginStore as store, teacherHandler } from "./http";
 
 /** POST: teacher starts the class login session. Returns the code once. */
-export const startClass = teacherHandler(sl.classSessionStartInput, ({ user, meta, input }) =>
-  sl.startClassSession({ db, user, actor: meta, input }),
+export const startClass = teacherHandler(sl.classSessionStartInput, async ({ user, meta, input }) =>
+  sl.classSessionStartOutput.parse(await sl.startClassSession({ db, user, actor: meta, input })),
 );
 
 /** POST: teacher ends the class login session. */
@@ -64,11 +64,11 @@ export const issueCards = teacherHandler(sl.issueCardTokensInput, async ({ user,
 }));
 
 /** POST: teacher reads the live sign-in roster of the class (status, setting, students). */
-export const readRoster = teacherHandler(sl.classLoginRosterInput, ({ user, input }) =>
-  sl.getClassLoginRoster({ db, user, input }),
+export const readRoster = teacherHandler(sl.classLoginRosterInput, async ({ user, input }) =>
+  sl.classLoginRosterOutput.parse(await sl.getClassLoginRoster({ db, user, input })),
 );
 
 /** POST: teacher sets new initial passwords for the class (class sheet). Returns the plain passwords once. */
-export const resetPasswords = teacherHandler(sl.resetClassPasswordsInput, ({ user, meta, input }) =>
-  sl.resetClassPasswords({ db, store, user, meta, input }),
+export const resetPasswords = teacherHandler(sl.resetClassPasswordsInput, async ({ user, meta, input }) =>
+  sl.resetClassPasswordsOutput.parse(await sl.resetClassPasswords({ db, store, user, meta, input })),
 );
