@@ -2883,5 +2883,44 @@
     "blackBolt": "black lightning",
     "brownHexagon": "brown hexagon",
     "tealFlower": "teal flower"
+  },
+  "StudentSignIn": {
+    "code": {
+      "title": "Hello! Let's sign in",
+      "label": "Class code",
+      "help": "Type the code your teacher shows you.",
+      "next": "Next",
+      "checking": "Checking…"
+    },
+    "names": {
+      "title": "Who are you?",
+      "help": "Tap your name.",
+      "empty": "There are no names in this class yet. Ask your teacher.",
+      "back": "Back"
+    },
+    "pictures": {
+      "title": "Hi, {name}!",
+      "help": "Tap your 3 pictures in order.",
+      "progress": "{count} of 3 pictures",
+      "undo": "Undo",
+      "clear": "Start again",
+      "back": "Not you? Go back",
+      "signingIn": "Signing in…"
+    },
+    "card": {
+      "title": "QR card sign-in",
+      "signingIn": "Signing you in…",
+      "useCode": "Sign in with the class code"
+    },
+    "errors": {
+      "codeFormat": "The code has 6 letters and numbers.",
+      "codeInvalid": "This code does not work. Check the code or ask your teacher.",
+      "wrongPictures": "Those pictures are not right. Try again.",
+      "locked": "Too many wrong tries. Wait {minutes, plural, one {# minute} other {# minutes}} or ask your teacher.",
+      "rateLimited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again.",
+      "cardInvalid": "This card does not work. Ask your teacher for a new card.",
+      "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
+      "generic": "Something went wrong. Try again."
+    }
   }
 }

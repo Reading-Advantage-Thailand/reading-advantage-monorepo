@@ -16,7 +16,6 @@ const mocks = vi.hoisted(() => ({
   replace: vi.fn(),
   logout: vi.fn(),
   login: vi.fn(),
-  fetchStudentsByClassCode: vi.fn(),
   currentUser: vi.fn(),
   getCurrentUser: vi.fn(),
   getTranslations: vi.fn(),
@@ -81,10 +80,6 @@ vi.mock("@reading-advantage/auth-client", () => ({
 vi.mock("@/lib/session", () => ({
   currentUser: mocks.currentUser,
   getCurrentUser: mocks.getCurrentUser,
-}));
-
-vi.mock("@/actions/classroom", () => ({
-  fetchStudentsByClassCode: mocks.fetchStudentsByClassCode,
 }));
 
 vi.mock("@reading-advantage/advantage-play-kit", () => ({
@@ -165,7 +160,7 @@ vi.mock("@/components/switchers/locale-switcher", () => ({
 
 import { StudentCartridgeHost } from "../apk/StudentCartridgeHost";
 import { UserAccountNav } from "../nav/user-account-nav";
-import { StudentSignInForm } from "../auth/student-signin-form";
+import { CodeSignIn } from "../student-login/code-sign-in";
 import { TeacherSignInForm } from "../auth/teacher-signin-form";
 import { Footer } from "../index/footer";
 import { EditLicenseForm } from "../system/edit-license-form";
@@ -341,39 +336,30 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
   });
 
   it("redirects student sign-in through the i18n router", async () => {
-    mocks.fetchStudentsByClassCode.mockResolvedValue({
-      success: true,
-      students: [
-        {
-          id: "cs1",
-          studentUserId: "s1",
-          studentName: "Somchai",
-          studentEmail: "somchai@example.com",
-        },
-      ],
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            picturePasswordRequired: false,
+            students: [{ studentId: "h1", displayName: "Somchai", avatar: "red-circle" }],
+          }),
+        ),
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ user: { id: "s1", role: "STUDENT" }, authStrength: "code_only" })),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+    renderWithMessages(<CodeSignIn />);
+
+    fireEvent.change(screen.getByLabelText(en.StudentSignIn.code.label), {
+      target: { value: "ABCDEF" },
     });
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({}),
-      }),
-    );
-    renderWithMessages(<StudentSignInForm />);
-
-    fireEvent.change(
-      screen.getByLabelText(en.AuthPage.signin.classroomCode),
-      { target: { value: "ABC123" } },
-    );
-    fireEvent.click(screen.getByRole("button", { name: en.AuthPage.signin.next }));
-
-    await screen.findByText(en.AuthPage.signin.selectYourName);
-    fireEvent.click(screen.getByRole("combobox"));
-    fireEvent.click(await screen.findByRole("option", { name: "Somchai" }));
-    fireEvent.click(screen.getByRole("button", { name: en.AuthPage.signin.login }));
+    fireEvent.click(screen.getByRole("button", { name: en.StudentSignIn.code.next }));
+    fireEvent.click(await screen.findByRole("button", { name: "Somchai" }));
 
     await waitFor(() =>
-      expect(mocks.push).toHaveBeenCalledWith("/student/read"),
+      expect(mocks.replace).toHaveBeenCalledWith("/student/read"),
     );
   });
 

@@ -1,4 +1,4 @@
-import { StudentSignInForm } from "@/components/auth/student-signin-form";
+import { CodeSignIn } from "@/components/student-login/code-sign-in";
 import { TeacherSignInForm } from "@/components/auth/teacher-signin-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookTextIcon, SchoolIcon } from "lucide-react";
@@ -35,7 +35,7 @@ export default async function SignInPage() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="student">
-        <StudentSignInForm />
+        <CodeSignIn />
       </TabsContent>
       <TabsContent value="teacher">
         <TeacherSignInForm />

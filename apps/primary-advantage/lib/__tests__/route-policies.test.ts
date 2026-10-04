@@ -18,6 +18,13 @@ describe("proxy route policies", () => {
     expect([...protectedRoutes["/student"]]).toEqual([ROLES.STUDENT]);
   });
 
+  it("leaves the sign-in and QR card pages open to a signed-out user", () => {
+    for (const path of ["/auth/signin", "/auth/card"]) {
+      const guard = Object.keys(protectedRoutes).find((route) => path.startsWith(route));
+      expect(guard, `${path} is behind ${guard}`).toBeUndefined();
+    }
+  });
+
   it("names no role outside the role enum", () => {
     const known = new Set(Object.values(ROLES));
     for (const [route, roles] of Object.entries(protectedRoutes)) {

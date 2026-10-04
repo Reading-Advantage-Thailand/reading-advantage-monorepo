@@ -32,8 +32,14 @@ export class ClassLoginApiError extends Error {
   /**
    * Builds the error.
    * @param status The HTTP status of the response.
+   * @param code The reason code from the response body, for example `invalid_code`, when present.
+   * @param retryAfterSeconds Seconds from the `Retry-After` header, when present.
    */
-  constructor(readonly status: number) {
+  constructor(
+    readonly status: number,
+    readonly code?: string,
+    readonly retryAfterSeconds?: number,
+  ) {
     super(`Student login request failed with status ${status}`);
     this.name = "ClassLoginApiError";
   }
@@ -44,7 +50,8 @@ export class ClassLoginApiError extends Error {
  * @param path The route path after `/api/auth/student/`, for example `roster`.
  * @param body The request body.
  * @returns The parsed response body.
- * @throws {ClassLoginApiError} When the response status is not 2xx.
+ * @throws {ClassLoginApiError} When the response status is not 2xx. It carries the reason code and
+ * the `Retry-After` seconds of the response.
  */
 export async function postStudentLogin<T>(path: string, body: unknown): Promise<T> {
   const response = await fetch(`/api/auth/student/${path}`, {
@@ -52,7 +59,11 @@ export async function postStudentLogin<T>(path: string, body: unknown): Promise<
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  if (!response.ok) throw new ClassLoginApiError(response.status);
+  if (!response.ok) {
+    const failure = (await response.json().catch(() => null)) as { code?: unknown } | null;
+    const code = typeof failure?.code === "string" ? failure.code : undefined;
+    throw new ClassLoginApiError(response.status, code, Number(response.headers.get("Retry-After")) || undefined);
+  }
   return (await response.json()) as T;
 }
 
