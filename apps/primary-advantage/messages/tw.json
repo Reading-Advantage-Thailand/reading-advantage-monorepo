@@ -254,7 +254,10 @@
         "file": "檔案",
         "size": "大小",
         "savedAs": "另存為",
-        "nextSteps": "檔案已可處理，您可以繼續下一步。"
+        "nextSteps": "檔案已可處理，您可以繼續下一步。",
+        "inserted": "已匯入",
+        "skippedDuplicate": "已略過（檔案內重複）",
+        "skippedExisting": "已略過（已存在）"
       },
       "progressLabel": "上傳進度",
       "progressPercent": "已完成 {percent}%",

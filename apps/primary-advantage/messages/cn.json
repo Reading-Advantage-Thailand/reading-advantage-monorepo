@@ -254,7 +254,10 @@
         "file": "文件",
         "size": "大小",
         "savedAs": "保存为",
-        "nextSteps": "文件已准备好处理。您可以继续下一步。"
+        "nextSteps": "文件已准备好处理。您可以继续下一步。",
+        "inserted": "已导入",
+        "skippedDuplicate": "已跳过（文件内重复）",
+        "skippedExisting": "已跳过（已存在）"
       },
       "progressLabel": "上传进度",
       "progressPercent": "已完成 {percent}%",

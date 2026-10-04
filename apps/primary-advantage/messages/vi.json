@@ -254,7 +254,10 @@
         "file": "Tệp",
         "size": "Kích thước",
         "savedAs": "Lưu dưới tên",
-        "nextSteps": "Tệp đã sẵn sàng để xử lý. Bạn có thể tiếp tục các bước tiếp theo."
+        "nextSteps": "Tệp đã sẵn sàng để xử lý. Bạn có thể tiếp tục các bước tiếp theo.",
+        "inserted": "Đã nhập",
+        "skippedDuplicate": "Bỏ qua (trùng trong tệp)",
+        "skippedExisting": "Bỏ qua (đã tồn tại)"
       },
       "progressLabel": "Tiến trình tải lên",
       "progressPercent": "Hoàn thành {percent}%",

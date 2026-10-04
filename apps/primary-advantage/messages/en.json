@@ -254,7 +254,10 @@
         "file": "File",
         "size": "Size",
         "savedAs": "Saved as",
-        "nextSteps": "File is now ready for processing. You can proceed with the next steps."
+        "nextSteps": "File is now ready for processing. You can proceed with the next steps.",
+        "inserted": "Inserted",
+        "skippedDuplicate": "Skipped (duplicate in file)",
+        "skippedExisting": "Skipped (already exist)"
       },
       "progressLabel": "Upload Progress",
       "progressPercent": "{percent}% complete",

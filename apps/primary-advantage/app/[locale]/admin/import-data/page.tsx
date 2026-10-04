@@ -121,7 +121,10 @@ export default function ImportDataPage() {
       }, 2000);
 
       // Upload file to API
-      const response = await fetch("/api/upload/classes ", {
+      // The students tab imports through the CSV route; other tabs use the classes route.
+      const endpoint =
+        activeTab === "students" ? "/api/upload/csv" : "/api/upload/classes";
+      const response = await fetch(endpoint, {
         method: "POST",
         body: formData,
       });
@@ -338,6 +341,26 @@ export default function ImportDataPage() {
                         <strong>{t("upload.success.savedAs")}:</strong>{" "}
                         {uploadResult.fileName}
                       </p>
+                      {typeof uploadResult.inserted === "number" && (
+                        <>
+                          <p>
+                            <strong>{t("upload.success.inserted")}:</strong>{" "}
+                            {uploadResult.inserted}
+                          </p>
+                          <p>
+                            <strong>
+                              {t("upload.success.skippedDuplicate")}:
+                            </strong>{" "}
+                            {uploadResult.skippedDuplicate}
+                          </p>
+                          <p>
+                            <strong>
+                              {t("upload.success.skippedExisting")}:
+                            </strong>{" "}
+                            {uploadResult.skippedExisting}
+                          </p>
+                        </>
+                      )}
                       <p className="text-muted-foreground text-sm">
                         {t("upload.success.nextSteps")}
                       </p>
