@@ -11,7 +11,6 @@ import { useLocale, useTranslations, Locale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { useTransition } from "react";
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { useParams } from "next/navigation";
 
 export function LocaleSwitcher() {
   const locale = useLocale();
@@ -19,17 +18,10 @@ export function LocaleSwitcher() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
-  const params = useParams();
 
   const onSelectChange = (locale: Locale) => {
     startTransition(() => {
-      router.replace(
-        // @ts-expect-error -- TypeScript will validate that only known `params`
-        // are used in combination with a given `pathname`. Since the two will
-        // always match for the current route, we can skip runtime checks.
-        { pathname, params },
-        { locale: locale }
-      );
+      router.replace(pathname, { locale });
     });
   };
 
