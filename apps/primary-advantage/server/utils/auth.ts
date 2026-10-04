@@ -1,6 +1,6 @@
 import { db } from "@reading-advantage/db";
 import { eq, sql, type AnyColumn, type SQL } from "drizzle-orm";
-import { effectiveRoleOf } from "@/lib/authorization";
+import { canSetPasswordFor, effectiveRoleOf } from "@/lib/authorization";
 import {
   users,
   schools,
@@ -130,11 +130,13 @@ export function callerEffectiveRank(userWithRoles: CallerScope): string {
  * An unrecognized legacy role name counts as the highest rank, so such a target is never writable.
  * @param userId The account to rank.
  * @param sessionRole The users.role value the caller already read for this account.
+ * @param unknownNames How to treat an unrecognized legacy name; "max" (default) fits a target, "ignore" fits an actor.
  * @returns The effective role of the account.
  */
 export async function loadTargetEffectiveRank(
   userId: string,
   sessionRole: string | null | undefined,
+  unknownNames: "ignore" | "max" = "max",
 ): Promise<string> {
   const legacy = await db.select({ name: roles.name })
     .from(userRoles)
@@ -144,7 +146,32 @@ export async function loadTargetEffectiveRank(
     .from(schoolAdmins)
     .where(eq(schoolAdmins.userId, userId))
     .limit(1);
-  return effectiveRoleOf(sessionRole, legacy.map((r) => r.name), Boolean(adminRow), "max");
+  return effectiveRoleOf(sessionRole, legacy.map((r) => r.name), Boolean(adminRow), unknownNames);
+}
+
+/** The account facts the reset decision reads. */
+interface ResetPrincipal {
+  id: string;
+  role: string;
+  schoolId: string | null;
+}
+
+/**
+ * Decides whether a session actor may reset the password of a target account.
+ * Both accounts must belong to the same school, and a school-less account never matches.
+ * The actor must outrank the target by effective rank, legacy rows included.
+ * @param actor The session user who asks for the reset.
+ * @param target The account whose password would change.
+ * @returns True when the reset is allowed.
+ */
+export async function authorizeResetTarget(
+  actor: ResetPrincipal,
+  target: ResetPrincipal,
+): Promise<boolean> {
+  if (!actor.schoolId || !target.schoolId || actor.schoolId !== target.schoolId) return false;
+  const actorRank = await loadTargetEffectiveRank(actor.id, actor.role, "ignore");
+  const targetRank = await loadTargetEffectiveRank(target.id, target.role);
+  return canSetPasswordFor(actorRank, targetRank);
 }
 
 /**

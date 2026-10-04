@@ -17,6 +17,23 @@ export const resetPasswordSchema = z.object({
   newPassword: z.string().min(8).max(128),
 });
 
+/** The identity facts a reset decision reads about one account. */
+export interface ResetPrincipal {
+  id: string;
+  role: string;
+  schoolId: string | null;
+}
+
+/** Options for `createResetPasswordHandler`. */
+export interface ResetPasswordHandlerOptions {
+  /**
+   * Replaces the built-in role matrix when set. It receives the session actor and the
+   * target row and returns true to allow the reset. The handler applies no school
+   * filter of its own, so this function owns the whole decision. The default is unset.
+   */
+  authorizeTarget?: (actor: ResetPrincipal, target: ResetPrincipal) => boolean | Promise<boolean>;
+}
+
 /**
  * Handles password reset requests by TEACHER/ADMIN.
  * TEACHER can reset STUDENT in their own school.
@@ -24,8 +41,24 @@ export const resetPasswordSchema = z.object({
  * @param request - The incoming request with userId and newPassword
  * @returns Response with success or error status
  */
-export async function handleResetPassword(
-  request: NextRequest
+export function handleResetPassword(request: NextRequest): Promise<Response> {
+  return resetWithOptions(request, {});
+}
+
+/**
+ * Builds a reset handler with a caller-supplied target authorization.
+ * Primary Advantage uses it to enforce school scope and effective rank.
+ * @param options - Reset options, such as `authorizeTarget`.
+ * @returns A route handler with the same flow as `handleResetPassword` and the supplied decision.
+ */
+export function createResetPasswordHandler(options: ResetPasswordHandlerOptions) {
+  return (request: NextRequest): Promise<Response> => resetWithOptions(request, options);
+}
+
+/** Shared reset implementation behind `handleResetPassword` and `createResetPasswordHandler`. */
+async function resetWithOptions(
+  request: NextRequest,
+  options: ResetPasswordHandlerOptions,
 ): Promise<Response> {
   try {
     const body = await request.json();
@@ -56,7 +89,7 @@ export async function handleResetPassword(
     // Load target user — scope by school for TEACHER actors.
     // ADMIN bypasses school scoping per the authorization matrix.
     const whereParts: SQL[] = [eq(users.id, userId)];
-    if (actor.role === "TEACHER" && actor.schoolId) {
+    if (!options.authorizeTarget && actor.role === "TEACHER" && actor.schoolId) {
       whereParts.push(eq(users.schoolId, actor.schoolId));
     }
 
@@ -70,8 +103,18 @@ export async function handleResetPassword(
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
+    if (options.authorizeTarget) {
+      const allowed = await options.authorizeTarget(
+        { id: actor.id, role: actor.role, schoolId: actor.schoolId ?? null },
+        { id: target.id, role: target.role, schoolId: target.schoolId ?? null },
+      );
+      if (!allowed) {
+        return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+      }
+    }
+
     // Authorization matrix — check target role and school
-    if (actor.role === "TEACHER") {
+    if (!options.authorizeTarget && actor.role === "TEACHER") {
       if (target.role !== "STUDENT") {
         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
@@ -79,7 +122,7 @@ export async function handleResetPassword(
         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
     }
-    if (actor.role === "ADMIN") {
+    if (!options.authorizeTarget && actor.role === "ADMIN") {
       if (target.role !== "STUDENT" && target.role !== "TEACHER") {
         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
