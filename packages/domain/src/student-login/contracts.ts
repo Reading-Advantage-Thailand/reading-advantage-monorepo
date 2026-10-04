@@ -50,8 +50,13 @@ export const classSessionStartOutput = z.object({
 /** Request to list the names of a class from a class code. */
 export const codeEntryInput = z.object({ code: codeSchema });
 
-/** Name list for a valid code. A row holds no full name, email, or username. */
+/**
+ * Name list for a valid code. A row holds no full name, email, or username.
+ * `studentId` is an opaque handle (the id of the student credential row), never a user id.
+ * `picturePasswordRequired` is false when the class turned the picture password off.
+ */
 export const nameListOutput = z.object({
+  picturePasswordRequired: z.boolean(),
   students: z.array(
     z
       .object({
@@ -71,6 +76,24 @@ export const picturePasswordSignInInput = z.object({
     .array(z.number().int().min(0).max(PICTURE_GRID_SIZE - 1))
     .length(PICTURE_SEQUENCE_LENGTH),
 });
+
+/** Request to sign in with a class code and a name only (class picture password is off). */
+export const codeOnlySignInInput = z.object({ code: codeSchema, studentId: studentIdSchema });
+
+/** Request from a teacher to reset the picture password of one student. */
+export const resetPicturePasswordInput = z.object({
+  classroomId: z.string().uuid(),
+  studentUserId: z.string().min(1).max(64),
+});
+
+/** Request from a teacher to turn the picture password of a class on or off. */
+export const picturePasswordSettingInput = z.object({
+  classroomId: z.string().uuid(),
+  enabled: z.boolean(),
+});
+
+/** Request from a teacher for the picture passwords of the students that have none. */
+export const assignPicturePasswordsInput = z.object({ classroomId: z.string().uuid() });
 
 /** Request to sign in with the token of a QR login card. */
 export const qrTokenSignInInput = z.object({
@@ -93,6 +116,14 @@ export type ClassSessionStartOutput = z.infer<typeof classSessionStartOutput>;
 export type CodeEntryInput = z.infer<typeof codeEntryInput>;
 /** Output type of {@link nameListOutput}. */
 export type NameListOutput = z.infer<typeof nameListOutput>;
+/** Input type of {@link codeOnlySignInInput}. */
+export type CodeOnlySignInInput = z.infer<typeof codeOnlySignInInput>;
+/** Input type of {@link resetPicturePasswordInput}. */
+export type ResetPicturePasswordInput = z.infer<typeof resetPicturePasswordInput>;
+/** Input type of {@link picturePasswordSettingInput}. */
+export type PicturePasswordSettingInput = z.infer<typeof picturePasswordSettingInput>;
+/** Input type of {@link assignPicturePasswordsInput}. */
+export type AssignPicturePasswordsInput = z.infer<typeof assignPicturePasswordsInput>;
 /** Input type of {@link picturePasswordSignInInput}. */
 export type PicturePasswordSignInInput = z.infer<typeof picturePasswordSignInInput>;
 /** Input type of {@link qrTokenSignInInput}. */

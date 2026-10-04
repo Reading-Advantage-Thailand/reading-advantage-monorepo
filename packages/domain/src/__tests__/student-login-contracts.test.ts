@@ -50,9 +50,9 @@ describe("student login contracts", () => {
 
   it("allows only an id, a display name, and an avatar in the name list", () => {
     const row = { studentId: uuid, displayName: "Nok", avatar: "fox" };
-    expect(nameListOutput.safeParse({ students: [row] }).success).toBe(true);
+    expect(nameListOutput.safeParse({ picturePasswordRequired: true, students: [row] }).success).toBe(true);
     for (const extra of [{ email: "a@b.c" }, { fullName: "Nok S." }, { username: "u1" }]) {
-      expect(nameListOutput.safeParse({ students: [{ ...row, ...extra }] }).success).toBe(false);
+      expect(nameListOutput.safeParse({ picturePasswordRequired: true, students: [{ ...row, ...extra }] }).success).toBe(false);
     }
   });
 
