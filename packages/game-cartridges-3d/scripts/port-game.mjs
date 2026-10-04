@@ -1,11 +1,17 @@
 #!/usr/bin/env node
-// Copies one game from the Forge demo repository and rewrites its imports to the kit subpaths.
-// Usage: node scripts/port-game.mjs <forge-repo-dir> <game-id>
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { basename, dirname, join } from 'node:path';
+// Copies games from the Forge demo repository and rewrites their imports to the kit subpaths.
+// Forge owns the games: change a game there, then copy it here.
+// Usage: node scripts/port-game.mjs <forge-repo-dir> <game-id ...|all> [--check]
+// --check writes nothing: it copies into a temporary folder and lists every file of the package
+// copy that differs from what Forge gives (an edit made only here), then exits 1 on a difference.
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { basename, dirname, join, relative } from 'node:path';
 
-const [forge, id] = process.argv.slice(2);
-if (!forge || !id) throw new Error('Usage: port-game.mjs <forge-repo-dir> <game-id>');
+const args = process.argv.slice(2);
+const check = args.includes('--check');
+const [forge, ...named] = args.filter((a) => !a.startsWith('--'));
+if (!forge || named.length === 0) throw new Error('Usage: port-game.mjs <forge-repo-dir> <game-id ...|all> [--check]');
 const pkg = join(import.meta.dirname, '..');
 const kit = '@reading-advantage/advantage-play-kit-3d';
 
@@ -51,16 +57,59 @@ const copy = (from, to, filter) => {
   }
 };
 
-copy(join(forge, 'src/games', id), join(pkg, 'src', id));
-copy(join(forge, 'tests/games', id), join(pkg, 'tests', id));
+/** Copies one game (its source and tests) into `root/src/<id>` and `root/tests/<id>`. */
+function port(id, root) {
+  copy(join(forge, 'src/games', id), join(root, 'src', id));
+  copy(join(forge, 'tests/games', id), join(root, 'tests', id));
 
-// CSS import -> installCss
-for (const f of walk(join(pkg, 'src', id)).filter((p) => p.endsWith('.ts'))) {
-  let s = readFileSync(f, 'utf8');
-  const m = s.match(/^import '\.\/([\w-]+)\.css';$/m);
-  if (!m) continue;
-  const v = m[1].replace(/-/g, '_') + 'Css';
-  s = s.replace(m[0], `import ${v} from './${m[1]}.css.js';\nimport { installCss } from '${kit}/hud';\ninstallCss('${m[1]}', ${v});`);
-  writeFileSync(f, s);
+  // CSS import -> installCss
+  for (const f of walk(join(root, 'src', id)).filter((p) => p.endsWith('.ts'))) {
+    let s = readFileSync(f, 'utf8');
+    const m = s.match(/^import '\.\/([\w-]+)\.css';$/m);
+    if (!m) continue;
+    const v = m[1].replace(/-/g, '_') + 'Css';
+    s = s.replace(m[0], `import ${v} from './${m[1]}.css.js';\nimport { installCss } from '${kit}/hud';\ninstallCss('${m[1]}', ${v});`);
+    writeFileSync(f, s);
+  }
 }
-console.log(`ported ${id}`);
+
+/** The files under `dir` as relative paths (none when it does not exist). */
+const filesOf = (dir) => (existsSync(dir) ? walk(dir).map((f) => relative(dir, f)) : []);
+
+/** The games of this package (every game folder of src except the shared code). */
+const packageGames = () => readdirSync(join(pkg, 'src'), { withFileTypes: true }).filter((d) => d.isDirectory() && d.name !== 'shared').map((d) => d.name);
+
+const ids = named.length === 1 && named[0] === 'all' ? packageGames() : named;
+if (!check) {
+  for (const id of ids) {
+    port(id, pkg);
+    console.log(`ported ${id}`);
+  }
+} else {
+  const temp = mkdtempSync(join(tmpdir(), 'port-game-'));
+  const drift = [];
+  try {
+    for (const id of ids) {
+      port(id, temp);
+      for (const part of ['src', 'tests']) {
+        const want = join(temp, part, id);
+        const have = join(pkg, part, id);
+        for (const f of new Set([...filesOf(want), ...filesOf(have)])) {
+          const a = existsSync(join(want, f)) ? readFileSync(join(want, f)) : null;
+          const b = existsSync(join(have, f)) ? readFileSync(join(have, f)) : null;
+          if (a === null) drift.push(`only here ${part}/${id}/${f}`);
+          else if (b === null) drift.push(`missing ${part}/${id}/${f}`);
+          else if (!a.equals(b)) drift.push(`differs ${part}/${id}/${f}`);
+        }
+      }
+    }
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
+  for (const line of drift) console.log(line);
+  if (drift.length) {
+    console.log(`port-game: ${drift.length} difference(s); make the change in Forge, then copy it`);
+    process.exit(1);
+  }
+  console.log(`port-game: ${ids.length} game(s) match Forge`);
+}
