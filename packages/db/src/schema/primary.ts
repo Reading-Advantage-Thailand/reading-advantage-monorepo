@@ -278,6 +278,10 @@ export const primaryClassLoginSessions = pgTable(
       .on(t.classroomId)
       .where(sql`${t.closedAt} is null`),
     index("primary_class_login_sessions_code_hash_idx").on(t.codeHash),
+    // A class code is unique among open sessions: code lookup spans all schools.
+    uniqueIndex("primary_class_login_sessions_open_code_idx")
+      .on(t.codeHash)
+      .where(sql`${t.closedAt} is null`),
   ],
 );
 

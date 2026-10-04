@@ -577,4 +577,9 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       },
     ],
   },
+  "0063_primary_student_login_settings": {
+    tag: "0063_primary_student_login_settings",
+    kind: "column",
+    target: "classrooms.picture_password_enabled",
+  },
 };

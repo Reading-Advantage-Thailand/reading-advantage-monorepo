@@ -18,6 +18,8 @@ export const classrooms = pgTable("classrooms", {
   createdBy: text("created_by").references(() => users.id),
   // Prisma-ported columns (track: primary_advantage_drizzle_migration_20260526, Phase 1)
   passwordStudents: text("password_students"),
+  // Student login (primary_student_login_20261003, FR-7): picture password on or off. Default on.
+  picturePasswordEnabled: boolean("picture_password_enabled").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
