@@ -75,7 +75,7 @@ export function PasswordSignIn() {
           autoCorrect="off"
           spellCheck={false}
           disabled={busy}
-          className="h-12 text-lg"
+          className="h-12 text-lg motion-reduce:transition-none"
         />
       </div>
       <div className="grid gap-2">
@@ -89,7 +89,7 @@ export function PasswordSignIn() {
           onChange={(event) => setPassword(event.target.value)}
           autoComplete="current-password"
           disabled={busy}
-          className="h-12 text-lg"
+          className="h-12 text-lg motion-reduce:transition-none"
         />
       </div>
       <StudentErrorMessage error={error} />

@@ -214,7 +214,7 @@ export function CodeSignIn() {
               maxLength={12}
               disabled={busy}
               aria-invalid={error?.key === "codeFormat" || error?.key === "codeInvalid"}
-              className="h-14 text-center font-mono text-2xl tracking-widest uppercase"
+              className="h-14 text-center font-mono text-2xl tracking-widest uppercase motion-reduce:transition-none"
             />
           </div>
           <StudentErrorMessage error={error} />
