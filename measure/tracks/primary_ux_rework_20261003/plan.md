@@ -3,7 +3,7 @@
 Owner lane: C. Edits to `globals.css`, nav, and `packages/ui` belong to this lane only.
 Other lanes request changes here and do not edit these files.
 
-## Phase 0: Screen inventory and audit (2 h)
+## Phase 0: Screen inventory and audit (2 h) — done in `7d4905521`
 - [x] List every route with a screenshot at 375/768/1280 (agents, vision review) — 50 routes in `measure/qa/browser-2026-10-05/phase0/inventory.json`; PNGs kept out of Git
 - [x] Rank problems per screen: broken, confusing, ugly — see [audit.md](audit.md) sections 1-2
 - [x] Choose the order of screens by student traffic — see [audit.md](audit.md) section 3
