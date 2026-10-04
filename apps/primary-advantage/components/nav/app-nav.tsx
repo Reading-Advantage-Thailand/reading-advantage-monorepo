@@ -68,19 +68,20 @@ export function BottomNav({ area, user }: AppNavProps) {
   return (
     <nav
       aria-label={t("mainNavigation")}
-      className="glass fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom)] lg:hidden"
+      data-bottom-nav=""
+      className="glass fixed inset-x-0 bottom-0 z-40 h-(--bottom-nav-h) border-t pb-(--safe-bottom) lg:hidden"
     >
-      <ul className="mx-auto grid max-w-lg auto-cols-fr grid-flow-col">
+      <ul className="mx-auto grid h-full max-w-lg auto-cols-fr grid-flow-col">
         {tabs.map((tab) => {
           const Icon = Icons[tab.icon as keyof typeof Icons] as LucideIcon | undefined;
           const active = tab.key === current;
           return (
-            <li key={tab.key}>
+            <li key={tab.key} className="h-full">
               <Link
                 href={tab.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex min-h-14 flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-xs font-medium",
+                  "flex h-full flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-xs font-medium",
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -111,7 +112,7 @@ export function BottomNav({ area, user }: AppNavProps) {
 export function MobileMenu({ area, user, settings }: AppNavProps) {
   const t = useTranslations("AppShell");
   const pathname = usePathname();
-  // The sheet stays open only on the page where it opened, so a link click closes it.
+  // The sheet stays open only on the page where it opened, so a route change closes it.
   const [openOn, setOpenOn] = useState<string | null>(null);
   const items = menuItems(area, settings);
   if (!items.length) return null;
@@ -123,7 +124,14 @@ export function MobileMenu({ area, user, settings }: AppNavProps) {
           <MenuIcon aria-hidden="true" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-72 overflow-y-auto">
+      <SheetContent
+        side="left"
+        className="w-72 overflow-y-auto"
+        // Any link tap closes the sheet, also a link to the page that is open.
+        onClickCapture={(event) => {
+          if ((event.target as HTMLElement).closest("a[href]")) setOpenOn(null);
+        }}
+      >
         <SheetHeader>
           <SheetTitle>{t("menu")}</SheetTitle>
         </SheetHeader>

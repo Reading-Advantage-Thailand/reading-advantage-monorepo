@@ -37,10 +37,6 @@ export { Progress } from "./components/Progress";
 export { Checkbox } from "./components/Checkbox";
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./components/Tooltip";
 export { StatusChip, statusChipVariants, type StatusChipProps } from "./components/StatusChip";
-export {
-  AnimatedCounter,
-  PageTransition,
-  ShimmerSkeleton,
-  cardHoverClassName,
-  type AnimatedCounterProps,
-} from "./components/Motion";
+// Server-safe motion parts. AnimatedCounter (hooks) is in the "@reading-advantage/ui/client" entry.
+export { PageTransition, ShimmerSkeleton } from "./components/Motion";
+export { cardHoverClassName } from "./lib/card-hover";

@@ -47,6 +47,12 @@ describe("not-found layout", () => {
     expect(screen.queryByTestId("user-nav")).not.toBeInTheDocument();
   });
 
+  it("does not clip wide content in main", async () => {
+    mocks.getCurrentUser.mockResolvedValue(null);
+    render(await NotfoundPageLayout({ children: <p>missing page content</p> }));
+    expect(screen.getByRole("main")).not.toHaveClass("overflow-hidden");
+  });
+
   it("renders the 404 content with the account nav for a signed-in user", async () => {
     mocks.getCurrentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" });
 

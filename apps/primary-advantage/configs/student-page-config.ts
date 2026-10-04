@@ -1,5 +1,5 @@
 import { PageConfig } from "@/types";
-import { STUDENT_HOME } from "@/components/student-login/use-student-home";
+import { STUDENT_HOME } from "@/lib/student-home";
 
 /** Student navigation: four bottom-bar tabs and the full sidebar list. */
 export const studentPageConfig: PageConfig = {

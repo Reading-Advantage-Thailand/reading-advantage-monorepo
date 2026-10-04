@@ -1,14 +1,8 @@
 import "@testing-library/jest-dom/vitest";
 import { act, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import {
-  AnimatedCounter,
-  Button,
-  PageTransition,
-  ShimmerSkeleton,
-  StatusChip,
-  cardHoverClassName,
-} from "../index";
+import { Button, PageTransition, ShimmerSkeleton, StatusChip, cardHoverClassName } from "../index";
+import { AnimatedCounter } from "../client";
 
 /** Class tokens that move or animate an element (color transitions are not motion). */
 const MOTION = /(^|:)(animate-|slide-in|-?translate-|scale-)/;
@@ -44,6 +38,11 @@ describe("Button glow variant", () => {
     expect(button.className).toMatch(/shadow-\[/);
     expect(unguardedMotion(button.className)).toEqual([]);
   });
+
+  it("names the translate property in its transition (Tailwind v4 moves with translate, not transform)", () => {
+    render(<Button variant="glow">Go</Button>);
+    expect(screen.getByRole("button", { name: "Go" }).className).toMatch(/transition-\[[^\]]*\btranslate\b/);
+  });
 });
 
 describe("StatusChip", () => {
@@ -76,6 +75,11 @@ describe("cardHoverClassName", () => {
     expect(cardHoverClassName).toContain("hover:shadow-md");
     expect(cardHoverClassName).toContain("motion-safe:hover:-translate-y-0.5");
     expect(unguardedMotion(cardHoverClassName)).toEqual([]);
+  });
+
+  it("transitions the translate, scale, and box-shadow properties that the hover and press change", () => {
+    const list = cardHoverClassName.match(/transition-\[([^\]]+)\]/)?.[1].split(",");
+    expect(list).toEqual(expect.arrayContaining(["translate", "scale", "box-shadow"]));
   });
 });
 

@@ -79,7 +79,7 @@ export default async function AppLayout({
             <AppSidebar area={navArea} user={user} settings={settings} />
           </div>
         </div>
-        <div className="flex min-w-0 flex-1 flex-col gap-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-8">
+        <div className="flex min-w-0 flex-1 flex-col gap-6 pb-[calc(var(--bottom-nav-h)+2rem)] lg:pb-8">
           {/* No overflow-hidden: wide tables scroll inside their own container. */}
           <main id="main-content" tabIndex={-1} className="flex w-full min-w-0 flex-1 flex-col outline-none">
             {children}

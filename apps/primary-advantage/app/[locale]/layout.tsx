@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { NextIntlClientProvider, hasLocale, Locale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -64,6 +64,11 @@ export const metadata: Metadata = {
   },
   // manifest: `${siteConfig.url}/site.webmanifest`,
   // manifest: `http://localhost:3000/site.webmanifest`,
+};
+
+/** Lets the page draw under the notch and home bar, so the safe-area insets get values. */
+export const viewport: Viewport = {
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({

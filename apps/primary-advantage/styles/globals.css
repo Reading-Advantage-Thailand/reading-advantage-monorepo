@@ -9,8 +9,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Thai-first: the Thai face carries only the Thai subset, so Latin falls through to Inter. */
-  --font-sans: var(--font-noto-thai), var(--font-inter), "Leelawadee UI", Tahoma,
+  /* Inter first: it has no Thai glyphs, so Thai text falls through to Noto Sans Thai. */
+  --font-sans: var(--font-inter), var(--font-noto-thai), "Leelawadee UI", Tahoma,
     ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-article: var(--font-quicksand), var(--font-noto-thai), ui-sans-serif,
@@ -139,6 +139,12 @@
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
+  /* Mobile bottom bar (below 1024 px): tab row height, and the full height with the safe area.
+     The bar, the content bottom padding, the go-to-top button, and toasts use --bottom-nav-h. */
+  --bottom-nav-row: 3.5rem;
+  --bottom-nav-h: calc(var(--bottom-nav-row) + var(--safe-bottom));
+  --toast-offset-bottom: calc(var(--bottom-nav-h) + 1rem);
+
   --nav-glass-bg: rgba(255, 255, 255, 0.82);
   --nav-glass-border: rgba(255, 255, 255, 0.5);
   --nav-active-bg: rgba(4, 125, 54, 0.1);
@@ -253,6 +259,13 @@
   --sidebar-ring: var(--brand-400);
   --warning: oklch(0.41 0.11 46);
   --warning-foreground: oklch(0.99 0.02 95);
+}
+
+/* From 1024 px the bottom bar hides: toasts use the sonner default offset. */
+@media (width >= 64rem) {
+  :root {
+    --toast-offset-bottom: 24px;
+  }
 }
 
 @layer base {

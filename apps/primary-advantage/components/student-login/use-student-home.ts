@@ -4,9 +4,9 @@ import { useCallback } from "react";
 import { useLocale } from "next-intl";
 import { getPathname } from "@/i18n/navigation";
 import { replaceLocation } from "@/lib/student-login/replace-location";
+import { STUDENT_HOME } from "@/lib/student-home";
 
-/** Student home after a sign-in. Lane C will add `/student/home`. */
-export const STUDENT_HOME = "/student/read";
+export { STUDENT_HOME };
 
 /**
  * Returns a function that opens a page after a sign-in. It uses a full page load: on a shared

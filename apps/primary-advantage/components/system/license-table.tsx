@@ -14,7 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@reading-advantage/ui";
+import { Checkbox } from "@reading-advantage/ui";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,

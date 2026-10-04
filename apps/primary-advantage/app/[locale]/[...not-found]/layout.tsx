@@ -23,7 +23,7 @@ export default async function NotfoundPageLayout({
         {user ? <UserAccountNav user={user} /> : null}
       </PublicHeader>
       <div className="container grid">
-        <main className="flex w-full flex-col overflow-hidden">{children}</main>
+        <main className="flex w-full min-w-0 flex-col">{children}</main>
       </div>
     </div>
   );

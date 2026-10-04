@@ -71,6 +71,11 @@ describe("signed-in page shell (FR-7)", () => {
     expect(screen.getByRole("main")).not.toHaveClass("overflow-hidden");
   });
 
+  it("keeps the content clear of the bottom bar with the --bottom-nav-h token", async () => {
+    await renderShell();
+    expect(screen.getByRole("main").parentElement!.className).toContain("var(--bottom-nav-h)");
+  });
+
   it("names the header controls in Thai", async () => {
     await renderShell("th");
     const th = testMessages.th;

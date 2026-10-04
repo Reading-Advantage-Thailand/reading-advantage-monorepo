@@ -1,13 +1,13 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { cleanup, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { areaConfigs } from "@/configs/app-nav";
 import { activeKey, areaForRole } from "@/lib/nav-area";
 import { STUDENT_HOME } from "@/components/student-login/use-student-home";
-import { AppSidebar, BottomNav } from "../app-nav";
+import { AppSidebar, BottomNav, MobileMenu } from "../app-nav";
 import { renderWithMessages, testMessages } from "@/components/__tests__/helpers/render-with-messages";
 
 const nav = vi.hoisted(() => ({ pathname: "/" }));
@@ -137,7 +137,23 @@ describe("BottomNav", () => {
   it("is a fixed bar that hides on large screens and clears the safe area", () => {
     const bar = renderBottomNav("student", "/student/read");
     expect(bar).toHaveClass("fixed", "lg:hidden");
-    expect(bar.className).toContain("safe-area-inset-bottom");
+    expect(bar.className).toContain("--safe-bottom");
+  });
+
+  it("takes its height from the --bottom-nav-h token that the layout and floating buttons use", () => {
+    const bar = renderBottomNav("student", "/student/read");
+    expect(bar.className).toContain("h-(--bottom-nav-h)");
+  });
+});
+
+describe("MobileMenu", () => {
+  it("closes the sheet on any link tap, also a link to the page that is open", async () => {
+    nav.pathname = "/student/history";
+    renderWithMessages(<MobileMenu area="student" user={student} />);
+    fireEvent.click(screen.getByRole("button", { name: en.AppShell.openMenu }));
+    const sheet = await screen.findByRole("dialog");
+    fireEvent.click(within(sheet).getByRole("link", { name: en.Sidebar.history }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   });
 });
 

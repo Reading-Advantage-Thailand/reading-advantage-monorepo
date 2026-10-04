@@ -126,9 +126,14 @@ describe("Primary design tokens (FR-1)", () => {
     for (const name of used) expect(css, `@keyframes ${name}`).toMatch(new RegExp(`@keyframes ${name}\\s*\\{`));
   });
 
-  it("loads fonts through next/font only, with a Thai-first sans stack", () => {
+  it("loads fonts through next/font only; Latin uses Inter and Thai falls through to Noto Sans Thai", () => {
     expect(css).not.toMatch(/--font-geist|fonts\.googleapis/);
-    expect(css).toMatch(/--font-sans:\s*var\(--font-noto-thai\)/);
+    // Inter has no Thai glyphs, so the browser takes Thai text from the next face.
+    expect(css).toMatch(/--font-sans:\s*var\(--font-inter\),\s*var\(--font-noto-thai\)/);
+  });
+
+  it("defines one bottom-nav height token that includes the device safe area", () => {
+    expect(root["bottom-nav-h"]).toMatch(/var\(--safe-bottom\)|safe-area-inset-bottom/);
   });
 
   it("turns off motion for users who ask for reduced motion", () => {

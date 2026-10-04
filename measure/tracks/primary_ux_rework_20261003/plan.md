@@ -12,8 +12,17 @@ Other lanes request changes here and do not edit these files.
 - [x] Tokens and fonts (FR-1) — `35a7c5b0f`
 - [x] `packages/ui` additions and the codemod for overlapping components (FR-2) — `7590d9807`
   - New package exports: Button `glow` variant, `StatusChip` (+ `statusChipVariants`), `ShimmerSkeleton`, `cardHoverClassName`, `PageTransition`, `AnimatedCounter`.
-  - Replaced with `@reading-advantage/ui` (local file deleted): alert, alert-dialog, avatar, checkbox, label, separator, skeleton.
+  - Replaced with `@reading-advantage/ui` (local file deleted): alert, avatar, checkbox, label, separator, skeleton. (alert-dialog was replaced, then restored locally in Phase 2a; see below.)
+  - Accepted look changes of the replaced files (Phase 2a, review L2):
+    - alert: the icon sits at the top left (absolute), not in a grid column; the default fill is `bg-background` (was `bg-card`); the destructive variant gets a red border (was a card fill with red text); the title does not clamp to one line.
+    - avatar: the default size is 40 px (was 32 px) where the call site sets no size.
+    - checkbox: the border is the brand primary (was the input gray), `rounded-sm`, a 1 px focus ring (was 3 px); no `aria-invalid` red style and no dark-mode input fill.
+    - label: no `flex gap-2` (an icon inside a label touches the text), disabled opacity 70 % (was 50 %), text can be selected.
+    - separator: no visible change (1 px, border color).
+    - skeleton: the fill is `bg-primary/10` (a light green tint) instead of the gray `bg-accent`.
+    - alert-dialog: the package version is edge to edge with square corners below 640 px and has a light blurred overlay. Restored locally (M3).
   - Kept local (API differs; full replacement is the Semester 2 `primary_package_alignment` track):
+    - alert-dialog (restored in Phase 2a, M3): at 375 px the package dialog has no side margin and no rounded corners. The local copy keeps `max-w-[calc(100%-2rem)] rounded-lg` and the `bg-black/50` overlay. The package default is not changed (other apps use it).
     - badge: `active`/`inactive`/`expired` variants in use (license table, article creation).
     - button: `accept`/`reject` variants in use (article creation).
     - card: `CardAction` export and a different padding model (`py-6` card, `px-6` parts) that 61 files rely on.
@@ -39,6 +48,12 @@ Other lanes request changes here and do not edit these files.
 - Not in Phase 1: the article-page and flashcard data bugs (Phase 2). Owner items: Google Classroom import, default locale `en`, email fields (labels only).
 
 ## Phase 2: Student
+- [ ] Phase 1 review fixes (run 2a, task 0)
+  - M1: one `--bottom-nav-h` token (`--bottom-nav-row` 3.5rem + `--safe-bottom`) sets the bottom bar height and the content bottom padding, lifts the go-to-top button (`lg:bottom-4`), and lifts toasts (`mobileOffset`, plus `--toast-offset-bottom` for 600-1023 px tablets; 24 px from 1024 px).
+  - M2: `--font-sans` is Inter, then Noto Sans Thai.
+  - M4: `@reading-advantage/ui/client` (tsup banner `"use client"`) serves `AnimatedCounter`; the root entry keeps every export from before Phase 1 plus the server-safe Phase 1 parts; `cardHoverClassName` is in `src/lib/card-hover.ts`. No other package component uses hooks (the Radix wrappers get `"use client"` from Radix).
+  - M5: audio bar translation text is `text-primary-foreground` (`dark:text-primary`); the bar sits on top of the bottom nav below 1024 px.
+  - L1 `viewport.viewportFit = "cover"`; L4 transitions name `translate`/`scale`/`box-shadow`; L5 `STUDENT_HOME` is in `lib/student-home.ts`; L6 not-found `main` without `overflow-hidden`, the phone menu closes on any link tap, `GoToTop` jumps without smooth scroll for reduced motion.
 - [ ] Student home (FR-4)
 - [ ] Read list and article view
 - [ ] Lesson flow shell (steps shown as a progress rail)
