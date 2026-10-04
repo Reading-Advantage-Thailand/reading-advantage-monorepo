@@ -16,9 +16,11 @@
  * cross-app coordination and are documented in the Phase 1 audit report.
  */
 import {
-  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique, primaryKey, uniqueIndex,
+  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique, primaryKey, uniqueIndex, index,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { users, schools } from "./users.js";
+import { classrooms } from "./classrooms.js";
 import { articles } from "./content.js";
 import { flashcardCards } from "./flashcards.js";
 
@@ -250,4 +252,52 @@ export const primaryLegacyIdMap = pgTable(
     primaryKey({ columns: [t.tableName, t.legacyId] }),
     uniqueIndex("primary_legacy_id_map_new_id_idx").on(t.tableName, t.newId),
   ],
+);
+
+// ─── Student login ────────────────────────────────────────
+
+/**
+ * A teacher-started class login session (spec: primary_student_login_20261003).
+ * Stores the SHA-256 hash of the class code only. One open row per class.
+ */
+export const primaryClassLoginSessions = pgTable(
+  "primary_class_login_sessions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    schoolId: uuid("school_id").notNull().references(() => schools.id, { onDelete: "cascade" }),
+    classroomId: uuid("classroom_id").notNull().references(() => classrooms.id, { onDelete: "cascade" }),
+    teacherId: text("teacher_id").notNull().references(() => users.id),
+    codeHash: text("code_hash").notNull(),
+    startsAt: timestamp("starts_at").defaultNow().notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+    closedAt: timestamp("closed_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("primary_class_login_sessions_open_class_idx")
+      .on(t.classroomId)
+      .where(sql`${t.closedAt} is null`),
+    index("primary_class_login_sessions_code_hash_idx").on(t.codeHash),
+  ],
+);
+
+/**
+ * Per-student login secrets: picture-password hash (argon2id), lockout state,
+ * and the SHA-256 hash of the QR card token. No plain secrets are stored.
+ */
+export const primaryStudentCredentials = pgTable(
+  "primary_student_credentials",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    schoolId: uuid("school_id").notNull().references(() => schools.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+    pictureHash: text("picture_hash"),
+    failedCount: integer("failed_count").default(0).notNull(),
+    lockedUntil: timestamp("locked_until"),
+    cardTokenHash: text("card_token_hash").unique(),
+    rotatedAt: timestamp("rotated_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => [index("primary_student_credentials_school_idx").on(t.schoolId)],
 );

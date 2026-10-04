@@ -555,4 +555,26 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       target: `tutor_compat.${view}`,
     })),
   },
+  "0062_primary_student_login": {
+    tag: "0062_primary_student_login",
+    kind: "all",
+    target: "primary_class_login_sessions",
+    allOf: [
+      {
+        tag: "0062_primary_student_login",
+        kind: "table",
+        target: "primary_class_login_sessions",
+      },
+      {
+        tag: "0062_primary_student_login",
+        kind: "table",
+        target: "primary_student_credentials",
+      },
+      {
+        tag: "0062_primary_student_login",
+        kind: "column",
+        target: "sessions.auth_strength",
+      },
+    ],
+  },
 };
