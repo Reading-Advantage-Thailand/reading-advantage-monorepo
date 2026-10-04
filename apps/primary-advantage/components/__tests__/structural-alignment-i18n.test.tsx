@@ -535,9 +535,6 @@ describe("FR-5 marketing and auth metadata", () => {
     );
     expect(privacy.metadata.title).toBeTruthy();
 
-    const signup = await import("../../app/[locale]/auth/signup/page");
-    expect(signup.metadata.title).toBeTruthy();
-
     const forgot = await import(
       "../../app/[locale]/auth/forgot-password/page"
     );

@@ -1,12 +1,15 @@
-import { SignUpForm } from "@/components/auth/user-signup-form";
-import type { Metadata } from "next";
+import { redirect } from "@/i18n/navigation";
 
-/** Static metadata for the sign-up page. */
-export const metadata: Metadata = {
-  title: "Sign Up",
-  description: "Create your Primary Advantage account.",
-};
-
-export default function SignUpPage() {
-  return <SignUpForm />;
+/**
+ * Sends every visitor to the sign-in page. Public sign-up is closed: the school creates accounts.
+ * @param params Route parameters carrying the locale.
+ * @returns A redirect to the sign-in page.
+ */
+export default async function SignUpPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  redirect({ href: "/auth/signin", locale });
 }
