@@ -10,7 +10,7 @@ import { APK3D_CAPABILITIES, CARTRIDGE_3D_RUNTIME_API_VERSION, validateCartridge
 /** The heroes a student may play (the rider) and the clips the 2D view plays (files of `primary-chibi-2d`). */
 export const HEROES_2D = ['knight', 'wizard', 'cleric'] as const;
 export const HERO_CLIPS_2D = ['idle', 'hit', 'victory'] as const;
-/** The gryphon (the fire dragon, tinted) and the bats (word enemies) with their 2D clips. */
+/** The gryphon (the griffin model) and the bats (word enemies) with their 2D clips. */
 export const GRYPHON_CLIPS_2D = ['fly', 'hit', 'roar'] as const;
 export const BAT_CLIPS_2D = ['fly', 'hit', 'death'] as const;
 /** The props the 2D view places on the land far below. */
@@ -19,14 +19,14 @@ export const LAND_PROPS_2D = ['oak-tree', 'pine-tree', 'bush', 'boulder', 'rock-
 /** Every 2D file the game uses (`requiredAssetBindings`: binding key = file id). */
 export const FILES_2D: readonly string[] = [
   ...HEROES_2D.flatMap((h) => HERO_CLIPS_2D.map((c) => `${h}.${c}`)),
-  ...GRYPHON_CLIPS_2D.map((c) => `dragon-fire.${c}`),
+  ...GRYPHON_CLIPS_2D.map((c) => `griffin.${c}`),
   ...BAT_CLIPS_2D.map((c) => `giant-bat.${c}`),
   ...LAND_PROPS_2D.map((p) => `prop.${p}`),
 ];
 
 /** The models the 3D view loads, by Forge asset name: the keys of `RuntimeEdition3D.bindings` (docs/apk3d-cartridge.md section 7). */
 export const MODELS_3D: readonly string[] = [
-  'ancient-oak', 'barn', 'boulder', 'bush', 'cleric', 'cottage', 'dragon-fire', 'fern', 'giant-bat', 'hay-bale', 'knight', 'oak-tree', 'pine-tree', 'rock-cluster', 'well', 'wildflowers', 'wizard',
+  'ancient-oak', 'barn', 'boulder', 'bush', 'cleric', 'cottage', 'fern', 'giant-bat', 'griffin', 'hay-bale', 'knight', 'oak-tree', 'pine-tree', 'rock-cluster', 'well', 'wildflowers', 'wizard',
 ];
 
 export const manifest = validateCartridge3DManifest({
@@ -42,7 +42,7 @@ export const manifest = validateCartridge3DManifest({
   needs: { sentences: 3 },
   requiredAssetBindings: [...FILES_2D],
   requiredModelBindings: [...MODELS_3D],
-  packs: ['heroes', 'dungeon-monsters', 'outdoor-props', 'flight-land'],
+  packs: ['heroes', 'dungeon-monsters', 'mounts', 'outdoor-props', 'flight-land'],
   capabilities: [...APK3D_CAPABILITIES],
   device: {},
   budget: { firstLoadBytes: 4_000_000, totalBytes: 6_000_000 },

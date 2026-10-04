@@ -9,7 +9,7 @@ import type { Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { CHUNK, chunkLayout } from './land-plan.js';
 
 /** The models the 3D view names (the rider comes from the session options). */
-export const ESCAPE_MODELS = ['dragon-fire', 'giant-bat', 'oak-tree', 'pine-tree', 'bush', 'fern', 'wildflowers', 'boulder', 'rock-cluster', 'cottage', 'well', 'hay-bale'];
+export const ESCAPE_MODELS = ['griffin', 'giant-bat', 'oak-tree', 'pine-tree', 'bush', 'fern', 'wildflowers', 'boulder', 'rock-cluster', 'cottage', 'well', 'hay-bale'];
 
 const CHUNKS = 5;
 const CLOUDS = 8;

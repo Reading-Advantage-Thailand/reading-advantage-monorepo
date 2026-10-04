@@ -206,7 +206,7 @@
    "provenance": {
     "source": "advantage-forge/assets/slime.ts",
     "license": "AGPL-3.0-or-later",
-    "forgeCommit": "2c508eb",
+    "forgeCommit": "4a171cd",
     "tool": "scripts/apk3d-models.ts"
    }
   },

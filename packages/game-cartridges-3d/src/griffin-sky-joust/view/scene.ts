@@ -8,7 +8,7 @@ import { ARENA } from '../core/index.js';
 import type { Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 
 /** The models of the scene (the hero the student chose is loaded on top of these). */
-export const SCENE_MODELS = ['dragon-fire', 'giant-bat', 'oak-tree', 'pine-tree', 'rock-cluster', 'bush'];
+export const SCENE_MODELS = ['griffin', 'giant-bat', 'oak-tree', 'pine-tree', 'rock-cluster', 'bush'];
 
 /** Arena pixels per world meter. */
 export const PX_PER_M = 40;

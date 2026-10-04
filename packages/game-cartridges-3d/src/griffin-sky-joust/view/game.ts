@@ -13,17 +13,18 @@ import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantag
 import { Actor, burst, FollowRig } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { ARENA, TUNING, createGriffinSkyJoust, evidenceOf, isTarget, scoreOf, type JoustCommand, type JoustEvent, type JoustState } from '../core/index.js';
 import { nextCommand } from '../qc/bot.js';
+import { GRIFFIN_MODEL, GRIFFIN_SEAT } from '../../shared/griffin.js';
 import { buildSky, SCENE_MODELS, WORLD_H, worldX, worldY } from './scene.js';
 import griffin_sky_joustCss from './griffin-sky-joust.css.js';
 import { installCss } from '@reading-advantage/advantage-play-kit-3d/hud';
 installCss('griffin-sky-joust', griffin_sky_joustCss);
 
 /** Model scales (the models are normalized; QC tunes these against the arena radii). */
-const GRIFFIN_SCALE = 0.55;
+const GRIFFIN_SCALE = 0.5;
 const RIDER_SCALE = 0.8;
 const HERO_SCALE = 0.34;
-/** Where the hero sits on the griffin's back, in meters. */
-const SEAT: readonly [number, number] = [0, 0.42];
+/** Where the hero stands on the griffin's back, in meters: [along the facing, up]. */
+const SEAT: readonly [number, number] = [GRIFFIN_SEAT.forward * GRIFFIN_SCALE, GRIFFIN_SEAT.up * GRIFFIN_SCALE];
 const FOV = 45;
 
 interface RiderView {
@@ -46,7 +47,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- the griffin and its rider
-  const griffin = stage.addActor(new Actor('dragon-fire', stage.loader.get(stage.loader.modelPath('dragon-fire'))!, stage.timeline, { idle: 'fly', scale: GRIFFIN_SCALE }));
+  const griffin = stage.addActor(new Actor(GRIFFIN_MODEL, stage.loader.get(stage.loader.modelPath(GRIFFIN_MODEL))!, stage.timeline, { idle: 'fly', scale: GRIFFIN_SCALE }));
   griffin.placeAt(worldX(sim.state.griffin.x), worldY(sim.state.griffin.y), 0, 90);
   const hero = stage.addActor(new Actor(heroId, stage.loader.get(stage.loader.modelPath(heroId))!, stage.timeline, { scale: HERO_SCALE }));
   hero.placeAt(0, 0, 0, 90);

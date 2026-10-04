@@ -13,8 +13,6 @@ export const GROUND_PROPS: [string, number][] = [
 /** Sizes in meters of the actors as the views show them (larger than life so they read from afar). */
 export const SIZES = { gryphon: 3.6, bat: 2.4, rider: 1.5 } as const;
 
-/** The gryphon's tint: the fire dragon in the gold-brown of a gryphon (3D multiplies it into the texture, 2D tints the sprite). */
-export const GRYPHON_TINT = 0xd9a441;
 
 /** Colors of the bat banners by slot (violet, cyan, gold, rose). */
 export const BAT_COLORS = [0x9b6bff, 0x3ec6ff, 0xffc83e, 0xff7fb0] as const;

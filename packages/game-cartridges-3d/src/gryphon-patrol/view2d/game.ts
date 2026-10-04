@@ -1,7 +1,7 @@
 /**
  * Gryphon Patrol in 2D (Phaser): the fallback for old phones and the renderer a player may
  * choose. It runs the same core, rules, catalog, and evidence as the 3D view (../view/game.ts).
- * The camera looks across the sky from the side: the gryphon (the fire dragon sprite, tinted)
+ * The camera looks across the sky from the side: the gryphon (the griffin sprite)
  * flies with its rider, the bats circle with their words on banners the student taps, the shot
  * and the word orb cross the sky, and the forest and village sit on the ground below.
  */
@@ -16,7 +16,7 @@ import { SKY, TUNING, createGryphonPatrol, evidenceOf, scoreOf, type PatrolComma
 import { FILES_2D, HEROES_2D } from '../manifest.js';
 import { nextChoice } from '../qc/bot.js';
 import strings from '../strings.en.js';
-import { GRYPHON_TINT, SIZES, groundLayout } from '../view/sky-plan.js';
+import { SIZES, groundLayout } from '../view/sky-plan.js';
 import { PromptPanel2D } from './prompt.js';
 
 /** Frame widths of the sheets in pixels, to size a sprite in meters. */
@@ -87,8 +87,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     }
 
     // ---------------------------------------------------------------- the gryphon and its rider
-    const gryphonFile = edition.pack.files['dragon-fire.fly'];
-    const gryphon = scene.add.sprite(0, 0, gryphonFile ? textureKeyOf(edition, gryphonFile.id) : '__MISSING').setScale(scaleOf('dragon-fire.fly', SIZES.gryphon * 1.3, FRAME.gryphon)).setTint(GRYPHON_TINT);
+    const gryphonFile = edition.pack.files['griffin.fly'];
+    const gryphon = scene.add.sprite(0, 0, gryphonFile ? textureKeyOf(edition, gryphonFile.id) : '__MISSING').setScale(scaleOf('griffin.fly', SIZES.gryphon * 1.3, FRAME.gryphon));
     if (gryphonFile?.origin) gryphon.setOrigin(gryphonFile.origin.x, gryphonFile.origin.y);
     const riderFile = edition.pack.files[`${heroId}.idle`];
     const rider = scene.add.sprite(0, 0, riderFile ? textureKeyOf(edition, riderFile.id) : '__MISSING').setScale(scaleOf(`${heroId}.idle`, SIZES.rider, FRAME.rider));
@@ -98,15 +98,15 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     let busyUntil = 0;
     const gryphonLoop = (dir: 'e' | 'w'): void => {
       const key = `fly.${dir}`;
-      if (gryphonClip === key || !has('dragon-fire.fly')) return;
+      if (gryphonClip === key || !has('griffin.fly')) return;
       gryphonClip = key;
-      gryphon.play(animationKeyOf(edition, 'dragon-fire.fly', key));
+      gryphon.play(animationKeyOf(edition, 'griffin.fly', key));
     };
     const gryphonPlay = (file: string, name: string, dir: 'e' | 'w'): void => {
-      if (!has(`dragon-fire.${file}`)) return;
+      if (!has(`griffin.${file}`)) return;
       gryphonClip = '';
       busyUntil = performance.now() + 900;
-      gryphon.play(animationKeyOf(edition, `dragon-fire.${file}`, `${name}.${dir}`));
+      gryphon.play(animationKeyOf(edition, `griffin.${file}`, `${name}.${dir}`));
     };
     let riderClip = '';
     const riderPlay = (name: 'idle' | 'victory' | 'hit', dir: 'e' | 'w'): void => {

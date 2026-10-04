@@ -29,8 +29,6 @@ export const SIZES = { griffin: 3.6, bat: 2.2, rider: 1.5 } as const;
 /** The height of the flight above the ground, in meters. */
 export const FLIGHT_HEIGHT = 3.4;
 
-/** The griffin's tint: the fire dragon in the gold-brown of a griffin (3D multiplies it into the texture, 2D tints the sprite). */
-export const GRIFFIN_TINT = 0xd9a441;
 
 /** Colors of the gates by lane (violet, cyan, gold). */
 export const GATE_COLORS = [0x9b6bff, 0x3ec6ff, 0xffc83e] as const;

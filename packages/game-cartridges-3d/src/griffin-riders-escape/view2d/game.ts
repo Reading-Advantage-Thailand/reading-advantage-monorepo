@@ -2,7 +2,7 @@
  * Griffin Riders Escape in 2D (Phaser): the fallback for old phones and the renderer a player may
  * choose. It runs the same core, rules, catalog, and evidence as the 3D view (../view/game.ts).
  * The camera looks down the flight from above and behind: the land scrolls under the griffin (the
- * fire dragon sprite, tinted, with its rider), the word gates and the bat storms come from the top
+ * griffin sprite, with its rider), the word gates and the bat storms come from the top
  * in three lanes, and the student taps a lane (or a gate tag, or swipes, or uses the keys).
  */
 import type * as Phaser from 'phaser';
@@ -16,7 +16,7 @@ import { TUNING, createGriffinRidersEscape, evidenceOf, laneX, scoreOf, type Esc
 import { FILES_2D, HEROES_2D } from '../manifest.js';
 import { nextChoice } from '../qc/bot.js';
 import strings from '../strings.en.js';
-import { CHUNK, GATE_COLORS, GRIFFIN_TINT, SIZES, chunkLayout, rng } from '../view/land-plan.js';
+import { CHUNK, GATE_COLORS, SIZES, chunkLayout, rng } from '../view/land-plan.js';
 import { PromptPanel2D } from './prompt.js';
 
 /** Frame widths of the sheets in pixels, to size a sprite in meters. */
@@ -141,8 +141,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     }
 
     // ---------------------------------------------------------------- the griffin and its rider
-    const griffinFile = edition.pack.files['dragon-fire.fly'];
-    const griffin = scene.add.sprite(0, 0, griffinFile ? textureKeyOf(edition, griffinFile.id) : '__MISSING').setScale(scaleOf('dragon-fire.fly', SIZES.griffin * 1.3, FRAME.griffin)).setTint(GRIFFIN_TINT);
+    const griffinFile = edition.pack.files['griffin.fly'];
+    const griffin = scene.add.sprite(0, 0, griffinFile ? textureKeyOf(edition, griffinFile.id) : '__MISSING').setScale(scaleOf('griffin.fly', SIZES.griffin * 1.3, FRAME.griffin));
     if (griffinFile?.origin) griffin.setOrigin(griffinFile.origin.x, griffinFile.origin.y);
     const shadow = scene.add.ellipse(0, 0, 2.2 * kx, 0.9 * kx, 0x1c3010, 0.3);
     const riderFile = edition.pack.files[`${heroId}.idle`];
@@ -151,15 +151,15 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     let griffinClip = '';
     let busyUntil = 0;
     const griffinLoop = (): void => {
-      if (griffinClip === 'fly.n' || !has('dragon-fire.fly')) return;
+      if (griffinClip === 'fly.n' || !has('griffin.fly')) return;
       griffinClip = 'fly.n';
-      griffin.play(animationKeyOf(edition, 'dragon-fire.fly', 'fly.n'));
+      griffin.play(animationKeyOf(edition, 'griffin.fly', 'fly.n'));
     };
     const griffinPlay = (file: string): void => {
-      if (!has(`dragon-fire.${file}`)) return;
+      if (!has(`griffin.${file}`)) return;
       griffinClip = '';
       busyUntil = performance.now() + 900;
-      griffin.play(animationKeyOf(edition, `dragon-fire.${file}`, `${file}.n`));
+      griffin.play(animationKeyOf(edition, `griffin.${file}`, `${file}.n`));
     };
     let riderClip = '';
     const riderPlay = (name: 'idle' | 'victory' | 'hit'): void => {

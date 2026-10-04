@@ -1,6 +1,6 @@
 /**
  * Griffin Riders Escape 3D as a cartridge game. The core (../core) moves the flight in fixed
- * steps; this view flies the griffin (the fire dragon, tinted, with the student's hero on its
+ * steps; this view flies the griffin (with the student's hero on its
  * back) over the land, raises the word gates and the bat storms ahead, and fills the sentence bar
  * as words are collected. It reads the core's state every frame and animates its events; it never
  * decides a rule.
@@ -13,14 +13,13 @@ import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantag
 import { Actor, burst, FollowRig, type GLTF } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { TUNING, createGriffinRidersEscape, evidenceOf, laneX, scoreOf, type EscapeCommand, type EscapeEvent, type EscapeState, type GateInfo } from '../core/index.js';
 import { nextChoice } from '../qc/bot.js';
-import { FLIGHT_HEIGHT, GATE_COLORS, GRIFFIN_TINT, SIZES } from './land-plan.js';
+import { GRIFFIN_MODEL, GRIFFIN_SEAT } from '../../shared/griffin.js';
+import { FLIGHT_HEIGHT, GATE_COLORS, SIZES } from './land-plan.js';
 import { ESCAPE_MODELS, buildLand } from './land.js';
 import griffin_riders_escapeCss from './griffin-riders-escape.css.js';
 import { installCss } from '@reading-advantage/advantage-play-kit-3d/hud';
 installCss('griffin-riders-escape', griffin_riders_escapeCss);
 
-/** Where the rider sits on the griffin, as a share of the griffin's height. */
-const RIDER_LIFT = 0.5;
 const RING_RADIUS = 1.55;
 
 /** A model scale that makes the model's longest side `meters` long. */
@@ -61,16 +60,17 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- the griffin and its rider
-  const dragonGltf = stage.loader.get(stage.loader.modelPath('dragon-fire'))!;
-  const griffinScale = fitScale(dragonGltf, SIZES.griffin);
-  const griffin = stage.addActor(new Actor('dragon-fire', dragonGltf, stage.timeline, { idle: 'fly', scale: griffinScale }));
-  for (const m of griffin.materials) m.color.setHex(GRIFFIN_TINT);
+  const griffinGltf = stage.loader.get(stage.loader.modelPath(GRIFFIN_MODEL))!;
+  const griffinScale = fitScale(griffinGltf, SIZES.griffin);
+  const griffin = stage.addActor(new Actor(GRIFFIN_MODEL, griffinGltf, stage.timeline, { idle: 'fly', scale: griffinScale }));
   const heroGltf = stage.loader.get(stage.loader.modelPath(heroId))!;
   const heroHeight = new THREE.Box3().setFromObject(heroGltf.scene).getSize(new THREE.Vector3()).y || 1;
   const rider = stage.addActor(new Actor(heroId, heroGltf, stage.timeline, { scale: SIZES.rider / heroHeight }));
   const look = ctx.options.looks[heroId];
   if (look && look !== 'default') void stage.loader.texture(stage.loader.presetPath(heroId, look)).then((tex) => rider.setMap(tex)).catch(() => undefined);
-  const griffinHeight = new THREE.Box3().setFromObject(dragonGltf.scene).getSize(new THREE.Vector3()).y * griffinScale;
+  // The rider stands on the griffin's back (world meters from the griffin's origin; it flies toward -Z).
+  const seatUp = GRIFFIN_SEAT.up * griffinScale;
+  const seatBack = -GRIFFIN_SEAT.forward * griffinScale;
   griffin.placeAt(sim.state.griffin.x, FLIGHT_HEIGHT, 0, 180);
   rider.placeAt(0, 0, 0, 180);
 
@@ -309,7 +309,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     griffin.root.position.set(shownX, FLIGHT_HEIGHT + bob, shownZ);
     griffin.yaw = 180;
     griffin.root.rotation.z = THREE.MathUtils.clamp((s.griffin.x - shownX) * -0.12, -0.35, 0.35);
-    rider.root.position.set(shownX, FLIGHT_HEIGHT + bob + griffinHeight * RIDER_LIFT, shownZ);
+    rider.root.position.set(shownX, FLIGHT_HEIGHT + bob + seatUp, shownZ + seatBack);
     rider.yaw = 180;
     if (stageMs >= busyUntil && s.phase === 'flight') griffin.loop('fly', 0.2);
     target.set(shownX * 0.6, FLIGHT_HEIGHT, shownZ);

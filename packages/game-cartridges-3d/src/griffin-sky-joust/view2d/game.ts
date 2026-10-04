@@ -101,7 +101,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       const key = animationKeyOf(edition, fileId, `${clip}.${dir}`);
       if (sprite.anims.currentAnim?.key !== key) sprite.play(key);
     };
-    const griffin = spriteOf('dragon-fire.fly', GRIFFIN_PX).setDepth(500);
+    const griffin = spriteOf('griffin.fly', GRIFFIN_PX).setDepth(500);
     const hero = spriteOf(`${heroId}.idle`, HERO_PX).setDepth(501);
     let facing: 'e' | 'w' = 'e';
     let heroBusyUntil = 0;
@@ -215,8 +215,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         case 'bumped': {
           audio.play('bump');
           scene.cameras.main.shake(250, 0.005);
-          if (has('dragon-fire.hit')) {
-            griffin.play(animationKeyOf(edition, 'dragon-fire.hit', `hit.${facing}`));
+          if (has('griffin.hit')) {
+            griffin.play(animationKeyOf(edition, 'griffin.hit', `hit.${facing}`));
             griffinBusyUntil = performance.now() + 700;
           }
           if (has(`${heroId}.hit`)) {
@@ -277,7 +277,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       griffin.setPosition(sx(shown.x), sy(shown.y + bob));
       hero.setPosition(sx(shown.x + SEAT.x), sy(shown.y + SEAT.y + bob));
       const now = performance.now();
-      if (now >= griffinBusyUntil) play(griffin, 'dragon-fire.fly', 'fly', facing);
+      if (now >= griffinBusyUntil) play(griffin, 'griffin.fly', 'fly', facing);
       if (now >= heroBusyUntil && has(`${heroId}.idle`)) play(hero, `${heroId}.idle`, 'idle', 's');
       const visible = st.restMs > 0 ? Math.floor(time / 200) % 2 === 0 : st.griffin.safeMs > 0 ? Math.floor(time / 120) % 2 === 0 : true;
       griffin.setVisible(visible);
@@ -332,7 +332,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
 
     drawHud();
     audio.music('joust');
-    play(griffin, 'dragon-fire.fly', 'fly', facing);
+    play(griffin, 'griffin.fly', 'fly', facing);
     play(hero, `${heroId}.idle`, 'idle', 's');
     loop.start();
   }

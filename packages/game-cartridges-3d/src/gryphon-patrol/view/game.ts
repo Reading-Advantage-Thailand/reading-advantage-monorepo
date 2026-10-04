@@ -1,6 +1,6 @@
 /**
  * Gryphon Patrol 3D as a cartridge game. The core (../core) moves the sky in fixed steps; this
- * view shows the gryphon (the fire dragon, tinted, with the student's hero on its back), the bats
+ * view shows the gryphon (the griffin model, with the student's hero on its back), the bats
  * with their word banners, the shot, and the word orb over a forest, and fills the sentence bar as
  * words are collected. It reads the core's state every frame and animates its events; it never
  * decides a rule.
@@ -13,14 +13,13 @@ import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantag
 import { Actor, burst, type CameraPose, type CameraRig, type GLTF } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { SKY, TUNING, createGryphonPatrol, evidenceOf, scoreOf, type PatrolCommand, type PatrolEvent, type PatrolState } from '../core/index.js';
 import { nextChoice } from '../qc/bot.js';
-import { BAT_COLORS, GRYPHON_TINT, SIZES } from './sky-plan.js';
+import { GRIFFIN_MODEL, GRIFFIN_SEAT } from '../../shared/griffin.js';
+import { BAT_COLORS, SIZES } from './sky-plan.js';
 import { SKY_MODELS, buildSky } from './sky.js';
 import gryphon_patrolCss from './gryphon-patrol.css.js';
 import { installCss } from '@reading-advantage/advantage-play-kit-3d/hud';
 installCss('gryphon-patrol', gryphon_patrolCss);
 
-/** Where the rider sits on the gryphon, as a share of the gryphon's height, and the rider's facing offset. */
-const RIDER_LIFT = 0.5;
 const SHOT_COLOR = 0xffa23a;
 
 interface Bat {
@@ -78,16 +77,17 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const wy = (y: number): number => y * stretch();
 
   // ---------------------------------------------------------------- the gryphon and its rider
-  const dragonGltf = stage.loader.get(stage.loader.modelPath('dragon-fire'))!;
-  const gryphonScale = fitScale(dragonGltf, SIZES.gryphon);
-  const gryphon = stage.addActor(new Actor('dragon-fire', dragonGltf, stage.timeline, { idle: 'fly', scale: gryphonScale }));
-  for (const m of gryphon.materials) m.color.setHex(GRYPHON_TINT);
+  const gryphonGltf = stage.loader.get(stage.loader.modelPath(GRIFFIN_MODEL))!;
+  const gryphonScale = fitScale(gryphonGltf, SIZES.gryphon);
+  const gryphon = stage.addActor(new Actor(GRIFFIN_MODEL, gryphonGltf, stage.timeline, { idle: 'fly', scale: gryphonScale }));
   const heroGltf = stage.loader.get(stage.loader.modelPath(heroId))!;
   const heroHeight = new THREE.Box3().setFromObject(heroGltf.scene).getSize(new THREE.Vector3()).y || 1;
   const rider = stage.addActor(new Actor(heroId, heroGltf, stage.timeline, { scale: SIZES.rider / heroHeight }));
   const look = ctx.options.looks[heroId];
   if (look && look !== 'default') void stage.loader.texture(stage.loader.presetPath(heroId, look)).then((tex) => rider.setMap(tex)).catch(() => undefined);
-  const gryphonHeight = new THREE.Box3().setFromObject(dragonGltf.scene).getSize(new THREE.Vector3()).y * gryphonScale;
+  // The rider stands on the gryphon's back (world meters from the gryphon's origin).
+  const seatUp = GRIFFIN_SEAT.up * gryphonScale;
+  const seatForward = GRIFFIN_SEAT.forward * gryphonScale;
   gryphon.placeAt(wx(sim.state.gryphon.x), wy(sim.state.gryphon.y), 1, 90);
   rider.placeAt(0, 0, 1, 90);
 
@@ -320,7 +320,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     gryphon.root.position.set(gx, gy + bob, 1);
     gryphon.yaw = s.gryphon.facing > 0 ? 90 : -90;
     gryphon.root.rotation.z = THREE.MathUtils.clamp((wx(s.gryphon.toX) - gx) * -0.04, -0.2, 0.2);
-    rider.root.position.set(gx, gy + bob + gryphonHeight * RIDER_LIFT, 1);
+    rider.root.position.set(gx + seatForward * s.gryphon.facing, gy + bob + seatUp, 1);
     rider.yaw = gryphon.yaw;
     if (stageMs >= busyUntil && s.phase === 'patrol') gryphon.loop('fly', 0.2);
     // The bats: smooth to the core's loops (the bats of the open round only).
