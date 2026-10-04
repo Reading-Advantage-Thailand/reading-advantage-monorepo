@@ -3,13 +3,13 @@
 Owner lane: B. Depends on cutover blockers Phase 2 for argon2.
 
 ## Phase 0: Read the current flow (1 h)
-- [x] Map `components/auth/` student form, `api/auth/*`, `lib/session.ts`, `proxy.ts`, `lib/route-policies.ts`
-- [x] List what `@reading-advantage/auth` already offers (rate-limit, audit, sessions)
+- [x] Map `components/auth/` student form, `api/auth/*`, `lib/session.ts`, `proxy.ts`, `lib/route-policies.ts` (d6243eb5f)
+- [x] List what `@reading-advantage/auth` already offers (rate-limit, audit, sessions) (d6243eb5f)
 
 ## Phase 1: Contracts and schema
-- [ ] Zod contracts for the new requests
-- [ ] Additive migration, db package, with tests
-- [ ] `authStrength` in the session and the route policy
+- [x] Zod contracts for the new requests (b05454309)
+- [x] Additive migration, db package, with tests (9ad13562c; 0062 also adds sessions.auth_strength; drizzle drift on primary_legacy_id_map_new_id_idx removed from the SQL)
+- [x] `authStrength` in the session and the route policy (ab7febf68, committed under a wrong chore(measure) subject; helper in apps/primary-advantage/lib/auth-strength.ts, not wired to Reedy)
 
 ## Phase 2: Server (tests first)
 - [ ] Class session start/end, code generation, expiry
