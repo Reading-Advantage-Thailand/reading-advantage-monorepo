@@ -2701,7 +2701,7 @@
     "chooseGame": "Choose a game",
     "loading": "Loading your saved words…",
     "loadError": "Could not load your saved words. Try again later.",
-    "saved": "You saved {words, plural, one {# word} other {# words}} and {sentences, plural, one {# sentence} other {# sentences}}.",
+    "saved": "This practice set has {words, plural, one {# word} other {# words}} and {sentences, plural, one {# sentence} other {# sentences}} from your reading.",
     "needWords": "{count, plural, one {Save # more word to play.} other {Save # more words to play.}}",
     "needSentences": "{count, plural, one {Save # more sentence to play.} other {Save # more sentences to play.}}",
     "readMore": "Read and save more words",
