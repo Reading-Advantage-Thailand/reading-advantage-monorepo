@@ -40,6 +40,7 @@ import { NextResponse } from "next/server";
 import { getAudioUrl } from "@/lib/storage-config";
 import { mapOrderingSentenceFields, resolveClozeSegment } from "@/lib/audio-highlight";
 import { shuffle } from "@/lib/shuffle";
+import { countStreakDays } from "@/lib/streak";
 
 function tokenizeSentence(input: string) {
   // Split by spaces and filter out empty strings, while preserving punctuation
@@ -486,7 +487,11 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
         ]
       : [ActivityType.VOCABULARY_FLASHCARDS, ActivityType.SENTENCE_FLASHCARDS];
 
-    const [todayActivityRow, totalXPRow] = await Promise.all([
+    // Look back one year; streaks longer than that are capped.
+    const streakWindowStart = new Date(today);
+    streakWindowStart.setFullYear(streakWindowStart.getFullYear() - 1);
+
+    const [todayActivityRow, totalXPRow, activityDayRows] = await Promise.all([
       db.select({ value: count() })
         .from(userActivity)
         .where(
@@ -504,6 +509,15 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
             sql`${xpLogs.activityType} = ANY(${activityTypeFilter})`,
           ),
         ),
+      db.select({ createdAt: userActivity.createdAt })
+        .from(userActivity)
+        .where(
+          and(
+            eq(userActivity.userId, user.id as string),
+            gte(userActivity.createdAt, streakWindowStart),
+            sql`${userActivity.activityType} = ANY(${activityTypeFilter})`,
+          ),
+        ),
     ]);
 
     const todayActivity = Number(todayActivityRow[0]?.value ?? 0);
@@ -517,7 +531,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
       ),
       cardsStudiedToday: todayActivity,
       xpEarned: totalXP,
-      streakDays: 0, // TODO: Calculate streak
+      streakDays: countStreakDays(activityDayRows.map((row) => row.createdAt)),
     };
 
     return {
