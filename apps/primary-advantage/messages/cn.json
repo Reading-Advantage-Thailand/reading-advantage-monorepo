@@ -2821,6 +2821,11 @@
       "madeBeforeHelp": "The server does not keep these cards. Make a new card to print one again. The old card then stops working.",
       "print": "Print"
     },
+    "setting": {
+      "label": "Picture password",
+      "on": "Students tap their 3 pictures after they choose their name.",
+      "off": "Students sign in with the class code and their name only. Some features, such as Reedy, need a full sign-in."
+    },
     "roster": {
       "heading": "Students",
       "summary": "{signedIn} of {total} signed in",

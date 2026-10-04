@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ClassSessionControl } from "./class-session-control";
 import { LiveRoster } from "./live-roster";
+import { PicturePasswordSetting } from "./picture-password-setting";
 import { useClassLogin } from "./use-class-login";
 
 /** Props of {@link ClassLoginPanel}. */
@@ -15,8 +16,9 @@ export interface ClassLoginPanelProps {
 
 /**
  * Class sign-in panel for the teacher class page. It reads the live roster and the locked
- * students (polled while the page is visible) and shows the Start/End class control, links to
- * the class sheet and QR card print pages, and the live roster.
+ * students (polled while the page is visible) and shows the Start/End class control, the
+ * picture-password class setting, links to the class sheet and QR card print pages, and the
+ * live roster.
  * @param props The class.
  * @returns The panel.
  */
@@ -40,6 +42,7 @@ export function ClassLoginPanel({ classroomId }: ClassLoginPanelProps) {
         {roster ? (
           <>
             <ClassSessionControl classroomId={classroomId} openSession={roster.openSession} onChange={refresh} />
+            <PicturePasswordSetting classroomId={classroomId} enabled={roster.picturePasswordEnabled} onChange={refresh} />
             <div className="flex flex-wrap gap-4 text-sm">
               <Link href={`/teacher/class-roster/${classroomId}/class-sheet`} className="underline">
                 {t("links.classSheet")}
