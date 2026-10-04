@@ -24,10 +24,20 @@ Owner lane: B. Depends on cutover blockers Phase 2 for argon2.
 - `userModel.createUser` (public sign-up action) is not changed: owner decision says no self-service accounts.
 
 ## Phase 3: Teacher UI
-- [ ] Start/End class control on the class page
-- [ ] Live roster with lockout and reset
-- [ ] Class sheet and QR card print pages
-- [ ] Class setting for the picture password
+- [x] Start/End class control on the class page (c2a8ec409; panel on `teacher/class-roster/[classroomId]`; new read `getClassLoginRoster`, route `roster`)
+- [x] Live roster with lockout and reset (77fbc8a2d; polls roster + lockouts every 10 s while visible; adds `qrcode` 1.5.4 and `@types/qrcode` to the Primary app only)
+- [x] Class sheet and QR card print pages (219ddc225; new use-case `resetClassPasswords`, route `class-passwords/reset`)
+- [x] Class setting for the picture password (8fc0d42a7)
+
+### Phase 3 decisions (defaults, owner may change)
+- The class code shows once. The server keeps only its hash, so after a page reload the panel says the class is open and offers New code (restart replaces the code, Phase 2 rule).
+- Roster read: `getClassLoginRoster` returns the open session, the setting, and per student `signedIn` and `lastSeenAt` from `sessions` (same idle rule as `validateSession`), plus booleans for picture password and card. No hash leaves the server. Locked students come from the Phase 2 lockouts route.
+- Picture pictures: 12 inline SVG pictures in `components/student-login/pictures.tsx`. The array index is the stored picture number and must not change. Phase 4 reuses it for the student grid.
+- QR card URL: `<origin>/auth/card#<token>`. The token is in the fragment, so it stays out of server logs and Referer headers. Phase 4 builds `/auth/card`: read `location.hash`, POST `/api/auth/student/qr`.
+- Class sheet: `resetClassPasswords` (teacher of the class or school admin) sets new initial passwords for the whole class and returns them once. Each student's credential write and session delete run in one transaction. A failed student keeps the old password and is listed. Audit `student_login:class_password_reset` with counts only. Limit: 5 resets per class per 10 minutes (default chosen here).
+- QR cards: issued by a button, not on page load. Cards made earlier cannot be shown again; the page offers New card (rotate) for each. 8 cards per A4 page.
+- Print isolation: `PrintStyles` hides everything outside `[data-print-area]` with `:has()` (Chrome 105+, Safari 15.4+, Firefox 121+). No change to `styles/globals.css`.
+- The roster has "Give picture passwords" (Phase 2 assign route) for students without one, because import does not assign pictures.
 
 ## Phase 4: Student UI
 - [ ] Code entry, name list, picture grid, QR scan page
