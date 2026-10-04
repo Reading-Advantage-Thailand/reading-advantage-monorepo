@@ -11,13 +11,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const loginMock = vi.fn();
 const pushMock = vi.fn();
 const replaceMock = vi.fn();
+let searchParams = new URLSearchParams();
 
 vi.mock("@reading-advantage/auth-client", () => ({
   useAuth: () => ({ login: loginMock }),
 }));
 
 vi.mock("next/navigation", () => ({
-  useSearchParams: () => new URLSearchParams(),
+  useSearchParams: () => searchParams,
 }));
 
 vi.mock("@/i18n/navigation", () => ({
@@ -37,7 +38,16 @@ describe("staff sign-in form", () => {
     loginMock.mockReset().mockResolvedValue(undefined);
     pushMock.mockReset();
     replaceMock.mockReset();
+    searchParams = new URLSearchParams();
   });
+
+  /** Signs in through the form and waits for the login call. */
+  async function submit() {
+    fireEvent.change(screen.getByLabelText("Username"), { target: { value: "qa-system" } });
+    fireEvent.change(screen.getByLabelText(/^Password/), { target: { value: "long-enough-1" } });
+    fireEvent.click(screen.getByRole("button", { name: "Login" }));
+    await waitFor(() => expect(loginMock).toHaveBeenCalled());
+  }
 
   it("asks for a username, not an email", () => {
     renderWithMessages(<TeacherSignInForm />);
@@ -62,5 +72,26 @@ describe("staff sign-in form", () => {
     await waitFor(() => expect(loginMock).toHaveBeenCalledWith("qa-system", "long-enough-1"));
     // The proxy sends a signed-in user from the sign-in page to the role's home page.
     expect(replaceMock).toHaveBeenCalledWith("/auth/signin");
+  });
+
+  it("returns to a local callback without its locale prefix", async () => {
+    searchParams = new URLSearchParams({ callbackUrl: "/en/system/schools" });
+    renderWithMessages(<TeacherSignInForm />);
+    await submit();
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/system/schools"));
+  });
+
+  it("ignores callbacks that leave the site", async () => {
+    for (const callbackUrl of ["https://evil.example", "//evil.example", "/\\evil.example", "/en\\..\\evil"]) {
+      loginMock.mockClear();
+      pushMock.mockClear();
+      replaceMock.mockClear();
+      searchParams = new URLSearchParams({ callbackUrl });
+      const { unmount } = renderWithMessages(<TeacherSignInForm />);
+      await submit();
+      await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/auth/signin"));
+      expect(pushMock).not.toHaveBeenCalled();
+      unmount();
+    }
   });
 });

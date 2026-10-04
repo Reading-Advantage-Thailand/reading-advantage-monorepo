@@ -21,6 +21,22 @@ import { FormError } from "../form-error";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
+
+const LOCALE_PREFIX = new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`);
+
+/**
+ * Keeps a callback only when it is a path on this site, without its locale.
+ * The i18n router adds the current locale again on push.
+ * @param value The raw callbackUrl query value.
+ * @returns The local path without a locale prefix, or null for any other value.
+ */
+function safeCallbackPath(value: string | null): string | null {
+  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) {
+    return null;
+  }
+  return value.replace(LOCALE_PREFIX, "") || "/";
+}
 
 export function TeacherSignInForm({
   className,
@@ -28,8 +44,7 @@ export function TeacherSignInForm({
 }: React.ComponentPropsWithoutRef<"form">) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const requested = searchParams.get("callbackUrl");
-  const callbackUrl = requested?.startsWith("/") && !requested.startsWith("//") ? requested : null;
+  const callbackUrl = safeCallbackPath(searchParams.get("callbackUrl"));
   const [error, setError] = useState<string | undefined>("");
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
