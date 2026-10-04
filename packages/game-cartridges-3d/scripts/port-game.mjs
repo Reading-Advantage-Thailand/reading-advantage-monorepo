@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Copies games from the Forge demo repository and rewrites their imports to the kit subpaths.
 // Forge owns the games: change a game there, then copy it here.
-// Usage: node scripts/port-game.mjs <forge-repo-dir> <game-id ...|all> [--check]
+// Usage: node scripts/port-game.mjs <forge-repo-dir> <game-id ...|shared|all> [--check]
+// `shared` is the code the games share (Forge src/games/shared, here src/shared); `all` copies
+// every game of this package and the shared code.
 // --check writes nothing: it copies into a temporary folder and lists every file of the package
 // copy that differs from what Forge gives (an edit made only here), then exits 1 on a difference.
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
@@ -57,7 +59,7 @@ const copy = (from, to, filter) => {
   }
 };
 
-/** Copies one game (its source and tests) into `root/src/<id>` and `root/tests/<id>`. */
+/** Copies one game, or the shared code, (its source and tests) into `root/src/<id>` and `root/tests/<id>`. */
 function port(id, root) {
   copy(join(forge, 'src/games', id), join(root, 'src', id));
   copy(join(forge, 'tests/games', id), join(root, 'tests', id));
@@ -79,7 +81,7 @@ const filesOf = (dir) => (existsSync(dir) ? walk(dir).map((f) => relative(dir, f
 /** The games of this package (every game folder of src except the shared code). */
 const packageGames = () => readdirSync(join(pkg, 'src'), { withFileTypes: true }).filter((d) => d.isDirectory() && d.name !== 'shared').map((d) => d.name);
 
-const ids = named.length === 1 && named[0] === 'all' ? packageGames() : named;
+const ids = named.length === 1 && named[0] === 'all' ? [...packageGames(), 'shared'] : named;
 if (!check) {
   for (const id of ids) {
     port(id, pkg);
@@ -111,5 +113,5 @@ if (!check) {
     console.log(`port-game: ${drift.length} difference(s); make the change in Forge, then copy it`);
     process.exit(1);
   }
-  console.log(`port-game: ${ids.length} game(s) match Forge`);
+  console.log(`port-game: ${ids.length} folder(s) match Forge`);
 }
