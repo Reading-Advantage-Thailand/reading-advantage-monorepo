@@ -2912,12 +2912,25 @@
       "signingIn": "Signing you in…",
       "useCode": "Sign in with the class code"
     },
+    "password": {
+      "title": "Sign in with your username",
+      "help": "Use the username and password your teacher gave you.",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign in",
+      "signingIn": "Signing in…"
+    },
+    "switch": {
+      "usePassword": "Sign in with username and password",
+      "useCode": "Sign in with the class code"
+    },
     "errors": {
       "codeFormat": "The code has 6 letters and numbers.",
       "codeInvalid": "This code does not work. Check the code or ask your teacher.",
       "wrongPictures": "Those pictures are not right. Try again.",
       "locked": "Too many wrong tries. Wait {minutes, plural, one {# minute} other {# minutes}} or ask your teacher.",
       "rateLimited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again.",
+      "wrongPassword": "Wrong username or password. Try again.",
       "cardInvalid": "This card does not work. Ask your teacher for a new card.",
       "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
       "generic": "Something went wrong. Try again."

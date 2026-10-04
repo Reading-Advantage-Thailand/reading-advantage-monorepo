@@ -7,6 +7,7 @@ export type StudentErrorKey =
   | "codeFormat"
   | "codeInvalid"
   | "wrongPictures"
+  | "wrongPassword"
   | "locked"
   | "rateLimited"
   | "cardInvalid"
