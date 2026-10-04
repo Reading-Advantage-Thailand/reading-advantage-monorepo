@@ -4,11 +4,14 @@ import {
   baseLevel,
   cefrLevelSchema,
   normalizeCefrLevel,
+  parsePracticeInput,
   parseStoryIndex,
   parseStoryInput,
+  practiceInputSchema,
   sentenceInputSchema,
   storyIndexSchema,
   storyInputSchema,
+  toPracticeInput,
   toSentenceInput,
   toStoryIndexEntry,
   toVocabularyInput,
@@ -107,6 +110,59 @@ describe("derived inputs", () => {
       { term: "Pip is a small puppy.", translation: "" },
     ]);
     expect(sentenceInputSchema.parse(derived)).toEqual(derived);
+  });
+});
+
+describe("practice input contract", () => {
+  const saved = {
+    schemaVersion: 1,
+    id: "saved",
+    level: "A1",
+    vocabulary: [
+      { id: "7d3f9a1e-0000-4000-8000-000000000001", term: "bridge", translation: "สะพาน" },
+      { id: "7d3f9a1e-0000-4000-8000-000000000002", term: "lantern", translation: "โคมไฟ" },
+    ],
+    sentences: [
+      {
+        id: "7d3f9a1e-0000-4000-8000-000000000003",
+        text: "The river is wide.",
+        words: ["The", "river", "is", "wide."],
+        translation: "แม่น้ำกว้าง",
+      },
+    ],
+  } as const;
+
+  it("accepts saved flashcards without English definitions or paragraphs", () => {
+    expect(parsePracticeInput(saved)).toEqual(saved);
+  });
+
+  it("takes the practice part of a story, which is itself a valid practice input", () => {
+    const parsed = storyInputSchema.parse(story);
+    const practice = toPracticeInput(parsed);
+    expect(practice).toEqual({
+      schemaVersion: 1,
+      id: story.id,
+      level: story.level,
+      vocabulary: parsed.vocabulary,
+      sentences: parsed.sentences,
+    });
+    expect(practiceInputSchema.safeParse(practice).success).toBe(true);
+  });
+
+  it.each([
+    ["duplicate word ids", { ...saved, vocabulary: [saved.vocabulary[0], saved.vocabulary[0]] }],
+    ["words that do not join to the sentence", {
+      ...saved,
+      sentences: [{ ...saved.sentences[0], words: ["The", "river"] }],
+    }],
+    ["a story-only field", { ...saved, title: "Saved" }],
+    ["an unknown level", { ...saved, level: "C2" }],
+  ])("rejects %s", (_label, candidate) => {
+    expect(practiceInputSchema.safeParse(candidate).success).toBe(false);
+  });
+
+  it("names the input in the parse error", () => {
+    expect(() => parsePracticeInput({ ...saved, level: "C2" }, "saved items")).toThrow(/Invalid saved items:/u);
   });
 });
 

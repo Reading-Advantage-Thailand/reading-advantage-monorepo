@@ -331,3 +331,77 @@ export function toSentenceInput(story: StoryInput): SentenceInput {
     translation: sentence.translation ?? "",
   }));
 }
+
+/**
+ * Strict schema for one word of a practice game: a story word or a saved flashcard. A flashcard
+ * has no English definition, so `definition` is optional here.
+ */
+export const practiceWordSchema = storyVocabularySchema
+  .extend({ definition: textSchema.optional() })
+  .strict();
+
+/** Strict schema for one sentence of a practice game: a story sentence or a saved flashcard. */
+export const practiceSentenceSchema = storySentenceSchema;
+
+/**
+ * Strict schema for the input of a practice game. In Primary Advantage the items are the
+ * student's saved flashcards and the ids are their record ids; every `StoryInput` is also valid.
+ */
+export const practiceInputSchema = z
+  .object({
+    schemaVersion: z.literal(1),
+    /** The story id, or the name of the saved-item set ("saved"). */
+    id: idSchema,
+    level: cefrLevelSchema,
+    vocabulary: z.array(practiceWordSchema),
+    sentences: z.array(practiceSentenceSchema),
+  })
+  .strict()
+  .superRefine((input, context) => {
+    for (const key of ["vocabulary", "sentences"] as const) {
+      if (!hasUniqueIds(input[key])) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Item ids must be distinct",
+          path: [key],
+        });
+      }
+    }
+  });
+
+/** One validated practice input. */
+export type PracticeInput = z.infer<typeof practiceInputSchema>;
+
+/** One validated practice word. */
+export type PracticeWord = z.infer<typeof practiceWordSchema>;
+
+/** One validated practice sentence. */
+export type PracticeSentence = z.infer<typeof practiceSentenceSchema>;
+
+/**
+ * Validates untrusted JSON as a practice input.
+ * @param json Untrusted input content.
+ * @param label Name used in the error message.
+ * @returns The validated practice input.
+ * @throws An Error that lists every problem when the content is not a practice input.
+ */
+export function parsePracticeInput(json: unknown, label = "practice input"): PracticeInput {
+  const result = practiceInputSchema.safeParse(json);
+  if (!result.success) throw new Error(`Invalid ${label}:\n${describeIssues(result.error)}`);
+  return result.data;
+}
+
+/**
+ * Takes the practice part of a story: its id, level, words, and sentences.
+ * @param story A validated story.
+ * @returns The story's practice input.
+ */
+export function toPracticeInput(story: StoryInput): PracticeInput {
+  return {
+    schemaVersion: 1,
+    id: story.id,
+    level: story.level,
+    vocabulary: story.vocabulary,
+    sentences: story.sentences,
+  };
+}

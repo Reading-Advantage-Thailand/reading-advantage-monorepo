@@ -26,7 +26,7 @@ const evidence = {
   schemaVersion: 1,
   kind: "story-game",
   gameId: "monster-encounters",
-  storyId: "pip-the-puppy",
+  inputId: "pip-the-puppy",
   level: "A0",
   seed: 42,
   durationMs: 120_000,

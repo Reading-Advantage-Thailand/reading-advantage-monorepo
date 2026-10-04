@@ -39,7 +39,8 @@ export const storyGameEvidenceSchema = z
     schemaVersion: z.literal(1),
     kind: z.literal("story-game"),
     gameId: z.string().min(1),
-    storyId: z.string().min(1),
+    /** The input id: a story id, or the saved-item set ("saved"). */
+    inputId: z.string().min(1),
     level: cefrLevelSchema,
     seed: z.number().int(),
     durationMs: z.number().int().min(0),
