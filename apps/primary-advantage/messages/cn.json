@@ -2690,23 +2690,26 @@
   "StudentGames": {
     "title": "学生游戏",
     "description": "畅玩实时 Advantage Play Kit 目录。每张卡片都会打开已验证的 APK 路线。",
-    "storyLink": "Story adventures",
-    "storyLinkDescription": "Read a story, then play it as a 3D game."
+    "storyLink": "Word adventures",
+    "storyLinkDescription": "Play 3D games with the words you saved from your reading."
   },
   "StoryGames": {
-    "title": "Story adventures",
-    "description": "Pick a story, then play it as a 3D game. Older phones play the 2D version.",
-    "chooseStory": "Choose a story",
+    "title": "Word adventures",
+    "description": "Play 3D games with the words and sentences you saved from your reading. Older phones play the 2D version.",
     "chooseGame": "Choose a game",
-    "loading": "Loading stories…",
-    "noGame": "No game fits this story yet. Choose another story.",
+    "loading": "Loading your saved words…",
+    "loadError": "Could not load your saved words. Try again later.",
+    "saved": "You saved {words, plural, one {# word} other {# words}} and {sentences, plural, one {# sentence} other {# sentences}}.",
+    "needWords": "{count, plural, one {Save # more word to play.} other {Save # more words to play.}}",
+    "needSentences": "{count, plural, one {Save # more sentence to play.} other {Save # more sentences to play.}}",
+    "readMore": "Read and save more words",
     "flat": "2D mode (older phones)",
     "save": {
       "saving": "Saving your result…",
       "saved": "Result saved",
       "error": "Could not save your result"
     },
-    "link": "Story adventures"
+    "link": "Word adventures"
   },
   "Footer": {
     "tagline": "提供最佳英语学习体验。",

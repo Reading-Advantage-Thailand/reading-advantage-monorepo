@@ -7,7 +7,7 @@ const evidence: StoryGameEvidence = {
   schemaVersion: 1,
   kind: "story-game",
   gameId: "potion-rush",
-  storyId: "pips-happy-night",
+  inputId: "saved",
   level: "A0",
   seed: 7,
   durationMs: 60_000,

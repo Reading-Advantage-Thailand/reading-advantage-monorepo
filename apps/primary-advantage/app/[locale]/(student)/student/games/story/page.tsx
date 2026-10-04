@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { StoryGamesClient } from "@/components/story-games/StoryGamesClient";
 
 /**
- * Page metadata for the story adventures route.
+ * Page metadata for the word adventures route.
  */
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -12,8 +12,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /**
- * Story adventures: read-and-play 3D games built on a story.
- * @returns The story and game picker with the player.
+ * Word adventures: 3D games with the student's saved words and sentences.
+ * @returns The game list (locked games link to reading) with the player.
  */
 export default async function PrimaryStoryGamesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
