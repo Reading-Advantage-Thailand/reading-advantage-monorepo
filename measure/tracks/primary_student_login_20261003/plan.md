@@ -39,10 +39,23 @@ Owner lane: B. Depends on cutover blockers Phase 2 for argon2.
 - Print isolation: `PrintStyles` hides everything outside `[data-print-area]` with `:has()` (Chrome 105+, Safari 15.4+, Firefox 121+). No change to `styles/globals.css`.
 - The roster has "Give picture passwords" (Phase 2 assign route) for students without one, because import does not assign pictures.
 
+- Review follow-ups (f49614be5): the roster poll stops after 401, 403, or 404; after Start or New code the control keeps the new code until a successful roster read made after the start reports another session or none; the start, roster, and class sheet handlers parse the use-case result with its contract (a student row with an unknown field gives 500).
+
 ## Phase 4: Student UI
-- [ ] Code entry, name list, picture grid, QR scan page
-- [ ] Username/password form
-- [ ] Thai and English copy; 48 px targets; 375/768 layouts
+- [x] Code entry, name list, picture grid, QR scan page (8c2ea0b20; QR page is `/auth/card`)
+- [x] Username/password form (cababfa64)
+- [x] Thai and English copy; 48 px targets; 375/768 layouts (e0a36bd3c; copy and layout classes, checked by tests. The 375 px and 768 px screenshots move to Phase 5, coordinator decision)
+
+### Phase 4 decisions (defaults, owner may change)
+- Student tab: class code sign-in first, with a link to the username and password form and back (no third tab). The QR card has its own page, `/auth/card`. No proxy or route-policy change was needed; a route-policy test keeps `/auth/signin` and `/auth/card` open to a signed-out user.
+- After a sign-in the client calls `useAuth().refresh()` and then `router.replace("/student/read")` (next-intl router). `replace` keeps the sign-in page and `/auth/card` out of the Back history. The student flow does not follow `callbackUrl` (the old form followed it without a check).
+- `/auth/card` reads `location.hash`, calls `history.replaceState` to remove it before any other work, and posts the token once (a ref guard covers the StrictMode double effect).
+- Name list: first name and an avatar placeholder (first letter on the color of the server avatar key, hidden from screen readers), in the server order. The avatar does not use the password pictures.
+- Picture grid: the 12 pictures of `pictures.tsx`, index = stored number. The grid never marks the tapped pictures; only the progress dots show the count. The 3rd tap sends the sign-in. A lockout shows the minutes left and blocks the grid until `Retry-After` ends.
+- When the class turns the picture password on after the name list loaded, a code-only sign-in gets 403 and the flow asks for the pictures.
+- The password form posts to `/api/auth/login` with `fetch` (not `useAuth().login`), so it can map the status to en/th text. A non-student role goes to `/auth/signin`, where the proxy picks the role home.
+- The old student form, its test, the unauthenticated server action `fetchStudentsByClassCode` (it returned student names and emails for a legacy class code), `getClassroomStudentForLogin`, and `classCodeSchema` are removed. The old `AuthPage.signin` copy keys stay.
+- Open risk: `@reading-advantage/auth-client` `refresh()` does nothing after a client-side logout in the same page life (`signedOutRef`). After student A signs out and student B signs in by code, picture, or QR card in the same tab without a reload, the client auth state stays empty until a reload; the server session is correct. A fix belongs in `packages/auth-client` (reset the flag on an explicit sign-in) or needs a full page load after sign-in. Not changed in Phase 4.
 
 ## Phase 5: Verify
 - [ ] 25-student browser test through all paths
