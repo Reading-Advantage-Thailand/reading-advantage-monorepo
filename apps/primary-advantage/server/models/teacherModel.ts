@@ -17,8 +17,8 @@ import {
 import { ROLE_HIERARCHY, ROLES, type Role } from "@reading-advantage/auth/roles";
 import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, schoolScopeConditions } from "@/server/utils/auth";
 import { canSetPasswordFor } from "@/lib/authorization";
-import { afterPasswordWrite } from "@/server/utils/passwordEvents";
-import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount } from "@/server/utils/credentials";
+import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
+import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
 import {
   TeacherData,
   CreateTeacherInput,
@@ -738,6 +738,10 @@ export const updateTeacher = async (
       return { success: false, error: "Teacher not found" };
     }
 
+    if (updateData.role && !ASSIGNABLE_TEACHER_ROLES.includes(updateData.role)) {
+      return { success: false, error: "Invalid role specified" };
+    }
+
     // A password write needs a strictly lower-ranked target (shared reset matrix).
     if (
       updateData.password &&
@@ -800,6 +804,7 @@ export const updateTeacher = async (
 
       if (newPasswordHash) {
         await upsertCredentialAccount(tx, id, newPasswordHash);
+        await revokeSessionsInTx(tx, id);
       }
 
       // Handle role update if specified
@@ -836,7 +841,7 @@ export const updateTeacher = async (
     });
 
     if (newPasswordHash) {
-      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: false });
+      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: false, sessionsRevoked: true });
     }
 
     const refetch = await refetchTeacherWithInclude(id, updateData.role ?? "teacher");
@@ -865,7 +870,7 @@ export const deleteTeacher = async (
       ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
-    const [existingTeacher] = await db.select({ id: users.id })
+    const [existingTeacher] = await db.select({ id: users.id, sessionRole: users.role })
       .from(users)
       .innerJoin(userRoles, eq(userRoles.userId, users.id))
       .innerJoin(roles, eq(roles.id, userRoles.roleId))
@@ -876,12 +881,19 @@ export const deleteTeacher = async (
       return { success: false, error: "Teacher not found" };
     }
 
+    // A delete needs a strictly lower-ranked target, the same rule as a password write.
+    if (!canSetPasswordFor(callerEffectiveRank(userWithRoles), await loadTargetEffectiveRank(id, existingTeacher.sessionRole))) {
+      return { success: false, error: "Cannot delete this account" };
+    }
+
     // Delete related records first
     await db.delete(userRoles).where(eq(userRoles.userId, id));
     await db.delete(classroomTeachers).where(eq(classroomTeachers.teacherId, id));
 
     // Delete the teacher
     await db.delete(users).where(eq(users.id, id));
+
+    await auditUserDeleted({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) } });
 
     return { success: true };
   } catch (error) {

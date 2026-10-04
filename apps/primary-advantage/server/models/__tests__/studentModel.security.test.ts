@@ -22,14 +22,17 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   );
   return { ...actual, db: dbProxy };
 });
-const eventMocks = vi.hoisted(() => ({ afterPasswordWrite: vi.fn().mockResolvedValue(undefined) }));
+const eventMocks = vi.hoisted(() => ({
+  afterPasswordWrite: vi.fn().mockResolvedValue(undefined),
+  auditUserDeleted: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock("@/server/utils/passwordEvents", () => eventMocks);
 vi.mock("@reading-advantage/auth", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reading-advantage/auth")>()),
   hashPassword: async (password: string) => `hash:${password}`,
 }));
 
-import { updateStudent, createStudent } from "../studentModel";
+import { updateStudent, createStudent, deleteStudent } from "../studentModel";
 import type { UserWithRoles } from "@/server/utils/auth";
 
 const SCHOOL_A = "00000000-0000-0000-0000-0000000000a1";
@@ -159,7 +162,37 @@ describe("password write events (M1)", () => {
     await seedStudent("student-a", "STUDENT", SCHOOL_A);
     await updateStudent("student-a", { password: "New-password-1" }, sessionAdmin);
     expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
-      userId: "student-a", actor: { id: "caller", role: "ADMIN" }, created: false,
+      userId: "student-a", actor: { id: "caller", role: "ADMIN" }, created: false, sessionsRevoked: true,
     });
+  });
+});
+
+describe("updateStudent session revocation (L1)", () => {
+  it("ends the target's sessions in the same transaction as the password write", async () => {
+    await seedStudent("student-a", "STUDENT", SCHOOL_A);
+    await harness.db.execute(sql`INSERT INTO sessions (id, token_hash, user_id, expires_at)
+      VALUES ('s1', 'h1', 'student-a', now() + interval '1 day')`);
+    const result = await updateStudent("student-a", { password: "New-password-1" }, sessionAdmin);
+    expect(result.success).toBe(true);
+    const rows = await harness.db.execute(sql`SELECT id FROM sessions WHERE user_id = 'student-a'`);
+    expect(rows.rows).toHaveLength(0);
+  });
+});
+
+describe("deleteStudent effective rank and audit (L6)", () => {
+  it("refuses a teacher that deletes a student who holds a school_admins row", async () => {
+    await seedStudent("owner", "STUDENT", SCHOOL_A);
+    await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('owner', ${SCHOOL_A})`);
+    const result = await deleteStudent("owner", { ...sessionAdmin, role: "TEACHER" });
+    expect(result.success).toBe(false);
+    expect(eventMocks.auditUserDeleted).not.toHaveBeenCalled();
+    expect((await snapshot("owner")).account_password).toBe("orig");
+  });
+
+  it("deletes a same-school student and audits the delete", async () => {
+    await seedStudent("student-a", "STUDENT", SCHOOL_A);
+    const result = await deleteStudent("student-a", sessionAdmin);
+    expect(result.success).toBe(true);
+    expect(eventMocks.auditUserDeleted).toHaveBeenCalledWith({ userId: "student-a", actor: { id: "caller", role: "ADMIN" } });
   });
 });

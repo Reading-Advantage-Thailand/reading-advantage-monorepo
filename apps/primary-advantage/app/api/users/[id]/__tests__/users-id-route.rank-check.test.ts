@@ -32,6 +32,7 @@ vi.mock("@reading-advantage/db", async () => ({
 const credentialMocks = vi.hoisted(() => ({
   hashNewPassword: vi.fn().mockResolvedValue("$argon2id$new"),
   upsertCredentialAccount: vi.fn().mockResolvedValue(undefined),
+  revokeSessionsInTx: vi.fn().mockResolvedValue(undefined),
 }));
 vi.mock("@/server/utils/credentials", () => credentialMocks);
 const eventMocks = vi.hoisted(() => ({ afterPasswordWrite: vi.fn().mockResolvedValue(undefined) }));
@@ -329,7 +330,7 @@ describe("PATCH /api/users/[id] password events (M1)", () => {
 
     expect(response.status).toBe(200);
     expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
-      userId: "student-1", actor: { id: "admin-1", role: "ADMIN" }, created: false,
+      userId: "student-1", actor: { id: "admin-1", role: "ADMIN" }, created: false, sessionsRevoked: true,
     });
   });
 });

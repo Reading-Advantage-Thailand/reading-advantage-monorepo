@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { hashPassword } from "@reading-advantage/auth";
-import { accounts } from "@reading-advantage/db/schema";
+import { eq, type SQL } from "drizzle-orm";
+import { accounts, sessions } from "@reading-advantage/db/schema";
 
 /** Minimal insert surface shared by the db client and a transaction. */
 interface InsertCapable {
@@ -56,4 +57,21 @@ export async function upsertCredentialAccount(
       target: [accounts.userId, accounts.providerId],
       set: { password: passwordHash, updatedAt: new Date() },
     });
+}
+
+/** Minimal delete surface shared by the db client and a transaction. */
+interface DeleteCapable {
+  delete: (table: typeof sessions) => {
+    where: (condition: SQL) => PromiseLike<unknown>;
+  };
+}
+
+/**
+ * Deletes every session of one account inside the caller's transaction,
+ * so a password write and its revocation commit or roll back together.
+ * @param tx A db client or transaction.
+ * @param userId The account whose sessions end.
+ */
+export async function revokeSessionsInTx(tx: DeleteCapable, userId: string): Promise<void> {
+  await tx.delete(sessions).where(eq(sessions.userId, userId));
 }

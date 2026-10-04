@@ -19,8 +19,8 @@ import {
 } from '@reading-advantage/db';
 import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, schoolScopeConditions } from "@/server/utils/auth";
 import { canSetPasswordFor } from "@/lib/authorization";
-import { afterPasswordWrite } from "@/server/utils/passwordEvents";
-import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount } from "@/server/utils/credentials";
+import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
+import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
 import {
   StudentData,
   CreateStudentInput,
@@ -469,6 +469,7 @@ export const updateStudent = async (
 
       if (newPasswordHash) {
         await upsertCredentialAccount(tx, id, newPasswordHash);
+        await revokeSessionsInTx(tx, id);
       }
 
       if (updateData.classroomId !== undefined) {
@@ -486,7 +487,7 @@ export const updateStudent = async (
     });
 
     if (newPasswordHash) {
-      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: false });
+      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: false, sessionsRevoked: true });
     }
 
     // Refetch to get updated classroom info
@@ -546,7 +547,7 @@ export const deleteStudent = async (
     whereConditions.push(...schoolScopeConditions(users.schoolId, userWithRoles));
 
     // Check if student exists and user has permission to delete
-    const [existingStudent] = await db.select({ id: users.id })
+    const [existingStudent] = await db.select({ id: users.id, sessionRole: users.role })
       .from(users)
       .innerJoin(userRoles, eq(userRoles.userId, users.id))
       .innerJoin(roles, eq(roles.id, userRoles.roleId))
@@ -557,6 +558,11 @@ export const deleteStudent = async (
       return { success: false, error: "Student not found" };
     }
 
+    // A delete needs a strictly lower-ranked target, the same rule as a password write.
+    if (!canSetPasswordFor(callerEffectiveRank(userWithRoles), await loadTargetEffectiveRank(id, existingStudent.sessionRole))) {
+      return { success: false, error: "Cannot delete this account" };
+    }
+
     // Delete related records first
     await db.delete(userRoles).where(eq(userRoles.userId, id));
     await db.delete(classroomStudents).where(eq(classroomStudents.studentId, id));
@@ -565,6 +571,8 @@ export const deleteStudent = async (
 
     // Delete the student
     await db.delete(users).where(eq(users.id, id));
+
+    await auditUserDeleted({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) } });
 
     return { success: true };
   } catch (error) {

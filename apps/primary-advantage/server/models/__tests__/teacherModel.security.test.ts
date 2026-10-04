@@ -22,14 +22,17 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   );
   return { ...actual, db: dbProxy };
 });
-const eventMocks = vi.hoisted(() => ({ afterPasswordWrite: vi.fn().mockResolvedValue(undefined) }));
+const eventMocks = vi.hoisted(() => ({
+  afterPasswordWrite: vi.fn().mockResolvedValue(undefined),
+  auditUserDeleted: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock("@/server/utils/passwordEvents", () => eventMocks);
 vi.mock("@reading-advantage/auth", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reading-advantage/auth")>()),
   hashPassword: async (password: string) => `hash:${password}`,
 }));
 
-import { createTeacher, updateTeacher } from "../teacherModel";
+import { createTeacher, updateTeacher, deleteTeacher } from "../teacherModel";
 import type { UserWithRoles } from "@/server/utils/auth";
 
 const SCHOOL_A = "00000000-0000-0000-0000-0000000000a1";
@@ -326,7 +329,7 @@ describe("password write events (M1)", () => {
     await giveRole("teacher-a", "teacher");
     await updateTeacher("teacher-a", { password: "New-password-1" }, sessionAdmin);
     expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
-      userId: "teacher-a", actor: { id: "caller", role: "ADMIN" }, created: false,
+      userId: "teacher-a", actor: { id: "caller", role: "ADMIN" }, created: false, sessionsRevoked: true,
     });
   });
 
@@ -335,5 +338,91 @@ describe("password write events (M1)", () => {
     await giveRole("teacher-a", "teacher");
     await updateTeacher("teacher-a", { name: "Renamed" }, sessionAdmin);
     expect(eventMocks.afterPasswordWrite).not.toHaveBeenCalled();
+  });
+});
+
+/** Counts the stored sessions of one user. */
+async function sessionCount(userId: string): Promise<number> {
+  const rows = await harness.db.execute(sql`SELECT count(*)::int AS n FROM sessions WHERE user_id = ${userId}`);
+  return (rows.rows[0] as { n: number }).n;
+}
+
+/** Stores one live session for a user. */
+async function seedSession(userId: string) {
+  await harness.db.execute(sql`INSERT INTO sessions (id, token_hash, user_id, expires_at)
+    VALUES (${`s-${userId}`}, ${`h-${userId}`}, ${userId}, now() + interval '1 day')`);
+}
+
+describe("session revocation joins the password write (L1)", () => {
+  const sessionAdmin: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
+    role: "ADMIN", roles: [], SchoolAdmins: [],
+  };
+
+  it("ends the target's sessions in the same transaction as the password write", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    await seedSession("teacher-a");
+    const result = await updateTeacher("teacher-a", { password: "New-password-1" }, sessionAdmin);
+    expect(result.success).toBe(true);
+    expect(await sessionCount("teacher-a")).toBe(0);
+  });
+
+  it("keeps the sessions when the update does not change a password", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    await seedSession("teacher-a");
+    await updateTeacher("teacher-a", { name: "Renamed" }, sessionAdmin);
+    expect(await sessionCount("teacher-a")).toBe(1);
+  });
+});
+
+describe("updateTeacher role allowlist (L3)", () => {
+  const sessionAdmin: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
+    role: "ADMIN", roles: [], SchoolAdmins: [],
+  };
+
+  it("refuses a role name outside teacher and admin and leaves the roles unchanged", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    const result = await updateTeacher("teacher-a", { role: "system" }, sessionAdmin);
+    expect(result.success).toBe(false);
+    const rows = await harness.db.execute(sql`SELECT r.name FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = 'teacher-a'`);
+    expect(rows.rows).toEqual([{ name: "teacher" }]);
+  });
+});
+
+describe("deleteTeacher effective rank and audit (L6)", () => {
+  const sessionAdmin: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
+    role: "ADMIN", roles: [], SchoolAdmins: [],
+  };
+
+  it("refuses to delete an equal or higher rank and writes no audit event", async () => {
+    await seedUser("admin-2", "ADMIN", SCHOOL_A);
+    await giveRole("admin-2", "admin");
+    const result = await deleteTeacher("admin-2", sessionAdmin);
+    expect(result.success).toBe(false);
+    expect(await snapshot("admin-2")).toBeDefined();
+    expect(eventMocks.auditUserDeleted).not.toHaveBeenCalled();
+  });
+
+  it("refuses a teacher with a legacy admin row that deletes the owner", async () => {
+    await seedUser("owner", "STUDENT", SCHOOL_A);
+    await giveRole("owner", "admin");
+    await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('owner', ${SCHOOL_A})`);
+    const teacher: UserWithRoles = { ...sessionAdmin, role: "TEACHER" };
+    expect((await deleteTeacher("owner", teacher)).success).toBe(false);
+  });
+
+  it("deletes a lower-ranked teacher and audits the delete", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    const result = await deleteTeacher("teacher-a", sessionAdmin);
+    expect(result.success).toBe(true);
+    const rows = await harness.db.execute(sql`SELECT id FROM users WHERE id = 'teacher-a'`);
+    expect(rows.rows).toHaveLength(0);
+    expect(eventMocks.auditUserDeleted).toHaveBeenCalledWith({ userId: "teacher-a", actor: { id: "caller", role: "ADMIN" } });
   });
 });

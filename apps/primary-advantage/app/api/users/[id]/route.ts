@@ -8,7 +8,7 @@ import { isAdminOrSystem, patchUserBodySchema, canAccessSchoolResource, canSetPa
 import { roleAtLeast, type Role } from "@reading-advantage/auth";
 import { loadTargetEffectiveRank } from "@/server/utils/auth";
 import { afterPasswordWrite } from "@/server/utils/passwordEvents";
-import { hashNewPassword, upsertCredentialAccount } from "@/server/utils/credentials";
+import { hashNewPassword, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
 
 export async function PATCH(
   request: NextRequest,
@@ -125,6 +125,8 @@ export async function PATCH(
       // The shared login reads accounts.password, so mirror the new hash there.
       if (newPasswordHash) {
         await upsertCredentialAccount(tx, userId, newPasswordHash);
+        // sessions has no schoolId; the target was already school-checked above.
+        await revokeSessionsInTx(rawTx, userId);
       }
 
       // Handle role update if specified
@@ -170,6 +172,7 @@ export async function PATCH(
         userId,
         actor: { id: currentUserData.id, role: currentUserData.role },
         created: false,
+        sessionsRevoked: true,
       });
     }
 

@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@reading-advantage/db", () => ({ db: { marker: "db" } }));
 vi.mock("@reading-advantage/auth", () => mocks);
 
-import { afterPasswordWrite } from "../passwordEvents";
+import { afterPasswordWrite, auditUserDeleted } from "../passwordEvents";
 
 describe("afterPasswordWrite", () => {
   beforeEach(() => vi.clearAllMocks());
@@ -31,11 +31,34 @@ describe("afterPasswordWrite", () => {
     );
   });
 
-  it("does not throw when revocation or audit fails", async () => {
-    mocks.revokeAllUserSessions.mockRejectedValueOnce(new Error("x"));
+  it("keeps the audit best-effort when it fails", async () => {
     mocks.recordAuditEvent.mockRejectedValueOnce(new Error("y"));
     await expect(
       afterPasswordWrite({ userId: "u1", actor: null, created: false }),
     ).resolves.toBeUndefined();
+  });
+
+  it("surfaces a failed revocation to the caller", async () => {
+    mocks.revokeAllUserSessions.mockRejectedValueOnce(new Error("x"));
+    await expect(
+      afterPasswordWrite({ userId: "u1", actor: null, created: false }),
+    ).rejects.toThrow("session revocation failed");
+  });
+
+  it("skips revocation when the sessions already ended in the write transaction", async () => {
+    await afterPasswordWrite({ userId: "u1", actor: null, created: false, sessionsRevoked: true });
+    expect(mocks.revokeAllUserSessions).not.toHaveBeenCalled();
+  });
+});
+
+describe("auditUserDeleted", () => {
+  it("records a user:deleted event and never throws", async () => {
+    await auditUserDeleted({ userId: "u9", actor: { id: "a1", role: "admin" } });
+    expect(mocks.recordAuditEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ actorUserId: "a1", actorRole: "ADMIN" }),
+      expect.objectContaining({ action: "user:deleted", targetId: "u9" }),
+    );
+    mocks.recordAuditEvent.mockRejectedValueOnce(new Error("y"));
+    await expect(auditUserDeleted({ userId: "u9", actor: null })).resolves.toBeUndefined();
   });
 });
