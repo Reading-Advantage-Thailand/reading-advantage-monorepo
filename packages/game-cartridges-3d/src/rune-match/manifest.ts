@@ -1,7 +1,7 @@
 /**
  * The Rune Match cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
- * `inputMode` is 'practice': the evidence needs the story id and level. The core also accepts the
+ * `inputMode` is 'practice': the evidence needs the input id and level. The core also accepts the
  * APK `VocabularyInput`, so the APK port can switch this to 'sentence'. The 2D view reuses the
  * baked vault hall and the party and monster sprites of Monster Encounters.
  */

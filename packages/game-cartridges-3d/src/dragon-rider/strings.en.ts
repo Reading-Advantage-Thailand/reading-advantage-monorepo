@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Grow a flock of dragons and win the duel with the dark dragon.',
       instructions: {
-        read: { title: 'Read the word', description: 'A word from the story shows at the top. Two gates fly toward you.' },
+        read: { title: 'Read the word', description: 'One of your words shows at the top. Two gates fly toward you.' },
         choose: { title: 'Pick a gate', description: 'Fly through the gate with its meaning. A new dragon joins you.' },
         duel: { title: 'Duel the dark dragon', description: 'A bigger flock fights fresh for longer. Tired dragons rest and come back.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap or swipe', action: 'Pick left or right' },
         pointer: { label: 'Click or arrow keys', action: 'Pick left or right' },
       },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'No hurry: the gates wait in front of you until you pick one.',
       start: 'Take off 🐉',
     },

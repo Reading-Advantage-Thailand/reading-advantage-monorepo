@@ -1,7 +1,7 @@
 /**
  * The Castle Defense cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
- * `inputMode` is 'practice': the evidence needs the sentence ids, the paragraphs, the story id, and
+ * `inputMode` is 'practice': the evidence needs the sentence ids, the paragraphs, the input id, and
  * the level. The core also accepts the APK `SentenceInput`. The game shares the Sunken Vault
  * battle stage with Monster Encounters (3D) and its baked hall and sprites (2D), so it lists the
  * same models; the 2D files cover the party and the three attackers (skeleton, mimic, fire dragon).
@@ -29,7 +29,7 @@ export const MODELS_3D: readonly string[] = ['altar', 'arch', 'barrel', 'bone-pi
 export const manifest = validateCartridge3DManifest({
   id: 'castle-defense',
   title: 'Castle Defense',
-  description: 'Build each story sentence word by word to raise a tower that defends the castle.',
+  description: 'Build each of your sentences word by word to raise a tower that defends the castle.',
   runtimeApiVersion: CARTRIDGE_3D_RUNTIME_API_VERSION,
   renderers: ['three', 'phaser'],
   inputMode: 'practice',

@@ -2,7 +2,7 @@
  * The Rune Forge Chamber 3D cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
  * `inputMode` is 'practice': the host passes the whole `PracticeInput`, and the evidence needs the
- * sentence ids, the paragraphs, the story id, and the level. The core also accepts the APK
+ * sentence ids, the paragraphs, the input id, and the level. The core also accepts the APK
  * `SentenceInput`, so the APK port can switch this to 'sentence'.
  *
  * `requiredAssetBindings` lists the 2D view's files of the `primary-chibi-2d` sprite pack (the key

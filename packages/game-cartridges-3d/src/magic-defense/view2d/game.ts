@@ -32,7 +32,7 @@ export interface MagicDefense2DTest {
 }
 
 export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, unknown>> {
-  if (Array.isArray(ctx.input)) throw new Error('Magic Defense needs a story input.');
+  if (Array.isArray(ctx.input)) throw new Error('Magic Defense needs a practice input.');
   const story = ctx.input as PracticeInput;
   const i18n = ctx.i18n ?? createI18n([strings]).scope('magicDefense');
   const t = i18n.scope('hud').t;

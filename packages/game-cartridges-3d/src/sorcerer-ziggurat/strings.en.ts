@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Climb the ziggurat one rune cube at a time, in the order of each sentence.',
       instructions: {
-        read: { title: 'Read the sentence', description: 'The blanks at the top show the sentence from your story, word by word.' },
+        read: { title: 'Read the sentence', description: 'The blanks at the top show one of your sentences, word by word.' },
         step: { title: 'Pick the next word', description: 'Three rune cubes wait ahead. Tap the cube with the next word.' },
         climb: { title: 'Reach the crystal', description: 'A right cube lifts you one level. A wrong cube crumbles, then you try again.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap a rune cube', action: 'Step onto it' },
         pointer: { label: 'Arrows or A, W, D', action: 'Step left, forward, or right' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'A crumbled cube costs courage, but it never ends the game. The team rests and comes back.',
       start: 'Climb the ziggurat 🔮',
     },

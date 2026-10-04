@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Hold and drag', action: 'Climb and step sideways' },
         pointer: { label: 'Arrows or WASD', action: 'Climb and step sideways' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'Hazards and wrong windows cost courage, but they never end the game. The team rests and comes back.',
       start: 'Start the climb 🏰',
     },

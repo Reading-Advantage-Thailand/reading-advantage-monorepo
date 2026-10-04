@@ -12,7 +12,7 @@ export default {
         shield: { title: 'Shields hold', description: 'A wrong arrow bounces off, and that enemy cannot be shot again for this meaning. There is no timer.' },
       },
       controls: { touch: { label: 'Tap', action: 'Tap a word to shoot' }, pointer: { label: 'Click', action: 'Click a word to shoot' } },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'A wrong arrow costs courage, and the enemy strikes. Courage always comes back.',
       start: 'Start the battle 🏹',
     },

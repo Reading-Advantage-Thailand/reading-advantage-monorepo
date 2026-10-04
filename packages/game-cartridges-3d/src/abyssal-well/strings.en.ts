@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Creatures with words climb out of the well. Shoot them in the order of the sentence to build it.',
       instructions: {
-        read: { title: 'Read the sentence', description: 'The blanks at the top show the sentence from your story, word by word.' },
+        read: { title: 'Read the sentence', description: 'The blanks at the top show one of your sentences, word by word.' },
         aim: { title: 'Aim down a lane', description: 'Tap the creature with the next word, or turn with the arrows and shoot with Space.' },
         build: { title: 'Build the sentence', description: 'A right arrow drops the creature into the sentence. A wrong arrow bounces off and the creature falls back.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap a creature', action: 'Shoot down its lane' },
         pointer: { label: 'Arrows and Space', action: 'Turn and shoot' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'One creature holds a word that is not in the sentence. A wrong arrow costs courage, and courage always comes back.',
       start: 'Shoot the first word 🏹',
     },

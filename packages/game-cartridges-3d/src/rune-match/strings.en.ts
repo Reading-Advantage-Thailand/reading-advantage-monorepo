@@ -12,7 +12,7 @@ export default {
         look: { title: 'Power runes', description: 'A heart rune line gives courage back. A shield rune line stops the next strike. There is no timer.' },
       },
       controls: { touch: { label: 'Drag or tap', action: 'Drag a rune to its neighbor, or tap two neighbors' }, pointer: { label: 'Drag or click', action: 'Drag a rune to its neighbor, or click two neighbors' } },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'A wrong swap goes back, and the monster strikes. Courage always comes back.',
       start: 'Start the match ✨',
     },

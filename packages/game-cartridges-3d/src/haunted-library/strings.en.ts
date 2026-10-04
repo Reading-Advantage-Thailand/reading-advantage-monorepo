@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Open the library doors in the order of each sentence.',
       instructions: {
-        read: { title: 'Read the sentence', description: 'Each door holds one word of a sentence from the story.' },
+        read: { title: 'Read the sentence', description: 'Each door holds one word of one of your sentences.' },
         open: { title: 'Open the doors in order', description: 'Walk to the first word, then tap Open. Then find the next word.' },
         climb: { title: 'Climb the floors', description: 'Walk to either end of a floor to bounce up. Tap Down to drop one floor.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Hold and drag', action: 'Walk left and right' },
         pointer: { label: 'Arrows or WASD, Space', action: 'Walk, drop down, open a door' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'Ghosts and bats cost courage, but they never end the game. The team rests and comes back.',
       start: 'Enter the library 📚',
     },

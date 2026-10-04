@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Call the villagers in the order of each sentence, and lead them into the barn.',
       instructions: {
-        read: { title: 'Read the sentence', description: 'Each villager holds one word of a sentence from the story.' },
+        read: { title: 'Read the sentence', description: 'Each villager holds one word of one of your sentences.' },
         call: { title: 'Call them in order', description: 'Walk to the first word, then the next. Called villagers follow you.' },
         barn: { title: 'Lead them to the barn', description: 'When the whole sentence follows you, walk to the glowing barn door.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Hold and drag', action: 'Walk toward your finger' },
         pointer: { label: 'WASD or arrows', action: 'Walk' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'Bandits and goblins scare the villagers back home, but they never end the game.',
       start: 'Guard the village 🛡️',
     },

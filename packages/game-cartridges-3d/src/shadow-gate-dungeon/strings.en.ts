@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Collect the word crystals in the order of each sentence, then walk through the gate.',
       instructions: {
-        read: { title: 'Read the sentence', description: 'Each room has one sentence from the story. Think of the next word.' },
+        read: { title: 'Read the sentence', description: 'Each room has one of your sentences. Think of the next word.' },
         collect: { title: 'Touch the next word', description: 'Three crystals glow. Walk to the one with the next word of the sentence.' },
         gate: { title: 'Open the gate', description: 'When the whole sentence is built, walk through the glowing gate.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Hold and drag', action: 'Walk toward your finger' },
         pointer: { label: 'WASD or arrows', action: 'Walk' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'A shadow follows you. It pushes you back and shuffles the crystals, but it never ends the game.',
       start: 'Enter the dungeon 🔮',
     },

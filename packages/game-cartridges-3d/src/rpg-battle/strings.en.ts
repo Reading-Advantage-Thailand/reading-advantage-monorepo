@@ -12,7 +12,7 @@ export default {
         power: { title: 'Power cards', description: 'A ★ power card hits twice as hard and gives courage back. There is no timer.' },
       },
       controls: { touch: { label: 'Tap', action: 'Tap a card, then tap a meaning' }, pointer: { label: 'Click', action: 'Click a card, then click a meaning' } },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'A wrong choice costs courage, and the monster strikes. Courage always comes back.',
       start: 'Start the battle ⚔️',
     },

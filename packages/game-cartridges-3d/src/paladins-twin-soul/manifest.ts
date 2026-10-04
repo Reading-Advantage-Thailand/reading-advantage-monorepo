@@ -1,7 +1,7 @@
 /**
  * The Paladin's Twin Soul cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
- * `inputMode` is 'practice': the evidence needs the story id and level. The core also accepts the
+ * `inputMode` is 'practice': the evidence needs the input id and level. The core also accepts the
  * APK `VocabularyInput`, so the APK port can switch this to 'sentence'. The 3D and 2D views use
  * the shared battle stage (the Sunken Vault, the heroes, and the monsters of Monster Encounters).
  */

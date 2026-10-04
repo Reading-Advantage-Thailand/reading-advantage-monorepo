@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Strike the orbiting runes in the order of the sentence to forge each blade.',
       instructions: {
-        read: { title: 'Read the sentence', description: 'The blanks at the top show the sentence from your story, word by word.' },
+        read: { title: 'Read the sentence', description: 'The blanks at the top show one of your sentences, word by word.' },
         pick: { title: 'Pick the next rune', description: 'Runes circle the anvil. Tap the rune with the next word, or use the arrows and Space.' },
         forge: { title: 'Forge the blade', description: 'A right rune strikes into the blade. A wrong rune goes dim, then you try again.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap a rune', action: 'Strike it into the blade' },
         pointer: { label: 'Arrows and Space', action: 'Move between the runes and pick one' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'A wrong rune only goes dim for a moment. Nothing here ends the game.',
       start: 'Light the forge 🔨',
     },

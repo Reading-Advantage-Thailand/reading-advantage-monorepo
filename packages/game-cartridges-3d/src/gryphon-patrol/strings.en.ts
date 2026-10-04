@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap', action: 'Tap a bat to shoot it' },
         pointer: { label: 'Click or keys 1 2 3 4', action: 'Click a bat to shoot it' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'No hurry: the bats keep circling until you shoot. A wrong shot only costs courage, and courage always comes back.',
       start: 'Start the patrol 🦅',
     },

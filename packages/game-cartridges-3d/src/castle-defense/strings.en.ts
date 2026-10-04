@@ -5,14 +5,14 @@ export default {
     pitch: 'Build each sentence word by word to raise towers that guard the castle.',
     subtitle: 'Raise the towers',
     briefing: {
-      objective: 'Defend the castle of the Sunken Vault: build each story sentence word by word, and its tower beats the attackers at the gate.',
+      objective: 'Defend the castle of the Sunken Vault: build each of your sentences word by word, and its tower beats the attackers at the gate.',
       instructions: {
         read: { title: 'Read the meaning', description: 'The card shows the meaning of one sentence and the words you have built so far.' },
         build: { title: 'Pick the next word', description: 'Tap the word that comes next in the sentence. The right word joins the sentence.' },
         tower: { title: 'Place the tower', description: 'When the sentence is built, tap a post of the wall. Its hero raises a tower and the towers fire. There is no timer.' },
       },
       controls: { touch: { label: 'Tap', action: 'Tap a word or a post' }, pointer: { label: 'Click', action: 'Click a word or a post' } },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'A wrong word fails, and an attacker hurts the castle. If every heart is lost, the heroes rest and the castle stands strong again.',
       start: 'Defend the castle 🏰',
     },

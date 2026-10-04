@@ -12,7 +12,7 @@ export default {
         storm: { title: 'Call the storm', description: 'Each right word fills the storm. When it is full, tap Storm to mend every castle. There is no timer.' },
       },
       controls: { touch: { label: 'Tap', action: 'Tap a spell word' }, pointer: { label: 'Click', action: 'Click a spell word' } },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'A wrong word fails, and the missile hurts a castle. If every castle falls, the heroes rest and the castles stand again.',
       start: 'Defend the castles 🏰',
     },

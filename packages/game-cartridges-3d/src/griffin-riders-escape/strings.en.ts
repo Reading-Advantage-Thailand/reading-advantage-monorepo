@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap a lane or swipe', action: 'Steer the griffin to a lane' },
         pointer: { label: 'Click or keys A D', action: 'Steer the griffin left or right' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'A wrong gate or a storm only costs courage. The riders rest, the same word comes back, and courage always comes back.',
       start: 'Start the escape 🦅',
     },

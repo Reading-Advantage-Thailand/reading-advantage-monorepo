@@ -2,7 +2,7 @@
  * The Dungeon Liberator 3D cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
  * `inputMode` is 'practice': the host passes the whole `PracticeInput`, and the evidence needs the
- * sentence ids, the paragraphs, the story id, and the level. The core also accepts the APK
+ * sentence ids, the paragraphs, the input id, and the level. The core also accepts the APK
  * `SentenceInput`, so the APK port can switch this to 'sentence'.
  */
 import { APK3D_CAPABILITIES, CARTRIDGE_3D_RUNTIME_API_VERSION, validateCartridge3DManifest } from '@reading-advantage/advantage-play-kit-3d/contracts';

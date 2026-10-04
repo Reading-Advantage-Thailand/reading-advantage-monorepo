@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Hold and drag, or tap a book', action: 'Walk through the hall' },
         pointer: { label: 'Arrows or WASD, Space', action: 'Walk and raise the shield' },
       },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'Spirits and wrong books cost courage, but they never end the game. The team rests and comes back.',
       start: 'Enter the hall 📚',
     },

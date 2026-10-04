@@ -42,7 +42,7 @@ interface EnemyView {
 }
 
 export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, unknown>> {
-  if (Array.isArray(ctx.input)) throw new Error('Abyssal Well needs a story input.');
+  if (Array.isArray(ctx.input)) throw new Error('Abyssal Well needs a practice input.');
   const story = ctx.input as PracticeInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('abyssalWell')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;

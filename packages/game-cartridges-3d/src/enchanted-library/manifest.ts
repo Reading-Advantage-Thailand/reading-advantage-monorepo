@@ -2,7 +2,7 @@
  * The Enchanted Library 3D cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
  * `inputMode` is 'practice': the host passes the whole `PracticeInput`, and the evidence needs the
- * vocabulary ids, the story id, and the level. The core also accepts the APK `VocabularyInput`,
+ * vocabulary ids, the input id, and the level. The core also accepts the APK `VocabularyInput`,
  * so the APK port can switch this to 'vocabulary'.
  */
 import { APK3D_CAPABILITIES, CARTRIDGE_3D_RUNTIME_API_VERSION, validateCartridge3DManifest } from '@reading-advantage/advantage-play-kit-3d/contracts';

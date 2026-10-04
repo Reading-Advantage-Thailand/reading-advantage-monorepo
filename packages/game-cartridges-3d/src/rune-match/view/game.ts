@@ -14,7 +14,7 @@ const PRESET_HEROES = ['knight', 'wizard', 'cleric'] as const;
 const SFX: Record<Sfx, string> = { swap: 'tap', burst: 'correct', reject: 'wrong', heal: 'heal', shield: 'tap', hit: 'hit', defeat: 'defeat', victory: 'victory' };
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
-  if (Array.isArray(ctx.input)) throw new Error('Rune Match needs a story input.');
+  if (Array.isArray(ctx.input)) throw new Error('Rune Match needs a practice input.');
   const story: PracticeInput = ctx.input;
   const stage = new BattleStage(ctx.stage);
   const hud = new RuneHud(ctx.hud, stage, ctx.i18n, ctx.audio, ctx.host);

@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap or swipe', action: 'Choose an orb' },
         pointer: { label: 'Click or keys A S D', action: 'Choose an orb' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'No hurry: your wizard waits in front of the orbs until you choose.',
       start: 'Start running ✨',
     },

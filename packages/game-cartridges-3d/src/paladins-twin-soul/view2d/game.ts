@@ -30,7 +30,7 @@ export interface TwinSoul2DTest {
 }
 
 export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, unknown>> {
-  if (Array.isArray(ctx.input)) throw new Error('Paladin’s Twin Soul needs a story input.');
+  if (Array.isArray(ctx.input)) throw new Error('Paladin’s Twin Soul needs a practice input.');
   const story = ctx.input as PracticeInput;
   const i18n = ctx.i18n ?? createI18n([strings]).scope('paladinsTwinSoul');
   const t = i18n.scope('hud').t;

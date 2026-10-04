@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Eat the words of each sentence in order and grow big.',
       instructions: {
-        read: { title: 'Read the sentence', description: 'Word bubbles float in the clearing: the words of a sentence from the story.' },
+        read: { title: 'Read the sentence', description: 'Word bubbles float in the clearing: the words of one of your sentences.' },
         eat: { title: 'Eat them in order', description: 'The first word first. Every right word makes the slime bigger.' },
         gulp: { title: 'Power up and gulp', description: 'A big slime glows gold. While it glows, it can swallow guards! Then it shrinks back.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Hold and drag', action: 'Move toward your finger' },
         pointer: { label: 'WASD or arrows', action: 'Move' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'A wrong word bounces away. Big guards push you back, but you never lose.',
       start: 'Start munching 🟢',
     },

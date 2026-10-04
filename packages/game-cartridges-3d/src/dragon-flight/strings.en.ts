@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Grow a flock of dragons and beat the dark dragon at the end.',
       instructions: {
-        read: { title: 'Read the word', description: 'A word from the story shows at the top.' },
+        read: { title: 'Read the word', description: 'One of your words shows at the top.' },
         choose: { title: 'Choose the gate', description: 'Fly through the gate with its meaning. A new dragon joins you.' },
         boss: { title: 'Face the dark dragon', description: 'At the end, every dragon in your flock breathes fire.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap or swipe', action: 'Choose a gate' },
         pointer: { label: 'Click or keys 1 2 3', action: 'Choose a gate' },
       },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'No hurry: your dragon waits in front of the gates until you choose.',
       start: 'Take off 🐉',
     },

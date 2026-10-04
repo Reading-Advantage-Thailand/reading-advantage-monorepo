@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Shoot the word crystals in the order of the sentence to build each spell.',
       instructions: {
-        read: { title: 'Read the sentence', description: 'The blanks at the top show the sentence from your story, word by word.' },
+        read: { title: 'Read the sentence', description: 'The blanks at the top show one of your sentences, word by word.' },
         aim: { title: 'Aim at the next word', description: 'Tap the crystal with the next word, or use the arrows and Space.' },
         build: { title: 'Build the spell', description: 'A right crystal shatters into the sentence. A wrong crystal goes dim, then you try again.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap a crystal', action: 'Cast a bolt at it' },
         pointer: { label: 'Arrows and Space', action: 'Aim and cast' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'One crystal holds a word that is not in the sentence. Nothing here ends the game.',
       start: 'Cast the spell ✨',
     },

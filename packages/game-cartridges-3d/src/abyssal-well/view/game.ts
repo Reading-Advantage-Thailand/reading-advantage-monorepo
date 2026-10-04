@@ -43,7 +43,7 @@ interface EnemyView {
 }
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
-  if (Array.isArray(ctx.input)) throw new Error('Abyssal Well needs a story input.');
+  if (Array.isArray(ctx.input)) throw new Error('Abyssal Well needs a practice input.');
   const story: PracticeInput = ctx.input;
   const stage = ctx.stage;
   const t = ctx.i18n.scope('hud').t;

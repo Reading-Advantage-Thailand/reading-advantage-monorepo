@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Pick the ingredient jar that carries the word for each meaning, and fill the cauldron.',
       instructions: {
-        read: { title: 'Read the formula', description: 'The recipe card shows the meaning of one word from your story.' },
+        read: { title: 'Read the formula', description: 'The recipe card shows the meaning of one of your words.' },
         pick: { title: 'Pick the jar', description: 'Four jars carry English words. Tap the one that matches the meaning.' },
         brew: { title: 'Brew the elixir', description: 'The right jar pours into the cauldron. A wrong jar goes dim, then you try again.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap a jar', action: 'Pour it into the cauldron' },
         pointer: { label: 'Arrows and Space', action: 'Move between the jars and pick one' },
       },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'A wrong jar only goes dim for a moment. Nothing here ends the game.',
       start: 'Start brewing 🧪',
     },

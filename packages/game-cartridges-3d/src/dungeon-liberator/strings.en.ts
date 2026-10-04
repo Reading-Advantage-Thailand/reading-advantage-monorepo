@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Free the villagers in the order of each sentence, and lead them out.',
       instructions: {
-        read: { title: 'Read the sentence', description: 'Each villager holds one word of a sentence from the story.' },
+        read: { title: 'Read the sentence', description: 'Each villager holds one word of one of your sentences.' },
         free: { title: 'Free them in order', description: 'Walk to the first word, then the next. Freed villagers follow you.' },
         escape: { title: 'Lead them out', description: 'When the whole sentence follows you, walk through the glowing gate.' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Hold and drag', action: 'Walk toward your finger' },
         pointer: { label: 'WASD or arrows', action: 'Walk' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'Skeletons scare the villagers back to their spots, but they never end the game.',
       start: 'Enter the vault 🗝️',
     },

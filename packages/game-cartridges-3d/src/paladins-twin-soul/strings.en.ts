@@ -12,7 +12,7 @@ export default {
         look: { title: 'Take your time', description: 'A wrong shade falls, so fewer shades are left to try. There is no timer.' },
       },
       controls: { touch: { label: 'Tap', action: 'Tap a shade to strike it' }, pointer: { label: 'Click', action: 'Click a shade to strike it' } },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'A wrong shade falls and costs one courage. Courage always comes back.',
       start: 'Free the souls ✨',
     },

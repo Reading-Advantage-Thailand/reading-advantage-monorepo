@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Hold and drag', action: 'Walk in one direction' },
         pointer: { label: 'WASD or arrows', action: 'Walk' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'Monsters never end the game. If courage runs out, the team rests and comes back.',
       start: 'Carve the realm ⚔️',
     },

@@ -40,7 +40,7 @@ export interface RpgBattle2DTest {
 }
 
 export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, unknown>> {
-  if (Array.isArray(ctx.input)) throw new Error('RPG Battle needs a story input.');
+  if (Array.isArray(ctx.input)) throw new Error('RPG Battle needs a practice input.');
   const story = ctx.input as PracticeInput;
   const i18n = ctx.i18n ?? createI18n([strings]).scope('rpgBattle');
   const t = i18n.scope('hud').t;

@@ -7,7 +7,7 @@ export default {
     briefing: {
       objective: 'Find the meaning of every word before the sun rises.',
       instructions: {
-        read: { title: 'Read the word', description: 'A word from the story glows at the top of the screen.' },
+        read: { title: 'Read the word', description: 'One of your words glows at the top of the screen.' },
         find: { title: 'Find its meaning', description: 'Run to the light orb with the right meaning. It charges your Blast.' },
         blast: { title: 'Blast the zombies', description: 'Tap Blast to knock down every zombie near you. They get up again later!' },
       },
@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Drag and tap Blast', action: 'Run, and knock zombies down' },
         pointer: { label: 'WASD and Space', action: 'Run, and Blast' },
       },
-      learningPreview: 'Words from your story',
+      learningPreview: 'Your words',
       tip: 'Zombies only push you back. You cannot lose, so take your time to read.',
       start: 'Face the night 🧟',
     },

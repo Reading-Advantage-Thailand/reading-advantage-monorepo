@@ -14,7 +14,7 @@ const PRESET_HEROES = ['knight', 'wizard', 'cleric'] as const;
 const SFX: Record<Sfx, string> = { pick: 'tap', correct: 'correct', wrong: 'wrong', hit: 'hit', defeat: 'defeat', victory: 'victory' };
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
-  if (Array.isArray(ctx.input)) throw new Error('Archer’s Revenge needs a story input.');
+  if (Array.isArray(ctx.input)) throw new Error('Archer’s Revenge needs a practice input.');
   const story: PracticeInput = ctx.input;
   const stage = new BattleStage(ctx.stage);
   const hud = new ArchersHud(ctx.hud, stage, ctx.i18n, ctx.audio, ctx.host);

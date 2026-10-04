@@ -2,7 +2,7 @@
  * The Hero vs. Zombie 3D cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
  * `inputMode` is 'practice': the host passes the whole `PracticeInput`, and the evidence needs the
- * vocabulary ids, the story id, and the level. The core also accepts the APK `VocabularyInput`,
+ * vocabulary ids, the input id, and the level. The core also accepts the APK `VocabularyInput`,
  * so the APK port can switch this to 'vocabulary'.
  *
  * `requiredAssetBindings` lists the 2D view's files of the `primary-chibi-2d` sprite pack (the key
@@ -28,7 +28,7 @@ export const MODELS_3D: readonly string[] = ['bone-pile', 'boulder', 'bush', 'ca
 export const manifest = validateCartridge3DManifest({
   id: 'hero-vs-zombie',
   title: 'Hero vs. Zombie',
-  description: 'Run to the orb with the meaning of the story word, charge your Blast, and knock the churchyard zombies flat until dawn.',
+  description: 'Run to the orb with the meaning of your word, charge your Blast, and knock the churchyard zombies flat until dawn.',
   runtimeApiVersion: CARTRIDGE_3D_RUNTIME_API_VERSION,
   renderers: ['three', 'phaser'],
   inputMode: 'practice',

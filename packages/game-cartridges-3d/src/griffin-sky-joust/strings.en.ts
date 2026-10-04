@@ -15,7 +15,7 @@ export default {
         touch: { label: 'Tap to flap', action: 'Tap the left or right side to slide' },
         pointer: { label: 'Space or up arrow', action: 'Flap, and use left and right arrows to slide' },
       },
-      learningPreview: 'Sentences from your story',
+      learningPreview: 'Your sentences',
       tip: 'No hurry: when your courage runs out, your griffin rests and comes back.',
       start: 'Take off 🦅',
     },

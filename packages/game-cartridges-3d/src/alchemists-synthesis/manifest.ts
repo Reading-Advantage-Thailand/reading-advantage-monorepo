@@ -2,7 +2,7 @@
  * The Alchemist's Synthesis 3D cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
  * `inputMode` is 'practice': the host passes the whole `PracticeInput`, and the evidence needs the
- * vocabulary ids, the story id, and the level. The core also accepts the APK `VocabularyInput`,
+ * vocabulary ids, the input id, and the level. The core also accepts the APK `VocabularyInput`,
  * so the APK port can switch this to 'vocabulary'.
  *
  * `requiredAssetBindings` lists the 2D view's files of the `primary-chibi-2d` sprite pack (the key
