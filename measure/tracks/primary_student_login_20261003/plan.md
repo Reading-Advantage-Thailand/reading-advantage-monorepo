@@ -58,6 +58,12 @@ Owner lane: B. Depends on cutover blockers Phase 2 for argon2.
 - Phase 4 review fixes (coordinator): after a student sign-in the client does a full page load (`window.location.replace` of the locale path) instead of `refresh()` + `router.replace`. Reason: `@reading-advantage/auth-client` ignores `refresh()` after a client-side logout in the same page life (`signedOutRef`), and on a shared device the client state of the student before must not stay. A change in `packages/auth-client` would bring back the logout race in 7 apps. Also: picture buttons keep a white background in dark mode (dark pictures stay visible); a failed name-only sign-in no longer talks about pictures; the old class code and student password controls are removed from the class page (`ClassCodeGenerator` render, the header badges).
 
 ## Phase 5: Verify
-- [ ] 25-student browser test through all paths
+- [b] 25-student browser test through all paths — blocked: Claude Code stopped the run for low memory (other sessions), and a rerun needs the owner's go-ahead. Setup (25 picture passwords, class sheet 25/0, 25 QR cards) and the 375/768 screenshot checks passed in the browser. Script, seed, and results: `evidence/phase5-browser-test.md`.
 - [x] Security review by a separate agent (no shared context with the author) — no Critical or High. Fixed: QR card needs an open class (M2), 415 for a non-JSON body (login CSRF, L4), error logs keep only the error kind (L5), `no-store` on upload and create-student responses with initial passwords (L3), full-only path `/settings/user-profile` (L1; Lane F wires the check). Recorded in spec Known risks: M1, M3, M4, L2. Out of lane: `packages/api/src/routes/auth/register.ts:56` lets an ADMIN create a student in any school (tech debt).
-- [ ] Timing check in QA
+- [b] Timing check in QA — owner/QA: needs a QA run on real school devices and network.
+
+### Phase 5 gates (2026-10-05, lane-b at e624d310f)
+- Domain tests: 116 files, 1409 passed. Auth: 351 passed, 1 old failure (`phase-7-closeout`, tech-debt.md line cap; fails on integration too). API: 347 passed. DB: 42 failed vs 40 in the baseline; the 2 new ones (deploy-gate contract) are fixed in 97137af87 (`--required-migration 0064_primary_student_session_policy` in the Primary `cloudbuild.yaml`; repo edit only, no build submitted).
+- Primary: tsc exit 0; vitest 137 files, 893 passed. ESLint on changed files: 0 errors.
+- Migration doctor on local `primary_advantage` with `--required-migration 0064_primary_student_session_policy`: OK.
+- Tutor read test: shape PASS for all 5 reads; rows FAIL as expected (no ETL data locally).
