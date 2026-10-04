@@ -84,7 +84,7 @@ export interface ProvisionedStudentLogin {
 /** A student whose login data could not be stored. The student keeps the old username. */
 export interface FailedStudentLogin {
   userId: string;
-  /** The error message, for the teacher report and the log. */
+  /** A fixed reason for the teacher report. The raw error stays on the server. */
   reason: string;
 }
 
@@ -165,7 +165,9 @@ export async function provisionStudentLogins(params: {
       }
       results.push({ userId: seed.userId, username, initialPassword });
     } catch (error) {
-      failed.push({ userId: seed.userId, reason: error instanceof Error ? error.message : "Unknown error" });
+      // A Drizzle error message lists the query params (the new hash): keep it out of the result.
+      console.error("Student login provisioning failed for one student:", error instanceof Error ? error.name : "Unknown");
+      failed.push({ userId: seed.userId, reason: "Could not save the login." });
     }
   }
 
@@ -240,7 +242,9 @@ export async function resetClassPasswords(params: {
       });
       students.push({ userId: row.userId, name: row.name, username: row.username, password: row.password });
     } catch (error) {
-      console.error("Class password reset failed for one student:", error instanceof Error ? error.message : "Unknown");
+      // A Drizzle error message lists the query params, which hold the new hash: log only the kind.
+      const code = (error as { cause?: { code?: string } })?.cause?.code;
+      console.error("Class password reset failed for one student:", error instanceof Error ? error.name : "Unknown", code ?? "");
       failed.push({ userId: row.userId, name: row.name });
     }
   }

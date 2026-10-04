@@ -60,6 +60,9 @@ export async function parseBody<T>(request: NextRequest, schema: ZodType<T>): Pr
   return parsed.success ? parsed.data : NextResponse.json({ message: "Invalid input" }, { status: 400 });
 }
 
+// Bodies can carry one-time secrets (class codes, initial passwords, card tokens).
+const NO_STORE = { headers: { "Cache-Control": "no-store" } };
+
 /**
  * Builds a handler for a teacher action. `/api/*` is outside the proxy matcher, so the
  * handler checks the session itself: signed in, and a `full` session.
@@ -78,7 +81,7 @@ export function teacherHandler<T>(
       if (!canUseFullAuthFeature(session)) return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       const input = await parseBody(request, schema);
       if (input instanceof NextResponse) return input;
-      return NextResponse.json(await run({ user: session.user, meta: requestMeta(request), input }));
+      return NextResponse.json(await run({ user: session.user, meta: requestMeta(request), input }), NO_STORE);
     } catch (error) {
       return errorResponse(error);
     }
@@ -100,7 +103,7 @@ export function studentHandler<T>(
       const input = await parseBody(request, schema);
       if (input instanceof NextResponse) return input;
       const { body, session } = await run({ meta: requestMeta(request), input });
-      const response = NextResponse.json(body);
+      const response = NextResponse.json(body, NO_STORE);
       if (session) {
         response.cookies.set(SESSION_COOKIE_NAME, session.token, {
           httpOnly: true,

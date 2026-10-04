@@ -62,6 +62,7 @@ describe("teacher handlers", () => {
     const res = await startClass(post("/x", { classroomId: CLASS_ID }));
     expect(res.status).toBe(200);
     expect((await res.json()).code).toBe("ABCDEF");
+    expect(res.headers.get("Cache-Control")).toBe("no-store");
     expect(domain.startClassSession).toHaveBeenCalledWith(expect.objectContaining({ user: teacherSession.user, actor: { ip: "1.2.3.4", userAgent: null } }));
   });
 
@@ -97,6 +98,7 @@ describe("student handlers", () => {
     const cookie = res.headers.get("set-cookie") ?? "";
     expect(cookie).toContain("secret-token");
     expect(cookie.toLowerCase()).toContain("httponly");
+    expect(res.headers.get("Cache-Control")).toBe("no-store");
   });
 
   it("returns 423 with Retry-After when locked", async () => {

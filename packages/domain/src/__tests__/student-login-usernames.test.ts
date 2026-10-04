@@ -116,7 +116,7 @@ describe("provisionStudentLogins", () => {
   it("reports a student whose login could not be stored and goes on with the others", async () => {
     const db = createMockDb({ selectSequence: [[], [], []] });
     const insert = vi.fn()
-      .mockReturnValueOnce({ values: vi.fn().mockReturnValue({ onConflictDoUpdate: vi.fn().mockRejectedValue(new Error("db down")) }) })
+      .mockReturnValueOnce({ values: vi.fn().mockReturnValue({ onConflictDoUpdate: vi.fn().mockRejectedValue(new Error("Failed query: insert ... params: $argon2id$v=19$secret")) }) })
       .mockReturnValue({ values: vi.fn().mockReturnValue({ onConflictDoUpdate: vi.fn().mockResolvedValue([]), onConflictDoNothing: vi.fn().mockResolvedValue([]) }) });
     db.insert = insert;
     const out = await provisionStudentLogins({
@@ -127,7 +127,8 @@ describe("provisionStudentLogins", () => {
         { userId: "u2", classroomName: "P3A", classroomId: null },
       ],
     });
-    expect(out.failed).toEqual([{ userId: "u1", reason: "db down" }]);
+    // The raw database message can list the query params (the new hash), so it never leaves the use-case.
+    expect(out.failed).toEqual([{ userId: "u1", reason: "Could not save the login." }]);
     expect(out.provisioned.map((p) => p.userId)).toEqual(["u2"]);
   });
 });
