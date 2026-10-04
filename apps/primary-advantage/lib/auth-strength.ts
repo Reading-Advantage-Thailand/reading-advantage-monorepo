@@ -1,13 +1,13 @@
 import type { SessionAuthStrength } from "@reading-advantage/auth";
 
 /**
- * Route prefixes that need a `full` session (spec Design 6). Lane F wires the
- * Reedy routes to this list; the list names the paths known today.
+ * Route prefixes that need a `full` session (spec Design 6). Nothing calls
+ * `requiresFullAuth` yet: Lane F wires the Reedy routes and the profile page to this list.
  */
 export const FULL_AUTH_ONLY_ROUTES: readonly string[] = [
   "/student/reedy",
   "/api/reedy",
-  "/settings/profile",
+  "/settings/user-profile",
 ];
 
 /**

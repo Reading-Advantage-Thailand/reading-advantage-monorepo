@@ -209,6 +209,10 @@ describe.skipIf(!url)("student login against Postgres", () => {
     expect(await sl.issueClassCardTokens({ db, user: t1(), meta, input: { classroomId: ids.class1 } })).toEqual([]);
 
     const scan = (token: string) => sl.signInWithCardToken({ db, store, meta: { ip: `10.1.0.${Math.floor(Math.random() * 200)}`, userAgent: "vitest" }, input: { token } });
+    // Design 5: away from the classroom only the username and password work, so a card needs an open class.
+    await sl.endClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
+    await expect(scan(ann.token)).rejects.toMatchObject({ code: "invalid_credentials" });
+    await sl.startClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
     await expect(scan(ann.token)).resolves.toMatchObject({ authStrength: "full", user: { id: `${tag}-s1` } });
 
     const rotated = await sl.rotateCardToken({ db, user: t1(), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s1` } });
@@ -234,6 +238,7 @@ describe.skipIf(!url)("student login against Postgres", () => {
     await db.delete(schema.classroomStudents).where(eq(schema.classroomStudents.studentId, `${tag}-s1`));
     await expect(scan(rotated.token)).rejects.toMatchObject({ code: "invalid_credentials" });
     await db.insert(schema.classroomStudents).values({ classroomId: ids.class1, studentId: `${tag}-s1` });
+    await sl.endClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
   });
 
   it("generates unique class-based usernames and a working initial password", async () => {

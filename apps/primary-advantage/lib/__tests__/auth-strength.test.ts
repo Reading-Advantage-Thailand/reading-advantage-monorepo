@@ -24,7 +24,7 @@ describe("requiresFullAuth", () => {
     expect(FULL_AUTH_ONLY_ROUTES.length).toBeGreaterThan(0);
     expect(requiresFullAuth("/student/reedy")).toBe(true);
     expect(requiresFullAuth("/api/reedy/session")).toBe(true);
-    expect(requiresFullAuth("/settings/profile")).toBe(true);
+    expect(requiresFullAuth("/settings/user-profile")).toBe(true);
   });
 
   it("does not match unrelated or look-alike paths", () => {

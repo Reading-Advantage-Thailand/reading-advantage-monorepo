@@ -178,6 +178,7 @@ describe("CSV upload student login generation (FR-6)", () => {
     mocks.provision.mockRejectedValue(new Error("boom"));
     const response = await POST(uploadRequest("students.csv"));
     expect(response.status).toBe(200);
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
     const body = await response.json();
     expect(body.studentLogins).toEqual([]);
     expect(body.studentLoginsFailed).toBe(1);

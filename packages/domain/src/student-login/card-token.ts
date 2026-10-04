@@ -1,8 +1,9 @@
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, gt, isNull } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import {
   classroomStudents,
   classrooms,
+  primaryClassLoginSessions,
   primaryStudentCredentials,
   users,
 } from "@reading-advantage/db/schema";
@@ -28,8 +29,9 @@ export interface IssuedCardToken {
 /**
  * Signs in a student with the token of a QR card (FR-5). One scan gives a `full` session.
  * The token must belong to a credential of a student who still is in a class of the credential's
- * school. An unknown, rotated, or out-of-class token gives one generic error. Failed scans are
- * limited per IP.
+ * school, and that class must have an open class login session: away from the classroom only the
+ * username and password work (spec Design 5). An unknown, rotated, or out-of-class token, or a
+ * scan with no open class, gives one generic error. Failed scans are limited per IP.
  * @param params.db Database client.
  * @param params.store Shared rate-limit store.
  * @param params.meta Client IP and user agent.
@@ -46,6 +48,7 @@ export async function signInWithCardToken(params: {
   now?: Date;
 }): Promise<StudentSignInResult> {
   const { db, store, meta } = params;
+  const now = params.now ?? new Date();
   await guardCardScan(store, meta.ip);
   // The token is the only key here, so the lookup cannot be scoped by school up front.
   // The joins below tie the student and the class to the credential's own school instead.
@@ -59,9 +62,12 @@ export async function signInWithCardToken(params: {
     .innerJoin(users, eq(users.id, primaryStudentCredentials.userId))
     .innerJoin(classroomStudents, eq(classroomStudents.studentId, users.id))
     .innerJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
+    .innerJoin(primaryClassLoginSessions, eq(primaryClassLoginSessions.classroomId, classrooms.id))
     .where(
       and(
         eq(primaryStudentCredentials.cardTokenHash, hashCardToken(params.input.token)),
+        isNull(primaryClassLoginSessions.closedAt),
+        gt(primaryClassLoginSessions.expiresAt, now),
         eq(users.role, "STUDENT"),
         eq(users.schoolId, primaryStudentCredentials.schoolId),
         eq(classrooms.schoolId, primaryStudentCredentials.schoolId),

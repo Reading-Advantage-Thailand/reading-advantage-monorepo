@@ -2931,7 +2931,7 @@
       "locked": "Too many wrong tries. Wait {minutes, plural, one {# minute} other {# minutes}} or ask your teacher.",
       "rateLimited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again.",
       "wrongPassword": "Wrong username or password. Try again.",
-      "cardInvalid": "This card does not work. Ask your teacher for a new card.",
+      "cardInvalid": "This card does not work now. Cards work only in class. Ask your teacher.",
       "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
       "generic": "Something went wrong. Try again."
     }

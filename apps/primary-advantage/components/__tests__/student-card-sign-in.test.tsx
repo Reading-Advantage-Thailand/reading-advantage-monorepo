@@ -89,7 +89,7 @@ describe("CardSignIn", () => {
   it.each([400, 401])("explains a card that does not work (%i)", async (status) => {
     answer(status, { code: "invalid_credentials" });
     renderWithMessages(<CardSignIn />);
-    expect(await screen.findByRole("alert")).toHaveTextContent("This card does not work. Ask your teacher for a new card.");
+    expect(await screen.findByRole("alert")).toHaveTextContent("This card does not work now. Cards work only in class. Ask your teacher.");
     expect(screen.getByRole("link", { name: "Sign in with the class code" })).toBeInTheDocument();
     expect(replaceMock).not.toHaveBeenCalled();
   });

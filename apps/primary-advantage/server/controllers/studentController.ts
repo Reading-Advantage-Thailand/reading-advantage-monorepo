@@ -174,7 +174,7 @@ export const createStudentController = async (
 
     return NextResponse.json(
       { success: true, student: result.student, credentials: result.credentials },
-      { status: 201 },
+      { status: 201, headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
     console.error(

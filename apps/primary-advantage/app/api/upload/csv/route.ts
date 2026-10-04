@@ -589,7 +589,7 @@ export async function POST(request: NextRequest) {
       studentLogins,
       studentLoginsFailed: studentLoginsFailedNames.length,
       studentLoginsFailedNames,
-    });
+    }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("File upload error:", error);
     return NextResponse.json(

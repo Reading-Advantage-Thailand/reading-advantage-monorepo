@@ -118,6 +118,20 @@ describe("student handlers", () => {
     expect(res.headers.get("set-cookie")).toBeNull();
   });
 
+  it("refuses a body that is not JSON, so a cross-site text/plain form cannot sign a device in", async () => {
+    const req = new NextRequest("http://localhost/qr", { method: "POST", body: JSON.stringify({ token: "x".repeat(43) }), headers: { "content-type": "text/plain" } });
+    expect((await qrSignIn(req)).status).toBe(415);
+    expect(domain.signInWithCardToken).not.toHaveBeenCalled();
+  });
+
+  it("logs only the error kind for an unexpected error (a DB message lists the query values)", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    domain.getNameListForCode.mockRejectedValue(new Error("Failed query: select ... params: deadbeefhash"));
+    expect((await enterCode(post("/code", { code: "ABCDEF" }))).status).toBe(500);
+    expect(JSON.stringify(spy.mock.calls)).not.toContain("deadbeefhash");
+    spy.mockRestore();
+  });
+
   it("returns 400 for pictures outside the grid", async () => {
     const res = await pictureSignIn(post("/picture", { code: "ABCDEF", studentId: "h1", pictures: [1, 2, 99] }));
     expect(res.status).toBe(400);

@@ -1117,7 +1117,7 @@ export async function POST(request: NextRequest) {
       studentLogins,
       studentLoginsFailed: studentLoginsFailedNames.length,
       studentLoginsFailedNames,
-    });
+    }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const errorTime = apiTimer.end("Upload classes API request failed");
     console.error(`❌ Classes upload error after ${errorTime}ms:`, error);

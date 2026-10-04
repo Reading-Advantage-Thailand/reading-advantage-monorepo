@@ -59,5 +59,5 @@ Owner lane: B. Depends on cutover blockers Phase 2 for argon2.
 
 ## Phase 5: Verify
 - [ ] 25-student browser test through all paths
-- [ ] Security review by a separate agent (no shared context with the author)
+- [x] Security review by a separate agent (no shared context with the author) — no Critical or High. Fixed: QR card needs an open class (M2), 415 for a non-JSON body (login CSRF, L4), error logs keep only the error kind (L5), `no-store` on upload and create-student responses with initial passwords (L3), full-only path `/settings/user-profile` (L1; Lane F wires the check). Recorded in spec Known risks: M1, M3, M4, L2. Out of lane: `packages/api/src/routes/auth/register.ts:56` lets an ADMIN create a student in any school (tech debt).
 - [ ] Timing check in QA

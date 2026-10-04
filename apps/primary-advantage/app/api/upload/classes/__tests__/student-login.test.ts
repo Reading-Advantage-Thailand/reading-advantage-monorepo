@@ -125,6 +125,7 @@ describe("combined CSV upload student login generation (FR-6)", () => {
     }));
     const response = await uploadStudent((id) => id);
     expect(response.status).toBe(200);
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
     expect(mocks.provision).toHaveBeenCalledWith(
       expect.objectContaining({
         schoolId: SCHOOL,

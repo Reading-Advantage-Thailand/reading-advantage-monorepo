@@ -83,6 +83,22 @@ picture hash, failed count, locked until, card token hash, rotated at),
 - QR card origin: the card URL uses the origin of the teacher's browser. A card printed from a
   preview host, an IP, or localhost keeps that host. Print cards from the production host.
   Owner review is pending (option: a configured public app URL).
+- Class-wide picture guessing (Phase 5 security review M1): the lock is per student. A classmate
+  with the code who guesses every student in turn reaches a `full` session for some student in
+  about 1 to 1.5 hours from one device (many lockouts show on the teacher view). Owner review is
+  pending (option: a class-wide limit on wrong picture tries, or a longer lock after repeated locks).
+- Per-IP limits trust `X-Forwarded-For` (security review M3): without `TRUST_PROXY_COUNT` the
+  leftmost value is used, which the client controls. An attacker can pass the IP limits or fill
+  the limits of a school IP. Owner/deploy item: set `TRUST_PROXY_COUNT` for Primary (no Cloud Run
+  change in this program).
+- School-wide QR or code block by one student (security review M4): 30 failed card scans or 150
+  wrong codes from a shared school IP block that path for the school for 10 minutes. Owner review
+  is pending (option: a device cookie in the limit key).
+- Guessable student usernames (security review L2): `p3a12`, `student1`. An internet attacker can
+  lock the home sign-in of many students with 5 wrong passwords each. Owner review is pending
+  (option: a random part in each username; FR-6 asks for readable usernames).
+- QR cards now need an open class session in one of the student's classes (security review M2,
+  Design 5: away from the classroom only the username and password work).
 
 ## Non-goals
 

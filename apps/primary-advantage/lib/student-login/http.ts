@@ -45,17 +45,24 @@ export function errorResponse(error: unknown): NextResponse {
       },
     );
   }
-  console.error("Student login error:", error instanceof Error ? error.message : "Unknown");
+  // A Drizzle error message lists the query values (for example a code hash): log only the kind.
+  const code = (error as { cause?: { code?: string } } | null)?.cause?.code;
+  console.error("Student login error:", error instanceof Error ? error.name : "Unknown", code ?? "");
   return NextResponse.json({ message: "Internal server error" }, { status: 500 });
 }
 
 /**
- * Parses a JSON body with a Zod contract.
+ * Parses a JSON body with a Zod contract. Only `application/json` is accepted: a cross-site
+ * HTML form can send `text/plain` without a preflight, and a sign-in from it would put the
+ * attacker's student session on the device (login CSRF).
  * @param request The incoming request.
  * @param schema The contract.
- * @returns The parsed input, or a 400 response when the body is not valid.
+ * @returns The parsed input, a 415 response for another content type, or a 400 response when the body is not valid.
  */
 export async function parseBody<T>(request: NextRequest, schema: ZodType<T>): Promise<T | NextResponse> {
+  if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
+    return NextResponse.json({ message: "Unsupported content type" }, { status: 415 });
+  }
   const parsed = schema.safeParse(await request.json().catch(() => undefined));
   return parsed.success ? parsed.data : NextResponse.json({ message: "Invalid input" }, { status: 400 });
 }
