@@ -66,7 +66,7 @@ function mockTransaction() {
     insert: () => ({
       values: (row: { password: string }) => {
         written.password = row.password;
-        return { onConflictDoUpdate: vi.fn().mockResolvedValue(undefined) };
+        return { onConflictDoUpdate: () => ({ returning: vi.fn().mockResolvedValue([{ id: "u_credential" }]) }) };
       },
     }),
     update: () => ({ set: setUsers }),
