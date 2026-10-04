@@ -157,6 +157,11 @@
     }
   },
   "Admin": {
+    "SchoolSelect": {
+      "label": "School",
+      "placeholder": "Select a school",
+      "required": "Please select a school"
+    },
     "Classrooms": {
       "classrooms": "ห้องเรียน",
       "classroomsDescription": "จัดการห้องเรียนในโรงเรียนของคุณ",
