@@ -1,33 +1,38 @@
-import { MainNav } from "@/components/nav/main-nav";
 import { UserAccountNav } from "@/components/nav/user-account-nav";
-import { SidebarNav } from "@/components/nav/sidebar-nav";
-import { MainNavItem, SidebarNavItem } from "@/types";
-import { cn } from "@/lib/utils";
+import { AppBrand, AppSidebar, BottomNav, MobileMenu } from "@/components/nav/app-nav";
 import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
+import { areaForRole, type NavArea } from "@/lib/nav-area";
 import Leaderboard from "../leaderboard";
 import { getLocale } from "next-intl/server";
 import { getSchoolLeaderboardController } from "@/server/controllers/schoolController";
 
 interface AppLayoutProps {
   children?: React.ReactNode;
-  mainNavConfig: MainNavItem[];
-  sidebarNavConfig?: SidebarNavItem[];
-  disableSidebar?: boolean;
+  /** The nav area. When omitted (shared pages such as settings) it follows the user role. */
+  area?: NavArea;
+  /** True on settings pages: staff also get the settings links in the menu. */
+  settings?: boolean;
   disableLeaderboard?: boolean;
 }
 
+/** Props of the area layouts that wrap AppLayout. */
 export interface BaseAppLayoutProps {
   children?: React.ReactNode;
 }
 
+/**
+ * Renders the signed-in shell: the header, one role navigation (sidebar from 1024 px,
+ * bottom bar below), and the page content. Signed-out visitors go to the sign-in page.
+ * @param props The page content, the nav area, the settings flag, and the leaderboard switch.
+ * @returns The shell.
+ */
 export default async function AppLayout({
   children,
-  mainNavConfig,
-  sidebarNavConfig,
-  disableSidebar = false,
+  area,
+  settings = false,
   disableLeaderboard = false,
 }: AppLayoutProps) {
   const user = await getCurrentUser();
@@ -38,9 +43,10 @@ export default async function AppLayout({
     return redirect({ href: "/auth/signin", locale });
   }
 
+  const navArea = area ?? areaForRole(user.role);
   let leaderboardData: any | null = null;
 
-  if (user.role === "STUDENT" && user.schoolId) {
+  if (!disableLeaderboard && user.role === "STUDENT" && user.schoolId) {
     const leaderboard = await getSchoolLeaderboardController(
       user.schoolId,
       user.id,
@@ -51,10 +57,13 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col space-y-6">
-      <header className="bg-background sticky top-0 z-40 border-b">
-        <div className="container flex h-16 items-center justify-between">
-          <MainNav items={mainNavConfig} />
+    <div className="flex min-h-screen flex-col">
+      <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur">
+        <div className="container flex h-16 items-center justify-between gap-2">
+          <div className="flex items-center gap-1">
+            <MobileMenu area={navArea} user={user} settings={settings} />
+            <AppBrand area={navArea} />
+          </div>
           <div className="flex items-center justify-center gap-2">
             <LocaleSwitcher />
             <ThemeToggle />
@@ -62,30 +71,28 @@ export default async function AppLayout({
           </div>
         </div>
       </header>
-      <div
-        className={cn(
-          "container",
-          disableSidebar
-            ? "flex flex-1 gap-12"
-            : "flex-1 flex flex-col gap-4 lg:flex-row",
-        )}
-      >
-        {!disableSidebar && (
-          <aside className="lg:flex lg:w-[230px] lg:flex-col">
-            <SidebarNav items={sidebarNavConfig || []} user={user} />
-            {!disableLeaderboard && user.role === "STUDENT" && user.schoolId ? (
+      <div className="container flex flex-1 gap-8 pt-6">
+        <div className="hidden lg:block lg:w-[230px] lg:shrink-0">
+          <div className="sticky top-22">
+            <AppSidebar area={navArea} user={user} settings={settings} />
+          </div>
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-8">
+          <main className="flex w-full flex-1 flex-col overflow-hidden">
+            {children}
+          </main>
+          {leaderboardData ? (
+            <aside>
               <Leaderboard
-                data={leaderboardData?.results || []}
-                schoolName={leaderboardData?.schoolName || ""}
+                data={leaderboardData.results || []}
+                schoolName={leaderboardData.schoolName || ""}
                 userId={user.id}
               />
-            ) : null}
-          </aside>
-        )}
-        <main className="flex w-full flex-1 flex-col overflow-hidden">
-          {children}
-        </main>
+            </aside>
+          ) : null}
+        </div>
       </div>
+      <BottomNav area={navArea} user={user} />
     </div>
   );
 }

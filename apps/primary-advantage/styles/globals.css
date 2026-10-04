@@ -13,8 +13,6 @@
   --font-sans: var(--font-noto-thai), var(--font-inter), "Leelawadee UI", Tahoma,
     ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --font-menu: var(--font-noto-thai), var(--font-inter), "Leelawadee UI", Tahoma,
-    ui-sans-serif, system-ui, sans-serif;
   --font-article: var(--font-quicksand), var(--font-noto-thai), ui-sans-serif,
     sans-serif;
   --font-logo: var(--font-cabin-sketch), var(--font-noto-thai), ui-sans-serif,

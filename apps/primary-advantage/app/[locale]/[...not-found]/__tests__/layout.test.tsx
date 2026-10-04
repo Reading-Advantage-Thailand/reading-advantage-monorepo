@@ -14,8 +14,8 @@ vi.mock("@/lib/session", () => ({
 }));
 // redirect is the sign-in-redirect primitive; a call to it is a regression.
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
-vi.mock("@/components/nav/main-nav", () => ({
-  MainNav: () => <nav data-testid="main-nav" />,
+vi.mock("@/components/nav/public-header", () => ({
+  PublicHeader: ({ children }: { children?: React.ReactNode }) => <header>{children}</header>,
 }));
 vi.mock("@/components/nav/user-account-nav", () => ({
   UserAccountNav: () => <div data-testid="user-nav" />,

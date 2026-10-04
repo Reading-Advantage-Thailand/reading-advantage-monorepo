@@ -1,19 +1,31 @@
 import { PageConfig } from "@/types";
-import { sharedMainNav } from "./main-nav";
+import { STUDENT_HOME } from "@/components/student-login/use-student-home";
 
+/** Student navigation: four bottom-bar tabs and the full sidebar list. */
 export const studentPageConfig: PageConfig = {
-  mainNav: [...sharedMainNav],
+  tabs: [
+    { key: "home", href: STUDENT_HOME, icon: "HouseIcon" },
+    { key: "read", href: "/student/read", icon: "BookOpenIcon", match: ["/student/lesson"] },
+    { key: "games", href: "/student/games", icon: "Gamepad2Icon" },
+    { key: "me", href: "/settings/user-profile", icon: "CircleUserIcon", match: ["/settings"] },
+  ],
   sidebarNav: [
+    {
+      title: "home",
+      href: STUDENT_HOME,
+      icon: "HouseIcon",
+      requiredPermissions: ["STUDENT_ACCESS"],
+    },
     {
       title: "read",
       href: "/student/read",
-      icon: "BookIcon",
+      icon: "BookOpenIcon",
       requiredPermissions: ["STUDENT_ACCESS"],
     },
     {
       title: "games",
       href: "/student/games",
-      icon: "BookIcon",
+      icon: "Gamepad2Icon",
       requiredPermissions: ["STUDENT_ACCESS"],
     },
     {
@@ -33,7 +45,7 @@ export const studentPageConfig: PageConfig = {
       id: "onborda-vocabulary",
       title: "vocabulary",
       href: "/student/vocabulary",
-      icon: "BookIcon",
+      icon: "LanguagesIcon",
       requiredPermissions: ["STUDENT_ACCESS"],
     },
     {
@@ -48,6 +60,12 @@ export const studentPageConfig: PageConfig = {
       title: "history",
       href: "/student/history",
       icon: "HistoryIcon",
+      requiredPermissions: ["STUDENT_ACCESS"],
+    },
+    {
+      title: "me",
+      href: "/settings/user-profile",
+      icon: "CircleUserIcon",
       requiredPermissions: ["STUDENT_ACCESS"],
     },
   ],

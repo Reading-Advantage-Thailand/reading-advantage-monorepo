@@ -38,6 +38,10 @@
     }
   },
   "Sidebar": {
+    "home": "Home",
+    "me": "Me",
+    "noPermissionSection": "You don't have permission to open this section",
+    "noPermissionPage": "You don't have permission to open this page",
     "read": "Read",
     "games": "Games",
     "stories": "Stories",
@@ -2934,6 +2938,27 @@
       "cardInvalid": "This card does not work now. Cards work only in class. Ask your teacher.",
       "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
       "generic": "Something went wrong. Try again."
+    }
+  },
+  "AppShell": {
+    "mainNavigation": "Main navigation",
+    "publicNavigation": "Site navigation",
+    "openMenu": "Open menu",
+    "menu": "Menu",
+    "tabs": {
+      "home": "Home",
+      "read": "Read",
+      "games": "Games",
+      "me": "Me",
+      "classes": "Classes",
+      "assignments": "Assignments",
+      "reports": "Reports",
+      "dashboard": "Dashboard",
+      "teachers": "Teachers",
+      "students": "Students",
+      "import": "Import",
+      "schools": "Schools",
+      "licenses": "Licenses"
     }
   }
 }

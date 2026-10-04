@@ -550,20 +550,15 @@ describe("shared helper wiring in consumers", () => {
 });
 
 describe("shared main nav in page configs", () => {
-  it("spreads every shared entry into each page config", () => {
-    const configs = [
-      adminPageConfig,
-      indexPageConfig,
-      studentPageConfig,
-      systemPageConfig,
-      teacherPageConfig,
-    ];
-    expect(configs).toHaveLength(5);
-    for (const config of configs) {
-      const hrefs = config.mainNav.map((item) => item.href);
-      for (const entry of sharedMainNav) {
-        expect(hrefs).toContain(entry.href);
-      }
+  it("keeps the shared public links on the public config only", () => {
+    // FR-3 (primary_ux_rework_20261003): signed-in areas have one role navigation and no
+    // public marketing links; the public header still uses every shared entry.
+    const hrefs = (indexPageConfig.mainNav ?? []).map((item) => item.href);
+    for (const entry of sharedMainNav) {
+      expect(hrefs).toContain(entry.href);
+    }
+    for (const config of [adminPageConfig, studentPageConfig, systemPageConfig, teacherPageConfig]) {
+      expect(config.mainNav ?? []).toEqual([]);
     }
   });
 });

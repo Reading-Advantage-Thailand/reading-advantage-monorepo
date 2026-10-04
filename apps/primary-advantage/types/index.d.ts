@@ -35,9 +35,36 @@ export type NavLink = {
   hideWhenNoPermission?: boolean;
 };
 
+/** One tab of the mobile bottom bar (at most four per area). */
+export type TabNavItem = {
+  /** Message key under AppShell.tabs. */
+  key:
+    | "home"
+    | "read"
+    | "games"
+    | "me"
+    | "classes"
+    | "assignments"
+    | "reports"
+    | "dashboard"
+    | "teachers"
+    | "students"
+    | "import"
+    | "schools"
+    | "licenses";
+  href: string;
+  /** lucide-react icon name. */
+  icon: string;
+  /** More path prefixes that make this tab active (the href always counts). */
+  match?: string[];
+  requiredPermissions?: import("@/lib/permissions").Permission[];
+};
+
+/** Navigation for one area: public links (signed-out pages only), the sidebar list, and the bottom-bar tabs. */
 export type PageConfig = {
-  mainNav: MainNavItem[];
+  mainNav?: MainNavItem[];
   sidebarNav?: SidebarNavItem[];
+  tabs?: TabNavItem[];
 };
 
 export type SidebarNavItem = {

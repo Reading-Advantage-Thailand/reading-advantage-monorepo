@@ -1,8 +1,12 @@
 import { PageConfig } from "@/types";
-import { sharedMainNav } from "./main-nav";
 
+/** SYSTEM navigation: bottom-bar tabs and the current system menu. */
 export const systemPageConfig: PageConfig = {
-  mainNav: [...sharedMainNav],
+  tabs: [
+    { key: "dashboard", href: "/system/dashboard", icon: "LayoutDashboardIcon" },
+    { key: "schools", href: "/system/schools", icon: "SchoolIcon" },
+    { key: "licenses", href: "/system/licenses", icon: "KeyIcon" },
+  ],
   sidebarNav: [
     {
       title: "systemdashboard",
