@@ -1,4 +1,5 @@
 import { db } from "@reading-advantage/db";
+import { z } from "zod";
 import { and, eq, sql, type AnyColumn, type SQL } from "drizzle-orm";
 import { canSetPasswordFor, effectiveRoleOf } from "@/lib/authorization";
 import { hasOwnSchoolAdminRow } from "@/lib/permissions";
@@ -210,6 +211,30 @@ export function schoolScopeConditions(
   if (effectiveCallerRole(userWithRoles) === "SYSTEM") return [];
   if (!userWithRoles.schoolId) return [sql`false`];
   return [eq(schoolColumn, userWithRoles.schoolId)];
+}
+
+/**
+ * Resolves the school that a new account joins.
+ * Only a SYSTEM caller may name a school; every other caller keeps its own school.
+ * @param userWithRoles The caller loaded by validateUser.
+ * @param requestedSchoolId The school id sent by the client, if any.
+ * @returns The school id to use (null when none) or an error message.
+ */
+export async function resolveCreationSchoolId(
+  userWithRoles: CallerScope,
+  requestedSchoolId?: string | null,
+): Promise<{ schoolId: string | null } | { error: string }> {
+  if (effectiveCallerRole(userWithRoles) !== "SYSTEM" || !requestedSchoolId) {
+    return { schoolId: userWithRoles.schoolId ?? null };
+  }
+  if (!z.string().uuid().safeParse(requestedSchoolId).success) {
+    return { error: "School not found" };
+  }
+  const [school] = await db.select({ id: schools.id })
+    .from(schools)
+    .where(eq(schools.id, requestedSchoolId))
+    .limit(1);
+  return school ? { schoolId: school.id } : { error: "School not found" };
 }
 
 // Check if user has admin permissions

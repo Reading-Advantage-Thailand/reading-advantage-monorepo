@@ -17,7 +17,7 @@ import {
   userActivity,
   xpLogs,
 } from '@reading-advantage/db';
-import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, schoolScopeConditions } from "@/server/utils/auth";
+import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, resolveCreationSchoolId, schoolScopeConditions } from "@/server/utils/auth";
 import { canSetPasswordFor } from "@/lib/authorization";
 import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
 import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
@@ -239,7 +239,8 @@ export const getStudentById = async (
 // Create new student
 /**
  * Creates a student in the authorized school.
- * @param params The student fields and authenticated actor.
+ * @param params The student fields, the authenticated actor, and an optional target school id.
+ *   The school id counts only for a SYSTEM actor; other actors keep their own school.
  * @returns The created student result.
  */
 export const createStudent = async (params: {
@@ -249,6 +250,7 @@ export const createStudent = async (params: {
   classroomId?: string;
   password?: string;
   userWithRoles: UserWithRoles;
+  schoolId?: string | null;
 }): Promise<{ success: boolean; student?: StudentData; error?: string }> => {
   const { name, email, cefrLevel, classroomId, password, userWithRoles } =
     params;
@@ -275,8 +277,12 @@ export const createStudent = async (params: {
       return { success: false, error: "Student role not found" };
     }
 
-    // Determine school assignment
-    const schoolId = userWithRoles.schoolId ?? null;
+    // Determine school assignment: only a SYSTEM caller may choose it.
+    const target = await resolveCreationSchoolId(userWithRoles, params.schoolId);
+    if ("error" in target) {
+      return { success: false, error: target.error };
+    }
+    const schoolId = target.schoolId;
 
     // Fail closed: only SYSTEM may create accounts without a school.
     if (!schoolId && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
@@ -287,6 +293,7 @@ export const createStudent = async (params: {
     if (classroomId) {
       const classroomConditions: any[] = [eq(classrooms.id, classroomId)];
       classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
+      if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
 
       const [classroom] = await db.select({ id: classrooms.id })
         .from(classrooms)

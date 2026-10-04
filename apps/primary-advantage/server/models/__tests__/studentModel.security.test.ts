@@ -196,3 +196,43 @@ describe("deleteStudent effective rank and audit (L6)", () => {
     expect(eventMocks.auditUserDeleted).toHaveBeenCalledWith({ userId: "student-a", actor: { id: "caller", role: "ADMIN" } });
   });
 });
+
+describe("createStudent target school (cutover)", () => {
+  const systemCaller: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: null, level: 1,
+    role: "SYSTEM", roles: [], SchoolAdmins: [],
+  };
+
+  /** Reads the school of one user by email. */
+  async function schoolOf(email: string) {
+    const rows = await harness.db.execute(sql`SELECT school_id FROM users WHERE email = ${email}`);
+    return (rows.rows[0] as { school_id: string } | undefined)?.school_id;
+  }
+
+  it("lets a SYSTEM caller choose the school of a new student", async () => {
+    const result = await createStudent({
+      name: "n", email: "s-b@x.test", cefrLevel: "A1", password: "Valid-pass-123",
+      schoolId: SCHOOL_B, userWithRoles: systemCaller,
+    });
+    expect(result.success).toBe(true);
+    expect(await schoolOf("s-b@x.test")).toBe(SCHOOL_B);
+  });
+
+  it("refuses a SYSTEM caller who names a school that does not exist", async () => {
+    const result = await createStudent({
+      name: "n", email: "s-x@x.test", cefrLevel: "A1", password: "Valid-pass-123",
+      schoolId: "00000000-0000-0000-0000-0000000000ff", userWithRoles: systemCaller,
+    });
+    expect(result.success).toBe(false);
+    expect(await schoolOf("s-x@x.test")).toBeUndefined();
+  });
+
+  it("ignores a client school id from a school admin", async () => {
+    const result = await createStudent({
+      name: "n", email: "s-a@x.test", cefrLevel: "A1", password: "Valid-pass-123",
+      schoolId: SCHOOL_B, userWithRoles: sessionAdmin,
+    });
+    expect(result.success).toBe(true);
+    expect(await schoolOf("s-a@x.test")).toBe(SCHOOL_A);
+  });
+});

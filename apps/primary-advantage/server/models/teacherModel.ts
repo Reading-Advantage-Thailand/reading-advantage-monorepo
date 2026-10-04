@@ -13,9 +13,10 @@ import {
   roles,
   userRoles,
   schools,
+  schoolAdmins,
 } from '@reading-advantage/db';
 import { ROLE_HIERARCHY, ROLES, type Role } from "@reading-advantage/auth/roles";
-import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, schoolScopeConditions } from "@/server/utils/auth";
+import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, resolveCreationSchoolId, schoolScopeConditions } from "@/server/utils/auth";
 import { canSetPasswordFor } from "@/lib/authorization";
 import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
 import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
@@ -312,8 +313,10 @@ export function outranksTeacher(
 
 // Create new teacher
 /**
- * Creates a teacher in the authorized school.
- * @param params The teacher fields and authenticated actor.
+ * Creates a teacher or school admin in the authorized school.
+ * A role of "admin" yields users.role ADMIN, a school_admins row, and an admin user_roles row.
+ * @param params The teacher fields, the authenticated actor, and an optional target school id.
+ *   The school id counts only for a SYSTEM actor; other actors keep their own school.
  * @returns The created teacher result.
  */
 export const createTeacher = async (params: {
@@ -324,6 +327,7 @@ export const createTeacher = async (params: {
   classroomIds?: string[];
   userWithRoles: UserWithRoles;
   force?: boolean;
+  schoolId?: string | null;
 }): Promise<{
   success: boolean;
   teacher?: TeacherData;
@@ -380,12 +384,21 @@ export const createTeacher = async (params: {
         }
       : null;
 
-    // Determine school assignment
-    const schoolId = userWithRoles.schoolId ?? null;
+    // Determine school assignment: only a SYSTEM caller may choose it.
+    const target = await resolveCreationSchoolId(userWithRoles, params.schoolId);
+    if ("error" in target) {
+      return { success: false, error: target.error };
+    }
+    const schoolId = target.schoolId;
 
     // Fail closed: only SYSTEM may create accounts without a school.
     if (!schoolId && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
       return { success: false, error: "A school is required to create a teacher" };
+    }
+
+    // A school admin needs a school for its school_admins row.
+    if (role === "admin" && !schoolId) {
+      return { success: false, error: "A school is required to create an admin" };
     }
 
     // If user exists, handle accordingly
@@ -444,16 +457,6 @@ export const createTeacher = async (params: {
       }
     }
 
-    // Get the role ID
-    const [roleRecord] = await db.select({ id: roles.id })
-      .from(roles)
-      .where(eq(roles.name, role))
-      .limit(1);
-
-    if (!roleRecord) {
-      return { success: false, error: "Invalid role specified" };
-    }
-
     // Generate password if not provided
     const hashedPassword = password
       ? await hashNewPassword(password)
@@ -465,6 +468,7 @@ export const createTeacher = async (params: {
         inArray(classrooms.id, classroomIds),
       ];
       classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
+      if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
 
       const validClassrooms = await db.select({ id: classrooms.id })
         .from(classrooms)
@@ -480,6 +484,15 @@ export const createTeacher = async (params: {
 
     // Create the new teacher and assign classrooms in a transaction
     const completeTeacher = await db.transaction(async (tx) => {
+      // Find or create the role row by name, as the school admin routes do.
+      let [roleRecord] = await tx.select({ id: roles.id })
+        .from(roles)
+        .where(eq(roles.name, role))
+        .limit(1);
+      if (!roleRecord) {
+        [roleRecord] = await tx.insert(roles).values({ name: role }).returning({ id: roles.id });
+      }
+
       const username = email.trim().toLowerCase();
       const [user] = await tx.insert(users).values({
         id: crypto.randomUUID(),
@@ -487,12 +500,16 @@ export const createTeacher = async (params: {
         displayUsername: email.trim(),
         name,
         email,
-        role: "TEACHER",
+        role: role === "admin" ? "ADMIN" : "TEACHER",
         password: hashedPassword,
         schoolId,
       }).returning();
 
       await upsertCredentialAccount(tx, user.id, hashedPassword);
+
+      if (role === "admin" && schoolId) {
+        await tx.insert(schoolAdmins).values({ schoolId, userId: user.id });
+      }
 
       await tx.insert(userRoles).values({
         userId: user.id,

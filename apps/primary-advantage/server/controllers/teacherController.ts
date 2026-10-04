@@ -119,7 +119,7 @@ export const createTeacherController = async (
     }
 
     const body = await request.json();
-    const { name, email, role, password, classroomIds, force } =
+    const { name, email, role, password, classroomIds, force, schoolId } =
       body as CreateTeacherInput & { force?: boolean };
 
     if (password !== undefined && !passwordSchema.safeParse(password).success) {
@@ -152,6 +152,7 @@ export const createTeacherController = async (
       classroomIds,
       userWithRoles,
       force: force || false,
+      schoolId,
     });
 
     if (!result.success) {
