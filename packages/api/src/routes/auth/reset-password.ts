@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { and, eq, type SQL } from "drizzle-orm";
 import { db } from "@reading-advantage/db";
-import { users, accounts } from "@reading-advantage/db/schema";
+import { users, accounts, sessions } from "@reading-advantage/db/schema";
 import {
   hashPassword,
   requireRole,
@@ -100,7 +100,10 @@ async function resetWithOptions(
       .limit(1);
 
     if (!target) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      // authorizeTarget callers get the same answer as a refusal, so an id never reveals existence.
+      return options.authorizeTarget
+        ? NextResponse.json({ message: "Forbidden" }, { status: 403 })
+        : NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     if (options.authorizeTarget) {
@@ -146,15 +149,25 @@ async function resetWithOptions(
 
     // Hash new password and update credential account
     const hashedPassword = await hashPassword(newPassword);
-    await db
-      .update(accounts)
-      .set({ password: hashedPassword, updatedAt: new Date() })
-      .where(
-        and(eq(accounts.userId, userId), eq(accounts.providerId, "credential"))
-      );
+    const writeAccount = (client: Pick<typeof db, "update">) =>
+      client
+        .update(accounts)
+        .set({ password: hashedPassword, updatedAt: new Date() })
+        .where(
+          and(eq(accounts.userId, userId), eq(accounts.providerId, "credential"))
+        );
 
-    // Revoke all sessions for the target user
-    await revokeAllUserSessions(db, userId);
+    if (options.authorizeTarget) {
+      // Atomic: a failed revocation rolls back the new password.
+      await db.transaction(async (tx) => {
+        await writeAccount(tx);
+        await tx.delete(sessions).where(eq(sessions.userId, userId));
+      });
+    } else {
+      await writeAccount(db);
+      // Revoke all sessions for the target user
+      await revokeAllUserSessions(db, userId);
+    }
 
     // FR-9: audit event
     const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
