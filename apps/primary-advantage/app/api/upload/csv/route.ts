@@ -38,6 +38,8 @@ import { CsvUploadSummary } from "./schema";
  * @returns The import result or a validation error.
  */
 export async function POST(request: NextRequest) {
+  // Set once the upload is written to disk; the finally block deletes it on every exit.
+  let tempFilePath: string | undefined;
   try {
     const authUser = await getCurrentUser();
     if (!authUser) {
@@ -164,6 +166,7 @@ export async function POST(request: NextRequest) {
     // Convert file to buffer and save
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    tempFilePath = filePath;
     await writeFile(filePath, buffer);
 
     // Parse CSV file
@@ -513,13 +516,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Delete temp file
-    unlink(filePath, (err) => {
-      if (err) {
-        console.error("Error deleting temp file:", err);
-      }
-    });
-
     // FR-3.3: per-upload summary validated against the response contract.
     // Duplicates and existing rows are reported, never fatal.
     const summary = CsvUploadSummary.parse({
@@ -564,5 +560,13 @@ export async function POST(request: NextRequest) {
       { error: "Failed to upload file" },
       { status: 500 },
     );
+  } finally {
+    if (tempFilePath) {
+      unlink(tempFilePath, (err) => {
+        if (err) {
+          console.error("Error deleting temp file:", err);
+        }
+      });
+    }
   }
 }
