@@ -4,6 +4,7 @@ import { eq, and, asc } from 'drizzle-orm';
 import { users, classrooms, classroomStudents, userRoles, roles } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
+import { normalizeRole } from '@/lib/authorization';
 
 interface ClassroomData {
   id: string;
@@ -71,7 +72,12 @@ export async function GET(
       .from(userRoles)
       .where(and(eq(userRoles.userId, user.id), eq(userRoles.userId, user.id)));
 
-    const isAdmin = roleNames.some((n) => n === "admin" || n === "system");
+    // The session role (users.role) is authoritative; legacy rows are additive.
+    const sessionRole = normalizeRole(user.role);
+    const isAdmin =
+      sessionRole === "ADMIN" ||
+      sessionRole === "SYSTEM" ||
+      roleNames.some((n) => n === "admin" || n === "system");
 
     if (!isAdmin && schoolAdminRows.length === 0) {
       return NextResponse.json(
@@ -84,9 +90,13 @@ export async function GET(
     // scope for school staff, so the manual `eq(classrooms.schoolId, ...)`
     // filter is redundant and removed. SYSTEM (no schoolId) lists all
     // classrooms via unscoped.
+    if (!user.schoolId && sessionRole !== "SYSTEM") {
+      // Fail closed: school-less staff see no classrooms.
+      return NextResponse.json([]);
+    }
     const classroomsDb = user.schoolId
       ? tenantDb
-      : getUnscopedDB("SYSTEM or school-less staff list all classrooms; no schoolId");
+      : getUnscopedDB("SYSTEM has no schoolId; lists all classrooms");
     const classroomRows = await classroomsDb.select().from(classrooms)
       .orderBy(asc(classrooms.name));
 

@@ -140,7 +140,11 @@ export const checkAdminPermissions = async (
     // Check if user is a school admin
     const isSchoolAdmin = userWithRoles.SchoolAdmins.length > 0;
 
-    const hasPermission = isSystemAdmin || isAdmin || isSchoolAdmin;
+    // The users.role session role is authoritative; legacy rows are additive.
+    const sessionRole = String(userWithRoles.role ?? "").toUpperCase();
+    const isSessionAdmin = sessionRole === "ADMIN" || sessionRole === "SYSTEM";
+
+    const hasPermission = isSystemAdmin || isAdmin || isSchoolAdmin || isSessionAdmin;
 
     return hasPermission;
   } catch (error) {
