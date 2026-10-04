@@ -6,7 +6,7 @@ import {
   primaryStudentCredentials,
   users,
 } from "@reading-advantage/db/schema";
-import { createSession, type RateLimitStore, type UserContext } from "@reading-advantage/auth";
+import type { RateLimitStore, UserContext } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
 import { authorizeClassroom } from "./access.js";
 import { auditStudentLogin, type StudentLoginActor } from "./audit.js";
@@ -18,20 +18,17 @@ import {
   type PicturePasswordSettingInput,
   type PicturePasswordSignInInput,
   type ResetPicturePasswordInput,
-  type StudentSignInOutput,
 } from "./contracts.js";
 import { ensureStudentCredentials } from "./credentials.js";
 import { resolveCode, type OpenClassSession, type RequestMeta } from "./class-session.js";
 import { StudentLoginError } from "./errors.js";
+import { startStudentSession, type StudentSignInResult } from "./session.js";
 
 /** Wrong picture tries before the lock (FR-3). */
 export const MAX_PICTURE_FAILURES = 5;
 
 /** Length of the lock after too many wrong tries (FR-3). */
 export const PICTURE_LOCKOUT_MS = 5 * 60 * 1000;
-
-/** Result of a student sign-in: the contract output plus the raw session token for the cookie. */
-export type StudentSignInResult = StudentSignInOutput & { token: string; expiresAt: Date };
 
 interface ClassStudentRow {
   credentialId: string;
@@ -74,28 +71,6 @@ async function findClassStudent(db: DB, session: OpenClassSession, handle: strin
     )
     .limit(1);
   return row;
-}
-
-async function startStudentSession(
-  db: DB,
-  row: ClassStudentRow,
-  session: OpenClassSession,
-  meta: RequestMeta,
-  authStrength: AuthStrength,
-  method: "picture" | "code_only",
-): Promise<StudentSignInResult> {
-  const created = await createSession(db, row.userId, {
-    ...(meta.ip ? { ipAddress: meta.ip } : {}),
-    ...(meta.userAgent ? { userAgent: meta.userAgent } : {}),
-    authStrength,
-  });
-  await auditStudentLogin(
-    { userId: row.userId, role: "STUDENT", ip: meta.ip, userAgent: meta.userAgent },
-    "auth:login",
-    { type: "user", id: row.userId },
-    { method, classroomId: session.classroomId, authStrength },
-  );
-  return { user: { id: row.userId, role: "STUDENT" }, authStrength, token: created.token, expiresAt: created.expiresAt };
 }
 
 function lockedError(lockedUntil: Date, now: Date): StudentLoginError {
@@ -162,7 +137,7 @@ export async function signInWithPicture(params: {
       .set({ failedCount: 0, lockedUntil: null, updatedAt: now })
       .where(eq(primaryStudentCredentials.id, row.credentialId));
   }
-  return startStudentSession(db, row, session, meta, "full", "picture");
+  return startStudentSession({ db, userId: row.userId, meta, authStrength: "full", method: "picture", classroomId: session.classroomId, now });
 }
 
 /**
@@ -197,7 +172,7 @@ export async function signInWithCodeOnly(params: {
   if (setting?.picturePasswordEnabled !== false) {
     throw new StudentLoginError("forbidden", "This class needs a picture password.");
   }
-  return startStudentSession(db, row, session, meta, "code_only", "code_only");
+  return startStudentSession({ db, userId: row.userId, meta, authStrength: "code_only", method: "code_only", classroomId: session.classroomId, now });
 }
 
 /** A picture sequence shown once to the teacher, for example on the class sheet. */

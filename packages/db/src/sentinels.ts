@@ -582,4 +582,21 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     kind: "column",
     target: "classrooms.picture_password_enabled",
   },
+  "0064_primary_student_session_policy": {
+    tag: "0064_primary_student_session_policy",
+    kind: "all",
+    target: "sessions.idle_timeout_seconds",
+    allOf: [
+      {
+        tag: "0064_primary_student_session_policy",
+        kind: "column",
+        target: "sessions.idle_timeout_seconds",
+      },
+      {
+        tag: "0064_primary_student_session_policy",
+        kind: "column",
+        target: "sessions.last_seen_at",
+      },
+    ],
+  },
 };

@@ -63,6 +63,14 @@ export {
   type CreateSessionResult,
 } from "./session.js";
 
+export {
+  STUDENT_SESSION_IDLE_SECONDS,
+  SCHOOL_DAY_END_HOUR,
+  schoolDayEnd,
+  studentSessionOptions,
+  type StudentSessionOptions,
+} from "./student-session-policy.js";
+
 // Rate Limiting
 export {
   checkRateLimit,

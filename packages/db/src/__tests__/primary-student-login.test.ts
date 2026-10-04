@@ -135,3 +135,16 @@ describe("migration 0063 (run 2a)", () => {
     expect(sentinelProbes[TAG63]).toBeDefined();
   });
 });
+
+describe("0064 student session policy columns", () => {
+  const c = cols(sessions);
+
+  it("adds nullable idle_timeout_seconds and last_seen_at", () => {
+    expect(c.idle_timeout_seconds!.notNull).toBe(false);
+    expect(c.last_seen_at!.notNull).toBe(false);
+  });
+
+  it("has a sentinel for the migration", () => {
+    expect(sentinelProbes["0064_primary_student_session_policy"]).toBeDefined();
+  });
+});

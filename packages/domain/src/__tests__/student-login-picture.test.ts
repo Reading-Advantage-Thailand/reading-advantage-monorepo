@@ -60,6 +60,16 @@ describe("signInWithPicture", () => {
     expect(recordAuditEvent).toHaveBeenCalledWith(expect.objectContaining({ actorUserId: "stu-1" }), expect.objectContaining({ action: "auth:login" }));
   });
 
+  it("applies the student session policy: school-day expiry, 30 minutes idle, one device", async () => {
+    const db = createMockDb({ selectSequence: [[session], [credRow()]] });
+    await signIn(db);
+    expect(createSession).toHaveBeenCalledWith(
+      expect.anything(),
+      "stu-1",
+      expect.objectContaining({ expiresAt: new Date("2026-10-05T10:00:00Z"), idleTimeoutSeconds: 1800, singleDevice: true }),
+    );
+  });
+
   it("clears the failure count after a success", async () => {
     const db = createMockDb({ selectSequence: [[session], [credRow({ failedCount: 3 })]] });
     await signIn(db);

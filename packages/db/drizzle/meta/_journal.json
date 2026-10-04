@@ -449,6 +449,13 @@
       "when": 1791127686566,
       "tag": "0063_primary_student_login_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1791129740168,
+      "tag": "0064_primary_student_session_policy",
+      "breakpoints": true
     }
   ]
 }

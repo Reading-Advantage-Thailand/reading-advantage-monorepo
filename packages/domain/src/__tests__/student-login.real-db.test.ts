@@ -1,6 +1,6 @@
 /**
  * Real-Postgres checks for student login (run 2a). Runs only when `PG_TEST_URL` points at a
- * scratch database that has migrations 0000-0063 applied, for example:
+ * scratch database that has migrations 0000-0064 applied (0064 adds the session policy columns), for example:
  * `PG_TEST_URL=postgres://postgres:postgres@localhost:5432/lane_b_scratch pnpm exec vitest run <this file>`.
  */
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
@@ -150,5 +150,30 @@ describe.skipIf(!url)("student login against Postgres", () => {
     const rows = await db.select().from(schema.sessions).where(eq(schema.sessions.userId, `${tag}-s2`));
     expect(rows.map((r) => r.authStrength)).toEqual(["code_only"]);
     await sl.endClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
+  });
+
+  it("applies the student session policy: school-day expiry, idle expiry, one device", async () => {
+    const auth = await import("@reading-advantage/auth");
+    const first = await sl.startStudentSession({ db, userId: `${tag}-s3`, meta, authStrength: "full", method: "qr" });
+    const [row] = await db.select().from(schema.sessions).where(eq(schema.sessions.userId, `${tag}-s3`));
+    expect(row!.idleTimeoutSeconds).toBe(1800);
+    expect(row!.lastSeenAt).toBeInstanceOf(Date);
+    expect(row!.expiresAt.getTime()).toBeGreaterThan(Date.now());
+    expect(row!.expiresAt.getTime() - Date.now()).toBeLessThanOrEqual(24 * 60 * 60 * 1000);
+    expect((await auth.validateSession(db, first.token))?.userId).toBe(`${tag}-s3`);
+
+    // Idle for 31 minutes: the session ends and the row is deleted.
+    await db.update(schema.sessions).set({ lastSeenAt: new Date(Date.now() - 31 * 60 * 1000) }).where(eq(schema.sessions.userId, `${tag}-s3`));
+    expect(await auth.validateSession(db, first.token)).toBeNull();
+    expect(await db.select().from(schema.sessions).where(eq(schema.sessions.userId, `${tag}-s3`))).toHaveLength(0);
+
+    // A new login ends the old one; a stale last-seen value is refreshed at most once a minute.
+    const a = await sl.startStudentSession({ db, userId: `${tag}-s3`, meta, authStrength: "full", method: "qr" });
+    const b = await sl.startStudentSession({ db, userId: `${tag}-s3`, meta, authStrength: "full", method: "qr" });
+    expect(await auth.validateSession(db, a.token)).toBeNull();
+    await db.update(schema.sessions).set({ lastSeenAt: new Date(Date.now() - 5 * 60 * 1000) }).where(eq(schema.sessions.userId, `${tag}-s3`));
+    expect((await auth.validateSession(db, b.token))?.userId).toBe(`${tag}-s3`);
+    const [seen] = await db.select().from(schema.sessions).where(eq(schema.sessions.userId, `${tag}-s3`));
+    expect(Date.now() - seen!.lastSeenAt!.getTime()).toBeLessThan(5000);
   });
 });
