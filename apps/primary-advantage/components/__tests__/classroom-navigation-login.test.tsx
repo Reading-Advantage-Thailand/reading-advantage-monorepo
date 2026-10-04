@@ -15,11 +15,9 @@ import { renderWithMessages } from "./helpers/render-with-messages";
 
 describe("ClassroomNavigation", () => {
   it("does not show the old class code or the old student password", () => {
-    renderWithMessages(
-      <ClassroomNavigation
-        classroom={{ id: "c1", name: "P3A", classCode: "OLDCODE1", passwordStudents: "oldpass1", studentCount: 2 }}
-      />,
-    );
+    // The classroom API row still carries the old fields; the header must ignore them.
+    const classroom = { id: "c1", name: "P3A", classCode: "OLDCODE1", passwordStudents: "oldpass1", studentCount: 2 };
+    renderWithMessages(<ClassroomNavigation classroom={classroom} />);
     expect(screen.getByRole("heading", { name: "P3A" })).toBeInTheDocument();
     expect(screen.queryByText(/OLDCODE1/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Password/i)).not.toBeInTheDocument();
