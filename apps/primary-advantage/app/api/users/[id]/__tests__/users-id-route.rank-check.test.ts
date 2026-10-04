@@ -98,7 +98,7 @@ const systemCaller = { id: "system-1", role: "SYSTEM" };
  */
 function queueRoleUpdate(role: string) {
   selectQueue = [
-    [{ id: "student-1", schoolId: "school-a" }],
+    [{ id: "student-1", schoolId: "school-a", role: "STUDENT" }],
     [{ id: "role-1", name: role }],
     [
       {
@@ -133,7 +133,7 @@ describe("PATCH /api/users/[id] role rank check", () => {
 
   it("blocks an ADMIN from assigning SYSTEM with the rank error", async () => {
     mocks.currentUser.mockResolvedValue(adminCaller);
-    selectQueue = [[{ id: "student-1", schoolId: "school-a" }]];
+    selectQueue = [[{ id: "student-1", schoolId: "school-a", role: "STUDENT" }]];
 
     const { request, context } = patchRequest("student-1", { role: "SYSTEM" });
     const response = await PATCH(request, context);
@@ -174,7 +174,7 @@ describe("PATCH /api/users/[id] role rank check", () => {
   it("hashes a new password with argon2 and mirrors it to the credential account", async () => {
     mocks.currentUser.mockResolvedValue(adminCaller);
     selectQueue = [
-      [{ id: "student-1", schoolId: "school-a" }],
+      [{ id: "student-1", schoolId: "school-a", role: "STUDENT" }],
       [
         {
           id: "student-1",
@@ -260,5 +260,46 @@ describe("PATCH /api/users/[id] role rank check", () => {
     });
     expect(mocks.select).not.toHaveBeenCalled();
     expect(mocks.transaction).not.toHaveBeenCalled();
+  });
+});
+
+describe("PATCH /api/users/[id] password target rank (H1)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    selectQueue = [];
+    mocks.select.mockImplementation(() => chain(selectQueue.shift() ?? []));
+    mocks.update.mockReturnValue({
+      set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) }),
+    });
+    mocks.transaction.mockImplementation(
+      async (fn: (tx: unknown) => unknown) => fn(rawDb),
+    );
+  });
+
+  it.each([
+    ["ADMIN", "school-a"],
+    ["SYSTEM", "school-a"],
+  ])("blocks an ADMIN from setting the password of a same-school %s", async (role, schoolId) => {
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    selectQueue = [[{ id: "victim", schoolId, role }]];
+
+    const { request, context } = patchRequest("victim", { password: "Takeover-pass-1" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(403);
+    expect(credentialMocks.hashNewPassword).not.toHaveBeenCalled();
+    expect(credentialMocks.upsertCredentialAccount).not.toHaveBeenCalled();
+    expect(mocks.transaction).not.toHaveBeenCalled();
+  });
+
+  it("blocks a SYSTEM caller from setting another SYSTEM password", async () => {
+    mocks.currentUser.mockResolvedValue(systemCaller);
+    selectQueue = [[{ id: "victim", schoolId: null, role: "SYSTEM" }]];
+
+    const { request, context } = patchRequest("victim", { password: "Takeover-pass-1" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(403);
+    expect(credentialMocks.upsertCredentialAccount).not.toHaveBeenCalled();
   });
 });

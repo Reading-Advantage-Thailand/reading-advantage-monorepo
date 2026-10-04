@@ -4,7 +4,7 @@ import { users, userRoles, roles } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB, type TenantDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
-import { isAdminOrSystem, patchUserBodySchema, canAccessSchoolResource, normalizeRole } from "@/lib/authorization";
+import { isAdminOrSystem, patchUserBodySchema, canAccessSchoolResource, canSetPasswordFor, normalizeRole } from "@/lib/authorization";
 import { roleAtLeast, type Role } from "@reading-advantage/auth";
 import { hashNewPassword, upsertCredentialAccount } from "@/server/utils/credentials";
 
@@ -52,7 +52,7 @@ export async function PATCH(
     const usersDb = isSystem
       ? getUnscopedDB("SYSTEM manages users across schools; no schoolId")
       : tenantDb;
-    const [existingTarget] = await usersDb.select({ id: users.id, schoolId: users.schoolId })
+    const [existingTarget] = await usersDb.select({ id: users.id, schoolId: users.schoolId, role: users.role })
       .from(users)
       .where(eq(users.id, userId))
       .limit(1);
@@ -76,6 +76,15 @@ export async function PATCH(
           { status: 403 },
         );
       }
+    }
+
+    // Password writes: only strictly lower-ranked targets (shared reset matrix),
+    // judged on the target's CURRENT role, never on the requested one.
+    if (password !== undefined && !canSetPasswordFor(currentUserData.role, existingTarget.role)) {
+      return NextResponse.json(
+        { error: "Cannot change the password of this account" },
+        { status: 403 },
+      );
     }
 
     // Build update data object (excluding role for now)

@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   USER_MANAGEMENT_ROLES,
   normalizeRole,
+  canSetPasswordFor,
   isAdminOrSystem,
   canRunContentTooling,
   canReadUserResource,
@@ -113,5 +114,22 @@ describe("authorization contracts", () => {
     expect(amountPerGenreSchema.safeParse(1000).success).toBe(false);
     expect(amountPerGenreSchema.safeParse("many").success).toBe(false);
     expect(z.number().safeParse(1000).success).toBe(true);
+  });
+});
+
+describe("canSetPasswordFor", () => {
+  it.each([
+    ["ADMIN", "STUDENT", true],
+    ["ADMIN", "TEACHER", true],
+    ["ADMIN", "ADMIN", false],
+    ["ADMIN", "SYSTEM", false],
+    ["SYSTEM", "ADMIN", true],
+    ["SYSTEM", "SYSTEM", false],
+    ["TEACHER", "STUDENT", true],
+    ["TEACHER", "TEACHER", false],
+    ["STUDENT", "STUDENT", false],
+    ["ADMIN", undefined, false],
+  ])("actor %s target %s -> %s", (actor, target, expected) => {
+    expect(canSetPasswordFor(actor, target)).toBe(expected);
   });
 });

@@ -22,6 +22,22 @@ export function normalizeRole(role: unknown): string {
 }
 
 /**
+ * Checks whether an actor may set another account's password.
+ * Mirrors the shared reset matrix: only strictly lower-ranked targets.
+ * @param actorRole The session role of the caller.
+ * @param targetRole The current role of the account whose password changes.
+ * @returns True when the actor outranks the target within the matrix.
+ */
+export function canSetPasswordFor(actorRole: unknown, targetRole: unknown): boolean {
+  const actor = normalizeRole(actorRole);
+  const target = normalizeRole(targetRole);
+  if (actor === "SYSTEM") return target !== "SYSTEM" && target !== "";
+  if (actor === "ADMIN") return target === "STUDENT" || target === "TEACHER";
+  if (actor === "TEACHER") return target === "STUDENT";
+  return false;
+}
+
+/**
  * Checks whether a session user manages other users.
  * @param user The session user, or null for anonymous callers.
  * @returns True when the caller holds ADMIN or SYSTEM.
