@@ -36,13 +36,19 @@ describe("primary_legacy_id_map schema", () => {
     expect(cfg.primaryKeys[0]!.columns.map((c) => c.name)).toEqual(["table_name", "legacy_id"]);
   });
 
-  it("has a reverse-lookup index on (table_name, new_id)", () => {
+  it("has a UNIQUE reverse-lookup index on (table_name, new_id)", () => {
     const idx = cfg.indexes.find((i) => i.config.name === "primary_legacy_id_map_new_id_idx");
     expect(idx).toBeDefined();
+    expect(idx!.config.unique).toBe(true);
     expect(idx!.config.columns.map((c) => (c as { name: string }).name)).toEqual([
       "table_name",
       "new_id",
     ]);
+  });
+
+  it("creates the reverse-lookup index as UNIQUE in the migration SQL", () => {
+    const sql = readFileSync(new URL("../../drizzle/0060_primary_legacy_id_map.sql", import.meta.url), "utf8");
+    expect(sql).toMatch(/CREATE UNIQUE INDEX "primary_legacy_id_map_new_id_idx"/);
   });
 
   it("is classified EXEMPT in the tenant registry", () => {

@@ -30,6 +30,12 @@ program did not own this work. Rehearsal 1 (Oct 8-9) needs the ETL.
   report (read, written, skipped with reason, per table). It resolves every §6 hazard,
   including a target or a "dropped, because" for each table with no known target.
   Google tokens are not copied.
+  ETL ordering rule: Tutor assigns question audio by row position and its queries have no
+  ORDER BY. The ETL writes `order` for MCQ and SAQ rows from the legacy physical row order
+  per article (rank by `ctid` within the article). The `tutor_compat` views sort by
+  `order`, then `id`. In the April copy, 7 of 240 published MCQ rows and 5 of 120 SAQ rows
+  differ from `createdAt` order.
+  ETL answer rule: the ETL always writes `answer` for MCQ rows (the legacy column was NOT NULL).
 - FR-4 (A5, D3): `student/read/[articleId]` and `/writing` accept a legacy cuid, look it
   up in `primary_legacy_id_map`, and redirect to the UUID URL.
 - FR-5 (A9, D8): A script gives each migrated teacher a credential account with

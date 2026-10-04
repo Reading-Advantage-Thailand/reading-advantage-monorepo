@@ -82,4 +82,17 @@ describe("tutor_compat views migration", () => {
   it("keeps Tutor's is_published filter column", () => {
     expect(viewSql("article")).toMatch(/is_published\s+AS is_published|a\.is_published AS is_published/);
   });
+
+  it("sorts MCQ and SAQ rows by order, then id (Tutor assigns audio by row position)", () => {
+    for (const name of ["multiple_choice_questions", "short_answer_questions"]) {
+      expect(viewSql(name)).toMatch(/ORDER BY q\."order", q\.id\s*;?\s*$/);
+    }
+  });
+
+  it("keeps option order and returns NULL for a negative answer index", () => {
+    const mcq = viewSql("multiple_choice_questions");
+    expect(mcq).toMatch(/WITH ORDINALITY/);
+    expect(mcq).toMatch(/ORDER BY o\.ordinality/);
+    expect(mcq).toMatch(/q\.correct_answer >= 0/);
+  });
 });

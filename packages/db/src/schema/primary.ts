@@ -16,7 +16,7 @@
  * cross-app coordination and are documented in the Phase 1 audit report.
  */
 import {
-  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique, primaryKey, index,
+  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique, primaryKey, uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { users, schools } from "./users.js";
 import { articles } from "./content.js";
@@ -155,6 +155,7 @@ export const articleActivityLogs = pgTable("article_activity_logs", {
  * Per-article sentence + words snapshot used as input to the flashcard
  * generator. JSON fields store the actual sentence + words data.
  */
+/** NOTE: Views in schema tutor_compat (0061) read this table. PostgreSQL refuses ALTER COLUMN TYPE and DROP COLUMN on columns a view uses. DROP ... CASCADE silently deletes the Tutor views. Recreate the views in the same migration. */
 export const sentencsAndWordsForFlashcards = pgTable("sentencs_and_words_for_flashcard", {
   id: uuid("id").primaryKey().defaultRandom(),
   articleId: uuid("article_id")
@@ -247,6 +248,6 @@ export const primaryLegacyIdMap = pgTable(
   },
   (t) => [
     primaryKey({ columns: [t.tableName, t.legacyId] }),
-    index("primary_legacy_id_map_new_id_idx").on(t.tableName, t.newId),
+    uniqueIndex("primary_legacy_id_map_new_id_idx").on(t.tableName, t.newId),
   ],
 );

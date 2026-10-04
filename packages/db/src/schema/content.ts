@@ -4,6 +4,7 @@ import { classrooms } from "./classrooms.js";
 
 // ─── Content ──────────────────────────────────────────────
 
+/** NOTE: Views in schema tutor_compat (0061) read this table. PostgreSQL refuses ALTER COLUMN TYPE and DROP COLUMN on columns a view uses. DROP ... CASCADE silently deletes the Tutor views. Recreate the views in the same migration. */
 export const articles = pgTable("articles", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: text("title").notNull(),

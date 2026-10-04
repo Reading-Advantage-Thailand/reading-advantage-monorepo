@@ -29,13 +29,14 @@ SELECT
 	coalesce(mq.legacy_id, q.id::text) AS id,
 	q.question AS question,
 	CASE WHEN jsonb_typeof(q.options) = 'array'
-		THEN ARRAY(SELECT jsonb_array_elements_text(q.options))
+		THEN ARRAY(SELECT o.value FROM jsonb_array_elements_text(q.options) WITH ORDINALITY AS o(value, ordinality) ORDER BY o.ordinality)
 	END AS options,
-	coalesce(q.answer, q.options ->> q.correct_answer) AS answer,
+	coalesce(q.answer, CASE WHEN jsonb_typeof(q.options) = 'array' AND q.correct_answer >= 0 THEN q.options ->> q.correct_answer END) AS answer,
 	coalesce(ma.legacy_id, q.article_id::text) AS article_id
 FROM public.multiple_choice_questions q
 LEFT JOIN public.primary_legacy_id_map mq ON mq.table_name = 'multiple_choice_questions' AND mq.new_id = q.id
-LEFT JOIN public.primary_legacy_id_map ma ON ma.table_name = 'article' AND ma.new_id = q.article_id;
+LEFT JOIN public.primary_legacy_id_map ma ON ma.table_name = 'article' AND ma.new_id = q.article_id
+ORDER BY q."order", q.id;
 --> statement-breakpoint
 CREATE VIEW tutor_compat.short_answer_questions AS
 SELECT
@@ -45,7 +46,8 @@ SELECT
 	coalesce(ma.legacy_id, q.article_id::text) AS article_id
 FROM public.short_answer_questions q
 LEFT JOIN public.primary_legacy_id_map mq ON mq.table_name = 'short_answer_questions' AND mq.new_id = q.id
-LEFT JOIN public.primary_legacy_id_map ma ON ma.table_name = 'article' AND ma.new_id = q.article_id;
+LEFT JOIN public.primary_legacy_id_map ma ON ma.table_name = 'article' AND ma.new_id = q.article_id
+ORDER BY q."order", q.id;
 --> statement-breakpoint
 CREATE VIEW tutor_compat.sentencs_and_words_for_flashcard AS
 SELECT
