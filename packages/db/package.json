@@ -57,6 +57,7 @@
     "push": "drizzle-kit push",
     "studio": "drizzle-kit studio",
     "seed:codecamp": "tsx src/seed/codecamp-seed.ts",
+    "seed:primary-qa": "tsx src/seed/primary-qa-seed.ts",
     "doctor": "tsx scripts/migration-ledger-doctor.ts",
     "tutor-read-check": "tsx scripts/tutor-read-check.ts",
     "refuse-legacy-db": "tsx scripts/refuse-legacy-db.ts",
