@@ -1,7 +1,7 @@
 import { baseConfig, ignores } from "@reading-advantage/config/eslint";
 
 const eslintConfig = [
-  { ignores: [...ignores, "prisma/generated/", "public/"] },
+  { ignores: [...ignores, "public/"] },
   ...baseConfig,
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
