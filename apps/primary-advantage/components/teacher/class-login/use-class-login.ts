@@ -1,33 +1,40 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { errorKey, postStudentLogin, type ClassLoginErrorKey, type ClassRoster } from "./api";
+import { errorKey, postStudentLogin, type ClassLoginErrorKey, type ClassRoster, type Lockout } from "./api";
 
 /** Time between two roster reads while the page is visible. */
 export const ROSTER_POLL_MS = 10_000;
 
 /**
- * Reads the live sign-in roster of a class and reads it again every 10 seconds while the page
- * is visible, and at once when the page becomes visible again. A response that arrives after a
- * newer request is dropped, so a slow old read never overwrites fresh data.
+ * Reads the live sign-in roster and the locked students of a class, and reads them again every
+ * 10 seconds while the page is visible, and at once when the page becomes visible again. A
+ * response that arrives after a newer request is dropped, so a slow old read never overwrites
+ * fresh data.
  * @param classroomId The class to read.
- * @returns The roster (null until the first read), the last error key, and a refresh function.
+ * @returns The roster (null until the first read), the locked students, the time of the last
+ * read in milliseconds, the last error key, and a refresh function.
  */
 export function useClassLogin(classroomId: string): {
   roster: ClassRoster | null;
+  locked: Lockout[];
+  fetchedAt: number;
   error: ClassLoginErrorKey | null;
   refresh: () => Promise<void>;
 } {
-  const [roster, setRoster] = useState<ClassRoster | null>(null);
+  const [data, setData] = useState<{ roster: ClassRoster; locked: Lockout[]; fetchedAt: number } | null>(null);
   const [error, setError] = useState<ClassLoginErrorKey | null>(null);
   const latest = useRef(0);
 
   const refresh = useCallback(async () => {
     const request = ++latest.current;
     try {
-      const next = await postStudentLogin<ClassRoster>("roster", { classroomId });
+      const [roster, lockouts] = await Promise.all([
+        postStudentLogin<ClassRoster>("roster", { classroomId }),
+        postStudentLogin<{ locked: Lockout[] }>("lockouts", { classroomId }),
+      ]);
       if (request !== latest.current) return;
-      setRoster(next);
+      setData({ roster, locked: lockouts.locked, fetchedAt: Date.now() });
       setError(null);
     } catch (caught) {
       if (request === latest.current) setError(errorKey(caught));
@@ -47,5 +54,5 @@ export function useClassLogin(classroomId: string): {
     };
   }, [refresh]);
 
-  return { roster, error, refresh };
+  return { roster: data?.roster ?? null, locked: data?.locked ?? [], fetchedAt: data?.fetchedAt ?? 0, error, refresh };
 }

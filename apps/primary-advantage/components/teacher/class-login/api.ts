@@ -17,6 +17,13 @@ export interface ClassRoster {
   students: RosterStudent[];
 }
 
+/** A student who is locked after too many wrong picture tries, as the lockouts route returns it. */
+export interface Lockout {
+  userId: string;
+  name: string | null;
+  lockedUntil: string;
+}
+
 /** Keys under `ClassLogin.errors` in the message files. */
 export type ClassLoginErrorKey = "signedOut" | "forbidden" | "notFound" | "rateLimited" | "unavailable" | "generic";
 

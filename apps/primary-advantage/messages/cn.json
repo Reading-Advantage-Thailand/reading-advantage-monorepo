@@ -2789,6 +2789,61 @@
       "openNoCode": "The class is open until {time}. The code shows only once. Press New code to show a code.",
       "newCode": "New code",
       "end": "End class"
+    },
+    "roster": {
+      "heading": "Students",
+      "summary": "{signedIn} of {total} signed in",
+      "student": "Student",
+      "status": "Status",
+      "actions": "Actions",
+      "signedIn": "Signed in",
+      "notSignedIn": "Not signed in",
+      "seen": "Seen {time}",
+      "lastSeen": "Last seen {time}",
+      "locked": "Locked, {minutes} min left",
+      "noPicture": "No picture password",
+      "resetPicture": "Reset pictures",
+      "resetPictureFor": "Reset picture password for {name}",
+      "setPicture": "Set pictures",
+      "setPictureFor": "Set picture password for {name}",
+      "newCard": "New card",
+      "newCardFor": "New card for {name}",
+      "assignMissing": "Give picture passwords to {count, plural, one {# student} other {# students}}",
+      "empty": "No students in this class yet."
+    },
+    "pictures": {
+      "title": "New picture password",
+      "description": "Show this to the student now. It does not show again.",
+      "print": "Print",
+      "close": "Close"
+    },
+    "rotate": {
+      "title": "Make a new card for {name}?",
+      "description": "The old card stops working now, and {name} is signed out.",
+      "confirm": "Make new card",
+      "cancel": "Cancel"
+    },
+    "cards": {
+      "title": "New QR card",
+      "description": "Print this card now. It does not show again.",
+      "qrLabel": "Sign-in QR code for {name}",
+      "scanHint": "Scan to sign in",
+      "print": "Print",
+      "close": "Close"
     }
+  },
+  "StudentPictures": {
+    "redCircle": "red circle",
+    "blueSquare": "blue square",
+    "greenTriangle": "green triangle",
+    "yellowStar": "yellow star",
+    "pinkHeart": "pink heart",
+    "orangeDiamond": "orange diamond",
+    "purpleMoon": "purple moon",
+    "grayCloud": "gray cloud",
+    "skyDrop": "light blue drop",
+    "blackBolt": "black lightning",
+    "brownHexagon": "brown hexagon",
+    "tealFlower": "teal flower"
   }
 }

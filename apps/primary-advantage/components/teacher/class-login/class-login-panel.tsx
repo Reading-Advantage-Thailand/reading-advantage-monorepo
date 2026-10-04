@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ClassSessionControl } from "./class-session-control";
+import { LiveRoster } from "./live-roster";
 import { useClassLogin } from "./use-class-login";
 
 /** Props of {@link ClassLoginPanel}. */
@@ -12,14 +13,15 @@ export interface ClassLoginPanelProps {
 }
 
 /**
- * Class sign-in panel for the teacher class page. It reads the live roster (polled while the
- * page is visible) and shows the Start/End class control.
+ * Class sign-in panel for the teacher class page. It reads the live roster and the locked
+ * students (polled while the page is visible) and shows the Start/End class control and the
+ * live roster.
  * @param props The class.
  * @returns The panel.
  */
 export function ClassLoginPanel({ classroomId }: ClassLoginPanelProps) {
   const t = useTranslations("ClassLogin");
-  const { roster, error, refresh } = useClassLogin(classroomId);
+  const { roster, locked, fetchedAt, error, refresh } = useClassLogin(classroomId);
 
   return (
     <Card>
@@ -35,7 +37,17 @@ export function ClassLoginPanel({ classroomId }: ClassLoginPanelProps) {
           </p>
         )}
         {roster ? (
-          <ClassSessionControl classroomId={classroomId} openSession={roster.openSession} onChange={refresh} />
+          <>
+            <ClassSessionControl classroomId={classroomId} openSession={roster.openSession} onChange={refresh} />
+            <LiveRoster
+              classroomId={classroomId}
+              classroomName={roster.classroomName}
+              students={roster.students}
+              locked={locked}
+              fetchedAt={fetchedAt}
+              onChange={refresh}
+            />
+          </>
         ) : (
           !error && <p className="text-muted-foreground">{t("loading")}</p>
         )}

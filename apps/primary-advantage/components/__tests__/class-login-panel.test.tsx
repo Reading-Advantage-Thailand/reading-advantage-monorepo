@@ -11,10 +11,16 @@ import { ClassLoginPanel } from "../teacher/class-login/class-login-panel";
 import { renderWithMessages } from "./helpers/render-with-messages";
 
 const CLASS_ID = "11111111-1111-4111-8111-111111111111";
-const roster = { classroomName: "P3A", picturePasswordEnabled: true, openSession: null, students: [] };
+const roster = {
+  classroomName: "P3A",
+  picturePasswordEnabled: true,
+  openSession: null,
+  students: [{ userId: "u1", name: "Ann Smith", username: "p3a1", hasPicturePassword: true, hasCardToken: false, signedIn: false, lastSeenAt: null }],
+};
 const fetchMock = vi.fn();
 const respond = (status: number, body: unknown) => Promise.resolve(new Response(JSON.stringify(body), { status }));
-const rosterCalls = () => fetchMock.mock.calls.filter(([url]) => url === "/api/auth/student/roster").length;
+const calls = (path: string) => fetchMock.mock.calls.filter(([url]) => url === `/api/auth/student/${path}`).length;
+const rosterCalls = () => calls("roster");
 let visibility: DocumentVisibilityState = "visible";
 
 /** Lets pending fetch promises and state updates settle. */
@@ -38,7 +44,7 @@ afterEach(() => {
 });
 
 describe("ClassLoginPanel", () => {
-  it("loads the roster for the class and shows the start control", async () => {
+  it("loads the roster and the lockouts and shows the start control and the students", async () => {
     renderWithMessages(<ClassLoginPanel classroomId={CLASS_ID} />);
     expect(screen.getByText("Loading class sign-in…")).toBeInTheDocument();
     await flush();
@@ -48,6 +54,8 @@ describe("ClassLoginPanel", () => {
     );
     expect(screen.getByRole("heading", { name: "Class sign-in" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Start class" })).toBeInTheDocument();
+    expect(calls("lockouts")).toBe(1);
+    expect(screen.getByRole("row", { name: /Ann Smith/ })).toBeInTheDocument();
   });
 
   it("polls every 10 seconds while the page is visible and stops while it is hidden", async () => {
@@ -57,6 +65,7 @@ describe("ClassLoginPanel", () => {
     await act(async () => void vi.advanceTimersByTime(10_000));
     await flush();
     expect(rosterCalls()).toBe(2);
+    expect(calls("lockouts")).toBe(2);
 
     visibility = "hidden";
     await act(async () => void vi.advanceTimersByTime(30_000));
