@@ -270,6 +270,14 @@ export async function getStudentAssignments(
   }
 }
 
+/** Raised when the caller may not read an assignment of another school or class. */
+export class AssignmentForbiddenError extends Error {
+  constructor() {
+    super("Forbidden");
+    this.name = "AssignmentForbiddenError";
+  }
+}
+
 export default async function getAssignmentById(id: string) {
   try {
     const user = await currentUser();
@@ -308,17 +316,17 @@ export default async function getAssignmentById(id: string) {
         classroomRow?.schoolId == null ||
         classroomRow.schoolId !== callerSchool
       ) {
-        throw new Error("Forbidden");
+        throw new AssignmentForbiddenError();
       }
       if (callerRole === "STUDENT" && saRows.length === 0) {
-        throw new Error("Forbidden");
+        throw new AssignmentForbiddenError();
       }
       if (
         callerRole !== "STUDENT" &&
         callerRole !== "TEACHER" &&
         callerRole !== "ADMIN"
       ) {
-        throw new Error("Forbidden");
+        throw new AssignmentForbiddenError();
       }
     }
 
