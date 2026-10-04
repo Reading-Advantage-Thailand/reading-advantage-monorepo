@@ -4,6 +4,7 @@ import { articles } from "./content.js";
 
 // ─── Question Models ────────────────────────────────────
 
+/** NOTE: Views in schema tutor_compat (0061) read this table. PostgreSQL refuses ALTER COLUMN TYPE and DROP COLUMN on columns a view uses. DROP ... CASCADE silently deletes the Tutor views. Recreate the views in the same migration. */
 export const multipleChoiceQuestions = pgTable("multiple_choice_questions", {
   id: uuid("id").primaryKey().defaultRandom(),
   articleId: uuid("article_id")
@@ -21,6 +22,7 @@ export const multipleChoiceQuestions = pgTable("multiple_choice_questions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+/** NOTE: Views in schema tutor_compat (0061) read this table. PostgreSQL refuses ALTER COLUMN TYPE and DROP COLUMN on columns a view uses. DROP ... CASCADE silently deletes the Tutor views. Recreate the views in the same migration. */
 export const shortAnswerQuestions = pgTable("short_answer_questions", {
   id: uuid("id").primaryKey().defaultRandom(),
   articleId: uuid("article_id")

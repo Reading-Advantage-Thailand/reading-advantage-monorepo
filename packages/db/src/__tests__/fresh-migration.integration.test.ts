@@ -183,5 +183,28 @@ DESCRIBE("fresh PostgreSQL migration path", () => {
       doctorResult.status,
       `Doctor rejected fresh migration. stdout=${doctorResult.stdout} stderr=${doctorResult.stderr}`,
     ).toBe(0);
+    // Tutor's five queries (PrimaryAdvantageDB.ts:93-120, import-primary-workbooks.ts:56-58)
+    // must execute against the migrated schema through search_path=tutor_compat.
+    const tutorClient = postgres(scratchDatabaseUrl, {
+      max: 1,
+      connection: { search_path: "tutor_compat" },
+    });
+    try {
+      const id = "legacy-id";
+      await tutorClient.unsafe(
+        `SELECT id, title, summary, passage, cefr_level, ra_level, words, sentences,
+                translated_passage, translated_summary, audio_url, audio_word_url, genre, type
+           FROM article WHERE id = $1 AND is_published = true`, [id]);
+      await tutorClient.unsafe(
+        `SELECT id, question, options, answer FROM multiple_choice_questions WHERE article_id = $1`, [id]);
+      await tutorClient.unsafe(
+        `SELECT id, question, answer FROM short_answer_questions WHERE article_id = $1`, [id]);
+      await tutorClient.unsafe(
+        `SELECT sentence, audio_sentences_url, words, words_url
+           FROM sentencs_and_words_for_flashcard WHERE article_id = $1 LIMIT 1`, [id]);
+      await tutorClient.unsafe("SELECT id, title FROM article WHERE is_published = true");
+    } finally {
+      await tutorClient.end({ timeout: 5 });
+    }
   }, 180_000);
 });

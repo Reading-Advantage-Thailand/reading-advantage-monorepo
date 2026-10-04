@@ -1,7 +1,14 @@
 # Plan — Primary Legacy Data Migration
 
-Runs in its own worktree, in parallel with Lane A. Its migrations come after Lane A's
-user-columns migration; Lane A merges to the integration branch first.
+Runs in its own worktree, in parallel with Lane A. Migrations 0060 and 0061 belong to this
+track. Lane A found that its user-columns migration is not needed (no Primary column is
+missing). After the merge, never change the tags, the `when` values, or the SQL of 0060 and 0061.
+
+## Merge blockers
+- `apps/codecamp-advantage/cloudbuild.yaml:28` sets `MIGRATION_CEILING_TAG=0059_game_challenges`.
+  `packages/db/src/migration.ts:71-75` throws when the ceiling is not the last journal entry.
+  Merging 0060 and 0061 therefore stops Codecamp deploys. Owner decision: raise Codecamp's
+  ceiling to the last tag in the same merge, after review. This track does not change that file.
 
 ## Phase 0: Inventory (read only)
 - [x] Map each legacy Prisma table (`~/Desktop/primary-advantage/prisma/schema.prisma`) to its shared-schema target; list the §6 tables with no target and propose a target or "dropped, because"
@@ -13,8 +20,9 @@ Open risks for Phase 2: story-chapter MCQs (22,720 rows) have no link target; fl
 FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 
 ## Phase 1: ID map and Tutor views (FR-1, FR-2) — unblocks Lane A's Tutor read test
-- [ ] Additive migration for `primary_legacy_id_map`
-- [ ] Additive migration for the `tutor_compat` schema and its four views, with tests
+- [x] Additive migration for `primary_legacy_id_map` (cbc839b6a, sentinel e90202faf)
+- [x] Additive migration for the `tutor_compat` schema and its four views, with tests (c7cf1bfb5, sentinel e90202faf; column names and types match the April legacy copy)
+- [x] Read-only `tutor_reader` login: `packages/db/scripts/tutor-reader-grants.sql` grants CONNECT, USAGE on `tutor_compat`, SELECT on the four views, and sets the search path on the role (owner decision 2026-10-04; real-database test)
 
 ## Phase 2: ETL (FR-3)
 - [ ] ETL script with `primary_legacy_id_map` writes and the reconciliation report

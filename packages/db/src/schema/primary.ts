@@ -16,7 +16,7 @@
  * cross-app coordination and are documented in the Phase 1 audit report.
  */
 import {
-  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique,
+  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique, primaryKey, uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { users, schools } from "./users.js";
 import { articles } from "./content.js";
@@ -155,6 +155,7 @@ export const articleActivityLogs = pgTable("article_activity_logs", {
  * Per-article sentence + words snapshot used as input to the flashcard
  * generator. JSON fields store the actual sentence + words data.
  */
+/** NOTE: Views in schema tutor_compat (0061) read this table. PostgreSQL refuses ALTER COLUMN TYPE and DROP COLUMN on columns a view uses. DROP ... CASCADE silently deletes the Tutor views. Recreate the views in the same migration. */
 export const sentencsAndWordsForFlashcards = pgTable("sentencs_and_words_for_flashcard", {
   id: uuid("id").primaryKey().defaultRandom(),
   articleId: uuid("article_id")
@@ -231,3 +232,22 @@ export const leaderboards = pgTable("leaderboards", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+// ─── Legacy ID map ────────────────────────────────────────
+
+/**
+ * Maps legacy Primary cuid keys to the new uuid keys (cutover decision D2).
+ * `table_name` holds the LEGACY table name (for example `article`). The
+ * `tutor_compat` views read it to show legacy ids to Tutor. Not tenant data.
+ */
+export const primaryLegacyIdMap = pgTable(
+  "primary_legacy_id_map",
+  {
+    tableName: text("table_name").notNull(),
+    legacyId: text("legacy_id").notNull(),
+    newId: uuid("new_id").notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.tableName, t.legacyId] }),
+    uniqueIndex("primary_legacy_id_map_new_id_idx").on(t.tableName, t.newId),
+  ],
+);

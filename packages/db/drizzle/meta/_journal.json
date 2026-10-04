@@ -421,6 +421,20 @@
       "when": 1788934304395,
       "tag": "0059_game_challenges",
       "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1791070043680,
+      "tag": "0060_primary_legacy_id_map",
+      "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1791070274888,
+      "tag": "0061_tutor_compat_views",
+      "breakpoints": true
     }
   ]
 }
