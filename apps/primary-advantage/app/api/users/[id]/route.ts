@@ -4,9 +4,11 @@ import { users, userRoles, roles } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB, type TenantDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
-import { isAdminOrSystem, patchUserBodySchema, canAccessSchoolResource, normalizeRole } from "@/lib/authorization";
+import { isAdminOrSystem, patchUserBodySchema, canAccessSchoolResource, canSetPasswordFor, normalizeRole } from "@/lib/authorization";
 import { roleAtLeast, type Role } from "@reading-advantage/auth";
-import bcrypt from "bcryptjs";
+import { loadTargetEffectiveRank } from "@/server/utils/auth";
+import { afterPasswordWrite } from "@/server/utils/passwordEvents";
+import { hashNewPassword, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
 
 export async function PATCH(
   request: NextRequest,
@@ -52,7 +54,7 @@ export async function PATCH(
     const usersDb = isSystem
       ? getUnscopedDB("SYSTEM manages users across schools; no schoolId")
       : tenantDb;
-    const [existingTarget] = await usersDb.select({ id: users.id, schoolId: users.schoolId })
+    const [existingTarget] = await usersDb.select({ id: users.id, schoolId: users.schoolId, role: users.role })
       .from(users)
       .where(eq(users.id, userId))
       .limit(1);
@@ -78,6 +80,22 @@ export async function PATCH(
       }
     }
 
+    // Password and role writes: only strictly lower-ranked targets (shared reset matrix),
+    // judged on the target's CURRENT effective rank (legacy rows included), never on the requested one.
+    if (password !== undefined || role !== undefined) {
+      // The caller already passed the ADMIN/SYSTEM gate, so its session role is its top rank.
+      if (!canSetPasswordFor(currentUserData.role, await loadTargetEffectiveRank(userId, existingTarget.role))) {
+        return NextResponse.json(
+          {
+            error: password !== undefined
+              ? "Cannot change the password of this account"
+              : "Cannot change the role of this account",
+          },
+          { status: 403 },
+        );
+      }
+    }
+
     // Build update data object (excluding role for now)
     const updateData: any = {};
     if (name !== undefined) updateData.name = name;
@@ -87,9 +105,10 @@ export async function PATCH(
     if (cefrLevel !== undefined) updateData.cefrLevel = cefrLevel;
 
     // Handle password hashing if password is provided
+    let newPasswordHash: string | undefined;
     if (password !== undefined) {
-      const saltRounds = 12;
-      updateData.password = await bcrypt.hash(password, saltRounds);
+      newPasswordHash = await hashNewPassword(password);
+      updateData.password = newPasswordHash;
     }
 
     // Use transaction to handle both user data and role updates
@@ -105,6 +124,13 @@ export async function PATCH(
         await tx.update(users)
           .set(updateData)
           .where(eq(users.id, userId));
+      }
+
+      // The shared login reads accounts.password, so mirror the new hash there.
+      if (newPasswordHash) {
+        await upsertCredentialAccount(tx, userId, newPasswordHash);
+        // sessions has no schoolId; the target was already school-checked above.
+        await revokeSessionsInTx(rawTx, userId);
       }
 
       // Handle role update if specified
@@ -144,6 +170,15 @@ export async function PATCH(
 
       return updated ? { ...updated, roles: userRoleRows } : null;
     });
+
+    if (newPasswordHash) {
+      await afterPasswordWrite({
+        userId,
+        actor: { id: currentUserData.id, role: currentUserData.role },
+        created: false,
+        sessionsRevoked: true,
+      });
+    }
 
     return NextResponse.json(
       {

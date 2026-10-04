@@ -32,7 +32,10 @@ nothing in this track may break that read path.
   Tutor's `PrimaryAdvantageDB.ts` (tables `article`, `multiple_choice_questions`,
   `short_answer_questions`, `sentencs_and_words_for_flashcard`) against the new
   schema. The test fails on any renamed or dropped column. Run it against a
-  restored copy of the production data before each rehearsal.
+  restored copy of the production data before each rehearsal. The legacy table names
+  exist in the new database only as the `tutor_compat` views, which track
+  `primary_legacy_data_migration_20261004` builds (FR-2). Run the test with
+  `search_path=tutor_compat`.
 - FR-6 (QA defects): Complete FR-1..FR-8 of `primary_browser_qa_fixes_20260915`
   inside this track and mark that track superseded. Also fix: `streakDays` always 0
   (`actions/flashcard.ts:520`), the dead `transition.from !== "paused"` clause

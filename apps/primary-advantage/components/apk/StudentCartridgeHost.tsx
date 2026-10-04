@@ -12,6 +12,7 @@ import {
   preparedReadToSelectAudioVocabularyResponseSchema,
   sentenceInputSchema,
   vocabularyInputSchema,
+  type GameCompletionInput,
   type GameResults,
   type LearningEvidence,
   type PreparedReadToSelectAudioVocabularyResponse,
@@ -29,6 +30,7 @@ import {
   createCatalogStandardEdition,
 } from "@reading-advantage/game-cartridges";
 
+import { capRealmCarverSentences } from "@/lib/apk/realm-carver-input";
 import { APK_HOST_LAYOUT_CLASS, APK_HOST_RESPONSIVE_OPTIONS } from "./apk-host-layout";
 
 const APKGameHost = dynamic(
@@ -151,13 +153,14 @@ export function StudentCartridgeHost({
     idempotencyKey?: string;
     request?: ReturnType<typeof mapGameResultsToCompletionInput> & { readonly challengeRunId?: string };
     challengeRunId?: string;
-    difficulty: "easy" | "medium" | "hard";
+    difficulty: GameCompletionInput["difficulty"];
     challengeModality?: unknown;
   } | undefined>(undefined);
-  if (!completionSessionRef.current
-    || completionSessionRef.current.configKey !== completionConfigKey
-    || completionSessionRef.current.input !== input) {
-    completionSessionRef.current = {
+  let completionSession = completionSessionRef.current;
+  if (!completionSession
+    || completionSession.configKey !== completionConfigKey
+    || completionSession.input !== input) {
+    completionSession = completionSessionRef.current = {
       configKey: completionConfigKey,
       input,
       challengeRunId: challengeLaunch?.runId,
@@ -165,7 +168,6 @@ export function StudentCartridgeHost({
       challengeModality: challengeLaunch?.challenge.modality,
     };
   }
-  const completionSession = completionSessionRef.current;
   const edition = useMemo(
     () => (cartridge
       ? createCatalogStandardEdition(
@@ -286,7 +288,10 @@ export function StudentCartridgeHost({
         }
         if (!active) return;
         setCartridge(loadedCartridge);
-        setInput(parsedInput.data);
+        // Realm Carver throws above its word cap; trim whole cards host-side.
+        setInput(cartridgeId === "realm-carver" && inputMode === "sentence"
+          ? capRealmCarverSentences(parsedInput.data as z.infer<typeof sentenceInputSchema>)
+          : parsedInput.data);
         setAnswerAudioResponse(prepared?.data);
         setLoadedLearningMode(effectiveLearningMode);
       } catch (error) {
@@ -475,8 +480,9 @@ export function StudentCartridgeHost({
               onComplete={handleComplete}
               onLifecycleTransition={(transition) => {
                 if (transition.to === "playing") startedAtRef.current = Date.now();
-                if (transition.event === "replay"
-                  || (transition.to === "playing" && transition.from !== "paused")) {
+                // Pause and resume go through the runtime handle and never emit a lifecycle
+                // transition, so every transition into "playing" starts a new RPG session.
+                if (transition.event === "replay" || transition.to === "playing") {
                   rpg.beginSession();
                 }
                 if (transition.from === "results" && transition.event === "replay") {

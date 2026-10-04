@@ -1,7 +1,7 @@
 import argon2 from "@node-rs/argon2";
 import bcrypt from "bcryptjs";
-import { eq, and } from "drizzle-orm";
-import { accounts } from "@reading-advantage/db/schema";
+import { eq, and, isNull } from "drizzle-orm";
+import { accounts, users } from "@reading-advantage/db/schema";
 import type { PostgresJsDatabase } from "@reading-advantage/db";
 import type * as schema from "@reading-advantage/db/schema";
 
@@ -79,4 +79,51 @@ export async function rehashOnLogin(
     .where(and(eq(accounts.userId, userId), eq(accounts.providerId, "credential")));
 
   return { migrated: true };
+}
+
+/**
+ * Adopts a legacy `users.password` hash into the credential `accounts` row.
+ * The legacy Primary Advantage build stored hashes only on the users table.
+ * The function verifies the password against the legacy hash before it writes.
+ * A bcrypt hash becomes Argon2id. A credential row that already holds a password stays unchanged.
+ * The credential write and the removal of `users.password` happen in one transaction.
+ * @param db - Database client (Drizzle instance)
+ * @param userId - The user who owns the credential
+ * @param password - The plaintext password to verify and adopt
+ * @param legacyHash - The hash read from `users.password`
+ * @returns True if the password matched and the legacy hash was adopted, false if nothing was written
+ * (wrong password, or a credential password already existed and the write was skipped).
+ */
+export async function adoptLegacyPassword(
+  db: Db,
+  userId: string,
+  password: string,
+  legacyHash: string,
+): Promise<boolean> {
+  if (!(await verifyPassword(password, legacyHash))) {
+    return false;
+  }
+  const hash = legacyHash.startsWith("$argon2id$")
+    ? legacyHash
+    : await argon2.hash(password, ARGON2ID_OPTS);
+  return db.transaction(async (tx) => {
+    const written = await tx
+      .insert(accounts)
+      .values({
+        id: `${userId}_credential`,
+        userId,
+        providerId: "credential",
+        password: hash,
+      })
+      .onConflictDoUpdate({
+        target: [accounts.userId, accounts.providerId],
+        set: { password: hash, updatedAt: new Date() },
+        setWhere: isNull(accounts.password),
+      })
+      .returning({ id: accounts.id });
+    // No row means a credential password already existed: the legacy hash is stale.
+    if (written.length === 0) return false;
+    await tx.update(users).set({ password: null }).where(eq(users.id, userId));
+    return true;
+  });
 }

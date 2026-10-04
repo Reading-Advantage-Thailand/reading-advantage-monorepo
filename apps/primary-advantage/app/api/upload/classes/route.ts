@@ -151,6 +151,8 @@ const createTimer = (label: string) => {
  */
 export async function POST(request: NextRequest) {
   const apiTimer = createTimer("UPLOAD_CLASSES_API");
+  // Set once the upload is written to disk; the finally block deletes it on every exit.
+  let tempFilePath: string | undefined;
 
   try {
     const authTimer = createTimer("AUTH_CHECK");
@@ -278,6 +280,7 @@ export async function POST(request: NextRequest) {
     // Convert file to buffer and save
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    tempFilePath = filePath;
     await writeFile(filePath, buffer);
     fileTimer.log("File saved to temp directory", `Path: ${filePath}`);
 
@@ -704,11 +707,6 @@ export async function POST(request: NextRequest) {
 
     // If there are validation errors, return them
     if (errors.length > 0) {
-      unlink(filePath, (err) => {
-        if (err) {
-          console.error("Error deleting temp file:", err);
-        }
-      });
       return NextResponse.json(
         {
           error: "Validation failed",
@@ -998,11 +996,6 @@ export async function POST(request: NextRequest) {
 
     // Delete temp file
     const cleanupTimer = createTimer("CLEANUP_RESPONSE");
-    unlink(filePath, (err) => {
-      if (err) {
-        console.error("Error deleting temp file:", err);
-      }
-    });
     cleanupTimer.log("Temp file cleanup completed");
 
     // Prepare response message and stats based on file type
@@ -1081,5 +1074,13 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 },
     );
+  } finally {
+    if (tempFilePath) {
+      unlink(tempFilePath, (err) => {
+        if (err) {
+          console.error("Error deleting temp file:", err);
+        }
+      });
+    }
   }
 }

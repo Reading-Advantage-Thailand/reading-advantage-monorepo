@@ -4,7 +4,7 @@ This file tracks all major tracks for the project.
 
 ---
 
-- [ ] **Track: Primary Browser QA Fixes** *Link: [./tracks/primary_browser_qa_fixes_20260915/](./tracks/primary_browser_qa_fixes_20260915/)*
+- [x] **Track: Primary Browser QA Fixes** *Link: [./tracks/primary_browser_qa_fixes_20260915/](./tracks/primary_browser_qa_fixes_20260915/)* — SUPERSEDED by primary_cutover_blockers_20261003
   Fix the eight defects found by the 2026-09-15 parallel browser QA sweep (sign-in crash, article crash, dead sidebar links, i18n key, admin 403, Realm Carver cap, locale toggle, Import Data routing).
 
 - [~] **Track: APK Arcade Portfolio Refactor** *Link: [./tracks/apk_arcade_portfolio_refactor_20260908/](./tracks/apk_arcade_portfolio_refactor_20260908/)*
@@ -1118,4 +1118,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys.
 
 - [ ] **Track: Primary Reedy Preview** *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
-  Reedy in Primary, 8 minutes per student per month, Forge avatar, usage views.
+  Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.
+
+- [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*
+  ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.

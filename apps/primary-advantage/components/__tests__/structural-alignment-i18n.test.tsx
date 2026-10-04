@@ -345,12 +345,9 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
       students: [
         {
           id: "cs1",
-          name: "Somchai",
-          student: {
-            id: "s1",
-            name: "Somchai",
-            email: "somchai@example.com",
-          },
+          studentUserId: "s1",
+          studentName: "Somchai",
+          studentEmail: "somchai@example.com",
         },
       ],
     });

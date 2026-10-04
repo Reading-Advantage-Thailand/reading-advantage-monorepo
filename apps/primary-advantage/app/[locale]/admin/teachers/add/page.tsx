@@ -58,8 +58,10 @@ export default function AddTeacherPage() {
       role: z.string().min(1, t("schema.roleRequired")),
       password: z
         .string()
-        .min(6, t("schema.passwordMin"))
-        .max(100, t("schema.passwordMax")),
+        // Match the server: PASSWORD_MIN_LENGTH (8) and PASSWORD_MAX_LENGTH (128) in
+        // @reading-advantage/auth. Literals avoid importing the auth barrel into a client bundle.
+        .min(8, t("schema.passwordMin"))
+        .max(128, t("schema.passwordMax")),
       confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {

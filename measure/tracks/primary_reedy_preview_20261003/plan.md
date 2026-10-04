@@ -9,7 +9,7 @@ login track's `authStrength` contract (a contract stub is enough to start).
 - [ ] Decide package placement (domain use-cases + ai voice module + thin routes)
 
 ## Phase 1: Avatar
-- [ ] Choose the model with Daniel (open question: which Forge hero or avatar)
+- [x] Model decided: the student's own customized avatar (owner decision 2026-10-04)
 - [ ] Render eight state images or short clips in the Chibi Quest style (race-unmarked)
 - [ ] `Reedy` React component with the states, Thai bubbles, reduced motion
 

@@ -133,7 +133,7 @@ const APPS: readonly AppRouteSpec[] = [
  *     bypass the barrel contract.
  */
 const IMPORT_HANDLE_RESET_PASSWORD =
-  /import\s*\{[^}]*\bhandleResetPassword\b[^}]*\}\s*from\s*["']@reading-advantage\/api\/routes\/auth["']/;
+  /import\s*\{[^}]*\b(?:handleResetPassword|createResetPasswordHandler)\b[^}]*\}\s*from\s*["']@reading-advantage\/api\/routes\/auth["']/;
 
 /**
  * Matches either of the two `POST` export shapes used by the existing

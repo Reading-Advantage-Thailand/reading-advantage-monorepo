@@ -49,7 +49,7 @@ export function TaskReading({
   const [selectedSentence, setSelectedSentence] = useState<number | null>(null);
   const sentenceRefs = useRef<{ [key: number]: HTMLElement | null }>({});
 
-  const paragraphs = article.passage
+  const paragraphs = (article.passage ?? "")
     .split("\n\n")
     .filter((p) => p.trim() !== "");
 

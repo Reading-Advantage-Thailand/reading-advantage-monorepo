@@ -233,9 +233,26 @@ describe("StudentCartridgeHost", () => {
     const lifecycle = currentGameHostProps().onLifecycleTransition;
     act(() => {
       lifecycle?.({ from: "briefing", event: "start", to: "playing" });
-      lifecycle?.({ from: "paused", event: "resume", to: "playing" });
       lifecycle?.({ from: "results", event: "replay", to: "briefing" });
       lifecycle?.({ from: "briefing", event: "startPractice", to: "tutorial" });
+    });
+    expect(mockRpgBeginSession).toHaveBeenCalledTimes(2);
+  });
+
+  it("begins one RPG session per real entry to playing and none for the other phases", async () => {
+    render(<StudentCartridgeHost cartridgeId="dragon-flight" description="Choose the correct gate." inputMode="vocabulary" locale="th" ownerKey="school-1:student-7" title="Dragon Flight" />);
+    await screen.findByTestId("apk-game-host");
+    const lifecycle = currentGameHostProps().onLifecycleTransition;
+    act(() => {
+      lifecycle?.({ from: "briefing", event: "start", to: "tutorial" });
+      lifecycle?.({ from: "tutorial", event: "tutorial-complete", to: "countdown" });
+      lifecycle?.({ from: "demo", event: "demo-complete", to: "briefing" });
+    });
+    expect(mockRpgBeginSession).not.toHaveBeenCalled();
+    act(() => {
+      lifecycle?.({ from: "countdown", event: "countdown-complete", to: "playing" });
+      lifecycle?.({ from: "tutorial", event: "tutorial-skip", to: "playing" });
+      lifecycle?.({ from: "playing", event: "game-complete", to: "results" });
     });
     expect(mockRpgBeginSession).toHaveBeenCalledTimes(2);
   });

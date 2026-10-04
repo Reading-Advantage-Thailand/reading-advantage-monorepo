@@ -21,9 +21,9 @@ per student. Daniel set the limit at 8 minutes per month.
   is never the only control.
 - FR-3: Per-session cap of 180 seconds (default; adjust after the cost check).
   One active session per student.
-- FR-4: Unlock rule (default): a student can start Reedy after completing at least one
-  lesson (from `articleActivityLogs`). Reedy uses that lesson as context. Daniel may
-  change this rule.
+- FR-4: Reedy is a standard activity at the end of each lesson (owner decision
+  2026-10-04). The student reaches it through the lesson flow, and Reedy uses that
+  lesson as context. The monthly budget and session cap still apply.
 - FR-5: Requires `authStrength = full` (see the student login track).
 - FR-6: Kill switch env flag `AI_VOICE_ENABLED` and a per-school disable. Live by default at cutover.
 - FR-7: Cost metering per session (tokens, USD, THB at a configurable rate).
@@ -33,7 +33,8 @@ per student. Daniel set the limit at 8 minutes per month.
 - FR-8: Reedy page labeled **Preview** with a short line that explains it in Thai and English.
 - FR-9: Minutes-left meter before and during a session and on the student home.
   Shows the reset date. Shows a friendly stop message at the limit.
-- FR-10: Reedy avatar from Advantage Forge in the Chibi Quest style, replacing the fox.
+- FR-10: Reedy shows the student's own avatar from the avatar customization plans
+  (owner decision 2026-10-04), replacing the fox. Do not pick a separate Forge model.
   Eight states as in Tutor (idle, connecting, listening, thinking, speaking, muted,
   celebrating, reassuring), with Thai speech bubbles. Reduced-motion variant.
 - FR-11: Mic permission flow with clear child-friendly wording, and a fallback when

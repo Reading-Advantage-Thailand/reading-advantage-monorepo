@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { and, eq, type SQL } from "drizzle-orm";
 import { db } from "@reading-advantage/db";
-import { users, accounts } from "@reading-advantage/db/schema";
+import { users, accounts, sessions } from "@reading-advantage/db/schema";
 import {
   hashPassword,
   requireRole,
@@ -17,6 +17,30 @@ export const resetPasswordSchema = z.object({
   newPassword: z.string().min(8).max(128),
 });
 
+/** The identity facts a reset decision reads about one account. */
+export interface ResetPrincipal {
+  id: string;
+  role: string;
+  schoolId: string | null;
+}
+
+/** Options for `createResetPasswordHandler`. */
+export interface ResetPasswordHandlerOptions {
+  /**
+   * Replaces the built-in role matrix when set. It receives the session actor and the
+   * target row and returns true to allow the reset. The handler applies no school
+   * filter of its own, so this function owns the whole decision. It must return a
+   * boolean only. The default is unset.
+   */
+  authorizeTarget?: (actor: ResetPrincipal, target: ResetPrincipal) => boolean | Promise<boolean>;
+  /**
+   * Returns the role that the audit event records for the actor, or undefined to record
+   * the session role. The handler calls it only after the write succeeds. A throw is
+   * logged and the session role is recorded. The default is unset.
+   */
+  auditActorRole?: (actor: ResetPrincipal) => string | undefined | Promise<string | undefined>;
+}
+
 /**
  * Handles password reset requests by TEACHER/ADMIN.
  * TEACHER can reset STUDENT in their own school.
@@ -24,8 +48,24 @@ export const resetPasswordSchema = z.object({
  * @param request - The incoming request with userId and newPassword
  * @returns Response with success or error status
  */
-export async function handleResetPassword(
-  request: NextRequest
+export function handleResetPassword(request: NextRequest): Promise<Response> {
+  return resetWithOptions(request, {});
+}
+
+/**
+ * Builds a reset handler with a caller-supplied target authorization.
+ * Primary Advantage uses it to enforce school scope and effective rank.
+ * @param options - Reset options, such as `authorizeTarget`.
+ * @returns A route handler with the same flow as `handleResetPassword` and the supplied decision.
+ */
+export function createResetPasswordHandler(options: ResetPasswordHandlerOptions) {
+  return (request: NextRequest): Promise<Response> => resetWithOptions(request, options);
+}
+
+/** Shared reset implementation behind `handleResetPassword` and `createResetPasswordHandler`. */
+async function resetWithOptions(
+  request: NextRequest,
+  options: ResetPasswordHandlerOptions,
 ): Promise<Response> {
   try {
     const body = await request.json();
@@ -56,7 +96,7 @@ export async function handleResetPassword(
     // Load target user — scope by school for TEACHER actors.
     // ADMIN bypasses school scoping per the authorization matrix.
     const whereParts: SQL[] = [eq(users.id, userId)];
-    if (actor.role === "TEACHER" && actor.schoolId) {
+    if (!options.authorizeTarget && actor.role === "TEACHER" && actor.schoolId) {
       whereParts.push(eq(users.schoolId, actor.schoolId));
     }
 
@@ -67,11 +107,24 @@ export async function handleResetPassword(
       .limit(1);
 
     if (!target) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      // authorizeTarget callers get the same answer as a refusal, so an id never reveals existence.
+      return options.authorizeTarget
+        ? NextResponse.json({ message: "Forbidden" }, { status: 403 })
+        : NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    if (options.authorizeTarget) {
+      const allowed = await options.authorizeTarget(
+        { id: actor.id, role: actor.role, schoolId: actor.schoolId ?? null },
+        { id: target.id, role: target.role, schoolId: target.schoolId ?? null },
+      );
+      if (!allowed) {
+        return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+      }
     }
 
     // Authorization matrix — check target role and school
-    if (actor.role === "TEACHER") {
+    if (!options.authorizeTarget && actor.role === "TEACHER") {
       if (target.role !== "STUDENT") {
         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
@@ -79,7 +132,7 @@ export async function handleResetPassword(
         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
     }
-    if (actor.role === "ADMIN") {
+    if (!options.authorizeTarget && actor.role === "ADMIN") {
       if (target.role !== "STUDENT" && target.role !== "TEACHER") {
         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
@@ -103,21 +156,39 @@ export async function handleResetPassword(
 
     // Hash new password and update credential account
     const hashedPassword = await hashPassword(newPassword);
-    await db
-      .update(accounts)
-      .set({ password: hashedPassword, updatedAt: new Date() })
-      .where(
-        and(eq(accounts.userId, userId), eq(accounts.providerId, "credential"))
-      );
+    const writeAccount = (client: Pick<typeof db, "update">) =>
+      client
+        .update(accounts)
+        .set({ password: hashedPassword, updatedAt: new Date() })
+        .where(
+          and(eq(accounts.userId, userId), eq(accounts.providerId, "credential"))
+        );
 
-    // Revoke all sessions for the target user
-    await revokeAllUserSessions(db, userId);
+    if (options.authorizeTarget) {
+      // Atomic: a failed revocation rolls back the new password.
+      await db.transaction(async (tx) => {
+        await writeAccount(tx);
+        await tx.delete(sessions).where(eq(sessions.userId, userId));
+      });
+    } else {
+      await writeAccount(db);
+      // Revoke all sessions for the target user
+      await revokeAllUserSessions(db, userId);
+    }
 
     // FR-9: audit event
     const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
     const ua = request.headers.get("user-agent") ?? null;
+    let auditRole: string = actor.role;
+    try {
+      auditRole =
+        (await options.auditActorRole?.({ id: actor.id, role: actor.role, schoolId: actor.schoolId ?? null })) ??
+        actor.role;
+    } catch (err) {
+      console.error("Audit actor role failed:", err instanceof Error ? err.message : "Unknown");
+    }
     recordAuditEvent(
-      { actorUserId: actor.id, actorRole: actor.role, ipAddress: ip, userAgent: ua },
+      { actorUserId: actor.id, actorRole: auditRole as typeof actor.role, ipAddress: ip, userAgent: ua },
       { action: "auth:password_reset", targetType: "user", targetId: userId }
     ).catch((err) => {
       console.error("Audit event auth:password_reset failed:", err instanceof Error ? err.message : "Unknown");

@@ -39,6 +39,7 @@
   },
   "Sidebar": {
     "read": "Đọc",
+    "games": "Trò chơi",
     "stories": "Câu chuyện",
     "assignments": "Bài tập",
     "history": "Lịch sử",
@@ -253,7 +254,10 @@
         "file": "Tệp",
         "size": "Kích thước",
         "savedAs": "Lưu dưới tên",
-        "nextSteps": "Tệp đã sẵn sàng để xử lý. Bạn có thể tiếp tục các bước tiếp theo."
+        "nextSteps": "Tệp đã sẵn sàng để xử lý. Bạn có thể tiếp tục các bước tiếp theo.",
+        "inserted": "Đã nhập",
+        "skippedDuplicate": "Bỏ qua (trùng trong tệp)",
+        "skippedExisting": "Bỏ qua (đã tồn tại)"
       },
       "progressLabel": "Tiến trình tải lên",
       "progressPercent": "Hoàn thành {percent}%",
@@ -2496,8 +2500,8 @@
         "nameMax": "Tên phải ít hơn 100 ký tự",
         "emailInvalid": "Vui lòng nhập email hợp lệ",
         "roleRequired": "Vui lòng chọn vai trò",
-        "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
-        "passwordMax": "Mật khẩu phải ít hơn 100 ký tự",
+        "passwordMin": "Mật khẩu phải có ít nhất 8 ký tự",
+        "passwordMax": "Mật khẩu không được quá 128 ký tự",
         "passwordsDontMatch": "Mật khẩu không khớp"
       }
     },

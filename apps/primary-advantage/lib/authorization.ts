@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ActivityType, UserXpEarned } from "@/types/enum";
-import { ROLES } from "@reading-advantage/auth";
+import { ROLES, passwordSchema } from "@reading-advantage/auth";
+import { ROLE_HIERARCHY, type Role } from "@reading-advantage/auth/roles";
 import { STAFF_ROLES } from "./permissions";
 
 /** Session roles allowed to manage other users. */
@@ -19,6 +20,62 @@ export const USER_SEARCH_ROLES: readonly string[] = STAFF_ROLES;
  */
 export function normalizeRole(role: unknown): string {
   return String(role ?? "").toUpperCase();
+}
+
+/**
+ * Computes the effective rank of an account across every place Primary grants rights.
+ * The result is the highest of the users.role value, the legacy user_roles names,
+ * and ADMIN when a school_admins row exists. The legacy name "user" carries no rank.
+ * @param sessionRole The users.role value of the account.
+ * @param legacyRoleNames The legacy user_roles names held by the account.
+ * @param hasSchoolAdminRow True when the account has a school_admins row.
+ * @param unknownNames How to treat an unrecognized legacy name: "ignore" for a caller,
+ * "max" for a target so that an unclear account is never writable.
+ * @returns The highest role name, or an empty string when the account has none.
+ */
+export function effectiveRoleOf(
+  sessionRole: unknown,
+  legacyRoleNames: readonly string[],
+  hasSchoolAdminRow: boolean,
+  unknownNames: "ignore" | "max" = "ignore",
+): string {
+  const candidates: string[] = [];
+  const session = normalizeRole(sessionRole);
+  if (session) candidates.push(session);
+  for (const raw of legacyRoleNames) {
+    const name = normalizeRole(raw);
+    if (!name || name === "USER") continue;
+    if (name in ROLE_HIERARCHY) candidates.push(name);
+    else if (unknownNames === "max") candidates.push(ROLES.SYSTEM);
+  }
+  if (hasSchoolAdminRow) candidates.push(ROLES.ADMIN);
+  let best = "";
+  let bestRank = -1;
+  for (const name of candidates) {
+    const rank = ROLE_HIERARCHY[name as Role] ?? (unknownNames === "max" ? ROLE_HIERARCHY.SYSTEM : -1);
+    if (rank > bestRank) {
+      best = name;
+      bestRank = rank;
+    }
+  }
+  return best;
+}
+
+/**
+ * Checks whether an actor may set another account's password.
+ * Mirrors the shared reset matrix: only strictly lower-ranked targets.
+ * Pass effective roles from `effectiveRoleOf` so legacy admin rows count.
+ * @param actorRole The effective role of the caller.
+ * @param targetRole The effective role of the account whose password changes.
+ * @returns True when the actor outranks the target within the matrix.
+ */
+export function canSetPasswordFor(actorRole: unknown, targetRole: unknown): boolean {
+  const actor = normalizeRole(actorRole);
+  const target = normalizeRole(targetRole);
+  if (actor === "SYSTEM") return target !== "SYSTEM" && target !== "";
+  if (actor === "ADMIN") return target === "STUDENT" || target === "TEACHER";
+  if (actor === "TEACHER") return target === "STUDENT";
+  return false;
 }
 
 /**
@@ -231,7 +288,7 @@ export const patchUserBodySchema = z.object({
   xp: z.number().int().min(0).optional(),
   level: z.number().int().min(1).optional(),
   cefrLevel: z.string().min(1).max(16).optional(),
-  password: z.string().min(8).max(256).optional(),
+  password: passwordSchema.optional(),
 });
 
 /** Bounded article generation amount per genre. */

@@ -411,7 +411,7 @@ export default function ArticleContent({ article }: Props) {
     }
   };
 
-  const paragraphs = article.passage
+  const paragraphs = (article.passage ?? "")
     .split("\n\n")
     .filter((p) => p.trim() !== "");
 

@@ -17,7 +17,10 @@ import {
   userActivity,
   xpLogs,
 } from '@reading-advantage/db';
-import bcrypt from "bcryptjs";
+import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, schoolScopeConditions } from "@/server/utils/auth";
+import { canSetPasswordFor } from "@/lib/authorization";
+import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
+import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
 import {
   StudentData,
   CreateStudentInput,
@@ -67,13 +70,7 @@ export const getStudents = async (
     const whereConditions: any[] = [eq(roles.name, studentRole)];
 
     // If user is school admin, only show students from their school
-    if (
-      userWithRoles.SchoolAdmins.length > 0 &&
-      !userWithRoles.roles.some((r: any) => r.role.name === "system")
-    ) {
-      if (!userWithRoles.schoolId) throw new Error("School association required");
-      whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
-    }
+    whereConditions.push(...schoolScopeConditions(users.schoolId, userWithRoles));
 
     // Add search filter (Prisma: contains + mode: insensitive → ILIKE)
     if (search) {
@@ -192,13 +189,7 @@ export const getStudentById = async (
     ];
 
     // If user is school admin, only show students from their school
-    if (
-      userWithRoles.SchoolAdmins.length > 0 &&
-      !userWithRoles.roles.some((r: any) => r.role.name === "system")
-    ) {
-      if (!userWithRoles.schoolId) throw new Error("School association required");
-      whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
-    }
+    whereConditions.push(...schoolScopeConditions(users.schoolId, userWithRoles));
 
     const rows = await db.select({
       id: users.id,
@@ -285,15 +276,17 @@ export const createStudent = async (params: {
     }
 
     // Determine school assignment
-    let schoolId = null;
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolId = userWithRoles.schoolId;
+    const schoolId = userWithRoles.schoolId ?? null;
+
+    // Fail closed: only SYSTEM may create accounts without a school.
+    if (!schoolId && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
+      return { success: false, error: "A school is required to create a student" };
     }
 
     // Validate classroom if provided
     if (classroomId) {
       const classroomConditions: any[] = [eq(classrooms.id, classroomId)];
-      if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
+      classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
 
       const [classroom] = await db.select({ id: classrooms.id })
         .from(classrooms)
@@ -307,8 +300,8 @@ export const createStudent = async (params: {
 
     // Generate password if not provided
     const hashedPassword = password
-      ? bcrypt.hashSync(password, 10)
-      : bcrypt.hashSync(Math.random().toString(36).slice(-8), 10);
+      ? await hashNewPassword(password)
+      : await generateRandomPasswordHash();
 
     // Create the new student (and role + optional classroom link) in a tx.
     const newStudentId = await db.transaction(async (tx) => {
@@ -327,6 +320,8 @@ export const createStudent = async (params: {
         level: 1,
       }).returning({ id: users.id });
 
+      await upsertCredentialAccount(tx, created.id, hashedPassword);
+
       await tx.insert(userRoles).values({
         userId: created.id,
         roleId: roleRecord.id,
@@ -341,6 +336,8 @@ export const createStudent = async (params: {
 
       return created.id;
     });
+
+    await afterPasswordWrite({ userId: newStudentId, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: true });
 
     // Refetch the full record with the include shape.
     const studentRows = await db.select({
@@ -397,19 +394,14 @@ export const updateStudent = async (
     ];
 
     // If user is school admin, only allow updates to students from their school
-    if (
-      userWithRoles.SchoolAdmins.length > 0 &&
-      !userWithRoles.roles.some((r: any) => r.role.name === "system")
-    ) {
-      if (!userWithRoles.schoolId) throw new Error("School association required");
-      whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
-    }
+    whereConditions.push(...schoolScopeConditions(users.schoolId, userWithRoles));
 
     // Check if student exists and user has permission to update
     const [existingStudent] = await db.select({
       id: users.id,
       email: users.email,
       schoolId: users.schoolId,
+      sessionRole: users.role,
     })
       .from(users)
       .innerJoin(userRoles, eq(userRoles.userId, users.id))
@@ -419,6 +411,14 @@ export const updateStudent = async (
 
     if (!existingStudent) {
       return { success: false, error: "Student not found" };
+    }
+
+    // A password write needs a strictly lower-ranked target (shared reset matrix).
+    if (
+      updateData.password &&
+      !canSetPasswordFor(callerEffectiveRank(userWithRoles), await loadTargetEffectiveRank(id, existingStudent.sessionRole))
+    ) {
+      return { success: false, error: "Cannot change the password of this account" };
     }
 
     // Check if email is being updated and doesn't conflict
@@ -436,12 +436,7 @@ export const updateStudent = async (
     // Validate classroom if being updated
     if (updateData.classroomId) {
       const classroomConditions: any[] = [eq(classrooms.id, updateData.classroomId)];
-      if (
-        userWithRoles.schoolId &&
-        userWithRoles.SchoolAdmins.length > 0
-      ) {
-        classroomConditions.push(eq(classrooms.schoolId, userWithRoles.schoolId));
-      }
+      classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
 
       const [classroom] = await db.select({ id: classrooms.id })
         .from(classrooms)
@@ -458,8 +453,10 @@ export const updateStudent = async (
     if (updateData.name) updatePayload.name = updateData.name;
     if (updateData.email) updatePayload.email = updateData.email;
     if (updateData.cefrLevel) updatePayload.cefrLevel = updateData.cefrLevel;
+    let newPasswordHash: string | undefined;
     if (updateData.password) {
-      updatePayload.password = bcrypt.hashSync(updateData.password, 10);
+      newPasswordHash = await hashNewPassword(updateData.password);
+      updatePayload.password = newPasswordHash;
     }
 
     // Update the student (and optionally their classroom link) in a tx.
@@ -468,6 +465,11 @@ export const updateStudent = async (
         await tx.update(users)
           .set(updatePayload)
           .where(eq(users.id, id));
+      }
+
+      if (newPasswordHash) {
+        await upsertCredentialAccount(tx, id, newPasswordHash);
+        await revokeSessionsInTx(tx, id);
       }
 
       if (updateData.classroomId !== undefined) {
@@ -483,6 +485,10 @@ export const updateStudent = async (
         }
       }
     });
+
+    if (newPasswordHash) {
+      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: false, sessionsRevoked: true });
+    }
 
     // Refetch to get updated classroom info
     const studentRows = await db.select({
@@ -538,16 +544,10 @@ export const deleteStudent = async (
     ];
 
     // If user is school admin, only allow deletion of students from their school
-    if (
-      userWithRoles.SchoolAdmins.length > 0 &&
-      !userWithRoles.roles.some((r: any) => r.role.name === "system")
-    ) {
-      if (!userWithRoles.schoolId) throw new Error("School association required");
-      whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
-    }
+    whereConditions.push(...schoolScopeConditions(users.schoolId, userWithRoles));
 
     // Check if student exists and user has permission to delete
-    const [existingStudent] = await db.select({ id: users.id })
+    const [existingStudent] = await db.select({ id: users.id, sessionRole: users.role })
       .from(users)
       .innerJoin(userRoles, eq(userRoles.userId, users.id))
       .innerJoin(roles, eq(roles.id, userRoles.roleId))
@@ -558,6 +558,11 @@ export const deleteStudent = async (
       return { success: false, error: "Student not found" };
     }
 
+    // A delete needs a strictly lower-ranked target, the same rule as a password write.
+    if (!canSetPasswordFor(callerEffectiveRank(userWithRoles), await loadTargetEffectiveRank(id, existingStudent.sessionRole))) {
+      return { success: false, error: "Cannot delete this account" };
+    }
+
     // Delete related records first
     await db.delete(userRoles).where(eq(userRoles.userId, id));
     await db.delete(classroomStudents).where(eq(classroomStudents.studentId, id));
@@ -566,6 +571,8 @@ export const deleteStudent = async (
 
     // Delete the student
     await db.delete(users).where(eq(users.id, id));
+
+    await auditUserDeleted({ userId: id, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) } });
 
     return { success: true };
   } catch (error) {
@@ -581,13 +588,7 @@ export const getStudentStatistics = async (userWithRoles: UserWithRoles) => {
     const whereConditions: any[] = [eq(roles.name, studentRole)];
 
     // If user is school admin, only show students from their school
-    if (
-      userWithRoles.SchoolAdmins.length > 0 &&
-      !userWithRoles.roles.some((r: any) => r.role.name === "system")
-    ) {
-      if (!userWithRoles.schoolId) throw new Error("School association required");
-      whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
-    }
+    whereConditions.push(...schoolScopeConditions(users.schoolId, userWithRoles));
 
     // Fetch students + their recent activity (last 7 days) in one query.
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);

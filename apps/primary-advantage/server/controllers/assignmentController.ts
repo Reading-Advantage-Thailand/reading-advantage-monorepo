@@ -15,6 +15,7 @@ import {
 } from '@reading-advantage/db';
 import { NextRequest, NextResponse } from "next/server";
 import getAssignmentById, {
+  AssignmentForbiddenError,
   createAssignment,
   getStudentAssignments,
   getUserLessonProgress,
@@ -307,6 +308,9 @@ export async function fetchAssignmentById(
 
     return NextResponse.json(assignment, { status: 200 });
   } catch (error) {
+    if (error instanceof AssignmentForbiddenError) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     console.error("Error fetching assignment by ID:", error);
     return NextResponse.json(
       { error: "Internal server error" },
