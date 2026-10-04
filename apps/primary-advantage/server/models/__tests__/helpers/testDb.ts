@@ -154,6 +154,7 @@ CREATE TABLE IF NOT EXISTS classrooms (
   grade integer,
   created_by text REFERENCES users(id),
   password_students text,
+  picture_password_enabled boolean NOT NULL DEFAULT true,
   created_at timestamp NOT NULL DEFAULT now(),
   updated_at timestamp NOT NULL DEFAULT now()
 );
