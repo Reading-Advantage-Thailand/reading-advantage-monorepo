@@ -22,6 +22,8 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   );
   return { ...actual, db: dbProxy };
 });
+const eventMocks = vi.hoisted(() => ({ afterPasswordWrite: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/server/utils/passwordEvents", () => eventMocks);
 vi.mock("@reading-advantage/auth", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reading-advantage/auth")>()),
   hashPassword: async (password: string) => `hash:${password}`,
@@ -77,6 +79,7 @@ afterAll(async () => {
   await harness.close();
 });
 beforeEach(async () => {
+  eventMocks.afterPasswordWrite.mockClear();
   await harness.reset();
   await harness.db.execute(sql`INSERT INTO schools (id, name) VALUES (${SCHOOL_A}, 'A'), (${SCHOOL_B}, 'B')`);
   await harness.db.execute(sql`INSERT INTO roles (name) VALUES ('teacher'), ('admin'), ('system'), ('user')`);
@@ -185,5 +188,38 @@ describe("updateTeacher scope and target rank (H2)", () => {
     await giveRole("teacher-b", "teacher");
     const result = await updateTeacher("teacher-b", { name: "Renamed" }, { ...sessionAdmin, role: "SYSTEM", schoolId: null });
     expect(result.success).toBe(true);
+  });
+});
+
+describe("password write events (M1)", () => {
+  const sessionAdmin: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
+    role: "ADMIN", roles: [], SchoolAdmins: [],
+  };
+
+  it("records an audit event for a new teacher without revoking", async () => {
+    const result = await createTeacher({
+      name: "n", email: "fresh@x.test", role: "teacher", password: "Valid-pass-123", userWithRoles: sessionAdmin,
+    });
+    expect(result.success).toBe(true);
+    expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
+      userId: result.teacher!.id, actor: { id: "caller", role: "ADMIN" }, created: true,
+    });
+  });
+
+  it("revokes and audits when updateTeacher changes a password", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    await updateTeacher("teacher-a", { password: "New-password-1" }, sessionAdmin);
+    expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
+      userId: "teacher-a", actor: { id: "caller", role: "ADMIN" }, created: false,
+    });
+  });
+
+  it("emits nothing when updateTeacher does not change a password", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    await updateTeacher("teacher-a", { name: "Renamed" }, sessionAdmin);
+    expect(eventMocks.afterPasswordWrite).not.toHaveBeenCalled();
   });
 });

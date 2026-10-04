@@ -34,6 +34,8 @@ const credentialMocks = vi.hoisted(() => ({
   upsertCredentialAccount: vi.fn().mockResolvedValue(undefined),
 }));
 vi.mock("@/server/utils/credentials", () => credentialMocks);
+const eventMocks = vi.hoisted(() => ({ afterPasswordWrite: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/server/utils/passwordEvents", () => eventMocks);
 
 import { PATCH } from "../route";
 
@@ -301,5 +303,30 @@ describe("PATCH /api/users/[id] password target rank (H1)", () => {
 
     expect(response.status).toBe(403);
     expect(credentialMocks.upsertCredentialAccount).not.toHaveBeenCalled();
+  });
+});
+
+describe("PATCH /api/users/[id] password events (M1)", () => {
+  it("revokes sessions and audits after a committed password change", async () => {
+    vi.clearAllMocks();
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    selectQueue = [
+      [{ id: "student-1", schoolId: "school-a", role: "STUDENT" }],
+      [{ id: "student-1", name: "N", email: "n@x.test", xp: 1, level: 1, cefrLevel: "A1" }],
+      [],
+    ];
+    mocks.select.mockImplementation(() => chain(selectQueue.shift() ?? []));
+    mocks.update.mockReturnValue({
+      set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) }),
+    });
+    mocks.transaction.mockImplementation(async (fn: (tx: unknown) => unknown) => fn(rawDb));
+
+    const { request, context } = patchRequest("student-1", { password: "new-password-1" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(200);
+    expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
+      userId: "student-1", actor: { id: "admin-1", role: "ADMIN" }, created: false,
+    });
   });
 });

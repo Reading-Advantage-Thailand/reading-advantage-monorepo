@@ -16,6 +16,7 @@ import {
   userRoles,
 } from '@reading-advantage/db';
 import { ActivityType } from "@/types/enum";
+import { afterPasswordWrite } from "@/server/utils/passwordEvents";
 import { hashNewPassword, upsertCredentialAccount } from "@/server/utils/credentials";
 
 /**
@@ -74,6 +75,8 @@ export const createUser = async (data: {
 
       return user;
     });
+
+    await afterPasswordWrite({ userId: newUser.id, actor: null, created: true });
 
     return {
       success: "User created successfully",

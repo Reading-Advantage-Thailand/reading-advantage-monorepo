@@ -19,6 +19,7 @@ import {
 } from '@reading-advantage/db';
 import { effectiveCallerRole, schoolScopeConditions } from "@/server/utils/auth";
 import { canSetPasswordFor } from "@/lib/authorization";
+import { afterPasswordWrite } from "@/server/utils/passwordEvents";
 import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount } from "@/server/utils/credentials";
 import {
   StudentData,
@@ -331,6 +332,8 @@ export const createStudent = async (params: {
       return created.id;
     });
 
+    await afterPasswordWrite({ userId: newStudentId, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: true });
+
     // Refetch the full record with the include shape.
     const studentRows = await db.select({
       id: users.id,
@@ -476,6 +479,10 @@ export const updateStudent = async (
         }
       }
     });
+
+    if (newPasswordHash) {
+      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: false });
+    }
 
     // Refetch to get updated classroom info
     const studentRows = await db.select({

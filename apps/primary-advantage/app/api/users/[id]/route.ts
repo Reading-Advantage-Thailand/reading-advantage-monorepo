@@ -6,6 +6,7 @@ import { assertCan, AuthError } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
 import { isAdminOrSystem, patchUserBodySchema, canAccessSchoolResource, canSetPasswordFor, normalizeRole } from "@/lib/authorization";
 import { roleAtLeast, type Role } from "@reading-advantage/auth";
+import { afterPasswordWrite } from "@/server/utils/passwordEvents";
 import { hashNewPassword, upsertCredentialAccount } from "@/server/utils/credentials";
 
 export async function PATCH(
@@ -159,6 +160,14 @@ export async function PATCH(
 
       return updated ? { ...updated, roles: userRoleRows } : null;
     });
+
+    if (newPasswordHash) {
+      await afterPasswordWrite({
+        userId,
+        actor: { id: currentUserData.id, role: currentUserData.role },
+        created: false,
+      });
+    }
 
     return NextResponse.json(
       {

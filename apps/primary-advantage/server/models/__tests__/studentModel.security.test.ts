@@ -22,12 +22,14 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   );
   return { ...actual, db: dbProxy };
 });
+const eventMocks = vi.hoisted(() => ({ afterPasswordWrite: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/server/utils/passwordEvents", () => eventMocks);
 vi.mock("@reading-advantage/auth", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@reading-advantage/auth")>()),
   hashPassword: async (password: string) => `hash:${password}`,
 }));
 
-import { updateStudent } from "../studentModel";
+import { updateStudent, createStudent } from "../studentModel";
 import type { UserWithRoles } from "@/server/utils/auth";
 
 const SCHOOL_A = "00000000-0000-0000-0000-0000000000a1";
@@ -67,6 +69,7 @@ afterAll(async () => {
   await harness.close();
 });
 beforeEach(async () => {
+  eventMocks.afterPasswordWrite.mockClear();
   await harness.reset();
   await harness.db.execute(sql`INSERT INTO schools (id, name) VALUES (${SCHOOL_A}, 'A'), (${SCHOOL_B}, 'B')`);
   await harness.db.execute(sql`INSERT INTO roles (name) VALUES ('student'), ('teacher')`);
@@ -106,5 +109,25 @@ describe("updateStudent scope and target rank (H2)", () => {
     await seedStudent("student-b", "STUDENT", SCHOOL_B);
     const result = await updateStudent("student-b", { name: "Renamed" }, { ...sessionAdmin, role: "SYSTEM", schoolId: null });
     expect(result.success).toBe(true);
+  });
+});
+
+describe("password write events (M1)", () => {
+  it("records an audit event for a new student without revoking", async () => {
+    const result = await createStudent({
+      name: "n", email: "fresh@x.test", cefrLevel: "A1", password: "Valid-pass-123", userWithRoles: sessionAdmin,
+    });
+    expect(result.success).toBe(true);
+    expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
+      userId: result.student!.id, actor: { id: "caller", role: "ADMIN" }, created: true,
+    });
+  });
+
+  it("revokes and audits when updateStudent changes a password", async () => {
+    await seedStudent("student-a", "STUDENT", SCHOOL_A);
+    await updateStudent("student-a", { password: "New-password-1" }, sessionAdmin);
+    expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
+      userId: "student-a", actor: { id: "caller", role: "ADMIN" }, created: false,
+    });
   });
 });

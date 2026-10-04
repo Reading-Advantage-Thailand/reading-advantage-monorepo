@@ -17,6 +17,7 @@ import {
 import { ROLE_HIERARCHY, ROLES, type Role } from "@reading-advantage/auth/roles";
 import { effectiveCallerRole, schoolScopeConditions } from "@/server/utils/auth";
 import { canSetPasswordFor } from "@/lib/authorization";
+import { afterPasswordWrite } from "@/server/utils/passwordEvents";
 import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount } from "@/server/utils/credentials";
 import {
   TeacherData,
@@ -498,6 +499,8 @@ export const createTeacher = async (params: {
       return user.id;
     });
 
+    await afterPasswordWrite({ userId: completeTeacher, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: true });
+
     // Refetch with the include shape (roles + ClassroomTeachers + classroom.students).
     return await refetchTeacherWithInclude(completeTeacher, role);
   } catch (error) {
@@ -822,6 +825,10 @@ export const updateTeacher = async (
         }
       }
     });
+
+    if (newPasswordHash) {
+      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: false });
+    }
 
     const refetch = await refetchTeacherWithInclude(id, updateData.role ?? "teacher");
     return {
