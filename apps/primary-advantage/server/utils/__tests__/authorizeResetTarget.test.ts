@@ -23,7 +23,7 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   return { ...actual, db: dbProxy };
 });
 
-import { authorizeResetTarget } from "../auth";
+import { authorizeResetTarget, callerEffectiveRank } from "../auth";
 
 const SCHOOL_A = "00000000-0000-0000-0000-0000000000a1";
 const SCHOOL_B = "00000000-0000-0000-0000-0000000000b1";
@@ -105,5 +105,35 @@ describe("authorizeResetTarget", () => {
     await seedUser("teacher", "TEACHER", SCHOOL_A);
     await seedUser("student", "STUDENT", SCHOOL_A);
     expect(await authorizeResetTarget(principal("teacher", "TEACHER", SCHOOL_A), principal("student", "STUDENT", SCHOOL_A))).toBe(true);
+  });
+});
+
+describe("school_admins rows of another school (M-2)", () => {
+  it("does not lift a reset actor through a school_admins row of another school", async () => {
+    await seedUser("teacher-x", "TEACHER", SCHOOL_A);
+    await seedUser("teacher-y", "TEACHER", SCHOOL_A);
+    await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('teacher-x', ${SCHOOL_B})`);
+    expect(await authorizeResetTarget(principal("teacher-x", "TEACHER", SCHOOL_A), principal("teacher-y", "TEACHER", SCHOOL_A))).toBe(false);
+  });
+
+  it("lifts a reset actor through a school_admins row of its own school", async () => {
+    await seedUser("teacher-x", "TEACHER", SCHOOL_A);
+    await seedUser("teacher-y", "TEACHER", SCHOOL_A);
+    await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('teacher-x', ${SCHOOL_A})`);
+    expect(await authorizeResetTarget(principal("teacher-x", "TEACHER", SCHOOL_A), principal("teacher-y", "TEACHER", SCHOOL_A))).toBe(true);
+  });
+
+  it("still counts a school_admins row of any school for a target", async () => {
+    await seedUser("admin", "ADMIN", SCHOOL_A);
+    await seedUser("odd", "TEACHER", SCHOOL_A);
+    await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('odd', ${SCHOOL_B})`);
+    expect(await authorizeResetTarget(principal("admin", "ADMIN", SCHOOL_A), principal("odd", "TEACHER", SCHOOL_A))).toBe(false);
+  });
+
+  it("callerEffectiveRank counts only school_admins rows of the caller's own school", () => {
+    const caller = { schoolId: SCHOOL_A, role: "TEACHER", roles: [] };
+    expect(callerEffectiveRank({ ...caller, SchoolAdmins: [{ id: "1", schoolId: SCHOOL_B }] })).toBe("TEACHER");
+    expect(callerEffectiveRank({ ...caller, SchoolAdmins: [{ id: "1", schoolId: SCHOOL_A }] })).toBe("ADMIN");
+    expect(callerEffectiveRank({ ...caller, schoolId: null, SchoolAdmins: [{ id: "1", schoolId: SCHOOL_A }] })).toBe("TEACHER");
   });
 });

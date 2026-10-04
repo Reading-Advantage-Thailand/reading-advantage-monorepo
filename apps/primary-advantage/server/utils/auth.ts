@@ -1,5 +1,5 @@
 import { db } from "@reading-advantage/db";
-import { eq, sql, type AnyColumn, type SQL } from "drizzle-orm";
+import { and, eq, sql, type AnyColumn, type SQL } from "drizzle-orm";
 import { canSetPasswordFor, effectiveRoleOf } from "@/lib/authorization";
 import {
   users,
@@ -113,7 +113,7 @@ export function effectiveCallerRole(userWithRoles: CallerScope): string {
 /**
  * Resolves the effective rank of a loaded caller for password and delete rank checks.
  * Unlike effectiveCallerRole, the highest of users.role, legacy role rows,
- * and school_admins rows wins.
+ * and school_admins rows wins. A school_admins row counts only for the caller's own school.
  * @param userWithRoles The caller loaded by validateUser.
  * @returns SYSTEM, ADMIN, TEACHER, STUDENT, or an empty string.
  */
@@ -121,7 +121,9 @@ export function callerEffectiveRank(userWithRoles: CallerScope): string {
   return effectiveRoleOf(
     userWithRoles.role,
     userWithRoles.roles.map((r) => r.role.name),
-    userWithRoles.SchoolAdmins.length > 0,
+    userWithRoles.SchoolAdmins.some(
+      (row) => userWithRoles.schoolId != null && row.schoolId === userWithRoles.schoolId,
+    ),
   );
 }
 
@@ -131,21 +133,30 @@ export function callerEffectiveRank(userWithRoles: CallerScope): string {
  * @param userId The account to rank.
  * @param sessionRole The users.role value the caller already read for this account.
  * @param unknownNames How to treat an unrecognized legacy name; "max" (default) fits a target, "ignore" fits an actor.
+ * @param adminSchoolId When set, only a school_admins row of this school counts (use it for an actor); null counts no row. Leave it undefined for a target so every row counts.
  * @returns The effective role of the account.
  */
 export async function loadTargetEffectiveRank(
   userId: string,
   sessionRole: string | null | undefined,
   unknownNames: "ignore" | "max" = "max",
+  adminSchoolId?: string | null,
 ): Promise<string> {
   const legacy = await db.select({ name: roles.name })
     .from(userRoles)
     .innerJoin(roles, eq(roles.id, userRoles.roleId))
     .where(eq(userRoles.userId, userId));
-  const [adminRow] = await db.select({ id: schoolAdmins.id })
-    .from(schoolAdmins)
-    .where(eq(schoolAdmins.userId, userId))
-    .limit(1);
+  const adminRows = adminSchoolId === null
+    ? []
+    : await db.select({ id: schoolAdmins.id })
+      .from(schoolAdmins)
+      .where(
+        adminSchoolId === undefined
+          ? eq(schoolAdmins.userId, userId)
+          : and(eq(schoolAdmins.userId, userId), eq(schoolAdmins.schoolId, adminSchoolId)),
+      )
+      .limit(1);
+  const adminRow = adminRows[0];
   return effectiveRoleOf(sessionRole, legacy.map((r) => r.name), Boolean(adminRow), unknownNames);
 }
 
@@ -169,7 +180,7 @@ export async function authorizeResetTarget(
   target: ResetPrincipal,
 ): Promise<boolean> {
   if (!actor.schoolId || !target.schoolId || actor.schoolId !== target.schoolId) return false;
-  const actorRank = await loadTargetEffectiveRank(actor.id, actor.role, "ignore");
+  const actorRank = await loadTargetEffectiveRank(actor.id, actor.role, "ignore", actor.schoolId);
   const targetRank = await loadTargetEffectiveRank(target.id, target.role);
   return canSetPasswordFor(actorRank, targetRank);
 }
