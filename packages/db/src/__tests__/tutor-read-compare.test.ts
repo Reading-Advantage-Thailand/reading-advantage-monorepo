@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { diffColumnShapes, diffRows } from "../tutor-read-compare.js";
+import { classifyQueryError, diffColumnShapes, diffRows } from "../tutor-read-compare.js";
 import { TUTOR_READ_QUERIES } from "../tutor-read-queries.js";
 
 const ref = [
@@ -44,5 +44,18 @@ describe("diffRows", () => {
 describe("TUTOR_READ_QUERIES", () => {
   it("holds the five Tutor reads", () => {
     expect(TUTOR_READ_QUERIES).toHaveLength(5);
+  });
+});
+
+describe("classifyQueryError", () => {
+  it("treats undefined column and undefined table as shape failures", () => {
+    expect(classifyQueryError({ code: "42703" })).toBe("shape");
+    expect(classifyQueryError({ code: "42P01" })).toBe("shape");
+  });
+  it("treats other errors as connection errors", () => {
+    expect(classifyQueryError({ code: "28P01" })).toBe("connection");
+    expect(classifyQueryError({ code: "ECONNREFUSED" })).toBe("connection");
+    expect(classifyQueryError(new Error("boom"))).toBe("connection");
+    expect(classifyQueryError(null)).toBe("connection");
   });
 });

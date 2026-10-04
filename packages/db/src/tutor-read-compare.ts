@@ -6,7 +6,7 @@ export interface ColumnShape {
 
 /** One difference found between the reference and the target. */
 export interface Difference {
-  kind: "missing-column" | "extra-column" | "type-mismatch" | "missing-row" | "extra-row" | "value-mismatch";
+  kind: "missing-column" | "extra-column" | "type-mismatch" | "missing-row" | "extra-row" | "value-mismatch" | "query-error";
   detail: string;
 }
 
@@ -64,4 +64,16 @@ export function diffRows(reference: Row[], target: Row[]): Difference[] {
     if (!r.has(key)) out.push({ kind: "extra-row", detail: key.slice(0, 80) });
   }
   return out;
+}
+
+const SHAPE_SQLSTATES = new Set(["42703", "42P01"]);
+
+/**
+ * Classifies a query error as a shape failure or a connection or config error.
+ * @param error The error thrown by a Tutor read query.
+ * @returns "shape" for SQLSTATE 42703 (undefined column) or 42P01 (undefined table); otherwise "connection".
+ */
+export function classifyQueryError(error: unknown): "shape" | "connection" {
+  const code = (error as { code?: unknown } | null)?.code;
+  return typeof code === "string" && SHAPE_SQLSTATES.has(code) ? "shape" : "connection";
 }
