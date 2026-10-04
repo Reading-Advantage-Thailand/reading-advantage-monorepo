@@ -516,8 +516,9 @@ describe("authorizeTarget path: atomic reset and no existence oracle", () => {
     mockDb.select
       .mockReturnValueOnce(targetRow("TEACHER", "school-1"))
       .mockReturnValueOnce(selectResult([{ id: "target-1_credential" }]));
+    const txUpdateWhere = vi.fn().mockResolvedValue(undefined);
     const tx = {
-      update: vi.fn().mockReturnValue({ set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue(undefined) }) }),
+      update: vi.fn().mockReturnValue({ set: vi.fn().mockReturnValue({ where: txUpdateWhere }) }),
       delete: vi.fn().mockReturnValue({ where: vi.fn().mockRejectedValue(new Error("boom")) }),
     };
     // A real transaction rolls back when the callback throws; the handler must not catch it inside.
@@ -525,6 +526,11 @@ describe("authorizeTarget path: atomic reset and no existence oracle", () => {
     const handler = createResetPasswordHandler({ authorizeTarget: () => true });
     const response = await handler(jsonRequest("/api/auth/reset-password", body, "tok"));
     expect(response.status).toBe(500);
+    // The write and the revocation share one transaction; the top-level client writes nothing.
+    expect(mockDb.transaction).toHaveBeenCalledTimes(1);
+    expect(txUpdateWhere).toHaveBeenCalledTimes(1);
+    expect(mockDb.update).not.toHaveBeenCalled();
+    expect(vi.mocked(revokeAllUserSessions)).not.toHaveBeenCalled();
   });
 
   it("logs the effective actor rank that authorizeTarget returns (L-2)", async () => {
