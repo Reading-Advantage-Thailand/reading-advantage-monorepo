@@ -20,11 +20,18 @@ interface UserAccountNavProps {
   user: AuthUser;
 }
 
- export function UserAccountNav({ user }: UserAccountNavProps) {
+/**
+ * Renders the account menu: role links, settings, and Logout. The trigger is a button
+ * with an accessible name, so keyboard users can open it and sign out.
+ * @param props The signed-in user.
+ * @returns The account menu.
+ */
+export function UserAccountNav({ user }: UserAccountNavProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { logout } = useAuth();
   const router = useRouter();
   const t = useTranslations("MainNav.usernav");
+  const tShell = useTranslations("AppShell");
   const tr = useTranslations("Overall.roles");
 
   const roles = {
@@ -41,13 +48,20 @@ interface UserAccountNavProps {
 
   return (
     <DropdownMenu>
+      {/* A real button: the avatar span cannot take focus or carry aria-expanded. */}
       <DropdownMenuTrigger asChild>
-        <UserAvatar
-          user={{
-            name: user?.name || "",
-          }}
-          className="border-muted-foreground h-8 w-8 cursor-pointer border"
-        />
+        <button
+          type="button"
+          aria-label={tShell("accountMenu")}
+          className="cursor-pointer rounded-full"
+        >
+          <UserAvatar
+            user={{
+              name: user?.name || "",
+            }}
+            className="border-muted-foreground h-8 w-8 border"
+          />
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="md:w-56 lg:w-fit">
         <div className="flex items-center justify-start gap-2 p-2">

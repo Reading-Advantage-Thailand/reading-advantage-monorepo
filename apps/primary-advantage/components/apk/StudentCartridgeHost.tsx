@@ -379,7 +379,7 @@ export function StudentCartridgeHost({
   };
 
   return (
-    <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6">
+    <div className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6">
       <div className="mx-auto w-full max-w-5xl">
         <header className="border-b border-border pb-4">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
@@ -506,6 +506,6 @@ export function StudentCartridgeHost({
           ) : null}
         </section>
       </div>
-    </main>
+    </div>
   );
 }

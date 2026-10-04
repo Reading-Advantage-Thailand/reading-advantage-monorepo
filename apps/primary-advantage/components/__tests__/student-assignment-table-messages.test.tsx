@@ -143,3 +143,12 @@ describe("StudentAssignmentTable due-date badge translations", () => {
     },
   );
 });
+
+describe("StudentAssignmentTable filter names (axe select-name)", () => {
+  it.each(["en", "th"] as const)("names both filter selects in %s", async (locale) => {
+    const table = MESSAGES[locale].Assignment.studentAssignmentTable;
+    renderTable(locale);
+    expect(await screen.findByRole("combobox", { name: table.status })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: table.dueDate })).toBeInTheDocument();
+  });
+});

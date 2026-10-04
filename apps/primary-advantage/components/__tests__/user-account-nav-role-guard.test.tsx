@@ -108,3 +108,20 @@ describe("UserAccountNav student dashboard role guard", () => {
     ).not.toBeInTheDocument();
   });
 });
+
+describe("UserAccountNav trigger (axe aria-allowed-attr, keyboard sign-out)", () => {
+  it.each(["en", "th"] as const)("is a real button with a %s accessible name", (locale) => {
+    renderWithMessages(<UserAccountNav user={createSessionUser("STUDENT")} />, { locale });
+    const trigger = screen.getByRole("button", { name: testMessages[locale].AppShell.accountMenu });
+    expect(trigger.tagName).toBe("BUTTON");
+    expect(trigger).toHaveAttribute("aria-haspopup", "menu");
+  });
+
+  it("opens from the keyboard so a keyboard user can reach Logout", () => {
+    renderWithMessages(<UserAccountNav user={createSessionUser("TEACHER")} />);
+    const trigger = screen.getByRole("button", { name: en.AppShell.accountMenu });
+    trigger.focus();
+    fireEvent.keyDown(trigger, { key: "Enter" });
+    expect(screen.getByRole("menuitem", { name: userNavCopy.logout })).toBeInTheDocument();
+  });
+});

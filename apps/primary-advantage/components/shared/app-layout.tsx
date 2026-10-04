@@ -2,6 +2,7 @@ import { UserAccountNav } from "@/components/nav/user-account-nav";
 import { AppBrand, AppSidebar, BottomNav, MobileMenu } from "@/components/nav/app-nav";
 import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
+import { SkipLink } from "@/components/shared/skip-link";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import { areaForRole, type NavArea } from "@/lib/nav-area";
@@ -58,6 +59,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
+      <SkipLink />
       <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur">
         <div className="container flex h-16 items-center justify-between gap-2">
           <div className="flex items-center gap-1">
@@ -78,7 +80,8 @@ export default async function AppLayout({
           </div>
         </div>
         <div className="flex min-w-0 flex-1 flex-col gap-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-8">
-          <main className="flex w-full flex-1 flex-col overflow-hidden">
+          {/* No overflow-hidden: wide tables scroll inside their own container. */}
+          <main id="main-content" tabIndex={-1} className="flex w-full min-w-0 flex-1 flex-col outline-none">
             {children}
           </main>
           {leaderboardData ? (

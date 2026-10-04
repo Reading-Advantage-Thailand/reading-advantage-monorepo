@@ -641,6 +641,7 @@ export default function StudentAssignmentTable({
         />
         <div className="flex flex-wrap items-center gap-2">
           <select
+            aria-label={t("status")}
             className="min-w-[120px] rounded-md border px-3 py-1 text-sm"
             value={statusFilter}
             onChange={(event) => {
@@ -653,6 +654,7 @@ export default function StudentAssignmentTable({
             <option value="2">{t("done")}</option>
           </select>
           <select
+            aria-label={t("dueDate")}
             className="min-w-[120px] rounded-md border px-3 py-1 text-sm"
             value={dueDateFilter}
             onChange={(event) => {

@@ -35,7 +35,7 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
   }));
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-8">
+    <div className="mx-auto w-full max-w-5xl px-4 py-8">
       <header className="mb-8">
         <h1 className="text-3xl font-bold">{t("title")}</h1>
         <p className="mt-2 text-muted-foreground">
@@ -59,6 +59,6 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
           </li>
         ))}
       </ul>
-    </main>
+    </div>
   );
 }

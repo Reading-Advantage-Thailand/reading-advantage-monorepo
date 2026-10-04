@@ -2941,6 +2941,9 @@
     }
   },
   "AppShell": {
+    "skipToContent": "Skip to main content",
+    "accountMenu": "Account menu",
+    "toggleTheme": "Switch light or dark theme",
     "mainNavigation": "Main navigation",
     "publicNavigation": "Site navigation",
     "openMenu": "Open menu",

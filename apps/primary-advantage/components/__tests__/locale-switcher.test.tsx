@@ -28,7 +28,8 @@ describe("LocaleSwitcher", () => {
   it("navigates to the chosen locale and keeps the current path", async () => {
     const user = userEvent.setup();
     render(<LocaleSwitcher />);
-    await user.click(screen.getByRole("button", { name: /toggle locale/i }));
+    // The button name is the translated LocaleSwitcher.label (the mock returns "label-").
+    await user.click(screen.getByRole("button", { name: "label-" }));
     await user.click(await screen.findByText("label-th"));
     expect(replace).toHaveBeenCalledWith("/student/games", { locale: "th" });
   });
