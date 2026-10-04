@@ -23,6 +23,7 @@ const mockSession: Session = {
   id: "s1",
   userId: "u1",
   expiresAt: new Date(Date.now() + 86400000),
+  authStrength: "full",
   user: {
     id: "u1",
     username: "testuser",

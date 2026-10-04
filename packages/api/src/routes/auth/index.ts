@@ -10,3 +10,4 @@ export {
   type ResetPrincipal,
 } from "./reset-password.js";
 export { enrichAuthUser } from "./enrich.js";
+export { getClientIp } from "./client-ip.js";

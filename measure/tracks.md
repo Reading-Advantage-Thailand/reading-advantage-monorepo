@@ -1108,7 +1108,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: Primary Cutover Blockers** *Link: [./tracks/primary_cutover_blockers_20261003/](./tracks/primary_cutover_blockers_20261003/)*
   Type gate, authorization, argon2, migration gate, Tutor read test, Sept 15 QA defects. Absorbs primary_browser_qa_fixes_20260915.
 
-- [ ] **Track: Primary Student Login** *Link: [./tracks/primary_student_login_20261003/](./tracks/primary_student_login_20261003/)*
+- [~] **Track: Primary Student Login** *Link: [./tracks/primary_student_login_20261003/](./tracks/primary_student_login_20261003/)*
   Teacher-started code, name list, picture password, QR card, username/password, auth strength.
 
 - [ ] **Track: Primary UX Rework** *Link: [./tracks/primary_ux_rework_20261003/](./tracks/primary_ux_rework_20261003/)*

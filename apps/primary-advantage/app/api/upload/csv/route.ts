@@ -6,7 +6,7 @@ import { parse } from "csv/sync";
 import { eq, and, inArray, or, ilike } from 'drizzle-orm';
 import type { DB } from '@reading-advantage/domain';
 import { users, schools, roles, classrooms, classroomStudents, classroomTeachers, userRoles } from '@reading-advantage/db/schema';
-import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { getTenantDB, getUnscopedDB, studentLogin } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
 import { CsvUploadSummary } from "./schema";
@@ -426,6 +426,9 @@ export async function POST(request: NextRequest) {
     let classroomsCreated = 0;
     let studentAssignments = 0;
     let teacherAssignments = 0;
+    // FR-6: students that joined a class in this upload get a generated username and password.
+    // One seed per user, so a new student in two classes is provisioned once.
+    const studentSeeds = new Map<string, studentLogin.StudentLoginSeed>();
 
     if (classroomAssignments.length > 0) {
       // Update classroom assignments with actual user IDs
@@ -493,6 +496,9 @@ export async function POST(request: NextRequest) {
               studentId: assignment.userId,
             } as any).onConflictDoNothing();
             studentAssignments++;
+            if (!studentSeeds.has(assignment.userId)) {
+              studentSeeds.set(assignment.userId, { userId: assignment.userId, classroomName, classroomId: classroom.id });
+            }
           } else if (assignment.role === "teacher") {
             // Add teacher to classroom (replaces Prisma `classroomTeachers.findFirst + create`).
             const [existingTeacher] = await globalDb.select().from(classroomTeachers)
@@ -513,6 +519,33 @@ export async function POST(request: NextRequest) {
             }
           }
         }
+      }
+    }
+
+    // FR-6: a failure leaves the students with the email username. Report it to the teacher.
+    let studentLogins: { name: string; classroomName: string | null; username: string; initialPassword: string | null }[] = [];
+    let studentLoginsFailedNames: string[] = [];
+    if (studentSeeds.size > 0) {
+      const nameByUserId = new Map(
+        processedUsers.map((userData) => [emailToUserId.get(userData.email), userData.name] as const),
+      );
+      try {
+        const { provisioned, failed } = await studentLogin.provisionStudentLogins({
+          db: globalDb,
+          schoolId: authUser.schoolId ?? null,
+          students: Array.from(studentSeeds.values()),
+        });
+        studentLogins = provisioned.map((login) => ({
+          name: nameByUserId.get(login.userId) ?? "",
+          classroomName: studentSeeds.get(login.userId)?.classroomName ?? null,
+          username: login.username,
+          initialPassword: login.initialPassword,
+        }));
+        studentLoginsFailedNames = failed.map((f) => nameByUserId.get(f.userId) ?? f.userId);
+        if (failed.length > 0) console.error("Student login generation failed for", failed.length, "students");
+      } catch (error) {
+        console.error("Student login generation failed:", error instanceof Error ? error.message : "Unknown");
+        studentLoginsFailedNames = Array.from(studentSeeds.keys(), (id) => nameByUserId.get(id) ?? id);
       }
     }
 
@@ -552,8 +585,11 @@ export async function POST(request: NextRequest) {
         : {
             note: "system user - users imported without school assignment",
           },
-      note: "Users created with default values: password=null, cefrLevel=A0-, level=1, xp=0",
-    });
+      note: "Users created with default values: cefrLevel=A0-, level=1, xp=0. Students get a generated username and an initial password, shown once in studentLogins.",
+      studentLogins,
+      studentLoginsFailed: studentLoginsFailedNames.length,
+      studentLoginsFailedNames,
+    }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("File upload error:", error);
     return NextResponse.json(

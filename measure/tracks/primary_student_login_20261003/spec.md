@@ -55,6 +55,51 @@ New tables or nullable columns, named with a `primary_` prefix: class login sess
 picture hash, failed count, locked until, card token hash, rotated at),
 `authStrength` on the session record. No change to existing user columns.
 
+## Known risks (owner decision pending)
+
+- Picture password strength: 3 taps from 12 pictures gives 12^3 = 1728 sequences. With the
+  lockout (5 wrong tries, then 5 minutes) a classmate who knows the class code needs about
+  6 days of attempts for one student, and the lockout shows on the teacher view and in the audit
+  log. The spec keeps this lockout. Accepted for now. Owner review is pending on a stronger
+  rule (for example a longer lock after repeated lockouts, or 4 taps).
+- Class code strength: 6 characters from 31 gives about 30 bits. Code entry is limited per IP,
+  per class, and by a global limit on failed lookups. The code hash is SHA-256 and the code lives
+  3 hours at most. Accepted.
+- A shared school IP shares one IP bucket (150 requests in 10 minutes). Raise it if a class fails
+  to sign in together.
+- `/api/*` is outside the proxy matcher. Each API that needs a full sign-in must check
+  `canUseFullAuthFeature` in its handler (the student-login teacher handlers do).
+- Global miss bucket DoS: an attacker who makes 200 failed code lookups in 10 minutes blocks code
+  entry for every school until the window ends. Accepted for now. Owner review is pending.
+- One student can use the whole class bucket (200 requests in 10 minutes) and block the class
+  from signing in until the window ends. Accepted for now. Owner review is pending.
+- A classmate who knows the code can lock a student by design (5 wrong tries), and a teacher
+  reset or card rotation ends that student's sessions by design. Accepted. Owner review is pending.
+- QR card token in the browser history: `/auth/card` removes the `#token` from the tab history,
+  but the browser History list and address-bar suggestions keep the first URL. On a shared
+  device a classmate can open it and sign in as the card owner until the teacher rotates the
+  card. Mitigation: schools use guest or private browsing on shared devices; card rotation is
+  the recovery. Owner review is pending.
+- QR card origin: the card URL uses the origin of the teacher's browser. A card printed from a
+  preview host, an IP, or localhost keeps that host. Print cards from the production host.
+  Owner review is pending (option: a configured public app URL).
+- Class-wide picture guessing (Phase 5 security review M1): the lock is per student. A classmate
+  with the code who guesses every student in turn reaches a `full` session for some student in
+  about 1 to 1.5 hours from one device (many lockouts show on the teacher view). Owner review is
+  pending (option: a class-wide limit on wrong picture tries, or a longer lock after repeated locks).
+- Per-IP limits trust `X-Forwarded-For` (security review M3): without `TRUST_PROXY_COUNT` the
+  leftmost value is used, which the client controls. An attacker can pass the IP limits or fill
+  the limits of a school IP. Owner/deploy item: set `TRUST_PROXY_COUNT` for Primary (no Cloud Run
+  change in this program).
+- School-wide QR or code block by one student (security review M4): 30 failed card scans or 150
+  wrong codes from a shared school IP block that path for the school for 10 minutes. Owner review
+  is pending (option: a device cookie in the limit key).
+- Guessable student usernames (security review L2): `p3a12`, `student1`. An internet attacker can
+  lock the home sign-in of many students with 5 wrong passwords each. Owner review is pending
+  (option: a random part in each username; FR-6 asks for readable usernames).
+- QR cards now need an open class session in one of the student's classes (security review M2,
+  Design 5: away from the classroom only the username and password work).
+
 ## Non-goals
 
 - No SSO, no Google login for students, no biometric.

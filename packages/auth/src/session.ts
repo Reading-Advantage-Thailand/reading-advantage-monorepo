@@ -11,10 +11,27 @@ function sha256Hex(s: string): string {
   return createHash("sha256").update(s).digest("hex");
 }
 
+/** How strongly the session proved identity. NULL in storage means `full`. */
+export type SessionAuthStrength = "full" | "code_only";
+
+/** Maps a stored value to a strength; fails closed: only NULL and "full" map to `full`. */
+function toAuthStrength(value: string | null | undefined): SessionAuthStrength {
+  return value == null || value === "full" ? "full" : "code_only";
+}
+
+/** Minimum time between two "last seen" writes of one idle-tracked session. */
+const LAST_SEEN_WRITE_INTERVAL_MS = 60 * 1000;
+
 export interface Session {
   id: string;
   userId: string;
   expiresAt: Date;
+  /**
+   * `full` unless the session was created with weaker proof such as a class code only.
+   * `validateSession` and `createSession` always set it. It is optional in the type so
+   * other apps that build Session objects keep compiling.
+   */
+  authStrength?: SessionAuthStrength;
   user: UserContext;
 }
 
@@ -27,18 +44,27 @@ export interface CreateSessionResult extends Session {
  * Creates a new session for a user.
  * @param db - Database client
  * @param userId - The user ID to create session for
- * @param opts - Optional metadata (ipAddress, userAgent)
- * @returns The created session object including raw token for cookie wiring (expires in 7 days)
+ * @param opts - Optional metadata (ipAddress, userAgent), `authStrength` (default `full`, stored as NULL),
+ * and the student policy: `expiresAt` (default 7 days), `idleTimeoutSeconds` (idle expiry, default none),
+ * and `singleDevice` (ends all other sessions of the user first)
+ * @returns The created session object including raw token for cookie wiring (expires in 7 days unless `expiresAt` is set)
  * @throws {Error} Throws if user not found after creation
  */
 export async function createSession(
   db: Db,
   userId: string,
-  opts?: { ipAddress?: string; userAgent?: string }
+  opts?: {
+    ipAddress?: string;
+    userAgent?: string;
+    authStrength?: SessionAuthStrength;
+    expiresAt?: Date;
+    idleTimeoutSeconds?: number;
+    singleDevice?: boolean;
+  }
 ): Promise<CreateSessionResult> {
   const token = Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) => b.toString(16).padStart(2, "0")).join("");
   const tokenHash = sha256Hex(token);
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+  const expiresAt = opts?.expiresAt ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
   // FR-10: Cap active sessions at 10 per user (count only non-expired).
   // The count, eviction, and insert are wrapped in a transaction so
@@ -50,6 +76,10 @@ export async function createSession(
       .from(users)
       .where(eq(users.id, userId))
       .for("update");
+    // FR-9: a new student login ends the sessions of the same user on other devices.
+    if (opts?.singleDevice) {
+      await tx.delete(sessions).where(eq(sessions.userId, userId));
+    }
     const countResult = await tx
       .select({ value: count() })
       .from(sessions)
@@ -79,6 +109,8 @@ export async function createSession(
         expiresAt,
         ...(opts?.ipAddress ? { ipAddress: opts.ipAddress } : {}),
         ...(opts?.userAgent ? { userAgent: opts.userAgent } : {}),
+        ...(opts?.authStrength === "code_only" ? { authStrength: "code_only" } : {}),
+        ...(opts?.idleTimeoutSeconds ? { idleTimeoutSeconds: opts.idleTimeoutSeconds, lastSeenAt: now } : {}),
       })
       .returning();
 
@@ -109,6 +141,7 @@ export async function createSession(
     token,
     userId: session.userId,
     expiresAt: session.expiresAt,
+    authStrength: toAuthStrength(session.authStrength),
     user: {
       id: user.id,
       username: user.username,
@@ -165,9 +198,23 @@ export async function validateSession(
   }
 
   // Lazy cleanup: delete expired sessions
-  if (session.expiresAt < new Date()) {
+  const now = new Date();
+  if (session.expiresAt < now) {
     await db.delete(sessions).where(eq(sessions.id, session.id));
     return null;
+  }
+
+  // FR-9: idle expiry applies only to sessions created with `idleTimeoutSeconds` (students).
+  if (session.idleTimeoutSeconds != null) {
+    const lastSeen = (session.lastSeenAt ?? session.createdAt).getTime();
+    if (now.getTime() - lastSeen > session.idleTimeoutSeconds * 1000) {
+      await db.delete(sessions).where(eq(sessions.id, session.id));
+      return null;
+    }
+    // Throttled "last seen" write: at most one per minute. It also feeds the teacher live roster.
+    if (now.getTime() - lastSeen >= LAST_SEEN_WRITE_INTERVAL_MS) {
+      await db.update(sessions).set({ lastSeenAt: now }).where(eq(sessions.id, session.id));
+    }
   }
 
   const [user] = await db
@@ -193,6 +240,7 @@ export async function validateSession(
     id: session.id,
     userId: session.userId,
     expiresAt: session.expiresAt,
+    authStrength: toAuthStrength(session.authStrength),
     user: {
       id: user.id,
       username: user.username,

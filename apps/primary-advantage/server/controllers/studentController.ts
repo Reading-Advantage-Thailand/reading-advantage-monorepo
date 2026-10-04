@@ -101,7 +101,10 @@ export const getStudentsController = async (
 export const createStudentController = async (
   request: NextRequest,
 ): Promise<
-  NextResponse<{ success: boolean; student?: StudentData } | { error: string }>
+  NextResponse<
+    | { success: boolean; student?: StudentData; credentials?: { username: string; initialPassword: string | null } }
+    | { error: string }
+  >
 > => {
   try {
 
@@ -170,8 +173,8 @@ export const createStudentController = async (
     }
 
     return NextResponse.json(
-      { success: true, student: result.student },
-      { status: 201 },
+      { success: true, student: result.student, credentials: result.credentials },
+      { status: 201, headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
     console.error(

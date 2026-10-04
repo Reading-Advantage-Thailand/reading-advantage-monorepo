@@ -236,3 +236,36 @@ describe("createStudent target school (cutover)", () => {
     expect(await schoolOf("s-a@x.test")).toBe(SCHOOL_A);
   });
 });
+
+describe("createStudent generated login (FR-6)", () => {
+  const classId = "00000000-0000-0000-0000-0000000000c1";
+
+  /** Adds a class of school A and returns its id. */
+  async function seedClass(name: string) {
+    await harness.db.execute(sql`INSERT INTO users (id, username, display_username, name, role, school_id)
+      VALUES ('teach', 'teach', 'teach', 'T', 'TEACHER', ${SCHOOL_A}) ON CONFLICT DO NOTHING`);
+    await harness.db.execute(sql`INSERT INTO classrooms (id, name, school_id, teacher_id) VALUES (${classId}, ${name}, ${SCHOOL_A}, 'teach')`);
+  }
+
+  it("gives a class-based username and an initial password when none is given", async () => {
+    await seedClass("P3A");
+    const first = await createStudent({ name: "Ann Lee", email: "ann@x.test", cefrLevel: "A1", classroomId: classId, userWithRoles: sessionAdmin });
+    const second = await createStudent({ name: "Bo Kim", email: "bo@x.test", cefrLevel: "A1", classroomId: classId, userWithRoles: sessionAdmin });
+    expect(first.credentials?.username).toBe("p3a1");
+    expect(second.credentials?.username).toBe("p3a2");
+    expect(first.credentials?.initialPassword).toMatch(/^[a-z0-9]{8}$/);
+    const rows = await harness.db.execute(sql`SELECT u.username, a.password FROM users u JOIN accounts a ON a.user_id = u.id WHERE u.email = 'ann@x.test'`);
+    const row = rows.rows[0] as { username: string; password: string };
+    expect(row.username).toBe("p3a1");
+    expect(row.password).toBe(`hash:${first.credentials!.initialPassword}`);
+    const cred = await harness.db.execute(sql`SELECT c.school_id FROM primary_student_credentials c JOIN users u ON u.id = c.user_id WHERE u.email = 'ann@x.test'`);
+    expect(cred.rows).toHaveLength(1);
+  });
+
+  it("keeps a password the admin typed and returns no initial password", async () => {
+    const result = await createStudent({ name: "Cy", email: "cy@x.test", cefrLevel: "A1", password: "Valid-pass-123", userWithRoles: sessionAdmin });
+    expect(result.credentials).toEqual({ username: "student1", initialPassword: null });
+    const rows = await harness.db.execute(sql`SELECT a.password FROM users u JOIN accounts a ON a.user_id = u.id WHERE u.email = 'cy@x.test'`);
+    expect((rows.rows[0] as { password: string }).password).toBe("hash:Valid-pass-123");
+  });
+});

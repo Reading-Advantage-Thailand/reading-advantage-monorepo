@@ -15,6 +15,7 @@ import {
   rehashOnLogin,
   adoptLegacyPassword,
   recordAuditEvent,
+  studentSessionOptions,
   configurePostgresRateLimiter,
   type Role,
 } from "@reading-advantage/auth";
@@ -64,6 +65,12 @@ export interface LoginHandlerOptions {
    * Only Primary Advantage enables this. The default is false.
    */
   legacyUsersPasswordFallback?: boolean;
+  /**
+   * When true, a STUDENT session ends at the end of the school day (Asia/Bangkok), after
+   * 30 minutes idle, and when the student signs in on another device (FR-9).
+   * Other roles keep the 7-day session. Only Primary Advantage enables this. The default is false.
+   */
+  studentSessionPolicy?: boolean;
 }
 
 /**
@@ -264,9 +271,12 @@ async function loginWithOptions(request: NextRequest, options: LoginHandlerOptio
 
     // Success — create session
     await resetLimit(lowerUsername, ...(clientIp ? [clientIp] : []));
+    const studentPolicy =
+      options.studentSessionPolicy && user.role === "STUDENT" ? studentSessionOptions() : undefined;
     const session = await createSession(db, user.id, {
       ipAddress: clientIp,
       userAgent: request.headers.get("user-agent") ?? undefined,
+      ...studentPolicy,
     });
 
     // FR-9: emit auth:login audit event
@@ -287,7 +297,13 @@ async function loginWithOptions(request: NextRequest, options: LoginHandlerOptio
       user: enrichedUser,
     });
 
-    response.cookies.set(SESSION_COOKIE_NAME, session.token, COOKIE_OPTIONS);
+    response.cookies.set(
+      SESSION_COOKIE_NAME,
+      session.token,
+      studentPolicy
+        ? { httpOnly: true, secure: COOKIE_OPTIONS.secure, sameSite: "lax", path: "/", expires: studentPolicy.expiresAt }
+        : COOKIE_OPTIONS,
+    );
     return response;
   } catch (error) {
     console.error("Login error:", error instanceof Error ? error.message : "Unknown");

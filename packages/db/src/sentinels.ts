@@ -555,4 +555,48 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       target: `tutor_compat.${view}`,
     })),
   },
+  "0062_primary_student_login": {
+    tag: "0062_primary_student_login",
+    kind: "all",
+    target: "primary_class_login_sessions",
+    allOf: [
+      {
+        tag: "0062_primary_student_login",
+        kind: "table",
+        target: "primary_class_login_sessions",
+      },
+      {
+        tag: "0062_primary_student_login",
+        kind: "table",
+        target: "primary_student_credentials",
+      },
+      {
+        tag: "0062_primary_student_login",
+        kind: "column",
+        target: "sessions.auth_strength",
+      },
+    ],
+  },
+  "0063_primary_student_login_settings": {
+    tag: "0063_primary_student_login_settings",
+    kind: "column",
+    target: "classrooms.picture_password_enabled",
+  },
+  "0064_primary_student_session_policy": {
+    tag: "0064_primary_student_session_policy",
+    kind: "all",
+    target: "sessions.idle_timeout_seconds",
+    allOf: [
+      {
+        tag: "0064_primary_student_session_policy",
+        kind: "column",
+        target: "sessions.idle_timeout_seconds",
+      },
+      {
+        tag: "0064_primary_student_session_policy",
+        kind: "column",
+        target: "sessions.last_seen_at",
+      },
+    ],
+  },
 };

@@ -1,0 +1,2 @@
+ALTER TABLE "classrooms" ADD COLUMN "picture_password_enabled" boolean DEFAULT true NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "primary_class_login_sessions_open_code_idx" ON "primary_class_login_sessions" USING btree ("code_hash") WHERE "primary_class_login_sessions"."closed_at" is null;

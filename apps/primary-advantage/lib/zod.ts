@@ -36,14 +36,6 @@ export const signUpSchema = z
     path: ["confirmPassword"],
   });
 
-export const classCodeSchema = z.object({
-  classroomCode: z
-    .string({
-      required_error: "Classroom code is required",
-    })
-    .min(1, "Classroom code is required"),
-});
-
 export const MCQuestionSchema = z.object({
   questions: z.array(
     z.object({

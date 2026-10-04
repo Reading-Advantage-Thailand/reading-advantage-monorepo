@@ -2768,5 +2768,170 @@
     "createSuccessDescription": "已將 {name} 加入系統。",
     "createError": "學校建立失敗",
     "fallbackError": "發生未預期的錯誤。"
+  },
+  "ClassLogin": {
+    "title": "Class sign-in",
+    "loading": "Loading class sign-in…",
+    "errors": {
+      "signedOut": "Your sign-in has ended. Sign in again.",
+      "forbidden": "You cannot manage this class.",
+      "notFound": "We cannot find this class or student.",
+      "rateLimited": "Too many tries. Wait a few minutes and try again.",
+      "unavailable": "No free code right now. Try again.",
+      "generic": "Something went wrong. Try again."
+    },
+    "session": {
+      "start": "Start class",
+      "startHelp": "Start the class to show a sign-in code for your students.",
+      "codeLabel": "Class code",
+      "codeAria": "Class code {code}",
+      "openUntil": "Open until {time}",
+      "openNoCode": "The class is open until {time}. The code shows only once. Press New code to show a code.",
+      "newCode": "New code",
+      "end": "End class"
+    },
+    "backToClass": "Back to class",
+    "links": {
+      "classSheet": "Class sheet",
+      "qrCards": "QR cards"
+    },
+    "sheet": {
+      "title": "Class sheet",
+      "intro": "The class sheet lists each student's username and a new password, for signing in away from the classroom.",
+      "warning": "Making the sheet sets a new password for every student in this class and signs them out. Old passwords stop working.",
+      "make": "Make class sheet",
+      "confirmTitle": "Set new passwords for the whole class?",
+      "confirm": "Set new passwords",
+      "cancel": "Cancel",
+      "print": "Print",
+      "once": "The passwords show only now. Print the sheet before you leave this page.",
+      "signInAt": "Sign in at",
+      "name": "Name",
+      "username": "Username",
+      "password": "Password",
+      "failed": "These students kept their old password: {names}. Try again."
+    },
+    "qrPage": {
+      "title": "QR login cards",
+      "intro": "Each card signs one student in with one scan. A card shows only once, so print it now.",
+      "issue": "Make cards for {count, plural, one {# student} other {# students}} without a card",
+      "allHaveCards": "Every student has a card. To print a card again, make a new card for that student.",
+      "toPrint": "{count, plural, one {# card} other {# cards}} to print",
+      "madeBefore": "Cards made before",
+      "madeBeforeHelp": "The server does not keep these cards. Make a new card to print one again. The old card then stops working.",
+      "print": "Print"
+    },
+    "setting": {
+      "label": "Picture password",
+      "on": "Students tap their 3 pictures after they choose their name.",
+      "off": "Students sign in with the class code and their name only. Some features, such as Reedy, need a full sign-in."
+    },
+    "roster": {
+      "heading": "Students",
+      "summary": "{signedIn} of {total} signed in",
+      "student": "Student",
+      "status": "Status",
+      "actions": "Actions",
+      "signedIn": "Signed in",
+      "notSignedIn": "Not signed in",
+      "seen": "Seen {time}",
+      "lastSeen": "Last seen {time}",
+      "locked": "Locked, {minutes} min left",
+      "noPicture": "No picture password",
+      "resetPicture": "Reset pictures",
+      "resetPictureFor": "Reset picture password for {name}",
+      "setPicture": "Set pictures",
+      "setPictureFor": "Set picture password for {name}",
+      "newCard": "New card",
+      "newCardFor": "New card for {name}",
+      "assignMissing": "Give picture passwords to {count, plural, one {# student} other {# students}}",
+      "empty": "No students in this class yet."
+    },
+    "pictures": {
+      "title": "New picture password",
+      "description": "Show this to the student now. It does not show again.",
+      "print": "Print",
+      "close": "Close"
+    },
+    "rotate": {
+      "title": "Make a new card for {name}?",
+      "description": "The old card stops working now, and {name} is signed out.",
+      "confirm": "Make new card",
+      "cancel": "Cancel"
+    },
+    "cards": {
+      "title": "New QR card",
+      "description": "Print this card now. It does not show again.",
+      "qrLabel": "Sign-in QR code for {name}",
+      "scanHint": "Scan to sign in",
+      "print": "Print",
+      "close": "Close"
+    }
+  },
+  "StudentPictures": {
+    "redCircle": "red circle",
+    "blueSquare": "blue square",
+    "greenTriangle": "green triangle",
+    "yellowStar": "yellow star",
+    "pinkHeart": "pink heart",
+    "orangeDiamond": "orange diamond",
+    "purpleMoon": "purple moon",
+    "grayCloud": "gray cloud",
+    "skyDrop": "light blue drop",
+    "blackBolt": "black lightning",
+    "brownHexagon": "brown hexagon",
+    "tealFlower": "teal flower"
+  },
+  "StudentSignIn": {
+    "code": {
+      "title": "Hello! Let's sign in",
+      "label": "Class code",
+      "help": "Type the code your teacher shows you.",
+      "next": "Next",
+      "checking": "Checking…"
+    },
+    "names": {
+      "title": "Who are you?",
+      "help": "Tap your name.",
+      "empty": "There are no names in this class yet. Ask your teacher.",
+      "back": "Back"
+    },
+    "pictures": {
+      "title": "Hi, {name}!",
+      "help": "Tap your 3 pictures in order.",
+      "progress": "{count} of 3 pictures",
+      "undo": "Undo",
+      "clear": "Start again",
+      "back": "Not you? Go back",
+      "signingIn": "Signing in…"
+    },
+    "card": {
+      "title": "QR card sign-in",
+      "signingIn": "Signing you in…",
+      "useCode": "Sign in with the class code"
+    },
+    "password": {
+      "title": "Sign in with your username",
+      "help": "Use the username and password your teacher gave you.",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign in",
+      "signingIn": "Signing in…"
+    },
+    "switch": {
+      "usePassword": "Sign in with username and password",
+      "useCode": "Sign in with the class code"
+    },
+    "errors": {
+      "codeFormat": "The code has 6 letters and numbers.",
+      "codeInvalid": "This code does not work. Check the code or ask your teacher.",
+      "wrongPictures": "Those pictures are not right. Try again.",
+      "locked": "Too many wrong tries. Wait {minutes, plural, one {# minute} other {# minutes}} or ask your teacher.",
+      "rateLimited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again.",
+      "wrongPassword": "Wrong username or password. Try again.",
+      "cardInvalid": "This card does not work now. Cards work only in class. Ask your teacher.",
+      "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
+      "generic": "Something went wrong. Try again."
+    }
   }
 }

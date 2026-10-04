@@ -55,7 +55,6 @@ import StudentEnrollmentButton from "./student-enrollment-button";
 import StudentUnenrollmentButton from "./student-unenrollment-button";
 import ClassroomNavigation from "./classroom-navigation";
 import StudentCefrLevelSetter from "./student-cefr-level-setter";
-import ClassCodeGenerator from "./class-code-generator";
 import { getCefrLevelColor } from "@/lib/cefr";
 
 interface StudentData {
@@ -452,8 +451,6 @@ export default function EnhancedClassRoster() {
           id: classroom.id,
           name: classroom.classroomName,
           grade: classroom.grade,
-          classCode: classroom.classCode,
-          passwordStudents: classroom.passwordStudents,
           studentCount: filteredStudents.length,
         }}
       />
@@ -462,15 +459,6 @@ export default function EnhancedClassRoster() {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">{t("students.title")}</h2>
         <div className="flex gap-2">
-          <ClassCodeGenerator
-            classroomId={classroom.id}
-            classroomName={classroom.classroomName}
-            currentClassCode={classroom.passwordStudents}
-            codeExpiresAt={classroom.codeExpiresAt}
-            onCodeGenerated={fetchClassroomData}
-            buttonSize="sm"
-            buttonVariant="outline"
-          />
           <StudentEnrollmentButton
             classroomId={classroom.id}
             classroomName={classroom.classroomName}

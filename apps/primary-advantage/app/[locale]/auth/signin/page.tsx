@@ -1,4 +1,4 @@
-import { StudentSignInForm } from "@/components/auth/student-signin-form";
+import { StudentSignIn } from "@/components/student-login/student-sign-in";
 import { TeacherSignInForm } from "@/components/auth/teacher-signin-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookTextIcon, SchoolIcon } from "lucide-react";
@@ -19,23 +19,28 @@ export async function generateMetadata({
   return { title: t("title"), description: t("welcome") };
 }
 
+/**
+ * Sign-in page with a student tab (class code, picture password, or username and password) and
+ * a staff tab (username and password).
+ * @returns The page.
+ */
 export default async function SignInPage() {
   const t = await getTranslations("AuthPage.signin");
 
   return (
-    <Tabs defaultValue="student">
-      <TabsList className="w-full">
-        <TabsTrigger value="student" className="cursor-pointer">
+    <Tabs defaultValue="student" className="w-full max-w-md p-4">
+      <TabsList className="h-auto w-full">
+        <TabsTrigger value="student" className="min-h-12 cursor-pointer text-base motion-reduce:transition-none">
           <BookTextIcon />
           {t("student")}
         </TabsTrigger>
-        <TabsTrigger value="teacher" className="cursor-pointer">
+        <TabsTrigger value="teacher" className="min-h-12 cursor-pointer text-base motion-reduce:transition-none">
           <SchoolIcon />
           {t("teacher")}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="student">
-        <StudentSignInForm />
+        <StudentSignIn />
       </TabsContent>
       <TabsContent value="teacher">
         <TeacherSignInForm />

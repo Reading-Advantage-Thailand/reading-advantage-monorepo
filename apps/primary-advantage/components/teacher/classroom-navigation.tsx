@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
 import {
   ChevronDown,
   Users,
@@ -20,22 +19,14 @@ import {
   Settings,
   ArrowLeft,
   GraduationCap,
-  Copy,
-  Lock,
-  Eye,
-  EyeOff,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
-import { copyToClipboardWithMeta } from "@/components/ui/copy-button";
 
 interface ClassroomNavigationProps {
   classroom: {
     id: string;
     name: string;
     grade?: string;
-    classCode?: string;
-    passwordStudents?: string;
     studentCount: number;
   };
   showBackButton?: boolean;
@@ -48,7 +39,6 @@ export default function ClassroomNavigation({
   const router = useRouter();
   const t = useTranslations("Teacher.ClassroomNavigation");
   const tComponents = useTranslations("Components");
-  const [showPassword, setShowPassword] = useState(false);
 
   const navigationItems = [
     {
@@ -80,41 +70,6 @@ export default function ClassroomNavigation({
 
   const handleBackToClassrooms = () => {
     router.push("/teacher/class-roster");
-  };
-
-  const handleCopyCode = async () => {
-    if (!classroom.classCode) return;
-
-    try {
-      await copyToClipboardWithMeta(classroom.classCode);
-      toast.success(t("toast.copyClassCodeSuccess"));
-    } catch (error) {
-      console.error("Failed to copy class code:", error);
-      toast.error(t("toast.copyClassCodeError"));
-    }
-  };
-
-  const handleCopyPassword = async () => {
-    if (!classroom.passwordStudents) return;
-
-    try {
-      await copyToClipboardWithMeta(classroom.passwordStudents);
-      toast.success(t("toast.copyPasswordSuccess"));
-    } catch (error) {
-      console.error("Failed to copy password:", error);
-      toast.error(t("toast.copyPasswordError"));
-    }
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const getPasswordDisplay = () => {
-    if (!classroom.passwordStudents) {
-      return t("password.noPassword");
-    }
-    return showPassword ? classroom.passwordStudents : "••••••••";
   };
 
   return (
@@ -153,62 +108,6 @@ export default function ClassroomNavigation({
                     <span>{t("info.grade", { grade: classroom.grade })}</span>
                   </>
                 )}
-                {classroom.classCode && (
-                  <Badge
-                    onClick={handleCopyCode}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        handleCopyCode();
-                      }
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    variant="outline"
-                    className="ml-2 cursor-pointer text-xs"
-                  >
-                    {t("info.classCode")} {classroom.classCode}
-                  </Badge>
-                )}
-                <div className="flex items-center gap-1">
-                  <Badge variant="outline" className="ml-2 text-xs">
-                    {t("password.label")} {getPasswordDisplay()}
-                  </Badge>
-                  {classroom.passwordStudents && (
-                    <>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="ghost"
-                        className="size-6 p-0"
-                        onClick={togglePasswordVisibility}
-                        title={
-                          showPassword ? t("password.hide") : t("password.show")
-                        }
-                        aria-label={
-                          showPassword ? t("password.hide") : t("password.show")
-                        }
-                      >
-                        {showPassword ? (
-                          <EyeOff className="size-3" />
-                        ) : (
-                          <Eye className="size-3" />
-                        )}
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="ghost"
-                        className="size-6 p-0"
-                        onClick={handleCopyPassword}
-                        title={t("password.copy")}
-                        aria-label={t("password.copy")}
-                      >
-                        <Copy className="size-3" />
-                      </Button>
-                    </>
-                  )}
-                </div>
               </div>
             </div>
           </div>

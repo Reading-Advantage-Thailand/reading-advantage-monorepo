@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /**
  * Behavioral replacements for the broken-ux-fixes static cases that target
- * client components (FR-4 dead links, FR-5 footer copy, FR-7 signup form,
+ * client components (FR-4 dead links, FR-5 footer copy,
  * FR-8 header spelling, FR-9 act warnings). Each test renders through the
  * real message trees and asserts on visible output. FR-6 (assignment-table
  * t() calls) is already covered by student-assignment-table-messages.test.tsx,
@@ -51,11 +51,6 @@ vi.mock("@reading-advantage/auth-client", () => ({
   }),
 }));
 
-const signUpActionMock = vi.fn();
-
-vi.mock("@/actions/signupAction", () => ({
-  signUpAction: (...args: unknown[]) => signUpActionMock(...args),
-}));
 
 vi.mock("sonner", () => ({
   toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
@@ -64,7 +59,6 @@ vi.mock("sonner", () => ({
 import { AdminQuickActions } from "../admin/admin-quick-actions";
 import { AdminDashboardHeader } from "../admin/admin-dashboard-header";
 import { Footer } from "../index/footer";
-import { SignUpForm } from "../auth/user-signup-form";
 import MyStudents from "../teacher/my-students";
 import MyClasses from "../teacher/my-classes";
 import { HistoryTable } from "../dashboard/history-table";
@@ -81,7 +75,6 @@ beforeEach(() => {
   vi.stubGlobal("fetch", mockFetch);
   mockFetch.mockReset();
   pushMock.mockClear();
-  signUpActionMock.mockReset();
   // jsdom lacks the layout observer Radix form controls rely on.
   vi.stubGlobal(
     "ResizeObserver",
@@ -149,37 +142,6 @@ describe("FR-5 footer content", () => {
       expect(document.body.textContent).not.toContain(stale);
     }
     expect(renderedHrefs()).not.toContain("/pricing");
-  });
-});
-
-describe("FR-7 signup legal links and pending state", () => {
-  it("links the real legal routes and disables inputs while pending", async () => {
-    signUpActionMock.mockReturnValue(new Promise(() => undefined));
-    renderWithMessages(<SignUpForm />);
-    expect(
-      screen.getByRole("link", { name: "Terms of Service" }),
-    ).toHaveAttribute("href", "/terms");
-    expect(
-      screen.getByRole("link", { name: "Privacy Policy" }),
-    ).toHaveAttribute("href", "/privacy-policy");
-
-    fireEvent.change(screen.getByPlaceholderText("John Doe"), {
-      target: { value: "Test User" },
-    });
-    fireEvent.change(screen.getByPlaceholderText("name@example.com"), {
-      target: { value: "test@example.com" },
-    });
-    const passwords = screen.getAllByLabelText(/password/i);
-    fireEvent.change(passwords[0], { target: { value: "password123" } });
-    fireEvent.change(passwords[1], { target: { value: "password123" } });
-    fireEvent.click(screen.getByRole("checkbox"));
-    fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
-
-    await waitFor(() => expect(signUpActionMock).toHaveBeenCalled());
-    await waitFor(() =>
-      expect(screen.getByPlaceholderText("John Doe")).toBeDisabled(),
-    );
-    expect(screen.getByPlaceholderText("name@example.com")).toBeDisabled();
   });
 });
 

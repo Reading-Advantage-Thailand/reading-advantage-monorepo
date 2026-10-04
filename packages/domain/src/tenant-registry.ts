@@ -177,6 +177,8 @@ import {
   standardPackSuccessorCommitments,
   standardPackSuccessorAdmissionReceipts,
   primaryLegacyIdMap,
+  primaryClassLoginSessions,
+  primaryStudentCredentials,
 } from "@reading-advantage/db";
 import {
   accountingSubmissions,
@@ -191,6 +193,9 @@ register(roles, "EXEMPT");
 
 // Legacy cuid -> uuid remap for the Primary cutover; keyed by legacy table name, not tenant data.
 register(primaryLegacyIdMap, "EXEMPT");
+// Student login (primary_student_login_20261003): both tables carry school_id.
+register(primaryClassLoginSessions, "FLAT");
+register(primaryStudentCredentials, "FLAT");
 register(auditEvents, "EXEMPT");
 register(schools, "EXEMPT");
 register(accounts, "EXEMPT");
