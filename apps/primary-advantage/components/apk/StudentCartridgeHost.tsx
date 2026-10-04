@@ -30,6 +30,7 @@ import {
   createCatalogStandardEdition,
 } from "@reading-advantage/game-cartridges";
 
+import { capRealmCarverSentences } from "@/lib/apk/realm-carver-input";
 import { APK_HOST_LAYOUT_CLASS, APK_HOST_RESPONSIVE_OPTIONS } from "./apk-host-layout";
 
 const APKGameHost = dynamic(
@@ -287,7 +288,10 @@ export function StudentCartridgeHost({
         }
         if (!active) return;
         setCartridge(loadedCartridge);
-        setInput(parsedInput.data);
+        // Realm Carver throws above its word cap; trim whole cards host-side.
+        setInput(cartridgeId === "realm-carver" && inputMode === "sentence"
+          ? capRealmCarverSentences(parsedInput.data as { term: string }[])
+          : parsedInput.data);
         setAnswerAudioResponse(prepared?.data);
         setLoadedLearningMode(effectiveLearningMode);
       } catch (error) {
