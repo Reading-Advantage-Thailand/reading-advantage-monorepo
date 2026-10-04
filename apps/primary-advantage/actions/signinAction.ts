@@ -15,7 +15,7 @@ export async function signInAction(
     };
   }
 
-  const { email, password, type } = validation.data;
+  const { username, password, type } = validation.data;
 
   try {
     const response = await fetch(
@@ -23,13 +23,13 @@ export async function signInAction(
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: email, password }),
+        body: JSON.stringify({ username, password }),
       },
     );
 
     if (!response.ok) {
       return {
-        error: "Invalid email or password",
+        error: "Invalid username or password",
       };
     }
   } catch (error) {
