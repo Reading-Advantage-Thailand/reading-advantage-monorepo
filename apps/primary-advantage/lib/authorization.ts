@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ActivityType, UserXpEarned } from "@/types/enum";
-import { ROLES } from "@reading-advantage/auth";
+import { ROLES, passwordSchema } from "@reading-advantage/auth";
 import { STAFF_ROLES } from "./permissions";
 
 /** Session roles allowed to manage other users. */
@@ -247,7 +247,7 @@ export const patchUserBodySchema = z.object({
   xp: z.number().int().min(0).optional(),
   level: z.number().int().min(1).optional(),
   cefrLevel: z.string().min(1).max(16).optional(),
-  password: z.string().min(8).max(256).optional(),
+  password: passwordSchema.optional(),
 });
 
 /** Bounded article generation amount per genre. */

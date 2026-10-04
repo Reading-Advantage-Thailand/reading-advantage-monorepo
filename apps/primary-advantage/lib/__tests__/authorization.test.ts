@@ -5,6 +5,7 @@ import {
   USER_MANAGEMENT_ROLES,
   normalizeRole,
   canSetPasswordFor,
+  patchUserBodySchema,
   isAdminOrSystem,
   canRunContentTooling,
   canReadUserResource,
@@ -131,5 +132,14 @@ describe("canSetPasswordFor", () => {
     ["ADMIN", undefined, false],
   ])("actor %s target %s -> %s", (actor, target, expected) => {
     expect(canSetPasswordFor(actor, target)).toBe(expected);
+  });
+});
+
+describe("patchUserBodySchema password (shared passwordSchema)", () => {
+  it("accepts 8 to 128 characters and rejects the rest", () => {
+    expect(patchUserBodySchema.safeParse({ password: "x".repeat(8) }).success).toBe(true);
+    expect(patchUserBodySchema.safeParse({ password: "x".repeat(128) }).success).toBe(true);
+    expect(patchUserBodySchema.safeParse({ password: "x".repeat(129) }).success).toBe(false);
+    expect(patchUserBodySchema.safeParse({ password: "x".repeat(7) }).success).toBe(false);
   });
 });

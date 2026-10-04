@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { passwordSchema } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
 import {
   createTeacher,
@@ -120,6 +121,10 @@ export const createTeacherController = async (
     const body = await request.json();
     const { name, email, role, password, classroomIds, force } =
       body as CreateTeacherInput & { force?: boolean };
+
+    if (password !== undefined && !passwordSchema.safeParse(password).success) {
+      return NextResponse.json({ error: "Invalid password" }, { status: 400 });
+    }
 
     // Validate required fields
     if (!name || !email || !role) {
@@ -262,6 +267,9 @@ export const updateTeacherController = async (
 
     const body = await request.json();
     const updateData = body as UpdateTeacherInput;
+    if (updateData.password !== undefined && !passwordSchema.safeParse(updateData.password).success) {
+      return NextResponse.json({ error: "Invalid password" }, { status: 400 });
+    }
 
     // Update teacher using model
     const result = await updateTeacher(id, updateData, userWithRoles);
