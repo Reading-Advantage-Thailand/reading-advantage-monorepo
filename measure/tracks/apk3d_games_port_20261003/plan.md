@@ -31,6 +31,7 @@
 - [x] Play-test edits of 3 October moved to Forge (Forge 89a4769) and came back through `port-game.mjs`. Forge stays the source of the games.
 - [x] Replace the story picker. The games must read the student's saved vocabulary and sentences (`userWordRecords`, `userSentenceRecords`), chosen by memory state. The Forge track `game_flashcard_input_20261004` has the spec and the decisions. Done 2026-10-04: `GET /api/v1/apk/practice` (FSRS due order, at most 10 words and 8 sentences), locked games link to `/student/read`, Monster Encounters left the student games. Browser QC 28 of 28 in 3D and 2D; app QC on the local database passes.
 - [x] Rebase on `master` when the input change is done. 2026-10-04: rebased on `origin/master` fe6aedc2b without the 18 `www` commits; the lockfile was regenerated with pnpm 11.8.0 (`--lockfile-only` gives no change); 25 old subjects now pass commitlint (lowercase subject and track id). Backup branch: `apk3d-games-port-prerebase-20261004`.
+- [x] The griffin mount (Forge track `game_griffin_mount_20261004`): the griffin model replaces the tinted fire dragon in Gryphon Patrol, Griffin Sky-Joust, and Griffin Riders Escape, with a `mounts` model pack, griffin 2D sheets, and a shared rider seat (`src/shared/griffin.ts`). Commit 115a5496a. Kit 155 and games 1886 tests pass; QC 12 of 12 runs ok (3D and 2D, desktop and phone).
 
 ## Debt
 
