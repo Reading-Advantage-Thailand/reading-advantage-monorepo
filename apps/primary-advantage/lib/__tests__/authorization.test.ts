@@ -5,7 +5,6 @@ import {
   USER_MANAGEMENT_ROLES,
   normalizeRole,
   canSetPasswordFor,
-  patchUserBodySchema,
   isAdminOrSystem,
   canRunContentTooling,
   canReadUserResource,
