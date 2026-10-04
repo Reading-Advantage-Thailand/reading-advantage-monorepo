@@ -4,8 +4,12 @@ export {
   baseLevel,
   cefrLevelSchema,
   normalizeCefrLevel,
+  parsePracticeInput,
   parseStoryIndex,
   parseStoryInput,
+  practiceInputSchema,
+  practiceSentenceSchema,
+  practiceWordSchema,
   storyFillSchema,
   storyIndexEntrySchema,
   storyIndexSchema,
@@ -15,8 +19,9 @@ export {
   storySentenceSchema,
   storySourceSchema,
   storyVocabularySchema,
+  toPracticeInput,
   toSentenceInput,
   toStoryIndexEntry,
   toVocabularyInput,
 } from '@reading-advantage/game-contracts';
-export type { CefrLevel, StoryFill, StoryIndexEntry, StoryInput, StoryParagraph, StoryQuestion, StorySentence, StoryVocabulary } from '@reading-advantage/game-contracts';
+export type { CefrLevel, PracticeInput, PracticeSentence, PracticeWord, StoryFill, StoryIndexEntry, StoryInput, StoryParagraph, StoryQuestion, StorySentence, StoryVocabulary } from '@reading-advantage/game-contracts';

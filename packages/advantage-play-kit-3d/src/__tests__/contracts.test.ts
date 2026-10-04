@@ -14,6 +14,7 @@ import {
   gameBriefingSchema,
   gameResultsSchema,
   isCompatible,
+  missingFor,
   parseStoryInput,
   modelPackSchema,
   normalizeCefrLevel,
@@ -91,7 +92,7 @@ const evidence = (items: StoryGameEvidenceItem[]): StoryGameEvidence =>
     schemaVersion: 1,
     kind: 'story-game',
     gameId: 'monster-encounters',
-    storyId: 'pip-is-brave',
+    inputId: 'pip-is-brave',
     level: 'A0',
     seed: 7,
     durationMs: 120_000,
@@ -310,6 +311,14 @@ describe('manifest', () => {
       false,
     );
     expect(isCompatible(manifest({ needs: { fills: story.fills.length + 1 } as never }), story)).toBe(false);
+  });
+
+  it('missingFor counts the saved items a locked game still needs', () => {
+    const saved = { vocabulary: [{ id: 'w', term: 'bridge', translation: 'สะพาน' }], sentences: [] };
+    expect(missingFor(manifest({ needs: { vocabulary: 4 } as never }), saved)).toEqual({ vocabulary: 3, sentences: 0 });
+    expect(missingFor(manifest({ needs: { sentences: 3 } as never }), saved)).toEqual({ vocabulary: 0, sentences: 3 });
+    expect(missingFor(manifest({ needs: { vocabulary: 1 } as never }), saved)).toEqual({ vocabulary: 0, sentences: 0 });
+    expect(manifest({ inputMode: 'practice' }).inputMode).toBe('practice');
   });
 
   it('every real story fits Monster Encounters (section 11 step 8) and a sentence game with 6 orders', () => {

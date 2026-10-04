@@ -7,7 +7,8 @@ import { esc } from '../hud/index.js';
 
 export interface Run {
   game: string;
-  story: string;
+  /** The input id ("saved", or a story id). */
+  input: string;
   result: GameResults;
   evidence: StoryGameEvidence;
 }

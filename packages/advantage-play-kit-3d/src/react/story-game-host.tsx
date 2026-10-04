@@ -10,13 +10,13 @@ export type StoryGameHostProps = Omit<StoryGameOptions, "container"> & { classNa
 
 /**
  * Plays one story game inside a div: the briefing, the 3D or 2D game, and the results. The game
- * restarts when the cartridge or the story changes; callbacks may change without a restart.
+ * restarts when the cartridge or the input changes; callbacks may change without a restart.
  */
 export function StoryGameHost(props: StoryGameHostProps) {
   const ref = useRef<HTMLDivElement>(null);
   const callbacks = useRef(props);
   callbacks.current = props;
-  const { cartridge, story } = props;
+  const { cartridge, input } = props;
 
   useEffect(() => {
     const container = ref.current;
@@ -27,7 +27,7 @@ export function StoryGameHost(props: StoryGameHostProps) {
       ...rest,
       container,
       cartridge,
-      story,
+      input,
       onComplete: (...args) => callbacks.current.onComplete(...args),
       onExit: () => callbacks.current.onExit(),
       onDiagnostic: (event) => callbacks.current.onDiagnostic?.(event),
@@ -35,7 +35,7 @@ export function StoryGameHost(props: StoryGameHostProps) {
     return () => {
       void session.destroy();
     };
-  }, [cartridge, story]);
+  }, [cartridge, input]);
 
   return <div ref={ref} className={props.className ?? "h-full min-h-[480px] w-full"} />;
 }

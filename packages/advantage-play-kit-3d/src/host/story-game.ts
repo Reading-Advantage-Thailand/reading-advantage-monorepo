@@ -1,10 +1,11 @@
 /**
  * Plays one story game in a page element: briefing, the game (3D or 2D by device and setting),
  * then the results. It is the app-side counterpart of the standalone demo host, without the
- * lobby, the selector, or the simulated class boss: the app owns story choice and persistence.
+ * lobby, the selector, or the simulated class boss: the app owns the input and persistence.
  *
- * The caller passes the cartridge (loaded), the story, the base URL that serves `packs/` and
- * `assets/apk/`, and gets `onComplete` once per run with the APK completion triple.
+ * The caller passes the cartridge (loaded), the practice input (in Primary Advantage the
+ * student's saved words and sentences), the base URL that serves `packs/` and `assets/apk/`, and
+ * gets `onComplete` once per run with the APK completion triple.
  */
 import { AudioBus, installAudioUnlock } from '../audio/index.js';
 import {
@@ -19,8 +20,8 @@ import {
   type GameTerminalOutcome,
   type RuntimeEdition,
   type RuntimeEdition3D,
+  type PracticeInput,
   type StoryGameEvidence,
-  type StoryInput,
 } from '../contracts/index.js';
 import { checkDevice } from '../device/gate.js';
 import {
@@ -53,7 +54,8 @@ export interface StoryGameOptions {
   cartridge: Cartridge;
   /** The icon shown on the briefing. */
   icon?: string;
-  story: StoryInput;
+  /** The items the game uses: the student's saved words and sentences, or a story's. */
+  input: PracticeInput;
   /** URL prefix that serves `packs/` and `assets/apk/` (ends with a slash). */
   assetBase: string;
   /** `'phaser'` forces the 2D view; `'auto'` picks by device. */
@@ -96,7 +98,7 @@ async function edition3dOf(assetBase: string, cartridge: Cartridge): Promise<Run
 }
 
 export function startStoryGame(options: StoryGameOptions): StoryGameSession {
-  const { container, cartridge, story, assetBase } = options;
+  const { container, cartridge, input, assetBase } = options;
   const diagnostics: unknown[] = [];
   const report = (event: unknown): void => {
     diagnostics.push(event);
@@ -156,7 +158,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
       screen.classList.remove('on');
       gameEl.innerHTML = '';
       gameEl.classList.add('on');
-      const run = { game: cartridge.manifest.id, story: story.id };
+      const run = { game: cartridge.manifest.id, input: input.id };
       if (pick.renderer === 'three') {
         const canvas = document.createElement('canvas');
         canvas.className = 'apk3d-canvas';
@@ -168,7 +170,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
         container: gameEl,
         ...(stage ? { stage } : {}),
         cartridge,
-        input: story,
+        input,
         edition3d,
         ...(edition2d ? { edition2d, resolveUrl: (pack: AssetPackManifest, file: { path: string }) => `${assetBase}${pack.root.slice(1)}/${file.path}` } : {}),
         seed: randomSeed(),
@@ -219,8 +221,8 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
   }
 
   const showBriefing = (): void => {
-    const b = cartridge.briefing(i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!), story);
-    renderBriefing(screen, b, story, cartridge.manifest, options.icon ?? '🎮', t);
+    const b = cartridge.briefing(i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!), input);
+    renderBriefing(screen, b, input, cartridge.manifest, options.icon ?? '🎮', t);
     screen.classList.add('on');
     screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());
     screen.querySelector('[data-start]')?.addEventListener('click', () => void start());

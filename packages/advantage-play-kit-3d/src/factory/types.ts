@@ -19,6 +19,7 @@ import type {
   GameResults,
   GameTerminalOutcome,
   LayoutRect,
+  PracticeInput,
   RendererId,
   RuntimeEdition,
   RuntimeEdition3D,
@@ -68,7 +69,7 @@ export interface Game3DContext {
   audio: AudioBus;
   /** Strings scoped to the game's catalog key (`manifest.briefingKey`'s first segment). */
   i18n: ScopedI18n;
-  input: GameInput | StoryInput;
+  input: GameInput | StoryInput | PracticeInput;
   edition: RuntimeEdition3D;
   seed: number;
   sessionMode: APKSessionMode;
@@ -109,7 +110,7 @@ export interface Game3DInstance {
  */
 export interface Game2DContext extends Omit<CartridgeGameConfigContext, 'input' | 'complete'> {
   /** The APK `GameInput`, or the whole story for `inputMode: 'story'` (the port adds it to `GameInput`). */
-  input: GameInput | StoryInput;
+  input: GameInput | StoryInput | PracticeInput;
   complete: (result: unknown, outcome?: GameTerminalOutcome, evidence?: StoryGameEvidence) => void;
   i18n?: ScopedI18n;
   options?: SessionOptions;
@@ -132,7 +133,7 @@ export interface Cartridge {
   /** The game's English catalog (merged by the host). */
   strings: Catalog;
   /** The start screen, from the game's catalog scope (the APK briefing contract). */
-  briefing(i18n: ScopedI18n, input: GameInput | StoryInput): GameBriefing;
+  briefing(i18n: ScopedI18n, input: GameInput | StoryInput | PracticeInput): GameBriefing;
   /** The three.js path ('three'). */
   createGame?(context: Game3DContext): Promise<Game3DInstance>;
   /** The Phaser path ('phaser'): the APK `RuntimeCartridge.createGameConfig` shape. */
@@ -187,7 +188,7 @@ export interface ThreeFactoryContext {
    */
   stage?: Stage3D;
   cartridge: ThreeCartridge;
-  input: GameInput | StoryInput;
+  input: GameInput | StoryInput | PracticeInput;
   edition: RuntimeEdition3D;
   seed: number;
   sessionMode: APKSessionMode;
@@ -208,7 +209,7 @@ export interface ThreeFactoryContext {
 export interface PhaserFactoryContext {
   container: HTMLElement;
   cartridge: PhaserCartridge;
-  input: GameInput | StoryInput;
+  input: GameInput | StoryInput | PracticeInput;
   edition: RuntimeEdition;
   complete(result: unknown, outcome?: GameTerminalOutcome, evidence?: StoryGameEvidence): void;
   diagnostic(event: APKDiagnosticInput): void;

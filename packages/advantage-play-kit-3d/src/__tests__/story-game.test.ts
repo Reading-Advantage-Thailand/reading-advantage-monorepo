@@ -3,17 +3,18 @@
 import { describe, expect, it, vi } from 'vitest';
 import { startStoryGame } from '../host/story-game.js';
 import type { Cartridge } from '../factory/index.js';
-import type { StoryInput } from '../contracts/index.js';
+import { toPracticeInput, type StoryInput } from '../contracts/index.js';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const story = JSON.parse(readFileSync(join(process.cwd(), 'tests', 'fixtures', 'stories', 'pips-happy-night', 'story.json'), 'utf8')) as StoryInput;
+const input = toPracticeInput(story);
 
 const cartridge = {
   manifest: {
     id: 'demo-game',
     briefingKey: 'demo.briefing',
-    inputMode: 'story',
+    inputMode: 'practice',
     needs: { vocabulary: 0, sentences: 0, fills: 0, questions: 0 },
     device: {},
     renderers: ['three'],
@@ -38,12 +39,12 @@ function setup() {
   const container = document.createElement('div');
   document.body.append(container);
   const onExit = vi.fn();
-  const session = startStoryGame({ container, cartridge, story, assetBase: '/', catalogs: [hostCatalog], onComplete: vi.fn(), onExit });
+  const session = startStoryGame({ container, cartridge, input, assetBase: '/', catalogs: [hostCatalog], onComplete: vi.fn(), onExit });
   return { container, onExit, session };
 }
 
 describe('startStoryGame', () => {
-  it('shows the briefing with the game goal and a story preview', async () => {
+  it('shows the briefing with the game goal and a preview of the input items', async () => {
     const { container, session } = setup();
     expect(container.classList.contains('apk3d-story-host')).toBe(true);
     expect(container.querySelector('.briefing h2')?.textContent).toContain('Demo game');

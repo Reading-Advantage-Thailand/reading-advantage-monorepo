@@ -4,7 +4,7 @@
  * itself lives in `@reading-advantage/game-contracts`.
  */
 import { z } from 'zod';
-import { normalizeCefrLevel, parseStoryInput, type StoryInput } from '@reading-advantage/game-contracts';
+import { normalizeCefrLevel, parseStoryInput, type PracticeInput, type StoryInput } from '@reading-advantage/game-contracts';
 import type { Cartridge3DManifest } from './manifest.js';
 
 // ---------------------------------------------------------------- compatibility (section 5.4)
@@ -21,6 +21,20 @@ export function isCompatible(
     story.fills.length >= manifest.needs.fills &&
     story.questions.length >= manifest.needs.questions
   );
+}
+
+/**
+ * The items a game still needs from the input: 0 and 0 when it can play. A locked game shows
+ * these numbers ("save 2 more sentences").
+ */
+export function missingFor(
+  manifest: Pick<Cartridge3DManifest, 'needs'>,
+  input: Pick<PracticeInput, 'vocabulary' | 'sentences'>,
+): { vocabulary: number; sentences: number } {
+  return {
+    vocabulary: Math.max(0, manifest.needs.vocabulary - input.vocabulary.length),
+    sentences: Math.max(0, manifest.needs.sentences - input.sentences.length),
+  };
 }
 
 // ---------------------------------------------------------------- migration from the demo StoryPack

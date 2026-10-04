@@ -55,8 +55,11 @@ export const cartridge3DManifestSchema = runtimeCartridgeManifestSchema.extend({
     .array(rendererIdSchema)
     .min(1)
     .refine((ids) => new Set(ids).size === ids.length, { message: 'renderers must be unique' }),
-  /** 'story' = the whole StoryInput (section 5); the other two are the APK derived arrays. */
-  inputMode: z.enum(['vocabulary', 'sentence', 'story']),
+  /**
+   * 'practice' = a `PracticeInput` (the student's saved items, or a story's); 'story' = the whole
+   * StoryInput (section 5); the other two are the APK derived arrays.
+   */
+  inputMode: z.enum(['vocabulary', 'sentence', 'story', 'practice']),
   /** Both run on the fixed step (section 10); a turn game returns no events from `tick`. */
   simulation: z.enum(['turn', 'realtime']),
   /** 'portrait' for every phone-first game. */
