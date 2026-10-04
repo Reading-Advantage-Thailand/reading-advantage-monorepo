@@ -8,7 +8,8 @@ export type StudentLoginAuditAction =
   | "student_login:reset"
   | "student_login:picture_assign"
   | "student_login:picture_setting"
-  | "auth:login";
+  | "auth:login"
+  | "auth:login_failed";
 
 /** Who acted and from where. */
 export interface StudentLoginActor {
