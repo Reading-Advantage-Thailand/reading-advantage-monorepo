@@ -26,7 +26,7 @@ function selectChain() {
 }
 
 /** Write stub that records the call and resolves to a school row. */
-function writeChain(spy: ReturnType<typeof vi.fn>) {
+function writeChain(spy: (...args: unknown[]) => void) {
   return (...args: unknown[]) => {
     spy(...args);
     const stub: Record<string, unknown> = {};

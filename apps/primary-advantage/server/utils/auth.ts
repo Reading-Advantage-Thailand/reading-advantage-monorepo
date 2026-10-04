@@ -90,13 +90,16 @@ export const validateUser = async (
   }
 };
 
+/** The caller fields that scope and rank checks read. */
+export type CallerScope = Pick<UserWithRoles, "schoolId" | "role" | "roles" | "SchoolAdmins">;
+
 /**
  * Resolves the effective management role of a caller.
  * The users.role session role wins; legacy role rows fill in when it is absent.
  * @param userWithRoles The caller loaded by validateUser.
  * @returns SYSTEM, ADMIN, TEACHER, or an empty string.
  */
-export function effectiveCallerRole(userWithRoles: UserWithRoles): string {
+export function effectiveCallerRole(userWithRoles: CallerScope): string {
   const sessionRole = String(userWithRoles.role ?? "").toUpperCase();
   if (sessionRole) return sessionRole;
   const names = userWithRoles.roles.map((r) => r.role.name);
@@ -116,7 +119,7 @@ export function effectiveCallerRole(userWithRoles: UserWithRoles): string {
  */
 export function schoolScopeConditions(
   schoolColumn: AnyColumn,
-  userWithRoles: UserWithRoles,
+  userWithRoles: CallerScope,
 ): SQL[] {
   if (effectiveCallerRole(userWithRoles) === "SYSTEM") return [];
   if (!userWithRoles.schoolId) return [sql`false`];
