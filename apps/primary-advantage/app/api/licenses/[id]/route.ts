@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
 import { eq } from 'drizzle-orm';
 import { licenses, schools } from '@reading-advantage/db/schema';
-import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
+import { getUnscopedDB } from "@reading-advantage/domain";
+import { licenseDbFor } from "@/lib/license-db";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { z } from "zod";
 import { subscriptionType } from '@reading-advantage/db/schema';
@@ -52,10 +53,7 @@ export async function GET(
 
     // Get license by ID (replaces Prisma `findUnique({ include: School })`).
     // TenantDB scopes ADMIN reads to their own school; SYSTEM reads any.
-    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
-    const licensesDb = user.schoolId
-      ? tenantDb
-      : getUnscopedDB("SYSTEM reads licenses across all schools; no schoolId");
+    const licensesDb = licenseDbFor(user, "SYSTEM reads licenses across all schools");
     const [license] = await licensesDb.select().from(licenses)
       .where(eq(licenses.id, id))
       .limit(1);
@@ -67,8 +65,7 @@ export async function GET(
     // Stitch the School include via FK join.
     let schoolRow: { id: string; name: string } | null = null;
     if (license.schoolId) {
-      const [s] = await tenantDb
-        .unscoped("schools is EXEMPT; stitched by license.schoolId")
+      const [s] = await getUnscopedDB("schools is EXEMPT; stitched by license.schoolId")
         .select({ id: schools.id, name: schools.name })
         .from(schools)
         .where(eq(schools.id, license.schoolId))
@@ -119,10 +116,7 @@ export async function PUT(
     const validatedData = UpdateLicenseSchema.parse(body);
 
     // Check if license exists (replaces Prisma `findUnique({ where: { id } })`).
-    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
-    const licensesDb = user.schoolId
-      ? tenantDb
-      : getUnscopedDB("SYSTEM updates licenses across all schools; no schoolId");
+    const licensesDb = licenseDbFor(user, "SYSTEM updates licenses across all schools");
     const [existingLicense] = await licensesDb.select().from(licenses)
       .where(eq(licenses.id, id))
       .limit(1);
@@ -159,8 +153,7 @@ export async function PUT(
     // Stitch the School include via FK join.
     let schoolRow: { id: string; name: string } | null = null;
     if (updatedLicense.schoolId) {
-      const [s] = await tenantDb
-        .unscoped("schools is EXEMPT; stitched by license.schoolId")
+      const [s] = await getUnscopedDB("schools is EXEMPT; stitched by license.schoolId")
         .select({ id: schools.id, name: schools.name })
         .from(schools)
         .where(eq(schools.id, updatedLicense.schoolId))
@@ -235,10 +228,7 @@ export async function DELETE(
     const { id } = await params;
 
     // Check if license exists (replaces Prisma `findUnique({ where: { id } })`).
-    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
-    const licensesDb = user.schoolId
-      ? tenantDb
-      : getUnscopedDB("SYSTEM deletes licenses across all schools; no schoolId");
+    const licensesDb = licenseDbFor(user, "SYSTEM deletes licenses across all schools");
     const [existingLicense] = await licensesDb.select().from(licenses)
       .where(eq(licenses.id, id))
       .limit(1);

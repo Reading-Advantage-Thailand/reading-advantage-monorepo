@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { eq, and, desc, inArray, ilike, or, count } from 'drizzle-orm';
 import { licenses, schools } from '@reading-advantage/db/schema';
-import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
+import { getUnscopedDB } from "@reading-advantage/domain";
+import { licenseDbFor } from "@/lib/license-db";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { z } from "zod";
 import { randomBytes } from "crypto";
@@ -63,14 +64,28 @@ export async function POST(request: NextRequest) {
     }
 
     // Create license in database (replaces Prisma `license.create`).
-    // TenantDB injects the ADMIN's schoolId on FLAT inserts; SYSTEM (no
-    // schoolId) creates licenses for any school via unscoped.
-    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
-    const licensesDb = user.schoolId
-      ? tenantDb
-      : getUnscopedDB("SYSTEM creates licenses across all schools; no schoolId");
+    // TenantDB injects the ADMIN's schoolId on FLAT inserts; SYSTEM creates
+    // licenses for any school via unscoped.
+    const licensesDb = licenseDbFor(user, "SYSTEM creates licenses across all schools");
+
+    // licenses.school_name is NOT NULL: store the target school's name, or "" without a school.
+    const targetSchoolId = user.role === "SYSTEM" ? validatedData.schoolId || null : (user.schoolId ?? null);
+    let schoolName = "";
+    if (targetSchoolId) {
+      const [school] = await licensesDb
+        .select({ name: schools.name })
+        .from(schools)
+        .where(eq(schools.id, targetSchoolId))
+        .limit(1);
+      if (!school) {
+        return NextResponse.json({ error: "School not found" }, { status: 400 });
+      }
+      schoolName = school.name ?? "";
+    }
+
     const [license] = await licensesDb.insert(licenses).values({
       key: licenseKey,
+      schoolName,
       name: validatedData.name,
       maxUsers: validatedData.maxUsers,
       startDate: startDate,
@@ -78,7 +93,8 @@ export async function POST(request: NextRequest) {
       status: validatedData.status,
       subscription:
         validatedData.subscriptionType.toUpperCase() as SubscriptionType,
-      schoolId: validatedData.schoolId || null,
+      // Only SYSTEM picks the school; the tenant scope sets it for everyone else.
+      ...(user.role === "SYSTEM" ? { schoolId: validatedData.schoolId || null } : {}),
     } as any).returning();
 
     return NextResponse.json({
@@ -165,10 +181,7 @@ export async function GET(request: NextRequest) {
     // Get licenses with pagination (replaces Prisma `findMany({ where, skip, take, orderBy, include.School })`).
     // TenantDB scopes ADMIN reads to their own school; SYSTEM (no schoolId)
     // reads all licenses via unscoped.
-    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
-    const licensesDb = user.schoolId
-      ? tenantDb
-      : getUnscopedDB("SYSTEM lists licenses across all schools; no schoolId");
+    const licensesDb = licenseDbFor(user, "SYSTEM lists licenses across all schools");
     const [licenseRows, totalRows] = await Promise.all([
       whereConditions.length > 0
         ? licensesDb.select().from(licenses)
@@ -192,8 +205,7 @@ export async function GET(request: NextRequest) {
       .filter((id): id is string => !!id);
     const uniqueSchoolIds = Array.from(new Set(schoolIds));
     const schoolRows = uniqueSchoolIds.length > 0
-      ? await tenantDb
-          .unscoped("schools is EXEMPT; stitched by license.schoolId")
+      ? await getUnscopedDB("schools is EXEMPT; stitched by license.schoolId")
           .select({
           id: schools.id,
           name: schools.name,
@@ -256,10 +268,7 @@ export async function DELETE(request: NextRequest) {
 
     // Delete license (replaces Prisma `license.delete`).
     // TenantDB scopes ADMIN deletes to their own school; SYSTEM deletes any.
-    const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
-    const licensesDb = user.schoolId
-      ? tenantDb
-      : getUnscopedDB("SYSTEM deletes licenses across all schools; no schoolId");
+    const licensesDb = licenseDbFor(user, "SYSTEM deletes licenses across all schools");
     await licensesDb.delete(licenses)
       .where(eq(licenses.id, id));
 
