@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq, and, desc, inArray, ilike, or, count } from 'drizzle-orm';
 import { licenses, schools } from '@reading-advantage/db/schema';
 import { getUnscopedDB } from "@reading-advantage/domain";
-import { licenseDbFor } from "@/lib/license-db";
+import { licenseDbFor, licenseSchoolFields } from "@/lib/license-db";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { z } from "zod";
 import { randomBytes } from "crypto";
@@ -68,24 +68,13 @@ export async function POST(request: NextRequest) {
     // licenses for any school via unscoped.
     const licensesDb = licenseDbFor(user, "SYSTEM creates licenses across all schools");
 
-    // licenses.school_name is NOT NULL: store the target school's name, or "" without a school.
-    const targetSchoolId = user.role === "SYSTEM" ? validatedData.schoolId || null : (user.schoolId ?? null);
-    let schoolName = "";
-    if (targetSchoolId) {
-      const [school] = await licensesDb
-        .select({ name: schools.name })
-        .from(schools)
-        .where(eq(schools.id, targetSchoolId))
-        .limit(1);
-      if (!school) {
-        return NextResponse.json({ error: "School not found" }, { status: 400 });
-      }
-      schoolName = school.name ?? "";
+    const schoolFields = await licenseSchoolFields(licensesDb, user, validatedData.schoolId);
+    if (!schoolFields) {
+      return NextResponse.json({ error: "School not found" }, { status: 400 });
     }
 
     const [license] = await licensesDb.insert(licenses).values({
       key: licenseKey,
-      schoolName,
       name: validatedData.name,
       maxUsers: validatedData.maxUsers,
       startDate: startDate,
@@ -94,7 +83,7 @@ export async function POST(request: NextRequest) {
       subscription:
         validatedData.subscriptionType.toUpperCase() as SubscriptionType,
       // Only SYSTEM picks the school; the tenant scope sets it for everyone else.
-      ...(user.role === "SYSTEM" ? { schoolId: validatedData.schoolId || null } : {}),
+      ...schoolFields,
     } as any).returning();
 
     return NextResponse.json({

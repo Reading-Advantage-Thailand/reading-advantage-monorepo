@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   getUnscopedDB: vi.fn(),
   inserted: [] as Record<string, unknown>[],
   schoolRows: [] as { name: string }[],
+  updated: [] as Record<string, unknown>[],
 }));
 
 vi.mock("@/lib/session", () => ({ currentUser: mocks.currentUser }));
@@ -20,10 +21,22 @@ vi.mock("@reading-advantage/domain", () => ({
   getUnscopedDB: mocks.getUnscopedDB,
 }));
 
-/** Fake database handle that records insert values and answers school lookups. */
+/** Fake database handle that records writes and answers license and school lookups. */
 function fakeDb() {
   return {
-    select: () => ({ from: () => ({ where: () => ({ limit: async () => mocks.schoolRows }) }) }),
+    select: () => ({
+      from: (table: unknown) => ({
+        where: () => ({
+          limit: async () => (table === licenses ? [{ id: "l1", schoolId: SCHOOL_A }] : mocks.schoolRows),
+        }),
+      }),
+    }),
+    update: () => ({
+      set: (values: Record<string, unknown>) => {
+        mocks.updated.push(values);
+        return { where: () => ({ returning: async () => [{ id: "l1", ...values }] }) };
+      },
+    }),
     insert: () => ({
       values: (values: Record<string, unknown>) => {
         mocks.inserted.push(values);
@@ -33,7 +46,9 @@ function fakeDb() {
   };
 }
 
+import { licenses } from "@reading-advantage/db/schema";
 import { POST } from "../route";
+import { PUT } from "../[id]/route";
 import { licenseDbFor } from "@/lib/license-db";
 
 const SCHOOL_A = "11111111-1111-4111-8111-111111111111";
@@ -113,5 +128,38 @@ describe("POST /api/licenses", () => {
     expect(mocks.getUnscopedDB).not.toHaveBeenCalled();
     expect(mocks.inserted[0]).not.toHaveProperty("schoolId");
     expect(mocks.inserted[0]?.schoolName).toBe("QA School D");
+  });
+});
+
+describe("PUT /api/licenses/[id]", () => {
+  const params = Promise.resolve({ id: "l1" });
+
+  beforeEach(() => {
+    mocks.updated.length = 0;
+    mocks.schoolRows = [{ name: "QA School D" }];
+    mocks.getTenantDB.mockReset().mockImplementation(fakeDb);
+    mocks.getUnscopedDB.mockReset().mockImplementation(fakeDb);
+  });
+
+  it("does not let an ADMIN move its license to another school", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "adm", role: "ADMIN", schoolId: SCHOOL_A });
+    const response = await PUT(createRequest(licenseBody), { params } as never);
+    expect(response.status).toBe(200);
+    expect(mocks.updated[0]).not.toHaveProperty("schoolId");
+  });
+
+  it("refuses a SYSTEM move to a school that does not exist", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "sys", role: "SYSTEM", schoolId: SCHOOL_A });
+    mocks.schoolRows = [];
+    const response = await PUT(createRequest(licenseBody), { params } as never);
+    expect(response.status).toBe(400);
+    expect(mocks.updated).toHaveLength(0);
+  });
+
+  it("moves a license for SYSTEM and keeps school_name in step", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "sys", role: "SYSTEM", schoolId: SCHOOL_A });
+    const response = await PUT(createRequest(licenseBody), { params } as never);
+    expect(response.status).toBe(200);
+    expect(mocks.updated[0]).toMatchObject({ schoolId: SCHOOL_D, schoolName: "QA School D" });
   });
 });

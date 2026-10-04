@@ -3,7 +3,7 @@ import { currentUser } from "@/lib/session";
 import { eq } from 'drizzle-orm';
 import { licenses, schools } from '@reading-advantage/db/schema';
 import { getUnscopedDB } from "@reading-advantage/domain";
-import { licenseDbFor } from "@/lib/license-db";
+import { licenseDbFor, licenseSchoolFields } from "@/lib/license-db";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { z } from "zod";
 import { subscriptionType } from '@reading-advantage/db/schema';
@@ -134,6 +134,11 @@ export async function PUT(
       expiryDate.setDate(startDate.getDate() + validatedData.expiryDays);
     }
 
+    const schoolFields = await licenseSchoolFields(licensesDb, user, validatedData.schoolId);
+    if (!schoolFields) {
+      return NextResponse.json({ error: "School not found" }, { status: 400 });
+    }
+
     // Update license in database (replaces Prisma `update + include.School`).
     const [updatedLicense] = await licensesDb.update(licenses)
       .set({
@@ -145,7 +150,8 @@ export async function PUT(
         status: validatedData.status,
         subscription:
           validatedData.subscriptionType.toUpperCase() as SubscriptionType,
-        schoolId: validatedData.schoolId || null,
+        // Only SYSTEM moves a license between schools.
+        ...schoolFields,
       } as any)
       .where(eq(licenses.id, id))
       .returning();
