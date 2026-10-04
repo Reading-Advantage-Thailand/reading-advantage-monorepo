@@ -6,7 +6,7 @@ import {
   primaryStudentCredentials,
   users,
 } from "@reading-advantage/db/schema";
-import type { RateLimitStore, UserContext } from "@reading-advantage/auth";
+import { revokeAllUserSessions, type RateLimitStore, type UserContext } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
 import { authorizeClassroom } from "./access.js";
 import { auditStudentLogin, type StudentLoginActor } from "./audit.js";
@@ -230,10 +230,13 @@ export async function assignPicturePasswords(params: {
   const assigned: AssignedPicturePassword[] = [];
   for (const row of pending) {
     const pictures = generatePictureSequence();
-    await tenantDb
+    const stored = await tenantDb
       .update(primaryStudentCredentials)
       .set({ pictureHash: await hashPictureSequence(pictures), failedCount: 0, lockedUntil: null, updatedAt: new Date() })
-      .where(and(eq(primaryStudentCredentials.id, row.credentialId), isNull(primaryStudentCredentials.pictureHash)));
+      .where(and(eq(primaryStudentCredentials.id, row.credentialId), isNull(primaryStudentCredentials.pictureHash)))
+      .returning({ id: primaryStudentCredentials.id });
+    // A parallel call may have stored a sequence first. Return only sequences that this call stored.
+    if (stored.length === 0) continue;
     assigned.push({ credentialId: row.credentialId, userId: row.userId, name: row.name, pictures });
   }
   if (assigned.length > 0) {
@@ -281,6 +284,8 @@ export async function resetPicturePassword(params: {
     .update(primaryStudentCredentials)
     .set({ pictureHash: await hashPictureSequence(pictures), failedCount: 0, lockedUntil: null, updatedAt: new Date() })
     .where(eq(primaryStudentCredentials.id, target.credentialId));
+  // A stolen sign-in stops at once: the old sequence's sessions end.
+  await revokeAllUserSessions(db, input.studentUserId);
   await auditStudentLogin(teacherActor(user, meta), "student_login:reset", { type: "student_credential", id: target.credentialId }, { classroomId: classroom.id });
   return { credentialId: target.credentialId, pictures };
 }

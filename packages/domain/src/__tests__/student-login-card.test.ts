@@ -110,6 +110,7 @@ describe("rotateCardToken", () => {
   it("overwrites the stored hash, returns the new token once, and audits", async () => {
     const db = createMockDb({ selectSequence: [[classRow], [], [{ credentialId: "cred-1" }]] });
     const out = await rotate(db);
+    expect(db.delete).toHaveBeenCalledOnce(); // active sessions of the student end at once
     expect(out.credentialId).toBe("cred-1");
     expect(out.token).toHaveLength(QR_TOKEN_LENGTH);
     const set = db.update.mock.results[0]!.value.set.mock.calls[0][0];
@@ -143,6 +144,7 @@ describe("issueClassCardTokens", () => {
         [],
         [{ credentialId: "c1", userId: "u1", name: "Ann" }, { credentialId: "c2", userId: "u2", name: "Bo" }],
       ],
+      updateReturning: [{ id: "x" }],
     });
     const out = await issueClassCardTokens({ db: asDb(db), user: teacher, meta, input: { classroomId: CLASS_ID } });
     expect(out.map((o) => o.credentialId)).toEqual(["c1", "c2"]);
@@ -150,5 +152,15 @@ describe("issueClassCardTokens", () => {
     expect(db.update).toHaveBeenCalledTimes(2);
     expect(recordAuditEvent).toHaveBeenCalledTimes(1);
     expect(recordAuditEvent).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ action: "student_login:card_issue", metadata: { count: 2 } }));
+  });
+
+  it("returns only the tokens that were stored when a parallel call took the row first", async () => {
+    const db = createMockDb({
+      selectSequence: [[classRow], [], [{ credentialId: "c1", userId: "u1", name: "Ann" }]],
+      updateReturning: [],
+    });
+    const out = await issueClassCardTokens({ db: asDb(db), user: teacher, meta, input: { classroomId: CLASS_ID } });
+    expect(out).toEqual([]);
+    expect(recordAuditEvent).not.toHaveBeenCalled();
   });
 });

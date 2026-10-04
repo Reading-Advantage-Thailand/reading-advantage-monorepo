@@ -6,7 +6,7 @@ import {
   primaryStudentCredentials,
   users,
 } from "@reading-advantage/db/schema";
-import type { RateLimitStore, UserContext } from "@reading-advantage/auth";
+import { revokeAllUserSessions, type RateLimitStore, type UserContext } from "@reading-advantage/auth";
 import { authorizeClassroom } from "./access.js";
 import { auditStudentLogin } from "./audit.js";
 import { generateCardToken, hashCardToken } from "./codes.js";
@@ -124,6 +124,8 @@ export async function rotateCardToken(params: {
     .update(primaryStudentCredentials)
     .set({ cardTokenHash: hashCardToken(token), rotatedAt: now, updatedAt: now })
     .where(eq(primaryStudentCredentials.id, target.credentialId));
+  // A lost or stolen card stops at once: the student's sessions end with the old token.
+  await revokeAllUserSessions(db, input.studentUserId);
   await auditStudentLogin(
     { userId: user.id, role: user.role, ip: meta.ip, userAgent: meta.userAgent },
     "student_login:card_rotate",
@@ -170,10 +172,13 @@ export async function issueClassCardTokens(params: {
   for (const row of pending) {
     const token = generateCardToken();
     const now = new Date();
-    await tenantDb
+    const stored = await tenantDb
       .update(primaryStudentCredentials)
       .set({ cardTokenHash: hashCardToken(token), rotatedAt: now, updatedAt: now })
-      .where(and(eq(primaryStudentCredentials.id, row.credentialId), isNull(primaryStudentCredentials.cardTokenHash)));
+      .where(and(eq(primaryStudentCredentials.id, row.credentialId), isNull(primaryStudentCredentials.cardTokenHash)))
+      .returning({ id: primaryStudentCredentials.id });
+    // A parallel call may have stored a token first. Return only tokens that this call stored.
+    if (stored.length === 0) continue;
     issued.push({ credentialId: row.credentialId, userId: row.userId, name: row.name, token });
   }
   if (issued.length > 0) {

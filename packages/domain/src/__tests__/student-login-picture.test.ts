@@ -162,7 +162,7 @@ describe("signInWithCodeOnly", () => {
 describe("assignPicturePasswords", () => {
   it("hashes a random sequence for each student without one and returns it once", async () => {
     // select order: classroom, missing credentials (none), students without a picture hash
-    const db = createMockDb({ selectSequence: [[classRow], [], [{ credentialId: "c1", userId: "u1", name: "Ann" }, { credentialId: "c2", userId: "u2", name: "Bo" }]] });
+    const db = createMockDb({ selectSequence: [[classRow], [], [{ credentialId: "c1", userId: "u1", name: "Ann" }, { credentialId: "c2", userId: "u2", name: "Bo" }]], updateReturning: [{ id: "x" }] });
     const out = await assignPicturePasswords({ db: asDb(db), user: teacher, meta, input: { classroomId: CLASS_ID } });
     expect(out).toHaveLength(2);
     expect(out[0]).toMatchObject({ credentialId: "c1", userId: "u1", name: "Ann" });
@@ -172,6 +172,13 @@ describe("assignPicturePasswords", () => {
     expect(set.pictureHash).toContain("$argon2id$");
     expect(await verifyPictureSequence(out[0]!.pictures, set.pictureHash)).toBe(true);
     expect(JSON.stringify(set)).not.toContain(out[0]!.pictures.join("-"));
+  });
+
+  it("returns only the sequences that were stored when a parallel call took the row first", async () => {
+    const db = createMockDb({ selectSequence: [[classRow], [], [{ credentialId: "c1", userId: "u1", name: "Ann" }]], updateReturning: [] });
+    const out = await assignPicturePasswords({ db: asDb(db), user: teacher, meta, input: { classroomId: CLASS_ID } });
+    expect(out).toEqual([]);
+    expect(recordAuditEvent).not.toHaveBeenCalled();
   });
 
   it("rejects a student", async () => {
@@ -184,6 +191,7 @@ describe("resetPicturePassword", () => {
   it("sets a new sequence, unlocks, and audits", async () => {
     const db = createMockDb({ selectSequence: [[classRow], [{ credentialId: "cred-1" }]] });
     const out = await resetPicturePassword({ db: asDb(db), user: teacher, meta, input: { classroomId: CLASS_ID, studentUserId: "stu-1" } });
+    expect(db.delete).toHaveBeenCalledOnce(); // active sessions of the student end at once
     expect(out.pictures).toHaveLength(3);
     const set = db.update.mock.results[0]!.value.set.mock.calls[0][0];
     expect(set).toMatchObject({ failedCount: 0, lockedUntil: null });

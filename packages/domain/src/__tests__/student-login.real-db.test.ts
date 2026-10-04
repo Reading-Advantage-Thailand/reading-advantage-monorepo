@@ -212,6 +212,7 @@ describe.skipIf(!url)("student login against Postgres", () => {
     await expect(scan(ann.token)).resolves.toMatchObject({ authStrength: "full", user: { id: `${tag}-s1` } });
 
     const rotated = await sl.rotateCardToken({ db, user: t1(), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s1` } });
+    expect(await db.select().from(schema.sessions).where(eq(schema.sessions.userId, `${tag}-s1`))).toHaveLength(0);
     await expect(scan(ann.token)).rejects.toMatchObject({ code: "invalid_credentials" });
     await expect(scan(rotated.token)).resolves.toMatchObject({ authStrength: "full" });
     const audit = await db.select().from(schema.auditEvents).where(eq(schema.auditEvents.actorUserId, `${tag}-t1`));
