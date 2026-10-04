@@ -91,7 +91,8 @@ export async function rehashOnLogin(
  * @param userId - The user who owns the credential
  * @param password - The plaintext password to verify and adopt
  * @param legacyHash - The hash read from `users.password`
- * @returns True if the password matched and the legacy hash was adopted, false if nothing was written.
+ * @returns True if the password matched and the legacy hash was adopted, false if nothing was written
+ * (wrong password, or a credential password already existed and the write was skipped).
  */
 export async function adoptLegacyPassword(
   db: Db,
@@ -105,8 +106,8 @@ export async function adoptLegacyPassword(
   const hash = legacyHash.startsWith("$argon2id$")
     ? legacyHash
     : await argon2.hash(password, ARGON2ID_OPTS);
-  await db.transaction(async (tx) => {
-    await tx
+  return db.transaction(async (tx) => {
+    const written = await tx
       .insert(accounts)
       .values({
         id: `${userId}_credential`,
@@ -118,8 +119,11 @@ export async function adoptLegacyPassword(
         target: [accounts.userId, accounts.providerId],
         set: { password: hash, updatedAt: new Date() },
         setWhere: isNull(accounts.password),
-      });
+      })
+      .returning({ id: accounts.id });
+    // No row means a credential password already existed: the legacy hash is stale.
+    if (written.length === 0) return false;
     await tx.update(users).set({ password: null }).where(eq(users.id, userId));
+    return true;
   });
-  return true;
 }

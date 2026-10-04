@@ -243,7 +243,17 @@ async function loginWithOptions(request: NextRequest, options: LoginHandlerOptio
     // One-shot bcrypt → Argon2id migration (non-blocking)
     try {
       if (adoptLegacyHash) {
-        await adoptLegacyPassword(db, user.id, password, storedHash);
+        // False means the credential row got a password in the meantime: the legacy hash is stale.
+        if (!(await adoptLegacyPassword(db, user.id, password, storedHash))) {
+          await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
+          return NextResponse.json(
+            {
+              message: "Invalid username or password",
+              ...(rateCheck.captchaRequired ? { captchaRequired: true } : {}),
+            },
+            { status: 401 }
+          );
+        }
       } else {
         await rehashOnLogin(db, user.id, password, storedHash);
       }

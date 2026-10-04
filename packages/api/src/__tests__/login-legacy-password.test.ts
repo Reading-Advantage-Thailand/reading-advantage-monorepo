@@ -18,6 +18,8 @@ const authMocks = vi.hoisted(() => ({
   adoptLegacyPassword: vi.fn().mockResolvedValue(true),
   rehashOnLogin: vi.fn().mockResolvedValue({ migrated: false }),
   verifyPassword: vi.fn().mockResolvedValue(true),
+  createSession: vi.fn().mockResolvedValue({ token: "session-token" }),
+  recordFailure: vi.fn(),
 }));
 
 vi.mock("@reading-advantage/db", () => ({ db: mockDb }));
@@ -42,9 +44,7 @@ vi.mock("@reading-advantage/auth", async () => {
   return {
     ...actual,
     ...authMocks,
-    createSession: vi.fn().mockResolvedValue({ token: "session-token" }),
     checkRateLimit: vi.fn().mockReturnValue({ allowed: true }),
-    recordFailure: vi.fn(),
     resetLimit: vi.fn(),
     SESSION_COOKIE_NAME: "session_token",
     recordAuditEvent: vi.fn().mockResolvedValue(undefined),
@@ -123,6 +123,17 @@ describe("login with a legacy users.password hash", () => {
       userRow.password,
     );
     expect(authMocks.rehashOnLogin).not.toHaveBeenCalled();
+  });
+
+  it("refuses with 401 and records a failure when adoption wrote nothing", async () => {
+    authMocks.adoptLegacyPassword.mockResolvedValueOnce(false);
+    queueLogin([]);
+
+    const response = await login();
+
+    expect(response.status).toBe(401);
+    expect(authMocks.recordFailure).toHaveBeenCalled();
+    expect(authMocks.createSession).not.toHaveBeenCalled();
   });
 
   it("rejects a wrong password against the legacy hash", async () => {

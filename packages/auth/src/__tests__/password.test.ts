@@ -231,11 +231,12 @@ describe("Phase 2 — Task 12: FR-3 rehashOnLogin filters UPDATE by providerId =
   });
   describe("adoptLegacyPassword", () => {
     function createMockDb() {
-      const onConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
+      const returning = vi.fn().mockResolvedValue([{ id: "u_credential" }]);
+      const onConflictDoUpdate = vi.fn().mockReturnValue({ returning });
       const values = vi.fn().mockReturnValue({ onConflictDoUpdate });
       const insert = vi.fn().mockReturnValue({ values });
       const update = vi.fn().mockReturnValue({ set: vi.fn().mockReturnValue({ where: vi.fn() }) });
-      const transaction = async (cb: (tx: unknown) => Promise<void>) => cb({ insert, update });
+      const transaction = async <T,>(cb: (tx: unknown) => Promise<T>) => cb({ insert, update });
       return {
         db: { transaction } as unknown as Parameters<typeof adoptLegacyPassword>[0],
         values,
@@ -274,16 +275,17 @@ describe("adoptLegacyPassword", () => {
 
   /** Builds a mock db whose transaction runs the callback with a recording tx. */
   function createTxDb() {
-    const onConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
+    const returning = vi.fn().mockResolvedValue([{ id: "u1_credential" }]);
+    const onConflictDoUpdate = vi.fn().mockReturnValue({ returning });
     const values = vi.fn().mockReturnValue({ onConflictDoUpdate });
     const insert = vi.fn().mockReturnValue({ values });
     const where = vi.fn().mockResolvedValue(undefined);
     const set = vi.fn().mockReturnValue({ where });
     const update = vi.fn().mockReturnValue({ set });
-    const transaction = vi.fn(async (cb: (tx: unknown) => Promise<void>) => cb({ insert, update }));
+    const transaction = vi.fn(async <T,>(cb: (tx: unknown) => Promise<T>) => cb({ insert, update }));
     return {
       db: { transaction } as unknown as Parameters<typeof adoptLegacyPassword>[0],
-      transaction, values, onConflictDoUpdate, set,
+      transaction, values, onConflictDoUpdate, set, returning, update,
     };
   }
 
@@ -321,5 +323,13 @@ describe("adoptLegacyPassword", () => {
     expect(t.transaction).toHaveBeenCalledTimes(1);
     expect(t.set).toHaveBeenCalledWith({ password: null });
     expect(t.onConflictDoUpdate.mock.invocationCallOrder[0]).toBeLessThan(t.set.mock.invocationCallOrder[0]);
+  });
+
+  it("returns false and leaves users.password when the credential row already had a password", async () => {
+    const t = createTxDb();
+    t.returning.mockResolvedValueOnce([]);
+    const legacy = await hashPassword("rightPassword");
+    expect(await adoptLegacyPassword(t.db, "u1", "rightPassword", legacy)).toBe(false);
+    expect(t.update).not.toHaveBeenCalled();
   });
 });
