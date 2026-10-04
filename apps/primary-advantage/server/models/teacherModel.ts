@@ -14,6 +14,7 @@ import {
   userRoles,
   schools,
 } from '@reading-advantage/db';
+import { ROLE_HIERARCHY, ROLES, type Role } from "@reading-advantage/auth/roles";
 import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount } from "@/server/utils/credentials";
 import {
   TeacherData,
@@ -291,6 +292,31 @@ export const getTeacherById = async (
   }
 };
 
+/** Legacy role names a teacher management call may assign. */
+const ASSIGNABLE_TEACHER_ROLES = ["teacher", "admin"];
+
+/**
+ * Checks whether an existing account outranks the TEACHER role.
+ * Both the session role and the legacy role rows count, so a legacy admin is refused.
+ * @param sessionRole The users.role value of the account.
+ * @param legacyRoleNames The user_roles names held by the account.
+ * @returns True when any role ranks above TEACHER or is unknown.
+ */
+export function outranksTeacher(
+  sessionRole: string | null | undefined,
+  legacyRoleNames: string[],
+): boolean {
+  const names = [sessionRole ?? "", ...legacyRoleNames]
+    .filter((name) => name !== "")
+    .map((name) => name.toUpperCase());
+  return names.some((name) => {
+    const rank = ROLE_HIERARCHY[name as Role];
+    return rank === undefined
+      ? name !== "USER"
+      : rank > ROLE_HIERARCHY[ROLES.TEACHER];
+  });
+}
+
 // Create new teacher
 /**
  * Creates a teacher in the authorized school.
@@ -316,11 +342,16 @@ export const createTeacher = async (params: {
     params;
 
   try {
+    if (!ASSIGNABLE_TEACHER_ROLES.includes(role)) {
+      return { success: false, error: "Invalid role specified" };
+    }
+
     // Check if user already exists (with school + roles for the include shape).
     const existingUserRows = await db.select({
       id: users.id,
       email: users.email,
       schoolId: users.schoolId,
+      sessionRole: users.role,
       schoolRowId: schools.id,
       schoolName: schools.name,
       roleName: roles.name,
@@ -336,6 +367,7 @@ export const createTeacher = async (params: {
           id: existingUserRows[0].id,
           email: existingUserRows[0].email,
           schoolId: existingUserRows[0].schoolId,
+          sessionRole: existingUserRows[0].sessionRole,
           School: existingUserRows[0].schoolRowId
             ? {
                 id: existingUserRows[0].schoolRowId,
@@ -358,6 +390,19 @@ export const createTeacher = async (params: {
 
     // If user exists, handle accordingly
     if (existingUser) {
+      // An existing account is never taken over: no outranking roles and no
+      // moves out of another school, even with `force`.
+      if (
+        outranksTeacher(
+          existingUser.sessionRole,
+          existingUser.roles.map((r) => r.role.name),
+        )
+      ) {
+        return { success: false, error: "This account cannot be added as a teacher" };
+      }
+      if (existingUser.schoolId && existingUser.schoolId !== schoolId) {
+        return { success: false, error: "This account belongs to another school" };
+      }
       if (existingUser.schoolId && existingUser.School) {
         if (force) {
           return await updateExistingTeacherToSchool({
@@ -365,7 +410,6 @@ export const createTeacher = async (params: {
             name,
             email,
             role,
-            password,
             classroomIds,
             schoolId,
             userWithRoles,
@@ -390,7 +434,6 @@ export const createTeacher = async (params: {
           name,
           email,
           role,
-          password,
           classroomIds,
           schoolId,
           userWithRoles,
@@ -559,7 +602,6 @@ async function updateExistingTeacherToSchool(params: {
   name: string;
   email: string;
   role: string;
-  password?: string;
   classroomIds?: string[];
   schoolId: string | null;
   userWithRoles: UserWithRoles;
@@ -573,7 +615,6 @@ async function updateExistingTeacherToSchool(params: {
     name,
     email,
     role,
-    password,
     classroomIds,
     schoolId,
     userWithRoles,
@@ -609,25 +650,12 @@ async function updateExistingTeacherToSchool(params: {
       }
     }
 
-    // Update the existing teacher in a transaction
-    const newPasswordHash = password ? await hashNewPassword(password) : undefined;
+    // Update the existing teacher in a transaction. An existing account
+    // never gets a new password here: only its owner or a reset flow may set it.
     await db.transaction(async (tx) => {
-      const updateData: any = {
-        name,
-        schoolId,
-      };
-
-      if (newPasswordHash) {
-        updateData.password = newPasswordHash;
-      }
-
       await tx.update(users)
-        .set(updateData)
+        .set({ name, schoolId })
         .where(eq(users.id, existingUser.id));
-
-      if (newPasswordHash) {
-        await upsertCredentialAccount(tx, existingUser.id, newPasswordHash);
-      }
 
       // Look up the user's current roles to decide if we need to rotate them.
       const currentRoleRows = await tx.select({ name: roles.name })
