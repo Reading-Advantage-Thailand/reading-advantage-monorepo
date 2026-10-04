@@ -56,6 +56,8 @@ describe("ClassLoginPanel", () => {
     expect(screen.getByRole("button", { name: "Start class" })).toBeInTheDocument();
     expect(calls("lockouts")).toBe(1);
     expect(screen.getByRole("row", { name: /Ann Smith/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Class sheet" }).getAttribute("href")).toMatch(new RegExp(`/teacher/class-roster/${CLASS_ID}/class-sheet$`));
+    expect(screen.getByRole("link", { name: "QR cards" }).getAttribute("href")).toMatch(new RegExp(`/teacher/class-roster/${CLASS_ID}/qr-cards$`));
   });
 
   it("polls every 10 seconds while the page is visible and stops while it is hidden", async () => {

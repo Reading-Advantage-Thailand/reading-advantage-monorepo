@@ -10,6 +10,7 @@ export type StudentLoginAuditAction =
   | "student_login:picture_setting"
   | "student_login:card_rotate"
   | "student_login:card_issue"
+  | "student_login:class_password_reset"
   | "auth:login"
   | "auth:login_failed";
 

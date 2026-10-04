@@ -1,10 +1,15 @@
 import { randomInt } from "node:crypto";
-import { eq, like } from "drizzle-orm";
+import { and, eq, like } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
-import { accounts, users } from "@reading-advantage/db/schema";
-import { hashPassword } from "@reading-advantage/auth";
+import { accounts, classroomStudents, sessions, users } from "@reading-advantage/db/schema";
+import { hashPassword, type RateLimitStore, type UserContext } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
+import { authorizeClassroom } from "./access.js";
+import { auditStudentLogin } from "./audit.js";
+import type { RequestMeta } from "./class-session.js";
+import type { ResetClassPasswordsInput, ResetClassPasswordsOutput } from "./contracts.js";
 import { ensureStudentCredentials } from "./credentials.js";
+import { guardClassPasswordReset } from "./rate-limits.js";
 
 /** Number of characters in a generated initial password. */
 export const INITIAL_PASSWORD_LENGTH = 8;
@@ -39,6 +44,17 @@ export function usernamePrefix(className: string | null | undefined): string {
  */
 export function generateInitialPassword(pick: (max: number) => number = randomInt): string {
   return Array.from({ length: INITIAL_PASSWORD_LENGTH }, () => INITIAL_PASSWORD_ALPHABET[pick(INITIAL_PASSWORD_ALPHABET.length)]).join("");
+}
+
+/**
+ * Writes the password hash to the student's credential account (the account the shared login
+ * reads), creating the account when it does not exist.
+ */
+function upsertCredentialPassword(executor: Pick<DB, "insert">, userId: string, hash: string) {
+  return executor
+    .insert(accounts)
+    .values({ id: `${userId}_credential`, userId, providerId: "credential", password: hash })
+    .onConflictDoUpdate({ target: [accounts.userId, accounts.providerId], set: { password: hash, updatedAt: new Date() } });
 }
 
 function isUniqueViolation(error: unknown): boolean {
@@ -140,10 +156,7 @@ export async function provisionStudentLogins(params: {
         try {
           await userDb.transaction(async (tx) => {
             await tx.update(users).set({ username, displayUsername: username }).where(eq(users.id, seed.userId));
-            await tx
-              .insert(accounts)
-              .values({ id: `${seed.userId}_credential`, userId: seed.userId, providerId: "credential", password: hash })
-              .onConflictDoUpdate({ target: [accounts.userId, accounts.providerId], set: { password: hash, updatedAt: new Date() } });
+            await upsertCredentialPassword(tx, seed.userId, hash);
           });
           break;
         } catch (error) {
@@ -162,4 +175,84 @@ export async function provisionStudentLogins(params: {
     }
   }
   return { provisioned: results, failed };
+}
+
+/**
+ * Sets a new random initial password for every student of a class and returns each plain
+ * password once, for the class sheet (FR-6). The database keeps only argon2id hashes, so this
+ * is the only way to print a sheet after the import. Each student's new password and the end
+ * of the student's sessions are written in one transaction. A failure for one student does not
+ * stop the others; that student keeps the old password and is returned in `failed`. One audit
+ * entry records the count. Resets are limited per class.
+ * @param params.db Database client.
+ * @param params.store Shared rate-limit store.
+ * @param params.user The teacher of the class, or an admin of its school.
+ * @param params.meta Client IP and user agent for the audit entry.
+ * @param params.input The class.
+ * @returns The class name, the sheet rows (name, username, new password) sorted by name, and
+ * the students whose password did not change.
+ * @throws {StudentLoginError} `forbidden`, `not_found`, or `rate_limited`.
+ */
+export async function resetClassPasswords(params: {
+  db: DB;
+  store: RateLimitStore;
+  user: UserContext;
+  meta: RequestMeta;
+  input: ResetClassPasswordsInput;
+}): Promise<ResetClassPasswordsOutput> {
+  const { db, store, user, meta, input } = params;
+  const { classroom, tenantDb } = await authorizeClassroom(db, user, input.classroomId);
+  await guardClassPasswordReset(store, classroom.id);
+  const rows = await tenantDb
+    .unscoped("classroomStudents has no schoolId, scoped via classroom id and users.schoolId")
+    .select({ userId: users.id, name: users.name, username: users.username })
+    .from(classroomStudents)
+    .innerJoin(users, eq(users.id, classroomStudents.studentId))
+    .where(
+      and(
+        eq(classroomStudents.classroomId, classroom.id),
+        eq(users.schoolId, classroom.schoolId),
+        eq(users.role, "STUDENT"),
+      ),
+    );
+
+  const prepared: { userId: string; name: string; username: string; password: string; hash: string }[] = [];
+  for (let i = 0; i < rows.length; i += HASH_BATCH) {
+    prepared.push(
+      ...(await Promise.all(
+        rows.slice(i, i + HASH_BATCH).map(async (row) => {
+          const password = generateInitialPassword();
+          return { userId: row.userId, name: row.name?.trim() || row.username, username: row.username, password, hash: await hashPassword(password) };
+        }),
+      )),
+    );
+  }
+
+  const students: ResetClassPasswordsOutput["students"] = [];
+  const failed: ResetClassPasswordsOutput["failed"] = [];
+  for (const row of prepared) {
+    try {
+      // The new password and the end of the old sessions are stored together or not at all.
+      // `revokeAllUserSessions` takes the root client, so the delete runs on the transaction here.
+      await tenantDb.transaction(async (tx) => {
+        await upsertCredentialPassword(tx, row.userId, row.hash);
+        await tx.delete(sessions).where(eq(sessions.userId, row.userId));
+      });
+      students.push({ userId: row.userId, name: row.name, username: row.username, password: row.password });
+    } catch (error) {
+      console.error("Class password reset failed for one student:", error instanceof Error ? error.message : "Unknown");
+      failed.push({ userId: row.userId, name: row.name });
+    }
+  }
+  if (prepared.length > 0) {
+    await auditStudentLogin(
+      { userId: user.id, role: user.role, ip: meta.ip, userAgent: meta.userAgent },
+      "student_login:class_password_reset",
+      { type: "classroom", id: classroom.id },
+      { count: students.length, failed: failed.length },
+    );
+  }
+  const byName = (a: { name: string; userId: string }, b: { name: string; userId: string }) =>
+    a.name.localeCompare(b.name) || a.userId.localeCompare(b.userId);
+  return { classroomName: classroom.name, students: students.sort(byName), failed: failed.sort(byName) };
 }

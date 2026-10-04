@@ -11,6 +11,8 @@ export const STUDENT_LOGIN_LIMITS = {
   globalMiss: { windowMs: 10 * 60 * 1000, maxAttempts: 200 } satisfies RateLimitConfig,
   /** Failed QR card scans from one IP. Successful scans do not count, so a class can scan together. */
   cardMiss: { windowMs: 10 * 60 * 1000, maxAttempts: 30 } satisfies RateLimitConfig,
+  /** Class password resets (class sheet) for one class. Each reset hashes a password per student. */
+  classPasswordReset: { windowMs: 10 * 60 * 1000, maxAttempts: 5 } satisfies RateLimitConfig,
 } as const;
 
 /**
@@ -92,4 +94,16 @@ export async function guardCardScan(store: RateLimitStore, ip: string | null): P
  */
 export async function recordCardMiss(store: RateLimitStore, ip: string | null): Promise<void> {
   await consumeRateLimit(store, cardMissKey(ip), STUDENT_LOGIN_LIMITS.cardMiss);
+}
+
+/**
+ * Charges one class password reset to the class bucket.
+ * @param store Shared rate-limit store.
+ * @param classroomId The class whose passwords are reset.
+ * @returns Resolves when the reset may go on.
+ * @throws {StudentLoginError} With code `rate_limited` when the bucket is full.
+ */
+export async function guardClassPasswordReset(store: RateLimitStore, classroomId: string): Promise<void> {
+  const result = await consumeRateLimit(store, `student-class-password-reset:${classroomId}`, STUDENT_LOGIN_LIMITS.classPasswordReset);
+  if (!result.allowed) throw limited(result.retriesAfter);
 }

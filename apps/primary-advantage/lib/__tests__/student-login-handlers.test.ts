@@ -11,6 +11,7 @@ const domain = vi.hoisted(() => ({
   rotateCardToken: vi.fn(),
   issueClassCardTokens: vi.fn(),
   getClassLoginRoster: vi.fn(),
+  resetClassPasswords: vi.fn(),
 }));
 
 vi.mock("@reading-advantage/db", async (orig) => ({ ...(await orig<typeof import("@reading-advantage/db")>()), db: {} }));
@@ -26,7 +27,7 @@ vi.mock("@reading-advantage/domain", async (orig) => {
 });
 
 import { studentLogin } from "@reading-advantage/domain";
-import { startClass, enterCode, pictureSignIn, qrSignIn, rotateCard, issueCards, readRoster } from "../student-login/handlers";
+import { startClass, enterCode, pictureSignIn, qrSignIn, rotateCard, issueCards, readRoster, resetPasswords } from "../student-login/handlers";
 
 const CLASS_ID = "11111111-1111-4111-8111-111111111111";
 const post = (url: string, body: unknown) =>
@@ -175,5 +176,33 @@ describe("roster handler", () => {
     expect(res.status).toBe(200);
     expect((await res.json()).classroomName).toBe("P3A");
     expect(domain.getClassLoginRoster).toHaveBeenCalledWith(expect.objectContaining({ user: teacherSession.user, input: { classroomId: CLASS_ID } }));
+  });
+});
+
+describe("class password reset handler", () => {
+  it("returns 401 without a session and 403 for a session that is not full", async () => {
+    getCurrentSession.mockResolvedValue(null);
+    expect((await resetPasswords(post("/reset", { classroomId: CLASS_ID }))).status).toBe(401);
+    getCurrentSession.mockResolvedValue({ ...teacherSession, authStrength: "code_only" });
+    expect((await resetPasswords(post("/reset", { classroomId: CLASS_ID }))).status).toBe(403);
+    expect(domain.resetClassPasswords).not.toHaveBeenCalled();
+  });
+
+  it("passes the user, the request meta, and the rate-limit store to the use-case", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.resetClassPasswords.mockResolvedValue({ classroomName: "P3A", students: [], failed: [] });
+    const res = await resetPasswords(post("/reset", { classroomId: CLASS_ID }));
+    expect(res.status).toBe(200);
+    expect(domain.resetClassPasswords).toHaveBeenCalledWith(
+      expect.objectContaining({ user: teacherSession.user, meta: { ip: "1.2.3.4", userAgent: null }, store: expect.anything(), input: { classroomId: CLASS_ID } }),
+    );
+  });
+
+  it("maps a rate limit to 429 with Retry-After", async () => {
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.resetClassPasswords.mockRejectedValue(new studentLogin.StudentLoginError("rate_limited", "Too many.", 120));
+    const res = await resetPasswords(post("/reset", { classroomId: CLASS_ID }));
+    expect(res.status).toBe(429);
+    expect(res.headers.get("Retry-After")).toBe("120");
   });
 });

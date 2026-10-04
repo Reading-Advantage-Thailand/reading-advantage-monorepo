@@ -2790,6 +2790,37 @@
       "newCode": "New code",
       "end": "End class"
     },
+    "backToClass": "Back to class",
+    "links": {
+      "classSheet": "Class sheet",
+      "qrCards": "QR cards"
+    },
+    "sheet": {
+      "title": "Class sheet",
+      "intro": "The class sheet lists each student's username and a new password, for signing in away from the classroom.",
+      "warning": "Making the sheet sets a new password for every student in this class and signs them out. Old passwords stop working.",
+      "make": "Make class sheet",
+      "confirmTitle": "Set new passwords for the whole class?",
+      "confirm": "Set new passwords",
+      "cancel": "Cancel",
+      "print": "Print",
+      "once": "The passwords show only now. Print the sheet before you leave this page.",
+      "signInAt": "Sign in at",
+      "name": "Name",
+      "username": "Username",
+      "password": "Password",
+      "failed": "These students kept their old password: {names}. Try again."
+    },
+    "qrPage": {
+      "title": "QR login cards",
+      "intro": "Each card signs one student in with one scan. A card shows only once, so print it now.",
+      "issue": "Make cards for {count, plural, one {# student} other {# students}} without a card",
+      "allHaveCards": "Every student has a card. To print a card again, make a new card for that student.",
+      "toPrint": "{count, plural, one {# card} other {# cards}} to print",
+      "madeBefore": "Cards made before",
+      "madeBeforeHelp": "The server does not keep these cards. Make a new card to print one again. The old card then stops working.",
+      "print": "Print"
+    },
     "roster": {
       "heading": "Students",
       "summary": "{signedIn} of {total} signed in",

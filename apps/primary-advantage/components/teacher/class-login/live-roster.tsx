@@ -5,16 +5,6 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -27,6 +17,7 @@ import { cardSignInUrl } from "@/lib/student-login/card-url";
 import { errorKey, postStudentLogin, type ClassLoginErrorKey, type Lockout, type RosterStudent } from "./api";
 import { PrintStyles } from "./print-styles";
 import { QrCard } from "./qr-card";
+import { RotateCardConfirm } from "./rotate-card-confirm";
 
 /** Props of {@link LiveRoster}. */
 export interface LiveRosterProps {
@@ -199,25 +190,14 @@ export function LiveRoster({ classroomId, classroomName, students, locked, fetch
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={rotateTarget !== null} onOpenChange={(open) => !open && setRotateTarget(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("rotate.title", { name: rotateTarget?.name ?? "" })}</AlertDialogTitle>
-            <AlertDialogDescription>{t("rotate.description", { name: rotateTarget?.name ?? "" })}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t("rotate.cancel")}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (rotateTarget) void rotateCard(rotateTarget);
-                setRotateTarget(null);
-              }}
-            >
-              {t("rotate.confirm")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <RotateCardConfirm
+        name={rotateTarget?.name ?? null}
+        onCancel={() => setRotateTarget(null)}
+        onConfirm={() => {
+          if (rotateTarget) void rotateCard(rotateTarget);
+          setRotateTarget(null);
+        }}
+      />
 
       <Dialog open={newCard !== null} onOpenChange={(open) => !open && setNewCard(null)}>
         <DialogContent>

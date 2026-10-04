@@ -135,6 +135,21 @@ export const classLoginRosterOutput = z.object({
   ),
 });
 
+/** Request from a teacher to set new initial passwords for every student of a class (class sheet). */
+export const resetClassPasswordsInput = z.object({ classroomId: z.string().uuid() });
+
+/**
+ * Result of a class password reset: the class sheet rows with each new plain password, shown
+ * once, and the students whose password did not change.
+ */
+export const resetClassPasswordsOutput = z.object({
+  classroomName: z.string(),
+  students: z.array(
+    z.object({ userId: z.string().min(1), name: z.string(), username: z.string(), password: z.string().min(1) }).strict(),
+  ),
+  failed: z.array(z.object({ userId: z.string().min(1), name: z.string() }).strict()),
+});
+
 /** Result of a student sign-in through a class code or a QR card. */
 export const studentSignInOutput = z.object({
   user: z.object({ id: z.string().min(1), role: z.literal("STUDENT") }),
@@ -173,3 +188,7 @@ export type IssueCardTokensInput = z.infer<typeof issueCardTokensInput>;
 export type ClassLoginRosterInput = z.infer<typeof classLoginRosterInput>;
 /** Output type of {@link classLoginRosterOutput}. */
 export type ClassLoginRosterOutput = z.infer<typeof classLoginRosterOutput>;
+/** Input type of {@link resetClassPasswordsInput}. */
+export type ResetClassPasswordsInput = z.infer<typeof resetClassPasswordsInput>;
+/** Output type of {@link resetClassPasswordsOutput}. */
+export type ResetClassPasswordsOutput = z.infer<typeof resetClassPasswordsOutput>;

@@ -258,4 +258,35 @@ describe.skipIf(!url)("student login against Postgres", () => {
     expect(next[0]!.username).toBe(`${prefix}3`);
     await db.delete(schema.accounts).where(inArray(schema.accounts.userId, [`${tag}-s1`, `${tag}-s2`, `${tag}-s3`]));
   });
+
+  it("teacher roster and class password reset (Phase 3)", async () => {
+    const auth = await import("@reading-advantage/auth");
+    const started = await sl.startClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
+    // Earlier tests leave sessions behind: start from none, then sign in Ann only.
+    await db.delete(schema.sessions).where(inArray(schema.sessions.userId, [`${tag}-s1`, `${tag}-s2`]));
+    await sl.startStudentSession({ db, userId: `${tag}-s1`, meta, authStrength: "full", method: "qr" });
+    const roster = await sl.getClassLoginRoster({ db, user: t1(), input: { classroomId: ids.class1 } });
+    expect(roster.openSession?.id).toBe(started.sessionId);
+    expect(roster.students.map((s) => [s.name, s.signedIn])).toEqual([["Ann Smith", true], ["Bo Jones", false]]);
+    expect(JSON.stringify(roster)).not.toMatch(/argon2|"cardTokenHash"|"pictureHash"/);
+    await expect(sl.getClassLoginRoster({ db, user: asUser(fixtures[1]!), input: { classroomId: ids.class1 } })).rejects.toMatchObject({ code: "forbidden" });
+    await expect(sl.getClassLoginRoster({ db, user: asUser(fixtures[2]!), input: { classroomId: ids.class1 } })).rejects.toMatchObject({ code: "not_found" });
+
+    const sheet = await sl.resetClassPasswords({ db, store, user: t1(), meta, input: { classroomId: ids.class1 } });
+    expect(sheet.failed).toEqual([]);
+    expect(sheet.students.map((s) => s.userId)).toEqual([`${tag}-s1`, `${tag}-s2`]);
+    const [account] = await db.select().from(schema.accounts).where(eq(schema.accounts.userId, `${tag}-s1`));
+    expect(await auth.verifyPassword(sheet.students[0]!.password, account!.password!)).toBe(true);
+    expect(await db.select().from(schema.sessions).where(eq(schema.sessions.userId, `${tag}-s1`))).toHaveLength(0);
+    const audit = await db.select().from(schema.auditEvents).where(eq(schema.auditEvents.actorUserId, `${tag}-t1`));
+    expect(audit.map((a) => a.action)).toContain("student_login:class_password_reset");
+    expect(JSON.stringify(audit)).not.toContain(sheet.students[0]!.password);
+    // A second reset replaces the credential row instead of adding one.
+    await sl.resetClassPasswords({ db, store, user: t1(), meta, input: { classroomId: ids.class1 } });
+    expect(await db.select().from(schema.accounts).where(eq(schema.accounts.userId, `${tag}-s1`))).toHaveLength(1);
+    await expect(sl.resetClassPasswords({ db, store, user: asUser(fixtures[2]!), meta, input: { classroomId: ids.class1 } })).rejects.toMatchObject({ code: "not_found" });
+
+    await sl.endClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
+    await db.delete(schema.accounts).where(inArray(schema.accounts.userId, [`${tag}-s1`, `${tag}-s2`]));
+  });
 });

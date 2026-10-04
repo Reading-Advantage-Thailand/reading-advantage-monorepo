@@ -67,3 +67,8 @@ export const issueCards = teacherHandler(sl.issueCardTokensInput, async ({ user,
 export const readRoster = teacherHandler(sl.classLoginRosterInput, ({ user, input }) =>
   sl.getClassLoginRoster({ db, user, input }),
 );
+
+/** POST: teacher sets new initial passwords for the class (class sheet). Returns the plain passwords once. */
+export const resetPasswords = teacherHandler(sl.resetClassPasswordsInput, ({ user, meta, input }) =>
+  sl.resetClassPasswords({ db, store, user, meta, input }),
+);
