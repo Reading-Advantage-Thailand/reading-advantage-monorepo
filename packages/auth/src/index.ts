@@ -59,6 +59,7 @@ export {
   deleteSession,
   revokeAllUserSessions,
   type Session,
+  type SessionAuthStrength,
   type CreateSessionResult,
 } from "./session.js";
 

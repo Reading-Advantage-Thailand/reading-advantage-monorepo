@@ -11,10 +11,24 @@ function sha256Hex(s: string): string {
   return createHash("sha256").update(s).digest("hex");
 }
 
+/** How strongly the session proved identity. NULL in storage means `full`. */
+export type SessionAuthStrength = "full" | "code_only";
+
+/** Maps a stored value to a strength; NULL and unknown values map to `full`. */
+function toAuthStrength(value: string | null | undefined): SessionAuthStrength {
+  return value === "code_only" ? "code_only" : "full";
+}
+
 export interface Session {
   id: string;
   userId: string;
   expiresAt: Date;
+  /**
+   * `full` unless the session was created with weaker proof such as a class code only.
+   * `validateSession` and `createSession` always set it. It is optional in the type so
+   * other apps that build Session objects keep compiling.
+   */
+  authStrength?: SessionAuthStrength;
   user: UserContext;
 }
 
@@ -27,14 +41,14 @@ export interface CreateSessionResult extends Session {
  * Creates a new session for a user.
  * @param db - Database client
  * @param userId - The user ID to create session for
- * @param opts - Optional metadata (ipAddress, userAgent)
+ * @param opts - Optional metadata (ipAddress, userAgent) and `authStrength` (default `full`, stored as NULL)
  * @returns The created session object including raw token for cookie wiring (expires in 7 days)
  * @throws {Error} Throws if user not found after creation
  */
 export async function createSession(
   db: Db,
   userId: string,
-  opts?: { ipAddress?: string; userAgent?: string }
+  opts?: { ipAddress?: string; userAgent?: string; authStrength?: SessionAuthStrength }
 ): Promise<CreateSessionResult> {
   const token = Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) => b.toString(16).padStart(2, "0")).join("");
   const tokenHash = sha256Hex(token);
@@ -79,6 +93,7 @@ export async function createSession(
         expiresAt,
         ...(opts?.ipAddress ? { ipAddress: opts.ipAddress } : {}),
         ...(opts?.userAgent ? { userAgent: opts.userAgent } : {}),
+        ...(opts?.authStrength === "code_only" ? { authStrength: "code_only" } : {}),
       })
       .returning();
 
@@ -109,6 +124,7 @@ export async function createSession(
     token,
     userId: session.userId,
     expiresAt: session.expiresAt,
+    authStrength: toAuthStrength(session.authStrength),
     user: {
       id: user.id,
       username: user.username,
@@ -193,6 +209,7 @@ export async function validateSession(
     id: session.id,
     userId: session.userId,
     expiresAt: session.expiresAt,
+    authStrength: toAuthStrength(session.authStrength),
     user: {
       id: user.id,
       username: user.username,
