@@ -1,8 +1,10 @@
 /** Runs one read-only SQL statement and returns its rows. */
 export type ReadOnlyQuery = (sql: string) => Promise<ReadonlyArray<{ table_name: string }>>;
 
-const LEGACY_MARKER_SQL = `SELECT table_name FROM information_schema.tables
-WHERE table_schema = 'public' AND table_name IN ('_prisma_migrations', 'article')`;
+// to_regclass is not filtered by table privileges, unlike information_schema.tables.
+const LEGACY_MARKER_SQL = `SELECT 'article' AS table_name WHERE to_regclass('public.article') IS NOT NULL
+UNION ALL
+SELECT '_prisma_migrations' WHERE to_regclass('public._prisma_migrations') IS NOT NULL`;
 
 /**
  * Finds tables that only the legacy Prisma Primary database has.
