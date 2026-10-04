@@ -2,7 +2,7 @@
 
 Version: 0.1 (draft)
 Date: 2026-10-03
-Status: Planned. No build work has started.
+Status: In progress. Lanes A, M (Phase 1) and B are merged into `primary-parity-integration`.
 Owner: Daniel Bo
 Gap list: `advantage-pr/12-operations/primary-tutor-parity-gap-list.md` (v0.2)
 
@@ -23,6 +23,19 @@ so the build must be tested and rehearsed before he leaves.
 | D+E | [primary_teacher_books_lesson_support_20261003](./tracks/primary_teacher_books_lesson_support_20261003/) | C shell for the UI half; data half is independent |
 | F | [primary_reedy_preview_20261003](./tracks/primary_reedy_preview_20261003/) | B (`authStrength`), C (meter slot) |
 | M | [primary_legacy_data_migration_20261004](./tracks/primary_legacy_data_migration_20261004/) | A (migration numbering, credential helper); added 2026-10-04 |
+
+### Progress (2026-10-05)
+
+| Lane | State | Merge commit | Open items |
+|---|---|---|---|
+| A | Merged (step 0: local SYSTEM seed, username-only staff sign-in, SYSTEM creates school, license, admin) | 395540aaa | `/system/test` destructive page (tech debt) |
+| M | Phase 1 merged; `tutor_reader` grants script | fcd3efffa | Phase 2 needs a fresh legacy backup |
+| B | Merged | 0c26f7fb6 | 25-student browser run `[b]` (stopped for low memory; owner go-ahead); QA timing check `[b]`; spec Known risks for owner review; `TRUST_PROXY_COUNT` for the Primary deploy; Primary `cloudbuild.yaml` now requires `0064_primary_student_session_policy` |
+| C, D+E, F | Not started | — | — |
+
+Every lane that adds a migration must also set `--required-migration` in
+`apps/primary-advantage/cloudbuild.yaml` to its latest migration (the deploy-gate
+contract test fails otherwise).
 
 Lane M (added 2026-10-04) owns the unowned tasks of the
 [cutover migration spec](../docs/deployment/primary-cutover-migration-spec.md): the ETL and
