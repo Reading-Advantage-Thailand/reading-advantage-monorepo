@@ -1,7 +1,14 @@
 # Plan — Primary Legacy Data Migration
 
-Runs in its own worktree, in parallel with Lane A. Its migrations come after Lane A's
-user-columns migration; Lane A merges to the integration branch first.
+Runs in its own worktree, in parallel with Lane A. Migrations 0060 and 0061 belong to this
+track. Lane A found that its user-columns migration is not needed (no Primary column is
+missing). After the merge, never change the tags, the `when` values, or the SQL of 0060 and 0061.
+
+## Merge blockers
+- `apps/codecamp-advantage/cloudbuild.yaml:28` sets `MIGRATION_CEILING_TAG=0059_game_challenges`.
+  `packages/db/src/migration.ts:71-75` throws when the ceiling is not the last journal entry.
+  Merging 0060 and 0061 therefore stops Codecamp deploys. Owner decision: raise Codecamp's
+  ceiling to the last tag in the same merge, after review. This track does not change that file.
 
 ## Phase 0: Inventory (read only)
 - [x] Map each legacy Prisma table (`~/Desktop/primary-advantage/prisma/schema.prisma`) to its shared-schema target; list the §6 tables with no target and propose a target or "dropped, because"
