@@ -7,6 +7,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { sentinelProbes } from "../sentinels";
 
 const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const CLOUDBUILD = readFileSync(
@@ -58,6 +59,12 @@ describe("Primary Cloud Build migration gate", () => {
       `pnpm --filter @reading-advantage/db doctor --check --required-migration ${LATEST_TAG}`,
     );
     expect(block).toMatch(/secretEnv:\s*\n\s*-\s*"DATABASE_URL"/);
+  });
+
+  it("has a sentinel probe for the migration the doctor requires", () => {
+    const required = CLOUDBUILD.match(/--required-migration\s+(\S+?)["\s]/)?.[1];
+    expect(required).toBe(LATEST_TAG);
+    expect(sentinelProbes[required!]).toBeDefined();
   });
 
   it("declares the DATABASE_URL secret and keeps no Prisma step", () => {

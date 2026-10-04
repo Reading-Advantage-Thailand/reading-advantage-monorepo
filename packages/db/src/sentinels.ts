@@ -513,4 +513,26 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       },
     ],
   },
+  "0059_game_challenges": {
+    tag: "0059_game_challenges",
+    kind: "all",
+    target: "game_challenge_definitions",
+    allOf: [
+      {
+        tag: "0059_game_challenges",
+        kind: "table",
+        target: "game_challenge_definitions",
+      },
+      {
+        tag: "0059_game_challenges",
+        kind: "table",
+        target: "game_challenge_runs",
+      },
+      {
+        tag: "0059_game_challenges",
+        kind: "table",
+        target: "game_challenge_contributions",
+      },
+    ],
+  },
 };
