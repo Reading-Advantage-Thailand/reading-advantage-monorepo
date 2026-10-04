@@ -73,4 +73,28 @@ describe("Primary Cloud Build migration gate", () => {
     );
     expect(CLOUDBUILD).not.toMatch(/prisma/i);
   });
+
+  it("uses its own secret, never the legacy DATABASE_URL secret", () => {
+    const sub = CLOUDBUILD.match(/^\s*_DATABASE_URL:\s*"([^"]+)"/m)?.[1];
+    expect(sub).toBe("PRIMARY_V2_DATABASE_URL");
+    expect(sub).not.toBe("DATABASE_URL");
+  });
+
+  it("starts the Cloud SQL Auth Proxy in every step that reads the database", () => {
+    for (const id of ["refuse-legacy-db", "migrate-db", "doctor-check"]) {
+      const block = stepBlocks().get(id) ?? "";
+      expect(block, id).toContain(
+        "cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql",
+      );
+      expect(block.indexOf("cloud-sql-proxy --unix-socket"), id).toBeLessThan(
+        block.indexOf("pnpm --filter"),
+      );
+    }
+  });
+
+  it("mounts the Cloud SQL instance on the Cloud Run service for the socket URL", () => {
+    expect(stepBlocks().get("deploy-cloudrun")).toContain(
+      "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql",
+    );
+  });
 });

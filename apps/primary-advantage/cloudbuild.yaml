@@ -18,6 +18,11 @@ steps:
       - "push"
       - "asia-southeast1-docker.pkg.dev/${_PROJECT_ID}/primary-advantage-repo/primary-advantage-app:$BUILD_ID"
 
+  # DATABASE_URL is a Cloud SQL unix-socket URL (?host=/cloudsql/<instance>) held
+  # in its own secret, PRIMARY_V2_DATABASE_URL. Never point the legacy
+  # DATABASE_URL secret at the new database: a legacy rollback revision uses it.
+  # Cloud Build steps have no /cloudsql socket, so each step starts the Cloud SQL
+  # Auth Proxy on the same /cloudsql path the runtime uses.
   # Step 3: Read-only guard first: never migrate the legacy Primary database
   # (Tutor reads it). Then migrate, then fail closed unless the ledger matches
   # the journal and the latest migration is applied. All run before deploy.
@@ -26,7 +31,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db refuse-legacy-db"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db refuse-legacy-db"
     secretEnv:
       - "DATABASE_URL"
 
@@ -35,7 +40,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db migrate"
     secretEnv:
       - "DATABASE_URL"
 
@@ -44,7 +49,7 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - "set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0059_game_challenges"
+      - "set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export DIRECT_DATABASE_URL=\"$$DATABASE_URL\" && pnpm --filter @reading-advantage/db doctor --check --required-migration 0059_game_challenges"
     secretEnv:
       - "DATABASE_URL"
 
@@ -59,6 +64,7 @@ steps:
       - "--region=asia-southeast1"
       - "--platform=managed"
       - "--allow-unauthenticated"
+      - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
       - "--set-secrets=DATABASE_URL=${_DATABASE_URL}:latest"
       - "--set-secrets=RESEND_API_KEY=${_RESEND_API_KEY}:latest"
       - "--set-secrets=AUTH_SECRET=${_AUTH_SECRET}:latest"
@@ -87,7 +93,7 @@ availableSecrets:
 substitutions:
   _NODE_ENV: "production"
   _PROJECT_ID: "primary-advantage"
-  _DATABASE_URL: "DATABASE_URL"
+  _DATABASE_URL: "PRIMARY_V2_DATABASE_URL"
   _RESEND_API_KEY: "RESEND_API_KEY"
   _AUTH_SECRET: "AUTH_SECRET"
   _AUTH_URL: "AUTH_URL"

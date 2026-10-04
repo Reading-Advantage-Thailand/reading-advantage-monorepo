@@ -1,6 +1,6 @@
 # Primary Advantage Cutover — Data and Login Migration Spec
 
-Version 1.1 | Date 2026-10-01 | Status: Calendar (§11) approved by Daniel 2026-10-01; the rest is a draft | Owner: Daniel Bo | Scope: `apps/primary-advantage`, `packages/db`, `packages/auth`, `packages/api`
+Version 1.3 | Date 2026-10-04 | Status: Calendar (§11) approved by Daniel 2026-10-01; the rest is a draft | Owner: Daniel Bo | Scope: `apps/primary-advantage`, `packages/db`, `packages/auth`, `packages/api`
 
 Related: `advantage-pr/08-strategy/product-strategy-2026-2027.md` §6 (October plan); `Workbooks/docs/content-plans/primary-origins-3.2-plan.md` (decision D1, QR URLs); `tutor-advantage/docs/specs/2026-10-tutor-catalogue-and-platform-spec.md` (Tutor side).
 
@@ -111,7 +111,7 @@ Known hazards found on 2026-09-30:
 ## 8. Rehearsal (run twice)
 
 1. Take a fresh backup of the legacy Primary database. Restore it to a scratch database.
-2. Create an empty database. Run all `packages/db` migrations.
+2. Create an empty database. Create the secret `PRIMARY_V2_DATABASE_URL` for it (a Cloud SQL socket URL; never add a version to the legacy `DATABASE_URL` secret). Grant the Primary Cloud Build service account `roles/cloudsql.client`. Run refuse-legacy-db, then migrate, then doctor against the new database (the Cloud Build steps do this).
 3. Run the ETL (A6) from scratch to new. Read the reconciliation report. Fix and repeat until it is clean.
 4. Run the monorepo Primary build against the new database (staging service or local).
 5. Run the go/no-go checklist (§10).
@@ -124,13 +124,14 @@ Rehearsal 1 finds the problems. Rehearsal 2 runs on a new backup, end to end, wi
 
 1. Tell the team in the group chat. Put the legacy Primary service in maintenance mode (or stop traffic) so no one writes.
 2. Take the final backup of the legacy database. Keep it.
-3. Run the ETL into the new database. Check the reconciliation report.
-4. Deploy the monorepo revision with `DATABASE_URL` pointing at the new database. Keep the legacy revision, unrouted, for rollback.
-5. Run §10 on production.
-6. Tutor: Wannachok switches `DATABASE_URL_PRIMARY_ADVANTAGE` to the new database with the `tutor_compat` search path, or keeps the legacy database until A7 passes on staging. The legacy database stays online and read-only until Tutor has switched.
-7. Send reset links to Google-only teachers (A9). Phone Boonyathat's teachers with the new sign-in steps.
+3. Before the ETL, make sure the secret `PRIMARY_V2_DATABASE_URL` exists for the new database. Make sure the Primary Cloud Build service account has `roles/cloudsql.client`. Run refuse-legacy-db, then migrate, then doctor against the new database. Never add a version to the legacy `DATABASE_URL` secret.
+4. Run the ETL into the new database. Check the reconciliation report.
+5. Deploy the monorepo revision with `DATABASE_URL` from `PRIMARY_V2_DATABASE_URL`. Pin the secret version for this deploy. Make the first monorepo deploy with `--no-traffic` (manual), or keep the build trigger disabled until cutover. Route traffic to it only after step 6 passes. Keep the legacy revision, unrouted, for rollback.
+6. Run §10 on production.
+7. Tutor: Wannachok switches `DATABASE_URL_PRIMARY_ADVANTAGE` to the new database with the `tutor_compat` search path, or keeps the legacy database until A7 passes on staging. The legacy database stays online and read-only until Tutor has switched.
+8. Send reset links to Google-only teachers (A9). Phone Boonyathat's teachers with the new sign-in steps.
 
-**Rollback:** route traffic back to the legacy revision. It still points at the untouched legacy database. Any data written to the new database after go-live is lost on rollback; decide within 24 hours.
+**Rollback:** route traffic back to the legacy revision. It still points at the untouched legacy database, because the legacy revision keeps the `DATABASE_URL` secret and that secret never points at the new database. Any data written to the new database after go-live is lost on rollback; decide within 24 hours.
 
 ## 10. Go/no-go checklist
 
@@ -178,6 +179,7 @@ Also: one admin and one system user.
 
 ## Revision history
 
+- 1.3 — 2026-10-04 — Review fixes: the monorepo pipeline uses its own secret `PRIMARY_V2_DATABASE_URL`; the Cloud SQL Auth Proxy runs in the migrate steps; the runbook adds the pre-ETL gate steps, a `--no-traffic` first deploy, and a pinned secret version.
 - 1.2 — 2026-10-04 — D7 dropped (no live teacher passwords). D8 decided: temporary password plus forced change. ID map table renamed `primary_legacy_id_map` (program prefix rule). A5, A6, A7, A8, A9 move to track `primary_legacy_data_migration_20261004`.
 - 1.1 — 2026-10-01 — Calendar in §11 approved by Daniel. Content now arrives through the Workbooks injector, not the admin tool.
 - 1.0 — 2026-09-30 — First draft from code and April-backup evidence.
