@@ -8,6 +8,5 @@ export {
   createResetPasswordHandler,
   type ResetPasswordHandlerOptions,
   type ResetPrincipal,
-  type ResetDecision,
 } from "./reset-password.js";
 export { enrichAuthUser } from "./enrich.js";

@@ -533,25 +533,78 @@ describe("authorizeTarget path: atomic reset and no existence oracle", () => {
     expect(vi.mocked(revokeAllUserSessions)).not.toHaveBeenCalled();
   });
 
-  it("logs the effective actor rank that authorizeTarget returns (L-2)", async () => {
+  const okTx = () => ({
+    update: vi.fn().mockReturnValue({ set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue(undefined) }) }),
+    delete: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue(undefined) }),
+  });
+
+  it("logs the effective actor rank that auditActorRole returns (L-2)", async () => {
     setActorSession("co-admin", "TEACHER", "school-1");
     mockDb.select
       .mockReturnValueOnce(targetRow("STUDENT", "school-1"))
       .mockReturnValueOnce(selectResult([{ id: "target-1_credential" }]));
-    const tx = {
-      update: vi.fn().mockReturnValue({ set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue(undefined) }) }),
-      delete: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue(undefined) }),
-    };
+    const tx = okTx();
     mockDb.transaction.mockImplementationOnce(async (fn: (t: typeof tx) => Promise<unknown>) => fn(tx));
-    const handler = createResetPasswordHandler({
-      authorizeTarget: () => ({ allowed: true, actorRole: "ADMIN" }),
-    });
+    const auditActorRole = vi.fn().mockResolvedValue("ADMIN");
+    const handler = createResetPasswordHandler({ authorizeTarget: () => true, auditActorRole });
     const response = await handler(jsonRequest("/api/auth/reset-password", body, "tok"));
     expect(response.status).toBe(200);
+    expect(auditActorRole).toHaveBeenCalledWith({ id: "co-admin", role: "TEACHER", schoolId: "school-1" });
     expect(vi.mocked(recordAuditEvent)).toHaveBeenCalledWith(
       expect.objectContaining({ actorUserId: "co-admin", actorRole: "ADMIN" }),
       expect.objectContaining({ action: "auth:password_reset" }),
     );
+  });
+
+  it("logs the session role when auditActorRole is unset or returns undefined", async () => {
+    for (const auditActorRole of [undefined, () => undefined]) {
+      vi.mocked(recordAuditEvent).mockClear();
+      setActorSession("teacher-1", "TEACHER", "school-1");
+      mockDb.select
+        .mockReturnValueOnce(targetRow("STUDENT", "school-1"))
+        .mockReturnValueOnce(selectResult([{ id: "target-1_credential" }]));
+      const tx = okTx();
+      mockDb.transaction.mockImplementationOnce(async (fn: (t: typeof tx) => Promise<unknown>) => fn(tx));
+      const handler = createResetPasswordHandler({ authorizeTarget: () => true, auditActorRole });
+      expect((await handler(jsonRequest("/api/auth/reset-password", body, "tok"))).status).toBe(200);
+      expect(vi.mocked(recordAuditEvent)).toHaveBeenCalledWith(
+        expect.objectContaining({ actorRole: "TEACHER" }),
+        expect.anything(),
+      );
+    }
+  });
+
+  it("still resets and logs the session role when auditActorRole throws", async () => {
+    setActorSession("teacher-1", "TEACHER", "school-1");
+    mockDb.select
+      .mockReturnValueOnce(targetRow("STUDENT", "school-1"))
+      .mockReturnValueOnce(selectResult([{ id: "target-1_credential" }]));
+    const tx = okTx();
+    mockDb.transaction.mockImplementationOnce(async (fn: (t: typeof tx) => Promise<unknown>) => fn(tx));
+    const handler = createResetPasswordHandler({
+      authorizeTarget: () => true,
+      auditActorRole: () => {
+        throw new Error("rank lookup failed");
+      },
+    });
+    const response = await handler(jsonRequest("/api/auth/reset-password", body, "tok"));
+    expect(response.status).toBe(200);
+    expect(vi.mocked(recordAuditEvent)).toHaveBeenCalledWith(
+      expect.objectContaining({ actorRole: "TEACHER" }),
+      expect.anything(),
+    );
+  });
+
+  it("refuses with 403, no write and no auditActorRole call when authorizeTarget returns false", async () => {
+    setActorSession("teacher-1", "TEACHER", "school-1");
+    mockDb.select.mockReturnValueOnce(targetRow("STUDENT", "school-2"));
+    const auditActorRole = vi.fn().mockReturnValue("ADMIN");
+    const handler = createResetPasswordHandler({ authorizeTarget: () => false, auditActorRole });
+    const response = await handler(jsonRequest("/api/auth/reset-password", body, "tok"));
+    expect(response.status).toBe(403);
+    expect(mockDb.transaction).not.toHaveBeenCalled();
+    expect(mockDb.update).not.toHaveBeenCalled();
+    expect(auditActorRole).not.toHaveBeenCalled();
   });
 
   it("answers an unknown id and another school's id with the same status and body (L-3)", async () => {

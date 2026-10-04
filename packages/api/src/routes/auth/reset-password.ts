@@ -24,22 +24,21 @@ export interface ResetPrincipal {
   schoolId: string | null;
 }
 
-/** A reset decision: a plain verdict, or a verdict with the actor effective rank. */
-export type ResetDecision = boolean | { allowed: boolean; actorRole?: string };
-
 /** Options for `createResetPasswordHandler`. */
 export interface ResetPasswordHandlerOptions {
   /**
    * Replaces the built-in role matrix when set. It receives the session actor and the
    * target row and returns true to allow the reset. The handler applies no school
-   * filter of its own, so this function owns the whole decision. It may return an object
-   * whose `actorRole` is the actor effective rank, which the audit event then records
-   * in place of the session role. The default is unset.
+   * filter of its own, so this function owns the whole decision. It must return a
+   * boolean only. The default is unset.
    */
-  authorizeTarget?: (
-    actor: ResetPrincipal,
-    target: ResetPrincipal,
-  ) => ResetDecision | Promise<ResetDecision>;
+  authorizeTarget?: (actor: ResetPrincipal, target: ResetPrincipal) => boolean | Promise<boolean>;
+  /**
+   * Returns the role that the audit event records for the actor, or undefined to record
+   * the session role. The handler calls it only after the write succeeds. A throw is
+   * logged and the session role is recorded. The default is unset.
+   */
+  auditActorRole?: (actor: ResetPrincipal) => string | undefined | Promise<string | undefined>;
 }
 
 /**
@@ -114,14 +113,11 @@ async function resetWithOptions(
         : NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    let auditActorRole = actor.role;
     if (options.authorizeTarget) {
-      const decision = await options.authorizeTarget(
+      const allowed = await options.authorizeTarget(
         { id: actor.id, role: actor.role, schoolId: actor.schoolId ?? null },
         { id: target.id, role: target.role, schoolId: target.schoolId ?? null },
       );
-      const allowed = typeof decision === "boolean" ? decision : decision.allowed;
-      if (typeof decision === "object" && decision.actorRole) auditActorRole = decision.actorRole as typeof actor.role;
       if (!allowed) {
         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
@@ -183,8 +179,16 @@ async function resetWithOptions(
     // FR-9: audit event
     const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? null;
     const ua = request.headers.get("user-agent") ?? null;
+    let auditRole: string = actor.role;
+    try {
+      auditRole =
+        (await options.auditActorRole?.({ id: actor.id, role: actor.role, schoolId: actor.schoolId ?? null })) ??
+        actor.role;
+    } catch (err) {
+      console.error("Audit actor role failed:", err instanceof Error ? err.message : "Unknown");
+    }
     recordAuditEvent(
-      { actorUserId: actor.id, actorRole: auditActorRole, ipAddress: ip, userAgent: ua },
+      { actorUserId: actor.id, actorRole: auditRole as typeof actor.role, ipAddress: ip, userAgent: ua },
       { action: "auth:password_reset", targetType: "user", targetId: userId }
     ).catch((err) => {
       console.error("Audit event auth:password_reset failed:", err instanceof Error ? err.message : "Unknown");

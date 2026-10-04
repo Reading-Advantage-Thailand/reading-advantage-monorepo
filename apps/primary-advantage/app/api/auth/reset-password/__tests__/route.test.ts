@@ -8,14 +8,14 @@ vi.mock("@reading-advantage/api/routes/auth", () => ({
     return captured.handler;
   },
 }));
-vi.mock("@/server/utils/auth", () => ({ decideResetTarget: vi.fn() }));
+vi.mock("@/server/utils/auth", () => ({ authorizeResetTarget: vi.fn(), resetActorRank: vi.fn() }));
 
 import { POST } from "../route";
-import { decideResetTarget } from "@/server/utils/auth";
+import { authorizeResetTarget, resetActorRank } from "@/server/utils/auth";
 
 describe("POST /api/auth/reset-password", () => {
   it("mounts the strict shared handler with Primary's school and rank check", () => {
     expect(POST).toBe(captured.handler);
-    expect(captured.options).toEqual({ authorizeTarget: decideResetTarget });
+    expect(captured.options).toEqual({ authorizeTarget: authorizeResetTarget, auditActorRole: resetActorRank });
   });
 });
