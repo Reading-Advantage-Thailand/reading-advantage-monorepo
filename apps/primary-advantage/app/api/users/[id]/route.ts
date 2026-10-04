@@ -80,13 +80,17 @@ export async function PATCH(
       }
     }
 
-    // Password writes: only strictly lower-ranked targets (shared reset matrix),
+    // Password and role writes: only strictly lower-ranked targets (shared reset matrix),
     // judged on the target's CURRENT effective rank (legacy rows included), never on the requested one.
-    if (password !== undefined) {
+    if (password !== undefined || role !== undefined) {
       // The caller already passed the ADMIN/SYSTEM gate, so its session role is its top rank.
       if (!canSetPasswordFor(currentUserData.role, await loadTargetEffectiveRank(userId, existingTarget.role))) {
         return NextResponse.json(
-          { error: "Cannot change the password of this account" },
+          {
+            error: password !== undefined
+              ? "Cannot change the password of this account"
+              : "Cannot change the role of this account",
+          },
           { status: 403 },
         );
       }

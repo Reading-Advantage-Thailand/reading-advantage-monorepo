@@ -308,6 +308,32 @@ describe("password writes use effective rank (legacy rows)", () => {
   });
 });
 
+describe("role changes use the current target rank (M-1)", () => {
+  const sessionAdmin: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
+    role: "ADMIN", roles: [], SchoolAdmins: [],
+  };
+
+  it("demote, then write: a co-admin cannot be demoted and then reset", async () => {
+    await seedUser("co-admin", "TEACHER", SCHOOL_A);
+    await giveRole("co-admin", "admin");
+    const demote = await updateTeacher("co-admin", { role: "teacher" }, sessionAdmin);
+    expect(demote.success).toBe(false);
+    const write = await updateTeacher("co-admin", { password: "Takeover-pass-1" }, sessionAdmin);
+    expect(write.success).toBe(false);
+    expect((await snapshot("co-admin")).account_password).toBe("orig");
+    const rows = await harness.db.execute(sql`SELECT r.name FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = 'co-admin'`);
+    expect(rows.rows).toEqual([{ name: "admin" }]);
+    expect((await deleteTeacher("co-admin", sessionAdmin)).success).toBe(false);
+  });
+
+  it("still lets an admin change the role of a plain teacher", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    expect((await updateTeacher("teacher-a", { role: "admin" }, sessionAdmin)).success).toBe(true);
+  });
+});
+
 describe("password write events (M1)", () => {
   const sessionAdmin: UserWithRoles = {
     id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
@@ -412,8 +438,9 @@ describe("deleteTeacher effective rank and audit (L6)", () => {
     await seedUser("owner", "STUDENT", SCHOOL_A);
     await giveRole("owner", "admin");
     await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('owner', ${SCHOOL_A})`);
-    const teacher: UserWithRoles = { ...sessionAdmin, role: "TEACHER" };
+    const teacher: UserWithRoles = { ...sessionAdmin, role: "TEACHER", roles: [{ role: { id: "r", name: "admin" } }] };
     expect((await deleteTeacher("owner", teacher)).success).toBe(false);
+    expect(await snapshot("owner")).toBeDefined();
   });
 
   it("deletes a lower-ranked teacher and audits the delete", async () => {

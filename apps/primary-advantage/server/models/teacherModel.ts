@@ -742,12 +742,17 @@ export const updateTeacher = async (
       return { success: false, error: "Invalid role specified" };
     }
 
-    // A password write needs a strictly lower-ranked target (shared reset matrix).
-    if (
-      updateData.password &&
-      !canSetPasswordFor(callerEffectiveRank(userWithRoles), await loadTargetEffectiveRank(id, existingTeacher.sessionRole))
-    ) {
-      return { success: false, error: "Cannot change the password of this account" };
+    // A password or role write needs a strictly lower-ranked CURRENT target (shared reset matrix).
+    if (updateData.password || updateData.role) {
+      const targetRank = await loadTargetEffectiveRank(id, existingTeacher.sessionRole);
+      if (!canSetPasswordFor(callerEffectiveRank(userWithRoles), targetRank)) {
+        return {
+          success: false,
+          error: updateData.password
+            ? "Cannot change the password of this account"
+            : "Cannot change the role of this account",
+        };
+      }
     }
 
     // Check if email is being updated and doesn't conflict

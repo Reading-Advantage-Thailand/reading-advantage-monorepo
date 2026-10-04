@@ -177,6 +177,21 @@ describe("PATCH /api/users/[id] role rank check", () => {
     },
   );
 
+  it("refuses to demote a co-admin whose legacy admin row hides its rank (M-1)", async () => {
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    selectQueue = [
+      [{ id: "co-admin", schoolId: "school-a", role: "TEACHER" }],
+    ];
+    // The loader folds the legacy admin row into the current effective rank.
+    rankMocks.loadTargetEffectiveRank.mockResolvedValueOnce("ADMIN");
+
+    const { request, context } = patchRequest("co-admin", { role: "TEACHER" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(403);
+    expect(mocks.transaction).not.toHaveBeenCalled();
+  });
+
   it("hashes a new password with argon2 and mirrors it to the credential account", async () => {
     mocks.currentUser.mockResolvedValue(adminCaller);
     selectQueue = [
@@ -211,7 +226,7 @@ describe("PATCH /api/users/[id] role rank check", () => {
   it("lets a SYSTEM caller assign SYSTEM", async () => {
     mocks.currentUser.mockResolvedValue(systemCaller);
     selectQueue = [
-      [{ id: "student-1", schoolId: null }],
+      [{ id: "student-1", schoolId: null, role: "STUDENT" }],
       [{ id: "role-1", name: "SYSTEM" }],
       [
         {
