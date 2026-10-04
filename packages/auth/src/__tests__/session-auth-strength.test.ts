@@ -98,8 +98,8 @@ describe("session authStrength", () => {
     expect((await validateSession(db, "t"))?.authStrength).toBe("full");
   });
 
-  it("validateSession treats an unknown value as full", async () => {
+  it("validateSession fails closed: an unknown value is code_only", async () => {
     const { db } = makeDb([{ ...sessionRow, authStrength: "weird" }]);
-    expect((await validateSession(db, "t"))?.authStrength).toBe("full");
+    expect((await validateSession(db, "t"))?.authStrength).toBe("code_only");
   });
 });

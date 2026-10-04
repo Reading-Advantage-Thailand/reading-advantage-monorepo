@@ -14,9 +14,9 @@ function sha256Hex(s: string): string {
 /** How strongly the session proved identity. NULL in storage means `full`. */
 export type SessionAuthStrength = "full" | "code_only";
 
-/** Maps a stored value to a strength; NULL and unknown values map to `full`. */
+/** Maps a stored value to a strength; fails closed: only NULL and "full" map to `full`. */
 function toAuthStrength(value: string | null | undefined): SessionAuthStrength {
-  return value === "code_only" ? "code_only" : "full";
+  return value == null || value === "full" ? "full" : "code_only";
 }
 
 export interface Session {
