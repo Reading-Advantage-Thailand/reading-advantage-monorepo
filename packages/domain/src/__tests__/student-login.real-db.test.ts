@@ -57,7 +57,7 @@ describe.skipIf(!url)("student login against Postgres", () => {
     const userIds = fixtures.map((f) => f.id);
     await db.delete(schema.sessions).where(inArray(schema.sessions.userId, userIds));
     await db.delete(schema.auditEvents).where(inArray(schema.auditEvents.actorUserId, userIds));
-    await db.delete(schema.loginAttempts).where(like(schema.loginAttempts.identifier, "student-code-class:%"));
+    await db.delete(schema.loginAttempts).where(like(schema.loginAttempts.kind, "student-%"));
     await db.delete(schema.classrooms).where(inArray(schema.classrooms.id, [ids.class1, ids.class2, ids.classB]));
     await db.delete(schema.users).where(inArray(schema.users.id, userIds));
     await db.delete(schema.schools).where(inArray(schema.schools.id, [ids.schoolA, ids.schoolB]));
@@ -136,6 +136,28 @@ describe.skipIf(!url)("student login against Postgres", () => {
     const s3 = (await db.select().from(schema.primaryStudentCredentials).where(eq(schema.primaryStudentCredentials.userId, `${tag}-s3`)))[0]!;
     expect(other ?? s3).toBeDefined();
     await expect(attempt([0, 1, 2], s3.id)).rejects.toMatchObject({ code: "invalid_credentials" });
+    await sl.endClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
+  });
+
+  it("parallel wrong guesses plus one correct guess cannot get past the 5-try claim", async () => {
+    const reset = await sl.resetPicturePassword({ db, user: t1(), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s2` } });
+    const { code } = await sl.startClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
+    const [bo] = await db.select().from(schema.primaryStudentCredentials).where(eq(schema.primaryStudentCredentials.userId, `${tag}-s2`));
+    const wrong = reset.pictures.map((n) => (n + 1) % 12);
+    const attempt = (pictures: number[]) => sl.signInWithPicture({ db, store, meta, input: { code, studentId: bo!.id, pictures } });
+    const results = await Promise.allSettled([...Array.from({ length: 10 }, () => attempt(wrong)), attempt(reset.pictures)]);
+    const wins = results.filter((r) => r.status === "fulfilled").length;
+    const audit = await db.select().from(schema.auditEvents).where(eq(schema.auditEvents.actorUserId, `${tag}-s2`));
+    const verified = audit.filter((a) => a.action === "auth:login_failed" || a.action === "student_login:lockout").length + wins;
+    // Without the atomic claim all 11 requests reach the verify. With it, at most 5 do.
+    expect(verified).toBeLessThanOrEqual(5);
+    const locked = results.filter((r) => r.status === "rejected" && (r.reason as { code?: string }).code === "locked").length;
+    expect(locked).toBeGreaterThanOrEqual(11 - 5 - wins);
+    if (wins === 0) {
+      // Locked: the correct pictures are refused now, and one generic error shows for the rest.
+      await expect(attempt(reset.pictures)).rejects.toMatchObject({ code: "locked" });
+    }
+    await sl.resetPicturePassword({ db, user: t1(), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s2` } });
     await sl.endClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
   });
 

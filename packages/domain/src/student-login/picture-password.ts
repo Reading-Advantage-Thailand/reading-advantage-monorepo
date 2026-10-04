@@ -1,4 +1,4 @@
-import { and, eq, gt, isNull, sql } from "drizzle-orm";
+import { and, eq, gt, isNull, lte, or, sql } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import {
   classroomStudents,
@@ -81,8 +81,8 @@ function lockedError(lockedUntil: Date, now: Date): StudentLoginError {
 }
 
 /**
- * Signs in a student with the 3-picture password (FR-3). A wrong try is counted in the
- * credential row. The 5th wrong try locks the student for 5 minutes and writes an audit entry.
+ * Signs in a student with the 3-picture password (FR-3). Each try is claimed atomically in the
+ * credential row before the verify, so parallel guesses cannot pass a stale lock check. The 5th wrong try locks the student for 5 minutes and writes an audit entry.
  * The error for a wrong handle, a wrong class, no password, and wrong pictures is the same.
  * @param params.db Database client.
  * @param params.store Shared rate-limit store.
@@ -109,33 +109,44 @@ export async function signInWithPicture(params: {
   }
   if (row.lockedUntil && row.lockedUntil > now) throw lockedError(row.lockedUntil, now);
 
+  // Claim the try in one atomic statement BEFORE the verify. Parallel guesses cannot all pass a
+  // stale lock read: only the rows claimed before the 5th try reach the verify.
+  const tenantDb = createTenantDB(db, { schoolId: session.schoolId });
+  const lockUntil = new Date(now.getTime() + PICTURE_LOCKOUT_MS).toISOString();
+  const count = sql`${primaryStudentCredentials.failedCount} + 1`;
+  const [claim] = await tenantDb
+    .update(primaryStudentCredentials)
+    .set({
+      failedCount: sql`case when ${count} >= ${MAX_PICTURE_FAILURES} then 0 else ${count} end`,
+      lockedUntil: sql`case when ${count} >= ${MAX_PICTURE_FAILURES} then ${lockUntil}::timestamp else null end`,
+      updatedAt: now,
+    })
+    .where(
+      and(
+        eq(primaryStudentCredentials.id, row.credentialId),
+        or(isNull(primaryStudentCredentials.lockedUntil), lte(primaryStudentCredentials.lockedUntil, now)),
+      ),
+    )
+    .returning({ lockedUntil: primaryStudentCredentials.lockedUntil });
+  if (!claim) {
+    await burnVerifyTime();
+    throw lockedError(new Date(now.getTime() + PICTURE_LOCKOUT_MS), now);
+  }
+
   if (!(await verifyPictureSequence(input.pictures, row.pictureHash))) {
-    const lockUntil = new Date(now.getTime() + PICTURE_LOCKOUT_MS).toISOString();
-    const count = sql`${primaryStudentCredentials.failedCount} + 1`;
-    const [updated] = await createTenantDB(db, { schoolId: session.schoolId })
-      .update(primaryStudentCredentials)
-      .set({
-        failedCount: sql`case when ${count} >= ${MAX_PICTURE_FAILURES} then 0 else ${count} end`,
-        lockedUntil: sql`case when ${count} >= ${MAX_PICTURE_FAILURES} then ${lockUntil}::timestamp else ${primaryStudentCredentials.lockedUntil} end`,
-        updatedAt: now,
-      })
-      .where(eq(primaryStudentCredentials.id, row.credentialId))
-      .returning({ lockedUntil: primaryStudentCredentials.lockedUntil });
     const student: StudentLoginActor = { userId: row.userId, role: "STUDENT", ip: meta.ip, userAgent: meta.userAgent };
-    if (updated?.lockedUntil && updated.lockedUntil > now) {
-      await auditStudentLogin(student, "student_login:lockout", { type: "student_credential", id: row.credentialId }, { classroomId: session.classroomId, lockedUntil: updated.lockedUntil.toISOString() });
-      throw lockedError(updated.lockedUntil, now);
+    if (claim.lockedUntil && claim.lockedUntil > now) {
+      await auditStudentLogin(student, "student_login:lockout", { type: "student_credential", id: row.credentialId }, { classroomId: session.classroomId, lockedUntil: claim.lockedUntil.toISOString() });
+      throw lockedError(claim.lockedUntil, now);
     }
     await auditStudentLogin(student, "auth:login_failed", { type: "user", id: row.userId }, { method: "picture", classroomId: session.classroomId });
     throw new StudentLoginError("invalid_credentials", "Wrong pictures.");
   }
 
-  if (row.failedCount > 0 || row.lockedUntil) {
-    await createTenantDB(db, { schoolId: session.schoolId })
-      .update(primaryStudentCredentials)
-      .set({ failedCount: 0, lockedUntil: null, updatedAt: now })
-      .where(eq(primaryStudentCredentials.id, row.credentialId));
-  }
+  await tenantDb
+    .update(primaryStudentCredentials)
+    .set({ failedCount: 0, lockedUntil: null, updatedAt: now })
+    .where(eq(primaryStudentCredentials.id, row.credentialId));
   return startStudentSession({ db, userId: row.userId, meta, authStrength: "full", method: "picture", classroomId: session.classroomId, now });
 }
 

@@ -53,7 +53,7 @@ const signIn = (db: ReturnType<typeof createMockDb>, pictures = [1, 2, 3], store
 
 describe("signInWithPicture", () => {
   it("signs in with the right pictures and a full session", async () => {
-    const db = createMockDb({ selectSequence: [[session], [credRow()]] });
+    const db = createMockDb({ selectSequence: [[session], [credRow()]], updateReturning: [{ lockedUntil: null }] });
     const out = await signIn(db);
     expect(out).toMatchObject({ user: { id: "stu-1", role: "STUDENT" }, authStrength: "full", token: "tok" });
     expect(createSession).toHaveBeenCalledWith(expect.anything(), "stu-1", expect.objectContaining({ authStrength: "full", ipAddress: "1.1.1.1" }));
@@ -61,7 +61,7 @@ describe("signInWithPicture", () => {
   });
 
   it("applies the student session policy: school-day expiry, 30 minutes idle, one device", async () => {
-    const db = createMockDb({ selectSequence: [[session], [credRow()]] });
+    const db = createMockDb({ selectSequence: [[session], [credRow()]], updateReturning: [{ lockedUntil: null }] });
     await signIn(db);
     expect(createSession).toHaveBeenCalledWith(
       expect.anything(),
@@ -70,10 +70,20 @@ describe("signInWithPicture", () => {
     );
   });
 
-  it("clears the failure count after a success", async () => {
-    const db = createMockDb({ selectSequence: [[session], [credRow({ failedCount: 3 })]] });
+  it("claims the try before the verify and clears the count after a success", async () => {
+    const db = createMockDb({ selectSequence: [[session], [credRow({ failedCount: 3 })]], updateReturning: [{ lockedUntil: null }] });
     await signIn(db);
+    expect(db.update).toHaveBeenCalledTimes(2);
+    const reset = db.update.mock.results[0]!.value.set.mock.calls[1][0];
+    expect(reset).toMatchObject({ failedCount: 0, lockedUntil: null });
+  });
+
+  it("refuses the right pictures when the claim finds the student locked by a parallel try", async () => {
+    // The first read shows no lock, but the atomic claim returns no row.
+    const db = createMockDb({ selectSequence: [[session], [credRow()]], updateReturning: [] });
+    await expect(signIn(db)).rejects.toMatchObject({ code: "locked" });
     expect(db.update).toHaveBeenCalledOnce();
+    expect(createSession).not.toHaveBeenCalled();
   });
 
   it("rejects wrong pictures with a generic error and counts the failure", async () => {
@@ -104,7 +114,7 @@ describe("signInWithPicture", () => {
   });
 
   it("allows sign-in again once the lock has expired", async () => {
-    const db = createMockDb({ selectSequence: [[session], [credRow({ lockedUntil: new Date(NOW.getTime() - 1) })]] });
+    const db = createMockDb({ selectSequence: [[session], [credRow({ lockedUntil: new Date(NOW.getTime() - 1) })]], updateReturning: [{ lockedUntil: null }] });
     await expect(signIn(db)).resolves.toMatchObject({ authStrength: "full" });
   });
 
