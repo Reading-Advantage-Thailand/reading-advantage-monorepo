@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@reading-advantage/ui";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
 import { formatDistanceToNow } from "date-fns";

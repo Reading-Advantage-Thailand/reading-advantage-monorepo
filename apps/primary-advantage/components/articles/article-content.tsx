@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 // import { createEmptyCard, Card } from "ts-fsrs";
 import { Article, SentenceTimepoint, WordTimestamp } from "@/types";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import {
   Select,
   SelectContent,

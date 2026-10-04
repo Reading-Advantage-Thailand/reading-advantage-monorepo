@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@reading-advantage/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function ArticleLoading() {
   return (

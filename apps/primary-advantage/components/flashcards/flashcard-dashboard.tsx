@@ -1,7 +1,7 @@
 // components/flashcards/flashcard-dashboard.tsx
 import React from "react";
 import { AlertCircle, Loader2 } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@reading-advantage/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDashboardData } from "@/actions/flashcard";
 import { SingleDeckViewInline } from "./deck-view";

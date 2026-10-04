@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { FeatureBox } from "@/components/index/feature-box";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@reading-advantage/ui";
 import {
   Select,
   SelectContent,

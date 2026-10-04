@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+import { Separator, Label } from "@reading-advantage/ui";
 import {
   Trophy,
   Clock,
@@ -41,7 +41,6 @@ import {
   SENTENCE_LANGUAGES,
   VOCABULARY_LANGUAGES,
 } from "../../flashcards/deck-view";
-import { Label } from "@/components/ui/label";
 import { toTranslationLanguage } from "@/lib/translation-language";
 import { QuizContext, QuizContextProvider } from "@/contexts/question-context";
 import { updateUserActivity } from "@/actions/user";

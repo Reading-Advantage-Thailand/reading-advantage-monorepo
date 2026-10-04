@@ -6,7 +6,7 @@ import { MainNav } from "@/components/nav/new-main-nav";
 import { MobileNav } from "@/components/nav/new-mobile-nav";
 import { SiteConfig } from "@/components/site-config";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 
 export function SiteHeader() {
   return (

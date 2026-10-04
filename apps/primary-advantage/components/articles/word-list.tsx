@@ -15,8 +15,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton, Checkbox } from "@reading-advantage/ui";
 import { Button } from "@/components/ui/button";
 import { Book } from "lucide-react";
 import { WordListTimestamp } from "@/types";

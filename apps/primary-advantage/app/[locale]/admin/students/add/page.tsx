@@ -1,11 +1,10 @@
 "use client";
 
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator, Label } from "@reading-advantage/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,

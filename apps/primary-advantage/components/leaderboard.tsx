@@ -10,7 +10,7 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 
 type RankingType = {
   classroom: string;

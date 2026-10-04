@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@reading-advantage/ui";
 import { ChevronDownIcon } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import type { PaginationInfo } from "@/types";

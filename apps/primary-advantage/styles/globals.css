@@ -1,6 +1,8 @@
 /* Fonts load through next/font in app/[locale]/layout.tsx (no CSS @import). */
 @import "tailwindcss";
 @import "tw-animate-css";
+/* Generate the classes that @reading-advantage/ui components use. */
+@source "../../../packages/ui/src";
 
 @custom-variant dark (&:is(.dark *));
 

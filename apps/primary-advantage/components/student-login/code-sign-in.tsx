@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@reading-advantage/ui";
 import { ClassLoginApiError, postStudentLogin } from "@/components/teacher/class-login/api";
 import { cn } from "@/lib/utils";
 import { StudentErrorMessage, waitMinutes, type StudentError } from "./errors";

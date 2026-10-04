@@ -2,7 +2,7 @@
 import { Article, WordListTimestamp } from "@/types";
 import React, { useEffect, useState } from "react";
 import { BookmarkIcon, VolumeXIcon } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@reading-advantage/ui";
 import AudioButton from "@/components/audio-button";
 import { Sentence } from "@/components/articles/sentence";
 import { useLocale, useTranslations } from "next-intl";

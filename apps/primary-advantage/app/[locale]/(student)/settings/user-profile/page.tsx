@@ -1,5 +1,5 @@
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChangeUsernameForm } from "@/components/change-username-form";

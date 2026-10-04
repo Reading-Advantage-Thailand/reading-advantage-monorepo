@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import { Label } from "@reading-advantage/ui";
 import { convertCefrLevel } from "@/lib/utils";
 import { Settings } from "lucide-react";
 

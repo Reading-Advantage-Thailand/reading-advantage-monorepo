@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { Card } from "../ui/card";
 import { Calendar } from "../ui/calendar";
-import { Checkbox } from "../ui/checkbox";
+import { Checkbox } from "@reading-advantage/ui";
 import {
   Select,
   SelectContent,

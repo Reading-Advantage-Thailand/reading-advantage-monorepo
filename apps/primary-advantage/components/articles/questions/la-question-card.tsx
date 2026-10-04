@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@reading-advantage/ui";
 import { getQuestionsByArticleId } from "@/server/models/articleModel";
 import { ActivityType, QuestionState } from "@/types/enum";
 import QuestionHeader from "./question-header";

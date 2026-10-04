@@ -1,5 +1,5 @@
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import React from "react";
 
 export default function RolesManagement() {
