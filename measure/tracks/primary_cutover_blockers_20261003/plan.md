@@ -32,6 +32,13 @@ Owner lane: A. Starts first. Merge to the integration branch before other lanes 
 - [x] streak, paused clause, upload routes; school-B assignment read returns 500, must be 403 (streak dcf0a64d4, paused d5271d4ae, upload temp files 68e85a061, upload school already session-scoped, assignment 3f814930c)
 - [x] Housekeeping and the tech-debt entry (b169e15c2, eb993bb41, e36ecc5f1, f8d2b886f)
 
+## Step 0 of the parity goal (2026-10-04)
+- [x] Local SYSTEM login: the QA seed gives `qa-system` a password; the seed is out of the db build (fdeb16051)
+- [x] Staff sign-in by username only: no email field, no Google button, no sign-up link (owner decision 2026-10-04) (3a9237113)
+- [x] SYSTEM picks the school when it creates staff or students; role "admin" makes a real school admin (ecb77ceca, 38ca37512)
+- [x] License routes choose the database scope by role; the license insert stores `school_name` (466f54c95)
+- [x] Browser check: SYSTEM creates a school, a license, and the school admin; the admin sees the license and creates a teacher and a student; the teacher signs in. Closes the AC-3 SYSTEM login gap.
+
 ## Gates
 - [x] Tests, tsc, ESLint green (2026-10-04 rerun) — tsc 0 errors for Primary, api, auth, db (db fix 5b8dac175); Primary 736/736; api 338 passed, 6 skipped, 1 file hook timeout under load (wave0-phase3-typed-errors, 15/15 alone); auth 333/334, only the known phase-7-closeout failure; db 40 failures that predate Lane A (company-identity integration env, drizzle045 counts 58 vs 60, codecamp-0049 ceiling, marketing import); ESLint 0 errors, 156 warnings on 64 changed Primary files (packages have no ESLint config)
 - [x] Browser re-verification of every Phase 4 fix (0b25ba006, evidence/phase4-browser-recheck.md)
