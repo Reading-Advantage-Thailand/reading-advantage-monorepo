@@ -32,6 +32,9 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   let pending: Promise<void> = Promise.resolve();
   let player: RuneMatchPlayer | null = null;
   const board = hud.mountBoard(sim.state.rows, sim.state.cols, (a, b) => void player?.swap(a, b), () => audio.play('tap'));
+  // The portrait card is tall (readable tiles): frame the battle in the part above it.
+  const free = (): number => Math.min(0.55, Math.max(0.24, 1 - ctx.hud.card.el.offsetHeight / Math.max(1, ctx.hud.el.clientHeight)));
+  stage.setFreeArea(true, free());
 
   const presentation: Presentation = {
     board,
@@ -86,7 +89,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     resize: () => undefined,
     recompose: (c) => {
       stage.setLayout(c.profile === 'compact');
-      stage.setFreeArea(true);
+      stage.setFreeArea(true, free());
     },
     captureResponsiveState: () => null,
     restoreResponsiveState: () => undefined,

@@ -100,7 +100,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
 
     const presentation: Presentation = {
       setCastles: (castles, max) => {
-        hearts = castles.map((h) => `[${'❤'.repeat(h)}${'♡'.repeat(Math.max(0, max - h))}]`).join(' ');
+        hearts = castles.map((h) => `${'❤'.repeat(h)}${'♡'.repeat(Math.max(0, max - h))}`).join('  ');
         drawStatus();
       },
       setMana: (v, max) => {

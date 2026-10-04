@@ -143,7 +143,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     grab.className = 'grab';
     const it: Item = { obj, tag, grab, flying: false, undrag: () => undefined };
     hud.anchor(grab, () => stage.screenOfPoint(obj.position.clone().add(new THREE.Vector3(0, 0.12, 0))));
-    hud.anchor(tag, () => stage.screenOfPoint(obj.position.clone().add(new THREE.Vector3(0, 0.34, 0))));
+    hud.anchor(tag, () => stage.screenOfPoint(obj.position.clone().add(new THREE.Vector3(0, 0.34, 0))), { spread: true });
     it.undrag = makeDraggable(
       tag,
       {
@@ -274,7 +274,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     if (c.leaving) return;
     actor.yaw = 0;
     if (actor.has('talk')) void actor.play('talk');
-    hud.anchor(bubble, () => stage.screenOf(actor, 1.2));
+    hud.anchor(bubble, () => stage.screenOf(actor, 1.2), { spread: true });
     bubble.innerHTML = orderHtml(sim.state, slot);
     bubble.classList.add('on');
   }

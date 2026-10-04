@@ -94,7 +94,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const mute = status.querySelector<HTMLButtonElement>('[data-mute]');
   mute?.addEventListener('click', () => (mute.textContent = ctx.host.toggleMute?.() ? '🔇' : '🔊'));
   const promptBox = document.createElement('div');
-  promptBox.className = 'escape-prompt';
+  promptBox.className = 'escape-prompt hud-top';
   hud.el.append(promptBox);
   const sentenceEl = status.querySelector<HTMLElement>('[data-sentence]')!;
   const courageEl = status.querySelector<HTMLElement>('[data-courage]')!;
@@ -145,7 +145,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       hud.anchor(tag, () => {
         const p = stage.screenOfPoint(new THREE.Vector3(x, FLIGHT_HEIGHT + RING_RADIUS + 0.2, z));
         return target.z - z > 44 || z > target.z + 2 ? { ...p, visible: false } : p;
-      });
+      }, { keepX: true, spread: true });
       wave.gates.push({ lane: info.lane, ring, tag });
     }
   }

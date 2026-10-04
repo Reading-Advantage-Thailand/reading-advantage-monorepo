@@ -36,6 +36,22 @@ export default `/* Abyssal Well 3D: the creature word tags are buttons (the base
   font-weight: 700;
   pointer-events: none;
 }
+.apk3d-hud .well-top {
+  position: absolute;
+  left: 50%;
+  top: calc(76px + env(safe-area-inset-top, 0px));
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+}
+.apk3d-hud .well-top .sentence-bar {
+  position: static;
+  transform: none;
+  max-width: 100%;
+}
 .apk3d-hud .well-translation {
   margin-top: 4px;
   text-align: center;

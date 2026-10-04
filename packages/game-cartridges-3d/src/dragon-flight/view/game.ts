@@ -104,7 +104,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const mute = status.querySelector<HTMLButtonElement>('[data-mute]');
   mute?.addEventListener('click', () => (mute.textContent = ctx.host.toggleMute?.() ? '🔇' : '🔊'));
   const wordBox = document.createElement('div');
-  wordBox.className = 'flight-word';
+  wordBox.className = 'flight-word hud-top';
   hud.el.append(wordBox);
 
   // ---------------------------------------------------------------- sound
@@ -140,7 +140,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       hud.anchor(tag, () => {
         const p = stage.screenOfPoint(new THREE.Vector3(obj.position.x, 3.4, obj.position.z));
         return dragon.root.position.z - obj.position.z > 38 ? { ...p, visible: false } : p;
-      });
+      }, { keepX: true, spread: true });
       return { obj, ring, tag };
     });
     gates.set(roundId, list);

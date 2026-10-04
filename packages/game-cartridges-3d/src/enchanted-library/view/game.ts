@@ -99,7 +99,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const roundEl = status.querySelector<HTMLElement>('[data-round]')!;
   const courageEl = status.querySelector<HTMLElement>('[data-courage]')!;
   const prompt = document.createElement('div');
-  prompt.className = 'lib-prompt';
+  prompt.className = 'lib-prompt hud-top';
   prompt.innerHTML = `<small>${esc(t('find'))}</small><b data-word></b>`;
   hud.el.append(prompt);
   const wordEl = prompt.querySelector<HTMLElement>('[data-word]')!;

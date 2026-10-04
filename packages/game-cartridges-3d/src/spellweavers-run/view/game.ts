@@ -81,7 +81,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const mute = status.querySelector<HTMLButtonElement>('[data-mute]');
   mute?.addEventListener('click', () => (mute.textContent = ctx.host.toggleMute?.() ? '🔇' : '🔊'));
   const promptBox = document.createElement('div');
-  promptBox.className = 'run-prompt';
+  promptBox.className = 'run-prompt hud-top';
   hud.el.append(promptBox);
   const spellEl = status.querySelector<HTMLElement>('[data-spell]')!;
   const courageEl = status.querySelector<HTMLElement>('[data-courage]')!;
@@ -136,7 +136,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       hud.anchor(tag, () => {
         const p = stage.screenOfPoint(new THREE.Vector3(x, 3.3, -at));
         return hero.root.position.z - -at > 38 ? { ...p, visible: false } : p;
-      });
+      }, { keepX: true, spread: true });
       return { arch, ball, tag, x, z: -at };
     });
     rows.set(roundId, list);

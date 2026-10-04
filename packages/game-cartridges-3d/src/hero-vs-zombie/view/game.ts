@@ -60,7 +60,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const mute = status.querySelector<HTMLButtonElement>('[data-mute]');
   mute?.addEventListener('click', () => (mute.textContent = ctx.host.toggleMute?.() ? '🔇' : '🔊'));
   const targetBox = document.createElement('div');
-  targetBox.className = 'hvz-target';
+  targetBox.className = 'hvz-target hud-top';
   hud.el.append(targetBox);
   const blastButton = document.createElement('button');
   blastButton.className = 'blast-button';

@@ -36,6 +36,40 @@ export default `/* Magic Defense 3D: the missile label over the caster, the spel
   opacity: 0.45;
   text-decoration: line-through;
 }
+.status .md-castles b {
+  white-space: nowrap;
+}
+.status .md-castles i {
+  font-style: normal;
+}
+.status .md-castles i + i {
+  margin-left: 8px;
+}
+/* A phone: the place name, the castle hearts, and the storm button share one short row. */
+@media (orientation: portrait), (max-width: 699px) {
+  .md-status .place small {
+    display: none;
+  }
+  .md-status .place {
+    font-size: 15px;
+  }
+  .md-status .md-castles {
+    font-size: 11px;
+  }
+  .md-status .md-castles b {
+    font-size: 13px;
+    letter-spacing: 0;
+  }
+  .md-status .md-castles i + i {
+    margin-left: 5px;
+  }
+  .md-status .md-storm-name {
+    display: none;
+  }
+  .md-status .md-storm [data-mana]::before {
+    content: '⚡ ';
+  }
+}
 .status .md-storm:disabled {
   opacity: 0.6;
 }

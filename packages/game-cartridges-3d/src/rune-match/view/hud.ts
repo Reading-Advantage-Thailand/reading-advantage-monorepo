@@ -45,6 +45,7 @@ export class RuneHud {
   /** Builds the card (the word, then the board) and returns the board. */
   mountBoard(rows: number, cols: number, onSwap: ConstructorParameters<typeof Board>[3], tap: () => void): Board {
     const card = this.root.card;
+    card.el.classList.add('rune-card');
     card.show(`<div class="rune-find"><small>${esc(this.t('find'))}</small><b data-find></b></div>`);
     this.findEl = card.el.querySelector<HTMLElement>('[data-find]')!;
     const board = new Board(card.el, rows, cols, onSwap, tap);

@@ -87,12 +87,15 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   status.querySelector('[data-story]')?.addEventListener('click', () => ctx.host.openStory?.());
   const mute = status.querySelector<HTMLButtonElement>('[data-mute]');
   mute?.addEventListener('click', () => (mute.textContent = ctx.host.toggleMute?.() ? '🔇' : '🔊'));
+  // The sentence with its translation under it, in one column at the top middle.
+  const top = document.createElement('div');
+  top.className = 'well-top hud-top';
   const bar = document.createElement('div');
   bar.className = 'sentence-bar';
-  hud.el.append(bar);
   const translation = document.createElement('div');
   translation.className = 'well-translation';
-  hud.el.append(translation);
+  top.append(bar, translation);
+  hud.el.append(top);
   const hint = document.createElement('div');
   hint.className = 'well-hint';
   hint.textContent = t('aim');
@@ -351,8 +354,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       window.removeEventListener('keydown', onKey);
       clearEnemies();
       status.remove();
-      bar.remove();
-      translation.remove();
+      top.remove();
       hint.remove();
       delete (window as unknown as { __apk3dGame?: unknown }).__apk3dGame;
     },

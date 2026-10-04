@@ -30,11 +30,11 @@ export class MagicHud {
     this.t = i18n.scope('hud').t;
     const t = this.t;
     this.status = document.createElement('div');
-    this.status.className = 'status';
+    this.status.className = 'status md-status';
     this.status.innerHTML = `
       <div class="place"><small>${esc(t('place'))}</small><span data-place></span></div>
-      <div class="meter">${esc(t('castles'))}<b data-castles></b></div>
-      <button class="book md-storm" data-storm disabled><span data-mana></span> ${esc(t('stormButton'))}</button>
+      <div class="meter md-castles">${esc(t('castles'))}<b data-castles></b></div>
+      <button class="book md-storm" data-storm disabled><span data-mana></span> <span class="md-storm-name">${esc(t('stormButton'))}</span></button>
       ${host.openStory ? `<button class="book" data-story>${esc(t('story'))}</button>` : ''}
       ${host.toggleMute ? `<button class="book" data-mute aria-label="${esc(t('story'))}">🔊</button>` : ''}`;
     root.el.prepend(this.status);
@@ -60,7 +60,8 @@ export class MagicHud {
 
   /** The hearts of each castle; a castle in ruins shows no heart. */
   setCastles(castles: readonly number[], max: number): void {
-    this.status.querySelector('[data-castles]')!.textContent = castles.map((h) => `[${'❤'.repeat(h)}${'♡'.repeat(Math.max(0, max - h))}]`).join(' ');
+    // One group of hearts for each castle (a gap between the groups, no brackets: it fits a phone).
+    this.status.querySelector('[data-castles]')!.innerHTML = castles.map((h) => `<i>${'❤'.repeat(h)}${'♡'.repeat(Math.max(0, max - h))}</i>`).join('');
   }
 
   /** The storm button shows the mana and wakes when the mana is full. */
@@ -77,10 +78,10 @@ export class MagicHud {
   setMissile(round: Round): void {
     this.clearMissile();
     const el = document.createElement('div');
-    el.className = 'md-tag';
+    el.className = `md-tag ${hasThai(round.prompt) ? 'th' : ''}`;
     el.innerHTML = `<small>${esc(this.t('missile'))}</small><b class="${hasThai(round.prompt) ? 'th' : ''}">${esc(round.prompt)}</b>`;
     this.tags.set(round.enemyId, el);
-    this.root.anchor(el, () => this.stage.screenOf(round.enemyId, 1.3));
+    this.root.anchor(el, () => this.stage.screenOf(round.enemyId, 1.3), { spread: true });
   }
 
   clearMissile(): void {

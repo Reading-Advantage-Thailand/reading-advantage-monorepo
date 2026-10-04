@@ -108,7 +108,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const mute = status.querySelector<HTMLButtonElement>('[data-mute]');
   mute?.addEventListener('click', () => (mute.textContent = ctx.host.toggleMute?.() ? '🔇' : '🔊'));
   const promptBox = document.createElement('div');
-  promptBox.className = 'patrol-prompt';
+  promptBox.className = 'patrol-prompt hud-top';
   hud.el.append(promptBox);
   const sentenceEl = status.querySelector<HTMLElement>('[data-sentence]')!;
   const courageEl = status.querySelector<HTMLElement>('[data-courage]')!;
@@ -160,7 +160,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       tag.textContent = info.text;
       tag.addEventListener('click', () => shoot(info.id));
       const bat: Bat = { id: info.id, roundId, actor, tag, leaving: false, shownX: x, shownY: y };
-      hud.anchor(tag, () => stage.screenOfPoint(new THREE.Vector3(actor.root.position.x, actor.root.position.y + 1.7, 0)));
+      hud.anchor(tag, () => stage.screenOfPoint(new THREE.Vector3(actor.root.position.x, actor.root.position.y + 1.7, 0)), { keepX: true, spread: true });
       bats.set(`${roundId}:${info.id}`, bat);
     });
   }

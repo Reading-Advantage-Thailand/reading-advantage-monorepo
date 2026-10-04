@@ -79,7 +79,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const mute = status.querySelector<HTMLButtonElement>('[data-mute]');
   mute?.addEventListener('click', () => (mute.textContent = ctx.host.toggleMute?.() ? '🔇' : '🔊'));
   const promptBox = document.createElement('div');
-  promptBox.className = 'joust-prompt';
+  promptBox.className = 'joust-prompt hud-top';
   hud.el.append(promptBox);
   const sentenceEl = status.querySelector<HTMLElement>('[data-sentence]')!;
   const courageEl = status.querySelector<HTMLElement>('[data-courage]')!;
@@ -116,7 +116,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     tag.className = 'rider-tag';
     tag.textContent = r.text;
     const view: RiderView = { actor, tag, x, y };
-    hud.anchor(tag, () => stage.screenOfPoint(new THREE.Vector3(view.x, view.y + 1.0, 0)));
+    hud.anchor(tag, () => stage.screenOfPoint(new THREE.Vector3(view.x, view.y + 1.0, 0)), { keepX: true, spread: true });
     riders.set(r.id, view);
   }
 

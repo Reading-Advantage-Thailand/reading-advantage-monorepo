@@ -72,7 +72,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   bar.className = 'sentence-bar';
   hud.el.append(bar);
   const prompt = document.createElement('div');
-  prompt.className = 'zig-prompt';
+  prompt.className = 'zig-prompt hud-top';
   hud.el.append(prompt);
   const hint = document.createElement('div');
   hint.className = 'zig-hint';

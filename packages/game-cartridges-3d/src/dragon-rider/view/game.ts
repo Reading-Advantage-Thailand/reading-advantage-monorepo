@@ -124,7 +124,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const mute = status.querySelector<HTMLButtonElement>('[data-mute]');
   mute?.addEventListener('click', () => (mute.textContent = ctx.host.toggleMute?.() ? '🔇' : '🔊'));
   const wordBox = document.createElement('div');
-  wordBox.className = 'rider-word';
+  wordBox.className = 'rider-word hud-top';
   const powerBox = document.createElement('div');
   powerBox.className = 'rider-power';
   hud.el.append(wordBox, powerBox);
@@ -158,7 +158,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       hud.anchor(tag, () => {
         const p = stage.screenOfPoint(new THREE.Vector3(x, 3.6, z));
         return dragon.root.position.z - z > 40 ? { ...p, visible: false } : p;
-      });
+      }, { keepX: true, spread: true });
       return { obj, ring, tag };
     });
     gates.set(roundId, list);
