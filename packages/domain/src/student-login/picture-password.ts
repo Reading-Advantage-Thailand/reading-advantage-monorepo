@@ -13,7 +13,6 @@ import { auditStudentLogin, type StudentLoginActor } from "./audit.js";
 import { burnVerifyTime, generatePictureSequence, hashPictureSequence, verifyPictureSequence } from "./codes.js";
 import {
   type AssignPicturePasswordsInput,
-  type AuthStrength,
   type CodeOnlySignInInput,
   type PicturePasswordSettingInput,
   type PicturePasswordSignInInput,

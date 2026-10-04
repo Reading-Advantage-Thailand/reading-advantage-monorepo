@@ -7,7 +7,6 @@ import {
   users,
 } from "@reading-advantage/db/schema";
 import type { RateLimitStore, UserContext } from "@reading-advantage/auth";
-import { createTenantDB } from "../db-contract.js";
 import { authorizeClassroom } from "./access.js";
 import { auditStudentLogin } from "./audit.js";
 import { generateCardToken, hashCardToken } from "./codes.js";
