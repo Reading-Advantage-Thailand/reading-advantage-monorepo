@@ -9,11 +9,12 @@
  */
 
 export type AvatarSlot =
-  | 'head' | 'chest' | 'robe' | 'shoulders' | 'back' | 'hands' | 'waist' | 'feet'
+  | 'hair' | 'head' | 'chest' | 'robe' | 'shoulders' | 'back' | 'hands' | 'waist' | 'feet'
   | 'mainhand' | 'offhand' | 'accessory' | 'tool' | 'none';
 
+/** Hair styles are free (docs/avatar-system.md, section 3). */
 export const SLOT_BASE: Readonly<Record<AvatarSlot, number>> = {
-  head: 40, chest: 50, robe: 50, shoulders: 30, back: 30, hands: 20, waist: 20, feet: 20,
+  hair: 0, head: 40, chest: 50, robe: 50, shoulders: 30, back: 30, hands: 20, waist: 20, feet: 20,
   mainhand: 50, offhand: 40, accessory: 30, tool: 30, none: 0,
 };
 
