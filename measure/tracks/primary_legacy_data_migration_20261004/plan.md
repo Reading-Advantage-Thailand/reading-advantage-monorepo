@@ -22,6 +22,7 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 ## Phase 1: ID map and Tutor views (FR-1, FR-2) — unblocks Lane A's Tutor read test
 - [x] Additive migration for `primary_legacy_id_map` (cbc839b6a, sentinel e90202faf)
 - [x] Additive migration for the `tutor_compat` schema and its four views, with tests (c7cf1bfb5, sentinel e90202faf; column names and types match the April legacy copy)
+- [x] Read-only `tutor_reader` login: `packages/db/scripts/tutor-reader-grants.sql` grants CONNECT, USAGE on `tutor_compat`, SELECT on the four views, and sets the search path on the role (owner decision 2026-10-04; real-database test)
 
 ## Phase 2: ETL (FR-3)
 - [ ] ETL script with `primary_legacy_id_map` writes and the reconciliation report
