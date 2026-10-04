@@ -517,9 +517,10 @@ describe("authorizeTarget path: atomic reset and no existence oracle", () => {
       .mockReturnValueOnce(targetRow("TEACHER", "school-1"))
       .mockReturnValueOnce(selectResult([{ id: "target-1_credential" }]));
     const txUpdateWhere = vi.fn().mockResolvedValue(undefined);
+    const txDeleteWhere = vi.fn().mockRejectedValue(new Error("boom"));
     const tx = {
       update: vi.fn().mockReturnValue({ set: vi.fn().mockReturnValue({ where: txUpdateWhere }) }),
-      delete: vi.fn().mockReturnValue({ where: vi.fn().mockRejectedValue(new Error("boom")) }),
+      delete: vi.fn().mockReturnValue({ where: txDeleteWhere }),
     };
     // A real transaction rolls back when the callback throws; the handler must not catch it inside.
     mockDb.transaction.mockImplementationOnce(async (fn: (t: typeof tx) => Promise<unknown>) => fn(tx));
@@ -529,7 +530,9 @@ describe("authorizeTarget path: atomic reset and no existence oracle", () => {
     // The write and the revocation share one transaction; the top-level client writes nothing.
     expect(mockDb.transaction).toHaveBeenCalledTimes(1);
     expect(txUpdateWhere).toHaveBeenCalledTimes(1);
+    expect(txDeleteWhere).toHaveBeenCalledTimes(1);
     expect(mockDb.update).not.toHaveBeenCalled();
+    expect(mockDb.delete).not.toHaveBeenCalled();
     expect(vi.mocked(revokeAllUserSessions)).not.toHaveBeenCalled();
   });
 
