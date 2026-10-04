@@ -12,11 +12,11 @@ Owner lane: B. Depends on cutover blockers Phase 2 for argon2.
 - [x] `authStrength` in the session and the route policy (ab7febf68, committed under a wrong chore(measure) subject; helper in apps/primary-advantage/lib/auth-strength.ts, not wired to Reedy)
 
 ## Phase 2: Server (tests first)
-- [ ] Class session start/end, code generation, expiry
-- [ ] Picture-password verify, lockout, reset
+- [x] Class session start/end, code generation, expiry (ad3fef1f3; 2b3722647 adds unique open-code index; name list uses the credential id as opaque handle; restart replaces the open session; routes dad2b819a)
+- [x] Picture-password verify, lockout, reset (12ae97d1d; 0063 adds classrooms.picture_password_enabled in 2b3722647; code-only sign-in when the class setting is off; teacher lockout list; routes dad2b819a)
 - [ ] QR token issue, verify, rotate
 - [ ] Username/password path
-- [ ] Rate limits and audit entries
+- [x] Rate limits and audit entries (49f2385dc; per IP, per class, global failed-lookup limit; audit start, end, lockout, reset, assign, setting; fail-closed authStrength 779bc5945)
 
 ## Phase 3: Teacher UI
 - [ ] Start/End class control on the class page

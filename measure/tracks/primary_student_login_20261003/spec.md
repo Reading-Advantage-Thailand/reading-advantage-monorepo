@@ -55,6 +55,21 @@ New tables or nullable columns, named with a `primary_` prefix: class login sess
 picture hash, failed count, locked until, card token hash, rotated at),
 `authStrength` on the session record. No change to existing user columns.
 
+## Known risks (owner decision pending)
+
+- Picture password strength: 3 taps from 12 pictures gives 12^3 = 1728 sequences. With the
+  lockout (5 wrong tries, then 5 minutes) a classmate who knows the class code needs about
+  6 days of attempts for one student, and the lockout shows on the teacher view and in the audit
+  log. The spec keeps this lockout. Accepted for now. Owner review is pending on a stronger
+  rule (for example a longer lock after repeated lockouts, or 4 taps).
+- Class code strength: 6 characters from 31 gives about 30 bits. Code entry is limited per IP,
+  per class, and by a global limit on failed lookups. The code hash is SHA-256 and the code lives
+  3 hours at most. Accepted.
+- A shared school IP shares one IP bucket (150 requests in 10 minutes). Raise it if a class fails
+  to sign in together.
+- `/api/*` is outside the proxy matcher. Each API that needs a full sign-in must check
+  `canUseFullAuthFeature` in its handler (the student-login teacher handlers do).
+
 ## Non-goals
 
 - No SSO, no Google login for students, no biometric.
