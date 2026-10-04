@@ -192,6 +192,30 @@ describe("createTeacher against existing users (C1)", () => {
   });
 });
 
+describe("create paths fail closed without a school (M2)", () => {
+  const noSchoolAdmin: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: null, level: 1,
+    role: "ADMIN", roles: [], SchoolAdmins: [],
+  };
+
+  it("refuses to create a teacher for a non-SYSTEM caller without a school", async () => {
+    const result = await createTeacher({
+      name: "n", email: "fresh@x.test", role: "teacher", password: "Valid-pass-123", userWithRoles: noSchoolAdmin,
+    });
+    expect(result.success).toBe(false);
+    const rows = await harness.db.execute(sql`SELECT id FROM users WHERE email = 'fresh@x.test'`);
+    expect(rows.rows).toHaveLength(0);
+  });
+
+  it("rejects a classroom of another school when creating a teacher", async () => {
+    await harness.db.execute(sql`INSERT INTO classrooms (id, name, school_id, teacher_id) VALUES ('00000000-0000-0000-0000-0000000000c1', 'B class', ${SCHOOL_B}, 'caller')`);
+    const result = await createTeacher({
+      name: "n", email: "fresh@x.test", role: "teacher", classroomIds: ["00000000-0000-0000-0000-0000000000c1"], userWithRoles: adminCaller(SCHOOL_A),
+    });
+    expect(result.success).toBe(false);
+  });
+});
+
 describe("updateTeacher scope and target rank (H2)", () => {
   /** An ADMIN session caller with no legacy school_admins row. */
   const sessionAdmin: UserWithRoles = {

@@ -123,6 +123,27 @@ describe("updateStudent effective target rank", () => {
   });
 });
 
+describe("createStudent fails closed without a school (M2)", () => {
+  it("refuses a non-SYSTEM caller without a school", async () => {
+    const result = await createStudent({
+      name: "n", email: "fresh@x.test", cefrLevel: "A1", password: "Valid-pass-123",
+      userWithRoles: { ...sessionAdmin, schoolId: null },
+    });
+    expect(result.success).toBe(false);
+    const rows = await harness.db.execute(sql`SELECT id FROM users WHERE email = 'fresh@x.test'`);
+    expect(rows.rows).toHaveLength(0);
+  });
+
+  it("rejects a classroom of another school", async () => {
+    await seedStudent("caller", "ADMIN", SCHOOL_A);
+    await harness.db.execute(sql`INSERT INTO classrooms (id, name, school_id, teacher_id) VALUES ('00000000-0000-0000-0000-0000000000c1', 'B class', ${SCHOOL_B}, 'caller')`);
+    const result = await createStudent({
+      name: "n", email: "fresh@x.test", cefrLevel: "A1", classroomId: "00000000-0000-0000-0000-0000000000c1", userWithRoles: sessionAdmin,
+    });
+    expect(result.success).toBe(false);
+  });
+});
+
 describe("password write events (M1)", () => {
   it("records an audit event for a new student without revoking", async () => {
     const result = await createStudent({

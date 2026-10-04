@@ -278,10 +278,15 @@ export const createStudent = async (params: {
     // Determine school assignment
     const schoolId = userWithRoles.schoolId ?? null;
 
+    // Fail closed: only SYSTEM may create accounts without a school.
+    if (!schoolId && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
+      return { success: false, error: "A school is required to create a student" };
+    }
+
     // Validate classroom if provided
     if (classroomId) {
       const classroomConditions: any[] = [eq(classrooms.id, classroomId)];
-      if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
+      classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
 
       const [classroom] = await db.select({ id: classrooms.id })
         .from(classrooms)

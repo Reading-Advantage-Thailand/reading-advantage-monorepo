@@ -378,6 +378,11 @@ export const createTeacher = async (params: {
     // Determine school assignment
     const schoolId = userWithRoles.schoolId ?? null;
 
+    // Fail closed: only SYSTEM may create accounts without a school.
+    if (!schoolId && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
+      return { success: false, error: "A school is required to create a teacher" };
+    }
+
     // If user exists, handle accordingly
     if (existingUser) {
       // An existing account is never taken over or moved. It must already
@@ -452,7 +457,7 @@ export const createTeacher = async (params: {
       const classroomConditions: any[] = [
         inArray(classrooms.id, classroomIds),
       ];
-      if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
+      classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
 
       const validClassrooms = await db.select({ id: classrooms.id })
         .from(classrooms)
@@ -629,7 +634,7 @@ async function updateExistingTeacherToSchool(params: {
       const classroomConditions: any[] = [
         inArray(classrooms.id, classroomIds),
       ];
-      if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
+      classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
 
       const validClassrooms = await db.select({ id: classrooms.id })
         .from(classrooms)
