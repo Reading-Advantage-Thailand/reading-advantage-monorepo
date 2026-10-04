@@ -5,7 +5,7 @@
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
-import { handleLogin } from "../routes/auth/login.js";
+import { createLoginHandler } from "../routes/auth/login.js";
 
 const mockDb = vi.hoisted(() => ({
   select: vi.fn(),
@@ -15,7 +15,7 @@ const mockDb = vi.hoisted(() => ({
   transaction: vi.fn(),
 }));
 const authMocks = vi.hoisted(() => ({
-  adoptLegacyPassword: vi.fn().mockResolvedValue(undefined),
+  adoptLegacyPassword: vi.fn().mockResolvedValue(true),
   rehashOnLogin: vi.fn().mockResolvedValue({ migrated: false }),
   verifyPassword: vi.fn().mockResolvedValue(true),
 }));
@@ -93,7 +93,7 @@ function queueLogin(accountRows: unknown[]) {
  * @returns The route response.
  */
 function login() {
-  return handleLogin(
+  return createLoginHandler({ legacyUsersPasswordFallback: true })(
     new NextRequest("http://localhost/api/auth/login", {
       method: "POST",
       body: JSON.stringify({ username: "teacher1", password: "Password123!" }),

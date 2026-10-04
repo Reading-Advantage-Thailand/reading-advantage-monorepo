@@ -1,9 +1,12 @@
+import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { and, eq } from "drizzle-orm";
 import { db } from "@reading-advantage/db";
 import { users, accounts } from "@reading-advantage/db/schema";
 import {
   verifyPassword,
+  hashPassword,
+  PASSWORD_MAX_LENGTH,
   createSession,
   checkRateLimit,
   recordFailure,
@@ -24,7 +27,20 @@ import { getClientIp } from "./client-ip.js";
 // fast-path is dev-only and opt-in via RATE_LIMIT_INMEMORY_FASTPATH=true.
 configurePostgresRateLimiter(db);
 
-export const DUMMY_HASH = "$argon2id$v=19$m=65536,t=3,p=4$c2FsdHNhbHRzYWx0$uTb0iMnAqN7uKjB8Y3N4v7J8k2L5mQwR9tY1xZ3aBcD";
+let dummyHashPromise: Promise<string> | undefined;
+
+/**
+ * Returns a valid Argon2id hash of random bytes, built once and cached.
+ * Login verifies against it for unknown users so that timing matches a real verify.
+ * @returns The cached dummy hash, made with the production Argon2id parameters.
+ */
+export function getDummyHash(): Promise<string> {
+  dummyHashPromise ??= hashPassword(randomBytes(32).toString("hex")).catch((err) => {
+    dummyHashPromise = undefined;
+    throw err;
+  });
+  return dummyHashPromise;
+}
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -36,17 +52,43 @@ const COOKIE_OPTIONS = {
 
 const loginSchema = z.object({
   username: z.string().min(1).max(100),
-  password: z.string().min(1).max(128),
+  // Login keeps min(1) so legacy passwords shorter than the set-password minimum still work.
+  password: z.string().min(1).max(PASSWORD_MAX_LENGTH),
 });
+
+/** Options for `createLoginHandler`. */
+export interface LoginHandlerOptions {
+  /**
+   * When true, a user with no credential password may log in with the legacy
+   * `users.password` hash, which is then adopted into the credential account.
+   * Only Primary Advantage enables this. The default is false.
+   */
+  legacyUsersPasswordFallback?: boolean;
+}
 
 /**
  * Handles user login with username/password authentication.
  * Implements rate limiting and creates a session on success.
+ * The legacy `users.password` fallback is off.
  *
  * @param request - The Next.js request object containing username and password in body
  * @returns NextResponse with user data and session cookie on success
  */
-export async function handleLogin(request: NextRequest) {
+export function handleLogin(request: NextRequest) {
+  return loginWithOptions(request, {});
+}
+
+/**
+ * Builds a login handler with the given options.
+ * @param options - Login options, such as the opt-in legacy password fallback.
+ * @returns A route handler with the same behavior as `handleLogin` plus the options.
+ */
+export function createLoginHandler(options: LoginHandlerOptions) {
+  return (request: NextRequest) => loginWithOptions(request, options);
+}
+
+/** Shared login implementation behind `handleLogin` and `createLoginHandler`. */
+async function loginWithOptions(request: NextRequest, options: LoginHandlerOptions) {
   try {
     const body = await request.json();
     const parsed = loginSchema.safeParse(body);
@@ -106,7 +148,7 @@ export async function handleLogin(request: NextRequest) {
 
     // FR-4: unknown-username timing fix — call verifyPassword with DUMMY_HASH
     if (!user) {
-      await verifyPassword(password, DUMMY_HASH);
+      await verifyPassword(password, await getDummyHash());
       await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
         {
@@ -144,14 +186,14 @@ export async function handleLogin(request: NextRequest) {
     // Fall back to it when no credential account holds a password.
     let storedHash: string | null = account?.password ?? null;
     let adoptLegacyHash = false;
-    if (!storedHash && user.password) {
+    if (!storedHash && options.legacyUsersPasswordFallback && user.password) {
       storedHash = user.password;
       adoptLegacyHash = true;
     }
 
     // FR-4: account-not-found or no-password timing fix
     if (!storedHash) {
-      await verifyPassword(password, DUMMY_HASH);
+      await verifyPassword(password, await getDummyHash());
       await recordFailure(lowerUsername, ...(clientIp ? [clientIp] : []));
       return NextResponse.json(
         {

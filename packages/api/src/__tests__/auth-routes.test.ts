@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { handleImpersonate } from "../routes/auth/impersonate.js";
-import { handleLogin, DUMMY_HASH } from "../routes/auth/login.js";
+import { handleLogin, getDummyHash } from "../routes/auth/login.js";
 import { handleRegister } from "../routes/auth/register.js";
 import { requireAuth, requireRole } from "@reading-advantage/auth";
 
@@ -565,10 +565,9 @@ describe("Phase 2 — Task 14: FR-4/FR-5/FR-6/FR-11 in the auth route handlers",
       const auth = await import("@reading-advantage/auth");
       const verifyPassword = vi.mocked(auth.verifyPassword);
       expect(
-        DUMMY_HASH,
-        "Phase 1 Task 8 requires login.ts to export a `DUMMY_HASH` " +
-          "constant. If the constant is missing, the FR-4 timing fix has " +
-          "no value to fall back on.",
+        await getDummyHash(),
+        "Phase 1 Task 8 requires login.ts to export `getDummyHash`, " +
+          "which resolves to a valid Argon2id hash.",
       ).toBeTypeOf("string");
 
       // Unknown user: the first select returns []. The current
@@ -593,7 +592,7 @@ describe("Phase 2 — Task 14: FR-4/FR-5/FR-6/FR-11 in the auth route handlers",
           "wrong-password branch. The current implementation skips the " +
           "verify call entirely, leaking a username-enumeration timing " +
           "oracle.",
-      ).toHaveBeenCalledWith("Password123!", DUMMY_HASH);
+      ).toHaveBeenCalledWith("Password123!", await getDummyHash());
     });
 
     it("calls verifyPassword(password, DUMMY_HASH) when the account row has no password", async () => {
@@ -636,7 +635,7 @@ describe("Phase 2 — Task 14: FR-4/FR-5/FR-6/FR-11 in the auth route handlers",
         "Expected handleLogin to call verifyPassword with DUMMY_HASH when " +
           "the credential account has no password (orphaned user), so the " +
           "branch pays the same Argon2id cost as the wrong-password branch.",
-      ).toHaveBeenCalledWith("Password123!", DUMMY_HASH);
+      ).toHaveBeenCalledWith("Password123!", await getDummyHash());
     });
   });
 
