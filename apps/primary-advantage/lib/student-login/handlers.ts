@@ -47,3 +47,18 @@ export const pictureSignIn = studentHandler(sl.picturePasswordSignInInput, async
 export const codeOnlySignIn = studentHandler(sl.codeOnlySignInInput, async ({ meta, input }) =>
   signInResponse(await sl.signInWithCodeOnly({ db, store, meta, input })),
 );
+
+/** POST: student scans a QR card and signs in. Sets the session cookie. */
+export const qrSignIn = studentHandler(sl.qrTokenSignInInput, async ({ meta, input }) =>
+  signInResponse(await sl.signInWithCardToken({ db, store, meta, input })),
+);
+
+/** POST: teacher gives one student a new card token. Returns the raw token once. */
+export const rotateCard = teacherHandler(sl.rotateCardTokenInput, ({ user, meta, input }) =>
+  sl.rotateCardToken({ db, user, meta, input }),
+);
+
+/** POST: teacher issues card tokens to the students of a class that have none. Returns the raw tokens once. */
+export const issueCards = teacherHandler(sl.issueCardTokensInput, async ({ user, meta, input }) => ({
+  cards: await sl.issueClassCardTokens({ db, user, meta, input }),
+}));

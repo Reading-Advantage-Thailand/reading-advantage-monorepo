@@ -176,4 +176,40 @@ describe.skipIf(!url)("student login against Postgres", () => {
     const [seen] = await db.select().from(schema.sessions).where(eq(schema.sessions.userId, `${tag}-s3`));
     expect(Date.now() - seen!.lastSeenAt!.getTime()).toBeLessThan(5000);
   });
+
+  it("QR card: issue, scan, rotate kills the old token, and a removed student cannot scan", async () => {
+    const issued = await sl.issueClassCardTokens({ db, user: t1(), meta, input: { classroomId: ids.class1 } });
+    const ann = issued.find((i) => i.userId === `${tag}-s1`)!;
+    const stored = (await db.select().from(schema.primaryStudentCredentials).where(eq(schema.primaryStudentCredentials.userId, `${tag}-s1`)))[0]!;
+    expect(stored.cardTokenHash).toBe((await import("../student-login/codes.js")).hashCardToken(ann.token));
+    expect(JSON.stringify(stored)).not.toContain(ann.token);
+    // A second issue gives nothing: existing tokens stay.
+    expect(await sl.issueClassCardTokens({ db, user: t1(), meta, input: { classroomId: ids.class1 } })).toEqual([]);
+
+    const scan = (token: string) => sl.signInWithCardToken({ db, store, meta: { ip: `10.1.0.${Math.floor(Math.random() * 200)}`, userAgent: "vitest" }, input: { token } });
+    await expect(scan(ann.token)).resolves.toMatchObject({ authStrength: "full", user: { id: `${tag}-s1` } });
+
+    const rotated = await sl.rotateCardToken({ db, user: t1(), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s1` } });
+    await expect(scan(ann.token)).rejects.toMatchObject({ code: "invalid_credentials" });
+    await expect(scan(rotated.token)).resolves.toMatchObject({ authStrength: "full" });
+    const audit = await db.select().from(schema.auditEvents).where(eq(schema.auditEvents.actorUserId, `${tag}-t1`));
+    expect(audit.map((a) => a.action)).toContain("student_login:card_rotate");
+    expect(JSON.stringify(audit)).not.toContain(rotated.token);
+
+    // Another teacher, another school, and a student outside the class are refused.
+    await expect(sl.rotateCardToken({ db, user: asUser(fixtures[1]!), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s1` } })).rejects.toMatchObject({ code: "forbidden" });
+    await expect(sl.rotateCardToken({ db, user: asUser(fixtures[2]!), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s1` } })).rejects.toMatchObject({ code: "not_found" });
+    await expect(sl.rotateCardToken({ db, user: t1(), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s3` } })).rejects.toMatchObject({ code: "not_found" });
+
+    // A token whose credential school differs from the class school does not sign in.
+    await db.update(schema.primaryStudentCredentials).set({ schoolId: ids.schoolB }).where(eq(schema.primaryStudentCredentials.userId, `${tag}-s1`));
+    await expect(scan(rotated.token)).rejects.toMatchObject({ code: "invalid_credentials" });
+    await db.update(schema.primaryStudentCredentials).set({ schoolId: ids.schoolA }).where(eq(schema.primaryStudentCredentials.userId, `${tag}-s1`));
+    await expect(scan(rotated.token)).resolves.toMatchObject({ authStrength: "full" });
+
+    // Removed from every class: the card stops working.
+    await db.delete(schema.classroomStudents).where(eq(schema.classroomStudents.studentId, `${tag}-s1`));
+    await expect(scan(rotated.token)).rejects.toMatchObject({ code: "invalid_credentials" });
+    await db.insert(schema.classroomStudents).values({ classroomId: ids.class1, studentId: `${tag}-s1` });
+  });
 });

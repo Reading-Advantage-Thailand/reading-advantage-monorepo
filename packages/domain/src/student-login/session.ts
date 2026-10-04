@@ -1,5 +1,5 @@
-import type { DB } from "@reading-advantage/db";
 import { createSession, studentSessionOptions } from "@reading-advantage/auth";
+import type { DB } from "../index.js";
 import { auditStudentLogin } from "./audit.js";
 import type { AuthStrength, StudentSignInOutput } from "./contracts.js";
 import type { RequestMeta } from "./class-session.js";

@@ -100,6 +100,15 @@ export const qrTokenSignInInput = z.object({
   token: z.string().regex(new RegExp(`^[A-Za-z0-9_-]{${QR_TOKEN_LENGTH}}$`)),
 });
 
+/** Request from a teacher to give one student a new QR card token. */
+export const rotateCardTokenInput = z.object({
+  classroomId: z.string().uuid(),
+  studentUserId: z.string().min(1).max(64),
+});
+
+/** Request from a teacher for QR card tokens for the students that have none. */
+export const issueCardTokensInput = z.object({ classroomId: z.string().uuid() });
+
 /** Result of a student sign-in through a class code or a QR card. */
 export const studentSignInOutput = z.object({
   user: z.object({ id: z.string().min(1), role: z.literal("STUDENT") }),
@@ -130,3 +139,7 @@ export type PicturePasswordSignInInput = z.infer<typeof picturePasswordSignInInp
 export type QrTokenSignInInput = z.infer<typeof qrTokenSignInInput>;
 /** Output type of {@link studentSignInOutput}. */
 export type StudentSignInOutput = z.infer<typeof studentSignInOutput>;
+/** Input type of {@link rotateCardTokenInput}. */
+export type RotateCardTokenInput = z.infer<typeof rotateCardTokenInput>;
+/** Input type of {@link issueCardTokensInput}. */
+export type IssueCardTokensInput = z.infer<typeof issueCardTokensInput>;

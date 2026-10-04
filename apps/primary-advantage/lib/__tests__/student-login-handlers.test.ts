@@ -7,6 +7,9 @@ const domain = vi.hoisted(() => ({
   startClassSession: vi.fn(),
   getNameListForCode: vi.fn(),
   signInWithPicture: vi.fn(),
+  signInWithCardToken: vi.fn(),
+  rotateCardToken: vi.fn(),
+  issueClassCardTokens: vi.fn(),
 }));
 
 vi.mock("@reading-advantage/db", async (orig) => ({ ...(await orig<typeof import("@reading-advantage/db")>()), db: {} }));
@@ -22,7 +25,7 @@ vi.mock("@reading-advantage/domain", async (orig) => {
 });
 
 import { studentLogin } from "@reading-advantage/domain";
-import { startClass, enterCode, pictureSignIn } from "../student-login/handlers";
+import { startClass, enterCode, pictureSignIn, qrSignIn, rotateCard, issueCards } from "../student-login/handlers";
 
 const CLASS_ID = "11111111-1111-4111-8111-111111111111";
 const post = (url: string, body: unknown) =>
@@ -106,5 +109,51 @@ describe("student handlers", () => {
     const res = await pictureSignIn(post("/picture", { code: "ABCDEF", studentId: "h1", pictures: [1, 2, 99] }));
     expect(res.status).toBe(400);
     expect(domain.signInWithPicture).not.toHaveBeenCalled();
+  });
+});
+
+describe("QR card handlers", () => {
+  const token = "A".repeat(43);
+
+  it("signs in with a scan, sets the cookie to the session expiry, and hides the token", async () => {
+    const expiresAt = new Date(Date.now() + 3600_000);
+    domain.signInWithCardToken.mockResolvedValue({ user: { id: "u1", role: "STUDENT" }, authStrength: "full", token: "secret-token", expiresAt });
+    const res = await qrSignIn(post("/qr", { token }));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ user: { id: "u1", role: "STUDENT" }, authStrength: "full" });
+    expect(res.headers.get("set-cookie")).toContain("secret-token");
+    expect(domain.signInWithCardToken).toHaveBeenCalledWith(expect.objectContaining({ meta: { ip: "1.2.3.4", userAgent: null }, input: { token } }));
+  });
+
+  it("returns 401 for a bad card and 429 when limited", async () => {
+    domain.signInWithCardToken.mockRejectedValueOnce(new studentLogin.StudentLoginError("invalid_credentials", "Card not valid."));
+    expect((await qrSignIn(post("/qr", { token }))).status).toBe(401);
+    domain.signInWithCardToken.mockRejectedValueOnce(new studentLogin.StudentLoginError("rate_limited", "Too many.", 9));
+    const res = await qrSignIn(post("/qr", { token }));
+    expect(res.status).toBe(429);
+    expect(res.headers.get("Retry-After")).toBe("9");
+  });
+
+  it("returns 400 for a malformed token", async () => {
+    expect((await qrSignIn(post("/qr", { token: "short" }))).status).toBe(400);
+    expect(domain.signInWithCardToken).not.toHaveBeenCalled();
+  });
+
+  it("rotates a card for a full teacher session only", async () => {
+    getCurrentSession.mockResolvedValue({ ...teacherSession, authStrength: "code_only" });
+    expect((await rotateCard(post("/rotate", { classroomId: CLASS_ID, studentUserId: "s1" }))).status).toBe(403);
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.rotateCardToken.mockResolvedValue({ credentialId: "c1", token });
+    const res = await rotateCard(post("/rotate", { classroomId: CLASS_ID, studentUserId: "s1" }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).token).toBe(token);
+  });
+
+  it("issues class cards for a teacher and returns 401 without a session", async () => {
+    getCurrentSession.mockResolvedValue(null);
+    expect((await issueCards(post("/issue", { classroomId: CLASS_ID }))).status).toBe(401);
+    getCurrentSession.mockResolvedValue(teacherSession);
+    domain.issueClassCardTokens.mockResolvedValue([]);
+    expect((await issueCards(post("/issue", { classroomId: CLASS_ID }))).status).toBe(200);
   });
 });

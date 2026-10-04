@@ -1,4 +1,4 @@
-import { createHash, randomInt } from "node:crypto";
+import { createHash, randomBytes, randomInt } from "node:crypto";
 import { hashPassword, verifyPassword } from "@reading-advantage/auth";
 import {
   CLASS_CODE_ALPHABET,
@@ -67,4 +67,21 @@ export async function burnVerifyTime(): Promise<void> {
     throw error;
   });
   await verifyPictureSequence([0, 0, 0], await dummyHash);
+}
+
+/**
+ * Makes a QR card token: 256 random bits as base64url without padding.
+ * @returns A token of `QR_TOKEN_LENGTH` characters.
+ */
+export function generateCardToken(): string {
+  return randomBytes(32).toString("base64url");
+}
+
+/**
+ * Hashes a card token for storage and lookup. SHA-256 is enough because the token has 256 bits of entropy.
+ * @param token A card token.
+ * @returns The hex SHA-256 digest.
+ */
+export function hashCardToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
 }

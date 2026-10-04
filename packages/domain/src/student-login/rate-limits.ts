@@ -9,6 +9,8 @@ export const STUDENT_LOGIN_LIMITS = {
   classroom: { windowMs: 10 * 60 * 1000, maxAttempts: 200 } satisfies RateLimitConfig,
   /** Failed code lookups from every IP together. Guards the 30-bit code space. */
   globalMiss: { windowMs: 10 * 60 * 1000, maxAttempts: 200 } satisfies RateLimitConfig,
+  /** Failed QR card scans from one IP. Successful scans do not count, so a class can scan together. */
+  cardMiss: { windowMs: 10 * 60 * 1000, maxAttempts: 30 } satisfies RateLimitConfig,
 } as const;
 
 const GLOBAL_MISS_KEY = "username:student-code-miss-global";
@@ -58,4 +60,32 @@ export async function guardClassAttempt(store: RateLimitStore, classroomId: stri
     STUDENT_LOGIN_LIMITS.classroom,
   );
   if (!result.allowed) throw limited(result.retriesAfter);
+}
+
+const cardMissKey = (ip: string | null) => `username:student-card-miss:${ip ?? "unknown"}`;
+
+/**
+ * Checks that the IP has not used up its failed card scans. It does not count the request.
+ * @param store Shared rate-limit store.
+ * @param ip Client IP, or null when unknown (all unknown clients share one bucket).
+ * @returns Resolves when the scan may go on.
+ * @throws {StudentLoginError} With code `rate_limited` when the IP has too many failed scans.
+ */
+export async function guardCardScan(store: RateLimitStore, ip: string | null): Promise<void> {
+  const now = Date.now();
+  const entry = await store.get(cardMissKey(ip));
+  const config = STUDENT_LOGIN_LIMITS.cardMiss;
+  if (entry && now - entry.windowStart < config.windowMs && entry.failedCount >= config.maxAttempts) {
+    throw limited(Math.ceil((config.windowMs - (now - entry.windowStart)) / 1000));
+  }
+}
+
+/**
+ * Counts one failed card scan for the IP.
+ * @param store Shared rate-limit store.
+ * @param ip Client IP, or null when unknown.
+ * @returns Resolves when the miss is stored.
+ */
+export async function recordCardMiss(store: RateLimitStore, ip: string | null): Promise<void> {
+  await consumeRateLimit(store, cardMissKey(ip), STUDENT_LOGIN_LIMITS.cardMiss);
 }
