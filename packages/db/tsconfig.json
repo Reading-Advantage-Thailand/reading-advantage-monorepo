@@ -8,6 +8,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "src/seed/codecamp-users-seed.ts"
+    "src/seed/codecamp-users-seed.ts",
+    "src/seed/primary-qa-seed.ts"
   ]
 }
