@@ -4,13 +4,13 @@ import postgres from "postgres";
 import { and, eq } from "drizzle-orm";
 import * as schema from "../schema/index.js";
 import type { DB } from "../client.js";
-import { createCredentialAccount } from "../../../auth/src/index.js";
+import { createCredentialAccount, hashPassword } from "../../../auth/src/index.js";
 import {
   buildPostgresOptions,
   normalizePostgresConnectionString,
 } from "../connection-options.js";
 
-const { schools, users, classrooms, classroomStudents, classroomTeachers } = schema;
+const { schools, users, accounts, classrooms, classroomStudents, classroomTeachers } = schema;
 
 /** Shared password of every QA account created by this seed. */
 const QA_PASSWORD = "QaTest!2026x";
@@ -35,7 +35,7 @@ export function assertLocalQaSeedAllowed(connectionString: string | undefined): 
 
 /**
  * Seeds Primary Advantage QA browser-test data into a local database.
- * Creates two schools, a SYSTEM actor, credential accounts per role, one classroom
+ * Creates two schools, a SYSTEM user with a password login, credential accounts per role, one classroom
  * per school, and classroom links. Existing rows are skipped, so reruns are safe.
  * @param db Database client connected to a local database.
  * @returns A promise that resolves after all rows exist.
@@ -68,6 +68,19 @@ export async function seedPrimaryQa(db: DB): Promise<void> {
       xp: 0,
       level: 1,
       cefrLevel: "A1-",
+    });
+  }
+  const [systemCredential] = await db
+    .select({ id: accounts.id })
+    .from(accounts)
+    .where(and(eq(accounts.userId, systemId), eq(accounts.providerId, "credential")))
+    .limit(1);
+  if (!systemCredential) {
+    await db.insert(accounts).values({
+      id: `${systemId}_credential`,
+      userId: systemId,
+      providerId: "credential",
+      password: await hashPassword(QA_PASSWORD),
     });
   }
   const actorUserId = systemId;
