@@ -17,7 +17,7 @@ import {
   userActivity,
   xpLogs,
 } from '@reading-advantage/db';
-import { effectiveCallerRole, schoolScopeConditions } from "@/server/utils/auth";
+import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, schoolScopeConditions } from "@/server/utils/auth";
 import { canSetPasswordFor } from "@/lib/authorization";
 import { afterPasswordWrite } from "@/server/utils/passwordEvents";
 import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount } from "@/server/utils/credentials";
@@ -411,7 +411,7 @@ export const updateStudent = async (
     // A password write needs a strictly lower-ranked target (shared reset matrix).
     if (
       updateData.password &&
-      !canSetPasswordFor(effectiveCallerRole(userWithRoles), existingStudent.sessionRole)
+      !canSetPasswordFor(callerEffectiveRank(userWithRoles), await loadTargetEffectiveRank(id, existingStudent.sessionRole))
     ) {
       return { success: false, error: "Cannot change the password of this account" };
     }

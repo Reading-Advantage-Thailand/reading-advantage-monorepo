@@ -239,6 +239,48 @@ describe("updateTeacher scope and target rank (H2)", () => {
   });
 });
 
+describe("password writes use effective rank (legacy rows)", () => {
+  /** A TEACHER session caller with no legacy rows. */
+  const teacherCaller: UserWithRoles = {
+    id: "helper", email: "helper@a.test", schoolId: SCHOOL_A, level: 1,
+    role: "TEACHER", roles: [], SchoolAdmins: [],
+  };
+
+  it("a teacher cannot reset a self-serve owner (session STUDENT + school_admins row)", async () => {
+    await seedUser("owner", "STUDENT", SCHOOL_A);
+    await giveRole("owner", "admin");
+    await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('owner', ${SCHOOL_A})`);
+    const result = await updateTeacher("owner", { password: "Takeover-pass-1" }, teacherCaller);
+    expect(result.success).toBe(false);
+    expect((await snapshot("owner")).account_password).toBe("orig");
+  });
+
+  it("a teacher cannot reset a co-admin (session TEACHER + legacy admin row)", async () => {
+    await seedUser("co-admin", "TEACHER", SCHOOL_A);
+    await giveRole("co-admin", "admin");
+    const result = await updateTeacher("co-admin", { password: "Takeover-pass-1" }, teacherCaller);
+    expect(result.success).toBe(false);
+    expect((await snapshot("co-admin")).account_password).toBe("orig");
+  });
+
+  it("a co-admin with session TEACHER and a legacy admin row cannot reset the owner", async () => {
+    await seedUser("owner", "STUDENT", SCHOOL_A);
+    await giveRole("owner", "admin");
+    await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('owner', ${SCHOOL_A})`);
+    const coAdmin: UserWithRoles = { ...teacherCaller, roles: [{ role: { id: "r", name: "admin" } }] };
+    const result = await updateTeacher("owner", { password: "Takeover-pass-1" }, coAdmin);
+    expect(result.success).toBe(false);
+  });
+
+  it("a co-admin with session TEACHER and a legacy admin row can reset a plain teacher", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    const coAdmin: UserWithRoles = { ...teacherCaller, roles: [{ role: { id: "r", name: "admin" } }] };
+    const result = await updateTeacher("teacher-a", { password: "New-password-1" }, coAdmin);
+    expect(result.success).toBe(true);
+  });
+});
+
 describe("password write events (M1)", () => {
   const sessionAdmin: UserWithRoles = {
     id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,

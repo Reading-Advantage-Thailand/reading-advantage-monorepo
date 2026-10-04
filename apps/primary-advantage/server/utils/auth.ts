@@ -1,5 +1,6 @@
 import { db } from "@reading-advantage/db";
 import { eq, sql, type AnyColumn, type SQL } from "drizzle-orm";
+import { effectiveRoleOf } from "@/lib/authorization";
 import {
   users,
   schools,
@@ -107,6 +108,43 @@ export function effectiveCallerRole(userWithRoles: CallerScope): string {
   if (names.includes("admin") || userWithRoles.SchoolAdmins.length > 0) return "ADMIN";
   if (names.includes("teacher")) return "TEACHER";
   return "";
+}
+
+/**
+ * Resolves the effective rank of a loaded caller for password and delete rank checks.
+ * Unlike effectiveCallerRole, the highest of users.role, legacy role rows,
+ * and school_admins rows wins.
+ * @param userWithRoles The caller loaded by validateUser.
+ * @returns SYSTEM, ADMIN, TEACHER, STUDENT, or an empty string.
+ */
+export function callerEffectiveRank(userWithRoles: CallerScope): string {
+  return effectiveRoleOf(
+    userWithRoles.role,
+    userWithRoles.roles.map((r) => r.role.name),
+    userWithRoles.SchoolAdmins.length > 0,
+  );
+}
+
+/**
+ * Loads the effective rank of a target account from its legacy role and school_admins rows.
+ * An unrecognized legacy role name counts as the highest rank, so such a target is never writable.
+ * @param userId The account to rank.
+ * @param sessionRole The users.role value the caller already read for this account.
+ * @returns The effective role of the account.
+ */
+export async function loadTargetEffectiveRank(
+  userId: string,
+  sessionRole: string | null | undefined,
+): Promise<string> {
+  const legacy = await db.select({ name: roles.name })
+    .from(userRoles)
+    .innerJoin(roles, eq(roles.id, userRoles.roleId))
+    .where(eq(userRoles.userId, userId));
+  const [adminRow] = await db.select({ id: schoolAdmins.id })
+    .from(schoolAdmins)
+    .where(eq(schoolAdmins.userId, userId))
+    .limit(1);
+  return effectiveRoleOf(sessionRole, legacy.map((r) => r.name), Boolean(adminRow), "max");
 }
 
 /**

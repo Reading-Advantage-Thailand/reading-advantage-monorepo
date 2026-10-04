@@ -112,6 +112,17 @@ describe("updateStudent scope and target rank (H2)", () => {
   });
 });
 
+describe("updateStudent effective target rank", () => {
+  it("a teacher cannot set the password of a student who holds a school_admins row", async () => {
+    await seedStudent("owner", "STUDENT", SCHOOL_A);
+    await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('owner', ${SCHOOL_A})`);
+    const teacher: UserWithRoles = { ...sessionAdmin, role: "TEACHER" };
+    const result = await updateStudent("owner", { password: "Takeover-pass-1" }, teacher);
+    expect(result.success).toBe(false);
+    expect((await snapshot("owner")).account_password).toBe("orig");
+  });
+});
+
 describe("password write events (M1)", () => {
   it("records an audit event for a new student without revoking", async () => {
     const result = await createStudent({

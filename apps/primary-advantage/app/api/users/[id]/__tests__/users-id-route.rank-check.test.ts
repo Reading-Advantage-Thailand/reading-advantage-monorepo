@@ -36,6 +36,9 @@ const credentialMocks = vi.hoisted(() => ({
 vi.mock("@/server/utils/credentials", () => credentialMocks);
 const eventMocks = vi.hoisted(() => ({ afterPasswordWrite: vi.fn().mockResolvedValue(undefined) }));
 vi.mock("@/server/utils/passwordEvents", () => eventMocks);
+// The effective-rank loader runs three queries; its real SQL is covered by the PGlite model tests.
+const rankMocks = vi.hoisted(() => ({ loadTargetEffectiveRank: vi.fn(async (_id: string, sessionRole: string | null) => sessionRole ?? "") }));
+vi.mock("@/server/utils/auth", () => rankMocks);
 
 import { PATCH } from "../route";
 
@@ -328,5 +331,19 @@ describe("PATCH /api/users/[id] password events (M1)", () => {
     expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
       userId: "student-1", actor: { id: "admin-1", role: "ADMIN" }, created: false,
     });
+  });
+});
+
+describe("PATCH /api/users/[id] effective target rank (M1)", () => {
+  it("refuses a password write when the target is a legacy admin with session STUDENT", async () => {
+    vi.clearAllMocks();
+    mocks.currentUser.mockResolvedValue({ id: "admin-1", role: "ADMIN", schoolId: "school-a" });
+    selectQueue = [[{ id: "owner-1", schoolId: "school-a", role: "STUDENT" }]];
+    mocks.select.mockImplementation(() => chain(selectQueue.shift() ?? []));
+    rankMocks.loadTargetEffectiveRank.mockResolvedValueOnce("ADMIN");
+    const { request, context } = patchRequest("owner-1", { password: "new-password-1" });
+    const response = await PATCH(request, context);
+    expect(response.status).toBe(403);
+    expect(credentialMocks.upsertCredentialAccount).not.toHaveBeenCalled();
   });
 });

@@ -5,6 +5,7 @@ import {
   USER_MANAGEMENT_ROLES,
   normalizeRole,
   canSetPasswordFor,
+  effectiveRoleOf,
   isAdminOrSystem,
   canRunContentTooling,
   canReadUserResource,
@@ -114,6 +115,25 @@ describe("authorization contracts", () => {
     expect(amountPerGenreSchema.safeParse(1000).success).toBe(false);
     expect(amountPerGenreSchema.safeParse("many").success).toBe(false);
     expect(z.number().safeParse(1000).success).toBe(true);
+  });
+});
+
+describe("effectiveRoleOf", () => {
+  it.each([
+    ["STUDENT", [], true, "ADMIN"],
+    ["TEACHER", ["admin"], false, "ADMIN"],
+    ["STUDENT", ["teacher"], false, "TEACHER"],
+    ["ADMIN", ["teacher"], false, "ADMIN"],
+    ["STUDENT", ["user"], false, "STUDENT"],
+    [null, [], false, ""],
+    ["TEACHER", ["system"], false, "SYSTEM"],
+  ])("session %s legacy %j schoolAdmin %s -> %s", (session, legacy, schoolAdmin, expected) => {
+    expect(effectiveRoleOf(session, legacy as string[], schoolAdmin)).toBe(expected);
+  });
+
+  it("ignores unknown legacy names for a caller and ranks them highest for a target", () => {
+    expect(effectiveRoleOf("TEACHER", ["mystery"], false)).toBe("TEACHER");
+    expect(effectiveRoleOf("STUDENT", ["mystery"], false, "max")).toBe("SYSTEM");
   });
 });
 
