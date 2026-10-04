@@ -69,6 +69,12 @@ picture hash, failed count, locked until, card token hash, rotated at),
   to sign in together.
 - `/api/*` is outside the proxy matcher. Each API that needs a full sign-in must check
   `canUseFullAuthFeature` in its handler (the student-login teacher handlers do).
+- Global miss bucket DoS: an attacker who makes 200 failed code lookups in 10 minutes blocks code
+  entry for every school until the window ends. Accepted for now. Owner review is pending.
+- One student can use the whole class bucket (200 requests in 10 minutes) and block the class
+  from signing in until the window ends. Accepted for now. Owner review is pending.
+- A classmate who knows the code can lock a student by design (5 wrong tries), and a teacher
+  reset or card rotation ends that student's sessions by design. Accepted. Owner review is pending.
 
 ## Non-goals
 
