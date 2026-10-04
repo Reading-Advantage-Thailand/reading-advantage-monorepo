@@ -12,8 +12,9 @@ const replaceMock = vi.fn();
 const refreshMock = vi.fn();
 
 vi.mock("@reading-advantage/auth-client", () => ({ useAuth: () => ({ refresh: refreshMock }) }));
-vi.mock("@/i18n/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: replaceMock }) }));
+vi.mock("@/i18n/navigation", () => ({ getPathname: ({ href, locale }: { href: string; locale: string }) => `/${locale}${href}`,  useRouter: () => ({ push: vi.fn(), replace: replaceMock }) }));
 
+vi.mock("@/lib/student-login/replace-location", () => ({ replaceLocation: (url: string) => replaceMock(url) }));
 import { PasswordSignIn } from "../student-login/password-sign-in";
 import { StudentSignIn } from "../student-login/student-sign-in";
 import { renderWithMessages } from "./helpers/render-with-messages";
@@ -51,17 +52,16 @@ describe("PasswordSignIn", () => {
     fetchMock.mockReturnValue(respond(200, { success: true, user: { id: "u1", role: "STUDENT" } }));
     renderWithMessages(<PasswordSignIn />);
     submit();
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/student/read"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/read"));
     expect(fetchMock).toHaveBeenCalledWith("/api/auth/login", expect.objectContaining({ method: "POST" }));
     expect(JSON.parse(fetchMock.mock.calls[0]![1].body)).toEqual({ username: "p3a12", password: "abcd2345" });
-    expect(refreshMock).toHaveBeenCalled();
   });
 
   it("sends a staff user to the sign-in page, where the proxy picks the home page", async () => {
     fetchMock.mockReturnValue(respond(200, { success: true, user: { id: "t1", role: "TEACHER" } }));
     renderWithMessages(<PasswordSignIn />);
     submit("teacher@school.test", "long-enough-1");
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/auth/signin"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/auth/signin"));
   });
 
   it("announces a wrong username or password", async () => {

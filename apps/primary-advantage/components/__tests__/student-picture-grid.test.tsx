@@ -20,6 +20,13 @@ describe("PictureGrid", () => {
     expect(screen.getAllByRole("button", { name: new RegExp(`^(${labels.join("|")})$`) })).toHaveLength(12);
   });
 
+  it("keeps a light picture background in dark mode so dark pictures stay visible", () => {
+    renderWithMessages(<PictureGrid value={[]} onChange={vi.fn()} />);
+    const bolt = screen.getByRole("button", { name: en.StudentPictures[PICTURES[0]!.key as keyof typeof en.StudentPictures] });
+    expect(bolt).toHaveClass("bg-white", "dark:bg-white");
+    expect(bolt).not.toHaveClass("dark:bg-input/30");
+  });
+
   it("adds the tapped picture number to the taps", () => {
     const onChange = vi.fn();
     renderWithMessages(<PictureGrid value={[4]} onChange={onChange} />);

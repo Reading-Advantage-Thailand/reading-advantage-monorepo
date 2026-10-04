@@ -12,8 +12,9 @@ const replaceMock = vi.fn();
 const refreshMock = vi.fn();
 
 vi.mock("@reading-advantage/auth-client", () => ({ useAuth: () => ({ refresh: refreshMock }) }));
-vi.mock("@/i18n/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: replaceMock }) }));
+vi.mock("@/i18n/navigation", () => ({ getPathname: ({ href, locale }: { href: string; locale: string }) => `/${locale}${href}`,  useRouter: () => ({ push: vi.fn(), replace: replaceMock }) }));
 
+vi.mock("@/lib/student-login/replace-location", () => ({ replaceLocation: (url: string) => replaceMock(url) }));
 import { CodeSignIn } from "../student-login/code-sign-in";
 import { renderWithMessages } from "./helpers/render-with-messages";
 
@@ -98,11 +99,10 @@ describe("CodeSignIn", () => {
     fireEvent.click(screen.getByRole("button", { name: "yellow star" }));
     fireEvent.click(screen.getByRole("button", { name: "red circle" }));
     fireEvent.click(screen.getByRole("button", { name: "teal flower" }));
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/student/read"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/read"));
     const call = fetchMock.mock.calls[1]!;
     expect(call[0]).toBe("/api/auth/student/picture");
     expect(bodyOf(call)).toEqual({ code: "ABCDEF", studentId: "h-ann", pictures: [3, 0, 11] });
-    expect(refreshMock).toHaveBeenCalled();
   });
 
   it("clears the taps and announces wrong pictures", async () => {
@@ -141,11 +141,19 @@ describe("CodeSignIn", () => {
     await openNameList(false);
     fetchMock.mockReturnValueOnce(respond(200, { ...signedIn, authStrength: "code_only" }));
     fireEvent.click(screen.getByRole("button", { name: "Bo" }));
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/student/read"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/read"));
     const call = fetchMock.mock.calls[1]!;
     expect(call[0]).toBe("/api/auth/student/code-only");
     expect(bodyOf(call)).toEqual({ code: "ABCDEF", studentId: "h-bo" });
     expect(screen.queryByRole("button", { name: "red circle" })).not.toBeInTheDocument();
+  });
+
+  it("does not talk about pictures when a name-only sign-in fails", async () => {
+    await openNameList(false);
+    fetchMock.mockReturnValueOnce(respond(401, { code: "invalid_credentials" }));
+    fireEvent.click(screen.getByRole("button", { name: "Bo" }));
+    expect(await screen.findByRole("alert")).not.toHaveTextContent("pictures");
+    expect(replaceMock).not.toHaveBeenCalled();
   });
 
   it("asks for the pictures when the class turned the picture password on after the list loaded", async () => {

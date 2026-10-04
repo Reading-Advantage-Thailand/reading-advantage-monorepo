@@ -21,6 +21,11 @@ const mocks = vi.hoisted(() => ({
   getTranslations: vi.fn(),
 }));
 
+// Student sign-in ends with a full page load to the locale path (shared devices).
+vi.mock("@/lib/student-login/replace-location", () => ({
+  replaceLocation: (url: string) => mocks.replace(url),
+}));
+
 vi.mock("@/i18n/navigation", () => ({
   // The marker data attribute distinguishes this mock from a swap to
   // next/link: the page tests below assert the marker on every navigation
@@ -34,6 +39,7 @@ vi.mock("@/i18n/navigation", () => ({
     </a>
   ),
   usePathname: () => "/",
+  getPathname: ({ href, locale }: { href: string; locale: string }) => `/${locale}${href}`,
   useRouter: () => ({
     push: mocks.push,
     replace: mocks.replace,
@@ -335,7 +341,7 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     expect(mocks.push).toHaveBeenCalledWith("/");
   });
 
-  it("redirects student sign-in through the i18n router", async () => {
+  it("opens the locale student home after student sign-in", async () => {
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce(
@@ -359,7 +365,7 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Somchai" }));
 
     await waitFor(() =>
-      expect(mocks.replace).toHaveBeenCalledWith("/student/read"),
+      expect(mocks.replace).toHaveBeenCalledWith("/en/student/read"),
     );
   });
 

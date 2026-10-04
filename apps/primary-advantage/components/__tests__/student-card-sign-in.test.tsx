@@ -13,7 +13,7 @@ const replaceMock = vi.fn();
 const refreshMock = vi.fn();
 
 vi.mock("@reading-advantage/auth-client", () => ({ useAuth: () => ({ refresh: refreshMock }) }));
-vi.mock("@/i18n/navigation", () => ({
+vi.mock("@/i18n/navigation", () => ({ getPathname: ({ href, locale }: { href: string; locale: string }) => `/${locale}${href}`, 
   Link: ({ children, href, ...rest }: { children: React.ReactNode; href: string }) => (
     <a href={href} {...rest}>
       {children}
@@ -22,6 +22,7 @@ vi.mock("@/i18n/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), replace: replaceMock }),
 }));
 
+vi.mock("@/lib/student-login/replace-location", () => ({ replaceLocation: (url: string) => replaceMock(url) }));
 import { CardSignIn } from "../student-login/card-sign-in";
 import { renderWithMessages } from "./helpers/render-with-messages";
 
@@ -57,14 +58,13 @@ describe("CardSignIn", () => {
     answer(200, { user: { id: "u1", role: "STUDENT" }, authStrength: "full" });
     const replaceState = vi.spyOn(window.history, "replaceState");
     renderWithMessages(<CardSignIn />);
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/student/read"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/read"));
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]![0]).toBe("/api/auth/student/qr");
     expect(JSON.parse(fetchMock.mock.calls[0]![1].body)).toEqual({ token: TOKEN });
     expect(hashAtFetch).toBe("");
     expect(replaceState.mock.invocationCallOrder[0]).toBeLessThan(fetchMock.mock.invocationCallOrder[0]!);
     expect(window.location.pathname).toBe("/en/auth/card");
-    expect(refreshMock).toHaveBeenCalled();
   });
 
   it("posts the token once under StrictMode", async () => {

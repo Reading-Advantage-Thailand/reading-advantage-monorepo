@@ -58,13 +58,13 @@ function Avatar({ name, avatar }: { name: string; avatar: string }) {
   );
 }
 
-/** Maps a failed student-login call to the message for the student. */
-function errorFor(caught: unknown): StudentError {
+/** Maps a failed student-login call to the message for the student. `pictures` is false on the name-only path. */
+function errorFor(caught: unknown, pictures: boolean): StudentError {
   if (!(caught instanceof ClassLoginApiError)) return { key: "generic" };
   if (caught.status === 429) return { key: "rateLimited", minutes: waitMinutes(caught.retryAfterSeconds) };
   if (caught.status === 423) return { key: "locked", minutes: waitMinutes(caught.retryAfterSeconds) };
   if (caught.status === 400 || caught.code === "invalid_code") return { key: "codeInvalid" };
-  if (caught.code === "invalid_credentials") return { key: "wrongPictures" };
+  if (caught.code === "invalid_credentials") return { key: pictures ? "wrongPictures" : "generic" };
   return { key: "generic" };
 }
 
@@ -111,8 +111,8 @@ export function CodeSignIn() {
     return () => clearTimeout(timer);
   }, [lockedUntil]);
 
-  function fail(caught: unknown) {
-    const next = errorFor(caught);
+  function fail(caught: unknown, pictures = true) {
+    const next = errorFor(caught, pictures);
     if (next.key === "codeInvalid") {
       setList(null);
       setStudent(null);
@@ -162,7 +162,7 @@ export function CodeSignIn() {
         setBusy(false);
         return;
       }
-      fail(caught);
+      fail(caught, false);
     }
   }
 

@@ -75,6 +75,14 @@ picture hash, failed count, locked until, card token hash, rotated at),
   from signing in until the window ends. Accepted for now. Owner review is pending.
 - A classmate who knows the code can lock a student by design (5 wrong tries), and a teacher
   reset or card rotation ends that student's sessions by design. Accepted. Owner review is pending.
+- QR card token in the browser history: `/auth/card` removes the `#token` from the tab history,
+  but the browser History list and address-bar suggestions keep the first URL. On a shared
+  device a classmate can open it and sign in as the card owner until the teacher rotates the
+  card. Mitigation: schools use guest or private browsing on shared devices; card rotation is
+  the recovery. Owner review is pending.
+- QR card origin: the card URL uses the origin of the teacher's browser. A card printed from a
+  preview host, an IP, or localhost keeps that host. Print cards from the production host.
+  Owner review is pending (option: a configured public app URL).
 
 ## Non-goals
 

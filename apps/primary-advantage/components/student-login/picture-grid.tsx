@@ -47,7 +47,7 @@ export function PictureGrid({ value, onChange, disabled = false }: PictureGridPr
             key={picture.key}
             type="button"
             variant="outline"
-            className="h-auto min-h-20 p-2 motion-reduce:transition-none"
+            className="h-auto min-h-20 bg-white p-2 motion-reduce:transition-none dark:bg-white"
             disabled={disabled || full}
             onClick={() => onChange([...value, index])}
           >

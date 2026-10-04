@@ -1,30 +1,26 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAuth } from "@reading-advantage/auth-client";
-import { useRouter } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
+import { getPathname } from "@/i18n/navigation";
+import { replaceLocation } from "@/lib/student-login/replace-location";
 
 /** Student home after a sign-in. Lane C will add `/student/home`. */
 export const STUDENT_HOME = "/student/read";
 
 /**
- * Returns a function that opens a page after a sign-in. The function first reads the new session
- * into the client auth state, then replaces the sign-in page in the history, so Back does not
- * return to it.
+ * Returns a function that opens a page after a sign-in. It uses a full page load: on a shared
+ * device the client auth state and caches of the student before must not stay, and the auth
+ * client ignores `refresh()` after a logout in the same page life. The load replaces the
+ * sign-in page in the history, so Back does not return to it.
  * @returns A function that takes the page path (default: the student home).
  */
 export function useEnterAfterSignIn(): (path?: string) => Promise<void> {
-  const { refresh } = useAuth();
-  const router = useRouter();
+  const locale = useLocale();
   return useCallback(
     async (path: string = STUDENT_HOME) => {
-      try {
-        await refresh();
-      } catch {
-        // The session cookie is set. The next page reads the session on the server.
-      }
-      router.replace(path);
+      replaceLocation(getPathname({ href: path, locale }));
     },
-    [refresh, router],
+    [locale],
   );
 }
