@@ -22,7 +22,7 @@ const mocks = vi.hoisted(() => {
       "lessonRecords", "lessons", "licenseOnUsers", "licenses", "loginAttempts",
       "longAnswerQuestions", "masteryCalibrations", "masteryCards", "masteryCommits", "masteryEvidence",
       "masteryPlacements", "masteryPrincipals", "masteryReviews", "masteryStates", "multipleChoiceQuestions",
-      "pastTopics", "primaryLegacyIdMap", "raCefrMappings", "reviewJobAdoptionAuditEvents", "reviewJobDurableAdoption", "reviewJobDurableBindings",
+      "pastTopics", "primaryClassLoginSessions", "primaryLegacyIdMap", "primaryStudentCredentials", "raCefrMappings", "reviewJobAdoptionAuditEvents", "reviewJobDurableAdoption", "reviewJobDurableBindings",
       "reviewJobMigrationIssues", "reviewJobs", "salesChatMessages", "salesConversations", "salesLessons",
       "salesMasteryProjectionOutbox", "salesMasteryProjectionReceipts", "salesMasteryTenantMappings", "salesModules", "salesProgress",
       "salesQuizQuestions", "salesRoleplayAttempts", "salesRoleplayScenarios", "salesRubrics", "schoolAdmins",

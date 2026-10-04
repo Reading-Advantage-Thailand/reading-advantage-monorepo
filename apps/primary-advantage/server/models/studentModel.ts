@@ -17,6 +17,7 @@ import {
   userActivity,
   xpLogs,
 } from '@reading-advantage/db';
+import { studentLogin } from "@reading-advantage/domain";
 import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, resolveCreationSchoolId, schoolScopeConditions } from "@/server/utils/auth";
 import { canSetPasswordFor } from "@/lib/authorization";
 import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
@@ -241,7 +242,8 @@ export const getStudentById = async (
  * Creates a student in the authorized school.
  * @param params The student fields, the authenticated actor, and an optional target school id.
  *   The school id counts only for a SYSTEM actor; other actors keep their own school.
- * @returns The created student result.
+ * @returns The created student result. `credentials` holds the generated username and, when no
+ *   password was given, the initial password, shown once so a teacher can print it.
  */
 export const createStudent = async (params: {
   name: string;
@@ -251,7 +253,12 @@ export const createStudent = async (params: {
   password?: string;
   userWithRoles: UserWithRoles;
   schoolId?: string | null;
-}): Promise<{ success: boolean; student?: StudentData; error?: string }> => {
+}): Promise<{
+  success: boolean;
+  student?: StudentData;
+  credentials?: { username: string; initialPassword: string | null };
+  error?: string;
+}> => {
   const { name, email, cefrLevel, classroomId, password, userWithRoles } =
     params;
 
@@ -290,12 +297,13 @@ export const createStudent = async (params: {
     }
 
     // Validate classroom if provided
+    let classroomName: string | null = null;
     if (classroomId) {
       const classroomConditions: any[] = [eq(classrooms.id, classroomId)];
       classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
       if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
 
-      const [classroom] = await db.select({ id: classrooms.id })
+      const [classroom] = await db.select({ id: classrooms.id, name: classrooms.name })
         .from(classrooms)
         .where(and(...classroomConditions))
         .limit(1);
@@ -303,6 +311,7 @@ export const createStudent = async (params: {
       if (!classroom) {
         return { success: false, error: "Invalid classroom specified" };
       }
+      classroomName = classroom.name;
     }
 
     // Generate password if not provided
@@ -346,6 +355,20 @@ export const createStudent = async (params: {
 
     await afterPasswordWrite({ userId: newStudentId, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: true });
 
+    // FR-6: give the student a generated username and, without a chosen password, an initial
+    // password. A failure here leaves the student with the email username, so it is logged only.
+    let credentials: { username: string; initialPassword: string | null } | undefined;
+    try {
+      const [login] = await studentLogin.provisionStudentLogins({
+        db,
+        schoolId,
+        students: [{ userId: newStudentId, classroomName, classroomId: classroomId ?? null, ...(password ? { password } : {}) }],
+      });
+      if (login) credentials = { username: login.username, initialPassword: login.initialPassword };
+    } catch (error) {
+      console.error("Student Model: Error generating student login:", error);
+    }
+
     // Refetch the full record with the include shape.
     const studentRows = await db.select({
       id: users.id,
@@ -379,7 +402,7 @@ export const createStudent = async (params: {
       classroomId: newStudent.classroomId || null,
     };
 
-    return { success: true, student: studentData };
+    return { success: true, student: studentData, ...(credentials ? { credentials } : {}) };
   } catch (error) {
     console.error("Student Model: Error creating student:", error);
     return { success: false, error: "Failed to create student" };

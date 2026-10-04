@@ -307,9 +307,23 @@ CREATE TABLE IF NOT EXISTS student_assignments (
   updated_at timestamp NOT NULL DEFAULT now(),
   UNIQUE (assignment_id, student_id)
 );
+
+CREATE TABLE IF NOT EXISTS primary_student_credentials (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  school_id uuid NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+  user_id text NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  picture_hash text,
+  failed_count integer NOT NULL DEFAULT 0,
+  locked_until timestamp,
+  card_token_hash text UNIQUE,
+  rotated_at timestamp,
+  created_at timestamp NOT NULL DEFAULT now(),
+  updated_at timestamp NOT NULL DEFAULT now()
+);
 `;
 
 const TABLES = [
+  "primary_student_credentials",
   "accounts",
   "article_activity_logs",
   "lesson_progress",
