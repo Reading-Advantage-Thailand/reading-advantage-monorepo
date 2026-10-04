@@ -96,6 +96,7 @@ const PERMISSION_REQUIREMENTS: Record<
 // User type for permission checking
 export interface UserForPermissions {
   role?: string;
+  schoolId?: string | null;
   roles?: Array<{
     role: {
       name: string;
@@ -105,6 +106,21 @@ export interface UserForPermissions {
     id: string;
     schoolId: string;
   }>;
+}
+
+/**
+ * Tells whether a caller holds a school_admins row for its own school.
+ * A row for another school never lifts the caller, so the caller needs a home school.
+ * @param caller The caller home school and school_admins rows.
+ * @returns True when one row matches the caller's own school.
+ */
+export function hasOwnSchoolAdminRow(caller: {
+  schoolId?: string | null;
+  SchoolAdmins?: ReadonlyArray<{ schoolId: string }>;
+}): boolean {
+  return (caller.SchoolAdmins ?? []).some(
+    (row) => caller.schoolId != null && row.schoolId === caller.schoolId,
+  );
 }
 
 /**
@@ -126,7 +142,7 @@ export function hasPermission(
   // The session returns uppercase roles (STUDENT); requirements use lowercase.
   const userRole = user.role?.toLowerCase();
   const userRoles = user.roles?.map((r) => r.role.name.toLowerCase()) || [];
-  const isSchoolAdmin = (user.SchoolAdmins?.length || 0) > 0;
+  const isSchoolAdmin = hasOwnSchoolAdminRow(user);
 
   // Check if user is school admin and it's allowed for this permission
   if (isSchoolAdmin && requirement.schoolAdminAllowed) {
@@ -193,7 +209,7 @@ export function getEffectiveRole(
 ): string {
   if (!user) return "Guest";
 
-  const isSchoolAdmin = (user.SchoolAdmins?.length || 0) > 0;
+  const isSchoolAdmin = hasOwnSchoolAdminRow(user);
   if (isSchoolAdmin) {
     return "School Admin";
   }

@@ -50,9 +50,19 @@ describe("hasPermission", () => {
   });
 
   it("lets a school admin reach admin pages but never system pages", () => {
-    const schoolAdmin = { role: "teacher", SchoolAdmins: [{ id: "x", schoolId: "s" }] };
+    const schoolAdmin = { role: "teacher", schoolId: "s", SchoolAdmins: [{ id: "x", schoolId: "s" }] };
     expect(hasPermission(schoolAdmin, "ADMIN_ACCESS")).toBe(true);
     expect(hasPermission(schoolAdmin, "SYSTEM_ACCESS")).toBe(false);
+  });
+});
+
+describe("school admin rows of another school", () => {
+  it("grant no admin access or effective role", () => {
+    const foreign = { role: "teacher", schoolId: "a", SchoolAdmins: [{ id: "x", schoolId: "b" }] };
+    expect(hasPermission(foreign, "ADMIN_ACCESS")).toBe(false);
+    expect(getEffectiveRole(foreign)).not.toBe("School Admin");
+    const own = { ...foreign, SchoolAdmins: [{ id: "x", schoolId: "a" }] };
+    expect(hasPermission(own, "ADMIN_ACCESS")).toBe(true);
   });
 });
 

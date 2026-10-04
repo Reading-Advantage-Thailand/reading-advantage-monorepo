@@ -339,6 +339,11 @@ export const createTeacher = async (params: {
       return { success: false, error: "Invalid role specified" };
     }
 
+    // Only an ADMIN or SYSTEM caller may create or re-role an account to admin.
+    if (role === "admin" && !["ADMIN", "SYSTEM"].includes(callerEffectiveRank(userWithRoles))) {
+      return { success: false, error: "Only an admin can assign the admin role" };
+    }
+
     // Check if user already exists (with school + roles for the include shape).
     const existingUserRows = await db.select({
       id: users.id,

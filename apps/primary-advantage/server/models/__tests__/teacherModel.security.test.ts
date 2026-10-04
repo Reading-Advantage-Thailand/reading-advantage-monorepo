@@ -349,6 +349,51 @@ describe("createTeacher and school_admins rows (L-4)", () => {
   });
 });
 
+describe("createTeacher admin role needs an admin caller (cross-school row)", () => {
+  /** A session TEACHER of school A whose only school_admins row is for school B. */
+  const foreignAdmin: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
+    role: "TEACHER", roles: [], SchoolAdmins: [{ id: "sa-b", schoolId: SCHOOL_B }],
+  };
+
+  it("refuses to create an admin-role account", async () => {
+    const result = await createTeacher({
+      name: "x", email: "new-admin@x.test", role: "admin",
+      password: "Takeover-pass-1", userWithRoles: foreignAdmin,
+    });
+    expect(result.success).toBe(false);
+    const rows = await harness.db.execute(sql`SELECT id FROM users WHERE email = 'new-admin@x.test'`);
+    expect(rows.rows).toHaveLength(0);
+  });
+
+  it("refuses to re-role a plain teacher to admin", async () => {
+    await seedUser("plain", "TEACHER", SCHOOL_A);
+    await giveRole("plain", "teacher");
+    const result = await createTeacher({
+      name: "x", email: "plain@x.test", role: "admin", force: true, userWithRoles: foreignAdmin,
+    });
+    expect(result.success).toBe(false);
+    const roleRows = await harness.db.execute(sql`SELECT r.name FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = 'plain'`);
+    expect(roleRows.rows.map((r) => (r as { name: string }).name)).toEqual(["teacher"]);
+  });
+
+  it("still lets an own-school admin create an admin-role account", async () => {
+    const result = await createTeacher({
+      name: "x", email: "new-admin@x.test", role: "admin",
+      password: "Valid-pass-123", userWithRoles: adminCaller(SCHOOL_A),
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("still lets a foreign-row teacher create a teacher-role account", async () => {
+    const result = await createTeacher({
+      name: "x", email: "new-teacher@x.test", role: "teacher",
+      password: "Valid-pass-123", userWithRoles: foreignAdmin,
+    });
+    expect(result.success).toBe(true);
+  });
+});
+
 describe("audit actor role uses the effective rank (L-5)", () => {
   it("logs ADMIN for a session TEACHER with a legacy admin row", async () => {
     await seedUser("teacher-a", "TEACHER", SCHOOL_A);

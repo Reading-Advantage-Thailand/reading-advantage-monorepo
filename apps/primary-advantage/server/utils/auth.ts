@@ -1,6 +1,7 @@
 import { db } from "@reading-advantage/db";
 import { and, eq, sql, type AnyColumn, type SQL } from "drizzle-orm";
 import { canSetPasswordFor, effectiveRoleOf } from "@/lib/authorization";
+import { hasOwnSchoolAdminRow } from "@/lib/permissions";
 import {
   users,
   schools,
@@ -105,7 +106,7 @@ export function effectiveCallerRole(userWithRoles: CallerScope): string {
   if (sessionRole) return sessionRole;
   const names = userWithRoles.roles.map((r) => r.role.name);
   if (names.includes("system")) return "SYSTEM";
-  if (names.includes("admin") || userWithRoles.SchoolAdmins.length > 0) return "ADMIN";
+  if (names.includes("admin") || hasOwnSchoolAdminRow(userWithRoles)) return "ADMIN";
   if (names.includes("teacher")) return "TEACHER";
   return "";
 }
@@ -121,9 +122,7 @@ export function callerEffectiveRank(userWithRoles: CallerScope): string {
   return effectiveRoleOf(
     userWithRoles.role,
     userWithRoles.roles.map((r) => r.role.name),
-    userWithRoles.SchoolAdmins.some(
-      (row) => userWithRoles.schoolId != null && row.schoolId === userWithRoles.schoolId,
-    ),
+    hasOwnSchoolAdminRow(userWithRoles),
   );
 }
 
@@ -217,7 +216,7 @@ export const checkAdminPermissions = async (
     );
 
     // Check if user is a school admin
-    const isSchoolAdmin = userWithRoles.SchoolAdmins.length > 0;
+    const isSchoolAdmin = hasOwnSchoolAdminRow(userWithRoles);
 
     // The users.role session role is authoritative; legacy rows are additive.
     const sessionRole = String(userWithRoles.role ?? "").toUpperCase();
@@ -246,7 +245,7 @@ export const checkTeacherPermissions = async (
     );
 
     // Check if user is a school admin (can also manage teachers/students)
-    const isSchoolAdmin = userWithRoles.SchoolAdmins.length > 0;
+    const isSchoolAdmin = hasOwnSchoolAdminRow(userWithRoles);
 
     const hasPermission = isTeacher || isSchoolAdmin;
 
@@ -274,7 +273,7 @@ export const checkStudentPermissions = async (
       (userRole) => userRole.role.name === "student",
     );
 
-    const isSchoolAdmin = userWithRoles.SchoolAdmins.length > 0;
+    const isSchoolAdmin = hasOwnSchoolAdminRow(userWithRoles);
 
     const hasPermission = hasHigherPermissions || isStudent || isSchoolAdmin;
 
@@ -309,16 +308,7 @@ export const getUserSchoolIds = async (
       schoolIds.push(userWithRoles.schoolId);
     }
 
-    // Add schools where user is a school admin
-    const adminSchoolIds = userWithRoles.SchoolAdmins.map(
-      (admin) => admin.schoolId,
-    );
-    adminSchoolIds.forEach((schoolId) => {
-      if (!schoolIds.includes(schoolId)) {
-        schoolIds.push(schoolId);
-      }
-    });
-
+    // A school_admins row for another school grants no access here.
     return schoolIds;
   } catch (error) {
     console.error("Auth Utils: Error getting user school IDs:", error);
