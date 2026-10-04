@@ -12,6 +12,7 @@ Owner lane: A. Starts first. Merge to the integration branch before other lanes 
 - [x] Add `check-types` to CI — already in `.github/workflows/ci.yml:135` via turbo; heap and builder size set (fa0998d45)
 
 ## Phase 2: Auth and passwords (FR-2, FR-3)
+- [x] Security review fixes: C1 18d352ff1, C2 4461973c3, H1 3545408bb, H2 7e6ba137f, M1 0843b1882, H3/M2 3791f850a, L1-L3 427467596, L4 f1f36df1b af5fea08e
 - [x] Browser-verify the 09-12 authorization tracks; write failing tests for any gap (590435b65, caf2b2ef8; AC-3 system actions unit-tested only, no SYSTEM login exists)
 - [x] Swap permissions to `@reading-advantage/auth` (b3bf3ef0e)
 - [x] Dual-read bcrypt/argon2 with rehash on login, with tests for both formats (b3bf3ef0e; review fixes 427467596, f1f36df1b, 3791f850a)
@@ -19,15 +20,15 @@ Owner lane: A. Starts first. Merge to the integration branch before other lanes 
 ## Phase 3: Database (FR-4, FR-5, FR-8)
 - [x] Additive migration for the missing user columns — not needed for Primary (evidence/phase0-audit-recount.md)
 - [x] Wire doctor + gate in `cloudbuild.yaml` (546e9d330, 950cb8764, 4bb1876ee, 0528b61e8)
-- [ ] Write the Tutor read test and run it on a restored production copy
+- [x] Write the Tutor read test and run it on a restored production copy (cb7c961a7, 8ca1efd47, 1d2d909f8; run on the restored April copy: shape PASS, row check waits for the ETL)
 - [x] Check id mapping and `articleId` resolution for Tutor (4cd6e8087)
 
 ## Phase 4: Defects (FR-6, FR-7)
-- [ ] Sept 15 QA FR-1..FR-8 with regression tests
-- [ ] streak, paused clause, upload routes; school-B assignment read returns 500, must be 403
-- [ ] Housekeeping and the tech-debt entry
+- [x] Sept 15 QA FR-1..FR-8 with regression tests (FR-1 ed50d20ba, FR-2 1e8141c50, FR-3 ecdab4e58, FR-4 4461973c3 3799fc6c9, FR-5 d69c92c0c 7e6ba137f, FR-6 7ca6bd931 e7223b343, FR-7 878378cd2, FR-8 5a96b75d2)
+- [x] streak, paused clause, upload routes; school-B assignment read returns 500, must be 403 (streak dcf0a64d4, paused d5271d4ae, upload temp files 68e85a061, upload school already session-scoped, assignment 3f814930c)
+- [x] Housekeeping and the tech-debt entry (b169e15c2, eb993bb41, e36ecc5f1, f8d2b886f)
 
 ## Gates
-- [ ] Tests, tsc, ESLint green
+- [x] Tests, tsc, ESLint green — Primary tsc 0 errors; Primary 675/676 (1 load timeout, passes alone); ESLint 0 errors on 82 changed files; auth only the known phase-7-closeout failure; api 327/327 (1 file load timeout, passes alone); db 40 failures that predate Lane A (company-identity env, drizzle045 counts, codecamp-0049, marketing import)
 - [ ] Browser re-verification of every Phase 4 fix
 - [ ] Tutor read test green
