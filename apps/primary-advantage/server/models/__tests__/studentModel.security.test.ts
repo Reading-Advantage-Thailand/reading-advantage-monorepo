@@ -1,0 +1,110 @@
+// @vitest-environment node
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { sql } from "drizzle-orm";
+import { createTestDb, type TestDb } from "./helpers/testDb";
+
+vi.mock("@reading-advantage/db", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@reading-advantage/db")>();
+  const dbProxy = new Proxy(
+    {},
+    {
+      get(_target, property) {
+        const real = (globalThis as Record<string, unknown>).__TEST_DB__ as
+          | Record<string | symbol, unknown>
+          | undefined;
+        if (!real) throw new Error("Test DB not initialized");
+        const value = real[property];
+        return typeof value === "function"
+          ? (value as (...args: unknown[]) => unknown).bind(real)
+          : value;
+      },
+    },
+  );
+  return { ...actual, db: dbProxy };
+});
+vi.mock("@reading-advantage/auth", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@reading-advantage/auth")>()),
+  hashPassword: async (password: string) => `hash:${password}`,
+}));
+
+import { updateStudent } from "../studentModel";
+import type { UserWithRoles } from "@/server/utils/auth";
+
+const SCHOOL_A = "00000000-0000-0000-0000-0000000000a1";
+const SCHOOL_B = "00000000-0000-0000-0000-0000000000b1";
+
+let harness: TestDb;
+
+/** An ADMIN session caller with no legacy school_admins row. */
+const sessionAdmin: UserWithRoles = {
+  id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
+  role: "ADMIN", roles: [], SchoolAdmins: [],
+};
+
+/** Reads the credential hash and school of one user. */
+async function snapshot(userId: string) {
+  const rows = await harness.db.execute(sql`
+    SELECT u.password AS user_password, u.school_id, u.name, a.password AS account_password
+    FROM users u LEFT JOIN accounts a ON a.user_id = u.id AND a.provider_id = 'credential'
+    WHERE u.id = ${userId}`);
+  return rows.rows[0] as Record<string, unknown>;
+}
+
+/** Inserts one student-role user with a credential account. */
+async function seedStudent(id: string, role: string, schoolId: string | null) {
+  await harness.db.execute(sql`INSERT INTO users (id, username, display_username, name, email, role, school_id, password)
+    VALUES (${id}, ${id}, ${id}, ${id}, ${`${id}@x.test`}, ${role}, ${schoolId}, 'orig')`);
+  await harness.db.execute(sql`INSERT INTO accounts (id, user_id, provider_id, password)
+    VALUES (${`${id}_credential`}, ${id}, 'credential', 'orig')`);
+  await harness.db.execute(sql`INSERT INTO user_roles (user_id, role_id)
+    SELECT ${id}, id FROM roles WHERE name = 'student'`);
+}
+
+beforeAll(async () => {
+  harness = await createTestDb();
+}, 60_000);
+afterAll(async () => {
+  await harness.close();
+});
+beforeEach(async () => {
+  await harness.reset();
+  await harness.db.execute(sql`INSERT INTO schools (id, name) VALUES (${SCHOOL_A}, 'A'), (${SCHOOL_B}, 'B')`);
+  await harness.db.execute(sql`INSERT INTO roles (name) VALUES ('student'), ('teacher')`);
+});
+
+describe("updateStudent scope and target rank (H2)", () => {
+  it("cannot touch a student of another school without a school_admins row", async () => {
+    await seedStudent("student-b", "STUDENT", SCHOOL_B);
+    const result = await updateStudent("student-b", { name: "Hacked", password: "Takeover-pass-1" }, sessionAdmin);
+    expect(result.success).toBe(false);
+    const row = await snapshot("student-b");
+    expect(row.account_password).toBe("orig");
+    expect(row.name).toBe("student-b");
+  });
+
+  it("refuses a password write when the target session role outranks STUDENT", async () => {
+    await seedStudent("odd-admin", "ADMIN", SCHOOL_A);
+    const result = await updateStudent("odd-admin", { password: "Takeover-pass-1" }, sessionAdmin);
+    expect(result.success).toBe(false);
+    expect((await snapshot("odd-admin")).account_password).toBe("orig");
+  });
+
+  it("fails closed for a non-SYSTEM caller without a school", async () => {
+    await seedStudent("student-b", "STUDENT", SCHOOL_B);
+    const result = await updateStudent("student-b", { name: "Hacked" }, { ...sessionAdmin, schoolId: null });
+    expect(result.success).toBe(false);
+  });
+
+  it("updates a same-school student and its password", async () => {
+    await seedStudent("student-a", "STUDENT", SCHOOL_A);
+    const result = await updateStudent("student-a", { password: "New-password-1" }, sessionAdmin);
+    expect(result.success).toBe(true);
+    expect((await snapshot("student-a")).account_password).toBe("hash:New-password-1");
+  });
+
+  it("lets SYSTEM update a student in any school", async () => {
+    await seedStudent("student-b", "STUDENT", SCHOOL_B);
+    const result = await updateStudent("student-b", { name: "Renamed" }, { ...sessionAdmin, role: "SYSTEM", schoolId: null });
+    expect(result.success).toBe(true);
+  });
+});

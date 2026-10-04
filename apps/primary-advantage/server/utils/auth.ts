@@ -1,5 +1,5 @@
 import { db } from "@reading-advantage/db";
-import { eq } from "drizzle-orm";
+import { eq, sql, type AnyColumn, type SQL } from "drizzle-orm";
 import {
   users,
   schools,
@@ -14,6 +14,8 @@ export interface UserWithRoles {
   email: string | null;
   schoolId: string | null;
   level: number;
+  /** The users.role session role, when the loader provided it. */
+  role?: string | null;
   roles: Array<{
     role: {
       id: string;
@@ -37,6 +39,7 @@ export const validateUser = async (
       email: users.email,
       schoolId: users.schoolId,
       level: users.level,
+      role: users.role,
     })
       .from(users)
       .where(eq(users.id, userId))
@@ -74,6 +77,7 @@ export const validateUser = async (
       email: userRow.email,
       schoolId: userRow.schoolId,
       level: userRow.level,
+      role: userRow.role,
       roles: rolesNested,
       SchoolAdmins: schoolAdminRows,
     };
@@ -85,6 +89,39 @@ export const validateUser = async (
     return null;
   }
 };
+
+/**
+ * Resolves the effective management role of a caller.
+ * The users.role session role wins; legacy role rows fill in when it is absent.
+ * @param userWithRoles The caller loaded by validateUser.
+ * @returns SYSTEM, ADMIN, TEACHER, or an empty string.
+ */
+export function effectiveCallerRole(userWithRoles: UserWithRoles): string {
+  const sessionRole = String(userWithRoles.role ?? "").toUpperCase();
+  if (sessionRole) return sessionRole;
+  const names = userWithRoles.roles.map((r) => r.role.name);
+  if (names.includes("system")) return "SYSTEM";
+  if (names.includes("admin") || userWithRoles.SchoolAdmins.length > 0) return "ADMIN";
+  if (names.includes("teacher")) return "TEACHER";
+  return "";
+}
+
+/**
+ * Builds the school scope conditions for a management query.
+ * SYSTEM callers are unrestricted. Everyone else is limited to their own school,
+ * and a caller without a school sees nothing (fail closed).
+ * @param schoolColumn The schoolId column of the queried table.
+ * @param userWithRoles The caller loaded by validateUser.
+ * @returns Conditions to spread into a where clause.
+ */
+export function schoolScopeConditions(
+  schoolColumn: AnyColumn,
+  userWithRoles: UserWithRoles,
+): SQL[] {
+  if (effectiveCallerRole(userWithRoles) === "SYSTEM") return [];
+  if (!userWithRoles.schoolId) return [sql`false`];
+  return [eq(schoolColumn, userWithRoles.schoolId)];
+}
 
 // Check if user has admin permissions
 export const checkAdminPermissions = async (

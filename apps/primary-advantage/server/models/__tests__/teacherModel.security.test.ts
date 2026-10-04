@@ -22,11 +22,12 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   );
   return { ...actual, db: dbProxy };
 });
-vi.mock("@reading-advantage/auth", () => ({
+vi.mock("@reading-advantage/auth", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@reading-advantage/auth")>()),
   hashPassword: async (password: string) => `hash:${password}`,
 }));
 
-import { createTeacher } from "../teacherModel";
+import { createTeacher, updateTeacher } from "../teacherModel";
 import type { UserWithRoles } from "@/server/utils/auth";
 
 const SCHOOL_A = "00000000-0000-0000-0000-0000000000a1";
@@ -61,6 +62,12 @@ async function seedUser(id: string, role: string, schoolId: string | null) {
     VALUES (${id}, ${id}, ${id}, ${id}, ${`${id}@x.test`}, ${role}, ${schoolId}, 'orig')`);
   await harness.db.execute(sql`INSERT INTO accounts (id, user_id, provider_id, password)
     VALUES (${`${id}_credential`}, ${id}, 'credential', 'orig')`);
+}
+
+/** Grants a legacy user_roles row by role name. */
+async function giveRole(userId: string, roleName: string) {
+  await harness.db.execute(sql`INSERT INTO user_roles (user_id, role_id)
+    SELECT ${userId}, id FROM roles WHERE name = ${roleName}`);
 }
 
 beforeAll(async () => {
@@ -131,5 +138,52 @@ describe("createTeacher against existing users (C1)", () => {
       password: "Valid-pass-123", userWithRoles: adminCaller(SCHOOL_A),
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe("updateTeacher scope and target rank (H2)", () => {
+  /** An ADMIN session caller with no legacy school_admins row. */
+  const sessionAdmin: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
+    role: "ADMIN", roles: [], SchoolAdmins: [],
+  };
+
+  it("cannot touch a teacher of another school even without a school_admins row", async () => {
+    await seedUser("teacher-b", "TEACHER", SCHOOL_B);
+    await giveRole("teacher-b", "teacher");
+    const result = await updateTeacher("teacher-b", { name: "Hacked", password: "Takeover-pass-1" }, sessionAdmin);
+    expect(result.success).toBe(false);
+    const row = await snapshot("teacher-b");
+    expect(row.account_password).toBe("orig");
+  });
+
+  it("cannot set the password of an ADMIN in its own school", async () => {
+    await seedUser("admin-2", "ADMIN", SCHOOL_A);
+    await giveRole("admin-2", "admin");
+    const result = await updateTeacher("admin-2", { password: "Takeover-pass-1" }, sessionAdmin);
+    expect(result.success).toBe(false);
+    expect((await snapshot("admin-2")).account_password).toBe("orig");
+  });
+
+  it("fails closed for a non-SYSTEM caller without a school", async () => {
+    await seedUser("teacher-b", "TEACHER", SCHOOL_B);
+    await giveRole("teacher-b", "teacher");
+    const result = await updateTeacher("teacher-b", { name: "Hacked" }, { ...sessionAdmin, schoolId: null });
+    expect(result.success).toBe(false);
+  });
+
+  it("updates a same-school teacher and its password", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    const result = await updateTeacher("teacher-a", { password: "New-password-1" }, sessionAdmin);
+    expect(result.success).toBe(true);
+    expect((await snapshot("teacher-a")).account_password).toBe("hash:New-password-1");
+  });
+
+  it("lets SYSTEM update a teacher in any school", async () => {
+    await seedUser("teacher-b", "TEACHER", SCHOOL_B);
+    await giveRole("teacher-b", "teacher");
+    const result = await updateTeacher("teacher-b", { name: "Renamed" }, { ...sessionAdmin, role: "SYSTEM", schoolId: null });
+    expect(result.success).toBe(true);
   });
 });

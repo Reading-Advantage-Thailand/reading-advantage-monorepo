@@ -15,6 +15,8 @@ import {
   schools,
 } from '@reading-advantage/db';
 import { ROLE_HIERARCHY, ROLES, type Role } from "@reading-advantage/auth/roles";
+import { effectiveCallerRole, schoolScopeConditions } from "@/server/utils/auth";
+import { canSetPasswordFor } from "@/lib/authorization";
 import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount } from "@/server/utils/credentials";
 import {
   TeacherData,
@@ -45,18 +47,11 @@ export const getTeachers = async (
     // Calculate offset for pagination
     const offset = (page - 1) * limit;
 
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      // School admin - only see teachers from their school
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     // Build the where clause for filtering. We restrict to users whose role
     // is in (teacher, admin) via the M:N userRoles table.
     const roleNames = role ? [role] : ["teacher", "admin"];
     const whereConditions: any[] = [
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
     // Add search filter if provided
@@ -202,16 +197,10 @@ export const getTeacherById = async (
   userWithRoles: UserWithRoles,
 ): Promise<TeacherData | null> => {
   try {
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     const whereConditions: any[] = [
       eq(users.id, id),
       inArray(roles.name, ["teacher", "admin"]),
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
     const teachers = await db.select({
@@ -383,10 +372,7 @@ export const createTeacher = async (params: {
       : null;
 
     // Determine school assignment
-    let schoolId = null;
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolId = userWithRoles.schoolId;
-    }
+    const schoolId = userWithRoles.schoolId ?? null;
 
     // If user exists, handle accordingly
     if (existingUser) {
@@ -717,23 +703,18 @@ export const updateTeacher = async (
   userWithRoles: UserWithRoles,
 ): Promise<{ success: boolean; teacher?: TeacherData; error?: string }> => {
   try {
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     // Check if teacher exists and user has permission to update
     const teacherConditions: any[] = [
       eq(users.id, id),
       inArray(roles.name, ["teacher", "admin"]),
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
     const [existingTeacher] = await db.select({
       id: users.id,
       email: users.email,
       schoolId: users.schoolId,
+      sessionRole: users.role,
     })
       .from(users)
       .innerJoin(userRoles, eq(userRoles.userId, users.id))
@@ -743,6 +724,14 @@ export const updateTeacher = async (
 
     if (!existingTeacher) {
       return { success: false, error: "Teacher not found" };
+    }
+
+    // A password write needs a strictly lower-ranked target (shared reset matrix).
+    if (
+      updateData.password &&
+      !canSetPasswordFor(effectiveCallerRole(userWithRoles), existingTeacher.sessionRole)
+    ) {
+      return { success: false, error: "Cannot change the password of this account" };
     }
 
     // Check if email is being updated and doesn't conflict
@@ -853,17 +842,11 @@ export const deleteTeacher = async (
   userWithRoles: UserWithRoles,
 ): Promise<{ success: boolean; error?: string }> => {
   try {
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     // Check if teacher exists and user has permission to delete
     const teacherConditions: any[] = [
       eq(users.id, id),
       inArray(roles.name, ["teacher", "admin"]),
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
     const [existingTeacher] = await db.select({ id: users.id })
@@ -894,15 +877,9 @@ export const deleteTeacher = async (
 // Get teacher statistics
 export const getTeacherStatistics = async (userWithRoles: UserWithRoles) => {
   try {
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     const whereConditions: any[] = [
       inArray(roles.name, ["teacher", "admin"]),
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
     // Get all teachers + their classroom/student counts in one query.
