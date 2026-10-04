@@ -3,8 +3,8 @@
 Owner lane: B. Depends on cutover blockers Phase 2 for argon2.
 
 ## Phase 0: Read the current flow (1 h)
-- [ ] Map `components/auth/` student form, `api/auth/*`, `lib/session.ts`, `proxy.ts`, `lib/route-policies.ts`
-- [ ] List what `@reading-advantage/auth` already offers (rate-limit, audit, sessions)
+- [x] Map `components/auth/` student form, `api/auth/*`, `lib/session.ts`, `proxy.ts`, `lib/route-policies.ts`
+- [x] List what `@reading-advantage/auth` already offers (rate-limit, audit, sessions)
 
 ## Phase 1: Contracts and schema
 - [ ] Zod contracts for the new requests
