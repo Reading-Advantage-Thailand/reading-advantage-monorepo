@@ -9,7 +9,7 @@ import { STORY } from './helpers.js';
 describe('manifest', () => {
   it('is a story game with both renderers and a turn simulation', () => {
     expect(manifest.id).toBe('paladins-twin-soul');
-    expect(manifest.inputMode).toBe('story');
+    expect(manifest.inputMode).toBe('practice');
     expect(manifest.simulation).toBe('turn');
     expect([...manifest.renderers].sort()).toEqual(['phaser', 'three']);
     expect(manifest.needs.vocabulary).toBeLessThanOrEqual(STORY.vocabulary.length);

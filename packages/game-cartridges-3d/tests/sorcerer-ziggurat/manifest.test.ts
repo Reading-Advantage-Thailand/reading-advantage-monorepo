@@ -32,7 +32,7 @@ describe('manifest', () => {
   it('is a turn-based story cartridge that needs sentences, for A0 to A1, in both renderers', () => {
     expect(manifest).toMatchObject({
       id: 'sorcerer-ziggurat',
-      inputMode: 'story',
+      inputMode: 'practice',
       simulation: 'turn',
       levels: ['Pre-A1', 'A0', 'A0+', 'A1'],
       needs: { sentences: 3 },

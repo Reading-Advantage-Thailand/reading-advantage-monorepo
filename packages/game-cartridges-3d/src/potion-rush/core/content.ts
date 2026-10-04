@@ -1,14 +1,14 @@
 /**
  * Potion Rush content (task 16): the shift's orders from a story, with customers from a seeded
- * list. A `StoryInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
+ * list. A `PracticeInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
  * `SentenceInput` gets ids `s-1`, `s-2`, ... and words from `term.split(' ')`.
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { CUSTOMER_KINDS, type CustomerKind, type Order } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type PotionRushInput = StoryInput | SentenceInput;
+export type PotionRushInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: PotionRushInput): input is SentenceInput {
   return Array.isArray(input);

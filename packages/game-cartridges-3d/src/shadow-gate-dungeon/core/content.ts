@@ -1,16 +1,16 @@
 /**
- * Shadow Gate Dungeon content: the delve's rooms from a story. A `StoryInput` keeps its sentence
+ * Shadow Gate Dungeon content: the delve's rooms from a story. A `PracticeInput` keeps its sentence
  * ids and paragraphs for the evidence; a plain APK `SentenceInput` gets ids `s-1`, `s-2`, ...
  * and words from `term.split(' ')`. A room takes a sentence of 3 to 7 words; the delve is up to
  * 5 rooms in a seeded order (fewer when the story has fewer such sentences). The crystals of a
  * room hold the words of the sentence and words of other sentences of the story.
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { RoomSentence } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type ShadowGateInput = StoryInput | SentenceInput;
+export type ShadowGateInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: ShadowGateInput): input is SentenceInput {
   return Array.isArray(input);

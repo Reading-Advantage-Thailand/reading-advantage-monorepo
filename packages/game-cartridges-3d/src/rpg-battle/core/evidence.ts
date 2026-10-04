@@ -39,7 +39,7 @@ export function evidenceOf(state: RpgBattleState, story: EvidenceStory, seed: nu
     schemaVersion: 1,
     kind: 'story-game',
     gameId: RPG_BATTLE_GAME_ID,
-    storyId: story.id,
+    inputId: story.id,
     level: story.level,
     seed,
     durationMs: Math.max(0, Math.round(durationMs)),

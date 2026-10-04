@@ -48,7 +48,7 @@ export function evidenceOf(
     schemaVersion: 1,
     kind: 'story-game',
     gameId: POTION_RUSH_GAME_ID,
-    storyId: story.id,
+    inputId: story.id,
     level: story.level,
     seed,
     durationMs: Math.max(0, Math.round(durationMs)),

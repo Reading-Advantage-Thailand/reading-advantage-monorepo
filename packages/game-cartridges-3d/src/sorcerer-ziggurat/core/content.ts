@@ -1,16 +1,16 @@
 /**
- * Sorcerer's Ziggurat content: the rituals of a climb from a story. A `StoryInput` keeps its
+ * Sorcerer's Ziggurat content: the rituals of a climb from a story. A `PracticeInput` keeps its
  * sentence ids and paragraphs for the evidence; a plain APK `SentenceInput` gets ids `s-1`,
  * `s-2`, ... and words from `term.split(/\s+/)`. A ritual takes a sentence of 3 to 8 words; the
  * climb is up to 5 rituals in a seeded order. Each tier offers the right word and up to two
  * decoys: words that are not the right word, from this sentence or from the other sentences.
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { LANES, type Cube, type Lane, type Ritual } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type ZigguratInput = StoryInput | SentenceInput;
+export type ZigguratInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: ZigguratInput): input is SentenceInput {
   return Array.isArray(input);

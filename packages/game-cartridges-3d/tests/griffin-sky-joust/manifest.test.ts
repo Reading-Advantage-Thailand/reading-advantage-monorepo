@@ -27,7 +27,7 @@ describe('manifest', () => {
   it('needs sentences, plays the early levels, and runs in both renderers', () => {
     expect(manifest.needs).toEqual({ vocabulary: 0, sentences: 3, fills: 0, questions: 0 });
     expect(manifest.renderers).toEqual(['three', 'phaser']);
-    expect(manifest.inputMode).toBe('story');
+    expect(manifest.inputMode).toBe('practice');
   });
 
   it('the briefing reads real catalog keys', () => {

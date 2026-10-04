@@ -1,14 +1,14 @@
 /**
  * Paladin's Twin Soul content: the target words of a run from a story, the monsters that serve
- * them, and the shades of each wave. A `StoryInput` keeps its vocabulary ids for the evidence;
+ * them, and the shades of each wave. A `PracticeInput` keeps its vocabulary ids for the evidence;
  * a plain APK `VocabularyInput` gets ids `w-1`, `w-2`, ...
  */
-import type { StoryInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { PracticeInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { MONSTER_KINDS, type Monster, type Shade, type TargetWord } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK vocabulary array. */
-export type TwinSoulInput = StoryInput | VocabularyInput;
+export type TwinSoulInput = PracticeInput | VocabularyInput;
 
 export function isVocabularyInput(input: TwinSoulInput): input is VocabularyInput {
   return Array.isArray(input);

@@ -70,7 +70,7 @@ describe('content', () => {
   });
 
   it('the manifest validates', () => {
-    expect(manifest).toMatchObject({ id: 'dragon-flight', inputMode: 'story', simulation: 'realtime', orientation: 'any', needs: { vocabulary: 4 } });
+    expect(manifest).toMatchObject({ id: 'dragon-flight', inputMode: 'practice', simulation: 'realtime', orientation: 'any', needs: { vocabulary: 4 } });
   });
 });
 
@@ -388,7 +388,7 @@ describe('evidence', () => {
     chooseRight(sim);
     const evidence = evidenceOf(sim.state, STORY, 3, sim.state.timeMs);
     expect(storyGameEvidenceSchema.parse(evidence)).toEqual(evidence);
-    expect(evidence).toMatchObject({ gameId: 'dragon-flight', storyId: STORY.id, level: STORY.level, seed: 3 });
+    expect(evidence).toMatchObject({ gameId: 'dragon-flight', inputId: STORY.id, level: STORY.level, seed: 3 });
     expect(evidence.items).toEqual([
       { itemId: word0.id, itemKind: 'word', label: word0.term, attempts: 1, correctFirstTry: false, solved: false },
       { itemId: word1.id, itemKind: 'word', label: word1.term, attempts: 1, correctFirstTry: true, solved: true },

@@ -14,8 +14,8 @@ describe('bot', () => {
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].flatMap((seed) =>
       (['pip-is-brave', 'the-school-garden'] as const).map((story) => [seed, seed % 2 === 0, story] as const),
     ),
-  )('seed %i helper %s plays %s to the end', { timeout: 30_000 }, (seed, helper, storyId) => {
-    const story = storyId === 'pip-is-brave' ? STORY : LONG_STORY;
+  )('seed %i helper %s plays %s to the end', { timeout: 30_000 }, (seed, helper, inputId) => {
+    const story = inputId === 'pip-is-brave' ? STORY : LONG_STORY;
     const sim = createRecorder(seed, createHauntedLibrary(story, { seed, helper }));
     const events: LibraryEvent[] = [];
     let steps = 0;

@@ -9,8 +9,8 @@ import { LONG_STORY, STORY, ofType } from './helpers.js';
 const SEEDS = Array.from({ length: 24 }, (_, i) => i + 1);
 
 describe('bot', () => {
-  it.each(SEEDS.flatMap((seed) => [[seed, 'pip-is-brave'], [seed, 'the-school-garden']] as const))('seed %i plays %s to the end', (seed, storyId) => {
-    const story = storyId === 'pip-is-brave' ? STORY : LONG_STORY;
+  it.each(SEEDS.flatMap((seed) => [[seed, 'pip-is-brave'], [seed, 'the-school-garden']] as const))('seed %i plays %s to the end', (seed, inputId) => {
+    const story = inputId === 'pip-is-brave' ? STORY : LONG_STORY;
     const sim = createRecorder(seed, createSorcererZiggurat(story, { seed, helper: seed % 2 === 0 }));
     const events: ZigguratEvent[] = [];
     let n = 0;

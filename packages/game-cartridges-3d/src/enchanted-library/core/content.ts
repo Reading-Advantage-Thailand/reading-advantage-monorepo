@@ -1,15 +1,15 @@
 /**
- * Enchanted Library content: the rounds of a visit from the vocabulary of a story. A `StoryInput`
+ * Enchanted Library content: the rounds of a visit from the vocabulary of a story. A `PracticeInput`
  * keeps its vocabulary ids; a plain APK `VocabularyInput` gets ids `v-1`, `v-2`, ... A round
  * holds one word. The visit is up to 8 rounds in a seeded order (fewer when the story has fewer
  * words). Each round shows the right book and up to 3 decoy books of other words.
  */
-import type { StoryInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { PracticeInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { LibraryRound } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK vocabulary array. */
-export type LibraryInput = StoryInput | VocabularyInput;
+export type LibraryInput = PracticeInput | VocabularyInput;
 
 export function isVocabularyInput(input: LibraryInput): input is VocabularyInput {
   return Array.isArray(input);

@@ -7,7 +7,7 @@
  * flat. At dawn the light warms and the zombies crumble.
  */
 import type * as Phaser from 'phaser';
-import { preloadAssetBindings, toGameResults, type StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { preloadAssetBindings, toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
@@ -24,7 +24,7 @@ const ORB_COLOR = 0xfff1a8;
 const NIGHT_TINT = 0xb4c0ff;
 
 export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, unknown>> {
-  const story = ctx.input as StoryInput;
+  const story = ctx.input as PracticeInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('heroVsZombie')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
   const heroId = (HEROES_2D as readonly string[]).includes(options.hero) ? options.hero : 'knight';
@@ -45,8 +45,6 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   }
 
   function create(this: Phaser.Scene): void {
-    // Phaser calls create() with the scene as `this`.
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const scene = this;
     const { width: W, height: H } = scene.scale;
     const startedAt = performance.now();

@@ -12,8 +12,8 @@ describe('bot', () => {
     [1, 2, 3, 4, 5, 6, 7, 8].flatMap((seed) =>
       (['pip-is-brave', 'the-school-garden'] as const).map((story) => [seed, seed % 2 === 0, story] as const),
     ),
-  )('seed %i helper %s plays %s to the end without a wrong word', (seed, helper, storyId) => {
-    const story = storyId === 'pip-is-brave' ? STORY : SHORT_STORY;
+  )('seed %i helper %s plays %s to the end without a wrong word', (seed, helper, inputId) => {
+    const story = inputId === 'pip-is-brave' ? STORY : SHORT_STORY;
     const sim = createRecorder(seed, createPotionRush(story, { seed, helper }));
     const events: PotionRushEvent[] = [];
     let steps = 0;

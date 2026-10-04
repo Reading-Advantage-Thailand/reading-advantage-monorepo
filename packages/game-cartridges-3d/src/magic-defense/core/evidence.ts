@@ -39,7 +39,7 @@ export function evidenceOf(state: MagicDefenseState, story: EvidenceStory, seed:
     schemaVersion: 1,
     kind: 'story-game',
     gameId: MAGIC_DEFENSE_GAME_ID,
-    storyId: story.id,
+    inputId: story.id,
     level: story.level,
     seed,
     durationMs: Math.max(0, Math.round(durationMs)),

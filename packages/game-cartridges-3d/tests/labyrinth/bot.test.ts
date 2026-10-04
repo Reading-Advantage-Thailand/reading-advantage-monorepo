@@ -26,8 +26,8 @@ describe('bot', () => {
   )(
     'seed %i helper %s plays %s to the end',
     { timeout: 30_000 },
-    (seed, helper, storyId) => {
-      const story = loadStory(storyId);
+    (seed, helper, inputId) => {
+      const story = loadStory(inputId);
       const sim = createRecorder(seed, createLabyrinth(story, { seed, helper }));
       const events: LabyrinthEvent[] = [];
       let steps = 0;

@@ -15,7 +15,7 @@ const readPack = (id: string): ModelPack => modelPackSchema.parse(JSON.parse(rea
 
 describe('manifest', () => {
   it('is a valid story-mode turn game for both renderers', () => {
-    expect(manifest).toMatchObject({ id: 'rpg-battle', title: 'RPG Battle', inputMode: 'story', simulation: 'turn', renderers: ['three', 'phaser'] });
+    expect(manifest).toMatchObject({ id: 'rpg-battle', title: 'RPG Battle', inputMode: 'practice', simulation: 'turn', renderers: ['three', 'phaser'] });
     expect(manifest.needs.vocabulary).toBe(4);
     expect(manifest.briefingKey).toBe('rpgBattle.briefing');
     expect(manifest.requiredAssetBindings).toEqual([...FILES_2D]);

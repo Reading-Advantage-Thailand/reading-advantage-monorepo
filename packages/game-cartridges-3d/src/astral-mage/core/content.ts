@@ -1,16 +1,16 @@
 /**
- * Astral Mage content: the casting's rituals from a story. A `StoryInput` keeps its sentence
+ * Astral Mage content: the casting's rituals from a story. A `PracticeInput` keeps its sentence
  * ids and paragraphs for the evidence; a plain APK `SentenceInput` gets ids `s-1`, `s-2`, ...
  * and words from `term.split(/\s+/)`. A ritual takes a sentence of 3 to 8 words; the casting is
  * up to 5 rituals in a seeded order (fewer when the story has fewer such sentences). Each
  * ritual adds one echo crystal: a word of another sentence that is not in this one.
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { RitualSentence } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type AstralMageInput = StoryInput | SentenceInput;
+export type AstralMageInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: AstralMageInput): input is SentenceInput {
   return Array.isArray(input);

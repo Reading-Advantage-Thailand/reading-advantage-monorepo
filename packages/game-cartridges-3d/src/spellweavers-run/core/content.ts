@@ -1,15 +1,15 @@
 /**
  * Spellweaver's Run content: the sentences of a run from a story, and the orbs of a round. A
- * `StoryInput` keeps its sentence ids and paragraphs for the evidence; a plain APK `SentenceInput`
+ * `PracticeInput` keeps its sentence ids and paragraphs for the evidence; a plain APK `SentenceInput`
  * gets ids `s-1`, `s-2`, ... and words from `term.split(/\s+/)`. A run takes sentences of 3 to 8
  * words (all sentences when none fits). Decoy orbs carry words of other places in the story.
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { Orb, RunSentence } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type SpellweaversInput = StoryInput | SentenceInput;
+export type SpellweaversInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: SpellweaversInput): input is SentenceInput {
   return Array.isArray(input);

@@ -28,8 +28,8 @@ describe('bot', () => {
     [1, 2, 3, 4, 5, 6, 7, 8].flatMap((seed) =>
       (['pip-is-brave', 'the-school-garden'] as const).map((story) => [seed, seed % 2 === 0, story] as const),
     ),
-  )('seed %i helper %s plays %s to the end with no missed orb', { timeout: 30_000 }, (seed, helper, storyId) => {
-    const story = storyId === 'pip-is-brave' ? STORY : LONG_STORY;
+  )('seed %i helper %s plays %s to the end with no missed orb', { timeout: 30_000 }, (seed, helper, inputId) => {
+    const story = inputId === 'pip-is-brave' ? STORY : LONG_STORY;
     const { sim, events, steps } = play(seed, helper, story, stepsOf(1500));
     expect(sim.state.phase).toBe('complete');
     expect(steps).toBeLessThan(LIMIT_STEPS);

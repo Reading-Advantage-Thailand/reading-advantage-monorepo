@@ -1,15 +1,15 @@
 /**
- * Realm Carver content: the realms of a campaign from a story. A `StoryInput` keeps its sentence
+ * Realm Carver content: the realms of a campaign from a story. A `PracticeInput` keeps its sentence
  * ids and paragraphs for the evidence; a plain APK `SentenceInput` gets ids `s-1`, `s-2`, ... and
  * words from `term.split(' ')`. A realm takes a sentence of 3 to 7 words; the campaign is up to 4
  * realms in a seeded order (fewer when the story has fewer such sentences).
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { MONSTER_KINDS, type MonsterKind, type RealmSentence } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type RealmCarverInput = StoryInput | SentenceInput;
+export type RealmCarverInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: RealmCarverInput): input is SentenceInput {
   return Array.isArray(input);

@@ -1,12 +1,11 @@
 /**
- * The games the selector shows. A playable game has its manifest (small, for the story rule) and
- * a lazy loader for its cartridge code, so each game downloads only when chosen. A game that is
- * not built yet shows as "coming soon".
+ * The student games. A playable game has its manifest (small, for the lock rule) and a lazy
+ * loader for its cartridge code, so each game downloads only when chosen. A game that is not
+ * built yet shows as "coming soon". Monster Encounters is not here: it waits to become a
+ * teacher-led game of the reading lesson.
  */
-import { isCompatible, type Cartridge3DManifest, type StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { missingFor, type Cartridge3DManifest, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Cartridge } from '@reading-advantage/advantage-play-kit-3d/factory';
-import { manifest as monsterEncounters } from './monster-encounters/manifest.js';
-import monsterEncountersStrings from './monster-encounters/strings.en.js';
 import { manifest as rpgBattle } from './rpg-battle/manifest.js';
 import rpgBattleStrings from './rpg-battle/strings.en.js';
 import { manifest as paladinsTwinSoul } from './paladins-twin-soul/manifest.js';
@@ -77,15 +76,6 @@ export interface GameEntry {
 }
 
 export const GAMES: GameEntry[] = [
-  {
-    id: 'monster-encounters',
-    icon: '⚔️',
-    tint: ['#8b5cf6', '#4c1d95'],
-    titleKey: 'monsterEncounters.title',
-    pitchKey: 'monsterEncounters.pitch',
-    manifest: monsterEncounters,
-    load: () => import('./monster-encounters/index.js').then((m) => m.cartridge),
-  },
   {
     id: 'rune-match',
     icon: '🔮',
@@ -341,14 +331,19 @@ export const GAMES: GameEntry[] = [
 ];
 
 /** The English catalogs of every game (the host merges them with its own). */
-export const GAME_STRINGS = [monsterEncountersStrings, runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings, enchantedLibraryStrings, gryphonPatrolStrings, magicDefenseStrings, griffinSkyJoustStrings, abyssalWellStrings, runeForgeChamberStrings, dragonRiderStrings, griffinRidersEscapeStrings, castleDefenseStrings, sorcererZigguratStrings, stormCastleTowerStrings];
+export const GAME_STRINGS = [runeMatchStrings, labyrinthStrings, potionRushStrings, dragonFlightStrings, dungeonLiberatorStrings, devourerSlimeStrings, heroVsZombieStrings, rpgBattleStrings, paladinsTwinSoulStrings, villageGuardianStrings, archersRevengeStrings, astralMageStrings, spellweaversRunStrings, hauntedLibraryStrings, shadowGateDungeonStrings, realmCarverStrings, alchemistsSynthesisStrings, enchantedLibraryStrings, gryphonPatrolStrings, magicDefenseStrings, griffinSkyJoustStrings, abyssalWellStrings, runeForgeChamberStrings, dragonRiderStrings, griffinRidersEscapeStrings, castleDefenseStrings, sorcererZigguratStrings, stormCastleTowerStrings];
 
 export const playable = (g: GameEntry): boolean => !!g.load && !!g.manifest;
 
-/** A playable game fits a story when the story has the game's level and enough items. */
-export function fits(g: GameEntry, story: StoryInput | null): boolean {
-  if (!playable(g)) return false;
-  return !story || isCompatible(g.manifest!, story);
+/**
+ * The saved items a playable game still needs before it unlocks: 0 and 0 when the student can
+ * play it.
+ */
+export function missingItems(
+  g: GameEntry & { manifest: Cartridge3DManifest },
+  input: Pick<PracticeInput, 'vocabulary' | 'sentences'>,
+): { vocabulary: number; sentences: number } {
+  return missingFor(g.manifest, input);
 }
 
 export const gameById = (id: string): GameEntry | undefined => GAMES.find((g) => g.id === id);

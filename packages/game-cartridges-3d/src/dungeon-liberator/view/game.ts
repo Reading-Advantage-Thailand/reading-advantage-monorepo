@@ -5,7 +5,7 @@
  * animates the events. It never decides a rule.
  */
 import * as THREE from 'three';
-import { toGameResults, type StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { attachJoystick, esc, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
@@ -15,7 +15,7 @@ import { nextSteer } from '../qc/bot.js';
 import { buildRoom, ROOM_MODELS } from './room.js';
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
-  const story = ctx.input as StoryInput;
+  const story = ctx.input as PracticeInput;
   const stage = ctx.stage;
   const t = ctx.i18n.scope('hud').t;
   const audio = ctx.audio;

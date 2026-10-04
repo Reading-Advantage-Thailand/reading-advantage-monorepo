@@ -26,7 +26,7 @@ describe('manifest', () => {
   it('the manifest is a story cartridge for A0 to A1 with both renderers', () => {
     expect(manifest).toMatchObject({
       id: 'shadow-gate-dungeon',
-      inputMode: 'story',
+      inputMode: 'practice',
       simulation: 'realtime',
       levels: ['Pre-A1', 'A0', 'A0+', 'A1'],
       needs: { sentences: 3 },

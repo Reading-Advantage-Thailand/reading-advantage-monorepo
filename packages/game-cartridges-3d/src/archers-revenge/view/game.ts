@@ -3,7 +3,7 @@
  * plays each event in order on the battle stage and the HUD, the HTML card holds the meaning and
  * the lane buttons, and the run is reported once to the host (results, outcome, evidence).
  */
-import type { StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { BattleStage } from '../../shared/battle/stage3d.js';
 import { ARCHER, createArchersRevenge, type ArchersRevengeCommand, type ArchersRevengeInput, type Round } from '../core/index.js';
@@ -15,7 +15,7 @@ const SFX: Record<Sfx, string> = { pick: 'tap', correct: 'correct', wrong: 'wron
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   if (Array.isArray(ctx.input)) throw new Error('Archer’s Revenge needs a story input.');
-  const story: StoryInput = ctx.input;
+  const story: PracticeInput = ctx.input;
   const stage = new BattleStage(ctx.stage);
   const hud = new ArchersHud(ctx.hud, stage, ctx.i18n, ctx.audio, ctx.host);
   const audio = ctx.audio;

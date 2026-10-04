@@ -421,7 +421,7 @@ describe('evidence and results', () => {
     sim.dispatch({ type: 'swap', a: { row: 4, col: 2 }, b: { row: 5, col: 2 } });
     const evidence = evidenceOf(sim.state, STORY, 6, 12_345.6);
     expect(storyGameEvidenceSchema.parse(evidence)).toEqual(evidence);
-    expect(evidence).toMatchObject({ gameId: 'rune-match', storyId: STORY.id, level: STORY.level, seed: 6, durationMs: 12346 });
+    expect(evidence).toMatchObject({ gameId: 'rune-match', inputId: STORY.id, level: STORY.level, seed: 6, durationMs: 12346 });
     expect(evidence.items).toEqual([
       { itemId: w0!.id, itemKind: 'word', label: w0!.term, attempts: 2, correctFirstTry: false, solved: true },
       { itemId: w1!.id, itemKind: 'word', label: w1!.term, attempts: 1, correctFirstTry: true, solved: true },

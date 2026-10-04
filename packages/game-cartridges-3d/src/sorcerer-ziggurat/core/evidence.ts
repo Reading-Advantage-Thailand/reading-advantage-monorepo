@@ -46,7 +46,7 @@ export function evidenceOf(state: ZigguratState, story: EvidenceStory, seed: num
     schemaVersion: 1,
     kind: 'story-game',
     gameId: SORCERER_ZIGGURAT_GAME_ID,
-    storyId: story.id,
+    inputId: story.id,
     level: story.level,
     seed,
     durationMs: Math.max(0, Math.round(durationMs)),

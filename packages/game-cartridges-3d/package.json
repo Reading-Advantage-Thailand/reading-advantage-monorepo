@@ -94,21 +94,6 @@
       "import": "./dist/labyrinth/strings.en.js",
       "default": "./dist/labyrinth/strings.en.js"
     },
-    "./monster-encounters": {
-      "types": "./dist/monster-encounters/index.d.ts",
-      "import": "./dist/monster-encounters/index.js",
-      "default": "./dist/monster-encounters/index.js"
-    },
-    "./monster-encounters/manifest": {
-      "types": "./dist/monster-encounters/manifest.d.ts",
-      "import": "./dist/monster-encounters/manifest.js",
-      "default": "./dist/monster-encounters/manifest.js"
-    },
-    "./monster-encounters/strings": {
-      "types": "./dist/monster-encounters/strings.en.d.ts",
-      "import": "./dist/monster-encounters/strings.en.js",
-      "default": "./dist/monster-encounters/strings.en.js"
-    },
     "./rune-match": {
       "types": "./dist/rune-match/index.d.ts",
       "import": "./dist/rune-match/index.js",

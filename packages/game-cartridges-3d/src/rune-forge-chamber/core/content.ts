@@ -1,16 +1,16 @@
 /**
  * Rune Forge Chamber content: the blades of a forge from a story's sentences, and the runes of a
- * wave. A `StoryInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
+ * wave. A `PracticeInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
  * `SentenceInput` gets ids `s-1`, `s-2`, ... and words from `term.split(/\s+/)`. A blade takes a
  * sentence of 3 to 8 words; the forge is up to 5 blades in a seeded order. As in the legacy game,
  * the runes of a wave are the next word and words of the same sentence (up to four runes).
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { ForgeSentence } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type RuneForgeChamberInput = StoryInput | SentenceInput;
+export type RuneForgeChamberInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: RuneForgeChamberInput): input is SentenceInput {
   return Array.isArray(input);

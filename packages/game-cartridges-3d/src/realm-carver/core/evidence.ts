@@ -46,7 +46,7 @@ export function evidenceOf(state: RealmCarverState, story: EvidenceStory, seed: 
     schemaVersion: 1,
     kind: 'story-game',
     gameId: REALM_CARVER_GAME_ID,
-    storyId: story.id,
+    inputId: story.id,
     level: story.level,
     seed,
     durationMs: Math.max(0, Math.round(durationMs)),

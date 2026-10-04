@@ -1,16 +1,16 @@
 /**
  * Griffin Riders Escape content: the sentences of an escape from a story, and the waves of a
- * flight. A `StoryInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
+ * flight. A `PracticeInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
  * `SentenceInput` gets ids `s-1`, `s-2`, ... and words from `term.split(/\s+/)`. An escape takes
  * sentences of 3 to 8 words (all sentences when none fits). Decoy gates carry other words of the
  * story.
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { EscapeSentence, Gate } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type EscapeInput = StoryInput | SentenceInput;
+export type EscapeInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: EscapeInput): input is SentenceInput {
   return Array.isArray(input);

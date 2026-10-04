@@ -6,7 +6,7 @@
  * the rune board (`Board2D`). On a phone the battle is above the board; on a wide screen, beside it.
  */
 import type * as Phaser from 'phaser';
-import { preloadAssetBindings, type StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { preloadAssetBindings, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
@@ -32,7 +32,7 @@ export interface RuneMatch2DTest {
 
 export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, unknown>> {
   if (Array.isArray(ctx.input)) throw new Error('Rune Match needs a story input.');
-  const story = ctx.input as StoryInput;
+  const story = ctx.input as PracticeInput;
   const i18n = ctx.i18n ?? createI18n([strings]).scope('runeMatch');
   const t = i18n.scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;

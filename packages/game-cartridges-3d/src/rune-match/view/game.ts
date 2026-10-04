@@ -3,7 +3,7 @@
  * each event in order on the battle stage, the HTML rune board, and the HUD, and reports the
  * run once to the host (results, outcome, evidence).
  */
-import type { StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { BattleStage } from '../../shared/battle/stage3d.js';
 import { createRuneMatch, type RuneMatchCommand, type RuneMatchInput } from '../core/index.js';
@@ -15,7 +15,7 @@ const SFX: Record<Sfx, string> = { swap: 'tap', burst: 'correct', reject: 'wrong
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   if (Array.isArray(ctx.input)) throw new Error('Rune Match needs a story input.');
-  const story: StoryInput = ctx.input;
+  const story: PracticeInput = ctx.input;
   const stage = new BattleStage(ctx.stage);
   const hud = new RuneHud(ctx.hud, stage, ctx.i18n, ctx.audio, ctx.host);
   const audio = ctx.audio;

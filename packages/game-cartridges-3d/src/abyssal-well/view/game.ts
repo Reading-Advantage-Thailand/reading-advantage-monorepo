@@ -5,7 +5,7 @@
  * the run once to the host.
  */
 import * as THREE from 'three';
-import type { StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { Actor, burst, FollowRig, projectile } from '@reading-advantage/advantage-play-kit-3d/stage';
@@ -44,7 +44,7 @@ interface EnemyView {
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   if (Array.isArray(ctx.input)) throw new Error('Abyssal Well needs a story input.');
-  const story: StoryInput = ctx.input;
+  const story: PracticeInput = ctx.input;
   const stage = ctx.stage;
   const t = ctx.i18n.scope('hud').t;
   const audio = ctx.audio;

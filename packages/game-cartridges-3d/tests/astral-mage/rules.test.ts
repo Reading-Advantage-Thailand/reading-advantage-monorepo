@@ -78,7 +78,7 @@ describe('content', () => {
   it('the manifest is a story cartridge for A0 to A1 in both renderers', () => {
     expect(manifest).toMatchObject({
       id: 'astral-mage',
-      inputMode: 'story',
+      inputMode: 'practice',
       simulation: 'realtime',
       levels: ['Pre-A1', 'A0', 'A0+', 'A1'],
       needs: { sentences: 3 },

@@ -1,7 +1,7 @@
 /** The start screen of Paladin's Twin Soul, in the APK briefing shape, from catalog keys. */
-import type { GameBriefing, GameInput, ScopedI18n, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { GameBriefing, GameInput, ScopedI18n, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 
-export function briefing(i18n: ScopedI18n, _input: GameInput | StoryInput): GameBriefing {
+export function briefing(i18n: ScopedI18n, _input: GameInput | PracticeInput): GameBriefing {
   const t = i18n.scope('briefing').t;
   return {
     title: i18n.t('title'),

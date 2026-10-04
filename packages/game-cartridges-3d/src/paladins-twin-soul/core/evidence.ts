@@ -39,7 +39,7 @@ export function evidenceOf(state: TwinSoulState, story: EvidenceStory, seed: num
     schemaVersion: 1,
     kind: 'story-game',
     gameId: TWIN_SOUL_GAME_ID,
-    storyId: story.id,
+    inputId: story.id,
     level: story.level,
     seed,
     durationMs: Math.max(0, Math.round(durationMs)),

@@ -74,7 +74,7 @@ describe('content', () => {
   it('the manifest is a story cartridge for A0 to A1 with the heroes, folk, monster, and vault packs', () => {
     expect(manifest).toMatchObject({
       id: 'dungeon-liberator',
-      inputMode: 'story',
+      inputMode: 'practice',
       simulation: 'realtime',
       orientation: 'any',
       levels: ['Pre-A1', 'A0', 'A0+', 'A1'],
@@ -529,7 +529,7 @@ describe('evidence', () => {
     sim.tick();
     const evidence = evidenceOf(sim.state, STORY, 3, sim.state.timeMs);
     expect(storyGameEvidenceSchema.parse(evidence)).toEqual(evidence);
-    expect(evidence).toMatchObject({ gameId: 'dungeon-liberator', storyId: STORY.id, level: STORY.level, seed: 3 });
+    expect(evidence).toMatchObject({ gameId: 'dungeon-liberator', inputId: STORY.id, level: STORY.level, seed: 3 });
     expect(evidence.items).toEqual([
       { itemId: room0.id, itemKind: 'sentence', label: room0.text, attempts: 2, correctFirstTry: false, solved: true, paragraph: room0.paragraph },
       { itemId: room1.id, itemKind: 'sentence', label: room1.text, attempts: 1, correctFirstTry: true, solved: true, paragraph: room1.paragraph },

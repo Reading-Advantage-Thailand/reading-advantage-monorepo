@@ -1,16 +1,16 @@
 /**
- * Storm Castle Tower content: the towers of the climb from a story. A `StoryInput` keeps its
+ * Storm Castle Tower content: the towers of the climb from a story. A `PracticeInput` keeps its
  * sentence ids and paragraphs for the evidence; a plain APK `SentenceInput` gets ids `s-1`, `s-2`,
  * ... and words from `term.split(' ')`. A tower takes a sentence of 3 to 7 words; the climb is up
  * to 4 towers in a seeded order (fewer when the story has fewer such sentences). The windows of a
  * row hold the next word and words of the same sentence and of other sentences of the story.
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { TowerSentence } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type StormCastleTowerInput = StoryInput | SentenceInput;
+export type StormCastleTowerInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: StormCastleTowerInput): input is SentenceInput {
   return Array.isArray(input);

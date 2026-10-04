@@ -1,15 +1,15 @@
 /**
- * Dungeon Liberator content: the shift's rooms from a story. A `StoryInput` keeps its sentence
+ * Dungeon Liberator content: the shift's rooms from a story. A `PracticeInput` keeps its sentence
  * ids and paragraphs for the evidence; a plain APK `SentenceInput` gets ids `s-1`, `s-2`, ...
  * and words from `term.split(' ')`. A room takes a sentence of 3 to 7 words; the shift is up to
  * 5 rooms in a seeded order (fewer when the story has fewer such sentences).
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { VILLAGER_KINDS, type RoomSentence, type VillagerKind } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type DungeonLiberatorInput = StoryInput | SentenceInput;
+export type DungeonLiberatorInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: DungeonLiberatorInput): input is SentenceInput {
   return Array.isArray(input);

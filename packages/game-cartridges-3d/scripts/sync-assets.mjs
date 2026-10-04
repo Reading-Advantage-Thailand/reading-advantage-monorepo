@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Copies the 3D game assets into an app's `public/` folder (packs, stories, the 2D sprite pack,
- * and the HUD fonts), so the app serves them at the URLs the games expect:
+ * Copies the 3D game assets into an app's `public/` folder (packs, the 2D sprite pack, and the HUD
+ * fonts), so the app serves them at the URLs the games expect. The stories stay in the package:
+ * the games read the student's saved items, and the stories are test and QC fixtures only.
  *
  *   /packs/<pack>/<version>/...          3D model packs
- *   /stories/...                         story JSON and images
  *   /assets/apk/primary-chibi-2d/v1/...  2D sprite pack (Phaser)
  *   /assets/apk3d/fonts/...              HUD fonts
  *
@@ -25,7 +25,6 @@ if (!process.argv[2]) {
 
 const copies = [
   [join(assets, "packs"), join(target, "packs")],
-  [join(assets, "stories"), join(target, "stories")],
   [join(assets, "apk", "primary-chibi-2d"), join(target, "assets", "apk", "primary-chibi-2d")],
   [fonts, join(target, "assets", "apk3d", "fonts")],
 ];

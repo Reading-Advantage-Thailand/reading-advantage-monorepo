@@ -43,7 +43,7 @@ export function evidenceOf(state: CastleDefenseState, story: EvidenceStory, seed
     schemaVersion: 1,
     kind: 'story-game',
     gameId: CASTLE_DEFENSE_GAME_ID,
-    storyId: story.id,
+    inputId: story.id,
     level: story.level,
     seed,
     durationMs: Math.max(0, Math.round(durationMs)),

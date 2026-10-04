@@ -5,7 +5,7 @@
  * tags over the cubes, pinned to the screen edge when off screen), and never decides a rule.
  */
 import * as THREE from 'three';
-import { toGameResults, type StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { smooth } from '@reading-advantage/advantage-play-kit-3d/stage';
@@ -29,7 +29,7 @@ installCss('sorcerer-ziggurat', sorcerer_zigguratCss);
 const KEY_LANES: Readonly<Record<string, Lane>> = { ArrowLeft: 'left', a: 'left', ArrowUp: 'forward', w: 'forward', ArrowRight: 'right', d: 'right' };
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
-  const story = ctx.input as StoryInput;
+  const story = ctx.input as PracticeInput;
   const stage = ctx.stage;
   const t = ctx.i18n.scope('hud').t;
   const audio = ctx.audio;

@@ -28,7 +28,7 @@ describe('manifest', () => {
   it('is a story cartridge that needs vocabulary, for A0 to A1, in both renderers', () => {
     expect(manifest).toMatchObject({
       id: 'enchanted-library',
-      inputMode: 'story',
+      inputMode: 'practice',
       simulation: 'realtime',
       levels: ['Pre-A1', 'A0', 'A0+', 'A1'],
       needs: { vocabulary: 4 },

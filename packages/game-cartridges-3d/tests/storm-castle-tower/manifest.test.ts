@@ -27,7 +27,7 @@ describe('manifest', () => {
   it('is a story cartridge that needs sentences, for A0 to A1, in both renderers', () => {
     expect(manifest).toMatchObject({
       id: 'storm-castle-tower',
-      inputMode: 'story',
+      inputMode: 'practice',
       simulation: 'realtime',
       levels: ['Pre-A1', 'A0', 'A0+', 'A1'],
       needs: { sentences: 3 },

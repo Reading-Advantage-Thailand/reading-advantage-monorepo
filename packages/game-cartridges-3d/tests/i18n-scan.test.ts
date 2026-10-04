@@ -49,7 +49,8 @@ describe('source scan', () => {
       const scan = scanKeys(readFileSync(file, 'utf8'));
       for (const { key, line } of missingKeys(catalog, scan, basesFor(file))) problems.push(`${relative(ROOT, file)}:${line}: t('${key}') is not in the catalog`);
     }
-    expect(games.size).toBe(29);
+    // The 28 student games (Monster Encounters waits for its teacher-led version).
+    expect(games.size).toBe(28);
     expect(problems).toEqual([]);
   });
 

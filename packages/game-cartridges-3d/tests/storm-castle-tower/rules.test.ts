@@ -354,7 +354,7 @@ describe('evidence and results', () => {
     clearTower(sim);
     const evidence = evidenceOf(sim.state, STORY, 4, 12_345.6);
     expect(storyGameEvidenceSchema.safeParse(evidence).success).toBe(true);
-    expect(evidence).toMatchObject({ kind: 'story-game', gameId: 'storm-castle-tower', storyId: STORY.id, seed: 4, durationMs: 12_346 });
+    expect(evidence).toMatchObject({ kind: 'story-game', gameId: 'storm-castle-tower', inputId: STORY.id, seed: 4, durationMs: 12_346 });
     expect(evidence.items).toHaveLength(1);
     const tower = sim.state.shift[0]!;
     expect(evidence.items[0]).toMatchObject({ itemId: tower.id, itemKind: 'sentence', label: tower.text, attempts: 2, correctFirstTry: false, solved: true });

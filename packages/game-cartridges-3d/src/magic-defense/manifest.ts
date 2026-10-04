@@ -1,7 +1,7 @@
 /**
  * The Magic Defense cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
- * `inputMode` is 'story': the evidence needs the story id and level. The core also accepts the
+ * `inputMode` is 'practice': the evidence needs the story id and level. The core also accepts the
  * APK `VocabularyInput`. The game shares the Sunken Vault battle stage with Monster Encounters
  * (3D) and its baked hall and sprites (2D), so it lists the same models; the 2D files cover the
  * party and the two monsters of the formations (skeleton and mimic).
@@ -31,7 +31,7 @@ export const manifest = validateCartridge3DManifest({
   description: 'A missile shows a meaning: cast the right English word to break it before it hits the castle.',
   runtimeApiVersion: CARTRIDGE_3D_RUNTIME_API_VERSION,
   renderers: ['three', 'phaser'],
-  inputMode: 'story',
+  inputMode: 'practice',
   simulation: 'turn',
   orientation: 'any',
   levels: ['Pre-A1', 'A0', 'A0+', 'A1'],

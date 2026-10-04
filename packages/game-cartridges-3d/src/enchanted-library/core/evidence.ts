@@ -42,7 +42,7 @@ export function evidenceOf(state: LibraryState, story: EvidenceStory, seed: numb
     schemaVersion: 1,
     kind: 'story-game',
     gameId: ENCHANTED_LIBRARY_GAME_ID,
-    storyId: story.id,
+    inputId: story.id,
     level: story.level,
     seed,
     durationMs: Math.max(0, Math.round(durationMs)),

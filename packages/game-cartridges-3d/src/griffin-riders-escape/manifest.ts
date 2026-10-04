@@ -1,7 +1,7 @@
 /**
  * The Griffin Riders Escape 3D cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
- * `inputMode` is 'story': the host passes the whole `StoryInput`, and the evidence needs the
+ * `inputMode` is 'practice': the host passes the whole `PracticeInput`, and the evidence needs the
  * sentence ids, the paragraphs, the story id, and the level. The core also accepts the APK
  * `SentenceInput`, so the APK port can switch this to 'sentence'.
  */
@@ -35,7 +35,7 @@ export const manifest = validateCartridge3DManifest({
   description: 'Steer the griffin over the land through the gate that carries the next word of the sentence, and fly around the bat storms, to finish the whole sentence.',
   runtimeApiVersion: CARTRIDGE_3D_RUNTIME_API_VERSION,
   renderers: ['three', 'phaser'],
-  inputMode: 'story',
+  inputMode: 'practice',
   simulation: 'realtime',
   orientation: 'any',
   levels: ['Pre-A1', 'A0', 'A0+', 'A1'],

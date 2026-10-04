@@ -1,14 +1,14 @@
 /**
  * Magic Defense content: the words of a run from a story, the waves that hold them, the
  * monster formation of a wave, and the missile of a round (its meaning, its castle, and the spell
- * words to choose from). A `StoryInput` keeps its vocabulary ids for the evidence; a plain APK
+ * words to choose from). A `PracticeInput` keeps its vocabulary ids for the evidence; a plain APK
  * `VocabularyInput` gets ids `w-1`, `w-2`, ...
  */
-import type { StoryInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { PracticeInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { MONSTER_KINDS, type MonsterKind, type Round, type TargetWord, type WaveEnemy } from './types.js';
 
-export type MagicDefenseInput = StoryInput | VocabularyInput;
+export type MagicDefenseInput = PracticeInput | VocabularyInput;
 
 export function isVocabularyInput(input: MagicDefenseInput): input is VocabularyInput {
   return Array.isArray(input);

@@ -17,7 +17,7 @@ describe('manifest', () => {
   it('is a valid story-mode turn game for both renderers', () => {
     expect(manifest).toMatchObject({
       id: 'abyssal-well',
-      inputMode: 'story',
+      inputMode: 'practice',
       simulation: 'turn',
       renderers: ['three', 'phaser'],
       levels: ['Pre-A1', 'A0', 'A0+', 'A1'],

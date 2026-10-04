@@ -1,13 +1,13 @@
 /**
  * Dragon Rider content: the ride's words from a story, and the two gates of a round. A
- * `StoryInput` keeps its vocabulary ids for the evidence; a plain APK `VocabularyInput` gets ids
+ * `PracticeInput` keeps its vocabulary ids for the evidence; a plain APK `VocabularyInput` gets ids
  * `w-1`, `w-2`, ... from the index. The decoy is the meaning of another word of the ride.
  */
-import type { StoryInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { PracticeInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { GateOption, RideWord } from './types.js';
 
-export type DragonRiderInput = StoryInput | VocabularyInput;
+export type DragonRiderInput = PracticeInput | VocabularyInput;
 
 export function isVocabularyInput(input: DragonRiderInput): input is VocabularyInput {
   return Array.isArray(input);

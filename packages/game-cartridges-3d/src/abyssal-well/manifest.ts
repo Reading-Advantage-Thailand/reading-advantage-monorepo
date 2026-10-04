@@ -1,7 +1,7 @@
 /**
  * The Abyssal Well cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
- * `inputMode` is 'story': the host passes the whole `StoryInput`, and the evidence needs the
+ * `inputMode` is 'practice': the host passes the whole `PracticeInput`, and the evidence needs the
  * sentence ids, the paragraphs, the story id, and the level. The core also accepts the APK
  * `SentenceInput`, so the APK port can switch this to 'sentence'. The simulation is a turn game.
  */
@@ -34,7 +34,7 @@ export const manifest = validateCartridge3DManifest({
   description: 'Shoot the creatures that climb out of the well in the order of the sentence.',
   runtimeApiVersion: CARTRIDGE_3D_RUNTIME_API_VERSION,
   renderers: ['three', 'phaser'],
-  inputMode: 'story',
+  inputMode: 'practice',
   simulation: 'turn',
   orientation: 'any',
   levels: ['Pre-A1', 'A0', 'A0+', 'A1'],

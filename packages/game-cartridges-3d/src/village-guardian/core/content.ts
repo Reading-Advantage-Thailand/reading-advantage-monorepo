@@ -1,15 +1,15 @@
 /**
- * Village Guardian content: the watch's villages from a story. A `StoryInput` keeps its sentence
+ * Village Guardian content: the watch's villages from a story. A `PracticeInput` keeps its sentence
  * ids and paragraphs for the evidence; a plain APK `SentenceInput` gets ids `s-1`, `s-2`, ...
  * and words from `term.split(' ')`. A village takes a sentence of 3 to 7 words; the watch is up to
  * 5 villages in a seeded order (fewer when the story has fewer such sentences).
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { VILLAGER_KINDS, type VillageSentence, type VillagerKind } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type VillageGuardianInput = StoryInput | SentenceInput;
+export type VillageGuardianInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: VillageGuardianInput): input is SentenceInput {
   return Array.isArray(input);

@@ -1,14 +1,14 @@
 /**
  * Hero vs. Zombie content: the night's words from a story, and the orbs of a round. A
- * `StoryInput` keeps its vocabulary ids for the evidence; a plain APK `VocabularyInput` gets ids
+ * `PracticeInput` keeps its vocabulary ids for the evidence; a plain APK `VocabularyInput` gets ids
  * `w-1`, `w-2`, ... from the index. Decoys are the meanings of other words of the night.
  */
-import type { StoryInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { PracticeInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { NightWord } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK vocabulary array. */
-export type HeroVsZombieInput = StoryInput | VocabularyInput;
+export type HeroVsZombieInput = PracticeInput | VocabularyInput;
 
 export function isVocabularyInput(input: HeroVsZombieInput): input is VocabularyInput {
   return Array.isArray(input);

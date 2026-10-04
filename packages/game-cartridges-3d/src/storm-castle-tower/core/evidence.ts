@@ -47,7 +47,7 @@ export function evidenceOf(state: StormCastleTowerState, story: EvidenceStory, s
     schemaVersion: 1,
     kind: 'story-game',
     gameId: STORM_CASTLE_TOWER_GAME_ID,
-    storyId: story.id,
+    inputId: story.id,
     level: story.level,
     seed,
     durationMs: Math.max(0, Math.round(durationMs)),

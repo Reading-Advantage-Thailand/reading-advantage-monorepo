@@ -1,15 +1,15 @@
 /**
- * Haunted Library content: the rooms of a visit from a story. A `StoryInput` keeps its sentence
+ * Haunted Library content: the rooms of a visit from a story. A `PracticeInput` keeps its sentence
  * ids and paragraphs for the evidence; a plain APK `SentenceInput` gets ids `s-1`, `s-2`, ...
  * and words from `term.split(' ')`. A room takes a sentence of 3 to 7 words; the visit is up to
  * 5 rooms in a seeded order (fewer when the story has fewer such sentences).
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { LibraryRoom } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type LibraryInput = StoryInput | SentenceInput;
+export type LibraryInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: LibraryInput): input is SentenceInput {
   return Array.isArray(input);

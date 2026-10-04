@@ -1,17 +1,17 @@
 /**
  * Labyrinth content: the shift's sentences from a story and the words of an orb wave. A
- * `StoryInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
+ * `PracticeInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
  * `SentenceInput` gets ids `s-1`, `s-2`, ... and words from `term.split(' ')`. The shift is up
  * to 5 sentences of 3 to 7 words in a seeded order (fewer when the story has fewer such
  * sentences). An orb wave holds the right word and distractors from the same sentence first,
  * then from the other sentences of the shift.
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { ShiftSentence } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type LabyrinthInput = StoryInput | SentenceInput;
+export type LabyrinthInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: LabyrinthInput): input is SentenceInput {
   return Array.isArray(input);

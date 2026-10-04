@@ -1,7 +1,7 @@
 /**
  * The Alchemist's Synthesis 3D cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
- * `inputMode` is 'story': the host passes the whole `StoryInput`, and the evidence needs the
+ * `inputMode` is 'practice': the host passes the whole `PracticeInput`, and the evidence needs the
  * vocabulary ids, the story id, and the level. The core also accepts the APK `VocabularyInput`,
  * so the APK port can switch this to 'vocabulary'.
  *
@@ -34,7 +34,7 @@ export const manifest = validateCartridge3DManifest({
   description: 'Read the meaning on the recipe card, pick the jar with the matching word, and pour it into the cauldron.',
   runtimeApiVersion: CARTRIDGE_3D_RUNTIME_API_VERSION,
   renderers: ['three', 'phaser'],
-  inputMode: 'story',
+  inputMode: 'practice',
   simulation: 'realtime',
   orientation: 'portrait',
   levels: ['Pre-A1', 'A0', 'A0+', 'A1'],

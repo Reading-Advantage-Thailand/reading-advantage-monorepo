@@ -1,16 +1,16 @@
 /**
  * Gryphon Patrol content: the sentences of a patrol from a story, and the word enemies of a
- * round. A `StoryInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
+ * round. A `PracticeInput` keeps its sentence ids and paragraphs for the evidence; a plain APK
  * `SentenceInput` gets ids `s-1`, `s-2`, ... and words from `term.split(/\s+/)`. A patrol takes
  * sentences of 3 to 8 words (all sentences when none fits). Decoy enemies carry other words of the
  * story.
  */
-import type { SentenceInput, StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { SentenceInput, PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import type { Enemy, PatrolSentence } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK sentence array. */
-export type PatrolInput = StoryInput | SentenceInput;
+export type PatrolInput = PracticeInput | SentenceInput;
 
 export function isSentenceInput(input: PatrolInput): input is SentenceInput {
   return Array.isArray(input);

@@ -74,7 +74,7 @@ describe('content', () => {
   it('the manifest is a story cartridge for A0 to A1 with the heroes, folk, and outdoor packs', () => {
     expect(manifest).toMatchObject({
       id: 'village-guardian',
-      inputMode: 'story',
+      inputMode: 'practice',
       simulation: 'realtime',
       levels: ['Pre-A1', 'A0', 'A0+', 'A1'],
       needs: { sentences: 3 },

@@ -21,7 +21,6 @@ import { manifest as paladinsTwinSoul } from '../../src/paladins-twin-soul/manif
 import { manifest as rpgBattle } from '../../src/rpg-battle/manifest.js';
 import { manifest as villageGuardian } from '../../src/village-guardian/manifest.js';
 import { VILLAGE_MODELS } from '../../src/village-guardian/view/village.js';
-import { manifest as monsterEncounters } from '../../src/monster-encounters/manifest.js';
 import { manifest as runeMatch } from '../../src/rune-match/manifest.js';
 import { manifest as archersRevenge } from '../../src/archers-revenge/manifest.js';
 import { manifest as astralMage } from '../../src/astral-mage/manifest.js';
@@ -73,7 +72,6 @@ const GAMES = {
   'dungeon-liberator': { manifest: dungeonLiberator, named: ROOM_MODELS },
   'devourer-slime': { manifest: devourerSlime, named: CLEARING_MODELS },
   'hero-vs-zombie': { manifest: heroVsZombie, named: CHURCHYARD_MODELS },
-  'monster-encounters': { manifest: monsterEncounters, named: vaultModels() },
   'village-guardian': { manifest: villageGuardian, named: VILLAGE_MODELS },
   'archers-revenge': { manifest: archersRevenge, named: vaultModels() },
   'astral-mage': { manifest: astralMage, named: CIRCLE_MODELS },

@@ -1,15 +1,15 @@
 /**
  * Alchemist's Synthesis content: the formulas of a synthesis from a story's vocabulary, and the
- * jars of a formula. A `StoryInput` keeps its vocabulary ids for the evidence; a plain APK
+ * jars of a formula. A `PracticeInput` keeps its vocabulary ids for the evidence; a plain APK
  * `VocabularyInput` gets ids `w-1`, `w-2`, ... from the index. The decoy jars carry the terms of
  * other words of the synthesis (the legacy rule: the options are terms, the prompt is the meaning).
  */
-import type { StoryInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { PracticeInput, VocabularyInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Rng } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { INGREDIENT_KINDS, type Formula, type IngredientKind } from './types.js';
 
 /** The input the core accepts: the whole story (the host passes it) or the APK vocabulary array. */
-export type AlchemistsSynthesisInput = StoryInput | VocabularyInput;
+export type AlchemistsSynthesisInput = PracticeInput | VocabularyInput;
 
 export function isVocabularyInput(input: AlchemistsSynthesisInput): input is VocabularyInput {
   return Array.isArray(input);

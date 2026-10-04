@@ -26,7 +26,7 @@ describe('manifest', () => {
   it('needs vocabulary, plays the early levels, and runs in both renderers', () => {
     expect(manifest.needs).toEqual({ vocabulary: 4, sentences: 0, fills: 0, questions: 0 });
     expect(manifest.renderers).toEqual(['three', 'phaser']);
-    expect(manifest.inputMode).toBe('story');
+    expect(manifest.inputMode).toBe('practice');
     expect(manifest.id).toBe('dragon-rider');
   });
 

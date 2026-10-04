@@ -6,7 +6,7 @@
  * skeleton shadow follows, and the gate glows open when the sentence is complete.
  */
 import type * as Phaser from 'phaser';
-import { preloadAssetBindings, toGameResults, type StoryInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { preloadAssetBindings, toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
@@ -26,7 +26,7 @@ const CRYSTAL_FILE = 'prop.crystal-cluster';
 const SHADOW_TINT = 0x6b5a9e;
 
 export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, unknown>> {
-  const story = ctx.input as StoryInput;
+  const story = ctx.input as PracticeInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('shadowGateDungeon')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
   const heroId = (HEROES_2D as readonly string[]).includes(options.hero) ? options.hero : 'knight';

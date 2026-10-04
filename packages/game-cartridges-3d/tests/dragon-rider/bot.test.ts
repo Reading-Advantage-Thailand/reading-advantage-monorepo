@@ -25,8 +25,8 @@ function play(seed: number, story: typeof STORY, paceSteps: number) {
 describe('bot', () => {
   it.each(
     Array.from({ length: 24 }, (_, i) => i + 1).flatMap((seed) => (['pip-is-brave', 'the-school-garden'] as const).map((story) => [seed, story] as const)),
-  )('seed %i plays %s to the end', (seed, storyId) => {
-    const story = storyId === 'pip-is-brave' ? STORY : SHORT_STORY;
+  )('seed %i plays %s to the end', (seed, inputId) => {
+    const story = inputId === 'pip-is-brave' ? STORY : SHORT_STORY;
     const { sim, events, steps } = play(seed, story, stepsOf(1500));
     expect(sim.state.phase).toBe('complete');
     expect(steps).toBeLessThan(LIMIT_STEPS);

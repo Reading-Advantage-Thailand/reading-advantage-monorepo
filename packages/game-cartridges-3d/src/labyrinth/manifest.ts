@@ -1,7 +1,7 @@
 /**
  * The Labyrinth of the Goblin King 3D cartridge manifest (section 2.1 of docs/apk3d-cartridge.md).
  *
- * `inputMode` is 'story': the evidence needs the story id and level. The core also accepts the
+ * `inputMode` is 'practice': the evidence needs the story id and level. The core also accepts the
  * APK `SentenceInput`, so the APK port can switch this to 'sentence'. The 2D view draws the maze
  * from one baked background per maze (the 3D set, seen from the 2D camera).
  */
@@ -31,7 +31,7 @@ export const manifest = validateCartridge3DManifest({
   description: 'Walk the stone maze, take the word orbs in sentence order, and keep away from the goblins.',
   runtimeApiVersion: CARTRIDGE_3D_RUNTIME_API_VERSION,
   renderers: ['three', 'phaser'],
-  inputMode: 'story',
+  inputMode: 'practice',
   simulation: 'realtime',
   orientation: 'any',
   levels: ['Pre-A1', 'A0', 'A0+', 'A1'],

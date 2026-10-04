@@ -458,7 +458,7 @@ describe('gate and results', () => {
     takeRight(sim); // sentence 3: started, not built
     const evidence = evidenceOf(sim.state, STORY, 9, 12_345.6);
     expect(storyGameEvidenceSchema.parse(evidence)).toEqual(evidence);
-    expect(evidence).toMatchObject({ gameId: 'labyrinth', storyId: STORY.id, level: STORY.level, seed: 9, durationMs: 12_346 });
+    expect(evidence).toMatchObject({ gameId: 'labyrinth', inputId: STORY.id, level: STORY.level, seed: 9, durationMs: 12_346 });
     expect(evidence.items).toEqual([
       { itemId: sim.state.shift[0]!.id, itemKind: 'sentence', label: sim.state.shift[0]!.text, attempts: 1, correctFirstTry: true, solved: true, paragraph: sim.state.shift[0]!.paragraph },
       { itemId: sim.state.shift[1]!.id, itemKind: 'sentence', label: sim.state.shift[1]!.text, attempts: 2, correctFirstTry: false, solved: true, paragraph: sim.state.shift[1]!.paragraph },
