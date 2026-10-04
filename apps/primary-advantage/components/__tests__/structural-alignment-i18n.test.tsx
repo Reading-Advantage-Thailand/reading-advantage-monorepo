@@ -13,6 +13,7 @@ import { NextIntlClientProvider } from "next-intl";
 
 const mocks = vi.hoisted(() => ({
   push: vi.fn(),
+  replace: vi.fn(),
   logout: vi.fn(),
   login: vi.fn(),
   fetchStudentsByClassCode: vi.fn(),
@@ -36,7 +37,7 @@ vi.mock("@/i18n/navigation", () => ({
   usePathname: () => "/",
   useRouter: () => ({
     push: mocks.push,
-    replace: vi.fn(),
+    replace: mocks.replace,
     back: vi.fn(),
     refresh: vi.fn(),
     prefetch: vi.fn(),
@@ -380,8 +381,8 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     mocks.login.mockResolvedValue(undefined);
     renderWithMessages(<TeacherSignInForm />);
 
-    fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: "teacher@example.com" },
+    fireEvent.change(screen.getByLabelText("Username"), {
+      target: { value: "teacher-a" },
     });
     fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: "secret123" },
@@ -389,12 +390,9 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     fireEvent.click(screen.getByRole("button", { name: "Login" }));
 
     await waitFor(() =>
-      expect(mocks.login).toHaveBeenCalledWith(
-        "teacher@example.com",
-        "secret123",
-      ),
+      expect(mocks.login).toHaveBeenCalledWith("teacher-a", "secret123"),
     );
-    expect(mocks.push).toHaveBeenCalledWith("/dashboard");
+    expect(mocks.replace).toHaveBeenCalledWith("/auth/signin");
   });
 
   it("redirects anonymous users with the locale-aware redirect", async () => {

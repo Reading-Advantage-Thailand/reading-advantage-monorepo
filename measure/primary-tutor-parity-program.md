@@ -27,7 +27,7 @@ so the build must be tested and rehearsed before he leaves.
 Lane M (added 2026-10-04) owns the unowned tasks of the
 [cutover migration spec](../docs/deployment/primary-cutover-migration-spec.md): the ETL and
 ID map (A6), the Tutor compatibility views (A7), old article links (A5), teacher
-"Username or email" sign-in (A8), and teacher credentials with a forced password change
+username-only teacher sign-in (A8; usernames are `lower(email)`), and teacher credentials with a forced password change
 (A9). After cutover the only sign-in is username and password; there is no Google
 sign-in. All teachers use Google today, so every teacher needs a new credential
 before go-live.

@@ -45,7 +45,7 @@ program did not own this work. Rehearsal 1 (Oct 8-9) needs the ETL.
   backup), because scrypt verification is dropped. A nullable column marks the password as
   temporary. After a sign-in with a temporary password the teacher must set a new
   password before any other page; the temporary password then stops working.
-- FR-6 (A8): The teacher sign-in page says "Username or email" and accepts either.
+- FR-6 (A8): The teacher sign-in page asks for a username only (owner decision 2026-10-04). Teacher usernames are `lower(email)`, so a teacher types the address used before.
 
 ## Non-goals
 

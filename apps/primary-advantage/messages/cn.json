@@ -157,6 +157,11 @@
     }
   },
   "Admin": {
+    "SchoolSelect": {
+      "label": "School",
+      "placeholder": "Select a school",
+      "required": "Please select a school"
+    },
     "Classrooms": {
       "classrooms": "教室",
       "classroomsDescription": "管理您学校的教室",

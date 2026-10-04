@@ -157,6 +157,11 @@
     }
   },
   "Admin": {
+    "SchoolSelect": {
+      "label": "School",
+      "placeholder": "Select a school",
+      "required": "Please select a school"
+    },
     "Classrooms": {
       "classrooms": "Lớp học",
       "classroomsDescription": "Quản lý lớp học trong trường của bạn",

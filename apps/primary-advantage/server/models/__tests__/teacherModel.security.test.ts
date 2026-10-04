@@ -526,3 +526,94 @@ describe("deleteTeacher effective rank and audit (L6)", () => {
     expect(eventMocks.auditUserDeleted).toHaveBeenCalledWith({ userId: "teacher-a", actor: { id: "caller", role: "ADMIN" } });
   });
 });
+
+describe("createTeacher target school and admin rank (cutover)", () => {
+  const systemCaller: UserWithRoles = {
+    id: "caller", email: "caller@a.test", schoolId: null, level: 1,
+    role: "SYSTEM", roles: [], SchoolAdmins: [],
+  };
+
+  /** Reads the session role, school, and school_admins and user_roles rows of one user. */
+  async function accountState(email: string) {
+    const rows = await harness.db.execute(sql`
+      SELECT u.id, u.role, u.school_id,
+        (SELECT count(*)::int FROM school_admins sa WHERE sa.user_id = u.id AND sa.school_id = u.school_id) AS admin_rows,
+        (SELECT count(*)::int FROM school_admins sa WHERE sa.user_id = u.id) AS all_admin_rows,
+        (SELECT string_agg(r.name, ',') FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = u.id) AS role_names
+      FROM users u WHERE u.email = ${email}`);
+    return rows.rows[0] as Record<string, unknown> | undefined;
+  }
+
+  it("lets a SYSTEM caller choose the school of a new teacher", async () => {
+    const result = await createTeacher({
+      name: "t", email: "t-b@x.test", role: "teacher", password: "Valid-pass-123",
+      schoolId: SCHOOL_B, userWithRoles: systemCaller,
+    });
+    expect(result.success).toBe(true);
+    expect((await accountState("t-b@x.test"))?.school_id).toBe(SCHOOL_B);
+  });
+
+  it("refuses a SYSTEM caller who names a school that does not exist", async () => {
+    const result = await createTeacher({
+      name: "t", email: "t-x@x.test", role: "teacher", password: "Valid-pass-123",
+      schoolId: "00000000-0000-0000-0000-0000000000ff", userWithRoles: systemCaller,
+    });
+    expect(result.success).toBe(false);
+    expect(await accountState("t-x@x.test")).toBeUndefined();
+  });
+
+  it("refuses a SYSTEM caller who sends a malformed school id", async () => {
+    const result = await createTeacher({
+      name: "t", email: "t-m@x.test", role: "teacher", password: "Valid-pass-123",
+      schoolId: "not-a-uuid", userWithRoles: systemCaller,
+    });
+    expect(result.success).toBe(false);
+    expect(await accountState("t-m@x.test")).toBeUndefined();
+  });
+
+  it("ignores a client school id from a school admin", async () => {
+    const result = await createTeacher({
+      name: "t", email: "t-a@x.test", role: "teacher", password: "Valid-pass-123",
+      schoolId: SCHOOL_B, userWithRoles: adminCaller(SCHOOL_A),
+    });
+    expect(result.success).toBe(true);
+    expect((await accountState("t-a@x.test"))?.school_id).toBe(SCHOOL_A);
+  });
+
+  it("creates a real school admin on a database without an admin role row", async () => {
+    await harness.db.execute(sql`DELETE FROM roles WHERE name = 'admin'`);
+    const result = await createTeacher({
+      name: "a", email: "new-admin@x.test", role: "admin", password: "Valid-pass-123",
+      userWithRoles: adminCaller(SCHOOL_A),
+    });
+    expect(result.success).toBe(true);
+    const state = await accountState("new-admin@x.test");
+    expect(state?.role).toBe("ADMIN");
+    expect(state?.school_id).toBe(SCHOOL_A);
+    expect(state?.admin_rows).toBe(1);
+    expect(state?.role_names).toBe("admin");
+  });
+
+  it("creates a school admin in the school that a SYSTEM caller chose", async () => {
+    const result = await createTeacher({
+      name: "a", email: "admin-b@x.test", role: "admin", password: "Valid-pass-123",
+      schoolId: SCHOOL_B, userWithRoles: systemCaller,
+    });
+    expect(result.success).toBe(true);
+    const state = await accountState("admin-b@x.test");
+    expect(state?.role).toBe("ADMIN");
+    expect(state?.school_id).toBe(SCHOOL_B);
+    expect(state?.admin_rows).toBe(1);
+  });
+
+  it("creates a teacher without a school_admins row", async () => {
+    const result = await createTeacher({
+      name: "t", email: "plain@x.test", role: "teacher", password: "Valid-pass-123",
+      userWithRoles: adminCaller(SCHOOL_A),
+    });
+    expect(result.success).toBe(true);
+    const state = await accountState("plain@x.test");
+    expect(state?.role).toBe("TEACHER");
+    expect(state?.all_admin_rows).toBe(0);
+  });
+});

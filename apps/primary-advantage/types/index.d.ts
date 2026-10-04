@@ -424,6 +424,8 @@ export interface CreateTeacherInput {
   cefrLevel?: string;
   password?: string;
   classroomIds?: string[];
+  /** Target school; honored only for a SYSTEM caller. */
+  schoolId?: string;
 }
 
 export interface UpdateTeacherInput {
@@ -441,6 +443,8 @@ export interface CreateStudentInput {
   cefrLevel?: string;
   classroomId?: string;
   password?: string;
+  /** Target school; honored only for a SYSTEM caller. */
+  schoolId?: string;
 }
 
 export interface UpdateStudentInput {

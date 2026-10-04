@@ -29,6 +29,8 @@ import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Eye, EyeOff, User, Mail, Lock, Users, UserCog } from "lucide-react";
 import { toast } from "sonner";
+import { SchoolSelect } from "@/components/admin/school-select";
+import { useSession } from "@reading-advantage/auth-client";
 
 // Schema will be created inside the component to access translations
 
@@ -47,6 +49,10 @@ export default function AddTeacherPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const { user } = useSession();
+  const isSystem = user?.role === "SYSTEM";
+  const tSchool = useTranslations("Admin.SchoolSelect");
+  const [schoolId, setSchoolId] = useState("");
 
   const teacherFormSchema = z
     .object({
@@ -81,6 +87,10 @@ export default function AddTeacherPage() {
   });
 
   const onSubmit = async (data: TeacherFormData) => {
+    if (isSystem && !schoolId) {
+      toast.error(tSchool("required"));
+      return;
+    }
     setIsSubmitting(true);
     try {
       const response = await fetch("/api/teachers", {
@@ -93,6 +103,7 @@ export default function AddTeacherPage() {
           email: data.email,
           role: data.role,
           password: data.password,
+          ...(isSystem ? { schoolId } : {}),
         }),
       });
 
@@ -179,6 +190,8 @@ export default function AddTeacherPage() {
                       </FormItem>
                     )}
                   />
+
+                  <SchoolSelect value={schoolId} onChange={setSchoolId} />
 
                   {/* Role */}
                   <FormField

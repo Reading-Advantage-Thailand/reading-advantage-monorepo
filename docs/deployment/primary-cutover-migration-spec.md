@@ -105,7 +105,7 @@ Known hazards found on 2026-09-30:
 | A5 | `apps/primary-advantage` | Legacy article-ID resolver on `student/read/[articleId]` and `/writing` (D3) | Five printed QR codes from Origins 2 and 3.1 open the right article after sign-in |
 | A6 | `packages/db` | ETL script and `primary_legacy_id_map` (§6) | Rehearsal report shows zero unexplained skips |
 | A7 | `packages/db` | `tutor_compat` views (D4) | Tutor's four queries return the same rows from the new database as from the legacy one, for every article in Tutor's catalogue |
-| A8 | `apps/primary-advantage` | Teacher sign-in page says "Username or email" and accepts either | A teacher signs in with the email they used before |
+| A8 | `apps/primary-advantage` | Teacher sign-in page asks for a username only; teacher usernames are `lower(email)` (owner decision 2026-10-04) | A teacher signs in with the email address they used before, typed as the username |
 | A9 | `packages/db`, `apps/primary-advantage` | Teacher credential script, hand-out list, and forced password change at first sign-in (D8) | Every migrated teacher has a credential account before go-live; a temporary password works once, then the teacher must set a new one |
 
 ## 8. Rehearsal (run twice)

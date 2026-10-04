@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Icons } from "../icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
@@ -22,7 +21,22 @@ import { FormError } from "../form-error";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { routing } from "@/i18n/routing";
+
+const LOCALE_PREFIX = new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`);
+
+/**
+ * Keeps a callback only when it is a path on this site, without its locale.
+ * The i18n router adds the current locale again on push.
+ * @param value The raw callbackUrl query value.
+ * @returns The local path without a locale prefix, or null for any other value.
+ */
+function safeCallbackPath(value: string | null): string | null {
+  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) {
+    return null;
+  }
+  return value.replace(LOCALE_PREFIX, "") || "/";
+}
 
 export function TeacherSignInForm({
   className,
@@ -30,16 +44,15 @@ export function TeacherSignInForm({
 }: React.ComponentPropsWithoutRef<"form">) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl = safeCallbackPath(searchParams.get("callbackUrl"));
   const [error, setError] = useState<string | undefined>("");
-  const t = useTranslations("AuthPage.signin");
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
@@ -49,8 +62,10 @@ export function TeacherSignInForm({
     setIsLoading(true);
 
     try {
-      await login(value.email, value.password);
-      router.push(callbackUrl);
+      await login(value.username, value.password);
+      // Without a callback, the proxy sends the user from the sign-in page to the role's home page.
+      if (callbackUrl) router.push(callbackUrl);
+      else router.replace("/auth/signin");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -68,19 +83,20 @@ export function TeacherSignInForm({
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Welcome to Primary Advantage</h1>
           <p className="text-muted-foreground text-sm text-balance">
-            Enter your email below to login to your account
+            Enter your username below to login to your account
           </p>
         </div>
         <FormField
           control={form.control}
-          name="email"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input
-                  type="email"
-                  placeholder="name@example.com"
+                  type="text"
+                  autoComplete="username"
+                  autoCapitalize="none"
                   disabled={isLoading}
                   {...field}
                 />
@@ -110,6 +126,7 @@ export function TeacherSignInForm({
               <FormControl>
                 <Input
                   type="password"
+                  autoComplete="current-password"
                   placeholder="********"
                   disabled={isLoading}
                   {...field}
@@ -125,30 +142,6 @@ export function TeacherSignInForm({
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Signing in..." : "Login"}
           </Button>
-          <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-            <span className="bg-background text-muted-foreground relative z-10 px-2">
-              Or continue with
-            </span>
-          </div>
-          <Button
-            variant="outline"
-            type="button"
-            className="w-full cursor-pointer"
-            disabled={isLoading}
-            onClick={() => {
-              // Google OAuth — redirect to API
-              window.location.href = `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"}/auth/google`;
-            }}
-          >
-            <Icons.google className="mr-2 h-4 w-4" />
-            Login with Google
-          </Button>
-        </div>
-        <div className="text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <Link href="/auth/signup" className="underline underline-offset-4">
-            Sign up
-          </Link>
         </div>
       </form>
     </Form>
