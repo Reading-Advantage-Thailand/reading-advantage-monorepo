@@ -24,6 +24,7 @@ export {
   normalizeCefrLevel,
   parseStoryIndex,
   parseStoryInput,
+  storyAudioSchema,
   storyFillSchema,
   storyIndexEntrySchema,
   storyIndexSchema,
@@ -41,6 +42,7 @@ export {
 /** Public story input types. */
 export type {
   CefrLevel,
+  StoryAudio,
   StoryFill,
   StoryIndexEntry,
   StoryInput,

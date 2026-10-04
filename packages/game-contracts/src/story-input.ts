@@ -141,6 +141,27 @@ function hasUniqueIds(items: readonly { id: string }[]): boolean {
   return new Set(items.map((item) => item.id)).size === items.length;
 }
 
+const audioFileSchema = z.string().regex(/^[a-z0-9-]+\.(mp3|ogg|m4a)$/u);
+const audioSpanSchema = z.object({ text: textSchema, start: z.number().nonnegative(), end: z.number().positive() }).strict();
+
+/**
+ * Strict schema for the recorded read-aloud: one file for the whole story (each sentence is a time
+ * span in it, in story order) and one file with the glossary words (a time span for each). The
+ * files sit in the story folder.
+ */
+export const storyAudioSchema = z
+  .object({
+    article: audioFileSchema,
+    sentences: z.array(audioSpanSchema.extend({ paragraph: paragraphIndexSchema })).min(1),
+    words: audioFileSchema.optional(),
+    wordTimes: z.array(audioSpanSchema).optional(),
+  })
+  .strict()
+  .refine((audio) => audio.sentences.every((span) => span.end > span.start), {
+    message: "A sentence ends before it starts",
+    path: ["sentences"],
+  });
+
 /** Strict schema for one validated story as a story-mode cartridge receives it. */
 export const storyInputSchema = z
   .object({
@@ -160,6 +181,7 @@ export const storyInputSchema = z
     fills: z.array(storyFillSchema),
     questions: z.array(storyQuestionSchema),
     source: storySourceSchema,
+    audio: storyAudioSchema.optional(),
   })
   .strict()
   .superRefine((story, context) => {
@@ -199,6 +221,10 @@ export const storyInputSchema = z
 export type StoryInput = z.infer<typeof storyInputSchema>;
 
 /** One paragraph of a story. */
+/** Recorded read-aloud timings of a story. */
+export type StoryAudio = z.infer<typeof storyAudioSchema>;
+
+/** One paragraph of the story text. */
 export type StoryParagraph = z.infer<typeof storyParagraphSchema>;
 
 /** One vocabulary item of a story. */

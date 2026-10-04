@@ -1,0 +1,72 @@
+[
+  {
+    "id": "pip-is-brave",
+    "title": "Pip is Brave",
+    "level": "A0",
+    "series": "Origins 2",
+    "lesson": 12,
+    "cover": "img-1.webp",
+    "reviewed": true
+  },
+  {
+    "id": "squeaky-the-small-mouse",
+    "title": "Squeaky, the Small Mouse",
+    "level": "A0",
+    "series": "Origins 3.1",
+    "lesson": 14,
+    "cover": "img-1.webp",
+    "reviewed": true
+  },
+  {
+    "id": "pip-and-the-red-car",
+    "title": "Pip and the Red Car",
+    "level": "A0",
+    "series": "Origins 3.1",
+    "lesson": 7,
+    "cover": "img-1.webp",
+    "reviewed": true
+  },
+  {
+    "id": "fun-day-at-the-beach",
+    "title": "Fun Day at the Beach",
+    "level": "A0",
+    "series": "Origins 2",
+    "lesson": 4,
+    "cover": "img-1.webp",
+    "reviewed": true
+  },
+  {
+    "id": "pips-happy-night",
+    "title": "Pip's Happy Night",
+    "level": "A0",
+    "series": "Origins 3.1",
+    "lesson": 2,
+    "cover": "img-1.webp",
+    "reviewed": true
+  },
+  {
+    "id": "pip-sees-colors",
+    "title": "Pip Sees Colors",
+    "level": "A0",
+    "series": "Origins 3.1",
+    "lesson": 4,
+    "cover": "img-1.webp",
+    "reviewed": true
+  },
+  {
+    "id": "the-new-student",
+    "title": "The New Student",
+    "level": "A1",
+    "series": "Adventures 1.0",
+    "lesson": 1,
+    "reviewed": false
+  },
+  {
+    "id": "the-school-garden",
+    "title": "The School Garden",
+    "level": "A1",
+    "series": "Adventures 1.0",
+    "lesson": 2,
+    "reviewed": false
+  }
+]

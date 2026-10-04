@@ -1,0 +1,24 @@
+{
+  "extends": "@reading-advantage/config/tsconfig",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "target": "ES2023",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2023"
+    ],
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "allowJs": false,
+    "jsx": "preserve"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
