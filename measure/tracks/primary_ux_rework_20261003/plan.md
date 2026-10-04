@@ -8,9 +8,9 @@ Other lanes request changes here and do not edit these files.
 - [x] Rank problems per screen: broken, confusing, ugly — see [audit.md](audit.md) sections 1-2
 - [x] Choose the order of screens by student traffic — see [audit.md](audit.md) section 3
 
-## Phase 1: Foundation
-- [ ] Tokens and fonts (FR-1)
-- [ ] `packages/ui` additions and the codemod for overlapping components (FR-2)
+## Phase 1: Foundation — done in `35a7c5b0f`..`df21a293e`
+- [x] Tokens and fonts (FR-1) — `35a7c5b0f`
+- [x] `packages/ui` additions and the codemod for overlapping components (FR-2) — `7590d9807`
   - New package exports: Button `glow` variant, `StatusChip` (+ `statusChipVariants`), `ShimmerSkeleton`, `cardHoverClassName`, `PageTransition`, `AnimatedCounter`.
   - Replaced with `@reading-advantage/ui` (local file deleted): alert, alert-dialog, avatar, checkbox, label, separator, skeleton.
   - Kept local (API differs; full replacement is the Semester 2 `primary_package_alignment` track):
@@ -22,8 +22,13 @@ Other lanes request changes here and do not edit these files.
     - progress: package indicator is fixed `neutral-900` and `h-4`; local bars use the brand primary and `h-2`.
     - tabs: local trigger is `flex-1` with an icon gap; the sign-in tabs rely on it.
     - tooltip: local `Tooltip` adds its own provider; `copy-button` uses it without a provider (the package `Tooltip` needs one).
-- [ ] Navigation (FR-3)
-- [ ] Page shell, skip link, landmarks (FR-7 base)
+- [x] Navigation (FR-3) — `d359ee876`
+  - Bottom bar below 1024 px (glass, safe-area insets); sidebar from 1024 px. A menu button opens the full area menu in a sheet on phones, so pages that are not tabs stay reachable.
+  - Student Home points to `STUDENT_HOME` (`/student/read`) until Phase 2 adds `/student/home`; Read wins the tie, so one tab is active. Teacher Home points to `/teacher/dashboard` (redirects to My Classes) until Phase 3.
+  - Settings pages show the role navigation; School Profile shows only with `SCHOOL_ADMIN_ACCESS`.
+  - The leaderboard sits below the page content (all widths) until Phase 2 moves it to the student home.
+- [x] Page shell, skip link, landmarks (FR-7 base) — `df21a293e`
+  - Open for Phase 3/4: `button-name` nodes on page-level icon buttons (admin students delete, roster and enrollment remove, add-teacher show password, article creation). The one-node `button-name` on `/`, student reports, teacher assignments, teacher reports, and student progress did not trace to a shell or shared component in a static review; it needs a browser axe run with selectors.
 
 ### Phase 1 decisions (coordinator, after the Phase 0 audit)
 - Primary color is brand-700 `#047d36` for buttons and text on white (5.3:1). Tutor brand-500 `#06c755` is for large decorative fills only. The cyan logo text (1.8:1) uses `text-primary`.
