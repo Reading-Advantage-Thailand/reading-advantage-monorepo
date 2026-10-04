@@ -24,7 +24,7 @@
 
 - [x] All 21 legacy rewrites exist in the demo repository and in `game-cartridges-3d` (29 games in all; 28 student games since Monster Encounters left on 2026-10-04). Browser QC passes in 3D and 2D for each (software GL).
 - [ ] `babel-architect` has no cartridge and no rewrite.
-- [ ] Real touch-device checks and layout tuning for the 21 new games.
+- [~] Real touch-device checks and layout tuning for the 21 new games. 2026-10-04: layout tuning is done for all 28 games with the phone QC (`qc/run.mjs --phone` 390 x 844 and `--phone-landscape` 844 x 390, touch events, 3D and 2D). The first run passed 112 of 112 without errors but showed covered labels, gate words off screen, Thai words broken inside a label, and unreadable Rune Match tiles. The fixes are in Forge bc930b5 and here in d5813fa68 (kit) and 11a203aad (games); the second run passed 112 of 112 with clean layouts. Open: a check on a real touch device (owner).
 
 ## Phase 5: Game input (owner, 2026-10-04)
 
