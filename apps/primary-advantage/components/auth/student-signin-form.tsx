@@ -45,8 +45,9 @@ export function StudentSignInForm({
   const [students, setStudents] = useState<
     {
       id: string;
-      name: string;
-      student: { id: string; name: string; email: string };
+      studentUserId: string;
+      studentEmail: string;
+      studentName: string;
     }[]
   >([]);
   const [selectedStudentId, setSelectedStudentId] = useState<string>("");
@@ -181,8 +182,8 @@ export function StudentSignInForm({
               <SelectContent className="max-h-48 overflow-y-auto">
                 <SelectGroup>
                   {students.map((student) => (
-                    <SelectItem key={student.id} value={student.student.email}>
-                      {student.student.name}
+                    <SelectItem key={student.id} value={student.studentEmail}>
+                      {student.studentName}
                     </SelectItem>
                   ))}
                 </SelectGroup>
