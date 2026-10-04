@@ -389,11 +389,13 @@ export const createTeacher = async (params: {
       // belong to the caller's school (a school-less account is foreign), and
       // it must not outrank TEACHER. One generic message avoids leaking
       // which check failed.
+      // The effective rank also counts school_admins rows, which the legacy names miss.
+      const existingRank = await loadTargetEffectiveRank(existingUser.id, existingUser.sessionRole);
       if (
         !schoolId ||
         existingUser.schoolId !== schoolId ||
         outranksTeacher(
-          existingUser.sessionRole,
+          existingRank,
           existingUser.roles.map((r) => r.role.name),
         )
       ) {
@@ -508,7 +510,7 @@ export const createTeacher = async (params: {
       return user.id;
     });
 
-    await afterPasswordWrite({ userId: completeTeacher, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: true });
+    await afterPasswordWrite({ userId: completeTeacher, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: true });
 
     // Refetch with the include shape (roles + ClassroomTeachers + classroom.students).
     return await refetchTeacherWithInclude(completeTeacher, role);
@@ -846,7 +848,7 @@ export const updateTeacher = async (
     });
 
     if (newPasswordHash) {
-      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: false, sessionsRevoked: true });
+      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: false, sessionsRevoked: true });
     }
 
     const refetch = await refetchTeacherWithInclude(id, updateData.role ?? "teacher");
@@ -898,7 +900,7 @@ export const deleteTeacher = async (
     // Delete the teacher
     await db.delete(users).where(eq(users.id, id));
 
-    await auditUserDeleted({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) } });
+    await auditUserDeleted({ userId: id, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) } });
 
     return { success: true };
   } catch (error) {

@@ -83,6 +83,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   eventMocks.afterPasswordWrite.mockClear();
+  eventMocks.auditUserDeleted.mockClear();
   await harness.reset();
   await harness.db.execute(sql`INSERT INTO schools (id, name) VALUES (${SCHOOL_A}, 'A'), (${SCHOOL_B}, 'B')`);
   await harness.db.execute(sql`INSERT INTO roles (name) VALUES ('teacher'), ('admin'), ('system'), ('user')`);
@@ -331,6 +332,33 @@ describe("role changes use the current target rank (M-1)", () => {
     await seedUser("teacher-a", "TEACHER", SCHOOL_A);
     await giveRole("teacher-a", "teacher");
     expect((await updateTeacher("teacher-a", { role: "admin" }, sessionAdmin)).success).toBe(true);
+  });
+});
+
+describe("createTeacher and school_admins rows (L-4)", () => {
+  it("refuses to re-role an account that holds a school_admins row", async () => {
+    await seedUser("owner", "TEACHER", SCHOOL_A);
+    await giveRole("owner", "teacher");
+    await harness.db.execute(sql`INSERT INTO school_admins (user_id, school_id) VALUES ('owner', ${SCHOOL_A})`);
+    const result = await createTeacher({
+      name: "x", email: "owner@x.test", role: "teacher",
+      password: "Takeover-pass-1", force: true, userWithRoles: adminCaller(SCHOOL_A),
+    });
+    expect(result.success).toBe(false);
+    expect((await snapshot("owner")).account_password).toBe("orig");
+  });
+});
+
+describe("audit actor role uses the effective rank (L-5)", () => {
+  it("logs ADMIN for a session TEACHER with a legacy admin row", async () => {
+    await seedUser("teacher-a", "TEACHER", SCHOOL_A);
+    await giveRole("teacher-a", "teacher");
+    const coAdmin: UserWithRoles = {
+      id: "caller", email: "caller@a.test", schoolId: SCHOOL_A, level: 1,
+      role: "TEACHER", roles: [{ role: { id: "r", name: "admin" } }], SchoolAdmins: [],
+    };
+    expect((await deleteTeacher("teacher-a", coAdmin)).success).toBe(true);
+    expect(eventMocks.auditUserDeleted).toHaveBeenCalledWith({ userId: "teacher-a", actor: { id: "caller", role: "ADMIN" } });
   });
 });
 

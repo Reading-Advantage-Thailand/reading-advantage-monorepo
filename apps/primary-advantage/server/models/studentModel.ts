@@ -337,7 +337,7 @@ export const createStudent = async (params: {
       return created.id;
     });
 
-    await afterPasswordWrite({ userId: newStudentId, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: true });
+    await afterPasswordWrite({ userId: newStudentId, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: true });
 
     // Refetch the full record with the include shape.
     const studentRows = await db.select({
@@ -487,7 +487,7 @@ export const updateStudent = async (
     });
 
     if (newPasswordHash) {
-      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) }, created: false, sessionsRevoked: true });
+      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: false, sessionsRevoked: true });
     }
 
     // Refetch to get updated classroom info
@@ -572,7 +572,7 @@ export const deleteStudent = async (
     // Delete the student
     await db.delete(users).where(eq(users.id, id));
 
-    await auditUserDeleted({ userId: id, actor: { id: userWithRoles.id, role: effectiveCallerRole(userWithRoles) } });
+    await auditUserDeleted({ userId: id, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) } });
 
     return { success: true };
   } catch (error) {
