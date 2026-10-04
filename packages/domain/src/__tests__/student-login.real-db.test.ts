@@ -238,7 +238,7 @@ describe.skipIf(!url)("student login against Postgres", () => {
 
   it("generates unique class-based usernames and a working initial password", async () => {
     const auth = await import("@reading-advantage/auth");
-    const out = await sl.provisionStudentLogins({
+    const { provisioned: out } = await sl.provisionStudentLogins({
       db,
       schoolId: ids.schoolA,
       students: [
@@ -254,7 +254,7 @@ describe.skipIf(!url)("student login against Postgres", () => {
     expect(await auth.verifyPassword(out[0]!.initialPassword!, account!.password!)).toBe(true);
     expect(await auth.verifyPassword("wrong-pass", account!.password!)).toBe(false);
     // A second run for another student continues the numbering.
-    const next = await sl.provisionStudentLogins({ db, schoolId: ids.schoolA, students: [{ userId: `${tag}-s3`, classroomName: `Zq${tag.slice(0, 3)}`, classroomId: null }] });
+    const next = (await sl.provisionStudentLogins({ db, schoolId: ids.schoolA, students: [{ userId: `${tag}-s3`, classroomName: `Zq${tag.slice(0, 3)}`, classroomId: null }] })).provisioned;
     expect(next[0]!.username).toBe(`${prefix}3`);
     await db.delete(schema.accounts).where(inArray(schema.accounts.userId, [`${tag}-s1`, `${tag}-s2`, `${tag}-s3`]));
   });

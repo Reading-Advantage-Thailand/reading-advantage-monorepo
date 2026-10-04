@@ -359,12 +359,13 @@ export const createStudent = async (params: {
     // password. A failure here leaves the student with the email username, so it is logged only.
     let credentials: { username: string; initialPassword: string | null } | undefined;
     try {
-      const [login] = await studentLogin.provisionStudentLogins({
+      const { provisioned: [login], failed } = await studentLogin.provisionStudentLogins({
         db,
         schoolId,
         students: [{ userId: newStudentId, classroomName, classroomId: classroomId ?? null, ...(password ? { password } : {}) }],
       });
       if (login) credentials = { username: login.username, initialPassword: login.initialPassword };
+      if (failed.length > 0) console.error("Student Model: Error generating student login:", failed[0]!.reason);
     } catch (error) {
       console.error("Student Model: Error generating student login:", error);
     }

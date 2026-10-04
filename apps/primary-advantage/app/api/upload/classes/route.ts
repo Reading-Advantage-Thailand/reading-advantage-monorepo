@@ -727,6 +727,8 @@ export async function POST(request: NextRequest) {
     // Variables for user processing statistics
     const createdUsers: any[] = [];
     let studentLogins: { name: string; classroomName: string | null; username: string; initialPassword: string | null }[] = [];
+    // Students whose generated login could not be stored. The teacher sees them in the response.
+    let studentLoginsFailedNames: string[] = [];
     let roleAssignments: any[] = [];
     let classroomsAssigned = 0;
     let studentAssignments = 0;
@@ -989,21 +991,28 @@ export async function POST(request: NextRequest) {
             });
           }
           if (seeds.size > 0) {
-            const provisioned = await studentLogin.provisionStudentLogins({
-              db: globalDb,
-              schoolId: authUser.schoolId ?? null,
-              students: Array.from(seeds.values()),
-            });
-            studentLogins = provisioned.map((login) => ({
-              name: nameByUserId.get(login.userId) ?? "",
-              classroomName: seeds.get(login.userId)?.classroomName ?? null,
-              username: login.username,
-              initialPassword: login.initialPassword,
-            }));
+            try {
+              const { provisioned, failed } = await studentLogin.provisionStudentLogins({
+                db: globalDb,
+                schoolId: authUser.schoolId ?? null,
+                students: Array.from(seeds.values()),
+              });
+              studentLoginsFailedNames = failed.map((f) => nameByUserId.get(f.userId) ?? f.userId);
+              if (failed.length > 0) console.error("Student login generation failed for", failed.length, "students");
+              studentLogins = provisioned.map((login) => ({
+                name: nameByUserId.get(login.userId) ?? "",
+                classroomName: seeds.get(login.userId)?.classroomName ?? null,
+                username: login.username,
+                initialPassword: login.initialPassword,
+              }));
+            } catch (error) {
+              // A failure leaves the students with the email username. Report it to the teacher.
+              console.error("Student login generation failed:", error instanceof Error ? error.message : "Unknown");
+              studentLoginsFailedNames = Array.from(seeds.keys(), (id) => nameByUserId.get(id) ?? id);
+            }
           }
         } catch (error) {
-          // A failure leaves the students with the email username, so it is logged only.
-          console.error("Student login generation failed:", error instanceof Error ? error.message : "Unknown");
+          console.error("Student login preparation failed:", error instanceof Error ? error.message : "Unknown");
         }
       }
 
@@ -1106,6 +1115,8 @@ export async function POST(request: NextRequest) {
       classrooms: createdClassrooms,
       note: note,
       studentLogins,
+      studentLoginsFailed: studentLoginsFailedNames.length,
+      studentLoginsFailedNames,
     });
   } catch (error) {
     const errorTime = apiTimer.end("Upload classes API request failed");

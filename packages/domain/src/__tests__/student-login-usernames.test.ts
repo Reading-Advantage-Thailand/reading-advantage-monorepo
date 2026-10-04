@@ -43,7 +43,7 @@ describe("provisionStudentLogins", () => {
 
   it("gives readable unique usernames that continue after the highest existing number", async () => {
     const db = createMockDb({ selectSequence: [[{ username: "p3a1" }, { username: "p3a9" }, { username: "p3ab" }], [], []] });
-    const out = await provisionStudentLogins({
+    const { provisioned: out } = await provisionStudentLogins({
       db: asDb(db),
       schoolId: SCHOOL,
       students: [
@@ -57,7 +57,7 @@ describe("provisionStudentLogins", () => {
 
   it("returns a distinct initial password and stores only its argon2id hash", async () => {
     const db = createMockDb({ selectSequence: [[], [], []] });
-    const out = await provisionStudentLogins({
+    const { provisioned: out } = await provisionStudentLogins({
       db: asDb(db),
       schoolId: SCHOOL,
       students: [
@@ -75,7 +75,7 @@ describe("provisionStudentLogins", () => {
 
   it("keeps a password the caller gives and returns no initial password for it", async () => {
     const db = createMockDb({ selectSequence: [[], []] });
-    const out = await provisionStudentLogins({
+    const { provisioned: out } = await provisionStudentLogins({
       db: asDb(db),
       schoolId: SCHOOL,
       students: [{ userId: "u1", classroomName: "P3A", classroomId: null, password: "Chosen-pass-1" }],
@@ -96,7 +96,7 @@ describe("provisionStudentLogins", () => {
       .mockReturnValueOnce({ where: vi.fn().mockRejectedValue(Object.assign(new Error("dup"), { code: "23505" })) })
       .mockReturnValue({ where: vi.fn().mockReturnValue({ returning: vi.fn().mockResolvedValue([]) }) });
     db.update.mockReturnValue({ set });
-    const out = await provisionStudentLogins({ db: asDb(db), schoolId: SCHOOL, students: [{ userId: "u1", classroomName: "P3A", classroomId: null }] });
+    const { provisioned: out } = await provisionStudentLogins({ db: asDb(db), schoolId: SCHOOL, students: [{ userId: "u1", classroomName: "P3A", classroomId: null }] });
     expect(out[0]!.username).toBe("p3a2");
   });
 
@@ -105,5 +105,29 @@ describe("provisionStudentLogins", () => {
     await provisionStudentLogins({ db: asDb(db), schoolId: SCHOOL, students: [{ userId: "u1", classroomName: "P3A", classroomId: "c1" }] });
     const inserted = db.insert.mock.results.flatMap((r) => r.value.values.mock.calls.map((c: unknown[]) => c[0]));
     expect(JSON.stringify(inserted)).toContain('"schoolId":"22222222-2222-4222-8222-222222222222"');
+  });
+
+  it("runs the username update and the account insert of one student in one transaction", async () => {
+    const db = createMockDb({ selectSequence: [[], []] });
+    await provisionStudentLogins({ db: asDb(db), schoolId: SCHOOL, students: [{ userId: "u1", classroomName: "P3A", classroomId: null }] });
+    expect(db.transaction).toHaveBeenCalledTimes(1);
+  });
+
+  it("reports a student whose login could not be stored and goes on with the others", async () => {
+    const db = createMockDb({ selectSequence: [[], [], []] });
+    const insert = vi.fn()
+      .mockReturnValueOnce({ values: vi.fn().mockReturnValue({ onConflictDoUpdate: vi.fn().mockRejectedValue(new Error("db down")) }) })
+      .mockReturnValue({ values: vi.fn().mockReturnValue({ onConflictDoUpdate: vi.fn().mockResolvedValue([]), onConflictDoNothing: vi.fn().mockResolvedValue([]) }) });
+    db.insert = insert;
+    const out = await provisionStudentLogins({
+      db: asDb(db),
+      schoolId: SCHOOL,
+      students: [
+        { userId: "u1", classroomName: "P3A", classroomId: null },
+        { userId: "u2", classroomName: "P3A", classroomId: null },
+      ],
+    });
+    expect(out.failed).toEqual([{ userId: "u1", reason: "db down" }]);
+    expect(out.provisioned.map((p) => p.userId)).toEqual(["u2"]);
   });
 });

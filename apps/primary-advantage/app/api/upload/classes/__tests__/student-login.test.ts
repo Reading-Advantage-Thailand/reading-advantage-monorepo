@@ -119,9 +119,10 @@ describe("combined CSV upload student login generation (FR-6)", () => {
   });
 
   it("generates a username and password for a student created by the upload", async () => {
-    mocks.provision.mockImplementation(async ({ students }) =>
-      students.map((s: { userId: string }) => ({ userId: s.userId, username: "classa1", initialPassword: "abcd2345" })),
-    );
+    mocks.provision.mockImplementation(async ({ students }) => ({
+      provisioned: students.map((s: { userId: string }) => ({ userId: s.userId, username: "classa1", initialPassword: "abcd2345" })),
+      failed: [],
+    }));
     const response = await uploadStudent((id) => id);
     expect(response.status).toBe(200);
     expect(mocks.provision).toHaveBeenCalledWith(
@@ -140,5 +141,25 @@ describe("combined CSV upload student login generation (FR-6)", () => {
     expect(response.status).toBe(200);
     expect(mocks.provision).not.toHaveBeenCalled();
     expect((await response.json()).studentLogins).toEqual([]);
+  });
+
+  it("reports the students whose login could not be stored", async () => {
+    mocks.provision.mockImplementation(async ({ students }) => ({
+      provisioned: [],
+      failed: students.map((s: { userId: string }) => ({ userId: s.userId, reason: "db down" })),
+    }));
+    const body = await (await uploadStudent((id) => id)).json();
+    expect(body.studentLoginsFailed).toBe(1);
+    expect(body.studentLoginsFailedNames).toEqual(["Student One"]);
+    expect(body.studentLogins).toEqual([]);
+  });
+
+  it("reports every student as failed when provisioning throws", async () => {
+    mocks.provision.mockRejectedValue(new Error("boom"));
+    const response = await uploadStudent((id) => id);
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.studentLoginsFailed).toBe(1);
+    expect(body.studentLoginsFailedNames).toEqual(["Student One"]);
   });
 });

@@ -131,7 +131,7 @@ describe("CSV upload student login generation (FR-6)", () => {
           ? [{ id: "class-1", name: "P3A", schoolId: SESSION_SCHOOL }]
           : [],
     );
-    mocks.provision.mockResolvedValue([{ userId: "user-1", username: "p3a1", initialPassword: "abcd2345" }]);
+    mocks.provision.mockResolvedValue({ provisioned: [{ userId: "user-1", username: "p3a1", initialPassword: "abcd2345" }], failed: [] });
 
     const response = await POST(uploadRequest("students.csv"));
 
@@ -145,6 +145,23 @@ describe("CSV upload student login generation (FR-6)", () => {
     expect((await response.json()).studentLogins).toEqual([
       { name: "Ann Lee", classroomName: "P3A", username: "p3a1", initialPassword: "abcd2345" },
     ]);
+  });
+
+  it("reports the students whose login could not be stored", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId: SESSION_SCHOOL });
+    mocks.parse.mockReturnValue([
+      { name: "Ann Lee", email: "ann@example.com", role: "student", classroom_name: "P3A" },
+    ]);
+    for (const rows of [[{ id: "teacher-1", schoolId: SESSION_SCHOOL }], [{ id: SESSION_SCHOOL, name: "School A" }], [{ id: "role-student", name: "student" }], [], []]) {
+      mocks.select.mockReturnValueOnce(selectResult(rows));
+    }
+    recordingInserts((table) =>
+      table === users ? [{ id: "user-1", email: "ann@example.com" }] : table === classrooms ? [{ id: "class-1", name: "P3A", schoolId: SESSION_SCHOOL }] : [],
+    );
+    mocks.provision.mockResolvedValue({ provisioned: [], failed: [{ userId: "user-1", reason: "db down" }] });
+    const body = await (await POST(uploadRequest("students.csv"))).json();
+    expect(body.studentLoginsFailed).toBe(1);
+    expect(body.studentLoginsFailedNames).toEqual(["Ann Lee"]);
   });
 
   it("still finishes the upload when login generation fails", async () => {
@@ -161,6 +178,9 @@ describe("CSV upload student login generation (FR-6)", () => {
     mocks.provision.mockRejectedValue(new Error("boom"));
     const response = await POST(uploadRequest("students.csv"));
     expect(response.status).toBe(200);
-    expect((await response.json()).studentLogins).toEqual([]);
+    const body = await response.json();
+    expect(body.studentLogins).toEqual([]);
+    expect(body.studentLoginsFailed).toBe(1);
+    expect(body.studentLoginsFailedNames).toEqual(["Ann Lee"]);
   });
 });

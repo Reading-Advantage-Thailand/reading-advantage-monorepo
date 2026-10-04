@@ -65,6 +65,19 @@ export interface ProvisionedStudentLogin {
   initialPassword: string | null;
 }
 
+/** A student whose login data could not be stored. The student keeps the old username. */
+export interface FailedStudentLogin {
+  userId: string;
+  /** The error message, for the teacher report and the log. */
+  reason: string;
+}
+
+/** Result of `provisionStudentLogins`: the students that got a login and the ones that did not. */
+export interface ProvisionStudentLoginsResult {
+  provisioned: ProvisionedStudentLogin[];
+  failed: FailedStudentLogin[];
+}
+
 /**
  * Reads the highest number used after a prefix. Usernames are unique across all schools,
  * so this read is not scoped to one school.
@@ -83,21 +96,25 @@ async function highestNumber(db: DB, prefix: string): Promise<number> {
  * no email, no surname) and a credential account with an initial password, and creates the
  * student credential row for the class. It is the one path for student creation and roster
  * import (FR-6). A unique violation from a concurrent import is retried with a fresh number.
+ * The username update and the account insert of one student run in one transaction, so a
+ * student never keeps a new username without a password. A failure for one student does not
+ * stop the others; it is returned in `failed`.
  * @param params.db Database client.
  * @param params.schoolId The school of the students, or null for a SYSTEM student without a school.
  * @param params.students The students to provision. They must exist already.
- * @returns The username and the plain initial password of each student, in input order.
- * @throws {Error} When no free username is found after several tries.
+ * @returns The username and the plain initial password of each provisioned student, in input
+ * order, and the students that failed.
  */
 export async function provisionStudentLogins(params: {
   db: DB;
   schoolId: string | null;
   students: StudentLoginSeed[];
-}): Promise<ProvisionedStudentLogin[]> {
+}): Promise<ProvisionStudentLoginsResult> {
   const { db, schoolId, students } = params;
   const userDb = schoolId ? createTenantDB(db, { schoolId }) : db;
   const counters = new Map<string, number>();
   const results: ProvisionedStudentLogin[] = [];
+  const failed: FailedStudentLogin[] = [];
 
   const prepared: { seed: StudentLoginSeed; initialPassword: string | null; hash: string }[] = [];
   for (let i = 0; i < students.length; i += HASH_BATCH) {
@@ -114,23 +131,29 @@ export async function provisionStudentLogins(params: {
   for (const { seed, initialPassword, hash } of prepared) {
     const prefix = usernamePrefix(seed.classroomName);
     let username = "";
-    for (let attempt = 0; attempt < MAX_USERNAME_TRIES; attempt++) {
-      if (!counters.has(prefix) || attempt > 0) counters.set(prefix, await highestNumber(db, prefix));
-      const next = counters.get(prefix)! + 1;
-      counters.set(prefix, next);
-      username = `${prefix}${next}`;
-      try {
-        await userDb.update(users).set({ username, displayUsername: username }).where(eq(users.id, seed.userId));
-        break;
-      } catch (error) {
-        if (!isUniqueViolation(error) || attempt === MAX_USERNAME_TRIES - 1) throw error;
+    try {
+      for (let attempt = 0; attempt < MAX_USERNAME_TRIES; attempt++) {
+        if (!counters.has(prefix) || attempt > 0) counters.set(prefix, await highestNumber(db, prefix));
+        const next = counters.get(prefix)! + 1;
+        counters.set(prefix, next);
+        username = `${prefix}${next}`;
+        try {
+          await userDb.transaction(async (tx) => {
+            await tx.update(users).set({ username, displayUsername: username }).where(eq(users.id, seed.userId));
+            await tx
+              .insert(accounts)
+              .values({ id: `${seed.userId}_credential`, userId: seed.userId, providerId: "credential", password: hash })
+              .onConflictDoUpdate({ target: [accounts.userId, accounts.providerId], set: { password: hash, updatedAt: new Date() } });
+          });
+          break;
+        } catch (error) {
+          if (!isUniqueViolation(error) || attempt === MAX_USERNAME_TRIES - 1) throw error;
+        }
       }
+      results.push({ userId: seed.userId, username, initialPassword });
+    } catch (error) {
+      failed.push({ userId: seed.userId, reason: error instanceof Error ? error.message : "Unknown error" });
     }
-    await userDb
-      .insert(accounts)
-      .values({ id: `${seed.userId}_credential`, userId: seed.userId, providerId: "credential", password: hash })
-      .onConflictDoUpdate({ target: [accounts.userId, accounts.providerId], set: { password: hash, updatedAt: new Date() } });
-    results.push({ userId: seed.userId, username, initialPassword });
   }
 
   if (schoolId) {
@@ -138,5 +161,5 @@ export async function provisionStudentLogins(params: {
       await ensureStudentCredentials(db, schoolId, classroomId);
     }
   }
-  return results;
+  return { provisioned: results, failed };
 }

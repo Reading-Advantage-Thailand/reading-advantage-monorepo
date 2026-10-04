@@ -427,7 +427,8 @@ export async function POST(request: NextRequest) {
     let studentAssignments = 0;
     let teacherAssignments = 0;
     // FR-6: students that joined a class in this upload get a generated username and password.
-    const studentSeeds: studentLogin.StudentLoginSeed[] = [];
+    // One seed per user, so a new student in two classes is provisioned once.
+    const studentSeeds = new Map<string, studentLogin.StudentLoginSeed>();
 
     if (classroomAssignments.length > 0) {
       // Update classroom assignments with actual user IDs
@@ -495,7 +496,9 @@ export async function POST(request: NextRequest) {
               studentId: assignment.userId,
             } as any).onConflictDoNothing();
             studentAssignments++;
-            studentSeeds.push({ userId: assignment.userId, classroomName, classroomId: classroom.id });
+            if (!studentSeeds.has(assignment.userId)) {
+              studentSeeds.set(assignment.userId, { userId: assignment.userId, classroomName, classroomId: classroom.id });
+            }
           } else if (assignment.role === "teacher") {
             // Add teacher to classroom (replaces Prisma `classroomTeachers.findFirst + create`).
             const [existingTeacher] = await globalDb.select().from(classroomTeachers)
@@ -519,27 +522,30 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // FR-6: a failure leaves the students with the email username, so it is logged only.
+    // FR-6: a failure leaves the students with the email username. Report it to the teacher.
     let studentLogins: { name: string; classroomName: string | null; username: string; initialPassword: string | null }[] = [];
-    if (studentSeeds.length > 0) {
+    let studentLoginsFailedNames: string[] = [];
+    if (studentSeeds.size > 0) {
+      const nameByUserId = new Map(
+        processedUsers.map((userData) => [emailToUserId.get(userData.email), userData.name] as const),
+      );
       try {
-        const nameByUserId = new Map(
-          processedUsers.map((userData) => [emailToUserId.get(userData.email), userData.name] as const),
-        );
-        const classByUserId = new Map(studentSeeds.map((seed) => [seed.userId, seed.classroomName] as const));
-        const provisioned = await studentLogin.provisionStudentLogins({
+        const { provisioned, failed } = await studentLogin.provisionStudentLogins({
           db: globalDb,
           schoolId: authUser.schoolId ?? null,
-          students: studentSeeds,
+          students: Array.from(studentSeeds.values()),
         });
         studentLogins = provisioned.map((login) => ({
           name: nameByUserId.get(login.userId) ?? "",
-          classroomName: classByUserId.get(login.userId) ?? null,
+          classroomName: studentSeeds.get(login.userId)?.classroomName ?? null,
           username: login.username,
           initialPassword: login.initialPassword,
         }));
+        studentLoginsFailedNames = failed.map((f) => nameByUserId.get(f.userId) ?? f.userId);
+        if (failed.length > 0) console.error("Student login generation failed for", failed.length, "students");
       } catch (error) {
         console.error("Student login generation failed:", error instanceof Error ? error.message : "Unknown");
+        studentLoginsFailedNames = Array.from(studentSeeds.keys(), (id) => nameByUserId.get(id) ?? id);
       }
     }
 
@@ -581,6 +587,8 @@ export async function POST(request: NextRequest) {
           },
       note: "Users created with default values: cefrLevel=A0-, level=1, xp=0. Students get a generated username and an initial password, shown once in studentLogins.",
       studentLogins,
+      studentLoginsFailed: studentLoginsFailedNames.length,
+      studentLoginsFailedNames,
     });
   } catch (error) {
     console.error("File upload error:", error);
