@@ -28,6 +28,15 @@ describe("hasPermission", () => {
     expect(hasPermission(student, "ADMIN_ACCESS")).toBe(false);
   });
 
+  it("accepts the uppercase role strings the session returns", () => {
+    const student = { role: "STUDENT" };
+    expect(hasPermission(student, "STUDENT_ACCESS")).toBe(true);
+    expect(hasPermission({ role: "TEACHER" }, "TEACHER_ACCESS")).toBe(true);
+    expect(hasPermission(student, "TEACHER_ACCESS")).toBe(false);
+    const dbRoles = { roles: [{ role: { name: "STUDENT" } }] };
+    expect(hasPermission(dbRoles, "STUDENT_ACCESS")).toBe(true);
+  });
+
   it("uses the shared hierarchy for database roles", () => {
     const user = { roles: [{ role: { name: "admin" } }] };
     expect(hasPermission(user, "TEACHER_ACCESS")).toBe(true);

@@ -123,8 +123,9 @@ export function hasPermission(
   if (!requirement) return false;
 
   // Get user's primary role (from session) or roles array (from database)
-  const userRole = user.role;
-  const userRoles = user.roles?.map((r) => r.role.name) || [];
+  // The session returns uppercase roles (STUDENT); requirements use lowercase.
+  const userRole = user.role?.toLowerCase();
+  const userRoles = user.roles?.map((r) => r.role.name.toLowerCase()) || [];
   const isSchoolAdmin = (user.SchoolAdmins?.length || 0) > 0;
 
   // Check if user is school admin and it's allowed for this permission
