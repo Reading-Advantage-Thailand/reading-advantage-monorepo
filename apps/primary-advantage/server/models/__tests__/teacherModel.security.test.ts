@@ -122,17 +122,65 @@ describe("createTeacher against existing users (C1)", () => {
     expect(row.school_id).toBe(SCHOOL_B);
   });
 
-  it("never writes a password when it attaches an existing school-less teacher", async () => {
+  it("refuses an existing school-less teacher without moving it or writing a password", async () => {
     await seedUser("loose-teacher", "TEACHER", null);
     const result = await createTeacher({
       name: "x", email: "loose-teacher@x.test", role: "teacher",
       password: "Takeover-pass-1", userWithRoles: adminCaller(SCHOOL_A),
     });
-    expect(result.success).toBe(true);
+    expect(result.success).toBe(false);
     const row = await snapshot("loose-teacher");
     expect(row.account_password).toBe("orig");
     expect(row.user_password).toBe("orig");
-    expect(row.school_id).toBe(SCHOOL_A);
+    expect(row.school_id).toBeNull();
+  });
+
+  it("gives one generic refusal for every refused existing account", async () => {
+    await seedUser("v-system", "SYSTEM", null);
+    await seedUser("v-admin", "ADMIN", SCHOOL_A);
+    await seedUser("v-other", "TEACHER", SCHOOL_B);
+    await seedUser("v-loose", "STUDENT", null);
+    const messages = new Set<string | undefined>();
+    for (const id of ["v-system", "v-admin", "v-other", "v-loose"]) {
+      const result = await createTeacher({
+        name: "x", email: `${id}@x.test`, role: "teacher", userWithRoles: adminCaller(SCHOOL_A),
+      });
+      expect(result.success).toBe(false);
+      messages.add(result.error);
+    }
+    expect(messages.size).toBe(1);
+  });
+
+  it("blocks the account-move then password-takeover chain", async () => {
+    // Self-serve owner (session STUDENT + school_admins row) in school A.
+    await seedUser("owner", "STUDENT", SCHOOL_A);
+    const owner: UserWithRoles = {
+      id: "owner", email: "owner@x.test", schoolId: SCHOOL_A, level: 1,
+      role: "STUDENT", roles: [], SchoolAdmins: [{ id: "sa-o", schoolId: SCHOOL_A }],
+    };
+    // Step 1: owner creates helper B with a legacy admin row.
+    const helper = await createTeacher({
+      name: "b", email: "helper-b@x.test", role: "admin", password: "Helper-pass-123", userWithRoles: owner,
+    });
+    expect(helper.success).toBe(true);
+    const helperCaller: UserWithRoles = {
+      id: helper.teacher!.id, email: "helper-b@x.test", schoolId: SCHOOL_A, level: 1,
+      role: "TEACHER", roles: [{ role: { id: "r", name: "admin" } }], SchoolAdmins: [],
+    };
+    // Step 2: B tries to move a school-less victim into school A.
+    await seedUser("victim", "STUDENT", null);
+    await giveRole("victim", "user");
+    const move = await createTeacher({
+      name: "v", email: "victim@x.test", role: "admin", userWithRoles: helperCaller,
+    });
+    expect(move.success).toBe(false);
+    // Step 3: B tries to set the victim's password.
+    const takeover = await updateTeacher("victim", { password: "Takeover-pass-1" }, helperCaller);
+    expect(takeover.success).toBe(false);
+    const row = await snapshot("victim");
+    expect(row.school_id).toBeNull();
+    expect(row.account_password).toBe("orig");
+    expect(row.user_password).toBe("orig");
   });
 
   it("refuses to assign the system role", async () => {

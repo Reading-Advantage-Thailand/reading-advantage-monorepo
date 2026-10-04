@@ -282,6 +282,9 @@ export const getTeacherById = async (
   }
 };
 
+/** The one refusal for an existing account a caller may not add. */
+const EXISTING_ACCOUNT_REFUSAL = "This account cannot be added as a teacher";
+
 /** Legacy role names a teacher management call may assign. */
 const ASSIGNABLE_TEACHER_ROLES = ["teacher", "admin"];
 
@@ -377,18 +380,19 @@ export const createTeacher = async (params: {
 
     // If user exists, handle accordingly
     if (existingUser) {
-      // An existing account is never taken over: no outranking roles and no
-      // moves out of another school, even with `force`.
+      // An existing account is never taken over or moved. It must already
+      // belong to the caller's school (a school-less account is foreign), and
+      // it must not outrank TEACHER. One generic message avoids leaking
+      // which check failed.
       if (
+        !schoolId ||
+        existingUser.schoolId !== schoolId ||
         outranksTeacher(
           existingUser.sessionRole,
           existingUser.roles.map((r) => r.role.name),
         )
       ) {
-        return { success: false, error: "This account cannot be added as a teacher" };
-      }
-      if (existingUser.schoolId && existingUser.schoolId !== schoolId) {
-        return { success: false, error: "This account belongs to another school" };
+        return { success: false, error: EXISTING_ACCOUNT_REFUSAL };
       }
       if (existingUser.schoolId && existingUser.School) {
         if (force) {
