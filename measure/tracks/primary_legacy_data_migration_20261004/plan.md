@@ -35,7 +35,7 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 ## Phase 4: Teacher credentials (FR-5, FR-6)
 - [ ] Additive nullable column for a temporary password, and the forced change step
 - [ ] Teacher credential script and hand-out list
-- [ ] "Username or email" on the teacher sign-in page
+- [x] Teacher sign-in by username only (owner decision 2026-10-04: no email sign-in). Usernames are `lower(email)` (D6), so a teacher types the address used before; login lower-cases the input (lane A 3a9237113)
 
 ## Gates
 - [ ] Tests, tsc, ESLint green
