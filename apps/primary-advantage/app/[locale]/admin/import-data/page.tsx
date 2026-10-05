@@ -250,9 +250,9 @@ export default function ImportDataPage() {
       <Header heading={t("header.heading")} text={t("header.text")} />
       <Separator />
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-3">
         {/* Upload Section */}
-        <div className="space-y-6 lg:col-span-2">
+        <div className="min-w-0 space-y-6 lg:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -275,7 +275,7 @@ export default function ImportDataPage() {
                     accept=".csv"
                     onChange={handleFileSelect}
                     ref={fileInputRef}
-                    className="flex-1"
+                    className="min-w-0 flex-1"
                   />
                   <Button
                     variant="outline"

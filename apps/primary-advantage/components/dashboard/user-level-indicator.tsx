@@ -55,7 +55,7 @@ export default function CEFRLevels({
   const position = Math.max(0, CEFR_GAUGE_LEVELS.indexOf(currentLevel as (typeof CEFR_GAUGE_LEVELS)[number]));
 
   return (
-    <Card className="md:col-span-1">
+    <Card className="min-w-0 lg:col-span-1">
       <CardHeader>
         <CardTitle className="text-muted-foreground">{t("title")}</CardTitle>
       </CardHeader>

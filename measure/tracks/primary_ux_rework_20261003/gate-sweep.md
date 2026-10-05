@@ -70,3 +70,25 @@ student session lifetime.
   (FR-10).
 - Keyboard: pass (see above).
 - Visual baselines: see the plan entry.
+
+## Confirmation on the production build (2026-10-05, after the fixes)
+
+The fixed routes were captured again from `next build` + `next start` of the merged branch
+(`measure/qa/browser-2026-10-05/gates/` holds the first run; the confirmation inventories are
+in the session scratchpad). Results:
+
+- G2, G3, G4, G5: the axe `button-name`, `color-contrast` (leaderboard), and
+  `aria-prohibited-attr` violations are gone.
+- G1: the first fix (the date-range button) was not the cause. The overflow at 768 came from
+  the right column of the report panels: the CEFR gauge (a fixed 300 px SVG) and the heatmap
+  calendar (276 px) did not fit a third of 768 px. Fix: the report panels use three columns
+  from 1024 px (`lg:`), so at 768 the side column stacks full width. Both `/student/reports`
+  and `/teacher/student-progress/<id>` measure 0 px overflow at every width now.
+- G15: the example table was not the cause either. The upload card was 530 px wide at 375
+  because the file input keeps its intrinsic width inside a flex row and the grid column had
+  no `min-w-0`. Fix: `min-w-0` on the grid, the column, and the input. 0 px overflow now.
+- Still open, all Low: the public home logo contrast (G6); the react-day-picker outside-month
+  day numbers on the reports heatmap (`color-contrast`, 4 nodes, legacy component); the admin
+  sidebar "Article Creation" label contrast at 1280. The student home showed a shimmer at the
+  capture moment in one run (the leaderboard loads after the page); a direct check found no
+  loading marker after settle.

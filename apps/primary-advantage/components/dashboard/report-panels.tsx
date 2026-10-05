@@ -32,8 +32,8 @@ export function ReportPanels({
   return (
     <>
       <UserRecentActivity data={activity} />
-      <div className="mt-4 mb-10 grid min-w-0 gap-4 md:grid-cols-3">
-        <div className="flex min-w-0 flex-col gap-4 md:col-span-2">
+      <div className="mt-4 mb-10 grid min-w-0 gap-4 lg:grid-cols-3">
+        <div className="flex min-w-0 flex-col gap-4 lg:col-span-2">
           <UserActivityChart data={activity} xpLogs={xpLogs} />
           <UserXpOverAllChart data={xpLogs} />
           <ReadingStatsChart data={activity} />
