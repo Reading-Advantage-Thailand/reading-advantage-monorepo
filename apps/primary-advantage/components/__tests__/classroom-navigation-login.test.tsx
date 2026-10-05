@@ -6,9 +6,14 @@
  */
 import "@testing-library/jest-dom/vitest";
 import { screen } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/i18n/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+// Lane C Phase 3: the header links are real links (the i18n Link).
+vi.mock("@/i18n/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  Link: ({ children, href }: { children?: ReactNode; href: string }) => <a href={href}>{children}</a>,
+}));
 
 import ClassroomNavigation from "../teacher/classroom-navigation";
 import { renderWithMessages } from "./helpers/render-with-messages";
