@@ -131,9 +131,15 @@ Run 2a (tasks 0-3) is done in `4ba0ab362`..`01fa69a03`. Run 2b owns the last ite
 - [x] README cleanup — `27a489c31`.
 
 ## Gates
-- [ ] Vision QA sweep at three widths, no Critical/High. The 768 px width needs real evidence:
-  the Phase 0 audit looked at 768 for one route only (FR-10).
-- [ ] Visual baselines recorded — tool: Playwright screenshots (`toHaveScreenshot` in a spec under `apps/primary-advantage/tests/e2e`, `@playwright/test` 1.61.0; owner decision 2026-10-05)
+- [x] Vision QA sweep at three widths, no Critical/High (2026-10-05, `ba4e3d870`): 65 routes, 195
+  captures at 375/768/1280 on the merged branch; 4 High and 2 Medium findings fixed in the same
+  commit; the rest are Low, owner items, or timing effects. Keyboard walk-through passed. Report:
+  [gate-sweep.md](gate-sweep.md); data in `measure/qa/browser-2026-10-05/gates/`. The 768 px width
+  has a capture for every route now (FR-10).
+- [x] Visual baselines recorded (2026-10-05): 45 snapshots (15 screens × 375/768/1280) from
+  `next build` + `next start` of the merged branch, in
+  `apps/primary-advantage/tests/e2e/visual-baselines.spec.ts-snapshots/`; run with
+  `PLAYWRIGHT_PORT=3100 VISUAL_QA_PASS=… playwright test --project=visual` — tool: Playwright screenshots (`toHaveScreenshot` in a spec under `apps/primary-advantage/tests/e2e`, `@playwright/test` 1.61.0; owner decision 2026-10-05)
 
 ### Review notes (2026-10-05, review session, no code changes)
 - Lane C forked from integration after the Lane B merge (`490707f12`), so it contains A, B, and
