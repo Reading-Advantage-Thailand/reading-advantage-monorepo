@@ -445,7 +445,7 @@ export default function ArticleContent({ article }: Props) {
             onValueChange={setSelectedLanguage}
             disabled={loading}
           >
-            <SelectTrigger className="h-10 w-full">
+            <SelectTrigger className="h-10 w-full" aria-label={t("translationLanguage")}>
               <div className="flex items-center gap-2">
                 <Languages className="h-4 w-4" />
                 <SelectValue>
@@ -514,7 +514,7 @@ export default function ArticleContent({ article }: Props) {
                   onValueChange={setSelectedLanguage}
                   disabled={loading}
                 >
-                  <SelectTrigger className="h-10 w-[70px] md:w-auto">
+                  <SelectTrigger className="h-10 w-[70px] md:w-auto" aria-label={t("translationLanguage")}>
                     <div className="flex items-center gap-1 md:gap-2">
                       <Languages className="h-4 w-4 shrink-0" />
                       <SelectValue>

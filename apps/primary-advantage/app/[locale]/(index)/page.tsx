@@ -243,7 +243,7 @@ export default async function Home() {
               <div className="grid gap-2">
                 <Label htmlFor="inquiry">{t("contact.inquiry")}</Label>
                 <Select>
-                  <SelectTrigger>
+                  <SelectTrigger id="inquiry">
                     <SelectValue
                       placeholder={t("contact.inquiryPlaceholder")}
                     />

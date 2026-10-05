@@ -119,8 +119,8 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
               </CardContent>
             </Card>
           </div>
-          <Card className="col-span-1">
-            <CardContent className="flex flex-col gap-2">
+          <Card className="col-span-1 min-w-0">
+            <CardContent className="flex min-w-0 flex-col gap-2">
               <CardTitle className="text-muted-foreground text-sm">
                 {t("dateRange")}
               </CardTitle>
@@ -130,7 +130,7 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
                     id="date"
                     variant={"outline"}
                     className={cn(
-                      "justify-start text-left font-normal",
+                      "h-auto min-h-10 w-full min-w-0 justify-start text-left font-normal whitespace-normal",
                       !date && "text-muted-foreground",
                     )}
                   >

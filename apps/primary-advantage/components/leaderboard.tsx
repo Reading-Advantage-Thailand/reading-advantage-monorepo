@@ -80,7 +80,7 @@ export default function Leaderboard({
                   </TableCell>
                   <TableCell className="flex items-center gap-2">
                     {item.userId === userId ? (
-                      <span className="text-green-500">{t("you")}</span>
+                      <span className="text-primary font-semibold">{t("you")}</span>
                     ) : (
                       <span>{getInitials(item.name)}</span>
                     )}
