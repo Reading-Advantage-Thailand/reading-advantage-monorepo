@@ -5,3 +5,4 @@ export type { AvatarProfile, SetAvatarProfileInput } from "@reading-advantage/ga
 export { AvatarShopError, type AvatarShopErrorCode } from "./errors.js";
 export { GP_DAILY_CAP, GP_WEIGHTS, WELCOME_GP, bangkokDayStart, gpBalance, gpForXp, grantGpForXp } from "./gp.js";
 export { getAvatarState, getClassAvatars, listAvatarShop, purchaseAvatarItem, resetStudentAvatar, setLoadout, tieOrder, toLaunchAvatar } from "./shop.js";
+export type { AvatarInventoryItem, AvatarLoadout, AvatarShopItem, AvatarSlot, AvatarState, ClassAvatar, LaunchAvatar, PurchaseAvatarItemInput, SetLoadoutInput } from "@reading-advantage/game-contracts";

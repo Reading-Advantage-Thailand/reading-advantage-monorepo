@@ -1,4 +1,5 @@
 // app/api/flashcards/cards/[cardId]/review/route.ts
+import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
 import { NextRequest, NextResponse } from "next/server";
 import { eq, and, sql } from 'drizzle-orm';
 import { flashcardCards, flashcardDecks, cardReviews, userActivity, xpLogs, users } from '@reading-advantage/db/schema';
@@ -143,6 +144,7 @@ export async function POST(
         activityId: cardId,
         activityType,
       } as any);
+      await grantGpForXp({ tx: txFlashDb, schoolId: user.schoolId ?? null, userId: user.id!, sourceKey: `xp:${cardId}`, activityType, xpEarned: xpReward });
 
       // Update user XP (replaces Prisma `{ increment: xpReward }`).
       // users is FLAT; the tenant-scoped tx confines the increment.

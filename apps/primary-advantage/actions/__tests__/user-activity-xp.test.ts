@@ -28,6 +28,9 @@ vi.mock("@reading-advantage/db", () => ({
   and: vi.fn(() => ({})),
 }));
 
+// The GP grant beside the XP row is covered by the domain tests (primary-avatar/__tests__/gp.test.ts).
+vi.mock("@reading-advantage/domain/primary-avatar", () => ({ grantGpForXp: vi.fn().mockResolvedValue(0) }));
+
 import { updateUserActivity } from "../user";
 import { ActivityType, UserXpEarned } from "@/types/enum";
 
