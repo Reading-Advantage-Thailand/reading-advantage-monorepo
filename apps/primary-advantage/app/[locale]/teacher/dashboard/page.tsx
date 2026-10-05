@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * Teacher dashboard (Lane C Phase 3, audit T1): the summary numbers; my classes with student
  * counts, a link to each class, and "Start class" (it opens the class page at the class sign-in
  * panel); the class book slot (Lane D+E); the open assignments with Bangkok due chips; and the
- * students who need help (late work, or no activity for 7 days). A load failure goes to the
+ * students who need help (overdue work, or no activity for 7 days). A load failure goes to the
  * route error boundary (error.tsx), which offers a retry.
  * @returns The dashboard page.
  */

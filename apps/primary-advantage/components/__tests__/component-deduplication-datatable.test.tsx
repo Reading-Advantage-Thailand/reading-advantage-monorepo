@@ -6,7 +6,7 @@
  * runtime that the table delegates to the one DataTable shell.
  */
 import "@testing-library/jest-dom/vitest";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { pushMock, fetchMock, toastMock } = vi.hoisted(() => ({
@@ -187,10 +187,14 @@ afterEach(() => {
  * @param count Rows the table hands to the shell.
  */
 async function expectShellRows(count: number): Promise<void> {
-  const shells = await screen.findAllByTestId("shared-data-table");
-  expect(
-    shells.some((shell) => shell.getAttribute("data-rows") === String(count)),
-  ).toBe(true);
+  // Waits for the fetched rows: a table can first render the shell empty (the teacher
+  // assignments open the first class after the class list loads).
+  await waitFor(() => {
+    const shells = screen.getAllByTestId("shared-data-table");
+    expect(
+      shells.some((shell) => shell.getAttribute("data-rows") === String(count)),
+    ).toBe(true);
+  });
 }
 
 describe("live tables through one DataTable shell", () => {

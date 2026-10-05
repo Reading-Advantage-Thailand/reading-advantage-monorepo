@@ -14,7 +14,7 @@ const TONE: Record<DueDateStatus["kind"], "danger" | "warning" | "info" | "neutr
 };
 
 /**
- * Due-date chip for teacher screens: Late, Due today, Due in n days, or No due date. Days are
+ * Due-date chip for teacher screens: Overdue, Due today, Due in n days, or No due date. Days are
  * calendar days in Asia/Bangkok (`getDueDateStatus`), so a whole due day is "Due today".
  * @param props.dueDate The due date (a Date, an ISO string, or empty).
  * @param props.className Extra classes.

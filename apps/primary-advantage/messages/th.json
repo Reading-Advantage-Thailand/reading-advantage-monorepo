@@ -3213,5 +3213,20 @@
     "level": "เลเวล {level}",
     "xp": "{xp} XP",
     "qrPrintHint": "ทำบัตรก่อน แล้วจึงพิมพ์บัตรได้"
+  },
+  "TeacherAssignments": {
+    "backToAssignments": "กลับไปที่งานที่กำหนด",
+    "story": "เรื่อง",
+    "classLabel": "ชั้นเรียน",
+    "searchLabel": "ค้นหางาน",
+    "loadError": "โหลดงานที่กำหนดไม่สำเร็จ",
+    "loadOneError": "โหลดงานนี้ไม่สำเร็จ",
+    "loadErrorHint": "ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+    "noClasses": "คุณยังไม่มีชั้นเรียน",
+    "noClassesHint": "สร้างชั้นเรียนในหน้าชั้นเรียนของฉันก่อน",
+    "goToClasses": "ไปที่ชั้นเรียนของฉัน",
+    "statusFilter": "แสดงนักเรียนตามสถานะ",
+    "selectStudentFor": "เลือก {name}",
+    "progressLabel": "เสร็จแล้ว {percent}%"
   }
 }

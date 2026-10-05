@@ -123,9 +123,9 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
   it("lists who needs help with the reason and a link to the student's progress", async () => {
     await renderDashboard();
     const help = screen.getByRole("region", { name: en.help.heading });
-    expect(within(help).getByText("Students with late work or no activity for 7 days.")).toBeInTheDocument();
+    expect(within(help).getByText("Students with overdue work or no activity for 7 days.")).toBeInTheDocument();
     expect(within(help).getByRole("link", { name: "Ann" })).toHaveAttribute("href", "/teacher/student-progress/s1");
-    expect(within(help).getByText("1 late")).toBeInTheDocument();
+    expect(within(help).getByText("1 overdue")).toBeInTheDocument();
     expect(within(help).getByText(en.help.neverActive)).toBeInTheDocument();
     expect(within(help).getByText(/Last active Sep 20/)).toBeInTheDocument();
   });

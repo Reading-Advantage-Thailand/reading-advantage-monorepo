@@ -3162,12 +3162,12 @@
     },
     "help": {
       "heading": "Who needs help",
-      "hint": "Students with late work or no activity for {days} days.",
-      "late": "{count} late",
+      "hint": "Students with overdue work or no activity for {days} days.",
+      "late": "{count} overdue",
       "neverActive": "No activity yet",
       "inactive": "Last active {date}",
       "empty": "Everyone is on track",
-      "emptyHint": "No student has late work or a long break.",
+      "emptyHint": "No student has overdue work or a long break.",
       "more": "{count, plural, one {# more student} other {# more students}}"
     },
     "loadError": "We could not load your home page.",
@@ -3178,7 +3178,7 @@
     "startClassFor": "Start class {name}",
     "due": {
       "none": "No due date",
-      "overdue": "Late",
+      "overdue": "Overdue",
       "today": "Due today",
       "soon": "{days, plural, one {Due tomorrow} other {Due in # days}}",
       "upcoming": "Due in {days} days",
@@ -3209,5 +3209,20 @@
     "level": "Level {level}",
     "xp": "{xp} XP",
     "qrPrintHint": "Make the cards first. Then you can print them."
+  },
+  "TeacherAssignments": {
+    "backToAssignments": "Back to assignments",
+    "story": "Story",
+    "classLabel": "Class",
+    "searchLabel": "Search assignments",
+    "loadError": "We could not load the assignments.",
+    "loadOneError": "We could not load this assignment.",
+    "loadErrorHint": "Check your connection and try again.",
+    "noClasses": "You have no classes yet.",
+    "noClassesHint": "Create a class on My Classes first.",
+    "goToClasses": "Go to My Classes",
+    "statusFilter": "Show students by status",
+    "selectStudentFor": "Select {name}",
+    "progressLabel": "{percent}% done"
   }
 }

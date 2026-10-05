@@ -331,7 +331,8 @@ describe("FR-9 teacher assignments table", () => {
       json: async () => ({ classrooms: [] }),
     });
     renderWithMessages(<Assignments />);
-    await screen.findByText(en.Teacher.Assignments.empty.selectClassroom);
+    // A teacher without a class is sent to My Classes (Lane C Phase 3).
+    await screen.findByText(en.TeacherAssignments.noClasses);
     cleanup();
 
     const rows = [
