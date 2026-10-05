@@ -1111,13 +1111,13 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [x] **Track: Primary Student Login** *Link: [./tracks/primary_student_login_20261003/](./tracks/primary_student_login_20261003/)*
   Teacher-started code, name list, picture password, QR card, username/password, auth strength. Merged into primary-parity-integration at 0c26f7fb6 (2026-10-05). Blocked: 25-student browser run (low memory; owner go-ahead), QA timing check.
 
-- [~] **Track: Primary UX Rework** *Link: [./tracks/primary_ux_rework_20261003/](./tracks/primary_ux_rework_20261003/)*
+- [x] **Track: Primary UX Rework** (phases 0-4 and gates done 2026-10-05; final merge to integration pending) *Link: [./tracks/primary_ux_rework_20261003/](./tracks/primary_ux_rework_20261003/)*
   Brand tokens, one navigation, student home, redesigned screens, accessibility. Phases 0-2 merged early into primary-parity-integration at e849f6208 (2026-10-05); Phase 3-4 and gates in progress on primary/lane-c-ux-rework.
 
-- [~] **Track: Primary Class Books and Teacher Lesson Support** *Link: [./tracks/primary_teacher_books_lesson_support_20261003/](./tracks/primary_teacher_books_lesson_support_20261003/)*
+- [x] **Track: Primary Class Books and Teacher Lesson Support** (phases 0-5 done; merge to integration pending) *Link: [./tracks/primary_teacher_books_lesson_support_20261003/](./tracks/primary_teacher_books_lesson_support_20261003/)*
   Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys. Phases 0-5 done on primary/lane-de-teacher-books (2026-10-05, head 437eafe5f); open: browser walk-through, teaching-game demo ports. Merge after the Lane C gates.
 
-- [ ] **Track: Primary Reedy Preview** *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
+- [~] **Track: Primary Reedy Preview** (phases 0-4 done 2026-10-05; Phase 5 waits for one real OpenAI session) *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
   Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.
 
 - [ ] **Track: Primary Core Interaction Quality** *Link: [./tracks/primary_core_interaction_quality_20261005/](./tracks/primary_core_interaction_quality_20261005/)*
