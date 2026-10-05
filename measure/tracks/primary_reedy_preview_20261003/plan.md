@@ -9,20 +9,25 @@ login track's `authStrength` contract (a contract stub is enough to start).
 - [x] Package placement: contracts in `packages/game-contracts/src/avatar.ts` (class id, tints, catalog version, strict zod); the portrait composer, the starter sets, and the color table in a new `packages/avatar-kit` (pure, no React, with the Forge tests); use-cases in `packages/domain/src/primary-avatar` and `packages/domain/src/primary-voice` (budget, lock, session records; tenant-scoped); the OpenAI Realtime adapter in `packages/ai/src/voice` behind an interface with a mock provider (the `openai` SDK 6.44.0 is already a dependency of `apps/primary-advantage` and ships `openai/realtime`; `ws` 8.21.0 is installed and Node 22 has a global `WebSocket`); thin route handlers in `apps/primary-advantage/app/api/voice`; the picker and the Reedy component in `apps/primary-advantage/components/avatar` and `components/reedy`. `authStrength` is already in `packages/auth/src/session.ts` (`SessionAuthStrength`) and `users.authStrength`, so the FR-5 gate has its contract.
 - Branch: `primary/lane-f-reedy-preview` from `primary-parity-integration` 3e4543100 plus the Lane D+E branch (`e7ad54369`), so the Lane C shell, the student home with the Reedy meter slot (`components/student/reedy-meter-slot.tsx`), and the class books are present. Next migration number: 0066.
 
-## Phase 1: Avatar (decided 2026-10-05; not in the cut list, Reedy needs it)
-- [x] Model decided: the student's own avatar as a Forge starter set with a color scheme (skin 5, hair 6, eyes 5, cloth 5); the avatar plays the coach; portrait plus CSS (owner decisions 2026-10-04 and 2026-10-05)
-- [ ] Delivery (FR-10c): copy the starter-set portrait layers and `portraits.json` into Primary `public/packs/avatar/1.0.0/`; port `portraitPlan`, `recolorLayer`, `stackLayers`, and `STARTER_SETS` into a monorepo package with the Forge tests; record the Forge commit
-- [ ] Contract and schema: `avatar.ts` in `packages/game-contracts` (class id, tints, catalog version, strict zod); additive migration `primary_avatar_profile`; `--required-migration` in the Primary `cloudbuild.yaml`
-- [ ] Domain (tests first): `getAvatarProfile`, `setAvatarProfile` in `@reading-advantage/domain` (own row only; a class id must be a starter set; each tint must be an option of the base); thin route handlers
-- [ ] Picker (FR-10a): `/student/avatar`, 15 class cards with portraits, then the color step with a live preview; offered once after the first sign-in (skippable); a link on the Me tab; en and th; 48 px; 375 and 768
-- [ ] Gate (FR-10b): home toast for a student with no avatar (a request to Lane C if C still owns the home file at that time); the Reedy entry opens the picker first and blocks the session until the avatar is saved; never for staff
-- [ ] `Reedy` component: the portrait still with the eight CSS states, en and th bubbles, a voice-level halo, reduced motion; a development preview of the poses as Tutor has (`REEDY_POSES`)
+### Phase 1 decisions
+- Forge commit `3294ae5`, pack `1.0.0`: 15 starter sets, 46 catalog items, 121 portrait layers (242 WebP files) served from `public/packs/avatar/1.0.0/`; `scripts/port-avatar-pack.py` regenerates the data.
+- The `openai` SDK 6.44.0 in the root `node_modules` has no `realtime.calls` API, so the adapter uses `fetch` for `POST /v1/realtime/calls` and the global `WebSocket` for the sideband (subprotocols `realtime` and `openai-insecure-api-key.<key>`).
+- Lane F merged lane-de at `da16deebc` (Lane C and D+E) so the home slot and the lesson flow exist.
 
-## Phase 2: Server (tests first)
-- [ ] Migration for the voice tables
-- [ ] Entitlement: monthly budget, session cap, lock, unlock rule
-- [ ] Realtime session create/connect/end with moderation and metering
-- [ ] Kill switch and per-school disable
+## Phase 1: Avatar (decided 2026-10-05; not in the cut list, Reedy needs it) — done 2026-10-05
+- [x] Model decided: the student's own avatar as a Forge starter set with a color scheme (skin 5, hair 6, eyes 5, cloth 5); the avatar plays the coach; portrait plus CSS (owner decisions 2026-10-04 and 2026-10-05)
+- [x] `3f0947fa4` Delivery (FR-10c): copy the starter-set portrait layers and `portraits.json` into Primary `public/packs/avatar/1.0.0/`; port `portraitPlan`, `recolorLayer`, `stackLayers`, and `STARTER_SETS` into a monorepo package with the Forge tests; record the Forge commit
+- [x] `9b618194b` Contract and schema: `avatar.ts` in `packages/game-contracts` (class id, tints, catalog version, strict zod); additive migration `primary_avatar_profile`; `--required-migration` in the Primary `cloudbuild.yaml`
+- [x] `9b618194b` Domain (tests first): `getAvatarProfile`, `setAvatarProfile` in `@reading-advantage/domain` (own row only; a class id must be a starter set; each tint must be an option of the base); thin route handlers
+- [x] `ba13a9aaf` Picker (FR-10a): `/student/avatar`, 15 class cards with portraits, then the color step with a live preview; offered once after the first sign-in (skippable); a link on the Me tab; en and th; 48 px; 375 and 768
+- [x] `ba13a9aaf` (home nudge; the Reedy entry gate is in Phase 3) Gate (FR-10b): home toast for a student with no avatar (a request to Lane C if C still owns the home file at that time); the Reedy entry opens the picker first and blocks the session until the avatar is saved; never for staff
+- [x] `ba13a9aaf` `Reedy` component: the portrait still with the eight CSS states, en and th bubbles, a voice-level halo, reduced motion; a development preview of the poses as Tutor has (`REEDY_POSES`)
+
+## Phase 2: Server (tests first) — done 2026-10-05
+- [x] `1a1d8443e` Migration for the voice tables (`0067_primary_voice`: `primary_voice_sessions`, `primary_active_voice_sessions`, `primary_voice_monthly_usage`, `primary_voice_school_settings`; registry FLAT; sentinel and `cloudbuild.yaml --required-migration` pinned)
+- [x] `1a1d8443e` Entitlement: monthly budget, session cap, lock, unlock rule (`packages/domain/src/primary-voice`: 480 s per Asia/Bangkok month, 180 s cap, 45 s pending lease, one active session, `authStrength: full`, avatar required; 27 tests)
+- [x] `1a1d8443e` `39e4ed634` Realtime session create/connect/end with moderation and metering (`@reading-advantage/ai/voice`: OpenAI Realtime over fetch and the global WebSocket, no SDK call API; the strict guard, the summary tool, the rate card; routes `app/api/voice/*` through `voiceController`; 11 + 11 tests)
+- [x] `1a1d8443e` Kill switch and per-school disable (`AI_VOICE_ENABLED` read live, `primary_voice_school_settings.enabled`)
 
 ## Phase 3: Student UI
 - [ ] Reedy page with Preview label, mic flow, meter, stop screen, summary
@@ -33,6 +38,7 @@ login track's `authStrength` contract (a contract stub is enough to start).
 - [ ] Admin cost view
 
 ## Phase 5: Calibrate and ship
+- [ ] **Gate: one real OpenAI Realtime session first.** The adapter is hand-written over fetch and WebSocket because the catalog pins `openai` 6.44.0 (Tutor uses 7.x); every test so far uses the mock provider. Needs `OPENAI_API_KEY` in the rehearsal environment. See tech-debt 2026-10-05 (bump to `openai` 7 as its own migration task).
 - [ ] 20-session calibration; write the report; decide the cap with Daniel
 - [ ] Runbook and docs updates
 - [ ] Rehearsal run on Oct 8-9 with the flag on in the rehearsal environment
