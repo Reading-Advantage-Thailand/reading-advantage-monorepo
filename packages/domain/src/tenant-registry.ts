@@ -185,6 +185,10 @@ import {
   primaryStudentCredentials,
   primaryClassBooks,
   primaryAvatarProfile,
+  primaryVoiceSessions,
+  primaryActiveVoiceSessions,
+  primaryVoiceMonthlyUsage,
+  primaryVoiceSchoolSettings,
 } from "@reading-advantage/db";
 import {
   accountingSubmissions,
@@ -210,6 +214,11 @@ register(primaryStudentCredentials, "FLAT");
 register(primaryClassBooks, "FLAT");
 // Student avatar (primary_reedy_preview_20261003): school_id + user_id primary key.
 register(primaryAvatarProfile, "FLAT");
+// Reedy voice practice (primary_reedy_preview_20261003): every table carries school_id.
+register(primaryVoiceSessions, "FLAT");
+register(primaryActiveVoiceSessions, "FLAT");
+register(primaryVoiceMonthlyUsage, "FLAT");
+register(primaryVoiceSchoolSettings, "FLAT");
 register(auditEvents, "EXEMPT");
 register(schools, "EXEMPT");
 register(accounts, "EXEMPT");

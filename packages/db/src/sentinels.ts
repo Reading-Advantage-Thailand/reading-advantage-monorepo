@@ -614,4 +614,14 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     kind: "column",
     target: "primary_avatar_profile.class_preset",
   },
+  "0067_primary_voice": {
+    tag: "0067_primary_voice",
+    kind: "all",
+    target: "primary_voice_sessions.reserved_seconds",
+    allOf: [
+      { tag: "0067_primary_voice", kind: "column", target: "primary_voice_sessions.reserved_seconds" },
+      { tag: "0067_primary_voice", kind: "column", target: "primary_voice_monthly_usage.seconds_used" },
+      { tag: "0067_primary_voice", kind: "column", target: "primary_voice_school_settings.enabled" },
+    ],
+  },
 };

@@ -147,6 +147,10 @@
     "./primary-avatar": {
       "types": "./dist/primary-avatar/index.d.ts",
       "import": "./dist/primary-avatar/index.js"
+    },
+    "./primary-voice": {
+      "types": "./dist/primary-voice/index.d.ts",
+      "import": "./dist/primary-voice/index.js"
     }
   },
   "scripts": {
@@ -161,6 +165,7 @@
   "dependencies": {
     "@reading-advantage/activity-runtime": "workspace:*",
     "@reading-advantage/activity-tutorial": "workspace:*",
+    "@reading-advantage/ai": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/avatar-kit": "workspace:*",
     "@reading-advantage/codecamp-knowledge": "workspace:*",
