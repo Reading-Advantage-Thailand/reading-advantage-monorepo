@@ -3081,7 +3081,8 @@
         "play": "决战",
         "result": "结果",
         "done": "完成"
-      }
+      },
+      "live": "实时看板"
     },
     "assign": {
       "title": "布置任务",
@@ -3098,6 +3099,40 @@
         "BAD_TIME": "请选择晚于现在的决战时间。",
         "GAME_UNAVAILABLE": "决战游戏未安装。",
         "generic": "任务未布置。"
+      }
+    },
+    "battle": {
+      "title": "班级任务决战",
+      "go": "前往决战",
+      "none": "本周没有任务。",
+      "home": "返回首页",
+      "you": "你",
+      "hp": "HP {hp} / {max}",
+      "hpLabel": "你的 HP",
+      "damage": "你的伤害：{damage}",
+      "rested": "你休息后带着一半 HP 回来了。",
+      "used": "已用",
+      "waiting": "决战尚未开始，请等老师。",
+      "present": "你到了！决战即将开始。",
+      "saved": "你的攻击已记录：{damage} 伤害。看大屏幕！",
+      "fell": "头目倒下了！",
+      "held": "头目撑住了。下次再来！"
+    },
+    "live": {
+      "title": "实时看板",
+      "present": "已到 {count} / {total}",
+      "students": "全班",
+      "hits": "攻击",
+      "hit": "{name} 造成 {damage} 伤害",
+      "noHits": "还没有攻击。",
+      "helpers": "感谢所有帮手！",
+      "closed": "任务已关闭。",
+      "moveError": "无法进入下一阶段。",
+      "next": {
+        "rally": "开始集结",
+        "play": "开始决战",
+        "result": "显示结果",
+        "done": "关闭任务"
       }
     }
   },

@@ -3083,7 +3083,8 @@
         "play": "Chiến đấu",
         "result": "Kết quả",
         "done": "Xong"
-      }
+      },
+      "live": "Bảng điều khiển trực tiếp"
     },
     "assign": {
       "title": "Giao nhiệm vụ",
@@ -3100,6 +3101,40 @@
         "BAD_TIME": "Chọn giờ đấu sau thời điểm hiện tại.",
         "GAME_UNAVAILABLE": "Trò chơi quyết chiến chưa được cài.",
         "generic": "Chưa giao được nhiệm vụ."
+      }
+    },
+    "battle": {
+      "title": "Trận đấu nhiệm vụ lớp",
+      "go": "Đến trận đấu",
+      "none": "Tuần này chưa có nhiệm vụ.",
+      "home": "Về trang chính",
+      "you": "Bạn",
+      "hp": "HP {hp} trên {max}",
+      "hpLabel": "HP của bạn",
+      "damage": "Sát thương của bạn: {damage}",
+      "rested": "Bạn đã nghỉ và quay lại với một nửa HP.",
+      "used": "đã dùng",
+      "waiting": "Trận đấu chưa bắt đầu. Hãy đợi giáo viên.",
+      "present": "Bạn đã có mặt! Trận đấu sắp bắt đầu.",
+      "saved": "Đòn đánh của bạn đã được ghi: {damage} sát thương. Hãy nhìn màn hình!",
+      "fell": "Trùm đã gục!",
+      "held": "Trùm vẫn trụ. Lần sau nhé!"
+    },
+    "live": {
+      "title": "Bảng điều khiển trực tiếp",
+      "present": "{count} trên {total} có mặt",
+      "students": "Cả lớp",
+      "hits": "Đòn đánh",
+      "hit": "{name} đánh {damage}",
+      "noHits": "Chưa có đòn đánh.",
+      "helpers": "Cảm ơn các trợ thủ!",
+      "closed": "Nhiệm vụ đã đóng.",
+      "moveError": "Không chuyển được sang bước tiếp.",
+      "next": {
+        "rally": "Bắt đầu tập hợp",
+        "play": "Bắt đầu trận đấu",
+        "result": "Hiện kết quả",
+        "done": "Đóng nhiệm vụ"
       }
     }
   },

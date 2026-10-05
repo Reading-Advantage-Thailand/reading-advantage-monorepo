@@ -62,6 +62,8 @@ export interface StudentCartridgeHostProps {
   readonly mode?: "demo" | "briefing";
   /** The student's avatar for the game (FR-7 of the avatar shop); null when none is set. */
   readonly avatar?: LaunchAvatar | null;
+  /** Receives the saved completion numbers (Class Quest FR-8): the battle page posts them as its heartbeat. */
+  readonly onCompleted?: (summary: { challengeRunId?: string; correctAnswers: number; totalAttempts: number; victory: boolean }) => void;
 }
 
 type HostLoadError = {
@@ -121,6 +123,7 @@ export function StudentCartridgeHost({
   challengeId,
   mode = "briefing",
   avatar = null,
+  onCompleted,
 }: StudentCartridgeHostProps) {
   const t = useTranslations("ApkHost");
   const router = useRouter();
@@ -376,6 +379,7 @@ export function StudentCartridgeHost({
     if (completionSessionRef.current === completionSession) {
       void rpg.refreshAfterSavedCompletion().catch(() => undefined);
     }
+    onCompleted?.({ challengeRunId: completionSession.challengeRunId, correctAnswers: mappedCompletion.correctAnswers, totalAttempts: mappedCompletion.totalAttempts, victory: outcome === "victory" });
     return {
       xpEarned: parsedResponse.data.xpEarned,
       duplicate: parsedResponse.data.duplicate,

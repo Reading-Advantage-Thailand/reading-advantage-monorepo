@@ -1,6 +1,8 @@
 import { useLocale, useTranslations } from "next-intl";
 import { SwordsIcon } from "lucide-react";
 import type { StudentQuestCard as StudentQuestCardData } from "@reading-advantage/game-contracts";
+import { Link } from "@/i18n/navigation";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { QuestMeter } from "./quest-meter";
 import { goalValues, questText } from "./quest-copy";
@@ -31,6 +33,9 @@ export function StudentQuestCard({ card, className }: { card: StudentQuestCardDa
       </p>
       <QuestMeter committed={card.committed} target={card.quest.bossTarget} label={t("meterLabel")} />
       <p className="text-sm">{t("meter", { committed: card.committed, target: card.quest.bossTarget })}</p>
+      <Link href="/student/quest/battle" className={cn(buttonVariants({ variant: card.quest.status === "open" ? "outline" : "default" }), "min-h-12 w-fit rounded-xl")}>
+        {t("battle.go")}
+      </Link>
       <h3 className="text-sm font-semibold">{t("powerUps")}</h3>
       {card.powerUps.length ? (
         <ul className="flex flex-wrap gap-2">

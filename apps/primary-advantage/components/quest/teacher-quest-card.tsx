@@ -44,7 +44,14 @@ export function TeacherQuestCard({ classroomId, card, heading, className }: { cl
           <p className="text-sm">
             {t("meter", { committed: card.committed, target: card.quest.bossTarget })} · {t("teacher.roster", { count: card.rosterSize })} · {t("teacher.earners", { count: card.studentsWithPowerUps })}
           </p>
-          {card.quest.status === "open" ? <CancelQuestButton questId={card.quest.id} /> : null}
+          <div className="flex flex-wrap gap-2">
+            {card.quest.status !== "done" ? (
+              <Link href={`/teacher/quest/${card.quest.id}/live`} className={cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "rounded-xl")}>
+                {t("teacher.live")}
+              </Link>
+            ) : null}
+            {card.quest.status === "open" ? <CancelQuestButton questId={card.quest.id} /> : null}
+          </div>
         </>
       ) : (
         <>

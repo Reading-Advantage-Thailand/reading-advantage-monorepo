@@ -3081,7 +3081,8 @@
         "play": "決戰",
         "result": "結果",
         "done": "完成"
-      }
+      },
+      "live": "即時看板"
     },
     "assign": {
       "title": "指派任務",
@@ -3098,6 +3099,40 @@
         "BAD_TIME": "請選擇晚於現在的決戰時間。",
         "GAME_UNAVAILABLE": "決戰遊戲未安裝。",
         "generic": "任務未指派。"
+      }
+    },
+    "battle": {
+      "title": "班級任務決戰",
+      "go": "前往決戰",
+      "none": "本週沒有任務。",
+      "home": "返回首頁",
+      "you": "你",
+      "hp": "HP {hp} / {max}",
+      "hpLabel": "你的 HP",
+      "damage": "你的傷害：{damage}",
+      "rested": "你休息後帶著一半 HP 回來了。",
+      "used": "已用",
+      "waiting": "決戰尚未開始，請等老師。",
+      "present": "你到了！決戰即將開始。",
+      "saved": "你的攻擊已記錄：{damage} 傷害。看大螢幕！",
+      "fell": "頭目倒下了！",
+      "held": "頭目撐住了。下次再來！"
+    },
+    "live": {
+      "title": "即時看板",
+      "present": "已到 {count} / {total}",
+      "students": "全班",
+      "hits": "攻擊",
+      "hit": "{name} 造成 {damage} 傷害",
+      "noHits": "還沒有攻擊。",
+      "helpers": "感謝所有幫手！",
+      "closed": "任務已關閉。",
+      "moveError": "無法進入下一階段。",
+      "next": {
+        "rally": "開始集結",
+        "play": "開始決戰",
+        "result": "顯示結果",
+        "done": "關閉任務"
       }
     }
   },

@@ -3083,7 +3083,8 @@
         "play": "Battle",
         "result": "Result",
         "done": "Done"
-      }
+      },
+      "live": "Live dashboard"
     },
     "assign": {
       "title": "Assign a quest",
@@ -3100,6 +3101,40 @@
         "BAD_TIME": "Pick a battle time after now.",
         "GAME_UNAVAILABLE": "The battle game is not installed.",
         "generic": "The quest was not assigned."
+      }
+    },
+    "battle": {
+      "title": "Class Quest battle",
+      "go": "Go to the battle",
+      "none": "No quest this week.",
+      "home": "Back to home",
+      "you": "You",
+      "hp": "HP {hp} of {max}",
+      "hpLabel": "Your HP",
+      "damage": "Your damage: {damage}",
+      "rested": "You rested and came back with half HP.",
+      "used": "used",
+      "waiting": "The battle has not started. Wait for your teacher.",
+      "present": "You are here! The battle starts soon.",
+      "saved": "Your hits are in: {damage} damage. Watch the screen!",
+      "fell": "The boss fell!",
+      "held": "The boss held. Next time!"
+    },
+    "live": {
+      "title": "Live dashboard",
+      "present": "{count} of {total} here",
+      "students": "The class",
+      "hits": "Hits",
+      "hit": "{name} hit for {damage}",
+      "noHits": "No hits yet.",
+      "helpers": "Thank you, helpers!",
+      "closed": "The quest is closed.",
+      "moveError": "The battle did not move on.",
+      "next": {
+        "rally": "Start the rally",
+        "play": "Start the battle",
+        "result": "Show the result",
+        "done": "Close the quest"
       }
     }
   },

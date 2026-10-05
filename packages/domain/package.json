@@ -152,6 +152,10 @@
       "types": "./dist/primary-quest/index.d.ts",
       "import": "./dist/primary-quest/index.js"
     },
+    "./primary-quest/rules": {
+      "types": "./dist/primary-quest/rules.d.ts",
+      "import": "./dist/primary-quest/rules.js"
+    },
     "./primary-voice": {
       "types": "./dist/primary-voice/index.d.ts",
       "import": "./dist/primary-voice/index.js"
