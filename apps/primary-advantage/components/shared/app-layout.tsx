@@ -1,6 +1,8 @@
 import { UserAccountNav } from "@/components/nav/user-account-nav";
 import { AppBrand, AppSidebar, BottomNav, MobileMenu } from "@/components/nav/app-nav";
 import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
+import { SoundToggle } from "@/components/switchers/sound-toggle";
+import { SoundProvider } from "@/hooks/use-sound";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 import { SkipLink } from "@/components/shared/skip-link";
 import { getCurrentUser } from "@/lib/session";
@@ -43,6 +45,7 @@ export default async function AppLayout({
   const navArea = area ?? areaForRole(user.role);
 
   return (
+    <SoundProvider userId={user.id}>
     <div className="flex min-h-screen flex-col">
       <SkipLink />
       <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur">
@@ -53,6 +56,7 @@ export default async function AppLayout({
           </div>
           <div className="flex items-center justify-center gap-2">
             <LocaleSwitcher />
+            <SoundToggle />
             <ThemeToggle />
             <UserAccountNav user={user} />
           </div>
@@ -73,5 +77,6 @@ export default async function AppLayout({
       </div>
       <BottomNav area={navArea} user={user} />
     </div>
+    </SoundProvider>
   );
 }

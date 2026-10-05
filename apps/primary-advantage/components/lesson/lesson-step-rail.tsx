@@ -1,9 +1,10 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { CheckIcon, ChevronDownIcon, Timer } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSound } from "@/hooks/use-sound";
 
 /** Props for LessonStepRail. */
 export interface LessonStepRailProps {
@@ -28,6 +29,13 @@ export function LessonStepRail({ steps, current, timer }: LessonStepRailProps) {
   const titleId = useId();
   const listId = useId();
   const total = steps.length;
+  // A short sound when the lesson moves to another step (FR-9); none on the first render.
+  const { play } = useSound();
+  const previous = useRef(current);
+  useEffect(() => {
+    if (previous.current !== current) play("phaseChange");
+    previous.current = current;
+  }, [current, play]);
   const stepName = t("rail.stepName", { step: current, total, name: steps[current - 1] ?? "" });
 
   return (
