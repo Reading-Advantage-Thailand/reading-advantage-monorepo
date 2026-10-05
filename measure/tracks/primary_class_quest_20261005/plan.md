@@ -13,11 +13,11 @@ separate agent reviews each phase.
 - [x] Migration `0069_primary_class_quest`: the three tables (FLAT in the registry), one quest that is not done per class (partial unique index), the heartbeat keyed by school, quest, and user; `--required-migration 0069_primary_class_quest` in `cloudbuild.yaml`; applied locally
 
 ## Phase 2: Season (tests first)
-- [ ] `assignClassQuest` (creates the challenge definition and the quest; one open per class; fixed target), `cancelClassQuest`
-- [ ] Goal evaluators over existing data; `awardPowerUps` idempotent and capped
-- [ ] Quest card data: `getStudentQuestCard`, `getTeacherQuestCard`
-- [ ] Teacher assign page (`/teacher/quest`: pick a template, class, battle time) and the quest card on the teacher dashboard and class page
-- [ ] Student home quest card (a slot next to the Reedy meter; a request to the UX owner if needed)
+- [x] `43f008c9c` `assignClassQuest` (the challenge definition from the current lesson glossary, the quest with a fixed target, one open per class by the partial unique index; the definition is removed when a parallel assignment won), `cancelClassQuest` (deletes the definition; the quest cascades)
+- [x] `43f008c9c` Goal evaluators over `user_activity` (Bangkok days, MC responses), the streak, and `primary_student_lesson_steps`; `awardPowerUps` idempotent (unique per goal) and capped
+- [x] `43f008c9c` `getStudentQuestCard`, `getTeacherQuestCard`; committed damage = correct answers x 2 (x 3 with a sharp blade) over the verified contributions
+- [x] Teacher assign page `/teacher/quest` (template radio list with the goals, class select, battle time; `POST /api/v1/quest`), the quest card on the dashboard (one per class) and the class page (`classQuest` slot of the roster), cancel through `DELETE /api/v1/quest/:id`
+- [x] Student home quest card after the Reedy meter; the home load runs `awardPowerUps` first. Messages `Quest.*` and `TeacherHome.quest` in en, th, cn, tw, vi
 
 ## Phase 3: Battle (tests first)
 - [ ] State machine: rally, play, result; teacher controls; countdown; idempotent transitions
