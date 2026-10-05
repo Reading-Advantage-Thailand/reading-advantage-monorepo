@@ -101,7 +101,10 @@ describe("teacher class page", () => {
     // Roster management parts.
     expect(ann.getByText("A1")).toBeInTheDocument();
     expect(ann.getByText("Level 3")).toBeInTheDocument();
-    expect(ann.getByRole("link", { name: "Progress of Ann Smith" })).toHaveAttribute("href", "/teacher/student-progress/u1");
+    expect(ann.getByRole("link", { name: "Progress of Ann Smith" })).toHaveAttribute(
+      "href",
+      `/teacher/student-progress/u1?classroomId=${CLASS_ID}`,
+    );
     expect(ann.getByRole("button", { name: "More actions for Ann Smith" })).toBeInTheDocument();
     expect(ann.getByRole("button", { name: "Remove Ann Smith from the class" })).toBeInTheDocument();
   });

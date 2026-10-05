@@ -3228,5 +3228,30 @@
     "statusFilter": "แสดงนักเรียนตามสถานะ",
     "selectStudentFor": "เลือก {name}",
     "progressLabel": "เสร็จแล้ว {percent}%"
+  },
+  "TeacherStudents": {
+    "classLabel": "ชั้นเรียน",
+    "searchLabel": "ค้นหานักเรียน",
+    "nameColumn": "ชื่อ",
+    "classesColumn": "ชั้นเรียน",
+    "levelColumn": "ระดับ",
+    "xpColumn": "XP",
+    "sortBy": "เรียงตาม{column}",
+    "noClass": "ไม่มีชั้นเรียน",
+    "pageOf": "หน้า {page} จาก {totalPages}",
+    "noStudents": "คุณยังไม่มีนักเรียน",
+    "noStudentsHint": "เพิ่มนักเรียนเข้าชั้นเรียนในหน้าชั้นเรียนของฉัน",
+    "noStudentsInClass": "ชั้นเรียนนี้ยังไม่มีนักเรียน",
+    "goToClasses": "ไปที่ชั้นเรียนของฉัน",
+    "loadError": "โหลดรายชื่อนักเรียนไม่สำเร็จ",
+    "reportsLoadError": "โหลดรายงานไม่สำเร็จ",
+    "activityLoadError": "โหลดกิจกรรมของนักเรียนคนนี้ไม่สำเร็จ",
+    "loadErrorHint": "ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+    "progressHeading": "ความก้าวหน้าของ {name}",
+    "progressTitle": "ความก้าวหน้าของนักเรียน",
+    "backToReports": "กลับไปที่รายงาน",
+    "backToClass": "กลับไปที่ชั้นเรียน",
+    "studentLevel": "ระดับ: {level}",
+    "challengesHint": "สร้างภารกิจคำศัพท์สำหรับเกมของชั้นเรียน"
   }
 }

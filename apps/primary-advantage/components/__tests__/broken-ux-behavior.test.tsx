@@ -171,10 +171,8 @@ describe("FR-8 header spelling", () => {
     ).toBeInTheDocument();
     expect(await screen.findByText("Ann")).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("captoliza");
-    expect(
-      document.body.querySelector(".capitalize"),
-      "cells use the correctly spelled capitalize class",
-    ).not.toBeNull();
+    // Lane C Phase 3 (audit T3): names and usernames show as stored (no CSS capitalize).
+    expect(document.body.querySelector(".capitalize")).toBeNull();
   });
 
   it("renders the classes table with translated copy and correct classes", async () => {

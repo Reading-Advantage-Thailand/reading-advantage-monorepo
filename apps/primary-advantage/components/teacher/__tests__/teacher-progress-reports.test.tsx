@@ -45,6 +45,15 @@ const ACTIVITY_BODY = {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.stubGlobal("fetch", fetchMock);
+  // jsdom has no ResizeObserver; the level gauge (loaded on demand) and the class picker use it.
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    },
+  );
 });
 
 afterEach(() => {

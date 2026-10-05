@@ -3224,5 +3224,30 @@
     "statusFilter": "Show students by status",
     "selectStudentFor": "Select {name}",
     "progressLabel": "{percent}% done"
+  },
+  "TeacherStudents": {
+    "classLabel": "Class",
+    "searchLabel": "Search students",
+    "nameColumn": "Name",
+    "classesColumn": "Classes",
+    "levelColumn": "Level",
+    "xpColumn": "XP",
+    "sortBy": "Sort by {column}",
+    "noClass": "No class",
+    "pageOf": "Page {page} of {totalPages}",
+    "noStudents": "You have no students yet.",
+    "noStudentsHint": "Add students to a class on My Classes.",
+    "noStudentsInClass": "This class has no students yet.",
+    "goToClasses": "Go to My Classes",
+    "loadError": "We could not load your students.",
+    "reportsLoadError": "We could not load the reports.",
+    "activityLoadError": "We could not load the activity of this student.",
+    "loadErrorHint": "Check your connection and try again.",
+    "progressHeading": "Progress for {name}",
+    "progressTitle": "Student progress",
+    "backToReports": "Back to reports",
+    "backToClass": "Back to class",
+    "studentLevel": "Level: {level}",
+    "challengesHint": "Make a word challenge for a class game."
   }
 }

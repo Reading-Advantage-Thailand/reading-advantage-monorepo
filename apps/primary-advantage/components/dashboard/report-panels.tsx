@@ -14,16 +14,20 @@ import ReadingStatsChart from "./user-reading-chart";
  * @param props.activity The activity rows, newest first.
  * @param props.xpLogs The XP log rows.
  * @param props.cefrLevel The student's CEFR level.
+ * @param props.audience Who reads the panels: the student (default) or a teacher (the level card
+ * then names the level without the student-facing text).
  * @returns The panels.
  */
 export function ReportPanels({
   activity,
   xpLogs,
   cefrLevel,
+  audience = "student",
 }: {
   activity: UserActivityLog[];
   xpLogs: UserXpLog[];
   cefrLevel: string;
+  audience?: "student" | "teacher";
 }) {
   return (
     <>
@@ -35,7 +39,7 @@ export function ReportPanels({
           <ReadingStatsChart data={activity} />
         </div>
         <div className="flex min-w-0 flex-col gap-4">
-          <CEFRLevels currentLevel={cefrLevel} />
+          <CEFRLevels currentLevel={cefrLevel} audience={audience} />
           <UserActivityHeatMap data={activity} />
         </div>
       </div>

@@ -366,7 +366,7 @@ function StudentActions({
   return (
     <>
       <Link
-        href={`/teacher/student-progress/${student.id}`}
+        href={`/teacher/student-progress/${student.id}?classroomId=${classroomId}`}
         aria-label={tc("progressFor", { name })}
         className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION, "px-3")}
       >
