@@ -9,8 +9,8 @@ separate agent reviews each phase.
 - [x] Numbers in `packages/domain/src/primary-quest/rules.ts` with 14 tests: `bossTarget`, `hitDamage`, `applyWrongAnswer`, `canEarnPowerUp`
 
 ## Phase 1: Contracts and schema
-- [ ] `class-quest.ts` contracts in `packages/game-contracts` (template, quest, power-up, heartbeat, dashboard state; strict zod)
-- [ ] Additive migrations: `primary_class_quest`, `primary_class_quest_power_up`, `primary_class_quest_heartbeat`; `--required-migration`
+- [x] `class-quest.ts` contracts in `packages/game-contracts` (template, goal, quest, assign input, power-up, heartbeat, student and teacher cards, dashboard state, battle state, status input; strict zod; 6 tests). Status is one column: `open`, `rally`, `play`, `result`, `done` (the spec's `battle` is the union of the three battle states)
+- [x] Migration `0069_primary_class_quest`: the three tables (FLAT in the registry), one quest that is not done per class (partial unique index), the heartbeat keyed by school, quest, and user; `--required-migration 0069_primary_class_quest` in `cloudbuild.yaml`; applied locally
 
 ## Phase 2: Season (tests first)
 - [ ] `assignClassQuest` (creates the challenge definition and the quest; one open per class; fixed target), `cancelClassQuest`
