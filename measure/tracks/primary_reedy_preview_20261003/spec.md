@@ -42,6 +42,37 @@ per student. Daniel set the limit at 8 minutes per month.
 - FR-12: Summary after a session: 0-5 scores (fluency, grammar, vocabulary,
   pronunciation) shown kindly. No audio or transcript is stored.
 
+### Avatar review (2026-10-05, review session; facts for FR-10)
+
+- Forge Phase 1 is complete: track `avatar_system_20261001` (20 of 20 tasks, 2026-10-04). It
+  gives the avatar base (`assets/avatar-base.ts`, clips idle, walk, run, attack, hit, rest,
+  cheer, cast; no mouth or blink animation), 4 hair styles, 15 starter sets
+  (`src/apk3d/avatar/starters.ts`), the 3D composer (`src/apk3d/avatar/compose.ts`), the 2D
+  portrait composer that needs no WebGL (`src/apk3d/avatar/portrait.ts`: `portraitPlan`,
+  `recolorLayer`, `stackLayers`, `portraitPixels`), and the built pack
+  `out/packs/avatar/1.0.0/` (18 MB, 598 files; one loadout is about 1 MB of portrait layers).
+  Its 5 avatar test files (30 tests) pass on 2026-10-05.
+- Phase 2 of the avatar plan does not exist anywhere: no `gp_ledger`, `avatar_inventory`,
+  `avatar_loadout`, or `avatar_profile` table, no domain function, no
+  `packages/game-contracts/src/avatar.ts`, no API, no avatar page, and no monorepo track. So no
+  student has an avatar to show. FR-10 depends on work that nobody owns.
+- No delivery path exists from Forge to Primary. The APK port copies packs into
+  `apps/advantage-games/public/packs/` only, and `packages/advantage-play-kit-3d` is not in the
+  monorepo. Reedy needs the portrait layers and `portraits.json` under
+  `apps/primary-advantage/public/packs/avatar/1.0.0/` and a port of `portrait.ts` (pure
+  functions) into a monorepo package.
+- Tutor's Reedy (`voice-practice/Reedy.tsx`, 90 lines) is a hand-drawn SVG fox with eight poses,
+  a mouth, a volume halo, and hard-coded Thai bubbles. The Forge portrait is one still at one
+  camera. Eight body poses per loadout cannot be pre-rendered for 171 pieces. The realistic
+  options are: (a) one portrait still plus CSS state treatment (halo, bubble, dots, bob or
+  tilt; trivial reduced motion) or (b) the 3D composer in the browser with the base clips
+  (cheer for celebrating, rest for muted and thinking, idle for the rest; no speaking mouth).
+- Open design question: in Tutor the fox is the coach, and its states follow `coachSpeaking`.
+  If the student's own avatar replaces it, the avatar either plays the coach (the student's
+  character voices the AI) or stands for the student (listening when the coach speaks, speaking
+  when `learnerSpeaking`). The state mapping differs. Owner decision needed before Phase 1.
+- Bubbles must exist in en and th (next-intl), not Thai only.
+
 ### Teacher and admin
 - FR-13: Teacher view: minutes used this month per student and per class, session
   count, last use, average scores, students with no use.

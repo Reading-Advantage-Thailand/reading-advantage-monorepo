@@ -10,6 +10,11 @@ login track's `authStrength` contract (a contract stub is enough to start).
 
 ## Phase 1: Avatar
 - [x] Model decided: the student's own customized avatar (owner decision 2026-10-04)
+- [ ] Blocked (review 2026-10-05, spec "Avatar review"): avatar Phase 2 (tables, loadout, avatar
+  page) has no track and no code in the monorepo, and no pack delivery path to Primary exists.
+  Owner decisions needed: coach or mirror semantics; the cutover fallback when a student has no
+  loadout (a starter set pick, or the base avatar with a tint preset); portrait-plus-CSS or 3D
+  rendering; whether to create the Phase 2 monorepo track now or after cutover
 - [ ] Render eight state images or short clips in the Chibi Quest style (race-unmarked)
 - [ ] `Reedy` React component with the states, Thai bubbles, reduced motion
 
