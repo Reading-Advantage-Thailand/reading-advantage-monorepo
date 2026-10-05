@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@reading-advantage/db";
-import { getClassBookProgress, toProgressCsv } from "@reading-advantage/domain/primary-books";
+import { exportClassBookProgress } from "@/server/controllers/classBookController";
 import { currentUser } from "@/lib/session";
 
 /**
@@ -15,12 +14,12 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ cla
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { classBookId } = await params;
   try {
-    const progress = await getClassBookProgress({ db, user, classBookId });
-    return new NextResponse(toProgressCsv(progress), {
+    const { csv, bookKey } = await exportClassBookProgress(user, classBookId);
+    return new NextResponse(csv, {
       status: 200,
       headers: {
         "Content-Type": "text/csv; charset=utf-8",
-        "Content-Disposition": `attachment; filename="class-book-${progress.classBook.bookKey}-progress.csv"`,
+        "Content-Disposition": `attachment; filename="class-book-${bookKey}-progress.csv"`,
       },
     });
   } catch (error) {

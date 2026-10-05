@@ -1114,8 +1114,8 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [~] **Track: Primary UX Rework** *Link: [./tracks/primary_ux_rework_20261003/](./tracks/primary_ux_rework_20261003/)*
   Brand tokens, one navigation, student home, redesigned screens, accessibility. Phases 0-2 merged early into primary-parity-integration at e849f6208 (2026-10-05); Phase 3-4 and gates in progress on primary/lane-c-ux-rework.
 
-- [ ] **Track: Primary Class Books and Teacher Lesson Support** *Link: [./tracks/primary_teacher_books_lesson_support_20261003/](./tracks/primary_teacher_books_lesson_support_20261003/)*
-  Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys.
+- [~] **Track: Primary Class Books and Teacher Lesson Support** *Link: [./tracks/primary_teacher_books_lesson_support_20261003/](./tracks/primary_teacher_books_lesson_support_20261003/)*
+  Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys. Phases 0-5 done on primary/lane-de-teacher-books (2026-10-05, head 437eafe5f); open: browser walk-through, teaching-game demo ports. Merge after the Lane C gates.
 
 - [ ] **Track: Primary Reedy Preview** *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
   Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.

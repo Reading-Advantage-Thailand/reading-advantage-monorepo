@@ -13,7 +13,7 @@ import {
   classrooms,
   studentAssignments,
 } from '@reading-advantage/db';
-import { recordLessonProgress } from "@reading-advantage/domain/primary-books";
+import { recordLessonStep } from "./classBookController";
 import { NextRequest, NextResponse } from "next/server";
 import getAssignmentById, {
   AssignmentForbiddenError,
@@ -340,13 +340,8 @@ export async function postUserLessonProgress(
       timeSpent,
     );
 
-    // Class book progress (FR-5): the step the student moved to, from the 14-step percent.
-    // A failure here must not block the lesson.
     if (typeof articleId === "string" && typeof progress === "number") {
-      const reachedStep = Math.min(14, Math.max(1, Math.round((progress * 14) / 100)));
-      await recordLessonProgress({ db, user, input: { articleId, reachedStep, seconds: Math.round(Number(timeSpent) || 0) } }).catch(
-        (error: unknown) => console.error("Class book progress for assignment lesson failed:", error),
-      );
+      await recordLessonStep(user, articleId, progress, Number(timeSpent), "assignment lesson");
     }
 
     return NextResponse.json(
