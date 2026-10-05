@@ -185,6 +185,9 @@ import {
   primaryStudentCredentials,
   primaryClassBooks,
   primaryAvatarProfile,
+  primaryGpLedger,
+  primaryAvatarInventory,
+  primaryAvatarLoadout,
   primaryVoiceSessions,
   primaryActiveVoiceSessions,
   primaryVoiceMonthlyUsage,
@@ -214,6 +217,10 @@ register(primaryStudentCredentials, "FLAT");
 register(primaryClassBooks, "FLAT");
 // Student avatar (primary_reedy_preview_20261003): school_id + user_id primary key.
 register(primaryAvatarProfile, "FLAT");
+// Avatar shop (primary_avatar_shop_20261005): ledger, inventory, and loadout carry school_id.
+register(primaryGpLedger, "FLAT");
+register(primaryAvatarInventory, "FLAT");
+register(primaryAvatarLoadout, "FLAT");
 // Reedy voice practice (primary_reedy_preview_20261003): every table carries school_id.
 register(primaryVoiceSessions, "FLAT");
 register(primaryActiveVoiceSessions, "FLAT");

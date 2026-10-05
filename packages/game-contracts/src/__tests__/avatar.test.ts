@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { avatarClassIdSchema, avatarProfileSchema, setAvatarProfileInputSchema } from "../avatar.js";
+import { avatarClassIdSchema, avatarLoadoutSchema, avatarProfileSchema, purchaseAvatarItemInputSchema, setAvatarProfileInputSchema, setLoadoutInputSchema, avatarSlotSchema } from "../avatar.js";
 
 describe("avatar contracts", () => {
   it("lists the 15 hero classes", () => {
@@ -19,5 +19,15 @@ describe("avatar contracts", () => {
     const tints = { skin: "fair", hair: "brown", eyes: "blue", cloth: "sky" };
     expect(avatarProfileSchema.safeParse({ classId: "knight", tints, catalogVersion: "1.0.0", updatedAt: "2026-10-05T00:00:00.000Z" }).success).toBe(true);
     expect(avatarProfileSchema.safeParse({ classId: "knight", tints, catalogVersion: "v1", updatedAt: "2026-10-05T00:00:00.000Z" }).success).toBe(false);
+  });
+
+  it("names the ten pack slots and accepts a strict purchase and loadout input", () => {
+    expect(avatarSlotSchema.options).toHaveLength(10);
+    expect(purchaseAvatarItemInputSchema.parse({ itemId: "wizard-hat" })).toEqual({ itemId: "wizard-hat" });
+    expect(purchaseAvatarItemInputSchema.safeParse({ itemId: "wizard-hat", price: 1 }).success).toBe(false);
+    expect(setLoadoutInputSchema.parse({ slot: "head", itemId: null })).toEqual({ slot: "head", itemId: null });
+    expect(setLoadoutInputSchema.safeParse({ slot: "ring", itemId: "x" }).success).toBe(false);
+    expect(avatarLoadoutSchema.parse({ head: { itemId: "wizard-hat", dye: null } })).toEqual({ head: { itemId: "wizard-hat", dye: null } });
+    expect(avatarLoadoutSchema.safeParse({ head: { itemId: "wizard-hat" } }).success).toBe(false);
   });
 });

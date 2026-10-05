@@ -134,3 +134,33 @@ export {
   setAvatarProfileInputSchema,
 } from "./avatar.js";
 export type { AvatarClassId, AvatarProfile, AvatarTints, SetAvatarProfileInput } from "./avatar.js";
+/** Avatar shop, GP, inventory, and loadout contracts (track primary_avatar_shop_20261005). */
+export {
+  avatarSlotSchema,
+  gpReasonSchema,
+  avatarItemSourceSchema,
+  avatarDyeSchema,
+  avatarInventoryItemSchema,
+  avatarLoadoutPieceSchema,
+  avatarLoadoutSchema,
+  purchaseAvatarItemInputSchema,
+  setLoadoutInputSchema,
+  avatarShopItemSchema,
+  avatarStateSchema,
+  classAvatarSchema,
+  launchAvatarSchema,
+} from "./avatar.js";
+export type {
+  AvatarSlot,
+  GpReason,
+  AvatarItemSource,
+  AvatarInventoryItem,
+  AvatarLoadoutPiece,
+  AvatarLoadout,
+  PurchaseAvatarItemInput,
+  SetLoadoutInput,
+  AvatarShopItem,
+  AvatarState,
+  ClassAvatar,
+  LaunchAvatar,
+} from "./avatar.js";

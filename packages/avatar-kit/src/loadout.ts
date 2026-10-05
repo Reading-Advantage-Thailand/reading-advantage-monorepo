@@ -18,17 +18,58 @@ export const DEFAULT_HAIR = "avatar-hair-swept";
  */
 export const starterSet = (classId: string): StarterSet | undefined => STARTER_SETS.find((s) => s.id === classId);
 
+/** The level that opens each tier of the catalog (the Forge avatar plan, section 6). */
+export const TIER_LEVELS: Readonly<Record<number, number>> = { 1: 1, 2: 5, 3: 10 };
+
 /**
- * The portrait item of a catalog piece in its default dyes (the first option of each dye slot).
- * @param id A catalog id of the pack.
- * @returns The item for the portrait composer.
- * @throws When the id is not in the pack catalog.
+ * The level a student needs for a tier.
+ * @param tier The catalog tier (1 to 3).
+ * @returns The level; an unknown tier needs level 10.
  */
-export function catalogItem(id: string): PortraitItem {
+export const tierLevel = (tier: number): number => TIER_LEVELS[tier] ?? 10;
+
+/**
+ * The dye options of a piece: the option names of its dye slots (a dye is bought as `<id>:<dye>`).
+ * @param id A catalog id of the pack.
+ * @returns The option names, empty when the piece takes no dye.
+ */
+export function itemDyes(id: string): string[] {
+  const table = AVATAR_CATALOG[id]?.table;
+  return table ? [...new Set(Object.values(table.slots).flatMap((s) => Object.keys(s.options)))] : [];
+}
+
+/**
+ * The portrait item of a catalog piece in one dye, or in its default dyes (the first option of
+ * each dye slot) when no dye is given.
+ * @param id A catalog id of the pack.
+ * @param dye An option name of the piece's dye slots.
+ * @returns The item for the portrait composer.
+ * @throws When the id is not in the pack catalog, or the dye is not an option of the piece.
+ */
+export function catalogItem(id: string, dye?: string | null): PortraitItem {
   const item = AVATAR_CATALOG[id];
   if (!item) throw new Error(`no catalog item '${id}'`);
-  const dyes = item.table ? Object.fromEntries(Object.entries(item.table.slots).map(([slot, s]) => [slot, Object.keys(s.options)[0]!])) : {};
+  if (dye && !itemDyes(id).includes(dye)) throw new Error(`no dye '${dye}' on '${id}'`);
+  const dyes = item.table ? Object.fromEntries(Object.entries(item.table.slots).map(([slot, s]) => [slot, dye && s.options[dye] ? dye : Object.keys(s.options)[0]!])) : {};
   return { id, slot: item.slot, hides: item.hides, hair: item.hair, table: item.table, dyes };
+}
+
+/**
+ * The portrait loadout of worn pieces in the student's colors (the shop loadout).
+ * @param pieces The worn pieces: a catalog id and a dye or null.
+ * @param tints The student's option per color slot.
+ * @returns The loadout for `portraitPlan`.
+ * @throws When a piece or dye is unknown, or a tint is not an option of the base.
+ */
+export function wornLoadout(pieces: readonly { itemId: string; dye: string | null }[], tints: Partial<Record<TintSlot, string>>): PortraitLoadout {
+  const merged: Record<string, string> = {};
+  for (const slot of TINT_SLOTS) {
+    const option = tints[slot];
+    if (option === undefined) continue;
+    if (!AVATAR_BASE.slots[slot]?.options[option]) throw new Error(`no option '${option}' in color slot '${slot}'`);
+    merged[slot] = option;
+  }
+  return { base: AVATAR_BASE, tints: merged as TintChoice, pieces: pieces.map((p) => catalogItem(p.itemId, p.dye)), defaultHair: catalogItem(DEFAULT_HAIR) };
 }
 
 /**
@@ -49,7 +90,7 @@ export function starterLoadout(classId: string, tints: Partial<Record<TintSlot, 
     if (!AVATAR_BASE.slots[slot]?.options[option]) throw new Error(`no option '${option}' in color slot '${slot}'`);
     merged[slot] = option;
   }
-  return { base: AVATAR_BASE, tints: merged as TintChoice, pieces: set.pieces.map(catalogItem), defaultHair: catalogItem(DEFAULT_HAIR) };
+  return { base: AVATAR_BASE, tints: merged as TintChoice, pieces: set.pieces.map((id) => catalogItem(id)), defaultHair: catalogItem(DEFAULT_HAIR) };
 }
 
 /**

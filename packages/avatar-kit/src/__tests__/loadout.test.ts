@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { AVATAR_BASE, AVATAR_PACK_VERSION, FORGE_COMMIT } from "../catalog.js";
-import { catalogItem, portraitFiles, starterLoadout, starterSet, TINT_SLOTS } from "../loadout.js";
+import { catalogItem, itemDyes, portraitFiles, starterLoadout, starterSet, tierLevel, TINT_SLOTS, wornLoadout } from "../loadout.js";
 import { PORTRAIT_INDEX } from "../pack-index.js";
 import { STARTER_SETS } from "../starters.js";
 
@@ -40,7 +40,19 @@ describe("starter loadouts", () => {
     expect(starterSet("fox")).toBeUndefined();
     expect(() => starterLoadout("fox")).toThrow("no starter set 'fox'");
     expect(() => starterLoadout("knight", { eyes: "red" })).toThrow("no option 'red' in color slot 'eyes'");
-    expect(() => catalogItem("iron-helmet")).toThrow("no catalog item 'iron-helmet'");
+    expect(() => catalogItem("ruby-crown")).toThrow("no catalog item 'ruby-crown'");
     expect(TINT_SLOTS).toEqual(["skin", "hair", "eyes", "cloth"]);
+  });
+
+  it("dyes a piece, dresses worn pieces, and gates tiers by level", () => {
+    expect(itemDyes("rogue-hood")).toEqual(["teal", "crimson", "forest"]);
+    expect(itemDyes("adventurer-sword")).toEqual([]);
+    expect(catalogItem("rogue-hood", "crimson").dyes).toEqual({ cloth: "crimson" });
+    expect(() => catalogItem("rogue-hood", "gold")).toThrow("no dye 'gold' on 'rogue-hood'");
+    const worn = wornLoadout([{ itemId: "rogue-hood", dye: "forest" }, { itemId: "boots", dye: null }], { skin: "tan" });
+    expect(worn.pieces.map((p) => p.id)).toEqual(["rogue-hood", "boots"]);
+    expect(worn.tints).toEqual({ skin: "tan" });
+    expect(portraitFiles(worn).length).toBeGreaterThan(2);
+    expect([tierLevel(1), tierLevel(2), tierLevel(3), tierLevel(9)]).toEqual([1, 5, 10, 10]);
   });
 });

@@ -1,11 +1,27 @@
 /**
- * The portrait layer index of the pack (`portraits.json`), trimmed to the layers the starter sets
- * need. Each layer is a color image and a tint mask image under the pack root.
+ * The portrait layer index of the pack (`portraits.json`): every layer, a color image and a tint
+ * mask image under the pack root.
  */
 export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; readonly mask: string }>> = {
+  "adventurer-lantern": {
+    "color": "portraits/adventurer-lantern.webp",
+    "mask": "portraits/adventurer-lantern.mask.webp"
+  },
+  "adventurer-map": {
+    "color": "portraits/adventurer-map.webp",
+    "mask": "portraits/adventurer-map.mask.webp"
+  },
   "adventurer-sword": {
     "color": "portraits/adventurer-sword.webp",
     "mask": "portraits/adventurer-sword.mask.webp"
+  },
+  "apprentice-wand": {
+    "color": "portraits/apprentice-wand.webp",
+    "mask": "portraits/apprentice-wand.mask.webp"
+  },
+  "archer-bow": {
+    "color": "portraits/archer-bow.webp",
+    "mask": "portraits/archer-bow.mask.webp"
   },
   "avatar-hair-long.capped@auburn": {
     "color": "portraits/avatar-hair-long.capped@auburn.webp",
@@ -295,6 +311,14 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/avatar-hair-swept@teal.webp",
     "mask": "portraits/avatar-hair-swept@teal.mask.webp"
   },
+  "axe": {
+    "color": "portraits/axe.webp",
+    "mask": "portraits/axe.mask.webp"
+  },
+  "barbarian-axe": {
+    "color": "portraits/barbarian-axe.webp",
+    "mask": "portraits/barbarian-axe.mask.webp"
+  },
   "bard-hat": {
     "color": "portraits/bard-hat.webp",
     "mask": "portraits/bard-hat.mask.webp"
@@ -302,6 +326,10 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
   "base": {
     "color": "portraits/base.webp",
     "mask": "portraits/base.mask.webp"
+  },
+  "battle-axe": {
+    "color": "portraits/battle-axe.webp",
+    "mask": "portraits/battle-axe.mask.webp"
   },
   "belt": {
     "color": "portraits/belt.webp",
@@ -323,6 +351,54 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/cape.webp",
     "mask": "portraits/cape.mask.webp"
   },
+  "captain-shield": {
+    "color": "portraits/captain-shield.webp",
+    "mask": "portraits/captain-shield.mask.webp"
+  },
+  "captain-sword": {
+    "color": "portraits/captain-sword.webp",
+    "mask": "portraits/captain-sword.mask.webp"
+  },
+  "chainmail": {
+    "color": "portraits/chainmail.webp",
+    "mask": "portraits/chainmail.mask.webp"
+  },
+  "circlet": {
+    "color": "portraits/circlet.webp",
+    "mask": "portraits/circlet.mask.webp"
+  },
+  "circlet+avatar-hair-long": {
+    "color": "portraits/circlet+avatar-hair-long.webp",
+    "mask": "portraits/circlet+avatar-hair-long.mask.webp"
+  },
+  "circlet+avatar-hair-ponytail": {
+    "color": "portraits/circlet+avatar-hair-ponytail.webp",
+    "mask": "portraits/circlet+avatar-hair-ponytail.mask.webp"
+  },
+  "circlet+avatar-hair-short": {
+    "color": "portraits/circlet+avatar-hair-short.webp",
+    "mask": "portraits/circlet+avatar-hair-short.mask.webp"
+  },
+  "circlet+avatar-hair-swept": {
+    "color": "portraits/circlet+avatar-hair-swept.webp",
+    "mask": "portraits/circlet+avatar-hair-swept.mask.webp"
+  },
+  "cleric-book": {
+    "color": "portraits/cleric-book.webp",
+    "mask": "portraits/cleric-book.mask.webp"
+  },
+  "cleric-hammer": {
+    "color": "portraits/cleric-hammer.webp",
+    "mask": "portraits/cleric-hammer.mask.webp"
+  },
+  "cloak": {
+    "color": "portraits/cloak.webp",
+    "mask": "portraits/cloak.mask.webp"
+  },
+  "clockwork-soldier-halberd": {
+    "color": "portraits/clockwork-soldier-halberd.webp",
+    "mask": "portraits/clockwork-soldier-halberd.mask.webp"
+  },
   "cloth-hood": {
     "color": "portraits/cloth-hood.webp",
     "mask": "portraits/cloth-hood.mask.webp"
@@ -331,17 +407,69 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/club.webp",
     "mask": "portraits/club.mask.webp"
   },
+  "crossbow": {
+    "color": "portraits/crossbow.webp",
+    "mask": "portraits/crossbow.mask.webp"
+  },
+  "crown": {
+    "color": "portraits/crown.webp",
+    "mask": "portraits/crown.mask.webp"
+  },
+  "crown+avatar-hair-long": {
+    "color": "portraits/crown+avatar-hair-long.webp",
+    "mask": "portraits/crown+avatar-hair-long.mask.webp"
+  },
+  "crown+avatar-hair-ponytail": {
+    "color": "portraits/crown+avatar-hair-ponytail.webp",
+    "mask": "portraits/crown+avatar-hair-ponytail.mask.webp"
+  },
+  "crown+avatar-hair-short": {
+    "color": "portraits/crown+avatar-hair-short.webp",
+    "mask": "portraits/crown+avatar-hair-short.mask.webp"
+  },
+  "crown+avatar-hair-swept": {
+    "color": "portraits/crown+avatar-hair-swept.webp",
+    "mask": "portraits/crown+avatar-hair-swept.mask.webp"
+  },
+  "crystal-focus": {
+    "color": "portraits/crystal-focus.webp",
+    "mask": "portraits/crystal-focus.mask.webp"
+  },
   "dagger": {
     "color": "portraits/dagger.webp",
     "mask": "portraits/dagger.mask.webp"
+  },
+  "dragoon-helm": {
+    "color": "portraits/dragoon-helm.webp",
+    "mask": "portraits/dragoon-helm.mask.webp"
+  },
+  "dragoon-lance": {
+    "color": "portraits/dragoon-lance.webp",
+    "mask": "portraits/dragoon-lance.mask.webp"
   },
   "druid-cap": {
     "color": "portraits/druid-cap.webp",
     "mask": "portraits/druid-cap.mask.webp"
   },
+  "druid-staff": {
+    "color": "portraits/druid-staff.webp",
+    "mask": "portraits/druid-staff.mask.webp"
+  },
   "duelist-hat": {
     "color": "portraits/duelist-hat.webp",
     "mask": "portraits/duelist-hat.mask.webp"
+  },
+  "duelist-rapier": {
+    "color": "portraits/duelist-rapier.webp",
+    "mask": "portraits/duelist-rapier.mask.webp"
+  },
+  "enchanter-scroll": {
+    "color": "portraits/enchanter-scroll.webp",
+    "mask": "portraits/enchanter-scroll.mask.webp"
+  },
+  "enchanter-staff": {
+    "color": "portraits/enchanter-staff.webp",
+    "mask": "portraits/enchanter-staff.mask.webp"
   },
   "explorer-hat": {
     "color": "portraits/explorer-hat.webp",
@@ -351,6 +479,34 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/explorer-map.webp",
     "mask": "portraits/explorer-map.mask.webp"
   },
+  "falchion": {
+    "color": "portraits/falchion.webp",
+    "mask": "portraits/falchion.mask.webp"
+  },
+  "fighter-buckler": {
+    "color": "portraits/fighter-buckler.webp",
+    "mask": "portraits/fighter-buckler.mask.webp"
+  },
+  "fighter-cap": {
+    "color": "portraits/fighter-cap.webp",
+    "mask": "portraits/fighter-cap.mask.webp"
+  },
+  "fighter-sword": {
+    "color": "portraits/fighter-sword.webp",
+    "mask": "portraits/fighter-sword.mask.webp"
+  },
+  "flail": {
+    "color": "portraits/flail.webp",
+    "mask": "portraits/flail.mask.webp"
+  },
+  "gauntlets": {
+    "color": "portraits/gauntlets.webp",
+    "mask": "portraits/gauntlets.mask.webp"
+  },
+  "gladiator-helmet": {
+    "color": "portraits/gladiator-helmet.webp",
+    "mask": "portraits/gladiator-helmet.mask.webp"
+  },
   "gladiator-shield": {
     "color": "portraits/gladiator-shield.webp",
     "mask": "portraits/gladiator-shield.mask.webp"
@@ -359,9 +515,81 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/gladiator-sword.webp",
     "mask": "portraits/gladiator-sword.mask.webp"
   },
+  "glaive": {
+    "color": "portraits/glaive.webp",
+    "mask": "portraits/glaive.mask.webp"
+  },
   "gloves": {
     "color": "portraits/gloves.webp",
     "mask": "portraits/gloves.mask.webp"
+  },
+  "great-axe": {
+    "color": "portraits/great-axe.webp",
+    "mask": "portraits/great-axe.mask.webp"
+  },
+  "greatsword": {
+    "color": "portraits/greatsword.webp",
+    "mask": "portraits/greatsword.mask.webp"
+  },
+  "greaves": {
+    "color": "portraits/greaves.webp",
+    "mask": "portraits/greaves.mask.webp"
+  },
+  "grimoire": {
+    "color": "portraits/grimoire.webp",
+    "mask": "portraits/grimoire.mask.webp"
+  },
+  "guardian-hammer": {
+    "color": "portraits/guardian-hammer.webp",
+    "mask": "portraits/guardian-hammer.mask.webp"
+  },
+  "guardian-helm": {
+    "color": "portraits/guardian-helm.webp",
+    "mask": "portraits/guardian-helm.mask.webp"
+  },
+  "guardian-shield": {
+    "color": "portraits/guardian-shield.webp",
+    "mask": "portraits/guardian-shield.mask.webp"
+  },
+  "halberd": {
+    "color": "portraits/halberd.webp",
+    "mask": "portraits/halberd.mask.webp"
+  },
+  "hand-axe": {
+    "color": "portraits/hand-axe.webp",
+    "mask": "portraits/hand-axe.mask.webp"
+  },
+  "heavy-crossbow": {
+    "color": "portraits/heavy-crossbow.webp",
+    "mask": "portraits/heavy-crossbow.mask.webp"
+  },
+  "horned-helmet": {
+    "color": "portraits/horned-helmet.webp",
+    "mask": "portraits/horned-helmet.mask.webp"
+  },
+  "iron-helmet": {
+    "color": "portraits/iron-helmet.webp",
+    "mask": "portraits/iron-helmet.mask.webp"
+  },
+  "javelin": {
+    "color": "portraits/javelin.webp",
+    "mask": "portraits/javelin.mask.webp"
+  },
+  "katana": {
+    "color": "portraits/katana.webp",
+    "mask": "portraits/katana.mask.webp"
+  },
+  "kite-shield": {
+    "color": "portraits/kite-shield.webp",
+    "mask": "portraits/kite-shield.mask.webp"
+  },
+  "knight-helm": {
+    "color": "portraits/knight-helm.webp",
+    "mask": "portraits/knight-helm.mask.webp"
+  },
+  "lantern-handheld": {
+    "color": "portraits/lantern-handheld.webp",
+    "mask": "portraits/lantern-handheld.mask.webp"
   },
   "leather-armor": {
     "color": "portraits/leather-armor.webp",
@@ -371,17 +599,77 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/leather-cap.webp",
     "mask": "portraits/leather-cap.mask.webp"
   },
+  "long-sword": {
+    "color": "portraits/long-sword.webp",
+    "mask": "portraits/long-sword.mask.webp"
+  },
+  "longbow": {
+    "color": "portraits/longbow.webp",
+    "mask": "portraits/longbow.mask.webp"
+  },
   "mace": {
     "color": "portraits/mace.webp",
     "mask": "portraits/mace.mask.webp"
+  },
+  "mage-spellbook": {
+    "color": "portraits/mage-spellbook.webp",
+    "mask": "portraits/mage-spellbook.mask.webp"
   },
   "mage-wand": {
     "color": "portraits/mage-wand.webp",
     "mask": "portraits/mage-wand.mask.webp"
   },
+  "magic-scepter": {
+    "color": "portraits/magic-scepter.webp",
+    "mask": "portraits/magic-scepter.mask.webp"
+  },
+  "mantle": {
+    "color": "portraits/mantle.webp",
+    "mask": "portraits/mantle.mask.webp"
+  },
+  "maul": {
+    "color": "portraits/maul.webp",
+    "mask": "portraits/maul.mask.webp"
+  },
+  "morningstar": {
+    "color": "portraits/morningstar.webp",
+    "mask": "portraits/morningstar.mask.webp"
+  },
+  "orb": {
+    "color": "portraits/orb.webp",
+    "mask": "portraits/orb.mask.webp"
+  },
+  "paladin-hammer": {
+    "color": "portraits/paladin-hammer.webp",
+    "mask": "portraits/paladin-hammer.mask.webp"
+  },
+  "paladin-shield": {
+    "color": "portraits/paladin-shield.webp",
+    "mask": "portraits/paladin-shield.mask.webp"
+  },
+  "pike": {
+    "color": "portraits/pike.webp",
+    "mask": "portraits/pike.mask.webp"
+  },
+  "plate-armor": {
+    "color": "portraits/plate-armor.webp",
+    "mask": "portraits/plate-armor.mask.webp"
+  },
   "quarterstaff": {
     "color": "portraits/quarterstaff.webp",
     "mask": "portraits/quarterstaff.mask.webp"
+  },
+  "ranger-bow": {
+    "color": "portraits/ranger-bow.webp",
+    "mask": "portraits/ranger-bow.mask.webp"
+  },
+  "rapier": {
+    "color": "portraits/rapier.webp",
+    "mask": "portraits/rapier.mask.webp"
+  },
+  "ritual-dagger": {
+    "color": "portraits/ritual-dagger.webp",
+    "mask": "portraits/ritual-dagger.mask.webp"
   },
   "rogue-dagger": {
     "color": "portraits/rogue-dagger.webp",
@@ -395,6 +683,26 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/round-shield.webp",
     "mask": "portraits/round-shield.mask.webp"
   },
+  "rune-stone": {
+    "color": "portraits/rune-stone.webp",
+    "mask": "portraits/rune-stone.mask.webp"
+  },
+  "samurai-katana": {
+    "color": "portraits/samurai-katana.webp",
+    "mask": "portraits/samurai-katana.mask.webp"
+  },
+  "scale-armor": {
+    "color": "portraits/scale-armor.webp",
+    "mask": "portraits/scale-armor.mask.webp"
+  },
+  "scimitar": {
+    "color": "portraits/scimitar.webp",
+    "mask": "portraits/scimitar.mask.webp"
+  },
+  "scythe": {
+    "color": "portraits/scythe.webp",
+    "mask": "portraits/scythe.mask.webp"
+  },
   "shaman-cap": {
     "color": "portraits/shaman-cap.webp",
     "mask": "portraits/shaman-cap.mask.webp"
@@ -403,9 +711,17 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/shaman-feather.webp",
     "mask": "portraits/shaman-feather.mask.webp"
   },
+  "shaman-staff": {
+    "color": "portraits/shaman-staff.webp",
+    "mask": "portraits/shaman-staff.mask.webp"
+  },
   "shield-maiden-axe": {
     "color": "portraits/shield-maiden-axe.webp",
     "mask": "portraits/shield-maiden-axe.mask.webp"
+  },
+  "shield-maiden-helm": {
+    "color": "portraits/shield-maiden-helm.webp",
+    "mask": "portraits/shield-maiden-helm.mask.webp"
   },
   "shield-maiden-shield": {
     "color": "portraits/shield-maiden-shield.webp",
@@ -423,9 +739,53 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/shortbow.webp",
     "mask": "portraits/shortbow.mask.webp"
   },
+  "shoulder-armor": {
+    "color": "portraits/shoulder-armor.webp",
+    "mask": "portraits/shoulder-armor.mask.webp"
+  },
+  "sickle": {
+    "color": "portraits/sickle.webp",
+    "mask": "portraits/sickle.mask.webp"
+  },
+  "skeleton-knight-shield": {
+    "color": "portraits/skeleton-knight-shield.webp",
+    "mask": "portraits/skeleton-knight-shield.mask.webp"
+  },
+  "sling": {
+    "color": "portraits/sling.webp",
+    "mask": "portraits/sling.mask.webp"
+  },
   "spear": {
     "color": "portraits/spear.webp",
     "mask": "portraits/spear.mask.webp"
+  },
+  "spear-warden-crest": {
+    "color": "portraits/spear-warden-crest.webp",
+    "mask": "portraits/spear-warden-crest.mask.webp"
+  },
+  "spear-warden-helm": {
+    "color": "portraits/spear-warden-helm.webp",
+    "mask": "portraits/spear-warden-helm.mask.webp"
+  },
+  "spear-warden-javelin": {
+    "color": "portraits/spear-warden-javelin.webp",
+    "mask": "portraits/spear-warden-javelin.mask.webp"
+  },
+  "spear-warden-spear": {
+    "color": "portraits/spear-warden-spear.webp",
+    "mask": "portraits/spear-warden-spear.mask.webp"
+  },
+  "spellbook": {
+    "color": "portraits/spellbook.webp",
+    "mask": "portraits/spellbook.mask.webp"
+  },
+  "staff": {
+    "color": "portraits/staff.webp",
+    "mask": "portraits/staff.mask.webp"
+  },
+  "steel-helmet": {
+    "color": "portraits/steel-helmet.webp",
+    "mask": "portraits/steel-helmet.mask.webp"
   },
   "studded-leather": {
     "color": "portraits/studded-leather.webp",
@@ -455,6 +815,26 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/swashbuckler-dagger.webp",
     "mask": "portraits/swashbuckler-dagger.mask.webp"
   },
+  "swashbuckler-sabre": {
+    "color": "portraits/swashbuckler-sabre.webp",
+    "mask": "portraits/swashbuckler-sabre.mask.webp"
+  },
+  "throwing-axe": {
+    "color": "portraits/throwing-axe.webp",
+    "mask": "portraits/throwing-axe.mask.webp"
+  },
+  "throwing-knife": {
+    "color": "portraits/throwing-knife.webp",
+    "mask": "portraits/throwing-knife.mask.webp"
+  },
+  "tome": {
+    "color": "portraits/tome.webp",
+    "mask": "portraits/tome.mask.webp"
+  },
+  "tower-shield": {
+    "color": "portraits/tower-shield.webp",
+    "mask": "portraits/tower-shield.mask.webp"
+  },
   "treasure-hunter-hat": {
     "color": "portraits/treasure-hunter-hat.webp",
     "mask": "portraits/treasure-hunter-hat.mask.webp"
@@ -467,9 +847,33 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/treasure-hunter-whip.webp",
     "mask": "portraits/treasure-hunter-whip.mask.webp"
   },
+  "trident": {
+    "color": "portraits/trident.webp",
+    "mask": "portraits/trident.mask.webp"
+  },
   "undershirt": {
     "color": "portraits/undershirt.webp",
     "mask": "portraits/undershirt.mask.webp"
+  },
+  "wand": {
+    "color": "portraits/wand.webp",
+    "mask": "portraits/wand.mask.webp"
+  },
+  "warhammer": {
+    "color": "portraits/warhammer.webp",
+    "mask": "portraits/warhammer.mask.webp"
+  },
+  "warlock-book": {
+    "color": "portraits/warlock-book.webp",
+    "mask": "portraits/warlock-book.mask.webp"
+  },
+  "warrior-sword": {
+    "color": "portraits/warrior-sword.webp",
+    "mask": "portraits/warrior-sword.mask.webp"
+  },
+  "whip": {
+    "color": "portraits/whip.webp",
+    "mask": "portraits/whip.mask.webp"
   },
   "witch-broom": {
     "color": "portraits/witch-broom.webp",
@@ -486,5 +890,9 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
   "wizard-hat": {
     "color": "portraits/wizard-hat.webp",
     "mask": "portraits/wizard-hat.mask.webp"
+  },
+  "wizard-staff": {
+    "color": "portraits/wizard-staff.webp",
+    "mask": "portraits/wizard-staff.mask.webp"
   }
 };

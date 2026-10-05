@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Copies the portrait layers the 15 starter sets need from the Forge pack into the Primary app
-and regenerates `src/catalog.ts` and `src/pack-index.ts`. Run from this package folder:
+"""Copies every portrait layer of the Forge pack into the Primary app and regenerates
+`src/catalog.ts` (all ready items with their GP price) and `src/pack-index.ts`. Run from this package folder:
 `python3 scripts/port-avatar-pack.py ~/Desktop/advantage-forge <forge-commit>`."""
 import json, os, re, shutil, sys
 
@@ -10,13 +10,14 @@ OUT = "../../apps/primary-advantage/public/packs/avatar/1.0.0/"
 catalog = json.load(open(PACK + "catalog.json"))
 items = {i["id"]: i for i in catalog["items"]}
 starters = open(os.path.join(FORGE, "src/apk3d/avatar/starters.ts")).read()
-need = {"avatar-hair-swept"}
+need = set(items)
 for _, pieces in re.findall(r"id: '([a-z-]+)'.*?pieces: \[([^\]]*)\]", starters, re.S):
-    need.update(re.findall(r"'([a-z0-9-]+)'", pieces))
+    missing = set(re.findall(r"'([a-z0-9-]+)'", pieces)) - need
+    assert not missing, f"starter pieces not in the catalog: {missing}"
 cat = {}
 for i in sorted(need):
     it = items[i]
-    cat[i] = {"id": i, "slot": it["slot"], "tier": it["tier"], "twoHanded": it["twoHanded"], "hides": it["equip"]["hides"], "hair": it["equip"]["hair"], "table": it["dyes"]}
+    cat[i] = {"id": i, "slot": it["slot"], "tier": it["tier"], "twoHanded": it["twoHanded"], "price": it["price"], "rating": it.get("rating"), "hides": it["equip"]["hides"], "hair": it["equip"]["hair"], "table": it["dyes"]}
 styles = {n for n in need if n.startswith("avatar-hair")}
 index = json.load(open(PACK + "portraits.json"))
 layers = {}
@@ -48,12 +49,17 @@ export const FORGE_COMMIT = "{COMMIT}";
 /** The pack version; the portrait layers are served from `/packs/avatar/<version>/`. */
 export const AVATAR_PACK_VERSION = "{index["version"]}";
 
-/** One catalog item of the pack that a starter set wears. */
+/** One catalog item of the pack (every `ready` piece, the shop stock). */
 export interface AvatarCatalogItem {{
   readonly id: string;
   readonly slot: string;
+  /** Tier 1 opens at level 1, tier 2 at level 5, tier 3 at level 10. */
   readonly tier: number;
   readonly twoHanded: boolean;
+  /** The GP price from the Forge formula (0 for a free piece). */
+  readonly price: number;
+  /** The latest review score, or null when unrated. */
+  readonly rating: number | null;
   readonly hides: readonly string[];
   readonly hair: HairForm;
   /** The dye slot table of the piece, or null when it takes no dye. */
@@ -63,12 +69,12 @@ export interface AvatarCatalogItem {{
 /** The slot table of the avatar base: skin, hair, eyes, and cloth options in linear RGB. */
 export const AVATAR_BASE: VariantTable = {ts(catalog["base"]["variants"])};
 
-/** The catalog items of the 15 starter sets and the default hair style, by id. */
+/** Every catalog item of the pack, by id. */
 export const AVATAR_CATALOG: Readonly<Record<string, AvatarCatalogItem>> = {ts(cat)};
 ''')
 open("src/pack-index.ts", "w").write(f'''/**
- * The portrait layer index of the pack (`portraits.json`), trimmed to the layers the starter sets
- * need. Each layer is a color image and a tint mask image under the pack root.
+ * The portrait layer index of the pack (`portraits.json`): every layer, a color image and a tint
+ * mask image under the pack root.
  */
 export const PORTRAIT_INDEX: Readonly<Record<string, {{ readonly color: string; readonly mask: string }}>> = {ts(layers)};
 ''')
