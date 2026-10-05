@@ -433,6 +433,7 @@
     }
   },
   "Components": {
+    "translationLanguage": "Translation language",
     "submitButton": "Submit",
     "closeButton": "Close",
     "cancelButton": "Cancel",

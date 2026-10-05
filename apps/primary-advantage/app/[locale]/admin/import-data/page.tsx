@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -529,6 +529,7 @@ export default function ImportDataPage() {
                           ))}
                         </TableBody>
                       </Table>
+                      <ScrollBar orientation="horizontal" />
                     </ScrollArea>
                   </div>
 

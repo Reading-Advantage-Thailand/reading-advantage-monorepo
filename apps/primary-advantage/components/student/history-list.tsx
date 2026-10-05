@@ -130,7 +130,7 @@ export function HistoryList({ variant }: { variant: HistoryListVariant }) {
           }
         />
       ) : loading ? (
-        <div aria-busy="true" aria-label={t("loading")} className="grid gap-3 md:grid-cols-2">
+        <div role="status" aria-busy="true" aria-label={t("loading")} className="grid gap-3 md:grid-cols-2">
           {[0, 1].map((row) => (
             <ShimmerSkeleton key={row} className="h-24 rounded-2xl" />
           ))}

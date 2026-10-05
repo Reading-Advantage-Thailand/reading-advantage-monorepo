@@ -1,0 +1,1690 @@
+[
+ {
+  "role": "student",
+  "route": "/student/home",
+  "width": 1280,
+  "seq": [
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Read",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Games",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Assignments",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Sentences",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Vocabulary",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Reports",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "History",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Me",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "See the book",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Keep reading",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Play games",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "body"
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Read",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Games",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Assignments",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Sentences",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Vocabulary",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Reports",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "History",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Me",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "See the book",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Keep reading",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Play games",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "body"
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   }
+  ],
+  "firstTab": {
+   "tag": "a",
+   "role": null,
+   "name": "Skip to main content",
+   "ring": true,
+   "visible": true,
+   "inMain": false
+  },
+  "afterSkip": {
+   "tag": "main",
+   "id": "main-content",
+   "inMain": true
+  },
+  "accountMenu": [
+   "Student Dashboard",
+   "Contact Us",
+   "Logout"
+  ],
+  "menuClosedByEscape": true
+ },
+ {
+  "role": "student",
+  "route": "/student/home",
+  "width": 375,
+  "seq": [
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Open menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "See the book",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Keep reading",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Play games",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Read",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Games",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Me",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "body"
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Open menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "See the book",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Keep reading",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Play games",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Read",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Games",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Me",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "body"
+   }
+  ],
+  "firstTab": {
+   "tag": "a",
+   "role": null,
+   "name": "Skip to main content",
+   "ring": true,
+   "visible": true,
+   "inMain": false
+  },
+  "afterSkip": {
+   "tag": "main",
+   "id": "main-content",
+   "inMain": true
+  },
+  "accountMenu": [],
+  "menuClosedByEscape": true
+ },
+ {
+  "role": "teacher",
+  "route": "/teacher/my-classes",
+  "width": 1280,
+  "seq": [
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "My Classes",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "My Students",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Reports",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Assignments",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Teacher manual",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Class challenges",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "input",
+    "role": null,
+    "name": "Search classes",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "New Classroom",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "QA Login Class",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Actions for QA Login Class",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "QA Class A",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Actions for QA Class A",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "body"
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "My Classes",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "My Students",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Reports",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Assignments",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Teacher manual",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Class challenges",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "input",
+    "role": null,
+    "name": "Search classes",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "New Classroom",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "QA Login Class",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Actions for QA Login Class",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "QA Class A",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Actions for QA Class A",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "body"
+   }
+  ],
+  "firstTab": {
+   "tag": "a",
+   "role": null,
+   "name": "Skip to main content",
+   "ring": true,
+   "visible": true,
+   "inMain": false
+  },
+  "afterSkip": {
+   "tag": "main",
+   "id": "main-content",
+   "inMain": true
+  },
+  "accountMenu": [
+   "Teacher Dashboard",
+   "Contact Us",
+   "Settings",
+   "Logout"
+  ],
+  "menuClosedByEscape": true
+ },
+ {
+  "role": "teacher",
+  "route": "/teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8",
+  "width": 1280,
+  "seq": [
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "My Classes",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "My Students",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "All Students",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Class Roster",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Reports",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Assignments",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Teacher manual",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Back to Classrooms",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Reports",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Settings",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Start class",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": "checkbox",
+    "name": "",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Class sheet",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "QR cards",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "input",
+    "role": null,
+    "name": "Search students",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Enroll Student",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Give picture passwords to 3 students",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Set picture password for qa-student-a1",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "New card for qa-student-a1",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Progress of qa-student-a1",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "More actions for qa-student-a1",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Remove qa-student-a1 from the class",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Set picture password for qa-student-a2",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "New card for qa-student-a2",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Progress of qa-student-a2",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "More actions for qa-student-a2",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Remove qa-student-a2 from the class",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Set picture password for qa-student-a3",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "New card for qa-student-a3",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Progress of qa-student-a3",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "More actions for qa-student-a3",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Remove qa-student-a3 from the class",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Lesson plan",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "select",
+    "role": null,
+    "name": "Choose a bookPrimary Advantage Origins 2",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "select",
+    "role": null,
+    "name": "Teacher-led (workbook first)Independent",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "input",
+    "role": null,
+    "name": "",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "input",
+    "role": null,
+    "name": "",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "input",
+    "role": null,
+    "name": "",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "input",
+    "role": null,
+    "name": "",
+    "ring": false,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Assign",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "body"
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "My Classes",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "My Students",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "All Students",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Class Roster",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Reports",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   }
+  ],
+  "firstTab": {
+   "tag": "a",
+   "role": null,
+   "name": "Skip to main content",
+   "ring": true,
+   "visible": true,
+   "inMain": false
+  },
+  "afterSkip": {
+   "tag": "main",
+   "id": "main-content",
+   "inMain": true
+  },
+  "accountMenu": [
+   "Teacher Dashboard",
+   "Contact Us",
+   "Settings",
+   "Logout"
+  ],
+  "menuClosedByEscape": true
+ },
+ {
+  "role": "student",
+  "route": "/student/lesson/577addb8-4fb2-4b60-adeb-d52236d2c4c2",
+  "width": 1280,
+  "seq": [
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Read",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Games",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Assignments",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Sentences",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Vocabulary",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Reports",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "History",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Me",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Start Lesson",
+    "ring": true,
+    "visible": true,
+    "inMain": true
+   },
+   {
+    "tag": "body"
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Skip to main content",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Primary Advantage",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Change language",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Turn sound off",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Switch light or dark theme",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "button",
+    "role": null,
+    "name": "Account menu",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Home",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Read",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Games",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Assignments",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Sentences",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Vocabulary",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   },
+   {
+    "tag": "a",
+    "role": null,
+    "name": "Reports",
+    "ring": true,
+    "visible": true,
+    "inMain": false
+   }
+  ],
+  "firstTab": {
+   "tag": "a",
+   "role": null,
+   "name": "Skip to main content",
+   "ring": true,
+   "visible": true,
+   "inMain": false
+  },
+  "afterSkip": {
+   "tag": "main",
+   "id": "main-content",
+   "inMain": true
+  },
+  "accountMenu": [
+   "Student Dashboard",
+   "Contact Us",
+   "Logout"
+  ],
+  "menuClosedByEscape": true
+ }
+]

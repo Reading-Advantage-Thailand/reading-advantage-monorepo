@@ -433,6 +433,7 @@
     }
   },
   "Components": {
+    "translationLanguage": "Ngôn ngữ dịch",
     "submitButton": "Gửi",
     "closeButton": "Đóng",
     "cancelButton": "Hủy",
