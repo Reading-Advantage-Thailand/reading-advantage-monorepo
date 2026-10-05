@@ -174,6 +174,11 @@ export const questBattleStateSchema = z
     powerUps: z.array(questPowerUpRowSchema),
     /** The student's run for the play state; null before the teacher starts play. */
     runId: z.string().uuid().nullable(),
+    /** The student's own latest heartbeat, so a reload keeps the tally; null before the first one. */
+    heartbeat: z
+      .object({ runId: z.string().uuid().nullable(), answered: z.number().int().min(0), correct: z.number().int().min(0), hp: z.number().int().min(0), damage: z.number().int().min(0), powerUpsUsed: z.array(questPowerUpSchema) })
+      .strict()
+      .nullable(),
   })
   .strict();
 

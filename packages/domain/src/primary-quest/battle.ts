@@ -149,7 +149,7 @@ export async function getBattleState(ctx: Ctx): Promise<QuestBattleState | null>
   const { raw, quest, template } = found;
   const [{ committed, hits }, beats, powerUps, runs] = await Promise.all([
     committedDamage(raw, quest),
-    raw.select({ userId: primaryClassQuestHeartbeat.userId, damage: primaryClassQuestHeartbeat.damage }).from(primaryClassQuestHeartbeat).where(and(eq(primaryClassQuestHeartbeat.schoolId, quest.schoolId), eq(primaryClassQuestHeartbeat.questId, quest.id))),
+    raw.select().from(primaryClassQuestHeartbeat).where(and(eq(primaryClassQuestHeartbeat.schoolId, quest.schoolId), eq(primaryClassQuestHeartbeat.questId, quest.id))),
     studentPowerUps(raw, quest, ctx.user.id),
     raw
       .select({ id: gameChallengeRuns.id })
@@ -159,6 +159,7 @@ export async function getBattleState(ctx: Ctx): Promise<QuestBattleState | null>
       .limit(1),
   ]);
   const ends = countdownEndsAt(quest);
+  const mine = beats.find((beat) => beat.userId === ctx.user.id);
   return {
     quest: toQuest(quest),
     title: template.title,
@@ -169,6 +170,9 @@ export async function getBattleState(ctx: Ctx): Promise<QuestBattleState | null>
     countdownEndsAt: ends ? ends.toISOString() : null,
     powerUps: powerUps.map(toPowerUp),
     runId: runs[0]?.id ?? null,
+    heartbeat: mine
+      ? { runId: mine.runId, answered: mine.answered, correct: mine.correct, hp: mine.hp, damage: mine.damage, powerUpsUsed: mine.powerUpsUsed as QuestBattleState["powerUps"][number]["powerUp"][] }
+      : null,
   };
 }
 

@@ -78,7 +78,14 @@ export function BattleClient({ initial, cartridge, ownerKey, profile, avatar }: 
   const [state, setState] = useState(initial);
   const [now, setNow] = useState(() => new Date());
   const [armed, setArmed] = useState<Set<QuestPowerUp>>(() => new Set(initial.powerUps.filter((p) => !p.usedAt).map((p) => p.powerUp)));
-  const [tally, setTally] = useState<Tally>({ runId: initial.runId, answered: 0, correct: 0, hp: STUDENT_HP, damage: 0, rested: false, done: false });
+  // A reload keeps the tally: the server returns the phone's own latest heartbeat.
+  const [tally, setTally] = useState<Tally>(() => {
+    const mine = initial.heartbeat;
+    const done = Boolean(mine && mine.answered > 0);
+    return mine
+      ? { runId: mine.runId ?? initial.runId, answered: mine.answered, correct: mine.correct, hp: mine.hp, damage: mine.damage, rested: false, done }
+      : { runId: initial.runId, answered: 0, correct: 0, hp: STUDENT_HP, damage: 0, rested: false, done: false };
+  });
   const tallyRef = useRef(tally);
   tallyRef.current = tally;
   const armedRef = useRef(armed);

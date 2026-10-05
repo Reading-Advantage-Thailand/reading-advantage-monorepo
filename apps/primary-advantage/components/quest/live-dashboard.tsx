@@ -108,7 +108,7 @@ export function LiveDashboard({ initial }: { initial: QuestDashboardState }) {
                 ) : (
                   <div className="bg-muted aspect-square w-full rounded-xl" aria-hidden="true" />
                 )}
-                <span className="truncate text-center text-base font-semibold">{s.name}</span>
+                <span className="w-full truncate text-center text-base font-semibold">{s.name}</span>
                 <div role="progressbar" aria-label={`${s.name} HP`} aria-valuemin={0} aria-valuemax={STUDENT_HP} aria-valuenow={s.hp ?? 0} className="bg-muted h-2 w-full overflow-hidden rounded-full">
                   <div className="h-full bg-emerald-500" style={{ width: `${((s.hp ?? 0) / STUDENT_HP) * 100}%` }} />
                 </div>

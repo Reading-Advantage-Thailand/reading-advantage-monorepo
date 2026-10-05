@@ -98,6 +98,7 @@ describe("getBattleState", () => {
     const mock = createMockDb({ selectSequence: [[{ classId: CLASS }], [quest("play")], [{ userId: "s2", correct: 5, at: now }], [], [beat("s1", { damage: 6 }), beat("s2", { damage: 10 })], [power], [{ id: RUN }]] });
     const state = await getBattleState({ db: db(mock), user: student, now });
     expect(state).toMatchObject({ target: 40, committed: 10, pending: 6, countdownEndsAt: "2026-10-09T07:36:00.000Z", runId: RUN });
+    expect(state?.heartbeat).toEqual({ runId: RUN, answered: 4, correct: 3, hp: 4, damage: 6, powerUpsUsed: [] });
     expect(state?.powerUps).toEqual([{ goalKey: "read-3-days", powerUp: "shield", earnedAt: now.toISOString(), usedAt: null }]);
     await expect(getBattleState({ db: db(createMockDb({ selectResults: [] })), user: student, now })).resolves.toBeNull();
   });
