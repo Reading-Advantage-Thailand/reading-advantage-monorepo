@@ -750,7 +750,20 @@
       "MC_QUESTION": "多选问题",
       "SA_QUESTION": "短答问题",
       "LA_QUESTION": "长答问题",
-      "ARTICLE_READ": "文章阅读"
+      "ARTICLE_READ": "文章阅读",
+      "ARTICLE_RATING": "Story rating",
+      "STORIES_RATING": "Story series rating",
+      "STORIES_READ": "Story series read",
+      "CHAPTER_RATING": "Chapter rating",
+      "CHAPTER_READ": "Chapter read",
+      "LEVEL_TEST": "Level test",
+      "SENTENCE_FLASHCARDS": "Sentence flashcards",
+      "SENTENCE_MATCHING": "Sentence matching",
+      "SENTENCE_ORDERING": "Sentence ordering",
+      "SENTENCE_WORD_ORDERING": "Word ordering",
+      "SENTENCE_CLOZE_TEST": "Fill in the blank",
+      "VOCABULARY_FLASHCARDS": "Word flashcards",
+      "VOCABULARY_MATCHING": "Word matching"
     },
     "level": {
       "title": "CEFR 等级",
@@ -772,7 +785,9 @@
         "C1-": "您可以通过一些努力理解复杂文本。您的词汇量使您可以阅读许多不同的主题，并且您可以弄清楚不太明显的细节，尽管有时您可能需要重新阅读某些部分。",
         "C1": "您可以阅读长而具有挑战性的文本并理解大部分发生的事情。您喜欢让您思考的故事和文章，并且可以使用良好的词汇谈论它们，而无需太费力地查找正确的单词。",
         "C1+": "您是一个超级读者，可以处理具有挑战性的文本并理解不同的写作风格。您非常擅长弄清楚故事和文章中不太明显的部分，并且通常知道单词的意思，而无需查找它们。",
-        "C2": "您可以阅读和理解几乎任何事情。您可以理解复杂文本的主要观点，并且喜欢阅读更具挑战性的书籍和文章。您可以谈论几乎任何事情，并且使用语言充满信心。"
+        "C2": "您可以阅读和理解几乎任何事情。您可以理解复杂文本的主要观点，并且喜欢阅读更具挑战性的书籍和文章。您可以谈论几乎任何事情，并且使用语言充满信心。",
+        "A0-": "You are starting to learn English. You know some letters and a few words, especially with pictures.",
+        "A0+": "You know more simple words and names. You can understand very short phrases with pictures, like signs and labels."
       }
     },
     "progress": {
@@ -792,7 +807,21 @@
       "activeThisWeekDescription": "{count} / {total} 名学生",
       "studentList": "学生列表",
       "xpLabel": "{xp} XP"
-    }
+    },
+    "loadError": "We could not load your reports.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "noActivity": "No activity yet",
+    "noActivityHint": "Read a story or play a game, and your activity shows here.",
+    "showAllActivity": "Show all activity",
+    "noXp": "No XP on these days",
+    "noXpHint": "Read and practice to earn XP.",
+    "noXpOverall": "No XP yet",
+    "noReading": "No stories read yet",
+    "noReadingHint": "Read a story to see your reading stats.",
+    "groupBy": "Group by",
+    "groupType": "Type",
+    "groupGenre": "Genre",
+    "groupSubgenre": "Topic"
   },
   "Overall": {
     "roles": {

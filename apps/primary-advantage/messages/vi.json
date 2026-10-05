@@ -750,7 +750,20 @@
       "MC_QUESTION": "Câu hỏi đa lựa chọn",
       "SA_QUESTION": "Câu hỏi trả lời ngắn",
       "LA_QUESTION": "Câu hỏi trả lời dài",
-      "ARTICLE_READ": "Đã đọc bài viết"
+      "ARTICLE_READ": "Đã đọc bài viết",
+      "ARTICLE_RATING": "Story rating",
+      "STORIES_RATING": "Story series rating",
+      "STORIES_READ": "Story series read",
+      "CHAPTER_RATING": "Chapter rating",
+      "CHAPTER_READ": "Chapter read",
+      "LEVEL_TEST": "Level test",
+      "SENTENCE_FLASHCARDS": "Sentence flashcards",
+      "SENTENCE_MATCHING": "Sentence matching",
+      "SENTENCE_ORDERING": "Sentence ordering",
+      "SENTENCE_WORD_ORDERING": "Word ordering",
+      "SENTENCE_CLOZE_TEST": "Fill in the blank",
+      "VOCABULARY_FLASHCARDS": "Word flashcards",
+      "VOCABULARY_MATCHING": "Word matching"
     },
     "level": {
       "title": "Cấp độ CEFR",
@@ -772,7 +785,9 @@
         "C1-": "Bạn có thể hiểu văn bản phức tạp với một số nỗ lực. Từ vựng của bạn cho phép bạn đọc về nhiều chủ đề khác nhau, và bạn có thể tìm ra các chi tiết ít rõ ràng hơn, mặc dù đôi khi bạn có thể cần đọc lại một số phần.",
         "C1": "Bạn có thể đọc văn bản dài và khó khăn và hiểu hầu hết những gì đang xảy ra. Bạn thích các câu chuyện và bài viết khiến bạn suy nghĩ, và bạn có thể nói về chúng bằng cách sử dụng từ vựng tốt mà không cần phải tìm kiếm quá nhiều từ.",
         "C1+": "Bạn là một độc giả siêu năng năng xử lý văn bản khó khăn và hiểu các kiểu viết khác nhau. Bạn thực sự rất giỏi trong việc tìm ra các phần ít rõ ràng của các câu chuyện và bài viết, và bạn thường biết những từ nghĩa là gì mà không cần phải tìm kiếm chúng.",
-        "C2": "Bạn có thể đọc và hiểu gần như tất cả mọi thứ. Bạn có thể hiểu ý chính của văn bản phức tạp và thích đọc các cuốn sách và bài viết khó khăn hơn. Bạn có thể nói về gần như tất cả mọi thứ và sử dụng ngôn ngữ với tự tin."
+        "C2": "Bạn có thể đọc và hiểu gần như tất cả mọi thứ. Bạn có thể hiểu ý chính của văn bản phức tạp và thích đọc các cuốn sách và bài viết khó khăn hơn. Bạn có thể nói về gần như tất cả mọi thứ và sử dụng ngôn ngữ với tự tin.",
+        "A0-": "You are starting to learn English. You know some letters and a few words, especially with pictures.",
+        "A0+": "You know more simple words and names. You can understand very short phrases with pictures, like signs and labels."
       }
     },
     "progress": {
@@ -792,7 +807,21 @@
       "activeThisWeekDescription": "{count} trong tổng {total} học sinh",
       "studentList": "Danh sách học sinh",
       "xpLabel": "{xp} XP"
-    }
+    },
+    "loadError": "We could not load your reports.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "noActivity": "No activity yet",
+    "noActivityHint": "Read a story or play a game, and your activity shows here.",
+    "showAllActivity": "Show all activity",
+    "noXp": "No XP on these days",
+    "noXpHint": "Read and practice to earn XP.",
+    "noXpOverall": "No XP yet",
+    "noReading": "No stories read yet",
+    "noReadingHint": "Read a story to see your reading stats.",
+    "groupBy": "Group by",
+    "groupType": "Type",
+    "groupGenre": "Genre",
+    "groupSubgenre": "Topic"
   },
   "Overall": {
     "roles": {

@@ -22,6 +22,8 @@ import {
 import { useTheme } from "next-themes";
 import { UserActivityLog, UserXpLog } from "@/types";
 import { useTranslations } from "next-intl";
+import { StarIcon } from "lucide-react";
+import { EmptyState } from "@reading-advantage/ui";
 
 // Function to calculate the data for the chart
 // This function takes in the articles and the number of days to go back
@@ -155,6 +157,7 @@ const chartConfig = {
 
 export function UserXpOverAllChart({ data }: UserActiviryChartProps) {
   const formattedData = formatDataForDays(data, 6);
+  const hasXp = formattedData.some((point) => point.xpoverall > 0);
 
   const cardDescriptionText = `${formattedData[0]?.month} - ${formattedData[formattedData.length - 1]?.month}`;
   const t = useTranslations("Reports");
@@ -167,6 +170,9 @@ export function UserXpOverAllChart({ data }: UserActiviryChartProps) {
           <CardDescription>{cardDescriptionText}</CardDescription>
         </CardHeader>
         <CardContent className="pl-2">
+          {!hasXp ? (
+            <EmptyState className="py-6" icon={<StarIcon />} title={t("noXpOverall")} description={t("noXpHint")} />
+          ) : (
           <ChartContainer config={chartConfig}>
             <LineChart
               accessibilityLayer
@@ -198,6 +204,7 @@ export function UserXpOverAllChart({ data }: UserActiviryChartProps) {
               />
             </LineChart>
           </ChartContainer>
+          )}
         </CardContent>
       </Card>
     </>
