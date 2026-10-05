@@ -32,6 +32,7 @@ vi.mock("@/server/controllers/userController", () => ({
 
 import { GET as getArticleRecords } from "../[id]/article-records/route";
 import { GET as getReminderReread } from "../[id]/reminder-reread/route";
+import { GET as getActivity } from "../[id]/activity/route";
 
 /**
  * Builds a chainable Drizzle stub resolving to rows.
@@ -134,5 +135,92 @@ describe("cross-tenant user record reads", () => {
 
     expect(response.status).toBe(403);
     expect(mocks.fetchUserReminderReread).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * Builds an activity request for a target user.
+ * @param id The target user id.
+ * @returns The request and route context.
+ */
+function activityRequest(id: string) {
+  const request = new Request(`http://localhost/api/users/${id}/activity`) as NextRequest;
+  return { request, context: { params: Promise.resolve({ id }) } };
+}
+
+describe("user activity route (teacher per-student report)", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  const activity = [{ id: "act-1", userId: "student-a", activityType: "ARTICLE_READ", completed: true, details: {}, createdAt: "2026-10-04T09:00:00.000Z" }];
+  const xpLogs = [{ id: "xp-1", userId: "student-a", xpEarned: 5, createdAt: "2026-10-04T09:00:00.000Z" }];
+
+  it("returns only activity and xpLogs, never the users row", async () => {
+    mocks.currentUser.mockResolvedValue(teacherA);
+    mocks.select.mockReturnValueOnce(chain([{ id: "student-a", schoolId: "school-a" }]));
+    mocks.fetchUserActivity.mockResolvedValue({
+      activity,
+      xpLogs,
+      user: { id: "student-a", name: "Ann", password: "$argon2id$hash" },
+    });
+
+    const { request, context } = activityRequest("student-a");
+    const response = await getActivity(request, context);
+
+    expect(response.status).toBe(200);
+    expect(mocks.fetchUserActivity).toHaveBeenCalledWith("student-a");
+    const body = await response.json();
+    expect(Object.keys(body).sort()).toEqual(["activity", "xpLogs"]);
+    expect(body).toEqual({ activity, xpLogs });
+    expect(JSON.stringify(body)).not.toContain("argon2id");
+  });
+
+  it("denies a teacher of another school", async () => {
+    mocks.currentUser.mockResolvedValue(teacherA);
+    mocks.select.mockReturnValueOnce(chain([{ id: "student-b", schoolId: "school-b" }]));
+
+    const { request, context } = activityRequest("student-b");
+    const response = await getActivity(request, context);
+
+    expect(response.status).toBe(403);
+    expect(mocks.fetchUserActivity).not.toHaveBeenCalled();
+  });
+
+  it("denies a student reading another student of the same school", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "student-c", role: "STUDENT", schoolId: "school-a" });
+    mocks.select.mockReturnValueOnce(chain([{ id: "student-a", schoolId: "school-a" }]));
+
+    const { request, context } = activityRequest("student-a");
+    expect((await getActivity(request, context)).status).toBe(403);
+    expect(mocks.fetchUserActivity).not.toHaveBeenCalled();
+  });
+
+  it("serves a student their own activity", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "student-a", role: "STUDENT", schoolId: "school-a" });
+    mocks.select.mockReturnValueOnce(chain([{ id: "student-a", schoolId: "school-a" }]));
+    mocks.fetchUserActivity.mockResolvedValue({ activity, xpLogs, user: { id: "student-a" } });
+
+    const { request, context } = activityRequest("student-a");
+    expect((await getActivity(request, context)).status).toBe(200);
+  });
+
+  it("refuses an anonymous caller and an unknown user", async () => {
+    mocks.currentUser.mockResolvedValueOnce(null);
+    const anonymous = activityRequest("student-a");
+    expect((await getActivity(anonymous.request, anonymous.context)).status).toBe(401);
+
+    mocks.currentUser.mockResolvedValueOnce(teacherA);
+    mocks.select.mockReturnValueOnce(chain([]));
+    const unknown = activityRequest("ghost");
+    expect((await getActivity(unknown.request, unknown.context)).status).toBe(403);
+    expect(mocks.fetchUserActivity).not.toHaveBeenCalled();
+  });
+
+  it("returns 500 when the activity does not load", async () => {
+    mocks.currentUser.mockResolvedValue(teacherA);
+    mocks.select.mockReturnValueOnce(chain([{ id: "student-a", schoolId: "school-a" }]));
+    mocks.fetchUserActivity.mockResolvedValue(undefined);
+
+    const { request, context } = activityRequest("student-a");
+    expect((await getActivity(request, context)).status).toBe(500);
   });
 });
