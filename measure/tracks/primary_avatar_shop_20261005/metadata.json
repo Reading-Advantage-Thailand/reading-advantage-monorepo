@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_avatar_shop_20261005",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-10-05T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
+  "description": "Semester 2: avatar Phase 2 in the monorepo. GP ledger, inventory, loadout, purchase, catalog, shop and avatar page, teacher class avatars, and the avatar in the game launch context. Builds on the Lane F profile table, picker, and portrait package.",
+  "estimated_tasks": 14,
+  "actual_tasks": null,
+  "deviation_notes": "Created 2026-10-05 in the Fable review session. Owner decisions 2026-10-05: not a cutover item; the starter-set pick with a color scheme (Lane F) is the avatar until this track ships. Source: advantage-forge/docs/avatar-system.md Phase 2."
+}

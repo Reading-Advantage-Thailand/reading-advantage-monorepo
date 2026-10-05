@@ -1123,5 +1123,8 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: Primary Core Interaction Quality** *Link: [./tracks/primary_core_interaction_quality_20261005/](./tracks/primary_core_interaction_quality_20261005/)*
   Lane G. Browser-verify the September audio, loading, and dedup fixes; bring the reader, audio control, flashcard review, practice activities, lesson task components, and catalog copy to the Lane C quality bar. Created 2026-10-05.
 
+- [ ] **Track: Primary Avatar Shop, GP, Inventory, Loadout (semester 2)** *Link: [./tracks/primary_avatar_shop_20261005/](./tracks/primary_avatar_shop_20261005/)*
+  Avatar Phase 2 in the monorepo after the cutover: GP ledger, inventory, loadout, purchase, shop, avatar page, teacher class avatars, avatar in the game launch context. Created 2026-10-05.
+
 - [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*
   ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.

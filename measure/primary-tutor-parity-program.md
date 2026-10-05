@@ -105,6 +105,14 @@ Open question (Daniel): which base branch. The current checkout is `apk3d-port`
 `primary-parity-integration` from the current `apk3d-port` HEAD, with one worktree
 branch per lane.
 
+## Semester 2 track: primary_avatar_shop_20261005
+
+Created 2026-10-05: avatar Phase 2 (GP ledger, inventory, loadout, purchase, shop, avatar
+page, teacher class avatars, avatar in the game launch context). Not a cutover item. Lane F
+ships the first piece at cutover: the `primary_avatar_profile` table, the starter-set picker
+with a color scheme, and the portrait package. See
+[the track](./tracks/primary_avatar_shop_20261005/).
+
 ## Semester 2 stub: primary_package_alignment
 
 Not part of the cutover. Items from the audit: move `server/models` and controllers
@@ -116,7 +124,7 @@ client, and one TTS provider (M each); share the APK host and audio hooks (L);
 ## Open questions
 
 1. Integration base branch (above).
-2. Reedy avatar: decided 2026-10-04. It is the student's own avatar from the avatar customization plans.
+2. Reedy avatar: decided 2026-10-04 and 2026-10-05. The student's own avatar plays the coach. At cutover the avatar is a Forge starter set (15 classes) with a color scheme (skin 5, hair 6, eyes 5, cloth 5), chosen in a picker offered after the first sign-in and required at the Reedy entry (a home toast nudges). Rendered as the Forge portrait still plus CSS states. The shop and GP are semester 2 (`primary_avatar_shop_20261005`).
 3. Reedy unlock: decided 2026-10-04. Reedy is a standard activity at the end of each lesson. Default: no rollover of unused minutes.
 4. Per-session cap of 180 seconds (default).
 5. Primary QR deep link: confirmed 2026-10-04 as `primary.reading-advantage.com/b/<book>/<n>` (Workbooks `content/primary/README.md`).

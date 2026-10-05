@@ -33,10 +33,29 @@ per student. Daniel set the limit at 8 minutes per month.
 - FR-8: Reedy page labeled **Preview** with a short line that explains it in Thai and English.
 - FR-9: Minutes-left meter before and during a session and on the student home.
   Shows the reset date. Shows a friendly stop message at the limit.
-- FR-10: Reedy shows the student's own avatar from the avatar customization plans
-  (owner decision 2026-10-04), replacing the fox. Do not pick a separate Forge model.
-  Eight states as in Tutor (idle, connecting, listening, thinking, speaking, muted,
-  celebrating, reassuring), with Thai speech bubbles. Reduced-motion variant.
+- FR-10 (avatar, decided 2026-10-05): Reedy is the coach, played by the student's own
+  avatar. The avatar is a Forge starter set (one of the 15 hero classes in
+  `advantage-forge/src/apk3d/avatar/starters.ts`) with the student's color choices from the
+  avatar base: skin 5 options, hair 6, eyes 5, cloth 5 (750 schemes per class, no new art).
+  It renders as the Forge portrait still (the 2D layer composer, no WebGL) with a CSS state
+  treatment for the eight states (idle, connecting, listening, thinking, speaking, muted,
+  celebrating, reassuring): a bubble in en and th, a halo that follows the voice level, dots for
+  connecting and speaking, a small bob or tilt per state, and a reduced-motion variant with no
+  movement. Do not pick a separate Forge model. The fox is not used.
+- FR-10a (avatar onboarding): A student picks a hero class (15 cards with the portrait of each
+  starter set) and then a color scheme (skin, hair, eyes, cloth, with a live portrait preview).
+  The picker is a route in the student area (`/student/avatar`), offered once after the first
+  sign-in (the student can skip it) and reachable later from the Me tab. Changes are free until
+  the shop exists (semester 2). Copy in en and th, 48 px targets, 375 and 768 layouts.
+- FR-10b (avatar gate): A student with no avatar sees a toast on the student home that links to
+  the picker. Reedy requires an avatar: entering the Reedy page without one opens the picker
+  first (a full-screen friendly step, not only a toast), and the session cannot start until the
+  avatar is saved. Teachers and admins are never asked.
+- FR-10c (delivery): Copy the portrait layers and `portraits.json` that the 15 starter sets and
+  the 6 hair colors need from `advantage-forge/out/packs/avatar/1.0.0/` into
+  `apps/primary-advantage/public/packs/avatar/1.0.0/`, and port the pure functions of
+  `src/apk3d/avatar/portrait.ts` (`portraitPlan`, `recolorLayer`, `stackLayers`) and
+  `STARTER_SETS` into a monorepo package with the Forge tests. Record the Forge commit in the package.
 - FR-11: Mic permission flow with clear child-friendly wording, and a fallback when
   there is no microphone.
 - FR-12: Summary after a session: 0-5 scores (fluency, grammar, vocabulary,
@@ -67,11 +86,14 @@ per student. Daniel set the limit at 8 minutes per month.
   options are: (a) one portrait still plus CSS state treatment (halo, bubble, dots, bob or
   tilt; trivial reduced motion) or (b) the 3D composer in the browser with the base clips
   (cheer for celebrating, rest for muted and thinking, idle for the rest; no speaking mouth).
-- Open design question: in Tutor the fox is the coach, and its states follow `coachSpeaking`.
-  If the student's own avatar replaces it, the avatar either plays the coach (the student's
-  character voices the AI) or stands for the student (listening when the coach speaks, speaking
-  when `learnerSpeaking`). The state mapping differs. Owner decision needed before Phase 1.
-- Bubbles must exist in en and th (next-intl), not Thai only.
+- Decided 2026-10-05 (Daniel): the avatar plays the coach (states follow `coachSpeaking` as in
+  Tutor); a starter-set pick with a color scheme is the avatar until the shop exists; portrait
+  plus CSS at cutover; avatar Phase 2 (shop, GP, inventory, loadout) is the semester-2 track
+  `primary_avatar_shop_20261005`. Bubbles exist in en and th.
+- Facts for the picker (verified in `assets/avatar-base.ts` and `portraits.json`): a starter set
+  is a class id, four tints, and the pieces; the base offers skin 5, hair 6 (all rendered for the
+  4 hair styles), eyes 5, cloth 5; eyes, skin, and cloth recolor through the tint mask. One
+  loadout is about 13 layers of 72 KB.
 
 ### Teacher and admin
 - FR-13: Teacher view: minutes used this month per student and per class, session
@@ -95,8 +117,12 @@ per student. Daniel set the limit at 8 minutes per month.
 ## Schema (additive only)
 
 New tables with a `primary_` prefix: voice session (student, lesson, started, ended,
-consumed seconds, provider usage, summary scores) and monthly usage (student, month,
-seconds used, cost). Do not store audio or transcripts.
+consumed seconds, provider usage, summary scores), monthly usage (student, month,
+seconds used, cost), and `primary_avatar_profile` (schoolId, userId, classPreset, tints jsonb,
+catalogVersion, updatedAt; primary key schoolId + userId). The profile table is the
+`avatar_profile` table of the Forge avatar plan (section 10) under the program prefix; the
+semester-2 shop track adds the ledger, inventory, and loadout tables beside it. Do not store
+audio or transcripts.
 
 ## Non-goals
 
@@ -110,6 +136,10 @@ seconds used, cost). Do not store audio or transcripts.
   `authStrength` gate, kill switch, per-school disable.
 - Browser test: a seeded student runs a session to the limit and sees the stop screen.
 - Teacher usage view matches the stored sessions.
+- Avatar: a seeded student with no avatar sees the home toast, is stopped at the Reedy entry
+  by the picker, saves a class and colors, and then sees that portrait as Reedy in all eight
+  states (screenshots at 375 and 1280, plus the reduced-motion variant). The portrait in the
+  app matches the Forge review page render of the same starter set.
 - Calibration report is written to `measure/qa/` before cutover.
 - Documents updated when it ships: `advantage-pr/AGENTS.md` (Reedy is live in Primary
   as Preview), product docs, and the Reedy claim wording in the outcome-claims policy.
