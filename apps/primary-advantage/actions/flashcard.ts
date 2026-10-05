@@ -8,7 +8,6 @@ import {
   and,
   desc,
   asc,
-  sql,
   count,
   gte,
   sum,
@@ -479,6 +478,8 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // inArray, not sql`= ANY(${array})`: Drizzle expands a JS array in a sql template to a list,
+    // so ANY got `($1)` and Postgres failed (22P02 / 42809), which broke both dashboards.
     const activityTypeFilter = deckType
       ? [
           deckType === "VOCABULARY"
@@ -498,7 +499,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
           and(
             eq(userActivity.userId, user.id as string),
             gte(userActivity.createdAt, today),
-            sql`${userActivity.activityType} = ANY(${activityTypeFilter})`,
+            inArray(userActivity.activityType, activityTypeFilter),
           ),
         ),
       db.select({ value: sum(xpLogs.xpEarned) })
@@ -506,7 +507,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
         .where(
           and(
             eq(xpLogs.userId, user.id as string),
-            sql`${xpLogs.activityType} = ANY(${activityTypeFilter})`,
+            inArray(xpLogs.activityType, activityTypeFilter),
           ),
         ),
       db.select({ createdAt: userActivity.createdAt })
@@ -515,7 +516,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
           and(
             eq(userActivity.userId, user.id as string),
             gte(userActivity.createdAt, streakWindowStart),
-            sql`${userActivity.activityType} = ANY(${activityTypeFilter})`,
+            inArray(userActivity.activityType, activityTypeFilter),
           ),
         ),
     ]);

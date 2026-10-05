@@ -3066,5 +3066,19 @@
     "page": "Page {page} of {total}",
     "previous": "Previous",
     "next": "Next"
+  },
+  "Flashcards": {
+    "vocabularyTitle": "My words",
+    "vocabularySubtitle": "Practice the words you saved from stories.",
+    "sentencesTitle": "My sentences",
+    "sentencesSubtitle": "Practice the sentences you saved from stories.",
+    "practiceTabs": "Practice type",
+    "loadError": "We could not load your cards.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "vocabularyEmpty": "No words saved yet",
+    "vocabularyEmptyHint": "Read a story and save new words. They show here for practice.",
+    "sentencesEmpty": "No sentences saved yet",
+    "sentencesEmptyHint": "Read a story and save sentences. They show here for practice.",
+    "findStory": "Find a story"
   }
 }

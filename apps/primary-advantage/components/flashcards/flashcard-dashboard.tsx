@@ -1,134 +1,53 @@
-// components/flashcards/flashcard-dashboard.tsx
-import React from "react";
-import { AlertCircle, Loader2 } from "lucide-react";
-import { Alert, AlertDescription } from "@reading-advantage/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getDashboardData } from "@/actions/flashcard";
-import { SingleDeckViewInline } from "./deck-view";
-import { DashboardRetryButton } from "./dashboard-retry-button";
-import { EmptyDashboard } from "./empty-deck";
-import { Header } from "../header";
+import { BookOpenIcon, FileTextIcon, GraduationCapIcon, TriangleAlertIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { EmptyState, ErrorState } from "@reading-advantage/ui";
+import { getDashboardData } from "@/actions/flashcard";
+import { Link } from "@/i18n/navigation";
+import { buttonVariants } from "@/components/ui/button";
+import { RetryButton } from "@/components/shared/retry-button";
+import { cn } from "@/lib/utils";
+import { SingleDeckViewInline } from "./deck-view";
 
-interface FlashcardDashboardProps {
-  type?: "VOCABULARY" | "SENTENCE";
-}
-
-export default async function FlashcardDashboard({
-  type,
-}: FlashcardDashboardProps) {
-  const { success, decks, error, deckType } = await getDashboardData(type);
-  const t = await getTranslations("SentencesPage.sentencesCard");
-  const tVocabulary = await getTranslations("VocabularyPage");
-
-  // Get appropriate header text based on deck type
-  const getHeaderText = () => {
-    if (deckType === "VOCABULARY") {
-      return tVocabulary("description");
-    } else if (deckType === "SENTENCE") {
-      return t("description");
-    }
-    return "Master vocabulary and sentences with personalized flashcard decks";
-  };
+/**
+ * The flashcard deck of the vocabulary or sentences page. The page renders the title. States: an
+ * error with a retry (it reloads the page data) when the dashboard data fails, an empty state with
+ * a way to the stories when the student has saved nothing, otherwise the deck view.
+ * @param props.type The deck type of the page.
+ * @returns The deck view or a state panel.
+ */
+export default async function FlashcardDashboard({ type }: { type: "VOCABULARY" | "SENTENCE" }) {
+  const [{ success, decks }, t] = await Promise.all([getDashboardData(type), getTranslations("Flashcards")]);
+  const vocabulary = type === "VOCABULARY";
 
   if (!success) {
     return (
-      <div className="space-y-6">
-        <Header heading={t("title")} text={getHeaderText()} variant="warning" />
-
-        <div className="container mx-auto max-w-4xl px-4 py-12">
-          <div className="space-y-8 text-center">
-            {/* Error Animation */}
-            <div className="relative">
-              <div className="animate-pulse">
-                <AlertCircle className="mx-auto h-16 w-16 text-red-500" />
-              </div>
-            </div>
-
-            {/* Error Header */}
-            <div className="space-y-4">
-              <h1 className="text-3xl font-bold text-red-600">
-                Unable to Load Flashcard Data
-              </h1>
-              <p className="text-muted-foreground mx-auto max-w-md text-lg">
-                Something went wrong while loading your flashcard information
-              </p>
-            </div>
-
-            {/* Error Card */}
-            <Card className="mx-auto max-w-md border-red-200 bg-red-50 dark:bg-red-950/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-red-800 dark:text-red-200">
-                  <AlertCircle className="h-5 w-5" />
-                  Error Details
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Alert
-                  variant="destructive"
-                  className="border-red-200 bg-red-50 dark:bg-red-950/50"
-                >
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription className="text-sm">
-                    {error ||
-                      "Failed to load flashcard data. Please try refreshing the page."}
-                  </AlertDescription>
-                </Alert>
-              </CardContent>
-            </Card>
-
-            {/* Action Button */}
-            <DashboardRetryButton />
-          </div>
-        </div>
-      </div>
+      <ErrorState
+        className="bg-card border"
+        icon={<TriangleAlertIcon />}
+        title={t("loadError")}
+        description={t("loadErrorHint")}
+        action={<RetryButton />}
+      />
     );
   }
 
-  if (decks.length === 0) {
+  const deck = decks.find((candidate) => candidate.type === type) ?? decks[0];
+  if (!deck) {
     return (
-      <div className="space-y-6">
-        <Header heading={t("title")} text={getHeaderText()} />
-        <EmptyDashboard deckType={deckType} />
-      </div>
+      <EmptyState
+        className="bg-card border"
+        icon={vocabulary ? <GraduationCapIcon /> : <FileTextIcon />}
+        title={vocabulary ? t("vocabularyEmpty") : t("sentencesEmpty")}
+        description={vocabulary ? t("vocabularyEmptyHint") : t("sentencesEmptyHint")}
+        action={
+          <Link href="/student/read" className={cn(buttonVariants({ variant: "default" }), "min-h-12 rounded-xl px-6")}>
+            <BookOpenIcon aria-hidden="true" />
+            {t("findStory")}
+          </Link>
+        }
+      />
     );
   }
 
-  // For filtered type, always show single deck view (even if multiple decks exist)
-  if (deckType) {
-    const targetDeck = decks.find((deck) => deck.type === deckType) || decks[0];
-
-    return (
-      <div className="space-y-6">
-        <Header heading={t("title")} text={getHeaderText()} />
-        <SingleDeckViewInline
-          deck={targetDeck}
-          deckType={deckType}
-          showHeader={false}
-        />
-      </div>
-    );
-  }
-
-  // Original logic for no type filter
-  const vocabularyDeck = decks.find((deck) => deck.type === "VOCABULARY");
-  const sentenceDeck = decks.find((deck) => deck.type === "SENTENCE");
-
-  // Single deck scenario
-  const singleDeck = vocabularyDeck || sentenceDeck;
-  if (singleDeck) {
-    return (
-      <div className="space-y-6">
-        <Header heading={t("title")} text={getHeaderText()} />
-        <SingleDeckViewInline deck={singleDeck} showHeader={false} />
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      <Header heading={t("title")} text={getHeaderText()} />
-      <EmptyDashboard />
-    </div>
-  );
+  return <SingleDeckViewInline deck={deck} deckType={type} showHeader={false} />;
 }

@@ -10,7 +10,7 @@
  *   its lesson through the i18n Link (client navigation, no full reload).
  * - FR-12 deck-view router refresh -> refresh button calls router.refresh
  *   after a study session completes.
- * - FR-12 dashboard retry without reload -> retry button calls
+ * - FR-12 dashboard retry without reload -> the shared retry button calls
  *   router.refresh instead of reloading the page.
  * - FR-10 response.ok guard -> failed fetch never reaches response.json and
  *   the dashboard falls back; success fetch renders the assignment title.
@@ -115,7 +115,7 @@ vi.mock("../teacher/class-code-generator", () => ({
 
 import StudentAssignmentList from "../student/assignment-list";
 import { SingleDeckViewInline } from "../flashcards/deck-view";
-import { DashboardRetryButton } from "../flashcards/dashboard-retry-button";
+import { RetryButton } from "../shared/retry-button";
 import AssignmentDashboard from "../teacher/assignment-dashboard";
 import Assignments from "../teacher/assignments";
 import { DataTable } from "../ui/data-table";
@@ -261,8 +261,9 @@ describe("FR-12 router navigation instead of full reloads", () => {
   });
 
   it("retries the flashcard dashboard through the router", () => {
-    renderWithMessages(<DashboardRetryButton />);
-    fireEvent.click(screen.getByRole("button", { name: "Try Again" }));
+    // The dashboard error state uses the shared retry button (the local one is gone).
+    renderWithMessages(<RetryButton />);
+    fireEvent.click(screen.getByRole("button", { name: en.Error.retry }));
     expect(refreshMock).toHaveBeenCalledTimes(1);
   });
 });

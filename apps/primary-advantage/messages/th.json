@@ -3068,5 +3068,19 @@
     "page": "หน้า {page} จาก {total}",
     "previous": "ก่อนหน้า",
     "next": "ถัดไป"
+  },
+  "Flashcards": {
+    "vocabularyTitle": "คำศัพท์ของฉัน",
+    "vocabularySubtitle": "ฝึกคำศัพท์ที่เก็บไว้จากเรื่องที่อ่าน",
+    "sentencesTitle": "ประโยคของฉัน",
+    "sentencesSubtitle": "ฝึกประโยคที่เก็บไว้จากเรื่องที่อ่าน",
+    "practiceTabs": "แบบฝึก",
+    "loadError": "โหลดการ์ดไม่สำเร็จ",
+    "loadErrorHint": "ตรวจสอบอินเทอร์เน็ต แล้วลองใหม่อีกครั้ง",
+    "vocabularyEmpty": "ยังไม่มีคำศัพท์ที่เก็บไว้",
+    "vocabularyEmptyHint": "อ่านเรื่องแล้วเก็บคำศัพท์ใหม่ไว้ คำศัพท์จะแสดงที่นี่ให้ฝึก",
+    "sentencesEmpty": "ยังไม่มีประโยคที่เก็บไว้",
+    "sentencesEmptyHint": "อ่านเรื่องแล้วเก็บประโยคไว้ ประโยคจะแสดงที่นี่ให้ฝึก",
+    "findStory": "หาเรื่องอ่าน"
   }
 }
