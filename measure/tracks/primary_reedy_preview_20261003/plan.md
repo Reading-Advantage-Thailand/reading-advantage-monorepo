@@ -29,16 +29,16 @@ login track's `authStrength` contract (a contract stub is enough to start).
 - [x] `1a1d8443e` `39e4ed634` Realtime session create/connect/end with moderation and metering (`@reading-advantage/ai/voice`: OpenAI Realtime over fetch and the global WebSocket, no SDK call API; the strict guard, the summary tool, the rate card; routes `app/api/voice/*` through `voiceController`; 11 + 11 tests)
 - [x] `1a1d8443e` Kill switch and per-school disable (`AI_VOICE_ENABLED` read live, `primary_voice_school_settings.enabled`)
 
-## Phase 3: Student UI
-- [ ] Reedy page with Preview label, mic flow, meter, stop screen, summary
-- [ ] Meter on the student home (slot from the UX track)
+## Phase 3: Student UI — done 2026-10-05
+- [x] `9cbd49992` `ac30228aa` Reedy page with Preview label, mic flow, meter, stop screen, summary (`/student/reedy`, `components/reedy/reedy-session.tsx`; the lesson-end entry in `lesson-progress-bar.tsx`; 5 locales; 13 tests)
+- [x] `9cbd49992` Meter on the student home (slot from the UX track) (`components/reedy/reedy-meter.tsx`, home reads `getVoiceEntitlement`; a read failure hides the meter)
 
-## Phase 4: Teacher and admin
-- [ ] Teacher usage view
-- [ ] Admin cost view
+## Phase 4: Teacher and admin — done 2026-10-05
+- [x] `b9b79ee58` Teacher usage view (`/teacher/class-roster/<id>/reedy`, link in the class header; `getClassVoiceUsage`)
+- [x] `b9b79ee58` Admin cost view (`/admin/reedy`, quick action; `getSchoolVoiceCosts`, `summarizeVoiceOperations` ported)
 
 ## Phase 5: Calibrate and ship
 - [ ] **Gate: one real OpenAI Realtime session first.** The adapter is hand-written over fetch and WebSocket because the catalog pins `openai` 6.44.0 (Tutor uses 7.x); every test so far uses the mock provider. Needs `OPENAI_API_KEY` in the rehearsal environment. See tech-debt 2026-10-05 (bump to `openai` 7 as its own migration task).
 - [ ] 20-session calibration; write the report; decide the cap with Daniel
-- [ ] Runbook and docs updates
+- [x] `90f6c1044` Runbook and docs updates (`docs/runbooks/reedy-operations.md` with the Primary section)
 - [ ] Rehearsal run on Oct 8-9 with the flag on in the rehearsal environment
