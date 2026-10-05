@@ -1120,5 +1120,8 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: Primary Reedy Preview** *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
   Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.
 
+- [ ] **Track: Primary Core Interaction Quality** *Link: [./tracks/primary_core_interaction_quality_20261005/](./tracks/primary_core_interaction_quality_20261005/)*
+  Lane G. Browser-verify the September audio, loading, and dedup fixes; bring the reader, audio control, flashcard review, practice activities, lesson task components, and catalog copy to the Lane C quality bar. Created 2026-10-05.
+
 - [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*
   ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.

@@ -23,6 +23,7 @@ so the build must be tested and rehearsed before he leaves.
 | D+E | [primary_teacher_books_lesson_support_20261003](./tracks/primary_teacher_books_lesson_support_20261003/) | C shell for the UI half; data half is independent |
 | F | [primary_reedy_preview_20261003](./tracks/primary_reedy_preview_20261003/) | B (`authStrength`), C (meter slot) |
 | M | [primary_legacy_data_migration_20261004](./tracks/primary_legacy_data_migration_20261004/) | A (migration numbering, credential helper); added 2026-10-04 |
+| G | [primary_core_interaction_quality_20261005](./tracks/primary_core_interaction_quality_20261005/) | C Phases 0-2 merged (tokens, shell, shared states); added 2026-10-05. Verifies the September audio, loading, and dedup fixes in a browser, then brings the reader, audio, flashcard review, practice, lesson tasks, and catalog copy to the Lane C quality bar |
 
 ### Progress (2026-10-05, updated in the evening)
 
@@ -32,6 +33,7 @@ so the build must be tested and rehearsed before he leaves.
 | M | Phase 1 merged; `tutor_reader` grants script | fcd3efffa | Phase 2 needs a fresh legacy backup |
 | B | Merged | 0c26f7fb6 | 25-student browser run `[b]` (stopped for low memory; owner go-ahead); QA timing check `[b]`; spec Known risks for owner review; `TRUST_PROXY_COUNT` for the Primary deploy; Primary `cloudbuild.yaml` now requires `0064_primary_student_session_policy` |
 | C | Phases 0-2 merged early (owner decision 2026-10-05): audit, brand tokens, Thai-first fonts, one navigation with a mobile bottom bar, page shell, student home, all student screens with loading/empty/error states, data fixes. Phase 3 (teacher screens) in progress on `primary/lane-c-ux-rework`; Phase 4 (quality) and the gate sweep next | e849f6208 (phases 0-2) | No browser sweep yet for the merged screens; final Lane C merge after Phase 4 and the gates |
+| G | Created 2026-10-05 (owner decision: core components change with the shell, not only the page frames). Lane C made no change inside the reader, audio, flashcards, practice, and lesson tasks by spec | — | Default order (owner to confirm): G Phase 0 (browser verification, half a day) right after C merges, then D+E, then F, then G Phases 1-4 |
 | D+E, F | Not started. Lanes run one at a time on this 7 GB machine (owner rule, 2026-10-04), so D+E starts after C merges and F after D+E | — | The Oct 3-6 parallel timeline below no longer holds |
 
 Every lane that adds a migration must also set `--required-migration` in
@@ -60,6 +62,9 @@ before go-live.
 6. **File ownership.** `styles/globals.css`, navigation, and `packages/ui` belong to
    lane C. Migration numbering belongs to lane A: other lanes request a number or use
    a unique timestamp prefix. If two lanes need the same file, one waits.
+   The reader (`components/articles`), the audio control and hook, `components/flashcards`,
+   `components/practice`, `actions/flashcard.ts`, and `components/lesson/task` belong to lane G
+   from 2026-10-05 (full list in the lane G spec).
 7. **Worktrees.** The monorepo has uncommitted changes from other sessions
    (play-kit files, `graph.db`). Each lane works in its own git worktree off the
    integration branch so those changes are never mixed in or lost.
@@ -89,7 +94,8 @@ Today is Oct 3. Rehearsal 1 is Oct 8-9, rehearsal 2 is Oct 12-13, cutover Oct 14
 | Oct 14-16 | Cutover. |
 
 If a lane falls behind, cut in this order: D Phase 4 extras (teaching demos, printable aids),
-C teacher screens polish, F teacher/admin views. Never cut A, B, or the Reedy limit and kill switch.
+C teacher screens polish, G Phases 3-4 (lesson task polish, catalog copy), F teacher/admin views.
+Never cut G Phase 0 (verification of the September fixes). Never cut A, B, or the Reedy limit and kill switch.
 If the Oct 20 gate fails, Primary stays on the legacy build for semester 2.
 
 ## Integration branch
