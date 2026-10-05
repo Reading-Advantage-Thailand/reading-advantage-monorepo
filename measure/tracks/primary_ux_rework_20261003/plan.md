@@ -102,20 +102,11 @@ Run 2a (tasks 0-3) is done in `4ba0ab362`..`01fa69a03`. Run 2b owns the last ite
 - Open: the teacher per-student view shows nothing when the activity request fails (Phase 4 states); the flashcard "cards studied today" stat still counts from server midnight (UTC), and the flashcard streak query still reads every activity row of the year; `components/teacher/assignments.tsx` writes `createdAt` with `toLocaleString()` and no zone (Phase 3 redesign).
 
 ## Phase 3: Teacher
-- [ ] Owner decisions of 2026-10-05 (spec "Owner decisions", FR-1, FR-8, FR-12), tests first:
-  - `--font-sans` is Noto Sans Thai first, then Inter (reverses M2); update
-    `styles/__tests__/globals-tokens.test.ts` line 129-132 and the comment in `app/[locale]/layout.tsx`.
-  - `i18n/routing.ts` `defaultLocale: "th"`. Check the proxy sign-in redirects and the 20 test
-    files that build `/en/...` paths (list: `grep -rl -E "defaultLocale|/en\b" --include=*.test.*`).
-  - Remove the Google Classroom import from My Classes and the unused Google icons, copy, asset,
-    and dependency (FR-12 names every file). Confirm no Google sign-in surface remains.
-- [ ] Shell and dashboard — in progress, uncommitted in the worktree on 2026-10-05: teacher
-  dashboard page, `loading.tsx`, `error.tsx`, `components/teacher/teacher-shell.tsx`,
-  `class-book-slot.tsx`, `due-chip.tsx`, `lib/teacher-home.ts`, `getTeacherHome` in
-  `@reading-advantage/domain/primary-home` with `primary-teacher-home.test.ts`, `TeacherHome` and
-  `TeacherUi` copy in five locales. The full app suite passed on this working tree
-  (166 files, 1055 tests). Commit it as the next task.
-- [ ] My-classes, roster, assignments, reports, student-progress layouts
+- [x] Owner decisions of 2026-10-05 (spec "Owner decisions", FR-1, FR-8, FR-12) — `41da1e37b`: Noto Sans Thai first in `--font-sans` (reverses M2), `defaultLocale: "th"`, Google Classroom import and the unused Google icons, copy, and asset removed.
+- [x] Shell and dashboard — `a65d73cae`: teacher dashboard (`getTeacherHome` in `@reading-advantage/domain/primary-home`): classes and roster counts (own and co-taught, not archived), open assignments with done/assigned counts and a Bangkok-day due chip, "who needs help" (overdue work, no activity, or 7+ days since the last `user_activity`), a "Start class" link per class to the class page `#class-login` (no copy of the Lane B logic), and an empty Class book slot.
+- [x] My-classes, roster, assignments, reports, student-progress layouts — `76720221c` (my-classes and roster; the Lane B live roster is the only student list on the class page, with the management parts in each row and a fallback list if the live roster fails; class sheet, QR cards, and enrollment restyled), `2a1c6247f` (teacher assignments: due chips incl. "No due date", Bangkok created date, states; "Late" is "Overdue" everywhere), `4bf53279b` (reports, student progress, my-students, game-challenges: labelled pickers, error states with retry), `571670430` (test fix).
+- Phase 3 decisions: the reports "Active this week" tile is removed (the data had no last-activity field, so it always showed 0%); the student-progress back link goes to the class when the class page adds `?classroomId=`, otherwise to the reports; the game-challenges form gets a frame in Primary only (the play-kit panel and its English text belong to Lane G). Lane D+E slot: `ClassBookSlot` (`data-class-book-slot`) on the dashboard and on each class page.
+- Phase 3 open items: the sidebar link "studentProgress" goes to `/teacher/student-progress`, which has no index page; game-challenges has no sidebar link; the privacy policy still names the Google Workspace APIs (legal text, owner review). Phase 3 had no separate review yet (stopped by the owner on 2026-10-05). Full Primary suite on 4bf53279b in 3 shards: 1097 passed, 2 failed (one fixed in `571670430`, one PGlite hook timeout under load in `userModel.activity.behavior.test.ts` that passes with a longer timeout); tsc exit 0.
 
 ## Phase 4: Quality
 - [ ] States: loading, empty, error on every screen
@@ -127,7 +118,7 @@ Run 2a (tasks 0-3) is done in `4ba0ab362`..`01fa69a03`. Run 2b owns the last ite
 ## Gates
 - [ ] Vision QA sweep at three widths, no Critical/High. The 768 px width needs real evidence:
   the Phase 0 audit looked at 768 for one route only (FR-10).
-- [ ] Visual baselines recorded (tool choice is an open owner question; see the spec)
+- [ ] Visual baselines recorded — tool: Playwright screenshots (`toHaveScreenshot` in a spec under `apps/primary-advantage/tests/e2e`, `@playwright/test` 1.61.0; owner decision 2026-10-05)
 
 ### Review notes (2026-10-05, review session, no code changes)
 - Lane C forked from integration after the Lane B merge (`490707f12`), so it contains A, B, and
