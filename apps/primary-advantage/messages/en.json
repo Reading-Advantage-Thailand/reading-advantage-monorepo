@@ -2125,25 +2125,6 @@
       "delete": "Delete"
     },
     "search": { "placeholder": "Search" },
-    "import": {
-      "fromLabel": "Import a new class from",
-      "googleClassroom": "Google Classroom",
-      "dialog": {
-        "title": "Import Your Google Classroom",
-        "selectClass": "Select a Google Classroom Class",
-        "description": "Choose a class to sync. All students will be imported and added to your account.",
-        "yourClasses": "Your Google Classroom Classes",
-        "refresh": "Refresh",
-        "continue": "Continue",
-        "syncing": "Syncing Class...",
-        "syncingDescription": "Importing students from Google Classroom. This may take a moment.",
-        "syncCompleted": "Sync Completed!",
-        "syncAnother": "Sync Another Class",
-        "goToClass": "Go to Class",
-        "aboutTitle": "About Google Classroom Sync",
-        "aboutDescription": "This feature allows teachers to import Google Classroom students. Students will be automatically enrolled in your class."
-      }
-    },
     "pagination": { "previous": "Previous", "next": "Next" },
     "edit": {
       "title": "Edit Class",

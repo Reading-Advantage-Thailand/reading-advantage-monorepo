@@ -2123,25 +2123,6 @@
       "delete": "删除"
     },
     "search": { "placeholder": "搜索" },
-    "import": {
-      "fromLabel": "从以下导入新班级",
-      "googleClassroom": "Google Classroom",
-      "dialog": {
-        "title": "导入您的 Google Classroom",
-        "selectClass": "选择一个 Google Classroom 班级",
-        "description": "选择一个班级进行同步。所有学生将被导入并添加到您的账户。",
-        "yourClasses": "您的 Google Classroom 班级",
-        "refresh": "刷新",
-        "continue": "继续",
-        "syncing": "正在同步班级...",
-        "syncingDescription": "正在从 Google Classroom 导入学生，这可能需要一点时间。",
-        "syncCompleted": "同步完成！",
-        "syncAnother": "同步另一个班级",
-        "goToClass": "前往班级",
-        "aboutTitle": "关于 Google Classroom 同步",
-        "aboutDescription": "此功能允许导入 Google Classroom 学生。学生将自动加入您的班级。"
-      }
-    },
     "pagination": { "previous": "上一页", "next": "下一页" },
     "edit": {
       "title": "编辑班级",

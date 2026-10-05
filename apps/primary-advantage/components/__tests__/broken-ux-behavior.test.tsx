@@ -188,7 +188,6 @@ describe("FR-8 header spelling", () => {
             classCode: "ABC123",
             grade: "1",
             students: [],
-            importedFromGoogle: false,
           },
         ],
       }),

@@ -11,14 +11,15 @@ export default defineConfig({
     globals: true,
     environment: "node",
     include: ["lib/**/*.{test,spec}.{ts,tsx}", "**/__tests__/**/*.{test,spec}.{ts,tsx}"],
-    // next-intl's ESM build imports `next/navigation` and `next/link`
-    // extensionless, which Node ESM cannot resolve in externalized deps.
-    // Inline the navigation entry and subtree so Vite resolves those
-    // imports and tests can render the real i18n Link.
+    // next-intl's ESM build imports `next/navigation`, `next/link`, and
+    // `next/server` extensionless, which Node ESM cannot resolve in
+    // externalized deps. Inline the navigation and middleware entries and
+    // subtrees so Vite resolves those imports: tests render the real i18n
+    // Link and run the real proxy (default locale test).
     server: {
       deps: {
         inline: [
-          /[/\\]next-intl[/\\]dist[/\\]esm[/\\][^/\\]+[/\\]navigation(?=[/\\.])/,
+          /[/\\]next-intl[/\\]dist[/\\]esm[/\\][^/\\]+[/\\](?:navigation|middleware)(?=[/\\.])/,
         ],
       },
     },

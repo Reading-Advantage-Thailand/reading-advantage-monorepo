@@ -2124,25 +2124,6 @@
       "delete": "ลบ"
     },
     "search": { "placeholder": "ค้นหา" },
-    "import": {
-      "fromLabel": "นำเข้าชั้นเรียนใหม่จาก",
-      "googleClassroom": "Google Classroom",
-      "dialog": {
-        "title": "นำเข้า Google Classroom ของคุณ",
-        "selectClass": "เลือกคลาสจาก Google Classroom",
-        "description": "เลือกคลาสเพื่อซิงค์ นักเรียนทั้งหมดจะถูกนำเข้าและเพิ่มให้คุณ",
-        "yourClasses": "คลาส Google Classroom ของคุณ",
-        "refresh": "รีเฟรช",
-        "continue": "ดำเนินการต่อ",
-        "syncing": "กำลังซิงค์คลาส...",
-        "syncingDescription": "กำลังนำเข้านักเรียนจาก Google Classroom อาจใช้เวลาสักครู่",
-        "syncCompleted": "ซิงค์เสร็จสิ้น!",
-        "syncAnother": "ซิงค์คลาสอื่น",
-        "goToClass": "ไปที่คลาส",
-        "aboutTitle": "เกี่ยวกับการซิงค์ Google Classroom",
-        "aboutDescription": "ฟีเจอร์นี้ช่วยให้นำเข้านักเรียนจาก Google Classroom และลงทะเบียนให้ในคลาสของคุณอัตโนมัติ"
-      }
-    },
     "pagination": { "previous": "ก่อนหน้า", "next": "ถัดไป" },
     "edit": {
       "title": "แก้ไขชั้นเรียน",

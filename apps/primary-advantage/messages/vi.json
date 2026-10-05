@@ -2125,25 +2125,6 @@
       "delete": "Xóa"
     },
     "search": { "placeholder": "Tìm kiếm" },
-    "import": {
-      "fromLabel": "Nhập một lớp mới từ",
-      "googleClassroom": "Google Classroom",
-      "dialog": {
-        "title": "Nhập Google Classroom của bạn",
-        "selectClass": "Chọn lớp Google Classroom",
-        "description": "Chọn lớp để đồng bộ. Tất cả học sinh sẽ được nhập và thêm vào tài khoản của bạn.",
-        "yourClasses": "Lớp Google Classroom của bạn",
-        "refresh": "Làm mới",
-        "continue": "Tiếp tục",
-        "syncing": "Đang đồng bộ lớp...",
-        "syncingDescription": "Đang nhập học sinh từ Google Classroom. Có thể mất một lát.",
-        "syncCompleted": "Đồng bộ hoàn tất!",
-        "syncAnother": "Đồng bộ lớp khác",
-        "goToClass": "Đi tới lớp",
-        "aboutTitle": "Về đồng bộ Google Classroom",
-        "aboutDescription": "Tính năng này giúp nhập học sinh từ Google Classroom. Học sinh sẽ được ghi danh vào lớp của bạn tự động."
-      }
-    },
     "pagination": { "previous": "Trước", "next": "Tiếp" },
     "edit": {
       "title": "Chỉnh sửa lớp",

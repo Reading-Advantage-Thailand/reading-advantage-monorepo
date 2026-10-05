@@ -91,7 +91,6 @@ beforeEach(() => {
               classCode: "ABC123",
               grade: "1",
               students: [],
-              importedFromGoogle: false,
             },
           ],
         }),

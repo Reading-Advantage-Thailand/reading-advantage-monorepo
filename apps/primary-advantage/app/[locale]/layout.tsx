@@ -13,8 +13,9 @@ import { LayoutProvider } from "@/hooks/use-layout";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import QueryProvider from "@/components/providers/query-provider";
 
-// Thai-first stack (see --font-sans in styles/globals.css). The Thai face loads only the
-// Thai subset and has no metric fallback, so Latin text falls through to Inter.
+// Thai-first stack (see --font-sans in styles/globals.css): Noto Sans Thai first, then Inter
+// (owner decision 2026-10-05). The Thai face loads only the Thai subset and has no metric
+// fallback, so Latin text falls through to Inter.
 const fontThai = Noto_Sans_Thai({
   subsets: ["thai"],
   variable: "--font-noto-thai",

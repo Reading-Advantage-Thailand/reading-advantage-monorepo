@@ -21,11 +21,16 @@ vi.mock("@/i18n/navigation", () => ({
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 import MyClasses from "../my-classes";
+import enJson from "../../../messages/en.json";
+import thJson from "../../../messages/th.json";
+import viJson from "../../../messages/vi.json";
+import cnJson from "../../../messages/cn.json";
+import twJson from "../../../messages/tw.json";
 import ClassroomSelector from "../classroom-selector";
 
 const C1 = "c1c1c1c1-0000-4000-8000-000000000001";
 const classes = [
-  { id: C1, name: "P3A", classCode: "ABC123", grade: "3", createdAt: "2026-10-04T20:00:00Z", students: [{ id: "x1" }, { id: "x2" }], importedFromGoogle: false },
+  { id: C1, name: "P3A", classCode: "ABC123", grade: "3", createdAt: "2026-10-04T20:00:00Z", students: [{ id: "x1" }, { id: "x2" }] },
 ];
 const fetchMock = vi.fn();
 let failures = 0;
@@ -72,11 +77,18 @@ describe("My Classes", () => {
     expect(screen.getByText("ABC123")).not.toHaveClass("capitalize");
   });
 
-  it("keeps the Google Classroom button (owner item) and the new class button", async () => {
+  it("has no Google Classroom import (FR-12) and keeps the new class button", async () => {
     renderWithMessages(<MyClasses />);
     await flush();
-    expect(screen.getByRole("button", { name: /Google Classroom/ })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Google/ })).not.toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/Google/);
     expect(screen.getByRole("button", { name: /New Classroom/ })).toHaveClass("min-h-11");
+  });
+
+  it("has no Google Classroom import copy in any locale (FR-12)", () => {
+    for (const messages of [enJson, thJson, viJson, cnJson, twJson]) {
+      expect(messages.TeacherMyClasses).not.toHaveProperty("import");
+    }
   });
 
   it("shows an error with a retry when the classes cannot load, and loads them on retry", async () => {
