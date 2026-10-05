@@ -2256,7 +2256,8 @@
         "actions": {
           "actions": "操作",
           "details": "詳細"
-        }
+        },
+        "noDueDate": "No due date"
       },
       "empty": {
         "noAssignments": "未找到作業",
@@ -2478,7 +2479,8 @@
       "deleteCount": "刪除（{count}）",
       "cancel": "取消",
       "edit": "編輯",
-      "noStudentsInSelectedStatus": "所選狀態下沒有學生"
+      "noStudentsInSelectedStatus": "所選狀態下沒有學生",
+      "noDueDate": "No due date"
     }
   },
   "AdminTeachers": {
@@ -3023,5 +3025,44 @@
     "backToStories": "Back to stories",
     "articleError": "We could not open this story.",
     "disclaimer": "This story, its pictures, and its audio are made by a computer for learning English. Check facts with another source before you use them in school work."
+  },
+  "StudentAssignments": {
+    "title": "My assignments",
+    "subtitle": "Lessons from your teacher.",
+    "filters": "Assignment filters",
+    "search": "Search assignments",
+    "searchPlaceholder": "Search by name",
+    "searching": "Searching...",
+    "status": "Show",
+    "statusAll": "All",
+    "statusNotStarted": "To do",
+    "statusInProgress": "Started",
+    "statusCompleted": "Done",
+    "due": "Due date",
+    "dueAll": "Any date",
+    "dueOverdue": "Late",
+    "dueToday": "Due today",
+    "dueUpcoming": "Coming up",
+    "noDueDate": "No due date",
+    "dueOn": "Due {date}",
+    "daysLeft": "{days, plural, one {# day left} other {# days left}}",
+    "late": "Late",
+    "from": "From {teacher}",
+    "start": "Start lesson",
+    "continue": "Continue",
+    "review": "Look again",
+    "empty": "No assignments yet",
+    "emptyHint": "When your teacher gives you a lesson, it shows here.",
+    "findStory": "Find a story",
+    "noMatch": "No assignments match",
+    "noMatchHint": "Try another filter.",
+    "showAll": "Show all",
+    "loadError": "We could not load your assignments.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading assignments",
+    "pages": "Assignment pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
   }
 }

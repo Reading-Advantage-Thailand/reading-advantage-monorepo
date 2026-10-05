@@ -2260,7 +2260,8 @@
         "actions": {
           "actions": "การดำเนินการ",
           "details": "รายละเอียด"
-        }
+        },
+        "noDueDate": "ไม่มีวันส่ง"
       },
       "empty": {
         "noAssignments": "ไม่พบงานที่กำหนด",
@@ -2482,7 +2483,8 @@
       "deleteCount": "ลบ ({count})",
       "cancel": "ยกเลิก",
       "edit": "แก้ไข",
-      "noStudentsInSelectedStatus": "ไม่มีนักเรียนในสถานะที่เลือก"
+      "noStudentsInSelectedStatus": "ไม่มีนักเรียนในสถานะที่เลือก",
+      "noDueDate": "ไม่มีวันส่ง"
     }
   },
   "AdminTeachers": {
@@ -3027,5 +3029,44 @@
     "backToStories": "กลับไปหน้าเรื่องทั้งหมด",
     "articleError": "เปิดเรื่องนี้ไม่สำเร็จ",
     "disclaimer": "เรื่อง รูปภาพ และเสียงในหน้านี้สร้างด้วยคอมพิวเตอร์เพื่อฝึกภาษาอังกฤษ ถ้าจะนำข้อมูลไปใช้ทำงานส่งครู ควรตรวจสอบกับแหล่งอื่นก่อน"
+  },
+  "StudentAssignments": {
+    "title": "งานของฉัน",
+    "subtitle": "บทเรียนที่คุณครูให้ทำ",
+    "filters": "ตัวกรองงาน",
+    "search": "ค้นหางาน",
+    "searchPlaceholder": "ค้นหาจากชื่องาน",
+    "searching": "กำลังค้นหา...",
+    "status": "แสดง",
+    "statusAll": "ทั้งหมด",
+    "statusNotStarted": "ยังไม่ทำ",
+    "statusInProgress": "กำลังทำ",
+    "statusCompleted": "ทำเสร็จแล้ว",
+    "due": "วันส่ง",
+    "dueAll": "ทุกวันส่ง",
+    "dueOverdue": "เลยกำหนด",
+    "dueToday": "ส่งวันนี้",
+    "dueUpcoming": "ยังไม่ถึงวันส่ง",
+    "noDueDate": "ไม่มีวันส่ง",
+    "dueOn": "ส่งภายใน {date}",
+    "daysLeft": "{days, plural, other {เหลืออีก # วัน}}",
+    "late": "เลยกำหนด",
+    "from": "จาก {teacher}",
+    "start": "เริ่มบทเรียน",
+    "continue": "เรียนต่อ",
+    "review": "ดูอีกครั้ง",
+    "empty": "ยังไม่มีงาน",
+    "emptyHint": "เมื่อคุณครูให้บทเรียน งานจะแสดงที่นี่",
+    "findStory": "หาเรื่องอ่าน",
+    "noMatch": "ไม่พบงานที่ตรงกับตัวกรอง",
+    "noMatchHint": "ลองเลือกตัวกรองอื่นดูนะ",
+    "showAll": "แสดงทั้งหมด",
+    "loadError": "โหลดงานไม่สำเร็จ",
+    "loadErrorHint": "ตรวจสอบอินเทอร์เน็ต แล้วลองใหม่อีกครั้ง",
+    "loading": "กำลังโหลดงาน",
+    "pages": "หน้ารายการงาน",
+    "page": "หน้า {page} จาก {total}",
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป"
   }
 }

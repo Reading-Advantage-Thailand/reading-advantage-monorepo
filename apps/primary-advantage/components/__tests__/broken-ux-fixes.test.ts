@@ -19,7 +19,7 @@ describe("primary broken UX fixes", () => {
   // so they stay while every other case in this file converted to a
   // behavioral test (see broken-ux-behavior.test.tsx and
   // broken-ux-server-behavior.test.tsx; FR-6 maps to
-  // student-assignment-table-messages.test.tsx).
+  // student/__tests__/assignment-list.test.tsx).
   it("FR-1: cn/tw nest VocabularyMatching and Introduction inside Lesson", () => {
     for (const locale of ["cn", "tw"]) {
       const messages = JSON.parse(readAppFile(`messages/${locale}.json`));

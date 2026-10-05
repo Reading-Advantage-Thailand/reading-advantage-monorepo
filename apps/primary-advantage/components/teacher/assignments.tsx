@@ -26,6 +26,7 @@ import { Skeleton } from "@reading-advantage/ui";
 import { ChevronDownIcon } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import type { PaginationInfo } from "@/types";
+import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
 
 type Assignment = {
   articleId: string;
@@ -33,7 +34,8 @@ type Assignment = {
     id: string;
     title: string;
     description: string;
-    dueDate: string;
+    /** Null when the assignment has no due date (the column is nullable). */
+    dueDate: string | null;
     classroomId: string;
     articleId: string;
     userId: string;
@@ -108,7 +110,10 @@ export default function Assignments() {
       ),
       cell: ({ row }) => (
         <div className="text-center">
-          {new Date(row.original.meta.dueDate).toLocaleDateString()}
+          {row.original.meta.dueDate &&
+          getDueDateStatus(row.original.meta.dueDate).kind !== "none"
+            ? new Date(row.original.meta.dueDate).toLocaleDateString()
+            : t("table.noDueDate")}
         </div>
       ),
     },

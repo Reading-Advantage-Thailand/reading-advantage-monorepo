@@ -2258,7 +2258,8 @@
         "actions": {
           "actions": "Thao tác",
           "details": "Chi tiết"
-        }
+        },
+        "noDueDate": "No due date"
       },
       "empty": {
         "noAssignments": "Không tìm thấy bài giao",
@@ -2480,7 +2481,8 @@
       "deleteCount": "Xóa ({count})",
       "cancel": "Hủy",
       "edit": "Chỉnh sửa",
-      "noStudentsInSelectedStatus": "Không có học sinh trong trạng thái đã chọn"
+      "noStudentsInSelectedStatus": "Không có học sinh trong trạng thái đã chọn",
+      "noDueDate": "No due date"
     }
   },
   "AdminTeachers": {
@@ -3025,5 +3027,44 @@
     "backToStories": "Back to stories",
     "articleError": "We could not open this story.",
     "disclaimer": "This story, its pictures, and its audio are made by a computer for learning English. Check facts with another source before you use them in school work."
+  },
+  "StudentAssignments": {
+    "title": "My assignments",
+    "subtitle": "Lessons from your teacher.",
+    "filters": "Assignment filters",
+    "search": "Search assignments",
+    "searchPlaceholder": "Search by name",
+    "searching": "Searching...",
+    "status": "Show",
+    "statusAll": "All",
+    "statusNotStarted": "To do",
+    "statusInProgress": "Started",
+    "statusCompleted": "Done",
+    "due": "Due date",
+    "dueAll": "Any date",
+    "dueOverdue": "Late",
+    "dueToday": "Due today",
+    "dueUpcoming": "Coming up",
+    "noDueDate": "No due date",
+    "dueOn": "Due {date}",
+    "daysLeft": "{days, plural, one {# day left} other {# days left}}",
+    "late": "Late",
+    "from": "From {teacher}",
+    "start": "Start lesson",
+    "continue": "Continue",
+    "review": "Look again",
+    "empty": "No assignments yet",
+    "emptyHint": "When your teacher gives you a lesson, it shows here.",
+    "findStory": "Find a story",
+    "noMatch": "No assignments match",
+    "noMatchHint": "Try another filter.",
+    "showAll": "Show all",
+    "loadError": "We could not load your assignments.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading assignments",
+    "pages": "Assignment pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
   }
 }

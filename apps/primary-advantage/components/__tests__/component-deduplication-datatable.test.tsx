@@ -68,10 +68,8 @@ vi.mock("../ui/data-table", () => ({
   ),
 }));
 
-import type { AssignmentStudent } from "../student-assignment-table";
 import { HistoryTable } from "../dashboard/history-table";
 import Assignments from "../teacher/assignments";
-import StudentAssignmentTable from "../student-assignment-table";
 import MyStudents from "../teacher/my-students";
 import MyClasses from "../teacher/my-classes";
 import LicenseTable from "../system/license-table";
@@ -206,71 +204,6 @@ describe("live tables through one DataTable shell", () => {
   it("serves teacher assignments through the shell", async () => {
     renderWithMessages(<Assignments />);
     await expectShellRows(1);
-  });
-
-  it("serves student assignments through the shell", async () => {
-    const initialAssignments: AssignmentStudent[] = [
-      {
-        id: "row-1",
-        studentId: "user-1",
-        status: "IN_PROGRESS",
-        score: null,
-        startedAt: null,
-        assignmentId: "a1",
-        createdAt: new Date(0).toISOString(),
-        completedAt: null,
-        assignment: {
-          id: "a1",
-          classroomId: "c1",
-          articleId: "article-1",
-          lessonId: null,
-          title: "Assign One",
-          type: "lesson",
-          description: null,
-          dueDate: null,
-          createdAt: new Date(0).toISOString(),
-          teacherId: "teacher-1",
-          teacherName: "Teacher",
-        },
-      },
-      {
-        id: "row-2",
-        studentId: "user-1",
-        status: "COMPLETED",
-        score: 90,
-        startedAt: null,
-        assignmentId: "a2",
-        createdAt: new Date(0).toISOString(),
-        completedAt: new Date(0).toISOString(),
-        assignment: {
-          id: "a2",
-          classroomId: "c1",
-          articleId: "article-2",
-          lessonId: null,
-          title: "Assign Two",
-          type: "lesson",
-          description: null,
-          dueDate: null,
-          createdAt: new Date(0).toISOString(),
-          teacherId: "teacher-1",
-          teacherName: "Teacher",
-        },
-      },
-    ];
-    renderWithMessages(
-      <StudentAssignmentTable
-        initialAssignments={initialAssignments}
-        initialPagination={{
-          currentPage: 1,
-          totalPages: 1,
-          totalCount: 2,
-          hasNextPage: false,
-          hasPrevPage: false,
-          limit: 10,
-        }}
-      />,
-    );
-    await expectShellRows(2);
   });
 
   it("serves the student roster through the shell", async () => {

@@ -16,6 +16,10 @@
       "types": "./dist/assignments/index.d.ts",
       "import": "./dist/assignments/index.js"
     },
+    "./assignments/due-date": {
+      "types": "./dist/assignments/due-date.d.ts",
+      "import": "./dist/assignments/due-date.js"
+    },
     "./classes": {
       "types": "./dist/classes/index.d.ts",
       "import": "./dist/classes/index.js"
