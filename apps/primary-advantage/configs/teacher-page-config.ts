@@ -53,12 +53,6 @@ export const teacherPageConfig: PageConfig = {
           icon: "ClipboardListIcon",
           requiredPermissions: ["CLASS_MANAGEMENT"],
         },
-        {
-          title: "studentProgress",
-          href: "/teacher/student-progress",
-          icon: "TrendingUpIcon",
-          requiredPermissions: ["REPORTS_ACCESS"],
-        },
       ],
     },
 

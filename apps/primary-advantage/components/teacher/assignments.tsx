@@ -131,25 +131,32 @@ export default function Assignments() {
     }
   }, [selectedClassroom, debouncedSearchQuery, fetchAssignments]);
 
-  // Reads the classes once and opens the first class (audit T9: the list stayed empty until the
-  // teacher picked a class).
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const res = await fetch("/api/classroom");
-        const data = await res.json();
-        const rooms: Classroom[] = data.classrooms ?? [];
-        setClassrooms(rooms);
-        if (rooms.length) setSelectedClassroom(rooms[0].id);
-        else setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-        setClassrooms([]);
-        setIsLoading(false);
-      }
-    };
-    void init();
+  // Reads the classes and opens the first class (audit T9: the list stayed empty until the
+  // teacher picked a class). A failed read shows the error with a retry, not "no classes".
+  const loadClasses = useCallback(async () => {
+    setIsLoading(true);
+    setLoadError(false);
+    try {
+      const res = await fetch("/api/classroom");
+      if (!res.ok) throw new Error(`Failed to fetch classrooms: ${res.status}`);
+      const data = await res.json();
+      const rooms: Classroom[] = data.classrooms ?? [];
+      setClassrooms(rooms);
+      if (rooms.length) setSelectedClassroom(rooms[0].id);
+      else setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoadError(true);
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    void loadClasses();
+  }, [loadClasses]);
+
+  /** Retries the step that failed: the class list, or the assignments of the open class. */
+  const retry = () => (classrooms === null ? void loadClasses() : void fetchAssignments(selectedClassroom, currentPage, debouncedSearchQuery));
 
   const formatDate = (value: string, withTime: boolean) =>
     format.dateTime(new Date(value), withTime
@@ -266,7 +273,7 @@ export default function Assignments() {
           title={ta("loadError")}
           description={ta("loadErrorHint")}
           action={
-            <Button type="button" className={cn(TEACHER_ACTION, "px-6")} onClick={() => void fetchAssignments(selectedClassroom, currentPage, debouncedSearchQuery)}>
+            <Button type="button" className={cn(TEACHER_ACTION, "px-6")} onClick={retry}>
               {te("retry")}
             </Button>
           }

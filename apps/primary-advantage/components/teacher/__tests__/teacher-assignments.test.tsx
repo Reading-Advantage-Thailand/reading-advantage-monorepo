@@ -132,6 +132,23 @@ describe("teacher assignment list", () => {
     expect(screen.getByRole("link", { name: "Frogs" })).toBeInTheDocument();
   });
 
+  it("shows an error with a retry when the class list cannot load, not the no-classes state (review fix)", async () => {
+    let failClasses = 1;
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url === "/api/classroom") {
+        return failClasses-- > 0 ? new Response("{}", { status: 500 }) : new Response(JSON.stringify({ classrooms: classes }), { status: 200 });
+      }
+      return new Response(JSON.stringify(listResponse), { status: 200 });
+    });
+    renderWithMessages(<Assignments />);
+    await flush();
+    expect(screen.getByRole("alert")).toHaveTextContent(ta.loadError);
+    expect(screen.queryByText(ta.noClasses)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: en.Error.retry }));
+    await flush();
+    expect(screen.getByRole("link", { name: "Frogs" })).toBeInTheDocument();
+  });
+
   it("offers My Classes when the teacher has no class", async () => {
     classes = [];
     renderWithMessages(<Assignments />);
