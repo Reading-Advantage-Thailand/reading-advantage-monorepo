@@ -48,13 +48,14 @@ Other lanes request changes here and do not edit these files.
 - Not in Phase 1: the article-page and flashcard data bugs (Phase 2). Owner items: Google Classroom import, default locale `en`, email fields (labels only).
 
 ## Phase 2: Student
-- [ ] Phase 1 review fixes (run 2a, task 0)
+Run 2a (tasks 0-3) is done in `4ba0ab362`..`01fa69a03`. Run 2b owns the last item.
+- [x] Phase 1 review fixes (run 2a, task 0) — `4ba0ab362`
   - M1: one `--bottom-nav-h` token (`--bottom-nav-row` 3.5rem + `--safe-bottom`) sets the bottom bar height and the content bottom padding, lifts the go-to-top button (`lg:bottom-4`), and lifts toasts (`mobileOffset`, plus `--toast-offset-bottom` for 600-1023 px tablets; 24 px from 1024 px).
   - M2: `--font-sans` is Inter, then Noto Sans Thai.
   - M4: `@reading-advantage/ui/client` (tsup banner `"use client"`) serves `AnimatedCounter`; the root entry keeps every export from before Phase 1 plus the server-safe Phase 1 parts; `cardHoverClassName` is in `src/lib/card-hover.ts`. No other package component uses hooks (the Radix wrappers get `"use client"` from Radix).
   - M5: audio bar translation text is `text-primary-foreground` (`dark:text-primary`); the bar sits on top of the bottom nav below 1024 px.
   - L1 `viewport.viewportFit = "cover"`; L4 transitions name `translate`/`scale`/`box-shadow`; L5 `STUDENT_HOME` is in `lib/student-home.ts`; L6 not-found `main` without `overflow-hidden`, the phone menu closes on any link tap, `GoToTop` jumps without smooth scroll for reduced motion.
-- [ ] Student home (FR-4)
+- [x] Student home (FR-4) — `b1cfb2900` (gate fix `01fa69a03`)
   - Route `/student/home` (`app/[locale]/(student)/student/home`). `STUDENT_HOME = "/student/home"` (`lib/student-home.ts`) is the student role home in `lib/route-policies.ts` (`roleDefaultRedirects.student`, used by `proxy.ts` after sign-in), the Lane B sign-in redirect (`useEnterAfterSignIn`, password sign-in), the account-menu "Student dashboard" link, and the Home tab. Read stays `/student/read`.
   - Data: `getStudentHome` in `@reading-advantage/domain/primary-home` (own rows only, every query filters the signed-in student; tables reached through `tenantDb.unscoped`). XP, level, CEFR from `users`. Leaderboard: the existing `getSchoolLeaderboardController`; it left the shell (`AppLayout` has no leaderboard and no `disableLeaderboard` prop now). A leaderboard failure hides only the leaderboard.
   - Streak (decision): consecutive calendar days with any `user_activity` row in the last 366 days, ending today or yesterday (`countStreakDays`, moved from `lib/streak.ts` to the domain package; the flashcard dashboard uses the same function). Days use the server time zone (UTC on Cloud Run), not the student's. No stored streak.
@@ -62,13 +63,15 @@ Other lanes request changes here and do not edit these files.
   - Continue reading: the newest `ARTICLE_READ` activity whose article is not finished (finished = multiple-choice, short-answer, and long-answer all done in `article_activity_logs`). With none, an empty state links to `/student/read`.
   - Reedy meter: `components/student/reedy-meter-slot.tsx` renders nothing until Lane F fills it.
   - New package parts: `EmptyState` and `ErrorState` (root entry, server-safe).
-- [ ] Read list and article view
+  - The flashcard action imports `countStreakDays` from `@reading-advantage/domain/primary-home/streak` (`01fa69a03`). The `./primary-home` entry loads the tenant registry, which needs every table at import time.
+- [x] Read list and article view — `07526fcf8` (crash), `064c7f1c9` (redesign)
   - Crash (audit S2): `getQuestionsByArticleId` threw "No questions found" for an article without MC (or SA, LA) questions; the question cards are server components, so the throw reached the route error boundary and replaced the whole article. Fix: the loader returns `QuestionState.EMPTY` (new enum value) and the card shows a short note; `loadQuestions` turns any other load failure into the card ERROR state with a retry. A missing article throws `ArticleNotFoundError`, and the page shows a not-found state with a link back to the stories.
   - Read list: one level system for students (CEFR chip; the RA badge and the empty stars are gone), filter steps type, then genre, then topic (chosen steps are filled chips with `aria-current`, the next choices are outlined, 48 px), cards are white with the picture on top and a book fallback when the picture fails (the 403 black boxes), the title is a real link that covers the card, and "Study as a lesson" is a second link.
   - States: `loading.tsx` shimmer skeletons for the read list and the article; read-list empty state with "Show all" for a filter; load-more error with a retry; `error.tsx` for the read list and the article with a retry (`RouteError`: `router.refresh()` plus the boundary reset) and a back link. The student group error page links to the student home (was `/`).
   - Article view: CEFR chip and a "saved to flashcards" chip only when saved; the lesson link is a link (it was a button inside a link); the disclaimer is shorter and in en and th. `ArticleContent` (reader, audio, translation) is unchanged apart from M5.
   - Decision: the old `NEXT_NOT_FOUND` branch in the article `error.tsx` never ran (Next sends `notFound()` to not-found pages, not to `error.tsx`); it is replaced by the page-level not-found state, and its test is replaced.
-- [ ] Lesson flow shell (steps shown as a progress rail)
+  - Decision: the showcase card has no lesson toggle button now; the old toggle test in `components/__tests__/structural-alignment.test.ts` checks the two real links instead (`01fa69a03`). The `Article.showLessonOption`/`hideLessonOption` keys have no user now and stay for the Phase 4 i18n pass.
+- [x] Lesson flow shell (steps shown as a progress rail) — `dec9d6445`
   - `components/lesson/lesson-step-rail.tsx`: the open step ("Step 3 of 14: First Reading"), the timer (rendered once), a segmented `role="progressbar"`, and the full step list with `aria-current="step"`. It is the first element of the lesson grid, so at 375 px it sits above the task (audit: the rail was below "Start Lesson" and collapsed); the list opens with a 48 px toggle below 1280 px and is always open in the 1280 px sidebar.
   - States: shimmer while a step loads; a failed step save (start or next) shows an error with a retry below the task (before, it only logged); `lesson/[id]/loading.tsx` and `error.tsx` (`RouteError`); a lesson without an article shows a not-found state.
   - Look: the blue-purple gradients, the "Learning Mode" chip, and the gradient buttons are gone; the header uses `bg-brand-50` with the article title as the `h1`; the buttons are the brand primary and outline, 48 px. Task components (activity internals) are unchanged (non-goal); the audit's empty CEFR/RA badges and objectives in the introduction task stay for the teacher/lesson track.
