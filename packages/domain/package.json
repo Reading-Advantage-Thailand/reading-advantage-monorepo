@@ -32,6 +32,10 @@
       "types": "./dist/primary-home/index.d.ts",
       "import": "./dist/primary-home/index.js"
     },
+    "./primary-home/streak": {
+      "types": "./dist/primary-home/streak.d.ts",
+      "import": "./dist/primary-home/streak.js"
+    },
     "./students": {
       "types": "./dist/students/index.d.ts",
       "import": "./dist/students/index.js"

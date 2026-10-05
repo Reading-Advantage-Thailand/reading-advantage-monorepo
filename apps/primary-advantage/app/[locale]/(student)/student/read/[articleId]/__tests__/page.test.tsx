@@ -69,7 +69,7 @@ describe("article view", () => {
   });
 
   it("shows a not-found state with a way back when the article does not exist", async () => {
-    mocks.getArticleById.mockRejectedValue(new ArticleNotFoundError("Article not found"));
+    mocks.getArticleById.mockRejectedValue(new ArticleNotFoundError());
     render((await ArticleQuizPage({ params })) as React.ReactElement);
     expect(screen.getByRole("heading", { name: en.ReadList.notFound })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: en.ReadList.backToStories })).toHaveAttribute("href", "/student/read");
