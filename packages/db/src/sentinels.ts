@@ -599,4 +599,14 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       },
     ],
   },
+  "0065_primary_class_books": {
+    tag: "0065_primary_class_books",
+    kind: "all",
+    target: "primary_class_books.current_lesson",
+    allOf: [
+      { tag: "0065_primary_class_books", kind: "column", target: "primary_class_books.current_lesson" },
+      { tag: "0065_primary_class_books", kind: "column", target: "primary_book_lessons.package" },
+      { tag: "0065_primary_class_books", kind: "column", target: "primary_student_lesson_steps.app_step" },
+    ],
+  },
 };

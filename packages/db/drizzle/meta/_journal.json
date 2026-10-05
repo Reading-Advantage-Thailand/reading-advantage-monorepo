@@ -456,6 +456,13 @@
       "when": 1791129740168,
       "tag": "0064_primary_student_session_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1791184673375,
+      "tag": "0065_primary_class_books",
+      "breakpoints": true
     }
   ]
 }
