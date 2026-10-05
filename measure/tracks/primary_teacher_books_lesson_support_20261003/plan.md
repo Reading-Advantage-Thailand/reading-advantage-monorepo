@@ -9,14 +9,14 @@ Owner lane: D (data and server), lane E (teacher UI, after lane C ships the shel
 - [x] Write the data model (additive) and review it against the Tutor read test — seven `primary_` tables, no change to the four Tutor-read tables; new article rows only for packages without a mapped legacy article
 - Lane D+E runs in worktree `~/Desktop/rama-worktrees/lane-de` (branch `primary/lane-de-teacher-books`, from integration `3e4543100`). The Phase 2 teacher UI needs Lane C Phase 3 (`TeacherPageHeader`, `ClassBookSlot`), which is on `primary/lane-c-ux-rework` and not merged yet; this lane merges that branch in before Phase 2.
 
-## Phase 1: Catalogue and import
-- [ ] Migration for new tables
-- [ ] Importer from the lesson-package JSON, idempotent, with a dry-run report
-- [ ] Import Origins 2, Origins 3.1, Origins 3.2, Quest 4
-- [ ] Tutor read test after import
+## Phase 1: Catalogue and import — done 2026-10-05
+- [x] Migration for new tables — `fef53ecf1`: seven `primary_` tables, migration 0065, sentinel probe `0065_primary_class_books`, primary cloudbuild `--required-migration 0065_primary_class_books` (repo edit only, no deploy). Applied to the local `primary_advantage` database (66 migrations). Postgres truncates one FK constraint name (`primary_student_lesson_steps_class_book_id_primary_class_books_id_fk`, 69 chars) to 63 chars; a notice, no conflict.
+- [x] Importer from the lesson-package JSON, idempotent, with a dry-run report — `b97feed21`: `packages/domain/src/primary-books/` (`import.ts`, `mapping.ts`, `guides.ts`, `step-map.ts`, `package-schema.ts`), CLIs `pnpm --filter @reading-advantage/domain import-lesson-packages [--dry-run] <folder|file>` and `import-lesson-guides --workbooks <path> [--dry-run]`. 23 tests. The importer runs through `createTenantDB(db, {schoolId: null}).unscoped(...)` so the FR-6 tenant-coverage test passes.
+- [x] Import Origins 2, Origins 3.1, Origins 3.2, Quest 4 — local result: 2 series, 4 books, 56 lessons, 26 guide rows (13 en, 13 th). Origins 2, 3.1, and 3.2 packages carry legacy article ids, and the local `primary_legacy_id_map` is empty, so all 42 are `unmapped` (lesson rows without `article_id`). Quest 4 is draft: 14 `catalogue-only` rows. No new article rows were written. On the cutover database, the ETL fills the map and the same command links them.
+- [ ] Tutor read test after import — not run: `tutor-read-check` needs `--target` and `--reference` URLs and no legacy reference database is available on this machine. Migration 0065 only creates tables, so the four Tutor-read tables and the `tutor_compat` views are unchanged. Run it on the cutover rehearsal.
 
 ## Phase 2: Class books and pacing (tests first)
-- [ ] Domain use-cases (in `@reading-advantage/domain`, not the app): assign, pointer, taught
+- [x] Domain use-cases (in `@reading-advantage/domain`, not the app): assign, pointer, taught — `1e89de53e`: `class-books.ts` with `assignClassBook`, `listClassBooks`, `setCurrentLesson`, `markLessonTaught`, `markStepDone`, `getClassBookPacing`, `getStudentClassBooks`; permissions reuse `class:update` (manage) and `class:read`; owner or co-teacher of the class in the user's school. 21 tests.
 - [ ] Teacher UI: assign book, pacing view
 - [ ] Student home and book view show assigned lessons
 
