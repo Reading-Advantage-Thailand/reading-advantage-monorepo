@@ -37,5 +37,6 @@ ALTER TABLE "primary_avatar_loadout" ADD CONSTRAINT "primary_avatar_loadout_user
 ALTER TABLE "primary_avatar_loadout" ADD CONSTRAINT "primary_avatar_loadout_inventory_fk" FOREIGN KEY ("inventory_id") REFERENCES "public"."primary_avatar_inventory"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "primary_gp_ledger" ADD CONSTRAINT "primary_gp_ledger_school_id_schools_id_fk" FOREIGN KEY ("school_id") REFERENCES "public"."schools"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "primary_gp_ledger" ADD CONSTRAINT "primary_gp_ledger_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "primary_avatar_inventory_base_unique" ON "primary_avatar_inventory" USING btree ("school_id","user_id","item_id") WHERE "primary_avatar_inventory"."dye" is null;--> statement-breakpoint
 CREATE INDEX "primary_avatar_inventory_item_idx" ON "primary_avatar_inventory" USING btree ("item_id","acquired_at");--> statement-breakpoint
 CREATE INDEX "primary_gp_ledger_user_idx" ON "primary_gp_ledger" USING btree ("school_id","user_id","created_at");

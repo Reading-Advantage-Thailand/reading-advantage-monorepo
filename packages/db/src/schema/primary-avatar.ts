@@ -4,7 +4,8 @@
  * `avatar_profile` table of the Forge avatar plan under the program prefix; the semester-2 shop
  * adds the ledger, inventory, and loadout tables beside it. Additive; nothing Tutor reads changes.
  */
-import { pgTable, uuid, text, timestamp, jsonb, integer, primaryKey, unique, index, foreignKey } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { pgTable, uuid, text, timestamp, jsonb, integer, primaryKey, unique, uniqueIndex, index, foreignKey } from "drizzle-orm/pg-core";
 import { users, schools } from "./users.js";
 
 /** The avatar of a user: class, tints, and the pack version the choice was made against. */
@@ -59,7 +60,12 @@ export const primaryAvatarInventory = pgTable(
     catalogVersion: text("catalog_version").notNull(),
     acquiredAt: timestamp("acquired_at").defaultNow().notNull(),
   },
-  (t) => [unique("primary_avatar_inventory_item_unique").on(t.schoolId, t.userId, t.itemId, t.dye), index("primary_avatar_inventory_item_idx").on(t.itemId, t.acquiredAt)],
+  (t) => [
+    unique("primary_avatar_inventory_item_unique").on(t.schoolId, t.userId, t.itemId, t.dye),
+    // A unique constraint treats two NULL dyes as different rows: the undyed piece needs its own key.
+    uniqueIndex("primary_avatar_inventory_base_unique").on(t.schoolId, t.userId, t.itemId).where(sql`${t.dye} is null`),
+    index("primary_avatar_inventory_item_idx").on(t.itemId, t.acquiredAt),
+  ],
 );
 
 /** The worn piece of each slot of a student; the piece is an inventory row of the same student. */

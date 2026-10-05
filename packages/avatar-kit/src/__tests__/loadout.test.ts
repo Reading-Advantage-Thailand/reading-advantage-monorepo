@@ -47,6 +47,7 @@ describe("starter loadouts", () => {
   it("dyes a piece, dresses worn pieces, and gates tiers by level", () => {
     expect(itemDyes("rogue-hood")).toEqual(["teal", "crimson", "forest"]);
     expect(itemDyes("adventurer-sword")).toEqual([]);
+    expect(itemDyes("avatar-hair-long")).toEqual([]);
     expect(catalogItem("rogue-hood", "crimson").dyes).toEqual({ cloth: "crimson" });
     expect(() => catalogItem("rogue-hood", "gold")).toThrow("no dye 'gold' on 'rogue-hood'");
     const worn = wornLoadout([{ itemId: "rogue-hood", dye: "forest" }, { itemId: "boots", dye: null }], { skin: "tan" });

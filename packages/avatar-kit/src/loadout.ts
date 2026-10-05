@@ -34,8 +34,10 @@ export const tierLevel = (tier: number): number => TIER_LEVELS[tier] ?? 10;
  * @returns The option names, empty when the piece takes no dye.
  */
 export function itemDyes(id: string): string[] {
-  const table = AVATAR_CATALOG[id]?.table;
-  return table ? [...new Set(Object.values(table.slots).flatMap((s) => Object.keys(s.options)))] : [];
+  const item = AVATAR_CATALOG[id];
+  // A hair style's table is the hair color, which the student's tints set: no dye to buy.
+  if (!item?.table || item.slot === "hair") return [];
+  return [...new Set(Object.values(item.table.slots).flatMap((s) => Object.keys(s.options)))];
 }
 
 /**

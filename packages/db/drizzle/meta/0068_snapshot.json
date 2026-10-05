@@ -1,5 +1,5 @@
 {
-  "id": "69316bdf-6022-4fe8-97e9-3c750365403d",
+  "id": "05d4c3d1-4d2e-4e7b-858e-4c504f8882f0",
   "prevId": "2abd3ae6-7734-4661-aa4a-7478760bc95a",
   "version": "7",
   "dialect": "postgresql",
@@ -12132,6 +12132,34 @@
         }
       },
       "indexes": {
+        "primary_avatar_inventory_base_unique": {
+          "name": "primary_avatar_inventory_base_unique",
+          "columns": [
+            {
+              "expression": "school_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "item_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"primary_avatar_inventory\".\"dye\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "primary_avatar_inventory_item_idx": {
           "name": "primary_avatar_inventory_item_idx",
           "columns": [
