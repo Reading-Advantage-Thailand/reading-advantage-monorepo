@@ -113,6 +113,13 @@ ships the first piece at cutover: the `primary_avatar_profile` table, the starte
 with a color scheme, and the portrait package. See
 [the track](./tracks/primary_avatar_shop_20261005/).
 
+## Semester 2 track: primary_class_quest_20261005
+
+Created 2026-10-05 (Guild Mode in the Forge plan, Class Quest in the UI): a weekly quest from
+a fixed template list, power-ups from goals, and an 8-minute cooperative boss battle with a
+polling projector dashboard. Runs after `primary_avatar_shop_20261005`. See
+[the track](./tracks/primary_class_quest_20261005/).
+
 ## Semester 2 stub: primary_package_alignment
 
 Not part of the cutover. Items from the audit: move `server/models` and controllers
