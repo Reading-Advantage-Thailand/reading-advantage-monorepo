@@ -86,8 +86,8 @@ describe("student book view (teacher-books FR-4)", () => {
     const rows = within(screen.getByRole("list", { name: en.lessons })).getAllByRole("listitem");
     expect(rows).toHaveLength(5);
     expect(within(rows[0]).getByText(en.taught)).toBeInTheDocument();
-    expect(within(rows[0]).getByRole("link", { name: en.read })).toHaveAttribute("href", "/student/read/a1");
-    expect(within(rows[1]).getByRole("link", { name: en.read })).toHaveAttribute("href", "/student/read/a2");
+    expect(within(rows[0]).getByRole("link", { name: en.read })).toHaveAttribute("href", "/student/lesson/a1?type=article");
+    expect(within(rows[1]).getByRole("link", { name: en.read })).toHaveAttribute("href", "/student/lesson/a2?type=article");
     expect(rows[2]).toHaveAttribute("aria-current", "step");
     expect(within(rows[2]).getByText(en.current)).toBeInTheDocument();
     expect(within(rows[2]).queryByRole("link")).not.toBeInTheDocument();
@@ -100,13 +100,13 @@ describe("student book view (teacher-books FR-4)", () => {
     mocks.getStudentBook.mockResolvedValueOnce({ ...book, lesson: { ...book.lesson, unlockedAppSteps: [1, 2, 3] } });
     await renderBook();
     let rows = within(screen.getByRole("list", { name: en.lessons })).getAllByRole("listitem");
-    expect(within(rows[2]).getByRole("link", { name: en.read })).toHaveAttribute("href", "/student/read/a3");
+    expect(within(rows[2]).getByRole("link", { name: en.read })).toHaveAttribute("href", "/student/lesson/a3?type=article");
     expect(within(rows[3]).queryByRole("link")).not.toBeInTheDocument();
     cleanup();
     mocks.getStudentBook.mockResolvedValueOnce({ ...book, mode: "independent" });
     await renderBook();
     rows = within(screen.getByRole("list", { name: en.lessons })).getAllByRole("listitem");
-    expect(within(rows[3]).getByRole("link", { name: en.read })).toHaveAttribute("href", "/student/read/a4");
+    expect(within(rows[3]).getByRole("link", { name: en.read })).toHaveAttribute("href", "/student/lesson/a4?type=article");
     expect(within(rows[4]).queryByRole("link")).not.toBeInTheDocument();
   });
 

@@ -1586,6 +1586,7 @@
     }
   },
   "Lesson": {
+    "lockedStep": "Your teacher opens step {step} in class. Keep going with the steps that are open.",
     "rail": {
       "stepName": "Step {step} of {total}: {name}",
       "showSteps": "Show all steps",

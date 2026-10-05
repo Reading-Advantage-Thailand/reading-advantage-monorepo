@@ -75,7 +75,7 @@ export default async function StudentBookPage({ params }: { params: Params }) {
               {lesson.current ? <StatusChip tone="info">{t("current")}</StatusChip> : lesson.taught ? <StatusChip tone="success">{t("taught")}</StatusChip> : null}
             </div>
             {canRead(lesson) ? (
-              <Link href={`/student/read/${lesson.articleId}`} className={cn(buttonVariants({ variant: "default" }), "min-h-12 rounded-xl px-5 text-base", cardHoverClassName)}>
+              <Link href={`/student/lesson/${lesson.articleId}?type=article`} className={cn(buttonVariants({ variant: "default" }), "min-h-12 rounded-xl px-5 text-base", cardHoverClassName)}>
                 {t("read")}
               </Link>
             ) : (

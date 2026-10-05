@@ -4,6 +4,7 @@ import { redirect } from "@/i18n/navigation";
 import React from "react";
 import { getTranslations } from "next-intl/server";
 import { db, assignments, eq } from "@reading-advantage/db";
+import { getStudentClassBooks } from "@reading-advantage/domain/primary-books";
 
 export async function generateMetadata({
   params,
@@ -17,6 +18,24 @@ export async function generateMetadata({
     title: t("title"),
     description: t("description"),
   };
+}
+
+/**
+ * The workbook-first lock of the article (FR-4 rules): when the article is the current lesson
+ * of one of the student's teacher-led class books, the last app step the class has opened.
+ * Null when no class book locks the article or the read fails.
+ * @param user The signed-in student.
+ * @param articleId The article of the lesson.
+ * @returns The last open step, or null.
+ */
+async function maxUnlockedStepFor(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>, articleId: string): Promise<number | null> {
+  try {
+    const books = (await getStudentClassBooks({ db, user })).filter((book) => book.mode === "teacher_led" && book.lesson?.articleId === articleId);
+    if (!books.length) return null;
+    return Math.max(0, ...books.map((book) => Math.max(0, ...(book.lesson?.unlockedAppSteps ?? []))));
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -43,18 +62,23 @@ export default async function LessonPage({
 
   // If type is explicitly 'article', use standalone lesson
   if (lessonType === "article") {
-    return <LessonCard source="article" articleId={id} />;
+    return <LessonCard source="article" articleId={id} maxUnlockedStep={await maxUnlockedStepFor(user, id)} />;
   }
 
   // Otherwise, check if it's an assignment.
   // Drizzle equivalent of the legacy Prisma
   // `db.assignment.findUnique({ where: { id }, select: { id: true } })` call.
   const [assignment] = await db
-    .select({ id: assignments.id })
+    .select({ id: assignments.id, articleId: assignments.articleId })
     .from(assignments)
     .where(eq(assignments.id, id))
     .limit(1);
 
   // If it's an assignment, use the assignment-based lesson; otherwise treat the id as an article.
-  return assignment ? <LessonCard source="assignment" id={id} /> : <LessonCard source="article" articleId={id} />;
+  const maxUnlockedStep = await maxUnlockedStepFor(user, assignment?.articleId ?? id);
+  return assignment ? (
+    <LessonCard source="assignment" id={id} maxUnlockedStep={maxUnlockedStep} />
+  ) : (
+    <LessonCard source="article" articleId={id} maxUnlockedStep={maxUnlockedStep} />
+  );
 }

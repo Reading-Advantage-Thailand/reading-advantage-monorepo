@@ -44,9 +44,19 @@ function progressFor(task: number) {
   return { ok: true, json: async () => ({ userLessonProgress: { progress: Math.round((task / 14) * 100), timeSpent: 0 } }) };
 }
 
-/** Renders the lesson shell inside the quiz and message providers. */
-function renderShell() {
-  return renderWithMessages(withMessages(<QuizContextProvider><LessonProgressBar source="article" article={article} /></QuizContextProvider>, "en"));
+/**
+ * Renders the lesson shell inside the quiz and message providers.
+ * @param maxUnlockedStep The workbook-first lock, when the class book has one.
+ */
+function renderShell(maxUnlockedStep: number | null = null) {
+  return renderWithMessages(
+    withMessages(
+      <QuizContextProvider>
+        <LessonProgressBar source="article" article={article} maxUnlockedStep={maxUnlockedStep} />
+      </QuizContextProvider>,
+      "en",
+    ),
+  );
 }
 
 beforeEach(() => {
@@ -87,5 +97,25 @@ describe("lesson shell", () => {
     fireEvent.click(screen.getByRole("button", { name: testMessages.en.Error.retry }));
     expect(await screen.findByText("vocab-collection")).toBeInTheDocument();
     await waitFor(() => expect(screen.queryByRole("alert")).not.toBeInTheDocument());
+  });
+
+  it("keeps a step the class has not opened locked and says so (workbook first)", async () => {
+    fetchMock.mockResolvedValue(progressFor(3));
+    renderShell(3);
+    await screen.findByText("reading");
+    fireEvent.click(screen.getByRole("button", { name: en.actions.nextTask }));
+    expect(await screen.findByRole("status")).toHaveTextContent("Your teacher opens step 4 in class.");
+    expect(screen.getByText("reading")).toBeInTheDocument();
+    // only the initial progress read: no save was attempted
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("moves on when the class has opened the next step", async () => {
+    fetchMock.mockResolvedValueOnce(progressFor(3)).mockResolvedValueOnce({ ok: true });
+    renderShell(4);
+    await screen.findByText("reading");
+    fireEvent.click(screen.getByRole("button", { name: en.actions.nextTask }));
+    expect(await screen.findByText("vocab-collection")).toBeInTheDocument();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 });

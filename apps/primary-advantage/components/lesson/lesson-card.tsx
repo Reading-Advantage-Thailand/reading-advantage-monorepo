@@ -24,16 +24,20 @@ export type LessonCardSource = "assignment" | "article";
  * @param source Whether the lesson runs from an assignment or a standalone article.
  * @param id Assignment id for assignment lessons.
  * @param articleId Article id for article lessons.
+ * @param maxUnlockedStep The last step the class has opened (workbook-first lock).
  * @returns The lesson card.
  */
 export default async function LessonCard({
   source,
   id,
   articleId,
+  maxUnlockedStep = null,
 }: {
   source: LessonCardSource;
   id?: string;
   articleId?: string;
+  /** The last app step a teacher-led class has opened; null for no lock. */
+  maxUnlockedStep?: number | null;
 }) {
   const t = await getTranslations("Lesson");
   const assignment =
@@ -86,6 +90,7 @@ export default async function LessonCard({
           source={source}
           assignment={assignment as unknown as LessonAssignmentProps}
           article={standaloneArticle as unknown as Article}
+          maxUnlockedStep={maxUnlockedStep}
         />
       </QuizContextProvider>
     </div>

@@ -12,7 +12,7 @@ const mocks = vi.hoisted(() => ({ getAssignmentById: vi.fn(), getArticleForLesso
 
 vi.mock("@/server/models/assignmentModel", () => ({ default: mocks.getAssignmentById }));
 vi.mock("@/server/models/lessonModel", () => ({ getArticleForLesson: mocks.getArticleForLesson }));
-vi.mock("../lesson-progress-bar", () => ({ default: () => <div data-testid="lesson-flow" /> }));
+vi.mock("../lesson-progress-bar", () => ({ default: (props: { maxUnlockedStep?: number | null }) => <div data-testid="lesson-flow" data-max-step={String(props.maxUnlockedStep)} /> }));
 vi.mock("next-intl/server", async () => {
   const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
   return {
@@ -41,6 +41,12 @@ describe("LessonCard", () => {
     render((await LessonCard({ source: "article", articleId: "a1" })) as React.ReactElement);
     expect(screen.getByRole("heading", { level: 1, name: "The Moon" })).toBeInTheDocument();
     expect(screen.getByTestId("lesson-flow")).toBeInTheDocument();
+  });
+
+  it("passes the workbook-first lock to the lesson flow", async () => {
+    mocks.getArticleForLesson.mockResolvedValue({ id: "a1", title: "The Moon" });
+    render((await LessonCard({ source: "article", articleId: "a1", maxUnlockedStep: 4 })) as React.ReactElement);
+    expect(screen.getByTestId("lesson-flow")).toHaveAttribute("data-max-step", "4");
   });
 
   it("shows a not-found state with a way back when the lesson has no article", async () => {

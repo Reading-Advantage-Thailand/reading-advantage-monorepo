@@ -208,7 +208,7 @@ function ClassBookCard({ book, t }: { book: StudentClassBook; t: Awaited<ReturnT
         <>
           <p className="font-article text-xl font-bold">{t("classBookLesson", { number: lesson.number, title: lesson.title })}</p>
           {canRead ? (
-            <Link href={`/student/read/${lesson.articleId}`} className={cn(buttonVariants({ variant: "default" }), ACTION, "self-start", cardHoverClassName)}>
+            <Link href={`/student/lesson/${lesson.articleId}?type=article`} className={cn(buttonVariants({ variant: "default" }), ACTION, "self-start", cardHoverClassName)}>
               {t("readLesson")}
             </Link>
           ) : (

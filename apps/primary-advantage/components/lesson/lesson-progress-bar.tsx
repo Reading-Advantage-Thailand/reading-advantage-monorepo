@@ -70,6 +70,11 @@ export interface LessonProgressBarProps {
   source: LessonProgressSource;
   assignment?: LessonAssignmentProps | null;
   article?: Article | null;
+  /**
+   * The last app step the class has opened (the workbook-first lock of a teacher-led class
+   * book). Null or undefined: no lock.
+   */
+  maxUnlockedStep?: number | null;
 }
 
 export interface StandaloneLessonProps {
@@ -81,12 +86,14 @@ export interface StandaloneLessonProps {
  * @param source Whether the lesson runs from an assignment or a standalone article.
  * @param assignment Assignment carrying the article for assignment lessons.
  * @param articleProp Standalone article for article lessons.
+ * @param maxUnlockedStep The last step the class has opened; later steps stay locked.
  * @returns The lesson progress bar.
  */
 export default function LessonProgressBar({
   source,
   assignment,
   article: articleProp,
+  maxUnlockedStep = null,
 }: LessonProgressBarProps) {
   const t = useTranslations("Lesson");
   const tError = useTranslations("Error");
@@ -102,6 +109,8 @@ export default function LessonProgressBar({
   const [currentTask, setCurrentTask] = useState(1);
   // The step whose save failed ("start" for the first save), shown with a retry.
   const [saveError, setSaveError] = useState<"start" | number | null>(null);
+  // The step the student tried to open while the class had not reached it yet.
+  const [lockedStep, setLockedStep] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [nextPhaseContent, setNextPhaseContent] = useState<number | null>(null);
@@ -268,8 +277,15 @@ export default function LessonProgressBar({
       return;
     }
 
+    // Workbook first: a teacher-led class opens app steps as the class does the workbook steps.
+    if (maxUnlockedStep !== null && Task + 1 > maxUnlockedStep) {
+      setLockedStep(Task + 1);
+      return;
+    }
+
     try {
       setSaveError(null);
+      setLockedStep(null);
       setIsTransitioning(true);
       setPaused(true);
       const newTask = Task + 1;
@@ -527,6 +543,11 @@ export default function LessonProgressBar({
               {getTaskComponent(currentTask)}
             </div>
 
+            {lockedStep !== null ? (
+              <p role="status" className="bg-muted text-muted-foreground rounded-xl border px-4 py-3 text-sm">
+                {t("lockedStep", { step: lockedStep })}
+              </p>
+            ) : null}
             {saveError !== null ? (
               <ErrorState
                 className="bg-card border"

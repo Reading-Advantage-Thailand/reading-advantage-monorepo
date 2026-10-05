@@ -196,7 +196,7 @@ describe("student home class books (teacher-books FR-4)", () => {
     mocks.getStudentClassBooks.mockResolvedValueOnce([{ ...classBook, lesson: { ...classBook.lesson, unlockedAppSteps: [1, 2, 3] } }]);
     await renderHome();
     const card = screen.getByRole("region", { name: en.classBook });
-    expect(within(card).getByRole("link", { name: en.readLesson })).toHaveAttribute("href", "/student/read/a3");
+    expect(within(card).getByRole("link", { name: en.readLesson })).toHaveAttribute("href", "/student/lesson/a3?type=article");
   });
 
   it("says the next lesson is coming when the catalogue has no current lesson, and hides the card when the read fails", async () => {
