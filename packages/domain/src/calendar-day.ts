@@ -27,11 +27,20 @@ export function calendarDayKey(date: Date, timeZone: string = SCHOOL_TIME_ZONE):
 }
 
 /**
+ * Numbers a calendar date, so the difference of two numbers is a count of days.
+ * @param key The date as "YYYY-MM-DD".
+ * @returns The days from 1 January 1970 to that date.
+ */
+export function dayKeyNumber(key: string): number {
+  return Date.parse(`${key}T00:00:00Z`) / DAY_MS;
+}
+
+/**
  * Numbers the calendar days of a time zone, so the difference of two numbers is a count of days.
  * @param date The instant.
  * @param timeZone An IANA time zone name.
  * @returns The days from 1 January 1970 to the calendar date of the instant in that zone.
  */
 export function calendarDayNumber(date: Date, timeZone: string = SCHOOL_TIME_ZONE): number {
-  return Date.parse(`${calendarDayKey(date, timeZone)}T00:00:00Z`) / DAY_MS;
+  return dayKeyNumber(calendarDayKey(date, timeZone));
 }

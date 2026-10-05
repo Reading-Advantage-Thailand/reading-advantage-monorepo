@@ -3,8 +3,9 @@ import type { DB } from "@reading-advantage/db";
 import { articleActivityLogs, articles, assignments, studentAssignments, userActivity, users } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
+import { SCHOOL_TIME_ZONE } from "../calendar-day.js";
 import type { StudentHome } from "./contracts.js";
-import { countStreakDays } from "./streak.js";
+import { countStreakFromDays } from "./streak.js";
 
 /** Activity type that `getArticleActivity` writes when a student opens an article. */
 const ARTICLE_READ = "ARTICLE_READ";
@@ -13,6 +14,11 @@ const RECENT_READS = 20;
 /** Days of activity read for the streak. A longer streak shows as this number. */
 const STREAK_WINDOW_DAYS = 366;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+/**
+ * The calendar day of an activity row in the school time zone, as "YYYY-MM-DD". `created_at` is a
+ * timestamp without a zone that holds UTC, so it is read as UTC first.
+ */
+const ACTIVITY_DAY = sql<string>`to_char(date_trunc('day', (${userActivity.createdAt} AT TIME ZONE 'UTC') AT TIME ZONE ${sql.raw(`'${SCHOOL_TIME_ZONE}'`)}), 'YYYY-MM-DD')`;
 
 /**
  * Reads the Primary student home for the signed-in student: XP and level, the activity
@@ -65,8 +71,9 @@ export async function getStudentHome(params: { db: DB; user: UserContext; now?: 
       .where(and(eq(userActivity.userId, user.id), eq(userActivity.activityType, ARTICLE_READ)))
       .orderBy(desc(userActivity.updatedAt))
       .limit(RECENT_READS),
+    // One row per active day (not every activity row of the year).
     own
-      .select({ createdAt: userActivity.createdAt })
+      .selectDistinct({ day: ACTIVITY_DAY })
       .from(userActivity)
       .where(and(eq(userActivity.userId, user.id), gte(userActivity.createdAt, streakStart))),
   ]);
@@ -77,7 +84,7 @@ export async function getStudentHome(params: { db: DB; user: UserContext; now?: 
     xp: profile?.xp ?? user.xp,
     level: profile?.level ?? user.level,
     cefrLevel: profile?.cefrLevel ?? user.cefrLevel ?? null,
-    streakDays: countStreakDays(activityRows.map((row) => row.createdAt), now),
+    streakDays: countStreakFromDays(activityRows.map((row) => row.day), now),
     todayLesson: lesson
       ? { assignmentId: lesson.assignmentId, title: lesson.title, dueDate: lesson.dueDate, started: lesson.status === "IN_PROGRESS" }
       : null,
