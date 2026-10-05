@@ -21,10 +21,10 @@ Owner lane: D (data and server), lane E (teacher UI, after lane C ships the shel
 - [x] Student home and book view show assigned lessons — `68f29dcaf` + `d6e310069` (`listCatalogueBooks`, `getStudentBook`): the home shows one card per class book with the current lesson; the read link opens when workbook step 3 is marked done (or in independent mode); `/student/books/[classBookId]` lists every lesson, links taught and earlier lessons (read ahead), and the current lesson once step 3 is open.
 - Verification: domain 24 class-book tests; app 1138 tests pass (182 files). `userModel.activity.behavior.test.ts` hit its 10 s `beforeAll` timeout once under full-suite load and passes alone in 9 s. tsc and eslint clean for app and domain. No browser run yet (memory).
 
-## Phase 3: Progress
-- [ ] Step-level progress write path and the client hooks in the lesson flow
-- [ ] Class grid, student drill-down, CSV
-- [ ] Fidelity signals
+## Phase 3: Progress — done 2026-10-05
+- [x] Step-level progress write path and the client hooks in the lesson flow — `f98bb3649` (domain `recordLessonProgress`, `getClassBookProgress`, `getStudentLessonSteps`, `toProgressCsv`; 12 tests), `d590fd39c` (the standalone lesson POST and the assignment lesson POST derive the reached app step from the 14-step percent and write `primary_student_lesson_steps`; a failure never blocks the lesson), `6a533eb2c` (the lesson page passes the class's last open app step to the lesson flow, which refuses to move past it: the workbook-first lock; student links open the 14-step flow). No client hook was needed: the flow already posts every step change to those routes.
+- [x] Class grid, student drill-down, CSV — `90fd6be85`: `/teacher/class-roster/[classroomId]/books/[classBookId]/progress` (filters late, stuck = no activity for 7 days, not started; cell click-through), `/progress/[studentId]` (14 steps per lesson with minutes), `GET /api/class-books/[classBookId]/progress` (CSV attachment, 403 for other teachers).
+- [x] Fidelity signals — the grid, the drill-down, and the CSV carry `openedBeforeTaught` (the student's first app step on the lesson is earlier than the class's taught time, or the class has not taught it). The second FR-7 signal (writing submitted after the draft step) has no data: workbook step 11 Guided Writing has no app step and the app stores no writing submission. Left out; noted for the spec owner.
 
 ## Phase 4: Lesson support
 - [ ] Guide content import (en, th) and the guide page
