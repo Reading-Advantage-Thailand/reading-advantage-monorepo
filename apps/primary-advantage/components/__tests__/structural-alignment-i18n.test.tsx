@@ -171,7 +171,6 @@ import { TeacherSignInForm } from "../auth/teacher-signin-form";
 import { Footer } from "../index/footer";
 import { EditLicenseForm } from "../system/edit-license-form";
 import { CreateSchoolForm } from "../system/create-school-form";
-import TeacherDashboard from "../../app/[locale]/teacher/dashboard/page";
 import LessonPage from "../../app/[locale]/(student)/student/lesson/[id]/page";
 import UserProfilePage from "../../app/[locale]/(student)/settings/user-profile/page";
 import ReadPage from "../../app/[locale]/(student)/student/read/[articleId]/page";
@@ -429,7 +428,7 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
       name: "Class challenges",
     });
     expect(challengesLink).toHaveAttribute("data-test-id", "i18n-link");
-    expect(challengesLink).toHaveAttribute("href", "../game-challenges");
+    expect(challengesLink).toHaveAttribute("href", "/teacher/game-challenges");
     cleanup();
 
     mocks.getCurrentUser.mockResolvedValue({
@@ -477,14 +476,6 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
       "href",
       "/th",
     );
-  });
-});
-
-describe("FR-5 teacher dashboard placeholder", () => {
-  it("redirects to the classroom list", async () => {
-    await expect(
-      TeacherDashboard({ params: Promise.resolve({ locale: "tw" }) }),
-    ).rejects.toThrow("redirect:tw:/teacher/my-classes");
   });
 });
 

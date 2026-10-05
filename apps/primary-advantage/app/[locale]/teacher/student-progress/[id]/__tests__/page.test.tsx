@@ -1,7 +1,11 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, screen } from "@testing-library/react";
+import type { ReactElement, ReactNode } from "react";
+import { createTranslator } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { renderWithMessages, testMessages, type TestLocale } from "@/components/__tests__/helpers/render-with-messages";
 
 const mocks = vi.hoisted(() => ({
   currentUser: vi.fn(),
@@ -19,8 +23,20 @@ vi.mock("@/server/models/userModel", () => ({
 vi.mock("@/server/controllers/userController", () => ({
   fetchUserActivity: mocks.fetchUserActivity,
 }));
-vi.mock("next-intl/server", () => ({
-  getTranslations: () => Promise.resolve((key: string) => key),
+vi.mock("next-intl/server", async () => {
+  const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
+  return {
+    getTranslations: async (namespace?: string) =>
+      createTranslator({ locale: "en", messages: messages["en" as TestLocale], namespace: namespace as never }),
+  };
+});
+vi.mock("@/i18n/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn(), push: vi.fn() }),
+  Link: ({ children, href, ...rest }: { children?: ReactNode; href: string }) => (
+    <a href={href} {...rest}>
+      {children}
+    </a>
+  ),
 }));
 // The page composes dashboard charts; stub them to prove the data flow only.
 vi.mock("@/components/header", () => ({
@@ -55,14 +71,21 @@ import StudentProgressPage from "../page";
  */
 function invokePage(
   viewer: { id: string; role: string; schoolId: string | null } | null,
-  target: { id: string; schoolId: string | null } | null,
+  target: { id: string; schoolId: string | null; name?: string | null; username?: string } | null,
+  query: { classroomId?: string } = {},
 ) {
   mocks.currentUser.mockResolvedValue(viewer);
   mocks.getUserById.mockResolvedValue(target);
   return StudentProgressPage({
     params: Promise.resolve({ id: target?.id ?? "student-1" }),
+    searchParams: Promise.resolve(query),
   });
 }
+
+/** Renders a server page element with the English messages (the retry button is a client part). */
+const render = (ui: ReactElement) => renderWithMessages(ui);
+const ts = testMessages.en.TeacherStudents;
+const sameSchoolTeacher = { id: "teacher-1", role: "TEACHER", schoolId: "school-a" };
 
 const crossSchoolViewer = {
   id: "teacher-2",
@@ -150,5 +173,26 @@ describe("teacher student-progress page ownership", () => {
     expect(
       screen.getByRole("heading", { name: "Progress for sam" }),
     ).toBeInTheDocument();
+  });
+
+  it("links back to the reports, or to the class when the class page opened it", async () => {
+    mocks.fetchUserActivity.mockResolvedValue({ activity: [], xpLogs: [], user: { name: "Sam Student", username: "sam", cefrLevel: "A1" } });
+    render(await invokePage(sameSchoolTeacher, { id: "student-1", schoolId: "school-a" }));
+    expect(screen.getByRole("link", { name: ts.backToReports })).toHaveAttribute("href", "/teacher/reports");
+    cleanup();
+
+    render(await invokePage(sameSchoolTeacher, { id: "student-1", schoolId: "school-a" }, { classroomId: "c1" }));
+    const back = screen.getByRole("link", { name: ts.backToClass });
+    expect(back).toHaveAttribute("href", "/teacher/class-roster/c1");
+    expect(back).toHaveClass("min-h-11");
+  });
+
+  it("shows an error with a retry, not the sign-in error, when the activity cannot load", async () => {
+    mocks.fetchUserActivity.mockResolvedValue(undefined);
+    render(await invokePage(sameSchoolTeacher, { id: "student-1", schoolId: "school-a", name: "Sam Student", username: "sam" }));
+    expect(screen.getByRole("heading", { level: 1, name: "Progress for Sam Student" })).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent(ts.activityLoadError);
+    expect(screen.getByRole("button", { name: testMessages.en.Error.retry })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Authentication Error" })).not.toBeInTheDocument();
   });
 });

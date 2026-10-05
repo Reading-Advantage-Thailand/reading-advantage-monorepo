@@ -1,20 +1,12 @@
-import React from "react";
 import EnhancedClassRoster from "@/components/teacher/enhanced-class-roster";
-import { ClassLoginPanel } from "@/components/teacher/class-login/class-login-panel";
-import { getTranslations } from "next-intl/server";
 
-export default async function ClassroomDetailPage({
-  params,
-}: {
-  params: Promise<{ classroomId: string }>;
-}) {
+/**
+ * Teacher class page: the class heading, the class sign-in card, one student list (live roster
+ * with the roster management actions), and the class book slot.
+ * @param props.params The route params with the class id.
+ * @returns The class page.
+ */
+export default async function ClassroomDetailPage({ params }: { params: Promise<{ classroomId: string }> }) {
   const { classroomId } = await params;
-  // Keep available for future header usage if needed
-  await getTranslations("Teacher.EnhancedClassRoster");
-  return (
-    <div className="space-y-6">
-      <ClassLoginPanel classroomId={classroomId} />
-      <EnhancedClassRoster />
-    </div>
-  );
+  return <EnhancedClassRoster classroomId={classroomId} />;
 }

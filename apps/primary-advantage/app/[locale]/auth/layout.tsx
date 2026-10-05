@@ -3,7 +3,14 @@ import Image from "next/image";
 import { siteConfig } from "@/configs/site-config";
 import { Link } from "@/i18n/navigation";
 import { Icons } from "@/components/icons";
+import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 
+/**
+ * Layout of the sign-in screens: the picture column on large screens, the language menu, and
+ * the form.
+ * @param props.children The sign-in page.
+ * @returns The layout.
+ */
 export default function AuthLayout({
   children,
 }: {
@@ -35,7 +42,11 @@ export default function AuthLayout({
               <p className="text-lg drop-shadow-lg">{siteConfig.description}</p>
             </div>
           </div>
-          <div className="flex w-full items-center justify-center">
+          <div className="relative flex w-full items-center justify-center">
+            {/* The language menu on the sign-in screens (FR-8; audit C12: there was none). */}
+            <div className="absolute top-3 right-3">
+              <LocaleSwitcher />
+            </div>
             {children}
           </div>
         </div>

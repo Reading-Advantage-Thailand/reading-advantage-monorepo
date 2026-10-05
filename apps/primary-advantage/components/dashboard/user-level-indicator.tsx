@@ -36,13 +36,22 @@ const GAUGE_COLORS = ["#bbf7d2", "#047d36"];
 
 /**
  * The student's CEFR level on a gauge, with a text about what the student can do at that level.
- * A level without a text (not on the gauge) shows the level only.
+ * A level without a text (not on the gauge) shows the level only. A teacher sees "Level: A1"
+ * without the can-do text, because that text speaks to the student ("You can ...").
  * @param props.currentLevel The CEFR level, for example "A1-".
+ * @param props.audience Who reads the card: the student (default) or a teacher.
  * @returns The level card.
  */
-export default function CEFRLevels({ currentLevel }: { currentLevel: string }) {
+export default function CEFRLevels({
+  currentLevel,
+  audience = "student",
+}: {
+  currentLevel: string;
+  audience?: "student" | "teacher";
+}) {
   const td = useTranslations("Reports.level.description");
   const t = useTranslations("Reports.level");
+  const tt = useTranslations("TeacherStudents");
   const position = Math.max(0, CEFR_GAUGE_LEVELS.indexOf(currentLevel as (typeof CEFR_GAUGE_LEVELS)[number]));
 
   return (
@@ -79,9 +88,9 @@ export default function CEFRLevels({ currentLevel }: { currentLevel: string }) {
         />
 
         <div className="text-center text-xl font-bold">
-          {t("yourlevel")} : {currentLevel}
+          {audience === "teacher" ? tt("studentLevel", { level: currentLevel }) : `${t("yourlevel")} : ${currentLevel}`}
         </div>
-        {td.has(currentLevel) ? <p className="mt-2 text-center">{td(currentLevel)}</p> : null}
+        {audience === "student" && td.has(currentLevel) ? <p className="mt-2 text-center">{td(currentLevel)}</p> : null}
       </CardContent>
     </Card>
   );

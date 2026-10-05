@@ -171,10 +171,8 @@ describe("FR-8 header spelling", () => {
     ).toBeInTheDocument();
     expect(await screen.findByText("Ann")).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("captoliza");
-    expect(
-      document.body.querySelector(".capitalize"),
-      "cells use the correctly spelled capitalize class",
-    ).not.toBeNull();
+    // Lane C Phase 3 (audit T3): names and usernames show as stored (no CSS capitalize).
+    expect(document.body.querySelector(".capitalize")).toBeNull();
   });
 
   it("renders the classes table with translated copy and correct classes", async () => {
@@ -188,7 +186,6 @@ describe("FR-8 header spelling", () => {
             classCode: "ABC123",
             grade: "1",
             students: [],
-            importedFromGoogle: false,
           },
         ],
       }),
@@ -201,10 +198,8 @@ describe("FR-8 header spelling", () => {
     ).toBeInTheDocument();
     expect(await screen.findByText("Class One")).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("captoliza");
-    expect(
-      document.body.querySelector(".capitalize"),
-      "cells use the correctly spelled capitalize class",
-    ).not.toBeNull();
+    // Lane C Phase 3: class names and codes show as stored (no CSS capitalize).
+    expect(screen.getByText("ABC123")).not.toHaveClass("capitalize");
   });
 
   it("renders the history list with translated copy", async () => {

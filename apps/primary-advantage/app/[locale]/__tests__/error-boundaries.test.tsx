@@ -67,7 +67,8 @@ describe("route-group error boundaries", () => {
   const boundaries = [
     // A signed-in student goes back to the student home, not the marketing page.
     { name: "student", Component: StudentError, home: "/student/home" },
-    { name: "teacher", Component: TeacherError, home: "/" },
+    // A teacher goes back to the teacher dashboard (Lane C Phase 3).
+    { name: "teacher", Component: TeacherError, home: "/teacher/dashboard" },
   ] as const;
 
   for (const { name, Component, home } of boundaries) {

@@ -8,7 +8,7 @@ Primary Advantage transforms the powerful Reading Advantage language learning pl
 
 Primary Advantage helps elementary students build strong literacy foundations through:
 
-- **Child-Friendly UI** with colorful, intuitive navigation and character mascots
+- **Child-Friendly UI** with colorful, intuitive navigation
 - **Engaging Gamification** that makes reading practice feel like play
 - **AI-Powered Support** providing personalized guidance and recommendations
 - **Classroom Integration** with simplified tools for primary educators
@@ -18,31 +18,30 @@ Primary Advantage helps elementary students build strong literacy foundations th
 
 ### For Young Readers
 
-- **Simplified, Colorful Interface** with the Quicksand font for maximum readability
+- **Simplified, Colorful Interface** with a Thai-first font stack and the Quicksand font for stories
 - **Interactive Read-Along** with highlighted text and clear audio narration
 - **Kid-Friendly Dictionary** with age-appropriate definitions
-- **Character Guide Mascots** that accompany students through their reading journey
-- **Digital Sticker Collection** to reward reading achievements
+- **Character Guide Mascots** (planned) to accompany students through their reading journey
+- **XP, levels, and a leaderboard** to reward reading achievements
 - **Gamified Comprehension Quizzes** with animated rewards and feedback
-- **Interactive Story Adventures** that respond to reader choices
+- **Word and sentence games** built on the reading content
 
 ### For Teachers
 
 - **Simplified Class Management** optimized for primary school educators
 - **Visual Student Progress Tracking** with intuitive, graphical reports
 - **Easy Assignment Distribution** through a teacher-friendly interface
-- **Reading Group Organization** tools for differentiated instruction
-- **Printable Achievement Certificates** for classroom recognition
-- **Quick-Start Lesson Templates** for efficient classroom implementation
+- **Class sign-in tools**: class codes, picture passwords, and printable QR cards
+- **Printable Achievement Certificates** (planned) for classroom recognition
+- **Lesson flow** that turns any story into a guided lesson with steps
 
 ### For Schools
 
 - **Touch-Optimized Interface** designed for tablets and interactive whiteboards
-- **Cross-Device Synchronization** for school and home use
+- **One account on every device** for school and home use
 - **School-Wide Literacy Metrics** for tracking program effectiveness
 - **Quick-Launch Access** with picture-based or QR code logins
-- **Compatibility** with common primary LMS platforms
-- **Offline Reading Mode** for limited connectivity settings
+- **Offline Reading Mode** (planned) for limited connectivity settings
 
 ## 📚 Educational Benefits
 
@@ -61,18 +60,22 @@ Our platform leverages artificial intelligence to provide:
 
 - **Age-Appropriate Content Generation** aligned with grade level standards
 - **Personalized Reading Recommendations** based on interests and ability
-- **Friendly Reading Assistant** to help with difficult words and concepts
-- **Simple Writing Guidance** for early composition skills
-- **Pronunciation Support** for developing readers
+- **Word and sentence translation** to help with difficult words
+- **Writing feedback** on short and long answers
+- **Audio narration** for developing readers
 - **Dynamic Difficulty Adjustment** that grows with each student
 
 ## 📱 Technical Highlights
 
 Primary Advantage maintains the same technical architecture as Reading Advantage:
 - **Platform**: Next.js for full-stack development
-- **Authentication**: Simplified Firebase integration with classroom tools
+- **Authentication**: Username and password sessions, with class codes, picture passwords, and QR cards for students
 - **Hosting**: Google Cloud Platform
 - **Device Compatibility**: Optimized for iPads, Chromebooks, and interactive whiteboards
+
+## 🧭 Planned
+
+Items marked (planned) above have no code yet: character mascots, printable certificates, and an offline reading mode.
 
 ## 🌈 Join Our Reading Adventure!
 

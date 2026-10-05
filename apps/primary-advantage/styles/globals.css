@@ -9,8 +9,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Inter first: it has no Thai glyphs, so Thai text falls through to Noto Sans Thai. */
-  --font-sans: var(--font-inter), var(--font-noto-thai), "Leelawadee UI", Tahoma,
+  /* Noto Sans Thai first (owner decision 2026-10-05): it loads only the Thai subset, so Latin
+     text falls through to Inter. */
+  --font-sans: var(--font-noto-thai), var(--font-inter), "Leelawadee UI", Tahoma,
     ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-article: var(--font-quicksand), var(--font-noto-thai), ui-sans-serif,

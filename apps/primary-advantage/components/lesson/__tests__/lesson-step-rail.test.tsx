@@ -2,15 +2,21 @@
 /** Lesson step rail (audit S3): visible at the top on phones, all steps on demand, current step marked. */
 import "@testing-library/jest-dom/vitest";
 import { cleanup, fireEvent, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithMessages, testMessages } from "@/components/__tests__/helpers/render-with-messages";
+const sound = vi.hoisted(() => ({ play: vi.fn() }));
+vi.mock("@/hooks/use-sound", () => ({ useSound: () => ({ muted: false, setMuted: vi.fn(), play: sound.play }) }));
+
+import { renderWithMessages, testMessages, withMessages } from "@/components/__tests__/helpers/render-with-messages";
 import { LessonStepRail } from "../lesson-step-rail";
 
 const steps = ["Introduction", "Preview Vocabulary", "First Reading", "Deep Reading"];
 const en = testMessages.en.Lesson;
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  sound.play.mockClear();
+});
 
 describe("LessonStepRail", () => {
   it("says which step is open and shows progress as a progress bar", () => {
@@ -39,5 +45,13 @@ describe("LessonStepRail", () => {
   it("shows the timer once when given", () => {
     renderWithMessages(<LessonStepRail steps={steps} current={2} timer={<span>0m 5s</span>} />);
     expect(screen.getAllByText("0m 5s")).toHaveLength(1);
+  });
+
+  it("plays the step-change sound when the lesson moves to another step, not on the first render (FR-9)", () => {
+    const { rerender } = renderWithMessages(<LessonStepRail steps={steps} current={1} />);
+    expect(sound.play).not.toHaveBeenCalled();
+    rerender(withMessages(<LessonStepRail steps={steps} current={2} />));
+    expect(sound.play).toHaveBeenCalledWith("phaseChange");
+    expect(sound.play).toHaveBeenCalledTimes(1);
   });
 });

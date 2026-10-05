@@ -108,6 +108,12 @@ vi.mock("../teacher/student-cefr-level-setter", () => ({
   default: () => null,
 }));
 
+// The class page puts its rows on the Lane B live roster (own tests). Here the live roster
+// is not loaded, so the page shows its fallback list with the same row parts.
+vi.mock("../teacher/class-login/class-login-panel", () => ({
+  ClassLoginPanel: ({ rosterFallback }: { rosterFallback?: React.ReactNode }) => <>{rosterFallback}</>,
+}));
+
 vi.mock("../teacher/class-code-generator", () => ({
   __esModule: true,
   default: () => null,
@@ -325,7 +331,8 @@ describe("FR-9 teacher assignments table", () => {
       json: async () => ({ classrooms: [] }),
     });
     renderWithMessages(<Assignments />);
-    await screen.findByText(en.Teacher.Assignments.empty.selectClassroom);
+    // A teacher without a class is sent to My Classes (Lane C Phase 3).
+    await screen.findByText(en.TeacherAssignments.noClasses);
     cleanup();
 
     const rows = [

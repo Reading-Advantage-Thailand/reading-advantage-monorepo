@@ -447,7 +447,7 @@ describe("FR-4 game results expose aria-live", () => {
 });
 
 describe("FR-4 clickable elements are keyboard-reachable", () => {
-  it("opens classroom cards by keyboard", async () => {
+  it("opens classroom cards by keyboard (a native link: Tab and Enter work)", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -467,13 +467,12 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     );
     try {
       renderWithMessages(<ClassroomSelector />);
+      // Lane C Phase 3: the class name is a real link (keyboard and new tab work).
       const card = await screen.findByRole("link", { name: "Class One" });
-      expect(card).toHaveAttribute("tabindex", "0");
-
+      expect(card.tagName).toBe("A");
+      expect(card).toHaveAttribute("href", "/teacher/class-roster/c1");
       card.focus();
-      fireEvent.keyDown(document.activeElement!, { key: "Enter" });
-
-      expect(mocks.push).toHaveBeenCalledWith("/teacher/class-roster/c1");
+      expect(card).toHaveFocus();
     } finally {
       vi.unstubAllGlobals();
     }
@@ -606,7 +605,9 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     const studentRow = await screen.findByRole("button", {
       name: "Somchai",
     });
-    fireEvent.keyDown(studentRow, { key: "Enter" });
+    // A native button: Enter and Space activate it in the browser (jsdom sends only the click).
+    expect(studentRow.tagName).toBe("BUTTON");
+    fireEvent.click(studentRow);
     expect(
       await screen.findByRole("heading", { name: "Somchai" }),
     ).toBeInTheDocument();

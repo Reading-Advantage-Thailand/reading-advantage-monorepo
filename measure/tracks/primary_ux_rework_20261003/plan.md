@@ -2,6 +2,12 @@
 
 Owner lane: C. Edits to `globals.css`, nav, and `packages/ui` belong to this lane only.
 Other lanes request changes here and do not edit these files.
+From 2026-10-05 the reader (`components/articles`), `audio-button.tsx`, `hooks/useAudioSegment.ts`,
+`components/flashcards`, `components/practice`, `actions/flashcard.ts`, and `components/lesson/task`
+belong to Lane G (`primary_core_interaction_quality_20261005`). Lane C Phase 4 requests changes
+there (i18n keys, states) instead of editing. `lesson-step-rail.tsx` and `lesson-progress-bar.tsx`
+stay with Lane C. The Phase 2 open items on the flashcard streak, "cards studied today", the deck
+toasts, and the play-kit panel text move to Lane G.
 
 ## Phase 0: Screen inventory and audit (2 h) — done in `7d4905521`
 - [x] List every route with a screenshot at 375/768/1280 (agents, vision review) — 50 routes in `measure/qa/browser-2026-10-05/phase0/inventory.json`; PNGs kept out of Git
@@ -96,16 +102,50 @@ Run 2a (tasks 0-3) is done in `4ba0ab362`..`01fa69a03`. Run 2b owns the last ite
 - Open: the teacher per-student view shows nothing when the activity request fails (Phase 4 states); the flashcard "cards studied today" stat still counts from server midnight (UTC), and the flashcard streak query still reads every activity row of the year; `components/teacher/assignments.tsx` writes `createdAt` with `toLocaleString()` and no zone (Phase 3 redesign).
 
 ## Phase 3: Teacher
-- [ ] Shell and dashboard
-- [ ] My-classes, roster, assignments, reports, student-progress layouts
+- [x] Owner decisions of 2026-10-05 (spec "Owner decisions", FR-1, FR-8, FR-12) — `41da1e37b`: Noto Sans Thai first in `--font-sans` (reverses M2), `defaultLocale: "th"`, Google Classroom import and the unused Google icons, copy, and asset removed.
+- [x] Shell and dashboard — `a65d73cae`: teacher dashboard (`getTeacherHome` in `@reading-advantage/domain/primary-home`): classes and roster counts (own and co-taught, not archived), open assignments with done/assigned counts and a Bangkok-day due chip, "who needs help" (overdue work, no activity, or 7+ days since the last `user_activity`), a "Start class" link per class to the class page `#class-login` (no copy of the Lane B logic), and an empty Class book slot.
+- [x] My-classes, roster, assignments, reports, student-progress layouts — `76720221c` (my-classes and roster; the Lane B live roster is the only student list on the class page, with the management parts in each row and a fallback list if the live roster fails; class sheet, QR cards, and enrollment restyled), `2a1c6247f` (teacher assignments: due chips incl. "No due date", Bangkok created date, states; "Late" is "Overdue" everywhere), `4bf53279b` (reports, student progress, my-students, game-challenges: labelled pickers, error states with retry), `571670430` (test fix).
+- Phase 3 decisions: the reports "Active this week" tile is removed (the data had no last-activity field, so it always showed 0%); the student-progress back link goes to the class when the class page adds `?classroomId=`, otherwise to the reports; the game-challenges form gets a frame in Primary only (the play-kit panel and its English text belong to Lane G). Lane D+E slot: `ClassBookSlot` (`data-class-book-slot`) on the dashboard and on each class page.
+- Phase 3 open items: game-challenges has no sidebar link (it opens from My Classes); the privacy policy still names the Google Workspace APIs (legal text, owner review).
+- [x] Phase 3 review (2026-10-05, a separate session; [review-phase3.md](review-phase3.md)): no Critical or High finding. Two Medium findings fixed in `52ba1d908`: the sidebar "Student progress" link opened a 404 page (item removed; a config test checks every teacher href has a page), and the assignments screen showed "no classes" when the class list failed to load (now an error with a retry). Low findings go to Phase 4. Full Primary suite on 4bf53279b in 3 shards: 1097 passed, 2 failed (one fixed in `571670430`, one PGlite hook timeout under load in `userModel.activity.behavior.test.ts` that passes with a longer timeout); tsc exit 0.
 
-## Phase 4: Quality
-- [ ] States: loading, empty, error on every screen
-- [ ] Accessibility pass with axe and a keyboard walk-through
-- [ ] i18n keys and the locale toggle
-- [ ] Sound set and mute
-- [ ] README cleanup
+## Phase 4: Quality — `52ba1d908`..`27a489c31` (2026-10-05)
+- [x] States: loading, empty, error on every screen — Phases 2-3 cover the student and teacher
+  screens inside their components; `c6df077f7` adds `loading.tsx` for the two server-rendered
+  teacher pages (reports, student progress). Admin and system screens wait for the owner
+  decision (shell only or not). Review Low items left for Lane G or a later pass: the "Archive"
+  menu item with no handler, the silent failures in the assignment student removal and the
+  my-students reset (see review-phase3.md).
+- [x] Accessibility pass with axe — `c6df077f7`: `components/__tests__/axe-screens.test.tsx` runs
+  axe-core 4.12.1 in jsdom over the shared teacher and lesson parts (0 serious violations;
+  color contrast is checked in the browser sweep). The keyboard walk-through is part of the gate
+  sweep below (needs a browser).
+- [x] i18n keys and the locale toggle — `c5b752348`: enrollment page, unenroll dialogs, and the
+  assign toast read the message files; the sign-in screens get the language menu (audit C12).
+  The five message files have the same key set (checked by script). The Chinese depth problem of
+  FR-8 is not present any more (0 type mismatches en vs cn).
+- [x] Sound set and mute — `449714ee9`: `lib/sounds.ts` (Tutor synth set), `hooks/use-sound.tsx`
+  (`SoundProvider` in the shell, mute per student in localStorage), `SoundToggle` in the header,
+  and the step-change sound in the lesson rail. Request to Lane G: play `correct`/`incorrect` in
+  the quiz and flashcard feedback and `celebration` on a finished lesson (`useSound().play`).
+- [x] README cleanup — `27a489c31`.
 
 ## Gates
-- [ ] Vision QA sweep at three widths, no Critical/High
-- [ ] Visual baselines recorded
+- [ ] Vision QA sweep at three widths, no Critical/High. The 768 px width needs real evidence:
+  the Phase 0 audit looked at 768 for one route only (FR-10).
+- [ ] Visual baselines recorded — tool: Playwright screenshots (`toHaveScreenshot` in a spec under `apps/primary-advantage/tests/e2e`, `@playwright/test` 1.61.0; owner decision 2026-10-05)
+
+### Review notes (2026-10-05, review session, no code changes)
+- Lane C forked from integration after the Lane B merge (`490707f12`), so it contains A, B, and
+  M Phase 1. A merge to integration has no file conflicts today. Nothing from Lane C is in
+  integration yet; the program progress table still says "C: Not started". The coordinator
+  updates `measure/tracks.md`, this track's `metadata.json` (`status: planned` is stale), and the
+  program table at merge time.
+- The student home "today's lesson" card and the Reedy meter slot, and the teacher dashboard
+  class-book slot, stay empty until Lanes D+E and F ship. Neither lane has a branch on 2026-10-05.
+- Not in any phase today: the sign-in look (audit rank 1; Lane B changed copy and tap targets
+  only) and the profile "Me" tab (audit rank 10). Gap list V9 (mascot art in empty states) and
+  V10 (game readability inside the green shell; `/teacher/game-challenges` is still navy and
+  cyan) are not in the spec. All wait for an owner decision (spec "Owner decisions").
+- FR-2 moved 6 of 33 local UI files; 27 stay local because their API differs. The rest belongs
+  to the semester-2 `primary_package_alignment` track.

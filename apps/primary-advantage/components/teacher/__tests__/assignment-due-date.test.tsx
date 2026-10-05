@@ -28,6 +28,8 @@ import Assignments from "../assignments";
 import { renderWithMessages, testMessages } from "../../__tests__/helpers/render-with-messages";
 
 const t = testMessages.en.Teacher;
+/** The due chip on the assignment page (shared with the teacher list and dashboard). */
+const dueToday = testMessages.en.TeacherUi.due.today;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -147,10 +149,10 @@ describe("teacher assignment page on and after the due day", () => {
 
     expect(await screen.findByText("Quiz 1")).toBeInTheDocument();
     if (expected === "today") {
-      expect(screen.getByText(t.AssignmentDashboard.dueToday)).toBeInTheDocument();
+      expect(screen.getByText(dueToday)).toBeInTheDocument();
       expect(screen.getByText(`${t.AssignmentDashboard.overdue} (0)`)).toBeInTheDocument();
     } else {
-      expect(screen.queryByText(t.AssignmentDashboard.dueToday)).not.toBeInTheDocument();
+      expect(screen.queryByText(dueToday)).not.toBeInTheDocument();
       // Ann has not finished; Ben finished, so he is not overdue.
       expect(screen.getByText(`${t.AssignmentDashboard.overdue} (1)`)).toBeInTheDocument();
     }
@@ -163,7 +165,7 @@ describe("teacher assignment page on and after the due day", () => {
     primeAssignment(new Date("2026-10-07T23:30:00+07:00").toISOString());
     renderWithMessages(<AssignmentDashboard />);
 
-    expect(await screen.findByText(t.AssignmentDashboard.dueToday)).toBeInTheDocument();
+    expect(await screen.findByText(dueToday)).toBeInTheDocument();
     expect(document.body.textContent).toMatch(/October 7, 2026/);
     expect(document.body.textContent).not.toMatch(/October 8, 2026/);
   });

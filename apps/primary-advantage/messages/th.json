@@ -879,6 +879,7 @@
   },
   "Assignment": {
     "title": "สร้างงานที่กำหนด",
+    "saved": "บันทึกงานที่กำหนดแล้ว",
     "description": "สร้างงานที่กำหนดให้นักเรียน",
     "assignForm": {
       "classroom": "ห้องเรียน",
@@ -2124,25 +2125,6 @@
       "delete": "ลบ"
     },
     "search": { "placeholder": "ค้นหา" },
-    "import": {
-      "fromLabel": "นำเข้าชั้นเรียนใหม่จาก",
-      "googleClassroom": "Google Classroom",
-      "dialog": {
-        "title": "นำเข้า Google Classroom ของคุณ",
-        "selectClass": "เลือกคลาสจาก Google Classroom",
-        "description": "เลือกคลาสเพื่อซิงค์ นักเรียนทั้งหมดจะถูกนำเข้าและเพิ่มให้คุณ",
-        "yourClasses": "คลาส Google Classroom ของคุณ",
-        "refresh": "รีเฟรช",
-        "continue": "ดำเนินการต่อ",
-        "syncing": "กำลังซิงค์คลาส...",
-        "syncingDescription": "กำลังนำเข้านักเรียนจาก Google Classroom อาจใช้เวลาสักครู่",
-        "syncCompleted": "ซิงค์เสร็จสิ้น!",
-        "syncAnother": "ซิงค์คลาสอื่น",
-        "goToClass": "ไปที่คลาส",
-        "aboutTitle": "เกี่ยวกับการซิงค์ Google Classroom",
-        "aboutDescription": "ฟีเจอร์นี้ช่วยให้นำเข้านักเรียนจาก Google Classroom และลงทะเบียนให้ในคลาสของคุณอัตโนมัติ"
-      }
-    },
     "pagination": { "previous": "ก่อนหน้า", "next": "ถัดไป" },
     "edit": {
       "title": "แก้ไขชั้นเรียน",
@@ -2492,6 +2474,46 @@
       "header": {
         "title": "การลงทะเบียนนักเรียน",
         "subtitle": "จัดการการลงทะเบียนนักเรียนสำหรับ"
+      },
+      "search": {
+        "placeholder": "ค้นหานักเรียนด้วยชื่อหรืออีเมล"
+      },
+      "enrollButton": "ลงทะเบียนนักเรียน",
+      "dialog": {
+        "title": "ลงทะเบียนนักเรียน",
+        "description": "เลือกนักเรียนที่จะลงทะเบียนใน {classroom}"
+      },
+      "emptyAvailable": {
+        "noMatch": "ไม่พบนักเรียนที่ว่างตรงกับคำค้นหา",
+        "none": "ไม่มีนักเรียนที่ลงทะเบียนได้"
+      },
+      "enrolledHeading": "นักเรียนที่ลงทะเบียน ({count})",
+      "empty": {
+        "noMatch": "ไม่พบนักเรียนที่ตรงกับคำค้นหา",
+        "none": "ยังไม่มีนักเรียนลงทะเบียน"
+      },
+      "noName": "ไม่มีชื่อ",
+      "levelShort": "เลเวล {level}",
+      "toasts": {
+        "loadAvailableError": "โหลดรายชื่อนักเรียนที่ลงทะเบียนได้ไม่สำเร็จ",
+        "enrollError": "ลงทะเบียนนักเรียนไม่สำเร็จ",
+        "enrolled": "ลงทะเบียน {name} แล้ว",
+        "unenrollError": "นำนักเรียนออกไม่สำเร็จ",
+        "unenrolled": "นำ {name} ออกจากชั้นเรียนแล้ว"
+      },
+      "unenroll": {
+        "button": "นำออก",
+        "title": "นำนักเรียนออกจากชั้นเรียน",
+        "question": "ต้องการนำ <student></student> ออกจาก <classroom></classroom> ใช่หรือไม่",
+        "loses": "นักเรียนจะออกจากชั้นเรียนและไม่สามารถเข้าถึง:",
+        "item1": "งานและกิจกรรมของชั้นเรียน",
+        "item2": "การติดตามความก้าวหน้าของชั้นเรียนนี้",
+        "item3": "เนื้อหาและสื่อของชั้นเรียน",
+        "cannotUndo": "การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+        "cancel": "ยกเลิก",
+        "confirm": "นำนักเรียนออก",
+        "working": "กำลังนำออก...",
+        "unknownStudent": "นักเรียนไม่ทราบชื่อ"
       }
     },
     "AssignmentDashboard": {
@@ -2996,6 +3018,8 @@
     "skipToContent": "ข้ามไปยังเนื้อหาหลัก",
     "accountMenu": "เมนูบัญชี",
     "toggleTheme": "สลับธีมสว่างหรือมืด",
+    "soundOff": "ปิดเสียง",
+    "soundOn": "เปิดเสียง",
     "mainNavigation": "เมนูหลัก",
     "publicNavigation": "เมนูเว็บไซต์",
     "openMenu": "เปิดเมนู",
@@ -3155,5 +3179,122 @@
     "page": "หน้า {page} จาก {total}",
     "previous": "ก่อนหน้า",
     "next": "ถัดไป"
+  },
+  "TeacherHome": {
+    "title": "หน้าหลัก",
+    "greeting": "สวัสดี {name}",
+    "subtitle": "ภาพรวมของชั้นเรียนและนักเรียนของคุณ",
+    "summary": "สรุป",
+    "stats": {
+      "classes": "ชั้นเรียน",
+      "students": "นักเรียน",
+      "openAssignments": "งานที่ยังเปิดอยู่",
+      "needsHelp": "ต้องการความช่วยเหลือ"
+    },
+    "classes": {
+      "heading": "ชั้นเรียนของฉัน",
+      "students": "{count, plural, =0 {ยังไม่มีนักเรียน} other {นักเรียน # คน}}",
+      "grade": "ระดับชั้น {grade}",
+      "empty": "ยังไม่มีชั้นเรียน",
+      "emptyHint": "สร้างชั้นเรียนในหน้าชั้นเรียนของฉัน แล้วเพิ่มนักเรียน",
+      "goToClasses": "ไปที่ชั้นเรียนของฉัน",
+      "all": "ชั้นเรียนทั้งหมด"
+    },
+    "assignments": {
+      "heading": "งานที่ยังเปิดอยู่",
+      "progress": "เสร็จแล้ว {completed} จาก {assigned} คน",
+      "empty": "ไม่มีงานที่ยังเปิดอยู่",
+      "emptyHint": "นักเรียนทุกคนทำงานที่ได้รับเสร็จแล้ว",
+      "all": "งานทั้งหมด"
+    },
+    "help": {
+      "heading": "ใครต้องการความช่วยเหลือ",
+      "hint": "นักเรียนที่มีงานเลยกำหนด หรือไม่มีกิจกรรมมา {days} วัน",
+      "late": "เลยกำหนด {count} งาน",
+      "neverActive": "ยังไม่มีกิจกรรม",
+      "inactive": "ใช้งานล่าสุด {date}",
+      "empty": "ทุกคนเรียนตามแผน",
+      "emptyHint": "ไม่มีนักเรียนที่มีงานเลยกำหนดหรือหยุดเรียนไปนาน",
+      "more": "{count, plural, other {อีก # คน}}"
+    },
+    "loadError": "โหลดหน้าหลักไม่สำเร็จ",
+    "loadErrorHint": "ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง"
+  },
+  "TeacherUi": {
+    "startClass": "เริ่มชั้นเรียน",
+    "startClassFor": "เริ่มชั้นเรียน {name}",
+    "due": {
+      "none": "ไม่มีวันส่ง",
+      "overdue": "เลยกำหนด",
+      "today": "ส่งวันนี้",
+      "soon": "{days, plural, =1 {ส่งพรุ่งนี้} other {ส่งในอีก # วัน}}",
+      "upcoming": "ส่งในอีก {days} วัน",
+      "on": "ส่งภายใน {date}"
+    },
+    "classBook": {
+      "title": "หนังสือเรียนของชั้น",
+      "hint": "หนังสือและแผนการสอนของชั้นเรียนนี้จะแสดงที่นี่"
+    }
+  },
+  "TeacherClass": {
+    "challenges": "ภารกิจเกมของชั้นเรียน",
+    "backToClasses": "กลับไปที่ชั้นเรียน",
+    "loadError": "โหลดข้อมูลชั้นเรียนไม่สำเร็จ",
+    "loadClassesError": "โหลดรายการชั้นเรียนไม่สำเร็จ",
+    "loadErrorHint": "ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+    "searchClasses": "ค้นหาชั้นเรียน",
+    "classActionsFor": "การดำเนินการของ {name}",
+    "openClass": "เปิดชั้นเรียน",
+    "openClassFor": "เปิดชั้นเรียน {name}",
+    "searchStudents": "ค้นหานักเรียน",
+    "noMatch": "ไม่พบนักเรียนที่ตรงกับคำค้นหา",
+    "progress": "ความก้าวหน้า",
+    "progressFor": "ความก้าวหน้าของ {name}",
+    "removeFor": "นำ {name} ออกจากชั้นเรียน",
+    "moreFor": "การดำเนินการเพิ่มเติมสำหรับ {name}",
+    "lastActive": "ใช้งานล่าสุด: {when}",
+    "level": "เลเวล {level}",
+    "xp": "{xp} XP",
+    "qrPrintHint": "ทำบัตรก่อน แล้วจึงพิมพ์บัตรได้"
+  },
+  "TeacherAssignments": {
+    "backToAssignments": "กลับไปที่งานที่กำหนด",
+    "story": "เรื่อง",
+    "classLabel": "ชั้นเรียน",
+    "searchLabel": "ค้นหางาน",
+    "loadError": "โหลดงานที่กำหนดไม่สำเร็จ",
+    "loadOneError": "โหลดงานนี้ไม่สำเร็จ",
+    "loadErrorHint": "ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+    "noClasses": "คุณยังไม่มีชั้นเรียน",
+    "noClassesHint": "สร้างชั้นเรียนในหน้าชั้นเรียนของฉันก่อน",
+    "goToClasses": "ไปที่ชั้นเรียนของฉัน",
+    "statusFilter": "แสดงนักเรียนตามสถานะ",
+    "selectStudentFor": "เลือก {name}",
+    "progressLabel": "เสร็จแล้ว {percent}%"
+  },
+  "TeacherStudents": {
+    "classLabel": "ชั้นเรียน",
+    "searchLabel": "ค้นหานักเรียน",
+    "nameColumn": "ชื่อ",
+    "classesColumn": "ชั้นเรียน",
+    "levelColumn": "ระดับ",
+    "xpColumn": "XP",
+    "sortBy": "เรียงตาม{column}",
+    "noClass": "ไม่มีชั้นเรียน",
+    "pageOf": "หน้า {page} จาก {totalPages}",
+    "noStudents": "คุณยังไม่มีนักเรียน",
+    "noStudentsHint": "เพิ่มนักเรียนเข้าชั้นเรียนในหน้าชั้นเรียนของฉัน",
+    "noStudentsInClass": "ชั้นเรียนนี้ยังไม่มีนักเรียน",
+    "goToClasses": "ไปที่ชั้นเรียนของฉัน",
+    "loadError": "โหลดรายชื่อนักเรียนไม่สำเร็จ",
+    "reportsLoadError": "โหลดรายงานไม่สำเร็จ",
+    "activityLoadError": "โหลดกิจกรรมของนักเรียนคนนี้ไม่สำเร็จ",
+    "loadErrorHint": "ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+    "progressHeading": "ความก้าวหน้าของ {name}",
+    "progressTitle": "ความก้าวหน้าของนักเรียน",
+    "backToReports": "กลับไปที่รายงาน",
+    "backToClass": "กลับไปที่ชั้นเรียน",
+    "studentLevel": "ระดับ: {level}",
+    "challengesHint": "สร้างภารกิจคำศัพท์สำหรับเกมของชั้นเรียน"
   }
 }

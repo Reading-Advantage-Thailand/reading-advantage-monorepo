@@ -36,7 +36,7 @@ export default function AssignButton({ article }: { article: article }) {
 
   const onSave = () => {
     setIsOpen(false);
-    toast.success("Assignment saved successfully!", {
+    toast.success(t("saved"), {
       richColors: true,
     });
   };

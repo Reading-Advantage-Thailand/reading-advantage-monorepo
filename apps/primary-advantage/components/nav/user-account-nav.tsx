@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { STUDENT_HOME } from "@/lib/student-home";
+import { TEACHER_HOME } from "@/lib/teacher-home";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useAuth } from "@reading-advantage/auth-client";
 import {
@@ -126,7 +127,7 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
           user.role === "ADMIN" ||
           user.role === "SYSTEM") && (
           <DropdownMenuItem asChild>
-            <Link href="/teacher/my-classes" className="flex items-center">
+            <Link href={TEACHER_HOME} className="flex items-center">
               <span>{t("teacherDashboard")}</span>
             </Link>
           </DropdownMenuItem>

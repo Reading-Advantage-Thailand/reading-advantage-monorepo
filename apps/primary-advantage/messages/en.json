@@ -879,6 +879,7 @@
   },
   "Assignment": {
     "title": "Create Assignment",
+    "saved": "Assignment saved",
     "description": "Create an assignment for your students",
     "assignForm": {
       "classroom": "Classroom",
@@ -2125,25 +2126,6 @@
       "delete": "Delete"
     },
     "search": { "placeholder": "Search" },
-    "import": {
-      "fromLabel": "Import a new class from",
-      "googleClassroom": "Google Classroom",
-      "dialog": {
-        "title": "Import Your Google Classroom",
-        "selectClass": "Select a Google Classroom Class",
-        "description": "Choose a class to sync. All students will be imported and added to your account.",
-        "yourClasses": "Your Google Classroom Classes",
-        "refresh": "Refresh",
-        "continue": "Continue",
-        "syncing": "Syncing Class...",
-        "syncingDescription": "Importing students from Google Classroom. This may take a moment.",
-        "syncCompleted": "Sync Completed!",
-        "syncAnother": "Sync Another Class",
-        "goToClass": "Go to Class",
-        "aboutTitle": "About Google Classroom Sync",
-        "aboutDescription": "This feature allows teachers to import Google Classroom students. Students will be automatically enrolled in your class."
-      }
-    },
     "pagination": { "previous": "Previous", "next": "Next" },
     "edit": {
       "title": "Edit Class",
@@ -2490,6 +2472,46 @@
       "header": {
         "title": "Student Enrollment",
         "subtitle": "Manage student enrollment for"
+      },
+      "search": {
+        "placeholder": "Search students by name or email"
+      },
+      "enrollButton": "Enroll student",
+      "dialog": {
+        "title": "Enroll students",
+        "description": "Select students to enroll in {classroom}"
+      },
+      "emptyAvailable": {
+        "noMatch": "No available students match your search",
+        "none": "No students available for enrollment"
+      },
+      "enrolledHeading": "Enrolled students ({count})",
+      "empty": {
+        "noMatch": "No students match your search",
+        "none": "No students enrolled yet"
+      },
+      "noName": "No name",
+      "levelShort": "Lvl {level}",
+      "toasts": {
+        "loadAvailableError": "Failed to load available students",
+        "enrollError": "Failed to enroll student",
+        "enrolled": "{name} has been enrolled",
+        "unenrollError": "Failed to unenroll student",
+        "unenrolled": "{name} has been unenrolled"
+      },
+      "unenroll": {
+        "button": "Unenroll",
+        "title": "Unenroll student",
+        "question": "Are you sure you want to unenroll <student></student> from <classroom></classroom>?",
+        "loses": "The student leaves the class and loses access to:",
+        "item1": "Class assignments and activities",
+        "item2": "Progress tracking for this class",
+        "item3": "Class content and materials",
+        "cannotUndo": "This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Unenroll student",
+        "working": "Unenrolling...",
+        "unknownStudent": "Unknown student"
       }
     },
     "AssignmentDashboard": {
@@ -2994,6 +3016,8 @@
     "skipToContent": "Skip to main content",
     "accountMenu": "Account menu",
     "toggleTheme": "Switch light or dark theme",
+    "soundOff": "Turn sound off",
+    "soundOn": "Turn sound on",
     "mainNavigation": "Main navigation",
     "publicNavigation": "Site navigation",
     "openMenu": "Open menu",
@@ -3153,5 +3177,122 @@
     "page": "Page {page} of {total}",
     "previous": "Previous",
     "next": "Next"
+  },
+  "TeacherHome": {
+    "title": "Home",
+    "greeting": "Hello, {name}",
+    "subtitle": "Your classes and students at a glance.",
+    "summary": "Summary",
+    "stats": {
+      "classes": "Classes",
+      "students": "Students",
+      "openAssignments": "Open assignments",
+      "needsHelp": "Need help"
+    },
+    "classes": {
+      "heading": "My classes",
+      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
+      "grade": "Grade {grade}",
+      "empty": "No classes yet",
+      "emptyHint": "Create a class on My Classes, then add your students.",
+      "goToClasses": "Go to My Classes",
+      "all": "All classes"
+    },
+    "assignments": {
+      "heading": "Open assignments",
+      "progress": "{completed} of {assigned} done",
+      "empty": "No open assignments",
+      "emptyHint": "Every student has finished the assigned work.",
+      "all": "All assignments"
+    },
+    "help": {
+      "heading": "Who needs help",
+      "hint": "Students with overdue work or no activity for {days} days.",
+      "late": "{count} overdue",
+      "neverActive": "No activity yet",
+      "inactive": "Last active {date}",
+      "empty": "Everyone is on track",
+      "emptyHint": "No student has overdue work or a long break.",
+      "more": "{count, plural, one {# more student} other {# more students}}"
+    },
+    "loadError": "We could not load your home page.",
+    "loadErrorHint": "Check your connection and try again."
+  },
+  "TeacherUi": {
+    "startClass": "Start class",
+    "startClassFor": "Start class {name}",
+    "due": {
+      "none": "No due date",
+      "overdue": "Overdue",
+      "today": "Due today",
+      "soon": "{days, plural, one {Due tomorrow} other {Due in # days}}",
+      "upcoming": "Due in {days} days",
+      "on": "Due {date}"
+    },
+    "classBook": {
+      "title": "Class book",
+      "hint": "The book and the lesson plan for this class will show here."
+    }
+  },
+  "TeacherClass": {
+    "challenges": "Class challenges",
+    "backToClasses": "Back to classes",
+    "loadError": "We could not load this class.",
+    "loadClassesError": "We could not load your classes.",
+    "loadErrorHint": "Check your connection and try again.",
+    "searchClasses": "Search classes",
+    "classActionsFor": "Actions for {name}",
+    "openClass": "Open class",
+    "openClassFor": "Open class {name}",
+    "searchStudents": "Search students",
+    "noMatch": "No student matches your search.",
+    "progress": "Progress",
+    "progressFor": "Progress of {name}",
+    "removeFor": "Remove {name} from the class",
+    "moreFor": "More actions for {name}",
+    "lastActive": "Last active: {when}",
+    "level": "Level {level}",
+    "xp": "{xp} XP",
+    "qrPrintHint": "Make the cards first. Then you can print them."
+  },
+  "TeacherAssignments": {
+    "backToAssignments": "Back to assignments",
+    "story": "Story",
+    "classLabel": "Class",
+    "searchLabel": "Search assignments",
+    "loadError": "We could not load the assignments.",
+    "loadOneError": "We could not load this assignment.",
+    "loadErrorHint": "Check your connection and try again.",
+    "noClasses": "You have no classes yet.",
+    "noClassesHint": "Create a class on My Classes first.",
+    "goToClasses": "Go to My Classes",
+    "statusFilter": "Show students by status",
+    "selectStudentFor": "Select {name}",
+    "progressLabel": "{percent}% done"
+  },
+  "TeacherStudents": {
+    "classLabel": "Class",
+    "searchLabel": "Search students",
+    "nameColumn": "Name",
+    "classesColumn": "Classes",
+    "levelColumn": "Level",
+    "xpColumn": "XP",
+    "sortBy": "Sort by {column}",
+    "noClass": "No class",
+    "pageOf": "Page {page} of {totalPages}",
+    "noStudents": "You have no students yet.",
+    "noStudentsHint": "Add students to a class on My Classes.",
+    "noStudentsInClass": "This class has no students yet.",
+    "goToClasses": "Go to My Classes",
+    "loadError": "We could not load your students.",
+    "reportsLoadError": "We could not load the reports.",
+    "activityLoadError": "We could not load the activity of this student.",
+    "loadErrorHint": "Check your connection and try again.",
+    "progressHeading": "Progress for {name}",
+    "progressTitle": "Student progress",
+    "backToReports": "Back to reports",
+    "backToClass": "Back to class",
+    "studentLevel": "Level: {level}",
+    "challengesHint": "Make a word challenge for a class game."
   }
 }
