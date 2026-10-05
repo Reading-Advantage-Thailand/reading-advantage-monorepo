@@ -184,6 +184,7 @@ import {
   primaryClassLoginSessions,
   primaryStudentCredentials,
   primaryClassBooks,
+  primaryAvatarProfile,
 } from "@reading-advantage/db";
 import {
   accountingSubmissions,
@@ -207,6 +208,8 @@ register(primaryLessonGuides, "EXEMPT");
 register(primaryClassLoginSessions, "FLAT");
 register(primaryStudentCredentials, "FLAT");
 register(primaryClassBooks, "FLAT");
+// Student avatar (primary_reedy_preview_20261003): school_id + user_id primary key.
+register(primaryAvatarProfile, "FLAT");
 register(auditEvents, "EXEMPT");
 register(schools, "EXEMPT");
 register(accounts, "EXEMPT");

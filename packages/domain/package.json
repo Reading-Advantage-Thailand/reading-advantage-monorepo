@@ -143,6 +143,10 @@
     "./challenges": {
       "types": "./dist/challenges/index.d.ts",
       "import": "./dist/challenges/index.js"
+    },
+    "./primary-avatar": {
+      "types": "./dist/primary-avatar/index.d.ts",
+      "import": "./dist/primary-avatar/index.js"
     }
   },
   "scripts": {
@@ -158,12 +162,13 @@
     "@reading-advantage/activity-runtime": "workspace:*",
     "@reading-advantage/activity-tutorial": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
+    "@reading-advantage/avatar-kit": "workspace:*",
     "@reading-advantage/codecamp-knowledge": "workspace:*",
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/game-contracts": "workspace:*",
     "@reading-advantage/integrations-github": "workspace:*",
-    "@reading-advantage/srs-engine": "workspace:*",
     "@reading-advantage/sales-knowledge": "workspace:*",
+    "@reading-advantage/srs-engine": "workspace:*",
     "@reading-advantage/types": "workspace:*",
     "drizzle-orm": "^0.45.0",
     "zod": "catalog:"

@@ -2761,6 +2761,9 @@ importers:
       '@reading-advantage/auth':
         specifier: workspace:*
         version: link:../auth
+      '@reading-advantage/avatar-kit':
+        specifier: workspace:*
+        version: link:../avatar-kit
       '@reading-advantage/codecamp-knowledge':
         specifier: workspace:*
         version: link:../codecamp-knowledge

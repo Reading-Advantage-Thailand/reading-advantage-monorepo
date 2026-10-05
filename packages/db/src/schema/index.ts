@@ -16,6 +16,7 @@ export * from "./marketing.js";
 export * from "./sales.js";
 export * from "./primary.js";
 export * from "./primary-books.js";
+export * from "./primary-avatar.js";
 export * from "./mastery.js";
 export * from "./activity.js";
 export * from "./capability-idempotency.js";

@@ -120,3 +120,17 @@ export type {
 export * from "./multiplayer.js";
 
 export * from "./challenges.js";
+
+/** Public avatar profile contracts (Primary Reedy preview). */
+export {
+  avatarCatalogVersionSchema,
+  avatarClassIdSchema,
+  avatarClothSchema,
+  avatarEyesSchema,
+  avatarHairSchema,
+  avatarProfileSchema,
+  avatarSkinSchema,
+  avatarTintsSchema,
+  setAvatarProfileInputSchema,
+} from "./avatar.js";
+export type { AvatarClassId, AvatarProfile, AvatarTints, SetAvatarProfileInput } from "./avatar.js";

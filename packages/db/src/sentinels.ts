@@ -609,4 +609,9 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       { tag: "0065_primary_class_books", kind: "column", target: "primary_student_lesson_steps.app_step" },
     ],
   },
+  "0066_primary_avatar_profile": {
+    tag: "0066_primary_avatar_profile",
+    kind: "column",
+    target: "primary_avatar_profile.class_preset",
+  },
 };
