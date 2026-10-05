@@ -5,7 +5,8 @@ import { getCurrentSession } from "@/lib/session";
 export async function voiceActor() {
   const session = await getCurrentSession();
   if (!session) return null;
-  return { user: session.user, authStrength: session.authStrength };
+  // A session with no recorded strength is treated as a class-code sign-in (fail closed).
+  return { user: session.user, authStrength: session.authStrength ?? "code_only" };
 }
 
 /**

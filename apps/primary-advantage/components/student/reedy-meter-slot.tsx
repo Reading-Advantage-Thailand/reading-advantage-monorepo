@@ -1,9 +1,12 @@
+import { ReedyMeter, type ReedyMeterData } from "@/components/reedy/reedy-meter";
+
 /**
- * Slot for the Reedy meter on the student home. The Reedy track (Lane F,
- * `primary_reedy_preview_20261003`) fills it with the meter; until then it renders nothing,
- * so the home shows no empty box.
- * @returns Nothing yet.
+ * The Reedy meter on the student home (FR-9). The home passes the month's entitlement; nothing
+ * renders when the read failed, so the home shows no empty box.
+ * @param props.data The entitlement numbers, or null.
+ * @param props.t The `Reedy` translator.
+ * @returns The meter, or nothing.
  */
-export function ReedyMeterSlot(): React.ReactNode {
-  return null;
+export function ReedyMeterSlot({ data, t }: { data: ReedyMeterData | null; t: (key: string, values?: Record<string, string | number>) => string }): React.ReactNode {
+  return data ? <ReedyMeter data={data} t={t} /> : null;
 }

@@ -16,6 +16,7 @@ const mocks = vi.hoisted(() => ({
   getStudentHome: vi.fn(),
   getStudentClassBooks: vi.fn(async (): Promise<unknown[]> => []),
   getAvatarProfile: vi.fn(async (): Promise<unknown> => null),
+  getVoiceEntitlement: vi.fn(async (): Promise<unknown> => ({ remainingSeconds: 300, budgetSeconds: 480, blockedBy: null })),
   leaderboard: vi.fn(),
   redirect: vi.fn(),
 }));
@@ -25,6 +26,7 @@ vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getStudentHome: mocks.getStudentHome }));
 vi.mock("@reading-advantage/domain/primary-books", () => ({ getStudentClassBooks: mocks.getStudentClassBooks }));
 vi.mock("@reading-advantage/domain/primary-avatar", () => ({ getAvatarProfile: mocks.getAvatarProfile }));
+vi.mock("@reading-advantage/domain/primary-voice", () => ({ getVoiceEntitlement: mocks.getVoiceEntitlement, voiceConfigFromEnv: () => ({}) }));
 vi.mock("@/server/controllers/schoolController", () => ({ getSchoolLeaderboardController: mocks.leaderboard }));
 vi.mock("next-intl/server", async () => {
   const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
@@ -230,5 +232,27 @@ describe("student home avatar nudge (reedy FR-10b)", () => {
     mocks.getAvatarProfile.mockRejectedValue(new Error("down"));
     renderWithMessages(await StudentHomePage(), { locale: "th" });
     expect(screen.queryByText("สร้างอวตารของคุณ!")).not.toBeInTheDocument();
+  });
+});
+
+describe("student home Reedy meter (reedy FR-9)", () => {
+  it("shows the minutes left this month with a link to Reedy", async () => {
+    renderWithMessages(await StudentHomePage(), { locale: "en" });
+    const meter = screen.getByRole("progressbar", { name: "Reedy minutes" });
+    expect(meter).toHaveAttribute("aria-valuenow", "300");
+    expect(screen.getByText("5:00 left this month")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Talk to Reedy" })).toHaveAttribute("href", "/student/reedy");
+  });
+
+  it("says why Reedy is closed and hides the meter when the read fails", async () => {
+    mocks.getVoiceEntitlement.mockResolvedValueOnce({ remainingSeconds: 0, budgetSeconds: 480, blockedBy: "QUOTA_EXHAUSTED" });
+    mocks.locale = "th";
+    renderWithMessages(await StudentHomePage(), { locale: "th" });
+    expect(screen.getByText("นาทีคุยกับรีดี้ของเดือนนี้หมดแล้ว เดือนหน้าได้นาทีใหม่นะ")).toBeInTheDocument();
+    cleanup();
+    mocks.getVoiceEntitlement.mockRejectedValueOnce(new Error("down"));
+    mocks.locale = "en";
+    renderWithMessages(await StudentHomePage(), { locale: "en" });
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
   });
 });

@@ -7,8 +7,9 @@ import {
   useCallback,
   useContext,
 } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { ArrowLeft, MicIcon } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { ErrorState, ShimmerSkeleton } from "@reading-advantage/ui";
 import { cn } from "@/lib/utils";
 import { LessonStepRail } from "./lesson-step-rail";
@@ -96,6 +97,7 @@ export default function LessonProgressBar({
   maxUnlockedStep = null,
 }: LessonProgressBarProps) {
   const t = useTranslations("Lesson");
+  const tReedy = useTranslations("Reedy");
   const tError = useTranslations("Error");
   const article = (
     source === "assignment" ? assignment?.article : articleProp
@@ -438,10 +440,21 @@ export default function LessonProgressBar({
         );
       case 14:
         return (
-          <TaskLessonSummary
-            article={article as Article}
-            timerSpent={timer}
-          />
+          <>
+            <TaskLessonSummary
+              article={article as Article}
+              timerSpent={timer}
+            />
+            {/* Reedy entry at the end of the flow (reedy FR-4). */}
+            <Link
+              href={`/student/reedy?articleId=${resolvedArticleId}`}
+              data-testid="reedy-entry"
+              className={cn(buttonVariants({ variant: "outline" }), "mt-4 min-h-12 w-full rounded-xl text-base")}
+            >
+              <MicIcon aria-hidden="true" className="size-5" />
+              {tReedy("lessonEntry")}
+            </Link>
+          </>
         );
       default:
         return null;

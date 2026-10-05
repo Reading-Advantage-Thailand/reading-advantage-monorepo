@@ -5,6 +5,8 @@ import { db } from "@reading-advantage/db";
 import { getStudentHome } from "@reading-advantage/domain/primary-home";
 import { getStudentClassBooks, type StudentClassBook } from "@reading-advantage/domain/primary-books";
 import { getAvatarProfile } from "@reading-advantage/domain/primary-avatar";
+import { getVoiceEntitlement, voiceConfigFromEnv } from "@reading-advantage/domain/primary-voice";
+import type { ReedyMeterData } from "@/components/reedy/reedy-meter";
 import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
 import { EmptyState, StatusChip, cardHoverClassName } from "@reading-advantage/ui";
 import { AnimatedCounter } from "@reading-advantage/ui/client";
@@ -17,6 +19,8 @@ import { ReedyMeterSlot } from "@/components/student/reedy-meter-slot";
 import { AvatarNudge } from "@/components/avatar/avatar-nudge";
 import { getSchoolLeaderboardController } from "@/server/controllers/schoolController";
 
+/** The Reedy limits of this process (FR-9). */
+const voiceConfig = voiceConfigFromEnv(process.env);
 /** Card frame shared by the home sections. */
 const CARD = "bg-card text-card-foreground flex flex-col gap-3 rounded-2xl border p-5 shadow-sm";
 /** Large action link (48 px tap target). */
@@ -73,6 +77,20 @@ async function needsAvatar(user: NonNullable<Awaited<ReturnType<typeof currentUs
 }
 
 /**
+ * The month's Reedy minutes for the meter (FR-9); null when the read fails.
+ * @param user The signed-in student.
+ * @returns The meter numbers, or null.
+ */
+async function loadReedyMeter(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>): Promise<ReedyMeterData | null> {
+  try {
+    const { remainingSeconds, budgetSeconds, blockedBy } = await getVoiceEntitlement({ db, user, config: voiceConfig });
+    return { remainingSeconds, budgetSeconds, blockedBy };
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Student home (FR-4), the landing page after sign-in: streak, XP, and level; today's lesson
  * (the next open assignment, hidden when there is none); the class books with the current
  * lesson; the article to continue; a games
@@ -83,14 +101,16 @@ export default async function StudentHomePage() {
   const user = await currentUser();
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
 
-  const [home, classBooks, leaderboard, noAvatar, t, tBoard, tAvatar, format] = await Promise.all([
+  const [home, classBooks, leaderboard, noAvatar, reedy, t, tBoard, tAvatar, tReedy, format] = await Promise.all([
     getStudentHome({ db, user }),
     loadClassBooks(user),
     loadLeaderboard(user),
     needsAvatar(user),
+    loadReedyMeter(user),
     getTranslations("StudentHome"),
     getTranslations("Leaderboard"),
     getTranslations("Avatar"),
+    getTranslations("Reedy"),
     getFormatter(),
   ]);
   const lesson = home.todayLesson;
@@ -119,7 +139,7 @@ export default async function StudentHomePage() {
 
       {noAvatar ? <AvatarNudge t={tAvatar} /> : null}
 
-      <ReedyMeterSlot />
+      <ReedyMeterSlot data={reedy} t={tReedy} />
 
       <div className="grid gap-4 md:grid-cols-2">
         {lesson ? (
