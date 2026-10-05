@@ -390,6 +390,8 @@
       "importDataDesc": "Bulk import users and content",
       "viewReports": "View Reports",
       "viewReportsDesc": "Access analytics and insights",
+      "reedyCosts": "Reedy costs",
+      "reedyCostsDesc": "Minutes, cost, and failures by school and month",
       "manageClassrooms": "Manage Classrooms",
       "manageClassroomsDesc": "Organize classes and assignments"
     },
@@ -2293,6 +2295,7 @@
       "nav": {
         "classRoster": "Class Roster",
         "reports": "Reports",
+        "reedy": "Reedy",
         "settings": "Settings"
       },
       "info": {
@@ -3110,6 +3113,89 @@
         "slate": "Slate"
       }
     }
+  },
+  "Reedy":   {
+    "title": "Reedy",
+    "preview": "Preview",
+    "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
+    "explainTh": "รีดี้คือโค้ชฝึกพูด คุยเรื่องนิทานของคุณเป็นภาษาอังกฤษและภาษาไทยได้ รีดี้ยังใหม่ อาจทำผิดพลาดได้บ้าง",
+    "meterLabel": "Reedy minutes",
+    "minutesLeft": "{time} left this month",
+    "talk": "Talk to Reedy",
+    "start": "Start talking",
+    "micAsk": "Reedy needs your microphone. Tap Allow when your browser asks.",
+    "noMic": "No microphone found. Ask your teacher for help, or try another device.",
+    "micDenied": "The microphone is off. Allow it in your browser, then try again.",
+    "connecting": "Connecting to Reedy…",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "end": "Finish",
+    "timeLeft": "{time} left",
+    "stopTitle": "Time's up!",
+    "stopBody": "Your Reedy minutes for this month are used up. More minutes come next month.",
+    "providerDown": "Reedy cannot talk right now. Try again later.",
+    "lost": "The call dropped. You can try again.",
+    "summaryTitle": "Great talking with you!",
+    "summaryKind": "Here is what Reedy noticed. Every try makes you better.",
+    "strengths": "What went well",
+    "improvements": "Try next time",
+    "again": "Talk again",
+    "backHome": "Back to home",
+    "lessonEntry": "Talk to Reedy about this story",
+    "blocked": {
+      "DISABLED": "Reedy is taking a break right now.",
+      "SCHOOL_DISABLED": "Reedy is not switched on for your school yet.",
+      "AUTH_STRENGTH": "Sign in with your username and password to talk to Reedy.",
+      "NO_AVATAR": "Make your avatar first, then talk to Reedy.",
+      "SESSION_ACTIVE": "Reedy is already talking with you on another screen.",
+      "QUOTA_EXHAUSTED": "Your Reedy minutes for this month are used up. More minutes come next month."
+    },
+    "scores": {
+      "fluency": "Speaking",
+      "grammar": "Grammar",
+      "vocabulary": "Words",
+      "pronunciation": "Sounds"
+    },
+    "stars": "{score} of 5"
+  },
+  "ReedyUsage":   {
+    "title": "Reedy this month",
+    "monthHint": "Month {month}. Each student has {budget} of talking time.",
+    "backToClass": "Back to class",
+    "minutesUsed": "Minutes used",
+    "sessions": "Sessions",
+    "studentsWithUse": "Students who talked",
+    "safetyEvents": "Safety events",
+    "student": "Student",
+    "minutes": "Minutes",
+    "lastUse": "Last talk",
+    "averageScores": "Average scores",
+    "noUse": "No talk yet",
+    "noStudents": "No students in this class",
+    "noStudentsHint": "Enroll students to see their Reedy time.",
+    "privacyNote": "Reedy keeps no recording or transcript. Safety events are counts only.",
+    "scoreShort": {
+      "fluency": "Speak",
+      "grammar": "Gram",
+      "vocabulary": "Words",
+      "pronunciation": "Sound"
+    },
+    "loadError": "Reedy usage is not available",
+    "loadErrorHint": "Try again later. If this continues, contact support.",
+    "signInHint": "Sign in again to see this page.",
+    "costsTitle": "Reedy costs",
+    "costsHint": "Cost and failures by school and month for the last 3 months.",
+    "attempts": "Session attempts",
+    "failedStarts": "Failed starts",
+    "disconnects": "Disconnects",
+    "summaryFailures": "Summary failures",
+    "measuredCostUsd": "Measured cost (USD)",
+    "missingCost": "Sessions with no cost data",
+    "month": "Month",
+    "school": "School",
+    "costThb": "Cost (THB)",
+    "noCosts": "No Reedy sessions yet",
+    "noCostsHint": "Costs appear after the first session ends."
   },
   "StudentHome": {
     "title": "Home",

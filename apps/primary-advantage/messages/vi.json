@@ -390,6 +390,8 @@
       "importDataDesc": "Nhập dữ liệu người dùng và nội dung",
       "viewReports": "Xem báo cáo",
       "viewReportsDesc": "Truy cập phân tích và thông tin",
+      "reedyCosts": "Chi phí Reedy",
+      "reedyCostsDesc": "Phút, chi phí và lỗi theo trường và tháng",
       "manageClassrooms": "Quản lý lớp học",
       "manageClassroomsDesc": "Sắp xếp lớp học và bài tập"
     },
@@ -2368,6 +2370,7 @@
       "nav": {
         "classRoster": "Danh sách lớp",
         "reports": "Báo cáo",
+        "reedy": "Reedy",
         "settings": "Cài đặt"
       },
       "info": {
@@ -3110,6 +3113,89 @@
         "slate": "Xám đá"
       }
     }
+  },
+  "Reedy":   {
+    "title": "Reedy",
+    "preview": "Thử nghiệm",
+    "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
+    "explainTh": "รีดี้คือโค้ชฝึกพูด คุยเรื่องนิทานของคุณเป็นภาษาอังกฤษและภาษาไทยได้ รีดี้ยังใหม่ อาจทำผิดพลาดได้บ้าง",
+    "meterLabel": "Phút Reedy",
+    "minutesLeft": "Còn {time} trong tháng này",
+    "talk": "Nói chuyện với Reedy",
+    "start": "Bắt đầu nói",
+    "micAsk": "Reedy cần micro của bạn. Nhấn Cho phép khi trình duyệt hỏi.",
+    "noMic": "Không tìm thấy micro. Nhờ thầy cô giúp, hoặc thử thiết bị khác.",
+    "micDenied": "Micro đang tắt. Cho phép trong trình duyệt rồi thử lại.",
+    "connecting": "Đang kết nối với Reedy…",
+    "mute": "Tắt tiếng",
+    "unmute": "Bật tiếng",
+    "end": "Kết thúc",
+    "timeLeft": "Còn {time}",
+    "stopTitle": "Hết giờ!",
+    "stopBody": "Số phút Reedy của tháng này đã hết. Tháng sau sẽ có phút mới.",
+    "providerDown": "Reedy không nói được lúc này. Hãy thử lại sau.",
+    "lost": "Cuộc gọi bị ngắt. Bạn có thể thử lại.",
+    "summaryTitle": "Nói chuyện vui quá!",
+    "summaryKind": "Đây là những gì Reedy nhận thấy. Mỗi lần thử là một lần giỏi hơn.",
+    "strengths": "Điều làm tốt",
+    "improvements": "Lần sau thử",
+    "again": "Nói chuyện lại",
+    "backHome": "Về trang chủ",
+    "lessonEntry": "Nói chuyện với Reedy về câu chuyện này",
+    "blocked": {
+      "DISABLED": "Reedy đang nghỉ.",
+      "SCHOOL_DISABLED": "Trường của bạn chưa bật Reedy.",
+      "AUTH_STRENGTH": "Đăng nhập bằng tên người dùng và mật khẩu để nói chuyện với Reedy.",
+      "NO_AVATAR": "Tạo nhân vật trước, rồi nói chuyện với Reedy.",
+      "SESSION_ACTIVE": "Reedy đang nói chuyện với bạn ở một màn hình khác.",
+      "QUOTA_EXHAUSTED": "Số phút Reedy của tháng này đã hết. Tháng sau sẽ có phút mới."
+    },
+    "scores": {
+      "fluency": "Nói",
+      "grammar": "Ngữ pháp",
+      "vocabulary": "Từ vựng",
+      "pronunciation": "Phát âm"
+    },
+    "stars": "{score} / 5"
+  },
+  "ReedyUsage":   {
+    "title": "Reedy tháng này",
+    "monthHint": "Tháng {month}. Mỗi học sinh có {budget} thời gian nói chuyện.",
+    "backToClass": "Về lớp",
+    "minutesUsed": "Phút đã dùng",
+    "sessions": "Số lần",
+    "studentsWithUse": "Học sinh đã nói chuyện",
+    "safetyEvents": "Sự kiện an toàn",
+    "student": "Học sinh",
+    "minutes": "Phút",
+    "lastUse": "Lần nói gần nhất",
+    "averageScores": "Điểm trung bình",
+    "noUse": "Chưa nói chuyện",
+    "noStudents": "Lớp này chưa có học sinh",
+    "noStudentsHint": "Thêm học sinh để xem thời gian Reedy.",
+    "privacyNote": "Reedy không lưu bản ghi âm hay bản chép lời. Sự kiện an toàn chỉ là số đếm.",
+    "scoreShort": {
+      "fluency": "Nói",
+      "grammar": "Ngữ pháp",
+      "vocabulary": "Từ",
+      "pronunciation": "Phát âm"
+    },
+    "loadError": "Không xem được mức dùng Reedy",
+    "loadErrorHint": "Hãy thử lại sau. Nếu vẫn lỗi, liên hệ hỗ trợ.",
+    "signInHint": "Đăng nhập lại để xem trang này.",
+    "costsTitle": "Chi phí Reedy",
+    "costsHint": "Chi phí và lỗi theo trường và tháng trong 3 tháng gần nhất.",
+    "attempts": "Số lần thử",
+    "failedStarts": "Bắt đầu thất bại",
+    "disconnects": "Mất kết nối",
+    "summaryFailures": "Tóm tắt thất bại",
+    "measuredCostUsd": "Chi phí đo được (USD)",
+    "missingCost": "Số lần không có dữ liệu chi phí",
+    "month": "Tháng",
+    "school": "Trường",
+    "costThb": "Chi phí (THB)",
+    "noCosts": "Chưa có cuộc nói chuyện Reedy",
+    "noCostsHint": "Chi phí hiện sau khi cuộc nói chuyện đầu tiên kết thúc."
   },
   "StudentHome": {
     "title": "Home",

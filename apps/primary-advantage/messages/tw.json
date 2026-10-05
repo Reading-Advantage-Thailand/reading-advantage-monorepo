@@ -390,6 +390,8 @@
       "importDataDesc": "批量導入用戶和內容",
       "viewReports": "查看報告",
       "viewReportsDesc": "訪問分析和洞察",
+      "reedyCosts": "Reedy 費用",
+      "reedyCostsDesc": "按學校和月份的分鐘、費用與故障",
       "manageClassrooms": "管理教室",
       "manageClassroomsDesc": "組織班級和作業"
     },
@@ -2366,6 +2368,7 @@
       "nav": {
         "classRoster": "班級名冊",
         "reports": "報告",
+        "reedy": "Reedy",
         "settings": "設定"
       },
       "info": {
@@ -3108,6 +3111,89 @@
         "slate": "石板灰"
       }
     }
+  },
+  "Reedy":   {
+    "title": "Reedy",
+    "preview": "預覽",
+    "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
+    "explainTh": "รีดี้คือโค้ชฝึกพูด คุยเรื่องนิทานของคุณเป็นภาษาอังกฤษและภาษาไทยได้ รีดี้ยังใหม่ อาจทำผิดพลาดได้บ้าง",
+    "meterLabel": "Reedy 分鐘",
+    "minutesLeft": "本月剩餘 {time}",
+    "talk": "和 Reedy 說話",
+    "start": "開始說話",
+    "micAsk": "Reedy 需要你的麥克風。瀏覽器詢問時請點允許。",
+    "noMic": "找不到麥克風。請老師幫忙，或換一台裝置。",
+    "micDenied": "麥克風已關閉。在瀏覽器中允許後再試。",
+    "connecting": "正在連線 Reedy…",
+    "mute": "靜音",
+    "unmute": "取消靜音",
+    "end": "結束",
+    "timeLeft": "剩餘 {time}",
+    "stopTitle": "時間到！",
+    "stopBody": "這個月的 Reedy 分鐘用完了，下個月會有新的分鐘。",
+    "providerDown": "Reedy 現在無法說話，請稍後再試。",
+    "lost": "通話中斷了，可以再試一次。",
+    "summaryTitle": "聊得很開心！",
+    "summaryKind": "這是 Reedy 注意到的。每一次嘗試都讓你進步。",
+    "strengths": "做得好的地方",
+    "improvements": "下次試試",
+    "again": "再聊一次",
+    "backHome": "回到首頁",
+    "lessonEntry": "和 Reedy 聊聊這個故事",
+    "blocked": {
+      "DISABLED": "Reedy 現在休息中。",
+      "SCHOOL_DISABLED": "你的學校還沒有開啟 Reedy。",
+      "AUTH_STRENGTH": "用使用者名稱和密碼登入後才能和 Reedy 說話。",
+      "NO_AVATAR": "先建立你的頭像，再和 Reedy 說話。",
+      "SESSION_ACTIVE": "Reedy 正在另一個畫面上和你說話。",
+      "QUOTA_EXHAUSTED": "這個月的 Reedy 分鐘用完了，下個月會有新的分鐘。"
+    },
+    "scores": {
+      "fluency": "口說",
+      "grammar": "文法",
+      "vocabulary": "詞彙",
+      "pronunciation": "發音"
+    },
+    "stars": "{score} / 5"
+  },
+  "ReedyUsage":   {
+    "title": "本月 Reedy",
+    "monthHint": "{month} 月。每位學生有 {budget} 的通話時間。",
+    "backToClass": "返回班級",
+    "minutesUsed": "已用分鐘",
+    "sessions": "次數",
+    "studentsWithUse": "已通話的學生",
+    "safetyEvents": "安全事件",
+    "student": "學生",
+    "minutes": "分鐘",
+    "lastUse": "最近通話",
+    "averageScores": "平均分",
+    "noUse": "尚未通話",
+    "noStudents": "這個班沒有學生",
+    "noStudentsHint": "新增學生後可查看 Reedy 時間。",
+    "privacyNote": "Reedy 不保存錄音或文字紀錄。安全事件只是計數。",
+    "scoreShort": {
+      "fluency": "口說",
+      "grammar": "文法",
+      "vocabulary": "詞彙",
+      "pronunciation": "發音"
+    },
+    "loadError": "無法查看 Reedy 使用情況",
+    "loadErrorHint": "請稍後再試。如果持續出現，請聯絡支援。",
+    "signInHint": "請重新登入查看此頁面。",
+    "costsTitle": "Reedy 費用",
+    "costsHint": "最近 3 個月按學校和月份的費用與故障。",
+    "attempts": "嘗試次數",
+    "failedStarts": "啟動失敗",
+    "disconnects": "斷線",
+    "summaryFailures": "總結失敗",
+    "measuredCostUsd": "實測費用 (USD)",
+    "missingCost": "無費用資料的次數",
+    "month": "月份",
+    "school": "學校",
+    "costThb": "費用 (THB)",
+    "noCosts": "還沒有 Reedy 通話",
+    "noCostsHint": "第一次通話結束後會顯示費用。"
   },
   "StudentHome": {
     "title": "Home",
