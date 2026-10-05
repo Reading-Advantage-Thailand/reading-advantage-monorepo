@@ -17,8 +17,9 @@ Owner lane: D (data and server), lane E (teacher UI, after lane C ships the shel
 
 ## Phase 2: Class books and pacing (tests first)
 - [x] Domain use-cases (in `@reading-advantage/domain`, not the app): assign, pointer, taught — `1e89de53e`: `class-books.ts` with `assignClassBook`, `listClassBooks`, `setCurrentLesson`, `markLessonTaught`, `markStepDone`, `getClassBookPacing`, `getStudentClassBooks`; permissions reuse `class:update` (manage) and `class:read`; owner or co-teacher of the class in the user's school. 21 tests.
-- [ ] Teacher UI: assign book, pacing view
-- [ ] Student home and book view show assigned lessons
+- [x] Teacher UI: assign book, pacing view — `68f29dcaf` (after the merge of `primary/lane-c-ux-rework`, `cbceff9f6`): the class page fills the Lane C `ClassBookSlot` with `ClassBooksCard` (books, pointer, taught count, lesson plan link, assign form); `/teacher/class-roster/[classroomId]/books/[classBookId]` is the lesson plan (next step and period, 13 step toggles, make current, mark taught). Server actions in `actions/class-books.ts`. Step titles are English in every locale (the Thai step titles live in `primary_lesson_guides`; Phase 4 wires them). The teacher dashboard slot still shows the placeholder.
+- [x] Student home and book view show assigned lessons — `68f29dcaf` + `d6e310069` (`listCatalogueBooks`, `getStudentBook`): the home shows one card per class book with the current lesson; the read link opens when workbook step 3 is marked done (or in independent mode); `/student/books/[classBookId]` lists every lesson, links taught and earlier lessons (read ahead), and the current lesson once step 3 is open.
+- Verification: domain 24 class-book tests; app 1138 tests pass (182 files). `userModel.activity.behavior.test.ts` hit its 10 s `beforeAll` timeout once under full-suite load and passes alone in 9 s. tsc and eslint clean for app and domain. No browser run yet (memory).
 
 ## Phase 3: Progress
 - [ ] Step-level progress write path and the client hooks in the lesson flow
