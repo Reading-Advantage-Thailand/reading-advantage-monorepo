@@ -365,7 +365,7 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Somchai" }));
 
     await waitFor(() =>
-      expect(mocks.replace).toHaveBeenCalledWith("/en/student/read"),
+      expect(mocks.replace).toHaveBeenCalledWith("/en/student/home"),
     );
   });
 

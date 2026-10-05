@@ -6,6 +6,7 @@ export * as progress from "./progress/index.js";
 export * as reading from "./reading/index.js";
 export * as students from "./students/index.js";
 export * as studentLogin from "./student-login/index.js";
+export * as primaryHome from "./primary-home/index.js";
 export * as reports from "./reports/index.js";
 export * as users from "./users/index.js";
 export * as codecamp from "./codecamp/index.js";

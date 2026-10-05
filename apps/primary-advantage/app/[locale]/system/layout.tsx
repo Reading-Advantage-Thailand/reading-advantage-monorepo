@@ -7,7 +7,7 @@ export default async function SystemHomeLayout({
 }: BaseAppLayoutProps) {
   await assertLayoutRole(protectedRoutes["/system"]);
   return (
-    <AppLayout area="system" disableLeaderboard>
+    <AppLayout area="system">
       {children}
     </AppLayout>
   );

@@ -40,7 +40,7 @@ import { NextResponse } from "next/server";
 import { getAudioUrl } from "@/lib/storage-config";
 import { mapOrderingSentenceFields, resolveClozeSegment } from "@/lib/audio-highlight";
 import { shuffle } from "@/lib/shuffle";
-import { countStreakDays } from "@/lib/streak";
+import { countStreakDays } from "@reading-advantage/domain/primary-home";
 
 function tokenizeSentence(input: string) {
   // Split by spaces and filter out empty strings, while preserving punctuation

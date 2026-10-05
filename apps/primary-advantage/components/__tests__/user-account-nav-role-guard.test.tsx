@@ -102,7 +102,7 @@ describe("UserAccountNav student dashboard role guard", () => {
 
     expect(
       screen.getByRole("menuitem", { name: userNavCopy.studentDashboard }),
-    ).toHaveAttribute("href", "/student/read");
+    ).toHaveAttribute("href", "/student/home");
     expect(
       screen.queryByRole("menuitem", { name: userNavCopy.adminDashboard }),
     ).not.toBeInTheDocument();

@@ -7,7 +7,7 @@ export default async function TeacherHomeLayout({
 }: BaseAppLayoutProps) {
   await assertLayoutRole(protectedRoutes["/teacher"]);
   return (
-    <AppLayout area="teacher" disableLeaderboard>
+    <AppLayout area="teacher">
       {children}
     </AppLayout>
   );

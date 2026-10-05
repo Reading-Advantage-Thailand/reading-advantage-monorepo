@@ -2963,5 +2963,29 @@
       "schools": "Schools",
       "licenses": "Licenses"
     }
+  },
+  "StudentHome": {
+    "title": "Home",
+    "greeting": "Hi, {name}!",
+    "subtitle": "Ready to read today?",
+    "progress": "My progress",
+    "streak": "Day streak",
+    "streakValue": "{count, plural, =0 {No streak yet} one {# day} other {# days}}",
+    "xp": "XP",
+    "level": "Level",
+    "todayLesson": "Today's lesson",
+    "dueDate": "Due {date}",
+    "noDueDate": "No due date",
+    "overdue": "Late",
+    "startLesson": "Start lesson",
+    "continueLesson": "Continue lesson",
+    "continueReading": "Continue reading",
+    "keepReading": "Keep reading",
+    "noReading": "No story in progress",
+    "noReadingHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "games": "Games",
+    "gamesHint": "Play word games and earn XP.",
+    "playGames": "Play games"
   }
 }

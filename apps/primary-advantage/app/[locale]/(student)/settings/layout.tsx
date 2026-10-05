@@ -5,7 +5,7 @@ import { protectedRoutes } from "@/lib/route-policies";
 export default async function SettingsPageLayout({ children }: BaseAppLayoutProps) {
   await assertLayoutRole(protectedRoutes["/settings"]);
   return (
-    <AppLayout settings disableLeaderboard>
+    <AppLayout settings>
       {children}
     </AppLayout>
   );

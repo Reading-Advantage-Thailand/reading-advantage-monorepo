@@ -51,6 +51,7 @@ describe("nav item lists per role", () => {
     const tabs = areaConfigs.student.tabs ?? [];
     expect(tabs.map((tab) => tab.key)).toEqual(["home", "read", "games", "me"]);
     expect(tabs[0].href).toBe(STUDENT_HOME);
+    expect(tabs[0].href).toBe("/student/home");
   });
 
   it("gives teachers Home, Classes, Assignments, and Reports", () => {
@@ -121,8 +122,12 @@ describe("BottomNav", () => {
     expect(within(bar).getByRole("link", { name: en.AppShell.tabs.reports })).toHaveAttribute("aria-current", "page");
   });
 
-  it("shows one active tab while Home and Read share the student home", () => {
-    const bar = renderBottomNav("student", STUDENT_HOME);
+  it("marks Home on the student home and Read on the read list", () => {
+    let bar = renderBottomNav("student", STUDENT_HOME);
+    expect(within(bar).getByRole("link", { name: en.AppShell.tabs.home })).toHaveAttribute("aria-current", "page");
+    cleanup();
+    bar = renderBottomNav("student", "/student/read/abc");
+    expect(within(bar).getByRole("link", { name: en.AppShell.tabs.read })).toHaveAttribute("aria-current", "page");
     expect(within(bar).getAllByRole("link").filter((link) => link.hasAttribute("aria-current"))).toHaveLength(1);
   });
 

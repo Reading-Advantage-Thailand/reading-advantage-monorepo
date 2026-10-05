@@ -55,6 +55,13 @@ Other lanes request changes here and do not edit these files.
   - M5: audio bar translation text is `text-primary-foreground` (`dark:text-primary`); the bar sits on top of the bottom nav below 1024 px.
   - L1 `viewport.viewportFit = "cover"`; L4 transitions name `translate`/`scale`/`box-shadow`; L5 `STUDENT_HOME` is in `lib/student-home.ts`; L6 not-found `main` without `overflow-hidden`, the phone menu closes on any link tap, `GoToTop` jumps without smooth scroll for reduced motion.
 - [ ] Student home (FR-4)
+  - Route `/student/home` (`app/[locale]/(student)/student/home`). `STUDENT_HOME = "/student/home"` (`lib/student-home.ts`) is the student role home in `lib/route-policies.ts` (`roleDefaultRedirects.student`, used by `proxy.ts` after sign-in), the Lane B sign-in redirect (`useEnterAfterSignIn`, password sign-in), the account-menu "Student dashboard" link, and the Home tab. Read stays `/student/read`.
+  - Data: `getStudentHome` in `@reading-advantage/domain/primary-home` (own rows only, every query filters the signed-in student; tables reached through `tenantDb.unscoped`). XP, level, CEFR from `users`. Leaderboard: the existing `getSchoolLeaderboardController`; it left the shell (`AppLayout` has no leaderboard and no `disableLeaderboard` prop now). A leaderboard failure hides only the leaderboard.
+  - Streak (decision): consecutive calendar days with any `user_activity` row in the last 366 days, ending today or yesterday (`countStreakDays`, moved from `lib/streak.ts` to the domain package; the flashcard dashboard uses the same function). Days use the server time zone (UTC on Cloud Run), not the student's. No stored streak.
+  - Today's lesson (default, spec FR-4 and the program): the class book data comes from Lane D+E. Until then the card shows the next open assignment (not completed; earliest due date first, no due date last) and links to `/student/lesson/<assignmentId>`. With no open assignment the card is hidden.
+  - Continue reading: the newest `ARTICLE_READ` activity whose article is not finished (finished = multiple-choice, short-answer, and long-answer all done in `article_activity_logs`). With none, an empty state links to `/student/read`.
+  - Reedy meter: `components/student/reedy-meter-slot.tsx` renders nothing until Lane F fills it.
+  - New package parts: `EmptyState` and `ErrorState` (root entry, server-safe).
 - [ ] Read list and article view
 - [ ] Lesson flow shell (steps shown as a progress rail)
 - [ ] Games catalog, vocabulary, sentences, history, reports, assignments

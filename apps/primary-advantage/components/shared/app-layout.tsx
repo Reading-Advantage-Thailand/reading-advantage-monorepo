@@ -6,9 +6,7 @@ import { SkipLink } from "@/components/shared/skip-link";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import { areaForRole, type NavArea } from "@/lib/nav-area";
-import Leaderboard from "../leaderboard";
 import { getLocale } from "next-intl/server";
-import { getSchoolLeaderboardController } from "@/server/controllers/schoolController";
 
 interface AppLayoutProps {
   children?: React.ReactNode;
@@ -16,7 +14,6 @@ interface AppLayoutProps {
   area?: NavArea;
   /** True on settings pages: staff also get the settings links in the menu. */
   settings?: boolean;
-  disableLeaderboard?: boolean;
 }
 
 /** Props of the area layouts that wrap AppLayout. */
@@ -27,14 +24,13 @@ export interface BaseAppLayoutProps {
 /**
  * Renders the signed-in shell: the header, one role navigation (sidebar from 1024 px,
  * bottom bar below), and the page content. Signed-out visitors go to the sign-in page.
- * @param props The page content, the nav area, the settings flag, and the leaderboard switch.
+ * @param props The page content, the nav area, and the settings flag.
  * @returns The shell.
  */
 export default async function AppLayout({
   children,
   area,
   settings = false,
-  disableLeaderboard = false,
 }: AppLayoutProps) {
   const user = await getCurrentUser();
   const locale = await getLocale();
@@ -45,17 +41,6 @@ export default async function AppLayout({
   }
 
   const navArea = area ?? areaForRole(user.role);
-  let leaderboardData: any | null = null;
-
-  if (!disableLeaderboard && user.role === "STUDENT" && user.schoolId) {
-    const leaderboard = await getSchoolLeaderboardController(
-      user.schoolId,
-      user.id,
-    );
-    if (leaderboard?.success) {
-      leaderboardData = leaderboard?.data;
-    }
-  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -84,15 +69,6 @@ export default async function AppLayout({
           <main id="main-content" tabIndex={-1} className="flex w-full min-w-0 flex-1 flex-col outline-none">
             {children}
           </main>
-          {leaderboardData ? (
-            <aside>
-              <Leaderboard
-                data={leaderboardData.results || []}
-                schoolName={leaderboardData.schoolName || ""}
-                userId={user.id}
-              />
-            </aside>
-          ) : null}
         </div>
       </div>
       <BottomNav area={navArea} user={user} />

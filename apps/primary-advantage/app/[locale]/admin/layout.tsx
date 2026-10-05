@@ -7,7 +7,7 @@ export default async function AdminHomeLayout({
 }: BaseAppLayoutProps) {
   await assertLayoutRole(protectedRoutes["/admin"]);
   return (
-    <AppLayout area="admin" disableLeaderboard>
+    <AppLayout area="admin">
       {children}
     </AppLayout>
   );

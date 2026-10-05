@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { countStreakDays } from "../streak";
+import { countStreakDays } from "../primary-home/streak.js";
 
 const d = (s: string) => new Date(s);
 const NOW = d("2026-10-04T15:00:00");

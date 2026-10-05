@@ -40,3 +40,4 @@ export { StatusChip, statusChipVariants, type StatusChipProps } from "./componen
 // Server-safe motion parts. AnimatedCounter (hooks) is in the "@reading-advantage/ui/client" entry.
 export { PageTransition, ShimmerSkeleton } from "./components/Motion";
 export { cardHoverClassName } from "./lib/card-hover";
+export { EmptyState, ErrorState, type StatePanelProps } from "./components/StatePanel";

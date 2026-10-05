@@ -28,6 +28,10 @@
       "types": "./dist/reports/index.d.ts",
       "import": "./dist/reports/index.js"
     },
+    "./primary-home": {
+      "types": "./dist/primary-home/index.d.ts",
+      "import": "./dist/primary-home/index.js"
+    },
     "./students": {
       "types": "./dist/students/index.d.ts",
       "import": "./dist/students/index.js"

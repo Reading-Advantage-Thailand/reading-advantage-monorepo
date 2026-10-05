@@ -58,7 +58,7 @@ describe("CardSignIn", () => {
     answer(200, { user: { id: "u1", role: "STUDENT" }, authStrength: "full" });
     const replaceState = vi.spyOn(window.history, "replaceState");
     renderWithMessages(<CardSignIn />);
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/read"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/home"));
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0]![0]).toBe("/api/auth/student/qr");
     expect(JSON.parse(fetchMock.mock.calls[0]![1].body)).toEqual({ token: TOKEN });

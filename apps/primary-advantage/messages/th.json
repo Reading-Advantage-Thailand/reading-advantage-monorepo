@@ -2965,5 +2965,29 @@
       "schools": "โรงเรียน",
       "licenses": "สิทธิ์การใช้งาน"
     }
+  },
+  "StudentHome": {
+    "title": "หน้าหลัก",
+    "greeting": "สวัสดี {name}!",
+    "subtitle": "วันนี้พร้อมอ่านหรือยัง?",
+    "progress": "ความก้าวหน้าของฉัน",
+    "streak": "อ่านต่อเนื่อง",
+    "streakValue": "{count, plural, =0 {ยังไม่เริ่ม} other {# วัน}}",
+    "xp": "XP",
+    "level": "เลเวล",
+    "todayLesson": "บทเรียนวันนี้",
+    "dueDate": "ส่งภายใน {date}",
+    "noDueDate": "ไม่มีวันส่ง",
+    "overdue": "เลยกำหนด",
+    "startLesson": "เริ่มบทเรียน",
+    "continueLesson": "เรียนต่อ",
+    "continueReading": "อ่านต่อ",
+    "keepReading": "อ่านต่อเลย",
+    "noReading": "ยังไม่มีเรื่องที่อ่านค้างไว้",
+    "noReadingHint": "เลือกเรื่องที่ชอบ แล้วเริ่มอ่านเลย",
+    "findStory": "หาเรื่องอ่าน",
+    "games": "เกม",
+    "gamesHint": "เล่นเกมคำศัพท์ แล้วรับ XP",
+    "playGames": "เล่นเกม"
   }
 }

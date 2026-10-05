@@ -13,7 +13,8 @@ vi.mock("@/lib/session", () => ({
   currentUser: async () => mocks.user,
 }));
 vi.mock("next-intl/server", () => ({ getLocale: async () => "en" }));
-vi.mock("@/server/controllers/schoolController", () => ({ getSchoolLeaderboardController: vi.fn() }));
+const leaderboard = vi.hoisted(() => ({ get: vi.fn() }));
+vi.mock("@/server/controllers/schoolController", () => ({ getSchoolLeaderboardController: leaderboard.get }));
 vi.mock("@reading-advantage/auth-client", () => ({ useAuth: () => ({ logout: vi.fn() }) }));
 vi.mock("@/i18n/navigation", () => ({
   redirect: vi.fn(),
@@ -83,6 +84,15 @@ describe("signed-in page shell (FR-7)", () => {
     expect(screen.getByRole("button", { name: th.AppShell.accountMenu })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: th.AppShell.toggleTheme })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: th.LocaleSwitcher.label })).toBeInTheDocument();
+  });
+
+  it("leaves the leaderboard to the student home (no leaderboard in the shell)", async () => {
+    mocks.user = { ...mocks.user, role: "STUDENT" };
+    const ui = await AppLayout({ area: "student", children: <h1>Read</h1> });
+    renderWithMessages(ui as React.ReactElement);
+    expect(leaderboard.get).not.toHaveBeenCalled();
+    expect(screen.queryByText(testMessages.en.Leaderboard.title)).not.toBeInTheDocument();
+    mocks.user = { ...mocks.user, role: "TEACHER" };
   });
 
   it("shows the sidebar column only from 1024 px and the bottom bar only below it", async () => {
