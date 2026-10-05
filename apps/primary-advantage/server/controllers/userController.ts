@@ -36,6 +36,12 @@ export const handleUpdateUserActivity = async (
   }
 };
 
+/**
+ * Reads the activity of a user for a report, when the signed-in user may read that user.
+ * @param id The user id.
+ * @returns `{ activity, xpLogs, user }` with only the safe user columns (id, name, username,
+ * CEFR level), or undefined when the caller may not read the user or a read fails.
+ */
 export const fetchUserActivity = async (id: string) => {
   try {
     const user = await currentUser();
