@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { ArrowLeftIcon, TriangleAlertIcon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { errorKey, postStudentLogin, type ClassLoginErrorKey } from "./api";
 import { PrintStyles } from "./print-styles";
+import { TEACHER_BACK_LINK, TEACHER_CARD, TeacherPageHeader } from "../teacher-shell";
 
 /** Result of the class password reset route. */
 interface ClassSheetResult {
@@ -51,23 +53,32 @@ export function ClassSheet({ classroomId }: ClassSheetProps) {
 
   return (
     <div className="space-y-6">
-      <Link href={`/teacher/class-roster/${classroomId}`} className="text-sm underline">
-        {t("backToClass")}
-      </Link>
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold">{t("sheet.title")}</h1>
-        <p>{t("sheet.intro")}</p>
-        <p className="font-medium">{t("sheet.warning")}</p>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <Button className="min-h-12" disabled={busy} onClick={() => setConfirming(true)}>
-          {t("sheet.make")}
-        </Button>
-        {sheet && (
-          <Button variant="outline" className="min-h-12" onClick={() => window.print()}>
-            {t("sheet.print")}
+      <TeacherPageHeader
+        back={
+          <Link href={`/teacher/class-roster/${classroomId}`} className={TEACHER_BACK_LINK}>
+            <ArrowLeftIcon aria-hidden="true" />
+            {t("backToClass")}
+          </Link>
+        }
+        title={t("sheet.title")}
+        description={t("sheet.intro")}
+      />
+      <div className={TEACHER_CARD}>
+        <p className="flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 p-3 font-medium text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
+          <TriangleAlertIcon className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+          {t("sheet.warning")}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {/* Danger style: the action resets the password of every student in the class. */}
+          <Button variant="destructive" className="min-h-12" disabled={busy} onClick={() => setConfirming(true)}>
+            {t("sheet.make")}
           </Button>
-        )}
+          {sheet && (
+            <Button variant="outline" className="min-h-12" onClick={() => window.print()}>
+              {t("sheet.print")}
+            </Button>
+          )}
+        </div>
       </div>
       {error && (
         <p role="alert" className="text-destructive text-sm">

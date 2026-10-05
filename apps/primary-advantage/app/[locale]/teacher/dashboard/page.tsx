@@ -79,7 +79,7 @@ export default async function TeacherDashboardPage() {
                   </div>
                   <Link
                     href={`/teacher/class-roster/${cls.id}#class-login`}
-                    aria-label={t("classes.startClassFor", { name: cls.name })}
+                    aria-label={tUi("startClassFor", { name: cls.name })}
                     className={cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "px-4")}
                   >
                     <PlayIcon aria-hidden="true" />

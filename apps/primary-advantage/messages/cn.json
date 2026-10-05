@@ -3165,7 +3165,6 @@
     },
     "classes": {
       "heading": "My classes",
-      "startClassFor": "Start class {name}",
       "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
       "grade": "Grade {grade}",
       "empty": "No classes yet",
@@ -3195,6 +3194,7 @@
   },
   "TeacherUi": {
     "startClass": "Start class",
+    "startClassFor": "Start class {name}",
     "due": {
       "none": "No due date",
       "overdue": "Late",
@@ -3207,5 +3207,26 @@
       "title": "Class book",
       "hint": "The book and the lesson plan for this class will show here."
     }
+  },
+  "TeacherClass": {
+    "challenges": "Class challenges",
+    "backToClasses": "Back to classes",
+    "loadError": "We could not load this class.",
+    "loadClassesError": "We could not load your classes.",
+    "loadErrorHint": "Check your connection and try again.",
+    "searchClasses": "Search classes",
+    "classActionsFor": "Actions for {name}",
+    "openClass": "Open class",
+    "openClassFor": "Open class {name}",
+    "searchStudents": "Search students",
+    "noMatch": "No student matches your search.",
+    "progress": "Progress",
+    "progressFor": "Progress of {name}",
+    "removeFor": "Remove {name} from the class",
+    "moreFor": "More actions for {name}",
+    "lastActive": "Last active: {when}",
+    "level": "Level {level}",
+    "xp": "{xp} XP",
+    "qrPrintHint": "Make the cards first. Then you can print them."
   }
 }

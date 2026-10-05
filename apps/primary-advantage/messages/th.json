@@ -3169,7 +3169,6 @@
     },
     "classes": {
       "heading": "ชั้นเรียนของฉัน",
-      "startClassFor": "เริ่มชั้นเรียน {name}",
       "students": "{count, plural, =0 {ยังไม่มีนักเรียน} other {นักเรียน # คน}}",
       "grade": "ระดับชั้น {grade}",
       "empty": "ยังไม่มีชั้นเรียน",
@@ -3199,6 +3198,7 @@
   },
   "TeacherUi": {
     "startClass": "เริ่มชั้นเรียน",
+    "startClassFor": "เริ่มชั้นเรียน {name}",
     "due": {
       "none": "ไม่มีวันส่ง",
       "overdue": "เลยกำหนด",
@@ -3211,5 +3211,26 @@
       "title": "หนังสือเรียนของชั้น",
       "hint": "หนังสือและแผนการสอนของชั้นเรียนนี้จะแสดงที่นี่"
     }
+  },
+  "TeacherClass": {
+    "challenges": "ภารกิจเกมของชั้นเรียน",
+    "backToClasses": "กลับไปที่ชั้นเรียน",
+    "loadError": "โหลดข้อมูลชั้นเรียนไม่สำเร็จ",
+    "loadClassesError": "โหลดรายการชั้นเรียนไม่สำเร็จ",
+    "loadErrorHint": "ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+    "searchClasses": "ค้นหาชั้นเรียน",
+    "classActionsFor": "การดำเนินการของ {name}",
+    "openClass": "เปิดชั้นเรียน",
+    "openClassFor": "เปิดชั้นเรียน {name}",
+    "searchStudents": "ค้นหานักเรียน",
+    "noMatch": "ไม่พบนักเรียนที่ตรงกับคำค้นหา",
+    "progress": "ความก้าวหน้า",
+    "progressFor": "ความก้าวหน้าของ {name}",
+    "removeFor": "นำ {name} ออกจากชั้นเรียน",
+    "moreFor": "การดำเนินการเพิ่มเติมสำหรับ {name}",
+    "lastActive": "ใช้งานล่าสุด: {when}",
+    "level": "เลเวล {level}",
+    "xp": "{xp} XP",
+    "qrPrintHint": "ทำบัตรก่อน แล้วจึงพิมพ์บัตรได้"
   }
 }

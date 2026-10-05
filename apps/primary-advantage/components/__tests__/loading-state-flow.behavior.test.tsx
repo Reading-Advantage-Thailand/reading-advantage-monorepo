@@ -108,6 +108,12 @@ vi.mock("../teacher/student-cefr-level-setter", () => ({
   default: () => null,
 }));
 
+// The class page puts its rows on the Lane B live roster (own tests). Here the live roster
+// is not loaded, so the page shows its fallback list with the same row parts.
+vi.mock("../teacher/class-login/class-login-panel", () => ({
+  ClassLoginPanel: ({ rosterFallback }: { rosterFallback?: React.ReactNode }) => <>{rosterFallback}</>,
+}));
+
 vi.mock("../teacher/class-code-generator", () => ({
   __esModule: true,
   default: () => null,

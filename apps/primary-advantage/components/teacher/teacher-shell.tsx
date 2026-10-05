@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils";
 export const TEACHER_CARD = "bg-card text-card-foreground flex min-w-0 flex-col gap-3 rounded-2xl border p-4 shadow-sm sm:p-5";
 /** Tap target for teacher actions: 44 px or more. */
 export const TEACHER_ACTION = "min-h-11";
+/** A link back to the parent page, above the heading (with an arrow icon as its first child). */
+export const TEACHER_BACK_LINK =
+  "min-h-11 text-muted-foreground hover:text-foreground inline-flex w-fit items-center gap-2 text-sm font-medium [&>svg]:size-4";
 
 /** Props of {@link TeacherPageHeader}. */
 export interface TeacherPageHeaderProps {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,8 @@ import {
 import { toast } from "sonner";
 import { getCefrLevelColor } from "@/lib/cefr";
 import type { Student } from "@/types";
+import { cn } from "@/lib/utils";
+import { TEACHER_ACTION } from "./teacher-shell";
 import {
   Search,
   UserPlus,
@@ -47,6 +50,12 @@ interface EnrollmentManagementProps {
   refreshStudents?: () => void;
 }
 
+/**
+ * Enrollment of one class: search, enroll (a dialog with the students of the school who are not
+ * in the class), and the enrolled students as cards with a named remove button.
+ * @param props The class, the enrolled students, and the callbacks after a change.
+ * @returns The enrollment management body.
+ */
 export default function EnrollmentManagement({
   classroomId,
   classroomName,
@@ -55,6 +64,7 @@ export default function EnrollmentManagement({
   onStudentUnenrolled,
   refreshStudents,
 }: EnrollmentManagementProps) {
+  const tc = useTranslations("TeacherClass");
   const [enrolledStudents, setEnrolledStudents] = useState<EnrolledStudent[]>(
     initialEnrolledStudents,
   );
@@ -211,42 +221,24 @@ export default function EnrollmentManagement({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Student Enrollment
-          </h2>
-          <p className="mt-1 text-sm text-gray-600">
-            Manage students in {classroomName}
-          </p>
+      {/* Search and enroll (the page heading is in EnrollmentClient). */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative min-w-0 flex-1 basis-56">
+          <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" aria-hidden="true" />
+          <Input
+            type="search"
+            aria-label={tc("searchStudents")}
+            placeholder="Search students by name or email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="min-h-11 pl-10"
+          />
         </div>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <Button
-            onClick={openEnrollDialog}
-            className="w-full sm:w-auto"
-            size="sm"
-          >
-            <UserPlus className="mr-2 h-4 w-4" />
-            Enroll Student
-          </Button>
-        </div>
+        <Button onClick={openEnrollDialog} className={TEACHER_ACTION}>
+          <UserPlus className="mr-2 h-4 w-4" aria-hidden="true" />
+          Enroll Student
+        </Button>
       </div>
-
-      {/* Search */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="relative">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-            <Input
-              placeholder="Search students by name or email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </CardHeader>
-      </Card>
 
       {/* Enrolled Students */}
       <Card>
@@ -273,8 +265,8 @@ export default function EnrollmentManagement({
                   key={student.id}
                   className="rounded-lg border p-4 transition-shadow hover:shadow-md"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex flex-1 items-center gap-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback
                           className={`text-white ${getLevelColor(student.level)}`}
@@ -289,7 +281,7 @@ export default function EnrollmentManagement({
                         <p className="truncate text-sm text-gray-500">
                           {student.email}
                         </p>
-                        <div className="mt-2 flex items-center gap-2">
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
                           {student.cefrLevel && (
                             <Badge
                               variant="secondary"
@@ -321,10 +313,10 @@ export default function EnrollmentManagement({
                     </div>
                     <Button
                       variant="outline"
-                      size="sm"
                       onClick={() => setStudentToUnenroll(student)}
                       disabled={enrollmentLoading === student.id}
-                      className="ml-2 text-red-600 hover:bg-red-50 hover:text-red-700"
+                      aria-label={tc("removeFor", { name: student.name || student.email || "" })}
+                      className={cn(TEACHER_ACTION, "min-w-11 shrink-0 px-0 text-red-700 hover:bg-red-50 hover:text-red-800")}
                     >
                       {enrollmentLoading === student.id ? (
                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-red-600 border-t-transparent" />

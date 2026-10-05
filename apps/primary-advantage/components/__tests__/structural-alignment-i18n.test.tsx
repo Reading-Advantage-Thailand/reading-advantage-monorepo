@@ -428,7 +428,7 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
       name: "Class challenges",
     });
     expect(challengesLink).toHaveAttribute("data-test-id", "i18n-link");
-    expect(challengesLink).toHaveAttribute("href", "../game-challenges");
+    expect(challengesLink).toHaveAttribute("href", "/teacher/game-challenges");
     cleanup();
 
     mocks.getCurrentUser.mockResolvedValue({

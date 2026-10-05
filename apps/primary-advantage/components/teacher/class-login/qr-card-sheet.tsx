@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { useTranslations } from "next-intl";
+import { ArrowLeftIcon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { cardSignInUrl } from "@/lib/student-login/card-url";
@@ -9,6 +10,7 @@ import { errorKey, postStudentLogin, type ClassLoginErrorKey, type ClassRoster, 
 import { PrintStyles } from "./print-styles";
 import { QrCard } from "./qr-card";
 import { RotateCardConfirm } from "./rotate-card-confirm";
+import { TEACHER_BACK_LINK, TEACHER_CARD, TeacherPageHeader } from "../teacher-shell";
 
 /** Cards on one printed A4 page (FR-5). */
 export const CARDS_PER_PAGE = 8;
@@ -29,6 +31,8 @@ export interface QrCardSheetProps {
  */
 export function QrCardSheet({ classroomId }: QrCardSheetProps) {
   const t = useTranslations("ClassLogin");
+  const tc = useTranslations("TeacherClass");
+  const printHintId = useId();
   const [roster, setRoster] = useState<ClassRoster | null>(null);
   const [cards, setCards] = useState<{ userId: string; name: string; url: string }[]>([]);
   const [rotateTarget, setRotateTarget] = useState<RosterStudent | null>(null);
@@ -78,19 +82,23 @@ export function QrCardSheet({ classroomId }: QrCardSheetProps) {
 
   return (
     <div className="space-y-6">
-      <Link href={`/teacher/class-roster/${classroomId}`} className="text-sm underline">
-        {t("backToClass")}
-      </Link>
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold">{t("qrPage.title")}</h1>
-        <p>{t("qrPage.intro")}</p>
-      </div>
+      <TeacherPageHeader
+        back={
+          <Link href={`/teacher/class-roster/${classroomId}`} className={TEACHER_BACK_LINK}>
+            <ArrowLeftIcon aria-hidden="true" />
+            {t("backToClass")}
+          </Link>
+        }
+        title={t("qrPage.title")}
+        description={t("qrPage.intro")}
+      />
       {error && (
         <p role="alert" className="text-destructive text-sm">
           {t(`errors.${error}`)}
         </p>
       )}
       {roster && (
+        <div className={TEACHER_CARD}>
         <div className="flex flex-wrap items-center gap-2">
           {withoutCard.length > 0 ? (
             <Button
@@ -103,10 +111,22 @@ export function QrCardSheet({ classroomId }: QrCardSheetProps) {
           ) : (
             <p>{t("qrPage.allHaveCards")}</p>
           )}
-          <Button variant="outline" className="min-h-12" disabled={cards.length === 0} onClick={() => window.print()}>
+          <Button
+            variant="outline"
+            className="min-h-12"
+            disabled={cards.length === 0}
+            aria-describedby={cards.length === 0 ? printHintId : undefined}
+            onClick={() => window.print()}
+          >
             {t("qrPage.print")}
           </Button>
           {cards.length > 0 && <span className="text-muted-foreground text-sm">{t("qrPage.toPrint", { count: cards.length })}</span>}
+        </div>
+        {cards.length === 0 && (
+          <p id={printHintId} className="text-muted-foreground text-sm">
+            {tc("qrPrintHint")}
+          </p>
+        )}
         </div>
       )}
 

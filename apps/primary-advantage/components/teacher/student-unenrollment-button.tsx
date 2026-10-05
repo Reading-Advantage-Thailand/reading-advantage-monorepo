@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { UserMinus, AlertCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Student {
   id: string;
@@ -27,8 +28,17 @@ interface StudentUnenrollmentButtonProps {
   buttonSize?: "default" | "sm" | "lg" | "icon";
   showText?: boolean;
   disabled?: boolean;
+  /** Accessible name of an icon-only button, for example "Remove Ann from the class". */
+  ariaLabel?: string;
+  /** Extra classes for the button. */
+  className?: string;
 }
 
+/**
+ * Button that removes a student from a class after a confirmation dialog.
+ * @param props The student, the class, the callback after removal, and the button look.
+ * @returns The button with its confirmation dialog.
+ */
 export default function StudentUnenrollmentButton({
   student,
   classroomId,
@@ -38,6 +48,8 @@ export default function StudentUnenrollmentButton({
   buttonSize = "sm",
   showText = false,
   disabled = false,
+  ariaLabel,
+  className,
 }: StudentUnenrollmentButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -81,9 +93,14 @@ export default function StudentUnenrollmentButton({
           variant={buttonVariant}
           size={buttonSize}
           disabled={disabled}
-          className={`gap-2 ${buttonVariant === "outline" ? "border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700" : ""}`}
+          aria-label={ariaLabel}
+          className={cn(
+            "gap-2",
+            buttonVariant === "outline" && "border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800",
+            className,
+          )}
         >
-          <UserMinus className="h-4 w-4" />
+          <UserMinus className="h-4 w-4" aria-hidden="true" />
           {showText && "Unenroll"}
         </Button>
       </AlertDialogTrigger>
