@@ -77,5 +77,11 @@ export const teacherPageConfig: PageConfig = {
       icon: "ClipboardCheckIcon",
       requiredPermissions: ["TEACHER_ACCESS"],
     },
+    {
+      title: "manual",
+      href: "/teacher/manual",
+      icon: "BookOpenIcon",
+      requiredPermissions: ["TEACHER_ACCESS"],
+    },
   ],
 };

@@ -15,7 +15,7 @@ import { TEACHER_ACTION } from "./teacher-shell";
  * Runs a class book action, refreshes the page on success, and shows the error on failure.
  * @returns The pending flag and the runner.
  */
-function useClassBookAction() {
+export function useClassBookAction() {
   const t = useTranslations("TeacherUi.classBook");
   const router = useRouter();
   const [pending, start] = useTransition();

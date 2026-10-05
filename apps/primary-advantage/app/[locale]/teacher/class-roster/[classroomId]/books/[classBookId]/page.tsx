@@ -115,6 +115,9 @@ export default async function ClassBookPacingPage({ params }: { params: Params }
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   {lesson.current ? <StatusChip tone="info">{t("current")}</StatusChip> : null}
+                  <Link href={`/teacher/class-roster/${classroomId}/books/${classBookId}/lessons/${lesson.number}`} className={cn(buttonVariants({ variant: "ghost", size: "sm" }), TEACHER_ACTION)}>
+                    {t("guide.open")}
+                  </Link>
                   <LessonActions classBookId={classBook.id} lessonNumber={lesson.number} current={lesson.current} taught={lesson.taughtAt !== null} />
                 </div>
               </li>
