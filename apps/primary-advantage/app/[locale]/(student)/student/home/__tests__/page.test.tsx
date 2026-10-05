@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   > | null,
   getStudentHome: vi.fn(),
   getStudentClassBooks: vi.fn(async (): Promise<unknown[]> => []),
+  getAvatarProfile: vi.fn(async (): Promise<unknown> => null),
   leaderboard: vi.fn(),
   redirect: vi.fn(),
 }));
@@ -23,6 +24,7 @@ vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user, getCurren
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getStudentHome: mocks.getStudentHome }));
 vi.mock("@reading-advantage/domain/primary-books", () => ({ getStudentClassBooks: mocks.getStudentClassBooks }));
+vi.mock("@reading-advantage/domain/primary-avatar", () => ({ getAvatarProfile: mocks.getAvatarProfile }));
 vi.mock("@/server/controllers/schoolController", () => ({ getSchoolLeaderboardController: mocks.leaderboard }));
 vi.mock("next-intl/server", async () => {
   const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
@@ -208,5 +210,25 @@ describe("student home class books (teacher-books FR-4)", () => {
     await renderHome();
     expect(screen.queryByRole("region", { name: en.classBook })).not.toBeInTheDocument();
     expect(screen.getByRole("region", { name: en.continueReading })).toBeInTheDocument();
+  });
+});
+
+describe("student home avatar nudge (reedy FR-10b)", () => {
+  it("shows the nudge with a link to the picker for a student with no avatar", async () => {
+    mocks.getAvatarProfile.mockResolvedValue(null);
+    renderWithMessages(await StudentHomePage(), { locale: "en" });
+    const nudge = screen.getByRole("status");
+    expect(nudge).toHaveTextContent("Make your avatar!");
+    expect(within(nudge).getByRole("link", { name: "Make my avatar" })).toHaveAttribute("href", "/student/avatar");
+  });
+
+  it("hides the nudge once an avatar is saved, and when the read fails", async () => {
+    mocks.getAvatarProfile.mockResolvedValue({ classId: "knight", tints: {}, catalogVersion: "1.0.0", updatedAt: "2026-10-05T00:00:00.000Z" });
+    renderWithMessages(await StudentHomePage(), { locale: "en" });
+    expect(screen.queryByText("Make your avatar!")).not.toBeInTheDocument();
+    cleanup();
+    mocks.getAvatarProfile.mockRejectedValue(new Error("down"));
+    renderWithMessages(await StudentHomePage(), { locale: "th" });
+    expect(screen.queryByText("สร้างอวตารของคุณ!")).not.toBeInTheDocument();
   });
 });

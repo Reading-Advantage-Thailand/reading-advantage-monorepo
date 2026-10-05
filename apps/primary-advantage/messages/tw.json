@@ -1510,6 +1510,7 @@
       "title": "個人資訊",
       "subtitle": "關於您個人資料的資訊",
       "backToReading": "返回閱讀頁面",
+      "avatar": "我的頭像",
       "username": "用戶名",
       "usernameDescription": "用戶名用於代表自己在平台上的身份。",
       "email": "電子郵件",
@@ -3036,6 +3037,76 @@
       "import": "Import",
       "schools": "Schools",
       "licenses": "Licenses"
+    }
+  },
+  "Avatar":   {
+    "title": "我的頭像",
+    "subtitle": "選擇一個英雄和你的顏色，隨時可以更改。",
+    "stepClass": "選擇你的英雄",
+    "stepColors": "{class}的顏色",
+    "preview": "你的頭像",
+    "save": "儲存頭像",
+    "saving": "儲存中…",
+    "skip": "以後再說",
+    "back": "選擇其他英雄",
+    "error": "頭像儲存失敗，請再試一次。",
+    "nudgeTitle": "建立你的頭像！",
+    "nudgeBody": "選擇一個英雄和你的顏色，Reedy 會變成你的樣子。",
+    "nudgeLink": "建立頭像",
+    "meLink": "我的頭像",
+    "classes": {
+      "knight": "騎士",
+      "wizard": "法師",
+      "cleric": "牧師",
+      "rogue": "盜賊",
+      "ranger": "遊俠",
+      "bard": "吟遊詩人",
+      "witch": "女巫",
+      "druid": "德魯伊",
+      "shaman": "薩滿",
+      "duelist": "決鬥者",
+      "swashbuckler": "劍客",
+      "treasure-hunter": "尋寶者",
+      "explorer": "探險家",
+      "gladiator": "角鬥士",
+      "shield-maiden": "盾女"
+    },
+    "slots": {
+      "skin": "膚色",
+      "hair": "頭髮",
+      "eyes": "眼睛",
+      "cloth": "衣服"
+    },
+    "options": {
+      "skin": {
+        "fair": "白皙",
+        "light": "淺色",
+        "tan": "小麥",
+        "brown": "棕色",
+        "deep": "深色"
+      },
+      "hair": {
+        "brown": "棕色",
+        "black": "黑色",
+        "blond": "金色",
+        "auburn": "赤褐",
+        "silver": "銀色",
+        "teal": "青色"
+      },
+      "eyes": {
+        "brown": "棕色",
+        "blue": "藍色",
+        "green": "綠色",
+        "hazel": "淡褐",
+        "violet": "紫色"
+      },
+      "cloth": {
+        "sky": "天藍",
+        "linen": "亞麻",
+        "moss": "苔綠",
+        "rose": "玫瑰",
+        "slate": "石板灰"
+      }
     }
   },
   "StudentHome": {

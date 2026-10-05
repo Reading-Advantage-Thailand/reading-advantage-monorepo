@@ -1510,6 +1510,7 @@
       "title": "Personal information",
       "subtitle": "Information about your personal profile",
       "backToReading": "Back to Reading Page",
+      "avatar": "My avatar",
       "username": "Username",
       "usernameDescription": "The username is used to represent themselves on the platform.",
       "email": "Email",
@@ -3038,6 +3039,76 @@
       "import": "Import",
       "schools": "Schools",
       "licenses": "Licenses"
+    }
+  },
+  "Avatar":   {
+    "title": "My avatar",
+    "subtitle": "Pick a hero and your colors. You can change them any time.",
+    "stepClass": "Choose your hero",
+    "stepColors": "Colors for your {class}",
+    "preview": "Your avatar",
+    "save": "Save my avatar",
+    "saving": "Saving…",
+    "skip": "Not now",
+    "back": "Choose another hero",
+    "error": "We could not save your avatar. Try again.",
+    "nudgeTitle": "Make your avatar!",
+    "nudgeBody": "Pick a hero and your colors. Reedy will look like you.",
+    "nudgeLink": "Make my avatar",
+    "meLink": "My avatar",
+    "classes": {
+      "knight": "Knight",
+      "wizard": "Wizard",
+      "cleric": "Cleric",
+      "rogue": "Rogue",
+      "ranger": "Ranger",
+      "bard": "Bard",
+      "witch": "Witch",
+      "druid": "Druid",
+      "shaman": "Shaman",
+      "duelist": "Duelist",
+      "swashbuckler": "Swashbuckler",
+      "treasure-hunter": "Treasure hunter",
+      "explorer": "Explorer",
+      "gladiator": "Gladiator",
+      "shield-maiden": "Shield maiden"
+    },
+    "slots": {
+      "skin": "Skin",
+      "hair": "Hair",
+      "eyes": "Eyes",
+      "cloth": "Clothes"
+    },
+    "options": {
+      "skin": {
+        "fair": "Fair",
+        "light": "Light",
+        "tan": "Tan",
+        "brown": "Brown",
+        "deep": "Deep"
+      },
+      "hair": {
+        "brown": "Brown",
+        "black": "Black",
+        "blond": "Blond",
+        "auburn": "Auburn",
+        "silver": "Silver",
+        "teal": "Teal"
+      },
+      "eyes": {
+        "brown": "Brown",
+        "blue": "Blue",
+        "green": "Green",
+        "hazel": "Hazel",
+        "violet": "Violet"
+      },
+      "cloth": {
+        "sky": "Sky",
+        "linen": "Linen",
+        "moss": "Moss",
+        "rose": "Rose",
+        "slate": "Slate"
+      }
     }
   },
   "StudentHome": {

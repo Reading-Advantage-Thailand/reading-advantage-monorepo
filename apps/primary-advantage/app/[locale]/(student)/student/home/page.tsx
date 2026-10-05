@@ -4,6 +4,7 @@ import { BookMarkedIcon, BookOpenIcon, CalendarIcon, FlameIcon, Gamepad2Icon, St
 import { db } from "@reading-advantage/db";
 import { getStudentHome } from "@reading-advantage/domain/primary-home";
 import { getStudentClassBooks, type StudentClassBook } from "@reading-advantage/domain/primary-books";
+import { getAvatarProfile } from "@reading-advantage/domain/primary-avatar";
 import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
 import { EmptyState, StatusChip, cardHoverClassName } from "@reading-advantage/ui";
 import { AnimatedCounter } from "@reading-advantage/ui/client";
@@ -13,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import Leaderboard from "@/components/leaderboard";
 import { ReedyMeterSlot } from "@/components/student/reedy-meter-slot";
+import { AvatarNudge } from "@/components/avatar/avatar-nudge";
 import { getSchoolLeaderboardController } from "@/server/controllers/schoolController";
 
 /** Card frame shared by the home sections. */
@@ -58,22 +60,37 @@ async function loadClassBooks(user: NonNullable<Awaited<ReturnType<typeof curren
 }
 
 /**
+ * True when the student has no avatar yet (FR-10b). A failed read shows no nudge.
+ * @param user The signed-in student.
+ * @returns Whether to show the avatar nudge.
+ */
+async function needsAvatar(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>): Promise<boolean> {
+  try {
+    return (await getAvatarProfile({ db, user })) === null;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Student home (FR-4), the landing page after sign-in: streak, XP, and level; today's lesson
  * (the next open assignment, hidden when there is none); the class books with the current
  * lesson; the article to continue; a games
- * shortcut; the Reedy meter slot; and the school leaderboard.
+ * shortcut; the avatar nudge for a student with no avatar; the Reedy meter slot; and the school leaderboard.
  * @returns The home page.
  */
 export default async function StudentHomePage() {
   const user = await currentUser();
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
 
-  const [home, classBooks, leaderboard, t, tBoard, format] = await Promise.all([
+  const [home, classBooks, leaderboard, noAvatar, t, tBoard, tAvatar, format] = await Promise.all([
     getStudentHome({ db, user }),
     loadClassBooks(user),
     loadLeaderboard(user),
+    needsAvatar(user),
     getTranslations("StudentHome"),
     getTranslations("Leaderboard"),
+    getTranslations("Avatar"),
     getFormatter(),
   ]);
   const lesson = home.todayLesson;
@@ -99,6 +116,8 @@ export default async function StudentHomePage() {
           {home.level}
         </StatTile>
       </section>
+
+      {noAvatar ? <AvatarNudge t={tAvatar} /> : null}
 
       <ReedyMeterSlot />
 

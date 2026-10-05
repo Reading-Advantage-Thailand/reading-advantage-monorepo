@@ -305,6 +305,17 @@
 }
 
 /* Used by ShimmerSkeleton from @reading-advantage/ui. */
+/* Reedy (primary_reedy_preview_20261003): the idle and speaking bob of the coach portrait. */
+@keyframes reedy-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
 @keyframes shimmer {
   0% {
     background-position: -300px 0;

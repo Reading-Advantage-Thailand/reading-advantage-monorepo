@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChangeUsernameForm } from "@/components/change-username-form";
 import { UpdateUserLicenseForm } from "@/components/update-user-license";
-import { ArrowLeftIcon, BadgeCheck } from "lucide-react";
+import { ArrowLeftIcon, BadgeCheck, CircleUserIcon } from "lucide-react";
 import { Icons } from "@/components/icons";
 import { redirect } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
@@ -37,6 +37,12 @@ export default async function UserProfileSettingsPage({
         <ArrowLeftIcon className="h-4 w-4" />
         {t("backToReading")}
       </Link>
+      {user.role === "STUDENT" ? (
+        <Link href="/student/avatar?from=me" className="mb-4 inline-flex min-h-12 items-center gap-2 text-base font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200">
+          <CircleUserIcon className="h-5 w-5" aria-hidden="true" />
+          {t("avatar")}
+        </Link>
+      ) : null}
       <Separator className="my-4" />
       <div className="mx-2 flex flex-col gap-4 md:flex-row">
         <div className="w-full">

@@ -1510,6 +1510,7 @@
       "title": "Thông tin cá nhân",
       "subtitle": "Thông tin về hồ sơ cá nhân của bạn",
       "backToReading": "Quay lại trang đọc",
+      "avatar": "Nhân vật của tôi",
       "username": "Tên người dùng",
       "usernameDescription": "Tên người dùng được sử dụng để biểu thị chính mình trên nền tảng.",
       "email": "Email",
@@ -3038,6 +3039,76 @@
       "import": "Import",
       "schools": "Schools",
       "licenses": "Licenses"
+    }
+  },
+  "Avatar":   {
+    "title": "Nhân vật của tôi",
+    "subtitle": "Chọn một anh hùng và màu sắc của bạn. Bạn có thể đổi bất cứ lúc nào.",
+    "stepClass": "Chọn anh hùng của bạn",
+    "stepColors": "Màu sắc cho {class}",
+    "preview": "Nhân vật của bạn",
+    "save": "Lưu nhân vật",
+    "saving": "Đang lưu…",
+    "skip": "Để sau",
+    "back": "Chọn anh hùng khác",
+    "error": "Không lưu được nhân vật. Hãy thử lại.",
+    "nudgeTitle": "Tạo nhân vật của bạn!",
+    "nudgeBody": "Chọn một anh hùng và màu sắc của bạn. Reedy sẽ trông giống bạn.",
+    "nudgeLink": "Tạo nhân vật",
+    "meLink": "Nhân vật của tôi",
+    "classes": {
+      "knight": "Hiệp sĩ",
+      "wizard": "Pháp sư",
+      "cleric": "Tu sĩ",
+      "rogue": "Đạo tặc",
+      "ranger": "Kiểm lâm",
+      "bard": "Thi sĩ",
+      "witch": "Phù thủy",
+      "druid": "Druid",
+      "shaman": "Pháp sư bộ lạc",
+      "duelist": "Kiếm sĩ",
+      "swashbuckler": "Hải tặc",
+      "treasure-hunter": "Thợ săn kho báu",
+      "explorer": "Nhà thám hiểm",
+      "gladiator": "Đấu sĩ",
+      "shield-maiden": "Nữ chiến binh"
+    },
+    "slots": {
+      "skin": "Da",
+      "hair": "Tóc",
+      "eyes": "Mắt",
+      "cloth": "Quần áo"
+    },
+    "options": {
+      "skin": {
+        "fair": "Trắng",
+        "light": "Sáng",
+        "tan": "Rám nắng",
+        "brown": "Nâu",
+        "deep": "Đậm"
+      },
+      "hair": {
+        "brown": "Nâu",
+        "black": "Đen",
+        "blond": "Vàng",
+        "auburn": "Nâu đỏ",
+        "silver": "Bạc",
+        "teal": "Xanh mòng két"
+      },
+      "eyes": {
+        "brown": "Nâu",
+        "blue": "Xanh dương",
+        "green": "Xanh lá",
+        "hazel": "Nâu nhạt",
+        "violet": "Tím"
+      },
+      "cloth": {
+        "sky": "Xanh trời",
+        "linen": "Vải lanh",
+        "moss": "Rêu",
+        "rose": "Hồng",
+        "slate": "Xám đá"
+      }
     }
   },
   "StudentHome": {
