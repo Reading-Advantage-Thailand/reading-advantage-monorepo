@@ -1117,7 +1117,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [x] **Track: Primary Class Books and Teacher Lesson Support** (phases 0-5 done; merge to integration pending) *Link: [./tracks/primary_teacher_books_lesson_support_20261003/](./tracks/primary_teacher_books_lesson_support_20261003/)*
   Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys. Phases 0-5 done on primary/lane-de-teacher-books (2026-10-05, head 437eafe5f); open: browser walk-through, teaching-game demo ports. Merge after the Lane C gates.
 
-- [~] **Track: Primary Reedy Preview** (phases 0-4 done 2026-10-05; Phase 5 waits for one real OpenAI session) *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
+- [~] **Track: Primary Reedy Preview** (phases 0-4 done 2026-10-05; the Phase 5 live-session gate passed 2026-10-06; calibration and the rehearsal remain) *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
   Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.
 
 - [ ] **Track: Primary Core Interaction Quality** *Link: [./tracks/primary_core_interaction_quality_20261005/](./tracks/primary_core_interaction_quality_20261005/)*
@@ -1135,7 +1135,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: Primary Class Quest (semester 2)** *Link: [./tracks/primary_class_quest_20261005/](./tracks/primary_class_quest_20261005/)*
   Guild Mode as Class Quest: weekly quest from a fixed list, power-ups from goals, 8-minute cooperative boss battle with a polling projector dashboard. After the avatar shop track. Created 2026-10-05.
 
-- [ ] **Track: Primary Avatar Shop, GP, Inventory, Loadout (semester 2)** *Link: [./tracks/primary_avatar_shop_20261005/](./tracks/primary_avatar_shop_20261005/)*
+- [x] **Track: Primary Avatar Shop, GP, Inventory, Loadout** (started 2026-10-06 on the owner's instruction; delivered 2026-10-06; the browser walk-through passed; the separate-agent review was skipped by the owner's no-subagent rule) *Link: [./tracks/primary_avatar_shop_20261005/](./tracks/primary_avatar_shop_20261005/)*
   Avatar Phase 2 in the monorepo after the cutover: GP ledger, inventory, loadout, purchase, shop, avatar page, teacher class avatars, avatar in the game launch context. Created 2026-10-05.
 
 - [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*

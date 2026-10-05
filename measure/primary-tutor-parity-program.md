@@ -109,10 +109,20 @@ branch per lane.
 ## Semester 2 track: primary_avatar_shop_20261005
 
 Created 2026-10-05: avatar Phase 2 (GP ledger, inventory, loadout, purchase, shop, avatar
-page, teacher class avatars, avatar in the game launch context). Not a cutover item. Lane F
+page, teacher class avatars, avatar in the game launch context). Lane F
 ships the first piece at cutover: the `primary_avatar_profile` table, the starter-set picker
 with a color scheme, and the portrait package. See
 [the track](./tracks/primary_avatar_shop_20261005/).
+
+Progress 2026-10-06 (owner instruction "start working on the following lanes for Avatar, Quest,
+etc."): Phases 0-3 and the launch avatar are on `primary/lane-f-reedy-preview` (`7b028f6dd`,
+`4b211e2ac`, `882fec997`, `3eae06b1e`, and the uniqueness fix after the browser walk-through).
+Migration `0068_primary_avatar_shop` is additive and gated in `cloudbuild.yaml`. Whether the shop
+ships with the cutover build or stays behind until semester 2 is the owner's call: the pages are
+reachable from the Me tab and the teacher class page as soon as the branch deploys.
+Closed 2026-10-06: the production-build walk-through passed (buy, duplicate refused, wear, teacher
+list), captures 21, 21b, 24, and 46 are in the manual (`whats-new-2026-10.html`), and the
+separate-agent review was skipped by the owner's no-subagent rule.
 
 ## Semester 2 track: primary_class_quest_20261005
 
@@ -120,6 +130,8 @@ Created 2026-10-05 (Guild Mode in the Forge plan, Class Quest in the UI): a week
 a fixed template list, power-ups from goals, and an 8-minute cooperative boss battle with a
 polling projector dashboard. Runs after `primary_avatar_shop_20261005`. See
 [the track](./tracks/primary_class_quest_20261005/).
+
+Started 2026-10-06 after the avatar shop closed (Phase 0 discovery).
 
 ## Semester 2 program: Chibi Quest in Primary
 
