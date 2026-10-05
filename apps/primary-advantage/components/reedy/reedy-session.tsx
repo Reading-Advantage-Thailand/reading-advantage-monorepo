@@ -63,7 +63,12 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
   const [monthLeft, setMonthLeft] = useState(remainingSeconds);
   const call = useRef<{ pc: RTCPeerConnection; mic: MediaStream; sessionId: string; expiresAt: number; audio: HTMLAudioElement | null; context: AudioContext | null; raf: number } | null>(null);
   const ending = useRef(false);
-  const api = useRef(browser ?? defaultBrowser());
+  // The browser pieces resolve on first use, never during server rendering (no RTCPeerConnection there).
+  const api = useRef<ReedyBrowser | null>(browser ?? null);
+  const apiOf = (): ReedyBrowser => {
+    if (!api.current) api.current = defaultBrowser();
+    return api.current;
+  };
 
   const cleanup = useCallback(() => {
     const live = call.current;
@@ -84,7 +89,7 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
       setState("thinking");
       cleanup();
       try {
-        const response = await api.current.fetch(`/api/voice/sessions/${live.sessionId}/end`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ reason: reason === "QUOTA_REACHED" ? "USER_ENDED" : reason }) });
+        const response = await apiOf().fetch(`/api/voice/sessions/${live.sessionId}/end`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ reason: reason === "QUOTA_REACHED" ? "USER_ENDED" : reason }) });
         const record = (await response.json()) as VoiceSessionRecord;
         setSummary(response.ok ? record : null);
         setMonthLeft((left) => Math.max(0, left - (record.consumedSeconds ?? 0)));
@@ -122,7 +127,7 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
     const onHide = () => {
       const live = call.current;
       if (!live) return;
-      void api.current.fetch(`/api/voice/sessions/${live.sessionId}/end`, { method: "POST", keepalive: true, headers: { "content-type": "application/json" }, body: JSON.stringify({ reason: "PAGE_CLOSED" }) }).catch(() => undefined);
+      void apiOf().fetch(`/api/voice/sessions/${live.sessionId}/end`, { method: "POST", keepalive: true, headers: { "content-type": "application/json" }, body: JSON.stringify({ reason: "PAGE_CLOSED" }) }).catch(() => undefined);
     };
     window.addEventListener("pagehide", onHide);
     return () => {
@@ -136,7 +141,7 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
     setPhase("mic");
     let mic: MediaStream;
     try {
-      mic = await api.current.getUserMedia({ audio: true });
+      mic = await apiOf().getUserMedia({ audio: true });
     } catch (cause) {
       const name = (cause as { name?: string }).name;
       setError(name === "NotFoundError" || name === "OverconstrainedError" ? "noMic" : "micDenied");
@@ -146,7 +151,8 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
     }
     setPhase("connecting");
     setState("connecting");
-    const pc = new api.current.PeerConnection();
+    const Peer = apiOf().PeerConnection;
+    const pc = new Peer();
     const live = { pc, mic, sessionId: "", expiresAt: 0, audio: null as HTMLAudioElement | null, context: null as AudioContext | null, raf: 0 };
     call.current = live;
     try {
@@ -158,7 +164,7 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
         audio.autoplay = true;
         audio.srcObject = stream;
         live.audio = audio;
-        const Context = api.current.AudioContext;
+        const Context = apiOf().AudioContext;
         if (!Context) return;
         const context = new Context();
         const analyser = context.createAnalyser();
@@ -186,7 +192,7 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
       };
       pc.onconnectionstatechange = () => {
         if (pc.connectionState === "connected") {
-          void api.current
+          void apiOf()
             .fetch(`/api/voice/sessions/${live.sessionId}/connected`, { method: "POST" })
             .then(async (response) => {
               const body = (await response.json()) as { expiresAt?: string };
@@ -212,7 +218,7 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
         pc.addEventListener("icegatheringstatechange", done);
         setTimeout(resolve, 2000);
       });
-      const response = await api.current.fetch("/api/voice/sessions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ articleId, sdp: pc.localDescription?.sdp ?? offer.sdp }) });
+      const response = await apiOf().fetch("/api/voice/sessions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ articleId, sdp: pc.localDescription?.sdp ?? offer.sdp }) });
       if (!response.ok) {
         const body = (await response.json().catch(() => ({}))) as { error?: string };
         const code = body.error;
