@@ -447,6 +447,23 @@ export const getArticleById = async (articleId: string) => {
 // Local import for the article activity log table (lives in primary.ts).
 import { articleActivityLogs as articleActivityLogTable } from '@reading-advantage/db';
 
+/**
+ * Builds the answer for an article that has no questions of one type.
+ * @param result The empty result to return.
+ * @returns No questions with the EMPTY state.
+ */
+function noQuestions(result: QuestionResult) {
+  return { questions: [] as MCQuestion[], result, questionStatus: QuestionState.EMPTY };
+}
+
+/**
+ * Loads the questions of one type for an article, or the stored result when the student has
+ * finished them. An article with no questions of the type gives the EMPTY state.
+ * @param articleId The article.
+ * @param type The question activity type.
+ * @returns The questions, the result, and the question state.
+ * @throws When no user is signed in, the article id is empty, the type is unknown, or a query fails.
+ */
 export const getQuestionsByArticleId = async (
   articleId: string,
   type: ActivityType,
@@ -518,9 +535,7 @@ export const getQuestionsByArticleId = async (
       case ActivityType.SA_QUESTION: {
         const saQuestions = await db.select().from(shortAnswerQuestions)
           .where(eq(shortAnswerQuestions.articleId, articleId));
-        if (saQuestions.length === 0) {
-          throw new Error(`No SA questions found for article ${articleId}`);
-        }
+        if (saQuestions.length === 0) return noQuestions(result);
         questions = saQuestions[0] as SAQuestion;
         break;
       }
@@ -528,9 +543,7 @@ export const getQuestionsByArticleId = async (
       case ActivityType.LA_QUESTION: {
         const laQuestions = await db.select().from(longAnswerQuestions)
           .where(eq(longAnswerQuestions.articleId, articleId));
-        if (laQuestions.length === 0) {
-          throw new Error(`No LA questions found for article ${articleId}`);
-        }
+        if (laQuestions.length === 0) return noQuestions(result);
         questions = laQuestions[0] as LAQuestion;
         break;
       }
@@ -539,11 +552,9 @@ export const getQuestionsByArticleId = async (
         throw new Error(`Unsupported activity type: ${type}`);
     }
 
+    // An article without questions of this type still renders (audit S2): no throw.
     if (!questions || (Array.isArray(questions) && questions.length === 0)) {
-      questionStatus = QuestionState.ERROR;
-      throw new Error(
-        `No questions found for article ${articleId} and type ${type}`,
-      );
+      return noQuestions(result);
     }
 
     return { questions, result, questionStatus };

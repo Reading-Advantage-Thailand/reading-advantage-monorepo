@@ -94,6 +94,7 @@
     "noDataAvailable": "No data available for this month"
   },
   "Question": {
+    "descriptionEmpty": "This story has no questions of this kind yet.",
     "SAQuestion": {
       "title": "Short Answer Question",
       "description": "Answer the question in a few words",

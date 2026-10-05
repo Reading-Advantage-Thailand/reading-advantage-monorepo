@@ -94,6 +94,7 @@
     "noDataAvailable": "ไม่มีข้อมูลสำหรับเดือนนี้"
   },
   "Question": {
+    "descriptionEmpty": "เรื่องนี้ยังไม่มีคำถามแบบนี้",
     "SAQuestion": {
       "title": "คำถามตอบสั้น",
       "description": "ตอบคำถามในรูปแบบสั้นๆ",

@@ -94,6 +94,7 @@
     "noDataAvailable": "本月没有可用数据"
   },
   "Question": {
+    "descriptionEmpty": "This story has no questions of this kind yet.",
     "SAQuestion": {
       "title": "简答题",
       "description": "用几句话回答问题",

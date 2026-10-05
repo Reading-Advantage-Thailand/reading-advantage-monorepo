@@ -10,7 +10,9 @@ import {
 } from "@/components/ui/card";
 import { QuizContextProvider } from "@/contexts/question-context";
 import { Skeleton } from "@reading-advantage/ui";
-import { getQuestionsByArticleId } from "@/server/models/articleModel";
+import { ErrorState } from "@reading-advantage/ui";
+import { RetryButton } from "@/components/shared/retry-button";
+import { loadQuestions } from "./load-questions";
 import { MCQContent } from "./mc-question-content";
 import QuestionHeader from "./question-header";
 import { Button } from "@/components/ui/button";
@@ -23,10 +25,7 @@ export default async function MCQuestionCard({
 }: {
   articleId: string;
 }) {
-  const questionsData: QuestionResponse = await getQuestionsByArticleId(
-    articleId,
-    ActivityType.MC_QUESTION,
-  );
+  const questionsData: QuestionResponse = await loadQuestions(articleId, ActivityType.MC_QUESTION);
 
   let correct;
 
@@ -41,12 +40,25 @@ export default async function MCQuestionCard({
     return (
       <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-3xl font-bold md:text-3xl">
+          <CardTitle className="text-muted-foreground text-2xl font-bold">
             {t("MCQuestion.title")}
           </CardTitle>
-          <CardDescription className="text-red-500 dark:text-red-400">
-            {t("descriptionError")}
-          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ErrorState className="py-2" title={t("descriptionError")} action={<RetryButton />} />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (questionsData.questionStatus === QuestionState.EMPTY) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-muted-foreground text-2xl font-bold">
+            {t("MCQuestion.title")}
+          </CardTitle>
+          <CardDescription>{t("descriptionEmpty")}</CardDescription>
         </CardHeader>
       </Card>
     );

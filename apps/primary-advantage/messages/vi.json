@@ -94,6 +94,7 @@
     "noDataAvailable": "Không có dữ liệu cho tháng này"
   },
   "Question": {
+    "descriptionEmpty": "This story has no questions of this kind yet.",
     "SAQuestion": {
       "title": "Câu hỏi ngắn",
       "description": "Trả lời câu hỏi bằng một vài từ",

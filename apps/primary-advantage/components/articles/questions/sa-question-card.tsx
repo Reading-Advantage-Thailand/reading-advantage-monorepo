@@ -3,9 +3,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardContent,
 } from "@/components/ui/card";
 import { Skeleton } from "@reading-advantage/ui";
-import { getQuestionsByArticleId } from "@/server/models/articleModel";
+import { ErrorState } from "@reading-advantage/ui";
+import { RetryButton } from "@/components/shared/retry-button";
+import { loadQuestions } from "./load-questions";
 import { ActivityType, QuestionState } from "@/types/enum";
 import { WrittenQuestionContent } from "./written-question-content";
 import QuestionHeader from "./question-header";
@@ -18,10 +21,7 @@ export default async function SAQuestionCard({
 }: {
   articleId: string;
 }) {
-  const questionsData: QuestionResponse = await getQuestionsByArticleId(
-    articleId,
-    ActivityType.SA_QUESTION,
-  );
+  const questionsData: QuestionResponse = await loadQuestions(articleId, ActivityType.SA_QUESTION);
 
   const t = await getTranslations("Question");
   const tc = await getTranslations("Components");
@@ -30,12 +30,25 @@ export default async function SAQuestionCard({
     return (
       <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-3xl font-bold md:text-3xl">
+          <CardTitle className="text-muted-foreground text-2xl font-bold">
             {t("SAQuestion.title")}
           </CardTitle>
-          <CardDescription className="text-red-500 dark:text-red-400">
-            {t("descriptionError")}
-          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ErrorState className="py-2" title={t("descriptionError")} action={<RetryButton />} />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (questionsData.questionStatus === QuestionState.EMPTY) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-muted-foreground text-2xl font-bold">
+            {t("SAQuestion.title")}
+          </CardTitle>
+          <CardDescription>{t("descriptionEmpty")}</CardDescription>
         </CardHeader>
       </Card>
     );
