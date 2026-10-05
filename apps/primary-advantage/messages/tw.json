@@ -436,6 +436,7 @@
     }
   },
   "Components": {
+    "translationLanguage": "翻譯語言",
     "submitButton": "送出",
     "closeButton": "關閉",
     "cancelButton": "取消",

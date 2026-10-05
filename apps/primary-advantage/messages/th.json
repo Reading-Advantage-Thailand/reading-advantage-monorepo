@@ -436,6 +436,7 @@
     }
   },
   "Components": {
+    "translationLanguage": "ภาษาที่แปล",
     "submitButton": "ส่ง",
     "closeButton": "ปิด",
     "cancelButton": "ยกเลิก",

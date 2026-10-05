@@ -3,7 +3,6 @@ import {
   Card,
   CardDescription,
   CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
@@ -46,9 +45,9 @@ export default async function ArticleCard({ article }: Props) {
     <div className="min-w-0 xl:basis-3/5">
       <Card className="rounded-2xl">
         <CardHeader className="flex flex-col gap-4">
-          <CardTitle className="font-article text-3xl font-bold md:text-5xl">
+          <h1 data-slot="card-title" className="font-article text-3xl leading-none font-bold md:text-5xl">
             {article.title}
-          </CardTitle>
+          </h1>
           <div className="flex flex-wrap gap-2">
             {/* One level system for students: CEFR (the read list cards show the same). */}
             {article.cefrLevel ? <StatusChip tone="success">{article.cefrLevel}</StatusChip> : null}

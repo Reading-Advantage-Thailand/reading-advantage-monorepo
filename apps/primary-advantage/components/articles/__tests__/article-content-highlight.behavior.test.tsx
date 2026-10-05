@@ -6,7 +6,7 @@
  * must clear that timer and pause the audio element.
  */
 import "@testing-library/jest-dom/vitest";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const fetchArticleActivityMock = vi.fn();
@@ -118,5 +118,13 @@ describe("ArticleContent highlight timer cleanup", () => {
 
     // The unmount cleanup disarms the highlight timer: nothing fires after.
     expect(vi.getTimerCount()).toBe(baseline);
+  });
+});
+
+describe("ArticleContent translation language select", () => {
+  it("names the language select for assistive technology (gate sweep axe fix)", () => {
+    const { unmount } = renderWithMessages(<ArticleContent article={article} />);
+    expect(screen.getAllByRole("combobox", { name: "Translation language" }).length).toBeGreaterThan(0);
+    unmount();
   });
 });

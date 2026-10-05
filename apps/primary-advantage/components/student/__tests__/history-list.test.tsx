@@ -53,6 +53,13 @@ afterEach(() => {
 });
 
 describe("HistoryList records", () => {
+  it("marks the loading grid as a status region (gate sweep axe fix)", () => {
+    fetchMock.mockReturnValue(new Promise(() => undefined));
+    renderWithMessages(<HistoryList variant="history" />, { locale: "en" });
+    const region = screen.getByRole("status", { name: testMessages.en.StudentHistory.loading });
+    expect(region).toHaveAttribute("aria-busy", "true");
+  });
+
   it.each(["en", "th"] as const)("lists the article records as story links with child-friendly status (%s)", async (locale) => {
     const t = testMessages[locale].StudentHistory;
     fetchMock.mockResolvedValue(
