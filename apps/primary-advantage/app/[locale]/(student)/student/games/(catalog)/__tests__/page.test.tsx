@@ -2,11 +2,27 @@
 // The identity next-intl/server mock stays: the page is a server component and every assertion here is structural (link counts, hrefs, owner scoping), not user-facing copy.
 
 import "@testing-library/jest-dom/vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ getCurrentUser: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+  getCurrentUser: vi.fn(),
+  catalog: [
+    {
+      id: "dragon-flight",
+      title: "Dragon Flight",
+      description: "Fly through gates.",
+      inputMode: "vocabulary",
+    },
+    {
+      id: "castle-defense",
+      title: "Castle Defense",
+      description: "Defend the castle.",
+      inputMode: "sentence",
+    },
+  ] as Array<{ id: string; title: string; description: string; inputMode: string }>,
+}));
 
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ children, href }: { children: ReactNode; href: string }) => (
@@ -21,20 +37,7 @@ vi.mock("next-intl/server", () => ({
 vi.mock("@reading-advantage/game-cartridges", () => ({
   CARTRIDGE_CHALLENGE_CAPABILITIES: { "dragon-flight": { version: "v1" } },
   getCartridgeCatalogEntry: (id: string) => id === "dragon-flight" ? { title: "Dragon Flight" } : undefined,
-  cartridgeCatalog: [
-    {
-      id: "dragon-flight",
-      title: "Dragon Flight",
-      description: "Fly through gates.",
-      inputMode: "vocabulary",
-    },
-    {
-      id: "castle-defense",
-      title: "Castle Defense",
-      description: "Defend the castle.",
-      inputMode: "sentence",
-    },
-  ],
+  cartridgeCatalog: mocks.catalog,
 }));
 
 vi.mock("@reading-advantage/advantage-play-kit/react", () => ({
@@ -51,6 +54,11 @@ vi.mock("@/lib/session", () => ({
 }));
 
 import PrimaryStudentGamesPage from "../page";
+
+const FULL_CATALOG = [...mocks.catalog];
+afterEach(() => {
+  mocks.catalog.splice(0, mocks.catalog.length, ...FULL_CATALOG);
+});
 
 describe("Primary student games catalog", () => {
   it("lists every APK title and scopes rewards to the authenticated student", async () => {
@@ -69,5 +77,25 @@ describe("Primary student games catalog", () => {
     expect(JSON.parse(screen.getByTestId("challenge-catalog").getAttribute("data-props") ?? "{}")).toMatchObject({
       ownerKey: "school-1:student-7", locale: "th", games: { "dragon-flight": { title: "Dragon Flight", version: "v1" } },
     });
+  });
+
+  it("groups the games into word games and sentence games", async () => {
+    mocks.getCurrentUser.mockResolvedValue(null);
+    render(await PrimaryStudentGamesPage({ params: Promise.resolve({ locale: "en" }) }));
+
+    const words = screen.getByRole("region", { name: "wordGames" });
+    const sentences = screen.getByRole("region", { name: "sentenceGames" });
+    expect(within(words).getByRole("link", { name: /Dragon Flight/ })).toHaveAttribute("href", "/student/games/apk/dragon-flight");
+    expect(within(sentences).getByRole("link", { name: /Castle Defense/ })).toHaveAttribute("href", "/student/games/apk/castle-defense");
+    expect(screen.queryByText(/Advantage Play Kit|APK route/)).not.toBeInTheDocument();
+  });
+
+  it("shows an empty state when the catalog has no games", async () => {
+    mocks.getCurrentUser.mockResolvedValue(null);
+    mocks.catalog.splice(0, mocks.catalog.length);
+    render(await PrimaryStudentGamesPage({ params: Promise.resolve({ locale: "en" }) }));
+
+    expect(screen.getByText("empty")).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "wordGames" })).not.toBeInTheDocument();
   });
 });

@@ -2715,8 +2715,16 @@
     "signInToPlayGame": "Sign in to play this game"
   },
   "StudentGames": {
-    "title": "Student games",
-    "description": "Play the live Advantage Play Kit catalog. Each card opens the authenticated APK route."
+    "title": "Games",
+    "description": "Play games with the words and sentences you learn.",
+    "wordGames": "Word games",
+    "wordGamesHint": "Practice the words you know.",
+    "sentenceGames": "Sentence games",
+    "sentenceGamesHint": "Put words in order to make sentences.",
+    "empty": "No games yet",
+    "emptyHint": "Ask your teacher when the games are ready.",
+    "loadError": "We could not load the games.",
+    "loadErrorHint": "Check the internet connection and try again."
   },
   "Footer": {
     "tagline": "Providing the best English learning experience.",

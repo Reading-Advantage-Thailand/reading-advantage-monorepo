@@ -2714,7 +2714,15 @@
   },
   "StudentGames": {
     "title": "学生游戏",
-    "description": "畅玩实时 Advantage Play Kit 目录。每张卡片都会打开已验证的 APK 路线。"
+    "description": "Play games with the words and sentences you learn.",
+    "wordGames": "Word games",
+    "wordGamesHint": "Practice the words you know.",
+    "sentenceGames": "Sentence games",
+    "sentenceGamesHint": "Put words in order to make sentences.",
+    "empty": "No games yet",
+    "emptyHint": "Ask your teacher when the games are ready.",
+    "loadError": "We could not load the games.",
+    "loadErrorHint": "Check the internet connection and try again."
   },
   "Footer": {
     "tagline": "提供最佳英语学习体验。",

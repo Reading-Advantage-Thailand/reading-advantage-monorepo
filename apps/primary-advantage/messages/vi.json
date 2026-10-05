@@ -2716,7 +2716,15 @@
   },
   "StudentGames": {
     "title": "Trò chơi học sinh",
-    "description": "Chơi danh mục Advantage Play Kit trực tiếp. Mỗi thẻ mở tuyến APK đã xác thực."
+    "description": "Play games with the words and sentences you learn.",
+    "wordGames": "Word games",
+    "wordGamesHint": "Practice the words you know.",
+    "sentenceGames": "Sentence games",
+    "sentenceGamesHint": "Put words in order to make sentences.",
+    "empty": "No games yet",
+    "emptyHint": "Ask your teacher when the games are ready.",
+    "loadError": "We could not load the games.",
+    "loadErrorHint": "Check the internet connection and try again."
   },
   "Footer": {
     "tagline": "Mang lại trải nghiệm học tiếng Anh tốt nhất.",
