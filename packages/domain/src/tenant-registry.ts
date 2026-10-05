@@ -188,6 +188,9 @@ import {
   primaryGpLedger,
   primaryAvatarInventory,
   primaryAvatarLoadout,
+  primaryClassQuest,
+  primaryClassQuestPowerUp,
+  primaryClassQuestHeartbeat,
   primaryVoiceSessions,
   primaryActiveVoiceSessions,
   primaryVoiceMonthlyUsage,
@@ -221,6 +224,10 @@ register(primaryAvatarProfile, "FLAT");
 register(primaryGpLedger, "FLAT");
 register(primaryAvatarInventory, "FLAT");
 register(primaryAvatarLoadout, "FLAT");
+// Class Quest (primary_class_quest_20261005): quest, power-ups, and heartbeats carry school_id.
+register(primaryClassQuest, "FLAT");
+register(primaryClassQuestPowerUp, "FLAT");
+register(primaryClassQuestHeartbeat, "FLAT");
 // Reedy voice practice (primary_reedy_preview_20261003): every table carries school_id.
 register(primaryVoiceSessions, "FLAT");
 register(primaryActiveVoiceSessions, "FLAT");

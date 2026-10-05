@@ -17,6 +17,7 @@ export * from "./sales.js";
 export * from "./primary.js";
 export * from "./primary-books.js";
 export * from "./primary-avatar.js";
+export * from "./primary-class-quest.js";
 export * from "./primary-voice.js";
 export * from "./mastery.js";
 export * from "./activity.js";
