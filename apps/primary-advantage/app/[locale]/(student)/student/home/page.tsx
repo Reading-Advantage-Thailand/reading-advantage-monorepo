@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import Leaderboard from "@/components/leaderboard";
 import { ReedyMeterSlot } from "@/components/student/reedy-meter-slot";
+import { awardPowerUps, getStudentQuestCard } from "@reading-advantage/domain/primary-quest";
+import { StudentQuestCard } from "@/components/quest/student-quest-card";
 import { AvatarNudge } from "@/components/avatar/avatar-nudge";
 import { getSchoolLeaderboardController } from "@/server/controllers/schoolController";
 
@@ -91,6 +93,21 @@ async function loadReedyMeter(user: NonNullable<Awaited<ReturnType<typeof curren
 }
 
 /**
+ * The week's quest card after the goals are evaluated (Class Quest FR-4, FR-6); null when the
+ * student has no quest or the read fails.
+ * @param user The signed-in student.
+ * @returns The card, or null.
+ */
+async function loadQuestCard(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>) {
+  try {
+    await awardPowerUps({ db, user });
+    return await getStudentQuestCard({ db, user });
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Student home (FR-4), the landing page after sign-in: streak, XP, and level; today's lesson
  * (the next open assignment, hidden when there is none); the class books with the current
  * lesson; the article to continue; a games
@@ -101,12 +118,13 @@ export default async function StudentHomePage() {
   const user = await currentUser();
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
 
-  const [home, classBooks, leaderboard, noAvatar, reedy, t, tBoard, tAvatar, tReedy, format] = await Promise.all([
+  const [home, classBooks, leaderboard, noAvatar, reedy, quest, t, tBoard, tAvatar, tReedy, format] = await Promise.all([
     getStudentHome({ db, user }),
     loadClassBooks(user),
     loadLeaderboard(user),
     needsAvatar(user),
     loadReedyMeter(user),
+    loadQuestCard(user),
     getTranslations("StudentHome"),
     getTranslations("Leaderboard"),
     getTranslations("Avatar"),
@@ -140,6 +158,7 @@ export default async function StudentHomePage() {
       {noAvatar ? <AvatarNudge t={tAvatar} /> : null}
 
       <ReedyMeterSlot data={reedy} t={tReedy} />
+      <StudentQuestCard card={quest} />
 
       <div className="grid gap-4 md:grid-cols-2">
         {lesson ? (

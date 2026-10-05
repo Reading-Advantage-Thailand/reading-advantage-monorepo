@@ -3044,6 +3044,63 @@
       "licenses": "Licenses"
     }
   },
+  "Quest": {
+    "title": "班级任务",
+    "subtitle": "全班一起对抗一个头目。",
+    "boss": "头目：{name}",
+    "daysLeft": "{count, plural, =0 {决战日！} other {距离决战还有 # 天}}",
+    "meterLabel": "班级伤害",
+    "meter": "伤害 {committed} / {target}",
+    "powerUps": "你的强化道具",
+    "noPowerUps": "还没有强化道具。完成一个目标即可获得。",
+    "powerUp": {
+      "shield": "盾牌",
+      "sharp-blade": "利刃",
+      "rally-horn": "号角"
+    },
+    "goals": "本周目标",
+    "goal": {
+      "reading-days": "阅读 {days} 天",
+      "accuracy": "{minQuestions} 道题答对 {percent}%",
+      "streak": "连续 {days} 天",
+      "lesson-steps": "完成 {steps} 个课程步骤"
+    },
+    "earned": "已获得",
+    "teacher": {
+      "title": "班级任务",
+      "none": "本周没有任务。",
+      "assign": "布置任务",
+      "roster": "{count} 名学生",
+      "earners": "{count} 人有强化道具",
+      "cancel": "取消任务",
+      "cancelError": "无法取消任务。",
+      "battleAt": "决战：{time}",
+      "status": {
+        "open": "进行中",
+        "rally": "集结",
+        "play": "决战",
+        "result": "结果",
+        "done": "完成"
+      }
+    },
+    "assign": {
+      "title": "布置任务",
+      "subtitle": "选择任务、班级和决战时间。头目目标按今天的名单设定。",
+      "template": "任务",
+      "class": "班级",
+      "battleAt": "决战日期和时间",
+      "submit": "布置",
+      "back": "返回首页",
+      "noClasses": "你还没有班级。",
+      "errors": {
+        "ALREADY_OPEN": "这个班级本周已有任务。",
+        "NO_CONTENT": "班级当前课程没有词汇表。请先布置一本书。",
+        "BAD_TIME": "请选择晚于现在的决战时间。",
+        "GAME_UNAVAILABLE": "决战游戏未安装。",
+        "generic": "任务未布置。"
+      }
+    }
+  },
   "ClassAvatars": {
     "title": "班级头像",
     "subtitle": "每位学生的头像。重置会清除英雄和穿戴的装备，学生需重新选择。",
@@ -3400,6 +3457,7 @@
     "next": "Next"
   },
   "TeacherHome": {
+    "quest": "班级任务",
     "title": "Home",
     "greeting": "Hello, {name}",
     "subtitle": "Your classes and students at a glance.",

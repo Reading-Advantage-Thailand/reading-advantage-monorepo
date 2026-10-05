@@ -16,6 +16,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user, getCurrentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
+vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: async () => null }));
 vi.mock("@reading-advantage/domain/primary-books", () => ({ listClassBooks: mocks.listClassBooks, listCatalogueBooks: mocks.listCatalogueBooks }));
 vi.mock("@/actions/class-books", () => ({ assignClassBookAction: vi.fn() }));
 vi.mock("next-intl/server", async () => {

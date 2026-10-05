@@ -3046,6 +3046,63 @@
       "licenses": "Licenses"
     }
   },
+  "Quest": {
+    "title": "Nhiệm vụ lớp",
+    "subtitle": "Cả lớp cùng chiến đấu với một trùm.",
+    "boss": "Trùm: {name}",
+    "daysLeft": "{count, plural, =0 {Ngày quyết chiến!} other {Còn # ngày đến trận đấu}}",
+    "meterLabel": "Sát thương của lớp",
+    "meter": "{committed} trên {target} sát thương",
+    "powerUps": "Sức mạnh của bạn",
+    "noPowerUps": "Chưa có sức mạnh nào. Hoàn thành một mục tiêu để nhận.",
+    "powerUp": {
+      "shield": "Khiên",
+      "sharp-blade": "Kiếm sắc",
+      "rally-horn": "Tù và"
+    },
+    "goals": "Mục tiêu tuần này",
+    "goal": {
+      "reading-days": "Đọc trong {days} ngày",
+      "accuracy": "Đúng {percent}% trong {minQuestions} câu",
+      "streak": "Chuỗi {days} ngày",
+      "lesson-steps": "Hoàn thành {steps} bước bài học"
+    },
+    "earned": "Đã nhận",
+    "teacher": {
+      "title": "Nhiệm vụ lớp",
+      "none": "Tuần này chưa có nhiệm vụ.",
+      "assign": "Giao nhiệm vụ",
+      "roster": "{count} học sinh",
+      "earners": "{count} em có sức mạnh",
+      "cancel": "Hủy nhiệm vụ",
+      "cancelError": "Không thể hủy nhiệm vụ.",
+      "battleAt": "Trận đấu: {time}",
+      "status": {
+        "open": "Đang mở",
+        "rally": "Tập hợp",
+        "play": "Chiến đấu",
+        "result": "Kết quả",
+        "done": "Xong"
+      }
+    },
+    "assign": {
+      "title": "Giao nhiệm vụ",
+      "subtitle": "Chọn nhiệm vụ, lớp và giờ đấu. Mục tiêu trùm được đặt theo sĩ số hôm nay.",
+      "template": "Nhiệm vụ",
+      "class": "Lớp",
+      "battleAt": "Ngày và giờ đấu",
+      "submit": "Giao",
+      "back": "Về trang chính",
+      "noClasses": "Bạn chưa có lớp nào.",
+      "errors": {
+        "ALREADY_OPEN": "Lớp này đã có nhiệm vụ tuần này.",
+        "NO_CONTENT": "Bài học hiện tại của lớp không có bảng từ vựng. Hãy giao sách trước.",
+        "BAD_TIME": "Chọn giờ đấu sau thời điểm hiện tại.",
+        "GAME_UNAVAILABLE": "Trò chơi quyết chiến chưa được cài.",
+        "generic": "Chưa giao được nhiệm vụ."
+      }
+    }
+  },
   "ClassAvatars": {
     "title": "Nhân vật của lớp",
     "subtitle": "Nhân vật của từng học sinh. Đặt lại sẽ xóa anh hùng và trang bị đang mặc; học sinh chọn lại.",
@@ -3402,6 +3459,7 @@
     "next": "Next"
   },
   "TeacherHome": {
+    "quest": "Nhiệm vụ lớp",
     "title": "Home",
     "greeting": "Hello, {name}",
     "subtitle": "Your classes and students at a glance.",

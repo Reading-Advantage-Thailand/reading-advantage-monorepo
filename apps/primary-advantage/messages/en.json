@@ -3046,6 +3046,63 @@
       "licenses": "Licenses"
     }
   },
+  "Quest": {
+    "title": "Class Quest",
+    "subtitle": "Your class fights one boss together.",
+    "boss": "Boss: {name}",
+    "daysLeft": "{count, plural, =0 {Battle day!} one {# day to the battle} other {# days to the battle}}",
+    "meterLabel": "Class damage",
+    "meter": "{committed} of {target} damage",
+    "powerUps": "Your power-ups",
+    "noPowerUps": "No power-ups yet. Meet a goal to earn one.",
+    "powerUp": {
+      "shield": "Shield",
+      "sharp-blade": "Sharp blade",
+      "rally-horn": "Rally horn"
+    },
+    "goals": "Goals this week",
+    "goal": {
+      "reading-days": "Read on {days} days",
+      "accuracy": "{percent}% correct on {minQuestions} questions",
+      "streak": "A {days}-day streak",
+      "lesson-steps": "Finish {steps} lesson steps"
+    },
+    "earned": "Earned",
+    "teacher": {
+      "title": "Class Quest",
+      "none": "No quest this week.",
+      "assign": "Assign a quest",
+      "roster": "{count, plural, one {# student} other {# students}}",
+      "earners": "{count} with power-ups",
+      "cancel": "Cancel the quest",
+      "cancelError": "The quest could not be cancelled.",
+      "battleAt": "Battle: {time}",
+      "status": {
+        "open": "Open",
+        "rally": "Rally",
+        "play": "Battle",
+        "result": "Result",
+        "done": "Done"
+      }
+    },
+    "assign": {
+      "title": "Assign a quest",
+      "subtitle": "Pick a quest, a class, and the battle time. The boss target is set from today's roster.",
+      "template": "Quest",
+      "class": "Class",
+      "battleAt": "Battle date and time",
+      "submit": "Assign",
+      "back": "Back to the dashboard",
+      "noClasses": "You have no classes yet.",
+      "errors": {
+        "ALREADY_OPEN": "This class already has a quest this week.",
+        "NO_CONTENT": "The class's current lesson has no glossary. Assign a book first.",
+        "BAD_TIME": "Pick a battle time after now.",
+        "GAME_UNAVAILABLE": "The battle game is not installed.",
+        "generic": "The quest was not assigned."
+      }
+    }
+  },
   "ClassAvatars": {
     "title": "Class avatars",
     "subtitle": "The avatar of each student. Reset clears the hero and the worn pieces; the student picks again.",
@@ -3402,6 +3459,7 @@
     "next": "Next"
   },
   "TeacherHome": {
+    "quest": "Class Quest",
     "title": "Home",
     "greeting": "Hello, {name}",
     "subtitle": "Your classes and students at a glance.",

@@ -16,6 +16,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
+vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: async () => null }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getTeacherHome: mocks.getTeacherHome, TEACHER_HOME_INACTIVE_DAYS: 7 }));
 vi.mock("next-intl/server", async () => {
   const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");

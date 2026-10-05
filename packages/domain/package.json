@@ -148,6 +148,10 @@
       "types": "./dist/primary-avatar/index.d.ts",
       "import": "./dist/primary-avatar/index.js"
     },
+    "./primary-quest": {
+      "types": "./dist/primary-quest/index.d.ts",
+      "import": "./dist/primary-quest/index.js"
+    },
     "./primary-voice": {
       "types": "./dist/primary-voice/index.d.ts",
       "import": "./dist/primary-voice/index.js"

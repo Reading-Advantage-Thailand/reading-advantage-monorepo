@@ -90,9 +90,10 @@ function formatLastActivity(lastActivity: string | null, t: Translator, formatDa
  * its place, so enroll and remove still work.
  * @param props.classroomId The class (read from the route when empty).
  * @param props.classBook The class book card from the server; the placeholder slot when absent.
+ * @param props.classQuest The class quest card from the server (Class Quest FR-4).
  * @returns The class page body.
  */
-export default function EnhancedClassRoster({ classroomId: classroomIdProp, classBook }: { classroomId?: string; classBook?: ReactNode } = {}) {
+export default function EnhancedClassRoster({ classroomId: classroomIdProp, classBook, classQuest }: { classroomId?: string; classBook?: ReactNode; classQuest?: ReactNode } = {}) {
   const params = useParams();
   const classroomId = classroomIdProp ?? (params?.classroomId as string);
   const t = useTranslations("Teacher.EnhancedClassRoster");
@@ -304,6 +305,7 @@ export default function EnhancedClassRoster({ classroomId: classroomIdProp, clas
       />
 
       {classBook ?? <ClassBookSlot classroomId={classroomId} />}
+      {classQuest}
 
       <AlertDialog open={resetStudentId !== ""} onOpenChange={(open) => !open && setResetStudentId("")}>
         <AlertDialogContent>

@@ -10,6 +10,8 @@ import { Link, redirect } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { ClassBookSlot } from "@/components/teacher/class-book-slot";
+import { getTeacherQuestCard } from "@reading-advantage/domain/primary-quest";
+import { TeacherQuestCard } from "@/components/quest/teacher-quest-card";
 import { DueChip } from "@/components/teacher/due-chip";
 import { TEACHER_ACTION, TEACHER_CARD, TeacherPageHeader } from "@/components/teacher/teacher-shell";
 
@@ -45,6 +47,7 @@ export default async function TeacherDashboardPage() {
     getTranslations("TeacherUi"),
     getFormatter(),
   ]);
+  const quests = await Promise.all(home.classes.map((cls) => getTeacherQuestCard({ db, user }, cls.id).catch(() => null)));
   const today = calendarDayNumber(new Date());
   const moreHelp = home.needsHelpCount - home.needsHelp.length;
 
@@ -104,6 +107,9 @@ export default async function TeacherDashboardPage() {
         </section>
 
         <ClassBookSlot className="lg:col-span-2" />
+        {home.classes.map((cls, i) => (
+          <TeacherQuestCard key={cls.id} classroomId={cls.id} card={quests[i] ?? null} heading={`${t("quest")} · ${cls.name}`} />
+        ))}
 
         <section aria-labelledby="home-assignments" className={TEACHER_CARD}>
           <h2 id="home-assignments" className="text-lg font-semibold">

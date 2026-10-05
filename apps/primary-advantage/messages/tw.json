@@ -3044,6 +3044,63 @@
       "licenses": "Licenses"
     }
   },
+  "Quest": {
+    "title": "班級任務",
+    "subtitle": "全班一起對抗一個頭目。",
+    "boss": "頭目：{name}",
+    "daysLeft": "{count, plural, =0 {決戰日！} other {距離決戰還有 # 天}}",
+    "meterLabel": "班級傷害",
+    "meter": "傷害 {committed} / {target}",
+    "powerUps": "你的強化道具",
+    "noPowerUps": "還沒有強化道具。完成一個目標即可獲得。",
+    "powerUp": {
+      "shield": "盾牌",
+      "sharp-blade": "利刃",
+      "rally-horn": "號角"
+    },
+    "goals": "本週目標",
+    "goal": {
+      "reading-days": "閱讀 {days} 天",
+      "accuracy": "{minQuestions} 道題答對 {percent}%",
+      "streak": "連續 {days} 天",
+      "lesson-steps": "完成 {steps} 個課程步驟"
+    },
+    "earned": "已獲得",
+    "teacher": {
+      "title": "班級任務",
+      "none": "本週沒有任務。",
+      "assign": "指派任務",
+      "roster": "{count} 名學生",
+      "earners": "{count} 人有強化道具",
+      "cancel": "取消任務",
+      "cancelError": "無法取消任務。",
+      "battleAt": "決戰：{time}",
+      "status": {
+        "open": "進行中",
+        "rally": "集結",
+        "play": "決戰",
+        "result": "結果",
+        "done": "完成"
+      }
+    },
+    "assign": {
+      "title": "指派任務",
+      "subtitle": "選擇任務、班級和決戰時間。頭目目標按今天的名單設定。",
+      "template": "任務",
+      "class": "班級",
+      "battleAt": "決戰日期和時間",
+      "submit": "指派",
+      "back": "返回首頁",
+      "noClasses": "你還沒有班級。",
+      "errors": {
+        "ALREADY_OPEN": "這個班級本週已有任務。",
+        "NO_CONTENT": "班級目前的課程沒有詞彙表。請先指派一本書。",
+        "BAD_TIME": "請選擇晚於現在的決戰時間。",
+        "GAME_UNAVAILABLE": "決戰遊戲未安裝。",
+        "generic": "任務未指派。"
+      }
+    }
+  },
   "ClassAvatars": {
     "title": "班級頭像",
     "subtitle": "每位學生的頭像。重設會清除英雄和穿戴的裝備，學生需重新選擇。",
@@ -3400,6 +3457,7 @@
     "next": "Next"
   },
   "TeacherHome": {
+    "quest": "班級任務",
     "title": "Home",
     "greeting": "Hello, {name}",
     "subtitle": "Your classes and students at a glance.",

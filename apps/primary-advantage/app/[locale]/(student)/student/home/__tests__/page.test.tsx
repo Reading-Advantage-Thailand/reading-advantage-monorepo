@@ -16,6 +16,7 @@ const mocks = vi.hoisted(() => ({
   getStudentHome: vi.fn(),
   getStudentClassBooks: vi.fn(async (): Promise<unknown[]> => []),
   getAvatarProfile: vi.fn(async (): Promise<unknown> => null),
+  getStudentQuestCard: vi.fn(async (): Promise<unknown> => null),
   getVoiceEntitlement: vi.fn(async (): Promise<unknown> => ({ remainingSeconds: 300, budgetSeconds: 480, blockedBy: null })),
   leaderboard: vi.fn(),
   redirect: vi.fn(),
@@ -26,6 +27,7 @@ vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getStudentHome: mocks.getStudentHome }));
 vi.mock("@reading-advantage/domain/primary-books", () => ({ getStudentClassBooks: mocks.getStudentClassBooks }));
 vi.mock("@reading-advantage/domain/primary-avatar", () => ({ getAvatarProfile: mocks.getAvatarProfile }));
+vi.mock("@reading-advantage/domain/primary-quest", () => ({ awardPowerUps: async () => [], getStudentQuestCard: mocks.getStudentQuestCard }));
 vi.mock("@reading-advantage/domain/primary-voice", () => ({ getVoiceEntitlement: mocks.getVoiceEntitlement, voiceConfigFromEnv: () => ({}) }));
 vi.mock("@/server/controllers/schoolController", () => ({ getSchoolLeaderboardController: mocks.leaderboard }));
 vi.mock("next-intl/server", async () => {
