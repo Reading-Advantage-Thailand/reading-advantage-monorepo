@@ -89,11 +89,19 @@ export default function StudentAssignmentList({
   const [due, setDue] = useState("all");
   const [search, setSearch] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
-  const [loading, setLoading] = useState(initialAssignments === undefined);
   const [failed, setFailed] = useState(false);
   const debouncedSearch = useDebounce(search, 500);
-  // The server page already fetched the first page: skip the first effect run.
+
+  const params = new URLSearchParams({ page: String(page), limit: "10" });
+  if (status !== "all") params.set("status", status);
+  if (due !== "all") params.set("dueDateFilter", due);
+  if (debouncedSearch.trim()) params.set("search", debouncedSearch.trim());
+  const queryKey = params.toString();
+  // The server page already fetched the first page (page 1, no filters).
+  const [loadedKey, setLoadedKey] = useState<string | null>(initialAssignments !== undefined ? queryKey : null);
   const skipFirstFetch = useRef(initialAssignments !== undefined);
+  // Loading is derived from the query, so a new filter never shows the old result for a render.
+  const loading = Boolean(user?.id) && loadedKey !== queryKey;
 
   useEffect(() => {
     if (skipFirstFetch.current) {
@@ -102,16 +110,12 @@ export default function StudentAssignmentList({
     }
     if (!user?.id) return;
     let active = true;
-    setLoading(true);
     setFailed(false);
-    const params = new URLSearchParams({ page: String(page), limit: "10" });
-    if (status !== "all") params.set("status", status);
-    if (due !== "all") params.set("dueDateFilter", due);
-    if (debouncedSearch.trim()) params.set("search", debouncedSearch.trim());
+    setLoadedKey(null);
 
     (async () => {
       try {
-        const response = await fetch(`/api/students/${user.id}/assignments?${params.toString()}`);
+        const response = await fetch(`/api/students/${user.id}/assignments?${queryKey}`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         if (!active) return;
@@ -122,13 +126,13 @@ export default function StudentAssignmentList({
         console.error("Error fetching assignments:", error);
         setFailed(true);
       } finally {
-        if (active) setLoading(false);
+        if (active) setLoadedKey(queryKey);
       }
     })();
     return () => {
       active = false;
     };
-  }, [user?.id, page, status, due, debouncedSearch, reloadKey]);
+  }, [user?.id, queryKey, reloadKey]);
 
   const filtersActive = status !== "all" || due !== "all" || debouncedSearch.trim() !== "";
 
