@@ -3153,5 +3153,61 @@
     "page": "Page {page} of {total}",
     "previous": "Previous",
     "next": "Next"
+  },
+  "TeacherHome": {
+    "title": "Home",
+    "greeting": "Hello, {name}",
+    "subtitle": "Your classes and students at a glance.",
+    "summary": "Summary",
+    "stats": {
+      "classes": "Classes",
+      "students": "Students",
+      "openAssignments": "Open assignments",
+      "needsHelp": "Need help"
+    },
+    "classes": {
+      "heading": "My classes",
+      "startClassFor": "Start class {name}",
+      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
+      "grade": "Grade {grade}",
+      "empty": "No classes yet",
+      "emptyHint": "Create a class on My Classes, then add your students.",
+      "goToClasses": "Go to My Classes",
+      "all": "All classes"
+    },
+    "assignments": {
+      "heading": "Open assignments",
+      "progress": "{completed} of {assigned} done",
+      "empty": "No open assignments",
+      "emptyHint": "Every student has finished the assigned work.",
+      "all": "All assignments"
+    },
+    "help": {
+      "heading": "Who needs help",
+      "hint": "Students with late work or no activity for {days} days.",
+      "late": "{count} late",
+      "neverActive": "No activity yet",
+      "inactive": "Last active {date}",
+      "empty": "Everyone is on track",
+      "emptyHint": "No student has late work or a long break.",
+      "more": "{count, plural, one {# more student} other {# more students}}"
+    },
+    "loadError": "We could not load your home page.",
+    "loadErrorHint": "Check your connection and try again."
+  },
+  "TeacherUi": {
+    "startClass": "Start class",
+    "due": {
+      "none": "No due date",
+      "overdue": "Late",
+      "today": "Due today",
+      "soon": "{days, plural, one {Due tomorrow} other {Due in # days}}",
+      "upcoming": "Due in {days} days",
+      "on": "Due {date}"
+    },
+    "classBook": {
+      "title": "Class book",
+      "hint": "The book and the lesson plan for this class will show here."
+    }
   }
 }
