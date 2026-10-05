@@ -11,3 +11,10 @@ export {
   CLASS_QUEST_NAME, QUEST_TEMPLATES, questTemplate,
   type QuestCopy, type QuestGoal, type QuestGoalKind, type QuestTemplate,
 } from "./templates.js";
+export { QuestError, type QuestErrorCode } from "./errors.js";
+export {
+  assignClassQuest, cancelClassQuest, committedDamage, daysLeft, getStudentQuestCard, getTeacherQuestCard,
+  weekStart, type ResolveGameCapability,
+} from "./season.js";
+export { awardPowerUps, goalMet, mcCounts, readGoalFacts, type GoalFacts } from "./goals.js";
+export type { AssignClassQuestInput, ClassQuest, QuestPowerUpRow, StudentQuestCard, TeacherQuestCard } from "@reading-advantage/game-contracts";
