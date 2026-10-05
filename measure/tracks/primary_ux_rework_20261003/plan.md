@@ -96,7 +96,19 @@ Run 2a (tasks 0-3) is done in `4ba0ab362`..`01fa69a03`. Run 2b owns the last ite
 - Open: the teacher per-student view shows nothing when the activity request fails (Phase 4 states); the flashcard "cards studied today" stat still counts from server midnight (UTC), and the flashcard streak query still reads every activity row of the year; `components/teacher/assignments.tsx` writes `createdAt` with `toLocaleString()` and no zone (Phase 3 redesign).
 
 ## Phase 3: Teacher
-- [ ] Shell and dashboard
+- [ ] Owner decisions of 2026-10-05 (spec "Owner decisions", FR-1, FR-8, FR-12), tests first:
+  - `--font-sans` is Noto Sans Thai first, then Inter (reverses M2); update
+    `styles/__tests__/globals-tokens.test.ts` line 129-132 and the comment in `app/[locale]/layout.tsx`.
+  - `i18n/routing.ts` `defaultLocale: "th"`. Check the proxy sign-in redirects and the 20 test
+    files that build `/en/...` paths (list: `grep -rl -E "defaultLocale|/en\b" --include=*.test.*`).
+  - Remove the Google Classroom import from My Classes and the unused Google icons, copy, asset,
+    and dependency (FR-12 names every file). Confirm no Google sign-in surface remains.
+- [ ] Shell and dashboard — in progress, uncommitted in the worktree on 2026-10-05: teacher
+  dashboard page, `loading.tsx`, `error.tsx`, `components/teacher/teacher-shell.tsx`,
+  `class-book-slot.tsx`, `due-chip.tsx`, `lib/teacher-home.ts`, `getTeacherHome` in
+  `@reading-advantage/domain/primary-home` with `primary-teacher-home.test.ts`, `TeacherHome` and
+  `TeacherUi` copy in five locales. The full app suite passed on this working tree
+  (166 files, 1055 tests). Commit it as the next task.
 - [ ] My-classes, roster, assignments, reports, student-progress layouts
 
 ## Phase 4: Quality
@@ -107,5 +119,21 @@ Run 2a (tasks 0-3) is done in `4ba0ab362`..`01fa69a03`. Run 2b owns the last ite
 - [ ] README cleanup
 
 ## Gates
-- [ ] Vision QA sweep at three widths, no Critical/High
-- [ ] Visual baselines recorded
+- [ ] Vision QA sweep at three widths, no Critical/High. The 768 px width needs real evidence:
+  the Phase 0 audit looked at 768 for one route only (FR-10).
+- [ ] Visual baselines recorded (tool choice is an open owner question; see the spec)
+
+### Review notes (2026-10-05, review session, no code changes)
+- Lane C forked from integration after the Lane B merge (`490707f12`), so it contains A, B, and
+  M Phase 1. A merge to integration has no file conflicts today. Nothing from Lane C is in
+  integration yet; the program progress table still says "C: Not started". The coordinator
+  updates `measure/tracks.md`, this track's `metadata.json` (`status: planned` is stale), and the
+  program table at merge time.
+- The student home "today's lesson" card and the Reedy meter slot, and the teacher dashboard
+  class-book slot, stay empty until Lanes D+E and F ship. Neither lane has a branch on 2026-10-05.
+- Not in any phase today: the sign-in look (audit rank 1; Lane B changed copy and tap targets
+  only) and the profile "Me" tab (audit rank 10). Gap list V9 (mascot art in empty states) and
+  V10 (game readability inside the green shell; `/teacher/game-challenges` is still navy and
+  cyan) are not in the spec. All wait for an owner decision (spec "Owner decisions").
+- FR-2 moved 6 of 33 local UI files; 27 stay local because their API differs. The rest belongs
+  to the semester-2 `primary_package_alignment` track.
