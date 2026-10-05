@@ -34,7 +34,9 @@ Owner lane: D (data and server), lane E (teacher UI, after lane C ships the shel
 - [x] Manual and first-time how-to — `95bac6176`: `/teacher/manual` (five how-to steps, the 13 steps) in the teacher sidebar (FR-15). FR-16: `/b/[book]/[n]` resolves the printed QR link (student: lesson flow of the article or home; teacher: lesson page of the first class with the book or the class list).
 - FR-14 (pair-conversation, reflection, wrap-up prompts) is covered by the imported teacher language of steps 8, 13, and 12; no new student screen was added.
 
-## Phase 5: Verify
-- [ ] Teacher walk-through in a browser on a seeded class (agent with vision)
-- [ ] Compare each guide step with the Workbooks source (separate reviewer agent)
-- [ ] Workbook-first lock behavior tests (TL on, IND off)
+## Phase 5: Verify — done 2026-10-05 except the browser walk-through
+- [ ] Teacher walk-through in a browser on a seeded class (agent with vision) — blocked: the machine has no free memory for a browser next to the dev server. Open item for the lane merge; the same gate as the Lane C browser sweep.
+- [x] Compare each guide step with the Workbooks source — a script read the 13 en and 13 th rows of `primary_lesson_guides` back and compared every field with the `~/Desktop/Workbooks` lesson-plan source: 182 fields compared, 0 mismatches.
+- [x] Workbook-first lock behavior tests (TL on, IND off) — domain `class-books.test.ts` (`getStudentClassBooks`: unlocked steps follow the steps done in teacher-led mode, all 14 in independent mode) and the app `lesson-progress-bar` and lesson page tests (`maxUnlockedStep`, the `lockedStep` message, no move past the lock).
+- Verification: the full app suite after the Phase 4 commits ran in one process: 191 files, 1179 tests, 1 failure. The failure was the AC-1 guard (`api-no-direct-db.test.ts`): the two new routes imported the db client. Fixed in `437eafe5f` (a `classBookController` owns the db handle; routes call it); the guard, the route tests, and the controller tests pass; tsc and eslint clean. Domain primary-books: 65 tests; tenant coverage passes.
+- Merge: held. `primary/lane-de-teacher-books` contains the Lane C merge (`cbceff9f6`), so it merges into `primary-parity-integration` after the Lane C gates (browser sweep, Playwright baselines, keyboard walk-through) pass or the owner waives them.
