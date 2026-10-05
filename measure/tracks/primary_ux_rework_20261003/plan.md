@@ -109,12 +109,26 @@ Run 2a (tasks 0-3) is done in `4ba0ab362`..`01fa69a03`. Run 2b owns the last ite
 - Phase 3 open items: game-challenges has no sidebar link (it opens from My Classes); the privacy policy still names the Google Workspace APIs (legal text, owner review).
 - [x] Phase 3 review (2026-10-05, a separate session; [review-phase3.md](review-phase3.md)): no Critical or High finding. Two Medium findings fixed in `52ba1d908`: the sidebar "Student progress" link opened a 404 page (item removed; a config test checks every teacher href has a page), and the assignments screen showed "no classes" when the class list failed to load (now an error with a retry). Low findings go to Phase 4. Full Primary suite on 4bf53279b in 3 shards: 1097 passed, 2 failed (one fixed in `571670430`, one PGlite hook timeout under load in `userModel.activity.behavior.test.ts` that passes with a longer timeout); tsc exit 0.
 
-## Phase 4: Quality
-- [ ] States: loading, empty, error on every screen
-- [ ] Accessibility pass with axe and a keyboard walk-through
-- [ ] i18n keys and the locale toggle
-- [ ] Sound set and mute
-- [ ] README cleanup
+## Phase 4: Quality — `52ba1d908`..`27a489c31` (2026-10-05)
+- [x] States: loading, empty, error on every screen — Phases 2-3 cover the student and teacher
+  screens inside their components; `c6df077f7` adds `loading.tsx` for the two server-rendered
+  teacher pages (reports, student progress). Admin and system screens wait for the owner
+  decision (shell only or not). Review Low items left for Lane G or a later pass: the "Archive"
+  menu item with no handler, the silent failures in the assignment student removal and the
+  my-students reset (see review-phase3.md).
+- [x] Accessibility pass with axe — `c6df077f7`: `components/__tests__/axe-screens.test.tsx` runs
+  axe-core 4.12.1 in jsdom over the shared teacher and lesson parts (0 serious violations;
+  color contrast is checked in the browser sweep). The keyboard walk-through is part of the gate
+  sweep below (needs a browser).
+- [x] i18n keys and the locale toggle — `c5b752348`: enrollment page, unenroll dialogs, and the
+  assign toast read the message files; the sign-in screens get the language menu (audit C12).
+  The five message files have the same key set (checked by script). The Chinese depth problem of
+  FR-8 is not present any more (0 type mismatches en vs cn).
+- [x] Sound set and mute — `449714ee9`: `lib/sounds.ts` (Tutor synth set), `hooks/use-sound.tsx`
+  (`SoundProvider` in the shell, mute per student in localStorage), `SoundToggle` in the header,
+  and the step-change sound in the lesson rail. Request to Lane G: play `correct`/`incorrect` in
+  the quiz and flashcard feedback and `celebration` on a finished lesson (`useSound().play`).
+- [x] README cleanup — `27a489c31`.
 
 ## Gates
 - [ ] Vision QA sweep at three widths, no Critical/High. The 768 px width needs real evidence:
