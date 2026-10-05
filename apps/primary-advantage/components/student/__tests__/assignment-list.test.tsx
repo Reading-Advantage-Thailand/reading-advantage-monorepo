@@ -6,13 +6,16 @@ import type { ReactNode } from "react";
 
 import { calendarDayKey } from "@reading-advantage/domain/calendar-day";
 import StudentAssignmentList, { type AssignmentStudent } from "../assignment-list";
-import { renderWithMessages, testMessages } from "../../__tests__/helpers/render-with-messages";
+import { renderWithMessages, testMessages, withMessages } from "../../__tests__/helpers/render-with-messages";
 
 const DAY_MS = 86_400_000;
 const fetchMock = vi.fn();
+const STUDENT = { id: "student-1", role: "STUDENT", schoolId: "school-1" };
+/** The session user; null until AuthProvider has loaded it. */
+const session = vi.hoisted(() => ({ user: null as Record<string, unknown> | null }));
 
 vi.mock("@reading-advantage/auth-client", () => ({
-  useSession: () => ({ user: { id: "student-1", role: "STUDENT", schoolId: "school-1" } }),
+  useSession: () => ({ user: session.user }),
 }));
 
 vi.mock("@/i18n/navigation", () => ({
@@ -78,6 +81,7 @@ const ONE_PAGE = { currentPage: 1, totalPages: 1, totalCount: 0, hasNextPage: fa
 beforeEach(() => {
   vi.clearAllMocks();
   vi.stubGlobal("fetch", fetchMock);
+  session.user = STUDENT;
 });
 
 afterEach(() => {
@@ -222,5 +226,42 @@ describe("StudentAssignmentList states", () => {
     fireEvent.click(within(pages).getByRole("button", { name: t.next }));
     expect(await screen.findByText("Second page story")).toBeInTheDocument();
     expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining("page=2"));
+  });
+});
+
+describe("StudentAssignmentList when the session loads after the first render", () => {
+  it("keeps the server cards and does not fetch the first page again", async () => {
+    // AuthProvider loads the user after the first render. The effect ran again for the new user,
+    // cleared the loaded key, showed a skeleton over the server cards, and fetched page 1 again.
+    session.user = null;
+    const list = () => <StudentAssignmentList initialAssignments={[row("a", "River story", null)]} initialPagination={ONE_PAGE} />;
+    const { rerender } = renderWithMessages(list());
+
+    session.user = STUDENT;
+    rerender(withMessages(list()));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(screen.getByText("River story")).toBeInTheDocument();
+    expect(document.querySelector("[aria-busy='true']")).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("still fetches for a filter and for 'all' again after the session loads", async () => {
+    const t = testMessages.en.StudentAssignments;
+    session.user = null;
+    const list = () => <StudentAssignmentList initialAssignments={[row("a", "River story", null)]} initialPagination={ONE_PAGE} />;
+    const { rerender } = renderWithMessages(list());
+    session.user = STUDENT;
+    rerender(withMessages(list()));
+
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ assignments: [row("d", "Done story", null, "COMPLETED")], pagination: ONE_PAGE }) });
+    fireEvent.click(screen.getByRole("button", { name: t.statusCompleted }));
+    expect(await screen.findByText("Done story")).toBeInTheDocument();
+
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ assignments: [row("a", "River story", null)], pagination: ONE_PAGE }) });
+    fireEvent.click(screen.getByRole("button", { name: t.statusAll }));
+    expect(await screen.findByText("River story")).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/students/student-1/assignments?page=1&limit=10");
   });
 });

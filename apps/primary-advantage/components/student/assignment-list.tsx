@@ -98,17 +98,19 @@ export default function StudentAssignmentList({
   if (debouncedSearch.trim()) params.set("search", debouncedSearch.trim());
   const queryKey = params.toString();
   // The server page already fetched the first page (page 1, no filters).
+  const initialKey = useRef(queryKey);
   const [loadedKey, setLoadedKey] = useState<string | null>(initialAssignments !== undefined ? queryKey : null);
-  const skipFirstFetch = useRef(initialAssignments !== undefined);
+  // True until the first fetch replaces the server page.
+  const showsServerPage = useRef(initialAssignments !== undefined);
   // Loading is derived from the query, so a new filter never shows the old result for a render.
   const loading = Boolean(user?.id) && loadedKey !== queryKey;
 
   useEffect(() => {
-    if (skipFirstFetch.current) {
-      skipFirstFetch.current = false;
-      return;
-    }
+    // The server page is the first page: no fetch for it, also when AuthProvider loads the user
+    // after the first render (that fetch put a skeleton over the server cards). A retry fetches.
+    if (showsServerPage.current && queryKey === initialKey.current && reloadKey === 0) return;
     if (!user?.id) return;
+    showsServerPage.current = false;
     let active = true;
     setFailed(false);
     setLoadedKey(null);
