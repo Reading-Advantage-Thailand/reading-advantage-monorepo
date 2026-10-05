@@ -4,6 +4,7 @@ import type {
   LearningEvidence,
   SentenceInput,
   VocabularyInput,
+  LaunchAvatar,
 } from "@reading-advantage/game-contracts";
 
 import type { APKInputController } from "./input.js";
@@ -382,6 +383,8 @@ export interface GameFactoryContext {
   inputController: APKInputController;
   /** Whether this mount is authoritative gameplay or a safe preview. */
   sessionMode: APKSessionMode;
+  /** The player's avatar from the host (the avatar shop, FR-7); null or absent means the game's fixed hero. */
+  avatar?: LaunchAvatar | null;
   /** Initial responsive composition when host-owned responsive configuration is present. */
   composition?: SupportedResponsiveComposition;
   /** Optional deterministic seed. */
@@ -441,6 +444,8 @@ export interface MountCartridgeOptions {
   responsive?: ResponsiveRuntimeOptions;
   /** Optional multiplayer runtime ownership; omitted for single-player cartridges. */
   multiplayer?: MultiplayerRuntimeOptions;
+  /** The player's avatar; the host passes it, a game never fetches it. */
+  avatar?: LaunchAvatar | null;
 }
 
 /** Imperative lifecycle and diagnostics API returned to a host. */

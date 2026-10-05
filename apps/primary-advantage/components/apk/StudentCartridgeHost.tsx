@@ -1,5 +1,6 @@
 "use client";
 
+import type { LaunchAvatar } from "@reading-advantage/game-contracts";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -59,6 +60,8 @@ export interface StudentCartridgeHostProps {
   readonly challengeId?: string;
   /** Launch phase requested from the page search params. */
   readonly mode?: "demo" | "briefing";
+  /** The student's avatar for the game (FR-7 of the avatar shop); null when none is set. */
+  readonly avatar?: LaunchAvatar | null;
 }
 
 type HostLoadError = {
@@ -117,6 +120,7 @@ export function StudentCartridgeHost({
   ownerKey,
   challengeId,
   mode = "briefing",
+  avatar = null,
 }: StudentCartridgeHostProps) {
   const t = useTranslations("ApkHost");
   const router = useRouter();
@@ -449,6 +453,7 @@ export function StudentCartridgeHost({
                 !challengeId && mode === "demo" ? "demo" : "briefing"
               }
               seed={challengeLaunch?.challenge.seed ?? 29}
+              avatar={avatar}
               responsive={APK_HOST_RESPONSIVE_OPTIONS}
               standardExperience={cartridge.standardExperience}
               className={APK_HOST_LAYOUT_CLASS}

@@ -456,6 +456,7 @@ export async function mountCartridge(
         ...(answerAudio ? { answerAudio } : {}),
         ...(composition ? { composition } : {}),
         ...(options.seed === undefined ? {} : { seed: options.seed }),
+        ...(options.avatar === undefined ? {} : { avatar: options.avatar }),
       });
       if (closeRequested || destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
       instance.setMuted?.(muted);

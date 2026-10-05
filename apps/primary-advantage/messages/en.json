@@ -2297,6 +2297,7 @@
         "classRoster": "Class Roster",
         "reports": "Reports",
         "reedy": "Reedy",
+        "avatars": "Avatars",
         "settings": "Settings"
       },
       "info": {
@@ -3045,6 +3046,16 @@
       "licenses": "Licenses"
     }
   },
+  "ClassAvatars": {
+    "title": "Class avatars",
+    "subtitle": "The avatar of each student. Reset clears the hero and the worn pieces; the student picks again.",
+    "reset": "Reset",
+    "resetDone": "Reset",
+    "noAvatar": "No avatar yet",
+    "backToClass": "Back to the class",
+    "loadError": "The avatars did not load.",
+    "noStudents": "No students in this class yet."
+  },
   "Avatar":   {
     "title": "My avatar",
     "subtitle": "Pick a hero and your colors. You can change them any time.",
@@ -3060,6 +3071,42 @@
     "nudgeBody": "Pick a hero and your colors. Reedy will look like you.",
     "nudgeLink": "Make my avatar",
     "meLink": "My avatar",
+    "shop": {
+      "home": "My avatar",
+      "gp": "{gp} GP",
+      "level": "Level {level}",
+      "shopLink": "Go to the shop",
+      "changeHero": "Change hero or colors",
+      "wearing": "Wearing",
+      "empty": "Nothing",
+      "wear": "Wear",
+      "remove": "Take off",
+      "wornBadge": "Worn",
+      "shopTitle": "Avatar shop",
+      "shopSubtitle": "Spend your GP on pieces for your avatar. Earn GP by reading and answering.",
+      "allSlots": "All slots",
+      "buy": "Buy for {gp} GP",
+      "buyDye": "Buy the {dye} dye for {gp} GP",
+      "owned": "Owned",
+      "locked": "Level {level}",
+      "free": "Free",
+      "notEnough": "Not enough GP",
+      "shopError": "That did not work. Try again.",
+      "dyes": "Dyes",
+      "noAvatarYet": "Pick a hero first."
+    },
+    "pieceSlots": {
+      "hair": "Hair",
+      "head": "Head",
+      "chest": "Chest",
+      "shoulders": "Shoulders",
+      "back": "Back",
+      "hands": "Hands",
+      "waist": "Waist",
+      "feet": "Feet",
+      "mainhand": "Main hand",
+      "offhand": "Off hand"
+    },
     "classes": {
       "knight": "Knight",
       "wizard": "Wizard",

@@ -2370,6 +2370,7 @@
         "classRoster": "班级花名册",
         "reports": "报告",
         "reedy": "Reedy",
+        "avatars": "头像",
         "settings": "设置"
       },
       "info": {
@@ -3043,6 +3044,16 @@
       "licenses": "Licenses"
     }
   },
+  "ClassAvatars": {
+    "title": "班级头像",
+    "subtitle": "每位学生的头像。重置会清除英雄和穿戴的装备，学生需重新选择。",
+    "reset": "重置",
+    "resetDone": "已重置",
+    "noAvatar": "尚无头像",
+    "backToClass": "返回班级",
+    "loadError": "头像加载失败。",
+    "noStudents": "此班级还没有学生。"
+  },
   "Avatar":   {
     "title": "我的头像",
     "subtitle": "选择一个英雄和你的颜色，随时可以更改。",
@@ -3058,6 +3069,42 @@
     "nudgeBody": "选择一个英雄和你的颜色，Reedy 会变成你的样子。",
     "nudgeLink": "创建头像",
     "meLink": "我的头像",
+    "shop": {
+      "home": "我的头像",
+      "gp": "{gp} GP",
+      "level": "等级 {level}",
+      "shopLink": "前往商店",
+      "changeHero": "更换英雄或颜色",
+      "wearing": "穿戴中",
+      "empty": "无",
+      "wear": "穿戴",
+      "remove": "脱下",
+      "wornBadge": "已穿戴",
+      "shopTitle": "头像商店",
+      "shopSubtitle": "用 GP 为你的头像购买装备。阅读和答题可获得 GP。",
+      "allSlots": "所有部位",
+      "buy": "购买 {gp} GP",
+      "buyDye": "购买 {dye} 染色 {gp} GP",
+      "owned": "已拥有",
+      "locked": "等级 {level}",
+      "free": "免费",
+      "notEnough": "GP 不足",
+      "shopError": "操作失败，请重试。",
+      "dyes": "染色",
+      "noAvatarYet": "请先选择英雄。"
+    },
+    "pieceSlots": {
+      "hair": "头发",
+      "head": "头部",
+      "chest": "胸部",
+      "shoulders": "肩部",
+      "back": "背部",
+      "hands": "手部",
+      "waist": "腰部",
+      "feet": "脚部",
+      "mainhand": "主手",
+      "offhand": "副手"
+    },
     "classes": {
       "knight": "骑士",
       "wizard": "法师",

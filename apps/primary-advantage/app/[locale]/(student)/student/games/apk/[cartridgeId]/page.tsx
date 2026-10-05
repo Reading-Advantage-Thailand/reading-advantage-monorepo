@@ -1,3 +1,5 @@
+import { db } from "@reading-advantage/db";
+import { getAvatarState, toLaunchAvatar } from "@reading-advantage/domain/primary-avatar";
 import { getCartridgeCatalogEntry } from "@reading-advantage/game-cartridges";
 import { notFound } from "next/navigation";
 import { z } from "zod";
@@ -37,6 +39,8 @@ export default async function PrimaryApkGamePage({
   const ownerKey = user?.role === "STUDENT" && user.schoolId
     ? `${user.schoolId}:${user.id}`
     : undefined;
+  // The host passes the avatar to the game (FR-7); a game never fetches it. A failed read means no avatar.
+  const avatar = ownerKey && user ? await getAvatarState({ db, user }).then(toLaunchAvatar).catch(() => null) : null;
 
   return (
     <StudentCartridgeHost
@@ -47,6 +51,7 @@ export default async function PrimaryApkGamePage({
       ownerKey={ownerKey}
       challengeId={challengeIdResult.data}
       mode={modeResult.data}
+      avatar={avatar}
       title={catalogEntry.title}
     />
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import type { LaunchAvatar } from "@reading-advantage/game-contracts";
 import {
   useEffect,
   useRef,
@@ -68,6 +69,8 @@ export type APKGameHostProps = Omit<ComponentProps<"section">, "onComplete" | "i
   factory?: GameFactory;
   /** Optional deterministic session seed. */
   seed?: number;
+  /** The player's avatar from the host (the avatar shop, FR-7). */
+  avatar?: LaunchAvatar | null;
   /** Optional responsive runtime policy for the canvas mount surface. */
   responsive?: ResponsiveRuntimeOptions;
   /** Optional validated mission briefing shown before normal gameplay. */
@@ -187,6 +190,7 @@ export function APKGameHost({
   edition,
   factory,
   seed,
+  avatar,
   responsive,
   briefing,
   tutorial,
@@ -770,6 +774,7 @@ export function APKGameHost({
           input,
           edition,
           sessionMode,
+          ...(avatar === undefined ? {} : { avatar }),
           host: {
             complete: async (nextResult, outcome = "complete", evidence) => {
               if (!isCurrentMount(mountPoint, generation) || sessionMode !== "playing") return;

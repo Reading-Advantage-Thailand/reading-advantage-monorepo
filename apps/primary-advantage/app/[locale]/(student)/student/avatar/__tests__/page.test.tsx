@@ -53,13 +53,13 @@ describe("AvatarPage", () => {
     expect(picker).toHaveAttribute("data-return", "/student/reedy");
   });
 
-  it("falls back to the home when the read fails or the origin is unknown", async () => {
+  it("falls back to the avatar page when the read fails or the origin is unknown", async () => {
     mocks.getAvatarProfile.mockRejectedValue(new Error("down"));
     mocks.locale = "th";
     renderWithMessages(await AvatarPage({ searchParams: Promise.resolve({ from: "elsewhere" }) }), { locale: "th" });
     const picker = screen.getByTestId("picker");
     expect(picker).toHaveAttribute("data-initial", "null");
-    expect(picker).toHaveAttribute("data-return", "/student/home");
+    expect(picker).toHaveAttribute("data-return", "/student/avatar");
     expect(screen.getByRole("heading", { level: 1, name: "อวตารของฉัน" })).toBeInTheDocument();
   });
 });

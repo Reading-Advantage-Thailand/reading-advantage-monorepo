@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AVATAR_PACK_VERSION, PORTRAIT_SIZE, portraitFiles, portraitPixels, recolorLayer, stackLayers, starterLoadout } from "@reading-advantage/avatar-kit";
-import type { AvatarTints } from "@reading-advantage/game-contracts";
+import { AVATAR_PACK_VERSION, PORTRAIT_SIZE, portraitFiles, portraitPixels, recolorLayer, stackLayers, starterLoadout, wornLoadout } from "@reading-advantage/avatar-kit";
+import type { AvatarLoadoutPiece, AvatarTints } from "@reading-advantage/game-contracts";
 import { cn } from "@/lib/utils";
 
 /** Where the app serves the pack (FR-10c). */
@@ -32,28 +32,42 @@ function pixelsOf(file: string): Promise<Uint8ClampedArray> {
  * @returns The RGBA pixels of the portrait.
  */
 export async function composePortrait(classId: string, tints: Partial<AvatarTints>): Promise<Uint8ClampedArray> {
-  const files = portraitFiles(starterLoadout(classId, tints));
+  return composeFiles(portraitFiles(starterLoadout(classId, tints)));
+}
+
+/**
+ * Composes the portrait of worn pieces in the given colors (the shop loadout).
+ * @param pieces The worn pieces.
+ * @param tints The color choice.
+ * @returns The RGBA pixels of the portrait.
+ */
+export async function composeWornPortrait(pieces: readonly AvatarLoadoutPiece[], tints: Partial<AvatarTints>): Promise<Uint8ClampedArray> {
+  return composeFiles(portraitFiles(wornLoadout(pieces, tints)));
+}
+
+async function composeFiles(files: ReturnType<typeof portraitFiles>): Promise<Uint8ClampedArray> {
   const layers = await Promise.all(files.map(async ({ color, mask, scales }) => recolorLayer(await pixelsOf(color), await pixelsOf(mask), scales)));
   return stackLayers(layers);
 }
 
 /**
- * The portrait still of a hero class in a color scheme, drawn on a canvas (no WebGL).
- * @param props.classId The hero class (a starter set id).
+ * The portrait still of a hero class in a color scheme, or of worn pieces, drawn on a canvas (no WebGL).
+ * @param props.classId The hero class (a starter set id); the fallback when no pieces are given.
+ * @param props.pieces The worn pieces (the shop loadout); when given, they replace the class set.
  * @param props.tints The color choice; missing slots take the class colors.
  * @param props.alt The accessible name of the picture.
  * @param props.className Extra classes for the canvas.
  * @returns The canvas; a plain box with the name until the layers load.
  */
-export function AvatarPortrait({ classId, tints = {}, alt, className }: { classId: string; tints?: Partial<AvatarTints>; alt: string; className?: string }) {
+export function AvatarPortrait({ classId, pieces, tints = {}, alt, className }: { classId: string; pieces?: readonly AvatarLoadoutPiece[]; tints?: Partial<AvatarTints>; alt: string; className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading");
-  const key = `${classId}|${tints.skin ?? ""}|${tints.hair ?? ""}|${tints.eyes ?? ""}|${tints.cloth ?? ""}`;
+  const key = `${classId}|${pieces ? pieces.map((p) => `${p.itemId}:${p.dye ?? ""}`).join(",") : "-"}|${tints.skin ?? ""}|${tints.hair ?? ""}|${tints.eyes ?? ""}|${tints.cloth ?? ""}`;
 
   useEffect(() => {
     let live = true;
     setStatus("loading");
-    composePortrait(classId, tints)
+    (pieces ? composeWornPortrait(pieces, tints) : composePortrait(classId, tints))
       .then((pixels) => {
         const canvas = canvasRef.current;
         if (!live || !canvas) return;

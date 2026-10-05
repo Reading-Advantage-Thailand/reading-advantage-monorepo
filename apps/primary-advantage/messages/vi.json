@@ -2372,6 +2372,7 @@
         "classRoster": "Danh sách lớp",
         "reports": "Báo cáo",
         "reedy": "Reedy",
+        "avatars": "Nhân vật",
         "settings": "Cài đặt"
       },
       "info": {
@@ -3045,6 +3046,16 @@
       "licenses": "Licenses"
     }
   },
+  "ClassAvatars": {
+    "title": "Nhân vật của lớp",
+    "subtitle": "Nhân vật của từng học sinh. Đặt lại sẽ xóa anh hùng và trang bị đang mặc; học sinh chọn lại.",
+    "reset": "Đặt lại",
+    "resetDone": "Đã đặt lại",
+    "noAvatar": "Chưa có nhân vật",
+    "backToClass": "Về lớp học",
+    "loadError": "Không tải được nhân vật.",
+    "noStudents": "Lớp này chưa có học sinh."
+  },
   "Avatar":   {
     "title": "Nhân vật của tôi",
     "subtitle": "Chọn một anh hùng và màu sắc của bạn. Bạn có thể đổi bất cứ lúc nào.",
@@ -3060,6 +3071,42 @@
     "nudgeBody": "Chọn một anh hùng và màu sắc của bạn. Reedy sẽ trông giống bạn.",
     "nudgeLink": "Tạo nhân vật",
     "meLink": "Nhân vật của tôi",
+    "shop": {
+      "home": "Nhân vật của tôi",
+      "gp": "{gp} GP",
+      "level": "Cấp {level}",
+      "shopLink": "Đến cửa hàng",
+      "changeHero": "Đổi anh hùng hoặc màu sắc",
+      "wearing": "Đang mặc",
+      "empty": "Trống",
+      "wear": "Mặc",
+      "remove": "Tháo",
+      "wornBadge": "Đang mặc",
+      "shopTitle": "Cửa hàng nhân vật",
+      "shopSubtitle": "Dùng GP để mua trang bị cho nhân vật. Đọc và trả lời câu hỏi để nhận GP.",
+      "allSlots": "Tất cả vị trí",
+      "buy": "Mua với {gp} GP",
+      "buyDye": "Mua màu {dye} với {gp} GP",
+      "owned": "Đã có",
+      "locked": "Cấp {level}",
+      "free": "Miễn phí",
+      "notEnough": "Không đủ GP",
+      "shopError": "Không thực hiện được. Thử lại.",
+      "dyes": "Màu nhuộm",
+      "noAvatarYet": "Hãy chọn anh hùng trước."
+    },
+    "pieceSlots": {
+      "hair": "Tóc",
+      "head": "Đầu",
+      "chest": "Ngực",
+      "shoulders": "Vai",
+      "back": "Lưng",
+      "hands": "Tay",
+      "waist": "Eo",
+      "feet": "Chân",
+      "mainhand": "Tay chính",
+      "offhand": "Tay phụ"
+    },
     "classes": {
       "knight": "Hiệp sĩ",
       "wizard": "Pháp sư",
