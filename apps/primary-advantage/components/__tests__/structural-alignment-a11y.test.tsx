@@ -79,7 +79,7 @@ import ClassroomSelector from "../teacher/classroom-selector";
 import ArticleShowcaseCard from "../articles/article-showcase-card";
 import { TaskCollection } from "../lesson/task/task-collection";
 import TaskVocabularyCollection from "../lesson/task/task-vocabulary-collection";
-import { HistoryTable } from "../dashboard/history-table";
+import { HistoryList } from "../student/history-list";
 import TeacherProgressReports from "../teacher/teacher-progress-reports";
 import ChangeRole from "../shared/change-role";
 import { FlashcardType } from "@/types/enum";
@@ -557,7 +557,7 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     ).toBeInTheDocument();
   });
 
-  it("opens history rows by keyboard", async () => {
+  it("opens history records as native links (Tab and Enter work)", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -578,13 +578,10 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
       }),
     );
     try {
-      renderWithMessages(<HistoryTable variant="history" />);
-      const cell = await screen.findByText("River Story");
-      const row = cell.closest("tr")!;
-      expect(row).toHaveAttribute("tabindex", "0");
-
-      fireEvent.keyDown(row, { key: "Enter" });
-      expect(mocks.push).toHaveBeenCalledWith("/student/read/a1");
+      renderWithMessages(<HistoryList variant="history" />);
+      const link = await screen.findByRole("link", { name: /River Story/ });
+      expect(link.tagName).toBe("A");
+      expect(link).toHaveAttribute("href", "/student/read/a1");
     } finally {
       vi.unstubAllGlobals();
     }

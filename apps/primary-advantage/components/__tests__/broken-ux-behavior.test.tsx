@@ -61,7 +61,7 @@ import { AdminDashboardHeader } from "../admin/admin-dashboard-header";
 import { Footer } from "../index/footer";
 import MyStudents from "../teacher/my-students";
 import MyClasses from "../teacher/my-classes";
-import { HistoryTable } from "../dashboard/history-table";
+import { HistoryList } from "../student/history-list";
 import StudentAssignmentList from "../student/assignment-list";
 import {
   renderWithMessages,
@@ -207,7 +207,7 @@ describe("FR-8 header spelling", () => {
     ).not.toBeNull();
   });
 
-  it("renders the history table with translated copy and correct classes", async () => {
+  it("renders the history list with translated copy", async () => {
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -224,18 +224,14 @@ describe("FR-8 header spelling", () => {
         pagination: { page: 1, limit: 10, total: 1, totalPages: 1 },
       }),
     });
-    renderWithMessages(<HistoryTable variant="history" />);
+    renderWithMessages(<HistoryList variant="history" />);
     expect(await screen.findByText("River Tale")).toBeInTheDocument();
     expect(
-      await screen.findByPlaceholderText(
-        en.Student.history.searchPlaceholder,
-      ),
+      await screen.findByPlaceholderText(en.StudentHistory.searchPlaceholder),
     ).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("captoliza");
-    expect(
-      document.body.querySelector(".capitalize"),
-      "cells use the correctly spelled capitalize class",
-    ).not.toBeNull();
+    // Titles show as written: the card list does not force capital letters.
+    expect(document.body.querySelector(".captoliza")).toBeNull();
   });
 });
 

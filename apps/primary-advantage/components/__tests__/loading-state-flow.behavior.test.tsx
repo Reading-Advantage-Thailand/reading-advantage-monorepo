@@ -120,7 +120,7 @@ import AssignmentDashboard from "../teacher/assignment-dashboard";
 import Assignments from "../teacher/assignments";
 import { DataTable } from "../ui/data-table";
 import StudentsPage from "../../app/[locale]/admin/students/page";
-import { HistoryTable } from "../dashboard/history-table";
+import { HistoryList } from "../student/history-list";
 import EnhancedClassRoster from "../teacher/enhanced-class-roster";
 import LessonProgressBar from "../lesson/lesson-progress-bar";
 import { QuizContextProvider } from "@/contexts/question-context";
@@ -401,7 +401,7 @@ describe("FR-5 debounced admin search and single history fetch", () => {
     expect(String(fetchMock.mock.calls.at(-1)?.[0])).toContain("search=ana");
   });
 
-  it("fires exactly one records fetch on history table mount", async () => {
+  it("fires exactly one records fetch on history list mount", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -409,7 +409,7 @@ describe("FR-5 debounced admin search and single history fetch", () => {
         pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
       }),
     });
-    renderWithMessages(<HistoryTable variant="history" />);
+    renderWithMessages(<HistoryList variant="history" />);
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     expect(String(fetchMock.mock.calls[0]?.[0])).toContain("article-records");
   });

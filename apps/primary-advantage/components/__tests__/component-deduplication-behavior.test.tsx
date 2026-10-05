@@ -128,7 +128,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { TaskReading } from "@/components/lesson/task/task-reading";
 import LessonProgressBar from "@/components/lesson/lesson-progress-bar";
 import { QuizContextProvider } from "@/contexts/question-context";
-import { HistoryTable } from "@/components/dashboard/history-table";
+import { HistoryList } from "@/components/student/history-list";
 import { SchoolForm } from "@/components/school/school-form";
 import { TaskCollection } from "@/components/lesson/task/task-collection";
 import EnrollmentManagement from "@/components/teacher/enrollment-management";
@@ -309,7 +309,7 @@ describe("merged progress bar behind source", () => {
   });
 });
 
-describe("merged history table behind variant", () => {
+describe("merged history list behind variant", () => {
   const row = {
     id: "a1",
     title: "River Story",
@@ -327,14 +327,14 @@ describe("merged history table behind variant", () => {
         pagination: { page: 1, limit: 10, total: 1, totalPages: 1 },
       }),
     });
-    renderWithMessages(<HistoryTable variant="history" />);
+    renderWithMessages(<HistoryList variant="history" />);
 
     expect(await screen.findByText("River Story")).toBeInTheDocument();
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining("article-records"),
     );
     expect(
-      screen.getByPlaceholderText(en.Student.history.searchPlaceholder),
+      screen.getByPlaceholderText(en.StudentHistory.searchPlaceholder),
     ).toBeInTheDocument();
   });
 
@@ -343,16 +343,16 @@ describe("merged history table behind variant", () => {
       ok: true,
       json: async () => ({ data: [] }),
     });
-    renderWithMessages(<HistoryTable variant="reminder" />);
+    renderWithMessages(<HistoryList variant="reminder" />);
 
     expect(
-      await screen.findByText(en.Student.history.noArticlesToRead),
+      await screen.findByText(en.StudentHistory.noReadAgain),
     ).toBeInTheDocument();
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining("reminder-reread"),
     );
     expect(
-      screen.queryByPlaceholderText(en.Student.history.searchPlaceholder),
+      screen.queryByPlaceholderText(en.StudentHistory.searchPlaceholder),
     ).not.toBeInTheDocument();
   });
 });

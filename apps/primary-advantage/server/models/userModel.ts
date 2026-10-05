@@ -245,13 +245,8 @@ export const getUserArticleRecords = async (
       ]),
     ];
 
-    // Prisma used a JSON path + string_contains filter on the search
-    // term. We replicate it via a SQL `details->>'title' ILIKE` clause.
-    if (search) {
-      activityConditions.push(
-        sql`${userActivity.details}->>'title' ILIKE ${`%${search}%`}`,
-      );
-    }
+    // The search matches the article title (in the article query below). ARTICLE_READ rows keep
+    // no title in `details`, so a `details->>'title'` filter here made every search empty.
 
     // Get all article activities for the user
     const articleActivities = await db.select().from(userActivity)

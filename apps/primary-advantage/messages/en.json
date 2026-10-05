@@ -3088,5 +3088,41 @@
     "sentencesEmpty": "No sentences saved yet",
     "sentencesEmptyHint": "Read a story and save sentences. They show here for practice.",
     "findStory": "Find a story"
+  },
+  "StudentHistory": {
+    "title": "My reading",
+    "subtitle": "Stories you read, and stories to read again.",
+    "readAgain": "Read again",
+    "readAgainHint": "Reading these stories again can help you do better.",
+    "readAgainAction": "Read again",
+    "records": "Stories I read",
+    "recordsHint": "Every story you opened, newest first.",
+    "search": "Search stories",
+    "searchPlaceholder": "Search by title",
+    "searching": "Searching...",
+    "score": "Score {score}",
+    "readOn": "Read {date}",
+    "status": {
+      "READ": "Read",
+      "UNRATED": "Not rated yet",
+      "COMPLETED_MCQ": "Quiz done",
+      "COMPLETED_SAQ": "Short answers done",
+      "COMPLETED_LAQ": "Writing done"
+    },
+    "noReadAgain": "Nothing to read again",
+    "noReadAgainHint": "Great work! Keep reading new stories.",
+    "noRecords": "No stories read yet",
+    "noRecordsHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "noMatch": "No stories match",
+    "noMatchHint": "Try another word.",
+    "showAll": "Show all",
+    "loadError": "We could not load your reading history.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading stories",
+    "pages": "Story pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
   }
 }

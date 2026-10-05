@@ -1,0 +1,32 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { RouteError } from "@/components/shared/route-error";
+import { STUDENT_HOME } from "@/lib/student-home";
+
+/**
+ * Error boundary for the reading history.
+ * @param props.error The thrown error.
+ * @param props.reset Retries rendering the failed segment.
+ * @returns The error state with a retry and a link to the student home.
+ */
+export default function HistoryError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  const t = useTranslations("StudentHistory");
+  const te = useTranslations("Error");
+  return (
+    <RouteError
+      error={error}
+      reset={reset}
+      title={t("loadError")}
+      description={t("loadErrorHint")}
+      backHref={STUDENT_HOME}
+      backLabel={te("goHome")}
+    />
+  );
+}

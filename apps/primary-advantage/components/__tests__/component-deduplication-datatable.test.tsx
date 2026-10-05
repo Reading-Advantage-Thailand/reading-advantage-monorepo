@@ -68,7 +68,6 @@ vi.mock("../ui/data-table", () => ({
   ),
 }));
 
-import { HistoryTable } from "../dashboard/history-table";
 import Assignments from "../teacher/assignments";
 import MyStudents from "../teacher/my-students";
 import MyClasses from "../teacher/my-classes";
@@ -196,11 +195,6 @@ async function expectShellRows(count: number): Promise<void> {
 }
 
 describe("live tables through one DataTable shell", () => {
-  it("serves history rows through the shell", async () => {
-    renderWithMessages(<HistoryTable variant="history" />);
-    await expectShellRows(2);
-  });
-
   it("serves teacher assignments through the shell", async () => {
     renderWithMessages(<Assignments />);
     await expectShellRows(1);
