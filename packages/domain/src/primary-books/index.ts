@@ -8,3 +8,5 @@ export * from "./class-book-contracts.js";
 export { assignClassBook, listClassBooks, setCurrentLesson, markLessonTaught, markStepDone, getClassBookPacing, getStudentClassBooks, listCatalogueBooks, getStudentBook } from "./class-books.js";
 export * from "./progress-contracts.js";
 export { recordLessonProgress, getClassBookProgress, getStudentLessonSteps, toProgressCsv } from "./progress.js";
+export * from "./lesson-support-contracts.js";
+export { guideLocaleOf, getLessonGuide, getTeacherLesson, resolveBookLesson, findTeacherClassBook } from "./lesson-support.js";
