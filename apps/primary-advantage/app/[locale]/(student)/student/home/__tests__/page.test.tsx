@@ -14,7 +14,7 @@ const mocks = vi.hoisted(() => ({
     unknown
   > | null,
   getStudentHome: vi.fn(),
-  getStudentClassBooks: vi.fn(async () => []),
+  getStudentClassBooks: vi.fn(async (): Promise<unknown[]> => []),
   leaderboard: vi.fn(),
   redirect: vi.fn(),
 }));

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { db } from "@reading-advantage/db";
+import { recordLessonProgress } from "@reading-advantage/domain/primary-books";
 import { currentUser } from "@/lib/session";
 import {
   getArticleForLesson,
@@ -75,6 +77,13 @@ export async function POST(
       articleId,
       progress,
       timeSpent,
+    );
+
+    // Class book progress (FR-5): the step the student moved to, from the 14-step percent.
+    // A failure here must not block the lesson.
+    const reachedStep = Math.min(14, Math.max(1, Math.round((progress * 14) / 100)));
+    await recordLessonProgress({ db, user, input: { articleId, reachedStep, seconds: Math.round(timeSpent) } }).catch((error: unknown) =>
+      console.error("API Error - class book progress for POST /api/lessons/[articleId]:", error),
     );
 
     return NextResponse.json({ success: true }, { status: 200 });
