@@ -34,6 +34,7 @@ import TeacherError from "../teacher/error";
 import GlobalError from "../../global-error";
 import ArticleError from "../(student)/student/read/[articleId]/error";
 import ReadListError from "../(student)/student/read/error";
+import LessonError from "../(student)/student/lesson/[id]/error";
 
 const error = new Error("boundary failure");
 
@@ -156,5 +157,17 @@ describe("read list error boundary", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(enMessages.ReadList.loadError);
     fireEvent.click(screen.getByRole("button", { name: enMessages.Error.retry }));
     expect(reset).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("lesson error boundary", () => {
+  it("shows the lesson load error with a retry and a way back to the stories", () => {
+    const reset = vi.fn();
+    render(withIntl(<LessonError error={error} reset={reset} />));
+
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(enMessages.Lesson.error);
+    fireEvent.click(screen.getByRole("button", { name: enMessages.Error.retry }));
+    expect(reset).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("link", { name: enMessages.ReadList.backToStories })).toHaveAttribute("href", "/student/read");
   });
 });

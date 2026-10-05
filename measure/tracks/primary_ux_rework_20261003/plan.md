@@ -69,6 +69,9 @@ Other lanes request changes here and do not edit these files.
   - Article view: CEFR chip and a "saved to flashcards" chip only when saved; the lesson link is a link (it was a button inside a link); the disclaimer is shorter and in en and th. `ArticleContent` (reader, audio, translation) is unchanged apart from M5.
   - Decision: the old `NEXT_NOT_FOUND` branch in the article `error.tsx` never ran (Next sends `notFound()` to not-found pages, not to `error.tsx`); it is replaced by the page-level not-found state, and its test is replaced.
 - [ ] Lesson flow shell (steps shown as a progress rail)
+  - `components/lesson/lesson-step-rail.tsx`: the open step ("Step 3 of 14: First Reading"), the timer (rendered once), a segmented `role="progressbar"`, and the full step list with `aria-current="step"`. It is the first element of the lesson grid, so at 375 px it sits above the task (audit: the rail was below "Start Lesson" and collapsed); the list opens with a 48 px toggle below 1280 px and is always open in the 1280 px sidebar.
+  - States: shimmer while a step loads; a failed step save (start or next) shows an error with a retry below the task (before, it only logged); `lesson/[id]/loading.tsx` and `error.tsx` (`RouteError`); a lesson without an article shows a not-found state.
+  - Look: the blue-purple gradients, the "Learning Mode" chip, and the gradient buttons are gone; the header uses `bg-brand-50` with the article title as the `h1`; the buttons are the brand primary and outline, 48 px. Task components (activity internals) are unchanged (non-goal); the audit's empty CEFR/RA badges and objectives in the introduction task stay for the teacher/lesson track.
 - [ ] Games catalog, vocabulary, sentences, history, reports, assignments
 
 ## Phase 3: Teacher

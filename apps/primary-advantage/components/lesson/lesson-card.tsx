@@ -2,7 +2,11 @@ import React from "react";
 import LessonProgressBar, {
   LessonAssignmentProps,
 } from "./lesson-progress-bar";
-import { BookOpenIcon, GraduationCapIcon } from "lucide-react";
+import { BookOpenIcon, BookXIcon } from "lucide-react";
+import { EmptyState } from "@reading-advantage/ui";
+import { Link } from "@/i18n/navigation";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import getAssignmentById from "@/server/models/assignmentModel";
 import { getArticleForLesson } from "@/server/models/lessonModel";
 import { QuizContextProvider } from "@/contexts/question-context";
@@ -15,7 +19,8 @@ import { Article } from "@/types";
 export type LessonCardSource = "assignment" | "article";
 
 /**
- * Renders the lesson header and task sequence for an assignment or article.
+ * Renders the lesson header (the article title is the page heading) and the task sequence for
+ * an assignment or article. A lesson without an article shows a not-found state.
  * @param source Whether the lesson runs from an assignment or a standalone article.
  * @param id Assignment id for assignment lessons.
  * @param articleId Article id for article lessons.
@@ -43,51 +48,39 @@ export default async function LessonCard({
           ?.article?.title
       : (standaloneArticle as unknown as Article | null)?.title;
 
-  return (
-    <div className="w-full">
-      {/* Header Section */}
-      <div className="mb-8">
-        <div className="rounded-2xl border border-gray-200 bg-indigo-400 p-6 shadow-lg dark:border-gray-700 dark:bg-gray-900">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 p-3">
-                <BookOpenIcon className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {t("header.title", { default: "Lesson" })}
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {t("header.subtitle", {
-                    default: "Interactive Reading Experience",
-                  })}
-                </p>
-              </div>
-            </div>
-            <div className="hidden items-center gap-2 rounded-full bg-gradient-to-r from-purple-200 to-pink-200 px-4 py-2 md:flex dark:from-purple-950 dark:to-pink-950">
-              <GraduationCapIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-              <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
-                {t("header.mode", { default: "Learning Mode" })}
-              </span>
-            </div>
-          </div>
+  if (!title) {
+    const tRead = await getTranslations("ReadList");
+    return (
+      <EmptyState
+        className="bg-card border"
+        titleAs="h1"
+        icon={<BookXIcon />}
+        title={t("notFound")}
+        description={t("notFoundHint")}
+        action={
+          <Link href="/student/read" className={cn(buttonVariants({ variant: "default" }), "min-h-12 rounded-xl px-6")}>
+            {tRead("backToStories")}
+          </Link>
+        }
+      />
+    );
+  }
 
-          {/* Article Title */}
-          <div className="rounded-xl border-l-4 border-blue-500 bg-gradient-to-r from-gray-300 to-blue-300 p-4 dark:from-gray-800 dark:to-blue-950">
-            <h2 className="text-xl leading-tight font-semibold text-gray-900 dark:text-white">
-              {title}
-            </h2>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              {t("header.cta", {
-                default:
-                  "Begin your interactive reading journey with this article",
-              })}
-            </p>
+  return (
+    <div className="flex w-full flex-col gap-4">
+      <header className="bg-brand-50 flex flex-col gap-2 rounded-2xl border p-5 md:p-6">
+        <div className="flex items-center gap-3">
+          <span aria-hidden="true" className="bg-primary text-primary-foreground rounded-full p-2.5">
+            <BookOpenIcon className="size-5" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-primary text-sm font-semibold">{t("header.title")}</p>
+            <h1 className="text-xl leading-tight font-bold md:text-2xl">{title}</h1>
           </div>
         </div>
-      </div>
+        <p className="text-muted-foreground text-sm">{t("header.cta")}</p>
+      </header>
 
-      {/* Main Lesson Content */}
       <QuizContextProvider>
         <LessonProgressBar
           source={source}

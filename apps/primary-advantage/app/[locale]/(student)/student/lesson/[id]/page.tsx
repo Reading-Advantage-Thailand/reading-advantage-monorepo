@@ -19,6 +19,13 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * Lesson page: an assignment lesson when the id is an assignment, otherwise the standalone
+ * lesson of an article (`?type=article` skips the assignment lookup).
+ * @param props.params The locale and the assignment or article id.
+ * @param props.searchParams The lesson type.
+ * @returns The lesson.
+ */
 export default async function LessonPage({
   params,
   searchParams,
@@ -36,13 +43,7 @@ export default async function LessonPage({
 
   // If type is explicitly 'article', use standalone lesson
   if (lessonType === "article") {
-    return (
-      <div className="rounded-xl bg-gradient-to-b from-gray-50 to-white to-20% dark:from-slate-900 dark:to-[hsl(222.2_90%_4.9%)]">
-        <div className="relative">
-          <LessonCard source="article" articleId={id} />
-        </div>
-      </div>
-    );
+    return <LessonCard source="article" articleId={id} />;
   }
 
   // Otherwise, check if it's an assignment.
@@ -54,23 +55,6 @@ export default async function LessonPage({
     .where(eq(assignments.id, id))
     .limit(1);
 
-  // If it's an assignment, use the assignment-based lesson
-  if (assignment) {
-    return (
-      <div className="rounded-xl bg-gradient-to-b from-gray-50 to-white to-20% dark:from-slate-900 dark:to-[hsl(222.2_90%_4.9%)]">
-        <div className="relative">
-          <LessonCard source="assignment" id={id} />
-        </div>
-      </div>
-    );
-  }
-
-  // If no assignment found, treat it as an article ID for standalone lesson
-  return (
-    <div className="rounded-xl bg-gradient-to-b from-gray-50 to-white to-20% dark:from-slate-900 dark:to-[hsl(222.2_90%_4.9%)]">
-      <div className="relative">
-        <LessonCard source="article" articleId={id} />
-      </div>
-    </div>
-  );
+  // If it's an assignment, use the assignment-based lesson; otherwise treat the id as an article.
+  return assignment ? <LessonCard source="assignment" id={id} /> : <LessonCard source="article" articleId={id} />;
 }

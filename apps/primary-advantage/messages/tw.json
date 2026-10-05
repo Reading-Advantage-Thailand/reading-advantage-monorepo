@@ -1556,6 +1556,16 @@
     }
   },
   "Lesson": {
+    "rail": {
+      "stepName": "Step {step} of {total}: {name}",
+      "showSteps": "Show all steps",
+      "hideSteps": "Hide steps",
+      "done": "done"
+    },
+    "saveError": "We could not save your progress.",
+    "saveErrorHint": "Check the internet connection and try again.",
+    "notFound": "We could not find this lesson",
+    "notFoundHint": "Pick a story to read instead.",
     "Reading": {
       "firstTitle": "首次閱讀",
       "deepTitle": "深度閱讀",
