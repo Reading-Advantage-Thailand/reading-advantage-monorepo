@@ -5,10 +5,19 @@ import { assertCan } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
 import { managedClassBook, toClassBook, type Ctx } from "./class-books.js";
 import { lessonActivitiesSchema, lessonBankSchema, glossaryWordSchema, type BookLessonRef, type LessonGuidePeriod, type LessonGuideStep, type TeacherLesson } from "./lesson-support-contracts.js";
+import { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "./question-set.js";
 import { PERIODS } from "./step-map.js";
 import { z } from "zod";
 
 const CATALOGUE_REASON = "the book catalogue, the guides, and the articles are global (EXEMPT or owner-scoped); no tenant";
+
+
+/** The key shows the questions the students answer: the first five MCQs and the first SAQ. */
+const studentBank = <B extends { mcq: readonly unknown[]; saq: readonly unknown[] }>(bank: B): B => ({
+  ...bank,
+  mcq: studentQuestionSet(bank.mcq as { order?: number | null }[], STUDENT_MCQ_COUNT),
+  saq: studentQuestionSet(bank.saq as { order?: number | null }[], STUDENT_SAQ_COUNT),
+});
 
 /**
  * The language of the teacher guide for a UI locale (FR-8): Thai for Thai, English otherwise.
@@ -97,7 +106,7 @@ export async function getTeacherLesson(params: Ctx & { classBookId: string; numb
     lesson: { number: lesson.number, title: lesson.title, key: lesson.key, articleId: lesson.articleId, approved: lesson.approved },
     article: article ? { title: article.title, paragraphs: (article.passage ?? "").split(/\n\s*\n/).filter(Boolean) } : null,
     glossary: z.array(glossaryWordSchema).catch([]).parse(pkg.glossary ?? []),
-    bank: lessonBankSchema.catch({ mcq: [], saq: [], laq: [] }).parse(pkg.bank ?? {}),
+    bank: studentBank(lessonBankSchema.catch({ mcq: [], saq: [], laq: [] }).parse(pkg.bank ?? {})),
     activities: pkg.activities ? lessonActivitiesSchema.catch({}).parse(pkg.activities) : null,
     summary: typeof pkg.summary === "string" ? pkg.summary : null,
     thaiSummary: typeof pkg.thaiSummary === "string" ? pkg.thaiSummary : null,

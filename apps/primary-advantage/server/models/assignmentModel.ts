@@ -1,3 +1,4 @@
+import { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "@reading-advantage/domain/primary-books";
 import {
   db,
   eq,
@@ -342,8 +343,8 @@ export default async function getAssignmentById(id: string) {
       articleWithChildren = {
         ...articleWithChildren,
         sentencsAndWordsForFlashcard: sentRows[0] ?? null,
-        multipleChoiceQuestions: mcRows,
-        shortAnswerQuestions: saQuestionRows,
+        multipleChoiceQuestions: studentQuestionSet(mcRows, STUDENT_MCQ_COUNT),
+        shortAnswerQuestions: studentQuestionSet(saQuestionRows, STUDENT_SAQ_COUNT),
         longAnswerQuestions: laRows,
       };
     }

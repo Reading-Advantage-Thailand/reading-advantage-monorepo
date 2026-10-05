@@ -65,6 +65,16 @@ describe("getTeacherLesson", () => {
     },
   };
 
+  it("shows the student set in the key: the first five MCQs and the first SAQ of the bank", async () => {
+    const mcq = Array.from({ length: 10 }, (_, i) => ({ id: `m${i}`, question: `Q${i}?`, options: ["a", "b"], answer: "a" }));
+    const saq = Array.from({ length: 5 }, (_, i) => ({ id: `s${i}`, question: `S${i}?`, answer: "x" }));
+    const row = { ...lessonRow, package: { ...lessonRow.package, bank: { mcq, saq, laq: [] } } };
+    const mock = dbWith([[classBookRow], [classRow], [row], [], [{ title: "Hello Class", passage: "P." }]]);
+    const result = await getTeacherLesson({ db: mock as unknown as DB, user: teacher, classBookId: CLASS_BOOK, number: 2 });
+    expect(result.bank.mcq.map((q) => q.id)).toEqual(["m0", "m1", "m2", "m3", "m4"]);
+    expect(result.bank.saq.map((q) => q.id)).toEqual(["s0"]);
+  });
+
   it("returns the lesson, the article paragraphs, the key, and the steps done", async () => {
     // class book, class, lesson, states, article
     const mock = dbWith([[classBookRow], [classRow], [lessonRow], [{ lessonNumber: 2, taughtAt: null, stepsDone: [3, 1, 2] }], [{ title: "Hello Class", passage: "Para one.\n\nPara two." }]]);

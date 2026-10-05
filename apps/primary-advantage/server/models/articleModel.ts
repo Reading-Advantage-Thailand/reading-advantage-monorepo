@@ -1,3 +1,4 @@
+import { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "@reading-advantage/domain/primary-books";
 import {
   db,
   eq,
@@ -537,8 +538,7 @@ export const getQuestionsByArticleId = async (
       case ActivityType.MC_QUESTION: {
         const mcQuestions = await db.select().from(multipleChoiceQuestions)
           .where(eq(multipleChoiceQuestions.articleId, articleId));
-        questions = shuffle(mcQuestions)
-          .slice(0, 5)
+        questions = studentQuestionSet(mcQuestions, STUDENT_MCQ_COUNT)
           .map((q) => ({
             ...q,
             textualEvidence: q.textualEvidence || undefined,
@@ -550,7 +550,7 @@ export const getQuestionsByArticleId = async (
         const saQuestions = await db.select().from(shortAnswerQuestions)
           .where(eq(shortAnswerQuestions.articleId, articleId));
         if (saQuestions.length === 0) return noQuestions(result);
-        questions = saQuestions[0] as SAQuestion;
+        questions = studentQuestionSet(saQuestions, STUDENT_SAQ_COUNT)[0] as SAQuestion;
         break;
       }
 

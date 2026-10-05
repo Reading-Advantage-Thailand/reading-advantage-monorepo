@@ -316,10 +316,8 @@ function LessonMCQContentView({ article }: { article: Article }) {
 
   useEffect(() => {
     if (article.multipleChoiceQuestions) {
-      const randomQuestions = shuffle(article.multipleChoiceQuestions)
-        .slice(0, 5);
-
-      setQuestions(randomQuestions);
+      // The server already picked the student set (the first five, in bank order).
+      setQuestions(article.multipleChoiceQuestions.slice(0, 5));
       setState(QuestionState.INCOMPLETE);
     }
   }, [article]);

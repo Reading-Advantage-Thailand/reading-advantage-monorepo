@@ -1,3 +1,4 @@
+import { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "@reading-advantage/domain/primary-books";
 import { db, eq, and, isNull } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { articles, lessonProgress, articleActivityLogs } from '@reading-advantage/db';
@@ -43,8 +44,8 @@ export async function getArticleForLesson(articleId: string) {
     return {
       ...article,
       sentencsAndWordsForFlashcard: sentences[0] ?? null,
-      multipleChoiceQuestions: mcqs,
-      shortAnswerQuestions: saqs,
+      multipleChoiceQuestions: studentQuestionSet(mcqs, STUDENT_MCQ_COUNT),
+      shortAnswerQuestions: studentQuestionSet(saqs, STUDENT_SAQ_COUNT),
       longAnswerQuestions: laqs,
     };
   } catch (error) {
