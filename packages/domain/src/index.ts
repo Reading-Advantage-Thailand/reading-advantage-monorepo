@@ -8,6 +8,7 @@ export * as students from "./students/index.js";
 export * as studentLogin from "./student-login/index.js";
 export * as primaryHome from "./primary-home/index.js";
 export * as primaryAvatar from "./primary-avatar/index.js";
+export * as primaryQuest from "./primary-quest/index.js";
 export * as reports from "./reports/index.js";
 export * as users from "./users/index.js";
 export * as codecamp from "./codecamp/index.js";
