@@ -131,7 +131,11 @@ a fixed template list, power-ups from goals, and an 8-minute cooperative boss ba
 polling projector dashboard. Runs after `primary_avatar_shop_20261005`. See
 [the track](./tracks/primary_class_quest_20261005/).
 
-Started 2026-10-06 after the avatar shop closed (Phase 0 discovery).
+Delivered 2026-10-06 on `primary/lane-f-reedy-preview` (Phases 0-3; the production-build
+walk-through passed; captures 25, 26, 26b, 27 and the refreshed 10, 30, 32 are in the manual).
+Migration `0069_primary_class_quest` is additive and gated in `cloudbuild.yaml`. Open: the
+25-student week on the rehearsal environment, the owner's review of the Thai copy and the GP
+placeholders, and a per-answer event in the play kit for live HP bars (tech debt).
 
 ## Semester 2 program: Chibi Quest in Primary
 

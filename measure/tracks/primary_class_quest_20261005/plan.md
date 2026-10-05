@@ -27,13 +27,13 @@ separate agent reviews each phase.
 - [x] Result: helpers in play order, GP rewards once per participant when the result opens (`battle`, `quest:<id>`; +25 GP when the boss fell), banner on the phone and the projector
 
 ## Phase 4: Verify
-- [ ] Seeded 25-student week in a test clock (spec acceptance)
-- [ ] Vision-agent browser sessions at 375 and 1280; fix Critical and High
-- [ ] Separate-agent review; runbook note for teachers (how to run a battle in 8 minutes); retrospective
+- [ ] Seeded 25-student week in a test clock: not run locally (the owner's rule against 25-student runs on this machine; no real-database test harness in the domain package). The week's rules are covered by the mock-based domain tests (target, one open quest, goals idempotent and capped, heartbeat latest per run, damage and HP, reward idempotency: 28 tests). Run it on the rehearsal environment when the track ships.
+- [x] Browser walk-through (2026-10-06, production build, `quest-walk.mjs`): assign → 201 with target 42 for 3 students; a second assign → 409 `ALREADY_OPEN`; the quest card on the student home, the dashboard, and the class page; rally → the battle page posts presence and the live state lists the student; a skip to done → 409 `BAD_STATE`; play → the phone mounts the game with the quest's challenge and the countdown runs; result → one ledger row of 50 GP (`battle`, `quest:<id>`); done → the student has no quest. Vision QA at 375 and 1280: no Critical or High. Fixed: long names overflowed the portrait cards on the live dashboard; a phone reload lost the tally (the state now returns the phone's own heartbeat).
+- [x] Separate-agent review: skipped (the owner's no-subagent rule). Runbook `docs/runbooks/class-quest-battle.md`. Retrospective: the play kit exposes only `onComplete`, so the per-answer HP and rest rules run on the saved result, not live; the fix is a per-answer event in `APKGameHost` (tech debt). The walk-through script's first run failed on its own helper (the quest's `status` field shadowed the HTTP status): name HTTP fields apart from payload fields.
 
 ## Gates
-- [ ] Tests, tsc, ESLint green; Tutor read test unaffected
-- [ ] No ranking on any shared screen (checked in the review)
+- [x] Tests, tsc, ESLint green (2026-10-06: domain 28, contracts 6, routes 3, components 15 and 7, pages; app tsc clean; lint clean); Tutor read test unaffected (no Tutor files touched)
+- [x] No ranking on any shared screen: the dashboard contract has no score per student (contract and component tests assert it); helpers are listed in play order
 
 ## Discovery map (2026-10-06)
 
