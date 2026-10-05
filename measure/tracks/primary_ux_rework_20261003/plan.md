@@ -63,6 +63,11 @@ Other lanes request changes here and do not edit these files.
   - Reedy meter: `components/student/reedy-meter-slot.tsx` renders nothing until Lane F fills it.
   - New package parts: `EmptyState` and `ErrorState` (root entry, server-safe).
 - [ ] Read list and article view
+  - Crash (audit S2): `getQuestionsByArticleId` threw "No questions found" for an article without MC (or SA, LA) questions; the question cards are server components, so the throw reached the route error boundary and replaced the whole article. Fix: the loader returns `QuestionState.EMPTY` (new enum value) and the card shows a short note; `loadQuestions` turns any other load failure into the card ERROR state with a retry. A missing article throws `ArticleNotFoundError`, and the page shows a not-found state with a link back to the stories.
+  - Read list: one level system for students (CEFR chip; the RA badge and the empty stars are gone), filter steps type, then genre, then topic (chosen steps are filled chips with `aria-current`, the next choices are outlined, 48 px), cards are white with the picture on top and a book fallback when the picture fails (the 403 black boxes), the title is a real link that covers the card, and "Study as a lesson" is a second link.
+  - States: `loading.tsx` shimmer skeletons for the read list and the article; read-list empty state with "Show all" for a filter; load-more error with a retry; `error.tsx` for the read list and the article with a retry (`RouteError`: `router.refresh()` plus the boundary reset) and a back link. The student group error page links to the student home (was `/`).
+  - Article view: CEFR chip and a "saved to flashcards" chip only when saved; the lesson link is a link (it was a button inside a link); the disclaimer is shorter and in en and th. `ArticleContent` (reader, audio, translation) is unchanged apart from M5.
+  - Decision: the old `NEXT_NOT_FOUND` branch in the article `error.tsx` never ran (Next sends `notFound()` to not-found pages, not to `error.tsx`); it is replaced by the page-level not-found state, and its test is replaced.
 - [ ] Lesson flow shell (steps shown as a progress rail)
 - [ ] Games catalog, vocabulary, sentences, history, reports, assignments
 

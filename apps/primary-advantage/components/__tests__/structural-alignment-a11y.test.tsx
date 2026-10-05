@@ -479,7 +479,7 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     }
   });
 
-  it("opens article showcase cards by keyboard", () => {
+  it("opens article showcase cards by keyboard (a native link: Tab and Enter work)", () => {
     renderWithMessages(
       <ArticleShowcaseCard
         article={{
@@ -491,11 +491,10 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     );
 
     const card = screen.getByRole("link", { name: "River Crossing" });
-    expect(card).toHaveAttribute("tabindex", "0");
+    expect(card.tagName).toBe("A");
+    expect(card).toHaveAttribute("href", "/student/read/article-1");
     card.focus();
-    fireEvent.keyDown(document.activeElement!, { key: "Enter" });
-
-    expect(mocks.push).toHaveBeenCalledWith("/student/read/article-1");
+    expect(card).toHaveFocus();
   });
 
   it("selects collection words by keyboard", async () => {

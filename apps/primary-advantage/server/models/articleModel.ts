@@ -418,13 +418,27 @@ function sqlIlike(column: any, pattern: string) {
 }
 void ilikeFn; // kept for parity — actual call uses sql template above
 
+/** Raised by getArticleById when no article has the id (the message stays "Article not found"). */
+export class ArticleNotFoundError extends Error {
+  constructor() {
+    super("Article not found");
+    this.name = "ArticleNotFoundError";
+  }
+}
+
+/**
+ * Loads an article with its flashcard sentences and words and its activity log rows.
+ * @param articleId The article.
+ * @returns The article with `sentencsAndWordsForFlashcard` and `articleActivityLog`.
+ * @throws {ArticleNotFoundError} When no article has the id.
+ */
 export const getArticleById = async (articleId: string) => {
   const [article] = await db.select().from(articles)
     .where(eq(articles.id, articleId))
     .limit(1);
 
   if (!article) {
-    throw new Error("Article not found");
+    throw new ArticleNotFoundError();
   }
 
   // Stitch the include shape: sentencsAndWordsForFlashcard + articleActivityLog.

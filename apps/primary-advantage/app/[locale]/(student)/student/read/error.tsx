@@ -5,28 +5,28 @@ import { RouteError } from "@/components/shared/route-error";
 import { STUDENT_HOME } from "@/lib/student-home";
 
 /**
- * Error boundary for the student route group: the message, a retry, and a link to the
- * student home.
+ * Error boundary for the read list: the stories failed to load.
  * @param props.error The thrown error.
  * @param props.reset Retries rendering the failed segment.
- * @returns The student error state.
+ * @returns The read list error state with a retry and a link to the student home.
  */
-export default function StudentError({
+export default function ReadListError({
   error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const t = useTranslations("Error");
+  const t = useTranslations("ReadList");
+  const te = useTranslations("Error");
   return (
     <RouteError
       error={error}
       reset={reset}
-      title={t("title")}
-      description={t("description")}
+      title={t("loadError")}
+      description={t("loadErrorHint")}
       backHref={STUDENT_HOME}
-      backLabel={t("goHome")}
+      backLabel={te("goHome")}
     />
   );
 }

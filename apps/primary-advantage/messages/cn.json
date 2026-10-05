@@ -2986,5 +2986,32 @@
     "games": "Games",
     "gamesHint": "Play word games and earn XP.",
     "playGames": "Play games"
+  },
+  "ReadList": {
+    "title": "Read",
+    "subtitle": "Pick a story at your level.",
+    "yourLevel": "Your level: {level}",
+    "filters": "Story filters",
+    "chooseType": "Choose a type",
+    "chooseGenre": "Choose a genre",
+    "chooseSubgenre": "Choose a topic",
+    "stories": "Stories",
+    "empty": "No stories here yet",
+    "emptyHint": "Try another genre or topic.",
+    "loadingMore": "Loading more...",
+    "scrollMore": "Scroll down to load more",
+    "loadMoreError": "We could not load more stories.",
+    "loadError": "We could not load the stories.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "started": "Started",
+    "completed": "Completed",
+    "approved": "Approved",
+    "lesson": "Study as a lesson",
+    "lessonLabel": "Study {title} as a lesson",
+    "notFound": "We could not find this story",
+    "notFoundHint": "It may have been removed. Pick another story.",
+    "backToStories": "Back to stories",
+    "articleError": "We could not open this story.",
+    "disclaimer": "This story, its pictures, and its audio are made by a computer for learning English. Check facts with another source before you use them in school work."
   }
 }

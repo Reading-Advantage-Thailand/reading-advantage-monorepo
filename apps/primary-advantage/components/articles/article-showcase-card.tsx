@@ -1,182 +1,95 @@
 "use client";
 import React from "react";
-import { useRouter } from "@/i18n/navigation";
-import { Badge } from "../ui/badge";
-import { usePathname } from "@/i18n/navigation";
-import { ArticleShowcase } from "@/types";
-import StarRating from "../ui/rating";
+import { BookOpenIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { StatusChip, cardHoverClassName } from "@reading-advantage/ui";
+import { Link, usePathname } from "@/i18n/navigation";
+import { ArticleShowcase } from "@/types";
 import { getArticleImageUrl } from "@/lib/storage-config";
-import { PlayIcon, XIcon } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Props = {
   article: ArticleShowcase;
   userId?: string;
 };
 
-const ArticleShowcaseCard = React.forwardRef<HTMLDivElement, Props>(
-  ({ article, userId }, ref) => {
-    const locale = useLocale();
-    const pathName = usePathname();
-    const router = useRouter();
-    const t = useTranslations("Article");
-    const systemPathRegex = /\/(?:[a-z]{2}\/)?system\/.*\/?$/i;
-    const [isToggle, setIsToggle] = React.useState(false);
+const SYSTEM_PATH = /\/(?:[a-z]{2}\/)?system\/.*\/?$/i;
 
-    // Function to get the translated summary based on locale
-    const getLocalizedSummary = () => {
-      if (!locale || locale === "en") {
-        return article.summary;
-      }
+/**
+ * One story in the read list: the picture (with a book fallback when it fails to load), the
+ * CEFR level, a started or finished chip, the title as the link to the story, the summary in
+ * the UI language, and a second link that opens the story as a lesson.
+ * @param props.article The story.
+ * @returns The card.
+ */
+function ArticleShowcaseCard({ article }: Props) {
+  const locale = useLocale();
+  const pathName = usePathname();
+  const t = useTranslations("ReadList");
+  const [imageFailed, setImageFailed] = React.useState(false);
+  const approvedOnSystemPage = Boolean(article.is_approved && SYSTEM_PATH.test(pathName));
 
-      // Map locale to translatedSummary keys
-      const localeKey = locale as "th" | "cn" | "tw" | "vi";
+  const summary =
+    !locale || locale === "en"
+      ? article.summary
+      : article.translatedSummary?.[locale as "th" | "cn" | "tw" | "vi"] || article.summary;
+  const status = article.is_read
+    ? article.is_completed
+      ? { label: t("completed"), tone: "success" as const }
+      : { label: t("started"), tone: "info" as const }
+    : approvedOnSystemPage
+      ? { label: t("approved"), tone: "neutral" as const }
+      : null;
 
-      return article.translatedSummary?.[localeKey] || article.summary;
-    };
-
-    const handlePreviewClick = (e: React.MouseEvent) => {
-      e.preventDefault(); // Prevent parent Link navigation
-      e.stopPropagation(); // Stop event bubbling
-
-      router.push(`/student/lesson/${article.id}?type=article`);
-    };
-
-    // Handle toggle click and navigate to another page
-    const handleReadClick = (e: React.MouseEvent) => {
-      e.preventDefault(); // Prevent parent Link navigation
-      e.stopPropagation(); // Stop event bubbling
-
-      // If toggle is active, go to lesson mode, otherwise go to read mode
-      if (isToggle) {
-        router.push(`/student/lesson/${article.id}?type=article`);
-      } else {
-        router.push(`/student/read/${article.id}`);
-      }
-    };
-
-    return (
-      <div>
-        {/* <Link href={`/student/read/${article.id}`}> */}
-        <div
-          onClick={handleReadClick}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleReadClick(e as unknown as React.MouseEvent);
-            }
-          }}
-          role="link"
-          tabIndex={0}
-          aria-label={article.title}
-          ref={ref}
-          className="flex h-[20rem] cursor-pointer flex-col gap-1 rounded-md bg-black bg-cover bg-center p-3 transition-all duration-300 hover:scale-105"
-          style={{
-            backgroundImage: `url('${getArticleImageUrl(article.id, 1)}')`,
-            boxShadow: "inset 80px 10px 90px 10px rgba(0, 0, 0, 0.9)",
-            opacity:
-              article.is_read ||
-              (article.is_approved && systemPathRegex.test(pathName))
-                ? 0.3
-                : 1,
-          }}
-        >
-          <div className="flex justify-between">
-            <div className="flex flex-col gap-2">
-              {article.raLevel && (
-                <Badge className="max-w-max shadow-lg" variant="destructive">
-                  {t("raLevel", { level: article.raLevel ?? 0 })}
-                </Badge>
-              )}
-              <Badge className="max-w-max shadow-lg" variant="destructive">
-                {t("cefrLevel", { level: article.cefrLevel ?? 0 })}
-              </Badge>
-              <Badge className="max-w-max shadow-lg" variant="destructive">
-                <StarRating initialRating={article.rating} readOnly />
-              </Badge>
-            </div>
-            <div className="flex flex-col items-end gap-2">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsToggle(!isToggle);
-                }}
-                aria-label={isToggle ? t("hideLessonOption") : t("showLessonOption")}
-                aria-pressed={isToggle}
-                className="cursor-pointer rounded"
-              >
-                {isToggle ? (
-                  <XIcon className="h-6 w-6 text-red-500" />
-                ) : (
-                  <PlayIcon className="h-6 w-6 fill-white stroke-white" />
-                )}
-              </button>
-              {isToggle && (
-                <Badge
-                  onClick={handlePreviewClick}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      handlePreviewClick(
-                        e as unknown as React.MouseEvent,
-                      );
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  className="max-w-max cursor-pointer shadow-lg"
-                  variant="destructive"
-                >
-                  <PlayIcon className="h-4 w-4 fill-white stroke-white" />
-                  {t("studyAsLesson", { default: "Study as 45-min Lesson" })}
-                </Badge>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-auto">
-            <div className="bg-black/40">
-              <p className="text-xl font-bold text-white drop-shadow-lg">
-                {article.title}
-              </p>
-            </div>
-            <div className="bg-black/40">
-              <div className="line-clamp-4 text-sm text-white drop-shadow-lg">
-                <p>{getLocalizedSummary()}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {article.is_read && !article.is_completed && (
-          <div className="flex justify-center">
-            <Badge className="text-md relative -top-[11rem] right-0 left-0 m-auto max-w-max bg-slate-200 text-slate-900 shadow-lg">
-              Started
-            </Badge>
-          </div>
+  return (
+    <article
+      className={cn(
+        "bg-card text-card-foreground relative flex h-full flex-col overflow-hidden rounded-2xl border shadow-sm",
+        cardHoverClassName,
+        (article.is_completed || approvedOnSystemPage) && "opacity-75",
+      )}
+    >
+      <div
+        data-slot="article-image-fallback"
+        className="bg-brand-50 text-brand-700 dark:text-brand-300 relative flex aspect-video items-center justify-center"
+      >
+        <BookOpenIcon className="size-10" aria-hidden="true" />
+        {!imageFailed && (
+          // A plain img: onError swaps in the book fallback when the picture fails.
+          <img
+            src={getArticleImageUrl(article.id, 1)}
+            alt=""
+            loading="lazy"
+            onError={() => setImageFailed(true)}
+            className="absolute inset-0 size-full object-cover"
+          />
         )}
-
-        {article.is_read && article.is_completed && (
-          <div className="flex justify-center">
-            <Badge className="text-md relative -top-[11rem] right-0 left-0 m-auto max-w-max bg-slate-200 text-slate-900 shadow-lg">
-              Completed
-            </Badge>
-          </div>
+        {status && (
+          <StatusChip tone={status.tone} className="absolute top-2 left-2 shadow-sm">
+            {status.label}
+          </StatusChip>
         )}
-
-        {article.is_approved && systemPathRegex.test(pathName) && (
-          <div className="flex justify-center">
-            <Badge className="text-md relative -top-[11rem] right-0 left-0 m-auto max-w-max bg-slate-200 text-slate-900 shadow-lg">
-              Approved
-            </Badge>
-          </div>
-        )}
-        {/* </Link> */}
       </div>
-    );
-  },
-);
-
-ArticleShowcaseCard.displayName = "ArticleShowcaseCard";
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        {article.cefrLevel ? <StatusChip tone="success">{article.cefrLevel}</StatusChip> : null}
+        <h3 className="text-lg leading-snug font-bold">
+          {/* The title link covers the whole card (after:inset-0); the lesson link sits above it. */}
+          <Link href={`/student/read/${article.id}`} className="after:absolute after:inset-0 after:content-['']">
+            {article.title}
+          </Link>
+        </h3>
+        {summary ? <p className="text-muted-foreground line-clamp-3 text-sm">{summary}</p> : null}
+        <Link
+          href={`/student/lesson/${article.id}?type=article`}
+          aria-label={t("lessonLabel", { title: article.title })}
+          className={cn(buttonVariants({ variant: "outline" }), "relative z-10 mt-auto min-h-12 self-start rounded-xl")}
+        >
+          {t("lesson")}
+        </Link>
+      </div>
+    </article>
+  );
+}
 
 export default React.memo(ArticleShowcaseCard);
