@@ -27,6 +27,7 @@ import { ChevronDownIcon } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import type { PaginationInfo } from "@/types";
 import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
+import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
 
 type Assignment = {
   articleId: string;
@@ -112,7 +113,7 @@ export default function Assignments() {
         <div className="text-center">
           {row.original.meta.dueDate &&
           getDueDateStatus(row.original.meta.dueDate).kind !== "none"
-            ? new Date(row.original.meta.dueDate).toLocaleDateString()
+            ? new Date(row.original.meta.dueDate).toLocaleDateString(undefined, { timeZone: SCHOOL_TIME_ZONE })
             : t("table.noDueDate")}
         </div>
       ),

@@ -4,6 +4,7 @@ import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 
+import { calendarDayKey } from "@reading-advantage/domain/calendar-day";
 import StudentAssignmentList, { type AssignmentStudent } from "../assignment-list";
 import { renderWithMessages, testMessages } from "../../__tests__/helpers/render-with-messages";
 
@@ -62,15 +63,14 @@ function row(
 }
 
 /**
- * A due date at local noon, some days from today (stable near midnight).
+ * A due date at noon in Bangkok (the calendar of the due chips), some days from today there.
  * @param offsetDays Days from today; negative for the past.
  * @returns The ISO string.
  */
 function noonIn(offsetDays: number): string {
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
-  date.setDate(date.getDate() + offsetDays);
-  return date.toISOString();
+  const noon = new Date(`${calendarDayKey(new Date())}T12:00:00+07:00`);
+  noon.setUTCDate(noon.getUTCDate() + offsetDays);
+  return noon.toISOString();
 }
 
 const ONE_PAGE = { currentPage: 1, totalPages: 1, totalCount: 0, hasNextPage: false, hasPrevPage: false, limit: 10 };

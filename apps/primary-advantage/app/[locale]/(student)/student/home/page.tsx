@@ -3,6 +3,7 @@ import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { BookOpenIcon, CalendarIcon, FlameIcon, Gamepad2Icon, StarIcon, TrophyIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getStudentHome } from "@reading-advantage/domain/primary-home";
+import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
 import { EmptyState, StatusChip, cardHoverClassName } from "@reading-advantage/ui";
 import { AnimatedCounter } from "@reading-advantage/ui/client";
 import { currentUser } from "@/lib/session";
@@ -61,7 +62,8 @@ export default async function StudentHomePage() {
   ]);
   const lesson = home.todayLesson;
   const reading = home.continueReading;
-  const overdue = lesson?.dueDate ? lesson.dueDate.getTime() < Date.now() : false;
+  // Calendar days in Bangkok: the lesson is late only after its due day.
+  const overdue = getDueDateStatus(lesson?.dueDate).kind === "overdue";
 
   return (
     <div className="flex flex-col gap-6">

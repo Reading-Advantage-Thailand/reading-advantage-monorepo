@@ -143,3 +143,24 @@ describe("student home (FR-4)", () => {
     expect(mocks.getStudentHome).not.toHaveBeenCalled();
   });
 });
+
+describe("student home due chip (Phase 2 review item 2: calendar days in Bangkok)", () => {
+  const en = testMessages.en.StudentHome;
+  /** The teacher calendar stores midnight of the chosen day: 7 October in Bangkok. */
+  const dueMidnight = new Date("2026-10-07T00:00:00+07:00");
+
+  afterEach(() => vi.useRealTimers());
+
+  it.each([
+    ["at 10:00 on the due day", "2026-10-07T10:00:00+07:00", false],
+    ["at 23:59 on the due day", "2026-10-07T23:59:00+07:00", false],
+    ["one day later", "2026-10-08T00:01:00+07:00", true],
+  ])("shows Late only after the due day (%s)", async (_label, now, late) => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date(now));
+    mocks.getStudentHome.mockResolvedValue({ ...fullHome, todayLesson: { ...fullHome.todayLesson, dueDate: dueMidnight } });
+    await renderHome();
+    const lesson = screen.getByRole("region", { name: en.todayLesson });
+    expect(within(lesson).queryByText(en.overdue) !== null).toBe(late);
+  });
+});

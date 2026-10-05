@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { NextIntlClientProvider, hasLocale, Locale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
 import { siteConfig } from "@/configs/site-config";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Cabin_Sketch, Inter, Noto_Sans_Thai, Quicksand } from "next/font/google";
@@ -93,7 +94,7 @@ export default async function RootLayout({
         className={`${fontVariables} overscroll-none`}
       >
         <body className="bg-background min-h-screen font-sans antialiased [--header-height:calc(var(--spacing)*14)]">
-          <NextIntlClientProvider>
+          <NextIntlClientProvider timeZone={SCHOOL_TIME_ZONE}>
             <ThemeProvider
               attribute="class"
               defaultTheme="system"

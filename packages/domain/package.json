@@ -20,6 +20,10 @@
       "types": "./dist/assignments/due-date.d.ts",
       "import": "./dist/assignments/due-date.js"
     },
+    "./calendar-day": {
+      "types": "./dist/calendar-day.d.ts",
+      "import": "./dist/calendar-day.js"
+    },
     "./classes": {
       "types": "./dist/classes/index.d.ts",
       "import": "./dist/classes/index.js"

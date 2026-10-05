@@ -19,6 +19,7 @@ import {
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
+import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
 
 interface Student {
   id: string;
@@ -364,7 +365,9 @@ export default function AssignmentDashboard() {
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
+    // The school time zone: the server (UTC) and the browser write the same day.
     return date.toLocaleDateString(locale, {
+      timeZone: SCHOOL_TIME_ZONE,
       year: "numeric",
       month: "long",
       day: "numeric",

@@ -97,3 +97,74 @@ describe("teacher assignment views with no due date", () => {
     expect(document.body.textContent).not.toMatch(/1970/);
   });
 });
+
+/**
+ * Phase 2 review (item 2): the due chip and the overdue count compared instants, and the teacher
+ * calendar stores midnight of the chosen day, so the page showed "Overdue" all day on the due day.
+ * Days are calendar days in Bangkok.
+ */
+describe("teacher assignment page on and after the due day", () => {
+  /**
+   * Primes the assignment response with one student who has not started and one who finished.
+   * @param dueDate The ISO due date.
+   */
+  function primeAssignment(dueDate: string) {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        meta: {
+          id: "assign-1",
+          title: "Quiz 1",
+          description: "First quiz",
+          dueDate,
+          classroomId: "c1",
+          articleId: "article-1",
+          createdAt: "2026-10-01T03:00:00.000Z",
+          articleTitle: "Cat Story",
+        },
+        students: [
+          { id: "sa-1", studentId: "student-000001", status: 0, displayName: "Ann" },
+          { id: "sa-2", studentId: "student-000002", status: 2, displayName: "Ben" },
+        ],
+      }),
+    });
+  }
+
+  afterEach(() => vi.useRealTimers());
+
+  /** Midnight of 7 October in Bangkok, the value of the teacher calendar. */
+  const dueMidnight = new Date("2026-10-07T00:00:00+07:00").toISOString();
+
+  it.each([
+    ["at 10:00 on the due day", "2026-10-07T10:00:00+07:00", "today"],
+    ["at 23:59 on the due day", "2026-10-07T23:59:00+07:00", "today"],
+    ["one day later", "2026-10-08T00:01:00+07:00", "overdue"],
+  ])("shows Due Today on the due day and counts overdue only after it (%s)", async (_label, now, expected) => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date(now));
+    primeAssignment(dueMidnight);
+    renderWithMessages(<AssignmentDashboard />);
+
+    expect(await screen.findByText("Quiz 1")).toBeInTheDocument();
+    if (expected === "today") {
+      expect(screen.getByText(t.AssignmentDashboard.dueToday)).toBeInTheDocument();
+      expect(screen.getByText(`${t.AssignmentDashboard.overdue} (0)`)).toBeInTheDocument();
+    } else {
+      expect(screen.queryByText(t.AssignmentDashboard.dueToday)).not.toBeInTheDocument();
+      // Ann has not finished; Ben finished, so he is not overdue.
+      expect(screen.getByText(`${t.AssignmentDashboard.overdue} (1)`)).toBeInTheDocument();
+    }
+  });
+
+  it("writes the due date on the Bangkok calendar, whatever the time zone of the machine", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-10-07T10:00:00+07:00"));
+    // 23:30 in Bangkok is already 8 October in UTC+8.
+    primeAssignment(new Date("2026-10-07T23:30:00+07:00").toISOString());
+    renderWithMessages(<AssignmentDashboard />);
+
+    expect(await screen.findByText(t.AssignmentDashboard.dueToday)).toBeInTheDocument();
+    expect(document.body.textContent).toMatch(/October 7, 2026/);
+    expect(document.body.textContent).not.toMatch(/October 8, 2026/);
+  });
+});
