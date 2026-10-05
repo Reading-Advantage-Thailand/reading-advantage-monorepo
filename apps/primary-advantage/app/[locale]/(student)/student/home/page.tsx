@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
-import { BookOpenIcon, CalendarIcon, FlameIcon, Gamepad2Icon, StarIcon, TrophyIcon } from "lucide-react";
+import { BookMarkedIcon, BookOpenIcon, CalendarIcon, FlameIcon, Gamepad2Icon, StarIcon, TrophyIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getStudentHome } from "@reading-advantage/domain/primary-home";
+import { getStudentClassBooks, type StudentClassBook } from "@reading-advantage/domain/primary-books";
 import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
 import { EmptyState, StatusChip, cardHoverClassName } from "@reading-advantage/ui";
 import { AnimatedCounter } from "@reading-advantage/ui/client";
@@ -44,8 +45,22 @@ async function loadLeaderboard(user: { id: string; schoolId: string | null }) {
 }
 
 /**
+ * Reads the class books of the student. A failure hides the cards and keeps the rest of the home.
+ * @param user The signed-in student.
+ * @returns The class books, or none.
+ */
+async function loadClassBooks(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>): Promise<StudentClassBook[]> {
+  try {
+    return await getStudentClassBooks({ db, user });
+  } catch {
+    return [];
+  }
+}
+
+/**
  * Student home (FR-4), the landing page after sign-in: streak, XP, and level; today's lesson
- * (the next open assignment, hidden when there is none); the article to continue; a games
+ * (the next open assignment, hidden when there is none); the class books with the current
+ * lesson; the article to continue; a games
  * shortcut; the Reedy meter slot; and the school leaderboard.
  * @returns The home page.
  */
@@ -53,8 +68,9 @@ export default async function StudentHomePage() {
   const user = await currentUser();
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
 
-  const [home, leaderboard, t, tBoard, format] = await Promise.all([
+  const [home, classBooks, leaderboard, t, tBoard, format] = await Promise.all([
     getStudentHome({ db, user }),
+    loadClassBooks(user),
     loadLeaderboard(user),
     getTranslations("StudentHome"),
     getTranslations("Leaderboard"),
@@ -111,6 +127,10 @@ export default async function StudentHomePage() {
           </section>
         ) : null}
 
+        {classBooks.map((book) => (
+          <ClassBookCard key={book.classBookId} book={book} t={t} />
+        ))}
+
         <section aria-labelledby="home-reading" className={CARD}>
           <h2 id="home-reading" className="flex items-center gap-2 text-lg font-semibold">
             <BookOpenIcon className="text-primary size-5" aria-hidden="true" />
@@ -163,6 +183,45 @@ export default async function StudentHomePage() {
         </section>
       ) : null}
     </div>
+  );
+}
+
+/**
+ * The class book card (FR-4): the book, the current lesson, and the read link when the teacher
+ * has opened the reading step (or the class reads independently).
+ * @param props.book The class book of the student.
+ * @param props.t The StudentHome translator.
+ * @returns The card.
+ */
+function ClassBookCard({ book, t }: { book: StudentClassBook; t: Awaited<ReturnType<typeof getTranslations<"StudentHome">>> }) {
+  const headingId = `home-book-${book.classBookId}`;
+  const lesson = book.lesson;
+  const canRead = lesson?.articleId && lesson.unlockedAppSteps.includes(3);
+  return (
+    <section aria-labelledby={headingId} className={CARD}>
+      <h2 id={headingId} className="flex items-center gap-2 text-lg font-semibold">
+        <BookMarkedIcon className="text-primary size-5" aria-hidden="true" />
+        {t("classBook")}
+      </h2>
+      <p className="font-semibold">{book.bookName}</p>
+      {lesson ? (
+        <>
+          <p className="font-article text-xl font-bold">{t("classBookLesson", { number: lesson.number, title: lesson.title })}</p>
+          {canRead ? (
+            <Link href={`/student/read/${lesson.articleId}`} className={cn(buttonVariants({ variant: "default" }), ACTION, "self-start", cardHoverClassName)}>
+              {t("readLesson")}
+            </Link>
+          ) : (
+            <p className="text-muted-foreground text-sm">{t("classBookLocked")}</p>
+          )}
+        </>
+      ) : (
+        <p className="text-muted-foreground text-sm">{t("classBookNoLesson")}</p>
+      )}
+      <Link href={`/student/books/${book.classBookId}`} className={cn(buttonVariants({ variant: "outline" }), ACTION, "mt-auto self-start")}>
+        {t("seeBook")}
+      </Link>
+    </section>
   );
 }
 

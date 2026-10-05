@@ -89,9 +89,10 @@ function formatLastActivity(lastActivity: string | null, t: Translator, formatDa
  * reset, remove). When the live roster cannot load, a plain list with the management parts takes
  * its place, so enroll and remove still work.
  * @param props.classroomId The class (read from the route when empty).
+ * @param props.classBook The class book card from the server; the placeholder slot when absent.
  * @returns The class page body.
  */
-export default function EnhancedClassRoster({ classroomId: classroomIdProp }: { classroomId?: string } = {}) {
+export default function EnhancedClassRoster({ classroomId: classroomIdProp, classBook }: { classroomId?: string; classBook?: ReactNode } = {}) {
   const params = useParams();
   const classroomId = classroomIdProp ?? (params?.classroomId as string);
   const t = useTranslations("Teacher.EnhancedClassRoster");
@@ -302,7 +303,7 @@ export default function EnhancedClassRoster({ classroomId: classroomIdProp }: { 
         rosterVersion={rosterVersion}
       />
 
-      <ClassBookSlot classroomId={classroomId} />
+      {classBook ?? <ClassBookSlot classroomId={classroomId} />}
 
       <AlertDialog open={resetStudentId !== ""} onOpenChange={(open) => !open && setResetStudentId("")}>
         <AlertDialogContent>

@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
     unknown
   > | null,
   getStudentHome: vi.fn(),
+  getStudentClassBooks: vi.fn(async () => []),
   leaderboard: vi.fn(),
   redirect: vi.fn(),
 }));
@@ -21,6 +22,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user, getCurrentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getStudentHome: mocks.getStudentHome }));
+vi.mock("@reading-advantage/domain/primary-books", () => ({ getStudentClassBooks: mocks.getStudentClassBooks }));
 vi.mock("@/server/controllers/schoolController", () => ({ getSchoolLeaderboardController: mocks.leaderboard }));
 vi.mock("next-intl/server", async () => {
   const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
@@ -162,5 +164,49 @@ describe("student home due chip (Phase 2 review item 2: calendar days in Bangkok
     await renderHome();
     const lesson = screen.getByRole("region", { name: en.todayLesson });
     expect(within(lesson).queryByText(en.overdue) !== null).toBe(late);
+  });
+});
+
+describe("student home class books (teacher-books FR-4)", () => {
+  const en = testMessages.en.StudentHome;
+  const CB = "cbcbcbcb-0000-4000-8000-000000000001";
+  const classBook = {
+    classBookId: CB,
+    classroomId: "c1",
+    bookKey: "o3-2",
+    bookName: "Primary Advantage Origins 3.2",
+    mode: "teacher_led",
+    currentLesson: 3,
+    lessonCount: 14,
+    lesson: { number: 3, title: "Teacher Says", key: "o3-2/3", articleId: "a3", unlockedAppSteps: [1, 2] },
+  };
+
+  it("shows the class book with the current lesson and keeps reading locked until the teacher opens step 3", async () => {
+    mocks.getStudentClassBooks.mockResolvedValueOnce([classBook]);
+    await renderHome();
+    const card = screen.getByRole("region", { name: en.classBook });
+    expect(within(card).getByText("Primary Advantage Origins 3.2")).toBeInTheDocument();
+    expect(within(card).getByText("Lesson 3: Teacher Says")).toBeInTheDocument();
+    expect(within(card).getByText(en.classBookLocked)).toBeInTheDocument();
+    expect(within(card).queryByRole("link", { name: en.readLesson })).not.toBeInTheDocument();
+    expect(within(card).getByRole("link", { name: en.seeBook })).toHaveAttribute("href", `/student/books/${CB}`);
+  });
+
+  it("links the lesson article once the reading step is open", async () => {
+    mocks.getStudentClassBooks.mockResolvedValueOnce([{ ...classBook, lesson: { ...classBook.lesson, unlockedAppSteps: [1, 2, 3] } }]);
+    await renderHome();
+    const card = screen.getByRole("region", { name: en.classBook });
+    expect(within(card).getByRole("link", { name: en.readLesson })).toHaveAttribute("href", "/student/read/a3");
+  });
+
+  it("says the next lesson is coming when the catalogue has no current lesson, and hides the card when the read fails", async () => {
+    mocks.getStudentClassBooks.mockResolvedValueOnce([{ ...classBook, lesson: null }]);
+    await renderHome();
+    expect(within(screen.getByRole("region", { name: en.classBook })).getByText(en.classBookNoLesson)).toBeInTheDocument();
+    cleanup();
+    mocks.getStudentClassBooks.mockRejectedValueOnce(new Error("down"));
+    await renderHome();
+    expect(screen.queryByRole("region", { name: en.classBook })).not.toBeInTheDocument();
+    expect(screen.getByRole("region", { name: en.continueReading })).toBeInTheDocument();
   });
 });
