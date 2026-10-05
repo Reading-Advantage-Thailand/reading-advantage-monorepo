@@ -20,11 +20,11 @@ separate agent reviews each phase.
 - [x] Student home quest card after the Reedy meter; the home load runs `awardPowerUps` first. Messages `Quest.*` and `TeacherHome.quest` in en, th, cn, tw, vi
 
 ## Phase 3: Battle (tests first)
-- [ ] State machine: rally, play, result; teacher controls; countdown; idempotent transitions
-- [ ] Heartbeat route and store; damage and HP rules with power-ups; committed damage via the contribution path
-- [ ] Phone battle page with the portrait, HP bar, power-up buttons, and the game run
-- [ ] Projector dashboard: boss meter with the pending segment, portrait grid with HP bars, hit feed, state controls; polls every 3 to 5 seconds
-- [ ] Result: helpers in play order, GP rewards (idempotent), class banner
+- [x] `9f53004d8` State machine `setQuestStatus`: open → rally → play → result → done, one step at a time, a repeat is a no-op, a skip or a step back is 409; countdown from `statusAt` and the state minutes; teacher control `POST /api/v1/quest/:id/status`
+- [x] `9f53004d8` Heartbeat `POST /api/v1/quest/heartbeat` (latest per student and quest; marks used power-ups); committed damage through the existing contribution path (the battle challenge runs at medium difficulty, the only difficulty the Primary host accepts); the pending segment is the heartbeat damage of students without a committed hit
+- [x] Phone page `/student/quest/battle`: boss meter with the pending segment and countdown, portrait with HP bar and damage counter, power-up toggles, the game (`StudentCartridgeHost` with the quest's challenge; new `onCompleted` prop), result banner; polls every 4 s, heartbeat every 10 s and after the saved completion. Deviation: the play kit has no per-answer event, so HP and damage update when the game is saved, not per answer; the rest at 0 HP is applied to the final tally (follow-up: a per-answer event in `APKGameHost`)
+- [x] Projector `/teacher/quest/[id]/live`: boss meter with the pending segment, countdown, portrait grid with HP bars (dim when absent or stale), hit feed (last 8), one next-state button; polls every 4 s; no score per student on the screen (tested)
+- [x] Result: helpers in play order, GP rewards once per participant when the result opens (`battle`, `quest:<id>`; +25 GP when the boss fell), banner on the phone and the projector
 
 ## Phase 4: Verify
 - [ ] Seeded 25-student week in a test clock (spec acceptance)
