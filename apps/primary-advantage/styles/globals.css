@@ -149,7 +149,7 @@
 
   --nav-glass-bg: rgba(255, 255, 255, 0.82);
   --nav-glass-border: rgba(255, 255, 255, 0.5);
-  --nav-active-bg: rgba(4, 125, 54, 0.1);
+  --nav-active-bg: rgba(14, 116, 144, 0.1);
 
   --radius: 0.75rem;
   --background: oklch(0.99 0.002 240);
@@ -181,7 +181,7 @@
   --sidebar-foreground: oklch(0.2 0.02 240);
   --sidebar-primary: var(--brand-700);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: oklch(0.95 0.02 150);
+  --sidebar-accent: oklch(0.95 0.03 215);
   --sidebar-accent-foreground: oklch(0.15 0.02 240);
   --sidebar-border: oklch(0.92 0.01 240);
   --sidebar-ring: var(--brand-700);
@@ -204,7 +204,7 @@
 
   --nav-glass-bg: rgba(13, 17, 23, 0.85);
   --nav-glass-border: rgba(255, 255, 255, 0.08);
-  --nav-active-bg: rgba(74, 222, 128, 0.15);
+  --nav-active-bg: rgba(34, 211, 238, 0.15);
 
   --neutral-50: #0d1117;
   --neutral-100: #161b22;
