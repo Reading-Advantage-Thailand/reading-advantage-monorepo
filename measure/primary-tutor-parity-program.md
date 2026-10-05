@@ -24,14 +24,15 @@ so the build must be tested and rehearsed before he leaves.
 | F | [primary_reedy_preview_20261003](./tracks/primary_reedy_preview_20261003/) | B (`authStrength`), C (meter slot) |
 | M | [primary_legacy_data_migration_20261004](./tracks/primary_legacy_data_migration_20261004/) | A (migration numbering, credential helper); added 2026-10-04 |
 
-### Progress (2026-10-05)
+### Progress (2026-10-05, updated in the evening)
 
 | Lane | State | Merge commit | Open items |
 |---|---|---|---|
 | A | Merged (step 0: local SYSTEM seed, username-only staff sign-in, SYSTEM creates school, license, admin) | 395540aaa | `/system/test` destructive page (tech debt) |
 | M | Phase 1 merged; `tutor_reader` grants script | fcd3efffa | Phase 2 needs a fresh legacy backup |
 | B | Merged | 0c26f7fb6 | 25-student browser run `[b]` (stopped for low memory; owner go-ahead); QA timing check `[b]`; spec Known risks for owner review; `TRUST_PROXY_COUNT` for the Primary deploy; Primary `cloudbuild.yaml` now requires `0064_primary_student_session_policy` |
-| C, D+E, F | Not started | — | — |
+| C | In progress on branch `primary/lane-c-ux-rework` (worktree `rama-worktrees/lane-c`), not merged. Phases 0-2 done and reviewed (audit, brand tokens, Thai-first fonts, one navigation with a mobile bottom bar, page shell, student home, all student screens with loading/empty/error states, data fixes). Phase 3 (teacher screens) in progress; Phase 4 (quality) and the gate sweep next | — | Merge after Phase 4 and the gates |
+| D+E, F | Not started. Lanes run one at a time on this 7 GB machine (owner rule, 2026-10-04), so D+E starts after C merges and F after D+E | — | The Oct 3-6 parallel timeline below no longer holds |
 
 Every lane that adds a migration must also set `--required-migration` in
 `apps/primary-advantage/cloudbuild.yaml` to its latest migration (the deploy-gate
