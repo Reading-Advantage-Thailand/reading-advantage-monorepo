@@ -5,6 +5,7 @@ import {
   classroomTeachers,
   classrooms,
   primaryBookLessons,
+  primaryBookSeries,
   primaryBooks,
   primaryClassBookLessons,
   primaryClassBooks,
@@ -17,8 +18,10 @@ import {
   markStepDoneInput,
   setCurrentLessonInput,
   type AssignClassBookInput,
+  type CatalogueBook,
   type ClassBook,
   type ClassBookPacing,
+  type StudentBook,
   type StudentClassBook,
 } from "./class-book-contracts.js";
 import { APP_STEP_COUNT, WORKBOOK_STEPS, isAppStepUnlocked } from "./step-map.js";
@@ -323,4 +326,55 @@ export async function getStudentClassBooks(params: Ctx): Promise<StudentClassBoo
         : null,
     };
   });
+}
+
+/**
+ * Lists the books of the catalogue (every series), for the assign form.
+ * @param params The database and the user.
+ * @returns The books, by series name and book key.
+ */
+export async function listCatalogueBooks(params: Ctx): Promise<CatalogueBook[]> {
+  assertCan(params.user, "class:read", { schoolId: params.user.schoolId });
+  const raw = createTenantDB(params.db, { schoolId: params.user.schoolId }).unscoped("the book catalogue is global (EXEMPT tables)");
+  return raw
+    .select({ id: primaryBooks.id, key: primaryBooks.key, name: primaryBooks.name, seriesName: primaryBookSeries.name, lessonCount: primaryBooks.lessonCount })
+    .from(primaryBooks)
+    .innerJoin(primaryBookSeries, eq(primaryBookSeries.id, primaryBooks.seriesId))
+    .orderBy(asc(primaryBookSeries.name), asc(primaryBooks.key));
+}
+
+/**
+ * The book view of a student (FR-4): one class book of the student's classes with every lesson.
+ * A student may read ahead: every published lesson links to its article.
+ * @param params The database, the student, and the class book.
+ * @returns The class book with its lessons.
+ * @throws {AuthError} FORBIDDEN when the class book is not in one of the student's classes.
+ */
+export async function getStudentBook(params: Ctx & { classBookId: string }): Promise<StudentBook> {
+  const book = (await getStudentClassBooks(params)).find((row) => row.classBookId === params.classBookId);
+  if (!book) throw new AuthError("Unknown class book", "FORBIDDEN");
+  const raw = createTenantDB(params.db, { schoolId: params.user.schoolId }).unscoped(UNSCOPED_REASON);
+  const [lessons, states] = await Promise.all([
+    raw
+      .select({ number: primaryBookLessons.number, title: primaryBookLessons.title, articleId: primaryBookLessons.articleId, approved: primaryBookLessons.approved })
+      .from(primaryBookLessons)
+      .innerJoin(primaryClassBooks, eq(primaryClassBooks.bookId, primaryBookLessons.bookId))
+      .where(eq(primaryClassBooks.id, params.classBookId))
+      .orderBy(asc(primaryBookLessons.number)),
+    raw
+      .select({ lessonNumber: primaryClassBookLessons.lessonNumber, taughtAt: primaryClassBookLessons.taughtAt })
+      .from(primaryClassBookLessons)
+      .where(eq(primaryClassBookLessons.classBookId, params.classBookId)),
+  ]);
+  const taught = new Set(states.filter((state) => state.taughtAt).map((state) => state.lessonNumber));
+  return {
+    ...book,
+    lessons: lessons.map((lesson) => ({
+      number: lesson.number,
+      title: lesson.title,
+      articleId: lesson.approved ? lesson.articleId : null,
+      current: lesson.number === book.currentLesson,
+      taught: taught.has(lesson.number),
+    })),
+  };
 }

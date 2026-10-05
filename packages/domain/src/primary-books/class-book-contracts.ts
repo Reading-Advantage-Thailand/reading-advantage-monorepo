@@ -94,3 +94,27 @@ export const studentClassBookSchema = z.object({
     .nullable(),
 });
 export type StudentClassBook = z.infer<typeof studentClassBookSchema>;
+
+/** A book of the catalogue as the assign form lists it. */
+export const catalogueBookSchema = z.object({
+  id: z.string(),
+  key: z.string(),
+  name: z.string(),
+  seriesName: z.string(),
+  lessonCount: z.number().int(),
+});
+export type CatalogueBook = z.infer<typeof catalogueBookSchema>;
+
+/** One lesson of a class book as a student sees it in the book view. */
+export const studentBookLessonSchema = z.object({
+  number: z.number().int(),
+  title: z.string(),
+  /** The article to read, when the lesson is published. */
+  articleId: z.string().nullable(),
+  current: z.boolean(),
+  taught: z.boolean(),
+});
+
+/** The book view of a student (FR-4): the class book with every lesson. */
+export const studentBookSchema = studentClassBookSchema.extend({ lessons: z.array(studentBookLessonSchema) });
+export type StudentBook = z.infer<typeof studentBookSchema>;

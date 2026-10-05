@@ -5,7 +5,9 @@ import { createMockDb } from "../../__tests__/mock-db.js";
 import {
   assignClassBook,
   getClassBookPacing,
+  getStudentBook,
   getStudentClassBooks,
+  listCatalogueBooks,
   listClassBooks,
   markLessonTaught,
   markStepDone,
@@ -188,5 +190,40 @@ describe("getStudentClassBooks", () => {
   it("returns nothing for a student in no class", async () => {
     const mock = dbWith([[]]);
     expect(await getStudentClassBooks({ db: mock as unknown as DB, user: student })).toEqual([]);
+  });
+});
+
+describe("listCatalogueBooks", () => {
+  it("returns the catalogue rows for a teacher", async () => {
+    const rows = [{ id: BOOK, key: "o3-2", name: "Primary Advantage Origins 3.2", seriesName: "Primary Advantage Origins", lessonCount: 14 }];
+    const mock = dbWith([rows]);
+    expect(await listCatalogueBooks({ db: mock as unknown as DB, user: teacher })).toEqual(rows);
+  });
+});
+
+describe("getStudentBook", () => {
+  it("returns every lesson with the article of published lessons, the current marker, and taught", async () => {
+    // memberships, class books, current lesson, state rows; then lessons, state rows
+    const mock = dbWith([
+      [{ classroomId: CLASS }],
+      [classBookRow],
+      [lesson(3)],
+      [],
+      [lesson(1), lesson(2), lesson(3), { ...lesson(4), approved: false }],
+      [{ lessonNumber: 1, taughtAt: new Date() }, { lessonNumber: 2, taughtAt: null }],
+    ]);
+    const result = await getStudentBook({ db: mock as unknown as DB, user: student, classBookId: CLASS_BOOK });
+    expect(result.classBookId).toBe(CLASS_BOOK);
+    expect(result.lessons.map((row) => [row.number, row.articleId, row.current, row.taught])).toEqual([
+      [1, "a1", false, true],
+      [2, "a2", false, false],
+      [3, "a3", true, false],
+      [4, null, false, false],
+    ]);
+  });
+
+  it("rejects a class book outside the student's classes", async () => {
+    const mock = dbWith([[{ classroomId: CLASS }], [classBookRow], [lesson(3)], []]);
+    await expect(getStudentBook({ db: mock as unknown as DB, user: student, classBookId: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee" })).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 });
