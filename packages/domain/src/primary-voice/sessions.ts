@@ -225,6 +225,7 @@ export async function startVoiceSession(ctx: VoiceCtx & { provider: VoiceProvide
     const lesson = article ?? { title: "English lesson", passage: null, summary: null };
     const instructions = buildReedyInstructions(lesson, ctx.user.cefrLevel || "A1", avatar?.classPreset);
     const call = await ctx.provider.createCall({ sdp: input.sdp, instructions, model: config.model, transcriptionModel: config.transcriptionModel }).catch((error) => {
+      console.warn("[voice] createCall failed", error instanceof Error ? error.message : error);
       throw new VoiceError("VOICE_PROVIDER_UNAVAILABLE", 503, error instanceof Error ? error.message : "Voice provider is temporarily unavailable");
     });
     await raw.update(primaryVoiceSessions).set({ status: "ACTIVE", providerCallId: call.providerCallId, providerUsage: { model: call.model } }).where(eq(primaryVoiceSessions.id, sessionId));

@@ -89,6 +89,12 @@ export function createVoiceRuntime(options: VoiceRuntimeOptions = {}) {
   const sendGuidance = (state: SidebandState, text: string) =>
     state.sideband.send({ type: "conversation.item.create", item: { type: "message", role: "system", content: [{ type: "input_text", text }] } });
 
+  /** Counts the response from the send: `response.created` arrives too late to stop a second create. */
+  const createResponse = (state: SidebandState, response: Record<string, unknown>) => {
+    state.inflightResponses += 1;
+    state.sideband.send({ type: "response.create", response });
+  };
+
   /** Realtime rejects response.create while another response runs: cancel it and wait briefly. */
   const awaitIdleResponse = async (state: SidebandState) => {
     if (state.inflightResponses === 0) return true;
@@ -112,10 +118,7 @@ export function createVoiceRuntime(options: VoiceRuntimeOptions = {}) {
 
   const sendSafetyResponse = async (state: SidebandState, reason: Exclude<VoiceSafetyReason, "SAFE">) => {
     if (!(await awaitIdleResponse(state)) || state.closing) return;
-    state.sideband.send({
-      type: "response.create",
-      response: { conversation: "none", input: [], output_modalities: ["audio"], instructions: guardedResponseInstructions(reason), max_output_tokens: 300, tool_choice: "none" },
-    });
+    createResponse(state, { conversation: "none", input: [], output_modalities: ["audio"], instructions: guardedResponseInstructions(reason), max_output_tokens: 300, tool_choice: "none" });
   };
 
   const handleGuardedTurn = async (state: SidebandState, transcript: string, itemId: string | null) => {
@@ -128,7 +131,7 @@ export function createVoiceRuntime(options: VoiceRuntimeOptions = {}) {
       if (state.speechActive || state.pendingTranscriptions > 0) return;
       if (!(await awaitIdleResponse(state)) || state.closing) return;
       sendGuidance(state, SAFE_TURN_GUIDANCE);
-      state.sideband.send({ type: "response.create", response: { output_modalities: ["audio"], max_output_tokens: VOICE_TURN_MAX_OUTPUT_TOKENS, tool_choice: "auto" } });
+      createResponse(state, { output_modalities: ["audio"], max_output_tokens: VOICE_TURN_MAX_OUTPUT_TOKENS, tool_choice: "auto" });
       return;
     }
     state.safetyEvents[decision.reason] = (state.safetyEvents[decision.reason] ?? 0) + 1;
@@ -161,7 +164,9 @@ export function createVoiceRuntime(options: VoiceRuntimeOptions = {}) {
         state.reportedTranscriptionItems.add(itemId);
       }
     }
-    if (type === "response.created") state.inflightResponses += 1;
+    if (type === "error" && (event.error as { code?: string } | undefined)?.code === "conversation_already_has_active_response") {
+      state.inflightResponses = Math.max(0, state.inflightResponses - 1);
+    }
     if (type === "conversation.item.input_audio_transcription.completed" && typeof event.transcript === "string") {
       const transcript = event.transcript.trim();
       state.guardQueue = state.guardQueue.then(() => handleGuardedTurn(state, transcript, itemId)).catch((error) => log(`[voice] Strict guard turn failed for ${sessionId}`, error));
@@ -256,7 +261,7 @@ export function createVoiceRuntime(options: VoiceRuntimeOptions = {}) {
       state.summaryRequested = true;
       if (!(await awaitIdleResponse(state))) return false;
       sendGuidance(state, SUMMARY_GUIDANCE);
-      state.sideband.send({ type: "response.create", response: { output_modalities: ["text"], tool_choice: { type: "function", name: "submit_practice_summary" } } });
+      createResponse(state, { output_modalities: ["text"], tool_choice: { type: "function", name: "submit_practice_summary" } });
       return true;
     },
     /** Requests the summary when not yet requested and waits up to 20 ticks for it. */

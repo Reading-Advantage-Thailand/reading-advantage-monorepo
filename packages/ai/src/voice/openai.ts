@@ -1,20 +1,32 @@
+import NodeWebSocket from "ws";
 /**
  * The OpenAI Realtime adapter of Reedy: opens a WebRTC call with the browser's SDP offer, hangs
  * it up, watches it over a WebSocket sideband, and moderates turns with `omni-moderation-latest`.
- * Uses `fetch` and the global `WebSocket` of Node 22+; no SDK. Ported from the Tutor
+ * Uses `fetch` for the call and the `ws` client for the sideband (the call sideband accepts
+ * only header auth, not the browser subprotocol key); no SDK. Ported from the Tutor
  * `AiVoiceService.ts` provider calls.
  */
 
 const DEFAULT_BASE_URL = "https://api.openai.com/v1";
 
 /** What the adapter needs: the key and the optional base URL. Never read from `process.env` here. */
+/** The slice of a WebSocket the sideband uses (the `ws` client and the DOM socket both fit). */
+export interface SidebandSocket {
+  readyState: number;
+  send(data: string): void;
+  close(code?: number, reason?: string): void;
+  addEventListener(type: "open" | "message" | "close" | "error", listener: (event: unknown) => void): void;
+}
+/** Builds the sideband socket; tests inject a fake. */
+export type SidebandSocketCtor = (url: string, options: { headers: Record<string, string> }) => SidebandSocket;
+
 export interface OpenAIVoiceConfig {
   apiKey: string;
   baseUrl?: string;
   /** Replaces `fetch` in tests. */
   fetch?: typeof fetch;
-  /** Replaces the global `WebSocket` in tests. */
-  WebSocket?: typeof WebSocket;
+  /** Replaces the sideband socket in tests: gets the url and the auth headers. */
+  WebSocket?: SidebandSocketCtor;
 }
 
 /** A call request: the offer, the session prompt, and the models. */
@@ -95,13 +107,13 @@ export class OpenAIVoiceProvider {
   private readonly apiKey: string;
   private readonly baseUrl: string;
   private readonly fetchFn: typeof fetch;
-  private readonly WebSocketCtor: typeof WebSocket;
+  private readonly WebSocketCtor: SidebandSocketCtor;
 
   constructor(config: OpenAIVoiceConfig) {
     this.apiKey = config.apiKey.trim();
     this.baseUrl = (config.baseUrl ?? DEFAULT_BASE_URL).replace(/\/$/, "");
     this.fetchFn = config.fetch ?? fetch;
-    this.WebSocketCtor = config.WebSocket ?? WebSocket;
+    this.WebSocketCtor = config.WebSocket ?? ((url, options) => new NodeWebSocket(url, options) as unknown as SidebandSocket);
   }
 
   /**
@@ -121,7 +133,7 @@ export class OpenAIVoiceProvider {
       body: form,
       signal: AbortSignal.timeout(15_000),
     });
-    if (!response.ok) throw new Error(`Voice provider call failed: ${response.status}`);
+    if (!response.ok) throw new Error(`Voice provider call failed: ${response.status} ${(await response.text().catch(() => "")).slice(0, 200)}`.trim());
     const answerSdp = await response.text();
     const providerCallId = parseProviderCallId(response.headers.get("location"));
     if (!providerCallId || !answerSdp.startsWith("v=0")) throw new Error("Voice provider returned an invalid session");
@@ -142,31 +154,38 @@ export class OpenAIVoiceProvider {
   }
 
   /**
-   * Opens the WebSocket sideband of a call. Auth goes in the subprotocols, as the Realtime API
-   * accepts from a browser-style socket.
+   * Opens the WebSocket sideband of a call. Auth goes in the `Authorization` header: a live call
+   * answers 401 to the browser subprotocol key (checked 2026-10-05) and sends no subprotocol back.
    * @param providerCallId The call.
    * @returns The sideband, or null when the key is missing.
    */
   openSideband(providerCallId: string) {
     if (!this.apiKey) return null;
     const url = `${this.baseUrl.replace(/^http/, "ws")}/realtime?call_id=${encodeURIComponent(providerCallId)}`;
-    const socket = new this.WebSocketCtor(url, ["realtime", `openai-insecure-api-key.${this.apiKey}`]);
+    const socket = this.WebSocketCtor(url, { headers: { Authorization: `Bearer ${this.apiKey}`, "OpenAI-Beta": "realtime=v1" } });
     let onEvent: ((event: { type: string } & Record<string, unknown>) => void) | null = null;
     let onClose: (() => void) | null = null;
     const queue: string[] = [];
+    const label = `[voice] sideband ${providerCallId.slice(0, 12)}`;
     socket.addEventListener("open", () => {
+      console.warn(`${label} open`);
       for (const message of queue.splice(0)) socket.send(message);
     });
     socket.addEventListener("message", (message) => {
       try {
         const event = JSON.parse(String((message as MessageEvent).data));
+        if (event?.type === "error") console.warn(`${label} error event`, JSON.stringify(event.error ?? event).slice(0, 300));
         if (event && typeof event.type === "string") onEvent?.(event);
       } catch {
         /* a non-JSON frame */
       }
     });
-    socket.addEventListener("close", () => onClose?.());
-    socket.addEventListener("error", () => undefined);
+    socket.addEventListener("close", (event) => {
+      const { code, reason } = event as CloseEvent;
+      console.warn(`${label} closed ${code} ${reason || ""}`.trim());
+      onClose?.();
+    });
+    socket.addEventListener("error", (event) => console.warn(`${label} error`, (event as ErrorEvent).message ?? ""));
     return {
       onEvent(listener: (event: { type: string } & Record<string, unknown>) => void) {
         onEvent = listener;

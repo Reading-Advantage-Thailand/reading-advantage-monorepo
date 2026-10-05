@@ -30,6 +30,8 @@ describe("strict guard", () => {
     provider.flaggedWords = { fight: "violence" };
     turn("my phone number is 081-234-5678");
     await tick();
+    // The first out-of-band reply has finished before the next turn.
+    sideband.emit({ type: "response.done", response: { id: "r1", status: "cancelled" } });
     turn("let's fight", "i2");
     await tick();
     expect(state.safetyEvents).toEqual({ PERSONAL_DATA: 1, VIOLENCE: 1 });
@@ -61,13 +63,26 @@ describe("strict guard", () => {
     // The learner is still speaking: no reply yet.
     expect(sideband.sent).toEqual([]);
     sideband.emit({ type: "input_audio_buffer.speech_stopped", item_id: "i2", audio_end_ms: 4000 });
-    sideband.emit({ type: "response.created" });
+    state.inflightResponses = 1;
     turn("puppies", "i2");
     await new Promise((resolve) => setTimeout(resolve, 120));
     // A response was running: it is cancelled, then (after the wait) the new one is created.
     expect(sideband.sent.map((e) => e.type)).toEqual(["response.cancel", "conversation.item.create", "response.create"]);
     expect(state.transcriptionSeconds.get("i1")).toBe(2.5);
     expect(state.transcriptionSeconds.get("i2")).toBe(1);
+  });
+
+  it("counts a response from its create and frees it when the server rejects a second one", async () => {
+    const { runtime, sideband, state } = live();
+    sideband.emit({ type: "conversation.item.input_audio_transcription.completed", item_id: "i1", transcript: "Hello" });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(sideband.sent.map((e) => e.type)).toEqual(["conversation.item.create", "response.create"]);
+    expect(state.inflightResponses).toBe(1);
+    sideband.emit({ type: "error", error: { code: "conversation_already_has_active_response" } });
+    expect(state.inflightResponses).toBe(0);
+    sideband.emit({ type: "response.done", response: { id: "r0", status: "cancelled" } });
+    expect(state.inflightResponses).toBe(0);
+    runtime.release("s");
   });
 
   it("sums usage once per response and marks it incomplete when a response has none", () => {

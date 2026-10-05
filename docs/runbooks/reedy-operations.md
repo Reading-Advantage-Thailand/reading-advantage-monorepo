@@ -86,9 +86,14 @@ learner transcripts while investigating.
   When a session has no measured usage, the stored cost is the estimate
   `AI_VOICE_ESTIMATED_COST_THB_PER_MINUTE` (default 0.5) times the minutes.
 - Provider adapter: `packages/ai/src/voice/openai.ts` posts to
-  `POST /v1/realtime/calls` and opens the sideband WebSocket itself, because the
-  pinned `openai` 6.44.0 has no `realtime.calls.create`. Tutor uses the SDK
-  7.x calls. See `measure/tech-debt.md` (2026-10-05).
+  `POST /v1/realtime/calls` and opens the sideband with the `ws` client and an
+  `Authorization: Bearer` header, because the pinned `openai` 6.44.0 has no
+  `realtime.calls.create` and a `?call_id=` sideband rejects the browser
+  subprotocol key with 401. Tutor uses the SDK 7.x calls. See
+  `measure/tech-debt.md` (2026-10-05). The server log shows `[voice] sideband
+  <call> open|closed <code>`, every provider `error` event, and the cause of a
+  failed `createCall`; a `closed 1006` after `response.done` is the normal end
+  (the hangup drops the call).
 
 ### Before the first live session
 

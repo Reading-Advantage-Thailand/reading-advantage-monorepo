@@ -79,6 +79,9 @@ describe("ReedySession", () => {
       if (url === "/api/voice/sessions/vs1/connected") return json(200, { sessionId: "vs1", expiresAt: new Date(Date.now() + 90_000).toISOString() });
       if (url === "/api/voice/sessions/vs1/end") {
         expect(JSON.parse(String(init?.body))).toEqual({ reason: "USER_ENDED" });
+        // The call is still open: the server asks the coach for the summary over it.
+        expect(FakePeer.instances[0]!.closed).toBe(false);
+        expect(track.stop).toHaveBeenCalled();
         return json(200, summaryRecord);
       }
       throw new Error(`unexpected ${url}`);

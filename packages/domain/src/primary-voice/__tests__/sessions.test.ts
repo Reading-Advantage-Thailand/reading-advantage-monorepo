@@ -181,7 +181,10 @@ describe("finalizeVoiceSession", () => {
     const originalSend = sideband.send.bind(sideband);
     sideband.send = (event) => {
       originalSend(event);
-      if (event.type === "response.create") sideband.emit({ type: "response.function_call_arguments.done", name: "submit_practice_summary", arguments: JSON.stringify(summary) });
+      if (event.type !== "response.create") return;
+      sideband.emit({ type: "response.function_call_arguments.done", name: "submit_practice_summary", arguments: JSON.stringify(summary) });
+      // The summary response completes; its (empty) usage keeps the priced total of r1.
+      sideband.emit({ type: "response.done", response: { id: "r2", usage: { input_token_details: { text_tokens: 0, audio_tokens: 0 }, output_token_details: { text_tokens: 0, audio_tokens: 0 } } } });
     };
     const endedAt = new Date(now.getTime() + 10_000);
     const row = sessionRow({ startedAt, expiresAt: new Date(startedAt.getTime() + 180_000) });

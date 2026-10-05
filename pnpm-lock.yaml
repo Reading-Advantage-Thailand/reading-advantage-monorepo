@@ -2417,6 +2417,9 @@ importers:
       ai:
         specifier: 'catalog:'
         version: 5.0.204(zod@3.25.76)
+      ws:
+        specifier: ^8.21.0
+        version: 8.21.0
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -2427,6 +2430,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 20.19.43
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -2758,6 +2764,9 @@ importers:
       '@reading-advantage/activity-tutorial':
         specifier: workspace:*
         version: link:../activity-tutorial
+      '@reading-advantage/ai':
+        specifier: workspace:*
+        version: link:../ai
       '@reading-advantage/auth':
         specifier: workspace:*
         version: link:../auth

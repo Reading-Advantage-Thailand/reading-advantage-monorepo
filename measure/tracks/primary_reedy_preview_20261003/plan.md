@@ -38,7 +38,11 @@ login track's `authStrength` contract (a contract stub is enough to start).
 - [x] `b9b79ee58` Admin cost view (`/admin/reedy`, quick action; `getSchoolVoiceCosts`, `summarizeVoiceOperations` ported)
 
 ## Phase 5: Calibrate and ship
-- [ ] **Gate: one real OpenAI Realtime session first.** The adapter is hand-written over fetch and WebSocket because the catalog pins `openai` 6.44.0 (Tutor uses 7.x); every test so far uses the mock provider. Needs `OPENAI_API_KEY` in the rehearsal environment. See tech-debt 2026-10-05 (bump to `openai` 7 as its own migration task).
+- [x] **Gate: one real OpenAI Realtime session first.** Passed 2026-10-06 (local production build, `qa-student-a1`, session `d74b6e3b`): the call connected in 4 s, the coach spoke on every turn (states listening, thinking, speaking), the coach returned its own summary and four scores over the call, and the record stored complete usage (6 responses) priced from the rate card (1.02 THB measured against 0.43 THB estimated). Three defects found and fixed on the way:
+  - The sideband never connected: a `?call_id=` sideband answers 401 to the browser subprotocol key. The adapter now opens it with the `ws` client and an `Authorization: Bearer` header (new dependency `ws` in `packages/ai`).
+  - The client closed the WebRTC call before the end request, so the provider dropped the call before the summary. The client now stops the mic, waits for the end response, then closes the call.
+  - Two `response.create` sends raced (`conversation_already_has_active_response`), because the runtime counted a response only on `response.created`. It now counts from the send and frees the count on that error.
+  - Two more findings for the calibration: a student who talks without a pause of about 0.5 s never gets a reply (server VAD never closes the turn; expected), and the coach graded a Thai-only test clip 1/5 everywhere (expected). The adapter now logs provider `error` events and the `createCall` failure cause (one transient 503 was seen in 5 runs). The `openai` 7 bump stays in tech-debt.
 - [ ] 20-session calibration; write the report; decide the cap with Daniel
 - [x] `90f6c1044` Runbook and docs updates (`docs/runbooks/reedy-operations.md` with the Primary section)
 - [ ] Rehearsal run on Oct 8-9 with the flag on in the rehearsal environment

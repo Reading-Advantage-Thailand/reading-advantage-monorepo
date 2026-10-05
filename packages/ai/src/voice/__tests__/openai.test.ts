@@ -35,7 +35,7 @@ describe("OpenAI voice provider", () => {
     await expect(down.moderate("hi")).rejects.toThrow("503");
   });
 
-  it("opens the sideband with the key in the subprotocols and queues events until open", () => {
+  it("opens the sideband with the key in the auth header and queues events until open", () => {
     const sockets: FakeSocket[] = [];
     class FakeSocket {
       readyState = 0;
@@ -43,7 +43,7 @@ describe("OpenAI voice provider", () => {
       listeners: Record<string, ((e: unknown) => void)[]> = {};
       constructor(
         public url: string,
-        public protocols: string[],
+        public options: { headers: Record<string, string> },
       ) {
         sockets.push(this);
       }
@@ -61,11 +61,11 @@ describe("OpenAI voice provider", () => {
         this.listeners[name]?.forEach((fn) => fn(e));
       }
     }
-    const provider = new OpenAIVoiceProvider({ apiKey: "sk-test", WebSocket: FakeSocket as unknown as typeof WebSocket });
+    const provider = new OpenAIVoiceProvider({ apiKey: "sk-test", WebSocket: (url, options) => new FakeSocket(url, options) });
     const sideband = provider.openSideband("call_1")!;
     const socket = sockets[0]!;
     expect(socket.url).toBe("wss://api.openai.com/v1/realtime?call_id=call_1");
-    expect(socket.protocols).toEqual(["realtime", "openai-insecure-api-key.sk-test"]);
+    expect(socket.options.headers).toEqual({ Authorization: "Bearer sk-test", "OpenAI-Beta": "realtime=v1" });
     sideband.send({ type: "response.create" });
     expect(socket.sent).toEqual([]);
     socket.readyState = 1;

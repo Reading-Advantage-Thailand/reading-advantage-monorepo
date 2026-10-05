@@ -31,9 +31,11 @@
     "@ai-sdk/google-vertex": "catalog:",
     "@ai-sdk/openai": "catalog:",
     "ai": "catalog:",
+    "ws": "^8.21.0",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@types/ws": "^8.18.1",
     "@reading-advantage/config": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "5.9.3",

@@ -87,7 +87,9 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
       ending.current = true;
       setPhase("ending");
       setState("thinking");
-      cleanup();
+      // The mic stops now; the call stays open until the server has asked the coach for the summary.
+      live.mic.getTracks().forEach((track) => track.stop());
+      if (reason === "CONNECTION_LOST") cleanup();
       try {
         const response = await apiOf().fetch(`/api/voice/sessions/${live.sessionId}/end`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ reason: reason === "QUOTA_REACHED" ? "USER_ENDED" : reason }) });
         const record = (await response.json()) as VoiceSessionRecord;
@@ -96,6 +98,7 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
       } catch {
         setSummary(null);
       }
+      cleanup();
       ending.current = false;
       if (reason === "CONNECTION_LOST") {
         setError("lost");
