@@ -3278,7 +3278,41 @@
       "markTaught": "Mark taught",
       "steps": "Workbook steps done in class",
       "stepLabel": "Step {step}: {title}",
-      "actionError": "The change was not saved. Try again."
+      "actionError": "The change was not saved. Try again.",
+      "progress": {
+        "title": "Class progress",
+        "backToPlan": "Back to the lesson plan",
+        "open": "Class progress",
+        "csv": "Download CSV",
+        "filters": "Filters",
+        "filter": {
+          "all": "All students",
+          "late": "Late",
+          "stuck": "Stuck",
+          "not_started": "Not started"
+        },
+        "grid": "Students by lesson",
+        "gridCaption": "App steps done out of 14, one cell per student and lesson",
+        "student": "Student",
+        "lessonShort": "L{number}",
+        "cell": "{student}, lesson {lesson}: {status}, {done} of 14 steps",
+        "status": {
+          "not_started": "Not started",
+          "in_progress": "In progress",
+          "done": "Done"
+        },
+        "legend": "Green: done. Blue: in progress. Grey: not started. Red ring: the class taught the lesson and the student has not finished.",
+        "empty": "No students match this filter.",
+        "noStudents": "This class has no students yet.",
+        "steps": "{done} of 14 steps",
+        "minutes": "{minutes} min",
+        "taughtOn": "Taught {date}",
+        "notTaught": "Not taught yet",
+        "openedBeforeTaught": "Opened before taught",
+        "stepLabel": "Step {step}: {status}",
+        "backToGrid": "Back to class progress",
+        "studentTitle": "{name}"
+      }
     }
   },
   "TeacherClass": {

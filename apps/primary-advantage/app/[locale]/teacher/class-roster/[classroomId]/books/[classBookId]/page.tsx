@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, BarChart3Icon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getClassBookPacing, type ClassBookPacing } from "@reading-advantage/domain/primary-books";
 import { WORKBOOK_STEPS } from "@reading-advantage/domain/primary-books/step-map";
 import { StatusChip } from "@reading-advantage/ui";
 import { currentUser } from "@/lib/session";
 import { Link, redirect } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 import { LessonActions, StepChecklist } from "@/components/teacher/class-book-pacing-controls";
-import { TEACHER_BACK_LINK, TEACHER_CARD, TeacherPageHeader } from "@/components/teacher/teacher-shell";
+import { TEACHER_ACTION, TEACHER_BACK_LINK, TEACHER_CARD, TeacherPageHeader } from "@/components/teacher/teacher-shell";
 
 type Params = Promise<{ classroomId: string; classBookId: string }>;
 
@@ -62,6 +64,12 @@ export default async function ClassBookPacingPage({ params }: { params: Params }
           <Link href={`/teacher/class-roster/${classroomId}`} className={TEACHER_BACK_LINK}>
             <ArrowLeftIcon aria-hidden="true" />
             {t("backToClass")}
+          </Link>
+        }
+        actions={
+          <Link href={`/teacher/class-roster/${classroomId}/books/${classBookId}/progress`} className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION)}>
+            <BarChart3Icon aria-hidden="true" />
+            {t("progress.open")}
           </Link>
         }
       />

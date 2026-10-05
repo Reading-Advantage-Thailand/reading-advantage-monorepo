@@ -77,6 +77,7 @@ describe("class book lesson plan (FR-3)", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Primary Advantage Origins 3.2");
     expect(screen.getByText("Lesson 3 of 14 · 1 lesson taught")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: en.backToClass })).toHaveAttribute("href", `/teacher/class-roster/${C1}`);
+    expect(screen.getByRole("link", { name: en.progress.open })).toHaveAttribute("href", `/teacher/class-roster/${C1}/books/${CB}/progress`);
     const next = screen.getByRole("region", { name: en.nextStep });
     const headline = within(next).getAllByText("Step 7: Comprehension Check")[0].closest("p");
     expect(headline).toHaveTextContent("Step 7: Comprehension Check");
