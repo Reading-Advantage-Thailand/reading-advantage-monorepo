@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ArrowLeft, BarChart3, Settings } from "lucide-react";
+import { ArrowLeft, BarChart3, Mic, Settings } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -53,6 +53,10 @@ export default function ClassroomNavigation({ classroom, showBackButton = true }
           <Link href={`/teacher/reports?classroomId=${classroom.id}`} className={action}>
             <BarChart3 aria-hidden="true" />
             {t("nav.reports")}
+          </Link>
+          <Link href={`/teacher/class-roster/${classroom.id}/reedy`} className={action}>
+            <Mic aria-hidden="true" />
+            {t("nav.reedy")}
           </Link>
           <Link href={`/teacher/my-classes?edit=${classroom.id}`} className={action}>
             <Settings aria-hidden="true" />

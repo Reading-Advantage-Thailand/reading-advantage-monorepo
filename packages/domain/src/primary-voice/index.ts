@@ -6,3 +6,4 @@ export * from "./provider.js";
 export * from "./instructions.js";
 export { createVoiceRuntime, normalizeProviderSummary, type VoiceRuntime, type SidebandState, type ProviderSummary } from "./runtime.js";
 export * from "./sessions.js";
+export * from "./views.js";

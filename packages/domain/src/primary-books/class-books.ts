@@ -43,7 +43,7 @@ const UNSCOPED_REASON = "class books are read for classes of the user's school; 
  * @returns The class id and school id.
  * @throws {AuthError} FORBIDDEN when the class is not in the user's school or the teacher does not teach it.
  */
-async function managedClass(ctx: Ctx, classroomId: string): Promise<{ id: string; schoolId: string }> {
+export async function managedClass(ctx: Ctx, classroomId: string): Promise<{ id: string; schoolId: string }> {
   const raw = createTenantDB(ctx.db, { schoolId: ctx.user.schoolId }).unscoped(UNSCOPED_REASON);
   const rows = await raw
     .select({ id: classrooms.id, schoolId: classrooms.schoolId, teacherId: classrooms.teacherId })
