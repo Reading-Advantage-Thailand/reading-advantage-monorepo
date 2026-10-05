@@ -26,12 +26,13 @@ Owner lane: D (data and server), lane E (teacher UI, after lane C ships the shel
 - [x] Class grid, student drill-down, CSV — `90fd6be85`: `/teacher/class-roster/[classroomId]/books/[classBookId]/progress` (filters late, stuck = no activity for 7 days, not started; cell click-through), `/progress/[studentId]` (14 steps per lesson with minutes), `GET /api/class-books/[classBookId]/progress` (CSV attachment, 403 for other teachers).
 - [x] Fidelity signals — the grid, the drill-down, and the CSV carry `openedBeforeTaught` (the student's first app step on the lesson is earlier than the class's taught time, or the class has not taught it). The second FR-7 signal (writing submitted after the draft step) has no data: workbook step 11 Guided Writing has no app step and the app stores no writing submission. Left out; noted for the spec owner.
 
-## Phase 4: Lesson support
-- [ ] Guide content import (en, th) and the guide page
-- [ ] Overlay and rehearsal page
-- [ ] Projector mode and answer keys
-- [ ] Game links per period; teaching demos for the games Tutor already demos
-- [ ] Manual and first-time how-to
+## Phase 4: Lesson support — done 2026-10-05 (teaching demos left out, see below)
+- [x] Guide content import (en, th) and the guide page — import in Phase 1 (`import-lesson-guides`, 13 en + 13 th rows); `cb789bd13` `getLessonGuide` (Thai for th, English otherwise, English fallback per step); `95bac6176` lesson page `/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]` with the 13 steps in four periods, the full script, and the steps done marked (FR-8).
+- [x] Overlay and rehearsal page — `95bac6176`: `GuideOverlay` (one step at a time, teacher actions, teacher language, tip from the watch-fors, mark done) on the lesson page (FR-9); `/lessons/[number]/rehearsal` runs the real student lesson flow for the teacher; the teacher is in no roster, so no class progress is written (FR-10).
+- [x] Projector mode and answer keys — `95bac6176`: `/lessons/[number]/projector` (paragraph focus, vocabulary with Thai gloss in th, answer reveal; per-option tallies are not available: the app stores no per-option MCQ answers, said on screen) (FR-11); the answer key section (MCQ with evidence, SAQ model answers, LAQ prompts, fill-in, sentence order, completion, starters, writing prompt and frames, a three-line writing rubric authored here because the packages carry none) (FR-12). The article text comes from `articles.passage`, so the projector is empty locally until the ETL links the lessons.
+- [~] Game links per period; teaching demos for the games Tutor already demos — the bell-ringer (step 1) and practice steps (9, 10) link to `/teacher/game-challenges` in the guide and the overlay (FR-13 links). The seven `*TeachingGame` demo ports are not done: they are a separate port of Tutor components, game by game; a follow-up task.
+- [x] Manual and first-time how-to — `95bac6176`: `/teacher/manual` (five how-to steps, the 13 steps) in the teacher sidebar (FR-15). FR-16: `/b/[book]/[n]` resolves the printed QR link (student: lesson flow of the article or home; teacher: lesson page of the first class with the book or the class list).
+- FR-14 (pair-conversation, reflection, wrap-up prompts) is covered by the imported teacher language of steps 8, 13, and 12; no new student screen was added.
 
 ## Phase 5: Verify
 - [ ] Teacher walk-through in a browser on a seeded class (agent with vision)
