@@ -879,6 +879,7 @@
   },
   "Assignment": {
     "title": "Tạo bài tập",
+    "saved": "Assignment saved",
     "description": "Tạo bài tập cho học sinh của bạn",
     "assignForm": {
       "classroom": "Lớp học",
@@ -2471,6 +2472,46 @@
       "header": {
         "title": "Ghi danh học sinh",
         "subtitle": "Quản lý việc ghi danh học sinh cho"
+      },
+      "search": {
+        "placeholder": "Search students by name or email"
+      },
+      "enrollButton": "Enroll student",
+      "dialog": {
+        "title": "Enroll students",
+        "description": "Select students to enroll in {classroom}"
+      },
+      "emptyAvailable": {
+        "noMatch": "No available students match your search",
+        "none": "No students available for enrollment"
+      },
+      "enrolledHeading": "Enrolled students ({count})",
+      "empty": {
+        "noMatch": "No students match your search",
+        "none": "No students enrolled yet"
+      },
+      "noName": "No name",
+      "levelShort": "Lvl {level}",
+      "toasts": {
+        "loadAvailableError": "Failed to load available students",
+        "enrollError": "Failed to enroll student",
+        "enrolled": "{name} has been enrolled",
+        "unenrollError": "Failed to unenroll student",
+        "unenrolled": "{name} has been unenrolled"
+      },
+      "unenroll": {
+        "button": "Unenroll",
+        "title": "Unenroll student",
+        "question": "Are you sure you want to unenroll <student></student> from <classroom></classroom>?",
+        "loses": "The student leaves the class and loses access to:",
+        "item1": "Class assignments and activities",
+        "item2": "Progress tracking for this class",
+        "item3": "Class content and materials",
+        "cannotUndo": "This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Unenroll student",
+        "working": "Unenrolling...",
+        "unknownStudent": "Unknown student"
       }
     },
     "AssignmentDashboard": {
@@ -2975,6 +3016,8 @@
     "skipToContent": "Skip to main content",
     "accountMenu": "Account menu",
     "toggleTheme": "Switch light or dark theme",
+    "soundOff": "Turn sound off",
+    "soundOn": "Turn sound on",
     "mainNavigation": "Main navigation",
     "publicNavigation": "Site navigation",
     "openMenu": "Open menu",
