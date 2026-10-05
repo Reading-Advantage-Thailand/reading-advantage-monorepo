@@ -1111,8 +1111,8 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [x] **Track: Primary Student Login** *Link: [./tracks/primary_student_login_20261003/](./tracks/primary_student_login_20261003/)*
   Teacher-started code, name list, picture password, QR card, username/password, auth strength. Merged into primary-parity-integration at 0c26f7fb6 (2026-10-05). Blocked: 25-student browser run (low memory; owner go-ahead), QA timing check.
 
-- [ ] **Track: Primary UX Rework** *Link: [./tracks/primary_ux_rework_20261003/](./tracks/primary_ux_rework_20261003/)*
-  Brand tokens, one navigation, student home, redesigned screens, accessibility.
+- [~] **Track: Primary UX Rework** *Link: [./tracks/primary_ux_rework_20261003/](./tracks/primary_ux_rework_20261003/)*
+  Brand tokens, one navigation, student home, redesigned screens, accessibility. Phases 0-2 merged early into primary-parity-integration at e849f6208 (2026-10-05); Phase 3-4 and gates in progress on primary/lane-c-ux-rework.
 
 - [ ] **Track: Primary Class Books and Teacher Lesson Support** *Link: [./tracks/primary_teacher_books_lesson_support_20261003/](./tracks/primary_teacher_books_lesson_support_20261003/)*
   Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys.

@@ -2,7 +2,7 @@
 
 Version: 0.1 (draft)
 Date: 2026-10-03
-Status: In progress. Lanes A, M (Phase 1) and B are merged into `primary-parity-integration`.
+Status: In progress. Lanes A, M (Phase 1), B, and C Phases 0-2 are merged into `primary-parity-integration`.
 Owner: Daniel Bo
 Gap list: `advantage-pr/12-operations/primary-tutor-parity-gap-list.md` (v0.2)
 
@@ -31,7 +31,7 @@ so the build must be tested and rehearsed before he leaves.
 | A | Merged (step 0: local SYSTEM seed, username-only staff sign-in, SYSTEM creates school, license, admin) | 395540aaa | `/system/test` destructive page (tech debt) |
 | M | Phase 1 merged; `tutor_reader` grants script | fcd3efffa | Phase 2 needs a fresh legacy backup |
 | B | Merged | 0c26f7fb6 | 25-student browser run `[b]` (stopped for low memory; owner go-ahead); QA timing check `[b]`; spec Known risks for owner review; `TRUST_PROXY_COUNT` for the Primary deploy; Primary `cloudbuild.yaml` now requires `0064_primary_student_session_policy` |
-| C | In progress on branch `primary/lane-c-ux-rework` (worktree `rama-worktrees/lane-c`), not merged. Phases 0-2 done and reviewed (audit, brand tokens, Thai-first fonts, one navigation with a mobile bottom bar, page shell, student home, all student screens with loading/empty/error states, data fixes). Phase 3 (teacher screens) in progress; Phase 4 (quality) and the gate sweep next | — | Merge after Phase 4 and the gates |
+| C | Phases 0-2 merged early (owner decision 2026-10-05): audit, brand tokens, Thai-first fonts, one navigation with a mobile bottom bar, page shell, student home, all student screens with loading/empty/error states, data fixes. Phase 3 (teacher screens) in progress on `primary/lane-c-ux-rework`; Phase 4 (quality) and the gate sweep next | e849f6208 (phases 0-2) | No browser sweep yet for the merged screens; final Lane C merge after Phase 4 and the gates |
 | D+E, F | Not started. Lanes run one at a time on this 7 GB machine (owner rule, 2026-10-04), so D+E starts after C merges and F after D+E | — | The Oct 3-6 parallel timeline below no longer holds |
 
 Every lane that adds a migration must also set `--required-migration` in
