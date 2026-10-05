@@ -2,6 +2,12 @@
 
 Owner lane: C. Edits to `globals.css`, nav, and `packages/ui` belong to this lane only.
 Other lanes request changes here and do not edit these files.
+From 2026-10-05 the reader (`components/articles`), `audio-button.tsx`, `hooks/useAudioSegment.ts`,
+`components/flashcards`, `components/practice`, `actions/flashcard.ts`, and `components/lesson/task`
+belong to Lane G (`primary_core_interaction_quality_20261005`). Lane C Phase 4 requests changes
+there (i18n keys, states) instead of editing. `lesson-step-rail.tsx` and `lesson-progress-bar.tsx`
+stay with Lane C. The Phase 2 open items on the flashcard streak, "cards studied today", the deck
+toasts, and the play-kit panel text move to Lane G.
 
 ## Phase 0: Screen inventory and audit (2 h) — done in `7d4905521`
 - [x] List every route with a screenshot at 375/768/1280 (agents, vision review) — 50 routes in `measure/qa/browser-2026-10-05/phase0/inventory.json`; PNGs kept out of Git
