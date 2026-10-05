@@ -26,6 +26,7 @@
 - [Mastery Advantage Integration Plan](./mastery-advantage-integration-plan.md)
 - [Mastery Advantage Workbook Series Plan](./mastery-advantage-workbook-plan.md)
 - [Primary and Tutor Parity Program](./primary-tutor-parity-program.md)
+- [Chibi Quest in Primary Program](./chibi-quest-primary-program.md)
 
 ## Audit Reports
 - [science-advantage AGENTS.md Audit (2026-06-03)](./audit-reports/science-advantage_20260603/)

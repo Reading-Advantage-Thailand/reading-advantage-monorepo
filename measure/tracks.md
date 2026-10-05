@@ -1123,6 +1123,15 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: Primary Core Interaction Quality** *Link: [./tracks/primary_core_interaction_quality_20261005/](./tracks/primary_core_interaction_quality_20261005/)*
   Lane G. Browser-verify the September audio, loading, and dedup fixes; bring the reader, audio control, flashcard review, practice activities, lesson task components, and catalog copy to the Lane C quality bar. Created 2026-10-05.
 
+- [ ] **Track: Chibi Quest Reskins (wave 1, semester 2)** *Link: [./tracks/primary_quest_reskins_20261005/](./tracks/primary_quest_reskins_20261005/)*
+  RPG frame on daily activities, no schema. Program: measure/chibi-quest-primary-program.md. Created 2026-10-05.
+
+- [ ] **Track: The Expedition Loop and the World Map (wave 2, semester 2)** *Link: [./tracks/primary_expedition_loop_20261005/](./tracks/primary_expedition_loop_20261005/)*
+  Monster Encounters port as the expedition after every article; world map with 14 regions by Primary level; class spell; campaign certificate. After the APK 3D port merge. Created 2026-10-05.
+
+- [ ] **Track: The Guild Hall, Milestones, Bestiary, Familiars (wave 3, semester 2)** *Link: [./tracks/primary_guild_hall_20261005/](./tracks/primary_guild_hall_20261005/)*
+  Guild milestones replace the school leaderboard; guild hall; class bestiary; familiars. After Class Quest. Created 2026-10-05.
+
 - [ ] **Track: Primary Class Quest (semester 2)** *Link: [./tracks/primary_class_quest_20261005/](./tracks/primary_class_quest_20261005/)*
   Guild Mode as Class Quest: weekly quest from a fixed list, power-ups from goals, 8-minute cooperative boss battle with a polling projector dashboard. After the avatar shop track. Created 2026-10-05.
 

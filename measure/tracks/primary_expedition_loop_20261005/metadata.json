@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_expedition_loop_20261005",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-10-05T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
+  "description": "Chibi Quest wave 2: the expedition after every article (Monster Encounters port as a dual-renderer cartridge), the world map with 14 regions by Primary level on the Mastery Advantage mapping, the class spell on the projector, the campaign certificate.",
+  "estimated_tasks": 14,
+  "actual_tasks": null,
+  "deviation_notes": "Created 2026-10-05 in the Fable review session from the Chibi Quest in Primary program (measure/chibi-quest-primary-program.md). Owner decisions 2026-10-05: expedition loop is the core loop; leaderboard replaced by guild milestones; map regions follow the Mastery Advantage skill tree; one track per wave."
+}

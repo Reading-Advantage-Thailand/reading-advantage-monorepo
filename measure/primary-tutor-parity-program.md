@@ -120,6 +120,12 @@ a fixed template list, power-ups from goals, and an 8-minute cooperative boss ba
 polling projector dashboard. Runs after `primary_avatar_shop_20261005`. See
 [the track](./tracks/primary_class_quest_20261005/).
 
+## Semester 2 program: Chibi Quest in Primary
+
+Created 2026-10-05: [chibi-quest-primary-program.md](./chibi-quest-primary-program.md), three
+waves (reskins, the expedition loop and the world map, the guild hall). Runs after Lane G, the
+avatar shop, and Class Quest as the program file states.
+
 ## Semester 2 stub: primary_package_alignment
 
 Not part of the cutover. Items from the audit: move `server/models` and controllers

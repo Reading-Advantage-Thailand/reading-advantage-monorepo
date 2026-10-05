@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_guild_hall_20261005",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-10-05T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
+  "description": "Chibi Quest wave 3: guild hall, guild milestones in place of the school leaderboard, class bestiary, familiars.",
+  "estimated_tasks": 7,
+  "actual_tasks": null,
+  "deviation_notes": "Created 2026-10-05 in the Fable review session from the Chibi Quest in Primary program (measure/chibi-quest-primary-program.md). Owner decisions 2026-10-05: expedition loop is the core loop; leaderboard replaced by guild milestones; map regions follow the Mastery Advantage skill tree; one track per wave."
+}
