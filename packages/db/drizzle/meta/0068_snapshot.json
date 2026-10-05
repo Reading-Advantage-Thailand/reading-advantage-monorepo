@@ -1,5 +1,5 @@
 {
-  "id": "590df538-e3be-4363-837c-97445a2b5b6f",
+  "id": "69316bdf-6022-4fe8-97e9-3c750365403d",
   "prevId": "2abd3ae6-7734-4661-aa4a-7478760bc95a",
   "version": "7",
   "dialect": "postgresql",
@@ -12263,8 +12263,8 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "primary_avatar_loadout_inventory_id_primary_avatar_inventory_id_fk": {
-          "name": "primary_avatar_loadout_inventory_id_primary_avatar_inventory_id_fk",
+        "primary_avatar_loadout_inventory_fk": {
+          "name": "primary_avatar_loadout_inventory_fk",
           "tableFrom": "primary_avatar_loadout",
           "tableTo": "primary_avatar_inventory",
           "columnsFrom": [

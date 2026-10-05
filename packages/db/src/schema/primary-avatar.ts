@@ -4,7 +4,7 @@
  * `avatar_profile` table of the Forge avatar plan under the program prefix; the semester-2 shop
  * adds the ledger, inventory, and loadout tables beside it. Additive; nothing Tutor reads changes.
  */
-import { pgTable, uuid, text, timestamp, jsonb, integer, primaryKey, unique, index } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, jsonb, integer, primaryKey, unique, index, foreignKey } from "drizzle-orm/pg-core";
 import { users, schools } from "./users.js";
 
 /** The avatar of a user: class, tints, and the pack version the choice was made against. */
@@ -69,8 +69,12 @@ export const primaryAvatarLoadout = pgTable(
     schoolId: uuid("school_id").notNull().references(() => schools.id, { onDelete: "cascade" }),
     userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
     slot: text("slot").notNull(),
-    inventoryId: uuid("inventory_id").notNull().references(() => primaryAvatarInventory.id, { onDelete: "cascade" }),
+    inventoryId: uuid("inventory_id").notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  (t) => [primaryKey({ columns: [t.schoolId, t.userId, t.slot] })],
+  (t) => [
+    primaryKey({ columns: [t.schoolId, t.userId, t.slot] }),
+    // Named by hand: the generated name is longer than the 63 characters Postgres keeps.
+    foreignKey({ columns: [t.inventoryId], foreignColumns: [primaryAvatarInventory.id], name: "primary_avatar_loadout_inventory_fk" }).onDelete("cascade"),
+  ],
 );
