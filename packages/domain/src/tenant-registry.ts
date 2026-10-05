@@ -177,8 +177,13 @@ import {
   standardPackSuccessorCommitments,
   standardPackSuccessorAdmissionReceipts,
   primaryLegacyIdMap,
+  primaryBookSeries,
+  primaryBooks,
+  primaryBookLessons,
+  primaryLessonGuides,
   primaryClassLoginSessions,
   primaryStudentCredentials,
+  primaryClassBooks,
 } from "@reading-advantage/db";
 import {
   accountingSubmissions,
@@ -193,9 +198,15 @@ register(roles, "EXEMPT");
 
 // Legacy cuid -> uuid remap for the Primary cutover; keyed by legacy table name, not tenant data.
 register(primaryLegacyIdMap, "EXEMPT");
+// Class book catalogue and guides (primary_teacher_books_lesson_support_20261003): global content.
+register(primaryBookSeries, "EXEMPT");
+register(primaryBooks, "EXEMPT");
+register(primaryBookLessons, "EXEMPT");
+register(primaryLessonGuides, "EXEMPT");
 // Student login (primary_student_login_20261003): both tables carry school_id.
 register(primaryClassLoginSessions, "FLAT");
 register(primaryStudentCredentials, "FLAT");
+register(primaryClassBooks, "FLAT");
 register(auditEvents, "EXEMPT");
 register(schools, "EXEMPT");
 register(accounts, "EXEMPT");
@@ -274,6 +285,8 @@ import {
   chapterTrackings,
   storyAssignments,
   lessonRecords,
+  primaryClassBookLessons,
+  primaryStudentLessonSteps,
   assignmentNotifications,
   raCefrMappings,
   genreAdjacencies,
@@ -366,6 +379,9 @@ register(storyRecords, "REFERENTIAL");
 register(chapterTrackings, "REFERENTIAL");
 register(storyAssignments, "REFERENTIAL");
 register(lessonRecords, "REFERENTIAL");
+// Class book state and progress (primary_teacher_books_lesson_support_20261003): scoped via primary_class_books.school_id.
+register(primaryClassBookLessons, "REFERENTIAL");
+register(primaryStudentLessonSteps, "REFERENTIAL");
 register(assignmentNotifications, "REFERENTIAL");
 register(raCefrMappings, "REFERENTIAL");
 register(genreAdjacencies, "REFERENTIAL");
