@@ -69,6 +69,11 @@ describe("assignClassBook", () => {
 });
 
 describe("listClassBooks", () => {
+  it("refuses a student, who reads class books through getStudentClassBooks", async () => {
+    const mock = dbWith([[classRow]]);
+    await expect(listClassBooks({ db: mock as unknown as DB, user: student, classroomId: CLASS })).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
   it("returns the books of the class oldest first with taught counts", async () => {
     const second = { ...classBookRow, id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", bookKey: "q4", bookName: "Quest 4", currentLesson: 1 };
     const mock = dbWith([[classRow], [classBookRow, second], [{ classBookId: CLASS_BOOK, taughtAt: new Date() }, { classBookId: CLASS_BOOK, taughtAt: new Date() }]]);

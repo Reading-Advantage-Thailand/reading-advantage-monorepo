@@ -27,7 +27,7 @@ import {
 import { APP_STEP_COUNT, WORKBOOK_STEPS, isAppStepUnlocked } from "./step-map.js";
 
 /** The common parameters of every use-case. */
-interface Ctx {
+export interface Ctx {
   db: DB;
   user: UserContext;
   now?: Date;
@@ -37,7 +37,7 @@ const UNSCOPED_REASON = "class books are read for classes of the user's school; 
 
 /**
  * Finds a class the user teaches (owner or co-teacher) in the user's school. A school admin or
- * SYSTEM user may manage any class of the school.
+ * SYSTEM user may manage any class of the school. Students are refused.
  * @param ctx The database and the user.
  * @param classroomId The class.
  * @returns The class id and school id.
@@ -52,6 +52,8 @@ async function managedClass(ctx: Ctx, classroomId: string): Promise<{ id: string
     .limit(1);
   const cls = rows[0];
   if (!cls || !cls.schoolId || (ctx.user.role !== "SYSTEM" && cls.schoolId !== ctx.user.schoolId)) throw new AuthError("The class is not in your school", "FORBIDDEN");
+  const managesSchool = ctx.user.role === "ADMIN" || ctx.user.role === "SYSTEM";
+  if (!managesSchool && ctx.user.role !== "TEACHER") throw new AuthError("Only teachers manage class books", "FORBIDDEN");
   if (ctx.user.role === "TEACHER" && cls.teacherId !== ctx.user.id) {
     const co = await raw
       .select({ classroomId: classroomTeachers.classroomId })
@@ -77,7 +79,7 @@ const classBookSelect = {
   currentLesson: primaryClassBooks.currentLesson,
 };
 
-type ClassBookRow = { id: string; classroomId: string; schoolId: string; bookId: string; bookKey: string; bookName: string; lessonCount: number; mode: string; startDate: Date | null; currentLesson: number };
+export type ClassBookRow = { id: string; classroomId: string; schoolId: string; bookId: string; bookKey: string; bookName: string; lessonCount: number; mode: string; startDate: Date | null; currentLesson: number };
 
 /**
  * Reads one class book the user may manage.
@@ -86,7 +88,7 @@ type ClassBookRow = { id: string; classroomId: string; schoolId: string; bookId:
  * @returns The row.
  * @throws {AuthError} FORBIDDEN when the user may not manage the class.
  */
-async function managedClassBook(ctx: Ctx, classBookId: string): Promise<ClassBookRow> {
+export async function managedClassBook(ctx: Ctx, classBookId: string): Promise<ClassBookRow> {
   const raw = createTenantDB(ctx.db, { schoolId: ctx.user.schoolId }).unscoped(UNSCOPED_REASON);
   const rows = await raw.select(classBookSelect).from(primaryClassBooks).innerJoin(primaryBooks, eq(primaryBooks.id, primaryClassBooks.bookId)).where(eq(primaryClassBooks.id, classBookId)).limit(1);
   const row = rows[0] as ClassBookRow | undefined;
@@ -113,7 +115,7 @@ async function taughtCounts(ctx: Ctx, classBookIds: string[]): Promise<Map<strin
   return counts;
 }
 
-const toClassBook = (row: ClassBookRow, taughtCount: number): ClassBook => ({
+export const toClassBook = (row: ClassBookRow, taughtCount: number): ClassBook => ({
   id: row.id,
   classroomId: row.classroomId,
   bookId: row.bookId,
