@@ -101,6 +101,7 @@
     "@faker-js/faker": "^9.9.0",
     "@tailwindcss/postcss": "catalog:",
     "@testing-library/jest-dom": "catalog:",
+    "axe-core": "4.12.1",
     "@testing-library/react": "catalog:",
     "@testing-library/user-event": "catalog:",
     "@types/node": "catalog:",
