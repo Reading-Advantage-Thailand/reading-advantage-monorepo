@@ -18,3 +18,5 @@ export {
 } from "./season.js";
 export { awardPowerUps, goalMet, mcCounts, readGoalFacts, type GoalFacts } from "./goals.js";
 export type { AssignClassQuestInput, ClassQuest, QuestPowerUpRow, StudentQuestCard, TeacherQuestCard } from "@reading-advantage/game-contracts";
+export { countdownEndsAt, getBattleState, getQuestDashboard, pendingDamage, postHeartbeat, setQuestStatus } from "./battle.js";
+export type { QuestBattleState, QuestDashboardState, QuestHeartbeatInput, SetQuestStatusInput } from "@reading-advantage/game-contracts";

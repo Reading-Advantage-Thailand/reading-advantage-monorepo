@@ -82,7 +82,8 @@ export const questPowerUpRowSchema = z
 export const questHeartbeatInputSchema = z
   .object({
     questId: z.string().uuid(),
-    runId: z.string().uuid(),
+    /** The challenge run once the game started; null while the student is present in the rally only. */
+    runId: z.string().uuid().nullable(),
     answered: z.number().int().min(0),
     correct: z.number().int().min(0),
     hp: z.number().int().min(0),

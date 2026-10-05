@@ -47,7 +47,8 @@ const READING_MODALITY = {
   scored: true,
 } as const;
 
-type Raw = ReturnType<ReturnType<typeof createTenantDB>["unscoped"]>;
+/** The unscoped handle for quest rows. */
+export type Raw = ReturnType<ReturnType<typeof createTenantDB>["unscoped"]>;
 type QuestRow = typeof primaryClassQuest.$inferSelect;
 type PowerUpRowDb = typeof primaryClassQuestPowerUp.$inferSelect;
 
@@ -234,7 +235,8 @@ export async function assignClassQuest(ctx: Ctx, input: AssignClassQuestInput, r
     contentLocale: "th",
     content: { mode: "vocabulary", items },
     seed: Math.floor(Math.random() * 2_147_483_647),
-    difficulty: "easy",
+    // The Primary host runs challenges at medium difficulty only (StudentCartridgeHost).
+    difficulty: "medium",
     modality: READING_MODALITY,
     startsAt: startsAt.toISOString(),
     expiresAt: new Date(battleAt.getTime() + CHALLENGE_GRACE_MS).toISOString(),
@@ -281,17 +283,24 @@ export async function cancelClassQuest(ctx: Ctx, questId: string): Promise<void>
   await raw.delete(gameChallengeDefinitions).where(and(eq(gameChallengeDefinitions.id, quest.challengeId), eq(gameChallengeDefinitions.schoolId, quest.schoolId)));
 }
 
+/** One committed hit: a student's verified completion. */
+export interface CommittedHit {
+  userId: string;
+  damage: number;
+  at: Date;
+}
+
 /**
- * The committed damage of a quest from the verified completions, and the helpers in play order.
+ * The committed damage of a quest from the verified completions, and the hits in play order.
  * A correct answer is 2 damage, 3 with a sharp blade earned this week.
  * @param raw The unscoped handle.
  * @param quest The quest row.
- * @returns The committed total and the helpers in the order they finished.
+ * @returns The committed total and the hits in the order they landed.
  */
-export async function committedDamage(raw: Raw, quest: QuestRow): Promise<{ committed: number; helpers: string[] }> {
-  const [hits, blades] = await Promise.all([
+export async function committedDamage(raw: Raw, quest: QuestRow): Promise<{ committed: number; hits: CommittedHit[] }> {
+  const [rows, blades] = await Promise.all([
     raw
-      .select({ userId: gameChallengeContributions.userId, correct: gameCompletions.correctAnswers })
+      .select({ userId: gameChallengeContributions.userId, correct: gameCompletions.correctAnswers, at: gameChallengeContributions.contributedAt })
       .from(gameChallengeContributions)
       .innerJoin(gameCompletions, eq(gameCompletions.id, gameChallengeContributions.completionId))
       .where(and(eq(gameChallengeContributions.schoolId, quest.schoolId), eq(gameChallengeContributions.challengeId, quest.challengeId)))
@@ -302,8 +311,8 @@ export async function committedDamage(raw: Raw, quest: QuestRow): Promise<{ comm
       .where(and(eq(primaryClassQuestPowerUp.schoolId, quest.schoolId), eq(primaryClassQuestPowerUp.questId, quest.id), eq(primaryClassQuestPowerUp.powerUp, "sharp-blade"))),
   ]);
   const sharp = new Set(blades.map((b) => b.userId));
-  const committed = hits.reduce((sum, hit) => sum + Math.max(0, hit.correct) * (DAMAGE_PER_CORRECT + (sharp.has(hit.userId) ? SHARP_BLADE_BONUS : 0)), 0);
-  return { committed, helpers: hits.map((hit) => hit.userId) };
+  const hits = rows.map((row) => ({ userId: row.userId, damage: Math.max(0, row.correct) * (DAMAGE_PER_CORRECT + (sharp.has(row.userId) ? SHARP_BLADE_BONUS : 0)), at: row.at }));
+  return { committed: hits.reduce((sum, hit) => sum + hit.damage, 0), hits };
 }
 
 /**

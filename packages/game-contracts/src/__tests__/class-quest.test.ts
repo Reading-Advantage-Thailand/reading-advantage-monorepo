@@ -46,6 +46,7 @@ describe("class quest contracts", () => {
     const beat = { questId: QUEST.id, runId: QUEST.challengeId, answered: 4, correct: 3, hp: 4, damage: 6, powerUpsUsed: ["shield"] };
     expect(questHeartbeatInputSchema.safeParse(beat).success).toBe(true);
     expect(questHeartbeatInputSchema.safeParse({ ...beat, correct: 5 }).success).toBe(false);
+    expect(questHeartbeatInputSchema.safeParse({ ...beat, runId: null }).success).toBe(true);
     expect(questHeartbeatInputSchema.safeParse({ ...beat, powerUpsUsed: ["shield", "shield", "shield", "shield"] }).success).toBe(false);
   });
   it("keeps scores off the dashboard: a student carries HP and presence only", () => {
