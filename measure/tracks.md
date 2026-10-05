@@ -1132,7 +1132,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: The Guild Hall, Milestones, Bestiary, Familiars (wave 3, semester 2)** *Link: [./tracks/primary_guild_hall_20261005/](./tracks/primary_guild_hall_20261005/)*
   Guild milestones replace the school leaderboard; guild hall; class bestiary; familiars. After Class Quest. Created 2026-10-05.
 
-- [ ] **Track: Primary Class Quest (semester 2)** *Link: [./tracks/primary_class_quest_20261005/](./tracks/primary_class_quest_20261005/)*
+- [~] **Track: Primary Class Quest (semester 2)** (started 2026-10-06; Phase 0 done) *Link: [./tracks/primary_class_quest_20261005/](./tracks/primary_class_quest_20261005/)*
   Guild Mode as Class Quest: weekly quest from a fixed list, power-ups from goals, 8-minute cooperative boss battle with a polling projector dashboard. After the avatar shop track. Created 2026-10-05.
 
 - [x] **Track: Primary Avatar Shop, GP, Inventory, Loadout** (started 2026-10-06 on the owner's instruction; delivered 2026-10-06; the browser walk-through passed; the separate-agent review was skipped by the owner's no-subagent rule) *Link: [./tracks/primary_avatar_shop_20261005/](./tracks/primary_avatar_shop_20261005/)*

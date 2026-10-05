@@ -1,9 +1,9 @@
 {
   "track_id": "primary_class_quest_20261005",
   "type": "feature",
-  "status": "planned",
+  "status": "in_progress",
   "created_at": "2026-10-05T00:00:00Z",
-  "updated_at": "2026-10-05T00:00:00Z",
+  "updated_at": "2026-10-06T00:00:00Z",
   "description": "Semester 2: Class Quest (Guild Mode). A weekly quest from a fixed template list, power-ups from goals, and an 8-minute cooperative boss battle: students on their own devices, the teacher projects a polling dashboard. Builds on class challenges, Lane F portraits, and the GP ledger.",
   "estimated_tasks": 20,
   "actual_tasks": null,
