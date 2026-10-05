@@ -100,8 +100,9 @@ describe("Primary design tokens (FR-1)", () => {
     }
   });
 
-  it("uses brand green, not neutral black, for the shadcn primary", () => {
-    expect(resolve("primary", root)).toBe("#047d36");
+  it("uses the Primary Advantage cyan, not neutral black, for the shadcn primary", () => {
+    expect(resolve("brand-400", root)).toBe("#22d3ee");
+    expect(resolve("primary", root)).toBe("#0e7490");
     expect(resolve("primary", dark)).toBe(resolve("brand-400", dark));
   });
 

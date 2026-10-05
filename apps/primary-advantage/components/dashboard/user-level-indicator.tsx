@@ -32,7 +32,7 @@ export const CEFR_GAUGE_LEVELS = [
 ] as const;
 
 /** Gauge arc colors: brand green from light (start) to dark (top level). */
-const GAUGE_COLORS = ["#bbf7d2", "#047d36"];
+const GAUGE_COLORS = ["#a5f3fc", "#0e7490"];
 
 /**
  * The student's CEFR level on a gauge, with a text about what the student can do at that level.

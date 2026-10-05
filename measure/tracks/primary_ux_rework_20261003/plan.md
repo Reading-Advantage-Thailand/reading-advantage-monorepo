@@ -46,7 +46,7 @@ toasts, and the play-kit panel text move to Lane G.
   - Open for Phase 3/4: `button-name` nodes on page-level icon buttons (admin students delete, roster and enrollment remove, add-teacher show password, article creation). The one-node `button-name` on `/`, student reports, teacher assignments, teacher reports, and student progress did not trace to a shell or shared component in a static review; it needs a browser axe run with selectors.
 
 ### Phase 1 decisions (coordinator, after the Phase 0 audit)
-- Primary color is brand-700 `#047d36` for buttons and text on white (5.3:1). Tutor brand-500 `#06c755` is for large decorative fills only. The cyan logo text (1.8:1) uses `text-primary`.
+- Primary color is brand-700 for buttons and text on white. Owner correction 2026-10-06: the ramp is the Primary Advantage cyan (brand guide Cyan 400 `#22d3ee` = brand-400), not the Tutor green; brand-700 is `#0e7490` (5.4:1 with white), brand-400 and brand-500 are for large decorative fills only. The logo text uses `text-primary`.
 - `--font-sans` is a Thai-first `next/font` stack: Noto Sans Thai (Thai subset), then Inter. Quicksand (articles) and Cabin Sketch (logo) also load through `next/font`.
 - The account menu trigger becomes a real `<button>` with an accessible name.
 - Below 1024 px the bottom bar replaces the stacked sidebar. The leaderboard leaves the nav column.
