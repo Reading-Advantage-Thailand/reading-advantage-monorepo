@@ -1,9 +1,9 @@
 {
   "track_id": "primary_teacher_books_lesson_support_20261003",
   "type": "feature",
-  "status": "planned",
+  "status": "in_progress",
   "created_at": "2026-10-03T00:00:00Z",
-  "updated_at": "2026-10-03T00:00:00Z",
+  "updated_at": "2026-10-05T15:00:00Z",
   "description": "Assign workbooks to classes, track progress per lesson and student, and give teachers lesson support equal to Tutor Advantage: 13-step guidance, rehearsal, answer keys, teaching demos, and a manual.",
   "estimated_tasks": 28,
   "deviation_notes": "Primary is stuck in the extensive-reading-only phase: no class-book link exists, so no progress tracking. Lesson plan is fixed at 13 printed steps (blended-learning-lesson-plan.md v1.1). Tutor adds digital phases; this track does not reorder printed steps. Workbook-First Protocol applies to teacher-led (TL) mode only. Source of workbook content: ~/Desktop/Workbooks. Unconfirmed from subagent reports: the QR URL pattern and the question-bank counts. Verify in Phase 0."
