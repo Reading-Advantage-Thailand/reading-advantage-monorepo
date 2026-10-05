@@ -1,0 +1,39 @@
+14:12:01 students 3
+14:12:05 student 1 ok 1151 967 1029
+14:12:08 student 2 ok 1168 915 1024
+14:12:11 student 3 ok 991 837 1025
+{
+  "picture": {
+    "n": 3,
+    "ok": 3,
+    "median": 1151,
+    "max": 1168,
+    "strengths": [
+      null
+    ]
+  },
+  "qr": {
+    "n": 3,
+    "ok": 3,
+    "median": 915,
+    "max": 967,
+    "strengths": [
+      null
+    ]
+  },
+  "password": {
+    "n": 3,
+    "ok": 3,
+    "median": 1025,
+    "max": 1029
+  },
+  "checks": {
+    "singleSession": {
+      "pictureCtx": false,
+      "qrCtx": false,
+      "passwordCtx": true
+    },
+    "pictureNoStore": "no-store"
+  },
+  "errors": []
+}

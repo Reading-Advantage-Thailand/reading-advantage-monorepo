@@ -57,7 +57,8 @@ async function staffLogin(page) {
   await page.waitForURL((u) => !u.pathname.endsWith("/auth/signin"), { timeout: 120000 });
 }
 
-const atHome = (page) => page.waitForURL((u) => u.pathname === "/en/student/read", { timeout: 240000 });
+// The student home moved to /student/home in the UX rework (Lane C); /student/read was the home before.
+const atHome = (page) => page.waitForURL((u) => u.pathname === "/en/student/home" || u.pathname === "/en/student/read", { timeout: 240000 });
 
 async function studentPicture(code, name, pictures, viewport) {
   const { context, page, api } = await newPage(viewport);
@@ -171,7 +172,7 @@ try {
     for (const a of state.assigned) byUser.set(a.userId, { name: a.name, pictures: a.pictures });
     for (const s of state.sheet) Object.assign(byUser.get(s.userId) ?? byUser.set(s.userId, {}).get(s.userId), { username: s.username, password: s.password, name: s.name });
     for (const c of state.cards) Object.assign(byUser.get(c.userId), { token: c.token });
-    const students = [...byUser.values()];
+    const students = [...byUser.values()].slice(0, Number(process.env.LIMIT ?? 25));
     log("students", students.length);
     let i = 0;
     for (const s of students) {

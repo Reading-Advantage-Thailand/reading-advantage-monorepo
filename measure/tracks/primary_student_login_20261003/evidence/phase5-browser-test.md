@@ -17,3 +17,27 @@ Date: 2026-10-05. Local only: lane-b dev server on port 3100, database `primary_
 | extra | NOT RUN. |
 
 Teacher class panel: `teacher-class-panel-1280.png` (the code in the picture belonged to a local class session that is closed).
+
+
+## Rerun 2026-10-05 (production build of the merged branch, 3 students)
+
+Setup (attempt 3 of the day) passed on the dev server: 25 picture passwords, class sheet
+25 rows / 0 failed, 25 QR cards, class session started. The first two attempts failed
+because the earlier run had left cards, pictures, and an open class session behind and the
+state file was lost in a reboot; the credentials were reset in the local QA database and the
+session closed (`run-2026-10-05/setup-attempts.txt`).
+
+The student step ran against `next build` + `next start` of the merged branch (Lane B, C,
+D+E, F) with `LIMIT=3` (owner decision: 3 students, not 25, on this 7 GB machine). Results
+(`run-2026-10-05/login3-result.txt`):
+
+| Student | Picture | QR card | Password |
+|---|---|---|---|
+| 1 | 200, 1151 ms | 200, 967 ms | 200, 1029 ms |
+| 2 | 200, 1168 ms | 200, 915 ms | 200, 1024 ms |
+| 3 | 200, 991 ms | 200, 837 ms | 200, 1025 ms |
+
+Checks: one session per student (the newest sign-in ends the older ones: picture and QR
+contexts signed out after the password sign-in, password context still signed in); the
+picture route answers `Cache-Control: no-store`. Errors: none. The script now accepts
+`/student/home` as the landing page (Lane C moved the student home) and takes `LIMIT`.
