@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 // import { createEmptyCard, Card } from "ts-fsrs";
 import { Article, SentenceTimepoint, WordTimestamp } from "@/types";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import {
   Select,
   SelectContent,
@@ -487,11 +487,13 @@ export default function ArticleContent({ article }: Props) {
       </div>
 
       {shouldShowFixedControls && (
-        <div className="bg-primary dark:bg-primary-foreground fixed right-0 bottom-0 left-0 z-50 border-t p-4 shadow-lg transition-all duration-300">
+        <div className="bg-primary dark:bg-primary-foreground fixed right-0 bottom-(--bottom-nav-h) left-0 z-50 border-t p-4 shadow-lg transition-[background-color,box-shadow] duration-300 lg:bottom-0">
           <div className="mx-auto max-w-4xl space-y-3">
             {isTranslateOpen && (
               <div className="flex flex-col items-center justify-center border-b pb-3">
-                <p className="text-center text-green-500">{translate}</p>
+                <p aria-live="polite" className="text-primary-foreground dark:text-primary text-center">
+                  {translate}
+                </p>
               </div>
             )}
 

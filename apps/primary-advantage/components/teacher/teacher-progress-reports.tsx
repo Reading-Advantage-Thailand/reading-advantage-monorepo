@@ -12,12 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
-import { UserActivityChart } from "@/components/dashboard/user-activity-chart";
-import { UserXpOverAllChart } from "@/components/dashboard/user-xpoverall-chart";
-import ReadingStatsChart from "@/components/dashboard/user-reading-chart";
-import UserActivityHeatMap from "@/components/dashboard/user-heatmap-chart";
-import CEFRLevels from "@/components/dashboard/user-level-indicator";
-import UserRecentActivity from "@/components/dashboard/user-recent-activity";
+import { ReportPanels } from "@/components/dashboard/report-panels";
+import type { UserActivityLog, UserXpLog } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Users, BookOpen, TrendingUp, Clock } from "lucide-react";
@@ -49,12 +45,50 @@ interface Student {
   }>;
 }
 
+/** The activity of one student, with Date objects for the dates. */
+interface StudentActivity {
+  activity: UserActivityLog[];
+  xpLogs: UserXpLog[];
+}
+
+/** The JSON body of `/api/users/[id]/activity`: the same rows, with the dates as ISO strings. */
+interface StudentActivityBody {
+  activity?: (Omit<UserActivityLog, "createdAt" | "completed"> & { createdAt: string; completed: boolean | null })[];
+  xpLogs?: (Omit<UserXpLog, "createdAt"> & { createdAt: string })[];
+}
+
+/**
+ * Reads the activity endpoint body. JSON has no dates, and the recent-activity list calls
+ * `getTime()` on each row, so the ISO strings become Date objects here.
+ * @param body The JSON body of `/api/users/[id]/activity`.
+ * @returns The activity rows and XP logs with Date objects.
+ */
+function toStudentActivity(body: StudentActivityBody): StudentActivity {
+  return {
+    activity: (body.activity ?? []).map((row) => ({
+      ...row,
+      completed: row.completed ?? false,
+      details: row.details ?? {},
+      createdAt: new Date(row.createdAt),
+    })),
+    xpLogs: (body.xpLogs ?? []).map((row) => ({ ...row, createdAt: new Date(row.createdAt) })),
+  };
+}
+
 interface TeacherProgressReportsProps {
   classrooms: Classroom[];
   students: Student[];
   currentUser: AuthUser;
 }
 
+/**
+ * The teacher reports: class statistics and the student list; a selected student shows the
+ * report panels with that student's activity.
+ * @param props.classrooms The teacher's classes for the class filter.
+ * @param props.students The students of those classes.
+ * @param props.currentUser The signed-in teacher.
+ * @returns The reports view.
+ */
 export default function TeacherProgressReports({
   classrooms,
   students,
@@ -63,7 +97,7 @@ export default function TeacherProgressReports({
   const t = useTranslations("Reports");
   const [selectedClassroom, setSelectedClassroom] = useState<string>("all");
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
-  const [studentData, setStudentData] = useState<any>(null);
+  const [studentData, setStudentData] = useState<StudentActivity | null>(null);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -136,10 +170,10 @@ export default function TeacherProgressReports({
   const fetchStudentData = async (studentId: string) => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/users/${studentId}/article-records`);
+      // `/article-records` returns the history list (`{ success, data, pagination }`), not activity.
+      const response = await fetch(`/api/users/${studentId}/activity`);
       if (response.ok) {
-        const data = await response.json();
-        setStudentData(data);
+        setStudentData(toStudentActivity(await response.json()));
       }
     } catch (error) {
       console.error("Error fetching student data:", error);
@@ -211,28 +245,14 @@ export default function TeacherProgressReports({
           </div>
 
           {studentData && (
-            <>
-              <UserRecentActivity data={studentData.activity || []} />
-              <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-3">
-                <div className="col-span-2 flex flex-col gap-4">
-                  <UserActivityChart
-                    data={studentData.activity || []}
-                    xpLogs={studentData.xpLogs || []}
-                  />
-                  <UserXpOverAllChart data={studentData.xpLogs || []} />
-                  <ReadingStatsChart data={studentData.activity || []} />
-                </div>
-                <div className="flex flex-col gap-4">
-                  <CEFRLevels
-                    currentLevel={
-                      students.find((s) => s.id === selectedStudent)
-                        ?.cefrLevel || "A0"
-                    }
-                  />
-                  <UserActivityHeatMap data={studentData.activity || []} />
-                </div>
-              </div>
-            </>
+            <ReportPanels
+              activity={studentData.activity}
+              xpLogs={studentData.xpLogs}
+              cefrLevel={
+                students.find((s) => s.id === selectedStudent)?.cefrLevel ||
+                "A0"
+              }
+            />
           )}
 
           {loading && (

@@ -1,5 +1,5 @@
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import { CreateSchoolDialog } from "@/components/system/create-school-dialog";
 import React from "react";
 

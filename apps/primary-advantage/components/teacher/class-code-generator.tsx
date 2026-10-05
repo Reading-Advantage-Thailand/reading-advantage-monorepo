@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@reading-advantage/ui";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { QrCode, Copy, RefreshCw, Calendar, Users } from "lucide-react";

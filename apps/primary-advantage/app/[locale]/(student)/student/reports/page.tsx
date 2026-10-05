@@ -1,15 +1,28 @@
-import { Header } from "@/components/header";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import UserRecentActivity from "@/components/dashboard/user-recent-activity";
+import { TriangleAlertIcon } from "lucide-react";
+import { ErrorState } from "@reading-advantage/ui";
 import { fetchUserActivity } from "@/server/controllers/userController";
 import { currentUser } from "@/lib/session";
 import AuthErrorPage from "@/app/[locale]/auth/error/page";
-import CEFRLevels from "@/components/dashboard/user-level-indicator";
-import { UserActivityChart } from "@/components/dashboard/user-activity-chart";
-import UserActivityHeatMap from "@/components/dashboard/user-heatmap-chart";
-import { UserXpOverAllChart } from "@/components/dashboard/user-xpoverall-chart";
-import ReadingStatsChart from "@/components/dashboard/user-reading-chart";
+import { ReportPanels } from "@/components/dashboard/report-panels";
+import { RetryButton } from "@/components/shared/retry-button";
 
+/**
+ * Page title for the student reports.
+ * @returns The metadata.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Reports");
+  return { title: t("title") };
+}
+
+/**
+ * Student reports: recent activity, XP charts, reading stats, the level gauge, and the activity
+ * heatmap. When the activity fails to load, the page shows an error with a retry (it showed the
+ * sign-in error page before).
+ * @returns The reports page.
+ */
 export default async function ReportsPage() {
   const user = await currentUser();
 
@@ -17,13 +30,29 @@ export default async function ReportsPage() {
     return <AuthErrorPage />;
   }
 
-  const t = await getTranslations("Reports");
+  const [t, data] = await Promise.all([getTranslations("Reports"), fetchUserActivity(user.id)]);
 
-  const data = await fetchUserActivity(user.id);
+  const header = (
+    <header className="flex flex-col gap-1">
+      <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
+    </header>
+  );
 
   if (!data?.activity || !data?.xpLogs) {
-    return <AuthErrorPage />;
+    return (
+      <div className="flex flex-col gap-6">
+        {header}
+        <ErrorState
+          className="bg-card border"
+          icon={<TriangleAlertIcon />}
+          title={t("loadError")}
+          description={t("loadErrorHint")}
+          action={<RetryButton />}
+        />
+      </div>
+    );
   }
+
   const activity = data.activity.map((row) => ({
     ...row,
     completed: row.completed ?? false,
@@ -31,23 +60,9 @@ export default async function ReportsPage() {
   }));
 
   return (
-    <>
-      <Header heading={t("title")} />
-      <UserRecentActivity data={activity} />
-      <div className="mt-4 mb-10 grid gap-4 md:grid-cols-3 lg:grid-cols-3">
-        <div className="col-span-2 flex flex-col gap-4">
-          <UserActivityChart
-            data={activity}
-            xpLogs={data.xpLogs}
-          />
-          <UserXpOverAllChart data={data.xpLogs} />
-          <ReadingStatsChart data={activity} />
-        </div>
-        <div className="flex flex-col gap-4">
-          <CEFRLevels currentLevel={user.cefrLevel || "A0"} />
-          <UserActivityHeatMap data={activity} />
-        </div>
-      </div>
-    </>
+    <div className="flex flex-col gap-2">
+      {header}
+      <ReportPanels activity={activity} xpLogs={data.xpLogs} cefrLevel={user.cefrLevel || "A0"} />
+    </div>
   );
 }

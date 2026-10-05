@@ -6,6 +6,7 @@
  */
 import { render, type RenderOptions, type RenderResult } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
+import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
 import type { ComponentProps, ReactElement } from "react";
 
 import enMessages from "../../../messages/en.json";
@@ -25,7 +26,7 @@ type ProviderMessages = ComponentProps<
 >["messages"];
 
 /**
- * Wraps an element in NextIntlClientProvider with a real message tree.
+ * Wraps an element in NextIntlClientProvider with a real message tree and the app time zone.
  * @param ui The element to wrap.
  * @param locale Locale whose messages file backs the provider. Defaults to "en".
  * @returns The provider-wrapped element.
@@ -37,6 +38,7 @@ export function withMessages(
   return (
     <NextIntlClientProvider
       locale={locale}
+      timeZone={SCHOOL_TIME_ZONE}
       messages={testMessages[locale] as ProviderMessages}
     >
       {ui}

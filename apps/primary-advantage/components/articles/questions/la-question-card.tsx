@@ -3,9 +3,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardContent,
 } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getQuestionsByArticleId } from "@/server/models/articleModel";
+import { Skeleton } from "@reading-advantage/ui";
+import { ErrorState } from "@reading-advantage/ui";
+import { RetryButton } from "@/components/shared/retry-button";
+import { loadQuestions } from "./load-questions";
 import { ActivityType, QuestionState } from "@/types/enum";
 import QuestionHeader from "./question-header";
 import { QuizContextProvider } from "@/contexts/question-context";
@@ -18,10 +21,7 @@ export default async function LAQuestionCard({
 }: {
   articleId: string;
 }) {
-  const questionsData: QuestionResponse = await getQuestionsByArticleId(
-    articleId,
-    ActivityType.LA_QUESTION,
-  );
+  const questionsData: QuestionResponse = await loadQuestions(articleId, ActivityType.LA_QUESTION);
 
   const t = await getTranslations("Question");
   const tc = await getTranslations("Components");
@@ -30,12 +30,25 @@ export default async function LAQuestionCard({
     return (
       <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-muted-foreground text-3xl font-bold md:text-3xl">
+          <CardTitle className="text-muted-foreground text-2xl font-bold">
             {t("LAQuestion.title")}
           </CardTitle>
-          <CardDescription className="text-red-500 dark:text-red-400">
-            {t("descriptionError")}
-          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ErrorState className="py-2" title={t("descriptionError")} action={<RetryButton />} />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (questionsData.questionStatus === QuestionState.EMPTY) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-muted-foreground text-2xl font-bold">
+            {t("LAQuestion.title")}
+          </CardTitle>
+          <CardDescription>{t("descriptionEmpty")}</CardDescription>
         </CardHeader>
       </Card>
     );

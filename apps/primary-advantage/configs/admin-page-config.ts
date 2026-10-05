@@ -1,9 +1,33 @@
 import { PageConfig } from "@/types";
-import type { Permission } from "@/lib/permissions";
-import { sharedMainNav } from "./main-nav";
 
+/** School admin navigation: bottom-bar tabs and the current admin menu. */
 export const adminPageConfig: PageConfig = {
-  mainNav: [...sharedMainNav],
+  tabs: [
+    {
+      key: "dashboard",
+      href: "/admin/dashboard",
+      icon: "LayoutDashboardIcon",
+      requiredPermissions: ["ADMIN_ACCESS"],
+    },
+    {
+      key: "teachers",
+      href: "/admin/teachers",
+      icon: "UserIcon",
+      requiredPermissions: ["USER_MANAGEMENT"],
+    },
+    {
+      key: "students",
+      href: "/admin/students",
+      icon: "UsersIcon",
+      requiredPermissions: ["USER_MANAGEMENT"],
+    },
+    {
+      key: "import",
+      href: "/admin/import-data",
+      icon: "UploadIcon",
+      requiredPermissions: ["IMPORT_DATA"],
+    },
+  ],
   sidebarNav: [
     {
       title: "dashboard",

@@ -3,9 +3,9 @@
  * Behavioral replacements for the broken-ux-fixes static cases that target
  * client components (FR-4 dead links, FR-5 footer copy,
  * FR-8 header spelling, FR-9 act warnings). Each test renders through the
- * real message trees and asserts on visible output. FR-6 (assignment-table
- * t() calls) is already covered by student-assignment-table-messages.test.tsx,
- * so it is deleted without a duplicate here.
+ * real message trees and asserts on visible output. FR-6 (assignment
+ * t() calls) is covered by student/__tests__/assignment-list.test.tsx, so it
+ * is deleted without a duplicate here.
  */
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
@@ -61,8 +61,8 @@ import { AdminDashboardHeader } from "../admin/admin-dashboard-header";
 import { Footer } from "../index/footer";
 import MyStudents from "../teacher/my-students";
 import MyClasses from "../teacher/my-classes";
-import { HistoryTable } from "../dashboard/history-table";
-import StudentAssignmentTable from "../student-assignment-table";
+import { HistoryList } from "../student/history-list";
+import StudentAssignmentList from "../student/assignment-list";
 import {
   renderWithMessages,
   testMessages,
@@ -207,7 +207,7 @@ describe("FR-8 header spelling", () => {
     ).not.toBeNull();
   });
 
-  it("renders the history table with translated copy and correct classes", async () => {
+  it("renders the history list with translated copy", async () => {
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -224,23 +224,19 @@ describe("FR-8 header spelling", () => {
         pagination: { page: 1, limit: 10, total: 1, totalPages: 1 },
       }),
     });
-    renderWithMessages(<HistoryTable variant="history" />);
+    renderWithMessages(<HistoryList variant="history" />);
     expect(await screen.findByText("River Tale")).toBeInTheDocument();
     expect(
-      await screen.findByPlaceholderText(
-        en.Student.history.searchPlaceholder,
-      ),
+      await screen.findByPlaceholderText(en.StudentHistory.searchPlaceholder),
     ).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("captoliza");
-    expect(
-      document.body.querySelector(".capitalize"),
-      "cells use the correctly spelled capitalize class",
-    ).not.toBeNull();
+    // Titles show as written: the card list does not force capital letters.
+    expect(document.body.querySelector(".captoliza")).toBeNull();
   });
 });
 
 describe("FR-9 act warnings", () => {
-  it("renders the assignment table with no React act warnings", async () => {
+  it("renders the assignment list with no React act warnings", async () => {
     // The legacy "no console module import" rows are enforced by the
     // ESLint `no-restricted-imports` rule in eslint.config.mjs, which bans
     // importing the `console` module across this app. This test keeps only
@@ -292,12 +288,8 @@ describe("FR-9 act warnings", () => {
         consoleErrors.push(args);
       });
     try {
-      renderWithMessages(<StudentAssignmentTable />);
-      expect(
-        await screen.findByText(
-          en.Assignment.studentAssignmentTable.title,
-        ),
-      ).toBeInTheDocument();
+      renderWithMessages(<StudentAssignmentList />);
+      expect(await screen.findByText("River assignment")).toBeInTheDocument();
       const actWarnings = consoleErrors.filter((args) =>
         args
           .map(String)

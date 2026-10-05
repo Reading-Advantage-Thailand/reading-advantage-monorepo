@@ -7,7 +7,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Badge } from "../ui/badge";
+import { StatusChip } from "@reading-advantage/ui";
 import { Article } from "@/types";
 import { AlertCircle, BookCheck } from "lucide-react";
 import ArticleContent from "./article-content";
@@ -43,21 +43,21 @@ export default async function ArticleCard({ article }: Props) {
   );
 
   return (
-    <div className="md:basis-3/5">
-      <Card>
+    <div className="min-w-0 xl:basis-3/5">
+      <Card className="rounded-2xl">
         <CardHeader className="flex flex-col gap-4">
           <CardTitle className="font-article text-3xl font-bold md:text-5xl">
             {article.title}
           </CardTitle>
           <div className="flex flex-wrap gap-2">
-            <Badge>{t("Article.raLevel", { level: article.raLevel })}</Badge>
-            <Badge>
-              {t("Article.cefrLevel", { level: article.cefrLevel })}
-            </Badge>
-            <Badge>
-              <BookCheck className="h-4 w-4" />
-              {isSaved ? t("Article.saveToFlashcard") : t("Article.notSaved")}
-            </Badge>
+            {/* One level system for students: CEFR (the read list cards show the same). */}
+            {article.cefrLevel ? <StatusChip tone="success">{article.cefrLevel}</StatusChip> : null}
+            {isSaved ? (
+              <StatusChip tone="info">
+                <BookCheck className="size-3.5" aria-hidden="true" />
+                {t("Article.saveToFlashcard")}
+              </StatusChip>
+            ) : null}
           </div>
           <CardDescription className="font-article text-lg md:text-xl">
             {getLocalizedSummary()}
@@ -67,16 +67,10 @@ export default async function ArticleCard({ article }: Props) {
           <ArticleContent article={article} />
         </CardContent>
         <CardFooter>
-          <div className="flex items-center gap-4 px-8">
-            <AlertCircle width={64} height={64} />
-            <p className="text-sm leading-loose">
-              For language learners: This reading passage and its supporting
-              visuals are designed for educational purposes. The
-              computer-generated audio helps with pronunciation and listening
-              practice. As with any learning resource, consider
-              cross-referencing any facts used in academic work.
-            </p>
-          </div>
+          <p className="text-muted-foreground flex items-start gap-2 text-xs">
+            <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+            {t("ReadList.disclaimer")}
+          </p>
         </CardFooter>
       </Card>
       {/* <RatingPopup

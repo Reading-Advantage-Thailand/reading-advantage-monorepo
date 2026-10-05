@@ -52,7 +52,7 @@ describe("PasswordSignIn", () => {
     fetchMock.mockReturnValue(respond(200, { success: true, user: { id: "u1", role: "STUDENT" } }));
     renderWithMessages(<PasswordSignIn />);
     submit();
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/read"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/home"));
     expect(fetchMock).toHaveBeenCalledWith("/api/auth/login", expect.objectContaining({ method: "POST" }));
     expect(JSON.parse(fetchMock.mock.calls[0]![1].body)).toEqual({ username: "p3a12", password: "abcd2345" });
   });

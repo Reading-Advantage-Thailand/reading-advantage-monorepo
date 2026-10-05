@@ -12,6 +12,10 @@ import { routing } from "@/i18n/routing";
 import { useTransition } from "react";
 import { useRouter, usePathname } from "@/i18n/navigation";
 
+/**
+ * Renders the language menu with a localized accessible name.
+ * @returns The locale switcher.
+ */
 export function LocaleSwitcher() {
   const locale = useLocale();
   const t = useTranslations("LocaleSwitcher");
@@ -35,8 +39,8 @@ export function LocaleSwitcher() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="cursor-pointer" variant="ghost" size="icon">
-            <Globe />
-            <span className="sr-only">Toggle Locale</span>
+            <Globe aria-hidden="true" />
+            <span className="sr-only">{t("label")}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

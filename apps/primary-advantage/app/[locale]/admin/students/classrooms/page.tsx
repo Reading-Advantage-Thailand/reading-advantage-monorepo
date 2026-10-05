@@ -1,6 +1,6 @@
 import { ClassroomsTable } from "@/components/admin/classrooms-table";
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import { useTranslations } from "next-intl";
 import React from "react";
 

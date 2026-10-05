@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { NextIntlClientProvider } from "next-intl";
 import { GoToTop } from "../go-to-top";
@@ -77,66 +77,42 @@ function messages(locale: string): Record<string, unknown> {
 }
 
 describe("FR-4 clickable elements are keyboard-reachable", () => {
-  it("toggles the showcase lesson option from a real button", () => {
+  // Phase 2a (primary_ux_rework_20261003): the lesson option is a second
+  // real link on the card, not a toggle button.
+  it("reaches the showcase story and its lesson through real links", () => {
     const en = messages("en");
-    const article = en.Article as Record<string, string>;
-    render(
-      withMessages(
-        "en",
-        en,
-        createElement(ArticleShowcaseCard, {
-          article: {
-            id: "article-1",
-            title: "River Crossing",
-            summary: "A story about a river.",
-          },
-        }),
-      ),
+    const readList = en.ReadList as Record<string, string>;
+    const card = createElement(ArticleShowcaseCard, {
+      article: {
+        id: "article-1",
+        title: "River Crossing",
+        summary: "A story about a river.",
+      },
+    });
+    render(withMessages("en", en, card));
+
+    expect(screen.getByRole("link", { name: "River Crossing" })).toHaveAttribute(
+      "href",
+      "/student/read/article-1",
     );
+    expect(
+      screen.getByRole("link", {
+        name: readList.lessonLabel.replace("{title}", "River Crossing"),
+      }),
+    ).toHaveAttribute("href", "/student/lesson/article-1?type=article");
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
 
-    const toggle = screen.getByRole("button", {
-      name: article.showLessonOption,
-    });
-    expect(toggle).toHaveAttribute("aria-pressed", "false");
-
-    fireEvent.click(toggle);
-
-    const pressed = screen.getByRole("button", {
-      name: article.hideLessonOption,
-    });
-    expect(pressed).toHaveAttribute("aria-pressed", "true");
-
-    // The names must follow the message tree, not a hardcoded string.
+    // The lesson link name must follow the message tree, not a hardcoded string.
     cleanup();
     const patched = {
       ...en,
-      Article: {
-        ...article,
-        showLessonOption: "SENTINEL-SHOW-LESSON",
-        hideLessonOption: "SENTINEL-HIDE-LESSON",
-      },
+      ReadList: { ...readList, lessonLabel: "SENTINEL-LESSON {title}" },
     } as Record<string, unknown>;
-    render(
-      withMessages(
-        "en",
-        patched,
-        createElement(ArticleShowcaseCard, {
-          article: {
-            id: "article-1",
-            title: "River Crossing",
-            summary: "A story about a river.",
-          },
-        }),
-      ),
-    );
+    render(withMessages("en", patched, card));
 
-    const sentinelToggle = screen.getByRole("button", {
-      name: "SENTINEL-SHOW-LESSON",
-    });
-    fireEvent.click(sentinelToggle);
     expect(
-      screen.getByRole("button", { name: "SENTINEL-HIDE-LESSON" }),
-    ).toHaveAttribute("aria-pressed", "true");
+      screen.getByRole("link", { name: "SENTINEL-LESSON River Crossing" }),
+    ).toBeInTheDocument();
   });
 
   it("names the back-to-top link", () => {

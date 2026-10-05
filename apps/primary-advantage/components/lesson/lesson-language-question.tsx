@@ -3,11 +3,10 @@ import { useCallback, useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton, Avatar, AvatarFallback, AvatarImage } from "@reading-advantage/ui";
 import { Bot, MessageSquare, Send, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "@reading-advantage/auth-client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Article } from "@/types";
 import { useTranslations } from "next-intl";
 

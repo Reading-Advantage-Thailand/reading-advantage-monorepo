@@ -1,6 +1,6 @@
 import { Header } from "@/components/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import {
   WeeklyActivityChart,
   ClassEngagementChart,

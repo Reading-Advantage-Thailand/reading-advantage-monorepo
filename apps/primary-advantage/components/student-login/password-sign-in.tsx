@@ -4,7 +4,7 @@ import { useId, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@reading-advantage/ui";
 import { StudentErrorMessage, waitMinutes, type StudentError } from "./errors";
 import { STUDENT_HOME, useEnterAfterSignIn } from "./use-student-home";
 

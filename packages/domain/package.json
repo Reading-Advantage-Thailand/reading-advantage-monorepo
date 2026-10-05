@@ -16,6 +16,14 @@
       "types": "./dist/assignments/index.d.ts",
       "import": "./dist/assignments/index.js"
     },
+    "./assignments/due-date": {
+      "types": "./dist/assignments/due-date.d.ts",
+      "import": "./dist/assignments/due-date.js"
+    },
+    "./calendar-day": {
+      "types": "./dist/calendar-day.d.ts",
+      "import": "./dist/calendar-day.js"
+    },
     "./classes": {
       "types": "./dist/classes/index.d.ts",
       "import": "./dist/classes/index.js"
@@ -27,6 +35,14 @@
     "./reports": {
       "types": "./dist/reports/index.d.ts",
       "import": "./dist/reports/index.js"
+    },
+    "./primary-home": {
+      "types": "./dist/primary-home/index.d.ts",
+      "import": "./dist/primary-home/index.js"
+    },
+    "./primary-home/streak": {
+      "types": "./dist/primary-home/streak.d.ts",
+      "import": "./dist/primary-home/streak.js"
     },
     "./students": {
       "types": "./dist/students/index.d.ts",

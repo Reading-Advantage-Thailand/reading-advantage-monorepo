@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
+import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
 
 interface Student {
   id: string;
@@ -48,7 +50,8 @@ type Assignment = {
     id: string;
     title: string;
     description: string;
-    dueDate: string;
+    /** Null when the assignment has no due date (the column is nullable). */
+    dueDate: string | null;
     classroomId: string;
     articleId: string;
     userId: string;
@@ -362,7 +365,9 @@ export default function AssignmentDashboard() {
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
+    // The school time zone: the server (UTC) and the browser write the same day.
     return date.toLocaleDateString(locale, {
+      timeZone: SCHOOL_TIME_ZONE,
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -371,13 +376,9 @@ export default function AssignmentDashboard() {
     });
   };
 
-  const getDaysRemaining = (dueDate: string): number => {
-    const today = new Date();
-    const due = new Date(dueDate);
-    const diffTime = due.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
+  // A null due date is "none": never "Overdue" and never shown as 1 January 1970.
+  const dueStatus = getDueDateStatus(assignment.meta.dueDate);
+  const isPastDue = dueStatus.kind === "overdue";
 
   const getProgressStats = (students: Student[]): ProgressStats => {
     const total = students.length;
@@ -385,7 +386,7 @@ export default function AssignmentDashboard() {
     const inProgress = students.filter((s) => s.status === 1).length;
     const completed = students.filter((s) => s.status === 2).length;
     const overdue = students.filter(
-      (s) => s.status !== 2 && getDaysRemaining(assignment.meta.dueDate) < 0,
+      (s) => s.status !== 2 && isPastDue,
     ).length;
 
     return {
@@ -402,8 +403,7 @@ export default function AssignmentDashboard() {
     if (filterStatus === "all") return assignment.students;
     if (filterStatus === "overdue") {
       return assignment.students.filter(
-        (student) =>
-          student.status !== 2 && getDaysRemaining(assignment.meta.dueDate) < 0,
+        (student) => student.status !== 2 && isPastDue,
       );
     }
     return assignment.students.filter(
@@ -431,7 +431,6 @@ export default function AssignmentDashboard() {
   }
 
   const stats = getProgressStats(assignment.students);
-  const daysRemaining = getDaysRemaining(assignment.meta.dueDate);
   const filteredStudents = getFilteredStudents();
 
   return (
@@ -478,24 +477,29 @@ export default function AssignmentDashboard() {
             <div className="flex items-center space-x-2">
               <Clock className="h-4 w-4" />
               <span>
-                {t("dueDate")}: {formatDate(assignment.meta.dueDate)}
+                {t("dueDate")}:{" "}
+                {assignment.meta.dueDate && dueStatus.kind !== "none"
+                  ? formatDate(assignment.meta.dueDate)
+                  : t("noDueDate")}
               </span>
             </div>
-            <div
-              className={`rounded-full px-3 py-1 text-xs font-medium ${
-                daysRemaining < 0
-                  ? "bg-destructive/10 text-destructive"
-                  : daysRemaining <= 3
-                    ? "bg-orange-600/10 text-orange-600"
-                    : "bg-secondary text-muted-foreground"
-              }`}
-            >
-              {daysRemaining < 0
-                ? t("overdue")
-                : daysRemaining === 0
-                  ? t("dueToday")
-                  : t("daysRemaining", { daysRemaining })}
-            </div>
+            {dueStatus.kind !== "none" ? (
+              <div
+                className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  dueStatus.kind === "overdue"
+                    ? "bg-destructive/10 text-destructive"
+                    : dueStatus.kind === "upcoming"
+                      ? "bg-secondary text-muted-foreground"
+                      : "bg-orange-600/10 text-orange-600"
+                }`}
+              >
+                {dueStatus.kind === "overdue"
+                  ? t("overdue")
+                  : dueStatus.kind === "today"
+                    ? t("dueToday")
+                    : t("daysRemaining", { daysRemaining: dueStatus.days })}
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -764,9 +768,7 @@ export default function AssignmentDashboard() {
             {filteredStudents.map((student) => {
               const statusInfo = getStatusInfo(student.status);
               const StatusIcon = statusInfo.icon;
-              const isOverdue =
-                student.status !== 2 &&
-                getDaysRemaining(assignment.meta.dueDate) < 0;
+              const isOverdue = student.status !== 2 && isPastDue;
               const isSelected = selectedStudents.includes(student.id);
 
               return (

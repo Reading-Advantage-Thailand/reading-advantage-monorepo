@@ -1,16 +1,11 @@
 import { Header } from "@/components/header";
 import { getTranslations } from "next-intl/server";
-import UserRecentActivity from "@/components/dashboard/user-recent-activity";
 import { fetchUserActivity } from "@/server/controllers/userController";
 import { getUserById } from "@/server/models/userModel";
 import { currentUser } from "@/lib/session";
 import { canReadUserResource } from "@/lib/authorization";
 import AuthErrorPage from "@/app/[locale]/auth/error/page";
-import CEFRLevels from "@/components/dashboard/user-level-indicator";
-import { UserActivityChart } from "@/components/dashboard/user-activity-chart";
-import UserActivityHeatMap from "@/components/dashboard/user-heatmap-chart";
-import { UserXpOverAllChart } from "@/components/dashboard/user-xpoverall-chart";
-import ReadingStatsChart from "@/components/dashboard/user-reading-chart";
+import { ReportPanels } from "@/components/dashboard/report-panels";
 
 export default async function StudentProgressPage({
   params,
@@ -52,21 +47,7 @@ export default async function StudentProgressPage({
   return (
     <>
       <Header heading={`Progress for ${data.user.name ?? data.user.username}`} />
-      <UserRecentActivity data={activity} />
-      <div className="mt-4 mb-10 grid gap-4 md:grid-cols-3 lg:grid-cols-3">
-        <div className="col-span-2 flex flex-col gap-4">
-          <UserActivityChart
-            data={activity}
-            xpLogs={data.xpLogs}
-          />
-          <UserXpOverAllChart data={data.xpLogs} />
-          <ReadingStatsChart data={activity} />
-        </div>
-        <div className="flex flex-col gap-4">
-          <CEFRLevels currentLevel={data.user.cefrLevel || "A0"} />
-          <UserActivityHeatMap data={activity} />
-        </div>
-      </div>
+      <ReportPanels activity={activity} xpLogs={data.xpLogs} cefrLevel={data.user.cefrLevel || "A0"} />
     </>
   );
 }

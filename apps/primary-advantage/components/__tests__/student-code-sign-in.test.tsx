@@ -99,7 +99,7 @@ describe("CodeSignIn", () => {
     fireEvent.click(screen.getByRole("button", { name: "yellow star" }));
     fireEvent.click(screen.getByRole("button", { name: "red circle" }));
     fireEvent.click(screen.getByRole("button", { name: "teal flower" }));
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/read"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/home"));
     const call = fetchMock.mock.calls[1]!;
     expect(call[0]).toBe("/api/auth/student/picture");
     expect(bodyOf(call)).toEqual({ code: "ABCDEF", studentId: "h-ann", pictures: [3, 0, 11] });
@@ -141,7 +141,7 @@ describe("CodeSignIn", () => {
     await openNameList(false);
     fetchMock.mockReturnValueOnce(respond(200, { ...signedIn, authStrength: "code_only" }));
     fireEvent.click(screen.getByRole("button", { name: "Bo" }));
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/read"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/student/home"));
     const call = fetchMock.mock.calls[1]!;
     expect(call[0]).toBe("/api/auth/student/code-only");
     expect(bodyOf(call)).toEqual({ code: "ABCDEF", studentId: "h-bo" });

@@ -2,8 +2,7 @@
 
 import { useId, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Checkbox, Label } from "@reading-advantage/ui";
 import { errorKey, postStudentLogin, type ClassLoginErrorKey } from "./api";
 
 /** Props of {@link PicturePasswordSetting}. */

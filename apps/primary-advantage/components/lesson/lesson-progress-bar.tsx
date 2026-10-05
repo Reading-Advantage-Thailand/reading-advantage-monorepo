@@ -8,7 +8,10 @@ import {
   useContext,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Timer, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { ErrorState, ShimmerSkeleton } from "@reading-advantage/ui";
+import { cn } from "@/lib/utils";
+import { LessonStepRail } from "./lesson-step-rail";
 import { QuizContext } from "@/contexts/question-context";
 import { useTranslations } from "next-intl";
 import {
@@ -86,7 +89,7 @@ export default function LessonProgressBar({
   article: articleProp,
 }: LessonProgressBarProps) {
   const t = useTranslations("Lesson");
-  const tComponents = useTranslations("Components");
+  const tError = useTranslations("Error");
   const article = (
     source === "assignment" ? assignment?.article : articleProp
   ) as Article | null;
@@ -96,10 +99,9 @@ export default function LessonProgressBar({
     source === "assignment"
       ? `/api/assignments/${assignment?.id}`
       : `/api/lessons/${articleProp?.id}`;
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [maxHeight, setMaxHeight] = useState("0px");
-  const contentRef = useRef<HTMLDivElement>(null);
   const [currentTask, setCurrentTask] = useState(1);
+  // The step whose save failed ("start" for the first save), shown with a retry.
+  const [saveError, setSaveError] = useState<"start" | number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [nextPhaseContent, setNextPhaseContent] = useState<number | null>(null);
@@ -196,6 +198,7 @@ export default function LessonProgressBar({
       // Prevent multiple clicks and transitions
       if (phaseLoading || isTransitioning) return;
 
+      setSaveError(null);
       setIsTransitioning(true);
 
       // Start fade out animation
@@ -233,6 +236,7 @@ export default function LessonProgressBar({
           response.status,
           response.statusText,
         );
+        setSaveError("start");
         // Reset fade state on error
         setFadeOut(false);
         setNextPhaseContent(null);
@@ -240,6 +244,7 @@ export default function LessonProgressBar({
       }
     } catch (error) {
       console.error("Error starting lesson:", error);
+      setSaveError("start");
       // Reset fade state on error
       setFadeOut(false);
       setNextPhaseContent(null);
@@ -264,6 +269,7 @@ export default function LessonProgressBar({
     }
 
     try {
+      setSaveError(null);
       setIsTransitioning(true);
       setPaused(true);
       const newTask = Task + 1;
@@ -307,12 +313,14 @@ export default function LessonProgressBar({
           response.status,
           response.statusText,
         );
+        setSaveError(Task);
         setFadeOut(false);
         setNextPhaseContent(null);
         setPhaseLoading(false);
       }
     } catch (error) {
       console.error("Error updating phase:", error);
+      setSaveError(Task);
       // Reset fade state on error
       setFadeOut(false);
       setNextPhaseContent(null);
@@ -475,289 +483,132 @@ export default function LessonProgressBar({
     setCurrentTask(Task + 1);
   };
 
-  useEffect(() => {
-    if (contentRef.current) {
-      setMaxHeight(isExpanded ? `${contentRef.current.scrollHeight}px` : "0px");
-    }
-  }, [isExpanded]);
+  const retrySave = () => {
+    if (saveError === "start") void startLesson();
+    else if (saveError !== null) void nextTask(saveError, timer);
+  };
+  const busy = phaseLoading || isTransitioning;
+  const spinner = (
+    <span
+      aria-hidden="true"
+      className="size-5 rounded-full border-2 border-current border-t-transparent motion-safe:animate-spin"
+    />
+  );
 
   return (
-    <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 xl:grid-cols-4 xl:gap-6">
+      {/* Step rail: first in the DOM, so phones see it above the task (audit S3); sidebar from 1280 px. */}
+      <div className="min-w-0 xl:order-last xl:col-span-1">
+        <LessonStepRail
+          steps={Array.from({ length: 14 }, (_, index) => getTaskDisplayName(index + 1))}
+          current={currentTask}
+          timer={currentTask >= 2 && currentTask < 14 ? <LessonTimer seconds={timer} /> : undefined}
+        />
+      </div>
+
       {/* Main Content Area */}
-      <div className="xl:col-span-3">
+      <div className="min-w-0 xl:col-span-3">
         {phaseLoading && !fadeOut ? (
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-900">
-            <div className="animate-pulse space-y-6">
-              <div className="h-8 w-1/2 rounded-lg bg-gray-200 dark:bg-gray-800"></div>
-              <div className="space-y-4">
-                <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-800"></div>
-                <div className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-800"></div>
-                <div className="h-4 w-1/2 rounded bg-gray-200 dark:bg-gray-800"></div>
-              </div>
-            </div>
+          <div aria-busy="true" className="bg-card flex flex-col gap-4 rounded-2xl border p-6 shadow-sm">
+            <ShimmerSkeleton className="h-8 w-1/2" />
+            <ShimmerSkeleton className="h-4 w-full" />
+            <ShimmerSkeleton className="h-4 w-3/4" />
+            <ShimmerSkeleton className="h-4 w-1/2" />
           </div>
         ) : (
           <div className="space-y-6">
             {/* Phase Content */}
             <div
-              className={`transform transition-all duration-300 ease-in-out ${
-                fadeOut
-                  ? "translate-y-4 scale-95 opacity-0"
-                  : "translate-y-0 scale-100 opacity-100"
-              }`}
+              className={cn(
+                "transition-[opacity,translate,scale] duration-300 ease-in-out",
+                fadeOut ? "translate-y-4 scale-95 opacity-0" : "translate-y-0 scale-100 opacity-100",
+              )}
             >
               {getTaskComponent(currentTask)}
             </div>
 
+            {saveError !== null ? (
+              <ErrorState
+                className="bg-card border"
+                title={t("saveError")}
+                description={t("saveErrorHint")}
+                action={
+                  <Button type="button" className="min-h-12 px-6" onClick={retrySave}>
+                    {tError("retry")}
+                  </Button>
+                }
+              />
+            ) : null}
+
             {/* Navigation Buttons */}
-            <div
-              className={`mt-6 transition-all duration-300 ease-in-out ${
-                fadeOut ? "pointer-events-none opacity-50" : "opacity-100"
-              }`}
-            >
+            <div className={cn("transition-opacity duration-300", fadeOut ? "pointer-events-none opacity-50" : "opacity-100")}>
               {currentTask === 1 && (
-                <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                <div className="bg-card rounded-2xl border p-4 shadow-sm">
                   <Button
                     size="lg"
-                    className="group relative w-full transform overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 px-6 py-4 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+                    className="min-h-12 w-full rounded-xl text-base font-semibold"
                     onClick={startLesson}
-                    disabled={phaseLoading || isTransitioning}
+                    disabled={busy}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                    <div className="relative flex items-center justify-center">
-                      {phaseLoading || isTransitioning ? (
-                        <>
-                          <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                          <span>
-                            {t("actions.starting", { default: "Starting..." })}
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          {/* <span>{t("startLesson")}</span> */}
-                          {t("actions.startLesson", {
-                            default: "Start Lesson",
-                          })}
-                          <ArrowLeft className="ml-3 h-5 w-5 rotate-180 transition-transform group-hover:translate-x-1" />
-                        </>
-                      )}
-                    </div>
+                    {busy ? (
+                      <>
+                        {spinner}
+                        {t("actions.starting")}
+                      </>
+                    ) : (
+                      <>
+                        {t("actions.startLesson")}
+                        <ArrowLeft className="size-5 rotate-180" aria-hidden="true" />
+                      </>
+                    )}
                   </Button>
                 </div>
               )}
 
               {currentTask < 14 && currentTask > 1 && (
-                <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-900">
-                  <div className="flex gap-4">
-                    {/* Back Button - Only show if phase > 2 */}
-                    {currentTask > 2 && (
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="group relative flex-1 transform overflow-hidden rounded-xl border-2 border-slate-300 px-6 py-4 text-base font-semibold text-slate-700 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-400 hover:text-slate-800 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:text-slate-200"
-                        onClick={previousTask}
-                        disabled={phaseLoading || isTransitioning}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-slate-50 to-slate-100 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-slate-800 dark:to-slate-700" />
-                        <div className="relative flex items-center justify-center">
-                          {phaseLoading || isTransitioning ? (
-                            <>
-                              <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-slate-400 border-t-transparent" />
-                              <span>
-                                {t("actions.processing", {
-                                  default: "Processing...",
-                                })}
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <ArrowLeft className="mr-3 h-5 w-5 transition-transform group-hover:-translate-x-1" />
-                              {/* <span>{t("previousPhase")}</span> */}
-                              {t("actions.previousTask", {
-                                default: "Previous Task",
-                              })}
-                            </>
-                          )}
-                        </div>
-                      </Button>
-                    )}
-
-                    {/* Next Button */}
+                <div className="bg-card flex gap-3 rounded-2xl border p-4 shadow-sm">
+                  {/* Back Button - Only show if phase > 2 */}
+                  {currentTask > 2 && (
                     <Button
+                      variant="outline"
                       size="lg"
-                      className={`${currentTask > 2 ? "flex-1" : "w-full"} group relative transform overflow-hidden rounded-xl bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 px-6 py-4 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:from-emerald-600 hover:via-green-600 hover:to-teal-600 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 ${
-                        shakeButton ? "animate-shake" : ""
-                      }`}
-                      onClick={() => nextTask(currentTask, timer)}
-                      disabled={phaseLoading || isTransitioning}
+                      className="min-h-12 flex-1 rounded-xl text-base font-semibold"
+                      onClick={previousTask}
+                      disabled={busy}
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      <div className="relative flex items-center justify-center">
-                        {phaseLoading || isTransitioning ? (
-                          <>
-                            <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            <span>
-                              {t("actions.processing", {
-                                default: "Processing...",
-                              })}
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            {/* <span>{t("nextPhase")}</span> */}
-                            {t("actions.nextTask", { default: "Next Task" })}
-                            <ArrowLeft className="ml-3 h-5 w-5 rotate-180 transition-transform group-hover:translate-x-1" />
-                          </>
-                        )}
-                      </div>
+                      <ArrowLeft className="size-5" aria-hidden="true" />
+                      {t("actions.previousTask")}
                     </Button>
-                  </div>
+                  )}
+
+                  {/* Next Button */}
+                  <Button
+                    size="lg"
+                    className={cn(
+                      "min-h-12 rounded-xl text-base font-semibold",
+                      currentTask > 2 ? "flex-1" : "w-full",
+                      shakeButton && "animate-shake",
+                    )}
+                    onClick={() => nextTask(currentTask, timer)}
+                    disabled={busy}
+                  >
+                    {busy ? (
+                      <>
+                        {spinner}
+                        {t("actions.processing")}
+                      </>
+                    ) : (
+                      <>
+                        {t("actions.nextTask")}
+                        <ArrowLeft className="size-5 rotate-180" aria-hidden="true" />
+                      </>
+                    )}
+                  </Button>
                 </div>
               )}
             </div>
           </div>
         )}
-      </div>
-
-      {/* Sidebar - Progress Tracker */}
-      <div className="xl:col-span-1">
-        <div className="sticky top-6">
-          <div className="overflow-hidden rounded-2xl border border-gray-300 bg-gray-200 shadow-lg dark:border-gray-700 dark:bg-gray-900">
-            {/* Progress Header */}
-            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-4">
-              <div className="flex items-center justify-between text-white">
-                <div>
-                  <h3 className="font-semibold">
-                    {t("progress.title", { default: "Progress" })}
-                  </h3>
-                  <p className="text-sm opacity-90">
-                    {t("progress.taskOfTotal", {
-                      task: currentTask,
-                      total: 14,
-                      default: `Task ${currentTask} of 14`,
-                    })}
-                  </p>
-                </div>
-                {currentTask >= 2 && currentTask < 14 && (
-                  <div className="flex items-center gap-2 rounded-lg bg-white/20 px-3 py-1">
-                    <Timer className="h-4 w-4" />
-                    <LessonTimer seconds={timer} />
-                  </div>
-                )}
-              </div>
-
-              {/* Progress Bar */}
-              <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/20">
-                <div
-                  className="h-2 rounded-full bg-white transition-all duration-700 ease-out"
-                  style={{ width: `${(currentTask / 14) * 100}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Phase List */}
-            <div className="p-6">
-              {/* Mobile Accordion */}
-              <div className="xl:hidden">
-                <div className="mb-4 flex items-center justify-between">
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    {t("progress.currentTask", {
-                      task: currentTask,
-                      default: `Current: Task ${currentTask}`,
-                    })}
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    aria-label={tComponents("toggleDetails")}
-                    aria-expanded={isExpanded}
-                  >
-                    {isExpanded ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-
-                <div
-                  ref={contentRef}
-                  style={{ maxHeight }}
-                  className="overflow-hidden transition-all duration-500 ease-in-out"
-                >
-                  <div className="space-y-3">
-                    {Array.from({ length: 14 }, (_, index) => {
-                      const isActive = index + 1 === currentTask;
-                      const isCompleted = index + 1 < currentTask;
-
-                      return (
-                        <div
-                          key={index}
-                          className="flex items-center space-x-3"
-                        >
-                          <div
-                            className={`h-3 w-3 flex-shrink-0 rounded-full transition-all duration-300 ${
-                              isActive
-                                ? "scale-110 bg-blue-500 ring-4 ring-blue-100 dark:ring-blue-900"
-                                : isCompleted
-                                  ? "scale-100 bg-green-500"
-                                  : "scale-90 bg-gray-300 dark:bg-gray-600"
-                            }`}
-                          />
-                          <span
-                            className={`text-sm transition-all duration-200 ${
-                              isCompleted
-                                ? "text-gray-400 line-through"
-                                : isActive
-                                  ? "font-medium text-blue-600 dark:text-blue-400"
-                                  : "text-gray-600 dark:text-gray-400"
-                            }`}
-                          >
-                            {index + 1}. {getTaskDisplayName(index + 1)}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Desktop List */}
-              <div className="hidden space-y-3 xl:block">
-                {Array.from({ length: 14 }, (_, index) => {
-                  const isActive = index + 1 === currentTask;
-                  const isCompleted = index + 1 < currentTask;
-
-                  return (
-                    <div key={index} className="flex items-center space-x-3">
-                      <div
-                        className={`h-3 w-3 flex-shrink-0 rounded-full transition-all duration-300 ${
-                          isActive
-                            ? "scale-110 bg-blue-500 ring-4 ring-blue-100 dark:ring-blue-900"
-                            : isCompleted
-                              ? "scale-100 bg-green-500"
-                              : "scale-90 bg-gray-300 dark:bg-gray-600"
-                        }`}
-                      />
-                      <span
-                        className={`text-sm leading-tight transition-all duration-200 ${
-                          isCompleted
-                            ? "text-gray-400 line-through"
-                            : isActive
-                              ? "font-medium text-blue-600 dark:text-blue-400"
-                              : "text-gray-600 dark:text-gray-400"
-                        }`}
-                      >
-                        {index + 1}. {getTaskDisplayName(index + 1)}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -175,7 +175,7 @@ import TeacherDashboard from "../../app/[locale]/teacher/dashboard/page";
 import LessonPage from "../../app/[locale]/(student)/student/lesson/[id]/page";
 import UserProfilePage from "../../app/[locale]/(student)/settings/user-profile/page";
 import ReadPage from "../../app/[locale]/(student)/student/read/[articleId]/page";
-import PrimaryStudentGamesPage from "../../app/[locale]/(student)/student/games/page";
+import PrimaryStudentGamesPage from "../../app/[locale]/(student)/student/games/(catalog)/page";
 import MyClassesPage from "../../app/[locale]/teacher/my-classes/page";
 import TeacherGameChallengesPage from "../../app/[locale]/teacher/game-challenges/page";
 import type { LicenseWithSchool } from "@/types";
@@ -365,7 +365,7 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Somchai" }));
 
     await waitFor(() =>
-      expect(mocks.replace).toHaveBeenCalledWith("/en/student/read"),
+      expect(mocks.replace).toHaveBeenCalledWith("/en/student/home"),
     );
   });
 
@@ -509,7 +509,7 @@ describe("FR-5 marketing and auth metadata", () => {
     expect(signinMeta.title).toBeTruthy();
 
     const games = await import(
-      "../../app/[locale]/(student)/student/games/page"
+      "../../app/[locale]/(student)/student/games/(catalog)/page"
     );
     const gamesMeta = await games.generateMetadata({
       params: Promise.resolve({ locale: "en" }),

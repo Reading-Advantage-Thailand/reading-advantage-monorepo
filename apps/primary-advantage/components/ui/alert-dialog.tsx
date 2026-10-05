@@ -1,17 +1,30 @@
 "use client"
 
+// Kept local (Phase 2a, M3): the package AlertDialog is edge to edge with square corners
+// below 640 px. This copy keeps a 1 rem margin, rounded corners, and the dark overlay.
+
 import * as React from "react"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
+/**
+ * Root of a confirmation dialog that needs an answer before the user continues.
+ * @param props Radix AlertDialog root props.
+ * @returns The dialog root.
+ */
 function AlertDialog({
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
 }
 
+/**
+ * Element that opens the alert dialog.
+ * @param props Radix trigger props.
+ * @returns The trigger.
+ */
 function AlertDialogTrigger({
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Trigger>) {
@@ -20,6 +33,11 @@ function AlertDialogTrigger({
   )
 }
 
+/**
+ * Portal that renders the dialog at the end of the document body.
+ * @param props Radix portal props.
+ * @returns The portal.
+ */
 function AlertDialogPortal({
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Portal>) {
@@ -28,6 +46,11 @@ function AlertDialogPortal({
   )
 }
 
+/**
+ * Dark layer behind the dialog.
+ * @param props Radix overlay props and an optional className.
+ * @returns The overlay.
+ */
 function AlertDialogOverlay({
   className,
   ...props
@@ -44,6 +67,11 @@ function AlertDialogOverlay({
   )
 }
 
+/**
+ * Dialog panel, centered, with a 1 rem margin on phones.
+ * @param props Radix content props and an optional className.
+ * @returns The panel inside a portal, with the overlay.
+ */
 function AlertDialogContent({
   className,
   ...props
@@ -63,6 +91,11 @@ function AlertDialogContent({
   )
 }
 
+/**
+ * Header area for the title and description.
+ * @param props Div attributes.
+ * @returns The header.
+ */
 function AlertDialogHeader({
   className,
   ...props
@@ -76,6 +109,11 @@ function AlertDialogHeader({
   )
 }
 
+/**
+ * Footer area for the action buttons (stacked on phones).
+ * @param props Div attributes.
+ * @returns The footer.
+ */
 function AlertDialogFooter({
   className,
   ...props
@@ -92,6 +130,11 @@ function AlertDialogFooter({
   )
 }
 
+/**
+ * Dialog title (gives the dialog its accessible name).
+ * @param props Radix title props.
+ * @returns The title.
+ */
 function AlertDialogTitle({
   className,
   ...props
@@ -105,6 +148,11 @@ function AlertDialogTitle({
   )
 }
 
+/**
+ * Dialog description (gives the dialog its accessible description).
+ * @param props Radix description props.
+ * @returns The description.
+ */
 function AlertDialogDescription({
   className,
   ...props
@@ -118,6 +166,11 @@ function AlertDialogDescription({
   )
 }
 
+/**
+ * Button that confirms the action and closes the dialog.
+ * @param props Radix action props.
+ * @returns The action button.
+ */
 function AlertDialogAction({
   className,
   ...props
@@ -130,6 +183,11 @@ function AlertDialogAction({
   )
 }
 
+/**
+ * Button that cancels and closes the dialog.
+ * @param props Radix cancel props.
+ * @returns The cancel button.
+ */
 function AlertDialogCancel({
   className,
   ...props

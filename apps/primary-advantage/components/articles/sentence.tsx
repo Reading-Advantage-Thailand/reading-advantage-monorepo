@@ -12,7 +12,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { FileTextIcon } from "lucide-react";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@reading-advantage/ui";
 import AudioButton from "../audio-button";
 import { useLocale, useTranslations } from "next-intl";
 

@@ -14,6 +14,7 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        glow: "bg-primary text-primary-foreground shadow-[0_4px_20px_rgb(6_199_85/0.25)] hover:bg-primary/90 hover:shadow-[0_8px_32px_rgb(6_199_85/0.35)] motion-safe:transition-[background-color,box-shadow,translate] motion-safe:hover:-translate-y-px motion-safe:active:translate-y-0",
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -29,12 +30,18 @@ const buttonVariants = cva(
   }
 );
 
+/** Props for Button: native button attributes, a variant (including the brand "glow"), a size, and asChild. */
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
 
+/**
+ * Renders a button, or its single child element when asChild is set.
+ * @param props Button attributes, variant, size, and asChild.
+ * @returns The styled button element.
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";

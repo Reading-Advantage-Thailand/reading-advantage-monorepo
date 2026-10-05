@@ -1,165 +1,129 @@
 "use client";
-import { Link } from "@/i18n/navigation";
-import { usePathname } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { SidebarNavItem } from "@/types";
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  LucideIcon,
-  Lock,
-} from "lucide-react";
+import { NavLink, SidebarNavItem } from "@/types";
+import { ChevronRight, LucideIcon, Lock } from "lucide-react";
 import * as Icons from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import {
-  hasPermission,
-  hasAnyPermission,
-  UserForPermissions,
-} from "@/lib/permissions";
+import { hasAnyPermission, UserForPermissions } from "@/lib/permissions";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { activeKey, type ActiveCandidate } from "@/lib/nav-area";
 
 interface SidebarNavProps {
   items?: SidebarNavItem[];
   user?: UserForPermissions | null | undefined;
+  /** Accessible name of the nav landmark. */
+  label?: string;
 }
 
-export function SidebarNav({ items, user }: SidebarNavProps) {
+type AnyNavItem = SidebarNavItem | NavLink;
+
+/**
+ * Looks up a lucide icon by name.
+ * @param name The lucide-react export name.
+ * @returns The icon component, or null.
+ */
+function iconFor(name?: string): LucideIcon | null {
+  return name ? ((Icons[name as keyof typeof Icons] as LucideIcon) ?? null) : null;
+}
+
+/**
+ * Renders the role menu as a vertical list with collapsible groups. Items without
+ * permission are hidden or shown locked. The one active link gets aria-current="page".
+ * @param props The menu items, the user for permission checks, and the landmark label.
+ * @returns The menu, or null when there are no items.
+ */
+export function SidebarNav({ items, user, label }: SidebarNavProps) {
   const path = usePathname();
-  // const pathWithoutLocale = "/" + path.split("/").slice(2).join("/");
   const t = useTranslations("Sidebar");
   const tSubItem = useTranslations("Sidebar.subItem");
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
-
   const toggleSection = (sectionKey: string) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [sectionKey]: !prev[sectionKey],
-    }));
+    setOpenSections((prev) => ({ ...prev, [sectionKey]: !prev[sectionKey] }));
   };
 
-  const isItemActive = (href: string) => {
-    // Exact match for the current path
-    return path === href;
-  };
-
-  const isParentActive = (href: string) => {
-    // For parent paths, check if current path starts with the href followed by a slash
-    // This prevents false positives like /teacher/my-students matching /teacher/my-students-archive
-    return path.startsWith(href + "/");
-  };
-
-  const isAnyChildActive = (items: any[]) => {
-    return items?.some((child) => child.href && isItemActive(child.href));
-  };
-
-  const hasExactChildMatch = (items: any[]) => {
-    return items?.some((child) => child.href && path === child.href);
-  };
-
-  // Permission checking helpers
-  const hasItemPermission = (item: SidebarNavItem | any) => {
-    if (!item.requiredPermissions || item.requiredPermissions.length === 0) {
-      return true; // No permissions required
-    }
-    return hasAnyPermission(user, item.requiredPermissions);
-  };
-
-  const shouldHideItem = (item: SidebarNavItem | any) => {
-    return item.hideWhenNoPermission && !hasItemPermission(item);
-  };
-
-  const isItemLocked = (item: SidebarNavItem | any) => {
-    return !item.hideWhenNoPermission && !hasItemPermission(item);
-  };
-
-  // Filter out hidden items
-  const filterItems = (itemsList: any[]) => {
-    return itemsList?.filter((item) => !shouldHideItem(item)) || [];
-  };
+  const hasItemPermission = (item: AnyNavItem) =>
+    !item.requiredPermissions?.length || hasAnyPermission(user, item.requiredPermissions);
+  const shouldHideItem = (item: AnyNavItem) => item.hideWhenNoPermission && !hasItemPermission(item);
+  const isItemLocked = (item: AnyNavItem) => !item.hideWhenNoPermission && !hasItemPermission(item);
+  const filterItems = <T extends AnyNavItem>(list: T[] = []) => list.filter((item) => !shouldHideItem(item));
 
   if (!items?.length) {
     return null;
   }
 
-  // Filter items based on permissions
   const visibleItems = filterItems(items);
+
+  // One active link for the whole menu: the longest matching href (ties go to the later item).
+  const candidates: ActiveCandidate[] = [];
+  visibleItems.forEach((item, index) => {
+    const children = filterItems(item.items ?? []);
+    if (children.length > 0) {
+      children.forEach((child, subIndex) => {
+        if (child.href && !isItemLocked(child)) candidates.push({ key: `${index}.${subIndex}`, prefixes: [child.href] });
+      });
+    } else if (item.href && !isItemLocked(item)) {
+      candidates.push({ key: `${index}`, prefixes: [item.href] });
+    }
+  });
+  const activeId = activeKey(candidates, path);
+
+  const linkClass = (active: boolean, locked: boolean, disabled?: boolean) =>
+    cn(
+      "group hover:bg-accent hover:text-accent-foreground flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+      active ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-muted-foreground",
+      (disabled || locked) && "cursor-not-allowed opacity-80",
+    );
 
   return (
     <TooltipProvider>
-      {path.startsWith("/settings") && (
-        <button
-          className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-500"
-          onClick={() => window.history.back()}
-        >
-          <ChevronLeft width={16} height={16} />
-          {t("back")}
-        </button>
-      )}
-      <nav className="mb-4 flex flex-col gap-1 lg:mb-0">
-        {visibleItems.map((item: SidebarNavItem, index) => {
-          const Icon = item.icon
-            ? (Icons[item.icon as keyof typeof Icons] as LucideIcon)
-            : null;
-
+      <nav aria-label={label} className="flex flex-col gap-1">
+        {visibleItems.map((item, index) => {
+          const Icon = iconFor(item.icon);
           const sectionKey = `${item.title}-${index}`;
           const isLocked = isItemLocked(item);
-          const filteredChildItems = filterItems(item.items || []);
-          const isOpen =
-            openSections[sectionKey] ??
-            (isAnyChildActive(filteredChildItems) ||
-              (item.href && isParentActive(item.href)));
+          const childItems = filterItems(item.items ?? []);
+          const childActive = activeId?.startsWith(`${index}.`) ?? false;
 
-          // If item has children that are visible after filtering, render as collapsible
-          if (filteredChildItems.length > 0) {
+          if (childItems.length > 0) {
+            const isOpen =
+              openSections[sectionKey] ??
+              (childActive || Boolean(item.href && path.startsWith(item.href + "/")));
             return (
-              <Collapsible
-                key={index}
-                open={isOpen}
-                onOpenChange={() => toggleSection(sectionKey)}
-              >
+              <Collapsible key={index} open={isOpen} onOpenChange={() => toggleSection(sectionKey)}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <CollapsibleTrigger asChild>
                       <button
+                        type="button"
                         className={cn(
-                          "group hover:bg-accent hover:text-accent-foreground flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                          // Only highlight parent if no child has exact match AND parent path matches
-                          isAnyChildActive(filteredChildItems) ||
-                            (!hasExactChildMatch(filteredChildItems) &&
-                              item.href &&
-                              isItemActive(item.href))
-                            ? "bg-accent text-accent-foreground"
-                            : "text-muted-foreground",
-                          (item.disabled || isLocked) &&
-                            "cursor-not-allowed opacity-80",
-                          isLocked && "text-muted-foreground/60",
+                          linkClass(childActive, isLocked, item.disabled),
+                          "w-full justify-between",
                         )}
                         disabled={item.disabled || isLocked}
                       >
-                        <div className="flex items-center">
+                        <span className="flex items-center">
                           {isLocked ? (
-                            <Lock className="mr-2 h-4 w-4" />
+                            <Lock className="mr-2 h-4 w-4" aria-hidden="true" />
                           ) : (
-                            Icon && <Icon className="mr-2 h-4 w-4" />
+                            Icon && <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
                           )}
-                          <span className="truncate capitalize">
-                            {t(item.title)}
-                          </span>
-                        </div>
+                          <span className="truncate capitalize">{t(item.title)}</span>
+                        </span>
                         <ChevronRight
+                          aria-hidden="true"
                           className={cn(
                             "h-4 w-4 transition-transform duration-200",
                             isOpen && "rotate-90",
@@ -171,59 +135,37 @@ export function SidebarNav({ items, user }: SidebarNavProps) {
                   </TooltipTrigger>
                   {isLocked && (
                     <TooltipContent>
-                      <p>You don&apos;t have permission to access this section</p>
+                      <p>{t("noPermissionSection")}</p>
                     </TooltipContent>
                   )}
                 </Tooltip>
                 <CollapsibleContent className="border-border/40 ml-4 space-y-1 border-l py-1 pl-3">
-                  {filteredChildItems.map((subItem, subIndex) => {
-                    const SubIcon = subItem.icon
-                      ? (Icons[
-                          subItem.icon as keyof typeof Icons
-                        ] as LucideIcon)
-                      : null;
-
+                  {childItems.map((subItem, subIndex) => {
+                    const SubIcon = iconFor(subItem.icon);
                     const isSubItemLocked = isItemLocked(subItem);
-
+                    const active = activeId === `${index}.${subIndex}`;
                     return (
                       <Tooltip key={subIndex}>
                         <TooltipTrigger asChild>
                           <Link
-                            href={
-                              subItem.disabled || isSubItemLocked
-                                ? "#"
-                                : subItem.href
-                            }
-                            className={cn(
-                              "group hover:bg-accent hover:text-accent-foreground flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                              subItem.href &&
-                                isItemActive(subItem.href) &&
-                                !isSubItemLocked
-                                ? "bg-accent text-accent-foreground"
-                                : "text-muted-foreground",
-                              (subItem.disabled || isSubItemLocked) &&
-                                "cursor-not-allowed opacity-80",
-                              isSubItemLocked && "text-muted-foreground/60",
-                            )}
+                            href={subItem.disabled || isSubItemLocked ? "#" : subItem.href}
+                            aria-current={active ? "page" : undefined}
+                            className={linkClass(active, isSubItemLocked, subItem.disabled)}
                             onClick={(e) => {
-                              if (subItem.disabled || isSubItemLocked) {
-                                e.preventDefault();
-                              }
+                              if (subItem.disabled || isSubItemLocked) e.preventDefault();
                             }}
                           >
                             {isSubItemLocked ? (
-                              <Lock className="mr-2 h-4 w-4" />
+                              <Lock className="mr-2 h-4 w-4" aria-hidden="true" />
                             ) : (
-                              SubIcon && <SubIcon className="mr-2 h-4 w-4" />
+                              SubIcon && <SubIcon className="mr-2 h-4 w-4" aria-hidden="true" />
                             )}
-                            <span className="truncate capitalize">
-                              {tSubItem(subItem.title)}
-                            </span>
+                            <span className="truncate capitalize">{tSubItem(subItem.title)}</span>
                           </Link>
                         </TooltipTrigger>
                         {isSubItemLocked && (
                           <TooltipContent>
-                            <p>You don&apos;t have permission to access this page</p>
+                            <p>{t("noPermissionPage")}</p>
                           </TooltipContent>
                         )}
                       </Tooltip>
@@ -234,43 +176,34 @@ export function SidebarNav({ items, user }: SidebarNavProps) {
             );
           }
 
-          // Regular navigation item without children OR parent with all children filtered out but has href
           if (!item.href) {
             return null;
           }
 
+          const active = activeId === `${index}`;
           return (
             <Tooltip key={index}>
               <TooltipTrigger asChild>
                 <Link
                   id={item.id}
                   href={item.disabled || isLocked ? "#" : item.href}
-                  className={cn(
-                    "group hover:bg-accent hover:text-accent-foreground flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                    isItemActive(item.href) && !isLocked
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground",
-                    (item.disabled || isLocked) &&
-                      "cursor-not-allowed opacity-80",
-                    isLocked && "text-muted-foreground/60",
-                  )}
+                  aria-current={active ? "page" : undefined}
+                  className={linkClass(active, isLocked, item.disabled)}
                   onClick={(e) => {
-                    if (item.disabled || isLocked) {
-                      e.preventDefault();
-                    }
+                    if (item.disabled || isLocked) e.preventDefault();
                   }}
                 >
                   {isLocked ? (
-                    <Lock className="mr-2 h-4 w-4" />
+                    <Lock className="mr-2 h-4 w-4" aria-hidden="true" />
                   ) : (
-                    Icon && <Icon className="mr-2 h-4 w-4" />
+                    Icon && <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
                   )}
                   <span className="truncate capitalize">{t(item.title)}</span>
                 </Link>
               </TooltipTrigger>
               {isLocked && (
                 <TooltipContent>
-                  <p>You don&apos;t have permission to access this page</p>
+                  <p>{t("noPermissionPage")}</p>
                 </TooltipContent>
               )}
             </Tooltip>

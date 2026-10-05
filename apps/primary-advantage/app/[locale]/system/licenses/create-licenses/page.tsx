@@ -1,5 +1,5 @@
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import { Button } from "@/components/ui/button";
 import { CreateLicenseForm } from "./create-license-form";
 import { ArrowLeft } from "lucide-react";

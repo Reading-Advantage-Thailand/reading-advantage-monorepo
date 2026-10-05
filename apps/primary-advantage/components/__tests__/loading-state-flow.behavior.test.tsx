@@ -6,11 +6,11 @@
  * hoisted components and hooks).
  *
  * Mapping to the deleted static cases in loading-state-invariants.test.ts:
- * - FR-12 student assignments router nav -> row dialog action calls
- *   router.push with the lesson path and leaves window.location alone.
+ * - FR-12 student assignments navigation -> each assignment card links to
+ *   its lesson through the i18n Link (client navigation, no full reload).
  * - FR-12 deck-view router refresh -> refresh button calls router.refresh
  *   after a study session completes.
- * - FR-12 dashboard retry without reload -> retry button calls
+ * - FR-12 dashboard retry without reload -> the shared retry button calls
  *   router.refresh instead of reloading the page.
  * - FR-10 response.ok guard -> failed fetch never reaches response.json and
  *   the dashboard falls back; success fetch renders the assignment title.
@@ -22,10 +22,11 @@
  *   fetch after the debounce delay.
  * - FR-5 skipped duplicate mount fetch -> mounting the history table fires
  *   exactly one records fetch.
- * - FR-6 AssignmentDetailDialog module scope -> the open dialog keeps its
- *   DOM node across parent re-renders.
- * - FR-6 hoisted table debounce hook -> rapid keystrokes in the table settle
- *   into one assignments fetch after the debounce delay.
+ * - FR-6 AssignmentCard module scope -> a card link keeps its DOM node
+ *   across parent re-renders (the old detail dialog is gone: the cards show
+ *   every field).
+ * - FR-6 hoisted list debounce hook -> rapid keystrokes in the assignment
+ *   search settle into one assignments fetch after the debounce delay.
  * - FR-6 StudentRow module scope -> roster rows keep their DOM nodes across
  *   parent re-renders.
  * - FR-6 LessonTimer module scope -> the timer label keeps its DOM node and
@@ -112,14 +113,14 @@ vi.mock("../teacher/class-code-generator", () => ({
   default: () => null,
 }));
 
-import StudentAssignmentTable from "../student-assignment-table";
+import StudentAssignmentList from "../student/assignment-list";
 import { SingleDeckViewInline } from "../flashcards/deck-view";
-import { DashboardRetryButton } from "../flashcards/dashboard-retry-button";
+import { RetryButton } from "../shared/retry-button";
 import AssignmentDashboard from "../teacher/assignment-dashboard";
 import Assignments from "../teacher/assignments";
 import { DataTable } from "../ui/data-table";
 import StudentsPage from "../../app/[locale]/admin/students/page";
-import { HistoryTable } from "../dashboard/history-table";
+import { HistoryList } from "../student/history-list";
 import EnhancedClassRoster from "../teacher/enhanced-class-roster";
 import LessonProgressBar from "../lesson/lesson-progress-bar";
 import { QuizContextProvider } from "@/contexts/question-context";
@@ -146,17 +147,7 @@ afterEach(() => {
 });
 
 /**
- * Sets a fake mobile viewport before the table measures it on mount.
- */
-function useMobileViewport(): void {
-  Object.defineProperty(window, "innerWidth", {
-    value: 500,
-    configurable: true,
-  });
-}
-
-/**
- * One student-assignment row accepted by the table.
+ * One student-assignment row accepted by the assignment list.
  */
 function studentAssignment(id: string, title: string) {
   return {
@@ -218,25 +209,23 @@ function baseArticle(): Article {
 }
 
 describe("FR-12 router navigation instead of full reloads", () => {
-  it("navigates to the lesson through the router when the row action fires", async () => {
-    useMobileViewport();
-    const startUrl = window.location.href;
+  it("links each assignment card to its lesson through the i18n Link", async () => {
     renderWithMessages(
-      <StudentAssignmentTable
+      <StudentAssignmentList
         initialAssignments={[
           studentAssignment("s1", "Reading Quiz") as never,
           studentAssignment("s2", "Word Drill") as never,
         ]}
       />,
     );
-    fireEvent.click(await screen.findByText("Reading Quiz"));
-    fireEvent.click(
-      await screen.findByRole("button", {
-        name: en.Assignment.studentAssignmentTable.goToLesson,
+    expect(
+      await screen.findByRole("link", {
+        name: `${en.StudentAssignments.start}: Reading Quiz`,
       }),
-    );
-    expect(pushMock).toHaveBeenCalledWith("/student/lesson/assignment-s1");
-    expect(window.location.href).toBe(startUrl);
+    ).toHaveAttribute("href", "/student/lesson/assignment-s1");
+    expect(
+      screen.getByRole("link", { name: `${en.StudentAssignments.start}: Word Drill` }),
+    ).toHaveAttribute("href", "/student/lesson/assignment-s2");
   });
 
   it("refreshes the deck view through the router after a session", async () => {
@@ -272,8 +261,9 @@ describe("FR-12 router navigation instead of full reloads", () => {
   });
 
   it("retries the flashcard dashboard through the router", () => {
-    renderWithMessages(<DashboardRetryButton />);
-    fireEvent.click(screen.getByRole("button", { name: "Try Again" }));
+    // The dashboard error state uses the shared retry button (the local one is gone).
+    renderWithMessages(<RetryButton />);
+    fireEvent.click(screen.getByRole("button", { name: en.Error.retry }));
     expect(refreshMock).toHaveBeenCalledTimes(1);
   });
 });
@@ -411,7 +401,7 @@ describe("FR-5 debounced admin search and single history fetch", () => {
     expect(String(fetchMock.mock.calls.at(-1)?.[0])).toContain("search=ana");
   });
 
-  it("fires exactly one records fetch on history table mount", async () => {
+  it("fires exactly one records fetch on history list mount", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -419,51 +409,45 @@ describe("FR-5 debounced admin search and single history fetch", () => {
         pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
       }),
     });
-    renderWithMessages(<HistoryTable variant="history" />);
+    renderWithMessages(<HistoryList variant="history" />);
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     expect(String(fetchMock.mock.calls[0]?.[0])).toContain("article-records");
   });
 });
 
 describe("FR-6 hoisted components and hooks keep state across renders", () => {
-  it("keeps the open assignment dialog node across parent re-renders", async () => {
-    useMobileViewport();
+  it("keeps the assignment card nodes across parent re-renders", async () => {
     renderWithMessages(
-      <StudentAssignmentTable
+      <StudentAssignmentList
         initialAssignments={[
           studentAssignment("s1", "Reading Quiz") as never,
         ]}
       />,
     );
-    fireEvent.click(await screen.findByText("Reading Quiz"));
-    const dialog = await screen.findByRole("dialog");
+    const linkName = `${en.StudentAssignments.start}: Reading Quiz`;
+    const link = await screen.findByRole("link", { name: linkName });
     const search = screen.getByPlaceholderText(
-      en.Assignment.studentAssignmentTable.searchPlaceholder,
+      en.StudentAssignments.searchPlaceholder,
     );
     fireEvent.change(search, { target: { value: "word" } });
-    // The dialog survives the parent re-render on the same DOM node.
-    expect(await screen.findByRole("dialog")).toBe(dialog);
-    expect(
-      screen.getByRole("button", {
-        name: en.Assignment.studentAssignmentTable.goToLesson,
-      }),
-    ).toBeInTheDocument();
+    // The card survives the parent re-render (before the debounce fires) on the same DOM node.
+    expect(screen.getByRole("link", { name: linkName })).toBe(link);
   });
 
-  it("settles rapid table search keystrokes into one assignments fetch", async () => {
+  it("settles rapid assignment search keystrokes into one assignments fetch", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
       json: async () => ({ assignments: [], pagination: {} }),
     });
     renderWithMessages(
-      <StudentAssignmentTable
+      <StudentAssignmentList
         initialAssignments={[
           studentAssignment("s1", "Reading Quiz") as never,
         ]}
       />,
     );
     const search = await screen.findByPlaceholderText(
-      en.Assignment.studentAssignmentTable.searchPlaceholder,
+      en.StudentAssignments.searchPlaceholder,
     );
     vi.useFakeTimers();
     let query = "";

@@ -141,7 +141,8 @@ describe("Primary writer behavior", () => {
     });
     const [storedUser] = await harness.db.select().from(users);
 
-    expect(result).toHaveProperty("success");
+    // Only the id: the full row carried the password hash (Phase 2 review item 3).
+    expect(result).toEqual({ success: "User created successfully", user: { id: storedUser.id } });
     expect(storedUser.id).toMatch(/^[0-9a-f-]{36}$/);
     expect(storedUser.username).toBe("learner@example.com");
     expect(storedUser.displayUsername).toBe("Learner@Example.com");

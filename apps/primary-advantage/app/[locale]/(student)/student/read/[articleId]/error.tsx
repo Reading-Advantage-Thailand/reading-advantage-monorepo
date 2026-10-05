@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { RouteError } from "@/components/shared/route-error";
 
 /**
- * Error boundary for the article reader. Shows the 404 copy only for a real
- * not-found, and a generic retryable state for every other failure.
- * @param error The thrown error.
- * @param reset Retries rendering the failed segment.
- * @returns The article error fallback.
+ * Error boundary for the article view: the article failed to load. A missing article is not an
+ * error here; the page shows its own not-found state.
+ * @param props.error The thrown error.
+ * @param props.reset Retries rendering the failed segment.
+ * @returns The article error state with a retry and a link back to the stories.
  */
 export default function ArticleError({
   error,
@@ -18,65 +17,16 @@ export default function ArticleError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const t = useTranslations("Error");
-
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
-
-  if (error.digest === "NEXT_NOT_FOUND") {
-    return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center px-4 py-12 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-        <div className="w-full space-y-6 text-center">
-          <div className="space-y-3">
-            <h1 className="animate-bounce text-4xl font-bold tracking-tighter sm:text-5xl">
-              404
-            </h1>
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
-              Article Not Found
-            </h1>
-            <p className="text-gray-500">
-              Sorry, we couldn&apos;t find the article you&apos;re looking for.
-            </p>
-          </div>
-          <Link
-            href="/student/read"
-            className="inline-flex h-10 items-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:ring-1 focus-visible:ring-gray-950 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-            prefetch={false}
-          >
-            Return to Articles
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
+  const t = useTranslations("ReadList");
+  const te = useTranslations("Error");
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center px-4 py-12 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-      <div className="w-full space-y-6 text-center">
-        <div className="space-y-3">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
-            {t("title")}
-          </h1>
-          <p className="text-gray-500">{t("description")}</p>
-        </div>
-        <div className="flex items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={() => reset()}
-            className="inline-flex h-10 items-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:ring-1 focus-visible:ring-gray-950 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-          >
-            {t("retry")}
-          </button>
-          <Link
-            href="/student/read"
-            className="inline-flex h-10 items-center rounded-md border px-8 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
-            prefetch={false}
-          >
-            Return to Articles
-          </Link>
-        </div>
-      </div>
-    </div>
+    <RouteError
+      error={error}
+      reset={reset}
+      title={t("articleError")}
+      description={te("description")}
+      backHref="/student/read"
+      backLabel={t("backToStories")}
+    />
   );
 }

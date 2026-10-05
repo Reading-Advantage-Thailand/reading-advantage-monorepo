@@ -5,8 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
+import { Separator, Label, Alert, AlertDescription } from "@reading-advantage/ui";
 import {
   Play,
   BookOpen,
@@ -24,7 +23,6 @@ import {
   GraduationCap,
   CheckCircle,
 } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useRouter } from "@/i18n/navigation";
 import { FlashcardGameInline } from "./flashcard-game";
 import { getDeckCards } from "@/actions/flashcard";

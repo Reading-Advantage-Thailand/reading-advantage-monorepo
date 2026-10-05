@@ -1,34 +1,27 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ShimmerSkeleton } from "@reading-advantage/ui";
+
+/**
+ * Loading state of the article view: the article card and the side column (tools and
+ * question cards) as shimmer placeholders in the same layout as the page.
+ * @returns The skeleton.
+ */
 export default function ArticleLoading() {
   return (
-    <div className="md:mb-5 md:flex md:flex-row md:gap-3">
-      <div className="mt-4 md:basis-3/5">
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <Skeleton className="mt-2 h-14 w-full" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-[500px] w-full" />
-            <Skeleton className="mt-2 h-8 w-full" />
-            <Skeleton className="mt-2 h-14 w-full" />
-            <Skeleton className="mt-2 h-10 w-full" />
-          </CardContent>
-        </Card>
+    <div aria-busy="true" className="flex flex-col gap-4 xl:flex-row xl:items-start">
+      <div className="bg-card flex min-w-0 flex-col gap-4 rounded-2xl border p-6 xl:basis-3/5">
+        <ShimmerSkeleton className="h-10 w-3/4" />
+        <div className="flex gap-2">
+          <ShimmerSkeleton className="h-6 w-14 rounded-full" />
+          <ShimmerSkeleton className="h-6 w-28 rounded-full" />
+        </div>
+        <ShimmerSkeleton className="h-16 w-full" />
+        <ShimmerSkeleton className="h-12 w-full" />
+        <ShimmerSkeleton className="h-96 w-full" />
       </div>
-      <div className="mt-4 mb-40 flex flex-col md:mb-0 md:basis-2/5">
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-[100px] w-full" />
-          </CardHeader>
-        </Card>
-        <Card className="mt-3">
-          <CardHeader>
-            <Skeleton className="h-[398px] w-full" />
-          </CardHeader>
-        </Card>
+      <div className="flex min-w-0 flex-col gap-4 xl:basis-2/5">
+        <ShimmerSkeleton className="h-20 rounded-2xl" />
+        <ShimmerSkeleton className="h-40 rounded-2xl" />
+        <ShimmerSkeleton className="h-40 rounded-2xl" />
       </div>
     </div>
   );

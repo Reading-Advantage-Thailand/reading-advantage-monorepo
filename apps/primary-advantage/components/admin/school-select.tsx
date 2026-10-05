@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useSession } from "@reading-advantage/auth-client";
-import { Label } from "@/components/ui/label";
+import { Label } from "@reading-advantage/ui";
 import {
   Select,
   SelectContent,

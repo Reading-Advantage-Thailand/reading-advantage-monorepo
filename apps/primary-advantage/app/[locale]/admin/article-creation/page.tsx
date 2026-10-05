@@ -1,6 +1,6 @@
 import AdminArticleCreation from "@/components/admin/article-creation";
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import React from "react";
 import { getTranslations } from "next-intl/server";
 

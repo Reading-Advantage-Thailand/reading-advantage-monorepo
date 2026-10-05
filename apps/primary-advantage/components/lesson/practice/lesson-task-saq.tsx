@@ -14,7 +14,7 @@ import { QuizContext, QuizContextProvider } from "@/contexts/question-context";
 import TextareaAutosize from "react-textarea-autosize";
 import { Button } from "@/components/ui/button";
 import { finishQuiz, getFeedback } from "@/actions/question";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@reading-advantage/ui";
 import {
   Form,
   FormControl,

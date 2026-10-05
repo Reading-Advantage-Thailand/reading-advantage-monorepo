@@ -38,6 +38,10 @@
     }
   },
   "Sidebar": {
+    "home": "Home",
+    "me": "Me",
+    "noPermissionSection": "You don't have permission to open this section",
+    "noPermissionPage": "You don't have permission to open this page",
     "read": "Read",
     "games": "Games",
     "stories": "Stories",
@@ -90,6 +94,7 @@
     "noDataAvailable": "No data available for this month"
   },
   "Question": {
+    "descriptionEmpty": "This story has no questions of this kind yet.",
     "SAQuestion": {
       "title": "Short Answer Question",
       "description": "Answer the question in a few words",
@@ -745,7 +750,20 @@
       "MC_QUESTION": "Multiple Choice Question",
       "SA_QUESTION": "Short Answer Question",
       "LA_QUESTION": "Long Answer Question",
-      "ARTICLE_READ": "Article Read"
+      "ARTICLE_READ": "Article Read",
+      "ARTICLE_RATING": "Story rating",
+      "STORIES_RATING": "Story series rating",
+      "STORIES_READ": "Story series read",
+      "CHAPTER_RATING": "Chapter rating",
+      "CHAPTER_READ": "Chapter read",
+      "LEVEL_TEST": "Level test",
+      "SENTENCE_FLASHCARDS": "Sentence flashcards",
+      "SENTENCE_MATCHING": "Sentence matching",
+      "SENTENCE_ORDERING": "Sentence ordering",
+      "SENTENCE_WORD_ORDERING": "Word ordering",
+      "SENTENCE_CLOZE_TEST": "Fill in the blank",
+      "VOCABULARY_FLASHCARDS": "Word flashcards",
+      "VOCABULARY_MATCHING": "Word matching"
     },
     "level": {
       "title": "CEFR Level",
@@ -767,7 +785,9 @@
         "C1-": "You can understand complex texts with some effort. Your vocabulary lets you read about many different topics, and you can figure out less obvious details, although sometimes you might need to reread certain parts.",
         "C1": "You can read long and challenging texts and understand most of what's happening. You enjoy stories and articles that make you think, and you can talk about them using good vocabulary without having to search too hard for the right words.",
         "C1+": "You're a super reader who can handle challenging texts and understand different writing styles. You're really good at figuring out the less obvious parts of stories and articles, and you usually know what words mean without having to look them up.",
-        "C2": "You can read and understand almost anything. You can understand the main ideas of complex texts and enjoy reading more challenging books and articles. You can talk about almost anything and use the language with confidence."
+        "C2": "You can read and understand almost anything. You can understand the main ideas of complex texts and enjoy reading more challenging books and articles. You can talk about almost anything and use the language with confidence.",
+        "A0-": "You are starting to learn English. You know some letters and a few words, especially with pictures.",
+        "A0+": "You know more simple words and names. You can understand very short phrases with pictures, like signs and labels."
       }
     },
     "progress": {
@@ -787,7 +807,21 @@
       "activeThisWeekDescription": "{count} of {total} students",
       "studentList": "Student List",
       "xpLabel": "{xp} XP"
-    }
+    },
+    "loadError": "We could not load your reports.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "noActivity": "No activity yet",
+    "noActivityHint": "Read a story or play a game, and your activity shows here.",
+    "showAllActivity": "Show all activity",
+    "noXp": "No XP on these days",
+    "noXpHint": "Read and practice to earn XP.",
+    "noXpOverall": "No XP yet",
+    "noReading": "No stories read yet",
+    "noReadingHint": "Read a story to see your reading stats.",
+    "groupBy": "Group by",
+    "groupType": "Type",
+    "groupGenre": "Genre",
+    "groupSubgenre": "Topic"
   },
   "Overall": {
     "roles": {
@@ -1551,6 +1585,16 @@
     }
   },
   "Lesson": {
+    "rail": {
+      "stepName": "Step {step} of {total}: {name}",
+      "showSteps": "Show all steps",
+      "hideSteps": "Hide steps",
+      "done": "done"
+    },
+    "saveError": "We could not save your progress.",
+    "saveErrorHint": "Check the internet connection and try again.",
+    "notFound": "We could not find this lesson",
+    "notFoundHint": "Pick a story to read instead.",
     "Reading": {
       "firstTitle": "First Reading",
       "deepTitle": "Deep Reading",
@@ -2243,7 +2287,8 @@
         "actions": {
           "actions": "Actions",
           "details": "Details"
-        }
+        },
+        "noDueDate": "No due date"
       },
       "empty": {
         "noAssignments": "No assignments found",
@@ -2465,7 +2510,8 @@
       "deleteCount": "Delete ({count})",
       "cancel": "Cancel",
       "edit": "Edit",
-      "noStudentsInSelectedStatus": "No Students In Selected Status"
+      "noStudentsInSelectedStatus": "No Students In Selected Status",
+      "noDueDate": "No due date"
     }
   },
   "AdminTeachers": {
@@ -2698,8 +2744,16 @@
     "signInToPlayGame": "Sign in to play this game"
   },
   "StudentGames": {
-    "title": "Student games",
-    "description": "Play the live Advantage Play Kit catalog. Each card opens the authenticated APK route."
+    "title": "Games",
+    "description": "Play games with the words and sentences you learn.",
+    "wordGames": "Word games",
+    "wordGamesHint": "Practice the words you know.",
+    "sentenceGames": "Sentence games",
+    "sentenceGamesHint": "Put words in order to make sentences.",
+    "empty": "No games yet",
+    "emptyHint": "Ask your teacher when the games are ready.",
+    "loadError": "We could not load the games.",
+    "loadErrorHint": "Check the internet connection and try again."
   },
   "Footer": {
     "tagline": "Providing the best English learning experience.",
@@ -2935,5 +2989,169 @@
       "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
       "generic": "Something went wrong. Try again."
     }
+  },
+  "AppShell": {
+    "skipToContent": "Skip to main content",
+    "accountMenu": "Account menu",
+    "toggleTheme": "Switch light or dark theme",
+    "mainNavigation": "Main navigation",
+    "publicNavigation": "Site navigation",
+    "openMenu": "Open menu",
+    "menu": "Menu",
+    "tabs": {
+      "home": "Home",
+      "read": "Read",
+      "games": "Games",
+      "me": "Me",
+      "classes": "Classes",
+      "assignments": "Assignments",
+      "reports": "Reports",
+      "dashboard": "Dashboard",
+      "teachers": "Teachers",
+      "students": "Students",
+      "import": "Import",
+      "schools": "Schools",
+      "licenses": "Licenses"
+    }
+  },
+  "StudentHome": {
+    "title": "Home",
+    "greeting": "Hi, {name}!",
+    "subtitle": "Ready to read today?",
+    "progress": "My progress",
+    "streak": "Day streak",
+    "streakValue": "{count, plural, =0 {No streak yet} one {# day} other {# days}}",
+    "xp": "XP",
+    "level": "Level",
+    "todayLesson": "Today's lesson",
+    "dueDate": "Due {date}",
+    "noDueDate": "No due date",
+    "overdue": "Late",
+    "startLesson": "Start lesson",
+    "continueLesson": "Continue lesson",
+    "continueReading": "Continue reading",
+    "keepReading": "Keep reading",
+    "noReading": "No story in progress",
+    "noReadingHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "games": "Games",
+    "gamesHint": "Play word games and earn XP.",
+    "playGames": "Play games"
+  },
+  "ReadList": {
+    "title": "Read",
+    "subtitle": "Pick a story at your level.",
+    "yourLevel": "Your level: {level}",
+    "filters": "Story filters",
+    "chooseType": "Choose a type",
+    "chooseGenre": "Choose a genre",
+    "chooseSubgenre": "Choose a topic",
+    "stories": "Stories",
+    "empty": "No stories here yet",
+    "emptyHint": "Try another genre or topic.",
+    "loadingMore": "Loading more...",
+    "scrollMore": "Scroll down to load more",
+    "loadMoreError": "We could not load more stories.",
+    "loadError": "We could not load the stories.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "started": "Started",
+    "completed": "Completed",
+    "approved": "Approved",
+    "lesson": "Study as a lesson",
+    "lessonLabel": "Study {title} as a lesson",
+    "notFound": "We could not find this story",
+    "notFoundHint": "It may have been removed. Pick another story.",
+    "backToStories": "Back to stories",
+    "articleError": "We could not open this story.",
+    "disclaimer": "This story, its pictures, and its audio are made by a computer for learning English. Check facts with another source before you use them in school work."
+  },
+  "StudentAssignments": {
+    "title": "My assignments",
+    "subtitle": "Lessons from your teacher.",
+    "filters": "Assignment filters",
+    "search": "Search assignments",
+    "searchPlaceholder": "Search by name",
+    "searching": "Searching...",
+    "status": "Show",
+    "statusAll": "All",
+    "statusNotStarted": "To do",
+    "statusInProgress": "Started",
+    "statusCompleted": "Done",
+    "due": "Due date",
+    "dueAll": "Any date",
+    "dueOverdue": "Late",
+    "dueToday": "Due today",
+    "dueUpcoming": "Coming up",
+    "noDueDate": "No due date",
+    "dueOn": "Due {date}",
+    "daysLeft": "{days, plural, one {# day left} other {# days left}}",
+    "late": "Late",
+    "from": "From {teacher}",
+    "start": "Start lesson",
+    "continue": "Continue",
+    "review": "Look again",
+    "empty": "No assignments yet",
+    "emptyHint": "When your teacher gives you a lesson, it shows here.",
+    "findStory": "Find a story",
+    "noMatch": "No assignments match",
+    "noMatchHint": "Try another filter.",
+    "showAll": "Show all",
+    "loadError": "We could not load your assignments.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading assignments",
+    "pages": "Assignment pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "Flashcards": {
+    "vocabularyTitle": "My words",
+    "vocabularySubtitle": "Practice the words you saved from stories.",
+    "sentencesTitle": "My sentences",
+    "sentencesSubtitle": "Practice the sentences you saved from stories.",
+    "practiceTabs": "Practice type",
+    "loadError": "We could not load your cards.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "vocabularyEmpty": "No words saved yet",
+    "vocabularyEmptyHint": "Read a story and save new words. They show here for practice.",
+    "sentencesEmpty": "No sentences saved yet",
+    "sentencesEmptyHint": "Read a story and save sentences. They show here for practice.",
+    "findStory": "Find a story"
+  },
+  "StudentHistory": {
+    "title": "My reading",
+    "subtitle": "Stories you read, and stories to read again.",
+    "readAgain": "Read again",
+    "readAgainHint": "Reading these stories again can help you do better.",
+    "readAgainAction": "Read again",
+    "records": "Stories I read",
+    "recordsHint": "Every story you opened, newest first.",
+    "search": "Search stories",
+    "searchPlaceholder": "Search by title",
+    "searching": "Searching...",
+    "score": "Score {score}",
+    "readOn": "Read {date}",
+    "status": {
+      "READ": "Read",
+      "UNRATED": "Not rated yet",
+      "COMPLETED_MCQ": "Quiz done",
+      "COMPLETED_SAQ": "Short answers done",
+      "COMPLETED_LAQ": "Writing done"
+    },
+    "noReadAgain": "Nothing to read again",
+    "noReadAgainHint": "Great work! Keep reading new stories.",
+    "noRecords": "No stories read yet",
+    "noRecordsHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "noMatch": "No stories match",
+    "noMatchHint": "Try another word.",
+    "showAll": "Show all",
+    "loadError": "We could not load your reading history.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading stories",
+    "pages": "Story pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
   }
 }

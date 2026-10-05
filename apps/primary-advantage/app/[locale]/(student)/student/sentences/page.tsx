@@ -1,59 +1,86 @@
+import { Suspense } from "react";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FlashcardDashboard from "@/components/flashcards/flashcard-dashboard";
+import { FlashcardDeckSkeleton } from "@/components/flashcards/flashcard-dashboard-skeleton";
 import SentencesOrderingPage from "@/components/practice/order-sentences-page";
 import ClozeTestPage from "@/components/practice/cloze-test-page";
 import OrderWordPage from "@/components/practice/order-words-page";
 import ManageTab from "@/components/manage-tab";
 import { getAllSentenceCards } from "@/actions/flashcard";
 import MatchingGamePage from "@/components/practice/matching-page";
-import { getTranslations } from "next-intl/server";
 
+/** Practice tabs in display order, with their message keys in SentencesPage. */
+const TABS = [
+  { value: "flashcard", label: "sentences" },
+  { value: "orderSentence", label: "orderSentence" },
+  { value: "clozeTest", label: "clozeTest" },
+  { value: "orderWord", label: "orderWord" },
+  { value: "matching", label: "matching" },
+  { value: "manage", label: "manage.heading" },
+] as const;
+
+/**
+ * Page title for the sentences page.
+ * @returns The metadata.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Flashcards");
+  return { title: t("sentencesTitle") };
+}
+
+/**
+ * Sentences page: the title, one row of practice tabs (it scrolls sideways on phones, 48 px
+ * tabs), and the sentence flashcard deck with its own loading, empty, and error states. The
+ * practice activities are unchanged.
+ * @returns The page.
+ */
 export default async function SentencesPage() {
-  const flashcardsResult = await getAllSentenceCards();
-  const t = await getTranslations("SentencesPage");
+  const [flashcardsResult, t, tPage] = await Promise.all([
+    getAllSentenceCards(),
+    getTranslations("Flashcards"),
+    getTranslations("SentencesPage"),
+  ]);
 
   return (
-    <>
-      <Tabs defaultValue="flashcard">
-        <TabsList className="grid h-fit w-full grid-cols-1 md:grid-cols-6">
-          <TabsTrigger value="flashcard" className="text-xs sm:text-sm">
-            {t("sentences")}
-          </TabsTrigger>
-          <TabsTrigger value="orderSentence" className="text-xs sm:text-sm">
-            {t("orderSentence")}
-          </TabsTrigger>
-          <TabsTrigger value="clozeTest" className="text-xs sm:text-sm">
-            {t("clozeTest")}
-          </TabsTrigger>
-          <TabsTrigger value="orderWord" className="text-xs sm:text-sm">
-            {t("orderWord")}
-          </TabsTrigger>
-          <TabsTrigger value="matching" className="text-xs sm:text-sm">
-            {t("matching")}
-          </TabsTrigger>
-          <TabsTrigger value="manage" className="text-xs sm:text-sm">
-            {t("manage.heading")}
-          </TabsTrigger>
+    <div className="flex flex-col gap-6">
+      <header className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold md:text-3xl">{t("sentencesTitle")}</h1>
+        <p className="text-muted-foreground">{t("sentencesSubtitle")}</p>
+      </header>
+      <Tabs defaultValue="flashcard" className="gap-4">
+        <TabsList
+          aria-label={t("practiceTabs")}
+          className="h-auto w-full justify-start overflow-x-auto rounded-xl p-1"
+        >
+          {TABS.map((tab) => (
+            <TabsTrigger key={tab.value} value={tab.value} className="h-12 flex-none rounded-lg px-4 text-sm">
+              {tPage(tab.label)}
+            </TabsTrigger>
+          ))}
         </TabsList>
-        <TabsContent className="mt-4" value="flashcard">
-          <FlashcardDashboard type="SENTENCE" />
+        <TabsContent value="flashcard">
+          <Suspense fallback={<div aria-busy="true"><FlashcardDeckSkeleton /></div>}>
+            <FlashcardDashboard type="SENTENCE" />
+          </Suspense>
         </TabsContent>
-        <TabsContent className="mt-4" value="orderSentence">
+        <TabsContent value="orderSentence">
           <SentencesOrderingPage />
         </TabsContent>
-        <TabsContent className="mt-4" value="clozeTest">
+        <TabsContent value="clozeTest">
           <ClozeTestPage />
         </TabsContent>
-        <TabsContent className="mt-4" value="orderWord">
+        <TabsContent value="orderWord">
           <OrderWordPage />
         </TabsContent>
-        <TabsContent className="mt-4" value="matching">
+        <TabsContent value="matching">
           <MatchingGamePage />
         </TabsContent>
-        <TabsContent className="mt-4" value="manage">
+        <TabsContent value="manage">
           <ManageTab data={flashcardsResult.cards || []} />
         </TabsContent>
       </Tabs>
-    </>
+    </div>
   );
 }
