@@ -9,8 +9,11 @@
  *   /assets/apk3d/fonts/...              HUD fonts
  *
  * Usage: node scripts/sync-assets.mjs <public-dir>   (the target folders are replaced).
+ *
+ * Each 3D pack folder (`/packs/<pack>/`) is replaced on its own. Other folders under `/packs/` stay:
+ * the app commits the avatar pack of its RPG pages at `/packs/avatar/`.
  */
-import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -23,8 +26,9 @@ if (!process.argv[2]) {
   process.exit(1);
 }
 
+if (!existsSync(join(assets, "packs"))) throw new Error(`missing ${join(assets, "packs")}`);
 const copies = [
-  [join(assets, "packs"), join(target, "packs")],
+  ...readdirSync(join(assets, "packs")).map((pack) => [join(assets, "packs", pack), join(target, "packs", pack)]),
   [join(assets, "apk", "primary-chibi-2d"), join(target, "assets", "apk", "primary-chibi-2d")],
   [fonts, join(target, "assets", "apk3d", "fonts")],
 ];
