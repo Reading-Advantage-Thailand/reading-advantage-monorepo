@@ -8,7 +8,7 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 
 ## Phase 0: Discovery
 - [x] Facts verified 2026-10-06: tags and per-question objectives in all 250 Workbooks packages; `glossedNodes` in 222; the importer keeps tags only in `primary_book_lessons.package`; the importer deletes and reinserts question rows per import; `primary_legacy_id_map` maps `articles` (question ids: to confirm with the lane-m migration track)
-- [x] The workbooks session builds `content/primary/tags.json`; the entry shape was agreed by message on 2026-10-06 (spec FR-2)
+- [x] The workbooks session committed `content/primary/tags.json` (Workbooks `6e63a50`, 2026-10-06); validated against the agreed shape the same day; two extra fields (`title`, `role`) and the two-sense-node case recorded in spec FR-2. Legacy ids are null for the 222 new packages until Workbooks injects them (before the rehearsals, after Daniel grants database access); Workbooks re-exports after the injection and tags the 28 printed packages' vocabulary then
 - [ ] Task: Confirm with the lane-m migration track whether `primary_legacy_id_map` will hold question ids at the cutover; record the answer here and pick the question join (FR-5)
 
 ## Phase 1: Contract and Schema Definition

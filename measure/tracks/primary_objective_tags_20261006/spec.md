@@ -39,10 +39,21 @@ rewritten in the same transaction or cascade with the question row.
   `~/Desktop/Workbooks/docs/content-plans/data/a0-objective-key.json` and
   `a1-objective-key.json`. A Zod contract validates the file at load. A lookup function
   resolves a short id to its node and throws on an unknown id.
-- FR-2 (tags export contract): A Zod contract for `tags.json` entries:
-  `{ key, book, lesson, level, legacy: { articleId, questions: Record<packageQuestionId, cuid> } | null, articleObjectives: [{ shortId, role: "target" | "supporting" }], vocabulary: [{ word, pos, nodeId, role: "glossed" | "recycled" }], questions: [{ id, type: "mcq" | "saq" | "laq", objectives: [shortId] }] }`
-  with a header `{ generatedAt, objectiveKey, graphRelease: { gse, vocabulary } }`. An entry
-  with an unknown short id fails validation with the key and the id in the message.
+- FR-2 (tags export contract): A Zod contract for the Workbooks export
+  `content/primary/tags.json` (committed 2026-10-06, Workbooks `6e63a50`; validated the same
+  day: 250 packages, 138 objectives in the key, 5,000 questions, vocabulary on 222 packages,
+  legacy ids on the 28 printed packages). Shape:
+  - header: `{ version: 1, generatedAt, source, graphs: { gse, vocabulary }, objectiveKey: Record<shortId, { nodeId, gse, skill, text }>, packages: [...] }`.
+    Each graph record names the file, commit, commit date, and schema version; the contract
+    reads `file`, `commit`, and `schemaVersion` as the `graphRelease` and passes the rest
+    through unread.
+  - package: `{ key, book, lesson, title, role: "workbook" | "bank", level, legacy: { articleId, questions: Record<packageQuestionId, cuid> } | null, articleObjectives: [{ shortId, role: "target" | "supporting" }], vocabulary: [{ word, pos, nodeId, role: "glossed" | "recycled" }], questions: [{ id, type: "mcq" | "saq" | "laq", objectives: [shortId] }] }`.
+  - `word` is the node's normalized form and `pos` is the last segment of the node id. One
+    word and part of speech can appear twice with two sense nodes (141 such pairs); both
+    rows are kept.
+  A short id missing from the header key fails validation with the package key and the id
+  in the message. The contract validates the header key against the objective key in code
+  (FR-1) and reports node ids that differ.
 - FR-3 (tables): Three additive tables with the `primary_` prefix, classified `EXEMPT` in
   `tenant-registry.ts` like `primary_book_lessons` (content catalogue, no `schoolId`):
   - `primary_article_objectives` (`articleId` FK articles cascade, `shortId`, `nodeId`,
@@ -51,7 +62,8 @@ rewritten in the same transaction or cascade with the question row.
     `mcq | saq | laq`, `shortId`, `nodeId`, `graphRelease`; unique on question, type, short
     id; FK to the matching question table with cascade so a reimport removes stale rows).
   - `primary_article_word_nodes` (`articleId` FK cascade, `word`, `pos`, `nodeId`, `role`
-    `glossed | recycled`; unique on article, word, pos).
+    `glossed | recycled`; unique on article and node id, because one word can carry two
+    sense nodes).
   Migration `0070_primary_objective_tags`, append-only; `--required-migration
   0070_primary_objective_tags` in `apps/primary-advantage/cloudbuild.yaml`. No change to the
   tables Tutor reads.
@@ -107,7 +119,8 @@ rewritten in the same transaction or cascade with the question row.
 
 - Evidence recording, knowledge state, recommendations, and views (T2 to T5).
 - A lemma matcher for the 28 printed-book packages without vocabulary nodes. The workbooks
-  session was asked to tag them; if it declines, a follow-up track adds the matcher.
+  session tags them with its pipeline after the injection of the 222 new packages and
+  re-exports `tags.json`.
 - Tagging legacy online articles that have no package.
 - Any change to Workbooks files or to the legacy database.
 - Reading Advantage.
