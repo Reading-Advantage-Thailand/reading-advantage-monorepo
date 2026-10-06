@@ -60,7 +60,9 @@ rewritten in the same transaction or cascade with the question row.
     `role`, `graphRelease`; unique on article, short id, role).
   - `primary_question_objectives` (`articleId`, `questionId` uuid, `questionType`
     `mcq | saq | laq`, `shortId`, `nodeId`, `graphRelease`; unique on question, type, short
-    id; FK to the matching question table with cascade so a reimport removes stale rows).
+    id). The question id is polymorphic, so the row has no FK to a question table; it has an
+    FK to the article with cascade, and the importer deletes an article's rows before it
+    rewrites the questions, so a reimport leaves no stale row.
   - `primary_article_word_nodes` (`articleId` FK cascade, `word`, `pos`, `nodeId`, `role`
     `glossed | recycled`; unique on article and node id, because one word can carry two
     sense nodes).
