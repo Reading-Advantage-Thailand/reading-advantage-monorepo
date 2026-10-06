@@ -1168,3 +1168,12 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [~] **Track: Primary Mastery Evidence (T2 of the Primary Mastery Graph Program)** (created 2026-10-06 at the owner's request; lane-h; Phases 0-4 implemented and verified on a clone of the production copy the same day, 1361 evidence rows from 1065 legacy quiz rows; merged into integration 146e46261; the per-phase owner checks are open) *Link: [./tracks/primary_mastery_evidence_20261006/](./tracks/primary_mastery_evidence_20261006/)*
   `recordPrimaryEvidence`, the evidence policy as data (program 4.2), the question, flashcard, and game source adapters, the durable job, tenant scoping, and the evidence summary for calibration. Shadow mode: evidence only, no adaptation, no UI.
+
+- [ ] **Track: Science Advantage Relaunch** *Link: [./tracks/science_advantage_relaunch_20261006/](./tracks/science_advantage_relaunch_20261006/)*
+  Review of apps/science-advantage and the Nov 2026 to May 2027 plan: Science as a program of the shared platform, workbook digital twin, Mastery tag/shadow/adaptive. All decisions approved 2026-10-06; Phase 0 in progress.
+
+- [ ] **Track: Math Advantage Program** *Link: [./tracks/math_advantage_program_20261006/](./tracks/math_advantage_program_20261006/)*
+  Math as a program of the shared platform: P3 and P4 Book 1, generated practice on the Mastery runtime, demo 2027-03-08. All decisions approved 2026-10-06; Phase 0 in progress.
+
+- [ ] **Track: Zhongwen Advantage Program** *Link: [./tracks/zhongwen_advantage_program_20261006/](./tracks/zhongwen_advantage_program_20261006/)*
+  Zhongwen as a program of the shared platform: YCT 1 and 2, English lesson shape with a script layer, demo 2027-03-29 for May 2027 (Daniel's decision). All decisions approved 2026-10-06; Phase 0 in progress.
