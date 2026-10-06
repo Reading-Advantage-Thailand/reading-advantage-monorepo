@@ -55,7 +55,8 @@ views (T5) come after.
   records no evidence; a listening objective (`L` short id) counts only when the article
   audio played during the step; LAQ and Reedy record nothing. A pure function
   `rateEvidence(surface, outcome, context)` returns the rating, the confidence, and
-  `counts`, or `null` for "no evidence".
+  `counts`, or a skip with its reason (`no-evidence`, `too-fast`, `blank`,
+  `listening-without-audio`).
 - FR-2 (source event contracts): Zod schemas for the three source events, each carrying the
   source table and row id for idempotency:
   `questionAnswerEvent` (userId, articleId, questionId, questionType, mode `teacher_led` |
