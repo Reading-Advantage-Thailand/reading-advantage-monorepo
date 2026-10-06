@@ -52,8 +52,10 @@ views (T5) come after.
   and whether the evidence may count toward `mastered`. Rules: teacher-led MCQ 0.5 instead
   of 0.8; a hint, a reveal, or an open translation panel before the answer lowers the
   confidence one step (0.8 to 0.5, 0.5 to 0.3); a blank answer or an answer under two seconds
-  records no evidence; a listening objective (`L` short id) counts only when the article
-  audio played during the step; LAQ and Reedy record nothing. A pure function
+  records no evidence; a listening objective (`L` short id) is skipped when the step reports
+  that the article audio did not play (`audioPlayed: false`; a row without the key, legacy or
+  from a screen that does not track audio yet, keeps its evidence); LAQ and Reedy record
+  nothing. A pure function
   `rateEvidence(surface, outcome, context)` returns the rating, the confidence, and
   `counts`, or a skip with its reason (`no-evidence`, `too-fast`, `blank`,
   `listening-without-audio`).

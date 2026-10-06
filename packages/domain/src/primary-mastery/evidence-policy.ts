@@ -152,7 +152,8 @@ export function rateEvidence(surface: EvidenceSurface, outcome: EvidenceOutcome,
   if (row.confidence === null) return { kind: "skip", reason: "no-evidence" };
   if (outcome.blank) return { kind: "skip", reason: "blank" };
   if (outcome.answerMs !== undefined && outcome.answerMs < MIN_ANSWER_MS) return { kind: "skip", reason: "too-fast" };
-  if (context.objectiveSkill === "Listening" && !context.audioPlayed) return { kind: "skip", reason: "listening-without-audio" };
+  // Only a reported "no" skips: a legacy row, or a screen that does not track audio yet, leaves the key out, and the owner rule keeps that evidence.
+  if (context.objectiveSkill === "Listening" && context.audioPlayed === false) return { kind: "skip", reason: "listening-without-audio" };
   const base = context.mode === "teacher_led" && row.teacherLedConfidence != null ? row.teacherLedConfidence : row.confidence;
   const confidence = context.hintUsed ? (STEP_DOWN[String(base)] ?? base) : base;
   return { kind: "evidence", rating: ratingOf(surface, outcome), confidence, countsTowardMastered: row.countsTowardMastered, hintUsed: Boolean(context.hintUsed) };

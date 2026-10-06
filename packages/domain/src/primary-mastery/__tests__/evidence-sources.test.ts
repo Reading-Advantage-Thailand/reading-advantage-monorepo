@@ -39,6 +39,16 @@ describe("loadPrimaryEvidenceEvent (FR-5, FR-6)", () => {
     });
   });
 
+  it("reads legacy details stored as a JSON string inside the jsonb column (the production shape)", async () => {
+    const legacyRow = { id: ROW, userId: STUDENT, schoolId: SCHOOL, activityType: "MC_QUESTION", targetId: ARTICLE, createdAt: AT, details: JSON.stringify({ score: 1, responses: [{ question: "What is in the box?", answer: "A puppy", isCorrect: "A puppy" }] }) };
+    const loaded = await loadPrimaryEvidenceEvent({
+      db: createMockDb({ selectSequence: [[legacyRow], [{ id: Q1, question: "What is in the box?" }]] }) as unknown as DB,
+      payload: { sourceTable: "user_activity", rowId: ROW },
+    });
+    expect(loaded?.event.kind === "question-step" && loaded.event.questions).toEqual([{ questionId: Q1, questionType: "mcq", correct: true, firstTry: true }]);
+    expect(loaded?.legacyUnmatched).toBeUndefined();
+  });
+
   it("rebuilds a legacy SAQ row from its question text and the reviewer score out of 5", async () => {
     const legacyRow = { id: ROW, userId: STUDENT, schoolId: SCHOOL, activityType: "SA_QUESTION", targetId: ARTICLE, createdAt: AT, details: { question: "Why is the puppy sad?", yourAnswer: "...", score: 3, feedback: "ok" } };
     const loaded = await loadPrimaryEvidenceEvent({

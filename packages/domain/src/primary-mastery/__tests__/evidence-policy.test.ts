@@ -56,8 +56,9 @@ describe("evidence policy (FR-1, program 4.2)", () => {
     expect(rateEvidence("mcq", { correct: true, answerMs: MIN_ANSWER_MS }, independent)).toMatchObject({ kind: "evidence" });
   });
 
-  it("skips a listening objective when the audio did not play, and keeps it when it did", () => {
-    expect(rateEvidence("mcq", { correct: true }, { ...independent, objectiveSkill: "Listening" })).toEqual({ kind: "skip", reason: "listening-without-audio" });
+  it("skips a listening objective when the audio is reported not played, and keeps it when it played or when the row does not say", () => {
+    expect(rateEvidence("mcq", { correct: true }, { ...independent, objectiveSkill: "Listening", audioPlayed: false })).toEqual({ kind: "skip", reason: "listening-without-audio" });
+    expect(rateEvidence("mcq", { correct: true }, { ...independent, objectiveSkill: "Listening" })).toMatchObject({ kind: "evidence" });
     expect(rateEvidence("mcq", { correct: true }, { ...independent, objectiveSkill: "Listening", audioPlayed: true })).toMatchObject({ kind: "evidence" });
     expect(rateEvidence("mcq", { correct: true }, { ...independent, objectiveSkill: "Reading" })).toMatchObject({ kind: "evidence" });
   });

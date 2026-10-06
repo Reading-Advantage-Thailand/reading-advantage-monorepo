@@ -43,6 +43,22 @@ const iso = (value: unknown): string => (value instanceof Date ? value : new Dat
 const normalizeText = (text: string): string => text.replace(/\s+/g, " ").trim().toLowerCase();
 
 /**
+ * Returns the details object of a quiz row. A copy of the legacy data can carry `details` as a
+ * JSON string inside the jsonb column (the first ETL run of 2026-10-06 double-encoded every
+ * jsonb cell), so a string is parsed once; an object passes through; anything else becomes null.
+ * @param details The raw `user_activity.details` value.
+ * @returns The details object, or null when the value is not JSON.
+ */
+export function quizDetails(details: unknown): unknown {
+  if (typeof details !== "string") return details;
+  try {
+    return JSON.parse(details);
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Rebuilds the per-question answers of a quiz row saved before T2 by matching its question
  * texts against the article's question rows (the tags backfill's text rule). Unmatched text
  * is counted, never guessed.
@@ -99,8 +115,9 @@ export async function loadPrimaryEvidenceEvent(params: { db: DB; payload: Primar
       .limit(1);
     const articleId = asUuid(row?.targetId);
     if (!row?.schoolId || !articleId || !(row.activityType in QUIZ_ACTIVITY_TYPES)) return null;
-    const details = questionStepDetailsSchema.safeParse(row.details);
-    const legacy = details.success ? null : await legacyQuizAnswers({ db, articleId, activityType: row.activityType, details: row.details });
+    const rawDetails = quizDetails(row.details);
+    const details = questionStepDetailsSchema.safeParse(rawDetails);
+    const legacy = details.success ? null : await legacyQuizAnswers({ db, articleId, activityType: row.activityType, details: rawDetails });
     const step = details.success ? details.data : { mode: LEGACY_QUIZ_MODE, questions: legacy?.questions ?? [] };
     return {
       schoolId: row.schoolId,
