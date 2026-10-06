@@ -29,10 +29,10 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [ ] Task: Contract tests
     - [ ] `objective-key.test.ts`: every short id in the data resolves; an unknown id throws; the data file validates
     - [ ] `tags-export.test.ts`: a valid fixture parses; an unknown short id fails with the key and the id; `legacy: null` parses
-- [~] Task: Importer tests (extend `primary-books/__tests__/import.test.ts`)
-    - [ ] A tagged package writes article, question, and word link rows in the transaction
-    - [ ] A reimport deletes the article's link rows before writing; one row per link after
-    - [ ] A package without tags writes no link rows and reports `tagged: false`
+- [x] Task: Importer tests (extend `primary-books/__tests__/import.test.ts`) (1f7aa8b)
+    - [x] A tagged package writes article, question, and word link rows in the transaction
+    - [x] A reimport deletes the article's link rows before writing; one row per link after
+    - [x] A package without tags writes no link rows and reports `tagged: false`
 - [ ] Task: Backfill tests (`backfill.test.ts`, mock DB)
     - [ ] Legacy ids matched: links written, report has zero unmatched
     - [ ] Unknown article: reported by key, nothing written for it
@@ -45,9 +45,9 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
 
 ## Phase 3: Implement
-- [ ] Task: Importer writes the links (FR-4)
-    - [ ] `toTagRows(pkg, articleId, questionIds)` in `primary-books/mapping.ts`
-    - [ ] `import.ts`: delete the article's link rows, insert the new ones in the same transaction; `tagged` in the result
+- [x] Task: Importer writes the links (FR-4) (1f7aa8b, with its tests)
+    - [x] `toTagRows(pkg, articleId, questionIds)` in `primary-books/mapping.ts`
+    - [x] `import.ts`: delete the article's link rows, insert the new ones in the same transaction; `tagged` in the result
 - [ ] Task: Backfill (FR-5)
     - [ ] `backfillPrimaryTags` in `primary-mastery/backfill.ts`: article join by legacy id or package key, question join by legacy id or text, upsert, report
     - [ ] Thin script `packages/db/scripts/backfill-primary-tags.ts` (`--file`, `--dry-run`, prints the report)
