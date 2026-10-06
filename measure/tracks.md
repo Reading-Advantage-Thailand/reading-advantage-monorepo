@@ -1152,3 +1152,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.
 - [ ] **Track: APK 3D Games Port** *Link: [./tracks/apk3d_games_port_20261003/](./tracks/apk3d_games_port_20261003/)*
   Port the dual-renderer story games into the monorepo and offer them in Primary Advantage.
+
+- [ ] **Track: Primary Objective Tags (T1 of the Primary Mastery Graph Program)** (created 2026-10-06 after the owner approved the program decisions; branch `primary/lane-h-objective-tags`) *Link: [./tracks/primary_objective_tags_20261006/](./tracks/primary_objective_tags_20261006/)*
+  Objective key in code, three additive `primary_` link tables, the importer writes the links, a backfill from the Workbooks `tags.json` export, a coverage report, and read functions for the evidence pipeline.
