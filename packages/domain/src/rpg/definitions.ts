@@ -47,6 +47,12 @@ export interface EligibleRpgReward {
 }
 
 /**
+ * The completions that count as the ward: the 3D Hero vs. Zombie (a class challenge or a `-story`
+ * practice run) and its 2D predecessor's stored name.
+ */
+export const WARD_GAME_TYPES: ReadonlySet<string> = new Set(["hero-vs-zombie", "hero-vs-zombie-story", "wizard-vs-zombie"]);
+
+/**
  * Finds cosmetic rewards earned by one saved completion.
  * @param completion Trusted completion facts from the current transaction.
  * @returns Eligible quest and cosmetic pairs in catalog order.
@@ -54,7 +60,7 @@ export interface EligibleRpgReward {
 export function getEligibleRpgRewards(
   completion: RpgCompletionFacts,
 ): EligibleRpgReward[] {
-  if (completion.gameType !== "wizard-vs-zombie" || completion.totalAttempts < 1) return [];
+  if (!WARD_GAME_TYPES.has(completion.gameType) || completion.totalAttempts < 1) return [];
 
   const rewards: EligibleRpgReward[] = [
     { questId: "first-ward", cosmeticId: "apprentice-wand" },
