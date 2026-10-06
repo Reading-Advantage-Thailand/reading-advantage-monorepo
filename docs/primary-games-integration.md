@@ -33,8 +33,13 @@ briefing, and the results belong to the kit (`StoryGameHost`); the app places it
 
 `lib/games/catalog.ts` resolves ids. `gameFor(id)` accepts a 3D id or a legacy 2D catalog id through
 `LEGACY_GAME_IDS` (`wizard-vs-zombie` → `hero-vs-zombie`, `labyrinth-goblin-king` → `labyrinth`). The apk
-route redirects a legacy id to the 3D id and keeps the query. Quest templates, reward rules, and the
-teacher page still store the legacy ids until M2 of the track.
+route redirects a legacy id to the 3D id and keeps the query. Quest templates and the reward rules use
+the 3D ids; the reward rule (`WARD_GAME_TYPES`) also accepts the stored legacy name. The domain
+`gameTypeEnum` lists the 2D ids, the 3D ids, and the `<id>-story` practice runs: before 2026-10-06 the
+completion route rejected every `-story` type, so no word adventure run was saved.
+
+The games catalog page and the teacher challenge page list the 3D registry (`playableGames`,
+`challengeGames`); `isSentenceGame` groups a game by its `needs`.
 
 ## Class challenge capability
 

@@ -1,9 +1,9 @@
 import { TeacherChallengePanel } from "@reading-advantage/advantage-play-kit/react";
-import { CARTRIDGE_CHALLENGE_CAPABILITIES, getCartridgeCatalogEntry } from "@reading-advantage/game-cartridges";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { challengeGames } from "@/lib/games/catalog";
 import { getCurrentUser } from "@/lib/session";
 import { TEACHER_BACK_LINK, TeacherPageHeader } from "@/components/teacher/teacher-shell";
 
@@ -30,10 +30,7 @@ export default async function TeacherGameChallengesPage({ params }: { params: Pr
   if (!user || !user.schoolId || (user.role !== "TEACHER" && user.role !== "ADMIN")) notFound();
   const t = await getTranslations("TeacherClass");
   const ts = await getTranslations("TeacherStudents");
-  const games = Object.fromEntries(Object.entries(CARTRIDGE_CHALLENGE_CAPABILITIES).flatMap(([id, capability]) => {
-    const entry = getCartridgeCatalogEntry(id);
-    return entry ? [[id, { title: entry.title, version: capability.version }]] : [];
-  }));
+  const games = challengeGames();
   return (
     <div className="flex flex-col gap-6">
       <TeacherPageHeader

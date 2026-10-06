@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { challengeCapabilityOf, gameFor, LEGACY_GAME_IDS, practiceLocaleOf } from "../catalog";
+import { challengeCapabilityOf, challengeGames, gameFor, isSentenceGame, LEGACY_GAME_IDS, playableGames, practiceLocaleOf } from "../catalog";
 
 describe("gameFor", () => {
   it("finds a 3D game by its id and by its legacy 2D id", () => {
@@ -35,5 +35,22 @@ describe("practiceLocaleOf", () => {
   it("uses the page language for translations, and Thai on an English page", () => {
     expect(practiceLocaleOf("vi")).toBe("vi");
     expect(practiceLocaleOf("en")).toBe("th");
+  });
+});
+
+describe("playableGames, isSentenceGame, challengeGames", () => {
+  it("lists the 28 playable games and sorts the sentence games by their needs", () => {
+    const games = playableGames();
+    expect(games.length).toBe(28);
+    expect(isSentenceGame(gameFor("castle-defense")!)).toBe(true);
+    expect(isSentenceGame(gameFor("hero-vs-zombie")!)).toBe(false);
+  });
+
+  it("lists the challenge games with their manifest title and version", () => {
+    expect(challengeGames()).toEqual({
+      "dragon-flight": { title: expect.any(String), version: "2026-10-06.1" },
+      "hero-vs-zombie": { title: "Hero vs. Zombie", version: "2026-10-06.1" },
+      "dragon-rider": { title: expect.any(String), version: "2026-10-06.1" },
+    });
   });
 });

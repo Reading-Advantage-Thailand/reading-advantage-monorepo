@@ -12,9 +12,11 @@ Owner approved the plan as proposed on 2026-10-06 (through the Forge session). M
 - [ ] Browser check of the three pages (needs a free heavy slot for the Primary build)
 
 ## Phase 2: M2 ids (before the cutover)
-- [ ] Quest templates, reward rules, challenge capabilities on the new ids and version 2026-10-06.1
-- [ ] Alias map for old completions; apk/[cartridgeId] redirects by it
-- [ ] grantCompletionCosmetics on new-game completions; Echo Staff waits for F2
+- [x] Quest templates, reward rules, challenge capabilities on the new ids and version 2026-10-06.1 (`hero-vs-zombie`; `WARD_GAME_TYPES` keeps the stored legacy name)
+- [x] Alias map for old completions (`LEGACY_GAME_IDS`); apk/[cartridgeId] redirects by it (M1)
+- [x] grantCompletionCosmetics on new-game completions (`hero-vs-zombie`, `hero-vs-zombie-story`); Echo Staff waits for F2
+- [x] Domain `gameTypeEnum` accepts the 3D ids and the `<id>-story` runs — defect found: the completion route rejected every story run before this (no word adventure was ever saved)
+- [x] Games catalog page and teacher challenge page list the 3D registry; seed-demo resolves the capability from the manifests
 
 ## Phase 3: M3 and M4 (after the cutover)
 - [ ] Reading Advantage and Advantage Games: practice input, new game pages, teacher challenge pages
