@@ -1,11 +1,12 @@
 /**
  * A skinned character on the stage: its own copy of the model and materials (so a flash or a
  * color preset touches only this actor), animation clips by forge name, and a smooth turn toward
- * `yaw`. One-shot clips resolve promises on the stage timeline.
+ * `yaw`. One-shot clips resolve promises on the stage timeline. The body is a model GLB, or the
+ * student's avatar (`playerBody` in ./avatar.ts), which composes a new copy for each actor.
  */
 import * as THREE from 'three';
 import { clone as skeletonClone } from 'three/addons/utils/SkeletonUtils.js';
-import type { GLTF } from './loader.js';
+import { isAvatarBody, type ActorBody } from './avatar.js';
 import type { Timeline } from './timeline.js';
 
 export interface ActorOptions {
@@ -14,6 +15,8 @@ export interface ActorOptions {
   scale?: number;
   /** Seconds into the idle loop, so a group does not move in step. */
   phase?: number;
+  /** Clip names that play another clip of the body (`victory` plays `cheer`); an own clip wins. */
+  aliases?: Readonly<Record<string, string>>;
 }
 
 export interface ClipRun {
@@ -40,29 +43,43 @@ export class Actor {
 
   constructor(
     readonly kind: string,
-    gltf: GLTF,
+    body: ActorBody,
     private readonly timeline: Timeline,
     options: ActorOptions = {},
   ) {
-    this.model = skeletonClone(gltf.scene);
-    this.model.traverse((node) => {
-      if (!(node instanceof THREE.Mesh)) return;
-      node.castShadow = true;
-      node.receiveShadow = true;
-      node.frustumCulled = false; // skinned bounds do not follow the animation
-      const own = (Array.isArray(node.material) ? node.material : [node.material]).map((m: THREE.Material) => {
-        const copy = m.clone() as THREE.MeshStandardMaterial;
-        this.materials.push(copy);
-        this.baseMaps.set(copy, copy.map);
-        return copy;
+    if (isAvatarBody(body)) {
+      // The composer made this avatar's own material copies (with its tint shader): a clone would
+      // lose the tint, so the actor uses them as they are. A color preset does not apply (no map).
+      const avatar = body.compose();
+      this.model = avatar.root;
+      for (const m of avatar.materials) if (m instanceof THREE.MeshStandardMaterial) this.materials.push(m);
+      this.mixer = avatar.mixer;
+      for (const [name, action] of avatar.actions) this.actions.set(name, action);
+    } else {
+      this.model = skeletonClone(body.scene);
+      this.model.traverse((node) => {
+        if (!(node instanceof THREE.Mesh)) return;
+        node.castShadow = true;
+        node.receiveShadow = true;
+        node.frustumCulled = false; // skinned bounds do not follow the animation
+        const own = (Array.isArray(node.material) ? node.material : [node.material]).map((m: THREE.Material) => {
+          const copy = m.clone() as THREE.MeshStandardMaterial;
+          this.materials.push(copy);
+          this.baseMaps.set(copy, copy.map);
+          return copy;
+        });
+        node.material = Array.isArray(node.material) ? own : own[0]!;
       });
-      node.material = Array.isArray(node.material) ? own : own[0]!;
-    });
+      this.mixer = new THREE.AnimationMixer(this.model);
+      for (const clip of body.animations) this.actions.set(clip.name, this.mixer.clipAction(clip));
+    }
+    for (const [from, to] of Object.entries({ ...(isAvatarBody(body) ? body.aliases : {}), ...options.aliases })) {
+      const action = this.actions.get(to);
+      if (action && !this.actions.has(from)) this.actions.set(from, action);
+    }
     this.scale = options.scale ?? 1;
     this.model.scale.setScalar(this.scale);
     this.root.add(this.model);
-    this.mixer = new THREE.AnimationMixer(this.model);
-    for (const clip of gltf.animations) this.actions.set(clip.name, this.mixer.clipAction(clip));
     this.idle = options.idle ?? 'idle';
     this.loop(this.idle, 0);
     if (options.phase) this.mixer.update(options.phase);

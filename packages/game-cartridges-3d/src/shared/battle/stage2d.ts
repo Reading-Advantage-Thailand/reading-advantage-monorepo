@@ -3,9 +3,15 @@
  * the 3D set, the party and the monsters as forge sprites, their entrances and moves, and the
  * monsters' HP pips. It knows nothing about rules: a game view tells it what happened (from its
  * core's events) and awaits the returned promises to keep the story in order.
+ *
+ * When the session has an avatar, the student stands at the party place of their role as their own
+ * figure (owner rule: the avatar is the student's identity); the two other places keep their heroes.
  */
 import type * as Phaser from 'phaser';
+import { roleHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
+import { playerFigure, type PortraitFigure } from '@reading-advantage/advantage-play-kit-3d/avatar/portrait-of';
 import type { RuntimeEdition } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import type { Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { Actor2D, project, textureKeyOf, type Projection2D, type Rect } from '@reading-advantage/advantage-play-kit-3d/view2d';
 import { HALL } from './hall.js';
 import type { BattleEnemy, EnemyKind, HeroId } from './types.js';
@@ -30,6 +36,22 @@ export function battleFiles2D(kinds: readonly EnemyKind[] = ['skeleton', 'giant-
   ];
 }
 
+/** The student in the party: the place of their role and their figure (its pixels also make the face icon). */
+export interface PartyPlayer2D {
+  readonly place: HeroId;
+  readonly figure: PortraitFigure;
+}
+
+/**
+ * The student in the party for a 2D view: null when the session has no avatar. Call it when the
+ * view is made, so the figure loads while the pack loads.
+ */
+export function partyPlayer2D(ctx: Game2DContext): PartyPlayer2D | null {
+  const avatar = ctx.options?.avatar;
+  const figure = playerFigure(ctx);
+  return avatar && figure ? { place: roleHero(avatar.classId), figure } : null;
+}
+
 /** The dragon is smaller than in 3D (no perspective shrinks it here). */
 const DRAGON_SCALE = 1.4;
 /** A cool tint puts the day-lit forge sprites in the blue vault light. */
@@ -52,6 +74,8 @@ export class BattleStage2D {
     background: string,
     /** The screen rectangle the fight fills (the rest of the screen shows more of the hall). */
     area: Rect,
+    /** The student, who takes the party place of their role (none: three heroes). */
+    player: PartyPlayer2D | null = null,
   ) {
     const ppm = projection.ppm;
     const pxPerM = Math.min(area.width / FIGHT.width, area.height / (FIGHT.vTop - FIGHT.vBottom));
@@ -60,7 +84,8 @@ export class BattleStage2D {
     this.world = scene.add.container(area.x + area.width / 2 + projection.uMin * ppm * this.scale, area.y + area.height / 2 - (projection.vMax - vMid) * ppm * this.scale).setScale(this.scale);
     this.world.add(scene.add.image(0, 0, textureKeyOf(edition, background)).setOrigin(0, 0).setDepth(-1e9));
     for (const id of HEROES) {
-      const a = new Actor2D(scene, edition, id, projection, { dirs: 8, clips: this.clips(id, HERO_CLIPS_2D), stiffness: 20 }, this.world);
+      const figure = player?.place === id ? player.figure : null;
+      const a = new Actor2D(scene, edition, id, projection, { dirs: 8, clips: this.clips(id, HERO_CLIPS_2D), stiffness: 20, figure }, this.world);
       const [x, , z] = HALL.party[id];
       a.placeAt(x, z);
       a.face(0, -1);

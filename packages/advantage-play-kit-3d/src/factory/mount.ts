@@ -49,6 +49,8 @@ export interface MountOptions extends Omit<
   edition2d?: RuntimeEdition;
   /** Where the 2D pack files load from (the site's base path); none: the pack root. */
   resolveUrl?: AssetUrlResolver;
+  /** The URL folder of the avatar pack versions for a 2D view; none: `/packs/avatar`, as the apps serve it. */
+  avatarRoot?: string;
   complete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence): void;
 }
 
@@ -103,6 +105,7 @@ export function createCartridgeMounter(
         host: rest.host,
         audio: rest.audio,
         ...(rest.resolveUrl ? { resolveUrl: rest.resolveUrl } : {}),
+        ...(rest.avatarRoot ? { avatarRoot: rest.avatarRoot } : {}),
         diagnostic: rest.diagnostic,
         // The kit completion latch (the APK `single-completion-emission` behavior), as in the three factory.
         complete: (result, outcome = 'complete', evidence) => {

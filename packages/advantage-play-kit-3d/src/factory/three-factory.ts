@@ -24,6 +24,8 @@ export class Apk3dError extends Error {
 export interface ThreeFactoryOptions {
   /** Site root for model paths. */
   base: string;
+  /** The folder of the avatar pack versions under `base` (default `packs/avatar`). */
+  avatarRoot?: string;
   /** The device check; without one the device counts as supported at the `high` tier. */
   gate?: () => GateVerdict;
 }
@@ -43,7 +45,7 @@ export function createThreeGameFactory(options: ThreeFactoryOptions): (context: 
       canvas = document.createElement('canvas');
       canvas.className = 'apk3d-canvas';
       context.container.append(canvas);
-      stage = new Stage3D(canvas, { base: options.base, tier: verdict.status === 'lite' ? 'low' : verdict.tier });
+      stage = new Stage3D(canvas, { base: options.base, ...(options.avatarRoot ? { avatarRoot: options.avatarRoot } : {}), tier: verdict.status === 'lite' ? 'low' : verdict.tier });
     }
     stage.loader.bind(context.edition);
     context.container.append(layer);

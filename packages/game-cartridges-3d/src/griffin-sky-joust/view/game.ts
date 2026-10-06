@@ -10,7 +10,7 @@ import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, hasThai, pips, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { Actor, burst, FollowRig } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, burst, FollowRig, isAvatarBody, playerBody } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { ARENA, TUNING, createGriffinSkyJoust, evidenceOf, isTarget, scoreOf, type JoustCommand, type JoustEvent, type JoustState } from '../core/index.js';
 import { nextCommand } from '../qc/bot.js';
 import { GRIFFIN_MODEL, GRIFFIN_SEAT } from '../../shared/griffin.js';
@@ -41,7 +41,11 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const audio = ctx.audio;
   const hud = ctx.hud;
   const heroId = ctx.options.hero || 'knight';
-  await stage.loader.preload([...SCENE_MODELS, heroId].map((n) => stage.loader.modelPath(n)));
+  // The student's avatar (or the fixed hero) loads with the scene; an avatar needs no hero model.
+  const [, heroBody] = await Promise.all([
+    stage.loader.preload([...SCENE_MODELS, ...(ctx.options.avatar ? [] : [heroId])].map((n) => stage.loader.modelPath(n))),
+    playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
+  ]);
   const sky = buildSky(stage);
   const sim = createGriffinSkyJoust(story, { seed: ctx.seed, helper: ctx.options.helper });
   const startedAt = performance.now();
@@ -49,9 +53,9 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   // ---------------------------------------------------------------- the griffin and its rider
   const griffin = stage.addActor(new Actor(GRIFFIN_MODEL, stage.loader.get(stage.loader.modelPath(GRIFFIN_MODEL))!, stage.timeline, { idle: 'fly', scale: GRIFFIN_SCALE }));
   griffin.placeAt(worldX(sim.state.griffin.x), worldY(sim.state.griffin.y), 0, 90);
-  const hero = stage.addActor(new Actor(heroId, stage.loader.get(stage.loader.modelPath(heroId))!, stage.timeline, { scale: HERO_SCALE }));
+  const hero = stage.addActor(new Actor(heroId, heroBody, stage.timeline, { scale: HERO_SCALE }));
   hero.placeAt(0, 0, 0, 90);
-  const look = ctx.options.looks[heroId];
+  const look = isAvatarBody(heroBody) ? undefined : ctx.options.looks[heroId];
   if (look && look !== 'default') void stage.loader.texture(stage.loader.presetPath(heroId, look)).then((tex) => hero.setMap(tex)).catch(() => undefined);
   let facing: 1 | -1 = 1;
 

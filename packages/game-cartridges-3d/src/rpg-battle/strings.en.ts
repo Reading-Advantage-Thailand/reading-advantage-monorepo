@@ -40,6 +40,6 @@ export default {
     },
     actions: { slash: 'Slash', blaze: 'Blaze', mend: 'Mend' },
     monsters: { skeleton: 'Skeleton', mimic: 'Mimic', 'dragon-fire': 'Fire Dragon' },
-    heroes: { knight: 'Knight', wizard: 'Wizard', cleric: 'Cleric' },
+    heroes: { knight: 'Knight', wizard: 'Wizard', cleric: 'Cleric', you: 'You' },
   },
 } as const;

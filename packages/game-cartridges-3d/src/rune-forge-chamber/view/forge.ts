@@ -5,7 +5,7 @@
  * smith at the side. The layout is narrow on purpose: a portrait phone sees the whole orbit.
  */
 import * as THREE from 'three';
-import { Actor, type GLTF, type Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, type ActorBody, type GLTF, type Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { LAYOUT } from './layout.js';
 
 /** Models the forge needs before the first frame (the scenery and the rune); the hero comes from the session. */
@@ -42,7 +42,7 @@ function place(stage: Stage3D, name: string, at: V3, yaw = 0, scale = 1): THREE.
 }
 
 /** `hero` is the student's hero model ('knight', 'wizard', 'cleric'). */
-export function buildForge(stage: Stage3D, hero: string): Forge {
+export function buildForge(stage: Stage3D, hero: string, body?: ActorBody): Forge {
   const scene = stage.scene;
   scene.background = new THREE.Color('#1a1520');
   scene.fog = new THREE.Fog('#1a1520', 14, 28);
@@ -99,8 +99,8 @@ export function buildForge(stage: Stage3D, hero: string): Forge {
   blade.castShadow = true;
   scene.add(blade);
 
-  // The smith: the student's hero, facing the anvil.
-  const g = stage.loader.get(stage.loader.modelPath(hero)) ?? stage.loader.get(stage.loader.modelPath('wizard'))!;
+  // The smith: the student's hero (or avatar, `body`), facing the anvil.
+  const g = body ?? stage.loader.get(stage.loader.modelPath(hero)) ?? stage.loader.get(stage.loader.modelPath('wizard'))!;
   const smith = stage.addActor(new Actor(hero, g, stage.timeline));
   smith.placeAt(LAYOUT.smith[0], 0, LAYOUT.smith[2], 60);
 
