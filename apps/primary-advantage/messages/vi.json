@@ -2821,7 +2821,12 @@
     "readMode": "Đọc tiếng Thái",
     "listenMode": "Nghe tiếng Anh",
     "signInToPlayChallenge": "Đăng nhập để chơi thử thách này",
-    "signInToPlayGame": "Đăng nhập để chơi trò này"
+    "signInToPlayGame": "Đăng nhập để chơi trò này",
+    "loadError": "The game could not load.",
+    "loadingGame": "Loading the game…",
+    "loadingChallenge": "Loading the challenge…",
+    "challengeMismatch": "This game cannot run this challenge.",
+    "retry": "Try again"
   },
   "StudentGames": {
     "title": "Trò chơi học sinh",

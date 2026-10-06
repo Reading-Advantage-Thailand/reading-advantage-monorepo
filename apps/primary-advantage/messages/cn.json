@@ -2821,7 +2821,12 @@
     "readMode": "阅读泰语",
     "listenMode": "听英语",
     "signInToPlayChallenge": "登录以参与此挑战",
-    "signInToPlayGame": "登录以玩此游戏"
+    "signInToPlayGame": "登录以玩此游戏",
+    "loadError": "The game could not load.",
+    "loadingGame": "Loading the game…",
+    "loadingChallenge": "Loading the challenge…",
+    "challengeMismatch": "This game cannot run this challenge.",
+    "retry": "Try again"
   },
   "StudentGames": {
     "title": "学生游戏",

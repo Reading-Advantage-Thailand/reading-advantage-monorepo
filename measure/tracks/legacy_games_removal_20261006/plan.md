@@ -1,12 +1,15 @@
 # Plan — Legacy games removal
 
-Waits for the owner's go on the plan (sent through the Forge session 2026-10-06).
+Owner approved the plan as proposed on 2026-10-06 (through the Forge session). M1 runs on lane-g (`primary/lane-g-new-game-host`).
 
 ## Phase 1: M1 host (before the cutover)
-- [ ] Challenge run mount on StoryGameHost: content as VocabularyInput, server seed, helper off, challengeRunId on the completion, no learningEvidence for a reading challenge
-- [ ] resolveGameCapability reads manifest.challenge from the 3D registry (not CARTRIDGE_CHALLENGE_CAPABILITIES)
-- [ ] Reward panels (inventory note), demo launch, briefing phase, quest battle callback, avatar on every page
-- [ ] docs/primary-games-integration.md
+- [x] Kit host: `input: PracticeInput | GameInput`, `seed`, `replay`, `onPhase`; briefing previews an APK input
+- [x] `GameHost` (components/games): challenge run on the server content and seed, helper off, `challengeRunId` on the completion, no learningEvidence for a reading challenge
+- [x] resolveGameCapability reads manifest.challenge from the 3D registry (not CARTRIDGE_CHALLENGE_CAPABILITIES)
+- [x] Reward panels (inventory note), demo launch (`save={false}`), briefing phase, quest battle callback, avatar on every page
+- [x] StoryGamesClient, quest battle, and apk/[cartridgeId] render `GameHost`; legacy ids redirect through `LEGACY_GAME_IDS`
+- [x] docs/primary-games-integration.md
+- [ ] Browser check of the three pages (needs a free heavy slot for the Primary build)
 
 ## Phase 2: M2 ids (before the cutover)
 - [ ] Quest templates, reward rules, challenge capabilities on the new ids and version 2026-10-06.1

@@ -1,32 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  parsePracticeInput,
-  type GameResults,
-  type LaunchAvatar,
-  type PracticeInput,
-  type StoryGameEvidence,
-} from "@reading-advantage/game-contracts";
-import type { Cartridge3DManifest } from "@reading-advantage/advantage-play-kit-3d/contracts";
-import type { Cartridge } from "@reading-advantage/advantage-play-kit-3d/factory";
-import { StoryGameHost } from "@reading-advantage/advantage-play-kit-3d/react";
-import { GAMES, hostStrings, missingItems, playable, type GameEntry } from "@reading-advantage/game-cartridges-3d";
+import { parsePracticeInput, type LaunchAvatar, type PracticeInput } from "@reading-advantage/game-contracts";
+import { GAMES, missingItems, playable } from "@reading-advantage/game-cartridges-3d";
 
+import { GameHost } from "@/components/games/game-host";
 import { Link } from "@/i18n/navigation";
-import { storyCompletionInput } from "@/lib/story-games/completion";
+import { practiceLocaleOf, type PlayableGame } from "@/lib/games/catalog";
 
-type PlayableGame = GameEntry & { manifest: Cartridge3DManifest; load: () => Promise<Cartridge> };
-type Playing = { game: PlayableGame; cartridge: Cartridge; startedAt: number };
-type SaveState = "idle" | "saving" | "saved" | "error";
+export { practiceLocaleOf };
 
 /** A game card: the game and the saved items it still needs (0 and 0 when it is open). */
 export type GameCard = { game: PlayableGame; missing: { vocabulary: number; sentences: number } };
-
-/** The translation language of the saved items: the page language, or Thai on an English page. */
-export const practiceLocaleOf = (locale: string): string =>
-  ["th", "cn", "tw", "vi"].includes(locale) ? locale : "th";
 
 /** The student games with the saved items each one still needs. */
 export const gameCardsFor = (input: Pick<PracticeInput, "vocabulary" | "sentences">): GameCard[] =>
@@ -37,19 +23,17 @@ const isOpen = (card: GameCard): boolean => card.missing.vocabulary === 0 && car
 /**
  * Word adventures: 3D games (2D on older phones) with the words and sentences the student saved
  * from reading, chosen by the server in FSRS order. A game without enough saved items is locked
- * and links to the reading page. A finished run is saved through the catalog completion route.
+ * and links to the reading page. The shared game host plays the chosen game and saves the run.
+ * @param props.avatar The student's avatar from the server (null when the student has none); the host passes it to every game.
+ * @param props.ownerKey The student's identity for the RPG rewards; absent for a guest.
+ * @returns The game list, or the player while a game runs.
  */
-/**
- * The word adventures list and player.
- * @param props The student's avatar from the server (null when the student has none); the host passes it to every game.
- */
-export function StoryGamesClient({ avatar = null }: { avatar?: LaunchAvatar | null }) {
+export function StoryGamesClient({ avatar = null, ownerKey }: { avatar?: LaunchAvatar | null; ownerKey?: string }) {
   const t = useTranslations("StoryGames");
   const locale = useLocale();
   const [input, setInput] = useState<PracticeInput | null>(null);
   const [error, setError] = useState(false);
-  const [playing, setPlaying] = useState<Playing | null>(null);
-  const [save, setSave] = useState<SaveState>("idle");
+  const [playing, setPlaying] = useState<PlayableGame | null>(null);
   const [flat, setFlat] = useState(false);
 
   useEffect(() => {
@@ -66,57 +50,21 @@ export function StoryGamesClient({ avatar = null }: { avatar?: LaunchAvatar | nu
     };
   }, [locale]);
 
-  const play = useCallback(async (game: PlayableGame) => {
-    try {
-      const cartridge = await game.load();
-      setSave("idle");
-      setPlaying({ game, cartridge, startedAt: Date.now() });
-    } catch {
-      setError(true);
-    }
-  }, []);
-
-  const onComplete = useCallback(
-    (result: GameResults, outcome: string, evidence: StoryGameEvidence) => {
-      if (!playing) return;
-      setSave("saving");
-      const body = storyCompletionInput(playing.game.id, result, evidence, {
-        startedAt: playing.startedAt,
-        now: Date.now(),
-        helper: false,
-        victory: outcome !== "defeat",
-        idempotencyKey: crypto.randomUUID(),
-      });
-      fetch("/api/v1/apk/complete", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
-        .then((res) => setSave(res.ok ? "saved" : "error"))
-        .catch(() => setSave("error"));
-    },
-    [playing],
-  );
-
   const cards = useMemo(() => (input ? gameCardsFor(input) : []), [input]);
 
   if (playing && input) {
     return (
       <div className="fixed inset-0 z-50 bg-background" data-testid="story-game-player">
-        <StoryGameHost
-          cartridge={playing.cartridge}
+        <GameHost
+          gameId={playing.id}
+          locale={locale}
+          ownerKey={ownerKey}
           input={input}
-          icon={playing.game.icon}
-          assetBase="/"
-          helper={false}
           avatar={avatar}
           setting={flat ? "phaser" : "auto"}
-          catalogs={[hostStrings]}
-          className="h-full w-full"
-          onComplete={onComplete}
+          className="flex h-full w-full flex-col"
           onExit={() => setPlaying(null)}
         />
-        {save !== "idle" ? (
-          <p role="status" className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-black/70 px-3 py-1 text-sm text-white">
-            {t(`save.${save}`)}
-          </p>
-        ) : null}
       </div>
     );
   }
@@ -140,7 +88,7 @@ export function StoryGamesClient({ avatar = null }: { avatar?: LaunchAvatar | nu
             {isOpen(card) ? (
               <button
                 type="button"
-                onClick={() => void play(card.game)}
+                onClick={() => setPlaying(card.game)}
                 className="cq-panel cq-pin w-full text-left transition-transform hover:-translate-y-0.5"
               >
                 <span className="block text-lg font-semibold">{card.game.icon} {card.game.manifest.title}</span>

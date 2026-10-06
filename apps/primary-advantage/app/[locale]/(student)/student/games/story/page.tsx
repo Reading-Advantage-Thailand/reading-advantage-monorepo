@@ -25,14 +25,15 @@ export default async function PrimaryStoryGamesPage({ params }: { params: Promis
   const t = await getTranslations({ locale, namespace: "StoryGames" });
   // The host passes the avatar to every game (identity rule); a game never fetches it. A failed read means no avatar.
   const user = await getCurrentUser();
-  const avatar = user?.role === "STUDENT" && user.schoolId ? await getAvatarState({ db, user }).then(toLaunchAvatar).catch(() => null) : null;
+  const ownerKey = user?.role === "STUDENT" && user.schoolId ? `${user.schoolId}:${user.id}` : undefined;
+  const avatar = ownerKey && user ? await getAvatarState({ db, user }).then(toLaunchAvatar).catch(() => null) : null;
   return (
     <Scene place="arena">
       <header className="cq-on-scene flex flex-col gap-1">
         <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
         <p>{t("description")}</p>
       </header>
-      <StoryGamesClient avatar={avatar} />
+      <StoryGamesClient avatar={avatar} ownerKey={ownerKey} />
     </Scene>
   );
 }

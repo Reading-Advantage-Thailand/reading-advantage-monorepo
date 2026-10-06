@@ -9,7 +9,7 @@ import {
   getBattleState,
   questTemplate,
 } from "@reading-advantage/domain/primary-quest";
-import { getCartridgeCatalogEntry } from "@reading-advantage/game-cartridges";
+import { gameFor } from "@/lib/games/catalog";
 import { currentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import { BattleClient } from "@/components/quest/battle-client";
@@ -38,10 +38,8 @@ export default async function QuestBattlePage() {
     getTranslations("Quest.battle"),
   ]);
   const template = state ? questTemplate(state.quest.templateId) : undefined;
-  const entry = template
-    ? getCartridgeCatalogEntry(template.gameId)
-    : undefined;
-  if (!state || !template || !entry || !user.schoolId) {
+  const game = template ? gameFor(template.gameId) : undefined;
+  if (!state || !template || !game || !user.schoolId) {
     return (
       <Scene place="boss-arena">
         <Panel className="items-center text-center">
@@ -59,12 +57,7 @@ export default async function QuestBattlePage() {
     <Scene place="boss-arena">
       <BattleClient
         initial={state}
-        cartridge={{
-          id: entry.id,
-          title: entry.title,
-          description: entry.description,
-          inputMode: entry.inputMode,
-        }}
+        gameId={game.id}
         ownerKey={`${user.schoolId}:${user.id}`}
         profile={avatarState?.profile ?? null}
         avatar={avatarState ? toLaunchAvatar(avatarState) : null}

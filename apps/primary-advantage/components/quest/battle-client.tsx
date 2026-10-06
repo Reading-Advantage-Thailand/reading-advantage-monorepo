@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import type {
   AvatarProfile,
   LaunchAvatar,
@@ -19,18 +20,10 @@ import { Hearts, Meter, Panel, RpgLink, Sign } from "@/components/rpg/chrome";
 import { RELIC_ART } from "@/lib/rpg/places";
 import { cn } from "@/lib/utils";
 import { AvatarPortrait } from "@/components/avatar/portrait-canvas";
-import { StudentCartridgeHost } from "@/components/apk/StudentCartridgeHost";
+import { GameHost } from "@/components/games/game-host";
 import { BossSprite, useBossHit } from "./boss-sprite";
 import { countdownText } from "./countdown";
 import { questText } from "./quest-copy";
-
-/** The cartridge the battle runs. */
-export interface BattleCartridge {
-  id: string;
-  title: string;
-  description: string;
-  inputMode: "vocabulary" | "sentence";
-}
 
 /** The phone's own numbers for the heartbeat (FR-8). */
 interface Tally {
@@ -99,7 +92,7 @@ const RAIN = Array.from({ length: 12 }, (_, i) => ({
  * the game inside a stone archway, and the result. Polls the state every few seconds and posts a
  * heartbeat every 10 seconds and after the game is saved.
  * @param props.initial The state from the server.
- * @param props.cartridge The battle game.
+ * @param props.gameId The battle game (a 3D game id).
  * @param props.ownerKey The student's owner key for the game host.
  * @param props.profile The student's avatar profile, for the portrait; null without one.
  * @param props.avatar The avatar the game receives.
@@ -107,19 +100,20 @@ const RAIN = Array.from({ length: 12 }, (_, i) => ({
  */
 export function BattleClient({
   initial,
-  cartridge,
+  gameId,
   ownerKey,
   profile,
   avatar,
 }: {
   initial: QuestBattleState;
-  cartridge: BattleCartridge;
+  gameId: string;
   ownerKey: string;
   profile: AvatarProfile | null;
   avatar: LaunchAvatar | null;
 }) {
   const t = useTranslations("Quest");
   const locale = useLocale();
+  const router = useRouter();
   const [state, setState] = useState(initial);
   // The clock starts after mount so the server and the client render the same text.
   const [now, setNow] = useState<Date | null>(null);
@@ -377,16 +371,15 @@ export function BattleClient({
       ) : null}
       {status === "play" && !tally.done ? (
         <div className="cq-arch">
-          <StudentCartridgeHost
-            cartridgeId={cartridge.id}
-            title={cartridge.title}
-            description={cartridge.description}
-            inputMode={cartridge.inputMode}
+          <GameHost
+            gameId={gameId}
             locale={locale}
             ownerKey={ownerKey}
             challengeId={state.quest.challengeId}
             avatar={avatar}
+            className="flex min-h-[480px] w-full flex-col"
             onCompleted={onCompleted}
+            onExit={() => router.push("/student/home")}
           />
         </div>
       ) : null}
