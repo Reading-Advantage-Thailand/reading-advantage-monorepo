@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { DB } from "@reading-advantage/db";
 import { createMockDb } from "../../__tests__/mock-db.js";
 import { loadPrimaryEvidenceEvent } from "../evidence-sources.js";
-import { ARTICLE, Q1, ROW, SCHOOL, STUDENT } from "./evidence-fixtures.js";
+import { ARTICLE, Q1, Q2, ROW, SCHOOL, STUDENT } from "./evidence-fixtures.js";
 
 const db = (rows: unknown[]) => createMockDb({ selectResults: rows }) as unknown as DB;
 const AT = new Date("2026-10-06T10:00:00.000Z");
@@ -19,12 +19,38 @@ describe("loadPrimaryEvidenceEvent (FR-5, FR-6)", () => {
     });
   });
 
-  it("gives a legacy user_activity row (no questions in details) an event with no questions, so the job records nothing", async () => {
+  it("rebuilds a legacy MCQ row (no question ids) by matching its question texts to the article's questions, at the teacher-led mode, counting the unmatched", async () => {
+    const legacyRow = { id: ROW, userId: STUDENT, schoolId: SCHOOL, activityType: "MC_QUESTION", targetId: ARTICLE, createdAt: AT, details: { score: 1, timer: 30, responses: [
+      { question: "What is in the box?", answer: "A puppy", isCorrect: "A puppy" },
+      { question: "Who has a box? ", answer: "Tom", isCorrect: "Lily" },
+      { question: "A question the bank replaced", answer: "x", isCorrect: "x" },
+    ] } };
     const loaded = await loadPrimaryEvidenceEvent({
-      db: db([{ id: ROW, userId: STUDENT, schoolId: SCHOOL, activityType: "MC_QUESTION", targetId: ARTICLE, createdAt: AT, details: { score: 2, responses: [] } }]),
+      db: createMockDb({ selectSequence: [[legacyRow], [{ id: Q1, question: "What is in the box?" }, { id: Q2, question: "Who has a box?" }]] }) as unknown as DB,
       payload: { sourceTable: "user_activity", rowId: ROW },
     });
-    expect(loaded?.event).toMatchObject({ kind: "question-step", mode: "independent", questions: [] });
+    expect(loaded).toEqual({
+      schoolId: SCHOOL,
+      legacyUnmatched: 1,
+      event: { kind: "question-step", sourceTable: "user_activity", rowId: ROW, userId: STUDENT, articleId: ARTICLE, mode: "teacher_led", questions: [
+        { questionId: Q1, questionType: "mcq", correct: true, firstTry: true },
+        { questionId: Q2, questionType: "mcq", correct: false, firstTry: true },
+      ], occurredAt: AT.toISOString() },
+    });
+  });
+
+  it("rebuilds a legacy SAQ row from its question text and the reviewer score out of 5", async () => {
+    const legacyRow = { id: ROW, userId: STUDENT, schoolId: SCHOOL, activityType: "SA_QUESTION", targetId: ARTICLE, createdAt: AT, details: { question: "Why is the puppy sad?", yourAnswer: "...", score: 3, feedback: "ok" } };
+    const loaded = await loadPrimaryEvidenceEvent({
+      db: createMockDb({ selectSequence: [[legacyRow], [{ id: Q2, question: "Why is the puppy sad?" }]] }) as unknown as DB,
+      payload: { sourceTable: "user_activity", rowId: ROW },
+    });
+    expect(loaded?.event).toMatchObject({ mode: "teacher_led", questions: [{ questionId: Q2, questionType: "saq", scoreRatio: 0.6 }] });
+    expect(loaded?.legacyUnmatched).toBeUndefined();
+  });
+
+  it("returns null for a user_activity row that is not a quiz", async () => {
+    expect(await loadPrimaryEvidenceEvent({ db: db([{ id: ROW, userId: STUDENT, schoolId: SCHOOL, activityType: "VOCABULARY_FLASHCARDS", targetId: ARTICLE, createdAt: AT, details: {} }]), payload: { sourceTable: "user_activity", rowId: ROW } })).toBeNull();
   });
 
   it("turns a card_reviews row with its card and deck into a flashcard-review event", async () => {

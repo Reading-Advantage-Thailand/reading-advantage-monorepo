@@ -94,7 +94,7 @@ export async function runPrimaryEvidenceJob(options: RunPrimaryEvidenceJobOption
   if (!loaded) return { status: "row-missing", committed: 0, skipped: 0 };
   if (loaded.schoolId !== options.tenant.schoolId) return { status: "tenant-mismatch", committed: 0, skipped: 0 };
   const result = await recordPrimaryEvidence({ db: options.db, tenant: options.tenant, event: loaded.event, persistence: options.persistence, resolver: options.resolver, now: options.now });
-  return { status: "recorded", committed: result.committed.length, skipped: result.skipped.length };
+  return { status: "recorded", committed: result.committed.length, skipped: result.skipped.length + (loaded.legacyUnmatched ?? 0) };
 }
 
 /** The execution context the backend worker passes to a handler (structural copy). */
