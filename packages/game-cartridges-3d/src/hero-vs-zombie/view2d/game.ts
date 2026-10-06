@@ -9,14 +9,15 @@
 import type * as Phaser from 'phaser';
 import { shownHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
 import { playerFigure } from '@reading-advantage/advantage-play-kit-3d/avatar/portrait-of';
-import { preloadAssetBindings, toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { preloadAssetBindings, toGameResults } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { createFixedStepLoop, createManualClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor2D, Arena2D, banner, button, depthOf, fitGameSize, Joystick2D, popup, registerSheetAnimations, StatusBar2D, tag, WordPanel2D } from '@reading-advantage/advantage-play-kit-3d/view2d';
-import { createHeroVsZombie, evidenceOf, scoreOf, TUNING, type HeroVsZombieCommand, type HeroVsZombieEvent, type HeroVsZombieState } from '../core/index.js';
-import { FILES_2D, HERO_CLIPS_2D, HEROES_2D, ZOMBIE_CLIPS_2D } from '../manifest.js';
+import { createHeroVsZombie, evidenceOf, scoreOf, TUNING, type HeroVsZombieCommand, type HeroVsZombieEvent, type HeroVsZombieState, type HeroVsZombieInput } from '../core/index.js';
+import { evidenceStoryOf } from '../../shared/challenge.js';
+import { manifest, FILES_2D, HERO_CLIPS_2D, HEROES_2D, ZOMBIE_CLIPS_2D } from '../manifest.js';
 import { nextCommand } from '../qc/bot.js';
 import strings from '../strings.en.js';
 import { BACKGROUND_FILE, PROJECTION } from './projection.gen.js';
@@ -26,7 +27,8 @@ const ORB_COLOR = 0xfff1a8;
 const NIGHT_TINT = 0xb4c0ff;
 
 export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, unknown>> {
-  const story = ctx.input as PracticeInput;
+  // A practice input, or a class challenge's APK vocabulary input.
+  const input = ctx.input as HeroVsZombieInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('heroVsZombie')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
   const heroId = shownHero(HEROES_2D, options, 'knight');
@@ -34,7 +36,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const figure = playerFigure(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
-  const sim = createHeroVsZombie(story, { seed, helper: options.helper });
+  const sim = createHeroVsZombie(input, { seed, helper: options.helper });
   const needed = FILES_2D.filter((id) => {
     const model = id.split('.')[0]!;
     return !(HEROES_2D as readonly string[]).includes(model) || model === heroId;
@@ -255,7 +257,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       audio.play('victory');
       void hero.play('victory', 1, true);
       await banner(scene, t('done.title'), t('done.text'), 2.2);
-      const evidence = evidenceOf(sim.state, story, seed, Math.round(performance.now() - startedAt));
+      const evidence = evidenceOf(sim.state, evidenceStoryOf(input, manifest.levels), seed, Math.round(performance.now() - startedAt));
       ctx.complete(toGameResults(evidence, scoreOf(sim.state)), 'victory', evidence);
     }
 

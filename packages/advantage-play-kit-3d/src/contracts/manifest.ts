@@ -44,6 +44,20 @@ export const rendererIdSchema = z.enum(['three', 'phaser']);
 
 export type RendererId = z.infer<typeof rendererIdSchema>;
 
+/** The class challenge a game can run: its comparable revision, content mode, and modalities. */
+export const challengeCapabilitySchema = z
+  .object({
+    version: z.string().min(1),
+    inputMode: z.enum(['vocabulary', 'sentence']),
+    modalities: z
+      .array(z.enum(['reading', 'read-to-select-audio']))
+      .min(1)
+      .refine((ids) => new Set(ids).size === ids.length, { message: 'modalities must be unique' }),
+  })
+  .strict();
+
+export type ChallengeCapability = z.infer<typeof challengeCapabilitySchema>;
+
 export const cartridge3DManifestSchema = runtimeCartridgeManifestSchema.extend({
   /**
    * The renderers this cartridge implements, each backed by its method on the cartridge
@@ -78,6 +92,14 @@ export const cartridge3DManifestSchema = runtimeCartridgeManifestSchema.extend({
     .strict(),
   /** Catalog scope of the briefing text (section 8), e.g. 'potionRush'. */
   briefingKey: z.string().min(1),
+  /**
+   * The class challenges this game can run (the monorepo `gameChallenge*` tables and the class
+   * quests), in the shape of the monorepo `CartridgeChallengeCapability`. A challenge run gets the
+   * challenge content as the APK input of `inputMode` (a `VocabularyInput` for 'vocabulary') and the
+   * server's seed: the same seed and content give the same run and the same results. Bump `version`
+   * when scoring, controls, learning rules, or seeded behavior change. Absent: no class challenge.
+   */
+  challenge: challengeCapabilitySchema.optional(),
 });
 
 export type Cartridge3DManifest = z.infer<typeof cartridge3DManifestSchema>;

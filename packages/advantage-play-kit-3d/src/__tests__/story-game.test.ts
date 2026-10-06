@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /** The story game host: the briefing screen, its buttons, and teardown (the game itself needs WebGL or Phaser). */
 import { describe, expect, it, vi } from 'vitest';
-import { startStoryGame } from '../host/story-game.js';
+import { sessionOptionsOf, startStoryGame } from '../host/story-game.js';
 import type { Cartridge } from '../factory/index.js';
 import { toPracticeInput, type StoryInput } from '../contracts/index.js';
 import { readFileSync } from 'node:fs';
@@ -42,6 +42,19 @@ function setup() {
   const session = startStoryGame({ container, cartridge, input, assetBase: '/', catalogs: [hostCatalog], onComplete: vi.fn(), onExit });
   return { container, onExit, session };
 }
+
+describe('sessionOptionsOf', () => {
+  const avatar = { catalogVersion: '1.0.0', classId: 'knight', tints: { skin: 'fair', hair: 'brown', eyes: 'blue', cloth: 'sky' }, pieces: [] } as unknown as NonNullable<Parameters<typeof sessionOptionsOf>[0]['avatar']>;
+
+  it('carries the avatar to the game, with the defaults for the rest', () => {
+    expect(sessionOptionsOf({ avatar })).toEqual({ helper: false, hero: 'knight', looks: {}, avatar });
+  });
+
+  it('leaves the avatar out when the student has none, so the game keeps the hero', () => {
+    expect(sessionOptionsOf({ hero: 'wizard', helper: true, looks: { wizard: 'dusk' }, avatar: null })).toEqual({ helper: true, hero: 'wizard', looks: { wizard: 'dusk' } });
+    expect(sessionOptionsOf({})).not.toHaveProperty('avatar');
+  });
+});
 
 describe('startStoryGame', () => {
   it('shows the briefing with the game goal and a preview of the input items', async () => {

@@ -9,14 +9,15 @@
 import type * as Phaser from 'phaser';
 import { shownHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
 import { playerFigure } from '@reading-advantage/advantage-play-kit-3d/avatar/portrait-of';
-import { preloadAssetBindings, toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { preloadAssetBindings, toGameResults } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { createFixedStepLoop, createManualClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { animationKeyOf, banner, COLORS, depthOf, Figure2D, fitGameSize, popup, recolorTag, registerSheetAnimations, SPRITE_PPM, StatusBar2D, tag, textureKeyOf, WordPanel2D } from '@reading-advantage/advantage-play-kit-3d/view2d';
-import { createDragonRider, evidenceOf, scoreOf, type DragonRiderCommand, type DragonRiderEvent, type DragonRiderState } from '../core/index.js';
-import { FILES_2D, HEROES_2D } from '../manifest.js';
+import { createDragonRider, evidenceOf, scoreOf, type DragonRiderCommand, type DragonRiderEvent, type DragonRiderState, type DragonRiderInput } from '../core/index.js';
+import { evidenceStoryOf } from '../../shared/challenge.js';
+import { manifest, FILES_2D, HEROES_2D } from '../manifest.js';
 import { nextChoice } from '../qc/bot.js';
 import strings from '../strings.en.js';
 import { CHUNK, GATE_X, HIGHLAND, rng } from '../view/land-plan.js';
@@ -61,7 +62,8 @@ interface Wing {
 }
 
 export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, unknown>> {
-  const story = ctx.input as PracticeInput;
+  // A practice input, or a class challenge's APK vocabulary input.
+  const input = ctx.input as DragonRiderInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('dragonRider')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
   const heroId = shownHero(HEROES_2D, options, 'knight');
@@ -69,7 +71,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const figure = playerFigure(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
-  const sim = createDragonRider(story, { seed });
+  const sim = createDragonRider(input, { seed });
   const needed = FILES_2D.filter((id) => {
     const model = id.split('.')[0]!;
     return !(HEROES_2D as readonly string[]).includes(model) || model === heroId;
@@ -417,7 +419,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       heroDo('victory', 3000);
       power.setVisible(false);
       await banner(scene, t('done.title'), t('done.text'), 2.2);
-      const evidence = evidenceOf(sim.state, story, seed, Math.round(performance.now() - startedAt));
+      const evidence = evidenceOf(sim.state, evidenceStoryOf(input, manifest.levels), seed, Math.round(performance.now() - startedAt));
       ctx.complete(toGameResults(evidence, scoreOf(sim.state)), 'victory', evidence);
     }
 

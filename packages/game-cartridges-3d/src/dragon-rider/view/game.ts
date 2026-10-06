@@ -6,12 +6,14 @@
  * it never decides a rule.
  */
 import * as THREE from 'three';
-import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { toGameResults } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, hasThai } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor, burst, FollowRig, isAvatarBody, playerBody, projectile } from '@reading-advantage/advantage-play-kit-3d/stage';
-import { createDragonRider, evidenceOf, scoreOf, type DragonRiderCommand, type DragonRiderEvent, type DragonRiderState } from '../core/index.js';
+import { createDragonRider, evidenceOf, scoreOf, type DragonRiderCommand, type DragonRiderEvent, type DragonRiderState, type DragonRiderInput } from '../core/index.js';
+import { manifest } from '../manifest.js';
+import { evidenceStoryOf } from '../../shared/challenge.js';
 import { nextChoice } from '../qc/bot.js';
 import { GATE_X } from './land-plan.js';
 import { buildLand, RIDER_MODELS } from './land.js';
@@ -54,7 +56,8 @@ function stoneGate(): THREE.Group {
 }
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
-  const story = ctx.input as PracticeInput;
+  // A practice input, or a class challenge's APK vocabulary input.
+  const input = ctx.input as DragonRiderInput;
   const stage = ctx.stage;
   const t = ctx.i18n.scope('hud').t;
   const audio = ctx.audio;
@@ -66,7 +69,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
   ]);
   const land = buildLand(stage);
-  const sim = createDragonRider(story, { seed: ctx.seed });
+  const sim = createDragonRider(input, { seed: ctx.seed });
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- dragons and the hero
@@ -306,7 +309,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     void hero.play('victory');
     powerBox.classList.remove('on');
     await hud.banner.show(t('done.title'), t('done.text'), 2.2);
-    const evidence = evidenceOf(sim.state, story, ctx.seed, Math.round(performance.now() - startedAt));
+    const evidence = evidenceOf(sim.state, evidenceStoryOf(input, manifest.levels), ctx.seed, Math.round(performance.now() - startedAt));
     ctx.complete(toGameResults(evidence, scoreOf(sim.state)), 'victory', evidence);
   }
 

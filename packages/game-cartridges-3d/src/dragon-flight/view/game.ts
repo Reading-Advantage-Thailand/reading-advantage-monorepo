@@ -5,12 +5,14 @@
  * and animates its events; it never decides a rule.
  */
 import * as THREE from 'three';
-import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { toGameResults } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, hasThai } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor, burst, FollowRig, projectile } from '@reading-advantage/advantage-play-kit-3d/stage';
-import { createDragonFlight, evidenceOf, scoreOf, type DragonFlightCommand, type DragonFlightEvent, type DragonFlightState } from '../core/index.js';
+import { createDragonFlight, evidenceOf, scoreOf, type DragonFlightCommand, type DragonFlightEvent, type DragonFlightState, type DragonFlightInput } from '../core/index.js';
+import { manifest } from '../manifest.js';
+import { evidenceStoryOf } from '../../shared/challenge.js';
 import { nextChoice } from '../qc/bot.js';
 import { buildLand, FLIGHT_MODELS } from './land.js';
 import dragon_flightCss from './dragon-flight.css.js';
@@ -35,14 +37,15 @@ interface Gate {
 }
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
-  const story = ctx.input as PracticeInput;
+  // A practice input, or a class challenge's APK vocabulary input.
+  const input = ctx.input as DragonFlightInput;
   const stage = ctx.stage;
   const t = ctx.i18n.scope('hud').t;
   const audio = ctx.audio;
   const hud = ctx.hud;
   await stage.loader.preload(FLIGHT_MODELS.map((n) => stage.loader.modelPath(n)));
   const land = buildLand(stage);
-  const sim = createDragonFlight(story, { seed: ctx.seed, helper: ctx.options.helper });
+  const sim = createDragonFlight(input, { seed: ctx.seed, helper: ctx.options.helper });
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- dragons
@@ -275,7 +278,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     audio.play('victory');
     void dragon.play('roar');
     await hud.banner.show(t('done.title'), t('done.text'), 2.2);
-    const evidence = evidenceOf(sim.state, story, ctx.seed, Math.round(performance.now() - startedAt));
+    const evidence = evidenceOf(sim.state, evidenceStoryOf(input, manifest.levels), ctx.seed, Math.round(performance.now() - startedAt));
     ctx.complete(toGameResults(evidence, scoreOf(sim.state)), 'victory', evidence);
   }
 

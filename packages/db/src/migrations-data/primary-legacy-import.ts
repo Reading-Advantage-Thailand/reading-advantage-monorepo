@@ -18,6 +18,14 @@ type Sql = postgres.Sql;
 type Tx = postgres.TransactionSql;
 type Row = Record<string, unknown>;
 
+/** A value bound for a jsonb column: upsert sends it through `sql.json`, so an array or an object lands as JSON, never as a string or a Postgres array. */
+export class JsonCell {
+  constructor(readonly value: unknown) {}
+}
+
+/** Wraps a legacy json value for a jsonb column; null stays null. */
+export const jsonb = (value: unknown): JsonCell | null => (value === null || value === undefined ? null : new JsonCell(value));
+
 /** The `primary_legacy_id_map.table_name` values the ETL writes (legacy table names). */
 export const MAP_TABLES = {
   schools: "schools",
@@ -161,15 +169,15 @@ export function mapArticle(a: LegacyArticle, newId: string, authorExists: boolea
     genre: a.genre,
     sub_genre: a.sub_genre,
     passage: a.passage,
-    translated_summary: a.translated_summary === null ? null : JSON.stringify(a.translated_summary),
-    translated_passage: a.translated_passage === null ? null : JSON.stringify(a.translated_passage),
+    translated_summary: jsonb(a.translated_summary),
+    translated_passage: jsonb(a.translated_passage),
     image_description: a.image_description,
     ra_level: a.ra_level,
     rating: a.rating,
     audio_url: a.audio_url,
     audio_word_url: a.audio_word_url,
-    sentences: a.sentences === null ? null : JSON.stringify(a.sentences),
-    words: a.words === null ? null : JSON.stringify(a.words),
+    sentences: jsonb(a.sentences),
+    words: jsonb(a.words),
     author_id: authorExists ? a.author_id : null,
     is_public: false,
     is_approved: a.is_approved ?? false,
@@ -240,7 +248,7 @@ async function upsert(tx: Tx, table: string, rows: Row[], conflict = "id"): Prom
   const updates = columns.filter((c) => c !== conflict);
   let written = 0;
   for (let i = 0; i < rows.length; i += 200) {
-    const batch = rows.slice(i, i + 200);
+    const batch = rows.slice(i, i + 200).map((row) => Object.fromEntries(Object.entries(row).map(([k, v]) => [k, v instanceof JsonCell ? tx.json(v.value as never) : v])));
     await tx`insert into ${tx(table)} ${tx(batch, ...columns)} on conflict (${tx(conflict)}) do update set ${tx.unsafe(updates.map((c) => `"${c}" = excluded."${c}"`).join(", "))}`;
     written += batch.length;
   }
@@ -433,7 +441,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const correct = correctAnswerIndex(options, q.answer as string | null);
       if (correct < 0) { counter.skip("multiple_choice_questions", "answer not among the options (spec §6 MCQ rule)", id); continue; }
       mcqRows.push({
-        id: ids.ensure(MAP_TABLES.mcq, id), article_id: articleId, question: q.question, options: JSON.stringify(options), correct_answer: correct,
+        id: ids.ensure(MAP_TABLES.mcq, id), article_id: articleId, question: q.question, options: jsonb(options), correct_answer: correct,
         order: Number(q.ord), answer: q.answer, textual_evidence: q.textualEvidence, chapter_id: null, created_at: q.createdAt, updated_at: q.updatedAt,
       });
     }
@@ -472,8 +480,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const articleId = ids.get(MAP_TABLES.article, c.article_id as string | null);
       if (!articleId) { counter.skip("sentencs_and_words_for_flashcard", "no article", id); continue; }
       cardRows.push({
-        id: ids.ensure(MAP_TABLES.flashcard, id), article_id: articleId, sentence: c.sentence === null ? null : JSON.stringify(c.sentence), audio_sentences_url: c.audio_sentences_url,
-        words: c.words === null ? null : JSON.stringify(c.words), words_url: c.words_url, created_at: c.createdAt, updated_at: c.updatedAt,
+        id: ids.ensure(MAP_TABLES.flashcard, id), article_id: articleId, sentence: jsonb(c.sentence), audio_sentences_url: c.audio_sentences_url,
+        words: jsonb(c.words), words_url: c.words_url, created_at: c.createdAt, updated_at: c.updatedAt,
       });
     }
     counter.table("sentencs_and_words_for_flashcard").written += await upsert(tx, "sentencs_and_words_for_flashcard", cardRows);
@@ -563,7 +571,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     for (const d of acts.dropped) counter.skip("user_activities", "duplicate (user, type, target); the latest row kept (null targets are distinct)", String(d.id));
     const activityRows = acts.kept.map((a) => ({
       id: ids.ensure(MAP_TABLES.userActivities, String(a.id)), user_id: a.user_id, activity_type: a.activity_type, xp_earned: 0, target_id: a._target,
-      timer: a.timer, details: a.details === null ? null : JSON.stringify(a.details), completed: a.completed ?? false, created_at: a.createdAt, updated_at: a.updatedAt,
+      timer: a.timer, details: jsonb(a.details), completed: a.completed ?? false, created_at: a.createdAt, updated_at: a.updatedAt,
     }));
     counter.table("user_activities").written += await upsert(tx, "user_activity", activityRows);
 
