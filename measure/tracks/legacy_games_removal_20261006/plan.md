@@ -11,6 +11,15 @@ Owner approved the plan as proposed on 2026-10-06 (through the Forge session). M
 - [x] docs/primary-games-integration.md
 - [ ] Browser check of the three pages (needs a free heavy slot for the Primary build)
 
+## Phase 1b: English answer audio in GameHost (owner priority, 2026-10-07)
+Owner, 2026-10-07: "merge, but prioritize this feature". Lane-g merged into integration (6af080159) on the unit checks. Until this phase ends, the new host has no English answer audio mode (Thai question, English answer clips), which only `StudentCartridgeHost` started.
+- [ ] Controller: a play that ends cancelled or failed uses no replay (`packages/advantage-play-kit/src/audio/answer-choice-controller.ts`, test); send Forge the commit (F2 Q2)
+- [ ] Content route: prepared answer audio for the 3D ids `hero-vs-zombie`, `dragon-flight`, `dragon-rider` (the legacy `wizard-vs-zombie` stays until M4)
+- [ ] Kit host (`host/story-game.ts`, `react/story-game-host.tsx`): an `answerAudio` controller option goes to `mount()`; `onComplete` passes the answer evidence
+- [ ] `GameHost`: the reading or English answer audio choice for the three games outside a class challenge; the prepared content and the controller; the answer evidence posted as `metadata.learningEvidence`, the story evidence kept for the results screen
+- [ ] F2 release sync on `apk3d-games-port`: Forge `factory/mount.ts` with `answerAudio`, the games' audio mode, `MONOREPO_OWNED` re-exports for `contracts/listening.ts` and `audio/answer-choice.ts`, fixture compares for the two listening schemas
+- [ ] Browser check: one English answer audio run on Hero vs. Zombie saves a completion with the answer evidence
+
 ## Phase 2: M2 ids (before the cutover)
 - [x] Quest templates, reward rules, challenge capabilities on the new ids and version 2026-10-06.1 (`hero-vs-zombie`; `WARD_GAME_TYPES` keeps the stored legacy name)
 - [x] Alias map for old completions (`LEGACY_GAME_IDS`); apk/[cartridgeId] redirects by it (M1)
