@@ -52,6 +52,10 @@
       "types": "./dist/primary-books/step-map.d.ts",
       "import": "./dist/primary-books/step-map.js"
     },
+    "./primary-mastery": {
+      "types": "./dist/primary-mastery/index.d.ts",
+      "import": "./dist/primary-mastery/index.js"
+    },
     "./students": {
       "types": "./dist/students/index.d.ts",
       "import": "./dist/students/index.js"
