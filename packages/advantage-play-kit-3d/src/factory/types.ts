@@ -29,6 +29,7 @@ import type {
   StoryInput,
   SupportedResponsiveComposition,
 } from '../contracts/index.js';
+import type { AnswerChoiceAudioController } from '../audio/answer-choice.js';
 import type { AudioBus } from '../audio/bus.js';
 import type { HudRoot } from '../hud/root.js';
 import type { QualityTierId, Stage3D } from '../stage/stage.js';
@@ -83,6 +84,12 @@ export interface Game3DContext {
   composition: Composition3D;
   options: SessionOptions;
   host: HostServices;
+  /**
+   * The Read to Select Audio controller of a playing session (the host owns it). A game that has
+   * the mode shows the Thai meanings and plays the English choices through it; without it, the game
+   * plays as before.
+   */
+  answerAudio?: AnswerChoiceAudioController;
   /** Once per mount; later calls become a `warning` diagnostic (the APK completion latch). */
   complete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence): void;
   diagnostic(event: APKDiagnosticInput): void;
@@ -115,7 +122,9 @@ export interface Game3DInstance {
  * own `strings.en.ts` for `i18n`, `SESSION_OPTIONS_DEFAULT` for `options`, no host buttons.
  * `complete` takes the evidence as a third argument; the APK port adds that parameter.
  */
-export interface Game2DContext extends Omit<CartridgeGameConfigContext, 'input' | 'complete'> {
+export interface Game2DContext extends Omit<CartridgeGameConfigContext, 'input' | 'complete' | 'answerAudio'> {
+  /** The Read to Select Audio controller of a playing session, as in `Game3DContext`. */
+  answerAudio?: AnswerChoiceAudioController;
   /** The APK `GameInput`, or the whole story for `inputMode: 'story'` (the port adds it to `GameInput`). */
   input: GameInput | StoryInput | PracticeInput;
   complete: (result: unknown, outcome?: GameTerminalOutcome, evidence?: StoryGameEvidence) => void;
@@ -206,6 +215,8 @@ export interface ThreeFactoryContext {
   audio: AudioBus;
   options: SessionOptions;
   host: HostServices;
+  /** The Read to Select Audio controller; the factory passes it to the game as is. */
+  answerAudio?: AnswerChoiceAudioController;
   complete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence): void;
   diagnostic(event: APKDiagnosticInput): void;
 }
@@ -227,7 +238,7 @@ export interface PhaserFactoryContext {
   composition?: SupportedResponsiveComposition;
   seed?: number;
   listening?: unknown;
-  answerAudio?: unknown;
+  answerAudio?: AnswerChoiceAudioController;
   i18n?: ScopedI18n;
   options?: SessionOptions;
   host?: HostServices;
