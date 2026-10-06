@@ -12,6 +12,12 @@ describe("tags export contract (FR-2)", () => {
     expect(parsed.packages[1]).toMatchObject({ key: "bank-1/1", role: "bank", legacy: null });
   });
 
+  it("accepts the glossary form as a string, null, or absent", () => {
+    const parsed = parseTagsExport(sampleTagsExport());
+    expect(parsed.packages[0].vocabulary.map((entry) => entry.glossaryWord)).toEqual(["puppies", null]);
+    expect(parsed.packages[1].vocabulary[0].glossaryWord).toBeUndefined();
+  });
+
   it("keeps both sense nodes of one word and part of speech", () => {
     const pkg = tagsPackageSchema.parse(sampleTagsPackage({ vocabulary: [
       { word: "bat", pos: "noun", nodeId: "english.vocabulary.skill.bat.noun", role: "glossed" },
