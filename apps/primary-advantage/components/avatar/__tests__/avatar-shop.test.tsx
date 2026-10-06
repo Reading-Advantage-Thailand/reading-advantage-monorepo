@@ -9,6 +9,8 @@ import { renderWithMessages } from "@/components/__tests__/helpers/render-with-m
 vi.mock("../portrait-canvas", () => ({
   AvatarPortrait: ({ pieces, alt }: { pieces?: { itemId: string; dye: string | null }[]; alt: string }) => <div role="img" data-testid="portrait" data-pieces={JSON.stringify(pieces ?? [])} aria-label={alt} />,
 }));
+const refresh = vi.fn();
+vi.mock("next/navigation", async (importOriginal) => ({ ...(await importOriginal<object>()), useRouter: () => ({ refresh }) }));
 vi.mock("@reading-advantage/avatar-kit", () => ({ AVATAR_CATALOG: {}, AVATAR_BASE: { slots: {} }, TINT_SLOTS: [] }));
 
 import { AvatarShop, tryOnPieces } from "../avatar-shop";
@@ -69,6 +71,7 @@ describe("AvatarShop", () => {
     expect(within(card).getByText("You keep 100 GP")).toBeInTheDocument();
     await user.click(within(card).getByRole("button", { name: "Buy for 50 GP" }));
     await waitFor(() => expect(fetchMock).toHaveBeenCalledWith("/api/v1/avatar/purchase", expect.objectContaining({ method: "POST", body: JSON.stringify({ itemId: "hat-3" }) })));
+    await waitFor(() => expect(refresh).toHaveBeenCalled()); // the header purse re-renders on the server
     expect(await within(card).findByText("Owned")).toBeInTheDocument();
     expect(screen.getByTitle("100 GP")).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent("Good choice!");

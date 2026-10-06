@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import {
   avatarSlotSchema,
   type AvatarLoadout,
@@ -78,6 +79,7 @@ export function AvatarShop({
   const [line, setLine] = useState<"greeting" | "thanks">("greeting");
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
+  const router = useRouter();
 
   const listed = items.filter((item) => slot === "all" || item.slot === slot);
   const perPage = SHELF_SIZE * SHELVES_PER_PAGE;
@@ -128,6 +130,7 @@ export function AvatarShop({
             : t("shop.shopError"),
         );
       setGp(body.gp ?? gp);
+      router.refresh(); // the header purse is server-rendered
       setItems((list) =>
         list.map((item) =>
           item.id !== itemId

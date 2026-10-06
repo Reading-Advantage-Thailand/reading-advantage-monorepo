@@ -85,6 +85,11 @@ describe("BattleClient", () => {
 });
 
 describe("LiveDashboard", () => {
+  it("labels a student with no hero instead of an empty tile", () => {
+    renderWithMessages(<LiveDashboard initial={dashboard("play")} />, { locale: "en" });
+    expect(screen.getAllByRole("img", { name: "No hero yet" })).toHaveLength(2);
+  });
+
   const dashboard = (status: QuestStatus) => ({
     quest: { ...quest, status }, title, boss, target: 40, committed: 16, pending: 6, countdownEndsAt: null,
     students: [

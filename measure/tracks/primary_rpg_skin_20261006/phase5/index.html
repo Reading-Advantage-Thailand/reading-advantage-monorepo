@@ -50,8 +50,8 @@
 
 <h2>Open items</h2>
 <ul>
-<li><strong>The header purse does not refresh after a purchase.</strong> The coin counter in the top bar keeps the old balance until the next navigation (220 stayed in shot 3 while the shop purse showed 170). Small fix: refresh the shell balance from the purchase response.</li>
-<li><strong>Students with no hero show a white square on the projector.</strong> <code>qa-student-a2</code> and <code>qa-student-a3</code> have no avatar, so the live dashboard draws an empty tile. Show the class placeholder portrait instead.</li>
+<li><strong>Fixed: the header purse now refreshes after a purchase.</strong> The first frames showed 220 in the top bar while the shop purse read 170; the shop now refreshes the server-rendered header, and the recapture shows 95 after the Bracers purchase.</li>
+<li><strong>Fixed: a student with no hero gets a "No hero yet" tile on the projector</strong> (<code>qa-student-a2</code> and <code>qa-student-a3</code> in the recapture). A neutral hero silhouette from Forge replaces the text in a later skin release.</li>
 <li><strong>The hit frame of shot 4 is the battle page state, not the slash.</strong> The slash and the rising damage number play inside the archway game at the moment of a correct answer; a headless frame of the battle page shows the boss with the student's pending hits. The video session records the slash from a real phone in the game.</li>
 <li><strong>The coin rain of shot 5 did not land in the headless frame</strong>; the fallen-boss panel, the thank-you list, and the hits list did. Check it on a real projector at the rehearsal.</li>
 </ul>

@@ -3119,6 +3119,7 @@
     "xp": "{xp} XP"
   },
   "Quest": {
+    "noHero": "No hero yet",
     "title": "Class Quest",
     "subtitle": "Your class fights one boss together.",
     "boss": "Boss: {name}",

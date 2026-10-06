@@ -162,9 +162,12 @@ export function LiveDashboard({ initial }: { initial: QuestDashboardState }) {
                 />
               ) : (
                 <div
-                  className="bg-muted size-18 rounded-xl"
-                  aria-hidden="true"
-                />
+                  className="bg-muted/80 text-muted-foreground flex size-18 items-center justify-center rounded-xl px-1 text-center text-xs leading-tight"
+                  role="img"
+                  aria-label={t("noHero")}
+                >
+                  {t("noHero")}
+                </div>
               )}
               <span className="w-full truncate text-center">{s.name}</span>
               <Meter
