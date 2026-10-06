@@ -20,31 +20,33 @@ file for `createTenantDB` or `unscoped`.
 - [ ] Task: Measure - User Manual Verification 'Phase 0: Discovery' (Protocol in workflow.md)
 
 ## Phase 1: Contract and Schema Definition
-- [ ] Task: Evidence policy data and contract (FR-1)
-    - [ ] `primary-mastery/evidence-policy.ts`: the matrix constant, `evidencePolicySchema`, `rateEvidence(surface, outcome, context)`
-    - [ ] JSDoc with the program 4.2 source and the version
-- [ ] Task: Source event contracts (FR-2)
-    - [ ] `primary-mastery/evidence-contracts.ts`: `questionAnswerEventSchema`, `flashcardReviewEventSchema`, `gameCompletionEventSchema`, `primaryEvidenceEventSchema` (discriminated union), `recordPrimaryEvidenceResultSchema` with receipts and skipped items
-    - [ ] Job payload contract `primaryEvidenceJobPayloadSchema` (`sourceTable`, `rowId`) and the job kind constant
-    - [ ] Export from `primary-mastery/index.ts`; update `tenant-registry.ts` comments if a table's reason changes
-- [ ] Task: Question step details contract (FR-5a): Zod schema for the additive `userActivity.details` keys, shared by the action and the adapter
+- [x] Task: Evidence policy data and contract (FR-1) (6d1c0708c)
+    - [x] `primary-mastery/evidence-policy.ts`: the matrix constant, `evidencePolicySchema`, `rateEvidence(surface, outcome, context)`
+    - [x] JSDoc with the program 4.2 source and the version
+- [x] Task: Source event contracts (FR-2) (240d36410)
+    - [x] `primary-mastery/evidence-contracts.ts`: `questionAnswerEventSchema`, `flashcardReviewEventSchema`, `gameCompletionEventSchema`, `primaryEvidenceEventSchema` (discriminated union), `recordPrimaryEvidenceResultSchema` with receipts and skipped items
+    - [x] Job payload contract `primaryEvidenceJobPayloadSchema` (`sourceTable`, `rowId`) and the job kind constant
+    - [x] Export from `primary-mastery/index.ts`; the registry needed no change
+- [x] Task: Question step details contract (FR-5a): `questionStepDetailsSchema` in `evidence-contracts.ts`, shared by the action and the adapter (240d36410)
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract and Schema Definition' (Protocol in workflow.md)
 
 ## Phase 2: Test
-- [ ] Task: `__tests__/evidence-policy.test.ts`: one test per matrix row and per rule (teacher-led step, hint step, blank, under two seconds, LAQ, listening without audio) (AC-1)
-- [ ] Task: `__tests__/record-evidence.test.ts` with `createInMemoryMasteryPersistence` and the mock DB: MCQ two objectives, teacher-led confidence, replay writes nothing, SAQ score ratio, flashcard node and off-list skip, game 20 items at 0.4, expedition question item, unknown item skipped, state before and after recorded (AC-2 to AC-4)
-- [ ] Task: `__tests__/evidence-adapters.test.ts`: the three source rows become events; a row of another school is refused before any write (FR-6)
-- [ ] Task: `__tests__/evidence-jobs.test.ts`: enqueue inserts one `durable_jobs` row per source write; the handler loads the row and calls `recordPrimaryEvidence`; a 201-item run is rejected (FR-5, NFR)
-- [ ] Task: `__tests__/evidence-summary.test.ts`: counts per surface, day, confidence, and skipped reason (FR-8)
+- [x] Task: `__tests__/evidence-policy.test.ts`: one test per matrix row and per rule (teacher-led step, hint step, blank, under two seconds, LAQ, listening without audio) (AC-1) (aa9a35c71)
+- [x] Task: `__tests__/record-evidence.test.ts` with `createInMemoryMasteryPersistence` and the in-memory resolver: MCQ two objectives, teacher-led confidence, replay writes nothing, SAQ score ratio, flashcard node and off-list skip, game items at 0.4, expedition question item, unknown item skipped, 201 items rejected (AC-2 to AC-4) (aa9a35c71)
+- [x] Task: `__tests__/evidence-sources.test.ts`: the three source rows become events; legacy quiz rows by text (FR-5, FR-5d) (aa9a35c71, 6498a0193)
+- [x] Task: `__tests__/evidence-jobs.test.ts`: the enqueue request, the port call, the runner (recorded, row-missing, tenant-mismatch), the handler definition (FR-5, FR-6) (aa9a35c71)
+- [x] Task: `__tests__/evidence-summary.test.ts`: counts per surface, day, confidence, and the job results (FR-8) (aa9a35c71)
 - [ ] Task: App-side tests: the question action writes the new `details` keys and enqueues; the flashcard route enqueues after the FSRS write; `recordGameCompletion` enqueues on story evidence (AC-5)
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
 
 ## Phase 3: Implement
-- [ ] Task: `recordPrimaryEvidence` in `primary-mastery/record-evidence.ts`: resolution through the T1 read functions, FR-1 rating, `buildActivityMasteryCommand` per objective, `commitMasteryEvidence` with the idempotency key, skipped list (FR-3, FR-4)
-- [ ] Task: Source adapters in `primary-mastery/evidence-sources.ts`: `userActivity` row to event, `cardReviews` + `userWordRecords` row to event, `gameCompletions` row to event; owner-FK school check through `users.schoolId` with `unscoped(reason)` (FR-5, FR-6)
-- [ ] Task: Job enqueue and handler in `primary-mastery/evidence-jobs.ts` (`enqueuePrimaryEvidenceJob`, `runPrimaryEvidenceJob` or `processPrimaryEvidenceJobs` per Phase 0) (FR-5)
+- [x] Task: `recordPrimaryEvidence` in `primary-mastery/record-evidence.ts`: resolution through the T1 read functions, FR-1 rating, `buildActivityMasteryCommand` per objective, `commitMasteryEvidence` with the idempotency key, skipped list (FR-3, FR-4) (08dcb487a; reuses `projectActivitySubmissionToMastery`, which carries the replay)
+- [x] Task: Source adapters in `primary-mastery/evidence-sources.ts`: `userActivity` row to event, `cardReviews` + `flashcardCards` + `flashcardDecks` row to event (the Primary flashcard store; `userWordRecords` is the Reading one), `gameCompletions` row to event; owner-FK school check through `users.schoolId` with `unscoped(reason)` (FR-5, FR-6) (05186260b)
+- [x] Task: Job enqueue and handler in `primary-mastery/evidence-jobs.ts` (`primaryEvidenceEnqueueRequest`, `enqueuePrimaryEvidence`, `runPrimaryEvidenceJob`, `definePrimaryEvidenceJobHandler`) (FR-5) (59741550a)
 - [ ] Task: Request-path changes: `actions/question.ts` details keys and enqueue; flashcard review route enqueue; `recordGameCompletion` enqueue (FR-5a-c); keep the app layers thin
-- [ ] Task: `summarizePrimaryEvidence` in `primary-mastery/evidence-summary.ts` (FR-8)
+- [x] Task: `summarizePrimaryEvidence` in `primary-mastery/evidence-summary.ts` (FR-8) (2793824f2)
+- [x] Task: Legacy quiz rows yield evidence by question text; `recordGameCompletion` returns `completionId` (FR-5d; owner rule "evidence is kept", 2026-10-06; proposal sent to the monorepo session, confidence 0.5 and SAQ scale 1-5 confirmed from `lib/authorization.ts`)
+- [ ] Task: One-time backfill script `apps/primary-advantage/scripts/backfill-primary-evidence.ts`: enqueue one job per existing quiz row, flashcard review, and story game run (FR-5d)
 - [ ] Task: Phase gate: type check, lint, the domain suite, and the primary-advantage targeted tests once; commit
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
