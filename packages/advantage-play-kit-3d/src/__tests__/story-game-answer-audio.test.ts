@@ -26,7 +26,7 @@ const { startStoryGame } = await import('../host/story-game.js');
 const cartridge = {
   manifest: { id: 'hero-vs-zombie', briefingKey: 'demo.briefing', inputMode: 'vocabulary', device: {}, renderers: ['three'], packs: [], requiredModelBindings: [], requiredAssetBindings: [] },
   strings: {},
-  briefing: () => ({ title: 'Demo', objective: 'Play.', instructions: [], controls: [] }),
+  briefing: () => ({ title: 'Demo', objective: 'Play.', instructions: [], controls: [], learningPreview: { heading: 'Words' } }),
 } as unknown as Cartridge;
 
 const result = { accuracy: 1, xp: 10, score: 10, correctAnswers: 2, totalAttempts: 2 };
@@ -51,6 +51,18 @@ describe('startStoryGame with answer audio', () => {
     expect(mounts[0]!.answerAudio).toBe(controller);
     mounts[0]!.complete(result, 'victory', evidence, answerEvidence);
     expect(onComplete).toHaveBeenCalledWith(result, 'victory', evidence, answerEvidence);
+    await session.destroy();
+  });
+
+  it('briefs an audio run in the answer audio mode', async () => {
+    const briefing = vi.spyOn(cartridge, 'briefing');
+    const container = document.createElement('div');
+    document.body.append(container);
+    const session = startStoryGame({
+      container, cartridge, input: [{ term: 'apple', translation: 'แอปเปิล' }], assetBase: '/', catalogs: [],
+      answerAudio: () => ({}) as unknown as AnswerChoiceAudioController, onComplete: () => undefined, onExit: () => undefined,
+    });
+    expect(briefing).toHaveBeenCalledWith(expect.anything(), expect.anything(), { answerAudio: true });
     await session.destroy();
   });
 });

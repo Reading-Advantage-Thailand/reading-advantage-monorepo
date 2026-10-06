@@ -18,7 +18,8 @@ Owner, 2026-10-07: "merge, but prioritize this feature". Lane-g merged into inte
 - [x] Kit host (`host/story-game.ts`): an `answerAudio` factory makes one controller per run for `mount()`; `onComplete` passes the answer evidence — a4ba7be4f
 - [x] `GameHost`: the reading or English answer audio choice for the three games outside a class challenge; the prepared content and the controller; the answer evidence posted as `metadata.learningEvidence`, the story evidence kept for the results screen — 97656f1d1. The choice shows only when the manifest lists `read-to-select-audio` (Forge gate, 2026-10-07), so a game without its audio mode never starts an audio run
 - [x] F2 part A sync on `apk3d-games-port`: Forge `factory/mount.ts` with `answerAudio`, `MONOREPO_OWNED` re-exports for `contracts/listening.ts` and `audio/answer-choice.ts`, fixture compares for the two listening schemas — 500b28563, a683e9d1d (Forge 58f06d5a), in integration
-- [ ] F2 part B sync, one game at a time (Hero vs. Zombie first, Forge 864d3810): the audio mode and the manifest modality; the host calls `cartridge.briefing(i18n, input, { answerAudio: true })` in an audio run
+- [x] F2 part B sync, Hero vs. Zombie (Forge 24c0a24e, monorepo 6dd0ec837, in integration): the audio mode and the manifest modality; the host calls `cartridge.briefing(i18n, input, { answerAudio: true })` in an audio run
+- [ ] F2 part B sync, Dragon Flight and Dragon Rider (each one when its manifest lists the modality)
 - [ ] Browser check: one English answer audio run on Hero vs. Zombie saves a completion with the answer evidence
 
 ## Phase 2: M2 ids (before the cutover)

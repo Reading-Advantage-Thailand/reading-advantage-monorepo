@@ -261,7 +261,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
   }
 
   const showBriefing = (): void => {
-    const b = cartridge.briefing(i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!), input);
+    const b = cartridge.briefing(i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!), input, options.answerAudio ? { answerAudio: true } : undefined);
     renderBriefing(screen, b, input, cartridge.manifest, options.icon ?? '🎮', t);
     screen.classList.add('on');
     screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());
