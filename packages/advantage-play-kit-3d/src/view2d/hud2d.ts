@@ -1,12 +1,12 @@
 /**
  * HUD pieces drawn in Phaser for 2D views, in the look of the HTML HUD of the 3D views (the theme
- * colors, Fredoka for Latin and Mali for Thai): word tags, popups, a banner, a status bar, and
+ * colors, Fredoka for Latin and Mitr for Thai): word tags, popups, a banner, a status bar, and
  * round buttons. Every text comes from the caller (the game's catalog), as in the 3D HUD.
  */
 import type * as Phaser from 'phaser';
 import { spreadBoxes } from '../sim/index.js';
 
-export const FONT = "'Fredoka', 'Mali', 'Noto Sans Thai', system-ui, sans-serif";
+export const FONT = "'Fredoka', 'Mitr', 'Noto Sans Thai', system-ui, sans-serif";
 export const COLORS = { ink: '#2b1d3a', paper: 0xfffdf7, night: 0x121a2c, gold: 0xffd84a, green: 0x2fa84f, red: 0xe0452f, purple: 0x6a3fd1, tagFill: 0x2b1d3a };
 
 const thai = (s: string): boolean => /[฀-๿]/.test(s);

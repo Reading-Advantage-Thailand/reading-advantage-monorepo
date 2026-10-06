@@ -1,6 +1,7 @@
 // Generated from hud/theme.css (the stylesheet text; installed once by installCss).
 export default `/*
- * The Primary Chibi edition theme: fonts (Fredoka for Latin, Mali for Thai; OFL, see fonts/),
+ * The Primary Chibi edition theme: fonts (Fredoka for Latin, Mitr for Thai, the face of the
+ * Primary Advantage pages; OFL, see fonts/),
  * color tokens, and shared buttons. A Secondary Epic edition replaces this file only.
  */
 @font-face {
@@ -10,16 +11,16 @@ export default `/*
   font-display: swap;
 }
 @font-face {
-  font-family: 'Mali';
-  src: url('/assets/apk3d/fonts/mali-thai-600.woff2') format('woff2');
-  font-weight: 400 600;
+  font-family: 'Mitr';
+  src: url('/assets/apk3d/fonts/mitr-500-thai.woff2') format('woff2');
+  font-weight: 300 500;
   unicode-range: U+0E00-0E7F;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Mali';
-  src: url('/assets/apk3d/fonts/mali-thai-700.woff2') format('woff2');
-  font-weight: 700;
+  font-family: 'Mitr';
+  src: url('/assets/apk3d/fonts/mitr-600-thai.woff2') format('woff2');
+  font-weight: 600 800;
   unicode-range: U+0E00-0E7F;
   font-display: swap;
 }
@@ -34,7 +35,7 @@ export default `/*
   --green: #2fa84f;
   --red: #e0452f;
   --night: #121a2c;
-  --font: 'Fredoka', 'Mali', 'Noto Sans Thai', system-ui, sans-serif;
+  --font: 'Fredoka', 'Mitr', 'Noto Sans Thai', system-ui, sans-serif;
   --safe-b: env(safe-area-inset-bottom, 0px);
 }
 

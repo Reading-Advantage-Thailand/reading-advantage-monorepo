@@ -474,7 +474,7 @@ export default `/*
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   color: #fff;
-  font: 700 clamp(12px, 3.6vw, 18px) / 1.1 var(--font, 'Fredoka', 'Mali', system-ui, sans-serif);
+  font: 700 clamp(12px, 3.6vw, 18px) / 1.1 var(--font, 'Fredoka', 'Mitr', system-ui, sans-serif);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
   box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.18), 0 3px 0 rgba(0, 0, 0, 0.3);
   cursor: pointer;
@@ -482,7 +482,7 @@ export default `/*
   overflow: hidden;
 }
 .board .rune.th {
-  font-family: 'Mali', 'Noto Sans Thai', system-ui, sans-serif;
+  font-family: 'Mitr', 'Noto Sans Thai', system-ui, sans-serif;
   /* Thai has no spaces: keep one word on one line and shrink it, never break inside a word. */
   white-space: nowrap;
   word-break: keep-all;
