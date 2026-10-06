@@ -1168,3 +1168,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [~] **Track: Primary Mastery Evidence (T2 of the Primary Mastery Graph Program)** (created 2026-10-06 at the owner's request; lane-h; Phases 0-4 implemented and verified on a clone of the production copy the same day, 1361 evidence rows from 1065 legacy quiz rows; merged into integration 146e46261; the per-phase owner checks are open) *Link: [./tracks/primary_mastery_evidence_20261006/](./tracks/primary_mastery_evidence_20261006/)*
   `recordPrimaryEvidence`, the evidence policy as data (program 4.2), the question, flashcard, and game source adapters, the durable job, tenant scoping, and the evidence summary for calibration. Shadow mode: evidence only, no adaptation, no UI.
+
+- [ ] **Track: Primary YLE-format Starters Tasks** (created 2026-10-07 after the owner approved the spec and plan; lane-h; starts after the 2026-10-11 deploy; migration in the 2026-11-09 window) *Link: [./tracks/primary_yle_starters_20261007/](./tracks/primary_yle_starters_20261007/)*
+  The five Starters reading and writing task models: item contract and JSON Schema, practice and secure importers, exact-key matcher, task screens, after-reading lesson step, level bank sets, secure test sittings, and evidence from every answer. Catalog: `measure/primary-yle-task-models.md`.
