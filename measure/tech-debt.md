@@ -68,8 +68,8 @@
 ## Objective tags: follow-ups found at the T1 verification (2026-10-06, primary_objective_tags_20261006)
 
 - `packages/db` tests red on `primary-parity-integration` before this track: `journal-integrity` wants sentinel probes for `0068_primary_avatar_shop` and `0069_primary_class_quest` (owner: lane-f), and the `drizzle045-phase2-contracts-adversarial` migration allowlist stops at `0057` while the disk has `0070` (two tests). `measure/doctor.sh` fails A13 on the stale `agents_md_audit_science_advantage_20260603` directory that also sits under `archive/`. None of these come from this track.
-- The lesson importer rejects the 14 `origins-1` packages (`o1/1`..`o1/14`): `BOOKS` in `packages/domain/src/primary-books/import.ts` has no `o1` key. Owner: the lesson importer track. The backfill then finds no article for them.
-- The coverage report joins the glossary to the word nodes by a crude stem (`pets` -> `pet`). Ask Workbooks for a `glossaryWord` field in `tags.json` (the glossary form next to the node's dictionary form) and drop the stem.
+- Resolved 2026-10-06 (feb22e1e1 on integration): `BOOKS` has the `o1` key, so the 14 `origins-1` packages import (they wait for the id map like the other printed lessons).
+- The coverage report joins the glossary to the word nodes by a crude stem (`pets` -> `pet`). Workbooks added `glossaryWord` to `tags.json` (341d5e7); the contract accepts it, but `primary_article_word_nodes` has no column for it, so the report still stems. Add the column (one additive migration) and store the glossary form when the report needs to be exact.
 - The 180 bank packages are not imported (the importer skips `role: bank` by design), so the backfill finds no article for them; the 42 legacy workbook packages wait for `primary_legacy_id_map`. Rerun `pnpm backfill-primary-tags` after the ETL and after every Workbooks re-export.
 
 ## Class Quest: live HP needs a per-answer event (2026-10-06)
