@@ -28,6 +28,7 @@ import {
   createCartridgeMounter,
   createPhaserGameFactory,
   createThreeGameFactory,
+  savedRendererSetting,
   selectRenderer,
   type Cartridge,
   type Composition3D,
@@ -58,7 +59,8 @@ export interface StoryGameOptions {
   input: PracticeInput;
   /** URL prefix that serves `packs/` and `assets/apk/` (ends with a slash). */
   assetBase: string;
-  /** `'phaser'` forces the 2D view; `'auto'` picks by device. */
+  /** `'phaser'` forces the 2D view; `'auto'` picks by device. Absent: the student's saved "2D mode
+   *  (older phones)" choice, shared with the RPG pages (`savedRendererSetting`), else by device. */
   setting?: RendererSetting;
   hero?: string;
   /** Helper mode (easier: highlights the right answer). Off by default. */
@@ -140,7 +142,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
     starting = true;
     try {
       const verdict = checkDevice({ requirements: cartridge.manifest.device });
-      const pick = selectRenderer(cartridge.manifest, verdict, options.setting ?? 'auto');
+      const pick = selectRenderer(cartridge.manifest, verdict, options.setting ?? savedRendererSetting());
       if (!pick) {
         renderGate(screen, verdict.status === 'unsupported' ? verdict.reason : undefined, t);
         screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());
