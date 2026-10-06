@@ -69,6 +69,26 @@
       "import": "./dist/avatar/price.js",
       "default": "./dist/avatar/price.js"
     },
+    "./avatar/tint": {
+      "types": "./dist/avatar/tint.d.ts",
+      "import": "./dist/avatar/tint.js",
+      "default": "./dist/avatar/tint.js"
+    },
+    "./avatar/hair": {
+      "types": "./dist/avatar/hair.d.ts",
+      "import": "./dist/avatar/hair.js",
+      "default": "./dist/avatar/hair.js"
+    },
+    "./avatar/portrait": {
+      "types": "./dist/avatar/portrait.d.ts",
+      "import": "./dist/avatar/portrait.js",
+      "default": "./dist/avatar/portrait.js"
+    },
+    "./avatar/starters": {
+      "types": "./dist/avatar/starters.d.ts",
+      "import": "./dist/avatar/starters.js",
+      "default": "./dist/avatar/starters.js"
+    },
     "./host": {
       "types": "./dist/host/index.d.ts",
       "import": "./dist/host/index.js",
