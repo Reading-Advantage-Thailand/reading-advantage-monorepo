@@ -63,3 +63,26 @@ export const slotArt = (slot: string): string => `/rpg/kit/icons/slot-${slot}.we
  * @returns The WebP path.
  */
 export const bossArt = (artKey: string): string => `/rpg/kit/boss/${artKey}-front.webp`;
+
+/**
+ * The Forge view of a catalog piece (the Forge build writes `/rpg/items/<id>.webp`); the item
+ * icon falls back to the slot icon while the file is missing.
+ * @param itemId The catalog id.
+ * @returns The path under the public root.
+ */
+export const itemArt = (itemId: string): string => `/rpg/items/${itemId}.webp`;
+
+/**
+ * The Forge front view of a hero class in its starter look (`/rpg/kit/heroes/<classId>.webp`).
+ * @param classId The hero class.
+ * @returns The path under the public root.
+ */
+export const heroArt = (classId: string): string => `/rpg/kit/heroes/${classId}.webp`;
+
+/** The NPC sprite strips (8 frames at 128 px) and fronts. */
+export const NPC_ART = {
+  blacksmithIdle: "/rpg/kit/npc/blacksmith-idle-strip.png",
+  blacksmithTalk: "/rpg/kit/npc/blacksmith-talk-strip.png",
+  blacksmith: "/rpg/kit/npc/blacksmith-front.webp",
+  questGiver: "/rpg/kit/npc/quest-giver-front.webp",
+} as const;

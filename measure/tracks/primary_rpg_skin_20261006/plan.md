@@ -16,10 +16,11 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - [x] Home in the guild hall; captures at 375 and 1280, light and night (`phase1/captures/`)
 - [x] Fonts Fredoka and Mitr served from `public/rpg/fonts/`; the Forge peer owns the rebuild of `public/rpg/`
 
-## Phase 2: the avatar
-- [ ] Picker in the shrine (3D composer, portrait fallback)
-- [ ] Paper-doll inventory with the paged drawer
-- [ ] Armory shop with the blacksmith, shelves, the try-on card, the purchase animation
+## Phase 2: the avatar (done 2026-10-06, report `phase2/index.html`)
+- [x] Picker in the shrine: 15 heroes on pedestals, the chosen one steps forward, dye pots on the stone table (`avatar-picker.tsx`); the hero is the 2D portrait until the games port lands the 3D composer
+- [x] Paper-doll inventory with the paged drawer, eight per page (`avatar-home.tsx`)
+- [x] Armory shop with the blacksmith, hanging signs, two shelves of six per page, the try-on card with dye pots, flying coins on buy (`avatar-shop.tsx`)
+- [x] Item icons read `/rpg/items/<id>.webp` and fall back to the slot icon until the Forge build ships the views (`components/rpg/item-icon.tsx`)
 
 ## Phase 3: the battle
 - [ ] Phone battle page in the arena: boss sprite, meter frame, hearts, relics, archway game

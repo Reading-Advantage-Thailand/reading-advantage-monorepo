@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { ArrowLeftIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { db } from "@reading-advantage/db";
 import { getAvatarState, listAvatarShop, type AvatarShopItem, type AvatarState } from "@reading-advantage/domain/primary-avatar";
 import { ErrorState } from "@reading-advantage/ui";
 import { currentUser } from "@/lib/session";
-import { Link, redirect } from "@/i18n/navigation";
+import { redirect } from "@/i18n/navigation";
 import { AvatarShop } from "@/components/avatar/avatar-shop";
+import { RpgLink } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
 
 /**
  * Page title: the shop.
@@ -36,17 +37,17 @@ export default async function AvatarShopPage() {
     state = null;
   }
   if (state && !state.profile) return redirect({ href: "/student/avatar?from=me", locale });
+  // The shop is the armory (docs/primary-rpg-skin.md §4).
   return (
-    <div className="flex flex-col gap-6">
-      <Link href="/student/avatar" className="text-muted-foreground inline-flex min-h-11 items-center gap-2 text-sm hover:underline">
-        <ArrowLeftIcon aria-hidden="true" className="size-4" />
-        {t("shop.home")}
-      </Link>
-      <header className="flex flex-col gap-1">
+    <Scene place="armory">
+      <header className="cq-on-scene flex flex-col gap-1">
         <h1 className="text-2xl font-bold md:text-3xl">{t("shop.shopTitle")}</h1>
-        <p className="text-muted-foreground">{t("shop.shopSubtitle")}</p>
+        <p>{t("shop.shopSubtitle")}</p>
       </header>
-      {state ? <AvatarShop items={items} gp={state.gp} /> : <ErrorState className="bg-card border" title={t("shop.shopError")} />}
-    </div>
+      {state?.profile ? <AvatarShop items={items} gp={state.gp} profile={state.profile} loadout={state.loadout} /> : <ErrorState className="bg-card border" title={t("shop.shopError")} />}
+      <RpgLink href="/student/avatar" tone="iron" className="w-fit">
+        {t("shop.home")}
+      </RpgLink>
+    </Scene>
   );
 }

@@ -15,7 +15,7 @@ export function Sprite({ src, size, frames = 8, label = "", className }: { src: 
       aria-label={label || undefined}
       aria-hidden={label ? undefined : true}
       className={cn("cq-sprite", className)}
-      style={{ width: size, height: size, backgroundImage: `url("${src}")`, backgroundSize: `${size * frames}px ${size}px`, "--frames": frames } as React.CSSProperties}
+      style={{ width: size, height: size, backgroundImage: `url("${src}")`, backgroundSize: `${size * frames}px ${size}px`, "--frames": frames, "--strip-w": `${size * frames}px` } as React.CSSProperties}
     />
   );
 }

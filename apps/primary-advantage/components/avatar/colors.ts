@@ -1,4 +1,4 @@
-import { AVATAR_BASE, TINT_SLOTS, type TintSlot } from "@reading-advantage/avatar-kit";
+import { AVATAR_BASE, AVATAR_CATALOG, TINT_SLOTS, type TintSlot } from "@reading-advantage/avatar-kit";
 
 /**
  * A linear light value as an sRGB byte.
@@ -22,3 +22,20 @@ export function swatchColor(slot: TintSlot, option: string): string {
 
 /** The options of every color slot, in the order of the base table. */
 export const TINT_OPTIONS: Readonly<Record<TintSlot, readonly string[]>> = Object.fromEntries(TINT_SLOTS.map((slot) => [slot, Object.keys(AVATAR_BASE.slots[slot]!.options)])) as unknown as Record<TintSlot, readonly string[]>;
+
+/**
+ * The CSS color of a dye of a catalog piece, for a paint pot; null when the piece or the dye is
+ * unknown.
+ * @param itemId The catalog id.
+ * @param dye The dye name.
+ * @returns A hex color, or null.
+ */
+export function dyeColor(itemId: string, dye: string): string | null {
+  const table = AVATAR_CATALOG[itemId]?.table;
+  if (!table) return null;
+  for (const slot of Object.values(table.slots)) {
+    const rgb = slot.options[dye];
+    if (rgb) return `#${rgb.map((v) => toSrgb(v).toString(16).padStart(2, "0")).join("")}`;
+  }
+  return null;
+}

@@ -6,6 +6,7 @@ import { currentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import { AvatarPicker } from "@/components/avatar/avatar-picker";
 import { AvatarHome } from "@/components/avatar/avatar-home";
+import { Scene } from "@/components/rpg/scene";
 
 /** Where the picker may send the student back to. */
 const RETURN_TO: Readonly<Record<string, string>> = { reedy: "/student/reedy", me: "/settings/user-profile" };
@@ -57,13 +58,14 @@ export default async function AvatarPage({ searchParams }: { searchParams: Promi
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
   const [{ from }, profile, t] = await Promise.all([searchParams, loadProfile(user), getTranslations("Avatar")]);
   const state = profile && from === undefined ? await loadState(user) : null;
+  // The inventory is the treasure vault; the picker is the shrine (docs/primary-rpg-skin.md §4).
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
+    <Scene place={state?.profile ? "treasure-vault" : "shrine"}>
+      <header className="cq-on-scene flex flex-col gap-1">
         <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
-        <p className="text-muted-foreground">{state ? t("shop.wearing") : t("subtitle")}</p>
+        <p>{state ? t("shop.wearing") : t("subtitle")}</p>
       </header>
       {state?.profile ? <AvatarHome state={{ ...state, profile: state.profile }} /> : <AvatarPicker initial={profile} returnTo={RETURN_TO[from ?? ""] ?? "/student/avatar"} />}
-    </div>
+    </Scene>
   );
 }
