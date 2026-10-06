@@ -624,4 +624,14 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       { tag: "0067_primary_voice", kind: "column", target: "primary_voice_school_settings.enabled" },
     ],
   },
+  "0070_primary_objective_tags": {
+    tag: "0070_primary_objective_tags",
+    kind: "all",
+    target: "primary_article_objectives.node_id",
+    allOf: [
+      { tag: "0070_primary_objective_tags", kind: "column", target: "primary_article_objectives.node_id" },
+      { tag: "0070_primary_objective_tags", kind: "column", target: "primary_question_objectives.question_type" },
+      { tag: "0070_primary_objective_tags", kind: "column", target: "primary_article_word_nodes.node_id" },
+    ],
+  },
 };

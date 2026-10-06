@@ -181,6 +181,9 @@ import {
   primaryBooks,
   primaryBookLessons,
   primaryLessonGuides,
+  primaryArticleObjectives,
+  primaryQuestionObjectives,
+  primaryArticleWordNodes,
   primaryClassLoginSessions,
   primaryStudentCredentials,
   primaryClassBooks,
@@ -214,6 +217,10 @@ register(primaryBookSeries, "EXEMPT");
 register(primaryBooks, "EXEMPT");
 register(primaryBookLessons, "EXEMPT");
 register(primaryLessonGuides, "EXEMPT");
+// Objective tags (primary_objective_tags_20261006): content-to-graph links, global like the catalogue.
+register(primaryArticleObjectives, "EXEMPT");
+register(primaryQuestionObjectives, "EXEMPT");
+register(primaryArticleWordNodes, "EXEMPT");
 // Student login (primary_student_login_20261003): both tables carry school_id.
 register(primaryClassLoginSessions, "FLAT");
 register(primaryStudentCredentials, "FLAT");

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { estimateWordTimes, legacyArticleIdOf, splitKey, toArticleRow, toFlashcardRow, toLessonPackageJson, toQuestionRows } from "../mapping.js";
+import { estimateWordTimes, legacyArticleIdOf, splitKey, toArticleRow, toFlashcardRow, toLessonPackageJson, toQuestionRows, toTagRows } from "../mapping.js";
 import { parseLessonPackage } from "../package-schema.js";
 import { isAppStepUnlocked, WORKBOOK_STEPS, workbookStepOf } from "../step-map.js";
 import { samplePackage } from "./fixtures.js";
@@ -46,9 +46,9 @@ describe("lesson package mapping", () => {
 
   it("maps the question bank with the answer index and the evidence", () => {
     const rows = toQuestionRows(samplePackage(), ID);
-    expect(rows.mcq[1]).toEqual({ articleId: ID, question: "Where does May live?", options: ["By the sea", "Next to the school", "In a city", "On a farm"], correctAnswer: 1, answer: "Next to the school", textualEvidence: "May lives next to the school.", order: 1 });
+    expect(rows.mcq[1]).toEqual({ id: expect.any(String), articleId: ID, question: "Where does May live?", options: ["By the sea", "Next to the school", "In a city", "On a farm"], correctAnswer: 1, answer: "Next to the school", textualEvidence: "May lives next to the school.", order: 1 });
     expect(rows.saq[0]).toMatchObject({ answer: "Teacher Kim.", sampleAnswer: "Teacher Kim.", order: 0 });
-    expect(rows.laq).toEqual([{ articleId: ID, question: "Write about your class." }]);
+    expect(rows.laq).toEqual([{ id: expect.any(String), articleId: ID, question: "Write about your class." }]);
   });
 
   it("refuses an MCQ whose answer is not an option", () => {
@@ -88,5 +88,52 @@ describe("step map", () => {
     expect(isAppStepUnlocked(7, [7])).toBe(true);
     expect(isAppStepUnlocked(10, [9])).toBe(true);
     expect(isAppStepUnlocked(99, [])).toBe(true);
+  });
+
+  it("gives every question row an id so the objective links can name it", () => {
+    let n = 0;
+    const rows = toQuestionRows(samplePackage(), ID, () => `q-${++n}`);
+    expect(rows.mcq.map((row) => row.id)).toEqual(["q-1", "q-2"]);
+    expect(rows.saq[0].id).toBe("q-3");
+    expect(rows.laq[0].id).toBe("q-4");
+  });
+
+  it("maps the package tags to article objective, question objective, and word node rows", () => {
+    const rows = toQuestionRows(samplePackage(), ID, (() => { let n = 0; return () => `q-${++n}`; })());
+    const tags = toTagRows(samplePackage(), ID, rows, { gse: "7344a27", vocabulary: "2daf568" });
+    expect(tags.articleObjectives).toEqual([
+      { articleId: ID, shortId: "R12.1", nodeId: "english.gse.skill.young.reading.12.can-read-cardinal-numbers-up-to-ten-writ", role: "target", graphRelease: "7344a27" },
+      { articleId: ID, shortId: "L19.2", nodeId: "english.gse.skill.young.listening.19.can-identify-everyday-objects-people-or", role: "supporting", graphRelease: "7344a27" },
+    ]);
+    expect(tags.questionObjectives).toEqual([
+      { articleId: ID, questionId: "q-1", questionType: "mcq", shortId: "L19.2", nodeId: "english.gse.skill.young.listening.19.can-identify-everyday-objects-people-or", graphRelease: "7344a27" },
+      { articleId: ID, questionId: "q-3", questionType: "saq", shortId: "R12.1", nodeId: "english.gse.skill.young.reading.12.can-read-cardinal-numbers-up-to-ten-writ", graphRelease: "7344a27" },
+      { articleId: ID, questionId: "q-3", questionType: "saq", shortId: "R10.2", nodeId: "english.gse.skill.young.reading.10.can-recognise-the-use-of-a-question-mark", graphRelease: "7344a27" },
+    ]);
+    expect(tags.wordNodes).toEqual([
+      { articleId: ID, word: "hi", pos: "exclamation", nodeId: "english.vocabulary.skill.hi.exclamation", role: "glossed", graphRelease: "2daf568" },
+      { articleId: ID, word: "new", pos: "adjective", nodeId: "english.vocabulary.skill.new.adjective", role: "glossed", graphRelease: "2daf568" },
+    ]);
+  });
+
+  it("maps article-level tags without question rows for a linked legacy article", () => {
+    const tags = toTagRows(samplePackage(), ID, null, { gse: "7344a27", vocabulary: "2daf568" });
+    expect(tags.questionObjectives).toEqual([]);
+    expect(tags.articleObjectives).toHaveLength(2);
+  });
+
+  it("reads the word and the part of speech from a vocabulary node id, including multi-segment forms", () => {
+    const pkg = samplePackage({}, { tags: { targetObjectives: [], supportingObjectives: [], glossedNodes: ["english.vocabulary.skill.look-for.phrasal-verb", "english.vocabulary.skill.bat-as-sports-equipment.noun"], recycledNodes: ["english.vocabulary.skill.run.verb"] } });
+    const tags = toTagRows(pkg, ID, null, { gse: "7344a27", vocabulary: "2daf568" });
+    expect(tags.wordNodes.map((row) => [row.word, row.pos, row.role])).toEqual([
+      ["look-for", "phrasal-verb", "glossed"],
+      ["bat-as-sports-equipment", "noun", "glossed"],
+      ["run", "verb", "recycled"],
+    ]);
+  });
+
+  it("throws on a tag short id the key does not have, naming the package", () => {
+    const pkg = samplePackage({}, { tags: { targetObjectives: ["R99.9"], supportingObjectives: [], glossedNodes: [], recycledNodes: [] } });
+    expect(() => toTagRows(pkg, ID, null, { gse: "7344a27", vocabulary: "2daf568" })).toThrow(/o3-2\/1.*R99\.9/);
   });
 });
