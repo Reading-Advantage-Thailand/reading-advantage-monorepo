@@ -42,6 +42,7 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - [ ] Later: lists as objects inside the client components (books on shelves, scrolls in pigeonholes, the lesson marker on the path, stamped journal pages) once the owner accepts the scene pass
 
 ## Phase 5: the five promo shots recorded from the build
+- Blocker 2026-10-06 14:30: `next dev` cannot start on this machine (Turbopack panic "OS file watch limit reached"; ~63k of 65,536 inotify watches are held by the Claude sessions). Webpack mode fails on the sales-knowledge JSON asset. Needs `sudo sysctl fs.inotify.max_user_watches=524288` from the owner, then the captures run.
 - [ ] Shot 1: the home hero beside the Class Quest banner (phone, day)
 - [ ] Shot 2: the chosen hero steps into the light on the shrine pedestals (picker, step 2)
 - [ ] Shot 3: coins fly to the counter in the armory after a purchase
