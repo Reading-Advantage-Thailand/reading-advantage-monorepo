@@ -1,0 +1,1 @@
+var e=`griffin`,t={up:.84,forward:-.04};export{t as n,e as t};
