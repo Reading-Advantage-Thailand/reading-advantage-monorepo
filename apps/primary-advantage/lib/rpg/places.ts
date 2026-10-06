@@ -86,3 +86,14 @@ export const NPC_ART = {
   blacksmith: "/rpg/kit/npc/blacksmith-front.webp",
   questGiver: "/rpg/kit/npc/quest-giver-front.webp",
 } as const;
+
+/** The boss clips the Forge exports as 8-frame strips. */
+export type BossClip = "idle" | "hit" | "death";
+
+/**
+ * The sprite strip of a boss clip (`/rpg/kit/boss/<artKey>-<clip>-strip.png`, 8 frames).
+ * @param artKey The boss art key of the quest template.
+ * @param clip The clip.
+ * @returns The path under the public root.
+ */
+export const bossStrip = (artKey: string, clip: BossClip): string => `/rpg/kit/boss/${artKey}-${clip}-strip.png`;

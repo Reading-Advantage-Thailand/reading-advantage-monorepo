@@ -3180,6 +3180,7 @@
       "noHits": "還沒有攻擊。",
       "helpers": "感謝所有幫手！",
       "closed": "任務已關閉。",
+      "field": "戰場",
       "moveError": "無法進入下一階段。",
       "next": {
         "rally": "開始集結",

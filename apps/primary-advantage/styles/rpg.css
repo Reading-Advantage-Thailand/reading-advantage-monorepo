@@ -195,7 +195,26 @@
 @keyframes cq-pop { 0% { transform: scale(1); } 35% { transform: scale(1.12) translateY(-6px); } 100% { transform: scale(1); } }
 .cq-nod { animation: cq-nod 0.6s ease-in-out; }
 @keyframes cq-nod { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
-@media (prefers-reduced-motion: reduce) { .cq-sprite, .cq-bob, .cq-relic--armed, .cq-shake, .cq-pop, .cq-nod { animation: none; } .cq-pedestal > canvas { transition: none; } }
+/* The battle: the stone archway around the game, the clock, the field, and the coin rain. */
+.cq-clock { font-family: var(--cq-font); font-weight: 700; font-size: 28px; color: #fff4dc; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6); font-variant-numeric: tabular-nums; }
+.cq-arch { position: relative; margin-top: 40px; padding: 14px; border: 10px solid transparent; border-image: linear-gradient(180deg, #8b929c, #4a4f57 60%, #2d3138) 1; background: #111722; box-shadow: 0 0 0 4px #2d3138, 0 10px 24px rgba(0, 0, 0, 0.5); }
+.cq-arch::before { content: ""; position: absolute; left: -10px; right: -10px; top: -44px; height: 34px; background: linear-gradient(180deg, #8b929c, #4a4f57); border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+.cq-boss { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.cq-boss .cq-sprite { filter: drop-shadow(0 10px 6px rgba(0, 0, 0, 0.6)); }
+.cq-boss--fallen .cq-sprite { animation-iteration-count: 1; animation-fill-mode: forwards; }
+.cq-field { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; min-height: 260px; padding: 12px 8px 0; }
+.cq-field-heroes { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.cq-field-hero { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; width: 92px; color: #fff4dc; font-family: var(--cq-font); font-weight: 700; font-size: 13px; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6); }
+.cq-field-hero > canvas, .cq-field-hero > img { width: 72px; height: 72px; filter: drop-shadow(0 6px 4px rgba(0, 0, 0, 0.5)); }
+.cq-field-hero--away { opacity: 0.4; }
+.cq-field-hero--stale { opacity: 0.6; }
+.cq-field-hero .cq-meter { width: 100%; }
+.cq-lunge { animation: cq-lunge 0.5s ease-out; }
+@keyframes cq-lunge { 0%, 100% { transform: translateX(0); } 40% { transform: translateX(26px) translateY(-6px); } }
+.cq-coin-rain { position: absolute; top: -30px; width: 22px; height: 22px; background: url("/rpg/kit/icons/coin.webp") center / contain no-repeat; animation: cq-rain 1.4s ease-in forwards; pointer-events: none; }
+@keyframes cq-rain { from { transform: translateY(0) rotate(0); opacity: 1; } to { transform: translateY(320px) rotate(300deg); opacity: 0; } }
+.cq-fx-shield--on { animation: cq-glow 1.2s ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) { .cq-sprite, .cq-bob, .cq-relic--armed, .cq-shake, .cq-pop, .cq-nod, .cq-lunge, .cq-coin-rain, .cq-fx-shield--on { animation: none; } .cq-pedestal > canvas { transition: none; } }
 
 /* Shell: the wooden header and toolbar, the signpost. */
 .cq-header { background: linear-gradient(180deg, rgba(58, 42, 24, 0.96), rgba(36, 24, 16, 0.96)); border-bottom: 3px solid var(--cq-wood-dark); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45); color: #fff4dc; }

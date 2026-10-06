@@ -3180,6 +3180,7 @@
       "noHits": "No hits yet.",
       "helpers": "Thank you, helpers!",
       "closed": "The quest is closed.",
+      "field": "The battle field",
       "moveError": "The battle did not move on.",
       "next": {
         "rally": "Start the rally",

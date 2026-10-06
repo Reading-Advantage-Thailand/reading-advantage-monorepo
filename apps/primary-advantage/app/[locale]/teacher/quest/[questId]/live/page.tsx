@@ -5,6 +5,7 @@ import { db } from "@reading-advantage/db";
 import { getQuestDashboard } from "@reading-advantage/domain/primary-quest";
 import { getCurrentUser } from "@/lib/session";
 import { LiveDashboard } from "@/components/quest/live-dashboard";
+import { Scene } from "@/components/rpg/scene";
 
 /**
  * Page title: the live dashboard.
@@ -25,5 +26,10 @@ export default async function QuestLivePage({ params }: { params: Promise<{ ques
   if (!user || (user.role !== "TEACHER" && user.role !== "ADMIN")) notFound();
   const state = await getQuestDashboard({ db, user }, questId).catch(() => null);
   if (!state) notFound();
-  return <LiveDashboard initial={state} />;
+  // The projector shows the battle field (docs/primary-rpg-skin.md §4).
+  return (
+    <Scene place="arena">
+      <LiveDashboard initial={state} />
+    </Scene>
+  );
 }

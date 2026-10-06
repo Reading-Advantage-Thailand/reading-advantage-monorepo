@@ -22,9 +22,10 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - [x] Armory shop with the blacksmith, hanging signs, two shelves of six per page, the try-on card with dye pots, flying coins on buy (`avatar-shop.tsx`)
 - [x] Item icons read `/rpg/items/<id>.webp` and fall back to the slot icon until the Forge build ships the views (`components/rpg/item-icon.tsx`)
 
-## Phase 3: the battle
-- [ ] Phone battle page in the arena: boss sprite, meter frame, hearts, relics, archway game
-- [ ] Projector dashboard on the teaser field (2D sprite field fallback)
+## Phase 3: the battle (done 2026-10-06, report `phase3/index.html`)
+- [x] Phone battle page in the boss arena: boss sprite with idle, hit, and death clips, the wood-iron meter, hearts, relics that glow when armed, the game inside a stone archway, coin rain on the fall (`battle-client.tsx`, `boss-sprite.tsx`)
+- [x] Projector dashboard on the 2D sprite field: the boss east, the heroes west with HP bars, the lunge and the floating number on a hit, the fall with coin rain (`live-dashboard.tsx`); the 3D field waits for the games port and reads the same renderer switch
+- [ ] Capture of the fall: needs a real completed run (the committed damage comes from verified completions); taken in Phase 5 from a rehearsal class
 
 ## Phase 4: the rest (pages 7 to 19 of the spec)
 
