@@ -9,7 +9,7 @@ import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, hasThai, pips, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { Actor, burst, FollowRig } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, burst, FollowRig, isAvatarBody, playerBody } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { createSpellweaversRun, evidenceOf, scoreOf, TUNING, type SpellweaversCommand, type SpellweaversEvent, type SpellweaversState } from '../core/index.js';
 import { nextChoice } from '../qc/bot.js';
 import { buildLand, RUN_MODELS } from './land.js';
@@ -36,16 +36,19 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const audio = ctx.audio;
   const hud = ctx.hud;
   const heroId = ctx.options.hero || 'wizard';
-  await stage.loader.preload([...RUN_MODELS, heroId].map((n) => stage.loader.modelPath(n)));
+  // The student's avatar (or the fixed hero) loads with the scene; an avatar needs no hero model.
+  const [, heroBody] = await Promise.all([
+    stage.loader.preload([...RUN_MODELS, ...(ctx.options.avatar ? [] : [heroId])].map((n) => stage.loader.modelPath(n))),
+    playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
+  ]);
   const land = buildLand(stage);
   const sim = createSpellweaversRun(story, { seed: ctx.seed, helper: ctx.options.helper });
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- the hero
-  const heroGltf = stage.loader.get(stage.loader.modelPath(heroId))!;
-  const hero = stage.addActor(new Actor(heroId, heroGltf, stage.timeline));
+  const hero = stage.addActor(new Actor(heroId, heroBody, stage.timeline));
   hero.placeAt(0, 0, 0, 180);
-  const look = ctx.options.looks[heroId];
+  const look = isAvatarBody(heroBody) ? undefined : ctx.options.looks[heroId];
   if (look && look !== 'default') void stage.loader.texture(stage.loader.presetPath(heroId, look)).then((tex) => hero.setMap(tex)).catch(() => undefined);
   let clip = '';
   let busyUntil = 0;

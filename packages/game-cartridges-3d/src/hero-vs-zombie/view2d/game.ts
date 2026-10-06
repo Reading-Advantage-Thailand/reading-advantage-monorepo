@@ -7,6 +7,8 @@
  * flat. At dawn the light warms and the zombies crumble.
  */
 import type * as Phaser from 'phaser';
+import { shownHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
+import { playerFigure } from '@reading-advantage/advantage-play-kit-3d/avatar/portrait-of';
 import { preloadAssetBindings, toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
@@ -27,7 +29,9 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const story = ctx.input as PracticeInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('heroVsZombie')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
-  const heroId = (HEROES_2D as readonly string[]).includes(options.hero) ? options.hero : 'knight';
+  const heroId = shownHero(HEROES_2D, options, 'knight');
+  /** The student's own figure for the hero when the session has an avatar (it loads while the pack loads). */
+  const figure = playerFigure(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
   const sim = createHeroVsZombie(story, { seed, helper: options.helper });
@@ -56,7 +60,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     const panel = new WordPanel2D(scene, 66);
     const arena = new Arena2D(scene, edition, PROJECTION, BACKGROUND_FILE, { scale: H > W ? 1.25 : 1.1, top: 66, bottom: 100 });
     const ppm = PROJECTION.ppm;
-    const hero = new Actor2D(scene, edition, heroId, PROJECTION, { dirs: 8, clips: clips(heroId, HERO_CLIPS_2D), walk: 'run', stiffness: 18 }, arena.world);
+    const hero = new Actor2D(scene, edition, heroId, PROJECTION, { dirs: 8, figure, clips: clips(heroId, HERO_CLIPS_2D), walk: 'run', stiffness: 18 }, arena.world);
     hero.placeAt(sim.state.hero.x, sim.state.hero.z);
     hero.sprite.setTint(NIGHT_TINT);
     arena.follow(sim.state.hero.x, sim.state.hero.z, 0, true);

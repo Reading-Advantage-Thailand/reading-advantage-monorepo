@@ -6,6 +6,8 @@
  * and a closed loop turns the wild into bright claimed land.
  */
 import type * as Phaser from 'phaser';
+import { shownHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
+import { playerFigure } from '@reading-advantage/advantage-play-kit-3d/avatar/portrait-of';
 import { preloadAssetBindings, toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
@@ -23,7 +25,9 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const story = ctx.input as PracticeInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('realmCarver')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
-  const heroId = (HEROES_2D as readonly string[]).includes(options.hero) ? options.hero : 'knight';
+  const heroId = shownHero(HEROES_2D, options, 'knight');
+  /** The student's own figure for the hero when the session has an avatar (it loads while the pack loads). */
+  const figure = playerFigure(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
   const sim = createRealmCarver(story, { seed, helper: options.helper });
@@ -55,7 +59,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     const fit = Math.min(1.1, (W - 12) / (PROJECTION.width - 2 * 64));
     const arena = new Arena2D(scene, edition, PROJECTION, GROUND_FILE, { scale: fit, top: 66 });
     const board = new BoardLayer(scene, arena.world);
-    const hero = new Actor2D(scene, edition, heroId, PROJECTION, { dirs: 8, clips: clips(heroId, HERO_CLIPS_2D), walk: 'run', stiffness: 18 }, arena.world);
+    const hero = new Actor2D(scene, edition, heroId, PROJECTION, { dirs: 8, figure, clips: clips(heroId, HERO_CLIPS_2D), walk: 'run', stiffness: 18 }, arena.world);
     const start = worldOf(START);
     hero.placeAt(start.x, start.z);
     hero.face(0, -1);

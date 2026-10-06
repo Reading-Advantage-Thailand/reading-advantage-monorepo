@@ -96,12 +96,19 @@ export class Card2D {
     this.options.clear();
   }
 
-  /** A colored pill ("Knight's turn") and an optional note beside it ("Try this one again"). */
-  pill(value: string, color: number, note = ''): void {
+  /**
+   * A colored pill ("Knight's turn") and an optional note beside it ("Try this one again").
+   * `icon` is a texture key drawn as a round 26 px image at the start (the student's face); a
+   * key that is not loaded yet is left out.
+   */
+  pill(value: string, color: number, note = '', icon?: string): void {
     const label = text(this.scene, 0, 0, value, 16).setOrigin(0, 0.5);
-    const w = label.width + 22;
+    const lead = icon && this.scene.textures.exists(icon) ? 26 : 0;
+    const w = label.width + 22 + lead;
     const g = this.scene.add.graphics().fillStyle(color, 1).fillRoundedRect(0, -15, w, 30, 15);
-    const pill = this.scene.add.container(PAD, this.y + 15, [g, label.setX(11)]);
+    const parts: Phaser.GameObjects.GameObject[] = [g, label.setX(11 + lead)];
+    if (lead) parts.push(this.scene.add.image(17, 0, icon!).setDisplaySize(26, 26));
+    const pill = this.scene.add.container(PAD, this.y + 15, parts);
     this.add(pill);
     if (note) this.add(text(this.scene, PAD + w + 10, this.y + 15, note, 14, '#b4541a').setOrigin(0, 0.5));
     this.y += 30 + GAP;

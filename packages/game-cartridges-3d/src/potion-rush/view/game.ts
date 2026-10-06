@@ -9,7 +9,7 @@ import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, hit, makeDraggable } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { Actor, burst, ShotRig, smooth } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, burst, isAvatarBody, playerBody, ShotRig, smooth } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { createPotionRush, evidenceOf, scoreOf, targetFor, type PotionRushCommand, type PotionRushEvent, type PotionRushState } from '../core/index.js';
 import { nextDrop } from '../qc/bot.js';
 import { BREW, INGREDIENT_SCALE } from './layout.js';
@@ -43,10 +43,14 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const stage = ctx.stage;
   const t = ctx.i18n.scope('hud').t;
   const hero = ctx.options.hero || 'wizard';
-  await stage.loader.preload([...SHOP_MODELS, hero].map((n) => stage.loader.modelPath(n)));
-  const built = buildShop(stage, hero);
+  // The student's avatar (or the fixed hero) loads with the scene; an avatar needs no hero model.
+  const [, heroBody] = await Promise.all([
+    stage.loader.preload([...SHOP_MODELS, ...(ctx.options.avatar ? [] : [hero])].map((n) => stage.loader.modelPath(n))),
+    playerBody(stage.loader, ctx.options.avatar, hero, ctx.diagnostic),
+  ]);
+  const built = buildShop(stage, hero, heroBody);
   const shop = { ...built, alchemist: built.alchemist! };
-  const look = ctx.options.looks[hero];
+  const look = isAvatarBody(heroBody) ? undefined : ctx.options.looks[hero];
   if (look && look !== 'default') void stage.loader.texture(stage.loader.presetPath(hero, look)).then((tex) => shop.alchemist.setMap(tex)).catch(() => undefined);
   /** The teal brew of an idle cauldron. */
   const baseBrew = shop.brews[0]!.clone();

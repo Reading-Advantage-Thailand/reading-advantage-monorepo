@@ -9,7 +9,7 @@ import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { burst, ShotRig, smooth } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { burst, isAvatarBody, playerBody, ShotRig, smooth } from '@reading-advantage/advantage-play-kit-3d/stage';
 import {
   createAlchemistsSynthesis,
   evidenceOf,
@@ -49,10 +49,14 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const audio = ctx.audio;
   const hud = ctx.hud;
   const heroId = ctx.options.hero || 'wizard';
-  await stage.loader.preload([...LAB_MODELS, heroId].map((n) => stage.loader.modelPath(n)));
-  const lab = buildLab(stage, heroId);
+  // The student's avatar (or the fixed hero) loads with the scene; an avatar needs no hero model.
+  const [, heroBody] = await Promise.all([
+    stage.loader.preload([...LAB_MODELS, ...(ctx.options.avatar ? [] : [heroId])].map((n) => stage.loader.modelPath(n))),
+    playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
+  ]);
+  const lab = buildLab(stage, heroId, heroBody);
   const hero = lab.alchemist;
-  const look = ctx.options.looks[heroId];
+  const look = isAvatarBody(heroBody) ? undefined : ctx.options.looks[heroId];
   if (look && look !== 'default') void stage.loader.texture(stage.loader.presetPath(heroId, look)).then((tex) => hero.setMap(tex)).catch(() => undefined);
   const sim = createAlchemistsSynthesis(story, { seed: ctx.seed, helper: ctx.options.helper });
   const startedAt = performance.now();
