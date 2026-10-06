@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { hashPassword, verifyPassword, rehashOnLogin, ARGON2ID_OPTS } from "../password.js";
+import { hashPassword, verifyPassword, rehashOnLogin, adoptLegacyPassword, ARGON2ID_OPTS } from "../password.js";
 
 describe("password", () => {
   // Crypto tests involve real Argon2id/bcrypt hashing which is hardware-dependent.
@@ -228,5 +228,108 @@ describe("Phase 2 — Task 12: FR-3 rehashOnLogin filters UPDATE by providerId =
         "userId would be overwritten with the new Argon2id hash — a " +
         "destructive cross-provider bug.",
     ).toBe(true);
+  });
+  describe("adoptLegacyPassword", () => {
+    function createMockDb() {
+      const returning = vi.fn().mockResolvedValue([{ id: "u_credential" }]);
+      const onConflictDoUpdate = vi.fn().mockReturnValue({ returning });
+      const values = vi.fn().mockReturnValue({ onConflictDoUpdate });
+      const insert = vi.fn().mockReturnValue({ values });
+      const update = vi.fn().mockReturnValue({ set: vi.fn().mockReturnValue({ where: vi.fn() }) });
+      const transaction = async <T,>(cb: (tx: unknown) => Promise<T>) => cb({ insert, update });
+      return {
+        db: { transaction } as unknown as Parameters<typeof adoptLegacyPassword>[0],
+        values,
+        onConflictDoUpdate,
+      };
+    }
+
+    it("upserts an argon2id credential account from a legacy bcrypt users.password", async () => {
+      const { db, values, onConflictDoUpdate } = createMockDb();
+      const bcrypt = await import("bcryptjs");
+      const legacy = await bcrypt.hash("testPassword", 10);
+
+      await adoptLegacyPassword(db, "user-1", "testPassword", legacy);
+
+      const row = values.mock.calls[0][0];
+      expect(row.userId).toBe("user-1");
+      expect(row.providerId).toBe("credential");
+      expect(row.password.startsWith("$argon2id$")).toBe(true);
+      expect(await verifyPassword("testPassword", row.password)).toBe(true);
+      expect(onConflictDoUpdate).toHaveBeenCalled();
+    });
+
+    it("keeps an existing argon2id hash unchanged", async () => {
+      const { db, values } = createMockDb();
+      const hash = await hashPassword("testPassword");
+
+      await adoptLegacyPassword(db, "user-1", "testPassword", hash);
+
+      expect(values.mock.calls[0][0].password).toBe(hash);
+    });
+  });
+});
+
+describe("adoptLegacyPassword", () => {
+  vi.setConfig({ testTimeout: 15000 });
+
+  /** Builds a mock db whose transaction runs the callback with a recording tx. */
+  function createTxDb() {
+    const returning = vi.fn().mockResolvedValue([{ id: "u1_credential" }]);
+    const onConflictDoUpdate = vi.fn().mockReturnValue({ returning });
+    const values = vi.fn().mockReturnValue({ onConflictDoUpdate });
+    const insert = vi.fn().mockReturnValue({ values });
+    const where = vi.fn().mockResolvedValue(undefined);
+    const set = vi.fn().mockReturnValue({ where });
+    const update = vi.fn().mockReturnValue({ set });
+    const transaction = vi.fn(async <T,>(cb: (tx: unknown) => Promise<T>) => cb({ insert, update }));
+    return {
+      db: { transaction } as unknown as Parameters<typeof adoptLegacyPassword>[0],
+      transaction, values, onConflictDoUpdate, set, returning, update,
+    };
+  }
+
+  it("does not adopt a wrong password and writes nothing", async () => {
+    const t = createTxDb();
+    const bcrypt = await import("bcryptjs");
+    const legacy = await bcrypt.hash("rightPassword", 10);
+    expect(await adoptLegacyPassword(t.db, "u1", "wrongPassword", legacy)).toBe(false);
+    expect(t.transaction).not.toHaveBeenCalled();
+  });
+
+  it("writes an Argon2id credential hash for a bcrypt legacy hash", async () => {
+    const t = createTxDb();
+    const bcrypt = await import("bcryptjs");
+    const legacy = await bcrypt.hash("rightPassword", 10);
+    expect(await adoptLegacyPassword(t.db, "u1", "rightPassword", legacy)).toBe(true);
+    const written = t.values.mock.calls[0][0].password as string;
+    expect(written.startsWith("$argon2id$")).toBe(true);
+    expect(await verifyPassword("rightPassword", written)).toBe(true);
+  });
+
+  it("only fills a credential row whose password is null", async () => {
+    const t = createTxDb();
+    const legacy = await hashPassword("rightPassword");
+    await adoptLegacyPassword(t.db, "u1", "rightPassword", legacy);
+    const config = t.onConflictDoUpdate.mock.calls[0][0];
+    expect(config.setWhere).toBeDefined();
+    expect(JSON.stringify(config.setWhere, (k, v) => (k === "table" ? undefined : v))).toMatch(/is null/i);
+  });
+
+  it("clears users.password in the same transaction after the credential write", async () => {
+    const t = createTxDb();
+    const legacy = await hashPassword("rightPassword");
+    await adoptLegacyPassword(t.db, "u1", "rightPassword", legacy);
+    expect(t.transaction).toHaveBeenCalledTimes(1);
+    expect(t.set).toHaveBeenCalledWith({ password: null });
+    expect(t.onConflictDoUpdate.mock.invocationCallOrder[0]).toBeLessThan(t.set.mock.invocationCallOrder[0]);
+  });
+
+  it("returns false and leaves users.password when the credential row already had a password", async () => {
+    const t = createTxDb();
+    t.returning.mockResolvedValueOnce([]);
+    const legacy = await hashPassword("rightPassword");
+    expect(await adoptLegacyPassword(t.db, "u1", "rightPassword", legacy)).toBe(false);
+    expect(t.update).not.toHaveBeenCalled();
   });
 });

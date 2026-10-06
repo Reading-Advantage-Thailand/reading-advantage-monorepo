@@ -1,0 +1,38 @@
+[
+  {
+    "id": "lilys-toy-box",
+    "title": "Lily's Toy Box",
+    "level": "Pre-A1",
+    "series": "Level 1",
+    "lesson": 1,
+    "cover": "img-1.webp",
+    "reviewed": false
+  },
+  {
+    "id": "mias-balloon-animals",
+    "title": "Mia's Balloon Animals",
+    "level": "A0",
+    "series": "Level 2",
+    "lesson": 1,
+    "cover": "img-1.webp",
+    "reviewed": false
+  },
+  {
+    "id": "mia-is-a-big-bear",
+    "title": "Mia Is a Big Bear",
+    "level": "A0+",
+    "series": "Level 3",
+    "lesson": 1,
+    "cover": "img-1.webp",
+    "reviewed": false
+  },
+  {
+    "id": "aunt-anna-and-the-band",
+    "title": "Aunt Anna and the Band",
+    "level": "A1",
+    "series": "Level 4",
+    "lesson": 1,
+    "cover": "img-1.webp",
+    "reviewed": false
+  }
+]

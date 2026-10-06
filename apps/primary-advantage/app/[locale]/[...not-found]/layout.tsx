@@ -1,8 +1,7 @@
-import { MainNav } from "@/components/nav/main-nav";
+import { PublicHeader } from "@/components/nav/public-header";
 import { UserAccountNav } from "@/components/nav/user-account-nav";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
-import { settingsPageConfig } from "@/configs/settings-page-config";
 import { getCurrentUser } from "@/lib/session";
 
 /**
@@ -18,20 +17,13 @@ export default async function NotfoundPageLayout({
   const user = await getCurrentUser();
   return (
     <div className="flex min-h-screen flex-col space-y-6">
-      <header className="sticky top-0 z-40 border-b bg-background">
-        <div className="container flex h-16 items-center justify-between py-4">
-          <MainNav items={settingsPageConfig.mainNav} />
-          <div className="flex justify-center items-center gap-2">
-            <LocaleSwitcher />
-            <ThemeToggle />
-            {user ? (
-              <UserAccountNav user={user} />
-            ) : null}
-          </div>
-        </div>
-      </header>
+      <PublicHeader>
+        <LocaleSwitcher />
+        <ThemeToggle />
+        {user ? <UserAccountNav user={user} /> : null}
+      </PublicHeader>
       <div className="container grid">
-        <main className="flex w-full flex-col overflow-hidden">{children}</main>
+        <main className="flex w-full min-w-0 flex-col">{children}</main>
       </div>
     </div>
   );

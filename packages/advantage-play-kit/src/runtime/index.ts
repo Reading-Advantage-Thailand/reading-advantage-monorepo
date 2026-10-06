@@ -51,6 +51,7 @@ export type {
   FrameGrid,
   GameTerminalOutcome,
   GameInput,
+  GameInputMode,
   MountCartridgeOptions,
   RuntimeCartridge,
   RuntimeCartridgeManifest,

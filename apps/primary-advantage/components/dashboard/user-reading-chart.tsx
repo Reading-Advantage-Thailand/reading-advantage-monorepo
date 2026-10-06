@@ -28,6 +28,8 @@ import {
 import { UserActivityLog, UserActiviryChartProps } from "@/types";
 import { ActivityType } from "@/types/enum";
 import { useTranslations } from "next-intl";
+import { BookOpenIcon } from "lucide-react";
+import { EmptyState } from "@reading-advantage/ui";
 
 const chartConfig = {
   inProgress: {
@@ -104,23 +106,30 @@ const ReadingStatsChart = ({ data }: UserActiviryChartProps) => {
   };
   return (
     <Card>
-      <CardHeader className="flex flex-row justify-between">
+      <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3">
         <div>
           <CardTitle>{t("readingstatschart")}</CardTitle>
         </div>
-        <Select onValueChange={handleSeletedChange} defaultValue="type">
-          <SelectTrigger className="w-[180px]">
-            <CardTitle>Selected</CardTitle>
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="type">Type</SelectItem>
-            <SelectItem value="genre">Genre</SelectItem>
-            <SelectItem value="subGenre">Subgenre</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <span id="reading-chart-group" className="text-muted-foreground text-sm">
+            {t("groupBy")}
+          </span>
+          <Select onValueChange={handleSeletedChange} defaultValue="type">
+            <SelectTrigger aria-labelledby="reading-chart-group" className="h-12 w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="type">{t("groupType")}</SelectItem>
+              <SelectItem value="genre">{t("groupGenre")}</SelectItem>
+              <SelectItem value="subGenre">{t("groupSubgenre")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </CardHeader>
       <CardContent>
+        {getData.length === 0 ? (
+          <EmptyState className="py-6" icon={<BookOpenIcon />} title={t("noReading")} description={t("noReadingHint")} />
+        ) : (
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={getData}>
             <CartesianGrid vertical={false} />
@@ -155,6 +164,7 @@ const ReadingStatsChart = ({ data }: UserActiviryChartProps) => {
             />
           </BarChart>
         </ChartContainer>
+        )}
       </CardContent>
     </Card>
   );

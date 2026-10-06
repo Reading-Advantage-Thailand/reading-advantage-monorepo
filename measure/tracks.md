@@ -4,7 +4,7 @@ This file tracks all major tracks for the project.
 
 ---
 
-- [ ] **Track: Primary Browser QA Fixes** *Link: [./tracks/primary_browser_qa_fixes_20260915/](./tracks/primary_browser_qa_fixes_20260915/)*
+- [x] **Track: Primary Browser QA Fixes** *Link: [./tracks/primary_browser_qa_fixes_20260915/](./tracks/primary_browser_qa_fixes_20260915/)* — SUPERSEDED by primary_cutover_blockers_20261003
   Fix the eight defects found by the 2026-09-15 parallel browser QA sweep (sign-in crash, article crash, dead sidebar links, i18n key, admin 403, Realm Carver cap, locale toggle, Import Data routing).
 
 - [~] **Track: APK Arcade Portfolio Refactor** *Link: [./tracks/apk_arcade_portfolio_refactor_20260908/](./tracks/apk_arcade_portfolio_refactor_20260908/)*
@@ -14,6 +14,16 @@ This file tracks all major tracks for the project.
   Reduce repeated verification, narrow Domain imports, and consolidate shared authentication behavior.
 
 ## Active Tracks (created 2026-09-19)
+
+- [~] **Track: Primary RPG skin — every student page inside the Chibi Quest world** — *created 2026-10-06*
+  *Link: [./tracks/primary_rpg_skin_20261006/](./tracks/primary_rpg_skin_20261006/)*
+  *Status: Phase 0 approved 2026-10-06; Phases 1 to 3 (shell, home, picker, inventory, shop, battle, dashboard) done 2026-10-06, reports `phase1/`, `phase2/`, `phase3/index.html`; Phase 4 (remaining pages) next | Priority: CRITICAL | Design authority: `docs/primary-rpg-skin.md`*
+  *Note: Forge assets only (no ElvGames). 3D avatar approved; every 3D interaction has a 2D fallback through the games' selector. Owner gate after Phase 0 on the look.*
+
+- [ ] **Track: ElvGames asset audit and removal (APK and the apps)** — *created 2026-10-06*
+  *Link: [./tracks/apk_elvgames_audit_20261006/](./tracks/apk_elvgames_audit_20261006/)*
+  *Status: upcoming | Priority: HIGH (license) | Owner rule 2026-10-06: Forge assets only*
+  *Note: Inventory every ElvGames file and reference (APK standard library, `standard-pack-qc`, the cartridges, `StudentCartridgeHost`), show the interim credit line, switch the cartridges to Forge packs, remove the files, add a CI gate. Tech-debt row 2026-10-06.*
 
 - [x] **Track: Sales Advantage Broken UX Fixes** *Link: [./tracks/sales_broken_ux_fixes_20260919/](./tracks/sales_broken_ux_fixes_20260919/)*
   Repair the broken user-experience items from the Sales Advantage UX audit. **Implemented 2026-09-20 (9/9 tasks, 267 tests green); owner manual verification PASSED 2026-09-22.**
@@ -1104,3 +1114,41 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [x] **Track: APK Named Asset Cuts** *Link: [./tracks/apk_named_asset_cuts_20260907/](./tracks/apk_named_asset_cuts_20260907/)*
   Prepare several sheets per review batch and process approved cuts.
+
+- [ ] **Track: Primary Cutover Blockers** *Link: [./tracks/primary_cutover_blockers_20261003/](./tracks/primary_cutover_blockers_20261003/)*
+  Type gate, authorization, argon2, migration gate, Tutor read test, Sept 15 QA defects. Absorbs primary_browser_qa_fixes_20260915.
+
+- [x] **Track: Primary Student Login** *Link: [./tracks/primary_student_login_20261003/](./tracks/primary_student_login_20261003/)*
+  Teacher-started code, name list, picture password, QR card, username/password, auth strength. Merged into primary-parity-integration at 0c26f7fb6 (2026-10-05). Blocked: 25-student browser run (low memory; owner go-ahead), QA timing check.
+
+- [x] **Track: Primary UX Rework** (phases 0-4 and gates done 2026-10-05; final merge to integration pending) *Link: [./tracks/primary_ux_rework_20261003/](./tracks/primary_ux_rework_20261003/)*
+  Brand tokens, one navigation, student home, redesigned screens, accessibility. Phases 0-2 merged early into primary-parity-integration at e849f6208 (2026-10-05); Phase 3-4 and gates in progress on primary/lane-c-ux-rework.
+
+- [x] **Track: Primary Class Books and Teacher Lesson Support** (phases 0-5 done; merge to integration pending) *Link: [./tracks/primary_teacher_books_lesson_support_20261003/](./tracks/primary_teacher_books_lesson_support_20261003/)*
+  Book-to-class assignment, progress grid, 13-step guide, rehearsal, answer keys. Phases 0-5 done on primary/lane-de-teacher-books (2026-10-05, head 437eafe5f); open: browser walk-through, teaching-game demo ports. Merge after the Lane C gates.
+
+- [~] **Track: Primary Reedy Preview** (phases 0-4 done 2026-10-05; the Phase 5 live-session gate passed 2026-10-06; calibration and the rehearsal remain) *Link: [./tracks/primary_reedy_preview_20261003/](./tracks/primary_reedy_preview_20261003/)*
+  Reedy in Primary, 8 minutes per student per month, student avatar, end-of-lesson activity, usage views.
+
+- [ ] **Track: Primary Core Interaction Quality** *Link: [./tracks/primary_core_interaction_quality_20261005/](./tracks/primary_core_interaction_quality_20261005/)*
+  Lane G. Browser-verify the September audio, loading, and dedup fixes; bring the reader, audio control, flashcard review, practice activities, lesson task components, and catalog copy to the Lane C quality bar. Created 2026-10-05.
+
+- [ ] **Track: Chibi Quest Reskins (wave 1, semester 2)** *Link: [./tracks/primary_quest_reskins_20261005/](./tracks/primary_quest_reskins_20261005/)*
+  RPG frame on daily activities, no schema. Program: measure/chibi-quest-primary-program.md. Created 2026-10-05.
+
+- [ ] **Track: The Expedition Loop and the World Map (wave 2, semester 2)** *Link: [./tracks/primary_expedition_loop_20261005/](./tracks/primary_expedition_loop_20261005/)*
+  Monster Encounters port as the expedition after every article; world map with 14 regions by Primary level; class spell; campaign certificate. After the APK 3D port merge. Created 2026-10-05.
+
+- [ ] **Track: The Guild Hall, Milestones, Bestiary, Familiars (wave 3, semester 2)** *Link: [./tracks/primary_guild_hall_20261005/](./tracks/primary_guild_hall_20261005/)*
+  Guild milestones replace the school leaderboard; guild hall; class bestiary; familiars. After Class Quest. Created 2026-10-05.
+
+- [x] **Track: Primary Class Quest (semester 2)** (started and delivered 2026-10-06; the walk-through passed; the 25-student week test waits for the rehearsal environment) *Link: [./tracks/primary_class_quest_20261005/](./tracks/primary_class_quest_20261005/)*
+  Guild Mode as Class Quest: weekly quest from a fixed list, power-ups from goals, 8-minute cooperative boss battle with a polling projector dashboard. After the avatar shop track. Created 2026-10-05.
+
+- [x] **Track: Primary Avatar Shop, GP, Inventory, Loadout** (started 2026-10-06 on the owner's instruction; delivered 2026-10-06; the browser walk-through passed; the separate-agent review was skipped by the owner's no-subagent rule) *Link: [./tracks/primary_avatar_shop_20261005/](./tracks/primary_avatar_shop_20261005/)*
+  Avatar Phase 2 in the monorepo after the cutover: GP ledger, inventory, loadout, purchase, shop, avatar page, teacher class avatars, avatar in the game launch context. Created 2026-10-05.
+
+- [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*
+  ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.
+- [ ] **Track: APK 3D Games Port** *Link: [./tracks/apk3d_games_port_20261003/](./tracks/apk3d_games_port_20261003/)*
+  Port the dual-renderer story games into the monorepo and offer them in Primary Advantage.

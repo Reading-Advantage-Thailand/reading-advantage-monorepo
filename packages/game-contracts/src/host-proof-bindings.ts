@@ -93,7 +93,7 @@ export const existingCoreHostProofBindingSchema = z
       "astral-mage",
     ]),
     title: z.string().min(1),
-    inputMode: z.enum(["vocabulary", "sentence"]),
+    inputMode: z.enum(["vocabulary", "sentence", "story"]),
     temporalScope: z.enum(["current-source", "historical-source-only"]),
     selectedStandardPackOutput: z.array(z.string().min(1)).min(1),
     registration: z.literal("reading-primary-host-proof-only"),

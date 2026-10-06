@@ -18,7 +18,7 @@ interface Article {
   summary: string;
   cefrLevel: string;
   raLevel: number;
-  passage: string;
+  passage: string | null;
   translatedSummary: {
     th?: string;
     vi?: string;
@@ -62,7 +62,7 @@ export default function TaskIntroduction({
         {/* Article Image */}
         <div className="relative h-64 overflow-hidden bg-gradient-to-r from-gray-200 to-gray-300 md:h-80 dark:from-gray-800 dark:to-gray-700">
           <Image
-            src={getArticleImageUrl(article.id, 1) || `/nopic.png`}
+            src={getArticleImageUrl(article, 1) || `/nopic.png`}
             alt={article.title}
             fill
             className="object-cover transition-transform duration-300 hover:scale-105"
@@ -91,7 +91,7 @@ export default function TaskIntroduction({
               <Badge className="bg-purple-200 text-purple-800 hover:bg-purple-300 dark:bg-purple-900 dark:text-purple-200">
                 <ClockIcon className="mr-1 h-4 w-4" />
                 {t("estimatedReadTime", {
-                  time: Math.ceil(article.passage.split(" ").length / 20),
+                  time: Math.ceil((article.passage ?? "").split(" ").length / 20),
                 })}
               </Badge>
             </div>

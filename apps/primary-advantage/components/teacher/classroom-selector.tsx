@@ -1,210 +1,149 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
-import {
-  Users,
-  GraduationCap,
-  Plus,
-  ArrowRight,
-  BookOpen,
-  Calendar,
-} from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useFormatter, useTranslations } from "next-intl";
+import { BookOpen, PlayIcon, TriangleAlertIcon, Users } from "lucide-react";
+import { EmptyState, ErrorState, ShimmerSkeleton, cardHoverClassName } from "@reading-advantage/ui";
+import { Link } from "@/i18n/navigation";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import CreateNewClass from "./create-classes";
+import { TEACHER_ACTION, TEACHER_CARD } from "./teacher-shell";
 
+/** One class, as `/api/classroom` returns it. */
 interface Classroom {
   id: string;
   name: string;
-  grade?: string;
-  classCode?: string;
+  grade?: string | number | null;
+  classCode?: string | null;
   createdAt: string;
-  updatedAt: string;
-  students: Array<{
-    id: string;
-    student: {
-      id: string;
-      name: string | null;
-      email: string | null;
-    };
-  }>;
+  students: unknown[];
 }
 
+/**
+ * Class roster index: a card per class with the class name (a real link to the class page), the
+ * grade, the student count, the class code, the created date (Bangkok calendar date), and
+ * "Start class" (the class page at its sign-in panel). Loading shows shimmer cards; a failed
+ * load shows an error with a retry; no class shows an empty state with "New Classroom".
+ * @returns The class cards.
+ */
 export default function ClassroomSelector() {
-  const router = useRouter();
   const t = useTranslations("Teacher.ClassroomSelector");
+  const tc = useTranslations("TeacherClass");
+  const tUi = useTranslations("TeacherUi");
+  const te = useTranslations("Error");
+  const format = useFormatter();
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
 
-  useEffect(() => {
-    fetchClassrooms();
-  }, []);
-
-  const fetchClassrooms = async () => {
+  const fetchClassrooms = useCallback(async () => {
     try {
-      setLoading(true);
       const response = await fetch("/api/classroom");
-      if (!response.ok) {
-        throw new Error("Failed to fetch classrooms");
-      }
+      if (!response.ok) throw new Error(`Failed to fetch classrooms: ${response.status}`);
       const data = await response.json();
       setClassrooms(data.classrooms || []);
+      setState("ready");
     } catch (error) {
       console.error("Error fetching classrooms:", error);
-      toast.error(t("toast.loadError"));
-    } finally {
-      setLoading(false);
+      setState("error");
     }
-  };
+  }, []);
 
-  const handleClassroomClick = (classroomId: string) => {
-    router.push(`/teacher/class-roster/${classroomId}`);
-  };
+  useEffect(() => {
+    void fetchClassrooms();
+  }, [fetchClassrooms]);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-
-  if (loading) {
+  if (state === "loading") {
     return (
-      <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-2/3" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+      <div aria-busy="true" className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {[0, 1, 2].map((card) => (
+          <ShimmerSkeleton key={card} className="h-44 rounded-2xl" />
+        ))}
       </div>
+    );
+  }
+
+  if (state === "error") {
+    return (
+      <ErrorState
+        className="bg-card border"
+        icon={<TriangleAlertIcon />}
+        title={tc("loadClassesError")}
+        description={tc("loadErrorHint")}
+        action={
+          <Button
+            type="button"
+            className={cn(TEACHER_ACTION, "px-6")}
+            onClick={() => {
+              setState("loading");
+              void fetchClassrooms();
+            }}
+          >
+            {te("retry")}
+          </Button>
+        }
+      />
     );
   }
 
   if (classrooms.length === 0) {
     return (
-      <Card>
-        <CardContent className="py-12 text-center">
-          <BookOpen className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-          <h3 className="mb-2 text-lg font-medium text-gray-900">
-            {t("empty.title")}
-          </h3>
-          <p className="mb-4 text-gray-500">{t("empty.description")}</p>
-          <CreateNewClass
-            buttonText={t("empty.createFirst")}
-            onClassCreated={fetchClassrooms}
-          />
-        </CardContent>
-      </Card>
+      <EmptyState
+        className="bg-card border"
+        icon={<BookOpen />}
+        title={t("empty.title")}
+        description={t("empty.description")}
+        action={<CreateNewClass buttonText={t("empty.createFirst")} onClassCreated={fetchClassrooms} />}
+      />
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">{t("title")}</h2>
-        <CreateNewClass
-          buttonText={t("actions.newClassroom")}
-          onClassCreated={fetchClassrooms}
-        />
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{t("title")}</h2>
+        <CreateNewClass buttonText={t("actions.newClassroom")} onClassCreated={fetchClassrooms} />
       </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {classrooms.map((classroom) => (
-          <Card
-            key={classroom.id}
-            className="cursor-pointer transition-all duration-200 hover:scale-[1.01] hover:shadow-md"
-            onClick={() => handleClassroomClick(classroom.id)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                handleClassroomClick(classroom.id);
-              }
-            }}
-            role="link"
-            tabIndex={0}
-            aria-label={classroom.name}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="line-clamp-2 text-lg">
-                    {classroom.name}
-                  </CardTitle>
-                  {classroom.grade && (
-                    <CardDescription className="mt-1">
-                      {t("grade", { grade: classroom.grade })}
-                    </CardDescription>
-                  )}
-                </div>
-                <ArrowRight className="h-5 w-5 text-gray-400 transition-transform group-hover:translate-x-1" />
-              </div>
-            </CardHeader>
-
-            <CardContent className="pt-0">
-              <div className="space-y-3">
-                {/* Student count */}
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Users className="h-4 w-4" />
-                  <span>
-                    {t("studentsCount", { count: classroom.students.length })}
-                  </span>
-                </div>
-
-                {/* Class code */}
-                {classroom.classCode && (
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">
-                      <GraduationCap className="mr-1 h-3 w-3" />
-                      {classroom.classCode}
-                    </Badge>
-                  </div>
-                )}
-
-                {/* Creation date */}
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <Calendar className="h-3 w-3" />
-                  {t("createdAt", { date: formatDate(classroom.createdAt) })}
-                </div>
-
-                {/* Quick stats */}
-                <div className="border-t border-gray-100 pt-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-full justify-start text-sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleClassroomClick(classroom.id);
-                    }}
-                  >
-                    {t("actions.viewRoster")}
-                    <ArrowRight className="ml-auto h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <li key={classroom.id} className={cn(TEACHER_CARD, cardHoverClassName)}>
+            <div className="flex flex-col gap-1">
+              <Link
+                href={`/teacher/class-roster/${classroom.id}`}
+                className={cn(TEACHER_ACTION, "inline-flex items-center text-lg font-semibold break-words underline-offset-4 hover:underline")}
+              >
+                {classroom.name}
+              </Link>
+              {classroom.grade ? <p className="text-muted-foreground text-sm">{t("grade", { grade: classroom.grade })}</p> : null}
+            </div>
+            <p className="flex items-center gap-2 text-sm">
+              <Users className="size-4" aria-hidden="true" />
+              <span>{t("studentsCount", { count: classroom.students.length })}</span>
+            </p>
+            {classroom.classCode ? <p className="text-muted-foreground font-mono text-sm">{classroom.classCode}</p> : null}
+            <p className="text-muted-foreground text-xs">
+              {t("createdAt", { date: format.dateTime(new Date(classroom.createdAt), { day: "numeric", month: "short", year: "numeric" }) })}
+            </p>
+            <div className="mt-auto flex flex-wrap gap-2 pt-1">
+              <Link
+                href={`/teacher/class-roster/${classroom.id}#class-login`}
+                aria-label={tUi("startClassFor", { name: classroom.name })}
+                className={cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "px-4")}
+              >
+                <PlayIcon aria-hidden="true" />
+                {tUi("startClass")}
+              </Link>
+              <Link
+                href={`/teacher/class-roster/${classroom.id}`}
+                aria-label={tc("openClassFor", { name: classroom.name })}
+                className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION, "px-4")}
+              >
+                {tc("openClass")}
+              </Link>
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }

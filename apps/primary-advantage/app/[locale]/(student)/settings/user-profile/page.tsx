@@ -1,13 +1,13 @@
-import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChangeUsernameForm } from "@/components/change-username-form";
 import { UpdateUserLicenseForm } from "@/components/update-user-license";
-import { ArrowLeftIcon, BadgeCheck } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
+import { Panel, RpgLink } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
+import { ART } from "@/lib/rpg/places";
 import { Icons } from "@/components/icons";
 import { redirect } from "@/i18n/navigation";
-import { Link } from "@/i18n/navigation";
 import ChangeRole from "@/components/shared/change-role";
 import { getCurrentUser } from "@/lib/session";
 import { Role } from "@/types/enum";
@@ -27,18 +27,26 @@ export default async function UserProfileSettingsPage({
     return redirect({ href: "/auth/signin", locale });
   }
 
+  // The hero's room at the inn: profile fields on parchment, the avatar link is the hero's chest
+  // (docs/primary-rpg-skin.md §4).
   return (
-    <div>
-      <Header heading={t("title")} text={t("subtitle")} />
-      <Link
-        href="/student/read"
-        className="mb-4 flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
-      >
-        <ArrowLeftIcon className="h-4 w-4" />
-        {t("backToReading")}
-      </Link>
-      <Separator className="my-4" />
-      <div className="mx-2 flex flex-col gap-4 md:flex-row">
+    <Scene place="inn">
+      <header className="cq-on-scene flex flex-col gap-1">
+        <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
+        <p>{t("subtitle")}</p>
+      </header>
+      <div className="flex flex-wrap gap-3">
+        {user.role === "STUDENT" ? (
+          <RpgLink href="/student/avatar?from=me" tone="gold">
+            <img src={ART.chest} alt="" />
+            {t("avatar")}
+          </RpgLink>
+        ) : null}
+        <RpgLink href="/student/read" tone="iron">
+          {t("backToReading")}
+        </RpgLink>
+      </div>
+      <Panel className="md:flex-row md:gap-4">
         <div className="w-full">
           <ChangeUsernameForm
             username={user.name || ""}
@@ -61,8 +69,8 @@ export default async function UserProfileSettingsPage({
             userRole={user.role as Role}
           />
         )}
-      </div>
-    </div>
+      </Panel>
+    </Scene>
   );
 }
 

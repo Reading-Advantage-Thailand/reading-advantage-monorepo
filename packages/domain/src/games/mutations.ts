@@ -1,3 +1,4 @@
+import { grantGpForXp } from "../primary-avatar/gp.js";
 import { eq, and } from "drizzle-orm";
 import {
   assertCan,
@@ -172,6 +173,7 @@ export async function recordGameCompletion({
         activityId,
         activityType: "GAME_COMPLETION",
       });
+      await grantGpForXp({ tx: rawXpLogsTx, schoolId: user.schoolId ?? null, userId: user.id, sourceKey: `xp:${activityId}`, activityType: "GAME_COMPLETION", xpEarned });
       await grantCompletionCosmetics(tx, {
         id: savedCompletion.id,
         schoolId: savedCompletion.schoolId,

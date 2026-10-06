@@ -41,3 +41,6 @@ export type {
   UnsupportedResponsiveComposition,
   WorldAdaptationStrategy,
 } from "./responsive-composition.js";
+
+/** The shared "2D mode (older phones)" setting of the games and the skin pages. */
+export * from "./renderer.js";

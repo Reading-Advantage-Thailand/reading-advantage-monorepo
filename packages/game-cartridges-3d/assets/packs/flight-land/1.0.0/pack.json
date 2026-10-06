@@ -1,0 +1,188 @@
+{
+ "id": "flight-land",
+ "version": "1.0.0",
+ "root": "packs/flight-land/1.0.0",
+ "files": {
+  "barn": {
+   "id": "barn",
+   "path": "barn.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 146240,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/barn.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "7ba1951",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "cottage": {
+   "id": "cottage",
+   "path": "cottage.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 149232,
+   "triangles": 1498,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/cottage.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2b1f1c9",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "dirt-ground": {
+   "id": "dirt-ground",
+   "path": "dirt-ground.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 30124,
+   "triangles": 4194,
+   "textureSize": 0,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/dirt-ground.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "3e9393a",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "farm-field": {
+   "id": "farm-field",
+   "path": "farm-field.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 167612,
+   "triangles": 2026,
+   "textureSize": 384,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/farm-field.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "3e9393a",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "fence": {
+   "id": "fence",
+   "path": "fence.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 84956,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/fence.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "fafdb4f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "forest-ground": {
+   "id": "forest-ground",
+   "path": "forest-ground.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 55976,
+   "triangles": 402,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/forest-ground.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "3e9393a",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "grass-ground": {
+   "id": "grass-ground",
+   "path": "grass-ground.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 6388,
+   "triangles": 469,
+   "textureSize": 0,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/grass-ground.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "3e9393a",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "hay-bale": {
+   "id": "hay-bale",
+   "path": "hay-bale.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 82712,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/hay-bale.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "6613d3f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "river-straight": {
+   "id": "river-straight",
+   "path": "river-straight.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 30588,
+   "triangles": 2368,
+   "textureSize": 0,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/river-straight.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "3e9393a",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "well": {
+   "id": "well",
+   "path": "well.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 160380,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/well.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "fafdb4f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  }
+ },
+ "byteSize": 914208
+}

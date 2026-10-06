@@ -29,7 +29,14 @@ export default defineConfig({
       testMatch: "**/*.setup.ts",
     },
     {
+      // Visual baselines of the UX rework: signs in by itself, no host-proof storage state.
+      name: "visual",
+      testMatch: "**/visual-baselines.spec.ts",
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
       name: "chromium",
+      testIgnore: "**/visual-baselines.spec.ts",
       use: {
         ...devices["Desktop Chrome"],
         hasTouch: true,

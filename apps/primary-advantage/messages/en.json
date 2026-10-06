@@ -38,11 +38,18 @@
     }
   },
   "Sidebar": {
+    "manual": "Teacher manual",
+    "home": "Home",
+    "me": "Me",
+    "noPermissionSection": "You don't have permission to open this section",
+    "noPermissionPage": "You don't have permission to open this page",
     "read": "Read",
+    "games": "Games",
     "stories": "Stories",
     "assignments": "Assignments",
     "sentences": "Sentences",
     "vocabulary": "Vocabulary",
+    "games": "Games",
     "testing": "Testing",
     "systemdashboard": "System Dashboard",
     "licenses": "Licenses Dashboard",
@@ -89,6 +96,7 @@
     "noDataAvailable": "No data available for this month"
   },
   "Question": {
+    "descriptionEmpty": "This story has no questions of this kind yet.",
     "SAQuestion": {
       "title": "Short Answer Question",
       "description": "Answer the question in a few words",
@@ -156,6 +164,11 @@
     }
   },
   "Admin": {
+    "SchoolSelect": {
+      "label": "School",
+      "placeholder": "Select a school",
+      "required": "Please select a school"
+    },
     "Classrooms": {
       "classrooms": "Classrooms",
       "classroomsDescription": "Manage classrooms in your school",
@@ -253,7 +266,10 @@
         "file": "File",
         "size": "Size",
         "savedAs": "Saved as",
-        "nextSteps": "File is now ready for processing. You can proceed with the next steps."
+        "nextSteps": "File is now ready for processing. You can proceed with the next steps.",
+        "inserted": "Inserted",
+        "skippedDuplicate": "Skipped (duplicate in file)",
+        "skippedExisting": "Skipped (already exist)"
       },
       "progressLabel": "Upload Progress",
       "progressPercent": "{percent}% complete",
@@ -264,7 +280,11 @@
     "preview": {
       "button": "Preview",
       "title": "Data Preview",
-      "columns": { "name": "Name", "email": "Email", "role": "Role" }
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role"
+      }
     },
     "formatGuide": {
       "title": "CSV Format Guide",
@@ -375,6 +395,8 @@
       "importDataDesc": "Bulk import users and content",
       "viewReports": "View Reports",
       "viewReportsDesc": "Access analytics and insights",
+      "reedyCosts": "Reedy costs",
+      "reedyCostsDesc": "Minutes, cost, and failures by school and month",
       "manageClassrooms": "Manage Classrooms",
       "manageClassroomsDesc": "Organize classes and assignments"
     },
@@ -419,6 +441,7 @@
     }
   },
   "Components": {
+    "translationLanguage": "Translation language",
     "submitButton": "Submit",
     "closeButton": "Close",
     "cancelButton": "Cancel",
@@ -736,7 +759,20 @@
       "MC_QUESTION": "Multiple Choice Question",
       "SA_QUESTION": "Short Answer Question",
       "LA_QUESTION": "Long Answer Question",
-      "ARTICLE_READ": "Article Read"
+      "ARTICLE_READ": "Article Read",
+      "ARTICLE_RATING": "Story rating",
+      "STORIES_RATING": "Story series rating",
+      "STORIES_READ": "Story series read",
+      "CHAPTER_RATING": "Chapter rating",
+      "CHAPTER_READ": "Chapter read",
+      "LEVEL_TEST": "Level test",
+      "SENTENCE_FLASHCARDS": "Sentence flashcards",
+      "SENTENCE_MATCHING": "Sentence matching",
+      "SENTENCE_ORDERING": "Sentence ordering",
+      "SENTENCE_WORD_ORDERING": "Word ordering",
+      "SENTENCE_CLOZE_TEST": "Fill in the blank",
+      "VOCABULARY_FLASHCARDS": "Word flashcards",
+      "VOCABULARY_MATCHING": "Word matching"
     },
     "level": {
       "title": "CEFR Level",
@@ -758,7 +794,9 @@
         "C1-": "You can understand complex texts with some effort. Your vocabulary lets you read about many different topics, and you can figure out less obvious details, although sometimes you might need to reread certain parts.",
         "C1": "You can read long and challenging texts and understand most of what's happening. You enjoy stories and articles that make you think, and you can talk about them using good vocabulary without having to search too hard for the right words.",
         "C1+": "You're a super reader who can handle challenging texts and understand different writing styles. You're really good at figuring out the less obvious parts of stories and articles, and you usually know what words mean without having to look them up.",
-        "C2": "You can read and understand almost anything. You can understand the main ideas of complex texts and enjoy reading more challenging books and articles. You can talk about almost anything and use the language with confidence."
+        "C2": "You can read and understand almost anything. You can understand the main ideas of complex texts and enjoy reading more challenging books and articles. You can talk about almost anything and use the language with confidence.",
+        "A0-": "You are starting to learn English. You know some letters and a few words, especially with pictures.",
+        "A0+": "You know more simple words and names. You can understand very short phrases with pictures, like signs and labels."
       }
     },
     "progress": {
@@ -778,7 +816,21 @@
       "activeThisWeekDescription": "{count} of {total} students",
       "studentList": "Student List",
       "xpLabel": "{xp} XP"
-    }
+    },
+    "loadError": "We could not load your reports.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "noActivity": "No activity yet",
+    "noActivityHint": "Read a story or play a game, and your activity shows here.",
+    "showAllActivity": "Show all activity",
+    "noXp": "No XP on these days",
+    "noXpHint": "Read and practice to earn XP.",
+    "noXpOverall": "No XP yet",
+    "noReading": "No stories read yet",
+    "noReadingHint": "Read a story to see your reading stats.",
+    "groupBy": "Group by",
+    "groupType": "Type",
+    "groupGenre": "Genre",
+    "groupSubgenre": "Topic"
   },
   "Overall": {
     "roles": {
@@ -836,6 +888,7 @@
   },
   "Assignment": {
     "title": "Create Assignment",
+    "saved": "Assignment saved",
     "description": "Create an assignment for your students",
     "assignForm": {
       "classroom": "Classroom",
@@ -881,7 +934,6 @@
     "clozeTest": "Cloze Test",
     "orderWord": "Order Word",
     "matching": "Matching",
-
     "matchingGame": {
       "title": "Translation Matching Game",
       "description": "Practice matching words with their meanings from your flashcard collection!",
@@ -1465,6 +1517,7 @@
       "title": "Personal information",
       "subtitle": "Information about your personal profile",
       "backToReading": "Back to Reading Page",
+      "avatar": "My avatar",
       "username": "Username",
       "usernameDescription": "The username is used to represent themselves on the platform.",
       "email": "Email",
@@ -1542,6 +1595,17 @@
     }
   },
   "Lesson": {
+    "lockedStep": "Your teacher opens step {step} in class. Keep going with the steps that are open.",
+    "rail": {
+      "stepName": "Step {step} of {total}: {name}",
+      "showSteps": "Show all steps",
+      "hideSteps": "Hide steps",
+      "done": "done"
+    },
+    "saveError": "We could not save your progress.",
+    "saveErrorHint": "Check the internet connection and try again.",
+    "notFound": "We could not find this lesson",
+    "notFoundHint": "Pick a story to read instead.",
     "Reading": {
       "firstTitle": "First Reading",
       "deepTitle": "Deep Reading",
@@ -1827,14 +1891,22 @@
         "title": "Key Sentences : {count} {count, plural, one {sentence} other {sentences}}",
         "more": "+{count} more {count, plural, one {sentence} other {sentences}} saved"
       },
-      "actions": { "backToRead": "Back to Read Page" },
-      "toast": { "failed": "Failed to load lesson summary" }
+      "actions": {
+        "backToRead": "Back to Read Page"
+      },
+      "toast": {
+        "failed": "Failed to load lesson summary"
+      }
     }
   },
   "LessonLanguageQuestion": {
     "title": "AI Reading Assistant",
-    "loading": { "conversation": "Loading conversation..." },
-    "status": { "online": "Online" },
+    "loading": {
+      "conversation": "Loading conversation..."
+    },
+    "status": {
+      "online": "Online"
+    },
     "header": {
       "readyWithName": "Ready to help {name} with questions",
       "ready": "Ready to help with your questions"
@@ -1849,7 +1921,10 @@
       "placeholderWithName": "{name}, ask about the article...",
       "placeholder": "Type your question about the article..."
     },
-    "buttons": { "send": "Send", "skip": "Skip" },
+    "buttons": {
+      "send": "Send",
+      "skip": "Skip"
+    },
     "tips": {
       "askVocabulary": "Ask about vocabulary",
       "discussTheme": "Discuss the main theme",
@@ -1866,7 +1941,9 @@
       "questionOf": "Question {current} of {total}",
       "completePercent": "{percent}% Complete"
     },
-    "timer": { "seconds": "{seconds}s" },
+    "timer": {
+      "seconds": "{seconds}s"
+    },
     "completed": {
       "title": "Quiz Completed",
       "description": "Great job finishing the quiz!",
@@ -1882,7 +1959,9 @@
     }
   },
   "LessonSAQ": {
-    "completed": { "title": "Quiz Completed" },
+    "completed": {
+      "title": "Quiz Completed"
+    },
     "labels": {
       "question": "Question:",
       "yourAnswer": "Your Answer:",
@@ -1890,15 +1969,23 @@
       "feedback": "Feedback:",
       "score": "Score:"
     },
-    "timer": { "elapsed": "Elapsed Time: {time}" },
+    "timer": {
+      "elapsed": "Elapsed Time: {time}"
+    },
     "form": {
-      "placeholder": { "answer": "Type your answer here..." },
+      "placeholder": {
+        "answer": "Type your answer here..."
+      },
       "help": {
         "detailedResponse": "Write a detailed response to demonstrate your understanding"
       },
-      "validation": { "answerRequired": "Please enter your answer" }
+      "validation": {
+        "answerRequired": "Please enter your answer"
+      }
     },
-    "actions": { "submit": "Submit" }
+    "actions": {
+      "submit": "Submit"
+    }
   },
   "LessonCloze": {
     "loading": {
@@ -2019,7 +2106,9 @@
     "prompt": {
       "thinkAndReveal": "Think about the meaning of this word, then reveal the answer."
     },
-    "buttons": { "showAnswer": "Show Answer" },
+    "buttons": {
+      "showAnswer": "Show Answer"
+    },
     "rating": {
       "prompt": "How well did you know this word?",
       "again": "Again",
@@ -2071,27 +2160,13 @@
       "archive": "Archive",
       "delete": "Delete"
     },
-    "search": { "placeholder": "Search" },
-    "import": {
-      "fromLabel": "Import a new class from",
-      "googleClassroom": "Google Classroom",
-      "dialog": {
-        "title": "Import Your Google Classroom",
-        "selectClass": "Select a Google Classroom Class",
-        "description": "Choose a class to sync. All students will be imported and added to your account.",
-        "yourClasses": "Your Google Classroom Classes",
-        "refresh": "Refresh",
-        "continue": "Continue",
-        "syncing": "Syncing Class...",
-        "syncingDescription": "Importing students from Google Classroom. This may take a moment.",
-        "syncCompleted": "Sync Completed!",
-        "syncAnother": "Sync Another Class",
-        "goToClass": "Go to Class",
-        "aboutTitle": "About Google Classroom Sync",
-        "aboutDescription": "This feature allows teachers to import Google Classroom students. Students will be automatically enrolled in your class."
-      }
+    "search": {
+      "placeholder": "Search"
     },
-    "pagination": { "previous": "Previous", "next": "Next" },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
     "edit": {
       "title": "Edit Class",
       "description": "Are you sure you want to edit the class?",
@@ -2120,8 +2195,13 @@
     }
   },
   "TeacherCreateClass": {
-    "button": { "newClassroom": "New Classroom" },
-    "dialog": { "title": "Create Class", "description": "Create a new class" },
+    "button": {
+      "newClassroom": "New Classroom"
+    },
+    "dialog": {
+      "title": "Create Class",
+      "description": "Create a new class"
+    },
     "fields": {
       "className": "Class Name",
       "classNamePlaceholder": "Class Name",
@@ -2130,7 +2210,10 @@
       "gradePlaceholder": "Grade",
       "gradeItem": "Grade {grade}"
     },
-    "actions": { "create": "Create", "cancel": "Cancel" },
+    "actions": {
+      "create": "Create",
+      "cancel": "Cancel"
+    },
     "toast": {
       "attention": "Attention",
       "fillAllFields": "Please fill in all fields",
@@ -2186,7 +2269,9 @@
       }
     },
     "cefrSetter": {
-      "button": { "setLevel": "Set Level" },
+      "button": {
+        "setLevel": "Set Level"
+      },
       "dialog": {
         "title": "Set CEFR Level for {name}",
         "description": "Choose the appropriate CEFR level for this student. This will also update their reading level (RA level)."
@@ -2195,7 +2280,9 @@
         "currentLevel": "Current Level",
         "newLevel": "New Level"
       },
-      "select": { "placeholder": "Select CEFR Level" },
+      "select": {
+        "placeholder": "Select CEFR Level"
+      },
       "preview": {
         "title": "Preview:",
         "cefr": "CEFR Level:",
@@ -2234,7 +2321,8 @@
         "actions": {
           "actions": "Actions",
           "details": "Details"
-        }
+        },
+        "noDueDate": "No due date"
       },
       "empty": {
         "noAssignments": "No assignments found",
@@ -2254,6 +2342,8 @@
       "nav": {
         "classRoster": "Class Roster",
         "reports": "Reports",
+        "reedy": "Reedy",
+        "avatars": "Avatars",
         "settings": "Settings"
       },
       "info": {
@@ -2436,6 +2526,46 @@
       "header": {
         "title": "Student Enrollment",
         "subtitle": "Manage student enrollment for"
+      },
+      "search": {
+        "placeholder": "Search students by name or email"
+      },
+      "enrollButton": "Enroll student",
+      "dialog": {
+        "title": "Enroll students",
+        "description": "Select students to enroll in {classroom}"
+      },
+      "emptyAvailable": {
+        "noMatch": "No available students match your search",
+        "none": "No students available for enrollment"
+      },
+      "enrolledHeading": "Enrolled students ({count})",
+      "empty": {
+        "noMatch": "No students match your search",
+        "none": "No students enrolled yet"
+      },
+      "noName": "No name",
+      "levelShort": "Lvl {level}",
+      "toasts": {
+        "loadAvailableError": "Failed to load available students",
+        "enrollError": "Failed to enroll student",
+        "enrolled": "{name} has been enrolled",
+        "unenrollError": "Failed to unenroll student",
+        "unenrolled": "{name} has been unenrolled"
+      },
+      "unenroll": {
+        "button": "Unenroll",
+        "title": "Unenroll student",
+        "question": "Are you sure you want to unenroll <student></student> from <classroom></classroom>?",
+        "loses": "The student leaves the class and loses access to:",
+        "item1": "Class assignments and activities",
+        "item2": "Progress tracking for this class",
+        "item3": "Class content and materials",
+        "cannotUndo": "This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Unenroll student",
+        "working": "Unenrolling...",
+        "unknownStudent": "Unknown student"
       }
     },
     "AssignmentDashboard": {
@@ -2456,7 +2586,8 @@
       "deleteCount": "Delete ({count})",
       "cancel": "Cancel",
       "edit": "Edit",
-      "noStudentsInSelectedStatus": "No Students In Selected Status"
+      "noStudentsInSelectedStatus": "No Students In Selected Status",
+      "noDueDate": "No due date"
     }
   },
   "AdminTeachers": {
@@ -2496,8 +2627,8 @@
         "nameMax": "Name must be less than 100 characters",
         "emailInvalid": "Please enter a valid email address",
         "roleRequired": "Please select a role",
-        "passwordMin": "Password must be at least 6 characters",
-        "passwordMax": "Password must be less than 100 characters",
+        "passwordMin": "Password must be at least 8 characters",
+        "passwordMax": "Password must be 128 characters or fewer",
         "passwordsDontMatch": "Passwords don't match"
       }
     },
@@ -2602,7 +2733,9 @@
       "title": "Student Management",
       "subtitle": "Manage students and their progress"
     },
-    "page": { "title": "Students Management" },
+    "page": {
+      "title": "Students Management"
+    },
     "stats": {
       "totalStudents": "Total Students",
       "allClassrooms": "All classrooms",
@@ -2674,7 +2807,9 @@
       "loading": "Loading students...",
       "empty": "No students found matching your criteria."
     },
-    "badges": { "noClass": "No Class" },
+    "badges": {
+      "noClass": "No Class"
+    },
     "pagination": {
       "showing": "Showing {from} to {to} of {total} students",
       "previous": "Previous",
@@ -2689,8 +2824,36 @@
     "signInToPlayGame": "Sign in to play this game"
   },
   "StudentGames": {
-    "title": "Student games",
-    "description": "Play the live Advantage Play Kit catalog. Each card opens the authenticated APK route."
+    "title": "Games",
+    "description": "Play games with the words and sentences you learn.",
+    "wordGames": "Word games",
+    "wordGamesHint": "Practice the words you know.",
+    "sentenceGames": "Sentence games",
+    "sentenceGamesHint": "Put words in order to make sentences.",
+    "empty": "No games yet",
+    "emptyHint": "Ask your teacher when the games are ready.",
+    "loadError": "We could not load the games.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "storyLink": "Word adventures",
+    "storyLinkDescription": "Play 3D games with the words you saved from your reading."
+  },
+  "StoryGames": {
+    "title": "Word adventures",
+    "description": "Play 3D games with the words and sentences you saved from your reading. Older phones play the 2D version.",
+    "chooseGame": "Choose a game",
+    "loading": "Loading your saved words…",
+    "loadError": "Could not load your saved words. Try again later.",
+    "saved": "This practice set has {words, plural, one {# word} other {# words}} and {sentences, plural, one {# sentence} other {# sentences}} from your reading.",
+    "needWords": "{count, plural, one {Save # more word to play.} other {Save # more words to play.}}",
+    "needSentences": "{count, plural, one {Save # more sentence to play.} other {Save # more sentences to play.}}",
+    "readMore": "Read and save more words",
+    "flat": "2D mode (older phones)",
+    "save": {
+      "saving": "Saving your result…",
+      "saved": "Result saved",
+      "error": "Could not save your result"
+    },
+    "link": "Word adventures"
   },
   "Footer": {
     "tagline": "Providing the best English learning experience.",
@@ -2761,5 +2924,912 @@
     "createSuccessDescription": "{name} has been added to the system.",
     "createError": "Failed to create school",
     "fallbackError": "An unexpected error occurred."
+  },
+  "ClassLogin": {
+    "title": "Class sign-in",
+    "loading": "Loading class sign-in…",
+    "errors": {
+      "signedOut": "Your sign-in has ended. Sign in again.",
+      "forbidden": "You cannot manage this class.",
+      "notFound": "We cannot find this class or student.",
+      "rateLimited": "Too many tries. Wait a few minutes and try again.",
+      "unavailable": "No free code right now. Try again.",
+      "generic": "Something went wrong. Try again."
+    },
+    "session": {
+      "start": "Start class",
+      "startHelp": "Start the class to show a sign-in code for your students.",
+      "codeLabel": "Class code",
+      "codeAria": "Class code {code}",
+      "openUntil": "Open until {time}",
+      "openNoCode": "The class is open until {time}. The code shows only once. Press New code to show a code.",
+      "newCode": "New code",
+      "end": "End class"
+    },
+    "backToClass": "Back to class",
+    "links": {
+      "classSheet": "Class sheet",
+      "qrCards": "QR cards"
+    },
+    "sheet": {
+      "title": "Class sheet",
+      "intro": "The class sheet lists each student's username and a new password, for signing in away from the classroom.",
+      "warning": "Making the sheet sets a new password for every student in this class and signs them out. Old passwords stop working.",
+      "make": "Make class sheet",
+      "confirmTitle": "Set new passwords for the whole class?",
+      "confirm": "Set new passwords",
+      "cancel": "Cancel",
+      "print": "Print",
+      "once": "The passwords show only now. Print the sheet before you leave this page.",
+      "signInAt": "Sign in at",
+      "name": "Name",
+      "username": "Username",
+      "password": "Password",
+      "failed": "These students kept their old password: {names}. Try again."
+    },
+    "qrPage": {
+      "title": "QR login cards",
+      "intro": "Each card signs one student in with one scan. A card shows only once, so print it now.",
+      "issue": "Make cards for {count, plural, one {# student} other {# students}} without a card",
+      "allHaveCards": "Every student has a card. To print a card again, make a new card for that student.",
+      "toPrint": "{count, plural, one {# card} other {# cards}} to print",
+      "madeBefore": "Cards made before",
+      "madeBeforeHelp": "The server does not keep these cards. Make a new card to print one again. The old card then stops working.",
+      "print": "Print"
+    },
+    "setting": {
+      "label": "Picture password",
+      "on": "Students tap their 3 pictures after they choose their name.",
+      "off": "Students sign in with the class code and their name only. Some features, such as Reedy, need a full sign-in."
+    },
+    "roster": {
+      "heading": "Students",
+      "summary": "{signedIn} of {total} signed in",
+      "student": "Student",
+      "status": "Status",
+      "actions": "Actions",
+      "signedIn": "Signed in",
+      "notSignedIn": "Not signed in",
+      "seen": "Seen {time}",
+      "lastSeen": "Last seen {time}",
+      "locked": "Locked, {minutes} min left",
+      "noPicture": "No picture password",
+      "resetPicture": "Reset pictures",
+      "resetPictureFor": "Reset picture password for {name}",
+      "setPicture": "Set pictures",
+      "setPictureFor": "Set picture password for {name}",
+      "newCard": "New card",
+      "newCardFor": "New card for {name}",
+      "assignMissing": "Give picture passwords to {count, plural, one {# student} other {# students}}",
+      "empty": "No students in this class yet."
+    },
+    "pictures": {
+      "title": "New picture password",
+      "description": "Show this to the student now. It does not show again.",
+      "print": "Print",
+      "close": "Close"
+    },
+    "rotate": {
+      "title": "Make a new card for {name}?",
+      "description": "The old card stops working now, and {name} is signed out.",
+      "confirm": "Make new card",
+      "cancel": "Cancel"
+    },
+    "cards": {
+      "title": "New QR card",
+      "description": "Print this card now. It does not show again.",
+      "qrLabel": "Sign-in QR code for {name}",
+      "scanHint": "Scan to sign in",
+      "print": "Print",
+      "close": "Close"
+    }
+  },
+  "StudentPictures": {
+    "redCircle": "red circle",
+    "blueSquare": "blue square",
+    "greenTriangle": "green triangle",
+    "yellowStar": "yellow star",
+    "pinkHeart": "pink heart",
+    "orangeDiamond": "orange diamond",
+    "purpleMoon": "purple moon",
+    "grayCloud": "gray cloud",
+    "skyDrop": "light blue drop",
+    "blackBolt": "black lightning",
+    "brownHexagon": "brown hexagon",
+    "tealFlower": "teal flower"
+  },
+  "StudentSignIn": {
+    "code": {
+      "title": "Hello! Let's sign in",
+      "label": "Class code",
+      "help": "Type the code your teacher shows you.",
+      "next": "Next",
+      "checking": "Checking…"
+    },
+    "names": {
+      "title": "Who are you?",
+      "help": "Tap your name.",
+      "empty": "There are no names in this class yet. Ask your teacher.",
+      "back": "Back"
+    },
+    "pictures": {
+      "title": "Hi, {name}!",
+      "help": "Tap your 3 pictures in order.",
+      "progress": "{count} of 3 pictures",
+      "undo": "Undo",
+      "clear": "Start again",
+      "back": "Not you? Go back",
+      "signingIn": "Signing in…"
+    },
+    "card": {
+      "title": "QR card sign-in",
+      "signingIn": "Signing you in…",
+      "useCode": "Sign in with the class code"
+    },
+    "password": {
+      "title": "Sign in with your username",
+      "help": "Use the username and password your teacher gave you.",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign in",
+      "signingIn": "Signing in…"
+    },
+    "switch": {
+      "usePassword": "Sign in with username and password",
+      "useCode": "Sign in with the class code"
+    },
+    "errors": {
+      "codeFormat": "The code has 6 letters and numbers.",
+      "codeInvalid": "This code does not work. Check the code or ask your teacher.",
+      "wrongPictures": "Those pictures are not right. Try again.",
+      "locked": "Too many wrong tries. Wait {minutes, plural, one {# minute} other {# minutes}} or ask your teacher.",
+      "rateLimited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again.",
+      "wrongPassword": "Wrong username or password. Try again.",
+      "cardInvalid": "This card does not work now. Cards work only in class. Ask your teacher.",
+      "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
+      "generic": "Something went wrong. Try again."
+    }
+  },
+  "AppShell": {
+    "skipToContent": "Skip to main content",
+    "accountMenu": "Account menu",
+    "toggleTheme": "Switch light or dark theme",
+    "soundOff": "Turn sound off",
+    "soundOn": "Turn sound on",
+    "mainNavigation": "Main navigation",
+    "publicNavigation": "Site navigation",
+    "openMenu": "Open menu",
+    "menu": "Menu",
+    "tabs": {
+      "home": "Home",
+      "read": "Read",
+      "games": "Games",
+      "me": "Me",
+      "classes": "Classes",
+      "assignments": "Assignments",
+      "reports": "Reports",
+      "dashboard": "Dashboard",
+      "teachers": "Teachers",
+      "students": "Students",
+      "import": "Import",
+      "schools": "Schools",
+      "licenses": "Licenses"
+    },
+    "gp": "{gp} GP",
+    "xp": "{xp} XP"
+  },
+  "Quest": {
+    "noHero": "No hero yet",
+    "title": "Class Quest",
+    "subtitle": "Your class fights one boss together.",
+    "boss": "Boss: {name}",
+    "daysLeft": "{count, plural, =0 {Battle day!} one {# day to the battle} other {# days to the battle}}",
+    "meterLabel": "Class damage",
+    "meter": "{committed} of {target} damage",
+    "powerUps": "Your power-ups",
+    "noPowerUps": "No power-ups yet. Meet a goal to earn one.",
+    "powerUp": {
+      "shield": "Shield",
+      "sharp-blade": "Sharp blade",
+      "rally-horn": "Rally horn"
+    },
+    "goals": "Goals this week",
+    "goal": {
+      "reading-days": "Read on {days} days",
+      "accuracy": "{percent}% correct on {minQuestions} questions",
+      "streak": "A {days}-day streak",
+      "lesson-steps": "Finish {steps} lesson steps"
+    },
+    "earned": "Earned",
+    "teacher": {
+      "title": "Class Quest",
+      "none": "No quest this week.",
+      "assign": "Assign a quest",
+      "roster": "{count, plural, one {# student} other {# students}}",
+      "earners": "{count} with power-ups",
+      "cancel": "Cancel the quest",
+      "cancelError": "The quest could not be cancelled.",
+      "battleAt": "Battle: {time}",
+      "status": {
+        "open": "Open",
+        "rally": "Rally",
+        "play": "Battle",
+        "result": "Result",
+        "done": "Done"
+      },
+      "live": "Live dashboard"
+    },
+    "assign": {
+      "title": "Assign a quest",
+      "subtitle": "Pick a quest, a class, and the battle time. The boss target is set from today's roster.",
+      "template": "Quest",
+      "class": "Class",
+      "battleAt": "Battle date and time",
+      "submit": "Assign",
+      "back": "Back to the dashboard",
+      "noClasses": "You have no classes yet.",
+      "errors": {
+        "ALREADY_OPEN": "This class already has a quest this week.",
+        "NO_CONTENT": "The class's current lesson has no glossary. Assign a book first.",
+        "BAD_TIME": "Pick a battle time after now.",
+        "GAME_UNAVAILABLE": "The battle game is not installed.",
+        "generic": "The quest was not assigned."
+      }
+    },
+    "battle": {
+      "title": "Class Quest battle",
+      "go": "Go to the battle",
+      "none": "No quest this week.",
+      "home": "Back to home",
+      "you": "You",
+      "hp": "HP {hp} of {max}",
+      "hpLabel": "Your HP",
+      "damage": "Your damage: {damage}",
+      "rested": "You rested and came back with half HP.",
+      "used": "used",
+      "waiting": "The battle has not started. Wait for your teacher.",
+      "present": "You are here! The battle starts soon.",
+      "saved": "Your hits are in: {damage} damage. Watch the screen!",
+      "fell": "The boss fell!",
+      "held": "The boss held. Next time!"
+    },
+    "live": {
+      "title": "Live dashboard",
+      "present": "{count} of {total} here",
+      "students": "The class",
+      "hits": "Hits",
+      "hit": "{name} hit for {damage}",
+      "noHits": "No hits yet.",
+      "helpers": "Thank you, helpers!",
+      "closed": "The quest is closed.",
+      "field": "The battle field",
+      "moveError": "The battle did not move on.",
+      "next": {
+        "rally": "Start the rally",
+        "play": "Start the battle",
+        "result": "Show the result",
+        "done": "Close the quest"
+      }
+    }
+  },
+  "ClassAvatars": {
+    "title": "Class avatars",
+    "subtitle": "The avatar of each student. Reset clears the hero and the worn pieces; the student picks again.",
+    "reset": "Reset",
+    "resetDone": "Reset",
+    "noAvatar": "No avatar yet",
+    "backToClass": "Back to the class",
+    "loadError": "The avatars did not load.",
+    "noStudents": "No students in this class yet."
+  },
+  "Avatar": {
+    "title": "My avatar",
+    "subtitle": "Pick a hero and your colors. You can change them any time.",
+    "stepClass": "Choose your hero",
+    "stepColors": "Colors for your {class}",
+    "preview": "Your avatar",
+    "save": "Save my avatar",
+    "saving": "Saving…",
+    "skip": "Not now",
+    "back": "Choose another hero",
+    "error": "We could not save your avatar. Try again.",
+    "nudgeTitle": "Make your avatar!",
+    "nudgeBody": "Pick a hero and your colors. Reedy will look like you.",
+    "nudgeLink": "Make my avatar",
+    "meLink": "My avatar",
+    "shop": {
+      "home": "My avatar",
+      "gp": "{gp} GP",
+      "level": "Level {level}",
+      "shopLink": "Go to the shop",
+      "changeHero": "Change hero or colors",
+      "wearing": "Wearing",
+      "empty": "Nothing",
+      "wear": "Wear",
+      "remove": "Take off",
+      "wornBadge": "Worn",
+      "shopTitle": "Avatar shop",
+      "shopSubtitle": "Spend your GP on pieces for your avatar. Earn GP by reading and answering.",
+      "allSlots": "All slots",
+      "buy": "Buy for {gp} GP",
+      "buyDye": "Buy the {dye} dye for {gp} GP",
+      "owned": "Owned",
+      "locked": "Level {level}",
+      "free": "Free",
+      "notEnough": "Not enough GP",
+      "shopError": "That did not work. Try again.",
+      "dyes": "Dyes",
+      "greeting": "Welcome, hero! Tap a piece to try it on.",
+      "thanks": "Good choice! It is in your pack.",
+      "armorer": "The armorer",
+      "all": "All",
+      "shelf": "Shelf {n} of {total}",
+      "prevShelf": "Previous shelf",
+      "nextShelf": "Next shelf",
+      "tryOn": "Try it on",
+      "youKeep": "You keep {gp} GP",
+      "tier": "Tier {tier}",
+      "noDye": "No dye",
+      "drawer": "Your {slot} pieces",
+      "pickSlot": "Tap a slot to open its drawer.",
+      "page": "Page {n} of {total}",
+      "prevPage": "Previous page",
+      "nextPage": "Next page",
+      "noAvatarYet": "Pick a hero first."
+    },
+    "pieceSlots": {
+      "hair": "Hair",
+      "head": "Head",
+      "chest": "Chest",
+      "shoulders": "Shoulders",
+      "back": "Back",
+      "hands": "Hands",
+      "waist": "Waist",
+      "feet": "Feet",
+      "mainhand": "Main hand",
+      "offhand": "Off hand"
+    },
+    "classes": {
+      "knight": "Knight",
+      "wizard": "Wizard",
+      "cleric": "Cleric",
+      "rogue": "Rogue",
+      "ranger": "Ranger",
+      "bard": "Bard",
+      "witch": "Witch",
+      "druid": "Druid",
+      "shaman": "Shaman",
+      "duelist": "Duelist",
+      "swashbuckler": "Swashbuckler",
+      "treasure-hunter": "Treasure hunter",
+      "explorer": "Explorer",
+      "gladiator": "Gladiator",
+      "shield-maiden": "Shield maiden"
+    },
+    "slots": {
+      "skin": "Skin",
+      "hair": "Hair",
+      "eyes": "Eyes",
+      "cloth": "Clothes"
+    },
+    "options": {
+      "skin": {
+        "fair": "Fair",
+        "light": "Light",
+        "tan": "Tan",
+        "brown": "Brown",
+        "deep": "Deep"
+      },
+      "hair": {
+        "brown": "Brown",
+        "black": "Black",
+        "blond": "Blond",
+        "auburn": "Auburn",
+        "silver": "Silver",
+        "teal": "Teal"
+      },
+      "eyes": {
+        "brown": "Brown",
+        "blue": "Blue",
+        "green": "Green",
+        "hazel": "Hazel",
+        "violet": "Violet"
+      },
+      "cloth": {
+        "sky": "Sky",
+        "linen": "Linen",
+        "moss": "Moss",
+        "rose": "Rose",
+        "slate": "Slate"
+      }
+    }
+  },
+  "Reedy": {
+    "title": "Reedy",
+    "preview": "Preview",
+    "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
+    "explainTh": "รีดี้คือโค้ชฝึกพูด คุยเรื่องนิทานของคุณเป็นภาษาอังกฤษและภาษาไทยได้ รีดี้ยังใหม่ อาจทำผิดพลาดได้บ้าง",
+    "meterLabel": "Reedy minutes",
+    "minutesLeft": "{time} left this month",
+    "talk": "Talk to Reedy",
+    "start": "Start talking",
+    "micAsk": "Reedy needs your microphone. Tap Allow when your browser asks.",
+    "noMic": "No microphone found. Ask your teacher for help, or try another device.",
+    "micDenied": "The microphone is off. Allow it in your browser, then try again.",
+    "connecting": "Connecting to Reedy…",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "end": "Finish",
+    "timeLeft": "{time} left",
+    "stopTitle": "Time's up!",
+    "stopBody": "Your Reedy minutes for this month are used up. More minutes come next month.",
+    "providerDown": "Reedy cannot talk right now. Try again later.",
+    "lost": "The call dropped. You can try again.",
+    "summaryTitle": "Great talking with you!",
+    "summaryKind": "Here is what Reedy noticed. Every try makes you better.",
+    "strengths": "What went well",
+    "improvements": "Try next time",
+    "again": "Talk again",
+    "backHome": "Back to home",
+    "lessonEntry": "Talk to Reedy about this story",
+    "blocked": {
+      "DISABLED": "Reedy is taking a break right now.",
+      "SCHOOL_DISABLED": "Reedy is not switched on for your school yet.",
+      "AUTH_STRENGTH": "Sign in with your username and password to talk to Reedy.",
+      "NO_AVATAR": "Make your avatar first, then talk to Reedy.",
+      "SESSION_ACTIVE": "Reedy is already talking with you on another screen.",
+      "QUOTA_EXHAUSTED": "Your Reedy minutes for this month are used up. More minutes come next month."
+    },
+    "scores": {
+      "fluency": "Speaking",
+      "grammar": "Grammar",
+      "vocabulary": "Words",
+      "pronunciation": "Sounds"
+    },
+    "stars": "{score} of 5"
+  },
+  "ReedyUsage": {
+    "title": "Reedy this month",
+    "monthHint": "Month {month}. Each student has {budget} of talking time.",
+    "backToClass": "Back to class",
+    "minutesUsed": "Minutes used",
+    "sessions": "Sessions",
+    "studentsWithUse": "Students who talked",
+    "safetyEvents": "Safety events",
+    "student": "Student",
+    "minutes": "Minutes",
+    "lastUse": "Last talk",
+    "averageScores": "Average scores",
+    "noUse": "No talk yet",
+    "noStudents": "No students in this class",
+    "noStudentsHint": "Enroll students to see their Reedy time.",
+    "privacyNote": "Reedy keeps no recording or transcript. Safety events are counts only.",
+    "scoreShort": {
+      "fluency": "Speak",
+      "grammar": "Gram",
+      "vocabulary": "Words",
+      "pronunciation": "Sound"
+    },
+    "loadError": "Reedy usage is not available",
+    "loadErrorHint": "Try again later. If this continues, contact support.",
+    "signInHint": "Sign in again to see this page.",
+    "costsTitle": "Reedy costs",
+    "costsHint": "Cost and failures by school and month for the last 3 months.",
+    "attempts": "Session attempts",
+    "failedStarts": "Failed starts",
+    "disconnects": "Disconnects",
+    "summaryFailures": "Summary failures",
+    "measuredCostUsd": "Measured cost (USD)",
+    "missingCost": "Sessions with no cost data",
+    "month": "Month",
+    "school": "School",
+    "costThb": "Cost (THB)",
+    "noCosts": "No Reedy sessions yet",
+    "noCostsHint": "Costs appear after the first session ends."
+  },
+  "StudentHome": {
+    "title": "Home",
+    "greeting": "Hi, {name}!",
+    "subtitle": "Ready to read today?",
+    "progress": "My progress",
+    "streak": "Day streak",
+    "streakValue": "{count, plural, =0 {No streak yet} one {# day} other {# days}}",
+    "xp": "XP",
+    "level": "Level",
+    "todayLesson": "Today's lesson",
+    "dueDate": "Due {date}",
+    "noDueDate": "No due date",
+    "overdue": "Late",
+    "startLesson": "Start lesson",
+    "continueLesson": "Continue lesson",
+    "continueReading": "Continue reading",
+    "keepReading": "Keep reading",
+    "noReading": "No story in progress",
+    "noReadingHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "games": "Games",
+    "gamesHint": "Play word games and earn XP.",
+    "playGames": "Play games",
+    "classBook": "Your class book",
+    "classBookLesson": "Lesson {number}: {title}",
+    "classBookNoLesson": "Your teacher will open the next lesson soon.",
+    "classBookLocked": "Your teacher opens this lesson in class.",
+    "readLesson": "Read the lesson",
+    "seeBook": "See the book",
+    "book": {
+      "back": "Back to home",
+      "lessons": "Lessons",
+      "lesson": "Lesson {number}",
+      "current": "Now in class",
+      "taught": "Taught",
+      "read": "Read",
+      "notYet": "Coming soon",
+      "progress": "Lesson {current} of {total}"
+    },
+    "yourHero": "Your hero",
+    "arena": "The arena",
+    "arenaHint": "Word and sentence games. The class challenge is on the arena wall."
+  },
+  "ReadList": {
+    "title": "Read",
+    "subtitle": "Pick a story at your level.",
+    "yourLevel": "Your level: {level}",
+    "filters": "Story filters",
+    "chooseType": "Choose a type",
+    "chooseGenre": "Choose a genre",
+    "chooseSubgenre": "Choose a topic",
+    "stories": "Stories",
+    "empty": "No stories here yet",
+    "emptyHint": "Try another genre or topic.",
+    "loadingMore": "Loading more...",
+    "scrollMore": "Scroll down to load more",
+    "loadMoreError": "We could not load more stories.",
+    "loadError": "We could not load the stories.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "started": "Started",
+    "completed": "Completed",
+    "approved": "Approved",
+    "lesson": "Study as a lesson",
+    "lessonLabel": "Study {title} as a lesson",
+    "notFound": "We could not find this story",
+    "notFoundHint": "It may have been removed. Pick another story.",
+    "backToStories": "Back to stories",
+    "articleError": "We could not open this story.",
+    "disclaimer": "This story, its pictures, and its audio are made by a computer for learning English. Check facts with another source before you use them in school work."
+  },
+  "StudentAssignments": {
+    "title": "My assignments",
+    "subtitle": "Lessons from your teacher.",
+    "filters": "Assignment filters",
+    "search": "Search assignments",
+    "searchPlaceholder": "Search by name",
+    "searching": "Searching...",
+    "status": "Show",
+    "statusAll": "All",
+    "statusNotStarted": "To do",
+    "statusInProgress": "Started",
+    "statusCompleted": "Done",
+    "due": "Due date",
+    "dueAll": "Any date",
+    "dueOverdue": "Late",
+    "dueToday": "Due today",
+    "dueUpcoming": "Coming up",
+    "noDueDate": "No due date",
+    "dueOn": "Due {date}",
+    "daysLeft": "{days, plural, one {# day left} other {# days left}}",
+    "late": "Late",
+    "from": "From {teacher}",
+    "start": "Start lesson",
+    "continue": "Continue",
+    "review": "Look again",
+    "empty": "No assignments yet",
+    "emptyHint": "When your teacher gives you a lesson, it shows here.",
+    "findStory": "Find a story",
+    "noMatch": "No assignments match",
+    "noMatchHint": "Try another filter.",
+    "showAll": "Show all",
+    "loadError": "We could not load your assignments.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading assignments",
+    "pages": "Assignment pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "Flashcards": {
+    "vocabularyTitle": "My words",
+    "vocabularySubtitle": "Practice the words you saved from stories.",
+    "sentencesTitle": "My sentences",
+    "sentencesSubtitle": "Practice the sentences you saved from stories.",
+    "practiceTabs": "Practice type",
+    "loadError": "We could not load your cards.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "vocabularyEmpty": "No words saved yet",
+    "vocabularyEmptyHint": "Read a story and save new words. They show here for practice.",
+    "sentencesEmpty": "No sentences saved yet",
+    "sentencesEmptyHint": "Read a story and save sentences. They show here for practice.",
+    "findStory": "Find a story"
+  },
+  "StudentHistory": {
+    "title": "My reading",
+    "subtitle": "Stories you read, and stories to read again.",
+    "readAgain": "Read again",
+    "readAgainHint": "Reading these stories again can help you do better.",
+    "readAgainAction": "Read again",
+    "records": "Stories I read",
+    "recordsHint": "Every story you opened, newest first.",
+    "search": "Search stories",
+    "searchPlaceholder": "Search by title",
+    "searching": "Searching...",
+    "score": "Score {score}",
+    "readOn": "Read {date}",
+    "status": {
+      "READ": "Read",
+      "UNRATED": "Not rated yet",
+      "COMPLETED_MCQ": "Quiz done",
+      "COMPLETED_SAQ": "Short answers done",
+      "COMPLETED_LAQ": "Writing done"
+    },
+    "noReadAgain": "Nothing to read again",
+    "noReadAgainHint": "Great work! Keep reading new stories.",
+    "noRecords": "No stories read yet",
+    "noRecordsHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "noMatch": "No stories match",
+    "noMatchHint": "Try another word.",
+    "showAll": "Show all",
+    "loadError": "We could not load your reading history.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading stories",
+    "pages": "Story pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "TeacherHome": {
+    "quest": "Class Quest",
+    "title": "Home",
+    "greeting": "Hello, {name}",
+    "subtitle": "Your classes and students at a glance.",
+    "summary": "Summary",
+    "stats": {
+      "classes": "Classes",
+      "students": "Students",
+      "openAssignments": "Open assignments",
+      "needsHelp": "Need help"
+    },
+    "classes": {
+      "heading": "My classes",
+      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
+      "grade": "Grade {grade}",
+      "empty": "No classes yet",
+      "emptyHint": "Create a class on My Classes, then add your students.",
+      "goToClasses": "Go to My Classes",
+      "all": "All classes"
+    },
+    "assignments": {
+      "heading": "Open assignments",
+      "progress": "{completed} of {assigned} done",
+      "empty": "No open assignments",
+      "emptyHint": "Every student has finished the assigned work.",
+      "all": "All assignments"
+    },
+    "help": {
+      "heading": "Who needs help",
+      "hint": "Students with overdue work or no activity for {days} days.",
+      "late": "{count} overdue",
+      "neverActive": "No activity yet",
+      "inactive": "Last active {date}",
+      "empty": "Everyone is on track",
+      "emptyHint": "No student has overdue work or a long break.",
+      "more": "{count, plural, one {# more student} other {# more students}}"
+    },
+    "loadError": "We could not load your home page.",
+    "loadErrorHint": "Check your connection and try again."
+  },
+  "TeacherUi": {
+    "startClass": "Start class",
+    "startClassFor": "Start class {name}",
+    "due": {
+      "none": "No due date",
+      "overdue": "Overdue",
+      "today": "Due today",
+      "soon": "{days, plural, one {Due tomorrow} other {Due in # days}}",
+      "upcoming": "Due in {days} days",
+      "on": "Due {date}"
+    },
+    "classBook": {
+      "title": "Class book",
+      "hint": "The book and the lesson plan for this class will show here.",
+      "none": "No book is assigned to this class yet.",
+      "noCatalogue": "No books are in the catalogue yet.",
+      "assign": "Assign a book",
+      "book": "Book",
+      "chooseBook": "Choose a book",
+      "mode": "Mode",
+      "modeTeacherLed": "Teacher-led (workbook first)",
+      "modeIndependent": "Independent",
+      "startDate": "Start date",
+      "assignButton": "Assign",
+      "assigned": "Book assigned.",
+      "assignError": "Could not assign the book. Try again.",
+      "pointer": "Lesson {current} of {total}",
+      "taughtCount": "{count, plural, =0 {No lessons taught yet} one {# lesson taught} other {# lessons taught}}",
+      "pacing": "Lesson plan",
+      "backToClass": "Back to class",
+      "nextStep": "Next step",
+      "nextStepValue": "Step {step}: {title}",
+      "period": "Period {period}",
+      "allStepsDone": "All 13 steps are done. Mark the lesson taught.",
+      "noLessons": "This book has no lessons in the catalogue yet.",
+      "lessons": "Lessons",
+      "lessonNumber": "Lesson {number}",
+      "current": "Current",
+      "taughtOn": "Taught {date}",
+      "notTaught": "Not taught",
+      "draft": "Not published yet",
+      "setCurrent": "Make current",
+      "markTaught": "Mark taught",
+      "steps": "Workbook steps done in class",
+      "stepLabel": "Step {step}: {title}",
+      "actionError": "The change was not saved. Try again.",
+      "lesson": {
+        "projector": "Projector",
+        "rehearsal": "Rehearsal (student view)",
+        "answerKey": "Answer key",
+        "teachersOnly": "Teachers only. Students never see this section.",
+        "mcq": "Comprehension check (multiple choice)",
+        "saq": "Guided response (short answers)",
+        "laq": "Writing prompts",
+        "vocabFill": "Fill in the words",
+        "sentenceOrder": "Sentence order",
+        "sentenceCompletion": "Sentence completion",
+        "sentenceStarters": "Sentence starters",
+        "writingPrompt": "Guided writing",
+        "writingFrames": "Writing frames",
+        "rubric": "Writing rubric",
+        "rubric1": "Ideas: the writing answers the prompt with 3 or more details.",
+        "rubric2": "Sentences: each sentence has a capital letter and a full stop.",
+        "rubric3": "Words: the writing uses 3 or more words from the lesson.",
+        "noKey": "This lesson has no answer key in the catalogue yet.",
+        "summary": "Lesson summary",
+        "noArticle": "This lesson is not linked to an article yet. The projector and the rehearsal open when it is.",
+        "rehearsalHint": "You see the lesson as a student does. Your steps are not recorded for the class.",
+        "backToLesson": "Back to the lesson",
+        "projectorHint": "Click a paragraph to focus it. Answer tallies are not available yet.",
+        "vocabulary": "Vocabulary",
+        "questions": "Questions",
+        "showAnswer": "Show answer",
+        "hideAnswer": "Hide answer",
+        "showAll": "Show all paragraphs",
+        "previous": "Previous",
+        "next": "Next",
+        "paragraph": "Paragraph {number} of {total}"
+      },
+      "guide": {
+        "title": "Teacher guide",
+        "open": "Guide",
+        "empty": "The teacher guide is not imported yet.",
+        "teacherActions": "Teacher actions",
+        "teacherLanguage": "Teacher language",
+        "studentActions": "Student actions",
+        "watchFor": "Watch for",
+        "script": "Full script",
+        "done": "Done in class",
+        "live": "Live guide",
+        "tip": "Tip",
+        "markDone": "Mark step done",
+        "undo": "Undo",
+        "games": "Open the games",
+        "stepOf": "Step {step} of {total}",
+        "allDone": "Every step of this lesson is done."
+      },
+      "manual": {
+        "title": "Teacher manual",
+        "intro": "How a teacher-led lesson runs in Primary Advantage, step by step.",
+        "howTo": "First lesson: how to",
+        "howTo1": "Assign the book to your class on the class page.",
+        "howTo2": "Open the lesson plan and mark each workbook step as the class does it. The app opens the matching student step.",
+        "howTo3": "Open the lesson guide for the teacher actions, the teacher language, and the full script.",
+        "howTo4": "Use the projector view for whole-class reading and the answer reveal.",
+        "howTo5": "Check the class progress grid after the lesson and mark the lesson taught.",
+        "stepsTitle": "The 13 steps"
+      },
+      "progress": {
+        "title": "Class progress",
+        "backToPlan": "Back to the lesson plan",
+        "open": "Class progress",
+        "csv": "Download CSV",
+        "filters": "Filters",
+        "filter": {
+          "all": "All students",
+          "late": "Late",
+          "stuck": "Stuck",
+          "not_started": "Not started"
+        },
+        "grid": "Students by lesson",
+        "gridCaption": "App steps done out of 14, one cell per student and lesson",
+        "student": "Student",
+        "lessonShort": "L{number}",
+        "cell": "{student}, lesson {lesson}: {status}, {done} of 14 steps",
+        "status": {
+          "not_started": "Not started",
+          "in_progress": "In progress",
+          "done": "Done"
+        },
+        "legend": "Green: done. Blue: in progress. Grey: not started. Red ring: the class taught the lesson and the student has not finished.",
+        "empty": "No students match this filter.",
+        "noStudents": "This class has no students yet.",
+        "steps": "{done} of 14 steps",
+        "minutes": "{minutes} min",
+        "taughtOn": "Taught {date}",
+        "notTaught": "Not taught yet",
+        "openedBeforeTaught": "Opened before taught",
+        "stepLabel": "Step {step}: {status}",
+        "backToGrid": "Back to class progress",
+        "studentTitle": "{name}"
+      }
+    }
+  },
+  "TeacherClass": {
+    "challenges": "Class challenges",
+    "backToClasses": "Back to classes",
+    "loadError": "We could not load this class.",
+    "loadClassesError": "We could not load your classes.",
+    "loadErrorHint": "Check your connection and try again.",
+    "searchClasses": "Search classes",
+    "classActionsFor": "Actions for {name}",
+    "openClass": "Open class",
+    "openClassFor": "Open class {name}",
+    "searchStudents": "Search students",
+    "noMatch": "No student matches your search.",
+    "progress": "Progress",
+    "progressFor": "Progress of {name}",
+    "removeFor": "Remove {name} from the class",
+    "moreFor": "More actions for {name}",
+    "lastActive": "Last active: {when}",
+    "level": "Level {level}",
+    "xp": "{xp} XP",
+    "qrPrintHint": "Make the cards first. Then you can print them."
+  },
+  "TeacherAssignments": {
+    "backToAssignments": "Back to assignments",
+    "story": "Story",
+    "classLabel": "Class",
+    "searchLabel": "Search assignments",
+    "loadError": "We could not load the assignments.",
+    "loadOneError": "We could not load this assignment.",
+    "loadErrorHint": "Check your connection and try again.",
+    "noClasses": "You have no classes yet.",
+    "noClassesHint": "Create a class on My Classes first.",
+    "goToClasses": "Go to My Classes",
+    "statusFilter": "Show students by status",
+    "selectStudentFor": "Select {name}",
+    "progressLabel": "{percent}% done"
+  },
+  "TeacherStudents": {
+    "classLabel": "Class",
+    "searchLabel": "Search students",
+    "nameColumn": "Name",
+    "classesColumn": "Classes",
+    "levelColumn": "Level",
+    "xpColumn": "XP",
+    "sortBy": "Sort by {column}",
+    "noClass": "No class",
+    "pageOf": "Page {page} of {totalPages}",
+    "noStudents": "You have no students yet.",
+    "noStudentsHint": "Add students to a class on My Classes.",
+    "noStudentsInClass": "This class has no students yet.",
+    "goToClasses": "Go to My Classes",
+    "loadError": "We could not load your students.",
+    "reportsLoadError": "We could not load the reports.",
+    "activityLoadError": "We could not load the activity of this student.",
+    "loadErrorHint": "Check your connection and try again.",
+    "progressHeading": "Progress for {name}",
+    "progressTitle": "Student progress",
+    "backToReports": "Back to reports",
+    "backToClass": "Back to class",
+    "studentLevel": "Level: {level}",
+    "challengesHint": "Make a word challenge for a class game."
   }
 }

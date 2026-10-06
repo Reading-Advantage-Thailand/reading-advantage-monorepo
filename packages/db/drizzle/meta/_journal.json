@@ -421,6 +421,76 @@
       "when": 1788934304395,
       "tag": "0059_game_challenges",
       "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1791070043680,
+      "tag": "0060_primary_legacy_id_map",
+      "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1791070274888,
+      "tag": "0061_tutor_compat_views",
+      "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "7",
+      "when": 1791126292565,
+      "tag": "0062_primary_student_login",
+      "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1791127686566,
+      "tag": "0063_primary_student_login_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1791129740168,
+      "tag": "0064_primary_student_session_policy",
+      "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1791184673375,
+      "tag": "0065_primary_class_books",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1791193977734,
+      "tag": "0066_primary_avatar_profile",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1791197219800,
+      "tag": "0067_primary_voice",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1791220341051,
+      "tag": "0068_primary_avatar_shop",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1791221193776,
+      "tag": "0069_primary_class_quest",
+      "breakpoints": true
     }
   ]
 }

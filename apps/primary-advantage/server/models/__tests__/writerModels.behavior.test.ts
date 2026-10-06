@@ -36,6 +36,8 @@ vi.mock("../../utils/generators/image-generator", () => ({
 vi.mock("../../utils/generators/audio-word-generator", () => ({
   generateWordLists: vi.fn().mockResolvedValue(undefined),
 }));
+const passwordEventMocks = vi.hoisted(() => ({ afterPasswordWrite: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/server/utils/passwordEvents", () => passwordEventMocks);
 vi.mock("bcryptjs", () => ({
   default: { hashSync: vi.fn().mockReturnValue("hashed-password") },
 }));
@@ -139,11 +141,17 @@ describe("Primary writer behavior", () => {
     });
     const [storedUser] = await harness.db.select().from(users);
 
-    expect(result).toHaveProperty("success");
+    // Only the id: the full row carried the password hash (Phase 2 review item 3).
+    expect(result).toEqual({ success: "User created successfully", user: { id: storedUser.id } });
     expect(storedUser.id).toMatch(/^[0-9a-f-]{36}$/);
     expect(storedUser.username).toBe("learner@example.com");
     expect(storedUser.displayUsername).toBe("Learner@Example.com");
     expect(storedUser.role).toBe("STUDENT");
+    expect(passwordEventMocks.afterPasswordWrite).toHaveBeenCalledWith({
+      userId: storedUser.id,
+      actor: null,
+      created: true,
+    });
   });
 
   it("stores standalone and assigned progress under each route identity", async () => {

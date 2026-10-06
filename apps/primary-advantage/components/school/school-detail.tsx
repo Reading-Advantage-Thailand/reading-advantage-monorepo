@@ -29,17 +29,7 @@ import { format } from "date-fns";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { toast } from "sonner";
 import { useState } from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { AddAdminDialog } from "./add-admin-dialog";
 import { useAuth } from "@reading-advantage/auth-client";
 import { useRouter } from "@/i18n/navigation";

@@ -1,5 +1,8 @@
 import { db } from "@reading-advantage/db";
-import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { and, eq, sql, type AnyColumn, type SQL } from "drizzle-orm";
+import { canSetPasswordFor, effectiveRoleOf } from "@/lib/authorization";
+import { hasOwnSchoolAdminRow } from "@/lib/permissions";
 import {
   users,
   schools,
@@ -14,6 +17,8 @@ export interface UserWithRoles {
   email: string | null;
   schoolId: string | null;
   level: number;
+  /** The users.role session role, when the loader provided it. */
+  role?: string | null;
   roles: Array<{
     role: {
       id: string;
@@ -37,6 +42,7 @@ export const validateUser = async (
       email: users.email,
       schoolId: users.schoolId,
       level: users.level,
+      role: users.role,
     })
       .from(users)
       .where(eq(users.id, userId))
@@ -74,6 +80,7 @@ export const validateUser = async (
       email: userRow.email,
       schoolId: userRow.schoolId,
       level: userRow.level,
+      role: userRow.role,
       roles: rolesNested,
       SchoolAdmins: schoolAdminRows,
     };
@@ -85,6 +92,150 @@ export const validateUser = async (
     return null;
   }
 };
+
+/** The caller fields that scope and rank checks read. */
+export type CallerScope = Pick<UserWithRoles, "schoolId" | "role" | "roles" | "SchoolAdmins">;
+
+/**
+ * Resolves the effective management role of a caller.
+ * The users.role session role wins; legacy role rows fill in when it is absent.
+ * @param userWithRoles The caller loaded by validateUser.
+ * @returns SYSTEM, ADMIN, TEACHER, or an empty string.
+ */
+export function effectiveCallerRole(userWithRoles: CallerScope): string {
+  const sessionRole = String(userWithRoles.role ?? "").toUpperCase();
+  if (sessionRole) return sessionRole;
+  const names = userWithRoles.roles.map((r) => r.role.name);
+  if (names.includes("system")) return "SYSTEM";
+  if (names.includes("admin") || hasOwnSchoolAdminRow(userWithRoles)) return "ADMIN";
+  if (names.includes("teacher")) return "TEACHER";
+  return "";
+}
+
+/**
+ * Resolves the effective rank of a loaded caller for password and delete rank checks.
+ * Unlike effectiveCallerRole, the highest of users.role, legacy role rows,
+ * and school_admins rows wins. A school_admins row counts only for the caller's own school.
+ * @param userWithRoles The caller loaded by validateUser.
+ * @returns SYSTEM, ADMIN, TEACHER, STUDENT, or an empty string.
+ */
+export function callerEffectiveRank(userWithRoles: CallerScope): string {
+  return effectiveRoleOf(
+    userWithRoles.role,
+    userWithRoles.roles.map((r) => r.role.name),
+    hasOwnSchoolAdminRow(userWithRoles),
+  );
+}
+
+/**
+ * Loads the effective rank of a target account from its legacy role and school_admins rows.
+ * An unrecognized legacy role name counts as the highest rank, so such a target is never writable.
+ * @param userId The account to rank.
+ * @param sessionRole The users.role value the caller already read for this account.
+ * @param unknownNames How to treat an unrecognized legacy name; "max" (default) fits a target, "ignore" fits an actor.
+ * @param adminSchoolId When set, only a school_admins row of this school counts (use it for an actor); null counts no row. Leave it undefined for a target so every row counts.
+ * @returns The effective role of the account.
+ */
+export async function loadTargetEffectiveRank(
+  userId: string,
+  sessionRole: string | null | undefined,
+  unknownNames: "ignore" | "max" = "max",
+  adminSchoolId?: string | null,
+): Promise<string> {
+  const legacy = await db.select({ name: roles.name })
+    .from(userRoles)
+    .innerJoin(roles, eq(roles.id, userRoles.roleId))
+    .where(eq(userRoles.userId, userId));
+  const adminRows = adminSchoolId === null
+    ? []
+    : await db.select({ id: schoolAdmins.id })
+      .from(schoolAdmins)
+      .where(
+        adminSchoolId === undefined
+          ? eq(schoolAdmins.userId, userId)
+          : and(eq(schoolAdmins.userId, userId), eq(schoolAdmins.schoolId, adminSchoolId)),
+      )
+      .limit(1);
+  const adminRow = adminRows[0];
+  return effectiveRoleOf(sessionRole, legacy.map((r) => r.name), Boolean(adminRow), unknownNames);
+}
+
+/** The account facts the reset decision reads. */
+interface ResetPrincipal {
+  id: string;
+  role: string;
+  schoolId: string | null;
+}
+
+/**
+ * Decides whether a session actor may reset the password of a target account.
+ * Both accounts must belong to the same school, and a school-less account never matches.
+ * The actor must outrank the target by effective rank, legacy rows included.
+ * @param actor The session user who asks for the reset.
+ * @param target The account whose password would change.
+ * @returns True when the reset is allowed.
+ */
+export async function authorizeResetTarget(
+  actor: ResetPrincipal,
+  target: ResetPrincipal,
+): Promise<boolean> {
+  if (!actor.schoolId || !target.schoolId || actor.schoolId !== target.schoolId) return false;
+  const actorRank = await loadTargetEffectiveRank(actor.id, actor.role, "ignore", actor.schoolId);
+  const targetRank = await loadTargetEffectiveRank(target.id, target.role);
+  return canSetPasswordFor(actorRank, targetRank);
+}
+
+/**
+ * Loads the effective rank of a reset actor for the audit event.
+ * Only a school_admins row of the actor own school counts, as in `authorizeResetTarget`.
+ * @param actor The session user who reset the password.
+ * @returns The effective role of the actor, or undefined when the actor has no school.
+ */
+export async function resetActorRank(actor: ResetPrincipal): Promise<string | undefined> {
+  if (!actor.schoolId) return undefined;
+  return loadTargetEffectiveRank(actor.id, actor.role, "ignore", actor.schoolId);
+}
+
+/**
+ * Builds the school scope conditions for a management query.
+ * SYSTEM callers are unrestricted. Everyone else is limited to their own school,
+ * and a caller without a school sees nothing (fail closed).
+ * @param schoolColumn The schoolId column of the queried table.
+ * @param userWithRoles The caller loaded by validateUser.
+ * @returns Conditions to spread into a where clause.
+ */
+export function schoolScopeConditions(
+  schoolColumn: AnyColumn,
+  userWithRoles: CallerScope,
+): SQL[] {
+  if (effectiveCallerRole(userWithRoles) === "SYSTEM") return [];
+  if (!userWithRoles.schoolId) return [sql`false`];
+  return [eq(schoolColumn, userWithRoles.schoolId)];
+}
+
+/**
+ * Resolves the school that a new account joins.
+ * Only a SYSTEM caller may name a school; every other caller keeps its own school.
+ * @param userWithRoles The caller loaded by validateUser.
+ * @param requestedSchoolId The school id sent by the client, if any.
+ * @returns The school id to use (null when none) or an error message.
+ */
+export async function resolveCreationSchoolId(
+  userWithRoles: CallerScope,
+  requestedSchoolId?: string | null,
+): Promise<{ schoolId: string | null } | { error: string }> {
+  if (effectiveCallerRole(userWithRoles) !== "SYSTEM" || !requestedSchoolId) {
+    return { schoolId: userWithRoles.schoolId ?? null };
+  }
+  if (!z.string().uuid().safeParse(requestedSchoolId).success) {
+    return { error: "School not found" };
+  }
+  const [school] = await db.select({ id: schools.id })
+    .from(schools)
+    .where(eq(schools.id, requestedSchoolId))
+    .limit(1);
+  return school ? { schoolId: school.id } : { error: "School not found" };
+}
 
 // Check if user has admin permissions
 export const checkAdminPermissions = async (
@@ -101,9 +252,13 @@ export const checkAdminPermissions = async (
     );
 
     // Check if user is a school admin
-    const isSchoolAdmin = userWithRoles.SchoolAdmins.length > 0;
+    const isSchoolAdmin = hasOwnSchoolAdminRow(userWithRoles);
 
-    const hasPermission = isSystemAdmin || isAdmin || isSchoolAdmin;
+    // The users.role session role is authoritative; legacy rows are additive.
+    const sessionRole = String(userWithRoles.role ?? "").toUpperCase();
+    const isSessionAdmin = sessionRole === "ADMIN" || sessionRole === "SYSTEM";
+
+    const hasPermission = isSystemAdmin || isAdmin || isSchoolAdmin || isSessionAdmin;
 
     return hasPermission;
   } catch (error) {
@@ -126,7 +281,7 @@ export const checkTeacherPermissions = async (
     );
 
     // Check if user is a school admin (can also manage teachers/students)
-    const isSchoolAdmin = userWithRoles.SchoolAdmins.length > 0;
+    const isSchoolAdmin = hasOwnSchoolAdminRow(userWithRoles);
 
     const hasPermission = isTeacher || isSchoolAdmin;
 
@@ -154,7 +309,7 @@ export const checkStudentPermissions = async (
       (userRole) => userRole.role.name === "student",
     );
 
-    const isSchoolAdmin = userWithRoles.SchoolAdmins.length > 0;
+    const isSchoolAdmin = hasOwnSchoolAdminRow(userWithRoles);
 
     const hasPermission = hasHigherPermissions || isStudent || isSchoolAdmin;
 
@@ -189,16 +344,7 @@ export const getUserSchoolIds = async (
       schoolIds.push(userWithRoles.schoolId);
     }
 
-    // Add schools where user is a school admin
-    const adminSchoolIds = userWithRoles.SchoolAdmins.map(
-      (admin) => admin.schoolId,
-    );
-    adminSchoolIds.forEach((schoolId) => {
-      if (!schoolIds.includes(schoolId)) {
-        schoolIds.push(schoolId);
-      }
-    });
-
+    // A school_admins row for another school grants no access here.
     return schoolIds;
   } catch (error) {
     console.error("Auth Utils: Error getting user school IDs:", error);

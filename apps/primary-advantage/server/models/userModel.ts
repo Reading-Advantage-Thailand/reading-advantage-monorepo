@@ -16,12 +16,13 @@ import {
   userRoles,
 } from '@reading-advantage/db';
 import { ActivityType } from "@/types/enum";
-import bcrypt from "bcryptjs";
+import { afterPasswordWrite } from "@/server/utils/passwordEvents";
+import { hashNewPassword, upsertCredentialAccount } from "@/server/utils/credentials";
 
 /**
  * Creates a user with the required identity fields.
  * @param data The new user's account fields.
- * @returns The created user result.
+ * @returns The created user's id on success (never the row, which has the password hash), or an error.
  */
 export const createUser = async (data: {
   name: string;
@@ -37,7 +38,7 @@ export const createUser = async (data: {
       };
     }
 
-    const hashedPassword = bcrypt.hashSync(data.password, 10);
+    const hashedPassword = await hashNewPassword(data.password);
 
     // Find the User role
     const [userRole] = await db.select({ id: roles.id })
@@ -64,6 +65,8 @@ export const createUser = async (data: {
         password: hashedPassword,
       }).returning();
 
+      await upsertCredentialAccount(tx, user.id, hashedPassword);
+
       // Assign the User role to the new user
       await tx.insert(userRoles).values({
         userId: user.id,
@@ -73,9 +76,11 @@ export const createUser = async (data: {
       return user;
     });
 
+    await afterPasswordWrite({ userId: newUser.id, actor: null, created: true });
+
     return {
       success: "User created successfully",
-      user: newUser,
+      user: { id: newUser.id },
     };
   } catch (error) {
     console.error("Error creating user:", error);
@@ -199,9 +204,19 @@ export const getUserById = async (id: string) => {
   }
 };
 
+/**
+ * Reads the activity rows and XP logs of a user, with the user columns that the report pages
+ * show. The full users row is never returned (it has the password hash).
+ * @param id The user id.
+ * @returns `{ activity, xpLogs, user }`, or undefined when the user does not exist or a read fails.
+ */
 export const getUserActivity = async (id: string) => {
   try {
-    const user = await getUserById(id);
+    const [user] = await db
+      .select({ id: users.id, name: users.name, username: users.username, cefrLevel: users.cefrLevel })
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
 
     if (!user) {
       throw new Error("User not found");
@@ -240,13 +255,8 @@ export const getUserArticleRecords = async (
       ]),
     ];
 
-    // Prisma used a JSON path + string_contains filter on the search
-    // term. We replicate it via a SQL `details->>'title' ILIKE` clause.
-    if (search) {
-      activityConditions.push(
-        sql`${userActivity.details}->>'title' ILIKE ${`%${search}%`}`,
-      );
-    }
+    // The search matches the article title (in the article query below). ARTICLE_READ rows keep
+    // no title in `details`, so a `details->>'title'` filter here made every search empty.
 
     // Get all article activities for the user
     const articleActivities = await db.select().from(userActivity)

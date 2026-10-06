@@ -1,5 +1,6 @@
 "use client";
 
+import type { LaunchAvatar } from "@reading-advantage/game-contracts";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -12,6 +13,7 @@ import {
   preparedReadToSelectAudioVocabularyResponseSchema,
   sentenceInputSchema,
   vocabularyInputSchema,
+  type GameCompletionInput,
   type GameResults,
   type LearningEvidence,
   type PreparedReadToSelectAudioVocabularyResponse,
@@ -29,6 +31,7 @@ import {
   createCatalogStandardEdition,
 } from "@reading-advantage/game-cartridges";
 
+import { capRealmCarverSentences } from "@/lib/apk/realm-carver-input";
 import { APK_HOST_LAYOUT_CLASS, APK_HOST_RESPONSIVE_OPTIONS } from "./apk-host-layout";
 
 const APKGameHost = dynamic(
@@ -57,6 +60,10 @@ export interface StudentCartridgeHostProps {
   readonly challengeId?: string;
   /** Launch phase requested from the page search params. */
   readonly mode?: "demo" | "briefing";
+  /** The student's avatar for the game (FR-7 of the avatar shop); null when none is set. */
+  readonly avatar?: LaunchAvatar | null;
+  /** Receives the saved completion numbers (Class Quest FR-8): the battle page posts them as its heartbeat. */
+  readonly onCompleted?: (summary: { challengeRunId?: string; correctAnswers: number; totalAttempts: number; victory: boolean }) => void;
 }
 
 type HostLoadError = {
@@ -115,6 +122,8 @@ export function StudentCartridgeHost({
   ownerKey,
   challengeId,
   mode = "briefing",
+  avatar = null,
+  onCompleted,
 }: StudentCartridgeHostProps) {
   const t = useTranslations("ApkHost");
   const router = useRouter();
@@ -151,13 +160,14 @@ export function StudentCartridgeHost({
     idempotencyKey?: string;
     request?: ReturnType<typeof mapGameResultsToCompletionInput> & { readonly challengeRunId?: string };
     challengeRunId?: string;
-    difficulty: "easy" | "medium" | "hard";
+    difficulty: GameCompletionInput["difficulty"];
     challengeModality?: unknown;
   } | undefined>(undefined);
-  if (!completionSessionRef.current
-    || completionSessionRef.current.configKey !== completionConfigKey
-    || completionSessionRef.current.input !== input) {
-    completionSessionRef.current = {
+  let completionSession = completionSessionRef.current;
+  if (!completionSession
+    || completionSession.configKey !== completionConfigKey
+    || completionSession.input !== input) {
+    completionSession = completionSessionRef.current = {
       configKey: completionConfigKey,
       input,
       challengeRunId: challengeLaunch?.runId,
@@ -165,7 +175,6 @@ export function StudentCartridgeHost({
       challengeModality: challengeLaunch?.challenge.modality,
     };
   }
-  const completionSession = completionSessionRef.current;
   const edition = useMemo(
     () => (cartridge
       ? createCatalogStandardEdition(
@@ -286,7 +295,10 @@ export function StudentCartridgeHost({
         }
         if (!active) return;
         setCartridge(loadedCartridge);
-        setInput(parsedInput.data);
+        // Realm Carver throws above its word cap; trim whole cards host-side.
+        setInput(cartridgeId === "realm-carver" && inputMode === "sentence"
+          ? capRealmCarverSentences(parsedInput.data as z.infer<typeof sentenceInputSchema>)
+          : parsedInput.data);
         setAnswerAudioResponse(prepared?.data);
         setLoadedLearningMode(effectiveLearningMode);
       } catch (error) {
@@ -367,6 +379,7 @@ export function StudentCartridgeHost({
     if (completionSessionRef.current === completionSession) {
       void rpg.refreshAfterSavedCompletion().catch(() => undefined);
     }
+    onCompleted?.({ challengeRunId: completionSession.challengeRunId, correctAnswers: mappedCompletion.correctAnswers, totalAttempts: mappedCompletion.totalAttempts, victory: outcome === "victory" });
     return {
       xpEarned: parsedResponse.data.xpEarned,
       duplicate: parsedResponse.data.duplicate,
@@ -374,7 +387,7 @@ export function StudentCartridgeHost({
   };
 
   return (
-    <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6">
+    <div className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6">
       <div className="mx-auto w-full max-w-5xl">
         <header className="border-b border-border pb-4">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
@@ -444,6 +457,7 @@ export function StudentCartridgeHost({
                 !challengeId && mode === "demo" ? "demo" : "briefing"
               }
               seed={challengeLaunch?.challenge.seed ?? 29}
+              avatar={avatar}
               responsive={APK_HOST_RESPONSIVE_OPTIONS}
               standardExperience={cartridge.standardExperience}
               className={APK_HOST_LAYOUT_CLASS}
@@ -475,8 +489,9 @@ export function StudentCartridgeHost({
               onComplete={handleComplete}
               onLifecycleTransition={(transition) => {
                 if (transition.to === "playing") startedAtRef.current = Date.now();
-                if (transition.event === "replay"
-                  || (transition.to === "playing" && transition.from !== "paused")) {
+                // Pause and resume go through the runtime handle and never emit a lifecycle
+                // transition, so every transition into "playing" starts a new RPG session.
+                if (transition.event === "replay" || transition.to === "playing") {
                   rpg.beginSession();
                 }
                 if (transition.from === "results" && transition.event === "replay") {
@@ -500,6 +515,6 @@ export function StudentCartridgeHost({
           ) : null}
         </section>
       </div>
-    </main>
+    </div>
   );
 }

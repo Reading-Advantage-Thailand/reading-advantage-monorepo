@@ -1,27 +1,14 @@
 "use server";
 
-import { z } from "zod";
-import { signUpSchema } from "@/lib/zod";
-import { createUser } from "@/server/models/userModel";
+import type { z } from "zod";
+import type { signUpSchema } from "@/lib/zod";
 
-export async function signUpAction(value: z.infer<typeof signUpSchema>) {
-  const validation = signUpSchema.safeParse(value);
-
-  if (!validation.success) {
-    return {
-      error: "Invalid input data",
-    };
-  }
-
-  const result = await createUser(validation.data);
-
-  if (result.error) {
-    return {
-      error: result.error,
-    };
-  }
-
-  return {
-    success: result.success,
-  };
+/**
+ * Refuses a public sign-up. Accounts are created by the school or by the SYSTEM role, never by
+ * a visitor, so this action creates nothing.
+ * @param _value The submitted sign-up form data, which the action ignores.
+ * @returns An error result that tells the visitor to ask the school.
+ */
+export async function signUpAction(_value: z.infer<typeof signUpSchema>) {
+  return { error: "Accounts are created by your school" };
 }

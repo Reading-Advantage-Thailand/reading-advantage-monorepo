@@ -1,0 +1,10 @@
+{
+  "track_id": "primary_ux_rework_20261003",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-10-03T00:00:00Z",
+  "updated_at": "2026-10-03T00:00:00Z",
+  "description": "Rework the whole Primary Advantage UX to match Tutor Advantage: brand tokens, one navigation, student home, redesigned student and teacher screens, accessibility, and loading/empty/error states.",
+  "estimated_tasks": 24,
+  "deviation_notes": "Daniel: the whole UX is janky, not only the theme. Tokens come from tutor-advantage apps/student-liff and apps/tutor-pwa globals.css. Do not copy Tutor faults: neutral-black shadcn primary, low-contrast tertiary text, indigo manifest color, English-only aria labels. New shared components go in packages/ui, not in local components/ui."
+}

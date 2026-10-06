@@ -8,7 +8,6 @@ import {
   and,
   desc,
   asc,
-  sql,
   count,
   gte,
   sum,
@@ -40,6 +39,7 @@ import { NextResponse } from "next/server";
 import { getAudioUrl } from "@/lib/storage-config";
 import { mapOrderingSentenceFields, resolveClozeSegment } from "@/lib/audio-highlight";
 import { shuffle } from "@/lib/shuffle";
+import { countStreakDays } from "@reading-advantage/domain/primary-home/streak";
 
 function tokenizeSentence(input: string) {
   // Split by spaces and filter out empty strings, while preserving punctuation
@@ -478,6 +478,8 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // inArray, not sql`= ANY(${array})`: Drizzle expands a JS array in a sql template to a list,
+    // so ANY got `($1)` and Postgres failed (22P02 / 42809), which broke both dashboards.
     const activityTypeFilter = deckType
       ? [
           deckType === "VOCABULARY"
@@ -486,14 +488,18 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
         ]
       : [ActivityType.VOCABULARY_FLASHCARDS, ActivityType.SENTENCE_FLASHCARDS];
 
-    const [todayActivityRow, totalXPRow] = await Promise.all([
+    // Look back one year; streaks longer than that are capped.
+    const streakWindowStart = new Date(today);
+    streakWindowStart.setFullYear(streakWindowStart.getFullYear() - 1);
+
+    const [todayActivityRow, totalXPRow, activityDayRows] = await Promise.all([
       db.select({ value: count() })
         .from(userActivity)
         .where(
           and(
             eq(userActivity.userId, user.id as string),
             gte(userActivity.createdAt, today),
-            sql`${userActivity.activityType} = ANY(${activityTypeFilter})`,
+            inArray(userActivity.activityType, activityTypeFilter),
           ),
         ),
       db.select({ value: sum(xpLogs.xpEarned) })
@@ -501,7 +507,16 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
         .where(
           and(
             eq(xpLogs.userId, user.id as string),
-            sql`${xpLogs.activityType} = ANY(${activityTypeFilter})`,
+            inArray(xpLogs.activityType, activityTypeFilter),
+          ),
+        ),
+      db.select({ createdAt: userActivity.createdAt })
+        .from(userActivity)
+        .where(
+          and(
+            eq(userActivity.userId, user.id as string),
+            gte(userActivity.createdAt, streakWindowStart),
+            inArray(userActivity.activityType, activityTypeFilter),
           ),
         ),
     ]);
@@ -517,7 +532,7 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
       ),
       cardsStudiedToday: todayActivity,
       xpEarned: totalXP,
-      streakDays: 0, // TODO: Calculate streak
+      streakDays: countStreakDays(activityDayRows.map((row) => row.createdAt)),
     };
 
     return {

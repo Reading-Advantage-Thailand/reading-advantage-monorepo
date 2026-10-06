@@ -1,0 +1,139 @@
+// Ported from tutor-advantage services/learning-service/src/services/voiceUsage.ts (Reedy).
+
+/** Token counts of a Realtime session, summed over every `response.done` event. */
+export type RealtimeUsage = {
+  responses: number;
+  inputTextTokens: number;
+  inputAudioTokens: number;
+  inputImageTokens: number;
+  cachedTextTokens: number;
+  cachedAudioTokens: number;
+  cachedImageTokens: number;
+  outputTextTokens: number;
+  outputAudioTokens: number;
+};
+
+/** A usage total with every count at zero. */
+export const emptyRealtimeUsage = (): RealtimeUsage => ({
+  responses: 0,
+  inputTextTokens: 0,
+  inputAudioTokens: 0,
+  inputImageTokens: 0,
+  cachedTextTokens: 0,
+  cachedAudioTokens: 0,
+  cachedImageTokens: 0,
+  outputTextTokens: 0,
+  outputAudioTokens: 0,
+});
+
+function record(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
+}
+
+function count(value: unknown) {
+  const number = Number(value);
+  return Number.isFinite(number) && number >= 0 ? number : 0;
+}
+
+/**
+ * Adds the usage of one provider `response.done` event to a total. An event without token
+ * details leaves the total unchanged (the same object), which marks the usage incomplete.
+ * @param total The usage so far.
+ * @param raw The `response.usage` value of the event.
+ * @returns The new total, or `total` itself when the event carried no token details.
+ */
+export function addRealtimeUsage(total: RealtimeUsage, raw: unknown): RealtimeUsage {
+  const usage = record(raw);
+  if (!Object.keys(record(usage.input_token_details)).length || !Object.keys(record(usage.output_token_details)).length) return total;
+  const input = record(usage.input_token_details);
+  const cached = record(input.cached_tokens_details);
+  const output = record(usage.output_token_details);
+  return {
+    responses: total.responses + 1,
+    inputTextTokens: total.inputTextTokens + count(input.text_tokens),
+    inputAudioTokens: total.inputAudioTokens + count(input.audio_tokens),
+    inputImageTokens: total.inputImageTokens + count(input.image_tokens),
+    cachedTextTokens: total.cachedTextTokens + count(cached.text_tokens),
+    cachedAudioTokens: total.cachedAudioTokens + count(cached.audio_tokens),
+    cachedImageTokens: total.cachedImageTokens + count(cached.image_tokens),
+    outputTextTokens: total.outputTextTokens + count(output.text_tokens),
+    outputAudioTokens: total.outputAudioTokens + count(output.audio_tokens),
+  };
+}
+
+/** USD per million tokens. Keep this table aligned with the dated OpenAI rate card. */
+const RATE_CARD = {
+  "gpt-realtime-2.1-mini": { textIn: 0.6, textCached: 0.06, textOut: 2.4, audioIn: 10, audioCached: 0.3, audioOut: 20, imageIn: 0.8, imageCached: 0.08 },
+  "gpt-realtime-2.1": { textIn: 4, textCached: 0.4, textOut: 24, audioIn: 32, audioCached: 0.4, audioOut: 64, imageIn: 5, imageCached: 0.5 },
+} as const;
+
+/** The date of the rate card above. */
+export const RATE_CARD_VERSION = "openai-2026-09-28";
+
+/**
+ * Prices a usage total with the rate card of a model.
+ * @param model The Realtime model.
+ * @param usage The token counts.
+ * @returns The USD cost, or null for an unknown model or no responses.
+ */
+export function realtimeCostUsd(model: string, usage: RealtimeUsage): number | null {
+  const rates = RATE_CARD[model as keyof typeof RATE_CARD];
+  if (!rates || !usage.responses) return null;
+  const uncachedText = Math.max(0, usage.inputTextTokens - usage.cachedTextTokens);
+  const uncachedAudio = Math.max(0, usage.inputAudioTokens - usage.cachedAudioTokens);
+  const uncachedImage = Math.max(0, usage.inputImageTokens - usage.cachedImageTokens);
+  return (
+    (uncachedText * rates.textIn +
+      usage.cachedTextTokens * rates.textCached +
+      uncachedAudio * rates.audioIn +
+      usage.cachedAudioTokens * rates.audioCached +
+      uncachedImage * rates.imageIn +
+      usage.cachedImageTokens * rates.imageCached +
+      usage.outputTextTokens * rates.textOut +
+      usage.outputAudioTokens * rates.audioOut) /
+    1_000_000
+  );
+}
+
+/** USD per audio minute. Input transcription is billed separately from Realtime tokens. */
+const TRANSCRIPTION_RATE_PER_MINUTE = {
+  "gpt-transcribe": 0.0045,
+  "gpt-4o-transcribe": 0.006,
+  "gpt-4o-mini-transcribe": 0.003,
+} as const;
+
+/**
+ * The billed seconds of a transcription event when the provider reports a duration.
+ * @param raw The `usage` value of the transcription event.
+ * @returns The seconds, or null when the provider reported tokens instead.
+ */
+export function reportedTranscriptionSeconds(raw: unknown): number | null {
+  const usage = record(raw);
+  if (usage.type !== "duration") return null;
+  const seconds = Number(usage.seconds);
+  return Number.isFinite(seconds) && seconds >= 0 ? seconds : null;
+}
+
+/**
+ * The speech seconds between two VAD boundaries, used when the provider reports no duration.
+ * @param audioStartMs The `audio_start_ms` of `speech_started`.
+ * @param audioEndMs The `audio_end_ms` of `speech_stopped`.
+ * @returns The seconds, or null when a boundary is missing or out of order.
+ */
+export function vadSpeechSeconds(audioStartMs: unknown, audioEndMs: unknown): number | null {
+  const start = Number(audioStartMs);
+  const end = Number(audioEndMs);
+  return Number.isFinite(start) && Number.isFinite(end) && end >= start ? (end - start) / 1000 : null;
+}
+
+/**
+ * Prices transcribed speech.
+ * @param model The transcription model.
+ * @param seconds The billed seconds.
+ * @returns The USD cost, or null for an unknown model or bad seconds.
+ */
+export function transcriptionCostUsd(model: string, seconds: number): number | null {
+  const rate = TRANSCRIPTION_RATE_PER_MINUTE[model as keyof typeof TRANSCRIPTION_RATE_PER_MINUTE];
+  if (rate === undefined || !Number.isFinite(seconds) || seconds < 0) return null;
+  return (seconds / 60) * rate;
+}

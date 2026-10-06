@@ -6,6 +6,7 @@ import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { getSchoolDetail } from "@/server/models/schoolModel";
 import { z } from "zod";
+import { normalizeRole } from "@/lib/authorization";
 
 const schoolSchema = z.object({
   name: z.string().min(2).max(100),
@@ -109,6 +110,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Only the self-serve account type may create a school: a school-less
+    // STUDENT whose only legacy role is "user" (the sign-up default). Staff
+    // accounts never gain admin rights through this route.
+    if (normalizeRole(existingUser.role) !== "STUDENT") {
+      return NextResponse.json(
+        { error: "This account type cannot create a school" },
+        { status: 403 },
+      );
+    }
+
     // Check if school with same name already exists (replaces Prisma `school.findFirst`).
     const [existingSchool] = await rawDb.select().from(schools)
       .where(eq(schools.name, validatedData.name))
@@ -121,7 +132,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check current user's roles to see if they need to be upgraded to Admin.
     const currentUserRoleRows = await rawDb.select({
       roleId: userRoles.roleId,
       roleName: roles.name,
@@ -131,42 +141,33 @@ export async function POST(request: NextRequest) {
       .where(eq(userRoles.userId, authUser.id));
 
     const currentUser = existingUser;
-    const hasAdminRole = currentUserRoleRows.some(
-      (r) => r.roleName === "admin",
-    );
-
-    // Check what roles exist in the database
-    const allRoles = await rawDb.select().from(roles);
-
-    // If user doesn't have Admin role and is currently User or Teacher, upgrade them
-    let roleUpgraded = false;
-    if (!hasAdminRole) {
-      const currentRoles = currentUserRoleRows.map((r) => r.roleName);
-
-      if (currentRoles.includes("user") || currentRoles.includes("teacher")) {
-        // Find or create Admin role
-        const [existingAdminRole] = await rawDb.select().from(roles)
-          .where(eq(roles.name, "admin"))
-          .limit(1);
-
-        let adminRole = existingAdminRole;
-        if (!adminRole) {
-          const [created] = await rawDb.insert(roles).values({ name: "admin" }).returning();
-          adminRole = created;
-        }
-
-        // Remove all existing roles and set Admin role only
-        await rawDb.delete(userRoles)
-          .where(eq(userRoles.userId, currentUser.id));
-
-        // Create new Admin role for user
-        await rawDb.insert(userRoles).values({
-          userId: currentUser.id,
-          roleId: adminRole.id,
-        });
-        roleUpgraded = true;
-      }
+    const currentRoles = currentUserRoleRows.map((r) => r.roleName);
+    if (currentRoles.length === 0 || !currentRoles.every((name) => name === "user")) {
+      return NextResponse.json(
+        { error: "This account type cannot create a school" },
+        { status: 403 },
+      );
     }
+
+    // The self-serve owner of a new school becomes its admin.
+    const roleUpgraded = true;
+    const [existingAdminRole] = await rawDb.select().from(roles)
+      .where(eq(roles.name, "admin"))
+      .limit(1);
+
+    let adminRole = existingAdminRole;
+    if (!adminRole) {
+      const [created] = await rawDb.insert(roles).values({ name: "admin" }).returning();
+      adminRole = created;
+    }
+
+    await rawDb.delete(userRoles)
+      .where(eq(userRoles.userId, currentUser.id));
+
+    await rawDb.insert(userRoles).values({
+      userId: currentUser.id,
+      roleId: adminRole.id,
+    });
 
     // Create school (replaces Prisma `school.create`).
     const [school] = await rawDb.insert(schools).values({

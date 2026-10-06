@@ -1,5 +1,6 @@
 "use client";
 
+import type { LaunchAvatar } from "@reading-advantage/game-contracts";
 import {
   useEffect,
   useRef,
@@ -8,8 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import {
-  sentenceInputSchema,
-  vocabularyInputSchema,
+  toVocabularyInput,
   type GameResults,
   type LearningEvidence,
 } from "@reading-advantage/game-contracts";
@@ -43,6 +43,7 @@ import type {
   LayoutProfile,
   ResponsiveInputMode,
 } from "../responsive/responsive-composition.js";
+import { inputSchemaFor } from "../runtime/cartridge-manifest.js";
 import { createPhaserGameFactory } from "../runtime/phaser-factory.js";
 import { mountCartridge } from "../runtime/runtime.js";
 import type {
@@ -68,6 +69,8 @@ export type APKGameHostProps = Omit<ComponentProps<"section">, "onComplete" | "i
   factory?: GameFactory;
   /** Optional deterministic session seed. */
   seed?: number;
+  /** The player's avatar from the host (the avatar shop, FR-7). */
+  avatar?: LaunchAvatar | null;
   /** Optional responsive runtime policy for the canvas mount surface. */
   responsive?: ResponsiveRuntimeOptions;
   /** Optional validated mission briefing shown before normal gameplay. */
@@ -187,6 +190,7 @@ export function APKGameHost({
   edition,
   factory,
   seed,
+  avatar,
   responsive,
   briefing,
   tutorial,
@@ -291,8 +295,7 @@ export function APKGameHost({
     : gameBriefingSchema.safeParse(effectiveBriefing);
   const inputValidation = effectiveBriefing === undefined
     ? undefined
-    : (cartridge.manifest.inputMode === "sentence" ? sentenceInputSchema : vocabularyInputSchema)
-      .safeParse(input);
+    : inputSchemaFor(cartridge.manifest.inputMode).safeParse(input);
   const validationError = briefingValidation && !briefingValidation.success
     ? "Briefing validation failed. Check the title, objective, instructions, learning preview, and controls."
     : inputValidation && !inputValidation.success
@@ -770,6 +773,7 @@ export function APKGameHost({
           input,
           edition,
           sessionMode,
+          ...(avatar === undefined ? {} : { avatar }),
           host: {
             complete: async (nextResult, outcome = "complete", evidence) => {
               if (!isCurrentMount(mountPoint, generation) || sessionMode !== "playing") return;
@@ -1930,7 +1934,9 @@ export function APKGameHost({
         <GameBriefingScreen
           key={`briefing-${briefingRevision}`}
           briefing={briefingValidation.data}
-          learningItems={inputValidation.data}
+          learningItems={Array.isArray(inputValidation.data)
+            ? inputValidation.data
+            : toVocabularyInput(inputValidation.data)}
           onStart={() => void startBriefing(standardExperience ? "playing" : undefined)}
           onPractice={effectiveTutorial ? () => void startBriefing("tutorial") : undefined}
           onDemonstrate={startDemoFromBriefing}

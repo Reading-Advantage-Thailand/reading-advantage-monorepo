@@ -16,6 +16,66 @@ export type {
   VocabularyItem,
 } from "./educational-io.js";
 
+/** Public story input contract and its derived vocabulary and sentence inputs. */
+export {
+  CEFR_LEVELS,
+  baseLevel,
+  cefrLevelSchema,
+  normalizeCefrLevel,
+  parsePracticeInput,
+  parseStoryIndex,
+  parseStoryInput,
+  practiceInputSchema,
+  practiceSentenceSchema,
+  practiceWordSchema,
+  storyAudioSchema,
+  storyFillSchema,
+  storyIndexEntrySchema,
+  storyIndexSchema,
+  storyInputSchema,
+  storyParagraphSchema,
+  storyQuestionSchema,
+  storySentenceSchema,
+  storySourceSchema,
+  storyVocabularySchema,
+  toPracticeInput,
+  toSentenceInput,
+  toStoryIndexEntry,
+  toVocabularyInput,
+} from "./story-input.js";
+
+/** Public story input types. */
+export type {
+  CefrLevel,
+  PracticeInput,
+  PracticeSentence,
+  PracticeWord,
+  StoryAudio,
+  StoryFill,
+  StoryIndexEntry,
+  StoryInput,
+  StoryParagraph,
+  StoryQuestion,
+  StorySentence,
+  StoryVocabulary,
+} from "./story-input.js";
+
+/** Public story-game completion evidence contract. */
+export {
+  MAX_STORY_GAME_EVIDENCE_ITEMS,
+  practiceOf,
+  storyGameEvidenceItemSchema,
+  storyGameEvidenceSchema,
+  storyItemKindSchema,
+} from "./evidence.js";
+
+/** Public story-game completion evidence types. */
+export type {
+  StoryGameEvidence,
+  StoryGameEvidenceItem,
+  StoryItemKind,
+} from "./evidence.js";
+
 /** Public host completion mapping boundary. */
 export {
   gameCompletionInputSchema,
@@ -120,3 +180,86 @@ export type {
 export * from "./multiplayer.js";
 
 export * from "./challenges.js";
+
+/** Public avatar profile contracts (Primary Reedy preview). */
+export {
+  avatarCatalogVersionSchema,
+  avatarClassIdSchema,
+  avatarClothSchema,
+  avatarEyesSchema,
+  avatarHairSchema,
+  avatarProfileSchema,
+  avatarSkinSchema,
+  avatarTintsSchema,
+  setAvatarProfileInputSchema,
+} from "./avatar.js";
+export type { AvatarClassId, AvatarProfile, AvatarTints, SetAvatarProfileInput } from "./avatar.js";
+/** Avatar shop, GP, inventory, and loadout contracts (track primary_avatar_shop_20261005). */
+export {
+  avatarSlotSchema,
+  gpReasonSchema,
+  avatarItemSourceSchema,
+  avatarDyeSchema,
+  avatarInventoryItemSchema,
+  avatarLoadoutPieceSchema,
+  avatarLoadoutSchema,
+  purchaseAvatarItemInputSchema,
+  setLoadoutInputSchema,
+  avatarShopItemSchema,
+  avatarStateSchema,
+  classAvatarSchema,
+  launchAvatarSchema,
+} from "./avatar.js";
+export type {
+  AvatarSlot,
+  GpReason,
+  AvatarItemSource,
+  AvatarInventoryItem,
+  AvatarLoadoutPiece,
+  AvatarLoadout,
+  PurchaseAvatarItemInput,
+  SetLoadoutInput,
+  AvatarShopItem,
+  AvatarState,
+  ClassAvatar,
+  LaunchAvatar,
+} from "./avatar.js";
+/** Class Quest contracts (track primary_class_quest_20261005). */
+export {
+  questCopySchema,
+  questPowerUpSchema,
+  questGoalKindSchema,
+  questGoalSchema,
+  questTemplateSchema,
+  questStatusSchema,
+  assignClassQuestInputSchema,
+  classQuestSchema,
+  questPowerUpRowSchema,
+  questHeartbeatInputSchema,
+  studentQuestCardSchema,
+  teacherQuestCardSchema,
+  questDashboardStudentSchema,
+  questHitSchema,
+  questDashboardStateSchema,
+  questBattleStateSchema,
+  setQuestStatusInputSchema,
+} from "./class-quest.js";
+export type {
+  QuestCopy,
+  QuestPowerUp,
+  QuestGoalKind,
+  QuestGoal,
+  QuestTemplate,
+  QuestStatus,
+  AssignClassQuestInput,
+  ClassQuest,
+  QuestPowerUpRow,
+  QuestHeartbeatInput,
+  StudentQuestCard,
+  TeacherQuestCard,
+  QuestDashboardStudent,
+  QuestHit,
+  QuestDashboardState,
+  QuestBattleState,
+  SetQuestStatusInput,
+} from "./class-quest.js";

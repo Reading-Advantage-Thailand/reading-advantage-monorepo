@@ -1,4 +1,6 @@
 import { ROLES } from "@reading-advantage/auth";
+import { STUDENT_HOME } from "./student-home";
+import { TEACHER_HOME } from "./teacher-home";
 
 /**
  * Every canonical role, used to prove each role owns a proxy policy.
@@ -22,8 +24,8 @@ export const protectedRoutes: Record<string, readonly string[]> = {
 /** Default landing page per normalized lowercase role. */
 export const roleDefaultRedirects: Record<string, string> = {
   intern: "/intern",
-  student: "/student/read",
-  teacher: "/teacher/my-classes",
+  student: STUDENT_HOME,
+  teacher: TEACHER_HOME,
   admin: "/admin/dashboard",
   system: "/system/dashboard",
   // Sales roles intentionally have no default landing in this app.

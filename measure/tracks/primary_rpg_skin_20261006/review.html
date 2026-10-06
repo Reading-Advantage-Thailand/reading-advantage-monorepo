@@ -1,0 +1,260 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primary RPG Skin Plan</title>
+<meta name="description" content="Per-page plan to put every Primary Advantage student page inside the Chibi Quest world, with the Forge scene and props each page uses.">
+<style>
+:root{--ink:#1f2933;--muted:#52606d;--brand:#0e7490;--soft:#ecfeff;--line:#e4e7eb;--bg:#fff;--card:#f8fafc}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}}
+:root[data-theme="dark"]{--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,"Noto Sans Thai",system-ui,sans-serif}
+header{background:var(--soft);padding:32px 16px;border-bottom:1px solid var(--line)} .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+h1{margin:0 0 8px;font-size:clamp(26px,4vw,36px)} h2{font-size:20px;margin:0 0 12px} h2 code{font-size:13px;color:var(--muted);font-weight:400;margin-left:8px}
+p{margin:0 0 10px;max-width:70ch} .lead{color:var(--muted);font-size:17px}
+.page{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:20px 0}
+.row{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:start}
+@media (min-width:900px){.row{grid-template-columns:150px 420px 1fr}}
+figure{margin:0} figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:#111;display:block}
+figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.now img{max-height:420px;object-fit:cover;object-position:top}
+.props{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;grid-column:1/-1} @media (min-width:900px){.props{grid-column:auto;grid-template-columns:repeat(3,1fr)} .text{grid-column:2/-1}}
+.props img{aspect-ratio:1;object-fit:contain;background:#fff}
+.rules{background:var(--card);border-left:4px solid var(--brand);padding:12px 16px;border-radius:8px;margin:16px 0}
+ol li,ul li{margin-bottom:6px}
+</style></head><body>
+<header><div class="wrap"><h1>Primary Advantage: the RPG skin, page by page</h1>
+<p class="lead">A plan for the owner's review, 6 October 2026. Each card shows the page as it is today, the Forge scene it moves into, three Forge props it uses, and the promo moment it must produce. The spec with the phases and the open questions is <code>spec.md</code> beside this page.</p></div></header>
+<main class="wrap">
+<div class="rules"><p><strong>Rules.</strong> Every asset comes from advantage-forge; no ElvGames asset appears in the app. Reading stays protected: the story text column gets a frame, not decorations. Backdrops are static renders for old phones; three.js runs only where the avatar must move. One scene system serves every page. The owner sees captures before a page is called done.</p>
+<p><strong>The bar.</strong> "How am I supposed to create an impactful marketing video from any of this?" A screen that is not worth five seconds in a promo video is not done.</p>
+<p><strong>Phases.</strong> 0: the Forge UI kit (parchment panel, plank sign, banner, meter frame, hearts, coins, slot icons, three effect sheets), the 12 backdrops, and three static mocks (shop, battle, home) for the owner. 1: the scene system, the shell, the home. 2: picker, inventory, shop. 3: the battle phone page and the projector dashboard. 4: the remaining pages. 5: the five promo shots recorded from the build.</p></div>
+
+<article class="page">
+  <h2>Home <code>/student/home</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/10-student-home-375.png" alt="Home today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/guild-hall-3q.png" alt="guild-hall scene" loading="lazy"><figcaption>The place: <strong>guild-hall</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/quest-giver/views/front.png" alt="quest-giver" loading="lazy"><figcaption>quest-giver</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/notice-board/views/front.png" alt="notice-board" loading="lazy"><figcaption>notice-board</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/banner/views/front.png" alt="banner" loading="lazy"><figcaption>banner</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> Stats on a wooden plaque. Today&#x27;s lesson is a notice pinned on the board. The class book is the open book on the map table. Class Quest is a banner with the boss portrait and a wood-and-iron meter. Continue reading is a scroll. Games is the arena door.</p>
+      <p><strong>Promo moment.</strong> The hero walks in and the quest banner unrolls with the boss&#x27;s face.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Avatar picker <code>/student/avatar?from=me</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/21b-student-avatar-pick-375.png" alt="Avatar picker today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/shrine-3q.png" alt="shrine scene" loading="lazy"><figcaption>The place: <strong>shrine</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/statue/views/front.png" alt="statue" loading="lazy"><figcaption>statue</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/health-potion/views/front.png" alt="health-potion" loading="lazy"><figcaption>health-potion</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/portal-frame/views/front.png" alt="portal-frame" loading="lazy"><figcaption>portal-frame</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> The 15 heroes stand in a half-circle. Tap one and it steps forward and plays idle. Colours are dye pots and potion bottles on a stone table; the hero changes live. Save: the hero bows.</p>
+      <p><strong>Promo moment.</strong> The chosen hero stepping into the light.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>My avatar (inventory) <code>/student/avatar</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/21-student-avatar-375.png" alt="My avatar (inventory) today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/treasure-vault-3q.png" alt="treasure-vault scene" loading="lazy"><figcaption>The place: <strong>treasure-vault</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/treasure-chest/views/front.png" alt="treasure-chest" loading="lazy"><figcaption>treasure-chest</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/coin-purse/views/front.png" alt="coin-purse" loading="lazy"><figcaption>coin-purse</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/duelist-hat/views/front.png" alt="duelist-hat icon" loading="lazy"><figcaption>duelist-hat icon</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> A paper-doll: the avatar in the centre, ten slot icons around it. Tap a slot and a drawer opens with the owned pieces as Forge item icons, 8 per page. Tap a piece to wear it. No long scroll.</p>
+      <p><strong>Promo moment.</strong> A helmet landing on the hero.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Avatar shop <code>/student/avatar/shop</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/24-student-avatar-shop-375.png" alt="Avatar shop today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/armory-3q.png" alt="armory scene" loading="lazy"><figcaption>The place: <strong>armory</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/blacksmith/views/front.png" alt="blacksmith" loading="lazy"><figcaption>blacksmith</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/gold-coin/views/front.png" alt="gold-coin" loading="lazy"><figcaption>gold-coin</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/locked-chest/views/front.png" alt="locked-chest" loading="lazy"><figcaption>locked-chest</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> Shelves, not a list. Slot tabs are hanging shop signs. Each shelf shows 6 item icons with coin prices. Locked tiers are a chained chest. Tap an item for a try-on card with the avatar wearing it. On buy, coins fly to the counter and the blacksmith nods. Dyes are paint pots on the try-on card.</p>
+      <p><strong>Promo moment.</strong> Coins flying to the counter and the hat landing on the hero.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Class Quest battle (phone) <code>/student/quest/battle</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/27-student-quest-battle-375.png" alt="Class Quest battle (phone) today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/boss-arena-3q.png" alt="boss-arena scene" loading="lazy"><figcaption>The place: <strong>boss-arena</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/goblin-king/views/front.png" alt="goblin-king" loading="lazy"><figcaption>goblin-king</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/horn/views/front.png" alt="horn" loading="lazy"><figcaption>horn</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/campfire/views/front.png" alt="campfire" loading="lazy"><figcaption>campfire</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> Rally: the hero at the campfire by the arena gate, class portraits arriving. Play: the boss on top with its meter in the wood-iron frame, the hero below with five hearts, power-ups as relic icons that glow when armed, the game inside a stone archway. Result: the boss plays its death clip and coins rain, or it roars and holds.</p>
+      <p><strong>Promo moment.</strong> The boss taking a hit and the hearts flashing.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Live dashboard (projector) <code>/teacher/quest/:id/live</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/26-teacher-quest-live-375.png" alt="Live dashboard (projector) today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/arena-3q.png" alt="arena scene" loading="lazy"><figcaption>The place: <strong>arena</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/lich/views/front.png" alt="lich" loading="lazy"><figcaption>lich</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/dragon-fire/views/front.png" alt="dragon-fire" loading="lazy"><figcaption>dragon-fire</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/iron-golem/views/front.png" alt="iron-golem" loading="lazy"><figcaption>iron-golem</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> The teaser battle field: the boss east, every student&#x27;s hero west. A heartbeat makes the hero attack and the boss play hit, with a floating number. HP bars under the heroes, the big meter on top. Rally, battle, result, done as cinematic cuts. The fall plays the death clip and the banner drops.</p>
+      <p><strong>Promo moment.</strong> The boss falling in front of the whole class.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Story list <code>/student/read</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/11-student-read-375.png" alt="Story list today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/library-3q.png" alt="library scene" loading="lazy"><figcaption>The place: <strong>library</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/bookshelf/views/front.png" alt="bookshelf" loading="lazy"><figcaption>bookshelf</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/cleric-book/views/front.png" alt="cleric-book" loading="lazy"><figcaption>cleric-book</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/villager/views/front.png" alt="villager" loading="lazy"><figcaption>villager</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> Stories are books on shelves with the article picture as the cover and a bookmark for the level. Fiction and nonfiction are two shelves.</p>
+      <p><strong>Promo moment.</strong> Pulling a book from the shelf.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Story view <code>/student/read/:id</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/12-student-article-375.png" alt="Story view today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/library-3q.png" alt="library scene" loading="lazy"><figcaption>The place: <strong>library</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/desk/views/front.png" alt="desk" loading="lazy"><figcaption>desk</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/scroll/views/front.png" alt="scroll" loading="lazy"><figcaption>scroll</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/lantern/views/front.png" alt="lantern" loading="lazy"><figcaption>lantern</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> The article is a parchment page on a desk, the library blurred behind. Audio, translation, and word list are desk objects. The text column is untouched: reading stays protected.</p>
+      <p><strong>Promo moment.</strong> Not a promo page. It is the reading moment.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Lesson flow <code>/student/lesson/:id</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/13-student-lesson-375.png" alt="Lesson flow today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/clearing-3q.png" alt="clearing scene" loading="lazy"><figcaption>The place: <strong>clearing</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/adventurer-map/views/front.png" alt="adventurer-map" loading="lazy"><figcaption>adventurer-map</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/flag/views/front.png" alt="flag" loading="lazy"><figcaption>flag</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/signpost/views/front.png" alt="signpost" loading="lazy"><figcaption>signpost</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> The 14-step rail becomes a path on a map. The marker walks from step to step. A done step plants a flag.</p>
+      <p><strong>Promo moment.</strong> The marker walking the path.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Class book <code>/student/books/:id</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/14-student-book-375.png" alt="Class book today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/library-3q.png" alt="library scene" loading="lazy"><figcaption>The place: <strong>library</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/spellbook/views/front.png" alt="spellbook" loading="lazy"><figcaption>spellbook</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/key-gold/views/front.png" alt="key-gold" loading="lazy"><figcaption>key-gold</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/candle/views/front.png" alt="candle" loading="lazy"><figcaption>candle</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> The book open on the desk, lessons as pages. A locked lesson is sealed with wax.</p>
+      
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Assignments <code>/student/assignments</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/15-student-assignments-375.png" alt="Assignments today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/guild-hall-3q.png" alt="guild-hall scene" loading="lazy"><figcaption>The place: <strong>guild-hall</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/notice-board/views/front.png" alt="notice-board" loading="lazy"><figcaption>notice-board</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/quest-giver/views/front.png" alt="quest-giver" loading="lazy"><figcaption>quest-giver</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/ancient-scroll/views/front.png" alt="ancient-scroll" loading="lazy"><figcaption>ancient-scroll</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> The quest board close up. Each assignment is a pinned notice. Filters are pins. A done notice has a stamp.</p>
+      <p><strong>Promo moment.</strong> Taking a notice from the board.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Games <code>/student/games</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/16-student-games-375.png" alt="Games today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/arena-3q.png" alt="arena scene" loading="lazy"><figcaption>The place: <strong>arena</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/gate/views/front.png" alt="gate" loading="lazy"><figcaption>gate</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/banner/views/front.png" alt="banner" loading="lazy"><figcaption>banner</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/gladiator-shield/views/front.png" alt="gladiator-shield" loading="lazy"><figcaption>gladiator-shield</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> Games are banners on the arena wall. The class challenge is the arena&#x27;s own notice. The game host keeps its frame; the dark briefing screen changes to the kit parchment later (APK side).</p>
+      <p><strong>Promo moment.</strong> The gate opening to the arena.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Vocabulary <code>/student/vocabulary</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/17-student-vocabulary-375.png" alt="Vocabulary today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/wizard-tower-3q.png" alt="wizard-tower scene" loading="lazy"><figcaption>The place: <strong>wizard-tower</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/mage-spellbook/views/front.png" alt="mage-spellbook" loading="lazy"><figcaption>mage-spellbook</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/magic-scroll/views/front.png" alt="magic-scroll" loading="lazy"><figcaption>magic-scroll</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/cauldron/views/front.png" alt="cauldron" loading="lazy"><figcaption>cauldron</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> Saved words are scrolls in a spellbook. Practice is &quot;cast&quot;. The empty state is an empty spellbook and a quill.</p>
+      
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Sentences <code>/student/sentences</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/18-student-sentences-375.png" alt="Sentences today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/archive-3q.png" alt="archive scene" loading="lazy"><figcaption>The place: <strong>archive</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/lectern/views/front.png" alt="lectern" loading="lazy"><figcaption>lectern</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/scroll/views/front.png" alt="scroll" loading="lazy"><figcaption>scroll</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/bookcase/views/front.png" alt="bookcase" loading="lazy"><figcaption>bookcase</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> Sentences are scrolls in pigeonholes. The three practice modes are three lecterns.</p>
+      
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>My reading <code>/student/history</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/19-student-history-375.png" alt="My reading today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/inn-3q.png" alt="inn scene" loading="lazy"><figcaption>The place: <strong>inn</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/innkeeper/views/front.png" alt="innkeeper" loading="lazy"><figcaption>innkeeper</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/cleric-book/views/front.png" alt="cleric-book" loading="lazy"><figcaption>cleric-book</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/mug/views/front.png" alt="mug" loading="lazy"><figcaption>mug</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> The adventurer&#x27;s journal. Each story read is a stamped page. Read again is a bookmark.</p>
+      
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Reports <code>/student/reports</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/20-student-reports-375.png" alt="Reports today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/observatory-3q.png" alt="observatory scene" loading="lazy"><figcaption>The place: <strong>observatory</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/gem-sapphire/views/front.png" alt="gem-sapphire" loading="lazy"><figcaption>gem-sapphire</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/orb/views/front.png" alt="orb" loading="lazy"><figcaption>orb</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/crystal-focus/views/front.png" alt="crystal-focus" loading="lazy"><figcaption>crystal-focus</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> Charts on parchment. The XP meter is a gem that fills. Activity days are stars in the sky.</p>
+      
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Reedy <code>/student/reedy</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/22-student-reedy-375.png" alt="Reedy today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/clearing-3q.png" alt="clearing scene" loading="lazy"><figcaption>The place: <strong>clearing</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/campfire/views/front.png" alt="campfire" loading="lazy"><figcaption>campfire</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/tent/views/front.png" alt="tent" loading="lazy"><figcaption>tent</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/bedroll/views/front.png" alt="bedroll" loading="lazy"><figcaption>bedroll</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> The talk happens at the campfire. The timer is the fire burning down. The summary is a scroll with four stars.</p>
+      <p><strong>Promo moment.</strong> The campfire talk.</p>
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Me <code>/settings/user-profile</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/23-student-me-375.png" alt="Me today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/inn-3q.png" alt="inn scene" loading="lazy"><figcaption>The place: <strong>inn</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/chest/views/front.png" alt="chest" loading="lazy"><figcaption>chest</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/bedroll/views/front.png" alt="bedroll" loading="lazy"><figcaption>bedroll</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/candle/views/front.png" alt="candle" loading="lazy"><figcaption>candle</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> Profile fields on parchment. The avatar link is the hero&#x27;s chest.</p>
+      
+    </div>
+  </div>
+</article>
+<article class="page">
+  <h2>Sign-in <code>/auth/signin</code></h2>
+  <div class="row">
+    <figure class="now"><img src="file:///home/daniebo/Desktop/advantage-pr/assets/screenshots/primary-advantage/2026-10-06/01-signin-375.png" alt="Sign-in today, phone" loading="lazy"><figcaption>Today (375 px)</figcaption></figure>
+    <figure class="place"><img src="file:///home/daniebo/Desktop/advantage-forge/docs/map-mockups/gatehouse-3q.png" alt="gatehouse scene" loading="lazy"><figcaption>The place: <strong>gatehouse</strong> (Forge scene, re-shot for the page)</figcaption></figure>
+    <div class="props"><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/gate/views/front.png" alt="gate" loading="lazy"><figcaption>gate</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/round-shield/views/front.png" alt="round-shield" loading="lazy"><figcaption>round-shield</figcaption></figure><figure><img src="file:///home/daniebo/Desktop/advantage-forge/out/torch/views/front.png" alt="torch" loading="lazy"><figcaption>torch</figcaption></figure></div>
+    <div class="text">
+      <p><strong>Plan.</strong> The class code sign hangs on the gate. The three picture passwords are shields on the wall. The QR card opens the gate.</p>
+      <p><strong>Promo moment.</strong> The gate opening on sign-in.</p>
+    </div>
+  </div>
+</article>
+</main>
+<footer class="wrap"><p style="color:var(--muted);font-size:13px;padding:24px 0">Scene thumbnails are the Forge's three-quarter mockups at 1500x950; the pages will use re-shot renders at phone and desktop aspect. Prop images are the Forge front views.</p></footer>
+</body></html>

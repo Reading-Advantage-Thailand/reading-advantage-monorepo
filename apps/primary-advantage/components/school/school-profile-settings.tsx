@@ -1,7 +1,7 @@
 "use client";
 
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import { SchoolDetail } from "@/components/school/school-detail";
 import { CreateSchoolCard } from "@/components/school/create-school-card";
 import { SchoolForm } from "@/components/school/school-form";

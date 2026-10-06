@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { vocabularyInputSchema } from "./educational-io.js";
+import { storyGameEvidenceSchema } from "./evidence.js";
 
 function isHttpUrl(value: string): boolean {
   try {
@@ -423,10 +424,11 @@ export const readToSelectAudioEvidenceSchema = z
     addQuestionClipPairIssues(evidence.audioFailures, evidence.itemCount, "audioFailures", context);
   });
 
-/** Accepted learning evidence for existing and answer-audio sessions. */
+/** Accepted learning evidence for existing, answer-audio, and story-game sessions. */
 export const learningEvidenceSchema = z.union([
   listeningEvidenceSchema,
   readToSelectAudioEvidenceSchema,
+  storyGameEvidenceSchema,
 ]);
 
 /** Completion metadata that validates the reserved listening evidence key. */

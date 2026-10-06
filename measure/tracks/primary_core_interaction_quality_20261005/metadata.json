@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_core_interaction_quality_20261005",
+  "type": "feature",
+  "status": "planned",
+  "created_at": "2026-10-05T00:00:00Z",
+  "updated_at": "2026-10-05T00:00:00Z",
+  "description": "Lane G: verify the September audio, loading, and deduplication fixes in a browser, then bring the reader, audio control, flashcard review, practice activities, lesson task components, and games catalog copy to the Lane C quality bar.",
+  "estimated_tasks": 23,
+  "actual_tasks": null,
+  "deviation_notes": "Created 2026-10-05 from the Fable review session. Daniel asked that core components (reading pages, audio playback, vocabulary review) change with the shell, not only the page frames. Lane C made no change inside these components by spec. Tutor is not the reference for these internals; the Lane C quality bar is."
+}

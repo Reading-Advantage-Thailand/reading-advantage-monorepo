@@ -62,3 +62,16 @@ this three-part protocol:
    matching `tag`.
 3. **Integrity test**: Add or update tests in `src/__tests__/` to verify the
    migration applies cleanly and the journal remains consistent.
+
+## Tutor Compat Views Block Column Changes
+
+Migration `0061_tutor_compat_views` creates four views in schema `tutor_compat` for
+Tutor Advantage. The views read `articles`, `multiple_choice_questions`,
+`short_answer_questions`, `sentencs_and_words_for_flashcard`, and `primary_legacy_id_map`.
+
+- PostgreSQL refuses `ALTER COLUMN ... TYPE` on a column that a view uses.
+- PostgreSQL refuses `DROP COLUMN` on a column that a view uses, unless `CASCADE` is set.
+- `DROP ... CASCADE` deletes the Tutor views without a warning.
+- A migration that changes a used column must drop and recreate the views in the same migration.
+- After the merge, never change the tag, the `when` value, or the SQL of `0060` and `0061`.
+  Write a new migration instead.

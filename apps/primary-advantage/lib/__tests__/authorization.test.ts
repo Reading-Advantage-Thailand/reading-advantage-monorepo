@@ -4,6 +4,8 @@ import { z } from "zod";
 import {
   USER_MANAGEMENT_ROLES,
   normalizeRole,
+  canSetPasswordFor,
+  effectiveRoleOf,
   isAdminOrSystem,
   canRunContentTooling,
   canReadUserResource,
@@ -113,5 +115,50 @@ describe("authorization contracts", () => {
     expect(amountPerGenreSchema.safeParse(1000).success).toBe(false);
     expect(amountPerGenreSchema.safeParse("many").success).toBe(false);
     expect(z.number().safeParse(1000).success).toBe(true);
+  });
+});
+
+describe("effectiveRoleOf", () => {
+  it.each([
+    ["STUDENT", [], true, "ADMIN"],
+    ["TEACHER", ["admin"], false, "ADMIN"],
+    ["STUDENT", ["teacher"], false, "TEACHER"],
+    ["ADMIN", ["teacher"], false, "ADMIN"],
+    ["STUDENT", ["user"], false, "STUDENT"],
+    [null, [], false, ""],
+    ["TEACHER", ["system"], false, "SYSTEM"],
+  ])("session %s legacy %j schoolAdmin %s -> %s", (session, legacy, schoolAdmin, expected) => {
+    expect(effectiveRoleOf(session, legacy as string[], schoolAdmin)).toBe(expected);
+  });
+
+  it("ignores unknown legacy names for a caller and ranks them highest for a target", () => {
+    expect(effectiveRoleOf("TEACHER", ["mystery"], false)).toBe("TEACHER");
+    expect(effectiveRoleOf("STUDENT", ["mystery"], false, "max")).toBe("SYSTEM");
+  });
+});
+
+describe("canSetPasswordFor", () => {
+  it.each([
+    ["ADMIN", "STUDENT", true],
+    ["ADMIN", "TEACHER", true],
+    ["ADMIN", "ADMIN", false],
+    ["ADMIN", "SYSTEM", false],
+    ["SYSTEM", "ADMIN", true],
+    ["SYSTEM", "SYSTEM", false],
+    ["TEACHER", "STUDENT", true],
+    ["TEACHER", "TEACHER", false],
+    ["STUDENT", "STUDENT", false],
+    ["ADMIN", undefined, false],
+  ])("actor %s target %s -> %s", (actor, target, expected) => {
+    expect(canSetPasswordFor(actor, target)).toBe(expected);
+  });
+});
+
+describe("patchUserBodySchema password (shared passwordSchema)", () => {
+  it("accepts 8 to 128 characters and rejects the rest", () => {
+    expect(patchUserBodySchema.safeParse({ password: "x".repeat(8) }).success).toBe(true);
+    expect(patchUserBodySchema.safeParse({ password: "x".repeat(128) }).success).toBe(true);
+    expect(patchUserBodySchema.safeParse({ password: "x".repeat(129) }).success).toBe(false);
+    expect(patchUserBodySchema.safeParse({ password: "x".repeat(7) }).success).toBe(false);
   });
 });

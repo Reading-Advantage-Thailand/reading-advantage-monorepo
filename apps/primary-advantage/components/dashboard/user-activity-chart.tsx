@@ -33,7 +33,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, StarIcon } from "lucide-react";
+import { EmptyState } from "@reading-advantage/ui";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -80,6 +81,8 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
   });
 
   const formattedData = formatCumulativeXpForDays(xpLogs, date);
+  // Cumulative XP: all zero means the student has no XP up to the end of the chosen days.
+  const hasXp = formattedData.some((point) => point.xpEarned > 0);
 
   const inProgressCount = data.filter(
     (item: UserActivityLog) => !item.completed,
@@ -116,8 +119,8 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
               </CardContent>
             </Card>
           </div>
-          <Card className="col-span-1">
-            <CardContent className="flex flex-col gap-2">
+          <Card className="col-span-1 min-w-0">
+            <CardContent className="flex min-w-0 flex-col gap-2">
               <CardTitle className="text-muted-foreground text-sm">
                 {t("dateRange")}
               </CardTitle>
@@ -127,7 +130,7 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
                     id="date"
                     variant={"outline"}
                     className={cn(
-                      "justify-start text-left font-normal",
+                      "h-auto min-h-10 w-full min-w-0 justify-start text-left font-normal whitespace-normal",
                       !date && "text-muted-foreground",
                     )}
                   >
@@ -225,6 +228,9 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
           <CardTitle>{t("xpearned")}</CardTitle>
         </CardHeader>
         <CardContent className="pl-2">
+          {!hasXp ? (
+            <EmptyState className="py-6" icon={<StarIcon />} title={t("noXp")} description={t("noXpHint")} />
+          ) : (
           <ChartContainer config={chartConfig}>
             <LineChart
               accessibilityLayer
@@ -256,6 +262,7 @@ export function UserActivityChart({ data, xpLogs }: UserActiviryChartProps) {
               />
             </LineChart>
           </ChartContainer>
+          )}
         </CardContent>
       </Card>
     </>

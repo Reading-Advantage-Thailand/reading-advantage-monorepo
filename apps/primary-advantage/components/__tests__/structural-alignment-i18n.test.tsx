@@ -13,12 +13,17 @@ import { NextIntlClientProvider } from "next-intl";
 
 const mocks = vi.hoisted(() => ({
   push: vi.fn(),
+  replace: vi.fn(),
   logout: vi.fn(),
   login: vi.fn(),
-  fetchStudentsByClassCode: vi.fn(),
   currentUser: vi.fn(),
   getCurrentUser: vi.fn(),
   getTranslations: vi.fn(),
+}));
+
+// Student sign-in ends with a full page load to the locale path (shared devices).
+vi.mock("@/lib/student-login/replace-location", () => ({
+  replaceLocation: (url: string) => mocks.replace(url),
 }));
 
 vi.mock("@/i18n/navigation", () => ({
@@ -34,9 +39,10 @@ vi.mock("@/i18n/navigation", () => ({
     </a>
   ),
   usePathname: () => "/",
+  getPathname: ({ href, locale }: { href: string; locale: string }) => `/${locale}${href}`,
   useRouter: () => ({
     push: mocks.push,
-    replace: vi.fn(),
+    replace: mocks.replace,
     back: vi.fn(),
     refresh: vi.fn(),
     prefetch: vi.fn(),
@@ -80,10 +86,6 @@ vi.mock("@reading-advantage/auth-client", () => ({
 vi.mock("@/lib/session", () => ({
   currentUser: mocks.currentUser,
   getCurrentUser: mocks.getCurrentUser,
-}));
-
-vi.mock("@/actions/classroom", () => ({
-  fetchStudentsByClassCode: mocks.fetchStudentsByClassCode,
 }));
 
 vi.mock("@reading-advantage/advantage-play-kit", () => ({
@@ -164,16 +166,15 @@ vi.mock("@/components/switchers/locale-switcher", () => ({
 
 import { StudentCartridgeHost } from "../apk/StudentCartridgeHost";
 import { UserAccountNav } from "../nav/user-account-nav";
-import { StudentSignInForm } from "../auth/student-signin-form";
+import { CodeSignIn } from "../student-login/code-sign-in";
 import { TeacherSignInForm } from "../auth/teacher-signin-form";
 import { Footer } from "../index/footer";
 import { EditLicenseForm } from "../system/edit-license-form";
 import { CreateSchoolForm } from "../system/create-school-form";
-import TeacherDashboard from "../../app/[locale]/teacher/dashboard/page";
 import LessonPage from "../../app/[locale]/(student)/student/lesson/[id]/page";
 import UserProfilePage from "../../app/[locale]/(student)/settings/user-profile/page";
 import ReadPage from "../../app/[locale]/(student)/student/read/[articleId]/page";
-import PrimaryStudentGamesPage from "../../app/[locale]/(student)/student/games/page";
+import PrimaryStudentGamesPage from "../../app/[locale]/(student)/student/games/(catalog)/page";
 import MyClassesPage from "../../app/[locale]/teacher/my-classes/page";
 import TeacherGameChallengesPage from "../../app/[locale]/teacher/game-challenges/page";
 import type { LicenseWithSchool } from "@/types";
@@ -339,43 +340,31 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     expect(mocks.push).toHaveBeenCalledWith("/");
   });
 
-  it("redirects student sign-in through the i18n router", async () => {
-    mocks.fetchStudentsByClassCode.mockResolvedValue({
-      success: true,
-      students: [
-        {
-          id: "cs1",
-          name: "Somchai",
-          student: {
-            id: "s1",
-            name: "Somchai",
-            email: "somchai@example.com",
-          },
-        },
-      ],
+  it("opens the locale student home after student sign-in", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            picturePasswordRequired: false,
+            students: [{ studentId: "h1", displayName: "Somchai", avatar: "red-circle" }],
+          }),
+        ),
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ user: { id: "s1", role: "STUDENT" }, authStrength: "code_only" })),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+    renderWithMessages(<CodeSignIn />);
+
+    fireEvent.change(screen.getByLabelText(en.StudentSignIn.code.label), {
+      target: { value: "ABCDEF" },
     });
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({}),
-      }),
-    );
-    renderWithMessages(<StudentSignInForm />);
-
-    fireEvent.change(
-      screen.getByLabelText(en.AuthPage.signin.classroomCode),
-      { target: { value: "ABC123" } },
-    );
-    fireEvent.click(screen.getByRole("button", { name: en.AuthPage.signin.next }));
-
-    await screen.findByText(en.AuthPage.signin.selectYourName);
-    fireEvent.click(screen.getByRole("combobox"));
-    fireEvent.click(await screen.findByRole("option", { name: "Somchai" }));
-    fireEvent.click(screen.getByRole("button", { name: en.AuthPage.signin.login }));
+    fireEvent.click(screen.getByRole("button", { name: en.StudentSignIn.code.next }));
+    fireEvent.click(await screen.findByRole("button", { name: "Somchai" }));
 
     await waitFor(() =>
-      expect(mocks.push).toHaveBeenCalledWith("/student/read"),
+      expect(mocks.replace).toHaveBeenCalledWith("/en/student/home"),
     );
   });
 
@@ -383,8 +372,8 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     mocks.login.mockResolvedValue(undefined);
     renderWithMessages(<TeacherSignInForm />);
 
-    fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: "teacher@example.com" },
+    fireEvent.change(screen.getByLabelText("Username"), {
+      target: { value: "teacher-a" },
     });
     fireEvent.change(screen.getByLabelText(/password/i), {
       target: { value: "secret123" },
@@ -392,12 +381,9 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     fireEvent.click(screen.getByRole("button", { name: "Login" }));
 
     await waitFor(() =>
-      expect(mocks.login).toHaveBeenCalledWith(
-        "teacher@example.com",
-        "secret123",
-      ),
+      expect(mocks.login).toHaveBeenCalledWith("teacher-a", "secret123"),
     );
-    expect(mocks.push).toHaveBeenCalledWith("/dashboard");
+    expect(mocks.replace).toHaveBeenCalledWith("/auth/signin");
   });
 
   it("redirects anonymous users with the locale-aware redirect", async () => {
@@ -442,7 +428,7 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
       name: "Class challenges",
     });
     expect(challengesLink).toHaveAttribute("data-test-id", "i18n-link");
-    expect(challengesLink).toHaveAttribute("href", "../game-challenges");
+    expect(challengesLink).toHaveAttribute("href", "/teacher/game-challenges");
     cleanup();
 
     mocks.getCurrentUser.mockResolvedValue({
@@ -493,14 +479,6 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
   });
 });
 
-describe("FR-5 teacher dashboard placeholder", () => {
-  it("redirects to the classroom list", async () => {
-    await expect(
-      TeacherDashboard({ params: Promise.resolve({ locale: "tw" }) }),
-    ).rejects.toThrow("redirect:tw:/teacher/my-classes");
-  });
-});
-
 describe("FR-5 marketing and auth metadata", () => {
   it("exports metadata from marketing and auth pages", async () => {
     const index = await import("../../app/[locale]/(index)/page");
@@ -522,7 +500,7 @@ describe("FR-5 marketing and auth metadata", () => {
     expect(signinMeta.title).toBeTruthy();
 
     const games = await import(
-      "../../app/[locale]/(student)/student/games/page"
+      "../../app/[locale]/(student)/student/games/(catalog)/page"
     );
     const gamesMeta = await games.generateMetadata({
       params: Promise.resolve({ locale: "en" }),
@@ -539,9 +517,6 @@ describe("FR-5 marketing and auth metadata", () => {
       "../../app/[locale]/(index)/privacy-policy/page"
     );
     expect(privacy.metadata.title).toBeTruthy();
-
-    const signup = await import("../../app/[locale]/auth/signup/page");
-    expect(signup.metadata.title).toBeTruthy();
 
     const forgot = await import(
       "../../app/[locale]/auth/forgot-password/page"

@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_class_quest_20261005",
+  "type": "feature",
+  "status": "completed",
+  "created_at": "2026-10-05T00:00:00Z",
+  "updated_at": "2026-10-06T00:00:00Z",
+  "description": "Semester 2: Class Quest (Guild Mode). A weekly quest from a fixed template list, power-ups from goals, and an 8-minute cooperative boss battle: students on their own devices, the teacher projects a polling dashboard. Builds on class challenges, Lane F portraits, and the GP ledger.",
+  "estimated_tasks": 20,
+  "actual_tasks": null,
+  "deviation_notes": "Created 2026-10-05 in the Fable review session. Owner decisions 2026-10-05: after the shop track; dashboard-only projector on the Wayground (Quizizz) live-session model without ranking; fixed quest list first; product name Class Quest. Source: advantage-forge/docs/chibi-quest-progression.md Phase 4 (no track existed in Forge or the monorepo)."
+}

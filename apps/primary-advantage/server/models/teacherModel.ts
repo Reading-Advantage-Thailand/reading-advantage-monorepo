@@ -13,8 +13,13 @@ import {
   roles,
   userRoles,
   schools,
+  schoolAdmins,
 } from '@reading-advantage/db';
-import bcrypt from "bcryptjs";
+import { ROLE_HIERARCHY, ROLES, type Role } from "@reading-advantage/auth/roles";
+import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, resolveCreationSchoolId, schoolScopeConditions } from "@/server/utils/auth";
+import { canSetPasswordFor } from "@/lib/authorization";
+import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
+import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
 import {
   TeacherData,
   CreateTeacherInput,
@@ -44,18 +49,11 @@ export const getTeachers = async (
     // Calculate offset for pagination
     const offset = (page - 1) * limit;
 
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      // School admin - only see teachers from their school
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     // Build the where clause for filtering. We restrict to users whose role
     // is in (teacher, admin) via the M:N userRoles table.
     const roleNames = role ? [role] : ["teacher", "admin"];
     const whereConditions: any[] = [
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
     // Add search filter if provided
@@ -201,16 +199,10 @@ export const getTeacherById = async (
   userWithRoles: UserWithRoles,
 ): Promise<TeacherData | null> => {
   try {
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     const whereConditions: any[] = [
       eq(users.id, id),
       inArray(roles.name, ["teacher", "admin"]),
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
     const teachers = await db.select({
@@ -291,10 +283,40 @@ export const getTeacherById = async (
   }
 };
 
+/** The one refusal for an existing account a caller may not add. */
+const EXISTING_ACCOUNT_REFUSAL = "This account cannot be added as a teacher";
+
+/** Legacy role names a teacher management call may assign. */
+const ASSIGNABLE_TEACHER_ROLES = ["teacher", "admin"];
+
+/**
+ * Checks whether an existing account outranks the TEACHER role.
+ * Both the session role and the legacy role rows count, so a legacy admin is refused.
+ * @param sessionRole The users.role value of the account.
+ * @param legacyRoleNames The user_roles names held by the account.
+ * @returns True when any role ranks above TEACHER or is unknown.
+ */
+export function outranksTeacher(
+  sessionRole: string | null | undefined,
+  legacyRoleNames: string[],
+): boolean {
+  const names = [sessionRole ?? "", ...legacyRoleNames]
+    .filter((name) => name !== "")
+    .map((name) => name.toUpperCase());
+  return names.some((name) => {
+    const rank = ROLE_HIERARCHY[name as Role];
+    return rank === undefined
+      ? name !== "USER"
+      : rank > ROLE_HIERARCHY[ROLES.TEACHER];
+  });
+}
+
 // Create new teacher
 /**
- * Creates a teacher in the authorized school.
- * @param params The teacher fields and authenticated actor.
+ * Creates a teacher or school admin in the authorized school.
+ * A role of "admin" yields users.role ADMIN, a school_admins row, and an admin user_roles row.
+ * @param params The teacher fields, the authenticated actor, and an optional target school id.
+ *   The school id counts only for a SYSTEM actor; other actors keep their own school.
  * @returns The created teacher result.
  */
 export const createTeacher = async (params: {
@@ -305,6 +327,7 @@ export const createTeacher = async (params: {
   classroomIds?: string[];
   userWithRoles: UserWithRoles;
   force?: boolean;
+  schoolId?: string | null;
 }): Promise<{
   success: boolean;
   teacher?: TeacherData;
@@ -316,11 +339,21 @@ export const createTeacher = async (params: {
     params;
 
   try {
+    if (!ASSIGNABLE_TEACHER_ROLES.includes(role)) {
+      return { success: false, error: "Invalid role specified" };
+    }
+
+    // Only an ADMIN or SYSTEM caller may create or re-role an account to admin.
+    if (role === "admin" && !["ADMIN", "SYSTEM"].includes(callerEffectiveRank(userWithRoles))) {
+      return { success: false, error: "Only an admin can assign the admin role" };
+    }
+
     // Check if user already exists (with school + roles for the include shape).
     const existingUserRows = await db.select({
       id: users.id,
       email: users.email,
       schoolId: users.schoolId,
+      sessionRole: users.role,
       schoolRowId: schools.id,
       schoolName: schools.name,
       roleName: roles.name,
@@ -336,6 +369,7 @@ export const createTeacher = async (params: {
           id: existingUserRows[0].id,
           email: existingUserRows[0].email,
           schoolId: existingUserRows[0].schoolId,
+          sessionRole: existingUserRows[0].sessionRole,
           School: existingUserRows[0].schoolRowId
             ? {
                 id: existingUserRows[0].schoolRowId,
@@ -350,14 +384,41 @@ export const createTeacher = async (params: {
         }
       : null;
 
-    // Determine school assignment
-    let schoolId = null;
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolId = userWithRoles.schoolId;
+    // Determine school assignment: only a SYSTEM caller may choose it.
+    const target = await resolveCreationSchoolId(userWithRoles, params.schoolId);
+    if ("error" in target) {
+      return { success: false, error: target.error };
+    }
+    const schoolId = target.schoolId;
+
+    // Fail closed: only SYSTEM may create accounts without a school.
+    if (!schoolId && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
+      return { success: false, error: "A school is required to create a teacher" };
+    }
+
+    // A school admin needs a school for its school_admins row.
+    if (role === "admin" && !schoolId) {
+      return { success: false, error: "A school is required to create an admin" };
     }
 
     // If user exists, handle accordingly
     if (existingUser) {
+      // An existing account is never taken over or moved. It must already
+      // belong to the caller's school (a school-less account is foreign), and
+      // it must not outrank TEACHER. One generic message avoids leaking
+      // which check failed.
+      // The effective rank also counts school_admins rows, which the legacy names miss.
+      const existingRank = await loadTargetEffectiveRank(existingUser.id, existingUser.sessionRole);
+      if (
+        !schoolId ||
+        existingUser.schoolId !== schoolId ||
+        outranksTeacher(
+          existingRank,
+          existingUser.roles.map((r) => r.role.name),
+        )
+      ) {
+        return { success: false, error: EXISTING_ACCOUNT_REFUSAL };
+      }
       if (existingUser.schoolId && existingUser.School) {
         if (force) {
           return await updateExistingTeacherToSchool({
@@ -365,7 +426,6 @@ export const createTeacher = async (params: {
             name,
             email,
             role,
-            password,
             classroomIds,
             schoolId,
             userWithRoles,
@@ -390,7 +450,6 @@ export const createTeacher = async (params: {
           name,
           email,
           role,
-          password,
           classroomIds,
           schoolId,
           userWithRoles,
@@ -398,26 +457,17 @@ export const createTeacher = async (params: {
       }
     }
 
-    // Get the role ID
-    const [roleRecord] = await db.select({ id: roles.id })
-      .from(roles)
-      .where(eq(roles.name, role))
-      .limit(1);
-
-    if (!roleRecord) {
-      return { success: false, error: "Invalid role specified" };
-    }
-
     // Generate password if not provided
     const hashedPassword = password
-      ? bcrypt.hashSync(password, 10)
-      : bcrypt.hashSync(Math.random().toString(36).slice(-8), 10);
+      ? await hashNewPassword(password)
+      : await generateRandomPasswordHash();
 
     // Validate classroom IDs if provided
     if (classroomIds && classroomIds.length > 0) {
       const classroomConditions: any[] = [
         inArray(classrooms.id, classroomIds),
       ];
+      classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
       if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
 
       const validClassrooms = await db.select({ id: classrooms.id })
@@ -434,6 +484,15 @@ export const createTeacher = async (params: {
 
     // Create the new teacher and assign classrooms in a transaction
     const completeTeacher = await db.transaction(async (tx) => {
+      // Find or create the role row by name, as the school admin routes do.
+      let [roleRecord] = await tx.select({ id: roles.id })
+        .from(roles)
+        .where(eq(roles.name, role))
+        .limit(1);
+      if (!roleRecord) {
+        [roleRecord] = await tx.insert(roles).values({ name: role }).returning({ id: roles.id });
+      }
+
       const username = email.trim().toLowerCase();
       const [user] = await tx.insert(users).values({
         id: crypto.randomUUID(),
@@ -441,10 +500,16 @@ export const createTeacher = async (params: {
         displayUsername: email.trim(),
         name,
         email,
-        role: "TEACHER",
+        role: role === "admin" ? "ADMIN" : "TEACHER",
         password: hashedPassword,
         schoolId,
       }).returning();
+
+      await upsertCredentialAccount(tx, user.id, hashedPassword);
+
+      if (role === "admin" && schoolId) {
+        await tx.insert(schoolAdmins).values({ schoolId, userId: user.id });
+      }
 
       await tx.insert(userRoles).values({
         userId: user.id,
@@ -466,6 +531,8 @@ export const createTeacher = async (params: {
 
       return user.id;
     });
+
+    await afterPasswordWrite({ userId: completeTeacher, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: true });
 
     // Refetch with the include shape (roles + ClassroomTeachers + classroom.students).
     return await refetchTeacherWithInclude(completeTeacher, role);
@@ -557,7 +624,6 @@ async function updateExistingTeacherToSchool(params: {
   name: string;
   email: string;
   role: string;
-  password?: string;
   classroomIds?: string[];
   schoolId: string | null;
   userWithRoles: UserWithRoles;
@@ -571,7 +637,6 @@ async function updateExistingTeacherToSchool(params: {
     name,
     email,
     role,
-    password,
     classroomIds,
     schoolId,
     userWithRoles,
@@ -593,7 +658,7 @@ async function updateExistingTeacherToSchool(params: {
       const classroomConditions: any[] = [
         inArray(classrooms.id, classroomIds),
       ];
-      if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
+      classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
 
       const validClassrooms = await db.select({ id: classrooms.id })
         .from(classrooms)
@@ -607,19 +672,11 @@ async function updateExistingTeacherToSchool(params: {
       }
     }
 
-    // Update the existing teacher in a transaction
+    // Update the existing teacher in a transaction. An existing account
+    // never gets a new password here: only its owner or a reset flow may set it.
     await db.transaction(async (tx) => {
-      const updateData: any = {
-        name,
-        schoolId,
-      };
-
-      if (password) {
-        updateData.password = bcrypt.hashSync(password, 10);
-      }
-
       await tx.update(users)
-        .set(updateData)
+        .set({ name, schoolId })
         .where(eq(users.id, existingUser.id));
 
       // Look up the user's current roles to decide if we need to rotate them.
@@ -682,23 +739,18 @@ export const updateTeacher = async (
   userWithRoles: UserWithRoles,
 ): Promise<{ success: boolean; teacher?: TeacherData; error?: string }> => {
   try {
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     // Check if teacher exists and user has permission to update
     const teacherConditions: any[] = [
       eq(users.id, id),
       inArray(roles.name, ["teacher", "admin"]),
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
     const [existingTeacher] = await db.select({
       id: users.id,
       email: users.email,
       schoolId: users.schoolId,
+      sessionRole: users.role,
     })
       .from(users)
       .innerJoin(userRoles, eq(userRoles.userId, users.id))
@@ -708,6 +760,23 @@ export const updateTeacher = async (
 
     if (!existingTeacher) {
       return { success: false, error: "Teacher not found" };
+    }
+
+    if (updateData.role && !ASSIGNABLE_TEACHER_ROLES.includes(updateData.role)) {
+      return { success: false, error: "Invalid role specified" };
+    }
+
+    // A password or role write needs a strictly lower-ranked CURRENT target (shared reset matrix).
+    if (updateData.password || updateData.role) {
+      const targetRank = await loadTargetEffectiveRank(id, existingTeacher.sessionRole);
+      if (!canSetPasswordFor(callerEffectiveRank(userWithRoles), targetRank)) {
+        return {
+          success: false,
+          error: updateData.password
+            ? "Cannot change the password of this account"
+            : "Cannot change the role of this account",
+        };
+      }
     }
 
     // Check if email is being updated and doesn't conflict
@@ -748,8 +817,10 @@ export const updateTeacher = async (
     if (updateData.name) updatePayload.name = updateData.name;
     if (updateData.email) updatePayload.email = updateData.email;
     if (updateData.cefrLevel) updatePayload.cefrLevel = updateData.cefrLevel;
+    let newPasswordHash: string | undefined;
     if (updateData.password) {
-      updatePayload.password = bcrypt.hashSync(updateData.password, 10);
+      newPasswordHash = await hashNewPassword(updateData.password);
+      updatePayload.password = newPasswordHash;
     }
 
     // Update the teacher and handle classroom assignments in a transaction
@@ -758,6 +829,11 @@ export const updateTeacher = async (
         await tx.update(users)
           .set(updatePayload)
           .where(eq(users.id, id));
+      }
+
+      if (newPasswordHash) {
+        await upsertCredentialAccount(tx, id, newPasswordHash);
+        await revokeSessionsInTx(tx, id);
       }
 
       // Handle role update if specified
@@ -793,6 +869,10 @@ export const updateTeacher = async (
       }
     });
 
+    if (newPasswordHash) {
+      await afterPasswordWrite({ userId: id, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: false, sessionsRevoked: true });
+    }
+
     const refetch = await refetchTeacherWithInclude(id, updateData.role ?? "teacher");
     return {
       success: refetch.success,
@@ -812,20 +892,14 @@ export const deleteTeacher = async (
   userWithRoles: UserWithRoles,
 ): Promise<{ success: boolean; error?: string }> => {
   try {
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     // Check if teacher exists and user has permission to delete
     const teacherConditions: any[] = [
       eq(users.id, id),
       inArray(roles.name, ["teacher", "admin"]),
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
-    const [existingTeacher] = await db.select({ id: users.id })
+    const [existingTeacher] = await db.select({ id: users.id, sessionRole: users.role })
       .from(users)
       .innerJoin(userRoles, eq(userRoles.userId, users.id))
       .innerJoin(roles, eq(roles.id, userRoles.roleId))
@@ -836,12 +910,19 @@ export const deleteTeacher = async (
       return { success: false, error: "Teacher not found" };
     }
 
+    // A delete needs a strictly lower-ranked target, the same rule as a password write.
+    if (!canSetPasswordFor(callerEffectiveRank(userWithRoles), await loadTargetEffectiveRank(id, existingTeacher.sessionRole))) {
+      return { success: false, error: "Cannot delete this account" };
+    }
+
     // Delete related records first
     await db.delete(userRoles).where(eq(userRoles.userId, id));
     await db.delete(classroomTeachers).where(eq(classroomTeachers.teacherId, id));
 
     // Delete the teacher
     await db.delete(users).where(eq(users.id, id));
+
+    await auditUserDeleted({ userId: id, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) } });
 
     return { success: true };
   } catch (error) {
@@ -853,15 +934,9 @@ export const deleteTeacher = async (
 // Get teacher statistics
 export const getTeacherStatistics = async (userWithRoles: UserWithRoles) => {
   try {
-    // Determine school filter based on user's role
-    let schoolFilter: any = {};
-    if (userWithRoles.schoolId && userWithRoles.SchoolAdmins.length > 0) {
-      schoolFilter = { schoolId: userWithRoles.schoolId };
-    }
-
     const whereConditions: any[] = [
       inArray(roles.name, ["teacher", "admin"]),
-      ...(schoolFilter.schoolId ? [eq(users.schoolId, schoolFilter.schoolId)] : []),
+      ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
 
     // Get all teachers + their classroom/student counts in one query.

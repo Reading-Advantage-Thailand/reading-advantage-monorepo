@@ -4,10 +4,8 @@ import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { Label, Separator, Alert, AlertDescription, AlertTitle } from "@reading-advantage/ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -18,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -121,7 +119,10 @@ export default function ImportDataPage() {
       }, 2000);
 
       // Upload file to API
-      const response = await fetch("/api/upload/classes ", {
+      // The students tab imports through the CSV route; other tabs use the classes route.
+      const endpoint =
+        activeTab === "students" ? "/api/upload/csv" : "/api/upload/classes";
+      const response = await fetch(endpoint, {
         method: "POST",
         body: formData,
       });
@@ -249,9 +250,9 @@ export default function ImportDataPage() {
       <Header heading={t("header.heading")} text={t("header.text")} />
       <Separator />
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-3">
         {/* Upload Section */}
-        <div className="space-y-6 lg:col-span-2">
+        <div className="min-w-0 space-y-6 lg:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -274,7 +275,7 @@ export default function ImportDataPage() {
                     accept=".csv"
                     onChange={handleFileSelect}
                     ref={fileInputRef}
-                    className="flex-1"
+                    className="min-w-0 flex-1"
                   />
                   <Button
                     variant="outline"
@@ -338,6 +339,26 @@ export default function ImportDataPage() {
                         <strong>{t("upload.success.savedAs")}:</strong>{" "}
                         {uploadResult.fileName}
                       </p>
+                      {typeof uploadResult.inserted === "number" && (
+                        <>
+                          <p>
+                            <strong>{t("upload.success.inserted")}:</strong>{" "}
+                            {uploadResult.inserted}
+                          </p>
+                          <p>
+                            <strong>
+                              {t("upload.success.skippedDuplicate")}:
+                            </strong>{" "}
+                            {uploadResult.skippedDuplicate}
+                          </p>
+                          <p>
+                            <strong>
+                              {t("upload.success.skippedExisting")}:
+                            </strong>{" "}
+                            {uploadResult.skippedExisting}
+                          </p>
+                        </>
+                      )}
                       <p className="text-muted-foreground text-sm">
                         {t("upload.success.nextSteps")}
                       </p>
@@ -508,6 +529,7 @@ export default function ImportDataPage() {
                           ))}
                         </TableBody>
                       </Table>
+                      <ScrollBar orientation="horizontal" />
                     </ScrollArea>
                   </div>
 

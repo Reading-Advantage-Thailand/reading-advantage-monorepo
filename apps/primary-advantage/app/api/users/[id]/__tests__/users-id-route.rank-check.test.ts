@@ -29,7 +29,17 @@ vi.mock("@reading-advantage/db", async () => ({
     insert: mocks.insert,
   },
 }));
-vi.mock("bcryptjs", () => ({ default: { hash: vi.fn() } }));
+const credentialMocks = vi.hoisted(() => ({
+  hashNewPassword: vi.fn().mockResolvedValue("$argon2id$new"),
+  upsertCredentialAccount: vi.fn().mockResolvedValue(undefined),
+  revokeSessionsInTx: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock("@/server/utils/credentials", () => credentialMocks);
+const eventMocks = vi.hoisted(() => ({ afterPasswordWrite: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/server/utils/passwordEvents", () => eventMocks);
+// The effective-rank loader runs three queries; its real SQL is covered by the PGlite model tests.
+const rankMocks = vi.hoisted(() => ({ loadTargetEffectiveRank: vi.fn(async (_id: string, sessionRole: string | null) => sessionRole ?? "") }));
+vi.mock("@/server/utils/auth", () => rankMocks);
 
 import { PATCH } from "../route";
 
@@ -94,7 +104,7 @@ const systemCaller = { id: "system-1", role: "SYSTEM" };
  */
 function queueRoleUpdate(role: string) {
   selectQueue = [
-    [{ id: "student-1", schoolId: "school-a" }],
+    [{ id: "student-1", schoolId: "school-a", role: "STUDENT" }],
     [{ id: "role-1", name: role }],
     [
       {
@@ -129,7 +139,7 @@ describe("PATCH /api/users/[id] role rank check", () => {
 
   it("blocks an ADMIN from assigning SYSTEM with the rank error", async () => {
     mocks.currentUser.mockResolvedValue(adminCaller);
-    selectQueue = [[{ id: "student-1", schoolId: "school-a" }]];
+    selectQueue = [[{ id: "student-1", schoolId: "school-a", role: "STUDENT" }]];
 
     const { request, context } = patchRequest("student-1", { role: "SYSTEM" });
     const response = await PATCH(request, context);
@@ -167,10 +177,56 @@ describe("PATCH /api/users/[id] role rank check", () => {
     },
   );
 
+  it("refuses to demote a co-admin whose legacy admin row hides its rank (M-1)", async () => {
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    selectQueue = [
+      [{ id: "co-admin", schoolId: "school-a", role: "TEACHER" }],
+    ];
+    // The loader folds the legacy admin row into the current effective rank.
+    rankMocks.loadTargetEffectiveRank.mockResolvedValueOnce("ADMIN");
+
+    const { request, context } = patchRequest("co-admin", { role: "TEACHER" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(403);
+    expect(mocks.transaction).not.toHaveBeenCalled();
+  });
+
+  it("hashes a new password with argon2 and mirrors it to the credential account", async () => {
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    selectQueue = [
+      [{ id: "student-1", schoolId: "school-a", role: "STUDENT" }],
+      [
+        {
+          id: "student-1",
+          name: "Old Name",
+          email: "old@example.com",
+          xp: 10,
+          level: 3,
+          cefrLevel: "B1",
+        },
+      ],
+      [],
+    ];
+
+    const { request, context } = patchRequest("student-1", {
+      password: "new-password-1",
+    });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(200);
+    expect(credentialMocks.hashNewPassword).toHaveBeenCalledWith("new-password-1");
+    expect(credentialMocks.upsertCredentialAccount).toHaveBeenCalledWith(
+      expect.anything(),
+      "student-1",
+      "$argon2id$new",
+    );
+  });
+
   it("lets a SYSTEM caller assign SYSTEM", async () => {
     mocks.currentUser.mockResolvedValue(systemCaller);
     selectQueue = [
-      [{ id: "student-1", schoolId: null }],
+      [{ id: "student-1", schoolId: null, role: "STUDENT" }],
       [{ id: "role-1", name: "SYSTEM" }],
       [
         {
@@ -225,5 +281,85 @@ describe("PATCH /api/users/[id] role rank check", () => {
     });
     expect(mocks.select).not.toHaveBeenCalled();
     expect(mocks.transaction).not.toHaveBeenCalled();
+  });
+});
+
+describe("PATCH /api/users/[id] password target rank (H1)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    selectQueue = [];
+    mocks.select.mockImplementation(() => chain(selectQueue.shift() ?? []));
+    mocks.update.mockReturnValue({
+      set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) }),
+    });
+    mocks.transaction.mockImplementation(
+      async (fn: (tx: unknown) => unknown) => fn(rawDb),
+    );
+  });
+
+  it.each([
+    ["ADMIN", "school-a"],
+    ["SYSTEM", "school-a"],
+  ])("blocks an ADMIN from setting the password of a same-school %s", async (role, schoolId) => {
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    selectQueue = [[{ id: "victim", schoolId, role }]];
+
+    const { request, context } = patchRequest("victim", { password: "Takeover-pass-1" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(403);
+    expect(credentialMocks.hashNewPassword).not.toHaveBeenCalled();
+    expect(credentialMocks.upsertCredentialAccount).not.toHaveBeenCalled();
+    expect(mocks.transaction).not.toHaveBeenCalled();
+  });
+
+  it("blocks a SYSTEM caller from setting another SYSTEM password", async () => {
+    mocks.currentUser.mockResolvedValue(systemCaller);
+    selectQueue = [[{ id: "victim", schoolId: null, role: "SYSTEM" }]];
+
+    const { request, context } = patchRequest("victim", { password: "Takeover-pass-1" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(403);
+    expect(credentialMocks.upsertCredentialAccount).not.toHaveBeenCalled();
+  });
+});
+
+describe("PATCH /api/users/[id] password events (M1)", () => {
+  it("revokes sessions and audits after a committed password change", async () => {
+    vi.clearAllMocks();
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    selectQueue = [
+      [{ id: "student-1", schoolId: "school-a", role: "STUDENT" }],
+      [{ id: "student-1", name: "N", email: "n@x.test", xp: 1, level: 1, cefrLevel: "A1" }],
+      [],
+    ];
+    mocks.select.mockImplementation(() => chain(selectQueue.shift() ?? []));
+    mocks.update.mockReturnValue({
+      set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) }),
+    });
+    mocks.transaction.mockImplementation(async (fn: (tx: unknown) => unknown) => fn(rawDb));
+
+    const { request, context } = patchRequest("student-1", { password: "new-password-1" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(200);
+    expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
+      userId: "student-1", actor: { id: "admin-1", role: "ADMIN" }, created: false, sessionsRevoked: true,
+    });
+  });
+});
+
+describe("PATCH /api/users/[id] effective target rank (M1)", () => {
+  it("refuses a password write when the target is a legacy admin with session STUDENT", async () => {
+    vi.clearAllMocks();
+    mocks.currentUser.mockResolvedValue({ id: "admin-1", role: "ADMIN", schoolId: "school-a" });
+    selectQueue = [[{ id: "owner-1", schoolId: "school-a", role: "STUDENT" }]];
+    mocks.select.mockImplementation(() => chain(selectQueue.shift() ?? []));
+    rankMocks.loadTargetEffectiveRank.mockResolvedValueOnce("ADMIN");
+    const { request, context } = patchRequest("owner-1", { password: "new-password-1" });
+    const response = await PATCH(request, context);
+    expect(response.status).toBe(403);
+    expect(credentialMocks.upsertCredentialAccount).not.toHaveBeenCalled();
   });
 });

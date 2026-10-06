@@ -28,7 +28,11 @@ vi.mock("@/lib/session", () => ({
 
 vi.mock("@reading-advantage/storage", () => ({ getStorageClient: () => ({}) }));
 
-vi.mock("@reading-advantage/db", () => ({ db: { connection: "primary" } }));
+vi.mock("@reading-advantage/db", async (importOriginal) => ({
+  // The real tables stay: the domain and auth modules register them when they load.
+  ...(await importOriginal<typeof import("@reading-advantage/db")>()),
+  db: { connection: "primary" },
+}));
 
 vi.mock("@reading-advantage/domain", () => ({
   createTenantDB: (...args: unknown[]) => mockCreateTenantDB(...args),
@@ -122,8 +126,8 @@ describe("Primary APK routes", () => {
     const readResponse = await GET_RPG();
     const equipResponse = await PATCH_RPG(completionRequest({ cosmeticId: "apprentice-wand" }));
 
-    expect(readResponse.status).toBe(200);
-    expect(equipResponse.status).toBe(200);
+    expect(readResponse?.status).toBe(200);
+    expect(equipResponse?.status).toBe(200);
     expect(mockGetMyRpgState).toHaveBeenCalledWith(expect.objectContaining({
       db: { tenant: "school-1" },
       tenant: { schoolId: "school-1" },

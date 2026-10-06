@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RPG Skin Phase 1</title>
+<meta name="description" content="Phase 1 of the Primary Advantage RPG skin: the scene system, the student shell, and the home page in the guild hall, captured from the running app.">
+<style>
+:root{--ink:#1f2933;--muted:#52606d;--brand:#0e7490;--soft:#ecfeff;--line:#e4e7eb;--bg:#fff;--card:#f8fafc}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}}
+:root[data-theme="dark"]{--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,"Noto Sans Thai",system-ui,sans-serif}
+header{background:var(--soft);padding:32px 16px;border-bottom:1px solid var(--line)} .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+h1{margin:0 0 8px;font-size:clamp(26px,4vw,36px)} h2{font-size:22px;margin:40px 0 8px} h3{font-size:17px;margin:20px 0 6px} p{margin:0 0 10px;max-width:75ch} .lead{color:var(--muted);font-size:17px}
+.page{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0} .page h2{margin-top:0}
+.row{display:grid;grid-template-columns:1fr;gap:16px} @media (min-width:900px){.row{grid-template-columns:300px 300px 1fr}}
+figure{margin:0} figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;display:block;background:#111} figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.rules{background:var(--card);border-left:4px solid var(--brand);padding:12px 16px;border-radius:8px;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:14px} th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top} code{font-size:13px}
+a{color:var(--brand)}
+</style></head><body>
+<header><div class="wrap"><h1>Primary Advantage RPG skin: Phase 1 for review</h1>
+<p class="lead">6 October 2026. The scene system, the student shell, and the home page in the guild hall are app code now. The captures below come from the running app with the QA student, at 375 px and 1280 px, in day and night mode.</p></div></header>
+<main class="wrap">
+<div class="rules"><p><strong>What changed.</strong> Every student page now sits in the Chibi Quest world: a wooden header with the coin purse and the XP gem, a signpost of planks on desktop, a wooden toolbar with Forge icons on phones, and a fixed Forge backdrop behind the page. The home page is the first page on the new look.</p>
+<p><strong>The 2D and 3D switch.</strong> The switch is new. One setting in the play kit (<code>@reading-advantage/advantage-play-kit/responsive</code>, localStorage key <code>chibi-quest</code>) serves the ported games and the pages. A device without WebGL2, or a page opened with <code>?renderer=phaser</code>, gets the 2D view. Phase 1 has no 3D view yet; the hero on the home page is the 2D portrait.</p>
+<p><strong>Assets.</strong> Every picture comes from advantage-forge. The Forge session owns the rebuild of <code>apps/primary-advantage/public/rpg/</code> and syncs it after this commit. No ElvGames asset is on any student page.</p></div>
+
+<article class="page"><h2>Home in the guild hall</h2>
+<p>The hero at the quest board with the day streak, the XP, and the level on plaques. The Class Quest banner with the boss when a quest is open. The class book and the reading as pinned notices. The arena door, the Reedy campfire, and the hall of fame.</p>
+<h3>Day</h3>
+<div class="row"><figure><img src="captures/home-phone.png" alt="Home, phone, first screen, day" loading="lazy"><figcaption>Phone, 375 px, first screen</figcaption></figure>
+<figure><img src="captures/home-phone-2.png" alt="Home, phone, second screen, day" loading="lazy"><figcaption>Phone, one screen down</figcaption></figure>
+<figure><img src="captures/home-desktop.png" alt="Home, desktop, day" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div>
+<h3>Night</h3>
+<div class="row"><figure><img src="captures/home-phone-night.png" alt="Home, phone, first screen, night" loading="lazy"><figcaption>Phone, 375 px, first screen</figcaption></figure>
+<figure><img src="captures/home-phone-2-night.png" alt="Home, phone, second screen, night" loading="lazy"><figcaption>Phone, one screen down</figcaption></figure>
+<figure><img src="captures/home-desktop-night.png" alt="Home, desktop, night" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div>
+</article>
+
+<h2>The parts</h2>
+<table><thead><tr><th>Part</th><th>File</th><th>What it does</th></tr></thead><tbody>
+<tr><td>Scene</td><td><code>components/rpg/scene.tsx</code></td><td>Puts a page in one of the 13 places. The backdrop is a fixed WebP, phone or desktop by width, dimmed at night.</td></tr>
+<tr><td>Chrome</td><td><code>components/rpg/chrome.tsx</code>, <code>styles/rpg.css</code></td><td>Panel, Sign, Banner, Meter, Hearts, Coins, Gem, Plaque, Bubble, and the wood, gold, and iron buttons.</td></tr>
+<tr><td>Sprite</td><td><code>components/rpg/sprite.tsx</code></td><td>Plays a Forge sprite strip with CSS steps.</td></tr>
+<tr><td>Shell</td><td><code>components/rpg/toolbar.tsx</code>, <code>hud.tsx</code>, <code>components/shared/app-layout.tsx</code></td><td>The header HUD, the signpost, and the toolbar for the student area. Staff areas keep the old shell.</td></tr>
+<tr><td>Places and art</td><td><code>lib/rpg/places.ts</code></td><td>The place list, the backdrop paths, and the icon paths under <code>/rpg/</code>.</td></tr>
+<tr><td>Renderer</td><td><code>lib/rpg/renderer.ts</code>, <code>use-renderer.ts</code></td><td>Re-exports the shared 2D/3D selector from the play kit and gives pages a hook.</td></tr>
+<tr><td>Fonts</td><td><code>app/[locale]/layout.tsx</code></td><td>Fredoka and Mitr from <code>public/rpg/fonts/</code>. Mitr stays until the owner picks Mitr or Mali for Thai.</td></tr>
+</tbody></table>
+
+<h2>Checks</h2>
+<p>Vitest: 8 files, 55 tests pass in the touched suites. The play kit renderer tests pass. ESLint on the changed files reports 0 errors and 1 pre-existing warning. The app type check runs before the commit.</p>
+
+<h2>Next</h2>
+<p>Phase 2: the avatar picker in the shrine, the paper-doll inventory with the paged drawer, and the armory shop with the blacksmith. These wait for the Forge item views, the hero fronts, and the NPC strips from the Forge build.</p>
+</main>
+<footer class="wrap"><p style="color:var(--muted);font-size:13px;padding:24px 0">Track primary_rpg_skin_20261006 on lane-f. <a href="../phase0/index.html">Phase 0 report</a> · <a href="../spec.md">spec.md</a> · <a href="../plan.md">plan.md</a> · <a href="../../../../docs/primary-rpg-skin.md">docs/primary-rpg-skin.md</a></p></footer>
+</body></html>

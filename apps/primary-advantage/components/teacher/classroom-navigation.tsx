@@ -1,296 +1,73 @@
 "use client";
 
-import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import {
-  ChevronDown,
-  Users,
-  UserPlus,
-  BarChart3,
-  Settings,
-  ArrowLeft,
-  GraduationCap,
-  Copy,
-  Lock,
-  Eye,
-  EyeOff,
-} from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
-import { copyToClipboardWithMeta } from "@/components/ui/copy-button";
+import { ArrowLeft, BarChart3, Mic, Settings, Smile } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { TEACHER_ACTION, TEACHER_BACK_LINK, TeacherPageHeader } from "./teacher-shell";
 
+/** Props of {@link ClassroomNavigation}. */
 interface ClassroomNavigationProps {
+  /** The class shown on the page. */
   classroom: {
     id: string;
     name: string;
     grade?: string;
-    classCode?: string;
-    passwordStudents?: string;
     studentCount: number;
   };
+  /** Shows the link back to the class list. */
   showBackButton?: boolean;
 }
 
-export default function ClassroomNavigation({
-  classroom,
-  showBackButton = true,
-}: ClassroomNavigationProps) {
-  const router = useRouter();
+/**
+ * Heading of the teacher class page: a link back to the class list, the class name (h1), the
+ * student count and grade, and links to the class reports and the class settings. Every link is
+ * a real link (keyboard and new tab work) with a 44 px tap target.
+ * @param props The class and the back link switch.
+ * @returns The class page header.
+ */
+export default function ClassroomNavigation({ classroom, showBackButton = true }: ClassroomNavigationProps) {
   const t = useTranslations("Teacher.ClassroomNavigation");
-  const tComponents = useTranslations("Components");
-  const [showPassword, setShowPassword] = useState(false);
-
-  const navigationItems = [
-    {
-      label: t("nav.classRoster"),
-      icon: Users,
-      href: `/teacher/class-roster/${classroom.id}`,
-      current: true,
-    },
-    // {
-    //   label: "Enrollment",
-    //   icon: UserPlus,
-    //   href: `/teacher/class-roster/${classroom.id}/enrollment`,
-    // },
-    {
-      label: t("nav.reports"),
-      icon: BarChart3,
-      href: `/teacher/reports?classroomId=${classroom.id}`,
-    },
-    {
-      label: t("nav.settings"),
-      icon: Settings,
-      href: `/teacher/my-classes?edit=${classroom.id}`,
-    },
-  ];
-
-  const handleNavigation = (href: string) => {
-    router.push(href);
-  };
-
-  const handleBackToClassrooms = () => {
-    router.push("/teacher/class-roster");
-  };
-
-  const handleCopyCode = async () => {
-    if (!classroom.classCode) return;
-
-    try {
-      await copyToClipboardWithMeta(classroom.classCode);
-      toast.success(t("toast.copyClassCodeSuccess"));
-    } catch (error) {
-      console.error("Failed to copy class code:", error);
-      toast.error(t("toast.copyClassCodeError"));
-    }
-  };
-
-  const handleCopyPassword = async () => {
-    if (!classroom.passwordStudents) return;
-
-    try {
-      await copyToClipboardWithMeta(classroom.passwordStudents);
-      toast.success(t("toast.copyPasswordSuccess"));
-    } catch (error) {
-      console.error("Failed to copy password:", error);
-      toast.error(t("toast.copyPasswordError"));
-    }
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const getPasswordDisplay = () => {
-    if (!classroom.passwordStudents) {
-      return t("password.noPassword");
-    }
-    return showPassword ? classroom.passwordStudents : "••••••••";
-  };
+  const action = cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION, "px-4");
 
   return (
-    <Card className="border-b">
-      <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-        {/* Left side - Classroom info */}
-        <div className="flex items-center gap-4">
-          {showBackButton && (
-            <Button
-              onClick={handleBackToClassrooms}
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 sm:hidden"
-              aria-label={t("actions.backToClassrooms")}
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          )}
-
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
-              <GraduationCap className="h-5 w-5 text-blue-600" />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <h1 className="truncate text-lg font-semibold sm:text-xl">
-                {classroom.name}
-              </h1>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span>
-                  {t("info.students", { count: classroom.studentCount })}
-                </span>
-                {classroom.grade && (
-                  <>
-                    <span>•</span>
-                    <span>{t("info.grade", { grade: classroom.grade })}</span>
-                  </>
-                )}
-                {classroom.classCode && (
-                  <Badge
-                    onClick={handleCopyCode}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        handleCopyCode();
-                      }
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    variant="outline"
-                    className="ml-2 cursor-pointer text-xs"
-                  >
-                    {t("info.classCode")} {classroom.classCode}
-                  </Badge>
-                )}
-                <div className="flex items-center gap-1">
-                  <Badge variant="outline" className="ml-2 text-xs">
-                    {t("password.label")} {getPasswordDisplay()}
-                  </Badge>
-                  {classroom.passwordStudents && (
-                    <>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="ghost"
-                        className="size-6 p-0"
-                        onClick={togglePasswordVisibility}
-                        title={
-                          showPassword ? t("password.hide") : t("password.show")
-                        }
-                        aria-label={
-                          showPassword ? t("password.hide") : t("password.show")
-                        }
-                      >
-                        {showPassword ? (
-                          <EyeOff className="size-3" />
-                        ) : (
-                          <Eye className="size-3" />
-                        )}
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="ghost"
-                        className="size-6 p-0"
-                        onClick={handleCopyPassword}
-                        title={t("password.copy")}
-                        aria-label={t("password.copy")}
-                      >
-                        <Copy className="size-3" />
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right side - Navigation menu */}
-        <div className="flex items-center gap-2">
-          {/* Desktop navigation */}
-          <div className="hidden space-x-1 sm:flex">
-            {navigationItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Button
-                  key={item.href}
-                  onClick={() => handleNavigation(item.href)}
-                  variant={item.current ? "default" : "ghost"}
-                  size="sm"
-                  className="gap-2"
-                  aria-label={item.label}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span className="hidden lg:block">{item.label}</span>
-                </Button>
-              );
-            })}
-          </div>
-
-          {/* Mobile dropdown menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2 sm:hidden"
-                aria-label={tComponents("openActionsMenu")}
-              >
-                <Users className="h-4 w-4" />
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              {navigationItems.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <React.Fragment key={item.href}>
-                    <DropdownMenuItem
-                      onClick={() => handleNavigation(item.href)}
-                      className="gap-2"
-                    >
-                      <Icon className="h-4 w-4" />
-                      {item.label}
-                    </DropdownMenuItem>
-                    {index === 1 && <DropdownMenuSeparator />}
-                  </React.Fragment>
-                );
-              })}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={handleBackToClassrooms}
-                className="gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                {t("actions.backToClassrooms")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Desktop back button */}
-          {showBackButton && (
-            <Button
-              onClick={handleBackToClassrooms}
-              variant="outline"
-              size="sm"
-              className="hidden gap-2 sm:flex"
-              aria-label={t("actions.back")}
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden lg:block">{t("actions.back")}</span>
-            </Button>
-          )}
-        </div>
-      </div>
-    </Card>
+    <TeacherPageHeader
+      back={
+        showBackButton ? (
+          <Link href="/teacher/class-roster" className={TEACHER_BACK_LINK}>
+            <ArrowLeft aria-hidden="true" />
+            {t("actions.backToClassrooms")}
+          </Link>
+        ) : undefined
+      }
+      title={classroom.name}
+      description={
+        <span className="flex flex-wrap gap-x-3">
+          <span>{t("info.students", { count: classroom.studentCount })}</span>
+          {classroom.grade ? <span>{t("info.grade", { grade: classroom.grade })}</span> : null}
+        </span>
+      }
+      actions={
+        <>
+          <Link href={`/teacher/reports?classroomId=${classroom.id}`} className={action}>
+            <BarChart3 aria-hidden="true" />
+            {t("nav.reports")}
+          </Link>
+          <Link href={`/teacher/class-roster/${classroom.id}/reedy`} className={action}>
+            <Mic aria-hidden="true" />
+            {t("nav.reedy")}
+          </Link>
+          <Link href={`/teacher/class-roster/${classroom.id}/avatars`} className={action}>
+            <Smile aria-hidden="true" />
+            {t("nav.avatars")}
+          </Link>
+          <Link href={`/teacher/my-classes?edit=${classroom.id}`} className={action}>
+            <Settings aria-hidden="true" />
+            {t("nav.settings")}
+          </Link>
+        </>
+      }
+    />
   );
 }

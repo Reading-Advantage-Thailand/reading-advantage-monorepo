@@ -16,6 +16,14 @@
       "types": "./dist/assignments/index.d.ts",
       "import": "./dist/assignments/index.js"
     },
+    "./assignments/due-date": {
+      "types": "./dist/assignments/due-date.d.ts",
+      "import": "./dist/assignments/due-date.js"
+    },
+    "./calendar-day": {
+      "types": "./dist/calendar-day.d.ts",
+      "import": "./dist/calendar-day.js"
+    },
     "./classes": {
       "types": "./dist/classes/index.d.ts",
       "import": "./dist/classes/index.js"
@@ -27,6 +35,22 @@
     "./reports": {
       "types": "./dist/reports/index.d.ts",
       "import": "./dist/reports/index.js"
+    },
+    "./primary-home": {
+      "types": "./dist/primary-home/index.d.ts",
+      "import": "./dist/primary-home/index.js"
+    },
+    "./primary-home/streak": {
+      "types": "./dist/primary-home/streak.d.ts",
+      "import": "./dist/primary-home/streak.js"
+    },
+    "./primary-books": {
+      "types": "./dist/primary-books/index.d.ts",
+      "import": "./dist/primary-books/index.js"
+    },
+    "./primary-books/step-map": {
+      "types": "./dist/primary-books/step-map.d.ts",
+      "import": "./dist/primary-books/step-map.js"
     },
     "./students": {
       "types": "./dist/students/index.d.ts",
@@ -119,25 +143,45 @@
     "./challenges": {
       "types": "./dist/challenges/index.d.ts",
       "import": "./dist/challenges/index.js"
+    },
+    "./primary-avatar": {
+      "types": "./dist/primary-avatar/index.d.ts",
+      "import": "./dist/primary-avatar/index.js"
+    },
+    "./primary-quest": {
+      "types": "./dist/primary-quest/index.d.ts",
+      "import": "./dist/primary-quest/index.js"
+    },
+    "./primary-quest/rules": {
+      "types": "./dist/primary-quest/rules.d.ts",
+      "import": "./dist/primary-quest/rules.js"
+    },
+    "./primary-voice": {
+      "types": "./dist/primary-voice/index.d.ts",
+      "import": "./dist/primary-voice/index.js"
     }
   },
   "scripts": {
     "build": "tsc",
     "lint": "eslint .",
     "prepare:english-answer-speech": "tsx scripts/prepare-wizard-speech.ts",
+    "import-lesson-packages": "tsx scripts/import-lesson-packages.ts",
+    "import-lesson-guides": "tsx scripts/import-lesson-guides.ts",
     "test": "vitest run",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@reading-advantage/activity-runtime": "workspace:*",
     "@reading-advantage/activity-tutorial": "workspace:*",
+    "@reading-advantage/ai": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
+    "@reading-advantage/avatar-kit": "workspace:*",
     "@reading-advantage/codecamp-knowledge": "workspace:*",
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/game-contracts": "workspace:*",
     "@reading-advantage/integrations-github": "workspace:*",
-    "@reading-advantage/srs-engine": "workspace:*",
     "@reading-advantage/sales-knowledge": "workspace:*",
+    "@reading-advantage/srs-engine": "workspace:*",
     "@reading-advantage/types": "workspace:*",
     "drizzle-orm": "^0.45.0",
     "zod": "catalog:"

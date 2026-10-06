@@ -1,34 +1,40 @@
-import { MainNav } from "@/components/nav/main-nav";
 import { UserAccountNav } from "@/components/nav/user-account-nav";
-import { SidebarNav } from "@/components/nav/sidebar-nav";
-import { MainNavItem, SidebarNavItem } from "@/types";
-import { cn } from "@/lib/utils";
+import { AppBrand, AppSidebar, BottomNav, MobileMenu } from "@/components/nav/app-nav";
 import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
+import { SoundToggle } from "@/components/switchers/sound-toggle";
+import { SoundProvider } from "@/hooks/use-sound";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
+import { SkipLink } from "@/components/shared/skip-link";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
-import Leaderboard from "../leaderboard";
+import { areaForRole, type NavArea } from "@/lib/nav-area";
 import { getLocale } from "next-intl/server";
-import { getSchoolLeaderboardController } from "@/server/controllers/schoolController";
+import { Signpost, Toolbar } from "@/components/rpg/toolbar";
+import { StudentHud } from "@/components/rpg/hud";
 
 interface AppLayoutProps {
   children?: React.ReactNode;
-  mainNavConfig: MainNavItem[];
-  sidebarNavConfig?: SidebarNavItem[];
-  disableSidebar?: boolean;
-  disableLeaderboard?: boolean;
+  /** The nav area. When omitted (shared pages such as settings) it follows the user role. */
+  area?: NavArea;
+  /** True on settings pages: staff also get the settings links in the menu. */
+  settings?: boolean;
 }
 
+/** Props of the area layouts that wrap AppLayout. */
 export interface BaseAppLayoutProps {
   children?: React.ReactNode;
 }
 
+/**
+ * Renders the signed-in shell: the header, one role navigation (sidebar from 1024 px,
+ * bottom bar below), and the page content. Signed-out visitors go to the sign-in page.
+ * @param props The page content, the nav area, and the settings flag.
+ * @returns The shell.
+ */
 export default async function AppLayout({
   children,
-  mainNavConfig,
-  sidebarNavConfig,
-  disableSidebar = false,
-  disableLeaderboard = false,
+  area,
+  settings = false,
 }: AppLayoutProps) {
   const user = await getCurrentUser();
   const locale = await getLocale();
@@ -38,54 +44,83 @@ export default async function AppLayout({
     return redirect({ href: "/auth/signin", locale });
   }
 
-  let leaderboardData: any | null = null;
+  const navArea = area ?? areaForRole(user.role);
 
-  if (user.role === "STUDENT" && user.schoolId) {
-    const leaderboard = await getSchoolLeaderboardController(
-      user.schoolId,
-      user.id,
+  // The student shell is the Chibi Quest world (docs/primary-rpg-skin.md): a wooden header with
+  // the HUD, the signpost on desktop, the toolbar on phones, and the page's own scene behind.
+  if (navArea === "student") {
+    return (
+      <SoundProvider userId={user.id}>
+        <div className="cq-world flex min-h-screen flex-col">
+          <SkipLink />
+          <header className="cq-header sticky top-0 z-40">
+            <div className="container flex h-16 items-center justify-between gap-2">
+              <div className="flex items-center gap-1">
+                <MobileMenu area={navArea} user={user} settings={settings} />
+                <div className="max-sm:[&_span]:hidden">
+                  <AppBrand area={navArea} />
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-1 sm:gap-2">
+                <StudentHud user={user} />
+                <LocaleSwitcher />
+                <SoundToggle />
+                <ThemeToggle />
+                <UserAccountNav user={user} />
+              </div>
+            </div>
+          </header>
+          <div className="container flex flex-1 gap-8 pt-5">
+            <div className="relative z-10 hidden lg:block lg:w-[230px] lg:shrink-0">
+              <div className="sticky top-22">
+                <Signpost user={user} />
+              </div>
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-6 pb-[calc(var(--bottom-nav-h)+2rem)] lg:pb-8">
+              <main id="main-content" tabIndex={-1} className="flex w-full min-w-0 flex-1 flex-col outline-none">
+                {children}
+              </main>
+            </div>
+          </div>
+          <Toolbar user={user} />
+        </div>
+      </SoundProvider>
     );
-    if (leaderboard?.success) {
-      leaderboardData = leaderboard?.data;
-    }
   }
 
   return (
-    <div className="flex min-h-screen flex-col space-y-6">
-      <header className="bg-background sticky top-0 z-40 border-b">
-        <div className="container flex h-16 items-center justify-between">
-          <MainNav items={mainNavConfig} />
+    <SoundProvider userId={user.id}>
+    <div className="flex min-h-screen flex-col">
+      <SkipLink />
+      <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur">
+        <div className="container flex h-16 items-center justify-between gap-2">
+          <div className="flex items-center gap-1">
+            <MobileMenu area={navArea} user={user} settings={settings} />
+            <AppBrand area={navArea} />
+          </div>
           <div className="flex items-center justify-center gap-2">
             <LocaleSwitcher />
+            <SoundToggle />
             <ThemeToggle />
             <UserAccountNav user={user} />
           </div>
         </div>
       </header>
-      <div
-        className={cn(
-          "container",
-          disableSidebar
-            ? "flex flex-1 gap-12"
-            : "flex-1 flex flex-col gap-4 lg:flex-row",
-        )}
-      >
-        {!disableSidebar && (
-          <aside className="lg:flex lg:w-[230px] lg:flex-col">
-            <SidebarNav items={sidebarNavConfig || []} user={user} />
-            {!disableLeaderboard && user.role === "STUDENT" && user.schoolId ? (
-              <Leaderboard
-                data={leaderboardData?.results || []}
-                schoolName={leaderboardData?.schoolName || ""}
-                userId={user.id}
-              />
-            ) : null}
-          </aside>
-        )}
-        <main className="flex w-full flex-1 flex-col overflow-hidden">
-          {children}
-        </main>
+      <div className="container flex flex-1 gap-8 pt-6">
+        <div className="hidden lg:block lg:w-[230px] lg:shrink-0">
+          <div className="sticky top-22">
+            <AppSidebar area={navArea} user={user} settings={settings} />
+          </div>
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-6 pb-[calc(var(--bottom-nav-h)+2rem)] lg:pb-8">
+          {/* No overflow-hidden: wide tables scroll inside their own container. */}
+          <main id="main-content" tabIndex={-1} className="flex w-full min-w-0 flex-1 flex-col outline-none">
+            {children}
+          </main>
+        </div>
       </div>
+      <BottomNav area={navArea} user={user} />
     </div>
+    </SoundProvider>
   );
 }

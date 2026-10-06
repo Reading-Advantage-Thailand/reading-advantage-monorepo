@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "../ui/label";
+import { Label } from "@reading-advantage/ui";
 import { PlusIcon } from "lucide-react";
 import { generateRandomClassCode } from "@/lib/utils";
 
@@ -97,7 +97,7 @@ export default function CreateNewClass({
     <div className="max-w-sm">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">
+          <Button className="min-h-11">
             <PlusIcon className="size-4" />
             &nbsp; {buttonText || t("button.newClassroom")}
           </Button>

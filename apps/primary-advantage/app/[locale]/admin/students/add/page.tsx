@@ -1,11 +1,10 @@
 "use client";
 
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator, Label } from "@reading-advantage/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -29,11 +28,17 @@ import { useRouter } from "@/i18n/navigation";
 import { Eye, EyeOff, User, Mail, Lock, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { SchoolSelect } from "@/components/admin/school-select";
+import { useSession } from "@reading-advantage/auth-client";
 
 export default function AddStudentPage() {
   const t = useTranslations("Admin.Students.Add");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const { user } = useSession();
+  const isSystem = user?.role === "SYSTEM";
+  const tSchool = useTranslations("Admin.SchoolSelect");
+  const [schoolId, setSchoolId] = useState("");
 
   const studentFormSchema = z.object({
     name: z.string().min(2, t("errors.nameMin")).max(100, t("errors.nameMax")),
@@ -51,6 +56,10 @@ export default function AddStudentPage() {
   });
 
   const onSubmit = async (data: StudentFormData) => {
+    if (isSystem && !schoolId) {
+      toast.error(tSchool("required"));
+      return;
+    }
     setIsSubmitting(true);
     try {
       const response = await fetch("/api/students", {
@@ -61,6 +70,7 @@ export default function AddStudentPage() {
         body: JSON.stringify({
           name: data.name,
           email: data.email,
+          ...(isSystem ? { schoolId } : {}),
         }),
       });
 
@@ -123,6 +133,10 @@ export default function AddStudentPage() {
                         </FormItem>
                       )}
                     />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <SchoolSelect value={schoolId} onChange={setSchoolId} />
                   </div>
 
                   {/* Email */}

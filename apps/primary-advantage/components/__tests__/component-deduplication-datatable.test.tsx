@@ -6,7 +6,7 @@
  * runtime that the table delegates to the one DataTable shell.
  */
 import "@testing-library/jest-dom/vitest";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { pushMock, fetchMock, toastMock } = vi.hoisted(() => ({
@@ -68,10 +68,7 @@ vi.mock("../ui/data-table", () => ({
   ),
 }));
 
-import type { AssignmentStudent } from "../student-assignment-table";
-import { HistoryTable } from "../dashboard/history-table";
 import Assignments from "../teacher/assignments";
-import StudentAssignmentTable from "../student-assignment-table";
 import MyStudents from "../teacher/my-students";
 import MyClasses from "../teacher/my-classes";
 import LicenseTable from "../system/license-table";
@@ -94,7 +91,6 @@ beforeEach(() => {
               classCode: "ABC123",
               grade: "1",
               students: [],
-              importedFromGoogle: false,
             },
           ],
         }),
@@ -191,86 +187,20 @@ afterEach(() => {
  * @param count Rows the table hands to the shell.
  */
 async function expectShellRows(count: number): Promise<void> {
-  const shells = await screen.findAllByTestId("shared-data-table");
-  expect(
-    shells.some((shell) => shell.getAttribute("data-rows") === String(count)),
-  ).toBe(true);
+  // Waits for the fetched rows: a table can first render the shell empty (the teacher
+  // assignments open the first class after the class list loads).
+  await waitFor(() => {
+    const shells = screen.getAllByTestId("shared-data-table");
+    expect(
+      shells.some((shell) => shell.getAttribute("data-rows") === String(count)),
+    ).toBe(true);
+  });
 }
 
 describe("live tables through one DataTable shell", () => {
-  it("serves history rows through the shell", async () => {
-    renderWithMessages(<HistoryTable variant="history" />);
-    await expectShellRows(2);
-  });
-
   it("serves teacher assignments through the shell", async () => {
     renderWithMessages(<Assignments />);
     await expectShellRows(1);
-  });
-
-  it("serves student assignments through the shell", async () => {
-    const initialAssignments: AssignmentStudent[] = [
-      {
-        id: "row-1",
-        studentId: "user-1",
-        status: "IN_PROGRESS",
-        score: null,
-        startedAt: null,
-        assignmentId: "a1",
-        createdAt: new Date(0).toISOString(),
-        completedAt: null,
-        assignment: {
-          id: "a1",
-          classroomId: "c1",
-          articleId: "article-1",
-          lessonId: null,
-          title: "Assign One",
-          type: "lesson",
-          description: null,
-          dueDate: null,
-          createdAt: new Date(0).toISOString(),
-          teacherId: "teacher-1",
-          teacherName: "Teacher",
-        },
-      },
-      {
-        id: "row-2",
-        studentId: "user-1",
-        status: "COMPLETED",
-        score: 90,
-        startedAt: null,
-        assignmentId: "a2",
-        createdAt: new Date(0).toISOString(),
-        completedAt: new Date(0).toISOString(),
-        assignment: {
-          id: "a2",
-          classroomId: "c1",
-          articleId: "article-2",
-          lessonId: null,
-          title: "Assign Two",
-          type: "lesson",
-          description: null,
-          dueDate: null,
-          createdAt: new Date(0).toISOString(),
-          teacherId: "teacher-1",
-          teacherName: "Teacher",
-        },
-      },
-    ];
-    renderWithMessages(
-      <StudentAssignmentTable
-        initialAssignments={initialAssignments}
-        initialPagination={{
-          currentPage: 1,
-          totalPages: 1,
-          totalCount: 2,
-          hasNextPage: false,
-          hasPrevPage: false,
-          limit: 10,
-        }}
-      />,
-    );
-    await expectShellRows(2);
   });
 
   it("serves the student roster through the shell", async () => {

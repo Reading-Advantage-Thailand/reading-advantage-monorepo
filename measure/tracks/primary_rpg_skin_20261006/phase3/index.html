@@ -1,0 +1,74 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RPG Skin Phase 3</title>
+<meta name="description" content="Phase 3 of the Primary Advantage RPG skin: the Class Quest battle in the boss arena and the projector dashboard on the battle field, captured from the running app.">
+<style>
+:root{--ink:#1f2933;--muted:#52606d;--brand:#0e7490;--soft:#ecfeff;--line:#e4e7eb;--bg:#fff;--card:#f8fafc}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}}
+:root[data-theme="dark"]{--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,"Noto Sans Thai",system-ui,sans-serif}
+header{background:var(--soft);padding:32px 16px;border-bottom:1px solid var(--line)} .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+h1{margin:0 0 8px;font-size:clamp(26px,4vw,36px)} h2{font-size:22px;margin:40px 0 8px} h3{font-size:17px;margin:20px 0 6px} p{margin:0 0 10px;max-width:75ch} .lead{color:var(--muted);font-size:17px}
+.page{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0} .page h2{margin-top:0}
+.row{display:grid;grid-template-columns:1fr;gap:16px} @media (min-width:900px){.row{grid-template-columns:300px 300px 1fr}}
+figure{margin:0} figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;display:block;background:#111} figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.rules{background:var(--card);border-left:4px solid var(--brand);padding:12px 16px;border-radius:8px;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:14px} th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top} code{font-size:13px}
+a{color:var(--brand)}
+</style></head><body>
+<header><div class="wrap"><h1>Primary Advantage RPG skin: Phase 3 for review</h1>
+<p class="lead">6 October 2026. The Class Quest battle and the projector dashboard are on the new look. The captures come from the running app with a staged quest for the QA class, at 375 px and 1280 px, in day and night mode.</p></div></header>
+<main class="wrap">
+<div class="rules"><p><strong>What changed.</strong> The battle page is the boss arena: the boss idles on the dais as a Forge sprite, its damage meter sits in the wood-and-iron frame with the pending segment, the hero stands on parchment with five hearts and the HP bar, the relics glow when armed, and the game runs inside a stone archway. A hit shakes the boss with a slash, a burst, and a floating number. The result is a sign: the fall plays the death clip and coins rain; a hold shows the boss standing.</p>
+<p><strong>The projector dashboard</strong> is the battle field: the boss east, every hero west with a name and an HP bar, the big meter on top with the clock and the state sign, the hit feed on parchment, and one gold button for the teacher. A new hit makes the hero lunge and the boss play its hit clip. The field is the 2D sprite field; the 3D field follows the games port and reads the same renderer switch.</p>
+<p><strong>What the captures cannot show yet.</strong> The committed damage comes from verified game completions, so a staged quest with heartbeats shows the pending segment and a held boss. The fall with the coin rain needs a real run; it is on the Phase 5 list with the promo shots. The game's own briefing card inside the archway keeps its dark look until the Forge session restyles it (spec row 12).</p></div>
+
+<article class="page"><h2>The battle, play state</h2>
+<p>The student has saved a run of 12 damage: the boss, the meter, the hero with four hearts, and the saved-hits notice. The second student has no run yet, so the game shows inside the archway.</p>
+<h3>Day</h3>
+<div class="row"><figure><img src="captures/battle-phone.png" alt="Battle, phone, after the run" loading="lazy"><figcaption>Phone, 375 px, after the run</figcaption></figure>
+<figure><img src="captures/arch-phone.png" alt="Battle, phone, the archway" loading="lazy"><figcaption>Phone, before the run: the archway</figcaption></figure>
+<figure><img src="captures/battle-desktop.png" alt="Battle, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div>
+<div class="row"><figure><img src="captures/arch-phone-2.png" alt="Battle, phone, the game in the archway" loading="lazy"><figcaption>Phone, one screen down: the game in the archway</figcaption></figure>
+<figure><img src="captures/arch-desktop.png" alt="Battle, desktop, the archway" loading="lazy"><figcaption>Desktop, before the run</figcaption></figure></div>
+<h3>Night</h3>
+<div class="row"><figure><img src="captures/battle-phone-night.png" alt="Battle, phone, night" loading="lazy"><figcaption>Phone</figcaption></figure>
+<figure><img src="captures/arch-phone-night.png" alt="Battle, phone, the archway, night" loading="lazy"><figcaption>Phone, the archway</figcaption></figure>
+<figure><img src="captures/battle-desktop-night.png" alt="Battle, desktop, night" loading="lazy"><figcaption>Desktop</figcaption></figure></div>
+</article>
+
+<article class="page"><h2>The battle, result state</h2>
+<p>The boss held: the sign on the dark panel with the final meter text.</p>
+<div class="row"><figure><img src="captures/result-phone.png" alt="Result, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/result-phone-night.png" alt="Result, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/result-desktop.png" alt="Result, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div>
+</article>
+
+<article class="page"><h2>The projector dashboard</h2>
+<p>Three students present, one with an avatar; the boss on the right; the hit feed empty because no completion is committed; the gold button moves the battle on.</p>
+<h3>Play</h3>
+<div class="row"><figure><img src="captures/live-phone.png" alt="Dashboard, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/live-phone-2.png" alt="Dashboard, phone, second screen" loading="lazy"><figcaption>Phone, one screen down</figcaption></figure>
+<figure><img src="captures/live-desktop.png" alt="Dashboard, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div>
+<h3>Result, and night</h3>
+<div class="row"><figure><img src="captures/live-result-phone.png" alt="Dashboard result, phone" loading="lazy"><figcaption>Result, phone</figcaption></figure>
+<figure><img src="captures/live-desktop-night.png" alt="Dashboard, desktop, night" loading="lazy"><figcaption>Play, desktop, night</figcaption></figure>
+<figure><img src="captures/live-result-desktop.png" alt="Dashboard result, desktop" loading="lazy"><figcaption>Result, desktop</figcaption></figure></div>
+</article>
+
+<h2>The parts</h2>
+<table><thead><tr><th>Part</th><th>File</th><th>What it does</th></tr></thead><tbody>
+<tr><td>Boss sprite</td><td><code>components/quest/boss-sprite.tsx</code></td><td>Idle, hit, and death clips from the Forge strips; the shake, slash, burst, and floating number; a hook that turns a rise in damage into one hit beat.</td></tr>
+<tr><td>Battle</td><td><code>components/quest/battle-client.tsx</code></td><td>The arena layout, the hearts and the HP meter, the relic buttons, the archway, the result sign, the coin rain. The polling and the heartbeat logic are unchanged.</td></tr>
+<tr><td>Dashboard</td><td><code>components/quest/live-dashboard.tsx</code></td><td>The field with heroes and the boss, the lunge on a hit, the big meter, the feed, the gold control. The polling and the state control are unchanged.</td></tr>
+<tr><td>Pages</td><td><code>student/quest/battle/page.tsx</code>, <code>teacher/quest/[questId]/live/page.tsx</code></td><td>Wrap the clients in the boss-arena and arena scenes.</td></tr>
+<tr><td>Skin rules</td><td><code>styles/rpg.css</code></td><td>Clock, archway, boss box, field, hero cards, lunge, coin rain, shield glow.</td></tr>
+<tr><td>Clock</td><td>both clients</td><td>The countdown starts after mount, which removes a hydration mismatch the old pages had.</td></tr>
+</tbody></table>
+
+<h2>Checks</h2>
+<p>Vitest: 12 tests pass in the quest suites, unchanged. ESLint on the changed files reports 0 errors. The app type check passes.</p>
+
+<h2>Next</h2>
+<p>Phase 4: the remaining student pages (story list, story view, lesson path, class book, assignments, games arena, vocabulary, sentences, history, reports, Reedy, Me, sign-in). Then Phase 5: the five promo shots from a rehearsal class.</p>
+</main>
+<footer class="wrap"><p style="color:var(--muted);font-size:13px;padding:24px 0">Track primary_rpg_skin_20261006 on lane-f. <a href="../phase2/index.html">Phase 2 report</a> · <a href="../phase1/index.html">Phase 1 report</a> · <a href="../spec.md">spec.md</a> · <a href="../plan.md">plan.md</a></p></footer>
+</body></html>

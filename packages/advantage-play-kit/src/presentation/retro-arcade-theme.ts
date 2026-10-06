@@ -9,13 +9,18 @@ export const RETRO_ARCADE_UI_ASSETS = Object.freeze({
   squarePanel: `${STANDARD_UI_ROOT}/apk-ui-panel-square.png`,
 });
 
-/** Nine-slice panel frame that keeps the source corners intact. */
+/**
+ * Nine-slice panel frame that keeps the source corners intact. A host theme replaces the frame
+ * through CSS variables: `--apk-arcade-panel-image: none` with a border width and a radius gives
+ * a plain framed panel in the host's colours.
+ */
 export const RETRO_ARCADE_PANEL_STYLE: CSSProperties = Object.freeze({
-  border: "12px solid var(--apk-arcade-panel-fallback, #31577d)",
-  borderImageSource: `url("${RETRO_ARCADE_UI_ASSETS.squarePanel}")`,
+  border: "var(--apk-arcade-panel-border-width, 12px) solid var(--apk-arcade-panel-fallback, #31577d)",
+  borderImageSource: `var(--apk-arcade-panel-image, url("${RETRO_ARCADE_UI_ASSETS.squarePanel}"))`,
   borderImageSlice: "16",
-  borderImageWidth: "12px",
+  borderImageWidth: "var(--apk-arcade-panel-border-width, 12px)",
   borderImageRepeat: "stretch",
+  borderRadius: "var(--apk-arcade-panel-radius, 0)",
   boxSizing: "border-box",
   imageRendering: "pixelated",
 });
@@ -31,14 +36,15 @@ export function getRetroArcadeButtonStyle(
   const primary = emphasis === "primary";
   return {
     minBlockSize: "48px",
-    border: "8px solid var(--apk-arcade-button-fallback, #38bdf8)",
-    borderImageSource: `url("${primary
-      ? RETRO_ARCADE_UI_ASSETS.primaryButton
-      : RETRO_ARCADE_UI_ASSETS.secondaryButton}")`,
+    border: "var(--apk-arcade-button-border-width, 8px) solid var(--apk-arcade-button-fallback, #38bdf8)",
+    // A host theme replaces the sliced caps with `--apk-arcade-button-primary-image: none` (and the secondary one).
+    borderImageSource: primary
+      ? `var(--apk-arcade-button-primary-image, url("${RETRO_ARCADE_UI_ASSETS.primaryButton}"))`
+      : `var(--apk-arcade-button-secondary-image, url("${RETRO_ARCADE_UI_ASSETS.secondaryButton}"))`,
     borderImageSlice: primary ? "4 6 fill" : "4 6",
-    borderImageWidth: "8px 12px",
+    borderImageWidth: "var(--apk-arcade-button-border-width, 8px) var(--apk-arcade-button-border-inline-width, 12px)",
     borderImageRepeat: "stretch",
-    borderRadius: 0,
+    borderRadius: "var(--apk-arcade-button-radius, 0)",
     background: primary
       ? "var(--apk-arcade-primary-fallback, #22d3ee)"
       : "var(--apk-arcade-secondary-fallback, #081225)",

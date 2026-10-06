@@ -72,6 +72,8 @@ export enum QuestionState {
   INCOMPLETE = 1,
   COMPLETED = 2,
   ERROR = 3,
+  /** The article has no questions of this type (not an error: the article still shows). */
+  EMPTY = 4,
 }
 
 export enum AnswerStatus {

@@ -1,0 +1,464 @@
+{
+  "name": "@reading-advantage/game-cartridges-3d",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./potion-rush": {
+      "types": "./dist/potion-rush/index.d.ts",
+      "import": "./dist/potion-rush/index.js",
+      "default": "./dist/potion-rush/index.js"
+    },
+    "./potion-rush/manifest": {
+      "types": "./dist/potion-rush/manifest.d.ts",
+      "import": "./dist/potion-rush/manifest.js",
+      "default": "./dist/potion-rush/manifest.js"
+    },
+    "./potion-rush/strings": {
+      "types": "./dist/potion-rush/strings.en.d.ts",
+      "import": "./dist/potion-rush/strings.en.js",
+      "default": "./dist/potion-rush/strings.en.js"
+    },
+    "./dragon-flight": {
+      "types": "./dist/dragon-flight/index.d.ts",
+      "import": "./dist/dragon-flight/index.js",
+      "default": "./dist/dragon-flight/index.js"
+    },
+    "./dragon-flight/manifest": {
+      "types": "./dist/dragon-flight/manifest.d.ts",
+      "import": "./dist/dragon-flight/manifest.js",
+      "default": "./dist/dragon-flight/manifest.js"
+    },
+    "./dragon-flight/strings": {
+      "types": "./dist/dragon-flight/strings.en.d.ts",
+      "import": "./dist/dragon-flight/strings.en.js",
+      "default": "./dist/dragon-flight/strings.en.js"
+    },
+    "./dungeon-liberator": {
+      "types": "./dist/dungeon-liberator/index.d.ts",
+      "import": "./dist/dungeon-liberator/index.js",
+      "default": "./dist/dungeon-liberator/index.js"
+    },
+    "./dungeon-liberator/manifest": {
+      "types": "./dist/dungeon-liberator/manifest.d.ts",
+      "import": "./dist/dungeon-liberator/manifest.js",
+      "default": "./dist/dungeon-liberator/manifest.js"
+    },
+    "./dungeon-liberator/strings": {
+      "types": "./dist/dungeon-liberator/strings.en.d.ts",
+      "import": "./dist/dungeon-liberator/strings.en.js",
+      "default": "./dist/dungeon-liberator/strings.en.js"
+    },
+    "./devourer-slime": {
+      "types": "./dist/devourer-slime/index.d.ts",
+      "import": "./dist/devourer-slime/index.js",
+      "default": "./dist/devourer-slime/index.js"
+    },
+    "./devourer-slime/manifest": {
+      "types": "./dist/devourer-slime/manifest.d.ts",
+      "import": "./dist/devourer-slime/manifest.js",
+      "default": "./dist/devourer-slime/manifest.js"
+    },
+    "./devourer-slime/strings": {
+      "types": "./dist/devourer-slime/strings.en.d.ts",
+      "import": "./dist/devourer-slime/strings.en.js",
+      "default": "./dist/devourer-slime/strings.en.js"
+    },
+    "./hero-vs-zombie": {
+      "types": "./dist/hero-vs-zombie/index.d.ts",
+      "import": "./dist/hero-vs-zombie/index.js",
+      "default": "./dist/hero-vs-zombie/index.js"
+    },
+    "./hero-vs-zombie/manifest": {
+      "types": "./dist/hero-vs-zombie/manifest.d.ts",
+      "import": "./dist/hero-vs-zombie/manifest.js",
+      "default": "./dist/hero-vs-zombie/manifest.js"
+    },
+    "./hero-vs-zombie/strings": {
+      "types": "./dist/hero-vs-zombie/strings.en.d.ts",
+      "import": "./dist/hero-vs-zombie/strings.en.js",
+      "default": "./dist/hero-vs-zombie/strings.en.js"
+    },
+    "./labyrinth": {
+      "types": "./dist/labyrinth/index.d.ts",
+      "import": "./dist/labyrinth/index.js",
+      "default": "./dist/labyrinth/index.js"
+    },
+    "./labyrinth/manifest": {
+      "types": "./dist/labyrinth/manifest.d.ts",
+      "import": "./dist/labyrinth/manifest.js",
+      "default": "./dist/labyrinth/manifest.js"
+    },
+    "./labyrinth/strings": {
+      "types": "./dist/labyrinth/strings.en.d.ts",
+      "import": "./dist/labyrinth/strings.en.js",
+      "default": "./dist/labyrinth/strings.en.js"
+    },
+    "./rune-match": {
+      "types": "./dist/rune-match/index.d.ts",
+      "import": "./dist/rune-match/index.js",
+      "default": "./dist/rune-match/index.js"
+    },
+    "./rune-match/manifest": {
+      "types": "./dist/rune-match/manifest.d.ts",
+      "import": "./dist/rune-match/manifest.js",
+      "default": "./dist/rune-match/manifest.js"
+    },
+    "./rune-match/strings": {
+      "types": "./dist/rune-match/strings.en.d.ts",
+      "import": "./dist/rune-match/strings.en.js",
+      "default": "./dist/rune-match/strings.en.js"
+    },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./rpg-battle": {
+      "types": "./dist/rpg-battle/index.d.ts",
+      "import": "./dist/rpg-battle/index.js",
+      "default": "./dist/rpg-battle/index.js"
+    },
+    "./rpg-battle/manifest": {
+      "types": "./dist/rpg-battle/manifest.d.ts",
+      "import": "./dist/rpg-battle/manifest.js",
+      "default": "./dist/rpg-battle/manifest.js"
+    },
+    "./rpg-battle/strings": {
+      "types": "./dist/rpg-battle/strings.en.d.ts",
+      "import": "./dist/rpg-battle/strings.en.js",
+      "default": "./dist/rpg-battle/strings.en.js"
+    },
+    "./paladins-twin-soul": {
+      "types": "./dist/paladins-twin-soul/index.d.ts",
+      "import": "./dist/paladins-twin-soul/index.js",
+      "default": "./dist/paladins-twin-soul/index.js"
+    },
+    "./paladins-twin-soul/manifest": {
+      "types": "./dist/paladins-twin-soul/manifest.d.ts",
+      "import": "./dist/paladins-twin-soul/manifest.js",
+      "default": "./dist/paladins-twin-soul/manifest.js"
+    },
+    "./paladins-twin-soul/strings": {
+      "types": "./dist/paladins-twin-soul/strings.en.d.ts",
+      "import": "./dist/paladins-twin-soul/strings.en.js",
+      "default": "./dist/paladins-twin-soul/strings.en.js"
+    },
+    "./village-guardian": {
+      "types": "./dist/village-guardian/index.d.ts",
+      "import": "./dist/village-guardian/index.js",
+      "default": "./dist/village-guardian/index.js"
+    },
+    "./village-guardian/manifest": {
+      "types": "./dist/village-guardian/manifest.d.ts",
+      "import": "./dist/village-guardian/manifest.js",
+      "default": "./dist/village-guardian/manifest.js"
+    },
+    "./village-guardian/strings": {
+      "types": "./dist/village-guardian/strings.en.d.ts",
+      "import": "./dist/village-guardian/strings.en.js",
+      "default": "./dist/village-guardian/strings.en.js"
+    },
+    "./archers-revenge": {
+      "types": "./dist/archers-revenge/index.d.ts",
+      "import": "./dist/archers-revenge/index.js",
+      "default": "./dist/archers-revenge/index.js"
+    },
+    "./archers-revenge/manifest": {
+      "types": "./dist/archers-revenge/manifest.d.ts",
+      "import": "./dist/archers-revenge/manifest.js",
+      "default": "./dist/archers-revenge/manifest.js"
+    },
+    "./archers-revenge/strings": {
+      "types": "./dist/archers-revenge/strings.en.d.ts",
+      "import": "./dist/archers-revenge/strings.en.js",
+      "default": "./dist/archers-revenge/strings.en.js"
+    },
+    "./astral-mage": {
+      "types": "./dist/astral-mage/index.d.ts",
+      "import": "./dist/astral-mage/index.js",
+      "default": "./dist/astral-mage/index.js"
+    },
+    "./astral-mage/manifest": {
+      "types": "./dist/astral-mage/manifest.d.ts",
+      "import": "./dist/astral-mage/manifest.js",
+      "default": "./dist/astral-mage/manifest.js"
+    },
+    "./astral-mage/strings": {
+      "types": "./dist/astral-mage/strings.en.d.ts",
+      "import": "./dist/astral-mage/strings.en.js",
+      "default": "./dist/astral-mage/strings.en.js"
+    },
+    "./spellweavers-run": {
+      "types": "./dist/spellweavers-run/index.d.ts",
+      "import": "./dist/spellweavers-run/index.js",
+      "default": "./dist/spellweavers-run/index.js"
+    },
+    "./spellweavers-run/manifest": {
+      "types": "./dist/spellweavers-run/manifest.d.ts",
+      "import": "./dist/spellweavers-run/manifest.js",
+      "default": "./dist/spellweavers-run/manifest.js"
+    },
+    "./spellweavers-run/strings": {
+      "types": "./dist/spellweavers-run/strings.en.d.ts",
+      "import": "./dist/spellweavers-run/strings.en.js",
+      "default": "./dist/spellweavers-run/strings.en.js"
+    },
+    "./haunted-library": {
+      "types": "./dist/haunted-library/index.d.ts",
+      "import": "./dist/haunted-library/index.js",
+      "default": "./dist/haunted-library/index.js"
+    },
+    "./haunted-library/manifest": {
+      "types": "./dist/haunted-library/manifest.d.ts",
+      "import": "./dist/haunted-library/manifest.js",
+      "default": "./dist/haunted-library/manifest.js"
+    },
+    "./haunted-library/strings": {
+      "types": "./dist/haunted-library/strings.en.d.ts",
+      "import": "./dist/haunted-library/strings.en.js",
+      "default": "./dist/haunted-library/strings.en.js"
+    },
+    "./shadow-gate-dungeon": {
+      "types": "./dist/shadow-gate-dungeon/index.d.ts",
+      "import": "./dist/shadow-gate-dungeon/index.js",
+      "default": "./dist/shadow-gate-dungeon/index.js"
+    },
+    "./shadow-gate-dungeon/manifest": {
+      "types": "./dist/shadow-gate-dungeon/manifest.d.ts",
+      "import": "./dist/shadow-gate-dungeon/manifest.js",
+      "default": "./dist/shadow-gate-dungeon/manifest.js"
+    },
+    "./shadow-gate-dungeon/strings": {
+      "types": "./dist/shadow-gate-dungeon/strings.en.d.ts",
+      "import": "./dist/shadow-gate-dungeon/strings.en.js",
+      "default": "./dist/shadow-gate-dungeon/strings.en.js"
+    },
+    "./realm-carver": {
+      "types": "./dist/realm-carver/index.d.ts",
+      "import": "./dist/realm-carver/index.js",
+      "default": "./dist/realm-carver/index.js"
+    },
+    "./realm-carver/manifest": {
+      "types": "./dist/realm-carver/manifest.d.ts",
+      "import": "./dist/realm-carver/manifest.js",
+      "default": "./dist/realm-carver/manifest.js"
+    },
+    "./realm-carver/strings": {
+      "types": "./dist/realm-carver/strings.en.d.ts",
+      "import": "./dist/realm-carver/strings.en.js",
+      "default": "./dist/realm-carver/strings.en.js"
+    },
+    "./alchemists-synthesis": {
+      "types": "./dist/alchemists-synthesis/index.d.ts",
+      "import": "./dist/alchemists-synthesis/index.js",
+      "default": "./dist/alchemists-synthesis/index.js"
+    },
+    "./alchemists-synthesis/manifest": {
+      "types": "./dist/alchemists-synthesis/manifest.d.ts",
+      "import": "./dist/alchemists-synthesis/manifest.js",
+      "default": "./dist/alchemists-synthesis/manifest.js"
+    },
+    "./alchemists-synthesis/strings": {
+      "types": "./dist/alchemists-synthesis/strings.en.d.ts",
+      "import": "./dist/alchemists-synthesis/strings.en.js",
+      "default": "./dist/alchemists-synthesis/strings.en.js"
+    },
+    "./enchanted-library": {
+      "types": "./dist/enchanted-library/index.d.ts",
+      "import": "./dist/enchanted-library/index.js",
+      "default": "./dist/enchanted-library/index.js"
+    },
+    "./enchanted-library/manifest": {
+      "types": "./dist/enchanted-library/manifest.d.ts",
+      "import": "./dist/enchanted-library/manifest.js",
+      "default": "./dist/enchanted-library/manifest.js"
+    },
+    "./enchanted-library/strings": {
+      "types": "./dist/enchanted-library/strings.en.d.ts",
+      "import": "./dist/enchanted-library/strings.en.js",
+      "default": "./dist/enchanted-library/strings.en.js"
+    },
+    "./gryphon-patrol": {
+      "types": "./dist/gryphon-patrol/index.d.ts",
+      "import": "./dist/gryphon-patrol/index.js",
+      "default": "./dist/gryphon-patrol/index.js"
+    },
+    "./gryphon-patrol/manifest": {
+      "types": "./dist/gryphon-patrol/manifest.d.ts",
+      "import": "./dist/gryphon-patrol/manifest.js",
+      "default": "./dist/gryphon-patrol/manifest.js"
+    },
+    "./gryphon-patrol/strings": {
+      "types": "./dist/gryphon-patrol/strings.en.d.ts",
+      "import": "./dist/gryphon-patrol/strings.en.js",
+      "default": "./dist/gryphon-patrol/strings.en.js"
+    },
+    "./magic-defense": {
+      "types": "./dist/magic-defense/index.d.ts",
+      "import": "./dist/magic-defense/index.js",
+      "default": "./dist/magic-defense/index.js"
+    },
+    "./magic-defense/manifest": {
+      "types": "./dist/magic-defense/manifest.d.ts",
+      "import": "./dist/magic-defense/manifest.js",
+      "default": "./dist/magic-defense/manifest.js"
+    },
+    "./magic-defense/strings": {
+      "types": "./dist/magic-defense/strings.en.d.ts",
+      "import": "./dist/magic-defense/strings.en.js",
+      "default": "./dist/magic-defense/strings.en.js"
+    },
+    "./griffin-sky-joust": {
+      "types": "./dist/griffin-sky-joust/index.d.ts",
+      "import": "./dist/griffin-sky-joust/index.js",
+      "default": "./dist/griffin-sky-joust/index.js"
+    },
+    "./griffin-sky-joust/manifest": {
+      "types": "./dist/griffin-sky-joust/manifest.d.ts",
+      "import": "./dist/griffin-sky-joust/manifest.js",
+      "default": "./dist/griffin-sky-joust/manifest.js"
+    },
+    "./griffin-sky-joust/strings": {
+      "types": "./dist/griffin-sky-joust/strings.en.d.ts",
+      "import": "./dist/griffin-sky-joust/strings.en.js",
+      "default": "./dist/griffin-sky-joust/strings.en.js"
+    },
+    "./abyssal-well": {
+      "types": "./dist/abyssal-well/index.d.ts",
+      "import": "./dist/abyssal-well/index.js",
+      "default": "./dist/abyssal-well/index.js"
+    },
+    "./abyssal-well/manifest": {
+      "types": "./dist/abyssal-well/manifest.d.ts",
+      "import": "./dist/abyssal-well/manifest.js",
+      "default": "./dist/abyssal-well/manifest.js"
+    },
+    "./abyssal-well/strings": {
+      "types": "./dist/abyssal-well/strings.en.d.ts",
+      "import": "./dist/abyssal-well/strings.en.js",
+      "default": "./dist/abyssal-well/strings.en.js"
+    },
+    "./rune-forge-chamber": {
+      "types": "./dist/rune-forge-chamber/index.d.ts",
+      "import": "./dist/rune-forge-chamber/index.js",
+      "default": "./dist/rune-forge-chamber/index.js"
+    },
+    "./rune-forge-chamber/manifest": {
+      "types": "./dist/rune-forge-chamber/manifest.d.ts",
+      "import": "./dist/rune-forge-chamber/manifest.js",
+      "default": "./dist/rune-forge-chamber/manifest.js"
+    },
+    "./rune-forge-chamber/strings": {
+      "types": "./dist/rune-forge-chamber/strings.en.d.ts",
+      "import": "./dist/rune-forge-chamber/strings.en.js",
+      "default": "./dist/rune-forge-chamber/strings.en.js"
+    },
+    "./dragon-rider": {
+      "types": "./dist/dragon-rider/index.d.ts",
+      "import": "./dist/dragon-rider/index.js",
+      "default": "./dist/dragon-rider/index.js"
+    },
+    "./dragon-rider/manifest": {
+      "types": "./dist/dragon-rider/manifest.d.ts",
+      "import": "./dist/dragon-rider/manifest.js",
+      "default": "./dist/dragon-rider/manifest.js"
+    },
+    "./dragon-rider/strings": {
+      "types": "./dist/dragon-rider/strings.en.d.ts",
+      "import": "./dist/dragon-rider/strings.en.js",
+      "default": "./dist/dragon-rider/strings.en.js"
+    },
+    "./griffin-riders-escape": {
+      "types": "./dist/griffin-riders-escape/index.d.ts",
+      "import": "./dist/griffin-riders-escape/index.js",
+      "default": "./dist/griffin-riders-escape/index.js"
+    },
+    "./griffin-riders-escape/manifest": {
+      "types": "./dist/griffin-riders-escape/manifest.d.ts",
+      "import": "./dist/griffin-riders-escape/manifest.js",
+      "default": "./dist/griffin-riders-escape/manifest.js"
+    },
+    "./griffin-riders-escape/strings": {
+      "types": "./dist/griffin-riders-escape/strings.en.d.ts",
+      "import": "./dist/griffin-riders-escape/strings.en.js",
+      "default": "./dist/griffin-riders-escape/strings.en.js"
+    },
+    "./castle-defense": {
+      "types": "./dist/castle-defense/index.d.ts",
+      "import": "./dist/castle-defense/index.js",
+      "default": "./dist/castle-defense/index.js"
+    },
+    "./castle-defense/manifest": {
+      "types": "./dist/castle-defense/manifest.d.ts",
+      "import": "./dist/castle-defense/manifest.js",
+      "default": "./dist/castle-defense/manifest.js"
+    },
+    "./castle-defense/strings": {
+      "types": "./dist/castle-defense/strings.en.d.ts",
+      "import": "./dist/castle-defense/strings.en.js",
+      "default": "./dist/castle-defense/strings.en.js"
+    },
+    "./sorcerer-ziggurat": {
+      "types": "./dist/sorcerer-ziggurat/index.d.ts",
+      "import": "./dist/sorcerer-ziggurat/index.js",
+      "default": "./dist/sorcerer-ziggurat/index.js"
+    },
+    "./sorcerer-ziggurat/manifest": {
+      "types": "./dist/sorcerer-ziggurat/manifest.d.ts",
+      "import": "./dist/sorcerer-ziggurat/manifest.js",
+      "default": "./dist/sorcerer-ziggurat/manifest.js"
+    },
+    "./sorcerer-ziggurat/strings": {
+      "types": "./dist/sorcerer-ziggurat/strings.en.d.ts",
+      "import": "./dist/sorcerer-ziggurat/strings.en.js",
+      "default": "./dist/sorcerer-ziggurat/strings.en.js"
+    },
+    "./storm-castle-tower": {
+      "types": "./dist/storm-castle-tower/index.d.ts",
+      "import": "./dist/storm-castle-tower/index.js",
+      "default": "./dist/storm-castle-tower/index.js"
+    },
+    "./storm-castle-tower/manifest": {
+      "types": "./dist/storm-castle-tower/manifest.d.ts",
+      "import": "./dist/storm-castle-tower/manifest.js",
+      "default": "./dist/storm-castle-tower/manifest.js"
+    },
+    "./storm-castle-tower/strings": {
+      "types": "./dist/storm-castle-tower/strings.en.d.ts",
+      "import": "./dist/storm-castle-tower/strings.en.js",
+      "default": "./dist/storm-castle-tower/strings.en.js"
+    }
+  },
+  "files": [
+    "dist",
+    "assets"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "sync:assets": "node scripts/sync-assets.mjs",
+    "qc:browser": "node qc/run.mjs"
+  },
+  "dependencies": {
+    "@reading-advantage/advantage-play-kit": "workspace:*",
+    "@reading-advantage/advantage-play-kit-3d": "workspace:*",
+    "@reading-advantage/game-contracts": "workspace:*",
+    "phaser": "catalog:",
+    "three": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@reading-advantage/config": "workspace:*",
+    "@types/three": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "jsdom": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8",
+    "vite": "catalog:",
+    "@playwright/test": "catalog:"
+  }
+}

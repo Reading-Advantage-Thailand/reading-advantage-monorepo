@@ -79,7 +79,7 @@ import ClassroomSelector from "../teacher/classroom-selector";
 import ArticleShowcaseCard from "../articles/article-showcase-card";
 import { TaskCollection } from "../lesson/task/task-collection";
 import TaskVocabularyCollection from "../lesson/task/task-vocabulary-collection";
-import { HistoryTable } from "../dashboard/history-table";
+import { HistoryList } from "../student/history-list";
 import TeacherProgressReports from "../teacher/teacher-progress-reports";
 import ChangeRole from "../shared/change-role";
 import { FlashcardType } from "@/types/enum";
@@ -447,7 +447,7 @@ describe("FR-4 game results expose aria-live", () => {
 });
 
 describe("FR-4 clickable elements are keyboard-reachable", () => {
-  it("opens classroom cards by keyboard", async () => {
+  it("opens classroom cards by keyboard (a native link: Tab and Enter work)", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -467,19 +467,18 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     );
     try {
       renderWithMessages(<ClassroomSelector />);
+      // Lane C Phase 3: the class name is a real link (keyboard and new tab work).
       const card = await screen.findByRole("link", { name: "Class One" });
-      expect(card).toHaveAttribute("tabindex", "0");
-
+      expect(card.tagName).toBe("A");
+      expect(card).toHaveAttribute("href", "/teacher/class-roster/c1");
       card.focus();
-      fireEvent.keyDown(document.activeElement!, { key: "Enter" });
-
-      expect(mocks.push).toHaveBeenCalledWith("/teacher/class-roster/c1");
+      expect(card).toHaveFocus();
     } finally {
       vi.unstubAllGlobals();
     }
   });
 
-  it("opens article showcase cards by keyboard", () => {
+  it("opens article showcase cards by keyboard (a native link: Tab and Enter work)", () => {
     renderWithMessages(
       <ArticleShowcaseCard
         article={{
@@ -491,11 +490,10 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     );
 
     const card = screen.getByRole("link", { name: "River Crossing" });
-    expect(card).toHaveAttribute("tabindex", "0");
+    expect(card.tagName).toBe("A");
+    expect(card).toHaveAttribute("href", "/student/read/article-1");
     card.focus();
-    fireEvent.keyDown(document.activeElement!, { key: "Enter" });
-
-    expect(mocks.push).toHaveBeenCalledWith("/student/read/article-1");
+    expect(card).toHaveFocus();
   });
 
   it("selects collection words by keyboard", async () => {
@@ -558,7 +556,7 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     ).toBeInTheDocument();
   });
 
-  it("opens history rows by keyboard", async () => {
+  it("opens history records as native links (Tab and Enter work)", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -579,13 +577,10 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
       }),
     );
     try {
-      renderWithMessages(<HistoryTable variant="history" />);
-      const cell = await screen.findByText("River Story");
-      const row = cell.closest("tr")!;
-      expect(row).toHaveAttribute("tabindex", "0");
-
-      fireEvent.keyDown(row, { key: "Enter" });
-      expect(mocks.push).toHaveBeenCalledWith("/student/read/a1");
+      renderWithMessages(<HistoryList variant="history" />);
+      const link = await screen.findByRole("link", { name: /River Story/ });
+      expect(link.tagName).toBe("A");
+      expect(link).toHaveAttribute("href", "/student/read/a1");
     } finally {
       vi.unstubAllGlobals();
     }
@@ -610,7 +605,9 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
     const studentRow = await screen.findByRole("button", {
       name: "Somchai",
     });
-    fireEvent.keyDown(studentRow, { key: "Enter" });
+    // A native button: Enter and Space activate it in the browser (jsdom sends only the click).
+    expect(studentRow.tagName).toBe("BUTTON");
+    fireEvent.click(studentRow);
     expect(
       await screen.findByRole("heading", { name: "Somchai" }),
     ).toBeInTheDocument();

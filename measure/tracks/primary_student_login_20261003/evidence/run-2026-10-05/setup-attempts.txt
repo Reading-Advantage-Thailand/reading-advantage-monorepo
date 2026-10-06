@@ -1,0 +1,9 @@
+login25-attempt1.log:13:09:23 teacher signed in
+login25-attempt1.log:13:09:25 pictures assigned 0
+login25-attempt1.log:13:09:57 class sheet rows 25 failed 0
+login25-attempt2.log:13:18:14 teacher signed in
+login25.log:13:25:07 teacher signed in
+login25.log:13:25:24 pictures assigned 25
+login25.log:13:25:38 class sheet rows 25 failed 0
+login25.log:13:25:54 cards 25
+login25.log:13:25:54 students 25

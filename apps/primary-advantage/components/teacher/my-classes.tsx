@@ -10,20 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  ChevronsUpDownIcon,
-  ChevronDownIcon,
-  CircleCheckBigIcon,
-  RefreshCcwIcon,
-  CircleAlertIcon,
-  UsersIcon,
-  Loader2Icon,
-  PlusIcon,
   ChartColumnBigIcon,
   ArchiveIcon,
   TrashIcon,
   ClipboardListIcon,
   PencilIcon,
   MoreHorizontalIcon,
+  TriangleAlertIcon,
 } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -33,7 +26,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -43,19 +35,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "@/i18n/navigation";
-import { Header } from "../header";
-// import { useCourseStore, useClassroomStore } from "@/store/classroom-store";
-import { Icons } from "@/components/icons";
-import Image from "next/image";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { classroom_v1 } from "googleapis";
-import { Link } from "@/i18n/navigation";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import CreateClass from "./create-classes";
 import { toast } from "sonner";
 import { Label } from "@radix-ui/react-label";
+import { ErrorState, ShimmerSkeleton } from "@reading-advantage/ui";
+import { TEACHER_ACTION } from "./teacher-shell";
 
 type Classes = {
   id: string;
@@ -93,26 +79,26 @@ type Classes = {
     studentId: string;
     lastActivity: Date;
   }[];
-  importedFromGoogle?: boolean;
-  alternateLink?: string;
 };
 
+/**
+ * My Classes: the teacher's classes in a table (class name links to the class page, code,
+ * student count, grade, and an actions menu), with search and new class. No Google Classroom
+ * import (FR-12, owner decision 2026-10-05). Loading shows shimmer rows; a failed load shows an
+ * error with a retry.
+ * @returns The class list.
+ */
 export default function MyClasses() {
   const t = useTranslations("TeacherMyClasses");
-
-
-
-
+  const tc = useTranslations("TeacherClass");
+  const te = useTranslations("Error");
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [coursesOpen, setCoursesOpen] = useState<boolean>(false);
-  const [importState, setImportState] = useState(0);
-  const [selected, setSelected] = useState("");
   const [classrooms, setClassrooms] = useState<Classes[]>([]);
   const [dialogOpen, setDialogOpen] = useState<string>("");
   const [nameChange, setNameChange] = useState<string>("");
   const [grade, setGrade] = useState<string>("");
   const [classroomId, setClassroomId] = useState<string>("");
+  const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
 
   const fetchClassrooms = async () => {
     try {
@@ -122,9 +108,10 @@ export default function MyClasses() {
       }
       const data = await response.json();
       setClassrooms(data.classrooms || []);
+      setLoadState("ready");
     } catch (error) {
       console.error("Error fetching classrooms:", error);
-      setClassrooms([]);
+      setLoadState("error");
     }
   };
 
@@ -217,21 +204,13 @@ export default function MyClasses() {
       },
       cell: ({ row }) => {
         const classroomName: string = row.getValue("name");
-        const checkImported = row.original.importedFromGoogle;
         return (
-          <div className="capitalize flex gap-4">
-            {classroomName ? classroomName : "Unknown"}{" "}
-            {checkImported ? (
-              <Link href={row.original.alternateLink || "#"} target="_blank">
-                <Image
-                  src={"/96x96_yellow_stroke_icon@1x.png"}
-                  alt="google-classroom"
-                  width={20}
-                  height={20}
-                />
-              </Link>
-            ) : null}
-          </div>
+          <Link
+            href={`/teacher/class-roster/${row.original.id}`}
+            className={cn(TEACHER_ACTION, "inline-flex items-center font-semibold underline-offset-4 hover:underline")}
+          >
+            {classroomName ? classroomName : "Unknown"}
+          </Link>
         );
       },
     },
@@ -243,7 +222,7 @@ export default function MyClasses() {
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue("classCode")}</div>
+        <div className="text-center font-mono">{row.getValue("classCode")}</div>
       ),
     },
     {
@@ -254,9 +233,7 @@ export default function MyClasses() {
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">
-          {row.original?.students?.length || 0}
-        </div>
+        <div className="text-center">{row.original?.students?.length || 0}</div>
       ),
     },
     {
@@ -265,7 +242,7 @@ export default function MyClasses() {
         return <div className="text-center">{t("table.headers.grade")}</div>;
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue("grade")}</div>
+        <div className="text-center">{row.getValue("grade")}</div>
       ),
     },
     {
@@ -280,9 +257,12 @@ export default function MyClasses() {
           <div className="flex justify-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Actions</span>
-                  <MoreHorizontalIcon />
+                <Button
+                  variant="ghost"
+                  className="size-11 p-0"
+                  aria-label={tc("classActionsFor", { name: payment.name })}
+                >
+                  <MoreHorizontalIcon aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -302,19 +282,17 @@ export default function MyClasses() {
                   <ChartColumnBigIcon className="size-4" />
                   {t("actions.reports")}
                 </DropdownMenuItem>
-                {payment.importedFromGoogle ? null : (
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      setDialogOpen("edit");
-                      setNameChange(payment.name);
-                      setGrade(payment.grade || "");
-                      setClassroomId(payment.id);
-                    }}
-                  >
-                    <PencilIcon className="size-4" />
-                    {t("actions.edit")}
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem
+                  onSelect={() => {
+                    setDialogOpen("edit");
+                    setNameChange(payment.name);
+                    setGrade(payment.grade || "");
+                    setClassroomId(payment.id);
+                  }}
+                >
+                  <PencilIcon className="size-4" />
+                  {t("actions.edit")}
+                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <ArchiveIcon className="size-4" />
                   {t("actions.archive")}
@@ -337,264 +315,81 @@ export default function MyClasses() {
     },
   ];
 
-
-  //     const data = await response.json();
-
-
-  // async function handleImportCourses() {
-  //   try {
-  //     setImportState(1);
-  //     const newCourses = courses.filter((course) => course.id === selected);
-  //     setSelectedCourses(newCourses);
-
-  //     const res = await fetch(`/api/classroom`, {
-  //       method: "POST",
-  //       body: JSON.stringify({ courses: newCourses }),
-  //     });
-
-  //     if (res.ok) {
-  //       setImportState(2);
-  //       fetchClassrooms();
-  //     }
-  //   } catch (error) {
-  //     console.error("Error importing courses:", error);
-  //   }
-  // }
-
   return (
     <>
       <div className="flex flex-col gap-4">
+        {loadState === "error" ? (
+          <ErrorState
+            className="bg-card border"
+            icon={<TriangleAlertIcon />}
+            title={tc("loadClassesError")}
+            description={tc("loadErrorHint")}
+            action={
+              <Button
+                type="button"
+                className={cn(TEACHER_ACTION, "px-6")}
+                onClick={() => {
+                  setLoadState("loading");
+                  void fetchClassrooms();
+                }}
+              >
+                {te("retry")}
+              </Button>
+            }
+          />
+        ) : (
         <DataTable
           columns={columns}
           data={classrooms}
+          loading={loadState === "loading"}
+          loadingContent={[0, 1, 2].map((row) => (
+            <tr key={row} aria-busy="true">
+              <td colSpan={columns.length} className="p-2">
+                <ShimmerSkeleton className="h-10 w-full" />
+              </td>
+            </tr>
+          ))}
           emptyText={t("table.empty")}
           headerClassName="font-bold"
+          wrapperClassName="bg-card rounded-2xl border"
           filterColumnId="name"
           toolbar={({ filterValue, setFilterValue }) => (
-            <div className="flex items-end justify-between">
+            <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <Input
+                type="search"
+                aria-label={tc("searchClasses")}
                 placeholder={t("search.placeholder")}
                 value={filterValue}
                 onChange={(event) => setFilterValue(event.target.value)}
-                className="max-w-sm"
+                className="min-h-11 w-full sm:max-w-sm"
               />
 
-          <div className="flex items-end space-x-2">
-            <div className="flex-col space-y-2">
-              <p className="text-xs opacity-70">{t("import.fromLabel")}</p>
-              <Button
-                onClick={() => {
-                  // syncClassroom();
-                }}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2Icon className="mr-2 size-4 animate-spin" />
-                    {t("import.googleClassroom")}
-                  </>
-                ) : (
-                  <>
-                    <Image
-                      className="mr-2"
-                      src={"/96x96_yellow_stroke_icon@1x.png"}
-                      alt="google-classroom"
-                      width={20}
-                      height={20}
-                    />
-                    {t("import.googleClassroom")}
-                  </>
-                )}
-              </Button>
-            </div>
-            <CreateClass onClassCreated={fetchClassrooms} />
-          </div>
+              <CreateClass onClassCreated={fetchClassrooms} />
             </div>
           )}
           footer={({ previousPage, nextPage, canPreviousPage, canNextPage }) => (
-            <div className="flex items-center justify-end space-x-2">
-              <div className="space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => previousPage()}
-                  disabled={!canPreviousPage}
-                >
-                  {t("pagination.previous")}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => nextPage()}
-                  disabled={!canNextPage}
-                >
-                  {t("pagination.next")}
-                </Button>
-              </div>
+            <div className="mt-3 flex items-center justify-end gap-2">
+              <Button
+                variant="outline"
+                className={TEACHER_ACTION}
+                onClick={() => previousPage()}
+                disabled={!canPreviousPage}
+              >
+                {t("pagination.previous")}
+              </Button>
+              <Button
+                variant="outline"
+                className={TEACHER_ACTION}
+                onClick={() => nextPage()}
+                disabled={!canNextPage}
+              >
+                {t("pagination.next")}
+              </Button>
             </div>
           )}
         />
+        )}
       </div>
-
-      <Dialog open={coursesOpen} onOpenChange={setCoursesOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              <h1 className="text-2xl">{t("import.dialog.title")}</h1>
-            </DialogTitle>
-          </DialogHeader>
-          <ImportStateSlider currentLevel={importState} />
-
-          <div className="overflow-hidden rounded-lg border shadow-md">
-            {importState === 0 && (
-              <div className="p-6">
-                <h2 className="mb-4 text-xl font-semibold">
-                  {t("import.dialog.selectClass")}
-                </h2>
-                <p className="mb-6">{t("import.dialog.description")}</p>
-                <div className="mb-6">
-                  <label className="mb-1 block text-sm font-medium">
-                    {t("import.dialog.yourClasses")}
-                  </label>
-                  {/* {courses.length ? (
-                    <ScrollArea className="h-52">
-                      <RadioGroup value={selected} onValueChange={setSelected}>
-                        {courses.map((data: CourseWithCount, i) => (
-                          <div
-                            key={i}
-                            onClick={() => setSelected(data.id as string)}
-                            className={cn(
-                              "border-muted hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center justify-between rounded-md border-2 bg-transparent p-4",
-                              selected === data.id ? "border-primary" : "",
-                            )}
-                          >
-                            <h3 className="font-medium">{data.name}</h3>
-                            <div className="flex items-center text-sm text-gray-500">
-                              <UsersIcon className="size-4" />
-                              <span>
-                                {data?.studentCount?.length ?? 0} students
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </RadioGroup>
-                    </ScrollArea>
-                  ) : (
-                    <p>No courses found</p>
-                  )} */}
-                </div>
-                <div className="flex justify-between border-t border-gray-200 pt-4">
-                  <Button
-                    className="flex gap-2"
-                    variant="outline"
-                    // onClick={() => syncClassroom()}
-                    disabled={loading}
-                  >
-                    <RefreshCcwIcon
-                      className={cn("size-4", loading ? "animate-spin" : "")}
-                    />
-                    {t("import.dialog.refresh")}
-                  </Button>
-                  <Button
-                    // onClick={() => handleImportCourses()}
-                    disabled={!selected}
-                  >
-                    {t("import.dialog.continue")}
-                  </Button>
-                </div>
-              </div>
-            )}
-            {importState === 1 && (
-              <div className="flex flex-col items-center justify-center p-6 py-12">
-                <div className="mb-4 h-12 w-12 animate-spin rounded-full border-t-2 border-b-2 border-blue-600"></div>
-                <h2 className="mb-2 text-xl font-semibold">
-                  {t("import.dialog.syncing")}
-                </h2>
-                <p className="max-w-md text-center text-gray-600">
-                  {t("import.dialog.syncingDescription")}
-                </p>
-              </div>
-            )}
-            {importState === 2 && (
-              <div className="p-6">
-                <div className="mb-6 flex justify-center">
-                  <div className="rounded-full bg-green-200 p-3">
-                    <CircleCheckBigIcon className="size-10" />
-                  </div>
-                </div>
-                <h2 className="mb-2 text-center text-xl font-semibold">
-                  {t("import.dialog.syncCompleted")}
-                </h2>
-                {/* {selectedCourses.map((course: CourseWithCount) => (
-                  <>
-                    <p className="mb-6 text-center text-gray-600">
-                      Successfully imported {course?.studentCount?.length ?? 0}{" "}
-                      students from {course.name}.
-                    </p>
-                    <div className="mb-6 rounded-md border p-4">
-                      <h3 className="mb-2 font-medium">Students Added</h3>
-                      {course?.studentCount?.length ? (
-                        <ScrollArea className="h-40">
-                          <ul className="space-y-2">
-                            {course?.studentCount.map((data, index) => (
-                              <li key={index} className="flex items-center">
-                                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full border">
-                                  <UserRoundIcon className="size-4" />
-                                </div>
-                                <span>{data?.profile.name.fullName}</span>
-                                <span className="ml-auto text-sm text-green-600">
-                                  New
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        </ScrollArea>
-                      ) : (
-                        <p>No students found</p>
-                      )}
-                    </div>
-                  </>
-                ))} */}
-
-                <div className="flex justify-between border-t border-gray-200 pt-4">
-                  <Button
-                    className="flex gap-2"
-                    variant="outline"
-                    onClick={() => {
-                      setSelected("");
-                      // syncClassroom();
-                    }}
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <Icons.spinner className="h-4 w-4 animate-spin" />
-                    ) : null}
-                    {t("import.dialog.syncAnother")}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setImportState(0);
-                      setSelected("");
-                      setCoursesOpen(false);
-                    }}
-                  >
-                    {t("import.dialog.goToClass")}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-          <DialogFooter>
-            <div className="rounded-md border p-4">
-              <h3 className="mb-1 flex items-center gap-2 font-medium">
-                <CircleAlertIcon className="size-4" />{" "}
-                {t("import.dialog.aboutTitle")}
-              </h3>
-              <p className="text-sm">{t("import.dialog.aboutDescription")}</p>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       <Dialog
         open={dialogOpen === "edit"}
@@ -679,38 +474,3 @@ export default function MyClasses() {
   );
 }
 
-function ImportStateSlider({ currentLevel }: { currentLevel: number }) {
-  const State = [
-    { no: 1, name: "Select Class" },
-    { no: 2, name: "Syncs Students" },
-    { no: 3, name: "Complete" },
-  ];
-  return (
-    <div className="w-full">
-      <div className="mb-2 flex justify-between">
-        {State.map((level, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <div
-              className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                index === currentLevel
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted"
-              }`}
-            >
-              {level.no}
-            </div>
-            <span>{level.name}</span>
-          </div>
-        ))}
-      </div>
-      <div className="bg-muted h-2 rounded-full">
-        <div
-          className="bg-primary h-full rounded-full transition-all duration-300 ease-in-out"
-          style={{
-            width: `${(currentLevel / (State.length - 1)) * 100}%`,
-          }}
-        ></div>
-      </div>
-    </div>
-  );
-}

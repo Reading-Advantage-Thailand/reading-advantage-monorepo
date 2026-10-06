@@ -128,8 +128,8 @@ describe("0059 challenge migration candidate", () => {
     const previous = JSON.parse(await readFile(resolve(migrationRoot, "meta/0058_snapshot.json"), "utf8"));
     const current = JSON.parse(await readFile(snapshotPath, "utf8"));
     const journal = JSON.parse(await readFile(resolve(migrationRoot, "meta/_journal.json"), "utf8"));
-    const lastEntry = journal.entries.at(-1);
-    const priorEntry = journal.entries.at(-2);
+    const lastEntry = journal.entries.find((e: { idx: number }) => e.idx === 59);
+    const priorEntry = journal.entries.find((e: { idx: number }) => e.idx === 58);
 
     expect(lastEntry).toMatchObject({ idx: 59, tag: "0059_game_challenges" });
     expect(lastEntry.when).toBeGreaterThan(priorEntry.when);

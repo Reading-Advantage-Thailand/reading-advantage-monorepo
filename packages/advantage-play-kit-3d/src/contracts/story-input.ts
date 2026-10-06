@@ -1,0 +1,27 @@
+/** The story input contract lives in game-contracts; the kit re-exports it for the games. */
+export {
+  CEFR_LEVELS,
+  baseLevel,
+  cefrLevelSchema,
+  normalizeCefrLevel,
+  parsePracticeInput,
+  parseStoryIndex,
+  parseStoryInput,
+  practiceInputSchema,
+  practiceSentenceSchema,
+  practiceWordSchema,
+  storyFillSchema,
+  storyIndexEntrySchema,
+  storyIndexSchema,
+  storyInputSchema,
+  storyParagraphSchema,
+  storyQuestionSchema,
+  storySentenceSchema,
+  storySourceSchema,
+  storyVocabularySchema,
+  toPracticeInput,
+  toSentenceInput,
+  toStoryIndexEntry,
+  toVocabularyInput,
+} from '@reading-advantage/game-contracts';
+export type { CefrLevel, PracticeInput, PracticeSentence, PracticeWord, StoryFill, StoryIndexEntry, StoryInput, StoryParagraph, StoryQuestion, StorySentence, StoryVocabulary } from '@reading-advantage/game-contracts';

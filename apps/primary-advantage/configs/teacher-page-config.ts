@@ -1,10 +1,30 @@
 import { PageConfig } from "@/types";
-import type { Permission } from "@/lib/permissions";
-import { sharedMainNav } from "./main-nav";
 
+/** Teacher navigation: four bottom-bar tabs and the full sidebar list. */
 export const teacherPageConfig: PageConfig = {
-  mainNav: [...sharedMainNav],
+  tabs: [
+    { key: "home", href: "/teacher/dashboard", icon: "HouseIcon" },
+    {
+      key: "classes",
+      href: "/teacher/my-classes",
+      icon: "SchoolIcon",
+      match: ["/teacher/class-roster", "/teacher/my-students", "/teacher/game-challenges"],
+    },
+    { key: "assignments", href: "/teacher/assignments", icon: "ClipboardCheckIcon" },
+    {
+      key: "reports",
+      href: "/teacher/reports",
+      icon: "ChartColumnBigIcon",
+      match: ["/teacher/student-progress"],
+    },
+  ],
   sidebarNav: [
+    {
+      title: "home",
+      href: "/teacher/dashboard",
+      icon: "HouseIcon",
+      requiredPermissions: ["TEACHER_ACCESS"],
+    },
     // Regular navigation item
     {
       title: "myClasses",
@@ -33,12 +53,6 @@ export const teacherPageConfig: PageConfig = {
           icon: "ClipboardListIcon",
           requiredPermissions: ["CLASS_MANAGEMENT"],
         },
-        {
-          title: "studentProgress",
-          href: "/teacher/student-progress",
-          icon: "TrendingUpIcon",
-          requiredPermissions: ["REPORTS_ACCESS"],
-        },
       ],
     },
 
@@ -61,6 +75,12 @@ export const teacherPageConfig: PageConfig = {
       title: "assignments",
       href: "/teacher/assignments",
       icon: "ClipboardCheckIcon",
+      requiredPermissions: ["TEACHER_ACCESS"],
+    },
+    {
+      title: "manual",
+      href: "/teacher/manual",
+      icon: "BookOpenIcon",
       requiredPermissions: ["TEACHER_ACCESS"],
     },
   ],

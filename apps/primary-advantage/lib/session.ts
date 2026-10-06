@@ -2,15 +2,21 @@ import { cookies } from "next/headers";
 import { db } from "@reading-advantage/db";
 import { validateSession, SESSION_COOKIE_NAME } from "@reading-advantage/auth";
 
-export async function getCurrentUser() {
+/**
+ * Reads the validated session from the session cookie.
+ * @returns The session with its user and `authStrength`, or null when absent or invalid.
+ */
+export async function getCurrentSession() {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
 
-  const session = await validateSession(db, token);
-  if (!session) return null;
+  return validateSession(db, token);
+}
 
-  return session.user;
+export async function getCurrentUser() {
+  const session = await getCurrentSession();
+  return session?.user ?? null;
 }
 
 export const currentUser = getCurrentUser;

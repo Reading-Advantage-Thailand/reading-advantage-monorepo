@@ -1,0 +1,262 @@
+/* The Chibi Quest skin (docs/primary-rpg-skin.md): owned SVG/CSS chrome for the student pages.
+   Every picture the chrome uses is a Forge render under /rpg. Class prefix: cq-. */
+:root {
+  --cq-ink: #3b2a1a;
+  --cq-ink-soft: #6b5438;
+  --cq-parchment: #f3e4c3;
+  --cq-parchment-2: #e9d4a8;
+  --cq-parchment-edge: #b58a4e;
+  --cq-wood: #8a5a2b;
+  --cq-wood-dark: #5c391a;
+  --cq-wood-light: #b37a3f;
+  --cq-iron: #4a4f57;
+  --cq-iron-light: #8b929c;
+  --cq-gold: #e8b534;
+  --cq-gold-dark: #a8781a;
+  --cq-red: #d64545;
+  --cq-green: #4fb45a;
+  --cq-blue: #3f7fd6;
+  --cq-night: #0f1420;
+  --cq-font: var(--font-fredoka), var(--font-mitr), var(--font-noto-thai), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* The world: the dark ground every student page stands on; a Scene paints the place over it. */
+.cq-world { background: radial-gradient(ellipse at 50% 0%, #2a2118 0%, var(--cq-night) 70%); color: #fff4dc; }
+/* A light card on the world keeps the theme ink: the world's light text is for text on the scene only. An explicit text utility still wins. */
+.cq-world :is(.bg-card, .bg-popover, .bg-background, .bg-white, .bg-muted, .bg-secondary, .bg-accent, [class*="bg-brand-"], [class*="bg-slate-"], [class*="bg-gray-"], [class*="bg-zinc-"], [class*="bg-sky-"], [class*="bg-cyan-"], [class*="bg-blue-"], [class*="bg-green-"], [class*="bg-emerald-"], [class*="bg-amber-"], [class*="bg-yellow-"], [class*="bg-violet-"], [class*="bg-purple-"], [class*="bg-pink-"], [class*="bg-rose-"], [class*="bg-red-"], [class*="bg-orange-"], [class*="bg-lime-"], [class*="bg-teal-"], [class*="bg-indigo-"]) { color: var(--foreground); }
+.cq { font-family: var(--cq-font); }
+.cq-ink { color: var(--cq-ink); }
+
+/* The play-kit panels inside the world (briefing, result, rewards, catalogs) take the parchment: the sliced
+   arcade frames switch off and the kit's theme variables map to the skin tokens (skin spec row 12). */
+.cq-world {
+  --apk-arcade-panel-image: none; --apk-arcade-panel-border-width: 3px; --apk-arcade-panel-radius: 14px; --apk-arcade-panel-fallback: var(--cq-parchment-edge);
+  --apk-arcade-button-primary-image: none; --apk-arcade-button-secondary-image: none; --apk-arcade-button-border-width: 3px; --apk-arcade-button-border-inline-width: 3px; --apk-arcade-button-radius: 10px;
+  --apk-arcade-button-fallback: var(--cq-wood-dark); --apk-arcade-primary-fallback: var(--cq-gold); --apk-arcade-primary-text: var(--cq-ink); --apk-arcade-secondary-fallback: var(--cq-iron); --apk-arcade-secondary-text: #fff4dc;
+  --apk-briefing-background: linear-gradient(180deg, var(--cq-parchment), var(--cq-parchment-2)); --apk-briefing-header-background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 55%, var(--cq-wood-dark)); --apk-briefing-header-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+  --apk-briefing-surface: rgba(255, 255, 255, 0.35); --apk-briefing-footer-background: rgba(255, 255, 255, 0.3); --apk-briefing-key-background: rgba(107, 84, 56, 0.15);
+  --apk-briefing-text: var(--cq-ink); --apk-briefing-muted: var(--cq-ink-soft); --apk-briefing-accent: var(--cq-wood-dark); --apk-briefing-accent-warm: var(--cq-gold-dark);
+  --apk-briefing-border: var(--cq-parchment-edge); --apk-briefing-border-soft: rgba(107, 84, 56, 0.35); --apk-briefing-shadow: rgba(0, 0, 0, 0.25); --apk-briefing-radius: 10px; --apk-briefing-key-radius: 6px;
+  --apk-briefing-display-font: var(--cq-font); --apk-briefing-body-font: var(--cq-font); --apk-briefing-mono-font: var(--cq-font);
+  --apk-reward-background: linear-gradient(180deg, var(--cq-parchment), var(--cq-parchment-2)); --apk-reward-card: rgba(255, 255, 255, 0.35); --apk-reward-text: var(--cq-ink); --apk-reward-muted: var(--cq-ink-soft); --apk-reward-accent: var(--cq-gold-dark); --apk-reward-border: var(--cq-parchment-edge); --apk-reward-shadow: rgba(0, 0, 0, 0.25); --apk-reward-icon-background: rgba(255, 255, 255, 0.5); --apk-reward-icon-border: var(--cq-parchment-edge); --apk-reward-display-font: var(--cq-font); --apk-reward-body-font: var(--cq-font);
+  --apk-shell-background: linear-gradient(180deg, var(--cq-parchment), var(--cq-parchment-2)); --apk-shell-text: var(--cq-ink); --apk-shell-border: var(--cq-parchment-edge); --apk-shell-shadow: rgba(0, 0, 0, 0.25); --apk-shell-body-font: var(--cq-font);
+  --apk-result-text: var(--cq-ink); --apk-result-body-font: var(--cq-font);
+}
+/* The briefing header keeps the light text of a wood sign. */
+.cq-world [data-apk-briefing-region="header"] { --apk-briefing-text: #fff4dc; --apk-briefing-accent: #fff4dc; }
+
+/* Scene: a fixed backdrop behind the page; the content flows over it. */
+.cq-backdrop { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.cq-backdrop img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+.cq-backdrop::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.6) 100%); }
+/* Night: the same place with the lanterns lit and a blue cast. */
+.cq-backdrop--dim img { filter: blur(3px) brightness(0.75); transform: scale(1.03); }
+.dark .cq-backdrop img { filter: brightness(0.55) saturate(0.85); }
+.dark .cq-backdrop--dim img { filter: blur(3px) brightness(0.4) saturate(0.85); }
+.dark .cq-backdrop::after { background: radial-gradient(ellipse at 50% 30%, rgba(20, 30, 60, 0.15) 30%, rgba(0, 0, 10, 0.7) 100%); }
+.cq-content { position: relative; z-index: 1; }
+
+/* Text over the backdrop. */
+.cq-on-scene { color: #fff4dc; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.55), 0 0 12px rgba(0, 0, 0, 0.5); }
+
+/* Parchment panel. */
+.cq-panel { position: relative; background: linear-gradient(180deg, var(--cq-parchment), var(--cq-parchment-2)); border: 3px solid var(--cq-parchment-edge); border-radius: 14px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.25), 0 10px 24px rgba(0, 0, 0, 0.35), inset 0 0 0 2px rgba(255, 255, 255, 0.35); padding: 14px 16px; color: var(--cq-ink); }
+.cq-panel::before { content: ""; position: absolute; inset: 6px; border: 1px dashed rgba(107, 84, 56, 0.35); border-radius: 9px; pointer-events: none; }
+.cq-panel--dark { background: linear-gradient(180deg, #2a2117, #1c1510); color: #f3e4c3; border-color: #5c391a; }
+.cq-panel .cq-muted { color: var(--cq-ink-soft); }
+/* Theme tokens inside a parchment panel stay ink-on-parchment in night mode too. */
+.cq-panel:not(.cq-panel--dark) { --foreground: var(--cq-ink); --muted-foreground: var(--cq-ink-soft); --border: rgba(107, 84, 56, 0.45); --card: transparent; --card-foreground: var(--cq-ink); --muted: rgba(107, 84, 56, 0.12); }
+/* A pin at the top of a notice. */
+.cq-pin::after { content: ""; position: absolute; top: -8px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ff8a8a, #b3222a); box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5); }
+
+/* Plank sign. */
+.cq-sign { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 55%, var(--cq-wood-dark)); border: 3px solid var(--cq-wood-dark); border-radius: 8px; color: #fff4dc; font-weight: 700; font-size: 20px; letter-spacing: 0.3px; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.35); }
+.cq-sign::before, .cq-sign::after { content: ""; position: absolute; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #d9dde3, var(--cq-iron)); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.5); }
+.cq-sign::before { left: 7px; }
+.cq-sign::after { right: 7px; }
+.cq-sign--small { font-size: 15px; padding: 6px 14px; }
+.cq-sign--active { box-shadow: 0 0 0 3px var(--cq-gold), 0 5px 0 rgba(0, 0, 0, 0.3); }
+
+/* Hanging banner. */
+.cq-banner { position: relative; display: inline-block; padding: 14px 22px 22px; color: #fff4dc; font-weight: 700; font-size: 22px; text-align: center; background: linear-gradient(180deg, #b2332f, #7f1f1c); border-left: 3px solid #5a1412; border-right: 3px solid #5a1412; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5); }
+.cq-banner--blue { background: linear-gradient(180deg, #3d6fc4, #22427c); border-color: #1a3160; }
+.cq-banner-wrap { text-align: center; margin-bottom: -14px; position: relative; z-index: 2; }
+
+/* Meter: wood and iron, a filling bar, a lighter pending segment. */
+.cq-meter { position: relative; height: 26px; border-radius: 13px; background: #2a1d12; border: 3px solid var(--cq-iron); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7), 0 2px 0 rgba(0, 0, 0, 0.4); overflow: hidden; }
+.cq-meter--thin { height: 16px; }
+.cq-meter::before, .cq-meter::after { content: ""; position: absolute; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, var(--cq-iron-light), var(--cq-iron)); z-index: 2; }
+.cq-meter::before { left: 4px; }
+.cq-meter::after { right: 4px; }
+.cq-meter > .cq-fill { position: absolute; inset: 0; width: var(--value, 0%); background: linear-gradient(180deg, #ff7a59, var(--cq-red) 55%, #8f2424); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25), inset 0 2px 0 rgba(255, 255, 255, 0.35); transition: width 0.4s ease; }
+.cq-meter > .cq-pending { position: absolute; inset: 0; width: var(--pending, 0%); background: repeating-linear-gradient(45deg, rgba(255, 220, 120, 0.55) 0 6px, rgba(255, 220, 120, 0.25) 6px 12px); }
+.cq-meter--green > .cq-fill { background: linear-gradient(180deg, #8ee07e, var(--cq-green) 55%, #2d7a36); }
+.cq-meter--gold > .cq-fill { background: linear-gradient(180deg, #ffe08a, var(--cq-gold) 55%, var(--cq-gold-dark)); }
+.cq-meter--blue > .cq-fill { background: linear-gradient(180deg, #8fc0ff, var(--cq-blue) 55%, #22427c); }
+
+/* Hearts. */
+.cq-hearts { display: inline-flex; gap: 4px; }
+.cq-heart { width: 26px; height: 24px; background: url("/rpg/kit/heart.svg") center / contain no-repeat; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4)); }
+.cq-heart--lost { filter: grayscale(1) brightness(0.35); }
+
+/* Coins and gems: the HUD chips. */
+.cq-coins { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 6px; background: linear-gradient(180deg, #3a2a18, #241810); border: 2px solid var(--cq-gold-dark); border-radius: 999px; color: #ffe9a8; font-weight: 700; font-size: 17px; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4); white-space: nowrap; }
+.cq-coins img { width: 24px; height: 24px; }
+.cq-gem { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px 4px 6px; background: linear-gradient(180deg, #1c2b4a, #0e1730); border: 2px solid var(--cq-blue); border-radius: 999px; color: #cfe3ff; font-weight: 700; font-size: 15px; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4); white-space: nowrap; }
+.cq-gem img { width: 22px; height: 22px; }
+
+/* Buttons: wood for an action, gold for the one primary action, iron for a way out. */
+.cq-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 12px; font-family: var(--cq-font); font-weight: 700; font-size: 17px; line-height: 1.2; color: #fff4dc; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 60%, var(--cq-wood-dark)); border: 3px solid var(--cq-wood-dark); box-shadow: 0 5px 0 #3b2411, 0 7px 12px rgba(0, 0, 0, 0.35); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45); cursor: pointer; text-decoration: none; transition: transform 0.08s ease, box-shadow 0.08s ease; }
+.cq-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #3b2411, 0 3px 6px rgba(0, 0, 0, 0.35); }
+.cq-btn:disabled { opacity: 0.6; cursor: default; }
+.cq-btn--gold { background: linear-gradient(180deg, #ffe08a, var(--cq-gold) 55%, var(--cq-gold-dark)); border-color: var(--cq-gold-dark); color: #3b2a1a; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); box-shadow: 0 5px 0 #7a5410, 0 7px 12px rgba(0, 0, 0, 0.35); }
+.cq-btn--gold:active { box-shadow: 0 2px 0 #7a5410, 0 3px 6px rgba(0, 0, 0, 0.35); }
+.cq-btn--iron { background: linear-gradient(180deg, var(--cq-iron-light), var(--cq-iron) 60%, #2d3138); border-color: #2d3138; box-shadow: 0 5px 0 #1b1e23, 0 7px 12px rgba(0, 0, 0, 0.35); }
+.cq-btn--iron:active { box-shadow: 0 2px 0 #1b1e23, 0 3px 6px rgba(0, 0, 0, 0.35); }
+.cq-btn--small { min-height: 40px; padding: 0 14px; font-size: 14px; }
+.cq-btn img { width: 22px; height: 22px; }
+
+/* Plaque: the stat tiles. */
+.cq-plaque { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 60%, var(--cq-wood-dark)); border: 3px solid var(--cq-wood-dark); border-radius: 10px; color: #fff4dc; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5); box-shadow: 0 4px 0 rgba(0, 0, 0, 0.35); text-align: center; }
+.cq-plaque b { font-size: 20px; line-height: 1; }
+.cq-plaque small { font-size: 11px; opacity: 0.9; }
+.cq-plaque img { width: 26px; height: 26px; }
+
+/* Slot and relic tokens. */
+.cq-slot { width: 56px; height: 56px; border-radius: 12px; background: radial-gradient(circle at 50% 40%, #4a3522, #2a1d12); border: 3px solid var(--cq-iron); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 0 rgba(0, 0, 0, 0.4); display: grid; place-items: center; }
+.cq-slot img { width: 44px; height: 44px; }
+.cq-slot--active { border-color: var(--cq-gold); box-shadow: 0 0 0 3px rgba(232, 181, 52, 0.35), inset 0 2px 6px rgba(0, 0, 0, 0.7); }
+.cq-relic { width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #4a3522, #1c1510); border: 3px solid var(--cq-iron); display: grid; place-items: center; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4); }
+.cq-relic img { width: 48px; height: 48px; }
+.cq-relic--armed { border-color: var(--cq-gold); animation: cq-glow 1.2s ease-in-out infinite alternate; }
+@keyframes cq-glow { from { box-shadow: 0 0 10px 2px rgba(255, 214, 90, 0.45); } to { box-shadow: 0 0 22px 6px rgba(255, 214, 90, 0.85); } }
+
+/* Sprite strip: eight frames side by side; the size is the frame size. */
+.cq-sprite { background-repeat: no-repeat; image-rendering: pixelated; animation: cq-strip 1s steps(8) infinite; }
+@keyframes cq-strip { to { background-position-x: calc(-1 * var(--strip-w, 1024px)); } }
+.cq-bob { animation: cq-bob 2.2s ease-in-out infinite; }
+@keyframes cq-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+.cq-shadowed { filter: drop-shadow(0 6px 4px rgba(0, 0, 0, 0.5)); }
+
+/* Effects (2D): burst, slash, shield flash, shake, floating number, coins flying. */
+.cq-fx-burst { position: absolute; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, #fff6c0 0%, #ffb347 35%, rgba(255, 80, 40, 0) 70%); animation: cq-burst 0.45s ease-out forwards; pointer-events: none; }
+@keyframes cq-burst { from { transform: scale(0.2); opacity: 1; } to { transform: scale(1.4); opacity: 0; } }
+.cq-fx-slash { position: absolute; width: 140px; height: 24px; background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 50%, rgba(255, 255, 255, 0)); border-radius: 12px; animation: cq-slash 0.3s ease-out forwards; pointer-events: none; }
+@keyframes cq-slash { from { opacity: 0; transform: rotate(-30deg) translateX(-40px) scaleX(0.3); } 40% { opacity: 1; } to { opacity: 0; transform: rotate(-30deg) translateX(40px) scaleX(1.2); } }
+.cq-fx-shield { position: absolute; inset: -6px; border-radius: 18px; box-shadow: 0 0 0 4px rgba(90, 170, 255, 0.9), 0 0 24px 8px rgba(90, 170, 255, 0.6); animation: cq-fade 0.6s ease-out forwards; pointer-events: none; }
+@keyframes cq-fade { from { opacity: 1; } to { opacity: 0; } }
+.cq-shake { animation: cq-shake 0.35s ease-in-out; }
+@keyframes cq-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px) rotate(-2deg); } 75% { transform: translateX(8px) rotate(2deg); } }
+.cq-dmg { position: absolute; font-weight: 700; font-size: 28px; color: #fff; -webkit-text-stroke: 2px #7f1f1c; animation: cq-float 1s ease-out forwards; pointer-events: none; }
+@keyframes cq-float { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-60px); opacity: 0; } }
+.cq-coin-fly { position: absolute; width: 22px; height: 22px; background: url("/rpg/kit/icons/coin.webp") center / contain no-repeat; animation: cq-fly 0.9s ease-in forwards; pointer-events: none; }
+@keyframes cq-fly { from { transform: translate(0, 0) scale(1); opacity: 1; } to { transform: translate(-160px, -120px) scale(0.5); opacity: 0; } }
+/* The counter: an NPC sprite and its speech bubble (the shop, the quest board). */
+.cq-counter { display: grid; grid-template-columns: 128px 1fr; gap: 10px; align-items: end; }
+.cq-counter .cq-bubble { align-self: start; margin-top: 10px; }
+
+/* Hanging shop signs as a filter row. */
+.cq-signs { display: flex; gap: 8px; overflow-x: auto; padding: 14px 2px 10px; scrollbar-width: none; }
+.cq-signs .cq-sign { white-space: nowrap; opacity: 0.85; cursor: pointer; font-family: var(--cq-font); font-weight: 700; color: #fff4dc; }
+.cq-signs .cq-sign--active { opacity: 1; }
+
+/* A shelf: a row of item cards on a wooden plank. */
+.cq-shelf { position: relative; margin: 10px 0 18px; }
+.cq-shelf::after { content: ""; display: block; height: 14px; background: linear-gradient(180deg, #b37a3f, #8a5a2b 60%, #5c391a); border: 3px solid #5c391a; border-radius: 6px; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35); }
+.cq-shelf-items { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: -8px; padding: 0 6px; }
+@media (min-width: 900px) { .cq-shelf-items { grid-template-columns: repeat(6, 1fr); } }
+.cq-item { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 48px; padding: 8px 4px 6px; background: linear-gradient(180deg, rgba(243, 228, 195, 0.95), rgba(233, 212, 168, 0.95)); border: 3px solid var(--cq-parchment-edge); border-radius: 12px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3); color: var(--cq-ink); font-family: var(--cq-font); text-align: center; cursor: pointer; }
+.cq-item > img { width: 72px; height: 72px; filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.35)); }
+.cq-item .cq-item-name { font-size: 13px; font-weight: 700; line-height: 1.1; }
+.cq-item .cq-item-price { display: inline-flex; align-items: center; gap: 3px; font-size: 14px; font-weight: 700; color: var(--cq-gold-dark); }
+.cq-item .cq-item-price img { width: 16px; height: 16px; }
+.cq-item--owned .cq-item-price { color: var(--cq-green); }
+.cq-item--locked { filter: saturate(0.3); }
+.cq-item .cq-item-lock { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: #fff4dc; background: #4a4f57; border-radius: 999px; padding: 2px 8px; }
+.cq-item[aria-pressed="true"], .cq-item--selected { border-color: var(--cq-gold); box-shadow: 0 0 0 3px rgba(232, 181, 52, 0.45), 0 4px 0 rgba(0, 0, 0, 0.3); }
+.cq-item .cq-pot { position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; }
+
+/* A dye pot (a colour choice). */
+.cq-pot { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 50% 50% 45% 45%; border: 3px solid #3b2a1a; box-shadow: inset 0 -10px 0 rgba(0, 0, 0, 0.25), 0 3px 0 rgba(0, 0, 0, 0.3); cursor: pointer; }
+.cq-pot[aria-checked="true"], .cq-pot--on { outline: 3px solid var(--cq-gold); outline-offset: 2px; }
+
+/* The try-on card: the hero in a light beam and the piece details. */
+.cq-tryon { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; }
+.cq-beam { position: relative; display: flex; align-items: flex-end; justify-content: center; }
+.cq-beam::before { content: ""; position: absolute; inset: -10% -20% -4%; border-radius: 50%; background: radial-gradient(ellipse at 50% 70%, rgba(255, 236, 170, 0.55), rgba(255, 236, 170, 0) 65%); pointer-events: none; }
+.cq-beam > * { position: relative; }
+
+/* A pager line under a shelf or a drawer. */
+.cq-pager { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 12px; font-family: var(--cq-font); font-weight: 700; }
+
+/* The paper-doll: ten slots around the hero. */
+.cq-doll { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; justify-items: center; align-items: center; max-width: 640px; margin: 0 auto; }
+.cq-doll-hero { grid-column: 1 / -1; grid-row: 2; }
+@media (min-width: 640px) {
+  .cq-doll { grid-template-columns: 64px 1fr 64px; grid-template-rows: repeat(5, auto); }
+  .cq-doll-hero { grid-column: 2; grid-row: 1 / -1; }
+  .cq-doll > .cq-slot:nth-child(1) { grid-area: 1 / 1; } .cq-doll > .cq-slot:nth-child(2) { grid-area: 2 / 1; } .cq-doll > .cq-slot:nth-child(3) { grid-area: 3 / 1; } .cq-doll > .cq-slot:nth-child(4) { grid-area: 4 / 1; } .cq-doll > .cq-slot:nth-child(5) { grid-area: 5 / 1; }
+  .cq-doll > .cq-slot:nth-child(7) { grid-area: 1 / 3; } .cq-doll > .cq-slot:nth-child(8) { grid-area: 2 / 3; } .cq-doll > .cq-slot:nth-child(9) { grid-area: 3 / 3; } .cq-doll > .cq-slot:nth-child(10) { grid-area: 4 / 3; } .cq-doll > .cq-slot:nth-child(11) { grid-area: 5 / 3; }
+}
+.cq-slot { position: relative; cursor: pointer; }
+.cq-slot .cq-slot-count { position: absolute; right: -6px; top: -6px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: var(--cq-gold); color: #3b2a1a; font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3); }
+.cq-slot[aria-pressed="true"] { border-color: var(--cq-gold); box-shadow: 0 0 0 3px rgba(232, 181, 52, 0.35), inset 0 2px 6px rgba(0, 0, 0, 0.7); }
+
+/* The shrine: heroes on pedestals in rows that bow like a half-circle. */
+.cq-pedestals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 16px; }
+@media (min-width: 640px) { .cq-pedestals { grid-template-columns: repeat(5, 1fr); } .cq-pedestals > li:nth-child(5n + 2), .cq-pedestals > li:nth-child(5n + 4) { transform: translateY(10px); } .cq-pedestals > li:nth-child(5n + 3) { transform: translateY(18px); } }
+.cq-pedestal { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; padding: 8px 4px 0; border: 0; background: none; cursor: pointer; color: #fff4dc; font-family: var(--cq-font); font-weight: 700; }
+.cq-pedestal::after { content: ""; width: 86%; height: 16px; margin-top: -6px; border-radius: 50%; background: radial-gradient(ellipse at 50% 40%, #9aa3ad, #4b535c 70%); box-shadow: 0 5px 0 #2d3138, 0 8px 10px rgba(0, 0, 0, 0.5); }
+.cq-pedestal > canvas, .cq-pedestal > img, .cq-pedestal > [role="img"] { width: 100%; max-width: 120px; transition: transform 0.2s ease-out; }
+.cq-pedestal:hover > canvas, .cq-pedestal:focus-visible > canvas { transform: translateY(-6px) scale(1.06); }
+.cq-pedestal[aria-pressed="true"] > canvas, .cq-pedestal[aria-pressed="true"] > [role="img"] { transform: translateY(-8px) scale(1.1); filter: drop-shadow(0 0 12px rgba(255, 224, 138, 0.9)); }
+.cq-pedestal[aria-pressed="true"]::after { background: radial-gradient(ellipse at 50% 40%, #ffe08a, var(--cq-gold-dark) 70%); }
+
+/* A pop when a piece lands on the hero, and a nod from an NPC. */
+.cq-pop { animation: cq-pop 0.45s ease-out; }
+@keyframes cq-pop { 0% { transform: scale(1); } 35% { transform: scale(1.12) translateY(-6px); } 100% { transform: scale(1); } }
+.cq-nod { animation: cq-nod 0.6s ease-in-out; }
+@keyframes cq-nod { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+/* The battle: the stone archway around the game, the clock, the field, and the coin rain. */
+.cq-clock { font-family: var(--cq-font); font-weight: 700; font-size: 28px; color: #fff4dc; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6); font-variant-numeric: tabular-nums; }
+.cq-arch { position: relative; margin-top: 40px; padding: 14px; border: 10px solid transparent; border-image: linear-gradient(180deg, #8b929c, #4a4f57 60%, #2d3138) 1; background: #111722; box-shadow: 0 0 0 4px #2d3138, 0 10px 24px rgba(0, 0, 0, 0.5); }
+.cq-arch::before { content: ""; position: absolute; left: -10px; right: -10px; top: -44px; height: 34px; background: linear-gradient(180deg, #8b929c, #4a4f57); border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+.cq-boss { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.cq-boss .cq-sprite { filter: drop-shadow(0 10px 6px rgba(0, 0, 0, 0.6)); }
+.cq-boss--fallen .cq-sprite { animation-iteration-count: 1; animation-fill-mode: forwards; }
+.cq-field { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; min-height: 260px; padding: 12px 8px 0; }
+.cq-field-heroes { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.cq-field-hero { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; width: 92px; color: #fff4dc; font-family: var(--cq-font); font-weight: 700; font-size: 13px; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6); }
+.cq-field-hero > canvas, .cq-field-hero > img { width: 72px; height: 72px; filter: drop-shadow(0 6px 4px rgba(0, 0, 0, 0.5)); }
+.cq-field-hero--away { opacity: 0.4; }
+.cq-field-hero--stale { opacity: 0.6; }
+.cq-field-hero .cq-meter { width: 100%; }
+.cq-lunge { animation: cq-lunge 0.5s ease-out; }
+@keyframes cq-lunge { 0%, 100% { transform: translateX(0); } 40% { transform: translateX(26px) translateY(-6px); } }
+.cq-coin-rain { position: absolute; top: -30px; width: 22px; height: 22px; background: url("/rpg/kit/icons/coin.webp") center / contain no-repeat; animation: cq-rain 1.4s ease-in forwards; pointer-events: none; }
+@keyframes cq-rain { from { transform: translateY(0) rotate(0); opacity: 1; } to { transform: translateY(320px) rotate(300deg); opacity: 0; } }
+.cq-fx-shield--on { animation: cq-glow 1.2s ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) { .cq-sprite, .cq-bob, .cq-relic--armed, .cq-shake, .cq-pop, .cq-nod, .cq-lunge, .cq-coin-rain, .cq-fx-shield--on { animation: none; } .cq-pedestal > canvas { transition: none; } }
+
+/* Shell: the wooden header and toolbar, the signpost. */
+.cq-header { background: linear-gradient(180deg, rgba(58, 42, 24, 0.96), rgba(36, 24, 16, 0.96)); border-bottom: 3px solid var(--cq-wood-dark); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45); color: #fff4dc; }
+.cq-header .cq-brand { font-family: var(--cq-font); font-weight: 700; font-size: 18px; color: #fff4dc; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6); }
+.cq-toolbar { background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 50%, var(--cq-wood-dark)); border-top: 4px solid var(--cq-wood-dark); box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.45); }
+.cq-toolbar a { color: #fff4dc; font-family: var(--cq-font); font-weight: 700; font-size: 12px; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45); }
+.cq-toolbar a img { width: 32px; height: 32px; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4)); }
+.cq-toolbar a[aria-current="page"] { background: rgba(0, 0, 0, 0.25); box-shadow: inset 0 3px 0 var(--cq-gold); }
+.cq-signpost { position: relative; padding: 10px 0 10px 18px; }
+.cq-signpost::before { content: ""; position: absolute; left: 4px; top: 0; bottom: 0; width: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--cq-wood-light), var(--cq-wood) 60%, var(--cq-wood-dark)); box-shadow: 2px 0 4px rgba(0, 0, 0, 0.4); }
+.cq-signpost a { display: flex; align-items: center; gap: 10px; min-height: 44px; margin: 6px 0; padding: 4px 12px; border-radius: 6px; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 60%, var(--cq-wood-dark)); border: 2px solid var(--cq-wood-dark); color: #fff4dc; font-family: var(--cq-font); font-weight: 700; font-size: 15px; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45); box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3); text-decoration: none; transform: rotate(-1deg); }
+.cq-signpost a:nth-child(even) { transform: rotate(1deg); }
+.cq-signpost a img { width: 26px; height: 26px; }
+.cq-signpost a[aria-current="page"] { box-shadow: 0 0 0 3px var(--cq-gold), 0 3px 0 rgba(0, 0, 0, 0.3); }
+
+/* Tabs as hanging signs (a TabsList with .cq-tabs). */
+.cq-tabs { background: none; gap: 8px; padding: 10px 2px; }
+.cq-tabs [role="tab"] { position: relative; min-height: 44px; padding: 6px 14px; border-radius: 8px; border: 3px solid var(--cq-wood-dark); background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 55%, var(--cq-wood-dark)); color: #fff4dc; font-family: var(--cq-font); font-weight: 700; font-size: 15px; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3); opacity: 0.85; }
+.cq-tabs [role="tab"][data-state="active"] { opacity: 1; box-shadow: 0 0 0 3px var(--cq-gold), 0 5px 0 rgba(0, 0, 0, 0.3); color: #fff4dc; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 55%, var(--cq-wood-dark)); }
+
+/* Speech bubble for an NPC line. */
+.cq-bubble { position: relative; display: inline-block; padding: 10px 14px; background: #fffaf0; border: 3px solid var(--cq-ink); border-radius: 14px; font-weight: 500; font-size: 15px; color: var(--cq-ink); }
+.cq-bubble::after { content: ""; position: absolute; left: 22px; bottom: -12px; border: 8px solid transparent; border-top-color: var(--cq-ink); border-bottom: 0; }

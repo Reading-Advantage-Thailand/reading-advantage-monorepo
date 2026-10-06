@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 // import { createEmptyCard, Card } from "ts-fsrs";
 import { Article, SentenceTimepoint, WordTimestamp } from "@/types";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import {
   Select,
   SelectContent,
@@ -411,7 +411,7 @@ export default function ArticleContent({ article }: Props) {
     }
   };
 
-  const paragraphs = article.passage
+  const paragraphs = (article.passage ?? "")
     .split("\n\n")
     .filter((p) => p.trim() !== "");
 
@@ -445,7 +445,7 @@ export default function ArticleContent({ article }: Props) {
             onValueChange={setSelectedLanguage}
             disabled={loading}
           >
-            <SelectTrigger className="h-10 w-full">
+            <SelectTrigger className="h-10 w-full" aria-label={t("translationLanguage")}>
               <div className="flex items-center gap-2">
                 <Languages className="h-4 w-4" />
                 <SelectValue>
@@ -487,11 +487,13 @@ export default function ArticleContent({ article }: Props) {
       </div>
 
       {shouldShowFixedControls && (
-        <div className="bg-primary dark:bg-primary-foreground fixed right-0 bottom-0 left-0 z-50 border-t p-4 shadow-lg transition-all duration-300">
+        <div className="bg-primary dark:bg-primary-foreground fixed right-0 bottom-(--bottom-nav-h) left-0 z-50 border-t p-4 shadow-lg transition-[background-color,box-shadow] duration-300 lg:bottom-0">
           <div className="mx-auto max-w-4xl space-y-3">
             {isTranslateOpen && (
               <div className="flex flex-col items-center justify-center border-b pb-3">
-                <p className="text-center text-green-500">{translate}</p>
+                <p aria-live="polite" className="text-primary-foreground dark:text-primary text-center">
+                  {translate}
+                </p>
               </div>
             )}
 
@@ -512,7 +514,7 @@ export default function ArticleContent({ article }: Props) {
                   onValueChange={setSelectedLanguage}
                   disabled={loading}
                 >
-                  <SelectTrigger className="h-10 w-[70px] md:w-auto">
+                  <SelectTrigger className="h-10 w-[70px] md:w-auto" aria-label={t("translationLanguage")}>
                     <div className="flex items-center gap-1 md:gap-2">
                       <Languages className="h-4 w-4 shrink-0" />
                       <SelectValue>
@@ -989,7 +991,7 @@ export default function ArticleContent({ article }: Props) {
               <Image
                 className="rounded-lg shadow-xl"
                 src={
-                  getArticleImageUrl(article.id, groupIndex + 1) || `/nopic.png`
+                  getArticleImageUrl(article, groupIndex + 1) || `/nopic.png`
                 }
                 alt="Article Image"
                 width={1024}

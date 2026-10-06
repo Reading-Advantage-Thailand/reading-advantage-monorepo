@@ -14,8 +14,8 @@ vi.mock("@/lib/session", () => ({
 }));
 // redirect is the sign-in-redirect primitive; a call to it is a regression.
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
-vi.mock("@/components/nav/main-nav", () => ({
-  MainNav: () => <nav data-testid="main-nav" />,
+vi.mock("@/components/nav/public-header", () => ({
+  PublicHeader: ({ children }: { children?: React.ReactNode }) => <header>{children}</header>,
 }));
 vi.mock("@/components/nav/user-account-nav", () => ({
   UserAccountNav: () => <div data-testid="user-nav" />,
@@ -45,6 +45,12 @@ describe("not-found layout", () => {
     expect(screen.getByText("missing page content")).toBeInTheDocument();
     expect(mocks.redirect).not.toHaveBeenCalled();
     expect(screen.queryByTestId("user-nav")).not.toBeInTheDocument();
+  });
+
+  it("does not clip wide content in main", async () => {
+    mocks.getCurrentUser.mockResolvedValue(null);
+    render(await NotfoundPageLayout({ children: <p>missing page content</p> }));
+    expect(screen.getByRole("main")).not.toHaveClass("overflow-hidden");
   });
 
   it("renders the 404 content with the account nav for a signed-in user", async () => {

@@ -13,8 +13,10 @@ import {
   classrooms,
   studentAssignments,
 } from '@reading-advantage/db';
+import { recordLessonStep } from "./classBookController";
 import { NextRequest, NextResponse } from "next/server";
 import getAssignmentById, {
+  AssignmentForbiddenError,
   createAssignment,
   getStudentAssignments,
   getUserLessonProgress,
@@ -307,6 +309,9 @@ export async function fetchAssignmentById(
 
     return NextResponse.json(assignment, { status: 200 });
   } catch (error) {
+    if (error instanceof AssignmentForbiddenError) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     console.error("Error fetching assignment by ID:", error);
     return NextResponse.json(
       { error: "Internal server error" },
@@ -334,6 +339,10 @@ export async function postUserLessonProgress(
       progress,
       timeSpent,
     );
+
+    if (typeof articleId === "string" && typeof progress === "number") {
+      await recordLessonStep(user, articleId, progress, Number(timeSpent), "assignment lesson");
+    }
 
     return NextResponse.json(
       { message: "User lesson progress updated successfully" },

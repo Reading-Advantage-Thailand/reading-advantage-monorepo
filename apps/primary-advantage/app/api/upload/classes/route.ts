@@ -7,7 +7,7 @@ import { z } from "zod";
 import { eq, and, inArray, or, ilike } from 'drizzle-orm';
 import type { DB } from '@reading-advantage/domain';
 import { users, schools, classrooms, classroomStudents, classroomTeachers, userRoles, roles } from '@reading-advantage/db/schema';
-import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { getTenantDB, getUnscopedDB, studentLogin } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
 import { generateRandomClassCode } from "@/lib/utils";
@@ -151,6 +151,8 @@ const createTimer = (label: string) => {
  */
 export async function POST(request: NextRequest) {
   const apiTimer = createTimer("UPLOAD_CLASSES_API");
+  // Set once the upload is written to disk; the finally block deletes it on every exit.
+  let tempFilePath: string | undefined;
 
   try {
     const authTimer = createTimer("AUTH_CHECK");
@@ -278,6 +280,7 @@ export async function POST(request: NextRequest) {
     // Convert file to buffer and save
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    tempFilePath = filePath;
     await writeFile(filePath, buffer);
     fileTimer.log("File saved to temp directory", `Path: ${filePath}`);
 
@@ -704,11 +707,6 @@ export async function POST(request: NextRequest) {
 
     // If there are validation errors, return them
     if (errors.length > 0) {
-      unlink(filePath, (err) => {
-        if (err) {
-          console.error("Error deleting temp file:", err);
-        }
-      });
       return NextResponse.json(
         {
           error: "Validation failed",
@@ -728,6 +726,9 @@ export async function POST(request: NextRequest) {
 
     // Variables for user processing statistics
     const createdUsers: any[] = [];
+    let studentLogins: { name: string; classroomName: string | null; username: string; initialPassword: string | null }[] = [];
+    // Students whose generated login could not be stored. The teacher sees them in the response.
+    let studentLoginsFailedNames: string[] = [];
     let roleAssignments: any[] = [];
     let classroomsAssigned = 0;
     let studentAssignments = 0;
@@ -747,9 +748,13 @@ export async function POST(request: NextRequest) {
       // Process users in batches
       batch = []; // Reset batch for user processing
 
+      // FR-6: ids this upload tried to insert. A user whose stored id differs already existed.
+      const attemptedIdByEmail = new Map<string, string>();
       for (const userData of processedUsers) {
+        const newUserId = crypto.randomUUID();
+        attemptedIdByEmail.set(userData.email, newUserId);
         batch.push({
-          id: crypto.randomUUID(),
+          id: newUserId,
           username: userData.email,
           displayUsername: userData.email,
           email: userData.email,
@@ -964,6 +969,53 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      // FR-6: only students created by this upload get a generated username and password.
+      // A student who existed before keeps the current credentials.
+      if (studentAssignmentsToCreate.length > 0) {
+        try {
+          const classNameById = new Map(Array.from(classroomNameToIdMap, ([name, id]) => [id, name] as const));
+          const newStudentIds = new Set(
+            processedUsers.flatMap((userData) => {
+              const stored = emailToUserId.get(userData.email);
+              return stored && stored === attemptedIdByEmail.get(userData.email) ? [stored] : [];
+            }),
+          );
+          const nameByUserId = new Map(processedUsers.map((userData) => [emailToUserId.get(userData.email), userData.name] as const));
+          const seeds = new Map<string, studentLogin.StudentLoginSeed>();
+          for (const assignment of studentAssignmentsToCreate) {
+            if (!newStudentIds.has(assignment.studentId) || seeds.has(assignment.studentId)) continue;
+            seeds.set(assignment.studentId, {
+              userId: assignment.studentId,
+              classroomName: classNameById.get(assignment.classroomId) ?? null,
+              classroomId: assignment.classroomId,
+            });
+          }
+          if (seeds.size > 0) {
+            try {
+              const { provisioned, failed } = await studentLogin.provisionStudentLogins({
+                db: globalDb,
+                schoolId: authUser.schoolId ?? null,
+                students: Array.from(seeds.values()),
+              });
+              studentLoginsFailedNames = failed.map((f) => nameByUserId.get(f.userId) ?? f.userId);
+              if (failed.length > 0) console.error("Student login generation failed for", failed.length, "students");
+              studentLogins = provisioned.map((login) => ({
+                name: nameByUserId.get(login.userId) ?? "",
+                classroomName: seeds.get(login.userId)?.classroomName ?? null,
+                username: login.username,
+                initialPassword: login.initialPassword,
+              }));
+            } catch (error) {
+              // A failure leaves the students with the email username. Report it to the teacher.
+              console.error("Student login generation failed:", error instanceof Error ? error.message : "Unknown");
+              studentLoginsFailedNames = Array.from(seeds.keys(), (id) => nameByUserId.get(id) ?? id);
+            }
+          }
+        } catch (error) {
+          console.error("Student login preparation failed:", error instanceof Error ? error.message : "Unknown");
+        }
+      }
+
       // Batch create teacher assignments (replaces Prisma `classroomTeachers.createMany`).
       if (teacherAssignmentsToCreate.length > 0) {
         await globalDb.insert(classroomTeachers)
@@ -998,11 +1050,6 @@ export async function POST(request: NextRequest) {
 
     // Delete temp file
     const cleanupTimer = createTimer("CLEANUP_RESPONSE");
-    unlink(filePath, (err) => {
-      if (err) {
-        console.error("Error deleting temp file:", err);
-      }
-    });
     cleanupTimer.log("Temp file cleanup completed");
 
     // Prepare response message and stats based on file type
@@ -1016,7 +1063,7 @@ export async function POST(request: NextRequest) {
     if (filename === "students.csv" || filename === "teachers.csv") {
       message = "Users uploaded and created successfully";
       note =
-        "Users created with default values: password=null, cefrLevel=A0-, level=1, xp=0. Users need to set passwords before they can log in.";
+        "Users created with default values: password=null, cefrLevel=A0-, level=1, xp=0. Students created now get a generated username and an initial password, shown once in studentLogins.";
       stats = {
         ...stats,
         processedUsers: processedUsers.length,
@@ -1067,7 +1114,10 @@ export async function POST(request: NextRequest) {
           },
       classrooms: createdClassrooms,
       note: note,
-    });
+      studentLogins,
+      studentLoginsFailed: studentLoginsFailedNames.length,
+      studentLoginsFailedNames,
+    }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const errorTime = apiTimer.end("Upload classes API request failed");
     console.error(`❌ Classes upload error after ${errorTime}ms:`, error);
@@ -1081,5 +1131,13 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 },
     );
+  } finally {
+    if (tempFilePath) {
+      unlink(tempFilePath, (err) => {
+        if (err) {
+          console.error("Error deleting temp file:", err);
+        }
+      });
+    }
   }
 }

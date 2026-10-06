@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { passwordSchema } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
 import {
   createStudent,
@@ -100,7 +101,10 @@ export const getStudentsController = async (
 export const createStudentController = async (
   request: NextRequest,
 ): Promise<
-  NextResponse<{ success: boolean; student?: StudentData } | { error: string }>
+  NextResponse<
+    | { success: boolean; student?: StudentData; credentials?: { username: string; initialPassword: string | null } }
+    | { error: string }
+  >
 > => {
   try {
 
@@ -124,8 +128,12 @@ export const createStudentController = async (
     }
 
     const body = await request.json();
-    const { name, email, cefrLevel, classroomId, password } =
+    const { name, email, cefrLevel, classroomId, password, schoolId } =
       body as CreateStudentInput;
+
+    if (password !== undefined && !passwordSchema.safeParse(password).success) {
+      return NextResponse.json({ error: "Invalid password" }, { status: 400 });
+    }
 
     // Validate required fields
     if (!name || !email) {
@@ -152,6 +160,7 @@ export const createStudentController = async (
       classroomId,
       password,
       userWithRoles,
+      schoolId,
     });
 
     if (!result.success) {
@@ -164,8 +173,8 @@ export const createStudentController = async (
     }
 
     return NextResponse.json(
-      { success: true, student: result.student },
-      { status: 201 },
+      { success: true, student: result.student, credentials: result.credentials },
+      { status: 201, headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
     console.error(
@@ -256,6 +265,9 @@ export const updateStudentController = async (
 
     const body = await request.json();
     const updateData = body as UpdateStudentInput;
+    if (updateData.password !== undefined && !passwordSchema.safeParse(updateData.password).success) {
+      return NextResponse.json({ error: "Invalid password" }, { status: 400 });
+    }
 
     // Update student using model
     const result = await updateStudent(id, updateData, userWithRoles);

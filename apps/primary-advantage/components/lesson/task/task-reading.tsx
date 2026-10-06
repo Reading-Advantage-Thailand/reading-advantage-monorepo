@@ -49,7 +49,7 @@ export function TaskReading({
   const [selectedSentence, setSelectedSentence] = useState<number | null>(null);
   const sentenceRefs = useRef<{ [key: number]: HTMLElement | null }>({});
 
-  const paragraphs = article.passage
+  const paragraphs = (article.passage ?? "")
     .split("\n\n")
     .filter((p) => p.trim() !== "");
 
@@ -428,7 +428,7 @@ export function TaskReading({
                     <Image
                       className="rounded-lg shadow-xl"
                       src={
-                        getArticleImageUrl(article.id, groupIndex + 1) ||
+                        getArticleImageUrl(article, groupIndex + 1) ||
                         `/nopic.png`
                       }
                       alt="Article Image"

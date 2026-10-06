@@ -39,8 +39,10 @@ export {
   hashPassword,
   verifyPassword,
   rehashOnLogin,
+  adoptLegacyPassword,
   ARGON2ID_OPTS,
 } from "./password.js";
+export { passwordSchema, PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } from "./password-schema.js";
 
 // Interim first-party credential compatibility adapter
 export {
@@ -57,8 +59,17 @@ export {
   deleteSession,
   revokeAllUserSessions,
   type Session,
+  type SessionAuthStrength,
   type CreateSessionResult,
 } from "./session.js";
+
+export {
+  STUDENT_SESSION_IDLE_SECONDS,
+  SCHOOL_DAY_END_HOUR,
+  schoolDayEnd,
+  studentSessionOptions,
+  type StudentSessionOptions,
+} from "./student-session-policy.js";
 
 // Rate Limiting
 export {

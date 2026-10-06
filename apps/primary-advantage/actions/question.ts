@@ -1,5 +1,6 @@
 "use server";
 
+import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
 import {
   db,
   eq,
@@ -155,6 +156,7 @@ export async function finishQuiz(
       activityId: userActivityRow.id,
       activityType: type,
     });
+    await grantGpForXp({ tx, schoolId: user.schoolId ?? null, userId: user.id as string, sourceKey: `xp:${userActivityRow.id}`, activityType: type, xpEarned });
 
     await tx.update(users)
       .set({

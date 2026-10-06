@@ -1,3 +1,4 @@
+import { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "@reading-advantage/domain/primary-books";
 import {
   db,
   eq,
@@ -13,6 +14,7 @@ import {
   lessonProgress,
   articleActivityLogs,
 } from '@reading-advantage/db';
+import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
 import { currentUser } from "@/lib/session";
 import { normalizeRole } from "@/lib/authorization";
 
@@ -224,21 +226,18 @@ export async function getStudentAssignments(
       });
     }
 
-    // Apply due date filter (client-side filter since it requires date comparison)
+    // Apply due date filter (client-side filter since it requires date comparison). The rule is
+    // the one of the due chips: calendar days in Bangkok, so the whole due day is "today".
     if (dueDateFilter && dueDateFilter !== "all") {
-      const now = new Date();
       stitched = stitched.filter((sa) => {
-        const dueDate = sa.assignment?.dueDate
-          ? new Date(sa.assignment.dueDate)
-          : null;
-        if (!dueDate) return false;
+        const { kind } = getDueDateStatus(sa.assignment?.dueDate);
         switch (dueDateFilter) {
           case "overdue":
-            return dueDate < now;
+            return kind === "overdue";
           case "today":
-            return dueDate.toDateString() === now.toDateString();
+            return kind === "today";
           case "upcoming":
-            return dueDate > now;
+            return kind === "soon" || kind === "upcoming";
           default:
             return true;
         }
@@ -267,6 +266,14 @@ export async function getStudentAssignments(
       throw error;
     }
     throw new Error("Failed to get student assignments");
+  }
+}
+
+/** Raised when the caller may not read an assignment of another school or class. */
+export class AssignmentForbiddenError extends Error {
+  constructor() {
+    super("Forbidden");
+    this.name = "AssignmentForbiddenError";
   }
 }
 
@@ -308,17 +315,17 @@ export default async function getAssignmentById(id: string) {
         classroomRow?.schoolId == null ||
         classroomRow.schoolId !== callerSchool
       ) {
-        throw new Error("Forbidden");
+        throw new AssignmentForbiddenError();
       }
       if (callerRole === "STUDENT" && saRows.length === 0) {
-        throw new Error("Forbidden");
+        throw new AssignmentForbiddenError();
       }
       if (
         callerRole !== "STUDENT" &&
         callerRole !== "TEACHER" &&
         callerRole !== "ADMIN"
       ) {
-        throw new Error("Forbidden");
+        throw new AssignmentForbiddenError();
       }
     }
 
@@ -336,8 +343,8 @@ export default async function getAssignmentById(id: string) {
       articleWithChildren = {
         ...articleWithChildren,
         sentencsAndWordsForFlashcard: sentRows[0] ?? null,
-        multipleChoiceQuestions: mcRows,
-        shortAnswerQuestions: saQuestionRows,
+        multipleChoiceQuestions: studentQuestionSet(mcRows, STUDENT_MCQ_COUNT),
+        shortAnswerQuestions: studentQuestionSet(saQuestionRows, STUDENT_SAQ_COUNT),
         longAnswerQuestions: laRows,
       };
     }

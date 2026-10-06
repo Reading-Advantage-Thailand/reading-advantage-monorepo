@@ -11,6 +11,7 @@ import {
   Settings,
   BarChart3,
   Download,
+  Mic,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
@@ -51,6 +52,13 @@ export function AdminQuickActions() {
       description: t("quickActions.viewReportsDesc"),
       href: "/admin/dashboard",
       icon: BarChart3,
+      variant: "outline" as const,
+    },
+    {
+      title: t("quickActions.reedyCosts"),
+      description: t("quickActions.reedyCostsDesc"),
+      href: "/admin/reedy",
+      icon: Mic,
       variant: "outline" as const,
     },
     {

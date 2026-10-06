@@ -1,0 +1,2699 @@
+{
+ "id": "avatar",
+ "version": "1.0.0",
+ "root": "packs/avatar/1.0.0",
+ "files": {
+  "avatar-base": {
+   "id": "avatar-base",
+   "path": "base/avatar-base.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 294904,
+   "triangles": 4996,
+   "textureSize": 512,
+   "skinned": true,
+   "clips": [
+    "attack",
+    "cast",
+    "cheer",
+    "hit",
+    "idle",
+    "rest",
+    "run",
+    "walk"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-base.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "adventurer-lantern": {
+   "id": "adventurer-lantern",
+   "path": "pieces/adventurer-lantern.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 89984,
+   "triangles": 312,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/adventurer-lantern.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "adventurer-map": {
+   "id": "adventurer-map",
+   "path": "pieces/adventurer-map.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 46572,
+   "triangles": 292,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/adventurer-map.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "adventurer-sword": {
+   "id": "adventurer-sword",
+   "path": "pieces/adventurer-sword.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 49248,
+   "triangles": 264,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/adventurer-sword.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "apprentice-wand": {
+   "id": "apprentice-wand",
+   "path": "pieces/apprentice-wand.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 42712,
+   "triangles": 226,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/apprentice-wand.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "archer-bow": {
+   "id": "archer-bow",
+   "path": "pieces/archer-bow.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 64948,
+   "triangles": 592,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/archer-bow.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-long.capped": {
+   "id": "avatar-hair-long.capped",
+   "path": "pieces/avatar-hair-long.capped.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 85976,
+   "triangles": 1434,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-long.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-long": {
+   "id": "avatar-hair-long",
+   "path": "pieces/avatar-hair-long.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 84528,
+   "triangles": 1488,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-long.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-long.tucked": {
+   "id": "avatar-hair-long.tucked",
+   "path": "pieces/avatar-hair-long.tucked.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 55564,
+   "triangles": 938,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-long.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-ponytail.capped": {
+   "id": "avatar-hair-ponytail.capped",
+   "path": "pieces/avatar-hair-ponytail.capped.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 72896,
+   "triangles": 1268,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-ponytail.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-ponytail": {
+   "id": "avatar-hair-ponytail",
+   "path": "pieces/avatar-hair-ponytail.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 98264,
+   "triangles": 1894,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-ponytail.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-ponytail.tucked": {
+   "id": "avatar-hair-ponytail.tucked",
+   "path": "pieces/avatar-hair-ponytail.tucked.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 53344,
+   "triangles": 934,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-ponytail.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-short.capped": {
+   "id": "avatar-hair-short.capped",
+   "path": "pieces/avatar-hair-short.capped.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 63076,
+   "triangles": 1074,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-short.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-short": {
+   "id": "avatar-hair-short",
+   "path": "pieces/avatar-hair-short.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 86968,
+   "triangles": 1384,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-short.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-short.tucked": {
+   "id": "avatar-hair-short.tucked",
+   "path": "pieces/avatar-hair-short.tucked.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 53340,
+   "triangles": 934,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-short.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-swept.capped": {
+   "id": "avatar-hair-swept.capped",
+   "path": "pieces/avatar-hair-swept.capped.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 63076,
+   "triangles": 1074,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-swept.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-swept": {
+   "id": "avatar-hair-swept",
+   "path": "pieces/avatar-hair-swept.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 92464,
+   "triangles": 1522,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-swept.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "avatar-hair-swept.tucked": {
+   "id": "avatar-hair-swept.tucked",
+   "path": "pieces/avatar-hair-swept.tucked.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 53340,
+   "triangles": 934,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/avatar-hair-swept.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "axe": {
+   "id": "axe",
+   "path": "pieces/axe.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 64724,
+   "triangles": 870,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/axe.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "barbarian-axe": {
+   "id": "barbarian-axe",
+   "path": "pieces/barbarian-axe.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 88336,
+   "triangles": 546,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/barbarian-axe.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "bard-hat": {
+   "id": "bard-hat",
+   "path": "pieces/bard-hat.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 113696,
+   "triangles": 1660,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/bard-hat.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "battle-axe": {
+   "id": "battle-axe",
+   "path": "pieces/battle-axe.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 105796,
+   "triangles": 1374,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/battle-axe.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "belt": {
+   "id": "belt",
+   "path": "pieces/belt.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 151280,
+   "triangles": 2974,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/belt.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "214aecbd",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "boots": {
+   "id": "boots",
+   "path": "pieces/boots.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 125620,
+   "triangles": 2100,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/boots.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "99a1b5fc",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "bracers": {
+   "id": "bracers",
+   "path": "pieces/bracers.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 202552,
+   "triangles": 2730,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/bracers.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2f7c691c",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "buckler": {
+   "id": "buckler",
+   "path": "pieces/buckler.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 130632,
+   "triangles": 1556,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/buckler.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "cape": {
+   "id": "cape",
+   "path": "pieces/cape.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 194916,
+   "triangles": 3304,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/cape.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "99a1b5fc",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "captain-shield": {
+   "id": "captain-shield",
+   "path": "pieces/captain-shield.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 93316,
+   "triangles": 536,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/captain-shield.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9cc865a0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "captain-sword": {
+   "id": "captain-sword",
+   "path": "pieces/captain-sword.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 49768,
+   "triangles": 268,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/captain-sword.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "chainmail": {
+   "id": "chainmail",
+   "path": "pieces/chainmail.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 143236,
+   "triangles": 1920,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/chainmail.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "660f5443",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "circlet": {
+   "id": "circlet",
+   "path": "pieces/circlet.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 115892,
+   "triangles": 956,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/circlet.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9a45bcc7",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "cleric-book": {
+   "id": "cleric-book",
+   "path": "pieces/cleric-book.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 107608,
+   "triangles": 3736,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/cleric-book.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "cleric-hammer": {
+   "id": "cleric-hammer",
+   "path": "pieces/cleric-hammer.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 135512,
+   "triangles": 1234,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/cleric-hammer.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "cloak": {
+   "id": "cloak",
+   "path": "pieces/cloak.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 180584,
+   "triangles": 2949,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/cloak.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "49f66878",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "clockwork-soldier-halberd": {
+   "id": "clockwork-soldier-halberd",
+   "path": "pieces/clockwork-soldier-halberd.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 80848,
+   "triangles": 438,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/clockwork-soldier-halberd.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "cloth-hood": {
+   "id": "cloth-hood",
+   "path": "pieces/cloth-hood.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 130596,
+   "triangles": 1898,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/cloth-hood.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "club": {
+   "id": "club",
+   "path": "pieces/club.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 146428,
+   "triangles": 2818,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/club.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "crossbow": {
+   "id": "crossbow",
+   "path": "pieces/crossbow.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 114928,
+   "triangles": 1252,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/crossbow.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "crown": {
+   "id": "crown",
+   "path": "pieces/crown.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 132728,
+   "triangles": 1350,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/crown.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9a45bcc7",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "crystal-focus": {
+   "id": "crystal-focus",
+   "path": "pieces/crystal-focus.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 95092,
+   "triangles": 1064,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/crystal-focus.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "dagger": {
+   "id": "dagger",
+   "path": "pieces/dagger.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 79896,
+   "triangles": 1060,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/dagger.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "dragoon-helm": {
+   "id": "dragoon-helm",
+   "path": "pieces/dragoon-helm.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 208136,
+   "triangles": 3558,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/dragoon-helm.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "dragoon-lance": {
+   "id": "dragoon-lance",
+   "path": "pieces/dragoon-lance.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 77468,
+   "triangles": 900,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/dragoon-lance.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9cc865a0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "druid-cap": {
+   "id": "druid-cap",
+   "path": "pieces/druid-cap.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 147416,
+   "triangles": 2026,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/druid-cap.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "druid-staff": {
+   "id": "druid-staff",
+   "path": "pieces/druid-staff.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 129948,
+   "triangles": 1086,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/druid-staff.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "duelist-hat": {
+   "id": "duelist-hat",
+   "path": "pieces/duelist-hat.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 90452,
+   "triangles": 1548,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/duelist-hat.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "duelist-rapier": {
+   "id": "duelist-rapier",
+   "path": "pieces/duelist-rapier.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 73404,
+   "triangles": 604,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/duelist-rapier.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "enchanter-scroll": {
+   "id": "enchanter-scroll",
+   "path": "pieces/enchanter-scroll.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 64352,
+   "triangles": 638,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/enchanter-scroll.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "05807f70",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "enchanter-staff": {
+   "id": "enchanter-staff",
+   "path": "pieces/enchanter-staff.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 54592,
+   "triangles": 310,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/enchanter-staff.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "explorer-hat": {
+   "id": "explorer-hat",
+   "path": "pieces/explorer-hat.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 102980,
+   "triangles": 984,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/explorer-hat.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "explorer-map": {
+   "id": "explorer-map",
+   "path": "pieces/explorer-map.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 62752,
+   "triangles": 242,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/explorer-map.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "falchion": {
+   "id": "falchion",
+   "path": "pieces/falchion.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 68280,
+   "triangles": 290,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/falchion.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "fighter-buckler": {
+   "id": "fighter-buckler",
+   "path": "pieces/fighter-buckler.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 113940,
+   "triangles": 872,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/fighter-buckler.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "fighter-cap": {
+   "id": "fighter-cap",
+   "path": "pieces/fighter-cap.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 110792,
+   "triangles": 1306,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/fighter-cap.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "fighter-sword": {
+   "id": "fighter-sword",
+   "path": "pieces/fighter-sword.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 58492,
+   "triangles": 258,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/fighter-sword.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9cc865a0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "flail": {
+   "id": "flail",
+   "path": "pieces/flail.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 114716,
+   "triangles": 1452,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/flail.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "gauntlets": {
+   "id": "gauntlets",
+   "path": "pieces/gauntlets.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 199040,
+   "triangles": 3468,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/gauntlets.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "19f193e0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "gladiator-helmet": {
+   "id": "gladiator-helmet",
+   "path": "pieces/gladiator-helmet.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 157568,
+   "triangles": 1964,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/gladiator-helmet.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "gladiator-shield": {
+   "id": "gladiator-shield",
+   "path": "pieces/gladiator-shield.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 93592,
+   "triangles": 618,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/gladiator-shield.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "gladiator-sword": {
+   "id": "gladiator-sword",
+   "path": "pieces/gladiator-sword.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 59388,
+   "triangles": 266,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/gladiator-sword.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "glaive": {
+   "id": "glaive",
+   "path": "pieces/glaive.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 110308,
+   "triangles": 1780,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/glaive.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "451ce009",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "gloves": {
+   "id": "gloves",
+   "path": "pieces/gloves.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 85016,
+   "triangles": 1870,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/gloves.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "162199c4",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "great-axe": {
+   "id": "great-axe",
+   "path": "pieces/great-axe.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 109512,
+   "triangles": 1536,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/great-axe.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "greatsword": {
+   "id": "greatsword",
+   "path": "pieces/greatsword.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 129744,
+   "triangles": 1996,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/greatsword.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "greaves": {
+   "id": "greaves",
+   "path": "pieces/greaves.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 105312,
+   "triangles": 748,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/greaves.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "771dc6e3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "grimoire": {
+   "id": "grimoire",
+   "path": "pieces/grimoire.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 121484,
+   "triangles": 1622,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/grimoire.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2e90acb4",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "guardian-hammer": {
+   "id": "guardian-hammer",
+   "path": "pieces/guardian-hammer.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 60648,
+   "triangles": 444,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/guardian-hammer.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "guardian-helm": {
+   "id": "guardian-helm",
+   "path": "pieces/guardian-helm.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 110176,
+   "triangles": 1258,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/guardian-helm.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "guardian-shield": {
+   "id": "guardian-shield",
+   "path": "pieces/guardian-shield.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 110716,
+   "triangles": 894,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/guardian-shield.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "c609b451",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "halberd": {
+   "id": "halberd",
+   "path": "pieces/halberd.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 116508,
+   "triangles": 1680,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/halberd.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "19f193e0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "hand-axe": {
+   "id": "hand-axe",
+   "path": "pieces/hand-axe.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 57648,
+   "triangles": 560,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/hand-axe.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "heavy-crossbow": {
+   "id": "heavy-crossbow",
+   "path": "pieces/heavy-crossbow.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 127100,
+   "triangles": 2378,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/heavy-crossbow.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "horned-helmet": {
+   "id": "horned-helmet",
+   "path": "pieces/horned-helmet.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 140272,
+   "triangles": 2868,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/horned-helmet.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0b14487a",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "iron-helmet": {
+   "id": "iron-helmet",
+   "path": "pieces/iron-helmet.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 150888,
+   "triangles": 3210,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/iron-helmet.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0b14487a",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "javelin": {
+   "id": "javelin",
+   "path": "pieces/javelin.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 83148,
+   "triangles": 820,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/javelin.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "katana": {
+   "id": "katana",
+   "path": "pieces/katana.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 80484,
+   "triangles": 1024,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/katana.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "kite-shield": {
+   "id": "kite-shield",
+   "path": "pieces/kite-shield.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 124848,
+   "triangles": 1972,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/kite-shield.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "knight-helm": {
+   "id": "knight-helm",
+   "path": "pieces/knight-helm.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 165772,
+   "triangles": 3094,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/knight-helm.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "lantern-handheld": {
+   "id": "lantern-handheld",
+   "path": "pieces/lantern-handheld.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 141064,
+   "triangles": 1368,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/lantern-handheld.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "leather-armor": {
+   "id": "leather-armor",
+   "path": "pieces/leather-armor.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 244508,
+   "triangles": 4762,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/leather-armor.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "01097496",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "leather-cap": {
+   "id": "leather-cap",
+   "path": "pieces/leather-cap.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 102356,
+   "triangles": 1360,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/leather-cap.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "long-sword": {
+   "id": "long-sword",
+   "path": "pieces/long-sword.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 116768,
+   "triangles": 1126,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/long-sword.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "19f193e0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "longbow": {
+   "id": "longbow",
+   "path": "pieces/longbow.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 74932,
+   "triangles": 838,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/longbow.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "mace": {
+   "id": "mace",
+   "path": "pieces/mace.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 91716,
+   "triangles": 972,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/mace.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "mage-spellbook": {
+   "id": "mage-spellbook",
+   "path": "pieces/mage-spellbook.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 45920,
+   "triangles": 190,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/mage-spellbook.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "mage-wand": {
+   "id": "mage-wand",
+   "path": "pieces/mage-wand.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 57756,
+   "triangles": 380,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/mage-wand.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "magic-scepter": {
+   "id": "magic-scepter",
+   "path": "pieces/magic-scepter.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 146876,
+   "triangles": 3056,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/magic-scepter.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "mantle": {
+   "id": "mantle",
+   "path": "pieces/mantle.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 166616,
+   "triangles": 3328,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/mantle.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "49f66878",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "maul": {
+   "id": "maul",
+   "path": "pieces/maul.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 91144,
+   "triangles": 1230,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/maul.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "morningstar": {
+   "id": "morningstar",
+   "path": "pieces/morningstar.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 80532,
+   "triangles": 558,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/morningstar.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "364e187e",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "orb": {
+   "id": "orb",
+   "path": "pieces/orb.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 99820,
+   "triangles": 1370,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/orb.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "paladin-hammer": {
+   "id": "paladin-hammer",
+   "path": "pieces/paladin-hammer.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 105896,
+   "triangles": 1086,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/paladin-hammer.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "paladin-shield": {
+   "id": "paladin-shield",
+   "path": "pieces/paladin-shield.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 98776,
+   "triangles": 668,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/paladin-shield.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "pike": {
+   "id": "pike",
+   "path": "pieces/pike.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 101628,
+   "triangles": 1770,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/pike.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "plate-armor": {
+   "id": "plate-armor",
+   "path": "pieces/plate-armor.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 193156,
+   "triangles": 3564,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/plate-armor.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "99a1b5fc",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "quarterstaff": {
+   "id": "quarterstaff",
+   "path": "pieces/quarterstaff.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 64120,
+   "triangles": 402,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/quarterstaff.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "ranger-bow": {
+   "id": "ranger-bow",
+   "path": "pieces/ranger-bow.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 64644,
+   "triangles": 592,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/ranger-bow.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "rapier": {
+   "id": "rapier",
+   "path": "pieces/rapier.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 97160,
+   "triangles": 812,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/rapier.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "ritual-dagger": {
+   "id": "ritual-dagger",
+   "path": "pieces/ritual-dagger.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 126764,
+   "triangles": 748,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/ritual-dagger.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "rogue-dagger": {
+   "id": "rogue-dagger",
+   "path": "pieces/rogue-dagger.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 40524,
+   "triangles": 126,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/rogue-dagger.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "rogue-hood": {
+   "id": "rogue-hood",
+   "path": "pieces/rogue-hood.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 84388,
+   "triangles": 1668,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/rogue-hood.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9cc865a0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "round-shield": {
+   "id": "round-shield",
+   "path": "pieces/round-shield.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 133968,
+   "triangles": 2768,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/round-shield.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "rune-stone": {
+   "id": "rune-stone",
+   "path": "pieces/rune-stone.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 87068,
+   "triangles": 730,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/rune-stone.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "samurai-katana": {
+   "id": "samurai-katana",
+   "path": "pieces/samurai-katana.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 59612,
+   "triangles": 308,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/samurai-katana.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "scale-armor": {
+   "id": "scale-armor",
+   "path": "pieces/scale-armor.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 158788,
+   "triangles": 3946,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/scale-armor.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "scimitar": {
+   "id": "scimitar",
+   "path": "pieces/scimitar.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 79320,
+   "triangles": 950,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/scimitar.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "scythe": {
+   "id": "scythe",
+   "path": "pieces/scythe.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 74212,
+   "triangles": 966,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/scythe.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "shaman-cap": {
+   "id": "shaman-cap",
+   "path": "pieces/shaman-cap.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 133948,
+   "triangles": 1486,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/shaman-cap.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "shaman-feather": {
+   "id": "shaman-feather",
+   "path": "pieces/shaman-feather.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 36456,
+   "triangles": 132,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/shaman-feather.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "shaman-staff": {
+   "id": "shaman-staff",
+   "path": "pieces/shaman-staff.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 134668,
+   "triangles": 1458,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/shaman-staff.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "shield-maiden-axe": {
+   "id": "shield-maiden-axe",
+   "path": "pieces/shield-maiden-axe.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 68632,
+   "triangles": 398,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/shield-maiden-axe.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "shield-maiden-helm": {
+   "id": "shield-maiden-helm",
+   "path": "pieces/shield-maiden-helm.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 110676,
+   "triangles": 1678,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/shield-maiden-helm.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "shield-maiden-shield": {
+   "id": "shield-maiden-shield",
+   "path": "pieces/shield-maiden-shield.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 119968,
+   "triangles": 1146,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/shield-maiden-shield.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "short-sword": {
+   "id": "short-sword",
+   "path": "pieces/short-sword.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 94128,
+   "triangles": 980,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/short-sword.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "shortbow": {
+   "id": "shortbow",
+   "path": "pieces/shortbow.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 119460,
+   "triangles": 1320,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/shortbow.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "19f193e0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "shoulder-armor": {
+   "id": "shoulder-armor",
+   "path": "pieces/shoulder-armor.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 289932,
+   "triangles": 5478,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/shoulder-armor.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9cc865a0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "sickle": {
+   "id": "sickle",
+   "path": "pieces/sickle.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 93828,
+   "triangles": 1242,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/sickle.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "skeleton-knight-shield": {
+   "id": "skeleton-knight-shield",
+   "path": "pieces/skeleton-knight-shield.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 132096,
+   "triangles": 932,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/skeleton-knight-shield.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "sling": {
+   "id": "sling",
+   "path": "pieces/sling.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 113676,
+   "triangles": 1702,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/sling.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "spear-warden-crest": {
+   "id": "spear-warden-crest",
+   "path": "pieces/spear-warden-crest.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 151668,
+   "triangles": 1434,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/spear-warden-crest.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "spear-warden-helm": {
+   "id": "spear-warden-helm",
+   "path": "pieces/spear-warden-helm.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 142172,
+   "triangles": 1254,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/spear-warden-helm.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "f4de18b3",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "spear-warden-javelin": {
+   "id": "spear-warden-javelin",
+   "path": "pieces/spear-warden-javelin.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 37032,
+   "triangles": 174,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/spear-warden-javelin.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "spear-warden-spear": {
+   "id": "spear-warden-spear",
+   "path": "pieces/spear-warden-spear.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 89824,
+   "triangles": 888,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/spear-warden-spear.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "spear": {
+   "id": "spear",
+   "path": "pieces/spear.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 153860,
+   "triangles": 1960,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/spear.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "spellbook": {
+   "id": "spellbook",
+   "path": "pieces/spellbook.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 90844,
+   "triangles": 512,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/spellbook.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "staff": {
+   "id": "staff",
+   "path": "pieces/staff.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 165200,
+   "triangles": 2356,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/staff.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "19f193e0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "steel-helmet": {
+   "id": "steel-helmet",
+   "path": "pieces/steel-helmet.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 117924,
+   "triangles": 1072,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/steel-helmet.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0b14487a",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "studded-leather": {
+   "id": "studded-leather",
+   "path": "pieces/studded-leather.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 135600,
+   "triangles": 3218,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/studded-leather.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "swashbuckler-bandana": {
+   "id": "swashbuckler-bandana",
+   "path": "pieces/swashbuckler-bandana.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 100868,
+   "triangles": 600,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/swashbuckler-bandana.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9a45bcc7",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "swashbuckler-dagger": {
+   "id": "swashbuckler-dagger",
+   "path": "pieces/swashbuckler-dagger.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 44500,
+   "triangles": 160,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/swashbuckler-dagger.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "swashbuckler-sabre": {
+   "id": "swashbuckler-sabre",
+   "path": "pieces/swashbuckler-sabre.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 51808,
+   "triangles": 254,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/swashbuckler-sabre.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "throwing-axe": {
+   "id": "throwing-axe",
+   "path": "pieces/throwing-axe.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 102528,
+   "triangles": 1416,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/throwing-axe.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "throwing-knife": {
+   "id": "throwing-knife",
+   "path": "pieces/throwing-knife.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 52224,
+   "triangles": 300,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/throwing-knife.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "tome": {
+   "id": "tome",
+   "path": "pieces/tome.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 60952,
+   "triangles": 542,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/tome.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "tower-shield": {
+   "id": "tower-shield",
+   "path": "pieces/tower-shield.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 134868,
+   "triangles": 1872,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/tower-shield.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "treasure-hunter-hat": {
+   "id": "treasure-hunter-hat",
+   "path": "pieces/treasure-hunter-hat.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 93824,
+   "triangles": 1114,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/treasure-hunter-hat.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "treasure-hunter-torch": {
+   "id": "treasure-hunter-torch",
+   "path": "pieces/treasure-hunter-torch.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 99372,
+   "triangles": 658,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/treasure-hunter-torch.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "treasure-hunter-whip": {
+   "id": "treasure-hunter-whip",
+   "path": "pieces/treasure-hunter-whip.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 103264,
+   "triangles": 740,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/treasure-hunter-whip.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "trident": {
+   "id": "trident",
+   "path": "pieces/trident.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 99396,
+   "triangles": 706,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/trident.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "dad093a8",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "wand": {
+   "id": "wand",
+   "path": "pieces/wand.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 98568,
+   "triangles": 664,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/wand.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "warhammer": {
+   "id": "warhammer",
+   "path": "pieces/warhammer.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 104460,
+   "triangles": 1254,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/warhammer.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "warlock-book": {
+   "id": "warlock-book",
+   "path": "pieces/warlock-book.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 104312,
+   "triangles": 780,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/warlock-book.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "warrior-sword": {
+   "id": "warrior-sword",
+   "path": "pieces/warrior-sword.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 53160,
+   "triangles": 528,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/warrior-sword.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9cc865a0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "whip": {
+   "id": "whip",
+   "path": "pieces/whip.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 119060,
+   "triangles": 1554,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/whip.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "witch-broom": {
+   "id": "witch-broom",
+   "path": "pieces/witch-broom.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 98792,
+   "triangles": 676,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/witch-broom.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "witch-hat": {
+   "id": "witch-hat",
+   "path": "pieces/witch-hat.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 90652,
+   "triangles": 1300,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/witch-hat.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "witch-potion": {
+   "id": "witch-potion",
+   "path": "pieces/witch-potion.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 62768,
+   "triangles": 544,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/witch-potion.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "wizard-hat": {
+   "id": "wizard-hat",
+   "path": "pieces/wizard-hat.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 166468,
+   "triangles": 2342,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/wizard-hat.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2ec30854",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "wizard-staff": {
+   "id": "wizard-staff",
+   "path": "pieces/wizard-staff.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 92552,
+   "triangles": 978,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/wizard-staff.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9cc865a0",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  }
+ },
+ "byteSize": 15708100
+}

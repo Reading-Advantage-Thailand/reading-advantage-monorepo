@@ -69,6 +69,56 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at timestamp NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS accounts (
+  id text PRIMARY KEY,
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  provider_id text NOT NULL,
+  password text,
+  access_token text,
+  refresh_token text,
+  access_token_expires_at timestamp,
+  refresh_token_expires_at timestamp,
+  created_at timestamp NOT NULL DEFAULT now(),
+  updated_at timestamp NOT NULL DEFAULT now(),
+  CONSTRAINT accounts_user_provider_unique UNIQUE (user_id, provider_id)
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+  id text PRIMARY KEY,
+  token text UNIQUE,
+  token_hash text NOT NULL UNIQUE,
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at timestamp NOT NULL,
+  created_at timestamp NOT NULL DEFAULT now(),
+  updated_at timestamp NOT NULL DEFAULT now(),
+  ip_address text,
+  user_agent text
+);
+
+CREATE TABLE IF NOT EXISTS user_activity (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  activity_type text NOT NULL,
+  xp_earned integer NOT NULL DEFAULT 0,
+  metadata text,
+  target_id text,
+  timer integer,
+  details jsonb,
+  completed boolean DEFAULT false,
+  updated_at timestamp NOT NULL DEFAULT now(),
+  created_at timestamp NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS xp_logs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  xp_earned integer NOT NULL,
+  activity_id text NOT NULL,
+  activity_type text NOT NULL,
+  created_at timestamp NOT NULL DEFAULT now(),
+  updated_at timestamp NOT NULL DEFAULT now()
+);
+
 CREATE TABLE IF NOT EXISTS roles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name text NOT NULL,
@@ -104,6 +154,7 @@ CREATE TABLE IF NOT EXISTS classrooms (
   grade integer,
   created_by text REFERENCES users(id),
   password_students text,
+  picture_password_enabled boolean NOT NULL DEFAULT true,
   created_at timestamp NOT NULL DEFAULT now(),
   updated_at timestamp NOT NULL DEFAULT now()
 );
@@ -257,9 +308,24 @@ CREATE TABLE IF NOT EXISTS student_assignments (
   updated_at timestamp NOT NULL DEFAULT now(),
   UNIQUE (assignment_id, student_id)
 );
+
+CREATE TABLE IF NOT EXISTS primary_student_credentials (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  school_id uuid NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+  user_id text NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  picture_hash text,
+  failed_count integer NOT NULL DEFAULT 0,
+  locked_until timestamp,
+  card_token_hash text UNIQUE,
+  rotated_at timestamp,
+  created_at timestamp NOT NULL DEFAULT now(),
+  updated_at timestamp NOT NULL DEFAULT now()
+);
 `;
 
 const TABLES = [
+  "primary_student_credentials",
+  "accounts",
   "article_activity_logs",
   "lesson_progress",
   "long_answer_questions",
@@ -272,6 +338,9 @@ const TABLES = [
   "classroom_students",
   "classrooms",
   "school_admins",
+  "sessions",
+  "user_activity",
+  "xp_logs",
   "user_roles",
   "roles",
   "users",

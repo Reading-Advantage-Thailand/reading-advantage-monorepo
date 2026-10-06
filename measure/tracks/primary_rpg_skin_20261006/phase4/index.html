@@ -1,0 +1,94 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RPG Skin Phase 4</title>
+<meta name="description" content="Phase 4 of the Primary Advantage RPG skin: the thirteen remaining student pages in their places, captured from the running app.">
+<style>
+:root{--ink:#1f2933;--muted:#52606d;--brand:#0e7490;--soft:#ecfeff;--line:#e4e7eb;--bg:#fff;--card:#f8fafc}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}}
+:root[data-theme="dark"]{--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,"Noto Sans Thai",system-ui,sans-serif}
+header{background:var(--soft);padding:32px 16px;border-bottom:1px solid var(--line)} .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+h1{margin:0 0 8px;font-size:clamp(26px,4vw,36px)} h2{font-size:22px;margin:40px 0 8px} h3{font-size:17px;margin:20px 0 6px} p{margin:0 0 10px;max-width:75ch} .lead{color:var(--muted);font-size:17px}
+.page{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0} .page h2{margin-top:0}
+.row{display:grid;grid-template-columns:1fr;gap:16px} @media (min-width:900px){.row{grid-template-columns:300px 300px 1fr}}
+figure{margin:0} figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;display:block;background:#111} figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.rules{background:var(--card);border-left:4px solid var(--brand);padding:12px 16px;border-radius:8px;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:14px} th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top} code{font-size:13px}
+a{color:var(--brand)}
+</style></head><body>
+<header><div class="wrap"><h1>Primary Advantage RPG skin: Phase 4 for review</h1>
+<p class="lead">6 October 2026. Every student page now sits in its place. The captures come from the running app with the QA student, at 375 px and 1280 px; the night frames are in the captures folder.</p></div></header>
+<main class="wrap">
+<div class="rules"><p><strong>What changed.</strong> Each page returns its scene, puts its heading on the scene, its cards on parchment, its filters and tabs on signs, and its actions on wood, gold, or iron buttons. The client components that own their markup (the game host, the flashcard decks, the lesson rail, the report charts, the assignment list, the story grid) keep their markup; the scene and the panels around them carry the look.</p>
+<p><strong>What waits.</strong> Lists as objects inside those client components (books on shelves, scrolls in pigeonholes, the lesson marker walking the path, stamped journal pages) are a later pass once the owner accepts this one. The sign-in screens use the gatehouse for every visitor, staff included.</p></div>
+<article class="page"><h2>The story list in the library</h2><p>The level chip and the filter steps on parchment: the chosen step in gold, the open choices in wood, reset in iron. The story grid is unchanged.</p>
+<div class="row"><figure><img src="captures/read-phone.png" alt="The story list in the library, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/read-phone-night.png" alt="The story list in the library, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/read-desktop.png" alt="The story list in the library, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The story view in the blurred library</h2><p>The article as before; the desk tools (words, sentences, the lesson link in gold) on parchment. The text column is untouched.</p>
+<div class="row"><figure><img src="captures/story-phone.png" alt="The story view in the blurred library, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/story-phone-night.png" alt="The story view in the blurred library, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/story-desktop.png" alt="The story view in the blurred library, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The lesson path in the clearing</h2><p>The 14-step lesson card over the clearing. The walking marker on a map path is a later task.</p>
+<div class="row"><figure><img src="captures/lesson-phone.png" alt="The lesson path in the clearing, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/lesson-phone-night.png" alt="The lesson path in the clearing, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/lesson-desktop.png" alt="The lesson path in the clearing, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The class book on the library desk</h2><p>Lessons as parchment rows; the current lesson is pinned; a lesson not yet taught shows a sealed label; Read in gold.</p>
+<div class="row"><figure><img src="captures/book-phone.png" alt="The class book on the library desk, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/book-phone-night.png" alt="The class book on the library desk, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/book-desktop.png" alt="The class book on the library desk, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The notices on the guild hall board</h2><p>The banner title over the assignment list.</p>
+<div class="row"><figure><img src="captures/assignments-phone.png" alt="The notices on the guild hall board, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/assignments-phone-night.png" alt="The notices on the guild hall board, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/assignments-desktop.png" alt="The notices on the guild hall board, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The arena wall</h2><p>Games as pinned parchment banners with the Forge sword and scroll icons; the groups are signs.</p>
+<div class="row"><figure><img src="captures/games-phone.png" alt="The arena wall, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/games-phone-night.png" alt="The arena wall, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/games-desktop.png" alt="The arena wall, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The word adventures in the arena</h2><p>The 3D story games from the Forge port, merged this phase. The first banner on the arena wall opens them; each game is a pinned parchment card, a locked game shows what to read first.</p>
+<div class="row"><figure><img src="captures/storygames-phone.png" alt="The word adventures in the arena, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/storygames-phone-night.png" alt="The word adventures in the arena, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/storygames-desktop.png" alt="The word adventures in the arena, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The spellbook in the wizard tower</h2><p>The flashcard deck over the tower.</p>
+<div class="row"><figure><img src="captures/vocabulary-phone.png" alt="The spellbook in the wizard tower, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/vocabulary-phone-night.png" alt="The spellbook in the wizard tower, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/vocabulary-desktop.png" alt="The spellbook in the wizard tower, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The scrolls in the archive</h2><p>The practice modes as hanging signs; the active one lit gold.</p>
+<div class="row"><figure><img src="captures/sentences-phone.png" alt="The scrolls in the archive, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/sentences-phone-night.png" alt="The scrolls in the archive, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/sentences-desktop.png" alt="The scrolls in the archive, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The journal at the inn</h2><p>The two sections as signs with the campfire and the scroll.</p>
+<div class="row"><figure><img src="captures/history-phone.png" alt="The journal at the inn, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/history-phone-night.png" alt="The journal at the inn, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/history-desktop.png" alt="The journal at the inn, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The observatory</h2><p>The report panels over the observatory.</p>
+<div class="row"><figure><img src="captures/reports-phone.png" alt="The observatory, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/reports-phone-night.png" alt="The observatory, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/reports-desktop.png" alt="The observatory, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The campfire talk in the clearing</h2><p>The Preview sign, the minutes meter, and the session over the clearing.</p>
+<div class="row"><figure><img src="captures/reedy-phone.png" alt="The campfire talk in the clearing, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/reedy-phone-night.png" alt="The campfire talk in the clearing, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/reedy-desktop.png" alt="The campfire talk in the clearing, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The hero's room at the inn</h2><p>The profile fields on parchment; the avatar link is the gold chest button.</p>
+<div class="row"><figure><img src="captures/me-phone.png" alt="The hero's room at the inn, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/me-phone-night.png" alt="The hero's room at the inn, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/me-desktop.png" alt="The hero's room at the inn, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+<article class="page"><h2>The gatehouse</h2><p>The sign-in form on parchment at the gate; the student and teacher tabs are signs.</p>
+<div class="row"><figure><img src="captures/signin-phone.png" alt="The gatehouse, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/signin-phone-night.png" alt="The gatehouse, phone, night" loading="lazy"><figcaption>Phone, night</figcaption></figure>
+<figure><img src="captures/signin-desktop.png" alt="The gatehouse, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div></article>
+
+<h2>Checks</h2>
+<p>Vitest: the read list, games catalog, story games, class book, Reedy, and layout tests pass; the domain host-proof tests pass with the GP ledger row asserted. The app type check passes.</p>
+<h2>Found in the captures and fixed</h2>
+<p>A light card on the world inherited the scene's light text: the lesson header, the assignment filters, and the empty states were white on white in day mode. One stylesheet rule gives light cards the theme ink again. The Reedy microphone hint now uses the on-scene text style.</p>
+<h2>Open items</h2>
+<ul>
+<li>The XP chart on the reports page stays blank in a headless capture (the chart draws after a resize event). It draws in a browser; a later task gives the chart a fixed height.</li>
+<li>The story cards on the read list, the lesson steps, the flashcard decks, and the practice activities keep their old look inside the scene. The plan lists them as the "lists as objects" pass after the owner accepts this scene pass.</li>
+<li>The Forge merge (753248e49) brought the 3D word adventures; their briefing and result panels use the kit parchment from Forge commit 98d7badd0.</li>
+</ul>
+
+<h2>Next</h2>
+<p>Phase 5: the five promo shots recorded from the build (the hero and the quest banner on home, the chosen hero stepping into the light, coins flying in the armory, the boss taking a hit, the boss falling on the projector).</p>
+</main>
+<footer class="wrap"><p style="color:var(--muted);font-size:13px;padding:24px 0">Track primary_rpg_skin_20261006 on lane-f. <a href="../phase3/index.html">Phase 3 report</a> · <a href="../phase2/index.html">Phase 2 report</a> · <a href="../spec.md">spec.md</a> · <a href="../plan.md">plan.md</a> · <a href="../../../../docs/primary-rpg-skin.md">docs/primary-rpg-skin.md</a></p></footer>
+</body></html>

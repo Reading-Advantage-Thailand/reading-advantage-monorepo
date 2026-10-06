@@ -1,22 +1,14 @@
 import ArticleSelect from "@/components/articles/article-select";
-import { Header } from "@/components/header";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import React from "react";
 import genreDataJson from "@/data/genres.json";
 import { Link } from "@/i18n/navigation";
 import { fetchArticles } from "@/server/controllers/articleController";
 import { cleanGenre, cn, sanitizeTranslationKey } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 import { GoToTop } from "@/components/go-to-top";
-import { translateAndStoreSentences } from "@/server/utils/generators/sentence-translator";
 import { getTranslations } from "next-intl/server";
 import { currentUser } from "@/lib/session";
+import { StatusChip } from "@reading-advantage/ui";
+import { rpgButton } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
 
 interface PageProps {
   searchParams: Promise<{
@@ -26,17 +18,29 @@ interface PageProps {
   }>;
 }
 
+/** One genre of a story type and its topics. */
 export interface GenreItem {
   name: string;
   subgenres: string[];
 }
 
+/** Genres per story type (data/genres.json). */
 export type GenreData = {
   [type: string]: GenreItem[];
 };
 
 const genreData = genreDataJson as GenreData;
 
+/** A filter choice: a chosen step is a gold button; an open choice is a wood button. 48 px tall. */
+const CHOICE = "min-h-12 text-base";
+
+/**
+ * Read list (audit S1): the student's level, the story filter steps (type, then genre, then
+ * topic; the chosen steps show as filled chips), and the story grid. Loading is
+ * `loading.tsx`, a failed load is `error.tsx`, and an empty filter shows the grid empty state.
+ * @param props.searchParams The type, genre, and subgenre filters.
+ * @returns The page.
+ */
 export default async function ReadPage({ searchParams }: PageProps) {
   const { type, genre, subgenre } = await searchParams;
   const user = await currentUser();
@@ -52,121 +56,92 @@ export default async function ReadPage({ searchParams }: PageProps) {
     }),
   );
 
+  const genres = type ? (genreData[type] ?? []) : [];
+  const subgenres = type && genre ? (genres.find((g) => cleanGenre(g.name) === genre)?.subgenres ?? []) : [];
+  const typeHref = (typeKey: string) => `/student/read?type=${typeKey}`;
+  const genreHref = (genreName: string) => `${typeHref(type!)}&genre=${encodeURIComponent(cleanGenre(genreName))}`;
+
+  // Chosen steps (filled chips) and the choices of the next step (outlined).
+  const chosen = [
+    type ? { key: "type", label: t(`Article.types.${type}`), href: typeHref(type) } : null,
+    type && genre ? { key: "genre", label: t(`Article.genres.${sanitizeTranslationKey(genre)}`), href: genreHref(genre) } : null,
+    type && genre && subgenre
+      ? { key: "subgenre", label: t(`Article.subgenres.${sanitizeTranslationKey(subgenre)}`), href: `${genreHref(genre)}&subgenre=${encodeURIComponent(subgenre)}` }
+      : null,
+  ].filter((step): step is { key: string; label: string; href: string } => step !== null);
+  const next = !type
+    ? {
+        heading: t("ReadList.chooseType"),
+        choices: Object.keys(genreData).map((typeKey) => ({ label: t(`Article.types.${typeKey}`), href: typeHref(typeKey) })),
+      }
+    : !genre
+      ? {
+          heading: t("ReadList.chooseGenre"),
+          choices: genres.map((g) => ({ label: t(`Article.genres.${sanitizeTranslationKey(g.name)}`), href: genreHref(g.name) })),
+        }
+      : !subgenre
+        ? {
+            heading: t("ReadList.chooseSubgenre"),
+            choices: subgenres.map((sub) => ({
+              label: t(`Article.subgenres.${sanitizeTranslationKey(sub)}`),
+              href: `${genreHref(genre)}&subgenre=${encodeURIComponent(cleanGenre(sub))}`,
+            })),
+          }
+        : null;
+
+  // The story list is the library (docs/primary-rpg-skin.md §4): the filter steps are signs.
   return (
-    <>
-      <Header heading={t("Article.selection.title")} />
-      <Card className="mt-4">
-        <CardHeader>
-          <CardTitle>
-            {t("Article.selection.description", {
-              selection:
-                type && genre && subgenre
-                  ? t(`Article.subgenres.${sanitizeTranslationKey(subgenre)}`)
-                  : type && genre
-                    ? t("Article.subGenre")
-                    : type
-                      ? t("Article.genre")
-                      : t("Article.type"),
-            })}
-          </CardTitle>
-          <CardDescription>
-            {t("Article.selection.description2", {
-              level: user?.level ?? 0,
-              selection:
-                type && genre && subgenre
-                  ? t(`Article.subgenres.${sanitizeTranslationKey(subgenre)}`)
-                  : type && genre
-                    ? t("Article.subGenre")
-                    : type
-                      ? t("Article.genre")
-                      : t("Article.type"),
-            })}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* Type selection */}
-          {!type && (
-            <div className="space-y-2 space-x-2">
-              {Object.keys(genreData).map((typeKey) => (
+    <Scene place="library">
+      <header className="cq-on-scene flex flex-col gap-2">
+        <h1 className="text-2xl font-bold md:text-3xl">{t("ReadList.title")}</h1>
+        <p>{t("ReadList.subtitle")}</p>
+        {user?.cefrLevel ? (
+          <StatusChip tone="success" className="text-sm">
+            {t("ReadList.yourLevel", { level: user.cefrLevel })}
+          </StatusChip>
+        ) : null}
+      </header>
+
+      <nav aria-label={t("ReadList.filters")} className="cq-panel flex flex-col gap-3">
+        {chosen.length ? (
+          <ul className="flex flex-wrap items-center gap-2">
+            {chosen.map((step) => (
+              <li key={step.key}>
                 <Link
-                  key={typeKey}
-                  href={`/student/read?type=${typeKey}`}
-                  className={cn(
-                    buttonVariants({ variant: "default" }),
-                    "capitalize",
-                  )}
+                  href={step.href}
+                  aria-current="true"
+                  className={cn(rpgButton("gold"), CHOICE)}
                   scroll={false}
-                  replace={false}
                 >
-                  {t(`Article.types.${typeKey}`)}
+                  {step.label}
                 </Link>
-              ))}
-            </div>
-          )}
-
-          {/* Genre selection */}
-          {type && !genre && (
-            <div className="space-y-2 space-x-2">
-              {genreData[type].map((g) => (
-                <Link
-                  key={g.name}
-                  href={`/student/read?type=${type}&genre=${encodeURIComponent(cleanGenre(g.name))}`}
-                  className={cn(
-                    buttonVariants({ variant: "default" }),
-                    "capitalize",
-                  )}
-                  scroll={false}
-                  replace={false}
-                >
-                  {t(`Article.genres.${sanitizeTranslationKey(g.name)}`)}
-                </Link>
-              ))}
-            </div>
-          )}
-
-          {/* Subgenre selection */}
-          {type && genre && !subgenre && (
-            <div className="space-y-2 space-x-2">
-              {genreData[type]
-                .find((g) => cleanGenre(g.name) === genre)
-                ?.subgenres.map((sub) => (
-                  <Link
-                    key={sub}
-                    href={`/student/read?type=${type}&genre=${encodeURIComponent(
-                      genre,
-                    )}&subgenre=${encodeURIComponent(cleanGenre(sub))}`}
-                    className={cn(
-                      buttonVariants({ variant: "default" }),
-                      "capitalize",
-                    )}
-                    scroll={false}
-                    replace={false}
-                  >
-                    {t(`Article.subgenres.${sanitizeTranslationKey(sub)}`)}
-                  </Link>
-                ))}
-            </div>
-          )}
-
-          {/* Reset button */}
-          {(type || genre || subgenre) && (
-            <div className="mt-2">
-              <Link
-                href="/student/read"
-                className={cn(buttonVariants({ variant: "outline" }))}
-              >
+              </li>
+            ))}
+            <li>
+              <Link href="/student/read" className={cn(rpgButton("iron", true), "min-h-12")}>
                 {t("Components.resetFilter")}
               </Link>
-            </div>
-          )}
+            </li>
+          </ul>
+        ) : null}
+        {next ? (
+          <>
+            <h2 className="text-sm font-semibold">{next.heading}</h2>
+            <ul className="flex flex-wrap gap-2">
+              {next.choices.map((choice) => (
+                <li key={choice.href}>
+                  <Link href={choice.href} className={cn(rpgButton("wood"), CHOICE)} scroll={false}>
+                    {choice.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+      </nav>
 
-          <ArticleSelect
-            initialArticles={initialData.articles}
-            total={initialData.totalArticles}
-          />
-        </CardContent>
-      </Card>
+      <ArticleSelect initialArticles={initialData.articles} total={initialData.totalArticles} />
       <GoToTop />
-    </>
+    </Scene>
   );
 }

@@ -10,7 +10,9 @@ vi.mock("@/lib/session", () => ({
   currentUser: mocks.currentUser,
   getCurrentUser: mocks.currentUser,
 }));
-vi.mock("@reading-advantage/db", () => ({
+vi.mock("@reading-advantage/db", async (importOriginal) => ({
+  // The real tables stay: the domain and auth modules register them when they load.
+  ...(await importOriginal<typeof import("@reading-advantage/db")>()),
   db: { select: mocks.select },
   classrooms: { id: "classrooms.id" },
   articles: { id: "articles.id" },
@@ -28,7 +30,7 @@ vi.mock("@reading-advantage/db", () => ({
   count: vi.fn(() => ({})),
 }));
 
-import getAssignmentById from "../assignmentModel";
+import getAssignmentById, { AssignmentForbiddenError } from "../assignmentModel";
 
 /**
  * Builds a chainable Drizzle stub resolving to rows.
@@ -79,7 +81,7 @@ describe("getAssignmentById school scope", () => {
     });
     primeReads({ id: "class-b", schoolId: "school-b" }, []);
 
-    await expect(getAssignmentById("assignment-1")).rejects.toThrow();
+    await expect(getAssignmentById("assignment-1")).rejects.toBeInstanceOf(AssignmentForbiddenError);
   });
 
   it("denies an unenrolled student", async () => {
@@ -90,7 +92,7 @@ describe("getAssignmentById school scope", () => {
     });
     primeReads(classroomA, []);
 
-    await expect(getAssignmentById("assignment-1")).rejects.toThrow();
+    await expect(getAssignmentById("assignment-1")).rejects.toBeInstanceOf(AssignmentForbiddenError);
   });
 
   it("serves a same-school teacher", async () => {

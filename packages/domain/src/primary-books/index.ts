@@ -1,0 +1,13 @@
+export * from "./contracts.js";
+export * from "./step-map.js";
+export { lessonPackageSchema, parseLessonPackage, type LessonPackage } from "./package-schema.js";
+export { BOOKS, splitKey, legacyArticleIdOf, toArticleRow, toQuestionRows, toFlashcardRow, toLessonPackageJson, estimateWordTimes } from "./mapping.js";
+export { importLessonPackage, type ImportLessonPackageOptions } from "./import.js";
+export { toGuideRows, stepTitleFromPlanLine, scriptBody, type GuideRow, type ManualLocale, type TeachingNotes } from "./guides.js";
+export * from "./class-book-contracts.js";
+export { assignClassBook, listClassBooks, setCurrentLesson, markLessonTaught, markStepDone, getClassBookPacing, getStudentClassBooks, listCatalogueBooks, getStudentBook, managedClass } from "./class-books.js";
+export * from "./progress-contracts.js";
+export { recordLessonProgress, getClassBookProgress, getStudentLessonSteps, toProgressCsv } from "./progress.js";
+export * from "./lesson-support-contracts.js";
+export { guideLocaleOf, getLessonGuide, getTeacherLesson, resolveBookLesson, findTeacherClassBook } from "./lesson-support.js";
+export { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "./question-set.js";

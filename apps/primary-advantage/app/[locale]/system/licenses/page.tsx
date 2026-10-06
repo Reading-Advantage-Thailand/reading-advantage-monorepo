@@ -1,5 +1,5 @@
 import React from "react";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@reading-advantage/ui";
 import { Header } from "@/components/header";
 import LicenseTable from "@/components/system/license-table";
 

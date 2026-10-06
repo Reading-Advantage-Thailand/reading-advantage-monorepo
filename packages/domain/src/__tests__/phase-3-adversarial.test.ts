@@ -28,6 +28,8 @@ vi.mock("@reading-advantage/auth", async (importOriginal) => {
   };
 });
 
+// The GP grant beside the XP row is covered by primary-avatar/__tests__/gp.test.ts.
+vi.mock("../primary-avatar/gp.js", () => ({ grantGpForXp: vi.fn().mockResolvedValue(0) }));
 vi.mock("@reading-advantage/db/schema", () => ({
   xpLogs: {
     userId: "user_id",

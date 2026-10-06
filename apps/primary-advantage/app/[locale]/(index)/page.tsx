@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { FeatureBox } from "@/components/index/feature-box";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@reading-advantage/ui";
 import {
   Select,
   SelectContent,
@@ -243,7 +243,7 @@ export default async function Home() {
               <div className="grid gap-2">
                 <Label htmlFor="inquiry">{t("contact.inquiry")}</Label>
                 <Select>
-                  <SelectTrigger>
+                  <SelectTrigger id="inquiry">
                     <SelectValue
                       placeholder={t("contact.inquiryPlaceholder")}
                     />

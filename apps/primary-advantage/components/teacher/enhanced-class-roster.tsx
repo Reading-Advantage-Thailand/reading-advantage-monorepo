@@ -1,27 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "@/i18n/navigation";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useFormatter, useTranslations } from "next-intl";
+import { MoreVertical, RotateCcw, Search, TrendingUp, TriangleAlert, Users } from "lucide-react";
+import { toast } from "sonner";
+import { calendarDayNumber } from "@reading-advantage/domain/calendar-day";
+import { EmptyState, ErrorState, ShimmerSkeleton } from "@reading-advantage/ui";
+import { Link } from "@/i18n/navigation";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,32 +21,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
 import {
-  Users,
-  Search,
-  MoreVertical,
-  UserMinus,
-  TrendingUp,
-  Calendar,
-  GraduationCap,
-  Star,
-  RotateCcw,
-  UserPlus,
-  Grid3X3,
-  List,
-  ChevronLeft,
-  Activity,
-  Settings,
-} from "lucide-react";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { getCefrLevelColor } from "@/lib/cefr";
+import { cn } from "@/lib/utils";
 import StudentEnrollmentButton from "./student-enrollment-button";
 import StudentUnenrollmentButton from "./student-unenrollment-button";
 import ClassroomNavigation from "./classroom-navigation";
 import StudentCefrLevelSetter from "./student-cefr-level-setter";
-import ClassCodeGenerator from "./class-code-generator";
-import { getCefrLevelColor } from "@/lib/cefr";
+import { ClassLoginPanel } from "./class-login/class-login-panel";
+import type { RosterStudent } from "./class-login/api";
+import { ClassBookSlot } from "./class-book-slot";
+import { TEACHER_ACTION, TEACHER_CARD } from "./teacher-shell";
 
+/** One student of the class, as `/api/classroom/[id]` returns it. */
 interface StudentData {
   id: string;
   display_name: string | null;
@@ -68,504 +50,362 @@ interface StudentData {
   cefrLevel?: string | null;
 }
 
+/** The class, as `/api/classroom/[id]` returns it. */
 interface ClassroomData {
   id: string;
   classroomName: string;
-  classCode?: string;
-  codeExpiresAt?: string;
-  grade?: string;
-  teacherId: string;
-  archived: boolean;
-  student: Array<{
-    studentId: string;
-    lastActivity: Date;
-  }>;
-  noOfStudents: number;
-  passwordStudents?: string;
+  grade?: string | number | null;
 }
 
-// type ViewMode = "grid" | "list";
+/** Load state of the class data. */
+type LoadState = "loading" | "ready" | "error" | "notFound";
+
+/** Translator passed into the row parts. */
+type Translator = (key: string, values?: Record<string, string | number>) => string;
 
 /**
- * Translation function passed into hoisted row components.
+ * Says how long ago a student was last active, in Bangkok calendar days.
+ * @param lastActivity ISO time of the newest activity, or null.
+ * @param t Translator for `Teacher.EnhancedClassRoster`.
+ * @param formatDate Formats an older date.
+ * @returns The text, for example "Today" or "3 days ago".
  */
-type RosterTranslator = (
-  key: string,
-  values?: Record<string, string | number>,
-) => string;
-
-/**
- * Derives avatar initials from a student record.
- * @param student Student record.
- * @returns Up to two uppercase initials.
- */
-function getStudentInitials(student: StudentData): string {
-  if (!student.display_name)
-    return student.email?.charAt(0).toUpperCase() || "?";
-  return student.display_name
-    .split(" ")
-    .map((word) => word.charAt(0))
-    .join("")
-    .substring(0, 2)
-    .toUpperCase();
-}
-
-/**
- * Resolves the level badge colour for a student level.
- * @param level Numeric student level.
- * @returns Tailwind background class.
- */
-function getLevelColor(level?: number): string {
-  if (!level) return "bg-gray-500";
-  if (level <= 10) return "bg-green-500";
-  if (level <= 20) return "bg-blue-500";
-  if (level <= 30) return "bg-purple-500";
-  return "bg-orange-500";
-}
-
-/**
- * Formats a last-activity timestamp as relative text.
- * @param lastActivity ISO timestamp, or null when never active.
- * @param t Active translator.
- * @returns Relative activity label.
- */
-function formatLastActivity(
-  lastActivity: string | null,
-  t: RosterTranslator,
-): string {
+function formatLastActivity(lastActivity: string | null, t: Translator, formatDate: (date: Date) => string): string {
   if (!lastActivity) return t("activity.none");
   const date = new Date(lastActivity);
-  const now = new Date();
-  const diffInDays = Math.floor(
-    (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
-  );
-
-  if (diffInDays === 0) return t("activity.today");
-  if (diffInDays === 1) return t("activity.yesterday");
-  if (diffInDays < 7) return t("activity.daysAgo", { count: diffInDays });
-  if (diffInDays < 30)
-    return t("activity.weeksAgo", { count: Math.floor(diffInDays / 7) });
-  return date.toLocaleDateString();
-}
-
-interface StudentRowProps {
-  student: StudentData;
-  classroomId: string;
-  classroomName: string;
-  t: RosterTranslator;
-  onViewProgress: (studentId: string) => void;
-  onRequestReset: (studentId: string) => void;
-  onDataChange: () => void;
+  const days = calendarDayNumber(new Date()) - calendarDayNumber(date);
+  if (days <= 0) return t("activity.today");
+  if (days === 1) return t("activity.yesterday");
+  if (days < 7) return t("activity.daysAgo", { count: days });
+  if (days < 30) return t("activity.weeksAgo", { count: Math.floor(days / 7) });
+  return formatDate(date);
 }
 
 /**
- * Renders one student row without remounting on parent renders.
- * @param props Student record and row callbacks.
- * @returns The student row card.
+ * The teacher class page (Lane C Phase 3): the class heading, the class sign-in card, one student
+ * list, and the class book slot. The student list is the Lane B live roster (sign-in status,
+ * lockouts, picture and card actions); each row also has the roster management parts from
+ * `/api/classroom/[id]` (CEFR, level, XP, last activity, progress link, CEFR setting and progress
+ * reset, remove). When the live roster cannot load, a plain list with the management parts takes
+ * its place, so enroll and remove still work.
+ * @param props.classroomId The class (read from the route when empty).
+ * @param props.classBook The class book card from the server; the placeholder slot when absent.
+ * @param props.classQuest The class quest card from the server (Class Quest FR-4).
+ * @returns The class page body.
  */
-function StudentRow({
-  student,
-  classroomId,
-  classroomName,
-  t,
-  onViewProgress,
-  onRequestReset,
-  onDataChange,
-}: StudentRowProps) {
-  const tComponents = useTranslations("Components");
-  return (
-    <Card>
-      <CardContent>
-        <div className="flex items-center gap-4">
-          <Avatar className="flex-shrink-0">
-            <AvatarFallback
-              className={`text-white ${getLevelColor(student.level)}`}
-            >
-              {getStudentInitials(student)}
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-              <div className="min-w-0 flex-1">
-                <h3 className="truncate font-medium">
-                  {student.display_name || "No name"}
-                </h3>
-                <p className="truncate text-sm text-gray-500">
-                  {student.email}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              {student.cefrLevel && (
-                <Badge
-                  variant="secondary"
-                  className={`text-xs ${getCefrLevelColor(student.cefrLevel)}`}
-                >
-                  {student.cefrLevel}
-                </Badge>
-              )}
-              {student.level && (
-                <Badge variant="outline" className="text-xs">
-                  <GraduationCap className="mr-1 h-3 w-3" />
-                  {t("labels.level", { level: student.level })}
-                </Badge>
-              )}
-              {student.xp && (
-                <Badge variant="outline" className="text-xs">
-                  <Star className="mr-1 h-3 w-3" />
-                  {student.xp}
-                </Badge>
-              )}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 text-sm text-gray-500">
-              <Activity className="h-3 w-3" />
-              {formatLastActivity(student.last_activity, t)}
-            </div>
-            <StudentUnenrollmentButton
-              student={{
-                id: student.id,
-                name: student.display_name,
-                email: student.email,
-              }}
-              classroomId={classroomId}
-              classroomName={classroomName}
-              onStudentUnenrolled={onDataChange}
-              buttonSize="sm"
-              buttonVariant="outline"
-            />
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  aria-label={tComponents("openActionsMenu")}
-                >
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onViewProgress(student.id)}>
-                  <TrendingUp className="mr-1 h-4 w-4" />
-                  {t("actions.viewProgress")}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <div>
-                  <StudentCefrLevelSetter
-                    studentId={student.id}
-                    studentName={
-                      student.display_name || t("labels.studentDefault")
-                    }
-                    currentCefrLevel={student.cefrLevel || "A0-"}
-                    onUpdate={onDataChange}
-                  />
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => onRequestReset(student.id)}
-                  className="text-orange-600"
-                >
-                  <RotateCcw className="mr-1 h-4 w-4" />
-                  Reset Progress
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-export default function EnhancedClassRoster() {
-  const router = useRouter();
+export default function EnhancedClassRoster({ classroomId: classroomIdProp, classBook, classQuest }: { classroomId?: string; classBook?: ReactNode; classQuest?: ReactNode } = {}) {
   const params = useParams();
-  const classroomId = params?.classroomId as string;
+  const classroomId = classroomIdProp ?? (params?.classroomId as string);
   const t = useTranslations("Teacher.EnhancedClassRoster");
-  const tComponents = useTranslations("Components");
+  const tc = useTranslations("TeacherClass");
+  const te = useTranslations("Error");
+  const tLogin = useTranslations("ClassLogin");
+  const format = useFormatter();
 
-  // State management
+  const [state, setState] = useState<LoadState>("loading");
   const [classroom, setClassroom] = useState<ClassroomData | null>(null);
   const [students, setStudents] = useState<StudentData[]>([]);
-  const [filteredStudents, setFilteredStudents] = useState<StudentData[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  // const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [loading, setLoading] = useState(true);
-  const [resetDialogOpen, setResetDialogOpen] = useState(false);
-  const [selectedStudentId, setSelectedStudentId] = useState<string>("");
+  const [rosterVersion, setRosterVersion] = useState(0);
+  const [resetStudentId, setResetStudentId] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
 
-  // Fetch classroom and student data
-  const fetchClassroomData = async () => {
-    if (!classroomId) {
-      setLoading(false);
-      return;
-    }
-
+  const fetchClassroomData = useCallback(async () => {
+    if (!classroomId) return;
     try {
-      setLoading(true);
       const response = await fetch(`/api/classroom/${classroomId}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch classroom data");
+      if (response.status === 404) {
+        setState("notFound");
+        return;
       }
+      if (!response.ok) throw new Error(`Failed to fetch classroom data: ${response.status}`);
       const data = await response.json();
       setClassroom(data.classroom);
       setStudents(data.studentInClass || []);
+      setState("ready");
     } catch (error) {
       console.error("Error fetching classroom data:", error);
+      setState((current) => (current === "ready" ? current : "error"));
       toast.error(t("toast.loadClassroomError"));
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [classroomId, t]);
 
-  // Filter students based on search term
   useEffect(() => {
-    const filtered = students.filter(
-      (student) =>
-        student.display_name
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        student.email?.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-    setFilteredStudents(filtered);
-  }, [students, searchTerm]);
+    void fetchClassroomData();
+  }, [fetchClassroomData]);
 
-  // Initial data fetch
-  useEffect(() => {
-    fetchClassroomData();
-  }, [classroomId]);
+  /** Reads the class and the live roster again after an enroll, a removal, or a level change. */
+  const refreshAll = useCallback(() => {
+    void fetchClassroomData();
+    setRosterVersion((version) => version + 1);
+  }, [fetchClassroomData]);
 
-  // Handler functions
   const handleResetProgress = async () => {
-    if (!selectedStudentId) return;
-
+    if (!resetStudentId) return;
     setResetLoading(true);
     try {
-      const response = await fetch(`/api/users/${selectedStudentId}`, {
+      const response = await fetch(`/api/users/${resetStudentId}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          xp: 0,
-          level: 1,
-          cefrLevel: "A0",
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ xp: 0, level: 1, cefrLevel: "A0" }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to reset progress");
-      }
-
+      if (!response.ok) throw new Error("Failed to reset progress");
       toast.success(t("toast.resetSuccess"));
-      await fetchClassroomData(); // Refresh data
+      await fetchClassroomData();
     } catch (error) {
       console.error("Error resetting progress:", error);
       toast.error(t("toast.resetError"));
     } finally {
       setResetLoading(false);
-      setResetDialogOpen(false);
-      setSelectedStudentId("");
+      setResetStudentId("");
     }
   };
 
-  const handleViewProgress = (studentId: string) => {
-    router.push(`/teacher/student-progress/${studentId}`);
-  };
-
-  const handleBackToRoster = () => {
-    router.push("/teacher/class-roster");
-  };
-
-  // Loading state
-  if (loading) {
+  if (state === "notFound") {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-8 w-8 rounded" />
-          <Skeleton className="h-8 w-48" />
-        </div>
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-6 w-32" />
-            <Skeleton className="h-4 w-64" />
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="h-32 w-full rounded-lg" />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <EmptyState
+        className="bg-card border"
+        titleAs="h1"
+        icon={<Users />}
+        title={t("notFound.title")}
+        description={t("notFound.description")}
+        action={
+          <Link href="/teacher/class-roster" className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION, "px-5")}>
+            {t("actions.backToRoster")}
+          </Link>
+        }
+      />
     );
   }
 
-  // No classroom found
-  if (!classroom) {
-    return (
-      <div className="py-12 text-center">
-        <Users className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-        <h3 className="mb-2 text-lg font-medium text-gray-900">
-          {t("notFound.title")}
-        </h3>
-        <p className="mb-4 text-gray-500">{t("notFound.description")}</p>
-        <Button onClick={handleBackToRoster} variant="outline">
-          <ChevronLeft className="mr-2 h-4 w-4" />
-          {t("actions.backToRoster")}
-        </Button>
+  const byId = new Map(students.map((student) => [student.id, student]));
+  const className = classroom?.classroomName ?? "";
+  const formatDate = (date: Date) => format.dateTime(date, { day: "numeric", month: "short", year: "numeric" });
+  const parts = (student: StudentData, name: string) => ({
+    details: (
+      <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-normal">
+        {student.cefrLevel ? (
+          <Badge variant="secondary" className={cn("text-xs", getCefrLevelColor(student.cefrLevel))}>
+            {student.cefrLevel}
+          </Badge>
+        ) : null}
+        {student.level ? <span className="text-muted-foreground text-xs">{tc("level", { level: student.level })}</span> : null}
+        {student.xp ? <span className="text-muted-foreground text-xs">{tc("xp", { xp: student.xp })}</span> : null}
+        <span className="text-muted-foreground w-full text-xs">
+          {tc("lastActive", { when: formatLastActivity(student.last_activity, t, formatDate) })}
+        </span>
+      </span>
+    ),
+    actions: (
+      <StudentActions
+        student={student}
+        name={name}
+        classroomId={classroomId}
+        classroomName={className}
+        onRequestReset={setResetStudentId}
+        onChange={refreshAll}
+      />
+    ),
+  });
+  const extras = (row: RosterStudent) => {
+    const student = byId.get(row.userId);
+    return student ? parts(student, student.display_name || row.name) : {};
+  };
+
+  const toolbar = (
+    <div className="flex flex-wrap items-center gap-2">
+      <div className="relative min-w-0 flex-1 basis-56">
+        <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" aria-hidden="true" />
+        <Input
+          type="search"
+          aria-label={tc("searchStudents")}
+          placeholder={t("students.searchPlaceholder")}
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+          className="min-h-11 pl-10"
+        />
       </div>
-    );
-  }
+      {classroom ? (
+        <StudentEnrollmentButton
+          classroomId={classroom.id}
+          classroomName={className}
+          onStudentEnrolled={refreshAll}
+          buttonText={t("students.enrollButton")}
+        />
+      ) : null}
+    </div>
+  );
 
-
-  //         <div className="min-w-0 flex-1">
-  //           <h3 className="truncate font-medium text-gray-900">
-  //             {student.display_name || "No name"}
-  //           </h3>
-  //           <p className="truncate text-sm text-gray-500">{student.email}</p>
-
-
-  //           <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
-  //             <Activity className="h-3 w-3" />
-  //             {formatLastActivity(student.last_activity)}
-  //           </div>
-  //         </div>
-
-
-
-  // Student rows render from the module-scope StudentRow below.
+  // The live roster failed: a plain list keeps the management actions (enroll, remove, progress).
+  const query = searchTerm.trim().toLowerCase();
+  const fallbackRows = students.filter(
+    (student) => !query || student.display_name?.toLowerCase().includes(query) || student.email?.toLowerCase().includes(query),
+  );
+  const fallback = (
+    <section className={TEACHER_CARD}>
+      <h2 className="text-lg font-semibold">{tLogin("roster.heading")}</h2>
+      {toolbar}
+      {fallbackRows.length === 0 ? (
+        <p className="text-muted-foreground">{query ? tc("noMatch") : t("students.empty.description")}</p>
+      ) : (
+        <ul>
+          {fallbackRows.map((student) => (
+            <ManagementRow key={student.id} name={student.display_name || t("labels.noName")} {...parts(student, student.display_name || t("labels.noName"))} />
+          ))}
+        </ul>
+      )}
+    </section>
+  );
 
   return (
-    <div className="space-y-6">
-      {/* Navigation */}
-      <ClassroomNavigation
-        classroom={{
-          id: classroom.id,
-          name: classroom.classroomName,
-          grade: classroom.grade,
-          classCode: classroom.classCode,
-          passwordStudents: classroom.passwordStudents,
-          studentCount: filteredStudents.length,
-        }}
-      />
-
-      {/* Quick Actions */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">{t("students.title")}</h2>
-        <div className="flex gap-2">
-          <ClassCodeGenerator
-            classroomId={classroom.id}
-            classroomName={classroom.classroomName}
-            currentClassCode={classroom.passwordStudents}
-            codeExpiresAt={classroom.codeExpiresAt}
-            onCodeGenerated={fetchClassroomData}
-            buttonSize="sm"
-            buttonVariant="outline"
-          />
-          <StudentEnrollmentButton
-            classroomId={classroom.id}
-            classroomName={classroom.classroomName}
-            onStudentEnrolled={fetchClassroomData}
-            buttonText={t("students.enrollButton")}
-            buttonSize="sm"
-          />
-        </div>
-      </div>
-
-      {/* Controls */}
-
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative max-w-sm flex-1">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder={t("students.searchPlaceholder")}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-      </div>
-
-      {/* Students Display */}
-      {filteredStudents.length === 0 ? (
-        <Card>
-          <CardContent className="py-12 text-center">
-            <Users className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-            <h3 className="mb-2 text-lg font-medium">
-              {searchTerm
-                ? t("students.empty.searchTitle")
-                : t("students.empty.title")}
-            </h3>
-            <p className="mb-4 text-gray-500">
-              {searchTerm
-                ? t("students.empty.searchDescription")
-                : t("students.empty.description")}
-            </p>
-            {!searchTerm && (
-              <StudentEnrollmentButton
-                classroomId={classroom.id}
-                classroomName={classroom.classroomName}
-                onStudentEnrolled={fetchClassroomData}
-                buttonText={t("students.empty.enrollFirst")}
-              />
-            )}
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-4">
-          {filteredStudents.map((student) => (
-            <StudentRow
-              key={student.id}
-              student={student}
-              classroomId={classroom.id}
-              classroomName={classroom.classroomName}
-              t={t}
-              onViewProgress={handleViewProgress}
-              onRequestReset={(studentId) => {
-                setSelectedStudentId(studentId);
-                setResetDialogOpen(true);
+    <div className="flex flex-col gap-6">
+      {state === "ready" && classroom ? (
+        <ClassroomNavigation
+          classroom={{
+            id: classroom.id,
+            name: className,
+            grade: classroom.grade ? String(classroom.grade) : undefined,
+            studentCount: students.length,
+          }}
+        />
+      ) : state === "error" ? (
+        <ErrorState
+          className="bg-card border"
+          icon={<TriangleAlert />}
+          title={tc("loadError")}
+          description={tc("loadErrorHint")}
+          action={
+            <Button
+              type="button"
+              className={cn(TEACHER_ACTION, "px-6")}
+              onClick={() => {
+                setState("loading");
+                void fetchClassroomData();
               }}
-              onDataChange={fetchClassroomData}
-            />
-          ))}
+            >
+              {te("retry")}
+            </Button>
+          }
+        />
+      ) : (
+        <div aria-busy="true" className="flex flex-col gap-2">
+          <ShimmerSkeleton className="h-5 w-40" />
+          <ShimmerSkeleton className="h-8 w-56" />
         </div>
       )}
 
-      {/* Reset Progress Dialog */}
-      <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+      <ClassLoginPanel
+        classroomId={classroomId}
+        renderStudentExtras={extras}
+        rosterFilter={searchTerm}
+        rosterFilterEmpty={tc("noMatch")}
+        rosterToolbar={toolbar}
+        rosterFallback={fallback}
+        rosterVersion={rosterVersion}
+      />
+
+      {classBook ?? <ClassBookSlot classroomId={classroomId} />}
+      {classQuest}
+
+      <AlertDialog open={resetStudentId !== ""} onOpenChange={(open) => !open && setResetStudentId("")}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t("resetDialog.title")}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t("resetDialog.description")}
-            </AlertDialogDescription>
+            <AlertDialogDescription>{t("resetDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t("actions.cancel")}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleResetProgress}
-              disabled={resetLoading}
-              className="bg-orange-600 hover:bg-orange-700"
-            >
-              {resetLoading ? (
-                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-              ) : (
-                <RotateCcw className="mr-2 h-4 w-4" />
-              )}
+            <AlertDialogAction onClick={handleResetProgress} disabled={resetLoading} className="bg-orange-700 hover:bg-orange-800">
+              <RotateCcw className="mr-2 size-4" aria-hidden="true" />
               {t("actions.resetProgress")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+/**
+ * One student of the fallback list: the name and the management details, then the actions.
+ * @param props The name, the details, and the actions.
+ * @returns The list item.
+ */
+function ManagementRow({ name, details, actions }: { name: string; details: ReactNode; actions: ReactNode }) {
+  return (
+    <li className="flex flex-wrap items-start justify-between gap-2 border-t py-3 first:border-t-0">
+      <div className="flex min-w-0 flex-col">
+        <span className="font-medium break-words">{name}</span>
+        {details}
+      </div>
+      <div className="flex flex-wrap gap-2">{actions}</div>
+    </li>
+  );
+}
+
+/**
+ * Roster management actions of one student: the progress link, a menu (CEFR level, progress
+ * reset), and remove from the class. Each has a 44 px tap target and a name with the student.
+ * @param props The student, the display name, the class, and the callbacks.
+ * @returns The actions.
+ */
+function StudentActions({
+  student,
+  name,
+  classroomId,
+  classroomName,
+  onRequestReset,
+  onChange,
+}: {
+  student: StudentData;
+  name: string;
+  classroomId: string;
+  classroomName: string;
+  onRequestReset: (studentId: string) => void;
+  onChange: () => void;
+}) {
+  const t = useTranslations("Teacher.EnhancedClassRoster");
+  const tc = useTranslations("TeacherClass");
+  return (
+    <>
+      <Link
+        href={`/teacher/student-progress/${student.id}?classroomId=${classroomId}`}
+        aria-label={tc("progressFor", { name })}
+        className={cn(buttonVariants({ variant: "outline" }), TEACHER_ACTION, "px-3")}
+      >
+        <TrendingUp aria-hidden="true" />
+        {tc("progress")}
+      </Link>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className={cn(TEACHER_ACTION, "min-w-11 px-0")} aria-label={tc("moreFor", { name })}>
+            <MoreVertical className="size-4" aria-hidden="true" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <div>
+            <StudentCefrLevelSetter
+              studentId={student.id}
+              studentName={name || t("labels.studentDefault")}
+              currentCefrLevel={student.cefrLevel || "A0-"}
+              onUpdate={onChange}
+            />
+          </div>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => onRequestReset(student.id)} className="text-orange-700">
+            <RotateCcw className="mr-1 size-4" aria-hidden="true" />
+            {t("actions.resetProgress")}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <StudentUnenrollmentButton
+        student={{ id: student.id, name, email: student.email }}
+        classroomId={classroomId}
+        classroomName={classroomName}
+        onStudentUnenrolled={onChange}
+        ariaLabel={tc("removeFor", { name })}
+        className={cn(TEACHER_ACTION, "min-w-11")}
+      />
+    </>
   );
 }

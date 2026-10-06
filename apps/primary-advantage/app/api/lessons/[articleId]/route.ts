@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { recordLessonStep } from "@/server/controllers/classBookController";
 import { currentUser } from "@/lib/session";
 import {
   getArticleForLesson,
@@ -76,6 +77,8 @@ export async function POST(
       progress,
       timeSpent,
     );
+
+    await recordLessonStep(user, articleId, progress, timeSpent, "POST /api/lessons/[articleId]");
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

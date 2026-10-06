@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchUserActivity } from "@/server/controllers/userController";
+import { z } from "zod";
+import { fetchUserArticleRecords } from "@/server/controllers/userController";
 import { currentUser } from "@/lib/session";
 import { eq } from 'drizzle-orm';
 import { users } from '@reading-advantage/db/schema';
@@ -7,6 +8,26 @@ import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { canReadUserResource } from "@/lib/authorization";
 
+/** Query of the article records list; bad values fall back to the first page of 10. */
+const recordsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).catch(1),
+  limit: z.coerce.number().int().min(1).max(100).catch(10),
+  search: z
+    .string()
+    .trim()
+    .max(100)
+    .optional()
+    .catch(undefined)
+    .transform((value) => value || undefined),
+});
+
+/**
+ * Lists the article records (one row per article read) of a user for the history page, with
+ * paging and a title search. The caller must be allowed to read that user (same school or SYSTEM).
+ * @param request The request; query `page`, `limit`, `search`.
+ * @param context The route params with the target user id.
+ * @returns `{ success, data, pagination }`, or 401/403/500.
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -51,18 +72,19 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const data = await fetchUserActivity(id);
+    // This route used to return fetchUserActivity (activity, XP logs, and the full users row),
+    // so the history table found no `data` and the response exposed user columns.
+    const { searchParams } = new URL(request.url);
+    const query = recordsQuerySchema.parse({
+      page: searchParams.get("page") ?? undefined,
+      limit: searchParams.get("limit") ?? undefined,
+      search: searchParams.get("search") ?? undefined,
+    });
+    const records = await fetchUserArticleRecords({ userId: id, ...query });
 
-    if (!data) {
-      return NextResponse.json(
-        { error: "User activity not found" },
-        { status: 404 },
-      );
-    }
-
-    return NextResponse.json(data);
+    return NextResponse.json(records);
   } catch (error) {
-    console.error("Error fetching user activity:", error);
+    console.error("Error fetching article records:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

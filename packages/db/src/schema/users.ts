@@ -87,6 +87,12 @@ export const sessions = pgTable("sessions", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
+  /** `full` or `code_only`; NULL means `full` (primary_student_login_20261003). */
+  authStrength: text("auth_strength"),
+  /** Idle expiry in seconds; NULL means no idle limit (students only, primary_student_login_20261003). */
+  idleTimeoutSeconds: integer("idle_timeout_seconds"),
+  /** Last request time, written at most once a minute for idle-tracked sessions. */
+  lastSeenAt: timestamp("last_seen_at"),
 }, (table) => [
   index("sessions_user_id_idx").on(table.userId),
   index("sessions_expires_at_idx").on(table.expiresAt),

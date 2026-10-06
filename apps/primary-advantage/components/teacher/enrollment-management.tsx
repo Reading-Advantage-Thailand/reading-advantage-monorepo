@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, Skeleton } from "@reading-advantage/ui";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import {
   Dialog,
   DialogContent,
@@ -14,20 +16,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { getCefrLevelColor } from "@/lib/cefr";
 import type { Student } from "@/types";
+import { cn } from "@/lib/utils";
+import { TEACHER_ACTION } from "./teacher-shell";
 import {
   Search,
   UserPlus,
@@ -57,6 +50,12 @@ interface EnrollmentManagementProps {
   refreshStudents?: () => void;
 }
 
+/**
+ * Enrollment of one class: search, enroll (a dialog with the students of the school who are not
+ * in the class), and the enrolled students as cards with a named remove button.
+ * @param props The class, the enrolled students, and the callbacks after a change.
+ * @returns The enrollment management body.
+ */
 export default function EnrollmentManagement({
   classroomId,
   classroomName,
@@ -65,6 +64,8 @@ export default function EnrollmentManagement({
   onStudentUnenrolled,
   refreshStudents,
 }: EnrollmentManagementProps) {
+  const tc = useTranslations("TeacherClass");
+  const t = useTranslations("Teacher.Enrollment");
   const [enrolledStudents, setEnrolledStudents] = useState<EnrolledStudent[]>(
     initialEnrolledStudents,
   );
@@ -97,11 +98,11 @@ export default function EnrollmentManagement({
       setAvailableStudents(data.students || []);
     } catch (error) {
       console.error("Error fetching available students:", error);
-      toast.error("Failed to load available students");
+      toast.error(t("toasts.loadAvailableError"));
     } finally {
       setIsLoadingAvailable(false);
     }
-  }, [classroomId]);
+  }, [classroomId, t]);
 
   useEffect(() => {
     setEnrolledStudents(initialEnrolledStudents);
@@ -134,14 +135,14 @@ export default function EnrollmentManagement({
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to enroll student");
+        throw new Error(error.error || t("toasts.enrollError"));
       }
 
       const enrolledStudent: EnrolledStudent = { ...student, enrolled: true };
       setEnrolledStudents((prev) => [...prev, enrolledStudent]);
       setAvailableStudents((prev) => prev.filter((s) => s.id !== student.id));
 
-      toast.success(`${student.name} has been enrolled successfully`);
+      toast.success(t("toasts.enrolled", { name: student.name || t("noName") }));
       setIsEnrollDialogOpen(false);
       setSelectedStudent(null);
 
@@ -149,7 +150,7 @@ export default function EnrollmentManagement({
       refreshStudents?.();
     } catch (error: any) {
       console.error("Error enrolling student:", error);
-      toast.error(error.message || "Failed to enroll student");
+      toast.error(error.message || t("toasts.enrollError"));
     } finally {
       setEnrollmentLoading(null);
     }
@@ -169,7 +170,7 @@ export default function EnrollmentManagement({
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to unenroll student");
+        throw new Error(error.error || t("toasts.unenrollError"));
       }
 
       setEnrolledStudents((prev) => prev.filter((s) => s.id !== student.id));
@@ -181,14 +182,14 @@ export default function EnrollmentManagement({
       };
       setAvailableStudents((prev) => [...prev, availableStudent]);
 
-      toast.success(`${student.name} has been unenrolled successfully`);
+      toast.success(t("toasts.unenrolled", { name: student.name || t("noName") }));
       setStudentToUnenroll(null);
 
       onStudentUnenrolled?.(student.id);
       refreshStudents?.();
     } catch (error: any) {
       console.error("Error unenrolling student:", error);
-      toast.error(error.message || "Failed to unenroll student");
+      toast.error(error.message || t("toasts.unenrollError"));
     } finally {
       setEnrollmentLoading(null);
     }
@@ -221,49 +222,31 @@ export default function EnrollmentManagement({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Student Enrollment
-          </h2>
-          <p className="mt-1 text-sm text-gray-600">
-            Manage students in {classroomName}
-          </p>
+      {/* Search and enroll (the page heading is in EnrollmentClient). */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative min-w-0 flex-1 basis-56">
+          <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" aria-hidden="true" />
+          <Input
+            type="search"
+            aria-label={tc("searchStudents")}
+            placeholder={t("search.placeholder")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="min-h-11 pl-10"
+          />
         </div>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <Button
-            onClick={openEnrollDialog}
-            className="w-full sm:w-auto"
-            size="sm"
-          >
-            <UserPlus className="mr-2 h-4 w-4" />
-            Enroll Student
-          </Button>
-        </div>
+        <Button onClick={openEnrollDialog} className={TEACHER_ACTION}>
+          <UserPlus className="mr-2 h-4 w-4" aria-hidden="true" />
+          {t("enrollButton")}
+        </Button>
       </div>
-
-      {/* Search */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="relative">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-            <Input
-              placeholder="Search students by name or email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </CardHeader>
-      </Card>
 
       {/* Enrolled Students */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            Enrolled Students ({filteredEnrolledStudents.length})
+            {t("enrolledHeading", { count: filteredEnrolledStudents.length })}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -271,9 +254,7 @@ export default function EnrollmentManagement({
             <div className="py-8 text-center">
               <Users className="mx-auto mb-4 h-12 w-12 text-gray-400" />
               <p className="text-gray-500">
-                {searchTerm
-                  ? "No students match your search"
-                  : "No students enrolled yet"}
+                {searchTerm ? t("empty.noMatch") : t("empty.none")}
               </p>
             </div>
           ) : (
@@ -283,8 +264,8 @@ export default function EnrollmentManagement({
                   key={student.id}
                   className="rounded-lg border p-4 transition-shadow hover:shadow-md"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex flex-1 items-center gap-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback
                           className={`text-white ${getLevelColor(student.level)}`}
@@ -294,12 +275,12 @@ export default function EnrollmentManagement({
                       </Avatar>
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-medium text-gray-900">
-                          {student.name || "No name"}
+                          {student.name || t("noName")}
                         </p>
                         <p className="truncate text-sm text-gray-500">
                           {student.email}
                         </p>
-                        <div className="mt-2 flex items-center gap-2">
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
                           {student.cefrLevel && (
                             <Badge
                               variant="secondary"
@@ -314,7 +295,7 @@ export default function EnrollmentManagement({
                               className="px-2 py-1 text-xs"
                             >
                               <GraduationCap className="mr-1 h-3 w-3" />
-                              Lvl {student.level}
+                              {t("levelShort", { level: student.level })}
                             </Badge>
                           )}
                           {student.xp && (
@@ -331,10 +312,10 @@ export default function EnrollmentManagement({
                     </div>
                     <Button
                       variant="outline"
-                      size="sm"
                       onClick={() => setStudentToUnenroll(student)}
                       disabled={enrollmentLoading === student.id}
-                      className="ml-2 text-red-600 hover:bg-red-50 hover:text-red-700"
+                      aria-label={tc("removeFor", { name: student.name || student.email || "" })}
+                      className={cn(TEACHER_ACTION, "min-w-11 shrink-0 px-0 text-red-700 hover:bg-red-50 hover:text-red-800")}
                     >
                       {enrollmentLoading === student.id ? (
                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-red-600 border-t-transparent" />
@@ -354,10 +335,8 @@ export default function EnrollmentManagement({
       <Dialog open={isEnrollDialogOpen} onOpenChange={setIsEnrollDialogOpen}>
         <DialogContent className="flex max-h-[80vh] max-w-4xl flex-col overflow-hidden">
           <DialogHeader>
-            <DialogTitle>Enroll Students</DialogTitle>
-            <DialogDescription>
-              Select students to enroll in {classroomName}
-            </DialogDescription>
+            <DialogTitle>{t("dialog.title")}</DialogTitle>
+            <DialogDescription>{t("dialog.description", { classroom: classroomName })}</DialogDescription>
           </DialogHeader>
 
           <div className="flex-1 overflow-auto">
@@ -381,9 +360,7 @@ export default function EnrollmentManagement({
               <div className="py-8 text-center">
                 <UserPlus className="mx-auto mb-4 h-12 w-12 text-gray-400" />
                 <p className="text-gray-500">
-                  {searchTerm
-                    ? "No available students match your search"
-                    : "No students available for enrollment"}
+                  {searchTerm ? t("emptyAvailable.noMatch") : t("emptyAvailable.none")}
                 </p>
               </div>
             ) : (
@@ -402,7 +379,7 @@ export default function EnrollmentManagement({
                     </Avatar>
                     <div className="flex-1">
                       <p className="font-medium text-gray-900">
-                        {student.name || "No name"}
+                        {student.name || t("noName")}
                       </p>
                       <p className="text-sm text-gray-500">{student.email}</p>
                       <div className="mt-1 flex items-center gap-2">
@@ -476,19 +453,19 @@ export default function EnrollmentManagement({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-red-500" />
-              Unenroll Student
+              <AlertCircle className="h-5 w-5 text-red-500" aria-hidden="true" />
+              {t("unenroll.title")}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to unenroll{" "}
-              <span className="font-medium">
-                {studentToUnenroll?.name || studentToUnenroll?.email}
-              </span>{" "}
-              from {classroomName}? This action cannot be undone.
+              {t.rich("unenroll.question", {
+                student: () => <span className="font-medium">{studentToUnenroll?.name || studentToUnenroll?.email}</span>,
+                classroom: () => <span className="font-medium">{classroomName}</span>,
+              })}{" "}
+              {t("unenroll.cannotUndo")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("unenroll.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() =>
                 studentToUnenroll && handleUnenrollStudent(studentToUnenroll)
@@ -497,11 +474,11 @@ export default function EnrollmentManagement({
               disabled={!!enrollmentLoading}
             >
               {enrollmentLoading === studentToUnenroll?.id ? (
-                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" aria-hidden="true" />
               ) : (
-                <UserMinus className="mr-2 h-4 w-4" />
+                <UserMinus className="mr-2 h-4 w-4" aria-hidden="true" />
               )}
-              Unenroll
+              {t("unenroll.button")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

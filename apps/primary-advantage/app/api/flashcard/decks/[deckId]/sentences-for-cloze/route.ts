@@ -1,3 +1,4 @@
+import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
 import { NextRequest, NextResponse } from "next/server";
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db/schema';
@@ -226,6 +227,7 @@ export async function POST(
     activityId: userActivityRow.id,
     activityType: ActivityType.SENTENCE_CLOZE_TEST,
   });
+  await grantGpForXp({ tx: flashDb, schoolId: user.schoolId ?? null, userId: user.id as string, sourceKey: `xp:${userActivityRow.id}`, activityType: ActivityType.SENTENCE_CLOZE_TEST, xpEarned });
 
   // Increment user XP (replaces Prisma `user.update({ data: { xp: { increment } } })`).
   // users is FLAT; TenantDB scopes the increment to the caller's school.

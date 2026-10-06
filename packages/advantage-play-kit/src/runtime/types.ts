@@ -3,7 +3,9 @@ import type {
   GameResults,
   LearningEvidence,
   SentenceInput,
+  StoryInput,
   VocabularyInput,
+  LaunchAvatar,
 } from "@reading-advantage/game-contracts";
 
 import type { APKInputController } from "./input.js";
@@ -26,7 +28,10 @@ export const APK_RUNTIME_API_VERSION = "1.0.0";
 export type GameTerminalOutcome = "victory" | "defeat" | "complete";
 
 /** Canonical learning content accepted by a cartridge launch. */
-export type GameInput = VocabularyInput | SentenceInput;
+export type GameInput = VocabularyInput | SentenceInput | StoryInput;
+
+/** Educational input mode a cartridge declares in its manifest. */
+export type GameInputMode = "vocabulary" | "sentence" | "story";
 
 /** Provenance attached to every edition asset. */
 export interface AssetProvenance {
@@ -222,7 +227,7 @@ export interface RuntimeCartridgeManifest {
   /** APK runtime API version required by the cartridge. */
   runtimeApiVersion: string;
   /** Educational input mode. */
-  inputMode: "vocabulary" | "sentence";
+  inputMode: GameInputMode;
   /** Semantic bindings that every edition must provide. */
   requiredAssetBindings: readonly string[];
   /** Phaser capability families exercised by the cartridge. */
@@ -382,6 +387,8 @@ export interface GameFactoryContext {
   inputController: APKInputController;
   /** Whether this mount is authoritative gameplay or a safe preview. */
   sessionMode: APKSessionMode;
+  /** The player's avatar from the host (the avatar shop, FR-7); null or absent means the game's fixed hero. */
+  avatar?: LaunchAvatar | null;
   /** Initial responsive composition when host-owned responsive configuration is present. */
   composition?: SupportedResponsiveComposition;
   /** Optional deterministic seed. */
@@ -441,6 +448,8 @@ export interface MountCartridgeOptions {
   responsive?: ResponsiveRuntimeOptions;
   /** Optional multiplayer runtime ownership; omitted for single-player cartridges. */
   multiplayer?: MultiplayerRuntimeOptions;
+  /** The player's avatar; the host passes it, a game never fetches it. */
+  avatar?: LaunchAvatar | null;
 }
 
 /** Imperative lifecycle and diagnostics API returned to a host. */

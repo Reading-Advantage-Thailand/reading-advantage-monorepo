@@ -21,6 +21,17 @@ vi.mock("@reading-advantage/auth", async (importOriginal) => {
 });
 
 vi.mock("@reading-advantage/db/schema", () => ({
+  // The GP ledger row that grantGpForXp writes beside the XP log (primary_avatar_shop FR-1).
+  primaryGpLedger: {
+    [Symbol.for("drizzle:Name")]: "primary_gp_ledger",
+    id: "id",
+    schoolId: "school_id",
+    userId: "user_id",
+    delta: "delta",
+    reason: "reason",
+    sourceKey: "source_key",
+    createdAt: "created_at",
+  },
   xpLogs: {
     userId: "user_id",
     xpEarned: "xp_earned",
@@ -337,13 +348,18 @@ describe("recordHostProofGameCompletion (Task 5)", () => {
     expect(result.activityId).toBe(`game:dragon-flight:${idempotencyKey}`);
     expect(result.gameType).toBe("dragon-flight");
     expect(() => hostProofCompletionResponseSchema.parse(result)).not.toThrow();
-    expect(db.insert).toHaveBeenCalledTimes(2);
+    // One completion, one XP log, one GP ledger row in the same transaction.
+    expect(db.insert).toHaveBeenCalledTimes(3);
+    const written = db.insert.mock.results[0].value.values.mock.calls.map((call: unknown[]) => call[0]);
+    expect(written[1]).toMatchObject({ userId: "user-1", xpEarned: 7, activityId: `game:dragon-flight:${idempotencyKey}`, activityType: "GAME_COMPLETION" });
+    expect(written[2]).toMatchObject({ schoolId: "school-1", userId: "user-1", delta: 7, reason: "xp", sourceKey: `xp:game:dragon-flight:${idempotencyKey}` });
   });
 
   it("returns duplicate: true with xpEarned: 0 for a repeated idempotency key", async () => {
     const expectedActivityId = `game:dragon-flight:${idempotencyKey}`;
+    // Selects in order: the first existence check, the GP day total, the second existence check.
     const db = createMockDb({
-      selectSequence: [[], [{ activityId: expectedActivityId }]],
+      selectSequence: [[], [], [{ activityId: expectedActivityId }]],
     });
     const tenantDb = createTenantDB(db as unknown as DB, mockTenant);
 
@@ -364,7 +380,8 @@ describe("recordHostProofGameCompletion (Task 5)", () => {
     expect(second.duplicate).toBe(true);
     expect(second.xpEarned).toBe(0);
     expect(second.activityId).toBe(expectedActivityId);
-    expect(db.insert).toHaveBeenCalledTimes(2);
+    // The duplicate writes nothing: still one completion, one XP log, one GP row.
+    expect(db.insert).toHaveBeenCalledTimes(3);
   });
 
   it("allows an ADMIN to record against a different server-derived school scope", async () => {

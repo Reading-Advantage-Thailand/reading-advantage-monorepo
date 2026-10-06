@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@reading-advantage/ui";
 import { UserPlus, Search, User, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Icons } from "@/components/icons";

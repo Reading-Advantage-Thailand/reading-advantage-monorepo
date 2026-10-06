@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "id": "pips-happy-night",
+  "title": "Pip's Happy Night",
+  "series": "Origins 3.1",
+  "lesson": 2,
+  "level": "A0",
+  "genre": "Health & Body",
+  "paragraphs": [
+    {
+      "text": "Pip is a puppy. He is a boy puppy. Pip is happy. Now it is night. Pip is sleepy. He wants his bed. Pip loves his bed. His bed is warm. This is Pip's room. His room is clean. First, a bath. Pip is in the bath.",
+      "translation": "ปิ๊ปเป็นลูกหมา เขาเป็นลูกหมาตัวผู้ ปิ๊ปมีความสุข ตอนนี้เป็นกลางคืนแล้ว ปิ๊ปง่วงนอน เขาต้องการเตียงของเขา ปิ๊ปชอบเตียงของเขา เตียงของเขามีความอบอุ่น นี่คือห้องของปิ๊ป ห้องของเขาสะอาด ก่อนอื่น อาบน้ำ ปิ๊ปอยู่ในอ่างอาบน้ำ"
+    },
+    {
+      "text": "Water is warm. Pip likes the warm water. Pip is clean. His body is clean. He brushes his teeth. His teeth are clean. Pip puts on pajamas. His pajamas are blue. They are soft pajamas. Pip is ready. Mama reads a book. Pip likes his book.",
+      "translation": "น้ำอุ่น ปิ๊ปชอบน้ำอุ่น ปิ๊ปสะอาดแล้ว ร่างกายของเขาสะอาด เขาแปรงฟัน ฟันของเขาสะอาด ปิ๊ปใส่ชุดนอน ชุดนอนของเขาสีฟ้า เป็นชุดนอนที่นุ่ม ปิ๊ปพร้อมแล้ว แม่กำลังอ่านหนังสือ ปิ๊ปชอบหนังสือของเขา"
+    },
+    {
+      "text": "The book is small. This book is fun. Pip is in his bed. He is under his blanket. His blanket is warm. His bed is soft. Pip closes his eyes. Pip is sleepy. He sleeps now. Good night, Pip. Pip is a happy puppy. He loves sleep.",
+      "translation": "หนังสือเล่มเล็ก หนังสือเล่มนี้สนุก ปิ๊ปอยู่ในเตียงของเขา เขาอยู่ใต้ผ้าห่มของเขา ผ้าห่มของเขามีความอบอุ่น เตียงของเขานุ่ม ปิ๊ปหลับตา ปิ๊ปง่วงนอน เขาหลับแล้ว ราตรีสวัสดิ์นะ ปิ๊ป ปิ๊ปเป็นลูกหมาที่มีความสุข เขารักการนอน"
+    }
+  ],
+  "images": [
+    "img-1.webp",
+    "img-2.webp",
+    "img-3.webp"
+  ],
+  "vocabulary": [
+    {
+      "id": "w-puppy",
+      "term": "puppy",
+      "translation": "ลูกสุนัข",
+      "definition": "A young dog."
+    },
+    {
+      "id": "w-sleepy",
+      "term": "sleepy",
+      "translation": "ง่วงนอน",
+      "definition": "Feeling a need to sleep."
+    },
+    {
+      "id": "w-warm",
+      "term": "warm",
+      "translation": "อบอุ่น",
+      "definition": "A comfortable level of heat."
+    },
+    {
+      "id": "w-clean",
+      "term": "clean",
+      "translation": "สะอาด",
+      "definition": "Not dirty or stained."
+    },
+    {
+      "id": "w-bath",
+      "term": "bath",
+      "translation": "การอาบน้ำ",
+      "definition": "Washing the body in a container of water."
+    },
+    {
+      "id": "w-brushes",
+      "term": "brushes",
+      "translation": "แปรง",
+      "definition": "Cleans or smooths something using a tool with bristles."
+    },
+    {
+      "id": "w-teeth",
+      "term": "teeth",
+      "translation": "ฟัน",
+      "definition": "The hard white structures in the mouth used for biting."
+    },
+    {
+      "id": "w-pajamas",
+      "term": "pajamas",
+      "translation": "ชุดนอน",
+      "definition": "Soft clothes designed for sleeping."
+    },
+    {
+      "id": "w-soft",
+      "term": "soft",
+      "translation": "นุ่ม",
+      "definition": "Easy to press or touch; not hard."
+    },
+    {
+      "id": "w-ready",
+      "term": "ready",
+      "translation": "พร้อม",
+      "definition": "Prepared for action or use."
+    },
+    {
+      "id": "w-blanket",
+      "term": "blanket",
+      "translation": "ผ้าห่ม",
+      "definition": "A large piece of cloth used as a bed covering for warmth."
+    },
+    {
+      "id": "w-under",
+      "term": "under",
+      "translation": "ใต้",
+      "definition": "In a position below or beneath something."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "Pip is a puppy.",
+      "words": [
+        "Pip",
+        "is",
+        "a",
+        "puppy."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "Water is warm.",
+      "words": [
+        "Water",
+        "is",
+        "warm."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-3",
+      "text": "He is a boy puppy.",
+      "words": [
+        "He",
+        "is",
+        "a",
+        "boy",
+        "puppy."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-4",
+      "text": "Pip is happy.",
+      "words": [
+        "Pip",
+        "is",
+        "happy."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-5",
+      "text": "Now it is night.",
+      "words": [
+        "Now",
+        "it",
+        "is",
+        "night."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-6",
+      "text": "Pip is sleepy.",
+      "words": [
+        "Pip",
+        "is",
+        "sleepy."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-7",
+      "text": "Pip likes the warm water.",
+      "words": [
+        "Pip",
+        "likes",
+        "the",
+        "warm",
+        "water."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-8",
+      "text": "Pip is clean.",
+      "words": [
+        "Pip",
+        "is",
+        "clean."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-9",
+      "text": "His body is clean.",
+      "words": [
+        "His",
+        "body",
+        "is",
+        "clean."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-10",
+      "text": "The book is small.",
+      "words": [
+        "The",
+        "book",
+        "is",
+        "small."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-11",
+      "text": "This book is fun.",
+      "words": [
+        "This",
+        "book",
+        "is",
+        "fun."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-12",
+      "text": "Pip is in his bed.",
+      "words": [
+        "Pip",
+        "is",
+        "in",
+        "his",
+        "bed."
+      ],
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "Pip is a ___.",
+      "answer": "puppy",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "Pip is ___.",
+      "answer": "sleepy",
+      "paragraph": 0
+    },
+    {
+      "id": "f-3",
+      "sentence": "His bed is ___.",
+      "answer": "warm",
+      "paragraph": 0
+    },
+    {
+      "id": "f-4",
+      "sentence": "His room is ___.",
+      "answer": "clean",
+      "paragraph": 0
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "Who is Pip?",
+      "options": [
+        "A cat",
+        "A boy",
+        "A puppy",
+        "A girl"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q-2",
+      "question": "What time is it?",
+      "options": [
+        "Morning",
+        "Night",
+        "Afternoon",
+        "Day"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "q-3",
+      "question": "What color are Pip's pajamas?",
+      "options": [
+        "Red",
+        "Green",
+        "Yellow",
+        "Blue"
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-4",
+      "question": "What is Pip under in bed?",
+      "options": [
+        "A table",
+        "A chair",
+        "His blanket",
+        "A toy"
+      ],
+      "answer": 2,
+      "paragraph": 2
+    }
+  ],
+  "source": {
+    "file": "primary/origins-3.1-a0/02-Pip's Happy Night _workbook.json",
+    "url": "https://primary.reading-advantage.com/student/read/cmgqwbh0b0208t79btb3784p5"
+  }
+}

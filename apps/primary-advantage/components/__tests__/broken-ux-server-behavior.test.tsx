@@ -103,7 +103,7 @@ describe("FR-3 app layout main pane", () => {
     });
     getLocaleMock.mockResolvedValue("en");
     const tree = await AppLayout({
-      mainNavConfig: [],
+      area: "teacher",
       children: <span data-testid="layout-child">pane content</span>,
     });
     const mains = findAll(tree, (element) => element.type === "main");

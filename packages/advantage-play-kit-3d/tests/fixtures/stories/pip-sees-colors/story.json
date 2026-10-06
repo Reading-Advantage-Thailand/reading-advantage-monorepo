@@ -1,0 +1,336 @@
+{
+  "schemaVersion": 1,
+  "id": "pip-sees-colors",
+  "title": "Pip Sees Colors",
+  "series": "Origins 3.1",
+  "lesson": 4,
+  "level": "A0",
+  "genre": "Colors & Art",
+  "paragraphs": [
+    {
+      "text": "This is Pip. Pip is a puppy. Pip is a happy puppy. Pip is in the park. It is a sunny day. Pip sees a road. Many cars are on the road. Pip likes cars. Pip sees a bus. A car is red. This car is red. Pip likes red.",
+      "translation": "นี่คือปิ๊ป ปิ๊ปเป็นลูกสุนัข ปิ๊ปเป็นลูกสุนัขที่มีความสุข ปิ๊ปอยู่ในสวนสาธารณะ เป็นวันที่แดดออก ปิ๊ปเห็นถนน มีรถหลายคันบนถนน ปิ๊ปชอบรถ ปิ๊ปเห็นรถบัส รถคันหนึ่งเป็นสีแดง รถคันนี้เป็นสีแดง ปิ๊ปชอบสีแดง"
+    },
+    {
+      "text": "Another car is blue. That car is blue too. Pip likes blue. A big bus is green. This bus is green. Pip likes green. A small truck is yellow. This truck is yellow. Yellow is a happy color. Pip likes yellow. Pip sees many colors. Red is a color.",
+      "translation": "รถอีกคันเป็นสีน้ำเงิน รถคันนั้นก็เป็นสีน้ำเงินด้วย ปิ๊ปชอบสีน้ำเงิน รถบัสคันใหญ่เป็นสีเขียว รถบัสคันนี้เป็นสีเขียว ปิ๊ปชอบสีเขียว รถบรรทุกคันเล็กเป็นสีเหลือง รถบรรทุกคันนี้เป็นสีเหลือง สีเหลืองเป็นสีแห่งความสุข ปิ๊ปชอบสีเหลือง ปิ๊ปเห็นหลายสี สีแดงเป็นสี"
+    },
+    {
+      "text": "Blue is a color. Green is a color. Yellow is a color. Colors are fun. Pip is a happy puppy. Pip sees a friend. My friend is a boy. We play. This is a good day. Pip goes home. Pip is happy.",
+      "translation": "สีน้ำเงินเป็นสี สีเขียวเป็นสี สีเหลืองเป็นสี สีต่างๆ สนุกสนาน ปิ๊ปเป็นลูกสุนัขที่มีความสุข ปิ๊ปเห็นเพื่อน เพื่อนของฉันเป็นเด็กผู้ชาย เราเล่นกัน เป็นวันที่ดี ปิ๊ปกลับบ้าน ปิ๊ปมีความสุข"
+    }
+  ],
+  "images": [
+    "img-1.webp",
+    "img-2.webp",
+    "img-3.webp"
+  ],
+  "vocabulary": [
+    {
+      "id": "w-puppy",
+      "term": "puppy",
+      "translation": "ลูกสุนัข",
+      "definition": "A young dog."
+    },
+    {
+      "id": "w-park",
+      "term": "park",
+      "translation": "สวนสาธารณะ",
+      "definition": "A public area used for recreation and play."
+    },
+    {
+      "id": "w-sunny",
+      "term": "sunny",
+      "translation": "แดดออก",
+      "definition": "Bright with light from the sun."
+    },
+    {
+      "id": "w-road",
+      "term": "road",
+      "translation": "ถนน",
+      "definition": "A hard surface built for vehicles to travel on."
+    },
+    {
+      "id": "w-bus",
+      "term": "bus",
+      "translation": "รถบัส",
+      "definition": "A large motor vehicle used for carrying many passengers."
+    },
+    {
+      "id": "w-truck",
+      "term": "truck",
+      "translation": "รถบรรทุก",
+      "definition": "A large vehicle used for carrying goods or heavy loads."
+    },
+    {
+      "id": "w-yellow",
+      "term": "yellow",
+      "translation": "สีเหลือง",
+      "definition": "The color of gold, butter, or a lemon."
+    },
+    {
+      "id": "w-color",
+      "term": "color",
+      "translation": "สี",
+      "definition": "The appearance of objects like red, blue, or green."
+    },
+    {
+      "id": "w-friend",
+      "term": "friend",
+      "translation": "เพื่อน",
+      "definition": "A person who you like and enjoy spending time with."
+    },
+    {
+      "id": "w-happy",
+      "term": "happy",
+      "translation": "มีความสุข",
+      "definition": "Feeling or showing pleasure and contentment."
+    },
+    {
+      "id": "w-blue",
+      "term": "blue",
+      "translation": "สีฟ้า",
+      "definition": "The color of the sky on a clear day."
+    },
+    {
+      "id": "w-green",
+      "term": "green",
+      "translation": "สีเขียว",
+      "definition": "The color of grass or leaves."
+    },
+    {
+      "id": "w-small",
+      "term": "small",
+      "translation": "เล็ก",
+      "definition": "Not large in size or amount."
+    },
+    {
+      "id": "w-home",
+      "term": "home",
+      "translation": "บ้าน",
+      "definition": "The place where one lives."
+    },
+    {
+      "id": "w-play",
+      "term": "play",
+      "translation": "เล่น",
+      "definition": "To engage in activity for enjoyment and recreation."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "This is Pip.",
+      "words": [
+        "This",
+        "is",
+        "Pip."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "Another car is blue.",
+      "words": [
+        "Another",
+        "car",
+        "is",
+        "blue."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-3",
+      "text": "Pip is a puppy.",
+      "words": [
+        "Pip",
+        "is",
+        "a",
+        "puppy."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-4",
+      "text": "Pip is a happy puppy.",
+      "words": [
+        "Pip",
+        "is",
+        "a",
+        "happy",
+        "puppy."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-5",
+      "text": "Pip is in the park.",
+      "words": [
+        "Pip",
+        "is",
+        "in",
+        "the",
+        "park."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-6",
+      "text": "It is a sunny day.",
+      "words": [
+        "It",
+        "is",
+        "a",
+        "sunny",
+        "day."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-7",
+      "text": "That car is blue too.",
+      "words": [
+        "That",
+        "car",
+        "is",
+        "blue",
+        "too."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-8",
+      "text": "Pip likes blue.",
+      "words": [
+        "Pip",
+        "likes",
+        "blue."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-9",
+      "text": "A big bus is green.",
+      "words": [
+        "A",
+        "big",
+        "bus",
+        "is",
+        "green."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-10",
+      "text": "Blue is a color.",
+      "words": [
+        "Blue",
+        "is",
+        "a",
+        "color."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-11",
+      "text": "Green is a color.",
+      "words": [
+        "Green",
+        "is",
+        "a",
+        "color."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-12",
+      "text": "Yellow is a color.",
+      "words": [
+        "Yellow",
+        "is",
+        "a",
+        "color."
+      ],
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "Pip is a ___.",
+      "answer": "puppy",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "Pip is in the ___.",
+      "answer": "park",
+      "paragraph": 0
+    },
+    {
+      "id": "f-3",
+      "sentence": "It is a ___ day.",
+      "answer": "sunny",
+      "paragraph": 0
+    },
+    {
+      "id": "f-4",
+      "sentence": "Pip sees a ___.",
+      "answer": "road",
+      "paragraph": 0
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "What is Pip?",
+      "options": [
+        "A cat",
+        "A bird",
+        "A puppy",
+        "A fish"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q-2",
+      "question": "Where is Pip?",
+      "options": [
+        "In the house",
+        "In the park",
+        "In the car",
+        "In the bus"
+      ],
+      "answer": 1,
+      "paragraph": 0
+    },
+    {
+      "id": "q-3",
+      "question": "What color is a car Pip likes?",
+      "options": [
+        "Purple",
+        "Orange",
+        "Red",
+        "Black"
+      ],
+      "answer": 2,
+      "paragraph": 1
+    },
+    {
+      "id": "q-4",
+      "question": "What color is a bus in the story?",
+      "options": [
+        "Pink",
+        "Green",
+        "Brown",
+        "White"
+      ],
+      "answer": 1,
+      "paragraph": 1
+    }
+  ],
+  "source": {
+    "file": "primary/origins-3.1-a0/04-Pip Sees Colors _workbook.json",
+    "url": "https://primary.reading-advantage.com/student/read/cmgqwwo0d02evt79b2hcfi25a"
+  }
+}

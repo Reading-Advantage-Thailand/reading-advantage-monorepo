@@ -1,11 +1,10 @@
 "use client";
 
 import { Header } from "@/components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator, Label } from "@reading-advantage/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -29,6 +28,8 @@ import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Eye, EyeOff, User, Mail, Lock, Users, UserCog } from "lucide-react";
 import { toast } from "sonner";
+import { SchoolSelect } from "@/components/admin/school-select";
+import { useSession } from "@reading-advantage/auth-client";
 
 // Schema will be created inside the component to access translations
 
@@ -47,6 +48,10 @@ export default function AddTeacherPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const { user } = useSession();
+  const isSystem = user?.role === "SYSTEM";
+  const tSchool = useTranslations("Admin.SchoolSelect");
+  const [schoolId, setSchoolId] = useState("");
 
   const teacherFormSchema = z
     .object({
@@ -58,8 +63,10 @@ export default function AddTeacherPage() {
       role: z.string().min(1, t("schema.roleRequired")),
       password: z
         .string()
-        .min(6, t("schema.passwordMin"))
-        .max(100, t("schema.passwordMax")),
+        // Match the server: PASSWORD_MIN_LENGTH (8) and PASSWORD_MAX_LENGTH (128) in
+        // @reading-advantage/auth. Literals avoid importing the auth barrel into a client bundle.
+        .min(8, t("schema.passwordMin"))
+        .max(128, t("schema.passwordMax")),
       confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
@@ -79,6 +86,10 @@ export default function AddTeacherPage() {
   });
 
   const onSubmit = async (data: TeacherFormData) => {
+    if (isSystem && !schoolId) {
+      toast.error(tSchool("required"));
+      return;
+    }
     setIsSubmitting(true);
     try {
       const response = await fetch("/api/teachers", {
@@ -91,6 +102,7 @@ export default function AddTeacherPage() {
           email: data.email,
           role: data.role,
           password: data.password,
+          ...(isSystem ? { schoolId } : {}),
         }),
       });
 
@@ -177,6 +189,8 @@ export default function AddTeacherPage() {
                       </FormItem>
                     )}
                   />
+
+                  <SchoolSelect value={schoolId} onChange={setSchoolId} />
 
                   {/* Role */}
                   <FormField

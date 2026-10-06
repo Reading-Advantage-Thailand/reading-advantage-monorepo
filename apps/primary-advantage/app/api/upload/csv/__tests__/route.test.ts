@@ -22,7 +22,7 @@ const mocks = vi.hoisted(() => {
       "lessonRecords", "lessons", "licenseOnUsers", "licenses", "loginAttempts",
       "longAnswerQuestions", "masteryCalibrations", "masteryCards", "masteryCommits", "masteryEvidence",
       "masteryPlacements", "masteryPrincipals", "masteryReviews", "masteryStates", "multipleChoiceQuestions",
-      "pastTopics", "raCefrMappings", "reviewJobAdoptionAuditEvents", "reviewJobDurableAdoption", "reviewJobDurableBindings",
+      "pastTopics", "primaryBookLessons", "primaryBookSeries", "primaryBooks", "primaryClassBookLessons", "primaryClassBooks", "primaryClassLoginSessions", "primaryLegacyIdMap", "primaryLessonGuides", "primaryStudentCredentials", "primaryStudentLessonSteps", "raCefrMappings", "reviewJobAdoptionAuditEvents", "reviewJobDurableAdoption", "reviewJobDurableBindings",
       "reviewJobMigrationIssues", "reviewJobs", "salesChatMessages", "salesConversations", "salesLessons",
       "salesMasteryProjectionOutbox", "salesMasteryProjectionReceipts", "salesMasteryTenantMappings", "salesModules", "salesProgress",
       "salesQuizQuestions", "salesRoleplayAttempts", "salesRoleplayScenarios", "salesRubrics", "schoolAdmins",
@@ -55,7 +55,9 @@ vi.mock("@/lib/session", () => ({ getCurrentUser: mocks.currentUser }));
 // the `db` export below is that client. Tables come from
 // @reading-advantage/db/schema and operators from drizzle-orm (both real), so
 // identity assertions target the real schema exports.
-vi.mock("@reading-advantage/db", () => ({
+vi.mock("@reading-advantage/db", async (importOriginal) => ({
+  // The real tables stay: the domain and auth modules register them when they load.
+  ...(await importOriginal<typeof import("@reading-advantage/db")>()),
   db: { select: mocks.select, insert: mocks.insert },
   ...mocks.tables,
   eq: vi.fn(() => ({})),

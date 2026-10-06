@@ -1,5 +1,6 @@
 "use server";
 
+import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
 import { currentUser } from "@/lib/session";
 import {
   db,
@@ -98,6 +99,7 @@ export async function updateUserActivity(
       activityId: userActivityRow.id,
       activityType: type,
     });
+    await grantGpForXp({ tx, schoolId: user.schoolId ?? null, userId: user.id as string, sourceKey: `xp:${userActivityRow.id}`, activityType: type, xpEarned: xpEarned });
 
     await tx.update(users)
       .set({

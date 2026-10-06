@@ -10,14 +10,18 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --external react --external react-dom",
-    "dev": "tsup src/index.ts --format esm --dts --external react --external react-dom --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "test": "vitest run",
     "lint": "eslint src/"
   },

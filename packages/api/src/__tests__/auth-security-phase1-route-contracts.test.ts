@@ -65,6 +65,7 @@ vi.mock("drizzle-orm", () => ({
 
 vi.mock("@reading-advantage/auth", () => ({
   hashPassword: vi.fn(),
+  PASSWORD_MAX_LENGTH: 128,
   requireAuth: vi.fn(),
   requireRole: vi.fn(),
   revokeAllUserSessions: vi.fn(),
@@ -240,46 +241,11 @@ describe("Phase 1 — Task 7: handleResetPassword is exported from the auth barr
 // Task 8 — DUMMY_HASH constant on login.ts
 // ---------------------------------------------------------------------------
 
-describe("Phase 1 — Task 8: login.ts exports a DUMMY_HASH constant", () => {
-  it("login.ts declares a module-level DUMMY_HASH constant", () => {
+describe("Phase 1 — Task 8: login.ts exports getDummyHash", () => {
+  it("login.ts exports a lazy getDummyHash function and no hard-coded hash literal", () => {
     const source = readFileSync(LOGIN_TS_PATH, "utf8");
-    // Match either `const DUMMY_HASH = ...` or `export const DUMMY_HASH = ...`.
-    // The plan does not require the constant to be exported from the
-    // module — it is module-internal — but the declaration must be
-    // present at the top level so every login code path can refer to it.
-    const decl = /(?:export\s+)?const\s+DUMMY_HASH\s*=\s*["'`]/;
-    expect(
-      decl.test(source),
-      "Expected packages/api/src/routes/auth/login.ts to declare a " +
-        "module-level `DUMMY_HASH` constant — Phase 1 stubs it as a " +
-        "string literal of a pre-computed Argon2id hash. FR-4 uses it " +
-        "to equalize the unknown-username / wrong-password cost.",
-    ).toBe(true);
-  });
-
-  it("DUMMY_HASH is a non-empty string at runtime", async () => {
-    // The login module is the source of truth; we re-import it after
-    // the import.meta.glob loaders above so the side-effect of
-    // reading `db` doesn't blow up the test (the module imports
-    // `@reading-advantage/db` at the top level).
-    const login = (await import("../routes/auth/login.js")) as {
-      DUMMY_HASH?: unknown;
-    };
-    expect(
-      login.DUMMY_HASH,
-      "Expected login.ts to export a `DUMMY_HASH` constant so FR-4 can " +
-        "`await verifyPassword(password, DUMMY_HASH)` in the unknown-" +
-        "username branch.",
-    ).toBeDefined();
-    expect(
-      typeof login.DUMMY_HASH,
-      "DUMMY_HASH must be a string — verifyPassword expects a hash, not a " +
-        "buffer or a function.",
-    ).toBe("string");
-    expect(
-      (login.DUMMY_HASH as string).length,
-      "DUMMY_HASH must be non-empty (Argon2id hashes are ≥ 20 chars).",
-    ).toBeGreaterThan(0);
+    expect(/export\s+function\s+getDummyHash\s*\(/.test(source)).toBe(true);
+    expect(source.includes('"$argon2id$')).toBe(false);
   });
 });
 

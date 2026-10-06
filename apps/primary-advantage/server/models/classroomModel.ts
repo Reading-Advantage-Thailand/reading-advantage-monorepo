@@ -1019,51 +1019,6 @@ export const getClassroomWithStudents = async (
   }
 };
 
-export const getClassroomStudentForLogin = async (code: string) => {
-  try {
-    //check code
-    const [checkCode] = await db.select({
-      id: classrooms.id,
-      passwordStudents: classrooms.passwordStudents,
-      codeExpiresAt: classrooms.codeExpiresAt,
-    })
-      .from(classrooms)
-      .where(eq(classrooms.passwordStudents, code))
-      .limit(1);
-
-    if (!checkCode) {
-      return NextResponse.json(
-        { error: "Invalid Classroom Code" },
-        { status: 404 },
-      );
-    }
-
-    if (checkCode.codeExpiresAt && new Date() > checkCode.codeExpiresAt) {
-      return NextResponse.json(
-        { error: "Classroom code has expired" },
-        { status: 410 }, // 410 Gone = valid but expired
-      );
-    }
-
-    const studentInClass = await db.select({
-      id: classroomStudents.id,
-      classroomId: classroomStudents.classroomId,
-      studentId: classroomStudents.studentId,
-      joinedAt: classroomStudents.joinedAt,
-      studentUserId: users.id,
-      studentEmail: users.email,
-      studentName: users.name,
-    })
-      .from(classroomStudents)
-      .innerJoin(users, eq(users.id, classroomStudents.studentId))
-      .where(eq(classroomStudents.classroomId, checkCode.id));
-
-    return NextResponse.json({ students: studentInClass }, { status: 200 });
-  } catch (error) {
-    throw new Error("error getClassroomStudentForLogin");
-  }
-};
-
 /**
  * Generates a unique login code for an accessible classroom.
  * @param classroomId The classroom identifier.

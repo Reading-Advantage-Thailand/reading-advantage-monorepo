@@ -176,6 +176,25 @@ import {
   companyProductPrincipals,
   standardPackSuccessorCommitments,
   standardPackSuccessorAdmissionReceipts,
+  primaryLegacyIdMap,
+  primaryBookSeries,
+  primaryBooks,
+  primaryBookLessons,
+  primaryLessonGuides,
+  primaryClassLoginSessions,
+  primaryStudentCredentials,
+  primaryClassBooks,
+  primaryAvatarProfile,
+  primaryGpLedger,
+  primaryAvatarInventory,
+  primaryAvatarLoadout,
+  primaryClassQuest,
+  primaryClassQuestPowerUp,
+  primaryClassQuestHeartbeat,
+  primaryVoiceSessions,
+  primaryActiveVoiceSessions,
+  primaryVoiceMonthlyUsage,
+  primaryVoiceSchoolSettings,
 } from "@reading-advantage/db";
 import {
   accountingSubmissions,
@@ -188,6 +207,32 @@ register(verificationTokens, "EXEMPT");
 // Looked up by id from `userRoles`; not school-scoped.
 register(roles, "EXEMPT");
 
+// Legacy cuid -> uuid remap for the Primary cutover; keyed by legacy table name, not tenant data.
+register(primaryLegacyIdMap, "EXEMPT");
+// Class book catalogue and guides (primary_teacher_books_lesson_support_20261003): global content.
+register(primaryBookSeries, "EXEMPT");
+register(primaryBooks, "EXEMPT");
+register(primaryBookLessons, "EXEMPT");
+register(primaryLessonGuides, "EXEMPT");
+// Student login (primary_student_login_20261003): both tables carry school_id.
+register(primaryClassLoginSessions, "FLAT");
+register(primaryStudentCredentials, "FLAT");
+register(primaryClassBooks, "FLAT");
+// Student avatar (primary_reedy_preview_20261003): school_id + user_id primary key.
+register(primaryAvatarProfile, "FLAT");
+// Avatar shop (primary_avatar_shop_20261005): ledger, inventory, and loadout carry school_id.
+register(primaryGpLedger, "FLAT");
+register(primaryAvatarInventory, "FLAT");
+register(primaryAvatarLoadout, "FLAT");
+// Class Quest (primary_class_quest_20261005): quest, power-ups, and heartbeats carry school_id.
+register(primaryClassQuest, "FLAT");
+register(primaryClassQuestPowerUp, "FLAT");
+register(primaryClassQuestHeartbeat, "FLAT");
+// Reedy voice practice (primary_reedy_preview_20261003): every table carries school_id.
+register(primaryVoiceSessions, "FLAT");
+register(primaryActiveVoiceSessions, "FLAT");
+register(primaryVoiceMonthlyUsage, "FLAT");
+register(primaryVoiceSchoolSettings, "FLAT");
 register(auditEvents, "EXEMPT");
 register(schools, "EXEMPT");
 register(accounts, "EXEMPT");
@@ -266,6 +311,8 @@ import {
   chapterTrackings,
   storyAssignments,
   lessonRecords,
+  primaryClassBookLessons,
+  primaryStudentLessonSteps,
   assignmentNotifications,
   raCefrMappings,
   genreAdjacencies,
@@ -358,6 +405,9 @@ register(storyRecords, "REFERENTIAL");
 register(chapterTrackings, "REFERENTIAL");
 register(storyAssignments, "REFERENTIAL");
 register(lessonRecords, "REFERENTIAL");
+// Class book state and progress (primary_teacher_books_lesson_support_20261003): scoped via primary_class_books.school_id.
+register(primaryClassBookLessons, "REFERENTIAL");
+register(primaryStudentLessonSteps, "REFERENTIAL");
 register(assignmentNotifications, "REFERENTIAL");
 register(raCefrMappings, "REFERENTIAL");
 register(genreAdjacencies, "REFERENTIAL");

@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "id": "the-school-garden",
+  "title": "The School Garden",
+  "series": "Adventures 1.0",
+  "lesson": 2,
+  "level": "A1",
+  "genre": "Informational",
+  "paragraphs": [
+    {
+      "text": "Our school has a special garden. Every student helps to grow vegetables and flowers there. First, we put seeds into the soil. Seeds need good soil, warm sunshine, and clean water to grow."
+    },
+    {
+      "text": "Every week, students water the plants. They pull out weeds so the plants have room to grow. They also check for insects that might eat the leaves. Taking care of a garden takes time and patience."
+    },
+    {
+      "text": "When the vegetables are ready, the class harvests them together. Last month, we picked tomatoes, cucumbers, and green beans. We used the vegetables to make a big salad and shared it at lunch. Growing your own food is a wonderful feeling!"
+    }
+  ],
+  "images": [],
+  "vocabulary": [
+    {
+      "id": "w-garden",
+      "term": "garden",
+      "translation": "สวน",
+      "definition": "a place outside where you grow plants and flowers",
+      "phonetic": "/ˈɡɑːrdən/"
+    },
+    {
+      "id": "w-seed",
+      "term": "seed",
+      "translation": "เมล็ด",
+      "definition": "a tiny object from a plant that grows into a new plant",
+      "phonetic": "/siːd/"
+    },
+    {
+      "id": "w-soil",
+      "term": "soil",
+      "translation": "ดิน",
+      "definition": "the dirt in the ground where plants grow",
+      "phonetic": "/sɔɪl/"
+    },
+    {
+      "id": "w-water",
+      "term": "water",
+      "translation": "น้ำ",
+      "definition": "the clear liquid that plants and people need to live",
+      "phonetic": "/ˈwɔːtər/"
+    },
+    {
+      "id": "w-harvest",
+      "term": "harvest",
+      "translation": "เก็บเกี่ยว",
+      "definition": "to pick fruits or vegetables when they are ready to eat",
+      "phonetic": "/ˈhɑːrvɪst/"
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "Seeds need soil, sunshine, and water.",
+      "words": [
+        "Seeds",
+        "need",
+        "soil,",
+        "sunshine,",
+        "and",
+        "water."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "The class harvested tomatoes and cucumbers.",
+      "words": [
+        "The",
+        "class",
+        "harvested",
+        "tomatoes",
+        "and",
+        "cucumbers."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-3",
+      "text": "Our school has a special garden.",
+      "words": [
+        "Our",
+        "school",
+        "has",
+        "a",
+        "special",
+        "garden."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-4",
+      "text": "First, we put seeds into the soil.",
+      "words": [
+        "First,",
+        "we",
+        "put",
+        "seeds",
+        "into",
+        "the",
+        "soil."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-5",
+      "text": "Every week, students water the plants.",
+      "words": [
+        "Every",
+        "week,",
+        "students",
+        "water",
+        "the",
+        "plants."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-6",
+      "text": "Growing your own food is a wonderful feeling!",
+      "words": [
+        "Growing",
+        "your",
+        "own",
+        "food",
+        "is",
+        "a",
+        "wonderful",
+        "feeling!"
+      ],
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "We put small ___ into the ground to start new plants.",
+      "answer": "seeds",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "Plants need good ___ to get food and water underground.",
+      "answer": "soil",
+      "paragraph": 0
+    },
+    {
+      "id": "f-3",
+      "sentence": "The class went to the ___ to take care of the plants.",
+      "answer": "garden",
+      "paragraph": 1
+    },
+    {
+      "id": "f-4",
+      "sentence": "At the end of the season, we ___ the tomatoes and cucumbers.",
+      "answer": "harvested",
+      "paragraph": 2
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "What does the school garden grow?",
+      "options": [
+        "Only flowers",
+        "Only trees",
+        "Vegetables and flowers",
+        "Fruit and grass"
+      ],
+      "answer": 2,
+      "paragraph": 0
+    },
+    {
+      "id": "q-2",
+      "question": "What three things do seeds need to grow?",
+      "options": [
+        "Shade, rain, and rocks",
+        "Soil, sunshine, and water",
+        "Soil, sand, and wind",
+        "Water, cold, and shade"
+      ],
+      "answer": 1,
+      "paragraph": 0
+    },
+    {
+      "id": "q-3",
+      "question": "What do students pull out to help the plants grow?",
+      "options": [
+        "Flowers",
+        "Seeds",
+        "Weeds",
+        "Soil"
+      ],
+      "answer": 2,
+      "paragraph": 1
+    },
+    {
+      "id": "q-4",
+      "question": "What did the class make with the vegetables they harvested?",
+      "options": [
+        "Soup",
+        "Juice",
+        "Pizza",
+        "A salad"
+      ],
+      "answer": 3,
+      "paragraph": 2
+    }
+  ],
+  "source": {
+    "file": "primary/adventures-1.0-a1/02-The_School_Garden_workbook.json",
+    "translationsGenerated": true
+  }
+}

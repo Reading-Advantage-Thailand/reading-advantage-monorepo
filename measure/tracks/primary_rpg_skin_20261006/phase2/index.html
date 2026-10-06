@@ -1,0 +1,81 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RPG Skin Phase 2</title>
+<meta name="description" content="Phase 2 of the Primary Advantage RPG skin: the avatar picker in the shrine, the paper-doll inventory in the treasure vault, and the armory shop, captured from the running app.">
+<style>
+:root{--ink:#1f2933;--muted:#52606d;--brand:#0e7490;--soft:#ecfeff;--line:#e4e7eb;--bg:#fff;--card:#f8fafc}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}}
+:root[data-theme="dark"]{--ink:#e6e9ee;--muted:#a3adb8;--brand:#67e8f9;--soft:#0c2a33;--line:#2b3340;--bg:#0f141a;--card:#171d26}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,"Noto Sans Thai",system-ui,sans-serif}
+header{background:var(--soft);padding:32px 16px;border-bottom:1px solid var(--line)} .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+h1{margin:0 0 8px;font-size:clamp(26px,4vw,36px)} h2{font-size:22px;margin:40px 0 8px} h3{font-size:17px;margin:20px 0 6px} p{margin:0 0 10px;max-width:75ch} .lead{color:var(--muted);font-size:17px}
+.page{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0} .page h2{margin-top:0}
+.row{display:grid;grid-template-columns:1fr;gap:16px} @media (min-width:900px){.row{grid-template-columns:300px 300px 1fr}}
+figure{margin:0} figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;display:block;background:#111} figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.rules{background:var(--card);border-left:4px solid var(--brand);padding:12px 16px;border-radius:8px;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:14px} th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top} code{font-size:13px}
+a{color:var(--brand)}
+</style></head><body>
+<header><div class="wrap"><h1>Primary Advantage RPG skin: Phase 2 for review</h1>
+<p class="lead">6 October 2026. The avatar picker, the inventory, and the shop are on the new look. The captures come from the running app with the QA student, at 375 px and 1280 px, in day and night mode.</p></div></header>
+<main class="wrap">
+<div class="rules"><p><strong>What changed.</strong> The picker is the shrine: the 15 heroes stand on pedestals, the chosen one steps forward in a light, and the colours are dye pots on a parchment table. The inventory is a paper-doll in the treasure vault: the hero in the centre, ten slot icons around it, a drawer of owned pieces for the tapped slot, eight per page. The shop is the armory: the blacksmith greets at the counter, the slot filters are hanging signs, two shelves of six pieces per page, a try-on card with the hero wearing the piece, the dyes as paint pots, and coins that fly to the counter on Buy.</p>
+<p><strong>Item pictures.</strong> The cards read the Forge view of each piece from <code>/rpg/items/</code>. The Forge build has not shipped those views yet, so the cards show the slot icon of the piece for now. The views appear without a code change once the Forge session syncs its build.</p>
+<p><strong>The 3D hero.</strong> The hero on these pages is the 2D portrait. The 3D composer arrives with the games port; the pages will then read the shared 2D/3D switch and keep the portrait as the 2D view.</p></div>
+
+<article class="page"><h2>The picker in the shrine</h2>
+<p>Step 1: the heroes on pedestals, the pedestal of the saved hero lit gold. Step 2: the colours as dye pots, the preview in a light beam, Save in gold, Choose another hero in iron.</p>
+<h3>Day</h3>
+<div class="row"><figure><img src="captures/heroes-phone.png" alt="Choose your hero, phone" loading="lazy"><figcaption>Heroes, phone, 375 px</figcaption></figure>
+<figure><img src="captures/picker-phone.png" alt="Colours, phone" loading="lazy"><figcaption>Colours, phone</figcaption></figure>
+<figure><img src="captures/heroes-desktop.png" alt="Choose your hero, desktop" loading="lazy"><figcaption>Heroes, desktop, 1280 px</figcaption></figure></div>
+<div class="row"><figure><img src="captures/heroes-phone-2.png" alt="Choose your hero, phone, second screen" loading="lazy"><figcaption>Heroes, phone, one screen down</figcaption></figure>
+<figure><img src="captures/picker-phone-2.png" alt="Colours, phone, second screen" loading="lazy"><figcaption>Colours, phone, one screen down</figcaption></figure>
+<figure><img src="captures/picker-desktop.png" alt="Colours, desktop" loading="lazy"><figcaption>Colours, desktop</figcaption></figure></div>
+<h3>Night</h3>
+<div class="row"><figure><img src="captures/heroes-phone-night.png" alt="Choose your hero, phone, night" loading="lazy"><figcaption>Heroes, phone</figcaption></figure>
+<figure><img src="captures/picker-phone-night.png" alt="Colours, phone, night" loading="lazy"><figcaption>Colours, phone</figcaption></figure>
+<figure><img src="captures/heroes-desktop-night.png" alt="Choose your hero, desktop, night" loading="lazy"><figcaption>Heroes, desktop</figcaption></figure></div>
+</article>
+
+<article class="page"><h2>The inventory in the treasure vault</h2>
+<p>The paper-doll with the Head slot open: the drawer lists the two owned hats, the worn one marked, and Take off in iron. The purse and the level plaque sit above; the shop link is the gold button.</p>
+<h3>Day</h3>
+<div class="row"><figure><img src="captures/inventory-phone.png" alt="Inventory, phone" loading="lazy"><figcaption>Phone, 375 px</figcaption></figure>
+<figure><img src="captures/inventory-phone-2.png" alt="Inventory, phone, the drawer" loading="lazy"><figcaption>Phone, one screen down: the drawer</figcaption></figure>
+<figure><img src="captures/inventory-desktop.png" alt="Inventory, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div>
+<h3>Night</h3>
+<div class="row"><figure><img src="captures/inventory-phone-night.png" alt="Inventory, phone, night" loading="lazy"><figcaption>Phone</figcaption></figure>
+<figure><img src="captures/inventory-phone-2-night.png" alt="Inventory, phone, the drawer, night" loading="lazy"><figcaption>Phone, the drawer</figcaption></figure>
+<figure><img src="captures/inventory-desktop-night.png" alt="Inventory, desktop, night" loading="lazy"><figcaption>Desktop</figcaption></figure></div>
+</article>
+
+<article class="page"><h2>The armory</h2>
+<p>The blacksmith idles at the counter with a greeting. The signs filter by slot. Each page holds two shelves of six; locked tiers are chained chests with the level. The Witch potion is tapped: the try-on card shows the hero holding it, the price, and what remains after the purchase.</p>
+<h3>Day</h3>
+<div class="row"><figure><img src="captures/shop-phone.png" alt="Shop, phone" loading="lazy"><figcaption>Phone, 375 px, scrolled to the try-on card</figcaption></figure>
+<figure><img src="captures/shop-phone-2.png" alt="Shop, phone, second screen" loading="lazy"><figcaption>Phone, one screen down</figcaption></figure>
+<figure><img src="captures/shop-desktop.png" alt="Shop, desktop" loading="lazy"><figcaption>Desktop, 1280 px</figcaption></figure></div>
+<h3>Night</h3>
+<div class="row"><figure><img src="captures/shop-phone-night.png" alt="Shop, phone, night" loading="lazy"><figcaption>Phone</figcaption></figure>
+<figure><img src="captures/shop-phone-2-night.png" alt="Shop, phone, second screen, night" loading="lazy"><figcaption>Phone, one screen down</figcaption></figure>
+<figure><img src="captures/shop-desktop-night.png" alt="Shop, desktop, night" loading="lazy"><figcaption>Desktop</figcaption></figure></div>
+</article>
+
+<h2>The parts</h2>
+<table><thead><tr><th>Part</th><th>File</th><th>What it does</th></tr></thead><tbody>
+<tr><td>Picker</td><td><code>components/avatar/avatar-picker.tsx</code></td><td>Pedestals, the step-forward state, dye pots, the same save action as before.</td></tr>
+<tr><td>Inventory</td><td><code>components/avatar/avatar-home.tsx</code></td><td>The paper-doll, the drawer, the pager, the wear call to the loadout API, a pop on the hero when a piece lands.</td></tr>
+<tr><td>Shop</td><td><code>components/avatar/avatar-shop.tsx</code></td><td>The counter, the signs, the shelves, the try-on preview composed from the real loadout, the purchase call, the coin flight, the blacksmith's nod.</td></tr>
+<tr><td>Item icon</td><td><code>components/rpg/item-icon.tsx</code></td><td>Probes the Forge view once per page and falls back to the slot icon.</td></tr>
+<tr><td>Dye colours</td><td><code>components/avatar/colors.ts</code></td><td>The paint pot colour of a dye from the catalog's slot table.</td></tr>
+<tr><td>Skin rules</td><td><code>styles/rpg.css</code></td><td>Counter, signs, shelf, item card, pot, try-on, pager, paper-doll, pedestal, pop, nod. The sprite strip keyframe now moves by the strip width.</td></tr>
+<tr><td>Messages</td><td><code>messages/*.json</code></td><td>Sixteen new keys under <code>Avatar.shop</code> in en, th, cn, tw, vi.</td></tr>
+</tbody></table>
+
+<h2>Checks</h2>
+<p>Vitest: 23 tests pass in the avatar and rpg suites, with new suites for the inventory and the shop. ESLint on the changed files reports 0 errors. The app type check passes.</p>
+
+<h2>Next</h2>
+<p>Phase 3: the phone battle page in the boss arena and the projector dashboard on the teaser field.</p>
+</main>
+<footer class="wrap"><p style="color:var(--muted);font-size:13px;padding:24px 0">Track primary_rpg_skin_20261006 on lane-f. <a href="../phase1/index.html">Phase 1 report</a> · <a href="../phase0/index.html">Phase 0 report</a> · <a href="../spec.md">spec.md</a> · <a href="../plan.md">plan.md</a></p></footer>
+</body></html>

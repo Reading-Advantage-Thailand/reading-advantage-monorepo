@@ -1,0 +1,679 @@
+{
+  "schemaVersion": 1,
+  "id": "aunt-anna-and-the-band",
+  "title": "Aunt Anna and the Band",
+  "series": "Level 4",
+  "lesson": 1,
+  "level": "A1",
+  "genre": "Family & Music",
+  "paragraphs": [
+    {
+      "text": "Mia and Leo are at the village funfair. A band plays near the big tree. \"Look, Leo! That's my aunt,\" says Mia. \"Which one?\" asks Leo. \"She's the woman with the red hat. Her name is Anna.\" \"Anna is Grandma's daughter, and I'm her granddaughter.\" \"So Grandma and Grandpa are your grandparents,\" says Leo. \"Yes! They're here with a big blue bag.\" \"I'm very happy to see them,\" says Mia.",
+      "translation": "มีอากับลีโออยู่ที่งานวัดในหมู่บ้าน วงดนตรีวงหนึ่งเล่นอยู่ใกล้ต้นไม้ใหญ่ \"ดูสิ ลีโอ! นั่นคือคุณป้าของฉัน\" มีอาพูด \"คนไหน\" ลีโอถาม \"เธอคือผู้หญิงที่ใส่หมวกสีแดง เธอชื่ออันนา\" \"อันนาเป็นลูกสาวของคุณยาย และฉันเป็นหลานสาวของคุณยาย\" \"แปลว่าคุณยายกับคุณตาเป็นปู่ย่าตายายของเธอ\" ลีโอพูด \"ใช่! พวกท่านอยู่ที่นี่ กับกระเป๋าใบใหญ่สีน้ำเงิน\" \"ฉันดีใจมากที่ได้เจอพวกท่าน\" มีอาพูด"
+    },
+    {
+      "text": "The band is very loud. \"What? I can't hear you!\" shouts Leo. \"It isn't noise, Leo. It's music!\" Mia laughs. Aunt Anna plays the guitar and dances. She jumps up and down. Then her red hat flies off her head. \"Oh no! It's coming to us!\" says Mia. \"Don't worry, I'm quick,\" says Leo. He puts up both hands.",
+      "translation": "วงดนตรีเล่นเสียงดังมาก \"อะไรนะ? ฉันไม่ได้ยินเธอเลย!\" ลีโอตะโกน \"นี่ไม่ใช่เสียงดังรบกวนนะ ลีโอ นี่คือดนตรี!\" มีอาหัวเราะ คุณป้าอันนาเล่นกีตาร์และเต้นไปด้วย เธอกระโดดขึ้นลง แล้วหมวกสีแดงของเธอก็ลอยออกจากศีรษะ \"โอ๊ะ ไม่นะ! มันกำลังมาทางเรา!\" มีอาพูด \"ไม่ต้องห่วง ฉันเร็วนะ\" ลีโอพูด เขายกมือทั้งสองข้างขึ้น"
+    },
+    {
+      "text": "Leo catches the hat! Grandma and Grandpa clap and smile. \"Thank you, Leo,\" says Aunt Anna. \"We're a good band, but we aren't good at hats!\" \"I'm not a good guitar player,\" says Leo. \"But I can catch!\" Aunt Anna gives him a sweet. Now the band plays a new song. Mia and Leo sing with them. It's a happy day.",
+      "translation": "ลีโอรับหมวกไว้ได้! คุณยายกับคุณตาตบมือและยิ้ม \"ขอบใจนะ ลีโอ\" คุณป้าอันนาพูด \"พวกเราเป็นวงที่เก่ง แต่พวกเราไม่เก่งเรื่องหมวกเลย!\" \"ฉันเล่นกีตาร์ไม่เก่งหรอก\" ลีโอพูด \"แต่ฉันรับของได้!\" คุณป้าอันนาให้ลูกอมเขาหนึ่งเม็ด ตอนนี้วงดนตรีเล่นเพลงใหม่ มีอากับลีโอร้องเพลงกับพวกเขา เป็นวันที่มีความสุข"
+    }
+  ],
+  "images": [
+    "img-1.webp",
+    "img-2.webp",
+    "img-3.webp"
+  ],
+  "vocabulary": [
+    {
+      "id": "w-aunt",
+      "term": "aunt",
+      "translation": "ป้า, น้า, อา (พี่สาวหรือน้องสาวของพ่อแม่)",
+      "definition": "The sister of your mom or dad."
+    },
+    {
+      "id": "w-daughter",
+      "term": "daughter",
+      "translation": "ลูกสาว",
+      "definition": "A girl or woman who is the child of a mom and dad."
+    },
+    {
+      "id": "w-granddaughter",
+      "term": "granddaughter",
+      "translation": "หลานสาว",
+      "definition": "The daughter of your son or daughter."
+    },
+    {
+      "id": "w-grandparent",
+      "term": "grandparent",
+      "translation": "ปู่ย่าตายาย",
+      "definition": "The mom or dad of your mom or dad."
+    },
+    {
+      "id": "w-band",
+      "term": "band",
+      "translation": "วงดนตรี",
+      "definition": "A group of people who play music together."
+    },
+    {
+      "id": "w-catch",
+      "term": "catch",
+      "translation": "รับ (ของที่ลอยมา)",
+      "definition": "To take something in your hands when it comes to you."
+    },
+    {
+      "id": "w-loud",
+      "term": "loud",
+      "translation": "ดัง, เสียงดัง",
+      "definition": "Making a lot of noise."
+    },
+    {
+      "id": "w-noise",
+      "term": "noise",
+      "translation": "เสียงดัง, เสียงรบกวน",
+      "definition": "A sound that is big and not nice."
+    },
+    {
+      "id": "w-shout",
+      "term": "shout",
+      "translation": "ตะโกน",
+      "definition": "To say something very loudly."
+    },
+    {
+      "id": "w-laugh",
+      "term": "laugh",
+      "translation": "หัวเราะ",
+      "definition": "To make a happy sound when something is funny."
+    },
+    {
+      "id": "w-sing",
+      "term": "sing",
+      "translation": "ร้องเพลง",
+      "definition": "To make music with your voice."
+    },
+    {
+      "id": "w-play",
+      "term": "play",
+      "translation": "เล่น (ดนตรี)",
+      "definition": "To make music with an instrument."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "Mia and Leo are at the village funfair.",
+      "words": [
+        "Mia",
+        "and",
+        "Leo",
+        "are",
+        "at",
+        "the",
+        "village",
+        "funfair."
+      ],
+      "translation": "มีอากับลีโออยู่ที่งานวัดในหมู่บ้าน",
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "A band plays near the big tree.",
+      "words": [
+        "A",
+        "band",
+        "plays",
+        "near",
+        "the",
+        "big",
+        "tree."
+      ],
+      "translation": "วงดนตรีวงหนึ่งเล่นอยู่ใกล้ต้นไม้ใหญ่",
+      "paragraph": 0
+    },
+    {
+      "id": "s-3",
+      "text": "Her name is Anna.",
+      "words": [
+        "Her",
+        "name",
+        "is",
+        "Anna."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-4",
+      "text": "They're here with a big blue bag.",
+      "words": [
+        "They're",
+        "here",
+        "with",
+        "a",
+        "big",
+        "blue",
+        "bag."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-5",
+      "text": "The band is very loud.",
+      "words": [
+        "The",
+        "band",
+        "is",
+        "very",
+        "loud."
+      ],
+      "translation": "วงดนตรีเล่นเสียงดังมาก",
+      "paragraph": 1
+    },
+    {
+      "id": "s-6",
+      "text": "I can't hear you!",
+      "words": [
+        "I",
+        "can't",
+        "hear",
+        "you!"
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-7",
+      "text": "Aunt Anna plays the guitar and dances.",
+      "words": [
+        "Aunt",
+        "Anna",
+        "plays",
+        "the",
+        "guitar",
+        "and",
+        "dances."
+      ],
+      "translation": "คุณป้าอันนาเล่นกีตาร์และเต้นไปด้วย",
+      "paragraph": 1
+    },
+    {
+      "id": "s-8",
+      "text": "She jumps up and down.",
+      "words": [
+        "She",
+        "jumps",
+        "up",
+        "and",
+        "down."
+      ],
+      "translation": "เธอกระโดดขึ้นลง",
+      "paragraph": 1
+    },
+    {
+      "id": "s-9",
+      "text": "Leo catches the hat!",
+      "words": [
+        "Leo",
+        "catches",
+        "the",
+        "hat!"
+      ],
+      "translation": "ลีโอรับหมวกไว้ได้!",
+      "paragraph": 2
+    },
+    {
+      "id": "s-10",
+      "text": "Grandma and Grandpa clap and smile.",
+      "words": [
+        "Grandma",
+        "and",
+        "Grandpa",
+        "clap",
+        "and",
+        "smile."
+      ],
+      "translation": "คุณยายกับคุณตาตบมือและยิ้ม",
+      "paragraph": 2
+    },
+    {
+      "id": "s-11",
+      "text": "Now the band plays a new song.",
+      "words": [
+        "Now",
+        "the",
+        "band",
+        "plays",
+        "a",
+        "new",
+        "song."
+      ],
+      "translation": "ตอนนี้วงดนตรีเล่นเพลงใหม่",
+      "paragraph": 2
+    },
+    {
+      "id": "s-12",
+      "text": "Mia and Leo sing with them.",
+      "words": [
+        "Mia",
+        "and",
+        "Leo",
+        "sing",
+        "with",
+        "them."
+      ],
+      "translation": "มีอากับลีโอร้องเพลงกับพวกเขา",
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "Anna is Grandma's ___, and I'm her granddaughter.",
+      "answer": "daughter",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "Anna is Grandma's daughter, and I'm her ___.",
+      "answer": "granddaughter",
+      "paragraph": 0
+    },
+    {
+      "id": "f-3",
+      "sentence": "\"So Grandma and Grandpa are your ___,\" says Leo.",
+      "answer": "grandparents",
+      "paragraph": 0
+    },
+    {
+      "id": "f-4",
+      "sentence": "A ___ plays near the big tree.",
+      "answer": "band",
+      "paragraph": 0
+    },
+    {
+      "id": "f-5",
+      "sentence": "Leo ___ the hat!",
+      "answer": "catches",
+      "paragraph": 2
+    },
+    {
+      "id": "f-6",
+      "sentence": "The band is very ___.",
+      "answer": "loud",
+      "paragraph": 1
+    },
+    {
+      "id": "f-7",
+      "sentence": "It isn't ___, Leo.",
+      "answer": "noise",
+      "paragraph": 1
+    },
+    {
+      "id": "f-8",
+      "sentence": "Mia and Leo ___ with them.",
+      "answer": "sing",
+      "paragraph": 2
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "Where are Mia and Leo?",
+      "options": [
+        "at school",
+        "at a zoo",
+        "at the beach",
+        "at a funfair"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-2",
+      "question": "Who is Anna?",
+      "options": [
+        "Leo's mom",
+        "Leo's teacher",
+        "Mia's sister",
+        "Mia's aunt"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-3",
+      "question": "What does Anna wear?",
+      "options": [
+        "a white dress",
+        "a green coat",
+        "a blue bag",
+        "a red hat"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-4",
+      "question": "Who is Anna's mother?",
+      "options": [
+        "Leo",
+        "Teacher Kim",
+        "Mia",
+        "Grandma"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-5",
+      "question": "What do Grandma and Grandpa have?",
+      "options": [
+        "a guitar",
+        "a small dog",
+        "a red hat",
+        "a big blue bag"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-6",
+      "question": "Why does Leo shout?",
+      "options": [
+        "He is lost in the park.",
+        "He is sad about his bag.",
+        "He is angry with his dad.",
+        "The band is very loud."
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-7",
+      "question": "What does Mia say about the sound?",
+      "options": [
+        "\"It's a bird!\"",
+        "\"It's a car!\"",
+        "\"It's my phone!\"",
+        "\"It's music!\""
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-8",
+      "question": "What flies off Anna's head?",
+      "options": [
+        "her bag",
+        "her guitar",
+        "her shoes",
+        "her hat"
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-9",
+      "question": "What does \"I'm quick\" mean?",
+      "options": [
+        "I can't be quick.",
+        "You are quick.",
+        "I was quick.",
+        "I am quick."
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-10",
+      "question": "What do Mia and Leo do at the end?",
+      "options": [
+        "They go home.",
+        "They eat rice.",
+        "They play football.",
+        "They sing with the band."
+      ],
+      "answer": 3,
+      "paragraph": 2
+    }
+  ],
+  "source": {
+    "file": "content/primary/bank-4/b001.json",
+    "translationsGenerated": true
+  },
+  "audio": {
+    "article": "article.mp3",
+    "sentences": [
+      {
+        "text": "Mia and Leo are at the village funfair.",
+        "start": 0,
+        "end": 3.197,
+        "paragraph": 0
+      },
+      {
+        "text": "A band plays near the big tree.",
+        "start": 3.647,
+        "end": 6.158,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Look, Leo! That's my aunt,\" says Mia.",
+        "start": 6.608,
+        "end": 10.758,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Which one?\" asks Leo.",
+        "start": 11.208,
+        "end": 13.745,
+        "paragraph": 0
+      },
+      {
+        "text": "\"She's the woman with the red hat. Her name is Anna.\"",
+        "start": 14.195,
+        "end": 18.135,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Anna is Grandma's daughter, and I'm her granddaughter.\"",
+        "start": 18.585,
+        "end": 23.134,
+        "paragraph": 0
+      },
+      {
+        "text": "\"So Grandma and Grandpa are your grandparents,\" says Leo.",
+        "start": 23.584,
+        "end": 28.928,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Yes! They're here with a big blue bag.\"",
+        "start": 29.378,
+        "end": 32.63,
+        "paragraph": 0
+      },
+      {
+        "text": "\"I'm very happy to see them,\" says Mia.",
+        "start": 33.08,
+        "end": 36.892,
+        "paragraph": 0
+      },
+      {
+        "text": "The band is very loud.",
+        "start": 37.792,
+        "end": 40.229,
+        "paragraph": 1
+      },
+      {
+        "text": "\"What? I can't hear you!\" shouts Leo.",
+        "start": 40.679,
+        "end": 44.556,
+        "paragraph": 1
+      },
+      {
+        "text": "\"It isn't noise, Leo. It's music!\" Mia laughs.",
+        "start": 45.006,
+        "end": 49.665,
+        "paragraph": 1
+      },
+      {
+        "text": "Aunt Anna plays the guitar and dances.",
+        "start": 50.115,
+        "end": 53.338,
+        "paragraph": 1
+      },
+      {
+        "text": "She jumps up and down.",
+        "start": 53.788,
+        "end": 55.705,
+        "paragraph": 1
+      },
+      {
+        "text": "Then her red hat flies off her head.",
+        "start": 56.155,
+        "end": 58.906,
+        "paragraph": 1
+      },
+      {
+        "text": "\"Oh no! It's coming to us!\" says Mia.",
+        "start": 59.356,
+        "end": 63.68,
+        "paragraph": 1
+      },
+      {
+        "text": "\"Don't worry, I'm quick,\" says Leo.",
+        "start": 64.13,
+        "end": 67.905,
+        "paragraph": 1
+      },
+      {
+        "text": "He puts up both hands.",
+        "start": 68.355,
+        "end": 70.198,
+        "paragraph": 1
+      },
+      {
+        "text": "Leo catches the hat!",
+        "start": 71.098,
+        "end": 72.997,
+        "paragraph": 2
+      },
+      {
+        "text": "Grandma and Grandpa clap and smile.",
+        "start": 73.447,
+        "end": 76.491,
+        "paragraph": 2
+      },
+      {
+        "text": "\"Thank you, Leo,\" says Aunt Anna.",
+        "start": 76.941,
+        "end": 79.717,
+        "paragraph": 2
+      },
+      {
+        "text": "\"We're a good band, but we aren't good at hats!\"",
+        "start": 80.167,
+        "end": 83.958,
+        "paragraph": 2
+      },
+      {
+        "text": "\"I'm not a good guitar player,\" says Leo.",
+        "start": 84.408,
+        "end": 87.775,
+        "paragraph": 2
+      },
+      {
+        "text": "\"But I can catch!\"",
+        "start": 88.225,
+        "end": 89.747,
+        "paragraph": 2
+      },
+      {
+        "text": "Aunt Anna gives him a sweet.",
+        "start": 90.197,
+        "end": 92.659,
+        "paragraph": 2
+      },
+      {
+        "text": "Now the band plays a new song.",
+        "start": 93.109,
+        "end": 95.734,
+        "paragraph": 2
+      },
+      {
+        "text": "Mia and Leo sing with them.",
+        "start": 96.184,
+        "end": 98.463,
+        "paragraph": 2
+      },
+      {
+        "text": "It's a happy day.",
+        "start": 98.913,
+        "end": 100.512,
+        "paragraph": 2
+      }
+    ],
+    "words": "words.mp3",
+    "wordTimes": [
+      {
+        "text": "aunt",
+        "start": 0,
+        "end": 0.771
+      },
+      {
+        "text": "daughter",
+        "start": 1.471,
+        "end": 2.333
+      },
+      {
+        "text": "granddaughter",
+        "start": 3.033,
+        "end": 4.236
+      },
+      {
+        "text": "grandparent",
+        "start": 4.936,
+        "end": 6.278
+      },
+      {
+        "text": "band",
+        "start": 6.978,
+        "end": 7.986
+      },
+      {
+        "text": "catch",
+        "start": 8.686,
+        "end": 9.463
+      },
+      {
+        "text": "loud",
+        "start": 10.163,
+        "end": 10.771
+      },
+      {
+        "text": "noise",
+        "start": 11.471,
+        "end": 12.47
+      },
+      {
+        "text": "shout",
+        "start": 13.17,
+        "end": 14.063
+      },
+      {
+        "text": "laugh",
+        "start": 14.763,
+        "end": 15.56
+      },
+      {
+        "text": "sing",
+        "start": 16.26,
+        "end": 17.267
+      },
+      {
+        "text": "play",
+        "start": 17.967,
+        "end": 18.86
+      }
+    ]
+  }
+}

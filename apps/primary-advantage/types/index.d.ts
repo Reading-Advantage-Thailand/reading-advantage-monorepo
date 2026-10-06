@@ -35,9 +35,36 @@ export type NavLink = {
   hideWhenNoPermission?: boolean;
 };
 
+/** One tab of the mobile bottom bar (at most four per area). */
+export type TabNavItem = {
+  /** Message key under AppShell.tabs. */
+  key:
+    | "home"
+    | "read"
+    | "games"
+    | "me"
+    | "classes"
+    | "assignments"
+    | "reports"
+    | "dashboard"
+    | "teachers"
+    | "students"
+    | "import"
+    | "schools"
+    | "licenses";
+  href: string;
+  /** lucide-react icon name. */
+  icon: string;
+  /** More path prefixes that make this tab active (the href always counts). */
+  match?: string[];
+  requiredPermissions?: import("@/lib/permissions").Permission[];
+};
+
+/** Navigation for one area: public links (signed-out pages only), the sidebar list, and the bottom-bar tabs. */
 export type PageConfig = {
-  mainNav: MainNavItem[];
+  mainNav?: MainNavItem[];
   sidebarNav?: SidebarNavItem[];
+  tabs?: TabNavItem[];
 };
 
 export type SidebarNavItem = {
@@ -65,6 +92,8 @@ export interface ArticleShowcase {
   rating?: number;
   cefrLevel?: string;
   id: string;
+  /** The picture key in the bucket (the legacy id of a migrated article). */
+  image?: string | null;
   raLevel?: number;
   summary?: string;
   translatedSummary?: {
@@ -84,6 +113,8 @@ export interface ArticleShowcase {
 }
 
 export interface Article {
+  /** The picture key in the bucket (the legacy id of a migrated article). */
+  image?: string | null;
   summary: string;
   translatedSummary: {
     th: string;
@@ -373,6 +404,7 @@ export interface UserWithRoles {
   id: string;
   email: string | null;
   schoolId: string | null;
+  role?: string | null;
   roles: Array<{
     role: {
       id: string;
@@ -423,6 +455,8 @@ export interface CreateTeacherInput {
   cefrLevel?: string;
   password?: string;
   classroomIds?: string[];
+  /** Target school; honored only for a SYSTEM caller. */
+  schoolId?: string;
 }
 
 export interface UpdateTeacherInput {
@@ -440,6 +474,8 @@ export interface CreateStudentInput {
   cefrLevel?: string;
   classroomId?: string;
   password?: string;
+  /** Target school; honored only for a SYSTEM caller. */
+  schoolId?: string;
 }
 
 export interface UpdateStudentInput {

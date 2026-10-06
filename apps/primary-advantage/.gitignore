@@ -50,3 +50,11 @@ cloud-sql-proxy
 service-account.json
 /docs
 /logs
+test-results/
+# 3D game assets synced from packages/game-cartridges-3d (pnpm sync:3d-assets). The avatar
+# pack of the RPG pages is committed, so it is not ignored.
+/public/packs/*
+!/public/packs/avatar/
+/public/stories
+/public/assets/apk/primary-chibi-2d
+/public/assets/apk3d

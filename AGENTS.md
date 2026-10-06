@@ -690,7 +690,14 @@ Key files:
 
 Never start significant work without an active track.
 
-`measure/automation-supervisor.py` is a peer-reviewed Measure infrastructure component. Changes to it are allowed only in a dedicated Measure/orchestrator track with reviewer evidence and the orchestrator anti-pattern audit; do not make drive-by supervisor edits inside unrelated product tracks.
+---
+
+## Primary Advantage student UI
+
+Every student-facing page of Primary Advantage follows the RPG skin design authority in
+`docs/primary-rpg-skin.md` (approved 2026-10-06): a Forge scene as the place, owned SVG/CSS
+chrome, Forge renders for every picture, a 2D fallback for every 3D interaction, and no ElvGames
+asset anywhere in the app. Read it before touching a page under `app/[locale]/(student)/`.
 
 ---
 

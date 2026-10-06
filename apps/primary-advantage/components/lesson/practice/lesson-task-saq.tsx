@@ -14,7 +14,7 @@ import { QuizContext, QuizContextProvider } from "@/contexts/question-context";
 import TextareaAutosize from "react-textarea-autosize";
 import { Button } from "@/components/ui/button";
 import { finishQuiz, getFeedback } from "@/actions/question";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@reading-advantage/ui";
 import {
   Form,
   FormControl,
@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/form";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@reading-advantage/auth-client";
-import { shuffle } from "@/lib/shuffle";
 
 interface LessonSAQProps {
   article: Article;
@@ -40,10 +39,8 @@ function LessonSAQContent({ article }: { article: Article }) {
   const { user, refresh } = useAuth();
   useEffect(() => {
     if (article.shortAnswerQuestions) {
-      const randomQuestions = shuffle(article.shortAnswerQuestions)
-        .slice(0, 1);
-
-      setQuestions({ ...randomQuestions[0] });
+      // The server already picked the student question (the first one, in bank order).
+      setQuestions({ ...article.shortAnswerQuestions[0] });
       setState(QuestionState.INCOMPLETE);
     }
   }, [article]);

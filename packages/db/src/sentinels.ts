@@ -513,4 +513,115 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       },
     ],
   },
+  "0059_game_challenges": {
+    tag: "0059_game_challenges",
+    kind: "all",
+    target: "game_challenge_definitions",
+    allOf: [
+      {
+        tag: "0059_game_challenges",
+        kind: "table",
+        target: "game_challenge_definitions",
+      },
+      {
+        tag: "0059_game_challenges",
+        kind: "table",
+        target: "game_challenge_runs",
+      },
+      {
+        tag: "0059_game_challenges",
+        kind: "table",
+        target: "game_challenge_contributions",
+      },
+    ],
+  },
+  "0060_primary_legacy_id_map": {
+    tag: "0060_primary_legacy_id_map",
+    kind: "table",
+    target: "primary_legacy_id_map",
+  },
+  "0061_tutor_compat_views": {
+    tag: "0061_tutor_compat_views",
+    kind: "all",
+    target: "tutor_compat.article",
+    allOf: [
+      "article",
+      "multiple_choice_questions",
+      "short_answer_questions",
+      "sentencs_and_words_for_flashcard",
+    ].map((view) => ({
+      tag: "0061_tutor_compat_views",
+      kind: "table" as const,
+      target: `tutor_compat.${view}`,
+    })),
+  },
+  "0062_primary_student_login": {
+    tag: "0062_primary_student_login",
+    kind: "all",
+    target: "primary_class_login_sessions",
+    allOf: [
+      {
+        tag: "0062_primary_student_login",
+        kind: "table",
+        target: "primary_class_login_sessions",
+      },
+      {
+        tag: "0062_primary_student_login",
+        kind: "table",
+        target: "primary_student_credentials",
+      },
+      {
+        tag: "0062_primary_student_login",
+        kind: "column",
+        target: "sessions.auth_strength",
+      },
+    ],
+  },
+  "0063_primary_student_login_settings": {
+    tag: "0063_primary_student_login_settings",
+    kind: "column",
+    target: "classrooms.picture_password_enabled",
+  },
+  "0064_primary_student_session_policy": {
+    tag: "0064_primary_student_session_policy",
+    kind: "all",
+    target: "sessions.idle_timeout_seconds",
+    allOf: [
+      {
+        tag: "0064_primary_student_session_policy",
+        kind: "column",
+        target: "sessions.idle_timeout_seconds",
+      },
+      {
+        tag: "0064_primary_student_session_policy",
+        kind: "column",
+        target: "sessions.last_seen_at",
+      },
+    ],
+  },
+  "0065_primary_class_books": {
+    tag: "0065_primary_class_books",
+    kind: "all",
+    target: "primary_class_books.current_lesson",
+    allOf: [
+      { tag: "0065_primary_class_books", kind: "column", target: "primary_class_books.current_lesson" },
+      { tag: "0065_primary_class_books", kind: "column", target: "primary_book_lessons.package" },
+      { tag: "0065_primary_class_books", kind: "column", target: "primary_student_lesson_steps.app_step" },
+    ],
+  },
+  "0066_primary_avatar_profile": {
+    tag: "0066_primary_avatar_profile",
+    kind: "column",
+    target: "primary_avatar_profile.class_preset",
+  },
+  "0067_primary_voice": {
+    tag: "0067_primary_voice",
+    kind: "all",
+    target: "primary_voice_sessions.reserved_seconds",
+    allOf: [
+      { tag: "0067_primary_voice", kind: "column", target: "primary_voice_sessions.reserved_seconds" },
+      { tag: "0067_primary_voice", kind: "column", target: "primary_voice_monthly_usage.seconds_used" },
+      { tag: "0067_primary_voice", kind: "column", target: "primary_voice_school_settings.enabled" },
+    ],
+  },
 };

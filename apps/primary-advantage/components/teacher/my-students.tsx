@@ -1,8 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { ColumnDef } from "@tanstack/react-table";
+import { ChevronsUpDownIcon, MoreHorizontalIcon, RotateCcw, Search, TrendingUp, TriangleAlertIcon, Users } from "lucide-react";
+import { toast } from "sonner";
+import { EmptyState, ErrorState, ShimmerSkeleton } from "@reading-advantage/ui";
 import { DataTable } from "@/components/ui/data-table";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -10,18 +15,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import {
-  ChevronsUpDownIcon,
-  ChevronDownIcon,
-  MoreHorizontalIcon,
-  TrendingUp,
-  RotateCcw,
-} from "lucide-react";
-import { ColumnDef } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
-import { Header } from "../header";
-import { useRouter } from "@/i18n/navigation";
-import { useCurrentRole } from "@/hooks/use-current-role";
+import { Link } from "@/i18n/navigation";
 import {
   Dialog,
   DialogContent,
@@ -30,12 +25,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import StudentCefrLevelSetter from "./student-cefr-level-setter";
+import { TEACHER_ACTION } from "./teacher-shell";
 
+/** One student, as `/api/classroom/students` returns it. */
 type Student = {
   id: string;
-  email: string;
+  email: string | null;
   display_name: string;
   xp?: number;
   level?: number;
@@ -51,21 +48,27 @@ type Student = {
   }>;
 };
 
-type MyStudentProps = {
-  matchedStudents: Student[];
-};
-
+/**
+ * My Students: a labelled search and a sorted, paged table (name linked to the progress page,
+ * classes, level, XP, and a named actions menu) that scrolls inside its own box on a phone. The
+ * table shows classes, not emails: students sign in by username, so the email was "Unknown" for
+ * most of them. Names show as stored (no CSS capitalize). Loading shows shimmer rows; a failed
+ * load shows an error with a retry; a teacher without students gets a link to My Classes.
+ * @returns The students screen.
+ */
 export default function MyStudents() {
   const t = useTranslations("teacher.myStudents");
-  // const t = useScopedI18n("components.articleRecordsTable");
-  // const ts = useScopedI18n("components.myStudent");
-  const router = useRouter();
+  const ts = useTranslations("TeacherStudents");
+  const tc = useTranslations("TeacherClass");
+  const te = useTranslations("Error");
   const [isResetModalOpen, setIsResetModalOpen] = useState<boolean>(false);
   const [selectedStudentId, setSelectedStudentId] = useState<string>("");
   const [students, setStudents] = useState<Student[]>([]);
-  const userRole = useCurrentRole();
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
+    setLoadError(false);
     try {
       const response = await fetch("/api/classroom/students", {
         method: "GET",
@@ -83,16 +86,24 @@ export default function MyStudents() {
     } catch (error) {
       console.error("Error fetching students:", error);
       setStudents([]);
+      setLoadError(true);
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchStudents();
   }, []);
 
-  const handleResetProgress = async (selectedStudentId: string) => {
+  useEffect(() => {
+    void fetchStudents();
+  }, [fetchStudents]);
+
+  const retry = () => {
+    setIsLoading(true);
+    void fetchStudents();
+  };
+
+  const handleResetProgress = async (studentId: string) => {
     try {
-      const response = await fetch(`/api/users/${selectedStudentId}`, {
+      const response = await fetch(`/api/users/${studentId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -111,12 +122,7 @@ export default function MyStudents() {
 
       if (response.status === 200) {
         toast(t("toast.reset.success"));
-        // Refresh the students list
-        const updatedResponse = await fetch("/api/classroom/students");
-        if (updatedResponse.ok) {
-          const data = await updatedResponse.json();
-          setStudents(data.students || []);
-        }
+        await fetchStudents();
       }
     } catch (error) {
       console.error("Error resetting progress:", error);
@@ -126,124 +132,83 @@ export default function MyStudents() {
     }
   };
 
+  const nameOf = (student: Student) => student.display_name || t("unknown.student");
+
   const columns: ColumnDef<Student>[] = [
     {
       accessorKey: "display_name",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            {t("table.name")}
-            <ChevronsUpDownIcon className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          type="button"
+          variant="ghost"
+          className={cn(TEACHER_ACTION, "-ml-3 px-3 font-bold")}
+          aria-label={ts("sortBy", { column: t("table.name") })}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          {t("table.name")}
+          <ChevronsUpDownIcon aria-hidden="true" className="size-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <Link
+          href={`/teacher/student-progress/${row.original.id}`}
+          className={cn(TEACHER_ACTION, "inline-flex items-center font-semibold break-words underline-offset-4 hover:underline")}
+        >
+          {nameOf(row.original)}
+        </Link>
+      ),
+    },
+    {
+      id: "classrooms",
+      header: () => ts("classesColumn"),
       cell: ({ row }) => {
-        const studentName: string = row.getValue("display_name");
+        const classrooms = row.original.classrooms ?? [];
+        if (!classrooms.length) return <span className="text-muted-foreground">{t("classrooms.none")}</span>;
         return (
-          <div className="capitalize ml-4">
-            {studentName ? studentName : t("unknown.student")}
-          </div>
+          <span className="break-words">
+            {classrooms
+              .map((classroom) => (classroom.teacher?.name ? `${classroom.name} (${classroom.teacher.name})` : classroom.name))
+              .join(", ")}
+          </span>
         );
       },
     },
     {
-      accessorKey: "email",
-      header: () => {
-        return <div>{t("table.email")}</div>;
-      },
-      cell: ({ row }) => {
-        const studentEmail: string = row.getValue("email");
-        return (
-          <div className="capitalize">
-            {studentEmail ? studentEmail : t("unknown.email")}
-          </div>
-        );
-      },
+      id: "level",
+      header: () => ts("levelColumn"),
+      cell: ({ row }) => <Badge variant="secondary">{row.original.cefrLevel || "A0-"}</Badge>,
     },
-    // Conditionally add classrooms column for system users
-    ...(userRole === "SYSTEM"
-      ? [
-          {
-            accessorKey: "classrooms",
-            header: () => {
-              return <div className="text-center">{t("table.classrooms")}</div>;
-            },
-            cell: ({ row }: any) => {
-              const classrooms: Array<{
-                id: string;
-                name: string;
-                teacher?: { name: string };
-              }> = row.getValue("classrooms") || [];
-              return (
-                <div className="text-center">
-                  {classrooms.length > 0 ? (
-                    <div className="flex justify-center gap-1">
-                      {classrooms.slice(0, 2).map((classroom, index) => (
-                        <span
-                          key={index}
-                          className="items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-700/10 ring-inset"
-                        >
-                          {classroom.name}
-                          {classroom.teacher && (
-                            <span className="ml-1 text-gray-500">
-                              ({classroom.teacher.name})
-                            </span>
-                          )}
-                        </span>
-                      ))}
-                      {classrooms.length > 2 && (
-                        <span className="text-xs text-gray-500">
-                          {t("classrooms.more", {
-                            count: classrooms.length - 2,
-                          })}
-                        </span>
-                      )}
-                    </div>
-                  ) : (
-                    <span className="text-gray-400">
-                      {t("classrooms.none")}
-                    </span>
-                  )}
-                </div>
-              );
-            },
-          },
-        ]
-      : []),
     {
-      accessorKey: "action",
-      header: () => {
-        return <div className="text-center">{t("table.actions")}</div>;
-      },
+      id: "xp",
+      header: () => ts("xpColumn"),
+      cell: ({ row }) => <span className="whitespace-nowrap">{tc("xp", { xp: row.original.xp ?? 0 })}</span>,
+    },
+    {
+      id: "action",
+      header: () => <span className="sr-only">{t("table.actions")}</span>,
       cell: ({ row }) => {
-        const payment = row.original;
+        const student = row.original;
         return (
-          <div className="text-center">
+          <div className="text-right">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Actions</span>
-                  <MoreHorizontalIcon />
+                <Button variant="ghost" className="size-11 p-0" aria-label={tc("classActionsFor", { name: nameOf(student) })}>
+                  <MoreHorizontalIcon aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem
-                  onClick={() =>
-                    router.push(`/teacher/student-progress/${payment.id}`)
-                  }
-                >
-                  <TrendingUp className="mr-1 size-4" />
-                  {t("actions.progress")}
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild className="min-h-11">
+                  <Link href={`/teacher/student-progress/${student.id}`}>
+                    <TrendingUp className="mr-1 size-4" aria-hidden="true" />
+                    {t("actions.progress")}
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <div>
                   <StudentCefrLevelSetter
-                    studentId={payment.id}
-                    studentName={payment.display_name || "Student"}
-                    currentCefrLevel={payment.cefrLevel || "A0-"}
+                    studentId={student.id}
+                    studentName={nameOf(student)}
+                    currentCefrLevel={student.cefrLevel || "A0-"}
                     onUpdate={fetchStudents}
                   />
                 </div>
@@ -251,11 +216,11 @@ export default function MyStudents() {
                 <DropdownMenuItem
                   onClick={() => {
                     setIsResetModalOpen(true);
-                    setSelectedStudentId(payment.id);
+                    setSelectedStudentId(student.id);
                   }}
-                  className="text-red-600"
+                  className="text-destructive min-h-11"
                 >
-                  <RotateCcw className="mr-1 size-4" />
+                  <RotateCcw className="mr-1 size-4" aria-hidden="true" />
                   {t("actions.resetProgress")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -266,73 +231,98 @@ export default function MyStudents() {
     },
   ];
 
+  if (loadError) {
+    return (
+      <ErrorState
+        className="bg-card border"
+        icon={<TriangleAlertIcon />}
+        title={ts("loadError")}
+        description={ts("loadErrorHint")}
+        action={
+          <Button type="button" className={cn(TEACHER_ACTION, "px-6")} onClick={retry}>
+            {te("retry")}
+          </Button>
+        }
+      />
+    );
+  }
+
+  if (!isLoading && students.length === 0) {
+    return (
+      <EmptyState
+        className="bg-card border"
+        icon={<Users />}
+        title={ts("noStudents")}
+        description={ts("noStudentsHint")}
+        action={
+          <Link href="/teacher/my-classes" className={cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "px-5")}>
+            {ts("goToClasses")}
+          </Link>
+        }
+      />
+    );
+  }
+
   return (
     <>
-      <div className="flex flex-col gap-4">
-        <DataTable
-          columns={columns}
-          data={students}
-          emptyText={t("table.empty")}
-          tableStyle={{ tableLayout: "fixed", width: "100%" }}
-          headerClassName="font-bold"
-          filterColumnId="display_name"
-          toolbar={({ filterValue, setFilterValue }) => (
+      <DataTable
+        columns={columns}
+        data={students}
+        loading={isLoading}
+        loadingContent={[0, 1, 2].map((row) => (
+          <tr key={row} aria-busy="true">
+            <td colSpan={columns.length} className="p-2">
+              <ShimmerSkeleton className="h-10 w-full" />
+            </td>
+          </tr>
+        ))}
+        emptyText={tc("noMatch")}
+        initialSorting={[{ id: "display_name", desc: false }]}
+        wrapperClassName="bg-card rounded-2xl border"
+        tableClassName="min-w-[36rem]"
+        headClassName="font-bold"
+        filterColumnId="display_name"
+        toolbar={({ filterValue, setFilterValue }) => (
+          <div className="relative mb-3 max-w-sm">
+            <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" aria-hidden="true" />
             <Input
+              type="search"
+              aria-label={ts("searchLabel")}
               placeholder={t("search.placeholder")}
               value={filterValue}
               onChange={(event) => setFilterValue(event.target.value)}
-              className="max-w-sm"
+              className="min-h-11 pl-10"
             />
-          )}
-          footer={({ previousPage, nextPage, canPreviousPage, canNextPage }) => (
-            <div className="flex items-center justify-end space-x-2">
-              <div className="space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => previousPage()}
-                  disabled={!canPreviousPage}
-                >
-                  {t("pagination.previous")}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => nextPage()}
-                  disabled={!canNextPage}
-                >
-                  {t("pagination.next")}
-                </Button>
-              </div>
+          </div>
+        )}
+        footer={({ previousPage, nextPage, canPreviousPage, canNextPage, pageIndex, pageCount }) =>
+          pageCount > 1 ? (
+            <div className="mt-3 flex flex-wrap items-center justify-end gap-2">
+              <Button type="button" variant="outline" className={TEACHER_ACTION} onClick={previousPage} disabled={!canPreviousPage}>
+                {t("pagination.previous")}
+              </Button>
+              <span className="text-sm whitespace-nowrap">{ts("pageOf", { page: pageIndex + 1, totalPages: pageCount })}</span>
+              <Button type="button" variant="outline" className={TEACHER_ACTION} onClick={nextPage} disabled={!canNextPage}>
+                {t("pagination.next")}
+              </Button>
             </div>
-          )}
-        />
-      </div>
-      <Dialog
-        open={isResetModalOpen}
-        onOpenChange={() => setIsResetModalOpen(!isResetModalOpen)}
-      >
+          ) : null
+        }
+      />
+      <Dialog open={isResetModalOpen} onOpenChange={() => setIsResetModalOpen(!isResetModalOpen)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t("dialog.reset.title")}</DialogTitle>
-            <DialogDescription>
-              {t("dialog.reset.description")}
-            </DialogDescription>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setIsResetModalOpen(false)}
-              >
-                {t("actions.cancel")}
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => handleResetProgress(selectedStudentId)}
-              >
-                {t("actions.reset")}
-              </Button>
-            </DialogFooter>
+            <DialogDescription>{t("dialog.reset.description")}</DialogDescription>
           </DialogHeader>
+          <DialogFooter className="flex-wrap gap-2">
+            <Button variant="outline" className={TEACHER_ACTION} onClick={() => setIsResetModalOpen(false)}>
+              {t("actions.cancel")}
+            </Button>
+            <Button variant="destructive" className={TEACHER_ACTION} onClick={() => void handleResetProgress(selectedStudentId)}>
+              {t("actions.reset")}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

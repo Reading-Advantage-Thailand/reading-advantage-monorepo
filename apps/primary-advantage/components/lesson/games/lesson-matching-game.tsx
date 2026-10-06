@@ -28,7 +28,7 @@ import {
   SENTENCE_LANGUAGES,
   VOCABULARY_LANGUAGES,
 } from "../../flashcards/deck-view";
-import { Label } from "@/components/ui/label";
+import { Label, Separator } from "@reading-advantage/ui";
 import {
   Select,
   SelectTrigger,
@@ -36,7 +36,6 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { getLessonFlashcards } from "@/actions/flashcard";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";

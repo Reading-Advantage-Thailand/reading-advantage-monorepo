@@ -9,7 +9,6 @@ vi.mock("@/lib/utils", () => ({ generateSecureCode: () => "CODE1234" }));
 vi.mock("@/lib/session", () => ({ currentUser }));
 vi.mock("@/server/models/classroomModel", () => ({
   createClassCode,
-  getClassroomStudentForLogin: vi.fn(),
 }));
 
 import { createClassroomCode } from "../classroom";

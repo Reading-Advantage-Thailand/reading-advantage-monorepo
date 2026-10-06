@@ -38,11 +38,18 @@
     }
   },
   "Sidebar": {
+    "manual": "Teacher manual",
+    "home": "Home",
+    "me": "Me",
+    "noPermissionSection": "You don't have permission to open this section",
+    "noPermissionPage": "You don't have permission to open this page",
     "read": "阅读",
+    "games": "游戏",
     "stories": "故事",
     "assignments": "作业",
     "sentences": "句子",
     "vocabulary": "词汇",
+    "games": "游戏",
     "testing": "测试",
     "systemdashboard": "系统仪表板",
     "licenses": "许可证仪表板",
@@ -89,6 +96,7 @@
     "noDataAvailable": "本月没有可用数据"
   },
   "Question": {
+    "descriptionEmpty": "This story has no questions of this kind yet.",
     "SAQuestion": {
       "title": "简答题",
       "description": "用几句话回答问题",
@@ -156,6 +164,11 @@
     }
   },
   "Admin": {
+    "SchoolSelect": {
+      "label": "School",
+      "placeholder": "Select a school",
+      "required": "Please select a school"
+    },
     "Classrooms": {
       "classrooms": "教室",
       "classroomsDescription": "管理您学校的教室",
@@ -253,7 +266,10 @@
         "file": "文件",
         "size": "大小",
         "savedAs": "保存为",
-        "nextSteps": "文件已准备好处理。您可以继续下一步。"
+        "nextSteps": "文件已准备好处理。您可以继续下一步。",
+        "inserted": "已导入",
+        "skippedDuplicate": "已跳过（文件内重复）",
+        "skippedExisting": "已跳过（已存在）"
       },
       "progressLabel": "上传进度",
       "progressPercent": "已完成 {percent}%",
@@ -264,7 +280,11 @@
     "preview": {
       "button": "预览",
       "title": "数据预览",
-      "columns": { "name": "姓名", "email": "邮箱", "role": "角色" }
+      "columns": {
+        "name": "姓名",
+        "email": "邮箱",
+        "role": "角色"
+      }
     },
     "formatGuide": {
       "title": "CSV 格式指南",
@@ -375,6 +395,8 @@
       "importDataDesc": "批量导入用户和内容",
       "viewReports": "查看报告",
       "viewReportsDesc": "访问分析和洞察",
+      "reedyCosts": "Reedy 费用",
+      "reedyCostsDesc": "按学校和月份的分钟、费用与故障",
       "manageClassrooms": "管理班级",
       "manageClassroomsDesc": "组织班级和作业"
     },
@@ -419,6 +441,7 @@
     }
   },
   "Components": {
+    "translationLanguage": "翻译语言",
     "submitButton": "提交",
     "closeButton": "关闭",
     "cancelButton": "取消",
@@ -736,7 +759,20 @@
       "MC_QUESTION": "多选问题",
       "SA_QUESTION": "短答问题",
       "LA_QUESTION": "长答问题",
-      "ARTICLE_READ": "文章阅读"
+      "ARTICLE_READ": "文章阅读",
+      "ARTICLE_RATING": "Story rating",
+      "STORIES_RATING": "Story series rating",
+      "STORIES_READ": "Story series read",
+      "CHAPTER_RATING": "Chapter rating",
+      "CHAPTER_READ": "Chapter read",
+      "LEVEL_TEST": "Level test",
+      "SENTENCE_FLASHCARDS": "Sentence flashcards",
+      "SENTENCE_MATCHING": "Sentence matching",
+      "SENTENCE_ORDERING": "Sentence ordering",
+      "SENTENCE_WORD_ORDERING": "Word ordering",
+      "SENTENCE_CLOZE_TEST": "Fill in the blank",
+      "VOCABULARY_FLASHCARDS": "Word flashcards",
+      "VOCABULARY_MATCHING": "Word matching"
     },
     "level": {
       "title": "CEFR 等级",
@@ -758,7 +794,9 @@
         "C1-": "您可以通过一些努力理解复杂文本。您的词汇量使您可以阅读许多不同的主题，并且您可以弄清楚不太明显的细节，尽管有时您可能需要重新阅读某些部分。",
         "C1": "您可以阅读长而具有挑战性的文本并理解大部分发生的事情。您喜欢让您思考的故事和文章，并且可以使用良好的词汇谈论它们，而无需太费力地查找正确的单词。",
         "C1+": "您是一个超级读者，可以处理具有挑战性的文本并理解不同的写作风格。您非常擅长弄清楚故事和文章中不太明显的部分，并且通常知道单词的意思，而无需查找它们。",
-        "C2": "您可以阅读和理解几乎任何事情。您可以理解复杂文本的主要观点，并且喜欢阅读更具挑战性的书籍和文章。您可以谈论几乎任何事情，并且使用语言充满信心。"
+        "C2": "您可以阅读和理解几乎任何事情。您可以理解复杂文本的主要观点，并且喜欢阅读更具挑战性的书籍和文章。您可以谈论几乎任何事情，并且使用语言充满信心。",
+        "A0-": "You are starting to learn English. You know some letters and a few words, especially with pictures.",
+        "A0+": "You know more simple words and names. You can understand very short phrases with pictures, like signs and labels."
       }
     },
     "progress": {
@@ -778,7 +816,21 @@
       "activeThisWeekDescription": "{count} / {total} 名学生",
       "studentList": "学生列表",
       "xpLabel": "{xp} XP"
-    }
+    },
+    "loadError": "We could not load your reports.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "noActivity": "No activity yet",
+    "noActivityHint": "Read a story or play a game, and your activity shows here.",
+    "showAllActivity": "Show all activity",
+    "noXp": "No XP on these days",
+    "noXpHint": "Read and practice to earn XP.",
+    "noXpOverall": "No XP yet",
+    "noReading": "No stories read yet",
+    "noReadingHint": "Read a story to see your reading stats.",
+    "groupBy": "Group by",
+    "groupType": "Type",
+    "groupGenre": "Genre",
+    "groupSubgenre": "Topic"
   },
   "Overall": {
     "roles": {
@@ -836,6 +888,7 @@
   },
   "Assignment": {
     "title": "创建作业",
+    "saved": "Assignment saved",
     "description": "创建作业给您的学生",
     "assignForm": {
       "classroom": "班级",
@@ -881,7 +934,6 @@
     "clozeTest": "填空测试",
     "orderWord": "排列单词",
     "matching": "匹配",
-
     "matchingGame": {
       "title": "翻译配对游戏",
       "description": "练习将单词与其含义从您的抽认卡集合中配对！",
@@ -1465,6 +1517,7 @@
       "title": "个人信息",
       "subtitle": "关于您个人资料的信息",
       "backToReading": "返回阅读页面",
+      "avatar": "我的头像",
       "username": "用户名",
       "usernameDescription": "用户名用于代表自己在平台上的身份。",
       "email": "电子邮件",
@@ -1542,6 +1595,17 @@
     }
   },
   "Lesson": {
+    "lockedStep": "Your teacher opens step {step} in class. Keep going with the steps that are open.",
+    "rail": {
+      "stepName": "Step {step} of {total}: {name}",
+      "showSteps": "Show all steps",
+      "hideSteps": "Hide steps",
+      "done": "done"
+    },
+    "saveError": "We could not save your progress.",
+    "saveErrorHint": "Check the internet connection and try again.",
+    "notFound": "We could not find this lesson",
+    "notFoundHint": "Pick a story to read instead.",
     "Reading": {
       "firstTitle": "首次阅读",
       "deepTitle": "深度阅读",
@@ -1704,8 +1768,12 @@
         "title": "关键句子：{count} 句",
         "more": "+{count} 句已保存"
       },
-      "actions": { "backToRead": "返回阅读页面" },
-      "toast": { "failed": "无法加载课程总结" }
+      "actions": {
+        "backToRead": "返回阅读页面"
+      },
+      "toast": {
+        "failed": "无法加载课程总结"
+      }
     },
     "VocabularyFlashcards": {
       "loading": {
@@ -1833,8 +1901,12 @@
   },
   "LessonLanguageQuestion": {
     "title": "AI 阅读助手",
-    "loading": { "conversation": "正在加载对话..." },
-    "status": { "online": "在线" },
+    "loading": {
+      "conversation": "正在加载对话..."
+    },
+    "status": {
+      "online": "在线"
+    },
     "header": {
       "readyWithName": "已准备好帮助 {name} 解答问题",
       "ready": "已准备好帮助你解答问题"
@@ -1849,7 +1921,10 @@
       "placeholderWithName": "{name}，问一问关于这篇文章的问题...",
       "placeholder": "输入你关于这篇文章的问题..."
     },
-    "buttons": { "send": "发送", "skip": "跳过" },
+    "buttons": {
+      "send": "发送",
+      "skip": "跳过"
+    },
     "tips": {
       "askVocabulary": "询问词汇",
       "discussTheme": "讨论主题思想",
@@ -1866,7 +1941,9 @@
       "questionOf": "第 {current} 题 / 共 {total} 题",
       "completePercent": "完成 {percent}%"
     },
-    "timer": { "seconds": "{seconds}秒" },
+    "timer": {
+      "seconds": "{seconds}秒"
+    },
     "completed": {
       "title": "测验完成",
       "description": "做得好！你已完成测验",
@@ -1882,7 +1959,9 @@
     }
   },
   "LessonSAQ": {
-    "completed": { "title": "测验完成" },
+    "completed": {
+      "title": "测验完成"
+    },
     "labels": {
       "question": "问题：",
       "yourAnswer": "你的答案：",
@@ -1890,13 +1969,23 @@
       "feedback": "反馈：",
       "score": "分数："
     },
-    "timer": { "elapsed": "用时：{time}" },
-    "form": {
-      "placeholder": { "answer": "在此输入你的答案..." },
-      "help": { "detailedResponse": "写下详细回答以展示你的理解" },
-      "validation": { "answerRequired": "请输入您的答案" }
+    "timer": {
+      "elapsed": "用时：{time}"
     },
-    "actions": { "submit": "提交" }
+    "form": {
+      "placeholder": {
+        "answer": "在此输入你的答案..."
+      },
+      "help": {
+        "detailedResponse": "写下详细回答以展示你的理解"
+      },
+      "validation": {
+        "answerRequired": "请输入您的答案"
+      }
+    },
+    "actions": {
+      "submit": "提交"
+    }
   },
   "LessonCloze": {
     "loading": {
@@ -2017,7 +2106,9 @@
     "prompt": {
       "thinkAndReveal": "思考这个句子的意思，然后显示答案。"
     },
-    "buttons": { "showAnswer": "显示答案" },
+    "buttons": {
+      "showAnswer": "显示答案"
+    },
     "rating": {
       "prompt": "您对这个句子的记忆程度如何？",
       "again": "再来一次",
@@ -2069,27 +2160,13 @@
       "archive": "归档",
       "delete": "删除"
     },
-    "search": { "placeholder": "搜索" },
-    "import": {
-      "fromLabel": "从以下导入新班级",
-      "googleClassroom": "Google Classroom",
-      "dialog": {
-        "title": "导入您的 Google Classroom",
-        "selectClass": "选择一个 Google Classroom 班级",
-        "description": "选择一个班级进行同步。所有学生将被导入并添加到您的账户。",
-        "yourClasses": "您的 Google Classroom 班级",
-        "refresh": "刷新",
-        "continue": "继续",
-        "syncing": "正在同步班级...",
-        "syncingDescription": "正在从 Google Classroom 导入学生，这可能需要一点时间。",
-        "syncCompleted": "同步完成！",
-        "syncAnother": "同步另一个班级",
-        "goToClass": "前往班级",
-        "aboutTitle": "关于 Google Classroom 同步",
-        "aboutDescription": "此功能允许导入 Google Classroom 学生。学生将自动加入您的班级。"
-      }
+    "search": {
+      "placeholder": "搜索"
     },
-    "pagination": { "previous": "上一页", "next": "下一页" },
+    "pagination": {
+      "previous": "上一页",
+      "next": "下一页"
+    },
     "edit": {
       "title": "编辑班级",
       "description": "您确定要编辑此班级吗？",
@@ -2118,8 +2195,13 @@
     }
   },
   "TeacherCreateClass": {
-    "button": { "newClassroom": "新建班级" },
-    "dialog": { "title": "创建班级", "description": "创建一个新班级" },
+    "button": {
+      "newClassroom": "新建班级"
+    },
+    "dialog": {
+      "title": "创建班级",
+      "description": "创建一个新班级"
+    },
     "fields": {
       "className": "班级名称",
       "classNamePlaceholder": "班级名称",
@@ -2128,7 +2210,10 @@
       "gradePlaceholder": "年级",
       "gradeItem": "年级 {grade}"
     },
-    "actions": { "create": "创建", "cancel": "取消" },
+    "actions": {
+      "create": "创建",
+      "cancel": "取消"
+    },
     "toast": {
       "attention": "提示",
       "fillAllFields": "请填写所有字段",
@@ -2184,7 +2269,9 @@
       }
     },
     "cefrSetter": {
-      "button": { "setLevel": "设置等级" },
+      "button": {
+        "setLevel": "设置等级"
+      },
       "dialog": {
         "title": "为 {name} 设置 CEFR 等级",
         "description": "为该学生选择合适的 CEFR 等级，同时会更新其阅读等级（RA）。"
@@ -2193,7 +2280,9 @@
         "currentLevel": "当前等级",
         "newLevel": "新等级"
       },
-      "select": { "placeholder": "选择 CEFR 等级" },
+      "select": {
+        "placeholder": "选择 CEFR 等级"
+      },
       "preview": {
         "title": "预览：",
         "cefr": "CEFR 等级：",
@@ -2232,7 +2321,8 @@
         "actions": {
           "actions": "操作",
           "details": "详情"
-        }
+        },
+        "noDueDate": "No due date"
       },
       "empty": {
         "noAssignments": "未找到作业",
@@ -2327,6 +2417,8 @@
       "nav": {
         "classRoster": "班级花名册",
         "reports": "报告",
+        "reedy": "Reedy",
+        "avatars": "头像",
         "settings": "设置"
       },
       "info": {
@@ -2434,6 +2526,46 @@
       "header": {
         "title": "学生加入",
         "subtitle": "管理学生加入："
+      },
+      "search": {
+        "placeholder": "Search students by name or email"
+      },
+      "enrollButton": "Enroll student",
+      "dialog": {
+        "title": "Enroll students",
+        "description": "Select students to enroll in {classroom}"
+      },
+      "emptyAvailable": {
+        "noMatch": "No available students match your search",
+        "none": "No students available for enrollment"
+      },
+      "enrolledHeading": "Enrolled students ({count})",
+      "empty": {
+        "noMatch": "No students match your search",
+        "none": "No students enrolled yet"
+      },
+      "noName": "No name",
+      "levelShort": "Lvl {level}",
+      "toasts": {
+        "loadAvailableError": "Failed to load available students",
+        "enrollError": "Failed to enroll student",
+        "enrolled": "{name} has been enrolled",
+        "unenrollError": "Failed to unenroll student",
+        "unenrolled": "{name} has been unenrolled"
+      },
+      "unenroll": {
+        "button": "Unenroll",
+        "title": "Unenroll student",
+        "question": "Are you sure you want to unenroll <student></student> from <classroom></classroom>?",
+        "loses": "The student leaves the class and loses access to:",
+        "item1": "Class assignments and activities",
+        "item2": "Progress tracking for this class",
+        "item3": "Class content and materials",
+        "cannotUndo": "This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Unenroll student",
+        "working": "Unenrolling...",
+        "unknownStudent": "Unknown student"
       }
     },
     "AssignmentDashboard": {
@@ -2454,7 +2586,8 @@
       "deleteCount": "删除（{count}）",
       "cancel": "取消",
       "edit": "编辑",
-      "noStudentsInSelectedStatus": "所选状态下没有学生"
+      "noStudentsInSelectedStatus": "所选状态下没有学生",
+      "noDueDate": "No due date"
     }
   },
   "AdminTeachers": {
@@ -2494,8 +2627,8 @@
         "nameMax": "姓名不能超过 100 个字符",
         "emailInvalid": "请输入有效的邮箱地址",
         "roleRequired": "请选择角色",
-        "passwordMin": "密码至少需要 6 个字符",
-        "passwordMax": "密码不能超过 100 个字符",
+        "passwordMin": "密码至少需要 8 个字符",
+        "passwordMax": "密码不能超过 128 个字符",
         "passwordsDontMatch": "两次输入的密码不一致"
       }
     },
@@ -2600,7 +2733,9 @@
       "title": "学生管理",
       "subtitle": "管理学生及其学习进度"
     },
-    "page": { "title": "学生管理" },
+    "page": {
+      "title": "学生管理"
+    },
     "stats": {
       "totalStudents": "学生总数",
       "allClassrooms": "所有班级",
@@ -2672,7 +2807,9 @@
       "loading": "正在加载学生...",
       "empty": "没有找到符合条件的学生。"
     },
-    "badges": { "noClass": "无班级" },
+    "badges": {
+      "noClass": "无班级"
+    },
     "pagination": {
       "showing": "显示第 {from} 到第 {to} 条，共 {total} 名学生",
       "previous": "上一页",
@@ -2688,7 +2825,35 @@
   },
   "StudentGames": {
     "title": "学生游戏",
-    "description": "畅玩实时 Advantage Play Kit 目录。每张卡片都会打开已验证的 APK 路线。"
+    "description": "Play games with the words and sentences you learn.",
+    "wordGames": "Word games",
+    "wordGamesHint": "Practice the words you know.",
+    "sentenceGames": "Sentence games",
+    "sentenceGamesHint": "Put words in order to make sentences.",
+    "empty": "No games yet",
+    "emptyHint": "Ask your teacher when the games are ready.",
+    "loadError": "We could not load the games.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "storyLink": "Word adventures",
+    "storyLinkDescription": "Play 3D games with the words you saved from your reading."
+  },
+  "StoryGames": {
+    "title": "Word adventures",
+    "description": "Play 3D games with the words and sentences you saved from your reading. Older phones play the 2D version.",
+    "chooseGame": "Choose a game",
+    "loading": "Loading your saved words…",
+    "loadError": "Could not load your saved words. Try again later.",
+    "saved": "This practice set has {words, plural, one {# word} other {# words}} and {sentences, plural, one {# sentence} other {# sentences}} from your reading.",
+    "needWords": "{count, plural, one {Save # more word to play.} other {Save # more words to play.}}",
+    "needSentences": "{count, plural, one {Save # more sentence to play.} other {Save # more sentences to play.}}",
+    "readMore": "Read and save more words",
+    "flat": "2D mode (older phones)",
+    "save": {
+      "saving": "Saving your result…",
+      "saved": "Result saved",
+      "error": "Could not save your result"
+    },
+    "link": "Word adventures"
   },
   "Footer": {
     "tagline": "提供最佳英语学习体验。",
@@ -2759,5 +2924,911 @@
     "createSuccessDescription": "已将 {name} 添加到系统。",
     "createError": "学校创建失败",
     "fallbackError": "发生意外错误。"
+  },
+  "ClassLogin": {
+    "title": "Class sign-in",
+    "loading": "Loading class sign-in…",
+    "errors": {
+      "signedOut": "Your sign-in has ended. Sign in again.",
+      "forbidden": "You cannot manage this class.",
+      "notFound": "We cannot find this class or student.",
+      "rateLimited": "Too many tries. Wait a few minutes and try again.",
+      "unavailable": "No free code right now. Try again.",
+      "generic": "Something went wrong. Try again."
+    },
+    "session": {
+      "start": "Start class",
+      "startHelp": "Start the class to show a sign-in code for your students.",
+      "codeLabel": "Class code",
+      "codeAria": "Class code {code}",
+      "openUntil": "Open until {time}",
+      "openNoCode": "The class is open until {time}. The code shows only once. Press New code to show a code.",
+      "newCode": "New code",
+      "end": "End class"
+    },
+    "backToClass": "Back to class",
+    "links": {
+      "classSheet": "Class sheet",
+      "qrCards": "QR cards"
+    },
+    "sheet": {
+      "title": "Class sheet",
+      "intro": "The class sheet lists each student's username and a new password, for signing in away from the classroom.",
+      "warning": "Making the sheet sets a new password for every student in this class and signs them out. Old passwords stop working.",
+      "make": "Make class sheet",
+      "confirmTitle": "Set new passwords for the whole class?",
+      "confirm": "Set new passwords",
+      "cancel": "Cancel",
+      "print": "Print",
+      "once": "The passwords show only now. Print the sheet before you leave this page.",
+      "signInAt": "Sign in at",
+      "name": "Name",
+      "username": "Username",
+      "password": "Password",
+      "failed": "These students kept their old password: {names}. Try again."
+    },
+    "qrPage": {
+      "title": "QR login cards",
+      "intro": "Each card signs one student in with one scan. A card shows only once, so print it now.",
+      "issue": "Make cards for {count, plural, one {# student} other {# students}} without a card",
+      "allHaveCards": "Every student has a card. To print a card again, make a new card for that student.",
+      "toPrint": "{count, plural, one {# card} other {# cards}} to print",
+      "madeBefore": "Cards made before",
+      "madeBeforeHelp": "The server does not keep these cards. Make a new card to print one again. The old card then stops working.",
+      "print": "Print"
+    },
+    "setting": {
+      "label": "Picture password",
+      "on": "Students tap their 3 pictures after they choose their name.",
+      "off": "Students sign in with the class code and their name only. Some features, such as Reedy, need a full sign-in."
+    },
+    "roster": {
+      "heading": "Students",
+      "summary": "{signedIn} of {total} signed in",
+      "student": "Student",
+      "status": "Status",
+      "actions": "Actions",
+      "signedIn": "Signed in",
+      "notSignedIn": "Not signed in",
+      "seen": "Seen {time}",
+      "lastSeen": "Last seen {time}",
+      "locked": "Locked, {minutes} min left",
+      "noPicture": "No picture password",
+      "resetPicture": "Reset pictures",
+      "resetPictureFor": "Reset picture password for {name}",
+      "setPicture": "Set pictures",
+      "setPictureFor": "Set picture password for {name}",
+      "newCard": "New card",
+      "newCardFor": "New card for {name}",
+      "assignMissing": "Give picture passwords to {count, plural, one {# student} other {# students}}",
+      "empty": "No students in this class yet."
+    },
+    "pictures": {
+      "title": "New picture password",
+      "description": "Show this to the student now. It does not show again.",
+      "print": "Print",
+      "close": "Close"
+    },
+    "rotate": {
+      "title": "Make a new card for {name}?",
+      "description": "The old card stops working now, and {name} is signed out.",
+      "confirm": "Make new card",
+      "cancel": "Cancel"
+    },
+    "cards": {
+      "title": "New QR card",
+      "description": "Print this card now. It does not show again.",
+      "qrLabel": "Sign-in QR code for {name}",
+      "scanHint": "Scan to sign in",
+      "print": "Print",
+      "close": "Close"
+    }
+  },
+  "StudentPictures": {
+    "redCircle": "red circle",
+    "blueSquare": "blue square",
+    "greenTriangle": "green triangle",
+    "yellowStar": "yellow star",
+    "pinkHeart": "pink heart",
+    "orangeDiamond": "orange diamond",
+    "purpleMoon": "purple moon",
+    "grayCloud": "gray cloud",
+    "skyDrop": "light blue drop",
+    "blackBolt": "black lightning",
+    "brownHexagon": "brown hexagon",
+    "tealFlower": "teal flower"
+  },
+  "StudentSignIn": {
+    "code": {
+      "title": "Hello! Let's sign in",
+      "label": "Class code",
+      "help": "Type the code your teacher shows you.",
+      "next": "Next",
+      "checking": "Checking…"
+    },
+    "names": {
+      "title": "Who are you?",
+      "help": "Tap your name.",
+      "empty": "There are no names in this class yet. Ask your teacher.",
+      "back": "Back"
+    },
+    "pictures": {
+      "title": "Hi, {name}!",
+      "help": "Tap your 3 pictures in order.",
+      "progress": "{count} of 3 pictures",
+      "undo": "Undo",
+      "clear": "Start again",
+      "back": "Not you? Go back",
+      "signingIn": "Signing in…"
+    },
+    "card": {
+      "title": "QR card sign-in",
+      "signingIn": "Signing you in…",
+      "useCode": "Sign in with the class code"
+    },
+    "password": {
+      "title": "Sign in with your username",
+      "help": "Use the username and password your teacher gave you.",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign in",
+      "signingIn": "Signing in…"
+    },
+    "switch": {
+      "usePassword": "Sign in with username and password",
+      "useCode": "Sign in with the class code"
+    },
+    "errors": {
+      "codeFormat": "The code has 6 letters and numbers.",
+      "codeInvalid": "This code does not work. Check the code or ask your teacher.",
+      "wrongPictures": "Those pictures are not right. Try again.",
+      "locked": "Too many wrong tries. Wait {minutes, plural, one {# minute} other {# minutes}} or ask your teacher.",
+      "rateLimited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again.",
+      "wrongPassword": "Wrong username or password. Try again.",
+      "cardInvalid": "This card does not work now. Cards work only in class. Ask your teacher.",
+      "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
+      "generic": "Something went wrong. Try again."
+    }
+  },
+  "AppShell": {
+    "skipToContent": "Skip to main content",
+    "accountMenu": "Account menu",
+    "toggleTheme": "Switch light or dark theme",
+    "soundOff": "Turn sound off",
+    "soundOn": "Turn sound on",
+    "mainNavigation": "Main navigation",
+    "publicNavigation": "Site navigation",
+    "openMenu": "Open menu",
+    "menu": "Menu",
+    "tabs": {
+      "home": "Home",
+      "read": "Read",
+      "games": "Games",
+      "me": "Me",
+      "classes": "Classes",
+      "assignments": "Assignments",
+      "reports": "Reports",
+      "dashboard": "Dashboard",
+      "teachers": "Teachers",
+      "students": "Students",
+      "import": "Import",
+      "schools": "Schools",
+      "licenses": "Licenses"
+    },
+    "gp": "{gp} GP",
+    "xp": "{xp} XP"
+  },
+  "Quest": {
+    "title": "班级任务",
+    "subtitle": "全班一起对抗一个头目。",
+    "boss": "头目：{name}",
+    "daysLeft": "{count, plural, =0 {决战日！} other {距离决战还有 # 天}}",
+    "meterLabel": "班级伤害",
+    "meter": "伤害 {committed} / {target}",
+    "powerUps": "你的强化道具",
+    "noPowerUps": "还没有强化道具。完成一个目标即可获得。",
+    "powerUp": {
+      "shield": "盾牌",
+      "sharp-blade": "利刃",
+      "rally-horn": "号角"
+    },
+    "goals": "本周目标",
+    "goal": {
+      "reading-days": "阅读 {days} 天",
+      "accuracy": "{minQuestions} 道题答对 {percent}%",
+      "streak": "连续 {days} 天",
+      "lesson-steps": "完成 {steps} 个课程步骤"
+    },
+    "earned": "已获得",
+    "teacher": {
+      "title": "班级任务",
+      "none": "本周没有任务。",
+      "assign": "布置任务",
+      "roster": "{count} 名学生",
+      "earners": "{count} 人有强化道具",
+      "cancel": "取消任务",
+      "cancelError": "无法取消任务。",
+      "battleAt": "决战：{time}",
+      "status": {
+        "open": "进行中",
+        "rally": "集结",
+        "play": "决战",
+        "result": "结果",
+        "done": "完成"
+      },
+      "live": "实时看板"
+    },
+    "assign": {
+      "title": "布置任务",
+      "subtitle": "选择任务、班级和决战时间。头目目标按今天的名单设定。",
+      "template": "任务",
+      "class": "班级",
+      "battleAt": "决战日期和时间",
+      "submit": "布置",
+      "back": "返回首页",
+      "noClasses": "你还没有班级。",
+      "errors": {
+        "ALREADY_OPEN": "这个班级本周已有任务。",
+        "NO_CONTENT": "班级当前课程没有词汇表。请先布置一本书。",
+        "BAD_TIME": "请选择晚于现在的决战时间。",
+        "GAME_UNAVAILABLE": "决战游戏未安装。",
+        "generic": "任务未布置。"
+      }
+    },
+    "battle": {
+      "title": "班级任务决战",
+      "go": "前往决战",
+      "none": "本周没有任务。",
+      "home": "返回首页",
+      "you": "你",
+      "hp": "HP {hp} / {max}",
+      "hpLabel": "你的 HP",
+      "damage": "你的伤害：{damage}",
+      "rested": "你休息后带着一半 HP 回来了。",
+      "used": "已用",
+      "waiting": "决战尚未开始，请等老师。",
+      "present": "你到了！决战即将开始。",
+      "saved": "你的攻击已记录：{damage} 伤害。看大屏幕！",
+      "fell": "头目倒下了！",
+      "held": "头目撑住了。下次再来！"
+    },
+    "live": {
+      "title": "实时看板",
+      "present": "已到 {count} / {total}",
+      "students": "全班",
+      "hits": "攻击",
+      "hit": "{name} 造成 {damage} 伤害",
+      "noHits": "还没有攻击。",
+      "helpers": "感谢所有帮手！",
+      "closed": "任务已关闭。",
+      "field": "战场",
+      "moveError": "无法进入下一阶段。",
+      "next": {
+        "rally": "开始集结",
+        "play": "开始决战",
+        "result": "显示结果",
+        "done": "关闭任务"
+      }
+    }
+  },
+  "ClassAvatars": {
+    "title": "班级头像",
+    "subtitle": "每位学生的头像。重置会清除英雄和穿戴的装备，学生需重新选择。",
+    "reset": "重置",
+    "resetDone": "已重置",
+    "noAvatar": "尚无头像",
+    "backToClass": "返回班级",
+    "loadError": "头像加载失败。",
+    "noStudents": "此班级还没有学生。"
+  },
+  "Avatar": {
+    "title": "我的头像",
+    "subtitle": "选择一个英雄和你的颜色，随时可以更改。",
+    "stepClass": "选择你的英雄",
+    "stepColors": "{class}的颜色",
+    "preview": "你的头像",
+    "save": "保存头像",
+    "saving": "保存中…",
+    "skip": "以后再说",
+    "back": "选择其他英雄",
+    "error": "头像保存失败，请重试。",
+    "nudgeTitle": "创建你的头像！",
+    "nudgeBody": "选择一个英雄和你的颜色，Reedy 会变成你的样子。",
+    "nudgeLink": "创建头像",
+    "meLink": "我的头像",
+    "shop": {
+      "home": "我的头像",
+      "gp": "{gp} GP",
+      "level": "等级 {level}",
+      "shopLink": "前往商店",
+      "changeHero": "更换英雄或颜色",
+      "wearing": "穿戴中",
+      "empty": "无",
+      "wear": "穿戴",
+      "remove": "脱下",
+      "wornBadge": "已穿戴",
+      "shopTitle": "头像商店",
+      "shopSubtitle": "用 GP 为你的头像购买装备。阅读和答题可获得 GP。",
+      "allSlots": "所有部位",
+      "buy": "购买 {gp} GP",
+      "buyDye": "购买 {dye} 染色 {gp} GP",
+      "owned": "已拥有",
+      "locked": "等级 {level}",
+      "free": "免费",
+      "notEnough": "GP 不足",
+      "shopError": "操作失败，请重试。",
+      "dyes": "染色",
+      "greeting": "欢迎，英雄！点一件装备试穿。",
+      "thanks": "好眼光！已经放进你的背包。",
+      "armorer": "铁匠",
+      "all": "全部",
+      "shelf": "第 {n} 层，共 {total} 层",
+      "prevShelf": "上一层",
+      "nextShelf": "下一层",
+      "tryOn": "试穿",
+      "youKeep": "还剩 {gp} GP",
+      "tier": "{tier} 级",
+      "noDye": "不染色",
+      "drawer": "你的{slot}装备",
+      "pickSlot": "点一个格子打开抽屉。",
+      "page": "第 {n} 页，共 {total} 页",
+      "prevPage": "上一页",
+      "nextPage": "下一页",
+      "noAvatarYet": "请先选择英雄。"
+    },
+    "pieceSlots": {
+      "hair": "头发",
+      "head": "头部",
+      "chest": "胸部",
+      "shoulders": "肩部",
+      "back": "背部",
+      "hands": "手部",
+      "waist": "腰部",
+      "feet": "脚部",
+      "mainhand": "主手",
+      "offhand": "副手"
+    },
+    "classes": {
+      "knight": "骑士",
+      "wizard": "法师",
+      "cleric": "牧师",
+      "rogue": "盗贼",
+      "ranger": "游侠",
+      "bard": "吟游诗人",
+      "witch": "女巫",
+      "druid": "德鲁伊",
+      "shaman": "萨满",
+      "duelist": "决斗者",
+      "swashbuckler": "剑客",
+      "treasure-hunter": "寻宝者",
+      "explorer": "探险家",
+      "gladiator": "角斗士",
+      "shield-maiden": "盾女"
+    },
+    "slots": {
+      "skin": "肤色",
+      "hair": "头发",
+      "eyes": "眼睛",
+      "cloth": "衣服"
+    },
+    "options": {
+      "skin": {
+        "fair": "白皙",
+        "light": "浅色",
+        "tan": "小麦",
+        "brown": "棕色",
+        "deep": "深色"
+      },
+      "hair": {
+        "brown": "棕色",
+        "black": "黑色",
+        "blond": "金色",
+        "auburn": "赤褐",
+        "silver": "银色",
+        "teal": "青色"
+      },
+      "eyes": {
+        "brown": "棕色",
+        "blue": "蓝色",
+        "green": "绿色",
+        "hazel": "淡褐",
+        "violet": "紫色"
+      },
+      "cloth": {
+        "sky": "天蓝",
+        "linen": "亚麻",
+        "moss": "苔绿",
+        "rose": "玫瑰",
+        "slate": "石板灰"
+      }
+    }
+  },
+  "Reedy": {
+    "title": "Reedy",
+    "preview": "预览",
+    "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
+    "explainTh": "รีดี้คือโค้ชฝึกพูด คุยเรื่องนิทานของคุณเป็นภาษาอังกฤษและภาษาไทยได้ รีดี้ยังใหม่ อาจทำผิดพลาดได้บ้าง",
+    "meterLabel": "Reedy 分钟",
+    "minutesLeft": "本月剩余 {time}",
+    "talk": "和 Reedy 说话",
+    "start": "开始说话",
+    "micAsk": "Reedy 需要你的麦克风。浏览器询问时请点允许。",
+    "noMic": "找不到麦克风。请老师帮忙，或换一台设备。",
+    "micDenied": "麦克风已关闭。在浏览器中允许后再试。",
+    "connecting": "正在连接 Reedy…",
+    "mute": "静音",
+    "unmute": "取消静音",
+    "end": "结束",
+    "timeLeft": "剩余 {time}",
+    "stopTitle": "时间到！",
+    "stopBody": "这个月的 Reedy 分钟用完了，下个月会有新的分钟。",
+    "providerDown": "Reedy 现在无法说话，请稍后再试。",
+    "lost": "通话中断了，可以再试一次。",
+    "summaryTitle": "聊得很开心！",
+    "summaryKind": "这是 Reedy 注意到的。每一次尝试都让你进步。",
+    "strengths": "做得好的地方",
+    "improvements": "下次试试",
+    "again": "再聊一次",
+    "backHome": "回到首页",
+    "lessonEntry": "和 Reedy 聊聊这个故事",
+    "blocked": {
+      "DISABLED": "Reedy 现在休息中。",
+      "SCHOOL_DISABLED": "你的学校还没有开启 Reedy。",
+      "AUTH_STRENGTH": "用用户名和密码登录后才能和 Reedy 说话。",
+      "NO_AVATAR": "先创建你的头像，再和 Reedy 说话。",
+      "SESSION_ACTIVE": "Reedy 正在另一个屏幕上和你说话。",
+      "QUOTA_EXHAUSTED": "这个月的 Reedy 分钟用完了，下个月会有新的分钟。"
+    },
+    "scores": {
+      "fluency": "口语",
+      "grammar": "语法",
+      "vocabulary": "词汇",
+      "pronunciation": "发音"
+    },
+    "stars": "{score} / 5"
+  },
+  "ReedyUsage": {
+    "title": "本月 Reedy",
+    "monthHint": "{month} 月。每位学生有 {budget} 的通话时间。",
+    "backToClass": "返回班级",
+    "minutesUsed": "已用分钟",
+    "sessions": "次数",
+    "studentsWithUse": "已通话的学生",
+    "safetyEvents": "安全事件",
+    "student": "学生",
+    "minutes": "分钟",
+    "lastUse": "最近通话",
+    "averageScores": "平均分",
+    "noUse": "尚未通话",
+    "noStudents": "这个班没有学生",
+    "noStudentsHint": "添加学生后可查看 Reedy 时间。",
+    "privacyNote": "Reedy 不保存录音或文字记录。安全事件只是计数。",
+    "scoreShort": {
+      "fluency": "口语",
+      "grammar": "语法",
+      "vocabulary": "词汇",
+      "pronunciation": "发音"
+    },
+    "loadError": "无法查看 Reedy 使用情况",
+    "loadErrorHint": "请稍后再试。如果持续出现，请联系支持。",
+    "signInHint": "请重新登录查看此页面。",
+    "costsTitle": "Reedy 费用",
+    "costsHint": "最近 3 个月按学校和月份的费用与故障。",
+    "attempts": "尝试次数",
+    "failedStarts": "启动失败",
+    "disconnects": "断线",
+    "summaryFailures": "总结失败",
+    "measuredCostUsd": "实测费用 (USD)",
+    "missingCost": "无费用数据的次数",
+    "month": "月份",
+    "school": "学校",
+    "costThb": "费用 (THB)",
+    "noCosts": "还没有 Reedy 通话",
+    "noCostsHint": "第一次通话结束后会显示费用。"
+  },
+  "StudentHome": {
+    "title": "Home",
+    "greeting": "Hi, {name}!",
+    "subtitle": "Ready to read today?",
+    "progress": "My progress",
+    "streak": "Day streak",
+    "streakValue": "{count, plural, =0 {No streak yet} one {# day} other {# days}}",
+    "xp": "XP",
+    "level": "Level",
+    "todayLesson": "Today's lesson",
+    "dueDate": "Due {date}",
+    "noDueDate": "No due date",
+    "overdue": "Late",
+    "startLesson": "Start lesson",
+    "continueLesson": "Continue lesson",
+    "continueReading": "Continue reading",
+    "keepReading": "Keep reading",
+    "noReading": "No story in progress",
+    "noReadingHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "games": "Games",
+    "gamesHint": "Play word games and earn XP.",
+    "playGames": "Play games",
+    "classBook": "Your class book",
+    "classBookLesson": "Lesson {number}: {title}",
+    "classBookNoLesson": "Your teacher will open the next lesson soon.",
+    "classBookLocked": "Your teacher opens this lesson in class.",
+    "readLesson": "Read the lesson",
+    "seeBook": "See the book",
+    "book": {
+      "back": "Back to home",
+      "lessons": "Lessons",
+      "lesson": "Lesson {number}",
+      "current": "Now in class",
+      "taught": "Taught",
+      "read": "Read",
+      "notYet": "Coming soon",
+      "progress": "Lesson {current} of {total}"
+    },
+    "yourHero": "你的英雄",
+    "arena": "竞技场",
+    "arenaHint": "单词和句子游戏。班级挑战就在竞技场的墙上。"
+  },
+  "ReadList": {
+    "title": "Read",
+    "subtitle": "Pick a story at your level.",
+    "yourLevel": "Your level: {level}",
+    "filters": "Story filters",
+    "chooseType": "Choose a type",
+    "chooseGenre": "Choose a genre",
+    "chooseSubgenre": "Choose a topic",
+    "stories": "Stories",
+    "empty": "No stories here yet",
+    "emptyHint": "Try another genre or topic.",
+    "loadingMore": "Loading more...",
+    "scrollMore": "Scroll down to load more",
+    "loadMoreError": "We could not load more stories.",
+    "loadError": "We could not load the stories.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "started": "Started",
+    "completed": "Completed",
+    "approved": "Approved",
+    "lesson": "Study as a lesson",
+    "lessonLabel": "Study {title} as a lesson",
+    "notFound": "We could not find this story",
+    "notFoundHint": "It may have been removed. Pick another story.",
+    "backToStories": "Back to stories",
+    "articleError": "We could not open this story.",
+    "disclaimer": "This story, its pictures, and its audio are made by a computer for learning English. Check facts with another source before you use them in school work."
+  },
+  "StudentAssignments": {
+    "title": "My assignments",
+    "subtitle": "Lessons from your teacher.",
+    "filters": "Assignment filters",
+    "search": "Search assignments",
+    "searchPlaceholder": "Search by name",
+    "searching": "Searching...",
+    "status": "Show",
+    "statusAll": "All",
+    "statusNotStarted": "To do",
+    "statusInProgress": "Started",
+    "statusCompleted": "Done",
+    "due": "Due date",
+    "dueAll": "Any date",
+    "dueOverdue": "Late",
+    "dueToday": "Due today",
+    "dueUpcoming": "Coming up",
+    "noDueDate": "No due date",
+    "dueOn": "Due {date}",
+    "daysLeft": "{days, plural, one {# day left} other {# days left}}",
+    "late": "Late",
+    "from": "From {teacher}",
+    "start": "Start lesson",
+    "continue": "Continue",
+    "review": "Look again",
+    "empty": "No assignments yet",
+    "emptyHint": "When your teacher gives you a lesson, it shows here.",
+    "findStory": "Find a story",
+    "noMatch": "No assignments match",
+    "noMatchHint": "Try another filter.",
+    "showAll": "Show all",
+    "loadError": "We could not load your assignments.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading assignments",
+    "pages": "Assignment pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "Flashcards": {
+    "vocabularyTitle": "My words",
+    "vocabularySubtitle": "Practice the words you saved from stories.",
+    "sentencesTitle": "My sentences",
+    "sentencesSubtitle": "Practice the sentences you saved from stories.",
+    "practiceTabs": "Practice type",
+    "loadError": "We could not load your cards.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "vocabularyEmpty": "No words saved yet",
+    "vocabularyEmptyHint": "Read a story and save new words. They show here for practice.",
+    "sentencesEmpty": "No sentences saved yet",
+    "sentencesEmptyHint": "Read a story and save sentences. They show here for practice.",
+    "findStory": "Find a story"
+  },
+  "StudentHistory": {
+    "title": "My reading",
+    "subtitle": "Stories you read, and stories to read again.",
+    "readAgain": "Read again",
+    "readAgainHint": "Reading these stories again can help you do better.",
+    "readAgainAction": "Read again",
+    "records": "Stories I read",
+    "recordsHint": "Every story you opened, newest first.",
+    "search": "Search stories",
+    "searchPlaceholder": "Search by title",
+    "searching": "Searching...",
+    "score": "Score {score}",
+    "readOn": "Read {date}",
+    "status": {
+      "READ": "Read",
+      "UNRATED": "Not rated yet",
+      "COMPLETED_MCQ": "Quiz done",
+      "COMPLETED_SAQ": "Short answers done",
+      "COMPLETED_LAQ": "Writing done"
+    },
+    "noReadAgain": "Nothing to read again",
+    "noReadAgainHint": "Great work! Keep reading new stories.",
+    "noRecords": "No stories read yet",
+    "noRecordsHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "noMatch": "No stories match",
+    "noMatchHint": "Try another word.",
+    "showAll": "Show all",
+    "loadError": "We could not load your reading history.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading stories",
+    "pages": "Story pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "TeacherHome": {
+    "quest": "班级任务",
+    "title": "Home",
+    "greeting": "Hello, {name}",
+    "subtitle": "Your classes and students at a glance.",
+    "summary": "Summary",
+    "stats": {
+      "classes": "Classes",
+      "students": "Students",
+      "openAssignments": "Open assignments",
+      "needsHelp": "Need help"
+    },
+    "classes": {
+      "heading": "My classes",
+      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
+      "grade": "Grade {grade}",
+      "empty": "No classes yet",
+      "emptyHint": "Create a class on My Classes, then add your students.",
+      "goToClasses": "Go to My Classes",
+      "all": "All classes"
+    },
+    "assignments": {
+      "heading": "Open assignments",
+      "progress": "{completed} of {assigned} done",
+      "empty": "No open assignments",
+      "emptyHint": "Every student has finished the assigned work.",
+      "all": "All assignments"
+    },
+    "help": {
+      "heading": "Who needs help",
+      "hint": "Students with overdue work or no activity for {days} days.",
+      "late": "{count} overdue",
+      "neverActive": "No activity yet",
+      "inactive": "Last active {date}",
+      "empty": "Everyone is on track",
+      "emptyHint": "No student has overdue work or a long break.",
+      "more": "{count, plural, one {# more student} other {# more students}}"
+    },
+    "loadError": "We could not load your home page.",
+    "loadErrorHint": "Check your connection and try again."
+  },
+  "TeacherUi": {
+    "startClass": "Start class",
+    "startClassFor": "Start class {name}",
+    "due": {
+      "none": "No due date",
+      "overdue": "Overdue",
+      "today": "Due today",
+      "soon": "{days, plural, one {Due tomorrow} other {Due in # days}}",
+      "upcoming": "Due in {days} days",
+      "on": "Due {date}"
+    },
+    "classBook": {
+      "title": "Class book",
+      "hint": "The book and the lesson plan for this class will show here.",
+      "none": "No book is assigned to this class yet.",
+      "noCatalogue": "No books are in the catalogue yet.",
+      "assign": "Assign a book",
+      "book": "Book",
+      "chooseBook": "Choose a book",
+      "mode": "Mode",
+      "modeTeacherLed": "Teacher-led (workbook first)",
+      "modeIndependent": "Independent",
+      "startDate": "Start date",
+      "assignButton": "Assign",
+      "assigned": "Book assigned.",
+      "assignError": "Could not assign the book. Try again.",
+      "pointer": "Lesson {current} of {total}",
+      "taughtCount": "{count, plural, =0 {No lessons taught yet} one {# lesson taught} other {# lessons taught}}",
+      "pacing": "Lesson plan",
+      "backToClass": "Back to class",
+      "nextStep": "Next step",
+      "nextStepValue": "Step {step}: {title}",
+      "period": "Period {period}",
+      "allStepsDone": "All 13 steps are done. Mark the lesson taught.",
+      "noLessons": "This book has no lessons in the catalogue yet.",
+      "lessons": "Lessons",
+      "lessonNumber": "Lesson {number}",
+      "current": "Current",
+      "taughtOn": "Taught {date}",
+      "notTaught": "Not taught",
+      "draft": "Not published yet",
+      "setCurrent": "Make current",
+      "markTaught": "Mark taught",
+      "steps": "Workbook steps done in class",
+      "stepLabel": "Step {step}: {title}",
+      "actionError": "The change was not saved. Try again.",
+      "lesson": {
+        "projector": "Projector",
+        "rehearsal": "Rehearsal (student view)",
+        "answerKey": "Answer key",
+        "teachersOnly": "Teachers only. Students never see this section.",
+        "mcq": "Comprehension check (multiple choice)",
+        "saq": "Guided response (short answers)",
+        "laq": "Writing prompts",
+        "vocabFill": "Fill in the words",
+        "sentenceOrder": "Sentence order",
+        "sentenceCompletion": "Sentence completion",
+        "sentenceStarters": "Sentence starters",
+        "writingPrompt": "Guided writing",
+        "writingFrames": "Writing frames",
+        "rubric": "Writing rubric",
+        "rubric1": "Ideas: the writing answers the prompt with 3 or more details.",
+        "rubric2": "Sentences: each sentence has a capital letter and a full stop.",
+        "rubric3": "Words: the writing uses 3 or more words from the lesson.",
+        "noKey": "This lesson has no answer key in the catalogue yet.",
+        "summary": "Lesson summary",
+        "noArticle": "This lesson is not linked to an article yet. The projector and the rehearsal open when it is.",
+        "rehearsalHint": "You see the lesson as a student does. Your steps are not recorded for the class.",
+        "backToLesson": "Back to the lesson",
+        "projectorHint": "Click a paragraph to focus it. Answer tallies are not available yet.",
+        "vocabulary": "Vocabulary",
+        "questions": "Questions",
+        "showAnswer": "Show answer",
+        "hideAnswer": "Hide answer",
+        "showAll": "Show all paragraphs",
+        "previous": "Previous",
+        "next": "Next",
+        "paragraph": "Paragraph {number} of {total}"
+      },
+      "guide": {
+        "title": "Teacher guide",
+        "open": "Guide",
+        "empty": "The teacher guide is not imported yet.",
+        "teacherActions": "Teacher actions",
+        "teacherLanguage": "Teacher language",
+        "studentActions": "Student actions",
+        "watchFor": "Watch for",
+        "script": "Full script",
+        "done": "Done in class",
+        "live": "Live guide",
+        "tip": "Tip",
+        "markDone": "Mark step done",
+        "undo": "Undo",
+        "games": "Open the games",
+        "stepOf": "Step {step} of {total}",
+        "allDone": "Every step of this lesson is done."
+      },
+      "manual": {
+        "title": "Teacher manual",
+        "intro": "How a teacher-led lesson runs in Primary Advantage, step by step.",
+        "howTo": "First lesson: how to",
+        "howTo1": "Assign the book to your class on the class page.",
+        "howTo2": "Open the lesson plan and mark each workbook step as the class does it. The app opens the matching student step.",
+        "howTo3": "Open the lesson guide for the teacher actions, the teacher language, and the full script.",
+        "howTo4": "Use the projector view for whole-class reading and the answer reveal.",
+        "howTo5": "Check the class progress grid after the lesson and mark the lesson taught.",
+        "stepsTitle": "The 13 steps"
+      },
+      "progress": {
+        "title": "Class progress",
+        "backToPlan": "Back to the lesson plan",
+        "open": "Class progress",
+        "csv": "Download CSV",
+        "filters": "Filters",
+        "filter": {
+          "all": "All students",
+          "late": "Late",
+          "stuck": "Stuck",
+          "not_started": "Not started"
+        },
+        "grid": "Students by lesson",
+        "gridCaption": "App steps done out of 14, one cell per student and lesson",
+        "student": "Student",
+        "lessonShort": "L{number}",
+        "cell": "{student}, lesson {lesson}: {status}, {done} of 14 steps",
+        "status": {
+          "not_started": "Not started",
+          "in_progress": "In progress",
+          "done": "Done"
+        },
+        "legend": "Green: done. Blue: in progress. Grey: not started. Red ring: the class taught the lesson and the student has not finished.",
+        "empty": "No students match this filter.",
+        "noStudents": "This class has no students yet.",
+        "steps": "{done} of 14 steps",
+        "minutes": "{minutes} min",
+        "taughtOn": "Taught {date}",
+        "notTaught": "Not taught yet",
+        "openedBeforeTaught": "Opened before taught",
+        "stepLabel": "Step {step}: {status}",
+        "backToGrid": "Back to class progress",
+        "studentTitle": "{name}"
+      }
+    }
+  },
+  "TeacherClass": {
+    "challenges": "Class challenges",
+    "backToClasses": "Back to classes",
+    "loadError": "We could not load this class.",
+    "loadClassesError": "We could not load your classes.",
+    "loadErrorHint": "Check your connection and try again.",
+    "searchClasses": "Search classes",
+    "classActionsFor": "Actions for {name}",
+    "openClass": "Open class",
+    "openClassFor": "Open class {name}",
+    "searchStudents": "Search students",
+    "noMatch": "No student matches your search.",
+    "progress": "Progress",
+    "progressFor": "Progress of {name}",
+    "removeFor": "Remove {name} from the class",
+    "moreFor": "More actions for {name}",
+    "lastActive": "Last active: {when}",
+    "level": "Level {level}",
+    "xp": "{xp} XP",
+    "qrPrintHint": "Make the cards first. Then you can print them."
+  },
+  "TeacherAssignments": {
+    "backToAssignments": "Back to assignments",
+    "story": "Story",
+    "classLabel": "Class",
+    "searchLabel": "Search assignments",
+    "loadError": "We could not load the assignments.",
+    "loadOneError": "We could not load this assignment.",
+    "loadErrorHint": "Check your connection and try again.",
+    "noClasses": "You have no classes yet.",
+    "noClassesHint": "Create a class on My Classes first.",
+    "goToClasses": "Go to My Classes",
+    "statusFilter": "Show students by status",
+    "selectStudentFor": "Select {name}",
+    "progressLabel": "{percent}% done"
+  },
+  "TeacherStudents": {
+    "classLabel": "Class",
+    "searchLabel": "Search students",
+    "nameColumn": "Name",
+    "classesColumn": "Classes",
+    "levelColumn": "Level",
+    "xpColumn": "XP",
+    "sortBy": "Sort by {column}",
+    "noClass": "No class",
+    "pageOf": "Page {page} of {totalPages}",
+    "noStudents": "You have no students yet.",
+    "noStudentsHint": "Add students to a class on My Classes.",
+    "noStudentsInClass": "This class has no students yet.",
+    "goToClasses": "Go to My Classes",
+    "loadError": "We could not load your students.",
+    "reportsLoadError": "We could not load the reports.",
+    "activityLoadError": "We could not load the activity of this student.",
+    "loadErrorHint": "Check your connection and try again.",
+    "progressHeading": "Progress for {name}",
+    "progressTitle": "Student progress",
+    "backToReports": "Back to reports",
+    "backToClass": "Back to class",
+    "studentLevel": "Level: {level}",
+    "challengesHint": "Make a word challenge for a class game."
   }
 }

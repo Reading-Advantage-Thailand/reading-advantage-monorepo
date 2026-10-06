@@ -1,0 +1,156 @@
+11:10:54 student /student/reports 768 200 17 33 small=4 axe=- 
+11:11:54 student /student/reports 1280 200 0 0 small=4 axe=1 
+11:13:47 student /student/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062 375 200 0 0 small=0 axe=0 
+11:13:50 student /student/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062 768 200 0 0 small=0 axe=- 
+11:13:54 student /student/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062 1280 200 0 0 small=0 axe=0 
+11:16:51 student /settings/user-profile 375 200 0 0 small=6 axe=0 
+11:16:54 student /settings/user-profile 768 200 0 0 small=6 axe=- 
+11:16:57 student /settings/user-profile 1280 200 0 0 small=6 axe=0 
+11:17:38 student /b/o2/1 375 200 0 0 small=0 axe=0 LOADING
+11:18:02 student /b/o2/1 768 200 0 0 small=0 axe=- LOADING
+11:18:27 student /b/o2/1 1280 200 0 0 small=0 axe=0 LOADING
+11:18:35 teacher /teacher/dashboard 375 200 0 0 small=8 axe=0 
+11:18:42 teacher /teacher/dashboard 768 200 0 0 small=8 axe=- 
+11:18:46 teacher /teacher/dashboard 1280 200 0 0 small=8 axe=0 
+11:18:51 teacher /teacher/my-classes 375 200 0 0 small=0 axe=0 
+11:18:53 teacher /teacher/my-classes 768 200 0 0 small=0 axe=- 
+11:18:57 teacher /teacher/my-classes 1280 200 0 0 small=0 axe=0 
+11:19:01 teacher /teacher/my-students 375 200 0 0 small=10 axe=0 
+11:19:04 teacher /teacher/my-students 768 200 0 0 small=10 axe=- 
+11:19:08 teacher /teacher/my-students 1280 200 0 0 small=10 axe=0 
+11:19:12 teacher /teacher/class-roster 375 200 0 0 small=0 axe=0 
+11:19:15 teacher /teacher/class-roster 768 200 0 0 small=0 axe=- 
+11:19:18 teacher /teacher/class-roster 1280 200 0 0 small=0 axe=0 
+11:19:27 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8 375 200 0 0 small=2 axe=1 
+11:19:30 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8 768 200 0 0 small=2 axe=- 
+11:19:34 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8 1280 200 0 0 small=2 axe=0 
+11:19:38 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/class-sheet 375 200 0 0 small=0 axe=0 
+11:19:41 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/class-sheet 768 200 0 0 small=0 axe=- 
+11:19:44 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/class-sheet 1280 200 0 0 small=0 axe=0 
+11:21:00 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/enrollment 375 200 0 0 small=0 axe=0 
+11:21:04 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/enrollment 768 200 0 0 small=0 axe=- 
+11:21:08 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/enrollment 1280 200 0 0 small=0 axe=0 
+11:22:01 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/qr-cards 375 200 0 0 small=0 axe=0 
+11:22:07 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/qr-cards 768 200 0 0 small=0 axe=- 
+11:22:17 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/qr-cards 1280 200 0 0 small=0 axe=0 
+11:22:46 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062 375 200 0 0 small=0 axe=0 
+11:22:49 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062 768 200 0 0 small=0 axe=- 
+11:22:53 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062 1280 200 0 0 small=0 axe=0 
+11:23:09 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress 375 200 0 0 small=42 axe=0 
+11:23:30 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress 768 200 0 0 small=42 axe=- 
+11:23:34 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress 1280 200 0 0 small=42 axe=0 
+11:26:20 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress/55271a44-5acd-4065-b1a9-11672a22eb55 375 200 0 0 small=0 axe=0 
+11:26:41 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress/55271a44-5acd-4065-b1a9-11672a22eb55 768 200 0 0 small=0 axe=- 
+11:26:47 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress/55271a44-5acd-4065-b1a9-11672a22eb55 1280 200 0 0 small=0 axe=0 
+11:28:09 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1 375 200 0 0 small=0 axe=0 
+11:28:16 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1 768 200 0 0 small=0 axe=- 
+11:28:37 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1 1280 200 0 0 small=0 axe=0 
+11:29:28 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/projector 375 200 0 0 small=0 axe=0 
+11:29:33 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/projector 768 200 0 0 small=0 axe=- 
+11:29:37 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/projector 1280 200 0 0 small=0 axe=0 
+11:33:34 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/rehearsal 375 200 0 0 small=0 axe=0 LOADING
+11:33:59 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/rehearsal 768 200 0 0 small=0 axe=- LOADING
+11:34:24 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/rehearsal 1280 200 0 0 small=0 axe=0 LOADING
+11:35:14 teacher /teacher/assignments 375 200 0 0 small=0 axe=1 LOADING
+11:35:32 teacher /teacher/assignments 768 200 0 0 small=0 axe=- 
+11:35:35 teacher /teacher/assignments 1280 200 0 0 small=0 axe=0 
+11:37:35 teacher /teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000a 375 200 0 0 small=0 axe=0 LOADING
+11:37:58 teacher /teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000a 768 200 0 0 small=0 axe=- LOADING
+11:38:50 teacher /teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000a 1280 200 0 0 small=0 axe=0 LOADING
+11:40:49 teacher /teacher/reports 375 200 0 0 small=10 axe=0 
+11:40:59 teacher /teacher/reports 768 200 0 0 small=10 axe=- 
+11:41:03 teacher /teacher/reports 1280 200 0 0 small=10 axe=0 
+11:42:00 teacher /teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55 375 200 0 0 small=4 axe=1 
+11:42:07 teacher /teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55 768 200 17 33 small=4 axe=- 
+11:42:11 teacher /teacher/student-progress/55271a44-5acd-4065-b1a9-11672a22eb55 1280 200 0 0 small=4 axe=1 
+11:44:29 teacher /teacher/game-challenges 375 200 0 0 small=0 axe=0 
+11:45:31 teacher /teacher/game-challenges 768 200 0 0 small=0 axe=- 
+11:46:06 teacher /teacher/game-challenges 1280 200 0 0 small=0 axe=0 
+11:49:29 teacher /teacher/manual 375 200 0 0 small=0 axe=0 
+11:49:34 teacher /teacher/manual 768 200 0 0 small=0 axe=- 
+11:49:39 teacher /teacher/manual 1280 200 0 0 small=0 axe=0 
+11:49:44 teacher /settings/user-profile 375 200 0 0 small=6 axe=0 
+11:49:47 teacher /settings/user-profile 768 200 0 0 small=6 axe=- 
+11:49:50 teacher /settings/user-profile 1280 200 0 0 small=6 axe=0 
+11:50:22 teacher /settings/school-profile 375 200 0 0 small=1 axe=0 
+11:50:24 teacher /settings/school-profile 768 200 0 0 small=1 axe=- 
+11:50:28 teacher /settings/school-profile 1280 200 0 0 small=1 axe=0 
+11:50:34 teacher /b/o2/1 375 200 0 0 small=0 axe=0 
+11:50:39 teacher /b/o2/1 768 200 0 0 small=0 axe=- 
+11:50:46 teacher /b/o2/1 1280 200 0 0 small=0 axe=0 
+11:58:36 admin /admin 768 200 0 0 small=0 axe=- 
+11:58:49 admin /admin 1280 200 0 0 small=0 axe=1 
+11:58:53 admin /admin/dashboard 375 200 0 0 small=0 axe=1 
+11:58:58 admin /admin/dashboard 768 200 0 0 small=0 axe=- 
+11:59:03 admin /admin/dashboard 1280 200 0 0 small=0 axe=1 
+11:59:37 admin /admin/dashboard/students 375 200 0 0 small=0 axe=0 
+11:59:41 admin /admin/dashboard/students 768 200 0 0 small=0 axe=- 
+11:59:51 admin /admin/dashboard/students 1280 200 0 0 small=0 axe=1 
+12:00:28 admin /admin/dashboard/teachers 375 200 0 0 small=0 axe=0 
+12:00:33 admin /admin/dashboard/teachers 768 200 0 0 small=0 axe=- 
+12:00:38 admin /admin/dashboard/teachers 1280 200 0 0 small=0 axe=1 
+12:01:20 admin /admin/students 375 200 0 0 small=8 axe=1 
+12:01:39 admin /admin/students 768 200 0 0 small=8 axe=- 
+12:01:47 admin /admin/students 1280 200 0 0 small=8 axe=2 
+12:02:22 admin /admin/students/add 375 200 0 0 small=2 axe=0 
+12:02:54 admin /admin/students/add 768 200 0 0 small=0 axe=- 
+12:02:58 admin /admin/students/add 1280 200 0 0 small=0 axe=1 
+12:03:52 admin /admin/students/classrooms 375 200 0 0 small=2 axe=1 
+12:03:55 admin /admin/students/classrooms 768 200 0 0 small=4 axe=- 
+12:03:59 admin /admin/students/classrooms 1280 200 0 0 small=4 axe=1 
+12:04:32 admin /admin/teachers 375 200 0 0 small=6 axe=0 
+12:05:04 admin /admin/teachers 768 200 0 0 small=6 axe=- 
+12:05:18 admin /admin/teachers 1280 200 0 0 small=6 axe=1 
+12:05:39 admin /admin/teachers/add 375 200 0 0 small=6 axe=1 
+12:06:24 admin /admin/teachers/add 768 200 0 0 small=4 axe=- 
+12:06:29 admin /admin/teachers/add 1280 200 0 0 small=4 axe=2 
+12:08:07 admin /admin/article-creation 375 200 0 0 small=9 axe=1 
+12:08:10 admin /admin/article-creation 768 200 0 0 small=9 axe=- 
+12:08:14 admin /admin/article-creation 1280 200 0 0 small=9 axe=2 
+12:08:40 admin /admin/import-data 375 200 171 187 small=7 axe=0 
+12:08:52 admin /admin/import-data 768 200 0 0 small=7 axe=- 
+12:10:01 admin /admin/import-data 1280 200 0 0 small=7 axe=1 
+12:16:25 student /student/games 375 200 0 0 small=0 axe=0 
+12:16:34 student /student/games 768 200 0 0 small=0 axe=- 
+12:16:41 student /student/games 1280 200 0 0 small=0 axe=0 
+12:17:43 student /student/history 375 200 0 0 small=0 axe=0 
+12:20:16 student /student/history 768 200 0 0 small=0 axe=- LOADING
+12:20:39 student /student/history 1280 200 0 0 small=0 axe=0 
+12:20:50 student /student/reports 375 200 0 0 small=4 axe=1 
+12:20:54 student /student/reports 768 200 17 33 small=4 axe=- 
+12:21:02 student /student/reports 1280 200 0 0 small=4 axe=1 
+12:21:15 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062 375 200 0 0 small=0 axe=0 
+12:21:19 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062 768 200 0 0 small=0 axe=- 
+12:21:24 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062 1280 200 0 0 small=0 axe=0 
+12:21:34 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress 375 200 0 0 small=42 axe=0 
+12:21:38 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress 768 200 0 0 small=42 axe=- 
+12:21:42 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress 1280 200 0 0 small=42 axe=0 
+12:21:52 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress/55271a44-5acd-4065-b1a9-11672a22eb55 375 200 0 0 small=0 axe=0 
+12:22:06 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress/55271a44-5acd-4065-b1a9-11672a22eb55 768 200 0 0 small=0 axe=- 
+12:22:15 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/progress/55271a44-5acd-4065-b1a9-11672a22eb55 1280 200 0 0 small=0 axe=0 
+12:22:42 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1 375 200 0 0 small=0 axe=0 
+12:22:46 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1 768 200 0 0 small=0 axe=- 
+12:22:53 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1 1280 200 0 0 small=0 axe=0 
+12:23:03 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/projector 375 200 0 0 small=0 axe=0 
+12:23:36 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/projector 768 200 0 0 small=0 axe=- 
+12:24:11 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/projector 1280 200 0 0 small=0 axe=0 
+12:24:55 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/rehearsal 375 200 0 0 small=0 axe=0 LOADING
+12:26:25 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/rehearsal 768 200 0 0 small=0 axe=- LOADING
+12:28:13 teacher /teacher/class-roster/828838c2-322e-435a-84b5-539dab1594e8/books/9a6c6b18-fc6f-4644-85e6-73fcecea9062/lessons/1/rehearsal 1280 200 0 0 small=0 axe=0 LOADING
+12:30:00 teacher /teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000a 375 200 0 0 small=0 axe=0 LOADING
+12:31:00 teacher /teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000a 768 200 0 0 small=0 axe=- LOADING
+12:31:35 teacher /teacher/assignments/aaaaaaaa-0000-4000-8000-00000000000a 1280 200 0 0 small=0 axe=0 LOADING
+12:32:26 admin /admin 375 200 0 0 small=0 axe=1 
+12:32:33 admin /admin 768 200 0 0 small=0 axe=- 
+12:32:48 admin /admin 1280 200 0 0 small=0 axe=1 
+12:36:05 system /system/dashboard 375 200 0 0 small=0 axe=0 
+12:36:40 system /system/dashboard 768 200 0 0 small=0 axe=- 
+12:37:35 system /system/dashboard 1280 200 0 0 small=0 axe=0 
+12:39:35 system /system/schools 375 200 0 0 small=1 axe=0 
+12:40:09 system /system/schools 768 200 0 0 small=1 axe=- 
+12:40:36 system /system/schools 1280 200 0 0 small=1 axe=0 
+12:51:52 system /system/licenses 1280 200 0 0 small=6 axe=0 
+12:57:35 system /system/licenses/create-licenses 768 200 0 0 small=15 axe=- 
+13:00:13 system /system/licenses/create-licenses 1280 200 0 0 small=15 axe=0 
+13:02:55 keyboard done
+13:03:30 done

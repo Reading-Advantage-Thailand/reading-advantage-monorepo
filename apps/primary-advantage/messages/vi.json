@@ -38,12 +38,19 @@
     }
   },
   "Sidebar": {
+    "manual": "Teacher manual",
+    "home": "Home",
+    "me": "Me",
+    "noPermissionSection": "You don't have permission to open this section",
+    "noPermissionPage": "You don't have permission to open this page",
     "read": "Đọc",
+    "games": "Trò chơi",
     "stories": "Câu chuyện",
     "assignments": "Bài tập",
     "history": "Lịch sử",
     "sentences": "Câu",
     "vocabulary": "Từ vựng",
+    "games": "Trò chơi",
     "testing": "Kiểm tra",
     "systemdashboard": "Bảng điều khiển hệ thống",
     "licenses": "Bảng điều khiển giấy phép",
@@ -89,6 +96,7 @@
     "noDataAvailable": "Không có dữ liệu cho tháng này"
   },
   "Question": {
+    "descriptionEmpty": "This story has no questions of this kind yet.",
     "SAQuestion": {
       "title": "Câu hỏi ngắn",
       "description": "Trả lời câu hỏi bằng một vài từ",
@@ -156,6 +164,11 @@
     }
   },
   "Admin": {
+    "SchoolSelect": {
+      "label": "School",
+      "placeholder": "Select a school",
+      "required": "Please select a school"
+    },
     "Classrooms": {
       "classrooms": "Lớp học",
       "classroomsDescription": "Quản lý lớp học trong trường của bạn",
@@ -253,7 +266,10 @@
         "file": "Tệp",
         "size": "Kích thước",
         "savedAs": "Lưu dưới tên",
-        "nextSteps": "Tệp đã sẵn sàng để xử lý. Bạn có thể tiếp tục các bước tiếp theo."
+        "nextSteps": "Tệp đã sẵn sàng để xử lý. Bạn có thể tiếp tục các bước tiếp theo.",
+        "inserted": "Đã nhập",
+        "skippedDuplicate": "Bỏ qua (trùng trong tệp)",
+        "skippedExisting": "Bỏ qua (đã tồn tại)"
       },
       "progressLabel": "Tiến trình tải lên",
       "progressPercent": "Hoàn thành {percent}%",
@@ -264,7 +280,11 @@
     "preview": {
       "button": "Xem trước",
       "title": "Xem trước dữ liệu",
-      "columns": { "name": "Tên", "email": "Email", "role": "Vai trò" }
+      "columns": {
+        "name": "Tên",
+        "email": "Email",
+        "role": "Vai trò"
+      }
     },
     "formatGuide": {
       "title": "Hướng dẫn định dạng CSV",
@@ -375,6 +395,8 @@
       "importDataDesc": "Nhập dữ liệu người dùng và nội dung",
       "viewReports": "Xem báo cáo",
       "viewReportsDesc": "Truy cập phân tích và thông tin",
+      "reedyCosts": "Chi phí Reedy",
+      "reedyCostsDesc": "Phút, chi phí và lỗi theo trường và tháng",
       "manageClassrooms": "Quản lý lớp học",
       "manageClassroomsDesc": "Sắp xếp lớp học và bài tập"
     },
@@ -419,6 +441,7 @@
     }
   },
   "Components": {
+    "translationLanguage": "Ngôn ngữ dịch",
     "submitButton": "Gửi",
     "closeButton": "Đóng",
     "cancelButton": "Hủy",
@@ -736,7 +759,20 @@
       "MC_QUESTION": "Câu hỏi đa lựa chọn",
       "SA_QUESTION": "Câu hỏi trả lời ngắn",
       "LA_QUESTION": "Câu hỏi trả lời dài",
-      "ARTICLE_READ": "Đã đọc bài viết"
+      "ARTICLE_READ": "Đã đọc bài viết",
+      "ARTICLE_RATING": "Story rating",
+      "STORIES_RATING": "Story series rating",
+      "STORIES_READ": "Story series read",
+      "CHAPTER_RATING": "Chapter rating",
+      "CHAPTER_READ": "Chapter read",
+      "LEVEL_TEST": "Level test",
+      "SENTENCE_FLASHCARDS": "Sentence flashcards",
+      "SENTENCE_MATCHING": "Sentence matching",
+      "SENTENCE_ORDERING": "Sentence ordering",
+      "SENTENCE_WORD_ORDERING": "Word ordering",
+      "SENTENCE_CLOZE_TEST": "Fill in the blank",
+      "VOCABULARY_FLASHCARDS": "Word flashcards",
+      "VOCABULARY_MATCHING": "Word matching"
     },
     "level": {
       "title": "Cấp độ CEFR",
@@ -758,7 +794,9 @@
         "C1-": "Bạn có thể hiểu văn bản phức tạp với một số nỗ lực. Từ vựng của bạn cho phép bạn đọc về nhiều chủ đề khác nhau, và bạn có thể tìm ra các chi tiết ít rõ ràng hơn, mặc dù đôi khi bạn có thể cần đọc lại một số phần.",
         "C1": "Bạn có thể đọc văn bản dài và khó khăn và hiểu hầu hết những gì đang xảy ra. Bạn thích các câu chuyện và bài viết khiến bạn suy nghĩ, và bạn có thể nói về chúng bằng cách sử dụng từ vựng tốt mà không cần phải tìm kiếm quá nhiều từ.",
         "C1+": "Bạn là một độc giả siêu năng năng xử lý văn bản khó khăn và hiểu các kiểu viết khác nhau. Bạn thực sự rất giỏi trong việc tìm ra các phần ít rõ ràng của các câu chuyện và bài viết, và bạn thường biết những từ nghĩa là gì mà không cần phải tìm kiếm chúng.",
-        "C2": "Bạn có thể đọc và hiểu gần như tất cả mọi thứ. Bạn có thể hiểu ý chính của văn bản phức tạp và thích đọc các cuốn sách và bài viết khó khăn hơn. Bạn có thể nói về gần như tất cả mọi thứ và sử dụng ngôn ngữ với tự tin."
+        "C2": "Bạn có thể đọc và hiểu gần như tất cả mọi thứ. Bạn có thể hiểu ý chính của văn bản phức tạp và thích đọc các cuốn sách và bài viết khó khăn hơn. Bạn có thể nói về gần như tất cả mọi thứ và sử dụng ngôn ngữ với tự tin.",
+        "A0-": "You are starting to learn English. You know some letters and a few words, especially with pictures.",
+        "A0+": "You know more simple words and names. You can understand very short phrases with pictures, like signs and labels."
       }
     },
     "progress": {
@@ -778,7 +816,21 @@
       "activeThisWeekDescription": "{count} trong tổng {total} học sinh",
       "studentList": "Danh sách học sinh",
       "xpLabel": "{xp} XP"
-    }
+    },
+    "loadError": "We could not load your reports.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "noActivity": "No activity yet",
+    "noActivityHint": "Read a story or play a game, and your activity shows here.",
+    "showAllActivity": "Show all activity",
+    "noXp": "No XP on these days",
+    "noXpHint": "Read and practice to earn XP.",
+    "noXpOverall": "No XP yet",
+    "noReading": "No stories read yet",
+    "noReadingHint": "Read a story to see your reading stats.",
+    "groupBy": "Group by",
+    "groupType": "Type",
+    "groupGenre": "Genre",
+    "groupSubgenre": "Topic"
   },
   "Overall": {
     "roles": {
@@ -836,6 +888,7 @@
   },
   "Assignment": {
     "title": "Tạo bài tập",
+    "saved": "Assignment saved",
     "description": "Tạo bài tập cho học sinh của bạn",
     "assignForm": {
       "classroom": "Lớp học",
@@ -881,7 +934,6 @@
     "clozeTest": "Bài kiểm tra điền từ",
     "orderWord": "Sắp xếp từ",
     "matching": "Ghép cặp",
-
     "matchingGame": {
       "title": "Trò chơi ghép cặp dịch thuật",
       "description": "Luyện tập ghép cặp từ với nghĩa của chúng từ bộ sưu tập thẻ ghi nhớ!",
@@ -1465,6 +1517,7 @@
       "title": "Thông tin cá nhân",
       "subtitle": "Thông tin về hồ sơ cá nhân của bạn",
       "backToReading": "Quay lại trang đọc",
+      "avatar": "Nhân vật của tôi",
       "username": "Tên người dùng",
       "usernameDescription": "Tên người dùng được sử dụng để biểu thị chính mình trên nền tảng.",
       "email": "Email",
@@ -1542,6 +1595,17 @@
     }
   },
   "Lesson": {
+    "lockedStep": "Your teacher opens step {step} in class. Keep going with the steps that are open.",
+    "rail": {
+      "stepName": "Step {step} of {total}: {name}",
+      "showSteps": "Show all steps",
+      "hideSteps": "Hide steps",
+      "done": "done"
+    },
+    "saveError": "We could not save your progress.",
+    "saveErrorHint": "Check the internet connection and try again.",
+    "notFound": "We could not find this lesson",
+    "notFoundHint": "Pick a story to read instead.",
     "Reading": {
       "firstTitle": "Đọc lần đầu",
       "deepTitle": "Đọc chuyên sâu",
@@ -1827,14 +1891,22 @@
         "title": "Câu quan trọng : {count} câu",
         "more": "+{count} câu được lưu thêm"
       },
-      "actions": { "backToRead": "Quay lại trang đọc" },
-      "toast": { "failed": "Không thể tải tổng kết bài học" }
+      "actions": {
+        "backToRead": "Quay lại trang đọc"
+      },
+      "toast": {
+        "failed": "Không thể tải tổng kết bài học"
+      }
     }
   },
   "LessonLanguageQuestion": {
     "title": "Trợ lý Đọc AI",
-    "loading": { "conversation": "Đang tải cuộc trò chuyện..." },
-    "status": { "online": "Trực tuyến" },
+    "loading": {
+      "conversation": "Đang tải cuộc trò chuyện..."
+    },
+    "status": {
+      "online": "Trực tuyến"
+    },
     "header": {
       "readyWithName": "Sẵn sàng giúp {name} với các câu hỏi",
       "ready": "Sẵn sàng giúp bạn với câu hỏi của bạn"
@@ -1849,7 +1921,10 @@
       "placeholderWithName": "{name}, hãy hỏi về bài đọc...",
       "placeholder": "Nhập câu hỏi về bài đọc..."
     },
-    "buttons": { "send": "Gửi", "skip": "Bỏ qua" },
+    "buttons": {
+      "send": "Gửi",
+      "skip": "Bỏ qua"
+    },
     "tips": {
       "askVocabulary": "Hỏi về từ vựng",
       "discussTheme": "Thảo luận về chủ đề chính",
@@ -1866,7 +1941,9 @@
       "questionOf": "Câu {current} trên {total}",
       "completePercent": "Hoàn thành {percent}%"
     },
-    "timer": { "seconds": "{seconds}s" },
+    "timer": {
+      "seconds": "{seconds}s"
+    },
     "completed": {
       "title": "Hoàn thành bài kiểm tra",
       "description": "Tuyệt vời! Bạn đã hoàn thành bài kiểm tra",
@@ -1882,7 +1959,9 @@
     }
   },
   "LessonSAQ": {
-    "completed": { "title": "Hoàn thành bài kiểm tra" },
+    "completed": {
+      "title": "Hoàn thành bài kiểm tra"
+    },
     "labels": {
       "question": "Câu hỏi:",
       "yourAnswer": "Câu trả lời của bạn:",
@@ -1890,15 +1969,23 @@
       "feedback": "Phản hồi:",
       "score": "Điểm:"
     },
-    "timer": { "elapsed": "Thời gian: {time}" },
+    "timer": {
+      "elapsed": "Thời gian: {time}"
+    },
     "form": {
-      "placeholder": { "answer": "Nhập câu trả lời của bạn..." },
+      "placeholder": {
+        "answer": "Nhập câu trả lời của bạn..."
+      },
       "help": {
         "detailedResponse": "Viết câu trả lời chi tiết để thể hiện sự hiểu biết"
       },
-      "validation": { "answerRequired": "Vui lòng nhập câu trả lời" }
+      "validation": {
+        "answerRequired": "Vui lòng nhập câu trả lời"
+      }
     },
-    "actions": { "submit": "Gửi" }
+    "actions": {
+      "submit": "Gửi"
+    }
   },
   "LessonCloze": {
     "loading": {
@@ -2019,7 +2106,9 @@
     "prompt": {
       "thinkAndReveal": "Nghĩ về ý nghĩa của câu này, sau đó hiển thị câu trả lời."
     },
-    "buttons": { "showAnswer": "Hiển thị câu trả lời" },
+    "buttons": {
+      "showAnswer": "Hiển thị câu trả lời"
+    },
     "rating": {
       "prompt": "Bạn biết câu này tốt như thế nào?",
       "again": "Lại",
@@ -2071,27 +2160,13 @@
       "archive": "Lưu trữ",
       "delete": "Xóa"
     },
-    "search": { "placeholder": "Tìm kiếm" },
-    "import": {
-      "fromLabel": "Nhập một lớp mới từ",
-      "googleClassroom": "Google Classroom",
-      "dialog": {
-        "title": "Nhập Google Classroom của bạn",
-        "selectClass": "Chọn lớp Google Classroom",
-        "description": "Chọn lớp để đồng bộ. Tất cả học sinh sẽ được nhập và thêm vào tài khoản của bạn.",
-        "yourClasses": "Lớp Google Classroom của bạn",
-        "refresh": "Làm mới",
-        "continue": "Tiếp tục",
-        "syncing": "Đang đồng bộ lớp...",
-        "syncingDescription": "Đang nhập học sinh từ Google Classroom. Có thể mất một lát.",
-        "syncCompleted": "Đồng bộ hoàn tất!",
-        "syncAnother": "Đồng bộ lớp khác",
-        "goToClass": "Đi tới lớp",
-        "aboutTitle": "Về đồng bộ Google Classroom",
-        "aboutDescription": "Tính năng này giúp nhập học sinh từ Google Classroom. Học sinh sẽ được ghi danh vào lớp của bạn tự động."
-      }
+    "search": {
+      "placeholder": "Tìm kiếm"
     },
-    "pagination": { "previous": "Trước", "next": "Tiếp" },
+    "pagination": {
+      "previous": "Trước",
+      "next": "Tiếp"
+    },
     "edit": {
       "title": "Chỉnh sửa lớp",
       "description": "Bạn có chắc muốn chỉnh sửa lớp này?",
@@ -2120,8 +2195,13 @@
     }
   },
   "TeacherCreateClass": {
-    "button": { "newClassroom": "Lớp học mới" },
-    "dialog": { "title": "Tạo lớp", "description": "Tạo lớp học mới" },
+    "button": {
+      "newClassroom": "Lớp học mới"
+    },
+    "dialog": {
+      "title": "Tạo lớp",
+      "description": "Tạo lớp học mới"
+    },
     "fields": {
       "className": "Tên lớp",
       "classNamePlaceholder": "Tên lớp",
@@ -2130,7 +2210,10 @@
       "gradePlaceholder": "Khối",
       "gradeItem": "Khối {grade}"
     },
-    "actions": { "create": "Tạo", "cancel": "Hủy" },
+    "actions": {
+      "create": "Tạo",
+      "cancel": "Hủy"
+    },
     "toast": {
       "attention": "Chú ý",
       "fillAllFields": "Vui lòng điền đầy đủ các trường",
@@ -2186,7 +2269,9 @@
       }
     },
     "cefrSetter": {
-      "button": { "setLevel": "Đặt cấp độ" },
+      "button": {
+        "setLevel": "Đặt cấp độ"
+      },
       "dialog": {
         "title": "Đặt cấp độ CEFR cho {name}",
         "description": "Chọn cấp độ CEFR phù hợp cho học sinh này. Hệ thống cũng sẽ cập nhật cấp độ đọc (RA)."
@@ -2195,7 +2280,9 @@
         "currentLevel": "Cấp độ hiện tại",
         "newLevel": "Cấp độ mới"
       },
-      "select": { "placeholder": "Chọn cấp độ CEFR" },
+      "select": {
+        "placeholder": "Chọn cấp độ CEFR"
+      },
       "preview": {
         "title": "Xem trước:",
         "cefr": "Cấp độ CEFR:",
@@ -2234,7 +2321,8 @@
         "actions": {
           "actions": "Thao tác",
           "details": "Chi tiết"
-        }
+        },
+        "noDueDate": "No due date"
       },
       "empty": {
         "noAssignments": "Không tìm thấy bài giao",
@@ -2329,6 +2417,8 @@
       "nav": {
         "classRoster": "Danh sách lớp",
         "reports": "Báo cáo",
+        "reedy": "Reedy",
+        "avatars": "Nhân vật",
         "settings": "Cài đặt"
       },
       "info": {
@@ -2436,6 +2526,46 @@
       "header": {
         "title": "Ghi danh học sinh",
         "subtitle": "Quản lý việc ghi danh học sinh cho"
+      },
+      "search": {
+        "placeholder": "Search students by name or email"
+      },
+      "enrollButton": "Enroll student",
+      "dialog": {
+        "title": "Enroll students",
+        "description": "Select students to enroll in {classroom}"
+      },
+      "emptyAvailable": {
+        "noMatch": "No available students match your search",
+        "none": "No students available for enrollment"
+      },
+      "enrolledHeading": "Enrolled students ({count})",
+      "empty": {
+        "noMatch": "No students match your search",
+        "none": "No students enrolled yet"
+      },
+      "noName": "No name",
+      "levelShort": "Lvl {level}",
+      "toasts": {
+        "loadAvailableError": "Failed to load available students",
+        "enrollError": "Failed to enroll student",
+        "enrolled": "{name} has been enrolled",
+        "unenrollError": "Failed to unenroll student",
+        "unenrolled": "{name} has been unenrolled"
+      },
+      "unenroll": {
+        "button": "Unenroll",
+        "title": "Unenroll student",
+        "question": "Are you sure you want to unenroll <student></student> from <classroom></classroom>?",
+        "loses": "The student leaves the class and loses access to:",
+        "item1": "Class assignments and activities",
+        "item2": "Progress tracking for this class",
+        "item3": "Class content and materials",
+        "cannotUndo": "This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Unenroll student",
+        "working": "Unenrolling...",
+        "unknownStudent": "Unknown student"
       }
     },
     "AssignmentDashboard": {
@@ -2456,7 +2586,8 @@
       "deleteCount": "Xóa ({count})",
       "cancel": "Hủy",
       "edit": "Chỉnh sửa",
-      "noStudentsInSelectedStatus": "Không có học sinh trong trạng thái đã chọn"
+      "noStudentsInSelectedStatus": "Không có học sinh trong trạng thái đã chọn",
+      "noDueDate": "No due date"
     }
   },
   "AdminTeachers": {
@@ -2496,8 +2627,8 @@
         "nameMax": "Tên phải ít hơn 100 ký tự",
         "emailInvalid": "Vui lòng nhập email hợp lệ",
         "roleRequired": "Vui lòng chọn vai trò",
-        "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
-        "passwordMax": "Mật khẩu phải ít hơn 100 ký tự",
+        "passwordMin": "Mật khẩu phải có ít nhất 8 ký tự",
+        "passwordMax": "Mật khẩu không được quá 128 ký tự",
         "passwordsDontMatch": "Mật khẩu không khớp"
       }
     },
@@ -2602,7 +2733,9 @@
       "title": "Quản lý học sinh",
       "subtitle": "Quản lý học sinh và tiến độ của họ"
     },
-    "page": { "title": "Quản lý học sinh" },
+    "page": {
+      "title": "Quản lý học sinh"
+    },
     "stats": {
       "totalStudents": "Tổng số học sinh",
       "allClassrooms": "Tất cả lớp học",
@@ -2674,7 +2807,9 @@
       "loading": "Đang tải danh sách học sinh...",
       "empty": "Không tìm thấy học sinh phù hợp với tiêu chí của bạn."
     },
-    "badges": { "noClass": "Không có lớp" },
+    "badges": {
+      "noClass": "Không có lớp"
+    },
     "pagination": {
       "showing": "Hiển thị {from} đến {to} trong tổng {total} học sinh",
       "previous": "Trước",
@@ -2690,7 +2825,35 @@
   },
   "StudentGames": {
     "title": "Trò chơi học sinh",
-    "description": "Chơi danh mục Advantage Play Kit trực tiếp. Mỗi thẻ mở tuyến APK đã xác thực."
+    "description": "Play games with the words and sentences you learn.",
+    "wordGames": "Word games",
+    "wordGamesHint": "Practice the words you know.",
+    "sentenceGames": "Sentence games",
+    "sentenceGamesHint": "Put words in order to make sentences.",
+    "empty": "No games yet",
+    "emptyHint": "Ask your teacher when the games are ready.",
+    "loadError": "We could not load the games.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "storyLink": "Word adventures",
+    "storyLinkDescription": "Play 3D games with the words you saved from your reading."
+  },
+  "StoryGames": {
+    "title": "Word adventures",
+    "description": "Play 3D games with the words and sentences you saved from your reading. Older phones play the 2D version.",
+    "chooseGame": "Choose a game",
+    "loading": "Loading your saved words…",
+    "loadError": "Could not load your saved words. Try again later.",
+    "saved": "This practice set has {words, plural, one {# word} other {# words}} and {sentences, plural, one {# sentence} other {# sentences}} from your reading.",
+    "needWords": "{count, plural, one {Save # more word to play.} other {Save # more words to play.}}",
+    "needSentences": "{count, plural, one {Save # more sentence to play.} other {Save # more sentences to play.}}",
+    "readMore": "Read and save more words",
+    "flat": "2D mode (older phones)",
+    "save": {
+      "saving": "Saving your result…",
+      "saved": "Result saved",
+      "error": "Could not save your result"
+    },
+    "link": "Word adventures"
   },
   "Footer": {
     "tagline": "Mang lại trải nghiệm học tiếng Anh tốt nhất.",
@@ -2761,5 +2924,911 @@
     "createSuccessDescription": "Đã thêm {name} vào hệ thống.",
     "createError": "Tạo trường thất bại",
     "fallbackError": "Đã xảy ra lỗi không mong đợi."
+  },
+  "ClassLogin": {
+    "title": "Class sign-in",
+    "loading": "Loading class sign-in…",
+    "errors": {
+      "signedOut": "Your sign-in has ended. Sign in again.",
+      "forbidden": "You cannot manage this class.",
+      "notFound": "We cannot find this class or student.",
+      "rateLimited": "Too many tries. Wait a few minutes and try again.",
+      "unavailable": "No free code right now. Try again.",
+      "generic": "Something went wrong. Try again."
+    },
+    "session": {
+      "start": "Start class",
+      "startHelp": "Start the class to show a sign-in code for your students.",
+      "codeLabel": "Class code",
+      "codeAria": "Class code {code}",
+      "openUntil": "Open until {time}",
+      "openNoCode": "The class is open until {time}. The code shows only once. Press New code to show a code.",
+      "newCode": "New code",
+      "end": "End class"
+    },
+    "backToClass": "Back to class",
+    "links": {
+      "classSheet": "Class sheet",
+      "qrCards": "QR cards"
+    },
+    "sheet": {
+      "title": "Class sheet",
+      "intro": "The class sheet lists each student's username and a new password, for signing in away from the classroom.",
+      "warning": "Making the sheet sets a new password for every student in this class and signs them out. Old passwords stop working.",
+      "make": "Make class sheet",
+      "confirmTitle": "Set new passwords for the whole class?",
+      "confirm": "Set new passwords",
+      "cancel": "Cancel",
+      "print": "Print",
+      "once": "The passwords show only now. Print the sheet before you leave this page.",
+      "signInAt": "Sign in at",
+      "name": "Name",
+      "username": "Username",
+      "password": "Password",
+      "failed": "These students kept their old password: {names}. Try again."
+    },
+    "qrPage": {
+      "title": "QR login cards",
+      "intro": "Each card signs one student in with one scan. A card shows only once, so print it now.",
+      "issue": "Make cards for {count, plural, one {# student} other {# students}} without a card",
+      "allHaveCards": "Every student has a card. To print a card again, make a new card for that student.",
+      "toPrint": "{count, plural, one {# card} other {# cards}} to print",
+      "madeBefore": "Cards made before",
+      "madeBeforeHelp": "The server does not keep these cards. Make a new card to print one again. The old card then stops working.",
+      "print": "Print"
+    },
+    "setting": {
+      "label": "Picture password",
+      "on": "Students tap their 3 pictures after they choose their name.",
+      "off": "Students sign in with the class code and their name only. Some features, such as Reedy, need a full sign-in."
+    },
+    "roster": {
+      "heading": "Students",
+      "summary": "{signedIn} of {total} signed in",
+      "student": "Student",
+      "status": "Status",
+      "actions": "Actions",
+      "signedIn": "Signed in",
+      "notSignedIn": "Not signed in",
+      "seen": "Seen {time}",
+      "lastSeen": "Last seen {time}",
+      "locked": "Locked, {minutes} min left",
+      "noPicture": "No picture password",
+      "resetPicture": "Reset pictures",
+      "resetPictureFor": "Reset picture password for {name}",
+      "setPicture": "Set pictures",
+      "setPictureFor": "Set picture password for {name}",
+      "newCard": "New card",
+      "newCardFor": "New card for {name}",
+      "assignMissing": "Give picture passwords to {count, plural, one {# student} other {# students}}",
+      "empty": "No students in this class yet."
+    },
+    "pictures": {
+      "title": "New picture password",
+      "description": "Show this to the student now. It does not show again.",
+      "print": "Print",
+      "close": "Close"
+    },
+    "rotate": {
+      "title": "Make a new card for {name}?",
+      "description": "The old card stops working now, and {name} is signed out.",
+      "confirm": "Make new card",
+      "cancel": "Cancel"
+    },
+    "cards": {
+      "title": "New QR card",
+      "description": "Print this card now. It does not show again.",
+      "qrLabel": "Sign-in QR code for {name}",
+      "scanHint": "Scan to sign in",
+      "print": "Print",
+      "close": "Close"
+    }
+  },
+  "StudentPictures": {
+    "redCircle": "red circle",
+    "blueSquare": "blue square",
+    "greenTriangle": "green triangle",
+    "yellowStar": "yellow star",
+    "pinkHeart": "pink heart",
+    "orangeDiamond": "orange diamond",
+    "purpleMoon": "purple moon",
+    "grayCloud": "gray cloud",
+    "skyDrop": "light blue drop",
+    "blackBolt": "black lightning",
+    "brownHexagon": "brown hexagon",
+    "tealFlower": "teal flower"
+  },
+  "StudentSignIn": {
+    "code": {
+      "title": "Hello! Let's sign in",
+      "label": "Class code",
+      "help": "Type the code your teacher shows you.",
+      "next": "Next",
+      "checking": "Checking…"
+    },
+    "names": {
+      "title": "Who are you?",
+      "help": "Tap your name.",
+      "empty": "There are no names in this class yet. Ask your teacher.",
+      "back": "Back"
+    },
+    "pictures": {
+      "title": "Hi, {name}!",
+      "help": "Tap your 3 pictures in order.",
+      "progress": "{count} of 3 pictures",
+      "undo": "Undo",
+      "clear": "Start again",
+      "back": "Not you? Go back",
+      "signingIn": "Signing in…"
+    },
+    "card": {
+      "title": "QR card sign-in",
+      "signingIn": "Signing you in…",
+      "useCode": "Sign in with the class code"
+    },
+    "password": {
+      "title": "Sign in with your username",
+      "help": "Use the username and password your teacher gave you.",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign in",
+      "signingIn": "Signing in…"
+    },
+    "switch": {
+      "usePassword": "Sign in with username and password",
+      "useCode": "Sign in with the class code"
+    },
+    "errors": {
+      "codeFormat": "The code has 6 letters and numbers.",
+      "codeInvalid": "This code does not work. Check the code or ask your teacher.",
+      "wrongPictures": "Those pictures are not right. Try again.",
+      "locked": "Too many wrong tries. Wait {minutes, plural, one {# minute} other {# minutes}} or ask your teacher.",
+      "rateLimited": "Too many tries. Wait {minutes, plural, one {# minute} other {# minutes}} and try again.",
+      "wrongPassword": "Wrong username or password. Try again.",
+      "cardInvalid": "This card does not work now. Cards work only in class. Ask your teacher.",
+      "cardMissing": "We cannot read this card. Scan it again or ask your teacher.",
+      "generic": "Something went wrong. Try again."
+    }
+  },
+  "AppShell": {
+    "skipToContent": "Skip to main content",
+    "accountMenu": "Account menu",
+    "toggleTheme": "Switch light or dark theme",
+    "soundOff": "Turn sound off",
+    "soundOn": "Turn sound on",
+    "mainNavigation": "Main navigation",
+    "publicNavigation": "Site navigation",
+    "openMenu": "Open menu",
+    "menu": "Menu",
+    "tabs": {
+      "home": "Home",
+      "read": "Read",
+      "games": "Games",
+      "me": "Me",
+      "classes": "Classes",
+      "assignments": "Assignments",
+      "reports": "Reports",
+      "dashboard": "Dashboard",
+      "teachers": "Teachers",
+      "students": "Students",
+      "import": "Import",
+      "schools": "Schools",
+      "licenses": "Licenses"
+    },
+    "gp": "{gp} GP",
+    "xp": "{xp} XP"
+  },
+  "Quest": {
+    "title": "Nhiệm vụ lớp",
+    "subtitle": "Cả lớp cùng chiến đấu với một trùm.",
+    "boss": "Trùm: {name}",
+    "daysLeft": "{count, plural, =0 {Ngày quyết chiến!} other {Còn # ngày đến trận đấu}}",
+    "meterLabel": "Sát thương của lớp",
+    "meter": "{committed} trên {target} sát thương",
+    "powerUps": "Sức mạnh của bạn",
+    "noPowerUps": "Chưa có sức mạnh nào. Hoàn thành một mục tiêu để nhận.",
+    "powerUp": {
+      "shield": "Khiên",
+      "sharp-blade": "Kiếm sắc",
+      "rally-horn": "Tù và"
+    },
+    "goals": "Mục tiêu tuần này",
+    "goal": {
+      "reading-days": "Đọc trong {days} ngày",
+      "accuracy": "Đúng {percent}% trong {minQuestions} câu",
+      "streak": "Chuỗi {days} ngày",
+      "lesson-steps": "Hoàn thành {steps} bước bài học"
+    },
+    "earned": "Đã nhận",
+    "teacher": {
+      "title": "Nhiệm vụ lớp",
+      "none": "Tuần này chưa có nhiệm vụ.",
+      "assign": "Giao nhiệm vụ",
+      "roster": "{count} học sinh",
+      "earners": "{count} em có sức mạnh",
+      "cancel": "Hủy nhiệm vụ",
+      "cancelError": "Không thể hủy nhiệm vụ.",
+      "battleAt": "Trận đấu: {time}",
+      "status": {
+        "open": "Đang mở",
+        "rally": "Tập hợp",
+        "play": "Chiến đấu",
+        "result": "Kết quả",
+        "done": "Xong"
+      },
+      "live": "Bảng điều khiển trực tiếp"
+    },
+    "assign": {
+      "title": "Giao nhiệm vụ",
+      "subtitle": "Chọn nhiệm vụ, lớp và giờ đấu. Mục tiêu trùm được đặt theo sĩ số hôm nay.",
+      "template": "Nhiệm vụ",
+      "class": "Lớp",
+      "battleAt": "Ngày và giờ đấu",
+      "submit": "Giao",
+      "back": "Về trang chính",
+      "noClasses": "Bạn chưa có lớp nào.",
+      "errors": {
+        "ALREADY_OPEN": "Lớp này đã có nhiệm vụ tuần này.",
+        "NO_CONTENT": "Bài học hiện tại của lớp không có bảng từ vựng. Hãy giao sách trước.",
+        "BAD_TIME": "Chọn giờ đấu sau thời điểm hiện tại.",
+        "GAME_UNAVAILABLE": "Trò chơi quyết chiến chưa được cài.",
+        "generic": "Chưa giao được nhiệm vụ."
+      }
+    },
+    "battle": {
+      "title": "Trận đấu nhiệm vụ lớp",
+      "go": "Đến trận đấu",
+      "none": "Tuần này chưa có nhiệm vụ.",
+      "home": "Về trang chính",
+      "you": "Bạn",
+      "hp": "HP {hp} trên {max}",
+      "hpLabel": "HP của bạn",
+      "damage": "Sát thương của bạn: {damage}",
+      "rested": "Bạn đã nghỉ và quay lại với một nửa HP.",
+      "used": "đã dùng",
+      "waiting": "Trận đấu chưa bắt đầu. Hãy đợi giáo viên.",
+      "present": "Bạn đã có mặt! Trận đấu sắp bắt đầu.",
+      "saved": "Đòn đánh của bạn đã được ghi: {damage} sát thương. Hãy nhìn màn hình!",
+      "fell": "Trùm đã gục!",
+      "held": "Trùm vẫn trụ. Lần sau nhé!"
+    },
+    "live": {
+      "title": "Bảng điều khiển trực tiếp",
+      "present": "{count} trên {total} có mặt",
+      "students": "Cả lớp",
+      "hits": "Đòn đánh",
+      "hit": "{name} đánh {damage}",
+      "noHits": "Chưa có đòn đánh.",
+      "helpers": "Cảm ơn các trợ thủ!",
+      "closed": "Nhiệm vụ đã đóng.",
+      "field": "Chiến trường",
+      "moveError": "Không chuyển được sang bước tiếp.",
+      "next": {
+        "rally": "Bắt đầu tập hợp",
+        "play": "Bắt đầu trận đấu",
+        "result": "Hiện kết quả",
+        "done": "Đóng nhiệm vụ"
+      }
+    }
+  },
+  "ClassAvatars": {
+    "title": "Nhân vật của lớp",
+    "subtitle": "Nhân vật của từng học sinh. Đặt lại sẽ xóa anh hùng và trang bị đang mặc; học sinh chọn lại.",
+    "reset": "Đặt lại",
+    "resetDone": "Đã đặt lại",
+    "noAvatar": "Chưa có nhân vật",
+    "backToClass": "Về lớp học",
+    "loadError": "Không tải được nhân vật.",
+    "noStudents": "Lớp này chưa có học sinh."
+  },
+  "Avatar": {
+    "title": "Nhân vật của tôi",
+    "subtitle": "Chọn một anh hùng và màu sắc của bạn. Bạn có thể đổi bất cứ lúc nào.",
+    "stepClass": "Chọn anh hùng của bạn",
+    "stepColors": "Màu sắc cho {class}",
+    "preview": "Nhân vật của bạn",
+    "save": "Lưu nhân vật",
+    "saving": "Đang lưu…",
+    "skip": "Để sau",
+    "back": "Chọn anh hùng khác",
+    "error": "Không lưu được nhân vật. Hãy thử lại.",
+    "nudgeTitle": "Tạo nhân vật của bạn!",
+    "nudgeBody": "Chọn một anh hùng và màu sắc của bạn. Reedy sẽ trông giống bạn.",
+    "nudgeLink": "Tạo nhân vật",
+    "meLink": "Nhân vật của tôi",
+    "shop": {
+      "home": "Nhân vật của tôi",
+      "gp": "{gp} GP",
+      "level": "Cấp {level}",
+      "shopLink": "Đến cửa hàng",
+      "changeHero": "Đổi anh hùng hoặc màu sắc",
+      "wearing": "Đang mặc",
+      "empty": "Trống",
+      "wear": "Mặc",
+      "remove": "Tháo",
+      "wornBadge": "Đang mặc",
+      "shopTitle": "Cửa hàng nhân vật",
+      "shopSubtitle": "Dùng GP để mua trang bị cho nhân vật. Đọc và trả lời câu hỏi để nhận GP.",
+      "allSlots": "Tất cả vị trí",
+      "buy": "Mua với {gp} GP",
+      "buyDye": "Mua màu {dye} với {gp} GP",
+      "owned": "Đã có",
+      "locked": "Cấp {level}",
+      "free": "Miễn phí",
+      "notEnough": "Không đủ GP",
+      "shopError": "Không thực hiện được. Thử lại.",
+      "dyes": "Màu nhuộm",
+      "greeting": "Chào anh hùng! Chạm vào một món để thử.",
+      "thanks": "Chọn hay lắm! Món đó đã ở trong túi của bạn.",
+      "armorer": "Thợ rèn",
+      "all": "Tất cả",
+      "shelf": "Kệ {n} / {total}",
+      "prevShelf": "Kệ trước",
+      "nextShelf": "Kệ sau",
+      "tryOn": "Thử đồ",
+      "youKeep": "Bạn còn {gp} GP",
+      "tier": "Bậc {tier}",
+      "noDye": "Không nhuộm",
+      "drawer": "Món {slot} của bạn",
+      "pickSlot": "Chạm vào một ô để mở ngăn kéo.",
+      "page": "Trang {n} / {total}",
+      "prevPage": "Trang trước",
+      "nextPage": "Trang sau",
+      "noAvatarYet": "Hãy chọn anh hùng trước."
+    },
+    "pieceSlots": {
+      "hair": "Tóc",
+      "head": "Đầu",
+      "chest": "Ngực",
+      "shoulders": "Vai",
+      "back": "Lưng",
+      "hands": "Tay",
+      "waist": "Eo",
+      "feet": "Chân",
+      "mainhand": "Tay chính",
+      "offhand": "Tay phụ"
+    },
+    "classes": {
+      "knight": "Hiệp sĩ",
+      "wizard": "Pháp sư",
+      "cleric": "Tu sĩ",
+      "rogue": "Đạo tặc",
+      "ranger": "Kiểm lâm",
+      "bard": "Thi sĩ",
+      "witch": "Phù thủy",
+      "druid": "Druid",
+      "shaman": "Pháp sư bộ lạc",
+      "duelist": "Kiếm sĩ",
+      "swashbuckler": "Hải tặc",
+      "treasure-hunter": "Thợ săn kho báu",
+      "explorer": "Nhà thám hiểm",
+      "gladiator": "Đấu sĩ",
+      "shield-maiden": "Nữ chiến binh"
+    },
+    "slots": {
+      "skin": "Da",
+      "hair": "Tóc",
+      "eyes": "Mắt",
+      "cloth": "Quần áo"
+    },
+    "options": {
+      "skin": {
+        "fair": "Trắng",
+        "light": "Sáng",
+        "tan": "Rám nắng",
+        "brown": "Nâu",
+        "deep": "Đậm"
+      },
+      "hair": {
+        "brown": "Nâu",
+        "black": "Đen",
+        "blond": "Vàng",
+        "auburn": "Nâu đỏ",
+        "silver": "Bạc",
+        "teal": "Xanh mòng két"
+      },
+      "eyes": {
+        "brown": "Nâu",
+        "blue": "Xanh dương",
+        "green": "Xanh lá",
+        "hazel": "Nâu nhạt",
+        "violet": "Tím"
+      },
+      "cloth": {
+        "sky": "Xanh trời",
+        "linen": "Vải lanh",
+        "moss": "Rêu",
+        "rose": "Hồng",
+        "slate": "Xám đá"
+      }
+    }
+  },
+  "Reedy": {
+    "title": "Reedy",
+    "preview": "Thử nghiệm",
+    "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
+    "explainTh": "รีดี้คือโค้ชฝึกพูด คุยเรื่องนิทานของคุณเป็นภาษาอังกฤษและภาษาไทยได้ รีดี้ยังใหม่ อาจทำผิดพลาดได้บ้าง",
+    "meterLabel": "Phút Reedy",
+    "minutesLeft": "Còn {time} trong tháng này",
+    "talk": "Nói chuyện với Reedy",
+    "start": "Bắt đầu nói",
+    "micAsk": "Reedy cần micro của bạn. Nhấn Cho phép khi trình duyệt hỏi.",
+    "noMic": "Không tìm thấy micro. Nhờ thầy cô giúp, hoặc thử thiết bị khác.",
+    "micDenied": "Micro đang tắt. Cho phép trong trình duyệt rồi thử lại.",
+    "connecting": "Đang kết nối với Reedy…",
+    "mute": "Tắt tiếng",
+    "unmute": "Bật tiếng",
+    "end": "Kết thúc",
+    "timeLeft": "Còn {time}",
+    "stopTitle": "Hết giờ!",
+    "stopBody": "Số phút Reedy của tháng này đã hết. Tháng sau sẽ có phút mới.",
+    "providerDown": "Reedy không nói được lúc này. Hãy thử lại sau.",
+    "lost": "Cuộc gọi bị ngắt. Bạn có thể thử lại.",
+    "summaryTitle": "Nói chuyện vui quá!",
+    "summaryKind": "Đây là những gì Reedy nhận thấy. Mỗi lần thử là một lần giỏi hơn.",
+    "strengths": "Điều làm tốt",
+    "improvements": "Lần sau thử",
+    "again": "Nói chuyện lại",
+    "backHome": "Về trang chủ",
+    "lessonEntry": "Nói chuyện với Reedy về câu chuyện này",
+    "blocked": {
+      "DISABLED": "Reedy đang nghỉ.",
+      "SCHOOL_DISABLED": "Trường của bạn chưa bật Reedy.",
+      "AUTH_STRENGTH": "Đăng nhập bằng tên người dùng và mật khẩu để nói chuyện với Reedy.",
+      "NO_AVATAR": "Tạo nhân vật trước, rồi nói chuyện với Reedy.",
+      "SESSION_ACTIVE": "Reedy đang nói chuyện với bạn ở một màn hình khác.",
+      "QUOTA_EXHAUSTED": "Số phút Reedy của tháng này đã hết. Tháng sau sẽ có phút mới."
+    },
+    "scores": {
+      "fluency": "Nói",
+      "grammar": "Ngữ pháp",
+      "vocabulary": "Từ vựng",
+      "pronunciation": "Phát âm"
+    },
+    "stars": "{score} / 5"
+  },
+  "ReedyUsage": {
+    "title": "Reedy tháng này",
+    "monthHint": "Tháng {month}. Mỗi học sinh có {budget} thời gian nói chuyện.",
+    "backToClass": "Về lớp",
+    "minutesUsed": "Phút đã dùng",
+    "sessions": "Số lần",
+    "studentsWithUse": "Học sinh đã nói chuyện",
+    "safetyEvents": "Sự kiện an toàn",
+    "student": "Học sinh",
+    "minutes": "Phút",
+    "lastUse": "Lần nói gần nhất",
+    "averageScores": "Điểm trung bình",
+    "noUse": "Chưa nói chuyện",
+    "noStudents": "Lớp này chưa có học sinh",
+    "noStudentsHint": "Thêm học sinh để xem thời gian Reedy.",
+    "privacyNote": "Reedy không lưu bản ghi âm hay bản chép lời. Sự kiện an toàn chỉ là số đếm.",
+    "scoreShort": {
+      "fluency": "Nói",
+      "grammar": "Ngữ pháp",
+      "vocabulary": "Từ",
+      "pronunciation": "Phát âm"
+    },
+    "loadError": "Không xem được mức dùng Reedy",
+    "loadErrorHint": "Hãy thử lại sau. Nếu vẫn lỗi, liên hệ hỗ trợ.",
+    "signInHint": "Đăng nhập lại để xem trang này.",
+    "costsTitle": "Chi phí Reedy",
+    "costsHint": "Chi phí và lỗi theo trường và tháng trong 3 tháng gần nhất.",
+    "attempts": "Số lần thử",
+    "failedStarts": "Bắt đầu thất bại",
+    "disconnects": "Mất kết nối",
+    "summaryFailures": "Tóm tắt thất bại",
+    "measuredCostUsd": "Chi phí đo được (USD)",
+    "missingCost": "Số lần không có dữ liệu chi phí",
+    "month": "Tháng",
+    "school": "Trường",
+    "costThb": "Chi phí (THB)",
+    "noCosts": "Chưa có cuộc nói chuyện Reedy",
+    "noCostsHint": "Chi phí hiện sau khi cuộc nói chuyện đầu tiên kết thúc."
+  },
+  "StudentHome": {
+    "title": "Home",
+    "greeting": "Hi, {name}!",
+    "subtitle": "Ready to read today?",
+    "progress": "My progress",
+    "streak": "Day streak",
+    "streakValue": "{count, plural, =0 {No streak yet} one {# day} other {# days}}",
+    "xp": "XP",
+    "level": "Level",
+    "todayLesson": "Today's lesson",
+    "dueDate": "Due {date}",
+    "noDueDate": "No due date",
+    "overdue": "Late",
+    "startLesson": "Start lesson",
+    "continueLesson": "Continue lesson",
+    "continueReading": "Continue reading",
+    "keepReading": "Keep reading",
+    "noReading": "No story in progress",
+    "noReadingHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "games": "Games",
+    "gamesHint": "Play word games and earn XP.",
+    "playGames": "Play games",
+    "classBook": "Your class book",
+    "classBookLesson": "Lesson {number}: {title}",
+    "classBookNoLesson": "Your teacher will open the next lesson soon.",
+    "classBookLocked": "Your teacher opens this lesson in class.",
+    "readLesson": "Read the lesson",
+    "seeBook": "See the book",
+    "book": {
+      "back": "Back to home",
+      "lessons": "Lessons",
+      "lesson": "Lesson {number}",
+      "current": "Now in class",
+      "taught": "Taught",
+      "read": "Read",
+      "notYet": "Coming soon",
+      "progress": "Lesson {current} of {total}"
+    },
+    "yourHero": "Anh hùng của bạn",
+    "arena": "Đấu trường",
+    "arenaHint": "Trò chơi từ vựng và câu. Thử thách của lớp ở trên tường đấu trường."
+  },
+  "ReadList": {
+    "title": "Read",
+    "subtitle": "Pick a story at your level.",
+    "yourLevel": "Your level: {level}",
+    "filters": "Story filters",
+    "chooseType": "Choose a type",
+    "chooseGenre": "Choose a genre",
+    "chooseSubgenre": "Choose a topic",
+    "stories": "Stories",
+    "empty": "No stories here yet",
+    "emptyHint": "Try another genre or topic.",
+    "loadingMore": "Loading more...",
+    "scrollMore": "Scroll down to load more",
+    "loadMoreError": "We could not load more stories.",
+    "loadError": "We could not load the stories.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "started": "Started",
+    "completed": "Completed",
+    "approved": "Approved",
+    "lesson": "Study as a lesson",
+    "lessonLabel": "Study {title} as a lesson",
+    "notFound": "We could not find this story",
+    "notFoundHint": "It may have been removed. Pick another story.",
+    "backToStories": "Back to stories",
+    "articleError": "We could not open this story.",
+    "disclaimer": "This story, its pictures, and its audio are made by a computer for learning English. Check facts with another source before you use them in school work."
+  },
+  "StudentAssignments": {
+    "title": "My assignments",
+    "subtitle": "Lessons from your teacher.",
+    "filters": "Assignment filters",
+    "search": "Search assignments",
+    "searchPlaceholder": "Search by name",
+    "searching": "Searching...",
+    "status": "Show",
+    "statusAll": "All",
+    "statusNotStarted": "To do",
+    "statusInProgress": "Started",
+    "statusCompleted": "Done",
+    "due": "Due date",
+    "dueAll": "Any date",
+    "dueOverdue": "Late",
+    "dueToday": "Due today",
+    "dueUpcoming": "Coming up",
+    "noDueDate": "No due date",
+    "dueOn": "Due {date}",
+    "daysLeft": "{days, plural, one {# day left} other {# days left}}",
+    "late": "Late",
+    "from": "From {teacher}",
+    "start": "Start lesson",
+    "continue": "Continue",
+    "review": "Look again",
+    "empty": "No assignments yet",
+    "emptyHint": "When your teacher gives you a lesson, it shows here.",
+    "findStory": "Find a story",
+    "noMatch": "No assignments match",
+    "noMatchHint": "Try another filter.",
+    "showAll": "Show all",
+    "loadError": "We could not load your assignments.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading assignments",
+    "pages": "Assignment pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "Flashcards": {
+    "vocabularyTitle": "My words",
+    "vocabularySubtitle": "Practice the words you saved from stories.",
+    "sentencesTitle": "My sentences",
+    "sentencesSubtitle": "Practice the sentences you saved from stories.",
+    "practiceTabs": "Practice type",
+    "loadError": "We could not load your cards.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "vocabularyEmpty": "No words saved yet",
+    "vocabularyEmptyHint": "Read a story and save new words. They show here for practice.",
+    "sentencesEmpty": "No sentences saved yet",
+    "sentencesEmptyHint": "Read a story and save sentences. They show here for practice.",
+    "findStory": "Find a story"
+  },
+  "StudentHistory": {
+    "title": "My reading",
+    "subtitle": "Stories you read, and stories to read again.",
+    "readAgain": "Read again",
+    "readAgainHint": "Reading these stories again can help you do better.",
+    "readAgainAction": "Read again",
+    "records": "Stories I read",
+    "recordsHint": "Every story you opened, newest first.",
+    "search": "Search stories",
+    "searchPlaceholder": "Search by title",
+    "searching": "Searching...",
+    "score": "Score {score}",
+    "readOn": "Read {date}",
+    "status": {
+      "READ": "Read",
+      "UNRATED": "Not rated yet",
+      "COMPLETED_MCQ": "Quiz done",
+      "COMPLETED_SAQ": "Short answers done",
+      "COMPLETED_LAQ": "Writing done"
+    },
+    "noReadAgain": "Nothing to read again",
+    "noReadAgainHint": "Great work! Keep reading new stories.",
+    "noRecords": "No stories read yet",
+    "noRecordsHint": "Pick a story and start reading.",
+    "findStory": "Find a story",
+    "noMatch": "No stories match",
+    "noMatchHint": "Try another word.",
+    "showAll": "Show all",
+    "loadError": "We could not load your reading history.",
+    "loadErrorHint": "Check the internet connection and try again.",
+    "loading": "Loading stories",
+    "pages": "Story pages",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "TeacherHome": {
+    "quest": "Nhiệm vụ lớp",
+    "title": "Home",
+    "greeting": "Hello, {name}",
+    "subtitle": "Your classes and students at a glance.",
+    "summary": "Summary",
+    "stats": {
+      "classes": "Classes",
+      "students": "Students",
+      "openAssignments": "Open assignments",
+      "needsHelp": "Need help"
+    },
+    "classes": {
+      "heading": "My classes",
+      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
+      "grade": "Grade {grade}",
+      "empty": "No classes yet",
+      "emptyHint": "Create a class on My Classes, then add your students.",
+      "goToClasses": "Go to My Classes",
+      "all": "All classes"
+    },
+    "assignments": {
+      "heading": "Open assignments",
+      "progress": "{completed} of {assigned} done",
+      "empty": "No open assignments",
+      "emptyHint": "Every student has finished the assigned work.",
+      "all": "All assignments"
+    },
+    "help": {
+      "heading": "Who needs help",
+      "hint": "Students with overdue work or no activity for {days} days.",
+      "late": "{count} overdue",
+      "neverActive": "No activity yet",
+      "inactive": "Last active {date}",
+      "empty": "Everyone is on track",
+      "emptyHint": "No student has overdue work or a long break.",
+      "more": "{count, plural, one {# more student} other {# more students}}"
+    },
+    "loadError": "We could not load your home page.",
+    "loadErrorHint": "Check your connection and try again."
+  },
+  "TeacherUi": {
+    "startClass": "Start class",
+    "startClassFor": "Start class {name}",
+    "due": {
+      "none": "No due date",
+      "overdue": "Overdue",
+      "today": "Due today",
+      "soon": "{days, plural, one {Due tomorrow} other {Due in # days}}",
+      "upcoming": "Due in {days} days",
+      "on": "Due {date}"
+    },
+    "classBook": {
+      "title": "Class book",
+      "hint": "The book and the lesson plan for this class will show here.",
+      "none": "No book is assigned to this class yet.",
+      "noCatalogue": "No books are in the catalogue yet.",
+      "assign": "Assign a book",
+      "book": "Book",
+      "chooseBook": "Choose a book",
+      "mode": "Mode",
+      "modeTeacherLed": "Teacher-led (workbook first)",
+      "modeIndependent": "Independent",
+      "startDate": "Start date",
+      "assignButton": "Assign",
+      "assigned": "Book assigned.",
+      "assignError": "Could not assign the book. Try again.",
+      "pointer": "Lesson {current} of {total}",
+      "taughtCount": "{count, plural, =0 {No lessons taught yet} one {# lesson taught} other {# lessons taught}}",
+      "pacing": "Lesson plan",
+      "backToClass": "Back to class",
+      "nextStep": "Next step",
+      "nextStepValue": "Step {step}: {title}",
+      "period": "Period {period}",
+      "allStepsDone": "All 13 steps are done. Mark the lesson taught.",
+      "noLessons": "This book has no lessons in the catalogue yet.",
+      "lessons": "Lessons",
+      "lessonNumber": "Lesson {number}",
+      "current": "Current",
+      "taughtOn": "Taught {date}",
+      "notTaught": "Not taught",
+      "draft": "Not published yet",
+      "setCurrent": "Make current",
+      "markTaught": "Mark taught",
+      "steps": "Workbook steps done in class",
+      "stepLabel": "Step {step}: {title}",
+      "actionError": "The change was not saved. Try again.",
+      "lesson": {
+        "projector": "Projector",
+        "rehearsal": "Rehearsal (student view)",
+        "answerKey": "Answer key",
+        "teachersOnly": "Teachers only. Students never see this section.",
+        "mcq": "Comprehension check (multiple choice)",
+        "saq": "Guided response (short answers)",
+        "laq": "Writing prompts",
+        "vocabFill": "Fill in the words",
+        "sentenceOrder": "Sentence order",
+        "sentenceCompletion": "Sentence completion",
+        "sentenceStarters": "Sentence starters",
+        "writingPrompt": "Guided writing",
+        "writingFrames": "Writing frames",
+        "rubric": "Writing rubric",
+        "rubric1": "Ideas: the writing answers the prompt with 3 or more details.",
+        "rubric2": "Sentences: each sentence has a capital letter and a full stop.",
+        "rubric3": "Words: the writing uses 3 or more words from the lesson.",
+        "noKey": "This lesson has no answer key in the catalogue yet.",
+        "summary": "Lesson summary",
+        "noArticle": "This lesson is not linked to an article yet. The projector and the rehearsal open when it is.",
+        "rehearsalHint": "You see the lesson as a student does. Your steps are not recorded for the class.",
+        "backToLesson": "Back to the lesson",
+        "projectorHint": "Click a paragraph to focus it. Answer tallies are not available yet.",
+        "vocabulary": "Vocabulary",
+        "questions": "Questions",
+        "showAnswer": "Show answer",
+        "hideAnswer": "Hide answer",
+        "showAll": "Show all paragraphs",
+        "previous": "Previous",
+        "next": "Next",
+        "paragraph": "Paragraph {number} of {total}"
+      },
+      "guide": {
+        "title": "Teacher guide",
+        "open": "Guide",
+        "empty": "The teacher guide is not imported yet.",
+        "teacherActions": "Teacher actions",
+        "teacherLanguage": "Teacher language",
+        "studentActions": "Student actions",
+        "watchFor": "Watch for",
+        "script": "Full script",
+        "done": "Done in class",
+        "live": "Live guide",
+        "tip": "Tip",
+        "markDone": "Mark step done",
+        "undo": "Undo",
+        "games": "Open the games",
+        "stepOf": "Step {step} of {total}",
+        "allDone": "Every step of this lesson is done."
+      },
+      "manual": {
+        "title": "Teacher manual",
+        "intro": "How a teacher-led lesson runs in Primary Advantage, step by step.",
+        "howTo": "First lesson: how to",
+        "howTo1": "Assign the book to your class on the class page.",
+        "howTo2": "Open the lesson plan and mark each workbook step as the class does it. The app opens the matching student step.",
+        "howTo3": "Open the lesson guide for the teacher actions, the teacher language, and the full script.",
+        "howTo4": "Use the projector view for whole-class reading and the answer reveal.",
+        "howTo5": "Check the class progress grid after the lesson and mark the lesson taught.",
+        "stepsTitle": "The 13 steps"
+      },
+      "progress": {
+        "title": "Class progress",
+        "backToPlan": "Back to the lesson plan",
+        "open": "Class progress",
+        "csv": "Download CSV",
+        "filters": "Filters",
+        "filter": {
+          "all": "All students",
+          "late": "Late",
+          "stuck": "Stuck",
+          "not_started": "Not started"
+        },
+        "grid": "Students by lesson",
+        "gridCaption": "App steps done out of 14, one cell per student and lesson",
+        "student": "Student",
+        "lessonShort": "L{number}",
+        "cell": "{student}, lesson {lesson}: {status}, {done} of 14 steps",
+        "status": {
+          "not_started": "Not started",
+          "in_progress": "In progress",
+          "done": "Done"
+        },
+        "legend": "Green: done. Blue: in progress. Grey: not started. Red ring: the class taught the lesson and the student has not finished.",
+        "empty": "No students match this filter.",
+        "noStudents": "This class has no students yet.",
+        "steps": "{done} of 14 steps",
+        "minutes": "{minutes} min",
+        "taughtOn": "Taught {date}",
+        "notTaught": "Not taught yet",
+        "openedBeforeTaught": "Opened before taught",
+        "stepLabel": "Step {step}: {status}",
+        "backToGrid": "Back to class progress",
+        "studentTitle": "{name}"
+      }
+    }
+  },
+  "TeacherClass": {
+    "challenges": "Class challenges",
+    "backToClasses": "Back to classes",
+    "loadError": "We could not load this class.",
+    "loadClassesError": "We could not load your classes.",
+    "loadErrorHint": "Check your connection and try again.",
+    "searchClasses": "Search classes",
+    "classActionsFor": "Actions for {name}",
+    "openClass": "Open class",
+    "openClassFor": "Open class {name}",
+    "searchStudents": "Search students",
+    "noMatch": "No student matches your search.",
+    "progress": "Progress",
+    "progressFor": "Progress of {name}",
+    "removeFor": "Remove {name} from the class",
+    "moreFor": "More actions for {name}",
+    "lastActive": "Last active: {when}",
+    "level": "Level {level}",
+    "xp": "{xp} XP",
+    "qrPrintHint": "Make the cards first. Then you can print them."
+  },
+  "TeacherAssignments": {
+    "backToAssignments": "Back to assignments",
+    "story": "Story",
+    "classLabel": "Class",
+    "searchLabel": "Search assignments",
+    "loadError": "We could not load the assignments.",
+    "loadOneError": "We could not load this assignment.",
+    "loadErrorHint": "Check your connection and try again.",
+    "noClasses": "You have no classes yet.",
+    "noClassesHint": "Create a class on My Classes first.",
+    "goToClasses": "Go to My Classes",
+    "statusFilter": "Show students by status",
+    "selectStudentFor": "Select {name}",
+    "progressLabel": "{percent}% done"
+  },
+  "TeacherStudents": {
+    "classLabel": "Class",
+    "searchLabel": "Search students",
+    "nameColumn": "Name",
+    "classesColumn": "Classes",
+    "levelColumn": "Level",
+    "xpColumn": "XP",
+    "sortBy": "Sort by {column}",
+    "noClass": "No class",
+    "pageOf": "Page {page} of {totalPages}",
+    "noStudents": "You have no students yet.",
+    "noStudentsHint": "Add students to a class on My Classes.",
+    "noStudentsInClass": "This class has no students yet.",
+    "goToClasses": "Go to My Classes",
+    "loadError": "We could not load your students.",
+    "reportsLoadError": "We could not load the reports.",
+    "activityLoadError": "We could not load the activity of this student.",
+    "loadErrorHint": "Check your connection and try again.",
+    "progressHeading": "Progress for {name}",
+    "progressTitle": "Student progress",
+    "backToReports": "Back to reports",
+    "backToClass": "Back to class",
+    "studentLevel": "Level: {level}",
+    "challengesHint": "Make a word challenge for a class game."
   }
 }

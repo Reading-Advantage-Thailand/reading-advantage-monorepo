@@ -7,6 +7,13 @@
  */
 
 import { z } from "zod";
+import {
+  sentenceInputSchema,
+  storyInputSchema,
+  vocabularyInputSchema,
+} from "@reading-advantage/game-contracts";
+
+import type { GameInputMode } from "./types.js";
 
 /** Rejects a physical file path where a semantic asset key is required. */
 const semanticAssetKeySchema = z
@@ -30,7 +37,7 @@ export const runtimeCartridgeManifestSchema = z
     title: z.string().min(1),
     description: z.string().min(1),
     runtimeApiVersion: z.string().min(1),
-    inputMode: z.enum(["vocabulary", "sentence"]),
+    inputMode: z.enum(["vocabulary", "sentence", "story"]),
     requiredAssetBindings: z.array(semanticAssetKeySchema),
     capabilities: z.array(capabilityIdSchema).min(1),
   })
@@ -54,4 +61,22 @@ export function validateRuntimeCartridgeManifest(
     );
   }
   return parsed.data;
+}
+
+/**
+ * Selects the input schema that a cartridge's declared input mode requires.
+ * @param inputMode The validated manifest input mode.
+ * @returns The vocabulary, sentence, or story input schema.
+ */
+export function inputSchemaFor(
+  inputMode: GameInputMode,
+): typeof vocabularyInputSchema | typeof sentenceInputSchema | typeof storyInputSchema {
+  switch (inputMode) {
+    case "sentence":
+      return sentenceInputSchema;
+    case "story":
+      return storyInputSchema;
+    case "vocabulary":
+      return vocabularyInputSchema;
+  }
 }

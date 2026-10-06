@@ -1,11 +1,22 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { currentUser } from "@/lib/session";
-import React from "react";
 import AuthErrorPage from "@/app/[locale]/auth/error/page";
-import StudentAssignmentTable, {
-  type AssignmentStudent,
-} from "@/components/student-assignment-table";
+import StudentAssignmentList, { type AssignmentStudent } from "@/components/student/assignment-list";
+import { AssignmentListSkeleton } from "@/components/student/assignment-list-skeleton";
 import { getStudentAssignments } from "@/server/models/assignmentModel";
+import { Banner } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
+
+/**
+ * Page title for the student assignments.
+ * @returns The metadata.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("StudentAssignments");
+  return { title: t("title") };
+}
 
 /**
  * Serializes a model date to an ISO string.
@@ -20,8 +31,9 @@ function toIso(value: Date | string | null | undefined): string | null {
 }
 
 /**
- * Fetches the first assignments page on the server and renders the table.
- * @returns The assignment table with server-fetched initial data.
+ * Fetches the first assignments page on the server and renders the card list. A load failure
+ * goes to the route error boundary (error.tsx), which offers a retry.
+ * @returns The assignment list with server-fetched initial data.
  */
 async function AssignmentsData() {
   const user = await currentUser();
@@ -72,7 +84,7 @@ async function AssignmentsData() {
     });
 
   return (
-    <StudentAssignmentTable
+    <StudentAssignmentList
       initialAssignments={initialAssignments}
       initialPagination={pagination}
     />
@@ -90,15 +102,16 @@ export default async function AssignmentsPage() {
   if (!user) {
     return <AuthErrorPage />;
   }
+  const t = await getTranslations("StudentAssignments");
+  // The notices on the guild hall board (docs/primary-rpg-skin.md §4).
   return (
-    <Suspense
-      fallback={
-        <div className="flex items-center justify-center py-8" aria-busy="true">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
-        </div>
-      }
-    >
-      <AssignmentsData />
-    </Suspense>
+    <Scene place="guild-hall">
+      <Banner>
+        <h1 className="m-0 text-[length:inherit] font-bold">{t("title")}</h1>
+      </Banner>
+      <Suspense fallback={<AssignmentListSkeleton />}>
+        <AssignmentsData />
+      </Suspense>
+    </Scene>
   );
 }

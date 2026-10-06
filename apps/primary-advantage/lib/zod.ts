@@ -1,15 +1,15 @@
 import z from "zod";
 
 export const signInSchema = z.object({
-  email: z
-    .string({ required_error: "Email is required" })
-    .min(1, "Email is required")
-    .email("Invalid email"),
+  username: z
+    .string({ required_error: "Username is required" })
+    .trim()
+    .min(1, "Username is required"),
   password: z
     .string({ required_error: "Password is required" })
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
+    .max(128, "Password must be at most 128 characters"),
   type: z.enum(["student", "other"]).optional(),
 });
 
@@ -24,25 +24,17 @@ export const signUpSchema = z
       .string({ required_error: "Password is required" })
       .min(1, "Password is required")
       .min(8, "Password must be more than 8 characters")
-      .max(32, "Password must be less than 32 characters"),
+      .max(128, "Password must be at most 128 characters"),
     confirmPassword: z
       .string({ required_error: "Confirm password is required" })
       .min(1, "Confirm password is required")
       .min(8, "Confirm password must be more than 8 characters")
-      .max(32, "Confirm password must be less than 32 characters"),
+      .max(128, "Confirm password must be at most 128 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
-
-export const classCodeSchema = z.object({
-  classroomCode: z
-    .string({
-      required_error: "Classroom code is required",
-    })
-    .min(1, "Classroom code is required"),
-});
 
 export const MCQuestionSchema = z.object({
   questions: z.array(
