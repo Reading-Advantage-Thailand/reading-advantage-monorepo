@@ -118,9 +118,10 @@ rewritten in the same transaction or cascade with the question row.
 ## Out of Scope
 
 - Evidence recording, knowledge state, recommendations, and views (T2 to T5).
-- A lemma matcher for the 28 printed-book packages without vocabulary nodes. The workbooks
-  session tags them with its pipeline after the injection of the 222 new packages and
-  re-exports `tags.json`.
+- A lemma matcher. Workbooks tagged the 28 printed-book packages on 2026-10-06
+  (`566734d`); 13 glossed words have no node in the vocabulary graph and stay personal
+  cards. The coverage report (FR-6) lists words without a node and words whose node has a
+  different part of speech from the glossary (one case: `pets` verb to `pet.noun`).
 - Tagging legacy online articles that have no package.
 - Any change to Workbooks files or to the legacy database.
 - Reading Advantage.
