@@ -31,34 +31,34 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract and Schema Definition' (Protocol in workflow.md)
 
 ## Phase 2: Test
-- [ ] Task: Contract tests
-    - [ ] `objective-key.test.ts`: every short id in the data resolves; an unknown id throws; the data file validates
-    - [ ] `tags-export.test.ts`: a valid fixture parses; an unknown short id fails with the key and the id; `legacy: null` parses
+- [x] Task: Contract tests (08cc9e9)
+    - [x] `objective-key.test.ts`: every short id in the data resolves; an unknown id throws; the data file validates
+    - [x] `tags-export.test.ts`: a valid fixture parses; an unknown short id fails with the key and the id; `legacy: null` parses
 - [x] Task: Importer tests (extend `primary-books/__tests__/import.test.ts`) (266d249)
     - [x] A tagged package writes article, question, and word link rows in the transaction
     - [x] A reimport deletes the article's link rows before writing; one row per link after
     - [x] A package without tags writes no link rows and reports `tagged: false`
-- [ ] Task: Backfill tests (`backfill.test.ts`, mock DB)
-    - [ ] Legacy ids matched: links written, report has zero unmatched
-    - [ ] Unknown article: reported by key, nothing written for it
-    - [ ] Question join by text when the id map has no question ids
-    - [ ] A second run writes no duplicate rows
-- [ ] Task: Coverage and read-function tests
-    - [ ] `coverage.test.ts`: objectives with no article, articles with no tags, words with no node
-    - [ ] `queries.test.ts`: the three read functions return node ids with short ids
-- [ ] Task: Tenant coverage: `tenant-coverage.test.ts` passes with the three tables classified
+- [x] Task: Backfill tests (`backfill.test.ts`, in-memory port) (d6ee8fd)
+    - [x] Legacy ids matched: links written, report has zero unmatched
+    - [x] Unknown article: reported by key, nothing written for it
+    - [x] Question join by text when the id map has no question ids
+    - [x] A second run writes no duplicate rows
+- [x] Task: Coverage and read-function tests (d6ee8fd)
+    - [x] `coverage.test.ts`: objectives with no article, articles with no tags, words with no node
+    - [x] `queries.test.ts`: the three read functions return node ids with short ids
+- [x] Task: Tenant coverage: `tenant-coverage.test.ts` passes with the three tables classified (d6ee8fd)
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
 
 ## Phase 3: Implement
 - [x] Task: Importer writes the links (FR-4) (266d249, with its tests)
     - [x] `toTagRows(pkg, articleId, questionIds)` in `primary-books/mapping.ts`
     - [x] `import.ts`: delete the article's link rows, insert the new ones in the same transaction; `tagged` in the result
-- [ ] Task: Backfill (FR-5)
-    - [ ] `backfillPrimaryTags` in `primary-mastery/backfill.ts`: article join by legacy id or package key, question join by legacy id or text, upsert, report
-    - [ ] Thin script `packages/db/scripts/backfill-primary-tags.ts` (`--file`, `--dry-run`, prints the report)
-- [ ] Task: Coverage report (FR-6)
-    - [ ] `reportPrimaryTagCoverage` in `primary-mastery/coverage.ts` and a Markdown printer in the script (`--coverage`)
-- [ ] Task: Read functions (FR-7) in `primary-mastery/queries.ts`
+- [x] Task: Backfill (FR-5) (d6ee8fd; the script lives in `packages/domain/scripts` beside the lesson importer, not in `packages/db/scripts`)
+    - [x] `backfillPrimaryTags` in `primary-mastery/backfill.ts`: article join by legacy id or package key, question join by legacy id or text, upsert, report
+    - [x] Thin script `packages/db/scripts/backfill-primary-tags.ts` (`--file`, `--dry-run`, prints the report)
+- [x] Task: Coverage report (FR-6) (d6ee8fd; the glossary-to-node join uses a crude stem for inflected forms; follow-up: ask Workbooks for a `glossaryWord` field)
+    - [x] `reportPrimaryTagCoverage` in `primary-mastery/coverage.ts` and a Markdown printer in the script (`--coverage`)
+- [x] Task: Read functions (FR-7) in `primary-mastery/queries.ts` (d6ee8fd)
 - [ ] Task: Phase gate: type check, lint, and the domain and db test suites once; commit
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
