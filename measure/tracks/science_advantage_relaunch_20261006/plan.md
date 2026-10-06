@@ -14,13 +14,13 @@ Phases overlap where owners differ. Dates are the plan; the Primary cutover and 
 ## Phase 0: Decisions and alignment (2026-10-07 to 2026-10-31) — read-only
 
 - [x] Task: Daniel resolves D1 to D11 in `decisions.md`; record the answers in `OPEN-QUESTIONS.md` Q-WB-10 (PR session). — approved 2026-10-06; the PR session records them (strategy v1.6 §3.3, Q-WB-10).
-- [ ] Task: Agree the science lesson shape with the workbooks session; they add a `program` discriminator and the science fields to `workbook-schema.ts`.
-- [ ] Task: Read the graph schema and release rules (`mastery-advantage/SPECIFICATION.md`, `MIGRATION-v3.md`) and the domain adapter pattern (`packages/domain/src/primary-mastery/objective-key.ts`, `contracts.ts`, `backfill.ts`, `evidence-policy.ts`, `record-evidence.ts`); fix the node ID pattern (`science.th2560.<strand>.<indicator>`, `science.skill.<process>`, `science.vocab.<word>`). This track owns the Science graph.
-- [ ] Task: Obtain the P3 and P4 science indicators (IPST source, B.E. 2560 revision) and file them under `mastery-advantage/science/sources/`.
-- [ ] Task: Agree the merge window and the additive migration rule with the monorepo session (after the cutover, after the freeze lifts).
-- [ ] Task: Write the Tutor series `program` contract as an addendum for the PR session's Tutor spec (`tutor-advantage/docs/specs/2026-10-tutor-catalogue-and-platform-spec.md`); Daniel's developer builds it in the Tutor repo.
-- [ ] Task: Request science backdrops and item icons from the forge session (lab, garden, pond, sky; beaker, magnifier, seed, magnet).
-- [ ] Task: Tag the legacy app: `git tag science-advantage-legacy-20261006 0b93daeb2` (after Daniel approves D10).
+- [~] Task: Agree the science lesson shape with the workbooks session; they add a `program` discriminator and the science fields to `workbook-schema.ts`. — fields sent 2026-10-06; the workbooks session commits them after Oct 11, before 2026-10-31.
+- [x] Task: Read the graph schema and release rules (`mastery-advantage/SPECIFICATION.md`, `MIGRATION-v3.md`) and the domain adapter pattern (`packages/domain/src/primary-mastery/objective-key.ts`, `contracts.ts`, `backfill.ts`, `evidence-policy.ts`, `record-evidence.ts`); fix the node ID pattern (`science.th2560.<strand>.<indicator>`, `science.skill.<process>`, `science.vocab.<word>`). This track owns the Science graph. — done 2026-10-06; patterns in `sources.md`.
+- [x] Task: Obtain the P3 and P4 science indicators (IPST source, B.E. 2560 revision) — filed in `sources.md` 2026-10-06 (25 and 21 indicators; strand 4 out of scope); copy into `mastery-advantage/science/sources/` after the freeze lifts.
+- [x] Task: Agree the merge window and the additive migration rule with the monorepo session — agreed 2026-10-06: windows 2026-11-09, 12-14, 2027-02-01; lane-h evidence already merged (146e46261); lanes cut from primary-parity-integration.
+- [x] Task: Write the Tutor series `program` contract as an addendum for the PR session's Tutor spec (`tutor-advantage/docs/specs/2026-10-tutor-catalogue-and-platform-spec.md`); Daniel's developer builds it in the Tutor repo. — sent 2026-10-06 as `tutor-program-dimension-spec.md`; now T12 of the Tutor spec (T6 enum kept).
+- [x] Task: Request science backdrops and item icons from the forge session — sent 2026-10-06; forge files it as `subject_scene_sets_20261006` after the cutover.
+- [ ] Task: Tag the legacy app: `git tag science-advantage-legacy-20261006 0b93daeb2` — D10 approved; waits for the freeze to lift (after 2026-10-20).
 
 ## Phase 1: Program dimension and canonical store (2026-11-02 to 2026-11-27)
 

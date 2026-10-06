@@ -11,8 +11,8 @@
 ## Phase 0: Decisions and alignment (2026-10-07 to 2026-10-31) — read-only
 
 - [x] Task: Daniel resolves M1 to M9; record in `OPEN-QUESTIONS.md` Q-WB-10 (PR session). — approved 2026-10-06; the PR session records them (strategy v1.6 §3.3, Q-WB-10).
-- [ ] Task: Agree the math lesson shape fields with the workbooks session (under the `program` discriminator added for Science).
-- [ ] Task: Obtain the P3 and P4 scope and sequence for the three strands (IPST source) as the graph input; file it under `mastery-advantage/math/sources/` (this track owns the Math graph).
+- [~] Task: Agree the math lesson shape fields with the workbooks session — fields sent 2026-10-06; due in the schema by 2026-11-27.
+- [x] Task: Obtain the P3 and P4 indicators for the three strands — filed in `sources.md` 2026-10-06 (28 and 22 indicators); copy into `mastery-advantage/math/sources/` after the freeze lifts.
 
 ## Phase 1: Math graph and package (2026-12-01 to 2027-01-08)
 

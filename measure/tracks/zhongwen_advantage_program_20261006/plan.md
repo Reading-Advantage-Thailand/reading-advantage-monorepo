@@ -21,9 +21,9 @@
 ## Phase 0: Decisions and alignment — read-only
 
 - [x] Task: Daniel resolves Z1 to Z9; record in `OPEN-QUESTIONS.md` Q-WB-10 (PR session). — approved 2026-10-06; the PR session records them (strategy v1.6 §3.3, Q-WB-10).
-- [ ] Task: Verify the YCT level word lists and the Thai Ministry of Education Chinese framework against their sources; file them under `mastery-advantage/zhongwen/sources/`.
+- [~] Task: Verify the YCT level word lists and the Thai Ministry of Education Chinese framework — YCT counts and the YCT 1 list filed in `sources.md` 2026-10-06 (secondary sources); the official syllabus and the current Thai framework title still need a check by the contracted Chinese reviewers.
 - [ ] Task: Daniel names the contracted Chinese speakers and signs the contract by 2026-12-18 (Z8); the workbooks session gets their review turnaround (target three working days per lesson). Stop rule: if not named by 2026-12-18, the Zhongwen print moves to the March break and the app ships in May with the digital lessons only.
-- [ ] Task: Agree the script fields (`hanzi`, `pinyin`, `thai`) and the character-writing item with the workbooks session.
+- [~] Task: Agree the script fields (`hanzi`, `pinyin`, `thai`) and the character-writing item with the workbooks session — sent 2026-10-06; due by 2027-01-15.
 
 ## Phase 1: Zhongwen graph and package
 
