@@ -20,6 +20,11 @@ This file tracks all major tracks for the project.
   *Status: Phase 0 approved 2026-10-06; Phases 1 to 3 (shell, home, picker, inventory, shop, battle, dashboard) done 2026-10-06, reports `phase1/`, `phase2/`, `phase3/index.html`; Phase 4 (remaining pages) next | Priority: CRITICAL | Design authority: `docs/primary-rpg-skin.md`*
   *Note: Forge assets only (no ElvGames). 3D avatar approved; every 3D interaction has a 2D fallback through the games' selector. Owner gate after Phase 0 on the look.*
 
+- [ ] **Track: Legacy games removal (Primary first)** — *created 2026-10-06*
+  *Link: [./tracks/legacy_games_removal_20261006/](./tracks/legacy_games_removal_20261006/)*
+  *Status: plan sent to the owner through Forge; Forge F1 ported (d292c1186) | Priority: HIGH | Owner direction 2026-10-06: no old games in the repo; Tutor out of scope*
+  *Note: M1 host and M2 ids before the cutover; M3 (other apps) and M4 (removal) after.*
+
 - [ ] **Track: Reward emblems become avatar pieces (M1 to M4)** — *created 2026-10-06*
   *Link: [./tracks/primary_reward_pieces_20261006/](./tracks/primary_reward_pieces_20261006/)*
   *Status: M1 to M4 done 2026-10-06 on pack 1.1.0 (Forge track avatar_reward_pieces_20261006); browser check of a granted staff open | Priority: HIGH | Owner approved plan A 2026-10-06*
