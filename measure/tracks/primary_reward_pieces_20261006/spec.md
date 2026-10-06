@@ -2,7 +2,7 @@
 
 **Status:** approved by the owner 2026-10-06 through the Forge session. Plan A, with plan B as the
 fallback if the Forge pieces are not ready by 2026-10-13.
-**Forge track:** F1 to F4 in advantage-forge (pack version, reward mark, the two staffs, pack 1.1.0).
+**Forge track:** `avatar_reward_pieces_20261006` in advantage-forge (`measure/tracks/avatar_reward_pieces_20261006/`): F1 to F4 (pack version, reward mark, the two staffs, pack 1.1.0) and TD-24.
 **Branch:** `primary-parity-integration` after the Forge sync (one commit for M1 to M4).
 
 ## Problem
