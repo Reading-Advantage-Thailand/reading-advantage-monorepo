@@ -34,7 +34,7 @@ export default async function ArticleCard({ article }: Props) {
     );
   };
 
-  const imageUrl = getArticleImageUrl(article.id, 1);
+  const imageUrl = getArticleImageUrl(article, 1);
   // const imageUrl = `/nopic.png`;
 
   const isSaved = article.articleActivityLog.some(

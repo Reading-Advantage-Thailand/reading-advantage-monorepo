@@ -58,7 +58,7 @@ function ArticleShowcaseCard({ article }: Props) {
         {!imageFailed && (
           // A plain img: onError swaps in the book fallback when the picture fails.
           <img
-            src={getArticleImageUrl(article.id, 1)}
+            src={getArticleImageUrl(article, 1)}
             alt=""
             loading="lazy"
             onError={() => setImageFailed(true)}

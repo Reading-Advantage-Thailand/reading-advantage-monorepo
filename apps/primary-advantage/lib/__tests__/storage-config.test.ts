@@ -72,3 +72,27 @@ describe("storage-config env documentation (config validation)", () => {
     expect(envExample).toMatch(/^NEXT_PUBLIC_STORAGE_BUCKET_NAME="([^"\s]+)"$/m);
   });
 });
+
+describe("article picture URLs", () => {
+  // Pictures stay at the legacy key after the cutover (cutover spec D10).
+  const legacy = { id: "577addb8-4fb2-4b60-adeb-d52236d2c4c2", image: "cmgqs0abc0001legacy" };
+
+  it("uses the stored picture key for a migrated article", async () => {
+    vi.stubEnv("NEXT_PUBLIC_STORAGE_BUCKET_NAME", "test-bucket");
+    const { getArticleImageKey, getArticleImageUrl } = await importStorageConfig();
+
+    expect(getArticleImageKey(legacy)).toBe("cmgqs0abc0001legacy");
+    expect(getArticleImageUrl(legacy, 2)).toBe(
+      "https://storage.googleapis.com/test-bucket/images/cmgqs0abc0001legacy_2.png",
+    );
+  });
+
+  it("falls back to the article id when no key is stored", async () => {
+    const { getArticleImageKey, getArticleImageUrl } = await importStorageConfig();
+
+    expect(getArticleImageKey({ id: "new-id" })).toBe("new-id");
+    expect(getArticleImageKey({ id: "new-id", image: null })).toBe("new-id");
+    expect(getArticleImageKey({ id: "new-id", image: "  " })).toBe("new-id");
+    expect(getArticleImageUrl({ id: "new-id" }, 1)).toMatch(/\/images\/new-id_1\.png$/);
+  });
+});

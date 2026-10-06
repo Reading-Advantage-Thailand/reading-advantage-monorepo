@@ -92,6 +92,8 @@ export interface ArticleShowcase {
   rating?: number;
   cefrLevel?: string;
   id: string;
+  /** The picture key in the bucket (the legacy id of a migrated article). */
+  image?: string | null;
   raLevel?: number;
   summary?: string;
   translatedSummary?: {
@@ -111,6 +113,8 @@ export interface ArticleShowcase {
 }
 
 export interface Article {
+  /** The picture key in the bucket (the legacy id of a migrated article). */
+  image?: string | null;
   summary: string;
   translatedSummary: {
     th: string;

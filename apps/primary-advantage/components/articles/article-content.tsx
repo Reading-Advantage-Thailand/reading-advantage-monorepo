@@ -991,7 +991,7 @@ export default function ArticleContent({ article }: Props) {
               <Image
                 className="rounded-lg shadow-xl"
                 src={
-                  getArticleImageUrl(article.id, groupIndex + 1) || `/nopic.png`
+                  getArticleImageUrl(article, groupIndex + 1) || `/nopic.png`
                 }
                 alt="Article Image"
                 width={1024}

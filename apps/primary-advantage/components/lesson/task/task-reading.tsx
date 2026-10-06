@@ -428,7 +428,7 @@ export function TaskReading({
                     <Image
                       className="rounded-lg shadow-xl"
                       src={
-                        getArticleImageUrl(article.id, groupIndex + 1) ||
+                        getArticleImageUrl(article, groupIndex + 1) ||
                         `/nopic.png`
                       }
                       alt="Article Image"
