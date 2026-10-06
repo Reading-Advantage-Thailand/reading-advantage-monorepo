@@ -38,6 +38,13 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - [x] Captures of the 14 pages at 375 and 1280, day and night; report `phase4/index.html`; the light-card ink fix found in the captures
 - [x] Skin spec row 12 for the story games: the 3D host briefing, result, and gate panels in the kit parchment (Forge commit 98d7badd0, merged); the legacy 2D briefing screen in advantage-play-kit stays on the list below
 - [x] Test repairs found by the Forge merge check: the GP ledger in the host-proof test mock (one XP row and one GP row per first completion, none on a duplicate), the db mock spread in four app tests, the local font mock in two layout tests
+- [ ] Skin spec row 12 for the legacy 2D games: the play-kit frames (briefing, result, rewards, catalogs) now read their sprite frames and colours from CSS variables, and the skin maps them to the parchment; the ElvGames arcade sprites no longer show on Primary pages. Capture check after the Forge build (battle arch and games page)
 - [ ] Later: lists as objects inside the client components (books on shelves, scrolls in pigeonholes, the lesson marker on the path, stamped journal pages) once the owner accepts the scene pass
 
 ## Phase 5: the five promo shots recorded from the build
+- [ ] Shot 1: the home hero beside the Class Quest banner (phone, day)
+- [ ] Shot 2: the chosen hero steps into the light on the shrine pedestals (picker, step 2)
+- [ ] Shot 3: coins fly to the counter in the armory after a purchase
+- [ ] Shot 4: the boss takes a hit on the battle page (the slash and the damage number)
+- [ ] Shot 5: the boss falls on the projector (the live dashboard in `result` with the coin rain); the committed damage comes from real completions: three QA students each start a challenge run and post one completion through `/api/v1/apk/challenges/runs` and `/api/v1/apk/complete` (the recipe `scratchpad/boss-fall.mjs`), or the staff rehearsal
+- [ ] Report `phase5/index.html` with the five frames and a note per shot on the recording path for the video session

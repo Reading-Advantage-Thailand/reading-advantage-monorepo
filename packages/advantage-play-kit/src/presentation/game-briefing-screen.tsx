@@ -168,8 +168,8 @@ export function GameBriefingScreen({
         data-apk-briefing-region="header"
         style={{
           borderBlockEnd: "2px solid var(--apk-briefing-border, #31577d)",
-          background: "linear-gradient(180deg, #122443 0%, #081225 100%)",
-          boxShadow: "inset 0 -4px 0 #030712",
+          background: "var(--apk-briefing-header-background, linear-gradient(180deg, #122443 0%, #081225 100%))",
+          boxShadow: "var(--apk-briefing-header-shadow, inset 0 -4px 0 #030712)",
           padding: "clamp(0.8rem, 2vw, 1.25rem) clamp(0.8rem, 3vw, 1.5rem)",
         }}
       >
