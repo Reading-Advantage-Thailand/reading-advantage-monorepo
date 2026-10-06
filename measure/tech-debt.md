@@ -89,6 +89,14 @@ committed file, then add a check that a rebuild never drops a node that a tag re
 - The coverage report joins the glossary to the word nodes by a crude stem (`pets` -> `pet`). Workbooks added `glossaryWord` to `tags.json` (341d5e7); the contract accepts it, but `primary_article_word_nodes` has no column for it, so the report still stems. Add the column (one additive migration) and store the glossary form when the report needs to be exact.
 - The 180 bank packages are not imported (the importer skips `role: bank` by design), so the backfill finds no article for them; the 42 legacy workbook packages wait for `primary_legacy_id_map`. Rerun `pnpm backfill-primary-tags` after the ETL and after every Workbooks re-export.
 
+## Mastery evidence: follow-ups from T2 (2026-10-06, primary_mastery_evidence_20261006)
+
+- **The shared worker runs no handler** (Medium): `services/worker/src/main.ts` wires no handlers, so `primary.mastery.evidence` jobs wait until the worker registers `definePrimaryEvidenceJobHandler` (owner: worker). Until then `pnpm evidence:run` in the Primary app runs the queue by hand.
+- **Story completions never persist** (High, lane-f): `storyCompletionInput` posts `gameType: "<id>-story"` and the domain `gameTypeEnum` rejects it with 400, so no story run reaches `game_completions` and the FR-5c enqueue has nothing to read. Add the story types to the enum or map them.
+- **No screen reports `audioPlayed`** (Low): the listening rule skips only an explicit `false`; the question screens send no value, so listening objectives are never skipped for want of audio. Track the article player state in the MCQ step and send the boolean.
+- **The Drizzle-wrapped postgres client cannot serve `sql.json()`** (Low, note for every future queue producer): `drizzle-orm/postgres-js` replaces the json serializers of the client it wraps; the durable job adapter needs its own `postgres()` client (`apps/primary-advantage/lib/primary-evidence-sql.ts`). A shared helper in `@reading-advantage/db` would stop the next app from repeating it.
+- **Legacy quiz evidence is partial by nature**: the question banks were regenerated after most quizzes, so the asked text is absent from the bank for about half of the legacy MCQ items (`legacyUnmatched`) and 108 SAQ rows; 28 of 582 articles carry tags until the Workbooks re-export and the full backfill. Rerun `pnpm evidence:backfill --apply` after the tags backfill; jobs for rows that already ran are skipped, re-enqueue them by hand (`refreshed`) when the tags grew.
+
 ## Class Quest: live HP needs a per-answer event (2026-10-06)
 
 `APKGameHost` reports a run only through `onComplete`, so the battle page updates HP and damage

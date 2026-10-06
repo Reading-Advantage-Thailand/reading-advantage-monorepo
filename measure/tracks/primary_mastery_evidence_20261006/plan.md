@@ -36,24 +36,35 @@ file for `createTenantDB` or `unscoped`.
 - [x] Task: `__tests__/evidence-sources.test.ts`: the three source rows become events; legacy quiz rows by text (FR-5, FR-5d) (aa9a35c71, 6498a0193)
 - [x] Task: `__tests__/evidence-jobs.test.ts`: the enqueue request, the port call, the runner (recorded, row-missing, tenant-mismatch), the handler definition (FR-5, FR-6) (aa9a35c71)
 - [x] Task: `__tests__/evidence-summary.test.ts`: counts per surface, day, confidence, and the job results (FR-8) (aa9a35c71)
-- [ ] Task: App-side tests: the question action writes the new `details` keys and enqueues; the flashcard route enqueues after the FSRS write; `recordGameCompletion` enqueues on story evidence (AC-5)
+- [x] Task: App-side tests: the question action writes the new `details` keys and enqueues; the flashcard route enqueues after the FSRS write; `recordGameCompletion` enqueues on story evidence (AC-5) (219d64287: `actions/__tests__/finish-quiz-evidence.test.ts`, the FR-5c case in `app/api/v1/apk/__tests__/routes.test.ts`; the flashcard route has no test harness of its own, the enqueue there is one guarded line after the transaction)
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
 
 ## Phase 3: Implement
 - [x] Task: `recordPrimaryEvidence` in `primary-mastery/record-evidence.ts`: resolution through the T1 read functions, FR-1 rating, `buildActivityMasteryCommand` per objective, `commitMasteryEvidence` with the idempotency key, skipped list (FR-3, FR-4) (08dcb487a; reuses `projectActivitySubmissionToMastery`, which carries the replay)
 - [x] Task: Source adapters in `primary-mastery/evidence-sources.ts`: `userActivity` row to event, `cardReviews` + `flashcardCards` + `flashcardDecks` row to event (the Primary flashcard store; `userWordRecords` is the Reading one), `gameCompletions` row to event; owner-FK school check through `users.schoolId` with `unscoped(reason)` (FR-5, FR-6) (05186260b)
 - [x] Task: Job enqueue and handler in `primary-mastery/evidence-jobs.ts` (`primaryEvidenceEnqueueRequest`, `enqueuePrimaryEvidence`, `runPrimaryEvidenceJob`, `definePrimaryEvidenceJobHandler`) (FR-5) (59741550a)
-- [ ] Task: Request-path changes: `actions/question.ts` details keys and enqueue; flashcard review route enqueue; `recordGameCompletion` enqueue (FR-5a-c); keep the app layers thin
+- [x] Task: Request-path changes: `actions/question.ts` details keys and enqueue; flashcard review route enqueue; `recordGameCompletion` enqueue (FR-5a-c); keep the app layers thin (219d64287)
+  - `lib/primary-evidence-queue.ts` wraps the backend Postgres adapter (new package subpath `@reading-advantage/backend/jobs/adapters/postgres`); a queue failure logs and never fails the request. The adapter needs its own postgres client (`lib/primary-evidence-sql.ts`): Drizzle replaces the json serializers of the client it wraps, so `sql.json()` through the shared `@reading-advantage/db` client throws `ERR_INVALID_ARG_TYPE`.
+  - Screens: `evidenceKeys()` in `mc-question-content.tsx` (independent on the article page, teacher_led in the lesson view); SAQ emits `scoreRatio = score / 5` on both surfaces. Story completions carry `metadata.articleId` when the host knows the article; no host does yet (saved-word runs), so word items of story runs skip with `no-article` until a story host passes it.
+  - Found, not fixed here: story completions post `gameType: "<id>-story"`, which the domain `gameTypeEnum` rejects with 400, so no story run reaches `game_completions` today (lane-f story games); recorded in tech-debt.
 - [x] Task: `summarizePrimaryEvidence` in `primary-mastery/evidence-summary.ts` (FR-8) (2793824f2)
 - [x] Task: Legacy quiz rows yield evidence by question text; `recordGameCompletion` returns `completionId` (FR-5d; owner rule "evidence is kept", 2026-10-06; proposal sent to the monorepo session, confidence 0.5 and SAQ scale 1-5 confirmed from `lib/authorization.ts`)
-- [ ] Task: One-time backfill script `apps/primary-advantage/scripts/backfill-primary-evidence.ts`: enqueue one job per existing quiz row, flashcard review, and story game run (FR-5d)
-- [ ] Task: Phase gate: type check, lint, the domain suite, and the primary-advantage targeted tests once; commit
+- [x] Task: One-time backfill script `apps/primary-advantage/scripts/backfill-primary-evidence.ts`: enqueue one job per existing quiz row, flashcard review, and story game run (FR-5d) (533adab51; `pnpm evidence:backfill [--apply] [--school id]`, dry run by default, skips rows that already have a job)
+  - Also `scripts/run-primary-evidence-jobs.ts` (`pnpm evidence:run`): the local AC-6 runner, because `services/worker/main.ts` wires no handlers; registering `definePrimaryEvidenceJobHandler` there is a follow-up for the worker owner (tech-debt).
+  - Dry run against `primary_etl_prod` (production copy of 2026-10-06): 1065 quiz rows in 4 schools; 73 more rows belong to 3 staff accounts without a school (owner decision item 5 on the monorepo list); 0 flashcard reviews, 0 story runs.
+  - The first ETL copy stored every jsonb cell as a JSON string (fixed in lane-m bcf8ad47a); `quizDetails()` in `evidence-sources.ts` parses a string once so either shape loads.
+- [x] Task: Phase gate: type check, lint, the domain suite, and the primary-advantage targeted tests once; commit
+  - 2026-10-06: app tsc 0 errors (after rebuilding the stale `advantage-play-kit`, `advantage-play-kit-3d`, and `game-cartridges-3d` dists); app eslint 0 errors on the changed files; domain suite 1709 passed, 1 pre-existing live-DB failure (`phase-4-adversarial` leaderboard clamp, needs a database); primary-advantage tests: 31 passed in the actions and apk route files, 15 in the written-question files.
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
 ## Phase 4: Generate Docs and Doctor
-- [ ] Task: Local run on `primary_advantage_laneh` (migrations through 0070, the 14 tagged articles): one MCQ through the action, the job, the `masteryEvidence` rows, the replay (AC-6); record the row counts here
-- [ ] Task: `summarizePrimaryEvidence` output for the local run saved as `evidence-summary.md` in this track folder (AC-7)
-- [ ] Task: Run `measure/generate.sh` and `measure/doctor.sh`; `build-graph update ./graph.db` for the new and changed files
-- [ ] Task: Tutor read test: not affected (no change to the tables Tutor reads); record the reasoning or the run
-- [ ] Task: Update `measure/tracks.md`, this plan, `lessons-learned.md`, `tech-debt.md`, and the program status line; tell the advantage-pr session that the Q-UX-01 resolution is in code (policy file path and version)
+- [x] Task: Local run on `primary_advantage_laneh` (migrations through 0070, the 14 tagged articles): one MCQ through the action, the job, the `masteryEvidence` rows, the replay (AC-6); record the row counts here
+  - 2026-10-06: run on `primary_evidence_laneh` instead, a clone of `primary_etl_prod` (the production copy after the lane-m ETL), so the legacy path carried real rows: tags backfill 28 articles and 560 questions by legacy id; 1065 jobs enqueued, 1065 settled, 0 failed; 1361 `mastery_evidence` rows, 1361 reviews, 173 principals; one finished job re-enqueued (`refreshed`) and run again: counts unchanged. The action path (new `details` keys) is covered by the unit tests; no browser run.
+- [x] Task: `summarizePrimaryEvidence` output for the local run saved as `evidence-summary.md` in this track folder (AC-7) (with the outcome breakdown per activity type and the skip reasons)
+- [x] Task: Run `measure/generate.sh` and `measure/doctor.sh`; `build-graph update ./graph.db` for the new and changed files
+  - 2026-10-06: generate ok. Doctor fails A13 only (the stale `agents_md_audit_science_advantage_20260603` directory, pre-existing on integration, recorded in T1). Graph update: see the commit note of the docs commit.
+- [x] Task: Tutor read test: not affected (no change to the tables Tutor reads); record the reasoning or the run
+  - The track adds rows to `mastery_*` and `durable_jobs` and three optional keys to `user_activity.details`; Tutor's five reads (tutor_compat views) do not touch those tables, and the details keys are additive jsonb. Not run (no `--reference` legacy database locally, as in T1).
+- [x] Task: Update `measure/tracks.md`, this plan, `lessons-learned.md`, `tech-debt.md`, and the program status line; tell the advantage-pr session that the Q-UX-01 resolution is in code (policy file path and version)
+  - 2026-10-06: done; the PR session was told (`evidence-policy.ts`, `primary-evidence.v1`). The monorepo session agreed to FR-5d (confidence 0.5, SAQ 1-5) and will cover the new detail keys in its next Primary verification run.
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs and Doctor' (Protocol in workflow.md)

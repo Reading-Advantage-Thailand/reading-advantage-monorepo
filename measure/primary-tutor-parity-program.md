@@ -2,7 +2,7 @@
 
 Version: 0.1 (draft)
 Date: 2026-10-03
-Status: In progress. Lanes A, M (Phase 1), B, and C Phases 0-2 are merged into `primary-parity-integration`.
+Status: In progress. Lanes A, M (Phase 1), B, and C Phases 0-2 are merged into `primary-parity-integration`. Mastery graph: T1 (objective tags) merged; T2 (evidence pipeline) implemented on lane-h and verified on the production copy on 2026-10-06 (1361 evidence rows from 1065 legacy quiz rows), waiting for the owner's phase checks and the merge.
 Owner: Daniel Bo
 Gap list: `advantage-pr/12-operations/primary-tutor-parity-gap-list.md` (v0.2)
 
