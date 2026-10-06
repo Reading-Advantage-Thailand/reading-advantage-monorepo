@@ -4,7 +4,7 @@ Track ID: `primary_objective_tags_20261006`
 Type: feature
 Program: [primary-mastery-graph-program](../../primary-mastery-graph-program.md) (track T1)
 Branch: `primary/lane-h-objective-tags` (worktree `~/Desktop/rama-worktrees/lane-h`), off
-`primary/lane-de-teacher-books` since the 2026-10-06 rebase (first cut from lane-f).
+`primary-parity-integration` since the 2026-10-06 rebases (first cut from lane-f, then lane-de).
 Owner decisions (2026-10-06): the ten decisions in program section 8 are approved. For this
 track: decision 4 (tag the printed books by script from the Workbooks export through the
 legacy ids; legacy online articles stay untagged until the banks replace them), decision 6
@@ -66,8 +66,8 @@ rewritten in the same transaction or cascade with the question row.
   - `primary_article_word_nodes` (`articleId` FK cascade, `word`, `pos`, `nodeId`, `role`
     `glossed | recycled`; unique on article and node id, because one word can carry two
     sense nodes).
-  Migration `0066_primary_objective_tags`, append-only; `--required-migration
-  0066_primary_objective_tags` in `apps/primary-advantage/cloudbuild.yaml`. No change to the
+  Migration `0070_primary_objective_tags`, append-only; `--required-migration
+  0070_primary_objective_tags` in `apps/primary-advantage/cloudbuild.yaml`. No change to the
   tables Tutor reads.
 - FR-4 (importer writes the links): `importLessonPackage` writes the three link tables from
   the package's `tags` and per-question `objectives` in the same transaction as the question
@@ -114,7 +114,7 @@ rewritten in the same transaction or cascade with the question row.
 - `pnpm turbo run test --filter=@reading-advantage/domain --filter=@reading-advantage/db`,
   `check-types`, and `lint` exit 0. `tenant-coverage.test.ts` passes with the three new
   tables.
-- Migration 0066 applies on the local database; the doctor check passes with the new
+- Migration 0070 applies on the local database; the doctor check passes with the new
   required migration.
 
 ## Out of Scope
