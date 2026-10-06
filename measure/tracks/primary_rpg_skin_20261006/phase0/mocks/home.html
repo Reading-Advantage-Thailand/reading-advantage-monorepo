@@ -1,0 +1,113 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mock: Home (guild hall)</title>
+<link rel="stylesheet" href="../kit/chrome/kit.css">
+<style>
+body{margin:0;background:#0f1420}
+.cq-backdrop{background-image:url('../backdrops/guild-hall-p.webp')}
+@media (min-width:900px){.cq-backdrop{background-image:url('../backdrops/guild-hall-d.webp')}}
+.wrap{max-width:1100px;margin:0 auto;padding:12px 16px 100px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0 10px}
+.top .brand{display:flex;align-items:center;gap:8px;color:#fff4dc;font-weight:700;font-size:18px;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+.top .brand img{width:34px;height:34px;border-radius:8px}
+.hud{display:flex;gap:8px;align-items:center}
+.hud .gem{display:inline-flex;align-items:center;gap:4px;padding:4px 10px 4px 6px;background:linear-gradient(180deg,#1c2b4a,#0e1730);border:2px solid #3f7fd6;border-radius:999px;color:#cfe3ff;font-weight:700;font-size:16px}
+.hud .gem img{width:22px;height:22px}
+.hero-row{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:end;margin:8px 0 14px}
+.hero-row .hero{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 6px 4px rgba(0,0,0,.5));animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.plaque{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.plaque .stat{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;background:linear-gradient(180deg,#b37a3f,#8a5a2b 60%,#5c391a);border:3px solid #5c391a;border-radius:10px;color:#fff4dc;text-shadow:0 2px 0 rgba(0,0,0,.5);box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.plaque .stat b{font-size:20px;line-height:1}
+.plaque .stat span{font-size:11px;opacity:.9}
+.plaque .stat img{width:26px;height:26px}
+.quest{position:relative;margin:14px 0;padding:0}
+.quest .banner-wrap{text-align:center;margin-bottom:-14px;position:relative;z-index:2}
+.quest .body{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center;padding-top:22px}
+.quest .boss{width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 4px 3px rgba(0,0,0,.5))}
+.quest h3{margin:0 0 2px;font-size:18px}
+.quest p{margin:0 0 6px;font-size:13px;color:var(--cq-ink-soft)}
+.quest .goals{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.quest .goal{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 8px;border-radius:999px;background:rgba(92,57,26,.12);border:1px solid rgba(92,57,26,.3)}
+.quest .goal img{width:16px;height:16px}
+.quest .goal.done{background:rgba(79,180,90,.2);border-color:#4fb45a}
+.notice{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0}
+@media (min-width:900px){.notice{grid-template-columns:1fr 1fr}}
+.card{position:relative}
+.card h3{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:17px}
+.card h3 img{width:28px;height:28px}
+.card p{margin:0 0 10px;font-size:14px;color:var(--cq-ink-soft)}
+.card .title{font-size:19px;font-weight:700;color:var(--cq-ink);margin-bottom:8px}
+.pin{position:absolute;top:-8px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff8a8a,#b3222a);box-shadow:0 2px 2px rgba(0,0,0,.5)}
+.door{display:flex;align-items:center;gap:12px}
+.door img{width:64px;height:64px}
+.fame{margin:14px 0}
+.fame table{width:100%;border-collapse:collapse;font-size:14px}
+.fame td{padding:6px 4px;border-bottom:1px dashed rgba(107,84,56,.35)}
+.fame td:first-child{width:28px;font-weight:700;color:var(--cq-gold-dark)}
+.fame .me{background:rgba(232,181,52,.18)}
+</style></head>
+<body class="cq"><div class="cq-scene"><div class="cq-backdrop"></div><div class="cq-content wrap">
+  <div class="top">
+    <div class="brand"><img src="../kit/icons/banner.png" alt="">Primary Advantage</div>
+    <div class="hud"><span class="cq-coins"><img src="../kit/icons/coin.png" alt="">50</span><span class="gem"><img src="../kit/icons/gem.png" alt="">15 XP</span></div>
+  </div>
+  <div class="hero-row">
+    <img class="hero" src="../kit/hero/hero-duelist-hat.png" alt="Your hero">
+    <div class="plaque">
+      <div class="stat"><img src="../kit/icons/campfire.png" alt=""><b>2</b><span>day streak</span></div>
+      <div class="stat"><img src="../kit/icons/gem.png" alt=""><b>15</b><span>XP</span></div>
+      <div class="stat"><img src="../kit/relics/shield.png" alt=""><b>1</b><span>level</span></div>
+    </div>
+  </div>
+
+  <section class="quest">
+    <div class="banner-wrap"><span class="cq-banner">Class Quest</span></div>
+    <div class="cq-panel"><div class="body">
+      <img class="boss" src="../kit/boss/goblin-king-front.png" alt="The Goblin King">
+      <div>
+        <h3>The Goblin King's Raid</h3>
+        <p>Boss: The Goblin King · 1 day to the battle</p>
+        <div class="cq-meter" style="--value:38%;--pending:8%"><div class="pending"></div><div class="fill"></div></div>
+        <p style="margin-top:6px">16 of 42 damage</p>
+        <div class="goals">
+          <span class="goal done"><img src="../kit/relics/shield.png" alt="">Read on 3 days</span>
+          <span class="goal"><img src="../kit/relics/sharp-blade.png" alt="">80% on 20 questions</span>
+          <span class="goal"><img src="../kit/relics/rally-horn.png" alt="">5-day streak</span>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <div class="notice">
+    <section class="cq-panel card"><span class="pin"></span>
+      <h3><img src="../kit/icons/scroll.png" alt="">Today's lesson</h3>
+      <div class="title">Pip the Curious Puppy Feels</div>
+      <p>Primary Advantage Origins 2 · Lesson 1 of 14 · due 9 Oct</p>
+      <button class="cq-btn cq-btn--gold">Start the lesson</button>
+    </section>
+    <section class="cq-panel card"><span class="pin"></span>
+      <h3><img src="../kit/icons/scroll.png" alt="">Continue reading</h3>
+      <div class="title">QA Game Content A</div>
+      <p>A1- · you stopped at the word list</p>
+      <button class="cq-btn">Keep reading</button>
+    </section>
+    <section class="cq-panel card door">
+      <img src="../kit/icons/chest.png" alt="">
+      <div><h3>The arena</h3><p>Word and sentence games. The class challenge is on the arena wall.</p><button class="cq-btn cq-btn--iron">Enter the arena</button></div>
+    </section>
+    <section class="cq-panel card door">
+      <img src="../kit/icons/campfire.png" alt="">
+      <div><h3>Reedy <small style="font-size:11px;background:#5c391a;color:#fff4dc;padding:2px 6px;border-radius:999px">PREVIEW</small></h3><p>0:36 left this month. Talk at the campfire.</p><button class="cq-btn cq-btn--iron">Go to the campfire</button></div>
+    </section>
+  </div>
+
+  <section class="cq-panel fame">
+    <h3 style="margin:0 0 8px;font-size:17px">Hall of fame · QA Class A</h3>
+    <table><tr><td>1</td><td>qa-student-a3</td><td style="text-align:right">120 XP</td></tr><tr class="me"><td>2</td><td>qa-student-a1 (you)</td><td style="text-align:right">15 XP</td></tr><tr><td>3</td><td>qa-student-a2</td><td style="text-align:right">10 XP</td></tr></table>
+  </section>
+</div>
+<nav class="cq-toolbar">
+  <a class="active" href="#"><img src="../kit/icons/banner.png" alt="">Home</a>
+  <a href="#"><img src="../kit/icons/scroll.png" alt="">Read</a>
+  <a href="#"><img src="../kit/relics/sharp-blade.png" alt="">Games</a>
+  <a href="#"><img src="../kit/hero/hero-duelist-hat.png" alt="">Me</a>
+</nav></div></body></html>

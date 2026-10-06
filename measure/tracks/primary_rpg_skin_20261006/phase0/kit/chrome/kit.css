@@ -1,0 +1,82 @@
+/* Chibi Quest UI kit, Phase 0. Owned SVG/CSS chrome; pictorials are Forge renders. */
+@font-face { font-family: "Fredoka"; src: url("../fredoka-latin.woff2") format("woff2"); font-weight: 400 700; }
+@font-face { font-family: "Mitr"; src: url("../mitr-500-thai.woff2") format("woff2"); font-weight: 500; }
+:root {
+  --cq-ink: #3b2a1a; --cq-ink-soft: #6b5438; --cq-parchment: #f3e4c3; --cq-parchment-2: #e9d4a8; --cq-parchment-edge: #b58a4e;
+  --cq-wood: #8a5a2b; --cq-wood-dark: #5c391a; --cq-wood-light: #b37a3f; --cq-iron: #4a4f57; --cq-iron-light: #8b929c;
+  --cq-gold: #e8b534; --cq-gold-dark: #a8781a; --cq-red: #d64545; --cq-green: #4fb45a; --cq-blue: #3f7fd6;
+  --cq-night: #0f1420; --cq-cyan: #22d3ee;
+}
+.cq { font-family: Fredoka, Mitr, "Noto Sans Thai", system-ui, sans-serif; color: var(--cq-ink); }
+/* Scene: a backdrop that fills the viewport, a vignette, and content above it. */
+.cq-scene { position: relative; min-height: 100vh; overflow: hidden; background: var(--cq-night); }
+.cq-scene > .cq-backdrop { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.cq-scene > .cq-backdrop::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 35%, rgba(0,0,0,0) 40%, rgba(0,0,0,.55) 100%); }
+.cq-scene > .cq-content { position: relative; z-index: 1; }
+/* Parchment panel: layered paper with a torn edge and a wax seal corner. */
+.cq-panel { position: relative; background: linear-gradient(180deg, var(--cq-parchment), var(--cq-parchment-2)); border: 3px solid var(--cq-parchment-edge); border-radius: 14px; box-shadow: 0 6px 0 rgba(0,0,0,.25), 0 10px 24px rgba(0,0,0,.35), inset 0 0 0 2px rgba(255,255,255,.35); padding: 14px 16px; }
+.cq-panel::before { content: ""; position: absolute; inset: 6px; border: 1px dashed rgba(107,84,56,.35); border-radius: 9px; pointer-events: none; }
+.cq-panel--dark { background: linear-gradient(180deg, #2a2117, #1c1510); color: #f3e4c3; border-color: #5c391a; }
+/* Plank sign: a wooden board with two nails and a title. */
+.cq-sign { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 55%, var(--cq-wood-dark)); border: 3px solid var(--cq-wood-dark); border-radius: 8px; color: #fff4dc; font-weight: 700; font-size: 20px; letter-spacing: .3px; text-shadow: 0 2px 0 rgba(0,0,0,.45); box-shadow: 0 5px 0 rgba(0,0,0,.3), 0 8px 16px rgba(0,0,0,.35); }
+.cq-sign::before, .cq-sign::after { content: ""; position: absolute; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #d9dde3, var(--cq-iron)); box-shadow: 0 1px 0 rgba(0,0,0,.5); }
+.cq-sign::before { left: 7px; } .cq-sign::after { right: 7px; }
+/* Hanging banner: a pennant with a pole. */
+.cq-banner { position: relative; display: inline-block; padding: 14px 22px 22px; color: #fff4dc; font-weight: 700; font-size: 22px; text-align: center; background: linear-gradient(180deg, #b2332f, #7f1f1c); border-left: 3px solid #5a1412; border-right: 3px solid #5a1412; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%); text-shadow: 0 2px 0 rgba(0,0,0,.5); }
+.cq-banner::before { content: ""; position: absolute; left: -10px; right: -10px; top: -6px; height: 10px; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood-dark)); border-radius: 5px; clip-path: none; }
+.cq-banner--blue { background: linear-gradient(180deg, #3d6fc4, #22427c); border-color: #1a3160; }
+/* Meter: a wood-and-iron frame with a filling bar and a lighter pending segment. */
+.cq-meter { position: relative; height: 26px; border-radius: 13px; background: #2a1d12; border: 3px solid var(--cq-iron); box-shadow: inset 0 2px 4px rgba(0,0,0,.7), 0 2px 0 rgba(0,0,0,.4); overflow: hidden; }
+.cq-meter::before, .cq-meter::after { content: ""; position: absolute; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, var(--cq-iron-light), var(--cq-iron)); z-index: 2; }
+.cq-meter::before { left: 4px; } .cq-meter::after { right: 4px; }
+.cq-meter > .fill { position: absolute; inset: 0; width: var(--value, 0%); background: linear-gradient(180deg, #ff7a59, var(--cq-red) 55%, #8f2424); box-shadow: inset 0 -3px 0 rgba(0,0,0,.25), inset 0 2px 0 rgba(255,255,255,.35); transition: width .4s ease; }
+.cq-meter > .pending { position: absolute; inset: 0; width: var(--pending, 0%); background: repeating-linear-gradient(45deg, rgba(255,220,120,.55) 0 6px, rgba(255,220,120,.25) 6px 12px); }
+.cq-meter--green > .fill { background: linear-gradient(180deg, #8ee07e, var(--cq-green) 55%, #2d7a36); }
+.cq-meter--gold > .fill { background: linear-gradient(180deg, #ffe08a, var(--cq-gold) 55%, var(--cq-gold-dark)); }
+/* Hearts: five SVG hearts; the lost ones are dark. */
+.cq-hearts { display: inline-flex; gap: 4px; }
+.cq-heart { width: 26px; height: 24px; background: url('heart.svg') center / contain no-repeat; filter: drop-shadow(0 2px 0 rgba(0,0,0,.4)); }
+.cq-heart.lost { filter: grayscale(1) brightness(.35); }
+/* Coins: the Forge gold coin and a count. */
+.cq-coins { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 6px; background: linear-gradient(180deg, #3a2a18, #241810); border: 2px solid var(--cq-gold-dark); border-radius: 999px; color: #ffe9a8; font-weight: 700; font-size: 18px; box-shadow: 0 3px 0 rgba(0,0,0,.4); }
+.cq-coins img { width: 26px; height: 26px; }
+/* Buttons: a carved wooden button with a gold rim for the primary action. */
+.cq-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 12px; font: inherit; font-weight: 700; font-size: 17px; color: #fff4dc; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 60%, var(--cq-wood-dark)); border: 3px solid var(--cq-wood-dark); box-shadow: 0 5px 0 #3b2411, 0 7px 12px rgba(0,0,0,.35); text-shadow: 0 2px 0 rgba(0,0,0,.45); cursor: pointer; }
+.cq-btn--gold { background: linear-gradient(180deg, #ffe08a, var(--cq-gold) 55%, var(--cq-gold-dark)); border-color: var(--cq-gold-dark); color: #3b2a1a; text-shadow: 0 1px 0 rgba(255,255,255,.5); box-shadow: 0 5px 0 #7a5410, 0 7px 12px rgba(0,0,0,.35); }
+.cq-btn--iron { background: linear-gradient(180deg, var(--cq-iron-light), var(--cq-iron) 60%, #2d3138); border-color: #2d3138; box-shadow: 0 5px 0 #1b1e23, 0 7px 12px rgba(0,0,0,.35); }
+/* Slot ring: ten slot icons around the paper-doll. */
+.cq-slot { width: 56px; height: 56px; border-radius: 12px; background: radial-gradient(circle at 50% 40%, #4a3522, #2a1d12); border: 3px solid var(--cq-iron); box-shadow: inset 0 2px 6px rgba(0,0,0,.7), 0 3px 0 rgba(0,0,0,.4); display: grid; place-items: center; }
+.cq-slot img { width: 44px; height: 44px; }
+.cq-slot.active { border-color: var(--cq-gold); box-shadow: 0 0 0 3px rgba(232,181,52,.35), inset 0 2px 6px rgba(0,0,0,.7); }
+/* Relic: a power-up token that glows when armed. */
+.cq-relic { width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #4a3522, #1c1510); border: 3px solid var(--cq-iron); display: grid; place-items: center; box-shadow: 0 3px 0 rgba(0,0,0,.4); }
+.cq-relic img { width: 48px; height: 48px; }
+.cq-relic.armed { border-color: var(--cq-gold); box-shadow: 0 0 18px 4px rgba(255,214,90,.65), 0 3px 0 rgba(0,0,0,.4); animation: cq-glow 1.2s ease-in-out infinite alternate; }
+@keyframes cq-glow { from { box-shadow: 0 0 10px 2px rgba(255,214,90,.45); } to { box-shadow: 0 0 22px 6px rgba(255,214,90,.85); } }
+/* Sprite: 8-frame idle loop from a strip. */
+.cq-sprite { width: 132px; height: 132px; background-repeat: no-repeat; background-size: 1056px 132px; image-rendering: pixelated; animation: cq-strip 1s steps(8) infinite; }
+@keyframes cq-strip { to { background-position: -1056px 0; } }
+/* Effects: burst, slash, shield flash (CSS keyframes, 2D). */
+.cq-fx-burst { position: absolute; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, #fff6c0 0%, #ffb347 35%, rgba(255,80,40,0) 70%); animation: cq-burst .45s ease-out forwards; pointer-events: none; }
+@keyframes cq-burst { from { transform: scale(.2); opacity: 1; } to { transform: scale(1.4); opacity: 0; } }
+.cq-fx-slash { position: absolute; width: 140px; height: 24px; background: linear-gradient(90deg, rgba(255,255,255,0), #fff 50%, rgba(255,255,255,0)); border-radius: 12px; transform: rotate(-30deg); animation: cq-slash .3s ease-out forwards; pointer-events: none; }
+@keyframes cq-slash { from { opacity: 0; transform: rotate(-30deg) translateX(-40px) scaleX(.3); } 40% { opacity: 1; } to { opacity: 0; transform: rotate(-30deg) translateX(40px) scaleX(1.2); } }
+.cq-fx-shield { position: absolute; inset: -6px; border-radius: 18px; box-shadow: 0 0 0 4px rgba(90,170,255,.9), 0 0 24px 8px rgba(90,170,255,.6); animation: cq-shield .6s ease-out forwards; pointer-events: none; }
+@keyframes cq-shield { from { opacity: 1; } to { opacity: 0; } }
+/* Shake: the boss takes a hit. */
+.cq-shake { animation: cq-shake .35s ease-in-out; }
+@keyframes cq-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px) rotate(-2deg); } 75% { transform: translateX(8px) rotate(2deg); } }
+/* Damage number floats up. */
+.cq-dmg { position: absolute; font-weight: 700; font-size: 28px; color: #fff; -webkit-text-stroke: 2px #7f1f1c; animation: cq-float 1s ease-out forwards; pointer-events: none; }
+@keyframes cq-float { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-60px); opacity: 0; } }
+/* Toolbar: the wooden bottom nav. */
+.cq-toolbar { position: fixed; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(4, 1fr); height: 72px; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 50%, var(--cq-wood-dark)); border-top: 4px solid var(--cq-wood-dark); box-shadow: 0 -6px 16px rgba(0,0,0,.45); z-index: 5; }
+.cq-toolbar a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: #fff4dc; font-weight: 700; font-size: 12px; text-decoration: none; text-shadow: 0 2px 0 rgba(0,0,0,.45); }
+.cq-toolbar a img { width: 34px; height: 34px; filter: drop-shadow(0 2px 0 rgba(0,0,0,.4)); }
+.cq-toolbar a.active { background: rgba(0,0,0,.25); box-shadow: inset 0 3px 0 var(--cq-gold); }
+/* Speech bubble for an NPC line. */
+.cq-bubble { position: relative; display: inline-block; padding: 10px 14px; background: #fffaf0; border: 3px solid var(--cq-ink); border-radius: 14px; font-weight: 500; font-size: 15px; color: var(--cq-ink); }
+.cq-bubble::after { content: ""; position: absolute; left: 22px; bottom: -12px; border: 8px solid transparent; border-top-color: var(--cq-ink); border-bottom: 0; }
+
+/* Capture mode: the toolbar sits at the end of the page in a full-page capture. */
+html.capture .cq-toolbar { position: sticky; }

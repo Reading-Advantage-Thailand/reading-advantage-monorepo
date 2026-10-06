@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mock: Class Quest battle (boss arena)</title>
+<link rel="stylesheet" href="../kit/chrome/kit.css">
+<style>
+body{margin:0;background:#0f1420}
+.cq-backdrop{background-image:url('../backdrops/boss-arena-p.webp')}
+@media (min-width:900px){.cq-backdrop{background-image:url('../backdrops/boss-arena-d.webp')}}
+.wrap{max-width:1100px;margin:0 auto;padding:12px 16px 100px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0 4px}
+.top .title{color:#fff4dc;font-weight:700;font-size:20px;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+.top .clock{font-size:26px;font-weight:700;color:#fff4dc;text-shadow:0 2px 0 rgba(0,0,0,.6);font-variant-numeric:tabular-nums}
+.bossbox{position:relative;display:grid;grid-template-columns:1fr;justify-items:center;margin:4px 0 8px}
+.bossbox .boss{position:relative;width:224px;height:224px}
+.bossbox .boss .sprite{width:224px;height:224px;background:url('../kit/boss/goblin-king-front.png') center/contain no-repeat;filter:drop-shadow(0 10px 6px rgba(0,0,0,.6))}
+.bossbox .name{color:#fff4dc;font-weight:700;font-size:18px;text-shadow:0 2px 0 rgba(0,0,0,.6);margin-top:2px}
+.bossbox .meterwrap{width:100%;max-width:520px;margin-top:8px}
+.bossbox .meterwrap p{margin:4px 0 0;color:#fff4dc;font-weight:700;text-align:center;text-shadow:0 2px 0 rgba(0,0,0,.6);font-size:14px}
+.you{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center}
+.you .hero{position:relative;width:96px;height:96px}
+.you .hero img{width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 6px 4px rgba(0,0,0,.5))}
+.you .line{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.you .dmg{font-weight:700;font-size:15px}
+.relics{display:flex;gap:12px;justify-content:center;margin:12px 0}
+.relics .r{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff4dc;font-size:12px;font-weight:700;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+.arch{position:relative;margin:44px 0 8px;padding:14px;border:10px solid transparent;border-image:linear-gradient(180deg,#8b929c,#4a4f57 60%,#2d3138) 1;border-radius:0;background:#111722;box-shadow:0 0 0 4px #2d3138,0 10px 24px rgba(0,0,0,.6)}
+.arch::before{content:"";position:absolute;left:-10px;right:-10px;top:-34px;height:34px;background:linear-gradient(180deg,#8b929c,#4a4f57);border-radius:50% 50% 0 0 / 100% 100% 0 0}
+.arch .game{height:300px;display:grid;grid-template-rows:auto 1fr;gap:8px;color:#dfe7f2;font-weight:700}
+.arch .game .word{font-size:22px;text-align:center;padding:8px;background:#1c2436;border-radius:10px}
+.arch .game .choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.arch .game .choices button{min-height:56px;border-radius:10px;border:3px solid #3f7fd6;background:#213356;color:#fff;font:inherit;font-size:17px}
+.hits{margin-top:10px}
+.hits li{list-style:none;display:flex;align-items:center;gap:8px;padding:4px 0;font-size:14px;border-bottom:1px dashed rgba(107,84,56,.35)}
+.hits li img{width:22px;height:22px;border-radius:50%}
+</style></head>
+<body class="cq"><div class="cq-scene"><div class="cq-backdrop"></div><div class="cq-content wrap">
+  <div class="top"><span class="title">The Goblin King's Raid</span><span class="clock">4:48</span></div>
+  <div class="bossbox">
+    <div class="boss cq-shake"><div class="sprite" role="img" aria-label="The Goblin King"></div><span class="cq-fx-slash" style="left:40px;top:90px"></span><span class="cq-fx-burst" style="left:60px;top:70px"></span><span class="cq-dmg" style="right:0;top:40px">-4</span></div>
+    <span class="name">The Goblin King</span>
+    <div class="meterwrap"><div class="cq-meter" style="--value:40%;--pending:12%"><div class="pending"></div><div class="fill"></div></div><p>17 of 42 damage · 3 of 3 here</p></div>
+  </div>
+
+  <section class="cq-panel you">
+    <div class="hero"><img src="../kit/hero/hero-duelist-hat.png" alt="You"><span class="cq-fx-shield"></span></div>
+    <div>
+      <div class="line"><span style="font-weight:700">You</span><span class="cq-hearts"><i class="cq-heart"></i><i class="cq-heart"></i><i class="cq-heart"></i><i class="cq-heart"></i><i class="cq-heart lost"></i></span></div>
+      <div class="cq-meter cq-meter--green" style="--value:80%;height:14px"><div class="fill"></div></div>
+      <div class="line" style="margin-top:8px"><span class="dmg">Your damage: 6</span><span style="font-size:13px;color:var(--cq-ink-soft)">+1 per hit (sharp blade)</span></div>
+    </div>
+  </section>
+
+  <div class="relics">
+    <div class="r"><span class="cq-relic armed"><img src="../kit/relics/shield.png" alt=""></span>Shield</div>
+    <div class="r"><span class="cq-relic armed"><img src="../kit/relics/sharp-blade.png" alt=""></span>Sharp blade</div>
+    <div class="r"><span class="cq-relic"><img src="../kit/relics/rally-horn.png" alt=""></span>Rally horn</div>
+  </div>
+
+  <div class="arch"><div class="game">
+    <div class="word">แมว</div>
+    <div class="choices"><button>cat</button><button>dog</button><button>bird</button><button>fish</button></div>
+  </div></div>
+
+  <section class="cq-panel hits"><h3 style="margin:0 0 6px;font-size:16px">Hits</h3><ul style="margin:0;padding:0">
+    <li><img src="../kit/hero/hero-duelist-hat.png" alt="">qa-student-a1 hit for <b>4</b></li>
+    <li><img src="../kit/hero/wizard-front.png" alt="">qa-student-a2 hit for <b>2</b></li>
+    <li><img src="../kit/hero/knight-front.png" alt="">qa-student-a3 blocked with a shield</li>
+  </ul></section>
+</div></div></body></html>

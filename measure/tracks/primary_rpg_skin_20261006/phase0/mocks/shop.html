@@ -1,0 +1,92 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mock: Avatar shop (armory)</title>
+<link rel="stylesheet" href="../kit/chrome/kit.css">
+<style>
+body{margin:0;background:#0f1420}
+.cq-backdrop{background-image:url('../backdrops/armory-p.webp')}
+@media (min-width:900px){.cq-backdrop{background-image:url('../backdrops/armory-d.webp')}}
+.wrap{max-width:1100px;margin:0 auto;padding:12px 16px 100px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0 10px}
+.top .brand{display:flex;align-items:center;gap:8px;color:#fff4dc;font-weight:700;font-size:18px;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+.top .brand img{width:34px;height:34px}
+.counter{display:grid;grid-template-columns:132px 1fr;gap:10px;align-items:end;margin:4px 0 10px}
+.counter .npc{width:132px;height:132px;background-image:url('../kit/npc/blacksmith-idle-strip.png');filter:drop-shadow(0 6px 4px rgba(0,0,0,.5))}
+.counter .say{align-self:start;margin-top:10px}
+.signs{display:flex;gap:8px;overflow-x:auto;padding:14px 2px 10px;scrollbar-width:none}
+.signs .cq-sign{font-size:15px;padding:6px 14px;white-space:nowrap;opacity:.85}
+.signs .cq-sign.active{opacity:1;box-shadow:0 0 0 3px var(--cq-gold),0 5px 0 rgba(0,0,0,.3)}
+.shelf{position:relative;margin:10px 0 18px}
+.shelf .plank{height:14px;background:linear-gradient(180deg,#b37a3f,#8a5a2b 60%,#5c391a);border:3px solid #5c391a;border-radius:6px;box-shadow:0 5px 0 rgba(0,0,0,.35)}
+.shelf .items{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:-8px;padding:0 6px;position:relative;z-index:1}
+@media (min-width:900px){.shelf .items{grid-template-columns:repeat(6,1fr)}}
+.item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px 6px;background:linear-gradient(180deg,rgba(243,228,195,.95),rgba(233,212,168,.95));border:3px solid var(--cq-parchment-edge);border-radius:12px;box-shadow:0 4px 0 rgba(0,0,0,.3);text-align:center}
+.item img{width:72px;height:72px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.35))}
+.item .name{font-size:13px;font-weight:700;line-height:1.1}
+.item .price{display:inline-flex;align-items:center;gap:3px;font-size:14px;font-weight:700;color:var(--cq-gold-dark)}
+.item .price img{width:16px;height:16px;filter:none}
+.item.owned{opacity:.85}.item.owned .price{color:var(--cq-green)}
+.item.locked{filter:saturate(.3)}
+.item.locked .lock{position:absolute;inset:auto;display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#fff4dc;background:#4a4f57;border-radius:999px;padding:2px 8px}
+.item.selected{border-color:var(--cq-gold);box-shadow:0 0 0 3px rgba(232,181,52,.45),0 4px 0 rgba(0,0,0,.3)}
+.tryon{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center}
+.tryon .hero{position:relative;width:120px;height:120px}
+.tryon .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 4px rgba(0,0,0,.5))}
+.tryon h3{margin:0 0 4px;font-size:18px}
+.tryon p{margin:0 0 8px;font-size:13px;color:var(--cq-ink-soft)}
+.tryon .buy{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dyes{display:flex;gap:6px;margin:6px 0}
+.dye{width:28px;height:28px;border-radius:50% 50% 45% 45%;border:2px solid #3b2a1a;box-shadow:inset 0 -6px 0 rgba(0,0,0,.25)}
+.coin-fly{position:absolute;width:22px;height:22px;background:url('../kit/icons/coin.png') center/contain no-repeat;animation:fly .9s ease-in forwards}
+@keyframes fly{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(-160px,-120px) scale(.5);opacity:0}}
+.pager{display:flex;justify-content:center;gap:8px;align-items:center;margin-top:16px;color:#fff4dc;font-weight:700;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+.pager .cq-btn{min-height:40px;padding:0 14px;font-size:14px}
+</style></head>
+<body class="cq"><div class="cq-scene"><div class="cq-backdrop"></div><div class="cq-content wrap">
+  <div class="top">
+    <div class="brand"><img src="../kit/icons/banner.png" alt="">The Armory</div>
+    <span class="cq-coins"><img src="../kit/icons/coin.png" alt="">150</span>
+  </div>
+  <div class="counter">
+    <div class="npc cq-sprite" role="img" aria-label="Bronn the armorer"></div>
+    <div class="say"><span class="cq-bubble">Welcome back, duelist! New steel on the shelves today. Tap a piece to try it on.</span></div>
+  </div>
+  <div class="signs">
+    <span class="cq-sign active">Gear</span><span class="cq-sign">Head</span><span class="cq-sign">Chest</span><span class="cq-sign">Back</span><span class="cq-sign">Hands</span><span class="cq-sign">Feet</span><span class="cq-sign">Main hand</span><span class="cq-sign">Off hand</span><span class="cq-sign">Hair · free</span>
+  </div>
+
+  <div class="shelf"><div class="items">
+    <div class="item selected"><img src="../kit/icons/item-wizard-hat.png" alt=""><span class="name">Wizard hat</span><span class="price"><img src="../kit/icons/coin.png" alt="">50</span></div>
+    <div class="item owned"><img src="../kit/icons/item-duelist-hat.png" alt=""><span class="name">Duelist hat</span><span class="price">Owned</span></div>
+    <div class="item"><img src="../kit/icons/item-cloak.png" alt=""><span class="name">Cloak</span><span class="price"><img src="../kit/icons/coin.png" alt="">45</span></div>
+    <div class="item"><img src="../kit/icons/item-gloves.png" alt=""><span class="name">Gloves</span><span class="price"><img src="../kit/icons/coin.png" alt="">25</span></div>
+    <div class="item"><img src="../kit/icons/item-boots.png" alt=""><span class="name">Boots</span><span class="price"><img src="../kit/icons/coin.png" alt="">30</span></div>
+    <div class="item"><img src="../kit/icons/item-kite-shield.png" alt=""><span class="name">Kite shield</span><span class="price"><img src="../kit/icons/coin.png" alt="">50</span></div>
+  </div><div class="plank"></div></div>
+
+  <section class="cq-panel tryon" style="position:relative">
+    <div class="hero"><img src="../kit/hero/hero-duelist-hat.png" alt="Your hero trying on the wizard hat"><img src="../kit/icons/item-wizard-hat.png" alt="" style="top:-22px;left:8px;width:96px;height:96px"></div>
+    <div>
+      <h3>Wizard hat <small style="font-size:12px;color:var(--cq-ink-soft)">· head · tier 1</small></h3>
+      <p>A pointed hat with a brass buckle. Fits any hero.</p>
+      <div class="dyes" aria-label="Dyes"><span class="dye" style="background:#b3222a"></span><span class="dye" style="background:#3f7fd6"></span><span class="dye" style="background:#7a3fb5"></span><span style="font-size:12px;color:var(--cq-ink-soft);align-self:center">dyes 50 each</span></div>
+      <div class="buy"><button class="cq-btn cq-btn--gold"><img src="../kit/icons/coin.png" alt="" style="width:22px;height:22px">Buy for 50</button><span style="font-size:13px;color:var(--cq-ink-soft)">You keep 100</span></div>
+    </div>
+    <span class="coin-fly" style="right:40px;bottom:30px"></span><span class="coin-fly" style="right:60px;bottom:24px;animation-delay:.1s"></span><span class="coin-fly" style="right:50px;bottom:40px;animation-delay:.2s"></span>
+  </section>
+
+  <div class="shelf" style="margin-top:18px"><div class="items">
+    <div class="item"><img src="../kit/icons/item-chainmail.png" alt=""><span class="name">Chainmail</span><span class="price"><img src="../kit/icons/coin.png" alt="">70</span></div>
+    <div class="item"><img src="../kit/icons/item-warrior-sword.png" alt=""><span class="name">Warrior sword</span><span class="price"><img src="../kit/icons/coin.png" alt="">55</span></div>
+    <div class="item"><img src="../kit/icons/item-ranger-bow.png" alt=""><span class="name">Ranger bow</span><span class="price"><img src="../kit/icons/coin.png" alt="">60</span></div>
+    <div class="item locked"><img src="../kit/icons/locked-chest.png" alt=""><span class="name">Greaves</span><span class="lock">🔒 level 5</span></div>
+    <div class="item locked"><img src="../kit/icons/locked-chest.png" alt=""><span class="name">Gladiator helm</span><span class="lock">🔒 level 10</span></div>
+    <div class="item locked"><img src="../kit/icons/locked-chest.png" alt=""><span class="name">Dragoon lance</span><span class="lock">🔒 level 10</span></div>
+  </div><div class="plank"></div></div>
+
+  <div class="pager"><button class="cq-btn cq-btn--iron">‹ Shelf 1</button><span>Shelf 2 of 24</span><button class="cq-btn cq-btn--iron">Shelf 3 ›</button></div>
+</div>
+<nav class="cq-toolbar">
+  <a href="#"><img src="../kit/icons/banner.png" alt="">Home</a>
+  <a href="#"><img src="../kit/icons/scroll.png" alt="">Read</a>
+  <a href="#"><img src="../kit/relics/sharp-blade.png" alt="">Games</a>
+  <a class="active" href="#"><img src="../kit/hero/hero-duelist-hat.png" alt="">Me</a>
+</nav></div></body></html>
