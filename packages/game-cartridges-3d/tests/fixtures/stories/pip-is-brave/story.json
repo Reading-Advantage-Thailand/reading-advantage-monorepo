@@ -1,0 +1,316 @@
+{
+  "schemaVersion": 1,
+  "id": "pip-is-brave",
+  "title": "Pip is Brave",
+  "series": "Origins 2",
+  "lesson": 12,
+  "level": "A0",
+  "genre": "Emotions & Feelings",
+  "paragraphs": [
+    {
+      "text": "This is Pip. Pip is a puppy. Pip is a little puppy. Pip is small. Pip is brown. Pip is in a room. The room is dark. This room is very dark. A big sound. That is a big sound. Pip hears the sound. Pip is not happy. Pip is not good. Pip feels not good. Pip is a little afraid. Pip is not brave.",
+      "translation": "นี่คือปิ๊ป ปิ๊ปเป็นลูกสุนัข ปิ๊ปเป็นลูกสุนัขตัวเล็ก ปิ๊ปตัวเล็ก ปิ๊ปเป็นสีน้ำตาล ปิ๊ปอยู่ในห้อง ห้องมืด ห้องนี้มืดมาก เสียงดัง นั่นคือเสียงดัง ปิ๊ปได้ยินเสียง ปิ๊ปไม่สบายใจ ปิ๊ปไม่ดี ปิ๊ปรู้สึกไม่ดี ปิ๊ปกลัวเล็กน้อย ปิ๊ปไม่กล้าหาญ"
+    },
+    {
+      "text": "Mom is here. Dad is here. Mom sees little Pip. Dad sees little Pip. Mom comes near Pip. Dad comes near Pip. Mom sits down. Dad sits down. Mom pets Pip. Dad pets Pip. This is my puppy. Pip feels Mom's hand. Pip feels Dad's hand. That is a good hand. This is comfort. Pip feels comfort.",
+      "translation": "แม่มาแล้ว พ่อมาแล้ว แม่เห็นปิ๊ปตัวเล็ก พ่อเห็นปิ๊ปตัวเล็ก แม่เข้ามาใกล้ปิ๊ป พ่อเข้ามาใกล้ปิ๊ป แม่นั่งลง พ่อนั่งลง แม่ลูบปิ๊ป พ่ลูบปิ๊ป นี่คือลูกสุนัขของฉัน ปิ๊ปรู้สึกถึงมือแม่ ปิ๊ปรู้สึกถึงมือพ่อ นั่นคือมือที่ดี นี่คือความสบาย ปิ๊ปรู้สึกสบาย"
+    },
+    {
+      "text": "Pip feels good. This is a good feeling. Mom says, \"Good puppy, Pip.\" Dad says, \"Good Pip.\" Pip is good now. Pip is happy. Mom is happy. Dad is happy. The family is happy. This is a good family. Pip loves Mom. Pip loves Dad. Pip loves family. Family loves Pip. Pip is a happy puppy. Yes, Pip is a brave puppy now.",
+      "translation": "ปิ๊ปรู้สึกดี นี่คือความรู้สึกที่ดี แม่พูดว่า 'ลูกหมาดีนะ ปิ๊ป' พ่อพูดว่า 'ปิ๊ปดี' ตอนนี้ปิ๊ปดีแล้ว ปิ๊ปมีความสุข แม่มีความสุข พ่อมีความสุข ครอบครัวมีความสุข นี่คือครอบครัวที่ดี ปิ๊ปรักแม่ ปิ๊ปรักพ่อ ปิ๊ปรักครอบครัว ครอบครัวรักปิ๊ป ปิ๊ปเป็นลูกสุนัขที่มีความสุข ใช่ ตอนนี้ปิ๊ปเป็นลูกสุนัขที่กล้าหาญแล้ว"
+    }
+  ],
+  "images": [
+    "img-1.webp",
+    "img-2.webp",
+    "img-3.webp"
+  ],
+  "vocabulary": [
+    {
+      "id": "w-puppy",
+      "term": "puppy",
+      "translation": "ลูกสุนัข",
+      "definition": "A young dog."
+    },
+    {
+      "id": "w-dark",
+      "term": "dark",
+      "translation": "มืด",
+      "definition": "Having no light."
+    },
+    {
+      "id": "w-sound",
+      "term": "sound",
+      "translation": "เสียง",
+      "definition": "Something you hear."
+    },
+    {
+      "id": "w-afraid",
+      "term": "afraid",
+      "translation": "กลัว",
+      "definition": "Feeling scared."
+    },
+    {
+      "id": "w-brave",
+      "term": "brave",
+      "translation": "กล้าหาญ",
+      "definition": "Not being afraid."
+    },
+    {
+      "id": "w-comes-near",
+      "term": "comes near",
+      "translation": "เข้ามาใกล้",
+      "definition": "Moves close to someone."
+    },
+    {
+      "id": "w-pets",
+      "term": "pets",
+      "translation": "ลูบ",
+      "definition": "To touch an animal gently."
+    },
+    {
+      "id": "w-hand",
+      "term": "hand",
+      "translation": "มือ",
+      "definition": "The part of the body at the end of the arm."
+    },
+    {
+      "id": "w-comfort",
+      "term": "comfort",
+      "translation": "ความสบายใจ",
+      "definition": "A feeling of being safe and happy."
+    },
+    {
+      "id": "w-feeling",
+      "term": "feeling",
+      "translation": "ความรู้สึก",
+      "definition": "An emotion like being happy or sad."
+    },
+    {
+      "id": "w-family",
+      "term": "family",
+      "translation": "ครอบครัว",
+      "definition": "A group of people who love each other."
+    },
+    {
+      "id": "w-little",
+      "term": "little",
+      "translation": "เล็ก",
+      "definition": "Small in size."
+    },
+    {
+      "id": "w-hears",
+      "term": "hears",
+      "translation": "ได้ยิน",
+      "definition": "To listen or notice a sound."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "This is Pip.",
+      "words": [
+        "This",
+        "is",
+        "Pip."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "Mom is here.",
+      "words": [
+        "Mom",
+        "is",
+        "here."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-3",
+      "text": "Pip is a puppy.",
+      "words": [
+        "Pip",
+        "is",
+        "a",
+        "puppy."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-4",
+      "text": "Pip is a little puppy.",
+      "words": [
+        "Pip",
+        "is",
+        "a",
+        "little",
+        "puppy."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-5",
+      "text": "Pip is small.",
+      "words": [
+        "Pip",
+        "is",
+        "small."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-6",
+      "text": "Pip is brown.",
+      "words": [
+        "Pip",
+        "is",
+        "brown."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-7",
+      "text": "Dad is here.",
+      "words": [
+        "Dad",
+        "is",
+        "here."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-8",
+      "text": "Mom sees little Pip.",
+      "words": [
+        "Mom",
+        "sees",
+        "little",
+        "Pip."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-9",
+      "text": "Dad sees little Pip.",
+      "words": [
+        "Dad",
+        "sees",
+        "little",
+        "Pip."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-10",
+      "text": "Pip feels good.",
+      "words": [
+        "Pip",
+        "feels",
+        "good."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-11",
+      "text": "This is a good feeling.",
+      "words": [
+        "This",
+        "is",
+        "a",
+        "good",
+        "feeling."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-12",
+      "text": "Pip is happy.",
+      "words": [
+        "Pip",
+        "is",
+        "happy."
+      ],
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "Pip is a ___.",
+      "answer": "puppy",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "The room is ___.",
+      "answer": "dark",
+      "paragraph": 0
+    },
+    {
+      "id": "f-3",
+      "sentence": "A big ___.",
+      "answer": "sound",
+      "paragraph": 0
+    },
+    {
+      "id": "f-4",
+      "sentence": "Pip is a little ___.",
+      "answer": "afraid",
+      "paragraph": 0
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "What is Pip?",
+      "options": [
+        "A cat",
+        "A boy",
+        "A puppy",
+        "A girl"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q-2",
+      "question": "What color is Pip?",
+      "options": [
+        "Red",
+        "Blue",
+        "Green",
+        "Brown"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-3",
+      "question": "Where is Pip at the start?",
+      "options": [
+        "In a park",
+        "In a room",
+        "On a car",
+        "Under a tree"
+      ],
+      "answer": 1,
+      "paragraph": 0
+    },
+    {
+      "id": "q-4",
+      "question": "How is the room?",
+      "options": [
+        "Bright",
+        "Dark",
+        "Big",
+        "Small"
+      ],
+      "answer": 1,
+      "paragraph": 0
+    }
+  ],
+  "source": {
+    "file": "primary/origins-2-a0/12-Pip is Brave _workbook.json",
+    "url": "https://primary.reading-advantage.com/student/read/cmgqwi2v60242t79bum2yj76o"
+  }
+}

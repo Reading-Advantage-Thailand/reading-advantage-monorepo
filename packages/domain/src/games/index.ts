@@ -30,6 +30,15 @@ export type {
   GameLearningContentResult,
 } from "./learning-content.js";
 export {
+  PRACTICE_SENTENCE_LIMIT,
+  PRACTICE_WORD_LIMIT,
+  SAVED_PRACTICE_INPUT_ID,
+  gamePracticeInputRequestSchema,
+  listGamePracticeInput,
+  practiceLevelOf,
+} from "./practice-input.js";
+export type { GamePracticeInputRequest } from "./practice-input.js";
+export {
   GameSpeechPreparationError,
   createConfiguredSpeechObjectResolver,
   createStoredSpeechClipLookup,

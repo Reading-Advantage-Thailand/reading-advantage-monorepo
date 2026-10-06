@@ -1317,4 +1317,63 @@ describe("mountCartridge", () => {
     listening.pause.mockImplementation(() => undefined);
     await handle.destroy();
   });
+
+  describe("story input mode", () => {
+    const story = {
+      schemaVersion: 1,
+      id: "pip-the-puppy",
+      title: "Pip the Puppy",
+      series: "Origins 2",
+      lesson: 12,
+      level: "A0",
+      genre: "animal story",
+      paragraphs: [{ text: "Pip is a brave puppy now." }],
+      images: [],
+      vocabulary: [{ id: "w-brave", term: "brave", translation: "กล้าหาญ", definition: "not afraid" }],
+      sentences: [],
+      fills: [],
+      questions: [],
+      source: { file: "primary/origins-2/lesson-12.json" },
+    } as const;
+    const storyCartridge = () => {
+      const cartridge = createRuntimeCartridge();
+      return { ...cartridge, manifest: { ...cartridge.manifest, inputMode: "story" as const } };
+    };
+
+    it("validates a story cartridge's input with the story schema", async () => {
+      const contexts: Parameters<GameFactory>[0][] = [];
+      const handle = await mountCartridge({
+        container: document.createElement("div"),
+        cartridge: storyCartridge(),
+        input: story,
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      }, async (context) => {
+        contexts.push(context);
+        return { destroy: vi.fn() };
+      });
+      expect(contexts[0]?.input).toEqual(story);
+      await handle.destroy();
+    });
+
+    it("rejects a vocabulary array for a story cartridge", async () => {
+      await expect(mountCartridge({
+        container: document.createElement("div"),
+        cartridge: storyCartridge(),
+        input: [{ term: "river", translation: "แม่น้ำ" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      }, async () => ({ destroy: vi.fn() }))).rejects.toMatchObject({ code: "INVALID_GAME_INPUT" });
+    });
+
+    it("rejects a story for a vocabulary cartridge", async () => {
+      await expect(mountCartridge({
+        container: document.createElement("div"),
+        cartridge: createRuntimeCartridge(),
+        input: story,
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      }, async () => ({ destroy: vi.fn() }))).rejects.toMatchObject({ code: "INVALID_GAME_INPUT" });
+    });
+  });
 });

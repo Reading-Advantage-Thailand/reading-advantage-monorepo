@@ -1,0 +1,568 @@
+{
+  "schemaVersion": 1,
+  "id": "lilys-toy-box",
+  "title": "Lily's Toy Box",
+  "series": "Level 1",
+  "lesson": 1,
+  "level": "Pre-A1",
+  "genre": "Toys & Play",
+  "paragraphs": [
+    {
+      "text": "Lily has a big toy box. It is in her bedroom. \"Mia, look!\" says Lily. \"How many animals?\" asks Mia. Lily counts. \"One bear.\" \"Two bats.\" \"Three frogs.\"",
+      "translation": "ลิลลี่มีกล่องของเล่นใบใหญ่ กล่องอยู่ในห้องนอนของเธอ \"มีอา ดูนี่!\" ลิลลี่พูด \"มีสัตว์กี่ตัว\" มีอาถาม ลิลลี่นับ \"หมีหนึ่งตัว\" \"ค้างคาวสองตัว\" \"กบสามตัว\""
+    },
+    {
+      "text": "\"Four ducks.\" Mia claps. \"Ten animals!\" says Mia. Lily looks in the box again. She sees an alien. It is green. \"Is it a toy?\" asks Mia. \"Yes, it is,\" says Lily.",
+      "translation": "\"เป็ดสี่ตัว\" มีอาตบมือ \"สัตว์สิบตัว!\" มีอาพูด ลิลลี่มองในกล่องอีกครั้ง เธอเห็นเอเลี่ยน มันเป็นสีเขียว \"นั่นเป็นของเล่นหรือเปล่า\" มีอาถาม \"ใช่ เป็นของเล่น\" ลิลลี่ตอบ"
+    },
+    {
+      "text": "Then Lily sees balloons. \"How many balloons?\" asks Lily. \"Five red balloons and one blue balloon.\" \"Six balloons!\" says Lily. Lily and Mia are happy. \"I like my toys,\" says Lily.",
+      "translation": "แล้วลิลลี่ก็เห็นลูกโป่ง \"มีลูกโป่งกี่ลูก\" ลิลลี่ถาม \"ลูกโป่งสีแดงห้าลูกกับสีน้ำเงินหนึ่งลูก\" \"ลูกโป่งหกลูก!\" ลิลลี่พูด ลิลลี่กับมีอามีความสุข \"ฉันชอบของเล่นของฉัน\" ลิลลี่พูด"
+    }
+  ],
+  "images": [
+    "img-1.webp",
+    "img-2.webp",
+    "img-3.webp"
+  ],
+  "vocabulary": [
+    {
+      "id": "w-toy",
+      "term": "toy",
+      "translation": "ของเล่น",
+      "definition": "A thing that you play with."
+    },
+    {
+      "id": "w-box",
+      "term": "box",
+      "translation": "กล่อง",
+      "definition": "A thing with a lid. You put things in it."
+    },
+    {
+      "id": "w-bedroom",
+      "term": "bedroom",
+      "translation": "ห้องนอน",
+      "definition": "The room where you sleep."
+    },
+    {
+      "id": "w-count",
+      "term": "count",
+      "translation": "นับ",
+      "definition": "To say numbers: one, two, three."
+    },
+    {
+      "id": "w-many",
+      "term": "many",
+      "translation": "มาก, หลาย",
+      "definition": "A lot of."
+    },
+    {
+      "id": "w-animal",
+      "term": "animal",
+      "translation": "สัตว์",
+      "definition": "A dog, a cat, or a bird is an animal."
+    },
+    {
+      "id": "w-bear",
+      "term": "bear",
+      "translation": "หมี",
+      "definition": "A big brown animal with thick hair."
+    },
+    {
+      "id": "w-bat",
+      "term": "bat",
+      "translation": "ค้างคาว",
+      "definition": "A small animal that flies at night."
+    },
+    {
+      "id": "w-frog",
+      "term": "frog",
+      "translation": "กบ",
+      "definition": "A small green animal that jumps."
+    },
+    {
+      "id": "w-alien",
+      "term": "alien",
+      "translation": "มนุษย์ต่างดาว, เอเลี่ยน",
+      "definition": "A person from another planet in a story."
+    },
+    {
+      "id": "w-balloon",
+      "term": "balloon",
+      "translation": "ลูกโป่ง",
+      "definition": "A round toy with air in it."
+    },
+    {
+      "id": "w-clap",
+      "term": "clap",
+      "translation": "ตบมือ",
+      "definition": "To hit your hands together."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "Lily has a big toy box.",
+      "words": [
+        "Lily",
+        "has",
+        "a",
+        "big",
+        "toy",
+        "box."
+      ],
+      "translation": "ลิลลี่มีกล่องของเล่นใบใหญ่",
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "It is in her bedroom.",
+      "words": [
+        "It",
+        "is",
+        "in",
+        "her",
+        "bedroom."
+      ],
+      "translation": "กล่องอยู่ในห้องนอนของเธอ",
+      "paragraph": 0
+    },
+    {
+      "id": "s-3",
+      "text": "Lily looks in the box again.",
+      "words": [
+        "Lily",
+        "looks",
+        "in",
+        "the",
+        "box",
+        "again."
+      ],
+      "translation": "ลิลลี่มองในกล่องอีกครั้ง",
+      "paragraph": 1
+    },
+    {
+      "id": "s-4",
+      "text": "She sees an alien.",
+      "words": [
+        "She",
+        "sees",
+        "an",
+        "alien."
+      ],
+      "translation": "เธอเห็นเอเลี่ยน",
+      "paragraph": 1
+    },
+    {
+      "id": "s-5",
+      "text": "It is green.",
+      "words": [
+        "It",
+        "is",
+        "green."
+      ],
+      "translation": "มันเป็นสีเขียว",
+      "paragraph": 1
+    },
+    {
+      "id": "s-6",
+      "text": "Then Lily sees balloons.",
+      "words": [
+        "Then",
+        "Lily",
+        "sees",
+        "balloons."
+      ],
+      "translation": "แล้วลิลลี่ก็เห็นลูกโป่ง",
+      "paragraph": 2
+    },
+    {
+      "id": "s-7",
+      "text": "Lily and Mia are happy.",
+      "words": [
+        "Lily",
+        "and",
+        "Mia",
+        "are",
+        "happy."
+      ],
+      "translation": "ลิลลี่กับมีอามีความสุข",
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "Lily has a big ___ box.",
+      "answer": "toy",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "Lily has a big toy ___.",
+      "answer": "box",
+      "paragraph": 0
+    },
+    {
+      "id": "f-3",
+      "sentence": "It is in her ___.",
+      "answer": "bedroom",
+      "paragraph": 0
+    },
+    {
+      "id": "f-4",
+      "sentence": "Lily ___.",
+      "answer": "counts",
+      "paragraph": 0
+    },
+    {
+      "id": "f-5",
+      "sentence": "How ___ animals?",
+      "answer": "many",
+      "paragraph": 0
+    },
+    {
+      "id": "f-6",
+      "sentence": "How many ___?",
+      "answer": "animals",
+      "paragraph": 0
+    },
+    {
+      "id": "f-7",
+      "sentence": "One ___.",
+      "answer": "bear",
+      "paragraph": 0
+    },
+    {
+      "id": "f-8",
+      "sentence": "Two ___.",
+      "answer": "bats",
+      "paragraph": 0
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "Where is the toy box?",
+      "options": [
+        "in the park",
+        "at school",
+        "in the kitchen",
+        "in the bedroom"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-2",
+      "question": "Who has the toy box?",
+      "options": [
+        "Mia",
+        "Mom",
+        "Tom",
+        "Lily"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-3",
+      "question": "How many animals are there?",
+      "options": [
+        "five",
+        "four",
+        "six",
+        "ten"
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-4",
+      "question": "How many bears are there?",
+      "options": [
+        "two",
+        "three",
+        "four",
+        "one"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-5",
+      "question": "How many frogs are there?",
+      "options": [
+        "two",
+        "five",
+        "one",
+        "three"
+      ],
+      "answer": 3,
+      "paragraph": 0
+    },
+    {
+      "id": "q-6",
+      "question": "What does Mia do?",
+      "options": [
+        "She sleeps.",
+        "She eats.",
+        "She runs.",
+        "She claps."
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-7",
+      "question": "What color is the alien?",
+      "options": [
+        "red",
+        "blue",
+        "yellow",
+        "green"
+      ],
+      "answer": 3,
+      "paragraph": 1
+    },
+    {
+      "id": "q-8",
+      "question": "What does Mia ask about the alien?",
+      "options": [
+        "\"Is it a dog?\"",
+        "\"Is it big?\"",
+        "\"Is it a cake?\"",
+        "\"Is it a toy?\""
+      ],
+      "answer": 3
+    },
+    {
+      "id": "q-9",
+      "question": "How many red balloons are there?",
+      "options": [
+        "one",
+        "two",
+        "six",
+        "five"
+      ],
+      "answer": 3,
+      "paragraph": 2
+    },
+    {
+      "id": "q-10",
+      "question": "How many balloons are there?",
+      "options": [
+        "five",
+        "ten",
+        "four",
+        "six"
+      ],
+      "answer": 3,
+      "paragraph": 2
+    }
+  ],
+  "source": {
+    "file": "content/primary/bank-1/b001.json",
+    "translationsGenerated": true
+  },
+  "audio": {
+    "article": "article.mp3",
+    "sentences": [
+      {
+        "text": "Lily has a big toy box.",
+        "start": 0,
+        "end": 2.614,
+        "paragraph": 0
+      },
+      {
+        "text": "It is in her bedroom.",
+        "start": 3.064,
+        "end": 4.703,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Mia, look!\" says Lily.",
+        "start": 5.153,
+        "end": 8.541,
+        "paragraph": 0
+      },
+      {
+        "text": "\"How many animals?\" asks Mia.",
+        "start": 8.991,
+        "end": 12.362,
+        "paragraph": 0
+      },
+      {
+        "text": "Lily counts.",
+        "start": 12.812,
+        "end": 14.44,
+        "paragraph": 0
+      },
+      {
+        "text": "\"One bear.\"",
+        "start": 14.89,
+        "end": 16.294,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Two bats.\"",
+        "start": 16.744,
+        "end": 17.906,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Three frogs.\"",
+        "start": 18.356,
+        "end": 19.804,
+        "paragraph": 0
+      },
+      {
+        "text": "\"Four ducks.\"",
+        "start": 20.704,
+        "end": 22.055,
+        "paragraph": 1
+      },
+      {
+        "text": "Mia claps.",
+        "start": 22.505,
+        "end": 24.116,
+        "paragraph": 1
+      },
+      {
+        "text": "\"Ten animals!\" says Mia.",
+        "start": 24.566,
+        "end": 27.36,
+        "paragraph": 1
+      },
+      {
+        "text": "Lily looks in the box again.",
+        "start": 27.81,
+        "end": 30.06,
+        "paragraph": 1
+      },
+      {
+        "text": "She sees an alien.",
+        "start": 30.51,
+        "end": 32.597,
+        "paragraph": 1
+      },
+      {
+        "text": "It is green.",
+        "start": 33.047,
+        "end": 34.389,
+        "paragraph": 1
+      },
+      {
+        "text": "\"Is it a toy?\" asks Mia.",
+        "start": 34.839,
+        "end": 37.494,
+        "paragraph": 1
+      },
+      {
+        "text": "\"Yes, it is,\" says Lily.",
+        "start": 37.944,
+        "end": 40.442,
+        "paragraph": 1
+      },
+      {
+        "text": "Then Lily sees balloons.",
+        "start": 41.342,
+        "end": 44.12,
+        "paragraph": 2
+      },
+      {
+        "text": "\"How many balloons?\" asks Lily.",
+        "start": 44.57,
+        "end": 47.277,
+        "paragraph": 2
+      },
+      {
+        "text": "\"Five red balloons and one blue balloon.\"",
+        "start": 47.727,
+        "end": 50.706,
+        "paragraph": 2
+      },
+      {
+        "text": "\"Six balloons!\" says Lily.",
+        "start": 51.156,
+        "end": 54.512,
+        "paragraph": 2
+      },
+      {
+        "text": "Lily and Mia are happy.",
+        "start": 54.962,
+        "end": 57.26,
+        "paragraph": 2
+      },
+      {
+        "text": "\"I like my toys,\" says Lily.",
+        "start": 57.71,
+        "end": 60.457,
+        "paragraph": 2
+      }
+    ],
+    "words": "words.mp3",
+    "wordTimes": [
+      {
+        "text": "toy",
+        "start": 0,
+        "end": 0.922
+      },
+      {
+        "text": "box",
+        "start": 1.622,
+        "end": 2.672
+      },
+      {
+        "text": "bedroom",
+        "start": 3.372,
+        "end": 4.106
+      },
+      {
+        "text": "count",
+        "start": 4.806,
+        "end": 5.686
+      },
+      {
+        "text": "many",
+        "start": 6.386,
+        "end": 7.122
+      },
+      {
+        "text": "animal",
+        "start": 7.822,
+        "end": 8.67
+      },
+      {
+        "text": "bear",
+        "start": 9.37,
+        "end": 10.165
+      },
+      {
+        "text": "bat",
+        "start": 10.865,
+        "end": 11.693
+      },
+      {
+        "text": "frog",
+        "start": 12.393,
+        "end": 13.419
+      },
+      {
+        "text": "alien",
+        "start": 14.119,
+        "end": 15.125
+      },
+      {
+        "text": "balloon",
+        "start": 15.825,
+        "end": 17.136
+      },
+      {
+        "text": "clap",
+        "start": 17.836,
+        "end": 18.606
+      }
+    ]
+  }
+}

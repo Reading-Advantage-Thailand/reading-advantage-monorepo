@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "id": "the-new-student",
+  "title": "The New Student",
+  "series": "Adventures 1.0",
+  "lesson": 1,
+  "level": "A1",
+  "genre": "Fiction",
+  "paragraphs": [
+    {
+      "text": "Today was Mia's first day at her new school. She stood at the door of the classroom and felt very nervous. She did not know anyone. She looked at all the students sitting at their desks and took a deep breath."
+    },
+    {
+      "text": "The teacher smiled and said, 'Class, we have a new student. Her name is Mia. Please make her feel welcome.' A girl named Sara raised her hand. 'Mia, you can sit next to me!' she said in a friendly voice."
+    },
+    {
+      "text": "At lunch, Sara introduced Mia to more friends. They talked and laughed together. By the end of the day, Mia did not feel nervous anymore. She smiled all the way home. She could not wait to come back tomorrow."
+    }
+  ],
+  "images": [],
+  "vocabulary": [
+    {
+      "id": "w-nervous",
+      "term": "nervous",
+      "translation": "ประหม่า",
+      "definition": "feeling worried or scared about something",
+      "phonetic": "/ˈnɜːrvəs/"
+    },
+    {
+      "id": "w-classroom",
+      "term": "classroom",
+      "translation": "ห้องเรียน",
+      "definition": "a room in a school where students learn",
+      "phonetic": "/ˈklæsruːm/"
+    },
+    {
+      "id": "w-friendly",
+      "term": "friendly",
+      "translation": "เป็นมิตร",
+      "definition": "kind and pleasant to others",
+      "phonetic": "/ˈfrendli/"
+    },
+    {
+      "id": "w-introduce",
+      "term": "introduce",
+      "translation": "แนะนำให้รู้จัก",
+      "definition": "to tell people your name for the first time",
+      "phonetic": "/ˌɪntrəˈdjuːs/"
+    },
+    {
+      "id": "w-welcome",
+      "term": "welcome",
+      "translation": "ต้อนรับ",
+      "definition": "to greet someone in a warm and happy way",
+      "phonetic": "/ˈwelkəm/"
+    }
+  ],
+  "sentences": [
+    {
+      "id": "s-1",
+      "text": "Mia felt nervous at the door.",
+      "words": [
+        "Mia",
+        "felt",
+        "nervous",
+        "at",
+        "the",
+        "door."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-2",
+      "text": "Sara introduced Mia to her friends.",
+      "words": [
+        "Sara",
+        "introduced",
+        "Mia",
+        "to",
+        "her",
+        "friends."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-3",
+      "text": "She did not know anyone.",
+      "words": [
+        "She",
+        "did",
+        "not",
+        "know",
+        "anyone."
+      ],
+      "paragraph": 0
+    },
+    {
+      "id": "s-4",
+      "text": "Her name is Mia.",
+      "words": [
+        "Her",
+        "name",
+        "is",
+        "Mia."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-5",
+      "text": "Please make her feel welcome.",
+      "words": [
+        "Please",
+        "make",
+        "her",
+        "feel",
+        "welcome."
+      ],
+      "paragraph": 1
+    },
+    {
+      "id": "s-6",
+      "text": "At lunch, Sara introduced Mia to more friends.",
+      "words": [
+        "At",
+        "lunch,",
+        "Sara",
+        "introduced",
+        "Mia",
+        "to",
+        "more",
+        "friends."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-7",
+      "text": "They talked and laughed together.",
+      "words": [
+        "They",
+        "talked",
+        "and",
+        "laughed",
+        "together."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-8",
+      "text": "She smiled all the way home.",
+      "words": [
+        "She",
+        "smiled",
+        "all",
+        "the",
+        "way",
+        "home."
+      ],
+      "paragraph": 2
+    },
+    {
+      "id": "s-9",
+      "text": "She could not wait to come back tomorrow.",
+      "words": [
+        "She",
+        "could",
+        "not",
+        "wait",
+        "to",
+        "come",
+        "back",
+        "tomorrow."
+      ],
+      "paragraph": 2
+    }
+  ],
+  "fills": [
+    {
+      "id": "f-1",
+      "sentence": "Mia was very ___ on her first day at the new school.",
+      "answer": "nervous",
+      "paragraph": 0
+    },
+    {
+      "id": "f-2",
+      "sentence": "The teacher asked the class to make Mia feel ___.",
+      "answer": "welcome",
+      "paragraph": 1
+    },
+    {
+      "id": "f-3",
+      "sentence": "Sara had a ___ voice when she spoke to Mia.",
+      "answer": "friendly",
+      "paragraph": 1
+    },
+    {
+      "id": "f-4",
+      "sentence": "Sara ___ Mia to more friends at lunch.",
+      "answer": "introduced",
+      "paragraph": 2
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "How did Mia feel at the start of the day?",
+      "options": [
+        "Happy",
+        "Nervous",
+        "Angry",
+        "Bored"
+      ],
+      "answer": 1,
+      "paragraph": 2
+    },
+    {
+      "id": "q-2",
+      "question": "What did the teacher ask the class to do?",
+      "options": [
+        "Be quiet",
+        "Read a book",
+        "Make Mia feel welcome",
+        "Go to lunch"
+      ],
+      "answer": 2,
+      "paragraph": 1
+    },
+    {
+      "id": "q-3",
+      "question": "Who asked Mia to sit next to her?",
+      "options": [
+        "The teacher",
+        "A boy named Tom",
+        "A girl named Sara",
+        "Her mother"
+      ],
+      "answer": 2,
+      "paragraph": 1
+    },
+    {
+      "id": "q-4",
+      "question": "How did Mia feel at the end of the day?",
+      "options": [
+        "Still nervous",
+        "Very tired",
+        "Much better and happy",
+        "Sad and quiet"
+      ],
+      "answer": 2,
+      "paragraph": 2
+    }
+  ],
+  "source": {
+    "file": "primary/adventures-1.0-a1/01-The_New_Student_workbook.json",
+    "translationsGenerated": true
+  }
+}

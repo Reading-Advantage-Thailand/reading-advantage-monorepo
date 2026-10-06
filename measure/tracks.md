@@ -1150,3 +1150,5 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: Primary Legacy Data Migration** *Link: [./tracks/primary_legacy_data_migration_20261004/](./tracks/primary_legacy_data_migration_20261004/)*
   ID map, ETL, Tutor compatibility views, old article links, teacher credentials with a forced password change.
+- [ ] **Track: APK 3D Games Port** *Link: [./tracks/apk3d_games_port_20261003/](./tracks/apk3d_games_port_20261003/)*
+  Port the dual-renderer story games into the monorepo and offer them in Primary Advantage.

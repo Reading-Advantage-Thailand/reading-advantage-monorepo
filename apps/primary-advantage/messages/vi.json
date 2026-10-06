@@ -50,6 +50,7 @@
     "history": "Lịch sử",
     "sentences": "Câu",
     "vocabulary": "Từ vựng",
+    "games": "Trò chơi",
     "testing": "Kiểm tra",
     "systemdashboard": "Bảng điều khiển hệ thống",
     "licenses": "Bảng điều khiển giấy phép",
@@ -2832,7 +2833,27 @@
     "empty": "No games yet",
     "emptyHint": "Ask your teacher when the games are ready.",
     "loadError": "We could not load the games.",
-    "loadErrorHint": "Check the internet connection and try again."
+    "loadErrorHint": "Check the internet connection and try again.",
+    "storyLink": "Word adventures",
+    "storyLinkDescription": "Play 3D games with the words you saved from your reading."
+  },
+  "StoryGames": {
+    "title": "Word adventures",
+    "description": "Play 3D games with the words and sentences you saved from your reading. Older phones play the 2D version.",
+    "chooseGame": "Choose a game",
+    "loading": "Loading your saved words…",
+    "loadError": "Could not load your saved words. Try again later.",
+    "saved": "This practice set has {words, plural, one {# word} other {# words}} and {sentences, plural, one {# sentence} other {# sentences}} from your reading.",
+    "needWords": "{count, plural, one {Save # more word to play.} other {Save # more words to play.}}",
+    "needSentences": "{count, plural, one {Save # more sentence to play.} other {Save # more sentences to play.}}",
+    "readMore": "Read and save more words",
+    "flat": "2D mode (older phones)",
+    "save": {
+      "saving": "Saving your result…",
+      "saved": "Result saved",
+      "error": "Could not save your result"
+    },
+    "link": "Word adventures"
   },
   "Footer": {
     "tagline": "Mang lại trải nghiệm học tiếng Anh tốt nhất.",

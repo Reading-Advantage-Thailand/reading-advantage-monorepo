@@ -1,0 +1,425 @@
+{
+ "id": "sunken-vault",
+ "version": "1.0.0",
+ "root": "packs/sunken-vault/1.0.0",
+ "files": {
+  "altar": {
+   "id": "altar",
+   "path": "altar.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 132888,
+   "triangles": 1498,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/altar.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "arch": {
+   "id": "arch",
+   "path": "arch.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 115584,
+   "triangles": 900,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/arch.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "bone-pile": {
+   "id": "bone-pile",
+   "path": "bone-pile.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 134364,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/bone-pile.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "803f702",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "brazier": {
+   "id": "brazier",
+   "path": "brazier.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 146300,
+   "triangles": 1580,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/brazier.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "91f0b2b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "cell-bars": {
+   "id": "cell-bars",
+   "path": "cell-bars.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 87288,
+   "triangles": 900,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/cell-bars.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "chains": {
+   "id": "chains",
+   "path": "chains.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 110552,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/chains.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "364e187",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "door": {
+   "id": "door",
+   "path": "door.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 124152,
+   "triangles": 1616,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/door.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "floor": {
+   "id": "floor",
+   "path": "floor.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 67096,
+   "triangles": 300,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/floor.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "619f80e",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "floor-cracked": {
+   "id": "floor-cracked",
+   "path": "floor-cracked.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 41652,
+   "triangles": 300,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/floor-cracked.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "619f80e",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "gate": {
+   "id": "gate",
+   "path": "gate.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 101012,
+   "triangles": 900,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/gate.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "gold-pile": {
+   "id": "gold-pile",
+   "path": "gold-pile.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 168512,
+   "triangles": 1732,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/gold-pile.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "hanging-cage": {
+   "id": "hanging-cage",
+   "path": "hanging-cage.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 150684,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/hanging-cage.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "c8645d5",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "moss-tuft": {
+   "id": "moss-tuft",
+   "path": "moss-tuft.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 105224,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/moss-tuft.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "pillar": {
+   "id": "pillar",
+   "path": "pillar.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 100328,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/pillar.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "rubble": {
+   "id": "rubble",
+   "path": "rubble.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 113704,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/rubble.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "sarcophagus": {
+   "id": "sarcophagus",
+   "path": "sarcophagus.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 89468,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/sarcophagus.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "8b9827f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "stairs": {
+   "id": "stairs",
+   "path": "stairs.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 82260,
+   "triangles": 900,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/stairs.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "torch-sconce": {
+   "id": "torch-sconce",
+   "path": "torch-sconce.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 96452,
+   "triangles": 1498,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/torch-sconce.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "c8645d5",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "treasure-chest": {
+   "id": "treasure-chest",
+   "path": "treasure-chest.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 226304,
+   "triangles": 2620,
+   "textureSize": 512,
+   "skinned": true,
+   "clips": [
+    "open",
+    "rattle"
+   ],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/treasure-chest.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "b1b7d78",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "walkway": {
+   "id": "walkway",
+   "path": "walkway.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 58072,
+   "triangles": 298,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/walkway.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "wall": {
+   "id": "wall",
+   "path": "wall.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 81316,
+   "triangles": 900,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/wall.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "803f702",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "wall-alcove": {
+   "id": "wall-alcove",
+   "path": "wall-alcove.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 92324,
+   "triangles": 1498,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/wall-alcove.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "9f4a136",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "wall-corner": {
+   "id": "wall-corner",
+   "path": "wall-corner.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 96488,
+   "triangles": 900,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/wall-corner.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "803f702",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  }
+ },
+ "byteSize": 2522024
+}

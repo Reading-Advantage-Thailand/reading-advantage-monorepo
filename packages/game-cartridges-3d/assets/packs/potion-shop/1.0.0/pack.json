@@ -1,0 +1,422 @@
+{
+ "id": "potion-shop",
+ "version": "1.0.0",
+ "root": "packs/potion-shop/1.0.0",
+ "files": {
+  "apple": {
+   "id": "apple",
+   "path": "apple.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 43508,
+   "triangles": 600,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/apple.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "fafdb4f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "barrel": {
+   "id": "barrel",
+   "path": "barrel.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 136244,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/barrel.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2b1f1c9",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "bottle": {
+   "id": "bottle",
+   "path": "bottle.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 88192,
+   "triangles": 1498,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/bottle.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "c2676f1",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "bread": {
+   "id": "bread",
+   "path": "bread.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 46212,
+   "triangles": 600,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/bread.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "7ba1951",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "candle-cluster": {
+   "id": "candle-cluster",
+   "path": "candle-cluster.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 112272,
+   "triangles": 1498,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/candle-cluster.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "cauldron": {
+   "id": "cauldron",
+   "path": "cauldron.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 133732,
+   "triangles": 1568,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/cauldron.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "chandelier": {
+   "id": "chandelier",
+   "path": "chandelier.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 151512,
+   "triangles": 1498,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/chandelier.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0c95eae",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "counter": {
+   "id": "counter",
+   "path": "counter.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 57740,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/counter.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "c2676f1",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "crate": {
+   "id": "crate",
+   "path": "crate.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 105804,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/crate.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "000f9b8",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "crystal-cluster": {
+   "id": "crystal-cluster",
+   "path": "crystal-cluster.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 157660,
+   "triangles": 1610,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/crystal-cluster.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0ef9c9b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "fireplace": {
+   "id": "fireplace",
+   "path": "fireplace.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 130520,
+   "triangles": 1614,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/fireplace.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "a42042b",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "lantern": {
+   "id": "lantern",
+   "path": "lantern.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 119196,
+   "triangles": 1546,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/lantern.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "fafdb4f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "mushroom": {
+   "id": "mushroom",
+   "path": "mushroom.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 90512,
+   "triangles": 600,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/mushroom.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "ffce7d2",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "plaster-wall": {
+   "id": "plaster-wall",
+   "path": "plaster-wall.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 55820,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/plaster-wall.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "c2676f1",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "plaster-wall-door": {
+   "id": "plaster-wall-door",
+   "path": "plaster-wall-door.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 89216,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/plaster-wall-door.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "c2676f1",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "plaster-wall-window": {
+   "id": "plaster-wall-window",
+   "path": "plaster-wall-window.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 106112,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/plaster-wall-window.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "c2676f1",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "pumpkin": {
+   "id": "pumpkin",
+   "path": "pumpkin.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 61588,
+   "triangles": 600,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/pumpkin.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "fafdb4f",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "round-table": {
+   "id": "round-table",
+   "path": "round-table.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 88176,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/round-table.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0c95eae",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "sack": {
+   "id": "sack",
+   "path": "sack.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 88368,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/sack.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "2169e33",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "shelf": {
+   "id": "shelf",
+   "path": "shelf.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 61888,
+   "triangles": 1092,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/shelf.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "c2676f1",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "stool": {
+   "id": "stool",
+   "path": "stool.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 86816,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/stool.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "0c95eae",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "wood-floor": {
+   "id": "wood-floor",
+   "path": "wood-floor.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 23156,
+   "triangles": 300,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/wood-floor.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "3e9393a",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "workbench": {
+   "id": "workbench",
+   "path": "workbench.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 71304,
+   "triangles": 1500,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/workbench.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "814a3ea",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  }
+ },
+ "byteSize": 2105548
+}

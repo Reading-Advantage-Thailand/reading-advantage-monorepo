@@ -110,7 +110,8 @@ export type GameLearningContentInput = z.input<typeof gameLearningContentInputSc
 export type GameLearningContentResult = z.infer<typeof gameLearningContentResultSchema>;
 
 const translationRecordSchema = z.record(z.string(), z.string());
-const wordRecordSchema = z.object({
+/** The JSON of a saved word record: the word and its translations by locale. */
+export const wordRecordSchema = z.object({
   vocabulary: z.string().trim().min(1),
   definition: translationRecordSchema,
 }).passthrough();
@@ -124,7 +125,7 @@ const fallbackLocales = ["en", "th", "cn", "tw", "vi"] as const;
  * @param locale Student-requested locale.
  * @returns The selected translation, or undefined when none is usable.
  */
-function selectTranslation(
+export function selectTranslation(
   value: unknown,
   locale: z.infer<typeof gameLearningContentLocaleSchema>,
 ): { translation: string; locale: z.infer<typeof gameLearningContentLocaleSchema> } | undefined {

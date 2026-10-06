@@ -66,8 +66,9 @@ describe("Primary student games catalog", () => {
     render(await PrimaryStudentGamesPage({ params: Promise.resolve({ locale: "th" }) }));
 
     const gameLinks = screen.getAllByRole("link");
-    expect(gameLinks).toHaveLength(2);
+    expect(gameLinks).toHaveLength(3);
     expect(gameLinks.map((link) => link.getAttribute("href"))).toEqual([
+      "/student/games/story",
       "/student/games/apk/dragon-flight",
       "/student/games/apk/castle-defense",
     ]);

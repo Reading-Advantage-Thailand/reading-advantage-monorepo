@@ -60,6 +60,22 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
         <StudentRpgCatalogPanel ownerKey={ownerKey} />
         <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames} />
       </div>
+      {/* The 3D story games (APK 3D port). Phase 4 of the RPG skin moves them to the arena wall. */}
+      <Link
+        className={cn(
+          "bg-card text-card-foreground focus-visible:ring-ring/50 border-primary flex min-h-20 items-start gap-3 rounded-2xl border p-4 shadow-sm outline-none focus-visible:ring-[3px]",
+          cardHoverClassName,
+        )}
+        href="/student/games/story"
+      >
+        <span aria-hidden="true" className="bg-brand-100 text-brand-700 dark:text-brand-300 flex size-11 shrink-0 items-center justify-center rounded-xl [&>svg]:size-6">
+          <Gamepad2Icon />
+        </span>
+        <span className="flex min-w-0 flex-col gap-1">
+          <span className="text-base leading-snug font-semibold">{t("storyLink")}</span>
+          <span className="text-muted-foreground line-clamp-2 text-sm">{t("storyLinkDescription")}</span>
+        </span>
+      </Link>
       {cartridgeCatalog.length === 0 ? (
         <EmptyState className="bg-card border" icon={<Gamepad2Icon />} title={t("empty")} description={t("emptyHint")} />
       ) : (
