@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RPG skin · Phase 5: the five promo shots</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; padding: 24px; background: #f6f1e7; color: #2b2118; }
+  h1 { margin: 0 0 4px; } h2 { margin: 32px 0 8px; font-size: 20px; }
+  p { max-width: 70ch; line-height: 1.45; }
+  .shot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px; align-items: start; margin-bottom: 8px; }
+  figure { margin: 0; } img { max-width: 100%; border: 1px solid #c9b48a; border-radius: 8px; background: #fff; }
+  figcaption { font-size: 13px; color: #6b5438; margin-top: 4px; }
+  .path { background: #fff8e8; border: 1px solid #e3cf9f; border-radius: 8px; padding: 10px 14px; font-size: 14px; }
+  code { background: #efe4cc; padding: 1px 4px; border-radius: 4px; }
+  @media (max-width: 720px) { .shot { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<h1>Phase 5: the five promo shots</h1>
+<p>Track <code>primary_rpg_skin_20261006</code>, 2026-10-06. Each shot is a frame recorded from the lane-f build with the QA data (three students, class A). The recording path tells the video session how to get the same frame on the rehearsal environment.</p>
+
+<h2>Shot 1: the home hero beside the Class Quest banner</h2>
+<div class="shot"><figure><img src="captures/shot1-home-phone.png" alt="The home page with the hero and the Class Quest banner, phone"><figcaption>Phone, 375 px, day</figcaption></figure>
+<div class="path"><strong>Recording path.</strong> Sign in as a student with a hero. Home opens. The hero stands at the left of the day streak, XP, and level signs; the Class Quest banner hangs below with the boss portrait and the damage meter. Hold two seconds on the banner, then tap "Go to the battle".</div></div>
+
+<h2>Shot 2: the chosen hero steps into the light</h2>
+<div class="shot"><figure><img src="captures/shot2-picker-phone.png" alt="The avatar picker, step 2, the hero in the light beam, phone"><figcaption>Phone, 375 px, day</figcaption></figure>
+<div class="path"><strong>Recording path.</strong> Sign in as the student with no hero (the demo seed's <code>ton</code>). The shrine opens with the heroes on pedestals. Tap one: step 2 shows the hero in the light beam, breathing, with the colour pots below. Change a hair colour, then save.</div></div>
+
+<h2>Shot 3: coins fly to the counter in the armory</h2>
+<div class="shot"><figure><img src="captures/shot3-shop-a-phone.png" alt="The avatar shop after a purchase, coins flying to the counter, phone"><figcaption>Phone, 375 px, day, the frame right after "Buy"</figcaption></figure>
+<div class="path"><strong>Recording path.</strong> Me → My avatar → the chest "Shop". Pick a shelf item the student can afford (the demo seed gives <code>ploy</code> 220 GP). Tap "Buy": three coins fly from the purse to the counter, the blacksmith nods and thanks the student, the balance drops. Record from the tap to the nod (about 1.5 seconds).</div></div>
+
+<h2>Shot 4: the boss takes a hit</h2>
+<div class="shot"><figure><img src="captures/shot4-battle-phone.png" alt="The battle page, the boss taking a hit with the slash and the damage number, phone"><figcaption>Phone, 375 px, day, the frame of the hit</figcaption></figure>
+<div class="path"><strong>Recording path.</strong> With the quest in <code>play</code>, open the battle page as a student and answer a question correctly in the archway game. The boss flinches, the slash crosses it, and the damage number rises. The teacher moves the quest with the gold button on the live dashboard; the phones follow.</div></div>
+
+<h2>Shot 5: the boss falls on the projector</h2>
+<div class="shot"><figure><img src="captures/shot5-projector-desktop.png" alt="The live dashboard in result, the boss fallen, coin rain, desktop"><figcaption>Desktop, 1280 px, the live dashboard in <code>result</code></figcaption></figure>
+<div class="path"><strong>Recording path.</strong> The committed damage comes from verified completions only, so the boss falls on real play. Locally: <code>node boss-fall.mjs &lt;questId&gt;</code> lets the three QA students each start a challenge run and post one completion through <code>/api/v1/apk/challenges/runs</code> and <code>/api/v1/apk/complete</code>; the teacher then moves the quest to <code>result</code>. On the rehearsal environment the staff rehearsal gives the same frame with five real phones.</div></div>
+
+<h2>Checks</h2>
+<ul>
+<li>Recorded 2026-10-06 from the production build of lane-f (<code>next build</code>, <code>next start</code>; the dev server could not start under the OS file-watch limit). Commits up to <code>91ff50781</code> (the Forge sync merge).</li>
+<li>Shot 5 comes from real play through the API: quest <code>f6519455-78ed-434c-ae71-aeac8eeb6a37</code>, three challenge runs, three completions (each gave 9 XP, no duplicate), committed damage 42 of 42, then the teacher moved the quest to <code>result</code>. The apk routes accept same-origin POSTs only, so the recipe sends an <code>Origin</code> header.</li>
+<li>Shot 3: the purchase posts, the coins fly, the panel turns to "Owned", and the shop's own purse drops (220 → 170 → 120 over two purchases).</li>
+<li>Every frame has its desktop and night twins in <code>captures/</code>; the recipe scripts are in <code>scripts/</code>.</li>
+</ul>
+
+<h2>Open items</h2>
+<ul>
+<li><strong>The header purse does not refresh after a purchase.</strong> The coin counter in the top bar keeps the old balance until the next navigation (220 stayed in shot 3 while the shop purse showed 170). Small fix: refresh the shell balance from the purchase response.</li>
+<li><strong>Students with no hero show a white square on the projector.</strong> <code>qa-student-a2</code> and <code>qa-student-a3</code> have no avatar, so the live dashboard draws an empty tile. Show the class placeholder portrait instead.</li>
+<li><strong>The hit frame of shot 4 is the battle page state, not the slash.</strong> The slash and the rising damage number play inside the archway game at the moment of a correct answer; a headless frame of the battle page shows the boss with the student's pending hits. The video session records the slash from a real phone in the game.</li>
+<li><strong>The coin rain of shot 5 did not land in the headless frame</strong>; the fallen-boss panel, the thank-you list, and the hits list did. Check it on a real projector at the rehearsal.</li>
+</ul>
+</body>
+</html>

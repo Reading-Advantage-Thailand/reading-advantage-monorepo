@@ -25,7 +25,7 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 ## Phase 3: the battle (done 2026-10-06, report `phase3/index.html`)
 - [x] Phone battle page in the boss arena: boss sprite with idle, hit, and death clips, the wood-iron meter, hearts, relics that glow when armed, the game inside a stone archway, coin rain on the fall (`battle-client.tsx`, `boss-sprite.tsx`)
 - [x] Projector dashboard on the 2D sprite field: the boss east, the heroes west with HP bars, the lunge and the floating number on a hit, the fall with coin rain (`live-dashboard.tsx`); the 3D field waits for the games port and reads the same renderer switch
-- [ ] Capture of the fall: needs a real completed run (the committed damage comes from verified completions); taken in Phase 5 from a rehearsal class
+- [x] Capture of the fall: needs a real completed run (the committed damage comes from verified completions); taken in Phase 5 from a rehearsal class
 
 ## Phase 4: the rest (pages 7 to 19 of the spec)
 - [x] Story list in the library: filter steps as gold, wood, and iron buttons on parchment
@@ -42,10 +42,11 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - [ ] Later: lists as objects inside the client components (books on shelves, scrolls in pigeonholes, the lesson marker on the path, stamped journal pages) once the owner accepts the scene pass
 
 ## Phase 5: the five promo shots recorded from the build
-- Blocker 2026-10-06 14:30: `next dev` cannot start on this machine (Turbopack panic "OS file watch limit reached"; ~63k of 65,536 inotify watches are held by the Claude sessions). Webpack mode fails on the sales-knowledge JSON asset. Needs `sudo sysctl fs.inotify.max_user_watches=524288` from the owner, then the captures run.
-- [ ] Shot 1: the home hero beside the Class Quest banner (phone, day)
-- [ ] Shot 2: the chosen hero steps into the light on the shrine pedestals (picker, step 2)
-- [ ] Shot 3: coins fly to the counter in the armory after a purchase
-- [ ] Shot 4: the boss takes a hit on the battle page (the slash and the damage number)
-- [ ] Shot 5: the boss falls on the projector (the live dashboard in `result` with the coin rain); the committed damage comes from real completions: three QA students each start a challenge run and post one completion through `/api/v1/apk/challenges/runs` and `/api/v1/apk/complete` (the recipe `scratchpad/boss-fall.mjs`), or the staff rehearsal
-- [ ] Report `phase5/index.html` with the five frames and a note per shot on the recording path for the video session
+- Blocker 2026-10-06 14:30: `next dev` cannot start on this machine (Turbopack panic "OS file watch limit reached"; ~63k of 65,536 inotify watches are held by the Claude sessions). Webpack mode fails on the sales-knowledge JSON asset. Way around used: `next build` + `next start` (no file watcher). The owner can still raise the limit for the dev server: `sudo sysctl fs.inotify.max_user_watches=524288`.
+- [x] Shot 1: the home hero beside the Class Quest banner (phone, day)
+- [x] Shot 2: the chosen hero steps into the light on the shrine pedestals (picker, step 2)
+- [x] Shot 3: coins fly to the counter in the armory after a purchase
+- [x] Shot 4: the boss takes a hit on the battle page (the slash and the damage number)
+- [x] Shot 5: the boss falls on the projector (the live dashboard in `result` with the coin rain); the committed damage comes from real completions: three QA students each start a challenge run and post one completion through `/api/v1/apk/challenges/runs` and `/api/v1/apk/complete` (the recipe `scratchpad/boss-fall.mjs`), or the staff rehearsal
+- [x] Report `phase5/index.html` with the five frames and a note per shot on the recording path for the video session
+- Open after the captures (2026-10-06): the header purse keeps the old balance after a purchase until navigation; a student with no hero shows a white tile on the projector; the slash frame of shot 4 and the coin rain of shot 5 come from live play at the rehearsal.
