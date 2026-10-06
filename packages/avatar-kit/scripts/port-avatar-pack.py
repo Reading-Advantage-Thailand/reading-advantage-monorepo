@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 """Copies every portrait layer of the Forge pack into the Primary app and regenerates
-`src/catalog.ts` (all ready items with their GP price) and `src/pack-index.ts`. Run from this package folder:
+`src/catalog.ts` (all ready items with their GP price or reward mark) and `src/pack-index.ts`.
+The pack version comes from the one pack folder Forge commits under `demo/public/avatar-pack/`
+(the highest version when there are several). Run from this package folder:
 `python3 scripts/port-avatar-pack.py ~/Desktop/advantage-forge <forge-commit>`."""
 import json, os, re, shutil, sys
 
 FORGE, COMMIT = sys.argv[1], sys.argv[2]
-# The catalog is committed in Forge under demo/public; the portrait layers are a generated output.
-CATALOG = os.path.join(FORGE, "demo/public/avatar-pack/1.0.0/catalog.json")
-PACK = os.path.join(FORGE, "out/packs/avatar/1.0.0/")
-OUT = "../../apps/primary-advantage/public/packs/avatar/1.0.0/"
+# The pack (catalog, portrait layers, and their index) is committed in Forge under demo/public.
+PACKS = os.path.join(FORGE, "demo/public/avatar-pack/")
+VERSION = max(os.listdir(PACKS), key=lambda v: tuple(int(n) for n in v.split(".")))
+PACK = os.path.join(PACKS, VERSION, "")
+CATALOG = PACK + "catalog.json"
+OUT = f"../../apps/primary-advantage/public/packs/avatar/{VERSION}/"
 catalog = json.load(open(CATALOG))
+assert catalog["version"] == VERSION, f"catalog version {catalog['version']} is not the folder {VERSION}"
 items = {i["id"]: i for i in catalog["items"]}
 starters = open(os.path.join(FORGE, "src/apk3d/avatar/starters.ts")).read()
 need = set(items)
@@ -19,9 +24,11 @@ for _, pieces in re.findall(r"id: '([a-z-]+)'.*?pieces: \[([^\]]*)\]", starters,
 cat = {}
 for i in sorted(need):
     it = items[i]
-    cat[i] = {"id": i, "slot": it["slot"], "tier": it["tier"], "twoHanded": it["twoHanded"], "price": it["price"], "rating": it.get("rating"), "hides": it["equip"]["hides"], "hair": it["equip"]["hair"], "table": it["dyes"]}
+    cat[i] = {"id": i, "slot": it["slot"], "tier": it["tier"], "twoHanded": it["twoHanded"], "source": it.get("source", "shop"), "price": it.get("price", 0), "rating": it.get("rating"), "hides": it["equip"]["hides"], "hair": it["equip"]["hair"], "table": it["dyes"]}
+    assert cat[i]["source"] in ("shop", "reward"), f"unknown source on {i}"
 styles = {n for n in need if n.startswith("avatar-hair")}
 index = json.load(open(PACK + "portraits.json"))
+assert index["version"] == VERSION, f"portraits.json version {index['version']} is not the folder {VERSION}"
 layers = {}
 for name, layer in index["layers"].items():
     if "+" in name:
@@ -39,7 +46,7 @@ json.dump({**index, "layers": layers}, open(OUT + "portraits.json", "w"), separa
 ts = lambda v: json.dumps(v, indent=2)
 open("src/catalog.ts", "w").write(f'''/**
  * The avatar pack data the Primary avatar needs, copied from the Forge pack
- * `demo/public/avatar-pack/1.0.0/catalog.json` at Forge commit {{@link FORGE_COMMIT}} by
+ * `demo/public/avatar-pack/{VERSION}/catalog.json` at Forge commit {{@link FORGE_COMMIT}} by
  * `scripts/port-avatar-pack.py` (data only; the composer is in `portrait.ts`).
  */
 import type {{ HairForm }} from "./hair.js";
@@ -58,7 +65,9 @@ export interface AvatarCatalogItem {{
   /** Tier 1 opens at level 1, tier 2 at level 5, tier 3 at level 10. */
   readonly tier: number;
   readonly twoHanded: boolean;
-  /** The GP price from the Forge formula (0 for a free piece). */
+  /** Where a student gets the piece: the shop, or a completion reward (never sold). */
+  readonly source: "shop" | "reward";
+  /** The GP price from the Forge formula (0 for a free piece or a reward piece). */
   readonly price: number;
   /** The latest review score, or null when unrated. */
   readonly rating: number | null;

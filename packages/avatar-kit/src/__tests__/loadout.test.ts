@@ -7,7 +7,7 @@ import { STARTER_SETS } from "../starters.js";
 describe("starter loadouts", () => {
   it("records the pack provenance", () => {
     expect(FORGE_COMMIT).toMatch(/^[0-9a-f]{7,}$/);
-    expect(AVATAR_PACK_VERSION).toBe("1.0.0");
+    expect(AVATAR_PACK_VERSION).toBe("1.1.0");
   });
 
   it("builds the knight in its own colors and lists its layer files in draw order", () => {

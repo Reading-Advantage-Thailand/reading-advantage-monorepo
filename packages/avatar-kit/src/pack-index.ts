@@ -463,6 +463,10 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
     "color": "portraits/duelist-rapier.webp",
     "mask": "portraits/duelist-rapier.mask.webp"
   },
+  "echo-staff": {
+    "color": "portraits/echo-staff.webp",
+    "mask": "portraits/echo-staff.mask.webp"
+  },
   "enchanter-scroll": {
     "color": "portraits/enchanter-scroll.webp",
     "mask": "portraits/enchanter-scroll.mask.webp"
@@ -522,6 +526,10 @@ export const PORTRAIT_INDEX: Readonly<Record<string, { readonly color: string; r
   "gloves": {
     "color": "portraits/gloves.webp",
     "mask": "portraits/gloves.mask.webp"
+  },
+  "graveyard-staff": {
+    "color": "portraits/graveyard-staff.webp",
+    "mask": "portraits/graveyard-staff.mask.webp"
   },
   "great-axe": {
     "color": "portraits/great-axe.webp",

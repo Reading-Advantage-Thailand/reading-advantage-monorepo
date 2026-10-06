@@ -60,7 +60,7 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
         <p>{t("description")}</p>
       </header>
       <div className="flex flex-col gap-4 empty:hidden">
-        <StudentRpgCatalogPanel ownerKey={ownerKey} />
+        <StudentRpgCatalogPanel ownerKey={ownerKey} inventoryNote={t("rewardInInventory")} />
         <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames} />
       </div>
       {/* The 3D story games (APK 3D port) as the first banner on the arena wall. */}

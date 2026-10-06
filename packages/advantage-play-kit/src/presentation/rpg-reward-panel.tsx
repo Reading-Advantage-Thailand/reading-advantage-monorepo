@@ -28,8 +28,10 @@ export type RpgRewardPanelProps = Omit<ComponentProps<"section">, "children"> & 
   readonly failureMessage?: string | null;
   /** Retries the failed state or equip request. */
   readonly onRetry?: () => void;
-  /** Requests server equipment of one unlocked cosmetic. */
-  readonly onEquip: (cosmeticId: RpgCosmeticId) => void;
+  /** Requests server equipment of one unlocked cosmetic. Unused when `inventoryNote` is set. */
+  readonly onEquip?: (cosmeticId: RpgCosmeticId) => void;
+  /** Shown under an unlocked reward in place of the equip action, on hosts where a reward is an avatar piece in the inventory. */
+  readonly inventoryNote?: string;
   /** Visible panel heading. */
   readonly heading?: string;
 };
@@ -63,6 +65,7 @@ export function RpgRewardPanel({
   failureMessage = null,
   onRetry,
   onEquip,
+  inventoryNote,
   heading = "Wizard rewards",
   style,
   ...sectionProps
@@ -139,7 +142,9 @@ export function RpgRewardPanel({
                     </p>
                   )}
                 </div>
-                {unlocked ? (
+                {unlocked && inventoryNote ? (
+                  <p data-rpg-in-inventory={cosmetic.id} style={{ margin: 0, color: "var(--apk-reward-muted, #b9c9bf)" }}>{inventoryNote}</p>
+                ) : unlocked && onEquip ? (
                   <button
                     type="button"
                     aria-label={`${equipped ? "Equipped" : pending ? "Equipping" : "Equip"} ${cosmetic.name}`}

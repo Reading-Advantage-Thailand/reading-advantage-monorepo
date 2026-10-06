@@ -1,7 +1,7 @@
 {
  "id": "avatar",
- "version": "1.0.0",
- "root": "packs/avatar/1.0.0",
+ "version": "1.1.0",
+ "root": "packs/avatar/1.1.0",
  "files": {
   "avatar-base": {
    "id": "avatar-base",
@@ -858,6 +858,24 @@
     "tool": "scripts/avatar-pack.ts"
    }
   },
+  "echo-staff": {
+   "id": "echo-staff",
+   "path": "pieces/echo-staff.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 126300,
+   "triangles": 1606,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/echo-staff.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "97f4093a",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
   "enchanter-scroll": {
    "id": "enchanter-scroll",
    "path": "pieces/enchanter-scroll.glb",
@@ -1125,6 +1143,24 @@
     "source": "advantage-forge/assets/gloves.ts",
     "license": "AGPL-3.0-or-later",
     "forgeCommit": "162199c4",
+    "tool": "scripts/avatar-pack.ts"
+   }
+  },
+  "graveyard-staff": {
+   "id": "graveyard-staff",
+   "path": "pieces/graveyard-staff.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 182352,
+   "triangles": 2752,
+   "textureSize": 512,
+   "skinned": false,
+   "clips": [],
+   "presets": [],
+   "provenance": {
+    "source": "advantage-forge/assets/graveyard-staff.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "97f4093a",
     "tool": "scripts/avatar-pack.ts"
    }
   },
@@ -2695,5 +2731,5 @@
    }
   }
  },
- "byteSize": 15708100
+ "byteSize": 16016752
 }

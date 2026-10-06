@@ -58,7 +58,8 @@ describe("listAvatarShop", () => {
   it("lists every piece with price, level gate, dyes, and ownership, popular first, then the student's fixed order", async () => {
     const mock = createMockDb({ selectSequence: [[{ itemId: "leather-cap", dye: null }, { itemId: "rogue-hood", dye: "crimson" }], [{ itemId: tier3.id, count: 3 }, { itemId: priced.id, count: 1 }]] });
     const shop = await listAvatarShop({ db: db(mock), user: student, now });
-    expect(shop).toHaveLength(items.length);
+    expect(shop).toHaveLength(items.filter((i) => i.source === "shop").length);
+    expect(shop.some((i) => AVATAR_CATALOG[i.id]!.source === "reward")).toBe(false);
     expect(shop[0]!.id).toBe(tier3.id);
     expect(shop[1]!.id).toBe(priced.id);
     expect(shop.find((i) => i.id === "leather-cap")).toMatchObject({ owned: true, unlocked: true, levelRequired: 1 });
@@ -78,6 +79,13 @@ describe("purchaseAvatarItem", () => {
     await expect(purchaseAvatarItem({ db: db(mock), user: student, input: { itemId: tier3.id } })).rejects.toMatchObject({ code: "LEVEL_LOCKED", status: 403 });
     await expect(purchaseAvatarItem({ db: db(mock), user: student, input: { itemId: priced.id, extra: 1 } as never })).rejects.toMatchObject({ name: "ZodError" });
     expect(mock.transaction).not.toHaveBeenCalled();
+  });
+
+  it("refuses a reward piece before any write: a reward is never sold, even at 0 GP", async () => {
+    const mock = createMockDb();
+    await expect(purchaseAvatarItem({ db: db(mock), user: student, now, input: { itemId: "apprentice-wand" } })).rejects.toMatchObject({ code: "NOT_FOR_SALE" });
+    expect(AVATAR_CATALOG["apprentice-wand"]!.source).toBe("reward");
+    expect(mock.insert).not.toHaveBeenCalled();
   });
 
   it("buys a piece in one transaction: balance check, inventory row, negative ledger row", async () => {

@@ -56,6 +56,14 @@ describe("RpgRewardPanel", () => {
     expect(screen.getByRole("button", { name: "Equipped Apprentice Wand" })).toBeDisabled();
   });
 
+  it("shows the inventory note in place of the equip action when the host gives one", () => {
+    const { container } = render(<RpgRewardPanel state={state} assetUrls={assetUrls} inventoryNote="It is in your inventory." />);
+
+    expect(screen.getAllByText("It is in your inventory.")).toHaveLength(2);
+    expect(container.querySelector('[data-rpg-in-inventory="echo-staff"]')).toBeNull();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
   it("keeps confirmed state visible during a failure and exposes a 48px retry action", () => {
     const onRetry = vi.fn();
     render(
