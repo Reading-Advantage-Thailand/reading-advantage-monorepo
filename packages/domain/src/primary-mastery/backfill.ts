@@ -204,6 +204,12 @@ export async function backfillPrimaryTags(options: BackfillPrimaryTagsOptions): 
 
 const QUESTION_TABLES = { mcq: multipleChoiceQuestions, saq: shortAnswerQuestions, laq: longAnswerQuestions } as const;
 
+/**
+ * The `primary_legacy_id_map.table_name` of an article: the legacy table name, as the
+ * `tutor_compat` views of migration 0061 and the cutover ETL (spec A6) use it.
+ */
+export const LEGACY_ARTICLE_TABLE = "article";
+
 /** The `primary_legacy_id_map.table_name` of each question type. */
 export const LEGACY_QUESTION_TABLE: Record<QuestionType, string> = { mcq: "multiple_choice_questions", saq: "short_answer_questions", laq: "long_answer_questions" };
 
@@ -217,7 +223,7 @@ export function createDrizzleTagBackfillPort(rawDb: DB): TagBackfillPort {
   const db = createTenantDB(rawDb, { schoolId: null }).unscoped("tag backfill: the content link tables and the catalogue are global (EXEMPT); privileged CLI, no tenant");
   return {
     async articleIdByLegacy(legacyId) {
-      const rows = await db.select({ newId: primaryLegacyIdMap.newId }).from(primaryLegacyIdMap).where(and(eq(primaryLegacyIdMap.tableName, "articles"), eq(primaryLegacyIdMap.legacyId, legacyId))).limit(1);
+      const rows = await db.select({ newId: primaryLegacyIdMap.newId }).from(primaryLegacyIdMap).where(and(eq(primaryLegacyIdMap.tableName, LEGACY_ARTICLE_TABLE), eq(primaryLegacyIdMap.legacyId, legacyId))).limit(1);
       return rows[0]?.newId ?? null;
     },
     async lessonByKey(key) {

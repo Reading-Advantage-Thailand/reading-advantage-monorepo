@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_mastery_evidence_20261006",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-06T10:30:00Z",
+  "updated_at": "2026-10-06T10:30:00Z",
+  "description": "T2 of the Primary Mastery Graph Program: recordPrimaryEvidence, the evidence policy as data, the three source adapters (question step, flashcard review, game run), the durable job, tenant scoping, and the evidence summary for calibration. Shadow mode: evidence only, no adaptation, no UI.",
+  "estimated_tasks": 25,
+  "actual_tasks": null,
+  "deviation_notes": "Created from the approved program (section 4.2, 4.4, 7, 8) without a questioning round at the owner's request. Decision 6 gated T2 on the game surfaces; the 3D games port merged into primary-parity-integration on 2026-10-06."
+}

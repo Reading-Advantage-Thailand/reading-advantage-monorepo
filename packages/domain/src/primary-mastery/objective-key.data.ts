@@ -18,7 +18,7 @@ export const GRAPH_RELEASE: GraphRelease = {
   },
   "vocabulary": {
     "file": "mastery-advantage/english/cefr-vocabulary/cefr-vocabulary-knowledge-space.json",
-    "commit": "2daf568",
+    "commit": "1e10cf9",
     "schemaVersion": "english-vocabulary.v1"
   }
 };
