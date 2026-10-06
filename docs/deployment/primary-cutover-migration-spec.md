@@ -1,6 +1,6 @@
 # Primary Advantage Cutover — Data and Login Migration Spec
 
-Version 1.3 | Date 2026-10-04 | Status: Calendar (§11) approved by Daniel 2026-10-01; the rest is a draft | Owner: Daniel Bo | Scope: `apps/primary-advantage`, `packages/db`, `packages/auth`, `packages/api`
+Version 1.4 | Date 2026-10-06 | Status: Calendar (§11) approved by Daniel 2026-10-01; the rest is a draft | Owner: Daniel Bo | Scope: `apps/primary-advantage`, `packages/db`, `packages/auth`, `packages/api`
 
 Related: `advantage-pr/08-strategy/product-strategy-2026-2027.md` §6 (October plan); `Workbooks/docs/content-plans/primary-origins-3.2-plan.md` (decision D1, QR URLs); `tutor-advantage/docs/specs/2026-10-tutor-catalogue-and-platform-spec.md` (Tutor side).
 
@@ -74,6 +74,7 @@ Password hashes in April: credential accounts 14 bcrypt, 4 scrypt; 8 Google acco
 | D7 | Password formats | **Dropped (Daniel, 2026-10-04).** Teachers sign in only with Google today, so no live teacher has a scrypt or bcrypt hash. Bcrypt dual-read stays (commit `b3bf3ef0e`); scrypt is not added. | Students use class codes. Teachers get new credentials through D8. |
 | D8 | Teacher credentials | No Google sign-in (Daniel, 2026-09-29); username and password only. **Decided 2026-10-04:** a script gives each migrated teacher a credential account with `username = lower(email)` (D6) and a random temporary password, and writes a hand-out list for the team. The teacher must change the temporary password at first sign-in (new nullable column plus a change-password step). | All teachers use Google sign-in today, so none has a password. Daniel is on holiday at cutover, so the team hands out the list. |
 | D9 | Roles | `student→STUDENT`, `teacher→TEACHER`, `admin→ADMIN`, `system→SYSTEM`. The 7 `user` rows: Daniel lists them and assigns a role by hand before the final run. | `user` has no enum value. |
+| D10 | Article pictures | **Decided 2026-10-06.** The bucket `primary-app-storage` keeps every file at its current key: `images/<legacyId>_<n>.png` and the audio paths stay as they are; the cutover renames no object. The ETL writes the legacy article id into `articles.image` (the picture key) for every migrated article. A new article has no picture key, and the app uses the article id. `getArticleImageUrl` reads the picture key first and the article id second (`apps/primary-advantage/lib/storage-config.ts`). The picture key is the same value that the `tutor_compat` view returns as `id` (D4), so Tutor builds the same `image_urls` as today. | D2 gives migrated articles new UUIDs, and the app built the picture URL from the article id. Without this rule every migrated story loses its pictures after the cutover. Tutor (`services/learning-service/src/services/PrimaryAdvantageDB.ts`) and the Workbooks injector both name pictures by the legacy id. |
 
 ## 6. ETL rules
 
@@ -90,6 +91,7 @@ Known hazards found on 2026-09-30:
 | `classrooms` | `teacher_id` is NOT NULL; legacy uses a join table (`classroom_teachers`: 18 rows for 31 classrooms) | First teacher in the join table; if none, the school's admin; list every fallback in the report |
 | `multiple_choice_questions` | `correct_answer integer NOT NULL` (index into `options`); legacy has `answer` text | Compute the index by matching `answer` to `options`; skip and report rows with no match |
 | `article` | Level labels: Origins 3.1 articles are at level 2; they belong at level 3 | Optional fix-up step: set `ra_level = 3`, `cefr_level = 'A0+'` for the 13 Origins 3.1 article IDs listed in `Workbooks/primary/origins-3.1-a0/*_workbook.json` |
+| `article` | The bucket names pictures and audio by the legacy id; the new row gets a UUID | D10: write the legacy id into `articles.image`; copy `audio_url` and the other storage paths unchanged; report an article whose `images/<legacyId>_1.png` is absent from the bucket |
 | All cuid-keyed tables | New `uuid` keys | D2; every foreign key is rewritten through `primary_legacy_id_map` |
 | `sessions`, `verifications` | Not needed | Do not move; everyone signs in again |
 | Tables with no shared-schema target found by name (`assignment_students`, `logs`, `story_chapters`, `user_activities`, `user_lesson_progress`, `verifications`) | Target unknown | Find the target table or record "dropped" with a reason, before rehearsal 1 |
@@ -107,6 +109,7 @@ Known hazards found on 2026-09-30:
 | A7 | `packages/db` | `tutor_compat` views (D4) | Tutor's four queries return the same rows from the new database as from the legacy one, for every article in Tutor's catalogue |
 | A8 | `apps/primary-advantage` | Teacher sign-in page asks for a username only; teacher usernames are `lower(email)` (owner decision 2026-10-04) | A teacher signs in with the email address they used before, typed as the username |
 | A9 | `packages/db`, `apps/primary-advantage` | Teacher credential script, hand-out list, and forced password change at first sign-in (D8) | Every migrated teacher has a credential account before go-live; a temporary password works once, then the teacher must set a new one |
+| A10 | `apps/primary-advantage`, `packages/db` | Picture key for migrated articles (D10): the app helper reads `articles.image` first (done on `primary/lane-f-reedy-preview`, track `primary_rpg_skin_20261006`); the ETL (A6) fills the column | After the rehearsal, a migrated article shows its picture on the Read list, the story page, and the lesson; a new article made after the cutover shows its picture too |
 
 ## 8. Rehearsal (run twice)
 
@@ -163,7 +166,7 @@ Also: one admin and one system user.
 | Date | Step |
 |---|---|
 | Oct 1 | Confirm §3 in the Cloud Run logs. Send a revised notice: Primary maintenance moves inside Oct 8–20. |
-| Oct 1–7 | A1–A9. Content work continues on the legacy database: the Workbooks injector (`Workbooks/measure/tracks/primary_injector_20261001/`) writes the Origins 3.2, Quest 4, and insert lessons there from Oct 4, and the ETL carries them. No content writes on the cutover evening. The Workbooks verify script checks each rehearsal database against the lesson packages. |
+| Oct 1–7 | A1–A10. Content work continues on the legacy database: the Workbooks injector (`Workbooks/measure/tracks/primary_injector_20261001/`) writes the Origins 3.2, Quest 4, and insert lessons there from Oct 4, and the ETL carries them. No content writes on the cutover evening. The Workbooks verify script checks each rehearsal database against the lesson packages. |
 | Oct 8–9 | Rehearsal 1 |
 | Oct 12–13 | Rehearsal 2 |
 | Oct 14–16 | Cutover evening, if rehearsal 2 passed |
@@ -179,6 +182,7 @@ Also: one admin and one system user.
 
 ## Revision history
 
+- 1.4 — 2026-10-06 — D10 decided: article pictures keep the legacy key (`articles.image`), the bucket stays as it is, Tutor sees no change. ETL rule and code task A10 added.
 - 1.3 — 2026-10-04 — Review fixes: the monorepo pipeline uses its own secret `PRIMARY_V2_DATABASE_URL`; the Cloud SQL Auth Proxy runs in the migrate steps; the runbook adds the pre-ETL gate steps, a `--no-traffic` first deploy, and a pinned secret version.
 - 1.2 — 2026-10-04 — D7 dropped (no live teacher passwords). D8 decided: temporary password plus forced change. ID map table renamed `primary_legacy_id_map` (program prefix rule). A5, A6, A7, A8, A9 move to track `primary_legacy_data_migration_20261004`.
 - 1.1 — 2026-10-01 — Calendar in §11 approved by Daniel. Content now arrives through the Workbooks injector, not the admin tool.
