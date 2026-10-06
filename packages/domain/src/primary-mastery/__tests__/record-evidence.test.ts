@@ -22,7 +22,7 @@ describe("recordPrimaryEvidence (FR-3, FR-4)", () => {
     const snapshot = await persistence.readSnapshot({ schoolId: SCHOOL });
     expect(snapshot.evidence.map((row) => [row.studentId, row.objectiveId, row.variantKey])).toEqual([[STUDENT, R12_1, "mcq"], [STUDENT, L19_2, "mcq"]]);
     expect(snapshot.cards).toHaveLength(2);
-    expect(snapshot.reviews.every((row) => row.stateBefore && row.stateAfter)).toBe(true);
+    expect(snapshot.reviews.every((row) => row.beforeState && row.afterState)).toBe(true);
   });
 
   it("uses the teacher-led confidence and the hint step", async () => {

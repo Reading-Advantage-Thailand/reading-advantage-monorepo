@@ -44,7 +44,7 @@ describe("loadPrimaryEvidenceEvent (FR-5, FR-6)", () => {
   });
 
   it("turns a game_completions row with story evidence into a game-run event, expedition when the game type says so", async () => {
-    const evidence = { schemaVersion: 1, kind: "story-game", gameId: "expedition", inputId: "pip-1", seed: 1, durationMs: 1000, items: [{ itemId: "w-puppy", kind: "word", label: "puppy", attempts: 1, correctFirstTry: true, solved: true }], practice: [] };
+    const evidence = { schemaVersion: 1, kind: "story-game", gameId: "expedition", inputId: "pip-1", level: "A1", seed: 1, durationMs: 1000, items: [{ itemId: "w-puppy", itemKind: "word", label: "puppy", attempts: 1, correctFirstTry: true, solved: true }], practice: [] };
     const loaded = await loadPrimaryEvidenceEvent({
       db: db([{ id: ROW, schoolId: SCHOOL, userId: STUDENT, gameType: "expedition-story", createdAt: AT, metadata: { learningEvidence: evidence, articleId: ARTICLE } }]),
       payload: { sourceTable: "game_completions", rowId: ROW },
