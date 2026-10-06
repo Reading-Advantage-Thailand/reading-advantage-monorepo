@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   DROPPED_TABLES,
+  JsonCell,
   MAP_TABLES,
   correctAnswerIndex,
   keepLatest,
@@ -71,7 +72,10 @@ describe("primary legacy import transforms", () => {
     expect(row.published).toBe(true);
     expect(row.is_published).toBe(true);
     expect(row.author_id).toBeNull();
-    expect(row.sentences).toBe(JSON.stringify([{ i: 0 }]));
+    // jsonb columns go through sql.json: an array must not become a Postgres array or a JSON string.
+    expect(row.sentences).toBeInstanceOf(JsonCell);
+    expect((row.sentences as JsonCell).value).toEqual([{ i: 0 }]);
+    expect((row.translated_passage as JsonCell).value).toEqual({ th: ["x"] });
     expect(row.words).toBeNull();
     expect(mapArticle({ ...legacy, passage: null, is_published: null }, "x", true)).toMatchObject({ content: "", published: false, author_id: "u9" });
   });
