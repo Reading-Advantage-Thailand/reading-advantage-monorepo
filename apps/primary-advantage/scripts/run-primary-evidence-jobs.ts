@@ -16,6 +16,9 @@ import { db } from "@reading-advantage/db";
 import { client } from "@reading-advantage/db/client";
 import { durableJobs } from "@reading-advantage/db/schema";
 import { definePrimaryEvidenceJobHandler, PRIMARY_EVIDENCE_JOB_NAME, PRIMARY_EVIDENCE_QUEUE_NAME } from "@reading-advantage/domain/primary-mastery";
+import { createPrimaryEvidenceSql } from "../lib/primary-evidence-sql";
+
+const queueSql = createPrimaryEvidenceSql();
 
 const WORKER_ID = `primary-evidence-local:${process.pid}`;
 const LEASE_SECONDS = 60;
@@ -37,7 +40,7 @@ async function tenantsWithWork(schoolId: string | null): Promise<string[]> {
 async function main(): Promise<void> {
   const schoolIndex = process.argv.indexOf("--school");
   const schoolId = schoolIndex >= 0 ? (process.argv[schoolIndex + 1] ?? null) : null;
-  const port = createDurableJobQueuePort({ sql: client });
+  const port = createDurableJobQueuePort({ sql: queueSql });
   const handler = definePrimaryEvidenceJobHandler({ db });
   const totals = { settled: 0, failed: 0, committed: 0, skipped: 0 };
   for (const tenantId of await tenantsWithWork(schoolId)) {
@@ -74,4 +77,4 @@ main()
     console.error(error);
     process.exitCode = 1;
   })
-  .finally(() => client.end());
+  .finally(() => Promise.all([client.end(), queueSql.end()]));

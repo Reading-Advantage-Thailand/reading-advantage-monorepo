@@ -19,6 +19,9 @@ import { db } from "@reading-advantage/db";
 import { client } from "@reading-advantage/db/client";
 import { cardReviews, durableJobs, flashcardCards, flashcardDecks, gameCompletions, userActivity, users } from "@reading-advantage/db/schema";
 import { enqueuePrimaryEvidence, PRIMARY_EVIDENCE_JOB_NAME, primaryEvidenceJobKey, type PrimaryEvidenceJobPayload } from "@reading-advantage/domain/primary-mastery";
+import { createPrimaryEvidenceSql } from "../lib/primary-evidence-sql";
+
+const queueSql = createPrimaryEvidenceSql();
 
 const QUIZ_ACTIVITY_TYPES = ["MC_QUESTION", "SA_QUESTION", "LA_QUESTION"];
 
@@ -97,7 +100,7 @@ async function main(): Promise<void> {
     console.log("Dry run. Pass --apply to enqueue.");
     return;
   }
-  const port = createDurableJobQueuePort({ sql: client });
+  const port = createDurableJobQueuePort({ sql: queueSql });
   const outcomes: Record<string, number> = {};
   for (const row of pending) {
     const result = await enqueuePrimaryEvidence({ port, payload: row.payload, schoolId: row.schoolId });
@@ -111,4 +114,4 @@ main()
     console.error(error);
     process.exitCode = 1;
   })
-  .finally(() => client.end());
+  .finally(() => Promise.all([client.end(), queueSql.end()]));

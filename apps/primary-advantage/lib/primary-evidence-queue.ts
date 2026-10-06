@@ -1,14 +1,17 @@
 import "server-only";
-import { createDurableJobQueuePort } from "@reading-advantage/backend/jobs/adapters/postgres";
-import { client } from "@reading-advantage/db/client";
+import { createDurableJobQueuePort, type DurableJobQueuePort } from "@reading-advantage/backend/jobs/adapters/postgres";
 import { enqueuePrimaryEvidence, type PrimaryEvidenceJobPayload } from "@reading-advantage/domain/primary-mastery";
+import { createPrimaryEvidenceSql } from "@/lib/primary-evidence-sql";
+
+let port: DurableJobQueuePort | undefined;
 
 /**
- * The durable job queue of this app, built once over the shared postgres client.
+ * The durable job queue of this app, built once over its own postgres client.
  * @returns The enqueue port.
  */
-function queuePort() {
-  return createDurableJobQueuePort({ sql: client });
+function queuePort(): DurableJobQueuePort {
+  port ??= createDurableJobQueuePort({ sql: createPrimaryEvidenceSql() });
+  return port;
 }
 
 /**
