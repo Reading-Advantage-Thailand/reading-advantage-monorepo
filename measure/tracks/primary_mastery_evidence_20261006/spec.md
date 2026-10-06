@@ -52,10 +52,13 @@ views (T5) come after.
   and whether the evidence may count toward `mastered`. Rules: teacher-led MCQ 0.5 instead
   of 0.8; a hint, a reveal, or an open translation panel before the answer lowers the
   confidence one step (0.8 to 0.5, 0.5 to 0.3); a blank answer or an answer under two seconds
-  records no evidence; a listening objective (`L` short id) counts only when the article
-  audio played during the step; LAQ and Reedy record nothing. A pure function
+  records no evidence; a listening objective (`L` short id) is skipped when the step reports
+  that the article audio did not play (`audioPlayed: false`; a row without the key, legacy or
+  from a screen that does not track audio yet, keeps its evidence); LAQ and Reedy record
+  nothing. A pure function
   `rateEvidence(surface, outcome, context)` returns the rating, the confidence, and
-  `counts`, or `null` for "no evidence".
+  `counts`, or a skip with its reason (`no-evidence`, `too-fast`, `blank`,
+  `listening-without-audio`).
 - FR-2 (source event contracts): Zod schemas for the three source events, each carrying the
   source table and row id for idempotency:
   `questionAnswerEvent` (userId, articleId, questionId, questionType, mode `teacher_led` |
@@ -95,6 +98,14 @@ views (T5) come after.
   tenant mode). Reads of the REFERENTIAL sources use `unscoped(reason)` and verify the row's
   `userId` belongs to `tenant.schoolId` through `users.schoolId` before any write. The T1
   link tables are global (EXEMPT) and need no scope.
+- FR-5d (evidence is kept, owner rule 2026-10-06): a quiz row saved before this track (no
+  `details.questions`) still yields evidence. The adapter matches each `responses[].question`
+  text (MCQ) or `details.question` (SAQ) against the article's question rows with the tags
+  backfill's text rule, takes `answer === isCorrect` as the MCQ outcome and `score / 5` as the
+  SAQ ratio, records the row at the teacher-led confidence (mode unknown, conservative), and
+  counts unmatched texts as skipped. A one-time script enqueues one job per existing quiz row,
+  flashcard review, and story game run so the past replays through the same path; it is
+  idempotent by row id and runs once after the cutover ETL.
 - FR-7 (no adaptation, no UI): this track changes no screen and shows no recommendation. The
   Class Quest keeps reading completions; it never writes evidence. Teacher-led steps record
   evidence at the teacher-led confidence and nothing else changes in the lesson.

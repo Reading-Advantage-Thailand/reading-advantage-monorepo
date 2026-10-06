@@ -97,6 +97,8 @@ export const gameCompletionResultSchema = z.object({
   activityId: z.string(),
   duplicate: z.boolean(),
   status: z.literal(200),
+  /** The saved `game_completions` row, so the caller can enqueue the evidence job (absent on a duplicate). */
+  completionId: z.string().uuid().optional(),
 });
 
 /**
