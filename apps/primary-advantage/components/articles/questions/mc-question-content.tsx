@@ -35,6 +35,23 @@ import { useAuth } from "@reading-advantage/auth-client";
 import { shuffle } from "@/lib/shuffle";
 
 /**
+ * The evidence keys of a finished quiz (track primary_mastery_evidence_20261006): one entry
+ * per question with its id and outcome. The screen allows one click per question, so every
+ * answer is a first try. The lesson view is the teacher-led step; the article page is
+ * independent reading.
+ * @param questions The quiz questions in order.
+ * @param progress The answer status per question index.
+ * @param mode The lesson mode of the screen.
+ * @returns The keys `finishQuiz` stores beside the legacy ones.
+ */
+export function evidenceKeys(questions: MCQuestion[], progress: AnswerStatus[], mode: "independent" | "teacher_led") {
+  return {
+    questions: questions.map((question, index) => ({ questionId: question.id, questionType: "mcq" as const, correct: progress[index] === AnswerStatus.CORRECT, firstTry: true })),
+    mode,
+  };
+}
+
+/**
  * Shared multiple-choice answer state and option shuffling.
  * @param questions Active multiple-choice questions.
  * @returns Answer state, setters, shuffled options, and the answer handler.
@@ -169,6 +186,7 @@ function MCQuestionContentView({
       score: progress.filter((status) => status === AnswerStatus.CORRECT)
         .length,
       timer,
+      ...evidenceKeys(questions, progress, "independent"),
     };
 
     startTransition(async () => {
@@ -354,6 +372,7 @@ function LessonMCQContentView({ article }: { article: Article }) {
       score: progress.filter((status) => status === AnswerStatus.CORRECT)
         .length,
       timer,
+      ...evidenceKeys(questions, progress, "teacher_led"),
     };
 
     startTransition(async () => {

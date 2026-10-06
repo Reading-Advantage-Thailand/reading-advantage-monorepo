@@ -1045,6 +1045,9 @@ importers:
       '@reading-advantage/avatar-kit':
         specifier: workspace:*
         version: link:../../packages/avatar-kit
+      '@reading-advantage/backend':
+        specifier: workspace:*
+        version: link:../../packages/backend
       '@reading-advantage/db':
         specifier: workspace:*
         version: link:../../packages/db

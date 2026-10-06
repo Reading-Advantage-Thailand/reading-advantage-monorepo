@@ -12,6 +12,7 @@ const {
   mockRecordGameCompletion,
   mockGetMyRpgState,
   mockEquipMyRpgCosmetic,
+  mockEnqueuePrimaryEvidence,
 } = vi.hoisted(() => ({
   mockPrepareGameAnswerAudio: vi.fn(),
   mockCreateTenantDB: vi.fn(),
@@ -20,6 +21,11 @@ const {
   mockRecordGameCompletion: vi.fn(),
   mockGetMyRpgState: vi.fn(),
   mockEquipMyRpgCosmetic: vi.fn(),
+  mockEnqueuePrimaryEvidence: vi.fn(),
+}));
+
+vi.mock("@/lib/primary-evidence-queue", () => ({
+  enqueuePrimaryEvidenceJob: (...args: unknown[]) => mockEnqueuePrimaryEvidence(...args),
 }));
 
 vi.mock("@/lib/session", () => ({
@@ -184,6 +190,22 @@ describe("Primary APK routes", () => {
       tenant: { schoolId: "school-1" },
       input: completionInput,
     });
+  });
+
+  it("enqueues one mastery evidence job for a story-game run and none for a plain run (FR-5c)", async () => {
+    const completionId = "20000000-0000-4000-8000-000000000002";
+    mockRecordGameCompletion.mockResolvedValue({ xpEarned: 25, activityId: "game:x", duplicate: false, status: 200, completionId });
+    mockEnqueuePrimaryEvidence.mockResolvedValue(true);
+    const storyEvidence = { schemaVersion: 1, kind: "story-game", gameId: "potion-rush", inputId: "saved", level: "A1", seed: 1, durationMs: 1000, items: [{ itemId: "w-puppy", itemKind: "word", label: "puppy", attempts: 1, correctFirstTry: true, solved: true }], practice: [] };
+
+    const storyResponse = await POST(completionRequest({ ...completionInput, challengeRunId: undefined, gameType: "potion-rush", metadata: { learningEvidence: storyEvidence } }));
+    expect(storyResponse.status).toBe(200);
+    expect(mockEnqueuePrimaryEvidence).toHaveBeenCalledWith({ sourceTable: "game_completions", rowId: completionId }, "school-1");
+
+    mockEnqueuePrimaryEvidence.mockClear();
+    const plainResponse = await POST(completionRequest(completionInput));
+    expect(plainResponse.status).toBe(200);
+    expect(mockEnqueuePrimaryEvidence).not.toHaveBeenCalled();
   });
 
   it("rejects an invalid completion payload before domain access", async () => {

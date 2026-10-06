@@ -67,6 +67,8 @@ export type WrittenQuestionModal = "categories" | "summary";
 export interface WrittenFinishInput {
   /** Feedback returned by getFeedback. */
   feedback: FeedbackData | SAQFeedback | null;
+  /** The question row id, for the evidence keys. */
+  questionId: string;
   /** Question text. */
   question: string;
   /** Suggested answer (short answer only). */
@@ -116,6 +118,8 @@ export interface WrittenQuestionConfig {
     score?: number;
     responses?: string[];
     timer?: number;
+    questions?: { questionId: string; questionType: "saq"; scoreRatio?: number }[];
+    mode?: "independent" | "teacher_led";
   };
   /** Success toast message on quiz finish. */
   successMessage: (t: TranslateFn) => string;
@@ -179,13 +183,19 @@ export const WRITTEN_QUESTION_CONFIGS: Record<
     preferredLanguage: () => "en",
     includeSuggestedResponse: true,
     pauseBeforeFeedback: true,
-    buildFinishData: (input) => ({
-      ...(input.feedback as SAQFeedback),
-      question: input.question,
-      suggestedAnswer: input.suggestedAnswer,
-      yourAnswer: input.yourAnswer,
-      timer: input.timer,
-    }),
+    buildFinishData: (input) => {
+      const score = (input.feedback as SAQFeedback | null)?.score;
+      return {
+        ...(input.feedback as SAQFeedback),
+        question: input.question,
+        suggestedAnswer: input.suggestedAnswer,
+        yourAnswer: input.yourAnswer,
+        timer: input.timer,
+        // Evidence keys: the article page is independent reading; the grader scores 1-5.
+        questions: [{ questionId: input.questionId, questionType: "saq" as const, scoreRatio: typeof score === "number" ? Math.max(0, Math.min(1, score / 5)) : undefined }],
+        mode: "independent" as const,
+      };
+    },
     successMessage: (t) => t("descriptionSuccess"),
     useRichColors: true,
     refreshAuthOnFinish: true,
@@ -281,6 +291,7 @@ function WrittenQuestionView({
     setPaused(true);
     const data = config.buildFinishData({
       feedback,
+      questionId: questions.id,
       question: questions.question,
       suggestedAnswer: (questions as SAQuestion).answer,
       yourAnswer: form.getValues("answer"),

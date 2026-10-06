@@ -15,6 +15,8 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "seed:demo": "tsx scripts/seed-demo.ts",
+    "evidence:backfill": "tsx scripts/backfill-primary-evidence.ts",
+    "evidence:run": "tsx scripts/run-primary-evidence-jobs.ts",
     "sync:3d-assets": "node ../../packages/game-cartridges-3d/scripts/sync-assets.mjs public",
     "predev": "pnpm sync:3d-assets",
     "prebuild": "pnpm sync:3d-assets"
@@ -51,6 +53,7 @@
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/auth-client": "workspace:*",
     "@reading-advantage/avatar-kit": "workspace:*",
+    "@reading-advantage/backend": "workspace:*",
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/domain": "workspace:*",
     "@reading-advantage/game-cartridges": "workspace:*",

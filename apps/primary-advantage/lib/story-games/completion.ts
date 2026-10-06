@@ -21,7 +21,7 @@ export function storyCompletionInput(
   gameId: string,
   result: GameResults,
   evidence: StoryGameEvidence,
-  run: { startedAt: number; now: number; helper: boolean; victory: boolean; idempotencyKey: string },
+  run: { startedAt: number; now: number; helper: boolean; victory: boolean; idempotencyKey: string; articleId?: string },
 ): GameCompletionInput {
   return mapGameResultsToCompletionInput(result, {
     gameType: storyGameType(gameId),
@@ -30,6 +30,7 @@ export function storyCompletionInput(
     victory: run.victory,
     idempotencyKey: run.idempotencyKey,
     clientTimestamp: run.now,
-    metadata: { learningEvidence: evidence },
+    // The article lets the evidence job map word items to the article's glossary nodes.
+    metadata: { learningEvidence: evidence, ...(run.articleId ? { articleId: run.articleId } : {}) },
   });
 }
