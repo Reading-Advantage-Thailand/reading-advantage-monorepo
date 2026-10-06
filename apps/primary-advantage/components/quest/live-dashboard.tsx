@@ -14,6 +14,7 @@ import { Meter, Panel, RpgButton, Sign } from "@/components/rpg/chrome";
 import { useRenderer } from "@/lib/rpg/use-renderer";
 import { cn } from "@/lib/utils";
 import { AvatarPortrait } from "@/components/avatar/portrait-canvas";
+import { NO_HERO_ART } from "@/lib/rpg/places";
 import { BossSprite, useBossHit } from "./boss-sprite";
 import { countdownText } from "./countdown";
 import { questText } from "./quest-copy";
@@ -161,13 +162,12 @@ export function LiveDashboard({ initial }: { initial: QuestDashboardState }) {
                   alt={s.name}
                 />
               ) : (
-                <div
-                  className="bg-muted/80 text-muted-foreground flex size-18 items-center justify-center rounded-xl px-1 text-center text-xs leading-tight"
-                  role="img"
-                  aria-label={t("noHero")}
-                >
-                  {t("noHero")}
-                </div>
+                <img
+                  src={NO_HERO_ART}
+                  alt={t("noHero")}
+                  title={t("noHero")}
+                  className="size-18 rounded-xl"
+                />
               )}
               <span className="w-full truncate text-center">{s.name}</span>
               <Meter

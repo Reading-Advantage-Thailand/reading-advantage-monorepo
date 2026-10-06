@@ -1,6 +1,6 @@
 {
  "id": "primary-rpg-skin",
- "version": "1.0.0",
+ "version": "1.1.0",
  "files": {
   "backdrops/archive-d.webp": {
    "kind": "backdrop",
@@ -2337,8 +2337,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 13922
+   "forgeCommit": "9c75c632",
+   "byteSize": 12922
   },
   "kit/heroes/cleric.webp": {
    "kind": "hero",
@@ -2349,8 +2349,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 16586
+   "forgeCommit": "9c75c632",
+   "byteSize": 15676
   },
   "kit/heroes/druid.webp": {
    "kind": "hero",
@@ -2361,8 +2361,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 14892
+   "forgeCommit": "9c75c632",
+   "byteSize": 14012
   },
   "kit/heroes/duelist.webp": {
    "kind": "hero",
@@ -2373,8 +2373,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 11896
+   "forgeCommit": "9c75c632",
+   "byteSize": 11318
   },
   "kit/heroes/explorer.webp": {
    "kind": "hero",
@@ -2385,8 +2385,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 15186
+   "forgeCommit": "9c75c632",
+   "byteSize": 14810
   },
   "kit/heroes/gladiator.webp": {
    "kind": "hero",
@@ -2397,8 +2397,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 14880
+   "forgeCommit": "9c75c632",
+   "byteSize": 13404
   },
   "kit/heroes/knight.webp": {
    "kind": "hero",
@@ -2409,8 +2409,21 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 16916
+   "forgeCommit": "9c75c632",
+   "byteSize": 15626
+  },
+  "kit/heroes/no-hero.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#none",
+   "spec": {
+    "kind": "hero",
+    "hero": "none",
+    "size": 512,
+    "turn": -25,
+    "silhouette": 256
+   },
+   "forgeCommit": "9c75c632",
+   "byteSize": 5768
   },
   "kit/heroes/ranger.webp": {
    "kind": "hero",
@@ -2421,8 +2434,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 16492
+   "forgeCommit": "9c75c632",
+   "byteSize": 15906
   },
   "kit/heroes/rogue.webp": {
    "kind": "hero",
@@ -2433,8 +2446,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 14360
+   "forgeCommit": "9c75c632",
+   "byteSize": 13660
   },
   "kit/heroes/shaman.webp": {
    "kind": "hero",
@@ -2445,8 +2458,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 13200
+   "forgeCommit": "9c75c632",
+   "byteSize": 11784
   },
   "kit/heroes/shield-maiden.webp": {
    "kind": "hero",
@@ -2457,8 +2470,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 18144
+   "forgeCommit": "9c75c632",
+   "byteSize": 17164
   },
   "kit/heroes/swashbuckler.webp": {
    "kind": "hero",
@@ -2469,8 +2482,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 13558
+   "forgeCommit": "9c75c632",
+   "byteSize": 12508
   },
   "kit/heroes/treasure-hunter.webp": {
    "kind": "hero",
@@ -2481,8 +2494,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 14296
+   "forgeCommit": "9c75c632",
+   "byteSize": 13380
   },
   "kit/heroes/witch.webp": {
    "kind": "hero",
@@ -2493,8 +2506,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 14260
+   "forgeCommit": "9c75c632",
+   "byteSize": 12532
   },
   "kit/heroes/wizard.webp": {
    "kind": "hero",
@@ -2505,8 +2518,8 @@
     "size": 512,
     "turn": -25
    },
-   "forgeCommit": "f5d87a50",
-   "byteSize": 15546
+   "forgeCommit": "9c75c632",
+   "byteSize": 14200
   },
   "kit/icons/banner.webp": {
    "kind": "view",

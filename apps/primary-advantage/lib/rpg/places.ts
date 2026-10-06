@@ -79,6 +79,9 @@ export const itemArt = (itemId: string): string => `/rpg/items/${itemId}.webp`;
  */
 export const heroArt = (classId: string): string => `/rpg/kit/heroes/${classId}.webp`;
 
+/** The Forge silhouette for a student who has not picked a hero yet (skin 1.1.0). */
+export const NO_HERO_ART = "/rpg/kit/heroes/no-hero.webp";
+
 /** The NPC sprite strips (8 frames at 128 px) and fronts. */
 export const NPC_ART = {
   blacksmithIdle: "/rpg/kit/npc/blacksmith-idle-strip.png",
