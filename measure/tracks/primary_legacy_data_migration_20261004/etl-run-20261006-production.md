@@ -6,6 +6,9 @@ Source `primary_legacy_20261006`: the Cloud SQL export of `primary_advantage` ta
 
 Compared with the April copy: 671 users (607), 582 articles (174), 38,780 MCQ rows (24,460).
 
+Rerun after the jsonb fix (lane-m, `JsonCell`): the counts below did not change; `jsonb_typeof` now
+reports `array` for MCQ options and article sentences and `object` for activity details and translations.
+
 ## Owner decisions before the cutover run
 
 1. Eight legacy users have the role `user` (seven in April plus one new). Give each a role in a `--roles` file. Seven of them sign in with Google and need a password (D8).
