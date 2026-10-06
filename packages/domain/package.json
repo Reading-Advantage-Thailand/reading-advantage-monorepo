@@ -52,6 +52,10 @@
       "types": "./dist/primary-books/step-map.d.ts",
       "import": "./dist/primary-books/step-map.js"
     },
+    "./primary-mastery": {
+      "types": "./dist/primary-mastery/index.d.ts",
+      "import": "./dist/primary-mastery/index.js"
+    },
     "./students": {
       "types": "./dist/students/index.d.ts",
       "import": "./dist/students/index.js"
@@ -167,6 +171,7 @@
     "prepare:english-answer-speech": "tsx scripts/prepare-wizard-speech.ts",
     "import-lesson-packages": "tsx scripts/import-lesson-packages.ts",
     "import-lesson-guides": "tsx scripts/import-lesson-guides.ts",
+    "backfill-primary-tags": "tsx scripts/backfill-primary-tags.ts",
     "test": "vitest run",
     "check-types": "tsc --noEmit"
   },

@@ -24,10 +24,10 @@ export function samplePackage(overrides: Partial<LessonPackage["meta"]> = {}, ex
     ],
     bank: {
       mcq: [
-        { id: "m1", question: "Who is new?", options: ["May", "Kim", "Pat", "Lily"], answer: "May", evidence: "May is new.", objectives: [] },
+        { id: "m1", question: "Who is new?", options: ["May", "Kim", "Pat", "Lily"], answer: "May", evidence: "May is new.", objectives: ["L19.2"] },
         { id: "m2", question: "Where does May live?", options: ["By the sea", "Next to the school", "In a city", "On a farm"], answer: "Next to the school", evidence: "May lives next to the school.", objectives: [] },
       ],
-      saq: [{ id: "s1", question: "Who says good morning?", answer: "Teacher Kim.", objectives: [] }],
+      saq: [{ id: "s1", question: "Who says good morning?", answer: "Teacher Kim.", objectives: ["R12.1", "R10.2"] }],
       laq: [{ id: "l1", question: "Write about your class.", objectives: [] }],
     },
     print: { mcq: ["m1"], saq: "s1", mcqOptions: 3 },
@@ -55,7 +55,7 @@ export function samplePackage(overrides: Partial<LessonPackage["meta"]> = {}, ex
       ],
       flashcardTimes: [{ text: "May lives next to the school.", startTime: 0, endTime: 2 }],
     },
-    tags: { targetObjectives: ["GSE-1"] },
+    tags: { targetObjectives: ["R12.1"], supportingObjectives: ["L19.2"], glossedNodes: ["english.vocabulary.skill.hi.exclamation", "english.vocabulary.skill.new.adjective"], recycledNodes: [] },
     approval: { lesson: { status: "approved" } },
     db: {},
     ...extra,

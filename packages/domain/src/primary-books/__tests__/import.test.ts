@@ -20,18 +20,21 @@ describe("importLessonPackage", () => {
     const mock = dbWith([[]]);
     const result = await importLessonPackage({ db: mock as unknown as DB, pkg: samplePackage(), sourceFile: "origins-3.2/p01.json", newId: () => NEW });
     expect(result).toMatchObject({ action: "new-article", articleId: NEW, legacyArticleId: null, key: "o3-2/1", bookKey: "o3-2", number: 1, approved: true });
-    // articles, mcq, saq, laq, flashcard, series, book, lesson
-    expect(mock.insert).toHaveBeenCalledTimes(8);
+    // articles, mcq, saq, laq, flashcard, article objectives, question objectives, word nodes, series, book, lesson
+    expect(mock.insert).toHaveBeenCalledTimes(11);
     expect(mock.transaction).toHaveBeenCalledTimes(2);
+    expect(result.tagged).toBe(true);
   });
 
   it("links a package whose legacy article is in the map and never writes that article", async () => {
     const mock = dbWith([[], [{ newId: MAPPED }]]);
     const pkg = samplePackage({ key: "o2/1", book: "origins-2", lesson: "L01" }, { db: { legacy: { articleId: "cmlegacy" } } });
     const result = await importLessonPackage({ db: mock as unknown as DB, pkg, sourceFile: "origins-2/l01.json" });
-    expect(result).toMatchObject({ action: "linked", articleId: MAPPED, legacyArticleId: "cmlegacy", bookKey: "o2" });
-    // only the catalogue: series, book, lesson
-    expect(mock.insert).toHaveBeenCalledTimes(3);
+    expect(result).toMatchObject({ action: "linked", articleId: MAPPED, legacyArticleId: "cmlegacy", bookKey: "o2", tagged: true });
+    // the article-level links (objectives, word nodes) and the catalogue: series, book, lesson; no question rows (Tutor reads them)
+    expect(mock.insert).toHaveBeenCalledTimes(5);
+    // the two article-level link tables; the question links of a legacy article belong to the backfill
+    expect(mock.delete).toHaveBeenCalledTimes(2);
     expect(mock.update).not.toHaveBeenCalled();
   });
 
@@ -56,9 +59,10 @@ describe("importLessonPackage", () => {
     const result = await importLessonPackage({ db: mock as unknown as DB, pkg: samplePackage(), sourceFile: "x.json" });
     expect(result).toMatchObject({ action: "new-article", articleId: NEW });
     expect(mock.update).toHaveBeenCalledTimes(1);
-    expect(mock.delete).toHaveBeenCalledTimes(4);
-    // mcq, saq, laq, flashcard, series, book, lesson
-    expect(mock.insert).toHaveBeenCalledTimes(7);
+    // mcq, saq, laq, flashcard, and the three link tables
+    expect(mock.delete).toHaveBeenCalledTimes(7);
+    // mcq, saq, laq, flashcard, article objectives, question objectives, word nodes, series, book, lesson
+    expect(mock.insert).toHaveBeenCalledTimes(10);
   });
 
   it("skips a bank article", async () => {
@@ -81,6 +85,25 @@ describe("importLessonPackage", () => {
     const pkg = samplePackage({ replaces: "cmold" }, { approval: { lesson: { status: "draft" } } });
     const result = await importLessonPackage({ db: mock as unknown as DB, pkg, sourceFile: "x.json" });
     expect(result).toMatchObject({ action: "linked", articleId: MAPPED, approved: false });
+  });
+
+  it("writes no link rows for a package without tags and reports it", async () => {
+    const mock = dbWith([[]]);
+    const pkg = samplePackage();
+    delete (pkg as { tags?: unknown }).tags;
+    pkg.bank.mcq.forEach((item) => { item.objectives = []; });
+    pkg.bank.saq.forEach((item) => { item.objectives = []; });
+    const result = await importLessonPackage({ db: mock as unknown as DB, pkg, sourceFile: "x.json", newId: () => NEW });
+    expect(result).toMatchObject({ action: "new-article", tagged: false });
+    // articles, mcq, saq, laq, flashcard, series, book, lesson
+    expect(mock.insert).toHaveBeenCalledTimes(8);
+  });
+
+  it("refuses a package whose tags use a short id the key does not have", async () => {
+    const mock = dbWith([[]]);
+    const pkg = samplePackage({}, { tags: { targetObjectives: ["R99.9"], supportingObjectives: [], glossedNodes: [], recycledNodes: [] } });
+    await expect(importLessonPackage({ db: mock as unknown as DB, pkg, sourceFile: "x.json", newId: () => NEW })).rejects.toThrow(/o3-2\/1.*R99\.9/);
+    expect(mock.insert).not.toHaveBeenCalled();
   });
 
   it("refuses a key that does not match the lesson number or an unknown book", async () => {

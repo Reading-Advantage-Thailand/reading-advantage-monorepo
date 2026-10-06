@@ -4,16 +4,20 @@ import {
   articles,
   longAnswerQuestions,
   multipleChoiceQuestions,
+  primaryArticleObjectives,
+  primaryArticleWordNodes,
   primaryBookLessons,
   primaryBookSeries,
   primaryBooks,
   primaryLegacyIdMap,
+  primaryQuestionObjectives,
   sentencsAndWordsForFlashcards,
   shortAnswerQuestions,
 } from "@reading-advantage/db/schema";
 import { createTenantDB } from "../db-contract.js";
 import type { ImportLessonResult } from "./contracts.js";
-import { BOOKS, legacyArticleIdOf, splitKey, toArticleRow, toFlashcardRow, toLessonPackageJson, toQuestionRows } from "./mapping.js";
+import { GRAPH_RELEASE } from "../primary-mastery/objective-key.js";
+import { BOOKS, hasTags, legacyArticleIdOf, splitKey, toArticleRow, toFlashcardRow, toLessonPackageJson, toQuestionRows, toTagRows, type QuestionRows } from "./mapping.js";
 import type { LessonPackage } from "./package-schema.js";
 
 /** Options of one package import. */
@@ -37,7 +41,9 @@ export interface ImportLessonPackageOptions {
  * reads it); a package with a legacy article the map does not know is stored without an article
  * and reported. An approved package with no legacy article gets a new article, its questions,
  * and its flashcard row, all written in one transaction; a draft one waits (catalogue only). A
- * level-bank article is skipped.
+ * level-bank article is skipped. The objective and vocabulary link rows (FR-4 of
+ * primary_objective_tags_20261006) are written with the questions; a linked legacy article gets
+ * its article-level links only, since its question rows belong to Tutor and the backfill.
  * @param options The database, the package, the source path, and the dry-run switch.
  * @returns What the importer did with the lesson.
  */
@@ -47,8 +53,10 @@ export async function importLessonPackage(options: ImportLessonPackageOptions): 
   const newId = options.newId ?? (() => crypto.randomUUID());
   const { bookKey, number } = splitKey(pkg.meta.key);
   const approved = pkg.approval?.lesson?.status === "approved";
-  const base = { key: pkg.meta.key, title: pkg.meta.title, bookKey, number, legacyArticleId: legacyArticleIdOf(pkg), approved };
+  const base = { key: pkg.meta.key, title: pkg.meta.title, bookKey, number, legacyArticleId: legacyArticleIdOf(pkg), approved, tagged: false };
   if (pkg.meta.role !== "workbook") return { ...base, action: "skipped", articleId: null, reason: `role ${pkg.meta.role}` };
+  const tagged = hasTags(pkg);
+  if (tagged) toTagRows(pkg, "00000000-0000-4000-8000-000000000000", null, { gse: "check", vocabulary: "check" }); // validate the short ids before any write
   if (number !== pkg.meta.number) throw new Error(`${pkg.meta.key}: meta.number ${pkg.meta.number} does not match the key`);
   const book = BOOKS[bookKey];
   if (!book) throw new Error(`${pkg.meta.key}: unknown book key "${bookKey}"`);
@@ -60,7 +68,8 @@ export async function importLessonPackage(options: ImportLessonPackageOptions): 
   if (existing[0]?.articleId) {
     action = base.legacyArticleId ? "linked" : "new-article";
     articleId = existing[0].articleId;
-    if (!dryRun && action === "new-article") await replaceArticleContent(db, pkg, articleId);
+    if (!dryRun && action === "new-article") await replaceArticleContent(db, pkg, articleId, newId);
+    if (!dryRun && action === "linked" && tagged) await replaceArticleLinks(db, pkg, articleId);
   } else if (base.legacyArticleId) {
     const mapped = await db
       .select({ newId: primaryLegacyIdMap.newId })
@@ -69,16 +78,17 @@ export async function importLessonPackage(options: ImportLessonPackageOptions): 
       .limit(1);
     articleId = mapped[0]?.newId ?? null;
     action = articleId ? "linked" : "unmapped";
+    if (!dryRun && articleId && tagged) await replaceArticleLinks(db, pkg, articleId);
   } else if (approved) {
     action = "new-article";
     articleId = newId();
-    if (!dryRun) await insertArticle(db, pkg, articleId);
+    if (!dryRun) await insertArticle(db, pkg, articleId, newId);
   } else {
     action = "catalogue-only";
   }
 
   if (!dryRun) await upsertCatalogue(db, pkg, { bookKey, number, articleId, sourceFile, book, approved });
-  return { ...base, action, articleId };
+  return { ...base, action, articleId, tagged: tagged && (action === "new-article" || action === "linked") };
 }
 
 /**
@@ -87,10 +97,11 @@ export async function importLessonPackage(options: ImportLessonPackageOptions): 
  * @param pkg The package.
  * @param articleId The new article uuid.
  */
-async function insertArticle(db: DB, pkg: LessonPackage, articleId: string): Promise<void> {
+async function insertArticle(db: DB, pkg: LessonPackage, articleId: string, newId: () => string): Promise<void> {
   await db.transaction(async (tx) => {
     await tx.insert(articles).values(toArticleRow(pkg, articleId));
-    await insertQuestions(tx, pkg, articleId);
+    const rows = await insertQuestions(tx, pkg, articleId, newId);
+    await insertLinks(tx, pkg, articleId, rows);
   });
 }
 
@@ -100,8 +111,9 @@ async function insertArticle(db: DB, pkg: LessonPackage, articleId: string): Pro
  * @param db The database.
  * @param pkg The package.
  * @param articleId The article uuid.
+ * @param newId Makes the question uuids.
  */
-async function replaceArticleContent(db: DB, pkg: LessonPackage, articleId: string): Promise<void> {
+async function replaceArticleContent(db: DB, pkg: LessonPackage, articleId: string, newId: () => string): Promise<void> {
   const { id: _id, ...values } = toArticleRow(pkg, articleId);
   await db.transaction(async (tx) => {
     await tx.update(articles).set({ ...values, updatedAt: new Date() }).where(eq(articles.id, articleId));
@@ -109,8 +121,51 @@ async function replaceArticleContent(db: DB, pkg: LessonPackage, articleId: stri
     await tx.delete(shortAnswerQuestions).where(eq(shortAnswerQuestions.articleId, articleId));
     await tx.delete(longAnswerQuestions).where(eq(longAnswerQuestions.articleId, articleId));
     await tx.delete(sentencsAndWordsForFlashcards).where(eq(sentencsAndWordsForFlashcards.articleId, articleId));
-    await insertQuestions(tx, pkg, articleId);
+    await deleteLinks(tx, articleId, true);
+    const rows = await insertQuestions(tx, pkg, articleId, newId);
+    await insertLinks(tx, pkg, articleId, rows);
   });
+}
+
+/**
+ * Rewrites the article-level links (objectives, word nodes) of a linked legacy article. Its
+ * question links are left to the backfill, which knows the legacy question ids.
+ * @param db The database.
+ * @param pkg The package.
+ * @param articleId The mapped article uuid.
+ */
+async function replaceArticleLinks(db: DB, pkg: LessonPackage, articleId: string): Promise<void> {
+  await db.transaction(async (tx) => {
+    await deleteLinks(tx, articleId, false);
+    await insertLinks(tx, pkg, articleId, null);
+  });
+}
+
+/**
+ * Deletes an article's link rows before a rewrite.
+ * @param tx The transaction.
+ * @param articleId The article uuid.
+ * @param withQuestions Also delete the question links (the importer owns them only for its own questions).
+ */
+async function deleteLinks(tx: Pick<DB, "delete">, articleId: string, withQuestions: boolean): Promise<void> {
+  await tx.delete(primaryArticleObjectives).where(eq(primaryArticleObjectives.articleId, articleId));
+  await tx.delete(primaryArticleWordNodes).where(eq(primaryArticleWordNodes.articleId, articleId));
+  if (withQuestions) await tx.delete(primaryQuestionObjectives).where(eq(primaryQuestionObjectives.articleId, articleId));
+}
+
+/**
+ * Inserts the link rows of an article; nothing when the package has no tags.
+ * @param tx The transaction.
+ * @param pkg The package.
+ * @param articleId The article uuid.
+ * @param rows The question rows written in this transaction, or null for a linked legacy article.
+ */
+async function insertLinks(tx: Pick<DB, "insert">, pkg: LessonPackage, articleId: string, rows: QuestionRows | null): Promise<void> {
+  if (!hasTags(pkg)) return;
+  const links = toTagRows(pkg, articleId, rows, { gse: GRAPH_RELEASE.gse.commit, vocabulary: GRAPH_RELEASE.vocabulary.commit });
+  if (links.articleObjectives.length) await tx.insert(primaryArticleObjectives).values(links.articleObjectives);
+  if (links.questionObjectives.length) await tx.insert(primaryQuestionObjectives).values(links.questionObjectives);
+  if (links.wordNodes.length) await tx.insert(primaryArticleWordNodes).values(links.wordNodes);
 }
 
 /**
@@ -118,13 +173,16 @@ async function replaceArticleContent(db: DB, pkg: LessonPackage, articleId: stri
  * @param tx The transaction.
  * @param pkg The package.
  * @param articleId The article uuid.
+ * @param newId Makes the question uuids.
+ * @returns The question rows, with their ids.
  */
-async function insertQuestions(tx: Pick<DB, "insert">, pkg: LessonPackage, articleId: string): Promise<void> {
-  const rows = toQuestionRows(pkg, articleId);
+async function insertQuestions(tx: Pick<DB, "insert">, pkg: LessonPackage, articleId: string, newId: () => string): Promise<QuestionRows> {
+  const rows = toQuestionRows(pkg, articleId, newId);
   if (rows.mcq.length) await tx.insert(multipleChoiceQuestions).values(rows.mcq);
   if (rows.saq.length) await tx.insert(shortAnswerQuestions).values(rows.saq);
   if (rows.laq.length) await tx.insert(longAnswerQuestions).values(rows.laq);
   await tx.insert(sentencsAndWordsForFlashcards).values(toFlashcardRow(pkg, articleId));
+  return rows;
 }
 
 /**

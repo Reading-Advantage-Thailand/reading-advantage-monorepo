@@ -18,6 +18,8 @@ export const importLessonResultSchema = z.object({
   approved: z.boolean(),
   articleId: z.string().nullable(),
   legacyArticleId: z.string().nullable(),
+  /** True when the objective and vocabulary link rows were (or, in a dry run, would be) written. */
+  tagged: z.boolean(),
   reason: z.string().optional(),
 });
 export type ImportLessonResult = z.infer<typeof importLessonResultSchema>;

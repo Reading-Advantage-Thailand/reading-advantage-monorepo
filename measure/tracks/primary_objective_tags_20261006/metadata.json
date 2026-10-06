@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_objective_tags_20261006",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-06T12:00:00Z",
+  "updated_at": "2026-10-06T12:00:00Z",
+  "description": "T1 of the Primary Mastery Graph Program: link articles, questions, and glossary words to GSE objectives and vocabulary nodes. Objective key in code, three additive primary_ tables, the lesson importer writes the links, a backfill from the Workbooks tags.json export through the legacy ids, a coverage report, and read functions for the evidence pipeline (T2).",
+  "estimated_tasks": 25,
+  "actual_tasks": null,
+  "deviation_notes": "Created 2026-10-06 in the graphs session after the owner approved the ten decisions of measure/primary-mastery-graph-program.md section 8. The objective key lives in code, not in a table (the program draft listed a primary_objective_key table; YAGNI). The question join falls back to article, type, and text when primary_legacy_id_map holds no question ids."
+}

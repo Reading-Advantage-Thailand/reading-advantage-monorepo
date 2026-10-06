@@ -53,7 +53,16 @@ export const lessonPackageSchema = z
       })
       .passthrough()
       .optional(),
-    tags: z.unknown().optional(),
+    /** Objective short ids and vocabulary node ids (Workbooks `TagsSchema`); absent in old packages. */
+    tags: z
+      .object({
+        targetObjectives: z.array(z.string().min(1)).default([]),
+        supportingObjectives: z.array(z.string().min(1)).default([]),
+        glossedNodes: z.array(z.string().min(1)).default([]),
+        recycledNodes: z.array(z.string().min(1)).default([]),
+      })
+      .passthrough()
+      .optional(),
     approval: z.record(z.string(), z.object({ status: z.string() }).passthrough()).optional(),
     db: z
       .object({
