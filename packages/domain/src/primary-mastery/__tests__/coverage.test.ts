@@ -26,11 +26,13 @@ function input(): TagCoverageInput {
     glossary: [
       { articleId: A1, word: "puppy", pos: "noun" },
       { articleId: A1, word: "pets", pos: "verb" },
+      { articleId: A1, word: "best", pos: "adjective" },
       { articleId: A2, word: "mud", pos: "noun" },
     ],
     wordNodes: [
       { articleId: A1, word: "puppy", pos: "noun", nodeId: "english.vocabulary.skill.puppy.noun" },
       { articleId: A1, word: "pet", pos: "noun", nodeId: "english.vocabulary.skill.pet.noun" },
+      { articleId: A1, word: "best", pos: "adjective-adverb", nodeId: "english.vocabulary.skill.best.adjective-adverb" },
     ],
   };
 }
@@ -59,7 +61,7 @@ describe("tag coverage report (FR-6)", () => {
     expect(report.questions).toEqual({ total: 3, withObjectives: 1, withoutObjectives: 2 });
   });
 
-  it("lists glossary words with no node and nodes whose part of speech differs from the glossary", () => {
+  it("lists glossary words with no node and nodes whose part of speech differs from the glossary; a node of several parts of speech covers one of them", () => {
     const report = summarizeTagCoverage(input());
     expect(report.wordsWithoutNode).toEqual([{ articleId: A2, word: "mud", pos: "noun" }]);
     expect(report.wordPosMismatches).toEqual([{ articleId: A1, word: "pets", glossaryPos: "verb", nodeId: "english.vocabulary.skill.pet.noun" }]);

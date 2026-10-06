@@ -90,7 +90,8 @@ export function summarizeTagCoverage(input: TagCoverageInput): TagCoverageReport
       wordsWithoutNode.push({ articleId: entry.articleId, word: entry.word, pos: entry.pos });
       continue;
     }
-    if (entry.pos && !nodes.some((node) => node.pos === entry.pos)) {
+    // A node of several parts of speech (`adjective-adverb`) covers a glossary entry of one of them.
+    if (entry.pos && !nodes.some((node) => node.pos.split("-").includes(entry.pos))) {
       for (const node of nodes) wordPosMismatches.push({ articleId: entry.articleId, word: entry.word, glossaryPos: entry.pos, nodeId: node.nodeId });
     }
   }
