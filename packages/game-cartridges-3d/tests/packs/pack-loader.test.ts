@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { modelEditionOf } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { modelEditionOf, modelPackRoot } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { ModelLoader } from '@reading-advantage/advantage-play-kit-3d/stage';
 
 const SITE = join(process.cwd(), 'assets');
@@ -32,9 +32,9 @@ describe('ModelLoader packs', () => {
     await loader.loadPacks(['sunken-vault', 'heroes']);
     await loader.loadPacks(['heroes']);
     expect(fetchFn).toHaveBeenCalledTimes(2);
-    expect(loader.modelPath('wall')).toBe('packs/sunken-vault/1.0.0/wall.glb');
-    expect(loader.modelPath('knight')).toBe('packs/heroes/1.0.0/knight.glb');
-    expect(loader.presetPath('knight', 'champion')).toBe('packs/heroes/1.0.0/knight/champion.webp');
+    expect(loader.modelPath('wall')).toBe(`${modelPackRoot('sunken-vault')}/wall.glb`);
+    expect(loader.modelPath('knight')).toBe(`${modelPackRoot('heroes')}/knight.glb`);
+    expect(loader.presetPath('knight', 'champion')).toBe(`${modelPackRoot('heroes')}/knight/champion.webp`);
     expect(loader.modelPath('not-a-model')).toBe('models/not-a-model.glb');
   });
 
@@ -43,12 +43,12 @@ describe('ModelLoader packs', () => {
     const loader = new ModelLoader('site/');
     const packs = await loader.fetchPacks(['sunken-vault', 'heroes']);
     loader.bind(modelEditionOf(packs, ['wall', 'knight']));
-    expect(loader.modelPath('wall')).toBe('packs/sunken-vault/1.0.0/wall.glb');
+    expect(loader.modelPath('wall')).toBe(`${modelPackRoot('sunken-vault')}/wall.glb`);
     expect(loader.modelPath('floor')).toBe('models/floor.glb');
-    expect(loader.presetPath('knight', 'champion')).toBe('packs/heroes/1.0.0/knight/champion.webp');
+    expect(loader.presetPath('knight', 'champion')).toBe(`${modelPackRoot('heroes')}/knight/champion.webp`);
     loader.bind(modelEditionOf(packs, ['floor']));
-    expect(loader.modelPath('floor')).toBe('packs/sunken-vault/1.0.0/floor.glb');
-    expect(loader.modelPath('wall')).toBe('packs/sunken-vault/1.0.0/wall.glb');
+    expect(loader.modelPath('floor')).toBe(`${modelPackRoot('sunken-vault')}/floor.glb`);
+    expect(loader.modelPath('wall')).toBe(`${modelPackRoot('sunken-vault')}/wall.glb`);
   });
 
   it('rejects when a pack manifest is missing, and retries on the next call', async () => {

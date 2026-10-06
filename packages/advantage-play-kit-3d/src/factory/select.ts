@@ -3,10 +3,22 @@
  * decides, a player setting can force 2D, and a cartridge plays only in a renderer it lists.
  */
 import { hasRenderer, type CartridgeManifest, type RendererId } from '../contracts/index.js';
+import { readFlatMode } from './renderer-setting.js';
 import type { Cartridge, GateVerdict, PhaserCartridge, ThreeCartridge } from './types.js';
 
 /** The player's renderer setting: `'auto'` lets the device gate decide. */
 export type RendererSetting = 'auto' | 'phaser';
+
+/**
+ * The game setting from the shared "2D mode (older phones)" setting (./renderer-setting.ts, a copy
+ * of the monorepo `@reading-advantage/advantage-play-kit/responsive` module that owns it):
+ * `'phaser'` when the student chose 2D or the page address has `?renderer=phaser`, else `'auto'`.
+ * `'auto'` on a server. A host passes it to `selectRenderer` when the app gives no setting.
+ */
+export function savedRendererSetting(): RendererSetting {
+  if (typeof window === 'undefined') return 'auto';
+  return new URLSearchParams(window.location.search).get('renderer') === 'phaser' || readFlatMode() ? 'phaser' : 'auto';
+}
 
 export interface RendererChoice {
   renderer: RendererId;

@@ -6,7 +6,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { editionModelIndex, GAME_LOADS, modelEditionOf, MODEL_PACK_VERSION, modelPackSchema, unboundModelKeys, type ModelPack } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { editionModelIndex, GAME_LOADS, modelEditionOf, packVersion, modelPackSchema, unboundModelKeys, type ModelPack } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { manifest as devourerSlime } from '../../src/devourer-slime/manifest.js';
 import { CLEARING_MODELS } from '../../src/devourer-slime/view/clearing.js';
 import { manifest as dragonFlight } from '../../src/dragon-flight/manifest.js';
@@ -61,7 +61,7 @@ import { HEROES } from '../../src/shared/battle/stage2d.js';
 import { vaultModels } from '../../src/shared/battle/stage3d.js';
 import { LOBBY_PACKS } from '../../src/lobby-packs.js';
 
-const readPack = (id: string): ModelPack => modelPackSchema.parse(JSON.parse(readFileSync(join(process.cwd(), 'assets', 'packs', id, MODEL_PACK_VERSION, 'pack.json'), 'utf8')));
+const readPack = (id: string): ModelPack => modelPackSchema.parse(JSON.parse(readFileSync(join(process.cwd(), 'assets', 'packs', id, packVersion(id), 'pack.json'), 'utf8')));
 const packsOf = (ids: readonly string[]): Record<string, ModelPack> => Object.fromEntries(ids.map((id) => [id, readPack(id)]));
 
 /** Each game: its manifest and every model its views name. */

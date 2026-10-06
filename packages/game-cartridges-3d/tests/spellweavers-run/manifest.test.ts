@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { MODEL_PACKS } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { MODEL_PACKS, packVersion } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { briefing } from '../../src/spellweavers-run/briefing.js';
 import { FILES_2D, MODELS_3D, manifest } from '../../src/spellweavers-run/manifest.js';
@@ -13,7 +13,7 @@ import { STORY } from './helpers.js';
 describe('manifest', () => {
   it('every 3D model is in a listed pack (the vault pack holds arch and gate), and the scene and the heroes are all bound', () => {
     const inPacks = new Set(manifest.packs.flatMap((p) => MODEL_PACKS[p] ?? []));
-    const vault = JSON.parse(readFileSync(join(process.cwd(), 'assets/packs/sunken-vault/1.0.0/pack.json'), 'utf8')) as { files: Record<string, unknown> };
+    const vault = JSON.parse(readFileSync(join(process.cwd(), 'assets', 'packs', 'sunken-vault', packVersion('sunken-vault'), 'pack.json'), 'utf8')) as { files: Record<string, unknown> };
     for (const name of Object.keys(vault.files)) inPacks.add(name);
     expect(MODELS_3D.filter((m) => !inPacks.has(m))).toEqual([]);
     expect(manifest.requiredModelBindings).toEqual([...MODELS_3D]);

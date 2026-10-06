@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { editionModelIndex, modelEditionOf, MODEL_PACKS, MODEL_PACK_VERSION, modelPackSchema, unboundModelKeys, type ModelPack } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { editionModelIndex, modelEditionOf, MODEL_PACKS, packVersion, modelPackSchema, unboundModelKeys, type ModelPack } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { briefing } from '../../src/abyssal-well/briefing.js';
 import { CREATURES } from '../../src/abyssal-well/core/index.js';
@@ -11,7 +11,7 @@ import strings from '../../src/abyssal-well/strings.en.js';
 import { WELL_MODELS } from '../../src/abyssal-well/view/well.js';
 import { STORY } from './helpers.js';
 
-const readPack = (id: string): ModelPack => modelPackSchema.parse(JSON.parse(readFileSync(join(process.cwd(), 'assets', 'packs', id, MODEL_PACK_VERSION, 'pack.json'), 'utf8')));
+const readPack = (id: string): ModelPack => modelPackSchema.parse(JSON.parse(readFileSync(join(process.cwd(), 'assets', 'packs', id, packVersion(id), 'pack.json'), 'utf8')));
 
 describe('manifest', () => {
   it('is a valid story-mode turn game for both renderers', () => {

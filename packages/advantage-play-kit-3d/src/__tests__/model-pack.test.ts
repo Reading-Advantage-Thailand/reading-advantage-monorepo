@@ -98,13 +98,13 @@ describe('buildModelIndex', () => {
 
   it('maps a model name to its versioned pack path', () => {
     const index = buildModelIndex([heroes, props]);
-    expect(index.path('wall')).toBe('packs/props/1.0.0/wall.glb');
+    expect(index.path('wall')).toBe(`${modelPackRoot('props')}/wall.glb`);
     expect(index.path('nothing')).toBeUndefined();
   });
 
   it('maps a hero preset only when the hero lists it', () => {
     const index = buildModelIndex([heroes]);
-    expect(index.preset('knight', 'royal')).toBe('packs/heroes/1.0.0/knight/royal.webp');
+    expect(index.preset('knight', 'royal')).toBe(`${modelPackRoot('heroes')}/knight/royal.webp`);
     expect(index.preset('knight', 'gold')).toBeUndefined();
     expect(index.preset('wall', 'royal')).toBeUndefined();
   });
@@ -134,9 +134,9 @@ describe('modelEditionOf', () => {
 
   it('resolves only bound keys, and presets of bound heroes', () => {
     const index = editionModelIndex(modelEditionOf(packs, ['knight', 'wall']));
-    expect(index.path('wall')).toBe('packs/props/1.0.0/wall.glb');
+    expect(index.path('wall')).toBe(`${modelPackRoot('props')}/wall.glb`);
     expect(index.path('floor')).toBeUndefined();
-    expect(index.preset('knight', 'royal')).toBe('packs/heroes/1.0.0/knight/royal.webp');
+    expect(index.preset('knight', 'royal')).toBe(`${modelPackRoot('heroes')}/knight/royal.webp`);
   });
 
   it('lists the required keys an edition does not bind', () => {

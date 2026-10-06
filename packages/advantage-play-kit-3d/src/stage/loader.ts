@@ -5,12 +5,12 @@
 import * as THREE from 'three';
 import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { MODEL_PACK_VERSION, editionModelIndex, modelEditionOf, modelPackRoot, modelPackSchema, type ModelIndex, type ModelPack, type RuntimeEdition3D } from '../contracts/index.js';
+import { editionModelIndex, modelEditionOf, modelPackRoot, modelPackSchema, packVersion, type ModelIndex, type ModelPack, type RuntimeEdition3D } from '../contracts/index.js';
 
 export type { GLTF };
 
-/** Fetches and validates one pack manifest (`<base>packs/<id>/<version>/pack.json`). */
-export async function fetchModelPack(base: string, id: string, version: string = MODEL_PACK_VERSION): Promise<ModelPack> {
+/** Fetches and validates one pack manifest (`<base>packs/<id>/<version>/pack.json`, by default the pack's current version). */
+export async function fetchModelPack(base: string, id: string, version: string = packVersion(id)): Promise<ModelPack> {
   const res = await fetch(`${base}${modelPackRoot(id, version)}/pack.json`);
   if (!res.ok) throw new Error(`model pack "${id}": ${res.status} ${res.statusText}`);
   return modelPackSchema.parse(await res.json());
@@ -33,13 +33,14 @@ export class ModelLoader {
   /**
    * Fetches the manifests of model packs (`packs/<id>/<version>/pack.json`), once each. A manifest
    * that fails to load rejects (and is retried on the next call): a game that names a pack needs it.
+   * Without `version`, each pack loads at its own current version (`packVersion`).
    */
-  async fetchPacks(ids: readonly string[], version: string = MODEL_PACK_VERSION): Promise<Record<string, ModelPack>> {
+  async fetchPacks(ids: readonly string[], version?: string): Promise<Record<string, ModelPack>> {
     const entries = await Promise.all(
       ids.map(async (id) => {
         let p = this.packs.get(id);
         if (!p) {
-          p = fetchModelPack(this.base, id, version);
+          p = fetchModelPack(this.base, id, version ?? packVersion(id));
           p.catch(() => this.packs.delete(id));
           this.packs.set(id, p);
         }
@@ -55,7 +56,7 @@ export class ModelLoader {
   }
 
   /** Fetches the packs and binds every file of them under its own name (tools and the lobby; a game binds its edition). */
-  async loadPacks(ids: readonly string[], version: string = MODEL_PACK_VERSION): Promise<void> {
+  async loadPacks(ids: readonly string[], version?: string): Promise<void> {
     const packs = await this.fetchPacks(ids, version);
     this.bind(modelEditionOf(packs, Object.values(packs).flatMap((p) => Object.keys(p.files))));
   }

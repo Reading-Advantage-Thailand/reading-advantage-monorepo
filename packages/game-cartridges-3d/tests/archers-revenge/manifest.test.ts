@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { editionModelIndex, modelEditionOf, MODEL_PACKS, MODEL_PACK_VERSION, modelPackSchema, unboundModelKeys, type ModelPack } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { editionModelIndex, modelEditionOf, MODEL_PACKS, packVersion, modelPackSchema, unboundModelKeys, type ModelPack } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { briefing } from '../../src/archers-revenge/briefing.js';
 import { FILES_2D, MODELS_3D, manifest } from '../../src/archers-revenge/manifest.js';
@@ -12,7 +12,7 @@ import { HEROES } from '../../src/shared/battle/stage2d.js';
 import { vaultModels } from '../../src/shared/battle/stage3d.js';
 import { STORY } from './helpers.js';
 
-const readPack = (id: string): ModelPack => modelPackSchema.parse(JSON.parse(readFileSync(join(process.cwd(), 'assets', 'packs', id, MODEL_PACK_VERSION, 'pack.json'), 'utf8')));
+const readPack = (id: string): ModelPack => modelPackSchema.parse(JSON.parse(readFileSync(join(process.cwd(), 'assets', 'packs', id, packVersion(id), 'pack.json'), 'utf8')));
 
 describe('manifest', () => {
   it('is a valid story-mode turn game for both renderers', () => {
