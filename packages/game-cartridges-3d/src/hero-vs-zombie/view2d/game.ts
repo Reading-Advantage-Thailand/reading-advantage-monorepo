@@ -4,7 +4,9 @@
  * with the forge sprites of the `primary-chibi-2d` pack over the churchyard baked from the 3D set.
  * The camera follows the hero; orbs glow with their meanings on tags that stay on screen; the
  * floating joystick (or the arrow keys) steers, and the Blast button (or Space) knocks the zombies
- * flat. At dawn the light warms and the zombies crumble.
+ * flat. At dawn the light warms and the zombies crumble. With an answer audio controller, the panel
+ * shows the meaning, the orbs carry numbers and play the English words, and a row of "n 🔊"
+ * buttons plays them from afar, as in the 3D view.
  */
 import type * as Phaser from 'phaser';
 import { shownHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
@@ -15,7 +17,8 @@ import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { createFixedStepLoop, createManualClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor2D, Arena2D, banner, button, depthOf, fitGameSize, Joystick2D, popup, registerSheetAnimations, StatusBar2D, tag, WordPanel2D } from '@reading-advantage/advantage-play-kit-3d/view2d';
-import { createHeroVsZombie, evidenceOf, scoreOf, TUNING, type HeroVsZombieCommand, type HeroVsZombieEvent, type HeroVsZombieState, type HeroVsZombieInput } from '../core/index.js';
+import { correctOrbOf, createHeroVsZombie, evidenceOf, scoreOf, TUNING, type HeroVsZombieCommand, type HeroVsZombieEvent, type HeroVsZombieState, type HeroVsZombieInput } from '../core/index.js';
+import { createAnswerAudioDriver, type ChoiceAction, type ChoiceLook } from '../../shared/answer-audio.js';
 import { evidenceStoryOf } from '../../shared/challenge.js';
 import { manifest, FILES_2D, HERO_CLIPS_2D, HEROES_2D, ZOMBIE_CLIPS_2D } from '../manifest.js';
 import { nextCommand } from '../qc/bot.js';
@@ -36,7 +39,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const figure = playerFigure(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
-  const sim = createHeroVsZombie(input, { seed, helper: options.helper });
+  const answer = ctx.answerAudio ? createAnswerAudioDriver(ctx.answerAudio, ctx.diagnostic) : null;
+  const sim = createHeroVsZombie(input, { seed, helper: options.helper, answerAudio: !!answer });
   const needed = FILES_2D.filter((id) => {
     const model = id.split('.')[0]!;
     return !(HEROES_2D as readonly string[]).includes(model) || model === heroId;
@@ -114,6 +118,11 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     // ---------------------------------------------------------------- orbs and zombies
     const orbs = new Map<string, { glow: Phaser.GameObjects.Graphics; tag: Phaser.GameObjects.Container; x: number; z: number }>();
     const zombies = new Map<string, Actor2D>();
+    /** Answer audio: one "n 🔊" button per orb, in the orbs' number order. */
+    let listenButtons: { orbId: string; index: number; button: Phaser.GameObjects.Container }[] = [];
+    // Answer audio: a bubble of light while the first clip of a round shields the hero.
+    const shield = scene.add.circle(0, 0, 0.9 * ppm, 0xbfe8ff, 0.2).setVisible(false);
+    arena.world.add(shield);
 
     function orbGraphic(): Phaser.GameObjects.Graphics {
       const g = scene.add.graphics();
@@ -137,9 +146,50 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
 
     function showRound(ev: Extract<HeroVsZombieEvent, { type: 'roundStarted' }>): void {
       clearOrbs();
-      panel.target(t('find'), ev.term);
+      if (answer) panel.target(t('findWord'), ev.translation);
+      else panel.target(t('find'), ev.term);
       arena.top = panel.bottom;
-      for (const o of ev.orbs) orbs.set(o.id, { glow: orbGraphic(), tag: tag(scene, o.text, 18).setDepth(15_000), x: o.x, z: o.z });
+      ev.orbs.forEach((o, i) => orbs.set(o.id, { glow: orbGraphic(), tag: tag(scene, answer ? String(i + 1) : o.text, 18).setDepth(15_000), x: o.x, z: o.z }));
+      if (!answer) return;
+      answer.question(ev.position, ev.orbs.map((o) => o.position));
+      clearListen();
+      const gap = 88;
+      listenButtons = ev.orbs.map((o, i) => ({
+        orbId: o.id,
+        index: i + 1,
+        button: button(scene, W / 2 + (i - (ev.orbs.length - 1) / 2) * gap, panel.bottom + 30, `${i + 1} 🔊`, () => react(o.id, answer.listen(o.position)), 0x312e81, '#ffffff').setDepth(19_400),
+      }));
+      arena.top = panel.bottom + 60;
+      drawListen();
+    }
+
+    function clearListen(): void {
+      for (const l of listenButtons) l.button.destroy();
+      listenButtons = [];
+    }
+
+    /** The label of each "n 🔊" button: … while its clip plays, ↻ after a failure, green once heard. */
+    function drawListen(): void {
+      if (!answer) return;
+      for (const l of listenButtons) {
+        const orb = sim.state.orbs.find((o) => o.id === l.orbId);
+        const look: ChoiceLook = orb ? answer.look(orb.position) : 'used';
+        const label = l.button.list[1] as Phaser.GameObjects.Text;
+        label.setText(`${l.index} ${look === 'playing' ? '…' : look === 'failed' ? '↻' : '🔊'}`);
+        label.setColor(look === 'heard' ? '#86efac' : '#ffffff');
+        l.button.setAlpha(look === 'used' ? 0.55 : 1);
+      }
+    }
+
+    /** What a touch or a 🔊 press did: take the orb, shield the hero at a first clip, or ask for sound. */
+    function react(orbId: string, action: ChoiceAction): void {
+      if (action.kind === 'confirm') loop.dispatch({ type: 'take', orbId });
+      else if (action.kind === 'play') loop.dispatch({ type: 'listen' });
+      else if (action.kind === 'muted') {
+        const at = heroTop();
+        popup(scene, at.x, at.y, t('soundOff'), 'miss');
+      }
+      drawListen();
     }
 
     function addZombie(id: string, x: number, z: number): void {
@@ -163,6 +213,16 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         case 'roundStarted':
           showRound(ev);
           break;
+        case 'orbTouched': {
+          const orb = sim.state.orbs.find((o) => o.id === ev.id);
+          if (answer && orb) react(ev.id, answer.touch(orb.position));
+          break;
+        }
+        case 'heroShielded': {
+          const at = heroTop();
+          popup(scene, at.x, at.y, t('shield'), 'good');
+          break;
+        }
         case 'orbTaken': {
           const o = orbs.get(ev.id);
           if (o) burst(o.x, 0.75, o.z, ORB_COLOR, 16, 1.4);
@@ -225,6 +285,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         }
         case 'dawn':
           clearOrbs();
+          clearListen();
           panel.hide();
           arena.top = 66;
           audio.music('dawn');
@@ -276,6 +337,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       }
       hero.moveTo(s.hero.x, s.hero.z);
       hero.update(dt);
+      const halo = arena.px(hero.x, 0.8, hero.z);
+      shield.setPosition(halo.x, halo.y).setDepth(depthOf(hero.z, 0.8) + 1).setVisible(s.hero.shieldMs > 0);
       for (const z of s.zombies) {
         const view = zombies.get(z.id);
         if (!view) continue;
@@ -305,18 +368,34 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         for (let k = 0; k < steps; k++) sim.tick().forEach(handle);
       },
       auto: () => {
+        if (listenFirst()) return true;
         const command = nextCommand(sim.state);
         if (command) loop.dispatch(command);
         return !!command;
       },
       size: () => ({ width: W, height: H }),
     };
+
+    /** The QC bot in answer audio: it plays the right orb from afar until heard, then runs to it (as in 3D). */
+    function listenFirst(): boolean {
+      const orb = correctOrbOf(sim.state);
+      if (!answer || !orb || sim.state.phase !== 'night') return false;
+      // A take starts the next round in the core at once; the view opens its question a frame later.
+      if (sim.state.round?.position !== answer.position()) return true;
+      const look = answer.look(orb.position);
+      if (look === 'heard') return false;
+      loop.dispatch({ type: 'steer', x: 0, z: 0 });
+      if (look !== 'playing') react(orb.id, answer.listen(orb.position));
+      return true;
+    }
+    const stopListen = answer?.onChange(drawListen);
     const qc = window as unknown as { __apk3dView2d?: typeof hook };
     qc.__apk3dView2d = hook;
     const cleanup = (): void => {
       finished = true;
       loop.stop();
       frame = null;
+      stopListen?.();
       if (qc.__apk3dView2d === hook) delete qc.__apk3dView2d;
       unlock?.();
     };

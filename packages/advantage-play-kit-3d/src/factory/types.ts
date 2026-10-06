@@ -142,6 +142,12 @@ export interface Game2DContext extends Omit<CartridgeGameConfigContext, 'input' 
 /** The `options` a 2D view uses when the APK factory mounts it (no hero choice, no helper). */
 export const SESSION_OPTIONS_DEFAULT: SessionOptions = { helper: false, hero: 'knight', looks: {} };
 
+/** How the run plays, for the start screen. */
+export interface BriefingMode {
+  /** Read to Select Audio: the student reads the meaning and listens to the English choices. */
+  answerAudio?: boolean;
+}
+
 /**
  * One cartridge, one or two renderers. `manifest.renderers` lists the renderers; each listed
  * renderer has its method (`validateCartridge` checks it).
@@ -150,8 +156,11 @@ export interface Cartridge {
   manifest: Cartridge3DManifest;
   /** The game's English catalog (merged by the host). */
   strings: Catalog;
-  /** The start screen, from the game's catalog scope (the APK briefing contract). */
-  briefing(i18n: ScopedI18n, input: GameInput | StoryInput | PracticeInput): GameBriefing;
+  /**
+   * The start screen, from the game's catalog scope (the APK briefing contract). The host passes
+   * `{ answerAudio: true }` when the run has an answer audio controller.
+   */
+  briefing(i18n: ScopedI18n, input: GameInput | StoryInput | PracticeInput, mode?: BriefingMode): GameBriefing;
   /** The three.js path ('three'). */
   createGame?(context: Game3DContext): Promise<Game3DInstance>;
   /** The Phaser path ('phaser'): the APK `RuntimeCartridge.createGameConfig` shape. */

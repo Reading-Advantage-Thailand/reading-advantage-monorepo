@@ -14,8 +14,8 @@ describe('VocabularyInput', () => {
         { term: 'bird ', translation: ' นก' },
       ]),
     ).toEqual([
-      { id: 'w-1', term: 'cat', translation: 'แมว' },
-      { id: 'w-4', term: 'bird', translation: 'นก' },
+      { id: 'w-1', term: 'cat', translation: 'แมว', position: 0 },
+      { id: 'w-4', term: 'bird', translation: 'นก', position: 3 },
     ]);
   });
 
