@@ -16,3 +16,5 @@ export {
 } from "./backfill.js";
 export { summarizeTagCoverage, tagCoverageToMarkdown, loadTagCoverageInput, type TagCoverageInput, type TagCoverageReport } from "./coverage.js";
 export { getArticleObjectives, getQuestionObjectives, getArticleWordNodes, type ArticleObjective, type QuestionObjective, type ArticleWordNode } from "./queries.js";
+export * from "./evidence-policy.js";
+export * from "./evidence-contracts.js";
