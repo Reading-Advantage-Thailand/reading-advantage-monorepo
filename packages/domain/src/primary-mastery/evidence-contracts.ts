@@ -165,7 +165,7 @@ export type PrimaryEvidenceJobPayload = z.infer<typeof primaryEvidenceJobPayload
 
 /** The job result: the counts the worker settles with. */
 export const primaryEvidenceJobResultSchema = z
-  .object({ committed: z.number().int().nonnegative(), skipped: z.number().int().nonnegative(), status: z.enum(["recorded", "row-missing"]) })
+  .object({ committed: z.number().int().nonnegative(), skipped: z.number().int().nonnegative(), status: z.enum(["recorded", "row-missing", "tenant-mismatch"]) })
   .strict();
 export type PrimaryEvidenceJobResult = z.infer<typeof primaryEvidenceJobResultSchema>;
 
