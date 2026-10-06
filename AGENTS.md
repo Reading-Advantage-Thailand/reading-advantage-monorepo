@@ -692,6 +692,15 @@ Never start significant work without an active track.
 
 ---
 
+## Primary Advantage student UI
+
+Every student-facing page of Primary Advantage follows the RPG skin design authority in
+`docs/primary-rpg-skin.md` (approved 2026-10-06): a Forge scene as the place, owned SVG/CSS
+chrome, Forge renders for every picture, a 2D fallback for every 3D interaction, and no ElvGames
+asset anywhere in the app. Read it before touching a page under `app/[locale]/(student)/`.
+
+---
+
 ## Documentation Standards
 
 ### JSDoc for All Functions

@@ -8,6 +8,7 @@
 
 | Date | Track | Item | Severity | Status | Notes |
 |------|-------|------|----------|--------|-------|
+| 2026-10-06 | primary_rpg_skin_20261006 | **ElvGames art still ships in the monorepo games; no credit line shown** | High | Open | Owner rule: no ElvGames asset anywhere, Forge only. Still present: `packages/advantage-play-kit/assets/standard/`, `apps/primary-advantage/public/assets/apk/standard-pack-qc/` (808 KB), references in `packages/game-cartridges` (dragon-flight, castle-defense, standard-art tests) and `StudentCartridgeHost.tsx`. The license needs "Pixel art assets by ElvGames" on screen while any file ships; no app shows it. Owned by the audit track `apk_elvgames_audit_20261006` (interim credit, cartridge switch to Forge packs, removal, CI gate). |
 | 2026-04-29 | monorepo-scaffold | advantage-games ESLint 6236 warnings | Low | Open | Pre-existing code has many `prefer-const`, `no-undef`, and `no-explicit-any` warnings. |
 | 2026-05-01 | migrate-reading-advantage | reading-advantage `ignoreBuildErrors: true` / `ignoreDuringBuilds: true` | Medium | Open | Temporarily enabled to pass build. Cannot verify removal due to build hanging on resource-constrained hardware. |
 | 2026-05-01 | migrate-reading-advantage | reading-advantage: 26 failed test suites (91 tests), 50 passing | Medium | Open | Pre-existing from original repo. Game component tests fail due to Zustand v4 store mocking patterns. |

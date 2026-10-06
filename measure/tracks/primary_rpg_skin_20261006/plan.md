@@ -8,7 +8,7 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - [x] Kit: Forge pictorials collected (studio grey keyed out with `cutout.py`; Phase 1 wants transparent renders from the pipeline) (coin, 10 slot icons, 3 relics, blacksmith idle, boss idle) in `phase0/kit/`
 - [x] Mocks: home (guild hall), shop (armory), battle play (boss arena) as static HTML at 375 and 1280 (`phase0/mocks/`)
 - [x] Captures of the three mocks and a `phase0/index.html` for the owner
-- [ ] Owner review of the look (2026-10-06: `phase0/index.html` sent)
+- [x] Owner review of the look: approved 2026-10-06 ("Looks right"); the look and the interaction model are codified in `docs/primary-rpg-skin.md`
 
 ## Phase 1: scene system and the shell
 - [ ] `Scene`, `Panel`, `Sign`, `Meter`, `Coins`, `Hearts` components with the 2D/3D selector

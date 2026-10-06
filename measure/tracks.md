@@ -17,8 +17,13 @@ This file tracks all major tracks for the project.
 
 - [~] **Track: Primary RPG skin — every student page inside the Chibi Quest world** — *created 2026-10-06*
   *Link: [./tracks/primary_rpg_skin_20261006/](./tracks/primary_rpg_skin_20261006/)*
-  *Status: Phase 0 in progress (kit, backdrops, three mocks) | Priority: CRITICAL | Owner approved the per-page plan 2026-10-06*
+  *Status: Phase 0 done and approved 2026-10-06 (kit, backdrops, three mocks); Phase 1 next | Priority: CRITICAL | Design authority: `docs/primary-rpg-skin.md`*
   *Note: Forge assets only (no ElvGames). 3D avatar approved; every 3D interaction has a 2D fallback through the games' selector. Owner gate after Phase 0 on the look.*
+
+- [ ] **Track: ElvGames asset audit and removal (APK and the apps)** — *created 2026-10-06*
+  *Link: [./tracks/apk_elvgames_audit_20261006/](./tracks/apk_elvgames_audit_20261006/)*
+  *Status: upcoming | Priority: HIGH (license) | Owner rule 2026-10-06: Forge assets only*
+  *Note: Inventory every ElvGames file and reference (APK standard library, `standard-pack-qc`, the cartridges, `StudentCartridgeHost`), show the interim credit line, switch the cartridges to Forge packs, remove the files, add a CI gate. Tech-debt row 2026-10-06.*
 
 - [x] **Track: Sales Advantage Broken UX Fixes** *Link: [./tracks/sales_broken_ux_fixes_20260919/](./tracks/sales_broken_ux_fixes_20260919/)*
   Repair the broken user-experience items from the Sales Advantage UX audit. **Implemented 2026-09-20 (9/9 tasks, 267 tests green); owner manual verification PASSED 2026-09-22.**
