@@ -33,7 +33,9 @@ export type ArticlePictureSource = { id: string; image?: string | null };
  * @returns The picture key: the stored key when present, else the article id.
  */
 export function getArticleImageKey(article: ArticlePictureSource): string {
-  return article.image?.trim() || article.id;
+  const key = article.image?.trim();
+  // A key is a bare id (legacy cuid or uuid). A URL or a path in the column is not a key.
+  return key && /^[\w-]+$/.test(key) ? key : article.id;
 }
 
 /**

@@ -93,6 +93,8 @@ describe("article picture URLs", () => {
     expect(getArticleImageKey({ id: "new-id" })).toBe("new-id");
     expect(getArticleImageKey({ id: "new-id", image: null })).toBe("new-id");
     expect(getArticleImageKey({ id: "new-id", image: "  " })).toBe("new-id");
+    expect(getArticleImageKey({ id: "new-id", image: "https://example.com/pic.png" })).toBe("new-id");
+    expect(getArticleImageKey({ id: "new-id", image: "images/abc_1.png" })).toBe("new-id");
     expect(getArticleImageUrl({ id: "new-id" }, 1)).toMatch(/\/images\/new-id_1\.png$/);
   });
 });
