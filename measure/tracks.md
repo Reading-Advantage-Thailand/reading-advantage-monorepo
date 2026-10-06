@@ -20,6 +20,11 @@ This file tracks all major tracks for the project.
   *Status: Phase 0 approved 2026-10-06; Phases 1 to 3 (shell, home, picker, inventory, shop, battle, dashboard) done 2026-10-06, reports `phase1/`, `phase2/`, `phase3/index.html`; Phase 4 (remaining pages) next | Priority: CRITICAL | Design authority: `docs/primary-rpg-skin.md`*
   *Note: Forge assets only (no ElvGames). 3D avatar approved; every 3D interaction has a 2D fallback through the games' selector. Owner gate after Phase 0 on the look.*
 
+- [ ] **Track: Reward emblems become avatar pieces (M1 to M4)** — *created 2026-10-06*
+  *Link: [./tracks/primary_reward_pieces_20261006/](./tracks/primary_reward_pieces_20261006/)*
+  *Status: waits for the Forge pack 1.1.0 release (Forge track F1 to F4) | Priority: HIGH | Owner approved plan A 2026-10-06; fallback B on 2026-10-13*
+  *Note: the three reward cosmetics become mainhand avatar pieces granted into the inventory (source `reward`); the shop leaves reward items out.*
+
 - [ ] **Track: ElvGames asset audit and removal (APK and the apps)** — *created 2026-10-06*
   *Link: [./tracks/apk_elvgames_audit_20261006/](./tracks/apk_elvgames_audit_20261006/)*
   *Status: upcoming | Priority: HIGH (license) | Owner rule 2026-10-06: Forge assets only*
