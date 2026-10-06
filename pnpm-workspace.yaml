@@ -80,7 +80,7 @@ catalog:
   pg: ^8.16.3
   phaser: 4.2.1
   postcss: ^8.5.15
-  postgres: ^3.4.5
+  postgres: ^3.4.9
   prettier: ^3.8.1
   prettier-plugin-tailwindcss: ^0.6.12
   react-day-picker: ^9.14.0
