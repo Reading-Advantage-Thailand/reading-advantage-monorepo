@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import FlashcardDashboard from "@/components/flashcards/flashcard-dashboard";
 import { FlashcardDeckSkeleton } from "@/components/flashcards/flashcard-dashboard-skeleton";
+import { Scene } from "@/components/rpg/scene";
 
 /**
  * Page title for the vocabulary page.
@@ -20,15 +21,16 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function VocabularyPage() {
   const t = await getTranslations("Flashcards");
+  // The spellbook in the wizard tower (docs/primary-rpg-skin.md §4).
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
+    <Scene place="wizard-tower">
+      <header className="cq-on-scene flex flex-col gap-1">
         <h1 className="text-2xl font-bold md:text-3xl">{t("vocabularyTitle")}</h1>
-        <p className="text-muted-foreground">{t("vocabularySubtitle")}</p>
+        <p>{t("vocabularySubtitle")}</p>
       </header>
       <Suspense fallback={<div aria-busy="true"><FlashcardDeckSkeleton /></div>}>
         <FlashcardDashboard type="VOCABULARY" />
       </Suspense>
-    </div>
+    </Scene>
   );
 }

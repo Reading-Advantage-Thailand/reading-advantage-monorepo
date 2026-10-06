@@ -261,7 +261,7 @@ export function ReedySession({ profile, articleId, remainingSeconds, blockedBy, 
       ) : null}
       {phase === "idle" ? (
         <div className="flex flex-col items-center gap-3">
-          <p className="text-muted-foreground text-center text-sm">{t("micAsk")}</p>
+          <p className="cq-on-scene text-center text-sm">{t("micAsk")}</p>
           <Button type="button" onClick={start} className="min-h-14 rounded-2xl px-8 text-lg">
             <MicIcon aria-hidden="true" className="size-5" />
             {t("start")}

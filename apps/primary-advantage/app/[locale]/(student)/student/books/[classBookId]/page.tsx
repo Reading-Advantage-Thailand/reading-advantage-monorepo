@@ -1,19 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { ArrowLeftIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getStudentBook, type StudentBook } from "@reading-advantage/domain/primary-books";
-import { StatusChip, cardHoverClassName } from "@reading-advantage/ui";
-import { currentUser } from "@/lib/session";
-import { Link, redirect } from "@/i18n/navigation";
+import { RpgLink, Sign } from "@/components/rpg/chrome";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Scene } from "@/components/rpg/scene";
+import { currentUser } from "@/lib/session";
+import { redirect } from "@/i18n/navigation";
 
 type Params = Promise<{ classBookId: string }>;
-
-/** Card frame of one lesson row. */
-const CARD = "bg-card text-card-foreground flex flex-wrap items-center justify-between gap-3 rounded-2xl border p-4 shadow-sm";
 
 /**
  * Page title: the student's book.
@@ -56,34 +52,34 @@ export default async function StudentBookPage({ params }: { params: Params }) {
   const canRead = (lesson: StudentBook["lessons"][number]) =>
     lesson.articleId !== null && (book.mode === "independent" || lesson.taught || lesson.number < book.currentLesson || (lesson.current && readingOpen));
 
+  // The book open on the library desk: lessons as pages, a locked lesson sealed (docs/primary-rpg-skin.md §4).
   return (
-    <div className="flex flex-col gap-6">
-      <Link href="/student/home" className="text-muted-foreground hover:text-foreground inline-flex min-h-11 w-fit items-center gap-2 text-sm font-medium [&>svg]:size-4">
-        <ArrowLeftIcon aria-hidden="true" />
+    <Scene place="library">
+      <RpgLink href="/student/home" tone="iron" small className="w-fit">
         {t("back")}
-      </Link>
-      <header className="flex flex-col gap-1">
+      </RpgLink>
+      <header className="cq-on-scene flex flex-col gap-1">
         <h1 className="text-2xl font-bold md:text-3xl">{book.bookName}</h1>
-        <p className="text-muted-foreground">{t("progress", { current: book.currentLesson, total: book.lessonCount })}</p>
+        <p>{t("progress", { current: book.currentLesson, total: book.lessonCount })}</p>
       </header>
       <ol aria-label={t("lessons")} className="flex flex-col gap-3">
         {book.lessons.map((lesson) => (
-          <li key={lesson.number} aria-current={lesson.current ? "step" : undefined} className={cn(CARD, lesson.current && "border-primary")}>
+          <li key={lesson.number} aria-current={lesson.current ? "step" : undefined} className={cn("cq-panel flex flex-wrap items-center justify-between gap-3", lesson.current && "cq-pin")}>
             <div className="flex min-w-0 flex-col gap-1">
-              <span className="text-muted-foreground text-sm">{t("lesson", { number: lesson.number })}</span>
+              <span className="cq-muted text-sm">{t("lesson", { number: lesson.number })}</span>
               <span className="font-article text-lg font-bold">{lesson.title}</span>
-              {lesson.current ? <StatusChip tone="info">{t("current")}</StatusChip> : lesson.taught ? <StatusChip tone="success">{t("taught")}</StatusChip> : null}
+              {lesson.current ? <Sign small className="w-fit text-sm">{t("current")}</Sign> : lesson.taught ? <span className="cq-item-lock w-fit">{t("taught")}</span> : null}
             </div>
             {canRead(lesson) ? (
-              <Link href={`/student/lesson/${lesson.articleId}?type=article`} className={cn(buttonVariants({ variant: "default" }), "min-h-12 rounded-xl px-5 text-base", cardHoverClassName)}>
+              <RpgLink href={`/student/lesson/${lesson.articleId}?type=article`} tone="gold">
                 {t("read")}
-              </Link>
+              </RpgLink>
             ) : (
-              <span className="text-muted-foreground text-sm">{t("notYet")}</span>
+              <span className="cq-item-lock">{t("notYet")}</span>
             )}
           </li>
         ))}
       </ol>
-    </div>
+    </Scene>
   );
 }

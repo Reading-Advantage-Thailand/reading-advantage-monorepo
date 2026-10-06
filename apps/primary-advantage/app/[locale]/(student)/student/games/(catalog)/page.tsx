@@ -1,13 +1,15 @@
-import { Gamepad2Icon, MessageSquareTextIcon, WholeWordIcon } from "lucide-react";
+import { Gamepad2Icon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import {
   CARTRIDGE_CHALLENGE_CAPABILITIES,
   cartridgeCatalog,
   getCartridgeCatalogEntry,
-  type CartridgeCatalogEntry,
 } from "@reading-advantage/game-cartridges";
 import { StudentChallengeCatalogPanel, StudentRpgCatalogPanel } from "@reading-advantage/advantage-play-kit/react";
-import { EmptyState, cardHoverClassName } from "@reading-advantage/ui";
+import { EmptyState } from "@reading-advantage/ui";
+import { Sign } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
+import { ART } from "@/lib/rpg/places";
 import { getTranslations } from "next-intl/server";
 
 import { getCurrentUser } from "@/lib/session";
@@ -15,8 +17,8 @@ import { cn } from "@/lib/utils";
 
 /** The catalog groups, by the practice input of each game. */
 const GROUPS = [
-  { mode: "vocabulary", title: "wordGames", hint: "wordGamesHint", icon: WholeWordIcon, tone: "bg-brand-100 text-brand-700 dark:text-brand-300" },
-  { mode: "sentence", title: "sentenceGames", hint: "sentenceGamesHint", icon: MessageSquareTextIcon, tone: "bg-(--accent-blue-light) text-blue-700 dark:text-blue-300" },
+  { mode: "vocabulary", title: "wordGames", hint: "wordGamesHint", icon: ART.sharpBlade },
+  { mode: "sentence", title: "sentenceGames", hint: "sentenceGamesHint", icon: ART.scroll },
 ] as const;
 
 /**
@@ -50,34 +52,21 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
     return entry ? [[gameId, { title: entry.title, version: capability.version }]] : [];
   }));
 
+  // The games are banners on the arena wall (docs/primary-rpg-skin.md §4).
   return (
-    <div className="flex flex-col gap-8">
-      <header className="flex flex-col gap-1">
+    <Scene place="arena" className="gap-8">
+      <header className="cq-on-scene flex flex-col gap-1">
         <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("description")}</p>
+        <p>{t("description")}</p>
       </header>
       <div className="flex flex-col gap-4 empty:hidden">
         <StudentRpgCatalogPanel ownerKey={ownerKey} />
         <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames} />
       </div>
-      {/* The 3D story games (APK 3D port). Phase 4 of the RPG skin moves them to the arena wall. */}
-      <Link
-        className={cn(
-          "bg-card text-card-foreground focus-visible:ring-ring/50 border-primary flex min-h-20 items-start gap-3 rounded-2xl border p-4 shadow-sm outline-none focus-visible:ring-[3px]",
-          cardHoverClassName,
-        )}
-        href="/student/games/story"
-      >
-        <span aria-hidden="true" className="bg-brand-100 text-brand-700 dark:text-brand-300 flex size-11 shrink-0 items-center justify-center rounded-xl [&>svg]:size-6">
-          <Gamepad2Icon />
-        </span>
-        <span className="flex min-w-0 flex-col gap-1">
-          <span className="text-base leading-snug font-semibold">{t("storyLink")}</span>
-          <span className="text-muted-foreground line-clamp-2 text-sm">{t("storyLinkDescription")}</span>
-        </span>
-      </Link>
+      {/* The 3D story games (APK 3D port) as the first banner on the arena wall. */}
+      <GameCard href="/student/games/story" icon={ART.banner} title={t("storyLink")} description={t("storyLinkDescription")} />
       {cartridgeCatalog.length === 0 ? (
-        <EmptyState className="bg-card border" icon={<Gamepad2Icon />} title={t("empty")} description={t("emptyHint")} />
+        <EmptyState className="cq-panel" icon={<Gamepad2Icon />} title={t("empty")} description={t("emptyHint")} />
       ) : (
         GROUPS.map((group) => {
           // Every game shows: a game that is not a sentence game goes to the word games.
@@ -87,16 +76,18 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
           if (games.length === 0) return null;
           return (
             <section key={group.mode} aria-labelledby={`games-${group.mode}`} className="flex flex-col gap-3">
-              <div className="flex flex-col gap-0.5">
-                <h2 id={`games-${group.mode}`} className="text-xl font-semibold">
-                  {t(group.title)}
-                </h2>
-                <p className="text-muted-foreground text-sm">{t(group.hint)}</p>
+              <div className="flex flex-col gap-1">
+                <Sign className="w-fit">
+                  <h2 id={`games-${group.mode}`} className="m-0 text-[length:inherit] font-bold">
+                    {t(group.title)}
+                  </h2>
+                </Sign>
+                <p className="cq-on-scene text-sm">{t(group.hint)}</p>
               </div>
               <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {games.map((entry) => (
                   <li key={entry.id}>
-                    <GameCard entry={entry} icon={<group.icon />} tone={group.tone} />
+                    <GameCard href={`/student/games/apk/${entry.id}`} icon={group.icon} title={entry.title} description={entry.description} />
                   </li>
                 ))}
               </ul>
@@ -104,33 +95,26 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
           );
         })
       )}
-    </div>
+    </Scene>
   );
 }
 
 /**
- * One game as a card link: an icon tile, the title, and a two-line description.
- * @param props.entry The catalog entry.
- * @param props.icon The group icon (decorative).
- * @param props.tone Color classes for the icon tile.
+ * One game as a parchment banner link on the arena wall: a Forge icon, the title, and a two-line
+ * description.
+ * @param props.href The game route.
+ * @param props.icon The icon path (decorative).
+ * @param props.title The game title.
+ * @param props.description The short description.
  * @returns The card link.
  */
-function GameCard({ entry, icon, tone }: { entry: CartridgeCatalogEntry; icon: React.ReactNode; tone: string }) {
+function GameCard({ href, icon, title, description }: { href: string; icon: string; title: string; description: string }) {
   return (
-    <Link
-      className={cn(
-        "bg-card text-card-foreground focus-visible:ring-ring/50 flex min-h-20 items-start gap-3 rounded-2xl border p-4 shadow-sm outline-none focus-visible:ring-[3px]",
-        "hover:border-primary",
-        cardHoverClassName,
-      )}
-      href={`/student/games/apk/${entry.id}`}
-    >
-      <span aria-hidden="true" className={cn("flex size-11 shrink-0 items-center justify-center rounded-xl [&>svg]:size-6", tone)}>
-        {icon}
-      </span>
+    <Link className={cn("cq-panel cq-pin focus-visible:ring-ring/50 flex min-h-20 items-start gap-3 outline-none focus-visible:ring-[3px]", "transition-transform hover:-translate-y-0.5")} href={href}>
+      <img src={icon} alt="" className="size-11 shrink-0" />
       <span className="flex min-w-0 flex-col gap-1">
-        <span className="text-base leading-snug font-semibold">{entry.title}</span>
-        <span className="text-muted-foreground line-clamp-2 text-sm">{entry.description}</span>
+        <span className="text-base leading-snug font-bold">{title}</span>
+        <span className="cq-muted line-clamp-2 text-sm">{description}</span>
       </span>
     </Link>
   );

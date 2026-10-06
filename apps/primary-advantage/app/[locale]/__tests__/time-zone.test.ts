@@ -8,6 +8,7 @@ import { describe, expect, it, vi } from "vitest";
 import { NextIntlClientProvider } from "next-intl";
 
 vi.mock("next-intl/server", () => ({ getRequestConfig: (create: unknown) => create }));
+vi.mock("next/font/local", () => ({ default: () => ({ variable: "--font-test", className: "font-test" }) }));
 vi.mock("next/font/google", () => {
   const font = () => ({ variable: "--font-test", className: "font-test" });
   return { Cabin_Sketch: font, Inter: font, Noto_Sans_Thai: font, Quicksand: font };

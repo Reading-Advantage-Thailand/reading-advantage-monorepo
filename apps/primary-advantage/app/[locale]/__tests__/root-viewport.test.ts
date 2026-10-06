@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
+vi.mock("next/font/local", () => ({ default: () => ({ variable: "--font-test", className: "font-test" }) }));
 vi.mock("next/font/google", () => {
   const font = () => ({ variable: "--font-test", className: "font-test" });
   return { Cabin_Sketch: font, Inter: font, Noto_Sans_Thai: font, Quicksand: font };

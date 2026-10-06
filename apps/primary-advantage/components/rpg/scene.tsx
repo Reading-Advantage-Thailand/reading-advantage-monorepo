@@ -7,15 +7,16 @@ import { cn } from "@/lib/utils";
  * page at the phone or desktop aspect, a vignette, and the page content over it. Night mode
  * darkens the backdrop through the stylesheet.
  * @param props.place The Forge scene.
+ * @param props.dim True blurs and darkens the backdrop, for a reading page.
  * @param props.className Extra classes for the content wrapper.
  * @param props.children The page content.
  * @returns The scene.
  */
-export function Scene({ place, className, children }: { place: Place; className?: string; children: ReactNode }) {
+export function Scene({ place, dim, className, children }: { place: Place; dim?: boolean; className?: string; children: ReactNode }) {
   const files = backdropFiles(place);
   return (
     <div className="cq" data-place={place}>
-      <div className="cq-backdrop" aria-hidden="true">
+      <div className={cn("cq-backdrop", dim && "cq-backdrop--dim")} aria-hidden="true">
         <picture>
           <source media="(min-width: 900px)" srcSet={files.desktop} type="image/webp" />
           <img src={files.phone} alt="" fetchPriority="high" decoding="async" />

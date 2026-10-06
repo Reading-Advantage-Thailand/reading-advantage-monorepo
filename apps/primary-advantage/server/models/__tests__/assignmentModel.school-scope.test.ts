@@ -10,7 +10,9 @@ vi.mock("@/lib/session", () => ({
   currentUser: mocks.currentUser,
   getCurrentUser: mocks.currentUser,
 }));
-vi.mock("@reading-advantage/db", () => ({
+vi.mock("@reading-advantage/db", async (importOriginal) => ({
+  // The real tables stay: the domain and auth modules register them when they load.
+  ...(await importOriginal<typeof import("@reading-advantage/db")>()),
   db: { select: mocks.select },
   classrooms: { id: "classrooms.id" },
   articles: { id: "articles.id" },

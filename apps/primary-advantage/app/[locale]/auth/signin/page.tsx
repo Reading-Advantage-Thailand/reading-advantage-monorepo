@@ -28,8 +28,8 @@ export default async function SignInPage() {
   const t = await getTranslations("AuthPage.signin");
 
   return (
-    <Tabs defaultValue="student" className="w-full max-w-md p-4">
-      <TabsList className="h-auto w-full">
+    <Tabs defaultValue="student" className="w-full">
+      <TabsList className="cq-tabs h-auto w-full">
         <TabsTrigger value="student" className="min-h-12 cursor-pointer text-base motion-reduce:transition-none">
           <BookTextIcon />
           {t("student")}

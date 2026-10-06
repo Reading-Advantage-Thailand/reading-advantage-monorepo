@@ -9,7 +9,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({ select: vi.fn() }));
 
 vi.mock("@/lib/session", () => ({ currentUser: vi.fn(), getCurrentUser: vi.fn() }));
-vi.mock("@reading-advantage/db", () => ({
+vi.mock("@reading-advantage/db", async (importOriginal) => ({
+  // The real tables stay: the domain and auth modules register them when they load.
+  ...(await importOriginal<typeof import("@reading-advantage/db")>()),
   db: { select: mocks.select },
   classrooms: {},
   articles: {},

@@ -10,6 +10,7 @@ import OrderWordPage from "@/components/practice/order-words-page";
 import ManageTab from "@/components/manage-tab";
 import { getAllSentenceCards } from "@/actions/flashcard";
 import MatchingGamePage from "@/components/practice/matching-page";
+import { Scene } from "@/components/rpg/scene";
 
 /** Practice tabs in display order, with their message keys in SentencesPage. */
 const TABS = [
@@ -43,19 +44,20 @@ export default async function SentencesPage() {
     getTranslations("SentencesPage"),
   ]);
 
+  // The scrolls in the archive; the practice modes are signs (docs/primary-rpg-skin.md §4).
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
+    <Scene place="archive">
+      <header className="cq-on-scene flex flex-col gap-1">
         <h1 className="text-2xl font-bold md:text-3xl">{t("sentencesTitle")}</h1>
-        <p className="text-muted-foreground">{t("sentencesSubtitle")}</p>
+        <p>{t("sentencesSubtitle")}</p>
       </header>
       <Tabs defaultValue="flashcard" className="gap-4">
         <TabsList
           aria-label={t("practiceTabs")}
-          className="h-auto w-full justify-start overflow-x-auto rounded-xl p-1"
+          className="cq-tabs h-auto w-full justify-start overflow-x-auto"
         >
           {TABS.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value} className="h-12 flex-none rounded-lg px-4 text-sm">
+            <TabsTrigger key={tab.value} value={tab.value} className="h-12 flex-none">
               {tPage(tab.label)}
             </TabsTrigger>
           ))}
@@ -81,6 +83,6 @@ export default async function SentencesPage() {
           <ManageTab data={flashcardsResult.cards || []} />
         </TabsContent>
       </Tabs>
-    </div>
+    </Scene>
   );
 }

@@ -5,6 +5,7 @@ import React from "react";
 import { getTranslations } from "next-intl/server";
 import { db, assignments, eq } from "@reading-advantage/db";
 import { getStudentClassBooks } from "@reading-advantage/domain/primary-books";
+import { Scene } from "@/components/rpg/scene";
 
 export async function generateMetadata({
   params,
@@ -62,7 +63,11 @@ export default async function LessonPage({
 
   // If type is explicitly 'article', use standalone lesson
   if (lessonType === "article") {
-    return <LessonCard source="article" articleId={id} maxUnlockedStep={await maxUnlockedStepFor(user, id)} />;
+    return (
+      <Scene place="clearing">
+        <LessonCard source="article" articleId={id} maxUnlockedStep={await maxUnlockedStepFor(user, id)} />
+      </Scene>
+    );
   }
 
   // Otherwise, check if it's an assignment.
@@ -76,9 +81,10 @@ export default async function LessonPage({
 
   // If it's an assignment, use the assignment-based lesson; otherwise treat the id as an article.
   const maxUnlockedStep = await maxUnlockedStepFor(user, assignment?.articleId ?? id);
-  return assignment ? (
-    <LessonCard source="assignment" id={id} maxUnlockedStep={maxUnlockedStep} />
-  ) : (
-    <LessonCard source="article" articleId={id} maxUnlockedStep={maxUnlockedStep} />
+  // The lesson path is the clearing (docs/primary-rpg-skin.md §4).
+  return (
+    <Scene place="clearing">
+      {assignment ? <LessonCard source="assignment" id={id} maxUnlockedStep={maxUnlockedStep} /> : <LessonCard source="article" articleId={id} maxUnlockedStep={maxUnlockedStep} />}
+    </Scene>
   );
 }

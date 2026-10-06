@@ -120,11 +120,11 @@ export function StoryGamesClient() {
 
   return (
     <section aria-labelledby="game-heading" className="space-y-4">
-      <p className="text-muted-foreground">
+      <p className="cq-on-scene text-sm">
         {t("saved", { words: input.vocabulary.length, sentences: input.sentences.length })}
       </p>
-      <h2 id="game-heading" className="text-xl font-semibold">{t("chooseGame")}</h2>
-      <label className="flex items-center gap-2 text-sm">
+      <h2 id="game-heading" className="cq-on-scene text-xl font-bold">{t("chooseGame")}</h2>
+      <label className="cq-on-scene flex min-h-12 items-center gap-2 text-sm">
         <input type="checkbox" checked={flat} onChange={(e) => setFlat(e.target.checked)} />
         {t("flat")}
       </label>
@@ -135,20 +135,20 @@ export function StoryGamesClient() {
               <button
                 type="button"
                 onClick={() => void play(card.game)}
-                className="w-full rounded-lg border border-border p-4 text-left hover:border-primary"
+                className="cq-panel cq-pin w-full text-left transition-transform hover:-translate-y-0.5"
               >
                 <span className="block text-lg font-semibold">{card.game.icon} {card.game.manifest.title}</span>
-                <span className="mt-1 block text-sm text-muted-foreground">{card.game.manifest.description}</span>
+                <span className="cq-muted mt-1 block text-sm">{card.game.manifest.description}</span>
               </button>
             ) : (
-              <div className="rounded-lg border border-dashed border-border p-4 opacity-80" data-testid={`locked-${card.game.id}`}>
+              <div className="cq-panel opacity-80" data-testid={`locked-${card.game.id}`}>
                 <span className="block text-lg font-semibold">🔒 {card.game.manifest.title}</span>
-                <span className="mt-1 block text-sm text-muted-foreground">
+                <span className="cq-muted mt-1 block text-sm">
                   {card.missing.vocabulary > 0
                     ? t("needWords", { count: card.missing.vocabulary })
                     : t("needSentences", { count: card.missing.sentences })}
                 </span>
-                <Link href="/student/read" className="mt-2 inline-block text-sm font-semibold text-primary underline">
+                <Link href="/student/read" className="mt-2 inline-block min-h-12 text-sm font-semibold underline">
                   {t("readMore")}
                 </Link>
               </div>

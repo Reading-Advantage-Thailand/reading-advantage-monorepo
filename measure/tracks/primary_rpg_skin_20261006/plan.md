@@ -28,5 +28,16 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - [ ] Capture of the fall: needs a real completed run (the committed damage comes from verified completions); taken in Phase 5 from a rehearsal class
 
 ## Phase 4: the rest (pages 7 to 19 of the spec)
+- [x] Story list in the library: filter steps as gold, wood, and iron buttons on parchment
+- [x] Story view in the blurred library: desk tools on parchment, the lesson link in gold
+- [x] Lesson path and Reedy in the clearing; class book on the library desk with pinned current lesson and sealed lessons
+- [x] Assignments as a banner over the guild hall board; games as banners on the arena wall with Forge icons
+- [x] Vocabulary in the wizard tower; sentences in the archive with the practice modes as signs; history at the inn with signed sections; reports in the observatory
+- [x] Me as the hero's room at the inn with the chest link to the avatar; sign-in at the gatehouse with the form on parchment and the student and teacher tabs as signs
+- [x] Forge merge `753248e49` (apk3d-games-port onto lane-f): the word adventures card as the first arena banner, the story page and its list in the arena scene
+- [x] Captures of the 14 pages at 375 and 1280, day and night; report `phase4/index.html`; the light-card ink fix found in the captures
+- [x] Skin spec row 12 for the story games: the 3D host briefing, result, and gate panels in the kit parchment (Forge commit 98d7badd0, merged); the legacy 2D briefing screen in advantage-play-kit stays on the list below
+- [x] Test repairs found by the Forge merge check: the GP ledger in the host-proof test mock (one XP row and one GP row per first completion, none on a duplicate), the db mock spread in four app tests, the local font mock in two layout tests
+- [ ] Later: lists as objects inside the client components (books on shelves, scrolls in pigeonholes, the lesson marker on the path, stamped journal pages) once the owner accepts the scene pass
 
 ## Phase 5: the five promo shots recorded from the build

@@ -7,6 +7,7 @@ import { currentUser } from "@/lib/session";
 import AuthErrorPage from "@/app/[locale]/auth/error/page";
 import { ReportPanels } from "@/components/dashboard/report-panels";
 import { RetryButton } from "@/components/shared/retry-button";
+import { Scene } from "@/components/rpg/scene";
 
 /**
  * Page title for the student reports.
@@ -33,23 +34,23 @@ export default async function ReportsPage() {
   const [t, data] = await Promise.all([getTranslations("Reports"), fetchUserActivity(user.id)]);
 
   const header = (
-    <header className="flex flex-col gap-1">
+    <header className="cq-on-scene flex flex-col gap-1">
       <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
     </header>
   );
 
   if (!data?.activity || !data?.xpLogs) {
     return (
-      <div className="flex flex-col gap-6">
+      <Scene place="observatory">
         {header}
         <ErrorState
-          className="bg-card border"
+          className="cq-panel"
           icon={<TriangleAlertIcon />}
           title={t("loadError")}
           description={t("loadErrorHint")}
           action={<RetryButton />}
         />
-      </div>
+      </Scene>
     );
   }
 
@@ -59,10 +60,11 @@ export default async function ReportsPage() {
     details: row.details ?? {},
   }));
 
+  // Charts on parchment in the observatory (docs/primary-rpg-skin.md §4).
   return (
-    <div className="flex flex-col gap-2">
+    <Scene place="observatory" className="gap-2">
       {header}
       <ReportPanels activity={activity} xpLogs={data.xpLogs} cefrLevel={user.cefrLevel || "A0"} />
-    </div>
+    </Scene>
   );
 }

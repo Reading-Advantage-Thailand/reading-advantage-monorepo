@@ -6,6 +6,8 @@ import AuthErrorPage from "@/app/[locale]/auth/error/page";
 import StudentAssignmentList, { type AssignmentStudent } from "@/components/student/assignment-list";
 import { AssignmentListSkeleton } from "@/components/student/assignment-list-skeleton";
 import { getStudentAssignments } from "@/server/models/assignmentModel";
+import { Banner } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
 
 /**
  * Page title for the student assignments.
@@ -100,9 +102,16 @@ export default async function AssignmentsPage() {
   if (!user) {
     return <AuthErrorPage />;
   }
+  const t = await getTranslations("StudentAssignments");
+  // The notices on the guild hall board (docs/primary-rpg-skin.md §4).
   return (
-    <Suspense fallback={<AssignmentListSkeleton />}>
-      <AssignmentsData />
-    </Suspense>
+    <Scene place="guild-hall">
+      <Banner>
+        <h1 className="m-0 text-[length:inherit] font-bold">{t("title")}</h1>
+      </Banner>
+      <Suspense fallback={<AssignmentListSkeleton />}>
+        <AssignmentsData />
+      </Suspense>
+    </Scene>
   );
 }

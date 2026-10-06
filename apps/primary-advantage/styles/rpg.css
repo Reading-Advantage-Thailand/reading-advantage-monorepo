@@ -22,6 +22,8 @@
 
 /* The world: the dark ground every student page stands on; a Scene paints the place over it. */
 .cq-world { background: radial-gradient(ellipse at 50% 0%, #2a2118 0%, var(--cq-night) 70%); color: #fff4dc; }
+/* A light card on the world keeps the theme ink: the world's light text is for text on the scene only. An explicit text utility still wins. */
+.cq-world :is(.bg-card, .bg-popover, .bg-background, .bg-white, .bg-muted, .bg-secondary, .bg-accent, [class*="bg-brand-"], [class*="bg-slate-"], [class*="bg-gray-"], [class*="bg-zinc-"], [class*="bg-sky-"], [class*="bg-cyan-"], [class*="bg-blue-"], [class*="bg-green-"], [class*="bg-emerald-"], [class*="bg-amber-"], [class*="bg-yellow-"], [class*="bg-violet-"], [class*="bg-purple-"], [class*="bg-pink-"], [class*="bg-rose-"], [class*="bg-red-"], [class*="bg-orange-"], [class*="bg-lime-"], [class*="bg-teal-"], [class*="bg-indigo-"]) { color: var(--foreground); }
 .cq { font-family: var(--cq-font); }
 .cq-ink { color: var(--cq-ink); }
 
@@ -30,7 +32,9 @@
 .cq-backdrop img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .cq-backdrop::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.6) 100%); }
 /* Night: the same place with the lanterns lit and a blue cast. */
+.cq-backdrop--dim img { filter: blur(3px) brightness(0.75); transform: scale(1.03); }
 .dark .cq-backdrop img { filter: brightness(0.55) saturate(0.85); }
+.dark .cq-backdrop--dim img { filter: blur(3px) brightness(0.4) saturate(0.85); }
 .dark .cq-backdrop::after { background: radial-gradient(ellipse at 50% 30%, rgba(20, 30, 60, 0.15) 30%, rgba(0, 0, 10, 0.7) 100%); }
 .cq-content { position: relative; z-index: 1; }
 
@@ -229,6 +233,11 @@
 .cq-signpost a:nth-child(even) { transform: rotate(1deg); }
 .cq-signpost a img { width: 26px; height: 26px; }
 .cq-signpost a[aria-current="page"] { box-shadow: 0 0 0 3px var(--cq-gold), 0 3px 0 rgba(0, 0, 0, 0.3); }
+
+/* Tabs as hanging signs (a TabsList with .cq-tabs). */
+.cq-tabs { background: none; gap: 8px; padding: 10px 2px; }
+.cq-tabs [role="tab"] { position: relative; min-height: 44px; padding: 6px 14px; border-radius: 8px; border: 3px solid var(--cq-wood-dark); background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 55%, var(--cq-wood-dark)); color: #fff4dc; font-family: var(--cq-font); font-weight: 700; font-size: 15px; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3); opacity: 0.85; }
+.cq-tabs [role="tab"][data-state="active"] { opacity: 1; box-shadow: 0 0 0 3px var(--cq-gold), 0 5px 0 rgba(0, 0, 0, 0.3); color: #fff4dc; background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 55%, var(--cq-wood-dark)); }
 
 /* Speech bubble for an NPC line. */
 .cq-bubble { position: relative; display: inline-block; padding: 10px 14px; background: #fffaf0; border: 3px solid var(--cq-ink); border-radius: 14px; font-weight: 500; font-size: 15px; color: var(--cq-ink); }

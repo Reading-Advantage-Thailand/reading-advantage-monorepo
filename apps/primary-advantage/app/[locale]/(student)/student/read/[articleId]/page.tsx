@@ -10,14 +10,14 @@ import Sentence, {
   Sentence as SentenceType,
 } from "@/components/articles/sentence";
 import { currentUser } from "@/lib/session";
-import { Link, redirect } from "@/i18n/navigation";
+import { redirect } from "@/i18n/navigation";
 import { saveArticleToFlashcard } from "@/actions/flashcard";
 import AssignButton from "@/components/teacher/assign-button";
 import { getTranslations } from "next-intl/server";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { BookXIcon, FileTextIcon } from "lucide-react";
 import { EmptyState } from "@reading-advantage/ui";
+import { Panel, RpgLink } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
 
 /**
  * Page title for the article view.
@@ -77,18 +77,20 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
 
   if (!article) {
     return (
-      <EmptyState
-        className="bg-card border"
-        titleAs="h1"
-        icon={<BookXIcon />}
-        title={tRead("notFound")}
-        description={tRead("notFoundHint")}
-        action={
-          <Link href="/student/read" className={cn(buttonVariants({ variant: "default" }), "min-h-12 rounded-xl px-6")}>
-            {tRead("backToStories")}
-          </Link>
-        }
-      />
+      <Scene place="library" dim>
+        <EmptyState
+          className="cq-panel"
+          titleAs="h1"
+          icon={<BookXIcon />}
+          title={tRead("notFound")}
+          description={tRead("notFoundHint")}
+          action={
+            <RpgLink href="/student/read" tone="gold">
+              {tRead("backToStories")}
+            </RpgLink>
+          }
+        />
+      </Scene>
     );
   }
 
@@ -115,13 +117,14 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
     }
   }
 
+  // The reading moment: the library, blurred, with the desk objects on parchment (docs/primary-rpg-skin.md §4).
   return (
-    <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
+    <Scene place="library" dim className="xl:flex-row xl:items-start">
       <ArticleCard
         article={article as unknown as Article & { articleActivityLog: any[] }}
       />
       <div className="flex min-w-0 flex-col gap-4 xl:basis-2/5">
-        <div className="bg-card flex flex-wrap gap-2 rounded-2xl border p-3 shadow-sm">
+        <Panel className="flex-row flex-wrap gap-2">
           {isAtLeastTeacher(user.role as string) && (
             <AssignButton article={{ ...article, summary: article.summary ?? "" }} />
           )}
@@ -134,19 +137,16 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
             sentences={(flashcardContent?.sentence as SentenceType[] | null) ?? []}
             audioUrl={flashcardContent?.audioSentencesUrl ?? ""}
           />
-          <Link
-            href={`/student/lesson/${articleId}?type=article`}
-            className={cn(buttonVariants({ variant: "default" }), "min-h-12 rounded-xl")}
-          >
+          <RpgLink href={`/student/lesson/${articleId}?type=article`} tone="gold">
             <FileTextIcon className="h-4 w-4" aria-hidden="true" />
             {t("studyAsLesson")}
-          </Link>
-        </div>
+          </RpgLink>
+        </Panel>
 
         <MCQuestionCard articleId={articleId} />
         <SAQuestionCard articleId={articleId} />
         <LAQuestionCard articleId={articleId} />
       </div>
-    </div>
+    </Scene>
   );
 }

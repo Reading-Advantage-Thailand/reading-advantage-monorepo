@@ -7,6 +7,8 @@ import { getCurrentSession } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import { ReedyMeter } from "@/components/reedy/reedy-meter";
 import { ReedySession } from "@/components/reedy/reedy-session";
+import { Sign } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
 
 /** The Reedy limits of this process. */
 const voiceConfig = voiceConfigFromEnv(process.env);
@@ -40,22 +42,23 @@ export default async function ReedyPage({ searchParams }: { searchParams: Promis
     entitlement = null;
   }
   const data = entitlement ?? { remainingSeconds: 0, budgetSeconds: voiceConfig.monthBudgetSeconds, blockedBy: "DISABLED" as const };
+  // The campfire talk in the clearing (docs/primary-rpg-skin.md §4).
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
+    <Scene place="clearing">
+      <header className="cq-on-scene flex flex-col gap-1">
         <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
           {t("title")}
-          <span className="bg-brand-100 text-brand-800 dark:bg-brand-900 dark:text-brand-100 rounded-full px-2 py-0.5 text-xs font-semibold uppercase">{t("preview")}</span>
+          <Sign small className="text-xs uppercase">{t("preview")}</Sign>
         </h1>
-        <p lang="en" className="text-muted-foreground text-sm">
+        <p lang="en" className="text-sm">
           {t("explainEn")}
         </p>
-        <p lang="th" className="text-muted-foreground text-sm">
+        <p lang="th" className="text-sm">
           {t("explainTh")}
         </p>
       </header>
       <ReedyMeter data={data} t={t} link={false} />
       <ReedySession profile={profile} articleId={articleId && /^[0-9a-f-]{36}$/i.test(articleId) ? articleId : null} remainingSeconds={data.remainingSeconds} blockedBy={data.blockedBy} />
-    </div>
+    </Scene>
   );
 }

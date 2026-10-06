@@ -3,11 +3,12 @@ import genreDataJson from "@/data/genres.json";
 import { Link } from "@/i18n/navigation";
 import { fetchArticles } from "@/server/controllers/articleController";
 import { cleanGenre, cn, sanitizeTranslationKey } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 import { GoToTop } from "@/components/go-to-top";
 import { getTranslations } from "next-intl/server";
 import { currentUser } from "@/lib/session";
 import { StatusChip } from "@reading-advantage/ui";
+import { rpgButton } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
 
 interface PageProps {
   searchParams: Promise<{
@@ -30,8 +31,8 @@ export type GenreData = {
 
 const genreData = genreDataJson as GenreData;
 
-/** A filter choice: selected chips are filled; open choices are outlined. 48 px tall. */
-const CHOICE = "min-h-12 rounded-full px-5 text-base";
+/** A filter choice: a chosen step is a gold button; an open choice is a wood button. 48 px tall. */
+const CHOICE = "min-h-12 text-base";
 
 /**
  * Read list (audit S1): the student's level, the story filter steps (type, then genre, then
@@ -88,11 +89,12 @@ export default async function ReadPage({ searchParams }: PageProps) {
           }
         : null;
 
+  // The story list is the library (docs/primary-rpg-skin.md §4): the filter steps are signs.
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-2">
+    <Scene place="library">
+      <header className="cq-on-scene flex flex-col gap-2">
         <h1 className="text-2xl font-bold md:text-3xl">{t("ReadList.title")}</h1>
-        <p className="text-muted-foreground">{t("ReadList.subtitle")}</p>
+        <p>{t("ReadList.subtitle")}</p>
         {user?.cefrLevel ? (
           <StatusChip tone="success" className="text-sm">
             {t("ReadList.yourLevel", { level: user.cefrLevel })}
@@ -100,7 +102,7 @@ export default async function ReadPage({ searchParams }: PageProps) {
         ) : null}
       </header>
 
-      <nav aria-label={t("ReadList.filters")} className="bg-card flex flex-col gap-3 rounded-2xl border p-4 shadow-sm">
+      <nav aria-label={t("ReadList.filters")} className="cq-panel flex flex-col gap-3">
         {chosen.length ? (
           <ul className="flex flex-wrap items-center gap-2">
             {chosen.map((step) => (
@@ -108,7 +110,7 @@ export default async function ReadPage({ searchParams }: PageProps) {
                 <Link
                   href={step.href}
                   aria-current="true"
-                  className={cn(buttonVariants({ variant: "default" }), CHOICE)}
+                  className={cn(rpgButton("gold"), CHOICE)}
                   scroll={false}
                 >
                   {step.label}
@@ -116,7 +118,7 @@ export default async function ReadPage({ searchParams }: PageProps) {
               </li>
             ))}
             <li>
-              <Link href="/student/read" className={cn(buttonVariants({ variant: "ghost" }), CHOICE, "underline")}>
+              <Link href="/student/read" className={cn(rpgButton("iron", true), "min-h-12")}>
                 {t("Components.resetFilter")}
               </Link>
             </li>
@@ -128,7 +130,7 @@ export default async function ReadPage({ searchParams }: PageProps) {
             <ul className="flex flex-wrap gap-2">
               {next.choices.map((choice) => (
                 <li key={choice.href}>
-                  <Link href={choice.href} className={cn(buttonVariants({ variant: "outline" }), CHOICE)} scroll={false}>
+                  <Link href={choice.href} className={cn(rpgButton("wood"), CHOICE)} scroll={false}>
                     {choice.label}
                   </Link>
                 </li>
@@ -140,6 +142,6 @@ export default async function ReadPage({ searchParams }: PageProps) {
 
       <ArticleSelect initialArticles={initialData.articles} total={initialData.totalArticles} />
       <GoToTop />
-    </div>
+    </Scene>
   );
 }

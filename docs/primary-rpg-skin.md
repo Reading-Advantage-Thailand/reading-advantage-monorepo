@@ -82,3 +82,39 @@ players see for the world is Chibi Quest.
 0 kit and mocks (done, approved) · 1 scene system, shell, home · 2 picker, inventory, shop ·
 3 battle phone page and projector dashboard · 4 the remaining pages · 5 the five promo shots.
 Status lives in the track plan.
+
+## 6. Implementation notes (Phases 1 to 4, 2026-10-06)
+
+- **Where the code is.** `apps/primary-advantage/styles/rpg.css` holds every `cq-` rule and is
+  imported into `globals.css` in `layer(components)`, so a Tailwind utility on an element wins
+  over a skin rule. `components/rpg/` holds `Scene`, the chrome (`Panel`, `Sign`, `Banner`,
+  `Meter`, `Hearts`, `Coins`, `Gem`, `Plaque`, `Bubble`, the wood, gold, and iron buttons),
+  `Sprite`, `ItemIcon`, the toolbar and the signpost, and the header HUD. `lib/rpg/places.ts`
+  maps places, icons, item views, hero fronts, NPC and boss strips to paths under `/rpg/`.
+- **A page joins the skin** by returning `<Scene place="...">`, putting its heading in a
+  `cq-on-scene` element, its cards in `Panel`, its filters or tabs in signs (`Sign`, or
+  `cq-tabs` on a TabsList), and its actions in `RpgLink` or `RpgButton`. A reading page passes
+  `dim` to blur the backdrop. Client components that own their markup (the games host, the
+  flashcard decks, the lesson rail, the report charts) keep their markup; the scene and the
+  panels around them carry the look.
+- **Tokens inside a panel.** A parchment panel resets `--foreground`, `--muted-foreground`,
+  `--border`, `--card`, and `--muted`, so Tailwind colour utilities inside it stay ink on
+  parchment in night mode.
+- **Sprites.** A Forge strip is one row of 8 frames; the frame size is the strip height.
+  `Sprite` scales the strip to `size × 8` in CSS, so any cell size plays at the display size.
+  The keyframe moves by the strip width (`--strip-w`), never by a percentage.
+- **Item views.** `ItemIcon` probes `/rpg/items/<id>.webp` once per page and shows the slot
+  icon until the Forge build ships the view. A server-rendered `<img onError>` does not fire
+  before hydration, so the probe is an `Image()` in an effect.
+- **Clocks.** A countdown starts after mount (`useState<Date | null>(null)` and an effect), so
+  the server and the client render the same text.
+- **One look per character.** Every file of a character (front, 3q view, strips) uses one
+  colour look: bosses and the blacksmith the default look (the games' look); role NPCs their
+  role preset (quest-giver scribe, shopkeeper grocer, innkeeper hostess, villager weaver). The
+  Forge build stops when two files of one character disagree.
+- **Assets.** The Forge session owns the reproducible build of `public/rpg/` and
+  `public/packs/avatar/`; the app never hand-copies Forge output. The avatar pack logic in
+  `packages/avatar-kit` re-exports the 3D kit's `avatar/*` modules once the games port is on
+  lane-f.
+- **Captures.** Each phase report lives in `measure/tracks/primary_rpg_skin_20261006/phase<n>/`
+  with captures at 375×812 (viewport, plus one screen down) and 1280×900, day and night.

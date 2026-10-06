@@ -55,7 +55,9 @@ vi.mock("@/lib/session", () => ({ getCurrentUser: mocks.currentUser }));
 // the `db` export below is that client. Tables come from
 // @reading-advantage/db/schema and operators from drizzle-orm (both real), so
 // identity assertions target the real schema exports.
-vi.mock("@reading-advantage/db", () => ({
+vi.mock("@reading-advantage/db", async (importOriginal) => ({
+  // The real tables stay: the domain and auth modules register them when they load.
+  ...(await importOriginal<typeof import("@reading-advantage/db")>()),
   db: { select: mocks.select, insert: mocks.insert },
   ...mocks.tables,
   eq: vi.fn(() => ({})),
