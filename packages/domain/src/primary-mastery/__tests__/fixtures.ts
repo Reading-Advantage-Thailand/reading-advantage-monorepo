@@ -26,8 +26,8 @@ export function sampleTagsPackage(overrides: Partial<TagsPackageInput> = {}): Ta
       { shortId: "L19.2", role: "supporting" },
     ],
     vocabulary: [
-      { word: "puppy", pos: "noun", nodeId: "english.vocabulary.skill.puppy.noun", role: "glossed" },
-      { word: "run", pos: "verb", nodeId: "english.vocabulary.skill.run.verb", role: "recycled" },
+      { word: "puppy", glossaryWord: "puppies", pos: "noun", nodeId: "english.vocabulary.skill.puppy.noun", role: "glossed" },
+      { word: "run", glossaryWord: null, pos: "verb", nodeId: "english.vocabulary.skill.run.verb", role: "recycled" },
     ],
     questions: [
       { id: "p1", type: "mcq", objectives: ["L19.2"] },

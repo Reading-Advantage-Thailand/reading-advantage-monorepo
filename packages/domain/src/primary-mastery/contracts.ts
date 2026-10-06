@@ -48,6 +48,8 @@ export const tagsVocabularySchema = z
   .object({
     /** The node's normalized form. */
     word: z.string().min(1),
+    /** The exact glossary form (`pets`, `truck`) when the export has it (Workbooks 341d5e7 and later). */
+    glossaryWord: z.string().min(1).nullable().optional(),
     /** The last segment of the node id, for example `noun` or `phrasal-verb`. */
     pos: z.string().min(1),
     nodeId: nodeIdSchema,
