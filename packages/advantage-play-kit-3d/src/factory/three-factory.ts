@@ -63,6 +63,7 @@ export function createThreeGameFactory(options: ThreeFactoryOptions): (context: 
       composition: context.composition,
       options: context.options,
       host: context.host,
+      ...(context.answerAudio ? { answerAudio: context.answerAudio } : {}),
       complete: (result, outcome, evidence) => {
         if (completed) {
           context.diagnostic({ level: 'warning', code: 'apk3d/second-completion', message: 'The game completed more than once; the later result is ignored.' });
