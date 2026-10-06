@@ -7,6 +7,7 @@ import type { LessonPackage } from "./package-schema.js";
 
 /** The book keys of the printed books and their names. Names always carry the product name. */
 export const BOOKS: Record<string, { seriesKey: string; seriesName: string; name: string }> = {
+  o1: { seriesKey: "origins", seriesName: "Primary Advantage Origins", name: "Primary Advantage Origins 1" },
   o2: { seriesKey: "origins", seriesName: "Primary Advantage Origins", name: "Primary Advantage Origins 2" },
   "o3-1": { seriesKey: "origins", seriesName: "Primary Advantage Origins", name: "Primary Advantage Origins 3.1" },
   "o3-2": { seriesKey: "origins", seriesName: "Primary Advantage Origins", name: "Primary Advantage Origins 3.2" },
