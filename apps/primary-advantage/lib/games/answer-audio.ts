@@ -8,8 +8,16 @@ import {
   type PreparedReadToSelectAudioVocabularyResponse,
 } from "@reading-advantage/game-contracts";
 
-/** The 3D games with the English answer audio mode: a Thai question, English answer clips. */
-export const ANSWER_AUDIO_GAME_IDS: ReadonlySet<string> = new Set(["hero-vs-zombie", "dragon-flight", "dragon-rider"]);
+import type { PlayableGame } from "@/lib/games/catalog";
+
+/**
+ * True for a game with the English answer audio mode (a Thai question, English answer clips): its
+ * manifest lists the `read-to-select-audio` modality. A game declares it once its audio mode is built.
+ * @param game The game about to run.
+ * @returns Whether the host offers "Listen to English".
+ */
+export const offersAnswerAudio = (game: Pick<PlayableGame, "manifest">): boolean =>
+  game.manifest.challenge?.modalities.includes("read-to-select-audio") ?? false;
 
 /**
  * Fetches the student's saved words with their prepared English answer clips.

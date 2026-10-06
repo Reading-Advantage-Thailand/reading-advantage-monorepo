@@ -11,7 +11,7 @@ import { useStudentChallengeRun, useStudentRpg } from "@reading-advantage/advant
 import { RpgRewardDisclosure, RpgUnlockNotice, resolveRpgRewardAssetUrls } from "@reading-advantage/advantage-play-kit/presentation";
 
 import { Link, useRouter } from "@/i18n/navigation";
-import { ANSWER_AUDIO_GAME_IDS, answerAudioControllerOf, fetchAnswerAudio } from "@/lib/games/answer-audio";
+import { answerAudioControllerOf, fetchAnswerAudio, offersAnswerAudio } from "@/lib/games/answer-audio";
 import { gameFor, practiceLocaleOf } from "@/lib/games/catalog";
 import { canRunChallenge, hostCompletionInput } from "@/lib/games/completion";
 
@@ -56,8 +56,8 @@ type LoadError = "game" | "load" | "unauthenticated";
  * Plays one 3D game (2D on older phones) for a student: the saved items or a class challenge as
  * the input, the RPG reward panels around the briefing and the results, and the completion posted
  * to the catalog route. The game internals never fetch: the host passes the input and the avatar.
- * Hero vs. Zombie, Dragon Flight, and Dragon Rider also offer English answer audio outside a class
- * challenge: the host fetches the prepared clips, makes a controller per run, and saves its evidence.
+ * A game whose manifest lists the answer audio modality also offers English answer audio outside a
+ * class challenge: the host fetches the prepared clips, makes a controller per run, and saves its evidence.
  * @param props The game, the identity, the content source, and the callbacks.
  * @returns The game surface with its load, lock, and save states.
  */
@@ -80,7 +80,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
   const rpg = useStudentRpg({ endpoint: "/api/v1/apk/rpg", ownerKey: ownerKey ?? "", enabled: Boolean(ownerKey) });
   const rpgAssetUrls = useMemo(() => resolveRpgRewardAssetUrls("/"), []);
   const exit = onExit ?? (() => router.push("/student/games"));
-  const offersAudio = Boolean(game && !challengeId && ANSWER_AUDIO_GAME_IDS.has(game.id));
+  const offersAudio = Boolean(game && !challengeId && offersAnswerAudio(game));
   const audioMode = offersAudio && mode === "answer-audio";
 
   useEffect(() => {

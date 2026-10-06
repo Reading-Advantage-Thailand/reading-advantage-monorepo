@@ -26,9 +26,9 @@ briefing, and the results belong to the kit (`StoryGameHost`); the app places it
   and gets the launch: the content items (the APK `VocabularyInput`) and the server seed. The kit host
   receives the array as `input` and the seed as `seed`; the briefing previews the terms. `replay` is off:
   one launch is one run.
-- **English answer audio run.** Hero vs. Zombie, Dragon Flight, and Dragon Rider (`ANSWER_AUDIO_GAME_IDS`
-  in `lib/games/answer-audio.ts`) show "Read Thai" and "Listen to English" on the briefing outside a class
-  challenge. "Listen to English" fetches `/api/v1/apk/content?mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=<id>`:
+- **English answer audio run.** A game whose manifest lists the `read-to-select-audio` challenge modality
+  (`offersAnswerAudio` in `lib/games/answer-audio.ts`; Hero vs. Zombie first, then Dragon Flight and Dragon
+  Rider) shows "Read Thai" and "Listen to English" on the briefing outside a class challenge. "Listen to English" fetches `/api/v1/apk/content?mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=<id>`:
   the saved words (the APK `VocabularyInput`, at most 50) with one English clip each. The kit host gets the
   words as `input` and `answerAudio`, a factory that makes a new controller for each run; the kit mount
   pauses, mutes, and destroys the controller with the game and checks its evidence against the result.

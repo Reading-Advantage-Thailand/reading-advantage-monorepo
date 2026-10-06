@@ -43,6 +43,8 @@ vi.mock("@reading-advantage/advantage-play-kit/presentation", () => ({
 vi.mock("@/lib/games/answer-audio", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/games/answer-audio")>()),
   fetchAnswerAudio: mocks.fetchAnswerAudio,
+  // The manifests declare the mode with the Forge F2 release; the gate itself has its own test.
+  offersAnswerAudio: (game: { id: string }) => game.id === "hero-vs-zombie",
 }));
 vi.mock("@reading-advantage/game-cartridges-3d", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@reading-advantage/game-cartridges-3d")>();
