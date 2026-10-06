@@ -23,8 +23,10 @@ export type RpgUnlockNoticeProps = Omit<ComponentProps<"section">, "children"> &
   readonly pendingCosmeticId?: RpgCosmeticId | null;
   /** Current refresh or equipment failure. */
   readonly failureMessage?: string | null;
-  /** Requests equipment for one confirmed cosmetic. */
-  readonly onEquip: (cosmeticId: RpgCosmeticId) => void;
+  /** Requests equipment for one confirmed cosmetic. Unused when `inventoryNote` is set. */
+  readonly onEquip?: (cosmeticId: RpgCosmeticId) => void;
+  /** Shown under a new reward in place of the equip action, on hosts where a reward is an avatar piece in the inventory. */
+  readonly inventoryNote?: string;
   /** Retries the current failed request. */
   readonly onRetry?: () => void;
 };
@@ -50,6 +52,7 @@ export function RpgUnlockNotice({
   pendingCosmeticId = null,
   failureMessage = null,
   onEquip,
+  inventoryNote,
   onRetry,
   style,
   ...sectionProps
@@ -98,6 +101,9 @@ export function RpgUnlockNotice({
               <div style={{ minInlineSize: 0 }}>
                 <h3 style={{ margin: 0 }}>{cosmetic.name}</h3>
                 <p style={{ margin: "0.25rem 0", color: "var(--apk-reward-accent, #67e8f9)" }}>Unlocked</p>
+                {inventoryNote ? (
+                  <p data-rpg-in-inventory={cosmetic.id} style={{ margin: 0, color: "var(--apk-reward-muted, #b9c9bf)" }}>{inventoryNote}</p>
+                ) : onEquip ? (
                 <button
                   type="button"
                   disabled={cosmetic.equipped || pending || pendingCosmeticId !== null}
@@ -109,6 +115,7 @@ export function RpgUnlockNotice({
                 >
                   {cosmetic.equipped ? "Equipped" : pending ? "Equipping…" : "Equip"}
                 </button>
+                ) : null}
               </div>
             </li>
           );

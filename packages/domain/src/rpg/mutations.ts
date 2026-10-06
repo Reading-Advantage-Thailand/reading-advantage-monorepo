@@ -7,9 +7,11 @@ import {
   type EquipRpgCosmeticResult,
 } from "@reading-advantage/game-contracts";
 import {
+  primaryAvatarInventory,
   studentCosmeticUnlocks,
   studentRpgProfiles,
 } from "@reading-advantage/db/schema";
+import { AVATAR_CATALOG, AVATAR_PACK_VERSION } from "@reading-advantage/avatar-kit";
 
 import type { TenantDB } from "../db-contract.js";
 import {
@@ -29,7 +31,9 @@ export class RpgCosmeticLockedError extends Error {
 }
 
 /**
- * Grants eligible cosmetic rewards inside a completion transaction.
+ * Grants eligible cosmetic rewards inside a completion transaction: the unlock row, and the
+ * avatar piece of the same id into the student's inventory (source "reward"), so the reward
+ * shows on the hero. Both inserts skip rows that exist, so a repeat grant changes nothing.
  * @param db Active tenant transaction.
  * @param completion Saved completion row from the active transaction.
  * @returns The number of eligible rewards attempted.
@@ -47,6 +51,18 @@ export async function grantCompletionCosmetics(
     cosmeticId: reward.cosmeticId,
     sourceCompletionId: completion.id,
   }))).onConflictDoNothing();
+  const pieces = rewards.filter((reward) => AVATAR_CATALOG[reward.cosmeticId]?.source === "reward");
+  if (pieces.length > 0) {
+    await db.insert(primaryAvatarInventory).values(pieces.map((reward) => ({
+      schoolId: completion.schoolId,
+      userId: completion.userId,
+      itemId: reward.cosmeticId,
+      dye: null,
+      source: "reward",
+      catalogVersion: AVATAR_PACK_VERSION,
+      acquiredAt: new Date(),
+    }))).onConflictDoNothing();
+  }
   return rewards.length;
 }
 

@@ -139,9 +139,9 @@ export function tieOrder(userId: string, itemId: string): number {
 }
 
 /**
- * The shop list of the signed-in student (FR-4, FR-5): every catalog piece with its price, level
+ * The shop list of the signed-in student (FR-4, FR-5): every shop piece with its price, level
  * gate, dyes, and what the student owns, in popularity order (purchases in the last 30 days over
- * all schools), ties in the student's fixed random order.
+ * all schools), ties in the student's fixed random order. Reward pieces are never listed.
  * @param ctx The database, the user, and the clock.
  * @returns The shop items.
  * @throws {AuthError} FORBIDDEN when the user has no school.
@@ -163,7 +163,7 @@ export async function listAvatarShop(ctx: AvatarCtx): Promise<AvatarShopItem[]> 
     .groupBy(primaryAvatarInventory.itemId);
   const counts = new Map(popular.map((row) => [row.itemId, Number(row.count)]));
   const level = Math.max(1, ctx.user.level || 1);
-  const items = Object.values(AVATAR_CATALOG).map((item): AvatarShopItem => ({
+  const items = Object.values(AVATAR_CATALOG).filter((item) => item.source === "shop").map((item): AvatarShopItem => ({
     id: item.id,
     slot: item.slot as AvatarSlot,
     tier: item.tier,
@@ -185,7 +185,7 @@ export async function listAvatarShop(ctx: AvatarCtx): Promise<AvatarShopItem[]> 
  * @param ctx The database, the user, and the clock.
  * @param input The piece and, for a dye, the dye.
  * @returns The owned item and the balance after the purchase.
- * @throws {AvatarShopError} NOT_IN_CATALOG, BAD_DYE, LEVEL_LOCKED, INSUFFICIENT_GP, ALREADY_OWNED, or RETRY (a concurrent purchase).
+ * @throws {AvatarShopError} NOT_IN_CATALOG, NOT_FOR_SALE (a reward piece), BAD_DYE, LEVEL_LOCKED, INSUFFICIENT_GP, ALREADY_OWNED, or RETRY (a concurrent purchase).
  * @throws {AuthError} FORBIDDEN when the user has no school.
  */
 export async function purchaseAvatarItem(ctx: AvatarCtx & { input: PurchaseAvatarItemInput }): Promise<{ item: AvatarInventoryItem; gp: number }> {
@@ -194,6 +194,7 @@ export async function purchaseAvatarItem(ctx: AvatarCtx & { input: PurchaseAvata
   const now = ctx.now ?? new Date();
   const item = AVATAR_CATALOG[input.itemId];
   if (!item) throw new AvatarShopError("NOT_IN_CATALOG", 404, `No piece '${input.itemId}' in the catalog`);
+  if (item.source === "reward") throw new AvatarShopError("NOT_FOR_SALE", 403, `'${item.id}' is a reward piece, not for sale`);
   if (input.dye && !itemDyes(item.id).includes(input.dye)) throw new AvatarShopError("BAD_DYE", 400, `No dye '${input.dye}' on '${item.id}'`);
   if (Math.max(1, ctx.user.level || 1) < tierLevel(item.tier)) throw new AvatarShopError("LEVEL_LOCKED", 403, `Tier ${item.tier} opens at level ${tierLevel(item.tier)}`);
   try {

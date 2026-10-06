@@ -1,5 +1,5 @@
 {
- "version": "1.0.0",
+ "version": "1.1.0",
  "base": {
   "file": "base/avatar-base.glb",
   "variants": {
@@ -5523,7 +5523,7 @@
    "slot": "mainhand",
    "tier": 1,
    "twoHanded": false,
-   "price": 50,
+   "source": "reward",
    "rating": null,
    "equip": {
     "slot": "mainhand",
@@ -5559,6 +5559,92 @@
    "dyes": null,
    "files": {
     "model": "pieces/apprentice-wand.glb"
+   }
+  },
+  {
+   "id": "graveyard-staff",
+   "slot": "mainhand",
+   "tier": 2,
+   "twoHanded": true,
+   "source": "reward",
+   "rating": null,
+   "equip": {
+    "slot": "mainhand",
+    "socket": "grip.R",
+    "fitScale": 2.2222222222222223,
+    "hides": [],
+    "hair": "full",
+    "displayOnly": [],
+    "twoHanded": true,
+    "attach": [
+     {
+      "bone": "knife.R",
+      "position": [
+       0,
+       -0.072337,
+       -0.198745
+      ],
+      "quaternion": [
+       0.40558,
+       -0.579228,
+       -0.40558,
+       0.579228
+      ],
+      "scale": [
+       0.45,
+       0.45,
+       0.45
+      ],
+      "half": null
+     }
+    ]
+   },
+   "dyes": null,
+   "files": {
+    "model": "pieces/graveyard-staff.glb"
+   }
+  },
+  {
+   "id": "echo-staff",
+   "slot": "mainhand",
+   "tier": 2,
+   "twoHanded": true,
+   "source": "reward",
+   "rating": null,
+   "equip": {
+    "slot": "mainhand",
+    "socket": "grip.R",
+    "fitScale": 2.2222222222222223,
+    "hides": [],
+    "hair": "full",
+    "displayOnly": [],
+    "twoHanded": true,
+    "attach": [
+     {
+      "bone": "knife.R",
+      "position": [
+       0,
+       -0.072337,
+       -0.198745
+      ],
+      "quaternion": [
+       0.40558,
+       -0.579228,
+       -0.40558,
+       0.579228
+      ],
+      "scale": [
+       0.45,
+       0.45,
+       0.45
+      ],
+      "half": null
+     }
+    ]
+   },
+   "dyes": null,
+   "files": {
+    "model": "pieces/echo-staff.glb"
    }
   },
   {

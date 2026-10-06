@@ -22,7 +22,7 @@ This file tracks all major tracks for the project.
 
 - [ ] **Track: Reward emblems become avatar pieces (M1 to M4)** — *created 2026-10-06*
   *Link: [./tracks/primary_reward_pieces_20261006/](./tracks/primary_reward_pieces_20261006/)*
-  *Status: waits for the Forge pack 1.1.0 release (Forge track F1 to F4) | Priority: HIGH | Owner approved plan A 2026-10-06; fallback B on 2026-10-13*
+  *Status: M1 to M4 done 2026-10-06 on pack 1.1.0 (Forge track avatar_reward_pieces_20261006); browser check of a granted staff open | Priority: HIGH | Owner approved plan A 2026-10-06*
   *Note: the three reward cosmetics become mainhand avatar pieces granted into the inventory (source `reward`); the shop leaves reward items out.*
 
 - [ ] **Track: ElvGames asset audit and removal (APK and the apps)** — *created 2026-10-06*

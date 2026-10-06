@@ -15,6 +15,8 @@ export interface StudentRpgCatalogPanelProps {
   readonly endpoint?: string;
   /** Host path prefix used for reviewed reward assets. */
   readonly basePath?: string;
+  /** Replaces the equip action on hosts where a reward is an avatar piece in the inventory. */
+  readonly inventoryNote?: string;
 }
 
 /**
@@ -26,6 +28,7 @@ export function StudentRpgCatalogPanel({
   ownerKey,
   endpoint = "/api/v1/apk/rpg",
   basePath = "",
+  inventoryNote,
 }: StudentRpgCatalogPanelProps): ReactElement | null {
   const enabled = Boolean(ownerKey);
   const rpg = useStudentRpg({ endpoint, ownerKey: ownerKey ?? "", enabled });
@@ -41,6 +44,7 @@ export function StudentRpgCatalogPanel({
         failureMessage={rpg.failureMessage}
         onRetry={() => void rpg.retry()}
         onEquip={(cosmeticId) => void rpg.equip(cosmeticId)}
+        inventoryNote={inventoryNote}
       />
     );
   }

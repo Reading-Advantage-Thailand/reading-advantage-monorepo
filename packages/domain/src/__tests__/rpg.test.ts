@@ -170,9 +170,13 @@ describe("RPG persistence operations", () => {
     await grantCompletionCosmetics(db, completion());
     await grantCompletionCosmetics(db, completion());
 
-    expect(onConflictDoNothing).toHaveBeenCalledTimes(2);
+    // Each grant writes the unlock rows and the avatar inventory rows (source "reward").
+    expect(onConflictDoNothing).toHaveBeenCalledTimes(4);
     expect(values.mock.calls[0]?.[0]).toHaveLength(3);
     expect(values.mock.calls[1]?.[0]).toHaveLength(3);
+    expect(values.mock.calls[1]?.[0][0]).toMatchObject({ itemId: "apprentice-wand", source: "reward", dye: null });
+    expect(values.mock.calls[2]?.[0]).toHaveLength(3);
+    expect(values.mock.calls[3]?.[0]).toHaveLength(3);
   });
 
   it("does not report an unrelated unique violation as a duplicate completion", async () => {

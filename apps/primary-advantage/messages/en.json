@@ -2818,12 +2818,14 @@
     }
   },
   "ApkHost": {
+    "rewardInInventory": "It is in your inventory. Wear it from your avatar page.",
     "readMode": "Read Thai",
     "listenMode": "Listen to English",
     "signInToPlayChallenge": "Sign in to play this challenge",
     "signInToPlayGame": "Sign in to play this game"
   },
   "StudentGames": {
+    "rewardInInventory": "It is in your inventory. Wear it from your avatar page.",
     "title": "Games",
     "description": "Play games with the words and sentences you learn.",
     "wordGames": "Word games",

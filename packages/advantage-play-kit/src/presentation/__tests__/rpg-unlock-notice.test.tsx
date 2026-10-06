@@ -36,6 +36,20 @@ describe("RpgUnlockNotice", () => {
     expect(screen.queryByText("Apprentice Wand")).not.toBeInTheDocument();
   });
 
+  it("shows the inventory note in place of the equip action when the host gives one", () => {
+    render(
+      <RpgUnlockNotice
+        cosmetics={[{ id: "echo-staff", slot: "profile-emblem", name: "Echo Staff", unlockedAt: "2026-09-09T01:00:00.000Z", equipped: false }]}
+        assetUrls={assetUrls}
+        inventoryNote="It is in your inventory."
+      />,
+    );
+
+    expect(screen.getByText("Unlocked")).toBeInTheDocument();
+    expect(screen.getByText("It is in your inventory.")).toBeInTheDocument();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
   it("shows a retry action without inventing an unlock", () => {
     const onRetry = vi.fn();
     render(

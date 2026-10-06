@@ -469,6 +469,7 @@ export function StudentCartridgeHost({
                   failureMessage={rpg.failureMessage}
                   onRetry={() => void rpg.retry()}
                   onEquip={(cosmeticId) => void rpg.equip(cosmeticId)}
+                  inventoryNote={t("rewardInInventory")}
                 />
               ) : rpg.failureMessage ? (
                 <div role="alert">
