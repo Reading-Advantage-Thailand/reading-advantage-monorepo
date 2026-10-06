@@ -5,12 +5,14 @@
  * Blast and the dawn. It never decides a rule.
  */
 import * as THREE from 'three';
-import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { toGameResults } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { attachJoystick, esc, hasThai } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor, burst, FollowRig, isAvatarBody, playerBody, Walker } from '@reading-advantage/advantage-play-kit-3d/stage';
-import { createHeroVsZombie, evidenceOf, scoreOf, type HeroVsZombieCommand, type HeroVsZombieEvent, type HeroVsZombieState } from '../core/index.js';
+import { createHeroVsZombie, evidenceOf, scoreOf, type HeroVsZombieCommand, type HeroVsZombieEvent, type HeroVsZombieState, type HeroVsZombieInput } from '../core/index.js';
+import { manifest } from '../manifest.js';
+import { evidenceStoryOf } from '../../shared/challenge.js';
 import { nextCommand } from '../qc/bot.js';
 import { buildChurchyard, CHURCHYARD_MODELS } from './churchyard.js';
 import hero_vs_zombieCss from './hero-vs-zombie.css.js';
@@ -20,7 +22,8 @@ installCss('hero-vs-zombie', hero_vs_zombieCss);
 const ORB_COLOR = 0xfff1a8;
 
 export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
-  const story = ctx.input as PracticeInput;
+  // A practice input, or a class challenge's APK vocabulary input.
+  const input = ctx.input as HeroVsZombieInput;
   const stage = ctx.stage;
   const t = ctx.i18n.scope('hud').t;
   const audio = ctx.audio;
@@ -32,7 +35,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
   ]);
   const yard = buildChurchyard(stage);
-  const sim = createHeroVsZombie(story, { seed: ctx.seed, helper: ctx.options.helper });
+  const sim = createHeroVsZombie(input, { seed: ctx.seed, helper: ctx.options.helper });
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- the hero
@@ -226,7 +229,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     audio.play('victory');
     hero.play('victory');
     await hud.banner.show(t('done.title'), t('done.text'), 2.2);
-    const evidence = evidenceOf(sim.state, story, ctx.seed, Math.round(performance.now() - startedAt));
+    const evidence = evidenceOf(sim.state, evidenceStoryOf(input, manifest.levels), ctx.seed, Math.round(performance.now() - startedAt));
     ctx.complete(toGameResults(evidence, scoreOf(sim.state)), 'victory', evidence);
   }
 

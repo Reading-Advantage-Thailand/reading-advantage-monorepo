@@ -35,4 +35,6 @@ export const manifest = validateCartridge3DManifest({
   device: {},
   budget: { firstLoadBytes: 4_000_000, totalBytes: 8_000_000 },
   briefingKey: 'dragonFlight.briefing',
+  // A class challenge sends its vocabulary items as the APK `VocabularyInput`, which the core accepts.
+  challenge: { version: '2026-10-06.1', inputMode: 'vocabulary', modalities: ['reading'] },
 });
