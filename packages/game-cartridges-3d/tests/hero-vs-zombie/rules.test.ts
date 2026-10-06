@@ -44,7 +44,15 @@ describe('content', () => {
     expect(new Set(words.map((w) => w.id)).size).toBe(TUNING.maxWords);
     for (const word of words) {
       const source = STORY.vocabulary.find((v) => v.id === word.id)!;
-      expect(word).toEqual({ id: source.id, term: source.term, translation: source.translation, attempts: 0, solved: false, returned: false });
+      expect(word).toEqual({
+        id: source.id,
+        term: source.term,
+        translation: source.translation,
+        position: STORY.vocabulary.indexOf(source),
+        attempts: 0,
+        solved: false,
+        returned: false,
+      });
     }
     expect(nightWordsOf(STORY, createRng(3), 10).map((w) => w.id)).toEqual(words.map((w) => w.id));
     expect(nightWordsOf(STORY, createRng(4), 10).map((w) => w.id)).not.toEqual(words.map((w) => w.id));
@@ -68,20 +76,20 @@ describe('content', () => {
 
 describe('orbs', () => {
   const words = [
-    { id: 'a', term: 'cat', translation: 'แมว' },
-    { id: 'b', term: 'dog', translation: 'หมา' },
-    { id: 'c', term: 'kitty', translation: 'แมว' }, // the same meaning as "cat"
-    { id: 'd', term: 'Dog', translation: 'หมา' },
-    { id: 'e', term: 'bird', translation: 'นก' },
-    { id: 'f', term: 'fish', translation: 'Fish' },
-    { id: 'g', term: 'fishes', translation: 'fish' }, // the same meaning as "fish", other case
+    { id: 'a', position: 0, term: 'cat', translation: 'แมว' },
+    { id: 'b', position: 1, term: 'dog', translation: 'หมา' },
+    { id: 'c', position: 2, term: 'kitty', translation: 'แมว' }, // the same meaning as "cat"
+    { id: 'd', position: 3, term: 'Dog', translation: 'หมา' },
+    { id: 'e', position: 4, term: 'bird', translation: 'นก' },
+    { id: 'f', position: 5, term: 'fish', translation: 'Fish' },
+    { id: 'g', position: 6, term: 'fishes', translation: 'fish' }, // the same meaning as "fish", other case
   ];
 
   it("decoys are other words' meanings, distinct from the right one and from each other, case-insensitive", () => {
     expect(decoysFor(words[0]!, words)).toEqual([
-      { wordId: 'b', text: 'หมา', correct: false },
-      { wordId: 'e', text: 'นก', correct: false },
-      { wordId: 'f', text: 'Fish', correct: false },
+      { wordId: 'b', position: 1, text: 'หมา', correct: false },
+      { wordId: 'e', position: 4, text: 'นก', correct: false },
+      { wordId: 'f', position: 5, text: 'Fish', correct: false },
     ]);
     expect(decoysFor(words[6]!, words).map((d) => d.text)).toEqual(['แมว', 'หมา', 'นก']);
   });
@@ -89,7 +97,7 @@ describe('orbs', () => {
   it('4 orbs, or 3 in Helper mode, with the right one at a seeded position', () => {
     const four = orbsFor(words[0]!, words, 4, createRng(1));
     expect(four).toHaveLength(4);
-    expect(four.filter((o) => o.correct)).toEqual([{ wordId: 'a', text: 'แมว', correct: true }]);
+    expect(four.filter((o) => o.correct)).toEqual([{ wordId: 'a', position: 0, text: 'แมว', correct: true }]);
     expect(new Set(four.map((o) => o.text.toLowerCase())).size).toBe(4);
     const three = orbsFor(words[0]!, words, 3, createRng(1));
     expect(three).toHaveLength(3);
@@ -99,7 +107,7 @@ describe('orbs', () => {
     expect(orbsFor(words[0]!, words, 4, createRng(5))).toEqual(orbsFor(words[0]!, words, 4, createRng(5)));
     // Fewer orbs when the night has too few distinct meanings.
     const few = [words[0]!, words[2]!];
-    expect(orbsFor(few[0]!, few, 4, createRng(1))).toEqual([{ wordId: 'a', text: 'แมว', correct: true }]);
+    expect(orbsFor(few[0]!, few, 4, createRng(1))).toEqual([{ wordId: 'a', position: 0, text: 'แมว', correct: true }]);
   });
 
   it('every round has the mode\'s orb count, distinct texts, and orbs apart from each other, the hero, and the graves', () => {
@@ -141,7 +149,7 @@ describe('rounds', () => {
     expect(sim.state.zombies.every((z) => z.rising && z.riseMs === TUNING.riseMs && isGrave(z))).toBe(true);
     expect(sim.state.zombies.every((z) => distance(z, sim.state.hero) >= TUNING.graveKeepOutHero)).toBe(true);
     expect(sim.state).toMatchObject({ phase: 'night', roundIndex: 0, total: sim.state.words.length, rounds: 0, charges: TUNING.chargesAtStart, coins: 0 });
-    expect(sim.state.hero).toEqual({ x: 0, z: 0, facing: 180, bumpedMs: 0, pushX: 0, pushZ: 0 });
+    expect(sim.state.hero).toEqual({ x: 0, z: 0, facing: 180, bumpedMs: 0, pushX: 0, pushZ: 0, shieldMs: 0 });
     const events = sim.tick();
     expect(ofType(events, 'zombieRose').map((e) => e.zombieId)).toEqual(['z1', 'z2', 'z3']);
     for (const e of ofType(events, 'zombieRose')) expect(isGrave(e)).toBe(true);
@@ -152,7 +160,9 @@ describe('rounds', () => {
       roundId: 'r1',
       itemId: sim.state.round!.itemId,
       term: sim.state.round!.term,
-      orbs: sim.state.orbs.map(({ id, text, x, z }) => ({ id, text, x, z })),
+      translation: sim.state.round!.translation,
+      position: sim.state.round!.position,
+      orbs: sim.state.orbs.map(({ id, text, position, x, z }) => ({ id, text, position, x, z })),
     });
     expect(events.at(-1)!.type).toBe('roundStarted');
     // Zombies walk after the rise.

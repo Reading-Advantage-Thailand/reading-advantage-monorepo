@@ -1,5 +1,5 @@
 // Generated from hero-vs-zombie.css (the stylesheet text; installed once by installCss).
-export default `/* Hero vs. Zombie HUD: the target word and the Blast button. */
+export default `/* Hero vs. Zombie HUD: the target word, the answer audio controls, and the Blast button. */
 .hvz-target {
   position: absolute;
   left: 50%;
@@ -68,5 +68,36 @@ export default `/* Hero vs. Zombie HUD: the target word and the Blast button. */
     height: 420px;
     opacity: 0;
   }
+}
+/* Answer audio: one "n 🔊" control per orb, under the target. */
+.hvz-listen {
+  position: absolute;
+  left: 50%;
+  top: calc(150px + env(safe-area-inset-top, 0px));
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+.hvz-listen button {
+  min-width: 64px;
+  height: 48px;
+  border: 3px solid #a5b4fc;
+  border-radius: 12px;
+  background: #312e81;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+.hvz-listen button[data-look='playing'] {
+  border-color: #fde68a;
+}
+.hvz-listen button[data-look='heard'] {
+  border-color: #86efac;
+}
+.hvz-listen button[data-look='failed'] {
+  border-color: #fca5a5;
+}
+.hvz-listen button[data-look='used'] {
+  opacity: 0.55;
 }
 `;
