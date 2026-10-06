@@ -17,6 +17,7 @@ import {
 import { createTenantDB } from "../db-contract.js";
 import type { ImportLessonResult } from "./contracts.js";
 import { GRAPH_RELEASE } from "../primary-mastery/objective-key.js";
+import { LEGACY_ARTICLE_TABLE } from "../primary-mastery/backfill.js";
 import { BOOKS, hasTags, legacyArticleIdOf, splitKey, toArticleRow, toFlashcardRow, toLessonPackageJson, toQuestionRows, toTagRows, type QuestionRows } from "./mapping.js";
 import type { LessonPackage } from "./package-schema.js";
 
@@ -74,7 +75,7 @@ export async function importLessonPackage(options: ImportLessonPackageOptions): 
     const mapped = await db
       .select({ newId: primaryLegacyIdMap.newId })
       .from(primaryLegacyIdMap)
-      .where(and(eq(primaryLegacyIdMap.tableName, "articles"), eq(primaryLegacyIdMap.legacyId, base.legacyArticleId)))
+      .where(and(eq(primaryLegacyIdMap.tableName, LEGACY_ARTICLE_TABLE), eq(primaryLegacyIdMap.legacyId, base.legacyArticleId)))
       .limit(1);
     articleId = mapped[0]?.newId ?? null;
     action = articleId ? "linked" : "unmapped";
