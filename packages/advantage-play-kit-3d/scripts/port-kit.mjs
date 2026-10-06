@@ -8,7 +8,7 @@
 //
 // --check writes nothing. It reports every kit file that differs from what Forge would give, and
 // compares the Forge contract copies with game-contracts by parsing the same fixtures with both
-// (every Forge story, its practice part, a saved-flashcard input, evidence, and broken variants).
+// (every Forge story, its practice part, a saved-flashcard input, evidence, a launch avatar, and broken variants).
 // It exits 1 on any difference.
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
@@ -22,7 +22,7 @@ const from = join(forge, "src", "apk3d");
 const pkg = join(import.meta.dirname, "..", "src");
 
 /** Kit files the monorepo owns: the contract re-exports and the app host. */
-const MONOREPO_OWNED = ["contracts/story-input.ts", "contracts/evidence.ts", "contracts/index.ts", "contracts/story-compat.ts", "factory/renderer-setting.ts"];
+const MONOREPO_OWNED = ["contracts/story-input.ts", "contracts/evidence.ts", "contracts/index.ts", "contracts/story-compat.ts", "factory/renderer-setting.ts", "contracts/avatar.ts"];
 const MONOREPO_OWNED_DIRS = ["host/", "react/", "__tests__/"];
 const owned = (rel) => MONOREPO_OWNED.includes(rel) || MONOREPO_OWNED_DIRS.some((d) => rel.startsWith(d));
 
@@ -132,6 +132,19 @@ async function contractDrift() {
     items: [{ itemId: saved.sentences[0].id, itemKind: "sentence", label: "The river is wide.", attempts: 2, correctFirstTry: false, solved: true }],
     practice: ["The river is wide."],
   };
+  const launchAvatar = {
+    catalogVersion: "1.0.0",
+    classId: "knight",
+    tints: { skin: "tan", hair: "black", eyes: "brown", cloth: "sky" },
+    pieces: [{ itemId: "cape", dye: "red" }, { itemId: "cloth-hood", dye: null }],
+  };
+  fixtures.push(
+    ["launchAvatarSchema", "launch avatar", launchAvatar],
+    ["launchAvatarSchema", "launch avatar without pieces", { ...launchAvatar, pieces: [] }],
+    ["launchAvatarSchema", "launch avatar with an unknown key", { ...launchAvatar, extra: 1 }],
+    ["launchAvatarSchema", "launch avatar with a bad class", { ...launchAvatar, classId: "dragon" }],
+    ["launchAvatarSchema", "launch avatar with a bad version", { ...launchAvatar, catalogVersion: "1" }],
+  );
   fixtures.push(
     ["practiceInputSchema", "saved flashcards", saved],
     ["practiceInputSchema", "saved flashcards with broken words", { ...saved, sentences: [{ ...saved.sentences[0], words: ["The"] }] }],

@@ -5,7 +5,7 @@
  * portrait phone sees the cauldron and all four jars at once.
  */
 import * as THREE from 'three';
-import { Actor, type GLTF, type Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, type ActorBody, type GLTF, type Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { LAYOUT } from './layout.js';
 
 /** Models the lab needs before the first frame (the scenery and the six ingredients); the hero comes from the session. */
@@ -43,7 +43,7 @@ function place(stage: Stage3D, name: string, at: V3, yaw = 0, scale = 1): THREE.
 }
 
 /** `hero` is the student's hero model ('knight', 'wizard', 'cleric'). */
-export function buildLab(stage: Stage3D, hero: string): Lab {
+export function buildLab(stage: Stage3D, hero: string, body?: ActorBody): Lab {
   const scene = stage.scene;
   scene.background = new THREE.Color('#1c1426');
   scene.fog = new THREE.Fog('#1c1426', 14, 28);
@@ -118,8 +118,8 @@ export function buildLab(stage: Stage3D, hero: string): Lab {
     mesh.material = brew;
   });
 
-  // The alchemist: the student's hero, facing the cauldron.
-  const g = stage.loader.get(stage.loader.modelPath(hero)) ?? stage.loader.get(stage.loader.modelPath('wizard'))!;
+  // The alchemist: the student's hero (or avatar, `body`), facing the cauldron.
+  const g = body ?? stage.loader.get(stage.loader.modelPath(hero)) ?? stage.loader.get(stage.loader.modelPath('wizard'))!;
   const alchemist = stage.addActor(new Actor(hero, g, stage.timeline));
   alchemist.placeAt(LAYOUT.alchemist[0], 0, LAYOUT.alchemist[2], 70);
 

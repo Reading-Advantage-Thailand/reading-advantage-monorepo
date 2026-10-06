@@ -12,7 +12,7 @@ import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { banner, Card2D, COLORS, fitGameSize, popup, recolorTag, registerSheetAnimations, StatusBar2D, tag, type Rect } from '@reading-advantage/advantage-play-kit-3d/view2d';
-import { BattleStage2D } from '../../shared/battle/stage2d.js';
+import { BattleStage2D, partyPlayer2D } from '../../shared/battle/stage2d.js';
 import { CASTER, createMagicDefense, type MagicDefenseCommand, type MagicDefenseInput, type HeroId, type Round } from '../core/index.js';
 import { FILES_2D } from '../manifest.js';
 import strings from '../strings.en.js';
@@ -37,6 +37,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const i18n = ctx.i18n ?? createI18n([strings]).scope('magicDefense');
   const t = i18n.scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
+  /** The student in the party when the session has an avatar (the figure loads while the pack loads). */
+  const partyPlayer = partyPlayer2D(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
   const needed = FILES_2D.filter((id) => edition.bindings[id]);
@@ -60,7 +62,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     const battle: Rect = portrait ? { x: 0, y: top, width: W, height: H * 0.6 - top } : { x: 0, y: top, width: W * 0.56, height: H - top };
     const cardArea: Rect = portrait ? { x: 10, y: H * 0.5, width: W - 20, height: H * 0.5 - 10 } : { x: W * 0.56 + 6, y: top, width: W * 0.44 - 16, height: H - top - 8 };
     scene.cameras.main.setBackgroundColor('#0c1118');
-    const stage = new BattleStage2D(scene, edition, PROJECTION, BACKGROUND_FILE, battle);
+    const stage = new BattleStage2D(scene, edition, PROJECTION, BACKGROUND_FILE, battle, partyPlayer);
     const headOf = (id: string, lift = 1.4) => stage.headOf(id, lift);
 
     // ---------------------------------------------------------------- HUD

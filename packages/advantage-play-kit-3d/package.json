@@ -103,6 +103,16 @@
       "types": "./dist/i18n/scan.d.ts",
       "import": "./dist/i18n/scan.js",
       "default": "./dist/i18n/scan.js"
+    },
+    "./avatar/launch": {
+      "types": "./dist/avatar/launch.d.ts",
+      "import": "./dist/avatar/launch.js",
+      "default": "./dist/avatar/launch.js"
+    },
+    "./avatar/portrait-of": {
+      "types": "./dist/avatar/portrait-of.d.ts",
+      "import": "./dist/avatar/portrait-of.js",
+      "default": "./dist/avatar/portrait-of.js"
     }
   },
   "files": [

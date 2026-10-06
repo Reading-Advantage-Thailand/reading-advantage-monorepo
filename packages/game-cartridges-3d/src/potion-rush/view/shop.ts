@@ -5,7 +5,7 @@
  * purpose: a portrait phone sees all three stations at once.
  */
 import * as THREE from 'three';
-import { Actor, type GLTF, type Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, type ActorBody, type GLTF, type Stage3D } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { LAYOUT } from './layout.js';
 
 
@@ -81,7 +81,7 @@ function runeTexture(): THREE.CanvasTexture {
 }
 
 /** `hero` is the student's hero model ('knight', 'wizard', 'cleric'): the alchemist; '' for none. */
-export function buildShop(stage: Stage3D, hero: string): Shop {
+export function buildShop(stage: Stage3D, hero: string, body?: ActorBody): Shop {
   const scene = stage.scene;
   scene.background = new THREE.Color('#1c1426');
   scene.fog = new THREE.Fog('#1c1426', 12, 24);
@@ -174,7 +174,8 @@ export function buildShop(stage: Stage3D, hero: string): Shop {
   // The alchemist: the student's hero, facing the cauldrons.
   let alchemist: Actor | null = null;
   if (hero) {
-    const g = stage.loader.get(stage.loader.modelPath(hero)) ?? stage.loader.get(stage.loader.modelPath('wizard'))!;
+    // The student's avatar when the game passes its body.
+    const g = body ?? stage.loader.get(stage.loader.modelPath(hero)) ?? stage.loader.get(stage.loader.modelPath('wizard'))!;
     alchemist = stage.addActor(new Actor(hero, g, stage.timeline));
     alchemist.placeAt(LAYOUT.alchemist[0], 0, LAYOUT.alchemist[2], 70);
   }

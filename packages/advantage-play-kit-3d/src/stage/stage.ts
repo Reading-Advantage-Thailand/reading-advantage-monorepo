@@ -36,6 +36,8 @@ export type ScreenRegion = readonly [number, number, number, number];
 export interface StageOptions {
   /** Site root for model paths. */
   base: string;
+  /** The folder of the avatar pack versions under `base` (default `packs/avatar`, see `ModelLoader`). */
+  avatarRoot?: string;
   tier?: QualityTierId;
   background?: THREE.ColorRepresentation;
   /** Linear fog [near, far] in meters, in the background color. */
@@ -72,7 +74,7 @@ export class Stage3D {
     this.renderer.toneMappingExposure = options.exposure ?? 1.3;
     this.renderer.shadowMap.enabled = this.tier.shadows;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
-    this.loader = new ModelLoader(options.base);
+    this.loader = new ModelLoader(options.base, options.avatarRoot);
     const bg = new THREE.Color(options.background ?? '#0c1118');
     this.scene.background = bg;
     if (options.fog) this.scene.fog = new THREE.Fog(bg, options.fog[0], options.fog[1]);

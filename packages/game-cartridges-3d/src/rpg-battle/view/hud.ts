@@ -23,6 +23,8 @@ export const ACTION_LOOK: Record<ActionKind, { color: string; emoji: string }> =
 
 export class RpgHud {
   private readonly status: HTMLElement;
+  /** The party place of the student's avatar: its label reads "You". */
+  player: string | null = null;
   private hp: HTMLElement | null = null;
   readonly t: ScopedI18n['t'];
 
@@ -90,7 +92,7 @@ export class RpgHud {
   showQuestion(q: Question, c: Card, answer: (optionId: string) => void, back: () => void): void {
     const t = this.t;
     const look = ACTION_LOOK[c.action];
-    const hero = this.i18n.t(`heroes.${HERO_OF[c.action]}`);
+    const hero = this.i18n.t(`heroes.${HERO_OF[c.action] === this.player ? 'you' : HERO_OF[c.action]}`);
     const who = `<div class="who"><span class="pill" style="background:${look.color}">${look.emoji} ${esc(this.i18n.t(`actions.${c.action}`))} · ${esc(hero)}</span><span>${esc(t(c.power === 'power' ? 'power' : 'basic'))}</span>${c.retry ? `<span>${esc(t('again'))}</span>` : ''}</div>`;
     const thai = q.options.some((o) => hasThai(o.text));
     const one = q.options.some((o) => o.text.length > 18);

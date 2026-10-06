@@ -6,12 +6,14 @@
  * in three lanes, and the student taps a lane (or a gate tag, or swipes, or uses the keys).
  */
 import type * as Phaser from 'phaser';
+import { shownHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
+import { playerFigure } from '@reading-advantage/advantage-play-kit-3d/avatar/portrait-of';
 import { preloadAssetBindings, toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { createFixedStepLoop, createManualClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { animationKeyOf, banner, COLORS, fitGameSize, popup, recolorTag, registerSheetAnimations, StatusBar2D, tag, textureKeyOf } from '@reading-advantage/advantage-play-kit-3d/view2d';
+import { animationKeyOf, banner, COLORS, Figure2D, fitGameSize, popup, recolorTag, registerSheetAnimations, SPRITE_PPM, StatusBar2D, tag, textureKeyOf } from '@reading-advantage/advantage-play-kit-3d/view2d';
 import { TUNING, createGriffinRidersEscape, evidenceOf, laneX, scoreOf, type EscapeCommand, type EscapeEvent, type EscapeState, type GateInfo } from '../core/index.js';
 import { FILES_2D, HEROES_2D } from '../manifest.js';
 import { nextChoice } from '../qc/bot.js';
@@ -53,7 +55,9 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const story = ctx.input as PracticeInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('griffinRidersEscape')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
-  const heroId = (HEROES_2D as readonly string[]).includes(options.hero) ? options.hero : 'knight';
+  const heroId = shownHero(HEROES_2D, options, 'knight');
+  /** The student's own figure as the rider when the session has an avatar (it loads while the pack loads). */
+  const figure = playerFigure(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
   const sim = createGriffinRidersEscape(story, { seed, helper: options.helper });
@@ -146,8 +150,9 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     if (griffinFile?.origin) griffin.setOrigin(griffinFile.origin.x, griffinFile.origin.y);
     const shadow = scene.add.ellipse(0, 0, 2.2 * kx, 0.9 * kx, 0x1c3010, 0.3);
     const riderFile = edition.pack.files[`${heroId}.idle`];
-    const rider = scene.add.sprite(0, 0, riderFile ? textureKeyOf(edition, riderFile.id) : '__MISSING').setScale(scaleOf(`${heroId}.idle`, SIZES.rider, FRAME.rider));
-    if (riderFile?.origin) rider.setOrigin(riderFile.origin.x, riderFile.origin.y);
+    const riderFigure = figure ? new Figure2D(scene, figure, SPRITE_PPM) : null;
+    const rider = riderFigure ? riderFigure.sprite.setScale((SIZES.rider * kx) / FRAME.rider) : scene.add.sprite(0, 0, riderFile ? textureKeyOf(edition, riderFile.id) : '__MISSING').setScale(scaleOf(`${heroId}.idle`, SIZES.rider, FRAME.rider));
+    if (!riderFigure && riderFile?.origin) rider.setOrigin(riderFile.origin.x, riderFile.origin.y);
     let griffinClip = '';
     let busyUntil = 0;
     const griffinLoop = (): void => {
@@ -164,6 +169,11 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     let riderClip = '';
     const riderPlay = (name: 'idle' | 'victory' | 'hit'): void => {
       const key = `${name}.n`;
+      if (riderFigure) {
+        if (name !== 'idle' && riderClip !== key) void riderFigure.play(name);
+        riderClip = key;
+        return;
+      }
       if (riderClip === key || !has(`${heroId}.${name}`)) return;
       riderClip = key;
       rider.play(animationKeyOf(edition, `${heroId}.${name}`, key));
@@ -376,7 +386,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       const bob = Math.sin(time / 340) * 4;
       griffin.setPosition(W / 2 + gx * kx, anchorY + bob).setDepth(3000);
       shadow.setPosition(griffin.x, anchorY + 0.7 * kx).setDepth(2999);
-      rider.setPosition(griffin.x, anchorY + bob - SIZES.griffin * kx * 0.28).setDepth(3001);
+      const lift = riderFigure?.update(dt, false) ?? { x: 0, y: 0 };
+      rider.setPosition(griffin.x + lift.x, anchorY + bob - SIZES.griffin * kx * 0.28 + lift.y).setDepth(3001);
       if (performance.now() >= busyUntil) griffinLoop();
       if (!finished) riderPlay('idle');
       for (const [id, wave] of waves) {

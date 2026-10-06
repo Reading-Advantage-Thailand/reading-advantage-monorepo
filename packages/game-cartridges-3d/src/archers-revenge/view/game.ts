@@ -4,7 +4,9 @@
  * the lane buttons, and the run is reported once to the host (results, outcome, evidence).
  */
 import type { PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
+import { roleHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
+import { playerBody } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { BattleStage } from '../../shared/battle/stage3d.js';
 import { ARCHER, createArchersRevenge, type ArchersRevengeCommand, type ArchersRevengeInput, type Round } from '../core/index.js';
 import { ArchersRevengePlayer, type Presentation, type Sfx } from './driver.js';
@@ -20,8 +22,12 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const hud = new ArchersHud(ctx.hud, stage, ctx.i18n, ctx.audio, ctx.host);
   const audio = ctx.audio;
   const portrait = (): boolean => ctx.composition.profile === 'compact';
-  await stage.load(() => undefined);
+  // The student's avatar takes the party place of its class's role; the other two stay heroes.
+  const avatar = ctx.options.avatar;
+  const place = avatar ? roleHero(avatar.classId) : null;
+  await stage.load(() => undefined, avatar && place ? { place, body: playerBody(ctx.stage.loader, avatar, place, ctx.diagnostic) } : undefined);
   for (const hero of PRESET_HEROES) {
+    if (hero === place) continue;
     const look = ctx.options.looks[hero];
     if (look && look !== 'default') void stage.setPreset(hero, look);
   }

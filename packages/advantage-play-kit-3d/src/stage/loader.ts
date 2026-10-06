@@ -22,12 +22,34 @@ export class ModelLoader {
   private readonly ready = new Map<string, GLTF>();
   private readonly textures = new Map<string, Promise<THREE.Texture>>();
   private readonly packs = new Map<string, Promise<ModelPack>>();
+  private readonly documents = new Map<string, Promise<unknown>>();
   /** The bound editions, newest last: a name resolves in the newest edition that binds it. */
   private readonly indexes: ModelIndex[] = [];
 
-  /** `base` is the site root that relative paths start from (for example './'). */
-  constructor(private readonly base: string) {
+  /**
+   * `base` is the site root that relative paths start from (for example './'). `avatarRoot` is the
+   * folder of the avatar pack versions under it: `packs/avatar` in the apps, `avatar-pack` in the
+   * Forge demo.
+   */
+  constructor(
+    private readonly base: string,
+    readonly avatarRoot = 'packs/avatar',
+  ) {
     this.gltf.setMeshoptDecoder(MeshoptDecoder);
+  }
+
+  /** Fetches and parses a JSON file (relative to the base), once. A failed fetch may be retried later. */
+  json(path: string): Promise<unknown> {
+    let p = this.documents.get(path);
+    if (!p) {
+      p = fetch(this.base + path).then((r) => {
+        if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
+        return r.json() as Promise<unknown>;
+      });
+      p.catch(() => this.documents.delete(path));
+      this.documents.set(path, p);
+    }
+    return p;
   }
 
   /**

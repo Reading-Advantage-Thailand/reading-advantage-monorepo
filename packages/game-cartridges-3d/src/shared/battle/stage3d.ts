@@ -5,7 +5,7 @@
  * the story in order.
  */
 import * as THREE from 'three';
-import { Actor, burst, InstancedSet, OrbitRig, projectile, ShotRig, smooth, Stage3D, type ClipRun, type Shot, type V3 } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, burst, InstancedSet, OrbitRig, projectile, ShotRig, smooth, Stage3D, type ActorBody, type ClipRun, type Shot, type V3 } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { sunkenVaultPlaces } from './vault-places.js';
 import type { BattleEnemy, EnemyKind, HeroId } from './types.js';
 
@@ -101,12 +101,14 @@ export class BattleStage {
 
   /**
    * Loads the vault and the heroes (enough for the title); `progress` gets 0 to 1. The monsters
-   * then load in the background while the student reads the story.
+   * then load in the background while the student reads the story. `player` is the student's
+   * body (`playerBody`, loading in parallel) for one party place: the actor keeps the place's id,
+   * so every event about that hero moves the student's avatar.
    */
-  async load(progress: (p: number) => void): Promise<void> {
+  async load(progress: (p: number) => void, player?: { place: HeroId; body: Promise<ActorBody> }): Promise<void> {
     const places = vaultPlaces();
     const names = [...vaultModels(), ...HEROES];
-    await this.kit.loader.preload(names.map((n) => this.kit.loader.modelPath(n)), progress);
+    const [, playerBody] = await Promise.all([this.kit.loader.preload(names.map((n) => this.kit.loader.modelPath(n)), progress), player?.body]);
     this.set = new InstancedSet(places, (a) => this.kit.loader.get(this.kit.loader.modelPath(a)), FLAT);
     this.kit.scene.add(this.set.group);
     this.torchSpots.push(...lightSpots(this.set));
@@ -116,13 +118,13 @@ export class BattleStage {
     ground.position.y = 0.02;
     ground.receiveShadow = true;
     this.kit.scene.add(ground);
-    HEROES.forEach((id, i) => this.makeActor(id, id, { phase: i * 0.37 }));
+    HEROES.forEach((id, i) => this.makeActor(id, id, { phase: i * 0.37 }, player?.place === id ? playerBody : undefined));
     this.setStage(0, true);
     for (const kind of ENEMY_KINDS) void this.kit.loader.load(this.kit.loader.modelPath(kind)).catch(() => undefined);
   }
 
-  private makeActor(id: string, asset: string, options: { idle?: string; scale?: number; phase?: number } = {}): Actor {
-    const g = this.kit.loader.get(this.kit.loader.modelPath(asset));
+  private makeActor(id: string, asset: string, options: { idle?: string; scale?: number; phase?: number } = {}, body?: ActorBody): Actor {
+    const g = body ?? this.kit.loader.get(this.kit.loader.modelPath(asset));
     if (!g) throw new Error(`Model ${asset} is not loaded.`);
     const actor = this.kit.addActor(new Actor(asset, g, this.kit.timeline, options));
     this.actors.set(id, actor);

@@ -6,6 +6,8 @@
  * and rocks, and walks through the gate at the top when the sentence is built.
  */
 import type * as Phaser from 'phaser';
+import { shownHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
+import { playerFigure } from '@reading-advantage/advantage-play-kit-3d/avatar/portrait-of';
 import { preloadAssetBindings, toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
@@ -37,7 +39,9 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const story = ctx.input as PracticeInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('stormCastleTower')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
-  const heroId = (HEROES_2D as readonly string[]).includes(options.hero) ? options.hero : 'knight';
+  const heroId = shownHero(HEROES_2D, options, 'knight');
+  /** The student's own figure for the hero when the session has an avatar (it loads while the pack loads). */
+  const figure = playerFigure(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
   const sim = createStormCastleTower(story, { seed, helper: options.helper });
@@ -82,7 +86,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     const gateGlow = scene.add.graphics().setBlendMode('ADD').setAlpha(0);
     for (const [r, a] of [[70, 0.18], [48, 0.3], [30, 0.45]] as const) gateGlow.fillStyle(0x9dffb0, a).fillEllipse(0, 0, r * 2, r * 2.4);
     world.add(gateGlow);
-    const hero = new Actor2D(scene, edition, heroId, PROJECTION, { dirs: 8, clips: clips(heroId, HERO_CLIPS_2D), walk: 'run', stiffness: 18 }, world);
+    const hero = new Actor2D(scene, edition, heroId, PROJECTION, { dirs: 8, figure, clips: clips(heroId, HERO_CLIPS_2D), walk: 'run', stiffness: 18 }, world);
     let heroY = rowY(sim.state.climber.row);
     hero.placeAt(columnX(sim.state.climber.col), 0);
     hero.lift = heroY;

@@ -10,7 +10,7 @@ import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { esc, hasThai, pips, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { Actor, burst, type CameraPose, type CameraRig, type GLTF } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, bodyHeight, burst, type CameraPose, type CameraRig, type GLTF, isAvatarBody, playerBody } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { SKY, TUNING, createGryphonPatrol, evidenceOf, scoreOf, type PatrolCommand, type PatrolEvent, type PatrolState } from '../core/index.js';
 import { nextChoice } from '../qc/bot.js';
 import { GRIFFIN_MODEL, GRIFFIN_SEAT } from '../../shared/griffin.js';
@@ -63,7 +63,11 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const audio = ctx.audio;
   const hud = ctx.hud;
   const heroId = ctx.options.hero || 'knight';
-  await stage.loader.preload([...SKY_MODELS, heroId].map((n) => stage.loader.modelPath(n)));
+  // The student's avatar (or the fixed hero) loads with the scene; an avatar needs no hero model.
+  const [, heroBody] = await Promise.all([
+    stage.loader.preload([...SKY_MODELS, ...(ctx.options.avatar ? [] : [heroId])].map((n) => stage.loader.modelPath(n))),
+    playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
+  ]);
   const sky = buildSky(stage);
   const sim = createGryphonPatrol(story, { seed: ctx.seed, helper: ctx.options.helper });
   const startedAt = performance.now();
@@ -80,10 +84,9 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const gryphonGltf = stage.loader.get(stage.loader.modelPath(GRIFFIN_MODEL))!;
   const gryphonScale = fitScale(gryphonGltf, SIZES.gryphon);
   const gryphon = stage.addActor(new Actor(GRIFFIN_MODEL, gryphonGltf, stage.timeline, { idle: 'fly', scale: gryphonScale }));
-  const heroGltf = stage.loader.get(stage.loader.modelPath(heroId))!;
-  const heroHeight = new THREE.Box3().setFromObject(heroGltf.scene).getSize(new THREE.Vector3()).y || 1;
-  const rider = stage.addActor(new Actor(heroId, heroGltf, stage.timeline, { scale: SIZES.rider / heroHeight }));
-  const look = ctx.options.looks[heroId];
+  const heroHeight = bodyHeight(heroBody);
+  const rider = stage.addActor(new Actor(heroId, heroBody, stage.timeline, { scale: SIZES.rider / heroHeight }));
+  const look = isAvatarBody(heroBody) ? undefined : ctx.options.looks[heroId];
   if (look && look !== 'default') void stage.loader.texture(stage.loader.presetPath(heroId, look)).then((tex) => rider.setMap(tex)).catch(() => undefined);
   // The rider stands on the gryphon's back (world meters from the gryphon's origin).
   const seatUp = GRIFFIN_SEAT.up * gryphonScale;

@@ -7,12 +7,14 @@
  * orbs come from the top, and the words wait on tags the student taps (or a swipe, or the keys).
  */
 import type * as Phaser from 'phaser';
+import { shownHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
+import { playerFigure } from '@reading-advantage/advantage-play-kit-3d/avatar/portrait-of';
 import { preloadAssetBindings, toGameResults, type PracticeInput } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-kit-3d/audio';
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { createFixedStepLoop, createManualClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { animationKeyOf, banner, COLORS, depthOf, fitGameSize, popup, recolorTag, registerSheetAnimations, StatusBar2D, tag, textureKeyOf } from '@reading-advantage/advantage-play-kit-3d/view2d';
+import { animationKeyOf, banner, COLORS, depthOf, Figure2D, fitGameSize, popup, recolorTag, registerSheetAnimations, SPRITE_PPM, StatusBar2D, tag, textureKeyOf } from '@reading-advantage/advantage-play-kit-3d/view2d';
 import { createSpellweaversRun, evidenceOf, scoreOf, TUNING, type SpellweaversCommand, type SpellweaversEvent, type SpellweaversState } from '../core/index.js';
 import { FILES_2D, HEROES_2D } from '../manifest.js';
 import { nextChoice } from '../qc/bot.js';
@@ -50,7 +52,9 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const story = ctx.input as PracticeInput;
   const t = (ctx.i18n ?? createI18n([strings]).scope('spellweaversRun')).scope('hud').t;
   const options = ctx.options ?? SESSION_OPTIONS_DEFAULT;
-  const heroId = (HEROES_2D as readonly string[]).includes(options.hero) ? options.hero : 'wizard';
+  const heroId = shownHero(HEROES_2D, options, 'wizard');
+  /** The student's own figure for the runner when the session has an avatar (it loads while the pack loads). */
+  const figure = playerFigure(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
   const sim = createSpellweaversRun(story, { seed, helper: options.helper });
@@ -147,17 +151,28 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     // ---------------------------------------------------------------- the wizard
     const heroKey = (name: string, dir: string): string => animationKeyOf(edition, `${heroId}.${name}`, `${name}.${dir}`);
     const heroFile = edition.pack.files[`${heroId}.run`] ?? edition.pack.files[`${heroId}.idle`];
-    const hero = scene.add.sprite(0, 0, heroFile ? textureKeyOf(edition, heroFile.id) : '__MISSING').setScale(HERO_SCALE * s);
-    if (heroFile?.origin) hero.setOrigin(heroFile.origin.x, heroFile.origin.y);
+    const heroFigure = figure ? new Figure2D(scene, figure, SPRITE_PPM) : null;
+    const hero = (heroFigure ? heroFigure.sprite : scene.add.sprite(0, 0, heroFile ? textureKeyOf(edition, heroFile.id) : '__MISSING')).setScale(HERO_SCALE * s);
+    if (!heroFigure && heroFile?.origin) hero.setOrigin(heroFile.origin.x, heroFile.origin.y);
     const heroShadow = scene.add.ellipse(0, 0, 1.0 * k, 0.4 * k, 0x1c3010, 0.3);
     let clip = '';
     let busyUntil = 0;
     const heroLoop = (name: string): void => {
+      if (heroFigure) {
+        clip = name;
+        return;
+      }
       if (clip === name || !has(`${heroId}.${name}`)) return;
       clip = name;
       hero.play(heroKey(name, 'n'));
     };
     const heroPlay = (name: string, dir = 'n'): void => {
+      if (heroFigure) {
+        clip = '';
+        busyUntil = performance.now() + 900;
+        void heroFigure.play(name);
+        return;
+      }
       if (!has(`${heroId}.${name}`)) return;
       clip = '';
       busyUntil = performance.now() + 900;
@@ -368,7 +383,9 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       shownX += (steerX - shownX) * (1 - Math.exp(-dt * 6));
       followLand();
       const at = screen(shownX, 0, camZ);
-      hero.setPosition(at.x, at.y).setDepth(depthOf(camZ, 0.05));
+      heroFigure?.face(steerX - shownX);
+      const lift = heroFigure?.update(dt, clip === 'run') ?? { x: 0, y: 0 };
+      hero.setPosition(at.x + lift.x, at.y + lift.y).setDepth(depthOf(camZ, 0.05));
       heroShadow.setPosition(at.x, at.y).setDepth(depthOf(camZ, 0) - 500);
       if (performance.now() >= busyUntil) heroLoop(st.speed > 0.1 && !finished ? 'run' : 'idle');
       const top = panel.bottom + 26;

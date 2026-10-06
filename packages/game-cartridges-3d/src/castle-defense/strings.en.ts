@@ -29,6 +29,8 @@ export default {
       intro: 'Attackers at the gate!',
       placeThe: 'The sentence is built! Place its tower on a post',
       post: '{hero} post',
+      /** The post of the place that the student's avatar takes. */
+      yourPost: 'Your post',
       level: 'Tower level {level}',
       empty: 'Free post',
       towerBuilt: 'Tower!',

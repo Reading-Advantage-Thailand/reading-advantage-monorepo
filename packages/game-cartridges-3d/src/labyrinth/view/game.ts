@@ -10,7 +10,7 @@ import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { attachJoystick, esc, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { Actor, burst, FollowRig, Walker } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, type ActorBody, burst, FollowRig, isAvatarBody, playerBody, Walker } from '@reading-advantage/advantage-play-kit-3d/stage';
 import { createLabyrinth, evidenceOf, positionOf, rightOrbOf, scoreOf, type LabyrinthCommand, type LabyrinthEvent, type LabyrinthState, type Mover } from '../core/index.js';
 import { nextTurn } from '../qc/bot.js';
 import { dirOfStick, fitCamera, heldTurn, worldOf, worldOfCell } from './geometry.js';
@@ -34,7 +34,11 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const audio = ctx.audio;
   const hud = ctx.hud;
   const heroId = ctx.options.hero || 'knight';
-  await stage.loader.preload([...MAZE_MODELS, heroId, 'goblin-warrior'].map((n) => stage.loader.modelPath(n)));
+  // The student's avatar (or the fixed hero) loads with the scene; an avatar needs no hero model.
+  const [, heroBody] = await Promise.all([
+    stage.loader.preload([...MAZE_MODELS, ...(ctx.options.avatar ? [] : [heroId]), 'goblin-warrior'].map((n) => stage.loader.modelPath(n))),
+    playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
+  ]);
   const sim = createLabyrinth(story, { seed: ctx.seed, helper: ctx.options.helper });
   const maze = sim.state.maze;
   const world = (m: Mover): { x: number; z: number } => worldOf(maze, positionOf(m));
@@ -42,8 +46,8 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- the hero
-  const body = (kind: string, walk: string, stiffness: number, at: { x: number; z: number }, phase = 0): Body => {
-    const actor = stage.addActor(new Actor(kind, stage.loader.get(stage.loader.modelPath(kind))!, stage.timeline, { phase, scale: CHARACTER_SCALE }));
+  const body = (kind: string, walk: string, stiffness: number, at: { x: number; z: number }, phase = 0, source?: ActorBody): Body => {
+    const actor = stage.addActor(new Actor(kind, source ?? stage.loader.get(stage.loader.modelPath(kind))!, stage.timeline, { phase, scale: CHARACTER_SCALE }));
     actor.placeAt(at.x, 0, at.z, 180);
     return { actor, walker: new Walker(actor, walk, stiffness) };
   };
@@ -57,8 +61,8 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     b.walker.update(dt, x, z);
   };
   const start = worldOfCell(maze, maze.start);
-  const hero = body(heroId, 'run', 18, start);
-  const look = ctx.options.looks[heroId];
+  const hero = body(heroId, 'run', 18, start, 0, heroBody);
+  const look = isAvatarBody(heroBody) ? undefined : ctx.options.looks[heroId];
   if (look && look !== 'default') void stage.loader.texture(stage.loader.presetPath(heroId, look)).then((tex) => hero.actor.setMap(tex)).catch(() => undefined);
   // The golden aura under the hero.
   const auraMat = new THREE.MeshBasicMaterial({ color: 0xffd84a, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });

@@ -11,3 +11,4 @@ export * from './model-pack.js';
 export * from './sprite-asset.js';
 export * from './i18n.js';
 export * from './device.js';
+export * from './avatar.js';

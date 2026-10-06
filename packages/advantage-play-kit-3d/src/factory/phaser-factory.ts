@@ -78,6 +78,7 @@ export function createPhaserGameFactory(
       ...(context.host ? { host: context.host } : {}),
       ...(context.audio ? { audio: context.audio } : {}),
       ...(context.resolveUrl ? { resolveUrl: context.resolveUrl } : {}),
+      ...(context.avatarRoot ? { avatarRoot: context.avatarRoot } : {}),
     });
     const scene = cartridgeConfig.scene;
     const game = new Phaser.Game({

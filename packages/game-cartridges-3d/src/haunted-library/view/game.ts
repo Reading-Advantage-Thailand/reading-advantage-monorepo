@@ -9,7 +9,7 @@ import { toGameResults, type PracticeInput } from '@reading-advantage/advantage-
 import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { attachJoystick, esc, sentenceBar } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { Actor, burst, FollowRig, Walker } from '@reading-advantage/advantage-play-kit-3d/stage';
+import { Actor, burst, FollowRig, isAvatarBody, playerBody, Walker } from '@reading-advantage/advantage-play-kit-3d/stage';
 import {
   FLOOR_HEIGHT,
   TUNING,
@@ -46,16 +46,19 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const audio = ctx.audio;
   const hud = ctx.hud;
   const heroId = ctx.options.hero || 'knight';
-  await stage.loader.preload([...LIBRARY_MODELS, heroId].map((n) => stage.loader.modelPath(n)));
+  // The student's avatar (or the fixed hero) loads with the scene; an avatar needs no hero model.
+  const [, heroBody] = await Promise.all([
+    stage.loader.preload([...LIBRARY_MODELS, ...(ctx.options.avatar ? [] : [heroId])].map((n) => stage.loader.modelPath(n))),
+    playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
+  ]);
   const library = buildLibrary(stage);
   const sim = createHauntedLibrary(story, { seed: ctx.seed, helper: ctx.options.helper });
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- the hero
-  const heroGltf = stage.loader.get(stage.loader.modelPath(heroId))!;
-  const hero = new Walker(stage.addActor(new Actor(heroId, heroGltf, stage.timeline)), 'run');
+  const hero = new Walker(stage.addActor(new Actor(heroId, heroBody, stage.timeline)), 'run');
   hero.actor.placeAt(sim.state.hero.x, 0, DEPTH.hero, 0);
-  const look = ctx.options.looks[heroId];
+  const look = isAvatarBody(heroBody) ? undefined : ctx.options.looks[heroId];
   if (look && look !== 'default') void stage.loader.texture(stage.loader.presetPath(heroId, look)).then((tex) => hero.actor.setMap(tex)).catch(() => undefined);
   /** The smoothed height of the hero (the core gives the floor and the progress of a bounce). */
   let heroY = 0;
