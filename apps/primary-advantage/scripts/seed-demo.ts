@@ -40,6 +40,7 @@ import { assignClassBook, markLessonTaught, recordLessonProgress, setCurrentLess
 import { assignClassQuest, awardPowerUps } from "@reading-advantage/domain/primary-quest";
 import { CARTRIDGE_CHALLENGE_CAPABILITIES, cartridgeLoaders } from "@reading-advantage/game-cartridges";
 import { STARTER_SETS } from "@reading-advantage/avatar-kit";
+import type { AvatarClassId, AvatarTints } from "@reading-advantage/game-contracts";
 
 import { LEVELS_XP } from "../lib/utils";
 
@@ -227,7 +228,7 @@ async function seedDemo(): Promise<void> {
     if (!s.spec.classId) continue;
     const starter = STARTER_SETS.find((set) => set.id === s.spec.classId);
     if (!starter) throw new Error(`no starter set ${s.spec.classId}`);
-    await setAvatarProfile({ ...ctx, input: { classId: starter.id, tints: starter.tints } });
+    await setAvatarProfile({ ...ctx, input: { classId: starter.id as AvatarClassId, tints: starter.tints as AvatarTints } });
     await getAvatarState(ctx); // grants the starter pieces (worn) and the welcome GP
   }
   // Shop purchases: a purchase row and a spend row each; Ploy wears the cape.
