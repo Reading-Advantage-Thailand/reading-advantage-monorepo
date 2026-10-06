@@ -13,11 +13,12 @@ Owner approved the plan as proposed on 2026-10-06 (through the Forge session). M
 
 ## Phase 1b: English answer audio in GameHost (owner priority, 2026-10-07)
 Owner, 2026-10-07: "merge, but prioritize this feature". Lane-g merged into integration (6af080159) on the unit checks. Until this phase ends, the new host has no English answer audio mode (Thai question, English answer clips), which only `StudentCartridgeHost` started.
-- [ ] Controller: a play that ends cancelled or failed uses no replay (`packages/advantage-play-kit/src/audio/answer-choice-controller.ts`, test); send Forge the commit (F2 Q2)
-- [ ] Content route: prepared answer audio for the 3D ids `hero-vs-zombie`, `dragon-flight`, `dragon-rider` (the legacy `wizard-vs-zombie` stays until M4)
-- [ ] Kit host (`host/story-game.ts`, `react/story-game-host.tsx`): an `answerAudio` controller option goes to `mount()`; `onComplete` passes the answer evidence
-- [ ] `GameHost`: the reading or English answer audio choice for the three games outside a class challenge; the prepared content and the controller; the answer evidence posted as `metadata.learningEvidence`, the story evidence kept for the results screen
-- [ ] F2 release sync on `apk3d-games-port`: Forge `factory/mount.ts` with `answerAudio`, the games' audio mode, `MONOREPO_OWNED` re-exports for `contracts/listening.ts` and `audio/answer-choice.ts`, fixture compares for the two listening schemas
+- [x] Controller: a play that ends cancelled or failed uses no replay (`packages/advantage-play-kit/src/audio/answer-choice-controller.ts`, test); send Forge the commit (F2 Q2) — 677ade328, Forge copy 300760b3
+- [x] Content route: prepared answer audio for the 3D ids `hero-vs-zombie`, `dragon-flight`, `dragon-rider` (the legacy `wizard-vs-zombie` stays until M4)
+- [x] Kit host (`host/story-game.ts`): an `answerAudio` factory makes one controller per run for `mount()`; `onComplete` passes the answer evidence — a4ba7be4f
+- [x] `GameHost`: the reading or English answer audio choice for the three games outside a class challenge; the prepared content and the controller; the answer evidence posted as `metadata.learningEvidence`, the story evidence kept for the results screen — 97656f1d1. Do not merge before the part B sync: until the games submit choices through the controller, the mount drops an audio run's result
+- [x] F2 part A sync on `apk3d-games-port`: Forge `factory/mount.ts` with `answerAudio`, `MONOREPO_OWNED` re-exports for `contracts/listening.ts` and `audio/answer-choice.ts`, fixture compares for the two listening schemas — 500b28563, a683e9d1d (Forge 58f06d5a), in integration
+- [ ] F2 part B sync: the audio mode in Hero vs. Zombie, Dragon Flight, and Dragon Rider; the host calls `cartridge.briefing(i18n, input, { answerAudio: true })` in an audio run
 - [ ] Browser check: one English answer audio run on Hero vs. Zombie saves a completion with the answer evidence
 
 ## Phase 2: M2 ids (before the cutover)
