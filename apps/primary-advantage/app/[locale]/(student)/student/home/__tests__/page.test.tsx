@@ -26,7 +26,14 @@ vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user, getCurren
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getStudentHome: mocks.getStudentHome }));
 vi.mock("@reading-advantage/domain/primary-books", () => ({ getStudentClassBooks: mocks.getStudentClassBooks }));
-vi.mock("@reading-advantage/domain/primary-avatar", () => ({ getAvatarProfile: mocks.getAvatarProfile }));
+// The home reads the avatar state (profile plus the worn pieces) for the hero portrait.
+vi.mock("@reading-advantage/domain/primary-avatar", () => ({
+  getAvatarProfile: mocks.getAvatarProfile,
+  getAvatarState: async () => {
+    const profile = await mocks.getAvatarProfile();
+    return { profile, gp: 0, level: 1, catalogVersion: "1.0.0", inventory: [], loadout: {} };
+  },
+}));
 vi.mock("@reading-advantage/domain/primary-quest", () => ({ awardPowerUps: async () => [], getStudentQuestCard: mocks.getStudentQuestCard }));
 vi.mock("@reading-advantage/domain/primary-voice", () => ({ getVoiceEntitlement: mocks.getVoiceEntitlement, voiceConfigFromEnv: () => ({}) }));
 vi.mock("@/server/controllers/schoolController", () => ({ getSchoolLeaderboardController: mocks.leaderboard }));

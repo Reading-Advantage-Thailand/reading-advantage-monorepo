@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
-import { BookMarkedIcon, BookOpenIcon, CalendarIcon, FlameIcon, Gamepad2Icon, StarIcon, TrophyIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getStudentHome } from "@reading-advantage/domain/primary-home";
 import { getStudentClassBooks, type StudentClassBook } from "@reading-advantage/domain/primary-books";
-import { getAvatarProfile } from "@reading-advantage/domain/primary-avatar";
+import { getAvatarState } from "@reading-advantage/domain/primary-avatar";
+import type { AvatarState } from "@reading-advantage/game-contracts";
 import { getVoiceEntitlement, voiceConfigFromEnv } from "@reading-advantage/domain/primary-voice";
 import type { ReedyMeterData } from "@/components/reedy/reedy-meter";
 import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
-import { EmptyState, StatusChip, cardHoverClassName } from "@reading-advantage/ui";
+import { StatusChip } from "@reading-advantage/ui";
 import { AnimatedCounter } from "@reading-advantage/ui/client";
 import { currentUser } from "@/lib/session";
-import { Link, redirect } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { redirect } from "@/i18n/navigation";
+import { ART } from "@/lib/rpg/places";
+import { Scene } from "@/components/rpg/scene";
+import { Panel, Plaque, RpgLink } from "@/components/rpg/chrome";
+import { AvatarPortrait } from "@/components/avatar/portrait-canvas";
 import Leaderboard from "@/components/leaderboard";
 import { ReedyMeterSlot } from "@/components/student/reedy-meter-slot";
 import { awardPowerUps, getStudentQuestCard } from "@reading-advantage/domain/primary-quest";
@@ -23,10 +25,6 @@ import { getSchoolLeaderboardController } from "@/server/controllers/schoolContr
 
 /** The Reedy limits of this process (FR-9). */
 const voiceConfig = voiceConfigFromEnv(process.env);
-/** Card frame shared by the home sections. */
-const CARD = "bg-card text-card-foreground flex flex-col gap-3 rounded-2xl border p-5 shadow-sm";
-/** Large action link (48 px tap target). */
-const ACTION = "min-h-12 w-full rounded-xl px-5 text-base sm:w-auto";
 
 /**
  * Page title for the student home.
@@ -36,6 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("StudentHome");
   return { title: t("title") };
 }
+
+type User = NonNullable<Awaited<ReturnType<typeof currentUser>>>;
 
 /**
  * Reads the school leaderboard. A failure hides the leaderboard and keeps the rest of the home.
@@ -57,7 +57,7 @@ async function loadLeaderboard(user: { id: string; schoolId: string | null }) {
  * @param user The signed-in student.
  * @returns The class books, or none.
  */
-async function loadClassBooks(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>): Promise<StudentClassBook[]> {
+async function loadClassBooks(user: User): Promise<StudentClassBook[]> {
   try {
     return await getStudentClassBooks({ db, user });
   } catch {
@@ -66,15 +66,17 @@ async function loadClassBooks(user: NonNullable<Awaited<ReturnType<typeof curren
 }
 
 /**
- * True when the student has no avatar yet (FR-10b). A failed read shows no nudge.
+ * The avatar of the student for the hero portrait: the profile and the worn pieces. Null when
+ * the student has no avatar yet (the nudge shows) or the read fails (no portrait, no nudge).
  * @param user The signed-in student.
- * @returns Whether to show the avatar nudge.
+ * @returns The state, "none" without a profile, or null on failure.
  */
-async function needsAvatar(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>): Promise<boolean> {
+async function loadAvatar(user: User): Promise<AvatarState | "none" | null> {
   try {
-    return (await getAvatarProfile({ db, user })) === null;
+    const state = await getAvatarState({ db, user });
+    return state.profile ? state : "none";
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -83,7 +85,7 @@ async function needsAvatar(user: NonNullable<Awaited<ReturnType<typeof currentUs
  * @param user The signed-in student.
  * @returns The meter numbers, or null.
  */
-async function loadReedyMeter(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>): Promise<ReedyMeterData | null> {
+async function loadReedyMeter(user: User): Promise<ReedyMeterData | null> {
   try {
     const { remainingSeconds, budgetSeconds, blockedBy } = await getVoiceEntitlement({ db, user, config: voiceConfig });
     return { remainingSeconds, budgetSeconds, blockedBy };
@@ -98,7 +100,7 @@ async function loadReedyMeter(user: NonNullable<Awaited<ReturnType<typeof curren
  * @param user The signed-in student.
  * @returns The card, or null.
  */
-async function loadQuestCard(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>) {
+async function loadQuestCard(user: User) {
   try {
     await awardPowerUps({ db, user });
     return await getStudentQuestCard({ db, user });
@@ -108,21 +110,20 @@ async function loadQuestCard(user: NonNullable<Awaited<ReturnType<typeof current
 }
 
 /**
- * Student home (FR-4), the landing page after sign-in: streak, XP, and level; today's lesson
- * (the next open assignment, hidden when there is none); the class books with the current
- * lesson; the article to continue; a games
- * shortcut; the avatar nudge for a student with no avatar; the Reedy meter slot; and the school leaderboard.
+ * Student home (FR-4) in the guild hall (docs/primary-rpg-skin.md §4): the hero at the quest
+ * board with the stats on a plaque; the Class Quest banner; today's lesson, the class books, and
+ * the story in progress as pinned notices; the arena door; the campfire (Reedy); the hall of fame.
  * @returns The home page.
  */
 export default async function StudentHomePage() {
   const user = await currentUser();
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
 
-  const [home, classBooks, leaderboard, noAvatar, reedy, quest, t, tBoard, tAvatar, tReedy, format] = await Promise.all([
+  const [home, classBooks, leaderboard, avatar, reedy, quest, t, tBoard, tAvatar, tReedy, format] = await Promise.all([
     getStudentHome({ db, user }),
     loadClassBooks(user),
     loadLeaderboard(user),
-    needsAvatar(user),
+    loadAvatar(user),
     loadReedyMeter(user),
     loadQuestCard(user),
     getTranslations("StudentHome"),
@@ -135,112 +136,106 @@ export default async function StudentHomePage() {
   const reading = home.continueReading;
   // Calendar days in Bangkok: the lesson is late only after its due day.
   const overdue = getDueDateStatus(lesson?.dueDate).kind === "overdue";
+  const profile = avatar && avatar !== "none" ? avatar.profile : null;
 
   return (
-    <div className="flex flex-col gap-6">
+    <Scene place="guild-hall">
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold md:text-3xl">{t("greeting", { name: user.name ?? user.username })}</h1>
-        <p className="text-muted-foreground">{t("subtitle")}</p>
+        <h1 className="cq-on-scene text-2xl font-bold md:text-3xl">{t("greeting", { name: user.name ?? user.username })}</h1>
+        <p className="cq-on-scene text-sm opacity-90">{t("subtitle")}</p>
       </header>
 
-      <section aria-label={t("progress")} className="grid grid-cols-3 gap-3">
-        <StatTile icon={<FlameIcon />} label={t("streak")} tone="bg-(--accent-amber-light) text-amber-700 dark:text-amber-300">
-          {t("streakValue", { count: home.streakDays })}
-        </StatTile>
-        <StatTile icon={<StarIcon />} label={t("xp")} tone="bg-brand-100 text-brand-700 dark:text-brand-300">
-          <AnimatedCounter value={home.xp} />
-        </StatTile>
-        <StatTile icon={<TrophyIcon />} label={t("level")} tone="bg-(--accent-blue-light) text-blue-700 dark:text-blue-300">
-          {home.level}
-        </StatTile>
-      </section>
+      <div className="grid grid-cols-[112px_1fr] items-end gap-3">
+        {profile ? (
+          <AvatarPortrait classId={profile.classId} pieces={Object.values(avatar !== "none" && avatar ? avatar.loadout : {})} tints={profile.tints} alt={t("yourHero")} className="cq-shadowed cq-bob w-28" />
+        ) : (
+          <img src={ART.banner} alt="" className="cq-shadowed w-24 justify-self-center" />
+        )}
+        <section aria-label={t("progress")} className="grid grid-cols-3 gap-2">
+          <Plaque icon={ART.campfire} label={t("streak")}>
+            {t("streakValue", { count: home.streakDays })}
+          </Plaque>
+          <Plaque icon={ART.gem} label={t("xp")}>
+            <AnimatedCounter value={home.xp} />
+          </Plaque>
+          <Plaque icon={ART.shield} label={t("level")}>
+            {home.level}
+          </Plaque>
+        </section>
+      </div>
 
-      {noAvatar ? <AvatarNudge t={tAvatar} /> : null}
+      {avatar === "none" ? <AvatarNudge t={tAvatar} /> : null}
 
-      <ReedyMeterSlot data={reedy} t={tReedy} />
       <StudentQuestCard card={quest} />
 
       <div className="grid gap-4 md:grid-cols-2">
         {lesson ? (
-          <section aria-labelledby="home-lesson" className={cn(CARD, "bg-primary text-primary-foreground border-transparent md:col-span-2")}>
-            <h2 id="home-lesson" className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide opacity-90">
-              <CalendarIcon className="size-4" aria-hidden="true" />
+          <Panel pinned aria-labelledby="home-lesson" className="md:col-span-2">
+            <h2 id="home-lesson" className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide">
+              <img src={ART.scroll} alt="" className="size-7" />
               {t("todayLesson")}
             </h2>
             <p className="text-xl font-bold">{lesson.title}</p>
-            <div className="flex flex-wrap items-center gap-2 text-sm">
-              <span>
-                {lesson.dueDate
-                  ? t("dueDate", { date: format.dateTime(lesson.dueDate, { day: "numeric", month: "short" }) })
-                  : t("noDueDate")}
-              </span>
+            <div className="cq-muted flex flex-wrap items-center gap-2 text-sm">
+              <span>{lesson.dueDate ? t("dueDate", { date: format.dateTime(lesson.dueDate, { day: "numeric", month: "short" }) }) : t("noDueDate")}</span>
               {overdue ? <StatusChip tone="danger">{t("overdue")}</StatusChip> : null}
             </div>
-            <Link
-              href={`/student/lesson/${lesson.assignmentId}`}
-              className={cn(buttonVariants({ variant: "secondary" }), ACTION, "mt-1 self-start")}
-            >
+            <RpgLink tone="gold" href={`/student/lesson/${lesson.assignmentId}`} className="mt-1 self-start">
               {lesson.started ? t("continueLesson") : t("startLesson")}
-            </Link>
-          </section>
+            </RpgLink>
+          </Panel>
         ) : null}
 
         {classBooks.map((book) => (
           <ClassBookCard key={book.classBookId} book={book} t={t} />
         ))}
 
-        <section aria-labelledby="home-reading" className={CARD}>
+        <Panel pinned aria-labelledby="home-reading">
           <h2 id="home-reading" className="flex items-center gap-2 text-lg font-semibold">
-            <BookOpenIcon className="text-primary size-5" aria-hidden="true" />
+            <img src={ART.scroll} alt="" className="size-7" />
             {t("continueReading")}
           </h2>
           {reading ? (
             <>
               <p className="font-article text-xl font-bold">{reading.title}</p>
               {reading.cefrLevel ? <StatusChip tone="success">{reading.cefrLevel}</StatusChip> : null}
-              <Link
-                href={`/student/read/${reading.articleId}`}
-                className={cn(buttonVariants({ variant: "default" }), ACTION, "mt-auto self-start", cardHoverClassName)}
-              >
+              <RpgLink href={`/student/read/${reading.articleId}`} className="mt-auto self-start">
                 {t("keepReading")}
-              </Link>
+              </RpgLink>
             </>
           ) : (
-            <EmptyState
-              className="py-4"
-              icon={<BookOpenIcon />}
-              title={t("noReading")}
-              description={t("noReadingHint")}
-              action={
-                <Link href="/student/read" className={cn(buttonVariants({ variant: "default" }), ACTION)}>
-                  {t("findStory")}
-                </Link>
-              }
-            />
+            <>
+              <p className="font-bold">{t("noReading")}</p>
+              <p className="cq-muted text-sm">{t("noReadingHint")}</p>
+              <RpgLink href="/student/read" className="mt-auto self-start">
+                {t("findStory")}
+              </RpgLink>
+            </>
           )}
-        </section>
+        </Panel>
 
-        <section aria-labelledby="home-games" className={CARD}>
-          <h2 id="home-games" className="flex items-center gap-2 text-lg font-semibold">
-            <Gamepad2Icon className="text-primary size-5" aria-hidden="true" />
-            {t("games")}
-          </h2>
-          <p className="text-muted-foreground">{t("gamesHint")}</p>
-          <Link
-            href="/student/games"
-            className={cn(buttonVariants({ variant: "outline" }), ACTION, "mt-auto self-start", cardHoverClassName)}
-          >
-            {t("playGames")}
-          </Link>
-        </section>
+        <Panel aria-labelledby="home-games" className="grid grid-cols-[64px_1fr] items-center gap-3">
+          <img src={ART.chest} alt="" className="cq-shadowed w-16" />
+          <div className="flex flex-col gap-2">
+            <h2 id="home-games" className="text-lg font-semibold">
+              {t("arena")}
+            </h2>
+            <p className="cq-muted text-sm">{t("arenaHint")}</p>
+            <RpgLink tone="iron" href="/student/games" className="self-start">
+              {t("playGames")}
+            </RpgLink>
+          </div>
+        </Panel>
+
+        <ReedyMeterSlot data={reedy} t={tReedy} />
       </div>
 
       {leaderboard ? (
-        <section aria-label={tBoard("title")} className={cn(CARD, "overflow-x-auto")}>
+        <Panel aria-label={tBoard("title")} className="overflow-x-auto">
           <Leaderboard data={leaderboard.results ?? []} schoolName={leaderboard.schoolName ?? ""} userId={user.id} />
-        </section>
+        </Panel>
       ) : null}
-    </div>
+    </Scene>
   );
 }
 
@@ -256,9 +251,9 @@ function ClassBookCard({ book, t }: { book: StudentClassBook; t: Awaited<ReturnT
   const lesson = book.lesson;
   const canRead = lesson?.articleId && lesson.unlockedAppSteps.includes(3);
   return (
-    <section aria-labelledby={headingId} className={CARD}>
+    <Panel pinned aria-labelledby={headingId}>
       <h2 id={headingId} className="flex items-center gap-2 text-lg font-semibold">
-        <BookMarkedIcon className="text-primary size-5" aria-hidden="true" />
+        <img src={ART.noticeBoard} alt="" className="size-7" />
         {t("classBook")}
       </h2>
       <p className="font-semibold">{book.bookName}</p>
@@ -266,46 +261,19 @@ function ClassBookCard({ book, t }: { book: StudentClassBook; t: Awaited<ReturnT
         <>
           <p className="font-article text-xl font-bold">{t("classBookLesson", { number: lesson.number, title: lesson.title })}</p>
           {canRead ? (
-            <Link href={`/student/lesson/${lesson.articleId}?type=article`} className={cn(buttonVariants({ variant: "default" }), ACTION, "self-start", cardHoverClassName)}>
+            <RpgLink tone="gold" href={`/student/lesson/${lesson.articleId}?type=article`} className="self-start">
               {t("readLesson")}
-            </Link>
+            </RpgLink>
           ) : (
-            <p className="text-muted-foreground text-sm">{t("classBookLocked")}</p>
+            <p className="cq-muted text-sm">{t("classBookLocked")}</p>
           )}
         </>
       ) : (
-        <p className="text-muted-foreground text-sm">{t("classBookNoLesson")}</p>
+        <p className="cq-muted text-sm">{t("classBookNoLesson")}</p>
       )}
-      <Link href={`/student/books/${book.classBookId}`} className={cn(buttonVariants({ variant: "outline" }), ACTION, "mt-auto self-start")}>
+      <RpgLink tone="iron" href={`/student/books/${book.classBookId}`} className="mt-auto self-start">
         {t("seeBook")}
-      </Link>
-    </section>
-  );
-}
-
-/**
- * One progress number with its icon and label.
- * @param props The icon, the label, the color classes for the icon circle, and the value.
- * @returns The tile.
- */
-function StatTile({
-  icon,
-  label,
-  tone,
-  children,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  tone: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="bg-card flex flex-col items-center gap-1 rounded-2xl border p-3 text-center shadow-sm">
-      <span aria-hidden="true" className={cn("flex size-9 items-center justify-center rounded-full [&>svg]:size-5", tone)}>
-        {icon}
-      </span>
-      <span className="text-lg leading-tight font-bold">{children}</span>
-      <span className="text-muted-foreground text-xs">{label}</span>
-    </div>
+      </RpgLink>
+    </Panel>
   );
 }

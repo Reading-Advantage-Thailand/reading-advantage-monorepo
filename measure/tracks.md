@@ -17,7 +17,7 @@ This file tracks all major tracks for the project.
 
 - [~] **Track: Primary RPG skin — every student page inside the Chibi Quest world** — *created 2026-10-06*
   *Link: [./tracks/primary_rpg_skin_20261006/](./tracks/primary_rpg_skin_20261006/)*
-  *Status: Phase 0 done and approved 2026-10-06 (kit, backdrops, three mocks); Phase 1 next | Priority: CRITICAL | Design authority: `docs/primary-rpg-skin.md`*
+  *Status: Phase 0 approved 2026-10-06; Phase 1 (scene system, student shell, home) done 2026-10-06, report `phase1/index.html`; Phase 2 next | Priority: CRITICAL | Design authority: `docs/primary-rpg-skin.md`*
   *Note: Forge assets only (no ElvGames). 3D avatar approved; every 3D interaction has a 2D fallback through the games' selector. Owner gate after Phase 0 on the look.*
 
 - [ ] **Track: ElvGames asset audit and removal (APK and the apps)** — *created 2026-10-06*

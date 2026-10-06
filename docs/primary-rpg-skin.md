@@ -24,10 +24,14 @@ players see for the world is Chibi Quest.
    has a host, and the content in parchment panels. New pages pick a place from the 94 maps.
 4. **Reading stays protected.** The story page gets a desk and a frame; the text column has no
    decoration (student experience strategy, Reading Mode).
-5. **3D with a 2D fallback, like the games.** The 3D avatar (picker, inventory, battle) and the
-   projector battle field run through the games' selector: the "2D mode (older phones)" setting
-   or `?renderer=phaser` forces 2D, and a device without WebGL2 gets 2D. The 2D fallback is the
-   portrait canvas with CSS motion, or a sprite field. No page is 3D-only.
+5. **3D with a 2D fallback, through one shared setting.** The play kit owns the "2D mode
+   (older phones)" setting (`@reading-advantage/advantage-play-kit/responsive`, `chooseRenderer`
+   and `saveFlatMode`): the Forge demo's `chibi-quest` storage JSON with `flat: true`. The
+   setting is new in the monorepo (2026-10-06); the Forge demo had it, the app's games did not.
+   `?renderer=phaser` forces 2D for one visit, and a device without WebGL2 gets 2D. The 3D
+   avatar (picker, inventory, battle) and the projector battle field read it; the ported 3D
+   games must read it too. The 2D fallback is the portrait canvas with CSS motion, or a sprite
+   field. No page is 3D-only.
 6. **Motion is cheap and meaningful.** CSS keyframes: a sprite strip idle (8 frames, 1 s), bob,
    glow on an armed relic, burst and slash and shield flash on a hit, shake on the boss, a
    floating damage number, coins flying on a purchase. No motion for decoration alone.

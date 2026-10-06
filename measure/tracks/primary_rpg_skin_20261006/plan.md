@@ -10,10 +10,11 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - [x] Captures of the three mocks and a `phase0/index.html` for the owner
 - [x] Owner review of the look: approved 2026-10-06 ("Looks right"); the look and the interaction model are codified in `docs/primary-rpg-skin.md`
 
-## Phase 1: scene system and the shell
-- [ ] `Scene`, `Panel`, `Sign`, `Meter`, `Coins`, `Hearts` components with the 2D/3D selector
-- [ ] The toolbar, the sidebar signpost, the header purse and gem
-- [ ] Home in the guild hall; captures at 375 and 1280, light and night
+## Phase 1: scene system and the shell (done 2026-10-06, report `phase1/index.html`)
+- [x] `Scene`, `Panel`, `Sign`, `Meter`, `Coins`, `Hearts` components (`components/rpg/`, `styles/rpg.css`) with the shared 2D/3D selector in the play kit (`@reading-advantage/advantage-play-kit/responsive`)
+- [x] The toolbar, the sidebar signpost, the header purse and gem (`components/rpg/toolbar.tsx`, `hud.tsx`, the student shell in `app-layout.tsx`)
+- [x] Home in the guild hall; captures at 375 and 1280, light and night (`phase1/captures/`)
+- [x] Fonts Fredoka and Mitr served from `public/rpg/fonts/`; the Forge peer owns the rebuild of `public/rpg/`
 
 ## Phase 2: the avatar
 - [ ] Picker in the shrine (3D composer, portrait fallback)

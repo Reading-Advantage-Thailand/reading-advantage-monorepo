@@ -279,7 +279,11 @@
     "preview": {
       "button": "ดูตัวอย่าง",
       "title": "ดูตัวอย่างข้อมูล",
-      "columns": { "name": "ชื่อ", "email": "อีเมล", "role": "บทบาท" }
+      "columns": {
+        "name": "ชื่อ",
+        "email": "อีเมล",
+        "role": "บทบาท"
+      }
     },
     "formatGuide": {
       "title": "คู่มือรูปแบบ CSV",
@@ -1886,14 +1890,22 @@
         "title": "ประโยคสำคัญ : {count} ประโยค",
         "more": "+{count} ประโยคที่บันทึกเพิ่ม"
       },
-      "actions": { "backToRead": "กลับไปหน้าอ่าน" },
-      "toast": { "failed": "ไม่สามารถโหลดสรุปบทเรียนได้" }
+      "actions": {
+        "backToRead": "กลับไปหน้าอ่าน"
+      },
+      "toast": {
+        "failed": "ไม่สามารถโหลดสรุปบทเรียนได้"
+      }
     }
   },
   "LessonLanguageQuestion": {
     "title": "ผู้ช่วยการอ่านด้วย AI",
-    "loading": { "conversation": "กำลังโหลดการสนทนา..." },
-    "status": { "online": "ออนไลน์" },
+    "loading": {
+      "conversation": "กำลังโหลดการสนทนา..."
+    },
+    "status": {
+      "online": "ออนไลน์"
+    },
     "header": {
       "readyWithName": "พร้อมช่วย {name} ตอบคำถาม",
       "ready": "พร้อมช่วยตอบคำถามของคุณ"
@@ -1908,7 +1920,10 @@
       "placeholderWithName": "{name}, ถามเกี่ยวกับบทความนี้...",
       "placeholder": "พิมพ์คำถามเกี่ยวกับบทความนี้..."
     },
-    "buttons": { "send": "ส่ง", "skip": "ข้าม" },
+    "buttons": {
+      "send": "ส่ง",
+      "skip": "ข้าม"
+    },
     "tips": {
       "askVocabulary": "ถามเกี่ยวกับคำศัพท์",
       "discussTheme": "พูดคุยเกี่ยวกับประเด็นหลัก",
@@ -1925,7 +1940,9 @@
       "questionOf": "คำถาม {current} จาก {total}",
       "completePercent": "เสร็จสิ้น {percent}%"
     },
-    "timer": { "seconds": "{seconds} วินาที" },
+    "timer": {
+      "seconds": "{seconds} วินาที"
+    },
     "completed": {
       "title": "ทำแบบทดสอบเสร็จแล้ว",
       "description": "เยี่ยมมาก! คุณทำแบบทดสอบเสร็จแล้ว",
@@ -1941,7 +1958,9 @@
     }
   },
   "LessonSAQ": {
-    "completed": { "title": "ทำแบบทดสอบเสร็จแล้ว" },
+    "completed": {
+      "title": "ทำแบบทดสอบเสร็จแล้ว"
+    },
     "labels": {
       "question": "คำถาม:",
       "yourAnswer": "คำตอบของคุณ:",
@@ -1949,15 +1968,23 @@
       "feedback": "คำแนะนำ:",
       "score": "คะแนน:"
     },
-    "timer": { "elapsed": "ใช้เวลา: {time}" },
+    "timer": {
+      "elapsed": "ใช้เวลา: {time}"
+    },
     "form": {
-      "placeholder": { "answer": "พิมพ์คำตอบของคุณที่นี่..." },
+      "placeholder": {
+        "answer": "พิมพ์คำตอบของคุณที่นี่..."
+      },
       "help": {
         "detailedResponse": "เขียนคำตอบละเอียดเพื่อแสดงความเข้าใจของคุณ"
       },
-      "validation": { "answerRequired": "กรุณากรอกคำตอบ" }
+      "validation": {
+        "answerRequired": "กรุณากรอกคำตอบ"
+      }
     },
-    "actions": { "submit": "ส่ง" }
+    "actions": {
+      "submit": "ส่ง"
+    }
   },
   "LessonCloze": {
     "loading": {
@@ -2078,7 +2105,9 @@
     "prompt": {
       "thinkAndReveal": "คิดเกี่ยวกับความหมายของคำนี้ จากนั้นเปิดดูคำตอบ"
     },
-    "buttons": { "showAnswer": "แสดงคำตอบ" },
+    "buttons": {
+      "showAnswer": "แสดงคำตอบ"
+    },
     "rating": {
       "prompt": "คุณจำคำนี้ได้ดีแค่ไหน?",
       "again": "อีกครั้ง",
@@ -2130,8 +2159,13 @@
       "archive": "เก็บถาวร",
       "delete": "ลบ"
     },
-    "search": { "placeholder": "ค้นหา" },
-    "pagination": { "previous": "ก่อนหน้า", "next": "ถัดไป" },
+    "search": {
+      "placeholder": "ค้นหา"
+    },
+    "pagination": {
+      "previous": "ก่อนหน้า",
+      "next": "ถัดไป"
+    },
     "edit": {
       "title": "แก้ไขชั้นเรียน",
       "description": "คุณแน่ใจหรือไม่ว่าจะแก้ไขชั้นเรียนนี้?",
@@ -2160,7 +2194,9 @@
     }
   },
   "TeacherCreateClass": {
-    "button": { "newClassroom": "ห้องเรียนใหม่" },
+    "button": {
+      "newClassroom": "ห้องเรียนใหม่"
+    },
     "dialog": {
       "title": "สร้างชั้นเรียน",
       "description": "สร้างชั้นเรียนใหม่"
@@ -2173,7 +2209,10 @@
       "gradePlaceholder": "ระดับชั้น",
       "gradeItem": "ระดับ {grade}"
     },
-    "actions": { "create": "สร้าง", "cancel": "ยกเลิก" },
+    "actions": {
+      "create": "สร้าง",
+      "cancel": "ยกเลิก"
+    },
     "toast": {
       "attention": "แจ้งเตือน",
       "fillAllFields": "กรุณากรอกทุกช่อง",
@@ -2229,7 +2268,9 @@
       }
     },
     "cefrSetter": {
-      "button": { "setLevel": "ตั้งค่าระดับ" },
+      "button": {
+        "setLevel": "ตั้งค่าระดับ"
+      },
       "dialog": {
         "title": "ตั้งค่าระดับ CEFR สำหรับ {name}",
         "description": "เลือกระดับ CEFR ที่เหมาะสมสำหรับนักเรียนคนนี้ และจะอัปเดตระดับการอ่าน (RA) ด้วย"
@@ -2238,7 +2279,9 @@
         "currentLevel": "ระดับปัจจุบัน",
         "newLevel": "ระดับใหม่"
       },
-      "select": { "placeholder": "เลือกระดับ CEFR" },
+      "select": {
+        "placeholder": "เลือกระดับ CEFR"
+      },
       "preview": {
         "title": "ตัวอย่าง:",
         "cefr": "ระดับ CEFR:",
@@ -2689,7 +2732,9 @@
       "title": "การจัดการนักเรียน",
       "subtitle": "จัดการนักเรียนและความก้าวหน้าของพวกเขา"
     },
-    "page": { "title": "การจัดการนักเรียน" },
+    "page": {
+      "title": "การจัดการนักเรียน"
+    },
     "stats": {
       "totalStudents": "จำนวนนักเรียนทั้งหมด",
       "allClassrooms": "ทุกห้องเรียน",
@@ -2761,7 +2806,9 @@
       "loading": "กำลังโหลดรายชื่อนักเรียน...",
       "empty": "ไม่พบนักเรียนตามเงื่อนไขที่เลือก"
     },
-    "badges": { "noClass": "ไม่มีชั้นเรียน" },
+    "badges": {
+      "noClass": "ไม่มีชั้นเรียน"
+    },
     "pagination": {
       "showing": "แสดง {from} ถึง {to} จากทั้งหมด {total} นักเรียน",
       "previous": "ก่อนหน้า",
@@ -3046,7 +3093,9 @@
       "import": "นำเข้า",
       "schools": "โรงเรียน",
       "licenses": "สิทธิ์การใช้งาน"
-    }
+    },
+    "gp": "{gp} GP",
+    "xp": "{xp} XP"
   },
   "Quest": {
     "title": "ภารกิจห้องเรียน",
@@ -3150,7 +3199,7 @@
     "loadError": "โหลดอวตารไม่สำเร็จ",
     "noStudents": "ห้องนี้ยังไม่มีนักเรียน"
   },
-  "Avatar":   {
+  "Avatar": {
     "title": "อวตารของฉัน",
     "subtitle": "เลือกฮีโร่และสีของคุณ เปลี่ยนได้ทุกเมื่อ",
     "stepClass": "เลือกฮีโร่ของคุณ",
@@ -3256,7 +3305,7 @@
       }
     }
   },
-  "Reedy":   {
+  "Reedy": {
     "title": "รีดี้",
     "preview": "ทดลอง",
     "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
@@ -3300,7 +3349,7 @@
     },
     "stars": "{score} จาก 5"
   },
-  "ReedyUsage":   {
+  "ReedyUsage": {
     "title": "รีดี้เดือนนี้",
     "monthHint": "เดือน {month} นักเรียนแต่ละคนคุยได้ {budget}",
     "backToClass": "กลับไปที่ห้องเรียน",
@@ -3377,7 +3426,10 @@
       "read": "อ่าน",
       "notYet": "เร็ว ๆ นี้",
       "progress": "บทที่ {current} จาก {total}"
-    }
+    },
+    "yourHero": "ฮีโร่ของคุณ",
+    "arena": "สนามประลอง",
+    "arenaHint": "เกมคำศัพท์และประโยค ความท้าทายของห้องอยู่บนกำแพงสนาม"
   },
   "ReadList": {
     "title": "อ่าน",

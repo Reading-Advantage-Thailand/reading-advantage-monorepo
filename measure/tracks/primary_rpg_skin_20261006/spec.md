@@ -22,11 +22,11 @@ The app must feel like being half inside a Zelda-style game, on every page.
    three.js view has a still fallback (the portrait canvas that exists today).
 4. **One system, not page art.** A `Scene` layer (backdrop, props, NPC, panel, sign, meter) that
    every page composes. New pages pick a place and a prop set; they do not invent chrome.
-5. **Every 3D interaction has a 2D fallback, like the games.** The games mount 3D or 2D through
-   `createCartridgeMounter`: the "2D mode (older phones)" setting or `?renderer=phaser` forces 2D,
-   and a device without WebGL2 gets 2D. The pages use the same selector: the 3D avatar (picker,
-   inventory, battle) falls back to the portrait canvas with CSS motion, and the projector
-   dashboard falls back to a 2D sprite field. No page is 3D-only.
+5. **Every 3D interaction has a 2D fallback, through one shared setting.** The play kit owns
+   the "2D mode (older phones)" setting (`advantage-play-kit/responsive`, the Forge demo's
+   `chibi-quest` storage JSON with `flat: true`); the setting is new in the monorepo. The skin
+   pages and the ported 3D games read it. `?renderer=phaser` forces 2D for one visit, a device
+   without WebGL2 gets 2D. No page is 3D-only.
 6. **The owner sees captures before a page is called done.** Each phase ends with 375 px and
    1280 px captures of every touched page, and the promo shot list is checked against them.
 

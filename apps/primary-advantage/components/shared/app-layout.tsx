@@ -9,6 +9,8 @@ import { getCurrentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import { areaForRole, type NavArea } from "@/lib/nav-area";
 import { getLocale } from "next-intl/server";
+import { Signpost, Toolbar } from "@/components/rpg/toolbar";
+import { StudentHud } from "@/components/rpg/hud";
 
 interface AppLayoutProps {
   children?: React.ReactNode;
@@ -43,6 +45,48 @@ export default async function AppLayout({
   }
 
   const navArea = area ?? areaForRole(user.role);
+
+  // The student shell is the Chibi Quest world (docs/primary-rpg-skin.md): a wooden header with
+  // the HUD, the signpost on desktop, the toolbar on phones, and the page's own scene behind.
+  if (navArea === "student") {
+    return (
+      <SoundProvider userId={user.id}>
+        <div className="cq-world flex min-h-screen flex-col">
+          <SkipLink />
+          <header className="cq-header sticky top-0 z-40">
+            <div className="container flex h-16 items-center justify-between gap-2">
+              <div className="flex items-center gap-1">
+                <MobileMenu area={navArea} user={user} settings={settings} />
+                <div className="max-sm:[&_span]:hidden">
+                  <AppBrand area={navArea} />
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-1 sm:gap-2">
+                <StudentHud user={user} />
+                <LocaleSwitcher />
+                <SoundToggle />
+                <ThemeToggle />
+                <UserAccountNav user={user} />
+              </div>
+            </div>
+          </header>
+          <div className="container flex flex-1 gap-8 pt-5">
+            <div className="relative z-10 hidden lg:block lg:w-[230px] lg:shrink-0">
+              <div className="sticky top-22">
+                <Signpost user={user} />
+              </div>
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-6 pb-[calc(var(--bottom-nav-h)+2rem)] lg:pb-8">
+              <main id="main-content" tabIndex={-1} className="flex w-full min-w-0 flex-1 flex-col outline-none">
+                {children}
+              </main>
+            </div>
+          </div>
+          <Toolbar user={user} />
+        </div>
+      </SoundProvider>
+    );
+  }
 
   return (
     <SoundProvider userId={user.id}>

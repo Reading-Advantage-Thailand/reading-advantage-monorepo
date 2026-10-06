@@ -7,6 +7,7 @@ import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
 import { siteConfig } from "@/configs/site-config";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Cabin_Sketch, Inter, Noto_Sans_Thai, Quicksand } from "next/font/google";
+import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/components/providers/session-provider";
 import { LayoutProvider } from "@/hooks/use-layout";
@@ -36,7 +37,18 @@ const fontLogo = Cabin_Sketch({
   variable: "--font-cabin-sketch",
   preload: false,
 });
-const fontVariables = [fontThai, fontLatin, fontArticle, fontLogo]
+// The Chibi Quest skin fonts (the Forge showcase fonts, OFL): Fredoka for Latin, Mitr for Thai.
+const fontFredoka = localFont({
+  src: "../../public/rpg/fonts/fredoka-latin.woff2",
+  variable: "--font-fredoka",
+  display: "swap",
+});
+const fontMitr = localFont({
+  src: "../../public/rpg/fonts/mitr-500-thai.woff2",
+  variable: "--font-mitr",
+  display: "swap",
+});
+const fontVariables = [fontThai, fontLatin, fontArticle, fontLogo, fontFredoka, fontMitr]
   .map((font) => font.variable)
   .join(" ");
 

@@ -279,7 +279,11 @@
     "preview": {
       "button": "Xem trước",
       "title": "Xem trước dữ liệu",
-      "columns": { "name": "Tên", "email": "Email", "role": "Vai trò" }
+      "columns": {
+        "name": "Tên",
+        "email": "Email",
+        "role": "Vai trò"
+      }
     },
     "formatGuide": {
       "title": "Hướng dẫn định dạng CSV",
@@ -929,7 +933,6 @@
     "clozeTest": "Bài kiểm tra điền từ",
     "orderWord": "Sắp xếp từ",
     "matching": "Ghép cặp",
-
     "matchingGame": {
       "title": "Trò chơi ghép cặp dịch thuật",
       "description": "Luyện tập ghép cặp từ với nghĩa của chúng từ bộ sưu tập thẻ ghi nhớ!",
@@ -1887,14 +1890,22 @@
         "title": "Câu quan trọng : {count} câu",
         "more": "+{count} câu được lưu thêm"
       },
-      "actions": { "backToRead": "Quay lại trang đọc" },
-      "toast": { "failed": "Không thể tải tổng kết bài học" }
+      "actions": {
+        "backToRead": "Quay lại trang đọc"
+      },
+      "toast": {
+        "failed": "Không thể tải tổng kết bài học"
+      }
     }
   },
   "LessonLanguageQuestion": {
     "title": "Trợ lý Đọc AI",
-    "loading": { "conversation": "Đang tải cuộc trò chuyện..." },
-    "status": { "online": "Trực tuyến" },
+    "loading": {
+      "conversation": "Đang tải cuộc trò chuyện..."
+    },
+    "status": {
+      "online": "Trực tuyến"
+    },
     "header": {
       "readyWithName": "Sẵn sàng giúp {name} với các câu hỏi",
       "ready": "Sẵn sàng giúp bạn với câu hỏi của bạn"
@@ -1909,7 +1920,10 @@
       "placeholderWithName": "{name}, hãy hỏi về bài đọc...",
       "placeholder": "Nhập câu hỏi về bài đọc..."
     },
-    "buttons": { "send": "Gửi", "skip": "Bỏ qua" },
+    "buttons": {
+      "send": "Gửi",
+      "skip": "Bỏ qua"
+    },
     "tips": {
       "askVocabulary": "Hỏi về từ vựng",
       "discussTheme": "Thảo luận về chủ đề chính",
@@ -1926,7 +1940,9 @@
       "questionOf": "Câu {current} trên {total}",
       "completePercent": "Hoàn thành {percent}%"
     },
-    "timer": { "seconds": "{seconds}s" },
+    "timer": {
+      "seconds": "{seconds}s"
+    },
     "completed": {
       "title": "Hoàn thành bài kiểm tra",
       "description": "Tuyệt vời! Bạn đã hoàn thành bài kiểm tra",
@@ -1942,7 +1958,9 @@
     }
   },
   "LessonSAQ": {
-    "completed": { "title": "Hoàn thành bài kiểm tra" },
+    "completed": {
+      "title": "Hoàn thành bài kiểm tra"
+    },
     "labels": {
       "question": "Câu hỏi:",
       "yourAnswer": "Câu trả lời của bạn:",
@@ -1950,15 +1968,23 @@
       "feedback": "Phản hồi:",
       "score": "Điểm:"
     },
-    "timer": { "elapsed": "Thời gian: {time}" },
+    "timer": {
+      "elapsed": "Thời gian: {time}"
+    },
     "form": {
-      "placeholder": { "answer": "Nhập câu trả lời của bạn..." },
+      "placeholder": {
+        "answer": "Nhập câu trả lời của bạn..."
+      },
       "help": {
         "detailedResponse": "Viết câu trả lời chi tiết để thể hiện sự hiểu biết"
       },
-      "validation": { "answerRequired": "Vui lòng nhập câu trả lời" }
+      "validation": {
+        "answerRequired": "Vui lòng nhập câu trả lời"
+      }
     },
-    "actions": { "submit": "Gửi" }
+    "actions": {
+      "submit": "Gửi"
+    }
   },
   "LessonCloze": {
     "loading": {
@@ -2079,7 +2105,9 @@
     "prompt": {
       "thinkAndReveal": "Nghĩ về ý nghĩa của câu này, sau đó hiển thị câu trả lời."
     },
-    "buttons": { "showAnswer": "Hiển thị câu trả lời" },
+    "buttons": {
+      "showAnswer": "Hiển thị câu trả lời"
+    },
     "rating": {
       "prompt": "Bạn biết câu này tốt như thế nào?",
       "again": "Lại",
@@ -2131,8 +2159,13 @@
       "archive": "Lưu trữ",
       "delete": "Xóa"
     },
-    "search": { "placeholder": "Tìm kiếm" },
-    "pagination": { "previous": "Trước", "next": "Tiếp" },
+    "search": {
+      "placeholder": "Tìm kiếm"
+    },
+    "pagination": {
+      "previous": "Trước",
+      "next": "Tiếp"
+    },
     "edit": {
       "title": "Chỉnh sửa lớp",
       "description": "Bạn có chắc muốn chỉnh sửa lớp này?",
@@ -2161,8 +2194,13 @@
     }
   },
   "TeacherCreateClass": {
-    "button": { "newClassroom": "Lớp học mới" },
-    "dialog": { "title": "Tạo lớp", "description": "Tạo lớp học mới" },
+    "button": {
+      "newClassroom": "Lớp học mới"
+    },
+    "dialog": {
+      "title": "Tạo lớp",
+      "description": "Tạo lớp học mới"
+    },
     "fields": {
       "className": "Tên lớp",
       "classNamePlaceholder": "Tên lớp",
@@ -2171,7 +2209,10 @@
       "gradePlaceholder": "Khối",
       "gradeItem": "Khối {grade}"
     },
-    "actions": { "create": "Tạo", "cancel": "Hủy" },
+    "actions": {
+      "create": "Tạo",
+      "cancel": "Hủy"
+    },
     "toast": {
       "attention": "Chú ý",
       "fillAllFields": "Vui lòng điền đầy đủ các trường",
@@ -2227,7 +2268,9 @@
       }
     },
     "cefrSetter": {
-      "button": { "setLevel": "Đặt cấp độ" },
+      "button": {
+        "setLevel": "Đặt cấp độ"
+      },
       "dialog": {
         "title": "Đặt cấp độ CEFR cho {name}",
         "description": "Chọn cấp độ CEFR phù hợp cho học sinh này. Hệ thống cũng sẽ cập nhật cấp độ đọc (RA)."
@@ -2236,7 +2279,9 @@
         "currentLevel": "Cấp độ hiện tại",
         "newLevel": "Cấp độ mới"
       },
-      "select": { "placeholder": "Chọn cấp độ CEFR" },
+      "select": {
+        "placeholder": "Chọn cấp độ CEFR"
+      },
       "preview": {
         "title": "Xem trước:",
         "cefr": "Cấp độ CEFR:",
@@ -2687,7 +2732,9 @@
       "title": "Quản lý học sinh",
       "subtitle": "Quản lý học sinh và tiến độ của họ"
     },
-    "page": { "title": "Quản lý học sinh" },
+    "page": {
+      "title": "Quản lý học sinh"
+    },
     "stats": {
       "totalStudents": "Tổng số học sinh",
       "allClassrooms": "Tất cả lớp học",
@@ -2759,7 +2806,9 @@
       "loading": "Đang tải danh sách học sinh...",
       "empty": "Không tìm thấy học sinh phù hợp với tiêu chí của bạn."
     },
-    "badges": { "noClass": "Không có lớp" },
+    "badges": {
+      "noClass": "Không có lớp"
+    },
     "pagination": {
       "showing": "Hiển thị {from} đến {to} trong tổng {total} học sinh",
       "previous": "Trước",
@@ -3044,7 +3093,9 @@
       "import": "Import",
       "schools": "Schools",
       "licenses": "Licenses"
-    }
+    },
+    "gp": "{gp} GP",
+    "xp": "{xp} XP"
   },
   "Quest": {
     "title": "Nhiệm vụ lớp",
@@ -3148,7 +3199,7 @@
     "loadError": "Không tải được nhân vật.",
     "noStudents": "Lớp này chưa có học sinh."
   },
-  "Avatar":   {
+  "Avatar": {
     "title": "Nhân vật của tôi",
     "subtitle": "Chọn một anh hùng và màu sắc của bạn. Bạn có thể đổi bất cứ lúc nào.",
     "stepClass": "Chọn anh hùng của bạn",
@@ -3254,7 +3305,7 @@
       }
     }
   },
-  "Reedy":   {
+  "Reedy": {
     "title": "Reedy",
     "preview": "Thử nghiệm",
     "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
@@ -3298,7 +3349,7 @@
     },
     "stars": "{score} / 5"
   },
-  "ReedyUsage":   {
+  "ReedyUsage": {
     "title": "Reedy tháng này",
     "monthHint": "Tháng {month}. Mỗi học sinh có {budget} thời gian nói chuyện.",
     "backToClass": "Về lớp",
@@ -3375,7 +3426,10 @@
       "read": "Read",
       "notYet": "Coming soon",
       "progress": "Lesson {current} of {total}"
-    }
+    },
+    "yourHero": "Anh hùng của bạn",
+    "arena": "Đấu trường",
+    "arenaHint": "Trò chơi từ vựng và câu. Thử thách của lớp ở trên tường đấu trường."
   },
   "ReadList": {
     "title": "Read",

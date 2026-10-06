@@ -279,7 +279,11 @@
     "preview": {
       "button": "Preview",
       "title": "Data Preview",
-      "columns": { "name": "Name", "email": "Email", "role": "Role" }
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role"
+      }
     },
     "formatGuide": {
       "title": "CSV Format Guide",
@@ -929,7 +933,6 @@
     "clozeTest": "Cloze Test",
     "orderWord": "Order Word",
     "matching": "Matching",
-
     "matchingGame": {
       "title": "Translation Matching Game",
       "description": "Practice matching words with their meanings from your flashcard collection!",
@@ -1887,14 +1890,22 @@
         "title": "Key Sentences : {count} {count, plural, one {sentence} other {sentences}}",
         "more": "+{count} more {count, plural, one {sentence} other {sentences}} saved"
       },
-      "actions": { "backToRead": "Back to Read Page" },
-      "toast": { "failed": "Failed to load lesson summary" }
+      "actions": {
+        "backToRead": "Back to Read Page"
+      },
+      "toast": {
+        "failed": "Failed to load lesson summary"
+      }
     }
   },
   "LessonLanguageQuestion": {
     "title": "AI Reading Assistant",
-    "loading": { "conversation": "Loading conversation..." },
-    "status": { "online": "Online" },
+    "loading": {
+      "conversation": "Loading conversation..."
+    },
+    "status": {
+      "online": "Online"
+    },
     "header": {
       "readyWithName": "Ready to help {name} with questions",
       "ready": "Ready to help with your questions"
@@ -1909,7 +1920,10 @@
       "placeholderWithName": "{name}, ask about the article...",
       "placeholder": "Type your question about the article..."
     },
-    "buttons": { "send": "Send", "skip": "Skip" },
+    "buttons": {
+      "send": "Send",
+      "skip": "Skip"
+    },
     "tips": {
       "askVocabulary": "Ask about vocabulary",
       "discussTheme": "Discuss the main theme",
@@ -1926,7 +1940,9 @@
       "questionOf": "Question {current} of {total}",
       "completePercent": "{percent}% Complete"
     },
-    "timer": { "seconds": "{seconds}s" },
+    "timer": {
+      "seconds": "{seconds}s"
+    },
     "completed": {
       "title": "Quiz Completed",
       "description": "Great job finishing the quiz!",
@@ -1942,7 +1958,9 @@
     }
   },
   "LessonSAQ": {
-    "completed": { "title": "Quiz Completed" },
+    "completed": {
+      "title": "Quiz Completed"
+    },
     "labels": {
       "question": "Question:",
       "yourAnswer": "Your Answer:",
@@ -1950,15 +1968,23 @@
       "feedback": "Feedback:",
       "score": "Score:"
     },
-    "timer": { "elapsed": "Elapsed Time: {time}" },
+    "timer": {
+      "elapsed": "Elapsed Time: {time}"
+    },
     "form": {
-      "placeholder": { "answer": "Type your answer here..." },
+      "placeholder": {
+        "answer": "Type your answer here..."
+      },
       "help": {
         "detailedResponse": "Write a detailed response to demonstrate your understanding"
       },
-      "validation": { "answerRequired": "Please enter your answer" }
+      "validation": {
+        "answerRequired": "Please enter your answer"
+      }
     },
-    "actions": { "submit": "Submit" }
+    "actions": {
+      "submit": "Submit"
+    }
   },
   "LessonCloze": {
     "loading": {
@@ -2079,7 +2105,9 @@
     "prompt": {
       "thinkAndReveal": "Think about the meaning of this word, then reveal the answer."
     },
-    "buttons": { "showAnswer": "Show Answer" },
+    "buttons": {
+      "showAnswer": "Show Answer"
+    },
     "rating": {
       "prompt": "How well did you know this word?",
       "again": "Again",
@@ -2131,8 +2159,13 @@
       "archive": "Archive",
       "delete": "Delete"
     },
-    "search": { "placeholder": "Search" },
-    "pagination": { "previous": "Previous", "next": "Next" },
+    "search": {
+      "placeholder": "Search"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
     "edit": {
       "title": "Edit Class",
       "description": "Are you sure you want to edit the class?",
@@ -2161,8 +2194,13 @@
     }
   },
   "TeacherCreateClass": {
-    "button": { "newClassroom": "New Classroom" },
-    "dialog": { "title": "Create Class", "description": "Create a new class" },
+    "button": {
+      "newClassroom": "New Classroom"
+    },
+    "dialog": {
+      "title": "Create Class",
+      "description": "Create a new class"
+    },
     "fields": {
       "className": "Class Name",
       "classNamePlaceholder": "Class Name",
@@ -2171,7 +2209,10 @@
       "gradePlaceholder": "Grade",
       "gradeItem": "Grade {grade}"
     },
-    "actions": { "create": "Create", "cancel": "Cancel" },
+    "actions": {
+      "create": "Create",
+      "cancel": "Cancel"
+    },
     "toast": {
       "attention": "Attention",
       "fillAllFields": "Please fill in all fields",
@@ -2227,7 +2268,9 @@
       }
     },
     "cefrSetter": {
-      "button": { "setLevel": "Set Level" },
+      "button": {
+        "setLevel": "Set Level"
+      },
       "dialog": {
         "title": "Set CEFR Level for {name}",
         "description": "Choose the appropriate CEFR level for this student. This will also update their reading level (RA level)."
@@ -2236,7 +2279,9 @@
         "currentLevel": "Current Level",
         "newLevel": "New Level"
       },
-      "select": { "placeholder": "Select CEFR Level" },
+      "select": {
+        "placeholder": "Select CEFR Level"
+      },
       "preview": {
         "title": "Preview:",
         "cefr": "CEFR Level:",
@@ -2687,7 +2732,9 @@
       "title": "Student Management",
       "subtitle": "Manage students and their progress"
     },
-    "page": { "title": "Students Management" },
+    "page": {
+      "title": "Students Management"
+    },
     "stats": {
       "totalStudents": "Total Students",
       "allClassrooms": "All classrooms",
@@ -2759,7 +2806,9 @@
       "loading": "Loading students...",
       "empty": "No students found matching your criteria."
     },
-    "badges": { "noClass": "No Class" },
+    "badges": {
+      "noClass": "No Class"
+    },
     "pagination": {
       "showing": "Showing {from} to {to} of {total} students",
       "previous": "Previous",
@@ -3044,7 +3093,9 @@
       "import": "Import",
       "schools": "Schools",
       "licenses": "Licenses"
-    }
+    },
+    "gp": "{gp} GP",
+    "xp": "{xp} XP"
   },
   "Quest": {
     "title": "Class Quest",
@@ -3148,7 +3199,7 @@
     "loadError": "The avatars did not load.",
     "noStudents": "No students in this class yet."
   },
-  "Avatar":   {
+  "Avatar": {
     "title": "My avatar",
     "subtitle": "Pick a hero and your colors. You can change them any time.",
     "stepClass": "Choose your hero",
@@ -3254,7 +3305,7 @@
       }
     }
   },
-  "Reedy":   {
+  "Reedy": {
     "title": "Reedy",
     "preview": "Preview",
     "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
@@ -3298,7 +3349,7 @@
     },
     "stars": "{score} of 5"
   },
-  "ReedyUsage":   {
+  "ReedyUsage": {
     "title": "Reedy this month",
     "monthHint": "Month {month}. Each student has {budget} of talking time.",
     "backToClass": "Back to class",
@@ -3375,7 +3426,10 @@
       "read": "Read",
       "notYet": "Coming soon",
       "progress": "Lesson {current} of {total}"
-    }
+    },
+    "yourHero": "Your hero",
+    "arena": "The arena",
+    "arenaHint": "Word and sentence games. The class challenge is on the arena wall."
   },
   "ReadList": {
     "title": "Read",

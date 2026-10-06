@@ -1,20 +1,17 @@
 import { useLocale, useTranslations } from "next-intl";
-import { SwordsIcon } from "lucide-react";
 import type { StudentQuestCard as StudentQuestCardData } from "@reading-advantage/game-contracts";
-import { Link } from "@/i18n/navigation";
-import { buttonVariants } from "@/components/ui/button";
+import { bossArt, RELIC_ART } from "@/lib/rpg/places";
+import { Banner, Meter, Panel, RpgLink } from "@/components/rpg/chrome";
 import { cn } from "@/lib/utils";
-import { QuestMeter } from "./quest-meter";
 import { goalValues, questText } from "./quest-copy";
 
-const CARD = "bg-card text-card-foreground flex flex-col gap-3 rounded-2xl border p-5 shadow-sm";
-
 /**
- * The quest card of the student home (FR-4): the boss, the days left, the class meter, the
- * student's power-ups, and the week's goals with the earned ones marked.
+ * The quest banner of the student home (FR-4, docs/primary-rpg-skin.md §4): the boss portrait,
+ * the days left, the class meter in the iron frame, the week's goals with the earned relics lit,
+ * and the way to the battle.
  * @param props.card The card data, or null when the student has no quest.
  * @param props.className Extra classes.
- * @returns The card, or nothing.
+ * @returns The banner and panel, or nothing.
  */
 export function StudentQuestCard({ card, className }: { card: StudentQuestCardData | null; className?: string }) {
   const t = useTranslations("Quest");
@@ -22,43 +19,43 @@ export function StudentQuestCard({ card, className }: { card: StudentQuestCardDa
   if (!card) return null;
   const earned = new Map(card.powerUps.map((p) => [p.goalKey, p.powerUp]));
   return (
-    <section aria-labelledby="home-quest" data-quest-card className={cn(CARD, className)}>
-      <h2 id="home-quest" className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide">
-        <SwordsIcon className="text-primary size-4" aria-hidden="true" />
-        {t("title")}
-      </h2>
-      <p className="text-xl font-bold">{questText(card.title, locale)}</p>
-      <p className="text-muted-foreground text-sm">
-        {t("boss", { name: questText(card.boss.name, locale) })} · {t("daysLeft", { count: card.daysLeft })}
-      </p>
-      <QuestMeter committed={card.committed} target={card.quest.bossTarget} label={t("meterLabel")} />
-      <p className="text-sm">{t("meter", { committed: card.committed, target: card.quest.bossTarget })}</p>
-      <Link href="/student/quest/battle" className={cn(buttonVariants({ variant: card.quest.status === "open" ? "outline" : "default" }), "min-h-12 w-fit rounded-xl")}>
-        {t("battle.go")}
-      </Link>
-      <h3 className="text-sm font-semibold">{t("powerUps")}</h3>
-      {card.powerUps.length ? (
-        <ul className="flex flex-wrap gap-2">
-          {card.powerUps.map((p) => (
-            <li key={p.goalKey} className="bg-primary/10 text-primary rounded-full px-3 py-1 text-sm font-semibold">
-              {t(`powerUp.${p.powerUp}`)}
-            </li>
-          ))}
+    <section aria-labelledby="home-quest" data-quest-card className={cn("flex flex-col", className)}>
+      <Banner>
+        <h2 id="home-quest" className="m-0 text-[length:inherit] font-bold">
+          {t("title")}
+        </h2>
+      </Banner>
+      <Panel className="pt-6">
+        <div className="grid grid-cols-[96px_1fr] items-center gap-3">
+          <img src={bossArt(card.boss.artKey)} alt={questText(card.boss.name, locale)} className="cq-shadowed w-24" />
+          <div className="flex min-w-0 flex-col gap-1">
+            <p className="text-lg font-bold leading-tight">{questText(card.title, locale)}</p>
+            <p className="cq-muted text-sm">
+              {t("boss", { name: questText(card.boss.name, locale) })} · {t("daysLeft", { count: card.daysLeft })}
+            </p>
+            <Meter value={card.committed} max={card.quest.bossTarget} label={t("meterLabel")} />
+            <p className="text-sm">{t("meter", { committed: card.committed, target: card.quest.bossTarget })}</p>
+          </div>
+        </div>
+        <ul className="flex flex-wrap gap-2" aria-label={t("goals")}>
+          {card.goals.map((goal) => {
+            const done = earned.has(goal.key);
+            return (
+              <li key={goal.key} className={cn("inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs font-semibold", done ? "border-[var(--cq-green)] bg-[rgba(79,180,90,0.2)]" : "border-[rgba(92,57,26,0.3)] bg-[rgba(92,57,26,0.12)]")}>
+                <img src={RELIC_ART[goal.powerUp]} alt="" className={cn("size-4", !done && "opacity-60 grayscale")} />
+                {t(`goal.${goal.kind}`, goalValues(goal))}
+                <span className="cq-muted font-normal" aria-hidden="true">·</span>
+                <span className="cq-muted font-normal">{t(`powerUp.${goal.powerUp}`)}</span>
+                {done ? <span className="sr-only">{t("earned")}</span> : null}
+              </li>
+            );
+          })}
         </ul>
-      ) : (
-        <p className="text-muted-foreground text-sm">{t("noPowerUps")}</p>
-      )}
-      <h3 className="text-sm font-semibold">{t("goals")}</h3>
-      <ul className="flex flex-col gap-1 text-sm">
-        {card.goals.map((goal) => (
-          <li key={goal.key} className="flex flex-wrap items-center justify-between gap-2">
-            <span>{t(`goal.${goal.kind}`, goalValues(goal))}</span>
-            <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", earned.has(goal.key) ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground")}>
-              {earned.has(goal.key) ? t("earned") : t(`powerUp.${goal.powerUp}`)}
-            </span>
-          </li>
-        ))}
-      </ul>
+        {card.powerUps.length === 0 ? <p className="cq-muted text-sm">{t("noPowerUps")}</p> : null}
+        <RpgLink tone={card.quest.status === "open" ? "wood" : "gold"} href="/student/quest/battle" className="w-fit">
+          {t("battle.go")}
+        </RpgLink>
+      </Panel>
     </section>
   );
 }

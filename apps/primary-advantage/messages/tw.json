@@ -279,7 +279,11 @@
     "preview": {
       "button": "預覽",
       "title": "資料預覽",
-      "columns": { "name": "姓名", "email": "電子郵件", "role": "角色" }
+      "columns": {
+        "name": "姓名",
+        "email": "電子郵件",
+        "role": "角色"
+      }
     },
     "formatGuide": {
       "title": "CSV 格式指南",
@@ -929,7 +933,6 @@
     "clozeTest": "填空測試",
     "orderWord": "排列單字",
     "matching": "配對",
-
     "matchingGame": {
       "title": "翻譯配對遊戲",
       "description": "練習將單字與其含義從您的抽認卡集合中配對！",
@@ -1764,8 +1767,12 @@
         "title": "關鍵句子：{count} 句",
         "more": "+{count} 句已保存"
       },
-      "actions": { "backToRead": "返回閱讀頁面" },
-      "toast": { "failed": "無法載入課程總結" }
+      "actions": {
+        "backToRead": "返回閱讀頁面"
+      },
+      "toast": {
+        "failed": "無法載入課程總結"
+      }
     },
     "VocabularyFlashcards": {
       "loading": {
@@ -1893,8 +1900,12 @@
   },
   "LessonLanguageQuestion": {
     "title": "AI 閱讀助理",
-    "loading": { "conversation": "正在載入對話..." },
-    "status": { "online": "線上" },
+    "loading": {
+      "conversation": "正在載入對話..."
+    },
+    "status": {
+      "online": "線上"
+    },
     "header": {
       "readyWithName": "準備好幫助 {name} 解答問題",
       "ready": "準備好幫助你解答問題"
@@ -1909,7 +1920,10 @@
       "placeholderWithName": "{name}，問問關於這篇文章的問題...",
       "placeholder": "輸入你關於這篇文章的問題..."
     },
-    "buttons": { "send": "送出", "skip": "略過" },
+    "buttons": {
+      "send": "送出",
+      "skip": "略過"
+    },
     "tips": {
       "askVocabulary": "詢問詞彙",
       "discussTheme": "討論主題思想",
@@ -1926,7 +1940,9 @@
       "questionOf": "第 {current} 題 / 共 {total} 題",
       "completePercent": "完成 {percent}%"
     },
-    "timer": { "seconds": "{seconds}秒" },
+    "timer": {
+      "seconds": "{seconds}秒"
+    },
     "completed": {
       "title": "測驗完成",
       "description": "做得好！你已完成測驗",
@@ -1942,7 +1958,9 @@
     }
   },
   "LessonSAQ": {
-    "completed": { "title": "測驗完成" },
+    "completed": {
+      "title": "測驗完成"
+    },
     "labels": {
       "question": "問題：",
       "yourAnswer": "你的答案：",
@@ -1950,13 +1968,23 @@
       "feedback": "反饋：",
       "score": "分數："
     },
-    "timer": { "elapsed": "用時：{time}" },
-    "form": {
-      "placeholder": { "answer": "在此輸入你的答案..." },
-      "help": { "detailedResponse": "寫下詳細回答以展示你的理解" },
-      "validation": { "answerRequired": "請輸入您的答案" }
+    "timer": {
+      "elapsed": "用時：{time}"
     },
-    "actions": { "submit": "送出" }
+    "form": {
+      "placeholder": {
+        "answer": "在此輸入你的答案..."
+      },
+      "help": {
+        "detailedResponse": "寫下詳細回答以展示你的理解"
+      },
+      "validation": {
+        "answerRequired": "請輸入您的答案"
+      }
+    },
+    "actions": {
+      "submit": "送出"
+    }
   },
   "LessonCloze": {
     "loading": {
@@ -2077,7 +2105,9 @@
     "prompt": {
       "thinkAndReveal": "思考這個詞的意思，然後顯示答案"
     },
-    "buttons": { "showAnswer": "顯示答案" },
+    "buttons": {
+      "showAnswer": "顯示答案"
+    },
     "rating": {
       "prompt": "您對這個詞的記憶程度如何？",
       "again": "再來一次",
@@ -2129,8 +2159,13 @@
       "archive": "封存",
       "delete": "刪除"
     },
-    "search": { "placeholder": "搜尋" },
-    "pagination": { "previous": "上一頁", "next": "下一頁" },
+    "search": {
+      "placeholder": "搜尋"
+    },
+    "pagination": {
+      "previous": "上一頁",
+      "next": "下一頁"
+    },
     "edit": {
       "title": "編輯班級",
       "description": "您確定要編輯此班級嗎？",
@@ -2159,8 +2194,13 @@
     }
   },
   "TeacherCreateClass": {
-    "button": { "newClassroom": "新增班級" },
-    "dialog": { "title": "建立班級", "description": "建立一個新班級" },
+    "button": {
+      "newClassroom": "新增班級"
+    },
+    "dialog": {
+      "title": "建立班級",
+      "description": "建立一個新班級"
+    },
     "fields": {
       "className": "班級名稱",
       "classNamePlaceholder": "班級名稱",
@@ -2169,7 +2209,10 @@
       "gradePlaceholder": "年級",
       "gradeItem": "年級 {grade}"
     },
-    "actions": { "create": "建立", "cancel": "取消" },
+    "actions": {
+      "create": "建立",
+      "cancel": "取消"
+    },
     "toast": {
       "attention": "提醒",
       "fillAllFields": "請填寫所有欄位",
@@ -2225,7 +2268,9 @@
       }
     },
     "cefrSetter": {
-      "button": { "setLevel": "設定等級" },
+      "button": {
+        "setLevel": "設定等級"
+      },
       "dialog": {
         "title": "為 {name} 設定 CEFR 等級",
         "description": "為此學生選擇合適的 CEFR 等級，同時也會更新其閱讀等級（RA）。"
@@ -2234,7 +2279,9 @@
         "currentLevel": "目前等級",
         "newLevel": "新等級"
       },
-      "select": { "placeholder": "選擇 CEFR 等級" },
+      "select": {
+        "placeholder": "選擇 CEFR 等級"
+      },
       "preview": {
         "title": "預覽：",
         "cefr": "CEFR 等級：",
@@ -2685,7 +2732,9 @@
       "title": "學生管理",
       "subtitle": "管理學生及其學習進度"
     },
-    "page": { "title": "學生管理" },
+    "page": {
+      "title": "學生管理"
+    },
     "stats": {
       "totalStudents": "學生總數",
       "allClassrooms": "所有班級",
@@ -2757,7 +2806,9 @@
       "loading": "正在載入學生...",
       "empty": "沒有符合條件的學生。"
     },
-    "badges": { "noClass": "無班級" },
+    "badges": {
+      "noClass": "無班級"
+    },
     "pagination": {
       "showing": "顯示第 {from} 到第 {to} 位，共 {total} 位學生",
       "previous": "上一頁",
@@ -3042,7 +3093,9 @@
       "import": "Import",
       "schools": "Schools",
       "licenses": "Licenses"
-    }
+    },
+    "gp": "{gp} GP",
+    "xp": "{xp} XP"
   },
   "Quest": {
     "title": "班級任務",
@@ -3146,7 +3199,7 @@
     "loadError": "頭像載入失敗。",
     "noStudents": "此班級還沒有學生。"
   },
-  "Avatar":   {
+  "Avatar": {
     "title": "我的頭像",
     "subtitle": "選擇一個英雄和你的顏色，隨時可以更改。",
     "stepClass": "選擇你的英雄",
@@ -3252,7 +3305,7 @@
       }
     }
   },
-  "Reedy":   {
+  "Reedy": {
     "title": "Reedy",
     "preview": "預覽",
     "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
@@ -3296,7 +3349,7 @@
     },
     "stars": "{score} / 5"
   },
-  "ReedyUsage":   {
+  "ReedyUsage": {
     "title": "本月 Reedy",
     "monthHint": "{month} 月。每位學生有 {budget} 的通話時間。",
     "backToClass": "返回班級",
@@ -3373,7 +3426,10 @@
       "read": "Read",
       "notYet": "Coming soon",
       "progress": "Lesson {current} of {total}"
-    }
+    },
+    "yourHero": "你的英雄",
+    "arena": "競技場",
+    "arenaHint": "單字和句子遊戲。班級挑戰就在競技場的牆上。"
   },
   "ReadList": {
     "title": "Read",

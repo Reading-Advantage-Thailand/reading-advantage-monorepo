@@ -279,7 +279,11 @@
     "preview": {
       "button": "预览",
       "title": "数据预览",
-      "columns": { "name": "姓名", "email": "邮箱", "role": "角色" }
+      "columns": {
+        "name": "姓名",
+        "email": "邮箱",
+        "role": "角色"
+      }
     },
     "formatGuide": {
       "title": "CSV 格式指南",
@@ -929,7 +933,6 @@
     "clozeTest": "填空测试",
     "orderWord": "排列单词",
     "matching": "匹配",
-
     "matchingGame": {
       "title": "翻译配对游戏",
       "description": "练习将单词与其含义从您的抽认卡集合中配对！",
@@ -1764,8 +1767,12 @@
         "title": "关键句子：{count} 句",
         "more": "+{count} 句已保存"
       },
-      "actions": { "backToRead": "返回阅读页面" },
-      "toast": { "failed": "无法加载课程总结" }
+      "actions": {
+        "backToRead": "返回阅读页面"
+      },
+      "toast": {
+        "failed": "无法加载课程总结"
+      }
     },
     "VocabularyFlashcards": {
       "loading": {
@@ -1893,8 +1900,12 @@
   },
   "LessonLanguageQuestion": {
     "title": "AI 阅读助手",
-    "loading": { "conversation": "正在加载对话..." },
-    "status": { "online": "在线" },
+    "loading": {
+      "conversation": "正在加载对话..."
+    },
+    "status": {
+      "online": "在线"
+    },
     "header": {
       "readyWithName": "已准备好帮助 {name} 解答问题",
       "ready": "已准备好帮助你解答问题"
@@ -1909,7 +1920,10 @@
       "placeholderWithName": "{name}，问一问关于这篇文章的问题...",
       "placeholder": "输入你关于这篇文章的问题..."
     },
-    "buttons": { "send": "发送", "skip": "跳过" },
+    "buttons": {
+      "send": "发送",
+      "skip": "跳过"
+    },
     "tips": {
       "askVocabulary": "询问词汇",
       "discussTheme": "讨论主题思想",
@@ -1926,7 +1940,9 @@
       "questionOf": "第 {current} 题 / 共 {total} 题",
       "completePercent": "完成 {percent}%"
     },
-    "timer": { "seconds": "{seconds}秒" },
+    "timer": {
+      "seconds": "{seconds}秒"
+    },
     "completed": {
       "title": "测验完成",
       "description": "做得好！你已完成测验",
@@ -1942,7 +1958,9 @@
     }
   },
   "LessonSAQ": {
-    "completed": { "title": "测验完成" },
+    "completed": {
+      "title": "测验完成"
+    },
     "labels": {
       "question": "问题：",
       "yourAnswer": "你的答案：",
@@ -1950,13 +1968,23 @@
       "feedback": "反馈：",
       "score": "分数："
     },
-    "timer": { "elapsed": "用时：{time}" },
-    "form": {
-      "placeholder": { "answer": "在此输入你的答案..." },
-      "help": { "detailedResponse": "写下详细回答以展示你的理解" },
-      "validation": { "answerRequired": "请输入您的答案" }
+    "timer": {
+      "elapsed": "用时：{time}"
     },
-    "actions": { "submit": "提交" }
+    "form": {
+      "placeholder": {
+        "answer": "在此输入你的答案..."
+      },
+      "help": {
+        "detailedResponse": "写下详细回答以展示你的理解"
+      },
+      "validation": {
+        "answerRequired": "请输入您的答案"
+      }
+    },
+    "actions": {
+      "submit": "提交"
+    }
   },
   "LessonCloze": {
     "loading": {
@@ -2077,7 +2105,9 @@
     "prompt": {
       "thinkAndReveal": "思考这个句子的意思，然后显示答案。"
     },
-    "buttons": { "showAnswer": "显示答案" },
+    "buttons": {
+      "showAnswer": "显示答案"
+    },
     "rating": {
       "prompt": "您对这个句子的记忆程度如何？",
       "again": "再来一次",
@@ -2129,8 +2159,13 @@
       "archive": "归档",
       "delete": "删除"
     },
-    "search": { "placeholder": "搜索" },
-    "pagination": { "previous": "上一页", "next": "下一页" },
+    "search": {
+      "placeholder": "搜索"
+    },
+    "pagination": {
+      "previous": "上一页",
+      "next": "下一页"
+    },
     "edit": {
       "title": "编辑班级",
       "description": "您确定要编辑此班级吗？",
@@ -2159,8 +2194,13 @@
     }
   },
   "TeacherCreateClass": {
-    "button": { "newClassroom": "新建班级" },
-    "dialog": { "title": "创建班级", "description": "创建一个新班级" },
+    "button": {
+      "newClassroom": "新建班级"
+    },
+    "dialog": {
+      "title": "创建班级",
+      "description": "创建一个新班级"
+    },
     "fields": {
       "className": "班级名称",
       "classNamePlaceholder": "班级名称",
@@ -2169,7 +2209,10 @@
       "gradePlaceholder": "年级",
       "gradeItem": "年级 {grade}"
     },
-    "actions": { "create": "创建", "cancel": "取消" },
+    "actions": {
+      "create": "创建",
+      "cancel": "取消"
+    },
     "toast": {
       "attention": "提示",
       "fillAllFields": "请填写所有字段",
@@ -2225,7 +2268,9 @@
       }
     },
     "cefrSetter": {
-      "button": { "setLevel": "设置等级" },
+      "button": {
+        "setLevel": "设置等级"
+      },
       "dialog": {
         "title": "为 {name} 设置 CEFR 等级",
         "description": "为该学生选择合适的 CEFR 等级，同时会更新其阅读等级（RA）。"
@@ -2234,7 +2279,9 @@
         "currentLevel": "当前等级",
         "newLevel": "新等级"
       },
-      "select": { "placeholder": "选择 CEFR 等级" },
+      "select": {
+        "placeholder": "选择 CEFR 等级"
+      },
       "preview": {
         "title": "预览：",
         "cefr": "CEFR 等级：",
@@ -2685,7 +2732,9 @@
       "title": "学生管理",
       "subtitle": "管理学生及其学习进度"
     },
-    "page": { "title": "学生管理" },
+    "page": {
+      "title": "学生管理"
+    },
     "stats": {
       "totalStudents": "学生总数",
       "allClassrooms": "所有班级",
@@ -2757,7 +2806,9 @@
       "loading": "正在加载学生...",
       "empty": "没有找到符合条件的学生。"
     },
-    "badges": { "noClass": "无班级" },
+    "badges": {
+      "noClass": "无班级"
+    },
     "pagination": {
       "showing": "显示第 {from} 到第 {to} 条，共 {total} 名学生",
       "previous": "上一页",
@@ -3042,7 +3093,9 @@
       "import": "Import",
       "schools": "Schools",
       "licenses": "Licenses"
-    }
+    },
+    "gp": "{gp} GP",
+    "xp": "{xp} XP"
   },
   "Quest": {
     "title": "班级任务",
@@ -3146,7 +3199,7 @@
     "loadError": "头像加载失败。",
     "noStudents": "此班级还没有学生。"
   },
-  "Avatar":   {
+  "Avatar": {
     "title": "我的头像",
     "subtitle": "选择一个英雄和你的颜色，随时可以更改。",
     "stepClass": "选择你的英雄",
@@ -3252,7 +3305,7 @@
       }
     }
   },
-  "Reedy":   {
+  "Reedy": {
     "title": "Reedy",
     "preview": "预览",
     "explainEn": "Reedy is a speaking coach. Talk about your story in English and Thai. Reedy is new, so it can make mistakes.",
@@ -3296,7 +3349,7 @@
     },
     "stars": "{score} / 5"
   },
-  "ReedyUsage":   {
+  "ReedyUsage": {
     "title": "本月 Reedy",
     "monthHint": "{month} 月。每位学生有 {budget} 的通话时间。",
     "backToClass": "返回班级",
@@ -3373,7 +3426,10 @@
       "read": "Read",
       "notYet": "Coming soon",
       "progress": "Lesson {current} of {total}"
-    }
+    },
+    "yourHero": "你的英雄",
+    "arena": "竞技场",
+    "arenaHint": "单词和句子游戏。班级挑战就在竞技场的墙上。"
   },
   "ReadList": {
     "title": "Read",
