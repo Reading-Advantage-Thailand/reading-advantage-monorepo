@@ -2,7 +2,7 @@
 
 Version: 0.3
 Date: 2026-10-06
-Status: The owner approved the ten decisions in section 8 on 2026-10-06. Track T1 (`primary_objective_tags_20261006`) is created on branch `primary/lane-h-objective-tags`; T2 to T5 wait for T1.
+Status: The owner approved the ten decisions in section 8 on 2026-10-06. Track T1 (`primary_objective_tags_20261006`) is implemented on branch `primary/lane-h-objective-tags` and merged into `primary-parity-integration` the same day. Track T2 (`primary_mastery_evidence_20261006`) is created on 2026-10-06; T3 to T5 wait for T2.
 Owner: Daniel Bo
 Strategy source: `advantage-pr/08-strategy/product-strategy-2026-2027.md` section 4
 (tag, then shadow mode in semester 2 2026, then adaptive in May 2027; approved 2026-09-30).

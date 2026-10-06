@@ -65,6 +65,23 @@
 | 2026-10-04 | primary_cutover_blockers_20261003 | Primary `/system/test` page ships destructive dev tools | High | Open | `app/[locale]/system/test/page.tsx` (SYSTEM-only, sidebar "Testing") has a "Delete All Articles" server action plus audio/image/article generation tests. A SYSTEM click deletes content that Tutor reads. Not changed in the parity run (no owner decision); remove or gate it before cutover. |
 | 2026-10-05 | primary_reedy_preview_20261003 | Reedy talks to OpenAI Realtime through a hand-written fetch and `ws` adapter (one real session passed 2026-10-06; the `openai` 7 bump is still open) | Medium | Open | Tutor uses `openai` ^7.15.0 (`client.realtime.calls.create`, `OpenAIRealtimeWS({ callID })`). This repo pins `openai` 6.44.0 through the pnpm catalog (shared by reading-advantage, primary-advantage, and reading-advantage-scripts); 6.44.0 has no `calls.create`, so `packages/ai/src/voice/openai.ts` posts to `/v1/realtime/calls` and opens the sideband with the `ws` client and a Bearer header (a `?call_id=` sideband rejects the browser subprotocol key with 401). Unit tests use the mock provider; one real session passed on 2026-10-06 (see the Lane F plan, Phase 5). Still to do: open a small migration task that bumps the catalog `openai` to 7.x (a major version; AGENTS.md needs an explicit task) and replaces the adapter internals with the SDK calls Tutor runs in production. The adapter interface (`VoiceProvider`) stays the same either way. |
 
+## Vocabulary graph: the committed file cannot be rebuilt from its sources (2026-10-06, High, Open)
+
+Owner: the mastery-advantage repo (`~/Desktop/mastery-advantage`). Found while fixing the
+`businessman/woman` match form (mastery-advantage 1e10cf9). Running the documented build step
+(`node english/cefr-vocabulary/scripts/generate-vocabulary-graph.js`) from the current sources
+does not reproduce the committed `cefr-vocabulary-knowledge-space.json`: it drops 17 nodes
+(3,848 to 3,831, for example the `Miss` title node), rewrites
+`data/cambridge-vocabulary-inventory.json`, and changes about 4,200 added and 5,700 removed
+lines unrelated to the fix. The fix was applied to the one node by hand; the generator change
+only guards the next rebuild. Why it matters: Workbooks' `tags.json`, the T1 link tables, and
+`GRAPH_RELEASE` in `packages/domain/src/primary-mastery/objective-key.data.ts` carry node ids
+from the committed graph; a rebuild can remove a node and break those tags without an error.
+Rule until resolved: the committed graph file is the source of truth; nobody runs the build
+script before the cutover. Fix: find why the sources drifted (inventory regeneration from
+downloaded lists, or a source file changed after the last commit), make the build reproduce the
+committed file, then add a check that a rebuild never drops a node that a tag references.
+
 ## Objective tags: follow-ups found at the T1 verification (2026-10-06, primary_objective_tags_20261006)
 
 - `packages/db` tests red on `primary-parity-integration` before this track: `journal-integrity` wants sentinel probes for `0068_primary_avatar_shop` and `0069_primary_class_quest` (owner: lane-f), and the `drizzle045-phase2-contracts-adversarial` migration allowlist stops at `0057` while the disk has `0070` (two tests). `measure/doctor.sh` fails A13 on the stale `agents_md_audit_science_advantage_20260603` directory that also sits under `archive/`. None of these come from this track.
