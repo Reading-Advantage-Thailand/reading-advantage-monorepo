@@ -4,6 +4,7 @@ import {
   mapGameResultsToCompletionInput,
   type GameCompletionInput,
   type GameResults,
+  type ReadToSelectAudioEvidence,
   type StoryGameEvidence,
   type StudentChallengeRunLaunch,
 } from "@reading-advantage/game-contracts";
@@ -46,11 +47,14 @@ export function canRunChallenge(game: PlayableGame, launch: StudentChallengeRunL
  * game completion (gameType `<id>-story`, the story evidence as learning evidence). A class challenge
  * run keeps the challenge's own game id, difficulty, and modality, so the contribution rules match it;
  * its story evidence rides under `storyEvidence`, because a reading challenge carries no learning evidence.
+ * An English answer audio run is a catalog completion on the student's flashcards (gameType `<id>`),
+ * with the answer evidence as learning evidence and the story evidence under `storyEvidence`.
  * @param game The game that ran.
  * @param launch The challenge run, or null for a practice run.
  * @param result The five-field game result.
  * @param evidence The per-item story evidence.
  * @param run The run's timing and outcome.
+ * @param answerEvidence The answer audio controller's evidence of an English answer audio run.
  * @returns The completion body.
  */
 export function hostCompletionInput(
@@ -59,14 +63,27 @@ export function hostCompletionInput(
   result: GameResults,
   evidence: StoryGameEvidence,
   run: RunContext,
+  answerEvidence?: ReadToSelectAudioEvidence,
 ): HostCompletion {
+  const duration = Math.max(0, Math.round((run.now - run.startedAt) / 1000));
+  if (!launch && answerEvidence) {
+    return mapGameResultsToCompletionInput(result, {
+      gameType: game.id,
+      difficulty: "medium",
+      duration,
+      victory: run.victory,
+      idempotencyKey: run.idempotencyKey,
+      clientTimestamp: run.now,
+      metadata: { contentSource: "student-flashcards", inputMode: "vocabulary", host: "primary-advantage", learningEvidence: answerEvidence, storyEvidence: evidence },
+    });
+  }
   if (!launch) return storyCompletionInput(game.id, result, evidence, { ...run, helper: false });
   const c = launch.challenge;
   return {
     ...mapGameResultsToCompletionInput(result, {
       gameType: c.gameId,
       difficulty: c.difficulty,
-      duration: Math.max(0, Math.round((run.now - run.startedAt) / 1000)),
+      duration,
       victory: run.victory,
       idempotencyKey: run.idempotencyKey,
       clientTimestamp: run.now,

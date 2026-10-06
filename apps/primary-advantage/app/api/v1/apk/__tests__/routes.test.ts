@@ -222,7 +222,7 @@ describe("Primary APK routes", () => {
     });
     expect(mockRecordGameCompletion).not.toHaveBeenCalled();
   });
-  it.each(["wizard-vs-zombie", "dragon-flight", "dragon-rider"])(
+  it.each(["wizard-vs-zombie", "hero-vs-zombie", "dragon-flight", "dragon-rider"])(
     "returns English answer audio for a written Thai target in %s",
     async (cartridgeId) => {
     vi.stubEnv("APK_WIZARD_SPEECH_MANIFEST", "test-manifest");

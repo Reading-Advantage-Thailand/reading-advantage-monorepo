@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   launch: null as unknown,
   failureMessage: null as string | null,
   retry: vi.fn(),
+  fetchAnswerAudio: vi.fn(async () => ({ content: [{ term: "apple", translation: "แอปเปิล" }, { term: "river", translation: "แม่น้ำ" }] })),
   rpg: {
     state: null as unknown,
     loading: false,
@@ -38,6 +39,13 @@ vi.mock("@reading-advantage/advantage-play-kit/presentation", () => ({
   RpgRewardDisclosure: () => <div data-testid="rpg-disclosure" />,
   RpgUnlockNotice: () => <div data-testid="rpg-unlock" />,
 }));
+// The prepared clips: the route has its own tests; the host only needs the content and the session.
+vi.mock("@/lib/games/answer-audio", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/games/answer-audio")>()),
+  fetchAnswerAudio: mocks.fetchAnswerAudio,
+  // The manifests declare the mode with the Forge F2 release; the gate itself has its own test.
+  offersAnswerAudio: (game: { id: string }) => game.id === "hero-vs-zombie",
+}));
 vi.mock("@reading-advantage/game-cartridges-3d", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@reading-advantage/game-cartridges-3d")>();
   return { ...actual, GAMES: actual.GAMES.map((g) => ({ ...g, load: async () => ({ manifest: g.manifest }) })) };
@@ -46,17 +54,33 @@ vi.mock("@reading-advantage/game-cartridges-3d", async (importOriginal) => {
 vi.mock("@reading-advantage/advantage-play-kit-3d/react", () => ({
   StoryGameHost: (props: {
     input: { id: string } | unknown[]; seed?: number; replay?: boolean; cartridge: { manifest: { id: string } };
-    onPhase?: (phase: string) => void; onComplete: (result: unknown, outcome: string, evidence: unknown) => void; onExit: () => void;
+    onPhase?: (phase: string) => void; onComplete: (result: unknown, outcome: string, evidence: unknown, answerEvidence?: unknown) => void; onExit: () => void;
+    answerAudio?: () => unknown;
   }) => (
-    <div data-testid="kit" data-input={Array.isArray(props.input) ? `apk:${props.input.length}` : props.input.id} data-seed={props.seed ?? "random"} data-replay={String(props.replay)} data-game={props.cartridge.manifest.id}>
+    <div data-testid="kit" data-input={Array.isArray(props.input) ? `apk:${props.input.length}` : props.input.id} data-seed={props.seed ?? "random"} data-replay={String(props.replay)} data-game={props.cartridge.manifest.id} data-audio={String(Boolean(props.answerAudio))}>
       <button type="button" onClick={() => props.onPhase?.("playing")}>start</button>
-      <button type="button" onClick={() => props.onComplete({ accuracy: 0.8, xp: 40, score: 800, correctAnswers: 8, totalAttempts: 10 }, "victory", evidence(props.cartridge.manifest.id))}>finish</button>
+      <button type="button" onClick={() => props.onComplete(props.answerAudio ? { accuracy: 0.67, xp: 10, score: 200, correctAnswers: 2, totalAttempts: 3 } : { accuracy: 0.8, xp: 40, score: 800, correctAnswers: 8, totalAttempts: 10 }, "victory", evidence(props.cartridge.manifest.id), props.answerAudio ? answerEvidence : undefined)}>finish</button>
       <button type="button" onClick={() => props.onPhase?.("results")}>results</button>
       <button type="button" onClick={props.onExit}>exit</button>
     </div>
   ),
 }));
 
+// Two questions, one wrong choice first: 3 submitted choices, 2 correct.
+const answerEvidence = {
+  schemaVersion: 1, declaredModality: "read-to-select-audio", effectiveModality: "read-to-select-audio",
+  promptLocale: "th-TH", answerLocale: "en-US", promptField: "translation", answerField: "term", itemCount: 2,
+  questions: [
+    { questionPosition: 0, promptItemPosition: 0, selectionAttempts: [
+      { attemptIndex: 0, clipItemPosition: 1, playbackResult: "completed", submitted: true, completedQuestion: false },
+      { attemptIndex: 1, clipItemPosition: 0, playbackResult: "completed", submitted: true, completedQuestion: true },
+    ] },
+    { questionPosition: 1, promptItemPosition: 1, selectionAttempts: [
+      { attemptIndex: 0, clipItemPosition: 1, playbackResult: "completed", submitted: true, completedQuestion: true },
+    ] },
+  ],
+  replayCounts: [], audioFailures: [],
+};
 const evidence = (gameId: string) => ({ schemaVersion: 1, kind: "story-game", gameId, inputId: "saved", level: "A1", seed: 1, durationMs: 1000, items: [], practice: [] });
 const word = (n: number) => ({ id: `w${n}`, term: `word${n}`, translation: `คำ${n}` });
 const sentence = (n: number) => ({ id: `s${n}`, text: `The cat sleeps ${n}.`, words: ["The", "cat", "sleeps", `${n}.`] });
@@ -112,6 +136,24 @@ describe("GameHost", () => {
     expect(postedBody()).toMatchObject({ gameType: "rune-match-story", correctAnswers: 8, totalAttempts: 10, victory: true });
     expect(mocks.rpg.refreshAfterSavedCompletion).toHaveBeenCalledTimes(1);
     expect(onCompleted).toHaveBeenCalledWith({ correctAnswers: 8, totalAttempts: 10, victory: true });
+  });
+
+  it("plays English answer audio on the prepared words with a controller per run, and saves the answer evidence", async () => {
+    renderWithMessages(<GameHost gameId="wizard-vs-zombie" locale="en" ownerKey="s:1" input={practice(10, 8)} />, { locale: "en" });
+    expect(await screen.findByTestId("kit", {}, { timeout: 5000 })).toHaveAttribute("data-audio", "false");
+    fireEvent.click(screen.getByRole("button", { name: "Listen to English" }));
+    await waitFor(() => expect(screen.getByTestId("kit")).toHaveAttribute("data-audio", "true"));
+    expect(mocks.fetchAnswerAudio).toHaveBeenCalledWith("hero-vs-zombie", expect.any(AbortSignal));
+    expect(screen.getByTestId("kit")).toHaveAttribute("data-input", "apk:2");
+    fireEvent.click(screen.getByText("finish"));
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Result saved"));
+    expect(postedBody()).toMatchObject({ gameType: "hero-vs-zombie", correctAnswers: 2, totalAttempts: 3, metadata: { contentSource: "student-flashcards", learningEvidence: answerEvidence } });
+  });
+
+  it("offers no answer audio in a game without the mode", async () => {
+    renderWithMessages(<GameHost gameId="rune-match" locale="en" ownerKey="s:1" input={practice(10, 8)} />, { locale: "en" });
+    await screen.findByTestId("kit", {}, { timeout: 5000 });
+    expect(screen.queryByRole("button", { name: "Listen to English" })).toBeNull();
   });
 
   it("fetches the saved items when the page has none, and locks a game that needs more", async () => {

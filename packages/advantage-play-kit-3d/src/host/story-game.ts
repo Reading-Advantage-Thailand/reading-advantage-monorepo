@@ -7,6 +7,7 @@
  * student's saved words and sentences), the base URL that serves `packs/` and `assets/apk/`, and
  * gets `onComplete` once per run with the APK completion triple.
  */
+import type { AnswerChoiceAudioController } from '../audio/answer-choice.js';
 import { AudioBus, installAudioUnlock } from '../audio/index.js';
 import {
   assetPackSchema,
@@ -23,6 +24,7 @@ import {
   type RuntimeEdition,
   type RuntimeEdition3D,
   type PracticeInput,
+  type ReadToSelectAudioEvidence,
   type StoryGameEvidence,
 } from '../contracts/index.js';
 import type { LaunchAvatar } from '../contracts/avatar.js';
@@ -84,7 +86,13 @@ export interface StoryGameOptions {
   skipBriefing?: boolean;
   /** Offer "play again" on the results (default true). A class challenge run is one run. */
   replay?: boolean;
-  onComplete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence): void;
+  /**
+   * Makes the English answer audio controller for one run; the mount destroys it with the game, so
+   * "again" makes a new one. Absent: the game plays without answer audio.
+   */
+  answerAudio?(): AnswerChoiceAudioController;
+  /** Once per run; `answerEvidence` comes from the `answerAudio` controller, the app saves it as the learning evidence. */
+  onComplete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence, answerEvidence?: ReadToSelectAudioEvidence): void;
   onExit(): void;
   onDiagnostic?(event: unknown): void;
   /** The screen the host shows: the app places its own panels (rewards, notices) around it. */
@@ -207,6 +215,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
         composition: composition(),
         i18n: i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!),
         audio,
+        ...(options.answerAudio ? { answerAudio: options.answerAudio() } : {}),
         options: sessionOptionsOf(options),
         host: {
           toggleMute: () => {
@@ -215,8 +224,8 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
             return audio.muted;
           },
         },
-        complete: (result, outcome, evidence) => {
-          options.onComplete(result, outcome, evidence);
+        complete: (result, outcome, evidence, answerEvidence) => {
+          options.onComplete(result, outcome, evidence, answerEvidence);
           renderResults(screen, { ...run, result, evidence }, t);
           if (options.replay === false) screen.querySelector('[data-again]')?.remove();
           else screen.querySelector('[data-again]')?.addEventListener('click', () => void again());
@@ -252,7 +261,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
   }
 
   const showBriefing = (): void => {
-    const b = cartridge.briefing(i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!), input);
+    const b = cartridge.briefing(i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!), input, options.answerAudio ? { answerAudio: true } : undefined);
     renderBriefing(screen, b, input, cartridge.manifest, options.icon ?? '🎮', t);
     screen.classList.add('on');
     screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { parsePracticeInput, type GameResults, type LaunchAvatar, type PracticeInput, type StoryGameEvidence } from "@reading-advantage/game-contracts";
+import { parsePracticeInput, type GameResults, type LaunchAvatar, type PracticeInput, type PreparedReadToSelectAudioVocabularyResponse, type ReadToSelectAudioEvidence, type StoryGameEvidence } from "@reading-advantage/game-contracts";
 import type { GameInput } from "@reading-advantage/advantage-play-kit-3d/contracts";
 import type { Cartridge, RendererSetting } from "@reading-advantage/advantage-play-kit-3d/factory";
 import { StoryGameHost, type StoryGamePhase } from "@reading-advantage/advantage-play-kit-3d/react";
@@ -11,6 +11,7 @@ import { useStudentChallengeRun, useStudentRpg } from "@reading-advantage/advant
 import { RpgRewardDisclosure, RpgUnlockNotice, resolveRpgRewardAssetUrls } from "@reading-advantage/advantage-play-kit/presentation";
 
 import { Link, useRouter } from "@/i18n/navigation";
+import { answerAudioControllerOf, fetchAnswerAudio, offersAnswerAudio } from "@/lib/games/answer-audio";
 import { gameFor, practiceLocaleOf } from "@/lib/games/catalog";
 import { canRunChallenge, hostCompletionInput } from "@/lib/games/completion";
 
@@ -48,12 +49,15 @@ export interface GameHostProps {
 }
 
 type SaveState = "idle" | "saving" | "saved" | "error";
+type LearningMode = "reading" | "answer-audio";
 type LoadError = "game" | "load" | "unauthenticated";
 
 /**
  * Plays one 3D game (2D on older phones) for a student: the saved items or a class challenge as
  * the input, the RPG reward panels around the briefing and the results, and the completion posted
  * to the catalog route. The game internals never fetch: the host passes the input and the avatar.
+ * A game whose manifest lists the answer audio modality also offers English answer audio outside a
+ * class challenge: the host fetches the prepared clips, makes a controller per run, and saves its evidence.
  * @param props The game, the identity, the content source, and the callbacks.
  * @returns The game surface with its load, lock, and save states.
  */
@@ -68,19 +72,25 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
   const [phase, setPhase] = useState<StoryGamePhase>("briefing");
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [attempt, setAttempt] = useState(0);
+  const [mode, setMode] = useState<LearningMode>("reading");
+  const [prepared, setPrepared] = useState<PreparedReadToSelectAudioVocabularyResponse | null>(null);
   const startedAt = useRef(Date.now());
   const challengeRun = useStudentChallengeRun({ endpoint: "/api/v1/apk/challenges/runs", ownerKey: ownerKey ?? "", challengeId, enabled: Boolean(ownerKey && challengeId) });
   const launch = challengeId ? challengeRun.launch : null;
   const rpg = useStudentRpg({ endpoint: "/api/v1/apk/rpg", ownerKey: ownerKey ?? "", enabled: Boolean(ownerKey) });
   const rpgAssetUrls = useMemo(() => resolveRpgRewardAssetUrls("/"), []);
   const exit = onExit ?? (() => router.push("/student/games"));
+  const offersAudio = Boolean(game && !challengeId && offersAnswerAudio(game));
+  const audioMode = offersAudio && mode === "answer-audio";
 
   useEffect(() => {
     if (!game) return undefined;
     let live = true;
     setCartridge(null);
+    setPrepared(null);
     setError(null);
     const needsPractice = !challengeId && !input;
+    const audio = new AbortController();
     Promise.all([
       game.load(),
       needsPractice
@@ -89,24 +99,29 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
           return parsePracticeInput(await res.json());
         })
         : Promise.resolve(null),
+      audioMode ? fetchAnswerAudio(game.id, audio.signal) : Promise.resolve(null),
     ])
-      .then(([loaded, saved]) => {
+      .then(([loaded, saved, clips]) => {
         if (!live) return;
         setCartridge(loaded);
         setPractice(saved);
+        setPrepared(clips);
       })
       .catch((err: unknown) => live && setError(typeof err === "object" && err !== null && "unauthenticated" in err && err.unauthenticated === true ? "unauthenticated" : "load"));
     return () => {
       live = false;
+      audio.abort();
     };
-  }, [game, challengeId, input, locale, attempt]);
+  }, [game, challengeId, input, locale, attempt, audioMode]);
 
   const challengeOk = Boolean(game && launch && canRunChallenge(game, launch, (id) => gameFor(id)?.id));
   const saved = input ?? practice;
   const run = useMemo<{ input: PracticeInput | GameInput; seed?: number } | null>(() => {
     if (challengeId) return launch && challengeOk ? { input: launch.content.items, seed: launch.challenge.seed } : null;
+    if (audioMode) return prepared ? { input: prepared.content } : null;
     return saved ? { input: saved } : null;
-  }, [challengeId, launch, challengeOk, saved]);
+  }, [challengeId, launch, challengeOk, saved, audioMode, prepared]);
+  const answerAudio = useMemo(() => (audioMode && prepared ? () => answerAudioControllerOf(prepared) : undefined), [audioMode, prepared]);
   const missing = game && !challengeId && saved ? missingItems(game, saved) : null;
   const locked = Boolean(missing && (missing.vocabulary > 0 || missing.sentences > 0));
 
@@ -119,10 +134,10 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
     }
   }, [rpg]);
 
-  const onComplete = useCallback((result: GameResults, outcome: string, evidence: StoryGameEvidence) => {
+  const onComplete = useCallback((result: GameResults, outcome: string, evidence: StoryGameEvidence, answerEvidence?: ReadToSelectAudioEvidence) => {
     if (!game) return;
     const victory = outcome !== "defeat";
-    const body = hostCompletionInput(game, launch, result, evidence, { startedAt: startedAt.current, now: Date.now(), victory, idempotencyKey: crypto.randomUUID() });
+    const body = hostCompletionInput(game, launch, result, evidence, { startedAt: startedAt.current, now: Date.now(), victory, idempotencyKey: crypto.randomUUID() }, answerEvidence);
     if (!save) return;
     setSaveState("saving");
     fetch("/api/v1/apk/complete", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
@@ -166,6 +181,15 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
     <div className={className ?? "flex h-full min-h-[480px] w-full flex-col"} data-testid="game-host" data-phase={phase}>
       {notice ? <div className="cq-panel m-4">{notice}</div> : null}
       {!notice && !ready ? <p className="cq-on-scene m-4 text-sm">{challengeId ? t("loadingChallenge") : t("loadingGame")}</p> : null}
+      {offersAudio && !locked && phase === "briefing" ? (
+        <div role="group" className="flex shrink-0 gap-2 p-2">
+          {(["reading", "answer-audio"] as const).map((m) => (
+            <button key={m} type="button" aria-pressed={mode === m} onClick={() => setMode(m)} className={`min-h-12 rounded-lg border px-4 py-2 font-semibold ${mode === m ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground"}`}>
+              {t(m === "reading" ? "readMode" : "listenMode")}
+            </button>
+          ))}
+        </div>
+      ) : null}
       {ready && phase === "briefing" && ownerKey ? (
         rpg.state ? (
           <div className="shrink-0 overflow-y-auto p-2">
@@ -194,6 +218,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
             setting={setting}
             catalogs={[hostStrings]}
             className="h-full w-full"
+            {...(answerAudio ? { answerAudio } : {})}
             onComplete={onComplete}
             onExit={exit}
             onPhase={onPhase}
