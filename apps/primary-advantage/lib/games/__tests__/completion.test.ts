@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { StudentChallengeRunLaunch } from "@reading-advantage/game-contracts";
+import type { ReadToSelectAudioEvidence, StudentChallengeRunLaunch } from "@reading-advantage/game-contracts";
 
 import { gameFor } from "../catalog";
 import { canRunChallenge, hostCompletionInput } from "../completion";
@@ -63,5 +63,29 @@ describe("hostCompletionInput", () => {
     expect(body.victory).toBe(true);
     expect(body.metadata).toMatchObject({ contentSource: "class-challenge", inputMode: "vocabulary", host: "primary-advantage", challengeModality: modality, storyEvidence: evidence });
     expect(body.metadata?.learningEvidence).toBeUndefined();
+  });
+
+  it("posts an English answer audio run under the game id, with the answer evidence as learning evidence", () => {
+    // Two questions, one wrong choice first: 3 submitted choices, 2 correct.
+    const answerEvidence = {
+      schemaVersion: 1, declaredModality: "read-to-select-audio", effectiveModality: "read-to-select-audio",
+      promptLocale: "th-TH", answerLocale: "en-US", promptField: "translation", answerField: "term", itemCount: 2,
+      questions: [
+        { questionPosition: 0, promptItemPosition: 0, selectionAttempts: [
+          { attemptIndex: 0, clipItemPosition: 1, playbackResult: "completed", submitted: true, completedQuestion: false },
+          { attemptIndex: 1, clipItemPosition: 0, playbackResult: "completed", submitted: true, completedQuestion: true },
+        ] },
+        { questionPosition: 1, promptItemPosition: 1, selectionAttempts: [
+          { attemptIndex: 0, clipItemPosition: 1, playbackResult: "completed", submitted: true, completedQuestion: true },
+        ] },
+      ],
+      replayCounts: [], audioFailures: [],
+    } as ReadToSelectAudioEvidence;
+    const body = hostCompletionInput(game, null, { ...result, correctAnswers: 2, totalAttempts: 3 }, evidence, run, answerEvidence);
+    expect(body.gameType).toBe("hero-vs-zombie");
+    expect(body.difficulty).toBe("medium");
+    expect(body.duration).toBe(61);
+    expect(body.metadata).toEqual({ contentSource: "student-flashcards", inputMode: "vocabulary", host: "primary-advantage", learningEvidence: answerEvidence, storyEvidence: evidence });
+    expect(body.challengeRunId).toBeUndefined();
   });
 });

@@ -26,6 +26,12 @@ briefing, and the results belong to the kit (`StoryGameHost`); the app places it
   and gets the launch: the content items (the APK `VocabularyInput`) and the server seed. The kit host
   receives the array as `input` and the seed as `seed`; the briefing previews the terms. `replay` is off:
   one launch is one run.
+- **English answer audio run.** Hero vs. Zombie, Dragon Flight, and Dragon Rider (`ANSWER_AUDIO_GAME_IDS`
+  in `lib/games/answer-audio.ts`) show "Read Thai" and "Listen to English" on the briefing outside a class
+  challenge. "Listen to English" fetches `/api/v1/apk/content?mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=<id>`:
+  the saved words (the APK `VocabularyInput`, at most 50) with one English clip each. The kit host gets the
+  words as `input` and `answerAudio`, a factory that makes a new controller for each run; the kit mount
+  pauses, mutes, and destroys the controller with the game and checks its evidence against the result.
 - `canRunChallenge` (`lib/games/completion.ts`) refuses a launch when the challenge names another game,
   another version, another content mode, another modality than reading, or a difficulty other than medium.
 
@@ -57,6 +63,11 @@ version is refused by the host. Current version: `2026-10-06.1` (hero-vs-zombie,
 - Challenge run: `gameType` is the challenge's own game id (the contribution rule compares it), the
   challenge difficulty and modality, `challengeRunId`, `metadata.contentSource = "class-challenge"`, and
   the story evidence under `metadata.storyEvidence`. A reading challenge carries no `learningEvidence`.
+- English answer audio run: `gameType` is the game id (`hero-vs-zombie`, as the 2D game saved it),
+  `metadata.contentSource = "student-flashcards"`, the controller's evidence under
+  `metadata.learningEvidence`, and the story evidence under `metadata.storyEvidence`. The completion
+  schema requires `totalAttempts` and `correctAnswers` to equal the submitted and the completing choices;
+  the Echo Staff rule reads this evidence.
 
 `save={false}` (`?mode=demo` on the apk route) posts nothing. The games need no demo flag: the app host
 decides what it saves.

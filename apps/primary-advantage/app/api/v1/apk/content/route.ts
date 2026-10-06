@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
   const learningMode = url.searchParams.get("learningMode") ?? "reading";
   const cartridgeId = url.searchParams.get("cartridgeId");
   const supportsAnswerAudio = cartridgeId !== null
-    && ["wizard-vs-zombie", "dragon-flight", "dragon-rider"].includes(cartridgeId);
+    && ["wizard-vs-zombie", "hero-vs-zombie", "dragon-flight", "dragon-rider"].includes(cartridgeId);
   const wantsAnswerAudio = learningMode === "answer-audio";
   const requestedLocale = url.searchParams.get("locale") ?? "th";
   if (
