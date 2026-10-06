@@ -2,7 +2,8 @@ import { z } from "zod";
 import { completionMetadataSchema } from "@reading-advantage/game-contracts";
 
 /**
- * Canonical game-type vocabulary frozen from `apps/advantage-games/src/lib/gameCards.ts`.
+ * Canonical game-type vocabulary: the 2D catalog ids frozen from `apps/advantage-games/src/lib/gameCards.ts`,
+ * the 3D game ids of `@reading-advantage/game-cartridges-3d`, and their `-story` practice runs.
  *
  * APK game IDs enter this authoritative persistence vocabulary only after a
  * real cartridge and server-owned completion path exist.
@@ -36,6 +37,39 @@ export const gameTypeEnum = z.enum([
   "gryphon-patrol",
   "astral-mage",
   "sorcerer-ziggurat",
+  // The 3D games of game-cartridges-3d that replaced a 2D game under another name (hero-vs-zombie
+  // was wizard-vs-zombie, labyrinth was labyrinth-goblin-king). The old names stay for stored rows.
+  "labyrinth",
+  "hero-vs-zombie",
+  // A practice run of a 3D game saves as `<gameId>-story` (apps/primary-advantage/lib/story-games/completion.ts).
+  "rune-match-story",
+  "labyrinth-story",
+  "potion-rush-story",
+  "dragon-flight-story",
+  "dungeon-liberator-story",
+  "devourer-slime-story",
+  "hero-vs-zombie-story",
+  "rpg-battle-story",
+  "paladins-twin-soul-story",
+  "village-guardian-story",
+  "archers-revenge-story",
+  "astral-mage-story",
+  "spellweavers-run-story",
+  "haunted-library-story",
+  "shadow-gate-dungeon-story",
+  "realm-carver-story",
+  "alchemists-synthesis-story",
+  "enchanted-library-story",
+  "gryphon-patrol-story",
+  "magic-defense-story",
+  "griffin-sky-joust-story",
+  "abyssal-well-story",
+  "rune-forge-chamber-story",
+  "dragon-rider-story",
+  "griffin-riders-escape-story",
+  "castle-defense-story",
+  "sorcerer-ziggurat-story",
+  "storm-castle-tower-story",
 ]);
 
 /**

@@ -16,16 +16,11 @@ vi.mock("@/i18n/navigation", () => ({
   ),
 }));
 
-vi.mock("@reading-advantage/advantage-play-kit-3d/react", () => ({
-  StoryGameHost: ({ input, cartridge, avatar }: { input: { id: string; vocabulary: unknown[] }; cartridge: { manifest: { id: string } }; avatar?: { classId: string } | null }) => (
-    <div data-testid="host" data-input={input.id} data-words={input.vocabulary.length} data-game={cartridge.manifest.id} data-avatar={avatar ? avatar.classId : "none"} />
+vi.mock("@/components/games/game-host", () => ({
+  GameHost: ({ gameId, input, avatar, ownerKey }: { gameId: string; input: { id: string; vocabulary: unknown[] }; avatar?: { classId: string } | null; ownerKey?: string }) => (
+    <div data-testid="host" data-input={input.id} data-words={input.vocabulary.length} data-game={gameId} data-avatar={avatar ? avatar.classId : "none"} data-owner={ownerKey ?? "none"} />
   ),
 }));
-
-vi.mock("@reading-advantage/game-cartridges-3d", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@reading-advantage/game-cartridges-3d")>();
-  return { ...actual, GAMES: actual.GAMES.map((g) => ({ ...g, load: async () => ({ manifest: g.manifest }) })) };
-});
 
 import { gameCardsFor, practiceLocaleOf, StoryGamesClient } from "../StoryGamesClient";
 
@@ -73,7 +68,7 @@ describe("StoryGamesClient", () => {
   it("loads the saved items, then plays an open game with them and the student's avatar", async () => {
     const fetchMock = stubPractice(practice(10, 8));
     const avatar = { catalogVersion: "1.0.0", classId: "knight", tints: { skin: "fair", hair: "brown", eyes: "blue", cloth: "sky" }, pieces: [] };
-    render(<StoryGamesClient avatar={avatar as never} />);
+    render(<StoryGamesClient avatar={avatar as never} ownerKey="school-1:student-7" />);
     expect(await screen.findByText(/^saved /)).toHaveTextContent('saved {"words":10,"sentences":8}');
     expect(fetchMock).toHaveBeenCalledWith("/api/v1/apk/practice?locale=th");
     fireEvent.click(screen.getAllByRole("button").find((b) => b.textContent?.includes("Rune Match"))!);
@@ -82,6 +77,7 @@ describe("StoryGamesClient", () => {
     expect(host).toHaveAttribute("data-words", "10");
     expect(host).toHaveAttribute("data-game", "rune-match");
     expect(host).toHaveAttribute("data-avatar", "knight");
+    expect(host).toHaveAttribute("data-owner", "school-1:student-7");
   });
 
   it("plays with no avatar when the student has none, so the game keeps its hero", async () => {
