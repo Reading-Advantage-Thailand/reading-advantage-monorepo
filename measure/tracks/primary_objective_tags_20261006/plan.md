@@ -2,7 +2,12 @@
 
 Measure TDD workflow; one commit per task with `(track_id: primary_objective_tags_20261006)`;
 tests before implementation; type check and lint once per phase before the phase commit.
-Branch `primary/lane-h-objective-tags` in `~/Desktop/rama-worktrees/lane-h`. Fresh worktree
+Branch `primary/lane-h-objective-tags` in `~/Desktop/rama-worktrees/lane-h`. Rebased on 2026-10-06 from
+lane-f onto `primary/lane-de-teacher-books` (the owner's decision: the tags reach the cutover build
+with the class-books lane, independent of the RPG decision D4; `primary-parity-integration` itself
+lacks the lesson importer, which lane-de holds). The migration is `0066` on this base; lane-f's
+`0066` to `0069` renumber when that lane merges after this one (the journal test requires
+contiguous indexes). Fresh worktree
 setup: `pnpm install --offline --frozen-lockfile`, then build each dependency package with
 `npm run build` in its folder (`pnpm -r run build` hangs).
 
@@ -12,16 +17,16 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [ ] Task: Confirm with the lane-m migration track whether `primary_legacy_id_map` will hold question ids at the cutover; record the answer here and pick the question join (FR-5)
 
 ## Phase 1: Contract and Schema Definition
-- [x] Task: Objective key data and contract (93e26e6)
+- [x] Task: Objective key data and contract (08cc9e9)
     - [x] Copy `a0-objective-key.json` and `a1-objective-key.json` into `packages/domain/src/primary-mastery/data/objective-key.json` with `graphRelease` and optional title fields (FR-1)
     - [x] Zod contract `objectiveKeySchema` and `resolveObjective(shortId)` in `contracts.ts`
-- [x] Task: Tags export contract (93e26e6, same commit)
+- [x] Task: Tags export contract (08cc9e9, same commit)
     - [x] Zod contracts `tagsExportSchema`, `tagsEntrySchema` with the header and the unknown-short-id refinement (FR-2)
     - [x] Export the contracts from `packages/domain/src/primary-mastery/index.ts`
-- [x] Task: Tables and migration (0165c27; the ledger file is a design note with no per-migration list, so no entry; `journal-integrity` also fails for the lane-f migrations 0068 and 0069, which have no sentinel probe: owner of that fix is lane-f)
+- [x] Task: Tables and migration (6acf04c on the lane-de base; was 0165c27; the ledger file is a design note with no per-migration list, so no entry; `journal-integrity` also fails for the lane-f migrations 0068 and 0069, which have no sentinel probe: owner of that fix is lane-f)
     - [x] `packages/db/src/schema/primary-mastery.ts`: the three tables with FKs, unique indexes, and JSDoc (FR-3)
     - [x] Register the three tables `EXEMPT` in `packages/domain/src/tenant-registry.ts`
-    - [x] `drizzle-kit generate` -> `0070_primary_objective_tags`; review the SQL; add it to `MIGRATION_LEDGER.md`; bump `--required-migration` in `apps/primary-advantage/cloudbuild.yaml`
+    - [x] `drizzle-kit generate` -> `0066_primary_objective_tags`; review the SQL; add it to `MIGRATION_LEDGER.md`; bump `--required-migration` in `apps/primary-advantage/cloudbuild.yaml`
     - [x] Package schema: `tags` parsed with the `TagsSchema` shape in `package-schema.ts` (FR-4)
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract and Schema Definition' (Protocol in workflow.md)
 
@@ -29,7 +34,7 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [ ] Task: Contract tests
     - [ ] `objective-key.test.ts`: every short id in the data resolves; an unknown id throws; the data file validates
     - [ ] `tags-export.test.ts`: a valid fixture parses; an unknown short id fails with the key and the id; `legacy: null` parses
-- [x] Task: Importer tests (extend `primary-books/__tests__/import.test.ts`) (1f7aa8b)
+- [x] Task: Importer tests (extend `primary-books/__tests__/import.test.ts`) (266d249)
     - [x] A tagged package writes article, question, and word link rows in the transaction
     - [x] A reimport deletes the article's link rows before writing; one row per link after
     - [x] A package without tags writes no link rows and reports `tagged: false`
@@ -45,7 +50,7 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
 
 ## Phase 3: Implement
-- [x] Task: Importer writes the links (FR-4) (1f7aa8b, with its tests)
+- [x] Task: Importer writes the links (FR-4) (266d249, with its tests)
     - [x] `toTagRows(pkg, articleId, questionIds)` in `primary-books/mapping.ts`
     - [x] `import.ts`: delete the article's link rows, insert the new ones in the same transaction; `tagged` in the result
 - [ ] Task: Backfill (FR-5)
@@ -58,7 +63,7 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
 ## Phase 4: Generate Docs and Doctor
-- [ ] Task: Apply migration 0070 locally; run the db doctor with the new required migration
+- [ ] Task: Apply migration 0066 locally; run the db doctor with the new required migration
 - [ ] Task: Run the backfill against the local database with the Workbooks `tags.json` once it is committed (`--dry-run` first); save the coverage output as `coverage.md` in this track folder
 - [ ] Task: Run `measure/generate.sh` and `measure/doctor.sh`; `build-graph update ./graph.db` for the new and changed files
 - [ ] Task: Tutor read test green; record the result here

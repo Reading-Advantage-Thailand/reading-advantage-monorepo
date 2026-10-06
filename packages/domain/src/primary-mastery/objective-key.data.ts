@@ -1,10 +1,11 @@
 /**
  * The Primary objective key: every objective short id the Workbooks lesson packages use, with its
  * GSE node (track primary_objective_tags_20261006, FR-1). Generated from
- * `~/Desktop/Workbooks/docs/content-plans/data/a0-objective-key.json` and `a1-objective-key.json`
- * (Workbooks commit 2f1bf6b) and the graph releases of `content/primary/tags.json`. Do not edit by
- * hand; regenerate from the key files. The child-language titles (`titleEn`, `titleTh`, `exampleEn`)
- * are filled by the Workbooks authors when they exist (program decision 10).
+ * `~/Desktop/Workbooks/docs/content-plans/data/{a0,a1,a2}-objective-key.json` (Workbooks commit
+ * 6c84d1a; A0 GSE 10-21, A1 GSE 22-29, A2 GSE 30-42) and the graph releases of
+ * `content/primary/tags.json`. Do not edit by hand; regenerate from the key files. The
+ * child-language titles (`titleEn`, `titleTh`, `exampleEn`) are filled by the Workbooks authors when
+ * they exist (program decision 10).
  */
 import type { GraphRelease, ObjectiveKeyEntry } from "./contracts.js";
 
@@ -989,5 +990,1139 @@ export const OBJECTIVE_KEY: readonly ObjectiveKeyEntry[] = [
     "gse": 29,
     "skill": "Reading",
     "text": "Can understand basic key words in short notes or messages."
+  },
+  {
+    "shortId": "L30.1",
+    "nodeId": "english.gse.skill.young.listening.30.can-identify-people-in-their-immediate-s",
+    "gse": 30,
+    "skill": "Listening",
+    "text": "Can identify people in their immediate surroundings or in pictures from a short, simple description of where they are and what they are doing."
+  },
+  {
+    "shortId": "L30.2",
+    "nodeId": "english.gse.skill.young.listening.30.can-follow-an-animated-cartoon-of-a-fami",
+    "gse": 30,
+    "skill": "Listening",
+    "text": "Can follow an animated cartoon of a familiar type, if provided with written support."
+  },
+  {
+    "shortId": "L30.3",
+    "nodeId": "english.gse.skill.young.listening.30.can-understand-basic-information-about-s",
+    "gse": 30,
+    "skill": "Listening",
+    "text": "Can understand basic information about someone’s house or flat (e.g. ‘rooms’, ‘furniture’), if spoken slowly and clearly and supported by pictures."
+  },
+  {
+    "shortId": "R30.1",
+    "nodeId": "english.gse.skill.young.reading.30.can-understand-some-details-in-short-sim",
+    "gse": 30,
+    "skill": "Reading",
+    "text": "Can understand some details in short, simple dialogues on familiar everyday topics, if supported by pictures."
+  },
+  {
+    "shortId": "R30.2",
+    "nodeId": "english.gse.skill.young.reading.30.can-understand-simple-information-on-eve",
+    "gse": 30,
+    "skill": "Reading",
+    "text": "Can understand simple information on everyday signs in a public building."
+  },
+  {
+    "shortId": "R30.3",
+    "nodeId": "english.gse.skill.young.reading.30.can-understand-the-main-idea-in-a-short",
+    "gse": 30,
+    "skill": "Reading",
+    "text": "Can understand the main idea in a short, simple picture story."
+  },
+  {
+    "shortId": "R30.4",
+    "nodeId": "english.gse.skill.young.reading.30.can-understand-basic-factual-statements",
+    "gse": 30,
+    "skill": "Reading",
+    "text": "Can understand basic factual statements relating to pictures or simple texts."
+  },
+  {
+    "shortId": "R30.5",
+    "nodeId": "english.gse.skill.young.reading.30.can-identify-people-in-their-immediate-s",
+    "gse": 30,
+    "skill": "Reading",
+    "text": "Can identify people in their immediate surroundings or in pictures from a short, simple description of their physical appearance and clothes."
+  },
+  {
+    "shortId": "R30.6",
+    "nodeId": "english.gse.skill.young.reading.30.can-understand-a-short-simple-descriptio",
+    "gse": 30,
+    "skill": "Reading",
+    "text": "Can understand a short, simple description of a house or flat (e.g. ‘rooms’, ‘furniture’), if supported by pictures."
+  },
+  {
+    "shortId": "R30.7",
+    "nodeId": "english.gse.skill.young.reading.30.can-understand-simple-feedback-from-a-te",
+    "gse": 30,
+    "skill": "Reading",
+    "text": "Can understand simple feedback from a teacher or classmate."
+  },
+  {
+    "shortId": "R30.8",
+    "nodeId": "english.gse.skill.young.reading.30.can-identify-the-main-information-for-an",
+    "gse": 30,
+    "skill": "Reading",
+    "text": "Can identify the main information for an event (e.g. ‘day’, ‘time, place’)."
+  },
+  {
+    "shortId": "L31.1",
+    "nodeId": "english.gse.skill.young.listening.31.can-follow-a-simple-conversation-between",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can follow a simple conversation between two people or characters, if supported by pictures."
+  },
+  {
+    "shortId": "L31.10",
+    "nodeId": "english.gse.skill.young.listening.31.can-understand-a-simple-instruction-cont",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can understand a simple instruction containing a qualifying clause (e.g. ‘If your birthday is in March, stand here.’)"
+  },
+  {
+    "shortId": "L31.11",
+    "nodeId": "english.gse.skill.young.listening.31.can-understand-the-main-information-in-s",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can understand the main information in short, simple dialogues about someone’s daily routines, if spoken slowly and clearly and supported by pictures."
+  },
+  {
+    "shortId": "L31.12",
+    "nodeId": "english.gse.skill.young.listening.31.can-understand-simple-expressions-about",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can understand simple expressions about likes and dislikes in short, simple stories or dialogues, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "L31.13",
+    "nodeId": "english.gse.skill.young.listening.31.can-understand-simple-comparisons-betwee",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can understand simple comparisons between objects or people, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "L31.2",
+    "nodeId": "english.gse.skill.young.listening.31.can-understand-some-unfamiliar-words-in",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can understand some unfamiliar words in a short description, if supported by pictures."
+  },
+  {
+    "shortId": "L31.3",
+    "nodeId": "english.gse.skill.young.listening.31.can-identify-objects-places-or-people-fr",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can identify objects, places or people from short descriptions."
+  },
+  {
+    "shortId": "L31.4",
+    "nodeId": "english.gse.skill.young.listening.31.can-understand-basic-information-about-c",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can understand basic information about common jobs, if spoken slowly and clearly and supported by pictures."
+  },
+  {
+    "shortId": "L31.5",
+    "nodeId": "english.gse.skill.young.listening.31.can-identify-key-information-eg-places-t",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can identify key information (e.g. ‘places’, ‘times’) from short audio recordings, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "L31.6",
+    "nodeId": "english.gse.skill.young.listening.31.can-identify-how-much-something-costs-in",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can identify how much something costs in short, simple dialogues about the price of something e.g. ‘in a shop’, ‘if speech is slow and clear.’"
+  },
+  {
+    "shortId": "L31.7",
+    "nodeId": "english.gse.skill.young.listening.31.can-understand-basic-personal-informatio",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can understand basic personal information in short, simple dialogues, if spoken slowly and clearly and guided by written prompts."
+  },
+  {
+    "shortId": "L31.8",
+    "nodeId": "english.gse.skill.young.listening.31.can-identify-simple-information-in-a-sho",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can identify simple information in a short video, provided that the visual supports this information and the delivery is slow and clear."
+  },
+  {
+    "shortId": "L31.9",
+    "nodeId": "english.gse.skill.young.listening.31.can-understand-how-people-are-feeling-if",
+    "gse": 31,
+    "skill": "Listening",
+    "text": "Can understand how people are feeling if they use simple language and speak slowly and clearly."
+  },
+  {
+    "shortId": "R31.1",
+    "nodeId": "english.gse.skill.young.reading.31.can-identify-key-information-in-a-text-t",
+    "gse": 31,
+    "skill": "Reading",
+    "text": "Can identify key information in a text to answer simple yes/no questions."
+  },
+  {
+    "shortId": "R31.2",
+    "nodeId": "english.gse.skill.young.reading.31.can-follow-a-simple-dialogue-about-famil",
+    "gse": 31,
+    "skill": "Reading",
+    "text": "Can follow a simple dialogue about familiar, everyday activities."
+  },
+  {
+    "shortId": "R31.3",
+    "nodeId": "english.gse.skill.young.reading.31.can-follow-basic-instructions-on-how-to",
+    "gse": 31,
+    "skill": "Reading",
+    "text": "Can follow basic instructions on how to play a simple board game, if supported by pictures."
+  },
+  {
+    "shortId": "R31.4",
+    "nodeId": "english.gse.skill.young.reading.31.can-understand-short-simple-descriptions",
+    "gse": 31,
+    "skill": "Reading",
+    "text": "Can understand short, simple descriptions of someone’s typical day, if supported by pictures."
+  },
+  {
+    "shortId": "R31.5",
+    "nodeId": "english.gse.skill.young.reading.31.can-understand-and-make-connections-betw",
+    "gse": 31,
+    "skill": "Reading",
+    "text": "Can understand and make connections between words in the same area of meaning, e.g. ‘head’ and ‘hat’."
+  },
+  {
+    "shortId": "R31.6",
+    "nodeId": "english.gse.skill.young.reading.31.can-follow-a-short-familiar-traditional",
+    "gse": 31,
+    "skill": "Reading",
+    "text": "Can follow a short, familiar, traditional story, if supported by pictures."
+  },
+  {
+    "shortId": "L32.1",
+    "nodeId": "english.gse.skill.young.listening.32.can-identify-the-context-of-short-simple",
+    "gse": 32,
+    "skill": "Listening",
+    "text": "Can identify the context of short, simple dialogues related to familiar everyday situations."
+  },
+  {
+    "shortId": "R32.1",
+    "nodeId": "english.gse.skill.young.reading.32.can-understand-simple-notes-p",
+    "gse": 32,
+    "skill": "Reading",
+    "text": "Can understand simple notes."
+  },
+  {
+    "shortId": "R32.2",
+    "nodeId": "english.gse.skill.young.reading.32.can-understand-and-make-connections-betw",
+    "gse": 32,
+    "skill": "Reading",
+    "text": "Can understand and make connections between words in the same area of meaning, e.g. ‘head’ and ‘hat’"
+  },
+  {
+    "shortId": "R32.3",
+    "nodeId": "english.gse.skill.young.reading.32.can-identify-the-number-of-syllables-in",
+    "gse": 32,
+    "skill": "Reading",
+    "text": "Can identify the number of syllables in a word."
+  },
+  {
+    "shortId": "R32.4",
+    "nodeId": "english.gse.skill.young.reading.32.can-identify-key-buildings-on-a-plan-or",
+    "gse": 32,
+    "skill": "Reading",
+    "text": "Can identify key buildings on a plan or key features on a map."
+  },
+  {
+    "shortId": "R32.5",
+    "nodeId": "english.gse.skill.young.reading.32.can-follow-the-sequence-of-events-in-sho",
+    "gse": 32,
+    "skill": "Reading",
+    "text": "Can follow the sequence of events in short, simple cartoon stories that use familiar key words."
+  },
+  {
+    "shortId": "R32.6",
+    "nodeId": "english.gse.skill.young.reading.32.can-understand-a-simple-written-dialogue",
+    "gse": 32,
+    "skill": "Reading",
+    "text": "Can understand a simple written dialogue on a familiar topic."
+  },
+  {
+    "shortId": "R32.7",
+    "nodeId": "english.gse.skill.young.reading.32.can-understand-everyday-written-signs-an",
+    "gse": 32,
+    "skill": "Reading",
+    "text": "Can understand everyday written signs and notices found in public places (e.g. ‘rules’, ‘directions’), if supported by the context."
+  },
+  {
+    "shortId": "R32.8",
+    "nodeId": "english.gse.skill.young.reading.32.can-understand-some-simple-details-about",
+    "gse": 32,
+    "skill": "Reading",
+    "text": "Can understand some simple details about a holiday from a postcard, if supported by pictures."
+  },
+  {
+    "shortId": "L33.1",
+    "nodeId": "english.gse.skill.young.listening.33.can-recognise-simple-phrases-related-to",
+    "gse": 33,
+    "skill": "Listening",
+    "text": "Can recognise simple phrases related to familiar topics in slow, clear speech."
+  },
+  {
+    "shortId": "L33.2",
+    "nodeId": "english.gse.skill.young.listening.33.can-identify-basic-factual-information-i",
+    "gse": 33,
+    "skill": "Listening",
+    "text": "Can identify basic factual information in short, simple dialogues or stories on familiar everyday topics, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "L33.3",
+    "nodeId": "english.gse.skill.young.listening.33.can-understand-the-main-information-in-s",
+    "gse": 33,
+    "skill": "Listening",
+    "text": "Can understand the main information in short, simple dialogues about someone’s hobbies and interests, if spoken slowly and clearly and supported by pictures."
+  },
+  {
+    "shortId": "L33.4",
+    "nodeId": "english.gse.skill.young.listening.33.can-identify-key-information-eg-day-date",
+    "gse": 33,
+    "skill": "Listening",
+    "text": "Can identify key information (e.g. ‘day’, ‘date’, ‘location’) in short announcements about events, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "R33.1",
+    "nodeId": "english.gse.skill.young.reading.33.can-understand-key-information-about-tim",
+    "gse": 33,
+    "skill": "Reading",
+    "text": "Can understand key information about time and place in short, simple messages from family or friends."
+  },
+  {
+    "shortId": "R33.2",
+    "nodeId": "english.gse.skill.young.reading.33.can-identify-key-information-in-short-si",
+    "gse": 33,
+    "skill": "Reading",
+    "text": "Can identify key information in short, simple factual texts from the headings and illustrations."
+  },
+  {
+    "shortId": "R33.3",
+    "nodeId": "english.gse.skill.young.reading.33.can-get-the-gist-of-short-simple-texts-o",
+    "gse": 33,
+    "skill": "Reading",
+    "text": "Can get the gist of short, simple texts on familiar topics, if supported by pictures."
+  },
+  {
+    "shortId": "R33.4",
+    "nodeId": "english.gse.skill.young.reading.33.can-identify-the-overall-theme-of-a-simp",
+    "gse": 33,
+    "skill": "Reading",
+    "text": "Can identify the overall theme of a simple illustrated story, if guided by questions or prompts."
+  },
+  {
+    "shortId": "R33.5",
+    "nodeId": "english.gse.skill.young.reading.33.can-follow-the-sequence-of-events-in-a-s",
+    "gse": 33,
+    "skill": "Reading",
+    "text": "Can follow the sequence of events in a short text on a familiar, everyday topic"
+  },
+  {
+    "shortId": "R33.6",
+    "nodeId": "english.gse.skill.young.reading.33.can-understand-a-key-to-locate-buildings",
+    "gse": 33,
+    "skill": "Reading",
+    "text": "Can understand a key to locate buildings or simple features on a map."
+  },
+  {
+    "shortId": "L34.1",
+    "nodeId": "english.gse.skill.young.listening.34.can-get-the-gist-of-a-short-weather-fore",
+    "gse": 34,
+    "skill": "Listening",
+    "text": "Can get the gist of a short weather forecast, if delivered slowly and clearly and supported by pictures."
+  },
+  {
+    "shortId": "L34.2",
+    "nodeId": "english.gse.skill.young.listening.34.can-identify-specific-information-in-sho",
+    "gse": 34,
+    "skill": "Listening",
+    "text": "Can identify specific information in short, simple dialogues, if there is some repetition and rephrasing."
+  },
+  {
+    "shortId": "L34.3",
+    "nodeId": "english.gse.skill.young.listening.34.can-recognise-the-use-of-simple-linking",
+    "gse": 34,
+    "skill": "Listening",
+    "text": "Can recognise the use of simple linking words e.g. ‘and’, ‘so’, or ‘but’ to connect ideas in a short phrase or sentence."
+  },
+  {
+    "shortId": "L34.4",
+    "nodeId": "english.gse.skill.young.listening.34.can-understand-excuses-if-expressed-in-s",
+    "gse": 34,
+    "skill": "Listening",
+    "text": "Can understand excuses if expressed in simple language."
+  },
+  {
+    "shortId": "L34.5",
+    "nodeId": "english.gse.skill.young.listening.34.can-understand-simple-directions-for-how",
+    "gse": 34,
+    "skill": "Listening",
+    "text": "Can understand simple directions for how to get somewhere on foot, if spoken slowly and clearly and using a map."
+  },
+  {
+    "shortId": "L34.6",
+    "nodeId": "english.gse.skill.young.listening.34.can-identify-key-information-in-short-co",
+    "gse": 34,
+    "skill": "Listening",
+    "text": "Can identify key information in short conversations on school-related topics e.g. ‘subjects’, ‘timetables’, ‘homework.’"
+  },
+  {
+    "shortId": "R34.1",
+    "nodeId": "english.gse.skill.young.reading.34.can-understand-some-simple-details-in-a",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can understand some simple details in a short text."
+  },
+  {
+    "shortId": "R34.10",
+    "nodeId": "english.gse.skill.young.reading.34.can-understand-safety-instructions-if-ex",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can understand safety instructions if expressed in simple language and supported by pictures."
+  },
+  {
+    "shortId": "R34.2",
+    "nodeId": "english.gse.skill.young.reading.34.can-understand-the-main-points-of-short",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can understand the main points of short, simple dialogues related to everyday situations, if guided by questions."
+  },
+  {
+    "shortId": "R34.3",
+    "nodeId": "english.gse.skill.young.reading.34.can-identify-key-information-in-short-si",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can identify key information in short, simple, factual texts."
+  },
+  {
+    "shortId": "R34.4",
+    "nodeId": "english.gse.skill.young.reading.34.can-recognise-the-use-of-simple-linking",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can recognise the use of simple linking words e.g. ‘and’, ‘so’, or ‘but’ to connect ideas in a short phrase or sentence."
+  },
+  {
+    "shortId": "R34.5",
+    "nodeId": "english.gse.skill.young.reading.34.can-understand-short-simple-notes-from-f",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can understand short, simple notes from family or friends communicating information of immediate relevance."
+  },
+  {
+    "shortId": "R34.6",
+    "nodeId": "english.gse.skill.young.reading.34.can-understand-basic-details-in-simple-i",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can understand basic details in simple informational texts (e.g. ‘brochures’, ‘leaflets’)."
+  },
+  {
+    "shortId": "R34.7",
+    "nodeId": "english.gse.skill.young.reading.34.can-understand-short-paragraphs-on-subje",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can understand short paragraphs on subjects of personal interest (e.g. ‘sports’, ‘music’, ‘travel’) if written using simple language and supported by pictures."
+  },
+  {
+    "shortId": "R34.8",
+    "nodeId": "english.gse.skill.young.reading.34.can-extract-specific-information-eg-fact",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can extract specific information (e.g. ‘facts and numbers’) from simple informational texts related to everyday life (e.g. ‘posters’, ‘leaflets’)."
+  },
+  {
+    "shortId": "R34.9",
+    "nodeId": "english.gse.skill.young.reading.34.can-use-a-simple-contents-page-to-locate",
+    "gse": 34,
+    "skill": "Reading",
+    "text": "Can use a simple contents page to locate information."
+  },
+  {
+    "shortId": "L35.1",
+    "nodeId": "english.gse.skill.young.listening.35.can-understand-the-main-information-in-s",
+    "gse": 35,
+    "skill": "Listening",
+    "text": "Can understand the main information in short, simple dialogues about familiar activities, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "L35.2",
+    "nodeId": "english.gse.skill.young.listening.35.can-identify-key-information-about-futur",
+    "gse": 35,
+    "skill": "Listening",
+    "text": "Can identify key information about future plans in short, simple dialogues."
+  },
+  {
+    "shortId": "L35.3",
+    "nodeId": "english.gse.skill.young.listening.35.can-understand-simple-comparisons-betwee",
+    "gse": 35,
+    "skill": "Listening",
+    "text": "Can understand simple comparisons between two places, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "L35.4",
+    "nodeId": "english.gse.skill.young.listening.35.can-identify-the-context-in-which-an-eve",
+    "gse": 35,
+    "skill": "Listening",
+    "text": "Can identify the context in which an everyday conversation is taking place."
+  },
+  {
+    "shortId": "L35.5",
+    "nodeId": "english.gse.skill.young.listening.35.can-identify-numbers-relating-to-height",
+    "gse": 35,
+    "skill": "Listening",
+    "text": "Can identify numbers relating to height, weight, length etc. in simple descriptions of objects, animals or buildings, if guided by questions."
+  },
+  {
+    "shortId": "L35.6",
+    "nodeId": "english.gse.skill.young.listening.35.can-identify-key-information-such-as-pri",
+    "gse": 35,
+    "skill": "Listening",
+    "text": "Can identify key information such as prices, times and dates in a short description, if supported by prompts or questions."
+  },
+  {
+    "shortId": "R35.1",
+    "nodeId": "english.gse.skill.young.reading.35.can-use-key-words-or-captions-to-find-in",
+    "gse": 35,
+    "skill": "Reading",
+    "text": "Can use key words or captions to find information in a simple text."
+  },
+  {
+    "shortId": "R35.2",
+    "nodeId": "english.gse.skill.young.reading.35.can-identify-specific-information-in-a-s",
+    "gse": 35,
+    "skill": "Reading",
+    "text": "Can identify specific information in a simple story, if guided by questions."
+  },
+  {
+    "shortId": "R35.3",
+    "nodeId": "english.gse.skill.young.reading.35.can-understand-the-main-ideas-in-simple",
+    "gse": 35,
+    "skill": "Reading",
+    "text": "Can understand the main ideas in simple informational texts, if supported by pictures."
+  },
+  {
+    "shortId": "R35.4",
+    "nodeId": "english.gse.skill.young.reading.35.can-understand-information-about-someone",
+    "gse": 35,
+    "skill": "Reading",
+    "text": "Can understand information about someone’s personal details in a simple paragraph or short text."
+  },
+  {
+    "shortId": "R35.5",
+    "nodeId": "english.gse.skill.young.reading.35.can-follow-simple-stories-with-basic-dia",
+    "gse": 35,
+    "skill": "Reading",
+    "text": "Can follow simple stories with basic dialogue and simple narrative."
+  },
+  {
+    "shortId": "R35.6",
+    "nodeId": "english.gse.skill.young.reading.35.can-identify-the-context-of-a-short-simp",
+    "gse": 35,
+    "skill": "Reading",
+    "text": "Can identify the context of a short, simple text related to familiar situations."
+  },
+  {
+    "shortId": "L36.1",
+    "nodeId": "english.gse.skill.young.listening.36.can-identify-the-main-points-in-short-ta",
+    "gse": 36,
+    "skill": "Listening",
+    "text": "Can identify the main points in short talks on familiar topics, if delivered slowly and clearly."
+  },
+  {
+    "shortId": "L36.2",
+    "nodeId": "english.gse.skill.young.listening.36.can-identify-activities-occurring-in-the",
+    "gse": 36,
+    "skill": "Listening",
+    "text": "Can identify activities occurring in the past in short, simple dialogues."
+  },
+  {
+    "shortId": "L36.3",
+    "nodeId": "english.gse.skill.young.listening.36.can-follow-the-sequence-of-events-in-a-s",
+    "gse": 36,
+    "skill": "Listening",
+    "text": "Can follow the sequence of events in a simple story or narrative, if told slowly and clearly."
+  },
+  {
+    "shortId": "L36.4",
+    "nodeId": "english.gse.skill.young.listening.36.can-understand-peoples-likes-in-informal",
+    "gse": 36,
+    "skill": "Listening",
+    "text": "Can understand people’s likes in informal conversations, if the speakers talk slowly and clearly."
+  },
+  {
+    "shortId": "L36.5",
+    "nodeId": "english.gse.skill.young.listening.36.can-identify-specific-information-in-sho",
+    "gse": 36,
+    "skill": "Listening",
+    "text": "Can identify specific information in short, simple dialogues in which speakers make arrangements to do something, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "L36.6",
+    "nodeId": "english.gse.skill.young.listening.36.can-identify-specific-information-about",
+    "gse": 36,
+    "skill": "Listening",
+    "text": "Can identify specific information about people’s personalities in short, simple dialogues, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "R36.1",
+    "nodeId": "english.gse.skill.young.reading.36.can-understand-the-main-themes-of-a-simp",
+    "gse": 36,
+    "skill": "Reading",
+    "text": "Can understand the main themes of a simplified story."
+  },
+  {
+    "shortId": "R36.2",
+    "nodeId": "english.gse.skill.young.reading.36.can-follow-a-simple-series-of-written-in",
+    "gse": 36,
+    "skill": "Reading",
+    "text": "Can follow a simple series of written instructions to carry out a task."
+  },
+  {
+    "shortId": "R36.3",
+    "nodeId": "english.gse.skill.young.reading.36.can-follow-instructions-and-feedback-in",
+    "gse": 36,
+    "skill": "Reading",
+    "text": "Can follow instructions and feedback in a computer game."
+  },
+  {
+    "shortId": "L37.1",
+    "nodeId": "english.gse.skill.young.listening.37.can-follow-multi-step-instructions-if-gi",
+    "gse": 37,
+    "skill": "Listening",
+    "text": "Can follow multi-step instructions if given slowly and clearly."
+  },
+  {
+    "shortId": "L37.2",
+    "nodeId": "english.gse.skill.young.listening.37.can-understand-most-of-the-concrete-deta",
+    "gse": 37,
+    "skill": "Listening",
+    "text": "Can understand most of the concrete details in informal conversations on familiar everyday topics, if the speakers talk slowly and clearly."
+  },
+  {
+    "shortId": "L37.3",
+    "nodeId": "english.gse.skill.young.listening.37.can-recognise-simple-expressions-of-agre",
+    "gse": 37,
+    "skill": "Listening",
+    "text": "Can recognise simple expressions of agreement and disagreement in short, informal discussions, if the speakers talk slowly and clearly."
+  },
+  {
+    "shortId": "L37.4",
+    "nodeId": "english.gse.skill.young.listening.37.can-understand-simple-directions-on-how",
+    "gse": 37,
+    "skill": "Listening",
+    "text": "Can understand simple directions on how to get somewhere by public transport, with reference to a map."
+  },
+  {
+    "shortId": "R37.1",
+    "nodeId": "english.gse.skill.young.reading.37.can-understand-the-main-information-in-b",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can understand the main information in basic diagrams related to familiar topics."
+  },
+  {
+    "shortId": "R37.10",
+    "nodeId": "english.gse.skill.young.reading.37.can-understand-the-meaning-of-short-text",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can understand the meaning of short texts using information they already know."
+  },
+  {
+    "shortId": "R37.2",
+    "nodeId": "english.gse.skill.young.reading.37.can-understand-the-correct-sequence-of-e",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can understand the correct sequence of events in a simple story or dialogue."
+  },
+  {
+    "shortId": "R37.3",
+    "nodeId": "english.gse.skill.young.reading.37.can-guess-the-meaning-of-unfamiliar-word",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can guess the meaning of unfamiliar words in short, simple stories, if supported by pictures."
+  },
+  {
+    "shortId": "R37.4",
+    "nodeId": "english.gse.skill.young.reading.37.can-identify-basic-similarities-and-diff",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can identify basic similarities and differences in the facts between two short simple texts on the same familiar topic, if supported by pictures and questions."
+  },
+  {
+    "shortId": "R37.5",
+    "nodeId": "english.gse.skill.young.reading.37.can-recognise-the-use-of-simple-linking",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can recognise the use of simple linking words to connect ideas in short paragraphs."
+  },
+  {
+    "shortId": "R37.6",
+    "nodeId": "english.gse.skill.young.reading.37.can-identify-specific-information-relate",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can identify specific information related to a familiar topic in a short, simple text."
+  },
+  {
+    "shortId": "R37.7",
+    "nodeId": "english.gse.skill.young.reading.37.can-identify-basic-biographical-informat",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can identify basic biographical information in short simple texts about other people."
+  },
+  {
+    "shortId": "R37.8",
+    "nodeId": "english.gse.skill.young.reading.37.can-find-the-correct-meaning-of-a-word-i",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can find the correct meaning of a word in a bilingual dictionary."
+  },
+  {
+    "shortId": "R37.9",
+    "nodeId": "english.gse.skill.young.reading.37.can-understand-likes-and-preferences-in",
+    "gse": 37,
+    "skill": "Reading",
+    "text": "Can understand likes and preferences in short, simple personal texts (e.g. ‘diary entries’ or ‘emails’)."
+  },
+  {
+    "shortId": "L38.1",
+    "nodeId": "english.gse.skill.young.listening.38.can-identify-key-details-eg-name-number",
+    "gse": 38,
+    "skill": "Listening",
+    "text": "Can identify key details (e.g. ‘name’, ‘number’) in factual talks on familiar topics, if spoken slowly and clearly."
+  },
+  {
+    "shortId": "L38.2",
+    "nodeId": "english.gse.skill.young.listening.38.can-identify-key-information-in-a-short",
+    "gse": 38,
+    "skill": "Listening",
+    "text": "Can identify key information in a short passage or description, if supported by prompts or questions."
+  },
+  {
+    "shortId": "L38.3",
+    "nodeId": "english.gse.skill.young.listening.38.can-understand-peoples-preferences-in-in",
+    "gse": 38,
+    "skill": "Listening",
+    "text": "Can understand people’s preferences in informal conversations, if the speakers talk slowly and clearly."
+  },
+  {
+    "shortId": "L38.4",
+    "nodeId": "english.gse.skill.young.listening.38.can-identify-the-key-information-in-shor",
+    "gse": 38,
+    "skill": "Listening",
+    "text": "Can identify the key information in short, simple recorded phone messages related to everyday situations (e.g. ‘what’s on at the cinema’)."
+  },
+  {
+    "shortId": "L38.5",
+    "nodeId": "english.gse.skill.young.listening.38.can-understand-specific-information-in-a",
+    "gse": 38,
+    "skill": "Listening",
+    "text": "Can understand specific information in a short, simple phone call."
+  },
+  {
+    "shortId": "R38.1",
+    "nodeId": "english.gse.skill.young.reading.38.can-find-appropriate-words-or-phrases-to",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can find appropriate words or phrases to describe a picture."
+  },
+  {
+    "shortId": "R38.10",
+    "nodeId": "english.gse.skill.young.reading.38.can-recognise-basic-fixed-expressions-us",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can recognise basic fixed expressions used to start or end an email."
+  },
+  {
+    "shortId": "R38.11",
+    "nodeId": "english.gse.skill.young.reading.38.can-follow-simple-recipes-if-supported-b",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can follow simple recipes, if supported by pictures."
+  },
+  {
+    "shortId": "R38.12",
+    "nodeId": "english.gse.skill.young.reading.38.can-understand-the-main-ideas-in-short-s",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can understand the main ideas in short, simple stories on familiar topics."
+  },
+  {
+    "shortId": "R38.13",
+    "nodeId": "english.gse.skill.young.reading.38.can-follow-basic-instructions-in-order-t",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can follow basic instructions in order to complete a simple shared online task, provided they can ask for help when necessary."
+  },
+  {
+    "shortId": "R38.2",
+    "nodeId": "english.gse.skill.young.reading.38.can-identify-words-and-phrases-from-diff",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can identify words and phrases from different places in a simple text to support their answers."
+  },
+  {
+    "shortId": "R38.3",
+    "nodeId": "english.gse.skill.young.reading.38.can-understand-a-simple-text-about-a-pas",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can understand a simple text about a past event."
+  },
+  {
+    "shortId": "R38.4",
+    "nodeId": "english.gse.skill.young.reading.38.can-identify-which-people-or-objects-are",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can identify which people or objects are being referred to in a text."
+  },
+  {
+    "shortId": "R38.5",
+    "nodeId": "english.gse.skill.young.reading.38.can-recognise-familiar-words-in-unfamili",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can recognise familiar words in unfamiliar contexts in descriptive texts and stories."
+  },
+  {
+    "shortId": "R38.6",
+    "nodeId": "english.gse.skill.young.reading.38.can-understand-simple-details-in-short-a",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can understand simple details in short animal factfiles containing some unfamiliar language, if supported by pictures."
+  },
+  {
+    "shortId": "R38.7",
+    "nodeId": "english.gse.skill.young.reading.38.can-recognise-the-use-of-because-to-sign",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can recognise the use of ‘because’ to signal the relationship between an action and a reason or explanation."
+  },
+  {
+    "shortId": "R38.8",
+    "nodeId": "english.gse.skill.young.reading.38.can-identify-the-main-topic-of-a-simple",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can identify the main topic of a simple structured text."
+  },
+  {
+    "shortId": "R38.9",
+    "nodeId": "english.gse.skill.young.reading.38.can-identify-key-parts-of-simple-stories",
+    "gse": 38,
+    "skill": "Reading",
+    "text": "Can identify key parts of simple stories (e.g. ‘beginning’, ‘middle’, ‘end’)."
+  },
+  {
+    "shortId": "L39.1",
+    "nodeId": "english.gse.skill.young.listening.39.can-understand-the-main-idea-of-a-simple",
+    "gse": 39,
+    "skill": "Listening",
+    "text": "Can understand the main idea of a simple news story, with visual support."
+  },
+  {
+    "shortId": "L39.2",
+    "nodeId": "english.gse.skill.young.listening.39.can-extract-factual-information-from-sho",
+    "gse": 39,
+    "skill": "Listening",
+    "text": "Can extract factual information from short, simple dialogues or stories about past events if spoken slowly and clearly and guided by questions or prompts."
+  },
+  {
+    "shortId": "L39.3",
+    "nodeId": "english.gse.skill.young.listening.39.can-make-basic-inferences-about-simple-i",
+    "gse": 39,
+    "skill": "Listening",
+    "text": "Can make basic inferences about simple information in a short conversation or passage."
+  },
+  {
+    "shortId": "L39.4",
+    "nodeId": "english.gse.skill.young.listening.39.can-understand-a-limited-range-of-basic",
+    "gse": 39,
+    "skill": "Listening",
+    "text": "Can understand a limited range of basic language related to common symptoms and illnesses."
+  },
+  {
+    "shortId": "L39.5",
+    "nodeId": "english.gse.skill.young.listening.39.can-understand-the-meaning-of-short-conv",
+    "gse": 39,
+    "skill": "Listening",
+    "text": "Can understand the meaning of short conversations or passages using information they already know."
+  },
+  {
+    "shortId": "L39.6",
+    "nodeId": "english.gse.skill.young.listening.39.can-recognise-simple-examples-used-to-su",
+    "gse": 39,
+    "skill": "Listening",
+    "text": "Can recognise simple examples used to support the speaker’s points in short talks on familiar topics, if clearly introduced by linking words/phrases."
+  },
+  {
+    "shortId": "R39.1",
+    "nodeId": "english.gse.skill.young.reading.39.can-understand-short-school-related-mess",
+    "gse": 39,
+    "skill": "Reading",
+    "text": "Can understand short school-related messages in emails, text messages and social media postings."
+  },
+  {
+    "shortId": "R39.2",
+    "nodeId": "english.gse.skill.young.reading.39.can-predict-what-a-short-simple-text-is",
+    "gse": 39,
+    "skill": "Reading",
+    "text": "Can predict what a short, simple text is about from the title, a picture etc., if guided by questions or prompts."
+  },
+  {
+    "shortId": "R39.3",
+    "nodeId": "english.gse.skill.young.reading.39.can-understand-the-main-points-in-simple",
+    "gse": 39,
+    "skill": "Reading",
+    "text": "Can understand the main points in simple descriptive texts on familiar topics."
+  },
+  {
+    "shortId": "R39.4",
+    "nodeId": "english.gse.skill.young.reading.39.can-recognise-the-use-of-because-to-sign",
+    "gse": 39,
+    "skill": "Reading",
+    "text": "Can recognise the use of ‘because’ to signal the relationship between an opinion and a reason."
+  },
+  {
+    "shortId": "R39.5",
+    "nodeId": "english.gse.skill.young.reading.39.can-recognise-different-phrases-used-for",
+    "gse": 39,
+    "skill": "Reading",
+    "text": "Can recognise different phrases used for a similar purpose (e.g. ‘Let’s’ / ‘Shall we’) to make a suggestion."
+  },
+  {
+    "shortId": "R39.6",
+    "nodeId": "english.gse.skill.young.reading.39.can-find-specific-information-about-typi",
+    "gse": 39,
+    "skill": "Reading",
+    "text": "Can find specific information about typical free-time activities for young people in simple illustrated information leaflets."
+  },
+  {
+    "shortId": "R39.7",
+    "nodeId": "english.gse.skill.young.reading.39.can-extract-specific-information-in-shor",
+    "gse": 39,
+    "skill": "Reading",
+    "text": "Can extract specific information in short texts on familiar topics."
+  },
+  {
+    "shortId": "R40.1",
+    "nodeId": "english.gse.skill.young.reading.40.can-make-simple-inferences-about-a-chara",
+    "gse": 40,
+    "skill": "Reading",
+    "text": "Can make simple inferences about a character’s feelings in a familiar story, if supported by questions or prompts."
+  },
+  {
+    "shortId": "R40.2",
+    "nodeId": "english.gse.skill.young.reading.40.can-recognise-some-basic-features-of-sho",
+    "gse": 40,
+    "skill": "Reading",
+    "text": "Can recognise some basic features of short non-fiction texts (e.g. ‘a heading’)."
+  },
+  {
+    "shortId": "R40.3",
+    "nodeId": "english.gse.skill.young.reading.40.can-guess-the-meaning-of-a-new-word-from",
+    "gse": 40,
+    "skill": "Reading",
+    "text": "Can guess the meaning of a new word from knowledge of part of it (e.g. ‘children’/ ‘child’, ‘your/you’, ‘going/go’)."
+  },
+  {
+    "shortId": "R40.4",
+    "nodeId": "english.gse.skill.young.reading.40.can-recognise-most-frequent-everyday-wor",
+    "gse": 40,
+    "skill": "Reading",
+    "text": "Can recognise most frequent everyday words, including those with regular prefixes and suffixes."
+  },
+  {
+    "shortId": "R40.5",
+    "nodeId": "english.gse.skill.young.reading.40.can-make-basic-inferences-from-simple-in",
+    "gse": 40,
+    "skill": "Reading",
+    "text": "Can make basic inferences from simple information in a short text."
+  },
+  {
+    "shortId": "R40.6",
+    "nodeId": "english.gse.skill.young.reading.40.can-understand-short-simple-texts-giving",
+    "gse": 40,
+    "skill": "Reading",
+    "text": "Can understand short, simple texts giving information about important places in a town, with the support of a map."
+  },
+  {
+    "shortId": "R40.7",
+    "nodeId": "english.gse.skill.young.reading.40.can-understand-who-a-simple-text-was-wri",
+    "gse": 40,
+    "skill": "Reading",
+    "text": "Can understand who a simple text was written for."
+  },
+  {
+    "shortId": "R40.8",
+    "nodeId": "english.gse.skill.young.reading.40.can-extract-factual-details-from-a-simpl",
+    "gse": 40,
+    "skill": "Reading",
+    "text": "Can extract factual details from a simple text."
+  },
+  {
+    "shortId": "R40.9",
+    "nodeId": "english.gse.skill.young.reading.40.can-extract-key-information-from-adverti",
+    "gse": 40,
+    "skill": "Reading",
+    "text": "Can extract key information from advertisements for familiar products, if guided by questions or prompts."
+  },
+  {
+    "shortId": "L41.1",
+    "nodeId": "english.gse.skill.young.listening.41.can-follow-detailed-instructions-to-comp",
+    "gse": 41,
+    "skill": "Listening",
+    "text": "Can follow detailed instructions to complete familiar tasks."
+  },
+  {
+    "shortId": "L41.2",
+    "nodeId": "english.gse.skill.young.listening.41.can-get-the-gist-of-authentic-recorded-m",
+    "gse": 41,
+    "skill": "Listening",
+    "text": "Can get the gist of authentic recorded material on topics of personal interest, if delivered in clear standard speech."
+  },
+  {
+    "shortId": "L41.3",
+    "nodeId": "english.gse.skill.young.listening.41.can-identify-simple-information-in-a-sho",
+    "gse": 41,
+    "skill": "Listening",
+    "text": "Can identify simple information in a short conversation or passage that isn’t explicitly stated."
+  },
+  {
+    "shortId": "L41.4",
+    "nodeId": "english.gse.skill.young.listening.41.can-understand-differences-between-the-i",
+    "gse": 41,
+    "skill": "Listening",
+    "text": "Can understand differences between the information given in short conversations or passages on similar topics."
+  },
+  {
+    "shortId": "L41.5",
+    "nodeId": "english.gse.skill.young.listening.41.can-understand-similarities-between-the",
+    "gse": 41,
+    "skill": "Listening",
+    "text": "Can understand similarities between the information given in short conversations or passages on similar topics."
+  },
+  {
+    "shortId": "R41.1",
+    "nodeId": "english.gse.skill.young.reading.41.can-understand-basic-opinions-related-to",
+    "gse": 41,
+    "skill": "Reading",
+    "text": "Can understand basic opinions related to familiar topics, expressed in simple language."
+  },
+  {
+    "shortId": "R41.2",
+    "nodeId": "english.gse.skill.young.reading.41.can-get-the-gist-of-short-factual-school",
+    "gse": 41,
+    "skill": "Reading",
+    "text": "Can get the gist of short factual school texts."
+  },
+  {
+    "shortId": "R41.3",
+    "nodeId": "english.gse.skill.young.reading.41.can-understand-the-order-in-which-events",
+    "gse": 41,
+    "skill": "Reading",
+    "text": "Can understand the order in which events happen (e.g. ‘in diary entries’ or ‘a story’)."
+  },
+  {
+    "shortId": "R41.4",
+    "nodeId": "english.gse.skill.young.reading.41.can-scan-a-simple-text-to-find-specific",
+    "gse": 41,
+    "skill": "Reading",
+    "text": "Can scan a simple text to find specific information."
+  },
+  {
+    "shortId": "R41.5",
+    "nodeId": "english.gse.skill.young.reading.41.can-identify-main-paragraph-topics-in-si",
+    "gse": 41,
+    "skill": "Reading",
+    "text": "Can identify main paragraph topics in simple texts on familiar subjects, if supported by prompts or questions."
+  },
+  {
+    "shortId": "L42.1",
+    "nodeId": "english.gse.skill.young.listening.42.can-guess-the-meaning-of-new-words-from",
+    "gse": 42,
+    "skill": "Listening",
+    "text": "Can guess the meaning of new words from a familiar vocabulary set by relating them to known words in the same set."
+  },
+  {
+    "shortId": "L42.2",
+    "nodeId": "english.gse.skill.young.listening.42.can-understand-some-details-in-longer-di",
+    "gse": 42,
+    "skill": "Listening",
+    "text": "Can understand some details in longer dialogues on familiar everyday topics, if guided by questions or prompts."
+  },
+  {
+    "shortId": "L42.3",
+    "nodeId": "english.gse.skill.young.listening.42.can-identify-basic-biographical-informat",
+    "gse": 42,
+    "skill": "Listening",
+    "text": "Can identify basic biographical information in short simple talks about famous people from the past, if delivered slowly and clearly."
+  },
+  {
+    "shortId": "L42.4",
+    "nodeId": "english.gse.skill.young.listening.42.can-understand-simple-conversations-abou",
+    "gse": 42,
+    "skill": "Listening",
+    "text": "Can understand simple conversations about things that have happened in the past."
+  },
+  {
+    "shortId": "L42.5",
+    "nodeId": "english.gse.skill.young.listening.42.can-identify-ideas-that-are-connected-in",
+    "gse": 42,
+    "skill": "Listening",
+    "text": "Can identify ideas that are connected in a short conversation or passage."
+  },
+  {
+    "shortId": "L42.6",
+    "nodeId": "english.gse.skill.young.listening.42.can-guess-the-meaning-of-simple-unknown",
+    "gse": 42,
+    "skill": "Listening",
+    "text": "Can guess the meaning of simple, unknown words in short dialogues on familiar topics."
+  },
+  {
+    "shortId": "R42.1",
+    "nodeId": "english.gse.skill.young.reading.42.can-identify-a-point-of-view-in-a-short",
+    "gse": 42,
+    "skill": "Reading",
+    "text": "Can identify a point of view in a short, simple narrative text."
+  },
+  {
+    "shortId": "R42.2",
+    "nodeId": "english.gse.skill.young.reading.42.can-read-a-short-text-and-predict-what-t",
+    "gse": 42,
+    "skill": "Reading",
+    "text": "Can read a short text and predict what they think will happen next."
+  },
+  {
+    "shortId": "R42.3",
+    "nodeId": "english.gse.skill.young.reading.42.can-follow-the-sequence-of-events-in-sim",
+    "gse": 42,
+    "skill": "Reading",
+    "text": "Can follow the sequence of events in simple narrative texts by recognising common linking words/ phrases."
+  },
+  {
+    "shortId": "R42.4",
+    "nodeId": "english.gse.skill.young.reading.42.can-identify-key-vocabulary-and-expressi",
+    "gse": 42,
+    "skill": "Reading",
+    "text": "Can identify key vocabulary and expressions in unfamiliar texts related to school subjects."
+  },
+  {
+    "shortId": "R42.5",
+    "nodeId": "english.gse.skill.young.reading.42.can-identify-the-parts-of-some-short-non",
+    "gse": 42,
+    "skill": "Reading",
+    "text": "Can identify the parts of some short, non-fictional text types (e.g. ‘notes’, ‘captions’, ‘blogs’, ‘instructions’)."
+  },
+  {
+    "shortId": "R42.6",
+    "nodeId": "english.gse.skill.young.reading.42.can-identify-the-differences-between-two",
+    "gse": 42,
+    "skill": "Reading",
+    "text": "Can identify the differences between two similar versions of a text, if guided by questions."
   }
 ];

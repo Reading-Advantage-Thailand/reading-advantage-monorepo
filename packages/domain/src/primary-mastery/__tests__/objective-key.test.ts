@@ -4,8 +4,8 @@ import { objectiveKeyEntrySchema } from "../contracts.js";
 import { objectiveKeyById, resolveObjective } from "../objective-key.js";
 
 describe("objective key (FR-1)", () => {
-  it("holds the 138 Workbooks objectives, each a valid entry with a young-learner GSE node", () => {
-    expect(OBJECTIVE_KEY).toHaveLength(138);
+  it("holds the 300 Workbooks objectives (A0, A1, A2), each a valid entry with a young-learner GSE node", () => {
+    expect(OBJECTIVE_KEY).toHaveLength(300);
     for (const entry of OBJECTIVE_KEY) {
       expect(() => objectiveKeyEntrySchema.parse(entry)).not.toThrow();
       expect(entry.nodeId).toMatch(/^english\.gse\.skill\.young\.(reading|listening)\.\d+\./);
@@ -30,7 +30,7 @@ describe("objective key (FR-1)", () => {
       skill: "Reading",
     });
     expect(() => resolveObjective("R99.9")).toThrow(/R99\.9/);
-    expect(objectiveKeyById().size).toBe(138);
+    expect(objectiveKeyById().size).toBe(300);
   });
 
   it("names the graph releases the tags were authored against", () => {
