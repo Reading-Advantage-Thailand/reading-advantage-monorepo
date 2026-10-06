@@ -17,8 +17,8 @@ vi.mock("@/i18n/navigation", () => ({
 }));
 
 vi.mock("@reading-advantage/advantage-play-kit-3d/react", () => ({
-  StoryGameHost: ({ input, cartridge }: { input: { id: string; vocabulary: unknown[] }; cartridge: { manifest: { id: string } } }) => (
-    <div data-testid="host" data-input={input.id} data-words={input.vocabulary.length} data-game={cartridge.manifest.id} />
+  StoryGameHost: ({ input, cartridge, avatar }: { input: { id: string; vocabulary: unknown[] }; cartridge: { manifest: { id: string } }; avatar?: { classId: string } | null }) => (
+    <div data-testid="host" data-input={input.id} data-words={input.vocabulary.length} data-game={cartridge.manifest.id} data-avatar={avatar ? avatar.classId : "none"} />
   ),
 }));
 
@@ -70,9 +70,10 @@ describe("practiceLocaleOf", () => {
 });
 
 describe("StoryGamesClient", () => {
-  it("loads the saved items, then plays an open game with them", async () => {
+  it("loads the saved items, then plays an open game with them and the student's avatar", async () => {
     const fetchMock = stubPractice(practice(10, 8));
-    render(<StoryGamesClient />);
+    const avatar = { catalogVersion: "1.0.0", classId: "knight", tints: { skin: "fair", hair: "brown", eyes: "blue", cloth: "sky" }, pieces: [] };
+    render(<StoryGamesClient avatar={avatar as never} />);
     expect(await screen.findByText(/^saved /)).toHaveTextContent('saved {"words":10,"sentences":8}');
     expect(fetchMock).toHaveBeenCalledWith("/api/v1/apk/practice?locale=th");
     fireEvent.click(screen.getAllByRole("button").find((b) => b.textContent?.includes("Rune Match"))!);
@@ -80,6 +81,15 @@ describe("StoryGamesClient", () => {
     expect(host).toHaveAttribute("data-input", "saved");
     expect(host).toHaveAttribute("data-words", "10");
     expect(host).toHaveAttribute("data-game", "rune-match");
+    expect(host).toHaveAttribute("data-avatar", "knight");
+  });
+
+  it("plays with no avatar when the student has none, so the game keeps its hero", async () => {
+    stubPractice(practice(10, 8));
+    render(<StoryGamesClient />);
+    await screen.findByText(/^saved /);
+    fireEvent.click(screen.getAllByRole("button").find((b) => b.textContent?.includes("Rune Match"))!);
+    expect(await screen.findByTestId("host")).toHaveAttribute("data-avatar", "none");
   });
 
   it("locks a game without enough saved items and links to the reading page", async () => {

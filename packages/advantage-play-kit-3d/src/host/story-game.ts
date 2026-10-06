@@ -23,7 +23,9 @@ import {
   type PracticeInput,
   type StoryGameEvidence,
 } from '../contracts/index.js';
+import type { LaunchAvatar } from '../contracts/avatar.js';
 import { checkDevice } from '../device/gate.js';
+import type { SessionOptions } from '../factory/types.js';
 import {
   createCartridgeMounter,
   createPhaserGameFactory,
@@ -67,6 +69,8 @@ export interface StoryGameOptions {
   helper?: boolean;
   /** Hero id to the color preset the student unlocked. */
   looks?: Readonly<Record<string, string>>;
+  /** The student's avatar (docs/avatar-system.md, section 11); null or absent means the `hero`. The host passes it, a game never fetches it. */
+  avatar?: LaunchAvatar | null;
   /** The host's own catalog (briefing, results, gate text) and any extra catalogs. */
   catalogs: readonly Catalog[];
   /** Skip the briefing and start at once. */
@@ -84,6 +88,11 @@ export interface StoryGameSession {
 }
 
 const randomSeed = (): number => (Math.random() * 0x7fffffff) >>> 0;
+
+/** The session options a game receives: helper mode, the hero, the looks, and the avatar when the student has one. */
+export function sessionOptionsOf(options: Pick<StoryGameOptions, 'helper' | 'hero' | 'looks' | 'avatar'>): SessionOptions {
+  return { helper: options.helper ?? false, hero: options.hero ?? 'knight', looks: { ...(options.looks ?? {}) }, ...(options.avatar ? { avatar: options.avatar } : {}) };
+}
 
 async function edition2dOf(assetBase: string, cartridge: Cartridge): Promise<RuntimeEdition> {
   const res = await fetch(`${assetBase}${spritePackRoot(PACK_2D).slice(1)}/pack.json`);
@@ -180,7 +189,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
         composition: composition(),
         i18n: i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!),
         audio,
-        options: { helper: options.helper ?? false, hero: options.hero ?? 'knight', looks: { ...(options.looks ?? {}) } },
+        options: sessionOptionsOf(options),
         host: {
           toggleMute: () => {
             audio.setMuted(!audio.muted);

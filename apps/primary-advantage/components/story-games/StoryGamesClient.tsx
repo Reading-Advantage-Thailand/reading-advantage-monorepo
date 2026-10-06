@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import {
   parsePracticeInput,
   type GameResults,
+  type LaunchAvatar,
   type PracticeInput,
   type StoryGameEvidence,
 } from "@reading-advantage/game-contracts";
@@ -38,7 +39,11 @@ const isOpen = (card: GameCard): boolean => card.missing.vocabulary === 0 && car
  * from reading, chosen by the server in FSRS order. A game without enough saved items is locked
  * and links to the reading page. A finished run is saved through the catalog completion route.
  */
-export function StoryGamesClient() {
+/**
+ * The word adventures list and player.
+ * @param props The student's avatar from the server (null when the student has none); the host passes it to every game.
+ */
+export function StoryGamesClient({ avatar = null }: { avatar?: LaunchAvatar | null }) {
   const t = useTranslations("StoryGames");
   const locale = useLocale();
   const [input, setInput] = useState<PracticeInput | null>(null);
@@ -100,6 +105,7 @@ export function StoryGamesClient() {
           icon={playing.game.icon}
           assetBase="/"
           helper={false}
+          avatar={avatar}
           setting={flat ? "phaser" : "auto"}
           catalogs={[hostStrings]}
           className="h-full w-full"
