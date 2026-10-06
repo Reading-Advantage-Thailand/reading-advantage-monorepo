@@ -18,18 +18,18 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [x] Task: Tags export contract (93e26e6, same commit)
     - [x] Zod contracts `tagsExportSchema`, `tagsEntrySchema` with the header and the unknown-short-id refinement (FR-2)
     - [x] Export the contracts from `packages/domain/src/primary-mastery/index.ts`
-- [~] Task: Tables and migration
-    - [ ] `packages/db/src/schema/primary-mastery.ts`: the three tables with FKs, unique indexes, and JSDoc (FR-3)
-    - [ ] Register the three tables `EXEMPT` in `packages/domain/src/tenant-registry.ts`
-    - [ ] `drizzle-kit generate` -> `0070_primary_objective_tags`; review the SQL; add it to `MIGRATION_LEDGER.md`; bump `--required-migration` in `apps/primary-advantage/cloudbuild.yaml`
-    - [ ] Package schema: `tags` parsed with the `TagsSchema` shape in `package-schema.ts` (FR-4)
+- [x] Task: Tables and migration (0165c27; the ledger file is a design note with no per-migration list, so no entry; `journal-integrity` also fails for the lane-f migrations 0068 and 0069, which have no sentinel probe: owner of that fix is lane-f)
+    - [x] `packages/db/src/schema/primary-mastery.ts`: the three tables with FKs, unique indexes, and JSDoc (FR-3)
+    - [x] Register the three tables `EXEMPT` in `packages/domain/src/tenant-registry.ts`
+    - [x] `drizzle-kit generate` -> `0070_primary_objective_tags`; review the SQL; add it to `MIGRATION_LEDGER.md`; bump `--required-migration` in `apps/primary-advantage/cloudbuild.yaml`
+    - [x] Package schema: `tags` parsed with the `TagsSchema` shape in `package-schema.ts` (FR-4)
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract and Schema Definition' (Protocol in workflow.md)
 
 ## Phase 2: Test
 - [ ] Task: Contract tests
     - [ ] `objective-key.test.ts`: every short id in the data resolves; an unknown id throws; the data file validates
     - [ ] `tags-export.test.ts`: a valid fixture parses; an unknown short id fails with the key and the id; `legacy: null` parses
-- [ ] Task: Importer tests (extend `primary-books/__tests__/import.test.ts`)
+- [~] Task: Importer tests (extend `primary-books/__tests__/import.test.ts`)
     - [ ] A tagged package writes article, question, and word link rows in the transaction
     - [ ] A reimport deletes the article's link rows before writing; one row per link after
     - [ ] A package without tags writes no link rows and reports `tagged: false`
