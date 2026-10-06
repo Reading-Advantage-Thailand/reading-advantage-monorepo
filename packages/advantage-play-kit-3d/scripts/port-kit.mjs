@@ -22,7 +22,7 @@ const from = join(forge, "src", "apk3d");
 const pkg = join(import.meta.dirname, "..", "src");
 
 /** Kit files the monorepo owns: the contract re-exports and the app host. */
-const MONOREPO_OWNED = ["contracts/story-input.ts", "contracts/evidence.ts", "contracts/index.ts", "contracts/story-compat.ts"];
+const MONOREPO_OWNED = ["contracts/story-input.ts", "contracts/evidence.ts", "contracts/index.ts", "contracts/story-compat.ts", "factory/renderer-setting.ts"];
 const MONOREPO_OWNED_DIRS = ["host/", "react/", "__tests__/"];
 const owned = (rel) => MONOREPO_OWNED.includes(rel) || MONOREPO_OWNED_DIRS.some((d) => rel.startsWith(d));
 
