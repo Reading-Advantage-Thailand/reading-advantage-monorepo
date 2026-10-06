@@ -67,4 +67,5 @@ file for `createTenantDB` or `unscoped`.
   - The track adds rows to `mastery_*` and `durable_jobs` and three optional keys to `user_activity.details`; Tutor's five reads (tutor_compat views) do not touch those tables, and the details keys are additive jsonb. Not run (no `--reference` legacy database locally, as in T1).
 - [x] Task: Update `measure/tracks.md`, this plan, `lessons-learned.md`, `tech-debt.md`, and the program status line; tell the advantage-pr session that the Q-UX-01 resolution is in code (policy file path and version)
   - 2026-10-06: done; the PR session was told (`evidence-policy.ts`, `primary-evidence.v1`). The monorepo session agreed to FR-5d (confidence 0.5, SAQ 1-5) and will cover the new detail keys in its next Primary verification run.
+  - 2026-10-06 later: merged into `primary-parity-integration` (146e46261, no conflicts) after the monorepo session's go-ahead; on the merge commit the domain primary-mastery and games suites, the Primary actions and apk route tests, and the app type check pass.
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs and Doctor' (Protocol in workflow.md)
