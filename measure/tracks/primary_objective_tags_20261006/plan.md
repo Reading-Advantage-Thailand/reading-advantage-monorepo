@@ -63,9 +63,14 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
 ## Phase 4: Generate Docs and Doctor
-- [ ] Task: Apply migration 0070 locally; run the db doctor with the new required migration
-- [ ] Task: Run the backfill against the local database with the Workbooks `tags.json` once it is committed (`--dry-run` first); save the coverage output as `coverage.md` in this track folder
-- [ ] Task: Run `measure/generate.sh` and `measure/doctor.sh`; `build-graph update ./graph.db` for the new and changed files
+- [x] Task: Apply migration 0070 locally; run the db doctor with the new required migration
+  - 2026-10-06: fresh database `primary_advantage_laneh`; `npx tsx scripts/migrate.ts` applied 0000-0070; `migration-ledger-doctor --check --required-migration 0070_primary_objective_tags` passed ("Required migration gate OK"). The shared `primary_advantage` database stops at 0069 and was left as is.
+- [x] Task: Run the backfill against the local database with the Workbooks `tags.json` once it is committed (`--dry-run` first); save the coverage output as `coverage.md` in this track folder
+  - 2026-10-06 against `primary_advantage_laneh` after `import-lesson-packages` on the nine Workbooks book folders (14 new tagged articles; 42 unmapped legacy packages; 180 bank packages skipped by design; 14 `origins-1` packages rejected, `o1` unknown to `BOOKS`). Export: Workbooks 6c84d1a, 250 packages. Dry run and real run agree: 14 articles matched, 236 not found, 280 of 280 questions matched by text, 0 unmatched, rows 436 article objectives, 316 question objectives, 277 word nodes; the table counts match. A second run replaced the same rows. `coverage.md` saved: 34 of 300 objectives targeted (14 articles only), 0 articles without tags, 0 glossary words without a node, 9 part-of-speech differences (`phrase` vs `phrasal-verb`, `number` vs `noun`, and the like).
+- [x] Task: Run `measure/generate.sh` and `measure/doctor.sh`; `build-graph update ./graph.db` for the new and changed files
+  - 2026-10-06: generate ok (architecture.json, routes.md). Doctor fails A13 only (stale `agents_md_audit_science_advantage_20260603` directory; same on integration). Graph updated for 16 files.
 - [ ] Task: Tutor read test green; record the result here
-- [ ] Task: Update `measure/tracks.md`, this plan, `lessons-learned.md`, and `tech-debt.md` (the 28 printed packages without vocabulary nodes if Workbooks does not tag them)
+  - Not run: `tutor-read-check` needs a `--reference` legacy database and none exists locally (same as the lesson importer track). The three link tables are new `primary_` tables; Tutor's five reads do not touch them. Run it in the rehearsal environment.
+- [x] Task: Update `measure/tracks.md`, this plan, `lessons-learned.md`, and `tech-debt.md` (the 28 printed packages without vocabulary nodes if Workbooks does not tag them)
+  - Workbooks tagged the vocabulary of every package (250 of 250 carry word nodes), so that item is closed. Tech-debt records the pre-existing db test failures, the `o1` book key, the `glossaryWord` request, and the rerun rule.
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs and Doctor' (Protocol in workflow.md)

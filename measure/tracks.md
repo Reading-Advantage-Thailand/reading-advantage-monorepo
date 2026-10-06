@@ -1154,4 +1154,4 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Port the dual-renderer story games into the monorepo and offer them in Primary Advantage.
 
 - [~] **Track: Primary Objective Tags (T1 of the Primary Mastery Graph Program)** (created 2026-10-06 after the owner approved the program decisions; branch `primary/lane-h-objective-tags`) *Link: [./tracks/primary_objective_tags_20261006/](./tracks/primary_objective_tags_20261006/)*
-  Objective key in code, three additive `primary_` link tables, the importer writes the links, a backfill from the Workbooks `tags.json` export, a coverage report, and read functions for the evidence pipeline.
+  Objective key in code, three additive `primary_` link tables, the importer writes the links, a backfill from the Workbooks `tags.json` export, a coverage report, and read functions for the evidence pipeline. 2026-10-06: rebased onto `primary-parity-integration` (migration `0070`); phases 0-4 implemented and verified on the local database; the owner's manual verification per phase is open.
