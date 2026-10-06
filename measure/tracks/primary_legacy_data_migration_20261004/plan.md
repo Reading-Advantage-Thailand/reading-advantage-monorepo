@@ -25,8 +25,9 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 - [x] Read-only `tutor_reader` login: `packages/db/scripts/tutor-reader-grants.sql` grants CONNECT, USAGE on `tutor_compat`, SELECT on the four views, and sets the search path on the role (owner decision 2026-10-04; real-database test)
 
 ## Phase 2: ETL (FR-3)
-- [ ] ETL script with `primary_legacy_id_map` writes and the reconciliation report
-- [ ] Run twice on the restored legacy copy; zero unexplained skips
+- [x] ETL script with `primary_legacy_id_map` writes and the reconciliation report (`packages/db/scripts/primary-legacy-import.ts`, library in `src/migrations-data/primary-legacy-import.ts`, `pnpm --filter @reading-advantage/db legacy-import`)
+- [x] Run twice on the restored legacy copy; zero unexplained skips (2026-10-06, April copy into `primary_etl_scratch`: identical counts on both runs; every skip has a reason, see [etl-run-20261006.md](./etl-run-20261006.md); the owner decisions it needs are listed there)
+- [ ] Run on the owner's copy of production (`primary_legacy_20261006`) with the `--roles` and `--teachers` answers, then into the cutover target
 
 ## Phase 3: Old article links (FR-4)
 - [ ] Legacy ID resolver and redirect on `student/read/[articleId]` and `/writing`
