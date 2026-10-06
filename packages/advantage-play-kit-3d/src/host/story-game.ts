@@ -15,6 +15,8 @@ import {
   spritePackRoot,
   validateEdition,
   type AssetPackManifest,
+  type Cartridge3DManifest,
+  type GameInput,
   type GameResults,
   type Catalog,
   type GameTerminalOutcome,
@@ -57,8 +59,13 @@ export interface StoryGameOptions {
   cartridge: Cartridge;
   /** The icon shown on the briefing. */
   icon?: string;
-  /** The items the game uses: the student's saved words and sentences, or a story's. */
-  input: PracticeInput;
+  /**
+   * The items the game uses: the student's saved words and sentences (or a story's), or the APK
+   * array of a class challenge's content (the manifest's `inputMode`).
+   */
+  input: PracticeInput | GameInput;
+  /** The run seed; absent: a new random seed per run. A class challenge passes the server's seed. */
+  seed?: number;
   /** URL prefix that serves `packs/` and `assets/apk/` (ends with a slash). */
   assetBase: string;
   /** `'phaser'` forces the 2D view; `'auto'` picks by device. Absent: the student's saved "2D mode
@@ -75,10 +82,17 @@ export interface StoryGameOptions {
   catalogs: readonly Catalog[];
   /** Skip the briefing and start at once. */
   skipBriefing?: boolean;
+  /** Offer "play again" on the results (default true). A class challenge run is one run. */
+  replay?: boolean;
   onComplete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence): void;
   onExit(): void;
   onDiagnostic?(event: unknown): void;
+  /** The screen the host shows: the app places its own panels (rewards, notices) around it. */
+  onPhase?(phase: StoryGamePhase): void;
 }
+
+/** The screens of a run, in order; "again" returns to playing. */
+export type StoryGamePhase = 'briefing' | 'playing' | 'results';
 
 export interface StoryGameSession {
   readonly diagnostics: readonly unknown[];
@@ -88,6 +102,10 @@ export interface StoryGameSession {
 }
 
 const randomSeed = (): number => (Math.random() * 0x7fffffff) >>> 0;
+
+/** The input id the results name: the practice or story input's own id, or the APK input's mode. */
+export const inputIdOf = (input: PracticeInput | GameInput, manifest: Pick<Cartridge3DManifest, 'inputMode'>): string =>
+  Array.isArray(input) ? manifest.inputMode : input.id;
 
 /** The session options a game receives: helper mode, the hero, the looks, and the avatar when the student has one. */
 export function sessionOptionsOf(options: Pick<StoryGameOptions, 'helper' | 'hero' | 'looks' | 'avatar'>): SessionOptions {
@@ -169,7 +187,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
       screen.classList.remove('on');
       gameEl.innerHTML = '';
       gameEl.classList.add('on');
-      const run = { game: cartridge.manifest.id, input: input.id };
+      const run = { game: cartridge.manifest.id, input: inputIdOf(input, cartridge.manifest) };
       if (pick.renderer === 'three') {
         const canvas = document.createElement('canvas');
         canvas.className = 'apk3d-canvas';
@@ -184,7 +202,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
         input,
         edition3d,
         ...(edition2d ? { edition2d, resolveUrl: (pack: AssetPackManifest, file: { path: string }) => `${assetBase}${pack.root.slice(1)}/${file.path}` } : {}),
-        seed: randomSeed(),
+        seed: options.seed ?? randomSeed(),
         sessionMode: 'playing',
         composition: composition(),
         i18n: i18n.scope(cartridge.manifest.briefingKey.split('.')[0]!),
@@ -200,13 +218,15 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
         complete: (result, outcome, evidence) => {
           options.onComplete(result, outcome, evidence);
           renderResults(screen, { ...run, result, evidence }, t);
-          screen.querySelector('[data-again]')?.addEventListener('click', () => void again());
+          if (options.replay === false) screen.querySelector('[data-again]')?.remove();
+          else screen.querySelector('[data-again]')?.addEventListener('click', () => void again());
           screen.querySelector('[data-done]')?.addEventListener('click', () => options.onExit());
-          void stopGame().then(show);
+          void stopGame().then(show).then(() => options.onPhase?.('results'));
         },
         diagnostic: report,
       });
       mounted.start();
+      options.onPhase?.('playing');
     } catch (err) {
       report({ level: 'error', code: 'apk3d/start-failed', message: String(err) });
       renderGate(screen, undefined, t);
@@ -237,6 +257,7 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
     screen.classList.add('on');
     screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());
     screen.querySelector('[data-start]')?.addEventListener('click', () => void start());
+    options.onPhase?.('briefing');
   };
 
   if (options.skipBriefing) void start();
