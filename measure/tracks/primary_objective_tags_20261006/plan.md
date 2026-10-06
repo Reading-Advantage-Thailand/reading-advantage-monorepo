@@ -12,13 +12,13 @@ setup: `pnpm install --offline --frozen-lockfile`, then build each dependency pa
 - [ ] Task: Confirm with the lane-m migration track whether `primary_legacy_id_map` will hold question ids at the cutover; record the answer here and pick the question join (FR-5)
 
 ## Phase 1: Contract and Schema Definition
-- [ ] Task: Objective key data and contract
-    - [ ] Copy `a0-objective-key.json` and `a1-objective-key.json` into `packages/domain/src/primary-mastery/data/objective-key.json` with `graphRelease` and optional title fields (FR-1)
-    - [ ] Zod contract `objectiveKeySchema` and `resolveObjective(shortId)` in `contracts.ts`
-- [ ] Task: Tags export contract
-    - [ ] Zod contracts `tagsExportSchema`, `tagsEntrySchema` with the header and the unknown-short-id refinement (FR-2)
-    - [ ] Export the contracts from `packages/domain/src/primary-mastery/index.ts`
-- [ ] Task: Tables and migration
+- [x] Task: Objective key data and contract (93e26e6)
+    - [x] Copy `a0-objective-key.json` and `a1-objective-key.json` into `packages/domain/src/primary-mastery/data/objective-key.json` with `graphRelease` and optional title fields (FR-1)
+    - [x] Zod contract `objectiveKeySchema` and `resolveObjective(shortId)` in `contracts.ts`
+- [x] Task: Tags export contract (93e26e6, same commit)
+    - [x] Zod contracts `tagsExportSchema`, `tagsEntrySchema` with the header and the unknown-short-id refinement (FR-2)
+    - [x] Export the contracts from `packages/domain/src/primary-mastery/index.ts`
+- [~] Task: Tables and migration
     - [ ] `packages/db/src/schema/primary-mastery.ts`: the three tables with FKs, unique indexes, and JSDoc (FR-3)
     - [ ] Register the three tables `EXEMPT` in `packages/domain/src/tenant-registry.ts`
     - [ ] `drizzle-kit generate` -> `0070_primary_objective_tags`; review the SQL; add it to `MIGRATION_LEDGER.md`; bump `--required-migration` in `apps/primary-advantage/cloudbuild.yaml`
