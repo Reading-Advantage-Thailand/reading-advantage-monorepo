@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { estimateWordTimes, legacyArticleIdOf, splitKey, toArticleRow, toFlashcardRow, toLessonPackageJson, toQuestionRows, toTagRows } from "../mapping.js";
+import { BOOKS, estimateWordTimes, legacyArticleIdOf, splitKey, toArticleRow, toFlashcardRow, toLessonPackageJson, toQuestionRows, toTagRows } from "../mapping.js";
 import { parseLessonPackage } from "../package-schema.js";
 import { isAppStepUnlocked, WORKBOOK_STEPS, workbookStepOf } from "../step-map.js";
 import { samplePackage } from "./fixtures.js";
@@ -7,6 +7,11 @@ import { samplePackage } from "./fixtures.js";
 const ID = "11111111-1111-4111-8111-111111111111";
 
 describe("lesson package mapping", () => {
+  it("knows every Workbooks book key, origins-1 included", () => {
+    expect(Object.keys(BOOKS).sort()).toEqual(["o1", "o2", "o3-1", "o3-2", "q4"]);
+    expect(BOOKS.o1).toEqual({ seriesKey: "origins", seriesName: "Primary Advantage Origins", name: "Primary Advantage Origins 1" });
+  });
+
   it("parses the sample package and splits its key", () => {
     const pkg = parseLessonPackage(samplePackage());
     expect(splitKey(pkg.meta.key)).toEqual({ bookKey: "o3-2", number: 1 });

@@ -93,6 +93,7 @@ Known hazards found on 2026-09-30:
 | `article` | Level labels: Origins 3.1 articles are at level 2; they belong at level 3 | Optional fix-up step: set `ra_level = 3`, `cefr_level = 'A0+'` for the 13 Origins 3.1 article IDs listed in `Workbooks/primary/origins-3.1-a0/*_workbook.json` |
 | `article` | The bucket names pictures and audio by the legacy id; the new row gets a UUID | D10: write the legacy id into `articles.image`; copy `audio_url` and the other storage paths unchanged; report an article whose `images/<legacyId>_1.png` is absent from the bucket |
 | All cuid-keyed tables | New `uuid` keys | D2; every foreign key is rewritten through `primary_legacy_id_map` |
+| `primary_legacy_id_map` | The lane-h backfill (`packages/domain/scripts/backfill-primary-tags.ts`) joins Workbooks `tags.json` by legacy id | Write `table_name` as `articles`, `multiple_choice_questions`, `short_answer_questions`, `long_answer_questions` with `legacy_id` = the Prisma cuid and `new_id` = the new uuid; the ETL source is the local snapshot `primary_legacy_20261006` for rehearsals (the April snapshot lacks the 2026-10 content); run the backfill after every ETL run |
 | `sessions`, `verifications` | Not needed | Do not move; everyone signs in again |
 | Tables with no shared-schema target found by name (`assignment_students`, `logs`, `story_chapters`, `user_activities`, `user_lesson_progress`, `verifications`) | Target unknown | Find the target table or record "dropped" with a reason, before rehearsal 1 |
 
