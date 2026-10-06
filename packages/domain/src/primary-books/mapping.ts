@@ -2,6 +2,7 @@
  * Pure mapping from a Workbooks lesson package to Primary rows (field map
  * `Workbooks/docs/content-plans/primary-db-field-map.md` v1.3). No database, no files.
  */
+import { resolveObjective } from "../primary-mastery/objective-key.js";
 import type { LessonPackage } from "./package-schema.js";
 
 /** The book keys of the printed books and their names. Names always carry the product name. */
@@ -149,28 +150,118 @@ export function toArticleRow(pkg: LessonPackage, articleId: string): ArticleRow 
 
 /** Question rows of one article. */
 export interface QuestionRows {
-  mcq: { articleId: string; question: string; options: string[]; correctAnswer: number; answer: string; textualEvidence: string | null; order: number }[];
-  saq: { articleId: string; question: string; answer: string; sampleAnswer: string; order: number }[];
-  laq: { articleId: string; question: string }[];
+  mcq: { id: string; articleId: string; question: string; options: string[]; correctAnswer: number; answer: string; textualEvidence: string | null; order: number }[];
+  saq: { id: string; articleId: string; question: string; answer: string; sampleAnswer: string; order: number }[];
+  laq: { id: string; articleId: string; question: string }[];
 }
 
 /**
- * Maps the question bank to the three question tables.
+ * Maps the question bank to the three question tables. Every row gets its id here so the
+ * objective links (`toTagRows`) can name it.
  * @param pkg The package.
  * @param articleId The article uuid.
- * @returns The rows.
+ * @param newId Makes a question uuid. Tests replace it.
+ * @returns The rows of each question table, in bank order.
  * @throws When an MCQ answer is not one of its options.
  */
-export function toQuestionRows(pkg: LessonPackage, articleId: string): QuestionRows {
+export function toQuestionRows(pkg: LessonPackage, articleId: string, newId: () => string = () => crypto.randomUUID()): QuestionRows {
   return {
     mcq: pkg.bank.mcq.map((item, order) => {
       const correctAnswer = item.options.indexOf(item.answer);
       if (correctAnswer < 0) throw new Error(`MCQ ${item.id} of ${pkg.meta.key}: the answer is not one of the options`);
-      return { articleId, question: item.question, options: item.options, correctAnswer, answer: item.answer, textualEvidence: item.evidence ?? null, order };
+      return { id: newId(), articleId, question: item.question, options: item.options, correctAnswer, answer: item.answer, textualEvidence: item.evidence ?? null, order };
     }),
-    saq: pkg.bank.saq.map((item, order) => ({ articleId, question: item.question, answer: item.answer, sampleAnswer: item.answer, order })),
-    laq: pkg.bank.laq.map((item) => ({ articleId, question: item.question })),
+    saq: pkg.bank.saq.map((item, order) => ({ id: newId(), articleId, question: item.question, answer: item.answer, sampleAnswer: item.answer, order })),
+    laq: pkg.bank.laq.map((item) => ({ id: newId(), articleId, question: item.question })),
   };
+}
+
+/** The content-to-graph link rows of one article (track primary_objective_tags_20261006, FR-4). */
+export interface TagRows {
+  articleObjectives: { articleId: string; shortId: string; nodeId: string; role: "target" | "supporting"; graphRelease: string }[];
+  questionObjectives: { articleId: string; questionId: string; questionType: "mcq" | "saq" | "laq"; shortId: string; nodeId: string; graphRelease: string }[];
+  wordNodes: { articleId: string; word: string; pos: string; nodeId: string; role: "glossed" | "recycled"; graphRelease: string }[];
+}
+
+/** The graph commits the link rows record. */
+export interface TagGraphRelease {
+  gse: string;
+  vocabulary: string;
+}
+
+/**
+ * True when the package carries any objective or vocabulary tag.
+ * @param pkg The package.
+ * @returns Whether `toTagRows` would produce a row.
+ */
+export function hasTags(pkg: LessonPackage): boolean {
+  const tags = pkg.tags;
+  if (tags && (tags.targetObjectives.length || tags.supportingObjectives.length || tags.glossedNodes.length || tags.recycledNodes.length)) return true;
+  return [...pkg.bank.mcq, ...pkg.bank.saq, ...pkg.bank.laq].some((item) => (item.objectives ?? []).length > 0);
+}
+
+/**
+ * Splits a vocabulary node id `english.vocabulary.skill.<word>.<pos>` into its word and part of speech.
+ * @param nodeId The node id.
+ * @param key The package key, for the error.
+ * @returns The word (the node's normalized form) and the part of speech.
+ * @throws When the id does not have the five segments.
+ */
+function splitVocabularyNode(nodeId: string, key: string): { word: string; pos: string } {
+  const parts = nodeId.split(".");
+  if (parts.length !== 5 || parts[0] !== "english" || parts[1] !== "vocabulary" || parts[2] !== "skill") throw new Error(`${key}: vocabulary node id "${nodeId}" is not english.vocabulary.skill.<word>.<pos>`);
+  return { word: parts[3], pos: parts[4] };
+}
+
+/**
+ * Maps the package tags to the three link tables. The article objectives and the word nodes
+ * need only the article; the question objectives need the question rows with their ids, so a
+ * linked legacy article (whose questions Tutor reads and the backfill links) passes null.
+ * @param pkg The package.
+ * @param articleId The article uuid.
+ * @param rows The question rows of this import, or null when no question row is written.
+ * @param release The GSE and vocabulary graph commits to record.
+ * @returns The link rows, without duplicates.
+ * @throws When a short id is not in the objective key or a node id is malformed; the message names the package.
+ */
+export function toTagRows(pkg: LessonPackage, articleId: string, rows: QuestionRows | null, release: TagGraphRelease): TagRows {
+  const resolve = (shortId: string): string => {
+    try {
+      return resolveObjective(shortId).nodeId;
+    } catch (error) {
+      throw new Error(`${pkg.meta.key}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+  const tags = pkg.tags ?? { targetObjectives: [], supportingObjectives: [], glossedNodes: [], recycledNodes: [] };
+  const articleObjectives: TagRows["articleObjectives"] = [];
+  const seenArticle = new Set<string>();
+  for (const [role, ids] of [["target", tags.targetObjectives], ["supporting", tags.supportingObjectives]] as const) {
+    for (const shortId of ids) {
+      if (seenArticle.has(`${shortId}:${role}`)) continue;
+      seenArticle.add(`${shortId}:${role}`);
+      articleObjectives.push({ articleId, shortId, nodeId: resolve(shortId), role, graphRelease: release.gse });
+    }
+  }
+  const questionObjectives: TagRows["questionObjectives"] = [];
+  if (rows) {
+    for (const [questionType, items, written] of [["mcq", pkg.bank.mcq, rows.mcq], ["saq", pkg.bank.saq, rows.saq], ["laq", pkg.bank.laq, rows.laq]] as const) {
+      items.forEach((item, index) => {
+        const questionId = written[index]?.id;
+        if (!questionId) throw new Error(`${pkg.meta.key}: no row for ${questionType} ${item.id}`);
+        for (const shortId of new Set(item.objectives ?? [])) questionObjectives.push({ articleId, questionId, questionType, shortId, nodeId: resolve(shortId), graphRelease: release.gse });
+      });
+    }
+  }
+  const wordNodes: TagRows["wordNodes"] = [];
+  const seenNode = new Set<string>();
+  for (const [role, ids] of [["glossed", tags.glossedNodes], ["recycled", tags.recycledNodes]] as const) {
+    for (const nodeId of ids) {
+      if (seenNode.has(nodeId)) continue;
+      seenNode.add(nodeId);
+      wordNodes.push({ articleId, ...splitVocabularyNode(nodeId, pkg.meta.key), nodeId, role, graphRelease: release.vocabulary });
+    }
+  }
+  return { articleObjectives, questionObjectives, wordNodes };
 }
 
 /** The `sentencs_and_words_for_flashcard` row of one article (Tutor reads this shape). */
