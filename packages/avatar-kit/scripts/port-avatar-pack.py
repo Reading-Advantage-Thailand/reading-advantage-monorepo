@@ -5,9 +5,11 @@
 import json, os, re, shutil, sys
 
 FORGE, COMMIT = sys.argv[1], sys.argv[2]
+# The catalog is committed in Forge under demo/public; the portrait layers are a generated output.
+CATALOG = os.path.join(FORGE, "demo/public/avatar-pack/1.0.0/catalog.json")
 PACK = os.path.join(FORGE, "out/packs/avatar/1.0.0/")
 OUT = "../../apps/primary-advantage/public/packs/avatar/1.0.0/"
-catalog = json.load(open(PACK + "catalog.json"))
+catalog = json.load(open(CATALOG))
 items = {i["id"]: i for i in catalog["items"]}
 starters = open(os.path.join(FORGE, "src/apk3d/avatar/starters.ts")).read()
 need = set(items)
@@ -37,7 +39,7 @@ json.dump({**index, "layers": layers}, open(OUT + "portraits.json", "w"), separa
 ts = lambda v: json.dumps(v, indent=2)
 open("src/catalog.ts", "w").write(f'''/**
  * The avatar pack data the Primary avatar needs, copied from the Forge pack
- * `out/packs/avatar/1.0.0/catalog.json` at Forge commit {{@link FORGE_COMMIT}} by
+ * `demo/public/avatar-pack/1.0.0/catalog.json` at Forge commit {{@link FORGE_COMMIT}} by
  * `scripts/port-avatar-pack.py` (data only; the composer is in `portrait.ts`).
  */
 import type {{ HairForm }} from "./hair.js";

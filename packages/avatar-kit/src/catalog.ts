@@ -1,13 +1,13 @@
 /**
  * The avatar pack data the Primary avatar needs, copied from the Forge pack
- * `out/packs/avatar/1.0.0/catalog.json` at Forge commit {@link FORGE_COMMIT} by
+ * `demo/public/avatar-pack/1.0.0/catalog.json` at Forge commit {@link FORGE_COMMIT} by
  * `scripts/port-avatar-pack.py` (data only; the composer is in `portrait.ts`).
  */
 import type { HairForm } from "./hair.js";
 import type { VariantTable } from "./tint.js";
 
 /** The Forge commit the pack data and the portrait layers come from. */
-export const FORGE_COMMIT = "0a919a0";
+export const FORGE_COMMIT = "c26e4406";
 
 /** The pack version; the portrait layers are served from `/packs/avatar/<version>/`. */
 export const AVATAR_PACK_VERSION = "1.0.0";

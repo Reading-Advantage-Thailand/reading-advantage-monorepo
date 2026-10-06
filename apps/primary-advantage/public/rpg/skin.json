@@ -1,0 +1,2919 @@
+{
+ "id": "primary-rpg-skin",
+ "version": "1.0.0",
+ "files": {
+  "backdrops/archive-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/archive.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "archive",
+    "query": "scene=archive&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "09d31dd4",
+   "byteSize": 160800
+  },
+  "backdrops/archive-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/archive.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "archive",
+    "query": "scene=archive&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "09d31dd4",
+   "byteSize": 118078
+  },
+  "backdrops/arena-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/arena.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "arena",
+    "query": "scene=arena&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 257598
+  },
+  "backdrops/arena-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/arena.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "arena",
+    "query": "scene=arena&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 207518
+  },
+  "backdrops/armory-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/armory.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "armory",
+    "query": "scene=armory&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 163582
+  },
+  "backdrops/armory-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/armory.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "armory",
+    "query": "scene=armory&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 108496
+  },
+  "backdrops/boss-arena-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/boss-arena.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "boss-arena",
+    "query": "scene=boss-arena&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 165568
+  },
+  "backdrops/boss-arena-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/boss-arena.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "boss-arena",
+    "query": "scene=boss-arena&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 113828
+  },
+  "backdrops/clearing-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/clearing.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "clearing",
+    "query": "scene=clearing&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "0a919a02",
+   "byteSize": 186422
+  },
+  "backdrops/clearing-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/clearing.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "clearing",
+    "query": "scene=clearing&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "0a919a02",
+   "byteSize": 104468
+  },
+  "backdrops/gatehouse-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/gatehouse.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "gatehouse",
+    "query": "scene=gatehouse&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 152770
+  },
+  "backdrops/gatehouse-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/gatehouse.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "gatehouse",
+    "query": "scene=gatehouse&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 102832
+  },
+  "backdrops/guild-hall-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/guild-hall.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "guild-hall",
+    "query": "scene=guild-hall&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 178036
+  },
+  "backdrops/guild-hall-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/guild-hall.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "guild-hall",
+    "query": "scene=guild-hall&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 126962
+  },
+  "backdrops/inn-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/inn.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "inn",
+    "query": "scene=inn&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 148786
+  },
+  "backdrops/inn-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/inn.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "inn",
+    "query": "scene=inn&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 99652
+  },
+  "backdrops/library-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/library.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "library",
+    "query": "scene=library&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 203426
+  },
+  "backdrops/library-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/library.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "library",
+    "query": "scene=library&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 126208
+  },
+  "backdrops/observatory-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/observatory.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "observatory",
+    "query": "scene=observatory&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 144168
+  },
+  "backdrops/observatory-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/observatory.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "observatory",
+    "query": "scene=observatory&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 81054
+  },
+  "backdrops/shrine-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/shrine.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "shrine",
+    "query": "scene=shrine&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 133872
+  },
+  "backdrops/shrine-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/shrine.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "shrine",
+    "query": "scene=shrine&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 93372
+  },
+  "backdrops/treasure-vault-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/treasure-vault.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "treasure-vault",
+    "query": "scene=treasure-vault&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 198668
+  },
+  "backdrops/treasure-vault-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/treasure-vault.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "treasure-vault",
+    "query": "scene=treasure-vault&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 128748
+  },
+  "backdrops/wizard-tower-d.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/wizard-tower.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "wizard-tower",
+    "query": "scene=wizard-tower&clean&az=20&el=24&dist=13&tx=0&tz=-1",
+    "width": 1920,
+    "height": 1080
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 152516
+  },
+  "backdrops/wizard-tower-p.webp": {
+   "kind": "backdrop",
+   "source": "advantage-forge/scenes/maps/wizard-tower.ts",
+   "spec": {
+    "kind": "backdrop",
+    "place": "wizard-tower",
+    "query": "scene=wizard-tower&clean&az=20&el=24&dist=11&tx=0&tz=-1",
+    "width": 1080,
+    "height": 1920
+   },
+   "forgeCommit": "73fb6ad5",
+   "byteSize": 97690
+  },
+  "fonts/fredoka-latin.woff2": {
+   "kind": "copy",
+   "source": "advantage-forge/src/apk3d/hud/fonts/fredoka-latin.woff2",
+   "spec": {
+    "kind": "copy",
+    "from": "src/apk3d/hud/fonts/fredoka-latin.woff2"
+   },
+   "forgeCommit": "49544838",
+   "byteSize": 29732
+  },
+  "fonts/mitr-500-thai.woff2": {
+   "kind": "copy",
+   "source": "advantage-forge/src/showcase/battle/fonts/mitr-500-thai.woff2",
+   "spec": {
+    "kind": "copy",
+    "from": "src/showcase/battle/fonts/mitr-500-thai.woff2"
+   },
+   "forgeCommit": "421debdf",
+   "byteSize": 14140
+  },
+  "items/adventurer-lantern.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/adventurer-lantern.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "adventurer-lantern",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 9204
+  },
+  "items/adventurer-map.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/adventurer-map.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "adventurer-map",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6294
+  },
+  "items/adventurer-sword.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/adventurer-sword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "adventurer-sword",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3664
+  },
+  "items/apprentice-wand.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/apprentice-wand.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "apprentice-wand",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3568
+  },
+  "items/archer-bow.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/archer-bow.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "archer-bow",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6646
+  },
+  "items/avatar-hair-long.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/avatar-hair-long.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "avatar-hair-long",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 6006
+  },
+  "items/avatar-hair-ponytail.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/avatar-hair-ponytail.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "avatar-hair-ponytail",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 4918
+  },
+  "items/avatar-hair-short.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/avatar-hair-short.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "avatar-hair-short",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 6150
+  },
+  "items/avatar-hair-swept.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/avatar-hair-swept.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "avatar-hair-swept",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 5796
+  },
+  "items/axe.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/axe.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "axe",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5480
+  },
+  "items/barbarian-axe.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/barbarian-axe.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "barbarian-axe",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 7324
+  },
+  "items/bard-hat.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/bard-hat.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "bard-hat",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6140
+  },
+  "items/battle-axe.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/battle-axe.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "battle-axe",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5566
+  },
+  "items/belt.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/belt.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "belt",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "214aecbd",
+   "byteSize": 5830
+  },
+  "items/boots.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/boots.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "boots",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "99a1b5fc",
+   "byteSize": 6384
+  },
+  "items/bracers.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/bracers.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "bracers",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2f7c691c",
+   "byteSize": 6826
+  },
+  "items/buckler.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/buckler.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "buckler",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 10640
+  },
+  "items/cape.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/cape.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "cape",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "99a1b5fc",
+   "byteSize": 6848
+  },
+  "items/captain-shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/captain-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "captain-shield",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "9cc865a0",
+   "byteSize": 10794
+  },
+  "items/captain-sword.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/captain-sword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "captain-sword",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3348
+  },
+  "items/chainmail.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/chainmail.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "chainmail",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "660f5443",
+   "byteSize": 10850
+  },
+  "items/circlet.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/circlet.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "circlet",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "9a45bcc7",
+   "byteSize": 5436
+  },
+  "items/cleric-book.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/cleric-book.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "cleric-book",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6492
+  },
+  "items/cleric-hammer.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/cleric-hammer.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "cleric-hammer",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5574
+  },
+  "items/cloak.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/cloak.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "cloak",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "49f66878",
+   "byteSize": 5824
+  },
+  "items/clockwork-soldier-halberd.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/clockwork-soldier-halberd.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "clockwork-soldier-halberd",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4234
+  },
+  "items/cloth-hood.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/cloth-hood.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "cloth-hood",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 9714
+  },
+  "items/club.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/club.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "club",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5964
+  },
+  "items/crossbow.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/crossbow.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "crossbow",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3836
+  },
+  "items/crown.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/crown.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "crown",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "9a45bcc7",
+   "byteSize": 8074
+  },
+  "items/crystal-focus.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/crystal-focus.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "crystal-focus",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 8420
+  },
+  "items/dagger.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/dagger.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "dagger",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5774
+  },
+  "items/dragoon-helm.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/dragoon-helm.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "dragoon-helm",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 8022
+  },
+  "items/dragoon-lance.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/dragoon-lance.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "dragoon-lance",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "9cc865a0",
+   "byteSize": 2632
+  },
+  "items/druid-cap.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/druid-cap.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "druid-cap",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5832
+  },
+  "items/druid-staff.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/druid-staff.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "druid-staff",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5236
+  },
+  "items/duelist-hat.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/duelist-hat.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "duelist-hat",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5806
+  },
+  "items/duelist-rapier.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/duelist-rapier.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "duelist-rapier",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4566
+  },
+  "items/enchanter-scroll.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/enchanter-scroll.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "enchanter-scroll",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "05807f70",
+   "byteSize": 4122
+  },
+  "items/enchanter-staff.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/enchanter-staff.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "enchanter-staff",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3160
+  },
+  "items/explorer-hat.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/explorer-hat.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "explorer-hat",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 3808
+  },
+  "items/explorer-map.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/explorer-map.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "explorer-map",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5152
+  },
+  "items/falchion.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/falchion.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "falchion",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4920
+  },
+  "items/fighter-buckler.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/fighter-buckler.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "fighter-buckler",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 9468
+  },
+  "items/fighter-cap.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/fighter-cap.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "fighter-cap",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5464
+  },
+  "items/fighter-sword.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/fighter-sword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "fighter-sword",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "9cc865a0",
+   "byteSize": 4284
+  },
+  "items/flail.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/flail.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "flail",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3564
+  },
+  "items/gauntlets.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/gauntlets.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "gauntlets",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "19f193e0",
+   "byteSize": 9712
+  },
+  "items/gladiator-helmet.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/gladiator-helmet.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "gladiator-helmet",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 8280
+  },
+  "items/gladiator-shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/gladiator-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "gladiator-shield",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 10104
+  },
+  "items/gladiator-sword.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/gladiator-sword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "gladiator-sword",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4692
+  },
+  "items/glaive.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/glaive.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "glaive",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "451ce009",
+   "byteSize": 4372
+  },
+  "items/gloves.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/gloves.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "gloves",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "162199c4",
+   "byteSize": 7558
+  },
+  "items/great-axe.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/great-axe.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "great-axe",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6606
+  },
+  "items/greatsword.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/greatsword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "greatsword",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5088
+  },
+  "items/greaves.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/greaves.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "greaves",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "771dc6e3",
+   "byteSize": 8308
+  },
+  "items/grimoire.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/grimoire.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "grimoire",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2e90acb4",
+   "byteSize": 7160
+  },
+  "items/guardian-hammer.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/guardian-hammer.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "guardian-hammer",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6034
+  },
+  "items/guardian-helm.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/guardian-helm.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "guardian-helm",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5682
+  },
+  "items/guardian-shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/guardian-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "guardian-shield",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "c609b451",
+   "byteSize": 8226
+  },
+  "items/halberd.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/halberd.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "halberd",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "19f193e0",
+   "byteSize": 5156
+  },
+  "items/hand-axe.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/hand-axe.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "hand-axe",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4948
+  },
+  "items/heavy-crossbow.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/heavy-crossbow.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "heavy-crossbow",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 3992
+  },
+  "items/horned-helmet.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/horned-helmet.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "horned-helmet",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "0b14487a",
+   "byteSize": 7210
+  },
+  "items/iron-helmet.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/iron-helmet.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "iron-helmet",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "0b14487a",
+   "byteSize": 6386
+  },
+  "items/javelin.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/javelin.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "javelin",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 3478
+  },
+  "items/katana.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/katana.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "katana",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3668
+  },
+  "items/kite-shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/kite-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "kite-shield",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 11036
+  },
+  "items/knight-helm.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/knight-helm.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "knight-helm",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 9268
+  },
+  "items/lantern-handheld.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/lantern-handheld.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "lantern-handheld",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 8968
+  },
+  "items/leather-armor.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/leather-armor.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "leather-armor",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "01097496",
+   "byteSize": 11224
+  },
+  "items/leather-cap.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/leather-cap.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "leather-cap",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3914
+  },
+  "items/long-sword.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/long-sword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "long-sword",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "19f193e0",
+   "byteSize": 4076
+  },
+  "items/longbow.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/longbow.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "longbow",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3844
+  },
+  "items/mace.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/mace.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "mace",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5534
+  },
+  "items/mage-spellbook.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/mage-spellbook.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "mage-spellbook",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5806
+  },
+  "items/mage-wand.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/mage-wand.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "mage-wand",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5266
+  },
+  "items/magic-scepter.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/magic-scepter.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "magic-scepter",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5838
+  },
+  "items/mantle.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/mantle.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "mantle",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "49f66878",
+   "byteSize": 6650
+  },
+  "items/maul.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/maul.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "maul",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 3606
+  },
+  "items/morningstar.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/morningstar.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "morningstar",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "364e187e",
+   "byteSize": 4856
+  },
+  "items/orb.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/orb.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "orb",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 11120
+  },
+  "items/paladin-hammer.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/paladin-hammer.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "paladin-hammer",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6570
+  },
+  "items/paladin-shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/paladin-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "paladin-shield",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 8764
+  },
+  "items/pike.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/pike.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "pike",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 2384
+  },
+  "items/plate-armor.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/plate-armor.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "plate-armor",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "99a1b5fc",
+   "byteSize": 10068
+  },
+  "items/quarterstaff.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/quarterstaff.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "quarterstaff",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 2326
+  },
+  "items/ranger-bow.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/ranger-bow.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "ranger-bow",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6692
+  },
+  "items/rapier.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/rapier.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "rapier",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5362
+  },
+  "items/ritual-dagger.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/ritual-dagger.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "ritual-dagger",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6028
+  },
+  "items/rogue-dagger.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/rogue-dagger.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "rogue-dagger",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4360
+  },
+  "items/rogue-hood.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/rogue-hood.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "rogue-hood",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "9cc865a0",
+   "byteSize": 5930
+  },
+  "items/round-shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/round-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "round-shield",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 9674
+  },
+  "items/rune-stone.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/rune-stone.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "rune-stone",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 7752
+  },
+  "items/samurai-katana.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/samurai-katana.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "samurai-katana",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4070
+  },
+  "items/scale-armor.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/scale-armor.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "scale-armor",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 8904
+  },
+  "items/scimitar.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/scimitar.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "scimitar",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5514
+  },
+  "items/scythe.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/scythe.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "scythe",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 5106
+  },
+  "items/shaman-cap.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/shaman-cap.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "shaman-cap",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 9870
+  },
+  "items/shaman-feather.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/shaman-feather.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "shaman-feather",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3526
+  },
+  "items/shaman-staff.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/shaman-staff.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "shaman-staff",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4868
+  },
+  "items/shield-maiden-axe.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/shield-maiden-axe.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "shield-maiden-axe",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4710
+  },
+  "items/shield-maiden-helm.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/shield-maiden-helm.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "shield-maiden-helm",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6334
+  },
+  "items/shield-maiden-shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/shield-maiden-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "shield-maiden-shield",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 12030
+  },
+  "items/short-sword.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/short-sword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "short-sword",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4940
+  },
+  "items/shortbow.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/shortbow.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "shortbow",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "19f193e0",
+   "byteSize": 4374
+  },
+  "items/shoulder-armor.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/shoulder-armor.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "shoulder-armor",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "9cc865a0",
+   "byteSize": 6566
+  },
+  "items/sickle.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/sickle.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "sickle",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6986
+  },
+  "items/skeleton-knight-shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/skeleton-knight-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "skeleton-knight-shield",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 9630
+  },
+  "items/sling.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/sling.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "sling",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 8548
+  },
+  "items/spear-warden-crest.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/spear-warden-crest.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "spear-warden-crest",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 7228
+  },
+  "items/spear-warden-helm.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/spear-warden-helm.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "spear-warden-helm",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 6476
+  },
+  "items/spear-warden-javelin.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/spear-warden-javelin.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "spear-warden-javelin",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 2862
+  },
+  "items/spear-warden-spear.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/spear-warden-spear.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "spear-warden-spear",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 2802
+  },
+  "items/spear.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/spear.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "spear",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 4726
+  },
+  "items/spellbook.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/spellbook.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "spellbook",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5520
+  },
+  "items/staff.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/staff.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "staff",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "19f193e0",
+   "byteSize": 6244
+  },
+  "items/steel-helmet.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/steel-helmet.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "steel-helmet",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "0b14487a",
+   "byteSize": 7708
+  },
+  "items/studded-leather.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/studded-leather.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "studded-leather",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 10124
+  },
+  "items/swashbuckler-bandana.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/swashbuckler-bandana.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "swashbuckler-bandana",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "9a45bcc7",
+   "byteSize": 4068
+  },
+  "items/swashbuckler-dagger.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/swashbuckler-dagger.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "swashbuckler-dagger",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4350
+  },
+  "items/swashbuckler-sabre.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/swashbuckler-sabre.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "swashbuckler-sabre",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4204
+  },
+  "items/throwing-axe.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/throwing-axe.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "throwing-axe",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 6988
+  },
+  "items/throwing-knife.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/throwing-knife.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "throwing-knife",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 1822
+  },
+  "items/tome.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/tome.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "tome",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3468
+  },
+  "items/tower-shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/tower-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "tower-shield",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 9044
+  },
+  "items/treasure-hunter-hat.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/treasure-hunter-hat.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "treasure-hunter-hat",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3950
+  },
+  "items/treasure-hunter-torch.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/treasure-hunter-torch.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "treasure-hunter-torch",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4978
+  },
+  "items/treasure-hunter-whip.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/treasure-hunter-whip.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "treasure-hunter-whip",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3294
+  },
+  "items/trident.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/trident.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "trident",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "dad093a8",
+   "byteSize": 5120
+  },
+  "items/wand.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/wand.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "wand",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4676
+  },
+  "items/warhammer.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/warhammer.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "warhammer",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5868
+  },
+  "items/warlock-book.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/warlock-book.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "warlock-book",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 9248
+  },
+  "items/warrior-sword.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/warrior-sword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "warrior-sword",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "451ce009",
+   "byteSize": 3386
+  },
+  "items/whip.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/whip.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "whip",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 3490
+  },
+  "items/witch-broom.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/witch-broom.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "witch-broom",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4248
+  },
+  "items/witch-hat.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/witch-hat.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "witch-hat",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 4220
+  },
+  "items/witch-potion.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/witch-potion.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "witch-potion",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 8820
+  },
+  "items/wizard-hat.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/wizard-hat.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "wizard-hat",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 5476
+  },
+  "items/wizard-staff.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/wizard-staff.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "wizard-staff",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "9cc865a0",
+   "byteSize": 4894
+  },
+  "kit/boss/dragon-fire-3q.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/dragon-fire.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "dragon-fire",
+    "view": "three-quarter",
+    "size": 512
+   },
+   "forgeCommit": "2b26e740",
+   "byteSize": 16088
+  },
+  "kit/boss/dragon-fire-attack-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/dragon-fire.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "dragon-fire",
+    "clip": "attack",
+    "cell": 160
+   },
+   "forgeCommit": "2b26e740",
+   "byteSize": 72125
+  },
+  "kit/boss/dragon-fire-death-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/dragon-fire.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "dragon-fire",
+    "clip": "death",
+    "cell": 160
+   },
+   "forgeCommit": "2b26e740",
+   "byteSize": 75119
+  },
+  "kit/boss/dragon-fire-front.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/dragon-fire.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "dragon-fire",
+    "view": "front",
+    "size": 512
+   },
+   "forgeCommit": "2b26e740",
+   "byteSize": 18658
+  },
+  "kit/boss/dragon-fire-hit-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/dragon-fire.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "dragon-fire",
+    "clip": "hit",
+    "cell": 160
+   },
+   "forgeCommit": "2b26e740",
+   "byteSize": 72596
+  },
+  "kit/boss/dragon-fire-idle-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/dragon-fire.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "dragon-fire",
+    "clip": "idle",
+    "cell": 160
+   },
+   "forgeCommit": "2b26e740",
+   "byteSize": 70878
+  },
+  "kit/boss/goblin-king-3q.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/goblin-king.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "goblin-king",
+    "view": "three-quarter",
+    "size": 512
+   },
+   "forgeCommit": "8e1af9e8",
+   "byteSize": 22158
+  },
+  "kit/boss/goblin-king-attack-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/goblin-king.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "goblin-king",
+    "clip": "attack",
+    "cell": 160
+   },
+   "forgeCommit": "8e1af9e8",
+   "byteSize": 81770
+  },
+  "kit/boss/goblin-king-death-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/goblin-king.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "goblin-king",
+    "clip": "death",
+    "cell": 160
+   },
+   "forgeCommit": "8e1af9e8",
+   "byteSize": 79007
+  },
+  "kit/boss/goblin-king-front.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/goblin-king.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "goblin-king",
+    "view": "front",
+    "size": 512
+   },
+   "forgeCommit": "8e1af9e8",
+   "byteSize": 22790
+  },
+  "kit/boss/goblin-king-hit-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/goblin-king.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "goblin-king",
+    "clip": "hit",
+    "cell": 160
+   },
+   "forgeCommit": "8e1af9e8",
+   "byteSize": 71527
+  },
+  "kit/boss/goblin-king-idle-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/goblin-king.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "goblin-king",
+    "clip": "idle",
+    "cell": 160
+   },
+   "forgeCommit": "8e1af9e8",
+   "byteSize": 82827
+  },
+  "kit/boss/iron-golem-3q.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/iron-golem.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "iron-golem",
+    "view": "three-quarter",
+    "size": 512
+   },
+   "forgeCommit": "11df2292",
+   "byteSize": 21896
+  },
+  "kit/boss/iron-golem-attack-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/iron-golem.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "iron-golem",
+    "clip": "attack",
+    "cell": 160
+   },
+   "forgeCommit": "11df2292",
+   "byteSize": 117080
+  },
+  "kit/boss/iron-golem-death-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/iron-golem.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "iron-golem",
+    "clip": "death",
+    "cell": 160
+   },
+   "forgeCommit": "11df2292",
+   "byteSize": 127711
+  },
+  "kit/boss/iron-golem-front.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/iron-golem.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "iron-golem",
+    "view": "front",
+    "size": 512
+   },
+   "forgeCommit": "11df2292",
+   "byteSize": 22292
+  },
+  "kit/boss/iron-golem-hit-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/iron-golem.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "iron-golem",
+    "clip": "hit",
+    "cell": 160
+   },
+   "forgeCommit": "11df2292",
+   "byteSize": 126527
+  },
+  "kit/boss/iron-golem-idle-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/iron-golem.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "iron-golem",
+    "clip": "idle",
+    "cell": 160
+   },
+   "forgeCommit": "11df2292",
+   "byteSize": 114529
+  },
+  "kit/boss/lich-3q.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/lich.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "lich",
+    "view": "three-quarter",
+    "size": 512
+   },
+   "forgeCommit": "4d3c2e17",
+   "byteSize": 22800
+  },
+  "kit/boss/lich-attack-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/lich.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "lich",
+    "clip": "attack",
+    "cell": 160
+   },
+   "forgeCommit": "4d3c2e17",
+   "byteSize": 53317
+  },
+  "kit/boss/lich-death-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/lich.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "lich",
+    "clip": "death",
+    "cell": 160
+   },
+   "forgeCommit": "4d3c2e17",
+   "byteSize": 53462
+  },
+  "kit/boss/lich-front.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/lich.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "lich",
+    "view": "front",
+    "size": 512
+   },
+   "forgeCommit": "4d3c2e17",
+   "byteSize": 24694
+  },
+  "kit/boss/lich-hit-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/lich.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "lich",
+    "clip": "hit",
+    "cell": 160
+   },
+   "forgeCommit": "4d3c2e17",
+   "byteSize": 47271
+  },
+  "kit/boss/lich-idle-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/lich.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "lich",
+    "clip": "idle",
+    "cell": 160
+   },
+   "forgeCommit": "4d3c2e17",
+   "byteSize": 49601
+  },
+  "kit/heroes/bard.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#bard",
+   "spec": {
+    "kind": "hero",
+    "hero": "bard",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 13922
+  },
+  "kit/heroes/cleric.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#cleric",
+   "spec": {
+    "kind": "hero",
+    "hero": "cleric",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 16586
+  },
+  "kit/heroes/druid.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#druid",
+   "spec": {
+    "kind": "hero",
+    "hero": "druid",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 14892
+  },
+  "kit/heroes/duelist.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#duelist",
+   "spec": {
+    "kind": "hero",
+    "hero": "duelist",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 11896
+  },
+  "kit/heroes/explorer.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#explorer",
+   "spec": {
+    "kind": "hero",
+    "hero": "explorer",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 15186
+  },
+  "kit/heroes/gladiator.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#gladiator",
+   "spec": {
+    "kind": "hero",
+    "hero": "gladiator",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 14880
+  },
+  "kit/heroes/knight.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#knight",
+   "spec": {
+    "kind": "hero",
+    "hero": "knight",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 16916
+  },
+  "kit/heroes/ranger.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#ranger",
+   "spec": {
+    "kind": "hero",
+    "hero": "ranger",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 16492
+  },
+  "kit/heroes/rogue.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#rogue",
+   "spec": {
+    "kind": "hero",
+    "hero": "rogue",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 14360
+  },
+  "kit/heroes/shaman.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#shaman",
+   "spec": {
+    "kind": "hero",
+    "hero": "shaman",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 13200
+  },
+  "kit/heroes/shield-maiden.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#shield-maiden",
+   "spec": {
+    "kind": "hero",
+    "hero": "shield-maiden",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 18144
+  },
+  "kit/heroes/swashbuckler.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#swashbuckler",
+   "spec": {
+    "kind": "hero",
+    "hero": "swashbuckler",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 13558
+  },
+  "kit/heroes/treasure-hunter.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#treasure-hunter",
+   "spec": {
+    "kind": "hero",
+    "hero": "treasure-hunter",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 14296
+  },
+  "kit/heroes/witch.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#witch",
+   "spec": {
+    "kind": "hero",
+    "hero": "witch",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 14260
+  },
+  "kit/heroes/wizard.webp": {
+   "kind": "hero",
+   "source": "advantage-forge/src/apk3d/avatar/starters.ts#wizard",
+   "spec": {
+    "kind": "hero",
+    "hero": "wizard",
+    "size": 512,
+    "turn": -25
+   },
+   "forgeCommit": "f5d87a50",
+   "byteSize": 15546
+  },
+  "kit/icons/banner.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/banner.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "banner",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "37f7adc3",
+   "byteSize": 7726
+  },
+  "kit/icons/campfire.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/campfire.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "campfire",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "1114786c",
+   "byteSize": 4952
+  },
+  "kit/icons/chest.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/treasure-chest.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "treasure-chest",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "b1b7d783",
+   "byteSize": 4936
+  },
+  "kit/icons/coin.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/gold-coin.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "gold-coin",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "a36ec6e6",
+   "byteSize": 9312
+  },
+  "kit/icons/gem.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/gem-sapphire.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "gem-sapphire",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "d3469db4",
+   "byteSize": 4218
+  },
+  "kit/icons/locked-chest.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/locked-chest.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "locked-chest",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "6c548f04",
+   "byteSize": 5640
+  },
+  "kit/icons/notice-board.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/notice-board.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "notice-board",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "fcb3edf5",
+   "byteSize": 8036
+  },
+  "kit/icons/purse.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/coin-purse.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "coin-purse",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "3538a705",
+   "byteSize": 5116
+  },
+  "kit/icons/scroll.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/scroll.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "scroll",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "d302c194",
+   "byteSize": 3006
+  },
+  "kit/icons/slot-back.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/cloak.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "cloak",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "49f66878",
+   "byteSize": 4250
+  },
+  "kit/icons/slot-chest.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/chainmail.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "chainmail",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "660f5443",
+   "byteSize": 6990
+  },
+  "kit/icons/slot-feet.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/boots.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "boots",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "99a1b5fc",
+   "byteSize": 4666
+  },
+  "kit/icons/slot-hair.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/avatar-hair-long.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "avatar-hair-long",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "f4de18b3",
+   "byteSize": 4602
+  },
+  "kit/icons/slot-hands.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/gloves.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "gloves",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "162199c4",
+   "byteSize": 5758
+  },
+  "kit/icons/slot-head.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/leather-cap.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "leather-cap",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 2922
+  },
+  "kit/icons/slot-mainhand.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/long-sword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "long-sword",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "19f193e0",
+   "byteSize": 3142
+  },
+  "kit/icons/slot-offhand.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/round-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "round-shield",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 7448
+  },
+  "kit/icons/slot-shoulders.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/shoulder-armor.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "shoulder-armor",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "9cc865a0",
+   "byteSize": 4794
+  },
+  "kit/icons/slot-waist.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/belt.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "belt",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "214aecbd",
+   "byteSize": 4198
+  },
+  "kit/npc/blacksmith-front.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/blacksmith.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "blacksmith",
+    "view": "front",
+    "size": 256
+   },
+   "forgeCommit": "c833cc8b",
+   "byteSize": 12318
+  },
+  "kit/npc/blacksmith-idle-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/blacksmith.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "blacksmith",
+    "clip": "idle"
+   },
+   "forgeCommit": "c833cc8b",
+   "byteSize": 64604
+  },
+  "kit/npc/blacksmith-talk-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/blacksmith.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "blacksmith",
+    "clip": "talk"
+   },
+   "forgeCommit": "c833cc8b",
+   "byteSize": 70723
+  },
+  "kit/npc/innkeeper-idle-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/innkeeper.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "innkeeper",
+    "clip": "idle",
+    "preset": "hostess"
+   },
+   "forgeCommit": "81837759",
+   "byteSize": 61424
+  },
+  "kit/npc/innkeeper-talk-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/innkeeper.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "innkeeper",
+    "clip": "talk",
+    "preset": "hostess"
+   },
+   "forgeCommit": "81837759",
+   "byteSize": 61425
+  },
+  "kit/npc/quest-giver-front.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/quest-giver.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "quest-giver",
+    "view": "front",
+    "size": 256,
+    "preset": "scribe"
+   },
+   "forgeCommit": "88750483",
+   "byteSize": 13752
+  },
+  "kit/npc/quest-giver-idle-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/quest-giver.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "quest-giver",
+    "clip": "idle",
+    "preset": "scribe"
+   },
+   "forgeCommit": "88750483",
+   "byteSize": 60802
+  },
+  "kit/npc/quest-giver-talk-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/quest-giver.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "quest-giver",
+    "clip": "talk",
+    "preset": "scribe"
+   },
+   "forgeCommit": "88750483",
+   "byteSize": 61739
+  },
+  "kit/npc/shopkeeper-idle-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/shopkeeper.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "shopkeeper",
+    "clip": "idle",
+    "preset": "grocer"
+   },
+   "forgeCommit": "1365053f",
+   "byteSize": 55580
+  },
+  "kit/npc/shopkeeper-talk-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/shopkeeper.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "shopkeeper",
+    "clip": "talk",
+    "preset": "grocer"
+   },
+   "forgeCommit": "1365053f",
+   "byteSize": 55587
+  },
+  "kit/npc/villager-idle-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/villager.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "villager",
+    "clip": "idle",
+    "preset": "weaver"
+   },
+   "forgeCommit": "32d2562a",
+   "byteSize": 60507
+  },
+  "kit/npc/villager-talk-strip.png": {
+   "kind": "strip",
+   "source": "advantage-forge/assets/villager.ts",
+   "spec": {
+    "kind": "strip",
+    "asset": "villager",
+    "clip": "talk",
+    "preset": "weaver"
+   },
+   "forgeCommit": "32d2562a",
+   "byteSize": 60942
+  },
+  "kit/relics/rally-horn.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/horn.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "horn",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "b8e1debe",
+   "byteSize": 6102
+  },
+  "kit/relics/sharp-blade.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/warrior-sword.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "warrior-sword",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "451ce009",
+   "byteSize": 2744
+  },
+  "kit/relics/shield.webp": {
+   "kind": "view",
+   "source": "advantage-forge/assets/kite-shield.ts",
+   "spec": {
+    "kind": "view",
+    "asset": "kite-shield",
+    "view": "front",
+    "size": 192
+   },
+   "forgeCommit": "2ec30854",
+   "byteSize": 8224
+  }
+ }
+}
