@@ -1,5 +1,6 @@
 import "server-only";
-import { createDurableJobQueuePort, type DurableJobQueuePort } from "@reading-advantage/backend/jobs/adapters/postgres";
+import type { DurableJobQueuePort } from "@reading-advantage/backend/jobs";
+import { createDurableJobQueuePort } from "@reading-advantage/backend/jobs/adapters/postgres";
 import { enqueuePrimaryEvidence, type PrimaryEvidenceJobPayload } from "@reading-advantage/domain/primary-mastery";
 import { createPrimaryEvidenceSql } from "@/lib/primary-evidence-sql";
 
