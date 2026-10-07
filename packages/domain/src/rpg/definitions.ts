@@ -53,6 +53,31 @@ export interface EligibleRpgReward {
 export const WARD_GAME_TYPES: ReadonlySet<string> = new Set(["hero-vs-zombie", "hero-vs-zombie-story", "wizard-vs-zombie"]);
 
 /**
+ * The completions whose English answer audio run can earn the Echo Staff: the ward games and the
+ * two dragon games (owner decision 2026-10-07). The dragon ids are the same in 2D and 3D.
+ */
+export const ECHO_GAME_TYPES: ReadonlySet<string> = new Set([
+  ...WARD_GAME_TYPES, "dragon-flight", "dragon-flight-story", "dragon-rider", "dragon-rider-story",
+]);
+
+/**
+ * True when the completion carries English answer audio evidence with every item answered and the
+ * last attempt of each question correct, and the result counts match the evidence.
+ * @param completion Trusted completion facts.
+ * @returns Whether the run is a perfect English answer audio run.
+ */
+function isPerfectAnswerAudioRun(completion: RpgCompletionFacts): boolean {
+  const evidence = readToSelectAudioEvidenceSchema.safeParse(completion.metadata?.learningEvidence);
+  if (!evidence.success) return false;
+  const completeQuestions = evidence.data.questions.every(({ selectionAttempts }) =>
+    selectionAttempts.at(-1)?.completedQuestion === true);
+  return evidence.data.questions.length === evidence.data.itemCount
+    && completeQuestions
+    && completion.totalAttempts === evidence.data.itemCount
+    && completion.correctAnswers === evidence.data.itemCount;
+}
+
+/**
  * Finds cosmetic rewards earned by one saved completion.
  * @param completion Trusted completion facts from the current transaction.
  * @returns Eligible quest and cosmetic pairs in catalog order.
@@ -60,25 +85,13 @@ export const WARD_GAME_TYPES: ReadonlySet<string> = new Set(["hero-vs-zombie", "
 export function getEligibleRpgRewards(
   completion: RpgCompletionFacts,
 ): EligibleRpgReward[] {
-  if (!WARD_GAME_TYPES.has(completion.gameType) || completion.totalAttempts < 1) return [];
-
-  const rewards: EligibleRpgReward[] = [
-    { questId: "first-ward", cosmeticId: "apprentice-wand" },
-  ];
-  if (!completion.victory) return rewards;
-  rewards.push({ questId: "complete-the-ward", cosmeticId: "graveyard-staff" });
-
-  const evidence = readToSelectAudioEvidenceSchema.safeParse(
-    completion.metadata?.learningEvidence,
-  );
-  if (!evidence.success) return rewards;
-  const completeQuestions = evidence.data.questions.every(({ selectionAttempts }) =>
-    selectionAttempts.at(-1)?.completedQuestion === true);
-  const completedEveryItem = evidence.data.questions.length === evidence.data.itemCount
-    && completeQuestions
-    && completion.totalAttempts === evidence.data.itemCount
-    && completion.correctAnswers === evidence.data.itemCount;
-  if (completedEveryItem) {
+  if (completion.totalAttempts < 1) return [];
+  const rewards: EligibleRpgReward[] = [];
+  if (WARD_GAME_TYPES.has(completion.gameType)) {
+    rewards.push({ questId: "first-ward", cosmeticId: "apprentice-wand" });
+    if (completion.victory) rewards.push({ questId: "complete-the-ward", cosmeticId: "graveyard-staff" });
+  }
+  if (ECHO_GAME_TYPES.has(completion.gameType) && completion.victory && isPerfectAnswerAudioRun(completion)) {
     rewards.push({ questId: "perfect-english-audio", cosmeticId: "echo-staff" });
   }
   return rewards;

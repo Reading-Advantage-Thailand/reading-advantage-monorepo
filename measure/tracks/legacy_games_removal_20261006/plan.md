@@ -37,6 +37,7 @@ Defect found 2026-10-07: the Primary reader saves words and sentences in `flashc
 - [x] Quest templates, reward rules, challenge capabilities on the new ids and version 2026-10-06.1 (`hero-vs-zombie`; `WARD_GAME_TYPES` keeps the stored legacy name)
 - [x] Alias map for old completions (`LEGACY_GAME_IDS`); apk/[cartridgeId] redirects by it (M1)
 - [x] grantCompletionCosmetics on new-game completions (`hero-vs-zombie`, `hero-vs-zombie-story`); Echo Staff waits for F2
+- [x] Echo Staff for the dragon games (owner decision 2026-10-07): a perfect English answer audio run of `dragon-flight` or `dragon-rider` earns it; the ward quests stay on Hero vs. Zombie (`ECHO_GAME_TYPES`)
 - [x] Domain `gameTypeEnum` accepts the 3D ids and the `<id>-story` runs — defect found: the completion route rejected every story run before this (no word adventure was ever saved)
 - [x] Games catalog page and teacher challenge page list the 3D registry; seed-demo resolves the capability from the manifests
 
