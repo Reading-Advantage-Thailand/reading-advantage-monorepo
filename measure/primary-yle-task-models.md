@@ -20,7 +20,7 @@ goal is YLE-format practice after a story and YLE-format tests for a level.
 Rights rule (approved 2026-10-07): we copy the task formats and the short rubric lines, so that children see
 the same instructions as in the exam. We do not copy items, texts, pictures, or audio scripts from
 the sample papers. Workbooks writes new items with the Primary characters and the level word lists.
-Pictures come from advantage-forge only.
+Workbooks makes all item pictures (owner, 2026-10-07; this replaces "advantage-forge only").
 
 ## 3. Exam shape
 
@@ -88,7 +88,7 @@ This file does not plan it.
 | Group | Models | New work |
 |---|---|---|
 | A. Text only | `RW-dialogue` (M2), `RW-3-option-cloze`, `RW-box-cloze`, `RW-open-cloze`, `RW-story-complete` | An exact answer key on short answers (accepted spellings, slash alternatives, optional words, word limit). A task model id on each item. |
-| B. Picture stem | `RW-tick-cross`, `RW-yes-no`, `RW-picture-qa`, `RW-definitions`, `RW-picture-write`, `RW-spell` | Group A, plus an image on the item stem and on options, plus letter tiles for `RW-spell`. Forge pictures. |
+| B. Picture stem | `RW-tick-cross`, `RW-yes-no`, `RW-picture-qa`, `RW-definitions`, `RW-picture-write`, `RW-spell` | Group A, plus an image on the item stem and on options, plus letter tiles for `RW-spell`. Workbooks pictures. |
 | C. Listening | `L-*` | Group B, plus audio with two voices (adult, child), scene pictures with named hot spots, and three interactions: drag line, letter match, tap-to-colour. |
 | D. Writing with a rubric | `RW-picture-write` sentences, `RW-story-write` | A rubric score (teacher or AI) before `laq` can give evidence. |
 | E. Speaking | `SP-*` | Not planned. |
@@ -112,9 +112,11 @@ This file does not plan it.
 5. Level map by CEFR: Starters formats for levels 1-3, Movers for levels 4-6, Flyers for
    levels 7-9.
 6. Thai: practice items show the English rubric plus a Thai line; tests show English only.
-7. Pictures: scene items in a story package use that story's own Workbooks pictures;
-   single-word pictures and the level bank use Forge pictures.
-8. Start: the track spec is written now; Workbooks and Forge start after the deploy on
+7. Pictures: scene items in a story package use that story's own Workbooks pictures. All
+   other item pictures (single words, scenes, level bank, secure forms) are made by Workbooks
+   (owner, 2026-10-07, relayed by Forge: "These should be assigned to Workbooks, which already
+   does this kind of work."). Forge makes no YLE pictures.
+8. Start: the track spec is written now; Workbooks starts after the deploy on
    2026-10-11.
 
 9. Scope order: Starters (Pre-A1) models first, the five reading and writing models; Movers
@@ -130,10 +132,11 @@ the word list of its Primary level, not the list of the exam whose format it use
 the Movers list, level 6 the Flyers list (Movers format), level 7 the Flyers list, and levels 8-9
 the A2 Key list (Flyers format). These are the same words as the story texts of that level.
 
-Open: Workbooks writes the items (a new section in AUTHORING.md) and Forge makes the pictures.
-Both sessions confirm before the track starts.
+Workbooks writes the items (a new section in AUTHORING.md) and makes their pictures.
 
-## 8. Forge answer (2026-10-07)
+## 8. Forge answer (2026-10-07, superseded)
+
+The owner gave all YLE pictures to Workbooks on 2026-10-07. This section is history only.
 
 - Single-object pictures: yes. Each word is a new Forge asset source and a review; most YLE words
   are not in the catalog now.
