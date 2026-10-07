@@ -22,6 +22,13 @@ Owner, 2026-10-07: "merge, but prioritize this feature". Lane-g merged into inte
 - [ ] F2 part B sync, Dragon Flight and Dragon Rider (each one when its manifest lists the modality)
 - [ ] Browser check: one English answer audio run on Hero vs. Zombie saves a completion with the answer evidence
 
+## Phase 1c: saved words reach the games; answer audio from the article word audio (owner option A, 2026-10-07)
+Defect found 2026-10-07: the Primary reader saves words and sentences in `flashcard_decks` / `flashcard_cards` (source_id = article id), but the games read `user_word_records` / `user_sentence_records`, which Primary never writes. Production has no single-word clips: the answer audio manifest (`APK_WIZARD_SPEECH_MANIFEST`) is set nowhere. Every article has `audios/words/<articleId>.mp3` with each word's start time in `sentencs_and_words_for_flashcard.words`.
+- [ ] Clip contract: optional `startSeconds` and `endSeconds` on the prepared clip and the clip reference; the browser port plays only that segment; send Forge the diff first
+- [ ] Domain: the Primary saved items from the flashcard store, with each word's translation and audio segment from its article (`listPrimaryPracticeInput`, `listPrimaryAnswerAudioContent`)
+- [ ] Primary routes: `/api/v1/apk/practice` and the answer audio content read the Primary store; answer audio needs no manifest
+- [ ] The legacy flashcards move in the ETL (track `primary_legacy_data_migration_20261004`)
+
 ## Phase 2: M2 ids (before the cutover)
 - [x] Quest templates, reward rules, challenge capabilities on the new ids and version 2026-10-06.1 (`hero-vs-zombie`; `WARD_GAME_TYPES` keeps the stored legacy name)
 - [x] Alias map for old completions (`LEGACY_GAME_IDS`); apk/[cartridgeId] redirects by it (M1)
