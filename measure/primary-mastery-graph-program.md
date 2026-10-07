@@ -340,7 +340,7 @@ scope of `getClassAnalytics`. Every query is tenant-scoped.
 |---|---|---|---|---|
 | T1 | `primary_objective_tags_20261006` | The four tag tables, the objective-key data package, the importer change, the printed-book backfill script, a coverage report | None. Data and importer only; safe to start now. | M |
 | T2 | `primary_mastery_evidence_20261006` | `recordPrimaryEvidence`, the three source adapters, story evidence in `game_completions.metadata`, the job, the confidence table, tenant classification, tests | T1; the cutover decision D4 for the game surfaces | L |
-| T3 | `primary_knowledge_state_20261006` | `getStudentKnowledgeState`, cold-start seed, projections, the shadow recommendation log, the internal admin view | T2 | M |
+| T3 | `primary_knowledge_state_20261007` (created 2026-10-07) | `getStudentKnowledgeState`, cold-start seed, projections, the shadow recommendation log, the internal admin view | T2 | M |
 | T4 | `primary_independent_recommendations_20261006` | Article and activity recommendation on the home and read pages behind a flag (shadow until May 2027), `PracticeInput` from the due set, reason copy in en and th | T3 | L |
 | T5 | `primary_progress_views_20261006` | Student views: map region card, skill page, "what changed"; teacher views: class skill heatmap, next lesson readiness, review-due list, student skill profile; parent report line; child-language objective titles | T3; the map region card also needs `primary_expedition_loop_20261005` | L |
 
