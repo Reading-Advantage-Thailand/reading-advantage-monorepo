@@ -40,6 +40,7 @@ import { createTenantDB } from "@reading-advantage/domain";
 import { listPrimaryArticleCards, listPrimaryDeckCards } from "@reading-advantage/domain/games";
 import { mapOrderingSentenceFields, resolveClozeSegment } from "@/lib/audio-highlight";
 import { shuffle } from "@/lib/shuffle";
+import { snapshotSentenceEntries, type SnapshotSentence } from "@/lib/flashcard-snapshot";
 import { countStreakDays } from "@reading-advantage/domain/primary-home/streak";
 
 function tokenizeSentence(input: string) {
@@ -893,7 +894,7 @@ export async function saveArticleToFlashcard(
     );
 
     const sentences = sentencsAndWords.flatMap(
-      (sentence) => sentence.sentence as unknown as SentenceEntry[],
+      (row) => row.sentence as unknown as SnapshotSentence[],
     );
 
     wordsList.forEach((word, index) => {
@@ -912,21 +913,8 @@ export async function saveArticleToFlashcard(
       });
     });
 
-    sentences.forEach((sentence, index) => {
-      const sentenceStartTime = sentence?.timeSeconds as number;
-      const sentenceEndTime =
-        index === sentences.length - 1
-          ? (sentence?.timeSeconds as number) + 10
-          : (sentences[index + 1].timeSeconds as number);
-
-      sentencesList.push({
-        cardSentence: sentence?.cardSentence,
-        cardTranslation: sentence?.cardTranslation,
-        cardStartTime: sentenceStartTime,
-        cardEndTime: sentenceEndTime,
-        cardAudioUrl: sentencsAndWords[0]?.audioSentencesUrl as string,
-      });
-    });
+    // The snapshot stores `sentence` and `translation`; reading other keys saved null fronts.
+    sentencesList.push(...snapshotSentenceEntries(sentences, sentencsAndWords[0]?.audioSentencesUrl as string));
 
     await Promise.all([
       saveFlashcard(sourceArticleId, wordlist),
