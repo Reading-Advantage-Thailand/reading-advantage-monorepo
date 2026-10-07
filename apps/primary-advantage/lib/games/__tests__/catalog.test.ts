@@ -21,7 +21,7 @@ describe("gameFor", () => {
 
 describe("challengeCapabilityOf", () => {
   it("reads the capability from the manifest, through a legacy id too", () => {
-    expect(challengeCapabilityOf("wizard-vs-zombie")).toEqual({ version: "2026-10-06.1", inputMode: "vocabulary", modalities: ["reading"] });
+    expect(challengeCapabilityOf("wizard-vs-zombie")).toEqual({ version: "2026-10-06.1", inputMode: "vocabulary", modalities: ["reading", "read-to-select-audio"] });
     expect(challengeCapabilityOf("dragon-rider")?.inputMode).toBe("vocabulary");
   });
 
