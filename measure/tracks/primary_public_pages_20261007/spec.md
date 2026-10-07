@@ -32,7 +32,9 @@ The four public pages (`app/[locale]/(index)`) do not look like the product and 
   levels, for families, contact.
 - **PP-3 No dead form.** The home contact form is removed. Contact is a list of links: LINE Official
   (with the QR picture), Facebook, phone (`tel:`), and email (`mailto:`). The channel values live in one
-  config file (`configs/contact-channels.ts`), not in the message files.
+  config file (`configs/contact-channels.ts`), not in the message files. The values come from PR's
+  single source `advantage-pr/01-company/contact-and-locations.md` (v2.1, 2026-10-07); the LINE QR picture
+  is `advantage-pr/assets/images/line-qr.jpg`.
 - **PP-4 Free trial call to action.** "Contact us for a free trial" (owner decision 3) links to the
   contact section or page. No trial terms on any page.
 - **PP-5 Book mock-up.** Home section 2 (and Our books) shows a CSS book (perspective, spine, shadow)

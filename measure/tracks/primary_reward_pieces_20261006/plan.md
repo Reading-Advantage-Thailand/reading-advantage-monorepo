@@ -3,7 +3,7 @@
 Waits for the Forge release of pack 1.1.0 (F4). Nothing starts before the sync lands.
 
 ## Phase 0: Fallback (only if F3 is not ready by 2026-10-13)
-- [ ] B: hide the equip button on `RpgRewardPanel` for emblem rewards, with a test
+- [x] Not needed: Phase 1 (M1 to M4) shipped before 2026-10-13, and M4 replaces the equip button with `inventoryNote` on the Primary hosts
 
 ## Phase 1: After the Forge sync (one commit)
 - [x] M1: `port-avatar-pack.py` takes the pack version from the Forge pack folder and writes `AVATAR_PACK_VERSION` and the `source` mark from `catalog.json`; the app's `public/packs/avatar/1.0.0` is gone (portraits compose from the served version, rows keep `catalogVersion`)
