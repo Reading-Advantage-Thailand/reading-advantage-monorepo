@@ -241,6 +241,17 @@ describe("answer choice audio controller", () => {
     await expect(controller.playChoice(0, 0)).rejects.toMatchObject({ code: "replay-limit" });
   });
 
+  it("passes a clip segment to the ports and refuses a segment that ends before it starts", async () => {
+    const segmented = clips.map((clip, index) => ({ ...clip, url: "/audios/words/article.mp3", startSeconds: index, endSeconds: index + 0.8 }));
+    const ports = createPorts();
+    const { controller, preparation } = createController(ports, { clips: segmented });
+    await controller.playChoice(0, 2);
+    expect(preparation.prepare).toHaveBeenCalledWith(expect.objectContaining({ itemPosition: 2, startSeconds: 2, endSeconds: 2.8 }), expect.anything());
+
+    expect(() => createController(createPorts(), { clips: [{ ...segmented[0]!, endSeconds: 0 }, ...segmented.slice(1)] }))
+      .toThrow(ListeningAudioControllerError);
+  });
+
   it("publishes pair states and releases every prepared clip on destroy", async () => {
     const { controller, preparation } = createController();
     const listener = vi.fn();
