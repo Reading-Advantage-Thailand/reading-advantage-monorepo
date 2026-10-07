@@ -31,7 +31,8 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 - [x] Run on the production copy of 2026-10-07 (`primary_legacy_20261007`) twice with identical counts: [etl-run-20261007-production.md](./etl-run-20261007-production.md)
 - [x] Move the saved flashcards into the Primary flashcard store (owner decision 2026-10-07, option A): decks, cards, progress of the reviewed cards, and reviews; FSRS stability and difficulty have no column (integration 92d87807c; two runs into `primary_etl_20261007`, identical counts)
 - [x] Owner decisions 2026-10-07: saved cards whose word or sentence left their article after the content reload move as text only (accepted); the 4 MCQs with an answer outside their options are fixed, not skipped (`MCQ_ANSWER_FIXES`, b2f202877; 6220 MCQs)
-- [ ] Run again with the `--roles` and `--teachers` answers, then into the cutover target
+- [x] Run again with the `--roles`, `--usernames`, and `--teachers` answers (owner decisions 2026-10-07; 0fd3f7cab; two runs into `primary_etl_20261007`, identical counts)
+- [ ] Run into the cutover target
 
 ## Phase 3: Old article links (FR-4)
 - [ ] Legacy ID resolver and redirect on `student/read/[articleId]` and `/writing`
@@ -39,7 +40,7 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 
 ## Phase 4: Teacher credentials (FR-5, FR-6)
 - [ ] Additive nullable column for a temporary password, and the forced change step
-- [ ] Teacher credential script and hand-out list
+- [ ] Teacher credential script and hand-out list (also the two SYSTEM accounts `phikulphookathin` and `readingadvantage0`: Google sign-in only before)
 - [x] Teacher sign-in by username only (owner decision 2026-10-04: no email sign-in). Usernames are `lower(email)` (D6), so a teacher types the address used before; login lower-cases the input (lane A 3a9237113)
 
 ## Gates
