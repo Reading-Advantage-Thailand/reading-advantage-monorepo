@@ -15,7 +15,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import postgres from "postgres";
-import { renderReport, runPrimaryLegacyImport, type TargetRole } from "../src/migrations-data/primary-legacy-import.js";
+import { LEGACY_UTC_TIMESTAMP, renderReport, runPrimaryLegacyImport, type TargetRole } from "../src/migrations-data/primary-legacy-import.js";
 
 const args = process.argv.slice(2);
 const flag = (name: string) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined; };
@@ -35,7 +35,7 @@ const usernamesFile = flag("--usernames");
 const usernameOverrides = usernamesFile ? (JSON.parse(readFileSync(usernamesFile, "utf8")) as Record<string, string>) : undefined;
 const teachersFile = flag("--teachers");
 const classroomTeacherOverrides = teachersFile ? (JSON.parse(readFileSync(teachersFile, "utf8")) as Record<string, string>) : undefined;
-const legacy = postgres(legacyUrl, { max: 2, connection: { default_transaction_read_only: "on" } });
+const legacy = postgres(legacyUrl, { max: 2, types: LEGACY_UTC_TIMESTAMP, connection: { default_transaction_read_only: "on" } });
 const target = postgres(targetUrl, { max: 2 });
 try {
   const report = await runPrimaryLegacyImport({ legacy, target, dryRun: args.includes("--dry-run"), roleOverrides, usernameOverrides, classroomTeacherOverrides, log: (line) => console.error(`[legacy-import] ${line}`) });

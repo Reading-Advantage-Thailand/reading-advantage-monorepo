@@ -138,6 +138,32 @@ export function parseGrade(grade: unknown): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/**
+ * Reads a Postgres `timestamp` text as UTC. Prisma writes UTC into the legacy `timestamp(3)` columns;
+ * the postgres.js default reads them in the process time zone and moves every date on a non-UTC machine.
+ * @param text The timestamp text, for example `2025-12-01 08:52:42.431`.
+ * @returns The instant in UTC.
+ */
+export function parseUtcTimestamp(text: string): Date {
+  return new Date(`${text.replace(" ", "T")}Z`);
+}
+
+/**
+ * The 0-based order of a legacy question inside its article. The legacy tables have no order column, and
+ * all the questions of an article share one `createdAt`, so the cuid id (it grows in insert order) breaks the tie.
+ */
+export const QUESTION_ORDER_SQL = 'row_number() over (partition by article_id order by "createdAt", id) - 1';
+
+/** postgres.js `types` for the legacy connection: `timestamp` (oid 1114) values are read as UTC. */
+export const LEGACY_UTC_TIMESTAMP = {
+  legacyTimestamp: {
+    to: 1114,
+    from: [1114],
+    serialize: (x: Date | string) => (x instanceof Date ? x : new Date(x)).toISOString(),
+    parse: parseUtcTimestamp,
+  },
+};
+
 /** The index of the legacy MCQ answer inside its options, or -1 (exact first, then trimmed, case-insensitive). */
 export function correctAnswerIndex(options: ReadonlyArray<string>, answer: string | null): number {
   if (answer === null || answer === undefined) return -1;
@@ -463,7 +489,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     counter.table("article").written += await upsert(tx, "articles", rows);
 
     // Question order: the legacy physical row order per article (FR-3 ordering rule; Tutor reads by position).
-    const mcqs = await legacy<Row[]>`select id, question, options, answer, "textualEvidence", article_id, "createdAt", "updatedAt", story_chapter_id, row_number() over (partition by article_id order by ctid) - 1 as ord from multiple_choice_questions`;
+    const mcqs = await legacy<Row[]>`select id, question, options, answer, "textualEvidence", article_id, "createdAt", "updatedAt", story_chapter_id, ${legacy.unsafe(QUESTION_ORDER_SQL)} as ord from multiple_choice_questions`;
     counter.table("multiple_choice_questions").read = mcqs.length;
     const mcqRows: Row[] = [];
     for (const q of mcqs) {
@@ -484,7 +510,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     }
     counter.table("multiple_choice_questions").written += await upsert(tx, "multiple_choice_questions", mcqRows);
 
-    const saqs = await legacy<Row[]>`select id, question, answer, article_id, "createdAt", "updatedAt", story_chapter_id, row_number() over (partition by article_id order by ctid) - 1 as ord from short_answer_questions`;
+    const saqs = await legacy<Row[]>`select id, question, answer, article_id, "createdAt", "updatedAt", story_chapter_id, ${legacy.unsafe(QUESTION_ORDER_SQL)} as ord from short_answer_questions`;
     counter.table("short_answer_questions").read = saqs.length;
     const saqRows: Row[] = [];
     for (const q of saqs) {

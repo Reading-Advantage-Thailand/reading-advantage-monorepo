@@ -1,9 +1,12 @@
+import { PGlite } from "@electric-sql/pglite";
 import { describe, expect, it } from "vitest";
 import {
   DROPPED_TABLES,
   JsonCell,
+  LEGACY_UTC_TIMESTAMP,
   MAP_TABLES,
   MCQ_ANSWER_FIXES,
+  QUESTION_ORDER_SQL,
   cardTextOf,
   correctAnswerIndex,
   keepLatest,
@@ -12,6 +15,7 @@ import {
   mapAssignmentStatus,
   mapRole,
   parseGrade,
+  parseUtcTimestamp,
   renderReport,
   reviewCountsOf,
   usernamesOf,
@@ -35,6 +39,33 @@ describe("primary legacy import transforms", () => {
     expect(usernamesOf("Support0@gmail.com", " Support0 ")).toEqual({ username: "support0", displayUsername: "Support0" });
     expect(usernamesOf("support0@gmail.com", " ")).toEqual({ username: "support0@gmail.com", displayUsername: "support0@gmail.com" });
   });
+
+  it("reads a legacy timestamp as UTC in any process time zone", () => {
+    const tz = process.env.TZ;
+    process.env.TZ = "Asia/Bangkok";
+    try {
+      expect(parseUtcTimestamp("2025-12-01 08:52:42.431").toISOString()).toBe("2025-12-01T08:52:42.431Z");
+      expect(parseUtcTimestamp("2025-12-01 08:52:42").toISOString()).toBe("2025-12-01T08:52:42.000Z");
+      expect(LEGACY_UTC_TIMESTAMP.legacyTimestamp.from).toEqual([1114]);
+      expect(LEGACY_UTC_TIMESTAMP.legacyTimestamp.parse("2026-10-07 17:00:51.51").toISOString()).toBe("2026-10-07T17:00:51.510Z");
+    } finally {
+      if (tz === undefined) delete process.env.TZ;
+      else process.env.TZ = tz;
+    }
+  });
+
+  it("orders the questions of an article by insert order, not by their place on disk", async () => {
+    const db = new PGlite();
+    try {
+      await db.exec(`create table q (id text, article_id text, "createdAt" timestamp);
+        insert into q values ('c3', 'a', '2026-01-01'), ('c1', 'a', '2026-01-01'), ('c2', 'a', '2026-01-01'), ('c9', 'b', '2026-01-02');
+        update q set article_id = article_id where id = 'c1';`);
+      const { rows } = await db.query<{ id: string; ord: number }>(`select id, (${QUESTION_ORDER_SQL})::int as ord from q order by id`);
+      expect(rows).toEqual([{ id: "c1", ord: 0 }, { id: "c2", ord: 1 }, { id: "c3", ord: 2 }, { id: "c9", ord: 0 }]);
+    } finally {
+      await db.close();
+    }
+  }, 30_000);
 
   it("parses the classroom grade text", () => {
     expect(parseGrade("3")).toBe(3);
