@@ -55,19 +55,22 @@ export function StoryGamesClient({ avatar = null, ownerKey }: { avatar?: LaunchA
 
   if (playing && input) {
     // A portal on the body: the scene content (`.cq-content`, z-index 1) is a stacking context, so a
-    // player inside it stays under the desktop side menu and the sticky header.
+    // player inside it stays under the desktop side menu and the sticky header. The wrapper keeps the
+    // skin classes, because the play-kit frame variables live on `.cq-world` (styles/rpg.css).
     return createPortal(
-      <div className="fixed inset-0 z-50 bg-background" data-testid="story-game-player">
-        <GameHost
-          gameId={playing.id}
-          locale={locale}
-          ownerKey={ownerKey}
-          input={input}
-          avatar={avatar}
-          setting={flat ? "phaser" : "auto"}
-          className="flex h-full w-full flex-col"
-          onExit={() => setPlaying(null)}
-        />
+      <div className="cq-world cq" data-testid="story-game-skin">
+        <div className="fixed inset-0 z-50 bg-background" data-testid="story-game-player">
+          <GameHost
+            gameId={playing.id}
+            locale={locale}
+            ownerKey={ownerKey}
+            input={input}
+            avatar={avatar}
+            setting={flat ? "phaser" : "auto"}
+            className="flex h-full w-full flex-col"
+            onExit={() => setPlaying(null)}
+          />
+        </div>
       </div>,
       document.body,
     );

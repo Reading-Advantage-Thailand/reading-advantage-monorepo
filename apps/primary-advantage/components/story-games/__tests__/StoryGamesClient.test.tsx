@@ -78,8 +78,12 @@ describe("StoryGamesClient", () => {
     expect(host).toHaveAttribute("data-game", "rune-match");
     expect(host).toHaveAttribute("data-avatar", "knight");
     expect(host).toHaveAttribute("data-owner", "school-1:student-7");
-    // The player is a child of the body, out of the scene's stacking context, so the desktop side menu stays under it.
-    expect(screen.getByTestId("story-game-player").parentElement).toBe(document.body);
+    // The player sits in a body-level skin wrapper, out of the scene's stacking context, so the desktop
+    // side menu stays under it, and the wrapper keeps the skin classes that hold the play-kit frame variables.
+    const skin = screen.getByTestId("story-game-skin");
+    expect(skin.parentElement).toBe(document.body);
+    expect(skin).toHaveClass("cq-world", "cq");
+    expect(screen.getByTestId("story-game-player").parentElement).toBe(skin);
   });
 
   it("plays with no avatar when the student has none, so the game keeps its hero", async () => {
