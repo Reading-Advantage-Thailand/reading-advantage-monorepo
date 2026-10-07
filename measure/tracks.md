@@ -2,6 +2,8 @@
 
 This file tracks all major tracks for the project.
 
+> **Feature freeze (owner, 2026-10-07) until the Primary deployment (master merge 2026-10-11).** Only bug fixes, tests, browser checks, and the cutover steps of `docs/deployment/primary-cutover-migration-spec.md`: the ETL run into the cutover target, the old article link redirect (FR-4), and the temporary passwords with the forced change (FR-5/6). No new features until the cutover passes.
+
 ---
 
 - [x] **Track: Primary Browser QA Fixes** *Link: [./tracks/primary_browser_qa_fixes_20260915/](./tracks/primary_browser_qa_fixes_20260915/)* — SUPERSEDED by primary_cutover_blockers_20261003
