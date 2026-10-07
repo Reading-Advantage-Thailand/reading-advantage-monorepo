@@ -2,10 +2,9 @@
 
 import { NextRequest } from "next/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { GameSpeechPreparationError } from "@reading-advantage/domain/games";
 
 const {
-  mockPrepareGameAnswerAudio,
+  mockListPrimaryAnswerAudioContent,
   mockCreateTenantDB,
   mockGetCurrentUser,
   mockListGameLearningContent,
@@ -14,7 +13,7 @@ const {
   mockEquipMyRpgCosmetic,
   mockEnqueuePrimaryEvidence,
 } = vi.hoisted(() => ({
-  mockPrepareGameAnswerAudio: vi.fn(),
+  mockListPrimaryAnswerAudioContent: vi.fn(),
   mockCreateTenantDB: vi.fn(),
   mockGetCurrentUser: vi.fn(),
   mockListGameLearningContent: vi.fn(),
@@ -48,9 +47,7 @@ vi.mock("@reading-advantage/domain/games", async () => ({
   ...(await vi.importActual<typeof import("@reading-advantage/domain/games")>(
     "@reading-advantage/domain/games",
   )),
-  prepareGameAnswerAudio: (...args: unknown[]) => mockPrepareGameAnswerAudio(...args),
-  createStoredSpeechClipLookup: () => ({ find: () => undefined }),
-  createConfiguredSpeechObjectResolver: () => () => undefined,
+  listPrimaryAnswerAudioContent: (...args: unknown[]) => mockListPrimaryAnswerAudioContent(...args),
   listGameLearningContent: (...args: unknown[]) => mockListGameLearningContent(...args),
   recordGameCompletion: (...args: unknown[]) => mockRecordGameCompletion(...args),
 }));
@@ -222,31 +219,32 @@ describe("Primary APK routes", () => {
     });
     expect(mockRecordGameCompletion).not.toHaveBeenCalled();
   });
+  const preparedAnswerAudio = {
+    mode: "vocabulary", source: "student-flashcards",
+    requestedTargetLocale: "th", selectedTargetLocales: ["th"],
+    content: [{ term: "river", translation: "แม่น้ำ" }],
+    answerAudioSession: {
+      modality: "read-to-select-audio", promptLocale: "th-TH", answerLocale: "en-US",
+      promptField: "translation", answerField: "term", scored: true,
+    },
+    preparedAnswerAudio: { clips: [{
+      itemPosition: 0, url: "https://storage.googleapis.com/primary-app-storage/audios/words/cmarticle.mp3",
+      mediaType: "audio/mpeg", sourceLocale: "en-US", startSeconds: 0.5, endSeconds: 1.4,
+    }] },
+  };
+
   it.each(["wizard-vs-zombie", "hero-vs-zombie", "dragon-flight", "dragon-rider"])(
-    "returns English answer audio for a written Thai target in %s",
+    "returns the saved words with their article word audio segments in %s",
     async (cartridgeId) => {
-    vi.stubEnv("APK_WIZARD_SPEECH_MANIFEST", "test-manifest");
-    mockListGameLearningContent.mockResolvedValue({
-      mode: "vocabulary", source: "student-flashcards",
-      requestedTargetLocale: "th", selectedTargetLocales: ["th"],
-      content: [{ term: "river", translation: "แม่น้ำ" }],
-    });
-    mockPrepareGameAnswerAudio.mockResolvedValue({ clips: [{
-      itemPosition: 0, url: "https://audio.example/river.mp3",
-      mediaType: "audio/mpeg", sourceLocale: "en-US",
-    }] });
-    const response = await GET(contentRequest(`mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=${cartridgeId}`));
-    expect(response.status).toBe(200);
-    expect(mockPrepareGameAnswerAudio).toHaveBeenCalledWith(expect.objectContaining({
-      user: expect.objectContaining({ id: "student-1", schoolId: "school-1" }),
-      tenant: { schoolId: "school-1" },
-      session: { modality: "read-to-select-audio", promptLocale: "th-TH", answerLocale: "en-US",
-        promptField: "translation", answerField: "term", scored: true },
-    }));
-    expect(await response.json()).toMatchObject({
-      answerAudioSession: { promptLocale: "th-TH", answerLocale: "en-US" },
-      preparedAnswerAudio: { clips: [{ itemPosition: 0, sourceLocale: "en-US" }] },
-    });
+      mockListPrimaryAnswerAudioContent.mockResolvedValue(preparedAnswerAudio);
+      const response = await GET(contentRequest(`mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=${cartridgeId}`));
+      expect(response.status).toBe(200);
+      await expect(response.json()).resolves.toEqual(preparedAnswerAudio);
+      const [args] = mockListPrimaryAnswerAudioContent.mock.calls[0] as [{ user: { id: string }; tenant: unknown; audioUrlOf: (key: string) => string }];
+      expect(args.user).toMatchObject({ id: "student-1", schoolId: "school-1" });
+      expect(args.tenant).toEqual({ schoolId: "school-1" });
+      expect(args.audioUrlOf("audios/words/cmarticle.mp3")).toMatch(/^https:\/\/storage\.googleapis\.com\/.+\/audios\/words\/cmarticle\.mp3$/);
+      expect(mockListGameLearningContent).not.toHaveBeenCalled();
     },
   );
 
@@ -254,103 +252,28 @@ describe("Primary APK routes", () => {
     const response = await GET(contentRequest("mode=vocabulary&locale=th&learningMode=listening&cartridgeId=wizard-vs-zombie"));
     expect(response.status).toBe(400);
     expect(mockListGameLearningContent).not.toHaveBeenCalled();
-    expect(mockPrepareGameAnswerAudio).not.toHaveBeenCalled();
+    expect(mockListPrimaryAnswerAudioContent).not.toHaveBeenCalled();
   });
 
-  it("returns unavailable without a reviewed manifest and never falls back to reading", async () => {
-    vi.stubEnv("APK_WIZARD_SPEECH_MANIFEST", "");
-    mockListGameLearningContent.mockResolvedValue({
-      mode: "vocabulary", source: "student-flashcards",
-      requestedTargetLocale: "th", selectedTargetLocales: ["th"],
-      content: [{ term: "river", translation: "แม่น้ำ" }],
-      answerAudioSession: {
-        modality: "read-to-select-audio", promptLocale: "th-TH", answerLocale: "en-US",
-        promptField: "translation", answerField: "term", scored: true,
-      },
-    });
+  it("returns unavailable when no saved word has a Thai meaning and word audio, and never falls back to reading", async () => {
+    mockListPrimaryAnswerAudioContent.mockResolvedValue(undefined);
 
-    const response = await GET(contentRequest("mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=wizard-vs-zombie"));
+    const response = await GET(contentRequest("mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=hero-vs-zombie"));
 
     expect(response.status).toBe(503);
     await expect(response.json()).resolves.toEqual({
-      error: { code: "LISTENING_UNAVAILABLE", message: "Prepared audio is unavailable" },
+      error: { code: "LISTENING_UNAVAILABLE", message: "No saved word has English audio" },
       status: 503,
     });
-    expect(mockPrepareGameAnswerAudio).not.toHaveBeenCalled();
+    expect(mockListGameLearningContent).not.toHaveBeenCalled();
   });
 
-  it("returns unavailable when one selected English answer has no prepared clip", async () => {
-    vi.stubEnv("APK_WIZARD_SPEECH_MANIFEST", "test-manifest");
-    mockListGameLearningContent.mockResolvedValue({
-      mode: "vocabulary", source: "student-flashcards",
-      requestedTargetLocale: "th", selectedTargetLocales: ["th"],
-      content: [{ term: "river", translation: "แม่น้ำ" }],
-      answerAudioSession: {
-        modality: "read-to-select-audio", promptLocale: "th-TH", answerLocale: "en-US",
-        promptField: "translation", answerField: "term", scored: true,
-      },
-    });
-    mockPrepareGameAnswerAudio.mockRejectedValue(
-      new GameSpeechPreparationError("missing-audio", "Prepared speech is unavailable", 0),
-    );
+  it("returns an internal error when the answer audio content cannot be built", async () => {
+    mockListPrimaryAnswerAudioContent.mockRejectedValue(new Error("invalid prepared response"));
 
-    const response = await GET(contentRequest("mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=wizard-vs-zombie"));
-
-    expect(response.status).toBe(503);
-    await expect(response.json()).resolves.toEqual({
-      error: { code: "LISTENING_UNAVAILABLE", message: "Prepared audio is unavailable" },
-      status: 503,
-    });
-  });
-
-  it.each([
-    ["incomplete clips", { clips: [] }],
-    ["misaligned clips", { clips: [{
-      itemPosition: 1, url: "https://audio.example/river.mp3",
-      mediaType: "audio/mpeg", sourceLocale: "en-US",
-    }] }],
-    ["malformed clips", { clips: [{
-      itemPosition: 0, url: "not a URL",
-      mediaType: "audio/mpeg", sourceLocale: "en-US",
-    }] }],
-  ])("rejects %s instead of returning reading content", async (_label, preparedAnswerAudio) => {
-    vi.stubEnv("APK_WIZARD_SPEECH_MANIFEST", "test-manifest");
-    mockListGameLearningContent.mockResolvedValue({
-      mode: "vocabulary", source: "student-flashcards",
-      requestedTargetLocale: "th", selectedTargetLocales: ["th"],
-      content: [{ term: "river", translation: "แม่น้ำ" }],
-      answerAudioSession: {
-        modality: "read-to-select-audio", promptLocale: "th-TH", answerLocale: "en-US",
-        promptField: "translation", answerField: "term", scored: true,
-      },
-    });
-    mockPrepareGameAnswerAudio.mockResolvedValue(preparedAnswerAudio);
-
-    const response = await GET(contentRequest("mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=wizard-vs-zombie"));
+    const response = await GET(contentRequest("mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=hero-vs-zombie"));
 
     expect(response.status).toBe(500);
-    await expect(response.json()).resolves.toEqual({
-      error: { code: "INTERNAL_ERROR", message: "Unable to load learning content" },
-      status: 500,
-    });
-  });
-
-  it("rejects fallback target metadata before returning answer audio", async () => {
-    vi.stubEnv("APK_WIZARD_SPEECH_MANIFEST", "test-manifest");
-    mockListGameLearningContent.mockResolvedValue({
-      mode: "vocabulary", source: "student-flashcards",
-      requestedTargetLocale: "th", selectedTargetLocales: ["en"],
-      content: [{ term: "river", translation: "river" }],
-    });
-    mockPrepareGameAnswerAudio.mockResolvedValue({ clips: [{
-      itemPosition: 0, url: "https://audio.example/river.mp3",
-      mediaType: "audio/mpeg", sourceLocale: "en-US",
-    }] });
-
-    const response = await GET(contentRequest("mode=vocabulary&locale=th&learningMode=answer-audio&cartridgeId=wizard-vs-zombie"));
-
-    expect(response.status).toBe(500);
-    expect(mockPrepareGameAnswerAudio).toHaveBeenCalledTimes(1);
   });
 
   it("returns unavailable for answer audio requested with an English interface locale", async () => {
@@ -358,7 +281,7 @@ describe("Primary APK routes", () => {
 
     expect(response.status).toBe(503);
     expect(mockListGameLearningContent).not.toHaveBeenCalled();
-    expect(mockPrepareGameAnswerAudio).not.toHaveBeenCalled();
+    expect(mockListPrimaryAnswerAudioContent).not.toHaveBeenCalled();
   });
 
 });

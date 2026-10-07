@@ -27,7 +27,7 @@ vi.mock("@reading-advantage/domain/games", async () => ({
   ...(await vi.importActual<typeof import("@reading-advantage/domain/games")>(
     "@reading-advantage/domain/games",
   )),
-  listGamePracticeInput: (...args: unknown[]) => mockListGamePracticeInput(...args),
+  listPrimaryPracticeInput: (...args: unknown[]) => mockListGamePracticeInput(...args),
 }));
 
 import { GET } from "../practice/route";

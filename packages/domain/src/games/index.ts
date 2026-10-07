@@ -39,6 +39,11 @@ export {
 } from "./practice-input.js";
 export type { GamePracticeInputRequest } from "./practice-input.js";
 export {
+  listPrimaryAnswerAudioContent,
+  listPrimaryPracticeInput,
+} from "./primary-saved-items.js";
+export type { PrimarySavedWord, PrimaryWordAudio } from "./primary-saved-items.js";
+export {
   GameSpeechPreparationError,
   createConfiguredSpeechObjectResolver,
   createStoredSpeechClipLookup,
