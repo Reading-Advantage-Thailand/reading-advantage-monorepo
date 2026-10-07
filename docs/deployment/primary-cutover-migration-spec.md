@@ -1,6 +1,6 @@
 # Primary Advantage Cutover — Data and Login Migration Spec
 
-Version 1.5 | Date 2026-10-06 | Status: Calendar (§11) approved by Daniel 2026-10-01; the rest is a draft | Owner: Daniel Bo | Scope: `apps/primary-advantage`, `packages/db`, `packages/auth`, `packages/api`
+Version 1.6 | Date 2026-10-08 | Status: Calendar (§11) approved by Daniel 2026-10-01; the rest is a draft | Owner: Daniel Bo | Scope: `apps/primary-advantage`, `packages/db`, `packages/auth`, `packages/api`
 
 Related: `advantage-pr/08-strategy/product-strategy-2026-2027.md` §6 (October plan); `Workbooks/docs/content-plans/primary-origins-3.2-plan.md` (decision D1, QR URLs); `tutor-advantage/docs/specs/2026-10-tutor-catalogue-and-platform-spec.md` (Tutor side).
 
@@ -127,6 +127,7 @@ Rehearsal 1 finds the problems. Rehearsal 2 runs on a new backup, end to end, wi
 ## 9. Cutover-day runbook
 
 1. Tell the team in the group chat. Put the legacy Primary service in maintenance mode (or stop traffic) so no one writes.
+   Check that the five legacy Cloud Scheduler jobs in project `primary-advantage` (`generateArticle`, `ValidateArticles`, `ResetDemoAccount`, `generateStory`, `ValidateStorys`) are still paused: `gcloud scheduler jobs list --project=primary-advantage --location=us-central1` and `--location=asia-southeast1`. They write to the legacy database; the owner turned them off permanently on 2026-10-08.
 2. Take the final backup of the legacy database. Keep it.
 3. Push `primary-parity-integration` and `master` to GitHub (owner, 2026-10-06: both branches live only on the owner's computer until the cutover point; the owner runs the push, because auto mode can block it). The monorepo deploy in step 6 builds from GitHub.
 4. Before the ETL, make sure the secret `PRIMARY_V2_DATABASE_URL` exists for the new database. Make sure the Primary Cloud Build service account has `roles/cloudsql.client`. Run refuse-legacy-db, then migrate, then doctor against the new database. Never add a version to the legacy `DATABASE_URL` secret.
@@ -184,6 +185,7 @@ Also: one admin and one system user.
 
 ## Revision history
 
+- 1.6 — 2026-10-08 — Rehearsal 1: runbook step 1 checks that the five legacy scheduler jobs stay paused (owner: off permanently). Record: `measure/tracks/primary_legacy_data_migration_20261004/rehearsal-1-20261008.md`.
 - 1.5 — 2026-10-06 — Runbook step 3: push the integration branch and master to GitHub at the cutover point (owner).
 - 1.4 — 2026-10-06 — D10 decided: article pictures keep the legacy key (`articles.image`), the bucket stays as it is, Tutor sees no change. ETL rule and code task A10 added.
 - 1.3 — 2026-10-04 — Review fixes: the monorepo pipeline uses its own secret `PRIMARY_V2_DATABASE_URL`; the Cloud SQL Auth Proxy runs in the migrate steps; the runbook adds the pre-ETL gate steps, a `--no-traffic` first deploy, and a pinned secret version.
