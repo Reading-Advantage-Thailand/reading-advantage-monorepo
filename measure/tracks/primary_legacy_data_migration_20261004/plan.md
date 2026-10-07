@@ -30,6 +30,7 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 - [x] Run on the production copy of 2026-10-06 (`primary_legacy_20261006`, today's Cloud SQL export) twice with identical counts: [etl-run-20261006-production.md](./etl-run-20261006-production.md)
 - [x] Run on the production copy of 2026-10-07 (`primary_legacy_20261007`) twice with identical counts: [etl-run-20261007-production.md](./etl-run-20261007-production.md)
 - [x] Move the saved flashcards into the Primary flashcard store (owner decision 2026-10-07, option A): decks, cards, progress of the reviewed cards, and reviews; FSRS stability and difficulty have no column (integration 92d87807c; two runs into `primary_etl_20261007`, identical counts)
+- [x] Owner decisions 2026-10-07: saved cards whose word or sentence left their article after the content reload move as text only (accepted); the 4 MCQs with an answer outside their options are fixed, not skipped (`MCQ_ANSWER_FIXES`, b2f202877; 6220 MCQs)
 - [ ] Run again with the `--roles` and `--teachers` answers, then into the cutover target
 
 ## Phase 3: Old article links (FR-4)

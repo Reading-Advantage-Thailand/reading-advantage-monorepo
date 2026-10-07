@@ -12,7 +12,7 @@ cmuwt44pn000ms601ayaklmek "The Happy Red Shoes", made in production 2026-10-06 1
 who made them.
 
 `primary_legacy_id_map` rows by table_name: article 622, multiple_choice_questions 6216,
-short_answer_questions 3110, long_answer_questions 3104, sentencs_and_words_for_flashcard 622.
+short_answer_questions 3110, long_answer_questions 3104, sentencs_and_words_for_flashcard 622 (multiple_choice_questions 6220 after the answer fixes).
 
 Saved flashcards (owner decision 2026-10-07, option A): integration 92d87807c (lane-m 015df4408) adds the
 "flashcards" group. Two more runs into the same target, after graph's tags and evidence backfills, gave
@@ -25,10 +25,16 @@ meaning and a word audio segment (the English answer audio mode), and 165 have f
 The 2026-10-07 content reload removed 217 saved words from their article's word list, and 151 saved
 sentences are not in the article text. Those cards move, but the reader and the games find no meaning,
 translation, or audio for them.
+The owner accepted this on 2026-10-07.
+
+Owner decision 2026-10-07: fix, not skip, the 4 MCQs whose answer is not one of their options
+(`MCQ_ANSWER_FIXES`, integration b2f202877). Two more runs, identical report tables:
+multiple_choice_questions 6220 (6216 before). Graph checked tags.json b29aed1: the 4 questions and
+their articles have no tags, so the tags and evidence rows do not change.
 
 ## Report of the last run
 
-Started 2026-10-07T00:54:59.855Z, finished 2026-10-07T00:55:08.190Z.
+Started 2026-10-07T01:50:47.689Z, finished 2026-10-07T01:50:55.783Z.
 
 | Legacy table | Read | Written | Skipped |
 |---|---|---|---|
@@ -41,7 +47,7 @@ Started 2026-10-07T00:54:59.855Z, finished 2026-10-07T00:55:08.190Z.
 | classroom_students | 643 | 577 | 66 classroom not migrated |
 | licenses | 2 | 2 | 0 |
 | article → articles | 622 | 622 | 0 |
-| multiple_choice_questions | 39180 | 6216 | 4 answer not among the options (spec §6 MCQ rule); 32960 story chapter question (stories deferred) |
+| multiple_choice_questions | 39180 | 6220 | 4 answer text set to its option (owner decision 2026-10-07); 32960 story chapter question (stories deferred) |
 | short_answer_questions | 19590 | 3110 | 16480 story chapter question (stories deferred) |
 | long_answer_questions | 19584 | 3104 | 16480 story chapter question (stories deferred) |
 | sentencs_and_words_for_flashcard | 3918 | 622 | 3296 story chapter row (stories deferred) |
@@ -64,7 +70,7 @@ Started 2026-10-07T00:54:59.855Z, finished 2026-10-07T00:55:08.190Z.
 - classrooms, no teacher and no school admin (spec §6 classrooms rule; assign one with --teachers): cmhj507q00000t7tvfmjlctck, cmhm5bi0q0001t7tv6y6o2dmc, cmhwuko0p000ds60dha8z70ig, cmhwuko0p000cs60d0u548cwz
 - classrooms, teacher_id fell back to the school admin: cmhmf2ig50004t71zrpjmlk0o, cmhnx34j70000t7307jlnmor4, cmhnxybpr0001t7307e3pnfxy, cmhxctzfc0001t7tgbv79seko, cmhxcvcme0002t7tgwiukjndy, cmhxdd1wj0007t7tggnsc2v17, cmi381ld2000as60dn77q4jvb, cmi381ld2000bs60d9cs55q8r, cmi38hnlq000fs60de7uwvftb, cmi38hnlq000gs60dis6qfgr2
 - classroom_students, classroom not migrated: cmier0z85009ut7vz93nemhlw, cmier0z85009vt7vzfm45o7mx, cmier0z85009wt7vze5cjczq1, cmier0z85009xt7vzvdlxvvnl, cmier0z85009yt7vzd2bfhx20, cmier0z85009zt7vzr2jbyomc, cmier0z8500a0t7vzy92ytpqh, cmier0z8500a1t7vzuv5us6p5, cmier0z8500a2t7vz6lgz2z9m, cmier0z8500a3t7vzhjq6upf8, cmier0z8500a4t7vz2gjqpj0p, cmier0z8500a5t7vz5yal2e10, cmier0z8500a6t7vzd7vitket, cmier0z8500a7t7vzlw82r7pk, cmier0z8500a8t7vzuvznvb36, cmier0z8500a9t7vz8det8sgr, cmier0z8500aat7vzo3i0zw1b, cmier0z8500abt7vz9ztkclun, cmier0z8500act7vzes98r7vd, cmier0z8500adt7vz9fy75njd, …
-- multiple_choice_questions, answer not among the options (spec §6 MCQ rule): cmgqtfb1400jot79b2b8vt3wx, cmorc24e10021s6012hxz5jhi, cmou6yrgv0049s601qg1b3hx5, cmqqrw1h1000us6011cslsbeh
+- multiple_choice_questions, answer text set to its option (owner decision 2026-10-07): cmgqtfb1400jot79b2b8vt3wx, cmorc24e10021s6012hxz5jhi, cmou6yrgv0049s601qg1b3hx5, cmqqrw1h1000us6011cslsbeh
 - multiple_choice_questions, story chapter question (stories deferred): cmlv529md0051s601xmvw37tk, cmll556si0144s601le94vlwq, cmlv529mc0049s601r767ibcz, cmlv529mc004as601mdy45ofb, cmlgun9rw00mus6017sfzk3cm, cmlgun9rw00mvs6011ed2bpc4, cmlgun9rw00mws601id37r3mb, cmlgun9rw00mxs601njw1dvqc, cmlgun9rw00mys601sleuns69, cmlgun9rx00mzs60107sy7d33, cmlgun9rx00n0s601zg4ds1x7, cmlgun9rx00n1s601p280izv4, cmlgun9rx00n2s601bz6saqej, cmlgun9rx00n3s601c3mnpsh5, cmlgun9ry00ngs601tphs3mqu, cmlgun9ry00nhs601won4za2n, cmlgun9ry00nis601kx9hlvup, cmlgun9ry00njs601egn41rbl, cmlgun9ry00nks601nidmgrxc, cmlgun9ry00nls6018rlquzdx, …
 - short_answer_questions, story chapter question (stories deferred): cmp016xgz0178s601lnomo684, cmp016xgz0179s601e5pmgjwu, cml15uou7000ct7z58tbmtjax, cml15uou7000dt7z5iteprin9, cml15uou7000et7z5zgkrjixw, cml15uou7000ft7z5reht7u6x, cml15uou7000gt7z5ak2y369w, cml15uou8000yt7z581c4tr7q, cml15uou8000zt7z578kvlzph, cml15uou80010t7z5uu3ycark, cml15uou80011t7z57tuif7uf, cml15uou80012t7z5mhxsyhvh, cml15uou8001kt7z5hq179iym, cml15uou8001lt7z55c5bl4e0, cml15uou8001mt7z5hnye2swf, cml15uou8001nt7z5zcpl3zll, cml15uou8001ot7z5pwnk16ub, cml15uou90026t7z5f45gabtm, cml15uou90027t7z5n8lrnrxc, cml15uou90028t7z588p73yfh, …
 - long_answer_questions, story chapter question (stories deferred): cmlia40qq00ops601kew5sskv, cml15uou7000ht7z5lqqsn451, cml15uou7000it7z5mfwbz2p5, cml15uou7000jt7z5z0q4hti2, cml15uou7000kt7z5ad8jai02, cml15uou7000lt7z5n4weo9zx, cml15uou80013t7z5wwlqjy1v, cml15uou80014t7z5gwgb0vuh, cml15uou80015t7z54xohx1hu, cml15uou80016t7z5imi6aa4z, cml15uou80017t7z5syzceuuy, cml15uou8001pt7z5st08y411, cml15uou8001qt7z5r3l2sn9y, cml15uou8001rt7z5q4s9nabc, cml15uou8001st7z53f3o81lz, cml15uou8001tt7z55llxun0d, cml15uou9002bt7z5slqe0opp, cml15uou9002ct7z55z0ktoop, cml15uou9002dt7z58l5e9eex, cml15uou9002et7z5txvqpx2m, …
