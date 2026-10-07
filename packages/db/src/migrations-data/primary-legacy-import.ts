@@ -105,8 +105,10 @@ export interface ImportOptions {
   target: Sql;
   /** Roll everything back at the end (every group still runs inside its transaction). */
   dryRun?: boolean;
-  /** Owner assignments for legacy users whose role is not student/teacher/admin/system (D9). */
-  roleOverrides?: Record<string, TargetRole>;
+  /** Owner assignments for legacy users whose role is not student/teacher/admin/system (D9); null: the user is not moved. */
+  roleOverrides?: Record<string, TargetRole | null>;
+  /** Owner-chosen usernames (legacy user id → username) in place of `lower(email)`. */
+  usernameOverrides?: Record<string, string>;
   /** Owner assignments of a teacher (legacy user id) for legacy classrooms with no teacher and no school admin. */
   classroomTeacherOverrides?: Record<string, string>;
   log?: (line: string) => void;
@@ -117,14 +119,15 @@ export type TargetRole = "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM";
 const ROLE_MAP: Record<string, TargetRole> = { student: "STUDENT", teacher: "TEACHER", admin: "ADMIN", system: "SYSTEM" };
 
 /** Maps a legacy role text to the target enum; null when the owner must assign it (D9). */
-export function mapRole(role: unknown, overrides: Record<string, TargetRole> | undefined, legacyUserId: string): TargetRole | null {
+export function mapRole(role: unknown, overrides: Record<string, TargetRole | null> | undefined, legacyUserId: string): TargetRole | null {
   const fromOverride = overrides?.[legacyUserId];
   if (fromOverride) return fromOverride;
   return ROLE_MAP[String(role ?? "").toLowerCase()] ?? null;
 }
 
-/** The username rule (D6): `lower(email)`; the display username keeps the email as typed. */
-export function usernamesOf(email: string): { username: string; displayUsername: string } {
+/** The username rule (D6): `lower(email)`, or the owner-chosen username; the display username keeps the text as typed. */
+export function usernamesOf(email: string, override?: string): { username: string; displayUsername: string } {
+  if (override?.trim()) return { username: override.trim().toLowerCase(), displayUsername: override.trim() };
   return { username: email.trim().toLowerCase(), displayUsername: email.trim() };
 }
 
@@ -283,7 +286,7 @@ async function upsert(tx: Tx, table: string, rows: Row[], conflict = "id"): Prom
 
 /** Runs the whole import and returns the report. */
 export async function runPrimaryLegacyImport(options: ImportOptions): Promise<ImportReport> {
-  const { legacy, target, dryRun = false, roleOverrides, classroomTeacherOverrides = {}, log = () => {} } = options;
+  const { legacy, target, dryRun = false, roleOverrides, usernameOverrides = {}, classroomTeacherOverrides = {}, log = () => {} } = options;
   const startedAt = new Date().toISOString();
   const counter = new Counter();
   const notes: string[] = [];
@@ -302,6 +305,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     await open(async (tx) => { await body(tx); await ids.flush(tx); });
   };
   const migratedArticles = new Set<string>();
+  // The teacher of each migrated classroom (legacy classroom id → user id), for assignments whose own teacher is gone.
+  const classTeachers = new Map<string, string>();
 
   const main = async () => {
   // ── 1. schools, users, accounts, school admins ───────────────────────────────────
@@ -319,10 +324,12 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     const userRows: Row[] = [];
     for (const u of legacyUsers) {
       const id = String(u.id);
+      if (roleOverrides?.[id] === null) { counter.skip("users", "not moved (owner decision)", id); continue; }
       const role = mapRole(u.role, roleOverrides, id);
       if (!role) { counter.skip("users", `role '${String(u.role)}' needs an owner assignment (D9)`, id); continue; }
       if (!u.email) { counter.skip("users", "no email, so no username (D6)", id); continue; }
-      const { username, displayUsername } = usernamesOf(String(u.email));
+      const { username, displayUsername } = usernamesOf(String(u.email), usernameOverrides[id]);
+      if (usernameOverrides[id]) counter.skip("users", "username set by the owner (no email part)", id);
       if (seenUsernames.has(username)) { counter.skip("users", "duplicate lower(email) (D6)", id); continue; }
       seenUsernames.add(username);
       users.add(id);
@@ -394,6 +401,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const grade = parseGrade(c.grade);
       if (c.grade && grade === null) counter.skip("classrooms", "grade text not a number, stored null", id);
       migratedClasses.add(id);
+      classTeachers.set(id, teacher);
       classRows.push({
         id: ids.ensure(MAP_TABLES.classrooms, id), name: c.name, school_id: ids.get(MAP_TABLES.schools, c.school_id as string | null), teacher_id: teacher,
         class_code: c.classCode, code_expires_at: c.codeExpiresAt, grade, password_students: c.password_students, created_at: c.createdAt, updated_at: c.updatedAt,
@@ -545,11 +553,13 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const id = String(a.id);
       const classroomId = ids.get(MAP_TABLES.classrooms, a.classroom_id as string);
       if (!classroomId) { counter.skip("assignments", "classroom not migrated", id); continue; }
-      if (!users.has(String(a.teacher_id))) { counter.skip("assignments", "teacher not migrated", id); continue; }
+      const teacherId = users.has(String(a.teacher_id)) ? String(a.teacher_id) : classTeachers.get(String(a.classroom_id));
+      if (!teacherId) { counter.skip("assignments", "teacher not migrated", id); continue; }
+      if (teacherId !== String(a.teacher_id)) counter.skip("assignments", "teacher_id fell back to the classroom teacher (the assignment's teacher is not migrated)", id);
       const articleId = ids.get(MAP_TABLES.article, a.article_id as string | null);
       migratedAssignments.add(id);
       assignmentRows.push({
-        id: ids.ensure(MAP_TABLES.assignments, id), title: a.name ?? a.article_title ?? "Assignment", classroom_id: classroomId, teacher_id: a.teacher_id, article_id: articleId,
+        id: ids.ensure(MAP_TABLES.assignments, id), title: a.name ?? a.article_title ?? "Assignment", classroom_id: classroomId, teacher_id: teacherId, article_id: articleId,
         due_date: a.due_date, type: "article", description: a.description, teacher_name: a.teacher_name, created_at: a.createdAt, updated_at: a.updatedAt,
       });
     }
