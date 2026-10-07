@@ -17,6 +17,11 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [ ] **Track: Real Advantage logos on the www site** — *created 2026-10-08*
+  *Link: [./tracks/www_real_logos_20261008/](./tracks/www_real_logos_20261008/)*
+  *Status: queued; starts after the Primary cutover blockers | Priority: MEDIUM | Requested by PR (logos approved by Daniel 2026-10-08)*
+  *Note: Thai lockups wait for PR's confirmation; the Primary app logo waits until after the freeze.*
+
 - [ ] **Track: Primary public pages in the RPG skin (home, about, contact, Our books)** — *created 2026-10-07*
   *Link: [./tracks/primary_public_pages_20261007/](./tracks/primary_public_pages_20261007/)*
   *Status: spec with the owner decisions of 2026-10-07; code waits on branch `primary/public-pages` until the cutover passes | Priority: MEDIUM | Requested by the owner through PR*

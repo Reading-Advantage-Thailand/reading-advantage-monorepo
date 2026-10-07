@@ -1,0 +1,10 @@
+{
+  "track_id": "www_real_logos_20261008",
+  "type": "chore",
+  "status": "planned",
+  "created_at": "2026-10-08T00:00:00Z",
+  "updated_at": "2026-10-08T00:00:00Z",
+  "description": "Replace the placeholder product wordmarks on the www site with the approved Advantage logo files from advantage-pr.",
+  "estimated_tasks": 6,
+  "deviation_notes": "Queued 2026-10-08 at the request of the PR session (logos approved by Daniel 2026-10-08, advantage-pr a6e2eeb). Starts after the Primary cutover blockers. The Primary app logo and favicon wait until after the cutover and the feature freeze."
+}
