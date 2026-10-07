@@ -28,6 +28,8 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 - [x] ETL script with `primary_legacy_id_map` writes and the reconciliation report (`packages/db/scripts/primary-legacy-import.ts`, library in `src/migrations-data/primary-legacy-import.ts`, `pnpm --filter @reading-advantage/db legacy-import`)
 - [x] Run twice on the restored legacy copy; zero unexplained skips (2026-10-06, April copy into `primary_etl_scratch`: identical counts on both runs; every skip has a reason, see [etl-run-20261006.md](./etl-run-20261006.md); the owner decisions it needs are listed there)
 - [x] Run on the production copy of 2026-10-06 (`primary_legacy_20261006`, today's Cloud SQL export) twice with identical counts: [etl-run-20261006-production.md](./etl-run-20261006-production.md)
+- [x] Run on the production copy of 2026-10-07 (`primary_legacy_20261007`) twice with identical counts: [etl-run-20261007-production.md](./etl-run-20261007-production.md)
+- [x] Move the saved flashcards into the Primary flashcard store (owner decision 2026-10-07, option A): decks, cards, progress of the reviewed cards, and reviews; FSRS stability and difficulty have no column (integration 92d87807c; two runs into `primary_etl_20261007`, identical counts)
 - [ ] Run again with the `--roles` and `--teachers` answers, then into the cutover target
 
 ## Phase 3: Old article links (FR-4)

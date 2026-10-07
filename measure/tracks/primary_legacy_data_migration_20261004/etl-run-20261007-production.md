@@ -14,12 +14,21 @@ who made them.
 `primary_legacy_id_map` rows by table_name: article 622, multiple_choice_questions 6216,
 short_answer_questions 3110, long_answer_questions 3104, sentencs_and_words_for_flashcard 622.
 
-Not in this run: the legacy flashcards (decks and cards). The owner chose on 2026-10-07 to move them into
-the Primary flashcard store; that step comes in a later run into the same target.
+Saved flashcards (owner decision 2026-10-07, option A): integration 92d87807c (lane-m 015df4408) adds the
+"flashcards" group. Two more runs into the same target, after graph's tags and evidence backfills, gave
+identical report tables: flashcard_decks 346, flashcard_cards 3678 of 3683 (5 story chapter cards),
+flashcard_progress 585 (the reviewed cards), card_reviews 692. The article and question counts did not
+change. New id map rows: flashcard_decks 346, flashcard_cards 3678, card_reviews 692.
 
-## Report of the second run
+A SQL check of the target: 173 students saved words; 169 of them have at least one word with a Thai
+meaning and a word audio segment (the English answer audio mode), and 165 have four or more (1,860 words).
+The 2026-10-07 content reload removed 217 saved words from their article's word list, and 151 saved
+sentences are not in the article text. Those cards move, but the reader and the games find no meaning,
+translation, or audio for them.
 
-Started 2026-10-07T00:44:11.825Z, finished 2026-10-07T00:44:16.437Z.
+## Report of the last run
+
+Started 2026-10-07T00:54:59.855Z, finished 2026-10-07T00:55:08.190Z.
 
 | Legacy table | Read | Written | Skipped |
 |---|---|---|---|
@@ -42,6 +51,10 @@ Started 2026-10-07T00:44:11.825Z, finished 2026-10-07T00:44:16.437Z.
 | user_lesson_progress → lesson_progress | 280 | 257 | 23 duplicate (user, article); the latest row kept |
 | user_activities → user_activity | 2770 | 2349 | 421 duplicate (user, type, target); the latest row kept (null targets are distinct) |
 | xp_logs | 2672 | 2672 | 111 null activityId kept as null activity_id |
+| flashcard_decks | 346 | 346 | 0 |
+| flashcard_cards | 3683 | 3678 | 5 story chapter card (stories deferred) |
+| flashcard_cards.last_review → flashcard_progress | 585 | 585 | 0 |
+| card_reviews | 692 | 692 | 0 |
 
 ## Skipped rows (legacy ids, up to 20 per reason)
 
@@ -62,6 +75,7 @@ Started 2026-10-07T00:44:11.825Z, finished 2026-10-07T00:44:16.437Z.
 - user_lesson_progress, duplicate (user, article); the latest row kept: cmin30isd0037s60dq4u7zinl, cmioec55y0031s60d11y1qpmr, cmiof6905006bs60d6qsfgsdj, cmj1g8d97000fs60dvkbvgdx5, cmizyp3xt001xs60d42jl54ot, cmiyjlj200023s60dieo7ly9c, cmityohm5000ns60dfffo01md, cmistrdyl0005s60d5mvpyw3i, cmirlxhla001ys60ddfo44pha, cmixb511600rns60djo5uswhu, cmhqw668d001at7itg035hu4w, cmizfmfw60001s60dft0vr1z0, cmjlcddji000hs60d6e03wo68, cmk8319y30031s601jrg7ar83, cmizs1yfk0007s60dmahc4zer, cmitn5a2q0001s60da3j1qddx, cmiy0lrn90001s60de2gff04u, cmipur6a6000js60d3guv3gkz, cmj013mbm0041s60dxnk3k7vb, cmiyiw94u0001s60d1ne9bfrt, …
 - user_activities, duplicate (user, type, target); the latest row kept (null targets are distinct): cmgz5e2qb002ct7boc382rnpe, cmin3lh640043s60d9ou1qsv6, cmin3osxn004hs60dc8gpetap, cmiof16hn005vs60dl8xf5mj9, cmioedj6w003ns60dp9uw4x8l, cmiof3ish0063s60duyq4uoh8, cmioeu0kj005fs60dejht2iav, cmiof7y98006ns60dyox0faph, cmiokbvj400d4s60ddbk90ltt, cmiomyvak00egs60duphwtgtg, cmiolacy900des60df1g0rukm, cmis7loit001hs60d946oq9lt, cmis7loln001ls60dqchee952, cmisunszb001ns60dxzxaf5fu, cmtr7b02s005hs601i086glbp, cmtr7f44f0069s601ulniwzyv, cmu188bka001ls601bapdfb3k, cmiuylth6000ps60d51w3z0n2, cmiuys00e000ts60d79o86ah8, cmiztf088001fs60d7p6uaurq, …
 - xp_logs, null activityId kept as null activity_id: cmuwxdccc00prs601a98rhokw, cmuwxdccn00pvs601rqvh2dwj, cmuwxdccz00pzs601jg2hng88, cmuwxdcdb00q3s6019upa8tsh, cmuwxdcdm00q7s601hx9g5k1s, cmuwxdce100qbs6019zmcsj28, cmuwxdcee00qhs601sapmomzi, cmuwxdces00qns6010wwhqsma, cmuwxdcf300qrs601x7iw0pb3, cmuwxdcff00qvs601vnbceorp, cmuwxdcfq00qzs60143hqp6sa, cmuwxdcg100r3s601m62vsyj9, cmuwxdcge00r9s60120yypxr9, cmuwxdcgr00rfs601yzg2fgjs, cmuwxdch300rjs601gt57k5my, cmuwxdche00rns601jj9a2yp6, cmuwxdchr00rrs601i3at11i0, cmuwxdci200rvs601fxnexls3, cmuwxdcie00rzs601z7ht9j6r, cmuwxdcip00s3s601qjjyrby3, …
+- flashcard_cards, story chapter card (stories deferred): cml17senp000cs601dl8q0by9, cml17senp000ds601iqf6apow, cml17senp000es601uc4ost8t, cml17seo4000fs60118dfdrvt, cml17seo4000gs60167opddj0
 
 ## Dropped or deferred
 
@@ -78,10 +92,12 @@ Started 2026-10-07T00:44:11.825Z, finished 2026-10-07T00:44:16.437Z.
 - game_rankings: legacy table in the target; the play kit keeps its own ledger
 - ai_insights: JSON title and description have no text target (inventory R6); deferred
 - stories, story_chapters: deferred: the new app has no stories page (docs/primary-whats-moved.md); chapter questions and flashcard rows go with them
-- flashcard_decks, flashcard_cards, card_reviews, cloze_test_games: deferred: FSRS state has no target columns (inventory R2); an owner decision
+- cloze_test_games: 0 rows in the 2026-10-07 copy; the target keeps no game state
 - learning_goals, goal_milestones, goal_progress_logs, assignment_notifications: 0 rows in April; loaded by a later run if production has rows
 
 ## Notes
 
 - lesson_progress.lesson_id holds the new article uuid as text (inventory R10 decision).
+- Saved cards whose text is no longer in their article: 217 words (not in the word list, so no meaning or audio), 151 sentences (not in the article text, so no translation).
+- flashcard_progress keeps due, last review, and the review counts; FSRS stability and difficulty have no column (inventory R2).
 - 622 legacy articles carry their legacy id in articles.image (D10).
