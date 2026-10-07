@@ -10,6 +10,7 @@ import { getTenantDB, getUnscopedDB, studentLogin } from '@reading-advantage/dom
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
 import { CsvUploadSummary } from "./schema";
+import { logger } from "@/lib/observability/logger";
 /**
  * CSV Upload API Route
  *
@@ -542,9 +543,9 @@ export async function POST(request: NextRequest) {
           initialPassword: login.initialPassword,
         }));
         studentLoginsFailedNames = failed.map((f) => nameByUserId.get(f.userId) ?? f.userId);
-        if (failed.length > 0) console.error("Student login generation failed for", failed.length, "students");
+        if (failed.length > 0) logger.error("student_login_generation_failed", { count: failed.length });
       } catch (error) {
-        console.error("Student login generation failed:", error instanceof Error ? error.message : "Unknown");
+        logger.error("student_login_generation_failed", { message: error instanceof Error ? error.message : "Unknown" });
         studentLoginsFailedNames = Array.from(studentSeeds.keys(), (id) => nameByUserId.get(id) ?? id);
       }
     }

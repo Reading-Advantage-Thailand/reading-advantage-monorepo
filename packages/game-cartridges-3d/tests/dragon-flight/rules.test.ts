@@ -26,7 +26,15 @@ describe('content', () => {
     expect(new Set(words.map((w) => w.id)).size).toBe(TUNING.maxWords);
     for (const word of words) {
       const source = STORY.vocabulary.find((v) => v.id === word.id)!;
-      expect(word).toEqual({ id: source.id, term: source.term, translation: source.translation, attempts: 0, solved: false, returned: false });
+      expect(word).toEqual({
+        id: source.id,
+        term: source.term,
+        translation: source.translation,
+        position: STORY.vocabulary.indexOf(source),
+        attempts: 0,
+        solved: false,
+        returned: false,
+      });
     }
     expect(flightWordsOf(STORY, createRng(3), 10).map((w) => w.id)).toEqual(words.map((w) => w.id));
     expect(flightWordsOf(STORY, createRng(4), 10).map((w) => w.id)).not.toEqual(words.map((w) => w.id));
@@ -41,8 +49,8 @@ describe('content', () => {
       { term: 'bird ', translation: ' นก' },
     ]);
     expect(words).toEqual([
-      { id: 'w-1', term: 'cat', translation: 'แมว' },
-      { id: 'w-4', term: 'bird', translation: 'นก' },
+      { id: 'w-1', term: 'cat', translation: 'แมว', position: 0 },
+      { id: 'w-4', term: 'bird', translation: 'นก', position: 3 },
     ]);
     const sim = createDragonFlight(
       [
@@ -76,20 +84,20 @@ describe('content', () => {
 
 describe('gates', () => {
   const words = [
-    { id: 'a', term: 'cat', translation: 'แมว' },
-    { id: 'b', term: 'dog', translation: 'หมา' },
-    { id: 'c', term: 'kitty', translation: 'แมว' }, // the same meaning as "cat"
-    { id: 'd', term: 'Dog', translation: 'หมา' },
-    { id: 'e', term: 'bird', translation: 'นก' },
-    { id: 'f', term: 'fish', translation: 'Fish' },
-    { id: 'g', term: 'fishes', translation: 'fish' }, // the same meaning as "fish", other case
+    { id: 'a', position: 0, term: 'cat', translation: 'แมว' },
+    { id: 'b', position: 1, term: 'dog', translation: 'หมา' },
+    { id: 'c', position: 2, term: 'kitty', translation: 'แมว' }, // the same meaning as "cat"
+    { id: 'd', position: 3, term: 'Dog', translation: 'หมา' },
+    { id: 'e', position: 4, term: 'bird', translation: 'นก' },
+    { id: 'f', position: 5, term: 'fish', translation: 'Fish' },
+    { id: 'g', position: 6, term: 'fishes', translation: 'fish' }, // the same meaning as "fish", other case
   ];
 
   it('decoys are other words\' meanings, distinct from the right one and from each other, case-insensitive', () => {
     expect(decoysFor(words[0]!, words)).toEqual([
-      { id: 'b', text: 'หมา' },
-      { id: 'e', text: 'นก' },
-      { id: 'f', text: 'Fish' },
+      { id: 'b', text: 'หมา', position: 1 },
+      { id: 'e', text: 'นก', position: 4 },
+      { id: 'f', text: 'Fish', position: 5 },
     ]);
     expect(decoysFor(words[6]!, words).map((d) => d.text)).toEqual(['แมว', 'หมา', 'นก']);
   });
@@ -97,12 +105,12 @@ describe('gates', () => {
   it('3 gates, or 2 in Helper mode, with the right one at a seeded position', () => {
     const three = gatesFor(words[0]!, words, 3, createRng(1));
     expect(three.options).toHaveLength(3);
-    expect(three.options[three.correctGate]).toEqual({ id: 'a', text: 'แมว' });
+    expect(three.options[three.correctGate]).toEqual({ id: 'a', text: 'แมว', position: 0 });
     const texts = three.options.map((o) => o.text.toLowerCase());
     expect(new Set(texts).size).toBe(3);
     const two = gatesFor(words[0]!, words, 2, createRng(1));
     expect(two.options).toHaveLength(2);
-    expect(two.options[two.correctGate]).toEqual({ id: 'a', text: 'แมว' });
+    expect(two.options[two.correctGate]).toEqual({ id: 'a', text: 'แมว', position: 0 });
     const positions = new Set(Array.from({ length: 30 }, (_, seed) => gatesFor(words[0]!, words, 3, createRng(seed)).correctGate));
     expect(positions).toEqual(new Set([0, 1, 2]));
     expect(gatesFor(words[0]!, words, 3, createRng(5))).toEqual(gatesFor(words[0]!, words, 3, createRng(5)));
@@ -110,7 +118,7 @@ describe('gates', () => {
 
   it('fewer gates when the flight has too few distinct meanings', () => {
     const few = [words[0]!, words[2]!];
-    expect(gatesFor(few[0]!, few, 3, createRng(1)).options).toEqual([{ id: 'a', text: 'แมว' }]);
+    expect(gatesFor(few[0]!, few, 3, createRng(1)).options).toEqual([{ id: 'a', text: 'แมว', position: 0 }]);
   });
 
   it('every round of a flight has the mode\'s gate count and distinct texts', () => {
@@ -147,6 +155,8 @@ describe('rounds and the flight', () => {
       roundId: round.id,
       itemId: round.itemId,
       term: round.term,
+      translation: round.translation,
+      position: round.position,
       options: round.options,
       gatesAt: TUNING.gateSpacing,
     });

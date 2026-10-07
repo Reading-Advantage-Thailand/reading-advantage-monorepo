@@ -5,7 +5,9 @@ import { usersRouter } from "../routers/users.js";
 import { createTenantDB } from "@reading-advantage/domain";
 import type { DB } from "@reading-advantage/db";
 
-vi.mock("@reading-advantage/db/schema", () => ({
+// Partial mocks: the domain index loads modules that read other tables and `sql` at module load.
+vi.mock("@reading-advantage/db/schema", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@reading-advantage/db/schema")>()),
   users: {
     id: "id",
     email: "email",
@@ -22,7 +24,8 @@ vi.mock("@reading-advantage/db/schema", () => ({
   },
 }));
 
-vi.mock("drizzle-orm", () => ({
+vi.mock("drizzle-orm", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("drizzle-orm")>()),
   eq: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "eq" })),
   and: vi.fn((...conds: unknown[]) => ({ type: "and", conds })),
 }));

@@ -199,6 +199,59 @@ describe("answer choice audio controller", () => {
     ]);
   });
 
+  it("gives back the replay of a cancelled play at the limit", async () => {
+    let calls = 0;
+    const ports = createPorts({
+      play: (_clip, signal) => (++calls === 3
+        ? new Promise((_resolve, reject) => signal.addEventListener("abort", () => reject(new Error("aborted"))))
+        : Promise.resolve()),
+    });
+    const { controller } = createController(ports);
+    await controller.playChoice(0, 0);
+    await controller.playChoice(0, 0);
+    const playback = controller.playChoice(0, 0);
+    await vi.waitFor(() => expect(controller.getSnapshot().status).toBe("playing"));
+    controller.pause();
+    await playback;
+
+    expect(controller.getChoiceSnapshot(0, 0)).toMatchObject({ status: "cancelled", replayCount: 1, canConfirm: false });
+    await controller.playChoice(0, 0);
+    expect(controller.confirmChoice(0, 0)).toMatchObject({ completedQuestion: true });
+    expect(controller.getEvidence().replayCounts).toEqual([
+      { questionPosition: 0, clipItemPosition: 0, count: 2 },
+    ]);
+  });
+
+  it("counts no replay for a failed play or a play before the first completed one", async () => {
+    let fail = true;
+    const ports = createPorts({
+      prepare: async (reference) => {
+        if (fail) {
+          fail = false;
+          throw new ListeningAudioControllerError("load-failed", "Clip failed to load");
+        }
+        return { itemPosition: reference.itemPosition };
+      },
+    });
+    const { controller } = createController(ports, { maxReplaysPerChoice: 0 });
+
+    await expect(controller.playChoice(0, 0)).rejects.toMatchObject({ code: "load-failed" });
+    await controller.playChoice(0, 0);
+    expect(controller.getChoiceSnapshot(0, 0)).toMatchObject({ playCount: 2, replayCount: 0, canConfirm: true });
+    await expect(controller.playChoice(0, 0)).rejects.toMatchObject({ code: "replay-limit" });
+  });
+
+  it("passes a clip segment to the ports and refuses a segment that ends before it starts", async () => {
+    const segmented = clips.map((clip, index) => ({ ...clip, url: "/audios/words/article.mp3", startSeconds: index, endSeconds: index + 0.8 }));
+    const ports = createPorts();
+    const { controller, preparation } = createController(ports, { clips: segmented });
+    await controller.playChoice(0, 2);
+    expect(preparation.prepare).toHaveBeenCalledWith(expect.objectContaining({ itemPosition: 2, startSeconds: 2, endSeconds: 2.8 }), expect.anything());
+
+    expect(() => createController(createPorts(), { clips: [{ ...segmented[0]!, endSeconds: 0 }, ...segmented.slice(1)] }))
+      .toThrow(ListeningAudioControllerError);
+  });
+
   it("publishes pair states and releases every prepared clip on destroy", async () => {
     const { controller, preparation } = createController();
     const listener = vi.fn();

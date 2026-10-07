@@ -2,6 +2,8 @@
 
 This file tracks all major tracks for the project.
 
+> **Feature freeze (owner, 2026-10-07) until the Primary deployment (master merge 2026-10-11).** Only bug fixes, tests, browser checks, and the cutover steps of `docs/deployment/primary-cutover-migration-spec.md`: the ETL run into the cutover target, the old article link redirect (FR-4), and the temporary passwords with the forced change (FR-5/6). No new features until the cutover passes.
+
 ---
 
 - [x] **Track: Primary Browser QA Fixes** *Link: [./tracks/primary_browser_qa_fixes_20260915/](./tracks/primary_browser_qa_fixes_20260915/)* — SUPERSEDED by primary_cutover_blockers_20261003
@@ -15,14 +17,24 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [ ] **Track: Real Advantage logos on the www site** — *created 2026-10-08*
+  *Link: [./tracks/www_real_logos_20261008/](./tracks/www_real_logos_20261008/)*
+  *Status: queued; starts after the Primary cutover blockers | Priority: MEDIUM | Requested by PR (logos approved by Daniel 2026-10-08)*
+  *Note: Thai lockups wait for PR's confirmation; the Primary app logo waits until after the freeze.*
+
+- [ ] **Track: Primary public pages in the RPG skin (home, about, contact, Our books)** — *created 2026-10-07*
+  *Link: [./tracks/primary_public_pages_20261007/](./tracks/primary_public_pages_20261007/)*
+  *Status: spec with the owner decisions of 2026-10-07; code waits on branch `primary/public-pages` until the cutover passes | Priority: MEDIUM | Requested by the owner through PR*
+  *Note: PR writes the English copy against the section list and string keys (spec §4); Daniel the Thai; no vi strings.*
+
 - [~] **Track: Primary RPG skin — every student page inside the Chibi Quest world** — *created 2026-10-06*
   *Link: [./tracks/primary_rpg_skin_20261006/](./tracks/primary_rpg_skin_20261006/)*
   *Status: Phase 0 approved 2026-10-06; Phases 1 to 3 (shell, home, picker, inventory, shop, battle, dashboard) done 2026-10-06, reports `phase1/`, `phase2/`, `phase3/index.html`; Phase 4 (remaining pages) next | Priority: CRITICAL | Design authority: `docs/primary-rpg-skin.md`*
   *Note: Forge assets only (no ElvGames). 3D avatar approved; every 3D interaction has a 2D fallback through the games' selector. Owner gate after Phase 0 on the look.*
 
-- [ ] **Track: Legacy games removal (Primary first)** — *created 2026-10-06*
+- [~] **Track: Legacy games removal (Primary first)** — *created 2026-10-06*
   *Link: [./tracks/legacy_games_removal_20261006/](./tracks/legacy_games_removal_20261006/)*
-  *Status: plan sent to the owner through Forge; Forge F1 ported (d292c1186) | Priority: HIGH | Owner direction 2026-10-06: no old games in the repo; Tutor out of scope*
+  *Status: owner approved 2026-10-06; M1 host and M2 ids done on lane-g (`primary/lane-g-new-game-host`), browser check and merge open | Priority: HIGH | Owner direction 2026-10-06: no old games in the repo; Tutor out of scope*
   *Note: M1 host and M2 ids before the cutover; M3 (other apps) and M4 (removal) after.*
 
 - [ ] **Track: Reward emblems become avatar pieces (M1 to M4)** — *created 2026-10-06*
@@ -1168,6 +1180,15 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [~] **Track: Primary Mastery Evidence (T2 of the Primary Mastery Graph Program)** (created 2026-10-06 at the owner's request; lane-h; Phases 0-4 implemented and verified on a clone of the production copy the same day, 1361 evidence rows from 1065 legacy quiz rows; merged into integration 146e46261; the per-phase owner checks are open) *Link: [./tracks/primary_mastery_evidence_20261006/](./tracks/primary_mastery_evidence_20261006/)*
   `recordPrimaryEvidence`, the evidence policy as data (program 4.2), the question, flashcard, and game source adapters, the durable job, tenant scoping, and the evidence summary for calibration. Shadow mode: evidence only, no adaptation, no UI.
+
+- [ ] **Track: Science Advantage Relaunch** *Link: [./tracks/science_advantage_relaunch_20261006/](./tracks/science_advantage_relaunch_20261006/)*
+  Review of apps/science-advantage and the Nov 2026 to May 2027 plan: Science as a program of the shared platform, workbook digital twin, Mastery tag/shadow/adaptive. All decisions approved 2026-10-06; Phase 0 in progress.
+
+- [ ] **Track: Math Advantage Program** *Link: [./tracks/math_advantage_program_20261006/](./tracks/math_advantage_program_20261006/)*
+  Math as a program of the shared platform: P3 and P4 Book 1, generated practice on the Mastery runtime, demo 2027-03-08. All decisions approved 2026-10-06; Phase 0 in progress.
+
+- [ ] **Track: Zhongwen Advantage Program** *Link: [./tracks/zhongwen_advantage_program_20261006/](./tracks/zhongwen_advantage_program_20261006/)*
+  Zhongwen as a program of the shared platform: YCT 1 and 2, English lesson shape with a script layer, demo 2027-03-29 for May 2027 (Daniel's decision). All decisions approved 2026-10-06; Phase 0 in progress.
 
 - [ ] **Track: Primary YLE-format Starters Tasks** (created 2026-10-07 after the owner approved the spec and plan; lane-h; starts after the 2026-10-11 deploy; migration in the 2026-11-09 window) *Link: [./tracks/primary_yle_starters_20261007/](./tracks/primary_yle_starters_20261007/)*
   The five Starters reading and writing task models: item contract and JSON Schema, practice and secure importers, exact-key matcher, task screens, after-reading lesson step, level bank sets, secure test sittings, and evidence from every answer. Catalog: `measure/primary-yle-task-models.md`.

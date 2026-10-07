@@ -1,0 +1,11 @@
+{
+  "track_id": "math_advantage_program_20261006",
+  "type": "feature",
+  "status": "in_progress",
+  "created_at": "2026-10-06T16:20:00Z",
+  "updated_at": "2026-10-06T21:00:00Z",
+  "description": "Review of ra-math-advantage and the plan for Math Advantage as a program of the shared K-12 platform: P3 and P4, one printed workbook each, generated practice on the Mastery Advantage runtime, shadow mode at launch, demo 2027-03-08, print by 2027-04-02, schools May 2027. Waits for Daniel's decisions M1 to M8.",
+  "estimated_tasks": 38,
+  "actual_tasks": null,
+  "deviation_notes": "Created from a cross-session request relayed by the PR session on 2026-10-06. Review only; no code changed. Not committed. The graphs session confirmed on 2026-10-06 that it builds only the English graph; this track owns the Math graph. Evening 2026-10-06: M9 cleared; scope P3 and P4 with a stop rule; shadow phase on the Primary evidence policy pattern. Night 2026-10-06: all decisions approved by Daniel; Phase 0 started (read-only until the cutover passes and the freeze lifts)."
+}

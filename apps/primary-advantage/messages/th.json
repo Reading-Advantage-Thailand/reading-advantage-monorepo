@@ -2822,7 +2822,12 @@
     "readMode": "อ่านภาษาไทย",
     "listenMode": "ฟังภาษาอังกฤษ",
     "signInToPlayChallenge": "เข้าสู่ระบบเพื่อเล่นชาเลนจ์นี้",
-    "signInToPlayGame": "เข้าสู่ระบบเพื่อเล่นเกมนี้"
+    "signInToPlayGame": "เข้าสู่ระบบเพื่อเล่นเกมนี้",
+    "loadError": "โหลดเกมไม่สำเร็จ",
+    "loadingGame": "กำลังโหลดเกม…",
+    "loadingChallenge": "กำลังโหลดชาเลนจ์…",
+    "challengeMismatch": "เกมนี้เล่นชาเลนจ์นี้ไม่ได้",
+    "retry": "ลองอีกครั้ง"
   },
   "StudentGames": {
     "rewardInInventory": "อยู่ในกระเป๋าของคุณแล้ว สวมใส่ได้ที่หน้าตัวละคร",

@@ -6,7 +6,14 @@
  * zombies rise from the graves on the edges and chase the hero, a zombie that reaches the hero
  * pushes the hero back (no damage), a Blast knocks down every zombie within the radius and they
  * rise again at a grave, and after the last word the sun rises. No HP, no game over.
+ *
+ * Answer audio (Read to Select Audio, `options.answerAudio`): every input word is one round (at
+ * most `MAX_LISTENING_SESSION_ITEMS`) and no word returns, so the evidence has one question per
+ * item. The banner shows the meaning and the orbs play the English words: a touch is only an
+ * `orbTouched` event, the view takes the orb with `take` after its clip played to the end, and the
+ * first clip of a round shields the hero for a while (`listen`).
  */
+import { MAX_LISTENING_SESSION_ITEMS } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import {
   STEP_MS,
   circlesTouch,
@@ -100,11 +107,15 @@ export const TUNING = {
   zombieAttackMs: 1000,
   /** The dawn lasts this long before the night is complete. */
   dawnMs: 2500,
+  /** Answer audio: the first clip of a round shields the hero this long (the old game's value). */
+  listenShieldMs: 8000,
 } as const;
 
 export interface HeroVsZombieOptions {
   seed: number;
   helper: boolean;
+  /** Read to Select Audio (the host gave an answer audio controller). */
+  answerAudio?: boolean;
 }
 
 export type HeroVsZombieSimulation = Simulation<HeroVsZombieState, HeroVsZombieCommand, HeroVsZombieEvent>;
@@ -148,12 +159,14 @@ const countDown = (ms: number): number => (ms - STEP_MS < 1e-6 ? 0 : ms - STEP_M
 
 export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZombieOptions): HeroVsZombieSimulation {
   const rng: Rng = createRng(options.seed);
-  const words = nightWordsOf(input, rng, TUNING.maxWords);
+  const answerAudio = options.answerAudio === true;
+  const words = nightWordsOf(input, rng, answerAudio ? MAX_LISTENING_SESSION_ITEMS : TUNING.maxWords);
   const zombieSpeed = zombieSpeedFor(options.helper);
 
   const state: HeroVsZombieState = {
     phase: 'night',
     helper: options.helper,
+    answerAudio,
     timeMs: 0,
     words,
     queue: words.map((w) => w.id),
@@ -162,7 +175,7 @@ export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZomb
     total: words.length,
     rounds: 0,
     orbCount: orbCountFor(options.helper),
-    hero: { x: HERO_START.x, z: HERO_START.z, facing: 180, bumpedMs: 0, pushX: 0, pushZ: 0 },
+    hero: { x: HERO_START.x, z: HERO_START.z, facing: 180, bumpedMs: 0, pushX: 0, pushZ: 0, shieldMs: 0 },
     orbs: [],
     zombies: [],
     charges: TUNING.chargesAtStart,
@@ -236,13 +249,14 @@ export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZomb
     const word = wordById(state, state.queue.shift()!);
     started += 1;
     const id = `r${started}`;
-    state.round = { id, itemId: word.id, term: word.term };
+    state.round = { id, itemId: word.id, term: word.term, translation: word.translation, position: word.position, listened: false };
     state.roundIndex = started - 1;
-    state.orbs = orbsFor(word, state.words, state.orbCount, rng).map((o, i) => ({
+    state.orbs = orbsFor(word, state.words, state.orbCount, rng, answerAudio).map((o, i) => ({
       id: `${id}-o${i + 1}`,
       text: o.text,
       correct: o.correct,
       wordId: o.wordId,
+      position: o.position,
       x: 0,
       z: 0,
       contact: false,
@@ -254,7 +268,9 @@ export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZomb
       roundId: id,
       itemId: word.id,
       term: word.term,
-      orbs: state.orbs.map(({ id: orbId, text, x, z }) => ({ id: orbId, text, x, z })),
+      translation: word.translation,
+      position: word.position,
+      orbs: state.orbs.map(({ id: orbId, text, position, x, z }) => ({ id: orbId, text, position, x, z })),
     });
   };
 
@@ -295,7 +311,8 @@ export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZomb
       return;
     }
     events.push({ type: 'orbWrong', id: orb.id, roundId: round.id, itemId: word.id });
-    if (!word.returned) {
+    // An answer audio question ends with its right answer, so a word cannot come back.
+    if (!word.returned && !answerAudio) {
       word.returned = true;
       state.queue.push(word.id);
       state.total += 1;
@@ -319,7 +336,8 @@ export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZomb
       orb.contact = touching;
       if (handled || !entered || hero.bumpedMs > 0) continue;
       handled = true; // one touch per step; the orbs move after it
-      takeOrb(orb, events);
+      if (answerAudio) events.push({ type: 'orbTouched', id: orb.id, roundId: state.round.id, itemId: state.round.itemId });
+      else takeOrb(orb, events);
     }
   };
 
@@ -327,6 +345,7 @@ export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZomb
 
   const moveHero = (): void => {
     const hero = state.hero;
+    hero.shieldMs = countDown(hero.shieldMs);
     let pos: Vec2;
     if (hero.bumpedMs > 0) {
       hero.bumpedMs = countDown(hero.bumpedMs);
@@ -377,7 +396,7 @@ export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZomb
   const zombieContacts = (events: HeroVsZombieEvent[]): void => {
     if (state.phase !== 'night') return;
     const hero = state.hero;
-    if (hero.bumpedMs > 0) return;
+    if (hero.bumpedMs > 0 || hero.shieldMs > 0) return;
     const hit = state.zombies.find((z) => isWalking(z) && circlesTouch(hero, TUNING.heroRadius, z, TUNING.zombieRadius));
     if (!hit) return;
     const push = directionTo(hit, hero);
@@ -417,6 +436,24 @@ export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZomb
     return [{ type: 'blast', charges: state.charges, knocked, coins: state.coins }];
   };
 
+  /** Answer audio: the view confirmed the orb's clip; the orb is taken as a touch takes it. */
+  const take = (orbId: string): HeroVsZombieEvent[] => {
+    if (!answerAudio || state.phase !== 'night' || !state.round) return [];
+    const orb = state.orbs.find((o) => o.id === orbId);
+    if (!orb) return [];
+    const events: HeroVsZombieEvent[] = [];
+    takeOrb(orb, events);
+    return events;
+  };
+
+  /** Answer audio: a clip started; the first clip of a round shields the hero. */
+  const listen = (): HeroVsZombieEvent[] => {
+    if (!answerAudio || state.phase !== 'night' || !state.round || state.round.listened) return [];
+    state.round.listened = true;
+    state.hero.shieldMs = TUNING.listenShieldMs;
+    return [{ type: 'heroShielded', ms: TUNING.listenShieldMs }];
+  };
+
   // ------------------------------------------------------------ the simulation
 
   // The first round and the first zombies are set up at creation (the view reads the state before
@@ -438,6 +475,10 @@ export function createHeroVsZombie(input: HeroVsZombieInput, options: HeroVsZomb
           return [];
         case 'blast':
           return blast();
+        case 'take':
+          return take(command.orbId);
+        case 'listen':
+          return listen();
         default:
           return [];
       }

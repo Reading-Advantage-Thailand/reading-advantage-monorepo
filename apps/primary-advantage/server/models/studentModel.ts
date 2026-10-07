@@ -28,6 +28,7 @@ import {
   UpdateStudentInput,
   UserWithRoles,
 } from "@/types/index";
+import { logger } from "@/lib/observability/logger";
 
 // Type for student query parameters
 interface StudentQueryParams {
@@ -365,9 +366,9 @@ export const createStudent = async (params: {
         students: [{ userId: newStudentId, classroomName, classroomId: classroomId ?? null, ...(password ? { password } : {}) }],
       });
       if (login) credentials = { username: login.username, initialPassword: login.initialPassword };
-      if (failed.length > 0) console.error("Student Model: Error generating student login:", failed[0]!.reason);
+      if (failed.length > 0) logger.error("student_login_generation_failed", { count: failed.length, error: failed[0]!.reason });
     } catch (error) {
-      console.error("Student Model: Error generating student login:", error);
+      logger.error("student_login_generation_failed", { error });
     }
 
     // Refetch the full record with the include shape.

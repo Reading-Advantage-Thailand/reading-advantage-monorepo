@@ -4,6 +4,7 @@ import {
   revokeAllUserSessions,
   type AuditContext,
 } from "@reading-advantage/auth";
+import { logger } from "@/lib/observability/logger";
 
 /** Who performed a password write; null for self-service sign-up. */
 export interface PasswordActor {
@@ -48,13 +49,13 @@ export async function afterPasswordWrite(params: {
       targetId: userId,
     });
   } catch (error) {
-    console.error("Password write: audit event failed:", error instanceof Error ? error.message : "Unknown");
+    logger.error("password_write_audit_failed", { message: error instanceof Error ? error.message : "Unknown" });
   }
   if (!created && !sessionsRevoked) {
     try {
       await revokeAllUserSessions(db, userId);
     } catch (error) {
-      console.error("Password write: session revocation failed:", error instanceof Error ? error.message : "Unknown");
+      logger.error("password_write_session_revocation_failed", { message: error instanceof Error ? error.message : "Unknown" });
       throw new Error("Password changed but session revocation failed");
     }
   }
@@ -75,6 +76,6 @@ export async function auditUserDeleted(params: {
       targetId: params.userId,
     });
   } catch (error) {
-    console.error("Account delete: audit event failed:", error instanceof Error ? error.message : "Unknown");
+    logger.error("account_delete_audit_failed", { message: error instanceof Error ? error.message : "Unknown" });
   }
 }

@@ -18,6 +18,13 @@ export default {
       learningPreview: 'Your words',
       tip: 'No hurry: the gates wait in front of you until you pick one.',
       start: 'Take off 🐉',
+      audio: {
+        instructions: {
+          read: { title: 'Read the meaning', description: 'A Thai meaning shows at the top. Two gates fly toward you.' },
+          choose: { title: 'Listen and pick', description: 'Tap 🔊 to hear a gate. Steer to the gate with the English word.' },
+        },
+        tip: 'At the gate, your dragon waits until you hear its word.',
+      },
     },
     hud: {
       place: 'Dragon Rider',
@@ -25,6 +32,9 @@ export default {
       flock: 'Flock',
       story: '📖 Story',
       word: 'Which gate means…',
+      wordAudio: 'Which gate says the English word for…',
+      listen: 'Listen to gate {index}',
+      soundOff: 'Turn the sound on to hear the words.',
       joined: '+1 dragon!',
       left: 'A dragon flew home',
       again: 'This word comes back later.',

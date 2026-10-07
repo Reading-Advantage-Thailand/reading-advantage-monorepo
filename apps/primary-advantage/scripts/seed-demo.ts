@@ -38,10 +38,10 @@ import { createCredentialAccount, type UserContext } from "@reading-advantage/au
 import { getAvatarState, purchaseAvatarItem, setAvatarProfile, setLoadout } from "@reading-advantage/domain/primary-avatar";
 import { assignClassBook, markLessonTaught, recordLessonProgress, setCurrentLesson } from "@reading-advantage/domain/primary-books";
 import { assignClassQuest, awardPowerUps } from "@reading-advantage/domain/primary-quest";
-import { CARTRIDGE_CHALLENGE_CAPABILITIES, cartridgeLoaders } from "@reading-advantage/game-cartridges";
 import { STARTER_SETS } from "@reading-advantage/avatar-kit";
 import type { AvatarClassId, AvatarTints } from "@reading-advantage/game-contracts";
 
+import { challengeCapabilityOf } from "../lib/games/catalog";
 import { LEVELS_XP } from "../lib/utils";
 
 /** The shared password of every demo account. A test credential for local and rehearsal databases only. */
@@ -216,12 +216,7 @@ async function seedDemo(): Promise<void> {
   }
 
   // Avatars: four heroes with the starter set and the welcome GP; Ton has no hero (the picker video); extra GP per student.
-  const resolveCapability = async (gameId: string) => {
-    const declared = CARTRIDGE_CHALLENGE_CAPABILITIES[gameId];
-    const loader = cartridgeLoaders[gameId as keyof typeof cartridgeLoaders];
-    if (!declared || !loader) return undefined;
-    return (await loader()).manifest.inputMode === declared.inputMode ? declared : undefined;
-  };
+  const resolveCapability = async (gameId: string) => challengeCapabilityOf(gameId);
   for (const s of students) {
     const ctx = { db, user: studentCtx(s, totals.get(s.id) ?? 0), now: at(10, 9) };
     if (s.spec.gp > 0) await db.insert(primaryGpLedger).values({ schoolId: school.id, userId: s.id, delta: s.spec.gp, reason: "xp", sourceKey: "demo:xp", createdAt: at(10, 9) });

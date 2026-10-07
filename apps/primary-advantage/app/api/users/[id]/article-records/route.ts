@@ -7,6 +7,7 @@ import { users } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { canReadUserResource } from "@/lib/authorization";
+import { logger } from "@/lib/observability/logger";
 
 /** Query of the article records list; bad values fall back to the first page of 10. */
 const recordsQuerySchema = z.object({
@@ -84,7 +85,7 @@ export async function GET(
 
     return NextResponse.json(records);
   } catch (error) {
-    console.error("Error fetching article records:", error);
+    logger.error("user_article_records_read_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

@@ -1,15 +1,11 @@
 import { Gamepad2Icon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import {
-  CARTRIDGE_CHALLENGE_CAPABILITIES,
-  cartridgeCatalog,
-  getCartridgeCatalogEntry,
-} from "@reading-advantage/game-cartridges";
 import { StudentChallengeCatalogPanel, StudentRpgCatalogPanel } from "@reading-advantage/advantage-play-kit/react";
 import { EmptyState } from "@reading-advantage/ui";
 import { Sign } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
-import { ART } from "@/lib/rpg/places";
+import { challengeGames, isSentenceGame, playableGames } from "@/lib/games/catalog";
+import { ART, rewardIconUrls } from "@/lib/rpg/places";
 import { getTranslations } from "next-intl/server";
 
 import { getCurrentUser } from "@/lib/session";
@@ -35,7 +31,7 @@ export async function generateMetadata({
 }
 
 /**
- * Student games catalog: the class challenges and rewards panels, then the APK games in two
+ * Student games catalog: the class challenges and rewards panels, then the 3D games in two
  * groups (word games and sentence games) as cards that link to the game. An empty catalog shows
  * an empty state. The game internals and the play-kit panels are unchanged.
  * @returns The games page.
@@ -47,10 +43,7 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
   const ownerKey = user?.role === "STUDENT" && user.schoolId
     ? `${user.schoolId}:${user.id}`
     : undefined;
-  const challengeGames = Object.fromEntries(Object.entries(CARTRIDGE_CHALLENGE_CAPABILITIES).flatMap(([gameId, capability]) => {
-    const entry = getCartridgeCatalogEntry(gameId);
-    return entry ? [[gameId, { title: entry.title, version: capability.version }]] : [];
-  }));
+  const games = playableGames();
 
   // The games are banners on the arena wall (docs/primary-rpg-skin.md §4).
   return (
@@ -60,20 +53,18 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
         <p>{t("description")}</p>
       </header>
       <div className="flex flex-col gap-4 empty:hidden">
-        <StudentRpgCatalogPanel ownerKey={ownerKey} inventoryNote={t("rewardInInventory")} />
-        <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames} />
+        <StudentRpgCatalogPanel ownerKey={ownerKey} inventoryNote={t("rewardInInventory")} assetUrls={rewardIconUrls} credit={null} />
+        <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames()} />
       </div>
       {/* The 3D story games (APK 3D port) as the first banner on the arena wall. */}
       <GameCard href="/student/games/story" icon={ART.banner} title={t("storyLink")} description={t("storyLinkDescription")} />
-      {cartridgeCatalog.length === 0 ? (
+      {games.length === 0 ? (
         <EmptyState className="cq-panel" icon={<Gamepad2Icon />} title={t("empty")} description={t("emptyHint")} />
       ) : (
         GROUPS.map((group) => {
           // Every game shows: a game that is not a sentence game goes to the word games.
-          const games = cartridgeCatalog.filter((entry) =>
-            group.mode === "sentence" ? entry.inputMode === "sentence" : entry.inputMode !== "sentence",
-          );
-          if (games.length === 0) return null;
+          const members = games.filter((game) => isSentenceGame(game) === (group.mode === "sentence"));
+          if (members.length === 0) return null;
           return (
             <section key={group.mode} aria-labelledby={`games-${group.mode}`} className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
@@ -85,9 +76,9 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
                 <p className="cq-on-scene text-sm">{t(group.hint)}</p>
               </div>
               <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {games.map((entry) => (
-                  <li key={entry.id}>
-                    <GameCard href={`/student/games/apk/${entry.id}`} icon={group.icon} title={entry.title} description={entry.description} />
+                {members.map((game) => (
+                  <li key={game.id}>
+                    <GameCard href={`/student/games/apk/${game.id}`} icon={group.icon} title={game.manifest.title} description={game.manifest.description} />
                   </li>
                 ))}
               </ul>

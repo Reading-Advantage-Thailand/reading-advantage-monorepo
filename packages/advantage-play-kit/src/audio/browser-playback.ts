@@ -36,6 +36,54 @@ export function createBrowserAudioClipPorts(
   options: BrowserAudioClipPortOptions = {},
 ): BrowserAudioClipPorts {
   const createAudio = options.createAudio ?? (() => new Audio());
+  // Clips with one URL share one element: up to 50 word segments can come from one article file.
+  const shared = new Map<string, { element: HTMLAudioElement; users: number; ready: Promise<void>; stop: () => void }>();
+  const dispose = (url: string): void => {
+    const entry = shared.get(url);
+    if (!entry || --entry.users > 0) return;
+    shared.delete(url);
+    entry.stop();
+    entry.element.pause();
+    entry.element.currentTime = 0;
+    entry.element.removeAttribute("src");
+    entry.element.load();
+  };
+  const load = (url: string): { element: HTMLAudioElement; ready: Promise<void> } => {
+    const existing = shared.get(url);
+    if (existing) {
+      existing.users += 1;
+      return existing;
+    }
+    const element = createAudio();
+    element.preload = "auto";
+    element.src = url;
+    let stop = (): void => undefined;
+    const ready = new Promise<void>((resolve, reject) => {
+      const cleanup = (): void => {
+        element.removeEventListener("canplay", handleReady);
+        element.removeEventListener("error", handleError);
+      };
+      stop = cleanup;
+      const handleReady = (): void => {
+        cleanup();
+        resolve();
+      };
+      const handleError = (): void => {
+        cleanup();
+        reject(new ListeningAudioControllerError(
+          "load-failed",
+          "Browser audio could not load the prompt URL",
+        ));
+      };
+      element.addEventListener("canplay", handleReady);
+      element.addEventListener("error", handleError);
+    });
+    // A failed or abandoned load must not stay unhandled while no clip waits on it.
+    ready.catch(() => undefined);
+    shared.set(url, { element, users: 1, ready, stop });
+    element.load();
+    return { element, ready };
+  };
   return Object.freeze({
     preparation: Object.freeze({
       prepare(
@@ -48,48 +96,37 @@ export function createBrowserAudioClipPorts(
             "Listening audio preparation was cancelled",
           ));
         }
-        const element = createAudio();
-        element.preload = "auto";
-        element.src = reference.url;
+        const { element, ready } = load(reference.url);
         return new Promise((resolve, reject) => {
-          const cleanup = (): void => {
-            element.removeEventListener("canplay", handleReady);
-            element.removeEventListener("error", handleError);
-            signal.removeEventListener("abort", handleAbort);
-          };
-          const handleReady = (): void => {
-            cleanup();
-            resolve(Object.freeze({ reference, element }));
-          };
-          const handleError = (): void => {
-            cleanup();
-            reject(new ListeningAudioControllerError(
-              "load-failed",
-              "Browser audio could not load the prompt URL",
-            ));
-          };
           const handleAbort = (): void => {
-            cleanup();
-            element.pause();
-            element.currentTime = 0;
-            element.removeAttribute("src");
-            element.load();
+            dispose(reference.url);
             reject(new ListeningAudioControllerError(
               "cancelled",
               "Listening audio preparation was cancelled",
             ));
           };
-          element.addEventListener("canplay", handleReady);
-          element.addEventListener("error", handleError);
           signal.addEventListener("abort", handleAbort, { once: true });
-          element.load();
+          ready.then(() => {
+            if (signal.aborted) return;
+            signal.removeEventListener("abort", handleAbort);
+            resolve(Object.freeze({ reference, element }));
+          }, (error: unknown) => {
+            if (signal.aborted) return;
+            signal.removeEventListener("abort", handleAbort);
+            dispose(reference.url);
+            reject(error);
+          });
         });
       },
       release(clip: BrowserPreparedAudioClip): void {
-        clip.element.pause();
-        clip.element.currentTime = 0;
-        clip.element.removeAttribute("src");
-        clip.element.load();
+        const entry = shared.get(clip.reference.url);
+        if (entry?.element !== clip.element) {
+          clip.element.pause();
+          return;
+        }
+        // Another clip still uses the element: stop this one only.
+        if (entry.users > 1) clip.element.pause();
+        dispose(clip.reference.url);
       },
     }),
     playback: Object.freeze({
@@ -100,17 +137,37 @@ export function createBrowserAudioClipPorts(
             "Listening audio playback was cancelled",
           ));
         }
-        const { element } = clip;
-        element.currentTime = 0;
+        const { element, reference } = clip;
+        const end = reference.endSeconds;
+        element.currentTime = reference.startSeconds ?? 0;
         return new Promise((resolve, reject) => {
+          let stopTimer: ReturnType<typeof setTimeout> | undefined;
           const cleanup = (): void => {
+            if (stopTimer !== undefined) clearTimeout(stopTimer);
             element.removeEventListener("ended", handleEnded);
             element.removeEventListener("error", handleError);
+            element.removeEventListener("playing", handlePlaying);
+            element.removeEventListener("timeupdate", handleTimeUpdate);
             signal.removeEventListener("abort", handleAbort);
           };
           const handleEnded = (): void => {
             cleanup();
             resolve();
+          };
+          // A segment of a longer file stops at its end: a timer from the moment playback runs,
+          // and the coarser timeupdate event as a backup.
+          const handleSegmentEnd = (): void => {
+            cleanup();
+            element.pause();
+            resolve();
+          };
+          const handlePlaying = (): void => {
+            if (end === undefined) return;
+            if (stopTimer !== undefined) clearTimeout(stopTimer);
+            stopTimer = setTimeout(handleSegmentEnd, Math.max(0, (end - element.currentTime) * 1000));
+          };
+          const handleTimeUpdate = (): void => {
+            if (end !== undefined && element.currentTime >= end) handleSegmentEnd();
           };
           const handleError = (): void => {
             cleanup();
@@ -129,6 +186,8 @@ export function createBrowserAudioClipPorts(
           };
           element.addEventListener("ended", handleEnded);
           element.addEventListener("error", handleError);
+          element.addEventListener("playing", handlePlaying);
+          element.addEventListener("timeupdate", handleTimeUpdate);
           signal.addEventListener("abort", handleAbort, { once: true });
           void element.play().catch((error: unknown) => {
             cleanup();

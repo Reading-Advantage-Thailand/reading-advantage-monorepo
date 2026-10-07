@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@reading-advantage/ui";
 import { StudentErrorMessage, waitMinutes, type StudentError } from "./errors";
-import { STUDENT_HOME, useEnterAfterSignIn } from "./use-student-home";
+import { useEnterAfterSignIn } from "./use-student-home";
 
 /** Maps a failed response of the shared login route to the message for the student. */
 function errorFor(response: Response): StudentError {
@@ -46,7 +46,7 @@ export function PasswordSignIn() {
       });
       if (response.ok) {
         const data = (await response.json().catch(() => null)) as { user?: { role?: string } } | null;
-        await enter(data?.user?.role === "STUDENT" ? STUDENT_HOME : "/auth/signin");
+        await enter(data?.user?.role === "STUDENT" ? undefined : "/auth/signin");
         return;
       }
       setError(errorFor(response));

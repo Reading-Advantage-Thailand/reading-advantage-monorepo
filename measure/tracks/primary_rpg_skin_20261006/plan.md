@@ -51,5 +51,14 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 - [x] Report `phase5/index.html` with the five frames and a note per shot on the recording path for the video session
 - Fixed after the captures (2026-10-06): the header purse refreshes after a purchase; a student with no hero shows the Forge silhouette on the projector (skin 1.1.0, `kit/heroes/no-hero.webp`). Still from live play at the rehearsal: the slash frame of shot 4 and the coin rain of shot 5.
 
+## Look acceptance for public use
+- [x] Owner accepted the look of Phases 2–5 for public use, 2026-10-07 (Daniel, via the PR session). Phase 1 has no captures in the curated set and no mark.
+
 ## Open defects (owner, 2026-10-06)
-- [ ] The side menu draws over the full-screen story game player at desktop widths (seen on the Labyrinth briefing at 1024 px). Fix the stacking, then open all 28 games at desktop width and confirm the briefing, the play screen, and the results are clear of the menu. Recapture the Phase 5 frames after the fix.
+- [x] The side menu draws over the full-screen story game player at desktop widths (seen on the Labyrinth briefing at 1024 px). Fix the stacking, then open all 28 games at desktop width and confirm the briefing, the play screen, and the results are clear of the menu. Recapture the Phase 5 frames after the fix.
+  - [x] Cause and fix (bug fix in the feature freeze, 2026-10-07): `.cq-content` (`position: relative; z-index: 1`) is a stacking context, so the player's `z-50` stayed under the signpost column (`z-10`) and the sticky header (`z-40`). `StoryGamesClient` now renders the player in a portal on the body; test
+  - [x] Regression found in the browser check and fixed: outside `.cq-world` the play-kit frames lost the skin variables (the reward panel fell back to navy). The portal wrapper keeps `cq-world cq`; test
+  - [x] Browser check 2026-10-07 (production build, scratch copy, a QA student with cards saved in two lessons): all 28 games open, and at 1024x768 the player is on top at the side menu and header points in each briefing (28/28); at 1280x800 the Labyrinth briefing and play screen too. The results screen was not reached; it renders in the same fixed layer
+  - [x] Phase 5 recapture not needed: none of the five shots shows the story game player (home, shrine, armory, battle page, projector), and the fix changes only that player
+- [x] Skin gap (not a regression): the "Wizard rewards" bar of `RpgRewardDisclosure` had fixed navy colours (`#081225`) with no skin variable; it now reads the panel's reward variables (8d0636696); test
+- [x] Gap: the "You" card of the phone battle page was an empty box for a student with no hero (every migrated student at the cutover); it shows the Forge silhouette, as the projector does (6cb983898); test

@@ -94,4 +94,57 @@ describe("staff sign-in form", () => {
       unmount();
     }
   });
+
+  describe("temporary password (FR-5)", () => {
+    const fetchMock = vi.fn();
+
+    beforeEach(() => {
+      fetchMock.mockReset().mockResolvedValue(new Response(JSON.stringify({ success: true }), { status: 200 }));
+      vi.stubGlobal("fetch", fetchMock);
+      loginMock.mockRejectedValueOnce(
+        Object.assign(new Error("Set a new password to continue"), { status: 403, code: "PASSWORD_CHANGE_REQUIRED" }),
+      );
+    });
+
+    /** Types the new password twice and saves it. */
+    function setNewPassword(first: string, second = first) {
+      fireEvent.change(screen.getByLabelText("New password"), { target: { value: first } });
+      fireEvent.change(screen.getByLabelText("Type the new password again"), { target: { value: second } });
+      fireEvent.click(screen.getByRole("button", { name: "Save and sign in" }));
+    }
+
+    it("asks for a new password, stores it, and signs in with it", async () => {
+      renderWithMessages(<TeacherSignInForm />);
+      await submit();
+      await screen.findByRole("heading", { name: "Set a new password" });
+      setNewPassword("my-own-pass-9");
+      await waitFor(() => expect(loginMock).toHaveBeenLastCalledWith("qa-system", "my-own-pass-9"));
+      expect(fetchMock).toHaveBeenCalledWith("/api/auth/temporary-password", expect.objectContaining({ method: "POST" }));
+      expect(JSON.parse(fetchMock.mock.calls[0]![1].body as string)).toEqual({
+        username: "qa-system",
+        password: "long-enough-1",
+        newPassword: "my-own-pass-9",
+      });
+      await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/auth/signin"));
+    });
+
+    it("does not send two passwords that are not the same", async () => {
+      renderWithMessages(<TeacherSignInForm />);
+      await submit();
+      await screen.findByRole("heading", { name: "Set a new password" });
+      setNewPassword("my-own-pass-9", "my-own-pass-8");
+      expect(await screen.findByText("The two passwords are not the same.")).toBeInTheDocument();
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it("shows the server message when the change fails", async () => {
+      fetchMock.mockResolvedValue(new Response(JSON.stringify({ message: "Invalid username or password" }), { status: 401 }));
+      renderWithMessages(<TeacherSignInForm />);
+      await submit();
+      await screen.findByRole("heading", { name: "Set a new password" });
+      setNewPassword("my-own-pass-9");
+      expect(await screen.findByText("Invalid username or password")).toBeInTheDocument();
+      expect(loginMock).toHaveBeenCalledTimes(1);
+    });
+  });
 });

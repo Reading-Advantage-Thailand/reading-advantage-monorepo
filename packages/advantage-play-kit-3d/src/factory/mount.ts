@@ -12,7 +12,9 @@ import type {
   StoryGameEvidence,
   GameResults,
   GameTerminalOutcome,
+  ReadToSelectAudioEvidence,
 } from '../contracts/index.js';
+import { readToSelectAudioEvidenceSchema } from '../contracts/index.js';
 import type { Stage3D } from '../stage/index.js';
 import { createInputController } from './input.js';
 import { isPhaserCartridge, isThreeCartridge } from './select.js';
@@ -51,7 +53,16 @@ export interface MountOptions extends Omit<
   resolveUrl?: AssetUrlResolver;
   /** The URL folder of the avatar pack versions for a 2D view; none: `/packs/avatar`, as the apps serve it. */
   avatarRoot?: string;
-  complete(result: GameResults, outcome: GameTerminalOutcome, evidence: StoryGameEvidence): void;
+  /**
+   * The game's story evidence; with `answerAudio`, also the controller's evidence (the APK sends
+   * that one as the completion's `learningEvidence`).
+   */
+  complete(
+    result: GameResults,
+    outcome: GameTerminalOutcome,
+    evidence: StoryGameEvidence,
+    answerEvidence?: ReadToSelectAudioEvidence,
+  ): void;
 }
 
 /**
@@ -104,6 +115,7 @@ export function createCartridgeMounter(
         options: rest.options,
         host: rest.host,
         audio: rest.audio,
+        ...(rest.answerAudio ? { answerAudio: rest.answerAudio } : {}),
         ...(rest.resolveUrl ? { resolveUrl: rest.resolveUrl } : {}),
         ...(rest.avatarRoot ? { avatarRoot: rest.avatarRoot } : {}),
         diagnostic: rest.diagnostic,
@@ -164,8 +176,88 @@ export function createCartridgeMounter(
     };
   };
   return async (options) => {
-    const game = await mountOne(options);
+    const owned = ownAnswerAudio(options);
+    const game = owned.wrap(await mountOne(owned.options));
     return options.cartridge.manifest.orientation === 'portrait' ? guardOrientation(options.container, game) : game;
+  };
+}
+
+/**
+ * What the APK runtime does with the answer audio controller (advantage-play-kit
+ * src/runtime/runtime.ts): a demo session gets none; pause, mute, and destroy reach it; at completion
+ * its evidence must parse, and its submitted and completing attempts must equal the result's
+ * `totalAttempts` and `correctAnswers`, or the completion is dropped with an error diagnostic.
+ */
+function ownAnswerAudio(options: MountOptions): {
+  options: MountOptions;
+  wrap(game: MountedGame): MountedGame;
+} {
+  const { answerAudio: given, ...rest } = options;
+  const audio = options.sessionMode === 'demo' ? undefined : given;
+  if (!audio) return { options: rest, wrap: (game) => game };
+  const warn = (code: string, message: string, error: unknown): void =>
+    options.diagnostic({ level: 'warning', code, message, details: { cause: error instanceof Error ? error.message : String(error) } });
+  const complete: MountOptions['complete'] = (result, outcome, evidence) => {
+    let answerEvidence: ReadToSelectAudioEvidence;
+    try {
+      const parsed = readToSelectAudioEvidenceSchema.safeParse(audio.getEvidence());
+      if (!parsed.success) throw new Error(parsed.error.message);
+      answerEvidence = parsed.data;
+    } catch (error) {
+      options.diagnostic({
+        level: 'error',
+        code: 'apk3d/invalid-answer-audio-evidence',
+        message: 'The answer audio evidence could not be read; the result is ignored.',
+        details: { cause: error instanceof Error ? error.message : String(error) },
+      });
+      return;
+    }
+    const submitted = answerEvidence.questions.flatMap((q) => q.selectionAttempts).filter((a) => a.submitted);
+    const completing = submitted.filter((a) => a.completedQuestion).length;
+    if (result.totalAttempts !== submitted.length || result.correctAnswers !== completing) {
+      options.diagnostic({
+        level: 'error',
+        code: 'apk3d/invalid-answer-audio-evidence',
+        message: 'The answer audio evidence does not match the result counts; the result is ignored.',
+        details: {
+          evidenceAttempts: submitted.length,
+          evidenceCorrectAnswers: completing,
+          resultAttempts: result.totalAttempts,
+          resultCorrectAnswers: result.correctAnswers,
+        },
+      });
+      return;
+    }
+    options.complete(result, outcome, evidence, answerEvidence);
+  };
+  return {
+    options: { ...rest, answerAudio: audio, complete },
+    wrap: (game) => ({
+      ...game,
+      pause: () => {
+        try {
+          audio.pause();
+        } catch (error) {
+          warn('apk3d/answer-audio-pause-failed', 'The answer audio could not stop.', error);
+        }
+        game.pause();
+      },
+      setMuted: (muted) => {
+        try {
+          audio.setMuted(muted);
+        } catch (error) {
+          warn('apk3d/answer-audio-mute-failed', 'The answer audio could not change its mute state.', error);
+        }
+        game.setMuted(muted);
+      },
+      destroy: async () => {
+        try {
+          await game.destroy();
+        } finally {
+          audio.destroy();
+        }
+      },
+    }),
   };
 }
 

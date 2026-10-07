@@ -3,6 +3,7 @@ import type { DurableJobQueuePort } from "@reading-advantage/backend/jobs";
 import { createDurableJobQueuePort } from "@reading-advantage/backend/jobs/adapters/postgres";
 import { enqueuePrimaryEvidence, type PrimaryEvidenceJobPayload } from "@reading-advantage/domain/primary-mastery";
 import { createPrimaryEvidenceSql } from "@/lib/primary-evidence-sql";
+import { logger } from "@/lib/observability/logger";
 
 let port: DurableJobQueuePort | undefined;
 
@@ -29,7 +30,7 @@ export async function enqueuePrimaryEvidenceJob(payload: PrimaryEvidenceJobPaylo
     const result = await enqueuePrimaryEvidence({ port: queuePort(), payload, schoolId });
     return result.outcome !== "conflict";
   } catch (error) {
-    console.error(JSON.stringify({ event: "primary.mastery.evidence.enqueue_failed", sourceTable: payload.sourceTable, rowId: payload.rowId, message: error instanceof Error ? error.message : String(error) }));
+    logger.error("primary.mastery.evidence.enqueue_failed", { sourceTable: payload.sourceTable, rowId: payload.rowId, message: error instanceof Error ? error.message : String(error) });
     return false;
   }
 }

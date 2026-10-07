@@ -91,6 +91,23 @@ describe("getDashboardData activity-type filter", () => {
     }
   });
 
+  it("counts a saved card with no review as new and due, so the review can start", async () => {
+    const now = new Date();
+    mocks.results.splice(0, mocks.results.length,
+      [{ id: "deck-1", name: "Words", type: "VOCABULARY", createdAt: now, updatedAt: now }],
+      [{ id: "fresh" }, { id: "due" }, { id: "later" }], // cards of deck-1
+      [
+        { cardId: "due", nextReviewAt: new Date(now.getTime() - 60_000) },
+        { cardId: "later", nextReviewAt: new Date(now.getTime() + 86_400_000) },
+      ], // flashcard_progress
+      [{ value: 0 }], [{ value: null }], [],
+    );
+
+    const result = await getDashboardData("VOCABULARY");
+
+    expect(result.decks?.[0]).toMatchObject({ totalCards: 3, newCards: 1, dueCards: 2, reviewCards: 1 });
+  });
+
   it("filters on both flashcard activity types when no deck type is given", async () => {
     mocks.results.splice(0, mocks.results.length, [], [{ value: 0 }], [{ value: null }], []);
 

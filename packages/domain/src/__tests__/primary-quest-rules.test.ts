@@ -65,7 +65,7 @@ describe("QUEST_TEMPLATES", () => {
       expect(template.title.en.trim()).not.toBe("");
       expect(template.title.th.trim()).not.toBe("");
       expect(template.boss.name.th.trim()).not.toBe("");
-      expect(["wizard-vs-zombie", "dragon-flight", "dragon-rider"]).toContain(template.gameId);
+      expect(["hero-vs-zombie", "dragon-flight", "dragon-rider"]).toContain(template.gameId);
       expect(template.contentMode).toBe("vocabulary");
     }
   });

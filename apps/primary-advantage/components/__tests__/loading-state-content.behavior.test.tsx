@@ -81,7 +81,6 @@ vi.mock("@reading-advantage/advantage-play-kit", () => ({
 vi.mock("@reading-advantage/advantage-play-kit/presentation", () => ({
   RpgRewardDisclosure: () => null,
   RpgUnlockNotice: () => null,
-  resolveRpgRewardAssetUrls: () => ({}),
 }));
 
 const launchPhaseProbe = vi.hoisted(() => ({ phase: "" as string }));

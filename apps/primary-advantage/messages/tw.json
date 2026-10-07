@@ -2818,12 +2818,19 @@
     }
   },
   "ApkHost": {
+    "rewardInInventory": "已放入你的背包。到頭像頁面穿戴它。",
     "readMode": "閱讀泰語",
     "listenMode": "聽英語",
     "signInToPlayChallenge": "登入以參與此挑戰",
-    "signInToPlayGame": "登入以玩此遊戲"
+    "signInToPlayGame": "登入以玩此遊戲",
+    "loadError": "The game could not load.",
+    "loadingGame": "Loading the game…",
+    "loadingChallenge": "Loading the challenge…",
+    "challengeMismatch": "This game cannot run this challenge.",
+    "retry": "Try again"
   },
   "StudentGames": {
+    "rewardInInventory": "已放入你的背包。到頭像頁面穿戴它。",
     "title": "學生遊戲",
     "description": "Play games with the words and sentences you learn.",
     "wordGames": "Word games",

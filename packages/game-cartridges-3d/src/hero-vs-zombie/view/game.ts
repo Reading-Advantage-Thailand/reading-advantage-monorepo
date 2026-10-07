@@ -2,7 +2,9 @@
  * Hero vs. Zombie 3D as a cartridge game. The core (../core) runs the night in fixed steps; this
  * view builds the churchyard, walks the hero and the zombies to the core's positions, floats the
  * light orbs with their meanings (pinned to the screen edge when off screen), and plays the
- * Blast and the dawn. It never decides a rule.
+ * Blast and the dawn. It never decides a rule. With an answer audio controller (Read to Select
+ * Audio), the banner shows the meaning, the orbs carry numbers and play the English words, and a
+ * row of "n 🔊" controls plays them from afar (../../shared/answer-audio.ts).
  */
 import * as THREE from 'three';
 import { toGameResults } from '@reading-advantage/advantage-play-kit-3d/contracts';
@@ -10,8 +12,9 @@ import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage
 import { attachJoystick, esc, hasThai } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor, burst, FollowRig, isAvatarBody, playerBody, Walker } from '@reading-advantage/advantage-play-kit-3d/stage';
-import { createHeroVsZombie, evidenceOf, scoreOf, type HeroVsZombieCommand, type HeroVsZombieEvent, type HeroVsZombieState, type HeroVsZombieInput } from '../core/index.js';
+import { correctOrbOf, createHeroVsZombie, evidenceOf, scoreOf, type HeroVsZombieCommand, type HeroVsZombieEvent, type HeroVsZombieState, type HeroVsZombieInput } from '../core/index.js';
 import { manifest } from '../manifest.js';
+import { createAnswerAudioDriver, type ChoiceAction } from '../../shared/answer-audio.js';
 import { evidenceStoryOf } from '../../shared/challenge.js';
 import { nextCommand } from '../qc/bot.js';
 import { buildChurchyard, CHURCHYARD_MODELS } from './churchyard.js';
@@ -35,7 +38,8 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
   ]);
   const yard = buildChurchyard(stage);
-  const sim = createHeroVsZombie(input, { seed: ctx.seed, helper: ctx.options.helper });
+  const answer = ctx.answerAudio ? createAnswerAudioDriver(ctx.answerAudio, ctx.diagnostic) : null;
+  const sim = createHeroVsZombie(input, { seed: ctx.seed, helper: ctx.options.helper, answerAudio: !!answer });
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- the hero
@@ -46,6 +50,10 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   // A soft light that follows the hero, so the hero never stands in the dark.
   const heroLight = new THREE.PointLight(0xfff0c8, 6, 6, 1.6);
   stage.scene.add(heroLight);
+  // Answer audio: a bubble of light while the first clip of a round shields the hero.
+  const shieldGeo = new THREE.SphereGeometry(0.9, 24, 16);
+  const shield = new THREE.Mesh(shieldGeo, new THREE.MeshBasicMaterial({ color: 0xbfe8ff, transparent: true, opacity: 0, depthWrite: false }));
+  stage.scene.add(shield);
 
   // ---------------------------------------------------------------- camera
   const target = new THREE.Vector3();
@@ -81,6 +89,10 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   };
   window.addEventListener('keydown', onKey);
   const joystick = attachJoystick(hud.el, { hint: t('move'), change: (x, y) => loop.dispatch({ type: 'steer', x, z: y }) });
+  // Answer audio: one "n 🔊" control per orb of the round, in the orbs' number order, inside the
+  // target box under the meaning (a long meaning takes two lines and pushes the row down).
+  const listenRow = document.createElement('div');
+  listenRow.className = 'hvz-listen';
 
   audio.defineMood('night', { bpm: 88, chords: [[57, 60, 64], [53, 57, 60], [52, 55, 59], [50, 53, 57]], busy: false, drum: true });
   audio.defineMood('dawn', { bpm: 96, chords: [[60, 64, 67], [65, 69, 72], [67, 71, 74], [60, 64, 67]], busy: true, drum: false });
@@ -107,18 +119,59 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
 
   function showRound(ev: Extract<HeroVsZombieEvent, { type: 'roundStarted' }>): void {
     clearOrbs();
-    targetBox.innerHTML = `<small>${esc(t('find'))}</small><b>${esc(ev.term)}</b>`;
-    for (const o of ev.orbs) {
+    targetBox.innerHTML = answer
+      ? `<small>${esc(t('findWord'))}</small><b class="${hasThai(ev.translation) ? 'th' : ''}">${esc(ev.translation)}</b>`
+      : `<small>${esc(t('find'))}</small><b>${esc(ev.term)}</b>`;
+    if (answer) {
+      answer.question(ev.position, ev.orbs.map((o) => o.position));
+      targetBox.append(listenRow);
+      listenRow.replaceChildren(
+        ...ev.orbs.map((o, i) => {
+          const b = document.createElement('button');
+          b.textContent = `${i + 1} 🔊`;
+          b.setAttribute('aria-label', t('listen', { index: i + 1 }));
+          b.dataset.orb = o.id;
+          b.addEventListener('click', () => react(o.id, answer.listen(o.position)));
+          return b;
+        }),
+      );
+    }
+    ev.orbs.forEach((o, i) => {
       const mesh = new THREE.Mesh(orbGeo, new THREE.MeshStandardMaterial({ color: ORB_COLOR, emissive: ORB_COLOR, emissiveIntensity: 0.9, transparent: true, opacity: 0.9 }));
       mesh.position.set(o.x, 0.75, o.z);
       stage.scene.add(mesh);
       const tag = document.createElement('div');
-      tag.className = `arena-tag ${hasThai(o.text) ? 'th' : ''}`;
-      tag.textContent = o.text;
+      const text = answer ? String(i + 1) : o.text;
+      tag.className = `arena-tag ${hasThai(text) ? 'th' : ''}`;
+      tag.textContent = text;
       hud.anchor(tag, () => stage.screenOfPoint(mesh.position.clone().add(new THREE.Vector3(0, 0.5, 0))), { pin: true });
       orbs.set(o.id, { mesh, tag });
-    }
+    });
     drawStatus();
+    drawListen();
+  }
+
+  /** The look of each "n 🔊" control (the controller tells when a clip plays, is heard, or failed). */
+  function drawListen(): void {
+    if (!answer) return;
+    for (const b of listenRow.querySelectorAll<HTMLButtonElement>('button')) {
+      const orb = sim.state.orbs.find((o) => o.id === b.dataset.orb);
+      b.dataset.look = orb ? answer.look(orb.position) : 'used';
+    }
+  }
+
+  /** What a touch or a 🔊 press did: take the orb, shield the hero at a first clip, or ask for sound. */
+  function react(orbId: string, action: ChoiceAction): void {
+    if (action.kind === 'confirm') loop.dispatch({ type: 'take', orbId });
+    else if (action.kind === 'play') loop.dispatch({ type: 'listen' });
+    else if (action.kind === 'muted') hud.popup(heroTop(), t('soundOff'), 'miss');
+    drawListen();
+  }
+
+  /** Answer audio: the hero entered an orb; the first touch plays it, a touch after its clip takes it. */
+  function touchOrb(orbId: string): void {
+    const orb = sim.state.orbs.find((o) => o.id === orbId);
+    if (answer && orb) react(orbId, answer.touch(orb.position));
   }
 
   function addZombie(id: string, x: number, z: number): void {
@@ -147,6 +200,12 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     switch (ev.type) {
       case 'roundStarted':
         showRound(ev);
+        break;
+      case 'orbTouched':
+        touchOrb(ev.id);
+        break;
+      case 'heroShielded':
+        hud.popup(heroTop(), t('shield'), 'good');
         break;
       case 'orbTaken': {
         const o = orbs.get(ev.id);
@@ -205,6 +264,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       case 'dawn':
         clearOrbs();
         targetBox.style.display = 'none';
+        listenRow.remove();
         audio.music('dawn');
         void stage.timeline.tween(2.2, (u) => yard.setDawn(u));
         for (const z of zombies.values()) {
@@ -247,6 +307,8 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     const s = sim.state;
     hero.update(dt, s.hero.x, s.hero.z);
     heroLight.position.set(hero.actor.root.position.x, 2.2, hero.actor.root.position.z + 0.6);
+    shield.position.set(hero.actor.root.position.x, 0.8, hero.actor.root.position.z);
+    (shield.material as THREE.MeshBasicMaterial).opacity = s.hero.shieldMs > 0 ? 0.18 + 0.06 * Math.sin(stageMs / 120) : 0;
     target.set(s.hero.x * 0.6, 0, s.hero.z);
     for (const z of s.zombies) {
       const w = zombies.get(z.id);
@@ -259,6 +321,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   });
 
   drawStatus();
+  const stopListen = answer?.onChange(drawListen);
 
   return {
     start: () => {
@@ -277,8 +340,13 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       loop.stop();
       joystick.dispose();
       window.removeEventListener('keydown', onKey);
+      stopListen?.();
       clearOrbs();
       orbGeo.dispose();
+      shield.removeFromParent();
+      shieldGeo.dispose();
+      (shield.material as THREE.Material).dispose();
+      listenRow.remove();
       status.remove();
       targetBox.remove();
       blastButton.remove();
@@ -290,10 +358,27 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
         for (let i = 0; i < steps; i++) sim.tick().forEach(handle);
       },
       auto: () => {
+        if (answer && listenFirst()) return true;
         const command = nextCommand(sim.state);
         if (command) loop.dispatch(command);
         return !!command;
       },
     },
   };
+
+  /**
+   * The QC bot in answer audio: it stands still and plays the right orb from afar with its 🔊
+   * control until the clip was heard, then runs to the orb, and the touch takes it.
+   */
+  function listenFirst(): boolean {
+    const orb = correctOrbOf(sim.state);
+    if (!answer || !orb || sim.state.phase !== 'night') return false;
+    // A take starts the next round in the core at once; the view opens its question a frame later.
+    if (sim.state.round?.position !== answer.position()) return true;
+    const look = answer.look(orb.position);
+    if (look === 'heard') return false;
+    loop.dispatch({ type: 'steer', x: 0, z: 0 });
+    if (look !== 'playing') react(orb.id, answer.listen(orb.position));
+    return true;
+  }
 }

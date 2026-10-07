@@ -21,6 +21,7 @@ import { SENTENCE_SPLITTER_SYSTEM_PROMPT } from "@/data/prompts-ai";
 import winkNLP from "wink-nlp";
 import model from "wink-eng-lite-web-model";
 import { uploadToBucket } from "@/utils/storage";
+import { logger } from "@/lib/observability/logger";
 
 interface GenerateAudioParams {
   passage: string;
@@ -446,10 +447,7 @@ export async function generateAudio({
     try {
       await translateAndStoreSentences({ articleId });
     } catch (translationError) {
-      console.error(
-        `Failed to translate sentences for article ${articleId}:`,
-        translationError,
-      );
+      logger.error("article_sentence_translation_failed", { articleId, error: translationError });
       // Don't throw here - audio generation was successful
     }
 

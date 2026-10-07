@@ -1,11 +1,13 @@
 // Generated from dragon-rider.css (the stylesheet text; installed once by installCss).
-export default `/* Dragon Rider HUD: the word banner, the gate tags, and the dark dragon's power. */
+export default `/* Dragon Rider HUD: the word banner, the gate tags, the dark dragon's power, and the answer audio controls. */
 .rider-word {
   position: absolute;
   left: 50%;
   top: calc(78px + env(safe-area-inset-top, 0px));
   transform: translateX(-50%) translateY(-10px);
+  width: max-content;
   min-width: 180px;
+  max-width: calc(100vw - 32px);
   padding: 8px 20px 10px;
   border-radius: 20px;
   background: var(--paper);
@@ -83,5 +85,39 @@ export default `/* Dragon Rider HUD: the word banner, the gate tags, and the dar
 }
 .gate-tag.dim {
   opacity: 0.4;
+}
+.gate-tag.held {
+  border-color: #fde68a;
+}
+/* Answer audio: one "n 🔊" control per gate, inside the word box under the meaning. */
+.rider-listen {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  /* The word box lets touches through; its buttons take them. */
+  pointer-events: auto;
+}
+.rider-listen button {
+  min-width: 64px;
+  height: 48px;
+  border: 3px solid #a5b4fc;
+  border-radius: 12px;
+  background: #312e81;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+.rider-listen button[data-look='playing'] {
+  border-color: #fde68a;
+}
+.rider-listen button[data-look='heard'] {
+  border-color: #86efac;
+}
+.rider-listen button[data-look='failed'] {
+  border-color: #fca5a5;
+}
+.rider-listen button[data-look='used'] {
+  opacity: 0.55;
 }
 `;

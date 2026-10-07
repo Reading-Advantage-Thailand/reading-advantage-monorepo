@@ -4,7 +4,7 @@
  */
 import { correctGateOf, type DragonRiderCommand, type DragonRiderState } from '../core/index.js';
 
-export function nextChoice(state: DragonRiderState): DragonRiderCommand | null {
+export function nextChoice(state: DragonRiderState): Extract<DragonRiderCommand, { type: 'choose' }> | null {
   if (state.phase !== 'riding' || !state.round || state.round.chosen !== null) return null;
   const gate = correctGateOf(state);
   return gate === null ? null : { type: 'choose', gate };

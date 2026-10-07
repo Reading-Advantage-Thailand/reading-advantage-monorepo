@@ -21,22 +21,8 @@ import { FormError } from "../form-error";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
-
-const LOCALE_PREFIX = new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`);
-
-/**
- * Keeps a callback only when it is a path on this site, without its locale.
- * The i18n router adds the current locale again on push.
- * @param value The raw callbackUrl query value.
- * @returns The local path without a locale prefix, or null for any other value.
- */
-function safeCallbackPath(value: string | null): string | null {
-  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) {
-    return null;
-  }
-  return value.replace(LOCALE_PREFIX, "") || "/";
-}
+import { safeCallbackPath } from "@/lib/safe-callback-path";
+import { TemporaryPasswordStep } from "./temporary-password-step";
 
 export function TeacherSignInForm({
   className,
@@ -47,7 +33,15 @@ export function TeacherSignInForm({
   const callbackUrl = safeCallbackPath(searchParams.get("callbackUrl"));
   const [error, setError] = useState<string | undefined>("");
   const [isLoading, setIsLoading] = useState(false);
+  // Set after a correct temporary password (FR-5): the user sets a new password first.
+  const [pendingChange, setPendingChange] = useState<{ username: string; password: string } | null>(null);
   const { login } = useAuth();
+
+  /** Opens the callback page, or lets the proxy send the user to the role's home page. */
+  const enter = () => {
+    if (callbackUrl) router.push(callbackUrl);
+    else router.replace("/auth/signin");
+  };
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -64,14 +58,30 @@ export function TeacherSignInForm({
     try {
       await login(value.username, value.password);
       // Without a callback, the proxy sends the user from the sign-in page to the role's home page.
-      if (callbackUrl) router.push(callbackUrl);
-      else router.replace("/auth/signin");
+      enter();
     } catch (err) {
+      if ((err as { code?: string }).code === "PASSWORD_CHANGE_REQUIRED") {
+        setPendingChange({ username: value.username, password: value.password });
+        return;
+      }
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (pendingChange) {
+    return (
+      <TemporaryPasswordStep
+        username={pendingChange.username}
+        temporaryPassword={pendingChange.password}
+        onChanged={async (newPassword) => {
+          await login(pendingChange.username, newPassword);
+          enter();
+        }}
+      />
+    );
+  }
 
   return (
     <Form {...form}>

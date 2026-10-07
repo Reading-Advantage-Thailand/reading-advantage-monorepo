@@ -2,6 +2,7 @@
 
 import { signInSchema } from "@/lib/zod";
 import { z } from "zod";
+import { logger } from "@/lib/observability/logger";
 
 export async function signInAction(
   value: z.infer<typeof signInSchema>,
@@ -33,7 +34,7 @@ export async function signInAction(
       };
     }
   } catch (error) {
-    console.error("Sign-in error:", error);
+    logger.error("sign_in_failed", { error });
     return {
       error: "An unknown error occurred",
     };

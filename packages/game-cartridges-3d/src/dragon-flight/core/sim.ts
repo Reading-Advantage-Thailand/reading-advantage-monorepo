@@ -5,7 +5,14 @@
  * one dragon home (never below 1) and queues the word once more, no choice makes the dragon hover
  * before the gates, and after the last gates the flock burns the boss with one fireball per
  * dragon. There is no game over: the boss always falls.
+ *
+ * Answer audio (Read to Select Audio, `options.answerAudio`): every input word is one round (at
+ * most `MAX_LISTENING_SESSION_ITEMS`) with two gates. The banner shows the meaning and the gates
+ * play the English words: `choose` only steers to a gate (`gateHeld`), the dragon waits at it
+ * (`gateReached`), and the view resolves it with `commit` after its clip played to the end. A
+ * missed word still comes back once: its question was not completed.
  */
+import { MAX_LISTENING_SESSION_ITEMS } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { STEP_MS, createRng, type Rng, type Simulation } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { flightWordsOf, gatesFor, type DragonFlightInput } from './content.js';
 import type {
@@ -23,6 +30,8 @@ export const TUNING = {
   /** Gates per round, and in Helper mode. */
   gates: 3,
   gatesHelper: 2,
+  /** Answer audio: two gates, as in the old game (each clip takes time to hear). */
+  gatesAudio: 2,
   /** Speeds in meters per second; the boost lasts `boostMs` after a right gate. */
   cruiseSpeed: 9,
   boostSpeed: 14,
@@ -46,6 +55,8 @@ export const TUNING = {
 export interface DragonFlightOptions {
   seed: number;
   helper: boolean;
+  /** Read to Select Audio (the host gave an answer audio controller). */
+  answerAudio?: boolean;
 }
 
 export type DragonFlightSimulation = Simulation<DragonFlightState, DragonFlightCommand, DragonFlightEvent>;
@@ -73,12 +84,14 @@ const STEP_S = STEP_MS / 1000;
 
 export function createDragonFlight(input: DragonFlightInput, options: DragonFlightOptions): DragonFlightSimulation {
   const rng: Rng = createRng(options.seed);
-  const words = flightWordsOf(input, rng, TUNING.maxWords);
+  const answerAudio = options.answerAudio === true;
+  const words = flightWordsOf(input, rng, answerAudio ? MAX_LISTENING_SESSION_ITEMS : TUNING.maxWords);
 
   const state: DragonFlightState = {
     phase: 'flying',
     helper: options.helper,
-    gates: gateCountFor(options.helper),
+    answerAudio,
+    gates: answerAudio ? TUNING.gatesAudio : gateCountFor(options.helper),
     timeMs: 0,
     distance: 0,
     speed: TUNING.cruiseSpeed,
@@ -105,16 +118,19 @@ export function createDragonFlight(input: DragonFlightInput, options: DragonFlig
   /** Starts the next round of the queue with its gates `gatesAt` ahead. */
   const startRound = (gatesAt: number, events: DragonFlightEvent[]): void => {
     const word = wordById(state, state.queue.shift()!);
-    const { options: gateOptions } = gatesFor(word, state.words, state.gates, rng);
+    const { options: gateOptions } = gatesFor(word, state.words, state.gates, rng, answerAudio);
     started += 1;
     const round: Round = {
       id: `r${started}`,
       itemId: word.id,
       term: word.term,
+      translation: word.translation,
+      position: word.position,
       options: gateOptions,
       gatesAt,
       chosen: null,
       correctGate: null,
+      held: null,
     };
     state.round = round;
     state.roundIndex = started - 1;
@@ -123,6 +139,8 @@ export function createDragonFlight(input: DragonFlightInput, options: DragonFlig
       roundId: round.id,
       itemId: round.itemId,
       term: round.term,
+      translation: round.translation,
+      position: round.position,
       options: round.options.map((o) => ({ ...o })),
       gatesAt,
     });
@@ -142,11 +160,35 @@ export function createDragonFlight(input: DragonFlightInput, options: DragonFlig
 
   // ------------------------------------------------------------ commands
 
+  /** True for a gate the student may still pick in the current round. */
+  const open = (round: Round | null, gate: number): round is Round =>
+    !!round && round.chosen === null && Number.isInteger(gate) && gate >= 0 && gate < round.options.length;
+
+  /** Answer audio: steer to a gate; at the gates, the dragon waits at it for the view's commit. */
+  const hold = (gate: number): DragonFlightEvent[] => {
+    const round = state.round;
+    if (!open(round, gate)) return [];
+    const events: DragonFlightEvent[] = [];
+    if (round.held !== gate) {
+      round.held = gate;
+      events.push({ type: 'gateHeld', roundId: round.id, gate });
+    }
+    // At the gates, every choice asks the view to play the gate's clip again (a retry after a failure).
+    if (state.waiting) events.push({ type: 'gateReached', roundId: round.id, gate });
+    return events;
+  };
+
+  /** Answer audio: the view confirmed the clip of the gate the dragon waits at. */
+  const commit = (): DragonFlightEvent[] => {
+    const round = state.round;
+    if (!answerAudio || !round || round.held === null || !state.waiting) return [];
+    return choose(round.held);
+  };
+
   const choose = (gate: number): DragonFlightEvent[] => {
     const events: DragonFlightEvent[] = [];
     const round = state.round;
-    if (!round || round.chosen !== null) return events;
-    if (!Number.isInteger(gate) || gate < 0 || gate >= round.options.length) return events;
+    if (!open(round, gate)) return events;
     const correctGate = correctGateOf(state)!;
     const correct = gate === correctGate;
     const word = wordById(state, round.itemId);
@@ -195,7 +237,8 @@ export function createDragonFlight(input: DragonFlightInput, options: DragonFlig
         state.speed = 0;
         if (!state.waiting) {
           state.waiting = true;
-          events.push({ type: 'waiting', roundId: round.id });
+          if (answerAudio && round.held !== null) events.push({ type: 'gateReached', roundId: round.id, gate: round.held });
+          else events.push({ type: 'waiting', roundId: round.id });
         }
       } else {
         state.speed = speedNow();
@@ -243,7 +286,9 @@ export function createDragonFlight(input: DragonFlightInput, options: DragonFlig
       if (state.phase !== 'flying') return [];
       switch (command.type) {
         case 'choose':
-          return choose(command.gate);
+          return answerAudio ? hold(command.gate) : choose(command.gate);
+        case 'commit':
+          return commit();
         default:
           return [];
       }

@@ -322,6 +322,26 @@ describe("login generation", () => {
     expect(result.current.isLoading).toBe(false);
     expect(result.current.isAuthenticated).toBe(false);
   });
+
+  it("passes the response status and code with a failed login, such as a temporary password", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({ ok: false, json: () => Promise.resolve({}) } as Response)
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        json: () => Promise.resolve({ message: "Set a new password to continue", code: "PASSWORD_CHANGE_REQUIRED" }),
+      } as Response);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await act(async () => {
+      await expect(result.current.login("kru", "temporary")).rejects.toMatchObject({
+        message: "Set a new password to continue",
+        status: 403,
+        code: "PASSWORD_CHANGE_REQUIRED",
+      });
+    });
+    expect(result.current.isAuthenticated).toBe(false);
+  });
 });
 
 describe("useSession", () => {

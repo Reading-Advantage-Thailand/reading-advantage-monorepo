@@ -5,6 +5,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "."),
+      // Next.js supplies `server-only` at build time; Vitest needs a module for it.
+      "server-only": path.resolve(__dirname, "./lib/test/server-only-mock.ts"),
     },
   },
   test: {

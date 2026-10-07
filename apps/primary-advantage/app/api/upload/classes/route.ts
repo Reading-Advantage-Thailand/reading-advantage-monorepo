@@ -11,6 +11,7 @@ import { getTenantDB, getUnscopedDB, studentLogin } from '@reading-advantage/dom
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
 import { generateRandomClassCode } from "@/lib/utils";
+import { logger } from "@/lib/observability/logger";
 
 // Zod validation schemas
 const classroomCsvRowSchema = z.object({
@@ -998,7 +999,7 @@ export async function POST(request: NextRequest) {
                 students: Array.from(seeds.values()),
               });
               studentLoginsFailedNames = failed.map((f) => nameByUserId.get(f.userId) ?? f.userId);
-              if (failed.length > 0) console.error("Student login generation failed for", failed.length, "students");
+              if (failed.length > 0) logger.error("student_login_generation_failed", { count: failed.length });
               studentLogins = provisioned.map((login) => ({
                 name: nameByUserId.get(login.userId) ?? "",
                 classroomName: seeds.get(login.userId)?.classroomName ?? null,
@@ -1007,12 +1008,12 @@ export async function POST(request: NextRequest) {
               }));
             } catch (error) {
               // A failure leaves the students with the email username. Report it to the teacher.
-              console.error("Student login generation failed:", error instanceof Error ? error.message : "Unknown");
+              logger.error("student_login_generation_failed", { message: error instanceof Error ? error.message : "Unknown" });
               studentLoginsFailedNames = Array.from(seeds.keys(), (id) => nameByUserId.get(id) ?? id);
             }
           }
         } catch (error) {
-          console.error("Student login preparation failed:", error instanceof Error ? error.message : "Unknown");
+          logger.error("student_login_preparation_failed", { message: error instanceof Error ? error.message : "Unknown" });
         }
       }
 

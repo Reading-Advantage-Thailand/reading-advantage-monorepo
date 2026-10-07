@@ -91,7 +91,7 @@ const ALLOWLIST: AllowlistEntry[] = [
     reason: "shared config package (tsconfig/eslint/tailwind) — no production runtime",
   },
   {
-    pattern: /^packages\/(db|scripts)\/scripts\//,
+    pattern: /^packages\/(db|domain|scripts)\/scripts\//,
     reason: "CLI/maintenance script output",
   },
   {
@@ -131,7 +131,7 @@ const ALLOWLIST: AllowlistEntry[] = [
     reason: "Node OTel instrumentation bootstrap",
   },
   {
-    pattern: /^apps\/science-advantage\/lib\/observability\//,
+    pattern: /^apps\/(science|primary)-advantage\/lib\/observability\//,
     reason: "app-local observability adapter implementation",
   },
 ];

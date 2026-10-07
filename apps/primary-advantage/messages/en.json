@@ -2822,7 +2822,12 @@
     "readMode": "Read Thai",
     "listenMode": "Listen to English",
     "signInToPlayChallenge": "Sign in to play this challenge",
-    "signInToPlayGame": "Sign in to play this game"
+    "signInToPlayGame": "Sign in to play this game",
+    "loadError": "The game could not load.",
+    "loadingGame": "Loading the game…",
+    "loadingChallenge": "Loading the challenge…",
+    "challengeMismatch": "This game cannot run this challenge.",
+    "retry": "Try again"
   },
   "StudentGames": {
     "rewardInInventory": "It is in your inventory. Wear it from your avatar page.",

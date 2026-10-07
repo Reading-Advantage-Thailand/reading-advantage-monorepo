@@ -71,7 +71,17 @@ export interface LoginHandlerOptions {
    * Other roles keep the 7-day session. Only Primary Advantage enables this. The default is false.
    */
   studentSessionPolicy?: boolean;
+  /**
+   * When true, a correct temporary password (`accounts.temporary_password_issued_at` set) gives
+   * no session: the response is 403 with `code: PASSWORD_CHANGE_REQUIRED`, and the user sets a new
+   * password through `createTemporaryPasswordChangeHandler` first (Primary cutover, FR-5).
+   * Only Primary Advantage enables this. The default is false.
+   */
+  temporaryPasswordChange?: boolean;
 }
+
+/** The login response code for a correct temporary password that must be changed first. */
+export const PASSWORD_CHANGE_REQUIRED = "PASSWORD_CHANGE_REQUIRED";
 
 /**
  * Handles user login with username/password authentication.
@@ -167,7 +177,7 @@ async function loginWithOptions(request: NextRequest, options: LoginHandlerOptio
     }
 
     // Find credential account
-    let account: { password: string | null } | undefined;
+    let account: { password: string | null; temporaryPasswordIssuedAt?: Date | null } | undefined;
     try {
       const result = await db
         .select()
@@ -244,6 +254,15 @@ async function loginWithOptions(request: NextRequest, options: LoginHandlerOptio
           ...(rateCheck.captchaRequired ? { captchaRequired: true } : {}),
         },
         { status: 401 }
+      );
+    }
+
+    // A temporary password opens no session: the user sets a new password first (FR-5).
+    if (options.temporaryPasswordChange && !adoptLegacyHash && account?.temporaryPasswordIssuedAt) {
+      await resetLimit(lowerUsername, ...(clientIp ? [clientIp] : []));
+      return NextResponse.json(
+        { message: "Set a new password to continue", code: PASSWORD_CHANGE_REQUIRED },
+        { status: 403 },
       );
     }
 

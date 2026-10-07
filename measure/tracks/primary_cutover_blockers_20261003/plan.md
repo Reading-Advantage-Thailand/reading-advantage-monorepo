@@ -39,7 +39,13 @@ Owner lane: A. Starts first. Merge to the integration branch before other lanes 
 - [x] License routes choose the database scope by role; the license insert stores `school_name` (466f54c95)
 - [x] Browser check: SYSTEM creates a school, a license, and the school admin; the admin sees the license and creates a teacher and a student; the teacher signs in. Closes the AC-3 SYSTEM login gap.
 
+## Phase 5: Deploy image (2026-10-06)
+- [x] Runner stage copies the full `public` folder (evidence/phase5-docker-public-folder.md)
+- [ ] Build the image once and request five public URLs from the container (evidence/phase5-docker-public-folder.md, open check)
+  - [x] Runner layout check without a container, 2026-10-07: the five URLs, a 3D model, a HUD font, and two pages answer 200 (the local image build fails on this machine: registry timeouts, then systemd-oomd)
+  - [ ] The five requests against the Cloud Build image (the first deploy smoke test)
+
 ## Gates
 - [x] Tests, tsc, ESLint green (2026-10-04 rerun) — tsc 0 errors for Primary, api, auth, db (db fix 5b8dac175); Primary 736/736; api 338 passed, 6 skipped, 1 file hook timeout under load (wave0-phase3-typed-errors, 15/15 alone); auth 333/334, only the known phase-7-closeout failure; db 40 failures that predate Lane A (company-identity integration env, drizzle045 counts 58 vs 60, codecamp-0049 ceiling, marketing import); ESLint 0 errors, 156 warnings on 64 changed Primary files (packages have no ESLint config)
 - [x] Browser re-verification of every Phase 4 fix (0b25ba006, evidence/phase4-browser-recheck.md)
-- [ ] Tutor read test green — shape check PASS on the April copy; the row check waits for the ETL (track primary_legacy_data_migration_20261004, Phase 2)
+- [x] Tutor read test green — 2026-10-07 on the ETL scratch copy `primary_etl_20261007` against `primary_legacy_20261007`: shape PASS, rows MATCH for 621 published articles; the four owner-approved MCQ answer fixes are expected values in the check (track primary_legacy_data_migration_20261004)

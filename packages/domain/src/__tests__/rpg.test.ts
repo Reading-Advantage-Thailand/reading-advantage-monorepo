@@ -78,6 +78,22 @@ function completion(overrides: Record<string, unknown> = {}) {
 }
 
 describe("RPG quest rules", () => {
+  it.each(["hero-vs-zombie", "hero-vs-zombie-story"])("earns the ward quests on the 3D game %s", (gameType) => {
+    expect(getEligibleRpgRewards(completion({ gameType, metadata: null }))).toEqual([
+      { questId: "first-ward", cosmeticId: "apprentice-wand" },
+      { questId: "complete-the-ward", cosmeticId: "graveyard-staff" },
+    ]);
+    expect(getEligibleRpgRewards(completion({ gameType: "dragon-flight", metadata: null }))).toEqual([]);
+  });
+
+  it.each(["dragon-flight", "dragon-rider"])("grants only the Echo Staff for a perfect English answer audio run of %s", (gameType) => {
+    expect(getEligibleRpgRewards(completion({ gameType }))).toEqual([
+      { questId: "perfect-english-audio", cosmeticId: "echo-staff" },
+    ]);
+    expect(getEligibleRpgRewards(completion({ gameType, correctAnswers: 1 }))).toEqual([]);
+    expect(getEligibleRpgRewards(completion({ gameType: "rune-match" }))).toEqual([]);
+  });
+
   it("grants all three fixed rewards for one complete perfect audio victory", () => {
     expect(getEligibleRpgRewards(completion())).toEqual([
       { questId: "first-ward", cosmeticId: "apprentice-wand" },
