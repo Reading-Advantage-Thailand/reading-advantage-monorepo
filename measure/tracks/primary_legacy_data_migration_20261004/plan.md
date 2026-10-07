@@ -35,8 +35,8 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 - [ ] Run into the cutover target
 
 ## Phase 3: Old article links (FR-4)
-- [ ] Legacy ID resolver and redirect on `student/read/[articleId]` and `/writing`
-- [ ] Script check of all 27 Origins 2 and 3.1 IDs
+- [x] Legacy ID resolver and redirect on `student/read/[articleId]` and `/writing` (owner: allowed in the feature freeze, 2026-10-07): `resolveLegacyArticleId` (domain articles) and the read page redirect; `/writing` opens the article page. Defect fixed on the way: a student sign-in ignored `callbackUrl`, so a signed-out QR scan opened the home page; it now opens the `/student/...` callback
+- [x] Script check of all Origins 2 and 3.1 IDs: 28 of 28 (27 lessons and E12) open a published article on `primary_etl_20261007` ([legacy-links-check-20261007.md](./legacy-links-check-20261007.md); `pnpm --filter @reading-advantage/db legacy-links-check`)
 
 ## Phase 4: Teacher credentials (FR-5, FR-6)
 - [ ] Additive nullable column for a temporary password, and the forced change step

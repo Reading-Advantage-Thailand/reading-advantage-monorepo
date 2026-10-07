@@ -62,6 +62,7 @@
     "tutor-read-check": "tsx scripts/tutor-read-check.ts",
     "refuse-legacy-db": "tsx scripts/refuse-legacy-db.ts",
     "legacy-import": "tsx scripts/primary-legacy-import.ts",
+    "legacy-links-check": "tsx scripts/check-legacy-article-links.ts",
     "company-identity:generate": "drizzle-kit generate --config company-identity/drizzle.config.ts",
     "company-identity:migrate": "tsx src/company-identity/commands/migrate.ts",
     "company-identity:doctor": "tsx src/company-identity/commands/doctor.ts",
