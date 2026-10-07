@@ -305,6 +305,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     await open(async (tx) => { await body(tx); await ids.flush(tx); });
   };
   const migratedArticles = new Set<string>();
+  // The teacher of each migrated classroom (legacy classroom id → user id), for assignments whose own teacher is gone.
+  const classTeachers = new Map<string, string>();
 
   const main = async () => {
   // ── 1. schools, users, accounts, school admins ───────────────────────────────────
@@ -399,6 +401,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const grade = parseGrade(c.grade);
       if (c.grade && grade === null) counter.skip("classrooms", "grade text not a number, stored null", id);
       migratedClasses.add(id);
+      classTeachers.set(id, teacher);
       classRows.push({
         id: ids.ensure(MAP_TABLES.classrooms, id), name: c.name, school_id: ids.get(MAP_TABLES.schools, c.school_id as string | null), teacher_id: teacher,
         class_code: c.classCode, code_expires_at: c.codeExpiresAt, grade, password_students: c.password_students, created_at: c.createdAt, updated_at: c.updatedAt,
@@ -550,11 +553,13 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const id = String(a.id);
       const classroomId = ids.get(MAP_TABLES.classrooms, a.classroom_id as string);
       if (!classroomId) { counter.skip("assignments", "classroom not migrated", id); continue; }
-      if (!users.has(String(a.teacher_id))) { counter.skip("assignments", "teacher not migrated", id); continue; }
+      const teacherId = users.has(String(a.teacher_id)) ? String(a.teacher_id) : classTeachers.get(String(a.classroom_id));
+      if (!teacherId) { counter.skip("assignments", "teacher not migrated", id); continue; }
+      if (teacherId !== String(a.teacher_id)) counter.skip("assignments", "teacher_id fell back to the classroom teacher (the assignment's teacher is not migrated)", id);
       const articleId = ids.get(MAP_TABLES.article, a.article_id as string | null);
       migratedAssignments.add(id);
       assignmentRows.push({
-        id: ids.ensure(MAP_TABLES.assignments, id), title: a.name ?? a.article_title ?? "Assignment", classroom_id: classroomId, teacher_id: a.teacher_id, article_id: articleId,
+        id: ids.ensure(MAP_TABLES.assignments, id), title: a.name ?? a.article_title ?? "Assignment", classroom_id: classroomId, teacher_id: teacherId, article_id: articleId,
         due_date: a.due_date, type: "article", description: a.description, teacher_name: a.teacher_name, created_at: a.createdAt, updated_at: a.updatedAt,
       });
     }
