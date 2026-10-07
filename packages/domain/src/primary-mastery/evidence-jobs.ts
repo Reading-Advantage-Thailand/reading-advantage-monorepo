@@ -80,7 +80,6 @@ export interface RunPrimaryEvidenceJobOptions {
   persistence?: MasteryPersistencePort;
   resolver?: EvidenceResolver;
   load?: (params: { db: DB; payload: PrimaryEvidenceJobPayload }) => Promise<LoadedEvidenceEvent | null>;
-  now?: string;
 }
 
 /**
@@ -93,7 +92,7 @@ export async function runPrimaryEvidenceJob(options: RunPrimaryEvidenceJobOption
   const loaded = await (options.load ?? loadPrimaryEvidenceEvent)({ db: options.db, payload });
   if (!loaded) return { status: "row-missing", committed: 0, skipped: 0 };
   if (loaded.schoolId !== options.tenant.schoolId) return { status: "tenant-mismatch", committed: 0, skipped: 0 };
-  const result = await recordPrimaryEvidence({ db: options.db, tenant: options.tenant, event: loaded.event, persistence: options.persistence, resolver: options.resolver, now: options.now });
+  const result = await recordPrimaryEvidence({ db: options.db, tenant: options.tenant, event: loaded.event, persistence: options.persistence, resolver: options.resolver });
   return { status: "recorded", committed: result.committed.length, skipped: result.skipped.length + (loaded.legacyUnmatched ?? 0) };
 }
 
@@ -117,7 +116,7 @@ export interface PrimaryEvidenceJobHandler {
 
 /**
  * Defines the handler the worker registers for `primary.mastery.evidence`.
- * @param deps The database and optional seams: a persistence per school and actor, a resolver, a loader, a clock.
+ * @param deps The database and optional seams: a persistence per school and actor, a resolver, a loader.
  * @returns The handler definition; pass it to the backend `defineDurableJobHandler` at the composition root.
  */
 export function definePrimaryEvidenceJobHandler(deps: {
@@ -125,7 +124,6 @@ export function definePrimaryEvidenceJobHandler(deps: {
   persistenceFor?: (schoolId: string) => MasteryPersistencePort;
   resolver?: EvidenceResolver;
   load?: RunPrimaryEvidenceJobOptions["load"];
-  now?: () => string;
 }): PrimaryEvidenceJobHandler {
   return {
     jobName: PRIMARY_EVIDENCE_JOB_NAME,
@@ -135,7 +133,7 @@ export function definePrimaryEvidenceJobHandler(deps: {
     async handle(context, payload) {
       if (context.tenant.mode !== "tenant") throw new Error(`${PRIMARY_EVIDENCE_JOB_NAME} runs in a tenant scope only`);
       const schoolId = context.tenant.tenantId;
-      return runPrimaryEvidenceJob({ db: deps.db, payload, tenant: { schoolId }, persistence: deps.persistenceFor?.(schoolId), resolver: deps.resolver, load: deps.load, now: deps.now?.() });
+      return runPrimaryEvidenceJob({ db: deps.db, payload, tenant: { schoolId }, persistence: deps.persistenceFor?.(schoolId), resolver: deps.resolver, load: deps.load });
     },
   };
 }

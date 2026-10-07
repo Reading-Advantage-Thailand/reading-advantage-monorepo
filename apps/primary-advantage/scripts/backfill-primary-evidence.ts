@@ -28,6 +28,7 @@ const QUIZ_ACTIVITY_TYPES = ["MC_QUESTION", "SA_QUESTION", "LA_QUESTION"];
 interface SourceRow {
   payload: PrimaryEvidenceJobPayload;
   schoolId: string;
+  occurredAt: Date;
 }
 
 /**
@@ -43,18 +44,18 @@ function parseArgs(argv: string[]): { apply: boolean; schoolId: string | null } 
 /**
  * Lists the source rows of the three evidence surfaces with their school.
  * @param schoolId Limits the list to one school when set.
- * @returns The rows to enqueue, oldest first per source.
+ * @returns The rows to enqueue, oldest first across all sources.
  */
 async function listSourceRows(schoolId: string | null): Promise<SourceRow[]> {
   const schoolFilter = (column: typeof users.schoolId | typeof gameCompletions.schoolId) => (schoolId ? eq(column, schoolId) : undefined);
   const quizzes = await db
-    .select({ rowId: userActivity.id, schoolId: users.schoolId })
+    .select({ rowId: userActivity.id, schoolId: users.schoolId, occurredAt: userActivity.createdAt })
     .from(userActivity)
     .innerJoin(users, eq(users.id, userActivity.userId))
     .where(and(inArray(userActivity.activityType, QUIZ_ACTIVITY_TYPES), schoolFilter(users.schoolId)))
     .orderBy(userActivity.createdAt);
   const reviews = await db
-    .select({ rowId: cardReviews.id, schoolId: users.schoolId })
+    .select({ rowId: cardReviews.id, schoolId: users.schoolId, occurredAt: cardReviews.reviewedAt })
     .from(cardReviews)
     .innerJoin(flashcardCards, eq(flashcardCards.id, cardReviews.cardId))
     .innerJoin(flashcardDecks, eq(flashcardDecks.id, flashcardCards.deckId))
@@ -62,18 +63,18 @@ async function listSourceRows(schoolId: string | null): Promise<SourceRow[]> {
     .where(schoolFilter(users.schoolId))
     .orderBy(cardReviews.reviewedAt);
   const runs = await db
-    .select({ rowId: gameCompletions.id, schoolId: gameCompletions.schoolId })
+    .select({ rowId: gameCompletions.id, schoolId: gameCompletions.schoolId, occurredAt: gameCompletions.createdAt })
     .from(gameCompletions)
     .where(and(sql`${gameCompletions.metadata} -> 'learningEvidence' ->> 'kind' = 'story-game'`, schoolFilter(gameCompletions.schoolId)))
     .orderBy(gameCompletions.createdAt);
   const rows: SourceRow[] = [];
-  const push = (sourceTable: PrimaryEvidenceJobPayload["sourceTable"], list: Array<{ rowId: string; schoolId: string | null }>) => {
-    for (const row of list) if (row.schoolId) rows.push({ payload: { sourceTable, rowId: row.rowId }, schoolId: row.schoolId });
+  const push = (sourceTable: PrimaryEvidenceJobPayload["sourceTable"], list: Array<{ rowId: string; schoolId: string | null; occurredAt: Date }>) => {
+    for (const row of list) if (row.schoolId) rows.push({ payload: { sourceTable, rowId: row.rowId }, schoolId: row.schoolId, occurredAt: row.occurredAt });
   };
   push("user_activity", quizzes);
   push("card_reviews", reviews);
   push("game_completions", runs);
-  return rows;
+  return rows.sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
 }
 
 /**
@@ -102,8 +103,10 @@ async function main(): Promise<void> {
   }
   const port = createDurableJobQueuePort({ sql: queueSql });
   const outcomes: Record<string, number> = {};
-  for (const row of pending) {
-    const result = await enqueuePrimaryEvidence({ port, payload: row.payload, schoolId: row.schoolId });
+  // The queue claims by available_at, then id: one millisecond apart keeps each card's reviews in practice order.
+  const start = Date.now();
+  for (const [index, row] of pending.entries()) {
+    const result = await enqueuePrimaryEvidence({ port, payload: row.payload, schoolId: row.schoolId, now: new Date(start + index).toISOString() });
     outcomes[result.outcome] = (outcomes[result.outcome] ?? 0) + 1;
   }
   console.log(JSON.stringify({ event: "primary.mastery.evidence.backfill.done", outcomes }));

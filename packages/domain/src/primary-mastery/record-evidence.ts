@@ -70,8 +70,6 @@ export interface RecordPrimaryEvidenceOptions {
   event: PrimaryEvidenceEvent;
   persistence?: MasteryPersistencePort;
   resolver?: EvidenceResolver;
-  /** The server time as ISO text. */
-  now?: string;
 }
 
 /** One objective to commit for one item. */
@@ -104,7 +102,7 @@ function partsFor(rating: EvidenceDecision & { kind: "evidence" }): ActivityPrac
   return [{ ...wrong, partId: "1" }];
 }
 
-function envelopeFor(event: PrimaryEvidenceEvent, surface: EvidenceSurface, itemId: string, target: Target, variantKey: string, decision: EvidenceDecision & { kind: "evidence" }, now: string): ActivityPracticeSubmissionEnvelope {
+function envelopeFor(event: PrimaryEvidenceEvent, surface: EvidenceSurface, itemId: string, target: Target, variantKey: string, decision: EvidenceDecision & { kind: "evidence" }, at: string): ActivityPracticeSubmissionEnvelope {
   const graphVersion = target.skill === "Vocabulary" ? GRAPH_RELEASE.vocabulary.commit : GRAPH_RELEASE.gse.commit;
   const mode = event.kind === "question-step" && event.mode === "teacher_led" ? "guided_practice" : "independent_practice";
   return {
@@ -113,7 +111,7 @@ function envelopeFor(event: PrimaryEvidenceEvent, surface: EvidenceSurface, item
     mode,
     status: "graded",
     attemptNumber: 1,
-    submittedAt: now,
+    submittedAt: at,
     answers: {},
     parts: partsFor(decision),
     analytics: {
@@ -192,8 +190,8 @@ async function resolveGameRun(event: GameCompletionEvent, resolver: EvidenceReso
 /**
  * Records the evidence of one source event: resolves each item's objectives through the tag
  * tables, rates it by the policy, and commits one command per objective. A replay returns the
- * same receipts and writes nothing.
- * @param options The tenant, the event, and optional persistence, resolver, and clock.
+ * same receipts and writes nothing. The review time is the event's `occurredAt`.
+ * @param options The tenant, the event, and optional persistence and resolver.
  * @returns The committed objectives and the skipped items with their reasons.
  * @throws When the event fails its contract (a run of more than 200 items included) or a commit fails.
  */
@@ -201,7 +199,8 @@ export async function recordPrimaryEvidence(options: RecordPrimaryEvidenceOption
   const event = primaryEvidenceEventSchema.parse(options.event);
   if (event.kind === "game-run" && event.items.length > MAX_EVIDENCE_ITEMS) throw new Error(`A game run holds at most ${MAX_EVIDENCE_ITEMS} items`);
   const { schoolId } = options.tenant;
-  const now = options.now ?? new Date().toISOString();
+  // The practice time of the source row, never the run time: a backfill runs months later.
+  const at = new Date(event.occurredAt).toISOString();
   const resolver = options.resolver ?? createDrizzleEvidenceResolver(requireDb(options.db));
   const persistence = options.persistence ?? createDrizzleMasteryPersistence({ db: requireDb(options.db), tenant: { schoolId }, actorId: event.userId });
   const context: Omit<EvidenceContext, "objectiveSkill"> = event.kind === "question-step"
@@ -227,7 +226,7 @@ export async function recordPrimaryEvidence(options: RecordPrimaryEvidenceOption
         skipped.push({ itemId: item.itemId, objectiveId: target.nodeId, reason: decision.reason });
         continue;
       }
-      const receipt = await projectActivitySubmissionToMastery(schoolId, event.userId, envelopeFor(event, item.surface, item.itemId, target, item.variantKey, decision, now), persistence, now);
+      const receipt = await projectActivitySubmissionToMastery(schoolId, event.userId, envelopeFor(event, item.surface, item.itemId, target, item.variantKey, decision, at), persistence, at);
       committed.push({ itemId: item.itemId, objectiveId: target.nodeId, variantKey: item.variantKey, rating: decision.rating, confidence: decision.confidence, status: receipt.status, commitId: receipt.commitId });
     }
   }

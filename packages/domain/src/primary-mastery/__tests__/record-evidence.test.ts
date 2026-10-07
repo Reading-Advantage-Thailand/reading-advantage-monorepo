@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { createInMemoryMasteryPersistence } from "../../mastery/in-memory-mastery-persistence.js";
 import { recordPrimaryEvidence } from "../record-evidence.js";
-import { ARTICLE, L19_2, NOW, PUPPY, Q1, Q2, Q3, R10_2, R12_1, RUN, SCHOOL, STUDENT, flashcardEvent, gameEvent, questionEvent, sampleResolver } from "./evidence-fixtures.js";
+import { ARTICLE, L19_2, PUPPY, Q1, Q2, Q3, R10_2, R12_1, RUN, SCHOOL, STUDENT, flashcardEvent, gameEvent, questionEvent, sampleResolver } from "./evidence-fixtures.js";
 
 function setup() {
   const persistence = createInMemoryMasteryPersistence();
   const resolver = sampleResolver();
-  const record = (event: Parameters<typeof recordPrimaryEvidence>[0]["event"]) => recordPrimaryEvidence({ tenant: { schoolId: SCHOOL }, event, persistence, resolver, now: NOW });
+  const record = (event: Parameters<typeof recordPrimaryEvidence>[0]["event"]) => recordPrimaryEvidence({ tenant: { schoolId: SCHOOL }, event, persistence, resolver });
   return { persistence, record };
 }
 
@@ -120,5 +120,21 @@ describe("recordPrimaryEvidence (FR-3, FR-4)", () => {
     expect(snapshot.cards.map((card) => card.objectiveId)).toEqual([PUPPY]);
     expect(snapshot.evidence[0]).toMatchObject({ objectiveId: PUPPY, variantKey: "flashcard" });
     expect(ARTICLE).toBeTruthy();
+  });
+
+  it("stamps the review and the evidence with the time of the source row, not the run time", async () => {
+    const { persistence, record } = setup();
+    await record(questionEvent({ occurredAt: "2025-11-05T13:30:13.344Z" }));
+    const snapshot = await persistence.readSnapshot({ schoolId: SCHOOL });
+    expect(snapshot.reviews.map((row) => row.reviewedAt)).toEqual(["2025-11-05T13:30:13.344Z", "2025-11-05T13:30:13.344Z"]);
+    expect(snapshot.evidence.map((row) => row.createdAt)).toEqual(["2025-11-05T13:30:13.344Z", "2025-11-05T13:30:13.344Z"]);
+  });
+
+  it("records an older row that runs after a newer one at the card's last review time", async () => {
+    const { persistence, record } = setup();
+    await record(questionEvent({ occurredAt: "2025-11-06T09:00:00.000Z" }));
+    await record(questionEvent({ rowId: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", occurredAt: "2025-11-04T09:00:00.000Z" }));
+    const snapshot = await persistence.readSnapshot({ schoolId: SCHOOL });
+    expect(snapshot.reviews.map((row) => row.reviewedAt)).toEqual(Array(4).fill("2025-11-06T09:00:00.000Z"));
   });
 });
