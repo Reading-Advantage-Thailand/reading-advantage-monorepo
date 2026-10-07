@@ -2,6 +2,7 @@ import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { google, googleModel } from "@/utils/google";
 import { storyGeneratorSchema } from "@/lib/zod";
 import { z } from "zod";
+import { logger } from "@/lib/observability/logger";
 
 /** Story generation input. */
 export interface GenerateStoryParams {
@@ -56,7 +57,7 @@ export async function generateStoryContent(
 
     return story;
   } catch (error) {
-    console.error("Error generating story:", error);
+    logger.error("story_generation_failed", { error });
     throw new Error(`Failed to generate story: ${error}`);
   }
 }

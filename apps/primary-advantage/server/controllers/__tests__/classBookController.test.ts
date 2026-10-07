@@ -38,7 +38,8 @@ describe("recordLessonStep", () => {
     const error = vi.spyOn(console, "error").mockImplementation(() => {});
     mocks.recordLessonProgress.mockRejectedValue(new Error("down"));
     await expect(recordLessonStep(user, "a1", 50, 10, "test")).resolves.toBeUndefined();
-    expect(error).toHaveBeenCalledWith("Class book progress for test failed:", expect.any(Error));
+    const line = JSON.parse(String(error.mock.calls[0]?.[0]));
+    expect(line).toMatchObject({ event: "class_book_progress_failed", level: "error", label: "test", error: { name: "Error", message: "down" } });
     error.mockRestore();
   });
 });

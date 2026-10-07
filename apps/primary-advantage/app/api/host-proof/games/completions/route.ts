@@ -15,6 +15,7 @@ import {
 import type { UserContext } from "@reading-advantage/auth";
 import { getCurrentUser } from "@/lib/session";
 import { isHostProofEnabled } from "@/lib/host-proof-config";
+import { logger } from "@/lib/observability/logger";
 
 function toHostProofErrorResponse(error: unknown): NextResponse {
   if (error instanceof HostProofCompletionError) {
@@ -30,7 +31,7 @@ function toHostProofErrorResponse(error: unknown): NextResponse {
     );
   }
 
-  console.error({ level: "error", event: "host_proof_completion_unexpected", error });
+  logger.error("host_proof_completion_unexpected", { error });
   return NextResponse.json(
     {
       error: {

@@ -5,6 +5,7 @@ import { eq, desc } from 'drizzle-orm';
 import { auditEvents, users } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
+import { logger } from "@/lib/observability/logger";
 
 /** Activity type rendered by the admin recent-activity panel. */
 type ActivityType =
@@ -143,7 +144,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ activities });
   } catch (error) {
-    console.error("Error fetching recent activity:", error);
+    logger.error("admin_recent_activity_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

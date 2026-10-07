@@ -6,6 +6,7 @@ import { google, googleImage, googleModelLite } from "@/utils/google";
 import { uploadToBucket } from "@/utils/storage";
 import { z } from "zod";
 import { createLogFile } from "../logging";
+import { logger } from "@/lib/observability/logger";
 
 interface GenerateImageParams {
   imageDesc: string;
@@ -123,7 +124,7 @@ export async function generateImage(
       break; // Success - exit retry loop
     } catch (error) {
       const errorMsg = `Attempt ${attempts + 1} failed: ${error}`;
-      console.error(errorMsg);
+      logger.error("article_image_generation_failed", { message: errorMsg });
       errors.push(errorMsg);
       attempts++;
 

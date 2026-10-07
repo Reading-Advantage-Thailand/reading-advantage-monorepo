@@ -10,6 +10,7 @@ import {
 
 import { getCurrentUser } from "@/lib/session";
 import { getAudioUrl } from "@/lib/storage-config";
+import { logger } from "@/lib/observability/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -132,7 +133,7 @@ export async function GET(request: NextRequest) {
       headers: { "Cache-Control": PRIVATE_NO_STORE },
     });
   } catch {
-    console.error({ level: "error", event: "apk_content_failed" });
+    logger.error("apk_content_failed");
     return errorResponse(500, "INTERNAL_ERROR", "Unable to load learning content");
   }
 }

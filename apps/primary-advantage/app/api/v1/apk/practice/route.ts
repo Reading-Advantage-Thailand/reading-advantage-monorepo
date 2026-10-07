@@ -7,6 +7,7 @@ import {
 } from "@reading-advantage/domain/games";
 
 import { getCurrentUser } from "@/lib/session";
+import { logger } from "@/lib/observability/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -72,7 +73,7 @@ export async function GET(request: NextRequest) {
       headers: { "Cache-Control": PRIVATE_NO_STORE },
     });
   } catch {
-    console.error({ level: "error", event: "apk_practice_failed" });
+    logger.error("apk_practice_failed");
     return errorResponse(500, "INTERNAL_ERROR", "Unable to load practice items");
   }
 }

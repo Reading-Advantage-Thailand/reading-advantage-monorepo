@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { articles } from "@reading-advantage/db";
 import { SentenceTimepoint } from "@/types";
 import z from "zod";
+import { logger } from "@/lib/observability/logger";
 
 // Translation schema matching your existing pattern
 const sentenceTranslationSchema = z.object({
@@ -85,7 +86,7 @@ Provide translations in the exact same order, maintaining sentence structure and
 
     return result.object.translatedSentences;
   } catch (error) {
-    console.error("Error translating AI :", error);
+    logger.error("sentence_translation_failed", { error });
     throw new Error("Failed to translate sentences with both AI providers");
   }
 }
@@ -179,10 +180,7 @@ export async function translateAndStoreSentences({
       .where(eq(articles.id, articleId));
 
   } catch (error: any) {
-    console.error(
-      `Failed to translate sentences for article ${articleId}:`,
-      error,
-    );
+    logger.error("article_sentence_translation_failed", { articleId, error });
     throw new Error(`Failed to translate sentences: ${error.message}`);
   }
 }

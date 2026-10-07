@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { exportClassBookProgress } from "@/server/controllers/classBookController";
 import { currentUser } from "@/lib/session";
+import { logger } from "@/lib/observability/logger";
 
 /**
  * GET /api/class-books/[classBookId]/progress
@@ -24,7 +25,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ cla
     });
   } catch (error) {
     if ((error as { code?: string }).code === "FORBIDDEN") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    console.error("API Error - GET /api/class-books/[classBookId]/progress:", error);
+    logger.error("class_book_progress_read_failed", { error });
     return NextResponse.json({ error: "Failed to export class progress" }, { status: 500 });
   }
 }
