@@ -8,7 +8,7 @@ export const LANDING_ART = {
   bookCover: { src: "/landing/pa-origins-3.2-cover.webp", width: 600, height: 814 },
   homePhone: { src: "/landing/home-phone.webp", width: 560, height: 859 },
   classBookPhone: { src: "/landing/class-book-phone.webp", width: 560, height: 1213 },
-  classBookDesktop: { src: "/landing/class-book-desktop.webp", width: 1200, height: 844 },
+  heroesPhone: { src: "/landing/heroes-phone.webp", width: 560, height: 1213 },
   heroesDesktop: { src: "/landing/heroes-desktop.webp", width: 1200, height: 844 },
   shopPhone: { src: "/landing/shop-phone.webp", width: 560, height: 1213 },
   questPhone: { src: "/landing/quest-phone.webp", width: 560, height: 1213 },
@@ -16,6 +16,23 @@ export const LANDING_ART = {
 
 /** A picture of the public pages. */
 export type LandingPicture = (typeof LANDING_ART)[keyof typeof LANDING_ART];
+
+/** A flat front cover on Our books; `key` names its alt text in `PublicBooks.covers`. */
+type BookCover = { key: string; src: string; width: number; height: number };
+
+/**
+ * The flat front covers of each series on Our books, in book order (final covers from the
+ * Workbooks session, 2026-10-07). Later covers come through PR after Daniel approves them.
+ */
+export const BOOK_COVERS: Readonly<Record<"origins" | "quest" | "adventure", readonly BookCover[]>> = {
+  origins: [
+    { key: "origins2", src: "/landing/covers/origins-2.webp", width: 240, height: 326 },
+    { key: "origins31", src: "/landing/covers/origins-3.1.webp", width: 240, height: 326 },
+    { key: "origins32", src: "/landing/covers/origins-3.2.webp", width: 240, height: 326 },
+  ],
+  quest: [{ key: "quest4", src: "/landing/covers/quest-4.webp", width: 240, height: 326 }],
+  adventure: [],
+};
 
 const WWW_LOCALE: Readonly<Record<string, string>> = { en: "en", th: "th", cn: "zh", tw: "zh" };
 

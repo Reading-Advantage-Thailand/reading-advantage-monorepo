@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ContactLinks } from "@/components/index/contact-links";
-import { BookMockup, PhoneShot, ScreenShot } from "@/components/index/landing-pictures";
+import { BookMockup, PhoneShot, ResponsiveShot } from "@/components/index/landing-pictures";
 import { Panel, RpgLink, Sign, rpgButton } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
 import { LANDING_ART, tutorAdvantageUrl, type LandingPicture } from "@/configs/landing";
@@ -19,14 +19,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /**
- * The "Inside the app" blocks. Reedy waits for decision D4; Word adventures and the teacher picture
- * wait for Daniel's look check of the demo-seed retakes (spec PP-10, PP-11).
+ * The "Inside the app" blocks: a phone capture, and a desktop capture for wide screens when there
+ * is one. Reedy waits for decision D4; Word adventures and the teacher picture wait for Daniel's
+ * look check of the demo-seed retakes (spec PP-10, PP-11). The class book is in section 2 only.
+ * A block with a desktop capture spans both columns on wide screens.
  */
-const INSIDE: { key: string; picture: LandingPicture; frame: "phone" | "screen" }[] = [
-  { key: "hero", picture: LANDING_ART.heroesDesktop, frame: "screen" },
-  { key: "shop", picture: LANDING_ART.shopPhone, frame: "phone" },
-  { key: "quest", picture: LANDING_ART.questPhone, frame: "phone" },
-  { key: "classBook", picture: LANDING_ART.classBookDesktop, frame: "screen" },
+const INSIDE: { key: string; phone: LandingPicture; desktop?: LandingPicture }[] = [
+  { key: "hero", phone: LANDING_ART.heroesPhone, desktop: LANDING_ART.heroesDesktop },
+  { key: "shop", phone: LANDING_ART.shopPhone },
+  { key: "quest", phone: LANDING_ART.questPhone },
 ];
 
 /** The CEFR bands of the 15 levels, three levels each (approved fact, spec PP-11). */
@@ -54,7 +55,7 @@ export default async function Home() {
             <a href="#contact" className={cn(rpgButton("gold"), "min-h-12")}>
               {tSite("trialCta")}
             </a>
-            <RpgLink href="/contact">{t("hero.forSchools")}</RpgLink>
+            <RpgLink href="/about#schools">{t("hero.forSchools")}</RpgLink>
             <RpgLink href="/auth/signin" tone="iron">
               {tSite("signIn")}
             </RpgLink>
@@ -87,12 +88,12 @@ export default async function Home() {
           <p className="cq-on-scene max-w-2xl text-lg">{t("inside.intro")}</p>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          {INSIDE.map(({ key, picture, frame }) => (
-            <Panel key={key} className="gap-4">
-              {frame === "phone" ? (
-                <PhoneShot picture={picture} alt={t(`inside.${key}.alt`)} className="max-w-48" />
+          {INSIDE.map(({ key, phone, desktop }) => (
+            <Panel key={key} className={cn("gap-4", desktop && "md:col-span-2")}>
+              {desktop ? (
+                <ResponsiveShot phone={phone} desktop={desktop} alt={t(`inside.${key}.alt`)} className="md:max-w-3xl" />
               ) : (
-                <ScreenShot picture={picture} alt={t(`inside.${key}.alt`)} />
+                <PhoneShot picture={phone} alt={t(`inside.${key}.alt`)} className="max-w-48" />
               )}
               <h3 className="text-xl font-bold">{t(`inside.${key}.title`)}</h3>
               <p>{t(`inside.${key}.body`)}</p>

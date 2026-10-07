@@ -31,7 +31,7 @@ export default async function AboutPage() {
       <h1 className="cq-on-scene text-4xl font-bold md:text-5xl">{t("title")}</h1>
       <div className="grid gap-6 md:grid-cols-2">
         {(["who", "product", "schools"] as const).map((key) => (
-          <Panel key={key} className="gap-3">
+          <Panel key={key} id={key === "schools" ? "schools" : undefined} className="scroll-mt-24 gap-3">
             <h2 className="text-2xl font-bold">{t(`${key}.title`)}</h2>
             <p className="text-lg">{t(`${key}.body`)}</p>
           </Panel>

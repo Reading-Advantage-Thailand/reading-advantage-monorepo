@@ -41,16 +41,21 @@ export function PhoneShot({ className, ...picture }: PictureProps) {
 }
 
 /**
- * An app capture in a desktop screen frame.
- * @param props.picture The desktop capture.
- * @param props.alt The alt text.
- * @param props.className Extra classes (the width).
+ * An app capture with art direction: the phone capture in a phone frame on phones, and the
+ * desktop capture in a screen frame from 768 px, so a phone never gets the small desktop capture.
+ * @param props.phone The phone capture.
+ * @param props.desktop The desktop capture of the same page.
+ * @param props.alt The alt text, true for both captures.
+ * @param props.className Extra classes.
  * @returns The framed capture.
  */
-export function ScreenShot({ className, ...picture }: PictureProps) {
+export function ResponsiveShot({ phone, desktop, alt, className }: { phone: LandingPicture; desktop: LandingPicture; alt: string; className?: string }) {
   return (
-    <div className={cn("cq-screen w-full", className)}>
-      <Picture {...picture} />
+    <div className={cn("cq-shot mx-auto w-full max-w-48 md:max-w-none", className)}>
+      <picture>
+        <source media="(min-width: 768px)" srcSet={desktop.src} width={desktop.width} height={desktop.height} />
+        <img src={phone.src} alt={alt} width={phone.width} height={phone.height} loading="lazy" decoding="async" />
+      </picture>
     </div>
   );
 }

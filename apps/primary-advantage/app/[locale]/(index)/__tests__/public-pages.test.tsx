@@ -79,6 +79,27 @@ describe("the public pages", () => {
     expect(screen.getByRole("link", { name: /LINE Official Account/ })).toHaveAttribute("href", "https://line.me/ti/p/Pf7_EF98Pv");
   });
 
+  it("links For schools to the Blended Learning panel of the About page", async () => {
+    state.locale = "en";
+    render(await Home());
+    expect(screen.getByRole("link", { name: en.PublicHome.hero.forSchools })).toHaveAttribute("href", "/about#schools");
+    cleanup();
+    render(await AboutPage());
+    expect(document.getElementById("schools")).toHaveTextContent(en.PublicAbout.schools.title);
+  });
+
+  it("gives phones the phone captures and wide screens the desktop capture of the shrine", async () => {
+    state.locale = "en";
+    const { container } = render(await Home());
+    const images = [...container.querySelectorAll("img")].map((img) => img.getAttribute("src"));
+    expect(images.filter((src) => src?.includes("-desktop"))).toEqual([]);
+    const hero = screen.getByRole("img", { name: en.PublicHome.inside.hero.alt });
+    expect(hero).toHaveAttribute("src", "/landing/heroes-phone.webp");
+    const source = hero.parentElement?.querySelector("source");
+    expect(source).toHaveAttribute("media", "(min-width: 768px)");
+    expect(source).toHaveAttribute("srcset", "/landing/heroes-desktop.webp");
+  });
+
   it("links families to the Tutor Advantage page of the www site in the visitor's language", async () => {
     state.locale = "cn";
     render(await AboutPage());
@@ -86,6 +107,16 @@ describe("the public pages", () => {
       "href",
       "https://www.reading-advantage.com/zh/products/tutor-advantage",
     );
+  });
+
+  it("shows the flat covers of each series in book order, and none for Adventure", async () => {
+    state.locale = "en";
+    render(await BooksPage());
+    const covers = (name: string) => [...screen.getByRole("heading", { name }).parentElement!.querySelectorAll("img")].map((img) => img.getAttribute("alt"));
+    const { covers: alt, series } = en.PublicBooks;
+    expect(covers(series.origins.title)).toEqual([alt.origins2, alt.origins31, alt.origins32]);
+    expect(covers(series.quest.title)).toEqual([alt.quest4]);
+    expect(covers(series.adventure.title)).toEqual([]);
   });
 
   it("redirects the old Authors page to Our books for good", async () => {

@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { BookMockup } from "@/components/index/landing-pictures";
 import { Panel, RpgLink } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
-import { LANDING_ART } from "@/configs/landing";
+import { BOOK_COVERS, LANDING_ART } from "@/configs/landing";
 
 /**
  * Localizes the Our books page metadata; the title is complete, so the site template is not added.
@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /**
- * Our books in the library (spec PP-6): the series (Origins, Quest, Adventure) and the team
- * that writes and edits them.
+ * Our books in the library (spec PP-6): the series (Origins, Quest, Adventure) with a row of
+ * flat covers each, and the team that writes and edits them.
  * @returns The page.
  */
 export default async function BooksPage() {
@@ -37,6 +37,23 @@ export default async function BooksPage() {
           <Panel key={series} className="gap-3">
             <h2 className="text-xl font-bold">{t(`series.${series}.title`)}</h2>
             <p>{t(`series.${series}.body`)}</p>
+            {BOOK_COVERS[series].length > 0 && (
+              <ul className="mt-auto flex flex-wrap gap-3 pt-2">
+                {BOOK_COVERS[series].map((cover) => (
+                  <li key={cover.key} className="w-20">
+                    <img
+                      src={cover.src}
+                      alt={t(`covers.${cover.key}`)}
+                      width={cover.width}
+                      height={cover.height}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-auto w-full rounded-sm shadow-md"
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
           </Panel>
         ))}
       </div>

@@ -3770,11 +3770,6 @@
           "body": "During the week, students meet reading goals to earn power-ups. Then the whole class fights one boss together on the classroom projector. There is no leaderboard and no ranking.",
           "alt": "Class Quest on a phone: the Goblin King, the class damage meter, and the student's hero with five hearts"
         },
-        "classBook": {
-          "title": "The class book",
-          "body": "The app follows the printed workbook, lesson by lesson. Students open their class book and see the lesson that is in class now.",
-          "alt": "The class book on desktop: Primary Advantage Origins 2 in the library, with lesson 1 marked \"Now in class\""
-        },
         "reedy": {
           "title": "Reedy Preview: speaking practice",
           "body": "After a lesson, students talk about the story with Reedy, a speaking coach, in English and Thai. Reedy is new, so it can make mistakes. Each student has a monthly time limit.",
@@ -3877,6 +3872,12 @@
         "title": "Who makes the books",
         "body": "The Reading Advantage team in Khon Kaen writes and edits every book. The founders lead the team: Phikul Phookathin (President; M.Ed., Educational Leadership) and Daniel Bo (Product Manager). Together they have 40 years of teaching experience."
       },
-      "mockupAlt": "The cover of the Primary Advantage Origins 3.2 workbook"
+      "mockupAlt": "The cover of the Primary Advantage Origins 3.2 workbook",
+      "covers": {
+        "origins2": "The cover of the Primary Advantage Origins 2 workbook",
+        "origins31": "The cover of the Primary Advantage Origins 3.1 workbook",
+        "origins32": "The cover of the Primary Advantage Origins 3.2 workbook",
+        "quest4": "The cover of the Primary Advantage Quest 4 workbook"
+      }
     }
 }

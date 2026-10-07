@@ -248,6 +248,8 @@
 .cq-footer { position: relative; z-index: 1; background: linear-gradient(180deg, rgba(58, 42, 24, 0.97), rgba(28, 19, 12, 0.98)); border-top: 4px solid var(--cq-wood-dark); box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.45); color: #fff4dc; }
 .cq-footer a { color: #fff4dc; opacity: 0.85; }
 .cq-footer a:hover { opacity: 1; text-decoration: underline; }
+/* The public pages: under the scenes the page is the dark wood of the header and footer, day and night. */
+.cq-world.cq-public { background: #241810; }
 /* The public pages: a printed workbook as a book (the flat cover, a spine crease, the page block, a shadow). */
 .cq-book { perspective: 1400px; }
 .cq-book > div { position: relative; transform: rotateY(-16deg) rotateX(2deg); transform-origin: 30% 50%; transform-style: preserve-3d; }
@@ -255,9 +257,10 @@
 .cq-book > div::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 7%; border-radius: 3px 0 0 3px; background: linear-gradient(90deg, rgba(0, 0, 0, 0.35), rgba(255, 255, 255, 0.18) 55%, rgba(0, 0, 0, 0.12)); pointer-events: none; }
 .cq-book > div::after { content: ""; position: absolute; top: 1.5%; bottom: 1.5%; right: -9px; width: 10px; border-radius: 0 3px 3px 0; background: repeating-linear-gradient(180deg, #f7f1e1 0 2px, #d9cfb6 2px 3px); box-shadow: 4px 6px 10px rgba(0, 0, 0, 0.35); }
 /* App captures in a device frame: a phone, or a desktop screen. */
-.cq-phone { overflow: hidden; border: 10px solid #1d1a17; border-radius: 34px; background: #000; box-shadow: 0 0 0 2px #4a3f33, 0 18px 36px rgba(0, 0, 0, 0.5); }
-.cq-phone img, .cq-screen img { display: block; width: 100%; height: auto; }
-.cq-screen { overflow: hidden; border: 8px solid #1d1a17; border-radius: 14px; background: #000; box-shadow: 0 0 0 2px #4a3f33, 0 18px 36px rgba(0, 0, 0, 0.5); }
+/* `.cq-shot` is a phone on phones and a desktop screen from 768 px (art direction, ResponsiveShot). */
+.cq-phone, .cq-shot { overflow: hidden; border: 10px solid #1d1a17; border-radius: 34px; background: #000; box-shadow: 0 0 0 2px #4a3f33, 0 18px 36px rgba(0, 0, 0, 0.5); }
+.cq-phone img, .cq-shot img { display: block; width: 100%; height: auto; }
+@media (min-width: 768px) { .cq-shot { border-width: 8px; border-radius: 14px; } }
 .cq-toolbar { background: linear-gradient(180deg, var(--cq-wood-light), var(--cq-wood) 50%, var(--cq-wood-dark)); border-top: 4px solid var(--cq-wood-dark); box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.45); }
 .cq-toolbar a { color: #fff4dc; font-family: var(--cq-font); font-weight: 700; font-size: 12px; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45); }
 .cq-toolbar a img { width: 32px; height: 32px; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4)); }

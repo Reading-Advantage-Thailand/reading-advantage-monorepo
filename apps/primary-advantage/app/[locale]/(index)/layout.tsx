@@ -22,7 +22,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
   const t = await getTranslations("PublicSite");
 
   return (
-    <div className="cq-world cq flex min-h-screen flex-col">
+    <div className="cq-world cq cq-public flex min-h-screen flex-col">
       <SkipLink />
       <PublicHeader links={user ? [] : indexPageConfig.mainNav}>
         <LocaleSwitcher />
