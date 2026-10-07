@@ -50,6 +50,17 @@ export const MAP_TABLES = {
   cardReviews: "card_reviews",
 } as const;
 
+/**
+ * Owner-approved answer fixes (2026-10-07) for the legacy MCQs whose answer text is not one of
+ * their options: each id maps to the option text that is the answer.
+ */
+export const MCQ_ANSWER_FIXES: Readonly<Record<string, string>> = {
+  cmgqtfb1400jot79b2b8vt3wx: "It rolled under her bed.",
+  cmorc24e10021s6012hxz5jhi: "It was better and lighter",
+  cmou6yrgv0049s601qg1b3hx5: "When water covers dry land",
+  cmqqrw1h1000us6011cslsbeh: "They talk.",
+};
+
 /** Legacy tables the ETL does not load, each with its reason (spec §6, inventory §2-3). */
 export const DROPPED_TABLES: ReadonlyArray<{ table: string; reason: string }> = [
   { table: "sessions", reason: "spec §6: everyone signs in again" },
@@ -453,11 +464,14 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const articleId = ids.get(MAP_TABLES.article, q.article_id as string | null);
       if (!articleId) { counter.skip("multiple_choice_questions", "no article", id); continue; }
       const options = (q.options as string[]) ?? [];
-      const correct = correctAnswerIndex(options, q.answer as string | null);
+      const fixed = MCQ_ANSWER_FIXES[id];
+      const answer = fixed ?? (q.answer as string | null);
+      const correct = correctAnswerIndex(options, answer);
       if (correct < 0) { counter.skip("multiple_choice_questions", "answer not among the options (spec §6 MCQ rule)", id); continue; }
+      if (fixed) counter.skip("multiple_choice_questions", "answer text set to its option (owner decision 2026-10-07)", id);
       mcqRows.push({
         id: ids.ensure(MAP_TABLES.mcq, id), article_id: articleId, question: q.question, options: jsonb(options), correct_answer: correct,
-        order: Number(q.ord), answer: q.answer, textual_evidence: q.textualEvidence, chapter_id: null, created_at: q.createdAt, updated_at: q.updatedAt,
+        order: Number(q.ord), answer, textual_evidence: q.textualEvidence, chapter_id: null, created_at: q.createdAt, updated_at: q.updatedAt,
       });
     }
     counter.table("multiple_choice_questions").written += await upsert(tx, "multiple_choice_questions", mcqRows);
