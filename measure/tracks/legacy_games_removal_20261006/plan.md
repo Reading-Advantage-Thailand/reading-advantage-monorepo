@@ -9,7 +9,7 @@ Owner approved the plan as proposed on 2026-10-06 (through the Forge session). M
 - [x] Reward panels (inventory note), demo launch (`save={false}`), briefing phase, quest battle callback, avatar on every page
 - [x] StoryGamesClient, quest battle, and apk/[cartridgeId] render `GameHost`; legacy ids redirect through `LEGACY_GAME_IDS`
 - [x] docs/primary-games-integration.md
-- [ ] Browser check of the three pages (needs a free heavy slot for the Primary build)
+- [x] Browser check of the three pages (2026-10-07, production build): the word adventures page opens all 28 games (scratch copy, QA student with saved cards); `apk/hero-vs-zombie` shows the briefing with the saved words and the "Read Thai" / "Listen to English" choice, and `apk/wizard-vs-zombie` redirects to it; the English answer audio run starts (Thai prompt, four audio choices, the word file loads on a touch); the quest battle (shared local database, a QA class with Origins 2, quest moved open → rally → play by the QA teacher through the API) shows the game host in the arch on a phone. Gap seen: the "You" box on the battle page is empty for a student with no hero
 
 ## Phase 1b: English answer audio in GameHost (owner priority, 2026-10-07)
 Owner, 2026-10-07: "merge, but prioritize this feature". Lane-g merged into integration (6af080159) on the unit checks. Until this phase ends, the new host has no English answer audio mode (Thai question, English answer clips), which only `StudentCartridgeHost` started.
