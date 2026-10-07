@@ -21,7 +21,6 @@ import {
 import {
   RpgRewardDisclosure,
   RpgUnlockNotice,
-  resolveRpgRewardAssetUrls,
   type StandardExperienceCartridge,
 } from "@reading-advantage/advantage-play-kit/presentation";
 import type { GameInput, GameTerminalOutcome } from "@reading-advantage/advantage-play-kit/runtime";
@@ -32,6 +31,7 @@ import {
 } from "@reading-advantage/game-cartridges";
 
 import { capRealmCarverSentences } from "@/lib/apk/realm-carver-input";
+import { rewardIconUrls } from "@/lib/rpg/places";
 import { APK_HOST_LAYOUT_CLASS, APK_HOST_RESPONSIVE_OPTIONS } from "./apk-host-layout";
 
 const APKGameHost = dynamic(
@@ -149,7 +149,6 @@ export function StudentCartridgeHost({
     ownerKey: ownerKey ?? "",
     enabled: Boolean(ownerKey),
   });
-  const rpgAssetUrls = useMemo(() => resolveRpgRewardAssetUrls("/"), []);
   const supportsAnswerAudio = !challengeId && ["wizard-vs-zombie", "dragon-flight", "dragon-rider"].includes(cartridgeId)
     && inputMode === "vocabulary";
   const effectiveLearningMode = supportsAnswerAudio ? learningMode : "reading";
@@ -464,7 +463,8 @@ export function StudentCartridgeHost({
               briefingExtension={rpg.state ? (
                 <RpgRewardDisclosure
                   state={rpg.state}
-                  assetUrls={rpgAssetUrls}
+                  assetUrls={rewardIconUrls}
+                  credit={null}
                   pendingCosmeticId={rpg.pendingCosmeticId}
                   failureMessage={rpg.failureMessage}
                   onRetry={() => void rpg.retry()}
@@ -480,7 +480,8 @@ export function StudentCartridgeHost({
               resultExtension={rpg.failureMessage || (rpg.state && rpg.newlyUnlockedCosmetics.length > 0) ? (
                 <RpgUnlockNotice
                   cosmetics={rpg.newlyUnlockedCosmetics}
-                  assetUrls={rpgAssetUrls}
+                  assetUrls={rewardIconUrls}
+                  credit={null}
                   pendingCosmeticId={rpg.pendingCosmeticId}
                   failureMessage={rpg.failureMessage}
                   onRetry={() => void rpg.retry()}

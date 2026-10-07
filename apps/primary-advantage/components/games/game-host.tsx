@@ -8,11 +8,12 @@ import type { Cartridge, RendererSetting } from "@reading-advantage/advantage-pl
 import { StoryGameHost, type StoryGamePhase } from "@reading-advantage/advantage-play-kit-3d/react";
 import { hostStrings, missingItems } from "@reading-advantage/game-cartridges-3d";
 import { useStudentChallengeRun, useStudentRpg } from "@reading-advantage/advantage-play-kit/react";
-import { RpgRewardDisclosure, RpgUnlockNotice, resolveRpgRewardAssetUrls } from "@reading-advantage/advantage-play-kit/presentation";
+import { RpgRewardDisclosure, RpgUnlockNotice } from "@reading-advantage/advantage-play-kit/presentation";
 
 import { Link, useRouter } from "@/i18n/navigation";
 import { answerAudioControllerOf, fetchAnswerAudio, offersAnswerAudio } from "@/lib/games/answer-audio";
 import { gameFor, practiceLocaleOf } from "@/lib/games/catalog";
+import { rewardIconUrls } from "@/lib/rpg/places";
 import { canRunChallenge, hostCompletionInput } from "@/lib/games/completion";
 
 /** The saved completion numbers (Class Quest FR-8): the battle page posts them as its heartbeat. */
@@ -78,7 +79,6 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
   const challengeRun = useStudentChallengeRun({ endpoint: "/api/v1/apk/challenges/runs", ownerKey: ownerKey ?? "", challengeId, enabled: Boolean(ownerKey && challengeId) });
   const launch = challengeId ? challengeRun.launch : null;
   const rpg = useStudentRpg({ endpoint: "/api/v1/apk/rpg", ownerKey: ownerKey ?? "", enabled: Boolean(ownerKey) });
-  const rpgAssetUrls = useMemo(() => resolveRpgRewardAssetUrls("/"), []);
   const exit = onExit ?? (() => router.push("/student/games"));
   const offersAudio = Boolean(game && !challengeId && offersAnswerAudio(game));
   const audioMode = offersAudio && mode === "answer-audio";
@@ -193,7 +193,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
       {ready && phase === "briefing" && ownerKey ? (
         rpg.state ? (
           <div className="shrink-0 overflow-y-auto p-2">
-            <RpgRewardDisclosure state={rpg.state} assetUrls={rpgAssetUrls} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
+            <RpgRewardDisclosure state={rpg.state} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
           </div>
         ) : rpg.failureMessage ? (
           <div role="alert" className="shrink-0 p-2 text-sm"><p>{rpg.failureMessage}</p><button type="button" className="min-h-12 underline" onClick={() => void rpg.retry()}>{t("retry")}</button></div>
@@ -201,7 +201,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
       ) : null}
       {ready && phase === "results" && ownerKey && (rpg.failureMessage || rpg.newlyUnlockedCosmetics.length > 0) ? (
         <div className="shrink-0 overflow-y-auto p-2">
-          <RpgUnlockNotice cosmetics={rpg.newlyUnlockedCosmetics} assetUrls={rpgAssetUrls} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
+          <RpgUnlockNotice cosmetics={rpg.newlyUnlockedCosmetics} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
         </div>
       ) : null}
       {ready && game && cartridge && run ? (

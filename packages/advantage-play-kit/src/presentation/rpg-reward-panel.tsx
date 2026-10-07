@@ -34,6 +34,8 @@ export type RpgRewardPanelProps = Omit<ComponentProps<"section">, "children"> & 
   readonly inventoryNote?: string;
   /** Visible panel heading. */
   readonly heading?: string;
+  /** Asset credit under the list (default: the ElvGames credit of the reviewed icons); null when the host icons need none. */
+  readonly credit?: string | null;
 };
 
 const QUEST_REQUIREMENTS: Readonly<Record<RpgQuestId, string>> = Object.freeze({
@@ -67,6 +69,7 @@ export function RpgRewardPanel({
   onEquip,
   inventoryNote,
   heading = "Wizard rewards",
+  credit = STANDARD_GAME_REQUIRED_CREDIT,
   style,
   ...sectionProps
 }: RpgRewardPanelProps): import("react").ReactElement {
@@ -162,7 +165,7 @@ export function RpgRewardPanel({
           );
         })}
       </ul>
-      <small>{STANDARD_GAME_REQUIRED_CREDIT}</small>
+      {credit ? <small>{credit}</small> : null}
     </section>
   );
 }

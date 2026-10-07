@@ -5,7 +5,7 @@ import { EmptyState } from "@reading-advantage/ui";
 import { Sign } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
 import { challengeGames, isSentenceGame, playableGames } from "@/lib/games/catalog";
-import { ART } from "@/lib/rpg/places";
+import { ART, rewardIconUrls } from "@/lib/rpg/places";
 import { getTranslations } from "next-intl/server";
 
 import { getCurrentUser } from "@/lib/session";
@@ -53,7 +53,7 @@ export default async function PrimaryStudentGamesPage({ params }: { params: Prom
         <p>{t("description")}</p>
       </header>
       <div className="flex flex-col gap-4 empty:hidden">
-        <StudentRpgCatalogPanel ownerKey={ownerKey} inventoryNote={t("rewardInInventory")} />
+        <StudentRpgCatalogPanel ownerKey={ownerKey} inventoryNote={t("rewardInInventory")} assetUrls={rewardIconUrls} credit={null} />
         <StudentChallengeCatalogPanel ownerKey={ownerKey} locale={locale} games={challengeGames()} />
       </div>
       {/* The 3D story games (APK 3D port) as the first banner on the arena wall. */}

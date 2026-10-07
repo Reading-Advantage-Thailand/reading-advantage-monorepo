@@ -96,7 +96,6 @@ vi.mock("@reading-advantage/advantage-play-kit", () => ({
 vi.mock("@reading-advantage/advantage-play-kit/presentation", () => ({
   RpgRewardDisclosure: () => null,
   RpgUnlockNotice: () => null,
-  resolveRpgRewardAssetUrls: () => ({}),
 }));
 
 vi.mock("@reading-advantage/advantage-play-kit/react", () => ({

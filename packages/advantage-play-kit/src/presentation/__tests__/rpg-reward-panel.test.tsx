@@ -56,6 +56,14 @@ describe("RpgRewardPanel", () => {
     expect(screen.getByRole("button", { name: "Equipped Apprentice Wand" })).toBeDisabled();
   });
 
+  it("shows the ElvGames credit by default and no credit when the host icons need none", () => {
+    const { rerender } = render(<RpgRewardPanel state={state} assetUrls={assetUrls} />);
+    expect(screen.getByText("Pixel art assets by ElvGames")).toBeInTheDocument();
+
+    rerender(<RpgRewardPanel state={state} assetUrls={assetUrls} credit={null} />);
+    expect(screen.queryByText("Pixel art assets by ElvGames")).not.toBeInTheDocument();
+  });
+
   it("shows the inventory note in place of the equip action when the host gives one", () => {
     const { container } = render(<RpgRewardPanel state={state} assetUrls={assetUrls} inventoryNote="It is in your inventory." />);
 
