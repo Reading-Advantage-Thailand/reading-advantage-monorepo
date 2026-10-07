@@ -8,14 +8,17 @@ import {
 import { createTenantDB } from "../db-contract.js";
 import type { DB } from "@reading-advantage/db";
 
-vi.mock("@reading-advantage/db/schema", () => ({
+// Partial mocks: the articles module loads modules that read other tables at module load.
+vi.mock("@reading-advantage/db/schema", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@reading-advantage/db/schema")>()),
   articles: {
     topic: "topic",
     cefrLevel: "cefr_level",
   },
 }));
 
-vi.mock("drizzle-orm", () => ({
+vi.mock("drizzle-orm", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("drizzle-orm")>()),
   eq: vi.fn((col: unknown, val: unknown) => ({ type: "eq", col, val })),
   and: vi.fn((...conds: unknown[]) => ({ type: "and", conds })),
 }));

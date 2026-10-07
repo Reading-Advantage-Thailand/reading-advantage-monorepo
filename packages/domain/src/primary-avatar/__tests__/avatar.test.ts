@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { DB } from "@reading-advantage/db";
 import type { UserContext } from "@reading-advantage/auth";
-import { AVATAR_BASE, STARTER_SETS } from "@reading-advantage/avatar-kit";
+import { AVATAR_BASE, AVATAR_PACK_VERSION, STARTER_SETS } from "@reading-advantage/avatar-kit";
 import { avatarClassIdSchema, avatarClothSchema, avatarEyesSchema, avatarHairSchema, avatarSkinSchema } from "@reading-advantage/game-contracts";
 import { createMockDb } from "../../__tests__/mock-db.js";
 import { getAvatarProfile, setAvatarProfile } from "../avatar.js";
@@ -47,7 +47,7 @@ describe("setAvatarProfile", () => {
     const result = await setAvatarProfile({ db: mock as unknown as DB, user: student, now, input: { classId: "ranger", tints } });
     expect(result).toEqual({ classId: "ranger", tints, catalogVersion: "1.0.0", updatedAt: "2026-10-05T10:00:00.000Z" });
     const values = mock.insert.mock.results[0]!.value.values.mock.calls[0]![0];
-    expect(values).toMatchObject({ schoolId: SCHOOL, userId: "s1", classPreset: "ranger", tints, catalogVersion: "1.0.0", updatedAt: now });
+    expect(values).toMatchObject({ schoolId: SCHOOL, userId: "s1", classPreset: "ranger", tints, catalogVersion: AVATAR_PACK_VERSION, updatedAt: now });
   });
 
   it("rejects an unknown class, an unknown option, and extra fields", async () => {

@@ -50,7 +50,8 @@ Defect found 2026-10-07: the Primary reader saves words and sentences in `flashc
 - [ ] Remove game-cartridges, the legacy-only host code, host-proof and QC pages, the ElvGames assets
 
 ## Gates
-- [ ] Tests, tsc, ESLint green
+- [x] Tests, tsc, ESLint green (2026-10-07 on integration: Primary 224 files / 1335 tests, domain 151 files /
+  1733 tests after two test fixes, tsc for Primary and domain, ESLint on Primary with no errors)
 - [x] Browser check: a class challenge on Hero vs. Zombie from the teacher page to the quest battle result
   (2026-10-07, production build, scratch copy with the four class books copied from the local database,
   QA teacher and QA student): the teacher assigns The Goblin King's Raid on `/teacher/quest`, opens the
