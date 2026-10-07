@@ -2818,6 +2818,7 @@
     }
   },
   "ApkHost": {
+    "rewardInInventory": "已放入你的背包。到头像页面穿戴它。",
     "readMode": "阅读泰语",
     "listenMode": "听英语",
     "signInToPlayChallenge": "登录以参与此挑战",
@@ -2829,6 +2830,7 @@
     "retry": "Try again"
   },
   "StudentGames": {
+    "rewardInInventory": "已放入你的背包。到头像页面穿戴它。",
     "title": "学生游戏",
     "description": "Play games with the words and sentences you learn.",
     "wordGames": "Word games",

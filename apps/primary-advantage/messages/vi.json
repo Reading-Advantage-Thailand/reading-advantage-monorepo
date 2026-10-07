@@ -2818,6 +2818,7 @@
     }
   },
   "ApkHost": {
+    "rewardInInventory": "Đã có trong túi đồ của bạn. Mặc nó từ trang Nhân vật.",
     "readMode": "Đọc tiếng Thái",
     "listenMode": "Nghe tiếng Anh",
     "signInToPlayChallenge": "Đăng nhập để chơi thử thách này",
@@ -2829,6 +2830,7 @@
     "retry": "Try again"
   },
   "StudentGames": {
+    "rewardInInventory": "Đã có trong túi đồ của bạn. Mặc nó từ trang Nhân vật.",
     "title": "Trò chơi học sinh",
     "description": "Play games with the words and sentences you learn.",
     "wordGames": "Word games",
