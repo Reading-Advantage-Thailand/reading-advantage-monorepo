@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS accounts (
   refresh_token text,
   access_token_expires_at timestamp,
   refresh_token_expires_at timestamp,
+  temporary_password_issued_at timestamp,
   created_at timestamp NOT NULL DEFAULT now(),
   updated_at timestamp NOT NULL DEFAULT now(),
   CONSTRAINT accounts_user_provider_unique UNIQUE (user_id, provider_id)

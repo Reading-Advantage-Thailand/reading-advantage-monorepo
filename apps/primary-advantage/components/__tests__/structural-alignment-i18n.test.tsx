@@ -162,6 +162,9 @@ vi.mock("@/components/switchers/theme-switcher-toggle", () => ({
 vi.mock("@/components/switchers/locale-switcher", () => ({
   LocaleSwitcher: () => null,
 }));
+// The read page imports createTenantDB from the domain index, whose sales module reads its evidence
+// files through import.meta.url, which jsdom cannot open.
+vi.mock("@reading-advantage/domain", () => ({ createTenantDB: vi.fn(() => ({})) }));
 
 import { StudentCartridgeHost } from "../apk/StudentCartridgeHost";
 import { UserAccountNav } from "../nav/user-account-nav";
@@ -413,11 +416,11 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
     const { unmount } = render(games);
     // The mock Link stamps the marker attribute, so a page that swaps to
     // next/link renders a plain <a> without it and fails here.
-    const gamesLink = screen.getByRole("link", { name: /Wizard vs Zombie/ });
+    const gamesLink = screen.getByRole("link", { name: /Hero vs\. Zombie/ });
     expect(gamesLink).toHaveAttribute("data-test-id", "i18n-link");
     expect(gamesLink).toHaveAttribute(
       "href",
-      "/student/games/apk/wizard-vs-zombie",
+      "/student/games/apk/hero-vs-zombie",
     );
     unmount();
 
