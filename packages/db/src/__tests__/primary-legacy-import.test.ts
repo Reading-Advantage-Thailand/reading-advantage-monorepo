@@ -3,6 +3,7 @@ import {
   DROPPED_TABLES,
   JsonCell,
   MAP_TABLES,
+  MCQ_ANSWER_FIXES,
   cardTextOf,
   correctAnswerIndex,
   keepLatest,
@@ -45,6 +46,17 @@ describe("primary legacy import transforms", () => {
     expect(correctAnswerIndex(["A dog.", "A cat."], "a cat. ")).toBe(1);
     expect(correctAnswerIndex(["a", "b"], "z")).toBe(-1);
     expect(correctAnswerIndex(["a", "b"], null)).toBe(-1);
+  });
+
+  it("fixes each owner-approved MCQ answer to one of its options", () => {
+    const options: Record<string, string[]> = {
+      cmgqtfb1400jot79b2b8vt3wx: ["It was too big to play with.", "It was broken.", "It rolled under her bed.", "She didn't like it."],
+      cmorc24e10021s6012hxz5jhi: ["It was better and lighter", "It was harder and heavier", "It was blue and green", "It was fast and loud"],
+      cmou6yrgv0049s601qg1b3hx5: ["When water covers dry land", "When it stops raining", "When the sun is hot", "When a river is dry"],
+      cmqqrw1h1000us6011cslsbeh: ["They sleep.", "They run.", "They talk.", "They sing."],
+    };
+    expect(Object.keys(MCQ_ANSWER_FIXES).sort()).toEqual(Object.keys(options).sort());
+    expect(Object.entries(MCQ_ANSWER_FIXES).map(([id, answer]) => correctAnswerIndex(options[id]!, answer))).toEqual([2, 0, 0, 2]);
   });
 
   it("keeps the latest row per key", () => {
