@@ -123,12 +123,10 @@ describe("FR-4 admin and footer links", () => {
 describe("FR-5 footer content", () => {
   it("shows the corrected tagline and contact details", () => {
     renderWithMessages(<Footer />);
+    expect(screen.getByText(en.PublicSite.tagline)).toBeInTheDocument();
     expect(
-      screen.getByText("Providing the best English learning experience."),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Email: admin@reading-advantage.com"),
-    ).toBeInTheDocument();
+      screen.getByRole("link", { name: "support@reading-advantage.com" }),
+    ).toHaveAttribute("href", "mailto:support@reading-advantage.com");
     expect(document.body.textContent).toContain(en.Footer.rights);
     expect(
       document.body.textContent,
@@ -138,6 +136,7 @@ describe("FR-5 footer content", () => {
       "info@primaryadvantage.com",
       "+1 (123) 456-7890",
       "2024",
+      "Providing the best English learning experience.",
     ]) {
       expect(document.body.textContent).not.toContain(stale);
     }

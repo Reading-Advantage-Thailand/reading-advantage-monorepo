@@ -123,7 +123,10 @@ describe("FR-3 app layout main pane", () => {
 
 describe("FR-7 Get Started link", () => {
   it("keeps every internal signin link free of target=_blank", async () => {
-    getTranslationsMock.mockImplementation(async () => (key: string) => key);
+    getTranslationsMock.mockImplementation(async () =>
+      Object.assign((key: string) => key, { raw: () => ["point"] }),
+    );
+    getLocaleMock.mockResolvedValue("en");
     const tree = await Home();
     const signinLinks = findAll(
       tree,

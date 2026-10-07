@@ -510,7 +510,16 @@ describe("FR-5 marketing and auth metadata", () => {
     expect(gamesMeta.title).toBeTruthy();
 
     const contact = await import("../../app/[locale]/(index)/contact/page");
-    expect(contact.metadata.title).toBeTruthy();
+    const contactMeta = await contact.generateMetadata({
+      params: Promise.resolve({ locale: "en" }),
+    });
+    expect(contactMeta.title).toBeTruthy();
+
+    const books = await import("../../app/[locale]/(index)/books/page");
+    const booksMeta = await books.generateMetadata({
+      params: Promise.resolve({ locale: "en" }),
+    });
+    expect(booksMeta.title).toBeTruthy();
 
     const terms = await import("../../app/[locale]/(index)/terms/page");
     expect(terms.metadata.title).toBeTruthy();
@@ -530,8 +539,9 @@ describe("FR-5 marketing and auth metadata", () => {
 describe("FR-5 footer, games, licence, and school strings", () => {
   it("translates the footer through messages", () => {
     renderWithMessages(<Footer />, { locale: "th" });
-    expect(screen.getByText(th.Footer.tagline)).toBeInTheDocument();
+    expect(screen.getByText(th.PublicSite.tagline)).toBeInTheDocument();
     expect(screen.getByText(th.Footer.aboutUs)).toBeInTheDocument();
+    expect(screen.getByText(th.MainNav.books)).toBeInTheDocument();
     expect(screen.getByText(th.Footer.privacyPolicy)).toBeInTheDocument();
   });
 

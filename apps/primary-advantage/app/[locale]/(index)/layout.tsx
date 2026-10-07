@@ -1,41 +1,41 @@
 import { Footer } from "@/components/index/footer";
 import { PublicHeader } from "@/components/nav/public-header";
 import { UserAccountNav } from "@/components/nav/user-account-nav";
-import { buttonVariants } from "@/components/ui/button";
+import { RpgLink } from "@/components/rpg/chrome";
+import { SkipLink } from "@/components/shared/skip-link";
+import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
+import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
 import { indexPageConfig } from "@/configs/index-page-config";
 import { getCurrentUser } from "@/lib/session";
-import { cn } from "@/lib/utils";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { ReactNode } from "react";
 
 /**
- * Renders the public pages. Signed-out visitors see the marketing links and the login
- * link; signed-in users see only the brand and their account menu.
+ * Renders the public pages in the Chibi Quest world (spec PP-1): the wooden header, the page's
+ * own scene, and the wooden footer. Signed-out visitors see the marketing links and the
+ * sign-in link; signed-in users see only the brand and their account menu.
  * @param props The page content.
  * @returns The public layout.
  */
 export default async function Layout({ children }: { children: ReactNode }) {
   const user = await getCurrentUser();
-  const t = await getTranslations("MainNav");
+  const t = await getTranslations("PublicSite");
 
   return (
-    <div className="flex min-h-screen flex-col">
-      {user ? (
-        <PublicHeader>
+    <div className="cq-world cq flex min-h-screen flex-col">
+      <SkipLink />
+      <PublicHeader links={user ? [] : indexPageConfig.mainNav}>
+        <LocaleSwitcher />
+        <ThemeToggle />
+        {user ? (
           <UserAccountNav user={user} />
-        </PublicHeader>
-      ) : (
-        <PublicHeader links={indexPageConfig.mainNav}>
-          <Link
-            href="/auth/signin"
-            className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "px-4")}
-          >
-            {t("login")}
-          </Link>
-        </PublicHeader>
-      )}
-      <main id="main-content" className="flex-1">
+        ) : (
+          <RpgLink href="/auth/signin" tone="gold" small>
+            {t("signIn")}
+          </RpgLink>
+        )}
+      </PublicHeader>
+      <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col outline-none">
         {children}
       </main>
       <Footer />

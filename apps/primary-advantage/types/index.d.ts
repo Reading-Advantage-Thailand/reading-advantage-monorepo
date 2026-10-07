@@ -4,7 +4,6 @@ import { licenses } from "@reading-advantage/db";
 
 export type SiteConfig = {
   name: string;
-  description: string;
   url: string;
   ogImage: string;
   link: {
@@ -18,7 +17,7 @@ export type SiteConfig = {
 };
 
 export type MainNavItem = {
-  title: "home" | "about" | "contact" | "authors";
+  title: "home" | "about" | "contact" | "books";
   href: string;
   disabled?: boolean;
   icon?: string;
