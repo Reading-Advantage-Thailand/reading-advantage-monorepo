@@ -105,8 +105,10 @@ export interface ImportOptions {
   target: Sql;
   /** Roll everything back at the end (every group still runs inside its transaction). */
   dryRun?: boolean;
-  /** Owner assignments for legacy users whose role is not student/teacher/admin/system (D9). */
-  roleOverrides?: Record<string, TargetRole>;
+  /** Owner assignments for legacy users whose role is not student/teacher/admin/system (D9); null: the user is not moved. */
+  roleOverrides?: Record<string, TargetRole | null>;
+  /** Owner-chosen usernames (legacy user id → username) in place of `lower(email)`. */
+  usernameOverrides?: Record<string, string>;
   /** Owner assignments of a teacher (legacy user id) for legacy classrooms with no teacher and no school admin. */
   classroomTeacherOverrides?: Record<string, string>;
   log?: (line: string) => void;
@@ -117,14 +119,15 @@ export type TargetRole = "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM";
 const ROLE_MAP: Record<string, TargetRole> = { student: "STUDENT", teacher: "TEACHER", admin: "ADMIN", system: "SYSTEM" };
 
 /** Maps a legacy role text to the target enum; null when the owner must assign it (D9). */
-export function mapRole(role: unknown, overrides: Record<string, TargetRole> | undefined, legacyUserId: string): TargetRole | null {
+export function mapRole(role: unknown, overrides: Record<string, TargetRole | null> | undefined, legacyUserId: string): TargetRole | null {
   const fromOverride = overrides?.[legacyUserId];
   if (fromOverride) return fromOverride;
   return ROLE_MAP[String(role ?? "").toLowerCase()] ?? null;
 }
 
-/** The username rule (D6): `lower(email)`; the display username keeps the email as typed. */
-export function usernamesOf(email: string): { username: string; displayUsername: string } {
+/** The username rule (D6): `lower(email)`, or the owner-chosen username; the display username keeps the text as typed. */
+export function usernamesOf(email: string, override?: string): { username: string; displayUsername: string } {
+  if (override?.trim()) return { username: override.trim().toLowerCase(), displayUsername: override.trim() };
   return { username: email.trim().toLowerCase(), displayUsername: email.trim() };
 }
 
@@ -283,7 +286,7 @@ async function upsert(tx: Tx, table: string, rows: Row[], conflict = "id"): Prom
 
 /** Runs the whole import and returns the report. */
 export async function runPrimaryLegacyImport(options: ImportOptions): Promise<ImportReport> {
-  const { legacy, target, dryRun = false, roleOverrides, classroomTeacherOverrides = {}, log = () => {} } = options;
+  const { legacy, target, dryRun = false, roleOverrides, usernameOverrides = {}, classroomTeacherOverrides = {}, log = () => {} } = options;
   const startedAt = new Date().toISOString();
   const counter = new Counter();
   const notes: string[] = [];
@@ -319,10 +322,12 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     const userRows: Row[] = [];
     for (const u of legacyUsers) {
       const id = String(u.id);
+      if (roleOverrides?.[id] === null) { counter.skip("users", "not moved (owner decision)", id); continue; }
       const role = mapRole(u.role, roleOverrides, id);
       if (!role) { counter.skip("users", `role '${String(u.role)}' needs an owner assignment (D9)`, id); continue; }
       if (!u.email) { counter.skip("users", "no email, so no username (D6)", id); continue; }
-      const { username, displayUsername } = usernamesOf(String(u.email));
+      const { username, displayUsername } = usernamesOf(String(u.email), usernameOverrides[id]);
+      if (usernameOverrides[id]) counter.skip("users", "username set by the owner (no email part)", id);
       if (seenUsernames.has(username)) { counter.skip("users", "duplicate lower(email) (D6)", id); continue; }
       seenUsernames.add(username);
       users.add(id);

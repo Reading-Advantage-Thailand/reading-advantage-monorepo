@@ -26,11 +26,14 @@ describe("primary legacy import transforms", () => {
     expect(mapRole("system", undefined, "u1")).toBe("SYSTEM");
     expect(mapRole("user", undefined, "u1")).toBeNull();
     expect(mapRole("user", { u1: "TEACHER" }, "u1")).toBe("TEACHER");
+    expect(mapRole("user", { u1: null }, "u1")).toBeNull();
     expect(mapRole(null, undefined, "u1")).toBeNull();
   });
 
-  it("derives the username from the lowered email (D6)", () => {
+  it("derives the username from the lowered email (D6), or takes the owner-chosen username", () => {
     expect(usernamesOf(" Kru.Nok@School.ac.th ")).toEqual({ username: "kru.nok@school.ac.th", displayUsername: "Kru.Nok@School.ac.th" });
+    expect(usernamesOf("Support0@gmail.com", " Support0 ")).toEqual({ username: "support0", displayUsername: "Support0" });
+    expect(usernamesOf("support0@gmail.com", " ")).toEqual({ username: "support0@gmail.com", displayUsername: "support0@gmail.com" });
   });
 
   it("parses the classroom grade text", () => {

@@ -3,10 +3,12 @@
  * CLI of the Primary Advantage cutover ETL (spec A6).
  *
  *   LEGACY_DATABASE_URL=postgres://... DIRECT_DATABASE_URL=postgres://... \
- *     pnpm --filter @reading-advantage/db legacy-import [--dry-run] [--report out.md] [--roles roles.json] [--teachers teachers.json]
+ *     pnpm --filter @reading-advantage/db legacy-import [--dry-run] [--report out.md] [--roles roles.json] [--usernames usernames.json] [--teachers teachers.json]
  *
- * `--roles` names a JSON object `{ "<legacy user id>": "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM" }`
- * for the legacy users whose role text the mapping does not know (D9). `--teachers` names a JSON
+ * `--roles` names a JSON object `{ "<legacy user id>": "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM" | null }`
+ * for the legacy users whose role text the mapping does not know (D9); null leaves the user out.
+ * `--usernames` names a JSON object `{ "<legacy user id>": "<username>" }` for the users whose
+ * username is not their email. These files name people: keep them out of the repository. `--teachers` names a JSON
  * object `{ "<legacy classroom id>": "<legacy user id>" }` for classrooms with no teacher and no
  * school admin. The legacy connection is read only; the target must already be migrated.
  * `--dry-run` rolls every group back.
@@ -28,13 +30,15 @@ if (legacyUrl === targetUrl) {
   process.exit(2);
 }
 const rolesFile = flag("--roles");
-const roleOverrides = rolesFile ? (JSON.parse(readFileSync(rolesFile, "utf8")) as Record<string, TargetRole>) : undefined;
+const roleOverrides = rolesFile ? (JSON.parse(readFileSync(rolesFile, "utf8")) as Record<string, TargetRole | null>) : undefined;
+const usernamesFile = flag("--usernames");
+const usernameOverrides = usernamesFile ? (JSON.parse(readFileSync(usernamesFile, "utf8")) as Record<string, string>) : undefined;
 const teachersFile = flag("--teachers");
 const classroomTeacherOverrides = teachersFile ? (JSON.parse(readFileSync(teachersFile, "utf8")) as Record<string, string>) : undefined;
 const legacy = postgres(legacyUrl, { max: 2, connection: { default_transaction_read_only: "on" } });
 const target = postgres(targetUrl, { max: 2 });
 try {
-  const report = await runPrimaryLegacyImport({ legacy, target, dryRun: args.includes("--dry-run"), roleOverrides, classroomTeacherOverrides, log: (line) => console.error(`[legacy-import] ${line}`) });
+  const report = await runPrimaryLegacyImport({ legacy, target, dryRun: args.includes("--dry-run"), roleOverrides, usernameOverrides, classroomTeacherOverrides, log: (line) => console.error(`[legacy-import] ${line}`) });
   const markdown = renderReport(report);
   const out = flag("--report");
   if (out) { writeFileSync(out, markdown); console.error(`[legacy-import] report written to ${out}`); } else console.log(markdown);
