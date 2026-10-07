@@ -36,7 +36,8 @@ until the Primary cutover passes.
   - [x] 20 captures in `captures/` (status 200, no page overflow, no form, no console errors)
   - [ ] Daniel's look check
 - [ ] Retakes with the demo seed (Word adventures, teacher dashboard) to Daniel before public use
-- [ ] PR claims review of the branch diff
+- [x] PR claims review of the branch diff (2026-10-07: pass; two fixes in 75105543b: Footer.tagline
+  deleted, the families link uses www.reading-advantage.com)
 
 ## Phase 5: Merge
 - [ ] Tests, tsc, ESLint green
