@@ -51,4 +51,10 @@ Defect found 2026-10-07: the Primary reader saves words and sentences in `flashc
 
 ## Gates
 - [ ] Tests, tsc, ESLint green
-- [ ] Browser check: a class challenge on Hero vs. Zombie from the teacher page to the quest battle result
+- [x] Browser check: a class challenge on Hero vs. Zombie from the teacher page to the quest battle result
+  (2026-10-07, production build, scratch copy with the four class books copied from the local database,
+  QA teacher and QA student): the teacher assigns The Goblin King's Raid on `/teacher/quest`, opens the
+  live dashboard from the class card, and moves rally → battle → result → done with its buttons; on a
+  phone the student sees the waiting, rally, and battle states, plays one Hero vs. Zombie run in the
+  arch (2D view, QC hook `auto()`, completion 200), and sees "The boss fell!" (20 of 14 damage); the
+  dashboard shows the hit; rows: quest `done`, 75 GP `battle` in the ledger, heartbeat 10 of 10
