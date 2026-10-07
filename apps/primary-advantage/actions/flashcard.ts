@@ -447,7 +447,9 @@ export async function getDashboardData(deckType?: "VOCABULARY" | "SENTENCE") {
           for (const cardId of cardIds) {
             const progress = progressByCard.get(cardId);
             if (!progress) {
+              // An FSRS new card is due at once; without this a saved word never opened a review.
               newCards++;
+              dueCards++;
             } else if (
               !progress.nextReviewAt ||
               progress.nextReviewAt <= now
