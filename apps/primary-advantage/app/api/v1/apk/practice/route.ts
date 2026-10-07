@@ -3,7 +3,7 @@ import { db } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
 import {
   gamePracticeInputRequestSchema,
-  listGamePracticeInput,
+  listPrimaryPracticeInput,
 } from "@reading-advantage/domain/games";
 
 import { getCurrentUser } from "@/lib/session";
@@ -60,7 +60,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const tenant = { schoolId: user.schoolId };
-    const result = await listGamePracticeInput({
+    // The words and sentences the student saved in the reader's flashcard list.
+    const result = await listPrimaryPracticeInput({
       db: createTenantDB(db, tenant),
       user,
       tenant,

@@ -44,6 +44,10 @@ export interface ListeningAudioClipReference {
   readonly url: string;
   /** Declared audio media type. */
   readonly mediaType: `audio/${string}`;
+  /** Start of the clip inside a longer file, in seconds; absent: the start of the file. */
+  readonly startSeconds?: number;
+  /** End of the clip inside a longer file, in seconds; absent: the end of the file. */
+  readonly endSeconds?: number;
 }
 
 /** Provider-neutral preparation port for one prompt clip. */

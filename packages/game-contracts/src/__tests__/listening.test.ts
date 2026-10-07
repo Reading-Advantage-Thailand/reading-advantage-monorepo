@@ -13,6 +13,7 @@ import {
   readToSelectAudioEvidenceSchema,
   readToSelectAudioSessionConfigSchema,
   vocabularyInputSchema,
+  preparedSpeechClipSchema,
 } from "../index.js";
 
 const session = {
@@ -468,5 +469,23 @@ describe("prepared Read to Select Audio response", () => {
     }],
   ])("rejects %s", (_label, candidate) => {
     expect(preparedReadToSelectAudioVocabularyResponseSchema.safeParse(candidate).success).toBe(false);
+  });
+});
+
+describe("prepared speech clip segment", () => {
+  const clip = { itemPosition: 0, url: "https://storage.example/audios/words/article.mp3", mediaType: "audio/mpeg", sourceLocale: "en-US" };
+
+  it("accepts a whole-file clip and a segment of a longer file", () => {
+    expect(preparedSpeechClipSchema.safeParse(clip).success).toBe(true);
+    expect(preparedSpeechClipSchema.parse({ ...clip, startSeconds: 2.5, endSeconds: 3.1 })).toMatchObject({ startSeconds: 2.5, endSeconds: 3.1 });
+    expect(preparedSpeechClipSchema.safeParse({ ...clip, startSeconds: 4 }).success).toBe(true);
+  });
+
+  it.each([
+    ["an end before the start", { startSeconds: 3, endSeconds: 2 }],
+    ["an end equal to the start", { startSeconds: 3, endSeconds: 3 }],
+    ["a negative start", { startSeconds: -1 }],
+  ])("rejects %s", (_label, segment) => {
+    expect(preparedSpeechClipSchema.safeParse({ ...clip, ...segment }).success).toBe(false);
   });
 });

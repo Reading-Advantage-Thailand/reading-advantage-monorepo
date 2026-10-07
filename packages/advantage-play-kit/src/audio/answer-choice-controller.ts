@@ -58,6 +58,11 @@ type ActivePlayback = {
   replay: boolean;
 };
 
+/** True when a clip has no segment, or a segment that starts at zero or later and ends after it starts. */
+const validSegment = ({ startSeconds = 0, endSeconds }: ListeningAudioClipReference): boolean =>
+  Number.isFinite(startSeconds) && startSeconds >= 0
+  && (endSeconds === undefined || (Number.isFinite(endSeconds) && endSeconds > startSeconds));
+
 const pairKey = (questionPosition: number, clipItemPosition: number): string =>
   `${questionPosition}:${clipItemPosition}`;
 
@@ -117,7 +122,8 @@ export function createAnswerChoiceAudioController<PreparedClip>(
       || reference.itemPosition >= options.clips.length
       || references.has(reference.itemPosition)
       || !reference.url.trim()
-      || !reference.mediaType.startsWith("audio/")) {
+      || !reference.mediaType.startsWith("audio/")
+      || !validSegment(reference)) {
       throw new ListeningAudioControllerError(
         "invalid-configuration",
         "Answer audio clips must cover unique session item positions",
