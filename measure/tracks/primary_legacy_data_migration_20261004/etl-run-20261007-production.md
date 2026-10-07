@@ -32,6 +32,11 @@ Owner decision 2026-10-07: fix, not skip, the 4 MCQs whose answer is not one of 
 multiple_choice_questions 6220 (6216 before). Graph checked tags.json b29aed1: the 4 questions and
 their articles have no tags, so the tags and evidence rows do not change.
 
+Graph's Tutor read check (2026-10-07, published articles only, 621 of 622) passed. The only differences
+are the 4 fixed answer texts; in each, `answer` equals `options[correct_answer]`. The article outside
+the check is cmusixx30001cs601rk7q9zz0 "The Nice Toy" (is_published = false); the ETL moved it with
+its 10 MCQs.
+
 ## Report of the last run
 
 Started 2026-10-07T01:50:47.689Z, finished 2026-10-07T01:50:55.783Z.
