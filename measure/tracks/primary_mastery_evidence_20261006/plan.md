@@ -71,6 +71,7 @@ file for `createTenantDB` or `unscoped`.
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs and Doctor' (Protocol in workflow.md)
 
 ## Phase 5: Rehearsal Fixes
-- [~] Task: Evidence time is the practice time of the source row (rehearsal 1 finding, 2026-10-08)
+- [x] Task: Evidence time is the practice time of the source row (rehearsal 1 finding, 2026-10-08) (a9de7a5cf)
   - Fault: `recordPrimaryEvidence` loaded `event.occurredAt` but stamped `submittedAt`, `mastery_reviews.reviewed_at`, and `mastery_evidence.observed_at` with the job run clock, so every backfilled row counted as practice on the backfill day (rehearsal 1: all 1615 rows at 2026-10-07 22:47-22:52 UTC). The ETL 8-hour shift of the same day did not reach any evidence row for this reason.
   - Fix: the review time is `event.occurredAt` (the unused `now` option leaves `recordPrimaryEvidence`, `runPrimaryEvidenceJob`, and `definePrimaryEvidenceJobHandler`); `buildActivityMasteryCommand` raises a time before the card's last review to that review, because ts-fsrs throws `Invalid delta_t` on a negative interval; the backfill sorts all sources by practice time and enqueues one millisecond apart, because the queue claims by `available_at`, then `id`.
+  - Checks: domain tsc 0 errors (after an `avatar-kit` dist rebuild); eslint clean; domain tests for primary-mastery, activity, mastery, codecamp callers, and tenant coverage pass. Run on `primary_evidence_r1fix` (a copy of `primary_rehearsal1_20261008` with the mastery rows cleared): 1541 jobs, 0 failed, 1615 committed, 1187 skipped (same counts as the run-clock version); all 1615 `observed_at` values equal the source row times (2025-11-05 to 2026-09-30); no review needed the raise.
