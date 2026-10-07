@@ -60,4 +60,5 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
   - [x] Regression found in the browser check and fixed: outside `.cq-world` the play-kit frames lost the skin variables (the reward panel fell back to navy). The portal wrapper keeps `cq-world cq`; test
   - [x] Browser check 2026-10-07 (production build, scratch copy, a QA student with cards saved in two lessons): all 28 games open, and at 1024x768 the player is on top at the side menu and header points in each briefing (28/28); at 1280x800 the Labyrinth briefing and play screen too. The results screen was not reached; it renders in the same fixed layer
   - [x] Phase 5 recapture not needed: none of the five shots shows the story game player (home, shrine, armory, battle page, projector), and the fix changes only that player
-- [ ] Skin gap (not a regression): the "Wizard rewards" bar of `RpgRewardDisclosure` has fixed navy colours (`#081225`) with no skin variable
+- [x] Skin gap (not a regression): the "Wizard rewards" bar of `RpgRewardDisclosure` had fixed navy colours (`#081225`) with no skin variable; it now reads the panel's reward variables (8d0636696); test
+- [x] Gap: the "You" card of the phone battle page was an empty box for a student with no hero (every migrated student at the cutover); it shows the Forge silhouette, as the projector does (6cb983898); test
