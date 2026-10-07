@@ -56,3 +56,5 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 
 ## Open defects (owner, 2026-10-06)
 - [ ] The side menu draws over the full-screen story game player at desktop widths (seen on the Labyrinth briefing at 1024 px). Fix the stacking, then open all 28 games at desktop width and confirm the briefing, the play screen, and the results are clear of the menu. Recapture the Phase 5 frames after the fix.
+  - [x] Cause and fix (bug fix in the feature freeze, 2026-10-07): `.cq-content` (`position: relative; z-index: 1`) is a stacking context, so the player's `z-50` stayed under the signpost column (`z-10`) and the sticky header (`z-40`). `StoryGamesClient` now renders the player in a portal on the body; test
+  - [ ] Browser check of all 28 games at desktop width, and the Phase 5 recapture

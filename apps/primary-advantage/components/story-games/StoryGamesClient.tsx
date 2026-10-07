@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
 import { parsePracticeInput, type LaunchAvatar, type PracticeInput } from "@reading-advantage/game-contracts";
 import { GAMES, missingItems, playable } from "@reading-advantage/game-cartridges-3d";
@@ -53,7 +54,9 @@ export function StoryGamesClient({ avatar = null, ownerKey }: { avatar?: LaunchA
   const cards = useMemo(() => (input ? gameCardsFor(input) : []), [input]);
 
   if (playing && input) {
-    return (
+    // A portal on the body: the scene content (`.cq-content`, z-index 1) is a stacking context, so a
+    // player inside it stays under the desktop side menu and the sticky header.
+    return createPortal(
       <div className="fixed inset-0 z-50 bg-background" data-testid="story-game-player">
         <GameHost
           gameId={playing.id}
@@ -65,7 +68,8 @@ export function StoryGamesClient({ avatar = null, ownerKey }: { avatar?: LaunchA
           className="flex h-full w-full flex-col"
           onExit={() => setPlaying(null)}
         />
-      </div>
+      </div>,
+      document.body,
     );
   }
 

@@ -78,6 +78,8 @@ describe("StoryGamesClient", () => {
     expect(host).toHaveAttribute("data-game", "rune-match");
     expect(host).toHaveAttribute("data-avatar", "knight");
     expect(host).toHaveAttribute("data-owner", "school-1:student-7");
+    // The player is a child of the body, out of the scene's stacking context, so the desktop side menu stays under it.
+    expect(screen.getByTestId("story-game-player").parentElement).toBe(document.body);
   });
 
   it("plays with no avatar when the student has none, so the game keeps its hero", async () => {
