@@ -46,4 +46,4 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 ## Gates
 - [ ] Tests, tsc, ESLint green
 - [x] Browser check of the forced password change and an old article link (2026-10-07, production build): a QA teacher with a temporary password on the shared local database got the new-password step and no session; two different passwords were refused; the save signed in to `/en/teacher/dashboard`; then the temporary password failed and the new one worked. On `primary_etl_20261007` a QA student opened the printed QR id `cmgqx8v6602p3t79btatvfjuw` and reached the migrated article; an unknown id showed "We could not find this story"; signed out, the link went to the sign-in page with the link as `callbackUrl`, and the sign-in opened the article
-- [ ] Lane A Tutor read test green against `tutor_compat`
+- [x] Lane A Tutor read test green against `tutor_compat` (2026-10-07, `primary_etl_20261007` against `primary_legacy_20261007`: shape PASS, rows MATCH for 621 articles; the check expects the four `MCQ_ANSWER_FIXES`). Run it again after the cutover-target ETL run

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyQueryError, diffColumnShapes, diffRows } from "../tutor-read-compare.js";
+import { applyExpectedFixes, classifyQueryError, diffColumnShapes, diffRows } from "../tutor-read-compare.js";
 import { TUTOR_READ_QUERIES } from "../tutor-read-queries.js";
 
 const ref = [
@@ -57,5 +57,22 @@ describe("classifyQueryError", () => {
     expect(classifyQueryError({ code: "ECONNREFUSED" })).toBe("connection");
     expect(classifyQueryError(new Error("boom"))).toBe("connection");
     expect(classifyQueryError(null)).toBe("connection");
+  });
+});
+
+describe("applyExpectedFixes", () => {
+  it("sets the approved value on the named rows only, so the fixed target matches", () => {
+    const reference = [
+      { id: "q1", answer: "not an option" },
+      { id: "q2", answer: "B" },
+    ];
+    const { rows, applied } = applyExpectedFixes(reference, "answer", { q1: "A", q9: "C" });
+    expect(applied).toBe(1);
+    expect(rows).toEqual([
+      { id: "q1", answer: "A" },
+      { id: "q2", answer: "B" },
+    ]);
+    expect(reference[0].answer).toBe("not an option");
+    expect(diffRows(rows, [{ id: "q1", answer: "A" }, { id: "q2", answer: "B" }])).toEqual([]);
   });
 });

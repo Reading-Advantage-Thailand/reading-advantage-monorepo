@@ -8,12 +8,21 @@
  * Row check ids: --article-ids file, else the first N published ids (--sample N), else all published ids of the reference.
  * import_published_articles is compared in full (all rows, by id).
  * The target search_path is set to tutor_compat. The reference uses its default schema.
+ * The owner-approved MCQ answer fixes (MCQ_ANSWER_FIXES) are applied to the reference rows first.
  * Exit: 0 match, 1 difference, 2 connection or config error.
  */
 import { readFileSync } from "node:fs";
 import postgres from "postgres";
 import { buildPostgresOptions, normalizePostgresConnectionString } from "../src/connection-options.js";
-import { classifyQueryError, diffColumnShapes, diffRows, type ColumnShape, type Difference } from "../src/tutor-read-compare.js";
+import { MCQ_ANSWER_FIXES } from "../src/migrations-data/primary-legacy-import.js";
+import {
+  applyExpectedFixes,
+  classifyQueryError,
+  diffColumnShapes,
+  diffRows,
+  type ColumnShape,
+  type Difference,
+} from "../src/tutor-read-compare.js";
 import { TUTOR_READ_QUERIES } from "../src/tutor-read-queries.js";
 
 const args = process.argv.slice(2);
@@ -107,6 +116,13 @@ async function main(): Promise<number> {
     for (const q of TUTOR_READ_QUERIES) {
       await guarded(`${q.name} (rows)`, async () => {
         let diffs = 0;
+        let fixed = 0;
+        const expected = (rows: unknown) => {
+          if (q.name !== "multiple_choice_questions") return rows as never;
+          const { rows: out, applied } = applyExpectedFixes(rows as never, "answer", MCQ_ANSWER_FIXES);
+          fixed += applied;
+          return out;
+        };
         const report = (id: string, d: Difference[]) => {
           diffs += d.length;
           for (const x of d) console.log(`        ${q.name} [${id}]: ${x.kind} ${x.detail}`);
@@ -115,13 +131,14 @@ async function main(): Promise<number> {
         if (q.takesArticleId) {
           for (const id of articleIds) {
             const [r, t] = await Promise.all([ref.unsafe(q.sql, [id]), target.unsafe(q.sql, [id])]);
-            report(id, diffRows(r as never, t as never));
+            report(id, diffRows(expected(r), t as never));
           }
         } else {
           const [r, t] = await Promise.all([ref.unsafe(q.sql), target.unsafe(q.sql)]);
-          report("all", diffRows(r as never, t as never));
+          report("all", diffRows(expected(r), t as never));
         }
-        console.log(`  ${diffs ? "FAIL" : "PASS"}  ${q.name}  (${diffs} differences)`);
+        const note = fixed ? `; ${fixed} owner-approved answer fixes expected` : "";
+        console.log(`  ${diffs ? "FAIL" : "PASS"}  ${q.name}  (${diffs} differences${note})`);
       }, failures);
     }
   } catch (error) {

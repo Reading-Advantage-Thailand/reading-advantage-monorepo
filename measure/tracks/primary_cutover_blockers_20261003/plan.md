@@ -46,4 +46,4 @@ Owner lane: A. Starts first. Merge to the integration branch before other lanes 
 ## Gates
 - [x] Tests, tsc, ESLint green (2026-10-04 rerun) — tsc 0 errors for Primary, api, auth, db (db fix 5b8dac175); Primary 736/736; api 338 passed, 6 skipped, 1 file hook timeout under load (wave0-phase3-typed-errors, 15/15 alone); auth 333/334, only the known phase-7-closeout failure; db 40 failures that predate Lane A (company-identity integration env, drizzle045 counts 58 vs 60, codecamp-0049 ceiling, marketing import); ESLint 0 errors, 156 warnings on 64 changed Primary files (packages have no ESLint config)
 - [x] Browser re-verification of every Phase 4 fix (0b25ba006, evidence/phase4-browser-recheck.md)
-- [ ] Tutor read test green — shape check PASS on the April copy; the row check waits for the ETL (track primary_legacy_data_migration_20261004, Phase 2)
+- [x] Tutor read test green — 2026-10-07 on the ETL scratch copy `primary_etl_20261007` against `primary_legacy_20261007`: shape PASS, rows MATCH for 621 published articles; the four owner-approved MCQ answer fixes are expected values in the check (track primary_legacy_data_migration_20261004)
