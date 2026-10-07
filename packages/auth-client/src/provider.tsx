@@ -112,7 +112,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({ message: "Login failed" }));
-        throw new Error(err.message ?? "Login failed");
+        // `code` lets a form react to a known case, such as PASSWORD_CHANGE_REQUIRED.
+        throw Object.assign(new Error(err.message ?? "Login failed"), { status: res.status, ...(typeof err.code === "string" ? { code: err.code } : {}) });
       }
 
       const data = await res.json();

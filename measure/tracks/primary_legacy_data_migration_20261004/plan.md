@@ -39,8 +39,8 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 - [x] Script check of all Origins 2 and 3.1 IDs: 28 of 28 (27 lessons and E12) open a published article on `primary_etl_20261007` ([legacy-links-check-20261007.md](./legacy-links-check-20261007.md); `pnpm --filter @reading-advantage/db legacy-links-check`)
 
 ## Phase 4: Teacher credentials (FR-5, FR-6)
-- [ ] Additive nullable column for a temporary password, and the forced change step
-- [ ] Teacher credential script and hand-out list (also the two SYSTEM accounts `phikulphookathin` and `readingadvantage0`: Google sign-in only before)
+- [x] Additive nullable column for a temporary password, and the forced change step (owner: allowed in the feature freeze, 2026-10-07): migration `0071_primary_temporary_password` (`accounts.temporary_password_issued_at`). With a temporary password the Primary login answers 403 `PASSWORD_CHANGE_REQUIRED` and opens no session; the staff form then asks for a new password and posts it to `/api/auth/temporary-password` (`createTemporaryPasswordChangeHandler`: verifies the temporary password, stores the new hash, clears the mark, ends the sessions, audits `auth:password_changed`)
+- [x] Teacher credential script and hand-out list (also the two SYSTEM accounts `phikulphookathin` and `readingadvantage0`: Google sign-in only before): `apps/primary-advantage/scripts/issue-temporary-passwords.ts` gives every TEACHER, ADMIN, and SYSTEM user a temporary password (this also covers the 6 staff scrypt hashes) and writes the CSV hand-out list (mode 600, refused inside the repository). Dry run by default; `--apply --out <file>`; `--reissue`. Run it after the last ETL run: an ETL rerun puts the legacy hashes back. Rehearsal on `primary_etl_20261007`: 22 issued (8 TEACHER, 8 ADMIN, 6 SYSTEM); the real handlers gave 403, then the change 200, the old temporary password 401, and the new password 200 with a session
 - [x] Teacher sign-in by username only (owner decision 2026-10-04: no email sign-in). Usernames are `lower(email)` (D6), so a teacher types the address used before; login lower-cases the input (lane A 3a9237113)
 
 ## Gates

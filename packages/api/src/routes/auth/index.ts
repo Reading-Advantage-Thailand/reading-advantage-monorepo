@@ -1,4 +1,9 @@
-export { handleLogin, createLoginHandler, type LoginHandlerOptions } from "./login.js";
+export { handleLogin, createLoginHandler, PASSWORD_CHANGE_REQUIRED, type LoginHandlerOptions } from "./login.js";
+export {
+  createTemporaryPasswordChangeHandler,
+  temporaryPasswordChangeSchema,
+  temporaryPasswordChangeResponseSchema,
+} from "./temporary-password.js";
 export { handleSession } from "./session.js";
 export { handleLogout } from "./logout.js";
 export { handleImpersonate } from "./impersonate.js";
