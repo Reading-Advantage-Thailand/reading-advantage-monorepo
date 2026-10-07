@@ -14,4 +14,4 @@ Waits for the Forge release of pack 1.1.0 (F4). Nothing starts before the sync l
 
 ## Gates
 - [x] Tests, tsc, ESLint green (2026-10-06: avatar-kit 12, domain shop and rpg 20, play-kit 9; tsc play-kit and the two app files clean; eslint clean)
-- [ ] Browser check: a completion grants a staff that shows on the hero and in the inventory
+- [x] Browser check: a completion grants a staff that shows on the hero and in the inventory (2026-10-07, production build, QA student on the scratch copy): one Hero vs. Zombie victory posted to `/api/v1/apk/complete` from the student's browser (the game host's request; the 3D run itself was not played) added the Apprentice Wand and the Graveyard Staff to `primary_avatar_inventory` (source `reward`); after the hero pick both show in the Main hand drawer, and the equipped Graveyard Staff shows "Worn" and in the hero's hand. The game briefing shows the Forge reward icons (M5) with no ElvGames credit
