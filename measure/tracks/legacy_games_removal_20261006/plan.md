@@ -28,7 +28,10 @@ Defect found 2026-10-07: the Primary reader saves words and sentences in `flashc
 - [x] Domain: the Primary saved items from the flashcard store, with each word's translation and audio segment from its article (`listPrimaryPracticeInput`, `listPrimaryAnswerAudioContent`)
 - [x] Primary routes: `/api/v1/apk/practice` and the answer audio content read the Primary store; answer audio needs no manifest
 - [ ] Browser check with a student who saves words in the reader (owner rule: never seeded data): a word adventure unlocks, and "Listen to English" plays clean word segments on Android Chrome and iOS Safari
-- [ ] The legacy flashcards move in the ETL (track `primary_legacy_data_migration_20261004`)
+- [x] The legacy flashcards move in the ETL (track `primary_legacy_data_migration_20261004`): integration 92d87807c, 3,678 cards
+- [x] Defect found 2026-10-07: the answer clip factory dropped `startSeconds` and `endSeconds`, so every choice played the full word file (2bf0c9ae0)
+- [x] Defect found 2026-10-07: the reader's flashcard activities (deck review, lesson flashcards, lesson matching) read `word`, `definition`, `sentence`, `translation`, and `audioUrl` from the raw card rows, which keep only `front` and `source_id`, so every card showed an empty face and the matching game could crash. `listPrimaryDeckCards` and `listPrimaryArticleCards` read the content from the article; a saved sentence takes its translation from the same line of `translated_passage` (the games had used the short snapshot list)
+- [ ] Browser check of the deck review and the lesson flashcards with a student who saves words and sentences in the reader
 
 ## Phase 2: M2 ids (before the cutover)
 - [x] Quest templates, reward rules, challenge capabilities on the new ids and version 2026-10-06.1 (`hero-vs-zombie`; `WARD_GAME_TYPES` keeps the stored legacy name)

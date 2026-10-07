@@ -1,7 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { TenantDB } from "../db-contract.js";
-import { listPrimaryAnswerAudioContent, listPrimaryPracticeInput } from "../games/primary-saved-items.js";
+import {
+  listPrimaryAnswerAudioContent,
+  listPrimaryArticleCards,
+  listPrimaryDeckCards,
+  listPrimaryPracticeInput,
+} from "../games/primary-saved-items.js";
 import { createMockDb } from "./mock-db.js";
 
 const assertCan = vi.hoisted(() => vi.fn());
@@ -28,8 +33,18 @@ const snapshot = {
   sentence: [{ sentence: "The river is wide.", translation: { th: "แม่น้ำกว้าง" }, timeSeconds: 0 }],
 };
 
-function dbOf(wordCards: unknown[], sentenceCards: unknown[], snapshots: unknown[] = [snapshot]) {
-  const rawDb = createMockDb({ selectSequence: [wordCards, sentenceCards, snapshots] });
+const articleText = {
+  id: ARTICLE,
+  audioUrl: "audios/cmarticle.mp3",
+  sentences: [
+    { sentence: "Pip is a puppy.", startTime: 0, endTime: 1.5 },
+    { sentence: "The moon is bright.", startTime: 1.5, endTime: 3.2 },
+  ],
+  translatedPassage: { th: ["ปิปเป็นลูกสุนัข", "พระจันทร์สว่าง"], cn: ["皮普是一只小狗。", "月亮很亮。"] },
+};
+
+function dbOf(wordCards: unknown[], sentenceCards: unknown[], snapshots: unknown[] = [snapshot], texts: unknown[] = [articleText]) {
+  const rawDb = createMockDb({ selectSequence: [wordCards, sentenceCards, snapshots, texts] });
   return { rawDb, db: { unscoped: vi.fn(() => rawDb) } as unknown as TenantDB };
 }
 
@@ -52,6 +67,16 @@ describe("listPrimaryPracticeInput", () => {
     expect(result.sentences).toEqual([
       { id: "c6", text: "The river is wide.", words: ["The", "river", "is", "wide."], translation: "แม่น้ำกว้าง" },
       { id: "c7", text: "The moon is bright.", words: ["The", "moon", "is", "bright."] },
+    ]);
+  });
+
+  it("translates a sentence the reader saved from the article text with the same line of the translated passage", async () => {
+    const { db } = dbOf([], [card("c8", "The moon is bright.")]);
+
+    const result = await listPrimaryPracticeInput({ db, user, tenant, input: { locale: "th" } });
+
+    expect(result.sentences).toEqual([
+      { id: "c8", text: "The moon is bright.", words: ["The", "moon", "is", "bright."], translation: "พระจันทร์สว่าง" },
     ]);
   });
 
@@ -95,5 +120,61 @@ describe("listPrimaryAnswerAudioContent", () => {
     const { db } = dbOf([card("c1", "river"), card("c3", "kite")], [], [noAudio]);
 
     expect(await listPrimaryAnswerAudioContent({ db, user, tenant, audioUrlOf: (key) => key })).toBeUndefined();
+  });
+});
+
+describe("listPrimaryDeckCards", () => {
+  beforeEach(() => assertCan.mockClear());
+  const DECK = "33333333-3333-4333-8333-333333333333";
+  const created = new Date("2026-10-01T00:00:00Z");
+  const row = (id: string, front: string, sourceId: string | null = ARTICLE) => ({ id, deckId: DECK, front, sourceId, createdAt: created });
+
+  it("gives each saved word its meaning and word audio, and a word the article lost an empty meaning", async () => {
+    const rawDb = createMockDb({ selectSequence: [
+      [{ id: DECK, name: "Vocabulary Deck", type: "VOCABULARY", description: null }],
+      [row("c1", "river"), row("c2", "dragon")],
+      [snapshot],
+      [articleText],
+    ] });
+    const db = { unscoped: vi.fn(() => rawDb) } as unknown as TenantDB;
+
+    const result = await listPrimaryDeckCards({ db, user, tenant, input: { deckId: DECK } });
+
+    expect(assertCan).toHaveBeenCalledWith(user, "progress:read:own", tenant);
+    expect(result?.deck).toEqual({ id: DECK, name: "Vocabulary Deck", type: "VOCABULARY", description: null });
+    expect(result?.cards).toEqual([
+      { id: "c1", deckId: DECK, type: "VOCABULARY", articleId: ARTICLE, createdAt: created, word: "river", definition: { th: "แม่น้ำ", en: "a large stream" }, audioUrl: "audios/words/cmarticle.mp3", startTime: 0.5, endTime: 1.4 },
+      { id: "c2", deckId: DECK, type: "VOCABULARY", articleId: ARTICLE, createdAt: created, word: "dragon", definition: {} },
+    ]);
+  });
+
+  it("returns null for a deck the student does not own", async () => {
+    const rawDb = createMockDb({ selectSequence: [[]] });
+    const db = { unscoped: vi.fn(() => rawDb) } as unknown as TenantDB;
+
+    expect(await listPrimaryDeckCards({ db, user, tenant, input: { deckId: DECK } })).toBeNull();
+    expect(rawDb.select).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("listPrimaryArticleCards", () => {
+  beforeEach(() => assertCan.mockClear());
+  const DECK = "33333333-3333-4333-8333-333333333333";
+  const created = new Date("2026-10-01T00:00:00Z");
+
+  it("gives a saved sentence its translations and its segment of the article audio", async () => {
+    const rawDb = createMockDb({ selectSequence: [
+      [{ id: "c3", deckId: DECK, front: "Pip is a puppy.", sourceId: ARTICLE, createdAt: created }],
+      [snapshot],
+      [articleText],
+    ] });
+    const db = { unscoped: vi.fn(() => rawDb) } as unknown as TenantDB;
+
+    const result = await listPrimaryArticleCards({ db, user, tenant, input: { articleId: ARTICLE, type: "SENTENCE" } });
+
+    expect(result).toEqual([{
+      id: "c3", deckId: DECK, type: "SENTENCE", articleId: ARTICLE, createdAt: created, sentence: "Pip is a puppy.",
+      translation: { th: "ปิปเป็นลูกสุนัข", cn: "皮普是一只小狗。" }, audioUrl: "audios/cmarticle.mp3", startTime: 0, endTime: 1.5,
+    }]);
   });
 });

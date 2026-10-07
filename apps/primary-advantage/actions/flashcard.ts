@@ -7,7 +7,6 @@ import {
   eq,
   and,
   desc,
-  asc,
   count,
   gte,
   sum,
@@ -37,6 +36,8 @@ type CardState = (typeof cardState.enumValues)[number];
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { getAudioUrl } from "@/lib/storage-config";
+import { createTenantDB } from "@reading-advantage/domain";
+import { listPrimaryArticleCards, listPrimaryDeckCards } from "@reading-advantage/domain/games";
 import { mapOrderingSentenceFields, resolveClozeSegment } from "@/lib/audio-highlight";
 import { shuffle } from "@/lib/shuffle";
 import { countStreakDays } from "@reading-advantage/domain/primary-home/streak";
@@ -576,33 +577,19 @@ export async function getDeckCards(deckId: string) {
       throw new Error("Unauthorized");
     }
 
-    // Fetch deck (verify ownership in the where clause).
-    const [deck] = await db.select().from(flashcardDecks)
-      .where(
-        and(
-          eq(flashcardDecks.id, deckId),
-          eq(flashcardDecks.userId, user.id as string),
-        ),
-      )
-      .limit(1);
+    // The card rows keep only the text and the article id; the domain reads the word or sentence,
+    // the meaning or translation, and the audio segment from the article.
+    const tenant = { schoolId: user.schoolId };
+    const result = await listPrimaryDeckCards({ db: createTenantDB(db, tenant), user, tenant, input: { deckId } });
 
-    if (!deck) {
+    if (!result) {
       throw new Error("Deck not found");
     }
 
-    const cards = await db.select().from(flashcardCards)
-      .where(eq(flashcardCards.deckId, deck.id))
-      .orderBy(asc(flashcardCards.id));
-
     return {
       success: true,
-      deck: {
-        id: deck.id,
-        name: deck.name,
-        type: deck.type,
-        description: deck.description,
-      },
-      cards,
+      deck: result.deck,
+      cards: result.cards,
     };
   } catch (error) {
     console.error("Error fetching deck cards:", error);
@@ -1001,34 +988,18 @@ export async function getLessonFlashcards(
       throw new Error("Unauthorized");
     }
 
-    const [deck] = await db.select().from(flashcardDecks)
-      .where(
-        and(
-          eq(flashcardDecks.userId, user.id as string),
-          eq(flashcardDecks.type, deckKind as string),
-        ),
-      )
-      .limit(1);
-
-    if (!deck) {
-      return {
-        success: true,
-        cards: [],
-      };
-    }
-
-    // Cards in this deck whose sourceId (shared-partial articleId column)
-    // matches the requested articleId.
-    const flashcards = await db.select().from(flashcardCards)
-      .where(eq(flashcardCards.deckId, deck.id));
-
-    const filtered = flashcards.filter(
-      (card) => card.sourceId === sourceArticleId,
-    );
+    // The student's cards of this type from this article, with their content from the article.
+    const tenant = { schoolId: user.schoolId };
+    const cards = await listPrimaryArticleCards({
+      db: createTenantDB(db, tenant),
+      user,
+      tenant,
+      input: { articleId: sourceArticleId, type: deckKind === FlashcardType.SENTENCE ? "SENTENCE" : "VOCABULARY" },
+    });
 
     return {
       success: true,
-      cards: filtered,
+      cards,
     };
   } catch (error) {
     console.error("Error fetching vocabulary flashcards:", error);

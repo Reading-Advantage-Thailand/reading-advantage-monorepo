@@ -35,14 +35,15 @@ export async function fetchAnswerAudio(gameId: string, signal?: AbortSignal): Pr
 }
 
 /**
- * Makes the answer audio controller for one run from the prepared response.
+ * Makes the answer audio controller for one run from the prepared response. Each clip keeps its
+ * segment (`startSeconds`, `endSeconds`) inside the article's word audio file.
  * @param prepared The prepared session and clips.
  * @returns A new controller that plays the clips in the browser.
  */
 export function answerAudioControllerOf(prepared: PreparedReadToSelectAudioVocabularyResponse): AnswerChoiceAudioController {
   return createAnswerChoiceAudioController({
     session: prepared.answerAudioSession,
-    clips: prepared.preparedAnswerAudio.clips.map(({ itemPosition, url, mediaType }) => ({ itemPosition, url, mediaType: mediaType as `audio/${string}` })),
+    clips: prepared.preparedAnswerAudio.clips.map(({ sourceLocale: _locale, mediaType, ...clip }) => ({ ...clip, mediaType: mediaType as `audio/${string}` })),
     preparationTimeoutMs: 10_000,
     ...createBrowserAudioClipPorts(),
     ducking: { duck: () => () => undefined },
