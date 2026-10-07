@@ -89,10 +89,10 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   };
   window.addEventListener('keydown', onKey);
   const joystick = attachJoystick(hud.el, { hint: t('move'), change: (x, y) => loop.dispatch({ type: 'steer', x, z: y }) });
-  // Answer audio: one "n 🔊" control per orb of the round, in the orbs' number order.
+  // Answer audio: one "n 🔊" control per orb of the round, in the orbs' number order, inside the
+  // target box under the meaning (a long meaning takes two lines and pushes the row down).
   const listenRow = document.createElement('div');
   listenRow.className = 'hvz-listen';
-  if (answer) hud.el.append(listenRow);
 
   audio.defineMood('night', { bpm: 88, chords: [[57, 60, 64], [53, 57, 60], [52, 55, 59], [50, 53, 57]], busy: false, drum: true });
   audio.defineMood('dawn', { bpm: 96, chords: [[60, 64, 67], [65, 69, 72], [67, 71, 74], [60, 64, 67]], busy: true, drum: false });
@@ -124,6 +124,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       : `<small>${esc(t('find'))}</small><b>${esc(ev.term)}</b>`;
     if (answer) {
       answer.question(ev.position, ev.orbs.map((o) => o.position));
+      targetBox.append(listenRow);
       listenRow.replaceChildren(
         ...ev.orbs.map((o, i) => {
           const b = document.createElement('button');

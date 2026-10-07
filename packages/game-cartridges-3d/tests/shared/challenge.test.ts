@@ -62,10 +62,9 @@ const RUNS: Record<string, (seed: number) => Run> = {
 };
 
 describe('class challenge games', () => {
-  it('Hero vs. Zombie, Dragon Flight, and Dragon Rider declare a vocabulary challenge; Hero vs. Zombie also in answer audio', () => {
-    expect(heroVsZombie.challenge).toEqual({ version: '2026-10-06.1', inputMode: 'vocabulary', modalities: ['reading', 'read-to-select-audio'] });
-    for (const manifest of [dragonFlight, dragonRider]) {
-      expect(manifest.challenge).toEqual({ version: '2026-10-06.1', inputMode: 'vocabulary', modalities: ['reading'] });
+  it('Hero vs. Zombie, Dragon Flight, and Dragon Rider declare a vocabulary challenge in reading and answer audio', () => {
+    for (const manifest of [heroVsZombie, dragonFlight, dragonRider]) {
+      expect(manifest.challenge).toEqual({ version: '2026-10-06.1', inputMode: 'vocabulary', modalities: ['reading', 'read-to-select-audio'] });
     }
   });
 

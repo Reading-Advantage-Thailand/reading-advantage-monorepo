@@ -69,14 +69,14 @@ export default `/* Hero vs. Zombie HUD: the target word, the answer audio contro
     opacity: 0;
   }
 }
-/* Answer audio: one "n 🔊" control per orb, under the target. */
+/* Answer audio: one "n 🔊" control per orb, inside the target box under the meaning. */
 .hvz-listen {
-  position: absolute;
-  left: 50%;
-  top: calc(150px + env(safe-area-inset-top, 0px));
-  transform: translateX(-50%);
   display: flex;
+  justify-content: center;
   gap: 10px;
+  margin-top: 8px;
+  /* The target box lets touches through; its buttons take them. */
+  pointer-events: auto;
 }
 .hvz-listen button {
   min-width: 64px;

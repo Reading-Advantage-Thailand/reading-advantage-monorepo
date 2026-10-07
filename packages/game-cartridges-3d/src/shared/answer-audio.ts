@@ -35,7 +35,10 @@ export interface AnswerAudioDriver {
   playing(): boolean;
   muted(): boolean;
   look(choice: number): ChoiceLook;
-  /** Calls `listener` at once and on every controller change; returns the remover. */
+  /**
+   * Calls `listener` at once, and after controller changes in a microtask (once for a burst), so a
+   * listener may touch or play; returns the remover.
+   */
   onChange(listener: () => void): () => void;
 }
 
@@ -44,9 +47,11 @@ export function createAnswerAudioDriver(
   diagnostic: (event: APKDiagnosticInput) => void,
 ): AnswerAudioDriver {
   let current: number | undefined;
+  /** Questions a confirmed choice completed: their clips do not play again. */
+  const done = new Set<number>();
 
   const play = (choice: number): ChoiceAction => {
-    if (current === undefined) return { kind: 'busy' };
+    if (current === undefined || done.has(current)) return { kind: 'busy' };
     const snapshot = controller.getSnapshot();
     if (snapshot.muted) return { kind: 'muted' };
     if (snapshot.activeClipItemPosition !== undefined) return { kind: 'busy' };
@@ -70,7 +75,9 @@ export function createAnswerAudioDriver(
     position: () => current,
     touch(choice) {
       if (current !== undefined && controller.canConfirmChoice(current, choice)) {
-        return { kind: 'confirm', correct: controller.confirmChoice(current, choice).completedQuestion };
+        const correct = controller.confirmChoice(current, choice).completedQuestion;
+        if (correct) done.add(current);
+        return { kind: 'confirm', correct };
       }
       return play(choice);
     },
@@ -86,7 +93,29 @@ export function createAnswerAudioDriver(
       return pair.submitted ? 'used' : 'idle';
     },
     onChange(listener) {
-      return controller.subscribe(() => listener());
+      // The controller notifies inside its own calls (a play notifies before its clip starts). A
+      // listener that played or confirmed there would run inside that call again and again, and
+      // every nested play would cancel the one before it.
+      let first = true;
+      let queued = false;
+      let live = true;
+      const stop = controller.subscribe(() => {
+        if (first) {
+          first = false;
+          listener();
+          return;
+        }
+        if (queued) return;
+        queued = true;
+        queueMicrotask(() => {
+          queued = false;
+          if (live) listener();
+        });
+      });
+      return () => {
+        live = false;
+        stop();
+      };
     },
   };
 }
