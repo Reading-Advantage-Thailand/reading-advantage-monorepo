@@ -17,6 +17,11 @@ This file tracks all major tracks for the project.
 
 ## Active Tracks (created 2026-09-19)
 
+- [ ] **Track: Primary public pages in the RPG skin (home, about, contact, Our books)** — *created 2026-10-07*
+  *Link: [./tracks/primary_public_pages_20261007/](./tracks/primary_public_pages_20261007/)*
+  *Status: spec with the owner decisions of 2026-10-07; code waits on branch `primary/public-pages` until the cutover passes | Priority: MEDIUM | Requested by the owner through PR*
+  *Note: PR writes the English copy against the section list and string keys (spec §4); Daniel the Thai; no vi strings.*
+
 - [~] **Track: Primary RPG skin — every student page inside the Chibi Quest world** — *created 2026-10-06*
   *Link: [./tracks/primary_rpg_skin_20261006/](./tracks/primary_rpg_skin_20261006/)*
   *Status: Phase 0 approved 2026-10-06; Phases 1 to 3 (shell, home, picker, inventory, shop, battle, dashboard) done 2026-10-06, reports `phase1/`, `phase2/`, `phase3/index.html`; Phase 4 (remaining pages) next | Priority: CRITICAL | Design authority: `docs/primary-rpg-skin.md`*
