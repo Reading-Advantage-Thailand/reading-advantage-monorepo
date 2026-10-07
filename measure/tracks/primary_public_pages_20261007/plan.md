@@ -34,7 +34,10 @@ until the Primary cutover passes.
   - [ ] cn and tw from the contracted reviewer
 - [ ] Captures at 375 px and 1280 px, light and night, to Daniel for the look check
   - [x] 20 captures in `captures/` (status 200, no page overflow, no form, no console errors)
-  - [ ] Daniel's look check
+  - [x] Look-check round 1 (Daniel through PR, 2026-10-07): the class book block left Inside the app; the
+    shrine is a phone capture on phones (`<picture>`, 768 px); dark wood under the scenes; For schools goes
+    to `/about#schools`; the flat covers on Our books (Origins 2, 3.1, 3.2; Quest 4); captures replaced
+  - [ ] Daniel's final look check
 - [ ] Retakes with the demo seed (Word adventures, teacher dashboard) to Daniel before public use
 - [x] PR claims review of the branch diff (2026-10-07: pass; two fixes in 75105543b: Footer.tagline
   deleted, the families link uses www.reading-advantage.com)
