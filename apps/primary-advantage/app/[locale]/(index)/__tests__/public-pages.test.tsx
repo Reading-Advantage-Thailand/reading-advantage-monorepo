@@ -84,7 +84,7 @@ describe("the public pages", () => {
     render(await AboutPage());
     expect(screen.getByRole("link", { name: (cn as Messages as { PublicAbout: { families: { link: string } } }).PublicAbout.families.link })).toHaveAttribute(
       "href",
-      "https://reading-advantage.com/zh/products/tutor-advantage",
+      "https://www.reading-advantage.com/zh/products/tutor-advantage",
     );
   });
 

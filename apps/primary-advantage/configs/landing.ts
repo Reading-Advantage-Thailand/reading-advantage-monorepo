@@ -25,5 +25,5 @@ const WWW_LOCALE: Readonly<Record<string, string>> = { en: "en", th: "th", cn: "
  * @returns The page URL; a locale that www does not have gets English.
  */
 export function tutorAdvantageUrl(locale: string): string {
-  return `https://reading-advantage.com/${WWW_LOCALE[locale] ?? "en"}/products/tutor-advantage`;
+  return `https://www.reading-advantage.com/${WWW_LOCALE[locale] ?? "en"}/products/tutor-advantage`;
 }
