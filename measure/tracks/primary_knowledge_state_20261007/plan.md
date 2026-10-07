@@ -25,9 +25,9 @@ _Story ref: spec.md#story-s2-student-knowledge-state_
 - [ ] Task: Contract & Schema Definition
     - [ ] Input and output schemas of `getStudentKnowledgeState` (state per objective, confidence, fringe, versions)
 - [ ] Task: Test
-    - [ ] Mock DB per `__tests__/mock-db.ts`: cards, evidence, and word records map to the expected state; a cross-tenant request is refused; two runs give the same result and no write
+    - [ ] Mock DB per `__tests__/mock-db.ts`: cards, evidence, and vocabulary flashcards map to the expected state; a cross-tenant request is refused; two runs give the same result and no write
 - [ ] Task: Implement
-    - [ ] Load `mastery_cards`, `mastery_evidence`, and `user_word_records` through TenantDB; call `buildKstState` with the slice
+    - [ ] Load `mastery_cards`, `mastery_evidence`, and the student's VOCABULARY `flashcard_cards` (FSRS fields) through TenantDB; call `buildKstState` with the slice
 - [ ] Task: Generate Docs & Doctor
     - [ ] JSDoc; `build-graph update`
 - [ ] Task: Measure - User Manual Verification 'Phase S2: Student knowledge state' (Protocol in workflow.md)

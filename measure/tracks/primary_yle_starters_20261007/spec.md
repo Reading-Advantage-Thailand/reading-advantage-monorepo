@@ -14,10 +14,10 @@ writing task formats after a story and in a level bank, and a tutor or teacher c
 locked test form; the server scores every answer with an exact key, and every answer gives
 mastery evidence.
 
-Sources: `measure/primary-yle-task-models.md` (catalog, owner decisions 1-11, Forge answer) and
+Sources: `measure/primary-yle-task-models.md` (catalog, owner decisions 1-11) and
 the PR plan `advantage-pr/12-operations/level-tests-and-certificates-plan.md` (phase P2). Workbooks
-writes all items (package part `yle`, level bank book folders, a separate secure export). Forge
-makes the single-word pictures and the scenes; Workbooks makes the Part 5 picture stories.
+writes all items (package part `yle`, level bank book folders, a separate secure export) and
+makes all their pictures (owner, 2026-10-07); Forge makes no YLE pictures.
 
 The five task models of this track:
 
@@ -40,7 +40,7 @@ The five task models of this track:
 - Given an item of each of the five models, When it is parsed, Then the contract accepts it with its model id, level, pool (`story`, `bank`, or `secure`), Workbooks item id, example flag, rubric, Thai rubric line, stem, options, picture references, answer key, and objective short ids.
 - Given an item whose content does not fit its model (for example a `RW-spell` item with no letters, or a `RW-box-cloze` gap with no key), When it is parsed, Then the contract rejects it and names the item id and the field.
 - Given an answer key in the converter's expanded form (accepted strings per gap and `maxWords`), When it is parsed, Then the contract keeps the strings exactly as written.
-- Given a picture reference, When it is parsed, Then it is one of: a Forge asset id, a story image of the same article, or a Workbooks picture path; a `secure` item may not use a story image.
+- Given a picture reference, When it is parsed, Then it is one of: `{ kind: "story", position }` (a picture of the item's own article: `hero`, `inline-para-2`, or `inline-para-3`) or `{ kind: "picture", id }` (an id in a Workbooks picture list, for example `w-starters-apple`); a `secure` item may not use `kind: "story"`, and its ids use the `sec-` prefix of the private list.
 - Given the contract, When the JSON Schema export runs, Then it writes a schema file that Workbooks can use in its converter.
 
 **Estimate:** M
@@ -84,7 +84,7 @@ The five task models of this track:
 - Given a `RW-tick-cross` item, When the child taps tick or cross, Then the server scores the answer and the screen shows the result in practice mode.
 - Given a `RW-yes-no` set, When the child answers each sentence about the one scene, Then each sentence is one scored answer.
 - Given a `RW-box-cloze` text, When the child puts a box word in each gap, Then each gap is one scored answer, and a box word can be used once only.
-- Given a phone 360 px wide, When any of these screens opens, Then the picture shows at the stem size agreed with Forge, with alt text, and the page does not scroll sideways.
+- Given a phone 360 px wide, When any of these screens opens, Then a word picture shows at most 200 CSS px wide and a scene at most 400 CSS px wide, with alt text, and the page does not scroll sideways.
 - Given the example item of a part, When the part opens, Then the example shows filled in and cannot be answered.
 
 **Estimate:** M
@@ -191,7 +191,9 @@ The five task models of this track:
 - Workbooks: the export shape (agreed in principle 2026-10-07), the first approved `yle` parts, and
   the secure export.
 - The owner: a private home for the secure forms (Workbooks recommends a new private repository).
-- Forge: the picture manifest (id, word, list level, file path, alt text) and the stem sizes.
+- Workbooks: the picture lists (agreed 2026-10-07: one public list for practice, one private list for
+  secure items; entries `id`, `kind` word | scene | story-strip, `word`, `listLevel`, `altEn`, `altTh`,
+  `path`, `width`, `height`, `version`, `approval`). Word pictures 768 x 768, scenes 1200 x 900, WebP.
 - PR plan phase P1 (test specification) for the composition of the secure forms.
 - The tags backfill after the ETL rerun, for the article ids of story items.
 
@@ -201,4 +203,4 @@ The five task models of this track:
 - The certificate PDF, its checking page, and the Tutor Advantage embed (PR phases P8a and P8t).
 - The item analysis and Angoff scripts (PR phase P7).
 - The grammar graph track (D12) and the knowledge state track T3 (D8).
-- The pictures and the items themselves (Forge and Workbooks).
+- The pictures and the items themselves (Workbooks).

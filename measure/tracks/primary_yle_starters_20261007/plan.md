@@ -14,7 +14,7 @@ the main checkout paths), so the blast-radius lines below come from grep.
 _Story ref: spec.md#story-s1-task-item-contract_
 
 - [ ] Task: Contract & Schema Definition
-    - [ ] Add `packages/domain/src/primary-tasks/contracts.ts`: `taskModelSchema` (the five ids), `taskPoolSchema` (`story`, `bank`, `secure`), `pictureRefSchema` (Forge id, story image, Workbooks path), `answerKeySchema` (accepted strings per gap, `maxWords`), and one item schema per model in a discriminated union on `taskModel`
+    - [ ] Add `packages/domain/src/primary-tasks/contracts.ts`: `taskModelSchema` (the five ids), `taskPoolSchema` (`story`, `bank`, `secure`), `pictureRefSchema` (`story` + position, `picture` + list id), `pictureListEntrySchema`, `answerKeySchema` (accepted strings per gap, `maxWords`), and one item schema per model in a discriminated union on `taskModel`
     - [ ] Refine: a `secure` item may not use a story image; every gap has a key; `RW-spell` letters are a permutation of the key
 - [ ] Task: Test
     - [ ] Valid and invalid fixture per model (made-up items only), with the error path naming the item id and the field
@@ -73,7 +73,7 @@ _Blast radius: `packages/domain/src/primary-mastery/` (evidence-policy.ts, evide
 _Story ref: spec.md#story-s4-choice-screens-tick-or-cross-yes-or-no-picture-word-box_
 
 - [ ] Task: Contract & Schema Definition
-    - [ ] Client payload schema per model with no key field; answer request and result schemas; the picture resolver contract (Forge manifest, story image, Workbooks path, signed URL for secure)
+    - [ ] Client payload schema per model with no key field; answer request and result schemas; the picture resolver contract (story position to the article's image, list id to the file, signed URL for secure ids)
 - [ ] Task: Test
     - [ ] Server scoring per model; a word-box word used once only; the example is not answerable; component tests at 360 px for layout
 - [ ] Task: Implement

@@ -191,6 +191,12 @@ Decision 3 in section 8 keeps `userWordRecords` as the one FSRS store for vocabu
 bridge reads vocabulary proficiency from it. `masteryCards` holds GSE objective cards only.
 This avoids two schedulers for the same word.
 
+Correction (2026-10-07, monorepo session): no Primary code writes `userWordRecords` or
+`user_sentence_records`. The Primary reader saves words and sentences into `flashcard_decks` and
+`flashcard_cards` (`actions/flashcard.ts`), and the ETL moves the legacy decks there. The one FSRS
+store for Primary words is therefore `flashcard_cards`; the intent of decision 3 (one scheduler)
+stands. T2 already reads `card_reviews` with `flashcard_cards`; T3 reads `flashcard_cards`.
+
 ### 4.5 Reading the graph
 
 `getStudentKnowledgeState({ db, user })`:

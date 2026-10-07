@@ -20,8 +20,10 @@ Existing engine pieces, reused and not rewritten: `buildKstState`
 (`packages/knowledge-space-core/src/srs-bridge.ts`), `planRecommendedNext`
 (`packages/knowledge-space-practice/src/planner/recommended-next.ts`), the projections in
 `packages/knowledge-space-practice/src/projections/`, the mastery tables (`mastery_cards`,
-`mastery_evidence`, `mastery_states`), and `user_word_records` as the one FSRS store for words
-(program decision 3).
+`mastery_evidence`, `mastery_states`), and the Primary flashcard store (`flashcard_decks`,
+`flashcard_cards` of VOCABULARY decks, with their FSRS fields) as the one FSRS store for words
+(program decision 3; correction of 2026-10-07: no Primary code writes `user_word_records`, the
+reader saves words through `actions/flashcard.ts` into the flashcard tables).
 
 ## Stories
 
@@ -44,7 +46,7 @@ Existing engine pieces, reused and not rewritten: `buildKstState`
 **So that** every consumer reads one state from one function
 
 **Acceptance Criteria:**
-- Given a student with objective cards, evidence, and word records, When the function runs, Then it returns the state of each objective (`mastered`, `inProgress`, `notStarted`), the confidence, and the outer fringe from `buildKstState`.
+- Given a student with objective cards, evidence, and vocabulary flashcards, When the function runs, Then it returns the state of each objective (`mastered`, `inProgress`, `notStarted`), the confidence, and the outer fringe from `buildKstState`.
 - Given a user of another school, When the function runs, Then it refuses the request (TenantDB and `assertCan`).
 - Given the same inputs, When the function runs twice, Then it returns the same state (no write on the read path).
 
