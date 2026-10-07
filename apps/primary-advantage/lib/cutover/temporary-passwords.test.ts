@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   generateTemporaryPassword,
   isInsideDirectory,
+  selectForIssue,
   TEMPORARY_PASSWORD_ALPHABET,
   toHandoutCsv,
 } from "./temporary-passwords";
@@ -27,6 +28,22 @@ describe("temporary passwords (cutover FR-5)", () => {
     expect(isInsideDirectory("/repo/..handout.csv", "/repo")).toBe(true);
     expect(isInsideDirectory("/repo/../inputs/x.csv", "/repo")).toBe(false);
     expect(isInsideDirectory("/repo-inputs/x.csv", "/repo")).toBe(false);
+  });
+
+  it("gives a SYSTEM account a password only when the operator names it", () => {
+    const staff = [
+      { username: "teacher@x.th", role: "TEACHER", pendingSince: null },
+      { username: "ceo", role: "SYSTEM", pendingSince: null },
+      { username: "old-dev@x.th", role: "SYSTEM", pendingSince: null },
+      { username: "admin@x.th", role: "ADMIN", pendingSince: new Date() },
+    ];
+    const none = selectForIssue(staff, { system: [], reissue: false });
+    expect(none.selected.map((user) => user.username)).toEqual(["teacher@x.th"]);
+    expect(none.unnamedSystem.map((user) => user.username)).toEqual(["ceo", "old-dev@x.th"]);
+    const named = selectForIssue(staff, { system: ["ceo"], reissue: true });
+    expect(named.selected.map((user) => user.username)).toEqual(["teacher@x.th", "ceo", "admin@x.th"]);
+    expect(named.unnamedSystem.map((user) => user.username)).toEqual(["old-dev@x.th"]);
+    expect(() => selectForIssue(staff, { system: ["teacher@x.th"], reissue: false })).toThrow("teacher@x.th");
   });
 
   it("writes CSV with quoted cells and no spreadsheet formulas", () => {

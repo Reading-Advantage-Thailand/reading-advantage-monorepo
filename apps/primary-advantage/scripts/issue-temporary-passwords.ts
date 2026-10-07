@@ -1,7 +1,9 @@
 /**
  * Issues temporary passwords to the staff of a migrated Primary database (cutover FR-5).
  *
- * Each TEACHER, ADMIN, and SYSTEM user gets a random temporary password in the credential account.
+ * Each TEACHER and ADMIN user, and each SYSTEM user named in --system, gets a random temporary
+ * password in the credential account. SYSTEM can change the data of every school, so an unnamed
+ * SYSTEM account gets no password.
  * The login then opens no session until the user sets a new password. The script writes the
  * hand-out list (school, name, role, username, temporary password) to a CSV file with mode 600 that
  * must be outside the repository (the repository is public). Without --apply it only lists the users.
@@ -9,8 +11,10 @@
  *
  * Usage (from apps/primary-advantage; DATABASE_URL names the target database):
  *   npx tsx scripts/issue-temporary-passwords.ts
- *   npx tsx scripts/issue-temporary-passwords.ts --apply --out ~/Desktop/primary-cutover-inputs/handout.csv
+ *   npx tsx scripts/issue-temporary-passwords.ts --apply --system phikulphookathin,readingadvantage0 \
+ *     --out ~/Desktop/primary-cutover-inputs/handout.csv
  * Options:
+ *   --system   comma-separated usernames of the SYSTEM accounts that get a temporary password
  *   --reissue  also users that have a temporary password that is not changed yet
  */
 
@@ -26,6 +30,7 @@ import { hashPassword } from "@reading-advantage/auth";
 import {
   generateTemporaryPassword,
   isInsideDirectory,
+  selectForIssue,
   STAFF_ROLES,
   toHandoutCsv,
 } from "../lib/cutover/temporary-passwords";
@@ -34,7 +39,7 @@ const REPO_ROOT = realpathSync(fileURLToPath(new URL("../../..", import.meta.url
 
 async function main() {
   const { values } = parseArgs({
-    options: { apply: { type: "boolean" }, out: { type: "string" }, reissue: { type: "boolean" } },
+    options: { apply: { type: "boolean" }, out: { type: "string" }, reissue: { type: "boolean" }, system: { type: "string" } },
   });
   if (!process.env.DATABASE_URL) throw new Error("Set DATABASE_URL to the target database.");
   const target = new URL(process.env.DATABASE_URL);
@@ -62,11 +67,13 @@ async function main() {
     .leftJoin(accounts, and(eq(accounts.userId, users.id), eq(accounts.providerId, "credential")))
     .where(inArray(users.role, [...STAFF_ROLES]))
     .orderBy(schools.name, users.role, users.username);
-  const selected = values.reissue ? staff : staff.filter((user) => !user.pendingSince);
-  const pending = staff.length - selected.length;
+  const system = (values.system ?? "").split(",").map((name) => name.trim()).filter(Boolean);
+  const { selected, unnamedSystem } = selectForIssue(staff, { system, reissue: Boolean(values.reissue) });
+  const pending = values.reissue ? 0 : staff.filter((user) => user.pendingSince).length;
 
   for (const role of STAFF_ROLES) console.log(`${role}: ${selected.filter((user) => user.role === role).length}`);
   if (pending) console.log(`Not changed: ${pending} users have a pending temporary password (use --reissue).`);
+  for (const user of unnamedSystem) console.log(`No password: SYSTEM ${user.username} (not named in --system)`);
   if (!values.apply) {
     for (const user of selected) console.log(`  ${user.role}\t${user.username}\t${user.school ?? "(no school)"}`);
     console.log("Dry run: no change. Add --apply --out <file> to issue the passwords.");
