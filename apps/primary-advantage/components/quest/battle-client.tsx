@@ -17,7 +17,7 @@ import {
   hitDamage,
 } from "@reading-advantage/domain/primary-quest/rules";
 import { Hearts, Meter, Panel, RpgLink, Sign } from "@/components/rpg/chrome";
-import { RELIC_ART } from "@/lib/rpg/places";
+import { NO_HERO_ART, RELIC_ART } from "@/lib/rpg/places";
 import { cn } from "@/lib/utils";
 import { AvatarPortrait } from "@/components/avatar/portrait-canvas";
 import { GameHost } from "@/components/games/game-host";
@@ -287,7 +287,8 @@ export function BattleClient({
               className="cq-shadowed"
             />
           ) : (
-            <div className="bg-muted size-24 rounded-xl" aria-hidden="true" />
+            // No hero yet (every migrated student at the cutover): the Forge silhouette, as on the projector.
+            <img src={NO_HERO_ART} alt={t("battle.you")} className="cq-shadowed size-24 rounded-xl" />
           )}
           {shielded ? (
             <span

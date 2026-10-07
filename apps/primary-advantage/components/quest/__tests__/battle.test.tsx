@@ -58,6 +58,8 @@ describe("BattleClient", () => {
     expect(screen.getByText("The battle has not started. Wait for your teacher.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Shield" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("progressbar", { name: "Your HP" })).toHaveAttribute("aria-valuenow", "5");
+    // A student with no hero (every migrated student at the cutover) sees the Forge silhouette, not an empty box.
+    expect(screen.getByRole("img", { name: "You" })).toHaveAttribute("src", "/rpg/kit/heroes/no-hero.webp");
     expect(fetchMock).not.toHaveBeenCalled();
     cleanup();
     renderWithMessages(<BattleClient initial={battle("rally")} gameId="hero-vs-zombie" ownerKey="s:1" profile={null} avatar={null} />, { locale: "en" });
