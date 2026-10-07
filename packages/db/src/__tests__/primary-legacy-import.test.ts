@@ -3,6 +3,7 @@ import {
   DROPPED_TABLES,
   JsonCell,
   MAP_TABLES,
+  cardTextOf,
   correctAnswerIndex,
   keepLatest,
   lessonStatusOf,
@@ -11,6 +12,7 @@ import {
   mapRole,
   parseGrade,
   renderReport,
+  reviewCountsOf,
   usernamesOf,
   type LegacyArticle,
 } from "../migrations-data/primary-legacy-import.js";
@@ -89,11 +91,24 @@ describe("primary legacy import transforms", () => {
     expect(lessonStatusOf(null, null)).toBe("not_started");
   });
 
+  it("takes the card text the Primary reader writes: the word of a vocabulary card, the sentence of a sentence card", () => {
+    expect(cardTextOf({ type: "VOCABULARY", word: "puppy", sentence: null })).toBe("puppy");
+    expect(cardTextOf({ type: "SENTENCE", word: null, sentence: "Pip is a puppy." })).toBe("Pip is a puppy.");
+    expect(cardTextOf({ type: "VOCABULARY", word: "  ", sentence: "Pip is a puppy." })).toBeNull();
+    expect(cardTextOf({ type: "SENTENCE", word: "puppy", sentence: null })).toBeNull();
+  });
+
+  it("counts Good and Easy reviews as correct, Again and Hard as incorrect", () => {
+    expect(reviewCountsOf([1, 2, 3, 4, 4])).toEqual({ correct: 3, incorrect: 2 });
+    expect(reviewCountsOf([])).toEqual({ correct: 0, incorrect: 0 });
+  });
+
   it("uses the legacy table names in the id map, as the tutor_compat views join them", () => {
     expect(MAP_TABLES.article).toBe("article");
     expect(MAP_TABLES.mcq).toBe("multiple_choice_questions");
     expect(MAP_TABLES.saq).toBe("short_answer_questions");
     expect(MAP_TABLES.laq).toBe("long_answer_questions");
+    expect(MAP_TABLES.flashcardCards).toBe("flashcard_cards");
   });
 
   it("renders the report with every table and the dropped list", () => {
@@ -105,5 +120,7 @@ describe("primary legacy import transforms", () => {
     expect(md).toContain("(dry run, rolled back)");
     expect(md).toContain("- sessions:");
     expect(md).toContain("- n1");
+    expect(renderReport({ startedAt: "a", finishedAt: "b", dryRun: false, dropped: [], notes: [], tables: { "flashcard_cards.last_review": { read: 3, written: 3, skipped: {}, examples: {} } } }))
+      .toContain("| flashcard_cards.last_review → flashcard_progress | 3 | 3 | 0 |");
   });
 });

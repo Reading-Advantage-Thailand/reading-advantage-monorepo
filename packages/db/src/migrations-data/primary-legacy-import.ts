@@ -45,6 +45,9 @@ export const MAP_TABLES = {
   userLessonProgress: "user_lesson_progress",
   userActivities: "user_activities",
   xpLogs: "xp_logs",
+  flashcardDecks: "flashcard_decks",
+  flashcardCards: "flashcard_cards",
+  cardReviews: "card_reviews",
 } as const;
 
 /** Legacy tables the ETL does not load, each with its reason (spec §6, inventory §2-3). */
@@ -62,7 +65,7 @@ export const DROPPED_TABLES: ReadonlyArray<{ table: string; reason: string }> = 
   { table: "game_rankings", reason: "legacy table in the target; the play kit keeps its own ledger" },
   { table: "ai_insights", reason: "JSON title and description have no text target (inventory R6); deferred" },
   { table: "stories, story_chapters", reason: "deferred: the new app has no stories page (docs/primary-whats-moved.md); chapter questions and flashcard rows go with them" },
-  { table: "flashcard_decks, flashcard_cards, card_reviews, cloze_test_games", reason: "deferred: FSRS state has no target columns (inventory R2); an owner decision" },
+  { table: "cloze_test_games", reason: "0 rows in the 2026-10-07 copy; the target keeps no game state" },
   { table: "learning_goals, goal_milestones, goal_progress_logs, assignment_notifications", reason: "0 rows in April; loaded by a later run if production has rows" },
 ];
 
@@ -197,6 +200,18 @@ export function mapAssignmentStatus(status: unknown): { status: string; complete
 }
 
 /** Maps legacy lesson progress to the target status text. */
+/** The card text the Primary reader writes to `flashcard_cards.front` and `back`: the word of a vocabulary card, the sentence of a sentence card. */
+export function cardTextOf(card: { type?: unknown; word?: unknown; sentence?: unknown }): string | null {
+  const text = String(card.type) === "VOCABULARY" ? card.word : card.sentence;
+  return typeof text === "string" && text.trim() ? text : null;
+}
+
+/** The review counts of `flashcard_progress`: Good (3) and Easy (4) are correct, Again (1) and Hard (2) are not, as the Primary review action counts them. */
+export function reviewCountsOf(ratings: ReadonlyArray<number>): { correct: number; incorrect: number } {
+  const correct = ratings.filter((r) => r >= 3).length;
+  return { correct, incorrect: ratings.length - correct };
+}
+
 export function lessonStatusOf(isCompleted: boolean | null, progress: number | null): string {
   if (isCompleted) return "completed";
   return (progress ?? 0) > 0 ? "in_progress" : "not_started";
@@ -588,6 +603,79 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     counter.table("xp_logs").written += await upsert(tx, "xp_logs", xpRows);
   });
 
+  // ── 5. saved words and sentences (owner decision 2026-10-07, option A) ──────────
+  // The target card keeps the text, the article, and the review dates; FSRS stability and
+  // difficulty have no column (inventory R2), so the review action starts again from the counts.
+  await group("flashcards", async (tx) => {
+    const decks = await legacy<Row[]>`select id, user_id, name, type::text as type, description, "createdAt", "updatedAt" from flashcard_decks`;
+    counter.table("flashcard_decks").read = decks.length;
+    const deckRows: Row[] = [];
+    const deckUser = new Map<string, string>();
+    for (const d of decks) {
+      const id = String(d.id);
+      if (!users.has(String(d.user_id))) { counter.skip("flashcard_decks", "user not migrated", id); continue; }
+      deckUser.set(id, String(d.user_id));
+      deckRows.push({
+        id: ids.ensure(MAP_TABLES.flashcardDecks, id), user_id: d.user_id, name: d.name ?? `${d.type === "VOCABULARY" ? "Vocabulary" : "Sentence"} Deck`,
+        type: d.type, description: d.description, created_at: d.createdAt, updated_at: d.updatedAt,
+      });
+    }
+    counter.table("flashcard_decks").written += await upsert(tx, "flashcard_decks", deckRows);
+
+    const ratingsByCard = new Map<string, number[]>();
+    const reviews = await legacy<Row[]>`select id, card_id, rating, time_spent, "reviewedAt" from card_reviews order by "reviewedAt", id`;
+    for (const r of reviews) ratingsByCard.set(String(r.card_id), [...(ratingsByCard.get(String(r.card_id)) ?? []), Number(r.rating)]);
+
+    const cards = await legacy<Row[]>`select id, deck_id, type::text as type, article_id, word, sentence, due, last_review, story_chapter_id, "createdAt", "updatedAt" from flashcard_cards`;
+    counter.table("flashcard_cards").read = cards.length;
+    const cardRows: Row[] = [];
+    const progressRows: Row[] = [];
+    for (const c of cards) {
+      const id = String(c.id);
+      if (c.story_chapter_id) { counter.skip("flashcard_cards", "story chapter card (stories deferred)", id); continue; }
+      const userId = deckUser.get(String(c.deck_id));
+      if (!userId) { counter.skip("flashcard_cards", "deck not migrated", id); continue; }
+      const articleId = ids.get(MAP_TABLES.article, c.article_id as string | null);
+      if (!articleId) { counter.skip("flashcard_cards", "article not migrated", id); continue; }
+      const text = cardTextOf(c);
+      if (!text) { counter.skip("flashcard_cards", "no word or sentence text", id); continue; }
+      const cardId = ids.ensure(MAP_TABLES.flashcardCards, id);
+      cardRows.push({ id: cardId, deck_id: ids.get(MAP_TABLES.flashcardDecks, String(c.deck_id)), front: text, back: text, source_id: articleId, order: 0, created_at: c.createdAt });
+      if (!c.last_review) continue;
+      // One progress row per reviewed card, with the card's uuid as its id, so a rerun updates it.
+      const { correct, incorrect } = reviewCountsOf(ratingsByCard.get(id) ?? []);
+      progressRows.push({
+        id: cardId, user_id: userId, card_id: cardId, correct_count: correct, incorrect_count: incorrect,
+        last_reviewed_at: c.last_review, next_review_at: c.due, created_at: c.createdAt, updated_at: c.updatedAt,
+      });
+    }
+    counter.table("flashcard_cards").written += await upsert(tx, "flashcard_cards", cardRows);
+    counter.table("flashcard_cards.last_review").read = cards.filter((c) => c.last_review).length;
+    counter.table("flashcard_cards.last_review").written += await upsert(tx, "flashcard_progress", progressRows);
+
+    counter.table("card_reviews").read = reviews.length;
+    const reviewRows: Row[] = [];
+    for (const r of reviews) {
+      const cardId = ids.get(MAP_TABLES.flashcardCards, String(r.card_id));
+      if (!cardId) { counter.skip("card_reviews", "card not migrated", String(r.id)); continue; }
+      reviewRows.push({ id: ids.ensure(MAP_TABLES.cardReviews, String(r.id)), card_id: cardId, rating: r.rating, time_spent: r.time_spent, reviewed_at: r.reviewedAt });
+    }
+    counter.table("card_reviews").written += await upsert(tx, "card_reviews", reviewRows);
+
+    // The reader and the games read a card's meaning, translation, and audio from its article; a
+    // content reload can drop a saved word from the article's word list.
+    const [loose] = await tx<{ words: number; sentences: number }[]>`
+      select count(*) filter (where d.type = 'VOCABULARY' and not exists (
+               select 1 from jsonb_array_elements(coalesce(s.words, '[]'::jsonb)) w where lower(trim(w->>'vocabulary')) = lower(trim(c.front))))::int as words,
+             count(*) filter (where d.type = 'SENTENCE' and not exists (
+               select 1 from jsonb_array_elements(coalesce(a.sentences, '[]'::jsonb)) x where x->>'sentence' = c.front))::int as sentences
+      from flashcard_cards c join flashcard_decks d on d.id = c.deck_id
+      left join articles a on a.id::text = c.source_id
+      left join sentencs_and_words_for_flashcard s on s.article_id::text = c.source_id`;
+    notes.push(`Saved cards whose text is no longer in their article: ${loose?.words ?? 0} words (not in the word list, so no meaning or audio), ${loose?.sentences ?? 0} sentences (not in the article text, so no translation).`);
+    notes.push("flashcard_progress keeps due, last review, and the review counts; FSRS stability and difficulty have no column (inventory R2).");
+  });
+
   };
 
   if (dryRun) {
@@ -608,7 +696,7 @@ class DryRunRollback extends Error {
 
 /** Renders the report as Markdown for the track evidence folder. */
 export function renderReport(report: ImportReport): string {
-  const TARGET_NAME: Record<string, string> = { article: "articles", assignment_students: "student_assignments", user_lesson_progress: "lesson_progress", user_activities: "user_activity" };
+  const TARGET_NAME: Record<string, string> = { article: "articles", assignment_students: "student_assignments", user_lesson_progress: "lesson_progress", user_activities: "user_activity", "flashcard_cards.last_review": "flashcard_progress" };
   const lines = [`# Primary legacy import report`, ``, `Started ${report.startedAt}, finished ${report.finishedAt}${report.dryRun ? " (dry run, rolled back)" : ""}.`, ``, `| Legacy table | Read | Written | Skipped |`, `|---|---|---|---|`];
   for (const [name, t] of Object.entries(report.tables)) {
     const skipped = Object.entries(t.skipped).map(([reason, n]) => `${n} ${reason}`).join("; ") || "0";
