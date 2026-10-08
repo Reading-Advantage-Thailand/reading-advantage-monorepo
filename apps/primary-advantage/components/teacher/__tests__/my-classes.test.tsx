@@ -73,8 +73,9 @@ describe("My Classes", () => {
     expect(link).toHaveClass("min-h-11");
     expect(screen.getByRole("button", { name: "Actions for P3A" })).toHaveClass("size-11");
     expect(screen.getByRole("searchbox", { name: en.TeacherClass.searchClasses })).toBeInTheDocument();
-    // The class code is shown as it is stored (no CSS capitalize on codes).
-    expect(screen.getByText("ABC123")).not.toHaveClass("capitalize");
+    // The legacy class code signs no one in (students use the Start class code), so it is not shown.
+    expect(screen.queryByText("ABC123")).not.toBeInTheDocument();
+    expect(screen.queryByRole("columnheader", { name: en.TeacherMyClasses.table.headers.classCode })).not.toBeInTheDocument();
   });
 
   it("has no Google Classroom import (FR-12) and keeps the new class button", async () => {

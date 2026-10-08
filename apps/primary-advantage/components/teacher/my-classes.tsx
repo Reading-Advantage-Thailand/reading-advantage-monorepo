@@ -82,8 +82,9 @@ type Classes = {
 };
 
 /**
- * My Classes: the teacher's classes in a table (class name links to the class page, code,
- * student count, grade, and an actions menu), with search and new class. No Google Classroom
+ * My Classes: the teacher's classes in a table (class name links to the class page, student
+ * count, grade, and an actions menu), with search and new class. The legacy class code is not
+ * shown: students sign in with the code from Start class. No Google Classroom
  * import (FR-12, owner decision 2026-10-05). Loading shows shimmer rows; a failed load shows an
  * error with a retry.
  * @returns The class list.
@@ -213,17 +214,6 @@ export default function MyClasses() {
           </Link>
         );
       },
-    },
-    {
-      accessorKey: "classCode",
-      header: () => {
-        return (
-          <div className="text-center">{t("table.headers.classCode")}</div>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="text-center font-mono">{row.getValue("classCode")}</div>
-      ),
     },
     {
       accessorKey: "students.length",
