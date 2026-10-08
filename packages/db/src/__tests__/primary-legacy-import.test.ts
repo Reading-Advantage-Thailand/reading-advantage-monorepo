@@ -13,6 +13,7 @@ import {
   lessonStatusOf,
   mapArticle,
   mapAssignmentStatus,
+  mapClassroom,
   mapRole,
   parseGrade,
   parseUtcTimestamp,
@@ -66,6 +67,14 @@ describe("primary legacy import transforms", () => {
       await db.close();
     }
   }, 30_000);
+
+  it("maps a classroom with the picture password off (owner decision 2026-10-08)", () => {
+    const row = mapClassroom(
+      { id: "c1", name: "P.5-1", classCode: "ab12cd", codeExpiresAt: null, grade: "5", password_students: "x", createdAt: "t0", updatedAt: "t1" },
+      { id: "uuid-1", schoolId: "s-1", teacherId: "u-1", grade: 5 },
+    );
+    expect(row).toMatchObject({ id: "uuid-1", name: "P.5-1", school_id: "s-1", teacher_id: "u-1", grade: 5, class_code: "ab12cd", picture_password_enabled: false });
+  });
 
   it("parses the classroom grade text", () => {
     expect(parseGrade("3")).toBe(3);

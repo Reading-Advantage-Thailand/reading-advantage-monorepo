@@ -233,6 +233,20 @@ export function mapArticle(a: LegacyArticle, newId: string, authorExists: boolea
   };
 }
 
+/**
+ * Maps a legacy classroom to the target row. Migrated classes start with the picture password off
+ * (owner decision 2026-10-08): students sign in with the class code and their name, as before.
+ * @param c The legacy classroom row.
+ * @param target The new id, the school id, the teacher id, and the parsed grade.
+ * @returns The target classroom row.
+ */
+export function mapClassroom(c: Row, target: { id: string; schoolId: string | null | undefined; teacherId: string; grade: number | null }): Row {
+  return {
+    id: target.id, name: c.name, school_id: target.schoolId, teacher_id: target.teacherId, class_code: c.classCode, code_expires_at: c.codeExpiresAt,
+    grade: target.grade, password_students: c.password_students, picture_password_enabled: false, created_at: c.createdAt, updated_at: c.updatedAt,
+  };
+}
+
 /** Maps a legacy assignment-student status to the target text and flag. */
 export function mapAssignmentStatus(status: unknown): { status: string; completed: boolean } {
   const s = String(status ?? "NOT_STARTED");
@@ -428,10 +442,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       if (c.grade && grade === null) counter.skip("classrooms", "grade text not a number, stored null", id);
       migratedClasses.add(id);
       classTeachers.set(id, teacher);
-      classRows.push({
-        id: ids.ensure(MAP_TABLES.classrooms, id), name: c.name, school_id: ids.get(MAP_TABLES.schools, c.school_id as string | null), teacher_id: teacher,
-        class_code: c.classCode, code_expires_at: c.codeExpiresAt, grade, password_students: c.password_students, created_at: c.createdAt, updated_at: c.updatedAt,
-      });
+      classRows.push(mapClassroom(c, { id: ids.ensure(MAP_TABLES.classrooms, id), schoolId: ids.get(MAP_TABLES.schools, c.school_id as string | null), teacherId: teacher, grade }));
     }
     // A skip that is only a note must not hide a written row: count writes from the rows.
     counter.table("classrooms").written += await upsert(tx, "classrooms", classRows);
