@@ -10,7 +10,7 @@ revision `primary-advantage-app-00125-9wd`, target database `primary_v2`, secret
 `PRIMARY_V2_DATABASE_URL` (version 1), domain `primary.reading-advantage.com`.
 
 Frozen code: the Primary build inputs (`apps/primary-advantage`, `packages`, the lockfile and the
-root files) at the integration commit that rehearsal 2 builds (on 2026-10-08: `92c2e2381`). Any
+root files) at the integration commit that rehearsal 2 builds (on 2026-10-08: `cfef79c88`). Any
 change to the build inputs after rehearsal 2 needs a new rehearsal.
 
 ## Rehearsal 2 (Saturday 2026-10-10)

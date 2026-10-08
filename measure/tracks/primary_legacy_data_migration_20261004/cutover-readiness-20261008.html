@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primary Cutover Readiness</title>
+<style>
+:root {
+  --bg: #f6f4ef; --panel: #ffffff; --ink: #1d1b16; --muted: #625d52; --line: #e2ddd2;
+  --ok: #1f7a3d; --ok-bg: #e5f4ea; --warn: #8a5a00; --warn-bg: #fdf1d8;
+  --bad: #a3271f; --bad-bg: #fbe3e1; --info: #1f4f8a; --info-bg: #e3edf9; --accent: #6b4b16;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15140f; --panel: #1f1d17; --ink: #ece8de; --muted: #a59f92; --line: #36332a;
+    --ok: #6fd08f; --ok-bg: #173323; --warn: #f0c060; --warn-bg: #3a2d10;
+    --bad: #f08a80; --bad-bg: #3d1a17; --info: #8ab8f0; --info-bg: #172a40; --accent: #e0b870;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15140f; --panel: #1f1d17; --ink: #ece8de; --muted: #a59f92; --line: #36332a;
+  --ok: #6fd08f; --ok-bg: #173323; --warn: #f0c060; --warn-bg: #3a2d10;
+  --bad: #f08a80; --bad-bg: #3d1a17; --info: #8ab8f0; --info-bg: #172a40; --accent: #e0b870;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+h1 { font-size: 28px; margin: 0 0 4px; }
+h2 { font-size: 19px; margin: 36px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--line); }
+h3 { font-size: 15px; margin: 18px 0 6px; }
+p { margin: 6px 0 10px; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+code { font-family: var(--mono); font-size: 12.5px; background: var(--line); padding: 1px 5px; border-radius: 4px; word-break: break-word; }
+.verdict { background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--warn); border-radius: 10px; padding: 18px 20px; }
+.verdict h2 { border: 0; margin: 0 0 6px; padding: 0; font-size: 20px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 16px 0; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.stat b { display: block; font-size: 22px; }
+.stat span { color: var(--muted); font-size: 13px; }
+.table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+th { background: var(--bg); font-weight: 600; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+.ok { color: var(--ok); background: var(--ok-bg); }
+.warn { color: var(--warn); background: var(--warn-bg); }
+.bad { color: var(--bad); background: var(--bad-bg); }
+.info { color: var(--info); background: var(--info-bg); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 10px 0; }
+.card h3 { margin-top: 0; }
+.rec { color: var(--accent); font-weight: 600; }
+ol, ul { padding-left: 22px; margin: 6px 0; }
+li { margin: 3px 0; }
+.timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.small { font-size: 13px; color: var(--muted); }
+footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Primary Advantage cutover readiness</h1>
+<p class="sub">Report date: Thursday 2026-10-08 (evening, Bangkok). Cutover: Sunday 2026-10-11, evening. Source of the steps: <code>docs/deployment/primary-cutover-migration-spec.md</code> 1.8 and <code>cutover-commands-20261011.md</code> in this folder.</p>
+
+<section class="verdict">
+<h2>Verdict: ready for rehearsal 2; ready for the cutover after rehearsal 2 and 4 owner decisions</h2>
+<p>The new app, the data move, and the sign-in flows passed in the cloud today. The cloud revision passed the full go/no-go browser check (25 of 25) against the migrated data in Cloud SQL. Live traffic stays on the legacy app until the cutover.</p>
+<p>The data move now runs inside GCP in 2 minutes 20 seconds (through this machine's network tunnel it took more than 2 hours). Before Sunday, 2 items stay open: rehearsal 2 on Saturday, and 4 owner decisions (section 4).</p>
+</section>
+
+<div class="grid">
+  <div class="stat"><b>25 / 25</b><span>browser checks pass on the cloud revision (tag <code>rehearsal1</code>)</span></div>
+  <div class="stat"><b>5 / 5</b><span>public game and skin files answer 200 from the cloud image</span></div>
+  <div class="stat"><b>625 MATCH</b><span>Tutor read check: all published articles, all 5 reads</span></div>
+  <div class="stat"><b>28 / 28</b><span>printed book QR ids open a migrated article</span></div>
+  <div class="stat"><b>5 / 5</b><span>sampled students match the legacy data (XP, reading, cards)</span></div>
+  <div class="stat"><b>643</b><span>students moved; each has a permanent two-word username and no email</span></div>
+  <div class="stat"><b>2 min 20 s</b><span>whole ETL build in GCP (ETL 5 s, Tutor read check 17 s)</span></div>
+  <div class="stat"><b>1334</b><span>Primary app tests; 1 old test fixed, then all pass</span></div>
+</div>
+
+<h2>1. Timeline</h2>
+<div class="timeline">
+  <div class="card"><h3>Thu 2026-10-08 <span class="chip ok">done</span></h3>
+    <ul><li>Rehearsal 1, local and cloud parts.</li><li>Cloud build and deploy without traffic.</li><li>Browser check 25 of 25.</li><li>Spec 1.8, command sheet.</li></ul></div>
+  <div class="card"><h3>Fri 2026-10-09 <span class="chip warn">owner</span></h3>
+    <ul><li>Owner decisions 1 to 4 (section 4).</li><li>Owner gives the start hour for Saturday and Sunday.</li></ul></div>
+  <div class="card"><h3>Sat 2026-10-10 <span class="chip info">rehearsal 2</span></h3>
+    <ul><li>New backup, new <code>primary_v2</code>, ETL in Cloud Build.</li><li>Owner runs <code>after-etl.sh rehearsal2</code> (about 1 minute).</li><li>The cutover image is built and checked.</li><li>Local copy for the graph and Workbooks checks.</li></ul></div>
+  <div class="card"><h3>Sun 2026-10-11 <span class="chip info">cutover</span></h3>
+    <ul><li>Merge integration into master; owner pushes.</li><li>Final backup, ETL, hand-out list.</li><li>Rehearsal 2 image, check, then traffic.</li><li>Teachers print the class sheets.</li></ul></div>
+</div>
+
+<h2>2. Go/no-go checklist (spec §10)</h2>
+<div class="table-wrap"><table>
+<tr><th>Item</th><th>Rehearsal 1 local</th><th>Rehearsal 1 cloud</th><th>Rehearsal 2</th><th>Production</th></tr>
+<tr><td>Login 1: a teacher signs in with the temporary password, must set a new password, signs in again</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span> 3 teachers</td><td>Sat</td><td>Sun</td></tr>
+<tr><td>Login 2: the temporary password stops working after the change</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
+<tr><td>Login 3: every migrated teacher has an account; the team holds the hand-out list</td><td><span class="chip ok">pass</span> 21 staff</td><td><span class="chip ok">pass</span> 21 staff</td><td>Sat</td><td>Sun</td></tr>
+<tr><td>Login 4: a student signs in by class code and name; a new code works, the old code stops</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span> 30-student class</td><td>Sat</td><td>Sun</td></tr>
+<tr><td>Login 5: the teacher ends the class and makes the class sheet; a student signs in at home with the sheet username and password (375 px)</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span> 30 rows</td><td>Sat</td><td>Sun</td></tr>
+<tr><td>One admin and one system user (forced change)</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
+<tr><td>Old article URLs: 27 unique ids by script; the printed writing QR</td><td><span class="chip ok">28 / 28</span></td><td><span class="chip ok">28 / 28</span>, QR pass</td><td>Sat</td><td>Sun</td></tr>
+<tr><td>At least five scanned printed QR codes (phone camera)</td><td colspan="2"><span class="chip warn">owner</span> the script opens the same URLs; a camera scan needs a person</td><td>Sat (owner)</td><td>Sun (owner)</td></tr>
+<tr><td>Five sampled students match the legacy data</td><td><span class="chip ok">5 / 5</span></td><td><span class="chip ok">5 / 5</span></td><td>Sat</td><td>Sun</td></tr>
+<tr><td>A teacher sees the right classes and students</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
+<tr><td>Reconciliation report: no unexplained skips</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
+<tr><td>Article pictures (legacy key) on the story page and the Read list</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
+<tr><td>Tutor opens 3 Origins 3.1 lessons and 1 Origins 2 lesson through <code>tutor_compat</code></td><td colspan="2"><span class="chip ok">read check MATCH 625</span>; the Tutor app itself on the new database: <span class="chip warn">not done</span></td><td colspan="2">Decision 4: Tutor keeps the legacy database (read only) until its staging check passes</td></tr>
+</table></div>
+
+<h2>3. What happened today</h2>
+<h3>Cloud part of rehearsal 1</h3>
+<ul>
+<li>The migration user needed <code>SET</code> membership in <code>durable_job_audit_owner</code> on Cloud SQL. Run 1 failed on this; run 2 passed after a role step (spec §8 step 2). The grant is instance-wide and stays.</li>
+<li>Run 2 from the owner's machine: migrate 7 min, ETL 90 min, Tutor read check 32 min. The cause is the network tunnel on this machine (about 180 ms for each database round trip). Locally the same data steps take about 5 minutes. Owner decision: the ETL runs inside GCP with <code>cloudbuild-etl.yaml</code>.</li>
+<li>Cloud build 668a4617 failed: two test files import code from another app. Fix 68f28eb56. Build a9198276 passed and deployed revision <code>00128-pac</code> without traffic.</li>
+<li>Browser check at the tag URL: 25 of 25. Two earlier runs failed on script timing and on this machine's tunnel (DNS drops), not on the app. The server answered every request in less than 0.1 s.</li>
+<li>In-GCP ETL test (a rerun into the current <code>primary_v2</code>). First build: the ETL script ignored the Cloud SQL socket and connected to <code>127.0.0.1</code>; fix <code>cbdf5d99c</code>. Second build: the Tutor read check was slow, because a global build can run far from the database. Third build, in <code>asia-southeast1</code>: <span class="chip ok">pass</span> in 2 min 20 s with the package install. Guard 2 s, migrate 1 s, doctor 1 s, ETL 5 s, Tutor read check 17 s (625 articles, MATCH), student sample 5 of 5.</li>
+<li>Primary app tests: 1334 tests. One old test still expected the legacy class code on My Classes; fix <code>92c2e2381</code>. Type check 0 errors; lint 0 errors on the changed files.</li>
+</ul>
+<h3>Owner decisions put into code today</h3>
+<ul>
+<li>Student usernames: two simple English words and two digits (for example <code>bluetiger47</code>). A username follows the student for years: no email, no class, no grade.</li>
+<li>Students have no email: not in the ETL, not in the student import, not on the admin Add student and Edit student pages.</li>
+<li>Migrated classes start with the picture password off. My Classes has no legacy class code column. Two students with the same first name show the last-name initial.</li>
+<li>Option A for home sign-in: each teacher prints the class sheet at the cutover (spec runbook step 10).</li>
+</ul>
+<div class="table-wrap"><table>
+<tr><th>Commit</th><th>Change</th></tr>
+<tr><td><code>cfef79c88</code></td><td>Regional ETL build results; the spec and the command sheet name <code>--region=asia-southeast1</code></td></tr>
+<tr><td><code>92c2e2381</code></td><td>Test fix: My Classes shows no legacy class code</td></tr>
+<tr><td><code>cbdf5d99c</code></td><td>ETL script connects through the Cloud SQL socket</td></tr>
+<tr><td><code>2dc6a7c10</code></td><td>Rehearsal 1 cloud results, cutover command sheet</td></tr>
+<tr><td><code>901a85277</code></td><td>Spec 1.8: calendar for 2026-10-11, deploy and traffic commands, legacy trigger, rollback command</td></tr>
+<tr><td><code>68f28eb56</code></td><td>Cloud build fix: no cross-app test files in the type check (the frozen build commit)</td></tr>
+<tr><td><code>4f56f18c3</code></td><td>No email on the admin Add student and Edit student pages</td></tr>
+<tr><td><code>4f3875897</code></td><td>The ETL runs in Cloud Build</td></tr>
+<tr><td><code>e6f0c7cd3</code>, <code>5dd9add8a</code></td><td>Permanent two-word student usernames; no student email in the ETL and the import</td></tr>
+<tr><td><code>3a8f3a2fe</code>, <code>8b5b1cfec</code>, <code>f5d5f4004</code></td><td>Rehearsal 1 findings 1 to 3</td></tr>
+<tr><td><code>7bb6b1065</code>, <code>30e31bee8</code></td><td>ETL time zone and question order fixes; the five-student sample check</td></tr>
+</table></div>
+
+<h2>4. Owner decisions needed before Sunday</h2>
+<div class="card">
+<h3>Decision 1: how to stop writes to the legacy database at the cutover start</h3>
+<p>The runbook says "maintenance mode or stop traffic", but the legacy app has no maintenance mode. Writes after the final backup are lost.</p>
+<p class="rec">Recommendation: make the legacy database read only (<code>ALTER DATABASE primary_advantage SET default_transaction_read_only = on</code>, then end the open sessions).</p>
+<p>Reads keep working: Tutor, the backup, and the ETL (the ETL only reads the legacy database). The legacy app then shows errors on sign-in and on saves. Students are on the school break, and the spec already keeps the legacy database read only after the cutover. Rollback resets the setting. The tool refused to write this job file for me, because it changes the live database. So it needs your go, or you run it.</p>
+</div>
+<div class="card">
+<h3>Decision 2: accounts for the production check</h3>
+<p>The check sets a new password for a teacher and an admin. The class sheet sets new passwords for a whole class. In the rehearsals this was real teachers and real classes on a copy.</p>
+<p class="rec">Recommendation: on production, use the demo school teacher, the demo school admin, and the demo class (5 students), plus your own system account.</p>
+</div>
+<div class="card">
+<h3>Decision 3: the demo school (rehearsal 1 finding 4)</h3>
+<p>The daily demo reset job is off. The demo teacher and admin get temporary passwords like every staff account. The demo data stays as it was on 2026-10-07.</p>
+<p class="rec">Recommendation: keep the demo school as it is for the cutover. Decide on a new demo reset after the freeze.</p>
+</div>
+<div class="card">
+<h3>Decision 4: Tutor Advantage on the cutover evening</h3>
+<p>The Tutor read check matches all 625 articles through <code>tutor_compat</code>. The Tutor app has not run against the new database. The <code>tutor_reader</code> login is not made on <code>primary_v2</code>.</p>
+<p class="rec">Recommendation: Tutor keeps reading the legacy database (read only) on Sunday. Switch Tutor after its staging check (spec §8 step 6). New lessons after the cutover go only to the new database, so plan the switch for the first week.</p>
+</div>
+<div class="card">
+<h3>Also needed from you</h3>
+<ul>
+<li>The start hour on Saturday and on Sunday. You run <code>after-etl.sh</code> (about 1 minute) after each ETL.</li>
+<li>Sunday: merge <code>primary-parity-integration</code> into <code>master</code> with me (no conflict today), then push both branches.</li>
+<li>Sunday: your go before the traffic switch; scan five printed QR codes with a phone.</li>
+<li>After the switch: give each teacher their line of the hand-out list; tell the teachers to print the class sheets.</li>
+</ul>
+</div>
+
+<h2>5. Cutover evening (Sunday)</h2>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>Who</th><th>Step</th><th>Time</th></tr>
+<tr><td>C1</td><td>Owner</td><td>Tell the team in the group chat</td><td>—</td></tr>
+<tr><td>C2</td><td>Agent</td><td>The five legacy scheduler jobs are still paused</td><td>1 min</td></tr>
+<tr><td>C3</td><td>Owner decision 1</td><td>Stop legacy writes</td><td>1 min</td></tr>
+<tr><td>C4</td><td>Agent</td><td>Final backup of the legacy database</td><td>1 min</td></tr>
+<tr><td>C5</td><td>Owner + agent</td><td>Merge integration into master; owner pushes both branches</td><td>5 min</td></tr>
+<tr><td>C6</td><td>Agent</td><td>Drop and create <code>primary_v2</code></td><td>1 min</td></tr>
+<tr><td>C7</td><td>Agent</td><td>ETL in Cloud Build: guard, migrate, doctor, ETL, Tutor read check, student sample</td><td>3 min</td></tr>
+<tr><td>C8</td><td>Owner</td><td><code>after-etl.sh cutover</code>: temporary passwords (hand-out list), printed-link check</td><td>1 min</td></tr>
+<tr><td>C9</td><td>Agent</td><td>Deploy the rehearsal 2 image, secret version pinned, no traffic, tag <code>cutover</code></td><td>2 min</td></tr>
+<tr><td>C10</td><td>Agent + owner</td><td>Go/no-go check at the tag URL; owner checks on a phone</td><td>15 min</td></tr>
+<tr><td>C11</td><td>Owner go, agent</td><td>Route 100% of the traffic to the tag <code>cutover</code></td><td>1 min</td></tr>
+<tr><td>C12</td><td>Agent</td><td>Turn off the legacy build trigger <code>primary-advantege-prod</code></td><td>1 min</td></tr>
+<tr><td>C13</td><td>Agent</td><td>Smoke check on <code>primary.reading-advantage.com</code></td><td>5 min</td></tr>
+<tr><td>C14</td><td>Owner and team</td><td>Hand-out list to the teachers; teachers print the class sheets</td><td>next days</td></tr>
+</table></div>
+<p><b>Rollback</b> (decide within 24 hours): route the traffic back to the legacy revision <code>primary-advantage-app-00125-9wd</code>. If C3 made the legacy database read only, reset that setting first. Data written to the new database after the switch is lost on rollback.</p>
+
+<h2>6. Risks and controls</h2>
+<div class="table-wrap"><table>
+<tr><th>Risk</th><th>Level</th><th>Control</th></tr>
+<tr><td>A push to the legacy repository's <code>main</code> starts the legacy trigger. It deploys the legacy app with traffic, over the new app.</td><td><span class="chip bad">high</span></td><td>C12 turns the trigger off right after the switch. The last legacy push was on 2026-08-28.</td></tr>
+<tr><td>A code change after rehearsal 2 makes the rehearsal invalid.</td><td><span class="chip warn">medium</span></td><td>The build inputs freeze at the commit that rehearsal 2 builds. The cutover deploys the rehearsal 2 image; there is no new build on Sunday.</td></tr>
+<tr><td>Students cannot sign in at home until their teacher prints the class sheet. The legacy class code worked at all times.</td><td><span class="chip warn">medium</span></td><td>Runbook step 10; the team reminds each teacher. In class, the class code and the name work while the teacher has the class open.</td></tr>
+<tr><td>This machine's network tunnel: slow database round trips, DNS drops.</td><td><span class="chip warn">medium</span></td><td>The ETL runs inside GCP. The browser script retries page loads. The owner's phone check does not use this machine.</td></tr>
+<tr><td>This machine has 7 GB of memory; heavy jobs kill Postgres.</td><td><span class="chip info">low</span></td><td>Peers run no heavy job during the checks (graph and Workbooks agreed).</td></tr>
+<tr><td>The Cloud Build ETL is new.</td><td><span class="chip info">low</span></td><td>It passed today in asia-southeast1. Rehearsal 2 runs it on an empty database. Always submit it with <code>--region=asia-southeast1</code>.</td></tr>
+<tr><td>Content: an injector write to the legacy database after the final backup is lost.</td><td><span class="chip info">low</span></td><td>Workbooks confirmed: no write from 2026-10-11 12:00 Bangkok; levels 5 to 9 load after the cutover into the new database.</td></tr>
+</table></div>
+
+<h2>7. After the cutover (not part of Sunday)</h2>
+<ul>
+<li>The feature freeze ends. Waiting work: www Primary features (PR branch), Primary public pages, the Forge answer audio part B (lane-g), legacy games removal Phase 3, YLE, T3, and grammar tracks.</li>
+<li>Graph: the tags backfill on the new database before the evidence worker starts (runbook step 11).</li>
+<li>Workbooks: the injector writes new lessons into the new database.</li>
+<li>Tutor switches to the new database after its staging check (decision 4).</li>
+<li>Owner: the Listen to English game on real phones (saved words games).</li>
+</ul>
+
+<footer>Made by the monorepo session on 2026-10-08. Integration head at the time of writing: <code>cfef79c88</code>. The report holds no password and no personal name.</footer>
+</main>
+</body>
+</html>
