@@ -283,6 +283,7 @@
       "columns": {
         "name": "姓名",
         "email": "電子郵件",
+        "classroom": "班級",
         "role": "角色"
       }
     },
@@ -309,7 +310,7 @@
         "title": "學生資料格式",
         "description": "匯入學生資訊（個人資料與班級分配）",
         "req1": "檔名必須為 students.csv",
-        "req2": "電子郵件需唯一且格式正確",
+        "req2": "不需電子郵件。每位新學生會取得使用者名稱和密碼，可在「Class sheet」頁面列印。",
         "req3": "角色須為 Student"
       },
       "teachers": {

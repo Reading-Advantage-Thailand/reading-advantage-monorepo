@@ -88,23 +88,37 @@ describe("combined classroom and user CSV upload", () => {
     mocks.currentUser.mockResolvedValue({ id: "student-1", role: "STUDENT" });
     mocks.select.mockReturnValueOnce(selectResult([{ id: "student-1", schoolId: null }]));
 
-    const response = await POST(uploadRequest("students.csv"));
+    const response = await POST(uploadRequest("teachers.csv"));
 
     expect(response.status).toBe(403);
     expect(mocks.insert).not.toHaveBeenCalled();
   });
 
-  it("imports a student with required account fields and a school-scoped role", async () => {
+  it("refuses students.csv: students import through /api/upload/csv without an email", async () => {
+    const schoolId = "00000000-0000-0000-0000-000000000001";
+    mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId });
+    mocks.select
+      .mockReturnValueOnce(selectResult([{ id: "teacher-1", schoolId }]))
+      .mockReturnValueOnce(selectResult([{ id: schoolId, name: "School A" }]));
+
+    const response = await POST(uploadRequest("students.csv"));
+
+    expect(response.status).toBe(400);
+    expect(JSON.stringify(await response.json())).toContain("Import students.csv on the Students tab");
+    expect(mocks.insert).not.toHaveBeenCalled();
+  });
+
+  it("imports a teacher with required account fields and a school-scoped role", async () => {
     const schoolId = "00000000-0000-0000-0000-000000000001";
     // The session school is the sole schoolId source for upload writes, so
     // the session mock must carry it.
     mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId });
     mocks.parse.mockReturnValue([
       {
-        name: "Student One",
-        email: "student@example.com",
+        name: "Teacher Two",
+        email: "teacher2@example.com",
         classroom_name: "Class A",
-        role: "student",
+        role: "teacher",
       },
     ]);
     const results = [
@@ -112,9 +126,10 @@ describe("combined classroom and user CSV upload", () => {
       [{ id: schoolId, name: "School A" }],
       [],
       [{ name: "Class A" }],
-      [{ id: "role-student", name: "student" }],
-      [{ id: "student-1", email: "student@example.com" }],
+      [{ id: "role-teacher", name: "teacher" }],
+      [{ id: "teacher-2", email: "teacher2@example.com" }],
       [{ id: "class-1", name: "Class A" }],
+      [],
     ];
     for (const rows of results) mocks.select.mockReturnValueOnce(selectResult(rows));
 
@@ -130,16 +145,16 @@ describe("combined classroom and user CSV upload", () => {
       return chain;
     });
 
-    const response = await POST(uploadRequest("students.csv"));
+    const response = await POST(uploadRequest("teachers.csv"));
 
     expect(response.status).toBe(200);
     const userWrite = insertedValues.find(
       (entry) => (entry as { table: unknown }).table === users,
     ) as { values: Array<Record<string, unknown>> };
     expect(userWrite.values[0]).toMatchObject({
-      username: "student@example.com",
-      displayUsername: "student@example.com",
-      role: "STUDENT",
+      username: "teacher2@example.com",
+      displayUsername: "teacher2@example.com",
+      role: "TEACHER",
       schoolId,
     });
     expect(userWrite.values[0].id).toEqual(expect.any(String));
@@ -153,17 +168,17 @@ describe("combined classroom and user CSV upload", () => {
     mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER" });
     mocks.parse.mockReturnValue([
       {
-        name: "Unexpected Admin",
-        email: "admin@example.com",
+        name: "Unexpected Student",
+        email: "student@example.com",
         classroom_name: "Class A",
-        role: "admin",
+        role: "student",
       },
     ]);
     mocks.select
       .mockReturnValueOnce(selectResult([{ id: "teacher-1", schoolId }]))
       .mockReturnValueOnce(selectResult([{ id: schoolId, name: "School A" }]));
 
-    const response = await POST(uploadRequest("students.csv"));
+    const response = await POST(uploadRequest("teachers.csv"));
 
     expect(response.status).toBe(400);
     expect(mocks.insert).not.toHaveBeenCalled();

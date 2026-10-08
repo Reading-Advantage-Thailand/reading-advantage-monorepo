@@ -283,6 +283,7 @@
       "columns": {
         "name": "Tên",
         "email": "Email",
+        "classroom": "Lớp",
         "role": "Vai trò"
       }
     },
@@ -309,7 +310,7 @@
         "title": "Định dạng dữ liệu Học sinh",
         "description": "Nhập thông tin học sinh bao gồm chi tiết cá nhân và phân lớp",
         "req1": "Tên tệp phải là students.csv",
-        "req2": "Email phải duy nhất và đúng định dạng",
+        "req2": "Không cần email. Mỗi học sinh mới nhận một tên đăng nhập và mật khẩu; in chúng từ trang Class sheet.",
         "req3": "Vai trò phải là Học sinh"
       },
       "teachers": {

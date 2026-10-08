@@ -60,11 +60,13 @@ const SESSION_SCHOOL = "00000000-0000-0000-0000-00000000000a";
 function selectResult(rows: unknown[]) {
   const chain = {
     from: vi.fn(),
+    innerJoin: vi.fn(),
     where: vi.fn(),
     limit: vi.fn().mockResolvedValue(rows),
     then: (resolve: (value: unknown[]) => unknown) => Promise.resolve(rows).then(resolve),
   };
   chain.from.mockReturnValue(chain);
+  chain.innerJoin.mockReturnValue(chain);
   chain.where.mockReturnValue(chain);
   return chain;
 }
@@ -80,7 +82,7 @@ function uploadRequest(name: string): NextRequest {
 }
 
 function recordingInserts(
-  returningFor: (table: unknown) => unknown[],
+  returningFor: (table: unknown, values: unknown[]) => unknown[],
 ): Array<{ table: unknown; values: unknown[]; onConflictDoNothing: boolean }> {
   const writes: Array<{ table: unknown; values: unknown[]; onConflictDoNothing: boolean }> = [];
   mocks.insert.mockImplementation((table: unknown) => {
@@ -94,7 +96,7 @@ function recordingInserts(
       write.onConflictDoNothing = true;
       return chain;
     });
-    chain.returning = vi.fn(() => Promise.resolve(returningFor(table)));
+    chain.returning = vi.fn(() => Promise.resolve(returningFor(table, write.values)));
     chain.then = (resolve: (value: unknown) => unknown) =>
       Promise.resolve(undefined).then(resolve);
     writes.push(write);
@@ -114,7 +116,7 @@ describe("CSV upload student login generation (FR-6)", () => {
   it("generates usernames and passwords for the students created in the upload", async () => {
     mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId: SESSION_SCHOOL });
     mocks.parse.mockReturnValue([
-      { name: "Ann Lee", email: "ann@example.com", role: "student", classroom_name: "P3A" },
+      { name: "Ann Lee", role: "student", classroom_name: "P3A" },
     ]);
     const results = [
       [{ id: "teacher-1", schoolId: SESSION_SCHOOL }],
@@ -124,14 +126,17 @@ describe("CSV upload student login generation (FR-6)", () => {
       [],
     ];
     for (const rows of results) mocks.select.mockReturnValueOnce(selectResult(rows));
-    recordingInserts((table) =>
+    recordingInserts((table, values) =>
       table === users
-        ? [{ id: "user-1", email: "ann@example.com" }]
+        ? (values as Array<{ id: string }>).map((v) => ({ id: v.id }))
         : table === classrooms
           ? [{ id: "class-1", name: "P3A", schoolId: SESSION_SCHOOL }]
           : [],
     );
-    mocks.provision.mockResolvedValue({ provisioned: [{ userId: "user-1", username: "bluetiger47", initialPassword: "abcd2345" }], failed: [] });
+    mocks.provision.mockImplementation(async ({ students }: { students: Array<{ userId: string }> }) => ({
+      provisioned: [{ userId: students[0]!.userId, username: "bluetiger47", initialPassword: "abcd2345" }],
+      failed: [],
+    }));
 
     const response = await POST(uploadRequest("students.csv"));
 
@@ -139,7 +144,7 @@ describe("CSV upload student login generation (FR-6)", () => {
     expect(mocks.provision).toHaveBeenCalledWith(
       expect.objectContaining({
         schoolId: SESSION_SCHOOL,
-        students: [{ userId: "user-1", classroomName: "P3A", classroomId: "class-1" }],
+        students: [{ userId: expect.any(String), classroomName: "P3A", classroomId: "class-1" }],
       }),
     );
     expect((await response.json()).studentLogins).toEqual([
@@ -150,15 +155,18 @@ describe("CSV upload student login generation (FR-6)", () => {
   it("reports the students whose login could not be stored", async () => {
     mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId: SESSION_SCHOOL });
     mocks.parse.mockReturnValue([
-      { name: "Ann Lee", email: "ann@example.com", role: "student", classroom_name: "P3A" },
+      { name: "Ann Lee", role: "student", classroom_name: "P3A" },
     ]);
     for (const rows of [[{ id: "teacher-1", schoolId: SESSION_SCHOOL }], [{ id: SESSION_SCHOOL, name: "School A" }], [{ id: "role-student", name: "student" }], [], []]) {
       mocks.select.mockReturnValueOnce(selectResult(rows));
     }
-    recordingInserts((table) =>
-      table === users ? [{ id: "user-1", email: "ann@example.com" }] : table === classrooms ? [{ id: "class-1", name: "P3A", schoolId: SESSION_SCHOOL }] : [],
+    recordingInserts((table, values) =>
+      table === users ? (values as Array<{ id: string }>).map((v) => ({ id: v.id })) : table === classrooms ? [{ id: "class-1", name: "P3A", schoolId: SESSION_SCHOOL }] : [],
     );
-    mocks.provision.mockResolvedValue({ provisioned: [], failed: [{ userId: "user-1", reason: "db down" }] });
+    mocks.provision.mockImplementation(async ({ students }: { students: Array<{ userId: string }> }) => ({
+      provisioned: [],
+      failed: [{ userId: students[0]!.userId, reason: "db down" }],
+    }));
     const body = await (await POST(uploadRequest("students.csv"))).json();
     expect(body.studentLoginsFailed).toBe(1);
     expect(body.studentLoginsFailedNames).toEqual(["Ann Lee"]);
@@ -167,13 +175,13 @@ describe("CSV upload student login generation (FR-6)", () => {
   it("still finishes the upload when login generation fails", async () => {
     mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId: SESSION_SCHOOL });
     mocks.parse.mockReturnValue([
-      { name: "Ann Lee", email: "ann@example.com", role: "student", classroom_name: "P3A" },
+      { name: "Ann Lee", role: "student", classroom_name: "P3A" },
     ]);
     for (const rows of [[{ id: "teacher-1", schoolId: SESSION_SCHOOL }], [{ id: SESSION_SCHOOL, name: "School A" }], [{ id: "role-student", name: "student" }], [], []]) {
       mocks.select.mockReturnValueOnce(selectResult(rows));
     }
-    recordingInserts((table) =>
-      table === users ? [{ id: "user-1", email: "ann@example.com" }] : table === classrooms ? [{ id: "class-1", name: "P3A", schoolId: SESSION_SCHOOL }] : [],
+    recordingInserts((table, values) =>
+      table === users ? (values as Array<{ id: string }>).map((v) => ({ id: v.id })) : table === classrooms ? [{ id: "class-1", name: "P3A", schoolId: SESSION_SCHOOL }] : [],
     );
     mocks.provision.mockRejectedValue(new Error("boom"));
     const response = await POST(uploadRequest("students.csv"));

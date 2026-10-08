@@ -283,6 +283,7 @@
       "columns": {
         "name": "Name",
         "email": "Email",
+        "classroom": "Class",
         "role": "Role"
       }
     },
@@ -309,7 +310,7 @@
         "title": "Students Data Format",
         "description": "Import student information including personal details and class assignments",
         "req1": "File name must be students.csv",
-        "req2": "Email must be unique and valid format",
+        "req2": "No email. Each new student gets a username and a password. Print them from the Class sheet.",
         "req3": "Role should be Student"
       },
       "teachers": {

@@ -21,6 +21,7 @@ import {
   reviewCountsOf,
   usernamesOf,
   assignStudentUsernames,
+  targetUserRow,
   type LegacyArticle,
 } from "../migrations-data/primary-legacy-import.js";
 
@@ -52,6 +53,14 @@ describe("primary legacy import transforms", () => {
     expect(names.get("s2")).toBe("greenkoala12");
     expect(taken).toContain("greenkoala12");
     expect([...names.values()].some((name) => name.includes("@"))).toBe(false);
+  });
+
+  it("keeps no email for a student and keeps the email for staff", () => {
+    const legacy = { id: "u1", name: "Ann", email: "ann.12@gmail.com", email_verified: true, createdAt: new Date(0), updatedAt: new Date(0) };
+    const student = targetUserRow(legacy, "STUDENT", { username: "bluetiger47", displayUsername: "bluetiger47" }, "s1");
+    expect(student).toMatchObject({ id: "u1", username: "bluetiger47", email: null, email_verified: null, school_id: "s1" });
+    const teacher = targetUserRow({ ...legacy, email: "kru@school.ac.th" }, "TEACHER", usernamesOf("kru@school.ac.th"), "s1");
+    expect(teacher).toMatchObject({ email: "kru@school.ac.th", username: "kru@school.ac.th", email_verified: new Date(0) });
   });
 
   it("stops when no free student username is found", () => {

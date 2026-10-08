@@ -19,16 +19,18 @@ import { logger } from "@/lib/observability/logger";
  *
  * Allowed filenames: students.csv, teachers.csv, classes.csv
  *
- * Expected CSV format with exactly 4 headers:
- * - name (required): User's full name
- * - email (required): User's email address
- * - role (required): User role (Student or Teacher)
- * - classroom_name (required): Classroom name
+ * Expected CSV headers:
+ * - students.csv: name,role,classroom_name. Students have no email (owner decision 2026-10-08);
+ *   each new student gets a generated username and an initial password.
+ * - teachers.csv: name,email,role,classroom_name.
  *
- * Example CSV:
- * name,email,role,classroom_name
- * John Doe,john@example.com,Student,Math Class A
- * Jane Smith,jane@example.com,Teacher,Math Class A
+ * Example students.csv:
+ * name,role,classroom_name
+ * Ann Lee,student,P3A
+ *
+ * Duplicates: a teacher row is keyed by its email; a student row by its name (case and spaces
+ * ignored) in its class. A repeated row in the file, or a student already in that class of the
+ * school, is skipped and counted.
  *
  * Classroom Logic:
  * - Students: Assigned to specified classroom (created if doesn't exist)
@@ -38,6 +40,9 @@ import { logger } from "@/lib/observability/logger";
  * @param request The authenticated upload request.
  * @returns The import result or a validation error.
  */
+/** The duplicate key of a student row: the name (case and spaces ignored) in one class. */
+const studentKey = (name: string, classroomName: string) => `${name.trim().replace(/\s+/g, " ").toLowerCase()}\n${classroomName}`;
+
 export async function POST(request: NextRequest) {
   // Set once the upload is written to disk; the finally block deletes it on every exit.
   let tempFilePath: string | undefined;
@@ -176,28 +181,29 @@ export async function POST(request: NextRequest) {
       skip_empty_lines: true,
     }) as Array<{
       name: string;
-      email: string;
+      email?: string;
       role: string;
       classroom_name: string;
     }>;
+    const studentFile = filename === "students.csv";
 
     // Validate CSV headers
     if (csvData.length > 0) {
       const firstRow = csvData[0];
       const headers = Object.keys(firstRow);
-      const expectedHeaders = ["name", "email", "role", "classroom_name"];
+      const expectedHeaders = studentFile ? ["name", "role", "classroom_name"] : ["name", "email", "role", "classroom_name"];
 
       if (
-        headers.length !== 4 ||
+        headers.length !== expectedHeaders.length ||
         !expectedHeaders.every((header) => headers.includes(header))
       ) {
         return NextResponse.json(
           {
             error: "Invalid CSV format",
             details: [
-              `Expected exactly 4 headers: ${expectedHeaders.join(", ")}. Got: ${headers.join(", ")}`,
+              `Expected exactly ${expectedHeaders.length} headers: ${expectedHeaders.join(", ")}. Got: ${headers.join(", ")}`,
             ],
-            expectedFormat: "name,email,role,classroom_name",
+            expectedFormat: expectedHeaders.join(","),
           },
           { status: 400 },
         );
@@ -212,10 +218,9 @@ export async function POST(request: NextRequest) {
       userId: string;
       classroomName: string;
       role: string;
-      email: string;
     }[] = [];
     const errors: string[] = [];
-    const seenEmails = new Set<string>();
+    const seenKeys = new Set<string>();
     let skippedDuplicate = 0;
 
     // Get all roles from database (replaces Prisma `role.findMany`).
@@ -238,9 +243,8 @@ export async function POST(request: NextRequest) {
       }
 
       if (
-        !row.email ||
-        typeof row.email !== "string" ||
-        row.email.trim() === ""
+        !studentFile &&
+        (!row.email || typeof row.email !== "string" || row.email.trim() === "")
       ) {
         errors.push(
           `Row ${rowNumber}: Email is required and must be a valid string`,
@@ -257,7 +261,7 @@ export async function POST(request: NextRequest) {
 
       // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(row.email.trim())) {
+      if (!studentFile && !emailRegex.test(row.email!.trim())) {
         errors.push(`Row ${rowNumber}: Invalid email format '${row.email}'`);
         continue;
       }
@@ -293,21 +297,25 @@ export async function POST(request: NextRequest) {
         continue;
       }
 
-      // FR-3.1: the first valid row wins. Later rows repeating an email in
-      // this file are skipped and counted, not rejected.
-      const email = row.email.trim().toLowerCase();
-      if (seenEmails.has(email)) {
+      // FR-3.1: the first valid row wins. Later rows repeating a teacher's
+      // email, or a student's name in the same class, are skipped and counted.
+      const email = studentFile ? null : row.email!.trim().toLowerCase();
+      const key = email ?? studentKey(row.name, classroomName);
+      if (seenKeys.has(key)) {
         skippedDuplicate += 1;
         continue;
       }
-      seenEmails.add(email);
+      seenKeys.add(key);
 
-      // Prepare user data with default values and school assignment
+      // Prepare user data with default values and school assignment. A
+      // student has no email: the id holds the unique username until
+      // provisionStudentLogins sets the two-word one.
+      const id = crypto.randomUUID();
       const userData = {
-        id: crypto.randomUUID(),
-        username: email,
-        displayUsername: email,
-        email: email,
+        id,
+        username: email ?? id,
+        displayUsername: email ?? id,
+        email,
         name: row.name.trim(),
         role: role.toUpperCase(),
         password: null, // No password from CSV, will need to be set later
@@ -322,15 +330,9 @@ export async function POST(request: NextRequest) {
       processedUsers.push(userData);
       userRoleAssignments.push({ userId: "", roleName: role }); // userId will be filled after user creation
 
-      // Store classroom assignment for non-Admin roles. The email is
-      // lowercased so the later id mapping matches the inserted rows.
+      // Store classroom assignment for non-Admin roles.
       if ((role === "student" || role === "teacher") && classroomName) {
-        classroomAssignments.push({
-          userId: "",
-          classroomName,
-          role,
-          email: email,
-        });
+        classroomAssignments.push({ userId: id, classroomName, role });
       }
     }
 
@@ -351,7 +353,7 @@ export async function POST(request: NextRequest) {
     // re-upload of the same file succeeds instead of failing the batch.
     // This pre-filter avoids doomed inserts; the authoritative counts come
     // from returning() below, which also covers rows that lost a race.
-    const uploadEmails = processedUsers.map((userData) => userData.email);
+    const uploadEmails = processedUsers.flatMap((userData) => (userData.email ? [userData.email] : []));
     const existingEmailRows = uploadEmails.length > 0
       ? await staffDb.select({ email: users.email }).from(users)
           .where(inArray(users.email, uploadEmails))
@@ -361,8 +363,29 @@ export async function POST(request: NextRequest) {
         .filter((row) => row.email !== null)
         .map((row) => row.email!.toLowerCase()),
     );
-    const rowsToInsert = processedUsers.filter(
-      (userData) => !existingEmails.has(userData.email),
+    // FR-3.2 for students: the same name already in that class of the school.
+    const studentClassNames = [...new Set(
+      classroomAssignments.filter((a) => a.role === "student").map((a) => a.classroomName),
+    )];
+    const existingStudentRows = studentClassNames.length > 0
+      ? await globalDb.select({ name: users.name, classroomName: classrooms.name })
+          .from(classroomStudents)
+          .innerJoin(users, eq(users.id, classroomStudents.studentId))
+          .innerJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
+          .where(and(
+            inArray(classrooms.name, studentClassNames),
+            eq(users.role, "STUDENT"),
+            ...(authUser.schoolId ? [eq(classrooms.schoolId, authUser.schoolId)] : []),
+          ))
+      : [];
+    const existingStudentKeys = new Set(
+      existingStudentRows.map((row) => studentKey(row.name ?? "", row.classroomName)),
+    );
+    const classroomOf = new Map(classroomAssignments.map((a) => [a.userId, a.classroomName]));
+    const rowsToInsert = processedUsers.filter((userData) =>
+      userData.email
+        ? !existingEmails.has(userData.email)
+        : !existingStudentKeys.has(studentKey(userData.name, classroomOf.get(userData.id) ?? "")),
     );
 
     // Process users in batches
@@ -378,7 +401,7 @@ export async function POST(request: NextRequest) {
         // which also supplies the ids for role and classroom assignment.
         const insertedUsers = await staffDb.insert(users).values(batch as any)
           .onConflictDoNothing()
-          .returning({ id: users.id, email: users.email });
+          .returning({ id: users.id });
         createdUsers.push(...insertedUsers);
         batch = [];
       }
@@ -387,7 +410,7 @@ export async function POST(request: NextRequest) {
     if (batch.length > 0) {
       const insertedUsers = await staffDb.insert(users).values(batch as any)
         .onConflictDoNothing()
-        .returning({ id: users.id, email: users.email });
+        .returning({ id: users.id });
       createdUsers.push(...insertedUsers);
     }
 
@@ -396,17 +419,15 @@ export async function POST(request: NextRequest) {
     // inserted + skippedExisting + skippedDuplicate equal to the valid rows.
     const skippedExisting = processedUsers.length - createdUsers.length;
 
-    // Create user-email to user-id mapping
-    const emailToUserId = new Map(
-      createdUsers.map((user) => [user.email, user.id]),
-    );
+    // The ids of the rows actually written (each row carries its own id).
+    const createdIds = new Set<string>(createdUsers.map((user) => user.id));
 
     // Assign roles to users
     const roleAssignments: { userId: string; roleId: string }[] = [];
     for (let i = 0; i < processedUsers.length; i++) {
       const userData = processedUsers[i];
       const roleData = userRoleAssignments[i];
-      const userId = emailToUserId.get(userData.email);
+      const userId = createdIds.has(userData.id) ? userData.id : undefined;
       const roleId = roleMap.get(roleData.roleName);
 
       if (userId && roleId) {
@@ -432,23 +453,13 @@ export async function POST(request: NextRequest) {
     const studentSeeds = new Map<string, studentLogin.StudentLoginSeed & { classroomName: string | null }>();
 
     if (classroomAssignments.length > 0) {
-      // Update classroom assignments with actual user IDs
-      for (let i = 0; i < classroomAssignments.length; i++) {
-        const assignment = classroomAssignments[i];
-        const userId = emailToUserId.get(assignment.email);
-
-        if (userId) {
-          assignment.userId = userId;
-        }
-      }
-
       // Group by classroom name to avoid duplicates
       const classroomGroups = new Map<
         string,
         { userId: string; role: string }[]
       >();
       classroomAssignments.forEach((assignment) => {
-        if (!assignment.userId) return; // Skip if no userId found
+        if (!createdIds.has(assignment.userId)) return; // Skip rows that were not written
 
         if (!classroomGroups.has(assignment.classroomName)) {
           classroomGroups.set(assignment.classroomName, []);
@@ -523,12 +534,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // FR-6: a failure leaves the students with the email username. Report it to the teacher.
+    // FR-6: a failure leaves the students with the id username. Report it to the teacher.
     let studentLogins: { name: string; classroomName: string | null; username: string; initialPassword: string | null }[] = [];
     let studentLoginsFailedNames: string[] = [];
     if (studentSeeds.size > 0) {
       const nameByUserId = new Map(
-        processedUsers.map((userData) => [emailToUserId.get(userData.email), userData.name] as const),
+        processedUsers.map((userData) => [userData.id, userData.name] as const),
       );
       try {
         const { provisioned, failed } = await studentLogin.provisionStudentLogins({

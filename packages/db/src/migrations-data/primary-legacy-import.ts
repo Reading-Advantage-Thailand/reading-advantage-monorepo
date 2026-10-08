@@ -133,6 +133,25 @@ export function usernamesOf(email: string, override?: string): { username: strin
 }
 
 /**
+ * Builds the target `users` row of one legacy user. A student keeps no email: the legacy one only
+ * existed because the old system required it (owner decision 2026-10-08).
+ * @param u The legacy users row.
+ * @param role The target role.
+ * @param names The username and display username (empty for a student until `assignStudentUsernames`).
+ * @param schoolId The new school id, or null.
+ * @returns The row for the upsert.
+ */
+export function targetUserRow(u: Row, role: TargetRole, names: { username: string; displayUsername: string }, schoolId: string | null): Row {
+  const student = role === "STUDENT";
+  return {
+    id: String(u.id), username: names.username, display_username: names.displayUsername, name: u.name,
+    email: student ? null : u.email, image: u.image, role, school_id: schoolId, xp: u.xp ?? 0, level: u.level ?? 1,
+    cefr_level: u.cefrLevel ?? "A1-", password: u.password, email_verified: !student && u.email_verified ? u.createdAt : null,
+    created_at: u.createdAt, updated_at: u.updatedAt,
+  };
+}
+
+/**
  * Gives each migrated student a permanent username of two words and two digits (owner decision
  * 2026-10-08: no email, no class or grade part). A student whose target row already has such a
  * username keeps it, so a rerun renames no one.
@@ -411,12 +430,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       if (!student && seenUsernames.has(username)) { counter.skip("users", "duplicate lower(email) (D6)", id); continue; }
       if (!student) seenUsernames.add(username);
       users.add(id);
-      userRows.push({
-        id, username, display_username: displayUsername, name: u.name, email: u.email, image: u.image, role,
-        school_id: ids.get(MAP_TABLES.schools, u.school_id as string | null), xp: u.xp ?? 0, level: u.level ?? 1,
-        cefr_level: u.cefrLevel ?? "A1-", password: u.password, email_verified: u.email_verified ? u.createdAt : null,
-        created_at: u.createdAt, updated_at: u.updatedAt,
-      });
+      userRows.push(targetUserRow(u, role, { username, displayUsername }, ids.get(MAP_TABLES.schools, u.school_id as string | null)));
     }
     const studentRows = userRows.filter((row) => row.role === "STUDENT");
     const studentIds = new Set(studentRows.map((row) => String(row.id)));
@@ -424,7 +438,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     const taken = new Set([...seenUsernames, ...[...existing].filter(([id]) => !studentIds.has(id)).map(([, name]) => name)]);
     const studentNames = assignStudentUsernames([...studentIds], existing, taken);
     for (const row of studentRows) row.username = row.display_username = studentNames.get(String(row.id));
-    notes.push(`${studentRows.length} students have a username of two words and two digits; the email is never a student username (owner decision 2026-10-08).`);
+    notes.push(`${studentRows.length} students have a username of two words and two digits; students keep no email (owner decisions 2026-10-08).`);
     counter.table("users").written += await upsert(tx, "users", userRows);
 
     const legacyAccounts = await legacy<Row[]>`select a.id, a.user_id, a.provider_id, a.password, a.created_at, a.updated_at, u.password as user_password from accounts a join users u on u.id = a.user_id`;

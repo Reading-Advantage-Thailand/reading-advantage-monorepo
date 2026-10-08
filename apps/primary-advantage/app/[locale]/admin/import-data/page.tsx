@@ -196,16 +196,16 @@ export default function ImportDataPage() {
     students: {
       title: t("format.students.title"),
       description: t("format.students.description"),
+      // Students have no email (owner decision 2026-10-08).
       headers: [
         t("format.headers.name"),
-        t("format.headers.email"),
         t("format.headers.classroomName"),
         t("format.headers.role"),
       ],
       example: [
-        ["John Doe", "john.doe@email.com", "Classroom 1", "student"],
-        ["Jane Smith", "jane.smith@email.com", "Classroom 2", "student"],
-        ["Bob Johnson", "bob.johnson@email.com", "Classroom 3", "student"],
+        ["John Doe", "Classroom 1", "student"],
+        ["Jane Smith", "Classroom 2", "student"],
+        ["Bob Johnson", "Classroom 3", "student"],
       ],
       requirements: [
         t("format.students.req1"),
@@ -420,7 +420,9 @@ export default function ImportDataPage() {
                             <TableRow>
                               <TableHead>{t("preview.columns.name")}</TableHead>
                               <TableHead>
-                                {t("preview.columns.email")}
+                                {activeTab === "students"
+                                  ? t("preview.columns.classroom")
+                                  : t("preview.columns.email")}
                               </TableHead>
                               <TableHead>{t("preview.columns.role")}</TableHead>
                             </TableRow>
@@ -429,7 +431,9 @@ export default function ImportDataPage() {
                             {previewData.map((row, index) => (
                               <TableRow key={index}>
                                 <TableCell>{row.name}</TableCell>
-                                <TableCell>{row.email}</TableCell>
+                                <TableCell>
+                                  {activeTab === "students" ? row.classroom_name : row.email}
+                                </TableCell>
                                 <TableCell>{row.role}</TableCell>
                               </TableRow>
                             ))}

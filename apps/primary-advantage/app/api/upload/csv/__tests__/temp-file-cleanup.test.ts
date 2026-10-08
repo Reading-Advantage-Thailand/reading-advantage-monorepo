@@ -94,9 +94,9 @@ describe("CSV upload temp file cleanup", () => {
 
   it("deletes the temp file when row validation fails with 400", async () => {
     mocks.parse.mockReturnValue([
-      { name: "Student One", email: "not-an-email", role: "student", classroom_name: "Class A" },
+      { name: "Teacher One", email: "not-an-email", role: "teacher", classroom_name: "Class A" },
     ]);
-    const response = await POST(uploadRequest("students.csv"));
+    const response = await POST(uploadRequest("teachers.csv"));
     expect(response.status).toBe(400);
     expect((await response.json()).error).toBe("Validation failed");
     expectTempFileDeleted();

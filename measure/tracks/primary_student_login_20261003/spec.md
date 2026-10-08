@@ -43,6 +43,8 @@ and cannot manage a long password. Classes have 20-30 students on shared devices
   Generate usernames at roster import. Print them on the class sheet. A username is two simple
   English words and two digits (for example `bluetiger47`), set once and kept for years: no email,
   no class or grade part (owner decision 2026-10-08; the earlier class-prefix rule `p3a12` is gone).
+  Students have no email: the student import (`students.csv`: `name,role,classroom_name`) asks for
+  none, and migrated students keep none (owner decision 2026-10-08).
 - FR-7: Class setting: picture password on or off. Default on.
 - FR-8: Thai and English copy. Large tap targets (48 px minimum). Works at 768 px
   tablet and 375 px phone.
