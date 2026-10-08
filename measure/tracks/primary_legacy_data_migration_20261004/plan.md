@@ -34,7 +34,7 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 - [x] Run again with the `--roles`, `--usernames`, and `--teachers` answers (owner decisions 2026-10-07; 0fd3f7cab; two runs into `primary_etl_20261007`, identical counts)
 - [x] Rehearsal 1, local part (2026-10-08): fresh export into `primary_rehearsal1_20261008`; two ETL defects fixed (7bb6b1065); browser check 22 of 22: [rehearsal-1-20261008.md](./rehearsal-1-20261008.md)
 - [x] Rehearsal 1, cloud part (2026-10-08): `primary_v2` on Cloud SQL, `PRIMARY_V2_DATABASE_URL`, ETL over the proxy (owner), deploy without traffic (revision 00128-pac, tag `rehearsal1`), browser check 25 of 25 at the tag URL
-- [~] Rehearsal 2 (started 2026-10-08): backup and the cutover image done; new `primary_v2`, ETL, hand-out, browser check wait for the owner ([rehearsal-2-20261010.md](./rehearsal-2-20261010.md))
+- [x] Rehearsal 2 (2026-10-08 to 2026-10-09 06:05 Bangkok): pass. Cloud ETL 2 min 22 s, Tutor read check MATCH 625, sample 5/5; browser check C10 form 18/18 and real school 25/25 on the cutover image `00129-xin`; local copy for graph and Workbooks ([rehearsal-2-20261010.md](./rehearsal-2-20261010.md))
 - [ ] Run into the cutover target (2026-10-11)
 
 ## Phase 3: Old article links (FR-4)

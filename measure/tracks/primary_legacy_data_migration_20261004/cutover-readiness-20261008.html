@@ -32,7 +32,7 @@ h3 { font-size: 15px; margin: 18px 0 6px; }
 p { margin: 6px 0 10px; }
 .sub { color: var(--muted); margin: 0 0 20px; }
 code { font-family: var(--mono); font-size: 12.5px; background: var(--line); padding: 1px 5px; border-radius: 4px; word-break: break-word; }
-.verdict { background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--warn); border-radius: 10px; padding: 18px 20px; }
+.verdict { background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--ok); border-radius: 10px; padding: 18px 20px; }
 .verdict h2 { border: 0; margin: 0 0 6px; padding: 0; font-size: 20px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 16px 0; }
 .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
@@ -61,44 +61,53 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <body>
 <main>
 <h1>Primary Advantage cutover readiness</h1>
-<p class="sub">Report date: Thursday 2026-10-08 (evening, Bangkok). Cutover: Sunday 2026-10-11, evening. Source of the steps: <code>docs/deployment/primary-cutover-migration-spec.md</code> 1.8 and <code>cutover-commands-20261011.md</code> in this folder.</p>
+<p class="sub">Report date: Thursday 2026-10-08 (evening, Bangkok); updated Friday 2026-10-09 (morning, Bangkok) after rehearsal 2. Cutover: Sunday 2026-10-11, evening. Source of the steps: <code>docs/deployment/primary-cutover-migration-spec.md</code> 1.8 and <code>cutover-commands-20261011.md</code> in this folder.</p>
 
 <section class="verdict">
-<h2>Verdict: not ready to cut over yet. The 4 decisions are made; rehearsal 2 is half done and waits for 2 short owner steps</h2>
-<p>The new app, the data move, and the sign-in flows passed in the cloud today. The cloud revision passed the full go/no-go browser check (25 of 25) against the migrated data in Cloud SQL. Live traffic stays on the legacy app until the cutover.</p>
-<p>The data move now runs inside GCP in 2 minutes 20 seconds (through this machine's network tunnel it took more than 2 hours). Rehearsal 2 started on Thursday evening: the backup and the cutover image are done. The new empty database, the hand-out list, and the browser check wait for you (section 0). You made the 4 decisions on 2026-10-09 (section 4).</p>
+<h2>Verdict: ready to cut over on Sunday 2026-10-11. Rehearsal 2 passed; only the Sunday steps are left</h2>
+<p>Rehearsal 2 ran every cutover step on the frozen build (<code>cfef79c88</code>), with an empty <code>primary_v2</code>: backup, ETL in GCP, hand-out list, the cutover image, and the go/no-go browser check. All steps passed. The C10 check with the demo school passed 18 of 18, and the real-school check passed 25 of 25. Live traffic stays on the legacy app until your go on Sunday.</p>
+<p>On Sunday the cutover deploys the image that rehearsal 2 checked. There is no new build. Do not change the Primary build inputs before Sunday. A change needs a new rehearsal. Saturday is free as a buffer day. You give the start hour for Sunday (section 4).</p>
 </section>
 
 <div class="grid">
-  <div class="stat"><b>25 / 25</b><span>browser checks pass on the cloud revision (tag <code>rehearsal1</code>)</span></div>
+  <div class="stat"><b>18 / 18 + 25 / 25</b><span>browser checks pass on the cutover image (tag <code>rehearsal2</code>): demo school (C10) and a real school</span></div>
   <div class="stat"><b>5 / 5</b><span>public game and skin files answer 200 from the cloud image</span></div>
   <div class="stat"><b>625 MATCH</b><span>Tutor read check: all published articles, all 5 reads</span></div>
   <div class="stat"><b>28 / 28</b><span>printed book QR ids open a migrated article</span></div>
   <div class="stat"><b>5 / 5</b><span>sampled students match the legacy data (XP, reading, cards)</span></div>
   <div class="stat"><b>643</b><span>students moved; each has a permanent two-word username and no email</span></div>
-  <div class="stat"><b>2 min 20 s</b><span>whole ETL build in GCP (ETL 5 s, Tutor read check 17 s)</span></div>
+  <div class="stat"><b>2 min 22 s</b><span>whole rehearsal 2 ETL build in GCP on the empty database (ETL 10 s, Tutor read check 20 s)</span></div>
   <div class="stat"><b>1334 / 1334</b><span>Primary app tests pass (223 files, second full run)</span></div>
 </div>
 
-<h2>0. Rehearsal 2 now: what waits for you</h2>
+<h2>0. Rehearsal 2: result</h2>
+<p>Times in UTC on 2026-10-08 (Bangkok: 2026-10-09, add 7 hours). Record: <code>rehearsal-2-20261010.md</code>.</p>
 <div class="table-wrap"><table>
 <tr><th>#</th><th>Step</th><th>Status</th></tr>
 <tr><td>R1</td><td>Backup of the legacy database (39 s)</td><td><span class="chip ok">done</span></td></tr>
-<tr><td>R2</td><td>New empty <code>primary_v2</code>. The tool refused the drop for me, so you run it or allow it:<br><code>gcloud sql databases delete primary_v2 --instance=cloud-sql --project=reading-advantage --quiet</code><br><code>gcloud sql databases create primary_v2 --instance=cloud-sql --project=reading-advantage</code></td><td><span class="chip warn">owner</span></td></tr>
+<tr><td>R2</td><td>You dropped and created <code>primary_v2</code> (22:44)</td><td><span class="chip ok">done</span></td></tr>
 <tr><td>R3, R6</td><td>Frozen build context <code>cfef79c88</code>; cutover image built in 11 min and deployed with no traffic (revision <code>00129-xin</code>, tag <code>rehearsal2</code>); 5 public files answer 200</td><td><span class="chip ok">done</span></td></tr>
-<tr><td>R4</td><td>ETL in Cloud Build on the empty database (about 3 min). I start it when R2 is done.</td><td><span class="chip info">after R2</span></td></tr>
-<tr><td>R5</td><td><code>bash ~/Desktop/primary-cutover-inputs/after-etl.sh rehearsal2</code> (about 1 min)</td><td><span class="chip warn">owner, after R4</span></td></tr>
-<tr><td>R7, R8</td><td>Browser check at the <code>rehearsal2</code> tag URL; local copy for the graph and Workbooks checks</td><td><span class="chip info">after R5</span></td></tr>
+<tr><td>R4</td><td>ETL in Cloud Build <code>43cbc2dc</code> (22:45 to 22:48, 2 min 22 s): guard, migrate, doctor 6 s; ETL 10 s; Tutor read check 20 s (625 articles, MATCH); student sample 5 of 5. The counts are the same as in rehearsal 1.</td><td><span class="chip ok">pass</span></td></tr>
+<tr><td>R5</td><td>You ran <code>after-etl.sh rehearsal2</code> (55 s): 21 temporary passwords, printed links 28 of 28</td><td><span class="chip ok">done</span></td></tr>
+<tr><td>R7</td><td>Browser check at the <code>rehearsal2</code> URL. C10 form with the demo teacher, the demo admin, and the demo class: 18 of 18. A real-school teacher (class of 30), the school admin, and a support system user: 25 of 25.</td><td><span class="chip ok">pass</span></td></tr>
+<tr><td>R8</td><td>Local copy <code>primary_rehearsal2_20261010</code> (export 22 s, restore 7 s). graph runs its backfills on it now, and Workbooks runs its lesson check. Their results do not block Sunday.</td><td><span class="chip ok">done</span></td></tr>
 </table></div>
+<div class="card">
+<h3>Two findings, no blocker</h3>
+<ul>
+<li>The demo class shows "Student (." five times on the student name list. The five demo students have the first name "Student", so the list adds the first letter of the last word, which is "(". A student of the demo class picks by position. No real class has two students with the same name on the list. After the cutover you can rename the five demo students in the app (a data change, no build).</li>
+<li>The check script now runs again safely. It signs in with the password that it kept, and it continues a class that is still open. If C10 stops partway on Sunday, I run it again.</li>
+</ul>
+</div>
 
 <h2>1. Timeline</h2>
 <div class="timeline">
   <div class="card"><h3>Thu 2026-10-08 <span class="chip ok">done</span></h3>
     <ul><li>Rehearsal 1, local and cloud parts.</li><li>Cloud build and deploy without traffic.</li><li>Browser check 25 of 25.</li><li>Spec 1.8, command sheet.</li></ul></div>
-  <div class="card"><h3>Fri 2026-10-09 <span class="chip warn">owner</span></h3>
-    <ul><li>Owner decisions 1 to 4: made (section 4).</li><li>Rehearsal 2: new <code>primary_v2</code> (R2) and <code>after-etl.sh</code> (R5).</li><li>Owner gives the start hour for Saturday and Sunday.</li></ul></div>
-  <div class="card"><h3>Sat 2026-10-10 <span class="chip info">rehearsal 2</span></h3>
-    <ul><li>New backup, new <code>primary_v2</code>, ETL in Cloud Build.</li><li>Owner runs <code>after-etl.sh rehearsal2</code> (about 1 minute).</li><li>The cutover image is built and checked.</li><li>Local copy for the graph and Workbooks checks.</li></ul></div>
+  <div class="card"><h3>Fri 2026-10-09 <span class="chip ok">done</span></h3>
+    <ul><li>Owner decisions 1 to 4: made (section 4).</li><li>Rehearsal 2: pass at 06:05 Bangkok (section 0).</li><li>Owner gives the start hour for Sunday.</li></ul></div>
+  <div class="card"><h3>Sat 2026-10-10 <span class="chip info">buffer</span></h3>
+    <ul><li>No planned step. Rehearsal 2 ran early.</li><li>No change to the Primary build inputs.</li><li>graph and Workbooks finish their checks on the local copy.</li></ul></div>
   <div class="card"><h3>Sun 2026-10-11 <span class="chip info">cutover</span></h3>
     <ul><li>Merge integration into master; owner pushes.</li><li>Final backup, ETL, hand-out list.</li><li>Rehearsal 2 image, check, then traffic.</li><li>Teachers print the class sheets.</li></ul></div>
 </div>
@@ -106,22 +115,22 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <h2>2. Go/no-go checklist (spec §10)</h2>
 <div class="table-wrap"><table>
 <tr><th>Item</th><th>Rehearsal 1 local</th><th>Rehearsal 1 cloud</th><th>Rehearsal 2</th><th>Production</th></tr>
-<tr><td>Login 1: a teacher signs in with the temporary password, must set a new password, signs in again</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span> 3 teachers</td><td>Sat</td><td>Sun</td></tr>
-<tr><td>Login 2: the temporary password stops working after the change</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
-<tr><td>Login 3: every migrated teacher has an account; the team holds the hand-out list</td><td><span class="chip ok">pass</span> 21 staff</td><td><span class="chip ok">pass</span> 21 staff</td><td>Sat</td><td>Sun</td></tr>
-<tr><td>Login 4: a student signs in by class code and name; a new code works, the old code stops</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span> 30-student class</td><td>Sat</td><td>Sun</td></tr>
-<tr><td>Login 5: the teacher ends the class and makes the class sheet; a student signs in at home with the sheet username and password (375 px)</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span> 30 rows</td><td>Sat</td><td>Sun</td></tr>
-<tr><td>One admin and one system user (forced change)</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
-<tr><td>Old article URLs: 27 unique ids by script; the printed writing QR</td><td><span class="chip ok">28 / 28</span></td><td><span class="chip ok">28 / 28</span>, QR pass</td><td>Sat</td><td>Sun</td></tr>
-<tr><td>At least five scanned printed QR codes (phone camera)</td><td colspan="2"><span class="chip warn">owner</span> the script opens the same URLs; a camera scan needs a person</td><td>Sat (owner)</td><td>Sun (owner)</td></tr>
-<tr><td>Five sampled students match the legacy data</td><td><span class="chip ok">5 / 5</span></td><td><span class="chip ok">5 / 5</span></td><td>Sat</td><td>Sun</td></tr>
-<tr><td>A teacher sees the right classes and students</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
-<tr><td>Reconciliation report: no unexplained skips</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
-<tr><td>Article pictures (legacy key) on the story page and the Read list</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
+<tr><td>Login 1: a teacher signs in with the temporary password, must set a new password, signs in again</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span> 3 teachers</td><td><span class="chip ok">pass</span> demo + 1 teacher</td><td>Sun</td></tr>
+<tr><td>Login 2: the temporary password stops working after the change</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sun</td></tr>
+<tr><td>Login 3: every migrated teacher has an account; the team holds the hand-out list</td><td><span class="chip ok">pass</span> 21 staff</td><td><span class="chip ok">pass</span> 21 staff</td><td><span class="chip ok">pass</span> 21 staff</td><td>Sun</td></tr>
+<tr><td>Login 4: a student signs in by class code and name; a new code works, the old code stops</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span> 30-student class</td><td><span class="chip ok">pass</span> 30 and 5 students</td><td>Sun</td></tr>
+<tr><td>Login 5: the teacher ends the class and makes the class sheet; a student signs in at home with the sheet username and password (375 px)</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span> 30 rows</td><td><span class="chip ok">pass</span> 30 and 5 rows</td><td>Sun</td></tr>
+<tr><td>One admin and one system user (forced change)</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sun</td></tr>
+<tr><td>Old article URLs: 27 unique ids by script; the printed writing QR</td><td><span class="chip ok">28 / 28</span></td><td><span class="chip ok">28 / 28</span>, QR pass</td><td><span class="chip ok">28 / 28</span>, QR pass</td><td>Sun</td></tr>
+<tr><td>At least five scanned printed QR codes (phone camera)</td><td colspan="2"><span class="chip warn">owner</span> the script opens the same URLs; a camera scan needs a person</td><td>not possible: the printed QR codes open <code>primary.reading-advantage.com</code></td><td>Sun (owner, after C11)</td></tr>
+<tr><td>Five sampled students match the legacy data</td><td><span class="chip ok">5 / 5</span></td><td><span class="chip ok">5 / 5</span></td><td><span class="chip ok">5 / 5</span></td><td>Sun</td></tr>
+<tr><td>A teacher sees the right classes and students</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sun</td></tr>
+<tr><td>Reconciliation report: no unexplained skips</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sun</td></tr>
+<tr><td>Article pictures (legacy key) on the story page and the Read list</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sun</td></tr>
 <tr><td>Tutor opens 3 Origins 3.1 lessons and 1 Origins 2 lesson through <code>tutor_compat</code></td><td colspan="2"><span class="chip ok">read check MATCH 625</span>; the Tutor app itself on the new database: <span class="chip warn">not done</span></td><td colspan="2">Decision 4: Tutor keeps the legacy database until its staging check passes (first week)</td></tr>
 </table></div>
 
-<h2>3. What happened today</h2>
+<h2>3. What happened on 2026-10-08</h2>
 <h3>Cloud part of rehearsal 1</h3>
 <ul>
 <li>The migration user needed <code>SET</code> membership in <code>durable_job_audit_owner</code> on Cloud SQL. Run 1 failed on this; run 2 passed after a role step (spec §8 step 2). The grant is instance-wide and stays.</li>
@@ -164,10 +173,11 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <div class="card">
 <h3>Also needed from you</h3>
 <ul>
-<li>The start hour on Saturday and on Sunday. You run <code>after-etl.sh</code> (about 1 minute) after each ETL.</li>
+<li>The start hour on Sunday. You run <code>after-etl.sh cutover</code> (about 1 minute) after the ETL (C8).</li>
 <li>Sunday: merge <code>primary-parity-integration</code> into <code>master</code> with me (no conflict today), then push both branches.</li>
 <li>Sunday: your go before the traffic switch; scan five printed QR codes with a phone.</li>
 <li>After the switch: give each teacher their line of the hand-out list; tell the teachers to print the class sheets.</li>
+<li>After the cutover, your choice: rename the five demo students in the app, or keep them (finding 1 in section 0).</li>
 </ul>
 </div>
 
@@ -199,7 +209,9 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <tr><td>Students cannot sign in at home until their teacher prints the class sheet. The legacy class code worked at all times.</td><td><span class="chip warn">medium</span></td><td>Runbook step 10; the team reminds each teacher. In class, the class code and the name work while the teacher has the class open.</td></tr>
 <tr><td>This machine's network tunnel: slow database round trips, DNS drops.</td><td><span class="chip warn">medium</span></td><td>The ETL runs inside GCP. The browser script retries page loads. The owner's phone check does not use this machine.</td></tr>
 <tr><td>This machine has 7 GB of memory; heavy jobs kill Postgres.</td><td><span class="chip info">low</span></td><td>Peers run no heavy job during the checks (graph and Workbooks agreed).</td></tr>
-<tr><td>The Cloud Build ETL is new.</td><td><span class="chip info">low</span></td><td>It passed today in asia-southeast1. Rehearsal 2 runs it on an empty database. Always submit it with <code>--region=asia-southeast1</code>.</td></tr>
+<tr><td>The Cloud Build ETL is new.</td><td><span class="chip info">low</span></td><td>It passed twice in asia-southeast1, the second time on an empty database in rehearsal 2 (2 min 22 s). Always submit it with <code>--region=asia-southeast1</code>.</td></tr>
+<tr><td>C6 can stop if an idle rehearsal instance still holds a connection to <code>primary_v2</code>.</td><td><span class="chip info">low</span></td><td>The drop worked in rehearsal 2. If it stops, wait 15 minutes for the idle instances to stop, then run C6 again.</td></tr>
+<tr><td>Cleanup of old images deletes the cutover image.</td><td><span class="chip info">low</span></td><td>The repository deletes images older than 30 days and keeps the 5 newest. The image was built on 2026-10-08, so it stays until 2026-11-07 at the earliest.</td></tr>
 <tr><td>A write to the legacy database after the final backup is lost (decision 1: announcement only).</td><td><span class="chip info">low</span></td><td>The announcement in C1; students are on the school break; C4 to C11 take about 30 minutes. Workbooks confirmed: no content write from 2026-10-11 12:00 Bangkok.</td></tr>
 </table></div>
 
@@ -212,7 +224,7 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <li>Owner: the Listen to English game on real phones (saved words games).</li>
 </ul>
 
-<footer>Made by the monorepo session on 2026-10-08. Updated on 2026-10-09 with the 4 owner decisions. The report holds no password and no personal name.</footer>
+<footer>Made by the monorepo session on 2026-10-08. Updated on 2026-10-09 with the 4 owner decisions and the rehearsal 2 result. The report holds no password and no personal name.</footer>
 </main>
 </body>
 </html>
