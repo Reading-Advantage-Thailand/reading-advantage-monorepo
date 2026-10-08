@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { sql } from "drizzle-orm";
+import { isStudentUsername } from "@reading-advantage/db";
 import { createTestDb, type TestDb } from "./helpers/testDb";
 
 vi.mock("@reading-advantage/db", async (importOriginal) => {
@@ -247,16 +248,17 @@ describe("createStudent generated login (FR-6)", () => {
     await harness.db.execute(sql`INSERT INTO classrooms (id, name, school_id, teacher_id) VALUES (${classId}, ${name}, ${SCHOOL_A}, 'teach')`);
   }
 
-  it("gives a class-based username and an initial password when none is given", async () => {
+  it("gives a permanent two-word username and an initial password when none is given", async () => {
     await seedClass("P3A");
     const first = await createStudent({ name: "Ann Lee", email: "ann@x.test", cefrLevel: "A1", classroomId: classId, userWithRoles: sessionAdmin });
     const second = await createStudent({ name: "Bo Kim", email: "bo@x.test", cefrLevel: "A1", classroomId: classId, userWithRoles: sessionAdmin });
-    expect(first.credentials?.username).toBe("p3a1");
-    expect(second.credentials?.username).toBe("p3a2");
+    expect(isStudentUsername(first.credentials!.username)).toBe(true);
+    expect(isStudentUsername(second.credentials!.username)).toBe(true);
+    expect(first.credentials!.username).not.toBe(second.credentials!.username);
     expect(first.credentials?.initialPassword).toMatch(/^[a-z0-9]{8}$/);
     const rows = await harness.db.execute(sql`SELECT u.username, a.password FROM users u JOIN accounts a ON a.user_id = u.id WHERE u.email = 'ann@x.test'`);
     const row = rows.rows[0] as { username: string; password: string };
-    expect(row.username).toBe("p3a1");
+    expect(row.username).toBe(first.credentials!.username);
     expect(row.password).toBe(`hash:${first.credentials!.initialPassword}`);
     const cred = await harness.db.execute(sql`SELECT c.school_id FROM primary_student_credentials c JOIN users u ON u.id = c.user_id WHERE u.email = 'ann@x.test'`);
     expect(cred.rows).toHaveLength(1);
@@ -264,7 +266,8 @@ describe("createStudent generated login (FR-6)", () => {
 
   it("keeps a password the admin typed and returns no initial password", async () => {
     const result = await createStudent({ name: "Cy", email: "cy@x.test", cefrLevel: "A1", password: "Valid-pass-123", userWithRoles: sessionAdmin });
-    expect(result.credentials).toEqual({ username: "student1", initialPassword: null });
+    expect(result.credentials?.initialPassword).toBeNull();
+    expect(isStudentUsername(result.credentials!.username)).toBe(true);
     const rows = await harness.db.execute(sql`SELECT a.password FROM users u JOIN accounts a ON a.user_id = u.id WHERE u.email = 'cy@x.test'`);
     expect((rows.rows[0] as { password: string }).password).toBe("hash:Valid-pass-123");
   });

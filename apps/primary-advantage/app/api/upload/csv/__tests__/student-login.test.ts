@@ -131,7 +131,7 @@ describe("CSV upload student login generation (FR-6)", () => {
           ? [{ id: "class-1", name: "P3A", schoolId: SESSION_SCHOOL }]
           : [],
     );
-    mocks.provision.mockResolvedValue({ provisioned: [{ userId: "user-1", username: "p3a1", initialPassword: "abcd2345" }], failed: [] });
+    mocks.provision.mockResolvedValue({ provisioned: [{ userId: "user-1", username: "bluetiger47", initialPassword: "abcd2345" }], failed: [] });
 
     const response = await POST(uploadRequest("students.csv"));
 
@@ -143,7 +143,7 @@ describe("CSV upload student login generation (FR-6)", () => {
       }),
     );
     expect((await response.json()).studentLogins).toEqual([
-      { name: "Ann Lee", classroomName: "P3A", username: "p3a1", initialPassword: "abcd2345" },
+      { name: "Ann Lee", classroomName: "P3A", username: "bluetiger47", initialPassword: "abcd2345" },
     ]);
   });
 

@@ -13,6 +13,7 @@
  */
 import { randomUUID } from "node:crypto";
 import type postgres from "postgres";
+import { generateStudentUsername, isStudentUsername } from "../student-usernames.js";
 
 type Sql = postgres.Sql;
 type Tx = postgres.TransactionSql;
@@ -129,6 +130,41 @@ export function mapRole(role: unknown, overrides: Record<string, TargetRole | nu
 export function usernamesOf(email: string, override?: string): { username: string; displayUsername: string } {
   if (override?.trim()) return { username: override.trim().toLowerCase(), displayUsername: override.trim() };
   return { username: email.trim().toLowerCase(), displayUsername: email.trim() };
+}
+
+/**
+ * Gives each migrated student a permanent username of two words and two digits (owner decision
+ * 2026-10-08: no email, no class or grade part). A student whose target row already has such a
+ * username keeps it, so a rerun renames no one.
+ * @param studentIds The ids of the migrated students.
+ * @param existing The username of each user already in the target (user id to username).
+ * @param taken The usernames of all other users. The function adds each name it gives.
+ * @param pick Returns a random integer below the given bound. Tests replace it.
+ * @returns The username of each student (user id to username).
+ * @throws When 50 tries in a row find no free username for one student.
+ */
+export function assignStudentUsernames(
+  studentIds: string[],
+  existing: Map<string, string>,
+  taken: Set<string>,
+  pick?: (max: number) => number,
+): Map<string, string> {
+  const names = new Map<string, string>();
+  for (const id of studentIds) {
+    const kept = existing.get(id);
+    if (kept && isStudentUsername(kept)) { names.set(id, kept); taken.add(kept); }
+  }
+  for (const id of studentIds) {
+    if (names.has(id)) continue;
+    let name = generateStudentUsername(pick);
+    for (let tries = 1; taken.has(name); tries++) {
+      if (tries >= 50) throw new Error("No free student username after 50 tries.");
+      name = generateStudentUsername(pick);
+    }
+    taken.add(name);
+    names.set(id, name);
+  }
+  return names;
 }
 
 /** Parses a legacy classroom grade text into an integer, or null when it is not a number. */
@@ -367,11 +403,13 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       if (roleOverrides?.[id] === null) { counter.skip("users", "not moved (owner decision)", id); continue; }
       const role = mapRole(u.role, roleOverrides, id);
       if (!role) { counter.skip("users", `role '${String(u.role)}' needs an owner assignment (D9)`, id); continue; }
-      if (!u.email) { counter.skip("users", "no email, so no username (D6)", id); continue; }
-      const { username, displayUsername } = usernamesOf(String(u.email), usernameOverrides[id]);
-      if (usernameOverrides[id]) counter.skip("users", "username set by the owner (no email part)", id);
-      if (seenUsernames.has(username)) { counter.skip("users", "duplicate lower(email) (D6)", id); continue; }
-      seenUsernames.add(username);
+      // Students get a two-word username after this loop; the email never becomes a student username.
+      const student = role === "STUDENT";
+      if (!student && !u.email) { counter.skip("users", "no email, so no username (D6)", id); continue; }
+      const { username, displayUsername } = student ? { username: "", displayUsername: "" } : usernamesOf(String(u.email), usernameOverrides[id]);
+      if (!student && usernameOverrides[id]) counter.skip("users", "username set by the owner (no email part)", id);
+      if (!student && seenUsernames.has(username)) { counter.skip("users", "duplicate lower(email) (D6)", id); continue; }
+      if (!student) seenUsernames.add(username);
       users.add(id);
       userRows.push({
         id, username, display_username: displayUsername, name: u.name, email: u.email, image: u.image, role,
@@ -380,6 +418,13 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
         created_at: u.createdAt, updated_at: u.updatedAt,
       });
     }
+    const studentRows = userRows.filter((row) => row.role === "STUDENT");
+    const studentIds = new Set(studentRows.map((row) => String(row.id)));
+    const existing = new Map((await tx<Row[]>`select id, username from users`).map((row) => [String(row.id), String(row.username)] as const));
+    const taken = new Set([...seenUsernames, ...[...existing].filter(([id]) => !studentIds.has(id)).map(([, name]) => name)]);
+    const studentNames = assignStudentUsernames([...studentIds], existing, taken);
+    for (const row of studentRows) row.username = row.display_username = studentNames.get(String(row.id));
+    notes.push(`${studentRows.length} students have a username of two words and two digits; the email is never a student username (owner decision 2026-10-08).`);
     counter.table("users").written += await upsert(tx, "users", userRows);
 
     const legacyAccounts = await legacy<Row[]>`select a.id, a.user_id, a.provider_id, a.password, a.created_at, a.updated_at, u.password as user_password from accounts a join users u on u.id = a.user_id`;

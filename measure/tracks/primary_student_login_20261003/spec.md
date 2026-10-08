@@ -40,7 +40,9 @@ and cannot manage a long password. Classes have 20-30 students on shared devices
 - FR-5: QR card print page (print CSS, 8 cards per A4 page). Rotating a card
   invalidates the old token.
 - FR-6: Username/password sign-in on a separate form, with the existing lockout rules.
-  Generate usernames at roster import. Print them on the class sheet.
+  Generate usernames at roster import. Print them on the class sheet. A username is two simple
+  English words and two digits (for example `bluetiger47`), set once and kept for years: no email,
+  no class or grade part (owner decision 2026-10-08; the earlier class-prefix rule `p3a12` is gone).
 - FR-7: Class setting: picture password on or off. Default on.
 - FR-8: Thai and English copy. Large tap targets (48 px minimum). Works at 768 px
   tablet and 375 px phone.
@@ -94,7 +96,8 @@ picture hash, failed count, locked until, card token hash, rotated at),
 - School-wide QR or code block by one student (security review M4): 30 failed card scans or 150
   wrong codes from a shared school IP block that path for the school for 10 minutes. Owner review
   is pending (option: a device cookie in the limit key).
-- Guessable student usernames (security review L2): `p3a12`, `student1`. An internet attacker can
+- Guessable student usernames (security review L2), now smaller: the class-prefix names (`p3a12`) are
+  gone; a random two-word name has about 880,000 choices. Earlier text: `p3a12`, `student1`. An internet attacker can
   lock the home sign-in of many students with 5 wrong passwords each. Owner review is pending
   (option: a random part in each username; FR-6 asks for readable usernames).
 - QR cards now need an open class session in one of the student's classes (security review M2,

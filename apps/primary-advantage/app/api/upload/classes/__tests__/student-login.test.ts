@@ -120,7 +120,7 @@ describe("combined CSV upload student login generation (FR-6)", () => {
 
   it("generates a username and password for a student created by the upload", async () => {
     mocks.provision.mockImplementation(async ({ students }) => ({
-      provisioned: students.map((s: { userId: string }) => ({ userId: s.userId, username: "classa1", initialPassword: "abcd2345" })),
+      provisioned: students.map((s: { userId: string }) => ({ userId: s.userId, username: "redpanda12", initialPassword: "abcd2345" })),
       failed: [],
     }));
     const response = await uploadStudent((id) => id);
@@ -133,7 +133,7 @@ describe("combined CSV upload student login generation (FR-6)", () => {
       }),
     );
     expect((await response.json()).studentLogins).toEqual([
-      { name: "Student One", classroomName: "Class A", username: "classa1", initialPassword: "abcd2345" },
+      { name: "Student One", classroomName: "Class A", username: "redpanda12", initialPassword: "abcd2345" },
     ]);
   });
 

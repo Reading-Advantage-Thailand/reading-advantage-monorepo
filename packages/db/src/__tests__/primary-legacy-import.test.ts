@@ -20,6 +20,7 @@ import {
   renderReport,
   reviewCountsOf,
   usernamesOf,
+  assignStudentUsernames,
   type LegacyArticle,
 } from "../migrations-data/primary-legacy-import.js";
 
@@ -39,6 +40,22 @@ describe("primary legacy import transforms", () => {
     expect(usernamesOf(" Kru.Nok@School.ac.th ")).toEqual({ username: "kru.nok@school.ac.th", displayUsername: "Kru.Nok@School.ac.th" });
     expect(usernamesOf("Support0@gmail.com", " Support0 ")).toEqual({ username: "support0", displayUsername: "Support0" });
     expect(usernamesOf("support0@gmail.com", " ")).toEqual({ username: "support0@gmail.com", displayUsername: "support0@gmail.com" });
+  });
+
+  it("gives students a two-word username, keeps one from an earlier run, and skips taken names", () => {
+    const existing = new Map([["s1", "redkoala42"], ["s2", "kid.12@gmail.com"], ["t1", "kru@school.ac.th"]]);
+    const taken = new Set(["kru@school.ac.th", "bluepanda11"]);
+    let n = 0;
+    const pick = () => (n++ < 3 ? 1 : 2); // first try bluepanda11 (taken), then greenkoala12
+    const names = assignStudentUsernames(["s1", "s2"], existing, taken, pick);
+    expect(names.get("s1")).toBe("redkoala42");
+    expect(names.get("s2")).toBe("greenkoala12");
+    expect(taken).toContain("greenkoala12");
+    expect([...names.values()].some((name) => name.includes("@"))).toBe(false);
+  });
+
+  it("stops when no free student username is found", () => {
+    expect(() => assignStudentUsernames(["s1"], new Map(), new Set(["bluepanda11"]), () => 1)).toThrow(/50 tries/);
   });
 
   it("reads a legacy timestamp as UTC in any process time zone", () => {

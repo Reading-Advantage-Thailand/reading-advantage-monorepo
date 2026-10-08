@@ -982,7 +982,7 @@ export async function POST(request: NextRequest) {
             }),
           );
           const nameByUserId = new Map(processedUsers.map((userData) => [emailToUserId.get(userData.email), userData.name] as const));
-          const seeds = new Map<string, studentLogin.StudentLoginSeed>();
+          const seeds = new Map<string, studentLogin.StudentLoginSeed & { classroomName: string | null }>();
           for (const assignment of studentAssignmentsToCreate) {
             if (!newStudentIds.has(assignment.studentId) || seeds.has(assignment.studentId)) continue;
             seeds.set(assignment.studentId, {

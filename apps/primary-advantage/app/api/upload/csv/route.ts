@@ -429,7 +429,7 @@ export async function POST(request: NextRequest) {
     let teacherAssignments = 0;
     // FR-6: students that joined a class in this upload get a generated username and password.
     // One seed per user, so a new student in two classes is provisioned once.
-    const studentSeeds = new Map<string, studentLogin.StudentLoginSeed>();
+    const studentSeeds = new Map<string, studentLogin.StudentLoginSeed & { classroomName: string | null }>();
 
     if (classroomAssignments.length > 0) {
       // Update classroom assignments with actual user IDs

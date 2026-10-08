@@ -298,13 +298,12 @@ export const createStudent = async (params: {
     }
 
     // Validate classroom if provided
-    let classroomName: string | null = null;
     if (classroomId) {
       const classroomConditions: any[] = [eq(classrooms.id, classroomId)];
       classroomConditions.push(...schoolScopeConditions(classrooms.schoolId, userWithRoles));
       if (schoolId) classroomConditions.push(eq(classrooms.schoolId, schoolId));
 
-      const [classroom] = await db.select({ id: classrooms.id, name: classrooms.name })
+      const [classroom] = await db.select({ id: classrooms.id })
         .from(classrooms)
         .where(and(...classroomConditions))
         .limit(1);
@@ -312,7 +311,6 @@ export const createStudent = async (params: {
       if (!classroom) {
         return { success: false, error: "Invalid classroom specified" };
       }
-      classroomName = classroom.name;
     }
 
     // Generate password if not provided
@@ -363,7 +361,7 @@ export const createStudent = async (params: {
       const { provisioned: [login], failed } = await studentLogin.provisionStudentLogins({
         db,
         schoolId,
-        students: [{ userId: newStudentId, classroomName, classroomId: classroomId ?? null, ...(password ? { password } : {}) }],
+        students: [{ userId: newStudentId, classroomId: classroomId ?? null, ...(password ? { password } : {}) }],
       });
       if (login) credentials = { username: login.username, initialPassword: login.initialPassword };
       if (failed.length > 0) logger.error("student_login_generation_failed", { count: failed.length, error: failed[0]!.reason });

@@ -28,12 +28,13 @@ describe.skipIf(!url)("student login against Postgres", () => {
   const meta = { ip: "10.0.0.1", userAgent: "vitest" };
 
   let db: typeof import("@reading-advantage/db").db;
+  let isStudentUsername: typeof import("@reading-advantage/db").isStudentUsername;
   let store: import("@reading-advantage/auth").RateLimitStore;
   let schema: typeof import("@reading-advantage/db/schema");
   let sl: typeof import("../student-login/index.js");
 
   beforeAll(async () => {
-    ({ db } = await import("@reading-advantage/db"));
+    ({ db, isStudentUsername } = await import("@reading-advantage/db"));
     schema = await import("@reading-advantage/db/schema");
     const auth = await import("@reading-advantage/auth");
     sl = await import("../student-login/index.js");
@@ -241,26 +242,25 @@ describe.skipIf(!url)("student login against Postgres", () => {
     await sl.endClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
   });
 
-  it("generates unique class-based usernames and a working initial password", async () => {
+  it("generates unique two-word usernames and a working initial password", async () => {
     const auth = await import("@reading-advantage/auth");
     const { provisioned: out } = await sl.provisionStudentLogins({
       db,
       schoolId: ids.schoolA,
       students: [
-        { userId: `${tag}-s1`, classroomName: `Zq${tag.slice(0, 3)}`, classroomId: ids.class1 },
-        { userId: `${tag}-s2`, classroomName: `Zq${tag.slice(0, 3)}`, classroomId: ids.class1 },
+        { userId: `${tag}-s1`, classroomId: ids.class1 },
+        { userId: `${tag}-s2`, classroomId: ids.class1 },
       ],
     });
-    const prefix = `zq${tag.slice(0, 3)}`.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8);
-    expect(out.map((o) => o.username)).toEqual([`${prefix}1`, `${prefix}2`]);
+    expect(out.every((o) => isStudentUsername(o.username))).toBe(true);
+    expect(out[0]!.username).not.toBe(out[1]!.username);
     const [row] = await db.select().from(schema.users).where(eq(schema.users.id, `${tag}-s1`));
-    expect(row!.username).toBe(`${prefix}1`);
+    expect(row!.username).toBe(out[0]!.username);
     const [account] = await db.select().from(schema.accounts).where(eq(schema.accounts.userId, `${tag}-s1`));
     expect(await auth.verifyPassword(out[0]!.initialPassword!, account!.password!)).toBe(true);
     expect(await auth.verifyPassword("wrong-pass", account!.password!)).toBe(false);
-    // A second run for another student continues the numbering.
-    const next = (await sl.provisionStudentLogins({ db, schoolId: ids.schoolA, students: [{ userId: `${tag}-s3`, classroomName: `Zq${tag.slice(0, 3)}`, classroomId: null }] })).provisioned;
-    expect(next[0]!.username).toBe(`${prefix}3`);
+    const next = (await sl.provisionStudentLogins({ db, schoolId: ids.schoolA, students: [{ userId: `${tag}-s3`, classroomId: null }] })).provisioned;
+    expect(isStudentUsername(next[0]!.username)).toBe(true);
     await db.delete(schema.accounts).where(inArray(schema.accounts.userId, [`${tag}-s1`, `${tag}-s2`, `${tag}-s3`]));
   });
 
