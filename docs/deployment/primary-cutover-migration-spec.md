@@ -131,7 +131,7 @@ Rehearsal 1 finds the problems. Rehearsal 2 runs on a new backup, end to end, wi
 2. Take the final backup of the legacy database. Keep it.
 3. Push `primary-parity-integration` and `master` to GitHub (owner, 2026-10-06: both branches live only on the owner's computer until the cutover point; the owner runs the push, because auto mode can block it). The monorepo deploy in step 6 builds from GitHub.
 4. Before the ETL, make sure the secret `PRIMARY_V2_DATABASE_URL` exists for the new database. Make sure the Primary Cloud Build service account has `roles/cloudsql.client`. Make sure the migration user can `SET ROLE durable_job_audit_owner` (§8 step 2). Run refuse-legacy-db, then migrate, then doctor against the new database. Never add a version to the legacy `DATABASE_URL` secret.
-5. Run the ETL into the new database. Check the reconciliation report.
+5. Run the ETL into the new database inside GCP: `gcloud builds submit <reduced context> --config=apps/primary-advantage/cloudbuild-etl.yaml` (guard, migrate, doctor, ETL, Tutor read check, student sample). Then, on the owner's machine, issue the temporary passwords and run the printed-link check. Check the reconciliation report in the build log. From the owner's machine the ETL took 90 minutes in rehearsal 1 (network tunnel), so do not run it there.
 6. Deploy the monorepo revision with `DATABASE_URL` from `PRIMARY_V2_DATABASE_URL`. Pin the secret version for this deploy. Make the first monorepo deploy with `--no-traffic` (manual), or keep the build trigger disabled until cutover. Route traffic to it only after step 6 passes. Keep the legacy revision, unrouted, for rollback.
 7. Run §10 on production.
 8. Tutor: Wannachok switches `DATABASE_URL_PRIMARY_ADVANTAGE` to the new database with the `tutor_compat` search path, or keeps the legacy database until A7 passes on staging. The legacy database stays online and read-only until Tutor has switched.
@@ -187,7 +187,7 @@ Also: one admin and one system user.
 
 ## Revision history
 
-- 1.7 — 2026-10-08 — D6: students get a permanent two-word username and no email (owner). Rehearsal 1 cloud part: the Cloud SQL migration user needs `SET` membership in `durable_job_audit_owner` (§8 step 2, runbook step 4). Students: D5 superseded; teachers print class sheets for home sign-in (runbook step 10, checklist login 5; owner decision 2026-10-08).
+- 1.7 — 2026-10-08 — Runbook step 5: the ETL runs in GCP (`cloudbuild-etl.yaml`); from the owner's machine it took 90 minutes. D6: students get a permanent two-word username and no email (owner). Rehearsal 1 cloud part: the Cloud SQL migration user needs `SET` membership in `durable_job_audit_owner` (§8 step 2, runbook step 4). Students: D5 superseded; teachers print class sheets for home sign-in (runbook step 10, checklist login 5; owner decision 2026-10-08).
 - 1.6 — 2026-10-08 — Rehearsal 1: runbook step 1 checks that the five legacy scheduler jobs stay paused (owner: off permanently). Record: `measure/tracks/primary_legacy_data_migration_20261004/rehearsal-1-20261008.md`.
 - 1.5 — 2026-10-06 — Runbook step 3: push the integration branch and master to GitHub at the cutover point (owner).
 - 1.4 — 2026-10-06 — D10 decided: article pictures keep the legacy key (`articles.image`), the bucket stays as it is, Tutor sees no change. ETL rule and code task A10 added.

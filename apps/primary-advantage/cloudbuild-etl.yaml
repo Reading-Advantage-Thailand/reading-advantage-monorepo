@@ -1,0 +1,79 @@
+# Primary cutover ETL inside GCP (cutover spec §8 steps 2-3, §9 steps 4-5).
+# From the owner's machine the ETL takes about 90 minutes through the network tunnel (rehearsal 1,
+# 2026-10-08); inside GCP the Cloud SQL round trips are short. Owner decision 2026-10-08.
+#
+# Steps: guard (target OK, legacy refused), migrate, doctor, ETL from the live legacy database
+# (read only) into the target, Tutor read check, student sample check. The temporary passwords and
+# the printed-link check run on the owner's machine after this build (they are small).
+#
+# The Cloud SQL migration user needs SET membership in durable_job_audit_owner (spec §8 step 2);
+# that grant is instance-wide and was made on 2026-10-08.
+#
+# The ETL input files name people, so they come from Secret Manager, never from the source upload:
+# PRIMARY_ETL_ROLES, PRIMARY_ETL_USERNAMES, PRIMARY_ETL_TEACHERS.
+#
+#   gcloud builds submit gs://primary-advantage_cloudbuild/source/<context>.tgz \
+#     --project=primary-advantage --config=apps/primary-advantage/cloudbuild-etl.yaml
+steps:
+  - name: "node:22-slim"
+    id: "etl"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        set -euo pipefail
+        t() { date -u +%T; }
+        apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null
+        curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64
+        chmod +x /usr/local/bin/cloud-sql-proxy
+        mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5
+        corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile
+        # postgres.js sends URL parameters other than host to the server, so keep only host.
+        LEGACY_DATABASE_URL=$$(node -e 'const u = new URL(process.env.LEGACY_RAW); for (const k of [...u.searchParams.keys()]) if (k !== "host") u.searchParams.delete(k); process.stdout.write(u.toString())')
+        export LEGACY_DATABASE_URL
+        mkdir -p /workspace/etl-inputs
+        printf '%s' "$$ETL_ROLES" > /workspace/etl-inputs/roles.json
+        printf '%s' "$$ETL_USERNAMES" > /workspace/etl-inputs/usernames.json
+        printf '%s' "$$ETL_TEACHERS" > /workspace/etl-inputs/teachers.json
+        cd packages/db
+        echo "$$(t) start"
+        npx tsx scripts/refuse-legacy-db.ts
+        if DIRECT_DATABASE_URL="$$LEGACY_DATABASE_URL" npx tsx scripts/refuse-legacy-db.ts >/dev/null 2>&1; then
+          echo "STOP: the guard did not refuse the legacy database"; exit 1
+        fi
+        echo "$$(t) guard: target OK, legacy refused"
+        npx tsx scripts/migrate.ts > /workspace/migrate.out 2>&1 || { tail -25 /workspace/migrate.out; exit 1; }
+        echo "$$(t) migrate done"
+        npx tsx scripts/migration-ledger-doctor.ts --check --required-migration 0071_primary_temporary_password 2>&1 | tail -1
+        echo "$$(t) doctor done"
+        npx tsx scripts/primary-legacy-import.ts --roles /workspace/etl-inputs/roles.json \
+          --usernames /workspace/etl-inputs/usernames.json --teachers /workspace/etl-inputs/teachers.json \
+          --report /workspace/etl-report.md 2>&1 | tail -25
+        grep "^| " /workspace/etl-report.md | head -40 || true
+        echo "$$(t) ETL done"
+        npx tsx scripts/tutor-read-check.ts --target "$$DIRECT_DATABASE_URL" --reference "$$LEGACY_DATABASE_URL" 2>&1 | tail -8
+        echo "$$(t) Tutor read check done"
+        npx tsx scripts/student-sample-check.ts --legacy "$$LEGACY_DATABASE_URL" --target "$$DIRECT_DATABASE_URL" 2>&1 | tail -6
+        echo "$$(t) finished"
+        rm -rf /workspace/etl-inputs
+    secretEnv: ["LEGACY_RAW", "DIRECT_DATABASE_URL", "ETL_ROLES", "ETL_USERNAMES", "ETL_TEACHERS"]
+
+availableSecrets:
+  secretManager:
+    - versionName: "projects/$PROJECT_ID/secrets/DATABASE_URL/versions/latest"
+      env: "LEGACY_RAW"
+    - versionName: "projects/$PROJECT_ID/secrets/${_TARGET_DATABASE_URL}/versions/latest"
+      env: "DIRECT_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/PRIMARY_ETL_ROLES/versions/latest"
+      env: "ETL_ROLES"
+    - versionName: "projects/$PROJECT_ID/secrets/PRIMARY_ETL_USERNAMES/versions/latest"
+      env: "ETL_USERNAMES"
+    - versionName: "projects/$PROJECT_ID/secrets/PRIMARY_ETL_TEACHERS/versions/latest"
+      env: "ETL_TEACHERS"
+
+substitutions:
+  _TARGET_DATABASE_URL: "PRIMARY_V2_DATABASE_URL"
+
+timeout: "3600s"
+options:
+  logging: CLOUD_LOGGING_ONLY
