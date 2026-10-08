@@ -64,9 +64,9 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <p class="sub">Report date: Thursday 2026-10-08 (evening, Bangkok). Cutover: Sunday 2026-10-11, evening. Source of the steps: <code>docs/deployment/primary-cutover-migration-spec.md</code> 1.8 and <code>cutover-commands-20261011.md</code> in this folder.</p>
 
 <section class="verdict">
-<h2>Verdict: not ready to cut over yet. Rehearsal 2 is half done; the rest needs 2 short owner steps and 4 owner decisions</h2>
+<h2>Verdict: not ready to cut over yet. The 4 decisions are made; rehearsal 2 is half done and waits for 2 short owner steps</h2>
 <p>The new app, the data move, and the sign-in flows passed in the cloud today. The cloud revision passed the full go/no-go browser check (25 of 25) against the migrated data in Cloud SQL. Live traffic stays on the legacy app until the cutover.</p>
-<p>The data move now runs inside GCP in 2 minutes 20 seconds (through this machine's network tunnel it took more than 2 hours). Rehearsal 2 started on Thursday evening: the backup and the cutover image are done. The new empty database, the hand-out list, and the browser check wait for you (section 0). The 4 decisions are in section 4.</p>
+<p>The data move now runs inside GCP in 2 minutes 20 seconds (through this machine's network tunnel it took more than 2 hours). Rehearsal 2 started on Thursday evening: the backup and the cutover image are done. The new empty database, the hand-out list, and the browser check wait for you (section 0). You made the 4 decisions on 2026-10-09 (section 4).</p>
 </section>
 
 <div class="grid">
@@ -96,7 +96,7 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
   <div class="card"><h3>Thu 2026-10-08 <span class="chip ok">done</span></h3>
     <ul><li>Rehearsal 1, local and cloud parts.</li><li>Cloud build and deploy without traffic.</li><li>Browser check 25 of 25.</li><li>Spec 1.8, command sheet.</li></ul></div>
   <div class="card"><h3>Fri 2026-10-09 <span class="chip warn">owner</span></h3>
-    <ul><li>Owner decisions 1 to 4 (section 4).</li><li>Owner gives the start hour for Saturday and Sunday.</li></ul></div>
+    <ul><li>Owner decisions 1 to 4: made (section 4).</li><li>Rehearsal 2: new <code>primary_v2</code> (R2) and <code>after-etl.sh</code> (R5).</li><li>Owner gives the start hour for Saturday and Sunday.</li></ul></div>
   <div class="card"><h3>Sat 2026-10-10 <span class="chip info">rehearsal 2</span></h3>
     <ul><li>New backup, new <code>primary_v2</code>, ETL in Cloud Build.</li><li>Owner runs <code>after-etl.sh rehearsal2</code> (about 1 minute).</li><li>The cutover image is built and checked.</li><li>Local copy for the graph and Workbooks checks.</li></ul></div>
   <div class="card"><h3>Sun 2026-10-11 <span class="chip info">cutover</span></h3>
@@ -118,7 +118,7 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <tr><td>A teacher sees the right classes and students</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
 <tr><td>Reconciliation report: no unexplained skips</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
 <tr><td>Article pictures (legacy key) on the story page and the Read list</td><td><span class="chip ok">pass</span></td><td><span class="chip ok">pass</span></td><td>Sat</td><td>Sun</td></tr>
-<tr><td>Tutor opens 3 Origins 3.1 lessons and 1 Origins 2 lesson through <code>tutor_compat</code></td><td colspan="2"><span class="chip ok">read check MATCH 625</span>; the Tutor app itself on the new database: <span class="chip warn">not done</span></td><td colspan="2">Decision 4: Tutor keeps the legacy database (read only) until its staging check passes</td></tr>
+<tr><td>Tutor opens 3 Origins 3.1 lessons and 1 Origins 2 lesson through <code>tutor_compat</code></td><td colspan="2"><span class="chip ok">read check MATCH 625</span>; the Tutor app itself on the new database: <span class="chip warn">not done</span></td><td colspan="2">Decision 4: Tutor keeps the legacy database until its staging check passes (first week)</td></tr>
 </table></div>
 
 <h2>3. What happened today</h2>
@@ -153,29 +153,14 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <tr><td><code>7bb6b1065</code>, <code>30e31bee8</code></td><td>ETL time zone and question order fixes; the five-student sample check</td></tr>
 </table></div>
 
-<h2>4. Owner decisions needed before Sunday</h2>
-<div class="card">
-<h3>Decision 1: how to stop writes to the legacy database at the cutover start</h3>
-<p>The runbook says "maintenance mode or stop traffic", but the legacy app has no maintenance mode. Writes after the final backup are lost.</p>
-<p class="rec">Recommendation: make the legacy database read only (<code>ALTER DATABASE primary_advantage SET default_transaction_read_only = on</code>, then end the open sessions).</p>
-<p>A read-only check on Thursday confirmed that this works: the app user owns <code>primary_advantage</code> and may end other sessions. The check changed nothing.</p>
-<p>Reads keep working: Tutor, the backup, and the ETL (the ETL only reads the legacy database). The legacy app then shows errors on sign-in and on saves. Students are on the school break, and the spec already keeps the legacy database read only after the cutover. Rollback resets the setting. The tool refused to write this job file for me, because it changes the live database. So it needs your go, or you run it.</p>
-</div>
-<div class="card">
-<h3>Decision 2: accounts for the production check</h3>
-<p>The check sets a new password for a teacher and an admin. The class sheet sets new passwords for a whole class. In the rehearsals this was real teachers and real classes on a copy.</p>
-<p class="rec">Recommendation: on production, use the demo school teacher, the demo school admin, and the demo class (5 students), plus your own system account.</p>
-</div>
-<div class="card">
-<h3>Decision 3: the demo school (rehearsal 1 finding 4)</h3>
-<p>The daily demo reset job is off. The demo teacher and admin get temporary passwords like every staff account. The demo data stays as it was on 2026-10-07.</p>
-<p class="rec">Recommendation: keep the demo school as it is for the cutover. Decide on a new demo reset after the freeze.</p>
-</div>
-<div class="card">
-<h3>Decision 4: Tutor Advantage on the cutover evening</h3>
-<p>The Tutor read check matches all 625 articles through <code>tutor_compat</code>. The Tutor app has not run against the new database. The <code>tutor_reader</code> login is not made on <code>primary_v2</code>.</p>
-<p class="rec">Recommendation: Tutor keeps reading the legacy database (read only) on Sunday. Switch Tutor after its staging check (spec §8 step 6). New lessons after the cutover go only to the new database, so plan the switch for the first week.</p>
-</div>
+<h2>4. Owner decisions (made on 2026-10-09)</h2>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>Decision</th><th>Your answer</th><th>Effect</th></tr>
+<tr><td>1</td><td>How to stop writes to the legacy database at the cutover start</td><td><span class="chip ok">announcement only</span></td><td>No technical block. A write to the legacy database after the final backup (C4) is lost. Students are on the school break.</td></tr>
+<tr><td>2</td><td>Accounts for the production check</td><td><span class="chip ok">demo school</span></td><td>The script uses the demo teacher, the demo admin, and the demo class. It keeps their new passwords in a private file in your folder. You check the system role with your own account on a phone.</td></tr>
+<tr><td>3</td><td>The demo school</td><td><span class="chip ok">keep as it is</span></td><td>It moves like every school. A new demo reset waits until after the freeze.</td></tr>
+<tr><td>4</td><td>Tutor on Sunday</td><td><span class="chip ok">legacy database until staging</span></td><td>Tutor keeps reading the legacy database. It switches after its staging check, in the first week. New lessons reach Tutor only after the switch.</td></tr>
+</table></div>
 <div class="card">
 <h3>Also needed from you</h3>
 <ul>
@@ -191,20 +176,20 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <tr><th>#</th><th>Who</th><th>Step</th><th>Time</th></tr>
 <tr><td>C1</td><td>Owner</td><td>Tell the team in the group chat</td><td>—</td></tr>
 <tr><td>C2</td><td>Agent</td><td>The five legacy scheduler jobs are still paused</td><td>1 min</td></tr>
-<tr><td>C3</td><td>Owner decision 1</td><td>Stop legacy writes</td><td>1 min</td></tr>
+<tr><td>C3</td><td>—</td><td>Stop legacy writes: announcement only (decision 1), no command</td><td>—</td></tr>
 <tr><td>C4</td><td>Agent</td><td>Final backup of the legacy database</td><td>1 min</td></tr>
 <tr><td>C5</td><td>Owner + agent</td><td>Merge integration into master; owner pushes both branches</td><td>5 min</td></tr>
 <tr><td>C6</td><td>Owner</td><td>Drop and create <code>primary_v2</code> (as R2)</td><td>1 min</td></tr>
 <tr><td>C7</td><td>Agent</td><td>ETL in Cloud Build: guard, migrate, doctor, ETL, Tutor read check, student sample</td><td>3 min</td></tr>
 <tr><td>C8</td><td>Owner</td><td><code>after-etl.sh cutover</code>: temporary passwords (hand-out list), printed-link check</td><td>1 min</td></tr>
 <tr><td>C9</td><td>Agent</td><td>Deploy the rehearsal 2 image, secret version pinned, no traffic, tag <code>cutover</code></td><td>2 min</td></tr>
-<tr><td>C10</td><td>Agent + owner</td><td>Go/no-go check at the tag URL; owner checks on a phone</td><td>15 min</td></tr>
+<tr><td>C10</td><td>Agent + owner</td><td>Go/no-go check at the tag URL with the demo school; you sign in with your own system account on a phone</td><td>15 min</td></tr>
 <tr><td>C11</td><td>Owner go, agent</td><td>Route 100% of the traffic to the tag <code>cutover</code></td><td>1 min</td></tr>
 <tr><td>C12</td><td>Agent</td><td>Turn off the legacy build trigger <code>primary-advantege-prod</code></td><td>1 min</td></tr>
 <tr><td>C13</td><td>Agent</td><td>Smoke check on <code>primary.reading-advantage.com</code></td><td>5 min</td></tr>
 <tr><td>C14</td><td>Owner and team</td><td>Hand-out list to the teachers; teachers print the class sheets</td><td>next days</td></tr>
 </table></div>
-<p><b>Rollback</b> (decide within 24 hours): route the traffic back to the legacy revision <code>primary-advantage-app-00125-9wd</code>. If C3 made the legacy database read only, reset that setting first. Data written to the new database after the switch is lost on rollback.</p>
+<p><b>Rollback</b> (decide within 24 hours): route the traffic back to the legacy revision <code>primary-advantage-app-00125-9wd</code>. The legacy database has no block, so nothing else is needed. Data written to the new database after the switch is lost on rollback.</p>
 
 <h2>6. Risks and controls</h2>
 <div class="table-wrap"><table>
@@ -215,7 +200,7 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <tr><td>This machine's network tunnel: slow database round trips, DNS drops.</td><td><span class="chip warn">medium</span></td><td>The ETL runs inside GCP. The browser script retries page loads. The owner's phone check does not use this machine.</td></tr>
 <tr><td>This machine has 7 GB of memory; heavy jobs kill Postgres.</td><td><span class="chip info">low</span></td><td>Peers run no heavy job during the checks (graph and Workbooks agreed).</td></tr>
 <tr><td>The Cloud Build ETL is new.</td><td><span class="chip info">low</span></td><td>It passed today in asia-southeast1. Rehearsal 2 runs it on an empty database. Always submit it with <code>--region=asia-southeast1</code>.</td></tr>
-<tr><td>Content: an injector write to the legacy database after the final backup is lost.</td><td><span class="chip info">low</span></td><td>Workbooks confirmed: no write from 2026-10-11 12:00 Bangkok; levels 5 to 9 load after the cutover into the new database.</td></tr>
+<tr><td>A write to the legacy database after the final backup is lost (decision 1: announcement only).</td><td><span class="chip info">low</span></td><td>The announcement in C1; students are on the school break; C4 to C11 take about 30 minutes. Workbooks confirmed: no content write from 2026-10-11 12:00 Bangkok.</td></tr>
 </table></div>
 
 <h2>7. After the cutover (not part of Sunday)</h2>
@@ -227,7 +212,7 @@ footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
 <li>Owner: the Listen to English game on real phones (saved words games).</li>
 </ul>
 
-<footer>Made by the monorepo session on 2026-10-08. Updated on 2026-10-08 at about 23:10 Bangkok. The report holds no password and no personal name.</footer>
+<footer>Made by the monorepo session on 2026-10-08. Updated on 2026-10-09 with the 4 owner decisions. The report holds no password and no personal name.</footer>
 </main>
 </body>
 </html>

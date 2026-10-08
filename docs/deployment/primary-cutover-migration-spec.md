@@ -1,6 +1,6 @@
 # Primary Advantage Cutover — Data and Login Migration Spec
 
-Version 1.8 | Date 2026-10-08 | Status: Calendar (§11) approved by Daniel 2026-10-01, cutover date 2026-10-11 set by Daniel 2026-10-08; the rest is a draft | Owner: Daniel Bo | Scope: `apps/primary-advantage`, `packages/db`, `packages/auth`, `packages/api`
+Version 1.9 | Date 2026-10-09 | Status: Calendar (§11) approved by Daniel 2026-10-01, cutover date 2026-10-11 set by Daniel 2026-10-08; the rest is a draft | Owner: Daniel Bo | Scope: `apps/primary-advantage`, `packages/db`, `packages/auth`, `packages/api`
 
 Related: `advantage-pr/08-strategy/product-strategy-2026-2027.md` §6 (October plan); `Workbooks/docs/content-plans/primary-origins-3.2-plan.md` (decision D1, QR URLs); `tutor-advantage/docs/specs/2026-10-tutor-catalogue-and-platform-spec.md` (Tutor side).
 
@@ -126,7 +126,7 @@ Rehearsal 1 finds the problems. Rehearsal 2 runs on a new backup, end to end, wi
 
 ## 9. Cutover-day runbook
 
-1. Tell the team in the group chat. Put the legacy Primary service in maintenance mode (or stop traffic) so no one writes.
+1. Tell the team in the group chat that Primary is closed for the evening (owner decision 2026-10-09: an announcement only, no technical block on the legacy database; students are on the school break). A write to the legacy database after the final backup (step 2) is lost.
    Check that the five legacy Cloud Scheduler jobs in project `primary-advantage` (`generateArticle`, `ValidateArticles`, `ResetDemoAccount`, `generateStory`, `ValidateStorys`) are still paused: `gcloud scheduler jobs list --project=primary-advantage --location=us-central1` and `--location=asia-southeast1`. They write to the legacy database; the owner turned them off permanently on 2026-10-08.
 2. Take the final backup of the legacy database. Keep it.
 3. Push `primary-parity-integration` and `master` to GitHub (owner, 2026-10-06: both branches live only on the owner's computer until the cutover point; the owner runs the push, because auto mode can block it). The monorepo deploy in step 6 builds from GitHub.
@@ -134,7 +134,7 @@ Rehearsal 1 finds the problems. Rehearsal 2 runs on a new backup, end to end, wi
 5. Run the ETL into the new database inside GCP: `gcloud builds submit <reduced context> --region=asia-southeast1 --config=apps/primary-advantage/cloudbuild-etl.yaml` (a regional build next to the database; a global build can run far away) (guard, migrate, doctor, ETL, Tutor read check, student sample). Then, on the owner's machine, issue the temporary passwords and run the printed-link check. Check the reconciliation report in the build log. From the owner's machine the ETL took 90 minutes in rehearsal 1 (network tunnel), so do not run it there.
 6. Deploy the image that passed rehearsal 2 (no new build) with `DATABASE_URL` from `PRIMARY_V2_DATABASE_URL`, the secret version pinned, and no traffic: `gcloud run services update primary-advantage-app --project=primary-advantage --region=asia-southeast1 --image=<rehearsal 2 image> --update-secrets=DATABASE_URL=PRIMARY_V2_DATABASE_URL:1 --no-traffic --tag=cutover`. Keep the legacy revision (`primary-advantage-app-00125-9wd`), unrouted, for rollback.
 7. Run §10 at the `cutover` tag URL. When it passes, route the traffic: `gcloud run services update-traffic primary-advantage-app --project=primary-advantage --region=asia-southeast1 --to-tags=cutover=100`. The domain `primary.reading-advantage.com` maps to the service, so it follows the traffic. Then turn off the legacy build trigger `primary-advantege-prod` (it deploys the legacy repository `Reading-Advantage-Thailand/primary-advantage` on each push to `main`, with traffic, over the new revision): `gcloud beta builds triggers export primary-advantege-prod --project=primary-advantage --destination=t.yaml`, add the line `disabled: true`, then `gcloud builds triggers import --project=primary-advantage --source=t.yaml`.
-8. Tutor: Wannachok switches `DATABASE_URL_PRIMARY_ADVANTAGE` to the new database with the `tutor_compat` search path, or keeps the legacy database until A7 passes on staging. The legacy database stays online and read-only until Tutor has switched.
+8. Tutor keeps reading the legacy database on the cutover evening (owner decision 2026-10-09). The Tutor developer switches `DATABASE_URL_PRIMARY_ADVANTAGE` to the new database with the `tutor_compat` search path after A7 passes on staging, in the first week. The legacy database stays online until Tutor has switched; no app writes to it after the traffic switch. Lessons added to the new database after the cutover reach Tutor only after the switch.
 9. Send reset links to Google-only teachers (A9). Phone Boonyathat's teachers with the new sign-in steps.
 10. Each teacher makes and prints the class sheet for each class (class page → Class sheet → Make class sheet → Print) and gives each student a line of it (owner decision 2026-10-08). In class, students sign in with the class code and their name while the teacher has the class open (3 hours at most). Away from the classroom, they sign in only with the username and password from the sheet. A new sheet sets new passwords for the whole class.
 11. After the cutover passes and the feature freeze ends, before the mastery evidence worker starts: run the mastery graph tags backfill on the new database (graph session; the owner or Cloud Build runs it, because the agent may not read database passwords). It is not part of the cutover evening.
@@ -154,6 +154,8 @@ All items pass on the rehearsal and again on production.
 5. The teacher ends the class and makes the class sheet. A student signs in with the username and password from the sheet while no class is open.
 
 Also: one admin and one system user.
+
+On production (owner decision 2026-10-09) the check uses the demo school: the demo teacher, the demo admin, and the demo class (login 4 and 5). The owner signs in with their own system account on a phone. The demo school moves like every school (owner decision 2026-10-09).
 
 **Content and data**
 
@@ -185,9 +187,11 @@ Also: one admin and one system user.
 2. The 7 legacy `user`-role accounts: who are they, and which role?
 3. Did the legacy app ever print a working `/writing` page? Scan a printed code.
 4. Stable book-and-lesson QR URLs for new books (3.2 plan, decision D1): if chosen, add the route in A5.
-5. Runbook step 1: how to stop legacy writes. Proposal (owner decision): make the legacy database read only (`ALTER DATABASE primary_advantage SET default_transaction_read_only = on`, then end the open sessions). Reads keep working (Tutor, the backup, the ETL; the ETL only reads the legacy database). Rollback first runs `ALTER DATABASE primary_advantage RESET default_transaction_read_only` (in a session with `SET default_transaction_read_only = off`).
+5. ~~Runbook step 1: how to stop legacy writes.~~ Answered 2026-10-09 (owner): an announcement only. The proposal was: make the legacy database read only (`ALTER DATABASE primary_advantage SET default_transaction_read_only = on`, then end the open sessions). Reads keep working (Tutor, the backup, the ETL; the ETL only reads the legacy database). Rollback first runs `ALTER DATABASE primary_advantage RESET default_transaction_read_only` (in a session with `SET default_transaction_read_only = off`).
 
 ## Revision history
+
+- 1.9 — 2026-10-09 — Owner decisions: runbook step 1 is an announcement only (open question 5 answered); the production check uses the demo school, the owner checks the own system account on a phone; the demo school moves as it is; Tutor keeps the legacy database until its staging check (runbook step 8).
 
 - 1.8 — 2026-10-08 — Cutover on 2026-10-11 (owner): §11 calendar. Runbook steps 6 and 7: deploy the rehearsal 2 image with no new build, route traffic by tag, turn off the legacy build trigger. Rollback command. Open question 5 (stop legacy writes). Step 11: the tags backfill after the freeze (graph).
 - 1.7 — 2026-10-08 — Runbook step 5: the ETL runs in GCP (`cloudbuild-etl.yaml`); from the owner's machine it took 90 minutes. D6: students get a permanent two-word username and no email (owner). Rehearsal 1 cloud part: the Cloud SQL migration user needs `SET` membership in `durable_job_audit_owner` (§8 step 2, runbook step 4). Students: D5 superseded; teachers print class sheets for home sign-in (runbook step 10, checklist login 5; owner decision 2026-10-08).
