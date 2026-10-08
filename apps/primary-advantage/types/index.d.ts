@@ -470,7 +470,6 @@ export interface UpdateTeacherInput {
 
 export interface CreateStudentInput {
   name: string;
-  email: string;
   cefrLevel?: string;
   classroomId?: string;
   password?: string;
@@ -480,7 +479,6 @@ export interface CreateStudentInput {
 
 export interface UpdateStudentInput {
   name?: string;
-  email?: string;
   cefrLevel?: string;
   classroomId?: string;
   password?: string;
@@ -646,7 +644,6 @@ export interface SchoolAdmin {
  */
 export interface StudentFormData {
   name: string;
-  email: string;
   cefrLevel: string;
   role: string;
 }

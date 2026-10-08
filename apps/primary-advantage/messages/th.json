@@ -2787,7 +2787,7 @@
       "admin": "ผู้ดูแลระบบ"
     },
     "filters": {
-      "searchPlaceholder": "ค้นหานักเรียนด้วยชื่อหรืออีเมล...",
+      "searchPlaceholder": "ค้นหานักเรียนด้วยชื่อหรือชื่อผู้ใช้...",
       "classroomPlaceholder": "กรองตามห้องเรียน",
       "cefrPlaceholder": "ระดับ CEFR",
       "activeFiltersLabel": "ตัวกรองที่ใช้งาน:",

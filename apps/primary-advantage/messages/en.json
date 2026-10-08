@@ -2787,7 +2787,7 @@
       "admin": "Admin"
     },
     "filters": {
-      "searchPlaceholder": "Search students by name or email...",
+      "searchPlaceholder": "Search students by name or username...",
       "classroomPlaceholder": "Filter by classroom",
       "cefrPlaceholder": "CEFR Level",
       "activeFiltersLabel": "Active filters:",

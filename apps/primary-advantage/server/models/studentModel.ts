@@ -77,8 +77,8 @@ export const getStudents = async (
     // Add search filter (Prisma: contains + mode: insensitive → ILIKE)
     if (search) {
       whereConditions.push(
-        // OR across name/email — use sql OR
-        sql`(${users.name} ILIKE ${`%${search}%`} OR ${users.email} ILIKE ${`%${search}%`})`,
+        // OR across name/username — students have no email
+        sql`(${users.name} ILIKE ${`%${search}%`} OR ${users.username} ILIKE ${`%${search}%`})`,
       );
     }
 
@@ -240,7 +240,7 @@ export const getStudentById = async (
 
 // Create new student
 /**
- * Creates a student in the authorized school.
+ * Creates a student in the authorized school. A student has no email (owner decision 2026-10-08).
  * @param params The student fields, the authenticated actor, and an optional target school id.
  *   The school id counts only for a SYSTEM actor; other actors keep their own school.
  * @returns The created student result. `credentials` holds the generated username and, when no
@@ -248,7 +248,6 @@ export const getStudentById = async (
  */
 export const createStudent = async (params: {
   name: string;
-  email: string;
   cefrLevel: string;
   classroomId?: string;
   password?: string;
@@ -260,21 +259,10 @@ export const createStudent = async (params: {
   credentials?: { username: string; initialPassword: string | null };
   error?: string;
 }> => {
-  const { name, email, cefrLevel, classroomId, password, userWithRoles } =
+  const { name, cefrLevel, classroomId, password, userWithRoles } =
     params;
 
   try {
-
-    // Check if user already exists
-    const [existingUser] = await db.select({ id: users.id })
-      .from(users)
-      .where(eq(users.email, email))
-      .limit(1);
-
-    if (existingUser) {
-      return { success: false, error: "User with this email already exists" };
-    }
-
     // Get the Student role ID
     const [roleRecord] = await db.select({ id: roles.id })
       .from(roles)
@@ -320,13 +308,14 @@ export const createStudent = async (params: {
 
     // Create the new student (and role + optional classroom link) in a tx.
     const newStudentId = await db.transaction(async (tx) => {
-      const username = email.trim().toLowerCase();
+      // The id holds the unique username until provisionStudentLogins sets the two-word one.
+      const id = crypto.randomUUID();
       const [created] = await tx.insert(users).values({
-        id: crypto.randomUUID(),
-        username,
-        displayUsername: email.trim(),
+        id,
+        username: id,
+        displayUsername: id,
         name,
-        email,
+        email: null,
         role: "STUDENT",
         password: hashedPassword,
         cefrLevel,
@@ -355,7 +344,7 @@ export const createStudent = async (params: {
     await afterPasswordWrite({ userId: newStudentId, actor: { id: userWithRoles.id, role: callerEffectiveRank(userWithRoles) }, created: true });
 
     // FR-6: give the student a generated username and, without a chosen password, an initial
-    // password. A failure here leaves the student with the email username, so it is logged only.
+    // password. A failure here leaves the student with the id username, so it is logged only.
     let credentials: { username: string; initialPassword: string | null } | undefined;
     try {
       const { provisioned: [login], failed } = await studentLogin.provisionStudentLogins({
@@ -451,18 +440,6 @@ export const updateStudent = async (
       return { success: false, error: "Cannot change the password of this account" };
     }
 
-    // Check if email is being updated and doesn't conflict
-    if (updateData.email && updateData.email !== existingStudent.email) {
-      const [emailExists] = await db.select({ id: users.id })
-        .from(users)
-        .where(eq(users.email, updateData.email))
-        .limit(1);
-
-      if (emailExists) {
-        return { success: false, error: "Email already in use" };
-      }
-    }
-
     // Validate classroom if being updated
     if (updateData.classroomId) {
       const classroomConditions: any[] = [eq(classrooms.id, updateData.classroomId)];
@@ -481,7 +458,6 @@ export const updateStudent = async (
     // Prepare update data
     const updatePayload: any = {};
     if (updateData.name) updatePayload.name = updateData.name;
-    if (updateData.email) updatePayload.email = updateData.email;
     if (updateData.cefrLevel) updatePayload.cefrLevel = updateData.cefrLevel;
     let newPasswordHash: string | undefined;
     if (updateData.password) {

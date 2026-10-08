@@ -2787,7 +2787,7 @@
       "admin": "管理員"
     },
     "filters": {
-      "searchPlaceholder": "以姓名或電子郵件搜尋學生...",
+      "searchPlaceholder": "以姓名或使用者名稱搜尋學生...",
       "classroomPlaceholder": "依班級篩選",
       "cefrPlaceholder": "CEFR 等級",
       "activeFiltersLabel": "啟用的篩選:",

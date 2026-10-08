@@ -130,11 +130,11 @@ describe("updateStudent effective target rank", () => {
 describe("createStudent fails closed without a school (M2)", () => {
   it("refuses a non-SYSTEM caller without a school", async () => {
     const result = await createStudent({
-      name: "n", email: "fresh@x.test", cefrLevel: "A1", password: "Valid-pass-123",
+      name: "fresh", cefrLevel: "A1", password: "Valid-pass-123",
       userWithRoles: { ...sessionAdmin, schoolId: null },
     });
     expect(result.success).toBe(false);
-    const rows = await harness.db.execute(sql`SELECT id FROM users WHERE email = 'fresh@x.test'`);
+    const rows = await harness.db.execute(sql`SELECT id FROM users WHERE name = 'fresh'`);
     expect(rows.rows).toHaveLength(0);
   });
 
@@ -142,7 +142,7 @@ describe("createStudent fails closed without a school (M2)", () => {
     await seedStudent("caller", "ADMIN", SCHOOL_A);
     await harness.db.execute(sql`INSERT INTO classrooms (id, name, school_id, teacher_id) VALUES ('00000000-0000-0000-0000-0000000000c1', 'B class', ${SCHOOL_B}, 'caller')`);
     const result = await createStudent({
-      name: "n", email: "fresh@x.test", cefrLevel: "A1", classroomId: "00000000-0000-0000-0000-0000000000c1", userWithRoles: sessionAdmin,
+      name: "fresh", cefrLevel: "A1", classroomId: "00000000-0000-0000-0000-0000000000c1", userWithRoles: sessionAdmin,
     });
     expect(result.success).toBe(false);
   });
@@ -151,7 +151,7 @@ describe("createStudent fails closed without a school (M2)", () => {
 describe("password write events (M1)", () => {
   it("records an audit event for a new student without revoking", async () => {
     const result = await createStudent({
-      name: "n", email: "fresh@x.test", cefrLevel: "A1", password: "Valid-pass-123", userWithRoles: sessionAdmin,
+      name: "fresh", cefrLevel: "A1", password: "Valid-pass-123", userWithRoles: sessionAdmin,
     });
     expect(result.success).toBe(true);
     expect(eventMocks.afterPasswordWrite).toHaveBeenCalledWith({
@@ -204,37 +204,37 @@ describe("createStudent target school (cutover)", () => {
     role: "SYSTEM", roles: [], SchoolAdmins: [],
   };
 
-  /** Reads the school of one user by email. */
-  async function schoolOf(email: string) {
-    const rows = await harness.db.execute(sql`SELECT school_id FROM users WHERE email = ${email}`);
+  /** Reads the school of one user by name (students have no email). */
+  async function schoolOf(name: string) {
+    const rows = await harness.db.execute(sql`SELECT school_id FROM users WHERE name = ${name}`);
     return (rows.rows[0] as { school_id: string } | undefined)?.school_id;
   }
 
   it("lets a SYSTEM caller choose the school of a new student", async () => {
     const result = await createStudent({
-      name: "n", email: "s-b@x.test", cefrLevel: "A1", password: "Valid-pass-123",
+      name: "s-b", cefrLevel: "A1", password: "Valid-pass-123",
       schoolId: SCHOOL_B, userWithRoles: systemCaller,
     });
     expect(result.success).toBe(true);
-    expect(await schoolOf("s-b@x.test")).toBe(SCHOOL_B);
+    expect(await schoolOf("s-b")).toBe(SCHOOL_B);
   });
 
   it("refuses a SYSTEM caller who names a school that does not exist", async () => {
     const result = await createStudent({
-      name: "n", email: "s-x@x.test", cefrLevel: "A1", password: "Valid-pass-123",
+      name: "s-x", cefrLevel: "A1", password: "Valid-pass-123",
       schoolId: "00000000-0000-0000-0000-0000000000ff", userWithRoles: systemCaller,
     });
     expect(result.success).toBe(false);
-    expect(await schoolOf("s-x@x.test")).toBeUndefined();
+    expect(await schoolOf("s-x")).toBeUndefined();
   });
 
   it("ignores a client school id from a school admin", async () => {
     const result = await createStudent({
-      name: "n", email: "s-a@x.test", cefrLevel: "A1", password: "Valid-pass-123",
+      name: "s-a", cefrLevel: "A1", password: "Valid-pass-123",
       schoolId: SCHOOL_B, userWithRoles: sessionAdmin,
     });
     expect(result.success).toBe(true);
-    expect(await schoolOf("s-a@x.test")).toBe(SCHOOL_A);
+    expect(await schoolOf("s-a")).toBe(SCHOOL_A);
   });
 });
 
@@ -250,25 +250,26 @@ describe("createStudent generated login (FR-6)", () => {
 
   it("gives a permanent two-word username and an initial password when none is given", async () => {
     await seedClass("P3A");
-    const first = await createStudent({ name: "Ann Lee", email: "ann@x.test", cefrLevel: "A1", classroomId: classId, userWithRoles: sessionAdmin });
-    const second = await createStudent({ name: "Bo Kim", email: "bo@x.test", cefrLevel: "A1", classroomId: classId, userWithRoles: sessionAdmin });
+    const first = await createStudent({ name: "Ann Lee", cefrLevel: "A1", classroomId: classId, userWithRoles: sessionAdmin });
+    const second = await createStudent({ name: "Bo Kim", cefrLevel: "A1", classroomId: classId, userWithRoles: sessionAdmin });
     expect(isStudentUsername(first.credentials!.username)).toBe(true);
     expect(isStudentUsername(second.credentials!.username)).toBe(true);
     expect(first.credentials!.username).not.toBe(second.credentials!.username);
     expect(first.credentials?.initialPassword).toMatch(/^[a-z0-9]{8}$/);
-    const rows = await harness.db.execute(sql`SELECT u.username, a.password FROM users u JOIN accounts a ON a.user_id = u.id WHERE u.email = 'ann@x.test'`);
-    const row = rows.rows[0] as { username: string; password: string };
+    const rows = await harness.db.execute(sql`SELECT u.username, u.email, a.password FROM users u JOIN accounts a ON a.user_id = u.id WHERE u.name = 'Ann Lee'`);
+    const row = rows.rows[0] as { username: string; email: string | null; password: string };
     expect(row.username).toBe(first.credentials!.username);
+    expect(row.email).toBeNull();
     expect(row.password).toBe(`hash:${first.credentials!.initialPassword}`);
-    const cred = await harness.db.execute(sql`SELECT c.school_id FROM primary_student_credentials c JOIN users u ON u.id = c.user_id WHERE u.email = 'ann@x.test'`);
+    const cred = await harness.db.execute(sql`SELECT c.school_id FROM primary_student_credentials c JOIN users u ON u.id = c.user_id WHERE u.name = 'Ann Lee'`);
     expect(cred.rows).toHaveLength(1);
   });
 
   it("keeps a password the admin typed and returns no initial password", async () => {
-    const result = await createStudent({ name: "Cy", email: "cy@x.test", cefrLevel: "A1", password: "Valid-pass-123", userWithRoles: sessionAdmin });
+    const result = await createStudent({ name: "Cy", cefrLevel: "A1", password: "Valid-pass-123", userWithRoles: sessionAdmin });
     expect(result.credentials?.initialPassword).toBeNull();
     expect(isStudentUsername(result.credentials!.username)).toBe(true);
-    const rows = await harness.db.execute(sql`SELECT a.password FROM users u JOIN accounts a ON a.user_id = u.id WHERE u.email = 'cy@x.test'`);
+    const rows = await harness.db.execute(sql`SELECT a.password FROM users u JOIN accounts a ON a.user_id = u.id WHERE u.name = 'Cy'`);
     expect((rows.rows[0] as { password: string }).password).toBe("hash:Valid-pass-123");
   });
 });

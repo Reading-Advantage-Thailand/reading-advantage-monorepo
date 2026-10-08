@@ -2787,7 +2787,7 @@
       "admin": "Quản trị"
     },
     "filters": {
-      "searchPlaceholder": "Tìm học sinh theo tên hoặc email...",
+      "searchPlaceholder": "Tìm học sinh theo tên hoặc tên đăng nhập...",
       "classroomPlaceholder": "Lọc theo lớp học",
       "cefrPlaceholder": "Cấp độ CEFR",
       "activeFiltersLabel": "Bộ lọc đang áp dụng:",

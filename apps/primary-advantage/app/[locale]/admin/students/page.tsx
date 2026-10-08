@@ -125,7 +125,6 @@ export default function StudentsPage() {
   // Form data
   const [formData, setFormData] = useState<StudentFormData>({
     name: "",
-    email: "",
     cefrLevel: "A1",
     role: "student",
   });
@@ -243,7 +242,6 @@ export default function StudentsPage() {
   const resetForm = () => {
     setFormData({
       name: "",
-      email: "",
       cefrLevel: "A1",
       role: "student",
     });
@@ -261,7 +259,6 @@ export default function StudentsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
-          email: formData.email,
           cefrLevel: formData.cefrLevel,
           role: formData.role,
         }),
@@ -292,7 +289,6 @@ export default function StudentsPage() {
     setEditingStudent(student);
     setFormData({
       name: student.name || "",
-      email: student.email || "",
       cefrLevel: student.cefrLevel || "A1",
       role: student.role,
     });
@@ -312,7 +308,6 @@ export default function StudentsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
-          email: formData.email,
           cefrLevel: formData.cefrLevel,
           role: formData.role,
         }),
@@ -502,21 +497,6 @@ export default function StudentsPage() {
                         }
                         className="col-span-3"
                         placeholder={t("form.namePlaceholder")}
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="email" className="text-right">
-                        {t("form.email")}
-                      </Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) =>
-                          handleInputChange("email", e.target.value)
-                        }
-                        className="col-span-3"
-                        placeholder={t("form.emailPlaceholder")}
                       />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
@@ -734,7 +714,6 @@ export default function StudentsPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>{t("tableHeaders.name")}</TableHead>
-                      <TableHead>{t("tableHeaders.email")}</TableHead>
                       <TableHead>{t("tableHeaders.className")}</TableHead>
                       <TableHead>{t("tableHeaders.cefr")}</TableHead>
                       <TableHead>{t("tableHeaders.xp")}</TableHead>
@@ -747,7 +726,7 @@ export default function StudentsPage() {
                   <TableBody>
                     {students.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={7} className="py-8 text-center">
+                        <TableCell colSpan={6} className="py-8 text-center">
                           {t("table.empty")}
                         </TableCell>
                       </TableRow>
@@ -757,7 +736,6 @@ export default function StudentsPage() {
                           <TableCell className="font-medium">
                             {student.name || "N/A"}
                           </TableCell>
-                          <TableCell>{student.email || "N/A"}</TableCell>
                           <TableCell>
                             <Badge variant="default">
                               {student.className || t("badges.noClass")}
@@ -794,8 +772,7 @@ export default function StudentsPage() {
                                     </AlertDialogTitle>
                                     <AlertDialogDescription>
                                       {t("dialogs.delete.description", {
-                                        name:
-                                          student.name || student.email || "",
+                                        name: student.name || "",
                                       })}
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
@@ -884,19 +861,6 @@ export default function StudentsPage() {
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   className="col-span-3"
                   placeholder={t("form.namePlaceholder")}
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-email" className="text-right">
-                  {t("form.email")}
-                </Label>
-                <Input
-                  id="edit-email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  className="col-span-3"
-                  placeholder={t("form.emailPlaceholder")}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
