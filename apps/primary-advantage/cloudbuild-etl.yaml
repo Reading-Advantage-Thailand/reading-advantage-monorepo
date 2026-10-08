@@ -12,8 +12,11 @@
 # The ETL input files name people, so they come from Secret Manager, never from the source upload:
 # PRIMARY_ETL_ROLES, PRIMARY_ETL_USERNAMES, PRIMARY_ETL_TEACHERS.
 #
+# Submit it as a regional build next to the database: a global build can run far away, and the
+# Tutor read check (one query per article and read) then takes 30 minutes (2026-10-08).
+#
 #   gcloud builds submit gs://primary-advantage_cloudbuild/source/<context>.tgz \
-#     --project=primary-advantage --config=apps/primary-advantage/cloudbuild-etl.yaml
+#     --project=primary-advantage --region=asia-southeast1 --config=apps/primary-advantage/cloudbuild-etl.yaml
 steps:
   - name: "node:22-slim"
     id: "etl"
