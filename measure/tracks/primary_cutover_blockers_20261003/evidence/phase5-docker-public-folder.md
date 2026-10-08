@@ -73,3 +73,16 @@ it as a secret.
 
 **Still open:** the same five requests against the image that Cloud Build makes (the first deploy smoke
 test). The local check proves the layout of the runner stage, not the Alpine image itself.
+
+## Result (2026-10-08)
+
+Cloud Build a9198276 built the image from integration 68f28eb56 and deployed it without traffic
+(revision `primary-advantage-app-00128-pac`, tag `rehearsal1`). Requests to the tag URL:
+
+| Path | Status |
+|---|---|
+| `/packs/avatar/1.1.0/catalog.json` | 200 |
+| `/packs/potion-shop/1.0.0/pack.json` | 200 |
+| `/assets/apk/primary-chibi-2d/v1/pack.json` | 200 |
+| `/rpg/skin.json` | 200 |
+| `/login-image.png` | 200 |

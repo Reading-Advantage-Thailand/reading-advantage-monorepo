@@ -33,8 +33,9 @@ FSRS state has no columns; duplicate and NOT NULL clashes would abort the ETL.
 - [x] Owner decisions 2026-10-07: saved cards whose word or sentence left their article after the content reload move as text only (accepted); the 4 MCQs with an answer outside their options are fixed, not skipped (`MCQ_ANSWER_FIXES`, b2f202877; 6220 MCQs)
 - [x] Run again with the `--roles`, `--usernames`, and `--teachers` answers (owner decisions 2026-10-07; 0fd3f7cab; two runs into `primary_etl_20261007`, identical counts)
 - [x] Rehearsal 1, local part (2026-10-08): fresh export into `primary_rehearsal1_20261008`; two ETL defects fixed (7bb6b1065); browser check 22 of 22: [rehearsal-1-20261008.md](./rehearsal-1-20261008.md)
-- [ ] Rehearsal 1, cloud part (owner): `primary_v2` on Cloud SQL, `PRIMARY_V2_DATABASE_URL`, ETL over the proxy, deploy without traffic
-- [ ] Run into the cutover target
+- [x] Rehearsal 1, cloud part (2026-10-08): `primary_v2` on Cloud SQL, `PRIMARY_V2_DATABASE_URL`, ETL over the proxy (owner), deploy without traffic (revision 00128-pac, tag `rehearsal1`), browser check 25 of 25 at the tag URL
+- [ ] Rehearsal 2 (2026-10-10): new backup, new `primary_v2`, ETL in Cloud Build, the cutover image ([cutover-commands-20261011.md](./cutover-commands-20261011.md))
+- [ ] Run into the cutover target (2026-10-11)
 
 ## Phase 3: Old article links (FR-4)
 - [x] Legacy ID resolver and redirect on `student/read/[articleId]` and `/writing` (owner: allowed in the feature freeze, 2026-10-07): `resolveLegacyArticleId` (domain articles) and the read page redirect; `/writing` opens the article page. Defect fixed on the way: a student sign-in ignored `callbackUrl`, so a signed-out QR scan opened the home page; it now opens the `/student/...` callback

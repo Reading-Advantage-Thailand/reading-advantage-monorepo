@@ -41,9 +41,9 @@ Owner lane: A. Starts first. Merge to the integration branch before other lanes 
 
 ## Phase 5: Deploy image (2026-10-06)
 - [x] Runner stage copies the full `public` folder (evidence/phase5-docker-public-folder.md)
-- [ ] Build the image once and request five public URLs from the container (evidence/phase5-docker-public-folder.md, open check)
+- [x] Build the image once and request five public URLs from the container (evidence/phase5-docker-public-folder.md)
   - [x] Runner layout check without a container, 2026-10-07: the five URLs, a 3D model, a HUD font, and two pages answer 200 (the local image build fails on this machine: registry timeouts, then systemd-oomd)
-  - [ ] The five requests against the Cloud Build image (the first deploy smoke test)
+  - [x] The five requests against the Cloud Build image (2026-10-08, revision 00128-pac at the `rehearsal1` tag URL, integration 68f28eb56): all five answer 200
 
 ## Gates
 - [x] Tests, tsc, ESLint green (2026-10-04 rerun) — tsc 0 errors for Primary, api, auth, db (db fix 5b8dac175); Primary 736/736; api 338 passed, 6 skipped, 1 file hook timeout under load (wave0-phase3-typed-errors, 15/15 alone); auth 333/334, only the known phase-7-closeout failure; db 40 failures that predate Lane A (company-identity integration env, drizzle045 counts 58 vs 60, codecamp-0049 ceiling, marketing import); ESLint 0 errors, 156 warnings on 64 changed Primary files (packages have no ESLint config)
