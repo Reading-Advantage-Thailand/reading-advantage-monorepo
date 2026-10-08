@@ -225,8 +225,8 @@ export async function resolveCode(params: {
 }
 
 /**
- * Returns the name list of a class for a valid code (FR-2). A row has a first name and an
- * avatar. Its `studentId` is the id of the credential row: an opaque handle that is not a user id.
+ * Returns the name list of a class for a valid code (FR-2). A row has a first name (with the
+ * last-name initial when two students of the class share the first name) and an avatar. Its `studentId` is the id of the credential row: an opaque handle that is not a user id.
  * @param params.db Database client.
  * @param params.store Shared rate-limit store.
  * @param params.ip Client IP, or null when unknown.
@@ -264,10 +264,18 @@ export async function getNameListForCode(params: {
         eq(primaryStudentCredentials.schoolId, session.schoolId),
       ),
     );
+  const firstName = (name: string | null) => (name?.trim().split(/\s+/)[0] || "Student").slice(0, 40);
+  const firstCounts = new Map<string, number>();
+  for (const row of rows) firstCounts.set(firstName(row.name), (firstCounts.get(firstName(row.name)) ?? 0) + 1);
+  // Two students with one first name get the last-name initial (owner decision 2026-10-08).
+  const displayName = (name: string | null) => {
+    const last = name?.trim().split(/\s+/).slice(1).pop();
+    return (firstCounts.get(firstName(name)) ?? 0) > 1 && last ? `${firstName(name).slice(0, 37)} ${last[0]}.` : firstName(name);
+  };
   const students = rows
     .map((row) => ({
       studentId: row.handle,
-      displayName: (row.name?.trim().split(/\s+/)[0] || "Student").slice(0, 40),
+      displayName: displayName(row.name),
       avatar: STUDENT_AVATARS[avatarIndex(row.handle)]!,
     }))
     .sort((a, b) => a.displayName.localeCompare(b.displayName) || a.studentId.localeCompare(b.studentId));
