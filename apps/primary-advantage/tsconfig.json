@@ -15,5 +15,9 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "scripts/seed-host-proof-session.ts",
+    "tests/e2e/authenticated-apk-lifecycle.spec.ts"
+  ]
 }
