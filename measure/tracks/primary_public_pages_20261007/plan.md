@@ -32,12 +32,12 @@ until the Primary cutover passes.
   - [x] English copy draft 1 and the alt text are in (2026-10-07)
   - [ ] Thai from Daniel
   - [ ] cn and tw from the contracted reviewer
-- [ ] Captures at 375 px and 1280 px, light and night, to Daniel for the look check
+- [x] Captures at 375 px and 1280 px, light and night, to Daniel for the look check
   - [x] 20 captures in `captures/` (status 200, no page overflow, no form, no console errors)
   - [x] Look-check round 1 (Daniel through PR, 2026-10-07): the class book block left Inside the app; the
     shrine is a phone capture on phones (`<picture>`, 768 px); dark wood under the scenes; For schools goes
     to `/about#schools`; the flat covers on Our books (Origins 2, 3.1, 3.2; Quest 4); captures replaced
-  - [ ] Daniel's final look check
+  - [x] Daniel's final look check (2026-10-08, through PR: round 1 captures 2ee88a816 and the shrine alt fix 0b0cdcef1 accepted)
 - [ ] Retakes with the demo seed (Word adventures, teacher dashboard) to Daniel before public use
 - [x] PR claims review of the branch diff (2026-10-07: pass; two fixes in 75105543b: Footer.tagline
   deleted, the families link uses www.reading-advantage.com)
