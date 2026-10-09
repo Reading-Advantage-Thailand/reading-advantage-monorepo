@@ -1195,3 +1195,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: Primary Knowledge State (T3 of the Primary Mastery Graph Program)** (created 2026-10-07 on owner decision D8; lane-h; build after the freeze, shadow mode first) *Link: [./tracks/primary_knowledge_state_20261007/](./tracks/primary_knowledge_state_20261007/)*
   Graph slice, `getStudentKnowledgeState` over `buildKstState`, cold-start seed, shadow log after each evidence job, level test readiness signal, projections for T5, and a SYSTEM-only admin view. No student, teacher, or parent screen changes.
+
+- [ ] **Track: Monorepo Continuous Deployment** (created 2026-10-09; spec only; code after the Primary cutover and the end of the freeze) *Link: [./tracks/monorepo_cd_20261009/](./tracks/monorepo_cd_20261009/)*
+  A push to master deploys each changed app: one shared GitHub deploy workflow, an app gate, tagged rollout with approval for Primary, keyless auth, and rollback. Primary and www first; CodeCamp after the migration ceiling fix.

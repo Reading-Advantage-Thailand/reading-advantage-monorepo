@@ -1,0 +1,11 @@
+{
+  "track_id": "monorepo_cd_20261009",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-10-09T12:30:00Z",
+  "updated_at": "2026-10-09T12:30:00Z",
+  "description": "Automatic deploy on a push to master for each changed app: one shared GitHub deploy workflow, an app gate, tagged rollout with approval for Primary, keyless auth, and rollback. Spec now; code after the Primary cutover and the end of the feature freeze.",
+  "estimated_tasks": 30,
+  "actual_tasks": null,
+  "deviation_notes": "Owner decided OD-1 to OD-5 on 2026-10-09. A Fable subagent reviewed the first draft; all 15 findings are in the spec and the plan."
+}
