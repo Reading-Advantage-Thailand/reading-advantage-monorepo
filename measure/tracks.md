@@ -1198,3 +1198,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: Monorepo Continuous Deployment** (created 2026-10-09; spec only; code after the Primary cutover and the end of the freeze) *Link: [./tracks/monorepo_cd_20261009/](./tracks/monorepo_cd_20261009/)*
   A push to master deploys each changed app: one shared GitHub deploy workflow, an app gate, tagged rollout with approval for Primary, keyless auth, and rollback. Primary and www first; CodeCamp after the migration ceiling fix.
+
+- [ ] **Track: Shared Accounts Across Apps** (created 2026-10-09; spec only; code after the Primary cutover and the end of the freeze) *Link: [./tracks/shared_accounts_20261009/](./tracks/shared_accounts_20261009/)*
+  One account for each person across all apps: a shared learner identity database and a session cookie on .reading-advantage.com for students and teachers, and the existing company identity with a role per app for staff. Reading starts on shared accounts; Primary users move after that.

@@ -1,0 +1,11 @@
+{
+  "track_id": "shared_accounts_20261009",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-09T14:00:00Z",
+  "updated_at": "2026-10-10T00:00:00Z",
+  "description": "One account for each person across all apps: a shared learner identity database with a session cookie on .reading-advantage.com for students and teachers, and the existing company identity with a role per app for staff. Reading starts on shared accounts; Primary users move after that. Code starts after the Primary cutover and the end of the feature freeze.",
+  "estimated_tasks": 48,
+  "actual_tasks": null,
+  "deviation_notes": "Owner chose option B1 plus company staff in all apps on 2026-10-09, and decided OD-1 to OD-5 (OD-5 depends on a licence model check). A Fable subagent reviewed the first draft; all 16 findings are in the spec and the plan. Owner decided OD-6 on 2026-10-10: Reading has no public self sign-up."
+}
