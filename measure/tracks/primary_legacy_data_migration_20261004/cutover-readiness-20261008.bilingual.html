@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primary Cutover Readiness · ความพร้อมในการตัดโอน</title>
+<style>
+:root {
+  --bg: #f6f4ef; --panel: #ffffff; --ink: #1d1b16; --muted: #625d52; --line: #e2ddd2;
+  --ok: #1f7a3d; --ok-bg: #e5f4ea; --warn: #8a5a00; --warn-bg: #fdf1d8;
+  --bad: #a3271f; --bad-bg: #fbe3e1; --info: #1f4f8a; --info-bg: #e3edf9; --accent: #6b4b16;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15140f; --panel: #1f1d17; --ink: #ece8de; --muted: #a59f92; --line: #36332a;
+    --ok: #6fd08f; --ok-bg: #173323; --warn: #f0c060; --warn-bg: #3a2d10;
+    --bad: #f08a80; --bad-bg: #3d1a17; --info: #8ab8f0; --info-bg: #172a40; --accent: #e0b870;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15140f; --panel: #1f1d17; --ink: #ece8de; --muted: #a59f92; --line: #36332a;
+  --ok: #6fd08f; --ok-bg: #173323; --warn: #f0c060; --warn-bg: #3a2d10;
+  --bad: #f08a80; --bad-bg: #3d1a17; --info: #8ab8f0; --info-bg: #172a40; --accent: #e0b870;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", "Noto Sans Thai", "Sarabun", sans-serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+h1 { font-size: 28px; margin: 0 0 4px; }
+h2 { font-size: 19px; margin: 36px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--line); }
+h3 { font-size: 15px; margin: 18px 0 6px; }
+p { margin: 6px 0 10px; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+code { font-family: var(--mono); font-size: 12.5px; background: var(--line); padding: 1px 5px; border-radius: 4px; word-break: break-word; }
+.verdict { background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--ok); border-radius: 10px; padding: 18px 20px; }
+.verdict h2 { border: 0; margin: 0 0 6px; padding: 0; font-size: 20px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 16px 0; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.stat b { display: block; font-size: 22px; }
+.stat span { color: var(--muted); font-size: 13px; }
+.table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+th { background: var(--bg); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+.chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; }
+.ok { color: var(--ok); background: var(--ok-bg); }
+.warn { color: var(--warn); background: var(--warn-bg); }
+.bad { color: var(--bad); background: var(--bad-bg); }
+.info { color: var(--info); background: var(--info-bg); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 10px 0; }
+.card h3 { margin-top: 0; }
+.rec { color: var(--accent); font-weight: 600; }
+ol, ul { padding-left: 22px; margin: 6px 0; }
+li { margin: 3px 0; }
+.timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.small { font-size: 13px; color: var(--muted); }
+.th { display: block; color: var(--muted); }
+p.th, li .th { margin-top: 2px; }
+h1 .th, h2 .th, h3 .th { font-size: .82em; font-weight: 600; }
+footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+<h1>Primary Advantage cutover readiness<span class="th" lang="th">ความพร้อมในการตัดโอน Primary Advantage</span></h1>
+<p class="sub">Report date: Thursday 2026-10-08 (evening, Bangkok); updated Friday 2026-10-09 (morning, Bangkok) after rehearsal 2. Cutover: Sunday 2026-10-11, evening. Source of the steps: <code>docs/deployment/primary-cutover-migration-spec.md</code> 1.8 and <code>cutover-commands-20261011.md</code> in this folder.
+<span class="th" lang="th">วันที่รายงาน: พฤหัสบดี 2026-10-08 (ช่วงเย็น เวลากรุงเทพฯ) อัปเดตวันศุกร์ 2026-10-09 (ช่วงเช้า เวลากรุงเทพฯ) หลังการซ้อมครั้งที่ 2 วันตัดโอน: วันอาทิตย์ 2026-10-11 ช่วงเย็น ที่มาของขั้นตอน: <code>docs/deployment/primary-cutover-migration-spec.md</code> เวอร์ชัน 1.8 และ <code>cutover-commands-20261011.md</code> ในโฟลเดอร์นี้</span></p>
+
+<section class="verdict">
+<h2>Verdict: ready to cut over on Sunday 2026-10-11. Rehearsal 2 passed; only the Sunday steps are left<span class="th" lang="th">สรุป: พร้อมตัดโอนวันอาทิตย์ 2026-10-11 การซ้อมครั้งที่ 2 ผ่านแล้ว เหลือเพียงขั้นตอนของวันอาทิตย์</span></h2>
+<p>Rehearsal 2 ran every cutover step on the frozen build (<code>cfef79c88</code>), with an empty <code>primary_v2</code>: backup, ETL in GCP, hand-out list, the cutover image, and the go/no-go browser check. All steps passed. The C10 check with the demo school passed 18 of 18, and the real-school check passed 25 of 25. Live traffic stays on the legacy app until your go on Sunday.
+<span class="th" lang="th">การซ้อมครั้งที่ 2 รันทุกขั้นตอนการตัดโอนบน build ที่ล็อกแล้ว (<code>cfef79c88</code>) โดย <code>primary_v2</code> ว่างเปล่า ได้แก่ การสำรองข้อมูล, ETL ใน GCP, รายการแจกรหัส, image สำหรับตัดโอน และการตรวจ go/no-go ผ่านเบราว์เซอร์ ทุกขั้นตอนผ่าน การตรวจ C10 กับโรงเรียนเดโมผ่าน 18 จาก 18 และการตรวจกับโรงเรียนจริงผ่าน 25 จาก 25 ทราฟฟิกจริงยังอยู่ที่แอปเดิม (legacy) จนกว่าคุณจะให้สัญญาณ go ในวันอาทิตย์</span></p>
+<p>On Sunday the cutover deploys the image that rehearsal 2 checked. There is no new build. Do not change the Primary build inputs before Sunday. A change needs a new rehearsal. Saturday is free as a buffer day. You give the start hour for Sunday (section 4).
+<span class="th" lang="th">ในวันอาทิตย์ การตัดโอนจะ deploy image ที่ผ่านการตรวจในการซ้อมครั้งที่ 2 ไม่มีการ build ใหม่ ห้ามเปลี่ยนอินพุตการ build ของ Primary ก่อนวันอาทิตย์ หากมีการเปลี่ยนแปลงต้องซ้อมใหม่ วันเสาร์ว่างเป็นวันสำรอง คุณแจ้งเวลาเริ่มของวันอาทิตย์ (หัวข้อ 4)</span></p>
+</section>
+
+<div class="grid">
+  <div class="stat"><b>18 / 18 + 25 / 25</b><span>browser checks pass on the cutover image (tag <code>rehearsal2</code>): demo school (C10) and a real school<span class="th" lang="th">การตรวจผ่านเบราว์เซอร์ผ่านบน image สำหรับตัดโอน (แท็ก <code>rehearsal2</code>): โรงเรียนเดโม (C10) และโรงเรียนจริง</span></span></div>
+  <div class="stat"><b>5 / 5</b><span>public game and skin files answer 200 from the cloud image<span class="th" lang="th">ไฟล์เกมและสกินสาธารณะตอบ 200 จาก image บนคลาวด์</span></span></div>
+  <div class="stat"><b>625 MATCH</b><span>Tutor read check: all published articles, all 5 reads<span class="th" lang="th">การตรวจการอ่านของ Tutor: บทความที่เผยแพร่ทั้งหมด การอ่านทั้ง 5 แบบ</span></span></div>
+  <div class="stat"><b>28 / 28</b><span>printed book QR ids open a migrated article<span class="th" lang="th">รหัส QR ที่พิมพ์ในหนังสือเปิดบทความที่ย้ายแล้วได้</span></span></div>
+  <div class="stat"><b>5 / 5</b><span>sampled students match the legacy data (XP, reading, cards)<span class="th" lang="th">นักเรียนที่สุ่มตรวจตรงกับข้อมูลเดิม (XP, การอ่าน, การ์ด)</span></span></div>
+  <div class="stat"><b>643</b><span>students moved; each has a permanent two-word username and no email<span class="th" lang="th">ย้ายนักเรียน 643 คน แต่ละคนมีชื่อผู้ใช้ถาวรแบบสองคำและไม่มีอีเมล</span></span></div>
+  <div class="stat"><b>2 min 22 s</b><span>whole rehearsal 2 ETL build in GCP on the empty database (ETL 10 s, Tutor read check 20 s)<span class="th" lang="th">การ build ETL ทั้งหมดของการซ้อมครั้งที่ 2 ใน GCP บนฐานข้อมูลว่าง (ETL 10 วินาที, ตรวจการอ่าน Tutor 20 วินาที)</span></span></div>
+  <div class="stat"><b>1334 / 1334</b><span>Primary app tests pass (223 files, second full run)<span class="th" lang="th">การทดสอบแอป Primary ผ่านทั้งหมด (223 ไฟล์ รันเต็มครั้งที่สอง)</span></span></div>
+</div>
+
+<h2>0. Rehearsal 2: result<span class="th" lang="th">0. การซ้อมครั้งที่ 2: ผลลัพธ์</span></h2>
+<p>Times in UTC on 2026-10-08 (Bangkok: 2026-10-09, add 7 hours). Record: <code>rehearsal-2-20261010.md</code>.
+<span class="th" lang="th">เวลาเป็น UTC ของวันที่ 2026-10-08 (เวลากรุงเทพฯ: 2026-10-09 บวก 7 ชั่วโมง) บันทึก: <code>rehearsal-2-20261010.md</code></span></p>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>Step · ขั้นตอน</th><th>Status · สถานะ</th></tr>
+<tr><td>R1</td><td>Backup of the legacy database (39 s)<span class="th" lang="th">สำรองฐานข้อมูลเดิม (39 วินาที)</span></td><td><span class="chip ok">done · เสร็จแล้ว</span></td></tr>
+<tr><td>R2</td><td>You dropped and created <code>primary_v2</code> (22:44)<span class="th" lang="th">คุณลบและสร้าง <code>primary_v2</code> ใหม่ (22:44)</span></td><td><span class="chip ok">done · เสร็จแล้ว</span></td></tr>
+<tr><td>R3, R6</td><td>Frozen build context <code>cfef79c88</code>; cutover image built in 11 min and deployed with no traffic (revision <code>00129-xin</code>, tag <code>rehearsal2</code>); 5 public files answer 200<span class="th" lang="th">ล็อก build context ที่ <code>cfef79c88</code>; build image สำหรับตัดโอนใน 11 นาทีและ deploy โดยไม่รับทราฟฟิก (revision <code>00129-xin</code>, แท็ก <code>rehearsal2</code>); ไฟล์สาธารณะ 5 ไฟล์ตอบ 200</span></td><td><span class="chip ok">done · เสร็จแล้ว</span></td></tr>
+<tr><td>R4</td><td>ETL in Cloud Build <code>43cbc2dc</code> (22:45 to 22:48, 2 min 22 s): guard, migrate, doctor 6 s; ETL 10 s; Tutor read check 20 s (625 articles, MATCH); student sample 5 of 5. The counts are the same as in rehearsal 1.<span class="th" lang="th">ETL ใน Cloud Build <code>43cbc2dc</code> (22:45 ถึง 22:48, 2 นาที 22 วินาที): guard, migrate, doctor 6 วินาที; ETL 10 วินาที; ตรวจการอ่าน Tutor 20 วินาที (625 บทความ, MATCH); สุ่มนักเรียน 5 จาก 5 จำนวนเท่ากับการซ้อมครั้งที่ 1</span></td><td><span class="chip ok">pass · ผ่าน</span></td></tr>
+<tr><td>R5</td><td>You ran <code>after-etl.sh rehearsal2</code> (55 s): 21 temporary passwords, printed links 28 of 28<span class="th" lang="th">คุณรัน <code>after-etl.sh rehearsal2</code> (55 วินาที): รหัสผ่านชั่วคราว 21 รายการ, ลิงก์ที่พิมพ์ 28 จาก 28</span></td><td><span class="chip ok">done · เสร็จแล้ว</span></td></tr>
+<tr><td>R7</td><td>Browser check at the <code>rehearsal2</code> URL. C10 form with the demo teacher, the demo admin, and the demo class: 18 of 18. A real-school teacher (class of 30), the school admin, and a support system user: 25 of 25.<span class="th" lang="th">ตรวจผ่านเบราว์เซอร์ที่ URL <code>rehearsal2</code> แบบฟอร์ม C10 กับครูเดโม ผู้ดูแลเดโม และห้องเรียนเดโม: 18 จาก 18 ครูโรงเรียนจริง (ห้อง 30 คน) ผู้ดูแลโรงเรียน และผู้ใช้ระบบฝ่ายสนับสนุน: 25 จาก 25</span></td><td><span class="chip ok">pass · ผ่าน</span></td></tr>
+<tr><td>R8</td><td>Local copy <code>primary_rehearsal2_20261010</code> (export 22 s, restore 7 s). graph's tags and evidence backfills on it passed in 6 minutes, with the same counts as rehearsal 1 and a clean time check (1615 of 1615). Workbooks runs its lesson check. These checks do not block Sunday.<span class="th" lang="th">สำเนาในเครื่อง <code>primary_rehearsal2_20261010</code> (export 22 วินาที, restore 7 วินาที) การ backfill แท็กและหลักฐานของ graph บนสำเนานี้ผ่านใน 6 นาที จำนวนเท่ากับการซ้อมครั้งที่ 1 และการตรวจเวลาสะอาด (1615 จาก 1615) Workbooks รันการตรวจบทเรียนของตน การตรวจเหล่านี้ไม่ขวางวันอาทิตย์</span></td><td><span class="chip ok">done · เสร็จแล้ว</span></td></tr>
+</table></div>
+<div class="card">
+<h3>Two findings, no blocker<span class="th" lang="th">ข้อค้นพบสองข้อ ไม่มีสิ่งขวาง</span></h3>
+<ul>
+<li>The demo class shows "Student (." five times on the student name list. The five demo students have the first name "Student", so the list adds the first letter of the last word, which is "(". A student of the demo class picks by position. No real class has two students with the same name on the list. After the cutover you can rename the five demo students in the app (a data change, no build).
+<span class="th" lang="th">ห้องเดโมแสดง "Student (." ห้าครั้งในรายชื่อนักเรียน นักเรียนเดโมทั้งห้าคนมีชื่อต้นว่า "Student" รายชื่อจึงเติมตัวอักษรแรกของคำสุดท้าย ซึ่งคือ "(" นักเรียนในห้องเดโมเลือกตามตำแหน่ง ไม่มีห้องจริงที่มีนักเรียนสองคนชื่อเดียวกันในรายชื่อ หลังตัดโอนคุณเปลี่ยนชื่อนักเรียนเดโมทั้งห้าในแอปได้ (เป็นการแก้ข้อมูล ไม่ต้อง build)</span></li>
+<li>The check script now runs again safely. It signs in with the password that it kept, and it continues a class that is still open. If C10 stops partway on Sunday, I run it again.
+<span class="th" lang="th">สคริปต์ตรวจรันซ้ำได้อย่างปลอดภัยแล้ว สคริปต์ล็อกอินด้วยรหัสผ่านที่เก็บไว้ และทำต่อกับห้องที่ยังเปิดอยู่ หาก C10 หยุดกลางทางในวันอาทิตย์ ฉันจะรันซ้ำ</span></li>
+</ul>
+</div>
+
+<h2>1. Timeline<span class="th" lang="th">1. ไทม์ไลน์</span></h2>
+<div class="timeline">
+  <div class="card"><h3>Thu 2026-10-08 <span class="chip ok">done · เสร็จแล้ว</span></h3>
+    <ul><li>Rehearsal 1, local and cloud parts.<span class="th" lang="th">การซ้อมครั้งที่ 1 ส่วนในเครื่องและส่วนคลาวด์</span></li><li>Cloud build and deploy without traffic.<span class="th" lang="th">build และ deploy บนคลาวด์โดยไม่รับทราฟฟิก</span></li><li>Browser check 25 of 25.<span class="th" lang="th">ตรวจผ่านเบราว์เซอร์ 25 จาก 25</span></li><li>Spec 1.8, command sheet.<span class="th" lang="th">สเปกเวอร์ชัน 1.8 และเอกสารคำสั่ง</span></li></ul></div>
+  <div class="card"><h3>Fri 2026-10-09 <span class="chip ok">done · เสร็จแล้ว</span></h3>
+    <ul><li>Owner decisions 1 to 4: made (section 4).<span class="th" lang="th">การตัดสินใจของเจ้าของ ข้อ 1 ถึง 4: ตัดสินใจแล้ว (หัวข้อ 4)</span></li><li>Rehearsal 2: pass at 06:05 Bangkok (section 0).<span class="th" lang="th">การซ้อมครั้งที่ 2: ผ่านเวลา 06:05 น. กรุงเทพฯ (หัวข้อ 0)</span></li><li>Owner gives the start hour for Sunday.<span class="th" lang="th">เจ้าของแจ้งเวลาเริ่มของวันอาทิตย์</span></li></ul></div>
+  <div class="card"><h3>Sat 2026-10-10 <span class="chip info">buffer · สำรอง</span></h3>
+    <ul><li>No planned step. Rehearsal 2 ran early.<span class="th" lang="th">ไม่มีขั้นตอนตามแผน การซ้อมครั้งที่ 2 รันเร็วกว่ากำหนด</span></li><li>No change to the Primary build inputs.<span class="th" lang="th">ไม่เปลี่ยนอินพุตการ build ของ Primary</span></li><li>graph and Workbooks finish their checks on the local copy.<span class="th" lang="th">graph และ Workbooks ตรวจให้เสร็จบนสำเนาในเครื่อง</span></li></ul></div>
+  <div class="card"><h3>Sun 2026-10-11 <span class="chip info">cutover · ตัดโอน</span></h3>
+    <ul><li>Merge integration into master; owner pushes.<span class="th" lang="th">merge integration เข้า master; เจ้าของ push</span></li><li>Final backup, ETL, hand-out list.<span class="th" lang="th">สำรองครั้งสุดท้าย, ETL, รายการแจกรหัส</span></li><li>Rehearsal 2 image, check, then traffic.<span class="th" lang="th">image จากการซ้อมครั้งที่ 2, ตรวจ, แล้วจึงสลับทราฟฟิก</span></li><li>Teachers print the class sheets.<span class="th" lang="th">ครูพิมพ์ใบรายชื่อห้องเรียน</span></li></ul></div>
+</div>
+
+<h2>2. Go/no-go checklist (spec §10)<span class="th" lang="th">2. เช็กลิสต์ go/no-go (สเปก §10)</span></h2>
+<div class="table-wrap"><table>
+<tr><th>Item · รายการ</th><th>Rehearsal 1 local<br>ซ้อม 1 ในเครื่อง</th><th>Rehearsal 1 cloud<br>ซ้อม 1 คลาวด์</th><th>Rehearsal 2<br>ซ้อม 2</th><th>Production<br>ระบบจริง</th></tr>
+<tr><td>Login 1: a teacher signs in with the temporary password, must set a new password, signs in again<span class="th" lang="th">ล็อกอิน 1: ครูล็อกอินด้วยรหัสผ่านชั่วคราว ต้องตั้งรหัสผ่านใหม่ แล้วล็อกอินอีกครั้ง</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span> 3 teachers · ครู 3 คน</td><td><span class="chip ok">pass · ผ่าน</span> demo + 1 teacher · เดโม + ครู 1 คน</td><td>Sun · อาทิตย์</td></tr>
+<tr><td>Login 2: the temporary password stops working after the change<span class="th" lang="th">ล็อกอิน 2: รหัสผ่านชั่วคราวใช้ไม่ได้หลังเปลี่ยนรหัสผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td>Sun · อาทิตย์</td></tr>
+<tr><td>Login 3: every migrated teacher has an account; the team holds the hand-out list<span class="th" lang="th">ล็อกอิน 3: ครูที่ย้ายมาทุกคนมีบัญชี ทีมถือรายการแจกรหัส</span></td><td><span class="chip ok">pass · ผ่าน</span> 21 staff · เจ้าหน้าที่ 21</td><td><span class="chip ok">pass · ผ่าน</span> 21 staff · เจ้าหน้าที่ 21</td><td><span class="chip ok">pass · ผ่าน</span> 21 staff · เจ้าหน้าที่ 21</td><td>Sun · อาทิตย์</td></tr>
+<tr><td>Login 4: a student signs in by class code and name; a new code works, the old code stops<span class="th" lang="th">ล็อกอิน 4: นักเรียนล็อกอินด้วยรหัสห้องและชื่อ รหัสใหม่ใช้ได้ รหัสเก่าใช้ไม่ได้</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span> 30-student class · ห้อง 30 คน</td><td><span class="chip ok">pass · ผ่าน</span> 30 and 5 students · 30 และ 5 คน</td><td>Sun · อาทิตย์</td></tr>
+<tr><td>Login 5: the teacher ends the class and makes the class sheet; a student signs in at home with the sheet username and password (375 px)<span class="th" lang="th">ล็อกอิน 5: ครูจบคลาสและสร้างใบรายชื่อห้อง นักเรียนล็อกอินที่บ้านด้วยชื่อผู้ใช้และรหัสผ่านจากใบรายชื่อ (375 px)</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span> 30 rows · 30 แถว</td><td><span class="chip ok">pass · ผ่าน</span> 30 and 5 rows · 30 และ 5 แถว</td><td>Sun · อาทิตย์</td></tr>
+<tr><td>One admin and one system user (forced change)<span class="th" lang="th">ผู้ดูแลหนึ่งคนและผู้ใช้ระบบหนึ่งคน (บังคับเปลี่ยนรหัสผ่าน)</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td>Sun · อาทิตย์</td></tr>
+<tr><td>Old article URLs: 27 unique ids by script; the printed writing QR<span class="th" lang="th">URL บทความเก่า: 27 รหัสไม่ซ้ำโดยสคริปต์; QR การเขียนที่พิมพ์</span></td><td><span class="chip ok">28 / 28</span></td><td><span class="chip ok">28 / 28</span>, QR pass · ผ่าน</td><td><span class="chip ok">28 / 28</span>, QR pass · ผ่าน</td><td>Sun · อาทิตย์</td></tr>
+<tr><td>At least five scanned printed QR codes (phone camera)<span class="th" lang="th">สแกน QR ที่พิมพ์อย่างน้อยห้าใบ (กล้องโทรศัพท์)</span></td><td colspan="2"><span class="chip warn">owner · เจ้าของ</span> the script opens the same URLs; a camera scan needs a person<span class="th" lang="th">สคริปต์เปิด URL เดียวกัน; การสแกนด้วยกล้องต้องใช้คน</span></td><td>not possible: the printed QR codes open <code>primary.reading-advantage.com</code><span class="th" lang="th">ทำไม่ได้: QR ที่พิมพ์เปิด <code>primary.reading-advantage.com</code></span></td><td>Sun (owner, after C11)<span class="th" lang="th">อาทิตย์ (เจ้าของ หลัง C11)</span></td></tr>
+<tr><td>Five sampled students match the legacy data<span class="th" lang="th">นักเรียนห้าคนที่สุ่มตรงกับข้อมูลเดิม</span></td><td><span class="chip ok">5 / 5</span></td><td><span class="chip ok">5 / 5</span></td><td><span class="chip ok">5 / 5</span></td><td>Sun · อาทิตย์</td></tr>
+<tr><td>A teacher sees the right classes and students<span class="th" lang="th">ครูเห็นห้องเรียนและนักเรียนที่ถูกต้อง</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td>Sun · อาทิตย์</td></tr>
+<tr><td>Reconciliation report: no unexplained skips<span class="th" lang="th">รายงานกระทบยอด: ไม่มีรายการที่ข้ามโดยไม่มีคำอธิบาย</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td>Sun · อาทิตย์</td></tr>
+<tr><td>Article pictures (legacy key) on the story page and the Read list<span class="th" lang="th">ภาพบทความ (คีย์เดิม) ในหน้าเรื่องและรายการ Read</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td><span class="chip ok">pass · ผ่าน</span></td><td>Sun · อาทิตย์</td></tr>
+<tr><td>Tutor opens 3 Origins 3.1 lessons and 1 Origins 2 lesson through <code>tutor_compat</code><span class="th" lang="th">Tutor เปิดบทเรียน Origins 3.1 จำนวน 3 บทและ Origins 2 จำนวน 1 บทผ่าน <code>tutor_compat</code></span></td><td colspan="2"><span class="chip ok">read check MATCH 625</span>; the Tutor app itself on the new database: <span class="chip warn">not done · ยังไม่ทำ</span><span class="th" lang="th">ตรวจการอ่าน MATCH 625; ตัวแอป Tutor บนฐานข้อมูลใหม่: ยังไม่ทำ</span></td><td colspan="2">Decision 4: Tutor keeps the legacy database until its staging check passes (first week)<span class="th" lang="th">การตัดสินใจข้อ 4: Tutor ใช้ฐานข้อมูลเดิมต่อจนกว่าการตรวจบน staging จะผ่าน (สัปดาห์แรก)</span></td></tr>
+</table></div>
+
+<h2>3. What happened on 2026-10-08<span class="th" lang="th">3. เกิดอะไรขึ้นในวันที่ 2026-10-08</span></h2>
+<h3>Cloud part of rehearsal 1<span class="th" lang="th">ส่วนคลาวด์ของการซ้อมครั้งที่ 1</span></h3>
+<ul>
+<li>The migration user needed <code>SET</code> membership in <code>durable_job_audit_owner</code> on Cloud SQL. Run 1 failed on this; run 2 passed after a role step (spec §8 step 2). The grant is instance-wide and stays.
+<span class="th" lang="th">ผู้ใช้ migration ต้องเป็นสมาชิกแบบ <code>SET</code> ของ <code>durable_job_audit_owner</code> บน Cloud SQL การรันครั้งที่ 1 ล้มเหลวเพราะเรื่องนี้ ครั้งที่ 2 ผ่านหลังขั้นตอนกำหนดบทบาท (สเปก §8 ขั้น 2) การให้สิทธิ์นี้มีผลทั้ง instance และคงไว้</span></li>
+<li>Run 2 from the owner's machine: migrate 7 min, ETL 90 min, Tutor read check 32 min. The cause is the network tunnel on this machine (about 180 ms for each database round trip). Locally the same data steps take about 5 minutes. Owner decision: the ETL runs inside GCP with <code>cloudbuild-etl.yaml</code>.
+<span class="th" lang="th">การรันครั้งที่ 2 จากเครื่องของเจ้าของ: migrate 7 นาที, ETL 90 นาที, ตรวจการอ่าน Tutor 32 นาที สาเหตุคืออุโมงค์เครือข่ายบนเครื่องนี้ (ประมาณ 180 ms ต่อการเดินทางไปกลับของฐานข้อมูลหนึ่งครั้ง) ในเครื่องเอง ขั้นตอนข้อมูลเดียวกันใช้ประมาณ 5 นาที เจ้าของตัดสินใจ: ให้ ETL รันภายใน GCP ด้วย <code>cloudbuild-etl.yaml</code></span></li>
+<li>Cloud build 668a4617 failed: two test files import code from another app. Fix 68f28eb56. Build a9198276 passed and deployed revision <code>00128-pac</code> without traffic.
+<span class="th" lang="th">Cloud build 668a4617 ล้มเหลว: ไฟล์ทดสอบสองไฟล์ import โค้ดจากแอปอื่น แก้ไขที่ 68f28eb56 build a9198276 ผ่านและ deploy revision <code>00128-pac</code> โดยไม่รับทราฟฟิก</span></li>
+<li>Browser check at the tag URL: 25 of 25. Two earlier runs failed on script timing and on this machine's tunnel (DNS drops), not on the app. The server answered every request in less than 0.1 s.
+<span class="th" lang="th">ตรวจผ่านเบราว์เซอร์ที่ URL ของแท็ก: 25 จาก 25 สองรอบก่อนหน้าล้มเหลวเพราะจังหวะเวลาของสคริปต์และอุโมงค์ของเครื่องนี้ (DNS หลุด) ไม่ใช่เพราะแอป เซิร์ฟเวอร์ตอบทุกคำขอในเวลาไม่ถึง 0.1 วินาที</span></li>
+<li>In-GCP ETL test (a rerun into the current <code>primary_v2</code>). First build: the ETL script ignored the Cloud SQL socket and connected to <code>127.0.0.1</code>; fix <code>cbdf5d99c</code>. Second build: the Tutor read check was slow, because a global build can run far from the database. Third build, in <code>asia-southeast1</code>: <span class="chip ok">pass · ผ่าน</span> in 2 min 20 s with the package install. Guard 2 s, migrate 1 s, doctor 1 s, ETL 5 s, Tutor read check 17 s (625 articles, MATCH), student sample 5 of 5.
+<span class="th" lang="th">ทดสอบ ETL ใน GCP (รันซ้ำลงใน <code>primary_v2</code> ปัจจุบัน) build แรก: สคริปต์ ETL ไม่ใช้ socket ของ Cloud SQL และเชื่อมต่อ <code>127.0.0.1</code>; แก้ไขที่ <code>cbdf5d99c</code> build ที่สอง: การตรวจการอ่าน Tutor ช้า เพราะ build แบบ global อาจรันไกลจากฐานข้อมูล build ที่สาม ใน <code>asia-southeast1</code>: ผ่านใน 2 นาที 20 วินาที รวมการติดตั้งแพ็กเกจ Guard 2 วินาที, migrate 1 วินาที, doctor 1 วินาที, ETL 5 วินาที, ตรวจการอ่าน Tutor 17 วินาที (625 บทความ, MATCH), สุ่มนักเรียน 5 จาก 5</span></li>
+<li>Primary app tests: one old test still expected the legacy class code on My Classes; fix <code>92c2e2381</code>. The second full run: 1334 of 1334 pass. Type check 0 errors; lint 0 errors on the changed files.
+<span class="th" lang="th">การทดสอบแอป Primary: มีการทดสอบเก่าหนึ่งรายการที่ยังคาดหวังรหัสห้องเดิมในหน้า My Classes; แก้ไขที่ <code>92c2e2381</code> รันเต็มครั้งที่สอง: ผ่าน 1334 จาก 1334 ตรวจชนิดข้อมูล 0 ข้อผิดพลาด; lint 0 ข้อผิดพลาดในไฟล์ที่แก้</span></li>
+</ul>
+<h3>Owner decisions put into code today<span class="th" lang="th">การตัดสินใจของเจ้าของที่นำเข้าโค้ดวันนี้</span></h3>
+<ul>
+<li>Student usernames: two simple English words and two digits (for example <code>bluetiger47</code>). A username follows the student for years: no email, no class, no grade.
+<span class="th" lang="th">ชื่อผู้ใช้นักเรียน: คำภาษาอังกฤษง่าย ๆ สองคำและตัวเลขสองหลัก (เช่น <code>bluetiger47</code>) ชื่อผู้ใช้อยู่กับนักเรียนหลายปี: ไม่มีอีเมล ไม่มีห้อง ไม่มีระดับชั้น</span></li>
+<li>Students have no email: not in the ETL, not in the student import, not on the admin Add student and Edit student pages.
+<span class="th" lang="th">นักเรียนไม่มีอีเมล: ไม่อยู่ใน ETL ไม่อยู่ในการนำเข้านักเรียน และไม่อยู่ในหน้า Add student และ Edit student ของผู้ดูแล</span></li>
+<li>Migrated classes start with the picture password off. My Classes has no legacy class code column. Two students with the same first name show the last-name initial.
+<span class="th" lang="th">ห้องเรียนที่ย้ายมาเริ่มต้นโดยปิดรหัสผ่านแบบรูปภาพ หน้า My Classes ไม่มีคอลัมน์รหัสห้องเดิม นักเรียนสองคนที่ชื่อต้นเหมือนกันแสดงอักษรย่อนามสกุล</span></li>
+<li>Option A for home sign-in: each teacher prints the class sheet at the cutover (spec runbook step 10).
+<span class="th" lang="th">ตัวเลือก A สำหรับล็อกอินที่บ้าน: ครูแต่ละคนพิมพ์ใบรายชื่อห้องเรียนตอนตัดโอน (ขั้นตอน runbook ข้อ 10 ในสเปก)</span></li>
+</ul>
+<div class="table-wrap"><table>
+<tr><th>Commit</th><th>Change · การเปลี่ยนแปลง</th></tr>
+<tr><td><code>cfef79c88</code></td><td>Regional ETL build results; the spec and the command sheet name <code>--region=asia-southeast1</code><span class="th" lang="th">ผลการ build ETL แบบระบุภูมิภาค; สเปกและเอกสารคำสั่งระบุ <code>--region=asia-southeast1</code></span></td></tr>
+<tr><td><code>92c2e2381</code></td><td>Test fix: My Classes shows no legacy class code<span class="th" lang="th">แก้การทดสอบ: My Classes ไม่แสดงรหัสห้องเดิม</span></td></tr>
+<tr><td><code>cbdf5d99c</code></td><td>ETL script connects through the Cloud SQL socket<span class="th" lang="th">สคริปต์ ETL เชื่อมต่อผ่าน socket ของ Cloud SQL</span></td></tr>
+<tr><td><code>2dc6a7c10</code></td><td>Rehearsal 1 cloud results, cutover command sheet<span class="th" lang="th">ผลการซ้อมครั้งที่ 1 บนคลาวด์ เอกสารคำสั่งตัดโอน</span></td></tr>
+<tr><td><code>901a85277</code></td><td>Spec 1.8: calendar for 2026-10-11, deploy and traffic commands, legacy trigger, rollback command<span class="th" lang="th">สเปก 1.8: ปฏิทินสำหรับ 2026-10-11 คำสั่ง deploy และสลับทราฟฟิก trigger ของระบบเดิม คำสั่ง rollback</span></td></tr>
+<tr><td><code>68f28eb56</code></td><td>Cloud build fix: no cross-app test files in the type check (the frozen build commit)<span class="th" lang="th">แก้ Cloud build: ไม่มีไฟล์ทดสอบข้ามแอปในการตรวจชนิดข้อมูล (commit ของ build ที่ล็อก)</span></td></tr>
+<tr><td><code>4f56f18c3</code></td><td>No email on the admin Add student and Edit student pages<span class="th" lang="th">ไม่มีอีเมลในหน้า Add student และ Edit student ของผู้ดูแล</span></td></tr>
+<tr><td><code>4f3875897</code></td><td>The ETL runs in Cloud Build<span class="th" lang="th">ETL รันใน Cloud Build</span></td></tr>
+<tr><td><code>e6f0c7cd3</code>, <code>5dd9add8a</code></td><td>Permanent two-word student usernames; no student email in the ETL and the import<span class="th" lang="th">ชื่อผู้ใช้นักเรียนถาวรแบบสองคำ; ไม่มีอีเมลนักเรียนใน ETL และการนำเข้า</span></td></tr>
+<tr><td><code>3a8f3a2fe</code>, <code>8b5b1cfec</code>, <code>f5d5f4004</code></td><td>Rehearsal 1 findings 1 to 3<span class="th" lang="th">ข้อค้นพบ 1 ถึง 3 ของการซ้อมครั้งที่ 1</span></td></tr>
+<tr><td><code>7bb6b1065</code>, <code>30e31bee8</code></td><td>ETL time zone and question order fixes; the five-student sample check<span class="th" lang="th">แก้เขตเวลาและลำดับคำถามของ ETL; การสุ่มตรวจนักเรียนห้าคน</span></td></tr>
+</table></div>
+
+<h2>4. Owner decisions (made on 2026-10-09)<span class="th" lang="th">4. การตัดสินใจของเจ้าของ (ตัดสินใจเมื่อ 2026-10-09)</span></h2>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>Decision · การตัดสินใจ</th><th>Your answer · คำตอบของคุณ</th><th>Effect · ผลที่ตามมา</th></tr>
+<tr><td>1</td><td>How to stop writes to the legacy database at the cutover start<span class="th" lang="th">วิธีหยุดการเขียนลงฐานข้อมูลเดิมตอนเริ่มตัดโอน</span></td><td><span class="chip ok">announcement only · ประกาศอย่างเดียว</span></td><td>No technical block. A write to the legacy database after the final backup (C4) is lost. Students are on the school break.<span class="th" lang="th">ไม่มีการบล็อกทางเทคนิค การเขียนลงฐานข้อมูลเดิมหลังการสำรองครั้งสุดท้าย (C4) จะสูญหาย นักเรียนอยู่ในช่วงปิดเทอม</span></td></tr>
+<tr><td>2</td><td>Accounts for the production check<span class="th" lang="th">บัญชีสำหรับการตรวจบนระบบจริง</span></td><td><span class="chip ok">demo school · โรงเรียนเดโม</span></td><td>The script uses the demo teacher, the demo admin, and the demo class. It keeps their new passwords in a private file in your folder. You check the system role with your own account on a phone.<span class="th" lang="th">สคริปต์ใช้ครูเดโม ผู้ดูแลเดโม และห้องเดโม เก็บรหัสผ่านใหม่ของบัญชีเหล่านั้นในไฟล์ส่วนตัวในโฟลเดอร์ของคุณ คุณตรวจบทบาทระบบด้วยบัญชีของคุณเองบนโทรศัพท์</span></td></tr>
+<tr><td>3</td><td>The demo school<span class="th" lang="th">โรงเรียนเดโม</span></td><td><span class="chip ok">keep as it is · คงไว้ตามเดิม</span></td><td>It moves like every school. A new demo reset waits until after the freeze.<span class="th" lang="th">ย้ายเหมือนโรงเรียนอื่นทุกแห่ง การรีเซ็ตเดโมใหม่รอจนหลังช่วงล็อก</span></td></tr>
+<tr><td>4</td><td>Tutor on Sunday<span class="th" lang="th">Tutor ในวันอาทิตย์</span></td><td><span class="chip ok">legacy database until staging · ฐานข้อมูลเดิมจนกว่า staging จะผ่าน</span></td><td>Tutor keeps reading the legacy database. It switches after its staging check, in the first week. New lessons reach Tutor only after the switch.<span class="th" lang="th">Tutor อ่านฐานข้อมูลเดิมต่อไป และสลับหลังการตรวจบน staging ในสัปดาห์แรก บทเรียนใหม่ถึง Tutor หลังการสลับเท่านั้น</span></td></tr>
+</table></div>
+<div class="card">
+<h3>Also needed from you<span class="th" lang="th">ต้องการจากคุณเพิ่มเติม</span></h3>
+<ul>
+<li>The start hour on Sunday. You run <code>after-etl.sh cutover</code> (about 1 minute) after the ETL (C8).
+<span class="th" lang="th">เวลาเริ่มในวันอาทิตย์ คุณรัน <code>after-etl.sh cutover</code> (ประมาณ 1 นาที) หลัง ETL (C8)</span></li>
+<li>Sunday: merge <code>primary-parity-integration</code> into <code>master</code> with me (no conflict today), then push both branches.
+<span class="th" lang="th">วันอาทิตย์: merge <code>primary-parity-integration</code> เข้า <code>master</code> ร่วมกับฉัน (วันนี้ไม่มี conflict) แล้ว push ทั้งสอง branch</span></li>
+<li>Sunday: your go before the traffic switch; scan five printed QR codes with a phone.
+<span class="th" lang="th">วันอาทิตย์: สัญญาณ go ของคุณก่อนสลับทราฟฟิก; สแกน QR ที่พิมพ์ห้าใบด้วยโทรศัพท์</span></li>
+<li>After the switch: give each teacher their line of the hand-out list; tell the teachers to print the class sheets.
+<span class="th" lang="th">หลังสลับ: ให้ครูแต่ละคนได้บรรทัดของตนจากรายการแจกรหัส; แจ้งครูให้พิมพ์ใบรายชื่อห้องเรียน</span></li>
+<li>After the cutover, your choice: rename the five demo students in the app, or keep them (finding 1 in section 0).
+<span class="th" lang="th">หลังตัดโอน คุณเลือกได้: เปลี่ยนชื่อนักเรียนเดโมทั้งห้าในแอป หรือคงไว้ (ข้อค้นพบ 1 ในหัวข้อ 0)</span></li>
+</ul>
+</div>
+
+<h2>5. Cutover evening (Sunday)<span class="th" lang="th">5. ช่วงเย็นของการตัดโอน (วันอาทิตย์)</span></h2>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>Who · ผู้ทำ</th><th>Step · ขั้นตอน</th><th>Time · เวลา</th></tr>
+<tr><td>C1</td><td>Owner · เจ้าของ</td><td>Tell the team in the group chat<span class="th" lang="th">แจ้งทีมในแชตกลุ่ม</span></td><td>—</td></tr>
+<tr><td>C2</td><td>Agent · เอเจนต์</td><td>The five legacy scheduler jobs are still paused<span class="th" lang="th">งาน scheduler ของระบบเดิมทั้งห้างานยังหยุดอยู่</span></td><td>1 min · 1 นาที</td></tr>
+<tr><td>C3</td><td>—</td><td>Stop legacy writes: announcement only (decision 1), no command<span class="th" lang="th">หยุดการเขียนของระบบเดิม: ประกาศอย่างเดียว (การตัดสินใจข้อ 1) ไม่มีคำสั่ง</span></td><td>—</td></tr>
+<tr><td>C4</td><td>Agent · เอเจนต์</td><td>Final backup of the legacy database<span class="th" lang="th">สำรองฐานข้อมูลเดิมครั้งสุดท้าย</span></td><td>1 min · 1 นาที</td></tr>
+<tr><td>C5</td><td>Owner + agent · เจ้าของ + เอเจนต์</td><td>Merge integration into master; owner pushes both branches<span class="th" lang="th">merge integration เข้า master; เจ้าของ push ทั้งสอง branch</span></td><td>5 min · 5 นาที</td></tr>
+<tr><td>C6</td><td>Owner · เจ้าของ</td><td>Drop and create <code>primary_v2</code> (as R2)<span class="th" lang="th">ลบและสร้าง <code>primary_v2</code> ใหม่ (เหมือน R2)</span></td><td>1 min · 1 นาที</td></tr>
+<tr><td>C7</td><td>Agent · เอเจนต์</td><td>ETL in Cloud Build: guard, migrate, doctor, ETL, Tutor read check, student sample<span class="th" lang="th">ETL ใน Cloud Build: guard, migrate, doctor, ETL, ตรวจการอ่าน Tutor, สุ่มนักเรียน</span></td><td>3 min · 3 นาที</td></tr>
+<tr><td>C8</td><td>Owner · เจ้าของ</td><td><code>after-etl.sh cutover</code>: temporary passwords (hand-out list), printed-link check<span class="th" lang="th"><code>after-etl.sh cutover</code>: รหัสผ่านชั่วคราว (รายการแจกรหัส), ตรวจลิงก์ที่พิมพ์</span></td><td>1 min · 1 นาที</td></tr>
+<tr><td>C9</td><td>Agent · เอเจนต์</td><td>Deploy the rehearsal 2 image, secret version pinned, no traffic, tag <code>cutover</code><span class="th" lang="th">deploy image จากการซ้อมครั้งที่ 2 ตรึงเวอร์ชัน secret ไม่รับทราฟฟิก แท็ก <code>cutover</code></span></td><td>2 min · 2 นาที</td></tr>
+<tr><td>C10</td><td>Agent + owner · เอเจนต์ + เจ้าของ</td><td>Go/no-go check at the tag URL with the demo school; you sign in with your own system account on a phone<span class="th" lang="th">ตรวจ go/no-go ที่ URL ของแท็กด้วยโรงเรียนเดโม; คุณล็อกอินด้วยบัญชีระบบของคุณเองบนโทรศัพท์</span></td><td>15 min · 15 นาที</td></tr>
+<tr><td>C11</td><td>Owner go, agent · เจ้าของให้ go, เอเจนต์ทำ</td><td>Route 100% of the traffic to the tag <code>cutover</code><span class="th" lang="th">ส่งทราฟฟิก 100% ไปที่แท็ก <code>cutover</code></span></td><td>1 min · 1 นาที</td></tr>
+<tr><td>C12</td><td>Agent · เอเจนต์</td><td>Turn off the legacy build trigger <code>primary-advantege-prod</code><span class="th" lang="th">ปิด build trigger ของระบบเดิม <code>primary-advantege-prod</code></span></td><td>1 min · 1 นาที</td></tr>
+<tr><td>C13</td><td>Agent · เอเจนต์</td><td>Smoke check on <code>primary.reading-advantage.com</code><span class="th" lang="th">smoke check บน <code>primary.reading-advantage.com</code></span></td><td>5 min · 5 นาที</td></tr>
+<tr><td>C14</td><td>Owner and team · เจ้าของและทีม</td><td>Hand-out list to the teachers; teachers print the class sheets<span class="th" lang="th">ส่งรายการแจกรหัสให้ครู; ครูพิมพ์ใบรายชื่อห้องเรียน</span></td><td>next days · วันถัดไป</td></tr>
+</table></div>
+<p><b>Rollback</b> (decide within 24 hours): route the traffic back to the legacy revision <code>primary-advantage-app-00125-9wd</code>. The legacy database has no block, so nothing else is needed. Data written to the new database after the switch is lost on rollback.
+<span class="th" lang="th"><b>Rollback</b> (ตัดสินใจภายใน 24 ชั่วโมง): ส่งทราฟฟิกกลับไปที่ revision เดิม <code>primary-advantage-app-00125-9wd</code> ฐานข้อมูลเดิมไม่มีการบล็อก จึงไม่ต้องทำอย่างอื่น ข้อมูลที่เขียนลงฐานข้อมูลใหม่หลังการสลับจะสูญหายเมื่อ rollback</span></p>
+
+<h2>6. Risks and controls<span class="th" lang="th">6. ความเสี่ยงและมาตรการควบคุม</span></h2>
+<div class="table-wrap"><table>
+<tr><th>Risk · ความเสี่ยง</th><th>Level · ระดับ</th><th>Control · มาตรการ</th></tr>
+<tr><td>A push to the legacy repository's <code>main</code> starts the legacy trigger. It deploys the legacy app with traffic, over the new app.<span class="th" lang="th">การ push ไปที่ <code>main</code> ของ repository เดิมจะเริ่ม trigger ของระบบเดิม ซึ่ง deploy แอปเดิมพร้อมทราฟฟิกทับแอปใหม่</span></td><td><span class="chip bad">high · สูง</span></td><td>C12 turns the trigger off right after the switch. The last legacy push was on 2026-08-28.<span class="th" lang="th">C12 ปิด trigger ทันทีหลังการสลับ push ล่าสุดของระบบเดิมคือ 2026-08-28</span></td></tr>
+<tr><td>A code change after rehearsal 2 makes the rehearsal invalid.<span class="th" lang="th">การเปลี่ยนโค้ดหลังการซ้อมครั้งที่ 2 ทำให้การซ้อมใช้ไม่ได้</span></td><td><span class="chip warn">medium · กลาง</span></td><td>The build inputs freeze at the commit that rehearsal 2 builds. The cutover deploys the rehearsal 2 image; there is no new build on Sunday.<span class="th" lang="th">อินพุตการ build ล็อกที่ commit ที่การซ้อมครั้งที่ 2 ใช้ build การตัดโอน deploy image จากการซ้อมครั้งที่ 2 ไม่มี build ใหม่ในวันอาทิตย์</span></td></tr>
+<tr><td>Students cannot sign in at home until their teacher prints the class sheet. The legacy class code worked at all times.<span class="th" lang="th">นักเรียนล็อกอินที่บ้านไม่ได้จนกว่าครูจะพิมพ์ใบรายชื่อห้องเรียน รหัสห้องเดิมใช้ได้ตลอดเวลา</span></td><td><span class="chip warn">medium · กลาง</span></td><td>Runbook step 10; the team reminds each teacher. In class, the class code and the name work while the teacher has the class open.<span class="th" lang="th">runbook ข้อ 10; ทีมเตือนครูแต่ละคน ในห้องเรียน รหัสห้องและชื่อใช้ได้ขณะที่ครูเปิดห้องไว้</span></td></tr>
+<tr><td>This machine's network tunnel: slow database round trips, DNS drops.<span class="th" lang="th">อุโมงค์เครือข่ายของเครื่องนี้: การเดินทางไปกลับของฐานข้อมูลช้า DNS หลุด</span></td><td><span class="chip warn">medium · กลาง</span></td><td>The ETL runs inside GCP. The browser script retries page loads. The owner's phone check does not use this machine.<span class="th" lang="th">ETL รันภายใน GCP สคริปต์เบราว์เซอร์ลองโหลดหน้าซ้ำ การตรวจด้วยโทรศัพท์ของเจ้าของไม่ใช้เครื่องนี้</span></td></tr>
+<tr><td>This machine has 7 GB of memory; heavy jobs kill Postgres.<span class="th" lang="th">เครื่องนี้มีหน่วยความจำ 7 GB; งานหนักทำให้ Postgres ถูกฆ่า</span></td><td><span class="chip info">low · ต่ำ</span></td><td>Peers run no heavy job during the checks (graph and Workbooks agreed).<span class="th" lang="th">เซสชันอื่นไม่รันงานหนักระหว่างการตรวจ (graph และ Workbooks ตกลงแล้ว)</span></td></tr>
+<tr><td>The Cloud Build ETL is new.<span class="th" lang="th">ETL บน Cloud Build เป็นของใหม่</span></td><td><span class="chip info">low · ต่ำ</span></td><td>It passed twice in asia-southeast1, the second time on an empty database in rehearsal 2 (2 min 22 s). Always submit it with <code>--region=asia-southeast1</code>.<span class="th" lang="th">ผ่านสองครั้งใน asia-southeast1 ครั้งที่สองบนฐานข้อมูลว่างในการซ้อมครั้งที่ 2 (2 นาที 22 วินาที) ส่งด้วย <code>--region=asia-southeast1</code> เสมอ</span></td></tr>
+<tr><td>C6 can stop if an idle rehearsal instance still holds a connection to <code>primary_v2</code>.<span class="th" lang="th">C6 อาจหยุดหากอินสแตนซ์ซ้อมที่ว่างยังถือการเชื่อมต่อกับ <code>primary_v2</code></span></td><td><span class="chip info">low · ต่ำ</span></td><td>The drop worked in rehearsal 2. If it stops, wait 15 minutes for the idle instances to stop, then run C6 again.<span class="th" lang="th">การลบทำงานได้ในการซ้อมครั้งที่ 2 หากหยุด รอ 15 นาทีให้อินสแตนซ์ที่ว่างหยุดทำงาน แล้วรัน C6 อีกครั้ง</span></td></tr>
+<tr><td>Cleanup of old images deletes the cutover image.<span class="th" lang="th">การล้าง image เก่าลบ image สำหรับตัดโอน</span></td><td><span class="chip info">low · ต่ำ</span></td><td>The repository deletes images older than 30 days and keeps the 5 newest. The image was built on 2026-10-08, so it stays until 2026-11-07 at the earliest.<span class="th" lang="th">repository ลบ image ที่เก่ากว่า 30 วันและเก็บ 5 รายการล่าสุด image นี้ build เมื่อ 2026-10-08 จึงอยู่ถึง 2026-11-07 เป็นอย่างเร็ว</span></td></tr>
+<tr><td>A write to the legacy database after the final backup is lost (decision 1: announcement only).<span class="th" lang="th">การเขียนลงฐานข้อมูลเดิมหลังการสำรองครั้งสุดท้ายจะสูญหาย (การตัดสินใจข้อ 1: ประกาศอย่างเดียว)</span></td><td><span class="chip info">low · ต่ำ</span></td><td>The announcement in C1; students are on the school break; C4 to C11 take about 30 minutes. Workbooks confirmed: no content write from 2026-10-11 12:00 Bangkok.<span class="th" lang="th">ประกาศใน C1; นักเรียนอยู่ในช่วงปิดเทอม; C4 ถึง C11 ใช้ประมาณ 30 นาที Workbooks ยืนยัน: ไม่มีการเขียนเนื้อหาตั้งแต่ 2026-10-11 เวลา 12:00 น. กรุงเทพฯ</span></td></tr>
+</table></div>
+
+<h2>7. After the cutover (not part of Sunday)<span class="th" lang="th">7. หลังการตัดโอน (ไม่รวมในวันอาทิตย์)</span></h2>
+<ul>
+<li>The feature freeze ends. Waiting work: www Primary features (PR branch), Primary public pages, the Forge answer audio part B (lane-g), legacy games removal Phase 3, YLE, T3, and grammar tracks.
+<span class="th" lang="th">ช่วงล็อกฟีเจอร์สิ้นสุด งานที่รออยู่: ฟีเจอร์ www Primary (PR branch), หน้าสาธารณะของ Primary, เสียงเฉลย Forge ส่วน B (lane-g), การถอดเกมเดิม เฟส 3, และแทร็ก YLE, T3 และไวยากรณ์</span></li>
+<li>Graph: the tags backfill on the new database before the evidence worker starts (runbook step 11).
+<span class="th" lang="th">Graph: backfill แท็กบนฐานข้อมูลใหม่ก่อนที่ evidence worker เริ่มทำงาน (runbook ข้อ 11)</span></li>
+<li>Workbooks: the injector writes new lessons into the new database.
+<span class="th" lang="th">Workbooks: injector เขียนบทเรียนใหม่ลงฐานข้อมูลใหม่</span></li>
+<li>Tutor switches to the new database after its staging check (decision 4).
+<span class="th" lang="th">Tutor สลับไปใช้ฐานข้อมูลใหม่หลังการตรวจบน staging (การตัดสินใจข้อ 4)</span></li>
+<li>Owner: the Listen to English game on real phones (saved words games).
+<span class="th" lang="th">เจ้าของ: ทดสอบเกม Listen to English บนโทรศัพท์จริง (เกมคำศัพท์ที่บันทึกไว้)</span></li>
+</ul>
+
+<footer>Made by the monorepo session on 2026-10-08. Updated on 2026-10-09 with the 4 owner decisions and the rehearsal 2 result. The report holds no password and no personal name.
+<span class="th" lang="th">จัดทำโดยเซสชัน monorepo เมื่อ 2026-10-08 อัปเดตเมื่อ 2026-10-09 พร้อมการตัดสินใจของเจ้าของ 4 ข้อและผลการซ้อมครั้งที่ 2 รายงานนี้ไม่มีรหัสผ่านและไม่มีชื่อบุคคล</span></footer>
+</main>
+</body>
+</html>
