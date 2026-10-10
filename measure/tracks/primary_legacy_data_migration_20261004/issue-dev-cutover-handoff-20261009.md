@@ -77,7 +77,7 @@ Options / ตัวเลือก (the owner chooses / เจ้าของเ
 | # | Step / ขั้นตอน |
 |---|---|
 | C2 | Turn off the legacy build trigger `primary-advantege-prod`, before C9. A push to the legacy `main` deploys the legacy app over the new app. / ปิด build trigger ของระบบเดิม `primary-advantege-prod` ก่อน C9 การ push ไปที่ `main` เดิมจะ deploy แอปเดิมทับแอปใหม่ |
-| C5 | Merge `primary-parity-integration` into `master`; push both branches / merge แล้ว push ทั้งสอง branch |
+| C5 | Merge `primary-parity-integration` into `master`; push both branches. The master push starts a www deploy (about 15 minutes); check it with `gh run list --workflow=cd-www-reading-advantage.yml --branch=master --limit=3`. A failed www build does not affect Primary / merge แล้ว push ทั้งสอง branch การ push ไปที่ master จะเริ่ม deploy www (ประมาณ 15 นาที) ตรวจด้วย `gh run list --workflow=cd-www-reading-advantage.yml --branch=master --limit=3` ถ้า build ของ www ล้มเหลว Primary ไม่ได้รับผลกระทบ |
 | C7 | Gate first: the `latest` version of `PRIMARY_V2_DATABASE_URL` must be version 1, because C9 pins `:1` / ตรวจก่อน: เวอร์ชัน `latest` ของ `PRIMARY_V2_DATABASE_URL` ต้องเป็นเวอร์ชัน 1 เพราะ C9 ตรึง `:1` |
 | C9 | Deploy the rehearsal 2 image with the secret version pinned, no traffic, tag `cutover` / deploy image จากการซ้อมครั้งที่ 2 ตรึงเวอร์ชัน secret ไม่รับทราฟฟิก แท็ก `cutover` |
 | C10 | Set `BASE` to the `cutover` tag URL. Without `BASE`, the check script uses `localhost:3000` / ตั้ง `BASE` เป็น URL ของแท็ก `cutover` ถ้าไม่ตั้ง สคริปต์ตรวจจะใช้ `localhost:3000` |
