@@ -1,7 +1,7 @@
 # Primary cutover 2026-10-11: dev handoff / ส่งต่องานให้ผู้พัฒนา
 
 Full report / รายงานฉบับเต็ม: `cutover-readiness-20261008.bilingual.html` (this folder / โฟลเดอร์นี้)
-Steps / ขั้นตอน: `cutover-commands-20261011.md`, `docs/deployment/primary-cutover-migration-spec.md` 1.8
+Steps / ขั้นตอน: `cutover-commands-20261011.md`, `docs/deployment/primary-cutover-migration-spec.md` 1.10
 
 ## Status / สถานะ
 
@@ -31,10 +31,18 @@ Code, links, and tests must not store a rehearsal UUID. Use the legacy cuid. `pr
 โค้ด ลิงก์ และการทดสอบต้องไม่เก็บ UUID จากการซ้อม ให้ใช้ cuid เดิม ซึ่ง `primary_legacy_id_map` แปลงให้
 
 Acceptance / เกณฑ์ผ่าน:
-- [ ] No repo file, script, or Tutor setting holds a rehearsal article UUID.
-      ไม่มีไฟล์ สคริปต์ หรือค่าตั้งของ Tutor ที่เก็บ UUID บทความจากการซ้อม
-- [ ] The repo search found none in the runbooks, the Primary tracks, and the scripts (checked 2026-10-09). Check the Tutor repo and the Cloud Run environment variables.
-      การค้นหาใน repo นี้ไม่พบใน runbook แทร็ก Primary และสคริปต์ (ตรวจเมื่อ 2026-10-09) ให้ตรวจ repo ของ Tutor และตัวแปรสภาพแวดล้อมของ Cloud Run
+- [x] No repo file, script, or Tutor setting holds a rehearsal article UUID (checked 2026-10-10).
+      ไม่มีไฟล์ สคริปต์ หรือค่าตั้งของ Tutor ที่เก็บ UUID บทความจากการซ้อม (ตรวจเมื่อ 2026-10-10)
+- [x] The repo search found none in the runbooks, the Primary tracks, and the scripts (checked 2026-10-09). The Tutor repo and the Cloud Run settings are checked (2026-10-10, read only):
+      การค้นหาใน repo นี้ไม่พบใน runbook แทร็ก Primary และสคริปต์ (ตรวจเมื่อ 2026-10-09) ตรวจ repo ของ Tutor และค่าตั้งของ Cloud Run แล้ว (2026-10-10 อ่านอย่างเดียว):
+  - Cloud Run: the Primary service and its 128 revisions; the 6 Tutor services (project `reading-advantage`) and their revisions. Every UUID there is a Cloud Run ID (operation, service, build), not an article.
+    Cloud Run: service ของ Primary และ revision ทั้ง 128 รายการ; service ของ Tutor 6 ตัว (โปรเจกต์ `reading-advantage`) และ revision ทุก UUID ในนั้นเป็น ID ของ Cloud Run (operation, service, build) ไม่ใช่บทความ
+  - Tutor repo `origin/main` 4435ea9: no Primary article UUID (the UUIDs are in the Tutor seed, tests, and a dev login).
+    repo ของ Tutor `origin/main` 4435ea9: ไม่มี UUID บทความของ Primary (UUID อยู่ใน seed การทดสอบ และ dev login ของ Tutor)
+  - This repo at b4378613a: no rehearsal 1 or rehearsal 2 article UUID. Two unit tests and two dated records hold article UUIDs of the test copy `primary_etl_20261007`. The tests use a mock database, so the cutover does not affect them. Optional: replace them after the freeze.
+    repo นี้ที่ b4378613a: ไม่มี UUID บทความจากการซ้อมครั้งที่ 1 หรือ 2 การทดสอบหน่วยสองไฟล์และบันทึกที่ลงวันที่สองไฟล์มี UUID บทความจากสำเนาทดสอบ `primary_etl_20261007` การทดสอบใช้ฐานข้อมูลจำลอง การตัดโอนจึงไม่กระทบ ไม่บังคับ: เปลี่ยนหลังช่วงล็อก
+  - The rehearsal UUIDs are only in the link-check logs in `~/Desktop/primary-cutover-inputs`. The check scripts in `.qa-tmp` hold none.
+    UUID จากการซ้อมอยู่เฉพาะใน log การตรวจลิงก์ใน `~/Desktop/primary-cutover-inputs` สคริปต์ตรวจใน `.qa-tmp` ไม่มี
 
 ### 2. Tutor on the new database / Tutor บนฐานข้อมูลใหม่
 
@@ -68,12 +76,17 @@ Options / ตัวเลือก (the owner chooses / เจ้าของเ
 
 | # | Step / ขั้นตอน |
 |---|---|
+| C2 | Turn off the legacy build trigger `primary-advantege-prod`, before C9. A push to the legacy `main` deploys the legacy app over the new app. / ปิด build trigger ของระบบเดิม `primary-advantege-prod` ก่อน C9 การ push ไปที่ `main` เดิมจะ deploy แอปเดิมทับแอปใหม่ |
 | C5 | Merge `primary-parity-integration` into `master`; push both branches / merge แล้ว push ทั้งสอง branch |
+| C7 | Gate first: the `latest` version of `PRIMARY_V2_DATABASE_URL` must be version 1, because C9 pins `:1` / ตรวจก่อน: เวอร์ชัน `latest` ของ `PRIMARY_V2_DATABASE_URL` ต้องเป็นเวอร์ชัน 1 เพราะ C9 ตรึง `:1` |
 | C9 | Deploy the rehearsal 2 image with the secret version pinned, no traffic, tag `cutover` / deploy image จากการซ้อมครั้งที่ 2 ตรึงเวอร์ชัน secret ไม่รับทราฟฟิก แท็ก `cutover` |
-| C12 | Turn off the legacy build trigger `primary-advantege-prod`. A push to the legacy `main` deploys the legacy app over the new app. / ปิด trigger ของระบบเดิม การ push ไปที่ `main` เดิมจะ deploy แอปเดิมทับแอปใหม่ |
+| C10 | Set `BASE` to the `cutover` tag URL. Without `BASE`, the check script uses `localhost:3000` / ตั้ง `BASE` เป็น URL ของแท็ก `cutover` ถ้าไม่ตั้ง สคริปต์ตรวจจะใช้ `localhost:3000` |
+| C12 | Check that 100% of the traffic goes to the `cutover` revision / ตรวจว่าทราฟฟิก 100% ไปที่ revision ของแท็ก `cutover` |
 
-Rollback (within 24 hours / ภายใน 24 ชั่วโมง): route the traffic back to revision `primary-advantage-app-00125-9wd`. Data written to the new database after the switch is lost.
-ส่งทราฟฟิกกลับไปที่ revision `primary-advantage-app-00125-9wd` ข้อมูลที่เขียนลงฐานข้อมูลใหม่หลังการสลับจะสูญหาย
+Owner only: C6, C8, and the go before C11. / เฉพาะเจ้าของ: C6, C8 และการให้ go ก่อน C11
+
+Rollback (within 24 hours / ภายใน 24 ชั่วโมง): route the traffic back to revision `primary-advantage-app-00125-9wd`. Data written to the new database after the switch is lost. Only the owner decides a rollback.
+ส่งทราฟฟิกกลับไปที่ revision `primary-advantage-app-00125-9wd` ข้อมูลที่เขียนลงฐานข้อมูลใหม่หลังการสลับจะสูญหาย เจ้าของเท่านั้นตัดสินใจ rollback
 
 ## After the cutover / หลังการตัดโอน
 
