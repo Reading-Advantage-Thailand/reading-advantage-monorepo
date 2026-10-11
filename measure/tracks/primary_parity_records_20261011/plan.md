@@ -31,7 +31,7 @@ corrections with evidence, and the "tests" are the checks of the records.
     - Defaults used: none (the spec has no Member Question).
     - Note: the NFR-5 message to the monorepo session is the job of the orchestrator. No write was made to the uncommitted cutover record.
 
-## Phase 2: Test — checks for the records
+## Phase 2: Test — checks for the records [checkpoint: f327b4b4f]
 
 - [x] Task: List the tests that read `measure/lessons-learned.md`
     - [x] Run `grep -rln "lessons-learned.md" --include=*.test.ts packages apps measure`
