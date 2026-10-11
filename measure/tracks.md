@@ -1201,3 +1201,105 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: Shared Accounts Across Apps** (created 2026-10-09; spec only; code after the Primary cutover and the end of the freeze) *Link: [./tracks/shared_accounts_20261009/](./tracks/shared_accounts_20261009/)*
   One account for each person across all apps: a shared learner identity database and a session cookie on .reading-advantage.com for students and teachers, and the existing company identity with a role per app for staff. Reading starts on shared accounts; Primary users move after that.
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: correct the parity records of the stopped 2026-10-11 cutover**
+  *Link: [./tracks/primary_parity_records_20261011/](./tracks/primary_parity_records_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: side-by-side acceptance kit (matched copies, matching accounts, capture script, report, behavior contract template)**
+  *Link: [./tracks/primary_parity_acceptance_20261011/](./tracks/primary_parity_acceptance_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: quick fixes (ADM-02, ADM-06, TCH-05, TCH-08, STU-02, STU-03, STU-06, STU-07, STU-08, STU-16, STU-17, PUB-04, PUB-05)**
+  *Link: [./tracks/primary_parity_quick_fixes_20261011/](./tracks/primary_parity_quick_fixes_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 2*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: cleanup (System Testing page, Admin Article Creation, content generation, old game host M4 with the ElvGames copy first, old game URL redirects, AI model configuration)**
+  *Link: [./tracks/primary_parity_cleanup_20261011/](./tracks/primary_parity_cleanup_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 2*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: Class books ready at the cutover**
+  *Link: [./tracks/primary_parity_class_books_20261011/](./tracks/primary_parity_class_books_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: Staff student view (Preview mode)**
+  *Link: [./tracks/primary_parity_staff_student_view_20261011/](./tracks/primary_parity_staff_student_view_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: School admin dashboard with real data (ADM-01, SYS-03, ADM-13)**
+  *Link: [./tracks/primary_parity_admin_dashboard_20261011/](./tracks/primary_parity_admin_dashboard_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: Teacher home numbers and class table with CSV (TCH-03)**
+  *Link: [./tracks/primary_parity_teacher_home_20261011/](./tracks/primary_parity_teacher_home_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: System dashboard with platform totals and a schools table (SYS-01)**
+  *Link: [./tracks/primary_parity_system_dashboard_20261011/](./tracks/primary_parity_system_dashboard_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 5*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: School management for admins and SYSTEM (ADM-03, ADM-04, SYS-05, school license view)**
+  *Link: [./tracks/primary_parity_school_management_20261011/](./tracks/primary_parity_school_management_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 5*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: Stories in Read**
+  *Link: [./tracks/primary_parity_stories_20261011/](./tracks/primary_parity_stories_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: Read-along that follows the voice**
+  *Link: [./tracks/primary_parity_read_along_20261011/](./tracks/primary_parity_read_along_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: Teach a lesson again and start a lesson again**
+  *Link: [./tracks/primary_parity_lesson_repeat_20261011/](./tracks/primary_parity_lesson_repeat_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: Chibi Quest games in the vocabulary step and the sentence step of the lesson**
+  *Link: [./tracks/primary_parity_lesson_games_20261011/](./tracks/primary_parity_lesson_games_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: Print one lesson with the Workbooks primary template**
+  *Link: [./tracks/primary_parity_print_lesson_20261011/](./tracks/primary_parity_print_lesson_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 8*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: Installable app and a worker that replaces the legacy worker**
+  *Link: [./tracks/primary_parity_pwa_20261011/](./tracks/primary_parity_pwa_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 8*
+
+---
+
+- [ ] **Track: Primary Parity Before the Cutover: member ETL and runbook changes, PUB-03 contact export, full side-by-side acceptance, rehearsal 3, and the next cutover command sheet**
+  *Link: [./tracks/primary_parity_rehearsal3_20261011/](./tracks/primary_parity_rehearsal3_20261011/)*
+  *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 9*

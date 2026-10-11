@@ -1,0 +1,21 @@
+{
+  "track_id": "primary_parity_system_dashboard_20261011",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: System dashboard with platform totals and a schools table (SYS-01)",
+  "estimated_tasks": 19,
+  "actual_tasks": null,
+  "deviation_notes": "Template group 'dashboards'. Extends the shared module with counts grouped by school. A row opens the SYS-03 school choice of the admin dashboard. No schema change.",
+  "depends_on": [
+    "primary_parity_admin_dashboard_20261011"
+  ],
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 5,
+    "depends_on": [
+      "primary_parity_admin_dashboard_20261011"
+    ]
+  }
+}

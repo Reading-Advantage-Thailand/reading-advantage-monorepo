@@ -1,0 +1,53 @@
+{
+  "track_id": "primary_parity_pwa_20261011",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: Installable app and a worker that replaces the legacy worker",
+  "estimated_tasks": 32,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "A phone with the legacy app installed shows the new app after one reload and keeps no legacy cache, and a new phone can install Primary Advantage with the new icons.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "Phones with the legacy app switch to the new app",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Add Primary Advantage to the home screen",
+        "size": "S",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "Install prompt on the student home",
+        "size": "S",
+        "priority": "Should",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "Offline page and offline sign",
+        "size": "S",
+        "priority": "Could",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  },
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 8,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  }
+}

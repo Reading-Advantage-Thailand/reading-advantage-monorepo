@@ -1,0 +1,104 @@
+# Plan: Chibi Quest games in the vocabulary step and the sentence step of the lesson
+
+Track: `primary_parity_lesson_games_20261011`. Branch: a lane branch from `primary-parity-integration`
+after `primary_parity_cleanup_20261011` (M4 removes `packages/game-cartridges`). Tell the monorepo
+session before any write to `primary-parity-integration`. Run one heavy job at a time (a 3D game in
+a browser is a heavy job). Every task follows the TDD order of `measure/workflow.md`.
+
+## Phase D: Design (RPG skin)
+
+- [ ] Task: Check the cartridges and the lesson items
+    - [ ] Confirm that the legacy four (`rpg-battle`, `rune-match`, `dragon-rider`, `enchanted-library`) and `castle-defense`, `potion-rush` load with a `PracticeInput` of lesson size; confirm the Tutor name match `wizard-vs-zombie` and `hero-vs-zombie`
+    - [ ] Count the words and sentences of the 70 lessons of the five printed books on the rehearsal copy (read only); list the lessons that open no cartridge
+- [ ] Task: Design the two steps and the projector panel
+    - [ ] Draw task 10: four cartridges as objects of the arena place (`docs/primary-rpg-skin.md` §3), the last result of each, the locked state, and "Simple game"
+    - [ ] Draw task 12: the sentence cartridges first, then the four activities
+    - [ ] Draw the projector game panel (1280 px and a 1920 px projector) and the full-screen run
+- [ ] Task: Captures and the owner's look check
+    - [ ] Capture at 375 px and 1280 px, day and night, into `measure/tracks/primary_parity_lesson_games_20261011/design/`
+    - [ ] Record the owner's answer and the answers to the Member Questions in `design/look-check.md`
+- [ ] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+
+## Phase S1: Make the game input from the lesson
+_Story ref: spec.md#story-s1_
+
+- [ ] Task: Define the contract
+    - [ ] `lessonPracticeInputRequestSchema` (article id, locale; for a teacher also the class book id and lesson number) and `LESSON_PRACTICE_INPUT_PREFIX` in `packages/domain/src/games/practice-input.ts`
+- [ ] Task: Write the tests (red)
+    - [ ] `packages/domain/src/games/__tests__/practice-input.test.ts` with `packages/domain/src/__tests__/mock-db.ts`: the input from the article snapshot (`sentencs_and_words_for_flashcard`); the limits; the locale; the id `lesson:<articleId>`; a student of another school and a teacher without the class book get FORBIDDEN
+- [ ] Task: Implement (green)
+    - [ ] `packages/domain/src/games/practice-input.ts`: `getLessonPracticeInput`, sharing the parse rules of `buildPracticeInput`; export it in the games index
+    - [ ] A thin server action `apps/primary-advantage/actions/lesson-games.ts` (`getLessonGameInputAction`) for the student and the teacher; a failure logs with `lib/observability/logger.ts`
+- [ ] Task: Docs and doctor
+    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [ ] Task: Measure - User Manual Verification 'Phase S1: Make the game input from the lesson' (Protocol in workflow.md)
+
+## Phase S2: Play a vocabulary game in task 10
+_Story ref: spec.md#story-s2_
+
+- [ ] Task: Define the contracts
+    - [ ] `LESSON_VOCABULARY_GAMES` and `LESSON_SENTENCE_GAMES` (the lists of the Member Question answer) in `apps/primary-advantage/lib/games/lesson-games.ts`
+    - [ ] `getLessonGameResults` (the last result of each cartridge for one article and student, from `game_completions` with `metadata.articleId`) with a Zod output in `packages/domain/src/games/`
+    - [ ] The `articleId` prop and the result callback of `GameHost` (`components/games/game-host.tsx`); `articleId` reaches `storyCompletionInput` through `hostCompletionInput` (`lib/games/completion.ts`)
+    - [ ] Keys for the step texts in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json`
+- [ ] Task: Write the tests (red)
+    - [ ] Domain: `getLessonGameResults` returns the latest run of each cartridge for the article only; school scoping
+    - [ ] App: `lib/games/__tests__/completion.test.ts`: the completion body holds `metadata.articleId`
+    - [ ] App: `components/games/__tests__/game-host.test.tsx`: the `articleId` prop; the error state calls the fallback callback
+    - [ ] App: `components/lesson/task/__tests__/task-vocabulary-game.test.tsx`: four cartridges with the last result; the locked state; "Simple game" opens `LessonMatchingGame`; a load error opens the matching game; the real XP after a run
+    - [ ] App: the lesson summary (`actions/article.ts` `getLessonSummaryData`) adds the game XP of the article
+    - [ ] A key-parity test for the new keys
+- [ ] Task: Implement (green)
+    - [ ] `components/games/game-host.tsx` and `lib/games/completion.ts`: the smallest change
+    - [ ] New `components/lesson/task/task-vocabulary-game.tsx`; `components/lesson/lesson-progress-bar.tsx` task 10 renders it; `task-vocabulary-matching.tsx` stays as the fallback
+    - [ ] `components/lesson/games/lesson-matching-game.tsx`: show the real XP and the real count on the end screen (it is the fallback now)
+    - [ ] `actions/article.ts`: the game XP in the summary
+- [ ] Task: Docs and doctor
+    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [ ] Task: Measure - User Manual Verification 'Phase S2: Play a vocabulary game in task 10' (Protocol in workflow.md)
+
+## Phase S3: Play a sentence game in task 12
+_Story ref: spec.md#story-s3_
+
+- [ ] Task: Define the step
+    - [ ] The order of the sentence cartridges and the four activities in `components/lesson/task/task-sentence-activities.tsx`; keys in the five locale files
+- [ ] Task: Write the tests (red)
+    - [ ] `components/lesson/task/__tests__/task-sentence-activities.test.tsx`: the cartridges first with the last result; locked with fewer than 3 sentences while the four activities stay open; a load error points to the activities
+- [ ] Task: Implement (green)
+    - [ ] `components/lesson/task/task-sentence-activities.tsx` with the shared lesson game picker of Phase S2
+- [ ] Task: Docs and doctor
+    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [ ] Task: Measure - User Manual Verification 'Phase S3: Play a sentence game in task 12' (Protocol in workflow.md)
+
+## Phase S4: Lead a game on the projector
+_Story ref: spec.md#story-s4_
+
+- [ ] Task: Define the panel
+    - [ ] The `helper` prop of `GameHost` (passed to `StoryGameHost`); the projector panel props; keys in the five locale files
+- [ ] Task: Write the tests (red)
+    - [ ] App: `components/teacher/__tests__/projector-game-panel.test.tsx`: the two lists with the lesson input; `save={false}` and `helper` on; no request to `/api/v1/apk/complete`
+    - [ ] App: `components/teacher/__tests__/guide-steps.test.tsx` and the overlay test: steps 9 and 10 link to the projector panel; step 1 keeps `/teacher/game-challenges`
+    - [ ] App: the projector page refuses a teacher who does not manage the class book (existing test extended)
+- [ ] Task: Implement (green)
+    - [ ] New `components/teacher/projector-game-panel.tsx`; `components/teacher/projector-view.tsx` and `.../lessons/[number]/projector/page.tsx` render it
+    - [ ] `components/teacher/guide-steps.tsx` and `guide-overlay.tsx`: the `gamesHref` of steps 9 and 10
+- [ ] Task: Docs and doctor
+    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [ ] Task: Measure - User Manual Verification 'Phase S4: Lead a game on the projector' (Protocol in workflow.md)
+
+## Phase S5: Save nothing in a rehearsal or a preview
+_Story ref: spec.md#story-s5_
+
+- [ ] Task: Define the save switch
+    - [ ] One prop of the lesson flow (`LessonCard`, `lesson-progress-bar.tsx`) that sets `save={false}` for the rehearsal page and the staff preview mode of `primary_parity_staff_student_view_20261011`
+- [ ] Task: Write the tests (red)
+    - [ ] App: `.../lessons/[number]/rehearsal` renders the lesson games with `save={false}`; the step sees the end of a game; the staff preview does the same
+- [ ] Task: Implement (green)
+    - [ ] `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/rehearsal/page.tsx`, `components/lesson/lesson-progress-bar.tsx`, and the two task components
+- [ ] Task: Browser run
+    - [ ] On the rehearsal copy with 2 or 3 demo students: checks A1 to A5 of the spec at 375 px and 1280 px, and one run with `?renderer=phaser`; save the captures in `measure/tracks/primary_parity_lesson_games_20261011/browser-check/`
+- [ ] Task: Final side-by-side check
+    - [ ] Run the checks with the acceptance kit next to legacy task 10; send the captures to the owner
+- [ ] Task: Docs and doctor
+    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [ ] Task: Measure - User Manual Verification 'Phase S5: Save nothing in a rehearsal or a preview' (Protocol in workflow.md)

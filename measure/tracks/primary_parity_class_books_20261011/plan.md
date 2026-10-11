@@ -1,0 +1,131 @@
+# Plan: Class books ready at the cutover
+
+Track: `primary_parity_class_books_20261011`. Branch: a lane branch from `primary-parity-integration`.
+Tell the monorepo session before any write to `primary-parity-integration`. The feature freeze of
+the set applies. Run one heavy job at a time (tsc, a test suite, a build, or a browser), never two.
+Every task follows the TDD order of `measure/workflow.md` (red, green, refactor, commit, git note).
+
+## Phase D: Design (RPG skin)
+
+- [ ] Task: Design the class page order, the book card, and the empty and error texts
+    - [ ] Read `docs/primary-rpg-skin.md` §2 and §6 and `components/rpg/chrome.tsx` (`Panel`, `Plaque`, `RpgLink`, `RpgButton`)
+    - [ ] Draw the class page with the book card first: book name, "Lesson N of M", lesson title, next step with its period, links to the lesson plan and the lesson page
+    - [ ] Draw the empty catalogue, no book assigned, and load error states (texts: spec Member Question 1)
+    - [ ] Draw the class navigation link to the book card
+    - [ ] Save the design as a static mock in `measure/tracks/primary_parity_class_books_20261011/design/` (no app code)
+- [ ] Task: Design the dashboard book slot
+    - [ ] Draw one row per class book, the row for a class with no book, and the empty slot
+    - [ ] Keep the slot in its place on `app/[locale]/teacher/dashboard/page.tsx`; tell `primary_parity_teacher_home_20261011` (same page) about the slot size
+- [ ] Task: Captures and the owner's look check
+    - [ ] Capture each state at 375 px and 1280 px, day and night, into `design/`
+    - [ ] Send the captures to the owner and record the answer in `design/look-check.md`
+- [ ] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+
+## Phase S1: Load the catalogue and the guide after the ETL
+_Story ref: spec.md#story-s1_
+
+- [ ] Task: Define the catalogue build contract
+    - [ ] Write the header of the new file `apps/primary-advantage/cloudbuild-catalogue.yaml`: the purpose, the inputs (build context of the frozen commit, substitution `_WORKBOOKS_ARCHIVE`, secret `DIRECT_DATABASE_URL` from `_TARGET_DATABASE_URL`), the step order, and the submit command (regional, `asia-southeast1`)
+    - [ ] Define the archive layout: `content/primary/{origins-1,origins-2,origins-3.1,origins-3.2,quest-4}/*.json`, `dashboard/lib/teacher-manual/i18n/`, `Teacher guide/step-*.md`, made with `git -C ~/Desktop/Workbooks archive <commit>` and copied to `gs://primary-advantage_cloudbuild/source/`
+    - [ ] Reason for a separate build (record in the header): it runs again alone after a fix, it serves a later catalogue update, and the ETL config that rehearsal 2 tested stays the same
+- [ ] Task: Write the contract test (red)
+    - [ ] New `packages/domain/src/primary-books/__tests__/catalogue-build-contract.test.ts` on the pattern of `packages/db/src/__tests__/primary-deploy-gate-contract.test.ts`
+    - [ ] Assert the step order: fetch the archive, refuse a legacy database (`packages/db/scripts/refuse-legacy-db.ts`), build `@reading-advantage/db`, `import-lesson-packages` with the five folders, `import-lesson-guides --workbooks`
+    - [ ] Assert that the only secret is `DIRECT_DATABASE_URL` and that no step prints an environment value
+    - [ ] Assert that each folder in the step maps to a key of `BOOKS` (`packages/domain/src/primary-books/mapping.ts`)
+- [ ] Task: Implement the catalogue build (green)
+    - [ ] Write `apps/primary-advantage/cloudbuild-catalogue.yaml`: a `cloud-sdk` step copies and extracts the archive to `/workspace/workbooks`; a `node:22-slim` step starts the Cloud SQL proxy, installs, runs the guard, builds `@reading-advantage/db`, and runs both imports
+    - [ ] Fail the build when an import exits non-zero; print only the import summary lines
+- [ ] Task: Run the catalogue build on a scratch copy
+    - [ ] Restore the rehearsal 2 export to a new scratch database (never the shared `primary_advantage`); ask the owner for the secret step
+    - [ ] Run the build once with `--dry-run` flags, then once for real; record the counts (70 lessons, linked, unmapped, failed; 13 en and 13 th guide steps) in `measure/tracks/primary_parity_class_books_20261011/catalogue-run.md`
+    - [ ] Run the build a second time and record that the row counts do not change
+    - [ ] Give the owner each unmapped lesson key, with the reason
+- [ ] Task: Write the runbook and go/no-go text for rehearsal 3
+    - [ ] Write the new step (after the ETL build, before the deploy) and the archive command in `measure/tracks/primary_parity_class_books_20261011/runbook-changes.md`
+    - [ ] Write the new §10 item for `docs/deployment/primary-cutover-migration-spec.md` in the same file
+    - [ ] Tell `primary_parity_rehearsal3_20261011` that the file is ready
+    - [ ] Tell the Workbooks session which Workbooks paths the catalogue build reads, so a change of them reaches the monorepo session
+- [ ] Task: Docs and doctor
+    - [ ] Run `measure/generate.sh`, then `measure/doctor.sh`; correct each failure that names a file of this phase
+- [ ] Task: Measure - User Manual Verification 'Phase S1: Load the catalogue and the guide after the ETL' (Protocol in workflow.md)
+
+## Phase S2: Check the class book in the browser
+_Story ref: spec.md#story-s2_
+
+- [ ] Task: Define the check
+    - [ ] List the checks of spec S2 with their names and the demo accounts (demo teacher, demo class, one demo student)
+- [ ] Task: Write the class book block of the go/no-go browser script
+    - [ ] Add the block to the go/no-go script (today `.qa-tmp/rehearsal1-gonogo.mjs`, untracked, in the main checkout; use the tracked path if `primary_parity_acceptance_20261011` moves the script)
+    - [ ] Check the class page order, the assign, the lesson page, the projector text, and `/en/b/o3-2/1` for the student
+    - [ ] Make a second run pass when the book is already assigned (the assign is an upsert, `assignClassBook`)
+- [ ] Task: Run the check on the scratch copy
+    - [ ] Run the app against the scratch copy (build and `next start`, one heavy job), then run the script once
+    - [ ] Save the captures and the result list in `measure/tracks/primary_parity_class_books_20261011/browser-check/`
+- [ ] Task: Measure - User Manual Verification 'Phase S2: Check the class book in the browser' (Protocol in workflow.md)
+
+## Phase S3: Tell the teacher what to do when the catalogue is empty
+_Story ref: spec.md#story-s3_
+
+- [ ] Task: Define the strings
+    - [ ] Add the keys for the empty catalogue, no book, and load error under `TeacherUi.classBook` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json` (Thai from the owner; cn, tw, vi follow the current file practice)
+- [ ] Task: Write the tests (red)
+    - [ ] `components/teacher/__tests__/assign-book-form.test.tsx`: the empty catalogue shows both sentences and no form
+    - [ ] `app/[locale]/teacher/class-roster/[classroomId]/__tests__/page.test.tsx`: a load failure shows the error state with a retry link and calls the logger once with `class_books.load_failed`
+    - [ ] A key-parity test for the new keys in the five locale files
+- [ ] Task: Implement (green)
+    - [ ] Change `components/teacher/assign-book-form.tsx` and `components/teacher/class-books-card.tsx` to the design of Phase D
+    - [ ] Change `loadClassBooks` in `app/[locale]/teacher/class-roster/[classroomId]/page.tsx` to log with `lib/observability/logger.ts` and to return an error state
+- [ ] Task: Docs and doctor
+    - [ ] JSDoc on every changed export; run `measure/generate.sh` and `measure/doctor.sh`
+- [ ] Task: Measure - User Manual Verification 'Phase S3: Tell the teacher what to do when the catalogue is empty' (Protocol in workflow.md)
+
+## Phase S4: Put the book card at the top of the class page
+_Story ref: spec.md#story-s4_
+
+- [ ] Task: Define the card data
+    - [ ] Extend `classBookSchema` in `packages/domain/src/primary-books/class-book-contracts.ts` with the current lesson title and the next step (number, title, period), or add a separate read; choose the smaller change
+- [ ] Task: Write the tests (red)
+    - [ ] `packages/domain/src/primary-books/__tests__/class-books.test.ts`: `listClassBooks` returns the lesson title and the next step; another school's class gives FORBIDDEN
+    - [ ] `components/teacher/__tests__/enhanced-class-roster.test.tsx` (or the existing roster test): the book card renders before `ClassLoginPanel`; the anchor `#class-book` exists; `#class-login` stays
+    - [ ] `components/teacher/__tests__/classroom-navigation.test.tsx`: the class book link points to `#class-book`
+- [ ] Task: Implement (green)
+    - [ ] `packages/domain/src/primary-books/class-books.ts`: the new fields
+    - [ ] `components/teacher/enhanced-class-roster.tsx`: move `classBook` above `ClassLoginPanel`
+    - [ ] `components/teacher/class-books-card.tsx`: the Phase D design with `components/rpg/*`
+    - [ ] `components/teacher/classroom-navigation.tsx`: the class book link; the label in the five locale files
+- [ ] Task: Docs and doctor
+    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [ ] Task: Measure - User Manual Verification 'Phase S4: Put the book card at the top of the class page' (Protocol in workflow.md)
+
+## Phase S5: Show the assigned book and the next lesson on the dashboard
+_Story ref: spec.md#story-s5_
+
+- [ ] Task: Define the slot contract
+    - [ ] Add `teacherBookSlotSchema` (class id and name, class book id or null, book name, current lesson, lesson count, lesson title, next step and period) to `packages/domain/src/primary-books/class-book-contracts.ts`
+- [ ] Task: Write the tests (red)
+    - [ ] `packages/domain/src/primary-books/__tests__/class-books.test.ts` with `packages/domain/src/__tests__/mock-db.ts`: `getTeacherBookSlots` lists the owned and co-taught classes of the school only, a class without a book, the next step; a STUDENT gets FORBIDDEN
+    - [ ] `components/teacher/__tests__/class-book-slot.test.tsx`: one row per class book, the "Assign a book" row, the empty slot, and the row link to the lesson page
+    - [ ] Update `components/__tests__/axe-screens.test.tsx` for the new slot props
+- [ ] Task: Implement (green)
+    - [ ] `packages/domain/src/primary-books/class-books.ts`: `getTeacherBookSlots`, with the class rule of `getTeacherHome` (`packages/domain/src/primary-home/teacher-home.ts`); export it in `index.ts`
+    - [ ] `components/teacher/class-book-slot.tsx`: render the slots with the Phase D design
+    - [ ] `app/[locale]/teacher/dashboard/page.tsx`: read the slots and pass them; a failure logs with the logger and shows the slot error text
+- [ ] Task: Docs and doctor
+    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [ ] Task: Measure - User Manual Verification 'Phase S5: Show the assigned book and the next lesson on the dashboard' (Protocol in workflow.md)
+
+## Phase S6: Check every Teacher Manual claim
+_Story ref: spec.md#story-s6_
+
+- [ ] Task: Define the claim list
+    - [ ] List `TeacherUi.classBook.manual.howTo1` to `howTo5` and "The 13 steps" with the page, the account, and the expected result (spec S6)
+- [ ] Task: Run the claims on the scratch copy
+    - [ ] Follow each claim with the demo teacher and one demo student (2 or 3 students at most); capture each result
+    - [ ] Save the result list in `measure/tracks/primary_parity_class_books_20261011/manual-check.md`
+- [ ] Task: Correct the manual text where a claim fails
+    - [ ] Write a failing test first in `app/[locale]/teacher/manual/__tests__/page.test.tsx` when the change touches the page
+    - [ ] Change the keys in the five locale files; the owner checks the English and the Thai text
+- [ ] Task: Final side-by-side check
+    - [ ] Run checks A1 to A5 of spec "Acceptance Criteria" with the acceptance kit; send the captures to the owner for the last look check
+- [ ] Task: Measure - User Manual Verification 'Phase S6: Check every Teacher Manual claim' (Protocol in workflow.md)

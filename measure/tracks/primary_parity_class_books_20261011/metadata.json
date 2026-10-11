@@ -1,0 +1,67 @@
+{
+  "track_id": "primary_parity_class_books_20261011",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: Class books ready at the cutover",
+  "estimated_tasks": 35,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "On the rehearsal 3 database, a teacher assigns a book, finds it on the class page and the dashboard, and completes each Teacher Manual step.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "Load the catalogue and the guide after the ETL",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Check the class book in the browser",
+        "size": "S",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "Tell the teacher what to do when the catalogue is empty",
+        "size": "S",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "Put the book card at the top of the class page",
+        "size": "S",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S5",
+        "title": "Show the assigned book and the next lesson on the dashboard",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S6",
+        "title": "Check every Teacher Manual claim",
+        "size": "S",
+        "priority": "Must",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  },
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 3,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  }
+}

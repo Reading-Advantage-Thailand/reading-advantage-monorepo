@@ -1,0 +1,21 @@
+{
+  "track_id": "primary_parity_teacher_home_20261011",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: Teacher home numbers and class table with CSV (TCH-03)",
+  "estimated_tasks": 22,
+  "actual_tasks": null,
+  "deviation_notes": "Template group 'dashboards'. Extends the shared module with the class scope. Touches the same page as primary_parity_class_books_20261011 (book slot). No schema change.",
+  "depends_on": [
+    "primary_parity_acceptance_20261011"
+  ],
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 4,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  }
+}

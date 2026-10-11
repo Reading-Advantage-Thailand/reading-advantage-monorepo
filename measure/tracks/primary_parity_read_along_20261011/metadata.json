@@ -1,0 +1,53 @@
+{
+  "track_id": "primary_parity_read_along_20261011",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: Read-along that follows the voice",
+  "estimated_tasks": 32,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "On every migrated article with word timings, the lit word is the word that the voice says, and a tap on a word plays from that word, on a phone and on a desktop.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "The highlight follows the voice",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Tap a word or a sentence to play from there",
+        "size": "S",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "One clear player",
+        "size": "M",
+        "priority": "Should",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "The lesson reading step uses the same read-along",
+        "size": "S",
+        "priority": "Should",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  },
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 6,
+    "depends_on": [
+      "primary_parity_quick_fixes_20261011"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "track_id": "primary_parity_staff_student_view_20261011",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: Staff student view (Preview mode)",
+  "estimated_tasks": 31,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "A teacher, a school admin, and a SYSTEM user open each student page from the account menu, see what a student of their school sees, and no student record changes.",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "Staff open the student pages",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Nothing saves in Preview mode",
+        "size": "L",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "Pages that need a student record show a preview state",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "Class books and lessons in preview",
+        "size": "M",
+        "priority": "Should",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  },
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 3,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  }
+}

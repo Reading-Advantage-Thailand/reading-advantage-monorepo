@@ -1,0 +1,18 @@
+{
+  "track_id": "primary_parity_quick_fixes_20261011",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: quick fixes (ADM-02, ADM-06, TCH-05, TCH-08, STU-02, STU-03, STU-06, STU-07, STU-08, STU-16, STU-17, PUB-04, PUB-05)",
+  "estimated_tasks": 29,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 2,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  }
+}

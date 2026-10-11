@@ -1,0 +1,17 @@
+{
+  "track_id": "primary_parity_records_20261011",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: correct the parity records of the stopped 2026-10-11 cutover",
+  "estimated_tasks": 18,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "depends_on": [],
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 1,
+    "depends_on": []
+  }
+}

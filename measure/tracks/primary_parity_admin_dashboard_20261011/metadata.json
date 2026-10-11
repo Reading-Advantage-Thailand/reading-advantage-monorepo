@@ -1,0 +1,21 @@
+{
+  "track_id": "primary_parity_admin_dashboard_20261011",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-11T00:00:00Z",
+  "updated_at": "2026-10-11T00:00:00Z",
+  "description": "Primary Parity Before the Cutover: School admin dashboard with real data (ADM-01, SYS-03, ADM-13)",
+  "estimated_tasks": 23,
+  "actual_tasks": null,
+  "deviation_notes": "Template group 'dashboards' (sample member). Builds the shared module packages/domain/src/primary-dashboards/ and packages/domain/src/licenses/usage.ts. No schema change.",
+  "depends_on": [
+    "primary_parity_acceptance_20261011"
+  ],
+  "set": {
+    "id": "primary_parity_20261011",
+    "order": 4,
+    "depends_on": [
+      "primary_parity_acceptance_20261011"
+    ]
+  }
+}
