@@ -40,7 +40,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 - [x] Task: Measure - User Manual Verification 'Phase 1: ElvGames asset copy' (Protocol in workflow.md)
     - Manual verification: run `ls "$HOME/Desktop/Asset Packs/monorepo-elvgames-20261011"`; check `MANIFEST.tsv` has 73,053 lines; read `asset-copy.md`. Look check pending (owner, async).
 
-## Phase 2: Design
+## Phase 2: Design [checkpoint: d27f71116]
 
 - [x] Task: Design the class challenge panels without ElvGames frames (spec FR-6)
     - [x] Student catalog `/student/games` (inside `.cq-world`): the panel and its buttons with the parchment frame that `styles/rpg.css:32-35` gives; decide the panel surface (today navy `#0f172a`, `student-challenge-catalog-panel.tsx:180`)
