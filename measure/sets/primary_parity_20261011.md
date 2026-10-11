@@ -43,6 +43,7 @@
 | 3 | [primary_parity_staff_student_view_20261011](../tracks/primary_parity_staff_student_view_20261011/) | feature | STU-01: staff open the student pages as a view, and staff actions save nothing | primary_parity_acceptance_20261011 | new |
 | 4 | [primary_parity_admin_dashboard_20261011](../tracks/primary_parity_admin_dashboard_20261011/) | feature | ADM-01, SYS-03: real school data, new design, school selector for SYSTEM | primary_parity_acceptance_20261011 | new |
 | 4 | [primary_parity_teacher_home_20261011](../tracks/primary_parity_teacher_home_20261011/) | feature | TCH-03: the missing numbers and a class table with CSV on the new home | primary_parity_acceptance_20261011 | new |
+| 4 | [primary_parity_qr_path_20261011](../tracks/primary_parity_qr_path_20261011/) | feature | QR code path (Workbooks D1, option B): return to the lesson after sign-in, a signed-out landing for Primary and Tutor readers, the writing QR target, clear pages for each other case, one go/no-go check | primary_parity_class_books_20261011 | new |
 | 5 | [primary_parity_system_dashboard_20261011](../tracks/primary_parity_system_dashboard_20261011/) | feature | SYS-01: platform overview with a new design | primary_parity_admin_dashboard_20261011 | new |
 | 5 | [primary_parity_school_management_20261011](../tracks/primary_parity_school_management_20261011/) | feature | ADM-03, ADM-04, SYS-05, and the new school license view | primary_parity_quick_fixes_20261011 | new |
 | 6 | [primary_parity_stories_20261011](../tracks/primary_parity_stories_20261011/) | feature | STU-04: stories, chapters, and their questions in the ETL; 3 pages in the RPG skin | primary_parity_acceptance_20261011 | new |
@@ -51,12 +52,14 @@
 | 7 | [primary_parity_lesson_games_20261011](../tracks/primary_parity_lesson_games_20261011/) | feature | STU-14: Chibi Quest games in a vocabulary step and a sentence step of the lesson | primary_parity_cleanup_20261011 | new |
 | 8 | [primary_parity_print_lesson_20261011](../tracks/primary_parity_print_lesson_20261011/) | feature | TCH-07: "Print this lesson" with the Workbooks primary template | primary_parity_class_books_20261011 | new |
 | 8 | [primary_parity_pwa_20261011](../tracks/primary_parity_pwa_20261011/) | feature | STU-13: manifest, icons, a worker that replaces the legacy worker | primary_parity_acceptance_20261011 | new |
-| 9 | [primary_parity_rehearsal3_20261011](../tracks/primary_parity_rehearsal3_20261011/) | chore | The ETL changes of the members, PUB-03 contact export, full acceptance, rehearsal 3, the new command sheet | all members above, primary_public_pages_20261007 | new |
+| 9 | [primary_parity_rehearsal3_20261011](../tracks/primary_parity_rehearsal3_20261011/) | chore | The ETL changes of the members, PUB-03 contact export, full acceptance, rehearsal 3, the new command sheet | all members above (incl. qr_path), primary_public_pages_20261007 | new |
 
 ## Open Questions
 
 - PUB-01: your Thai copy and the cn/tw review (owner: `primary_public_pages_20261007`, which must finish before rehearsal 3).
 - CNT-01: one real write of the Workbooks injector into a rehearsal copy (owner: the Workbooks session; a start condition of `primary_parity_rehearsal3_20261011`).
+
+- QR code path peer requests (owner: `primary_parity_qr_path_20261011`): Workbooks sets `article_url` to `https://primary.reading-advantage.com/b/<book>/<n>` for Origins 3.2, Quest 4, and the insert; Tutor adds a lesson route by Primary book key and lesson number.
 
 ## Later Work (after the cutover, no track yet)
 
