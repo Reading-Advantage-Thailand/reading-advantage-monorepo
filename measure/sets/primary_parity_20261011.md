@@ -1,7 +1,7 @@
 # Track Set: Primary Parity Before the Cutover
 
 - **Set ID:** `primary_parity_20261011`
-- **Status:** new
+- **Status:** in_progress
 - **Created:** 2026-10-11
 - **Goal:** The monorepo Primary build does every job that legacy `bfea121` does for the "before cutover" rows of the 2026-10-11 triage, plus the three approved new items, and it passes a side-by-side acceptance and rehearsal 3.
 - **Start gate:** none
@@ -35,10 +35,10 @@
 
 | Order | Track | Type | Scope | Depends on | Status |
 | --- | --- | --- | --- | --- | --- |
-| 1 | [primary_parity_records_20261011](../tracks/primary_parity_records_20261011/) | chore | Correct the wrong "same" marks and the cutover record, move M4 out of the games removal track, add the behavior-evidence rule | — | new |
+| 1 | [primary_parity_records_20261011](../tracks/primary_parity_records_20261011/) | chore | Correct the wrong "same" marks and the cutover record, move M4 out of the games removal track, add the behavior-evidence rule | — | in_progress |
 | 1 | [primary_parity_acceptance_20261011](../tracks/primary_parity_acceptance_20261011/) | chore | Side-by-side kit: legacy and new on rehearsal copies, matching accounts, a capture script, the behavior contract template | — | new |
 | 2 | [primary_parity_quick_fixes_20261011](../tracks/primary_parity_quick_fixes_20261011/) | bug | ADM-02, ADM-06, TCH-05, TCH-08, STU-02, STU-03, STU-06, STU-07, STU-08, STU-16, STU-17, PUB-04, PUB-05 | primary_parity_acceptance_20261011 | new |
-| 2 | [primary_parity_cleanup_20261011](../tracks/primary_parity_cleanup_20261011/) | chore | Remove the Testing page, `deleteAllArticles`, Admin Article Creation; M4 with the asset copy first; old game URL redirects (STU-09); AI model names into the adapter configuration (CNT-02) | primary_parity_acceptance_20261011 | new |
+| 2 | [primary_parity_cleanup_20261011](../tracks/primary_parity_cleanup_20261011/) | chore | Remove the Testing page, `deleteAllArticles`, Admin Article Creation; M4 with the asset copy first; old game URL redirects (STU-09); AI model names into the adapter configuration (CNT-02) | primary_parity_acceptance_20261011 | in_progress |
 | 3 | [primary_parity_class_books_20261011](../tracks/primary_parity_class_books_20261011/) | feature | TCH-01, TCH-02: catalogue and guide imports in the ETL and the runbook, the book card at the top, the dashboard book slot | primary_parity_acceptance_20261011 | new |
 | 3 | [primary_parity_staff_student_view_20261011](../tracks/primary_parity_staff_student_view_20261011/) | feature | STU-01: staff open the student pages as a view, and staff actions save nothing | primary_parity_acceptance_20261011 | new |
 | 4 | [primary_parity_admin_dashboard_20261011](../tracks/primary_parity_admin_dashboard_20261011/) | feature | ADM-01, SYS-03: real school data, new design, school selector for SYSTEM | primary_parity_acceptance_20261011 | new |

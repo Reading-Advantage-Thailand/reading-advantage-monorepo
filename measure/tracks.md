@@ -1204,7 +1204,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: correct the parity records of the stopped 2026-10-11 cutover**
+- [~] **Track: Primary Parity Before the Cutover: correct the parity records of the stopped 2026-10-11 cutover**
   *Link: [./tracks/primary_parity_records_20261011/](./tracks/primary_parity_records_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
 
@@ -1222,7 +1222,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: cleanup (System Testing page, Admin Article Creation, content generation, old game host M4 with the ElvGames copy first, old game URL redirects, AI model configuration)**
+- [~] **Track: Primary Parity Before the Cutover: cleanup (System Testing page, Admin Article Creation, content generation, old game host M4 with the ElvGames copy first, old game URL redirects, AI model configuration)**
   *Link: [./tracks/primary_parity_cleanup_20261011/](./tracks/primary_parity_cleanup_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 2*
 
