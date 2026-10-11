@@ -58,16 +58,18 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 
 ## Phase 3: Remove the System Testing page (SYS-04)
 
-- [ ] Task: FR-2 (SYS-04) — remove the System Testing page and `deleteAllArticles`
-    - [ ] Check the callers: `git grep -n -E 'actions/test"|system/test' -- apps/primary-advantage`; each hit is on the spec FR-2 list; record any other hit here and keep it (spec R-2)
-    - [ ] Red: new `lib/__tests__/removed-surfaces.test.ts`, block "SYS-04": `app/[locale]/system/test` and `actions/test.ts` do not exist; no source names `deleteAllArticles` or `@/actions/test`; no source matches `/\.delete\(articles\)\s*(\.returning|;)/` (a delete of all rows)
-    - [ ] Red: `components/nav/__tests__/app-nav.test.tsx:74-79` expects the SYSTEM list `["systemdashboard", "schools", "licenses"]`
-    - [ ] Green: delete `app/[locale]/system/test/` (7 files) and `actions/test.ts`; remove the item at `configs/system-page-config.ts:26-30`; remove `Sidebar.testing` from `messages/{en,th,cn,tw,vi}.json`; delete `actions/__tests__/test-actions.authorization.test.ts`
-    - [ ] Keep `canRunContentTooling` and `CONTENT_TOOLING_ROLES` (`lib/authorization.ts`); `app/api/upload/csv/cleanup/route.ts` uses them
-- [ ] Task: Grep check 'SYS-04'
-    - [ ] `git grep -n -E 'system/test|actions/test"|deleteAllArticles|ArticleTestGenerate|AudioTestWord|RolesManagement' -- apps/primary-advantage <guard>` gives no output
-    - [ ] `python3 -c "import json; print([l for l in ('en','th','cn','tw','vi') if 'testing' in json.load(open(f'apps/primary-advantage/messages/{l}.json'))['Sidebar']])"` prints `[]`
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Remove the System Testing page (SYS-04)' (Protocol in workflow.md)
+- [x] Task: FR-2 (SYS-04) — remove the System Testing page and `deleteAllArticles`
+    - [x] Check the callers: `git grep -n -E 'actions/test"|system/test' -- apps/primary-advantage`; each hit is on the spec FR-2 list; record any other hit here and keep it (spec R-2)
+    - [x] Red: new `lib/__tests__/removed-surfaces.test.ts`, block "SYS-04": `app/[locale]/system/test` and `actions/test.ts` do not exist; no source names `deleteAllArticles` or `@/actions/test`; no source matches `/\.delete\(articles\)\s*(\.returning|;)/` (a delete of all rows)
+    - [x] Red: `components/nav/__tests__/app-nav.test.tsx:74-79` expects the SYSTEM list `["systemdashboard", "schools", "licenses"]`
+    - [x] Green: delete `app/[locale]/system/test/` (7 files) and `actions/test.ts`; remove the item at `configs/system-page-config.ts:26-30`; remove `Sidebar.testing` from `messages/{en,th,cn,tw,vi}.json`; delete `actions/__tests__/test-actions.authorization.test.ts`
+    - [x] Keep `canRunContentTooling` and `CONTENT_TOOLING_ROLES` (`lib/authorization.ts`); `app/api/upload/csv/cleanup/route.ts` uses them
+- [x] Task: Grep check 'SYS-04'
+    - [x] `git grep -n -E 'system/test|actions/test"|deleteAllArticles|ArticleTestGenerate|AudioTestWord|RolesManagement' -- apps/primary-advantage <guard>` gives no output
+    - [x] `python3 -c "import json; print([l for l in ('en','th','cn','tw','vi') if 'testing' in json.load(open(f'apps/primary-advantage/messages/{l}.json'))['Sidebar']])"` prints `[]`
+- [x] Task: Measure - User Manual Verification 'Phase 3: Remove the System Testing page (SYS-04)' (Protocol in workflow.md)
+    - Look check pending (owner, async). Steps: log in as SYSTEM; the nav shows System Dashboard, Schools, Licenses and no Testing; `/en/system/test` gives the not-found page.
+    - Callers check: no hit outside the FR-2 list. App tsc passed. Vitest: removed-surfaces (3) and app-nav pass.
 
 ## Phase 4: Remove Admin Article Creation (ADM-11)
 

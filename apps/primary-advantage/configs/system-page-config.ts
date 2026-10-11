@@ -23,10 +23,5 @@ export const systemPageConfig: PageConfig = {
       href: "/system/licenses",
       icon: "KeyIcon",
     },
-    {
-      title: "testing",
-      href: "/system/test",
-      icon: "LayoutDashboardIcon",
-    },
   ],
 };
