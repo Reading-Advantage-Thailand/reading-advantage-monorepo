@@ -56,7 +56,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 - [x] Task: Measure - User Manual Verification 'Phase 2: Design' (Protocol in workflow.md)
     - Look check pending (owner, async). Manual verification: open the eight PNG files of `captures/design/captures.md`. Check that no panel shows a pixel-art frame or a navy fill on the student page, that the teacher panel looks like a staff card, and that the text is readable in day and night.
 
-## Phase 3: Remove the System Testing page (SYS-04) [checkpoint: PENDING]
+## Phase 3: Remove the System Testing page (SYS-04) [checkpoint: b034a3da8]
 
 - [x] Task: FR-2 (SYS-04) — remove the System Testing page and `deleteAllArticles`
     - [x] Check the callers: `git grep -n -E 'actions/test"|system/test' -- apps/primary-advantage`; each hit is on the spec FR-2 list; record any other hit here and keep it (spec R-2)
