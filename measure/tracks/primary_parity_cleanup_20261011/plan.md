@@ -42,14 +42,19 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 
 ## Phase 2: Design
 
-- [ ] Task: Design the class challenge panels without ElvGames frames (spec FR-6)
-    - [ ] Student catalog `/student/games` (inside `.cq-world`): the panel and its buttons with the parchment frame that `styles/rpg.css:32-35` gives; decide the panel surface (today navy `#0f172a`, `student-challenge-catalog-panel.tsx:180`)
-    - [ ] Teacher page `/teacher/game-challenges` (staff shell, outside `.cq-world`): the panel frame and the buttons with the staff tokens; the fields of `FIELD_FRAME` stay readable (`app/[locale]/teacher/game-challenges/page.tsx:10-19`)
-    - [ ] Reuse `components/rpg/*` and the `cq-` tokens; draw no new frame (`docs/primary-rpg-skin.md` rule 2)
-    - [ ] Make a prototype capture of each panel at 375 px and 1280 px (student page: day and night); save to `measure/tracks/primary_parity_cleanup_20261011/captures/design/` (demo or QA data only)
-- [ ] Task: Owner look check of the design
-    - [ ] Send the captures to the owner; record the answer and the date here; change the design until the owner accepts it
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Design' (Protocol in workflow.md)
+- [x] Task: Design the class challenge panels without ElvGames frames (spec FR-6)
+    - [x] Student catalog `/student/games` (inside `.cq-world`): the panel and its buttons with the parchment frame that `styles/rpg.css:32-35` gives; decide the panel surface (today navy `#0f172a`, `student-challenge-catalog-panel.tsx:180`)
+        - Design: the panel surface is the parchment gradient with ink text. Add two variables to the first `.cq-world` rule in `styles/rpg.css`: `--apk-arcade-panel-surface: linear-gradient(180deg, var(--cq-parchment), var(--cq-parchment-2))` and `--apk-arcade-panel-text: var(--cq-ink)`. The border (3 px, `--cq-parchment-edge`, radius 14 px) and the buttons (gold primary, iron secondary, wood-dark edge) come from the variables that already exist.
+    - [x] Teacher page `/teacher/game-challenges` (staff shell, outside `.cq-world`): the panel frame and the buttons with the staff tokens; the fields of `FIELD_FRAME` stay readable (`app/[locale]/teacher/game-challenges/page.tsx:10-19`)
+        - Design: the frame wrapper gets a `style` object (testable in Phase 6) with these values: `--apk-arcade-panel-image`, `--apk-arcade-button-primary-image`, `--apk-arcade-button-secondary-image`: `none`; panel border width `2px`, radius `16px`, fallback `var(--border)`, surface `var(--card)`, text `var(--card-foreground)`; button border width and inline width `2px`, radius `10px`, fallback `var(--border)`; primary `var(--primary)` with `var(--primary-foreground)`; secondary `var(--secondary)` with `var(--secondary-foreground)`. The values follow the staff cards (`TEACHER_CARD`) and work in day and night.
+        - Add `[&_fieldset]:border-border` to `FIELD_FRAME`: in night mode the fieldset edge of "Word 1" is white (browser default) in the capture.
+    - [x] Reuse `components/rpg/*` and the `cq-` tokens; draw no new frame (`docs/primary-rpg-skin.md` rule 2). No new asset and no ElvGames file: the design uses CSS variables only.
+    - [x] Make a prototype capture of each panel at 375 px and 1280 px (student page: day and night); captures are outside the repository (brief). Paths: `captures/design/captures.md`. The prototype also covers the teacher page at night.
+    - Play-kit change for Phase 6 (tested in the prototype): `design-playkit.patch` in this folder. The panel reads `--apk-arcade-panel-image`, the two button images, `--apk-arcade-panel-surface` (fallback `#0f172a`), and `--apk-arcade-panel-text` (fallback `#f8fafc`), each with the current value as the fallback. Reading Advantage and Advantage Games set none of these variables, so they keep the same look.
+- [x] Task: Owner look check of the design
+    - [x] Look check pending (owner, async). Default used: the design above stands. Phase 6 builds it. If the owner asks for a change, only the variable values change.
+- [x] Task: Measure - User Manual Verification 'Phase 2: Design' (Protocol in workflow.md)
+    - Look check pending (owner, async). Manual verification: open the eight PNG files of `captures/design/captures.md`. Check that no panel shows a pixel-art frame or a navy fill on the student page, that the teacher panel looks like a staff card, and that the text is readable in day and night.
 
 ## Phase 3: Remove the System Testing page (SYS-04)
 

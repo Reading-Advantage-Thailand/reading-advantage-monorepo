@@ -1,0 +1,46 @@
+diff --git a/packages/advantage-play-kit/src/react/student-challenge-catalog-panel.tsx b/packages/advantage-play-kit/src/react/student-challenge-catalog-panel.tsx
+index d073af32f..d90497670 100644
+--- a/packages/advantage-play-kit/src/react/student-challenge-catalog-panel.tsx
++++ b/packages/advantage-play-kit/src/react/student-challenge-catalog-panel.tsx
+@@ -54,7 +54,8 @@ function withBasePath(basePath: string, path: string): string {
+ /** Creates a retro button style with a host-prefixed image. */
+ function buttonStyle(emphasis: "primary" | "secondary", basePath: string): CSSProperties {
+   const asset = emphasis === "primary" ? RETRO_ARCADE_UI_ASSETS.primaryButton : RETRO_ARCADE_UI_ASSETS.secondaryButton;
+-  return { ...getRetroArcadeButtonStyle(emphasis), borderImageSource: `url("${withBasePath(basePath, asset)}")` };
++  const variable = emphasis === "primary" ? "--apk-arcade-button-primary-image" : "--apk-arcade-button-secondary-image";
++  return { ...getRetroArcadeButtonStyle(emphasis), borderImageSource: `var(${variable}, url("${withBasePath(basePath, asset)}"))` };
+ }
+ 
+ /**
+@@ -177,7 +178,7 @@ export function StudentChallengeCatalogPanel({
+   const now = Date.now();
+ 
+   return (
+-    <section aria-label="Class challenges" style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}")`, padding: 12, background: "#0f172a", color: "#f8fafc", maxWidth: "100%" }}>
++    <section aria-label="Class challenges" style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `var(--apk-arcade-panel-image, url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}"))`, padding: 12, background: "var(--apk-arcade-panel-surface, #0f172a)", color: "var(--apk-arcade-panel-text, #f8fafc)", maxWidth: "100%" }}>
+       <h2 style={{ margin: 0 }}>Class challenges</h2>
+       {visibleClassStatus?.message ? <div role="alert"><p>{visibleClassStatus.message}</p><button style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadClasses(0)}>Try again</button></div> : null}
+       {visibleClassStatus?.loading && visibleClasses.length === 0 ? <p role="status">Loading classes…</p> : null}
+diff --git a/packages/advantage-play-kit/src/react/teacher-challenge-panel.tsx b/packages/advantage-play-kit/src/react/teacher-challenge-panel.tsx
+index e3d9c074d..4bb885e2a 100644
+--- a/packages/advantage-play-kit/src/react/teacher-challenge-panel.tsx
++++ b/packages/advantage-play-kit/src/react/teacher-challenge-panel.tsx
+@@ -47,7 +47,8 @@ function withBasePath(basePath: string, path: string): string {
+ /** Creates a retro button style with a host-prefixed image. */
+ function buttonStyle(emphasis: "primary" | "secondary", basePath: string): CSSProperties {
+   const asset = emphasis === "primary" ? RETRO_ARCADE_UI_ASSETS.primaryButton : RETRO_ARCADE_UI_ASSETS.secondaryButton;
+-  return { ...getRetroArcadeButtonStyle(emphasis), borderImageSource: `url("${withBasePath(basePath, asset)}")` };
++  const variable = emphasis === "primary" ? "--apk-arcade-button-primary-image" : "--apk-arcade-button-secondary-image";
++  return { ...getRetroArcadeButtonStyle(emphasis), borderImageSource: `var(${variable}, url("${withBasePath(basePath, asset)}"))` };
+ }
+ 
+ /** Generates one stable safe seed for the current form. */
+@@ -212,7 +213,7 @@ export function TeacherChallengePanel({
+   if (formScope !== scope) return <section aria-label="Create class challenge" role="status">Loading classes…</section>;
+   const formLocked = pending || saved !== null;
+   const fieldStyle: CSSProperties = { display: "block", minHeight: 44, maxWidth: "100%", width: "100%", boxSizing: "border-box" };
+-  return <section aria-label="Create class challenge" style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}")`, padding: 12, background: "#0f172a", color: "#f8fafc" }}>
++  return <section aria-label="Create class challenge" style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `var(--apk-arcade-panel-image, url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}"))`, padding: 12, background: "var(--apk-arcade-panel-surface, #0f172a)", color: "var(--apk-arcade-panel-text, #f8fafc)" }}>
+     <h2>Create class challenge</h2>
+     {loadingClasses ? <p role="status">Loading classes…</p> : null}
+     {!loadingClasses && !failure && classes.length === 0 ? <p>No owned classes are available.</p> : null}
