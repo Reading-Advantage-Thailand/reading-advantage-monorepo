@@ -73,16 +73,20 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 
 ## Phase 4: Remove Admin Article Creation (ADM-11)
 
-- [ ] Task: FR-3 (ADM-11) — remove the page, the component, the routes, and their server code
-    - [ ] Check the callers of each export of spec FR-3: `git grep -n -w <name> -- apps/primary-advantage`; record any caller that is not on the list and keep that export
-    - [ ] Red: `removed-surfaces.test.ts`, block "ADM-11": `app/[locale]/admin/article-creation`, `components/admin/article-creation.tsx`, and `app/api/articles/generate/custom-generate` do not exist; no source names `/admin/article-creation`, `custom-generate`, or a removed export
-    - [ ] Red: `components/nav/__tests__/app-nav.test.tsx:67-73` expects the admin list without `"articlecreation"`; if `components/admin/admin-quick-actions.tsx` still exists, `components/__tests__/broken-ux-behavior.test.tsx:104-115` adds `/admin/article-creation` to the dead links
-    - [ ] Green: delete the page, the component, and the three route files; remove the exports of spec FR-3 from `server/controllers/articleController.ts`, `server/models/articleModel.ts` (and the imports that become unused, for example `deleteFile` at `:50`), and `actions/article.ts`
-    - [ ] Green: remove the item at `configs/admin-page-config.ts:113-118` and the entry at `components/admin/admin-quick-actions.tsx:36-42` (skip if the file is gone); remove the keys `Sidebar.articlecreation`, `AdminArticleCreationPage`, `Components.AdminArticleCreation`, `AdminDashboard.quickActions.createArticle`, and `AdminDashboard.quickActions.createArticleDesc` from the five locales
-- [ ] Task: Grep check 'ADM-11'
-    - [ ] `git grep -n -w -E 'article-creation|articlecreation|custom-generate|AdminArticleCreation|AdminArticleCreationPage|quickActions\.createArticle|createArticleDesc|generateCustomArticle|saveArticleAndPublish|saveArticleAsDraft|saveArticleAsDraftModel|fetchCustomArticleController|createdArticleCustom|updateAprovedCustomArticle|getCustomArticle|checkExistingArticle|getDeleteArticleById|deleteArticleById|deleteArticleByIdModel' -- apps/primary-advantage <guard>` gives no output
-    - [ ] Run the FR-3 data check of the spec table "Migrated data" on the rehearsal copy (read-only); if the count is more than 0, ask Q2 and record the answer here
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Remove Admin Article Creation (ADM-11)' (Protocol in workflow.md)
+- [x] Task: FR-3 (ADM-11) — remove the page, the component, the routes, and their server code
+    - [x] Check the callers of each export of spec FR-3: `git grep -n -w <name> -- apps/primary-advantage`; record any caller that is not on the list and keep that export
+    - [x] Red: `removed-surfaces.test.ts`, block "ADM-11": `app/[locale]/admin/article-creation`, `components/admin/article-creation.tsx`, and `app/api/articles/generate/custom-generate` do not exist; no source names `/admin/article-creation`, `custom-generate`, or a removed export
+    - [x] Red: `components/nav/__tests__/app-nav.test.tsx:67-73` expects the admin list without `"articlecreation"`; if `components/admin/admin-quick-actions.tsx` still exists, `components/__tests__/broken-ux-behavior.test.tsx:104-115` adds `/admin/article-creation` to the dead links
+    - [x] Green: delete the page, the component, and the three route files; remove the exports of spec FR-3 from `server/controllers/articleController.ts`, `server/models/articleModel.ts` (and the imports that become unused, for example `deleteFile` at `:50`), and `actions/article.ts`
+    - [x] Green: remove the item at `configs/admin-page-config.ts:113-118` and the entry at `components/admin/admin-quick-actions.tsx:36-42` (skip if the file is gone); remove the keys `Sidebar.articlecreation`, `AdminArticleCreationPage`, `Components.AdminArticleCreation`, `AdminDashboard.quickActions.createArticle`, and `AdminDashboard.quickActions.createArticleDesc` from the five locales
+- [x] Task: Grep check 'ADM-11'
+    - [x] `git grep -n -w -E 'article-creation|articlecreation|custom-generate|AdminArticleCreation|AdminArticleCreationPage|quickActions\.createArticle|createArticleDesc|generateCustomArticle|saveArticleAndPublish|saveArticleAsDraft|saveArticleAsDraftModel|fetchCustomArticleController|createdArticleCustom|updateAprovedCustomArticle|getCustomArticle|checkExistingArticle|getDeleteArticleById|deleteArticleById|deleteArticleByIdModel' -- apps/primary-advantage <guard>` gives no output
+    - Deviation: the dead-link entry for `/admin/article-creation` in `broken-ux-behavior.test.tsx` was not added. The grep check and the ADM-11 guard forbid the string in sources, and the quick action is gone.
+    - [x] Run the FR-3 data check of the spec table "Migrated data" on the rehearsal copy (read-only); if the count is more than 0, ask Q2 and record the answer here
+        - Result on `primary_rehearsal2_20261010`: 0 custom drafts (626 articles in total). Q2 not asked.
+- [x] Task: Measure - User Manual Verification 'Phase 4: Remove Admin Article Creation (ADM-11)' (Protocol in workflow.md)
+    - Look check pending (owner, async). Steps: log in as ADMIN; the nav shows Dashboard, Teachers, Students and Classes, Import Data and no Article Creation; `/en/admin/article-creation` gives the not-found page; `POST /api/articles/generate/custom-generate` gives 404.
+    - Callers check: no caller outside the FR-3 list. App tsc passed. Vitest: removed-surfaces (7), app-nav, broken-ux-behavior, and article-actions authorization pass.
 
 ## Phase 5: Remove the content generation code
 
