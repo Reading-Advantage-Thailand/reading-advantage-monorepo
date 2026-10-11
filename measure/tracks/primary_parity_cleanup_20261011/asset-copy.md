@@ -27,9 +27,8 @@ that name ElvGames. They hold no asset. They stay in the repository and are not 
 - `diff -rq` of each of the 6 source folders against the target: no output.
 - `cmp` of each of the 15 single files: no output.
 - `MANIFEST.tsv`: 73,052 lines plus the header. This equals the source file count.
-- Manifest size sum 337,567,285 bytes equals `du -sb` of the folders (337,453,854, which counts the
-  folder entries, not only files) plus the 15 files (113,431) when the folder entries are excluded:
-  the manifest sum and the file bytes in the table agree.
+- Manifest size sum: 337,567,285 bytes. This equals the file bytes of the table. The sum of `du -sb`
+  of the 6 folders (337,453,854) plus the 15 files (113,431) gives the same number.
 - Target file count: 73,053 (73,052 copies plus `MANIFEST.tsv`). Target size: 573 MB on disk.
 - Free disk space after the copy: 11 GB (limit 2 GB).
 - No hash or checksum was made (spec R-4).

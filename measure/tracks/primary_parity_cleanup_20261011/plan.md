@@ -21,7 +21,7 @@ phase. Each block reads the file system: the removed paths do not exist, and no 
 The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/removed-surfaces.test.ts'`
 (written `<guard>` below).
 
-## Phase 1: ElvGames asset copy
+## Phase 1: ElvGames asset copy [checkpoint: 0dd85cc9e]
 
 - [x] Task: Take the ElvGames inventory again (spec FR-1)
     - [x] For each source of the spec FR-1 table, run `git ls-files <source> | wc -l` and `du -sb <source>`; write the numbers in `measure/tracks/primary_parity_cleanup_20261011/asset-copy.md`
