@@ -8,22 +8,28 @@ have 100 characters or less.
 The four phases follow the Classic order. For this documentation track, the "contract" is the list of
 corrections with evidence, and the "tests" are the checks of the records.
 
-## Phase 1: Contract — the list of corrections
+## Phase 1: Contract — the list of corrections [checkpoint: 456c001dd]
 
-- [ ] Task: Check the facts again, read only
-    - [ ] Run the commands of spec E-1 in both repositories and record the counts in `corrections.md`
-    - [ ] Run `gcloud run services describe primary-advantage-app --project=primary-advantage --region=asia-southeast1 --format="yaml(status.traffic)"` and record that `primary-advantage-app-00125-9wd` has 100%
-    - [ ] Run `git status --short` for `cutover-result-20261011.md` and record whether the section of E-3 is still uncommitted
-- [ ] Task: Write `measure/tracks/primary_parity_records_20261011/corrections.md`
-    - [ ] Copy Table A of the spec into the file, one row for each correction
-    - [ ] Check each `file:line` at the integration HEAD and at legacy `bfea121`; correct a line that moved
-    - [ ] Add the legacy page, the new page, and the role to each row (spec FR-2)
-- [ ] Task: Write `measure/tracks/primary_parity_records_20261011/triage-decisions.md` (spec FR-8)
-    - [ ] Write the location of the source files: path, file names, and the `_saved_at` value
-    - [ ] Write one row for each of the 73 triage rows: ID, area, feature, status, choice, timing, owner member
-    - [ ] Apply the follow-up decisions to STU-09, STU-21, ADM-11, SYS-04, TCH-07, and STU-14, and say so in each row
-    - [ ] Search the file for words of the free-text notes, and remove any copy
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Contract — the list of corrections' (Protocol in workflow.md)
+- [x] Task: Check the facts again, read only
+    - [x] Run the commands of spec E-1 in both repositories and record the counts in `corrections.md`
+    - [x] Run `gcloud run services describe primary-advantage-app --project=primary-advantage --region=asia-southeast1 --format="yaml(status.traffic)"` and record that `primary-advantage-app-00125-9wd` has 100%
+    - [x] Run `git status --short` for `cutover-result-20261011.md` and record whether the section of E-3 is still uncommitted
+- [x] Task: Write `measure/tracks/primary_parity_records_20261011/corrections.md`
+    - [x] Copy Table A of the spec into the file, one row for each correction
+    - [x] Check each `file:line` at the integration HEAD and at legacy `bfea121`; correct a line that moved
+    - [x] Add the legacy page, the new page, and the role to each row (spec FR-2)
+- [x] Task: Write `measure/tracks/primary_parity_records_20261011/triage-decisions.md` (spec FR-8)
+    - [x] Write the location of the source files: path, file names, and the `_saved_at` value
+    - [x] Write one row for each of the 73 triage rows: ID, area, feature, status, choice, timing, owner member
+    - [x] Apply the follow-up decisions to STU-09, STU-21, ADM-11, SYS-04, TCH-07, and STU-14, and say so in each row
+    - [x] Search the file for words of the free-text notes, and remove any copy
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract — the list of corrections' (Protocol in workflow.md) (look check pending (owner, async))
+    - Manual verification steps (no capture; documentation only):
+        1. Open `corrections.md`. Check that it has 29 rows and that each row has a legacy page, a new page, and a role.
+        2. Open `triage-decisions.md`. Check that it has 73 rows and no free-text note of the owner.
+        3. Pick three `file:line` cites. Open each at the integration HEAD or at legacy `bfea121`. Check the cite.
+    - Defaults used: none (the spec has no Member Question).
+    - Note: the NFR-5 message to the monorepo session is the job of the orchestrator. No write was made to the uncommitted cutover record.
 
 ## Phase 2: Test — checks for the records
 
