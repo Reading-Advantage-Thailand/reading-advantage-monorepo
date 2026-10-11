@@ -1,3 +1,5 @@
+import type { RpgRewardAssetUrls } from "@reading-advantage/advantage-play-kit/presentation";
+
 /**
  * The places of the Chibi Quest skin (docs/primary-rpg-skin.md §3): one Forge scene per page.
  * The backdrops are shipped under /rpg/backdrops as `<place>-p.webp` (1080x1920) and
@@ -71,6 +73,13 @@ export const bossArt = (artKey: string): string => `/rpg/kit/boss/${artKey}-fron
  * @returns The path under the public root.
  */
 export const itemArt = (itemId: string): string => `/rpg/items/${itemId}.webp`;
+
+/** The Forge icons of the three Wizard reward staffs for the play-kit reward panels (no ElvGames pictures in Primary). */
+export const rewardIconUrls: RpgRewardAssetUrls = Object.freeze({
+  "apprentice-wand": itemArt("apprentice-wand"),
+  "graveyard-staff": itemArt("graveyard-staff"),
+  "echo-staff": itemArt("echo-staff"),
+});
 
 /**
  * The Forge front view of a hero class in its starter look (`/rpg/kit/heroes/<classId>.webp`).

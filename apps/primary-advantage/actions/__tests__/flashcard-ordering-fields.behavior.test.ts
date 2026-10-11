@@ -47,6 +47,10 @@ vi.mock("@/lib/fsrs-service", () => ({
   fsrsService: {},
 }));
 
+// The deck and lesson card reads go through the domain, which needs the real schema tables.
+vi.mock("@reading-advantage/domain", () => ({ createTenantDB: vi.fn() }));
+vi.mock("@reading-advantage/domain/games", () => ({ listPrimaryArticleCards: vi.fn(), listPrimaryDeckCards: vi.fn() }));
+
 import { getLessonOrderingSentences } from "../flashcard";
 
 /**

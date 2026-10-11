@@ -29,6 +29,9 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/primary-advantage/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/primary-advantage/.next/static ./apps/primary-advantage/.next/static
+# Standalone output traces only the public files the code references; the packs, the 2D sprite
+# pack, the RPG skin, and the fonts are served by URL and must be copied in full.
+COPY --from=builder --chown=nextjs:nodejs /app/apps/primary-advantage/public ./apps/primary-advantage/public
 USER nextjs
 EXPOSE 8080
 CMD ["node", "apps/primary-advantage/server.js"]

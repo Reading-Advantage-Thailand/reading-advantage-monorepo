@@ -13,6 +13,7 @@
  */
 import { randomUUID } from "node:crypto";
 import type postgres from "postgres";
+import { generateStudentUsername, isStudentUsername } from "../student-usernames.js";
 
 type Sql = postgres.Sql;
 type Tx = postgres.TransactionSql;
@@ -45,7 +46,21 @@ export const MAP_TABLES = {
   userLessonProgress: "user_lesson_progress",
   userActivities: "user_activities",
   xpLogs: "xp_logs",
+  flashcardDecks: "flashcard_decks",
+  flashcardCards: "flashcard_cards",
+  cardReviews: "card_reviews",
 } as const;
+
+/**
+ * Owner-approved answer fixes (2026-10-07) for the legacy MCQs whose answer text is not one of
+ * their options: each id maps to the option text that is the answer.
+ */
+export const MCQ_ANSWER_FIXES: Readonly<Record<string, string>> = {
+  cmgqtfb1400jot79b2b8vt3wx: "It rolled under her bed.",
+  cmorc24e10021s6012hxz5jhi: "It was better and lighter",
+  cmou6yrgv0049s601qg1b3hx5: "When water covers dry land",
+  cmqqrw1h1000us6011cslsbeh: "They talk.",
+};
 
 /** Legacy tables the ETL does not load, each with its reason (spec §6, inventory §2-3). */
 export const DROPPED_TABLES: ReadonlyArray<{ table: string; reason: string }> = [
@@ -62,7 +77,7 @@ export const DROPPED_TABLES: ReadonlyArray<{ table: string; reason: string }> = 
   { table: "game_rankings", reason: "legacy table in the target; the play kit keeps its own ledger" },
   { table: "ai_insights", reason: "JSON title and description have no text target (inventory R6); deferred" },
   { table: "stories, story_chapters", reason: "deferred: the new app has no stories page (docs/primary-whats-moved.md); chapter questions and flashcard rows go with them" },
-  { table: "flashcard_decks, flashcard_cards, card_reviews, cloze_test_games", reason: "deferred: FSRS state has no target columns (inventory R2); an owner decision" },
+  { table: "cloze_test_games", reason: "0 rows in the 2026-10-07 copy; the target keeps no game state" },
   { table: "learning_goals, goal_milestones, goal_progress_logs, assignment_notifications", reason: "0 rows in April; loaded by a later run if production has rows" },
 ];
 
@@ -91,8 +106,10 @@ export interface ImportOptions {
   target: Sql;
   /** Roll everything back at the end (every group still runs inside its transaction). */
   dryRun?: boolean;
-  /** Owner assignments for legacy users whose role is not student/teacher/admin/system (D9). */
-  roleOverrides?: Record<string, TargetRole>;
+  /** Owner assignments for legacy users whose role is not student/teacher/admin/system (D9); null: the user is not moved. */
+  roleOverrides?: Record<string, TargetRole | null>;
+  /** Owner-chosen usernames (legacy user id → username) in place of `lower(email)`. */
+  usernameOverrides?: Record<string, string>;
   /** Owner assignments of a teacher (legacy user id) for legacy classrooms with no teacher and no school admin. */
   classroomTeacherOverrides?: Record<string, string>;
   log?: (line: string) => void;
@@ -103,15 +120,70 @@ export type TargetRole = "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM";
 const ROLE_MAP: Record<string, TargetRole> = { student: "STUDENT", teacher: "TEACHER", admin: "ADMIN", system: "SYSTEM" };
 
 /** Maps a legacy role text to the target enum; null when the owner must assign it (D9). */
-export function mapRole(role: unknown, overrides: Record<string, TargetRole> | undefined, legacyUserId: string): TargetRole | null {
+export function mapRole(role: unknown, overrides: Record<string, TargetRole | null> | undefined, legacyUserId: string): TargetRole | null {
   const fromOverride = overrides?.[legacyUserId];
   if (fromOverride) return fromOverride;
   return ROLE_MAP[String(role ?? "").toLowerCase()] ?? null;
 }
 
-/** The username rule (D6): `lower(email)`; the display username keeps the email as typed. */
-export function usernamesOf(email: string): { username: string; displayUsername: string } {
+/** The username rule (D6): `lower(email)`, or the owner-chosen username; the display username keeps the text as typed. */
+export function usernamesOf(email: string, override?: string): { username: string; displayUsername: string } {
+  if (override?.trim()) return { username: override.trim().toLowerCase(), displayUsername: override.trim() };
   return { username: email.trim().toLowerCase(), displayUsername: email.trim() };
+}
+
+/**
+ * Builds the target `users` row of one legacy user. A student keeps no email: the legacy one only
+ * existed because the old system required it (owner decision 2026-10-08).
+ * @param u The legacy users row.
+ * @param role The target role.
+ * @param names The username and display username (empty for a student until `assignStudentUsernames`).
+ * @param schoolId The new school id, or null.
+ * @returns The row for the upsert.
+ */
+export function targetUserRow(u: Row, role: TargetRole, names: { username: string; displayUsername: string }, schoolId: string | null): Row {
+  const student = role === "STUDENT";
+  return {
+    id: String(u.id), username: names.username, display_username: names.displayUsername, name: u.name,
+    email: student ? null : u.email, image: u.image, role, school_id: schoolId, xp: u.xp ?? 0, level: u.level ?? 1,
+    cefr_level: u.cefrLevel ?? "A1-", password: u.password, email_verified: !student && u.email_verified ? u.createdAt : null,
+    created_at: u.createdAt, updated_at: u.updatedAt,
+  };
+}
+
+/**
+ * Gives each migrated student a permanent username of two words and two digits (owner decision
+ * 2026-10-08: no email, no class or grade part). A student whose target row already has such a
+ * username keeps it, so a rerun renames no one.
+ * @param studentIds The ids of the migrated students.
+ * @param existing The username of each user already in the target (user id to username).
+ * @param taken The usernames of all other users. The function adds each name it gives.
+ * @param pick Returns a random integer below the given bound. Tests replace it.
+ * @returns The username of each student (user id to username).
+ * @throws When 50 tries in a row find no free username for one student.
+ */
+export function assignStudentUsernames(
+  studentIds: string[],
+  existing: Map<string, string>,
+  taken: Set<string>,
+  pick?: (max: number) => number,
+): Map<string, string> {
+  const names = new Map<string, string>();
+  for (const id of studentIds) {
+    const kept = existing.get(id);
+    if (kept && isStudentUsername(kept)) { names.set(id, kept); taken.add(kept); }
+  }
+  for (const id of studentIds) {
+    if (names.has(id)) continue;
+    let name = generateStudentUsername(pick);
+    for (let tries = 1; taken.has(name); tries++) {
+      if (tries >= 50) throw new Error("No free student username after 50 tries.");
+      name = generateStudentUsername(pick);
+    }
+    taken.add(name);
+    names.set(id, name);
+  }
+  return names;
 }
 
 /** Parses a legacy classroom grade text into an integer, or null when it is not a number. */
@@ -120,6 +192,32 @@ export function parseGrade(grade: unknown): number | null {
   const n = Number.parseInt(String(grade).replace(/[^0-9-]/g, ""), 10);
   return Number.isFinite(n) ? n : null;
 }
+
+/**
+ * Reads a Postgres `timestamp` text as UTC. Prisma writes UTC into the legacy `timestamp(3)` columns;
+ * the postgres.js default reads them in the process time zone and moves every date on a non-UTC machine.
+ * @param text The timestamp text, for example `2025-12-01 08:52:42.431`.
+ * @returns The instant in UTC.
+ */
+export function parseUtcTimestamp(text: string): Date {
+  return new Date(`${text.replace(" ", "T")}Z`);
+}
+
+/**
+ * The 0-based order of a legacy question inside its article. The legacy tables have no order column, and
+ * all the questions of an article share one `createdAt`, so the cuid id (it grows in insert order) breaks the tie.
+ */
+export const QUESTION_ORDER_SQL = 'row_number() over (partition by article_id order by "createdAt", id) - 1';
+
+/** postgres.js `types` for the legacy connection: `timestamp` (oid 1114) values are read as UTC. */
+export const LEGACY_UTC_TIMESTAMP = {
+  legacyTimestamp: {
+    to: 1114,
+    from: [1114],
+    serialize: (x: Date | string) => (x instanceof Date ? x : new Date(x)).toISOString(),
+    parse: parseUtcTimestamp,
+  },
+};
 
 /** The index of the legacy MCQ answer inside its options, or -1 (exact first, then trimmed, case-insensitive). */
 export function correctAnswerIndex(options: ReadonlyArray<string>, answer: string | null): number {
@@ -190,6 +288,20 @@ export function mapArticle(a: LegacyArticle, newId: string, authorExists: boolea
   };
 }
 
+/**
+ * Maps a legacy classroom to the target row. Migrated classes start with the picture password off
+ * (owner decision 2026-10-08): students sign in with the class code and their name, as before.
+ * @param c The legacy classroom row.
+ * @param target The new id, the school id, the teacher id, and the parsed grade.
+ * @returns The target classroom row.
+ */
+export function mapClassroom(c: Row, target: { id: string; schoolId: string | null | undefined; teacherId: string; grade: number | null }): Row {
+  return {
+    id: target.id, name: c.name, school_id: target.schoolId, teacher_id: target.teacherId, class_code: c.classCode, code_expires_at: c.codeExpiresAt,
+    grade: target.grade, password_students: c.password_students, picture_password_enabled: false, created_at: c.createdAt, updated_at: c.updatedAt,
+  };
+}
+
 /** Maps a legacy assignment-student status to the target text and flag. */
 export function mapAssignmentStatus(status: unknown): { status: string; completed: boolean } {
   const s = String(status ?? "NOT_STARTED");
@@ -197,6 +309,18 @@ export function mapAssignmentStatus(status: unknown): { status: string; complete
 }
 
 /** Maps legacy lesson progress to the target status text. */
+/** The card text the Primary reader writes to `flashcard_cards.front` and `back`: the word of a vocabulary card, the sentence of a sentence card. */
+export function cardTextOf(card: { type?: unknown; word?: unknown; sentence?: unknown }): string | null {
+  const text = String(card.type) === "VOCABULARY" ? card.word : card.sentence;
+  return typeof text === "string" && text.trim() ? text : null;
+}
+
+/** The review counts of `flashcard_progress`: Good (3) and Easy (4) are correct, Again (1) and Hard (2) are not, as the Primary review action counts them. */
+export function reviewCountsOf(ratings: ReadonlyArray<number>): { correct: number; incorrect: number } {
+  const correct = ratings.filter((r) => r >= 3).length;
+  return { correct, incorrect: ratings.length - correct };
+}
+
 export function lessonStatusOf(isCompleted: boolean | null, progress: number | null): string {
   if (isCompleted) return "completed";
   return (progress ?? 0) > 0 ? "in_progress" : "not_started";
@@ -257,7 +381,7 @@ async function upsert(tx: Tx, table: string, rows: Row[], conflict = "id"): Prom
 
 /** Runs the whole import and returns the report. */
 export async function runPrimaryLegacyImport(options: ImportOptions): Promise<ImportReport> {
-  const { legacy, target, dryRun = false, roleOverrides, classroomTeacherOverrides = {}, log = () => {} } = options;
+  const { legacy, target, dryRun = false, roleOverrides, usernameOverrides = {}, classroomTeacherOverrides = {}, log = () => {} } = options;
   const startedAt = new Date().toISOString();
   const counter = new Counter();
   const notes: string[] = [];
@@ -276,6 +400,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     await open(async (tx) => { await body(tx); await ids.flush(tx); });
   };
   const migratedArticles = new Set<string>();
+  // The teacher of each migrated classroom (legacy classroom id → user id), for assignments whose own teacher is gone.
+  const classTeachers = new Map<string, string>();
 
   const main = async () => {
   // ── 1. schools, users, accounts, school admins ───────────────────────────────────
@@ -293,20 +419,26 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     const userRows: Row[] = [];
     for (const u of legacyUsers) {
       const id = String(u.id);
+      if (roleOverrides?.[id] === null) { counter.skip("users", "not moved (owner decision)", id); continue; }
       const role = mapRole(u.role, roleOverrides, id);
       if (!role) { counter.skip("users", `role '${String(u.role)}' needs an owner assignment (D9)`, id); continue; }
-      if (!u.email) { counter.skip("users", "no email, so no username (D6)", id); continue; }
-      const { username, displayUsername } = usernamesOf(String(u.email));
-      if (seenUsernames.has(username)) { counter.skip("users", "duplicate lower(email) (D6)", id); continue; }
-      seenUsernames.add(username);
+      // Students get a two-word username after this loop; the email never becomes a student username.
+      const student = role === "STUDENT";
+      if (!student && !u.email) { counter.skip("users", "no email, so no username (D6)", id); continue; }
+      const { username, displayUsername } = student ? { username: "", displayUsername: "" } : usernamesOf(String(u.email), usernameOverrides[id]);
+      if (!student && usernameOverrides[id]) counter.skip("users", "username set by the owner (no email part)", id);
+      if (!student && seenUsernames.has(username)) { counter.skip("users", "duplicate lower(email) (D6)", id); continue; }
+      if (!student) seenUsernames.add(username);
       users.add(id);
-      userRows.push({
-        id, username, display_username: displayUsername, name: u.name, email: u.email, image: u.image, role,
-        school_id: ids.get(MAP_TABLES.schools, u.school_id as string | null), xp: u.xp ?? 0, level: u.level ?? 1,
-        cefr_level: u.cefrLevel ?? "A1-", password: u.password, email_verified: u.email_verified ? u.createdAt : null,
-        created_at: u.createdAt, updated_at: u.updatedAt,
-      });
+      userRows.push(targetUserRow(u, role, { username, displayUsername }, ids.get(MAP_TABLES.schools, u.school_id as string | null)));
     }
+    const studentRows = userRows.filter((row) => row.role === "STUDENT");
+    const studentIds = new Set(studentRows.map((row) => String(row.id)));
+    const existing = new Map((await tx<Row[]>`select id, username from users`).map((row) => [String(row.id), String(row.username)] as const));
+    const taken = new Set([...seenUsernames, ...[...existing].filter(([id]) => !studentIds.has(id)).map(([, name]) => name)]);
+    const studentNames = assignStudentUsernames([...studentIds], existing, taken);
+    for (const row of studentRows) row.username = row.display_username = studentNames.get(String(row.id));
+    notes.push(`${studentRows.length} students have a username of two words and two digits; students keep no email (owner decisions 2026-10-08).`);
     counter.table("users").written += await upsert(tx, "users", userRows);
 
     const legacyAccounts = await legacy<Row[]>`select a.id, a.user_id, a.provider_id, a.password, a.created_at, a.updated_at, u.password as user_password from accounts a join users u on u.id = a.user_id`;
@@ -368,10 +500,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const grade = parseGrade(c.grade);
       if (c.grade && grade === null) counter.skip("classrooms", "grade text not a number, stored null", id);
       migratedClasses.add(id);
-      classRows.push({
-        id: ids.ensure(MAP_TABLES.classrooms, id), name: c.name, school_id: ids.get(MAP_TABLES.schools, c.school_id as string | null), teacher_id: teacher,
-        class_code: c.classCode, code_expires_at: c.codeExpiresAt, grade, password_students: c.password_students, created_at: c.createdAt, updated_at: c.updatedAt,
-      });
+      classTeachers.set(id, teacher);
+      classRows.push(mapClassroom(c, { id: ids.ensure(MAP_TABLES.classrooms, id), schoolId: ids.get(MAP_TABLES.schools, c.school_id as string | null), teacherId: teacher, grade }));
     }
     // A skip that is only a note must not hide a written row: count writes from the rows.
     counter.table("classrooms").written += await upsert(tx, "classrooms", classRows);
@@ -429,7 +559,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     counter.table("article").written += await upsert(tx, "articles", rows);
 
     // Question order: the legacy physical row order per article (FR-3 ordering rule; Tutor reads by position).
-    const mcqs = await legacy<Row[]>`select id, question, options, answer, "textualEvidence", article_id, "createdAt", "updatedAt", story_chapter_id, row_number() over (partition by article_id order by ctid) - 1 as ord from multiple_choice_questions`;
+    const mcqs = await legacy<Row[]>`select id, question, options, answer, "textualEvidence", article_id, "createdAt", "updatedAt", story_chapter_id, ${legacy.unsafe(QUESTION_ORDER_SQL)} as ord from multiple_choice_questions`;
     counter.table("multiple_choice_questions").read = mcqs.length;
     const mcqRows: Row[] = [];
     for (const q of mcqs) {
@@ -438,16 +568,19 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const articleId = ids.get(MAP_TABLES.article, q.article_id as string | null);
       if (!articleId) { counter.skip("multiple_choice_questions", "no article", id); continue; }
       const options = (q.options as string[]) ?? [];
-      const correct = correctAnswerIndex(options, q.answer as string | null);
+      const fixed = MCQ_ANSWER_FIXES[id];
+      const answer = fixed ?? (q.answer as string | null);
+      const correct = correctAnswerIndex(options, answer);
       if (correct < 0) { counter.skip("multiple_choice_questions", "answer not among the options (spec §6 MCQ rule)", id); continue; }
+      if (fixed) counter.skip("multiple_choice_questions", "answer text set to its option (owner decision 2026-10-07)", id);
       mcqRows.push({
         id: ids.ensure(MAP_TABLES.mcq, id), article_id: articleId, question: q.question, options: jsonb(options), correct_answer: correct,
-        order: Number(q.ord), answer: q.answer, textual_evidence: q.textualEvidence, chapter_id: null, created_at: q.createdAt, updated_at: q.updatedAt,
+        order: Number(q.ord), answer, textual_evidence: q.textualEvidence, chapter_id: null, created_at: q.createdAt, updated_at: q.updatedAt,
       });
     }
     counter.table("multiple_choice_questions").written += await upsert(tx, "multiple_choice_questions", mcqRows);
 
-    const saqs = await legacy<Row[]>`select id, question, answer, article_id, "createdAt", "updatedAt", story_chapter_id, row_number() over (partition by article_id order by ctid) - 1 as ord from short_answer_questions`;
+    const saqs = await legacy<Row[]>`select id, question, answer, article_id, "createdAt", "updatedAt", story_chapter_id, ${legacy.unsafe(QUESTION_ORDER_SQL)} as ord from short_answer_questions`;
     counter.table("short_answer_questions").read = saqs.length;
     const saqRows: Row[] = [];
     for (const q of saqs) {
@@ -516,11 +649,13 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const id = String(a.id);
       const classroomId = ids.get(MAP_TABLES.classrooms, a.classroom_id as string);
       if (!classroomId) { counter.skip("assignments", "classroom not migrated", id); continue; }
-      if (!users.has(String(a.teacher_id))) { counter.skip("assignments", "teacher not migrated", id); continue; }
+      const teacherId = users.has(String(a.teacher_id)) ? String(a.teacher_id) : classTeachers.get(String(a.classroom_id));
+      if (!teacherId) { counter.skip("assignments", "teacher not migrated", id); continue; }
+      if (teacherId !== String(a.teacher_id)) counter.skip("assignments", "teacher_id fell back to the classroom teacher (the assignment's teacher is not migrated)", id);
       const articleId = ids.get(MAP_TABLES.article, a.article_id as string | null);
       migratedAssignments.add(id);
       assignmentRows.push({
-        id: ids.ensure(MAP_TABLES.assignments, id), title: a.name ?? a.article_title ?? "Assignment", classroom_id: classroomId, teacher_id: a.teacher_id, article_id: articleId,
+        id: ids.ensure(MAP_TABLES.assignments, id), title: a.name ?? a.article_title ?? "Assignment", classroom_id: classroomId, teacher_id: teacherId, article_id: articleId,
         due_date: a.due_date, type: "article", description: a.description, teacher_name: a.teacher_name, created_at: a.createdAt, updated_at: a.updatedAt,
       });
     }
@@ -588,6 +723,79 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     counter.table("xp_logs").written += await upsert(tx, "xp_logs", xpRows);
   });
 
+  // ── 5. saved words and sentences (owner decision 2026-10-07, option A) ──────────
+  // The target card keeps the text, the article, and the review dates; FSRS stability and
+  // difficulty have no column (inventory R2), so the review action starts again from the counts.
+  await group("flashcards", async (tx) => {
+    const decks = await legacy<Row[]>`select id, user_id, name, type::text as type, description, "createdAt", "updatedAt" from flashcard_decks`;
+    counter.table("flashcard_decks").read = decks.length;
+    const deckRows: Row[] = [];
+    const deckUser = new Map<string, string>();
+    for (const d of decks) {
+      const id = String(d.id);
+      if (!users.has(String(d.user_id))) { counter.skip("flashcard_decks", "user not migrated", id); continue; }
+      deckUser.set(id, String(d.user_id));
+      deckRows.push({
+        id: ids.ensure(MAP_TABLES.flashcardDecks, id), user_id: d.user_id, name: d.name ?? `${d.type === "VOCABULARY" ? "Vocabulary" : "Sentence"} Deck`,
+        type: d.type, description: d.description, created_at: d.createdAt, updated_at: d.updatedAt,
+      });
+    }
+    counter.table("flashcard_decks").written += await upsert(tx, "flashcard_decks", deckRows);
+
+    const ratingsByCard = new Map<string, number[]>();
+    const reviews = await legacy<Row[]>`select id, card_id, rating, time_spent, "reviewedAt" from card_reviews order by "reviewedAt", id`;
+    for (const r of reviews) ratingsByCard.set(String(r.card_id), [...(ratingsByCard.get(String(r.card_id)) ?? []), Number(r.rating)]);
+
+    const cards = await legacy<Row[]>`select id, deck_id, type::text as type, article_id, word, sentence, due, last_review, story_chapter_id, "createdAt", "updatedAt" from flashcard_cards`;
+    counter.table("flashcard_cards").read = cards.length;
+    const cardRows: Row[] = [];
+    const progressRows: Row[] = [];
+    for (const c of cards) {
+      const id = String(c.id);
+      if (c.story_chapter_id) { counter.skip("flashcard_cards", "story chapter card (stories deferred)", id); continue; }
+      const userId = deckUser.get(String(c.deck_id));
+      if (!userId) { counter.skip("flashcard_cards", "deck not migrated", id); continue; }
+      const articleId = ids.get(MAP_TABLES.article, c.article_id as string | null);
+      if (!articleId) { counter.skip("flashcard_cards", "article not migrated", id); continue; }
+      const text = cardTextOf(c);
+      if (!text) { counter.skip("flashcard_cards", "no word or sentence text", id); continue; }
+      const cardId = ids.ensure(MAP_TABLES.flashcardCards, id);
+      cardRows.push({ id: cardId, deck_id: ids.get(MAP_TABLES.flashcardDecks, String(c.deck_id)), front: text, back: text, source_id: articleId, order: 0, created_at: c.createdAt });
+      if (!c.last_review) continue;
+      // One progress row per reviewed card, with the card's uuid as its id, so a rerun updates it.
+      const { correct, incorrect } = reviewCountsOf(ratingsByCard.get(id) ?? []);
+      progressRows.push({
+        id: cardId, user_id: userId, card_id: cardId, correct_count: correct, incorrect_count: incorrect,
+        last_reviewed_at: c.last_review, next_review_at: c.due, created_at: c.createdAt, updated_at: c.updatedAt,
+      });
+    }
+    counter.table("flashcard_cards").written += await upsert(tx, "flashcard_cards", cardRows);
+    counter.table("flashcard_cards.last_review").read = cards.filter((c) => c.last_review).length;
+    counter.table("flashcard_cards.last_review").written += await upsert(tx, "flashcard_progress", progressRows);
+
+    counter.table("card_reviews").read = reviews.length;
+    const reviewRows: Row[] = [];
+    for (const r of reviews) {
+      const cardId = ids.get(MAP_TABLES.flashcardCards, String(r.card_id));
+      if (!cardId) { counter.skip("card_reviews", "card not migrated", String(r.id)); continue; }
+      reviewRows.push({ id: ids.ensure(MAP_TABLES.cardReviews, String(r.id)), card_id: cardId, rating: r.rating, time_spent: r.time_spent, reviewed_at: r.reviewedAt });
+    }
+    counter.table("card_reviews").written += await upsert(tx, "card_reviews", reviewRows);
+
+    // The reader and the games read a card's meaning, translation, and audio from its article; a
+    // content reload can drop a saved word from the article's word list.
+    const [loose] = await tx<{ words: number; sentences: number }[]>`
+      select count(*) filter (where d.type = 'VOCABULARY' and not exists (
+               select 1 from jsonb_array_elements(coalesce(s.words, '[]'::jsonb)) w where lower(trim(w->>'vocabulary')) = lower(trim(c.front))))::int as words,
+             count(*) filter (where d.type = 'SENTENCE' and not exists (
+               select 1 from jsonb_array_elements(coalesce(a.sentences, '[]'::jsonb)) x where x->>'sentence' = c.front))::int as sentences
+      from flashcard_cards c join flashcard_decks d on d.id = c.deck_id
+      left join articles a on a.id::text = c.source_id
+      left join sentencs_and_words_for_flashcard s on s.article_id::text = c.source_id`;
+    notes.push(`Saved cards whose text is no longer in their article: ${loose?.words ?? 0} words (not in the word list, so no meaning or audio), ${loose?.sentences ?? 0} sentences (not in the article text, so no translation).`);
+    notes.push("flashcard_progress keeps due, last review, and the review counts; FSRS stability and difficulty have no column (inventory R2).");
+  });
+
   };
 
   if (dryRun) {
@@ -608,7 +816,7 @@ class DryRunRollback extends Error {
 
 /** Renders the report as Markdown for the track evidence folder. */
 export function renderReport(report: ImportReport): string {
-  const TARGET_NAME: Record<string, string> = { article: "articles", assignment_students: "student_assignments", user_lesson_progress: "lesson_progress", user_activities: "user_activity" };
+  const TARGET_NAME: Record<string, string> = { article: "articles", assignment_students: "student_assignments", user_lesson_progress: "lesson_progress", user_activities: "user_activity", "flashcard_cards.last_review": "flashcard_progress" };
   const lines = [`# Primary legacy import report`, ``, `Started ${report.startedAt}, finished ${report.finishedAt}${report.dryRun ? " (dry run, rolled back)" : ""}.`, ``, `| Legacy table | Read | Written | Skipped |`, `|---|---|---|---|`];
   for (const [name, t] of Object.entries(report.tables)) {
     const skipped = Object.entries(t.skipped).map(([reason, n]) => `${n} ${reason}`).join("; ") || "0";

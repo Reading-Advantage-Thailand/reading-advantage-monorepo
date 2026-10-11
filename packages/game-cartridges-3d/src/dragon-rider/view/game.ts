@@ -3,7 +3,10 @@
  * flies the student's hero on a dragon over a highland, stands two stone gates in front of it
  * with their meanings, grows and shrinks the flock, and stages the duel with the dark dragon
  * (tired dragons rest and rally). It reads the core's state every frame and animates its events;
- * it never decides a rule.
+ * it never decides a rule. With an answer audio controller (Read to Select Audio), the banner shows
+ * the meaning, the gates carry numbers and play the English words, a row of "n 🔊" controls plays
+ * them, and at the gates the rider holds until the chosen gate's clip played; then the view commits
+ * the gate (../../shared/answer-audio.ts).
  */
 import * as THREE from 'three';
 import { toGameResults } from '@reading-advantage/advantage-play-kit-3d/contracts';
@@ -11,8 +14,9 @@ import type { Game3DContext, Game3DInstance } from '@reading-advantage/advantage
 import { esc, hasThai } from '@reading-advantage/advantage-play-kit-3d/hud';
 import { createFixedStepLoop, type LoopClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor, burst, FollowRig, isAvatarBody, playerBody, projectile } from '@reading-advantage/advantage-play-kit-3d/stage';
-import { createDragonRider, evidenceOf, scoreOf, type DragonRiderCommand, type DragonRiderEvent, type DragonRiderState, type DragonRiderInput } from '../core/index.js';
+import { createDragonRider, evidenceOf, scoreOf, type DragonRiderCommand, type DragonRiderEvent, type DragonRiderState, type DragonRiderInput, type GateOption } from '../core/index.js';
 import { manifest } from '../manifest.js';
+import { createAnswerAudioDriver } from '../../shared/answer-audio.js';
 import { evidenceStoryOf } from '../../shared/challenge.js';
 import { nextChoice } from '../qc/bot.js';
 import { GATE_X } from './land-plan.js';
@@ -69,7 +73,8 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     playerBody(stage.loader, ctx.options.avatar, heroId, ctx.diagnostic),
   ]);
   const land = buildLand(stage);
-  const sim = createDragonRider(input, { seed: ctx.seed });
+  const answer = ctx.answerAudio ? createAnswerAudioDriver(ctx.answerAudio, ctx.diagnostic) : null;
+  const sim = createDragonRider(input, { seed: ctx.seed, answerAudio: !!answer });
   const startedAt = performance.now();
 
   // ---------------------------------------------------------------- dragons and the hero
@@ -135,6 +140,10 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   const powerBox = document.createElement('div');
   powerBox.className = 'rider-power';
   hud.el.append(wordBox, powerBox);
+  // Answer audio: one "n 🔊" control per gate of the round, inside the word box under the meaning
+  // (a long meaning takes two lines and pushes the row down).
+  const listenRow = document.createElement('div');
+  listenRow.className = 'rider-listen';
 
   // ---------------------------------------------------------------- sound
   audio.defineMood('ride', { bpm: 108, chords: [[57, 60, 64], [62, 65, 69], [60, 64, 67], [64, 67, 71]], busy: true, drum: false });
@@ -148,7 +157,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     if (s.round && s.round.chosen === null) loop.dispatch({ type: 'choose', gate });
   }
 
-  function raiseGates(roundId: string, options: readonly { id: string; text: string }[], z: number): void {
+  function raiseGates(roundId: string, options: readonly GateOption[], z: number): void {
     const list = options.map((o, i) => {
       const x = GATE_X[i] ?? 0;
       const obj = stoneGate();
@@ -158,9 +167,9 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       ring.position.set(x, GATE_Y + 0.25, z);
       stage.scene.add(ring);
       const tag = document.createElement('button');
-      tag.className = `gate-tag ${hasThai(o.text) ? 'th' : ''}`;
+      tag.className = `gate-tag ${!answer && hasThai(o.text) ? 'th' : ''}`;
       tag.dataset.gate = String(i);
-      tag.textContent = o.text;
+      tag.textContent = answer ? String(i + 1) : o.text;
       tag.addEventListener('click', () => choose(i));
       hud.anchor(tag, () => {
         const p = stage.screenOfPoint(new THREE.Vector3(x, 3.6, z));
@@ -200,6 +209,51 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   };
   window.addEventListener('keydown', onKey);
 
+  // ---------------------------------------------------------------- answer audio
+  /** The gate the rider holds at for its clip (answer audio), or null. */
+  let atGate: { roundId: string; gate: number } | null = null;
+
+  function showListen(options: readonly GateOption[]): void {
+    wordBox.append(listenRow);
+    listenRow.replaceChildren(
+      ...options.map((o, i) => {
+        const b = document.createElement('button');
+        b.textContent = `${i + 1} 🔊`;
+        b.setAttribute('aria-label', t('listen', { index: i + 1 }));
+        b.dataset.clip = String(o.position);
+        b.addEventListener('click', () => {
+          if (answer?.listen(o.position).kind === 'muted') hud.popup(dragonPoint(1.4), t('soundOff'), 'miss');
+        });
+        return b;
+      }),
+    );
+    drawListen();
+  }
+
+  function drawListen(): void {
+    if (!answer) return;
+    for (const b of listenRow.querySelectorAll<HTMLButtonElement>('button')) b.dataset.look = answer.look(Number(b.dataset.clip));
+  }
+
+  /**
+   * At the gate: commit it once its clip played to the end, or else play it. A change tries again;
+   * after a failed clip only the student's tap (`explicit`) plays it again.
+   */
+  function tryGate(explicit: boolean): void {
+    const round = sim.state.round;
+    if (!answer || !atGate || !round || round.id !== atGate.roundId || round.chosen !== null) return;
+    if (answer.position() !== round.position) return;
+    const clip = round.options[atGate.gate]?.position;
+    if (clip === undefined) return;
+    const look = answer.look(clip);
+    if (look === 'playing' || (look === 'failed' && !explicit)) return;
+    const action = answer.touch(clip);
+    if (action.kind === 'confirm') {
+      atGate = null;
+      loop.dispatch({ type: 'commit' });
+    } else if (action.kind === 'muted' && explicit) hud.popup(dragonPoint(1.4), t('soundOff'), 'miss');
+  }
+
   // ---------------------------------------------------------------- events
   let steerX = 0;
   let boss: Actor | null = null;
@@ -221,17 +275,37 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     switch (ev.type) {
       case 'roundStarted':
         raiseGates(ev.roundId, ev.options, -(s.distance + s.round!.gap));
-        wordBox.innerHTML = `<small>${esc(t('word'))}</small><b>${esc(ev.term)}</b>`;
+        wordBox.innerHTML = answer
+          ? `<small>${esc(t('wordAudio'))}</small><b class="${hasThai(ev.translation) ? 'th' : ''}">${esc(ev.translation)}</b>`
+          : `<small>${esc(t('word'))}</small><b>${esc(ev.term)}</b>`;
         wordBox.classList.add('on');
         steerX = 0;
+        atGate = null;
+        if (answer) {
+          answer.question(ev.position, ev.options.map((o) => o.position));
+          showListen(ev.options);
+        }
+        break;
+      case 'gateHeld': {
+        (gates.get(ev.roundId) ?? []).forEach((g, i) => g.tag.classList.toggle('held', i === ev.gate));
+        steerX = GATE_X[ev.gate] ?? 0;
+        audio.play('flap');
+        break;
+      }
+      case 'gateReached':
+        for (const g of gates.get(ev.roundId) ?? []) g.tag.classList.remove('pulse');
+        atGate = { roundId: ev.roundId, gate: ev.gate };
+        tryGate(true);
         break;
       case 'waiting':
         for (const g of gates.get(ev.roundId) ?? []) g.tag.classList.add('pulse');
         break;
       case 'gateChosen': {
+        atGate = null;
+        listenRow.replaceChildren();
         const list = gates.get(ev.roundId) ?? [];
         list.forEach((g, i) => {
-          g.tag.classList.remove('pulse');
+          g.tag.classList.remove('pulse', 'held');
           g.tag.classList.add(i === ev.correctGate ? 'right' : i === ev.gate ? 'wrong' : 'dim');
           (g.ring.material as THREE.MeshBasicMaterial).color.setHex(i === ev.correctGate ? 0x3ee07a : i === ev.gate ? 0xff5a4a : 0x777777);
         });
@@ -347,6 +421,10 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
   });
 
   drawStatus(sim.state);
+  const stopListen = answer?.onChange(() => {
+    drawListen();
+    tryGate(false);
+  });
 
   return {
     start: () => {
@@ -355,7 +433,11 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       loop.start();
     },
     pause: () => undefined,
-    resume: () => loop.reset(),
+    resume: () => {
+      loop.reset();
+      // A pause cancels a clip at the gate; play it again.
+      tryGate(false);
+    },
     resize: () => undefined,
     recompose: () => undefined,
     captureResponsiveState: () => null,
@@ -365,10 +447,12 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       finished = true;
       loop.stop();
       window.removeEventListener('keydown', onKey);
+      stopListen?.();
       for (const id of [...gates.keys()]) lowerGates(id);
       status.remove();
       wordBox.remove();
       powerBox.remove();
+      listenRow.remove();
     },
     test: {
       state: () => sim.state,

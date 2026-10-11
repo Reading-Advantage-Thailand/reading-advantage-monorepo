@@ -70,7 +70,7 @@ describe("assignClassQuest", () => {
     const quest = await assignClassQuest({ db: db(mock), user: teacher, now }, input, capability);
     expect(quest).toMatchObject({ id: QUEST, status: "open", bossTarget: 350, challengeId: CHALLENGE });
     const [challengeValues, questValues] = insertValues(mock);
-    expect(challengeValues).toMatchObject({ classId: CLASS, gameId: "wizard-vs-zombie", gameVersion: "2026-09-09.1", target: 350, teacherParticipationEnabled: false, startsAt: new Date("2026-10-04T17:00:00.000Z") });
+    expect(challengeValues).toMatchObject({ classId: CLASS, gameId: "hero-vs-zombie", gameVersion: "2026-09-09.1", target: 350, teacherParticipationEnabled: false, startsAt: new Date("2026-10-04T17:00:00.000Z") });
     expect(challengeValues.contentJson.items).toEqual([{ term: "puppy", translation: "ลูกสุนัข" }, { term: "picture", translation: "รูปภาพ" }]);
     expect(questValues).toMatchObject({ schoolId: SCHOOL, classId: CLASS, templateId: "goblin-raid", challengeId: CHALLENGE, bossTarget: 350, battleAt: new Date("2026-10-09T07:30:00.000Z") });
   });

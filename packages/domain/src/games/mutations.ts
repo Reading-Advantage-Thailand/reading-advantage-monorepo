@@ -160,7 +160,7 @@ export async function recordGameCompletion({
         metadata: gameCompletions.metadata,
         createdAt: gameCompletions.createdAt,
       });
-      if (!savedCompletion) return false;
+      if (!savedCompletion) return null;
       // xpLogs is REFERENTIAL (no schoolId) — bypass TenantDB scoping for
       // this single insert. The unique constraint on (userId, activityId)
       // catches the race even though the table is unscoped.
@@ -208,12 +208,12 @@ export async function recordGameCompletion({
           },
         });
       }
-      return true;
+      return { id: savedCompletion.id as string | undefined };
     });
 
   if (!inserted) {
     return { xpEarned: 0, activityId, duplicate: true, status: 200 };
   }
 
-  return { xpEarned, activityId, duplicate: false, status: 200 };
+  return { xpEarned, activityId, duplicate: false, status: 200, ...(inserted.id ? { completionId: inserted.id } : {}) };
 }

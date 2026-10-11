@@ -20,10 +20,11 @@ export function RpgRewardDisclosure(props: RpgRewardDisclosureProps): ReactEleme
         boxSizing: "border-box",
         padding: "0.75rem",
         cursor: "pointer",
-        border: "2px solid #31577d",
-        background: "#081225",
-        color: "#f7f2d0",
-        fontFamily: "Tahoma, sans-serif",
+        // The panel's reward variables, so a host skin styles the bar and the panel alike; the defaults are the old colors.
+        border: "2px solid var(--apk-reward-border, #31577d)",
+        background: "var(--apk-reward-background, #081225)",
+        color: "var(--apk-reward-text, #f7f2d0)",
+        fontFamily: "var(--apk-reward-body-font, Tahoma, sans-serif)",
         overflowWrap: "anywhere",
       }}>
         {props.heading ?? "Wizard rewards"} · {unlockedCount}/{props.state.cosmetics.length}

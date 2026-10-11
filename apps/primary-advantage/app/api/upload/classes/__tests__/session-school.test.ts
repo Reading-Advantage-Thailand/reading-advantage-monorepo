@@ -112,10 +112,10 @@ describe("classes upload session school scoping", () => {
     });
     mocks.parse.mockReturnValue([
       {
-        name: "Student One",
-        email: "student@example.com",
+        name: "Teacher Two",
+        email: "teacher2@example.com",
         classroom_name: "Class A",
-        role: "student",
+        role: "teacher",
       },
     ]);
     const results = [
@@ -123,22 +123,23 @@ describe("classes upload session school scoping", () => {
       [{ id: STORED_ROW_SCHOOL, name: "School B" }],
       [],
       [{ name: "Class A" }],
-      [{ id: "role-student", name: "student" }],
-      [{ id: "user-1", email: "student@example.com" }],
+      [{ id: "role-teacher", name: "teacher" }],
+      [{ id: "user-1", email: "teacher2@example.com" }],
       [{ id: "class-1", name: "Class A" }],
+      [],
     ];
     for (const rows of results) mocks.select.mockReturnValueOnce(selectResult(rows));
 
     const writes = recordingInserts();
 
-    const response = await POST(uploadRequest("students.csv"));
+    const response = await POST(uploadRequest("teachers.csv"));
 
     expect(response.status).toBe(200);
     const userWrite = writes.find((write) => write.table === users);
     expect(userWrite).toBeDefined();
     expect(userWrite!.values[0]).toMatchObject({
       schoolId: SESSION_SCHOOL,
-      email: "student@example.com",
+      email: "teacher2@example.com",
     });
   });
 
@@ -177,7 +178,7 @@ describe("classes upload session school scoping", () => {
     mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER" });
     mocks.select.mockReturnValueOnce(selectResult([{ id: "teacher-1", schoolId: null }]));
 
-    const response = await POST(uploadRequest("students.csv"));
+    const response = await POST(uploadRequest("teachers.csv"));
 
     expect(response.status).toBe(400);
     expect((await response.json()).error).toBe("School association required");

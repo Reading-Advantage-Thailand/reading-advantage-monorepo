@@ -22,7 +22,7 @@ const from = join(forge, "src", "apk3d");
 const pkg = join(import.meta.dirname, "..", "src");
 
 /** Kit files the monorepo owns: the contract re-exports and the app host. */
-const MONOREPO_OWNED = ["contracts/story-input.ts", "contracts/evidence.ts", "contracts/index.ts", "contracts/story-compat.ts", "factory/renderer-setting.ts", "contracts/avatar.ts"];
+const MONOREPO_OWNED = ["contracts/story-input.ts", "contracts/evidence.ts", "contracts/index.ts", "contracts/story-compat.ts", "factory/renderer-setting.ts", "contracts/avatar.ts", "contracts/listening.ts", "audio/answer-choice.ts"];
 const MONOREPO_OWNED_DIRS = ["host/", "react/", "__tests__/"];
 const owned = (rel) => MONOREPO_OWNED.includes(rel) || MONOREPO_OWNED_DIRS.some((d) => rel.startsWith(d));
 
@@ -153,6 +153,34 @@ async function contractDrift() {
     ["storyGameEvidenceSchema", "evidence with a one-letter input id", { ...evidence, inputId: "s" }],
     ["storyGameEvidenceSchema", "evidence without items", { ...evidence, items: [], practice: [] }],
     ["storyGameEvidenceSchema", "evidence first try but unsolved", { ...evidence, items: [{ ...evidence.items[0], correctFirstTry: true, solved: false }] }],
+  );
+  const audioSession = { modality: "read-to-select-audio", promptLocale: "th-TH", answerLocale: "en-US", promptField: "translation", answerField: "term", scored: true };
+  const wrong = { attemptIndex: 0, clipItemPosition: 1, playbackResult: "completed", submitted: true, completedQuestion: false };
+  const right = { attemptIndex: 1, clipItemPosition: 0, playbackResult: "completed", submitted: true, completedQuestion: true };
+  const question = { questionPosition: 0, promptItemPosition: 0, selectionAttempts: [wrong, right] };
+  const audioEvidence = {
+    schemaVersion: 1,
+    declaredModality: "read-to-select-audio",
+    effectiveModality: "read-to-select-audio",
+    promptLocale: "th-TH",
+    answerLocale: "en-US",
+    promptField: "translation",
+    answerField: "term",
+    itemCount: 3,
+    questions: [question],
+    replayCounts: [{ questionPosition: 0, clipItemPosition: 1, count: 1 }],
+    audioFailures: [{ questionPosition: 0, clipItemPosition: 2, code: "playback-failed" }],
+  };
+  fixtures.push(
+    ["readToSelectAudioSessionConfigSchema", "answer audio session", audioSession],
+    ["readToSelectAudioSessionConfigSchema", "answer audio session with an unknown key", { ...audioSession, extra: 1 }],
+    ["readToSelectAudioSessionConfigSchema", "answer audio session with an English prompt", { ...audioSession, promptLocale: "en-US" }],
+    ["readToSelectAudioEvidenceSchema", "answer audio evidence", audioEvidence],
+    ["readToSelectAudioEvidenceSchema", "answer audio evidence with a later attempt", { ...audioEvidence, questions: [{ ...question, selectionAttempts: [{ ...right, attemptIndex: 0 }, { ...wrong, attemptIndex: 1 }] }] }],
+    ["readToSelectAudioEvidenceSchema", "answer audio evidence with a moved prompt", { ...audioEvidence, questions: [{ ...question, promptItemPosition: 1 }] }],
+    ["readToSelectAudioEvidenceSchema", "answer audio evidence submitted after a failed play", { ...audioEvidence, questions: [{ ...question, selectionAttempts: [{ ...wrong, playbackResult: "failed" }, right] }] }],
+    ["readToSelectAudioEvidenceSchema", "answer audio evidence with a repeated replay pair", { ...audioEvidence, replayCounts: [audioEvidence.replayCounts[0], audioEvidence.replayCounts[0]] }],
+    ["readToSelectAudioEvidenceSchema", "answer audio evidence outside the session", { ...audioEvidence, itemCount: 2 }],
   );
   const out = [];
   for (const [schema, label, value] of fixtures) {

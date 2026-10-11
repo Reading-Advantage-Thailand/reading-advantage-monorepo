@@ -81,7 +81,14 @@ export const preparedSpeechClipSchema = z.object({
   url: z.string().url().refine(isHttpUrl, "Prepared speech URL must use HTTP or HTTPS"),
   mediaType: z.string().regex(/^audio\/[a-z0-9.+-]+$/i),
   sourceLocale: listeningLocaleSchema,
-}).strict();
+  /** Start of the clip inside a longer file (an article's word audio), in seconds. */
+  startSeconds: z.number().finite().min(0).optional(),
+  /** End of the clip inside a longer file; absent: the end of the file. */
+  endSeconds: z.number().finite().positive().optional(),
+}).strict().refine(
+  (clip) => clip.endSeconds === undefined || clip.endSeconds > (clip.startSeconds ?? 0),
+  { message: "A clip must end after it starts", path: ["endSeconds"] },
+);
 
 /** Complete prepared speech references for one current content array. */
 export const preparedSpeechSchema = z.object({

@@ -624,6 +624,26 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       { tag: "0067_primary_voice", kind: "column", target: "primary_voice_school_settings.enabled" },
     ],
   },
+  "0068_primary_avatar_shop": {
+    tag: "0068_primary_avatar_shop",
+    kind: "all",
+    target: "primary_avatar_inventory",
+    allOf: [
+      { tag: "0068_primary_avatar_shop", kind: "table", target: "primary_avatar_inventory" },
+      { tag: "0068_primary_avatar_shop", kind: "table", target: "primary_avatar_loadout" },
+      { tag: "0068_primary_avatar_shop", kind: "table", target: "primary_gp_ledger" },
+    ],
+  },
+  "0069_primary_class_quest": {
+    tag: "0069_primary_class_quest",
+    kind: "all",
+    target: "primary_class_quest",
+    allOf: [
+      { tag: "0069_primary_class_quest", kind: "table", target: "primary_class_quest" },
+      { tag: "0069_primary_class_quest", kind: "table", target: "primary_class_quest_heartbeat" },
+      { tag: "0069_primary_class_quest", kind: "table", target: "primary_class_quest_power_up" },
+    ],
+  },
   "0070_primary_objective_tags": {
     tag: "0070_primary_objective_tags",
     kind: "all",
@@ -632,6 +652,14 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       { tag: "0070_primary_objective_tags", kind: "column", target: "primary_article_objectives.node_id" },
       { tag: "0070_primary_objective_tags", kind: "column", target: "primary_question_objectives.question_type" },
       { tag: "0070_primary_objective_tags", kind: "column", target: "primary_article_word_nodes.node_id" },
+    ],
+  },
+  "0071_primary_temporary_password": {
+    tag: "0071_primary_temporary_password",
+    kind: "all",
+    target: "accounts.temporary_password_issued_at",
+    allOf: [
+      { tag: "0071_primary_temporary_password", kind: "column", target: "accounts.temporary_password_issued_at" },
     ],
   },
 };

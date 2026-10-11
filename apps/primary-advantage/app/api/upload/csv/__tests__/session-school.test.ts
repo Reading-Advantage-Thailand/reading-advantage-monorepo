@@ -56,11 +56,13 @@ const STORED_ROW_SCHOOL = "00000000-0000-0000-0000-00000000000b";
 function selectResult(rows: unknown[]) {
   const chain = {
     from: vi.fn(),
+    innerJoin: vi.fn(),
     where: vi.fn(),
     limit: vi.fn().mockResolvedValue(rows),
     then: (resolve: (value: unknown[]) => unknown) => Promise.resolve(rows).then(resolve),
   };
   chain.from.mockReturnValue(chain);
+  chain.innerJoin.mockReturnValue(chain);
   chain.where.mockReturnValue(chain);
   return chain;
 }
@@ -76,7 +78,7 @@ function uploadRequest(name: string): NextRequest {
 }
 
 function recordingInserts(
-  returningFor: (table: unknown) => unknown[],
+  returningFor: (table: unknown, values: unknown[]) => unknown[],
 ): Array<{ table: unknown; values: unknown[]; onConflictDoNothing: boolean }> {
   const writes: Array<{ table: unknown; values: unknown[]; onConflictDoNothing: boolean }> = [];
   mocks.insert.mockImplementation((table: unknown) => {
@@ -90,7 +92,7 @@ function recordingInserts(
       write.onConflictDoNothing = true;
       return chain;
     });
-    chain.returning = vi.fn(() => Promise.resolve(returningFor(table)));
+    chain.returning = vi.fn(() => Promise.resolve(returningFor(table, write.values)));
     chain.then = (resolve: (value: unknown) => unknown) =>
       Promise.resolve(undefined).then(resolve);
     writes.push(write);
@@ -119,7 +121,6 @@ describe("CSV upload session school scoping", () => {
     mocks.parse.mockReturnValue([
       {
         name: "Student One",
-        email: "student@example.com",
         role: "student",
         classroom_name: "Class A",
       },
@@ -133,9 +134,9 @@ describe("CSV upload session school scoping", () => {
     ];
     for (const rows of results) mocks.select.mockReturnValueOnce(selectResult(rows));
 
-    const writes = recordingInserts((table) =>
+    const writes = recordingInserts((table, values) =>
       table === users
-        ? [{ id: "user-1", email: "student@example.com" }]
+        ? (values as Array<{ id: string }>).map((v) => ({ id: v.id }))
         : table === classrooms
           ? [{ id: "class-1", name: "Class A", schoolId: SESSION_SCHOOL }]
           : [],
@@ -151,7 +152,7 @@ describe("CSV upload session school scoping", () => {
     expect(userWrite).toBeDefined();
     expect(userWrite!.values[0]).toMatchObject({
       schoolId: SESSION_SCHOOL,
-      email: "student@example.com",
+      email: null,
     });
 
     const classroomWrite = writes.find((write) => write.table === classrooms);

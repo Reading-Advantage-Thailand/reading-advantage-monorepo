@@ -7,6 +7,7 @@ import {
   and,
 } from '@reading-advantage/db';
 import { flashcardDecks } from '@reading-advantage/db';
+import { logger } from "@/lib/observability/logger";
 
 interface OrderSentenceGameData {
   id: string;
@@ -83,7 +84,7 @@ export async function getSentencesForOrderingGame(): Promise<{
       data: data.sentenceGroups || [],
     };
   } catch (error) {
-    console.error("Error getting sentences for ordering game:", error);
+    logger.error("practice_ordering_sentences_failed", { error });
     return {
       success: false,
       error: "Failed to get sentences for ordering game",
@@ -128,7 +129,7 @@ export async function getFlashcardDeckId(): Promise<{
       deckId: deck.id,
     };
   } catch (error) {
-    console.error("Error getting flashcard deck:", error);
+    logger.error("practice_flashcard_deck_failed", { error });
     return {
       success: false,
       error: "Failed to get flashcard deck",

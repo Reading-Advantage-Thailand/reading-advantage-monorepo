@@ -66,6 +66,28 @@ export function diffRows(reference: Row[], target: Row[]): Difference[] {
   return out;
 }
 
+/**
+ * Applies owner-approved value fixes to reference rows, so that the fixed target values match.
+ * @param reference Rows from the legacy database.
+ * @param column The column that the fixes change.
+ * @param fixes Each row id mapped to its approved value.
+ * @returns The rows with the fixes applied, and the number of rows changed.
+ */
+export function applyExpectedFixes(
+  reference: Row[],
+  column: string,
+  fixes: Readonly<Record<string, unknown>>,
+): { rows: Row[]; applied: number } {
+  let applied = 0;
+  const rows = reference.map((row) => {
+    const id = String(row.id);
+    if (!Object.hasOwn(fixes, id)) return row;
+    applied++;
+    return { ...row, [column]: fixes[id] };
+  });
+  return { rows, applied };
+}
+
 const SHAPE_SQLSTATES = new Set(["42703", "42P01"]);
 
 /**

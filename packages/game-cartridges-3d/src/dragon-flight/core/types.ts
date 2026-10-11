@@ -10,6 +10,8 @@
 export interface FlightWord {
   /** The word id, equal to the story vocabulary id (the evidence `itemId`). */
   id: string;
+  /** The word's position in the input: in answer audio, its question and its clip. */
+  position: number;
   /** The English term on the banner. */
   term: string;
   /** The meaning on the correct gate. */
@@ -26,6 +28,8 @@ export interface FlightWord {
 export interface GateOption {
   id: string;
   text: string;
+  /** The input position of that word: the clip the gate plays in answer audio. */
+  position: number;
 }
 
 /** One round: a word on the banner and its gates ahead. */
@@ -34,6 +38,10 @@ export interface Round {
   /** The word id (`FlightWord.id`). */
   itemId: string;
   term: string;
+  /** The meaning: the banner in answer audio. */
+  translation: string;
+  /** The word's input position: the question in answer audio. */
+  position: number;
   /** The gates from left to right; one carries the word's meaning. */
   options: GateOption[];
   /** Distance of the gates along the path, in meters. */
@@ -42,6 +50,8 @@ export interface Round {
   chosen: number | null;
   /** The right gate, known to the view once chosen. */
   correctGate: number | null;
+  /** Answer audio: the gate the dragon steers to; the view commits it after its clip. */
+  held: number | null;
 }
 
 // ---------------------------------------------------------------- state
@@ -51,6 +61,11 @@ export type DragonFlightPhase = 'flying' | 'boss' | 'complete';
 export interface DragonFlightState {
   phase: DragonFlightPhase;
   helper: boolean;
+  /**
+   * Read to Select Audio: the banner shows the meaning, the gates play the English words, `choose`
+   * only steers to a gate, and the view resolves it with `commit` after its clip played at the gate.
+   */
+  answerAudio: boolean;
   /** Gates per round: 2 in Helper mode, 3 otherwise. */
   gates: number;
   /** Game time since the start, in milliseconds (the sum of the steps). */
@@ -87,13 +102,19 @@ export interface DragonFlightState {
 // ---------------------------------------------------------------- commands
 
 export type DragonFlightCommand =
-  /** The student picks a gate of the current round (0 = left). */
-  { type: 'choose'; gate: number };
+  /** The student picks a gate of the current round (0 = left); in answer audio, steers to it. */
+  | { type: 'choose'; gate: number }
+  /** Answer audio: resolve the gate the dragon waits at (the view confirmed its clip). */
+  | { type: 'commit' };
 
 // ---------------------------------------------------------------- events
 
 export type DragonFlightEvent =
-  | { type: 'roundStarted'; roundId: string; itemId: string; term: string; options: GateOption[]; gatesAt: number }
+  | { type: 'roundStarted'; roundId: string; itemId: string; term: string; translation: string; position: number; options: GateOption[]; gatesAt: number }
+  /** Answer audio: the dragon steers to this gate. */
+  | { type: 'gateHeld'; roundId: string; gate: number }
+  /** Answer audio: the dragon waits at its gate; the view plays the gate's clip, then commits. */
+  | { type: 'gateReached'; roundId: string; gate: number }
   /** The dragon reached the gates with no choice; it hovers. */
   | { type: 'waiting'; roundId: string }
   | { type: 'gateChosen'; roundId: string; gate: number; correct: boolean; correctGate: number }
@@ -111,6 +132,8 @@ export type DragonFlightEventType = DragonFlightEvent['type'];
 /** Every event type the core emits; there is no game over. */
 export const DRAGON_FLIGHT_EVENT_TYPES: readonly DragonFlightEventType[] = [
   'roundStarted',
+  'gateHeld',
+  'gateReached',
   'waiting',
   'gateChosen',
   'flockGrew',

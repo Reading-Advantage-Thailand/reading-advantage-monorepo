@@ -37,13 +37,15 @@ function cardState(snapshot: MasterySnapshot, schoolId: string, studentId: strin
  * @param studentId Authenticated learner identifier.
  * @param submission Server-verified practice.v1 activity evidence.
  * @param snapshot Current school-scoped mastery snapshot.
- * @param now Server-owned projection timestamp.
+ * @param now Server-owned projection timestamp; a time before the card's last review is raised to it.
  * @returns Idempotent mastery persistence command with SRS and evidence records.
  */
 export function buildActivityMasteryCommand(schoolId: string, studentId: string, submission: ActivityPracticeSubmissionEnvelope, snapshot: MasterySnapshot, now: string): CommitMasteryEvidenceInput {
   const sourceId = submission.analytics.submissionId;
   const current = cardState(snapshot, schoolId, studentId, submission, now);
-  const review = processReview({ card: current.card, submission: submission as unknown as Parameters<typeof processReview>[0]["submission"], now });
+  // A submission older than the card's last review (a backfill row) reviews at that time: FSRS rejects a negative interval.
+  const at = current.card.lastReview !== null && Date.parse(current.card.lastReview) > Date.parse(now) ? new Date(current.card.lastReview).toISOString() : now;
+  const review = processReview({ card: current.card, submission: submission as unknown as Parameters<typeof processReview>[0]["submission"], now: at });
   const priorState = snapshot.states.find((candidate) => candidate.studentId === studentId && candidate.objectiveId === submission.analytics.objectiveId);
   const earned = submission.parts.reduce((sum, part) => sum + (part.score ?? (part.isCorrect ? 1 : 0)), 0);
   const possible = submission.parts.reduce((sum, part) => sum + (part.maxScore ?? 1), 0);
@@ -67,11 +69,11 @@ export function buildActivityMasteryCommand(schoolId: string, studentId: string,
     expectedRevisions: { card: current.revision, state: stateRevision }, provenance,
     audit: { actorId: studentId, requestId: `activity:${sourceId}`, sourceId, correlationId: `activity:${submission.activityId}:${sourceId}` },
     records: {
-      card: { id: review.updatedCard.cardId, schoolId, studentId, objectiveId: review.updatedCard.objectiveId, variantKey: review.updatedCard.variantKey, state: review.updatedCard.state, stability: review.updatedCard.stability, difficulty: review.updatedCard.difficulty, dueAt: review.updatedCard.dueDate, lastReviewedAt: review.updatedCard.lastReview, reps: review.updatedCard.reps, lapses: review.updatedCard.lapses, revision: cardRevision, paramsVersion: provenance.paramsVersion, createdAt: current.createdAt, updatedAt: now },
-      review: { id: uuidFor(`${sourceId}:review`), schoolId, cardId: review.updatedCard.cardId, studentId, submissionId: sourceId, rating: ratingFor(review.rating), beforeState: review.reviewLog.stateBefore.state, afterState: review.reviewLog.stateAfter.state, evidenceReasons: supportReasons, paramsVersion: provenance.paramsVersion, reviewedAt: now, createdAt: now },
-      evidence: [{ id: uuidFor(`${sourceId}:evidence:0`), schoolId, studentId, objectiveId: submission.analytics.objectiveId, variantKey: submission.analytics.variantKey, sourceId, evidenceOrdinal: 0, evidenceType: `activity_${submission.mode}`, correctedStrength: strength, practiceCoverage: Math.min(1, possible), confidence: submission.analytics.evidenceConfidence, attemptCount: submission.analytics.attemptNumber, supportMetadata: { revealSteps: submission.analytics.revealsUsed, misconceptionTags: [] }, provenance, createdAt: now }],
-      state: { id: stateId, schoolId, studentId, objectiveId: submission.analytics.objectiveId, masteryState: mastery >= 0.9 ? "mastered" : mastery >= 0.75 ? "proficient" : "practicing", mastery, retention: strength, evidenceConfidence: submission.analytics.evidenceConfidence, graphRelease: submission.analytics.graphVersion, revision: nextStateRevision, createdAt: priorState?.createdAt ?? now, updatedAt: now },
-      placement: { id: uuidFor(`${sourceId}:placement`), schoolId, studentId, objectiveId: submission.analytics.objectiveId, estimate: mastery, confidence: placementConfidence, evidenceType: `activity_direct:${sourceId}`, graphRelease: submission.analytics.graphVersion, seedProvenance: provenance, replacedByDirectEvidence: true, createdAt: now },
+      card: { id: review.updatedCard.cardId, schoolId, studentId, objectiveId: review.updatedCard.objectiveId, variantKey: review.updatedCard.variantKey, state: review.updatedCard.state, stability: review.updatedCard.stability, difficulty: review.updatedCard.difficulty, dueAt: review.updatedCard.dueDate, lastReviewedAt: review.updatedCard.lastReview, reps: review.updatedCard.reps, lapses: review.updatedCard.lapses, revision: cardRevision, paramsVersion: provenance.paramsVersion, createdAt: current.createdAt, updatedAt: at },
+      review: { id: uuidFor(`${sourceId}:review`), schoolId, cardId: review.updatedCard.cardId, studentId, submissionId: sourceId, rating: ratingFor(review.rating), beforeState: review.reviewLog.stateBefore.state, afterState: review.reviewLog.stateAfter.state, evidenceReasons: supportReasons, paramsVersion: provenance.paramsVersion, reviewedAt: at, createdAt: at },
+      evidence: [{ id: uuidFor(`${sourceId}:evidence:0`), schoolId, studentId, objectiveId: submission.analytics.objectiveId, variantKey: submission.analytics.variantKey, sourceId, evidenceOrdinal: 0, evidenceType: `activity_${submission.mode}`, correctedStrength: strength, practiceCoverage: Math.min(1, possible), confidence: submission.analytics.evidenceConfidence, attemptCount: submission.analytics.attemptNumber, supportMetadata: { revealSteps: submission.analytics.revealsUsed, misconceptionTags: [] }, provenance, createdAt: at }],
+      state: { id: stateId, schoolId, studentId, objectiveId: submission.analytics.objectiveId, masteryState: mastery >= 0.9 ? "mastered" : mastery >= 0.75 ? "proficient" : "practicing", mastery, retention: strength, evidenceConfidence: submission.analytics.evidenceConfidence, graphRelease: submission.analytics.graphVersion, revision: nextStateRevision, createdAt: priorState?.createdAt ?? at, updatedAt: at },
+      placement: { id: uuidFor(`${sourceId}:placement`), schoolId, studentId, objectiveId: submission.analytics.objectiveId, estimate: mastery, confidence: placementConfidence, evidenceType: `activity_direct:${sourceId}`, graphRelease: submission.analytics.graphVersion, seedProvenance: provenance, replacedByDirectEvidence: true, createdAt: at },
     },
   };
 }

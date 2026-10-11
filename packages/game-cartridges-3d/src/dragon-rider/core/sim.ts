@@ -5,7 +5,14 @@
  * / 2)). Rules changed (owner decisions): every story word once plus a missed word once more, no
  * timer, the gates hold in front of the rider until the choice, and the duel always ends in a
  * win: dragons tire one by one, rest, and rally, so a small flock only fights longer.
+ *
+ * Answer audio (Read to Select Audio, `options.answerAudio`): every input word is one round (at
+ * most `MAX_LISTENING_SESSION_ITEMS`). The banner shows the meaning and the gates play the English
+ * words: `choose` only steers to a gate (`gateHeld`), the rider holds at it (`gateReached`), and
+ * the view resolves it with `commit` after its clip played to the end. A missed word still comes
+ * back once: its question was not completed.
  */
+import { MAX_LISTENING_SESSION_ITEMS } from '@reading-advantage/advantage-play-kit-3d/contracts';
 import { STEP_MS, createRng, type Rng, type Simulation } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { rideWordsOf, gatesFor, type DragonRiderInput } from './content.js';
 import type { DragonRiderCommand, DragonRiderEvent, DragonRiderState, RideWord, Round } from './types.js';
@@ -35,6 +42,8 @@ export const TUNING = {
 
 export interface DragonRiderOptions {
   seed: number;
+  /** Read to Select Audio (the host gave an answer audio controller). */
+  answerAudio?: boolean;
 }
 
 export type DragonRiderSimulation = Simulation<DragonRiderState, DragonRiderCommand, DragonRiderEvent>;
@@ -56,10 +65,12 @@ const STEP_S = STEP_MS / 1000;
 
 export function createDragonRider(input: DragonRiderInput, options: DragonRiderOptions): DragonRiderSimulation {
   const rng: Rng = createRng(options.seed);
-  const words = rideWordsOf(input, rng, TUNING.maxWords);
+  const answerAudio = options.answerAudio === true;
+  const words = rideWordsOf(input, rng, answerAudio ? MAX_LISTENING_SESSION_ITEMS : TUNING.maxWords);
 
   const state: DragonRiderState = {
     phase: 'riding',
+    answerAudio,
     timeMs: 0,
     distance: 0,
     waiting: false,
@@ -88,20 +99,31 @@ export function createDragonRider(input: DragonRiderInput, options: DragonRiderO
 
   const startRound = (events: DragonRiderEvent[]): void => {
     const word = wordById(state.queue.shift()!);
-    const { options: gateOptions } = gatesFor(word, state.words, TUNING.gates, rng);
+    const { options: gateOptions } = gatesFor(word, state.words, TUNING.gates, rng, answerAudio);
     started += 1;
     const round: Round = {
       id: `r${started}`,
       itemId: word.id,
       term: word.term,
+      translation: word.translation,
+      position: word.position,
       options: gateOptions,
       gap: TUNING.spawnGap,
       chosen: null,
       correctGate: null,
+      held: null,
     };
     state.round = round;
     state.roundIndex = started - 1;
-    events.push({ type: 'roundStarted', roundId: round.id, itemId: round.itemId, term: round.term, options: round.options.map((o) => ({ ...o })) });
+    events.push({
+      type: 'roundStarted',
+      roundId: round.id,
+      itemId: round.itemId,
+      term: round.term,
+      translation: round.translation,
+      position: round.position,
+      options: round.options.map((o) => ({ ...o })),
+    });
   };
 
   const endRound = (events: DragonRiderEvent[]): void => {
@@ -118,11 +140,35 @@ export function createDragonRider(input: DragonRiderInput, options: DragonRiderO
     events.push({ type: 'bossAppeared', flock: state.flock, power: state.bossPower });
   };
 
+  /** True for a gate the student may still pick in the current round. */
+  const open = (round: Round | null, gate: number): round is Round =>
+    !!round && round.chosen === null && Number.isInteger(gate) && gate >= 0 && gate < round.options.length;
+
+  /** Answer audio: steer to a gate; at the gates, the rider holds at it for the view's commit. */
+  const hold = (gate: number): DragonRiderEvent[] => {
+    const round = state.round;
+    if (!open(round, gate)) return [];
+    const events: DragonRiderEvent[] = [];
+    if (round.held !== gate) {
+      round.held = gate;
+      events.push({ type: 'gateHeld', roundId: round.id, gate });
+    }
+    // At the gates, every choice asks the view to play the gate's clip again (a retry after a failure).
+    if (state.waiting) events.push({ type: 'gateReached', roundId: round.id, gate });
+    return events;
+  };
+
+  /** Answer audio: the view confirmed the clip of the gate the rider holds at. */
+  const commit = (): DragonRiderEvent[] => {
+    const round = state.round;
+    if (!answerAudio || !round || round.held === null || !state.waiting) return [];
+    return choose(round.held);
+  };
+
   const choose = (gate: number): DragonRiderEvent[] => {
     const events: DragonRiderEvent[] = [];
     const round = state.round;
-    if (!round || round.chosen !== null) return events;
-    if (!Number.isInteger(gate) || gate < 0 || gate >= round.options.length) return events;
+    if (!open(round, gate)) return events;
     const correctGate = correctGateOf(state)!;
     const correct = gate === correctGate;
     const word = wordById(round.itemId);
@@ -161,7 +207,8 @@ export function createDragonRider(input: DragonRiderInput, options: DragonRiderO
         round.gap = Math.min(round.gap, TUNING.holdGap);
         if (!state.waiting) {
           state.waiting = true;
-          events.push({ type: 'waiting', roundId: round.id });
+          if (answerAudio && round.held !== null) events.push({ type: 'gateReached', roundId: round.id, gate: round.held });
+          else events.push({ type: 'waiting', roundId: round.id });
         }
       } else {
         round.gap = next;
@@ -204,7 +251,8 @@ export function createDragonRider(input: DragonRiderInput, options: DragonRiderO
     },
     dispatch(command) {
       if (state.phase !== 'riding') return [];
-      return command.type === 'choose' ? choose(command.gate) : [];
+      if (command.type === 'commit') return commit();
+      return answerAudio ? hold(command.gate) : choose(command.gate);
     },
     tick() {
       if (state.phase === 'complete') return [];

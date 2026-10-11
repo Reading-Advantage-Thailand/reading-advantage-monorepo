@@ -54,4 +54,26 @@ describe("StudentRpgCatalogPanel", () => {
     fireEvent.click(retry);
     expect(mocks.retry).toHaveBeenCalledOnce();
   });
+
+  it("uses the host reward icons and credit in place of the reviewed icons", () => {
+    mocks.useStudentRpg.mockReturnValue({
+      state: {
+        schemaVersion: 1,
+        equippedEmblemId: null,
+        cosmetics: [{ id: "echo-staff", slot: "profile-emblem", name: "Echo Staff", unlockedAt: "2026-09-09T01:00:00.000Z", equipped: false }],
+        quests: [],
+      },
+      loading: false,
+      pendingCosmeticId: null,
+      failureMessage: null,
+      retry: mocks.retry,
+      equip: vi.fn(),
+    });
+    const assetUrls = { "apprentice-wand": "/host/a.webp", "graveyard-staff": "/host/g.webp", "echo-staff": "/host/e.webp" };
+
+    const { container } = render(<StudentRpgCatalogPanel ownerKey="school-1:student-7" assetUrls={assetUrls} credit={null} />);
+
+    expect(Array.from(container.querySelectorAll("img"), (image) => image.getAttribute("src"))).toEqual(["/host/e.webp"]);
+    expect(screen.queryByText("Pixel art assets by ElvGames")).not.toBeInTheDocument();
+  });
 });

@@ -6,6 +6,7 @@ import { users } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { canReadUserResource } from "@/lib/authorization";
+import { logger } from "@/lib/observability/logger";
 
 /**
  * Reads the activity rows and XP logs of a user for the teacher per-student report. The caller
@@ -64,7 +65,7 @@ export async function GET(
 
     return NextResponse.json({ activity: result.activity, xpLogs: result.xpLogs });
   } catch (error) {
-    console.error("Error fetching user activity:", error);
+    logger.error("user_activity_read_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

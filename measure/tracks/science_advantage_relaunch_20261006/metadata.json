@@ -1,0 +1,11 @@
+{
+  "track_id": "science_advantage_relaunch_20261006",
+  "type": "feature",
+  "status": "in_progress",
+  "created_at": "2026-10-06T14:30:00Z",
+  "updated_at": "2026-10-06T21:00:00Z",
+  "description": "Review apps/science-advantage against the 2026-2027 strategy and plan the relaunch of Science Advantage as a program of the shared K-12 platform, with printed workbooks and Mastery Advantage tags, demo-ready February 2027 and live for schools May 2027. Waits for Daniel's approval of decisions.md before any code change.",
+  "estimated_tasks": 62,
+  "actual_tasks": null,
+  "deviation_notes": "Created from a cross-session request relayed by the PR session on 2026-10-06. Review only; no code changed. Not committed, because the working tree on apk3d-port holds uncommitted edits from the monorepo session. 2026-10-06: six corrections from the PR session applied (Tutor dependency owner, cutover contingency, content production rules, Thai review load, D12 brand and skin, Reedy out of scope). The graphs session confirmed on 2026-10-06 that it owns only the English graph; this track builds the Science graph. Evening 2026-10-06: Daniel approved D1 and D2; D6 fallback withdrawn; shadow phase re-planned on the Primary evidence policy pattern. Night 2026-10-06: all decisions approved by Daniel; Phase 0 started (read-only until the cutover passes and the freeze lifts)."
+}

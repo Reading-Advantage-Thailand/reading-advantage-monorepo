@@ -18,6 +18,10 @@ import { BookXIcon, FileTextIcon } from "lucide-react";
 import { EmptyState } from "@reading-advantage/ui";
 import { Panel, RpgLink } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
+import { db } from "@reading-advantage/db";
+import { createTenantDB } from "@reading-advantage/domain";
+import { resolveLegacyArticleId } from "@reading-advantage/domain/articles";
+import { z } from "zod";
 
 /**
  * Page title for the article view.
@@ -70,10 +74,17 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
     return redirect({ href: "/auth/signin", locale });
   }
 
-  const { articleId } = await params;
+  const { articleId, locale } = await params;
+  // A printed Origins 2 or 3.1 QR code carries the legacy article id: open the migrated article (FR-4).
+  const isUuid = z.string().uuid().safeParse(articleId).success;
+  if (!isUuid) {
+    const tenant = { schoolId: user.schoolId };
+    const migratedId = await resolveLegacyArticleId({ db: createTenantDB(db, tenant), user, tenant, input: { legacyId: articleId } });
+    if (migratedId) return redirect({ href: `/student/read/${migratedId}`, locale });
+  }
   const t = await getTranslations("Article");
   const tRead = await getTranslations("ReadList");
-  const article = await loadArticle(articleId);
+  const article = isUuid ? await loadArticle(articleId) : null;
 
   if (!article) {
     return (

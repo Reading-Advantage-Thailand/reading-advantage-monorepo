@@ -9,19 +9,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   getCurrentUser: vi.fn(),
   catalog: [
-    {
-      id: "dragon-flight",
-      title: "Dragon Flight",
-      description: "Fly through gates.",
-      inputMode: "vocabulary",
-    },
-    {
-      id: "castle-defense",
-      title: "Castle Defense",
-      description: "Defend the castle.",
-      inputMode: "sentence",
-    },
-  ] as Array<{ id: string; title: string; description: string; inputMode: string }>,
+    { id: "dragon-flight", manifest: { title: "Dragon Flight", description: "Fly through gates.", inputMode: "practice", needs: { vocabulary: 6 } } },
+    { id: "castle-defense", manifest: { title: "Castle Defense", description: "Defend the castle.", inputMode: "practice", needs: { sentences: 3 } } },
+  ] as Array<{ id: string; manifest: { title: string; description: string; inputMode: string; needs: { vocabulary?: number; sentences?: number } } }>,
 }));
 
 vi.mock("@/i18n/navigation", () => ({
@@ -34,10 +24,10 @@ vi.mock("next-intl/server", () => ({
   getTranslations: async () => (key: string) => key,
 }));
 
-vi.mock("@reading-advantage/game-cartridges", () => ({
-  CARTRIDGE_CHALLENGE_CAPABILITIES: { "dragon-flight": { version: "v1" } },
-  getCartridgeCatalogEntry: (id: string) => id === "dragon-flight" ? { title: "Dragon Flight" } : undefined,
-  cartridgeCatalog: mocks.catalog,
+vi.mock("@/lib/games/catalog", () => ({
+  challengeGames: () => ({ "dragon-flight": { title: "Dragon Flight", version: "v1" } }),
+  playableGames: () => mocks.catalog,
+  isSentenceGame: (game: { manifest: { needs: { vocabulary?: number; sentences?: number } } }) => (game.manifest.needs.sentences ?? 0) > (game.manifest.needs.vocabulary ?? 0),
 }));
 
 vi.mock("@reading-advantage/advantage-play-kit/react", () => ({

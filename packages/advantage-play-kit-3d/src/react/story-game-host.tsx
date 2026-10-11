@@ -31,6 +31,7 @@ export function StoryGameHost(props: StoryGameHostProps) {
       onComplete: (...args) => callbacks.current.onComplete(...args),
       onExit: () => callbacks.current.onExit(),
       onDiagnostic: (event) => callbacks.current.onDiagnostic?.(event),
+      onPhase: (phase) => callbacks.current.onPhase?.(phase),
     });
     return () => {
       void session.destroy();

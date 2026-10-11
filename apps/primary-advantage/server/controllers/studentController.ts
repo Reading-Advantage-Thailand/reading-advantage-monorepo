@@ -128,7 +128,8 @@ export const createStudentController = async (
     }
 
     const body = await request.json();
-    const { name, email, cefrLevel, classroomId, password, schoolId } =
+    // Students have no email (owner decision 2026-10-08).
+    const { name, cefrLevel, classroomId, password, schoolId } =
       body as CreateStudentInput;
 
     if (password !== undefined && !passwordSchema.safeParse(password).success) {
@@ -136,18 +137,9 @@ export const createStudentController = async (
     }
 
     // Validate required fields
-    if (!name || !email) {
+    if (!name) {
       return NextResponse.json(
-        { error: "Missing required fields: name, email" },
-        { status: 400 },
-      );
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "Invalid email format" },
+        { error: "Missing required field: name" },
         { status: 400 },
       );
     }
@@ -155,7 +147,6 @@ export const createStudentController = async (
     // Create student using model
     const result = await createStudent({
       name,
-      email,
       cefrLevel: cefrLevel || "A0-",
       classroomId,
       password,
@@ -164,11 +155,9 @@ export const createStudentController = async (
     });
 
     if (!result.success) {
-      const status =
-        result.error === "User with this email already exists" ? 409 : 400;
       return NextResponse.json(
         { error: result.error || "Internal server error" },
-        { status },
+        { status: 400 },
       );
     }
 

@@ -55,7 +55,13 @@ type ActivePlayback = {
   attemptIndex: number;
   abort: AbortController;
   generation: number;
+  replay: boolean;
 };
+
+/** True when a clip has no segment, or a segment that starts at zero or later and ends after it starts. */
+const validSegment = ({ startSeconds = 0, endSeconds }: ListeningAudioClipReference): boolean =>
+  Number.isFinite(startSeconds) && startSeconds >= 0
+  && (endSeconds === undefined || (Number.isFinite(endSeconds) && endSeconds > startSeconds));
 
 const pairKey = (questionPosition: number, clipItemPosition: number): string =>
   `${questionPosition}:${clipItemPosition}`;
@@ -116,7 +122,8 @@ export function createAnswerChoiceAudioController<PreparedClip>(
       || reference.itemPosition >= options.clips.length
       || references.has(reference.itemPosition)
       || !reference.url.trim()
-      || !reference.mediaType.startsWith("audio/")) {
+      || !reference.mediaType.startsWith("audio/")
+      || !validSegment(reference)) {
       throw new ListeningAudioControllerError(
         "invalid-configuration",
         "Answer audio clips must cover unique session item positions",
@@ -179,6 +186,12 @@ export function createAnswerChoiceAudioController<PreparedClip>(
     }
     return pair;
   };
+
+  // Only a completed play uses the replay budget, so a cancelled or failed play never locks a choice.
+  const heard = (questionPosition: number, clipItemPosition: number): boolean =>
+    questions.get(questionPosition)?.selectionAttempts.some((attempt) => (
+      attempt.clipItemPosition === clipItemPosition && attempt.playbackResult === "completed"
+    )) ?? false;
 
   const canConfirm = (questionPosition: number, clipItemPosition: number): boolean => {
     if (destroyed || activeQuestionPosition !== questionPosition) return false;
@@ -272,6 +285,7 @@ export function createAnswerChoiceAudioController<PreparedClip>(
       "cancelled",
     );
     const pair = stateAt(active.questionPosition, active.clipItemPosition);
+    if (active.replay) pair.replayCount -= 1;
     pair.status = "cancelled";
     pair.submitted = false;
     delete pair.failure;
@@ -370,7 +384,8 @@ export function createAnswerChoiceAudioController<PreparedClip>(
       );
     }
     const pair = stateAt(questionPosition, clipItemPosition);
-    if (pair.replayCount >= maxReplays && pair.playCount > 0) {
+    const replay = heard(questionPosition, clipItemPosition);
+    if (replay && pair.replayCount >= maxReplays) {
       throw new ListeningAudioControllerError("replay-limit", "Answer audio replay limit was reached");
     }
     cancelActive(false);
@@ -378,8 +393,8 @@ export function createAnswerChoiceAudioController<PreparedClip>(
     const attemptIndex = question.selectionAttempts.length;
     const abort = new AbortController();
     const operationGeneration = ++generation;
-    activePlayback = { questionPosition, clipItemPosition, attemptIndex, abort, generation: operationGeneration };
-    pair.replayCount += pair.playCount > 0 ? 1 : 0;
+    activePlayback = { questionPosition, clipItemPosition, attemptIndex, abort, generation: operationGeneration, replay };
+    pair.replayCount += replay ? 1 : 0;
     pair.playCount += 1;
     pair.status = prepared.has(clipItemPosition) ? "ready" : "loading";
     pair.submitted = false;
@@ -420,6 +435,7 @@ export function createAnswerChoiceAudioController<PreparedClip>(
         : "playback-failed";
       failures.set(pairKey(questionPosition, clipItemPosition), failureCode);
       appendAttempt(questionPosition, clipItemPosition, attemptIndex, "failed");
+      if (replay) pair.replayCount -= 1;
       pair.status = "failed";
       pair.failure = { code: failureCode, message: failure.message };
       status = "failed";

@@ -283,6 +283,7 @@
       "columns": {
         "name": "Tên",
         "email": "Email",
+        "classroom": "Lớp",
         "role": "Vai trò"
       }
     },
@@ -309,7 +310,7 @@
         "title": "Định dạng dữ liệu Học sinh",
         "description": "Nhập thông tin học sinh bao gồm chi tiết cá nhân và phân lớp",
         "req1": "Tên tệp phải là students.csv",
-        "req2": "Email phải duy nhất và đúng định dạng",
+        "req2": "Không cần email. Mỗi học sinh mới nhận một tên đăng nhập và mật khẩu; in chúng từ trang Class sheet.",
         "req3": "Vai trò phải là Học sinh"
       },
       "teachers": {
@@ -2786,7 +2787,7 @@
       "admin": "Quản trị"
     },
     "filters": {
-      "searchPlaceholder": "Tìm học sinh theo tên hoặc email...",
+      "searchPlaceholder": "Tìm học sinh theo tên hoặc tên đăng nhập...",
       "classroomPlaceholder": "Lọc theo lớp học",
       "cefrPlaceholder": "Cấp độ CEFR",
       "activeFiltersLabel": "Bộ lọc đang áp dụng:",
@@ -2818,12 +2819,19 @@
     }
   },
   "ApkHost": {
+    "rewardInInventory": "Đã có trong túi đồ của bạn. Mặc nó từ trang Nhân vật.",
     "readMode": "Đọc tiếng Thái",
     "listenMode": "Nghe tiếng Anh",
     "signInToPlayChallenge": "Đăng nhập để chơi thử thách này",
-    "signInToPlayGame": "Đăng nhập để chơi trò này"
+    "signInToPlayGame": "Đăng nhập để chơi trò này",
+    "loadError": "The game could not load.",
+    "loadingGame": "Loading the game…",
+    "loadingChallenge": "Loading the challenge…",
+    "challengeMismatch": "This game cannot run this challenge.",
+    "retry": "Try again"
   },
   "StudentGames": {
+    "rewardInInventory": "Đã có trong túi đồ của bạn. Mặc nó từ trang Nhân vật.",
     "title": "Trò chơi học sinh",
     "description": "Play games with the words and sentences you learn.",
     "wordGames": "Word games",

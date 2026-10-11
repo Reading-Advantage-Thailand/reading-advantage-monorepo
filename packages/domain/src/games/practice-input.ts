@@ -57,7 +57,7 @@ export function practiceLevelOf(raw: string | undefined): CefrLevel {
 }
 
 /** True when two texts are the same apart from case and spaces. */
-const sameText = (a: string, b: string): boolean =>
+export const sameText = (a: string, b: string): boolean =>
   a.trim().replace(/\s+/gu, " ").toLowerCase() === b.trim().replace(/\s+/gu, " ").toLowerCase();
 
 /**
@@ -69,6 +69,68 @@ function sentenceWordsOf(raw: unknown): { text: string; words: string[] } | unde
   if (typeof raw !== "string") return undefined;
   const words = raw.trim().split(/\s+/u).filter((word) => word.length > 0);
   return words.length >= 2 ? { text: words.join(" "), words } : undefined;
+}
+
+/** One saved word as the practice builder reads it: the record id and the stored word record. */
+export interface SavedWordRow {
+  readonly id: string;
+  readonly word: unknown;
+}
+
+/** One saved sentence as the practice builder reads it. */
+export interface SavedSentenceRow {
+  readonly id: string;
+  readonly sentence: unknown;
+  readonly translation: unknown;
+}
+
+/**
+ * Builds a practice input from saved rows in their review order. A repeated term or sentence
+ * keeps only its first row; a word whose translation repeats the term (an English fallback, which
+ * would show the answer) is left out.
+ * @param wordRows Saved words, most urgent first.
+ * @param sentenceRows Saved sentences, most urgent first.
+ * @param locale The translation locale.
+ * @param level The game level of the student.
+ * @returns A validated practice input with the row ids as item ids.
+ */
+export function buildPracticeInput(
+  wordRows: readonly SavedWordRow[],
+  sentenceRows: readonly SavedSentenceRow[],
+  locale: z.infer<typeof gameLearningContentLocaleSchema>,
+  level: CefrLevel,
+): PracticeInput {
+  const seenTerms = new Set<string>();
+  const vocabulary: PracticeWord[] = [];
+  for (const row of wordRows) {
+    if (vocabulary.length >= PRACTICE_WORD_LIMIT) break;
+    const record = wordRecordSchema.safeParse(row.word);
+    if (!record.success) continue;
+    const term = record.data.vocabulary.trim();
+    const selected = selectTranslation(record.data.definition, locale);
+    if (!selected || sameText(selected.translation, term) || seenTerms.has(term.toLowerCase())) continue;
+    seenTerms.add(term.toLowerCase());
+    vocabulary.push({ id: row.id, term, translation: selected.translation });
+  }
+
+  const seenSentences = new Set<string>();
+  const sentences: PracticeSentence[] = [];
+  for (const row of sentenceRows) {
+    if (sentences.length >= PRACTICE_SENTENCE_LIMIT) break;
+    const split = sentenceWordsOf(row.sentence);
+    if (!split || seenSentences.has(split.text.toLowerCase())) continue;
+    seenSentences.add(split.text.toLowerCase());
+    const selected = selectTranslation(row.translation, locale);
+    const translation = selected && !sameText(selected.translation, split.text) ? selected.translation : undefined;
+    sentences.push({
+      id: row.id,
+      text: split.text,
+      words: split.words,
+      ...(translation ? { translation } : {}),
+    });
+  }
+
+  return practiceInputSchema.parse({ schemaVersion: 1, id: SAVED_PRACTICE_INPUT_ID, level, vocabulary, sentences });
 }
 
 /**
@@ -114,42 +176,5 @@ export async function listGamePracticeInput({
     .orderBy(asc(userSentenceRecords.due), desc(userSentenceRecords.createdAt))
     .limit(ROW_LIMIT);
 
-  const seenTerms = new Set<string>();
-  const vocabulary: PracticeWord[] = [];
-  for (const row of wordRows) {
-    if (vocabulary.length >= PRACTICE_WORD_LIMIT) break;
-    const record = wordRecordSchema.safeParse(row.word);
-    if (!record.success) continue;
-    const term = record.data.vocabulary.trim();
-    const selected = selectTranslation(record.data.definition, locale);
-    // A translation that repeats the term (an English fallback) would show the answer.
-    if (!selected || sameText(selected.translation, term) || seenTerms.has(term.toLowerCase())) continue;
-    seenTerms.add(term.toLowerCase());
-    vocabulary.push({ id: row.id, term, translation: selected.translation });
-  }
-
-  const seenSentences = new Set<string>();
-  const sentences: PracticeSentence[] = [];
-  for (const row of sentenceRows) {
-    if (sentences.length >= PRACTICE_SENTENCE_LIMIT) break;
-    const split = sentenceWordsOf(row.sentence);
-    if (!split || seenSentences.has(split.text.toLowerCase())) continue;
-    seenSentences.add(split.text.toLowerCase());
-    const selected = selectTranslation(row.translation, locale);
-    const translation = selected && !sameText(selected.translation, split.text) ? selected.translation : undefined;
-    sentences.push({
-      id: row.id,
-      text: split.text,
-      words: split.words,
-      ...(translation ? { translation } : {}),
-    });
-  }
-
-  return practiceInputSchema.parse({
-    schemaVersion: 1,
-    id: SAVED_PRACTICE_INPUT_ID,
-    level: practiceLevelOf(user.cefrLevel),
-    vocabulary,
-    sentences,
-  });
+  return buildPracticeInput(wordRows, sentenceRows, locale, practiceLevelOf(user.cefrLevel));
 }

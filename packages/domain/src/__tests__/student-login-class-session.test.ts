@@ -158,6 +158,18 @@ describe("getNameListForCode", () => {
     expect(JSON.stringify(out)).not.toMatch(/Smith|@|username/);
   });
 
+  it("adds the last-name initial only when two students share a first name (owner decision 2026-10-08)", async () => {
+    const twins = [
+      { handle: "c-1", name: "Beam Smith" },
+      { handle: "c-2", name: "Beam Tan" },
+      { handle: "c-3", name: "Ann Lee" },
+    ];
+    const db = createMockDb({ selectSequence: [[session], [{ picturePasswordEnabled: false }], twins] });
+    const out = await getNameListForCode({ db: asDb(db), store: makeStore(), ip: "9.9.9.9", input: { code: "ABCDEF" }, now: NOW });
+    expect(out.students.map((s) => s.displayName)).toEqual(["Ann", "Beam S.", "Beam T."]);
+    expect(JSON.stringify(out)).not.toMatch(/Smith|Tan|Lee/);
+  });
+
   it("reports picturePasswordRequired false when the class turned it off", async () => {
     const db = createMockDb({ selectSequence: [[session], [{ picturePasswordEnabled: false }], []] });
     const out = await getNameListForCode({ db: asDb(db), store: makeStore(), ip: null, input: { code: "ABCDEF" }, now: NOW });

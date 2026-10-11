@@ -1,6 +1,7 @@
 import { db } from "@reading-advantage/db";
 import type { UserContext } from "@reading-advantage/auth";
 import { getClassBookProgress, recordLessonProgress, toProgressCsv } from "@reading-advantage/domain/primary-books";
+import { logger } from "@/lib/observability/logger";
 
 /** The number of app steps in a lesson. */
 const APP_STEPS = 14;
@@ -23,7 +24,7 @@ export async function recordLessonStep(
 ): Promise<void> {
   const reachedStep = Math.min(APP_STEPS, Math.max(1, Math.round((progress * APP_STEPS) / 100)));
   await recordLessonProgress({ db, user, input: { articleId, reachedStep, seconds: Math.round(Number(timeSpent) || 0) } }).catch(
-    (error: unknown) => console.error(`Class book progress for ${label} failed:`, error),
+    (error: unknown) => logger.error("class_book_progress_failed", { label, error }),
   );
 }
 

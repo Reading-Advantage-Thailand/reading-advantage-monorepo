@@ -1,2 +1,2 @@
 import { createLoginHandler } from "@reading-advantage/api/routes/auth";
-export const POST = createLoginHandler({ legacyUsersPasswordFallback: true, studentSessionPolicy: true });
+export const POST = createLoginHandler({ legacyUsersPasswordFallback: true, studentSessionPolicy: true, temporaryPasswordChange: true });

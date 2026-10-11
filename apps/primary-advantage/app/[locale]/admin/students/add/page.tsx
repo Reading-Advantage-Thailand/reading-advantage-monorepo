@@ -25,7 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { Eye, EyeOff, User, Mail, Lock, GraduationCap } from "lucide-react";
+import { Eye, EyeOff, User, Lock, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { SchoolSelect } from "@/components/admin/school-select";
@@ -42,7 +42,6 @@ export default function AddStudentPage() {
 
   const studentFormSchema = z.object({
     name: z.string().min(2, t("errors.nameMin")).max(100, t("errors.nameMax")),
-    email: z.string().email(t("errors.emailInvalid")),
   });
 
   type StudentFormData = z.infer<typeof studentFormSchema>;
@@ -51,7 +50,6 @@ export default function AddStudentPage() {
     resolver: zodResolver(studentFormSchema),
     defaultValues: {
       name: "",
-      email: "",
     },
   });
 
@@ -69,7 +67,6 @@ export default function AddStudentPage() {
         },
         body: JSON.stringify({
           name: data.name,
-          email: data.email,
           ...(isSystem ? { schoolId } : {}),
         }),
       });
@@ -137,31 +134,6 @@ export default function AddStudentPage() {
 
                   <div className="md:col-span-2">
                     <SchoolSelect value={schoolId} onChange={setSchoolId} />
-                  </div>
-
-                  {/* Email */}
-                  <div className="md:col-span-2">
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <Mail className="h-4 w-4" />
-                            {t("emailLabel")}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder={t("emailPlaceholder")}
-                              {...field}
-                              className="h-11"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
                 </div>
 

@@ -36,6 +36,15 @@ describe("RpgUnlockNotice", () => {
     expect(screen.queryByText("Apprentice Wand")).not.toBeInTheDocument();
   });
 
+  it("shows the ElvGames credit by default and no credit when the host icons need none", () => {
+    const cosmetics = [{ id: "echo-staff", slot: "profile-emblem", name: "Echo Staff", unlockedAt: "2026-09-09T01:00:00.000Z", equipped: false }] as const;
+    const { rerender } = render(<RpgUnlockNotice cosmetics={cosmetics} assetUrls={assetUrls} />);
+    expect(screen.getByText("Pixel art assets by ElvGames")).toBeInTheDocument();
+
+    rerender(<RpgUnlockNotice cosmetics={cosmetics} assetUrls={assetUrls} credit={null} />);
+    expect(screen.queryByText("Pixel art assets by ElvGames")).not.toBeInTheDocument();
+  });
+
   it("shows the inventory note in place of the equip action when the host gives one", () => {
     render(
       <RpgUnlockNotice

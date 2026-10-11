@@ -10,6 +10,7 @@ import { testMessages } from "@/components/__tests__/helpers/render-with-message
 
 const mocks = vi.hoisted(() => ({
   getArticleById: vi.fn(),
+  resolveLegacyArticleId: vi.fn(),
   saveArticleToFlashcard: vi.fn(),
   user: { id: "s1", role: "STUDENT" } as Record<string, unknown> | null,
 }));
@@ -19,6 +20,9 @@ vi.mock("@/server/models/articleModel", async () => {
   return { getArticleById: mocks.getArticleById, ArticleNotFoundError };
 });
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
+vi.mock("@reading-advantage/db", () => ({ db: {} }));
+vi.mock("@reading-advantage/domain", () => ({ createTenantDB: vi.fn(() => ({})) }));
+vi.mock("@reading-advantage/domain/articles", () => ({ resolveLegacyArticleId: mocks.resolveLegacyArticleId }));
 vi.mock("@/actions/flashcard", () => ({ saveArticleToFlashcard: mocks.saveArticleToFlashcard }));
 vi.mock("next-intl/server", async () => {
   const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
@@ -45,9 +49,12 @@ vi.mock("@/components/articles/questions/la-question-card", () => ({ default: ()
 
 import ArticleQuizPage from "../page";
 import { ArticleNotFoundError } from "@/server/models/articleModel";
+import { redirect } from "@/i18n/navigation";
 
 const en = testMessages.en;
-const params = Promise.resolve({ locale: "en", articleId: "a1" });
+const ARTICLE_ID = "3b46fdbc-47ea-4e7f-ab9d-f8db4294081c";
+const params = Promise.resolve({ locale: "en", articleId: ARTICLE_ID });
+const LEGACY_ID = "cmgqx8v6602p3t79btatvfjuw";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -63,7 +70,7 @@ describe("article view", () => {
     expect(screen.getByTestId("article-card")).toBeInTheDocument();
     for (const id of ["word-list", "sentences", "mc", "sa", "la"]) expect(screen.getByTestId(id)).toBeInTheDocument();
     const lesson = screen.getByRole("link", { name: en.Article.studyAsLesson });
-    expect(lesson).toHaveAttribute("href", "/student/lesson/a1?type=article");
+    expect(lesson).toHaveAttribute("href", `/student/lesson/${ARTICLE_ID}?type=article`);
     expect(lesson.querySelector("button")).toBeNull();
     expect(lesson).toHaveClass("min-h-12");
   });
@@ -78,5 +85,21 @@ describe("article view", () => {
   it("lets other load errors reach the error page (retry there)", async () => {
     mocks.getArticleById.mockRejectedValue(new Error("db down"));
     await expect(ArticleQuizPage({ params })).rejects.toThrow("db down");
+  });
+
+  it("opens the migrated article of a printed legacy id (FR-4)", async () => {
+    mocks.resolveLegacyArticleId.mockResolvedValue(ARTICLE_ID);
+    await ArticleQuizPage({ params: Promise.resolve({ locale: "th", articleId: LEGACY_ID }) });
+    expect(mocks.resolveLegacyArticleId).toHaveBeenCalledWith(expect.objectContaining({ input: { legacyId: LEGACY_ID } }));
+    expect(redirect).toHaveBeenCalledWith({ href: `/student/read/${ARTICLE_ID}`, locale: "th" });
+    expect(mocks.getArticleById).not.toHaveBeenCalled();
+  });
+
+  it("shows the not-found state for an id that is neither a uuid nor a known legacy id", async () => {
+    mocks.resolveLegacyArticleId.mockResolvedValue(null);
+    render((await ArticleQuizPage({ params: Promise.resolve({ locale: "en", articleId: LEGACY_ID }) })) as React.ReactElement);
+    expect(screen.getByRole("heading", { name: en.ReadList.notFound })).toBeInTheDocument();
+    expect(mocks.getArticleById).not.toHaveBeenCalled();
+    expect(redirect).not.toHaveBeenCalled();
   });
 });

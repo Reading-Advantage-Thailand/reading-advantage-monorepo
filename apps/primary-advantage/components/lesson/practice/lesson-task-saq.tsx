@@ -76,12 +76,16 @@ function LessonSAQContent({ article }: { article: Article }) {
         activityType: ActivityType.SA_QUESTION,
       })
         .then(async (res) => {
+          const score = (res as { score?: number }).score;
           const data = {
             ...res,
             question: questions.question,
             suggestedAnswer: questions.answer,
             yourAnswer: form.getValues("answer"),
             timer: timer,
+            // Evidence keys: the lesson step is teacher-led; the grader scores 1-5.
+            questions: [{ questionId: questions.id, questionType: "saq" as const, scoreRatio: typeof score === "number" ? Math.max(0, Math.min(1, score / 5)) : undefined }],
+            mode: "teacher_led" as const,
           };
 
           setFeedback(data);

@@ -43,13 +43,13 @@ export interface TagCoverageReport {
   wordPosMismatches: { articleId: string; word: string; glossaryPos: string; nodeId: string }[];
 }
 
-const normalizeWord = (word: string): string => word.trim().toLowerCase().replace(/\s+/g, "-");
+export const normalizeWord = (word: string): string => word.trim().toLowerCase().replace(/\s+/g, "-");
 
 /**
  * A crude stem for the glossary-to-node join when the glossary form is inflected (`pets`, `puts on`)
  * and the export carries the node's dictionary form only.
  */
-const stem = (word: string): string => normalizeWord(word).replace(/(ies|es|ed|ing|s)$/, "");
+export const stem = (word: string): string => normalizeWord(word).replace(/(ies|es|ed|ing|s)$/, "");
 
 /**
  * Summarizes the tag coverage of the loaded rows.

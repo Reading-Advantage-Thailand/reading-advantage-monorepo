@@ -67,3 +67,13 @@ Owner lane: B. Depends on cutover blockers Phase 2 for argon2.
 - Primary: tsc exit 0; vitest 137 files, 893 passed. ESLint on changed files: 0 errors.
 - Migration doctor on local `primary_advantage` with `--required-migration 0064_primary_student_session_policy`: OK.
 - Tutor read test: shape PASS for all 5 reads; rows FAIL as expected (no ETL data locally).
+
+## Phase 6: No student email (owner decisions 2026-10-08)
+- [x] Permanent two-word student usernames (`bluetiger47`), shared by the ETL and `provisionStudentLogins` (5dd9add8a)
+- [x] ETL: migrated students keep no email (`email` and `email_verified` null)
+- [x] `/api/upload/csv`: `students.csv` has the headers `name,role,classroom_name` (no email). A student row is a duplicate when the same name is in the same class (in the file, or already in the school). Rows map to user ids by the generated id, not by email
+- [x] `/api/upload/classes`: refuses `students.csv` (the import page sends students to `/api/upload/csv` only); its student login code is removed (unreachable). Its other `students.csv` branches stay, unreachable
+- [x] Import page: student template, preview, and the rule text without email (en, th, cn, tw, vi)
+- [x] Admin Add student and Edit student (owner request 2026-10-08): no email field, no email in the API
+  payload; `createStudent` writes a null email and the id as the first username, then FR-6 gives the
+  two-word name; the student search matches name or username

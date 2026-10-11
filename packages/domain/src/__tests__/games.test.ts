@@ -256,6 +256,13 @@ describe("gameTypeEnum / gameDifficultyEnum (Group 3A)", () => {
     expect(gameTypeEnum.options).toContain("haunted-library");
   });
 
+  it.each(["hero-vs-zombie", "labyrinth", "rune-match-story", "hero-vs-zombie-story"] as const)(
+    "accepts the 3D game id or practice run %s",
+    (gameType) => {
+      expect(() => gameCompletionInputSchema.parse(makeValidInput({ gameType }))).not.toThrow();
+    },
+  );
+
   it.each(["astral-mage", "sorcerer-ziggurat"] as const)(
     "accepts the persisted W1 cartridge %s",
     (gameType) => {

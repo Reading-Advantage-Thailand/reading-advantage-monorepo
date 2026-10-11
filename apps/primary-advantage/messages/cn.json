@@ -283,6 +283,7 @@
       "columns": {
         "name": "姓名",
         "email": "邮箱",
+        "classroom": "班级",
         "role": "角色"
       }
     },
@@ -309,7 +310,7 @@
         "title": "学生数据格式",
         "description": "导入学生信息（个人信息与班级分配）",
         "req1": "文件名必须是 students.csv",
-        "req2": "邮箱需唯一且格式有效",
+        "req2": "无需邮箱。每位新学生会获得用户名和密码，可在“Class sheet”页面打印。",
         "req3": "角色应为 Student"
       },
       "teachers": {
@@ -2786,7 +2787,7 @@
       "admin": "管理员"
     },
     "filters": {
-      "searchPlaceholder": "按姓名或邮箱搜索学生...",
+      "searchPlaceholder": "按姓名或用户名搜索学生...",
       "classroomPlaceholder": "按班级筛选",
       "cefrPlaceholder": "CEFR 等级",
       "activeFiltersLabel": "已启用的筛选:",
@@ -2818,12 +2819,19 @@
     }
   },
   "ApkHost": {
+    "rewardInInventory": "已放入你的背包。到头像页面穿戴它。",
     "readMode": "阅读泰语",
     "listenMode": "听英语",
     "signInToPlayChallenge": "登录以参与此挑战",
-    "signInToPlayGame": "登录以玩此游戏"
+    "signInToPlayGame": "登录以玩此游戏",
+    "loadError": "The game could not load.",
+    "loadingGame": "Loading the game…",
+    "loadingChallenge": "Loading the challenge…",
+    "challengeMismatch": "This game cannot run this challenge.",
+    "retry": "Try again"
   },
   "StudentGames": {
+    "rewardInInventory": "已放入你的背包。到头像页面穿戴它。",
     "title": "学生游戏",
     "description": "Play games with the words and sentences you learn.",
     "wordGames": "Word games",

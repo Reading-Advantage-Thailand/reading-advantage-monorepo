@@ -1,0 +1,27 @@
+{
+  "track_id": "primary_yle_starters_20261007",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-06T23:56:40Z",
+  "updated_at": "2026-10-06T23:56:40Z",
+  "description": "YLE-format Starters (Pre-A1) reading and writing tasks for Primary: the item contract and JSON Schema, the practice and secure importers, the exact-key matcher, five task screens, the after-reading lesson step, level bank practice sets, secure test sittings, and mastery evidence from every answer. Start after the 2026-10-11 deploy; migration in the 2026-11-09 window.",
+  "estimated_tasks": 45,
+  "actual_tasks": null,
+  "deviation_notes": "Owner decisions of 2026-10-07 in measure/primary-yle-task-models.md section 7; PR plan phase P2 (advantage-pr 12-operations/level-tests-and-certificates-plan.md). Skill registry search skipped (vitest and React skills already installed).",
+  "sprint": {
+    "goal": "Primary children at Pre-A1 practice the five Starters reading and writing task formats after a story and in a level bank, and a tutor or teacher can give them a locked test form; the server scores every answer with an exact key, and every answer gives mastery evidence.",
+    "stories": [
+      { "id": "S1", "title": "Task item contract", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Import the Workbooks exports", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Exact-key matcher", "size": "S", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Choice screens (tick or cross, yes or no, picture word box)", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S5", "title": "Written screens (spelling, picture-story answers)", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S6", "title": "After-reading practice in a story lesson", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S7", "title": "Level bank practice sets", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S8", "title": "Secure test sittings", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S9", "title": "Evidence from task answers", "size": "S", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

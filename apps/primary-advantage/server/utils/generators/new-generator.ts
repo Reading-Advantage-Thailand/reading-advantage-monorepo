@@ -19,6 +19,7 @@ import { generateAudio } from "./audio-generator";
 import { generateAudioForWord } from "./audio-word-generator";
 import { generateAudioForFlashcard } from "./audio-flashcard-generator";
 import { se } from "date-fns/locale";
+import { logger } from "@/lib/observability/logger";
 
 export interface MultipleChoiceQuestionInput {
   question: string;
@@ -318,7 +319,7 @@ export const generateArticleNew = async (
       }
     }
   } catch (error) {
-    console.error("Error in generateArticleNew:", error);
+    logger.error("article_generation_failed", { error });
     throw new Error(`Failed to generate article: ${error}`);
   }
 };

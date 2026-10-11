@@ -33,7 +33,7 @@ export interface QuestTemplate {
     /** The boss hit points per student; the season target multiplies it by the roster. */
     hpPerStudent: number;
   };
-  /** The battle game; must be a key of `CARTRIDGE_CHALLENGE_CAPABILITIES` at assignment time. */
+  /** The battle game: a 3D game whose manifest declares `challenge` (checked at assignment time). */
   gameId: string;
   contentMode: "vocabulary" | "sentence";
   goals: readonly QuestGoal[];
@@ -48,7 +48,7 @@ export const QUEST_TEMPLATES: readonly QuestTemplate[] = [
     id: "goblin-raid",
     title: { en: "The Goblin King's Raid", th: "การบุกของราชาก๊อบลิน" },
     boss: { artKey: "goblin-king", name: { en: "The Goblin King", th: "ราชาก๊อบลิน" }, hpPerStudent: EXPECTED_DAMAGE_PER_STUDENT },
-    gameId: "wizard-vs-zombie",
+    gameId: "hero-vs-zombie",
     contentMode: "vocabulary",
     goals: [
       { key: "read-3-days", kind: "reading-days", days: 3, powerUp: "shield" },
@@ -84,7 +84,7 @@ export const QUEST_TEMPLATES: readonly QuestTemplate[] = [
     id: "iron-golem",
     title: { en: "The Iron Golem Awakes", th: "โกเลมเหล็กตื่นขึ้น" },
     boss: { artKey: "iron-golem", name: { en: "The Iron Golem", th: "โกเลมเหล็ก" }, hpPerStudent: EXPECTED_DAMAGE_PER_STUDENT },
-    gameId: "wizard-vs-zombie",
+    gameId: "hero-vs-zombie",
     contentMode: "vocabulary",
     goals: [
       { key: "lesson-steps-3", kind: "lesson-steps", steps: 3, powerUp: "shield" },

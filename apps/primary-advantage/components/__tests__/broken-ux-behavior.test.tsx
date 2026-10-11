@@ -198,8 +198,10 @@ describe("FR-8 header spelling", () => {
     ).toBeInTheDocument();
     expect(await screen.findByText("Class One")).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("captoliza");
-    // Lane C Phase 3: class names and codes show as stored (no CSS capitalize).
-    expect(screen.getByText("ABC123")).not.toHaveClass("capitalize");
+    // Lane C Phase 3: class names show as stored (no CSS capitalize). The legacy class code is
+    // not shown (owner decision 2026-10-08, rehearsal 1 finding 2).
+    expect(screen.getByText("Class One")).not.toHaveClass("capitalize");
+    expect(screen.queryByText("ABC123")).toBeNull();
   });
 
   it("renders the history list with translated copy", async () => {

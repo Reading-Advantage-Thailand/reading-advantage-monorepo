@@ -1,17 +1,27 @@
+import { PGlite } from "@electric-sql/pglite";
 import { describe, expect, it } from "vitest";
 import {
   DROPPED_TABLES,
   JsonCell,
+  LEGACY_UTC_TIMESTAMP,
   MAP_TABLES,
+  MCQ_ANSWER_FIXES,
+  QUESTION_ORDER_SQL,
+  cardTextOf,
   correctAnswerIndex,
   keepLatest,
   lessonStatusOf,
   mapArticle,
   mapAssignmentStatus,
+  mapClassroom,
   mapRole,
   parseGrade,
+  parseUtcTimestamp,
   renderReport,
+  reviewCountsOf,
   usernamesOf,
+  assignStudentUsernames,
+  targetUserRow,
   type LegacyArticle,
 } from "../migrations-data/primary-legacy-import.js";
 
@@ -23,11 +33,73 @@ describe("primary legacy import transforms", () => {
     expect(mapRole("system", undefined, "u1")).toBe("SYSTEM");
     expect(mapRole("user", undefined, "u1")).toBeNull();
     expect(mapRole("user", { u1: "TEACHER" }, "u1")).toBe("TEACHER");
+    expect(mapRole("user", { u1: null }, "u1")).toBeNull();
     expect(mapRole(null, undefined, "u1")).toBeNull();
   });
 
-  it("derives the username from the lowered email (D6)", () => {
+  it("derives the username from the lowered email (D6), or takes the owner-chosen username", () => {
     expect(usernamesOf(" Kru.Nok@School.ac.th ")).toEqual({ username: "kru.nok@school.ac.th", displayUsername: "Kru.Nok@School.ac.th" });
+    expect(usernamesOf("Support0@gmail.com", " Support0 ")).toEqual({ username: "support0", displayUsername: "Support0" });
+    expect(usernamesOf("support0@gmail.com", " ")).toEqual({ username: "support0@gmail.com", displayUsername: "support0@gmail.com" });
+  });
+
+  it("gives students a two-word username, keeps one from an earlier run, and skips taken names", () => {
+    const existing = new Map([["s1", "redkoala42"], ["s2", "kid.12@gmail.com"], ["t1", "kru@school.ac.th"]]);
+    const taken = new Set(["kru@school.ac.th", "bluepanda11"]);
+    let n = 0;
+    const pick = () => (n++ < 3 ? 1 : 2); // first try bluepanda11 (taken), then greenkoala12
+    const names = assignStudentUsernames(["s1", "s2"], existing, taken, pick);
+    expect(names.get("s1")).toBe("redkoala42");
+    expect(names.get("s2")).toBe("greenkoala12");
+    expect(taken).toContain("greenkoala12");
+    expect([...names.values()].some((name) => name.includes("@"))).toBe(false);
+  });
+
+  it("keeps no email for a student and keeps the email for staff", () => {
+    const legacy = { id: "u1", name: "Ann", email: "ann.12@gmail.com", email_verified: true, createdAt: new Date(0), updatedAt: new Date(0) };
+    const student = targetUserRow(legacy, "STUDENT", { username: "bluetiger47", displayUsername: "bluetiger47" }, "s1");
+    expect(student).toMatchObject({ id: "u1", username: "bluetiger47", email: null, email_verified: null, school_id: "s1" });
+    const teacher = targetUserRow({ ...legacy, email: "kru@school.ac.th" }, "TEACHER", usernamesOf("kru@school.ac.th"), "s1");
+    expect(teacher).toMatchObject({ email: "kru@school.ac.th", username: "kru@school.ac.th", email_verified: new Date(0) });
+  });
+
+  it("stops when no free student username is found", () => {
+    expect(() => assignStudentUsernames(["s1"], new Map(), new Set(["bluepanda11"]), () => 1)).toThrow(/50 tries/);
+  });
+
+  it("reads a legacy timestamp as UTC in any process time zone", () => {
+    const tz = process.env.TZ;
+    process.env.TZ = "Asia/Bangkok";
+    try {
+      expect(parseUtcTimestamp("2025-12-01 08:52:42.431").toISOString()).toBe("2025-12-01T08:52:42.431Z");
+      expect(parseUtcTimestamp("2025-12-01 08:52:42").toISOString()).toBe("2025-12-01T08:52:42.000Z");
+      expect(LEGACY_UTC_TIMESTAMP.legacyTimestamp.from).toEqual([1114]);
+      expect(LEGACY_UTC_TIMESTAMP.legacyTimestamp.parse("2026-10-07 17:00:51.51").toISOString()).toBe("2026-10-07T17:00:51.510Z");
+    } finally {
+      if (tz === undefined) delete process.env.TZ;
+      else process.env.TZ = tz;
+    }
+  });
+
+  it("orders the questions of an article by insert order, not by their place on disk", async () => {
+    const db = new PGlite();
+    try {
+      await db.exec(`create table q (id text, article_id text, "createdAt" timestamp);
+        insert into q values ('c3', 'a', '2026-01-01'), ('c1', 'a', '2026-01-01'), ('c2', 'a', '2026-01-01'), ('c9', 'b', '2026-01-02');
+        update q set article_id = article_id where id = 'c1';`);
+      const { rows } = await db.query<{ id: string; ord: number }>(`select id, (${QUESTION_ORDER_SQL})::int as ord from q order by id`);
+      expect(rows).toEqual([{ id: "c1", ord: 0 }, { id: "c2", ord: 1 }, { id: "c3", ord: 2 }, { id: "c9", ord: 0 }]);
+    } finally {
+      await db.close();
+    }
+  }, 30_000);
+
+  it("maps a classroom with the picture password off (owner decision 2026-10-08)", () => {
+    const row = mapClassroom(
+      { id: "c1", name: "P.5-1", classCode: "ab12cd", codeExpiresAt: null, grade: "5", password_students: "x", createdAt: "t0", updatedAt: "t1" },
+      { id: "uuid-1", schoolId: "s-1", teacherId: "u-1", grade: 5 },
+    );
+    expect(row).toMatchObject({ id: "uuid-1", name: "P.5-1", school_id: "s-1", teacher_id: "u-1", grade: 5, class_code: "ab12cd", picture_password_enabled: false });
   });
 
   it("parses the classroom grade text", () => {
@@ -43,6 +115,17 @@ describe("primary legacy import transforms", () => {
     expect(correctAnswerIndex(["A dog.", "A cat."], "a cat. ")).toBe(1);
     expect(correctAnswerIndex(["a", "b"], "z")).toBe(-1);
     expect(correctAnswerIndex(["a", "b"], null)).toBe(-1);
+  });
+
+  it("fixes each owner-approved MCQ answer to one of its options", () => {
+    const options: Record<string, string[]> = {
+      cmgqtfb1400jot79b2b8vt3wx: ["It was too big to play with.", "It was broken.", "It rolled under her bed.", "She didn't like it."],
+      cmorc24e10021s6012hxz5jhi: ["It was better and lighter", "It was harder and heavier", "It was blue and green", "It was fast and loud"],
+      cmou6yrgv0049s601qg1b3hx5: ["When water covers dry land", "When it stops raining", "When the sun is hot", "When a river is dry"],
+      cmqqrw1h1000us6011cslsbeh: ["They sleep.", "They run.", "They talk.", "They sing."],
+    };
+    expect(Object.keys(MCQ_ANSWER_FIXES).sort()).toEqual(Object.keys(options).sort());
+    expect(Object.entries(MCQ_ANSWER_FIXES).map(([id, answer]) => correctAnswerIndex(options[id]!, answer))).toEqual([2, 0, 0, 2]);
   });
 
   it("keeps the latest row per key", () => {
@@ -89,11 +172,24 @@ describe("primary legacy import transforms", () => {
     expect(lessonStatusOf(null, null)).toBe("not_started");
   });
 
+  it("takes the card text the Primary reader writes: the word of a vocabulary card, the sentence of a sentence card", () => {
+    expect(cardTextOf({ type: "VOCABULARY", word: "puppy", sentence: null })).toBe("puppy");
+    expect(cardTextOf({ type: "SENTENCE", word: null, sentence: "Pip is a puppy." })).toBe("Pip is a puppy.");
+    expect(cardTextOf({ type: "VOCABULARY", word: "  ", sentence: "Pip is a puppy." })).toBeNull();
+    expect(cardTextOf({ type: "SENTENCE", word: "puppy", sentence: null })).toBeNull();
+  });
+
+  it("counts Good and Easy reviews as correct, Again and Hard as incorrect", () => {
+    expect(reviewCountsOf([1, 2, 3, 4, 4])).toEqual({ correct: 3, incorrect: 2 });
+    expect(reviewCountsOf([])).toEqual({ correct: 0, incorrect: 0 });
+  });
+
   it("uses the legacy table names in the id map, as the tutor_compat views join them", () => {
     expect(MAP_TABLES.article).toBe("article");
     expect(MAP_TABLES.mcq).toBe("multiple_choice_questions");
     expect(MAP_TABLES.saq).toBe("short_answer_questions");
     expect(MAP_TABLES.laq).toBe("long_answer_questions");
+    expect(MAP_TABLES.flashcardCards).toBe("flashcard_cards");
   });
 
   it("renders the report with every table and the dropped list", () => {
@@ -105,5 +201,7 @@ describe("primary legacy import transforms", () => {
     expect(md).toContain("(dry run, rolled back)");
     expect(md).toContain("- sessions:");
     expect(md).toContain("- n1");
+    expect(renderReport({ startedAt: "a", finishedAt: "b", dryRun: false, dropped: [], notes: [], tables: { "flashcard_cards.last_review": { read: 3, written: 3, skipped: {}, examples: {} } } }))
+      .toContain("| flashcard_cards.last_review → flashcard_progress | 3 | 3 | 0 |");
   });
 });

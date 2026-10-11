@@ -4,6 +4,7 @@ import type { ReactElement } from "react";
 
 import { RpgRewardDisclosure } from "../presentation/rpg-reward-disclosure.js";
 import { resolveRpgRewardAssetUrls } from "../presentation/rpg-reward-assets.js";
+import type { RpgRewardAssetUrls } from "../presentation/rpg-reward-panel.js";
 import { getRetroArcadeButtonStyle } from "../presentation/retro-arcade-theme.js";
 import { useStudentRpg } from "./use-student-rpg.js";
 
@@ -17,6 +18,10 @@ export interface StudentRpgCatalogPanelProps {
   readonly basePath?: string;
   /** Replaces the equip action on hosts where a reward is an avatar piece in the inventory. */
   readonly inventoryNote?: string;
+  /** Host reward icon URLs in place of the reviewed icons under `basePath`. */
+  readonly assetUrls?: RpgRewardAssetUrls;
+  /** Asset credit under the list; null when the host icons need none. */
+  readonly credit?: string | null;
 }
 
 /**
@@ -29,6 +34,8 @@ export function StudentRpgCatalogPanel({
   endpoint = "/api/v1/apk/rpg",
   basePath = "",
   inventoryNote,
+  assetUrls,
+  credit,
 }: StudentRpgCatalogPanelProps): ReactElement | null {
   const enabled = Boolean(ownerKey);
   const rpg = useStudentRpg({ endpoint, ownerKey: ownerKey ?? "", enabled });
@@ -39,12 +46,13 @@ export function StudentRpgCatalogPanel({
     return (
       <RpgRewardDisclosure
         state={rpg.state}
-        assetUrls={resolveRpgRewardAssetUrls(basePath)}
+        assetUrls={assetUrls ?? resolveRpgRewardAssetUrls(basePath)}
         pendingCosmeticId={rpg.pendingCosmeticId}
         failureMessage={rpg.failureMessage}
         onRetry={() => void rpg.retry()}
         onEquip={(cosmeticId) => void rpg.equip(cosmeticId)}
         inventoryNote={inventoryNote}
+        credit={credit}
       />
     );
   }

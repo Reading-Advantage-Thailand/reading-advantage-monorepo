@@ -6,6 +6,7 @@ import { getClientIp } from "@reading-advantage/api/routes/auth";
 import { studentLogin } from "@reading-advantage/domain";
 import { canUseFullAuthFeature } from "@/lib/auth-strength";
 import { getCurrentSession } from "@/lib/session";
+import { logger } from "@/lib/observability/logger";
 
 const STATUS: Record<studentLogin.StudentLoginErrorCode, number> = {
   invalid_code: 401,
@@ -47,7 +48,7 @@ export function errorResponse(error: unknown): NextResponse {
   }
   // A Drizzle error message lists the query values (for example a code hash): log only the kind.
   const code = (error as { cause?: { code?: string } } | null)?.cause?.code;
-  console.error("Student login error:", error instanceof Error ? error.name : "Unknown", code ?? "");
+  logger.error("student_login_error", { errorName: error instanceof Error ? error.name : "Unknown", code: code ?? "" });
   return NextResponse.json({ message: "Internal server error" }, { status: 500 });
 }
 

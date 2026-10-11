@@ -1,6 +1,6 @@
 import { randomInt } from "node:crypto";
-import { and, eq, like } from "drizzle-orm";
-import type { DB } from "@reading-advantage/db";
+import { and, eq } from "drizzle-orm";
+import { generateStudentUsername, type DB } from "@reading-advantage/db";
 import { accounts, classroomStudents, sessions, users } from "@reading-advantage/db/schema";
 import { hashPassword, type RateLimitStore, type UserContext } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
@@ -17,25 +17,8 @@ export const INITIAL_PASSWORD_LENGTH = 8;
 /** Characters of an initial password: lower case and digits, without look-alikes (0, o, 1, i, l). */
 const INITIAL_PASSWORD_ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
 
-const FALLBACK_PREFIX = "student";
-const MAX_PREFIX_LENGTH = 8;
 const MAX_USERNAME_TRIES = 5;
 const HASH_BATCH = 8;
-
-/**
- * Makes the username prefix of a class: lower-case latin letters and digits of the class name,
- * at most 8 characters. A name with none of them (for example a Thai-only name) gives `student`.
- * @param className The class name, or null when the student has no class.
- * @returns The prefix, for example `p3a` for class `P3A`.
- */
-export function usernamePrefix(className: string | null | undefined): string {
-  const slug = (className ?? "")
-    .normalize("NFKD")
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, "")
-    .slice(0, MAX_PREFIX_LENGTH);
-  return slug || FALLBACK_PREFIX;
-}
 
 /**
  * Makes a random initial password that a teacher can print and a child can type.
@@ -65,8 +48,6 @@ function isUniqueViolation(error: unknown): boolean {
 /** One student that needs a generated username and an initial password. */
 export interface StudentLoginSeed {
   userId: string;
-  /** Class name for the username prefix. Empty gives the prefix `student`. */
-  classroomName: string | null;
   /** Class to create the student credential row for. Empty skips the row. */
   classroomId: string | null;
   /** A password the caller chose. The student then gets no generated initial password. */
@@ -95,23 +76,11 @@ export interface ProvisionStudentLoginsResult {
 }
 
 /**
- * Reads the highest number used after a prefix. Usernames are unique across all schools,
- * so this read is not scoped to one school.
- */
-async function highestNumber(db: DB, prefix: string): Promise<number> {
-  const rows = await db.select({ username: users.username }).from(users).where(like(users.username, `${prefix}%`));
-  const pattern = new RegExp(`^${prefix}(\\d+)$`);
-  return rows.reduce((max, row) => {
-    const match = pattern.exec(row.username);
-    return match ? Math.max(max, Number(match[1])) : max;
-  }, 0);
-}
-
-/**
- * Gives each student a readable generated username (class prefix plus a number, lower case,
- * no email, no surname) and a credential account with an initial password, and creates the
- * student credential row for the class. It is the one path for student creation and roster
- * import (FR-6). A unique violation from a concurrent import is retried with a fresh number.
+ * Gives each student a permanent generated username (two words and two digits, for example
+ * `bluetiger47`; no email, no class or grade part, owner decision 2026-10-08) and a credential
+ * account with an initial password, and creates the student credential row for the class. It is
+ * the one path for student creation and roster import (FR-6). A unique violation (the name is
+ * taken) is retried with a fresh name.
  * The username update and the account insert of one student run in one transaction, so a
  * student never keeps a new username without a password. A failure for one student does not
  * stop the others; it is returned in `failed`.
@@ -128,7 +97,6 @@ export async function provisionStudentLogins(params: {
 }): Promise<ProvisionStudentLoginsResult> {
   const { db, schoolId, students } = params;
   const userDb = schoolId ? createTenantDB(db, { schoolId }) : db;
-  const counters = new Map<string, number>();
   const results: ProvisionedStudentLogin[] = [];
   const failed: FailedStudentLogin[] = [];
 
@@ -145,14 +113,10 @@ export async function provisionStudentLogins(params: {
   }
 
   for (const { seed, initialPassword, hash } of prepared) {
-    const prefix = usernamePrefix(seed.classroomName);
     let username = "";
     try {
       for (let attempt = 0; attempt < MAX_USERNAME_TRIES; attempt++) {
-        if (!counters.has(prefix) || attempt > 0) counters.set(prefix, await highestNumber(db, prefix));
-        const next = counters.get(prefix)! + 1;
-        counters.set(prefix, next);
-        username = `${prefix}${next}`;
+        username = generateStudentUsername();
         try {
           await userDb.transaction(async (tx) => {
             await tx.update(users).set({ username, displayUsername: username }).where(eq(users.id, seed.userId));

@@ -7,6 +7,7 @@ import {
   recordGameCompletion,
 } from "@reading-advantage/domain/games";
 
+import { enqueuePrimaryEvidenceJob } from "@/lib/primary-evidence-queue";
 import { getCurrentUser } from "@/lib/session";
 
 export const runtime = "nodejs";
@@ -68,6 +69,11 @@ export async function POST(request: NextRequest) {
       { error: { code: "INTERNAL_ERROR", message: "Unable to save game completion" } },
       { status: 500 },
     );
+  }
+  // A story run carries per-item evidence; the worker maps it to the graph off the request path.
+  const learningEvidence = parsed.data.metadata?.learningEvidence as { kind?: string } | undefined;
+  if (validated.data.completionId && learningEvidence?.kind === "story-game") {
+    await enqueuePrimaryEvidenceJob({ sourceTable: "game_completions", rowId: validated.data.completionId }, user.schoolId);
   }
   return NextResponse.json(validated.data, { status: 200 });
 }

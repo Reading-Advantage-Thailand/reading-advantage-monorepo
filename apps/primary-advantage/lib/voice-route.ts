@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCurrentSession } from "@/lib/session";
+import { logger } from "@/lib/observability/logger";
 
 /** The signed-in student of a voice route, with the sign-in strength. */
 export async function voiceActor() {
@@ -21,6 +22,6 @@ export function voiceErrorResponse(error: unknown, label: string) {
   if (code === "FORBIDDEN") return NextResponse.json({ error: code, message: (error as Error).message }, { status: 403 });
   if (code && typeof status === "number") return NextResponse.json({ error: code, message: (error as Error).message }, { status });
   if ((error as { name?: string }).name === "ZodError") return NextResponse.json({ error: "BAD_INPUT" }, { status: 400 });
-  console.error(`API Error - ${label}:`, error);
+  logger.error("voice_route_failed", { label, error });
   return NextResponse.json({ error: "INTERNAL" }, { status: 500 });
 }

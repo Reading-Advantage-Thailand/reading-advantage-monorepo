@@ -2,35 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
 import {
-  GameSpeechPreparationError,
-  createConfiguredSpeechObjectResolver,
-  createStoredSpeechClipLookup,
   gameLearningContentInputSchema,
   gameLearningContentResultSchema,
   listGameLearningContent,
-  prepareGameAnswerAudio,
-  preparedGameAnswerAudioLearningContentResultSchema,
+  listPrimaryAnswerAudioContent,
 } from "@reading-advantage/domain/games";
-import { getStorageClient } from "@reading-advantage/storage";
 
 import { getCurrentUser } from "@/lib/session";
+import { getAudioUrl } from "@/lib/storage-config";
+import { logger } from "@/lib/observability/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const PRIVATE_NO_STORE = "no-store, private";
-const WIZARD_SPEECH_MANIFEST_ENV = "APK_WIZARD_SPEECH_MANIFEST";
-
-/** Creates a prepared speech lookup from reviewed storage configuration. */
-function getWizardSpeechLookup() {
-  const manifest = process.env[WIZARD_SPEECH_MANIFEST_ENV];
-  if (!manifest) return undefined;
-  return createStoredSpeechClipLookup({
-    storage: getStorageClient(),
-    resolveObject: createConfiguredSpeechObjectResolver(manifest),
-  });
-}
-
 /** Returns a private structured route error. */
 function errorResponse(status: 400 | 401 | 403 | 500 | 503, code: string, message: string) {
   return NextResponse.json(
@@ -63,7 +48,7 @@ export async function GET(request: NextRequest) {
   const learningMode = url.searchParams.get("learningMode") ?? "reading";
   const cartridgeId = url.searchParams.get("cartridgeId");
   const supportsAnswerAudio = cartridgeId !== null
-    && ["wizard-vs-zombie", "dragon-flight", "dragon-rider"].includes(cartridgeId);
+    && ["wizard-vs-zombie", "hero-vs-zombie", "dragon-flight", "dragon-rider"].includes(cartridgeId);
   const wantsAnswerAudio = learningMode === "answer-audio";
   const requestedLocale = url.searchParams.get("locale") ?? "th";
   if (
@@ -117,6 +102,22 @@ export async function GET(request: NextRequest) {
 
   try {
     const tenant = { schoolId: user.schoolId };
+    if (wantsAnswerAudio) {
+      // The saved words of the reader's flashcard list, each with its segment of the article's word audio.
+      const prepared = await listPrimaryAnswerAudioContent({
+        db: createTenantDB(db, tenant),
+        user,
+        tenant,
+        audioUrlOf: getAudioUrl,
+      });
+      if (!prepared) {
+        return errorResponse(503, "LISTENING_UNAVAILABLE", "No saved word has English audio");
+      }
+      return NextResponse.json(prepared, {
+        status: 200,
+        headers: { "Cache-Control": PRIVATE_NO_STORE },
+      });
+    }
     const result = await listGameLearningContent({
       db: createTenantDB(db, tenant),
       user,
@@ -127,42 +128,12 @@ export async function GET(request: NextRequest) {
     if (!validated.success) {
       return errorResponse(500, "INTERNAL_ERROR", "Unable to load learning content");
     }
-    if (wantsAnswerAudio) {
-      const lookup = getWizardSpeechLookup();
-      if (!lookup) {
-        return errorResponse(503, "LISTENING_UNAVAILABLE", "Prepared audio is unavailable");
-      }
-      const preparedAnswerAudio = await prepareGameAnswerAudio({
-        user,
-        tenant,
-        session: answerAudioSession!,
-        content: validated.data.content,
-        lookup,
-        preparationTimeoutMs: 5_000,
-        signal: request.signal,
-      });
-      const answerAudioResult = preparedGameAnswerAudioLearningContentResultSchema.safeParse({
-        ...validated.data,
-        answerAudioSession,
-        preparedAnswerAudio,
-      });
-      if (!answerAudioResult.success) {
-        return errorResponse(500, "INTERNAL_ERROR", "Unable to load learning content");
-      }
-      return NextResponse.json(answerAudioResult.data, {
-        status: 200,
-        headers: { "Cache-Control": PRIVATE_NO_STORE },
-      });
-    }
     return NextResponse.json(validated.data, {
       status: 200,
       headers: { "Cache-Control": PRIVATE_NO_STORE },
     });
-  } catch (error) {
-    if (error instanceof GameSpeechPreparationError) {
-      return errorResponse(503, "LISTENING_UNAVAILABLE", "Prepared audio is unavailable");
-    }
-    console.error({ level: "error", event: "apk_content_failed" });
+  } catch {
+    logger.error("apk_content_failed");
     return errorResponse(500, "INTERNAL_ERROR", "Unable to load learning content");
   }
 }

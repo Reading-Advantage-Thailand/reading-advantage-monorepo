@@ -1,0 +1,67 @@
+{
+  "track_id": "primary_knowledge_state_20261007",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-10-07T00:08:00Z",
+  "updated_at": "2026-10-07T00:08:00Z",
+  "description": "T3 of the Primary Mastery Graph Program: the graph slice, getStudentKnowledgeState over buildKstState, the cold-start seed, the shadow log after each evidence job, the level test readiness signal, projections for T5, and a SYSTEM-only admin view. Shadow mode only.",
+  "estimated_tasks": 35,
+  "actual_tasks": null,
+  "deviation_notes": "Owner decision D8 (2026-10-07): spec and plan now, build after the freeze in a migration window, shadow mode first. The program table names it primary_knowledge_state_20261006. Story S5 added for PR plan phase P6. Skill registry search skipped.",
+  "sprint": {
+    "goal": "For every Primary student, the engine computes the knowledge state and the outer fringe after each evidence commit, logs what it would recommend and whether the student looks ready for the level test, and shows this only on an internal admin page (shadow mode).",
+    "stories": [
+      {
+        "id": "S1",
+        "title": "Graph slice",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S2",
+        "title": "Student knowledge state",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S3",
+        "title": "Cold start",
+        "size": "S",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S4",
+        "title": "Shadow log",
+        "size": "M",
+        "priority": "Must",
+        "status": "pending"
+      },
+      {
+        "id": "S5",
+        "title": "Level test readiness signal",
+        "size": "S",
+        "priority": "Should",
+        "status": "pending"
+      },
+      {
+        "id": "S6",
+        "title": "Projections for the later views",
+        "size": "S",
+        "priority": "Should",
+        "status": "pending"
+      },
+      {
+        "id": "S7",
+        "title": "Internal admin view",
+        "size": "M",
+        "priority": "Should",
+        "status": "pending"
+      }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

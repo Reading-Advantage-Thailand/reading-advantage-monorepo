@@ -63,9 +63,11 @@ vi.mock("drizzle-orm", () => ({
   and: vi.fn(),
 }));
 
-vi.mock("@reading-advantage/auth", () => ({
+vi.mock("@reading-advantage/auth", async () => ({
   hashPassword: vi.fn(),
   PASSWORD_MAX_LENGTH: 128,
+  // The temporary-password route builds its body schema from it when the barrel loads.
+  passwordSchema: (await import("zod")).z.string().min(8).max(128),
   requireAuth: vi.fn(),
   requireRole: vi.fn(),
   revokeAllUserSessions: vi.fn(),

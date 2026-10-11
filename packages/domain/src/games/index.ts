@@ -39,6 +39,16 @@ export {
 } from "./practice-input.js";
 export type { GamePracticeInputRequest } from "./practice-input.js";
 export {
+  listPrimaryAnswerAudioContent,
+  listPrimaryArticleCards,
+  listPrimaryDeckCards,
+  listPrimaryPracticeInput,
+  primaryArticleCardsRequestSchema,
+  primaryDeckCardsRequestSchema,
+  primaryFlashcardViewSchema,
+} from "./primary-saved-items.js";
+export type { PrimaryFlashcardView, PrimarySavedWord, PrimaryWordAudio } from "./primary-saved-items.js";
+export {
   GameSpeechPreparationError,
   createConfiguredSpeechObjectResolver,
   createStoredSpeechClipLookup,

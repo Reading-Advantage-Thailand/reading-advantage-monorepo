@@ -4,7 +4,10 @@
  * camera is the one of every 2D view (elevation 45 degrees, 64 px/m) and follows the rider: the
  * student's hero sits on the dragon, the highland scrolls past in chunks (the 3D view's plan),
  * two gates wait ahead with their meanings on tags the student taps (or a swipe, or the arrow
- * keys), and the dark dragon hovers ahead for the duel.
+ * keys), and the dark dragon hovers ahead for the duel. With an answer audio controller, the
+ * panel shows the meaning, the tags carry numbers, a row of "n 🔊" buttons plays the English words,
+ * and at the gates the rider holds for the chosen gate's clip before the view commits it, as in the
+ * 3D view.
  */
 import type * as Phaser from 'phaser';
 import { shownHero } from '@reading-advantage/advantage-play-kit-3d/avatar/launch';
@@ -14,8 +17,9 @@ import { AudioBus, installAudioUnlock } from '@reading-advantage/advantage-play-
 import { SESSION_OPTIONS_DEFAULT, type Game2DContext } from '@reading-advantage/advantage-play-kit-3d/factory';
 import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { createFixedStepLoop, createManualClock } from '@reading-advantage/advantage-play-kit-3d/sim';
-import { animationKeyOf, banner, COLORS, depthOf, Figure2D, fitGameSize, popup, recolorTag, registerSheetAnimations, SPRITE_PPM, StatusBar2D, tag, textureKeyOf, WordPanel2D } from '@reading-advantage/advantage-play-kit-3d/view2d';
-import { createDragonRider, evidenceOf, scoreOf, type DragonRiderCommand, type DragonRiderEvent, type DragonRiderState, type DragonRiderInput } from '../core/index.js';
+import { animationKeyOf, banner, button, COLORS, depthOf, Figure2D, fitGameSize, popup, recolorTag, registerSheetAnimations, SPRITE_PPM, StatusBar2D, tag, textureKeyOf, WordPanel2D } from '@reading-advantage/advantage-play-kit-3d/view2d';
+import { createDragonRider, evidenceOf, scoreOf, type DragonRiderCommand, type DragonRiderEvent, type DragonRiderState, type DragonRiderInput, type GateOption } from '../core/index.js';
+import { createAnswerAudioDriver } from '../../shared/answer-audio.js';
 import { evidenceStoryOf } from '../../shared/challenge.js';
 import { manifest, FILES_2D, HEROES_2D } from '../manifest.js';
 import { nextChoice } from '../qc/bot.js';
@@ -71,7 +75,8 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
   const figure = playerFigure(ctx);
   const edition = ctx.edition;
   const seed = ctx.seed ?? Date.now() >>> 1;
-  const sim = createDragonRider(input, { seed });
+  const answer = ctx.answerAudio ? createAnswerAudioDriver(ctx.answerAudio, ctx.diagnostic) : null;
+  const sim = createDragonRider(input, { seed, answerAudio: !!answer });
   const needed = FILES_2D.filter((id) => {
     const model = id.split('.')[0]!;
     return !(HEROES_2D as readonly string[]).includes(model) || model === heroId;
@@ -235,7 +240,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       g.clear();
       g.lineStyle(Math.max(3, 0.12 * k), color, alpha).strokeEllipse(0, 0, rx * 2, rx * 2 * COS);
     }
-    function raiseGates(roundId: string, opts: readonly { text: string }[], z: number): void {
+    function raiseGates(roundId: string, opts: readonly GateOption[], z: number): void {
       const list = opts.map((o, i): Gate => {
         const x = GATE_X[i] ?? 0;
         let arch: Phaser.GameObjects.Image | null = null;
@@ -246,7 +251,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         }
         const ring = scene.add.graphics();
         drawRing(ring, 0xffe28a, 0.6);
-        const label = tag(scene, o.text, 20).setDepth(16_000);
+        const label = tag(scene, answer ? String(i + 1) : o.text, 20).setDepth(16_000);
         label.setInteractive({ useHandCursor: true }).on('pointerup', () => choose(i));
         return { arch, ring, tag: label, x, z };
       });
@@ -291,18 +296,97 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
     const dragonTop = () => ({ x: dragon.x, y: dragon.y - 1.6 * k });
     const shooter = (n: number): Phaser.GameObjects.Sprite => (n === 0 ? dragon : (flock[(n - 1) % Math.max(1, flock.length)]?.sprite ?? dragon));
 
+    // ---------------------------------------------------------------- answer audio
+    /** One "n 🔊" button per gate, under the word panel; the gate tags wait under the row. */
+    let listenButtons: { clip: number; index: number; button: Phaser.GameObjects.Container }[] = [];
+    /** The gate the rider holds at for its clip, or null. */
+    let atGate: { roundId: string; gate: number } | null = null;
+
+    function showListen(opts: readonly GateOption[]): void {
+      clearListen();
+      const gap = 88;
+      listenButtons = opts.map((o, i) => ({
+        clip: o.position,
+        index: i + 1,
+        button: button(scene, W / 2 + (i - (opts.length - 1) / 2) * gap, panel.bottom + 30, `${i + 1} 🔊`, () => {
+          if (answer?.listen(o.position).kind === 'muted') soundOff();
+        }, 0x312e81, '#ffffff').setDepth(19_400),
+      }));
+      drawListen();
+    }
+
+    function clearListen(): void {
+      for (const l of listenButtons) l.button.destroy();
+      listenButtons = [];
+    }
+
+    /** The label of each button: … while its clip plays, ↻ after a failure, green once heard. */
+    function drawListen(): void {
+      if (!answer) return;
+      for (const l of listenButtons) {
+        const look = answer.look(l.clip);
+        const label = l.button.list[1] as Phaser.GameObjects.Text;
+        label.setText(`${l.index} ${look === 'playing' ? '…' : look === 'failed' ? '↻' : '🔊'}`);
+        label.setColor(look === 'heard' ? '#86efac' : '#ffffff');
+        l.button.setAlpha(look === 'used' ? 0.55 : 1);
+      }
+    }
+
+    function soundOff(): void {
+      const at = dragonTop();
+      popup(scene, at.x, at.y, t('soundOff'), 'miss', 19_000);
+    }
+
+    /** At the gate: commit it once its clip played to the end, or else play it (as in the 3D view). */
+    function tryGate(explicit: boolean): void {
+      const round = sim.state.round;
+      if (!answer || !atGate || !round || round.id !== atGate.roundId || round.chosen !== null) return;
+      if (answer.position() !== round.position) return;
+      const clip = round.options[atGate.gate]?.position;
+      if (clip === undefined) return;
+      const look = answer.look(clip);
+      if (look === 'playing' || (look === 'failed' && !explicit)) return;
+      const action = answer.touch(clip);
+      if (action.kind === 'confirm') {
+        atGate = null;
+        loop.dispatch({ type: 'commit' });
+      } else if (action.kind === 'muted' && explicit) soundOff();
+    }
+
     function handle(ev: DragonRiderEvent): void {
       const st = sim.state;
       switch (ev.type) {
         case 'roundStarted':
           raiseGates(ev.roundId, ev.options, -(st.distance + st.round!.gap));
-          panel.target(t('word'), ev.term);
+          if (answer) panel.target(t('wordAudio'), ev.translation);
+          else panel.target(t('word'), ev.term);
           steerX = 0;
+          atGate = null;
+          if (answer) {
+            answer.question(ev.position, ev.options.map((o) => o.position));
+            showListen(ev.options);
+          }
+          break;
+        case 'gateHeld': {
+          (gates.get(ev.roundId) ?? []).forEach((g, i) => recolorTag(g.tag, COLORS.tagFill, i === ev.gate ? 0xfde68a : 0xffffff));
+          steerX = GATE_X[ev.gate] ?? 0;
+          audio.play('flap');
+          break;
+        }
+        case 'gateReached':
+          for (const g of gates.get(ev.roundId) ?? []) {
+            scene.tweens.killTweensOf(g.tag);
+            g.tag.setScale(1);
+          }
+          atGate = { roundId: ev.roundId, gate: ev.gate };
+          tryGate(true);
           break;
         case 'waiting':
           for (const g of gates.get(ev.roundId) ?? []) scene.tweens.add({ targets: g.tag, scale: { from: 1, to: 1.12 }, duration: 350, yoyo: true, repeat: -1 });
           break;
         case 'gateChosen': {
+          atGate = null;
+          clearListen();
           const list = gates.get(ev.roundId) ?? [];
           list.forEach((g, i) => {
             scene.tweens.killTweensOf(g.tag);
@@ -457,7 +541,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
         d.sprite.setPosition(p.x, p.y).setDepth(depthOf(camZ + d.home.z, fy)).setAlpha(d.resting ? 0.45 : 1);
         d.shadow.setPosition(f.x, f.y).setDepth(depthOf(camZ + d.home.z, 0) - 500);
       }
-      const top = panel.bottom + 26;
+      const top = panel.bottom + (answer ? 86 : 26);
       for (const [roundId, list] of gates) {
         if (list[0] && list[0].z > camZ + 6) {
           lowerGates(roundId);
@@ -482,7 +566,15 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       }
     };
 
-    scene.events.on('resume', () => loop.reset());
+    scene.events.on('resume', () => {
+      loop.reset();
+      // A pause cancels a clip at the gate; play it again.
+      tryGate(false);
+    });
+    const stopListen = answer?.onChange(() => {
+      drawListen();
+      tryGate(false);
+    });
     const hook = {
       state: () => sim.state,
       dispatch: (command: DragonRiderCommand) => loop.dispatch(command),
@@ -504,6 +596,7 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       finished = true;
       loop.stop();
       frame = null;
+      stopListen?.();
       if (qc.__apk3dView2d === hook) delete qc.__apk3dView2d;
       unlock?.();
     };

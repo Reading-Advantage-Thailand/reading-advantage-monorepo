@@ -29,6 +29,8 @@ export type RpgUnlockNoticeProps = Omit<ComponentProps<"section">, "children"> &
   readonly inventoryNote?: string;
   /** Retries the current failed request. */
   readonly onRetry?: () => void;
+  /** Asset credit under the list (default: the ElvGames credit of the reviewed icons); null when the host icons need none. */
+  readonly credit?: string | null;
 };
 
 const rewardStyle: CSSProperties = {
@@ -54,6 +56,7 @@ export function RpgUnlockNotice({
   onEquip,
   inventoryNote,
   onRetry,
+  credit = RPG_REWARD_REQUIRED_CREDIT,
   style,
   ...sectionProps
 }: RpgUnlockNoticeProps): import("react").ReactElement {
@@ -121,7 +124,7 @@ export function RpgUnlockNotice({
           );
         })}
       </ul>
-      <small>{RPG_REWARD_REQUIRED_CREDIT}</small>
+      {credit ? <small>{credit}</small> : null}
     </section>
   );
 }

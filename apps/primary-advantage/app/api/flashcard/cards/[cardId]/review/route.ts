@@ -9,6 +9,7 @@ import { assertCan, AuthError } from '@reading-advantage/auth';
 import { currentUser } from "@/lib/session";
 import { resolveXpAward } from "@/lib/authorization";
 import { fsrsService } from "@/lib/fsrs-service";
+import { enqueuePrimaryEvidenceJob } from "@/lib/primary-evidence-queue";
 import { Rating } from "ts-fsrs";
 import { ActivityType } from "@/types/enum";
 import { FlashcardCard } from "@/types";
@@ -154,6 +155,9 @@ export async function POST(
 
       return { card: updated, review, reviewLog };
     });
+
+    // Off the request path: the worker maps the word to its node and commits the evidence.
+    if (result.review?.id) await enqueuePrimaryEvidenceJob({ sourceTable: "card_reviews", rowId: result.review.id }, user.schoolId);
 
     return NextResponse.json(result);
   } catch (error) {

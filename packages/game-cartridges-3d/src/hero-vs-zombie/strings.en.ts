@@ -18,11 +18,23 @@ export default {
       learningPreview: 'Your words',
       tip: 'Zombies only push you back. You cannot lose, so take your time to read.',
       start: 'Face the night 🧟',
+      audio: {
+        objective: 'Find the English word for every meaning before the sun rises.',
+        instructions: {
+          read: { title: 'Read the meaning', description: 'A Thai meaning glows at the top of the screen.' },
+          find: { title: 'Listen and find', description: 'Touch an orb to hear its word. Touch it again to take it.' },
+        },
+        tip: 'Zombies wait while you hear the first word of each meaning.',
+      },
     },
     hud: {
       place: 'Churchyard',
       round: 'Word {index}/{total}',
       find: 'Find the meaning of',
+      findWord: 'Find the English word for',
+      listen: 'Listen to orb {index}',
+      soundOff: 'Turn the sound on to hear the words.',
+      shield: 'Listen!',
       story: '📖 Story',
       move: 'Drag to move',
       blast: 'Blast',

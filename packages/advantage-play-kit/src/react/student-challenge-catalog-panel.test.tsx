@@ -41,6 +41,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
   fetchMock.mockReset();
 });
@@ -53,6 +54,9 @@ describe("StudentChallengeCatalogPanel", () => {
   });
 
   it("links only an active installed reading challenge", async () => {
+    // A fixed clock inside the challenge window (2026-09-01 to 2026-10-01): the panel reads Date.now().
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-09-15T00:00:00.000Z"));
     fetchMock
       .mockResolvedValueOnce(response({ classes: [{ id: classOne, name: "Class A" }], hasMore: false }))
       .mockResolvedValueOnce(response({ challenges: [challenge()] }));

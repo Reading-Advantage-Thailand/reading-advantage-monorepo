@@ -1,6 +1,8 @@
 "use server";
 
 import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
+import type { EvidenceMode, QuestionAnswer } from "@reading-advantage/domain/primary-mastery";
+import { enqueuePrimaryEvidenceJob } from "@/lib/primary-evidence-queue";
 import {
   db,
   eq,
@@ -66,6 +68,11 @@ export async function finishQuiz(
     score?: number;
     responses?: string[];
     timer?: number;
+    /** The evidence keys (track primary_mastery_evidence_20261006): one entry per answered question. */
+    questions?: QuestionAnswer[];
+    mode?: EvidenceMode;
+    hintUsed?: boolean;
+    audioPlayed?: boolean;
   },
   type: ActivityType,
 ) {
@@ -97,6 +104,8 @@ export async function finishQuiz(
       yourAnswer: data.yourAnswer,
       score: data.score,
       responses: data.responses,
+      // The evidence keys ride beside the legacy ones; the evidence job reads them.
+      ...(data.questions ? { questions: data.questions, mode: data.mode ?? "independent", hintUsed: data.hintUsed, audioPlayed: data.audioPlayed } : {}),
     },
     completed: true,
   }).returning();
@@ -166,6 +175,9 @@ export async function finishQuiz(
       })
       .where(eq(users.id, user.id as string));
   });
+
+  // Off the request path: the worker resolves the objectives and commits the evidence.
+  await enqueuePrimaryEvidenceJob({ sourceTable: "user_activity", rowId: userActivityRow.id }, user.schoolId);
 
   return { success: true };
 }

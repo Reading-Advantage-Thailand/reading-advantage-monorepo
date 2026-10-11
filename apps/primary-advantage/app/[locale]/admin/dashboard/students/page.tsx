@@ -46,7 +46,6 @@ import type { StudentFormData } from "@/types";
 interface Student {
   id: string;
   name: string | null;
-  email: string | null;
   cefrLevel: string | null;
   xp: number;
   role: string;
@@ -60,7 +59,6 @@ export default function DashboardPage() {
     {
       id: "1",
       name: "John Doe",
-      email: "john.doe@example.com",
       cefrLevel: "B1",
       xp: 1250,
       role: "student",
@@ -69,7 +67,6 @@ export default function DashboardPage() {
     {
       id: "2",
       name: "Jane Smith",
-      email: "jane.smith@example.com",
       cefrLevel: "A2",
       xp: 800,
       role: "student",
@@ -78,7 +75,6 @@ export default function DashboardPage() {
     {
       id: "3",
       name: "Mike Johnson",
-      email: "mike.johnson@example.com",
       cefrLevel: "C1",
       xp: 2100,
       role: "student",
@@ -94,7 +90,6 @@ export default function DashboardPage() {
   // Form data
   const [formData, setFormData] = useState<StudentFormData>({
     name: "",
-    email: "",
     cefrLevel: "A1",
     role: "student",
   });
@@ -108,7 +103,6 @@ export default function DashboardPage() {
   const resetForm = () => {
     setFormData({
       name: "",
-      email: "",
       cefrLevel: "A1",
       role: "student",
     });
@@ -119,7 +113,6 @@ export default function DashboardPage() {
     const newStudent: Student = {
       id: Date.now().toString(),
       name: formData.name,
-      email: formData.email,
       cefrLevel: formData.cefrLevel,
       xp: 0,
       role: formData.role,
@@ -136,7 +129,6 @@ export default function DashboardPage() {
     setEditingStudent(student);
     setFormData({
       name: student.name || "",
-      email: student.email || "",
       cefrLevel: student.cefrLevel || "A1",
       role: student.role,
     });
@@ -153,7 +145,6 @@ export default function DashboardPage() {
           ? {
               ...student,
               name: formData.name,
-              email: formData.email,
               cefrLevel: formData.cefrLevel,
               role: formData.role,
             }

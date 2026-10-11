@@ -12,7 +12,7 @@ vi.mock("next-intl/server", async () => {
   return { getTranslations: async (namespace?: string) => createTranslator({ locale: "en", messages: messages.en, namespace: namespace as never }) };
 });
 vi.mock("@/lib/session", () => ({ getCurrentUser: () => mocks.user() }));
-vi.mock("@reading-advantage/game-cartridges", () => ({ CARTRIDGE_CHALLENGE_CAPABILITIES: { dragon: { version: "v1" } }, getCartridgeCatalogEntry: () => ({ title: "Dragon" }) }));
+vi.mock("@/lib/games/catalog", () => ({ challengeGames: () => ({ dragon: { title: "Dragon", version: "v1" } }) }));
 vi.mock("@reading-advantage/advantage-play-kit/react", () => ({ TeacherChallengePanel: (props: Record<string, unknown>) => <div data-testid="panel" data-props={JSON.stringify(props)} /> }));
 vi.mock("@/i18n/navigation", () => ({ Link: ({ href, children, ...rest }: { href: string; children: ReactNode }) => <a href={`/${mocks.locale}${href}`} {...rest}>{children}</a> }));
 import Page from "../page";

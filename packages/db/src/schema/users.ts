@@ -63,6 +63,9 @@ export const accounts = pgTable("accounts", {
     .references(() => users.id, { onDelete: "cascade" }),
   providerId: text("provider_id").notNull(), // "credential" or "google"
   password: text("password"), // Argon2id hash (or legacy bcrypt), only for credential provider
+  // Set when an operator issues a temporary password (Primary cutover, FR-5): the user must set a
+  // new password before the first session. Null: a normal password.
+  temporaryPasswordIssuedAt: timestamp("temporary_password_issued_at"),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   accessTokenExpiresAt: timestamp("access_token_expires_at"),
