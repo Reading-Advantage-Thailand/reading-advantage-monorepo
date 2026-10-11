@@ -50,7 +50,6 @@
     "history": "歷史",
     "sentences": "句子",
     "vocabulary": "單字",
-    "games": "遊戲",
     "systemdashboard": "系統儀表板",
     "licenses": "許可證儀表板",
     "schools": "學校儀表板",
@@ -67,7 +66,6 @@
     "userProfile": "用戶資料",
     "schoolProfile": "學校資料",
     "studentsandclasses": "學生和班級",
-    "articlecreation": "文章創建",
     "back": "返回",
     "subItem": {
       "admin": "管理員",
@@ -389,8 +387,6 @@
       "addTeacherDesc": "註冊新的教師帳戶",
       "addStudent": "新增學生",
       "addStudentDesc": "建立新的學生資料",
-      "createArticle": "建立文章",
-      "createArticleDesc": "生成新的閱讀內容",
       "importData": "匯入資料",
       "importDataDesc": "批量導入用戶和內容",
       "viewReports": "查看報告",
@@ -434,12 +430,6 @@
       "performance": "性能指標"
     }
   },
-  "AdminArticleCreationPage": {
-    "header": {
-      "heading": "文章建立與管理",
-      "text": "為 Primary Advantage 建立、以 AI 生成並審核文章"
-    }
-  },
   "Components": {
     "translationLanguage": "翻譯語言",
     "submitButton": "送出",
@@ -472,131 +462,7 @@
     "confirmRetake": "確認重新測試",
     "areYouSureYouWantToRetakeThisQuiz": "您確定要重新測試嗎？您的答案將被清除。",
     "loadError": "載入失敗",
-    "emptyList": "還沒有句子",
-    "AdminArticleCreation": {
-      "tabs": {
-        "createArticle": "建立文章",
-        "previewEdit": "預覽與編輯",
-        "manageArticles": "管理文章"
-      },
-      "aiArticleGenerator": "AI 文章產生器",
-      "aiArticleGeneratorDesc": "使用 AI 根據您的設定產生高品質文章",
-      "articleType": "文章類型",
-      "fiction": "小說",
-      "nonFiction": "非小說",
-      "genre": "類型",
-      "subgenre": "子類型",
-      "cefrLevel": "CEFR 等級",
-      "articleTopic": "文章主題",
-      "placeholder": {
-        "genre": "選擇類型",
-        "subgenre": "選擇子類型",
-        "cefr": "選擇 CEFR 等級",
-        "topic": "描述主題、主旨或重點"
-      },
-      "cefrLevels": {
-        "A1": "A1",
-        "A2": "A2",
-        "B1": "B1",
-        "B2": "B2",
-        "C1": "C1",
-        "C2": "C2"
-      },
-      "error": "錯誤",
-      "generateWithAI": "以 AI 生成",
-      "dialog": {
-        "approval": {
-          "title": "確認核准",
-          "description": "你確定要核准並發布此文章嗎？此動作將會把文章發布到平台。"
-        },
-        "backToCreate": {
-          "title": "返回建立?",
-          "description": "如果返回建立，變更將會遺失。",
-          "warning": "此動作會將文章重設為初始狀態。"
-        },
-        "common": {
-          "cancel": "取消",
-          "confirm": "確認",
-          "ok": "確定"
-        }
-      },
-      "loading": {
-        "titles": {
-          "generate": "正在產生文章",
-          "save": "正在儲存草稿",
-          "approve": "正在核准並發布"
-        },
-        "descriptions": {
-          "generate": "請稍候，AI 正在建立內容...",
-          "save": "正在將變更儲存為草稿...",
-          "approve": "正在將文章發布到平台..."
-        }
-      },
-      "preview": {
-        "title": "文章預覽",
-        "description": "查看文章內容（唯讀）"
-      },
-      "editor": {
-        "title": "文章編輯器",
-        "description": "在核准前檢視並編輯內容"
-      },
-      "modified": "已修改",
-      "badges": {
-        "type": "類型",
-        "genre": "類型",
-        "subgenre": "子類型",
-        "cefrLevel": "CEFR 等級"
-      },
-      "fields": {
-        "title": "文章標題",
-        "content": "文章內容",
-        "summary": "文章摘要"
-      },
-      "placeholders": {
-        "title": "輸入文章標題...",
-        "content": "輸入文章主要內容...",
-        "summary": "輸入文章摘要..."
-      },
-      "buttons": {
-        "backToCreate": "返回建立",
-        "approveAndPublish": "核准並發布",
-        "saveAsDraft": "儲存為草稿",
-        "backToManage": "返回管理",
-        "switchToEdit": "切換到編輯",
-        "refresh": "重新整理",
-        "preview": "預覽",
-        "edit": "編輯",
-        "delete": "刪除",
-        "deleting": "刪除中..."
-      },
-      "manage": {
-        "title": "文章管理",
-        "description": "管理你的文章",
-        "loading": "載入文章中...",
-        "empty": "沒有找到文章"
-      },
-      "status": {
-        "draft": "草稿",
-        "published": "已發布"
-      },
-      "list": {
-        "topic": "主題",
-        "cefr": "CEFR",
-        "rating": "評分",
-        "created": "建立時間"
-      },
-      "toasts": {
-        "fetchFailed": "取得文章失敗",
-        "generateSuccess": "產生文章成功！",
-        "saveSuccess": "已成功儲存為草稿！",
-        "saveFailed": "儲存文章失敗",
-        "approveSuccess": "核准並發布成功！",
-        "approveFailed": "核准文章失敗",
-        "deleteSuccess": "刪除文章成功",
-        "deleteFailed": "刪除文章失敗",
-        "deleteError": "刪除文章時發生錯誤"
-      }
-    }
+    "emptyList": "還沒有句子"
   },
   "WordList": {
     "title": "單字列表",

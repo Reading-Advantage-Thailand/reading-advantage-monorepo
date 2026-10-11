@@ -5,7 +5,6 @@ import {
   generateAllArticleNew,
 } from "@/server/controllers/articleController";
 import {
-  deleteArticleByIdModel,
   getArticleActivity,
 } from "@/server/models/articleModel";
 import {
@@ -56,17 +55,6 @@ export async function generateArticleNew(amountPerGenre: number) {
   if (denied) return denied;
   const result = await generateAllArticleNew(amountPerGenre);
   return result;
-}
-
-/**
- * Deletes one article by its identifier.
- * @param articleId The article identifier.
- * @returns The deletion result.
- */
-export async function getDeleteArticleById(articleId: string) {
-  const denied = await requireToolingAccess();
-  if (denied) return denied;
-  return await deleteArticleByIdModel(articleId);
 }
 
 /**

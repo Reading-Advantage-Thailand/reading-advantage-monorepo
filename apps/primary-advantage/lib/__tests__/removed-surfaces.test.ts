@@ -51,3 +51,34 @@ describe("SYS-04: System Testing page", () => {
     expect(filesMatching(/\.delete\(articles\)\s*(\.returning|;)/)).toEqual([]);
   });
 });
+
+describe("ADM-11: Admin Article Creation", () => {
+  it("has no page, component, or custom-generate routes", () => {
+    expect(existsSync(path.join(appRoot, "app/[locale]/admin/article-creation"))).toBe(false);
+    expect(existsSync(path.join(appRoot, "components/admin/article-creation.tsx"))).toBe(false);
+    expect(existsSync(path.join(appRoot, "app/api/articles/generate/custom-generate"))).toBe(false);
+  });
+
+  it("has no source that names the removed path or exports", () => {
+    expect(
+      filesMatching(
+        /\/admin\/article-creation|custom-generate|\b(?:generateCustomArticle|saveArticleAndPublish|saveArticleAsDraft|saveArticleAsDraftModel|fetchCustomArticleController|createdArticleCustom|updateAprovedCustomArticle|getCustomArticle|checkExistingArticle|getDeleteArticleById|deleteArticleById|deleteArticleByIdModel)\b/,
+      ),
+    ).toEqual([]);
+  });
+
+  it("has no source that deletes a row of articles", () => {
+    expect(filesMatching(/\.delete\(articles\)/)).toEqual([]);
+  });
+
+  it("has no message key of the removed page in any locale", () => {
+    for (const locale of ["en", "th", "cn", "tw", "vi"]) {
+      const m = JSON.parse(readFileSync(path.join(appRoot, `messages/${locale}.json`), "utf8"));
+      expect(m.Sidebar.articlecreation).toBeUndefined();
+      expect(m.AdminArticleCreationPage).toBeUndefined();
+      expect(m.Components.AdminArticleCreation).toBeUndefined();
+      expect(m.AdminDashboard.quickActions.createArticle).toBeUndefined();
+      expect(m.AdminDashboard.quickActions.createArticleDesc).toBeUndefined();
+    }
+  });
+});

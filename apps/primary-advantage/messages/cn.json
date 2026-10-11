@@ -49,7 +49,6 @@
     "assignments": "作业",
     "sentences": "句子",
     "vocabulary": "词汇",
-    "games": "游戏",
     "systemdashboard": "系统仪表板",
     "licenses": "许可证仪表板",
     "schools": "学校仪表板",
@@ -67,7 +66,6 @@
     "userProfile": "用户资料",
     "schoolProfile": "学校资料",
     "studentsandclasses": "学生和班级",
-    "articlecreation": "文章创建",
     "back": "返回",
     "subItem": {
       "admin": "管理员",
@@ -389,8 +387,6 @@
       "addTeacherDesc": "注册新的教师账户",
       "addStudent": "添加学生",
       "addStudentDesc": "创建新的学生资料",
-      "createArticle": "创建文章",
-      "createArticleDesc": "生成新的阅读内容",
       "importData": "导入数据",
       "importDataDesc": "批量导入用户和内容",
       "viewReports": "查看报告",
@@ -434,12 +430,6 @@
       "performance": "性能指标"
     }
   },
-  "AdminArticleCreationPage": {
-    "header": {
-      "heading": "文章创建与管理",
-      "text": "为 Primary Advantage 创建、用 AI 生成并审批文章"
-    }
-  },
   "Components": {
     "translationLanguage": "翻译语言",
     "submitButton": "提交",
@@ -472,131 +462,7 @@
     "confirmRetake": "确认重新测试",
     "areYouSureYouWantToRetakeThisQuiz": "您确定要重新测试吗？您的答案将被清除。",
     "loadError": "加载失败",
-    "emptyList": "还没有句子",
-    "AdminArticleCreation": {
-      "tabs": {
-        "createArticle": "创建文章",
-        "previewEdit": "预览与编辑",
-        "manageArticles": "管理文章"
-      },
-      "aiArticleGenerator": "AI 文章生成器",
-      "aiArticleGeneratorDesc": "使用 AI 按您的设置生成高质量文章",
-      "articleType": "文章类型",
-      "fiction": "小说",
-      "nonFiction": "非小说",
-      "genre": "类型",
-      "subgenre": "子类型",
-      "cefrLevel": "CEFR 等级",
-      "articleTopic": "文章主题",
-      "placeholder": {
-        "genre": "选择类型",
-        "subgenre": "选择子类型",
-        "cefr": "选择 CEFR 等级",
-        "topic": "描述主题、主旨或关键要点"
-      },
-      "cefrLevels": {
-        "A1": "A1",
-        "A2": "A2",
-        "B1": "B1",
-        "B2": "B2",
-        "C1": "C1",
-        "C2": "C2"
-      },
-      "error": "错误",
-      "generateWithAI": "使用 AI 生成",
-      "dialog": {
-        "approval": {
-          "title": "确认审批",
-          "description": "你确定要审批并发布此文章吗？此操作将把文章发布到平台。"
-        },
-        "backToCreate": {
-          "title": "返回创建?",
-          "description": "如果返回创建，修改将会丢失。",
-          "warning": "此操作会将文章重置为初始状态。"
-        },
-        "common": {
-          "cancel": "取消",
-          "confirm": "确认",
-          "ok": "确定"
-        }
-      },
-      "loading": {
-        "titles": {
-          "generate": "正在生成文章",
-          "save": "正在保存草稿",
-          "approve": "正在审批并发布"
-        },
-        "descriptions": {
-          "generate": "请稍候，AI 正在创建内容...",
-          "save": "正在将修改保存为草稿...",
-          "approve": "正在将文章发布到平台..."
-        }
-      },
-      "preview": {
-        "title": "文章预览",
-        "description": "查看文章内容（只读）"
-      },
-      "editor": {
-        "title": "文章编辑器",
-        "description": "在审批前查看并编辑生成内容"
-      },
-      "modified": "已修改",
-      "badges": {
-        "type": "类型",
-        "genre": "类别",
-        "subgenre": "子类别",
-        "cefrLevel": "CEFR 等级"
-      },
-      "fields": {
-        "title": "文章标题",
-        "content": "文章内容",
-        "summary": "文章摘要"
-      },
-      "placeholders": {
-        "title": "输入文章标题...",
-        "content": "输入文章主要内容...",
-        "summary": "输入文章摘要..."
-      },
-      "buttons": {
-        "backToCreate": "返回创建",
-        "approveAndPublish": "审批并发布",
-        "saveAsDraft": "保存为草稿",
-        "backToManage": "返回管理",
-        "switchToEdit": "切换到编辑",
-        "refresh": "刷新",
-        "preview": "预览",
-        "edit": "编辑",
-        "delete": "删除",
-        "deleting": "正在删除..."
-      },
-      "manage": {
-        "title": "文章管理",
-        "description": "管理你的文章",
-        "loading": "正在加载文章...",
-        "empty": "未找到文章"
-      },
-      "status": {
-        "draft": "草稿",
-        "published": "已发布"
-      },
-      "list": {
-        "topic": "主题",
-        "cefr": "CEFR",
-        "rating": "评分",
-        "created": "创建时间"
-      },
-      "toasts": {
-        "fetchFailed": "获取文章失败",
-        "generateSuccess": "生成文章成功！",
-        "saveSuccess": "已成功保存为草稿！",
-        "saveFailed": "保存文章失败",
-        "approveSuccess": "审批并发布成功！",
-        "approveFailed": "审批文章失败",
-        "deleteSuccess": "删除文章成功",
-        "deleteFailed": "删除文章失败",
-        "deleteError": "删除文章时发生错误"
-      }
-    }
+    "emptyList": "还没有句子"
   },
   "WordList": {
     "title": "单词列表",

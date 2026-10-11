@@ -6,23 +6,14 @@ import {
   getQuestionsByArticleId,
   getAllFlashcards,
   deleteFlashcardById,
-  getCustomArticle,
-  deleteArticleByIdModel,
-  createdArticleCustom,
-  checkExistingArticle,
-  updateAprovedCustomArticle,
 } from "../models/articleModel";
-import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { generateArticle } from "../utils/generators/article-generator";
-import { evaluateRating } from "../utils/generators/evaluate-rating-generator";
 import { generateMCQuestion } from "../utils/generators/mc-question-generator";
 import { generateLAQuestion } from "../utils/generators/la-question-generator";
 import { generateSAQuestion } from "../utils/generators/sa-question-generator";
 import {
   saveArticleContent,
   generateQuestions,
-  saveArticleAsDraftModel,
 } from "../models/articleModel";
 import { generateArticleNew } from "../utils/generators/new-generator";
 
@@ -130,10 +121,6 @@ export const fetchArticleById = async (req: URLSearchParams) => {
 //   return getQuestionsByArticleId(articleId);
 // };
 
-export const deleteArticleById = async (articleId: string) => {
-  return deleteArticleByIdModel(articleId);
-};
-
 export const fetchAllFlashcards = async (req: URLSearchParams) => {
   try {
     const userId = await currentUser();
@@ -160,118 +147,5 @@ export const deleteFlashcardByIdAction = async (flashcardId: string) => {
   } catch (error) {
     console.error("Error in deleteFlashcardByIdAction:", error);
     return { success: false, error: "Failed to delete flashcard" };
-  }
-};
-
-export const generateCustomArticle = async (req: NextRequest) => {
-  try {
-    const user = await currentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { type, genre, subgenre, topic, cefrLevel } = await req.json();
-
-    const article = await generateArticle({
-      type,
-      cefrLevel,
-      genre,
-      subgenre,
-      topic,
-    });
-
-    const evaluatedArticle = await evaluateRating({
-      passage: article.passage,
-      cefrLevel,
-    });
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Custom article generated successfully",
-        data: { ...article, ...evaluatedArticle, topic },
-      },
-      { status: 200 },
-    );
-  } catch (error) {
-    console.error("Error in generateCustomArticle:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to generate custom article" },
-      { status: 500 },
-    );
-  }
-};
-
-export const saveArticleAndPublish = async (req: NextRequest) => {
-  try {
-    const user = await currentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const requestBody = await req.json();
-    // Handle both { article } and { data } formats from frontend
-    const article = requestBody.article || requestBody.data;
-
-    // const existingArticle = await checkExistingArticle(data.id);
-
-    if (!article.id) {
-      await createdArticleCustom(article);
-    } else {
-      await updateAprovedCustomArticle(article.id);
-    }
-
-    return NextResponse.json(
-      { success: true, message: "Article saved and published successfully" },
-      { status: 200 },
-    );
-  } catch (error) {
-    console.error("Error in saveArticleCustomGenerate:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to save article" },
-      { status: 500 },
-    );
-  }
-};
-
-export const saveArticleAsDraft = async (req: NextRequest) => {
-  try {
-    const user = await currentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { article, type, genre, subgenre } = await req.json();
-
-    await saveArticleAsDraftModel(article, type, genre, subgenre);
-
-    return NextResponse.json(
-      { success: true, message: "Article saved as draft successfully" },
-      { status: 200 },
-    );
-  } catch (error) {
-    console.error("Error in saveArticleAsDraft:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to save article as draft" },
-      { status: 500 },
-    );
-  }
-};
-
-export const fetchCustomArticleController = async (req: NextRequest) => {
-  try {
-    const user = await currentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const customArticles = await getCustomArticle(user.id as string);
-
-    return NextResponse.json({ articles: customArticles }, { status: 200 });
-  } catch (error) {
-    console.error("Error in fetchCustomArticleController:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch custom article" },
-      { status: 500 },
-    );
   }
 };

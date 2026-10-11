@@ -49,7 +49,6 @@
     "assignments": "Assignments",
     "sentences": "Sentences",
     "vocabulary": "Vocabulary",
-    "games": "Games",
     "systemdashboard": "System Dashboard",
     "licenses": "Licenses Dashboard",
     "schools": "Schools Dashboard",
@@ -67,7 +66,6 @@
     "userProfile": "User Profile",
     "schoolProfile": "School Profile",
     "studentsandclasses": "Students and Classes",
-    "articlecreation": "Article Creation",
     "back": "Back",
     "subItem": {
       "admin": "Admin",
@@ -389,8 +387,6 @@
       "addTeacherDesc": "Register a new teacher account",
       "addStudent": "Add Student",
       "addStudentDesc": "Create a new student profile",
-      "createArticle": "Create Article",
-      "createArticleDesc": "Generate new reading content",
       "importData": "Import Data",
       "importDataDesc": "Bulk import users and content",
       "viewReports": "View Reports",
@@ -434,12 +430,6 @@
       "performance": "Performance Metrics"
     }
   },
-  "AdminArticleCreationPage": {
-    "header": {
-      "heading": "Article Creation & Management",
-      "text": "Create, generate, and approve articles for Primary Advantage"
-    }
-  },
   "Components": {
     "translationLanguage": "Translation language",
     "submitButton": "Submit",
@@ -472,131 +462,7 @@
     "confirmRetake": "Confirm Retake",
     "areYouSureYouWantToRetakeThisQuiz": "Are you sure you want to retake this quiz? Your previous answers will be cleared.",
     "loadError": "Failed to load",
-    "emptyList": "No sentences yet",
-    "AdminArticleCreation": {
-      "tabs": {
-        "createArticle": "Create Article",
-        "previewEdit": "Preview & Edit",
-        "manageArticles": "Manage Articles"
-      },
-      "aiArticleGenerator": "AI Article Generator",
-      "aiArticleGeneratorDesc": "Use AI to generate high-quality articles with your chosen settings.",
-      "articleType": "Article Type",
-      "fiction": "Fiction",
-      "nonFiction": "Nonfiction",
-      "genre": "Genre",
-      "subgenre": "Subgenre",
-      "cefrLevel": "CEFR Level",
-      "articleTopic": "Article Topic",
-      "placeholder": {
-        "genre": "Select a genre",
-        "subgenre": "Select a subgenre",
-        "cefr": "Select CEFR level",
-        "topic": "Describe the topic, theme, or key points"
-      },
-      "cefrLevels": {
-        "A1": "A1",
-        "A2": "A2",
-        "B1": "B1",
-        "B2": "B2",
-        "C1": "C1",
-        "C2": "C2"
-      },
-      "error": "Error",
-      "generateWithAI": "Generate with AI",
-      "dialog": {
-        "approval": {
-          "title": "Confirm Approval",
-          "description": "Are you sure you want to approve and publish this article? This action will publish the article to the platform."
-        },
-        "backToCreate": {
-          "title": "Back to Create?",
-          "description": "If you go back to Create, your changes will be lost.",
-          "warning": "This action will reset the article to the initial state."
-        },
-        "common": {
-          "cancel": "Cancel",
-          "confirm": "Confirm",
-          "ok": "OK"
-        }
-      },
-      "loading": {
-        "titles": {
-          "generate": "Generating Your Article",
-          "save": "Saving Article Draft",
-          "approve": "Approving & Publishing Article"
-        },
-        "descriptions": {
-          "generate": "Please wait while AI creates your amazing content...",
-          "save": "Saving your changes as a draft...",
-          "approve": "Publishing your article to the platform..."
-        }
-      },
-      "preview": {
-        "title": "Article Preview",
-        "description": "Review the article content (read-only)"
-      },
-      "editor": {
-        "title": "Article Editor",
-        "description": "Review and edit the generated content before approval"
-      },
-      "modified": "Modified",
-      "badges": {
-        "type": "Type",
-        "genre": "Genre",
-        "subgenre": "Subgenre",
-        "cefrLevel": "CEFR Level"
-      },
-      "fields": {
-        "title": "Article Title",
-        "content": "Article Content",
-        "summary": "Article Summary"
-      },
-      "placeholders": {
-        "title": "Enter article title...",
-        "content": "Enter the main article content...",
-        "summary": "Enter article summary..."
-      },
-      "buttons": {
-        "backToCreate": "Back to Create",
-        "approveAndPublish": "Approve and Publish",
-        "saveAsDraft": "Save as Draft",
-        "backToManage": "Back to Manage",
-        "switchToEdit": "Switch to Edit",
-        "refresh": "Refresh",
-        "preview": "Preview",
-        "edit": "Edit",
-        "delete": "Delete",
-        "deleting": "Deleting..."
-      },
-      "manage": {
-        "title": "Article Management",
-        "description": "Manage your articles",
-        "loading": "Loading articles...",
-        "empty": "No articles found"
-      },
-      "status": {
-        "draft": "Draft",
-        "published": "Published"
-      },
-      "list": {
-        "topic": "Topic",
-        "cefr": "CEFR",
-        "rating": "Rating",
-        "created": "Created"
-      },
-      "toasts": {
-        "fetchFailed": "Failed to fetch articles",
-        "generateSuccess": "Article generated successfully!",
-        "saveSuccess": "Article saved as draft successfully!",
-        "saveFailed": "Failed to save article",
-        "approveSuccess": "Article approved and published successfully!",
-        "approveFailed": "Failed to approve article",
-        "deleteSuccess": "Article deleted successfully",
-        "deleteFailed": "Failed to delete article",
-        "deleteError": "An error occurred while deleting the article"
-      }
-    }
+    "emptyList": "No sentences yet"
   },
   "WordList": {
     "title": "Word List",

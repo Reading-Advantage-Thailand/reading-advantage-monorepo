@@ -5,7 +5,6 @@ const mocks = vi.hoisted(() => ({
   currentUser: vi.fn(),
   generateAllArticle: vi.fn(),
   generateAllArticleNew: vi.fn(),
-  deleteArticleByIdModel: vi.fn(),
   getArticleActivity: vi.fn(),
 }));
 
@@ -18,7 +17,6 @@ vi.mock("@/server/controllers/articleController", () => ({
   generateAllArticleNew: mocks.generateAllArticleNew,
 }));
 vi.mock("@/server/models/articleModel", () => ({
-  deleteArticleByIdModel: mocks.deleteArticleByIdModel,
   getArticleActivity: mocks.getArticleActivity,
 }));
 vi.mock("@reading-advantage/db", () => ({
@@ -35,7 +33,6 @@ import {
   fetchArticleActivity,
   generateArticle,
   generateArticleNew,
-  getDeleteArticleById,
 } from "../article";
 
 const student = { id: "student-1", role: "STUDENT", schoolId: "school-a" };
@@ -43,7 +40,7 @@ const student = { id: "student-1", role: "STUDENT", schoolId: "school-a" };
 describe("article server actions authorization", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("rejects generation and deletion for a student caller", async () => {
+  it("rejects generation for a student caller", async () => {
     mocks.currentUser.mockResolvedValue(student);
 
     await expect(generateArticle(2)).resolves.toMatchObject({
@@ -54,13 +51,8 @@ describe("article server actions authorization", () => {
       success: false,
       error: "Forbidden",
     });
-    await expect(getDeleteArticleById("article-1")).resolves.toMatchObject({
-      success: false,
-      error: "Forbidden",
-    });
     expect(mocks.generateAllArticle).not.toHaveBeenCalled();
     expect(mocks.generateAllArticleNew).not.toHaveBeenCalled();
-    expect(mocks.deleteArticleByIdModel).not.toHaveBeenCalled();
   });
 
   it("rejects article activity tracking without a session", async () => {
