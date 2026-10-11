@@ -71,7 +71,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - Look check pending (owner, async). Steps: log in as SYSTEM; the nav shows System Dashboard, Schools, Licenses and no Testing; `/en/system/test` gives the not-found page.
     - Callers check: no hit outside the FR-2 list. App tsc passed. Vitest: removed-surfaces (3) and app-nav pass.
 
-## Phase 4: Remove Admin Article Creation (ADM-11)
+## Phase 4: Remove Admin Article Creation (ADM-11) [checkpoint: 665477b49]
 
 - [x] Task: FR-3 (ADM-11) — remove the page, the component, the routes, and their server code
     - [x] Check the callers of each export of spec FR-3: `git grep -n -w <name> -- apps/primary-advantage`; record any caller that is not on the list and keep that export
