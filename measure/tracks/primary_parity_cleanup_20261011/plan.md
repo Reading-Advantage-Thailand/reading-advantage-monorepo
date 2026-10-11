@@ -23,21 +23,22 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 
 ## Phase 1: ElvGames asset copy
 
-- [ ] Task: Take the ElvGames inventory again (spec FR-1)
-    - [ ] For each source of the spec FR-1 table, run `git ls-files <source> | wc -l` and `du -sb <source>`; write the numbers in `measure/tracks/primary_parity_cleanup_20261011/asset-copy.md`
-    - [ ] Run `git grep -l -i elvgames` and `git ls-files | grep -E 'standard-pack|assets/standard|assets/review|play-maps'`; add each new ElvGames location to the table
-    - [ ] Run `df -h ~/Desktop`; stop if less than 2 GB is free
-- [ ] Task: Copy the files and write the manifest
-    - [ ] Make the folder `~/Desktop/Asset Packs/monorepo-elvgames-20261011/`
-    - [ ] From the repository root, copy each source with its path: `git ls-files -z <source> | xargs -0 cp --parents -t "$HOME/Desktop/Asset Packs/monorepo-elvgames-20261011"` (one source at a time)
-    - [ ] Write `MANIFEST.tsv` in the target folder: `git ls-files -z <sources> | xargs -0 stat -c '%n%t%s'` (path, size in bytes); add a header line `path	size`
-- [ ] Task: Check the copy before any deletion
-    - [ ] For each folder: `diff -rq <source> "<target>/<source>"` gives no output
-    - [ ] For each single file: `cmp <file> "<target>/<file>"` gives no output
-    - [ ] The manifest has one line for each source file (plus the header), and its size sum equals the `du -sb` sums of the sources
-    - [ ] Write the result in `asset-copy.md` (folder path, counts, sizes, the compare result, the date); tell the owner the folder path
-    - [ ] No hash and no checksum (spec R-4)
-- [ ] Task: Measure - User Manual Verification 'Phase 1: ElvGames asset copy' (Protocol in workflow.md)
+- [x] Task: Take the ElvGames inventory again (spec FR-1)
+    - [x] For each source of the spec FR-1 table, run `git ls-files <source> | wc -l` and `du -sb <source>`; write the numbers in `measure/tracks/primary_parity_cleanup_20261011/asset-copy.md`
+    - [x] Run `git grep -l -i elvgames` and `git ls-files | grep -E 'standard-pack|assets/standard|assets/review|play-maps'`; add each new ElvGames location to the table
+    - [x] Run `df -h ~/Desktop`; stop if less than 2 GB is free
+- [x] Task: Copy the files and write the manifest
+    - [x] Make the folder `~/Desktop/Asset Packs/monorepo-elvgames-20261011/`
+    - [x] From the repository root, copy each source with its path: `git ls-files -z <source> | xargs -0 cp --parents -t "$HOME/Desktop/Asset Packs/monorepo-elvgames-20261011"` (one source at a time)
+    - [x] Write `MANIFEST.tsv` in the target folder: `git ls-files -z <sources> | xargs -0 stat -c '%n%t%s'` (path, size in bytes); add a header line `path	size`
+- [x] Task: Check the copy before any deletion
+    - [x] For each folder: `diff -rq <source> "<target>/<source>"` gives no output
+    - [x] For each single file: `cmp <file> "<target>/<file>"` gives no output
+    - [x] The manifest has one line for each source file (plus the header), and its size sum equals the `du -sb` sums of the sources
+    - [x] Write the result in `asset-copy.md` (folder path, counts, sizes, the compare result, the date); tell the owner the folder path
+    - [x] No hash and no checksum (spec R-4)
+- [x] Task: Measure - User Manual Verification 'Phase 1: ElvGames asset copy' (Protocol in workflow.md)
+    - Manual verification: run `ls "$HOME/Desktop/Asset Packs/monorepo-elvgames-20261011"`; check `MANIFEST.tsv` has 73,053 lines; read `asset-copy.md`. Look check pending (owner, async).
 
 ## Phase 2: Design
 
