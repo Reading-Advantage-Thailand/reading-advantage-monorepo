@@ -2,7 +2,7 @@ import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import type { DB } from "@reading-advantage/db";
 import { classroomTeachers, classrooms, users } from "@reading-advantage/db/schema";
-import { AuthError, assertCan, type Permission, type UserContext } from "@reading-advantage/auth";
+import { AuthError, assertCan, type UserContext } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
 import "./permissions.js";
 
@@ -70,7 +70,7 @@ export async function setClassroomTeachers({
   input: SetClassroomTeachersInput;
 }): Promise<SetClassroomTeachersOutput> {
   // The key is registered by `./permissions.js` (module registry), not in the central PERMISSIONS type.
-  assertCan(user, "class:teachers:assign" as Permission);
+  assertCan(user, "class:teachers:assign");
   const { classroomId, teacherIds } = setClassroomTeachersInputSchema.parse(input);
   const wanted = [...new Set(teacherIds)];
 
