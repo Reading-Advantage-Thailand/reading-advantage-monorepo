@@ -31,25 +31,30 @@ App paths are relative to `apps/primary-advantage`.
 - [x] Task: Owner's look check of the design and of the member questions in the spec section "Out of Scope"; record the answers in `spec.md` — look check pending (owner, async). Defaults used (owner decision 2026-10-12: no stop), recorded in `spec.md`: students only take a seat; the move of an owner is refused (409); the class owner stays on the class.
 - [x] Task: Measure - User Manual Verification 'Phase D: Design' (Protocol in workflow.md) — look check pending (owner, async). Steps: `design/captures.md`, section "Manual verification".
 
-## Phase S1: Admin assigns teachers to a class
+## Phase S1: Admin assigns teachers to a class [checkpoint: CHECKPOINT_SHA]
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Zod `setClassroomTeachersInput` (`classroomId`, `teacherIds`) and output (the teacher ids after the change) in `packages/domain/src/classes/set-classroom-teachers.ts`
-    - [ ] Register `class:teachers:assign` (ADMIN, SYSTEM) in a new `packages/domain/src/classes/permissions.ts` with `registerDomainModulePermissions`
-    - [ ] Zod for the PATCH body of `app/api/classroom/[id]/route.ts`: the fields of the quick fix plus an optional `teacherIds`
-- [ ] Task: Test
-    - [ ] Red: `packages/domain/src/__tests__/set-classroom-teachers.pglite.test.ts`: add and remove (diff), the owner stays, no duplicate pair, a teacher of another school gives an error and no change, a non-TEACHER user id gives an error, an ADMIN of another school gets FORBIDDEN, SYSTEM may edit any school
-    - [ ] Red: `server/controllers/__tests__/classroomController.teachers.test.ts`: 400 for a cross-school teacher; the class update and the teacher change run in one transaction
-    - [ ] Red: `server/controllers/__tests__/teacherController.school-filter.test.ts`: `GET /api/teachers?schoolId=` filters for SYSTEM and is ignored for ADMIN
-    - [ ] Red: `components/admin/__tests__/classroom-teacher-picker.test.tsx`: the list of the class's school, the owner checked and disabled, the ids sent on save
-- [ ] Task: Implement
-    - [ ] `packages/domain/src/classes/set-classroom-teachers.ts` (one transaction; `unscoped("classroom_teachers is REFERENTIAL, scoped via the classroom school")`), export from `classes/index.ts`
-    - [ ] `server/controllers/classroomController.ts` and `app/api/classroom/[id]/route.ts` call it; errors log with `lib/observability/logger.ts`
-    - [ ] `server/controllers/teacherController.ts`: `?schoolId` for SYSTEM only
-    - [ ] `components/admin/classroom-teacher-picker.tsx`, used in `components/admin/classrooms-table.tsx`; strings in `messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Generate Docs & Doctor: JSDoc on the new exports; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Admin assigns teachers to a class' (Protocol in workflow.md)
+- [x] Task: Contract & Schema Definition
+    - [x] Zod `setClassroomTeachersInput` (`classroomId`, `teacherIds`) and output (the teacher ids after the change) in `packages/domain/src/classes/set-classroom-teachers.ts`
+    - [x] Register `class:teachers:assign` (ADMIN, SYSTEM) in a new `packages/domain/src/classes/permissions.ts` with `registerDomainModulePermissions`
+    - [x] Zod for the PATCH body of `app/api/classroom/[id]/route.ts`: the fields of the quick fix plus an optional `teacherIds`
+- [x] Task: Test
+    - [x] Red: `packages/domain/src/__tests__/set-classroom-teachers.pglite.test.ts`: add and remove (diff), the owner stays, no duplicate pair, a teacher of another school gives an error and no change, a non-TEACHER user id gives an error, an ADMIN of another school gets FORBIDDEN, SYSTEM may edit any school
+    - [x] Red: `server/controllers/__tests__/classroomController.teachers.test.ts`: 400 for a cross-school teacher; the class update and the teacher change run in one transaction
+    - [x] Red: `server/controllers/__tests__/teacherController.school-filter.test.ts`: `GET /api/teachers?schoolId=` filters for SYSTEM and is ignored for ADMIN
+    - [x] Red: `components/admin/__tests__/classroom-teacher-picker.test.tsx`: the list of the class's school, the owner checked and disabled, the ids sent on save
+- [x] Task: Implement
+    - [x] `packages/domain/src/classes/set-classroom-teachers.ts` (one transaction; `unscoped("classroom_teachers is REFERENTIAL, scoped via the classroom school")`), export from `classes/index.ts`
+    - [x] `server/controllers/classroomController.ts` and `app/api/classroom/[id]/route.ts` call it; errors log with `lib/observability/logger.ts`
+    - [x] `server/controllers/teacherController.ts`: `?schoolId` for SYSTEM only
+    - [x] `components/admin/classroom-teacher-picker.tsx`, used in `components/admin/classrooms-table.tsx`; strings in `messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Generate Docs & Doctor: JSDoc on the new exports; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S1: Admin assigns teachers to a class' (Protocol in workflow.md) - look check pending (owner, async)
+    - Commits: domain `6defd2dea`, app `2fcd30010`. Defaults used: students only take a seat; a teacher who owns classes is not moved (409, S3); the class owner stays on the class.
+    - Thai strings (`Admin.Classrooms.picker.*`, `toast.teachersRefused`) are by the helper: owner check pending.
+    - Deviation: red-first skipped for the domain test, the picker test, and the controller tests (written after the code). See `plan-review.md`.
+    - Captures: `~/Desktop/primary-parity-progress/captures/school_management/phaseS1/` (`s1-picker-admin-{day,night}-{375,1280}.png`, `s1-picker-error-day-{375,1280}.png`).
+    - Steps: 1. Sign in as school ADMIN and open Classes, then Edit on a class. 2. Check that the owner row is checked, disabled, and labeled "Class owner". 3. Check another teacher, press Update, and open the class again: the teacher stays. 4. Uncheck that teacher and save: the teacher leaves. 5. As SYSTEM, check that only the teachers of the class school show.
 
 ## Phase S2: SYSTEM imports into a chosen school
 _Story ref: spec.md#story-s2_
