@@ -76,7 +76,7 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: Measure - User Manual Verification 'Phase 3: Teacher' (Protocol in workflow.md)
     - look check pending (owner, async). Manual verification steps: (1) As TEACHER open `/en/teacher/reports`. (2) Check four tiles: total, average XP, common level, and active this week. (3) Check the fourth tile shows a percent and "n of m students". (4) Pick a class and type a name in the search; check that the fourth tile changes. (5) Open a class page, press Settings. (6) Check that `/teacher/my-classes` opens the edit dialog with the name and grade of that class. (7) Close the dialog; check that `edit` leaves the URL. (8) Open `/teacher/my-classes?edit=nope`; check that no dialog opens.
 
-## Phase 4: Student — lessons and quizzes [checkpoint: PENDING]
+## Phase 4: Student — lessons and quizzes [checkpoint: a6fffbe01]
 
 - [x] Task: FR-5 (STU-02) — a lesson resumes on the saved task
     - [x] Red: new `lib/__tests__/lesson-progress.test.ts`: `getLessonTaskFromProgress` gives 1 for 0, -5, and NaN; 2 for 7 and 14; 13 for 93; 14 for 100 and 150; `getLessonProgressForTask` gives 0 for 1, 14 for 2, 93 for 13, 100 for 14; a round trip of each task gives the same task
