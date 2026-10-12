@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { legacyWorkbookLessonSchema } from "../../workbooks/legacy-workbook-importer.js";
 
 /** Allowed font file names of the print kit: Fontsource woff2 files and their OFL texts. */
 export const PRINT_FONT_FILE = /^(?:[a-z-]+-(?:latin|thai)-\d{3}-(?:normal|italic)\.woff2|OFL-[a-z-]+\.txt)$/;
@@ -37,3 +38,37 @@ export const printKitSchema = z.object({
 });
 
 export type PrintKit = z.infer<typeof printKitSchema>;
+
+/** The Workbooks lesson that the template renders. Keeps the fields that the shared schema does not list. */
+const printWorkbookLessonSchema = legacyWorkbookLessonSchema
+  .extend({
+    /** Optional public URL of the writing practice page (QR code of the writing step). */
+    writing_practice_url: z.string().optional(),
+  })
+  .passthrough();
+
+/**
+ * The print data of one lesson: the file that Workbooks exports to `content/primary/<book>/print/`.
+ * `article_image_url` accepts a string or a list, as the legacy files carry both.
+ */
+export const printLessonSchema = z
+  .object({
+    /** Series name in the page header, for example "Origins 3.2". */
+    seriesName: z.string().min(1),
+    /** Level label of the series, for example "A0+". */
+    seriesLevel: z.string().min(1),
+    /** Lesson number in the book. */
+    lessonNumber: z.number().int().positive(),
+    /** Package key `<book>/<n>`, for example "o3-2/5". */
+    packageKey: z.string().regex(/^[a-z0-9-]+\/\d+$/),
+    /** The lesson that Workbooks `make-lesson-pdfs.ts` renders. */
+    lesson: printWorkbookLessonSchema,
+    /** The Workbooks commit of the export (the importer sets it from `--workbooks-commit`). */
+    workbooksCommit: z.string().regex(/^[0-9a-f]{7,40}$/).optional(),
+  })
+  .refine((value) => value.packageKey.endsWith(`/${value.lessonNumber}`), {
+    message: "lessonNumber does not match packageKey",
+    path: ["lessonNumber"],
+  });
+
+export type PrintLesson = z.infer<typeof printLessonSchema>;

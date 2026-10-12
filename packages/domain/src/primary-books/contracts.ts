@@ -21,6 +21,8 @@ export const importLessonResultSchema = z.object({
   /** True when the objective and vocabulary link rows were (or, in a dry run, would be) written. */
   tagged: z.boolean(),
   reason: z.string().optional(),
+  /** True when the lesson row stores `package.printLesson` (a print file came with the package). */
+  printed: z.boolean().default(false),
 });
 export type ImportLessonResult = z.infer<typeof importLessonResultSchema>;
 

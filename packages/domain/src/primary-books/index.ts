@@ -13,3 +13,4 @@ export { guideLocaleOf, getLessonGuide, getTeacherLesson, resolveBookLesson, fin
 export { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "./question-set.js";
 export * from "./book-link-contracts.js";
 export { resolveBookLink } from "./book-link.js";
+export { printLessonSchema, type PrintLesson } from "./print/contracts.js";

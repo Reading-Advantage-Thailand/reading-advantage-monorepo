@@ -10,6 +10,9 @@
 #   Build context   : the frozen monorepo commit (a source tgz, as for the ETL build).
 #   _WORKBOOKS_ARCHIVE : gs:// path of the Workbooks archive (required). Layout of the archive:
 #       content/primary/{origins-1,origins-2,origins-3.1,origins-3.2,quest-4}/*.json
+#       content/primary/{origins-1,origins-2,origins-3.1,origins-3.2,quest-4}/print/*.json
+#         (the print data of each lesson, one file per package, same file name; Workbooks commit 08bb160 or later;
+#         the import stores it as package.printLesson and passes the archive commit with --workbooks-commit)
 #       dashboard/lib/teacher-manual/i18n/{en,th,index}.ts
 #       Teacher guide/step-N.md and step-N-th.md (N = 1..13)
 #     Make it from a Workbooks commit with `git -C ~/Desktop/Workbooks archive <commit> <paths>`
@@ -41,7 +44,7 @@ steps:
         tar -xzf /workspace/workbooks.tgz -C /workspace/workbooks
         for d in origins-1 origins-2 origins-3.1 origins-3.2 quest-4; do
           n=$$(ls /workspace/workbooks/content/primary/$$d/*.json 2>/dev/null | wc -l)
-          echo "archive: $$d has $$n packages"
+          echo "archive: $$d has $$n packages, $$(ls /workspace/workbooks/content/primary/$$d/print/*.json 2>/dev/null | wc -l) print files"
           test "$$n" -gt 0 || { echo "STOP: the archive has no packages for $$d"; exit 1; }
         done
         test -f "/workspace/workbooks/dashboard/lib/teacher-manual/i18n/en.ts" || { echo "STOP: the archive has no manual"; exit 1; }
@@ -77,6 +80,7 @@ steps:
         # --- imports (the local rehearsal test runs the text below this line) ---
         WB="$${WB:-/workspace/workbooks}"
         EXPECTED="$${EXPECTED:-$_EXPECTED_LESSONS}"
+        WBC="$${WBC:-$$(gzip -dc /workspace/workbooks.tgz 2>/dev/null | head -c 4096 | grep -a -o 'comment=[0-9a-f]\{40\}' | head -1 | cut -d= -f2 || true)}"
         redact() { sed -E 's#postgres(ql)?://[^[:space:]]+#<url>#g'; }
         (cd packages/db && npx tsx scripts/refuse-legacy-db.ts)
         echo "$$(t) guard: target OK"
@@ -86,7 +90,7 @@ steps:
         pnpm --filter @reading-advantage/domain import-lesson-packages \
           "$$WB/content/primary/origins-1" "$$WB/content/primary/origins-2" \
           "$$WB/content/primary/origins-3.1" "$$WB/content/primary/origins-3.2" \
-          "$$WB/content/primary/quest-4" >/workspace/packages.out 2>&1
+          "$$WB/content/primary/quest-4" $${WBC:+--workbooks-commit $$WBC} >/workspace/packages.out 2>&1
         rc=$$?
         set -e
         grep -E '^(unmapped|skipped|FAILED)|lessons:' /workspace/packages.out | redact || true

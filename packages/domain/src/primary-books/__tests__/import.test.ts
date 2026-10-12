@@ -117,7 +117,7 @@ describe("importLessonPackage", () => {
     /** The package JSON of the last insert (the lesson row). */
     const storedPackage = (mock: ReturnType<typeof dbWith>) => {
       const last = mock.insert.mock.results.at(-1)?.value as { values: { mock: { calls: [{ package: Record<string, unknown> }][] } } };
-      return last.values.mock.calls[0][0].package;
+      return last.values.mock.calls.at(-1)![0].package;
     };
 
     it("stores package.printLesson when a print file comes with the package", async () => {
