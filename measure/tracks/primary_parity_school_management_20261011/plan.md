@@ -142,7 +142,7 @@ _Story ref: spec.md#story-s5_
     - Manual steps: sign in as a school ADMIN of the migrated copy. Open Admin, Teachers: the TEACHER users of the school show, with count and statistics. Change one teacher to admin: the list shows the new role and that teacher must sign in again. Delete a test teacher: it works. Open the monthly leaderboard: students show.
     - Extended scope (orchestrator): teacher reads with `roleSql`, `updateExistingTeacherToSchool` with `setUserRole`, school leaderboard students with `roleSql("student")`, `DELETE /api/users/me/school` owner downgrade from `users.role`. Details: `plan-review.md`, section "Role source fixes (lane C)".
 
-## Phase A: Acceptance
+## Phase A: Acceptance [checkpoint: 4749dce97]
 
 - [x] Task: Run S1 to S5 one time against a clone of the rehearsal copy (never the shared copy); check that no new row has `school_id` null
     - Done on the clone `primary_parity_run_school_pa` (dropped). Result in `acceptance.md`. The S2 import routes were not called (route level, browser batch); `resolveImportSchool` was checked.
