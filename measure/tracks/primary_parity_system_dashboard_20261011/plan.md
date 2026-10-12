@@ -67,12 +67,16 @@ Done 2026-10-12 (4245a46f0 strings, ac20079a4 page and table). Red run: 3 files 
 
 ## Phase 4: Acceptance
 
-- [ ] Task: Run the queries one time against a clone of the rehearsal copy (never the shared copy); compare each total and school row with the reference SQL of the behavior contract; measure the page time (target 2 s)
+Prepared 2026-10-12. The kit run, the captures, and the owner look check wait for the batch (orchestrator).
+
+- [x] Task: Run the queries one time against a clone of the rehearsal copy; compare each total and school row with the reference SQL; measure the page time (target 2 s)
+    - Done in Phase 2 (totals and 8 rows equal, 0.2 to 0.3 s); Phase 3 did not change the domain call. Recorded in `acceptance.md`. The page time on a build: batch capture (orchestrator).
 - [ ] Task: Side-by-side check with the kit of `primary_parity_acceptance_20261011`: AC-1 to AC-5, as SYSTEM and as a school ADMIN, legacy `bfea121` and the new build on copies with the same data
-    - [ ] Write `measure/tracks/primary_parity_system_dashboard_20261011/acceptance-pairs.json` (kit FR-7): one pair for each check, with the legacy path, the new path, the role, and the observable behavior
-    - [ ] Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts`; the captures and the report stay in the private folder (kit FR-10)
-    - [ ] Write `measure/tracks/primary_parity_system_dashboard_20261011/acceptance.md` from the runbook template, with the result of each check
-- [ ] Task: Captures at 375 px and 1280 px, day and night, with the demo seed only (`design/` folder; captures with real names stay in the private folder), and the owner's look check (AC-6)
-- [ ] Task: Run `measure/generate.sh`, then `measure/doctor.sh`; fix each failure in a file of this track
-- [ ] Task: Final gates: `pnpm --filter @reading-advantage/domain test`, `pnpm --filter primary-advantage test`, tsc and ESLint (AC-7); record the commands and results in `acceptance.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Acceptance' (Protocol in workflow.md)
+    - [x] Write `acceptance-pairs.json` (6 pairs; parses with `PairList`) and `acceptance-steps-open-school.ts` (env `PARITY_SCHOOL_ID`)
+    - [ ] Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts` — batch capture (orchestrator)
+    - [x] Write `acceptance.md`
+- [ ] Task: Captures at 375 px and 1280 px, day and night, with the demo seed only, and the owner's look check (AC-6) — batch capture (orchestrator)
+- [x] Task: Run `measure/generate.sh`, then `measure/doctor.sh` (one failure, A13, outside this track; `measure/generated` restored)
+- [x] Task: Final gates (AC-7): domain 1938 tests passed; app 1695 tests passed (5 load timeouts passed alone); tsc 0; ESLint 0. See `acceptance.md`.
+- [x] Task: Measure - User Manual Verification 'Phase 4: Acceptance' (Protocol in workflow.md) — look check pending (owner, async)
+    - Manual verification: read the report of the batch run; open `/system/dashboard` as SYSTEM and compare 3 rows with `reference-sql.sql`; tap a row and check the admin page; open the page as ADMIN and check the unauthorized page.

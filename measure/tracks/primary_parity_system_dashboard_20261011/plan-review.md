@@ -84,3 +84,20 @@ Shortcuts, deviations, lessons (for the orchestrator to move into the shared fil
 - Lesson: an async server component cannot render inside `renderWithMessages`; a component that only needs next-intl can use the hooks and stay a server component, and the test then renders it.
 - Lesson: the capture harness can bundle the real server page for a browser if `next-intl/server`, the session, the db, and the domain call are aliased to small stubs.
 - Lesson: `flock` waits can take more than 10 minutes when three lanes run browser jobs; start the job in the background with `timeout`, and wait with `tail --pid`.
+
+## Phase 4: Acceptance (2026-10-12)
+
+Scope: track documents only (`acceptance.md`, `acceptance-pairs.json`, `acceptance-steps-open-school.ts`, behavior contract section 6, `plan.md`, `metadata.json`). No code changed, so no security, JSDoc, logger, or locale finding. The steps module has JSDoc and no school id.
+
+Critical and High findings: none.
+
+Medium:
+
+- M1. The app test suite shows load timeouts in 5 files outside this track (first full run); they pass alone. The suite is fragile under a loaded machine.
+
+Low:
+
+- L1. The pair AC-5-admin uses the legacy path `/en/system/dashboard`; the legacy app refuses ADMIN there, so the legacy capture shows the refusal page.
+- L2. AC-4-open needs `PARITY_SCHOOL_ID` set to a school with students and a clone that has activity for the admin page numbers.
+
+Shortcuts, deviations, lessons: none new.
