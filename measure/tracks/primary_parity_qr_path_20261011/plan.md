@@ -102,7 +102,7 @@ _Story ref: spec.md#story-s2_
     - The real Tutor URL template is not known in this run. Until the owner sets it, the landing shows one choice.
     - Exact env line for the Primary service: `TUTOR_LESSON_URL_TEMPLATE=https://<tutor host and path with {book} and {n}>` (for example `https://liff.line.me/<id>/b/{book}/{n}`). The template must start with `https://`. Only `{book}` and `{n}` are filled.
 
-## Phase S3: Writing QR code target
+## Phase S3: Writing QR code target [checkpoint: 95acef17e]
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Write the tests (red)
