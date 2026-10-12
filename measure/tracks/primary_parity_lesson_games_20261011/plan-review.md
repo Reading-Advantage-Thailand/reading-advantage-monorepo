@@ -46,3 +46,22 @@ Deviations: the step test `task-vocabulary-game.test.tsx` was written after the 
 Lessons: `vitest` in a Primary test does not type check, so a missing type (`RunContext.articleId`) passes the test; the app `tsc --noEmit` is the red for such a change. A characterization test with a hardcoded value ("20", "5/5") needs a change with the fix.
 
 Shortcuts: `practiceLocaleOf(locale) as "th"` in the step (the request type is a locale union; the helper returns string).
+
+## Phase S3 review (helper, 2026-10-12)
+
+No Critical or High finding. Checked: no new server code (the step calls the S2 actions); Zod and `assertCan` stay in S1 and S2; JSDoc on the changed export; no `console.error` added; key parity in the five locale files (parity test passes).
+
+Medium and Low findings:
+- Medium: the games panel shows above the activity header, so a student sees games first as the spec says. On a slow phone the games load after the activities list; the panel appears with no placeholder (layout shift). A later phase can add a placeholder.
+- Medium: a locked game hides its last result (same as S2).
+- Low: the existing activity fetch still uses `console.error` (old code, not changed).
+- Low: the load notice and the input notice share one slot; a second failure replaces the first.
+- Low: the activity buttons have no stable test id; the test finds them by role.
+- Low: stand-in Forge sprites (Golem boss and shopkeeper); request for Forge stays: one object render for each cartridge.
+- Low: captures use the S2 harness (real component, real CSS, demo data); no cartridge loaded in a browser.
+
+Extra task (orchestrator request): domain tests `games-host-proof` and `phase-3-adversarial` failed because their schema mock had no `primaryClassBooks` and `primaryBooks` (commit 628585040 made `getLessonPracticeInput` import `class-books`). Fix: commit a2a6a8dcb mocks `../primary-books/class-books.js` (`managedClassBook`) in both files. Red: 2 files failed. Green: the two files and `src/games` pass (4 files, 109 tests).
+
+Lessons: a schema mock in a domain test breaks when a function gains an import of a module that reads more tables. Mock the new module, not the tables, when the test does not use it.
+
+Shortcuts: none.

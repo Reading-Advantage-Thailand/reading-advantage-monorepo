@@ -72,18 +72,23 @@ _Story ref: spec.md#story-s2_
 - [x] Task: Measure - User Manual Verification 'Phase S2: Play a vocabulary game in task 10' (Protocol in workflow.md)
     - look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/lesson_games/phaseS2/` (`task10-<375|1280>-<day|night>.png`, `task10-locked-...`). Steps: (1) open a lesson on a school copy and go to task 10; (2) check four games, the last result of each, and "Simple game"; (3) play one game and leave it; check "You got x of y. +n XP"; (4) check that a game with too few words shows locked; (5) with `?renderer=phaser` check the 2D renderer. Defaults used: Member Questions 1 to 3 (XP for each run, legacy four games, no class challenge button).
 
-## Phase S3: Play a sentence game in task 12
+## Phase S3: Play a sentence game in task 12 [checkpoint: CKPT]
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Define the step
-    - [ ] The order of the sentence cartridges and the four activities in `components/lesson/task/task-sentence-activities.tsx`; keys in the five locale files
-- [ ] Task: Write the tests (red)
-    - [ ] `components/lesson/task/__tests__/task-sentence-activities.test.tsx`: the cartridges first with the last result; locked with fewer than 3 sentences while the four activities stay open; a load error points to the activities
-- [ ] Task: Implement (green)
-    - [ ] `components/lesson/task/task-sentence-activities.tsx` with the shared lesson game picker of Phase S2
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Play a sentence game in task 12' (Protocol in workflow.md)
+- [x] Task: Define the step
+    - [x] The order of the sentence cartridges and the four activities in `components/lesson/task/task-sentence-activities.tsx`; keys in the five locale files
+        - Commit 1c2570806. Keys `sentenceTitle`, `sentenceInputFailed`, `sentenceLoadFailed` in `LessonGames`. The games sit above the activities in every state of the step. Thai: owner check pending. The step also takes `save` (default true) for S5.
+- [x] Task: Write the tests (red)
+    - [x] `components/lesson/task/__tests__/task-sentence-activities.test.tsx`: the cartridges first with the last result; locked with fewer than 3 sentences while the four activities stay open; a load error points to the activities
+        - Red run: 7 failed (7). Green after the change.
+- [x] Task: Implement (green)
+    - [x] `components/lesson/task/task-sentence-activities.tsx` with the shared lesson game picker of Phase S2
+        - Commit 1c2570806. Also commit a2a6a8dcb: two domain test mocks got the class book module stub (orchestrator request).
+- [x] Task: Docs and doctor
+    - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+        - build-graph update skipped: graph.db read only (orchestrator rule). doctor: only A13 fails (stale archived directory `agents_md_audit_science_advantage_20260603`, not from this track). `measure/generated` restored.
+- [x] Task: Measure - User Manual Verification 'Phase S3: Play a sentence game in task 12' (Protocol in workflow.md)
+    - look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/lesson_games/phaseS3/` (`task12-<375|1280>-<day|night>.png`, `task12-locked-...`). Steps: (1) open a lesson and go to task 12; (2) check the two sentence games with the last result, and the four activities below; (3) play one game and leave it; check the result shows after the return; (4) check a lesson with 2 sentences: games locked with "Needs 3 sentences", activities open; (5) check that a game that fails to start shows the notice that points to the activities. Defaults used: Member Question 2 (castle-defense, potion-rush).
 
 ## Phase S4: Lead a game on the projector
 _Story ref: spec.md#story-s4_
