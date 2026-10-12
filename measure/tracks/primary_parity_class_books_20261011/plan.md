@@ -5,7 +5,7 @@ Tell the monorepo session before any write to `primary-parity-integration`. The 
 the set applies. Run one heavy job at a time (tsc, a test suite, a build, or a browser), never two.
 Every task follows the TDD order of `measure/workflow.md` (red, green, refactor, commit, git note).
 
-## Phase D: Design (RPG skin)
+## Phase D: Design (RPG skin) [checkpoint: dc8ddccff]
 
 - [x] Task: Design the class page order, the book card, and the empty and error texts
     - [x] Read `docs/primary-rpg-skin.md` §2 and §6 and `components/rpg/chrome.tsx` (`Panel`, `Plaque`, `RpgLink`, `RpgButton`)
