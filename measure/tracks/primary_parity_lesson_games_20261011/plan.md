@@ -72,7 +72,7 @@ _Story ref: spec.md#story-s2_
 - [x] Task: Measure - User Manual Verification 'Phase S2: Play a vocabulary game in task 10' (Protocol in workflow.md)
     - look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/lesson_games/phaseS2/` (`task10-<375|1280>-<day|night>.png`, `task10-locked-...`). Steps: (1) open a lesson on a school copy and go to task 10; (2) check four games, the last result of each, and "Simple game"; (3) play one game and leave it; check "You got x of y. +n XP"; (4) check that a game with too few words shows locked; (5) with `?renderer=phaser` check the 2D renderer. Defaults used: Member Questions 1 to 3 (XP for each run, legacy four games, no class challenge button).
 
-## Phase S3: Play a sentence game in task 12 [checkpoint: CKPT]
+## Phase S3: Play a sentence game in task 12 [checkpoint: 1c2570806]
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Define the step
