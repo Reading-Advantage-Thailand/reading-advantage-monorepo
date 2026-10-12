@@ -13,3 +13,11 @@ S1 must:
 - Low: the Thai texts of the new keys have no owner approval. S2 to S4 use English until the owner gives Thai.
 - Low: the grid cell grows from 36 px to 44 px high. S4 must check the 14-lesson grid at 375 px (the table already scrolls).
 - Shortcut: the summary mock shows only the top and the action row, not the full summary.
+
+## Phase S1
+- Low: the snapshot `meta/0073_snapshot.json` keeps the 0071 `prevId`. The orchestrator fixes the chain after lane C adds 0072.
+- Low: `journal-integrity` idx test and 2 deploy-gate tests fail until 0072 and the cloudbuild tag exist (merge step).
+- Low: an ETL attempt copy holds empty `activities` and `steps` (legacy duplicates have no activity rows).
+- Low: `closeAttemptInTx` makes 6 to 7 selects per student. For 30 students this is about 200 queries in one transaction; check the time on the rehearsal clone in S3/S4.
+- Lesson: `drizzle-kit generate` numbers from the journal (next idx 72). Rename the SQL, the snapshot, and the journal entry by hand when another lane takes the number.
+- Lesson: a domain test that imports a new db table needs a rebuilt `packages/db/dist` (direct tsc, under the lock).

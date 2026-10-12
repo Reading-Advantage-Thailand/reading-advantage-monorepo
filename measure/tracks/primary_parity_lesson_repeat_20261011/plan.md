@@ -21,26 +21,37 @@ heavy job at a time. Every task follows the TDD order of `measure/workflow.md`.
 ## Phase S1: Keep each closed attempt in a history
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Define the schema and the contracts
-    - [ ] New `packages/db/src/schema/primary-lesson-attempts.ts` (`primary_lesson_attempts`, spec "Design"); export it in `packages/db/src/schema/index.ts`
-    - [ ] Add `run_number` and `earlier_runs` to `primaryClassBookLessons` in `packages/db/src/schema/primary-books.ts`
-    - [ ] Classify `primaryLessonAttempts` as FLAT in `packages/domain/src/tenant-registry.ts`
-    - [ ] New `packages/domain/src/primary-lesson-attempts/contracts.ts`: `closeLessonAttemptInput`, `lessonAttemptSchema`, `LESSON_ACTIVITY_TYPES` (the 10 legacy types), `closeReasonSchema`
-- [ ] Task: Generate the migration
-    - [ ] Check the next free number in `packages/db/drizzle/` at the start of the phase; run `pnpm --filter @reading-advantage/db generate`; review the SQL (additive only)
-    - [ ] Add the sentinel in `packages/db/src/sentinels.ts`; set the new tag in `apps/primary-advantage/cloudbuild.yaml` and `apps/primary-advantage/cloudbuild-etl.yaml` (`--required-migration`)
-    - [ ] Run `journal-integrity.test.ts`, `primary-deploy-gate-contract.test.ts`, and `tenant-coverage.test.ts`
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-lesson-attempts/__tests__/attempts.test.ts` with `packages/domain/src/__tests__/mock-db.ts`: the history row and its attempt number; the deletes and the flag reset; XP logs and `users.xp` unchanged; read flag, rating, flashcards unchanged; a transaction failure writes nothing; another school gives FORBIDDEN
-- [ ] Task: Implement `closeLessonAttempt` (green)
-    - [ ] `packages/domain/src/primary-lesson-attempts/attempts.ts`: one transaction through `createTenantDB(...).unscoped("<reason>")` for the REFERENTIAL tables; a transaction-level variant for "Teach again"
-    - [ ] `packages/domain/src/primary-lesson-attempts/index.ts` and the export path in `packages/domain/package.json`
-- [ ] Task: Prove the migration and one close on real rows
-    - [ ] Clone the rehearsal copy (`create database <clone> template <rehearsal copy>`; never the shared `primary_advantage`); migrate; close one attempt of one demo student; record the rows in `measure/tracks/primary_parity_lesson_repeat_20261011/real-run.md`
-    - [ ] Tell `primary_parity_rehearsal3_20261011` the new migration tag and the two config changes
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc on every export; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Keep each closed attempt in a history' (Protocol in workflow.md)
+- [x] Task: Define the schema and the contracts
+    - [x] New `packages/db/src/schema/primary-lesson-attempts.ts` (`primary_lesson_attempts`, spec "Design"); export it in `packages/db/src/schema/index.ts`
+    - [x] Add `run_number` and `earlier_runs` to `primaryClassBookLessons` in `packages/db/src/schema/primary-books.ts`
+    - [x] Classify `primaryLessonAttempts` as FLAT in `packages/domain/src/tenant-registry.ts`
+    - [x] New `packages/domain/src/primary-lesson-attempts/contracts.ts`: `closeLessonAttemptInput`, `lessonAttemptSchema`, `LESSON_ACTIVITY_TYPES` (the 10 legacy types), `closeReasonSchema`
+- [x] Task: Generate the migration
+    - [x] Check the next free number in `packages/db/drizzle/` at the start of the phase; run `pnpm --filter @reading-advantage/db generate`; review the SQL (additive only)
+    - [x] Add the sentinel in `packages/db/src/sentinels.ts`; set the new tag in `apps/primary-advantage/cloudbuild.yaml` and `apps/primary-advantage/cloudbuild-etl.yaml` (`--required-migration`)
+    - [x] Run `journal-integrity.test.ts`, `primary-deploy-gate-contract.test.ts`, and `tenant-coverage.test.ts`
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-lesson-attempts/__tests__/attempts.test.ts` with `packages/domain/src/__tests__/mock-db.ts`: the history row and its attempt number; the deletes and the flag reset; XP logs and `users.xp` unchanged; read flag, rating, flashcards unchanged; a transaction failure writes nothing; another school gives FORBIDDEN
+- [x] Task: Implement `closeLessonAttempt` (green)
+    - [x] `packages/domain/src/primary-lesson-attempts/attempts.ts`: one transaction through `createTenantDB(...).unscoped("<reason>")` for the REFERENTIAL tables; a transaction-level variant for "Teach again"
+    - [x] `packages/domain/src/primary-lesson-attempts/index.ts` and the export path in `packages/domain/package.json`
+- [x] Task: Prove the migration and one close on real rows
+    - [x] Clone the rehearsal copy (`create database <clone> template <rehearsal copy>`; never the shared `primary_advantage`); migrate; close one attempt of one demo student; record the rows in `measure/tracks/primary_parity_lesson_repeat_20261011/real-run.md`
+    - [x] Tell `primary_parity_rehearsal3_20261011` the new migration tag and the two config changes
+- [x] Task: Docs and doctor
+    - [x] JSDoc on every export; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S1: Keep each closed attempt in a history' (Protocol in workflow.md)
+
+Notes (Phase S1, helper, 2026-10-12):
+- Migration file: `packages/db/drizzle/0073_primary_lesson_attempts.sql` (idx 73, when 1791900000000; 0072 belongs to lane C). Hand-set journal; the snapshot `prevId` is still the 0071 id; the orchestrator fixes the chain at the merge.
+- Cloudbuild files NOT changed (orchestrator sets `--required-migration 0073_primary_lesson_attempts` at the merge). Until then `primary-deploy-gate-contract.test.ts` (2 tests) and the idx test of `journal-integrity.test.ts` fail by design.
+- Public `closeLessonAttempt` is the student path only (own work, reason `student_restart`). `closeAttemptInTx` is the trusted variant for S3: the caller authorizes the teacher with `managedClassBook`. The close reason `legacy_import` was added for ETL attempts.
+- A close with no work (no activity rows, no steps, progress 0) writes nothing and returns `closed: false`.
+- ETL: duplicates of (user, article) in `user_lesson_progress` become closed attempts (reason `legacy_import`, empty activity and step copies). The latest row that links an assignment stays current.
+- Task "Tell `primary_parity_rehearsal3_20261011`": orchestrator step. Tag `0073_primary_lesson_attempts`; two cloudbuild files (`cloudbuild.yaml:52`, `cloudbuild-etl.yaml:50`).
+- Real run (local, scratch db `primary_etl_repeat_s1`, dropped; legacy `primary_legacy_20261011` read only): legacy `user_lesson_progress` 289 rows, 266 (user, article) pairs, 23 pairs with duplicates, 40 rows with assignment_id. After migrate + import: `lesson_progress` 263 rows (3 skipped: user not migrated), 40 current rows with assignment_id, `primary_lesson_attempts` 23 rows (all `legacy_import`, 23 of 23 have a current row, all numbered from 1). `tutor_compat` still has 4 views. One `closeLessonAttempt` on a real student row: activity rows of the article 7 -> 1 (the left row is not a lesson type), attempts 0 -> 1, progress 100 -> 0, `xp_logs` 10 -> 10, `users.xp` 58 -> 58.
+- Default used: Q1 legacy XP rule (no XP change at close); Q2/Q3 apply to S2/S3.
+- User Manual Verification: none visible in the UI in this phase. Steps: run `vitest run src/primary-lesson-attempts` in `packages/domain` (10 pass); look at the 23 history rows in a migrated copy.
 
 ## Phase S2: The student starts a lesson again
 _Story ref: spec.md#story-s2_
