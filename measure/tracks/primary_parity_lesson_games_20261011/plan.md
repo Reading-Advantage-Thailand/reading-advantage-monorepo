@@ -113,7 +113,7 @@ _Story ref: spec.md#story-s4_
 - [x] Task: Measure - User Manual Verification 'Phase S4: Lead a game on the projector' (Protocol in workflow.md)
     - look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/lesson_games/phaseS4/` (`panel-<375|1280|1920>-<day|night>.png`). Steps: (1) open the projector page of a class book lesson as the teacher of the class; (2) check the two lists: four vocabulary games and two sentence games, with no result text; (3) press Play: the game runs full screen with the answer hint on; (4) finish a run and leave it; check no XP and no new row in the student results; (5) open the lesson page, go to guide step 9 or 10 and press "Open the games": the projector page opens at the games; step 1 still opens the game challenges; (6) open the page as a teacher of another class: not found. Defaults used: Member Question 3 (a demo on the projector that saves nothing, no class challenge button).
 
-## Phase S5: Save nothing in a rehearsal or a preview
+## Phase S5: Save nothing in a rehearsal or a preview [checkpoint: da97e1420]
 _Story ref: spec.md#story-s5_
 
 - [x] Task: Define the save switch
