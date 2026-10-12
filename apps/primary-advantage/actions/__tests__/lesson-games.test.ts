@@ -1,0 +1,48 @@
+// @vitest-environment node
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const mocks = vi.hoisted(() => ({
+  currentUser: vi.fn(),
+  getLessonPracticeInput: vi.fn(),
+  logError: vi.fn(),
+}));
+
+vi.mock("@/lib/session", () => ({ currentUser: mocks.currentUser }));
+vi.mock("@reading-advantage/db", () => ({ db: {} }));
+vi.mock("@reading-advantage/domain", () => ({ createTenantDB: (_db: unknown, tenant: unknown) => ({ tenant }) }));
+vi.mock("@reading-advantage/domain/games", () => ({ getLessonPracticeInput: mocks.getLessonPracticeInput }));
+vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError } }));
+
+import { getLessonGameInputAction } from "../lesson-games";
+
+const ARTICLE = "11111111-1111-4111-8111-111111111111";
+const student = { id: "s1", role: "STUDENT", schoolId: "school-1" };
+const input = { schemaVersion: 1, id: `lesson:${ARTICLE}`, level: "A1", vocabulary: [], sentences: [] };
+
+describe("getLessonGameInputAction", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("refuses a request without a session", async () => {
+    mocks.currentUser.mockResolvedValue(null);
+    await expect(getLessonGameInputAction({ articleId: ARTICLE })).resolves.toEqual({ success: false, error: "Unauthorized" });
+    expect(mocks.getLessonPracticeInput).not.toHaveBeenCalled();
+  });
+
+  it("returns the lesson input scoped to the school of the user", async () => {
+    mocks.currentUser.mockResolvedValue(student);
+    mocks.getLessonPracticeInput.mockResolvedValue(input);
+    const result = await getLessonGameInputAction({ articleId: ARTICLE, locale: "th" });
+    expect(result).toEqual({ success: true, input });
+    expect(mocks.getLessonPracticeInput).toHaveBeenCalledWith(
+      expect.objectContaining({ user: student, tenant: { schoolId: "school-1" }, input: { articleId: ARTICLE, locale: "th" } }),
+    );
+  });
+
+  it("logs a failure and returns a message without detail", async () => {
+    mocks.currentUser.mockResolvedValue(student);
+    mocks.getLessonPracticeInput.mockRejectedValue(new Error("secret detail"));
+    const result = await getLessonGameInputAction({ articleId: ARTICLE });
+    expect(result).toEqual({ success: false, error: "Lesson game input failed" });
+    expect(mocks.logError).toHaveBeenCalledWith("lesson_game_input_failed", expect.objectContaining({ articleId: ARTICLE, userId: "s1" }));
+  });
+});

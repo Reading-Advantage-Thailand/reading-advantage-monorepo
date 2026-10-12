@@ -1,6 +1,8 @@
 import { and, asc, desc, eq } from "drizzle-orm";
-import { assertCan, type Tenant, type UserContext } from "@reading-advantage/auth";
+import { assertCan, AuthError, type Tenant, type UserContext } from "@reading-advantage/auth";
 import {
+  primaryBookLessons,
+  sentencsAndWordsForFlashcards,
   userSentenceRecords,
   userWordRecords,
 } from "@reading-advantage/db/schema";
@@ -15,6 +17,7 @@ import {
 import { z } from "zod";
 
 import type { TenantDB } from "../db-contract.js";
+import { managedClassBook } from "../primary-books/class-books.js";
 import {
   gameLearningContentLocaleSchema,
   selectTranslation,
@@ -26,6 +29,9 @@ export const PRACTICE_WORD_LIMIT = 10;
 
 /** Most saved sentences a practice game receives: the largest sentence round of any game. */
 export const PRACTICE_SENTENCE_LIMIT = 8;
+
+/** The prefix of the id of a practice input built from one lesson: `lesson:<articleId>`. */
+export const LESSON_PRACTICE_INPUT_PREFIX = "lesson:";
 
 /** Rows read per table: room to skip malformed rows and repeated terms. */
 const ROW_LIMIT = 50;
@@ -92,6 +98,7 @@ export interface SavedSentenceRow {
  * @param sentenceRows Saved sentences, most urgent first.
  * @param locale The translation locale.
  * @param level The game level of the student.
+ * @param inputId The id of the input; "saved" by default.
  * @returns A validated practice input with the row ids as item ids.
  */
 export function buildPracticeInput(
@@ -99,6 +106,7 @@ export function buildPracticeInput(
   sentenceRows: readonly SavedSentenceRow[],
   locale: z.infer<typeof gameLearningContentLocaleSchema>,
   level: CefrLevel,
+  inputId: string = SAVED_PRACTICE_INPUT_ID,
 ): PracticeInput {
   const seenTerms = new Set<string>();
   const vocabulary: PracticeWord[] = [];
@@ -130,7 +138,7 @@ export function buildPracticeInput(
     });
   }
 
-  return practiceInputSchema.parse({ schemaVersion: 1, id: SAVED_PRACTICE_INPUT_ID, level, vocabulary, sentences });
+  return practiceInputSchema.parse({ schemaVersion: 1, id: inputId, level, vocabulary, sentences });
 }
 
 /**
@@ -177,4 +185,92 @@ export async function listGamePracticeInput({
     .limit(ROW_LIMIT);
 
   return buildPracticeInput(wordRows, sentenceRows, locale, practiceLevelOf(user.cefrLevel));
+}
+
+/**
+ * Validated request of the lesson practice input: the article and the locale. A teacher also
+ * names the class book and the lesson number, which prove that the teacher manages the lesson.
+ */
+export const lessonPracticeInputRequestSchema = z
+  .object({
+    articleId: z.string().uuid(),
+    locale: gameLearningContentLocaleSchema.default("th"),
+    classBookId: z.string().uuid().optional(),
+    lessonNumber: z.number().int().positive().optional(),
+  })
+  .strict()
+  .refine((request) => (request.classBookId === undefined) === (request.lessonNumber === undefined), {
+    message: "classBookId and lessonNumber go together",
+    path: ["classBookId"],
+  });
+
+/** Request accepted by the lesson practice input query. */
+export type LessonPracticeInputRequest = z.input<typeof lessonPracticeInputRequestSchema>;
+
+/**
+ * Builds the practice input of one lesson from the article snapshot of words and sentences
+ * (`sentencs_and_words_for_flashcard`), with the same parse rules as `buildPracticeInput`. A
+ * student of the school gets the input of any article (the lesson page is open to every student
+ * of the school). A teacher gets it only for a lesson of a class book that the teacher manages.
+ * The caller gates each game with `missingFor(manifest, input)`.
+ * @param args Authenticated tenant context and the lesson request.
+ * @returns A validated practice input with the id `lesson:<articleId>`; it is empty when the article has no snapshot.
+ * @throws {AuthError} FORBIDDEN for a user of another school, a user with no school, a teacher without the class book, or a lesson of another article.
+ * @throws When authorization or input validation fails.
+ */
+export async function getLessonPracticeInput({
+  db,
+  user,
+  tenant,
+  input,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+  input: LessonPracticeInputRequest;
+}): Promise<PracticeInput> {
+  assertCan(user, "games:read:own", tenant);
+  const request = lessonPracticeInputRequestSchema.parse(input);
+  if (user.role !== "SYSTEM" && (!user.schoolId || user.schoolId !== tenant.schoolId)) {
+    throw new AuthError("The lesson is not in your school", "FORBIDDEN");
+  }
+  const rawDb = db.unscoped(
+    "the lesson catalogue and the article snapshot are global content; a teacher is checked against the class book",
+  );
+
+  if (user.role !== "STUDENT") {
+    if (request.classBookId === undefined || request.lessonNumber === undefined) {
+      throw new AuthError("A teacher needs the class book of the lesson", "FORBIDDEN");
+    }
+    const book = await managedClassBook({ db: rawDb, user }, request.classBookId);
+    const lessons = await rawDb
+      .select({ articleId: primaryBookLessons.articleId })
+      .from(primaryBookLessons)
+      .where(and(eq(primaryBookLessons.bookId, book.bookId), eq(primaryBookLessons.number, request.lessonNumber)))
+      .limit(1);
+    if (lessons[0]?.articleId !== request.articleId) throw new AuthError("The lesson does not hold this article", "FORBIDDEN");
+  }
+
+  const snapshots = await rawDb
+    .select({ words: sentencsAndWordsForFlashcards.words, sentence: sentencsAndWordsForFlashcards.sentence })
+    .from(sentencsAndWordsForFlashcards)
+    .where(eq(sentencsAndWordsForFlashcards.articleId, request.articleId))
+    .orderBy(desc(sentencsAndWordsForFlashcards.createdAt))
+    .limit(1);
+  const snapshot = snapshots[0];
+  const wordRows: SavedWordRow[] = (Array.isArray(snapshot?.words) ? snapshot.words : []).map((word, index) => ({
+    id: `w${index + 1}`,
+    word,
+  }));
+  const sentenceRows: SavedSentenceRow[] = (Array.isArray(snapshot?.sentence) ? snapshot.sentence : []).map((line, index) => {
+    const entry = (line ?? {}) as { sentence?: unknown; translation?: unknown };
+    return { id: `s${index + 1}`, sentence: entry.sentence, translation: entry.translation };
+  });
+  return buildPracticeInput(
+    wordRows,
+    sentenceRows,
+    request.locale,
+    practiceLevelOf(user.cefrLevel),
+    `${LESSON_PRACTICE_INPUT_PREFIX}${request.articleId}`,
+  );
 }
