@@ -72,3 +72,17 @@ export const printLessonSchema = z
   });
 
 export type PrintLesson = z.infer<typeof printLessonSchema>;
+
+/** Locales of the Primary app. The template prints English, so the locale sets only `<html lang>`. */
+export const PRINT_LOCALES = ["en", "th", "cn", "tw", "vi"] as const;
+
+/** The input of `renderPrintLesson`: the print data of one lesson and the locale of the viewer. */
+export const renderPrintLessonInputSchema = z.object({
+  printLesson: printLessonSchema,
+  locale: z.enum(PRINT_LOCALES).default("en"),
+});
+
+export type RenderPrintLessonInput = z.input<typeof renderPrintLessonInputSchema>;
+
+/** The output of `renderPrintLesson`: one A4 HTML document for a sandboxed frame. */
+export const renderPrintLessonOutputSchema = z.string().startsWith("<!DOCTYPE html>");

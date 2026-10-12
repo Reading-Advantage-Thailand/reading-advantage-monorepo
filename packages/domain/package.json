@@ -56,6 +56,10 @@
       "types": "./dist/primary-books/index.d.ts",
       "import": "./dist/primary-books/index.js"
     },
+    "./primary-books/print": {
+      "types": "./dist/primary-books/print/render.d.ts",
+      "import": "./dist/primary-books/print/render.js"
+    },
     "./primary-books/step-map": {
       "types": "./dist/primary-books/step-map.d.ts",
       "import": "./dist/primary-books/step-map.js"
