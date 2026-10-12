@@ -1,0 +1,25 @@
+{
+  "member": "primary_parity_pwa_20261011",
+  "pairs": [
+    {
+      "id": "PWA-A1",
+      "rows": ["STU-13"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read",
+      "newPath": "/en/student/home",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-install-notice]" },
+      "checks": [
+        {
+          "id": "PWA-A1-a",
+          "behavior": "Legacy: an Install App button shows in the page header. New: a pinned notice in the guild hall shows the install steps (iOS) or an Install button (Chrome), with 48 px targets. Capture shows the notice only when the browser state allows it (difference on purpose)."
+        },
+        {
+          "id": "PWA-A1-b",
+          "behavior": "New: no install notice shows in a reading page or a lesson.",
+          "network": "serwist/sw\\.js"
+        }
+      ]
+    }
+  ]
+}

@@ -8,16 +8,17 @@ server: no Next build and no dev server on this machine.
 
 ## Phase 0: Design
 
-- [ ] Task: Design the icons, the colours, and the install notice
-    - [ ] Ask the Forge session for icon renders from the RPG skin art (192, 512, 512 maskable with a safe zone, 180 apple touch icon, PNG); no ElvGames asset
-    - [ ] Pick the manifest `theme_color` and `background_color` from the skin tokens (day and night)
-    - [ ] Mock the install notice as a pinned notice in the guild hall (iOS steps and the Chrome Install button), and the offline page and sign (Story S4)
-    - [ ] Captures at 375 px and 1280 px in `measure/tracks/primary_parity_pwa_20261011/design/`
-- [ ] Task: Fill the behavior contract before the build
-    - [ ] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_pwa_20261011/behavior-contract.md` and fill its seven sections (STU-13, the legacy worker facts, and the runbook check)
-    - [ ] Write `measure/tracks/primary_parity_pwa_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7)
-- [ ] Task: Owner look check of the icons, the colours, the notice, the short name, and the choice to build Story S4; record the answers in `design/decisions.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md)
+- [x] Task: Design the icons, the colours, and the install notice
+    - [x] Ask the Forge session for icon renders. Asked 2026-10-12 by the orchestrator; answered 2026-10-12: use the brand app icon from advantage-pr (`assets/logos/png/app-icon/primary-advantage-{180,192,512}.png`, owner approval 2026-10-08). Forge asked the owner about an RPG-art icon; the brand icon is the default.
+    - [x] Pick the manifest `theme_color` and `background_color` from the skin tokens (day and night). Default: `theme_color` `#5c391a`, `background_color` `#0f1420`; option: brand cyan `#22d3ee` (`design/decisions.md`).
+    - [x] Mock the install notice as a pinned notice in the guild hall (iOS steps and the Chrome Install button), and the offline page and sign (Story S4). Mock done.
+    - [x] Captures at 375 px and 1280 px, day and night. PNG files are outside the repo; paths in `design/captures.md`.
+- [x] Task: Fill the behavior contract before the build
+    - [x] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_pwa_20261011/behavior-contract.md` and fill its seven sections (STU-13, the legacy worker facts, and the runbook check)
+    - [x] Write `measure/tracks/primary_parity_pwa_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7)
+- [x] Task: Owner look check of the icons, the colours, the notice, the short name, and the choice to build Story S4; record the answers in `design/decisions.md` - look check pending (owner, async). Defaults used (spec): short name "Primary Advantage"; build Story S4: yes; brand app icon; `theme_color` `#5c391a`; `background_color` `#0f1420`; notice pinned in the guild hall.
+- [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) - look check pending (owner, async)
+    - Steps: open each PNG of `design/captures.md`; check the icon, the two colours, the notice (iOS and Chrome), the offline page, and the offline sign at 375 px and 1280 px, day and night.
 
 ## Phase S1: Phones with the legacy app switch to the new app
 _Story ref: spec.md#story-s1_
