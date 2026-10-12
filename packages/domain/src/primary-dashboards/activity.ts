@@ -13,6 +13,7 @@ import {
   type ActiveStudentsCount,
   type ActiveStudentsDay,
   type ActivityScope,
+  type ClassesScope,
   type DashboardWindow,
 } from "./contracts.js";
 
@@ -77,12 +78,32 @@ export function windowBoundsSql(window: DashboardWindow) {
 }
 
 /**
- * The students of a scope: columns `id`, `cefr_level`, `created_at`.
+ * The class membership of a classes scope: columns `cid`, `sid`. A student in two classes has two
+ * rows. Only STUDENT users of the scope school, in classes of the scope school, are listed.
+ * @param scope The classes scope.
+ * @returns The SQL select. It has no row when the scope lists no class.
+ */
+export function classMembersSql(scope: ClassesScope): SQL {
+  if (!scope.classIds.length) return sql`select null::uuid as cid, null::text as sid where false`;
+  const ids = sql.join(scope.classIds.map((id) => sql`${id}::uuid`), sql`, `);
+  return sql`
+    select distinct cs.classroom_id as cid, cs.student_id as sid
+    from classroom_students cs
+    join classrooms c on c.id = cs.classroom_id and c.school_id = ${scope.schoolId}::uuid
+    join users u on u.id = cs.student_id and u.school_id = ${scope.schoolId}::uuid and u.role = 'STUDENT'
+    where cs.classroom_id in (${ids})`;
+}
+
+/**
+ * The students of a scope: columns `id`, `cefr_level`, `level`, `created_at`. A student appears one time.
  * @param scope The scope.
  * @returns The SQL select.
  */
 export function scopeStudentsSql(scope: ActivityScope): SQL {
-  return sql`select u.id, u.cefr_level, u.created_at from users u where u.school_id = ${scope.schoolId}::uuid and u.role = 'STUDENT'`;
+  if (scope.kind === "classes") {
+    return sql`select u.id, u.cefr_level, u.level, u.created_at from users u where u.school_id = ${scope.schoolId}::uuid and u.role = 'STUDENT' and u.id in (select m.sid from (${classMembersSql(scope)}) m)`;
+  }
+  return sql`select u.id, u.cefr_level, u.level, u.created_at from users u where u.school_id = ${scope.schoolId}::uuid and u.role = 'STUDENT'`;
 }
 
 /**
@@ -256,4 +277,113 @@ export async function getLastActivityAt(params: Omit<ActivityCountParams, "windo
       select to_char(max(e.ts), 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as last from (${activityEventsSql(params.scope)}) e`),
   );
   return rows[0]?.last ? new Date(rows[0].last) : null;
+}
+
+/**
+ * Asserts that a scope lists classes.
+ * @param scope The scope.
+ * @returns The scope, typed as a classes scope.
+ * @throws When the scope kind is not `classes`.
+ */
+function requireClassesScope(scope: ActivityScope): ClassesScope {
+  const parsed = activityScopeSchema.parse(scope);
+  if (parsed.kind !== "classes") throw new Error("A count by class needs a scope of the kind classes");
+  return parsed;
+}
+
+/** The students of one class and their mean Primary level. */
+export interface ClassStudentStats {
+  classId: string;
+  students: number;
+  /** The mean `users.level` with one decimal, or null when the class has no student. */
+  averageLevel: number | null;
+}
+
+/**
+ * Counts the students of each class of a classes scope and the mean level of each class.
+ * @param params.db The database.
+ * @param params.scope The classes scope.
+ * @returns One entry for each class id of the scope (0 students and a null level for an empty class).
+ */
+export async function getClassStudentStats(params: Omit<ActivityCountParams, "window">): Promise<ClassStudentStats[]> {
+  const scope = requireClassesScope(params.scope);
+  const raw = scopedRawDb(params.db, scope);
+  const rows = rowsOf<{ cid: string; students: unknown; avg: string | null }>(
+    await raw.execute(sql`
+      select m.cid, count(*)::int as students, round(avg(u.level)::numeric, 1)::text as avg
+      from (${classMembersSql(scope)}) m join users u on u.id = m.sid group by m.cid`),
+  );
+  const byClass = new Map(rows.map((row) => [row.cid, row]));
+  return scope.classIds.map((classId) => {
+    const row = byClass.get(classId);
+    return { classId, students: toInt(row?.students), averageLevel: row?.avg == null ? null : Number(row.avg) };
+  });
+}
+
+/**
+ * Finds the mean Primary level of the distinct students of a scope.
+ * @param params.db The database.
+ * @param params.scope The scope.
+ * @returns The mean `users.level` with one decimal, or null when the scope has no student.
+ */
+export async function getAverageLevel(params: Omit<ActivityCountParams, "window">): Promise<number | null> {
+  const raw = scopedRawDb(params.db, params.scope);
+  const rows = rowsOf<{ avg: string | null }>(
+    await raw.execute(sql`select round(avg(s.level)::numeric, 1)::text as avg from (${scopeStudentsSql(params.scope)}) s`),
+  );
+  return rows[0]?.avg == null ? null : Number(rows[0].avg);
+}
+
+/**
+ * Counts the active students of each class of a classes scope in the window. A student in two
+ * classes counts in each class.
+ * @param params.db The database.
+ * @param params.scope The classes scope.
+ * @param params.window The window.
+ * @returns A map from class id to the active count; a class with no active student has 0.
+ */
+export async function countActiveStudentsByClass(params: ActivityCountParams): Promise<Map<string, number>> {
+  const scope = requireClassesScope(params.scope);
+  const raw = scopedRawDb(params.db, scope);
+  const rows = rowsOf<{ cid: string; active: unknown }>(
+    await raw.execute(sql`
+      select m.cid, count(*)::int as active from (${classMembersSql(scope)}) m
+      where m.sid in (${activeStudentIdsSql(scope, params.window)}) group by m.cid`),
+  );
+  return new Map(scope.classIds.map((id) => [id, toInt(rows.find((row) => row.cid === id)?.active)]));
+}
+
+/**
+ * Sums the XP that the students of each class of a classes scope earned in the window. A student
+ * in two classes adds the XP to each class.
+ * @param params.db The database.
+ * @param params.scope The classes scope.
+ * @param params.window The window.
+ * @returns A map from class id to the XP sum; a class with no XP has 0.
+ */
+export async function sumXpEarnedByClass(params: ActivityCountParams): Promise<Map<string, number>> {
+  const scope = requireClassesScope(params.scope);
+  const raw = scopedRawDb(params.db, scope);
+  const rows = rowsOf<{ cid: string; xp: unknown }>(
+    await raw.execute(sql`
+      select m.cid, coalesce(sum(x.xp), 0)::int as xp from (${classMembersSql(scope)}) m
+      join (${xpEarnedByStudentSql(scope, params.window)}) x on x.sid = m.sid group by m.cid`),
+  );
+  return new Map(scope.classIds.map((id) => [id, toInt(rows.find((row) => row.cid === id)?.xp)]));
+}
+
+/**
+ * Finds the last activity event of each student of a scope (all time), by the shared event rule.
+ * @param params.db The database.
+ * @param params.scope The scope.
+ * @returns A map from student id to the instant of the last event. A student with no event has no entry.
+ */
+export async function getLastActivityByStudent(params: Omit<ActivityCountParams, "window">): Promise<Map<string, Date>> {
+  const raw = scopedRawDb(params.db, params.scope);
+  const rows = rowsOf<{ sid: string; last: string }>(
+    await raw.execute(sql`
+      select e.sid, to_char(max(e.ts), 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as last
+      from (${activityEventsSql(params.scope)}) e group by e.sid`),
+  );
+  return new Map(rows.map((row) => [row.sid, new Date(row.last)]));
 }

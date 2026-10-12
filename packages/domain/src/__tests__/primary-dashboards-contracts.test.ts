@@ -58,6 +58,14 @@ describe("activityScopeSchema", () => {
     });
   });
 
+  it("accepts a classes scope with class ids, also an empty list", () => {
+    const schoolId = "10000000-0000-4000-8000-00000000000a";
+    const classIds = ["20000000-0000-4000-8000-000000000001"];
+    expect(activityScopeSchema.parse({ kind: "classes", schoolId, classIds })).toEqual({ kind: "classes", schoolId, classIds });
+    expect(activityScopeSchema.parse({ kind: "classes", schoolId, classIds: [] }).kind).toBe("classes");
+    expect(() => activityScopeSchema.parse({ kind: "classes", schoolId, classIds: ["x"] })).toThrow();
+  });
+
   it("rejects a scope that is not a school scope or has a bad id", () => {
     expect(() => activityScopeSchema.parse({ kind: "school", schoolId: "x" })).toThrow();
     expect(() => activityScopeSchema.parse({ kind: "platform" })).toThrow();
