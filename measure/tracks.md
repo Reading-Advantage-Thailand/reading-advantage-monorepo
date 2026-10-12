@@ -1216,7 +1216,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: quick fixes (ADM-02, ADM-06, TCH-05, TCH-08, STU-02, STU-03, STU-06, STU-07, STU-08, STU-16, STU-17, PUB-04, PUB-05)**
+- [~] **Track: Primary Parity Before the Cutover: quick fixes (ADM-02, ADM-06, TCH-05, TCH-08, STU-02, STU-03, STU-06, STU-07, STU-08, STU-16, STU-17, PUB-04, PUB-05)**
   *Link: [./tracks/primary_parity_quick_fixes_20261011/](./tracks/primary_parity_quick_fixes_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 2*
 
