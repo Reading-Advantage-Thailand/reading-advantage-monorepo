@@ -47,3 +47,9 @@ Findings:
 - Low: the capture harness reports `small-buttons=1`. It is the 36 px language menu icon (as in S4). Both choices are 48 px or more.
 - Owner step: set `TUTOR_LESSON_URL_TEMPLATE` at the cutover (see `plan.md`, Phase S2).
 - S3 note: `/writing` calls `openBookLink({ ..., writing: true })` and renders `BookLanding` for the `landing` outcome, as the reading page does (`app/[locale]/b/[book]/[n]/page.tsx`).
+
+## Phase S3 review (helper, 2026-10-12)
+- No Critical or High finding. No new input path: the lookup, role check, and class check stay in `openBookLink`.
+- Low: the catch segment `[n]/[...rest]` shows the unknown-address page for every reader, with the home link "/" (the view fixes it). It does not read the session.
+- Low: `/b/<book>` with no number is not covered by this phase (the locale catch-all handles it).
+- Low: no new message keys in this phase; the five locale files stay in parity.
