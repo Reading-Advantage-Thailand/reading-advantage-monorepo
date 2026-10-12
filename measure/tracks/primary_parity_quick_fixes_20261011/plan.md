@@ -171,3 +171,9 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
     - Red 19 of 21 failed; green 30 pass in 4 files; app tsc exit 0. The assign form body already passes the new Zod schema.
     - Deviation: a TEACHER now reads only the assignments of a class that the teacher teaches (legacy: any teacher of the school).
     - Gap: the progress POST does not check that the body articleId is the article of the assignment.
+
+## Task: School and admin authorization fixes from the API audit (added 2026-10-12, orchestrator)
+
+- [x] Task: School and admin authorization fixes from the API audit (findings in `api-audit-20261012.md`)
+    - Rules: school create = TEACHER or ADMIN without a school, or SYSTEM (STUDENT 403; TEACHER becomes ADMIN). School PATCH and admin add/remove = owner, ADMIN of the school (`users.role` + `users.school_id`), or SYSTEM (`server/utils/school-access.ts`). New admin target = TEACHER or ADMIN (400 otherwise). School GET and profile page blank staff emails for a STUDENT. `getAllStudentsByAdmin` scopes by the authorized school id. The `/api/classrooms` gate drops the wrong `user_roles` query.
+    - Gap: DELETE of the school stays owner-only; an ownerless school has no delete path for its ADMIN. A TEACHER with only a `school_admins` row cannot rename the school.
