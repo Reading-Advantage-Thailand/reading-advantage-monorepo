@@ -63,18 +63,24 @@ _Story ref: spec.md#story-s2_
 ## Phase S3: Render one lesson with the template
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Define the render contract
-    - [ ] `renderPrintLessonInput` (the print data, the locale) and the output (one HTML document) in `packages/domain/src/primary-books/print/contracts.ts`
-- [ ] Task: Make the golden fixture
-    - [ ] Add a `--fixture <book>/<n>` mode to `sync-print-kit.ts` that renders one lesson with Workbooks' `renderMultipleLessons` at the kit commit; save it in `packages/domain/src/primary-books/print/__fixtures__/`
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/print/__tests__/render.test.ts`: the 13 step titles in order; the header names the product once; the QR codes; the Thai page; escaping; the `vocab_fill` blank span only; `@page` A4 with 20 mm; font faces at `/print-fonts/`; the body equals the golden fixture
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-books/print/render.ts`: Handlebars with the `icon` and `concat` helpers, the port of the `prepareLessonData` behavior (QR with `qrcode`), and the A4 wrapper with `PRINT_BRIDGE_SHIM`
-    - [ ] Add `handlebars` 4.7.9 and `qrcode` (lockfile versions) to `packages/domain/package.json`; export the module path
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Render one lesson with the template' (Protocol in workflow.md)
+- [x] Task: Define the render contract
+    - [x] `renderPrintLessonInputSchema` (the print data, the locale) and the output schema (one HTML document) in `packages/domain/src/primary-books/print/contracts.ts` (1ec34eb6d)
+- [x] Task: Make the golden fixture
+    - [x] `--fixture <book>/<n> --commit <id>` mode of `sync-print-kit.ts` (f544d9745). Deviation: it copies the Workbooks golden (`print/golden/lesson-NN-no-key.html`, made at 08bb160 by `renderMultipleLessons` + `wrapSingleLessonDocument`) and the print data. It does not render. It saves only the `<body>` of the golden (204 KB, not 838 KB with the font data URLs). Files: `__fixtures__/origins-3.2-5@08bb160.json` and `origins-3.2-5-no-key-body@08bb160.html`.
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/print/__tests__/render.test.ts` (10 tests). Red run: 1 file failed, 0 tests ran (`render.js` missing).
+- [x] Task: Implement (green)
+    - [x] `packages/domain/src/primary-books/print/render.ts` (1ec34eb6d): isolated Handlebars with `icon` and `concat`, the port of `prepareLessonData`, QR with `qrcode`, series colors, 17 font faces at `/print-fonts/`, the A4 wrapper with `PRINT_BRIDGE_SHIM` in the head
+    - [x] Add `handlebars` and `qrcode` to `packages/domain/package.json`: 4b22b031f (orchestrator). The export `./primary-books/print` points to `render.js` (1ec34eb6d).
+- [x] Task: Docs and doctor
+    - [x] JSDoc on each export; `build-graph update` not run (brief: graph.db read-only); `measure/generate.sh` and `measure/doctor.sh` run as a check
+- [x] Task: Measure - User Manual Verification 'Phase S3: Render one lesson with the template' (Protocol in workflow.md)
+    - Steps: from `packages/domain` run `../../node_modules/.bin/vitest run src/primary-books/print`; all 14 tests pass.
+    - Comparison with the golden: the body equals the golden after these normalizations: (1) all whitespace becomes one space; (2) each QR data URL becomes its pixel width (410); (3) the `<head>` is not compared (the golden `<script src=unpkg.com/pagedjs>` and the 17 data-URL font faces differ by design; a separate test checks the 17 `/print-fonts/` faces and the absence of unpkg).
+    - QR deviation: `qrcode` picks mask 2 and Workbooks' `qrcode-generator` picks mask 3 for the same URL. Both codes have version 4 (33 modules) and the same text. The data differs, so the test does not compare the QR bytes.
+    - Escaping: Handlebars escapes every field (it writes `=` as `&#x3D;`). `vocab_fill` sentences: `& < >` are escaped and the exact blank span stays; quotes stay as in the golden.
+    - The QR targets are the `article_url` and the `writing_practice_url` (or `<article_url>/writing`) of the print data, as in Workbooks (`https://primary.reading-advantage.com/b/o3-2/5`).
+    - The `locale` input only sets `<html lang>`: the template is English.
 
 ## Phase S4: Print this lesson from the class book
 _Story ref: spec.md#story-s4_
