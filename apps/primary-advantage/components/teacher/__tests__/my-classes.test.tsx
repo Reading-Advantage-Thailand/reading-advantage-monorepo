@@ -16,8 +16,11 @@ vi.mock("@/i18n/navigation", () => ({
       {children}
     </a>
   ),
-  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn(), replace: replaceMock }),
 }));
+const replaceMock = vi.hoisted(() => vi.fn());
+const searchState = vi.hoisted(() => ({ query: "" }));
+vi.mock("next/navigation", () => ({ useSearchParams: () => new URLSearchParams(searchState.query) }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 import MyClasses from "../my-classes";
@@ -44,6 +47,8 @@ async function flush() {
 }
 
 beforeEach(() => {
+  searchState.query = "";
+  replaceMock.mockReset();
   failures = 0;
   fetchMock.mockReset();
   fetchMock.mockImplementation(async () =>
@@ -100,6 +105,41 @@ describe("My Classes", () => {
     fireEvent.click(screen.getByRole("button", { name: en.Error.retry }));
     await flush();
     expect(screen.getByRole("link", { name: "P3A" })).toBeInTheDocument();
+  });
+});
+
+describe("My Classes edit link (FR-4)", () => {
+  it("opens the edit dialog of the class named by ?edit", async () => {
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByText(en.TeacherMyClasses.edit.title)).toBeInTheDocument();
+    expect(within(dialog).getByDisplayValue("P3A")).toBeInTheDocument();
+  });
+
+  it("shows the list only when the id is not a listed class", async () => {
+    searchState.query = "edit=00000000-0000-4000-8000-00000000dead";
+    renderWithMessages(<MyClasses />);
+    await flush();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "P3A" })).toBeInTheDocument();
+  });
+
+  it("removes edit from the URL when the dialog closes", async () => {
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
+    await flush();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(replaceMock).toHaveBeenCalledWith("/teacher/my-classes");
+  });
+
+  it("does not touch the URL when no edit query is set", async () => {
+    renderWithMessages(<MyClasses />);
+    await flush();
+    expect(replaceMock).not.toHaveBeenCalled();
   });
 });
 

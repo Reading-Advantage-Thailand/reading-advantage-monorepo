@@ -69,9 +69,10 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
     - [x] Red: in `components/teacher/__tests__/teacher-progress-reports.test.tsx`, add: four tiles; with 2 of 4 students active in 7 days the tile shows 50 % and "2 of 4 students"; the class filter changes the count
     - [x] Green: `server/models/classroomModel.ts:678-900` (three reads and one shared helper); `components/teacher/teacher-progress-reports.tsx:147-160` and `:291-295`
     - The model test uses the PGlite helper (a real Postgres), not the mock helper. The tile shows `n%` and the existing key `activeThisWeekDescription`. Active means `lastActivity` at most 7 days before the page render.
-- [ ] Task: FR-4 (TCH-08) — the class page "Settings" link opens the edit dialog
-    - [ ] Red: in `components/teacher/__tests__/my-classes.test.tsx`, add: with `?edit=<id of a listed class>` the edit dialog opens with its name and grade; with an unknown id no dialog opens; a close removes `edit` from the URL
-    - [ ] Green: `components/teacher/my-classes.tsx:92-120` reads `useSearchParams` after the list loads and opens the dialog; `router.replace` on close
+- [x] Task: FR-4 (TCH-08) — the class page "Settings" link opens the edit dialog
+    - [x] Red: in `components/teacher/__tests__/my-classes.test.tsx`, add: with `?edit=<id of a listed class>` the edit dialog opens with its name and grade; with an unknown id no dialog opens; a close removes `edit` from the URL
+    - [x] Green: `components/teacher/my-classes.tsx:92-120` reads `useSearchParams` after the list loads and opens the dialog; `router.replace` on close
+    - A ref guard opens the dialog once for each `edit` id. The save button also removes `edit` from the URL.
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Teacher' (Protocol in workflow.md)
 
 ## Phase 4: Student — lessons and quizzes
