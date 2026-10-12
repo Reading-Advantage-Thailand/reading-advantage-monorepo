@@ -23,7 +23,7 @@ tests add `// @vitest-environment jsdom`; the render helper is
 - [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) — look check pending (owner, async)
     - Manual verification steps: (1) open the PNG files in `design/captures.md` at 375 px and 1280 px, day and night; (2) check that the lit word, the band, and the hint line read well; (3) check that the player buttons are large enough; (4) tell the orchestrator the answer on the speed list and the hint line.
 
-## Phase S1: The highlight follows the voice [checkpoint: PENDING]
+## Phase S1: The highlight follows the voice [checkpoint: 853a21cc9]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Contracts for the alignment and the position
