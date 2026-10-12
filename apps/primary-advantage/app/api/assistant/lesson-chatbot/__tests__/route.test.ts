@@ -92,4 +92,22 @@ describe("POST /api/assistant/lesson-chatbot authorization", () => {
     expect(response.status).toBe(500);
     expect(mocks.error).toHaveBeenCalledWith("lesson_chatbot_error", expect.anything());
   });
+
+  describe("body size limits", () => {
+    beforeEach(() => mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" }));
+
+    it.each([
+      ["passage", { passage: "p".repeat(20_001) }],
+      ["summary", { summary: "s".repeat(5_001) }],
+      ["title", { title: "t".repeat(501) }],
+      ["image_description", { image_description: "i".repeat(2_001) }],
+      ["messages count", { messages: Array.from({ length: 61 }, () => ({ text: "x", sender: "user" })) }],
+      ["message text", { messages: [{ text: "x".repeat(4_001), sender: "user" }] }],
+      ["blacklist count", { blacklistedQuestions: Array.from({ length: 101 }, () => "q") }],
+    ])("returns 400 for an oversized %s", async (_name, patch) => {
+      const response = await POST(postRequest({ ...validBody, ...patch }));
+      expect(response.status).toBe(400);
+      expect(mocks.streamText).not.toHaveBeenCalled();
+    });
+  });
 });

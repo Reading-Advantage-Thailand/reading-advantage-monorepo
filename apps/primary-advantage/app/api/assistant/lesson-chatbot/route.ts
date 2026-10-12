@@ -8,15 +8,15 @@ import { currentUser } from "@/lib/session";
 const createLessonChatbotQuestionSchema = z.object({
   messages: z.array(
     z.object({
-      text: z.string(),
+      text: z.string().max(4000),
       sender: z.enum(["user", "bot"]),
     }),
-  ),
-  title: z.string(),
-  passage: z.string(),
-  summary: z.string(),
-  image_description: z.string(),
-  blacklistedQuestions: z.array(z.string()).optional().default([]),
+  ).max(60),
+  title: z.string().max(500),
+  passage: z.string().max(20000),
+  summary: z.string().max(5000),
+  image_description: z.string().max(2000),
+  blacklistedQuestions: z.array(z.string().max(1000)).max(100).optional().default([]),
   isInitial: z.boolean().optional().default(false),
 });
 
