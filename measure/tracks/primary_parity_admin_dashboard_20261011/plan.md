@@ -94,12 +94,23 @@ Phase 3 notes (helper, 2026-10-12):
 
 ## Phase 4: Acceptance
 
-- [ ] Task: Run the queries one time against a clone of the rehearsal copy (`create database x template <rehearsal copy>`, never the shared copy; lessons-learned 2026-10-06); compare each number with the reference SQL of the behavior contract; measure the page time for the largest school (target 2 s)
+- [x] Task: Run the queries one time against a clone of the rehearsal copy (`create database x template <rehearsal copy>`, never the shared copy; lessons-learned 2026-10-06); compare each number with the reference SQL of the behavior contract; measure the page time for the largest school (target 2 s) (domain queries done; the page time on a build: batch capture (orchestrator))
 - [ ] Task: Side-by-side check with the kit of `primary_parity_acceptance_20261011`: AC-1 to AC-7, as a school ADMIN and as SYSTEM, legacy `bfea121` and the new build on copies with the same school data
-    - [ ] Write `measure/tracks/primary_parity_admin_dashboard_20261011/acceptance-pairs.json` (kit FR-7): one pair for each check, with the legacy path, the new path, the role, and the observable behavior
-    - [ ] Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts`; the captures and the report stay in the private folder (kit FR-10)
-    - [ ] Write `measure/tracks/primary_parity_admin_dashboard_20261011/acceptance.md` from the runbook template, with the result of each check
-- [ ] Task: Captures at 375 px and 1280 px, day and night, with the demo seed only (`design/` folder; captures with real names stay in the private folder), and the owner's look check (AC-8)
-- [ ] Task: Run `measure/generate.sh`, then `measure/doctor.sh`; fix each failure in a file of this track
-- [ ] Task: Final gates: `pnpm --filter @reading-advantage/domain test`, `pnpm --filter primary-advantage test`, tsc and ESLint (AC-9); record the commands and results in `acceptance.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Acceptance' (Protocol in workflow.md)
+    - [x] Write `measure/tracks/primary_parity_admin_dashboard_20261011/acceptance-pairs.json` (kit FR-7): one pair for each check, with the legacy path, the new path, the role, and the observable behavior
+    - [ ] (batch capture (orchestrator)) Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts`; the captures and the report stay in the private folder (kit FR-10)
+    - [x] Write `measure/tracks/primary_parity_admin_dashboard_20261011/acceptance.md` from the runbook template, with the result of each check
+- [ ] Task: (batch capture (orchestrator); look check pending (owner, async)) Captures at 375 px and 1280 px, day and night, with the demo seed only (`design/` folder; captures with real names stay in the private folder), and the owner's look check (AC-8)
+- [x] Task: Run `measure/generate.sh`, then `measure/doctor.sh`; fix each failure in a file of this track
+- [x] Task: Final gates: `pnpm --filter @reading-advantage/domain test`, `pnpm --filter primary-advantage test`, tsc and ESLint (AC-9); record the commands and results in `acceptance.md`
+- [x] Task: Measure - User Manual Verification 'Phase 4: Acceptance' (Protocol in workflow.md) (look check pending (owner, async))
+
+Phase 4 notes (helper, 2026-10-12):
+
+- Defaults used: none (no member question open).
+- Domain check: all numbers of `getSchoolDashboard` equal the reference SQL for four schools and n = 7, 30, 90 (`acceptance.md`). The clone got a teacher sign-in row and an active license for the check; it is dropped.
+- Deviation: the host has no database password for the helper. The check script sends each domain query to `psql` in the container, so the wall time is not the page time (server time of all queries: 180 to 320 ms).
+- Fix found by the final gate: `packages/domain/src/__tests__/licenses.test.ts` mocked `drizzle-orm` without `sql`. Phase 2 had not run the full domain suite. The mock now keeps the real exports (commit 5c350f810).
+- Doc: `docs/primary-whats-moved.md` rows for the dashboard and the removed sub-pages are updated (Phase 3 finding closed).
+- `measure/doctor.sh`: `orchestrator_catalog` (A13, old), `orchestrator_supervisor_invariants` (file missing, old), `orchestrator_marker_vocabulary` (many old tracks, and the `[ ]` capture tasks above, by the brief) and `architecture:check` (stale manifest, old) fail. None is caused by this track.
+- Batch capture: set `PARITY_SCHOOL_ID` and `PARITY_OTHER_SCHOOL_ID`; add one teacher sign-in event and one active license to the clone of school B first.
+- Manual verification: after the batch, open the report of the 18 pairs. Check the numbers against `acceptance.md`; check `/api/admin/recent-activity` returns 404; check the nav of SYSTEM and ADMIN; check the range change keeps `school=<id>`.
