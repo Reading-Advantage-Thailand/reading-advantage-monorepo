@@ -11,10 +11,11 @@ const mocks = vi.hoisted(() => ({
   restart: vi.fn(),
   push: vi.fn(),
   toastInfo: vi.fn(),
+  summary: vi.fn(),
 }));
 vi.mock("@/actions/lesson-attempts", () => ({ restartLessonAction: (...a: unknown[]) => mocks.restart(...a) }));
 vi.mock("@/actions/article", () => ({
-  getLessonSummaryData: vi.fn().mockResolvedValue({ data: { totalXp: 50, quizScores: { mcqScore: 3, saqScore: 4 } } }),
+  getLessonSummaryData: (...a: unknown[]) => mocks.summary(...a),
 }));
 vi.mock("@/i18n/navigation", () => ({ useRouter: () => ({ push: mocks.push }) }));
 vi.mock("@reading-advantage/auth-client", () => ({ useAuth: () => ({ user: { id: "s1" }, refresh: vi.fn() }) }));
@@ -41,9 +42,24 @@ beforeEach(() => {
   mocks.restart.mockReset();
   mocks.push.mockReset();
   mocks.toastInfo.mockReset();
+  mocks.summary.mockReset().mockResolvedValue({ data: { totalXp: 50, attemptNumber: 1, quizScores: { mcqScore: 3, saqScore: 4 } } });
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
 afterEach(cleanup);
+
+describe("TaskLessonSummary attempt number after a reload", () => {
+  it("shows the attempt number that the server returns", async () => {
+    mocks.summary.mockResolvedValue({ data: { totalXp: 50, attemptNumber: 2, quizScores: { mcqScore: 3, saqScore: 4 } } });
+    renderSummary();
+    expect(await screen.findByText(s.attempt.replace("{number}", "2"))).toBeInTheDocument();
+  });
+
+  it("shows no attempt banner for the first attempt", async () => {
+    renderSummary();
+    await screen.findByRole("button", { name: s.actions.startAgain });
+    expect(screen.queryByText(s.attempt.replace("{number}", "1"))).toBeNull();
+  });
+});
 
 describe("TaskLessonSummary restart", () => {
   it("shows Back to Read Page and Start again, and no dialog", async () => {

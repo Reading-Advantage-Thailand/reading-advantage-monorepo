@@ -28,6 +28,7 @@ vi.mock("@reading-advantage/db", () => ({
   inArray: () => ({}),
   userActivity: {},
   xpLogs: {},
+  primaryLessonAttempts: {},
 }));
 vi.mock("@reading-advantage/domain", () => ({ createTenantDB: (_db: unknown, tenant: unknown) => ({ tenant }) }));
 vi.mock("@reading-advantage/domain/games", () => ({ getLessonGameResults: mocks.getLessonGameResults }));
@@ -51,6 +52,14 @@ describe("getLessonSummaryData game XP", () => {
     expect(mocks.getLessonGameResults).toHaveBeenCalledWith(
       expect.objectContaining({ user: student, tenant: { schoolId: "school-1" }, input: { articleId: ARTICLE } }),
     );
+  });
+
+  it("returns the attempt number: the closed attempts of the student on the article plus one", async () => {
+    mocks.getLessonGameResults.mockResolvedValue({ latest: [], totalXp: 0 });
+    mocks.selects = [[{ id: "a1", activityType: "MC_QUESTION", details: { score: 4 } }], [{ xpEarned: 20 }], [{ attemptNumber: 1 }]];
+    expect(await getLessonSummaryData(ARTICLE)).toMatchObject({ success: true, data: { totalXp: 20, attemptNumber: 2 } });
+    mocks.selects = [[], []];
+    expect(await getLessonSummaryData(ARTICLE)).toMatchObject({ success: true, data: { attemptNumber: 1 } });
   });
 
   it("keeps the activity XP when the game read fails, and logs the failure", async () => {

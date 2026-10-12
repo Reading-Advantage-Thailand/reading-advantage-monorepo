@@ -93,6 +93,29 @@ describe("student progress drill-down (FR-6, FR-7)", () => {
     expect(mocks.getStudentLessonSteps).toHaveBeenCalledWith(expect.objectContaining({ classBookId: CB, studentId: "s1" }));
   });
 
+  it("shows the current attempt and the earlier attempts of a lesson, newest first", async () => {
+    const earlier = (attemptNumber: number, closeReason: string, doneSteps: number, seconds: number, xpEarned: number) => ({ attemptNumber, closedAt: new Date("2026-10-08T08:00:00Z"), closeReason, doneSteps, seconds, xpEarned, score: null });
+    mocks.getStudentLessonSteps.mockResolvedValueOnce({
+      ...data,
+      lessons: data.lessons.map((lesson, index) => (index === 0 ? { ...lesson, attemptNumber: 3, earlierAttempts: [earlier(1, "teacher_teach_again", 14, 1500, 120), earlier(2, "student_restart", 6, 300, 20)] } : { ...lesson, attemptNumber: 1, earlierAttempts: [] })),
+    });
+    await renderPage();
+    const first = screen.getAllByRole("heading", { level: 2 })[0].closest("li")!;
+    expect(within(first).getByText("Attempt 3 (current)")).toBeInTheDocument();
+    const list = within(first).getByRole("list", { name: "Earlier attempts (2)" });
+    const items = within(list).getAllByRole("listitem");
+    expect(items).toHaveLength(2);
+    expect(items[0]).toHaveTextContent("Attempt 2");
+    expect(items[0]).toHaveTextContent("Student started again");
+    expect(items[0]).toHaveTextContent("6 of 14 steps · 5 min · 20 XP");
+    expect(items[1]).toHaveTextContent("Attempt 1");
+    expect(items[1]).toHaveTextContent("Teacher taught again");
+    expect(items[1]).toHaveTextContent("Closed");
+    expect(items[1]).toHaveTextContent("14 of 14 steps · 25 min · 120 XP");
+    const second = screen.getAllByRole("heading", { level: 2 })[1].closest("li")!;
+    expect(within(second).queryByText(/Attempt \d/)).toBeNull();
+  });
+
   it("is not found when the student is not in the class", async () => {
     mocks.getStudentLessonSteps.mockRejectedValueOnce(new Error("FORBIDDEN"));
     await expect(renderPage()).rejects.toThrow("NOT_FOUND");

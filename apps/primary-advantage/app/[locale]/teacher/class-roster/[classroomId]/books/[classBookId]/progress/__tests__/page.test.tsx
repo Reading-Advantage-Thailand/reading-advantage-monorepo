@@ -112,6 +112,16 @@ describe("class book progress grid (FR-6)", () => {
     expect(mocks.getClassBookProgress).toHaveBeenCalledWith(expect.objectContaining({ classBookId: CB, user: mocks.user }));
   });
 
+  it("marks a cell with earlier attempts: the attempt number on a gold dot and in the label", async () => {
+    mocks.getClassBookProgress.mockResolvedValueOnce({ ...progress, cells: progress.cells.map((row) => (row.studentId === "s1" && row.lessonNumber === 1 ? { ...row, attempts: 2 } : { ...row, attempts: 0 })) });
+    await renderPage();
+    const table = screen.getByRole("table");
+    const marked = within(table).getByRole("link", { name: "Ann, lesson 1: Done, 14 of 14 steps, attempt 3" });
+    expect(within(marked).getByTestId("attempt-dot")).toHaveTextContent("3");
+    expect(within(table).queryAllByTestId("attempt-dot")).toHaveLength(1);
+    expect(within(table).getByRole("link", { name: "Ann, lesson 2: In progress, 3 of 14 steps" })).toBeInTheDocument();
+  });
+
   it("filters the rows by late, stuck, and not started", async () => {
     await renderPage("late");
     let rows = within(screen.getByRole("table")).getAllByRole("row");
