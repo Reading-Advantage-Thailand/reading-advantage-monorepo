@@ -5,7 +5,7 @@ after `primary_parity_class_books_20261011` (the catalogue build and the lesson 
 monorepo session before any write to `primary-parity-integration`. Run one heavy job at a time.
 Every task follows the TDD order of `measure/workflow.md`.
 
-## Phase D: Design (RPG skin)
+## Phase D: Design (RPG skin) [checkpoint: 545e337af]
 
 - [x] Task: Send the message to the Workbooks session (sent 2026-10-12 by the orchestrator; answer pending)
     - [ ] Send the text of spec "Message to the Workbooks session" through the monorepo session; record the answer in `measure/tracks/primary_parity_print_lesson_20261011/workbooks-coordination.md`
