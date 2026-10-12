@@ -1,11 +1,14 @@
 import { describe, it, expect, vi } from "vitest";
 import type { DB } from "@reading-advantage/db";
-import { getStory, listStories, recordStoryRead } from "../stories/index.js";
+import { getStory, listStories, listPrimaryStories, recordStoryRead } from "../stories/index.js";
 import { createTenantDB } from "../db-contract.js";
 import { createMockDb } from "./mock-db.js";
 
 vi.mock("@reading-advantage/db/schema", () => ({
-  stories: { id: "id", isPublic: "isPublic" },
+  stories: {
+    id: "id", isPublic: "isPublic", raLevel: "raLevel", genre: "genre", title: "title",
+    subgenre: "subgenre", image: "image", cefrLevel: "cefrLevel",
+  },
   storyRecords: { userId: "userId", storyId: "storyId", status: "status" },
   users: { id: "id" },
 }));
@@ -13,6 +16,12 @@ vi.mock("@reading-advantage/db/schema", () => ({
 vi.mock("drizzle-orm", () => ({
   eq: vi.fn((col, val) => ({ col, val, type: "eq" })),
   and: vi.fn((...conds) => ({ type: "and", conds })),
+  or: vi.fn((...conds) => ({ type: "or", conds })),
+  gte: vi.fn((col, val) => ({ col, val, type: "gte" })),
+  lte: vi.fn((col, val) => ({ col, val, type: "lte" })),
+  ilike: vi.fn((col, val) => ({ col, val, type: "ilike" })),
+  asc: vi.fn((col) => ({ col, type: "asc" })),
+  count: vi.fn(() => ({ type: "count" })),
 }));
 
 const mockStudent = { id: "s1", role: "STUDENT" as const, schoolId: "school-1" };
@@ -127,5 +136,95 @@ describe("recordStoryRead", () => {
         input: { storyId: "story-1", status: "READ" },
       })
     ).rejects.toThrow(/progress:record/);
+  });
+});
+
+
+describe("listPrimaryStories", () => {
+  const row = { id: "st-1", title: "The Lantern Fox", genre: "Fantasy", raLevel: 5, cefrLevel: "A2", image: "cl123" };
+  const mockTeacher = { id: "t1", role: "TEACHER" as const, schoolId: "school-1" };
+
+  /** Builds a mock DB whose three selects return the rows, the count, and the genres. */
+  function listDb(rows: unknown[] = [row], total = 1, genres: string[] = ["Fantasy", "Sports"]) {
+    return createMockDb({
+      selectSequence: [rows, [{ total }], genres.map((genre) => ({ genre }))],
+    });
+  }
+
+  /** The `where` mock of the first select (the list query). */
+  const firstWhere = (db: ReturnType<typeof createMockDb>) => db.select.mock.results[0].value.from.mock.results[0].value.where;
+
+  /** Flattens the where condition of the first select into a list of leaf conditions. */
+  function leaves(db: ReturnType<typeof createMockDb>) {
+    const where = firstWhere(db).mock.calls[0][0] as { type: string; conds?: unknown[] };
+    const flat = (c: any): any[] => (c.conds ? c.conds.flatMap(flat) : [c]);
+    return flat(where);
+  }
+
+  const call = (db: ReturnType<typeof createMockDb>, user: any, input: Record<string, unknown> = {}) =>
+    listPrimaryStories({ db: wrapDb(db), user, tenant: mockTenant, input });
+
+  it("returns story cards with the picture key (image ?? id), the total, and the genres", async () => {
+    const db = listDb([row, { ...row, id: "st-2", image: null }], 2);
+    const result = await call(db, { ...mockStudent, level: 5 });
+    expect(result.stories.map((s) => s.imageKey)).toEqual(["cl123", "st-2"]);
+    expect(result.total).toBe(2);
+    expect(result.page).toBe(1);
+    expect(result.pageSize).toBe(10);
+    expect(result.genres).toEqual(["Fantasy", "Sports"]);
+  });
+
+  it("limits a student to published stories in the level window raLevel +/- 1", async () => {
+    const db = listDb();
+    await call(db, { ...mockStudent, level: 5 });
+    const l = leaves(db);
+    expect(l).toContainEqual({ col: "isPublic", val: true, type: "eq" });
+    expect(l).toContainEqual({ col: "raLevel", val: 4, type: "gte" });
+    expect(l).toContainEqual({ col: "raLevel", val: 6, type: "lte" });
+  });
+
+  it("keeps the window at level 1 or higher", async () => {
+    const db = listDb();
+    await call(db, { ...mockStudent, level: 1 });
+    expect(leaves(db)).toContainEqual({ col: "raLevel", val: 1, type: "gte" });
+  });
+
+  it("shows staff every published story with no level window", async () => {
+    const db = listDb();
+    await call(db, mockTeacher);
+    const l = leaves(db);
+    expect(l).toContainEqual({ col: "isPublic", val: true, type: "eq" });
+    expect(l.some((c) => c.type === "gte" || c.type === "lte")).toBe(false);
+    await call(listDb(), mockAdmin);
+  });
+
+  it("filters by genre and by a search on title or topic", async () => {
+    const db = listDb();
+    await call(db, { ...mockStudent, level: 5 }, { genre: "Fantasy", search: "fox" });
+    const l = leaves(db);
+    expect(l).toContainEqual({ col: "genre", val: "Fantasy", type: "eq" });
+    expect(l).toContainEqual({ col: "title", val: "%fox%", type: "ilike" });
+    expect(l).toContainEqual({ col: "subgenre", val: "%fox%", type: "ilike" });
+  });
+
+  it("escapes the wildcard characters of a search", async () => {
+    const db = listDb();
+    await call(db, mockAdmin, { search: "50%_off" });
+    expect(leaves(db)).toContainEqual({ col: "title", val: "%50\\%\\_off%", type: "ilike" });
+  });
+
+  it("pages by 10 and reads the page offset", async () => {
+    const db = listDb();
+    const result = await call(db, mockAdmin, { page: 3 });
+    const builder = firstWhere(db).mock.results[0].value;
+    expect(builder.limit).toHaveBeenCalledWith(10);
+    expect(builder.offset).toHaveBeenCalledWith(20);
+    expect(result.page).toBe(3);
+  });
+
+  it("rejects a bad page and a user without story:list", async () => {
+    await expect(call(listDb(), mockAdmin, { page: 0 })).rejects.toThrow();
+    const intern = { id: "i1", role: "INTERN" as const, schoolId: "school-1" };
+    await expect(call(listDb(), intern)).rejects.toThrow();
   });
 });
