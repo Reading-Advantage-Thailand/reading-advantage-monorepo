@@ -8,6 +8,6 @@ import { logger } from "@/lib/observability/logger";
  */
 export default async function UnknownBookAddressPage({ params }: { params: Promise<{ locale: string; book: string; n: string; rest: string[] }> }) {
   const { book, n } = await params;
-  logger.info("book_link.unknown_address", { book, n });
+  logger.info("book_link.unknown_address", { book: book.slice(0, 64), n: n.slice(0, 64) });
   return <BookLinkCase name="unknown-address" homeHref="/" />;
 }

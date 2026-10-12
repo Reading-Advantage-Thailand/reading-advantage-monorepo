@@ -14,4 +14,9 @@ describe("/b/<book>/<n>/<other> (unknown address)", () => {
     expect(element.props).toMatchObject({ name: "unknown-address", homeHref: "/" });
     expect(info).toHaveBeenCalledWith("book_link.unknown_address", { book: "o3-2", n: "5" });
   });
+
+  it("cuts the logged book and number to 64 characters", async () => {
+    await UnknownBookAddressPage({ params: Promise.resolve({ locale: "th", book: "b".repeat(100), n: "9".repeat(100), rest: ["x"] }) });
+    expect(info).toHaveBeenLastCalledWith("book_link.unknown_address", { book: "b".repeat(64), n: "9".repeat(64) });
+  });
 });
