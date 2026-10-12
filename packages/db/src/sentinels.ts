@@ -662,4 +662,14 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       { tag: "0071_primary_temporary_password", kind: "column", target: "accounts.temporary_password_issued_at" },
     ],
   },
+  "0073_primary_lesson_attempts": {
+    tag: "0073_primary_lesson_attempts",
+    kind: "all",
+    target: "primary_lesson_attempts",
+    allOf: [
+      { tag: "0073_primary_lesson_attempts", kind: "table", target: "primary_lesson_attempts" },
+      { tag: "0073_primary_lesson_attempts", kind: "column", target: "primary_class_book_lessons.run_number" },
+      { tag: "0073_primary_lesson_attempts", kind: "column", target: "primary_class_book_lessons.earlier_runs" },
+    ],
+  },
 };
