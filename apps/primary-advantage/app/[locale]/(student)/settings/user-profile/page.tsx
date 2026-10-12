@@ -53,7 +53,8 @@ export default async function UserProfileSettingsPage({
             userId={user.id}
           />
           <DisplaySettingInfo
-            title={t("username")}
+            title={t("signInUsername")}
+            desc={t("signInUsernameDescription")}
             data={user.username}
             resetPassword
           />

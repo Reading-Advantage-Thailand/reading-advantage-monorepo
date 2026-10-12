@@ -14,6 +14,7 @@ import {
   getAllStudentsByAdmin,
 } from "@/server/models/classroomModel";
 import { currentUser } from "@/lib/session";
+import { updateClassroomBodySchema } from "@/lib/zod";
 
 import { STAFF_ROLES } from "@/lib/permissions";
 
@@ -155,20 +156,21 @@ export async function updateClassroomController(
     }
 
     const { id } = await params;
-    const body = await req.json();
-    const { classroomName, grade, description } = body;
-
-    if (!classroomName) {
+    const parsed = updateClassroomBodySchema.safeParse(
+      await req.json().catch(() => ({})),
+    );
+    if (!parsed.success) {
+      const fieldErrors = parsed.error.flatten().fieldErrors;
+      const firstError = Object.values(fieldErrors).flat()[0];
       return NextResponse.json(
-        { error: "Classroom name is required" },
+        { error: firstError ?? "Invalid request body", fieldErrors },
         { status: 400 },
       );
     }
 
     const classroom = await updateClassroom(id, {
-      name: classroomName,
-      grade,
-      description,
+      name: parsed.data.classroomName,
+      grade: parsed.data.grade,
     }, user);
 
     if (!classroom) {

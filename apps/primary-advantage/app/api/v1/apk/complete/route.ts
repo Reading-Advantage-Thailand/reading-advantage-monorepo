@@ -62,6 +62,8 @@ export async function POST(request: NextRequest) {
     user,
     tenant: { schoolId: user.schoolId },
     input: parsed.data,
+    // Primary shows `users.xp` on the home page and the header; Reading Advantage keeps the default.
+    options: { addToUserXp: true },
   });
   const validated = gameCompletionResultSchema.safeParse(result);
   if (!validated.success) {

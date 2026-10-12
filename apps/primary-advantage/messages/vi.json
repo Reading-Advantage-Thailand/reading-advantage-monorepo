@@ -1521,6 +1521,13 @@
       "avatar": "Nhân vật của tôi",
       "username": "Tên người dùng",
       "usernameDescription": "Tên người dùng được sử dụng để biểu thị chính mình trên nền tảng.",
+      "displayName": "Tên hiển thị",
+      "displayNameDescription": "Tên hiển thị cho thấy tên của bạn trên nền tảng. Bạn có thể đổi tên này.",
+      "signInUsername": "Tên đăng nhập",
+      "signInUsernameDescription": "Bạn dùng tên này để đăng nhập. Tên này không bao giờ thay đổi.",
+      "codeOnlyError": "Đăng nhập bằng mã lớp không thể đổi hồ sơ. Hãy đăng nhập bằng tên đăng nhập và mật khẩu.",
+      "updateSuccess": "Đã cập nhật tên hiển thị.",
+      "updateError": "Không thể cập nhật tên hiển thị. Hãy thử lại.",
       "email": "Email",
       "level": "Cấp độ Primary Advantage",
       "xp": "XP Primary Advantage",
@@ -2730,6 +2737,15 @@
     }
   },
   "AdminStudents": {
+    "toasts": {
+      "addSuccess": "Đã thêm học sinh thành công",
+      "addError": "Không thể thêm học sinh",
+      "updateSuccess": "Đã cập nhật học sinh thành công",
+      "updateError": "Không thể cập nhật học sinh",
+      "deleteSuccess": "Đã xóa học sinh thành công",
+      "deleteError": "Không thể xóa học sinh",
+      "fetchError": "Không thể tải danh sách học sinh"
+    },
     "header": {
       "title": "Quản lý học sinh",
       "subtitle": "Quản lý học sinh và tiến độ của họ"
@@ -3052,7 +3068,8 @@
       "label": "Class code",
       "help": "Type the code your teacher shows you.",
       "next": "Next",
-      "checking": "Checking…"
+      "checking": "Checking…",
+      "oldLink": "Liên kết này có mã lớp cũ. Hãy nhập mã mà giáo viên cho em xem."
     },
     "names": {
       "title": "Who are you?",

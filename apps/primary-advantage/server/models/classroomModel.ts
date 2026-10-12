@@ -7,6 +7,7 @@ import {
   asc,
   inArray,
   or,
+  max,
 } from '@reading-advantage/db';
 import {
   classrooms,
@@ -18,6 +19,7 @@ import {
   schools,
   schoolAdmins,
   userActivity,
+  xpLogs,
 } from '@reading-advantage/db';
 import { NextResponse } from "next/server";
 import { addDays } from "date-fns";
@@ -670,6 +672,47 @@ export const deleteClassroom = async (
 };
 
 /**
+ * Finds the newest activity time of each student: the newest `created_at` of the student's
+ * `user_activity` and `xp_logs` rows. Uses one grouped query for each table.
+ * @param studentIds The ids of the students of one list.
+ * @returns A map from student id to the newest time. A student with no row has no entry.
+ */
+const getLastActivityByStudent = async (
+  studentIds: string[],
+): Promise<Map<string, Date>> => {
+  const latest = new Map<string, Date>();
+  if (!studentIds.length) return latest;
+  const [activityRows, xpRows] = await Promise.all([
+    db.select({ userId: userActivity.userId, last: max(userActivity.createdAt) })
+      .from(userActivity)
+      .where(inArray(userActivity.userId, studentIds))
+      .groupBy(userActivity.userId),
+    db.select({ userId: xpLogs.userId, last: max(xpLogs.createdAt) })
+      .from(xpLogs)
+      .where(inArray(xpLogs.userId, studentIds))
+      .groupBy(xpLogs.userId),
+  ]);
+  for (const row of [...activityRows, ...xpRows]) {
+    if (!row.last) continue;
+    const current = latest.get(row.userId);
+    if (!current || row.last > current) latest.set(row.userId, row.last);
+  }
+  return latest;
+};
+
+/**
+ * Adds `lastActivity` to each student of a list.
+ * @param students The students, each with an `id`.
+ * @returns The same students with `lastActivity` (a date, or null when the student has no activity).
+ */
+const withLastActivity = async <T extends { id: string }>(
+  students: T[],
+): Promise<Array<T & { lastActivity: Date | null }>> => {
+  const latest = await getLastActivityByStudent(students.map((student) => student.id));
+  return students.map((student) => ({ ...student, lastActivity: latest.get(student.id) ?? null }));
+};
+
+/**
  * Gets students from a teacher's classrooms in one school.
  * @param teacherId The teacher identifier.
  * @param schoolId The authorized school identifier.
@@ -732,9 +775,7 @@ export const getAllStudentsByTeacher = async (
     });
 
     // Convert map to array
-    const students = Array.from(studentMap.values());
-
-    return students;
+    return await withLastActivity(Array.from(studentMap.values()));
   } catch (error) {
     console.error("Error fetching students by teacher:", error);
     throw new Error("Failed to fetch students");
@@ -811,9 +852,7 @@ export const getAllStudentsByAdmin = async (
     });
 
     // Convert map to array
-    const students = Array.from(studentMap.values());
-
-    return students;
+    return await withLastActivity(Array.from(studentMap.values()));
   } catch (error) {
     console.error("Error fetching students by teacher:", error);
     throw new Error("Failed to fetch students");
@@ -904,7 +943,7 @@ export const getAllStudentsInSystem = async () => {
       }
     }
 
-    return Array.from(groupedByStudent.values());
+    return await withLastActivity(Array.from(groupedByStudent.values()));
   } catch (error) {
     console.error("Error fetching all students in system:", error);
     throw new Error("Failed to fetch students");

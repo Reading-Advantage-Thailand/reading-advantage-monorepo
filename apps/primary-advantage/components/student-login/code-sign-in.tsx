@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@reading-advantage/ui";
+import { ART } from "@/lib/rpg/places";
 import { ClassLoginApiError, postStudentLogin } from "@/components/teacher/class-login/api";
 import { cn } from "@/lib/utils";
 import { StudentErrorMessage, waitMinutes, type StudentError } from "./errors";
@@ -58,6 +60,11 @@ function Avatar({ name, avatar }: { name: string; avatar: string }) {
   );
 }
 
+/** Removes spaces from a typed or linked class code and turns it to upper case. */
+function normalizeCode(value: string): string {
+  return value.replace(/\s+/g, "").toUpperCase();
+}
+
 /** Maps a failed student-login call to the message for the student. `pictures` is false on the name-only path. */
 function errorFor(caught: unknown, pictures: boolean): StudentError {
   if (!(caught instanceof ClassLoginApiError)) return { key: "generic" };
@@ -88,6 +95,9 @@ export function CodeSignIn() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<StudentError | null>(null);
   const [lockedUntil, setLockedUntil] = useState(0);
+  const [oldLink, setOldLink] = useState(false);
+  const searchParams = useSearchParams();
+  const linkRead = useRef(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const firstStep = useRef(true);
   const step = !list ? "code" : !student ? "names" : "pictures";
@@ -125,13 +135,33 @@ export function CodeSignIn() {
     setBusy(false);
   }
 
-  async function submitCode(event: FormEvent<HTMLFormElement>) {
+  // A link with ?classroom_code= fills the code. The ref keeps the Strict Mode double effect to one send.
+  useEffect(() => {
+    if (linkRead.current) return;
+    linkRead.current = true;
+    const raw = searchParams?.get("classroom_code");
+    if (!raw) return;
+    const value = normalizeCode(raw);
+    if (value.length !== CODE_LENGTH) {
+      setOldLink(true);
+      return;
+    }
+    setInput(value);
+    void sendCode(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- runs once, on the first render
+  }, []);
+
+  function submitCode(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const value = input.replace(/\s+/g, "").toUpperCase();
+    const value = normalizeCode(input);
     if (value.length !== CODE_LENGTH) {
       setError({ key: "codeFormat" });
       return;
     }
+    void sendCode(value);
+  }
+
+  async function sendCode(value: string) {
     setBusy(true);
     setError(null);
     try {
@@ -196,6 +226,12 @@ export function CodeSignIn() {
             </h1>
             <p className="text-muted-foreground text-base">{t("code.help")}</p>
           </div>
+          {oldLink && (
+            <div role="note" className="flex items-start gap-3 rounded-lg border-2 border-[var(--cq-gold-dark)] bg-[#fbe7b0] p-3 text-[var(--cq-ink)]">
+              <img src={ART.scroll} alt="" className="size-14 shrink-0 object-contain" />
+              <p className="text-base font-semibold">{t("code.oldLink")}</p>
+            </div>
+          )}
           <div className="grid gap-2">
             <Label htmlFor={inputId} className="text-base">
               {t("code.label")}
@@ -206,6 +242,7 @@ export function CodeSignIn() {
               onChange={(event) => {
                 setInput(event.target.value);
                 setError(null);
+                setOldLink(false);
               }}
               autoComplete="off"
               autoCapitalize="characters"

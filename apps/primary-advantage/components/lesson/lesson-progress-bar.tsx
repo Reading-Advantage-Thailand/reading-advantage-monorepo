@@ -32,6 +32,10 @@ import {
 
 import { Article, AssignmentStudent, Classroom } from "@/types";
 import { saveArticleToFlashcard } from "@/actions/flashcard";
+import {
+  getLessonProgressForTask,
+  getLessonTaskFromProgress,
+} from "@/lib/lesson-progress";
 
 export interface LessonAssignmentProps {
   id: string;
@@ -153,17 +157,13 @@ export default function LessonProgressBar({
         if (response.ok) {
           const data = await response.json();
 
-          // Ensure we get a valid phase number
-          const taskWidth = 100 / 14;
-          const taskNumber = Math.ceil(
-            data.userLessonProgress.progress / taskWidth,
+          const taskNumber = getLessonTaskFromProgress(
+            data.userLessonProgress.progress,
           );
 
           // Update phase on initial load
           if (isMounted) {
-            setCurrentTask(
-              source === "article" && taskNumber === 0 ? 1 : taskNumber,
-            );
+            setCurrentTask(taskNumber);
             setTimer(data.userLessonProgress.timeSpent as number);
             // Pause timer if on lesson summary
             if (taskNumber === 14) {
@@ -226,7 +226,7 @@ export default function LessonProgressBar({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           articleId: resolvedArticleId,
-          progress: Math.round((1 / 14) * 100),
+          progress: getLessonProgressForTask(2),
           timeSpent: 0,
         }),
       });
@@ -314,7 +314,7 @@ export default function LessonProgressBar({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           articleId: resolvedArticleId,
-          progress: Math.round((newTask / 14) * 100),
+          progress: getLessonProgressForTask(newTask),
           timeSpent: timer,
         }),
       });

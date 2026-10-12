@@ -1,5 +1,5 @@
 import { grantGpForXp } from "../primary-avatar/gp.js";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import {
   assertCan,
   type UserContext,
@@ -7,7 +7,7 @@ import {
 } from "@reading-advantage/auth";
 import { getReadToSelectAudioCompletionCounts } from "@reading-advantage/game-contracts";
 import type { TenantDB } from "../db-contract.js";
-import { gameCompletions, xpLogs } from "@reading-advantage/db/schema";
+import { gameCompletions, users, xpLogs } from "@reading-advantage/db/schema";
 import { gameCompletionInputSchema } from "./schema.js";
 import { calculateGameXP } from "./xp.js";
 import { grantCompletionCosmetics } from "../rpg/mutations.js";
@@ -60,6 +60,7 @@ type TenantTx = TenantDB;
  * @param tenant - Tenant (school) scope
  * @param input - Game completion payload (must satisfy
  *   `gameCompletionInputSchema`).
+ * @param options - Server-side options; `addToUserXp` also adds the XP to `users.xp`.
  * @returns `GameCompletionResult` with server-computed XP and stable
  *   activityId.
  */
@@ -68,11 +69,17 @@ export async function recordGameCompletion({
   user,
   tenant,
   input,
+  options,
 }: {
   db: TenantDB;
   user: UserContext;
   tenant: Tenant;
   input: GameCompletionInput;
+  /**
+   * Server-side options. They are not part of the client contract.
+   * `addToUserXp` (default false) adds the earned XP to `users.xp` in the same transaction.
+   */
+  options?: { addToUserXp?: boolean };
 }): Promise<GameCompletionResult> {
   assertCan(user, "games:complete", tenant);
 
@@ -173,6 +180,13 @@ export async function recordGameCompletion({
         activityId,
         activityType: "GAME_COMPLETION",
       });
+      if (options?.addToUserXp) {
+        // A SQL increment keeps the write safe against a parallel XP write. Only a new completion reaches this line.
+        await tx
+          .update(users)
+          .set({ xp: sql`${users.xp} + ${xpEarned}` })
+          .where(eq(users.id, user.id));
+      }
       await grantGpForXp({ tx: rawXpLogsTx, schoolId: user.schoolId ?? null, userId: user.id, sourceKey: `xp:${activityId}`, activityType: "GAME_COMPLETION", xpEarned });
       await grantCompletionCosmetics(tx, {
         id: savedCompletion.id,

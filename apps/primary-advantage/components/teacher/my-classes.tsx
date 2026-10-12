@@ -1,6 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import {
@@ -94,6 +95,8 @@ export default function MyClasses() {
   const tc = useTranslations("TeacherClass");
   const te = useTranslations("Error");
   const router = useRouter();
+  const editId = useSearchParams()?.get("edit") ?? null;
+  const openedEditId = useRef<string | null>(null);
   const [classrooms, setClassrooms] = useState<Classes[]>([]);
   const [dialogOpen, setDialogOpen] = useState<string>("");
   const [nameChange, setNameChange] = useState<string>("");
@@ -196,6 +199,25 @@ export default function MyClasses() {
   useEffect(() => {
     fetchClassrooms();
   }, []);
+
+  // The class page "Settings" link opens `?edit=<id>`: open that class's edit dialog once the list
+  // has loaded. An id that is not in the list shows the list only.
+  useEffect(() => {
+    if (loadState !== "ready" || !editId || openedEditId.current === editId) return;
+    const target = classrooms.find((classroom) => classroom.id === editId);
+    if (!target) return;
+    openedEditId.current = editId;
+    setDialogOpen("edit");
+    setNameChange(target.name);
+    setGrade(target.grade || "");
+    setClassroomId(target.id);
+  }, [loadState, classrooms, editId]);
+
+  /** Closes the dialog and removes `edit` from the URL, so a reload does not open it again. */
+  const closeDialog = () => {
+    setDialogOpen("");
+    if (editId) router.replace("/teacher/my-classes");
+  };
 
   const columns: ColumnDef<Classes>[] = [
     {
@@ -383,7 +405,7 @@ export default function MyClasses() {
 
       <Dialog
         open={dialogOpen === "edit"}
-        onOpenChange={() => setDialogOpen("")}
+        onOpenChange={closeDialog}
       >
         <DialogContent>
           <DialogHeader>
@@ -426,7 +448,7 @@ export default function MyClasses() {
             <Button
               variant="destructive"
               onClick={() => {
-                setDialogOpen("");
+                closeDialog();
                 handleEditClass(classroomId, nameChange, grade);
               }}
             >

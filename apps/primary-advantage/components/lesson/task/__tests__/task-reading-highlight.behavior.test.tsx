@@ -98,3 +98,24 @@ describe("TaskReading highlight timer cleanup", () => {
     expect(vi.getTimerCount()).toBe(baseline);
   });
 });
+
+describe("TaskReading paragraph blocks (FR-9)", () => {
+  it("shows every sentence once in 3 blocks when no paragraph holds them", () => {
+    const texts = ["Go.", "It is a cat.", "The cat runs.", "Go home now.", "Stop.", "Look up.", "The end."];
+    const many: Article = {
+      ...article,
+      passage: "Different words Go.\n\nOther words Go. again",
+      sentences: texts.map((sentence, i) => ({
+        sentence,
+        startTime: i,
+        endTime: i + 1,
+        words: sentence.split(" ").map((word, w) => ({ word, start: w, end: w + 1 })),
+      })),
+    };
+    const { container } = renderWithMessages(<TaskReading article={many} enableTranslation={false} />);
+    const blocks = container.querySelectorAll("p.indent-8");
+    expect(blocks).toHaveLength(3);
+    const all = Array.from(blocks).map((b) => b.textContent).join("").replace(/\s+/g, "");
+    expect(all).toBe(texts.join("").replace(/\s+/g, ""));
+  });
+});

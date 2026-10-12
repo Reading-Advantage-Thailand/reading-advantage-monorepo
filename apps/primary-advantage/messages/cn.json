@@ -1521,6 +1521,13 @@
       "avatar": "我的头像",
       "username": "用户名",
       "usernameDescription": "用户名用于代表自己在平台上的身份。",
+      "displayName": "显示名称",
+      "displayNameDescription": "显示名称在平台上显示你的名字。你可以更改它。",
+      "signInUsername": "登录用户名",
+      "signInUsernameDescription": "你用这个名称登录。它不会改变。",
+      "codeOnlyError": "使用班级代码登录时不能更改个人资料。请用用户名和密码登录。",
+      "updateSuccess": "显示名称已更新。",
+      "updateError": "无法更新显示名称。请重试。",
       "email": "电子邮件",
       "level": "Primary Advantage 等级",
       "xp": "Primary Advantage 经验值",
@@ -2730,6 +2737,15 @@
     }
   },
   "AdminStudents": {
+    "toasts": {
+      "addSuccess": "学生添加成功",
+      "addError": "添加学生失败",
+      "updateSuccess": "学生更新成功",
+      "updateError": "更新学生失败",
+      "deleteSuccess": "学生删除成功",
+      "deleteError": "删除学生失败",
+      "fetchError": "无法加载学生列表"
+    },
     "header": {
       "title": "学生管理",
       "subtitle": "管理学生及其学习进度"
@@ -3052,7 +3068,8 @@
       "label": "Class code",
       "help": "Type the code your teacher shows you.",
       "next": "Next",
-      "checking": "Checking…"
+      "checking": "Checking…",
+      "oldLink": "这个链接里的班级代码是旧的。请输入老师显示的代码。"
     },
     "names": {
       "title": "Who are you?",

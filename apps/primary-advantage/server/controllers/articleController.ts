@@ -116,7 +116,9 @@ export const fetchArticleById = async (req: URLSearchParams) => {
     throw new Error("Article ID is required");
   }
 
-  return getArticleById(articleId);
+  // Only the signed-in user's activity logs leave the server; without a session there is no log.
+  const user = await currentUser();
+  return getArticleById(articleId, user?.id);
 };
 
 

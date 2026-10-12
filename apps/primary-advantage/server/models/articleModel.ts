@@ -428,12 +428,14 @@ export class ArticleNotFoundError extends Error {
 }
 
 /**
- * Loads an article with its flashcard sentences and words and its activity log rows.
+ * Loads an article with its flashcard sentences and words and the activity log rows of one user.
+ * The logs of other users never leave this function (they would reach the browser).
  * @param articleId The article.
+ * @param userId The signed-in user; without a user the article has no log rows.
  * @returns The article with `sentencsAndWordsForFlashcard` and `articleActivityLog`.
  * @throws {ArticleNotFoundError} When no article has the id.
  */
-export const getArticleById = async (articleId: string) => {
+export const getArticleById = async (articleId: string, userId?: string) => {
   const [article] = await db.select().from(articles)
     .where(eq(articles.id, articleId))
     .limit(1);
@@ -447,8 +449,10 @@ export const getArticleById = async (articleId: string) => {
     .where(eq(sentencsAndWordsForFlashcards.articleId, articleId))
     .limit(1);
 
-  const activityRows = await db.select().from(articleActivityLogTable)
-    .where(eq(articleActivityLogTable.articleId, articleId));
+  const activityRows = userId
+    ? await db.select().from(articleActivityLogTable)
+      .where(and(eq(articleActivityLogTable.articleId, articleId), eq(articleActivityLogTable.userId, userId)))
+    : [];
 
   return {
     article: {

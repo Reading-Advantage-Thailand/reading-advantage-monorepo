@@ -21,12 +21,20 @@ import {
 } from "../../../../components/__tests__/helpers/render-with-messages";
 
 const mockPush = vi.fn();
+const toastMock = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn() }));
+
+vi.mock("sonner", () => ({ toast: toastMock }));
 
 vi.mock("@/i18n/navigation", () => ({
   useRouter: () => ({ push: mockPush, back: vi.fn() }),
 }));
 
 import StudentsPage from "../students/page";
+import cnMessages from "../../../../messages/cn.json";
+import enMessages from "../../../../messages/en.json";
+import thMessages from "../../../../messages/th.json";
+import twMessages from "../../../../messages/tw.json";
+import viMessages from "../../../../messages/vi.json";
 
 /** Real English copy for the AdminStudents namespace. */
 const studentCopy = testMessages.en.AdminStudents;
@@ -196,4 +204,146 @@ describe("admin students CRUD live server calls", () => {
       ).toBeGreaterThan(0);
     });
   }, 30_000);
+});
+
+const BOB = {
+  id: "student-1",
+  name: "Bob Jones",
+  email: "bob@example.com",
+  cefrLevel: "A1",
+  xp: 0,
+  role: "student",
+  createdAt: "2026-01-01",
+  className: null,
+  classroomId: null,
+};
+
+/**
+ * Mocks the list read with one student and answers each write with the given status.
+ * @param writeStatus HTTP status of the POST, PUT, and DELETE answers.
+ * @param writeBody JSON body of those answers.
+ */
+function mockWrites(writeStatus: number, writeBody: Record<string, unknown>) {
+  vi.spyOn(global, "fetch").mockImplementation(async (url, init) => {
+    const method = (init as RequestInit | undefined)?.method;
+    if (method === "POST" || method === "PUT" || method === "DELETE") {
+      return new Response(JSON.stringify(writeBody), { status: writeStatus });
+    }
+    if (typeof url === "string" && url.startsWith("/api/classrooms")) {
+      return new Response(JSON.stringify([]), { status: 200 });
+    }
+    return new Response(
+      JSON.stringify({
+        ...EMPTY_RESPONSE,
+        students: [BOB],
+        pagination: { page: 1, limit: 10, total: 1, totalPages: 1 },
+      }),
+      { status: 200 },
+    );
+  });
+}
+
+async function addStudent() {
+  await userEvent.click(
+    screen.getByRole("button", { name: studentCopy.actions.addStudent }),
+  );
+  fireEvent.change(screen.getByPlaceholderText(studentCopy.form.namePlaceholder), {
+    target: { value: "Alice Smith" },
+  });
+  await userEvent.click(
+    screen.getByRole("button", { name: studentCopy.actions.saveStudent }),
+  );
+}
+
+async function editStudent() {
+  const row = screen.getByRole("row", { name: /Bob Jones/ });
+  await userEvent.click(within(row).getAllByRole("button")[0]);
+  fireEvent.change(screen.getByDisplayValue("Bob Jones"), {
+    target: { value: "Bob Updated" },
+  });
+  await userEvent.click(
+    screen.getByRole("button", { name: studentCopy.actions.saveChanges }),
+  );
+}
+
+async function deleteStudent() {
+  const row = screen.getByRole("row", { name: /Bob Jones/ });
+  await userEvent.click(within(row).getAllByRole("button")[1]);
+  await userEvent.click(
+    screen.getByRole("button", { name: studentCopy.actions.delete }),
+  );
+}
+
+describe("admin students toasts (FR-2)", () => {
+  const toasts = enMessages.AdminStudents.toasts;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it.each([
+    ["add", addStudent, toasts.addSuccess],
+    ["edit", editStudent, toasts.updateSuccess],
+    ["delete", deleteStudent, toasts.deleteSuccess],
+  ])("shows a success toast after %s", async (_name, act, title) => {
+    mockWrites(200, { student: BOB });
+    renderWithMessages(<StudentsPage />);
+    await waitFor(() => expect(screen.getByText("Bob Jones")).toBeDefined());
+
+    await act();
+
+    await waitFor(() => expect(toastMock.success).toHaveBeenCalledWith(title));
+    expect(toastMock.error).not.toHaveBeenCalled();
+  }, 30_000);
+
+  it.each([
+    ["add", addStudent, toasts.addError],
+    ["edit", editStudent, toasts.updateError],
+    ["delete", deleteStudent, toasts.deleteError],
+  ])("shows an error toast with the server text after a failed %s", async (_name, act, title) => {
+    mockWrites(400, { error: "Name already used" });
+    renderWithMessages(<StudentsPage />);
+    await waitFor(() => expect(screen.getByText("Bob Jones")).toBeDefined());
+
+    await act();
+
+    await waitFor(() =>
+      expect(toastMock.error).toHaveBeenCalledWith(title, {
+        description: "Name already used",
+      }),
+    );
+    expect(toastMock.success).not.toHaveBeenCalled();
+  }, 30_000);
+
+  it("shows an error toast without a description when the answer has no error text", async () => {
+    mockWrites(500, {});
+    renderWithMessages(<StudentsPage />);
+    await waitFor(() => expect(screen.getByText("Bob Jones")).toBeDefined());
+
+    await addStudent();
+
+    await waitFor(() =>
+      expect(toastMock.error).toHaveBeenCalledWith(toasts.addError, {
+        description: undefined,
+      }),
+    );
+  }, 30_000);
+
+  it("has the seven AdminStudents.toasts keys in the five locales", () => {
+    const keys = Object.keys(toasts).sort();
+    expect(keys).toEqual(
+      [
+        "addError",
+        "addSuccess",
+        "deleteError",
+        "deleteSuccess",
+        "fetchError",
+        "updateError",
+        "updateSuccess",
+      ],
+    );
+    for (const messages of [thMessages, cnMessages, twMessages, viMessages]) {
+      expect(Object.keys(messages.AdminStudents.toasts).sort()).toEqual(keys);
+    }
+  });
 });

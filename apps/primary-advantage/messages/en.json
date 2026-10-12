@@ -1521,6 +1521,13 @@
       "avatar": "My avatar",
       "username": "Username",
       "usernameDescription": "The username is used to represent themselves on the platform.",
+      "displayName": "Display name",
+      "displayNameDescription": "The display name shows your name on the platform. You can change it.",
+      "signInUsername": "Sign-in username",
+      "signInUsernameDescription": "You use this name to sign in. It never changes.",
+      "codeOnlyError": "Your class code sign-in cannot change the profile. Sign in with your username and password.",
+      "updateSuccess": "Display name updated.",
+      "updateError": "Could not update the display name. Try again.",
       "email": "Email",
       "level": "Primary advantage level",
       "xp": "Primary advantage XP",
@@ -2730,6 +2737,15 @@
     }
   },
   "AdminStudents": {
+    "toasts": {
+      "addSuccess": "Student added successfully",
+      "addError": "Failed to add student",
+      "updateSuccess": "Student updated successfully",
+      "updateError": "Failed to update student",
+      "deleteSuccess": "Student deleted successfully",
+      "deleteError": "Failed to delete student",
+      "fetchError": "Failed to load students"
+    },
     "header": {
       "title": "Student Management",
       "subtitle": "Manage students and their progress"
@@ -3052,7 +3068,8 @@
       "label": "Class code",
       "help": "Type the code your teacher shows you.",
       "next": "Next",
-      "checking": "Checking…"
+      "checking": "Checking…",
+      "oldLink": "This link has an old class code. Type the code that your teacher shows."
     },
     "names": {
       "title": "Who are you?",

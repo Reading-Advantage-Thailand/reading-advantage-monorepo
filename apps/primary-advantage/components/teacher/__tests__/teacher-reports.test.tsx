@@ -107,8 +107,8 @@ describe("teacher reports overview", () => {
     const row = screen.getByRole("row", { name: /Somchai/ });
     expect(within(row).getByText("P3A")).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("somchai@example.com");
-    // The tile that always showed 0% (no activity data in the list) is gone.
-    expect(screen.queryByText(en.Reports.progress.activeThisWeek)).not.toBeInTheDocument();
+    // FR-3: the tile is back, and it reads the real `lastActivity` of the list.
+    expect(screen.getByText(en.Reports.progress.activeThisWeek)).toBeInTheDocument();
   });
 
   it("opens with the class from the class page link", () => {
