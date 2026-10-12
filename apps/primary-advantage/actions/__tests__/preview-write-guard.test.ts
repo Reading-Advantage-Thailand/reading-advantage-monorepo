@@ -48,6 +48,7 @@ import { updateUserActivity } from "../user";
 import { fetchArticleActivity } from "../article";
 import { deleteFlashcardCard, reviewCard, saveArticleToFlashcard, saveFlashcard } from "../flashcard";
 import { setAvatarProfileAction } from "../avatar";
+import { restartLessonAction } from "../lesson-attempts";
 import { ActivityType } from "@/types/enum";
 
 const cases: Array<[string, () => Promise<unknown>]> = [
@@ -60,6 +61,7 @@ const cases: Array<[string, () => Promise<unknown>]> = [
   ["reviewCard", () => reviewCard("c1", 3 as never, 4)],
   ["deleteFlashcardCard", () => deleteFlashcardCard("c1")],
   ["setAvatarProfileAction", () => setAvatarProfileAction({} as never)],
+  ["restartLessonAction", () => restartLessonAction({ articleId: "dddddddd-dddd-4ddd-8ddd-dddddddddddd" })],
 ];
 
 describe("server actions refuse staff in Preview mode", () => {
