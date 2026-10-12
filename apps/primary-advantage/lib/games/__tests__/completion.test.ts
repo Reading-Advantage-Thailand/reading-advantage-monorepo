@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { ReadToSelectAudioEvidence, StudentChallengeRunLaunch } from "@reading-advantage/game-contracts";
 
+import { gameCompletionInputSchema } from "@reading-advantage/domain/games";
+
 import { gameFor } from "../catalog";
 import { canRunChallenge, hostCompletionInput } from "../completion";
 
@@ -53,6 +55,24 @@ describe("hostCompletionInput", () => {
     expect(body.duration).toBe(61);
     expect(body.metadata?.learningEvidence).toEqual(evidence);
     expect(body.challengeRunId).toBeUndefined();
+  });
+
+  it("keeps the article id of a lesson run in the metadata, next to the story evidence", () => {
+    const body = hostCompletionInput(game, null, result, evidence, { ...run, articleId: "11111111-1111-4111-8111-111111111111" });
+    expect(body.gameType).toBe("hero-vs-zombie-story");
+    expect(body.metadata).toMatchObject({ articleId: "11111111-1111-4111-8111-111111111111", learningEvidence: evidence });
+  });
+
+  it.each(["rpg-battle", "rune-match", "dragon-rider", "enchanted-library", "castle-defense", "potion-rush"])(
+    "posts a lesson run of %s with a game type that the completion route accepts",
+    (id) => {
+      const body = hostCompletionInput(gameFor(id)!, null, result, evidence, { ...run, articleId: "11111111-1111-4111-8111-111111111111" });
+      expect(gameCompletionInputSchema.safeParse(body).success).toBe(true);
+    },
+  );
+
+  it("posts a run without an article as before, with no article id", () => {
+    expect(hostCompletionInput(game, null, result, evidence, run).metadata).not.toHaveProperty("articleId");
   });
 
   it("posts a challenge run under the challenge's own game id, with the run id and no learning evidence", () => {

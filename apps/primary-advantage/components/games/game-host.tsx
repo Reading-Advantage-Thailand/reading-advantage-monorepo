@@ -22,6 +22,15 @@ export interface CompletionSummary {
   correctAnswers: number;
   totalAttempts: number;
   victory: boolean;
+  /** The XP that the server awarded for this run (absent when the response has none). */
+  xpEarned?: number;
+}
+
+/** The end of a run, given to the page whether or not the run saves. */
+export interface RunResult {
+  correctAnswers: number;
+  totalAttempts: number;
+  victory: boolean;
 }
 
 /** Props of the Primary game host. */
@@ -42,9 +51,15 @@ export interface GameHostProps {
   readonly setting?: RendererSetting;
   /** Post the completion (default). False is the demo mode: the run saves nothing. */
   readonly save?: boolean;
+  /** The lesson article of a lesson game: the saved completion carries it in its metadata. */
+  readonly articleId?: string;
   readonly className?: string;
   /** Receives the saved completion numbers. */
   readonly onCompleted?: (summary: CompletionSummary) => void;
+  /** Receives the end of each run at once, also when `save` is false. */
+  readonly onResult?: (result: RunResult) => void;
+  /** Called once when the game or its items fail to load, so the page can offer a fallback. */
+  readonly onLoadError?: () => void;
   /** Back from the briefing or done from the results; absent: the games catalog. */
   readonly onExit?: () => void;
 }
@@ -62,7 +77,7 @@ type LoadError = "game" | "load" | "unauthenticated";
  * @param props The game, the identity, the content source, and the callbacks.
  * @returns The game surface with its load, lock, and save states.
  */
-export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar = null, setting, save = true, className, onCompleted, onExit }: GameHostProps) {
+export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar = null, setting, save = true, articleId, className, onCompleted, onResult, onLoadError, onExit }: GameHostProps) {
   const t = useTranslations("ApkHost");
   const tStory = useTranslations("StoryGames");
   const router = useRouter();
@@ -134,21 +149,31 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
     }
   }, [rpg]);
 
+  useEffect(() => {
+    if (error === "game" || error === "load") onLoadError?.();
+    // The callback is read at the error edge only: a new function identity must not call it again.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
   const onComplete = useCallback((result: GameResults, outcome: string, evidence: StoryGameEvidence, answerEvidence?: ReadToSelectAudioEvidence) => {
     if (!game) return;
     const victory = outcome !== "defeat";
-    const body = hostCompletionInput(game, launch, result, evidence, { startedAt: startedAt.current, now: Date.now(), victory, idempotencyKey: crypto.randomUUID() }, answerEvidence);
+    const body = hostCompletionInput(game, launch, result, evidence, { startedAt: startedAt.current, now: Date.now(), victory, idempotencyKey: crypto.randomUUID(), ...(articleId ? { articleId } : {}) }, answerEvidence);
+    onResult?.({ correctAnswers: body.correctAnswers, totalAttempts: body.totalAttempts, victory });
     if (!save) return;
     setSaveState("saving");
     fetch("/api/v1/apk/complete", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
-      .then((res) => {
+      .then(async (res) => {
         setSaveState(res.ok ? "saved" : "error");
         if (!res.ok) return;
         if (ownerKey) void rpg.refreshAfterSavedCompletion().catch(() => undefined);
-        onCompleted?.({ ...(body.challengeRunId ? { challengeRunId: body.challengeRunId } : {}), correctAnswers: body.correctAnswers, totalAttempts: body.totalAttempts, victory });
+        // The server owns the XP: read it from the response, never from the client result.
+        const saved: unknown = await res.json().catch(() => null);
+        const xp = typeof saved === "object" && saved !== null && "xpEarned" in saved && typeof saved.xpEarned === "number" ? saved.xpEarned : undefined;
+        onCompleted?.({ ...(body.challengeRunId ? { challengeRunId: body.challengeRunId } : {}), correctAnswers: body.correctAnswers, totalAttempts: body.totalAttempts, victory, ...(xp === undefined ? {} : { xpEarned: xp }) });
       })
       .catch(() => setSaveState("error"));
-  }, [game, launch, save, ownerKey, rpg, onCompleted]);
+  }, [game, launch, save, ownerKey, rpg, articleId, onCompleted, onResult]);
 
   const signIn = (
     <Link className="underline" href={`/auth/signin?redirect=${encodeURIComponent(`/${locale}/student/games/apk/${gameId}${challengeId ? `?challengeId=${challengeId}` : ""}`)}`}>
