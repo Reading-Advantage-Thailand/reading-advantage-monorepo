@@ -24,7 +24,7 @@ before a build; no dev server; no run with 25 students.
 - [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) - look check pending (owner, async)
     - Steps: (1) Open `~/Desktop/primary-parity-progress/captures/acceptance/phase1/sample-report.html` and check the layout. (2) Read the template `docs/runbooks/primary-behavior-contract-template.md` and check the seven sections. (3) Run `node_modules/.bin/tsc -p scripts/primary-parity/tsconfig.json` from the repository root: no error.
 
-## Phase 2: Test
+## Phase 2: Test [checkpoint: 7c71879da]
 
 - [x] Task: Write the tests of the pair list (red)
     - [x] `scripts/primary-parity/__tests__/pairs.test.ts`: a valid file parses; a missing `checks` fails; the defaults apply; each placeholder resolves through a fake map; an unknown placeholder fails
