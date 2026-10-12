@@ -37,9 +37,14 @@ function fakeDb(selects: unknown[][]) {
   const wheres: unknown[] = [];
   const inserts: { values: unknown }[] = [];
   const updates: unknown[] = [];
+  const locks: string[] = [];
   const chain = (rows: unknown[]) => {
     const c: Record<string, unknown> = {};
     for (const m of ["from", "innerJoin", "limit", "orderBy"]) c[m] = () => c;
+    c.for = (strength: string) => {
+      locks.push(strength);
+      return c;
+    };
     c.where = (w: unknown) => {
       wheres.push(w);
       return c;
@@ -66,13 +71,19 @@ function fakeDb(selects: unknown[][]) {
     transaction: async (fn: (t: unknown) => Promise<unknown>) => fn(tx),
   };
   const db = { unscoped: () => tx } as unknown as TenantDB;
-  return { db, wheres, inserts, updates };
+  return { db, wheres, inserts, updates, locks };
 }
 
 const run = (f: ReturnType<typeof fakeDb>, user = student, random = () => 0) =>
   saveArticleCardsAfterQuiz({ db: f.db, user, tenant, input: { articleId: ARTICLE }, random });
 
 describe("saveArticleCardsAfterQuiz", () => {
+  it("locks the article log row for update before it reads the saved flag", async () => {
+    const f = fakeDb([[{ ...doneLog, isSentenceAndWordsSaved: true }]]);
+    await run(f);
+    expect(f.locks).toEqual(["update"]);
+  });
+
   it("saves nothing before all three quizzes are done", async () => {
     const f = fakeDb([[{ ...doneLog, isLongAnswerQuestionCompleted: false }]]);
     expect(await run(f)).toEqual({ wordsCreated: 0, sentencesCreated: 0, alreadySaved: false });

@@ -14,20 +14,34 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/session", () => ({ currentUser: mocks.currentUser, getCurrentUser: mocks.currentUser }));
 vi.mock("@/lib/primary-evidence-queue", () => ({ enqueuePrimaryEvidenceJob: mocks.enqueue }));
-vi.mock("@reading-advantage/db", () => ({
-  db: { select: mocks.select, insert: mocks.insert, update: mocks.update, transaction: mocks.transaction },
-  users: { id: "users.id", xp: "users.xp" },
-  userActivity: { id: "ua.id", userId: "ua.userId", activityType: "ua.type", targetId: "ua.target", completed: "ua.completed" },
-  articleActivityLogs: { id: "al.id", articleId: "al.articleId", userId: "al.userId" },
-  xpLogs: { id: "xp.id", __name: "xpLogs" },
-  eq: vi.fn(() => ({})),
-  and: vi.fn(() => ({})),
-  or: vi.fn(() => ({})),
-  isNull: vi.fn(() => ({})),
-}));
+vi.mock("@reading-advantage/db", async () => {
+  // Real drizzle operators and a real table, so the test can build the ON CONFLICT SQL.
+  const orm = await vi.importActual<typeof import("drizzle-orm")>("drizzle-orm");
+  const pg = await vi.importActual<typeof import("drizzle-orm/pg-core")>("drizzle-orm/pg-core");
+  const userActivity = pg.pgTable("user_activity", {
+    id: pg.text("id"),
+    userId: pg.text("user_id"),
+    activityType: pg.text("activity_type"),
+    targetId: pg.text("target_id"),
+    completed: pg.boolean("completed"),
+  });
+  return {
+    db: { select: mocks.select, insert: mocks.insert, update: mocks.update, transaction: mocks.transaction },
+    users: { id: "users.id", xp: "users.xp" },
+    userActivity,
+    articleActivityLogs: { id: "al.id", articleId: "al.articleId", userId: "al.userId" },
+    xpLogs: { id: "xp.id", __name: "xpLogs" },
+    eq: orm.eq,
+    and: orm.and,
+    or: orm.or,
+    isNull: orm.isNull,
+  };
+});
 vi.mock("@reading-advantage/domain/primary-avatar", () => ({ grantGpForXp: mocks.grantGp }));
 vi.mock("@/server/utils/assistant", () => ({ getLaqFeedback: vi.fn(), getSaqFeedback: vi.fn() }));
 
+import { PgDialect } from "drizzle-orm/pg-core";
+import type { SQL } from "drizzle-orm";
 import { finishQuiz } from "../question";
 import { ActivityType } from "@/types/enum";
 import { xpLogs } from "@reading-advantage/db";
@@ -35,9 +49,16 @@ import { xpLogs } from "@reading-advantage/db";
 const ARTICLE = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const ROW = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
 
+/** The config object of each onConflictDoUpdate call. */
+const conflictConfigs: unknown[] = [];
+
 function chain<T>(value: T) {
   const stub: Record<string, (...args: unknown[]) => unknown> = {};
-  for (const method of ["from", "where", "limit", "values", "set", "returning", "onConflictDoUpdate"]) stub[method] = () => stub;
+  for (const method of ["from", "where", "limit", "values", "set", "returning"]) stub[method] = () => stub;
+  stub.onConflictDoUpdate = (config: unknown) => {
+    conflictConfigs.push(config);
+    return stub;
+  };
   (stub as Record<string, unknown>).then = (resolve: (value: T) => unknown) => Promise.resolve(value).then(resolve);
   return stub;
 }
@@ -65,6 +86,7 @@ function setup(upsertRows: Array<{ id: string }>) {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  conflictConfigs.length = 0;
 });
 
 describe("finishQuiz with an existing activity row", () => {
@@ -76,6 +98,16 @@ describe("finishQuiz with an existing activity row", () => {
     expect(mocks.grantGp).toHaveBeenCalledTimes(1);
     expect(mocks.update).toHaveBeenCalled();
     expect(mocks.enqueue).toHaveBeenCalledWith({ sourceTable: "user_activity", rowId: ROW }, "55555555-5555-4555-8555-555555555555");
+  });
+
+  it("limits the conflict update to rows that are not complete (ON CONFLICT ... WHERE completed = false)", async () => {
+    setup([{ id: ROW }]);
+    await finishQuiz(ARTICLE, { responses: [], score: 1, timer: 9 }, ActivityType.MC_QUESTION);
+    const { target, setWhere } = conflictConfigs[0] as { target: unknown[]; setWhere: SQL };
+    expect(target).toHaveLength(3);
+    const built = new PgDialect().sqlToQuery(setWhere);
+    expect(built.sql).toBe('("user_activity"."completed" = $1 or "user_activity"."completed" is null)');
+    expect(built.params).toEqual([false]);
   });
 
   it("returns success and writes no XP log, no XP, and no job for an already complete row", async () => {

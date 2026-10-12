@@ -89,7 +89,8 @@ export async function saveArticleCardsAfterQuiz({
       .select()
       .from(articleActivityLogs)
       .where(and(eq(articleActivityLogs.userId, user.id), eq(articleActivityLogs.articleId, articleId)))
-      .limit(1);
+      .limit(1)
+      .for("update");
     const quizzesDone = Boolean(
       log?.isMultipleChoiceQuestionCompleted && log.isShortAnswerQuestionCompleted && log.isLongAnswerQuestionCompleted,
     );
