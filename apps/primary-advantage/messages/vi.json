@@ -463,6 +463,62 @@
     "loadErrorHint": "Hãy thử lại. Nếu lỗi còn, báo cho Reading Advantage.",
     "back": "Đến trang giáo viên"
   },
+  "SystemDashboard": {
+    "title": "Bảng điều khiển hệ thống",
+    "week": "Tuần này: {start} đến {end}",
+    "totals": {
+      "heading": "Tổng số của nền tảng",
+      "schools": "Trường",
+      "students": "Học sinh",
+      "teachers": "Giáo viên",
+      "active": "Học sinh hoạt động tuần này",
+      "activeSub": "{active} trên {total} ({percent}%)",
+      "articles": "Bài đọc đã mở tuần này",
+      "seatsUsed": "Chỗ đã dùng",
+      "seatsOf": "trên {seats} chỗ",
+      "noLicense": "Không có giấy phép",
+      "withoutSchool": "{count, plural, other {# học sinh chưa có trường và không nằm trong bảng.}} Hãy gán trường ở trang Người dùng."
+    },
+    "table": {
+      "heading": "Trường",
+      "search": "Tìm theo tên trường",
+      "searchLabel": "Tìm trường",
+      "sortBy": "Sắp xếp theo",
+      "sortDefault": "Trường im lặng trước",
+      "sortAsc": "Thấp đến cao",
+      "sortDesc": "Cao đến thấp",
+      "sortDirection": "Đổi thứ tự sắp xếp",
+      "noMatch": "Không có trường nào khớp với “{query}”.",
+      "empty": "Chưa có trường nào",
+      "emptyHint": "Hãy thêm trường đầu tiên ở trang Trường.",
+      "goToSchools": "Đến trang Trường",
+      "columns": {
+        "name": "Trường",
+        "active": "Học sinh hoạt động",
+        "articles": "Bài đọc đã mở",
+        "seats": "Chỗ",
+        "last": "Hoạt động gần nhất",
+        "status": "Trạng thái"
+      },
+      "activeOf": "{active} trên {students} ({percent}%)",
+      "seatsOf": "{used} trên {total}",
+      "noLicense": "Không có giấy phép",
+      "none": "Không có",
+      "open": "Mở",
+      "openFor": "Mở bảng điều khiển của {name}",
+      "openCard": "Mở bảng điều khiển",
+      "actions": "Thao tác",
+      "footnote": "Tuần này là 7 ngày gần nhất, tính cả hôm nay. Im lặng là trường có học sinh nhưng không có hoạt động tuần này. Chỗ chỉ tính học sinh."
+    },
+    "status": {
+      "quiet": "Im lặng",
+      "active": "Hoạt động",
+      "noStudents": "Chưa có học sinh"
+    },
+    "loadError": "Không tải được bảng điều khiển hệ thống",
+    "loadErrorHint": "Hãy thử lại. Nếu lỗi vẫn còn, hãy báo cho nhóm hỗ trợ.",
+    "back": "Đến trang Trường"
+  },
   "Components": {
     "translationLanguage": "Ngôn ngữ dịch",
     "submitButton": "Gửi",
