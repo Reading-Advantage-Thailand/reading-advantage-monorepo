@@ -1,0 +1,84 @@
+{
+  "member": "primary_parity_lesson_repeat_20261011",
+  "pairs": [
+    {
+      "id": "LR-A1",
+      "rows": ["STU-05"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/student/lesson/{map:article:cmtyina5w000ps601n6htj9g3}",
+      "colorSchemes": ["light", "dark"],
+      "checks": [
+        {
+          "id": "LR-A1-a",
+          "behavior": "Finish the lesson to task 14. Legacy: the summary has \"Start Again\". New: the summary has \"Back to Read Page\" and \"Start Again\". A click and the confirm open the lesson at task 1 with no task marked done. New: the dialog asks first and Cancel changes nothing."
+        },
+        {
+          "id": "LR-A1-b",
+          "behavior": "New: after the restart and a second finish, the summary shows \"Attempt 2\" and the XP of attempt 2. After a page reload of the summary, \"Attempt 2\" still shows (S4)."
+        }
+      ]
+    },
+    {
+      "id": "LR-A2",
+      "rows": ["STU-05"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/student/lesson/{map:article:cmtyina5w000ps601n6htj9g3}",
+      "checks": [
+        {
+          "id": "LR-A2-a",
+          "behavior": "After the restart, finish task 7. Legacy and new: the student gets the task XP again (legacy rule, Member Question 1 default). New: the earlier attempt keeps its XP in xp_logs."
+        }
+      ]
+    },
+    {
+      "id": "LR-A3",
+      "rows": ["STU-05"],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/class-roster/cmhwuko0p000ds60dha8z70ig",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
+      "steps": "./acceptance-steps-lesson-repeat.ts",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-class-book-slot]" },
+      "checks": [
+        {
+          "id": "LR-A3-a",
+          "behavior": "New: the drill-down of the student shows the chip \"Attempt 2 (current)\" and the list \"Earlier attempts (1)\" with the close date, the reason, the steps, the minutes, and the XP of attempt 1. Legacy has no history (difference on purpose: legacy deletes the earlier work)."
+        },
+        {
+          "id": "LR-A3-b",
+          "behavior": "New: the class grid shows a gold dot with the attempt number on the cell of the lesson, and the 14-lesson grid scrolls at 375 px with no page overflow. The CSV has the column attempts."
+        }
+      ]
+    },
+    {
+      "id": "LR-A4",
+      "rows": ["STU-05"],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/class-roster/cmhwuko0p000ds60dha8z70ig",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-class-book-slot]" },
+      "checks": [
+        {
+          "id": "LR-A4-a",
+          "behavior": "New: a taught lesson of the lesson plan has \"Teach again\". The dialog says that the class starts the lesson again, that the work goes into the history, and that XP stays. After the confirm: Run 2, no step done, the lesson is current, \"Earlier runs (1)\" shows. Legacy has no teacher reset (difference on purpose)."
+        }
+      ]
+    },
+    {
+      "id": "LR-A5",
+      "rows": ["STU-05"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/student/lesson/{map:article:cmtyina5w000ps601n6htj9g3}",
+      "checks": [
+        {
+          "id": "LR-A5-a",
+          "behavior": "New, teacher-led class, after LR-A4: the student opens the lesson and only the steps that the teacher marks done again open. Legacy has no teacher-led lock for this flow (difference on purpose)."
+        }
+      ]
+    }
+  ]
+}

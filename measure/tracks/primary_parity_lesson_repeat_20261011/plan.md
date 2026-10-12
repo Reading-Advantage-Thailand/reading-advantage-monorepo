@@ -122,22 +122,27 @@ Notes (Phase S3, helper A1, 2026-10-12):
 ## Phase S4: The reports show the latest and the earlier attempts
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Define the report contracts
-    - [ ] Add `attempts` and `earlierAttempts` to the contracts of `getClassBookProgress` and `getStudentLessonSteps` in `packages/domain/src/primary-books/progress-contracts.ts`; add the `attempts` column to `toProgressCsv`
-    - [ ] A read `listLessonAttempts` in `packages/domain/src/primary-lesson-attempts/attempts.ts` with `progress:read:all` for staff and `progress:read:own` for the student
-- [ ] Task: Write the tests (red)
-    - [ ] Domain: the grid count, the drill-down list, and the CSV column; school scoping
-    - [ ] App: `server/models/__tests__/userModel.test.ts` (or the existing test): `getUserActivity` and `getUserArticleRecords` add the moved rows with their attempt number and keep the XP totals
-    - [ ] App: the summary shows "Attempt 2" and the XP of attempt 2 (`actions/article.ts` `getLessonSummaryData`)
-    - [ ] App: the pages `.../progress/page.tsx` and `.../progress/[studentId]/page.tsx` render the attempt marker and the list
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-books/progress.ts` and `progress-contracts.ts`
-    - [ ] `apps/primary-advantage/server/models/userModel.ts` (`getUserActivity`, `getUserArticleRecords`) and `actions/article.ts` (`getLessonSummaryData`)
-    - [ ] The progress pages and their components
-- [ ] Task: Tell the graph session about the history table
-    - [ ] Send the table name and the moved row shape for the mastery evidence job (spec Risks)
+- [x] Task: Define the report contracts (3234e458f red, ffed804e2 green)
+    - [x] Add `attempts` and `earlierAttempts` to the contracts of `getClassBookProgress` and `getStudentLessonSteps` in `packages/domain/src/primary-books/progress-contracts.ts`; add the `attempts` column to `toProgressCsv`
+    - [x] A read `listLessonAttempts` in `packages/domain/src/primary-lesson-attempts/attempts.ts` with `progress:read:all` for staff and `progress:read:own` for the student
+- [x] Task: Write the tests (red) (3234e458f domain, 255d3b798 app)
+    - [x] Domain: the grid count, the drill-down list, and the CSV column; school scoping
+    - [x] App: `server/models/__tests__/userModel.attempt-history.test.ts` (new) and `userModel.article-records.test.ts`: `getUserActivity` and `getUserArticleRecords` add the moved rows with their attempt number and keep the XP totals
+    - [x] App: the summary shows "Attempt 2" and the XP of attempt 2 (`actions/article.ts` `getLessonSummaryData`)
+    - [x] App: the pages `.../progress/page.tsx` and `.../progress/[studentId]/page.tsx` render the attempt marker and the list
+- [x] Task: Implement (green) (ffed804e2 domain, d8f1c519e app)
+    - [x] `packages/domain/src/primary-books/progress.ts` and `progress-contracts.ts`
+    - [x] `apps/primary-advantage/server/models/userModel.ts` (`getUserActivity`, `getUserArticleRecords`) and `actions/article.ts` (`getLessonSummaryData`)
+    - [x] The progress pages and their components
+- [x] Task: Tell the graph session about the history table (149fb0d8d red, 1f9f2f989 green)
+    - [x] Send the table name and the moved row shape for the mastery evidence job (spec Risks)
 - [ ] Task: Final side-by-side check
     - [ ] Run checks A1 to A5 of the spec with the acceptance kit on the rehearsal clone (2 or 3 students); send the captures to the owner
 - [ ] Task: Docs and doctor
     - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
 - [ ] Task: Measure - User Manual Verification 'Phase S4: The reports show the latest and the earlier attempts' (Protocol in workflow.md)
+
+Notes (Phase S4, helper A1, 2026-10-12):
+- Commits: 3234e458f + ffed804e2 domain report contracts and counts; 255d3b798 + d8f1c519e app history rows, summary attempt, progress markers; 149fb0d8d + 1f9f2f989 evidence loader reads moved rows.
+- Open: side-by-side A1-A5 run on the rehearsal clone plus captures (kit committed: `acceptance-pairs.json`, `acceptance-steps-lesson-repeat.ts`, `behavior-contract.md`, `lesson-repeat-data-checks.sql`; run is orchestrator work, never the shared copies); docs `generate.sh`/`doctor.sh` and `build-graph update` (orchestrator); manual verification.
+- Phase checks: domain `vitest run` 178 files, 2066 tests pass; app `tsc --noEmit` clean.
