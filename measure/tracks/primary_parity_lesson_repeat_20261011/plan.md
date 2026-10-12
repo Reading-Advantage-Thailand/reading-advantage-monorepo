@@ -18,7 +18,7 @@ heavy job at a time. Every task follows the TDD order of `measure/workflow.md`.
 - [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
     - Manual steps: open the 36 PNG files of `design/captures.md`; check 375 px and 1280 px, day and night; check the gold and iron buttons; answer the 4 questions of `design/look-check.md`. Look check pending (owner, async).
 
-## Phase S1: Keep each closed attempt in a history
+## Phase S1: Keep each closed attempt in a history [checkpoint: 0d97e0fdc]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Define the schema and the contracts
