@@ -174,5 +174,15 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 
 ## Task: API authorization fixes, cluster 2 (added 2026-10-12, orchestrator)
 
-- [ ] Task: API authorization fixes, cluster 2 (nine findings; notes per finding below)
+- [x] Task: API authorization fixes, cluster 2 (nine findings; notes per finding below)
     - Finding 5 (licenses), DEFAULT for the owner to confirm: POST, PUT, and DELETE on `/api/licenses` and `/api/licenses/[id]` are SYSTEM only (403 for ADMIN). GET (list and by id) stays for ADMIN (own school, tenant scope) and SYSTEM. ADMIN flows that the UI uses and that stay: the school license panel at `/settings/school-profile#license` (server read through `getLicenseViewForCaller`, no API call) and `/api/users/me/school`. The create, edit, and delete forms and the license table sit under `/system/licenses` (SYSTEM pages), so they keep working. `components/update-user-license.tsx` sends PATCH to `/api/licenses/<userId>`; no PATCH handler exists, so that flow already fails with 405 (not changed here; a key activation flow needs its own owner decision).
+    - 1 ranking (2a100f15c): GET ignores `?schoolId` unless SYSTEM, else the session school (404 with none). POST compares the key with `timingSafeEqual` on equal-length buffers; no `ACCESS_KEY` gives 401. Red 3 of 8.
+    - 2, 3 flashcard actions (96dd4fa81): `getUserFlashcardDecks()` has no parameter (no caller used one); the `articleActivityLogs` update filters by id and `userId`. Red 3 of 3.
+    - 4 register (43255d514): ADMIN and TEACHER name only the own school (403); SYSTEM may name any school (SYSTEM got 403 before). Red 2 of 23. The app uses the `packages/api` dist; dist rebuilt with the direct tsc (exit 0).
+    - 5 licenses (a936e586f): see the default above. Red 5 of 15.
+    - 6 chatbot (b128c8eda): passage 20000, summary 5000, title 500, image description 2000, 60 messages of 4000 characters (the client sends the full history, so 30 would break long chats), blacklist 100 of 1000. 400 on failure. Red 7 of 11.
+    - 7 article questions (524b08a66): GET 401 without a session, 400 for a bad `questionType`; POST body Zod (`activityType` enum, `data.responses`, `data.progress`, `data.timer`); the preview guard stays first. Red 7 of 11.
+    - 8 deck games (5916d58ef): shared `server/utils/flashcard-game-submit.ts` (Zod `score` 0-1000, `timer` 0-86400000; owner check gives 403). Four routes use it. Red 24 of 32.
+    - 9 teachers and students (e46507fdf): Zod on teacher create, student create, student update (unknown fields such as `role` are dropped). Teacher PUT already had Zod. The audit claim "teacher by id uses an inner join on `user_roles`" is NOT true: `getTeacherById`, `updateTeacher`, and delete use `roleSql` (`users.role`), fixed earlier in `5cf2dcb91`. No change needed.
+    - Type check: `apps/primary-advantage` `tsc --noEmit` exit 0 under the lock.
+    - Gaps: `components/update-user-license.tsx` sends PATCH to `/api/licenses/<userId>` and no PATCH handler exists (405; key activation needs an owner decision). Other `console.error` calls in the touched controllers stay (not changed lines).
