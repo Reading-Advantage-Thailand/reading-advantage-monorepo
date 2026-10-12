@@ -79,19 +79,28 @@ _Story ref: spec.md#story-s4_
     - Open a lesson with no article as a student: the page says "not ready". As a teacher with no class that has the book: the page says "no class".
     - Check the language menu on each page and the Thai text (owner check pending).
 
-## Phase S2: Signed-out landing for Primary and Tutor readers
+## Phase S2: Signed-out landing for Primary and Tutor readers [checkpoint: 67e4823d3]
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Define the Tutor URL builder
-    - [ ] New `lib/book-link/tutor-url.ts`: fills `{book}` and `{n}` of `TUTOR_LESSON_URL_TEMPLATE` from a validated key and number only; returns null when the setting is empty or the template is not `https`; add the name to the env schema and `.env.example` if the app has them
-- [ ] Task: Write the tests (red)
-    - [ ] `lib/book-link/__tests__/tutor-url.test.ts`: fill, empty setting, `http` template, an injected book value
-    - [ ] Page tests: signed out shows the landing with two choices; no setting shows one choice; signed in skips the landing
-- [ ] Task: Implement (green)
-    - [ ] `components/book-link/book-landing.tsx` (RPG skin) and its use in the page; the school choice links to sign-in with the callback of S1
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; graph update; `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Signed-out landing for Primary and Tutor readers' (Protocol in workflow.md)
+- [x] Task: Define the Tutor URL builder
+    - [x] New `lib/book-link/tutor-url.ts`: fills `{book}` and `{n}` of `TUTOR_LESSON_URL_TEMPLATE` from a validated key and number only; returns null when the setting is empty or the template is not `https`; the app has no env schema, so the name is in `.env.example` only
+- [x] Task: Write the tests (red)
+    - [x] `lib/book-link/__tests__/tutor-url.test.ts`: fill, empty setting, `http` template, an injected book value
+    - [x] Page tests: signed out shows the landing with two choices; no setting shows one choice; signed in skips the landing
+- [x] Task: Implement (green)
+    - [x] `components/book-link/book-landing.tsx` (RPG skin) and its use in the page; the school choice links to sign-in with the callback of S1
+- [x] Task: Docs and doctor
+    - [x] JSDoc; skipped: graph.db read only (orchestrator rule); `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S2: Signed-out landing for Primary and Tutor readers' (Protocol in workflow.md) - look check pending (owner, async)
+    - Captures (landing, school only, writing; 375 px and 1280 px; day and night; 12 PNG): `~/Desktop/primary-parity-progress/captures/qr_path/phaseS2/`.
+    - Manual steps: on a running build open `/th/b/o3-2/5` signed out. The landing shows the book name, the lesson line, and the school choice. With `TUTOR_LESSON_URL_TEMPLATE` set, a second Tutor choice shows below it.
+    - Select the school choice: sign-in opens with `callbackUrl=/th/b/o3-2/5`. Open `/th/b/o3-2/5/writing` after S3: the callback keeps `/writing`. Check the Thai text (owner check pending).
+    - Sign in, then open the link again: no landing, straight to the target.
+- Member Question default used: Q1 and Q3 (spec defaults): the second choice shows only with the setting; school first; no cookie.
+- Note: the signed-out landing replaces the S1 sign-in redirect in `openBookLink` (outcome type `landing`). The landing shows for an unpublished lesson too (it shows no article data).
+- [~] Task: Set the Tutor URL template at the cutover (orchestrator or owner step)
+    - The real Tutor URL template is not known in this run. Until the owner sets it, the landing shows one choice.
+    - Exact env line for the Primary service: `TUTOR_LESSON_URL_TEMPLATE=https://<tutor host and path with {book} and {n}>` (for example `https://liff.line.me/<id>/b/{book}/{n}`). The template must start with `https://`. Only `{book}` and `{n}` are filled.
 
 ## Phase S3: Writing QR code target
 _Story ref: spec.md#story-s3_
