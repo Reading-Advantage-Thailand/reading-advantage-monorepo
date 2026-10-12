@@ -95,8 +95,10 @@ Build this phase only if the owner chose it in Phase 0.
 ## Phase A: Acceptance
 
 - [ ] Task: Run the kit of `primary_parity_acceptance_20261011` (`scripts/primary-parity/capture.ts` for each app, then `report.ts`) with `acceptance-pairs.json`; the kit blocks service workers, so it covers only the student home pair with the install notice (S3)
+    - [x] Prep `e816799e6`: `acceptance-pairs.json` (one pair, PWA-A1, STUDENT) parses with the kit `PairList`; `acceptance-steps-pwa.ts` exports `legacy`/`new` (synthetic `beforeinstallprompt`, then the notice selector)
+    - [ ] Kit run (orchestrator batch)
 - [ ] Task: Run AC-1 (the takeover test) and AC-2 (`curl -I` on the rehearsal tag URL)
 - [ ] Task: Run AC-3 on an iPhone (Safari) and an Android phone (Chrome) against legacy and the rehearsal build
 - [ ] Task: Hand the AC-4 check to `primary_parity_rehearsal3_20261011` for the cutover command sheet
-- [ ] Task: Write `measure/tracks/primary_parity_pwa_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
+- [x] Task `e816799e6`: Write `measure/tracks/primary_parity_pwa_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check - look check pending (owner, async); AC-1 proven, AC-2/AC-3/AC-4 pending
 - [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
