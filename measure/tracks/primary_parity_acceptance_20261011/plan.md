@@ -64,21 +64,28 @@ before a build; no dev server; no run with 25 students.
     - New path for the peer sessions (class books, stories, staff student view): `scripts/primary-parity/cutover-check.mjs`. The orchestrator tells them.
 - [x] Task: Write the runbook [67c69b2e5]
     - [x] Write `docs/runbooks/primary-parity-acceptance.md` (spec FR-12) with the commands of FR-1 to FR-10 and the summary template of FR-10
-- [ ] Task: Make the matched copies (heavy job, alone)
-    - [ ] Download the C4 backup to `~/Desktop/primary-parity-acceptance/backups/`; restore it as `primary_legacy_20261011`; record the time
-    - [ ] Create `primary_parity_20261011`; run the guard, the migrations, the doctor, the ETL with the three inputs, and `student-sample-check`; record the counts and the time
-- [ ] Task: Build and start the legacy app (heavy job, alone)
-    - [ ] Export `bfea121` to `~/Desktop/primary-parity-acceptance/legacy-app/`; write the kit env file (spec FR-2)
-    - [ ] Run `npm ci`, `npx prisma generate`, and the build with 4 GB; record the time and `free -m`
-    - [ ] If the build fails from memory, stop and ask the owner (spec Member question 2); check the source commit of the image before a pull
-- [ ] Task: Run the smoke run (spec FR-14)
-    - [ ] Write `measure/tracks/primary_parity_acceptance_20261011/acceptance-pairs.json` with the pairs SYS-01, ADM-01, and STU-05
-    - [ ] Make clones of both copies; run `accounts.ts`; run `issue-temporary-passwords.ts` on the new clone
-    - [ ] Capture the legacy side; stop the legacy server
-    - [ ] Build the new app at the integration HEAD; capture the new side; stop the server
-    - [ ] Run the report; check AC-1 to AC-5; write `measure/tracks/primary_parity_acceptance_20261011/acceptance.md`
-    - [ ] Send the report to the owner for the look check; record the answer
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Make the matched copies (heavy job, alone)
+    - [x] Download the C4 backup to `~/Desktop/primary-parity-acceptance/backups/`; restore it as `primary_legacy_20261011`; record the time
+        - 32 s download, 14 s restore (one harmless error: `transaction_timeout`). Users 671, articles 626.
+    - [x] Create `primary_parity_20261011`; run the guard, the migrations, the doctor, the ETL with the three inputs, and `student-sample-check`; record the counts and the time
+        - Guard OK (legacy refused), migrate 8 s, doctor OK, ETL 15 s (users 664, classrooms 31, articles 626, lesson_progress 263), sample 5 of 5. Details in the private `timing.md` and `etl-report.md`.
+- [x] Task: Build and start the legacy app (heavy job, alone)
+    - [x] Export `bfea121` to `~/Desktop/primary-parity-acceptance/legacy-app/`; write the kit env file (spec FR-2)
+    - [x] Run `npm ci`, `npx prisma generate`, and the build with 4 GB; record the time and `free -m`
+        - Path used: local build, no image pull. `npm ci` of npm 11 refuses the legacy lock file (out of sync), so the run used `npx npm@10 ci`. The network timed out three times; the final run was `ci --ignore-scripts`, then `npm rebuild esbuild @prisma/engines` and `prisma generate`. Build 306 s with 4 GB, no memory failure.
+    - [x] If the build fails from memory, stop and ask the owner (spec Member question 2); check the source commit of the image before a pull
+        - Not needed. Default of Member question 2 not used.
+- [x] Task: Run the smoke run (spec FR-14)
+    - [x] Write `measure/tracks/primary_parity_acceptance_20261011/acceptance-pairs.json` with the pairs SYS-01, ADM-01, and STU-05
+    - [x] Make clones of both copies; run `accounts.ts`; run `issue-temporary-passwords.ts` on the new clone
+        - `accounts.ts` needs `--teacher`, `--admin`, and `--student` together; `--student` alone is ignored. The run used a student with a finished lesson.
+    - [x] Capture the legacy side; stop the legacy server
+    - [x] Build the new app at the integration HEAD; capture the new side; stop the server
+        - New commit 0048f9620, build 415 s.
+    - [x] Run the report; check AC-1 to AC-5; write `measure/tracks/primary_parity_acceptance_20261011/acceptance.md`
+    - [x] Send the report to the owner for the look check; record the answer - look check pending (owner, async). Copy: `~/Desktop/primary-parity-progress/captures/acceptance/smoke/report.html`
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) - look check pending (owner, async)
+    - Steps: (1) Open `~/Desktop/primary-parity-progress/captures/acceptance/smoke/report.html` and check that each pair shows legacy and new side by side at 375 and 1280 px. (2) Check SYS-01: legacy metric cards against the new heading only. (3) Check ADM-01: legacy KPI cards against three "Data unavailable" cards. (4) Check STU-05: legacy "Start Again" button against no restart button. (5) Run `node_modules/.bin/vitest run --root scripts/primary-parity` from the repository root: all tests pass.
 
 ## Phase 4: Generate Docs & Doctor
 

@@ -34,3 +34,17 @@ No Critical or High finding. Findings and shortcuts that stay:
 - Low: JSDoc exists on each export of the kit. `capture.ts` and `accounts.ts` main functions are private.
 - Shortcut: `cutover-check.mjs` is outside the tsconfig and has no test (as FR-13 says: no change in behavior).
 - Default used: Member question 1 (no AI keys in the kit runs). Member question 2 (a later helper decides on the image pull if the legacy build fails from memory).
+
+## Phase 3, second part (smoke run)
+
+No Critical or High finding in the kit. Findings and shortcuts that stay:
+
+- Medium (ETL, for rehearsal 3): `lesson_progress` keeps the latest of duplicate rows per (user, article). When the latest row has no `assignment_id`, the finished assignment lesson loses its state in the new app (it opens at step 1). 28 of 263 new rows have an `assignment_id` (legacy 40 of 289). Owner or the lesson-repeat member must decide. See `acceptance.md`.
+- Medium: the kit needs the lesson summary reached by a resume. A pair for a lesson in progress needs a `steps` module.
+- Low: `accounts.ts` ignores `--student` unless `--teacher` and `--admin` are also given. Document in the runbook or accept the three together.
+- Low: `accounts.ts` refuses to overwrite `handout.csv`: `issue-temporary-passwords.ts` still issued new passwords, so the older file was stale. Use a new `--out` name and rename it.
+- Low: `legacy-cap` and `new-cap` shell wrappers used `npx next start`, which leaves a child `next-server`. Stop the server by the PID on the port (`ss -ltnp`), not by the parent PID.
+- Low: `accounts.ts` prints a real staff email in the console hint (the SYSTEM username). It is not in a file of the repository.
+- Shortcut: the legacy build used `npx npm@10 ci --ignore-scripts` plus a manual `npm rebuild esbuild @prisma/engines` because of the slow network. The result is the same lockfile tree.
+- Lesson for lessons-learned: npm 11 `ci` refuses the legacy `package-lock.json` (missing optional platform packages); npm 10 accepts it. Disk was 97-99% full during the run (2.5 GB free).
+- Runbook gap: step 4 should say `npx npm@10 ci` and name the stale-lock fix; step 3 should say `--teacher --admin --student` together.
