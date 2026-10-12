@@ -1234,7 +1234,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Staff student view (Preview mode)**
+- [~] **Track: Primary Parity Before the Cutover: Staff student view (Preview mode)**
   *Link: [./tracks/primary_parity_staff_student_view_20261011/](./tracks/primary_parity_staff_student_view_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
 
