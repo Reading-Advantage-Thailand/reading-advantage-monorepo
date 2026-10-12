@@ -89,13 +89,17 @@ corrections with evidence, and the "tests" are the checks of the records.
 
 ## Phase 4: Generate Docs & Doctor
 
-- [ ] Task: Run the checks
-    - [ ] Run each test of "Lessons-learned checks", one package at a time: all pass
-    - [ ] Run each command of "Record checks": each gives the expected result
-- [ ] Task: Run the Measure scripts, one at a time
-    - [ ] Run `bash measure/generate.sh` and stage the files that it changes
-    - [ ] Run `bash measure/doctor.sh`; correct each failure that names a file of this track
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+- [x] Task: Run the checks
+    - [x] Run each test of "Lessons-learned checks", one package at a time: every lessons-learned assertion passes (limit and tags). Rows 1, 2, 3, 5, 7, 8 still fail on `tech-debt.md` or `graph.db` only (not in this track).
+    - [x] Run each command of "Record checks": each gives the expected result (0 0 0 0 1 1 48 1 1)
+- [x] Task: Run the Measure scripts, one at a time
+    - [x] Run `bash measure/generate.sh` and stage the files that it changes (revision lines only)
+    - [x] Run `bash measure/doctor.sh`; one failure, A13 (`agents_md_audit_science_advantage_20260603`), is outside this track
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) (look check pending (owner, async))
+    - Manual verification steps (no capture; documentation only):
+        1. Run the commands of "Record checks". Check the Green column.
+        2. Run `bash measure/doctor.sh`. Check that only the A13 failure shows.
+    - Defaults used: none (the spec has no Member Question).
 
 ## Lessons-learned checks
 

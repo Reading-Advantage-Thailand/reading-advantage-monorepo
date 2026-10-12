@@ -68,3 +68,19 @@ None.
 - Lesson: the record check for "removed" is case-sensitive. Write "owner decision" or "owner follow-up"
   in lower case after a connecting word, for example "By owner decision".
 - Shortcut: none.
+
+## Phase 4: Generate Docs & Doctor
+
+No code change. Generate script changed the revision lines of `measure/generated/*` only.
+
+### Critical and High
+
+None.
+
+### Medium
+
+- M-5. `bash measure/doctor.sh` fails on A13 (stale archived directory
+  `agents_md_audit_science_advantage_20260603`). This track did not cause it. Not fixed.
+- M-6. The lessons-learned tests pass on the limit and the tags. The tests named in M-2 stay red on
+  `tech-debt.md` (106 lines) and `graph.db` age. Not in this track.
+
