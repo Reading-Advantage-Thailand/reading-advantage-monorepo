@@ -98,4 +98,10 @@ describe("getLessonGameResultsAction", () => {
     await expect(getLessonGameResultsAction({ articleId: ARTICLE })).resolves.toEqual({ success: false, error: "Lesson game results failed" });
     expect(mocks.logError).toHaveBeenCalledWith("lesson_game_results_failed", expect.objectContaining({ articleId: ARTICLE, userId: "s1" }));
   });
+
+  it.each(["TEACHER", "ADMIN"])("returns empty results without a read for %s in a preview", async (role) => {
+    mocks.currentUser.mockResolvedValue({ id: "t1", role, schoolId: "school-1" });
+    await expect(getLessonGameResultsAction({ articleId: ARTICLE })).resolves.toEqual({ success: true, results: { latest: [], totalXp: 0 } });
+    expect(mocks.getLessonGameResults).not.toHaveBeenCalled();
+  });
 });
