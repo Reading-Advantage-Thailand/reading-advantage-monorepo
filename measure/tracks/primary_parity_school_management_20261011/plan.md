@@ -144,11 +144,14 @@ _Story ref: spec.md#story-s5_
 
 ## Phase A: Acceptance
 
-- [ ] Task: Run S1 to S5 one time against a clone of the rehearsal copy (never the shared copy); check that no new row has `school_id` null
+- [x] Task: Run S1 to S5 one time against a clone of the rehearsal copy (never the shared copy); check that no new row has `school_id` null
+    - Done on the clone `primary_parity_run_school_pa` (dropped). Result in `acceptance.md`. The S2 import routes were not called (route level, browser batch); `resolveImportSchool` was checked.
 - [ ] Task: Side-by-side check with the kit of `primary_parity_acceptance_20261011`: AC-1 to AC-6, as a school ADMIN, a TEACHER, a STUDENT, and SYSTEM, legacy `bfea121` and the new build on copies with the same school data
-    - [ ] Write `measure/tracks/primary_parity_school_management_20261011/acceptance-pairs.json` (kit FR-7): one pair for each check, with the legacy path, the new path, the role, and the observable behavior
-    - [ ] Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts`; the captures and the report stay in the private folder (kit FR-10)
-    - [ ] Write `measure/tracks/primary_parity_school_management_20261011/acceptance.md` from the runbook template, with the result of each check
-- [ ] Task: Captures of the changed parts at 375 px and 1280 px, day and night, with the demo seed or QA data only (`design/` folder; captures with real names stay in the private folder), and the owner's look check (AC-7)
-- [ ] Task: Final gates: `pnpm --filter @reading-advantage/domain test`, `pnpm --filter primary-advantage test`, tsc and ESLint (AC-8); record the commands and results in `acceptance.md`
-- [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
+    - [x] Write `measure/tracks/primary_parity_school_management_20261011/acceptance-pairs.json` (kit FR-7): 9 pairs, parses with `PairList`
+    - [ ] Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts` - batch capture (orchestrator)
+    - [x] Write `measure/tracks/primary_parity_school_management_20261011/acceptance.md` from the runbook template, with the result of each check (page results wait for the batch)
+- [ ] Task: Captures of the changed parts at 375 px and 1280 px, day and night, and the owner's look check (AC-7) - batch capture (orchestrator); look check pending (owner, async)
+- [x] Task: Final gates: domain vitest, app vitest, tsc and ESLint (AC-8); commands and results in `acceptance.md`
+    - Fixed in this phase: `app-nav.test.tsx` (new nav item). Open and not from this track: 2 domain suites (lesson games mock), 2 app suites (stale `sales-knowledge` dist).
+- [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md) - batch capture (orchestrator); look check pending (owner, async)
+    - Steps: 1. Run the capture kit with `acceptance-pairs.json` on the capture clone. 2. Open the report and read each check. 3. Run the A-queries of `reference-sql.sql` after the browser steps. 4. Do the look check of the changed parts.
