@@ -10,12 +10,13 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/session", () => ({ getCurrentUser: mocks.getCurrentUser }));
-vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@/lib/observability/logger", () => ({ logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn() } }));
-vi.mock("@reading-advantage/domain", () => ({ licenses: { listSeatHolders: mocks.listSeatHolders } }));
+vi.mock("@/server/models/schoolLicenseView", () => ({ getSeatHoldersForCaller: mocks.listSeatHolders }));
 vi.mock("@reading-advantage/auth", () => ({
   AuthError: class AuthError extends Error {
-    code = "FORBIDDEN";
+    constructor(message: string, readonly code: string) {
+      super(message);
+    }
   },
 }));
 
@@ -29,20 +30,21 @@ describe("GET /api/users/me/school/seat-holders", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.getCurrentUser.mockResolvedValue({ id: "a1", role: "ADMIN", schoolId: SCHOOL });
-    mocks.listSeatHolders.mockImplementation(async ({ page: n }: { page: number }) => page(n));
+    mocks.listSeatHolders.mockImplementation(async (_user: unknown, n: number) => page(n));
   });
 
   it("returns page 1 by default for the session school", async () => {
     const response = await get();
     expect(response.status).toBe(200);
     expect((await response.json()).page).toBe(1);
-    expect(mocks.listSeatHolders.mock.calls[0][0]).toMatchObject({ schoolId: SCHOOL, page: 1 });
+    expect(mocks.listSeatHolders.mock.calls[0]![0]).toMatchObject({ schoolId: SCHOOL });
+    expect(mocks.listSeatHolders.mock.calls[0]![1]).toBe(1);
   });
 
   it("returns page 2", async () => {
     const response = await get("?page=2");
     expect((await response.json()).page).toBe(2);
-    expect(mocks.listSeatHolders.mock.calls[0][0].page).toBe(2);
+    expect(mocks.listSeatHolders.mock.calls[0]![1]).toBe(2);
   });
 
   it("returns 400 for a bad page", async () => {
@@ -52,7 +54,7 @@ describe("GET /api/users/me/school/seat-holders", () => {
 
   it("returns 403 when the domain refuses a STUDENT", async () => {
     mocks.getCurrentUser.mockResolvedValue({ id: "s1", role: "STUDENT", schoolId: SCHOOL });
-    mocks.listSeatHolders.mockRejectedValue(new AuthError("no"));
+    mocks.listSeatHolders.mockRejectedValue(new AuthError("no", "FORBIDDEN"));
     expect((await get()).status).toBe(403);
   });
 

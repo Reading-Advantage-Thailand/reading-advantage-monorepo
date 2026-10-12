@@ -3,13 +3,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   getSchoolLicenseView: vi.fn(),
+  listSeatHolders: vi.fn(),
   selectQueue: [] as unknown[][],
 }));
 
-vi.mock("@reading-advantage/domain", () => ({ licenses: { getSchoolLicenseView: mocks.getSchoolLicenseView } }));
+vi.mock("@reading-advantage/domain", () => ({ licenses: { getSchoolLicenseView: mocks.getSchoolLicenseView, listSeatHolders: mocks.listSeatHolders } }));
 vi.mock("@reading-advantage/auth", () => ({
   AuthError: class AuthError extends Error {
-    code = "FORBIDDEN";
+    constructor(message: string, readonly code: string) {
+      super(message);
+    }
   },
 }));
 
@@ -32,7 +35,7 @@ vi.mock("@reading-advantage/db", () => {
 });
 
 import { AuthError } from "@reading-advantage/auth";
-import { getLicenseViewForCaller } from "../schoolLicenseView";
+import { getLicenseViewForCaller, getSeatHoldersForCaller } from "../schoolLicenseView";
 import { getSchoolDetail } from "../schoolModel";
 
 const SCHOOL = "5c5c5c5c-0000-4000-8000-000000000001";
@@ -50,7 +53,7 @@ describe("getLicenseViewForCaller", () => {
   });
 
   it("returns null when the domain refuses the caller", async () => {
-    mocks.getSchoolLicenseView.mockRejectedValue(new AuthError("no"));
+    mocks.getSchoolLicenseView.mockRejectedValue(new AuthError("no", "FORBIDDEN"));
     expect(await getLicenseViewForCaller(user({ role: "STUDENT" }))).toBeNull();
   });
 
@@ -62,6 +65,14 @@ describe("getLicenseViewForCaller", () => {
   it("rethrows an unknown error", async () => {
     mocks.getSchoolLicenseView.mockRejectedValue(new Error("boom"));
     await expect(getLicenseViewForCaller(user())).rejects.toThrow("boom");
+  });
+});
+
+describe("getSeatHoldersForCaller", () => {
+  it("passes the session school and the page to the domain", async () => {
+    mocks.listSeatHolders.mockResolvedValue({ page: 2 });
+    expect(await getSeatHoldersForCaller(user() as never, 2)).toEqual({ page: 2 });
+    expect(mocks.listSeatHolders.mock.calls[0]![0]).toMatchObject({ schoolId: SCHOOL, page: 2 });
   });
 });
 

@@ -19,3 +19,17 @@ export async function getLicenseViewForCaller(
     throw error;
   }
 }
+
+/**
+ * Loads one page of the seat holders (students) of the caller's school.
+ * @param user The session user, who needs a school.
+ * @param page The page number, from 1.
+ * @returns The page of students.
+ * @throws {AuthError} When the caller is not a school admin of the school.
+ */
+export async function getSeatHoldersForCaller(
+  user: UserContext & { schoolId: string },
+  page: number,
+): Promise<licenses.SeatHoldersOutput> {
+  return licenses.listSeatHolders({ db, user, schoolId: user.schoolId, page });
+}

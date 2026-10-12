@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { db } from "@reading-advantage/db";
-import { licenses } from "@reading-advantage/domain";
 import { AuthError } from "@reading-advantage/auth";
 import { getCurrentUser } from "@/lib/session";
+import { getSeatHoldersForCaller } from "@/server/models/schoolLicenseView";
 import { logger } from "@/lib/observability/logger";
 
 const pageSchema = z.coerce.number().int().min(1);
@@ -20,7 +19,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const page = pageSchema.safeParse(new URL(request.url).searchParams.get("page") ?? "1");
     if (!page.success) return NextResponse.json({ error: "Invalid page" }, { status: 400 });
     if (!user.schoolId) return NextResponse.json({ error: "School association required" }, { status: 400 });
-    const result = await licenses.listSeatHolders({ db, user, schoolId: user.schoolId, page: page.data });
+    const result = await getSeatHoldersForCaller({ ...user, schoolId: user.schoolId }, page.data);
     return NextResponse.json(result);
   } catch (error) {
     if (error instanceof AuthError) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
