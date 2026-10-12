@@ -123,10 +123,15 @@ _Story ref: spec.md#story-s4_
 - [x] Task: Measure - User Manual Verification 'Phase S4: Class books and lessons in preview' (Protocol in workflow.md)
     - look check pending (owner, async). Manual steps: sign in as a teacher who has a class book; open Student view; check that home lists the book under the notices; open it; check that every published lesson has a Read link and no "taught" mark; open a lesson; open a book id of another school and check 404.
 
-## Phase A: Acceptance
+## Phase A: Acceptance [checkpoint: ada61096a]
 
 - [ ] Task: Run the kit of `primary_parity_acceptance_20261011` (`scripts/primary-parity/capture.ts` for each app, then `report.ts`) with `acceptance-pairs.json`; sign in a teacher, an admin, a SYSTEM user, and a student; record the database counts before and after for AC-2 and AC-5
+    - batch capture (orchestrator). Prepared: `acceptance-pairs.json` (19 pairs), `acceptance-data-checks.sql`, two step modules.
 - [ ] Task: Captures at 375 px and 1280 px, day and night, for the owner look check (AC-6)
-- [ ] Task: Add the block of this track to `scripts/primary-parity/cutover-check.mjs` (kit FR-13) for rehearsal 3
-- [ ] Task: Write `measure/tracks/primary_parity_staff_student_view_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
-- [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
+    - batch capture (orchestrator)
+- [x] Task: Add the block of this track to `scripts/primary-parity/cutover-check.mjs` (kit FR-13) for rehearsal 3
+    - Block `staffPreviewBlock` added (checks named "staff ...", read only; `STAFF_VIEW_CHECK=off` skips it); pure judge in `scripts/primary-parity/staff-preview-checks.mjs` with 6 tests.
+- [x] Task: Write `measure/tracks/primary_parity_staff_student_view_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
+    - Written with empty result rows for the batch and the owner look check.
+- [x] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual steps: (1) Read `acceptance.md`. (2) After the batch, fill the Result column from `$P/captures/<member>/report.html`. (3) Compare the SQL rows before and after for each staff user: they must be equal. (4) Run `cutover-check.mjs` on rehearsal 3 and read the "staff ..." lines. (5) Open the captures at 375 px and 1280 px, light and dark.
