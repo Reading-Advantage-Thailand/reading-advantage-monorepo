@@ -49,7 +49,7 @@ _Story ref: spec.md#story-s1_
 - [x] Task: Measure - User Manual Verification 'Phase S1: The ETL brings the stories, chapters, and chapter questions' (Protocol in workflow.md)
     - Step 1: Read `etl-run.md`. The counts match the legacy copy. Step 2: Run `etl-cloud-step.md` (orchestrator or owner).
 
-## Phase S2: Stories tab in Read [checkpoint: CKPT]
+## Phase S2: Stories tab in Read [checkpoint: d121d7f40]
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Contracts for the story list
