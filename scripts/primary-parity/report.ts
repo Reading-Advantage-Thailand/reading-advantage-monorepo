@@ -8,12 +8,13 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
+import { assertOutsideRepository } from "./guards.js";
 import { PairList, type PairData, type PairListData } from "./pairs.js";
 
 /** One screenshot and its visible text. `png` is relative to the member folder. */
 export interface Shot {
   png: string;
-  text: string;
+  text?: string;
 }
 
 /** The capture of one pair in one app. Shot keys are `<width>-<scheme>`. */
@@ -66,8 +67,8 @@ function diffFor(pair: PairData, cap: { legacy?: AppCapture; new?: AppCapture })
   const key = shotKeys(pair)
     .sort((x, y) => y.width - x.width)
     .map((k) => k.key)
-    .find((k) => cap.legacy?.shots[k] && cap.new?.shots[k]);
-  return key ? diffLines(cap.legacy!.shots[key].text, cap.new!.shots[key].text) : undefined;
+    .find((k) => cap.legacy?.shots[k]?.text !== undefined && cap.new?.shots[k]?.text !== undefined);
+  return key ? diffLines(cap.legacy!.shots[key].text!, cap.new!.shots[key].text!) : undefined;
 }
 
 const appLine = (label: string, path: string, c?: AppCapture): string =>
@@ -112,7 +113,9 @@ export function renderReport(input: ReportInput): { markdown: string; html: stri
     html.push("<h3>Text differences</h3>");
     if (diff) {
       const block = (l: string[]) => (l.length ? l.join("\n") : "(none)");
-      md.push("Only in legacy:", "", "```", block(diff.onlyLegacy), "```", "", "Only in new:", "", "```", block(diff.onlyNew), "```");
+      const runs = (block(diff.onlyLegacy) + block(diff.onlyNew)).match(/`+/g) ?? [];
+      const fence = "`".repeat(Math.max(3, ...runs.map((m) => m.length + 1)));
+      md.push("Only in legacy:", "", fence, block(diff.onlyLegacy), fence, "", "Only in new:", "", fence, block(diff.onlyNew), fence);
       html.push(`<div class="diff"><div><strong>Only in legacy</strong><pre>${esc(block(diff.onlyLegacy))}</pre></div><div><strong>Only in new</strong><pre>${esc(block(diff.onlyNew))}</pre></div></div>`);
     } else {
       md.push(NOT_CAPTURED);
@@ -148,7 +151,7 @@ function loadApp(folder: string, app: "legacy" | "new"): Record<string, AppCaptu
       {
         ...p,
         shots: Object.fromEntries(
-          Object.entries(p.shots).map(([k, s]) => [k, { png: s.png, text: existsSync(join(folder, s.txt)) ? readFileSync(join(folder, s.txt), "utf8") : "" }]),
+          Object.entries(p.shots).map(([k, s]) => [k, { png: s.png, text: existsSync(join(folder, s.txt)) ? readFileSync(join(folder, s.txt), "utf8") : undefined }]),
         ),
       },
     ]),
@@ -158,6 +161,7 @@ function loadApp(folder: string, app: "legacy" | "new"): Record<string, AppCaptu
 function main(): void {
   const { values } = parseArgs({ options: { pairs: { type: "string" }, out: { type: "string" }, commit: { type: "string" }, "legacy-db": { type: "string" }, "new-db": { type: "string" } } });
   if (!values.pairs || !values.out) throw new Error("Usage: report.ts --pairs <file> --out <folder> [--commit <sha>] [--legacy-db <name>] [--new-db <name>]");
+  assertOutsideRepository([join(values.out, "x", "report.html"), join(values.out, "x", "report.md")]);
   const list = PairList.parse(JSON.parse(readFileSync(values.pairs, "utf8")));
   const folder = join(values.out, list.member);
   const legacy = loadApp(folder, "legacy");

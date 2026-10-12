@@ -14,7 +14,7 @@ import { parseArgs } from "node:util";
 import { chromium, type BrowserContext, type Page } from "playwright";
 import postgres from "postgres";
 import { AccountsFile, requireRoles, type AccountsFileData } from "./accounts-file.js";
-import { assertLocalBaseUrl, assertOutsideRepository } from "./guards.js";
+import { assertLocalBaseUrl, assertOutsideRepository, checkDatabaseUrl } from "./guards.js";
 import { PairList, resolvePlaceholders, rolesNeeded, type PairData } from "./pairs.js";
 import {
   gotoRetry,
@@ -42,6 +42,7 @@ export async function loadIdMap(paths: string[], databaseUrl: string | undefined
   const wanted = paths.flatMap((p) => [...p.matchAll(/\{map:([^:{}]+):([^{}:\s]+)\}/g)].map((m) => [m[1], m[2]] as const));
   if (!wanted.length) return () => undefined;
   if (!databaseUrl) throw new Error("Set NEW_DATABASE_URL: a pair path uses {map:...}.");
+  checkDatabaseUrl(databaseUrl, "read");
   const sql = postgres(databaseUrl, { max: 1 });
   try {
     const found = new Map<string, string>();
@@ -78,12 +79,12 @@ async function main(): Promise<void> {
     throw new Error("Usage: capture.ts --app legacy|new --base <url> --pairs <file> [--pairs <file> ...] --accounts <file> --out <folder>");
   }
   assertLocalBaseUrl(base);
-  assertOutsideRepository([join(out, "x"), accountsFile]);
+  const stateDir = values["state-dir"] ?? join(out, "..", "state");
+  assertOutsideRepository([join(out, "x"), accountsFile, join(stateDir, "x"), ...(values.handout ? [values.handout] : [])]);
 
   const lists = pairsFiles.map((f) => ({ file: f, list: PairList.parse(JSON.parse(readFileSync(f, "utf8"))) }));
   const accounts: AccountsFileData = AccountsFile.parse(JSON.parse(readFileSync(accountsFile, "utf8")));
   const entries = requireRoles(accounts, rolesNeeded(lists.map((l) => l.list), app));
-  const stateDir = values["state-dir"] ?? join(out, "..", "state");
 
   const idMap = app === "new" ? await loadIdMap(lists.flatMap((l) => l.list.pairs.map((p) => p.newPath)), process.env.NEW_DATABASE_URL) : (_t: string, id: string) => id;
   const users = Object.fromEntries(Object.entries(entries).map(([role, e]) => [role, e!.userId]));

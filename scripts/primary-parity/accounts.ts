@@ -100,6 +100,7 @@ async function main(): Promise<void> {
       newQuery: queryOf(next),
       baseUrls: [],
       outputFiles: [out, handout],
+      writeTargets: ["legacy"],
     });
 
     const systemRows = values.system

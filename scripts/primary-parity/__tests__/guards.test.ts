@@ -111,4 +111,32 @@ describe("guards", () => {
     input.legacyUrl = "postgres://kit:pw-legacy-1@db.example.com:5432/primary_legacy_clone";
     await expect(assertGuards(input)).rejects.not.toThrow(/pw-legacy-1/);
   });
+
+  it.each([
+    "primary_legacy_20261007", "primary_legacy_20261008",
+    "primary_legacy_20261006", "primary_etl_20261007", "primary_rehearsal1_20261008", "primary_rehearsal2_20261010", "primary_etl_prod",
+  ])("refuses the protected copy %s", async (name) => {
+    const input = good();
+    input.newUrl = `postgres://kit:pw@localhost:5432/${name}`;
+    await expect(assertGuards(input)).rejects.toMatchObject({ code: "shared-database" });
+  });
+
+  it("keeps the matched copies readable and refuses a write to them", () => {
+    for (const name of ["primary_legacy_20261011", "primary_parity_20261011"]) {
+      expect(() => guards.checkDatabaseUrl(`postgres://k:p@localhost:5432/${name}`, "read")).not.toThrow();
+      expect(() => guards.checkDatabaseUrl(`postgres://k:p@localhost:5432/${name}`, "write")).toThrowError(/protected/);
+    }
+  });
+
+  it("refuses a write to a name with no _run_ and accepts a _run_ copy", async () => {
+    const input = good();
+    expect(() => guards.checkDatabaseUrl("postgres://k:p@localhost:5432/primary_legacy_clone", "write")).toThrowError(/_run_/);
+    expect(() => guards.checkDatabaseUrl("postgres://k:p@localhost:5432/primary_legacy_run_20261012", "write")).not.toThrow();
+    expect(() => guards.checkDatabaseUrl("postgres://k:p@localhost:5432/primary_legacy_clone", "read")).not.toThrow();
+    await expect(assertGuards({ ...input, writeTargets: ["legacy"] } as GuardInput)).rejects.toMatchObject({ code: "shared-database" });
+  });
+
+  it("refuses a URL with a host search param (unix socket)", () => {
+    expect(() => guards.checkDatabaseUrl("postgres://k:p@localhost:5432/x_run_1?host=/var/run/postgresql", "read")).toThrowError(/host/);
+  });
 });

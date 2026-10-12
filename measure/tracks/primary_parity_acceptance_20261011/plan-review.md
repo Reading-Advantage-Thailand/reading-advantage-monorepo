@@ -56,3 +56,12 @@ No Critical or High finding. Fixed in 4f7066a58: the three Low findings of the s
 - Low: the SQL filters of `accounts.ts` for named ids have no automated test (needs a database). `pickCandidate` with named ids has a test.
 - Low: `report.ts` runs once for each member by design; it has no batch option.
 - Doctor: A13 (stale archived directory agents_md_audit_science_advantage_20260603) is not from this track.
+
+## Review fixes 2026-10-12
+
+- `guards.ts`: `checkDatabaseUrl` is exported. It refuses the protected list (shared database, older copies, ETL, rehearsal) and a URL with a `host` search param. In write mode it also refuses the matched copies and any name without `_run_`. `assertGuards` takes `writeTargets`; `accounts.ts` sets `["legacy"]`, because it writes passwords into the legacy clone.
+- `capture.ts`: `loadIdMap` calls `checkDatabaseUrl` (read). The state dir and the handout path join the `assertOutsideRepository` check.
+- `report.ts`: output paths pass `assertOutsideRepository`. A missing `.txt` is "not captured". The markdown fence grows when the text holds backticks.
+- Runbook: npm 10 install line inside the flock command, `chmod 600` of `.env.local`, `chmod 700` of state and captures, port 3100 and 3005 checks, handout rename note in section 11, and a note that `cutover-check.mjs` stdout can hold names (the script stays unchanged, FR-13).
+- Tests: 68 pass in the kit (`vitest run --root scripts/primary-parity`); the kit type check passes.
+- Open Low: no automated test for the `loadIdMap` guard call (the file imports Playwright).
