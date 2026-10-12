@@ -154,3 +154,16 @@ Phase review of `bb16da1a7..HEAD` (files of this phase only). No Critical and no
 ## Lessons (for the orchestrator to move)
 
 - An unmount cleanup that reads `ref.current` finds null: React clears refs first. Keep the element in a variable in the effect.
+
+# Plan review: Phase A (acceptance, prepared)
+
+No code in this phase. The captures and the Tutor note delivery wait for the orchestrator.
+
+## Medium
+
+- M-13: Pair RA-A4 moved from the assignment id of the acceptance track to the clean article lesson
+  (`?type=article`), as the quick fixes pairs do. The orchestrator must check in the batch that the reading step opens with audio.
+
+## Low
+
+- L-22: Pair RA-A5 checks the player bar at 375 px (M-11). A fix, if needed, belongs to a follow-up task.

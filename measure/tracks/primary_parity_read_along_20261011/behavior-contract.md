@@ -59,7 +59,8 @@ No write. No XP, no log, no email, no file, no AI call.
 | RA-A1 | `/en/student/read/<clean article>` | same, new id | STUDENT | The lit word is the spoken word; tap plays from the word; player buttons work | none | |
 | RA-A2 | `/en/student/read/<curly-quote article>` | same, new id | STUDENT | The mark stays right after each quote | none | |
 | RA-A3 | `/en/student/read/<dropped-word article>` | same, new id | STUDENT | The mark recovers within one word after a gap | none | |
-| RA-A4 | `/en/student/lesson/<lesson>` | same, new id | STUDENT | The reading step has the same highlight and tap | none | |
+| RA-A4 | `/en/student/lesson/<clean article id>?type=article` | same, new id | STUDENT | The reading step has the same highlight and tap, and one player | none | |
+| RA-A5 | same as RA-A4, 375 px only | same, new id | STUDENT | The player bar does not cover the lesson footer (M-11) | none | |
 
 The article ids are in `data-profile.md`.
 
