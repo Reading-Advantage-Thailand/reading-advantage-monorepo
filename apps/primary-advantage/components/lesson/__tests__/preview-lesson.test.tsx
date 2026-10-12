@@ -45,7 +45,7 @@ function renderIn(mode: "preview" | "student") {
     withMessages(
       <StudentViewProvider mode={mode}>
         <QuizContext.Provider value={{ timer: 5, setPaused: vi.fn(), setTimer: vi.fn() }}>
-          <LessonProgressBar source="standalone" article={article} />
+          <LessonProgressBar source="article" article={article} />
         </QuizContext.Provider>
       </StudentViewProvider>,
       "en",

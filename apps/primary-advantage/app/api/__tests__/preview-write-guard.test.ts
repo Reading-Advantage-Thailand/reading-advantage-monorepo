@@ -73,9 +73,9 @@ vi.mock("@/lib/apk/challenge-dependencies", () => ({ apkChallengeDependencies: {
 vi.setConfig({ testTimeout: 60_000 });
 
 const req = (method = "POST") => new NextRequest("http://localhost/api/x", { method, body: method === "GET" ? undefined : "{}" });
-const ctx = (p: Record<string, string>) => ({ params: Promise.resolve(p) });
+const ctx = (p: Record<string, string>) => ({ params: Promise.resolve(p) }) as never;
 
-type Case = [string, () => Promise<Response>];
+type Case = [string, () => Promise<Response | undefined>];
 const routes: Case[] = [
   ["lessons/[articleId] POST", async () => (await import("../lessons/[articleId]/route")).POST(req(), ctx({ articleId: "a" }))],
   ["assignments/[id] POST", async () => (await import("../assignments/[id]/route")).POST(req(), ctx({ id: "a" }))],
@@ -108,7 +108,7 @@ describe("student API write routes refuse staff in Preview mode", () => {
   describe.each(["TEACHER", "ADMIN", "SYSTEM"])("as %s", (role) => {
     it.each(routes)("%s gives 403 PREVIEW_READ_ONLY and writes nothing", async (_name, call) => {
       mocks.user.current = { id: "u1", role, schoolId: "s1" };
-      const response = await call();
+      const response = (await call())!;
       expect(response.status).toBe(403);
       expect(await response.json()).toEqual({ error: { code: "PREVIEW_READ_ONLY", message: "Preview: not saved" } });
       expect(mocks.writes).not.toHaveBeenCalled();

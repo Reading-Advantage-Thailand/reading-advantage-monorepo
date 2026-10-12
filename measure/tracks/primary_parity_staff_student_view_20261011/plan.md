@@ -50,28 +50,38 @@ Until S3, some pages (home, avatar, Class Quest, class books) can show an error 
 ## Phase S2: Nothing saves in Preview mode
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Contract for the write guard
-    - [ ] `lib/student-view.ts`: `assertStudentWriter(user)`, `PreviewWriteError`, the action result `{ status: "preview" }`, and the route response helper (403, code `PREVIEW_READ_ONLY`); the refusal logs one info line with `lib/observability/logger.ts`
-    - [ ] Primary domain permission: register a STUDENT-only permission for student-record writes in the Primary domain permission module (`packages/domain/src/primary-avatar/`, `packages/domain/src/primary-quest/`; check the registration pattern of `packages/domain/src/gamification/permissions.ts`)
-- [ ] Task: Tests for every write path (one table-driven test per layer)
-    - [ ] `actions/__tests__/preview-write-guard.test.ts`: `finishQuiz`, `retakeQuiz`, `updateUserActivity`, `fetchArticleActivity`, `saveFlashcard`, `saveArticleToFlashcard`, `reviewCard`, `deleteFlashcardCard`, `setAvatarProfileAction`; TEACHER, ADMIN, SYSTEM get `{ status: "preview" }` and the DB mock records no insert, update, or delete; STUDENT saves
-    - [ ] `app/api/__tests__/preview-write-guard.test.ts`: `lessons/[articleId]` POST, `assignments/[id]`, `v1/apk/complete`, `v1/apk/rpg` PATCH, `v1/apk/challenges/runs`, `v1/avatar` GET (no starter set), `v1/avatar/purchase`, `v1/avatar/loadout`, `v1/quest/heartbeat`, `voice/sessions` and its two sub-routes, the four `flashcard/decks/[deckId]/*` game routes, `flashcard/cards/[cardId]/review`, `articles/questions/[articleId]` POST; staff get 403 `PREVIEW_READ_ONLY` and no write
-    - [ ] `packages/domain/src/__tests__/primary-student-record-permission.test.ts`: `setAvatarProfile`, `purchaseAvatarItem`, `setLoadout`, `ensureStarterSet`, `awardPowerUps`, and the quest heartbeat refuse TEACHER, ADMIN, SYSTEM; STUDENT passes (mock DB)
-    - [ ] `lib/__tests__/preview-guard-coverage.test.ts`: every non-GET handler under the student API folders calls `assertStudentWriter`; a counterexample fixture without the call is detected
-- [ ] Task: Implement the server guards
-    - [ ] Call `assertStudentWriter` at the start of each action in `actions/question.ts`, `actions/user.ts`, `actions/article.ts`, `actions/flashcard.ts`, `actions/avatar.ts`
-    - [ ] Call it at the start of each route in the inventory (spec, "Write paths that student pages reach today")
-    - [ ] Add the domain permission check to `packages/domain/src/primary-avatar/avatar.ts`, `packages/domain/src/primary-avatar/shop.ts`, `packages/domain/src/primary-quest/goals.ts`, `packages/domain/src/primary-quest/battle.ts`; rebuild the domain `dist/` before the app tests
-- [ ] Task: Tests for the client layer
-    - [ ] `components/articles/questions/__tests__/preview-quiz.test.tsx`: in preview, MCQ, SAQ, and LAQ show the result and "Preview: not saved", and `finishQuiz` is not called
-    - [ ] `components/lesson/__tests__/preview-lesson.test.tsx`: in preview, the lesson progress bar and the five lesson games call no write path
-    - [ ] `components/articles/__tests__/preview-article.test.tsx`: in preview, `fetchArticleActivity` and `saveFlashcard` are not called
-- [ ] Task: Implement the client layer and the page-load skips
-    - [ ] Read `useStudentView()` in `components/articles/questions/mc-question-content.tsx`, `written-question-content.tsx`, `components/lesson/task/lesson-task-saq.tsx`, the five lesson game components, `components/lesson/lesson-progress-bar.tsx`, `components/articles/article-content.tsx`, `components/articles/word-list.tsx`, the flashcard game and manage tab
-    - [ ] Skip the page-load writes in preview: `student/home/page.tsx:105` (`awardPowerUps`), `getAvatarState` callers, `student/read/[articleId]/page.tsx:126-128`
-    - [ ] Wrap the lesson rehearsal page in `StudentViewProvider` with `preview`, and correct its hint copy
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Nothing saves in Preview mode' (Protocol in workflow.md)
+Guard names (S2): `assertStudentWriter` (throws `PreviewWriteError`), `guardStudentAction` (returns
+`{ status: "preview" }`), `guardStudentRoute` (403 `PREVIEW_READ_ONLY`), `isStudentWriter`,
+`isPreviewResult`, all in `lib/student-view.ts`. Client: `usePreviewSave()` in
+`components/student/student-view-provider.tsx`. Domain: `STUDENT_RECORD_WRITE`,
+`assertStudentRecordWriter`, `canWriteStudentRecord` in `packages/domain/src/primary-avatar/permissions.ts`.
+
+Student API folders that the coverage test scans (`lib/__tests__/preview-guard-coverage.test.ts`,
+list `STUDENT_API_FOLDERS`, folders under `app/api`): `articles`, `assignments`, `assistant`, `flashcard`,
+`lessons`, `users/activitylog`, `v1/apk`, `v1/avatar`, `v1/quest`, `voice`. A new write route in one of
+them needs a guard call, or an entry with a reason in `EXEMPT` of the same test. The lesson games track
+must add its lesson game completion route under one of these folders, or add its folder to the list.
+
+- [x] Task: Contract for the write guard
+    - [x] `lib/student-view.ts`: guard functions above; the refusal logs one info line `preview_write_refused` (operation and role only)
+    - [x] Primary domain permission `primary:student-record:write` (STUDENT only), registered in `primary-avatar/permissions.ts`; the quest module imports it
+- [x] Task: Tests for every write path
+    - [x] `actions/__tests__/preview-write-guard.test.ts` (9 actions x TEACHER, ADMIN, SYSTEM, plus student)
+    - [x] `app/api/__tests__/preview-write-guard.test.ts` (19 routes x 3 staff roles, plus student)
+    - [x] `packages/domain/src/__tests__/primary-student-record-permission.test.ts`
+    - [x] `lib/__tests__/preview-guard-coverage.test.ts` (with counterexample fixture)
+- [x] Task: Implement the server guards (actions, routes, domain; domain `dist` rebuilt)
+- [x] Task: Tests for the client layer
+    - [x] `components/articles/questions/__tests__/preview-quiz.test.tsx` (MCQ, SAQ, LAQ)
+    - [x] `components/lesson/__tests__/preview-lesson.test.tsx` (progress bar); the five lesson games have no render test (see `plan-review.md`, Medium)
+    - [x] `components/articles/__tests__/preview-article.test.tsx`
+- [x] Task: Implement the client layer and the page-load skips
+    - [x] `usePreviewSave()` in quiz, article, lesson progress bar, five lesson games, flashcard games, lesson SAQ, matching game
+    - [x] Page-load writes: home `awardPowerUps` skipped for staff; `getAvatarState` no longer writes for staff (domain); the read page keeps its STUDENT-only save, with a test for TEACHER, ADMIN, SYSTEM
+    - [x] The rehearsal page runs inside `StudentViewProvider mode="preview"`; the hint copy says nothing is saved
+- [x] Task: Generate docs and run doctor
+- [x] Task: Measure - User Manual Verification 'Phase S2: Nothing saves in Preview mode' - look check pending (owner, async)
+    - Manual steps: (1) Sign in as a teacher in a build and open `/student/read/<article>`; finish the MCQ: the score shows with "Preview: not saved". (2) Count the rows of `user_activity`, `xp_logs`, `article_activity_logs` and the `users.xp` value of the teacher before and after: they stay equal. (3) Open the lesson rehearsal page, move two steps: `lesson_progress` and `xp_logs` stay equal. (4) Sign in as a student and finish a quiz: XP rises as before. (5) With a teacher cookie, POST to `/api/v1/avatar/purchase`: 403 with `PREVIEW_READ_ONLY`.
 
 ## Phase S3: Pages that need a student record show a preview state
 _Story ref: spec.md#story-s3_

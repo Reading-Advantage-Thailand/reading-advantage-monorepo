@@ -1,4 +1,5 @@
 "use client";
+import { isPreviewResult } from "@/lib/student-view";
 import { usePreviewSave } from "@/components/student/student-view-provider";
 import React, { useState, useTransition } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -105,7 +106,7 @@ export function FlashcardGameInline({
 
           const results = await Promise.all(reviewPromises);
 
-          const allSuccess = results.every((r) => r.success);
+          const allSuccess = results.every((r) => !isPreviewResult(r) && r.success);
 
           if (allSuccess) {
             setSessionComplete(true);

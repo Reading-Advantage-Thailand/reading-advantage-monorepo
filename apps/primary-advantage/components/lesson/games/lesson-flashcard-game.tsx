@@ -1,5 +1,6 @@
 "use client";
 
+import { isPreviewResult } from "@/lib/student-view";
 import { usePreviewSave } from "@/components/student/student-view-provider";
 import { useState, useEffect, useTransition, useContext } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -364,7 +365,7 @@ function LessonFlashcardView({
 
           const results = await Promise.all(reviewPromises);
 
-          const allSuccess = results.every((r) => r.success);
+          const allSuccess = results.every((r) => !isPreviewResult(r) && r.success);
 
           if (allSuccess) {
             await updateUserActivity(
