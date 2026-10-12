@@ -7,3 +7,11 @@ export {
   createLicenseInputSchema,
   type CreateLicenseInput,
 } from "./contracts.js";
+export {
+  getSchoolSeatUsage,
+  getSchoolLicenseTiming,
+  schoolSeatUsageSchema,
+  schoolLicenseTimingSchema,
+  type SchoolSeatUsage,
+  type SchoolLicenseTiming,
+} from "./usage.js";
