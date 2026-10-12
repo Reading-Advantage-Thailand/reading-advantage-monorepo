@@ -71,7 +71,7 @@ _Story ref: spec.md#story-s2_
     - Step 3: Open `/student/read` and `/student/read/stories` as a level 5 student; the list shows levels 4 to 6.
     - Defaults used: D9 level window (raLevel +/- 1) on the list; staff see every published story, with no window text.
 
-## Phase S3: Story page
+## Phase S3: Story page [checkpoint: fff917b8a]
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Contract for the story page
