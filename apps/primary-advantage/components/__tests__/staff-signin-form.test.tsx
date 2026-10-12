@@ -89,7 +89,7 @@ describe("staff sign-in form", () => {
   });
 
   it("ignores callbacks that leave the site", async () => {
-    for (const callbackUrl of ["https://evil.example", "//evil.example", "/\\evil.example", "/en\\..\\evil"]) {
+    for (const callbackUrl of ["https://evil.example", "//evil.example", "/\\evil.example", "/en\\..\\evil", "/th//evil.com", "/th/%2F%2Fevil.com"]) {
       loginMock.mockClear();
       pushMock.mockClear();
       replaceMock.mockClear();
