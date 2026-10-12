@@ -15,7 +15,7 @@ import { chromium, type BrowserContext, type Page } from "playwright";
 import postgres from "postgres";
 import { AccountsFile, requireRoles, type AccountsFileData } from "./accounts-file.js";
 import { assertLocalBaseUrl, assertOutsideRepository } from "./guards.js";
-import { PairList, resolvePlaceholders, type PairData } from "./pairs.js";
+import { PairList, resolvePlaceholders, rolesNeeded, type PairData } from "./pairs.js";
 import {
   gotoRetry,
   readClassSheetPassword,
@@ -66,27 +66,26 @@ async function main(): Promise<void> {
     options: {
       app: { type: "string" },
       base: { type: "string" },
-      pairs: { type: "string" },
+      pairs: { type: "string", multiple: true },
       accounts: { type: "string" },
       out: { type: "string" },
       handout: { type: "string" },
       "state-dir": { type: "string" },
     },
   });
-  const { app, base, pairs: pairsFile, accounts: accountsFile, out } = values;
-  if ((app !== "legacy" && app !== "new") || !base || !pairsFile || !accountsFile || !out) {
-    throw new Error("Usage: capture.ts --app legacy|new --base <url> --pairs <file> --accounts <file> --out <folder>");
+  const { app, base, pairs: pairsFiles, accounts: accountsFile, out } = values;
+  if ((app !== "legacy" && app !== "new") || !base || !pairsFiles?.length || !accountsFile || !out) {
+    throw new Error("Usage: capture.ts --app legacy|new --base <url> --pairs <file> [--pairs <file> ...] --accounts <file> --out <folder>");
   }
   assertLocalBaseUrl(base);
   assertOutsideRepository([join(out, "x"), accountsFile]);
 
-  const list = PairList.parse(JSON.parse(readFileSync(pairsFile, "utf8")));
+  const lists = pairsFiles.map((f) => ({ file: f, list: PairList.parse(JSON.parse(readFileSync(f, "utf8"))) }));
   const accounts: AccountsFileData = AccountsFile.parse(JSON.parse(readFileSync(accountsFile, "utf8")));
-  const entries = requireRoles(accounts, [...list.pairs.map((p) => p.role), ...(app === "new" && list.pairs.some((p) => p.role === "STUDENT") ? ["TEACHER"] : [])]);
-  const folder = join(out, list.member);
+  const entries = requireRoles(accounts, rolesNeeded(lists.map((l) => l.list), app));
   const stateDir = values["state-dir"] ?? join(out, "..", "state");
 
-  const idMap = app === "new" ? await loadIdMap(list.pairs.map((p) => p.newPath), process.env.NEW_DATABASE_URL) : (_t: string, id: string) => id;
+  const idMap = app === "new" ? await loadIdMap(lists.flatMap((l) => l.list.pairs.map((p) => p.newPath)), process.env.NEW_DATABASE_URL) : (_t: string, id: string) => id;
   const users = Object.fromEntries(Object.entries(entries).map(([role, e]) => [role, e!.userId]));
 
   const browser = await chromium.launch({
@@ -125,8 +124,10 @@ async function main(): Promise<void> {
     return ctx;
   }
 
-  const result: Record<string, { status: number; finalUrl: string; consoleErrors: number; shots: Record<string, { png: string; txt: string }> }> = {};
   try {
+   for (const { file: pairsFile, list } of lists) {
+    const folder = join(out, list.member);
+    const result: Record<string, { status: number; finalUrl: string; consoleErrors: number; shots: Record<string, { png: string; txt: string }> }> = {};
     // The TEACHER context must exist before a new STUDENT sign-in; the loop order does not matter.
     for (const pair of list.pairs) {
       const path = resolvePlaceholders(app === "legacy" ? pair.legacyPath : pair.newPath, { map: idMap, users });
@@ -164,10 +165,11 @@ async function main(): Promise<void> {
       await page.close();
       console.log(`captured ${pair.id} (${app}): status ${record.status}`);
     }
+    writePrivate(join(folder, `capture-${app}.json`), JSON.stringify({ app, base, pairs: result }, null, 2));
+   }
   } finally {
     await browser.close();
   }
-  writePrivate(join(folder, `capture-${app}.json`), JSON.stringify({ app, base, pairs: result }, null, 2));
 }
 
 if (typeof require !== "undefined" && require.main === module) {

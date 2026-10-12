@@ -83,8 +83,9 @@ npx tsx scripts/primary-parity/accounts.ts            # writes accounts.json (mo
 
 `accounts.ts` prints the exact second command. It picks one SYSTEM user, one ADMIN and one TEACHER of one
 school, and one STUDENT of a class of that teacher. Use `--system`, `--admin`, `--teacher`, and `--student`
-to name the user ids. Give `--teacher`, `--admin`, and `--student` together; `--student` alone is ignored.
-Use a new `--out` name for `issue-temporary-passwords.ts` when `handout.csv` exists, then rename it. Use `--force` to replace an existing `accounts.json`.
+to name the user ids. Each option works alone: the script then finds the other users that fit. The console hint shows the role and the user id of the SYSTEM user, not a name or an email.
+`issue-temporary-passwords.ts` refuses to overwrite an existing `--out` file. Delete or rename the old handout first, because the old passwords are stale after a new run.
+Use `--force` to replace an existing `accounts.json`.
 The first new-app capture does the forced password change of each staff user and keeps the new password in `accounts.json`.
 The student of the new app signs in with the row of the class sheet that the matched teacher makes.
 
@@ -174,7 +175,21 @@ Owner look check: <date and answer, or "pending">
 Usage: `[NEW_PASSWORDS_OUT=<private csv>] node scripts/primary-parity/cutover-check.mjs <handout.csv> <teacher username> <admin username> <system username or -> <classroomId | class name | first>`.
 Set `BASE` (default `http://localhost:3000`) and `SHOTS`. Members add their blocks to this file; rehearsal 3 runs it.
 
-## 11. Checks of the kit
+## 11. Batch run (several members at once)
+
+The orchestrator runs the captures of several members on one build. Let `PAIRS` be the list of `--pairs measure/tracks/<member>/acceptance-pairs.json` options, one for each member.
+
+1. Clone the matched copies once (section 2).
+2. Run `accounts.ts` once. It makes one user of each role for all members. Then issue the temporary passwords (section 3).
+3. Capture legacy once for the union of the pair lists. The legacy app in `$P/legacy-app` is built; do not rebuild it.
+   `npx tsx scripts/primary-parity/capture.ts --app legacy --base http://localhost:3100 $PAIRS --accounts $P/accounts.json --out $P/captures`
+4. Stop the legacy server. Build the new app once at the integration HEAD (section 6). Start it and capture the new side with the same `$PAIRS` and `--handout $P/handout.csv`. Stop the server.
+5. Run `report.ts` once for each member (section 7). The output goes to `$P/captures/<member>/`.
+6. Drop the two clones (`dropdb`) and delete `apps/primary-advantage/.next`. Keep `legacy-app` and the two matched copies.
+
+`capture.ts` takes several `--pairs` options. It signs in once for each role, and it writes the files of each member in the folder of that member.
+
+## 12. Checks of the kit
 
 ```bash
 node_modules/.bin/vitest run --root scripts/primary-parity
