@@ -94,17 +94,17 @@ _Story ref: spec.md#story-s3_
 _Story ref: spec.md#story-s4_
 
 - [ ] Task: Contract for the chapter page
-    - [ ] `packages/domain/src/stories/contracts.ts`: `getChapterForStudent` output (chapter, sentences, translations, audio key, picture key, the word list row, the previous and next chapter numbers)
-    - [ ] Confirm the read-along component contract with `primary_parity_read_along_20261011` (spec D7): `components/read-along/read-along-passage.tsx`, props `{ sentences, passage, audioUrl, translations }`
+    - [x] `packages/domain/src/stories/contracts.ts`: `getChapterForStudent` output (chapter, sentences, translations, audio key, picture key, the word list row, the previous and next chapter numbers) (0194b1b2d; picture key and URL in c44403a17)
+    - [ ] Confirm the read-along component contract with `primary_parity_read_along_20261011` (spec D7): `components/read-along/read-along-passage.tsx`, props `{ sentences, passage, audioUrl, translations }` — open: the component exists on this branch but its props are `{ sentences, passage, position, active, ... }` (the host owns the audio element), so the confirmation does not match. Follow-up for the orchestrator; do not build here.
 - [ ] Task: Tests for the chapter page
-    - [ ] `packages/domain/src/__tests__/stories.test.ts`: the level window, the chapter by story and number, the word list from the chapter row of `sentencs_and_words_for_flashcard`
-    - [ ] `lib/__tests__/storage-config.test.ts`: `getChapterImageKey`, the chapter audio URL from `audio_url`
-    - [ ] If this track creates the read-along component: `components/read-along/__tests__/read-along-passage.test.tsx` proves the same highlight and seek behavior as `components/articles/__tests__/article-content-highlight.behavior.test.tsx`
-    - [ ] `app/[locale]/(student)/student/read/stories/[storyId]/[chapterNumber]/__tests__/chapter-page.test.tsx`: the player, the translation, the word list, previous and next
+    - [x] `packages/domain/src/__tests__/stories.test.ts`: the level window, the chapter by story and number, the word list from the chapter row of `sentencs_and_words_for_flashcard` (0194b1b2d; 30 of 30 green)
+    - [x] `lib/__tests__/storage-config.test.ts`: `getChapterImageKey`, the chapter audio URL from `audio_url` (`getAudioUrl`; c44403a17; 12 of 12 green)
+    - [ ] If this track creates the read-along component: `components/read-along/__tests__/read-along-passage.test.tsx` proves the same highlight and seek behavior as `components/articles/__tests__/article-content-highlight.behavior.test.tsx` — open (N/A so far: this track did not create the component; the read-along track owns it and its highlight tests live there)
+    - [ ] `app/[locale]/(student)/student/read/stories/[storyId]/[chapterNumber]/__tests__/chapter-page.test.tsx`: the player, the translation, the word list, previous and next — open: no `[chapterNumber]` route exists on this branch
 - [ ] Task: Implement the chapter page
-    - [ ] `packages/domain/src/stories/queries.ts`: `getChapterForStudent`
-    - [ ] `components/read-along/read-along-passage.tsx`: use it, or move it out of `components/articles/article-content.tsx` with no behavior change (spec D7)
-    - [ ] `app/[locale]/(student)/student/read/stories/[storyId]/[chapterNumber]/page.tsx`, `loading.tsx`; `components/stories/chapter-content.tsx`; reuse `components/articles/word-list.tsx`
+    - [x] `packages/domain/src/stories/queries.ts`: `getChapterForStudent` (0194b1b2d)
+    - [ ] `components/read-along/read-along-passage.tsx`: use it, or move it out of `components/articles/article-content.tsx` with no behavior change (spec D7) — open: blocked on the D7 prop mismatch above
+    - [ ] `app/[locale]/(student)/student/read/stories/[storyId]/[chapterNumber]/page.tsx`, `loading.tsx`; `components/stories/chapter-content.tsx`; reuse `components/articles/word-list.tsx` — open: none of these files exists on this branch
 - [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
 - [ ] Task: Measure - User Manual Verification 'Phase S4: Chapter page with read-along' (Protocol in workflow.md)
 
