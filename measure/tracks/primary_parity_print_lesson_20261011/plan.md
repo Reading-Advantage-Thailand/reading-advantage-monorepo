@@ -40,7 +40,7 @@ _Story ref: spec.md#story-s1_
     - Steps: run `cd packages/domain && ../../node_modules/.bin/tsx scripts/sync-print-kit.ts --check` (exit 0); open `kit.generated.ts` and check the commit id and the ISC header in `iconsSource`.
     - Member Question defaults used: none in this phase.
 
-## Phase S2: Store the print data of each lesson
+## Phase S2: Store the print data of each lesson [checkpoint: 89e666c8b]
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Define the print data contract
