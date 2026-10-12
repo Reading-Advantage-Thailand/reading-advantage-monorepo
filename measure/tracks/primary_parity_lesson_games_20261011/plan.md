@@ -40,29 +40,37 @@ _Story ref: spec.md#story-s1_
 - [x] Task: Measure - User Manual Verification 'Phase S1: Make the game input from the lesson' (Protocol in workflow.md)
     - look check pending (owner, async). No UI in this phase. Steps: run `vitest run src/games/__tests__/practice-input.test.ts` in `packages/domain` (10 pass); in the lesson page of S2 the input shows from `getLessonGameInputAction`.
 
-## Phase S2: Play a vocabulary game in task 10
+## Phase S2: Play a vocabulary game in task 10 [checkpoint: 385261fa7]
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Define the contracts
-    - [ ] `LESSON_VOCABULARY_GAMES` and `LESSON_SENTENCE_GAMES` (the lists of the Member Question answer) in `apps/primary-advantage/lib/games/lesson-games.ts`
-    - [ ] `getLessonGameResults` (the last result of each cartridge for one article and student, from `game_completions` with `metadata.articleId`) with a Zod output in `packages/domain/src/games/`
-    - [ ] The `articleId` prop and the result callback of `GameHost` (`components/games/game-host.tsx`); `articleId` reaches `storyCompletionInput` through `hostCompletionInput` (`lib/games/completion.ts`)
-    - [ ] Keys for the step texts in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Write the tests (red)
-    - [ ] Domain: `getLessonGameResults` returns the latest run of each cartridge for the article only; school scoping
-    - [ ] App: `lib/games/__tests__/completion.test.ts`: the completion body holds `metadata.articleId`
-    - [ ] App: `components/games/__tests__/game-host.test.tsx`: the `articleId` prop; the error state calls the fallback callback
-    - [ ] App: `components/lesson/task/__tests__/task-vocabulary-game.test.tsx`: four cartridges with the last result; the locked state; "Simple game" opens `LessonMatchingGame`; a load error opens the matching game; the real XP after a run
-    - [ ] App: the lesson summary (`actions/article.ts` `getLessonSummaryData`) adds the game XP of the article
-    - [ ] A key-parity test for the new keys
-- [ ] Task: Implement (green)
-    - [ ] `components/games/game-host.tsx` and `lib/games/completion.ts`: the smallest change
-    - [ ] New `components/lesson/task/task-vocabulary-game.tsx`; `components/lesson/lesson-progress-bar.tsx` task 10 renders it; `task-vocabulary-matching.tsx` stays as the fallback
-    - [ ] `components/lesson/games/lesson-matching-game.tsx`: show the real XP and the real count on the end screen (it is the fallback now)
-    - [ ] `actions/article.ts`: the game XP in the summary
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Play a vocabulary game in task 10' (Protocol in workflow.md)
+- [x] Task: Define the contracts
+    - [x] `LESSON_VOCABULARY_GAMES` and `LESSON_SENTENCE_GAMES` (the lists of the Member Question answer) in `apps/primary-advantage/lib/games/lesson-games.ts`
+        - Commit 385261fa7. The lists hold the Member Question defaults; the file also holds the stand-in Forge sprite of each game.
+    - [x] `getLessonGameResults` (the last result of each cartridge for one article and student, from `game_completions` with `metadata.articleId`) with a Zod output in `packages/domain/src/games/`
+        - Commit 73e3e64fe. It returns `{ latest, totalXp }`, scoped to the user and the school; `gameId` comes from the `<id>-story` game type.
+    - [x] The `articleId` prop and the result callback of `GameHost` (`components/games/game-host.tsx`); `articleId` reaches `storyCompletionInput` through `hostCompletionInput` (`lib/games/completion.ts`)
+        - Commit b43d21627. The host also got `onResult` (fires with `save={false}`), `onLoadError`, and the server XP in `onCompleted`.
+    - [x] Keys for the step texts in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json`
+        - Namespace `LessonGames` in the five files. Thai by the helper: owner check pending.
+- [x] Task: Write the tests (red)
+    - [x] Domain: `getLessonGameResults` returns the latest run of each cartridge for the article only; school scoping
+    - [x] App: `lib/games/__tests__/completion.test.ts`: the completion body holds `metadata.articleId`
+    - [x] App: `components/games/__tests__/game-host.test.tsx`: the `articleId` prop; the error state calls the fallback callback
+    - [x] App: `components/lesson/task/__tests__/task-vocabulary-game.test.tsx`: four cartridges with the last result; the locked state; "Simple game" opens `LessonMatchingGame`; a load error opens the matching game; the real XP after a run
+    - [x] App: the lesson summary (`actions/article.ts` `getLessonSummaryData`) adds the game XP of the article
+    - [x] A key-parity test for the new keys
+        - Defect check ("Story completions never persist"): `gameTypeEnum` already holds the six lesson `-story` types. Tests added; no domain fix was needed.
+- [x] Task: Implement (green)
+    - [x] `components/games/game-host.tsx` and `lib/games/completion.ts`: the smallest change
+    - [x] New `components/lesson/task/task-vocabulary-game.tsx`; `components/lesson/lesson-progress-bar.tsx` task 10 renders it; `task-vocabulary-matching.tsx` stays as the fallback
+    - [x] `components/lesson/games/lesson-matching-game.tsx`: show the real XP and the real count on the end screen (it is the fallback now)
+    - [x] `actions/article.ts`: the game XP in the summary
+        - `getLessonSummaryData` adds `gameXp` to `totalXp`; a failed game read keeps the activity XP and logs.
+- [x] Task: Docs and doctor
+    - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+        - skipped: graph.db read only (orchestrator rule). `measure/generate.sh` run as a check; `measure/generated` restored.
+- [x] Task: Measure - User Manual Verification 'Phase S2: Play a vocabulary game in task 10' (Protocol in workflow.md)
+    - look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/lesson_games/phaseS2/` (`task10-<375|1280>-<day|night>.png`, `task10-locked-...`). Steps: (1) open a lesson on a school copy and go to task 10; (2) check four games, the last result of each, and "Simple game"; (3) play one game and leave it; check "You got x of y. +n XP"; (4) check that a game with too few words shows locked; (5) with `?renderer=phaser` check the 2D renderer. Defaults used: Member Questions 1 to 3 (XP for each run, legacy four games, no class challenge button).
 
 ## Phase S3: Play a sentence game in task 12
 _Story ref: spec.md#story-s3_

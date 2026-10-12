@@ -25,3 +25,24 @@ No Critical or High finding. Checked: `assertCan`, school check, class book chec
 - Low: a teacher with `ADMIN` or `SYSTEM` role passes `managedClassBook` for any class of the school, as the projector page does.
 - Lesson (for the shared file): in Vitest 4.1.8 a `vi.fn` that throws or rejects fails the test even when the code under test catches the error. Mock with a plain wrapper function and a variable for the failure.
 - Shortcut: `buildPracticeInput` got a fifth parameter `inputId` (default "saved") to share the parse rules.
+
+## Phase S2 review (helper, 2026-10-12)
+
+No Critical or High finding. Checked: school and user scope of `getLessonGameResults`, `assertCan`, Zod at the boundary, JSDoc on each export, logger rule (no `console.error` in new code), key parity in five locale files, server XP only (the route schema is strict and rejects a client `xp`; `calculateGameXP` derives the XP).
+
+Defect check: the tech-debt row "Story completions never persist" is closed in the current code. `gameTypeEnum` holds `rpg-battle-story`, `rune-match-story`, `dragon-rider-story`, `enchanted-library-story`, `castle-defense-story`, and `potion-rush-story`. Tests in `lesson-results.test.ts` and `completion.test.ts` prove it. The orchestrator can remove the row from `measure/tech-debt.md`.
+
+Medium and Low findings:
+- Medium: the lesson host passes no `ownerKey` and no avatar, so the lesson run shows no RPG reward panels and no avatar hero. The games page passes both from the server page. A later phase (S5) can add one server action that gives both.
+- Medium: a locked card hides the last result of that game. A lesson that lost words after a run shows "Needs 6 words" and no result.
+- Low: the game XP shows in the lesson summary only inside `totalXp`; the page has no separate game line (`gameXp` is in the data).
+- Low: the step reads `LESSON_VOCABULARY_GAMES` only. Phase S3 reuses `LessonGamePicker` with `LESSON_SENTENCE_GAMES`; the picker already counts sentences for the chip.
+- Low: the picker uses stand-in sprites (Forge boss and NPC strips). Request for Forge: one object render for each of the six cartridges.
+- Low: the captures use a harness (real component, real CSS, demo data). No 3D cartridge loaded in a browser; Phase S5 does the browser run.
+- Low: the speed bonus of `calculateGameXP` compares seconds with milliseconds (known, reported for `primary_parity_quick_fixes_20261011`).
+
+Deviations: the step test `task-vocabulary-game.test.tsx` was written after the component, so its red run is "suite fails with the component absent". The other tests were red first.
+
+Lessons: `vitest` in a Primary test does not type check, so a missing type (`RunContext.articleId`) passes the test; the app `tsc --noEmit` is the red for such a change. A characterization test with a hardcoded value ("20", "5/5") needs a change with the fix.
+
+Shortcuts: `practiceLocaleOf(locale) as "th"` in the step (the request type is a locale union; the helper returns string).
