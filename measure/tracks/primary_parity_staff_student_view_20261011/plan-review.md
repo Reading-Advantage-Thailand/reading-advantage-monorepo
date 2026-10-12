@@ -22,3 +22,22 @@ Tests: the pair list parses with `PairList` (11 pairs). No code, so no unit test
 Shortcuts: none in code. Deviation: none. Lesson: a banner on a dark leather bar vanishes on the
 dark scenes and a `Banner` hangs below its box, so it needs its own spacing and `relative z-10`
 over the fixed scene backdrop.
+
+## Phase S1 review (2026-10-12)
+
+Plan compliance: all tasks done. Scope: access, provider, banner, menu item, back link, copy.
+Security: the mode comes from the session role only (`studentViewModeFor`). `isStaffRole` reads the
+role string of the session, never `user_roles` (checked). INTERN stays out. No data read or write is new.
+Tests: 8 files, 59 tests pass (red run first: 7 tests failed). The app type check is clean.
+
+| Level | Finding | Action |
+| --- | --- | --- |
+| High (gate) | After S1 alone, staff open the student pages and every write path saves on the staff row. | `plan.md` carries a MERGE GATE. The orchestrator must not merge S1 before S2. |
+| Medium | Home, avatar, Class Quest, and class books can show an error for staff until S3 and S4. | Planned in S3 and S4. |
+| Medium | The Thai copy was written by the helper. | Owner check pending. |
+| Low | `notSaved` is added in S1 but no component shows it before S2. | Used from S2. |
+| Low | `bannerTitle` uses `whitespace-nowrap`; a long Thai or Vietnamese title could be wide at 375 px. | Check in the owner look check; the Phase 0 mock fits English only. |
+| Low | `doctor.sh` fails A13 (old archived track directory). | Not from this track. |
+
+Shortcuts: none. Deviation: none. Lesson: the student layout test mocked only `getLocale`; a layout that
+reads the session twice needs `currentUser` in the mock (it already had it).

@@ -20,25 +20,32 @@ Do not run a 25-student check on this machine (shared decision of 2026-10-05).
 - [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) — look check pending (owner, async)
     - Manual steps: (1) Open the 48 PNG files in `~/Desktop/primary-parity-progress/captures/staff_student_view/phase0-design/`. (2) Check `banner-375-*` and `banner-1280-*`: the blue banner differs from the brown PREVIEW plank. (3) Check each state at both widths in day and night. (4) Read `design/decisions.md` and answer P0-1 (SYSTEM school rule). Answers come back to `design/decisions.md`, `spec.md`, and `plan.md`.
 
-## Phase S1: Staff open the student pages
+## Phase S1: Staff open the student pages [checkpoint: CHECKPOINT_SHA]
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Contract for the student view mode
+**MERGE GATE: do not merge the branch of this phase into integration before Phase S2 is done.**
+After S1 alone, a staff member opens the student pages and every write path still saves on the
+staff row (the guards come in S2). S1 makes the mode available to the S2 guards: the
+`StudentViewProvider` (client) and `studentViewModeFor(role)` in `lib/student-view.ts` (server).
+Until S3, some pages (home, avatar, Class Quest, class books) can show an error for staff.
+
+- [x] Task: Contract for the student view mode
     - [ ] `lib/student-view.ts`: `StudentViewMode` (`"student" | "preview"`), a Zod schema, and `studentViewModeFor(role)` built on `isStaffRole` (`lib/permissions.ts:276`); JSDoc
-- [ ] Task: Tests for access and the menu
+- [x] Task: Tests for access and the menu
     - [ ] `lib/__tests__/student-view.test.ts`: STUDENT gives `student`; TEACHER, ADMIN, SYSTEM give `preview`; INTERN and an unknown role give no mode
     - [ ] Update `lib/__tests__/route-policies.test.ts` and `lib/__tests__/route-policies.contract.test.ts`: `/student` admits STUDENT, TEACHER, ADMIN, SYSTEM; INTERN gets `/unauthorized` (this replaces AC-7 of `primary_authorization_hardening_20260912` for page access)
     - [ ] `components/nav/__tests__/user-account-nav.test.tsx`: staff see "Student view" to `/student/home`; students keep their item
     - [ ] Test for the settings back link: staff go to the role home (`roleDefaultRedirects`)
-- [ ] Task: Implement access, the provider, the banner, and the menu item
+- [x] Task: Implement access, the provider, the banner, and the menu item
     - [ ] `lib/route-policies.ts:17`: add TEACHER, ADMIN, SYSTEM to `/student`
     - [ ] `app/[locale]/(student)/student/layout.tsx`: keep `assertLayoutRole`; derive the mode; wrap the children in `StudentViewProvider`; render the banner for `preview`
     - [ ] `components/student/student-view-provider.tsx` (provider and `useStudentView()`), `components/student/preview-banner.tsx`
     - [ ] `components/nav/user-account-nav.tsx:106-112`: the "Student view" item for staff
     - [ ] `app/[locale]/(student)/settings/user-profile/page.tsx:45-47`: role-aware back link
-    - [ ] `messages/{en,th,cn,tw,vi}.json`: banner, menu, and back link keys
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Staff open the student pages' (Protocol in workflow.md)
+    - [ ] `messages/{en,th,cn,tw,vi}.json`: banner, menu, and back link keys (namespace `StudentView`: `bannerTitle`, `bannerNote`, `exit`, `menuItem`, `notSaved`, `backHome`; Thai written by the helper, owner check pending)
+- [x] Task: Generate docs (generate.sh ran; generated files restored, not committed; doctor.sh: one old failure A13, `agents_md_audit_science_advantage_20260603`, not from this track) and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Staff open the student pages' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: (1) Open the PNG files in `~/Desktop/primary-parity-progress/captures/staff_student_view/phaseS1/` (16 files, list in `design/captures-s1.md`). (2) Check the blue banner on home and read at 375 px and 1280 px, day and night: it shows over the scene and the Exit button is 48 px high. (3) Check that the account menu shows "Student view" first under Navigation. (4) In a build, sign in as a teacher: the menu item opens `/student/home` with the banner, and Exit preview goes to `/teacher/dashboard`. (5) Open `/settings/user-profile` as a teacher: the back link goes to the role home. (6) INTERN opens `/student/home` and gets `/unauthorized`. Do not save anything as staff before S2.
 
 ## Phase S2: Nothing saves in Preview mode
 _Story ref: spec.md#story-s2_
