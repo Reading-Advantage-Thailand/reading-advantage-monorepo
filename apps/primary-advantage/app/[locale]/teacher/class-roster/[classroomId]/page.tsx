@@ -8,7 +8,7 @@ import { logger } from "@/lib/observability/logger";
 import { TeacherQuestCard } from "@/components/quest/teacher-quest-card";
 
 /**
- * Reads the books of the class and the catalogue. A failure logs `class_books.load_failed` once
+ * Reads the books of the class and the catalogue. A failure logs `class_books.load_failed` once (warn for FORBIDDEN, else error)
  * and returns the error state: the card then shows the load error with a retry link.
  * @param classroomId The class.
  * @returns The class books and the catalogue (with `failed` false), the error state (`failed` true), or null without a session.
@@ -20,7 +20,8 @@ async function loadClassBooks(classroomId: string) {
     const [books, catalogue] = await Promise.all([listClassBooks({ db, user, classroomId }), listCatalogueBooks({ db, user })]);
     return { books, catalogue, failed: false };
   } catch (error) {
-    logger.error("class_books.load_failed", { classroomId, userId: user.id, error });
+    const forbidden = (error as { code?: string } | null)?.code === "FORBIDDEN";
+    logger[forbidden ? "warn" : "error"]("class_books.load_failed", { classroomId, userId: user.id, error });
     return { books: [], catalogue: [], failed: true };
   }
 }
