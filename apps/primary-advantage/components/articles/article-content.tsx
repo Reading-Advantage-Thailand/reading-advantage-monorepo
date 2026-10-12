@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 // import { createEmptyCard, Card } from "ts-fsrs";
 import { Article } from "@/types";
 import { Button } from "../ui/button";
-import { Separator } from "@reading-advantage/ui";
 import {
   Select,
   SelectContent,
@@ -12,23 +11,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import {
-  PauseIcon,
-  PlayIcon,
-  SkipBackIcon,
-  SkipForwardIcon,
-  Languages,
-  Loader2,
-} from "lucide-react";
+import { Languages } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { saveFlashcard } from "@/actions/flashcard";
 import { toast } from "sonner";
 import { fetchArticleActivity } from "@/actions/article";
 import Image from "next/image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
-import { seekTimeForWord } from "@/lib/read-along/position";
+import { seekTimeForSentence, seekTimeForWord } from "@/lib/read-along/position";
 import { parseSentences } from "@/lib/read-along/align";
 import { ReadAlongPassage } from "@/components/read-along/read-along-passage";
+import { ReadAlongPlayer } from "@/components/read-along/read-along-player";
+import { rpgButton } from "@/components/rpg/chrome";
+import { useFollowScroll } from "@/hooks/use-follow-scroll";
 import { useReadAlong } from "@/hooks/use-read-along";
 import { toTranslationLanguage } from "@/lib/translation-language";
 
@@ -47,11 +42,9 @@ export default function ArticleContent({ article }: Props) {
   const locale = useLocale();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSentenceRef = useRef<HTMLSpanElement | null>(null);
-  const controlsRef = useRef<HTMLDivElement | null>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [togglePlayer, setTogglePlayer] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const [speed, setSpeed] = useState<string>("1");
+  const [speed, setSpeed] = useState<number>(1);
   const sentences = useMemo(() => parseSentences(article.sentences), [article.sentences]);
   const { position, isPlaying, select, reset } = useReadAlong({ audioRef, sentences });
   const currentSentenceIndex = position.sentenceIndex;
@@ -62,8 +55,11 @@ export default function ArticleContent({ article }: Props) {
   );
   const [isPanding, startTransition] = useTransition();
   const t = useTranslations("Components");
-  const [isControlsVisible, setIsControlsVisible] = useState<boolean>(true);
-  const [isAutoScrollPaused, setIsAutoScrollPaused] = useState<boolean>(false);
+  const { resume: resumeFollow } = useFollowScroll({
+    targetRef: currentSentenceRef,
+    enabled: isPlaying,
+    sentenceIndex: currentSentenceIndex,
+  });
 
   useEffect(() => {
     if (article.id) {
@@ -76,88 +72,6 @@ export default function ArticleContent({ article }: Props) {
       audioRef.current?.pause();
     };
   }, []);
-
-  useEffect(() => {
-    if (
-      isPlaying &&
-      currentSentenceIndex !== -1 &&
-      currentSentenceRef.current &&
-      !isAutoScrollPaused
-    ) {
-      const timeoutId = setTimeout(() => {
-        currentSentenceRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-          inline: "nearest",
-        });
-      }, 100);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [currentSentenceIndex, position.wordIndex, isPlaying, isAutoScrollPaused]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsControlsVisible(entry.isIntersecting);
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "-10px 0px -10px 0px",
-      },
-    );
-
-    if (controlsRef.current) {
-      observer.observe(controlsRef.current);
-    }
-
-    return () => {
-      if (controlsRef.current) {
-        observer.unobserve(controlsRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    let isScrolling = false;
-
-    const handleScroll = () => {
-      if (!isScrolling && isPlaying) {
-        isScrolling = true;
-        setIsAutoScrollPaused(true);
-
-        if (scrollTimeoutRef.current) {
-          clearTimeout(scrollTimeoutRef.current);
-        }
-
-        scrollTimeoutRef.current = setTimeout(() => {
-          setIsAutoScrollPaused(false);
-          isScrolling = false;
-        }, 3000);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
-  }, [isPlaying]);
-
-  useEffect(() => {
-    if (!isPlaying) {
-      setIsAutoScrollPaused(false);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    }
-  }, [isPlaying]);
-
-  const shouldShowFixedControls =
-    togglePlayer && isPlaying && !isControlsVisible;
 
   const handlePlayPause = async () => {
     if (audioRef.current) {
@@ -176,7 +90,7 @@ export default function ArticleContent({ article }: Props) {
     if (togglePlayer) {
       setTogglePlayer(false);
       reset();
-      setSpeed("1");
+      setSpeed(1);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -186,10 +100,10 @@ export default function ArticleContent({ article }: Props) {
     }
   };
 
-  const handleSpeedTime = (value: string) => {
+  const handleSpeedTime = (value: number) => {
     setSpeed(value);
     if (audioRef.current) {
-      audioRef.current.playbackRate = Number(value);
+      audioRef.current.playbackRate = value;
     }
   };
 
@@ -198,7 +112,7 @@ export default function ArticleContent({ article }: Props) {
     if (!audio || !article) return;
 
     const handleLoadedMetadata = () => {
-      audio.playbackRate = Number(speed);
+      audio.playbackRate = speed;
     };
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -238,11 +152,15 @@ export default function ArticleContent({ article }: Props) {
     const audio = audioRef.current;
     const sentence = sentences[sentenceIndex];
     if (!audio || !sentence) return;
+    resumeFollow();
     audio.currentTime = seekTimeForWord(sentence, audioWordIndex);
     select({ sentenceIndex, wordIndex: sentence.words[audioWordIndex] ? audioWordIndex : -1 });
     // Play at once to give the student feedback.
     if (togglePlayer) audio.play().catch(() => undefined);
   };
+
+  /** Plays from the start of a sentence entry; the player buttons use it. */
+  const handlePlaySentence = (sentenceIndex: number) => handleWordTap(sentenceIndex, -1);
 
   const handleSaveToFlashcard = () => {
     if (currentSentenceIndex !== -1) {
@@ -299,19 +217,19 @@ export default function ArticleContent({ article }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div ref={controlsRef} className="flex flex-col gap-2 md:flex-row">
+      <div className="flex flex-col gap-2 md:flex-row">
         <div id="onborda-audio" className="w-full">
           <audio
             ref={audioRef}
             src={getAudioUrl(article.audioUrl || "")}
           />
-          <Button
-            variant="default"
-            className="w-full"
+          <button
+            type="button"
+            className={cn(rpgButton(togglePlayer ? "iron" : "gold"), "w-full")}
             onClick={handleTogglePlayer}
           >
-            {t("audioButton")}
-          </Button>
+            {togglePlayer ? t("closeAudio") : t("audioButton")}
+          </button>
         </div>
         <div id="onborda-translate" className="flex gap-2">
           <Select
@@ -360,201 +278,19 @@ export default function ArticleContent({ article }: Props) {
         </div>
       </div>
 
-      {shouldShowFixedControls && (
-        <div className="bg-primary dark:bg-primary-foreground fixed right-0 bottom-(--bottom-nav-h) left-0 z-50 border-t p-4 shadow-lg transition-[background-color,box-shadow] duration-300 lg:bottom-0">
-          <div className="mx-auto max-w-4xl space-y-3">
-            {isTranslateOpen && (
-              <div className="flex flex-col items-center justify-center border-b pb-3">
-                <p aria-live="polite" className="text-primary-foreground dark:text-primary text-center">
-                  {translate}
-                </p>
-              </div>
-            )}
-
-            {/* Main Controls */}
-            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-center md:gap-4">
-              <div className="flex w-full items-center md:flex-grow">
-                <Button
-                  variant="default"
-                  className="w-full"
-                  onClick={handleTogglePlayer}
-                >
-                  {t("audioButton")}
-                </Button>
-              </div>
-              <div className="flex items-center gap-2">
-                <Select
-                  value={selectedLanguage}
-                  onValueChange={setSelectedLanguage}
-                  disabled={loading}
-                >
-                  <SelectTrigger className="h-10 w-[70px] md:w-auto" aria-label={t("translationLanguage")}>
-                    <div className="flex items-center gap-1 md:gap-2">
-                      <Languages className="h-4 w-4 shrink-0" />
-                      <SelectValue>
-                        <span className="text-lg">
-                          {selectedLanguage === "th" && "🇹🇭"}
-                          {selectedLanguage === "vi" && "🇻🇳"}
-                          {selectedLanguage === "cn" && "🇨🇳"}
-                          {selectedLanguage === "tw" && "🇹🇼"}
-                        </span>
-                      </SelectValue>
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent position="popper" className="max-h-60 w-48">
-                    {Object.entries(SUPPORTED_LANGUAGES).map(([code, name]) => (
-                      <SelectItem key={code} value={code} className="w-full">
-                        <span className="truncate">{name}</span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Button
-                  variant="default"
-                  disabled={loading || currentSentenceIndex === -1}
-                  onClick={() => {
-                    isTranslateOpen
-                      ? setIsTranslateOpen(false)
-                      : setIsTranslateOpen(true);
-                    handleTranslate(currentSentenceIndex);
-                  }}
-                  className="flex flex-1 items-center gap-2"
-                >
-                  <>
-                    <Languages className="h-4 w-4 shrink-0" />
-                    <span className="truncate">
-                      {isTranslateOpen ? t("closeButton") : t("translate")}
-                    </span>
-                  </>
-                </Button>
-              </div>
-            </div>
-
-            {/* Audio Player Controls */}
-            {togglePlayer && (
-              <div className="bg-primary text-primary-foreground rounded p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <Button
-                    variant="secondary"
-                    className="h-10 w-10 rounded-full p-0"
-                    aria-label={t("seekBack")}
-                  >
-                    <SkipBackIcon />
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="h-10 w-10 rounded-full p-0"
-                    onClick={handlePlayPause}
-                    aria-label={isPlaying ? t("stopAudio") : t("playAudio")}
-                  >
-                    {isPlaying ? <PauseIcon /> : <PlayIcon />}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="h-10 w-10 rounded-full p-0"
-                    aria-label={t("seekForward")}
-                  >
-                    <SkipForwardIcon />
-                  </Button>
-                  <div>
-                    <Select value={speed} onValueChange={handleSpeedTime}>
-                      <SelectTrigger
-                        className="border-muted-foreground w-20 border"
-                        aria-label={t("playbackSpeed")}
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent position="popper">
-                        <SelectItem value="0.5">0.5x</SelectItem>
-                        <SelectItem value="0.75">0.75x</SelectItem>
-                        <SelectItem value="1">1x</SelectItem>
-                        <SelectItem value="1.25">1.25x</SelectItem>
-                        <SelectItem value="1.5">1.5x</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Add padding when fixed controls are shown */}
-      {shouldShowFixedControls && (
-        <div
-          className={cn(
-            "pb-4",
-            togglePlayer && isTranslateOpen
-              ? "h-52"
-              : togglePlayer
-                ? "h-36"
-                : isTranslateOpen
-                  ? "h-32"
-                  : "h-20",
-          )}
-        ></div>
-      )}
-
-      {/* Keep normal audio player when not fixed */}
-      {togglePlayer && !shouldShowFixedControls && (
-        <div
-          id="audioPlayer"
-          className="bg-primary text-primary-foreground my-2 rounded p-4 transition-all duration-300"
+      {togglePlayer && (
+        <p
+          role="note"
+          className="rounded-lg border-2 border-dashed border-amber-500 bg-amber-50 px-3 py-2 text-center text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100"
         >
-          <div className="flex items-center justify-between gap-2">
-            <Button
-              variant="secondary"
-              className="h-10 w-10 rounded-full p-0"
-              aria-label={t("seekBack")}
-            >
-              <SkipBackIcon />
-            </Button>
-            <Button
-              id="playPauseButton"
-              variant="secondary"
-              className="h-10 w-10 rounded-full p-0"
-              onClick={handlePlayPause}
-              aria-label={isPlaying ? t("stopAudio") : t("playAudio")}
-            >
-              {isPlaying ? <PauseIcon /> : <PlayIcon />}
-            </Button>
-            <Button
-              variant="secondary"
-              className="h-10 w-10 rounded-full p-0"
-              aria-label={t("seekForward")}
-            >
-              <SkipForwardIcon />
-            </Button>
-            <div>
-              <Select value={speed} onValueChange={handleSpeedTime}>
-                <SelectTrigger
-                  className="border-muted-foreground w-20 border"
-                  aria-label={t("playbackSpeed")}
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem value="0.5">0.5x</SelectItem>
-                  <SelectItem value="0.75">0.75x</SelectItem>
-                  <SelectItem value="1">1x</SelectItem>
-                  <SelectItem value="1.25">1.25x</SelectItem>
-                  <SelectItem value="1.5">1.5x</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
+          {t("readAlongHint")}
+        </p>
       )}
 
-      {/* Keep normal translate when not fixed */}
-      {isTranslateOpen && !shouldShowFixedControls && (
-        <div className="flex h-32 flex-col items-center justify-between transition-all duration-300 md:h-24">
-          <Separator />
-          <p className="text-center text-green-500">{translate}</p>
-          <Separator />
-        </div>
+      {isTranslateOpen && translate && !togglePlayer && (
+        <p aria-live="polite" className="text-center text-green-500">
+          {translate}
+        </p>
       )}
 
       <ReadAlongPassage
@@ -578,6 +314,28 @@ export default function ArticleContent({ article }: Props) {
         translateLabel={t("translate")}
         translateDisabled={loading || currentSentenceIndex === -1}
       />
+
+      {togglePlayer && (
+        <>
+          {/* Room for the fixed player bar on a phone. */}
+          <div aria-hidden className="h-24 lg:hidden" />
+          <ReadAlongPlayer
+            playing={isPlaying}
+            speed={speed}
+            sentenceIndex={currentSentenceIndex}
+            sentenceCount={sentences.length}
+            onPlayPause={handlePlayPause}
+            onPlaySentence={handlePlaySentence}
+            onSpeedChange={handleSpeedTime}
+          >
+            {isTranslateOpen && translate && (
+              <p aria-live="polite" className="text-center text-sm text-[#fff4dc]">
+                {translate}
+              </p>
+            )}
+          </ReadAlongPlayer>
+        </>
+      )}
     </div>
   );
 }

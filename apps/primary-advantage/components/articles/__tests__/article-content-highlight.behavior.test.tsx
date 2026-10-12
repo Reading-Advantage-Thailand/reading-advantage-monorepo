@@ -152,3 +152,73 @@ describe("ArticleContent translation language select", () => {
     unmount();
   });
 });
+
+describe("ArticleContent one player (Phase S3)", () => {
+  const twoSentences: Article = {
+    ...article,
+    passage: "Alpha beta. Gamma delta.",
+    sentences: [
+      {
+        sentence: "Alpha beta.",
+        startTime: 0,
+        endTime: 2,
+        words: [
+          { word: "Alpha", start: 0, end: 1 },
+          { word: "beta.", start: 1, end: 2 },
+        ],
+      },
+      {
+        sentence: "Gamma delta.",
+        startTime: 3,
+        endTime: 5,
+        words: [
+          { word: "Gamma", start: 3, end: 4 },
+          { word: "delta.", start: 4, end: 5 },
+        ],
+      },
+    ],
+  };
+
+  it("shows no player before the audio opens, and exactly one after", () => {
+    renderWithMessages(<ArticleContent article={twoSentences} />);
+    expect(screen.queryByRole("button", { name: "Play audio" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Listen and read along" }));
+    expect(screen.getAllByRole("button", { name: "Play audio" })).toHaveLength(1);
+    expect(screen.queryByRole("button", { name: "Seek back" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Seek forward" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Listen and read along" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Close the audio" }));
+    expect(screen.queryByRole("button", { name: "Play audio" })).toBeNull();
+  });
+
+  it("Next sentence seeks to the next entry and plays; Previous goes back", () => {
+    const { container } = renderWithMessages(<ArticleContent article={twoSentences} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    const play = vi.spyOn(window.HTMLMediaElement.prototype, "play");
+    fireEvent.click(screen.getByRole("button", { name: "Listen and read along" }));
+    fireEvent.click(screen.getByRole("button", { name: "Replay this sentence" }));
+    expect(audio.currentTime).toBeCloseTo(0);
+    fireEvent.click(screen.getByRole("button", { name: "Next sentence" }));
+    expect(audio.currentTime).toBeCloseTo(2.95);
+    expect(play).toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Previous sentence" }));
+    expect(audio.currentTime).toBeCloseTo(0);
+  });
+
+  it("a tap on the speed sign changes the playback rate of the audio", () => {
+    const { container } = renderWithMessages(<ArticleContent article={twoSentences} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    fireEvent.click(screen.getByRole("button", { name: "Listen and read along" }));
+    fireEvent.click(screen.getByRole("button", { name: "Speed 1 times. Change speed" }));
+    expect(audio.playbackRate).toBe(1.25);
+    fireEvent.click(screen.getByRole("button", { name: "Speed 1.25 times. Change speed" }));
+    expect(audio.playbackRate).toBe(0.75);
+  });
+
+  it("shows the hint line while the audio is open", () => {
+    renderWithMessages(<ArticleContent article={twoSentences} />);
+    expect(screen.queryByText(/Tap a word to hear it/)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Listen and read along" }));
+    expect(screen.getByText(/Tap a word to hear it from there/)).toBeInTheDocument();
+  });
+});
