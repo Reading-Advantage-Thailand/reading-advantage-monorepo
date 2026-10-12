@@ -3819,6 +3819,16 @@
       "steps": "ขั้นในแบบฝึกหัดที่ทำในชั้นเรียนแล้ว",
       "stepLabel": "ขั้นที่ {step}: {title}",
       "actionError": "บันทึกการเปลี่ยนแปลงไม่สำเร็จ ลองอีกครั้ง",
+      "teachAgain": "Teach again",
+      "teachAgainTitle": "Teach lesson {number} again?",
+      "teachAgainBody1": "The class starts lesson {number} again. The lesson becomes the current lesson.",
+      "teachAgainBody2": "The work of each student goes into the history. The XP stays.",
+      "teachAgainCancel": "Cancel",
+      "taughtTimes": "{count, plural, one {Taught # time} other {Taught # times}}",
+      "runChip": "Run {number}",
+      "earlierRuns": "Earlier runs ({count})",
+      "earlierRun": "Run {number} · taught {date} · {done} of {total} steps done",
+      "earlierRunNoDate": "Run {number} · not marked taught · {done} of {total} steps done",
       "lesson": {
         "projector": "โปรเจกเตอร์",
         "projectorGames": {

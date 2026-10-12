@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@reading-advantage/db";
-import { assignClassBook, markLessonTaught, markStepDone, setCurrentLesson } from "@reading-advantage/domain/primary-books";
+import { assignClassBook, markLessonTaught, markStepDone, setCurrentLesson, teachLessonAgain } from "@reading-advantage/domain/primary-books";
 import { currentUser } from "@/lib/session";
 
 /** The result of a class book action; null before the first call of a form. */
@@ -77,4 +77,14 @@ export async function markLessonTaughtAction(classBookId: string, lessonNumber: 
  */
 export async function markStepDoneAction(classBookId: string, lessonNumber: number, step: number, done: boolean): Promise<ClassBookActionState> {
   return run((user) => markStepDone({ db, user, input: { classBookId, lessonNumber, step, done } }));
+}
+
+/**
+ * Teaches a lesson again for the class: the run goes into the history and the students' attempts close.
+ * @param classBookId The class book.
+ * @param lessonNumber The lesson.
+ * @returns The action state.
+ */
+export async function teachLessonAgainAction(classBookId: string, lessonNumber: number): Promise<ClassBookActionState> {
+  return run((user) => teachLessonAgain({ db, user, input: { classBookId, lessonNumber } }));
 }
