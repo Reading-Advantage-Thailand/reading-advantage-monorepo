@@ -65,3 +65,27 @@ No Critical or High finding. Fixed in 4f7066a58: the three Low findings of the s
 - Runbook: npm 10 install line inside the flock command, `chmod 600` of `.env.local`, `chmod 700` of state and captures, port 3100 and 3005 checks, handout rename note in section 11, and a note that `cutover-check.mjs` stdout can hold names (the script stays unchanged, FR-13).
 - Tests: 68 pass in the kit (`vitest run --root scripts/primary-parity`); the kit type check passes.
 - Open Low: no automated test for the `loadIdMap` guard call (the file imports Playwright).
+
+## Batch 1 findings (2026-10-12)
+
+- Legacy student redirected to sign-in (quick_fixes AC-5, 6, 7, 10, 11). Facts: the sign-in of the kit works
+  (`signInLegacyStudent` reaches `/student`). The final URL of the failed pages is
+  `/en/auth/signin?callbackUrl=<path>&session=expired`. Only the legacy `proxy.ts` makes this URL (step 5:
+  the cookie exists but `getValidSession` gets no user from `<BETTER_AUTH_URL>/api/auth/get-session`).
+  The failures are intermittent: AC-8, 9, 9b, and 10 (settings, reads, games) opened with the same cookie
+  between failures. The legacy log shows no session error, only "User lesson progress not found" and
+  "Cannot read properties of undefined (reading 'user')" from the roster pages. The copy holds no kit session
+  row, so the session table cannot confirm the cause now.
+  Cause: not proven. Best guess: the proxy self-fetch to `get-session` failed or timed out while the legacy
+  dev-size server was under load (the run took 5.6 min with the lock waits), and the proxy treats any failed
+  fetch as "expired".
+  Fix in the kit (small, tested helper `isExpiredRedirect`): when a legacy page of a signed-in role ends on the
+  `session=expired` sign-in page, `capture.ts` signs in again once and opens the page again.
+  Proposal if batch 2 still shows the redirect: run the legacy server alone, add a retry of the page, and read
+  `legacy-server.log` for the `get-session` request at the time of the redirect.
+- Network log (cleanup AC-4-2 and AC-5-2): done. A check can carry `network` (regular expression). The capture
+  stores the matching request paths (no query string) in `capture-<app>.json`, and the report prints them in
+  the Note cell. Tests: `__tests__/batch.test.ts` and `__tests__/report.test.ts` (81 pass).
+- Pair data errors found in batch 1: the quick_fixes AC-4 `legacyPath` used `{map:...}` (a new id for the legacy
+  app). Check other pair lists for the same fault: `legacyPath` must hold the raw legacy id.
+- Runbook section 11 has a new first step: rebuild the package `dist` folders before the app build.

@@ -1,0 +1,50 @@
+{
+  "member": "primary_parity_read_along_20261011",
+  "pairs": [
+    {
+      "id": "RA-A1",
+      "rows": ["STU-10"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/cmgqu1x6v00w2t79bzal712ko",
+      "newPath": "/en/student/read/{map:article:cmgqu1x6v00w2t79bzal712ko}",
+      "colorSchemes": ["light", "dark"],
+      "checks": [
+        { "id": "RA-A1-a", "behavior": "Clean article. Play it to the end in both apps. In the new app the lit word is the spoken word through the whole text (AC-1). Note where legacy goes wrong." },
+        { "id": "RA-A1-b", "behavior": "Tap 5 words in the middle of sentences. The new app plays from each tapped word (AC-2)." },
+        { "id": "RA-A1-c", "behavior": "New: Previous, Replay, and Next sentence each play from the right sentence, and 0.75× changes the speed. Legacy: the skip buttons do nothing (AC-3)." }
+      ]
+    },
+    {
+      "id": "RA-A2",
+      "rows": ["STU-10"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/cmgqulnnp014it79bvuynoxk9",
+      "newPath": "/en/student/read/{map:article:cmgqulnnp014it79bvuynoxk9}",
+      "checks": [
+        { "id": "RA-A2-a", "behavior": "Article with curly quotes. In the new app the lit word stays on the spoken word after each quote. In legacy the mark can move to a wrong word after a quote (AC-1)." },
+        { "id": "RA-A2-b", "behavior": "Tap a word right after a curly quote. The new app plays from that word (AC-2)." }
+      ]
+    },
+    {
+      "id": "RA-A3",
+      "rows": ["STU-10"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/cmorc1khs001bs601yvv09j2a",
+      "newPath": "/en/student/read/{map:article:cmorc1khs001bs601yvv09j2a}",
+      "checks": [
+        { "id": "RA-A3-a", "behavior": "Article where the audio drops words (the maps need the resync). In the new app the mark goes back to the right word within one word after each gap (AC-1)." },
+        { "id": "RA-A3-b", "behavior": "Pause, then play. The mark stays on the last word while paused. In a gap between two words no other word lights up." }
+      ]
+    },
+    {
+      "id": "RA-A4",
+      "rows": ["STU-10"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/cmirl4sc5000ts60d7zuiqpjb",
+      "newPath": "/en/student/lesson/{map:assignments:cmirl4sc5000ts60d7zuiqpjb}",
+      "checks": [
+        { "id": "RA-A4-a", "behavior": "Open the reading step of the lesson (the orchestrator picks a lesson with a reading step and audio when this one has none). The highlight and the tap to play work as on the article page (AC-4)." }
+      ]
+    }
+  ]
+}

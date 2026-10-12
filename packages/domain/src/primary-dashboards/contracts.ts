@@ -20,17 +20,41 @@ export const dashboardRangeSchema = z.preprocess(
   z.union([z.literal(7), z.literal(30), z.literal(90)]),
 );
 
-/**
- * The set of students that a count covers. `school` covers all STUDENT users of one school.
- * The teacher home adds a `classes` kind and the system dashboard adds a `platform` kind later.
- */
-export const activityScopeSchema = z.object({
+/** The scope of all STUDENT users of one school. */
+export const schoolScopeSchema = z.object({
   kind: z.literal("school"),
   schoolId: z.string().uuid(),
 });
 
+/**
+ * The scope of the STUDENT users of a school who are in the listed classes. A student in two
+ * classes counts one time in the totals and one time in each class.
+ */
+export const classesScopeSchema = z.object({
+  kind: z.literal("classes"),
+  schoolId: z.string().uuid(),
+  /** The class ids. The caller picks them from the classes of its own school. */
+  classIds: z.array(z.string().uuid()),
+});
+
+/** The scope of all STUDENT users who have a school (the system dashboard). */
+export const platformScopeSchema = z.object({ kind: z.literal("platform") });
+
+/**
+ * The set of students that a count covers. `school` covers all STUDENT users of one school,
+ * `classes` covers the students of some classes of one school, and `platform` covers all
+ * STUDENT users who have a school.
+ */
+export const activityScopeSchema = z.discriminatedUnion("kind", [schoolScopeSchema, classesScopeSchema, platformScopeSchema]);
+
 /** The set of students that a count covers. */
 export type ActivityScope = z.infer<typeof activityScopeSchema>;
+
+/** A scope that belongs to one school: it has a `schoolId`. */
+export type SchoolBoundScope = Exclude<ActivityScope, { kind: "platform" }>;
+
+/** The scope of the students of some classes. */
+export type ClassesScope = z.infer<typeof classesScopeSchema>;
 
 /** A window of Bangkok calendar days: the last N days, today included. */
 export const dashboardWindowSchema = z.object({

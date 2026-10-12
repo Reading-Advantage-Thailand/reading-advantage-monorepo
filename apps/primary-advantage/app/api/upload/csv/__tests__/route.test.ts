@@ -111,7 +111,7 @@ describe("user CSV upload authorization", () => {
 
   it("allows a teacher and reads the school from the schools table", async () => {
     const schoolId = "00000000-0000-0000-0000-000000000001";
-    mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER" });
+    mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId });
     mocks.select
       .mockReturnValueOnce(selectResult([{ id: "teacher-1", schoolId }]))
       .mockReturnValueOnce(selectResult([{ id: schoolId, name: "School A" }]));
@@ -125,13 +125,13 @@ describe("user CSV upload authorization", () => {
     expect(mocks.insert).not.toHaveBeenCalled();
   });
 
-  it("allows a system actor without a school", async () => {
+  it("asks a system actor for a school before any lookup", async () => {
     mocks.currentUser.mockResolvedValue({ id: "system-1", role: "SYSTEM" });
-    mocks.select.mockReturnValueOnce(selectResult([{ id: "system-1", schoolId: null }]));
 
     const response = await POST(request);
 
     expect(response.status).toBe(400);
+    expect((await response.json()).error).toBe("School selection required");
     expect(mocks.insert).not.toHaveBeenCalled();
   });
 });

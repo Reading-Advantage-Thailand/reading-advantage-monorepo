@@ -56,8 +56,8 @@
         "TCH-08"
       ],
       "role": "TEACHER",
-      "legacyPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
-      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}",
+      "legacyPath": "/en/teacher/class-roster/cmhmfagyv0001t7mk3nq28w01",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhmfagyv0001t7mk3nq28w01}",
       "checks": [
         {
           "id": "AC-4-a",

@@ -11,7 +11,8 @@ vi.mock("@reading-advantage/db/schema", () => ({
   schools: { id: "id" },
 }));
 
-vi.mock("drizzle-orm", () => ({
+vi.mock("drizzle-orm", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("drizzle-orm")>()),
   eq: vi.fn((col, val) => ({ col, val, type: "eq" })),
   and: vi.fn((...conds) => ({ type: "and", conds })),
 }));

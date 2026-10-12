@@ -81,7 +81,8 @@
       "overviewReports": "概覽報告",
       "performanceAnalytics": "效能分析",
       "progressTracking": "進度追蹤"
-    }
+    },
+    "schoollicense": "學校授權"
   },
   "Leaderboard": {
     "title": "排行榜",
@@ -208,7 +209,16 @@
         "updateFailed": "更新教室失敗",
         "updateSuccess": "更新教室成功",
         "deleteSuccess": "教室刪除成功",
-        "deleteFailed": "刪除教室失敗"
+        "deleteFailed": "刪除教室失敗",
+        "teachersRefused": "教師未變更。有教師屬於其他學校。"
+      },
+      "picker": {
+        "hint": "勾選教這個班級的教師。",
+        "owner": "班主任",
+        "loading": "正在載入教師...",
+        "loadFailed": "教師清單載入失敗。",
+        "empty": "這所學校沒有教師。",
+        "selected": "{count, plural, other {已選擇 # 位教師}}。班主任會留在班級中。"
       }
     },
     "Students": {
@@ -251,6 +261,7 @@
       "maxSize": "最大大小：5MB",
       "browse": "瀏覽",
       "supportedFormat": "支援格式：僅 CSV 檔，最大 5MB",
+      "chooseSchool": "匯入前請先選擇學校。",
       "fileSelected": {
         "title": "已選擇檔案",
         "name": "名稱",
@@ -260,6 +271,7 @@
       "failedTitle": "上傳失敗",
       "successTitle": "上傳成功",
       "success": {
+        "school": "學校",
         "file": "檔案",
         "size": "大小",
         "savedAs": "另存為",
@@ -1485,6 +1497,43 @@
         "title": "沒有學校關聯",
         "description": "您還沒有與您的帳戶關聯的學校。創建一個以開始並獲得管理學校功能的管理員訪問權限。",
         "createSchool": "創建學校"
+      },
+      "licensePanel": {
+        "title": "授權",
+        "viewOnly": "僅供檢視。如需變更授權，請聯絡 Reading Advantage。",
+        "overChip": "已超額",
+        "overTitle": "學生人數超出限額 {count} 人。",
+        "overBody": "學校有 {used} 名學生和 {seats} 個席位。學生仍可使用。請在下學期前申請更多席位。",
+        "noneChip": "沒有有效授權",
+        "noneTitle": "學校目前沒有席位。",
+        "noneBody": "有 {used} 名學生使用本應用程式。請申請授權。",
+        "seatsTitle": "席位",
+        "seatsUsed": "已用席位",
+        "seatsFree": "空閒席位",
+        "seatsTotal": "席位總數",
+        "seatsNote": "席位按今天有效的授權計算。已用席位按學校的學生人數計算。教師和管理員不佔用席位。",
+        "licensesTitle": "授權",
+        "noLicense": "這所學校沒有授權。",
+        "seatsCount": "{count} 個席位",
+        "dateRange": "{start} 至 {end}",
+        "noEnd": "無結束日期",
+        "state": {
+          "active": "有效",
+          "ended": "已結束",
+          "inactive": "未啟用"
+        },
+        "holdersTitle": "席位使用者",
+        "holdersRange": "第 {from} 至 {to} 名學生，共 {total} 名",
+        "holdersEmpty": "學校沒有學生。",
+        "holdersError": "席位使用者載入失敗。",
+        "colName": "姓名",
+        "colUsername": "使用者名稱",
+        "colClasses": "班級",
+        "colJoined": "加入日期",
+        "noClass": "無班級",
+        "previous": "上一頁",
+        "next": "下一頁",
+        "pageOf": "第 {page} 頁，共 {pages} 頁"
       }
     }
   },
@@ -2605,7 +2654,8 @@
         "students": "學生",
         "classes": "班級",
         "joined": "加入日期",
-        "actions": "操作"
+        "actions": "操作",
+        "school": "學校"
       },
       "loading": "正在載入教師...",
       "empty": {
@@ -2620,6 +2670,18 @@
         "createError": "無法建立教師",
         "updateError": "無法更新教師",
         "deleteError": "無法刪除教師"
+      },
+      "schoolManage": {
+        "school": "學校",
+        "noSchool": "無學校",
+        "filterLabel": "依學校篩選",
+        "filterAll": "所有學校",
+        "notice": "儲存後，教師將轉到 {school}。請在下方選擇該學校的班級。",
+        "moved": "教師已轉到新學校",
+        "refusedTitle": "暫時無法轉校",
+        "refusedDescription": "{name} 是以下班級的擁有者。請先把每個班級交給其他擁有者，然後重試。",
+        "refusedClose": "關閉",
+        "moveFailed": "轉校失敗"
       }
     }
   },
@@ -3508,7 +3570,17 @@
       "classes": "Classes",
       "students": "Students",
       "openAssignments": "Open assignments",
-      "needsHelp": "Need help"
+      "needsHelp": "Need help",
+      "activeStudents": "活躍學生（30 天）",
+      "activeStudentsOf": "{active} / {total}（{percent}%）",
+      "noStudentsYet": "還沒有學生",
+      "averageLevel": "平均等級",
+      "averageLevelHint": "Primary 等級 1 至 15",
+      "activeToday": "今日活躍",
+      "activeTodayOf": "共 {count} 位學生",
+      "completedToday": "今日完成",
+      "completedTodayHint": "已完成的作業",
+      "needsHelpHint": "見下方名單"
     },
     "classes": {
       "heading": "My classes",
@@ -3537,7 +3609,41 @@
       "more": "{count, plural, one {# more student} other {# more students}}"
     },
     "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again."
+    "loadErrorHint": "Check your connection and try again.",
+    "table": {
+      "search": "依班級名稱搜尋",
+      "searchLabel": "搜尋班級",
+      "sortBy": "排序方式",
+      "sortAsc": "升序",
+      "sortDesc": "降序",
+      "sortDirection": "變更排序順序",
+      "csv": "下載 CSV",
+      "csvLabel": "將顯示的班級下載為 CSV 檔案",
+      "noMatch": "沒有班級符合「{query}」。",
+      "legend": "活躍指 7 天內至少有一次活動。XP 趨勢與前 7 天比較（上升或下降超過 5%）。",
+      "activeOf": "{active} / {students}（{percent}%）",
+      "actions": "操作",
+      "columns": {
+        "name": "班級",
+        "students": "學生",
+        "active": "活躍（7 天）",
+        "level": "平均等級",
+        "xp": "XP（7 天）",
+        "trend": "趨勢",
+        "status": "狀態"
+      },
+      "trend": {
+        "up": "上升",
+        "flat": "持平",
+        "down": "下降"
+      },
+      "status": {
+        "onTrack": "達標",
+        "someQuiet": "部分安靜",
+        "needsAttention": "需要關注",
+        "noStudents": "沒有學生"
+      }
+    }
   },
   "TeacherUi": {
     "startClass": "Start class",

@@ -4,6 +4,7 @@ import type { TeacherQuestCard as TeacherQuestCardData } from "@reading-advantag
 import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Panel, rpgButton } from "@/components/rpg/chrome";
 import { TEACHER_ACTION, TEACHER_CARD } from "@/components/teacher/teacher-shell";
 import { CancelQuestButton } from "./cancel-quest-button";
 import { QuestMeter } from "./quest-meter";
@@ -17,17 +18,20 @@ import { questText } from "./quest-copy";
  * @param props.card The card data, or null.
  * @param props.heading A heading above the quest, for example the class name on the dashboard.
  * @param props.className Extra classes.
+ * @param props.panel True renders the card as a parchment panel, for a page inside a Scene.
  * @returns The card.
  */
-export function TeacherQuestCard({ classroomId, card, heading, className }: { classroomId: string; card: TeacherQuestCardData | null; heading?: string; className?: string }) {
+export function TeacherQuestCard({ classroomId, card, heading, className, panel }: { classroomId: string; card: TeacherQuestCardData | null; heading?: string; className?: string; panel?: boolean }) {
   const t = useTranslations("Quest");
   const locale = useLocale();
   const format = useFormatter();
   const headingId = `quest-${classroomId}`;
+  const Frame = panel ? Panel : "section";
+  const actionClass = panel ? cn(rpgButton("wood", true), "min-h-12") : cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "rounded-xl");
   return (
-    <section aria-labelledby={headingId} data-quest-card={classroomId} className={cn(TEACHER_CARD, className)}>
+    <Frame aria-labelledby={headingId} data-quest-card={classroomId} className={panel ? className : cn(TEACHER_CARD, className)}>
       <h2 id={headingId} className="flex items-center gap-2 text-lg font-semibold">
-        <SwordsIcon className="text-primary size-5" aria-hidden="true" />
+        <SwordsIcon className="text-primary size-5 shrink-0" aria-hidden="true" />
         {heading ?? t("teacher.title")}
       </h2>
       {card ? (
@@ -46,7 +50,7 @@ export function TeacherQuestCard({ classroomId, card, heading, className }: { cl
           </p>
           <div className="flex flex-wrap gap-2">
             {card.quest.status !== "done" ? (
-              <Link href={`/teacher/quest/${card.quest.id}/live`} className={cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "rounded-xl")}>
+              <Link href={`/teacher/quest/${card.quest.id}/live`} className={actionClass}>
                 {t("teacher.live")}
               </Link>
             ) : null}
@@ -56,11 +60,11 @@ export function TeacherQuestCard({ classroomId, card, heading, className }: { cl
       ) : (
         <>
           <p className="text-muted-foreground text-sm">{t("teacher.none")}</p>
-          <Link href={`/teacher/quest?classroomId=${classroomId}`} className={cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "w-fit rounded-xl")}>
+          <Link href={`/teacher/quest?classroomId=${classroomId}`} className={cn(actionClass, "w-fit")}>
             {t("teacher.assign")}
           </Link>
         </>
       )}
-    </section>
+    </Frame>
   );
 }

@@ -94,7 +94,7 @@ describe("admin class edit dialog", () => {
 
     const patch = fetchMock.mock.calls.find(([, init]) => init?.method === "PATCH");
     expect(patch?.[0]).toBe(`/api/classroom/${C1}`);
-    expect(JSON.parse(patch?.[1].body as string)).toEqual({ classroomName: "P3B", grade: "5" });
+    expect(JSON.parse(patch?.[1].body as string)).toEqual({ classroomName: "P3B", grade: "5", teacherIds: [] });
   });
 
   it("shows the class code read-only and no student password field", async () => {

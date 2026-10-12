@@ -14,8 +14,10 @@ The verified session is the sole `schoolId` source for every upload write.
    change.
 3. The stored row may still supply non-school values, such as the user id for
    audit columns.
-4. SYSTEM sessions carry no school. Their imports stamp `schoolId: null` by
-   design.
+4. SYSTEM sessions carry no school. A SYSTEM import stamps the verified target
+   school: the form field `schoolId`, checked by `resolveImportSchool`
+   (`primary_parity_school_management_20261011`, Phase S2). A SYSTEM upload
+   without a valid school gets 400. Other roles use the school of the session.
 
 ## Stamping sites
 

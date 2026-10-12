@@ -16,6 +16,15 @@ export { getClassLessonAnalytics } from "./get-class-lesson-analytics.js";
 export { listAssignments } from "./list-assignment.js";
 export { createAssignment } from "./create-assignment.js";
 export { deleteAssignment } from "./delete-assignment.js";
+export {
+  setClassroomTeachers,
+  setClassroomTeachersInputSchema,
+  setClassroomTeachersOutputSchema,
+  SetClassroomTeachersError,
+  type SetClassroomTeachersInput,
+  type SetClassroomTeachersOutput,
+} from "./set-classroom-teachers.js";
+export { CLASS_TEACHER_PERMISSIONS } from "./permissions.js";
 
 interface CreateClassInput {
   name: string;

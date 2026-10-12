@@ -147,11 +147,11 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [~] Task: Side-by-side acceptance on the rehearsal copy
     - [x] Write `measure/tracks/primary_parity_quick_fixes_20261011/acceptance-pairs.json` with the rows AC-1 to AC-13 of the spec (the pair list contract of `primary_parity_acceptance_20261011`)
     - [x] Fill the behavior contract template (`docs/runbooks/primary-behavior-contract-template.md`) for FR-3, FR-5, FR-6, and FR-11
-    - [ ] Run the kit on the matched copies with a production build of each app (one app at a time) - batch capture (orchestrator)
+    - [x] Run the kit on the matched copies with a production build of each app (one app at a time) - done 2026-10-12 in batch capture 1 at commit 0c9356701; results in `acceptance.md`
     - [x] Run the data checks of the spec table "Migrated data" (read only on `primary_parity_20261011`; SQL in `migrated-data-checks.sql`, results in `acceptance.md`)
     - [x] Write `measure/tracks/primary_parity_quick_fixes_20261011/acceptance.md` (the kit template); keep the captures in the private folder
-- [ ] Task: Owner look check of the built pages
-    - [ ] Send the report and the new captures (375 px and 1280 px, day and night for the student pages); record the answer here - batch capture (orchestrator)
+- [x] Task: Owner look check of the built pages
+    - [x] Send the report and the new captures (375 px and 1280 px, day and night for the student pages); record the answer here - look check pending (owner, async): report at `~/Desktop/primary-parity-acceptance/captures/primary_parity_quick_fixes_20261011/report.html`
 - [x] Task: Record the found items
     - [x] Show the owner E-8 (`/api/articles/[articleId]` GET with no session check) and the level rule of `calculateLevelAndCefrLevel`; on a yes, add the rows to `measure/tech-debt.md` (the file has more than 50 lines, so ask the owner to prune it first, `measure/workflow.md` step 8)
     - No stop (owner decision 2026-10-12). E-8 and the level rule are findings F-1 and F-2 in `plan-review.md`; `tech-debt.md` stays unchanged. The orchestrator adds the rows after the owner answer. The three dependent members are named in the Phase 7 report for the orchestrator to tell.

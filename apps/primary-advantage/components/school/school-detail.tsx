@@ -35,6 +35,8 @@ import { useAuth } from "@reading-advantage/auth-client";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import type { SchoolAdmin } from "@/types";
+import type { licenses as licenseDomain } from "@reading-advantage/domain";
+import { LicensePanel } from "./license-panel";
 
 interface License {
   id: string;
@@ -74,6 +76,8 @@ interface SchoolDetailProps {
   onEdit: () => void;
   onDelete: () => void;
   onRefresh: () => void;
+  /** The license view for a school admin. Null or absent: no license part and no key. */
+  licenseView?: licenseDomain.SchoolLicenseViewOutput | null;
 }
 
 export function SchoolDetail({
@@ -81,6 +85,7 @@ export function SchoolDetail({
   onEdit,
   onDelete,
   onRefresh,
+  licenseView,
 }: SchoolDetailProps) {
   const currentUser = useCurrentUser();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -292,6 +297,8 @@ export function SchoolDetail({
         </CardContent>
       </Card>
 
+      {licenseView ? (
+      <>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -445,6 +452,9 @@ export function SchoolDetail({
           </CardContent>
         )}
       </Card>
+      <LicensePanel view={licenseView} />
+      </>
+      ) : null}
 
       {school.admins && school.admins.length > 0 && (
         <Card>

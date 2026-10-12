@@ -103,18 +103,25 @@ Design (Phase 1, captures in `captures.md`):
 
 ## 6. Acceptance rows
 
+Pair ids are the ids in `acceptance-pairs.json`. The domain numbers were checked on a clone in Phase 4
+(`acceptance.md`, "Domain query check"). The page result waits for the batch capture (orchestrator).
+
 | Pair id | Legacy page | New page | Role | Observable behavior | Data check | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| AC1-widgets | `/admin/dashboard` | `/admin/dashboard` | ADMIN | Each legacy widget maps to a new block (section 5) or to its reason | none | |
-| AC2-numbers | n/a | `/admin/dashboard?range=30` | ADMIN | Each number of FR-3 equals the reference SQL Q3a to Q3f for the school and window | `reference-sql.sql` Q3a to Q3f | |
-| AC2-adoption | n/a | `/admin/dashboard?range=30` and `&by=grade` | ADMIN | Adoption rows equal Q4 and Q5; teacher rows equal Q8 | Q4, Q5, Q8 | |
-| AC2-alerts | n/a | `/admin/dashboard` | ADMIN | Alerts equal Q6a and Q6b (Q6b with n=30) | Q6a, Q6b | |
-| AC3-other-school | n/a | `/admin/dashboard?school=<other school id>` | ADMIN | The page shows the admin's own school | Q3a for both ids | |
-| AC4-system-empty | `/admin/dashboard` | `/admin/dashboard` | SYSTEM | The selector shows; no numbers; the picker lists the same schools | school list | |
-| AC4-system-chosen | `/admin/dashboard` | `/admin/dashboard?school=<id>` | SYSTEM | URL has `school=<id>`; numbers equal the ADMIN of that school | Q3a to Q3f | |
-| AC5-no-sample | n/a | `/admin/dashboard`, `GET /api/admin/recent-activity` | ADMIN | No "Data unavailable" text, no sample number; the route returns 404 | none | |
-| AC6-nav | `/admin/dashboard` nav | `/admin/dashboard` nav | SYSTEM | No link to `/admin/dashboard/students` or `/admin/dashboard/teachers` | none | |
-| AC7-range | n/a | `/admin/dashboard?range=7`, `90` | ADMIN | All numbers change except the low activity alert; activity by day shows N cells, the last cell is today in Bangkok | Q3a with n=7 and n=90; Q9a row count and last day | |
+| AC-1-admin | `/admin/dashboard` | `/admin/dashboard` | ADMIN | Each legacy widget maps to a new block (section 5) or to its reason | none | batch capture (orchestrator) |
+| AC-1-system | `/admin/dashboard` | `/admin/dashboard` | SYSTEM | Selector and "Choose a school" only | school list | batch capture (orchestrator) |
+| AC-2-admin | n/a | `/admin/dashboard?range=30` | ADMIN | Each number of FR-3 equals Q3a to Q3f | Q3a to Q3f (equal on the clone) | batch capture (orchestrator) |
+| AC-2-adoption | n/a | `?range=30&by=grade` | ADMIN | Adoption rows equal Q4 and Q5; teacher rows equal Q8 | Q4, Q5, Q8 (equal on the clone) | batch capture (orchestrator) |
+| AC-2-alerts | n/a | `/admin/dashboard` | ADMIN | Alerts equal Q6a and Q6b | Q6a, Q6b (equal on the clone) | batch capture (orchestrator) |
+| AC-2-system | n/a | `?range=30&school=<id>` | SYSTEM | Numbers equal the ADMIN of that school | Q3a to Q3f | batch capture (orchestrator) |
+| AC-3-admin | n/a | `?school=<other school id>` | ADMIN | The page shows the own school | Q3a for both ids | batch capture (orchestrator) |
+| AC-3-system | n/a | `?school=<id>` | SYSTEM | The page shows the chosen school | Q3a | batch capture (orchestrator) |
+| AC-4-system-empty | `/admin/dashboard` | `/admin/dashboard` | SYSTEM | Selector shows; no numbers; same school list | school list | batch capture (orchestrator) |
+| AC-4-system-chosen | `/admin/dashboard` | `?school=<id>` | SYSTEM | URL has `school=<id>`; numbers equal the ADMIN | Q3a to Q3f | batch capture (orchestrator) |
+| AC-4-admin | n/a | `/admin/dashboard` | ADMIN | No selector; own school at once | none | batch capture (orchestrator) |
+| AC-5-admin, AC-5-system | n/a | `/admin/dashboard`, `GET /api/admin/recent-activity` | ADMIN, SYSTEM | No "Data unavailable", no sample number; the route returns 404 | none | batch capture (orchestrator) |
+| AC-6-system, AC-6-admin | `/admin/dashboard` nav | `/admin/dashboard` nav | SYSTEM, ADMIN | No link to `/admin/dashboard/students` or `/admin/dashboard/teachers` | none | batch capture (orchestrator) |
+| AC-7-admin-7, AC-7-admin-90, AC-7-system-7 | n/a | `?range=7`, `?range=90` | ADMIN, SYSTEM | Numbers change except the low activity alert; N cells; last cell is today in Bangkok | Q3a with n=7 and n=90; Q9a row count and last day (equal on the clone) | batch capture (orchestrator) |
 
 ## 7. ETL and runbook changes
 

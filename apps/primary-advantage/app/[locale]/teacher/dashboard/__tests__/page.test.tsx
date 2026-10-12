@@ -67,6 +67,15 @@ const fullHome = {
     { studentId: "s3", name: "Cy", username: "p3a3", classroomId: C1, classroomName: "P3A", overdueCount: 0, lastActiveAt: new Date("2026-09-20T03:00:00Z") },
   ],
   needsHelpCount: 3,
+  activeStudents30d: 2,
+  engagementRate30d: 100,
+  averageLevel: 4.5,
+  activeToday: 1,
+  completedToday: 4,
+  classRows: [
+    { id: C1, name: "P3A", grade: 3, students: 2, active7d: 2, activeRate7d: 100, averageLevel: 4.5, xp7d: 300, xpPrevious7d: 200, trend: "up", status: "onTrack" },
+    { id: C2, name: "P4B", grade: null, students: 0, active7d: 0, activeRate7d: 0, averageLevel: null, xp7d: 0, xpPrevious7d: 0, trend: "flat", status: "noStudents" },
+  ],
 };
 
 /**
@@ -98,22 +107,52 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
   const en = testMessages.en.TeacherHome;
   const ui = testMessages.en.TeacherUi;
 
-  it("shows the summary numbers and every class with its student count and links", async () => {
+  it("shows eight numbers with their labels in the summary", async () => {
     await renderDashboard();
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Kru Ann");
     const summary = screen.getByRole("region", { name: en.summary });
-    expect(within(summary).getByText(en.stats.classes).parentElement).toHaveTextContent("2");
-    expect(within(summary).getByText(en.stats.openAssignments).parentElement).toHaveTextContent("3");
-    expect(within(summary).getByText(en.stats.needsHelp).parentElement).toHaveTextContent("3");
+    const value = (label: string) => within(summary).getByText(label).parentElement;
+    expect(value(en.stats.classes)).toHaveTextContent("2");
+    expect(value(en.stats.students)).toHaveTextContent("2");
+    expect(value(en.stats.activeStudents)).toHaveTextContent("2");
+    expect(value(en.stats.averageLevel)).toHaveTextContent("4.5");
+    expect(value(en.stats.activeToday)).toHaveTextContent("1");
+    expect(value(en.stats.completedToday)).toHaveTextContent("4");
+    expect(value(en.stats.openAssignments)).toHaveTextContent("3");
+    expect(value(en.stats.needsHelp)).toHaveTextContent("3");
+  });
 
+  it("writes the active number as n of m (p %)", async () => {
+    mocks.getTeacherHome.mockResolvedValue({ ...fullHome, studentCount: 24, activeStudents30d: 21, engagementRate30d: 88 });
+    await renderDashboard();
+    expect(within(screen.getByRole("region", { name: en.summary })).getByText("21 of 24 (88%)")).toBeInTheDocument();
+  });
+
+  it("labels the average level as Average level, never CEFR", async () => {
+    await renderDashboard();
+    const summary = screen.getByRole("region", { name: en.summary });
+    expect(within(summary).getByText("Average level")).toBeInTheDocument();
+    expect(summary).not.toHaveTextContent(/CEFR/i);
+  });
+
+  it("shows a dash for the average level and a hint when there is no student", async () => {
+    mocks.getTeacherHome.mockResolvedValue({ ...fullHome, studentCount: 0, activeStudents30d: 0, engagementRate30d: 0, averageLevel: null, activeToday: 0 });
+    await renderDashboard();
+    const summary = screen.getByRole("region", { name: en.summary });
+    expect(within(summary).getByText(en.stats.averageLevel).parentElement).toHaveTextContent("—");
+    expect(within(summary).getAllByText(en.stats.noStudentsYet).length).toBeGreaterThan(0);
+  });
+
+  it("shows every class once in the class table, with links and Start class", async () => {
+    await renderDashboard();
     const classes = screen.getByRole("region", { name: en.classes.heading });
-    expect(within(classes).getByRole("link", { name: "P3A" })).toHaveAttribute("href", `/teacher/class-roster/${C1}`);
-    expect(within(classes).getByText("2 students")).toBeInTheDocument();
-    expect(within(classes).getByText("Grade 3")).toBeInTheDocument();
-    expect(within(classes).getByText("No students")).toBeInTheDocument();
-    // "Start class" opens the class page at the class sign-in panel (Lane B owns the start logic).
-    expect(within(classes).getByRole("link", { name: "Start class P3A" })).toHaveAttribute("href", `/teacher/class-roster/${C1}#class-login`);
-    expect(within(classes).getByRole("link", { name: "Start class P4B" })).toHaveAttribute("href", `/teacher/class-roster/${C2}#class-login`);
+    const table = within(classes).getByRole("table", { hidden: true });
+    expect(within(table).getByRole("link", { name: "P3A", hidden: true })).toHaveAttribute("href", `/teacher/class-roster/${C1}`);
+    expect(within(table).getByRole("link", { name: "Start class P3A", hidden: true })).toHaveAttribute("href", `/teacher/class-roster/${C1}#class-login`);
+    expect(within(table).getByRole("link", { name: "Start class P4B", hidden: true })).toHaveAttribute("href", `/teacher/class-roster/${C2}#class-login`);
+    // One class list only: the card list of the old home is gone (FR-12).
+    expect(screen.getAllByRole("region", { name: en.classes.heading })).toHaveLength(1);
+    expect(within(classes).getAllByRole("list", { hidden: true })).toHaveLength(1);
   });
 
   it("lists open assignments with Bangkok due chips and progress", async () => {
@@ -163,6 +202,12 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
       openAssignmentCount: 0,
       needsHelp: [],
       needsHelpCount: 0,
+      activeStudents30d: 0,
+      engagementRate30d: 0,
+      averageLevel: null,
+      activeToday: 0,
+      completedToday: 0,
+      classRows: [],
     });
     await renderDashboard();
     const classes = screen.getByRole("region", { name: en.classes.heading });
@@ -183,15 +228,17 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
     await renderDashboard("th");
     const th = testMessages.th.TeacherHome;
     expect(screen.getByRole("region", { name: th.classes.heading })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "เริ่มชั้นเรียน P3A" })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "เริ่มชั้นเรียน P3A", hidden: true }).length).toBeGreaterThan(0);
     expect(screen.getByText(testMessages.th.TeacherUi.due.overdue)).toBeInTheDocument();
   });
 
   it("gives every action a tap target of at least 44 px", async () => {
     await renderDashboard();
-    for (const name of ["Start class P3A", en.assignments.all, "Frogs", "Ann", "P3A"]) {
-      expect(screen.getByRole("link", { name })).toHaveClass("min-h-11");
+    for (const name of [en.assignments.all, "Frogs", "Ann"]) {
+      expect(screen.getByRole("link", { name }).className).toMatch(/min-h-1[12]\b/);
     }
+    const classes = screen.getByRole("region", { name: en.classes.heading });
+    expect(within(classes).getAllByRole("link", { name: "P3A", hidden: true })[0]).toHaveClass("min-h-12");
   });
 
   it("reads the dashboard for the signed-in teacher", async () => {

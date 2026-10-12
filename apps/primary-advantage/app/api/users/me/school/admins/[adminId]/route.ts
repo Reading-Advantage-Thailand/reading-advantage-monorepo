@@ -4,6 +4,8 @@ import { eq } from 'drizzle-orm';
 import { users, schools, schoolAdmins, userRoles, roles } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
+import { normalizeRole } from "@/lib/authorization";
+import { setUserRole } from "@/server/utils/role-sql";
 
 // DELETE /api/users/me/school/admins/[adminId] - Remove a school admin
 export async function DELETE(
@@ -128,39 +130,18 @@ export async function DELETE(
         .innerJoin(roles, eq(roles.id, userRoles.roleId))
         .where(eq(userRoles.userId, adminRecord.admin.userId));
 
-      const hasAdminRole = userRoleRows.some(
-        (ur) => ur.roleName === "admin",
-      );
+      // users.role is the truth; legacy user_roles rows are additive.
+      const hasAdminRole =
+        normalizeRole(adminRecord.adminUser.role) === "ADMIN" ||
+        userRoleRows.some((ur) => ur.roleName === "admin");
 
       // Only downgrade if they only have Admin role and no other admin responsibilities
-      if (hasAdminRole && userRoleRows.length === 1) {
-        // Find or create Teacher role as default
-        const [existingTeacherRole] = await tenantDb
-          .unscoped("roles is EXEMPT; looked up by name")
-          .select().from(roles)
-          .where(eq(roles.name, "teacher"))
-          .limit(1);
-
-        let teacherRole = existingTeacherRole;
-        if (!teacherRole) {
-          const [created] = await tenantDb
-            .unscoped("roles is EXEMPT; created by name")
-            .insert(roles).values({ name: "teacher" }).returning();
-          teacherRole = created;
-        }
-
-        // Remove all roles and set Teacher role
-        await tenantDb
-          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-          .delete(userRoles)
-          .where(eq(userRoles.userId, adminRecord.admin.userId));
-
-        await tenantDb
-          .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-          .insert(userRoles).values({
-          userId: adminRecord.admin.userId,
-          roleId: teacherRole.id,
-        });
+      if (hasAdminRole && userRoleRows.length <= 1) {
+        await setUserRole(
+          tenantDb.unscoped("userRoles is REFERENTIAL; scoped via users.schoolId"),
+          adminRecord.admin.userId,
+          "teacher",
+        );
       }
     }
 

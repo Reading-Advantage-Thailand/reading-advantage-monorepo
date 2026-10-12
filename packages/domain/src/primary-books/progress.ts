@@ -9,6 +9,7 @@ import {
 } from "@reading-advantage/db/schema";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
+import { toCsvText } from "../csv.js";
 import { managedClassBook, toClassBook, type Ctx } from "./class-books.js";
 import {
   recordLessonProgressInput,
@@ -232,10 +233,6 @@ export async function getStudentLessonSteps(params: Ctx & { classBookId: string;
  * @returns The CSV text with a header row.
  */
 export function toProgressCsv(progress: ClassBookProgress): string {
-  const quote = (value: string | number | boolean | null) => {
-    const text = value === null ? "" : String(value);
-    return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
-  };
   const header = ["student", "username", "lesson", "title", "status", "done_steps", "seconds", "first_started_at", "last_at", "late", "stuck", "opened_before_taught"];
   const studentBy = new Map(progress.students.map((student) => [student.id, student]));
   const lessonBy = new Map(progress.lessons.map((lesson) => [lesson.number, lesson]));
@@ -255,9 +252,7 @@ export function toProgressCsv(progress: ClassBookProgress): string {
       cell.late,
       cell.stuck,
       cell.openedBeforeTaught,
-    ]
-      .map(quote)
-      .join(",");
+    ];
   });
-  return [header.join(","), ...rows].join("\n") + "\n";
+  return toCsvText(header, rows);
 }

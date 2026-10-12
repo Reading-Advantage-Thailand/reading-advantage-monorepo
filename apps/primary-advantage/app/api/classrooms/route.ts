@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { eq, and, asc } from 'drizzle-orm';
+import { z } from "zod";
+import { eq, and, asc, inArray, countDistinct } from 'drizzle-orm';
+import { roleSql } from '@/server/utils/role-sql';
 import { users, classrooms, classroomStudents, userRoles, roles } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
@@ -14,6 +16,7 @@ interface ClassroomData {
 }
 
 // GET /api/classrooms - Fetch classrooms for admin
+// ?schoolId=<uuid> narrows the list to one school. Only SYSTEM gets it; other roles ignore it.
 export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<ClassroomData[] | { error: string }>> {
@@ -97,52 +100,40 @@ export async function GET(
     const classroomsDb = user.schoolId
       ? tenantDb
       : getUnscopedDB("SYSTEM has no schoolId; lists all classrooms");
+    const rawSchoolId = new URL(request.url).searchParams.get("schoolId");
+    const schoolFilter =
+      sessionRole === "SYSTEM" && rawSchoolId && z.string().uuid().safeParse(rawSchoolId).success
+        ? eq(classrooms.schoolId, rawSchoolId)
+        : undefined;
     const classroomRows = await classroomsDb.select().from(classrooms)
+      .where(schoolFilter)
       .orderBy(asc(classrooms.name));
 
-    // For each classroom, fetch students + their roles for the count.
-    const classroomsData: ClassroomData[] = await Promise.all(
-      classroomRows.map(async (classroom) => {
-        const studentRows = await tenantDb
-          .unscoped("classroomStudents is REFERENTIAL; scoped via classrooms.schoolId")
-          .select({
-          studentId: classroomStudents.studentId,
+    // One grouped query counts the students per classroom. users.role is authoritative.
+    const counts = new Map<string, number>();
+    if (classroomRows.length > 0) {
+      const countRows = await tenantDb
+        .unscoped("classroomStudents is REFERENTIAL; scoped via the classroom ids of this school")
+        .select({
+          classroomId: classroomStudents.classroomId,
+          total: countDistinct(users.id),
         })
-          .from(classroomStudents)
-          .where(eq(classroomStudents.classroomId, classroom.id));
+        .from(classroomStudents)
+        .innerJoin(users, eq(users.id, classroomStudents.studentId))
+        .where(and(
+          inArray(classroomStudents.classroomId, classroomRows.map((c) => c.id)),
+          roleSql("student"),
+        ))
+        .groupBy(classroomStudents.classroomId);
+      for (const r of countRows) counts.set(r.classroomId, Number(r.total));
+    }
 
-        const studentIds = studentRows.map((s) => s.studentId);
-        let studentRoleCount = 0;
-        if (studentIds.length > 0) {
-          const studentRoleRows = await tenantDb
-            .unscoped("userRoles is REFERENTIAL and roles is EXEMPT; stitched by userId")
-            .select({ userId: userRoles.userId })
-            .from(userRoles)
-            .innerJoin(roles, eq(roles.id, userRoles.roleId))
-            .where(and(
-              eq(roles.name, "student"),
-              // userIds match
-              ...studentIds.map((sid) => eq(userRoles.userId, sid)).slice(0, 1),
-            ));
-          // Simpler: count distinct students with student role.
-          const allStudentRoleRows = await tenantDb
-            .unscoped("userRoles is REFERENTIAL and roles is EXEMPT; stitched by userId")
-            .select({ userId: userRoles.userId })
-            .from(userRoles)
-            .innerJoin(roles, eq(roles.id, userRoles.roleId))
-            .where(eq(roles.name, "student"));
-          const studentRoleSet = new Set(allStudentRoleRows.map((r) => r.userId));
-          studentRoleCount = studentIds.filter((sid) => studentRoleSet.has(sid)).length;
-        }
-
-        return {
-          id: classroom.id,
-          name: classroom.name,
-          grade: classroom.grade != null ? String(classroom.grade) : null,
-          studentCount: studentRoleCount,
-        };
-      }),
-    );
+    const classroomsData: ClassroomData[] = classroomRows.map((classroom) => ({
+      id: classroom.id,
+      name: classroom.name,
+      grade: classroom.grade != null ? String(classroom.grade) : null,
+      studentCount: counts.get(classroom.id) ?? 0,
+    }));
 
     return NextResponse.json(classroomsData);
   } catch (error) {

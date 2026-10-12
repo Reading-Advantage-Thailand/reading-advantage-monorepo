@@ -3,7 +3,7 @@ import { sql } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import { createTestDb, type TestDb } from "./helpers/testDb.js";
 import { NOW, SCHOOL_A, SCHOOL_B, seedDashboard, seedLicenses } from "./helpers/dashboardSeed.js";
-import { getSchoolLicenseTiming, getSchoolSeatUsage } from "../licenses/usage.js";
+import { getSchoolLicenseTiming, getSchoolSeatUsage, getSeatUsageBySchool } from "../licenses/usage.js";
 
 describe("school seat usage and license timing (PGlite)", () => {
   let h: TestDb;
@@ -70,5 +70,42 @@ describe("school seat usage and license timing (PGlite)", () => {
 
   it("does not flag a school with no license as ended", async () => {
     expect(await getSchoolLicenseTiming({ db, schoolId: SCHOOL_A, now: NOW })).toEqual({ daysToEndSoon: null, ended: false });
+  });
+
+  describe("seat usage grouped by school", () => {
+    it("gives every school a row; a school without a license has seats null", async () => {
+      const rows = await getSeatUsageBySchool({ db, now: NOW });
+      expect(rows.get(SCHOOL_A)).toEqual({ seats: null, seatsUsed: 5 });
+      expect(rows.get(SCHOOL_B)).toEqual({ seats: null, seatsUsed: 1 });
+    });
+
+    it("sums the seats of the valid licenses of each school and ignores the others", async () => {
+      await seedLicenses(h, [
+        { maxUsers: 100, status: "active", expiry: "2026-10-12T16:00:00" },
+        { maxUsers: 50, status: "active", expiry: null },
+        { maxUsers: 10, status: "active", expiry: "2026-10-11T16:59:00" },
+        { maxUsers: 20, status: "suspended", expiry: null },
+        { school: SCHOOL_B, maxUsers: 500, status: "active", expiry: null },
+      ]);
+      const rows = await getSeatUsageBySchool({ db, now: NOW });
+      expect(rows.get(SCHOOL_A)).toEqual({ seats: 150, seatsUsed: 5 });
+      expect(rows.get(SCHOOL_B)).toEqual({ seats: 500, seatsUsed: 1 });
+    });
+
+    it("gives an ended license, or a license with 0 seats, seats null", async () => {
+      await seedLicenses(h, [
+        { maxUsers: 100, status: "active", expiry: "2026-10-01T00:00:00" },
+        { school: SCHOOL_B, maxUsers: 0, status: "active", expiry: null },
+      ]);
+      const rows = await getSeatUsageBySchool({ db, now: NOW });
+      expect(rows.get(SCHOOL_A)?.seats).toBeNull();
+      expect(rows.get(SCHOOL_B)?.seats).toBeNull();
+    });
+
+    it("agrees with the usage of one school", async () => {
+      await seedLicenses(h, [{ maxUsers: 40, status: "active", expiry: null }]);
+      const one = await getSchoolSeatUsage({ db, schoolId: SCHOOL_A, now: NOW });
+      expect((await getSeatUsageBySchool({ db, now: NOW })).get(SCHOOL_A)).toEqual({ seats: one.seats, seatsUsed: one.seatsUsed });
+    });
   });
 });

@@ -44,7 +44,7 @@ export function withAuth<T = any>(
           if (dbUser) {
             const userForPermissions: AuthenticatedUser = {
               ...dbUser,
-              role: dbUser.roles[0].role.name?.toLowerCase() || "user",
+              role: dbUser.roles[0]?.role.name?.toLowerCase() || dbUser.role?.toLowerCase() || "user",
             };
 
             return handler(req, context, userForPermissions);

@@ -69,6 +69,7 @@ describe("nav item lists per role", () => {
       "teachers",
       "studentsandclasses",
       "importdata",
+      "schoollicense",
     ]);
     expect(areaConfigs.system.sidebarNav?.map((item) => item.title)).toEqual([
       "systemdashboard",

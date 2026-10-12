@@ -172,3 +172,15 @@ describe("renderReport", () => {
     expect(markdown).toContain("not captured");
   });
 });
+
+describe("network note", () => {
+  const withNet = (net: string[]) => ({
+    list: { member: "m1", pairs: [{ ...list.pairs[0], checks: [{ id: "C1", behavior: "No old asset.", network: "standard-pack" }] }] },
+    captures: { "SYS-01": { legacy: { ...capture("legacy", "a"), network: { C1: ["/assets/standard-pack/x.png"] } }, new: { ...capture("new", "a"), network: { C1: net } } } },
+  });
+  it("lists the matching paths of both apps in the Note cell", () => {
+    const { markdown } = api.renderReport(withNet([]));
+    expect(markdown).toContain("legacy: 1 request(s): /assets/standard-pack/x.png");
+    expect(markdown).toContain("new: no matching request");
+  });
+});

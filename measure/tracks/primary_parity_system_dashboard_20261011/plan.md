@@ -13,17 +13,20 @@ TDD order for each code task (`measure/workflow.md`): write the failing test, ru
 fail, write the minimum code, run it and see it pass, then refactor and add JSDoc. Run tsc and
 ESLint one time per phase, before the phase commit. One heavy job at a time on this machine.
 
-## Phase 1: Design
+## Phase 1: Design [checkpoint: 03426762d]
 
-- [ ] Task: Write the behavior contract from `docs/runbooks/primary-behavior-contract-template.md` (`primary_parity_acceptance_20261011` FR-11)
-    - [ ] List each legacy number, tab, and control with its `file:line` (spec, Legacy Behavior) and the new total or column, or the reason it is gone
-    - [ ] Write the reference SQL for FR-2 to FR-4 (the kit runs it on the rehearsal copy)
-    - [ ] File: `measure/tracks/primary_parity_system_dashboard_20261011/behavior-contract.md`
-- [ ] Task: Design the page in the RPG skin
-    - [ ] Pick the place from `lib/rpg/places.ts` (proposal: `observatory`, as the admin dashboard) and the layout: the totals strip, then the schools table with search; the quiet status as a sign with a text label, not a colour only
-    - [ ] Mock at 375 px (row cards) and 1280 px (table), day and night, with the demo seed and one quiet school; files under `measure/tracks/primary_parity_system_dashboard_20261011/design/`
-- [ ] Task: Owner's look check of the design and of the values in the spec section "Values for the Owner's Look Check" (the quiet rule first); record the answers in `spec.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md)
+- [x] Task: Write the behavior contract from `docs/runbooks/primary-behavior-contract-template.md` (`primary_parity_acceptance_20261011` FR-11)
+    - [x] List each legacy number, tab, and control with its `file:line` (spec, Legacy Behavior) and the new total or column, or the reason it is gone
+    - [x] Write the reference SQL for FR-2 to FR-4 (the kit runs it on the rehearsal copy)
+    - [x] File: `measure/tracks/primary_parity_system_dashboard_20261011/behavior-contract.md`
+- [x] Task: Design the page in the RPG skin
+    - [x] Pick the place from `lib/rpg/places.ts` (proposal: `observatory`, as the admin dashboard) and the layout: the totals strip, then the schools table with search; the quiet status as a sign with a text label, not a colour only
+    - [x] Mock at 375 px (row cards) and 1280 px (table), day and night, with the demo seed and one quiet school; files under `measure/tracks/primary_parity_system_dashboard_20261011/design/`
+    - Done 2026-10-12: place `observatory`; notes in `design/design.md`, capture list in `design/captures.md`, PNG files in `~/Desktop/primary-parity-progress/captures/system_dashboard/phase1-design/`. Reference SQL in `reference-sql.sql` (run on `primary_parity_20261011`: 8 schools, 3 quiet).
+- [x] Task: Owner's look check of the design and of the values in the spec section "Values for the Owner's Look Check" (the quiet rule first); record the answers in `spec.md` — look check pending (owner, async)
+    - Defaults used (member questions, no stop): quiet rule = at least one student and no event in 7 days; "this week" = last 7 days; "articles opened" = the reading number; order = quiet first, then name; students without a school shown as a note in the strip; strip "Seats used" counts only schools with an active license that has seats (design choice, new).
+    - Manual verification: open each PNG of `design/captures.md`; check that the quiet chip reads "Quiet" with a mark; check that a card shows 4 values and one button at 375 px; check the night captures; answer or change each default above.
+- [x] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md) — look check pending (owner, async)
 
 ## Phase 2: Contracts and domain queries
 

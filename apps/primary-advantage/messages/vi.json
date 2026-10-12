@@ -81,7 +81,8 @@
       "overviewReports": "Báo cáo tổng quan",
       "performanceAnalytics": "Phân tích hiệu suất",
       "progressTracking": "Theo dõi tiến độ"
-    }
+    },
+    "schoollicense": "Giấy phép trường"
   },
   "Leaderboard": {
     "title": "Bảng xếp hạng",
@@ -208,7 +209,16 @@
         "updateFailed": "Cập nhật lớp học thất bại",
         "updateSuccess": "Cập nhật lớp học thành công",
         "deleteSuccess": "Xóa lớp học thành công",
-        "deleteFailed": "Xóa lớp học thất bại"
+        "deleteFailed": "Xóa lớp học thất bại",
+        "teachersRefused": "Giáo viên không thay đổi. Có giáo viên thuộc trường khác."
+      },
+      "picker": {
+        "hint": "Chọn các giáo viên dạy lớp này.",
+        "owner": "Chủ nhiệm lớp",
+        "loading": "Đang tải giáo viên...",
+        "loadFailed": "Không tải được danh sách giáo viên.",
+        "empty": "Trường này chưa có giáo viên.",
+        "selected": "{count, plural, other {Đã chọn # giáo viên}}. Chủ nhiệm lớp vẫn ở trong lớp."
       }
     },
     "Students": {
@@ -251,6 +261,7 @@
       "maxSize": "Kích thước tối đa: 5MB",
       "browse": "Duyệt",
       "supportedFormat": "Định dạng hỗ trợ: chỉ tệp CSV, kích thước tối đa 5MB",
+      "chooseSchool": "Hãy chọn trường trước khi nhập dữ liệu.",
       "fileSelected": {
         "title": "Đã chọn tệp",
         "name": "Tên",
@@ -260,6 +271,7 @@
       "failedTitle": "Tải lên thất bại",
       "successTitle": "Tải lên thành công",
       "success": {
+        "school": "Trường",
         "file": "Tệp",
         "size": "Kích thước",
         "savedAs": "Lưu dưới tên",
@@ -1485,6 +1497,43 @@
         "title": "Không có trường học được liên kết",
         "description": "Bạn chưa có trường học được liên kết với tài khoản của bạn. Tạo một để bắt đầu và nhận quyền quản trị viên để quản lý các tính năng của trường học.",
         "createSchool": "Tạo trường học"
+      },
+      "licensePanel": {
+        "title": "Giấy phép",
+        "viewOnly": "Chỉ để xem. Để đổi giấy phép, hãy liên hệ Reading Advantage.",
+        "overChip": "Vượt giới hạn",
+        "overTitle": "Vượt giới hạn {count} học sinh.",
+        "overBody": "Trường có {used} học sinh và {seats} chỗ. Học sinh vẫn được truy cập. Hãy xin thêm chỗ trước học kỳ sau.",
+        "noneChip": "Không có giấy phép hiệu lực",
+        "noneTitle": "Hiện trường không có chỗ nào.",
+        "noneBody": "{used} học sinh dùng ứng dụng. Hãy xin giấy phép.",
+        "seatsTitle": "Chỗ",
+        "seatsUsed": "Chỗ đã dùng",
+        "seatsFree": "Chỗ còn trống",
+        "seatsTotal": "Tổng số chỗ",
+        "seatsNote": "Chỗ được tính theo các giấy phép còn hiệu lực hôm nay. Chỗ đã dùng được tính theo học sinh của trường. Giáo viên và quản trị viên không dùng chỗ.",
+        "licensesTitle": "Giấy phép",
+        "noLicense": "Trường này chưa có giấy phép.",
+        "seatsCount": "{count} chỗ",
+        "dateRange": "{start} đến {end}",
+        "noEnd": "không có ngày kết thúc",
+        "state": {
+          "active": "Hiệu lực",
+          "ended": "Đã hết hạn",
+          "inactive": "Không hoạt động"
+        },
+        "holdersTitle": "Người dùng chỗ",
+        "holdersRange": "Học sinh {from} đến {to} trên {total}",
+        "holdersEmpty": "Trường chưa có học sinh.",
+        "holdersError": "Không tải được danh sách người dùng chỗ.",
+        "colName": "Tên",
+        "colUsername": "Tên đăng nhập",
+        "colClasses": "Lớp",
+        "colJoined": "Ngày tham gia",
+        "noClass": "Chưa có lớp",
+        "previous": "Trước",
+        "next": "Sau",
+        "pageOf": "Trang {page} trên {pages}"
       }
     }
   },
@@ -2605,7 +2654,8 @@
         "students": "Học sinh",
         "classes": "Lớp",
         "joined": "Tham gia",
-        "actions": "Thao tác"
+        "actions": "Thao tác",
+        "school": "Trường"
       },
       "loading": "Đang tải danh sách giáo viên...",
       "empty": {
@@ -2620,6 +2670,18 @@
         "createError": "Không thể tạo giáo viên",
         "updateError": "Không thể cập nhật giáo viên",
         "deleteError": "Không thể xóa giáo viên"
+      },
+      "schoolManage": {
+        "school": "Trường",
+        "noSchool": "Không có trường",
+        "filterLabel": "Lọc theo trường",
+        "filterAll": "Tất cả trường",
+        "notice": "Khi lưu, giáo viên sẽ chuyển sang {school}. Chọn các lớp của trường đó bên dưới.",
+        "moved": "Đã chuyển giáo viên sang trường mới",
+        "refusedTitle": "Chưa thể chuyển giáo viên",
+        "refusedDescription": "{name} là chủ của các lớp này. Giao từng lớp cho chủ khác rồi thử lại.",
+        "refusedClose": "Đóng",
+        "moveFailed": "Chuyển không thành công"
       }
     }
   },
@@ -3508,7 +3570,17 @@
       "classes": "Classes",
       "students": "Students",
       "openAssignments": "Open assignments",
-      "needsHelp": "Need help"
+      "needsHelp": "Need help",
+      "activeStudents": "Học sinh hoạt động (30 ngày)",
+      "activeStudentsOf": "{active} trên {total} ({percent}%)",
+      "noStudentsYet": "Chưa có học sinh",
+      "averageLevel": "Cấp độ trung bình",
+      "averageLevelHint": "Cấp độ Primary từ 1 đến 15",
+      "activeToday": "Hoạt động hôm nay",
+      "activeTodayOf": "trên {count} học sinh",
+      "completedToday": "Hoàn thành hôm nay",
+      "completedTodayHint": "bài tập đã xong",
+      "needsHelpHint": "Xem danh sách bên dưới"
     },
     "classes": {
       "heading": "My classes",
@@ -3537,7 +3609,41 @@
       "more": "{count, plural, one {# more student} other {# more students}}"
     },
     "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again."
+    "loadErrorHint": "Check your connection and try again.",
+    "table": {
+      "search": "Tìm theo tên lớp",
+      "searchLabel": "Tìm lớp",
+      "sortBy": "Sắp xếp theo",
+      "sortAsc": "Tăng dần",
+      "sortDesc": "Giảm dần",
+      "sortDirection": "Đổi thứ tự sắp xếp",
+      "csv": "Tải CSV",
+      "csvLabel": "Tải các lớp đang hiển thị thành tệp CSV",
+      "noMatch": "Không có lớp nào khớp với “{query}”.",
+      "legend": "Hoạt động nghĩa là có ít nhất một hoạt động trong 7 ngày qua. Xu hướng XP so với 7 ngày trước (tăng hoặc giảm hơn 5%).",
+      "activeOf": "{active} trên {students} ({percent}%)",
+      "actions": "Thao tác",
+      "columns": {
+        "name": "Lớp",
+        "students": "Học sinh",
+        "active": "Hoạt động (7 ngày)",
+        "level": "Cấp độ trung bình",
+        "xp": "XP (7 ngày)",
+        "trend": "Xu hướng",
+        "status": "Trạng thái"
+      },
+      "trend": {
+        "up": "Tăng",
+        "flat": "Đi ngang",
+        "down": "Giảm"
+      },
+      "status": {
+        "onTrack": "Đạt mục tiêu",
+        "someQuiet": "Hơi vắng",
+        "needsAttention": "Cần chú ý",
+        "noStudents": "Không có học sinh"
+      }
+    }
   },
   "TeacherUi": {
     "startClass": "Start class",

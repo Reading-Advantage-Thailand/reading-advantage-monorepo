@@ -87,5 +87,11 @@ export const adminPageConfig: PageConfig = {
       icon: "UploadIcon",
       requiredPermissions: ["IMPORT_DATA"],
     },
+    {
+      title: "schoollicense",
+      href: "/settings/school-profile#license",
+      icon: "KeyIcon",
+      requiredPermissions: ["SCHOOL_ADMIN_ACCESS"],
+    },
   ],
 };

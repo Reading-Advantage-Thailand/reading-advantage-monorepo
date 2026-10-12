@@ -177,6 +177,25 @@ describe("PATCH /api/users/[id] role rank check", () => {
     },
   );
 
+  it("writes users.role when the roles table is empty (migrated database)", async () => {
+    mocks.currentUser.mockResolvedValue(adminCaller);
+    const set = vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) });
+    mocks.update.mockReturnValue({ set });
+    selectQueue = [
+      [{ id: "student-1", schoolId: "school-a", role: "STUDENT" }],
+      [], // roles lookup finds no row
+      [{ id: "student-1", name: "N", email: "e@x.test", xp: 1, level: 1, cefrLevel: "A1" }],
+      [],
+    ];
+
+    const { request, context } = patchRequest("student-1", { role: "TEACHER" });
+    const response = await PATCH(request, context);
+
+    expect(response.status).toBe(200);
+    expect(set).toHaveBeenCalledWith({ role: "TEACHER" });
+    expect(mocks.delete).not.toHaveBeenCalled();
+  });
+
   it("refuses to demote a co-admin whose legacy admin row hides its rank (M-1)", async () => {
     mocks.currentUser.mockResolvedValue(adminCaller);
     selectQueue = [

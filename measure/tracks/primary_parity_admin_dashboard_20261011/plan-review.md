@@ -77,3 +77,24 @@ Lessons:
 - `vi.mock("@reading-advantage/db")` without `importActual` fails when the page imports the domain barrel (the barrel needs table exports). Use `importActual` and override only `db`.
 - A harness that bundles the real async page function (with stubs for the session and domain call) tests the real page markup for the captures; it is better than a copy of the markup.
 
+
+## Phase 4: Acceptance (phase start 0c9356701)
+
+I reviewed the phase diff (a test mock fix, two doc rows, the pair list, two steps modules, the contract table, notes). No Critical or High finding. No new server code, so no new TenantDB, `assertCan`, Zod, or logger point. The five locale files did not change.
+
+Medium:
+
+- The page captures, the page time on a build, and AC-8 are open (batch capture, orchestrator). The pair list needs `PARITY_SCHOOL_ID` and `PARITY_OTHER_SCHOOL_ID`, and the clone needs a teacher sign-in event and an active license for school B (see `acceptance.md`).
+- The domain check used `psql` in the container for each query. The wall time is not the page time.
+- "License ended" and "seats nearly full" have no row in the copy. Only the Phase 2 pure tests cover them.
+- `orchestrator_marker_vocabulary` flags the `[ ]` capture tasks of this plan. The brief asks for `[ ]`.
+
+Low:
+
+- Steps modules read the school ids from the environment, so no id is in the repository.
+
+Lessons (for the orchestrator):
+
+- Run the full suite of the package at the end of the phase that adds a shared module. The `licenses.test.ts` mock of `drizzle-orm` broke when `licenses/usage.ts` used `sql` at load time. Phase 2 ran only its own tests.
+- `eslint` needs the package folder (each package has its own `eslint.config.mjs`). Run it from `apps/primary-advantage` or `packages/domain`.
+- A helper has no database password. A script can send raw SQL to `psql` in the container through a small `db.execute` shim.

@@ -35,7 +35,14 @@ describe("admin navigation (primary_parity_admin_dashboard FR-18)", () => {
     expect(hrefs()).not.toContain("/admin/dashboard/teachers");
   });
 
+  it("links a school admin to the license part of the school profile (S4)", () => {
+    const entry = (adminPageConfig.sidebarNav as SidebarNavItem[]).find((item) => item.href === "/settings/school-profile#license");
+    expect(entry).toMatchObject({ title: "schoollicense", requiredPermissions: ["SCHOOL_ADMIN_ACCESS"] });
+  });
+
   it.each(hrefs())("%s has a page", (href) => {
-    expect(existsSync(path.join(appDir, href, "page.tsx"))).toBe(true);
+    const route = href.split("#")[0]!;
+    const found = [appDir, path.join(appDir, "(student)")].some((root) => existsSync(path.join(root, route, "page.tsx")));
+    expect(found).toBe(true);
   });
 });

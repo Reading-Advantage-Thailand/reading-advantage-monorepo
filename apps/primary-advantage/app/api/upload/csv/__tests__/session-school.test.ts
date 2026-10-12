@@ -11,8 +11,13 @@ const mocks = vi.hoisted(() => ({
   mkdir: vi.fn(),
   existsSync: vi.fn(() => true),
   unlink: vi.fn(),
+  audit: vi.fn(),
 }));
 
+vi.mock("@reading-advantage/auth", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@reading-advantage/auth")>()),
+  recordAuditEvent: mocks.audit,
+}));
 vi.mock("@/lib/session", () => ({ getCurrentUser: mocks.currentUser }));
 vi.mock("csv/sync", () => ({ parse: mocks.parse }));
 vi.mock("fs/promises", () => ({ writeFile: mocks.writeFile, mkdir: mocks.mkdir }));
@@ -51,6 +56,7 @@ import { CsvUploadSummary } from "../schema";
 import { POST } from "../route";
 
 const SESSION_SCHOOL = "00000000-0000-0000-0000-00000000000a";
+const SCHOOL_X = "00000000-0000-0000-0000-0000000000c1";
 const STORED_ROW_SCHOOL = "00000000-0000-0000-0000-00000000000b";
 
 function selectResult(rows: unknown[]) {
@@ -67,14 +73,14 @@ function selectResult(rows: unknown[]) {
   return chain;
 }
 
-function uploadRequest(name: string): NextRequest {
+function uploadRequest(name: string, fields: Record<string, string> = {}): NextRequest {
   const file = {
     name,
     size: 100,
     type: "text/csv",
     arrayBuffer: vi.fn().mockResolvedValue(new TextEncoder().encode("csv").buffer),
   };
-  return { formData: vi.fn().mockResolvedValue({ get: () => file }) } as unknown as NextRequest;
+  return { formData: vi.fn().mockResolvedValue({ get: (key: string) => (key === "file" ? file : (fields[key] ?? null)) }) } as unknown as NextRequest;
 }
 
 function recordingInserts(
@@ -166,6 +172,97 @@ describe("CSV upload session school scoping", () => {
   it("keeps the 400 rejection when the session has no school context", async () => {
     mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER" });
     mocks.select.mockReturnValueOnce(selectResult([{ id: "teacher-1", schoolId: null }]));
+
+    const response = await POST(uploadRequest("students.csv"));
+
+    expect(response.status).toBe(400);
+    expect((await response.json()).error).toBe("School association required");
+    expect(mocks.insert).not.toHaveBeenCalled();
+  });
+
+  it("stamps school X on users and classes of a SYSTEM import and names X in the result", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "sys-1", role: "SYSTEM", schoolId: null });
+    mocks.parse.mockReturnValue([{ name: "Student One", role: "student", classroom_name: "Class A" }]);
+    const results = [
+      [{ id: SCHOOL_X }],
+      [{ id: "sys-1", schoolId: null }],
+      [{ id: SCHOOL_X, name: "School X" }],
+      [{ id: "role-student", name: "student" }],
+      [],
+      [],
+    ];
+    for (const rows of results) mocks.select.mockReturnValueOnce(selectResult(rows));
+    const writes = recordingInserts((table, values) =>
+      table === users
+        ? (values as Array<{ id: string }>).map((v) => ({ id: v.id }))
+        : table === classrooms
+          ? [{ id: "class-1", name: "Class A", schoolId: SCHOOL_X }]
+          : [],
+    );
+
+    const response = await POST(uploadRequest("students.csv", { schoolId: SCHOOL_X }));
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.schoolInfo).toMatchObject({ id: SCHOOL_X, name: "School X" });
+    expect(writes.find((w) => w.table === users)!.values[0]).toMatchObject({ schoolId: SCHOOL_X });
+    expect(writes.find((w) => w.table === classrooms)!.values[0]).toMatchObject({ schoolId: SCHOOL_X });
+    expect(mocks.audit).toHaveBeenCalledWith(
+      expect.objectContaining({ actorUserId: "sys-1", actorRole: "SYSTEM" }),
+      expect.objectContaining({
+        action: "import:system",
+        targetType: "school",
+        targetId: SCHOOL_X,
+        metadata: expect.objectContaining({ counts: expect.objectContaining({ inserted: 1 }) }),
+      }),
+    );
+  });
+
+  it.each([
+    ["no schoolId", {}, []],
+    ["a value that is not a UUID", { schoolId: "not-a-uuid" }, []],
+    ["an unknown school", { schoolId: SCHOOL_X }, [[]]],
+  ])("refuses a SYSTEM upload with %s: 400, no write, no audit", async (_label, fields, selects) => {
+    mocks.currentUser.mockResolvedValue({ id: "sys-1", role: "SYSTEM", schoolId: null });
+    for (const rows of selects as unknown[][]) mocks.select.mockReturnValueOnce(selectResult(rows));
+
+    const response = await POST(uploadRequest("students.csv", fields));
+
+    expect(response.status).toBe(400);
+    expect(mocks.insert).not.toHaveBeenCalled();
+    expect(mocks.writeFile).not.toHaveBeenCalled();
+    expect(mocks.audit).not.toHaveBeenCalled();
+  });
+
+  it("ignores the schoolId form value of a school ADMIN and writes no audit event", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "admin-1", role: "ADMIN", schoolId: SESSION_SCHOOL });
+    mocks.parse.mockReturnValue([{ name: "Student One", role: "student", classroom_name: "Class A" }]);
+    const results = [
+      [{ id: "admin-1", schoolId: SESSION_SCHOOL }],
+      [{ id: SESSION_SCHOOL, name: "School A" }],
+      [{ id: "role-student", name: "student" }],
+      [],
+      [],
+    ];
+    for (const rows of results) mocks.select.mockReturnValueOnce(selectResult(rows));
+    const writes = recordingInserts((table, values) =>
+      table === users
+        ? (values as Array<{ id: string }>).map((v) => ({ id: v.id }))
+        : table === classrooms
+          ? [{ id: "class-1", name: "Class A", schoolId: SESSION_SCHOOL }]
+          : [],
+    );
+
+    const response = await POST(uploadRequest("students.csv", { schoolId: SCHOOL_X }));
+
+    expect(response.status).toBe(200);
+    expect(writes.find((w) => w.table === users)!.values[0]).toMatchObject({ schoolId: SESSION_SCHOOL });
+    expect(mocks.audit).not.toHaveBeenCalled();
+  });
+
+  it("reads the session, not the stored row, for the school guard", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId: null });
+    mocks.select.mockReturnValueOnce(selectResult([{ id: "teacher-1", schoolId: STORED_ROW_SCHOOL }]));
 
     const response = await POST(uploadRequest("students.csv"));
 

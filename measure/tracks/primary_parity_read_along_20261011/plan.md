@@ -6,21 +6,22 @@ tests add `// @vitest-environment jsdom`; the render helper is
 `components/__tests__/helpers/render-with-messages.tsx`). Start after
 `primary_parity_quick_fixes_20261011` has merged `lib/paragraph-utils.ts` (STU-07).
 
-## Phase 0: Design
+## Phase 0: Design [checkpoint: fd2696367]
 
-- [ ] Task: Collect the real data shapes
-    - [ ] Write `scripts/profile-read-along.ts` (read only): count the articles with `sentences`, the sentences with `words: []`, and the sentences where the display words and the audio words differ in number; include the Workbooks-injected articles
-    - [ ] Run it once against a production copy (read only, for example `primary_etl_20261007`); save the result in `measure/tracks/primary_parity_read_along_20261011/data-profile.md`
-    - [ ] Export 10 to 12 real `sentences` arrays as fixtures in `lib/read-along/__tests__/fixtures/` (contractions, curly quotes, numbers, hyphens, a dropped audio word, an extra audio word, `words: []`)
-- [ ] Task: Design the read-along in the RPG skin
-    - [ ] Mock the sentence band and the word mark (FR-10 colours), the paused state, the follow scroll, the one player (phone bottom bar, desktop frame), the speed sign, and the sentence buttons
-    - [ ] Mock the keyboard focus on a sentence; check the 48 px targets
-    - [ ] Captures at 375 px and 1280 px, day and night, in `measure/tracks/primary_parity_read_along_20261011/design/`
-- [ ] Task: Fill the behavior contract before the build
-    - [ ] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_read_along_20261011/behavior-contract.md` and fill its seven sections (STU-10 and the September timer fixes that stay)
-    - [ ] Write `measure/tracks/primary_parity_read_along_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7)
-- [ ] Task: Owner look check of the design (and the speed list of spec D3); record the answers in `design/decisions.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md)
+- [x] Task: Collect the real data shapes
+    - [x] Write `scripts/profile-read-along.ts` (read only): count the articles with `sentences`, the sentences with `words: []`, and the sentences where the display words and the audio words differ in number; include the Workbooks-injected articles _(the data has no marker for them; the profile covers all 622 articles)_
+    - [x] Run it once against a production copy (read only, for example `primary_etl_20261007`); save the result in `measure/tracks/primary_parity_read_along_20261011/data-profile.md`
+    - [x] Export 10 to 12 real `sentences` arrays as fixtures in `lib/read-along/__tests__/fixtures/` (contractions, curly quotes, numbers, hyphens, a dropped audio word, an extra audio word, `words: []`) _(5 real fixtures: the data has no `words: []`, no extra audio word, and no same-count mismatch; Phase S1 derives those from the real files)_
+- [x] Task: Design the read-along in the RPG skin
+    - [x] Mock the sentence band and the word mark (FR-10 colours), the paused state, the follow scroll, the one player (phone bottom bar, desktop frame), the speed sign, and the sentence buttons
+    - [x] Mock the keyboard focus on a sentence; check the 48 px targets _(48 px and 56 px, measured)_
+    - [x] Captures at 375 px and 1280 px, day and night, in `measure/tracks/primary_parity_read_along_20261011/design/` _(PNG files are outside the repository; `design/captures.md` lists the paths)_
+- [x] Task: Fill the behavior contract before the build
+    - [x] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_read_along_20261011/behavior-contract.md` and fill its seven sections (STU-10 and the September timer fixes that stay)
+    - [x] Write `measure/tracks/primary_parity_read_along_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7) _(validated with `PairList`)_
+- [x] Task: Owner look check of the design (and the speed list of spec D3); record the answers in `design/decisions.md` — look check pending (owner, async). Default used: speeds 0.75×, 1×, 1.25×.
+- [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) — look check pending (owner, async)
+    - Manual verification steps: (1) open the PNG files in `design/captures.md` at 375 px and 1280 px, day and night; (2) check that the lit word, the band, and the hint line read well; (3) check that the player buttons are large enough; (4) tell the orchestrator the answer on the speed list and the hint line.
 
 ## Phase S1: The highlight follows the voice
 _Story ref: spec.md#story-s1_

@@ -78,7 +78,8 @@
         },
         {
           "id": "AC-4-2",
-          "behavior": "The network log has no request to /assets/apk/standard-pack-qc/."
+          "behavior": "The network log has no request to /assets/apk/standard-pack-qc/.",
+          "network": "standard-pack-qc"
         }
       ]
     },
@@ -97,7 +98,8 @@
         },
         {
           "id": "AC-5-2",
-          "behavior": "The network log has no request to /assets/apk/standard-pack-qc/."
+          "behavior": "The network log has no request to /assets/apk/standard-pack-qc/.",
+          "network": "standard-pack-qc"
         }
       ]
     },
@@ -169,8 +171,8 @@
         "FR-13"
       ],
       "role": "STUDENT",
-      "legacyPath": "/en/student/lesson/cmirl4sc5000ts60d7zuiqpjb",
-      "newPath": "/en/student/lesson/{map:assignments:cmirl4sc5000ts60d7zuiqpjb}",
+      "legacyPath": "/en/student/lesson/cmhmg00n10009t7mktirfpce7",
+      "newPath": "/en/student/lesson/{map:assignments:cmhmg00n10009t7mktirfpce7}",
       "checks": [
         {
           "id": "AC-9-1",
@@ -188,8 +190,8 @@
         "FR-13"
       ],
       "role": "STUDENT",
-      "legacyPath": "/en/student/lesson/cmirl4sc5000ts60d7zuiqpjb",
-      "newPath": "/en/student/lesson/{map:assignments:cmirl4sc5000ts60d7zuiqpjb}",
+      "legacyPath": "/en/student/lesson/cmhmg00n10009t7mktirfpce7",
+      "newPath": "/en/student/lesson/{map:assignments:cmhmg00n10009t7mktirfpce7}",
       "checks": [
         {
           "id": "AC-10-1",
