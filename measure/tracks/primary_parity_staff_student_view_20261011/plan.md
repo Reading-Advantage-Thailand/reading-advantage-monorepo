@@ -123,7 +123,7 @@ _Story ref: spec.md#story-s4_
 - [x] Task: Measure - User Manual Verification 'Phase S4: Class books and lessons in preview' (Protocol in workflow.md)
     - look check pending (owner, async). Manual steps: sign in as a teacher who has a class book; open Student view; check that home lists the book under the notices; open it; check that every published lesson has a Read link and no "taught" mark; open a lesson; open a book id of another school and check 404.
 
-## Phase A: Acceptance [checkpoint: ada61096a]
+## Phase A: Acceptance [checkpoint: 79e4ae50e]
 
 - [ ] Task: Run the kit of `primary_parity_acceptance_20261011` (`scripts/primary-parity/capture.ts` for each app, then `report.ts`) with `acceptance-pairs.json`; sign in a teacher, an admin, a SYSTEM user, and a student; record the database counts before and after for AC-2 and AC-5
     - batch capture (orchestrator). Prepared: `acceptance-pairs.json` (19 pairs), `acceptance-data-checks.sql`, two step modules.
