@@ -46,3 +46,18 @@ code, no schema, no locale file. No Critical or High finding. The script block w
 - Low: the check strings are English only (`/en/` URLs), as the other blocks.
 - Why no pure-helper test of the browser flow: the script has top-level `await` and starts Chromium
   on import, so only the extracted pure judges have a test.
+
+## Phase S3: Tell the teacher what to do when the catalogue is empty
+
+Review of the phase diff: the card, the form, the page loader, the five locale files, three test files.
+No Critical or High finding. The `loadClassBooks` failure logs once through `lib/observability/logger.ts`
+(no `console.error`). The page reads `listClassBooks` and `listCatalogueBooks` with the session user, as before.
+
+- Medium: Thai text is by the helper. The owner checks it (async).
+- Medium: cn, tw, and vi keep the English text for the new keys (file practice today). Key parity is tested.
+- Low: the retry link goes to the same page (a full reload through the router). It has no pending state.
+- Low: the load-error state hides the assign form. A teacher cannot assign during a failure.
+- Low: the design capture harness stands in for the staff header, sidebar, and sign-in panel. The font is the system font.
+- Low: `measure/doctor.sh` reports A13 (stale archived directory `agents_md_audit_science_advantage_20260603`). It is not from this phase.
+- Strings kept for the S2 browser block: "Assign", "Book assigned.", "Lesson plan", `[data-class-book-slot]`. No change to the block.
+

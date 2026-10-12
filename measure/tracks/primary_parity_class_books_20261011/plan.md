@@ -93,21 +93,35 @@ _Story ref: spec.md#story-s2_
 - [x] Task: Measure - User Manual Verification 'Phase S2: Check the class book in the browser' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual steps: run `browser-check/README.md` steps 1 to 6; read the 11 `class book:` lines (all PASS on both runs); open `teacher-class-book-card.png` and `student1-class-book-qr.png` from the shots folder.
 
-## Phase S3: Tell the teacher what to do when the catalogue is empty
+## Phase S3: Tell the teacher what to do when the catalogue is empty [checkpoint: 79d1933cd]
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Define the strings
-    - [ ] Add the keys for the empty catalogue, no book, and load error under `TeacherUi.classBook` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json` (Thai from the owner; cn, tw, vi follow the current file practice)
-- [ ] Task: Write the tests (red)
-    - [ ] `components/teacher/__tests__/assign-book-form.test.tsx`: the empty catalogue shows both sentences and no form
-    - [ ] `app/[locale]/teacher/class-roster/[classroomId]/__tests__/page.test.tsx`: a load failure shows the error state with a retry link and calls the logger once with `class_books.load_failed`
-    - [ ] A key-parity test for the new keys in the five locale files
-- [ ] Task: Implement (green)
-    - [ ] Change `components/teacher/assign-book-form.tsx` and `components/teacher/class-books-card.tsx` to the design of Phase D
-    - [ ] Change `loadClassBooks` in `app/[locale]/teacher/class-roster/[classroomId]/page.tsx` to log with `lib/observability/logger.ts` and to return an error state
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc on every changed export; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Tell the teacher what to do when the catalogue is empty' (Protocol in workflow.md)
+- [x] Task: Define the strings
+    - [x] Add the keys for the empty catalogue, no book, and load error under `TeacherUi.classBook` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json` (Thai by helper, owner check pending; cn, tw, vi keep the English text, as the file practice is today)
+- [x] Task: Write the tests (red)
+    - [x] `components/teacher/__tests__/assign-book-form.test.tsx`: the empty catalogue shows both sentences and no form
+    - [x] `app/[locale]/teacher/class-roster/[classroomId]/__tests__/page.test.tsx`: a load failure shows the error state with a retry link and calls the logger once with `class_books.load_failed`
+    - [x] A key-parity test for the new keys in the five locale files
+- [x] Task: Implement (green)
+    - [x] Change `components/teacher/assign-book-form.tsx` and `components/teacher/class-books-card.tsx` to the design of Phase D
+    - [x] Change `loadClassBooks` in `app/[locale]/teacher/class-roster/[classroomId]/page.tsx` to log with `lib/observability/logger.ts` and to return an error state
+- [x] Task: Docs and doctor
+    - [x] JSDoc on every changed export; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S3: Tell the teacher what to do when the catalogue is empty' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps:
+        1. Open the 12 PNG files in `~/Desktop/primary-parity-progress/captures/class_books/phaseS3/` (list: `design/captures-s3.md`).
+        2. Check the three states (empty catalogue, no book, load error) at 375 px and 1280 px, day and night.
+        3. Check the empty-catalogue box has two sentences and no form, and the error state has a "Try again" button.
+        4. Read the Thai text in `messages/th.json` (`TeacherUi.classBook`, keys `none`, `emptyCatalogueTitle`, `emptyCatalogueBody`, `loadErrorTitle`, `loadErrorBody`, `retry`).
+
+### Phase S3 notes
+
+- Defaults used: Member Question 1 (empty catalogue text) uses the spec default, with no LINE link.
+- Thai by helper, owner check pending. The five new keys and the new `none` text are in `th.json`.
+- The key `noCatalogue` is removed (two keys replace it: `emptyCatalogueTitle`, `emptyCatalogueBody`). No other file used it.
+- The card now uses `Panel`, `RpgLink`, and `RpgButton`; the assign form uses the parchment fields of the Phase D design. S4 adds the `#class-book` anchor and the new layout.
+- With an empty catalogue and no book, the card shows only the empty-catalogue box (the "choose a book below" text would mislead).
+- The class page keeps the placeholder slot only when there is no session user.
 
 ## Phase S4: Put the book card at the top of the class page
 _Story ref: spec.md#story-s4_
