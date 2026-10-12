@@ -7,15 +7,16 @@ heavy job at a time. Every task follows the TDD order of `measure/workflow.md`.
 
 ## Phase D: Design (RPG skin)
 
-- [ ] Task: Design the student "Start again"
-    - [ ] Draw the lesson summary (task 14) with "Back to Read Page" and "Start again" (iron button), the confirm dialog, and the "Attempt N" text; reuse `components/rpg/chrome.tsx`
-- [ ] Task: Design the teacher "Teach again" and the attempt views
-    - [ ] Draw the lesson row of the lesson plan with "Teach again", the confirm dialog text, and "Taught 2 times"
-    - [ ] Draw the drill-down list of earlier attempts and the grid cell marker
-- [ ] Task: Captures and the owner's look check
-    - [ ] Capture at 375 px and 1280 px, day and night, into `measure/tracks/primary_parity_lesson_repeat_20261011/design/`
-    - [ ] Record the owner's answer and the answers to the Member Questions in `design/look-check.md`
-- [ ] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+- [x] Task: Design the student "Start again"
+    - [x] Draw the lesson summary (task 14) with "Back to Read Page" and "Start again" (iron button), the confirm dialog, and the "Attempt N" text; reuse `components/rpg/chrome.tsx`
+- [x] Task: Design the teacher "Teach again" and the attempt views
+    - [x] Draw the lesson row of the lesson plan with "Teach again", the confirm dialog text, and "Taught 2 times"
+    - [x] Draw the drill-down list of earlier attempts and the grid cell marker
+- [x] Task: Captures and the owner's look check
+    - [x] Capture at 375 px and 1280 px, day and night, into `measure/tracks/primary_parity_lesson_repeat_20261011/design/`
+    - [x] Record the owner's answer and the answers to the Member Questions in `design/look-check.md` (look check pending (owner, async); defaults used: Q1 legacy XP rule on each attempt, Q2 "Teach again" closes all students with work, Q3 the student can use "Start again" in a teacher-led class)
+- [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+    - Manual steps: open the 36 PNG files of `design/captures.md`; check 375 px and 1280 px, day and night; check the gold and iron buttons; answer the 4 questions of `design/look-check.md`. Look check pending (owner, async).
 
 ## Phase S1: Keep each closed attempt in a history
 _Story ref: spec.md#story-s1_
