@@ -6,7 +6,7 @@ refactor, then commit. Tests use Vitest (`vitest.config.ts`; DOM tests add
 `// @vitest-environment jsdom`). Domain tests use `packages/domain/src/__tests__/mock-db.ts`.
 Do not run a 25-student check on this machine (shared decision of 2026-10-05).
 
-## Phase 0: Design
+## Phase 0: Design [checkpoint: 6f9e589f6]
 
 - [x] Task: Design the Preview banner and the preview states in the RPG skin
     - [x] Mock the banner (`Banner` from `components/rpg/chrome.tsx`) with "Exit preview", in day and night, at 375 px and 1280 px
