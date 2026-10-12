@@ -59,7 +59,7 @@ _Story ref: spec.md#story-s2_
 - [x] Task: Measure - User Manual Verification 'Phase S2: Tap a word or a sentence to play from there' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual verification steps: (1) open the PNG files in `~/Desktop/primary-parity-progress/captures/read_along/phaseS2/` (tap and focus, 375 px and 1280 px, day and night); (2) check that the tapped word is blue and the focus ring on the sentence is visible; (3) on a real article page, turn the audio on and tap a word: the voice starts at that word; (4) tap the band outside a word: the voice starts at the sentence; (5) press Tab: one stop for each sentence; press Enter: the sentence plays.
 
-## Phase S3: One clear player [checkpoint: PENDING]
+## Phase S3: One clear player [checkpoint: b7952d902]
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Contract for the player
