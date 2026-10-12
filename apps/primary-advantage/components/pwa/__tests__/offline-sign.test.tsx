@@ -28,10 +28,12 @@ describe("OfflineSign", () => {
     setOnLine(true);
     renderWithMessages(<OfflineSign />);
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    setOnLine(false);
     act(() => {
       window.dispatchEvent(new Event("offline"));
     });
     expect(screen.getByRole("status")).toHaveTextContent(testMessages.en.PwaInstall.offlineSign);
+    setOnLine(true);
     act(() => {
       window.dispatchEvent(new Event("online"));
     });

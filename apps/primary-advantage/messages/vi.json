@@ -4058,6 +4058,7 @@
     "iosAdd": "Tap Add to Home Screen.",
     "iosConfirm": "Tap Add.",
     "install": "Install",
-    "dismiss": "Not now"
+    "dismiss": "Not now",
+    "offlineSign": "You are offline. The app needs the internet."
   }
 }
