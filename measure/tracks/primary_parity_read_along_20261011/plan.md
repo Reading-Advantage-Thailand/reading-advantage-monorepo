@@ -59,20 +59,22 @@ _Story ref: spec.md#story-s2_
 - [x] Task: Measure - User Manual Verification 'Phase S2: Tap a word or a sentence to play from there' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual verification steps: (1) open the PNG files in `~/Desktop/primary-parity-progress/captures/read_along/phaseS2/` (tap and focus, 375 px and 1280 px, day and night); (2) check that the tapped word is blue and the focus ring on the sentence is visible; (3) on a real article page, turn the audio on and tap a word: the voice starts at that word; (4) tap the band outside a word: the voice starts at the sentence; (5) press Tab: one stop for each sentence; press Enter: the sentence plays.
 
-## Phase S3: One clear player
+## Phase S3: One clear player [checkpoint: PENDING]
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Contract for the player
-    - [ ] `components/read-along/read-along-player.tsx`: props (playing, speed, the sentence index, the count, the callbacks); the speed list from the design decision
-- [ ] Task: Tests for the player
-    - [ ] `components/read-along/__tests__/read-along-player.test.tsx`: Previous, Replay, and Next play from the right sentence; the first and the last sentence; the speed sign is controlled; 48 px targets (class check on the RPG button)
-    - [ ] Follow scroll: the current sentence scrolls into view; a manual scroll stops it until the next play
-- [ ] Task: Implement the player
-    - [ ] `components/read-along/read-along-player.tsx` with the RPG buttons and a `Sign` for the speed
-    - [ ] `components/articles/article-content.tsx`: remove the two old player copies (lines 489-608 and 627-675)
-    - [ ] Copy keys in `messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S3: One clear player' (Protocol in workflow.md)
+- [x] Task: Contract for the player
+    - [x] `components/read-along/read-along-player.tsx`: props (playing, speed, the sentence index, the count, the callbacks); the speed list from the design decision
+- [x] Task: Tests for the player
+    - [x] `components/read-along/__tests__/read-along-player.test.tsx`: Previous, Replay, and Next play from the right sentence; the first and the last sentence; the speed sign is controlled; 48 px targets (class check on the RPG button)
+    - [x] Follow scroll: the current sentence scrolls into view; a manual scroll stops it until the next play
+- [x] Task: Implement the player
+    - [x] `components/read-along/read-along-player.tsx` with the RPG buttons and a `Sign` for the speed
+    - [x] `components/articles/article-content.tsx`: remove the two old player copies (lines 489-608 and 627-675)
+    - [x] Copy keys in `messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S3: One clear player' (Protocol in workflow.md) - look check pending (owner, async)
+    - Defaults used: speeds 0.75x, 1x, 1.25x (spec decision); the translation text shows inside the player panel; the language select stays in the top row only.
+    - Manual verification steps: (1) open the PNG files in `~/Desktop/primary-parity-progress/captures/read_along/phaseS3/` (playing at 0.75x, 1x, 1.25x, paused, first and last sentence; 375 px and 1280 px, day and night); (2) on a real article page open the audio: one player shows, and no second bar appears when you scroll; (3) tap Previous, Replay, Next: the voice starts at the sentence before, the same sentence, the sentence after; (4) tap the speed sign: 0.75x, then 1x, then 1.25x; (5) while the voice plays, the sentence stays near the upper third; scroll by hand: the follow stops until you press play again.
 
 ## Phase S4: The lesson reading step uses the same read-along
 _Story ref: spec.md#story-s4_

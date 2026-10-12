@@ -97,3 +97,36 @@ Phase review of `9ce977a55..HEAD`. No Critical and no High finding. M-6 and L-5 
 
 - A keyboard handler on a sentence that holds clickable words must check `e.target === e.currentTarget`, else a key on a child fires the sentence action.
 - A word click must call `stopPropagation`, else the sentence handler plays a second time.
+
+# Plan review: Phase S3 (one clear player)
+
+Phase review of `c95ef1174..HEAD`. No Critical and no High finding. L-6 and L-7 are fixed.
+
+## Medium
+
+- M-8: The fixed bottom bar of the old page had a second copy of the language select and the translate
+  button. The new page has them in the top row only. The translation text shows inside the player panel
+  while the player is open. A student who scrolls far down must scroll up to change the language
+  (the sentence menu still opens the translation).
+- M-9: The follow scroll stops on `wheel`, `touchmove`, and scroll keys, not on every `scroll` event.
+  A scroll bar drag or a text-selection drag does not stop it. Check this on a real desktop.
+- M-10: Previous is disabled on the first entry and Next on the last. Replay on "no sentence yet" plays entry 0.
+
+## Low
+
+- L-15: The speed in the player is a number state of the page. It resets to 1x when the audio closes (as before).
+- L-16: The hint line shows while the audio is open; it has no "do not show again" control.
+- L-17: `article-content.tsx` keeps 10 older lint warnings (unused `setLoading`, `isPanding`, `handleSaveToFlashcard`, and others). They are not from this phase.
+- L-18: The speed label has a 73 px width at 0.75x and 1.25x (56 px at 1x). The row stays inside 343 px at 375 px.
+- L-19: The captures use the S1 esbuild harness (`read_along-s3/` in the scratchpad) with the real player, hook, passage, and the RPG skin.
+
+## Shortcuts and deviations
+
+- The player has an optional `children` slot (used for the translation text). The plan did not name it.
+- The two old players were removed with their IntersectionObserver, their fixed-bar spacer, and the 3 s scroll pause.
+- Copy keys added to the `Components` namespace in the five locale files: `previousSentence`, `replaySentence`,
+  `nextSentence`, `changeSpeed`, `closeAudio`, `readAlongHint`. Thai is by the helper: owner check pending. The keys `seekBack` and `seekForward` are now unused.
+
+## Lessons (for the orchestrator to move)
+
+- A follow scroll must not listen to `scroll` events: its own smooth scroll fires them. Listen to `wheel`, `touchmove`, and keys.

@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { fetchArticleActivity } from "@/actions/article";
 import Image from "next/image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
-import { seekTimeForSentence, seekTimeForWord } from "@/lib/read-along/position";
+import { seekTimeForWord } from "@/lib/read-along/position";
 import { parseSentences } from "@/lib/read-along/align";
 import { ReadAlongPassage } from "@/components/read-along/read-along-passage";
 import { ReadAlongPlayer } from "@/components/read-along/read-along-player";
