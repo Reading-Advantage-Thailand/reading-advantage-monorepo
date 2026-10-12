@@ -151,3 +151,25 @@ Tests: domain 8 tests (red: 8 failed), app 4 tests in 2 files (red: 4 failed). C
 Shortcuts: none. Deviation: the lesson link check is by reading the code (no new link test); the links are
 `/student/...` paths under the layout that S1 opens for staff. `packages/domain/src/primary-books/index.ts` got a
 hunk from helper B2; I staged only my hunk. Lesson: stage one hunk of a shared file with `git apply --cached --unidiff-zero`.
+
+## Phase A review (2026-10-12)
+
+Phase start sha: `7ef52a1ae`. Review of the commits `e3c23f0fb` and `ada61096a`, and the files of this track.
+
+Plan compliance: prepare tasks done (pairs, SQL, cutover block, `acceptance.md`, `metadata.json`). The kit run and the
+captures stay `[ ]` with "batch capture (orchestrator)". The pair list parses with `PairList` (19 pairs).
+Security: the pairs hold no password, token, or class code. The SQL is read only and prints counts and one XP number.
+The cutover block only opens pages (GET). It writes nothing and prints no page text.
+Tests: `scripts/primary-parity` 8 files, 99 tests pass (red run first for the new helper: 1 file failed).
+
+| Level | Finding | Action |
+| --- | --- | --- |
+| Medium | `acceptance-data-checks.sql` reads `primary_lesson_attempts` (migration 0073). It fails on a copy without that migration. | Batch: migrate the copy first. |
+| Medium | Pairs SSV-A17 and SSV-A18 need a teacher with an assigned class book. | Batch: run the class book check first. |
+| Low | The block expects `[data-preview-banner] a` to be the Exit link and `[data-preview-notice]` on seven pages; no live run was made. | Batch run confirms. |
+| Low | Runbook section 10 does not name the "staff ..." block yet. | Orchestrator adds one line when it merges. |
+| Low | The 15 S3 copy keys stay English in th, cn, tw, vi. | Owner translation pass. |
+
+Shortcuts: none. Deviation: the block checks for the notice on the seven pages that render `PreviewNotice`; avatar, shop,
+games, and Read have the banner only. Lesson: `vitest` runs from the worktree root with `node_modules/.bin/vitest`
+for files under `scripts/`.
