@@ -64,12 +64,12 @@ With a student session: `/api/articles/generate` POST 405; `custom-generate` POS
 | AC-1 | AC-1-2 | pass | The 404 page has no nav, so no Testing item. |
 | AC-2 | AC-2-1 | pass | 404 page in the new app. |
 | AC-2 | AC-2-2 | pass | No nav on the 404 page. |
-| AC-3 | AC-3-1 | fail (minor) | `/api/articles/generate` has no route file. A dynamic route `app/api/articles/[articleId]` answers: POST 405, GET 500 (body `Error`). Expected 404. No generation runs. Likely file: `apps/primary-advantage/app/api/articles/[articleId]/route.ts` (no id validation, and the GET throws for the id `generate`). |
+| AC-3 | AC-3-1 | fail (minor), fixed in code (commit 5a7085de8): recapture in batch 2 | `/api/articles/generate` has no route file. A dynamic route `app/api/articles/[articleId]` answers: POST 405, GET 500 (body `Error`). Expected 404. No generation runs. Likely file: `apps/primary-advantage/app/api/articles/[articleId]/route.ts` (no id validation, and the GET throws for the id `generate`). |
 | AC-3 | AC-3-2 | pass | `custom-generate` GET and POST, `/save`, `/approve`: all 404, with no session and as a student (POST 404). |
 | AC-4 | AC-4-1 | pass | After the dependency rebuild: parchment panel with ink text at 375 and 1280 px, no navy fill. First run on a stale play-kit `dist` (7 Oct) showed the old navy panel: a harness issue, not an app defect. |
-| AC-4 | AC-4-2 | not checked | The kit does not record the network log. The PNG probe gives 404 (AC-7-1). Check by hand. |
+| AC-4 | AC-4-2 | not checked; the check now has a `network` pattern: recapture in batch 2 | The kit does not record the network log. The PNG probe gives 404 (AC-7-1). Check by hand. |
 | AC-5 | AC-5-1 | pass | White staff card with a border, no navy fill (after the dependency rebuild). |
-| AC-5 | AC-5-2 | not checked | The kit does not record the network log. Check by hand. |
+| AC-5 | AC-5-2 | not checked; the check now has a `network` pattern: recapture in batch 2 | The kit does not record the network log. Check by hand. |
 | AC-6 | AC-6-1 | pass | 404 page text in the new app (HTTP status 200 for the page, not-found content). |
 | AC-6 | AC-6-2 | pass | POST `/api/host-proof/games/completions` gives 404 (no session and as a student). |
 | AC-7 | AC-7-1 | pass | GET and POST `/assets/apk/standard-pack-qc/apk-ui-panel-square.png` give 404. |
@@ -77,9 +77,23 @@ With a student session: `/api/articles/generate` POST 405; `custom-generate` POS
 | AC-8 | AC-8-1 | pass | Five old URLs give 308 to `/en/student/games/apk/<id>` with the same id. The rune-match page shows its intro (the 3D scene itself was not played). |
 | AC-8 | AC-8-2 | not checked | No `/th/...` probe in this run. |
 | AC-8 | AC-8-3 | pass | `vocabulary/unknown` gives 404. |
-| AC-9 | AC-9-1 | fail (pair data) | The new app shows "Failed to load lesson": `AssignmentForbiddenError`. The assignment in the pair list belongs to a class that the kit student has not joined. Legacy has no such check. Use an assignment of the kit student's class. AI keys are off anyway. |
+| AC-9 | AC-9-1 | fail (pair data), fixed in pair data: recapture in batch 2 | The new app shows "Failed to load lesson": `AssignmentForbiddenError`. The assignment in the pair list belongs to a class that the kit student has not joined. Legacy has no such check. Use an assignment of the kit student's class. AI keys are off anyway. |
 | AC-9 | AC-9-2 | not checked | Blocked by AC-9-1; no AI key in the kit. |
-| AC-10 | AC-10-1 | fail (pair data) | Same page as AC-9: "Failed to load lesson", so the chatbot did not open. |
+| AC-10 | AC-10-1 | fail (pair data), fixed in pair data: recapture in batch 2 | Same page as AC-9: "Failed to load lesson", so the chatbot did not open. |
 | AC-10 | AC-10-2 | not checked | Blocked by AC-10-1; no AI key in the kit. |
 
 Owner look check: pending (owner, async). Report: `~/Desktop/primary-parity-acceptance/captures/primary_parity_cleanup_20261011/report.html`.
+
+## After batch 1 (fixes, 2026-10-12)
+
+- AC-3-1 now expects 404 with a JSON body for `GET /api/articles/generate`. The route `app/api/articles/[articleId]`
+  checks that the id is a UUID, answers 404 JSON for an unknown or malformed id, and logs other errors with the
+  Primary logger. `POST` stays 405 because the dynamic route has no POST handler. The spec (AC-3) says "each new
+  route gives 404"; it does not name 405. Treat 405 on `POST /api/articles/generate` as accepted: no generation
+  code runs and no AI call starts. A strict 404 for POST needs a POST handler that only returns 404; nobody added one.
+  No session check was added (item E-8 waits for the owner).
+- AC-9 and AC-10: both pairs now use the assignment `cmhmg00n10009t7mktirfpce7` of the class of the kit student.
+  The new path maps it with `{map:assignments:...}`. The pair lists the legacy id and the new id separately.
+  Recapture in batch 2.
+- AC-4-2 and AC-5-2: the checks carry `"network": "standard-pack-qc"`. The report prints the matching request paths
+  of each app in the Note cell. "No matching request" is the pass result.

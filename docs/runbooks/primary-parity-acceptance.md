@@ -151,7 +151,7 @@ Open `$P/captures/<member>/report.html`. Fill the Result and Note cells of the c
 `measure/tracks/<member>/acceptance-pairs.json` has: `member`, and `pairs[]` with `id`, `rows`, `role`,
 `legacyPath`, `newPath` (with the locale), `widths` (default `[375, 1280]`), `colorSchemes` (default `["light"]`),
 `waitFor` (`{legacy?, new?}` selectors), `steps` (module with `legacy(page)` and `new(page)`), and `checks[]`
-(`id`, `behavior`). Paths may use `{map:<table>:<legacyId>}` and `{user:<ROLE>}`. The file holds no name,
+(`id`, `behavior`, and an optional `network` regular expression: the capture lists the request paths that match it, without the query). Paths may use `{map:<table>:<legacyId>}` and `{user:<ROLE>}`. The file holds no name,
 password, or class code; the schema refuses an unknown field and a secret query key.
 
 ## 9. Summary in the repository (FR-10)
@@ -183,13 +183,15 @@ The class book block (11 checks named `class book: ...`) runs by default; `CLASS
 
 The orchestrator runs the captures of several members on one build. Let `PAIRS` be the list of `--pairs measure/tracks/<member>/acceptance-pairs.json` options, one for each member.
 
-1. Clone the matched copies once (section 2).
-2. Run `accounts.ts` once. It makes one user of each role for all members. Delete or rename the old `handout.csv` first, because `issue-temporary-passwords.ts` refuses to overwrite it and the old passwords are stale. Then issue the temporary passwords (section 3).
-3. Capture legacy once for the union of the pair lists. The legacy app in `$P/legacy-app` is built; do not rebuild it.
+1. Rebuild the package `dist` folders before the app build. Batch 1 used a stale play-kit `dist` from 7 October, and the first capture showed the old design. Run it under the heavy lock:
+   `flock ~/Desktop/primary-parity-progress/heavy.lock nice node_modules/.bin/turbo run build --filter="primary-advantage^..."`
+2. Clone the matched copies once (section 2).
+3. Run `accounts.ts` once. It makes one user of each role for all members. Delete or rename the old `handout.csv` first, because `issue-temporary-passwords.ts` refuses to overwrite it and the old passwords are stale. Then issue the temporary passwords (section 3).
+4. Capture legacy once for the union of the pair lists. The legacy app in `$P/legacy-app` is built; do not rebuild it.
    `npx tsx scripts/primary-parity/capture.ts --app legacy --base http://localhost:3100 $PAIRS --accounts $P/accounts.json --out $P/captures`
-4. Stop the legacy server. Build the new app once at the integration HEAD (section 6). Check that port 3005 is free (`ss -ltn | grep :3005`). Start it and capture the new side with the same `$PAIRS` and `--handout $P/handout.csv`. Stop the server.
-5. Run `report.ts` once for each member (section 7). The output goes to `$P/captures/<member>/`.
-6. Drop the two clones (`dropdb`) and delete `apps/primary-advantage/.next`. Keep `legacy-app` and the two matched copies.
+5. Stop the legacy server. Build the new app once at the integration HEAD (section 6). Check that port 3005 is free (`ss -ltn | grep :3005`). Start it and capture the new side with the same `$PAIRS` and `--handout $P/handout.csv`. Stop the server.
+6. Run `report.ts` once for each member (section 7). The output goes to `$P/captures/<member>/`.
+7. Drop the two clones (`dropdb`) and delete `apps/primary-advantage/.next`. Keep `legacy-app` and the two matched copies.
 
 `capture.ts` takes several `--pairs` options. It signs in once for each role, and it writes the files of each member in the folder of that member.
 
