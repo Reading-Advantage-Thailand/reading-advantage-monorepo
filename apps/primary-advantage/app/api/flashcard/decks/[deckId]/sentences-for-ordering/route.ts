@@ -9,6 +9,7 @@ import { resolveFlashcardGameXpAward } from "@/lib/authorization";
 import { ActivityType, FlashcardType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
 import { shuffle } from "@/lib/shuffle";
+import { guardStudentRoute } from "@/lib/student-view";
 
 /**
  * Returns shuffled sentence-ordering groups from the caller's deck.
@@ -227,6 +228,8 @@ export async function POST(
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const preview = guardStudentRoute(user, "flashcard_game_sentence_order");
+  if (preview) return preview;
 
   // Authorization decision via the central policy. Flashcard study serves
   // any authenticated user; article:read is the matching low-privilege
