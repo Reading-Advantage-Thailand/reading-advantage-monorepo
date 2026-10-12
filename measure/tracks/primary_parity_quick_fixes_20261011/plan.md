@@ -76,19 +76,20 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: Measure - User Manual Verification 'Phase 3: Teacher' (Protocol in workflow.md)
     - look check pending (owner, async). Manual verification steps: (1) As TEACHER open `/en/teacher/reports`. (2) Check four tiles: total, average XP, common level, and active this week. (3) Check the fourth tile shows a percent and "n of m students". (4) Pick a class and type a name in the search; check that the fourth tile changes. (5) Open a class page, press Settings. (6) Check that `/teacher/my-classes` opens the edit dialog with the name and grade of that class. (7) Close the dialog; check that `edit` leaves the URL. (8) Open `/teacher/my-classes?edit=nope`; check that no dialog opens.
 
-## Phase 4: Student — lessons and quizzes
+## Phase 4: Student — lessons and quizzes [checkpoint: PENDING]
 
-- [ ] Task: FR-5 (STU-02) — a lesson resumes on the saved task
-    - [ ] Red: new `lib/__tests__/lesson-progress.test.ts`: `getLessonTaskFromProgress` gives 1 for 0, -5, and NaN; 2 for 7 and 14; 13 for 93; 14 for 100 and 150; `getLessonProgressForTask` gives 0 for 1, 14 for 2, 93 for 13, 100 for 14; a round trip of each task gives the same task
-    - [ ] Red: new `components/lesson/__tests__/lesson-progress-bar-resume.test.tsx`: a progress response of 93 opens task 13 with its Next button; 0 on an assignment opens task 1; 100 opens the summary and pauses the timer
-    - [ ] Green: new `lib/lesson-progress.ts` (pure, with JSDoc); `components/lesson/lesson-progress-bar.tsx:157-171`, `:229`, `:317`
-- [ ] Task: FR-6 (STU-03) — a quiz finishes when a row exists
-    - [ ] Red: new `actions/__tests__/finish-quiz-existing-row.test.ts`: a `completed = false` row becomes complete and gets one XP log; a second call for a complete row returns success and writes no XP log and no XP; a new article inserts a row; all writes run in one transaction
-    - [ ] Green: `actions/question.ts:60-182` (upsert on the unique key with `onConflictDoUpdate` where `completed = false`, one `db.transaction`, the evidence job only when the row changed); keep `actions/__tests__/finish-quiz-evidence.test.ts` green
-- [ ] Task: FR-7 (STU-17) — lesson task 8 shows the saved short answer
-    - [ ] Red: new `components/lesson/practice/__tests__/lesson-task-saq-completed.test.tsx`: a `COMPLETED` response shows the saved question, answer, suggested answer, feedback, and score, and pauses the timer; a failed read shows the empty form; an `INCOMPLETE` response shows the form
-    - [ ] Green: `components/lesson/practice/lesson-task-saq.tsx:38-46` reads `/api/articles/questions/<id>?articleId=<id>&questionType=SA_QUESTION` (`cache: "no-store"`) before the form
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Student — lessons and quizzes' (Protocol in workflow.md)
+- [x] Task: FR-5 (STU-02) — a lesson resumes on the saved task
+    - [x] Red: new `lib/__tests__/lesson-progress.test.ts`: `getLessonTaskFromProgress` gives 1 for 0, -5, and NaN; 2 for 7 and 14; 13 for 93; 14 for 100 and 150; `getLessonProgressForTask` gives 0 for 1, 14 for 2, 93 for 13, 100 for 14; a round trip of each task gives the same task
+    - [x] Red: new `components/lesson/__tests__/lesson-progress-bar-resume.test.tsx`: a progress response of 93 opens task 13 with its Next button; 0 on an assignment opens task 1; 100 opens the summary and pauses the timer
+    - [x] Green: new `lib/lesson-progress.ts` (pure, with JSDoc); `components/lesson/lesson-progress-bar.tsx:157-171`, `:229`, `:317`
+- [x] Task: FR-6 (STU-03) — a quiz finishes when a row exists
+    - [x] Red: new `actions/__tests__/finish-quiz-existing-row.test.ts`: a `completed = false` row becomes complete and gets one XP log; a second call for a complete row returns success and writes no XP log and no XP; a new article inserts a row; all writes run in one transaction
+    - [x] Green: `actions/question.ts:60-182` (upsert on the unique key with `onConflictDoUpdate` where `completed = false`, one `db.transaction`, the evidence job only when the row changed); keep `actions/__tests__/finish-quiz-evidence.test.ts` green
+- [x] Task: FR-7 (STU-17) — lesson task 8 shows the saved short answer
+    - [x] Red: new `components/lesson/practice/__tests__/lesson-task-saq-completed.test.tsx`: a `COMPLETED` response shows the saved question, answer, suggested answer, feedback, and score, and pauses the timer; a failed read shows the empty form; an `INCOMPLETE` response shows the form
+    - [x] Green: `components/lesson/practice/lesson-task-saq.tsx:38-46` reads `/api/articles/questions/<id>?articleId=<id>&questionType=SA_QUESTION` (`cache: "no-store"`) before the form
+- [x] Task: Measure - User Manual Verification 'Phase 4: Student — lessons and quizzes' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) As a student open an assignment lesson with progress 93; check that task 13 opens with a Next button. (2) Open a new assignment (progress 0); check that task 1 opens with the start button. (3) Open a lesson with progress 100; check that the summary shows and the timer stays still. (4) Finish a quiz twice in a row (double click); check that XP rises one time. (5) Answer task 8, go to task 9, go back; check that the saved question, answer, suggested answer, feedback, and score show.
 
 ## Phase 5: Student — reading, saved words, profile, and XP
 

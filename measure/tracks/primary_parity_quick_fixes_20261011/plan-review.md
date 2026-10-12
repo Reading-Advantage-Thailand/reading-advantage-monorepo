@@ -69,3 +69,23 @@ Medium and Low findings:
 - L-13 (Low). The edit dialog of `my-classes.tsx` still lists grades 3 to 12 only. A class with another grade shows
   an empty select (same as before this phase).
 - Lesson: the PGlite helper (`server/models/__tests__/helpers/testDb.ts`) gives a real-SQL test for model reads at low cost.
+
+## Phase 4: Student — lessons and quizzes
+
+Phase review of `git diff 3c96ba5ea..HEAD` (commits 84df11c01, 8e1fbced1, 00bed1179).
+Plan compliance: FR-5, FR-6, and FR-7 done as planned. Critical and High findings: none.
+Checks: `finishQuiz` still reads the user from the session and writes only rows of that user; the whole write set runs in
+one `db.transaction`; no new `console.error`; no new message key (the FR-7 view reuses `LessonSAQ.*`); JSDoc on both new exports.
+Tests: `lesson-progress.test.ts` 5 pass, `lesson-progress-bar-resume.test.tsx` 3 pass, `finish-quiz-existing-row.test.ts` 4 pass,
+`finish-quiz-evidence.test.ts` 2 pass, `lesson-task-saq-completed.test.tsx` 3 pass; `components/lesson` 16 files 82 pass.
+App `tsc --noEmit`: exit 0.
+
+Medium and Low findings:
+
+- M-4 (Medium). The red step was not run as a separate step for FR-5 and FR-6. The tests and the fix went in one commit each.
+- M-5 (Medium). `finishQuiz` and `retakeQuiz` still use the old catch style and `retakeQuiz` keeps `console.error`. A logger sweep can move them.
+- L-14 (Low). `finish-quiz-evidence.test.ts` needed a mock change: the transaction object now has `select`, `insert`, and `update`, because all writes moved into the transaction. The test cases did not change.
+- L-15 (Low). The "one transaction" test checks that the outer `db.insert` is not called. It does not run real SQL. The ON CONFLICT `setWhere` is covered by the side-by-side acceptance check on the rehearsal copy.
+- L-16 (Low). The FR-7 test mocks `@/contexts/question-context`, because the task wraps itself in its own provider.
+- L-17 (Low). The completed view of task 8 still has the unused `MessageSquare` import path in the loading branch only; the form and loading views keep the old card style.
+- Deviation: `startLesson` now saves `getLessonProgressForTask(2)` = 14 instead of 7. The reader accepts both values.
