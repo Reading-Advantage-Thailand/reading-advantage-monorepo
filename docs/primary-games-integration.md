@@ -87,4 +87,4 @@ The battle page resolves the quest template's game with `gameFor` and renders `G
 ## Legacy host
 
 `components/apk/StudentCartridgeHost.tsx` and `@reading-advantage/game-cartridges` stay in the tree until
-M4 (after the cutover). No Primary page renders them.
+M4 (`primary_parity_cleanup_20261011`, before the cutover). No Primary page renders them.

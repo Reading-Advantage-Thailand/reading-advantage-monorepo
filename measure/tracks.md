@@ -35,7 +35,7 @@ This file tracks all major tracks for the project.
 - [~] **Track: Legacy games removal (Primary first)** — *created 2026-10-06*
   *Link: [./tracks/legacy_games_removal_20261006/](./tracks/legacy_games_removal_20261006/)*
   *Status: owner approved 2026-10-06; M1 host and M2 ids done on lane-g (`primary/lane-g-new-game-host`), browser check and merge open | Priority: HIGH | Owner direction 2026-10-06: no old games in the repo; Tutor out of scope*
-  *Note: M1 host and M2 ids before the cutover; M3 (other apps) and M4 (removal) after.*
+  *Note: M1 host and M2 ids before the cutover; M3 (other apps) after. M4 (removal) moved to `primary_parity_cleanup_20261011`, before the cutover (owner follow-up 2026-10-11).*
 
 - [ ] **Track: Reward emblems become avatar pieces (M1 to M4)** — *created 2026-10-06*
   *Link: [./tracks/primary_reward_pieces_20261006/](./tracks/primary_reward_pieces_20261006/)*
