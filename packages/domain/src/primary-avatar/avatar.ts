@@ -1,3 +1,4 @@
+import { assertStudentRecordWriter } from "./permissions.js";
 import { and, eq } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import { primaryAvatarProfile } from "@reading-advantage/db/schema";
@@ -62,9 +63,10 @@ export async function getAvatarProfile(ctx: AvatarCtx): Promise<AvatarProfile | 
  * @returns The saved profile.
  * @throws {ZodError} When the input is not a known class or an option per slot.
  * @throws {Error} When the class is not a starter set or a tint is not an option of the avatar base.
- * @throws {AuthError} FORBIDDEN when the user has no school.
+ * @throws {AuthError} FORBIDDEN when the user has no school or is not a student.
  */
 export async function setAvatarProfile(ctx: AvatarCtx & { input: SetAvatarProfileInput }): Promise<AvatarProfile> {
+  assertStudentRecordWriter(ctx.user);
   const input = setAvatarProfileInputSchema.parse(ctx.input);
   const schoolId = schoolOf(ctx.user);
   if (!starterSet(input.classId)) throw new Error(`no starter set '${input.classId}'`);

@@ -28,6 +28,7 @@ import { createTenantDB } from "../db-contract.js";
 import { managedClass } from "../primary-books/class-books.js";
 import { getAvatarProfile, type AvatarCtx } from "./avatar.js";
 import { AvatarShopError } from "./errors.js";
+import { assertStudentRecordWriter, canWriteStudentRecord } from "./permissions.js";
 import { gpBalance, WELCOME_GP } from "./gp.js";
 
 const UNSCOPED_REASON = "avatar shop rows are read and written with an explicit school_id and user_id pair (the student's own rows)";
@@ -106,7 +107,8 @@ async function ensureStarterSet(raw: Raw, schoolId: string, userId: string, clas
 
 /**
  * The avatar page state of the signed-in student (FR-5): profile, GP, level, inventory, and
- * loadout. The first visit with a saved profile grants the starter set and the welcome GP.
+ * loadout. The first visit of a student with a saved profile grants the starter set and the welcome
+ * GP. A staff member in Preview mode reads without that write.
  * @param ctx The database, the user, and the clock.
  * @returns The state; `profile` is null until the student picks a class.
  * @throws {AuthError} FORBIDDEN when the user has no school.
@@ -116,7 +118,7 @@ export async function getAvatarState(ctx: AvatarCtx): Promise<AvatarState> {
   const now = ctx.now ?? new Date();
   const raw = createTenantDB(ctx.db, { schoolId }).unscoped(UNSCOPED_REASON);
   const profile = await getAvatarProfile(ctx);
-  if (profile) await ensureStarterSet(raw, schoolId, ctx.user.id, profile.classId, now);
+  if (profile && canWriteStudentRecord(ctx.user)) await ensureStarterSet(raw, schoolId, ctx.user.id, profile.classId, now);
   const rows = await raw
     .select()
     .from(primaryAvatarInventory)
@@ -189,6 +191,7 @@ export async function listAvatarShop(ctx: AvatarCtx): Promise<AvatarShopItem[]> 
  * @throws {AuthError} FORBIDDEN when the user has no school.
  */
 export async function purchaseAvatarItem(ctx: AvatarCtx & { input: PurchaseAvatarItemInput }): Promise<{ item: AvatarInventoryItem; gp: number }> {
+  assertStudentRecordWriter(ctx.user);
   const input = purchaseAvatarItemInputSchema.parse(ctx.input);
   const schoolId = schoolOf(ctx.user);
   const now = ctx.now ?? new Date();
@@ -233,6 +236,7 @@ export async function purchaseAvatarItem(ctx: AvatarCtx & { input: PurchaseAvata
  * @throws {AuthError} FORBIDDEN when the user has no school.
  */
 export async function setLoadout(ctx: AvatarCtx & { input: SetLoadoutInput }): Promise<AvatarLoadout> {
+  assertStudentRecordWriter(ctx.user);
   const input = setLoadoutInputSchema.parse(ctx.input);
   const schoolId = schoolOf(ctx.user);
   const now = ctx.now ?? new Date();

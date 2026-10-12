@@ -3,6 +3,7 @@
  * existing data only: reading days, question accuracy, the streak, and lesson steps. A met goal
  * earns one named power-up; the week is capped; the evaluation runs any number of times.
  */
+import { assertStudentRecordWriter } from "../primary-avatar/permissions.js";
 import { and, count, eq, gte } from "drizzle-orm";
 import { primaryClassQuestPowerUp, primaryStudentLessonSteps, userActivity } from "@reading-advantage/db/schema";
 import type { QuestPowerUpRow } from "@reading-advantage/game-contracts";
@@ -118,8 +119,10 @@ export async function readGoalFacts(raw: Ctx["db"], userId: string, startsAt: Da
  * repeat grants nothing twice.
  * @param ctx The database and the student.
  * @returns Every power-up of the student in this quest, in the order earned; empty without a quest.
+ * @throws {AuthError} FORBIDDEN when the user is not a student.
  */
 export async function awardPowerUps(ctx: Ctx): Promise<QuestPowerUpRow[]> {
+  assertStudentRecordWriter(ctx.user);
   const found = await studentQuest(ctx);
   if (!found) return [];
   const { raw, quest, template } = found;
