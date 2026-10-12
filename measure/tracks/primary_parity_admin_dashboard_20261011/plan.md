@@ -14,7 +14,7 @@ fail, write the minimum code, run it and see it pass, then refactor and add JSDo
 ESLint one time per phase, before the phase commit (owner rule: batch checks). One heavy job at
 a time on this machine.
 
-## Phase 1: Design
+## Phase 1: Design [checkpoint: fdb1f4688]
 
 - [x] Task: Write the behavior contract from `docs/runbooks/primary-behavior-contract-template.md` (`primary_parity_acceptance_20261011` FR-11)
     - [x] List each legacy widget with its `file:line` (spec, Legacy Behavior) and the new block that does its job, or the reason it is gone
