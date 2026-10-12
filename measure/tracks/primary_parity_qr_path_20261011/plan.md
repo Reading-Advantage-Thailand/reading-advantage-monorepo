@@ -23,11 +23,12 @@ Start after `primary_parity_class_books_20261011` loads the catalogue. The route
 ## Phase S5: Prove the printed URL without a locale
 _Story ref: spec.md#story-s5_
 
-- [ ] Task: Write the proxy tests (red, or green if the proxy already does the job)
-    - [ ] Extend `apps/primary-advantage/lib/__tests__/default-locale.test.ts`: `/b/o3-2/5` and `/b/o3-2/5/writing` redirect once to a locale path with the path and query kept; the locale path gives no redirect; the five book keys match the `config.matcher`; a signed-out reader gets no sign-in redirect
-- [ ] Task: Fix the proxy only if a test fails
-    - [ ] `apps/primary-advantage/proxy.ts`: change the smallest part; do not add `/b` to `protectedRoutes` (the page owns the landing)
-- [ ] Task: Measure - User Manual Verification 'Phase S5: Prove the printed URL without a locale' (Protocol in workflow.md)
+- [x] Task: Write the proxy tests (red, or green if the proxy already does the job)
+    - [x] Extend `apps/primary-advantage/lib/__tests__/default-locale.test.ts`: `/b/o3-2/5` and `/b/o3-2/5/writing` redirect once to a locale path with the path and query kept; the locale path gives no redirect; the five book keys match the `config.matcher`; a signed-out reader gets no sign-in redirect
+- [x] Task: Fix the proxy only if a test fails (no test failed; proxy.ts unchanged)
+    - [x] `apps/primary-advantage/proxy.ts`: change the smallest part; do not add `/b` to `protectedRoutes` (the page owns the landing)
+- [x] Task: Measure - User Manual Verification 'Phase S5: Prove the printed URL without a locale' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: on a running build, open `/b/o3-2/5` signed out. Check one redirect to `/th/b/o3-2/5`, with no sign-in page.
 
 ## Phase S1: Return to the same lesson after sign-in
 _Story ref: spec.md#story-s1_
