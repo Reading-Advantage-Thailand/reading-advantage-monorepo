@@ -20,3 +20,11 @@ export {
   type ListPrimaryStoriesOutput,
   type StoryCard,
 } from "./contracts.js";
+export {
+  LEGACY_STORY_TABLE,
+  legacyStoryIdSchema,
+  resolveLegacyChapter,
+  resolveLegacyStoryId,
+  resolveLegacyStoryIdInputSchema,
+  resolveLegacyStoryIdOutputSchema,
+} from "./legacy-id.js";
