@@ -1,6 +1,7 @@
 "use server";
 
 import { currentUser } from "@/lib/session";
+import { guardStudentAction } from "@/lib/student-view";
 import { createEmptyCard, Card, Rating } from "ts-fsrs";
 import {
   db,
@@ -217,6 +218,9 @@ export async function saveFlashcard(
         message: "Unauthorized",
       };
     }
+
+    const preview = guardStudentAction(user, "save_flashcard");
+    if (preview) return preview;
 
     // Validate input
     if (!words?.length && !sentences?.length) {
@@ -659,6 +663,9 @@ export async function deleteFlashcardCard(cardId: string) {
       };
     }
 
+    const preview = guardStudentAction(user, "delete_flashcard_card");
+    if (preview) return preview;
+
     if (!cardId) {
       return {
         success: false,
@@ -722,6 +729,9 @@ export async function reviewCard(
     if (!user) {
       throw new Error("Unauthorized");
     }
+
+    const preview = guardStudentAction(user, "review_card");
+    if (preview) return preview;
 
     // Validate rating
     if (
@@ -871,6 +881,9 @@ export async function saveArticleToFlashcard(
     if (!user) {
       throw new Error("Unauthorized");
     }
+
+    const preview = guardStudentAction(user, "save_article_to_flashcard");
+    if (preview) return preview;
 
     // Fetch article + sentences/words snapshot. Replaces Prisma's
     // `include: { sentencsAndWordsForFlashcard: true }` with a separate

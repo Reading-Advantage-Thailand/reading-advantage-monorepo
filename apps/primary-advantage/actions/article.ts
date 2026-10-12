@@ -15,6 +15,7 @@ import {
   xpLogs,
 } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
+import { guardStudentAction } from "@/lib/student-view";
 import { ActivityType } from "@/types/enum";
 
 /**
@@ -27,6 +28,9 @@ export async function fetchArticleActivity(articleId: string) {
   if (!user) {
     return { success: false, error: "Unauthorized" };
   }
+
+  const preview = guardStudentAction(user, "fetch_article_activity");
+  if (preview) return preview;
   try {
     const result = await getArticleActivity(articleId);
 
