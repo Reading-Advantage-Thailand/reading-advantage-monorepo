@@ -56,7 +56,7 @@ _Story ref: spec.md#story-s1_
     - Captures: `~/Desktop/primary-parity-progress/captures/school_management/phaseS1/` (`s1-picker-admin-{day,night}-{375,1280}.png`, `s1-picker-error-day-{375,1280}.png`).
     - Steps: 1. Sign in as school ADMIN and open Classes, then Edit on a class. 2. Check that the owner row is checked, disabled, and labeled "Class owner". 3. Check another teacher, press Update, and open the class again: the teacher stays. 4. Uncheck that teacher and save: the teacher leaves. 5. As SYSTEM, check that only the teachers of the class school show.
 
-## Phase S2: SYSTEM imports into a chosen school
+## Phase S2: SYSTEM imports into a chosen school [checkpoint: a6224072a]
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Contract & Schema Definition
