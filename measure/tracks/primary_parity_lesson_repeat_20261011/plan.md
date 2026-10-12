@@ -87,7 +87,7 @@ Notes (Phase S2, helper A1, 2026-10-12):
 - `build-graph update` skipped (graph.db is read only for helpers). `measure/generate.sh` and `doctor.sh` are left to the orchestrator.
 
 
-## Phase S3: The teacher teaches a lesson again [checkpoint: CHECKPOINT_SHA]
+## Phase S3: The teacher teaches a lesson again [checkpoint: bf19c5fdd]
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Define the contract
