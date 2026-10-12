@@ -30,14 +30,24 @@ export type {
   GameLearningContentResult,
 } from "./learning-content.js";
 export {
+  LESSON_PRACTICE_INPUT_PREFIX,
   PRACTICE_SENTENCE_LIMIT,
   PRACTICE_WORD_LIMIT,
   SAVED_PRACTICE_INPUT_ID,
   gamePracticeInputRequestSchema,
+  getLessonPracticeInput,
+  lessonPracticeInputRequestSchema,
   listGamePracticeInput,
   practiceLevelOf,
 } from "./practice-input.js";
-export type { GamePracticeInputRequest } from "./practice-input.js";
+export type { GamePracticeInputRequest, LessonPracticeInputRequest } from "./practice-input.js";
+export {
+  getLessonGameResults,
+  lessonGameResultSchema,
+  lessonGameResultsRequestSchema,
+  lessonGameResultsSchema,
+} from "./lesson-results.js";
+export type { LessonGameResult, LessonGameResults, LessonGameResultsRequest } from "./lesson-results.js";
 export {
   listPrimaryAnswerAudioContent,
   listPrimaryArticleCards,

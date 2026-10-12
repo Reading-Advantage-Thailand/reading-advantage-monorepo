@@ -1904,6 +1904,43 @@
       }
     }
   },
+  "LessonGames": {
+    "title": "Vocabulary games",
+    "subtitle": "Play with the words of this lesson.",
+    "choose": "Choose a game",
+    "wordsReady": "{count, plural, one {# word ready} other {# words ready}}",
+    "sentencesReady": "{count, plural, one {# sentence ready} other {# sentences ready}}",
+    "play": "Play",
+    "playAgain": "Play again",
+    "locked": "Locked",
+    "newTag": "New",
+    "notPlayed": "New: not played yet",
+    "last": "Last: {correct}/{total} correct",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, one {Needs # word} other {Needs # words}}",
+    "needSentences": "{count, plural, one {Needs # sentence} other {Needs # sentences}}",
+    "lockedLesson": "Locked for now",
+    "simpleHint": "Slow phone or a game does not start?",
+    "simpleGame": "Simple game",
+    "backToGames": "Back to the games",
+    "loading": "Getting the words of this lesson…",
+    "inputFailed": "We could not get the words of this lesson. Play the simple game.",
+    "noGames": "No game fits this lesson yet. Play the simple game.",
+    "loadFailed": "The game did not start. Play the simple game instead.",
+    "sentenceTitle": "Sentence games",
+    "sentenceInputFailed": "We could not get the sentences of this lesson. Play one of the four activities below.",
+    "sentenceLoadFailed": "The game did not start. Play one of the four activities below.",
+    "runLine": "You got {correct} of {total}.",
+    "runLineXp": "You got {correct} of {total}. +{xp} XP",
+    "pitch": {
+      "rpg-battle": "Pick the right meaning to hit the goblin king.",
+      "rune-match": "Match each word with its rune.",
+      "dragon-rider": "Fly through the gate with the right word.",
+      "enchanted-library": "Catch the right book, dodge the wrong one.",
+      "castle-defense": "Put the words in order to hold the wall.",
+      "potion-rush": "Build the sentence before the potion boils."
+    }
+  },
   "LessonLanguageQuestion": {
     "title": "AI Reading Assistant",
     "loading": {

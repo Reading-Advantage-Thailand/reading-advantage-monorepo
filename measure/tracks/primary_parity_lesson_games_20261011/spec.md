@@ -235,3 +235,20 @@ The side-by-side kit of `primary_parity_acceptance_20261011` checks these on a r
    owner want?
 3. Teacher-led mode. Default: a demo on the projector that saves nothing. Does the owner also want
    a button that starts a class challenge with the lesson words (students play on their phones)?
+
+### Defaults used (2026-10-12, owner decision: no stop; look check pending (owner, async))
+
+1. XP: the game rule for each run (at most 10 XP).
+2. Lists: task 10 the legacy four; task 12 `castle-defense` and `potion-rush`.
+3. Teacher-led mode: a demo on the projector that saves nothing; no class challenge button.
+
+## Design Decisions (Phase D, source: Forge, 2026-10-12)
+
+- Gate each cartridge with `missingFor(manifest, input)`. Minimums: `rune-match` 6 words; `rpg-battle`,
+  `dragon-rider`, `enchanted-library`, `hero-vs-zombie` 4 words; `castle-defense`, `potion-rush` 3 sentences.
+  Show the locked state "not enough words or sentences in this lesson".
+- `castle-defense` and `potion-rush` are sentence games (task 12 only).
+- Below the minimum a game still runs and is easier; a game with 0 items ends at once with a result and no play.
+- Each sentence has a `words` array; Phase S1 builds the input with `parsePracticeInput`.
+- Tutor `wizard-vs-zombie` = Forge `hero-vs-zombie`. No Forge sync is pending.
+- All 70 lessons of the five printed books give 10 words and 4 or more sentences (counts in `design/look-check.md`).

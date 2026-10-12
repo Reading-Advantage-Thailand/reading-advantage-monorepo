@@ -1,0 +1,153 @@
+{
+  "member": "primary_parity_stories_20261011",
+  "pairs": [
+    {
+      "id": "ST-A1",
+      "rows": [
+        "STU-04"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/stories",
+      "newPath": "/en/student/read/stories",
+      "widths": [
+        375,
+        1280
+      ],
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "ST-A1-a",
+          "behavior": "Use a student of level 5. Both lists show the same published stories of level 4 to 6 (AC-1). The new list shows books on shelves; a genre sign and a title search narrow it; an empty result shows a short note."
+        },
+        {
+          "id": "ST-A1-b",
+          "behavior": "New: the Read page shows the sign \"Articles | Stories\" and the toolbar has four tabs."
+        }
+      ]
+    },
+    {
+      "id": "ST-A2",
+      "rows": [
+        "STU-04"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/stories/cmmcadr1q00rjs6012b0ym9oa",
+      "newPath": "/en/student/read/stories/{map:stories:cmmcadr1q00rjs6012b0ym9oa}",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "ST-A2-a",
+          "behavior": "Same title, summary, and chapter count (8) in both apps (AC-2)."
+        },
+        {
+          "id": "ST-A2-b",
+          "behavior": "Characters sign shows the characters in both apps."
+        }
+      ]
+    },
+    {
+      "id": "ST-A3",
+      "rows": [
+        "STU-04"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/stories/cmmcadr1q00rjs6012b0ym9oa/1",
+      "newPath": "/en/student/read/stories/{map:stories:cmmcadr1q00rjs6012b0ym9oa}/1",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "ST-A3-a",
+          "behavior": "Same text, picture, and audio. The highlight follows the audio in the new app (AC-3)."
+        },
+        {
+          "id": "ST-A3-b",
+          "behavior": "Pick th: the current sentence shows its translation in both apps."
+        },
+        {
+          "id": "ST-A3-c",
+          "behavior": "Open the word list: the same words show with their meanings and audio."
+        }
+      ]
+    },
+    {
+      "id": "ST-A4",
+      "rows": [
+        "STU-04"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/stories/cmmcadr1q00rjs6012b0ym9oa/1",
+      "newPath": "/en/student/read/stories/{map:stories:cmmcadr1q00rjs6012b0ym9oa}/1",
+      "widths": [
+        375
+      ],
+      "checks": [
+        {
+          "id": "ST-A4-a",
+          "behavior": "MCQ with 4 of 5 correct. Both apps add 8 XP (AC-4). Record XP before and after."
+        },
+        {
+          "id": "ST-A4-b",
+          "behavior": "Retake the MCQ. Legacy adds XP again. New adds no XP and shows the new score (D4)."
+        },
+        {
+          "id": "ST-A4-c",
+          "behavior": "New: no answer reaches the client before the submit."
+        }
+      ]
+    },
+    {
+      "id": "ST-A5",
+      "rows": [
+        "STU-04"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/stories/cmmjfv7iz00v0s6015lcm2zmm/1",
+      "newPath": "/en/student/read/stories/{map:stories:cmmjfv7iz00v0s6015lcm2zmm}/1",
+      "widths": [
+        375
+      ],
+      "checks": [
+        {
+          "id": "ST-A5-a",
+          "behavior": "SAQ: feedback shows and the submit adds the score as XP in both apps (AC-5). A second submit is refused."
+        },
+        {
+          "id": "ST-A5-b",
+          "behavior": "LAQ shorter than level x 30 characters: the page asks for a longer answer. A valid answer gets 2 feedback tries at most and the submit adds the rubric total."
+        }
+      ]
+    },
+    {
+      "id": "ST-A6",
+      "rows": [
+        "STU-04"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/stories/cmmcadr1q00rjs6012b0ym9oa/8",
+      "newPath": "/en/student/read/stories/{map:stories:cmmcadr1q00rjs6012b0ym9oa}/8",
+      "widths": [
+        375
+      ],
+      "checks": [
+        {
+          "id": "ST-A6-a",
+          "behavior": "The last chapter (8 of 8) shows \"Previous chapter\" and no \"Next chapter\" in both apps."
+        },
+        {
+          "id": "ST-A6-b",
+          "behavior": "The chapter picture loads in the new app (a request for images/story/<legacy cuid>.png).",
+          "network": "images/story/"
+        }
+      ]
+    }
+  ]
+}

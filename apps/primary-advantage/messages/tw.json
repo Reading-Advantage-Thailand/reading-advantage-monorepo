@@ -1904,6 +1904,43 @@
       "improveComprehension": "提升閱讀理解："
     }
   },
+  "LessonGames": {
+    "title": "詞彙遊戲",
+    "subtitle": "用本課的單字來玩。",
+    "choose": "選擇一個遊戲",
+    "wordsReady": "{count, plural, other {已備好 # 個單字}}",
+    "sentencesReady": "{count, plural, other {已備好 # 個句子}}",
+    "play": "開始",
+    "playAgain": "再玩一次",
+    "locked": "已鎖定",
+    "newTag": "新",
+    "notPlayed": "新：還沒玩過",
+    "last": "上次：答對 {correct}/{total}",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, other {需要 # 個單字}}",
+    "needSentences": "{count, plural, other {需要 # 個句子}}",
+    "lockedLesson": "暫時鎖定",
+    "simpleHint": "手機太慢，或是遊戲打不開？",
+    "simpleGame": "簡單遊戲",
+    "backToGames": "返回遊戲",
+    "loading": "正在準備本課的單字…",
+    "inputFailed": "無法取得本課的單字。請玩簡單遊戲。",
+    "noGames": "本課還沒有合適的遊戲。請玩簡單遊戲。",
+    "loadFailed": "遊戲沒有啟動。請改玩簡單遊戲。",
+    "sentenceTitle": "句子遊戲",
+    "sentenceInputFailed": "無法取得本課的句子。請玩下面四個活動之一。",
+    "sentenceLoadFailed": "遊戲沒有啟動。請玩下面四個活動之一。",
+    "runLine": "你答對了 {correct}/{total}。",
+    "runLineXp": "你答對了 {correct}/{total}。+{xp} XP",
+    "pitch": {
+      "rpg-battle": "選出正確的詞義，打敗哥布林王。",
+      "rune-match": "把每個單字和它的符文配成一對。",
+      "dragon-rider": "用正確的單字飛過大門。",
+      "enchanted-library": "接住正確的書，躲開錯誤的書。",
+      "castle-defense": "把單字排成正確的順序，守住城牆。",
+      "potion-rush": "在藥水煮沸之前拼好句子。"
+    }
+  },
   "LessonLanguageQuestion": {
     "title": "AI 閱讀助理",
     "loading": {

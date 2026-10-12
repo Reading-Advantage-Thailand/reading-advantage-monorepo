@@ -13,13 +13,12 @@ import {
   users,
   xpLogs,
   leaderboards,
-  userRoles,
-  roles,
   classroomStudents,
   classrooms,
   schoolAdmins,
   licenses,
 } from '@reading-advantage/db';
+import { roleSql } from "@/server/utils/role-sql";
 
 /** A ranked student entry in a school leaderboard. */
 export interface LeaderboardResult {
@@ -37,17 +36,17 @@ export interface SchoolLeaderboardData {
 }
 
 /**
- * Look up the role id for "student" once and reuse it for the leaderboard
- * aggregation. The Prisma model kept the role name as a string, so this
- * helper bridges to the new Drizzle roles/userRoles tables.
+ * Lists the student user ids of one school.
+ * `users.role` is the truth; a legacy `user_roles` row also counts.
+ * @param schoolId The school to read.
+ * @returns The ids of the students of the school.
  */
-async function getStudentRoleId(): Promise<string | null> {
-  const [role] = await db
-    .select({ id: roles.id })
-    .from(roles)
-    .where(eq(roles.name, "student"))
-    .limit(1);
-  return role?.id ?? null;
+async function getSchoolStudentIds(schoolId: string): Promise<string[]> {
+  const rows = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(and(eq(users.schoolId, schoolId), roleSql("student")));
+  return rows.map((row) => row.id);
 }
 
 /** License detail shown on the school profile settings page. */
@@ -213,28 +212,10 @@ export const updateSchoolRankingModel = async () => {
     // Fetch all schools
     const schoolsRows = await db.select({ id: schools.id, name: schools.name }).from(schools);
 
-    const studentRoleId = await getStudentRoleId();
-
     // Process each school
     const leaderboardUpdates = await Promise.all(
       schoolsRows.map(async (school) => {
-        // Build a set of student user ids for this school via the
-        // M:N userRoles table + users.schoolId filter. We do this in two
-        // queries because the Drizzle relations API is not in use yet.
-        let studentUserIds: string[] = [];
-        if (studentRoleId) {
-          const studentRows = await db
-            .select({ id: users.id })
-            .from(users)
-            .innerJoin(userRoles, eq(userRoles.userId, users.id))
-            .where(
-              and(
-                eq(users.schoolId, school.id),
-                eq(userRoles.roleId, studentRoleId),
-              ),
-            );
-          studentUserIds = studentRows.map((row) => row.id);
-        }
+        const studentUserIds = await getSchoolStudentIds(school.id);
 
         // Get XP logs for current month for students in this school
         const xpLogRows = studentUserIds.length
@@ -429,23 +410,7 @@ export const getSchoolLeaderboardModel = async (
           999,
         );
 
-        // Build student ids list for this school (same query as above, cached
-        // would be nicer — for parity with the original we re-query).
-        const studentRoleId = await getStudentRoleId();
-        let studentUserIds: string[] = [];
-        if (studentRoleId) {
-          const studentRows = await db
-            .select({ id: users.id })
-            .from(users)
-            .innerJoin(userRoles, eq(userRoles.userId, users.id))
-            .where(
-              and(
-                eq(users.schoolId, schoolId as string),
-                eq(userRoles.roleId, studentRoleId),
-              ),
-            );
-          studentUserIds = studentRows.map((row) => row.id);
-        }
+        const studentUserIds = await getSchoolStudentIds(schoolId as string);
 
         // Get all students' XP for current month in this school
         const xpLogRows = studentUserIds.length

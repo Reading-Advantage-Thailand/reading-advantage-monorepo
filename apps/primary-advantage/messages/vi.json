@@ -1904,6 +1904,43 @@
       }
     }
   },
+  "LessonGames": {
+    "title": "Trò chơi từ vựng",
+    "subtitle": "Chơi với các từ của bài học này.",
+    "choose": "Chọn một trò chơi",
+    "wordsReady": "{count, plural, other {Sẵn sàng # từ}}",
+    "sentencesReady": "{count, plural, other {Sẵn sàng # câu}}",
+    "play": "Chơi",
+    "playAgain": "Chơi lại",
+    "locked": "Đã khóa",
+    "newTag": "Mới",
+    "notPlayed": "Mới: chưa chơi",
+    "last": "Lần trước: đúng {correct}/{total}",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, other {Cần # từ}}",
+    "needSentences": "{count, plural, other {Cần # câu}}",
+    "lockedLesson": "Tạm khóa",
+    "simpleHint": "Điện thoại chậm hoặc trò chơi không chạy?",
+    "simpleGame": "Trò chơi đơn giản",
+    "backToGames": "Quay lại các trò chơi",
+    "loading": "Đang chuẩn bị các từ của bài học này…",
+    "inputFailed": "Không lấy được các từ của bài học này. Hãy chơi trò chơi đơn giản.",
+    "noGames": "Chưa có trò chơi phù hợp với bài học này. Hãy chơi trò chơi đơn giản.",
+    "loadFailed": "Trò chơi không chạy. Hãy chơi trò chơi đơn giản.",
+    "sentenceTitle": "Trò chơi câu",
+    "sentenceInputFailed": "Chúng tôi không lấy được các câu của bài học này. Hãy chơi một trong bốn hoạt động bên dưới.",
+    "sentenceLoadFailed": "Trò chơi không bắt đầu. Hãy chơi một trong bốn hoạt động bên dưới.",
+    "runLine": "Bạn đúng {correct}/{total}.",
+    "runLineXp": "Bạn đúng {correct}/{total}. +{xp} XP",
+    "pitch": {
+      "rpg-battle": "Chọn nghĩa đúng để đánh vua yêu tinh.",
+      "rune-match": "Ghép mỗi từ với chữ rune của nó.",
+      "dragon-rider": "Bay qua cổng bằng từ đúng.",
+      "enchanted-library": "Bắt cuốn sách đúng, tránh cuốn sai.",
+      "castle-defense": "Xếp các từ đúng thứ tự để giữ tường thành.",
+      "potion-rush": "Ghép câu trước khi thuốc sôi."
+    }
+  },
   "LessonLanguageQuestion": {
     "title": "Trợ lý Đọc AI",
     "loading": {
