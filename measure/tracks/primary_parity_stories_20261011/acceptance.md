@@ -22,8 +22,8 @@
 | ST-A5 | ST-A5-b | proven by tests | LAQ minimum and try cap (`chapter-quiz.test.tsx`: "Write at least 150 characters", "0 tries left") |
 | ST-A6 | ST-A6-a | pending batch capture | Last chapter nav in both apps (`chapter-page.test.tsx` 6/6 covers the links) |
 | ST-A6 | ST-A6-b | pending batch capture | Chapter picture request `images/story/` recorded by the capture |
-| ST-A7 | ST-A7-a | pending Phase S6 and batch run | Flashcard save after all three types; decks and tables checked by hand (Phase S6 builds the new save) |
-| ST-A7 | ST-A7-b | pending Phase S6 and batch run | No duplicate card; no save before all three are done |
+| ST-A7 | ST-A7-a | implemented, side-by-side pending | Chapter save landed (8bf4a3d6b); decks and tables checked by hand at batch time |
+| ST-A7 | ST-A7-b | implemented, side-by-side pending | No duplicate card; no save before all three are done |
 | ST-A8 | ST-A8-a | pending batch capture | Old chapter URL redirects through the map in the new app |
 | ST-A8 | ST-A8-b | pending batch capture | First-chapter nav in both apps |
 | ST-A9 | ST-A9-a | pending batch capture | Unknown story id is not found in both apps |
