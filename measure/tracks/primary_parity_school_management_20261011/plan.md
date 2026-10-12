@@ -18,18 +18,18 @@ App paths are relative to `apps/primary-advantage`.
 
 ## Phase D: Design
 
-- [ ] Task: Write the behavior contract from `docs/runbooks/primary-behavior-contract-template.md` (`primary_parity_acceptance_20261011` FR-11)
-    - [ ] For each story, list the legacy behavior with its `file:line` (spec, Evidence) and the new behavior
-    - [ ] Write the reference SQL for the seat usage and the seat holders (S4)
-    - [ ] File: `measure/tracks/primary_parity_school_management_20261011/behavior-contract.md`
-- [ ] Task: Design the changed parts in the RPG skin (`Panel`, `Sign`, `RpgButton`; `docs/primary-rpg-skin.md` §6)
-    - [ ] S1 teacher picker in the class edit dialog (the owner row with "Class owner")
-    - [ ] S2 school selector on the import page and the disabled upload state
-    - [ ] S3 school column, school filter, and the move confirm step in the teacher edit dialog
-    - [ ] S4 license panel (each license, seats used and free, the over-limit warning) and the seat holder list
-    - [ ] Mocks at 375 px and 1280 px, day and night, with the demo seed or QA data only, under `measure/tracks/primary_parity_school_management_20261011/design/`
-- [ ] Task: Owner's look check of the design and of the member questions in the spec section "Out of Scope"; record the answers in `spec.md`
-- [ ] Task: Measure - User Manual Verification 'Phase D: Design' (Protocol in workflow.md)
+- [x] Task: Write the behavior contract from `docs/runbooks/primary-behavior-contract-template.md` (`primary_parity_acceptance_20261011` FR-11)
+    - [x] For each story, list the legacy behavior with its `file:line` (spec, Evidence) and the new behavior
+    - [x] Write the reference SQL (`reference-sql.sql`; L1 to L5 ran on `primary_parity_20261011`, read only) for the seat usage and the seat holders (S4)
+    - [x] File: `measure/tracks/primary_parity_school_management_20261011/behavior-contract.md`
+- [x] Task: Design the changed parts in the RPG skin (`Panel`, `Sign`, `RpgButton`; `docs/primary-rpg-skin.md` §6)
+    - [x] S1 teacher picker in the class edit dialog (the owner row with "Class owner")
+    - [x] S2 school selector on the import page and the disabled upload state
+    - [x] S3 school column, school filter, and the move confirm step in the teacher edit dialog
+    - [x] S4 license panel (each license, seats used and free, the over-limit warning) and the seat holder list
+    - [x] Mocks at 375 px and 1280 px, day and night, with the demo seed or QA data only, (PNG files in `~/Desktop/primary-parity-progress/captures/school_management/phaseD-design/`, index in `design/captures.md`)
+- [x] Task: Owner's look check of the design and of the member questions in the spec section "Out of Scope"; record the answers in `spec.md` — look check pending (owner, async). Defaults used (owner decision 2026-10-12: no stop), recorded in `spec.md`: students only take a seat; the move of an owner is refused (409); the class owner stays on the class.
+- [x] Task: Measure - User Manual Verification 'Phase D: Design' (Protocol in workflow.md) — look check pending (owner, async). Steps: `design/captures.md`, section "Manual verification".
 
 ## Phase S1: Admin assigns teachers to a class
 _Story ref: spec.md#story-s1_

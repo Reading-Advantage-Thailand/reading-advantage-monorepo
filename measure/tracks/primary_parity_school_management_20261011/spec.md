@@ -251,3 +251,14 @@ of legacy `bfea121` and the new build with the same school data.
   - When SYSTEM moves a teacher who owns classes in the old school, the server refuses the move (S3).
     Must the classes get a new owner in the old school instead? Legacy has no class owner.
   - May an admin remove the class owner from a class (S1)? This spec keeps the owner.
+
+### Defaults used for the member questions
+
+default used (owner decision 2026-10-12: no stop). The spec text above is the default for each question.
+
+- Seat rule: students only take a seat. A teacher or an admin takes no seat.
+- Move of a teacher who owns classes in the old school: the server refuses (409, class names). No new owner.
+- Class owner on a class (S1): the owner stays and the picker locks the owner row.
+- Design default (Phase D): a school with students and no active license shows "No active license", not "over the limit".
+  The over-limit warning shows only when the school has at least one active license.
+- Design default (Phase D): the license panel does not repeat the license key. The existing card keeps it.
