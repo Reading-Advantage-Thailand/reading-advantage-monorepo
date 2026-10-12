@@ -163,3 +163,11 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
     - [x] If `graph.db` is fresh, run `build-graph update ./graph.db <changed files>` (skipped by instruction)
 - [x] Task: Measure - User Manual Verification 'Phase 7: Acceptance, Docs & Doctor' (Protocol in workflow.md)
     - look check pending (owner, async). Manual steps: (1) Read `acceptance.md` and the batch report. (2) Check each pair of AC-1 to AC-13 in the report. (3) Merge `primary/public-pages` before AC-12. (4) Set `PARITY_NEW_CLASS_CODE` and `PARITY_OLD_CLASS_CODE` for AC-13. (5) Do the manual steps in the pair notes on the clone (toasts, quiz finish, game, code-only session).
+
+## Task: Authorization of the assignment routes (added 2026-10-12, orchestrator)
+
+- [x] Task: Authorization of the assignment routes (found by staff_student_view S2) - commit 40804468c
+    - Rules: POST and GET list: TEACHER of the class, ADMIN of the class school, or SYSTEM (403 otherwise, 400 for a bad body or a student outside the class). GET by id: the same staff, or the assigned student. Student POST progress: the assigned student only. Student assignments GET: the student, SYSTEM, or staff of a class of the student. Progress and activity GET read the session user's own record.
+    - Red 19 of 21 failed; green 30 pass in 4 files; app tsc exit 0. The assign form body already passes the new Zod schema.
+    - Deviation: a TEACHER now reads only the assignments of a class that the teacher teaches (legacy: any teacher of the school).
+    - Gap: the progress POST does not check that the body articleId is the article of the assignment.
