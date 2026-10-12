@@ -21,6 +21,20 @@ import { generateObject, generateText, experimental_generateImage } from "ai";
 const testSchema = z.object({ answer: z.string() });
 
 describe("OpenAIProvider", () => {
+  it("passes system to generateObject", async () => {
+    vi.mocked(generateObject).mockResolvedValueOnce({
+      object: { answer: "x" },
+    } as unknown as Awaited<ReturnType<typeof generateObject>>);
+    await new OpenAIProvider({ apiKey: "k" }).generateObject({
+      schema: testSchema,
+      system: "sys",
+      prompt: "p",
+    });
+    expect(generateObject).toHaveBeenLastCalledWith(
+      expect.objectContaining({ system: "sys", prompt: "p" })
+    );
+  });
+
   describe("generateObject", () => {
     it("delegates to AI SDK generateObject with the configured model", async () => {
       vi.mocked(generateObject).mockResolvedValueOnce({

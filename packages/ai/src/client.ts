@@ -3,14 +3,19 @@ import type { AIClientWithProvenance, AIConfig, AIProvider } from "./types.js";
 import { ProviderNotConfiguredError } from "./errors.js";
 import { OpenAIProvider } from "./providers/openai.js";
 import { GoogleProvider } from "./providers/google.js";
+import { VertexProvider } from "./providers/vertex.js";
 import { OpenRouterProvider } from "./providers/openrouter.js";
 import { MockProvider } from "./providers/mock.js";
 
 const aiConfigSchema = z.object({
-  provider: z.enum(["openai", "google", "openrouter", "mock"]).default("openai"),
+  provider: z.enum(["openai", "google", "vertex", "openrouter", "mock"]).default("openai"),
   apiKey: z.string().optional(),
   model: z.string().optional(),
   organization: z.string().optional(),
+  project: z.string().optional(),
+  location: z.string().optional(),
+  clientEmail: z.string().optional(),
+  privateKey: z.string().optional(),
 });
 
 /**
@@ -55,6 +60,25 @@ export function createAIClient(config: AIConfig): AIClientWithProvenance {
       return new GoogleProvider({ apiKey, model: parsed.model });
     }
 
+    case "vertex": {
+      const clientEmail = parsed.clientEmail ?? process.env.VERTEX_CLIENT_EMAIL;
+      const privateKey = parsed.privateKey ?? process.env.VERTEX_PRIVATE_KEY;
+      const project = parsed.project ?? process.env.PROJECT_ID;
+      if (!clientEmail || !privateKey || !project) {
+        throw new ProviderNotConfiguredError(
+          "vertex",
+          "project (PROJECT_ID), VERTEX_CLIENT_EMAIL, and VERTEX_PRIVATE_KEY must be set"
+        );
+      }
+      return new VertexProvider({
+        project,
+        location: parsed.location ?? "global",
+        clientEmail,
+        privateKey,
+        model: parsed.model,
+      });
+    }
+
     case "openrouter": {
       const apiKey = parsed.apiKey ?? process.env.OPENROUTER_API_KEY;
       if (!apiKey) {
@@ -83,7 +107,7 @@ let singletonClient: AIClientWithProvenance | null = null;
  * Return a lazily-initialised singleton AIClient. The provider and API key
  * are read from environment variables on first call:
  *
- *   AI_PROVIDER  — "openai" | "google" | "openrouter" | "mock"  (default: "openai" in
+ *   AI_PROVIDER  — "openai" | "google" | "vertex" | "openrouter" | "mock"  (default: "openai" in
  *                   production, "mock" in test)
  *   OPENAI_API_KEY
  *   GEMINI_API_KEY / GOOGLE_API_KEY

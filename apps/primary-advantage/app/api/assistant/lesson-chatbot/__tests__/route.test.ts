@@ -5,20 +5,22 @@ import type { NextRequest } from "next/server";
 const mocks = vi.hoisted(() => ({
   currentUser: vi.fn(),
   streamText: vi.fn(),
+  info: vi.fn(),
+  error: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({
   currentUser: mocks.currentUser,
   getCurrentUser: mocks.currentUser,
 }));
-vi.mock("@/utils/openai", () => ({
-  openai: vi.fn(() => ({})),
-  openaiModel: "test-model",
+vi.mock("@reading-advantage/ai", () => ({
+  createAIClient: vi.fn(() => ({ streamText: mocks.streamText })),
 }));
-vi.mock("@reading-advantage/ai/internal-sdk", () => ({
-  streamText: mocks.streamText,
+vi.mock("@/lib/observability/logger", () => ({
+  logger: { info: mocks.info, warn: vi.fn(), error: mocks.error },
 }));
 
+import { resetPrimaryAiClients } from "@/lib/ai/models";
 import { POST } from "../route";
 
 const validBody = {
@@ -64,6 +66,30 @@ describe("POST /api/assistant/lesson-chatbot authorization", () => {
     const response = await POST(postRequest(validBody));
 
     expect(response.status).toBe(201);
-    expect(mocks.streamText).toHaveBeenCalled();
+    expect(await response.json()).toEqual({ messages: "success", sender: "bot", text: "hi" });
+    const input = mocks.streamText.mock.calls[0][0];
+    expect(input.system).toContain("Title: \"Title\"");
+    expect(input.messages).toEqual([{ role: "user", content: "hello" }]);
+    expect(mocks.info).toHaveBeenCalledWith("ai_call", {
+      task: "chatbot.stream",
+      provider: "openai",
+      model: "gpt-4o-mini",
+      durationMs: expect.any(Number),
+    });
+  });
+
+  it("returns 400 and logs through the logger for a bad body", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" });
+    const response = await POST(postRequest({ title: 1 }));
+    expect(response.status).toBe(400);
+    expect(mocks.error).toHaveBeenCalledWith("lesson_chatbot_validation_error", expect.anything());
+  });
+
+  it("returns 500 and logs when the model call fails", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" });
+    mocks.streamText.mockRejectedValue(new Error("boom"));
+    const response = await POST(postRequest(validBody));
+    expect(response.status).toBe(500);
+    expect(mocks.error).toHaveBeenCalledWith("lesson_chatbot_error", expect.anything());
   });
 });

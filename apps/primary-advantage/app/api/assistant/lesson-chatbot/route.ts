@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import z from "zod";
-import { openai, openaiModel } from "@/utils/openai";
-import { streamText } from "@reading-advantage/ai/internal-sdk";
+import { chatbotClient, loggedAiCall } from "@/lib/ai/models";
+import { logger } from "@/lib/observability/logger";
 import { currentUser } from "@/lib/session";
 
 const createLessonChatbotQuestionSchema = z.object({
@@ -46,9 +46,7 @@ export async function POST(request: NextRequest) {
         ? `\n\nBlacklisted Questions (DO NOT answer these):\n${blacklistedQuestions.map((q, index) => `${index + 1}. ${q}`).join("\n")}`
         : "";
 
-    const systemMessage = {
-      role: "system" as const,
-      content: isInitial
+    const system = isInitial
         ? `You are a helpful and friendly AI English language tutor. Start the conversation by asking the user one engaging, open-ended question related to the following article to encourage reflection or discussion. Do not answer anything yet.
     
     **IMPORTANT RULES:**
@@ -99,8 +97,7 @@ export async function POST(request: NextRequest) {
     Title: "${title}"
     Summary: "${summary}"
     Passage: "${passage}"
-    Image Description: "${image_description}"${blacklistedQuestionsText}`,
-    };
+    Image Description: "${image_description}"${blacklistedQuestionsText}`;
 
 
     // แปลงข้อความทั้งหมดจาก frontend เป็น messages สำหรับ OpenAI
@@ -110,21 +107,19 @@ export async function POST(request: NextRequest) {
     }));
 
 
-    // ส่ง prompt เข้า OpenAI พร้อมประวัติ
-    const { textStream } = await streamText({
-      model: openai(openaiModel),
-      messages: [systemMessage, ...chatMessages],
-    });
-
-    const streamChunks: string[] = [];
-
-    for await (const chunk of textStream) {
-      if (chunk && chunk !== "{" && chunk !== "}") {
-        streamChunks.push(chunk);
+    const fullMessage = await loggedAiCall("chatbot.stream", async () => {
+      const { textStream } = await chatbotClient().streamText({
+        system,
+        messages: chatMessages,
+      });
+      const streamChunks: string[] = [];
+      for await (const chunk of textStream) {
+        if (chunk && chunk !== "{" && chunk !== "}") {
+          streamChunks.push(chunk);
+        }
       }
-    }
-
-    const fullMessage = streamChunks.join("").trim();
+      return streamChunks.join("").trim();
+    });
 
 
     return NextResponse.json(
@@ -137,11 +132,11 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("Validation Error:", error.errors);
+      logger.error("lesson_chatbot_validation_error", { issues: error.errors });
       return NextResponse.json({ errors: error.errors }, { status: 400 });
     }
 
-    console.error("ChatBot API Error:", error);
+    logger.error("lesson_chatbot_error", { error });
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
