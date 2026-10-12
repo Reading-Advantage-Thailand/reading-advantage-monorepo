@@ -129,6 +129,9 @@ export function TeachersTable() {
       // Convert API data to component format
       const teachersWithDates = data.teachers.map((teacher) => ({
         ...teacher,
+        // The API reports the stored users.role value (TEACHER, ADMIN); the table
+        // forms and badges below use the lowercase teacher role names.
+        role: (teacher.role ?? "teacher").toLowerCase(),
         createdAt: new Date(teacher.createdAt),
       }));
 

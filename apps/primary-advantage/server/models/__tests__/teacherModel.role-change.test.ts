@@ -189,6 +189,15 @@ describe.each([
     expect(await getTeacherById("s1", adminA)).toBeNull();
   });
 
+  it("reports the stored role of each row, not the requested filter", async () => {
+    await seedUser("a1", "ADMIN", SCHOOL_A);
+    const out = await getTeachers({ page: 1, limit: 20, search: "", role: "", userWithRoles: adminA });
+    expect(out.teachers.find((t) => t.id === "a1")?.role).toBe("ADMIN");
+    expect(out.teachers.find((t) => t.id === "t1")?.role).toBe("TEACHER");
+    expect((await getTeacherById("a1", adminA))?.role).toBe("ADMIN");
+    expect((await getTeacherById("t2", adminA))?.role).toBe("TEACHER");
+  });
+
   it("counts the teachers in the statistics", async () => {
     expect((await getTeacherStatistics(adminA)).totalTeachers).toBe(3);
   });

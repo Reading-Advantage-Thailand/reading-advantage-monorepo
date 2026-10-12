@@ -66,3 +66,11 @@ Needs. AC-4 needs an ADMIN account of school `2c5f6031` (the only school with an
 The working tree also held uncommitted files of the lesson games helper (`actions/lesson-games.ts`,
 `packages/domain/src/games/lesson-results.ts`, and others). The gates ran with these files present. The helper did not stage them.
 The helper used no `pnpm run`, `pnpm exec`, or `pnpm --filter`.
+
+## Review accepts (2026-10-12)
+
+Follow-ups F1 to F4 of `review-20261012.md` are fixed in this track. The rest are accepted defaults, no code change.
+- F5: the S5 `user:role_changed` audit stays best-effort after commit; a failed audit write keeps the role change and only logs.
+- F6: the SYSTEM branch of `canManageSchool` stays unreachable from the school self-serve routes; it is defensive only.
+- F7: end-day semantics keep the hours-wide tolerance between the license view (`LICENSE_END_DAY >= today`, Bangkok day) and reference L1/L2 (`expiry_date >= now()`).
+- F8: the PUT still saves name/email/role before a refused move, so a 409 refusal commits the field edits and refuses only the move.
