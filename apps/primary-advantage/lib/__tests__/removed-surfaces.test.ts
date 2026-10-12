@@ -120,3 +120,39 @@ describe("Content generation code", () => {
     }
   });
 });
+
+describe("M4: old game host (safe scope)", () => {
+  it("has no host-proof page, route, client, or config", () => {
+    for (const rel of [
+      "app/[locale]/(host-proof)",
+      "app/api/host-proof",
+      "components/host-proof",
+      "lib/host-proof-config.ts",
+      "tests/e2e/host-proof-games.spec.ts",
+    ]) {
+      expect(existsSync(path.join(appRoot, rel)), rel).toBe(false);
+    }
+  });
+
+  it("has no source that names the host-proof surface", () => {
+    expect(
+      filesMatching(/HostProofGameClient|isHostProofEnabled|HOST_PROOF_ENABLED|student\/host-proof|api\/host-proof/),
+    ).toEqual([]);
+  });
+
+  it("has no old student host and no package dependency on game-cartridges", () => {
+    for (const rel of ["components/apk/StudentCartridgeHost.tsx", "components/apk/apk-host-layout.ts", "lib/apk/realm-carver-input.ts"]) {
+      expect(existsSync(path.join(appRoot, rel)), rel).toBe(false);
+    }
+    expect(filesMatching(/StudentCartridgeHost|apk-host-layout|realm-carver-input|@reading-advantage\/game-cartridges(?!-)/)).toEqual([]);
+    const pkg = readFileSync(path.join(appRoot, "package.json"), "utf8");
+    const next = readFileSync(path.join(appRoot, "next.config.ts"), "utf8");
+    expect(pkg).not.toMatch(/@reading-advantage\/game-cartridges["/]/);
+    expect(next).not.toMatch(/@reading-advantage\/game-cartridges["/]/);
+  });
+
+  it("ships no ElvGames standard pack", () => {
+    expect(existsSync(path.join(appRoot, "public/assets/apk/standard-pack-qc"))).toBe(false);
+    expect(filesMatching(/standard-pack-qc/)).toEqual([]);
+  });
+});

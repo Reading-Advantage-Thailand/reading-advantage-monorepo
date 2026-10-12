@@ -124,33 +124,6 @@ vi.mock("@reading-advantage/advantage-play-kit/react", () => ({
   TeacherChallengePanel: () => null,
 }));
 
-vi.mock("@reading-advantage/game-cartridges", () => ({
-  cartridgeLoaders: {
-    "wizard-vs-zombie": async () => ({
-      manifest: {
-        id: "wizard-vs-zombie",
-        inputMode: "vocabulary",
-        requiredAssetBindings: [],
-      },
-      standardExperience: {},
-    }),
-    "test-game": async () => ({
-      manifest: {
-        id: "test-game",
-        inputMode: "vocabulary",
-        requiredAssetBindings: [],
-      },
-      standardExperience: {},
-    }),
-  },
-  CARTRIDGE_CHALLENGE_CAPABILITIES: {},
-  createCatalogStandardEdition: () => ({}),
-  getCartridgeCatalogEntry: () => undefined,
-  cartridgeCatalog: [
-    { id: "wizard-vs-zombie", title: "Wizard vs Zombie", description: " duel" },
-  ],
-}));
-
 vi.mock("@/components/teacher/my-classes", () => ({
   default: () => null,
 }));
@@ -166,7 +139,6 @@ vi.mock("@/components/switchers/locale-switcher", () => ({
 // files through import.meta.url, which jsdom cannot open.
 vi.mock("@reading-advantage/domain", () => ({ createTenantDB: vi.fn(() => ({})) }));
 
-import { StudentCartridgeHost } from "../apk/StudentCartridgeHost";
 import { UserAccountNav } from "../nav/user-account-nav";
 import { CodeSignIn } from "../student-login/code-sign-in";
 import { TeacherSignInForm } from "../auth/teacher-signin-form";
@@ -228,100 +200,6 @@ beforeEach(() => {
       };
     },
   );
-});
-
-describe("FR-5 APK learning-mode labels are translated", () => {
-  it("reads both labels from messages", async () => {
-    const { unmount } = renderWithMessages(
-      <StudentCartridgeHost
-        cartridgeId="wizard-vs-zombie"
-        title="Wizard vs Zombie"
-        description=" duel"
-        inputMode="vocabulary"
-        locale="th"
-      />,
-      { locale: "th" },
-    );
-
-    expect(
-      await screen.findByRole("button", {
-        name: th.ApkHost.readMode,
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: th.ApkHost.listenMode }),
-    ).toBeInTheDocument();
-    unmount();
-
-    // Labels follow the message tree, not hardcoded English.
-    const patched = {
-      ...th,
-      ApkHost: {
-        ...th.ApkHost,
-        readMode: "SENTINEL-READ",
-        listenMode: "SENTINEL-LISTEN",
-      },
-    } as never;
-    render(
-      <StudentCartridgeHost
-        cartridgeId="wizard-vs-zombie"
-        title="Wizard vs Zombie"
-        description=" duel"
-        inputMode="vocabulary"
-        locale="th"
-      />,
-      {
-        wrapper: ({ children }: { children: ReactNode }) => (
-          <NextIntlPatched tree={patched}>{children}</NextIntlPatched>
-        ),
-      },
-    );
-    expect(
-      await screen.findByRole("button", { name: "SENTINEL-READ" }),
-    ).toBeInTheDocument();
-  });
-
-  it("keeps the locale prefix on sign-in links and catalog navigation", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({
-          content: [{ term: "cat", translation: "แมว" }],
-        }),
-      }),
-    );
-    renderWithMessages(
-      <StudentCartridgeHost
-        cartridgeId="test-game"
-        title="Test Game"
-        description="desc"
-        inputMode="vocabulary"
-        locale="th"
-        challengeId="challenge-1"
-      />,
-      { locale: "th" },
-    );
-
-    const signIn = await screen.findByRole("link", {
-      name: th.ApkHost.signInToPlayChallenge,
-    });
-    expect(signIn.getAttribute("href")).toMatch(/^\/th\/auth\/signin\?/);
-
-    cleanup();
-    renderWithMessages(
-      <StudentCartridgeHost
-        cartridgeId="test-game"
-        title="Test Game"
-        description="desc"
-        inputMode="vocabulary"
-        locale="en"
-        ownerKey="school-1:user-1"
-      />,
-    );
-    fireEvent.click(await screen.findByRole("button", { name: "stub-game-host" }));
-    expect(mocks.push).toHaveBeenCalledWith("/student/games");
-  });
 });
 
 describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {

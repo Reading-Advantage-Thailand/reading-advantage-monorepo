@@ -4,7 +4,7 @@ import { act, cleanup, fireEvent, screen, waitFor } from "@testing-library/react
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { StudentChallengeRunLaunch } from "@reading-advantage/game-contracts";
 
-import { renderWithMessages } from "@/components/__tests__/helpers/render-with-messages";
+import { renderWithMessages, testMessages } from "@/components/__tests__/helpers/render-with-messages";
 import { GameHost } from "../game-host";
 
 const mocks = vi.hoisted(() => ({
@@ -148,6 +148,17 @@ describe("GameHost", () => {
     fireEvent.click(screen.getByText("finish"));
     await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Result saved"));
     expect(postedBody()).toMatchObject({ gameType: "hero-vs-zombie", correctAnswers: 2, totalAttempts: 3, metadata: { contentSource: "student-flashcards", learningEvidence: answerEvidence } });
+  });
+
+  it("reads the mode labels and the challenge sign-in link from the Thai messages", async () => {
+    const th = testMessages.th.ApkHost;
+    renderWithMessages(<GameHost gameId="wizard-vs-zombie" locale="th" ownerKey="s:1" input={practice(10, 8)} />, { locale: "th" });
+    await screen.findByTestId("kit", {}, { timeout: 5000 });
+    expect(screen.getByRole("button", { name: th.readMode })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: th.listenMode })).toBeInTheDocument();
+    cleanup();
+    renderWithMessages(<GameHost gameId="hero-vs-zombie" locale="th" challengeId="33333333-3333-4333-8333-333333333333" />, { locale: "th" });
+    expect(screen.getByRole("link", { name: th.signInToPlayChallenge })).toHaveAttribute("href", expect.stringMatching(/^\/auth\/signin\?/));
   });
 
   it("offers no answer audio in a game without the mode", async () => {
