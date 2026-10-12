@@ -57,7 +57,7 @@ export default function TaskLessonSummary({
   article,
   timerSpent,
   assignmentId = null,
-  attemptNumber = 1,
+  attemptNumber: sessionAttempt = 1,
   onRestarted,
 }: {
   article: Article;
@@ -72,6 +72,9 @@ export default function TaskLessonSummary({
   const { isPreview, notSaved } = usePreviewSave();
   const [loading, setLoading] = useState(true);
   const [totalXp, setTotalXp] = useState(0);
+  // The attempt number from the server: it survives a page reload (the prop covers only this session).
+  const [fetchedAttempt, setFetchedAttempt] = useState(1);
+  const attemptNumber = Math.max(sessionAttempt, fetchedAttempt);
   const [quizScores, setQuizScores] = useState<QuizScores>({
     mcqScore: 0,
     saqScore: 0,
@@ -99,6 +102,7 @@ export default function TaskLessonSummary({
 
         if (result.data) {
           setTotalXp(result.data.totalXp);
+          setFetchedAttempt(result.data.attemptNumber ?? 1);
           setQuizScores(result.data.quizScores);
           setShowCelebration(true);
           await refresh();

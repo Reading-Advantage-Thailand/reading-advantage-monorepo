@@ -12,6 +12,7 @@ import {
   userActivity,
   xpLogs,
   articles,
+  primaryLessonAttempts,
   roles,
   userRoles,
 } from '@reading-advantage/db';
@@ -200,10 +201,40 @@ export const getUserById = async (id: string) => {
   }
 };
 
+/** Reads a date that a JSON copy stored as an ISO string. */
+const toDate = (value: unknown, fallback: Date): Date => {
+  const date = value instanceof Date ? value : typeof value === "string" ? new Date(value) : fallback;
+  return Number.isNaN(date.getTime()) ? fallback : date;
+};
+
+/**
+ * Reads the activity rows that closed lesson attempts moved into the history, with their attempt
+ * number. The moved rows keep their ids, so the XP logs still point to them.
+ * @param userId The student.
+ * @returns The moved rows (dates restored) and the highest closed attempt number of each article.
+ */
+const getMovedActivity = async (userId: string) => {
+  const attempts = await db
+    .select({ articleId: primaryLessonAttempts.articleId, attemptNumber: primaryLessonAttempts.attemptNumber, activities: primaryLessonAttempts.activities })
+    .from(primaryLessonAttempts)
+    .where(eq(primaryLessonAttempts.studentId, userId));
+  const closed = new Map<string, number>();
+  const moved = attempts.flatMap((attempt) => {
+    closed.set(attempt.articleId, Math.max(closed.get(attempt.articleId) ?? 0, attempt.attemptNumber));
+    const items = Array.isArray(attempt.activities) ? (attempt.activities as Record<string, unknown>[]) : [];
+    return items.map((item) => {
+      const createdAt = toDate(item.createdAt, new Date(0));
+      return { ...item, createdAt, updatedAt: toDate(item.updatedAt, createdAt), attemptNumber: attempt.attemptNumber } as typeof userActivity.$inferSelect & { attemptNumber: number };
+    });
+  });
+  return { moved, closed };
+};
+
 /**
  * Reads the activity rows and XP logs of a user, with the user columns that the report pages
  * show. The full users row is never returned (it has the password hash).
  * @param id The user id.
+ * Rows that closed lesson attempts moved into the history are included, and each row has its `attemptNumber`.
  * @returns `{ activity, xpLogs, user }`, or undefined when the user does not exist or a read fails.
  */
 export const getUserActivity = async (id: string) => {
@@ -225,7 +256,13 @@ export const getUserActivity = async (id: string) => {
     const xpLogRows = await db.select().from(xpLogs)
       .where(eq(xpLogs.userId, id));
 
-    return { activity, xpLogs: xpLogRows, user };
+    const { moved, closed } = await getMovedActivity(id);
+    const withAttempt = [
+      ...activity.map((row) => ({ ...row, attemptNumber: (closed.get(row.targetId ?? "") ?? 0) + 1 })),
+      ...moved,
+    ].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+    return { activity: withAttempt, xpLogs: xpLogRows, user };
   } catch (error) {
   }
 };
@@ -258,6 +295,12 @@ export const getUserArticleRecords = async (
     const articleActivities = await db.select().from(userActivity)
       .where(and(...activityConditions))
       .orderBy(desc(userActivity.updatedAt));
+
+    // Closed attempts keep their rows in the history: an article with only moved rows stays listed.
+    const recordTypes: string[] = [ActivityType.ARTICLE_READ, ActivityType.MC_QUESTION, ActivityType.SA_QUESTION, ActivityType.LA_QUESTION, ActivityType.ARTICLE_RATING];
+    const { moved } = await getMovedActivity(userId);
+    articleActivities.push(...moved.filter((row) => recordTypes.includes(row.activityType)));
+    articleActivities.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
 
     // Group activities by article
     const articleMap = new Map();

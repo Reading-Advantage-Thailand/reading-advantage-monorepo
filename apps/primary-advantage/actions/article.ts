@@ -13,6 +13,7 @@ import {
 import {
   userActivity,
   xpLogs,
+  primaryLessonAttempts,
 } from '@reading-advantage/db';
 import { createTenantDB } from "@reading-advantage/domain";
 import { getLessonGameResults } from "@reading-advantage/domain/games";
@@ -113,6 +114,13 @@ export async function getLessonSummaryData(articleId: string) {
         ),
       );
 
+    // The attempt number is the closed attempts of this student on the article plus one (S4).
+    const closedAttempts = await db
+      .select({ attemptNumber: primaryLessonAttempts.attemptNumber })
+      .from(primaryLessonAttempts)
+      .where(and(eq(primaryLessonAttempts.studentId, user.id as string), eq(primaryLessonAttempts.articleId, articleId)));
+    const attemptNumber = Math.max(0, ...closedAttempts.map((row) => row.attemptNumber)) + 1;
+
     // A lesson game run saves in `game_completions`, not in `user_activity`: add its XP here.
     let gameXp = 0;
     try {
@@ -128,6 +136,7 @@ export async function getLessonSummaryData(articleId: string) {
       data: {
         totalXp,
         gameXp,
+        attemptNumber,
         quizScores: {
           mcqScore,
           saqScore,

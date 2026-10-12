@@ -138,14 +138,21 @@ export default async function ClassBookProgressPage({ params, searchParams }: { 
                     </th>
                     {progress.lessons.map((lesson) => {
                       const cell = cellOf(student.id, lesson.number)!;
+                      const attempt = (cell.attempts ?? 0) + 1;
+                      const label = t("cell", { student: name, lesson: lesson.number, status: t(`status.${cell.status}`), done: cell.doneSteps });
                       return (
                         <td key={lesson.number} className="p-1 text-center">
                           <Link
                             href={`${base}/progress/${student.id}`}
-                            aria-label={t("cell", { student: name, lesson: lesson.number, status: t(`status.${cell.status}`), done: cell.doneSteps })}
-                            className={cn("inline-flex min-h-9 min-w-10 items-center justify-center rounded-md px-1 text-xs font-semibold", CELL_TONE[cell.status], cell.late && "ring-2 ring-red-400")}
+                            aria-label={attempt >= 2 ? `${label}, ${t("attemptsLabel", { number: attempt })}` : label}
+                            className={cn("relative inline-flex min-h-9 min-w-10 items-center justify-center rounded-md px-1 text-xs font-semibold", attempt >= 2 && "min-h-11", CELL_TONE[cell.status], cell.late && "ring-2 ring-red-400")}
                           >
                             {cell.doneSteps}/14
+                            {attempt >= 2 ? (
+                              <span data-testid="attempt-dot" aria-hidden="true" className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-amber-400 text-[10px] leading-none font-bold text-amber-950">
+                                {attempt}
+                              </span>
+                            ) : null}
                           </Link>
                         </td>
                       );
@@ -156,7 +163,7 @@ export default async function ClassBookProgressPage({ params, searchParams }: { 
             </tbody>
           </table>
         )}
-        <p className="text-muted-foreground text-xs">{t("legend")}</p>
+        <p className="text-muted-foreground text-xs">{t("legend")} {t("attemptsLegend")}</p>
       </section>
     </div>
   );

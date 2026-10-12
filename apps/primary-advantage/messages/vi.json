@@ -3929,7 +3929,19 @@
         "openedBeforeTaught": "Opened before taught",
         "stepLabel": "Step {step}: {status}",
         "backToGrid": "Back to class progress",
-        "studentTitle": "{name}"
+        "studentTitle": "{name}",
+        "attemptCurrent": "Attempt {number} (current)",
+        "earlierAttempts": "Earlier attempts ({count})",
+        "attemptNumber": "Attempt {number}",
+        "closedOn": "Closed {date}",
+        "reason": {
+          "student_restart": "Student started again",
+          "teacher_teach_again": "Teacher taught again",
+          "legacy_import": "Moved from the old system"
+        },
+        "attemptSummary": "{done} of 14 steps · {minutes} min · {xp} XP",
+        "attemptsLabel": "attempt {number}",
+        "attemptsLegend": "Gold dot: the student is on a later attempt. The number is the attempt."
       }
     }
   },
