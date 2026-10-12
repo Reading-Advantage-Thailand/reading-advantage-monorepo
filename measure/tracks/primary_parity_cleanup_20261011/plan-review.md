@@ -26,3 +26,17 @@ Low findings:
 Deviation: the plan asked for `/admin/article-creation` in the dead-link list of `broken-ux-behavior.test.tsx`. The grep check forbids the string, so the entry was not added. The ADM-11 guard covers the path.
 
 Shortcuts: none. Lessons: none. Data check: 0 custom drafts on the rehearsal 2 copy, so Q2 stays unasked. After this phase, Primary has no delete from `articles`.
+
+## Phase 5: Remove the content generation code
+
+Phase diff: bulk route, 16 generators, helper files, generator data files, and the generator exports deleted. No new route, query, or table access. Security: the change removes code only. Logger and JSDoc: not affected. Locale keys: not affected.
+
+Low findings:
+
+- L-6. `articleResponseSchema` in `lib/zod.ts` has no caller. It is not generator code, so it stays.
+- L-7. `data/story-prompts.json`, `data/A*-story-example.json`, `data/cefr-level-evaluation-prompts.json`, `data/level-test.json`, and `data/db.json` have no reader. They are not on the spec list, so they stay. Phase 9 can decide.
+- L-8. The ADM/SYS guard blocks scan `app`, `components`, `lib`, `server`, `actions`, `configs`, and `public`. They do not scan `data/`. The grep check covers `data/`.
+
+Deviation: removed `MCQuestionSchema`, `LAQuestionSchema`, `SAQuestionSchema`, `VocabularySchema`, and `data/story-schema.ts` in addition to the spec list. Only removed code used them.
+
+Shortcuts: none. Lessons: none. Red step: the guard block and the code change went in one commit.

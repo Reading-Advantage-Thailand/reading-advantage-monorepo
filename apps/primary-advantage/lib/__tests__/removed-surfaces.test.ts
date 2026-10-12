@@ -82,3 +82,41 @@ describe("ADM-11: Admin Article Creation", () => {
     }
   });
 });
+
+describe("Content generation code", () => {
+  it("has no bulk route, generators folder, or generator helper files", () => {
+    expect(existsSync(path.join(appRoot, "app/api/articles/generate"))).toBe(false);
+    expect(existsSync(path.join(appRoot, "server/utils/generators"))).toBe(false);
+    expect(existsSync(path.join(appRoot, "server/utils/constants.ts"))).toBe(false);
+    expect(existsSync(path.join(appRoot, "server/utils/logging.ts"))).toBe(false);
+  });
+
+  it("has no source that names the removed path or exports", () => {
+    expect(
+      filesMatching(
+        /api\/articles\/generate|utils\/generators|\b(?:generateAllArticle|generateAllArticleNew|generateArticle|generateArticleNew|generateArticles|generateQuestions|saveArticleContent|requireToolingAccess|amountPerGenreSchema|articleGeneratorSchema|storyGeneratorSchema)\b/,
+      ),
+    ).toEqual([]);
+  });
+
+  it("has no generator data file", () => {
+    const names = [
+      "cefr-article-prompts.json",
+      "new-article-prompts.json",
+      "new-level-evaluation-prompts.json",
+      "prompts-combined-LA.json",
+      "prompts-combined-MC.json",
+      "prompts-combined-SA.json",
+      "title-a0.json",
+      "title-a1.json",
+      "title-a2.json",
+      "audios/articles/temp.mp3",
+      "audios/sentences/temp.mp3",
+      "audios/words/temp.mp3",
+      "images/temp.jpg",
+    ];
+    for (const name of names) {
+      expect(existsSync(path.join(appRoot, "data", name))).toBe(false);
+    }
+  });
+});

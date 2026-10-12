@@ -1,6 +1,4 @@
-import { ArticleBaseCefrLevel, ArticleType } from "@/types/enum";
 import {
-  generateArticles,
   getArticlesWithParams,
   getArticleById,
   getQuestionsByArticleId,
@@ -8,77 +6,6 @@ import {
   deleteFlashcardById,
 } from "../models/articleModel";
 import { currentUser } from "@/lib/session";
-import { generateMCQuestion } from "../utils/generators/mc-question-generator";
-import { generateLAQuestion } from "../utils/generators/la-question-generator";
-import { generateSAQuestion } from "../utils/generators/sa-question-generator";
-import {
-  saveArticleContent,
-  generateQuestions,
-} from "../models/articleModel";
-import { generateArticleNew } from "../utils/generators/new-generator";
-
-export const generateAllArticleNew = async (amountPerGenre: number) => {
-  const types: ArticleType[] = [ArticleType.FICTION];
-  const levels: ArticleBaseCefrLevel[] = [
-    ArticleBaseCefrLevel.A0,
-    ArticleBaseCefrLevel.A1,
-    ArticleBaseCefrLevel.A2,
-    ArticleBaseCefrLevel.B1,
-    ArticleBaseCefrLevel.B2,
-  ];
-
-  const totalArticles = types.length * levels.length * amountPerGenre;
-  const articles: any[] = [];
-  const completedArticles = 0;
-
-  try {
-    for (let i = 0; i < amountPerGenre; i++) {
-      await generateArticleNew(ArticleBaseCefrLevel.A0);
-    }
-  } catch (error) {
-    console.error("Error in generateAllArticleNew:", error);
-    throw new Error(`Failed to generate all articles: ${error}`);
-  }
-};
-
-export const generateAllArticle = async (amountPerGenre: number) => {
-  const types: ArticleType[] = [ArticleType.FICTION, ArticleType.NONFICTION];
-  const levels: ArticleBaseCefrLevel[] = [
-    ArticleBaseCefrLevel.A1,
-    ArticleBaseCefrLevel.A2,
-    ArticleBaseCefrLevel.B1,
-    ArticleBaseCefrLevel.B2,
-  ];
-
-  const totalArticles = types.length * levels.length * amountPerGenre;
-  const articles: any[] = [];
-  let completedArticles = 0;
-
-
-  try {
-    for (let i = 0; i < amountPerGenre; i++) {
-      for (const type of types) {
-        for (const level of levels) {
-          try {
-            await generateArticles({ type, level });
-            completedArticles++;
-          } catch (error: any) {
-            console.error(
-              `Failed to generate article (Type: ${type}, Level: ${level}):`,
-              error,
-            );
-            throw new Error(`Failed to generate article: ${error.message}`);
-          }
-        }
-      }
-    }
-
-    return articles;
-  } catch (error: any) {
-    console.error("Error in generateAllArticle:", error);
-    throw new Error(`Failed to generate all articles: ${error.message}`);
-  }
-};
 
 export const fetchArticles = async (req: URLSearchParams) => {
   const title = req.get("title") ?? undefined;

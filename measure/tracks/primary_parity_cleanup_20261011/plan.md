@@ -90,20 +90,22 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 
 ## Phase 5: Remove the content generation code
 
-- [ ] Task: FR-4 — remove the bulk route and the generation actions
-    - [ ] Check the callers of `generateAllArticle`, `generateAllArticleNew`, `generateArticle`, `generateArticleNew`, and `amountPerGenreSchema` with `git grep -n -w`
-    - [ ] Red: `removed-surfaces.test.ts`, block "content generation": `app/api/articles/generate` does not exist; no source names `/api/articles/generate`, `generateAllArticle`, `generateArticleNew`, or `amountPerGenreSchema`
-    - [ ] Green: delete `app/api/articles/generate/route.ts` and `app/api/articles/generate/__tests__/route.test.ts`; remove `generateArticle`, `generateArticleNew`, and `requireToolingAccess` from `actions/article.ts:30-64` (and the unused imports); remove `amountPerGenreSchema` (`lib/authorization.ts:295`)
-    - [ ] Tests: in `actions/__tests__/article-actions.authorization.test.ts`, remove the case at `:46` and the mocks of removed exports, and keep the case at `:66`; in `lib/__tests__/authorization.test.ts`, remove the `amountPerGenreSchema` import (`:16`) and its case (`:112-117`)
-- [ ] Task: FR-4 — remove the generators, their model code, and their data files
-    - [ ] Red: `removed-surfaces.test.ts`, same block: `server/utils/generators`, `server/utils/constants.ts`, and `server/utils/logging.ts` do not exist; no source names `utils/generators`, `saveArticleContent`, `generateQuestions`, `generateArticles`, `articleGeneratorSchema`, or `storyGeneratorSchema`
-    - [ ] Green: delete `server/utils/generators/` (16 files and `__tests__/`), `server/utils/constants.ts`, and `server/utils/logging.ts`; remove `generateAllArticleNew` and `generateAllArticle` (`articleController.ts:29-90`); remove `saveArticleContent`, `generateQuestions`, and `generateArticles` with the generator imports (`articleModel.ts:21-40`, `:186-362`); remove `articleGeneratorSchema` and `storyGeneratorSchema` from `lib/zod.ts` (and each schema that only they use)
-    - [ ] Green: `git grep -n` each data file name of spec FR-4; delete each file that has no other reader
-    - [ ] Tests: delete `server/__tests__/writer-contracts.test.ts`; in `server/models/__tests__/writerModels.behavior.test.ts`, remove the `saveArticleContent` cases (`:45`, `:115-130`) and keep the others; remove the mocks at `server/models/__tests__/articleModel.questions.test.ts:25-26`; remove the path at `components/__tests__/component-deduplication-behavior.test.tsx:612`
-- [ ] Task: Grep check 'content generation'
-    - [ ] `git grep -n -w -E 'utils/generators|generateAllArticle|generateAllArticleNew|generateArticle|generateArticleNew|generateArticles|generateQuestions|saveArticleContent|amountPerGenreSchema|articleGeneratorSchema|storyGeneratorSchema|api/articles/generate|new-article-prompts|prompts-combined|cefr-article-prompts|new-level-evaluation-prompts|title-a0|title-a1|title-a2' -- apps/primary-advantage <guard>` gives no output
-    - [ ] Run `pnpm --filter primary-advantage test` once
-- [ ] Task: Measure - User Manual Verification 'Phase 5: Remove the content generation code' (Protocol in workflow.md)
+- [x] Task: FR-4 — remove the bulk route and the generation actions
+    - [x] Check the callers of `generateAllArticle`, `generateAllArticleNew`, `generateArticle`, `generateArticleNew`, and `amountPerGenreSchema` with `git grep -n -w`
+    - [x] Red: `removed-surfaces.test.ts`, block "content generation": `app/api/articles/generate` does not exist; no source names `/api/articles/generate`, `generateAllArticle`, `generateArticleNew`, or `amountPerGenreSchema`
+    - [x] Green: delete `app/api/articles/generate/route.ts` and `app/api/articles/generate/__tests__/route.test.ts`; remove `generateArticle`, `generateArticleNew`, and `requireToolingAccess` from `actions/article.ts:30-64` (and the unused imports); remove `amountPerGenreSchema` (`lib/authorization.ts:295`)
+    - [x] Tests: in `actions/__tests__/article-actions.authorization.test.ts`, remove the case at `:46` and the mocks of removed exports, and keep the case at `:66`; in `lib/__tests__/authorization.test.ts`, remove the `amountPerGenreSchema` import (`:16`) and its case (`:112-117`)
+- [x] Task: FR-4 — remove the generators, their model code, and their data files
+    - [x] Red: `removed-surfaces.test.ts`, same block: `server/utils/generators`, `server/utils/constants.ts`, and `server/utils/logging.ts` do not exist; no source names `utils/generators`, `saveArticleContent`, `generateQuestions`, `generateArticles`, `articleGeneratorSchema`, or `storyGeneratorSchema`
+    - [x] Green: delete `server/utils/generators/` (16 files and `__tests__/`), `server/utils/constants.ts`, and `server/utils/logging.ts`; remove `generateAllArticleNew` and `generateAllArticle` (`articleController.ts:29-90`); remove `saveArticleContent`, `generateQuestions`, and `generateArticles` with the generator imports (`articleModel.ts:21-40`, `:186-362`); remove `articleGeneratorSchema` and `storyGeneratorSchema` from `lib/zod.ts` (and each schema that only they use)
+    - [x] Green: `git grep -n` each data file name of spec FR-4; delete each file that has no other reader
+    - [x] Tests: delete `server/__tests__/writer-contracts.test.ts`; in `server/models/__tests__/writerModels.behavior.test.ts`, remove the `saveArticleContent` cases (`:45`, `:115-130`) and keep the others; remove the mocks at `server/models/__tests__/articleModel.questions.test.ts:25-26`; remove the path at `components/__tests__/component-deduplication-behavior.test.tsx:612`
+- [x] Task: Grep check 'content generation'
+    - [x] `git grep -n -w -E 'utils/generators|generateAllArticle|generateAllArticleNew|generateArticle|generateArticleNew|generateArticles|generateQuestions|saveArticleContent|amountPerGenreSchema|articleGeneratorSchema|storyGeneratorSchema|api/articles/generate|new-article-prompts|prompts-combined|cefr-article-prompts|new-level-evaluation-prompts|title-a0|title-a1|title-a2' -- apps/primary-advantage <guard>` gives no output
+    - [x] Run `pnpm --filter primary-advantage test` once
+- [x] Task: Measure - User Manual Verification 'Phase 5: Remove the content generation code' (Protocol in workflow.md)
+    - Look check pending (owner, async). Steps: log in as ADMIN; `POST /api/articles/generate` gives 404; student read pages still list and open articles.
+    - Callers check: no caller outside the FR-4 list. Extra items removed (their only readers were the generators): `MCQuestionSchema`, `LAQuestionSchema`, `SAQuestionSchema`, `VocabularySchema` in `lib/zod.ts`, and the unused file `data/story-schema.ts` (it held copies of the two generator schemas and had no importer). `canRunContentTooling` stays for `app/api/upload/csv/cleanup/route.ts`. App tsc passed. Full app test run: 219 files, 1328 tests pass.
 
 ## Phase 6: Old game host (M4, safe scope)
 
