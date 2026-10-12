@@ -1,4 +1,5 @@
 "use client";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Header } from "../header";
 import { Button } from "@/components/ui/button";
@@ -131,6 +132,7 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
     useState<MatchingGameData[]>(gameData);
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   const activeAudioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -247,17 +249,21 @@ export function MatchingGame({ deckId, gameData = [] }: MatchingGameProps) {
       setCurrentIndex((prev) => prev + 1);
     } else {
       setGameComplete(true);
-      await fetch(`/api/flashcard/decks/${deckId}/sentences-for-matching`, {
-        method: "POST",
-        body: JSON.stringify({
-          score: score,
-          timer: timer,
-        }),
-      });
+      if (isPreview) {
+        notSaved();
+      } else {
+        await fetch(`/api/flashcard/decks/${deckId}/sentences-for-matching`, {
+          method: "POST",
+          body: JSON.stringify({
+            score: score,
+            timer: timer,
+          }),
+        });
+      }
       setIsPlaying(false);
       await refresh();
     }
-  }, [currentIndex, activeGameData.length, deckId, score, timer]);
+  }, [currentIndex, activeGameData.length, deckId, score, timer, isPreview]);
 
   const handleRestart = useCallback(() => {
     setUserMatches([]);

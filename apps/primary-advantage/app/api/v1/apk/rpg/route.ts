@@ -12,6 +12,7 @@ import {
 } from "@reading-advantage/game-contracts";
 
 import { getCurrentUser } from "@/lib/session";
+import { guardStudentRoute } from "@/lib/student-view";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -20,9 +21,13 @@ function errorResponse(status: number, code: string, message: string) {
   return NextResponse.json({ error: { code, message } }, { status });
 }
 
-async function getStudentContext() {
+async function getStudentContext(writeOperation?: string) {
   const user = await getCurrentUser();
   if (!user) return { error: errorResponse(401, "UNAUTHORIZED", "Authentication required") };
+  if (writeOperation) {
+    const preview = guardStudentRoute(user, writeOperation);
+    if (preview) return { error: preview };
+  }
   if (user.role !== "STUDENT") {
     return { error: errorResponse(403, "FORBIDDEN", "A student account is required") };
   }
@@ -52,7 +57,7 @@ export async function GET() {
  * @returns The equipped cosmetic identifier or a structured error.
  */
 export async function PATCH(request: NextRequest) {
-  const context = await getStudentContext();
+  const context = await getStudentContext("apk_rpg_equip");
   if ("error" in context) return context.error;
   let body: unknown;
   try {

@@ -1,4 +1,6 @@
 "use client";
+import { isPreviewResult } from "@/lib/student-view";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import React, { useState, useTransition } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -57,6 +59,7 @@ export function FlashcardGameInline({
   );
   const t = useTranslations("SentencesPage.sentencesCard");
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   const currentCard = cards[currentIndex];
   const progress = cards.length > 0 ? (completedCards / cards.length) * 100 : 0;
@@ -89,6 +92,11 @@ export function FlashcardGameInline({
 
       startTransition(async () => {
         try {
+          if (isPreview) {
+            notSaved();
+            setSessionComplete(true);
+            return;
+          }
           const reviewPromises = Object.entries({
             ...cardRating,
             [currentCard.id]: rating,
@@ -98,7 +106,7 @@ export function FlashcardGameInline({
 
           const results = await Promise.all(reviewPromises);
 
-          const allSuccess = results.every((r) => r.success);
+          const allSuccess = results.every((r) => !isPreviewResult(r) && r.success);
 
           if (allSuccess) {
             setSessionComplete(true);

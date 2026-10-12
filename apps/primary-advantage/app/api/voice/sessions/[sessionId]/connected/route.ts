@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { voiceConnected } from "@/server/controllers/voiceController";
 import { voiceActor, voiceErrorResponse } from "@/lib/voice-route";
+import { guardStudentRoute } from "@/lib/student-view";
 
 /**
  * POST /api/voice/sessions/[sessionId]/connected: the browser connected, the clock starts (FR-3).
@@ -11,6 +12,8 @@ import { voiceActor, voiceErrorResponse } from "@/lib/voice-route";
 export async function POST(_request: NextRequest, { params }: { params: Promise<{ sessionId: string }> }) {
   const actor = await voiceActor();
   if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const preview = guardStudentRoute(actor.user, "voice_connected");
+  if (preview) return preview;
   const { sessionId } = await params;
   try {
     return NextResponse.json(await voiceConnected(actor.user, sessionId), { headers: { "Cache-Control": "no-store" } });

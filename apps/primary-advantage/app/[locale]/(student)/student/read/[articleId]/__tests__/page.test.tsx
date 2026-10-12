@@ -84,8 +84,8 @@ describe("article view saved state (FR-11)", () => {
     expect(mocks.getArticleById).toHaveBeenCalledWith(ARTICLE_ID, "s1");
   });
 
-  it("saves nothing for the staff view", async () => {
-    mocks.user = { id: "t1", role: "TEACHER", schoolId: "sc1" };
+  it.each(["TEACHER", "ADMIN", "SYSTEM"])("saves nothing for the %s staff view", async (role) => {
+    mocks.user = { id: "t1", role, schoolId: "sc1" };
     render((await ArticleQuizPage({ params })) as React.ReactElement);
     expect(mocks.saveArticleCardsAfterQuiz).not.toHaveBeenCalled();
     expect(screen.getByTestId("article-card")).toHaveAttribute("data-saved", "false");

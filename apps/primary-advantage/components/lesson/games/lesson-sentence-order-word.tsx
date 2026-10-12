@@ -1,4 +1,5 @@
 "use client";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Header } from "@/components/header";
@@ -199,6 +200,7 @@ function OrderWordGameBody({
   );
 
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   const activeAudioRef = useRef<HTMLAudioElement | null>(null);
   const hintAudioStopRef = useRef<(() => void) | null>(null);
@@ -385,7 +387,9 @@ function OrderWordGameBody({
       setCurrentIndex((prev) => prev + 1);
     } else {
       setGameComplete(true);
-      if (!isDeck) {
+      if (isPreview) {
+        notSaved();
+      } else if (!isDeck) {
         await updateUserActivity(
           articleId as string,
           ActivityType.SENTENCE_WORD_ORDERING,
@@ -406,7 +410,7 @@ function OrderWordGameBody({
       setIsPlaying(false);
       await refresh();
     }
-  }, [currentIndex, activeSentences.length]);
+  }, [currentIndex, activeSentences.length, isPreview]);
 
   const handleRestart = useCallback(() => {
     if (currentSentence?.words) {

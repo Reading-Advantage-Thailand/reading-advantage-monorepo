@@ -45,7 +45,7 @@ describe("finishQuiz evidence keys (track primary_mastery_evidence_20261006, FR-
 
   beforeEach(() => {
     inserted.length = 0;
-    mocks.currentUser.mockResolvedValue({ id: "student-1", schoolId: "55555555-5555-4555-8555-555555555555" });
+    mocks.currentUser.mockResolvedValue({ id: "student-1", role: "STUDENT", schoolId: "55555555-5555-4555-8555-555555555555" });
     mocks.select
       .mockReturnValueOnce(chain([{ xp: 10 }]))
       .mockReturnValueOnce(chain([{ id: "log-1" }]));

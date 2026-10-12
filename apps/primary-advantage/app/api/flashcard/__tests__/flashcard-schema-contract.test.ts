@@ -106,7 +106,7 @@ describe("flashcard schema contract", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.insertedCards.length = 0;
-    mocks.currentUser.mockResolvedValue({ id: "user-1" });
+    mocks.currentUser.mockResolvedValue({ id: "user-1", role: "STUDENT" });
   });
 
   it("shared flashcardCards schema exposes only the expected columns", () => {

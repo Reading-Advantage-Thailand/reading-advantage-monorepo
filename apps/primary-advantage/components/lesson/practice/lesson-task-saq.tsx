@@ -1,5 +1,6 @@
 "use client";
 
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import { Article, QuestionResponse, SAQuestion } from "@/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +40,7 @@ function LessonSAQContent({ article }: { article: Article }) {
   const [feedback, setFeedback] = useState<any>(null);
   const [questions, setQuestions] = useState<SAQuestion | null>(null);
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
   useEffect(() => {
     let isMounted = true;
 
@@ -128,7 +130,8 @@ function LessonSAQContent({ article }: { article: Article }) {
 
           setFeedback(data);
 
-          await finishQuiz(article.id, data, ActivityType.SA_QUESTION);
+          if (isPreview) notSaved();
+          else await finishQuiz(article.id, data, ActivityType.SA_QUESTION);
         })
         .finally(async () => {
           setState(QuestionState.COMPLETED);

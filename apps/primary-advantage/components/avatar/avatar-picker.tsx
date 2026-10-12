@@ -40,7 +40,8 @@ export function AvatarPicker({ initial, returnTo = "/student/home" }: { initial:
     setError(null);
     start(async () => {
       const result = await setAvatarProfileAction({ classId, tints });
-      if (result.success) router.push(returnTo);
+      if ('status' in result) setError(t("error"));
+      else if (result.success) router.push(returnTo);
       else setError(t("error"));
     });
   };

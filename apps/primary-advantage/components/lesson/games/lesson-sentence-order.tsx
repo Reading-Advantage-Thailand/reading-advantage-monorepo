@@ -1,4 +1,5 @@
 "use client";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import React, {
   useState,
   useEffect,
@@ -194,6 +195,7 @@ export function OrderSentenceGame({
   const [isPlayingHintAudio, setIsPlayingHintAudio] = useState(false);
   const [showCorrectOrder, setShowCorrectOrder] = useState(false);
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
   const [highlightHintsEnabled, setHighlightHintsEnabled] = useState(false);
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
 
@@ -449,7 +451,9 @@ export function OrderSentenceGame({
       return;
     }
     setGameComplete(true);
-    if (isDeck) {
+    if (isPreview) {
+      notSaved();
+    } else if (isDeck) {
       await fetch(`/api/flashcard/decks/${deckId}/sentences-for-ordering`, {
         method: "POST",
         body: JSON.stringify({
@@ -469,7 +473,7 @@ export function OrderSentenceGame({
     }
     setIsPlaying(false);
     await refresh();
-  }, [currentIndex, activeSentences.length, isDeck, articleId, deckId, refresh]);
+  }, [currentIndex, activeSentences.length, isDeck, articleId, deckId, refresh, isPreview]);
 
   const handleRestart = useCallback(() => {
     if (currentSentenceGroup?.sentences) {

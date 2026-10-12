@@ -3827,7 +3827,7 @@
         "noKey": "This lesson has no answer key in the catalogue yet.",
         "summary": "Lesson summary",
         "noArticle": "This lesson is not linked to an article yet. The projector and the rehearsal open when it is.",
-        "rehearsalHint": "You see the lesson as a student does. Your steps are not recorded for the class.",
+        "rehearsalHint": "You see the lesson as a student does. Nothing you do here is saved.",
         "backToLesson": "Back to the lesson",
         "projectorHint": "Click a paragraph to focus it. Answer tallies are not available yet.",
         "vocabulary": "Vocabulary",
@@ -3998,5 +3998,13 @@
     "toClasses": "Go to my classes",
     "toStart": "Go to the start page",
     "retry": "Try again"
+  },
+  "StudentView": {
+    "bannerTitle": "學生預覽",
+    "bannerNote": "你看到的是學生看到的內容。這裡不會儲存任何內容。",
+    "exit": "退出預覽",
+    "menuItem": "學生檢視",
+    "notSaved": "預覽：不儲存",
+    "backHome": "返回首頁"
   }
 }

@@ -1,3 +1,4 @@
+import { isStudentWriter } from "@/lib/student-view";
 import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { db } from "@reading-advantage/db";
@@ -102,7 +103,8 @@ async function loadReedyMeter(user: User): Promise<ReedyMeterData | null> {
  */
 async function loadQuestCard(user: User) {
   try {
-    await awardPowerUps({ db, user });
+    // Preview mode (staff) writes no power-up row.
+    if (isStudentWriter(user)) await awardPowerUps({ db, user });
     return await getStudentQuestCard({ db, user });
   } catch {
     return null;

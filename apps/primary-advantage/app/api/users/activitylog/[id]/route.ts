@@ -3,6 +3,7 @@ import { ActivityType } from "@/types/enum";
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
 import { z } from "zod";
+import { guardStudentRoute } from "@/lib/student-view";
 
 const activityLogBodySchema = z.object({
   articleId: z.string().min(1),
@@ -19,6 +20,8 @@ export async function POST(
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const preview = guardStudentRoute(user, "user_activity_log");
+  if (preview) return preview;
 
   const { id } = await params;
   if (user.id !== id) {

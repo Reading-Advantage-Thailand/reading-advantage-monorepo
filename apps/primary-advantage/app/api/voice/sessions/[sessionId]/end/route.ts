@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { endVoice } from "@/server/controllers/voiceController";
 import { voiceActor, voiceErrorResponse } from "@/lib/voice-route";
+import { guardStudentRoute } from "@/lib/student-view";
 
 /**
  * POST /api/voice/sessions/[sessionId]/end: ends the session with `{ reason }` and returns the
@@ -12,6 +13,8 @@ import { voiceActor, voiceErrorResponse } from "@/lib/voice-route";
 export async function POST(request: NextRequest, { params }: { params: Promise<{ sessionId: string }> }) {
   const actor = await voiceActor();
   if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const preview = guardStudentRoute(actor.user, "voice_end");
+  if (preview) return preview;
   const { sessionId } = await params;
   try {
     const body = (await request.json().catch(() => ({}))) as { reason?: string };
