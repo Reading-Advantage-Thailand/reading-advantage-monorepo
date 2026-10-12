@@ -72,6 +72,7 @@ One row per delegated role. Verdict values: keep, promote, demote, ban.
 | 2026-10-12 | pwa S3 install notice, 3 commits | muse-spark-1.3-contributor#high | new tests 11/11 re-run by orchestrator, tsc clean, docs+doctor run | keep |
 | 2026-10-12 | read-only review: staff_student_view, artifact + 4 explicit verifications | muse-spark-1.3-contributor#xhigh | 419 tests pass read-only, evidence-backed findings, correct severity discipline | keep (reviewer role confirmed) |
 | 2026-10-12 | pwa S4 offline page + sign + worker handler, 3 commits | muse-spark-1.3-contributor#high | new suites green, browser spec (takeover + offline) 2/2, tsc clean re-run by orchestrator | keep |
+| 2026-10-12 | pwa Phase A prep (pairs, steps, acceptance.md), 2 commits | muse-spark-1.3-contributor#high | pairs parse verified, draft defects fixed and reported, plan ticks honest | keep |
 
 ## Adaptation rules
 
