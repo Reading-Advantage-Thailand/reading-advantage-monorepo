@@ -373,71 +373,92 @@
     }
   },
   "AdminDashboard": {
-    "title": "Admin Dashboard",
-    "subtitle": "Manage your school's educational platform",
-    "actions": {
-      "importData": "Import Data",
-      "addTeacher": "Add Teacher"
-    },
-    "stats": {
-      "teachers": "Teachers",
-      "teachersDesc": "Active teachers in your school",
-      "students": "Students",
-      "studentsDesc": "Enrolled students",
-      "articles": "Articles",
-      "articlesDesc": "Available reading materials",
-      "growth": "Monthly Growth",
-      "growthDesc": "Student enrollment growth",
-      "loadError": "Failed to load statistics"
-    },
-    "quickActions": {
-      "title": "Quick Actions",
-      "addTeacher": "Add Teacher",
-      "addTeacherDesc": "Register a new teacher account",
-      "addStudent": "Add Student",
-      "addStudentDesc": "Create a new student profile",
-      "importData": "Import Data",
-      "importDataDesc": "Bulk import users and content",
-      "viewReports": "View Reports",
-      "viewReportsDesc": "Access analytics and insights",
-      "reedyCosts": "Reedy costs",
-      "reedyCostsDesc": "Minutes, cost, and failures by school and month",
-      "manageClassrooms": "Manage Classrooms",
-      "manageClassroomsDesc": "Organize classes and assignments"
-    },
-    "recentActivity": {
-      "title": "Recent Activity",
-      "empty": "No recent activity to display",
-      "viewAll": "View all activity",
-      "loadError": "Failed to load recent activity"
-    },
-    "systemStatus": {
-      "title": "System Status",
-      "serverHealth": "Server Health",
-      "database": "Database",
-      "aiServices": "AI Services",
-      "healthy": "Healthy",
-      "connected": "Connected",
-      "operational": "Operational"
+    "title": "School dashboard",
+    "period": "{start} to {end}",
+    "rangeLabel": "Time range",
+    "days": "{count} days",
+    "chooseSchool": "Choose a school",
+    "chooseSchoolHint": "Pick a school to see its numbers.",
+    "keyNumbers": {
+      "heading": "Key numbers",
+      "activeStudents": "Active students",
+      "activeTeachers": "Active teachers",
+      "classes": "Classes with activity",
+      "articles": "Articles opened",
+      "xp": "XP earned",
+      "newStudents": "New students",
+      "activeStudentsSub": "of {total} students ({percent}%)",
+      "activeTeachersSub": "of {total} teachers signed in",
+      "classesSub": "of {total} classes",
+      "articlesSub": "by students",
+      "xpSub": "by students",
+      "newStudentsSub": "added in this range",
+      "empty": "No students in this school yet. The numbers appear after the first student is added."
     },
     "alerts": {
-      "title": "System Alerts",
-      "lowStorage": {
-        "title": "Storage Space Low",
-        "description": "Consider upgrading your storage plan"
+      "heading": "Alerts",
+      "none": "No alerts. All checks pass.",
+      "noneEmpty": "Alerts start when students sign in.",
+      "severity": {
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Medium"
       },
-      "newRegistrations": {
-        "title": "New Teacher Registrations",
-        "description": "5 teachers pending approval"
+      "lowActivity": "Only {percent}% of students were active in the last 30 days",
+      "lowActivityHint": "{active} of {total} students had an activity in the last 30 days.",
+      "licenseEndsSoon": "The license ends in {days, plural, =0 {less than a day} one {# day} other {# days}}",
+      "licenseEndsSoonHint": "Renew the license before it ends.",
+      "licenseEnded": "The license of this school has ended",
+      "licenseEndedHint": "No active license is left. Contact Reading Advantage to renew it.",
+      "seatsNearlyFull": "Seats are nearly full: {seatsUsed} of {seats} used ({percent}%)",
+      "seatsNearlyFullHint": "Students use the seats of the license. Ask for more seats before it is full."
+    },
+    "adoption": {
+      "heading": "Adoption",
+      "byCefr": "CEFR level",
+      "byGrade": "Class grade",
+      "level": "Level",
+      "grade": "Grade",
+      "noGrade": "No grade",
+      "students": "Students",
+      "active": "Active",
+      "share": "Active share",
+      "averageXp": "Average XP",
+      "note": "Active means one activity in the last {days} days. Average XP counts every student of the row.",
+      "empty": "No students in this school yet."
+    },
+    "teachers": {
+      "heading": "Teachers",
+      "teacher": "Teacher",
+      "classes": "Classes",
+      "activeOfStudents": "Active / students",
+      "engagement": "Engagement",
+      "noStudents": "No students",
+      "classCount": "{count, plural, =0 {No classes} one {# class} other {# classes}}",
+      "empty": "No teachers in this school yet.",
+      "unnamed": "Teacher without a name"
+    },
+    "activity": {
+      "heading": "Activity by day",
+      "empty": "Activity appears after students start.",
+      "events": "Activity events",
+      "peak": "Busiest day (students)",
+      "average": "Daily average (students)",
+      "aria": "{count} days, active students per day",
+      "cell": "{day}: {count} active students",
+      "weekdays": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
       }
     },
-    "charts": {
-      "title": "Analytics Overview",
-      "userGrowth": "User Growth",
-      "topArticles": "Most Popular Articles",
-      "activityByLevel": "Activity by CEFR Level",
-      "performance": "Performance Metrics"
-    }
+    "loadError": "The school dashboard did not load",
+    "loadErrorHint": "Try again. If the problem stays, tell Reading Advantage.",
+    "back": "Go to teachers"
   },
   "Components": {
     "translationLanguage": "Translation language",
@@ -2223,6 +2244,7 @@
     "ClassroomNavigation": {
       "nav": {
         "classRoster": "Class Roster",
+        "classBook": "Class book",
         "reports": "Reports",
         "reedy": "Reedy",
         "avatars": "Avatars",
@@ -3540,8 +3562,12 @@
     "classBook": {
       "title": "Class book",
       "hint": "The book and the lesson plan for this class will show here.",
-      "none": "No book is assigned to this class yet.",
-      "noCatalogue": "No books are in the catalogue yet.",
+      "none": "No book is assigned to this class yet. Choose a book below to start.",
+      "emptyCatalogueTitle": "The book list is not ready yet.",
+      "emptyCatalogueBody": "Tell your school admin, who asks Reading Advantage to load the books.",
+      "loadErrorTitle": "We could not load the class books.",
+      "loadErrorBody": "Check the internet connection and try again.",
+      "retry": "Try again",
       "assign": "Assign a book",
       "book": "Book",
       "chooseBook": "Choose a book",
@@ -3555,6 +3581,12 @@
       "pointer": "Lesson {current} of {total}",
       "taughtCount": "{count, plural, =0 {No lessons taught yet} one {# lesson taught} other {# lessons taught}}",
       "pacing": "Lesson plan",
+      "nowInClass": "Now in class",
+      "openLesson": "Open lesson",
+      "lessonTitle": "Lesson {number}: {title}",
+      "taughtLabel": "Lessons taught",
+      "stepsMeter": "Workbook steps done",
+      "assignAnother": "Assign another book",
       "backToClass": "Back to class",
       "nextStep": "Next step",
       "nextStepValue": "Step {step}: {title}",

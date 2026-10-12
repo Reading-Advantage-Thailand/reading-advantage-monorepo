@@ -98,21 +98,25 @@ export async function managedClassBook(ctx: Ctx, classBookId: string): Promise<C
 }
 
 /**
- * Counts the taught lessons of class books.
+ * Reads the lesson state rows (taught time and steps done) of class books.
  * @param ctx The database and the user.
  * @param classBookIds The class books.
- * @returns Taught lesson count by class book id.
+ * @returns The state rows by class book id.
  */
-async function taughtCounts(ctx: Ctx, classBookIds: string[]): Promise<Map<string, number>> {
-  if (!classBookIds.length) return new Map();
+async function lessonStates(ctx: Ctx, classBookIds: string[]): Promise<Map<string, { lessonNumber: number; taughtAt: Date | null; stepsDone: number[] }[]>> {
+  const byBook = new Map<string, { lessonNumber: number; taughtAt: Date | null; stepsDone: number[] }[]>();
+  if (!classBookIds.length) return byBook;
   const raw = createTenantDB(ctx.db, { schoolId: ctx.user.schoolId }).unscoped(UNSCOPED_REASON);
   const rows = await raw
-    .select({ classBookId: primaryClassBookLessons.classBookId, taughtAt: primaryClassBookLessons.taughtAt })
+    .select({ classBookId: primaryClassBookLessons.classBookId, lessonNumber: primaryClassBookLessons.lessonNumber, taughtAt: primaryClassBookLessons.taughtAt, stepsDone: primaryClassBookLessons.stepsDone })
     .from(primaryClassBookLessons)
     .where(inArray(primaryClassBookLessons.classBookId, classBookIds));
-  const counts = new Map<string, number>();
-  for (const row of rows) if (row.taughtAt) counts.set(row.classBookId, (counts.get(row.classBookId) ?? 0) + 1);
-  return counts;
+  for (const row of rows) {
+    const list = byBook.get(row.classBookId) ?? [];
+    list.push({ lessonNumber: row.lessonNumber, taughtAt: row.taughtAt, stepsDone: (row.stepsDone as number[] | null) ?? [] });
+    byBook.set(row.classBookId, list);
+  }
+  return byBook;
 }
 
 export const toClassBook = (row: ClassBookRow, taughtCount: number): ClassBook => ({
@@ -150,7 +154,8 @@ export async function assignClassBook(params: Ctx & { input: AssignClassBookInpu
 }
 
 /**
- * Lists the books of a class with the pointer and the taught count (teacher view).
+ * Lists the books of a class with the pointer, the taught count, the current lesson title, and
+ * the next workbook step with its period (teacher view).
  * @param params The database, the user, and the class.
  * @returns The class books, oldest first.
  * @throws {AuthError} FORBIDDEN when the user may not manage the class.
@@ -165,8 +170,25 @@ export async function listClassBooks(params: Ctx & { classroomId: string }): Pro
     .innerJoin(primaryBooks, eq(primaryBooks.id, primaryClassBooks.bookId))
     .where(eq(primaryClassBooks.classroomId, params.classroomId))
     .orderBy(asc(primaryClassBooks.createdAt))) as ClassBookRow[];
-  const taught = await taughtCounts(params, rows.map((row) => row.id));
-  return rows.map((row) => toClassBook(row, taught.get(row.id) ?? 0));
+  const states = await lessonStates(params, rows.map((row) => row.id));
+  const titles = rows.length
+    ? await raw
+        .select({ bookId: primaryBookLessons.bookId, number: primaryBookLessons.number, title: primaryBookLessons.title })
+        .from(primaryBookLessons)
+        .where(or(...rows.map((row) => and(eq(primaryBookLessons.bookId, row.bookId), eq(primaryBookLessons.number, row.currentLesson)))))
+    : [];
+  return rows.map((row) => {
+    const own = states.get(row.id) ?? [];
+    const done = new Set(own.find((state) => state.lessonNumber === row.currentLesson)?.stepsDone ?? []);
+    const next = WORKBOOK_STEPS.find((step) => !done.has(step.step));
+    return {
+      ...toClassBook(row, own.filter((state) => state.taughtAt).length),
+      lessonTitle: titles.find((lesson) => lesson.bookId === row.bookId && lesson.number === row.currentLesson)?.title ?? null,
+      stepsDoneCount: done.size,
+      nextStep: next?.step ?? null,
+      nextStepPeriod: next?.period ?? null,
+    };
+  });
 }
 
 /**

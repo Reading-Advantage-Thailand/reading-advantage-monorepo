@@ -29,3 +29,49 @@ no schema, no locale file. No Critical or High finding.
 - Low: the contract test checks the YAML text only (like the deploy gate test). It cannot run the build.
 - Lesson: `pnpm --filter <pkg> <script> <abs paths>` passes the arguments through (pnpm 11), so the
   scripts need no wrapper. The tsx import of the Workbooks `i18n/*.ts` files works from an archive copy.
+
+## Phase S2: Check the class book in the browser
+
+Review of the phase diff: one script block, one helper file, one node test, and track docs. No app
+code, no schema, no locale file. No Critical or High finding. The script block was not run.
+
+- Medium: the block never ran in a browser. Selectors rest on the page source
+  (`[data-class-book-slot]`, `#class-login`, `#answer-key`, `section[aria-labelledby^="guide-period-"] > ol > li`,
+  `section[aria-label] button[aria-pressed]`, link name "Lesson plan"). The first batch run can need a selector fix.
+- Medium: check 1 (card above the sign-in panel) fails until S4 is in the build. This is on purpose.
+- Medium: if S3 or S4 rename the strings "Assign", "Book assigned.", or "Lesson plan", change the block in the same commit.
+- Low: the helpers file is `.mjs` (the script runs under plain node). The test is `.test.mjs`, so the
+  kit `tsc` run (`include` of `.ts` only) does not type-check it.
+- Low: the student check uses student 1 of the class code flow; the run does not test a book that is not approved.
+- Low: the check strings are English only (`/en/` URLs), as the other blocks.
+- Why no pure-helper test of the browser flow: the script has top-level `await` and starts Chromium
+  on import, so only the extracted pure judges have a test.
+
+## Phase S3: Tell the teacher what to do when the catalogue is empty
+
+Review of the phase diff: the card, the form, the page loader, the five locale files, three test files.
+No Critical or High finding. The `loadClassBooks` failure logs once through `lib/observability/logger.ts`
+(no `console.error`). The page reads `listClassBooks` and `listCatalogueBooks` with the session user, as before.
+
+- Medium: Thai text is by the helper. The owner checks it (async).
+- Medium: cn, tw, and vi keep the English text for the new keys (file practice today). Key parity is tested.
+- Low: the retry link goes to the same page (a full reload through the router). It has no pending state.
+- Low: the load-error state hides the assign form. A teacher cannot assign during a failure.
+- Low: the design capture harness stands in for the staff header, sidebar, and sign-in panel. The font is the system font.
+- Low: `measure/doctor.sh` reports A13 (stale archived directory `agents_md_audit_science_advantage_20260603`). It is not from this phase.
+- Strings kept for the S2 browser block: "Assign", "Book assigned.", "Lesson plan", `[data-class-book-slot]`. No change to the block.
+
+## Phase S4: Put the book card at the top of the class page
+
+Review of `git diff 3f8e641ec..HEAD`: domain read, card, roster order, navigation link, five locale files, tests.
+No Critical or High finding. `listClassBooks` keeps `assertCan` and `managedClass` (FORBIDDEN for another school; tested).
+Both new reads use the same `unscoped` reason as before. No new Zod boundary. No `console.error`.
+
+- Medium: step titles show in English in all locales (the `WORKBOOK_STEPS` titles; the pacing page does the same today).
+- Medium: Thai text for the new keys is by the helper. cn, tw, and vi keep English for the card keys (file practice). The nav key `classBook` is translated in all five files.
+- Low: `listClassBooks` adds one select (lesson titles). The new fields are optional on `ClassBook`, so `toClassBook` callers do not set them.
+- Low: the capture harness shows the real card in a mock page shell, not the full class page.
+- Low: with several books, only the first block has the gold "Open lesson" button.
+- Low: eslint on the three changed components passed. A full app eslint did not run.
+- Skipped: `build-graph update` (graph.db read only, orchestrator rule).
+

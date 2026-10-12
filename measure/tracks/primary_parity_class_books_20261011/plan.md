@@ -75,53 +75,85 @@ _Story ref: spec.md#story-s1_
 - Default used: the plan asks for a `--dry-run` pass first; the real run on a clone replaced it.
 - Member Questions: none in this phase.
 
-## Phase S2: Check the class book in the browser
+## Phase S2: Check the class book in the browser [checkpoint: a13a06cf2]
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Define the check
-    - [ ] List the checks of spec S2 with their names and the demo accounts (demo teacher, demo class, one demo student)
-- [ ] Task: Write the class book block of the go/no-go browser script
-    - [ ] Add the block to the go/no-go script (today `.qa-tmp/rehearsal1-gonogo.mjs`, untracked, in the main checkout; use the tracked path if `primary_parity_acceptance_20261011` moves the script)
-    - [ ] Check the class page order, the assign, the lesson page, the projector text, and `/en/b/o3-2/1` for the student
-    - [ ] Make a second run pass when the book is already assigned (the assign is an upsert, `assignClassBook`)
+- [x] Task: Define the check
+    - [x] List the checks of spec S2 with their names and the demo accounts (demo teacher, demo class, one demo student)
+        - The 11 checks and the accounts are in `browser-check/README.md`.
+- [x] Task: Write the class book block of the go/no-go browser script
+    - [x] Add the block to the go/no-go script: the tracked `scripts/primary-parity/cutover-check.mjs` (block runs by default; `CLASS_BOOK_CHECK=off` skips it)
+    - [x] Check the class page order, the assign, the lesson page, the projector text, and `/en/b/o3-2/1` for the student
+    - [x] Make a second run pass when the book is already assigned (the assign is an upsert, `assignClassBook`)
+    - [x] Pure helpers in `scripts/primary-parity/class-book-checks.mjs`; test `__tests__/class-book-checks.test.mjs` (7 tests pass)
 - [ ] Task: Run the check on the scratch copy
-    - [ ] Run the app against the scratch copy (build and `next start`, one heavy job), then run the script once
-    - [ ] Save the captures and the result list in `measure/tracks/primary_parity_class_books_20261011/browser-check/`
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Check the class book in the browser' (Protocol in workflow.md)
+    - [ ] batch run (orchestrator): needs the catalogue import (S1 import text) on a _run_ clone and the S3-S5 UI
+    - [ ] Run steps: `browser-check/README.md`
+    - [ ] Save the captures and the result list in `measure/tracks/primary_parity_class_books_20261011/browser-check/` (result list only; no PNG in git)
+- [x] Task: Measure - User Manual Verification 'Phase S2: Check the class book in the browser' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: run `browser-check/README.md` steps 1 to 6; read the 11 `class book:` lines (all PASS on both runs); open `teacher-class-book-card.png` and `student1-class-book-qr.png` from the shots folder.
 
-## Phase S3: Tell the teacher what to do when the catalogue is empty
+## Phase S3: Tell the teacher what to do when the catalogue is empty [checkpoint: 79d1933cd]
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Define the strings
-    - [ ] Add the keys for the empty catalogue, no book, and load error under `TeacherUi.classBook` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json` (Thai from the owner; cn, tw, vi follow the current file practice)
-- [ ] Task: Write the tests (red)
-    - [ ] `components/teacher/__tests__/assign-book-form.test.tsx`: the empty catalogue shows both sentences and no form
-    - [ ] `app/[locale]/teacher/class-roster/[classroomId]/__tests__/page.test.tsx`: a load failure shows the error state with a retry link and calls the logger once with `class_books.load_failed`
-    - [ ] A key-parity test for the new keys in the five locale files
-- [ ] Task: Implement (green)
-    - [ ] Change `components/teacher/assign-book-form.tsx` and `components/teacher/class-books-card.tsx` to the design of Phase D
-    - [ ] Change `loadClassBooks` in `app/[locale]/teacher/class-roster/[classroomId]/page.tsx` to log with `lib/observability/logger.ts` and to return an error state
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc on every changed export; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Tell the teacher what to do when the catalogue is empty' (Protocol in workflow.md)
+- [x] Task: Define the strings
+    - [x] Add the keys for the empty catalogue, no book, and load error under `TeacherUi.classBook` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json` (Thai by helper, owner check pending; cn, tw, vi keep the English text, as the file practice is today)
+- [x] Task: Write the tests (red)
+    - [x] `components/teacher/__tests__/assign-book-form.test.tsx`: the empty catalogue shows both sentences and no form
+    - [x] `app/[locale]/teacher/class-roster/[classroomId]/__tests__/page.test.tsx`: a load failure shows the error state with a retry link and calls the logger once with `class_books.load_failed`
+    - [x] A key-parity test for the new keys in the five locale files
+- [x] Task: Implement (green)
+    - [x] Change `components/teacher/assign-book-form.tsx` and `components/teacher/class-books-card.tsx` to the design of Phase D
+    - [x] Change `loadClassBooks` in `app/[locale]/teacher/class-roster/[classroomId]/page.tsx` to log with `lib/observability/logger.ts` and to return an error state
+- [x] Task: Docs and doctor
+    - [x] JSDoc on every changed export; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S3: Tell the teacher what to do when the catalogue is empty' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps:
+        1. Open the 12 PNG files in `~/Desktop/primary-parity-progress/captures/class_books/phaseS3/` (list: `design/captures-s3.md`).
+        2. Check the three states (empty catalogue, no book, load error) at 375 px and 1280 px, day and night.
+        3. Check the empty-catalogue box has two sentences and no form, and the error state has a "Try again" button.
+        4. Read the Thai text in `messages/th.json` (`TeacherUi.classBook`, keys `none`, `emptyCatalogueTitle`, `emptyCatalogueBody`, `loadErrorTitle`, `loadErrorBody`, `retry`).
 
-## Phase S4: Put the book card at the top of the class page
+### Phase S3 notes
+
+- Defaults used: Member Question 1 (empty catalogue text) uses the spec default, with no LINE link.
+- Thai by helper, owner check pending. The five new keys and the new `none` text are in `th.json`.
+- The key `noCatalogue` is removed (two keys replace it: `emptyCatalogueTitle`, `emptyCatalogueBody`). No other file used it.
+- The card now uses `Panel`, `RpgLink`, and `RpgButton`; the assign form uses the parchment fields of the Phase D design. S4 adds the `#class-book` anchor and the new layout.
+- With an empty catalogue and no book, the card shows only the empty-catalogue box (the "choose a book below" text would mislead).
+- The class page keeps the placeholder slot only when there is no session user.
+
+## Phase S4: Put the book card at the top of the class page [checkpoint: 51a6043b6]
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Define the card data
-    - [ ] Extend `classBookSchema` in `packages/domain/src/primary-books/class-book-contracts.ts` with the current lesson title and the next step (number, title, period), or add a separate read; choose the smaller change
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/__tests__/class-books.test.ts`: `listClassBooks` returns the lesson title and the next step; another school's class gives FORBIDDEN
-    - [ ] `components/teacher/__tests__/enhanced-class-roster.test.tsx` (or the existing roster test): the book card renders before `ClassLoginPanel`; the anchor `#class-book` exists; `#class-login` stays
-    - [ ] `components/teacher/__tests__/classroom-navigation.test.tsx`: the class book link points to `#class-book`
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-books/class-books.ts`: the new fields
-    - [ ] `components/teacher/enhanced-class-roster.tsx`: move `classBook` above `ClassLoginPanel`
-    - [ ] `components/teacher/class-books-card.tsx`: the Phase D design with `components/rpg/*`
-    - [ ] `components/teacher/classroom-navigation.tsx`: the class book link; the label in the five locale files
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Put the book card at the top of the class page' (Protocol in workflow.md)
+- [x] Task: Define the card data
+    - [x] Extend `classBookSchema` in `packages/domain/src/primary-books/class-book-contracts.ts` with the current lesson title and the next step (number, title, period), or add a separate read; choose the smaller change
+        - Done: optional fields `lessonTitle`, `stepsDoneCount`, `nextStep`, `nextStepPeriod` on `classBookSchema`, set by `listClassBooks` (3156c1eee).
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/__tests__/class-books.test.ts`: `listClassBooks` returns the lesson title and the next step; another school's class gives FORBIDDEN
+    - [x] `components/teacher/__tests__/enhanced-class-roster.test.tsx` (or the existing roster test): the book card renders before `ClassLoginPanel`; the anchor `#class-book` exists; `#class-login` stays
+    - [x] `components/teacher/__tests__/classroom-navigation.test.tsx`: the class book link points to `#class-book`
+- [x] Task: Implement (green)
+    - [x] `packages/domain/src/primary-books/class-books.ts`: the new fields
+    - [x] `components/teacher/enhanced-class-roster.tsx`: move `classBook` above `ClassLoginPanel`
+    - [x] `components/teacher/class-books-card.tsx`: the Phase D design with `components/rpg/*`
+    - [x] `components/teacher/classroom-navigation.tsx`: the class book link; the label in the five locale files
+- [x] Task: Docs and doctor
+    - [x] JSDoc; skipped: graph.db read only (orchestrator rule); run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S4: Put the book card at the top of the class page' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps:
+        1. Open the 8 PNG files in `~/Desktop/primary-parity-progress/captures/class_books/phaseS4/` (`s4-assigned-*`, `s4-no-book-*`).
+        2. Check that the book card is the first card after the heading, above the sign-in panel, at 375 px and 1280 px, day and night.
+        3. Check the card: book name, two plaques, lesson title, meter, next step with period, gold "Open lesson", wood "Lesson plan".
+        4. On a running app, click "Class book" in the class heading: the page moves to the card. Click "Start class" on the dashboard: the page moves to `#class-login`.
+
+### Phase S4 notes
+
+- Deviation: the plan names `enhanced-class-roster.test` and `classroom-navigation.test`. The tests went into `class-page.test.tsx` and `classroom-navigation-login.test.tsx`, which exist.
+- The card keeps the three S3 states. The assign form sits in a closed "Assign another book" disclosure when a book exists.
+- `cutover-check.mjs`: the S2 block opens that disclosure before it selects the book (second run). Strings "Assign", "Book assigned.", "Lesson plan", `[data-class-book-slot]`, `#class-login`, `#answer-key` stay. Check 1 uses the card top and `#class-login` top: the card is now higher.
+- Member Questions: none in this phase.
+
 
 ## Phase S5: Show the assigned book and the next lesson on the dashboard
 _Story ref: spec.md#story-s5_

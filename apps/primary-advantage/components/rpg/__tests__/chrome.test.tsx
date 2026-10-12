@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 
@@ -71,6 +73,15 @@ describe("the skin chrome", () => {
     expect(container.querySelector("source")).toHaveAttribute("srcset", "/rpg/backdrops/guild-hall-d.webp");
     expect(container.querySelector(".cq-backdrop img")).toHaveAttribute("src", "/rpg/backdrops/guild-hall-p.webp");
     expect(screen.getByText("Hello")).toBeInTheDocument();
+  });
+
+  it("clips the backdrop to the scene box only when contained", () => {
+    const css = readFileSync(path.join(__dirname, "../../../styles/rpg.css"), "utf8");
+    expect(css).toMatch(/\.cq-scene--staff\s*\{\s*clip-path:\s*inset\(0\)/);
+    const { container, rerender } = render(<Scene place="observatory">x</Scene>);
+    expect(container.querySelector(".cq")).not.toHaveClass("cq-scene--staff");
+    rerender(<Scene place="observatory" contained>x</Scene>);
+    expect(container.querySelector(".cq")).toHaveClass("cq-scene--staff");
   });
 
   it("sizes a sprite strip to its frames", () => {

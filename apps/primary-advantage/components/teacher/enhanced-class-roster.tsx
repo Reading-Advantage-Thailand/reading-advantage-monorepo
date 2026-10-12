@@ -294,6 +294,8 @@ export default function EnhancedClassRoster({ classroomId: classroomIdProp, clas
         </div>
       )}
 
+      {classBook ?? <ClassBookSlot classroomId={classroomId} />}
+
       <ClassLoginPanel
         classroomId={classroomId}
         renderStudentExtras={extras}
@@ -304,7 +306,6 @@ export default function EnhancedClassRoster({ classroomId: classroomIdProp, clas
         rosterVersion={rosterVersion}
       />
 
-      {classBook ?? <ClassBookSlot classroomId={classroomId} />}
       {classQuest}
 
       <AlertDialog open={resetStudentId !== ""} onOpenChange={(open) => !open && setResetStudentId("")}>
