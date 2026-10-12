@@ -49,7 +49,7 @@ ESLint one time per phase, before the phase commit. One heavy job at a time on t
 - [x] Task: Measure - User Manual Verification 'Phase 2: Contracts and domain queries' (Protocol in workflow.md)
     - Manual verification: run `packages/domain` vitest on `primary-platform-overview*.test.ts`; run `reference-sql.sql` on a clone and compare the totals and rows. Look check pending (owner, async).
 
-## Phase 3: UI [checkpoint: 701852338]
+## Phase 3: UI [checkpoint: b98aa8aa4]
 
 Done 2026-10-12 (4245a46f0 strings, ac20079a4 page and table). Red run: 3 files failed, 1 test failed (modules and keys missing); green: 3 files, 38 tests. The page is a server page; `PlatformTotalsPanel` and `SchoolsTable` use the next-intl hooks. Captures: `design/captures-phase3.md`.
 
