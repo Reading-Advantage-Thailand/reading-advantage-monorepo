@@ -51,7 +51,7 @@ corrections with evidence, and the "tests" are the checks of the records.
     - Defaults used: none (the spec has no Member Question).
     - NFR-5: monorepo session approved 2026-10-12 (the orchestrator is the monorepo session). It holds a copy of the uncommitted section of `cutover-result-20261011.md`. Phase 3 replaces that section.
 
-## Phase 3: Implement — edit the records
+## Phase 3: Implement — edit the records [checkpoint: a06d84022]
 
 - [x] Task: Correct `docs/primary-whats-moved.md` (spec FR-1, FR-2)
     - [x] Change line 6 and the mark definitions of line 8; add the marks "reduced" and "missing" and the rule of FR-5
