@@ -44,19 +44,23 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md)
     - look check pending (owner, async). Manual verification steps: (1) Open each PNG listed in `captures.md`. (2) Check that student pieces use the wood, gold, and parchment look in day and night. (3) Check that no text is cut off at 375 px. (4) Check that each button is 48 px high. (5) Check that the staff pieces look like the existing staff shell. (6) Write the owner answer under "Owner look check" above.
 
-## Phase 2: Admin
+## Phase 2: Admin [checkpoint: e5c036c9f]
 
-- [ ] Task: FR-1 (ADM-02) — the admin can edit a class again
-    - [ ] Contract: `updateClassroomBodySchema` in `lib/zod.ts` (`classroomName` trimmed 1 to 100; `grade` optional, "1" to "12"; `passwordStudents` only if Q1 keeps the field), with JSDoc
-    - [ ] Red: in `server/controllers/__tests__/classroomController.authorization.test.ts`, add: the PATCH body of the admin dialog gives 200 and calls `updateClassroom` with the name and the grade; an empty name gives 400 with the field error; a grade "13" gives 400
-    - [ ] Red: new `components/admin/__tests__/classrooms-table-edit.test.tsx` (jsdom): the edit dialog sends `classroomName` and `grade`; the grade control is a select
-    - [ ] Green: `server/controllers/classroomController.ts:141-187` parses with the schema; `components/admin/classrooms-table.tsx:178-213` and `:490-545` send and show the new fields; the result of Q1 in the dialog and, if kept, in `server/models/classroomModel.ts:528-597`
-    - [ ] Check that `components/teacher/my-classes.tsx` still saves (the existing teacher test, or one new case in `components/teacher/__tests__/my-classes.test.tsx`)
-- [ ] Task: FR-2 (ADM-06) — the students page shows the result of each change
-    - [ ] Red: in `app/[locale]/admin/__tests__/students-crud-live-calls.test.tsx`, mock `sonner` and assert a success toast for add, edit, and delete, and an error toast with the server `error` text for a failed call of each
-    - [ ] Red: a key parity check for `AdminStudents.toasts.*` in the five locales (extend the existing i18n parity test, `components/__tests__/structural-alignment-i18n.test.tsx`, or add one case)
-    - [ ] Green: add the toasts in `app/[locale]/admin/students/page.tsx:250-360`; add the seven keys to `messages/{en,th,cn,tw,vi}.json` from the legacy files
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Admin' (Protocol in workflow.md)
+- [x] Task: FR-1 (ADM-02) — the admin can edit a class again
+    - [x] Contract: `updateClassroomBodySchema` in `lib/zod.ts` (`classroomName` trimmed 1 to 100; `grade` optional, "1" to "12"; `passwordStudents` only if Q1 keeps the field), with JSDoc
+    - [x] Red: in `server/controllers/__tests__/classroomController.authorization.test.ts`, add: the PATCH body of the admin dialog gives 200 and calls `updateClassroom` with the name and the grade; an empty name gives 400 with the field error; a grade "13" gives 400
+    - [x] Red: new `components/admin/__tests__/classrooms-table-edit.test.tsx` (jsdom): the edit dialog sends `classroomName` and `grade`; the grade control is a select
+    - [x] Green: `server/controllers/classroomController.ts:141-187` parses with the schema; `components/admin/classrooms-table.tsx:178-213` and `:490-545` send and show the new fields; the result of Q1 in the dialog and, if kept, in `server/models/classroomModel.ts:528-597`
+    - [x] Check that `components/teacher/my-classes.tsx` still saves (one new controller case with the teacher body `{classroomName, grade}` in `classroomController.authorization.test.ts`)
+    - Q1 default used (owner decision 2026-10-12: no stop): the "Student password" field is removed; the contract has no `passwordStudents`; `updateClassroom` is unchanged. The edit dialog shows the class code read-only.
+    - Commit 8ce321d69. The grade select lists 3 to 12 (as the create dialog), plus the current grade when it is outside that range.
+- [x] Task: FR-2 (ADM-06) — the students page shows the result of each change
+    - [x] Red: in `app/[locale]/admin/__tests__/students-crud-live-calls.test.tsx`, mock `sonner` and assert a success toast for add, edit, and delete, and an error toast with the server `error` text for a failed call of each
+    - [x] Red: a key parity check for `AdminStudents.toasts.*` in the five locales (extend the existing i18n parity test, `components/__tests__/structural-alignment-i18n.test.tsx`, or add one case)
+    - [x] Green: add the toasts in `app/[locale]/admin/students/page.tsx:250-360`; add the seven keys to `messages/{en,th,cn,tw,vi}.json` from the legacy files
+    - Commit e5c036c9f. The parity check is one case in `students-crud-live-calls.test.tsx` (it compares the key sets of the five locales).
+- [x] Task: Measure - User Manual Verification 'Phase 2: Admin' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) As ADMIN open `/en/admin/students/classrooms`, choose Edit on a class. (2) Check that the dialog shows name, a grade select, and a read-only class code, and no student password. (3) Change the name and the grade, press Update, and check that the list shows the new values with a success toast. (4) Clear the name and check that the update fails with an error toast. (5) Open `/en/admin/students`; add, edit, and delete a test student; check one toast for each. (6) Make a failing call (for example a name that the server refuses) and check that the error toast shows the server text.
 
 ## Phase 3: Teacher
 
