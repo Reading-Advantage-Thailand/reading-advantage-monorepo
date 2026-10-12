@@ -7,19 +7,33 @@ Every task follows the TDD order of `measure/workflow.md` (red, green, refactor,
 
 ## Phase D: Design (RPG skin)
 
-- [ ] Task: Design the class page order, the book card, and the empty and error texts
-    - [ ] Read `docs/primary-rpg-skin.md` §2 and §6 and `components/rpg/chrome.tsx` (`Panel`, `Plaque`, `RpgLink`, `RpgButton`)
-    - [ ] Draw the class page with the book card first: book name, "Lesson N of M", lesson title, next step with its period, links to the lesson plan and the lesson page
-    - [ ] Draw the empty catalogue, no book assigned, and load error states (texts: spec Member Question 1)
-    - [ ] Draw the class navigation link to the book card
-    - [ ] Save the design as a static mock in `measure/tracks/primary_parity_class_books_20261011/design/` (no app code)
-- [ ] Task: Design the dashboard book slot
-    - [ ] Draw one row per class book, the row for a class with no book, and the empty slot
-    - [ ] Keep the slot in its place on `app/[locale]/teacher/dashboard/page.tsx`; tell `primary_parity_teacher_home_20261011` (same page) about the slot size
-- [ ] Task: Captures and the owner's look check
-    - [ ] Capture each state at 375 px and 1280 px, day and night, into `design/`
-    - [ ] Send the captures to the owner and record the answer in `design/look-check.md`
-- [ ] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+- [x] Task: Design the class page order, the book card, and the empty and error texts
+    - [x] Read `docs/primary-rpg-skin.md` §2 and §6 and `components/rpg/chrome.tsx` (`Panel`, `Plaque`, `RpgLink`, `RpgButton`)
+    - [x] Draw the class page with the book card first: book name, "Lesson N of M", lesson title, next step with its period, links to the lesson plan and the lesson page
+    - [x] Draw the empty catalogue, no book assigned, and load error states (texts: spec Member Question 1)
+    - [x] Draw the class navigation link to the book card
+    - [x] Save the design as a static mock in `measure/tracks/primary_parity_class_books_20261011/design/` (no app code). Done: `design/design.md`, `design/mock-source.tsx.txt`.
+- [x] Task: Design the dashboard book slot
+    - [x] Draw one row per class book, the row for a class with no book, and the empty slot
+    - [x] Keep the slot in its place on `app/[locale]/teacher/dashboard/page.tsx`; tell `primary_parity_teacher_home_20261011` (same page) about the slot size. Done: size and position are in `design/design.md` (section Slot size) and in the note below
+- [x] Task: Captures and the owner's look check
+    - [x] Capture each state at 375 px and 1280 px, day and night, into `design/`
+    - [x] Send the captures to the owner and record the answer in `design/look-check.md` (look check pending (owner, async); `design/look-check.md` has status pending)
+- [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps:
+        1. Open the 28 PNG files in `~/Desktop/primary-parity-progress/captures/class_books/phaseD-design/` (list: `design/captures.md`).
+        2. Check that the book card is the first card after the class heading and uses the parchment panel.
+        3. Check the four card states (assigned, no book, empty catalogue, load error) at 375 px and 1280 px, day and night.
+        4. Check the dashboard slot states (rows, empty, error) and that no button is under 48 px.
+        5. Write the answer in `design/look-check.md`.
+
+### Phase D notes
+
+- Member Question defaults used (owner decision 2026-10-12, no stop): Q1 the empty catalogue text is the spec default ("The book list is not ready yet. Tell your school admin, who asks Reading Advantage to load the books."), with no LINE link. Q2 the catalogue is the five printed books of `BOOKS` (Origins 1 stays in the assign list). Q3 the browser check assigns Origins 3.2 to the demo class and leaves it.
+- Dashboard slot for `primary_parity_teacher_home_20261011` (same page): one `Panel`, `lg:col-span-2`, in the same grid cell as the placeholder today (after the "My classes" card, before the quest cards). Height at 1280 px: about 400 px for three rows, 150 px empty, 110 px error. One row is about 116 px (72 px for a class with no book). The slot grows with the class count and hides no class.
+- Design decision: the page stays in the staff shell. Only the book card and the slot are parchment panels. The heading link "Class book" keeps the staff outline button style (44 px, as its neighbours).
+- Design decision: only the first book block of the card has a gold button (one gold action per screen).
+
 
 ## Phase S1: Load the catalogue and the guide after the ETL
 _Story ref: spec.md#story-s1_
