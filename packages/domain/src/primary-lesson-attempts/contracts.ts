@@ -56,3 +56,17 @@ export const lessonAttemptSchema = z.object({
   xpEarned: z.number().int(),
 });
 export type LessonAttempt = z.infer<typeof lessonAttemptSchema>;
+
+/** Input of `restartLesson`: the article, and the assignment when the lesson runs from one. */
+export const restartLessonInput = z.object({
+  articleId: z.string().uuid(),
+  assignmentId: z.string().uuid().nullish(),
+});
+export type RestartLessonInput = z.input<typeof restartLessonInput>;
+
+/** The result of a restart: `attemptNumber` is the number of the NEW current attempt, or null when nothing closed. */
+export const restartLessonOutput = z.object({
+  closed: z.boolean(),
+  attemptNumber: z.number().int().nullable(),
+});
+export type RestartLessonOutput = z.infer<typeof restartLessonOutput>;

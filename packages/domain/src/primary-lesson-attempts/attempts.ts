@@ -13,12 +13,16 @@ import {
   xpLogs,
 } from "@reading-advantage/db/schema";
 import { assertCan, AuthError, type UserContext } from "@reading-advantage/auth";
+import { assertStudentRecordWriter } from "../primary-avatar/permissions.js";
 import { createTenantDB } from "../db-contract.js";
 import {
   closeLessonAttemptInput,
   LESSON_ACTIVITY_TYPES,
   type CloseLessonAttemptInput,
   type CloseLessonAttemptOutput,
+  restartLessonInput,
+  type RestartLessonInput,
+  type RestartLessonOutput,
 } from "./contracts.js";
 
 const UNSCOPED_REASON = "lesson attempts move rows of user_activity, lesson_progress, and student steps (REFERENTIAL); the student school is checked first";
@@ -159,4 +163,23 @@ export async function closeLessonAttempt(params: { db: DB; user: UserContext; no
   const schoolId = params.user.schoolId;
   const raw = createTenantDB(params.db, { schoolId }).unscoped(UNSCOPED_REASON);
   return raw.transaction((tx) => closeAttemptInTx(tx as unknown as DB, { schoolId, closedByUserId: params.user.id, now: params.now, input }));
+}
+
+/**
+ * Starts a lesson again for the signed-in student: closes the current attempt with the reason
+ * `student_restart`. XP logs and `users.xp` stay (legacy rule). An assignment lesson goes back to in progress.
+ * @param params The database, the student, and the input.
+ * @returns Whether an attempt closed, and the number of the new current attempt.
+ * @throws {AuthError} FORBIDDEN for a non-student user.
+ */
+export async function restartLesson(params: { db: DB; user: UserContext; now?: Date; input: RestartLessonInput }): Promise<RestartLessonOutput> {
+  assertStudentRecordWriter(params.user);
+  const input = restartLessonInput.parse(params.input);
+  const out = await closeLessonAttempt({
+    db: params.db,
+    user: params.user,
+    now: params.now,
+    input: { studentId: params.user.id, articleId: input.articleId, assignmentId: input.assignmentId, reason: "student_restart" },
+  });
+  return { closed: out.closed, attemptNumber: out.attemptNumber === null ? null : out.attemptNumber + 1 };
 }
