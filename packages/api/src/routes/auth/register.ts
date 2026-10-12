@@ -19,7 +19,7 @@ const registerSchema = z.object({
 
 /**
  * Handles new user registration with username, password, name, and school.
- * FR-6: Gated behind TEACHER/ADMIN session.
+ * FR-6: Gated behind TEACHER/ADMIN/SYSTEM session; only SYSTEM may name another school.
  * FR-16: No longer creates a session for the registered user.
  *
  * @param request - The Next.js request object containing registration data in body
@@ -44,16 +44,16 @@ export async function handleRegister(request: NextRequest) {
     }
     const session = await requireRole(db, cookie, "TEACHER");
     const actor = session.user;
-    if (actor.role !== "TEACHER" && actor.role !== "ADMIN") {
+    if (actor.role !== "TEACHER" && actor.role !== "ADMIN" && actor.role !== "SYSTEM") {
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
 
     const { username, password, name, schoolId } = parsed.data;
     const lowerUsername = username.toLowerCase();
 
-    // Tenant scope: TEACHER actors can only register into their own school.
-    // ADMIN bypasses school scoping per the authorization matrix.
-    if (actor.role === "TEACHER" && actor.schoolId !== schoolId) {
+    // Tenant scope: TEACHER and ADMIN actors can only register into their own school.
+    // Only SYSTEM may name another school.
+    if (actor.role !== "SYSTEM" && actor.schoolId !== schoolId) {
       return NextResponse.json(
         { message: "Forbidden" },
         { status: 403 }

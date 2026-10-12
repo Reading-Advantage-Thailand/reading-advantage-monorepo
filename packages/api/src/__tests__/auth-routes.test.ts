@@ -172,6 +172,36 @@ describe("auth route handlers", () => {
     expect(mockDb.insert).not.toHaveBeenCalled();
   });
 
+  const sessionFor = (role: string, schoolId: string | null) => ({
+    id: "sess", userId: "a1",
+    expiresAt: new Date(Date.now() + 86400000),
+    user: { id: "a1", username: "a", name: "A", role, schoolId, xp: 0, level: 0, cefrLevel: "" },
+  }) as never;
+  const registerRequest = (schoolId: string) => {
+    const request = jsonRequest("/api/auth/register", {
+      username: "student1", password: "Password123!", name: "Student One", schoolId,
+    });
+    request.cookies.set("session_token", "tok");
+    return request;
+  };
+
+  it("rejects an ADMIN who names the school of another tenant", async () => {
+    vi.mocked(requireRole).mockResolvedValueOnce(sessionFor("ADMIN", "550e8400-e29b-41d4-a716-446655440001"));
+    const response = await handleRegister(registerRequest("550e8400-e29b-41d4-a716-446655440002"));
+    expect(response.status).toBe(403);
+    expect(mockDb.select).not.toHaveBeenCalled();
+    expect(mockDb.insert).not.toHaveBeenCalled();
+    expect(mockDb.transaction).not.toHaveBeenCalled();
+  });
+
+  it("lets SYSTEM name any school (reaches the school lookup)", async () => {
+    vi.mocked(requireRole).mockResolvedValueOnce(sessionFor("SYSTEM", null));
+    mockDb.select.mockReturnValueOnce(selectResult([])).mockReturnValueOnce(selectResult([]));
+    const response = await handleRegister(registerRequest("550e8400-e29b-41d4-a716-446655440002"));
+    expect(response.status).toBe(400);
+    expect(mockDb.select).toHaveBeenCalledTimes(2);
+  });
+
   it("rejects registration when schoolId field is missing", async () => {
     const response = await handleRegister(
       jsonRequest("/api/auth/register", {
