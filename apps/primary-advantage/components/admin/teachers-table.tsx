@@ -98,12 +98,14 @@ export function TeachersTable() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isConfirmMoveDialogOpen, setIsConfirmMoveDialogOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+  const [addSchoolId, setAddSchoolId] = useState("");
   const [pendingTeacherData, setPendingTeacherData] = useState<{
     name: string;
     email: string;
     role: "teacher" | "admin";
     classroomIds: string[];
     password?: string;
+    schoolId?: string;
     existingSchool: { id: string; name: string };
   } | null>(null);
   const [formData, setFormData] = useState({
@@ -225,11 +227,19 @@ export function TeachersTable() {
       // Use pendingTeacherData if force is true and it exists, otherwise use formData
       const dataToUse =
         force && pendingTeacherData ? pendingTeacherData : formData;
+      // SYSTEM creates into the picked school; other callers keep their own school.
+      const chosenSchoolId =
+        force && pendingTeacherData
+          ? pendingTeacherData.schoolId
+          : isSystem
+            ? addSchoolId || undefined
+            : undefined;
 
       const requestData: CreateTeacherRequest & {
         classroomIds?: string[];
         password?: string;
         force?: boolean;
+        schoolId?: string;
       } = {
         name: dataToUse.name,
         email: dataToUse.email,
@@ -240,6 +250,7 @@ export function TeachersTable() {
             : formData.assignedClassroomIds,
         ...(dataToUse.password && { password: dataToUse.password }),
         ...(force && { force: true }),
+        ...(chosenSchoolId ? { schoolId: chosenSchoolId } : {}),
       };
 
       const response = await fetch("/api/teachers", {
@@ -262,6 +273,7 @@ export function TeachersTable() {
             role: formData.role,
             classroomIds: formData.assignedClassroomIds,
             ...(formData.password && { password: formData.password }),
+            ...(chosenSchoolId ? { schoolId: chosenSchoolId } : {}),
             existingSchool: responseData.existingSchool,
           });
           setIsConfirmMoveDialogOpen(true);
@@ -408,6 +420,7 @@ export function TeachersTable() {
 
   const resetForm = () => {
     setMoveError(null);
+    setAddSchoolId("");
     setFormData({
       name: "",
       email: "",
@@ -416,6 +429,13 @@ export function TeachersTable() {
       password: "",
     });
     setShowPasswordField(false);
+  };
+
+  /** Opens the add dialog with a fresh form and the unfiltered class list. */
+  const openAddDialog = () => {
+    resetForm();
+    fetchClassrooms();
+    setIsAddDialogOpen(true);
   };
 
   const getInitials = (name: string | null) => {
@@ -530,7 +550,7 @@ export function TeachersTable() {
           <CardTitle>{t("title")}</CardTitle>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
+              <Button className="flex items-center gap-2" onClick={openAddDialog}>
                 <Plus className="h-4 w-4" />
                 {t("actions.addTeacher")}
               </Button>
@@ -599,6 +619,19 @@ export function TeachersTable() {
                     placeholder={t("form.passwordPlaceholder")}
                   />
                 </div>
+                {isSystem && (
+                  <div className="grid gap-2">
+                    <SchoolSelect
+                      value={addSchoolId}
+                      onChange={(id) => {
+                        setAddSchoolId(id);
+                        // The class list of the previous school does not apply to the new one.
+                        setFormData((current) => ({ ...current, assignedClassroomIds: [] }));
+                        fetchClassrooms(id);
+                      }}
+                    />
+                  </div>
+                )}
                 <div className="grid gap-2">
                   <Label>{t("form.assignClassrooms")}</Label>
                   <div className="rounded-lg border p-3">

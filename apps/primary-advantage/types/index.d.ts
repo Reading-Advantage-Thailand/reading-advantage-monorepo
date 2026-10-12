@@ -382,6 +382,8 @@ export interface CreateTeacherRequest {
   cefrLevel?: string;
   classroomIds?: string[];
   password?: string;
+  /** Target school; honored only for a SYSTEM caller. */
+  schoolId?: string;
 }
 
 export interface UpdateTeacherRequest {
