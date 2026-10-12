@@ -2,14 +2,13 @@
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockSession, mockList, mockClasses, mockTeacherClasses, mockCreate, mockStart, mockLoader } = vi.hoisted(() => ({
+const { mockSession, mockList, mockClasses, mockTeacherClasses, mockCreate, mockStart } = vi.hoisted(() => ({
   mockSession: vi.fn(),
   mockList: vi.fn(),
   mockClasses: vi.fn(),
   mockTeacherClasses: vi.fn(),
   mockCreate: vi.fn(),
   mockStart: vi.fn(),
-  mockLoader: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ getCurrentUser: () => mockSession() }));
@@ -22,10 +21,6 @@ vi.mock("@reading-advantage/domain/challenges", async () => ({
   listStudentChallengeClasses: (...args: unknown[]) => mockClasses(...args),
   listOwnedChallengeClasses: (...args: unknown[]) => mockTeacherClasses(...args),
   startClassChallengeRun: (...args: unknown[]) => mockStart(...args),
-}));
-vi.mock("@reading-advantage/game-cartridges", () => ({
-  CARTRIDGE_CHALLENGE_CAPABILITIES: { "dragon-flight": { version: "2026-09-09.1", inputMode: "vocabulary", modalities: ["reading"] } },
-  cartridgeLoaders: { "dragon-flight": () => mockLoader() },
 }));
 
 import { GET, POST } from "../challenges/route";
@@ -46,7 +41,7 @@ function request(path: string, method = "GET", body?: unknown, origin = "https:/
 }
 
 describe("Primary challenge route dependencies", () => {
-  beforeEach(() => { vi.clearAllMocks(); mockLoader.mockResolvedValue({ manifest: { inputMode: "vocabulary" } }); });
+  beforeEach(() => { vi.clearAllMocks(); });
 
   it("rejects an absent Primary session", async () => {
     mockSession.mockResolvedValue(null);
@@ -72,7 +67,6 @@ describe("Primary challenge route dependencies", () => {
 
   it("rejects a Primary challenge when installed capability mismatches", async () => {
     mockSession.mockResolvedValue(teacher);
-    mockLoader.mockResolvedValue({ manifest: { inputMode: "sentence" } });
     expect((await POST(request("/api/v1/apk/challenges", "POST", createBody))).status).toBe(400);
     expect(mockCreate).not.toHaveBeenCalled();
   });

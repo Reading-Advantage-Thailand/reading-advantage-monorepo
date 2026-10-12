@@ -22,8 +22,6 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   );
   return { ...actual, db: dbProxy };
 });
-vi.mock("../../utils/generators/image-generator", () => ({ generateImage: vi.fn() }));
-vi.mock("../../utils/generators/audio-word-generator", () => ({ generateWordLists: vi.fn() }));
 vi.mock("@/lib/session", () => ({ currentUser: async () => ({ id: "s1", role: "STUDENT" }) }));
 
 import { getQuestionsByArticleId } from "../articleModel";

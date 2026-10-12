@@ -76,6 +76,25 @@ describe("StudentChallengeCatalogPanel", () => {
     expect(screen.queryByText("wizard-vs-zombie")).not.toBeInTheDocument();
   });
 
+  it("reads the host frame variables with the standard pack as the fallback (FR-6)", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-09-15T00:00:00.000Z"));
+    fetchMock
+      .mockResolvedValueOnce(response({ classes: [{ id: classOne, name: "Class A" }], hasMore: false }))
+      .mockResolvedValueOnce(response({ challenges: [challenge()] }));
+    render(<StudentChallengeCatalogPanel ownerKey="school-1:student-1" locale="en" basePath="/games"
+      games={{ "wizard-vs-zombie": { title: "Wizard vs. Zombie", version: "2026-09-09.1" } }} />);
+    const link = await screen.findByRole("link", { name: "Play challenge" });
+    const panel = screen.getByRole("region", { name: "Class challenges" });
+    expect(panel.style.borderImageSource).toBe('var(--apk-arcade-panel-image, url("/games/assets/apk/standard-pack-qc/apk-ui-panel-square.png"))');
+    expect(panel.style.background).toBe("var(--apk-arcade-panel-surface, #0f172a)");
+    expect(panel.style.color).toBe("var(--apk-arcade-panel-text, #f8fafc)");
+    expect(link.style.borderImageSource).toBe('var(--apk-arcade-button-primary-image, url("/games/assets/apk/standard-pack-qc/apk-ui-button-primary.png"))');
+    expect(screen.getByText("Active").closest("li")?.style.borderTop).toBe("1px solid var(--apk-arcade-panel-divider, #475569)");
+    expect(screen.getByText("Active")).toHaveAttribute("data-status", "Active");
+    expect(screen.getByLabelText("Class")).toHaveClass("apk-challenge-select");
+  });
+
   it("ignores a prior class response after the selected class changes", async () => {
     let resolveFirstChallenges: ((value: Response) => void) | undefined;
     const firstChallenges = new Promise<Response>((resolve) => { resolveFirstChallenges = resolve; });

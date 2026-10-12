@@ -39,8 +39,8 @@ export function getHostProofTestCredentials(
 /**
  * Builds the dev-server command used for Primary host-proof Playwright proof.
  * @param port Local port selected by the Playwright configuration.
- * @returns A command that enables the otherwise-hidden host-proof surface.
+ * @returns A command that seeds the fixture session and starts the dev server.
  */
 export function createHostProofPlaywrightWebServerCommand(port: number): string {
-  return `pnpm exec tsx scripts/seed-host-proof-session.ts && HOST_PROOF_ENABLED=true PORT=${port} npm run dev`;
+  return `pnpm exec tsx scripts/seed-host-proof-session.ts && PORT=${port} npm run dev`;
 }

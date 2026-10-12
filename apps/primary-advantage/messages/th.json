@@ -50,8 +50,6 @@
     "history": "ประวัติ",
     "sentences": "ประโยค",
     "vocabulary": "คำศัพท์",
-    "games": "เกม",
-    "testing": "ทดสอบ",
     "systemdashboard": "กระบวนการของระบบ",
     "teacherdashboard": "กระบวนการของครู",
     "licenses": "กระบวนการของลิขสิทธิ์",
@@ -68,7 +66,6 @@
     "userProfile": "โปรไฟล์ผู้ใช้งาน",
     "schoolProfile": "โปรไฟล์โรงเรียน",
     "studentsandclasses": "นักเรียนและชั้นเรียน",
-    "articlecreation": "การสร้างบทความ",
     "back": "กลับ",
     "subItem": {
       "admin": "ผู้ดูแลระบบ",
@@ -390,8 +387,6 @@
       "addTeacherDesc": "เพิ่มครูใหม่",
       "addStudent": "เพิ่มนักเรียน",
       "addStudentDesc": "เพิ่มนักเรียนใหม่",
-      "createArticle": "สร้างบทความ",
-      "createArticleDesc": "สร้างบทความใหม่",
       "importData": "นำเข้าข้อมูล",
       "importDataDesc": "นำเข้าข้อมูลใหม่",
       "viewReports": "ดูรายงาน",
@@ -435,12 +430,6 @@
       "performance": "ประสิทธิภาพ"
     }
   },
-  "AdminArticleCreationPage": {
-    "header": {
-      "heading": "การสร้างและจัดการบทความ",
-      "text": "สร้าง สร้างด้วย AI และอนุมัติบทความสำหรับ Primary Advantage"
-    }
-  },
   "Components": {
     "translationLanguage": "ภาษาที่แปล",
     "submitButton": "ส่ง",
@@ -473,131 +462,7 @@
     "confirmRetake": "ยืนยันทำแบบทดสอบใหม่",
     "areYouSureYouWantToRetakeThisQuiz": "คุณแน่ใจหรือไม่ที่จะทำแบบทดสอบใหม่? คำตอบของคุณจะถูกลบออก",
     "loadError": "ไม่สามารถโหลดได้",
-    "emptyList": "ยังไม่มีประโยค",
-    "AdminArticleCreation": {
-      "tabs": {
-        "createArticle": "สร้างบทความ",
-        "previewEdit": "ตัวอย่าง & แก้ไข",
-        "manageArticles": "จัดการบทความ"
-      },
-      "aiArticleGenerator": "ตัวสร้างบทความด้วย AI",
-      "aiArticleGeneratorDesc": "ใช้ AI เพื่อสร้างบทความคุณภาพสูงตามการตั้งค่าของคุณ",
-      "articleType": "ประเภทบทความ",
-      "fiction": "นิยาย",
-      "nonFiction": "สารคดี",
-      "genre": "ประเภท",
-      "subgenre": "ประเภทย่อย",
-      "cefrLevel": "ระดับ CEFR",
-      "articleTopic": "หัวข้อบทความ",
-      "placeholder": {
-        "genre": "เลือกประเภท",
-        "subgenre": "เลือกประเภทย่อย",
-        "cefr": "เลือกระดับ CEFR",
-        "topic": "อธิบายหัวข้อ ธีม หรือประเด็นสำคัญ"
-      },
-      "cefrLevels": {
-        "A1": "A1",
-        "A2": "A2",
-        "B1": "B1",
-        "B2": "B2",
-        "C1": "C1",
-        "C2": "C2"
-      },
-      "error": "เกิดข้อผิดพลาด",
-      "generateWithAI": "สร้างด้วย AI",
-      "dialog": {
-        "approval": {
-          "title": "ยืนยันการอนุมัติ",
-          "description": "คุณแน่ใจหรือไม่ว่าจะอนุมัติและเผยแพร่บทความนี้? การดำเนินการนี้จะเผยแพร่บทความบนแพลตฟอร์ม"
-        },
-        "backToCreate": {
-          "title": "กลับไปสร้างบทความ?",
-          "description": "หากกลับไปสร้าง บทความ การเปลี่ยนแปลงจะหายไป",
-          "warning": "การกระทำนี้จะรีเซ็ตบทความกลับสู่สถานะเริ่มต้น"
-        },
-        "common": {
-          "cancel": "ยกเลิก",
-          "confirm": "ยืนยัน",
-          "ok": "ตกลง"
-        }
-      },
-      "loading": {
-        "titles": {
-          "generate": "กำลังสร้างบทความของคุณ",
-          "save": "กำลังบันทึกแบบร่าง",
-          "approve": "กำลังอนุมัติและเผยแพร่บทความ"
-        },
-        "descriptions": {
-          "generate": "โปรดรอสักครู่ ระบบกำลังสร้างเนื้อหาด้วย AI...",
-          "save": "กำลังบันทึกการเปลี่ยนแปลงเป็นแบบร่าง...",
-          "approve": "กำลังเผยแพร่บทความไปยังแพลตฟอร์ม..."
-        }
-      },
-      "preview": {
-        "title": "ตัวอย่างบทความ",
-        "description": "ดูตัวอย่างเนื้อหาบทความ (อ่านอย่างเดียว)"
-      },
-      "editor": {
-        "title": "ตัวแก้ไขบทความ",
-        "description": "ตรวจสอบและแก้ไขเนื้อหาก่อนอนุมัติ"
-      },
-      "modified": "มีการแก้ไข",
-      "badges": {
-        "type": "ประเภท",
-        "genre": "ประเภท",
-        "subgenre": "ประเภทย่อย",
-        "cefrLevel": "ระดับ CEFR"
-      },
-      "fields": {
-        "title": "ชื่อบทความ",
-        "content": "เนื้อหาบทความ",
-        "summary": "สรุปบทความ"
-      },
-      "placeholders": {
-        "title": "กรอกชื่อบทความ...",
-        "content": "กรอกเนื้อหาหลักของบทความ...",
-        "summary": "กรอกสรุปบทความ..."
-      },
-      "buttons": {
-        "backToCreate": "กลับไปสร้าง",
-        "approveAndPublish": "อนุมัติและเผยแพร่",
-        "saveAsDraft": "บันทึกเป็นร่าง",
-        "backToManage": "กลับไปจัดการ",
-        "switchToEdit": "สลับไปแก้ไข",
-        "refresh": "รีเฟรช",
-        "preview": "ดูตัวอย่าง",
-        "edit": "แก้ไข",
-        "delete": "ลบ",
-        "deleting": "กำลังลบ..."
-      },
-      "manage": {
-        "title": "จัดการบทความ",
-        "description": "จัดการบทความของคุณ",
-        "loading": "กำลังโหลดบทความ...",
-        "empty": "ไม่พบบทความ"
-      },
-      "status": {
-        "draft": "ฉบับร่าง",
-        "published": "เผยแพร่แล้ว"
-      },
-      "list": {
-        "topic": "หัวข้อ",
-        "cefr": "CEFR",
-        "rating": "คะแนน",
-        "created": "สร้างเมื่อ"
-      },
-      "toasts": {
-        "fetchFailed": "ไม่สามารถดึงบทความได้",
-        "generateSuccess": "สร้างบทความสำเร็จ!",
-        "saveSuccess": "บันทึกบทความเป็นฉบับร่างสำเร็จ!",
-        "saveFailed": "บันทึกบทความไม่สำเร็จ",
-        "approveSuccess": "อนุมัติและเผยแพร่บทความสำเร็จ!",
-        "approveFailed": "อนุมัติบทความไม่สำเร็จ",
-        "deleteSuccess": "ลบบทความสำเร็จ",
-        "deleteFailed": "ลบบทความไม่สำเร็จ",
-        "deleteError": "เกิดข้อผิดพลาดระหว่างลบบทความ"
-      }
-    }
+    "emptyList": "ยังไม่มีประโยค"
   },
   "WordList": {
     "title": "รายการคำศัพท์",

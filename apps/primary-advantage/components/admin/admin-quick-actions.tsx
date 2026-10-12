@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import {
   UserPlus,
   Upload,
-  FileText,
   Users,
   GraduationCap,
   Settings,
@@ -31,13 +30,6 @@ export function AdminQuickActions() {
       description: t("quickActions.addStudentDesc"),
       href: "/admin/students/add",
       icon: GraduationCap,
-      variant: "outline" as const,
-    },
-    {
-      title: t("quickActions.createArticle"),
-      description: t("quickActions.createArticleDesc"),
-      href: "/admin/article-creation",
-      icon: FileText,
       variant: "outline" as const,
     },
     {

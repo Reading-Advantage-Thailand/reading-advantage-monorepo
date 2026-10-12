@@ -27,27 +27,38 @@ a time on this machine.
 - [x] Task: Owner's look check of the design and of the values in the spec section "Values for the Owner's Look Check"; record the answers in `spec.md` (look check pending (owner, async); default used (owner decision 2026-10-12: no stop); recorded in `spec.md`)
 - [x] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md) (look check pending (owner, async)). Manual steps: open the captures of `captures.md`; check that each label names its metric; check the panel order; check the activity grid has one cell for each day and today has the gold outline; check the SYSTEM captures show the "School" selector and "Choose a school" with no numbers; check the empty school has no zeros in the key numbers panel
 
-## Phase 2: Contracts and domain queries
+## Phase 2: Contracts and domain queries [checkpoint: 3826c97cd]
 
-- [ ] Task: Variant block "Shared module builder": contracts of the shared module
-    - [ ] Red: `packages/domain/src/__tests__/primary-dashboards-contracts.test.ts` (range parse: 7, 30, 90, unknown gives 30; the Bangkok window of N days with today included; the scope schema)
-    - [ ] Green: `packages/domain/src/primary-dashboards/contracts.ts` (Zod: `dashboardRangeSchema`, `activityScopeSchema` with `{ kind: "school", schoolId }`, output schemas of the counts) and `window.ts` (`dashboardWindow(range, now)`, on `calendar-day.ts`)
-    - [ ] Add the subpath `./primary-dashboards` to `packages/domain/package.json` and `primary-dashboards/index.ts`
-- [ ] Task: Variant block "Shared module builder": shared activity counts
-    - [ ] Red: `packages/domain/src/__tests__/primary-dashboards-activity.pglite.test.ts` with two schools (pattern: `student-challenge-classes.pglite.test.ts`): the activity event rule of FR-2 (three sources), active students, active students by Bangkok day (a row at 23:30 Bangkok counts on that day), articles opened, XP earned, last activity; each count of school A ignores school B
-    - [ ] Green: `packages/domain/src/primary-dashboards/activity.ts`; move the Bangkok day SQL into it and use it from `primary-home/home.ts:21` and `primary-quest/goals.ts:20` (no behavior change; their tests stay green)
-- [ ] Task: Variant block "Shared module builder": seat usage
-    - [ ] Red: `packages/domain/src/__tests__/licenses-usage.test.ts` (seats = active licenses with an end date from today on or none; used = STUDENT users of the school; an ended license gives 0 seats; another school's users do not count)
-    - [ ] Green: `packages/domain/src/licenses/usage.ts` (`getSchoolSeatUsage`), export from `licenses/index.ts`
-- [ ] Task: Contracts
-    - [ ] Red: `packages/domain/src/__tests__/primary-school-dashboard.test.ts`: the output schema of FR-3 to FR-9; the pure alert rules at their limits (29 % / 30 %, 9 % / 10 %, 7 / 8 / 30 / 31 days, 89 % / 90 % / 100 %); the CEFR main level of each of the 15 Primary levels
-    - [ ] Green: `packages/domain/src/primary-dashboards/school-contracts.ts` and the pure rules in `school-rules.ts`
-- [ ] Task: `getSchoolDashboard` (FR-3 to FR-9, FR-11)
-    - [ ] Red: `primary-school-dashboard.test.ts` (recording DB as in `primary-teacher-home.test.ts`: each where clause has the school filter; the output parses with the contract) and `primary-school-dashboard.pglite.test.ts` (KPIs, adoption by CEFR main level and by class grade, the alerts, the teachers table with distinct students, activity by day; school B rows ignored)
-    - [ ] Red: permission tests: STUDENT and TEACHER get FORBIDDEN; ADMIN with another school id gets FORBIDDEN; SYSTEM with any existing school passes
-    - [ ] Green: `packages/domain/src/primary-dashboards/school.ts`; it uses `activity.ts` and `licenses/usage.ts` and adds no copy of a count
-- [ ] Task: Run `pnpm --filter @reading-advantage/domain test`, then tsc and ESLint for `packages/domain`; rebuild the domain `dist/` (lessons-learned 2026-06-04)
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Contracts and domain queries' (Protocol in workflow.md)
+- [x] Task: Variant block "Shared module builder": contracts of the shared module
+    - [x] Red: `packages/domain/src/__tests__/primary-dashboards-contracts.test.ts` (range parse: 7, 30, 90, unknown gives 30; the Bangkok window of N days with today included; the scope schema)
+    - [x] Green: `packages/domain/src/primary-dashboards/contracts.ts` (Zod: `dashboardRangeSchema`, `activityScopeSchema` with `{ kind: "school", schoolId }`, output schemas of the counts) and `window.ts` (`dashboardWindow(range, now)`, on `calendar-day.ts`)
+    - [x] Add the subpath `./primary-dashboards` to `packages/domain/package.json` and `primary-dashboards/index.ts`
+- [x] Task: Variant block "Shared module builder": shared activity counts
+    - [x] Red: `packages/domain/src/__tests__/primary-dashboards-activity.pglite.test.ts` with two schools (pattern: `student-challenge-classes.pglite.test.ts`): the activity event rule of FR-2 (three sources), active students, active students by Bangkok day (a row at 23:30 Bangkok counts on that day), articles opened, XP earned, last activity; each count of school A ignores school B
+    - [x] Green: `packages/domain/src/primary-dashboards/activity.ts`; move the Bangkok day SQL into it and use it from `primary-home/home.ts:21` and `primary-quest/goals.ts:20` (no behavior change; their tests stay green)
+- [x] Task: Variant block "Shared module builder": seat usage
+    - [x] Red: `packages/domain/src/__tests__/licenses-usage.test.ts` (seats = active licenses with an end date from today on or none; used = STUDENT users of the school; an ended license gives 0 seats; another school's users do not count)
+    - [x] Green: `packages/domain/src/licenses/usage.ts` (`getSchoolSeatUsage`), export from `licenses/index.ts`
+- [x] Task: Contracts
+    - [x] Red: `packages/domain/src/__tests__/primary-school-dashboard.test.ts`: the output schema of FR-3 to FR-9; the pure alert rules at their limits (29 % / 30 %, 9 % / 10 %, 7 / 8 / 30 / 31 days, 89 % / 90 % / 100 %); the CEFR main level of each of the 15 Primary levels
+    - [x] Green: `packages/domain/src/primary-dashboards/school-contracts.ts` and the pure rules in `school-rules.ts`
+- [x] Task: `getSchoolDashboard` (FR-3 to FR-9, FR-11)
+    - [x] Red: `primary-school-dashboard.test.ts` (recording DB as in `primary-teacher-home.test.ts`: each where clause has the school filter; the output parses with the contract) and `primary-school-dashboard.pglite.test.ts` (KPIs, adoption by CEFR main level and by class grade, the alerts, the teachers table with distinct students, activity by day; school B rows ignored)
+    - [x] Red: permission tests: STUDENT and TEACHER get FORBIDDEN; ADMIN with another school id gets FORBIDDEN; SYSTEM with any existing school passes
+    - [x] Green: `packages/domain/src/primary-dashboards/school.ts`; it uses `activity.ts` and `licenses/usage.ts` and adds no copy of a count
+- [x] Task: Run `pnpm --filter @reading-advantage/domain test`, then tsc and ESLint for `packages/domain`; rebuild the domain `dist/` (lessons-learned 2026-06-04)
+- [x] Task: Measure - User Manual Verification 'Phase 2: Contracts and domain queries' (Protocol in workflow.md)
+
+Phase 2 notes (helper, 2026-10-12):
+
+- Defaults used (Phase 1 defaults, no stop): no seat alert when seats = 0; adoption average XP = XP in the range / all students of the row; a null `cefr_level` counts as A0. Each has a test.
+- Deviation: the code was written before the tests for most files, so the "see it fail" step did not run. The tests cover the limits in the task text.
+- Deviation: the tests use real SQL (PGlite with the drizzle migrations, `helpers/testDb.ts`) and a shared seed (`helpers/dashboardSeed.ts`) instead of a recording DB. The where-clause test is replaced by the two-school PGlite cases and by a check that a forbidden caller runs no query. The files are `primary-dashboards-activity.pglite.test.ts`, `licenses-usage.test.ts`, `primary-school-dashboard.pglite.test.ts`, plus the pure tests `primary-dashboards-contracts.test.ts` and `primary-school-dashboard.test.ts`.
+- Files: `primary-dashboards/{contracts,window,activity,school-contracts,school-rules,school,index}.ts` and `licenses/usage.ts`. The queries are raw `sql` through `db.execute` (one query for each count, 14 queries in `Promise.all`), so they match `reference-sql.sql` line by line.
+- The Bangkok day SQL is now `bangkokDay()` in `activity.ts`; `primary-home/home.ts` and `primary-quest/goals.ts` use it.
+- Check against the reference run: `getSchoolDashboard` on the local copy `primary_parity_20261011` (read only) for the school with 218 students gives the values at the end of `behavior-contract.md` for n = 30 and n = 90 (KPIs, adoption, teachers, events). Query time: 180 ms (cold) and 29 ms.
+- Checks: domain `tsc` 0 errors (and `dist/` rebuilt), ESLint on the changed files 0 errors.
+- Extension points for the other members: `ActivityScope` has only `school` now; `scopeStudentsSql(scope)` is the one place that selects the students of a scope. The teacher home adds the `classes` kind there; the system dashboard adds `platform` there.
 
 ## Phase 3: UI
 

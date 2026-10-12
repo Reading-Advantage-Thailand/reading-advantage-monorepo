@@ -50,8 +50,6 @@
     "history": "Lịch sử",
     "sentences": "Câu",
     "vocabulary": "Từ vựng",
-    "games": "Trò chơi",
-    "testing": "Kiểm tra",
     "systemdashboard": "Bảng điều khiển hệ thống",
     "licenses": "Bảng điều khiển giấy phép",
     "schools": "Bảng điều khiển trường học",
@@ -68,7 +66,6 @@
     "userProfile": "Hồ sơ người dùng",
     "schoolProfile": "Hồ sơ trường học",
     "studentsandclasses": "Học sinh và lớp học",
-    "articlecreation": "Tạo bài viết",
     "back": "Quay lại",
     "subItem": {
       "admin": "Quản trị viên",
@@ -390,8 +387,6 @@
       "addTeacherDesc": "Đăng ký tài khoản giáo viên mới",
       "addStudent": "Thêm học sinh",
       "addStudentDesc": "Tạo hồ sơ học sinh mới",
-      "createArticle": "Tạo bài viết",
-      "createArticleDesc": "Tạo nội dung đọc mới",
       "importData": "Nhập dữ liệu",
       "importDataDesc": "Nhập dữ liệu người dùng và nội dung",
       "viewReports": "Xem báo cáo",
@@ -435,12 +430,6 @@
       "performance": "Chỉ số hiệu suất"
     }
   },
-  "AdminArticleCreationPage": {
-    "header": {
-      "heading": "Tạo và Quản lý Bài viết",
-      "text": "Tạo, sinh bằng AI và phê duyệt bài viết cho Primary Advantage"
-    }
-  },
   "Components": {
     "translationLanguage": "Ngôn ngữ dịch",
     "submitButton": "Gửi",
@@ -473,131 +462,7 @@
     "confirmRetake": "Xác nhận làm lại",
     "areYouSureYouWantToRetakeThisQuiz": "Bạn có chắc chắn muốn làm lại bài kiểm tra này? Các câu trả lời của bạn sẽ bị xóa.",
     "loadError": "Không thể tải",
-    "emptyList": "Chưa có câu nào",
-    "AdminArticleCreation": {
-      "tabs": {
-        "createArticle": "Tạo Bài Viết",
-        "previewEdit": "Xem Trước & Chỉnh Sửa",
-        "manageArticles": "Quản Lý Bài Viết"
-      },
-      "aiArticleGenerator": "Tạo Bài Viết bằng AI",
-      "aiArticleGeneratorDesc": "Sử dụng AI để tạo bài viết chất lượng cao theo cài đặt của bạn.",
-      "articleType": "Loại Bài Viết",
-      "fiction": "Hư cấu",
-      "nonFiction": "Phi hư cấu",
-      "genre": "Thể loại",
-      "subgenre": "Phân loại",
-      "cefrLevel": "Mức CEFR",
-      "articleTopic": "Chủ đề Bài Viết",
-      "placeholder": {
-        "genre": "Chọn thể loại",
-        "subgenre": "Chọn phân loại",
-        "cefr": "Chọn mức CEFR",
-        "topic": "Mô tả chủ đề, chủ điểm hoặc ý chính"
-      },
-      "cefrLevels": {
-        "A1": "A1",
-        "A2": "A2",
-        "B1": "B1",
-        "B2": "B2",
-        "C1": "C1",
-        "C2": "C2"
-      },
-      "error": "Lỗi",
-      "generateWithAI": "Tạo bằng AI",
-      "dialog": {
-        "approval": {
-          "title": "Xác nhận phê duyệt",
-          "description": "Bạn có chắc muốn phê duyệt và xuất bản bài viết này? Hành động này sẽ xuất bản bài viết lên hệ thống."
-        },
-        "backToCreate": {
-          "title": "Quay lại tạo bài?",
-          "description": "Nếu quay lại tạo bài, các thay đổi sẽ bị mất.",
-          "warning": "Hành động này sẽ đặt lại bài viết về trạng thái ban đầu."
-        },
-        "common": {
-          "cancel": "Hủy",
-          "confirm": "Xác nhận",
-          "ok": "OK"
-        }
-      },
-      "loading": {
-        "titles": {
-          "generate": "Đang tạo bài viết",
-          "save": "Đang lưu bản nháp",
-          "approve": "Đang phê duyệt & xuất bản"
-        },
-        "descriptions": {
-          "generate": "Vui lòng đợi trong khi AI tạo nội dung...",
-          "save": "Đang lưu thay đổi thành bản nháp...",
-          "approve": "Đang xuất bản bài viết lên hệ thống..."
-        }
-      },
-      "preview": {
-        "title": "Xem trước bài viết",
-        "description": "Xem nội dung bài viết (chỉ đọc)"
-      },
-      "editor": {
-        "title": "Trình chỉnh sửa bài viết",
-        "description": "Xem và chỉnh sửa nội dung trước khi phê duyệt"
-      },
-      "modified": "Đã chỉnh sửa",
-      "badges": {
-        "type": "Loại",
-        "genre": "Thể loại",
-        "subgenre": "Phân loại",
-        "cefrLevel": "Mức CEFR"
-      },
-      "fields": {
-        "title": "Tiêu đề bài viết",
-        "content": "Nội dung bài viết",
-        "summary": "Tóm tắt bài viết"
-      },
-      "placeholders": {
-        "title": "Nhập tiêu đề bài viết...",
-        "content": "Nhập nội dung chính của bài viết...",
-        "summary": "Nhập tóm tắt bài viết..."
-      },
-      "buttons": {
-        "backToCreate": "Quay lại tạo",
-        "approveAndPublish": "Phê duyệt và xuất bản",
-        "saveAsDraft": "Lưu bản nháp",
-        "backToManage": "Quay lại quản lý",
-        "switchToEdit": "Chuyển sang chỉnh sửa",
-        "refresh": "Làm mới",
-        "preview": "Xem trước",
-        "edit": "Chỉnh sửa",
-        "delete": "Xóa",
-        "deleting": "Đang xóa..."
-      },
-      "manage": {
-        "title": "Quản lý bài viết",
-        "description": "Quản lý các bài viết của bạn",
-        "loading": "Đang tải bài viết...",
-        "empty": "Không tìm thấy bài viết nào"
-      },
-      "status": {
-        "draft": "Bản nháp",
-        "published": "Đã xuất bản"
-      },
-      "list": {
-        "topic": "Chủ đề",
-        "cefr": "CEFR",
-        "rating": "Đánh giá",
-        "created": "Tạo lúc"
-      },
-      "toasts": {
-        "fetchFailed": "Không thể tải bài viết",
-        "generateSuccess": "Tạo bài viết thành công!",
-        "saveSuccess": "Lưu bản nháp thành công!",
-        "saveFailed": "Lưu bài viết thất bại",
-        "approveSuccess": "Phê duyệt và xuất bản thành công!",
-        "approveFailed": "Phê duyệt thất bại",
-        "deleteSuccess": "Xóa bài viết thành công",
-        "deleteFailed": "Xóa bài viết thất bại",
-        "deleteError": "Đã xảy ra lỗi khi xóa bài viết"
-      }
-    }
+    "emptyList": "Chưa có câu nào"
   },
   "WordList": {
     "title": "Danh sách từ",

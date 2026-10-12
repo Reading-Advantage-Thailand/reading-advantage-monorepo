@@ -46,6 +46,7 @@ import {
 type ExpectedGenerateObjectInput = {
   schema: z.ZodSchema<unknown>;
   prompt: string;
+  system?: string;
   model?: string;
   temperature?: number;
   maxTokens?: number;
@@ -81,6 +82,10 @@ type ExpectedAIConfig = {
   apiKey?: string;
   model?: string;
   organization?: string;
+  project?: string;
+  location?: string;
+  clientEmail?: string;
+  privateKey?: string;
 };
 
 // ---------------------------------------------------------------------------
@@ -90,6 +95,7 @@ type ExpectedAIConfig = {
 expectTypeOf<GenerateObjectInput<{ foo: string; count: number }>>().toEqualTypeOf<{
   schema: z.ZodSchema<{ foo: string; count: number }>;
   prompt: string;
+  system?: string;
   model?: string;
   temperature?: number;
   maxTokens?: number;
@@ -150,7 +156,7 @@ expectTypeOf<AIClient["generateObjectFromMedia"]>().toBeCallableWith({
   media: { buffer: Buffer.from("audio"), mimeType: "audio/webm" },
 });
 
-expectTypeOf<AIProvider>().toEqualTypeOf<"openai" | "google" | "openrouter" | "mock">();
+expectTypeOf<AIProvider>().toEqualTypeOf<"openai" | "google" | "vertex" | "openrouter" | "mock">();
 expectTypeOf<AIConfig>().toEqualTypeOf<ExpectedAIConfig>();
 expectTypeOf<AIConfig["provider"]>().toEqualTypeOf<AIProvider>();
 

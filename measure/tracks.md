@@ -1264,7 +1264,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: School management for admins and SYSTEM (ADM-03, ADM-04, SYS-05, school license view)**
+- [~] **Track: Primary Parity Before the Cutover: School management for admins and SYSTEM (ADM-03, ADM-04, SYS-05, school license view)**
   *Link: [./tracks/primary_parity_school_management_20261011/](./tracks/primary_parity_school_management_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 5*
 

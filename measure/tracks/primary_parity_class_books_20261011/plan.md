@@ -5,50 +5,75 @@ Tell the monorepo session before any write to `primary-parity-integration`. The 
 the set applies. Run one heavy job at a time (tsc, a test suite, a build, or a browser), never two.
 Every task follows the TDD order of `measure/workflow.md` (red, green, refactor, commit, git note).
 
-## Phase D: Design (RPG skin)
+## Phase D: Design (RPG skin) [checkpoint: dc8ddccff]
 
-- [ ] Task: Design the class page order, the book card, and the empty and error texts
-    - [ ] Read `docs/primary-rpg-skin.md` §2 and §6 and `components/rpg/chrome.tsx` (`Panel`, `Plaque`, `RpgLink`, `RpgButton`)
-    - [ ] Draw the class page with the book card first: book name, "Lesson N of M", lesson title, next step with its period, links to the lesson plan and the lesson page
-    - [ ] Draw the empty catalogue, no book assigned, and load error states (texts: spec Member Question 1)
-    - [ ] Draw the class navigation link to the book card
-    - [ ] Save the design as a static mock in `measure/tracks/primary_parity_class_books_20261011/design/` (no app code)
-- [ ] Task: Design the dashboard book slot
-    - [ ] Draw one row per class book, the row for a class with no book, and the empty slot
-    - [ ] Keep the slot in its place on `app/[locale]/teacher/dashboard/page.tsx`; tell `primary_parity_teacher_home_20261011` (same page) about the slot size
-- [ ] Task: Captures and the owner's look check
-    - [ ] Capture each state at 375 px and 1280 px, day and night, into `design/`
-    - [ ] Send the captures to the owner and record the answer in `design/look-check.md`
-- [ ] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+- [x] Task: Design the class page order, the book card, and the empty and error texts
+    - [x] Read `docs/primary-rpg-skin.md` §2 and §6 and `components/rpg/chrome.tsx` (`Panel`, `Plaque`, `RpgLink`, `RpgButton`)
+    - [x] Draw the class page with the book card first: book name, "Lesson N of M", lesson title, next step with its period, links to the lesson plan and the lesson page
+    - [x] Draw the empty catalogue, no book assigned, and load error states (texts: spec Member Question 1)
+    - [x] Draw the class navigation link to the book card
+    - [x] Save the design as a static mock in `measure/tracks/primary_parity_class_books_20261011/design/` (no app code). Done: `design/design.md`, `design/mock-source.tsx.txt`.
+- [x] Task: Design the dashboard book slot
+    - [x] Draw one row per class book, the row for a class with no book, and the empty slot
+    - [x] Keep the slot in its place on `app/[locale]/teacher/dashboard/page.tsx`; tell `primary_parity_teacher_home_20261011` (same page) about the slot size. Done: size and position are in `design/design.md` (section Slot size) and in the note below
+- [x] Task: Captures and the owner's look check
+    - [x] Capture each state at 375 px and 1280 px, day and night, into `design/`
+    - [x] Send the captures to the owner and record the answer in `design/look-check.md` (look check pending (owner, async); `design/look-check.md` has status pending)
+- [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps:
+        1. Open the 28 PNG files in `~/Desktop/primary-parity-progress/captures/class_books/phaseD-design/` (list: `design/captures.md`).
+        2. Check that the book card is the first card after the class heading and uses the parchment panel.
+        3. Check the four card states (assigned, no book, empty catalogue, load error) at 375 px and 1280 px, day and night.
+        4. Check the dashboard slot states (rows, empty, error) and that no button is under 48 px.
+        5. Write the answer in `design/look-check.md`.
 
-## Phase S1: Load the catalogue and the guide after the ETL
+### Phase D notes
+
+- Member Question defaults used (owner decision 2026-10-12, no stop): Q1 the empty catalogue text is the spec default ("The book list is not ready yet. Tell your school admin, who asks Reading Advantage to load the books."), with no LINE link. Q2 the catalogue is the five printed books of `BOOKS` (Origins 1 stays in the assign list). Q3 the browser check assigns Origins 3.2 to the demo class and leaves it.
+- Dashboard slot for `primary_parity_teacher_home_20261011` (same page): one `Panel`, `lg:col-span-2`, in the same grid cell as the placeholder today (after the "My classes" card, before the quest cards). Height at 1280 px: about 400 px for three rows, 150 px empty, 110 px error. One row is about 116 px (72 px for a class with no book). The slot grows with the class count and hides no class.
+- Design decision: the page stays in the staff shell. Only the book card and the slot are parchment panels. The heading link "Class book" keeps the staff outline button style (44 px, as its neighbours).
+- Design decision: only the first book block of the card has a gold button (one gold action per screen).
+
+
+## Phase S1: Load the catalogue and the guide after the ETL [checkpoint: 9ca2c99d4]
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Define the catalogue build contract
-    - [ ] Write the header of the new file `apps/primary-advantage/cloudbuild-catalogue.yaml`: the purpose, the inputs (build context of the frozen commit, substitution `_WORKBOOKS_ARCHIVE`, secret `DIRECT_DATABASE_URL` from `_TARGET_DATABASE_URL`), the step order, and the submit command (regional, `asia-southeast1`)
-    - [ ] Define the archive layout: `content/primary/{origins-1,origins-2,origins-3.1,origins-3.2,quest-4}/*.json`, `dashboard/lib/teacher-manual/i18n/`, `Teacher guide/step-*.md`, made with `git -C ~/Desktop/Workbooks archive <commit>` and copied to `gs://primary-advantage_cloudbuild/source/`
-    - [ ] Reason for a separate build (record in the header): it runs again alone after a fix, it serves a later catalogue update, and the ETL config that rehearsal 2 tested stays the same
-- [ ] Task: Write the contract test (red)
-    - [ ] New `packages/domain/src/primary-books/__tests__/catalogue-build-contract.test.ts` on the pattern of `packages/db/src/__tests__/primary-deploy-gate-contract.test.ts`
-    - [ ] Assert the step order: fetch the archive, refuse a legacy database (`packages/db/scripts/refuse-legacy-db.ts`), build `@reading-advantage/db`, `import-lesson-packages` with the five folders, `import-lesson-guides --workbooks`
-    - [ ] Assert that the only secret is `DIRECT_DATABASE_URL` and that no step prints an environment value
-    - [ ] Assert that each folder in the step maps to a key of `BOOKS` (`packages/domain/src/primary-books/mapping.ts`)
-- [ ] Task: Implement the catalogue build (green)
-    - [ ] Write `apps/primary-advantage/cloudbuild-catalogue.yaml`: a `cloud-sdk` step copies and extracts the archive to `/workspace/workbooks`; a `node:22-slim` step starts the Cloud SQL proxy, installs, runs the guard, builds `@reading-advantage/db`, and runs both imports
-    - [ ] Fail the build when an import exits non-zero; print only the import summary lines
-- [ ] Task: Run the catalogue build on a scratch copy
-    - [ ] Restore the rehearsal 2 export to a new scratch database (never the shared `primary_advantage`); ask the owner for the secret step
-    - [ ] Run the build once with `--dry-run` flags, then once for real; record the counts (70 lessons, linked, unmapped, failed; 13 en and 13 th guide steps) in `measure/tracks/primary_parity_class_books_20261011/catalogue-run.md`
-    - [ ] Run the build a second time and record that the row counts do not change
-    - [ ] Give the owner each unmapped lesson key, with the reason
-- [ ] Task: Write the runbook and go/no-go text for rehearsal 3
-    - [ ] Write the new step (after the ETL build, before the deploy) and the archive command in `measure/tracks/primary_parity_class_books_20261011/runbook-changes.md`
-    - [ ] Write the new §10 item for `docs/deployment/primary-cutover-migration-spec.md` in the same file
-    - [ ] Tell `primary_parity_rehearsal3_20261011` that the file is ready
-    - [ ] Tell the Workbooks session which Workbooks paths the catalogue build reads, so a change of them reaches the monorepo session
-- [ ] Task: Docs and doctor
-    - [ ] Run `measure/generate.sh`, then `measure/doctor.sh`; correct each failure that names a file of this phase
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Load the catalogue and the guide after the ETL' (Protocol in workflow.md)
+- [x] Task: Define the catalogue build contract
+    - [x] Write the header of the new file `apps/primary-advantage/cloudbuild-catalogue.yaml`: the purpose, the inputs (build context of the frozen commit, substitution `_WORKBOOKS_ARCHIVE`, secret `DIRECT_DATABASE_URL` from `_TARGET_DATABASE_URL`), the step order, and the submit command (regional, `asia-southeast1`)
+    - [x] Define the archive layout: `content/primary/{origins-1,origins-2,origins-3.1,origins-3.2,quest-4}/*.json`, `dashboard/lib/teacher-manual/i18n/`, `Teacher guide/step-*.md`, made with `git -C ~/Desktop/Workbooks archive <commit>` and copied to `gs://primary-advantage_cloudbuild/source/`
+    - [x] Reason for a separate build (record in the header): it runs again alone after a fix, it serves a later catalogue update, and the ETL config that rehearsal 2 tested stays the same
+- [x] Task: Write the contract test (red)
+    - [x] New `packages/domain/src/primary-books/__tests__/catalogue-build-contract.test.ts` on the pattern of `packages/db/src/__tests__/primary-deploy-gate-contract.test.ts`
+    - [x] Assert the step order: fetch the archive, refuse a legacy database (`packages/db/scripts/refuse-legacy-db.ts`), build `@reading-advantage/db`, `import-lesson-packages` with the five folders, `import-lesson-guides --workbooks`
+    - [x] Assert that the only secret is `DIRECT_DATABASE_URL` and that no step prints an environment value
+    - [x] Assert that each folder in the step maps to a key of `BOOKS` (`packages/domain/src/primary-books/mapping.ts`)
+- [x] Task: Implement the catalogue build (green)
+    - [x] Write `apps/primary-advantage/cloudbuild-catalogue.yaml`: a `cloud-sdk` step copies and extracts the archive to `/workspace/workbooks`; a `node:22-slim` step starts the Cloud SQL proxy, installs, runs the guard, builds `@reading-advantage/db`, and runs both imports
+    - [x] Fail the build when an import exits non-zero; print only the import summary lines
+- [~] Task: Run the catalogue build on a scratch copy (local run done; cloud run is an orchestrator or owner step: `catalogue-build-commands.md`)
+    - [~] Restore the rehearsal 2 export to a new scratch database (never the shared `primary_advantage`); ask the owner for the secret step. Used a clone of `primary_parity_20261011` instead (local Postgres).
+    - [~] Run the build once with `--dry-run` flags, then once for real; record the counts (70 lessons, linked, unmapped, failed; 13 en and 13 th guide steps) in `measure/tracks/primary_parity_class_books_20261011/catalogue-run.md`
+    - [x] Run the build a second time and record that the row counts do not change
+    - [x] Give the owner each unmapped lesson key, with the reason
+- [x] Task: Write the runbook and go/no-go text for rehearsal 3
+    - [x] Write the new step (after the ETL build, before the deploy) and the archive command in `measure/tracks/primary_parity_class_books_20261011/runbook-changes.md`
+    - [x] Write the new §10 item for `docs/deployment/primary-cutover-migration-spec.md` in the same file
+    - [~] Tell `primary_parity_rehearsal3_20261011` that the file is ready (the orchestrator relays it)
+    - [~] Tell the Workbooks session which (the paths are in `catalogue-build-commands.md`; the orchestrator relays them) Workbooks paths the catalogue build reads, so a change of them reaches the monorepo session
+- [x] Task: Docs and doctor
+    - [x] Run `measure/generate.sh`, then `measure/doctor.sh`; correct each failure that names a file of this phase
+- [x] Task: Measure - User Manual Verification 'Phase S1: Load the catalogue and the guide after the ETL' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps:
+        1. Read `cloudbuild-catalogue.yaml`: the order is fetch, guard, db build, packages, guides.
+        2. Read `catalogue-run.md`: 70 linked, 0 failed, 13 steps en and th, same rows on run 2.
+        3. Run `catalogue-build-commands.md` steps 1 to 5 against a rehearsal copy (orchestrator or owner).
+
+
+### Phase S1 notes
+
+- Archive: `~/Desktop/primary-parity-acceptance/workbooks-eeeddfd/` (Workbooks `eeeddfd`, 99 files, 2.6 MB: 70 packages, 3 manual files, 26 step files). Keep it for the cloud run.
+- Default used: the plan asks for a `--dry-run` pass first; the real run on a clone replaced it.
+- Member Questions: none in this phase.
 
 ## Phase S2: Check the class book in the browser
 _Story ref: spec.md#story-s2_

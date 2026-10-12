@@ -291,9 +291,6 @@ export const patchUserBodySchema = z.object({
   password: passwordSchema.optional(),
 });
 
-/** Bounded article generation amount per genre. */
-export const amountPerGenreSchema = z.coerce.number().int().min(1).max(10);
-
 /** File name for temp cleanup; rejects directory traversal. */
 export const cleanupFileNameSchema = z
   .string()

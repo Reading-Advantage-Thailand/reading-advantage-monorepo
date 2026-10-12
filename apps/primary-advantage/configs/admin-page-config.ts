@@ -110,11 +110,5 @@ export const adminPageConfig: PageConfig = {
       icon: "UploadIcon",
       requiredPermissions: ["IMPORT_DATA"],
     },
-    {
-      title: "articlecreation",
-      href: "/admin/article-creation",
-      icon: "FileTextIcon",
-      requiredPermissions: ["SYSTEM_ACCESS"],
-    },
   ],
 };

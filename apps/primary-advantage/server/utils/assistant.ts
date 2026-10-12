@@ -10,8 +10,7 @@ import {
 } from "@/lib/zod";
 import { LAQFeedback, LAQFeedbackResponse, SAQFeedbackResponse } from "@/types";
 import { ActivityType } from "@/types/enum";
-import { google, googleModel, googleModelLite } from "@/utils/google";
-import { generateObject } from "@reading-advantage/ai/internal-sdk";
+import { feedbackClient, loggedAiCall } from "@/lib/ai/models";
 import fs from "fs";
 import path from "path";
 
@@ -73,12 +72,13 @@ export async function getSaqFeedback(req: {
       .replace("{suggestedResponse}", validatedInput.suggestedResponse)
       .replace("{studentResponse}", validatedInput.studentResponse);
 
-    const { object } = await generateObject({
-      model: google(googleModel),
-      schema: saqFeedbackOutputSchema,
-      system: saqeution_system,
-      prompt,
-    });
+    const object = await loggedAiCall("qa.feedback", () =>
+      feedbackClient().generateObject({
+        schema: saqFeedbackOutputSchema,
+        system: saqeution_system,
+        prompt: prompt!,
+      }),
+    );
 
     return object as SAQFeedbackResponse;
 }
@@ -138,12 +138,13 @@ export async function getLaqFeedback(req: {
       .replace("{writingPrompt}", validatedInput.writingPrompt)
       .replace("{studentResponse}", validatedInput.studentResponse);
 
-    const { object } = await generateObject({
-      model: google(googleModel),
-      schema: laqFeedbackOutputSchema,
-      system: laquestion_system,
-      prompt,
-    });
+    const object = await loggedAiCall("qa.feedback", () =>
+      feedbackClient().generateObject({
+        schema: laqFeedbackOutputSchema,
+        system: laquestion_system,
+        prompt: prompt!,
+      }),
+    );
 
     if (!object.feedback) {
       return { error: "An error occurred" };

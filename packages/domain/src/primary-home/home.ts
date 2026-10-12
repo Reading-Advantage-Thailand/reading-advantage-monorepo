@@ -3,7 +3,7 @@ import type { DB } from "@reading-advantage/db";
 import { articleActivityLogs, articles, assignments, studentAssignments, userActivity, users } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
-import { SCHOOL_TIME_ZONE } from "../calendar-day.js";
+import { bangkokDay } from "../primary-dashboards/activity.js";
 import type { StudentHome } from "./contracts.js";
 import { countStreakFromDays } from "./streak.js";
 
@@ -14,11 +14,8 @@ const RECENT_READS = 20;
 /** Days of activity read for the streak. A longer streak shows as this number. */
 const STREAK_WINDOW_DAYS = 366;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-/**
- * The calendar day of an activity row in the school time zone, as "YYYY-MM-DD". `created_at` is a
- * timestamp without a zone that holds UTC, so it is read as UTC first.
- */
-const ACTIVITY_DAY = sql<string>`to_char(date_trunc('day', (${userActivity.createdAt} AT TIME ZONE 'UTC') AT TIME ZONE ${sql.raw(`'${SCHOOL_TIME_ZONE}'`)}), 'YYYY-MM-DD')`;
+/** The calendar day of an activity row in the school time zone, as "YYYY-MM-DD". */
+const ACTIVITY_DAY = bangkokDay(userActivity.createdAt);
 
 /**
  * Reads the Primary student home for the signed-in student: XP and level, the activity
