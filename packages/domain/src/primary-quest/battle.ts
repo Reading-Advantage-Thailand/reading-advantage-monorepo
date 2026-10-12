@@ -17,6 +17,7 @@ import {
 } from "@reading-advantage/game-contracts";
 import { getClassAvatars } from "../primary-avatar/shop.js";
 import { managedClass, type Ctx } from "../primary-books/class-books.js";
+import { assertStudentRecordWriter } from "../primary-avatar/permissions.js";
 import { QuestError } from "./errors.js";
 import { BATTLE_GP, BOSS_FALLEN_GP, HEARTBEAT_STALE_SECONDS, PLAY_MINUTES, RALLY_MINUTES, RESULT_MINUTES, STUDENT_HP } from "./rules.js";
 import { committedDamage, questById, studentClassIds, studentPowerUps, studentQuest, toPowerUp, toQuest, type Raw } from "./season.js";
@@ -105,8 +106,10 @@ async function postRewards(raw: Raw, quest: QuestRow, now: Date): Promise<void> 
  * @param ctx The database and the student.
  * @param input The heartbeat.
  * @throws {QuestError} NOT_FOUND, NOT_IN_CLASS, or BAD_STATE outside the battle.
+ * @throws {AuthError} FORBIDDEN when the user is not a student.
  */
 export async function postHeartbeat(ctx: Ctx, input: QuestHeartbeatInput): Promise<void> {
+  assertStudentRecordWriter(ctx.user);
   const beat = questHeartbeatInputSchema.parse(input);
   const { raw, quest } = await questById(ctx, beat.questId);
   if (!(await studentClassIds(raw, ctx.user.id)).includes(quest.classId)) throw new QuestError("NOT_IN_CLASS", 403, "You are not in this class");

@@ -13,6 +13,7 @@ import { enqueuePrimaryEvidenceJob } from "@/lib/primary-evidence-queue";
 import { Rating } from "ts-fsrs";
 import { ActivityType } from "@/types/enum";
 import { FlashcardCard } from "@/types";
+import { guardStudentRoute } from "@/lib/student-view";
 
 /**
  * Processes one FSRS card review and awards server-side XP.
@@ -29,6 +30,8 @@ export async function POST(
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    const preview = guardStudentRoute(user, "flashcard_review");
+    if (preview) return preview;
 
     // Authorization decision via the central policy. Flashcard study serves
     // any authenticated user; article:read is the matching low-privilege

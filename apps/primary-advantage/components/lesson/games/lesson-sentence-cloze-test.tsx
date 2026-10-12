@@ -1,4 +1,5 @@
 "use client";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
@@ -476,6 +477,7 @@ export function SentenceClozeGame({
 
   const [audioHintsEnabled, setAudioHintsEnabled] = useState(false);
   const { refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   const activeAudioRef = useRef<HTMLAudioElement | null>(null);
   const hintAudioStopRef = useRef<(() => void) | null>(null);
@@ -890,7 +892,8 @@ export function SentenceClozeGame({
       toggleAudioHints();
     } else {
       setGameComplete(true);
-      await config.finishGame({ t, articleId, deckId, score, timer });
+      if (isPreview) notSaved();
+      else await config.finishGame({ t, articleId, deckId, score, timer });
       setIsPlaying(false);
       await refresh();
     }
@@ -905,6 +908,8 @@ export function SentenceClozeGame({
     timer,
     refresh,
     toggleAudioHints,
+    isPreview,
+    notSaved,
   ]);
 
   const handleRestart = useCallback(() => {

@@ -18,6 +18,7 @@ import { createTenantDB } from "@reading-advantage/domain";
 import { getLessonGameResults } from "@reading-advantage/domain/games";
 import { currentUser } from "@/lib/session";
 import { logger } from "@/lib/observability/logger";
+import { guardStudentAction } from "@/lib/student-view";
 import { ActivityType } from "@/types/enum";
 
 /**
@@ -30,6 +31,9 @@ export async function fetchArticleActivity(articleId: string) {
   if (!user) {
     return { success: false, error: "Unauthorized" };
   }
+
+  const preview = guardStudentAction(user, "fetch_article_activity");
+  if (preview) return preview;
   try {
     const result = await getArticleActivity(articleId);
 

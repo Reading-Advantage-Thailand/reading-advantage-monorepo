@@ -10,6 +10,7 @@ import { ActivityType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
 import { shuffle } from "@/lib/shuffle";
 import { toTranslationLanguage } from "@/lib/translation-language";
+import { guardStudentRoute } from "@/lib/student-view";
 
 /**
  * Returns shuffled cloze tests built from the caller's sentence flashcards.
@@ -180,6 +181,8 @@ export async function POST(
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const preview = guardStudentRoute(user, "flashcard_game_cloze");
+  if (preview) return preview;
 
   // Authorization decision via the central policy. Flashcard study serves
   // any authenticated user; article:read is the matching low-privilege

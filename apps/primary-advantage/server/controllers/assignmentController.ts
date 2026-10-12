@@ -6,11 +6,13 @@ import {
   ilike,
   count,
   or,
+  inArray,
 } from '@reading-advantage/db';
 import {
   assignments,
   articles,
   classrooms,
+  classroomStudents,
   studentAssignments,
 } from '@reading-advantage/db';
 import { recordLessonStep } from "./classBookController";
@@ -24,13 +26,49 @@ import getAssignmentById, {
   getAssignmentActivityById,
 } from "../models/assignmentModel";
 import { currentUser } from "@/lib/session";
+import { logger } from "@/lib/observability/logger";
+import {
+  canManageClassroom,
+  canReadStudentRecords,
+  isAssignmentManager,
+} from "../utils/assignment-access";
+import { CreateAssignmentBodySchema, LessonProgressBodySchema } from "./assignment-schemas";
 
+const unauthorized = () => NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+const forbidden = () => NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+/**
+ * Lists the assignments of a class, or reads one assignment by id, for the staff of the class.
+ * @param req The request with the `classroomId`, `articleId`, `id`, `search`, `page`, and `limit` query.
+ * @returns 401 without a session, 403 for a non-staff role or a class the caller does not manage,
+ *   400 without a class or an assignment id (except SYSTEM), else the assignment list.
+ */
 export async function fetchAssignments(req: NextRequest) {
   try {
+    const user = await currentUser();
+    if (!user) return unauthorized();
+    if (!isAssignmentManager(user)) return forbidden();
+    const role = String(user.role ?? "").toUpperCase();
     const { searchParams } = new URL(req.url);
     const classroomId = searchParams.get("classroomId");
     const articleId = searchParams.get("articleId");
     const assignmentId = searchParams.get("id");
+
+    if (!classroomId && !assignmentId && role !== "SYSTEM") {
+      return NextResponse.json({ error: "classroomId or id is required" }, { status: 400 });
+    }
+    if (assignmentId) {
+      const [owner] = await db
+        .select({ classroomId: assignments.classroomId })
+        .from(assignments)
+        .where(eq(assignments.id, assignmentId))
+        .limit(1);
+      if (owner && !(await canManageClassroom(user, owner.classroomId))) return forbidden();
+      if (!owner && role !== "SYSTEM" && !classroomId) {
+        return NextResponse.json({ meta: {}, students: [] }, { status: 200 });
+      }
+    }
+    if (classroomId && !(await canManageClassroom(user, classroomId))) return forbidden();
     const search = searchParams.get("search");
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
@@ -226,7 +264,7 @@ export async function fetchAssignments(req: NextRequest) {
       );
     }
   } catch (error) {
-    console.error("Error fetching assignments:", error);
+    logger.error("assignments_fetch_failed", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
@@ -234,40 +272,64 @@ export async function fetchAssignments(req: NextRequest) {
   }
 }
 
+/**
+ * Creates an article assignment. Only the teacher of the class, an ADMIN of its school, or SYSTEM may.
+ * @param req The request with the assignment body.
+ * @returns 401 without a session, 403 for another role or class, 400 for a bad body or a student
+ *   outside the class, 200 on success, 500 on a model failure.
+ */
 export async function postAssignment(req: NextRequest) {
   try {
-    const { classroomId, articleId, students, name, description, dueDate } =
-      await req.json();
+    const user = await currentUser();
+    if (!user) return unauthorized();
+    if (!isAssignmentManager(user)) return forbidden();
 
-    await createAssignment({
-      classroomId,
-      articleId,
-      students,
-      name,
-      description,
-      dueDate,
-    });
+    const parsed = CreateAssignmentBodySchema.safeParse(await req.json().catch(() => null));
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid body", issues: parsed.error.issues }, { status: 400 });
+    }
+    const data = parsed.data;
+    if (!(await canManageClassroom(user, data.classroomId))) return forbidden();
+
+    const students = [...new Set(data.students)];
+    const enrolled = await db
+      .select({ studentId: classroomStudents.studentId })
+      .from(classroomStudents)
+      .where(and(eq(classroomStudents.classroomId, data.classroomId), inArray(classroomStudents.studentId, students)));
+    if (enrolled.length !== students.length) {
+      return NextResponse.json({ error: "A student is not in the class" }, { status: 400 });
+    }
+
+    await createAssignment({ ...data, students });
 
     return NextResponse.json(
       { message: "Assignment created successfully" },
       { status: 200 },
     );
   } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { message: error.message || "Internal server error" },
-        { status: 500 },
-      );
-    }
+    logger.error("assignment_create_failed", { error });
+    return NextResponse.json(
+      { message: error instanceof Error && error.message ? error.message : "Internal server error" },
+      { status: 500 },
+    );
   }
 }
 
+/**
+ * Lists the assignments of one student. The student, SYSTEM, or staff of a class of the student may read.
+ * @param request The request with the paging and filter query.
+ * @param context The route params with the student id.
+ * @returns 401 without a session, 403 for another student or an unrelated staff member, else the list.
+ */
 export async function fetchStudentAssignments(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const user = await currentUser();
+    if (!user) return unauthorized();
     const { id } = await params;
+    if (!(await canReadStudentRecords(user, id))) return forbidden();
     const { searchParams } = new URL(request.url);
 
     // Parse query parameters
@@ -288,10 +350,7 @@ export async function fetchStudentAssignments(
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
-    console.error(
-      "Student Controller: Error in fetchStudentAssignments:",
-      error,
-    );
+    logger.error("student_assignments_fetch_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -304,6 +363,8 @@ export async function fetchAssignmentById(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const user = await currentUser();
+    if (!user) return unauthorized();
     const { id } = await params;
     const assignment = await getAssignmentById(id);
 
@@ -312,7 +373,7 @@ export async function fetchAssignmentById(
     if (error instanceof AssignmentForbiddenError) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
-    console.error("Error fetching assignment by ID:", error);
+    logger.error("assignment_fetch_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -330,7 +391,18 @@ export async function postUserLessonProgress(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const { id: assignmentId } = await params;
-    const { articleId, progress, timeSpent } = await request.json();
+    const parsed = LessonProgressBodySchema.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid body", issues: parsed.error.issues }, { status: 400 });
+    }
+    const { articleId, progress, timeSpent } = parsed.data;
+
+    const [assigned] = await db
+      .select({ id: studentAssignments.id })
+      .from(studentAssignments)
+      .where(and(eq(studentAssignments.assignmentId, assignmentId), eq(studentAssignments.studentId, user.id)))
+      .limit(1);
+    if (!assigned) return forbidden();
 
     await updateUserLessonProgress(
       user.id,
@@ -349,7 +421,7 @@ export async function postUserLessonProgress(
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error updating assignment by ID:", error);
+    logger.error("assignment_progress_save_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -376,7 +448,7 @@ export async function fetchUserLessonProgress(
 
     return NextResponse.json({ userLessonProgress }, { status: 200 });
   } catch (error) {
-    console.error("Error fetching user lesson progress:", error);
+    logger.error("assignment_progress_fetch_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -397,7 +469,7 @@ export async function fetchAssignmentActivityById(
     const assignmentActivity = await getAssignmentActivityById(id, user.id);
     return NextResponse.json({ assignmentActivity }, { status: 200 });
   } catch (error) {
-    console.error("Error fetching assignment activity by ID:", error);
+    logger.error("assignment_activity_fetch_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

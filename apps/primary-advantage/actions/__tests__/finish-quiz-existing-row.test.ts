@@ -66,7 +66,7 @@ function chain<T>(value: T) {
 /** Sets the rows that the activity upsert returns, and records each insert target. */
 function setup(upsertRows: Array<{ id: string }>) {
   const inserts: Array<{ table: unknown; row: unknown }> = [];
-  mocks.currentUser.mockResolvedValue({ id: "student-1", schoolId: "55555555-5555-4555-8555-555555555555" });
+  mocks.currentUser.mockResolvedValue({ id: "student-1", role: "STUDENT", schoolId: "55555555-5555-4555-8555-555555555555" });
   mocks.select.mockReset();
   mocks.select.mockReturnValueOnce(chain([{ xp: 10 }])).mockReturnValueOnce(chain([]));
   mocks.insert.mockImplementation((table: unknown) => ({

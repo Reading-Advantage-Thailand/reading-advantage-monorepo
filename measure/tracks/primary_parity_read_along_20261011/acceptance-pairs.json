@@ -1,0 +1,143 @@
+{
+  "member": "primary_parity_read_along_20261011",
+  "pairs": [
+    {
+      "id": "RA-A1",
+      "rows": [
+        "STU-10"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/cmgqu1x6v00w2t79bzal712ko",
+      "newPath": "/en/student/read/{map:article:cmgqu1x6v00w2t79bzal712ko}",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "RA-A1-a",
+          "behavior": "Clean article. Play it to the end in both apps. In the new app the lit word is the spoken word through the whole text (AC-1). Note where legacy goes wrong."
+        },
+        {
+          "id": "RA-A1-b",
+          "behavior": "Tap 5 words in the middle of sentences. The new app plays from each tapped word (AC-2)."
+        },
+        {
+          "id": "RA-A1-c",
+          "behavior": "New: one player (Previous, Replay, Play or Pause, Next, and the speed sign 0.75x, 1x, 1.25x). Previous, Replay, and Next each play from the right sentence; the speed sign changes the speed (AC-3). Legacy: two player copies, and the skip buttons do nothing (difference on purpose)."
+        },
+        {
+          "id": "RA-A1-d",
+          "behavior": "New: while the voice plays, the current sentence stays near the upper third of the screen. Scroll by hand: the follow stops until the next play. Legacy: the sentence scrolls to the centre (difference on purpose). Hint line shows while the audio is open."
+        }
+      ],
+      "widths": [
+        375,
+        1280
+      ]
+    },
+    {
+      "id": "RA-A2",
+      "rows": [
+        "STU-10"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/cmgqulnnp014it79bvuynoxk9",
+      "newPath": "/en/student/read/{map:article:cmgqulnnp014it79bvuynoxk9}",
+      "checks": [
+        {
+          "id": "RA-A2-a",
+          "behavior": "Article with curly quotes. In the new app the lit word stays on the spoken word after each quote. In legacy the mark can move to a wrong word after a quote (AC-1)."
+        },
+        {
+          "id": "RA-A2-b",
+          "behavior": "Tap a word right after a curly quote. The new app plays from that word (AC-2)."
+        }
+      ],
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "widths": [
+        375,
+        1280
+      ]
+    },
+    {
+      "id": "RA-A3",
+      "rows": [
+        "STU-10"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/cmorc1khs001bs601yvv09j2a",
+      "newPath": "/en/student/read/{map:article:cmorc1khs001bs601yvv09j2a}",
+      "checks": [
+        {
+          "id": "RA-A3-a",
+          "behavior": "Article where the audio drops words (the maps need the resync). In the new app the mark goes back to the right word within one word after each gap (AC-1)."
+        },
+        {
+          "id": "RA-A3-b",
+          "behavior": "Pause, then play. The mark stays on the last word while paused. In a gap between two words no other word lights up."
+        }
+      ],
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "widths": [
+        375,
+        1280
+      ]
+    },
+    {
+      "id": "RA-A4",
+      "rows": [
+        "STU-10"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/cmgqu1x6v00w2t79bzal712ko?type=article",
+      "newPath": "/en/student/lesson/{map:article:cmgqu1x6v00w2t79bzal712ko}?type=article",
+      "checks": [
+        {
+          "id": "RA-A4-a",
+          "behavior": "Finding M-3: open the reading step (the task with the article text and audio) of the lesson of the clean article. The lit word follows the voice, and a tap on a word plays from that word, as on the article page (AC-4). Use the id of this article lesson, not the assignment id of the acceptance track, which may have no reading step with audio."
+        },
+        {
+          "id": "RA-A4-b",
+          "behavior": "The lesson shows one player and no second bar. Speed sign: 0.75x, 1x, 1.25x. With translation on, a tap on a sentence shows its translation above the title and does not play (difference on purpose)."
+        }
+      ],
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "widths": [
+        375,
+        1280
+      ]
+    },
+    {
+      "id": "RA-A5",
+      "rows": [
+        "STU-10"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/lesson/cmgqu1x6v00w2t79bzal712ko?type=article",
+      "newPath": "/en/student/lesson/{map:article:cmgqu1x6v00w2t79bzal712ko}?type=article",
+      "widths": [
+        375
+      ],
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "RA-A5-a",
+          "behavior": "Finding M-11: at 375 px, scroll the lesson reading step to the bottom with the player open. The fixed player bar does not cover the lesson footer or the Next button, and the bottom navigation does not cover the bar."
+        }
+      ]
+    }
+  ]
+}

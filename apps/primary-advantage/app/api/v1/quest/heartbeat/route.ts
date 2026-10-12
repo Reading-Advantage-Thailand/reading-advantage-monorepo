@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { postQuestHeartbeat } from "@/server/controllers/questController";
 import { avatarActor, avatarErrorResponse, NO_STORE, unauthorized } from "@/lib/avatar-route";
+import { guardStudentRoute } from "@/lib/student-view";
 
 /**
  * POST /api/v1/quest/heartbeat: stores the phone's latest numbers (FR-8).
@@ -10,6 +11,8 @@ import { avatarActor, avatarErrorResponse, NO_STORE, unauthorized } from "@/lib/
 export async function POST(request: NextRequest) {
   const user = await avatarActor();
   if (!user) return unauthorized();
+  const preview = guardStudentRoute(user, "quest_heartbeat");
+  if (preview) return preview;
   try {
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
     await postQuestHeartbeat(user, body as never);

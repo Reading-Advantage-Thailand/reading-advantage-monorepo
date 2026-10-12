@@ -66,9 +66,13 @@ describe("activityScopeSchema", () => {
     expect(() => activityScopeSchema.parse({ kind: "classes", schoolId, classIds: ["x"] })).toThrow();
   });
 
-  it("rejects a scope that is not a school scope or has a bad id", () => {
+  it("accepts the platform scope", () => {
+    expect(activityScopeSchema.parse({ kind: "platform" })).toEqual({ kind: "platform" });
+  });
+
+  it("rejects an unknown scope kind, a bad id, and a classes scope with no class list", () => {
     expect(() => activityScopeSchema.parse({ kind: "school", schoolId: "x" })).toThrow();
-    expect(() => activityScopeSchema.parse({ kind: "platform" })).toThrow();
+    expect(() => activityScopeSchema.parse({ kind: "world" })).toThrow();
     expect(() => activityScopeSchema.parse({ kind: "classes", schoolId: "10000000-0000-4000-8000-00000000000a" })).toThrow();
   });
 });

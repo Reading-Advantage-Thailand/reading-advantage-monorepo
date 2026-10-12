@@ -1,6 +1,7 @@
 "use client";
 
 import { retakeQuiz } from "@/actions/question";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import { Button } from "@/components/ui/button";
 import { ActivityType } from "@/types/enum";
 import {
@@ -27,7 +28,14 @@ export default function RetakeButton({
   const router = useRouter();
   const t = useTranslations("Components");
 
+  const { isPreview, notSaved } = usePreviewSave();
+
   const handleRetakeQuiz = async () => {
+    if (isPreview) {
+      notSaved();
+      setIsOpen(false);
+      return;
+    }
     await retakeQuiz(articleId, type);
     setIsOpen(false);
     router.refresh();

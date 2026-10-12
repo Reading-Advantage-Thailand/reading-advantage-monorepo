@@ -243,6 +243,33 @@ export function keepLatest<T extends Row>(rows: ReadonlyArray<T>, keyOf: (row: T
   return { kept: [...best.values()], dropped };
 }
 
+/**
+ * Splits the legacy `user_lesson_progress` duplicates of one student and article. The current row
+ * is the latest row that links a migrated assignment, else the latest row. Every other row is a
+ * closed attempt, numbered from 1 in the order of `updatedAt` (then `id`).
+ * @param rows Candidate rows with `user_id`, `_articleId`, `_assignmentId` (the new assignment id or null), `id`, and `updatedAt`.
+ * @returns The current rows and the closed attempts with their attempt number.
+ */
+export function splitLessonProgress<T extends Row>(rows: ReadonlyArray<T>): { current: T[]; history: { row: T; attemptNumber: number }[] } {
+  const groups = new Map<string, T[]>();
+  for (const row of rows) {
+    const key = `${String(row.user_id)}:${String(row._articleId)}`;
+    groups.set(key, [...(groups.get(key) ?? []), row]);
+  }
+  const time = (row: T) => (row.updatedAt ? new Date(row.updatedAt as Date).getTime() : 0);
+  const byTime = (a: T, b: T) => time(a) - time(b) || String(a.id).localeCompare(String(b.id));
+  const current: T[] = [];
+  const history: { row: T; attemptNumber: number }[] = [];
+  for (const group of groups.values()) {
+    const sorted = [...group].sort(byTime);
+    const linked = sorted.filter((row) => row._assignmentId);
+    const keep = (linked.length ? linked : sorted).at(-1)!;
+    current.push(keep);
+    sorted.filter((row) => row !== keep).forEach((row, index) => history.push({ row, attemptNumber: index + 1 }));
+  }
+  return { current, history };
+}
+
 /** The legacy article row shape the ETL reads. */
 export interface LegacyArticle {
   id: string; type: string | null; genre: string | null; sub_genre: string | null; title: string; summary: string | null;
@@ -467,6 +494,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
 
   // The users that exist after group 1; later groups need them for foreign keys.
   const users = new Set<string>();
+  // The new school id of each migrated user (legacy user id → school uuid), for the lesson attempt history.
+  const userSchools = new Map<string, string>();
 
   // A normal run commits one transaction per group. A dry run holds one outer transaction, runs
   // each group in a savepoint so that later groups see the earlier rows, and rolls back at the end.
@@ -506,6 +535,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       if (!student && seenUsernames.has(username)) { counter.skip("users", "duplicate lower(email) (D6)", id); continue; }
       if (!student) seenUsernames.add(username);
       users.add(id);
+      const userSchool = ids.get(MAP_TABLES.schools, u.school_id as string | null);
+      if (userSchool) userSchools.set(id, userSchool);
       userRows.push(targetUserRow(u, role, { username, displayUsername }, ids.get(MAP_TABLES.schools, u.school_id as string | null)));
     }
     const studentRows = userRows.filter((row) => row.role === "STUDENT");
@@ -773,16 +804,29 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const articleId = ids.get(MAP_TABLES.article, p.article_id as string);
       if (!articleId) { counter.skip("user_lesson_progress", "article not migrated", id); continue; }
       if (!users.has(String(p.user_id))) { counter.skip("user_lesson_progress", "user not migrated", id); continue; }
-      progressCandidates.push({ ...p, _articleId: articleId });
+      progressCandidates.push({ ...p, _articleId: articleId, _assignmentId: ids.get(MAP_TABLES.assignments, p.assignment_id as string | null) });
     }
-    const { kept, dropped } = keepLatest(progressCandidates, (p) => `${String(p.user_id)}:${String(p._articleId)}`, (p) => p.updatedAt as Date);
-    for (const d of dropped) counter.skip("user_lesson_progress", "duplicate (user, article); the latest row kept", String(d.id));
-    const progressRows = kept.map((p) => ({
+    // The duplicates of (user, article) become closed attempts; the row that links the assignment stays current.
+    const { current, history } = splitLessonProgress(progressCandidates);
+    const progressRows = current.map((p) => ({
       id: ids.ensure(MAP_TABLES.userLessonProgress, String(p.id)), user_id: p.user_id, lesson_id: p._articleId, status: lessonStatusOf(p.isCompleted as boolean | null, p.progress as number | null),
-      progress: p.progress ?? 0, completed_at: p.isCompleted ? p.updatedAt : null, article_id: p._articleId, assignment_id: ids.get(MAP_TABLES.assignments, p.assignment_id as string | null),
+      progress: p.progress ?? 0, completed_at: p.isCompleted ? p.updatedAt : null, article_id: p._articleId, assignment_id: p._assignmentId,
       time_spent: p.timeSpent ?? 0, is_completed: p.isCompleted ?? false, created_at: p.createdAt, updated_at: p.updatedAt,
     }));
     counter.table("user_lesson_progress").written += await upsert(tx, "lesson_progress", progressRows);
+    const attemptRows: Row[] = [];
+    for (const { row: p, attemptNumber } of history) {
+      const schoolId = userSchools.get(String(p.user_id));
+      if (!schoolId) { counter.skip("user_lesson_progress", "duplicate (user, article) not kept as an attempt: the user has no school", String(p.id)); continue; }
+      attemptRows.push({
+        id: ids.ensure(MAP_TABLES.userLessonProgress, String(p.id)), school_id: schoolId, student_id: p.user_id, article_id: p._articleId, assignment_id: p._assignmentId,
+        attempt_number: attemptNumber, started_at: p.createdAt, closed_at: p.updatedAt, closed_by_user_id: null, close_reason: "legacy_import",
+        progress: p.progress ?? 0, time_spent: p.timeSpent ?? 0, completed: p.isCompleted ?? false, completed_at: p.isCompleted ? p.updatedAt : null, score: p.score ?? null, xp_earned: 0,
+        activities: new JsonCell([]), steps: new JsonCell([]),
+      });
+    }
+    counter.table("user_lesson_progress").written += await upsert(tx, "primary_lesson_attempts", attemptRows);
+    notes.push(`primary_lesson_attempts holds ${attemptRows.length} duplicate legacy lesson progress rows as closed attempts (reason legacy_import).`);
     notes.push("lesson_progress.lesson_id holds the new article uuid as text (inventory R10 decision).");
 
     const activities = await legacy<Row[]>`select id, user_id, "activityType"::text as activity_type, "targetId", timer, details, completed, "createdAt", "updatedAt" from user_activities`;

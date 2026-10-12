@@ -463,6 +463,62 @@
     "loadErrorHint": "请重试。如果问题仍在，请告知 Reading Advantage。",
     "back": "前往教师页面"
   },
+  "SystemDashboard": {
+    "title": "系统仪表板",
+    "week": "本周：{start} 至 {end}",
+    "totals": {
+      "heading": "平台总数",
+      "schools": "学校",
+      "students": "学生",
+      "teachers": "教师",
+      "active": "本周活跃学生",
+      "activeSub": "{total} 名中的 {active} 名（{percent}%）",
+      "articles": "本周打开的文章",
+      "seatsUsed": "已用席位",
+      "seatsOf": "共 {seats} 个席位",
+      "noLicense": "无许可证",
+      "withoutSchool": "{count, plural, other {# 名学生没有学校，不在表格中。}}请在“用户”页面指定学校。"
+    },
+    "table": {
+      "heading": "学校",
+      "search": "按学校名称搜索",
+      "searchLabel": "搜索学校",
+      "sortBy": "排序方式",
+      "sortDefault": "不活跃优先",
+      "sortAsc": "从低到高",
+      "sortDesc": "从高到低",
+      "sortDirection": "更改排序顺序",
+      "noMatch": "没有学校与“{query}”匹配。",
+      "empty": "还没有学校",
+      "emptyHint": "请在“学校”页面添加第一所学校。",
+      "goToSchools": "前往学校页面",
+      "columns": {
+        "name": "学校",
+        "active": "活跃学生",
+        "articles": "打开的文章",
+        "seats": "席位",
+        "last": "最近活动",
+        "status": "状态"
+      },
+      "activeOf": "{students} 名中的 {active} 名（{percent}%）",
+      "seatsOf": "{total} 个中已用 {used} 个",
+      "noLicense": "无许可证",
+      "none": "无",
+      "open": "打开",
+      "openFor": "打开{name}的仪表板",
+      "openCard": "打开仪表板",
+      "actions": "操作",
+      "footnote": "本周指最近 7 天，包括今天。不活跃指有学生但本周没有活动的学校。席位只计算学生。"
+    },
+    "status": {
+      "quiet": "不活跃",
+      "active": "活跃",
+      "noStudents": "没有学生"
+    },
+    "loadError": "系统仪表板加载失败",
+    "loadErrorHint": "请重试。如果问题仍然存在，请联系支持团队。",
+    "back": "前往学校页面"
+  },
   "Components": {
     "translationLanguage": "翻译语言",
     "submitButton": "提交",
@@ -482,6 +538,12 @@
     "seekBack": "后退",
     "seekForward": "前进",
     "playbackSpeed": "播放速度",
+    "previousSentence": "上一句",
+    "replaySentence": "重播这一句",
+    "nextSentence": "下一句",
+    "changeSpeed": "速度 {speed} 倍，点按更改速度",
+    "closeAudio": "关闭音频",
+    "readAlongHint": "点按一个单词，从该词开始听。点按一行，听整句。",
     "openActionsMenu": "打开操作菜单",
     "showNotifications": "显示通知",
     "toggleDetails": "切换详情",
@@ -3771,7 +3833,7 @@
         "noKey": "This lesson has no answer key in the catalogue yet.",
         "summary": "Lesson summary",
         "noArticle": "This lesson is not linked to an article yet. The projector and the rehearsal open when it is.",
-        "rehearsalHint": "You see the lesson as a student does. Your steps are not recorded for the class.",
+        "rehearsalHint": "You see the lesson as a student does. Nothing you do here is saved.",
         "backToLesson": "Back to the lesson",
         "projectorHint": "Click a paragraph to focus it. Answer tallies are not available yet.",
         "vocabulary": "Vocabulary",
@@ -3942,5 +4004,13 @@
     "toClasses": "Go to my classes",
     "toStart": "Go to the start page",
     "retry": "Try again"
+  },
+  "StudentView": {
+    "bannerTitle": "学生预览",
+    "bannerNote": "你看到的是学生看到的内容。这里不会保存任何内容。",
+    "exit": "退出预览",
+    "menuItem": "学生视图",
+    "notSaved": "预览：不保存",
+    "backHome": "返回首页"
   }
 }

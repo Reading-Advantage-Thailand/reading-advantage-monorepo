@@ -1234,7 +1234,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Staff student view (Preview mode)**
+- [~] **Track: Primary Parity Before the Cutover: Staff student view (Preview mode)**
   *Link: [./tracks/primary_parity_staff_student_view_20261011/](./tracks/primary_parity_staff_student_view_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
 
@@ -1258,7 +1258,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: System dashboard with platform totals and a schools table (SYS-01)**
+- [~] **Track: Primary Parity Before the Cutover: System dashboard with platform totals and a schools table (SYS-01)**
   *Link: [./tracks/primary_parity_system_dashboard_20261011/](./tracks/primary_parity_system_dashboard_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 5*
 
@@ -1270,31 +1270,31 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Stories in Read**
+- [~] **Track: Primary Parity Before the Cutover: Stories in Read**
   *Link: [./tracks/primary_parity_stories_20261011/](./tracks/primary_parity_stories_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Read-along that follows the voice**
+- [~] **Track: Primary Parity Before the Cutover: Read-along that follows the voice**
   *Link: [./tracks/primary_parity_read_along_20261011/](./tracks/primary_parity_read_along_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Teach a lesson again and start a lesson again**
+- [~] **Track: Primary Parity Before the Cutover: Teach a lesson again and start a lesson again**
   *Link: [./tracks/primary_parity_lesson_repeat_20261011/](./tracks/primary_parity_lesson_repeat_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Chibi Quest games in the vocabulary step and the sentence step of the lesson**
+- [~] **Track: Primary Parity Before the Cutover: Chibi Quest games in the vocabulary step and the sentence step of the lesson**
   *Link: [./tracks/primary_parity_lesson_games_20261011/](./tracks/primary_parity_lesson_games_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Print one lesson with the Workbooks primary template**
+- [~] **Track: Primary Parity Before the Cutover: Print one lesson with the Workbooks primary template**
   *Link: [./tracks/primary_parity_print_lesson_20261011/](./tracks/primary_parity_print_lesson_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 8*
 

@@ -168,3 +168,26 @@ describe("teacher: class avatars and reset", () => {
     await expect(resetStudentAvatar({ db: db(other), user: teacher }, "c1", "s1")).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 });
+
+describe("listAvatarShop in Preview mode (staff)", () => {
+  it("lists the pieces with nothing owned and level 1, and reads no row of the staff member", async () => {
+    const mock = createMockDb({ selectSequence: [[{ itemId: tier3.id, count: 3 }]] });
+    const shop = await listAvatarShop({ db: db(mock), user: { ...teacher, level: 9 }, now });
+    expect(mock.select).toHaveBeenCalledTimes(1); // the school popularity only; no inventory read
+    expect(shop.length).toBeGreaterThan(0);
+    expect(shop.every((item) => !item.owned && item.ownedDyes.length === 0)).toBe(true);
+    expect(shop.find((item) => item.id === tier3.id)?.unlocked).toBe(false);
+    expect(mock.insert).not.toHaveBeenCalled();
+  });
+
+  it("lists the pieces for a SYSTEM user with no school, with no query at all", async () => {
+    const mock = createMockDb();
+    const shop = await listAvatarShop({ db: db(mock), user: { ...teacher, role: "SYSTEM", schoolId: null }, now });
+    expect(shop.length).toBeGreaterThan(0);
+    expect(mock.select).not.toHaveBeenCalled();
+  });
+
+  it("still refuses a student with no school", async () => {
+    await expect(listAvatarShop({ db: db(createMockDb()), user: { ...student, schoolId: null } })).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+});

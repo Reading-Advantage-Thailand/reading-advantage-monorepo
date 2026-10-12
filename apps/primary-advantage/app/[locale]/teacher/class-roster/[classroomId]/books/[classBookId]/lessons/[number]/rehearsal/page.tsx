@@ -7,6 +7,7 @@ import { Link, redirect } from "@/i18n/navigation";
 import LessonCard from "@/components/lesson/lesson-card";
 import { TEACHER_BACK_LINK } from "@/components/teacher/teacher-shell";
 import { loadTeacherLesson } from "../page";
+import { StudentViewProvider } from "@/components/student/student-view-provider";
 
 type Params = Promise<{ classroomId: string; classBookId: string; number: string }>;
 
@@ -21,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /**
  * Lesson rehearsal (FR-10): the teacher runs the student lesson flow of the lesson's article.
- * The teacher is in no class roster, so the class book progress stays untouched.
+ * The lesson runs in Preview mode: it saves no progress, activity, or XP for the teacher.
  * @param props.params The class, the class book, and the lesson number.
  * @returns The page.
  */
@@ -43,7 +44,11 @@ export default async function RehearsalPage({ params }: { params: Params }) {
       <p role="note" className="bg-muted text-muted-foreground rounded-xl px-4 py-2 text-sm">
         {t("rehearsalHint")}
       </p>
-      {lesson.lesson.articleId ? <LessonCard source="article" articleId={lesson.lesson.articleId} /> : <p className="text-muted-foreground">{t("noArticle")}</p>}
+      {lesson.lesson.articleId ? (
+        <StudentViewProvider mode="preview">
+          <LessonCard source="article" articleId={lesson.lesson.articleId} />
+        </StudentViewProvider>
+      ) : <p className="text-muted-foreground">{t("noArticle")}</p>}
     </div>
   );
 }

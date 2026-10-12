@@ -5,11 +5,14 @@
 // already assigned passes, because the assign is an upsert.
 // The Teacher Manual block (spec S6, checks named "manual ...") runs after it; MANUAL_CHECK=off skips it. It marks
 // steps 1 to 3 and "Mark taught" on lesson 1, then makes lesson 1 current again. Use a fresh clone for each run.
+// The QR path block (track primary_parity_qr_path_20261011, spec S6, checks named "qr ...") runs after the class
+// book block; QR_CHECK=off skips it. It needs the book assigned to the class (CLASS_BOOK_CHECK on) and the open class code.
 // Usage: [NEW_PASSWORDS_OUT=<private csv>] node scripts/primary-parity/cutover-check.mjs <handout.csv> <teacher username> <admin username> <system username or -> <classroomId | class name | first>
 import { readFileSync, mkdirSync, appendFileSync, chmodSync, existsSync } from "node:fs";
 import { randomBytes } from "node:crypto";
 import { chromium } from "playwright";
 import { BOOK_KEY, BOOK_LABEL, bookCardFirst, classBookIdFromHref, judgeGuideContent, judgeLessonPage, judgeManualPage, judgeProgressAndTaught, judgeProjector, judgeProjectorUse, judgeStudentLanding, judgeStudentUnlock } from "./class-book-checks.mjs";
+import { QR_PATHS, judgeCasePage, judgeLanding, judgeSignedInLesson, judgeWritingArticle } from "./qr-path-checks.mjs";
 
 const [csvPath, teacherUser, adminUser, systemUser, classroomId] = process.argv.slice(2);
 const BASE = process.env.BASE ?? "http://localhost:3000";
@@ -378,6 +381,78 @@ try {
       await bp.close().catch(() => {});
     }
   }
+  // QR path (spec S6): one printed /b/ address signed out, the class code sign-in, the writing code, three case pages.
+  if (process.env.QR_CHECK !== "off") {
+    const qctx = await browser.newContext({ viewport: { width: 375, height: 812 } });
+    const qp = await qctx.newPage();
+    try {
+      const openLanding = async (path) => {
+        const resp = await gotoRetry(qp, `${BASE}/en${path}`, { waitUntil: "networkidle", timeout: 120000 });
+        await qp.locator("[data-landing]").waitFor({ timeout: 15000 }).catch(() => {});
+        return {
+          status: resp?.status() ?? 0,
+          hasLanding: (await qp.locator("[data-landing]").count()) > 0,
+          text: await qp.locator("[data-landing]").innerText().catch(() => ""),
+          hasSchoolChoice: (await qp.locator('[data-landing] a[href*="/auth/signin"]').count()) > 0,
+        };
+      };
+      // Signed out: the landing, then the school choice and the class code sign-in back to the lesson.
+      const read = await openLanding(QR_PATHS.read);
+      for (const c of judgeLanding("qr read", read)) check(c.name, c.ok, c.note);
+      await qp.screenshot({ path: `${SHOTS}/qr-landing.png` });
+      if (read.hasSchoolChoice) {
+        await qp.locator('[data-landing] a[href*="/auth/signin"]').first().click();
+        await qp.waitForURL((u) => u.pathname.endsWith("/auth/signin"), { timeout: 60000 }).catch(() => {});
+        await qp.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
+        await qp.getByLabel("Class code").waitFor({ timeout: 60000 }).catch(() => {});
+        await qp.getByLabel("Class code").fill(first.code);
+        await qp.getByRole("button", { name: "Next" }).click();
+        const named = await qp.locator("li button span.truncate").first().waitFor({ timeout: 30000 }).then(() => true).catch(() => false);
+        if (named) await qp.locator("li button").first().click();
+        await qp.waitForURL((u) => u.pathname.includes("/student"), { timeout: 60000 }).catch(() => {});
+        await qp.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
+        const bodyText = await qp.locator("body").innerText().catch(() => "");
+        for (const c of judgeSignedInLesson(new URL(qp.url()).pathname, bodyText)) check(c.name, c.ok, c.note);
+        await qp.screenshot({ path: `${SHOTS}/qr-lesson-after-sign-in.png` });
+      } else {
+        check("qr read: class code sign-in lands on the lesson flow", false, "no school choice to follow");
+      }
+      // Signed in: the writing code opens the article page.
+      await gotoRetry(qp, `${BASE}/en${QR_PATHS.writing}`, { waitUntil: "domcontentloaded", timeout: 120000 });
+      await qp.waitForURL((u) => /\/student\/read\/[^/]+/.test(u.pathname), { timeout: 60000 }).catch(() => {});
+      await qp.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
+      for (const c of judgeWritingArticle(new URL(qp.url()).pathname, await qp.locator("body").innerText().catch(() => ""))) check(c.name, c.ok, c.note);
+      await qp.screenshot({ path: `${SHOTS}/qr-writing-article.png` });
+    } catch (err) {
+      check("qr: block error", false, String(err).slice(0, 300));
+    } finally {
+      await qctx.close().catch(() => {});
+    }
+    // A signed-out reader: the writing landing and the three case pages (no sign-in, so no private data).
+    const gctx = await browser.newContext({ viewport: { width: 375, height: 812 } });
+    const gp = await gctx.newPage();
+    try {
+      const wresp = await gotoRetry(gp, `${BASE}/en${QR_PATHS.writing}`, { waitUntil: "networkidle", timeout: 120000 });
+      await gp.locator("[data-landing]").waitFor({ timeout: 15000 }).catch(() => {});
+      const writeFacts = {
+        status: wresp?.status() ?? 0,
+        hasLanding: (await gp.locator("[data-landing]").count()) > 0,
+        text: await gp.locator("[data-landing]").innerText().catch(() => ""),
+        hasSchoolChoice: (await gp.locator('[data-landing] a[href*="/auth/signin"]').count()) > 0,
+      };
+      for (const c of judgeLanding("qr writing", writeFacts, true)) check(c.name, c.ok, c.note);
+      for (const [label, path, expected] of [["qr unknown book", QR_PATHS.unknownBook, "unknown-book"], ["qr no lesson", QR_PATHS.noLesson, "no-lesson"], ["qr unknown address", QR_PATHS.unknownAddress, "unknown-address"]]) {
+        const resp = await gotoRetry(gp, `${BASE}/en${path}`, { waitUntil: "networkidle", timeout: 120000 });
+        const caseName = await gp.locator("[data-case]").first().getAttribute("data-case", { timeout: 15000 }).catch(() => null);
+        for (const c of judgeCasePage(label, { status: resp?.status() ?? 0, caseName }, expected)) check(c.name, c.ok, c.note);
+        await gp.screenshot({ path: `${SHOTS}/${label.replace(/ /g, "-")}.png` });
+      }
+    } catch (err) {
+      check("qr: case page block error", false, String(err).slice(0, 300));
+    } finally {
+      await gctx.close().catch(() => {});
+    }
+  }
   await s1.ctx.close();
 
   // The teacher makes a new code; student 2 signs in with it; the old code stops working.
@@ -434,5 +509,6 @@ try {
   await browser.close();
   const failed = results.filter((r) => !r.ok).length;
   console.log(`${results.length - failed} of ${results.length} checks pass.`);
+  for (const r of results.filter((x) => !x.ok)) console.log(`STOP  ${r.name}`);
   process.exitCode = failed ? 1 : 0;
 }

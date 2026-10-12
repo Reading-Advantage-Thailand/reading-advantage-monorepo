@@ -463,6 +463,62 @@
     "loadErrorHint": "請重試。如果問題仍在，請告知 Reading Advantage。",
     "back": "前往教師頁面"
   },
+  "SystemDashboard": {
+    "title": "系統儀表板",
+    "week": "本週：{start} 至 {end}",
+    "totals": {
+      "heading": "平台總數",
+      "schools": "學校",
+      "students": "學生",
+      "teachers": "教師",
+      "active": "本週活躍學生",
+      "activeSub": "{total} 名中的 {active} 名（{percent}%）",
+      "articles": "本週開啟的文章",
+      "seatsUsed": "已用席位",
+      "seatsOf": "共 {seats} 個席位",
+      "noLicense": "無授權",
+      "withoutSchool": "{count, plural, other {# 名學生沒有學校，不在表格中。}}請在「使用者」頁面指定學校。"
+    },
+    "table": {
+      "heading": "學校",
+      "search": "依學校名稱搜尋",
+      "searchLabel": "搜尋學校",
+      "sortBy": "排序方式",
+      "sortDefault": "不活躍優先",
+      "sortAsc": "由低到高",
+      "sortDesc": "由高到低",
+      "sortDirection": "變更排序順序",
+      "noMatch": "沒有學校符合「{query}」。",
+      "empty": "尚無學校",
+      "emptyHint": "請在「學校」頁面新增第一所學校。",
+      "goToSchools": "前往學校頁面",
+      "columns": {
+        "name": "學校",
+        "active": "活躍學生",
+        "articles": "開啟的文章",
+        "seats": "席位",
+        "last": "最近活動",
+        "status": "狀態"
+      },
+      "activeOf": "{students} 名中的 {active} 名（{percent}%）",
+      "seatsOf": "{total} 個中已用 {used} 個",
+      "noLicense": "無授權",
+      "none": "無",
+      "open": "開啟",
+      "openFor": "開啟{name}的儀表板",
+      "openCard": "開啟儀表板",
+      "actions": "操作",
+      "footnote": "本週指最近 7 天，包括今天。不活躍指有學生但本週沒有活動的學校。席位只計算學生。"
+    },
+    "status": {
+      "quiet": "不活躍",
+      "active": "活躍",
+      "noStudents": "沒有學生"
+    },
+    "loadError": "系統儀表板載入失敗",
+    "loadErrorHint": "請重試。如果問題持續，請聯絡支援團隊。",
+    "back": "前往學校頁面"
+  },
   "Components": {
     "translationLanguage": "翻譯語言",
     "submitButton": "送出",
@@ -482,6 +538,12 @@
     "seekBack": "後退",
     "seekForward": "前進",
     "playbackSpeed": "播放速度",
+    "previousSentence": "上一句",
+    "replaySentence": "重播這一句",
+    "nextSentence": "下一句",
+    "changeSpeed": "速度 {speed} 倍，點按更改速度",
+    "closeAudio": "關閉音訊",
+    "readAlongHint": "點按一個單字，從該字開始聽。點按一行，聽整句。",
     "openActionsMenu": "開啟操作選單",
     "showNotifications": "顯示通知",
     "toggleDetails": "切換詳情",
@@ -3771,7 +3833,7 @@
         "noKey": "This lesson has no answer key in the catalogue yet.",
         "summary": "Lesson summary",
         "noArticle": "This lesson is not linked to an article yet. The projector and the rehearsal open when it is.",
-        "rehearsalHint": "You see the lesson as a student does. Your steps are not recorded for the class.",
+        "rehearsalHint": "You see the lesson as a student does. Nothing you do here is saved.",
         "backToLesson": "Back to the lesson",
         "projectorHint": "Click a paragraph to focus it. Answer tallies are not available yet.",
         "vocabulary": "Vocabulary",
@@ -3942,5 +4004,13 @@
     "toClasses": "Go to my classes",
     "toStart": "Go to the start page",
     "retry": "Try again"
+  },
+  "StudentView": {
+    "bannerTitle": "學生預覽",
+    "bannerNote": "你看到的是學生看到的內容。這裡不會儲存任何內容。",
+    "exit": "退出預覽",
+    "menuItem": "學生檢視",
+    "notSaved": "預覽：不儲存",
+    "backHome": "返回首頁"
   }
 }

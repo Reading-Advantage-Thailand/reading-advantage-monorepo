@@ -52,7 +52,7 @@ createdb -h localhost -U postgres primary_parity_$DATE
 export DATABASE_URL=postgres://<user>@localhost:5432/primary_parity_$DATE DIRECT_DATABASE_URL=$DATABASE_URL
 pnpm --filter @reading-advantage/db exec tsx scripts/refuse-legacy-db.ts
 (cd packages/db && npx tsx scripts/migrate.ts)
-pnpm --filter @reading-advantage/db run doctor --check --required-migration 0072_primary_stories
+pnpm --filter @reading-advantage/db run doctor --check --required-migration 0073_primary_lesson_attempts
 LEGACY_DATABASE_URL=postgres://<user>@localhost:5432/primary_legacy_$DATE \
   pnpm --filter @reading-advantage/db legacy-import --report $P/etl-report.md \
   --roles ~/Desktop/primary-cutover-inputs/roles.json \

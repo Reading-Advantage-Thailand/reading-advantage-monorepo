@@ -24,6 +24,7 @@ import {
   parseGrade,
   parseUtcTimestamp,
   renderReport,
+  splitLessonProgress,
   reviewCountsOf,
   usernamesOf,
   assignStudentUsernames,
@@ -145,6 +146,29 @@ describe("primary legacy import transforms", () => {
     const { kept, dropped } = keepLatest(rows, (r) => r.k, (r) => r.t);
     expect(kept.map((r) => r.id).sort()).toEqual(["2", "3"]);
     expect(dropped.map((r) => r.id).sort()).toEqual(["1", "4"]);
+  });
+
+  it("keeps the assignment row as the current lesson row and the other duplicates as closed attempts", () => {
+    const row = (id: string, updatedAt: string, assignment: string | null, article = "a1") => ({ id, user_id: "u1", _articleId: article, _assignmentId: assignment, updatedAt: new Date(updatedAt) });
+    const { current, history } = splitLessonProgress([
+      row("p1", "2026-01-01", null),
+      row("p2", "2026-02-01", "as1"),
+      row("p3", "2026-03-01", null),
+      row("p4", "2026-03-01", null, "a2"),
+    ]);
+    // the row that links the assignment stays current although a later row exists
+    expect(current.map((r) => r.id).sort()).toEqual(["p2", "p4"]);
+    // the others become attempts 1 and 2 of (u1, a1), oldest first
+    expect(history.map((h) => [h.row.id, h.attemptNumber])).toEqual([["p1", 1], ["p3", 2]]);
+  });
+
+  it("keeps the latest row as current when no duplicate links an assignment, and the latest assignment row when several do", () => {
+    const row = (id: string, updatedAt: string, assignment: string | null) => ({ id, user_id: "u1", _articleId: "a1", _assignmentId: assignment, updatedAt: new Date(updatedAt) });
+    expect(splitLessonProgress([row("p1", "2026-01-01", null), row("p2", "2026-02-01", null)]).current.map((r) => r.id)).toEqual(["p2"]);
+    const both = splitLessonProgress([row("p1", "2026-01-01", "as1"), row("p2", "2026-02-01", "as2"), row("p3", "2026-03-01", null)]);
+    expect(both.current.map((r) => r.id)).toEqual(["p2"]);
+    expect(both.history.map((h) => h.row.id)).toEqual(["p1", "p3"]);
+    expect(splitLessonProgress([row("p1", "2026-01-01", null)]).history).toEqual([]);
   });
 
   it("maps an article with the legacy id as the picture key (D10)", () => {

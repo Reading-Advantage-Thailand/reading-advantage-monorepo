@@ -6,7 +6,7 @@
  * must clear that timer and pause the audio element.
  */
 import "@testing-library/jest-dom/vitest";
-import { fireEvent } from "@testing-library/react";
+import { act, fireEvent, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Article } from "@/types";
@@ -71,31 +71,94 @@ function setPlaybackTime(audio: HTMLAudioElement, seconds: number): void {
   });
 }
 
-describe("TaskReading highlight timer cleanup", () => {
-  it("clears the armed highlight timer on unmount", () => {
+describe("TaskReading highlight loop cleanup", () => {
+  let frames: Map<number, FrameRequestCallback>;
+  let nextId: number;
+
+  beforeEach(() => {
+    frames = new Map();
+    nextId = 1;
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      frames.set(nextId, cb);
+      return nextId++;
+    });
+    vi.stubGlobal("cancelAnimationFrame", (id: number) => frames.delete(id));
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("follows the voice with one frame at a time and leaves no frame or timer after unmount", () => {
     const { container, unmount } = renderWithMessages(
       <TaskReading article={article} enableTranslation={false} />,
     );
     const audio = container.querySelector("audio") as HTMLAudioElement;
     expect(audio).not.toBeNull();
 
-    vi.useFakeTimers();
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"] });
     const baseline = vi.getTimerCount();
 
-    // First word: establishes the current word index without arming a timer.
-    setPlaybackTime(audio, 0.05);
-    fireEvent.timeUpdate(audio);
-    expect(vi.getTimerCount()).toBe(baseline);
+    expect(frames.size).toBe(0);
+    act(() => void audio.dispatchEvent(new Event("play")));
+    expect(frames.size).toBe(1);
 
-    // Skipping to the third word arms the 100 ms intermediate-word timer.
+    // A jump of two words lights the third word at once (no 100 ms chain of timers).
     setPlaybackTime(audio, 2.05);
-    fireEvent.timeUpdate(audio);
-    expect(vi.getTimerCount()).toBe(baseline + 1);
+    const [id, run] = [...frames.entries()][0];
+    frames.delete(id);
+    act(() => run(0));
+    expect(container.querySelector(".bg-blue-500")?.textContent).toBe("gamma");
+    expect(vi.getTimerCount()).toBe(baseline);
 
     unmount();
 
-    // The unmount cleanup disarms the highlight timer: nothing fires after.
+    expect(frames.size).toBe(0);
     expect(vi.getTimerCount()).toBe(baseline);
+    expect(window.HTMLMediaElement.prototype.pause).toHaveBeenCalled();
+  });
+
+  it("stops the loop on pause", () => {
+    const { container } = renderWithMessages(<TaskReading article={article} enableTranslation={false} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    act(() => void audio.dispatchEvent(new Event("play")));
+    expect(frames.size).toBe(1);
+    act(() => void audio.dispatchEvent(new Event("pause")));
+    expect(frames.size).toBe(0);
+  });
+});
+
+describe("TaskReading tap and player (same read-along as the article page)", () => {
+  it("seeks to the tapped word and plays", () => {
+    const { container } = renderWithMessages(<TaskReading article={article} enableTranslation={false} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    fireEvent.click(screen.getByText("beta"));
+    expect(audio.currentTime).toBeCloseTo(0.95, 5);
+    expect(window.HTMLMediaElement.prototype.play).toHaveBeenCalled();
+  });
+
+  it("plays the sentence when the student taps the band outside a word", () => {
+    const { container } = renderWithMessages(<TaskReading article={article} enableTranslation={false} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    audio.currentTime = 2;
+    const band = container.querySelector("[data-sentence='0']") as HTMLElement;
+    fireEvent.click(band);
+    expect(audio.currentTime).toBeCloseTo(0, 1);
+    expect(window.HTMLMediaElement.prototype.play).toHaveBeenCalled();
+  });
+
+  it("shows the one shared player, and the speed sign sets the playback rate", () => {
+    const { container } = renderWithMessages(<TaskReading article={article} enableTranslation={false} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    expect(container.querySelectorAll("[data-player]")).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Speed 1 times. Change speed" }));
+    expect(audio.playbackRate).toBe(1.25);
+  });
+
+  it("plays or pauses from the player", () => {
+    renderWithMessages(<TaskReading article={article} enableTranslation={false} />);
+    fireEvent.click(screen.getByRole("button", { name: "Play audio" }));
+    expect(window.HTMLMediaElement.prototype.play).toHaveBeenCalled();
   });
 });
 

@@ -13,6 +13,10 @@ vi.mock("@/lib/session", () => ({
 }));
 vi.mock("next-intl/server", () => ({
   getLocale: () => Promise.resolve("en"),
+  getTranslations: () => Promise.resolve((key: string) => key),
+}));
+vi.mock("@/components/student/preview-banner", () => ({
+  PreviewBanner: () => <div data-testid="preview-banner" />,
 }));
 // redirect throws a capturable error so tests can assert the exact target.
 vi.mock("next/navigation", () => ({
@@ -41,7 +45,7 @@ const layouts = [
     Layout: TeacherLayout,
     admitted: ["TEACHER", "ADMIN", "SYSTEM"],
   },
-  { name: "student", Layout: StudentLayout, admitted: ["STUDENT"] },
+  { name: "student", Layout: StudentLayout, admitted: ["STUDENT", "TEACHER", "ADMIN", "SYSTEM"] },
   { name: "system", Layout: SystemLayout, admitted: ["SYSTEM"] },
   {
     name: "settings",
@@ -96,8 +100,18 @@ describe("role-gated layouts", () => {
     },
   );
 
-  it("keeps the student layout restricted to the student role", async () => {
+  it("shows the preview banner to staff and none to a student", async () => {
     mocks.currentUser.mockResolvedValue({ id: "t-1", role: "TEACHER" });
+    render(await StudentLayout({ children: <p>content</p> }));
+    expect(screen.getByTestId("preview-banner")).toBeInTheDocument();
+    cleanup();
+    mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" });
+    render(await StudentLayout({ children: <p>content</p> }));
+    expect(screen.queryByTestId("preview-banner")).not.toBeInTheDocument();
+  });
+
+  it("keeps the student layout closed to an intern", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "t-1", role: "INTERN" });
 
     await expect(StudentLayout({ children: <p>content</p> })).rejects.toThrow(
       "redirect:/en/unauthorized",

@@ -463,6 +463,62 @@
     "loadErrorHint": "Try again. If the problem stays, tell Reading Advantage.",
     "back": "Go to teachers"
   },
+  "SystemDashboard": {
+    "title": "System dashboard",
+    "week": "This week: {start} to {end}",
+    "totals": {
+      "heading": "Platform totals",
+      "schools": "Schools",
+      "students": "Students",
+      "teachers": "Teachers",
+      "active": "Active students this week",
+      "activeSub": "{active} of {total} ({percent}%)",
+      "articles": "Articles opened this week",
+      "seatsUsed": "Seats used",
+      "seatsOf": "of {seats} seats",
+      "noLicense": "No license",
+      "withoutSchool": "{count, plural, one {# student has no school. This student is not in the table.} other {# students have no school. They are not in the table.}} Assign a school on the Users page."
+    },
+    "table": {
+      "heading": "Schools",
+      "search": "Search by school name",
+      "searchLabel": "Search schools",
+      "sortBy": "Sort by",
+      "sortDefault": "Quiet first",
+      "sortAsc": "Low to high",
+      "sortDesc": "High to low",
+      "sortDirection": "Change the sort order",
+      "noMatch": "No school matches “{query}”.",
+      "empty": "No schools yet",
+      "emptyHint": "Add the first school on the Schools page.",
+      "goToSchools": "Go to Schools",
+      "columns": {
+        "name": "School",
+        "active": "Active students",
+        "articles": "Articles opened",
+        "seats": "Seats",
+        "last": "Last activity",
+        "status": "Status"
+      },
+      "activeOf": "{active} of {students} ({percent}%)",
+      "seatsOf": "{used} of {total}",
+      "noLicense": "No license",
+      "none": "None",
+      "open": "Open",
+      "openFor": "Open the dashboard of {name}",
+      "openCard": "Open dashboard",
+      "actions": "Actions",
+      "footnote": "This week means the last 7 days, today included. Quiet means a school with students and no activity this week. Seats count students only."
+    },
+    "status": {
+      "quiet": "Quiet",
+      "active": "Active",
+      "noStudents": "No students"
+    },
+    "loadError": "The system dashboard did not load",
+    "loadErrorHint": "Try again. If the problem stays, tell the support team.",
+    "back": "Go to Schools"
+  },
   "Components": {
     "translationLanguage": "Translation language",
     "submitButton": "Submit",
@@ -482,6 +538,12 @@
     "seekBack": "Seek back",
     "seekForward": "Seek forward",
     "playbackSpeed": "Playback speed",
+    "previousSentence": "Previous sentence",
+    "replaySentence": "Replay this sentence",
+    "nextSentence": "Next sentence",
+    "changeSpeed": "Speed {speed} times. Change speed",
+    "closeAudio": "Close the audio",
+    "readAlongHint": "Tap a word to hear it from there. Tap a line to hear the whole sentence.",
     "openActionsMenu": "Open actions menu",
     "showNotifications": "Show notifications",
     "toggleDetails": "Toggle details",
@@ -3771,7 +3833,7 @@
         "noKey": "This lesson has no answer key in the catalogue yet.",
         "summary": "Lesson summary",
         "noArticle": "This lesson is not linked to an article yet. The projector and the rehearsal open when it is.",
-        "rehearsalHint": "You see the lesson as a student does. Your steps are not recorded for the class.",
+        "rehearsalHint": "You see the lesson as a student does. Nothing you do here is saved.",
         "backToLesson": "Back to the lesson",
         "projectorHint": "Click a paragraph to focus it. Answer tallies are not available yet.",
         "vocabulary": "Vocabulary",
@@ -3942,5 +4004,13 @@
     "toClasses": "Go to my classes",
     "toStart": "Go to the start page",
     "retry": "Try again"
+  },
+  "StudentView": {
+    "bannerTitle": "Student preview",
+    "bannerNote": "You see what a student sees. Nothing here is saved.",
+    "exit": "Exit preview",
+    "menuItem": "Student view",
+    "notSaved": "Preview: not saved",
+    "backHome": "Back to home"
   }
 }

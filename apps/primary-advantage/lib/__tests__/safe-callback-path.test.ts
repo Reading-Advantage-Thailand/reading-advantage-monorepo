@@ -12,6 +12,14 @@ describe("callback paths after a sign-in", () => {
     expect(safeCallbackPath(null)).toBeNull();
   });
 
+  it("refuses a path that becomes a protocol-relative or unsafe URL after the locale strip", () => {
+    const refused = ["/th//evil.com", "/en//evil.com", "/th/\\evil.com", "/th/%2F%2Fevil.com", "/th/%5Cevil.com", "/th/\tfoo", "/th/en//evil.com", "/th/%2f%2fevil.com", "/th/foo\nbar", "/th/%09foo", "/th/\u0001x", "/th/%zz"];
+    for (const value of refused) {
+      expect(safeCallbackPath(value), JSON.stringify(value)).toBeNull();
+      expect(studentCallbackPath(value), JSON.stringify(value)).toBeNull();
+    }
+  });
+
   it("keeps only student pages for a student, such as the article of a printed QR code", () => {
     expect(studentCallbackPath("/th/student/read/cmgqx8v6602p3t79btatvfjuw")).toBe("/student/read/cmgqx8v6602p3t79btatvfjuw");
     expect(studentCallbackPath("/student")).toBe("/student");

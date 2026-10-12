@@ -2,6 +2,8 @@ import { handleUpdateUserActivity } from "@/server/controllers/userController";
 import { getQuestionsByArticleId } from "@/server/models/articleModel";
 import { NextRequest, NextResponse } from "next/server";
 import { ActivityType } from "@/types/enum";
+import { currentUser } from "@/lib/session";
+import { guardStudentRoute } from "@/lib/student-view";
 
 export async function GET(req: NextRequest) {
   try {
@@ -31,6 +33,13 @@ export async function POST(
   { params }: { params: Promise<{ articleId: string }> },
 ) {
   try {
+    const user = await currentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const preview = guardStudentRoute(user, "article_questions_activity");
+    if (preview) return preview;
+
     const { articleId } = await params;
     const body = await req.json();
 

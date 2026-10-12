@@ -111,16 +111,17 @@ export function TeacherClassTable({ rows, className }: { rows: readonly TeacherC
   const chooseColumn = (key: SortKey) =>
     setSort((now) => (now.key === key ? { key, dir: now.dir === "asc" ? "desc" : "asc" } : { key, dir: FIRST_DESC.has(key) ? "desc" : "asc" }));
 
-  /** Downloads the shown rows, in the shown order, as a CSV file named with the Bangkok date. */
+  /** Downloads the shown rows, in the shown order, as a CSV file (with a UTF-8 byte order mark for Excel) named with the Bangkok date. */
   const downloadCsv = () => {
-    const url = URL.createObjectURL(new Blob([toTeacherClassCsv(shown)], { type: "text/csv;charset=utf-8" }));
+    const url = URL.createObjectURL(new Blob(["\uFEFF", toTeacherClassCsv(shown)], { type: "text/csv;charset=utf-8" }));
     const link = document.createElement("a");
     link.href = url;
     link.download = `teacher-classes-${calendarDayKey(new Date())}.csv`;
     document.body.appendChild(link);
     link.click();
     link.remove();
-    URL.revokeObjectURL(url);
+    // Safari cancels the download when the URL is revoked at once.
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const num = (value: number) => format.number(value);

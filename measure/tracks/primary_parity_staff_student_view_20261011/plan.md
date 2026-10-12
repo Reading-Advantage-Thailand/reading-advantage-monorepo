@@ -6,64 +6,82 @@ refactor, then commit. Tests use Vitest (`vitest.config.ts`; DOM tests add
 `// @vitest-environment jsdom`). Domain tests use `packages/domain/src/__tests__/mock-db.ts`.
 Do not run a 25-student check on this machine (shared decision of 2026-10-05).
 
-## Phase 0: Design
+## Phase 0: Design [checkpoint: 6f9e589f6]
 
-- [ ] Task: Design the Preview banner and the preview states in the RPG skin
-    - [ ] Mock the banner (`Banner` from `components/rpg/chrome.tsx`) with "Exit preview", in day and night, at 375 px and 1280 px
-    - [ ] Mock the preview states of home, avatar picker, shop, history, reports, sentences, vocabulary, Class Quest, Reedy, and a game end screen
-    - [ ] Write the copy keys (en first) and the "Preview: not saved" note; check that the banner does not look like the Reedy "Preview" label
-    - [ ] Save the mocks and captures in `measure/tracks/primary_parity_staff_student_view_20261011/design/`
-- [ ] Task: Fill the behavior contract before the build
-    - [ ] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_staff_student_view_20261011/behavior-contract.md` and fill its seven sections (STU-01, the write-path inventory, and the AC-7 change of the security track)
-    - [ ] Write `measure/tracks/primary_parity_staff_student_view_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7)
-- [ ] Task: Owner look check of the design and of the SYSTEM school rule (spec D8); record the answers in `design/decisions.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md)
+- [x] Task: Design the Preview banner and the preview states in the RPG skin
+    - [x] Mock the banner (`Banner` from `components/rpg/chrome.tsx`) with "Exit preview", in day and night, at 375 px and 1280 px
+    - [x] Mock the preview states of home, avatar picker, shop, history, reports, sentences, vocabulary, Class Quest, Reedy, and a game end screen
+    - [x] Write the copy keys (en first) and the "Preview: not saved" note; check that the banner does not look like the Reedy "Preview" label
+    - [x] Save the mocks and captures in `measure/tracks/primary_parity_staff_student_view_20261011/design/` (mock source and `captures.md` there; the 48 PNG files are outside the repository, paths in `design/captures.md`)
+- [x] Task: Fill the behavior contract before the build
+    - [x] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_staff_student_view_20261011/behavior-contract.md` and fill its seven sections (STU-01, the write-path inventory, and the AC-7 change of the security track)
+    - [x] Write `measure/tracks/primary_parity_staff_student_view_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7)
+- [x] Task: Owner look check of the design and of the SYSTEM school rule (spec D8); record the answers in `design/decisions.md` — look check pending (owner, async). Default used: the D8 rule of the spec (decisions P0-1 to P0-8).
+- [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) — look check pending (owner, async)
+    - Manual steps: (1) Open the 48 PNG files in `~/Desktop/primary-parity-progress/captures/staff_student_view/phase0-design/`. (2) Check `banner-375-*` and `banner-1280-*`: the blue banner differs from the brown PREVIEW plank. (3) Check each state at both widths in day and night. (4) Read `design/decisions.md` and answer P0-1 (SYSTEM school rule). Answers come back to `design/decisions.md`, `spec.md`, and `plan.md`.
 
-## Phase S1: Staff open the student pages
+## Phase S1: Staff open the student pages [checkpoint: 846295101]
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Contract for the student view mode
+**MERGE GATE: do not merge the branch of this phase into integration before Phase S2 is done.**
+After S1 alone, a staff member opens the student pages and every write path still saves on the
+staff row (the guards come in S2). S1 makes the mode available to the S2 guards: the
+`StudentViewProvider` (client) and `studentViewModeFor(role)` in `lib/student-view.ts` (server).
+Until S3, some pages (home, avatar, Class Quest, class books) can show an error for staff.
+
+- [x] Task: Contract for the student view mode
     - [ ] `lib/student-view.ts`: `StudentViewMode` (`"student" | "preview"`), a Zod schema, and `studentViewModeFor(role)` built on `isStaffRole` (`lib/permissions.ts:276`); JSDoc
-- [ ] Task: Tests for access and the menu
+- [x] Task: Tests for access and the menu
     - [ ] `lib/__tests__/student-view.test.ts`: STUDENT gives `student`; TEACHER, ADMIN, SYSTEM give `preview`; INTERN and an unknown role give no mode
     - [ ] Update `lib/__tests__/route-policies.test.ts` and `lib/__tests__/route-policies.contract.test.ts`: `/student` admits STUDENT, TEACHER, ADMIN, SYSTEM; INTERN gets `/unauthorized` (this replaces AC-7 of `primary_authorization_hardening_20260912` for page access)
     - [ ] `components/nav/__tests__/user-account-nav.test.tsx`: staff see "Student view" to `/student/home`; students keep their item
     - [ ] Test for the settings back link: staff go to the role home (`roleDefaultRedirects`)
-- [ ] Task: Implement access, the provider, the banner, and the menu item
+- [x] Task: Implement access, the provider, the banner, and the menu item
     - [ ] `lib/route-policies.ts:17`: add TEACHER, ADMIN, SYSTEM to `/student`
     - [ ] `app/[locale]/(student)/student/layout.tsx`: keep `assertLayoutRole`; derive the mode; wrap the children in `StudentViewProvider`; render the banner for `preview`
     - [ ] `components/student/student-view-provider.tsx` (provider and `useStudentView()`), `components/student/preview-banner.tsx`
     - [ ] `components/nav/user-account-nav.tsx:106-112`: the "Student view" item for staff
     - [ ] `app/[locale]/(student)/settings/user-profile/page.tsx:45-47`: role-aware back link
-    - [ ] `messages/{en,th,cn,tw,vi}.json`: banner, menu, and back link keys
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Staff open the student pages' (Protocol in workflow.md)
+    - [ ] `messages/{en,th,cn,tw,vi}.json`: banner, menu, and back link keys (namespace `StudentView`: `bannerTitle`, `bannerNote`, `exit`, `menuItem`, `notSaved`, `backHome`; Thai written by the helper, owner check pending)
+- [x] Task: Generate docs (generate.sh ran; generated files restored, not committed; doctor.sh: one old failure A13, `agents_md_audit_science_advantage_20260603`, not from this track) and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Staff open the student pages' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: (1) Open the PNG files in `~/Desktop/primary-parity-progress/captures/staff_student_view/phaseS1/` (16 files, list in `design/captures-s1.md`). (2) Check the blue banner on home and read at 375 px and 1280 px, day and night: it shows over the scene and the Exit button is 48 px high. (3) Check that the account menu shows "Student view" first under Navigation. (4) In a build, sign in as a teacher: the menu item opens `/student/home` with the banner, and Exit preview goes to `/teacher/dashboard`. (5) Open `/settings/user-profile` as a teacher: the back link goes to the role home. (6) INTERN opens `/student/home` and gets `/unauthorized`. Do not save anything as staff before S2.
 
-## Phase S2: Nothing saves in Preview mode
+## Phase S2: Nothing saves in Preview mode [checkpoint: 16ae42559]
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Contract for the write guard
-    - [ ] `lib/student-view.ts`: `assertStudentWriter(user)`, `PreviewWriteError`, the action result `{ status: "preview" }`, and the route response helper (403, code `PREVIEW_READ_ONLY`); the refusal logs one info line with `lib/observability/logger.ts`
-    - [ ] Primary domain permission: register a STUDENT-only permission for student-record writes in the Primary domain permission module (`packages/domain/src/primary-avatar/`, `packages/domain/src/primary-quest/`; check the registration pattern of `packages/domain/src/gamification/permissions.ts`)
-- [ ] Task: Tests for every write path (one table-driven test per layer)
-    - [ ] `actions/__tests__/preview-write-guard.test.ts`: `finishQuiz`, `retakeQuiz`, `updateUserActivity`, `fetchArticleActivity`, `saveFlashcard`, `saveArticleToFlashcard`, `reviewCard`, `deleteFlashcardCard`, `setAvatarProfileAction`; TEACHER, ADMIN, SYSTEM get `{ status: "preview" }` and the DB mock records no insert, update, or delete; STUDENT saves
-    - [ ] `app/api/__tests__/preview-write-guard.test.ts`: `lessons/[articleId]` POST, `assignments/[id]`, `v1/apk/complete`, `v1/apk/rpg` PATCH, `v1/apk/challenges/runs`, `v1/avatar` GET (no starter set), `v1/avatar/purchase`, `v1/avatar/loadout`, `v1/quest/heartbeat`, `voice/sessions` and its two sub-routes, the four `flashcard/decks/[deckId]/*` game routes, `flashcard/cards/[cardId]/review`, `articles/questions/[articleId]` POST; staff get 403 `PREVIEW_READ_ONLY` and no write
-    - [ ] `packages/domain/src/__tests__/primary-student-record-permission.test.ts`: `setAvatarProfile`, `purchaseAvatarItem`, `setLoadout`, `ensureStarterSet`, `awardPowerUps`, and the quest heartbeat refuse TEACHER, ADMIN, SYSTEM; STUDENT passes (mock DB)
-    - [ ] `lib/__tests__/preview-guard-coverage.test.ts`: every non-GET handler under the student API folders calls `assertStudentWriter`; a counterexample fixture without the call is detected
-- [ ] Task: Implement the server guards
-    - [ ] Call `assertStudentWriter` at the start of each action in `actions/question.ts`, `actions/user.ts`, `actions/article.ts`, `actions/flashcard.ts`, `actions/avatar.ts`
-    - [ ] Call it at the start of each route in the inventory (spec, "Write paths that student pages reach today")
-    - [ ] Add the domain permission check to `packages/domain/src/primary-avatar/avatar.ts`, `packages/domain/src/primary-avatar/shop.ts`, `packages/domain/src/primary-quest/goals.ts`, `packages/domain/src/primary-quest/battle.ts`; rebuild the domain `dist/` before the app tests
-- [ ] Task: Tests for the client layer
-    - [ ] `components/articles/questions/__tests__/preview-quiz.test.tsx`: in preview, MCQ, SAQ, and LAQ show the result and "Preview: not saved", and `finishQuiz` is not called
-    - [ ] `components/lesson/__tests__/preview-lesson.test.tsx`: in preview, the lesson progress bar and the five lesson games call no write path
-    - [ ] `components/articles/__tests__/preview-article.test.tsx`: in preview, `fetchArticleActivity` and `saveFlashcard` are not called
-- [ ] Task: Implement the client layer and the page-load skips
-    - [ ] Read `useStudentView()` in `components/articles/questions/mc-question-content.tsx`, `written-question-content.tsx`, `components/lesson/task/lesson-task-saq.tsx`, the five lesson game components, `components/lesson/lesson-progress-bar.tsx`, `components/articles/article-content.tsx`, `components/articles/word-list.tsx`, the flashcard game and manage tab
-    - [ ] Skip the page-load writes in preview: `student/home/page.tsx:105` (`awardPowerUps`), `getAvatarState` callers, `student/read/[articleId]/page.tsx:126-128`
-    - [ ] Wrap the lesson rehearsal page in `StudentViewProvider` with `preview`, and correct its hint copy
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Nothing saves in Preview mode' (Protocol in workflow.md)
+Guard names (S2): `assertStudentWriter` (throws `PreviewWriteError`), `guardStudentAction` (returns
+`{ status: "preview" }`), `guardStudentRoute` (403 `PREVIEW_READ_ONLY`), `isStudentWriter`,
+`isPreviewResult`, all in `lib/student-view.ts`. Client: `usePreviewSave()` in
+`components/student/student-view-provider.tsx`. Domain: `STUDENT_RECORD_WRITE`,
+`assertStudentRecordWriter`, `canWriteStudentRecord` in `packages/domain/src/primary-avatar/permissions.ts`.
+
+Student API folders that the coverage test scans (`lib/__tests__/preview-guard-coverage.test.ts`,
+list `STUDENT_API_FOLDERS`, folders under `app/api`): `articles`, `assignments`, `assistant`, `flashcard`,
+`lessons`, `users/activitylog`, `v1/apk`, `v1/avatar`, `v1/quest`, `voice`. A new write route in one of
+them needs a guard call, or an entry with a reason in `EXEMPT` of the same test. The lesson games track
+must add its lesson game completion route under one of these folders, or add its folder to the list.
+
+- [x] Task: Contract for the write guard
+    - [x] `lib/student-view.ts`: guard functions above; the refusal logs one info line `preview_write_refused` (operation and role only)
+    - [x] Primary domain permission `primary:student-record:write` (STUDENT only), registered in `primary-avatar/permissions.ts`; the quest module imports it
+- [x] Task: Tests for every write path
+    - [x] `actions/__tests__/preview-write-guard.test.ts` (9 actions x TEACHER, ADMIN, SYSTEM, plus student)
+    - [x] `app/api/__tests__/preview-write-guard.test.ts` (19 routes x 3 staff roles, plus student)
+    - [x] `packages/domain/src/__tests__/primary-student-record-permission.test.ts`
+    - [x] `lib/__tests__/preview-guard-coverage.test.ts` (with counterexample fixture)
+- [x] Task: Implement the server guards (actions, routes, domain; domain `dist` rebuilt)
+- [x] Task: Tests for the client layer
+    - [x] `components/articles/questions/__tests__/preview-quiz.test.tsx` (MCQ, SAQ, LAQ)
+    - [x] `components/lesson/__tests__/preview-lesson.test.tsx` (progress bar); the five lesson games have no render test (see `plan-review.md`, Medium)
+    - [x] `components/articles/__tests__/preview-article.test.tsx`
+- [x] Task: Implement the client layer and the page-load skips
+    - [x] `usePreviewSave()` in quiz, article, lesson progress bar, five lesson games, flashcard games, lesson SAQ, matching game
+    - [x] Page-load writes: home `awardPowerUps` skipped for staff; `getAvatarState` no longer writes for staff (domain); the read page keeps its STUDENT-only save, with a test for TEACHER, ADMIN, SYSTEM
+    - [x] The rehearsal page runs inside `StudentViewProvider mode="preview"`; the hint copy says nothing is saved
+- [x] Task: Generate docs and run doctor
+- [x] Task: Measure - User Manual Verification 'Phase S2: Nothing saves in Preview mode' - look check pending (owner, async)
+    - Manual steps: (1) Sign in as a teacher in a build and open `/student/read/<article>`; finish the MCQ: the score shows with "Preview: not saved". (2) Count the rows of `user_activity`, `xp_logs`, `article_activity_logs` and the `users.xp` value of the teacher before and after: they stay equal. (3) Open the lesson rehearsal page, move two steps: `lesson_progress` and `xp_logs` stay equal. (4) Sign in as a student and finish a quiz: XP rises as before. (5) With a teacher cookie, POST to `/api/v1/avatar/purchase`: 403 with `PREVIEW_READ_ONLY`.
 
 ## Phase S3: Pages that need a student record show a preview state
 _Story ref: spec.md#story-s3_

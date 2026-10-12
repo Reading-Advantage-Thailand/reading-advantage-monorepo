@@ -1,0 +1,169 @@
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { ArrowLeft, Trophy, Clock, Star, History, ChevronDown, RotateCcw, Eye } from "lucide-react";
+import { Panel, Banner, Gem, RpgButton, RpgLink, Sign } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
+import { CELL_TONE } from "@/components/teacher/class-book-progress-tone";
+
+/* ---------- student summary (task 14) ---------- */
+function Summary({ attempt = 1, phase = "idle", preview = false }: { attempt?: number; phase?: "idle" | "confirm" | "restarting" | "error"; preview?: boolean }) {
+  return (
+    <Scene place="clearing">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-4">
+        {preview ? <p role="status" className="cq-on-scene flex min-h-12 items-center gap-2 text-base font-bold"><Eye className="size-5" />Preview: nothing is saved.</p> : null}
+        <Panel className="items-center text-center" aria-labelledby="sum">
+          <Trophy className="size-12" aria-hidden="true" style={{ color: "var(--cq-gold, #b8860b)" }} />
+          <h1 id="sum" className="text-3xl font-bold md:text-4xl">Lesson complete!</h1>
+          {attempt > 1 ? <Banner>Attempt {attempt}</Banner> : null}
+          <p className="text-lg">You finished the lesson. Great work!</p>
+          <Gem xp={attempt > 1 ? 85 : 120} label={attempt > 1 ? "XP in attempt " + attempt : "XP earned"} />
+          {attempt > 1 ? <p className="cq-muted text-sm">Your earlier attempt is saved in your history. Your XP stays.</p> : null}
+        </Panel>
+        <div className="grid grid-cols-2 gap-3">
+          <Panel className="items-center text-center"><Clock className="size-6" aria-hidden="true" /><b className="text-2xl">12:40</b><span className="cq-muted text-sm">Time spent</span></Panel>
+          <Panel className="items-center text-center"><Star className="size-6" aria-hidden="true" /><b className="text-2xl">8</b><span className="cq-muted text-sm">Words saved</span></Panel>
+        </div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <RpgButton tone="gold" className="w-full sm:w-auto" disabled={phase === "restarting"}>Back to Read Page</RpgButton>
+          <RpgButton tone="iron" className="w-full sm:w-auto" disabled={phase === "restarting"} aria-haspopup="dialog"><RotateCcw className="size-5" aria-hidden="true" />{phase === "restarting" ? "Restarting..." : "Start again"}</RpgButton>
+        </div>
+        {phase === "error" ? <p role="alert" className="cq-on-scene text-center text-base font-bold">We could not start the lesson again. Try again.</p> : null}
+        {phase === "confirm" ? <Dialog title="Start this lesson again?" lines={["Your work on this lesson goes into your history.", "You keep your XP. You can earn XP again."]} ok="Start again" /> : null}
+      </div>
+    </Scene>
+  );
+}
+
+function Dialog({ title, lines, ok }: { title: string; lines: string[]; ok: string }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(10,8,20,0.6)" }}>
+      <Panel role="alertdialog" aria-modal="true" aria-labelledby="dlg" className="w-full max-w-md">
+        <h2 id="dlg" className="text-2xl font-bold">{title}</h2>
+        {lines.map((l) => <p key={l} className="text-base">{l}</p>)}
+        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <RpgButton tone="iron" className="w-full sm:w-auto">Cancel</RpgButton>
+          <RpgButton tone="gold" className="w-full sm:w-auto">{ok}</RpgButton>
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+/* ---------- teacher pages (staff shell stand-in) ---------- */
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bg-background text-foreground flex min-h-screen flex-col">
+      <header className="bg-background border-b"><div className="container mx-auto flex h-16 items-center px-4 font-bold">Primary Advantage <span className="text-muted-foreground ml-2 text-sm font-normal">teacher</span></div></header>
+      <main className="container mx-auto flex flex-1 flex-col gap-6 px-4 pt-6 pb-24">{children}</main>
+    </div>
+  );
+}
+const Back = ({ t }: { t: string }) => <a className="text-muted-foreground inline-flex min-h-11 w-fit items-center gap-2 text-sm font-medium"><ArrowLeft className="size-4" />{t}</a>;
+const CARD = "bg-card text-card-foreground flex min-w-0 flex-col gap-3 rounded-2xl border p-4 shadow-sm sm:p-5";
+const Chip = ({ children, tone = "info" }: { children: React.ReactNode; tone?: "info" | "warn" }) => <span className={"inline-flex min-h-7 items-center rounded-full px-3 text-xs font-bold " + (tone === "warn" ? "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200" : "bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-200")}>{children}</span>;
+
+type L = { n: number; title: string; taught?: string; runs?: { n: number; taught: string; steps: number }[]; run: number; current?: boolean };
+const LESSONS: L[] = [
+  { n: 1, title: "A Day at the Sea Park", taught: "3 Oct", run: 1 },
+  { n: 2, title: "The Lost Map", taught: "9 Oct", run: 2, runs: [{ n: 1, taught: "6 Oct", steps: 13 }] },
+  { n: 3, title: "Night at the Zoo", run: 2, current: true, runs: [{ n: 1, taught: "7 Oct", steps: 13 }, { n: 2, taught: "10 Oct", steps: 9 }] },
+  { n: 4, title: "The Big Race", run: 1 },
+];
+function Plan({ dialog = false }: { dialog?: boolean }) {
+  return (
+    <Shell>
+      <div className="flex flex-col gap-1"><Back t="Back to class" /><h1 className="text-2xl font-bold md:text-3xl">Primary Advantage Origins 3.2</h1><p className="text-muted-foreground">Lesson 3 of 14 · 2 lessons taught</p></div>
+      <section aria-labelledby="pl" className={CARD}>
+        <h2 id="pl" className="text-lg font-semibold">Lesson plan</h2>
+        <ol className="flex flex-col divide-y">
+          {LESSONS.map((l) => {
+            const taughtTimes = (l.runs?.length ?? 0) + (l.taught ? 1 : 0);
+            return (
+              <li key={l.n} className="flex flex-col gap-2 py-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex min-w-0 flex-col">
+                    <span className="font-semibold">Lesson {l.n} · {l.title}</span>
+                    <span className="text-muted-foreground text-sm">{l.taught ? "Taught on " + l.taught : "Not taught yet"}{taughtTimes > 1 ? " · Taught " + taughtTimes + " times" : ""}</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {l.current ? <Chip>Current</Chip> : null}
+                    {l.run > 1 ? <Chip tone="warn">Run {l.run}</Chip> : null}
+                    <a className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium">Open guide</a>
+                    {l.taught || l.runs ? <RpgButton tone="iron" small={false}><RotateCcw className="size-5" aria-hidden="true" />Teach again</RpgButton> : null}
+                  </div>
+                </div>
+                {l.runs ? (
+                  <details className="text-sm"><summary className="flex min-h-11 cursor-pointer items-center gap-2 font-medium"><History className="size-4" />Earlier runs ({l.runs.length})<ChevronDown className="size-4" /></summary>
+                    <ul className="ml-6 flex flex-col gap-1 pb-2">{l.runs.map((r) => <li key={r.n}>Run {r.n} · taught {r.taught} · {r.steps} of 13 steps done</li>)}</ul>
+                  </details>
+                ) : null}
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+      {dialog ? <Dialog title="Teach lesson 2 again?" lines={["The class starts lesson 2 again. The lesson becomes the current lesson.", "The work of each student goes into the history. The XP stays.", "24 students have work on this lesson."]} ok="Teach again" /> : null}
+    </Shell>
+  );
+}
+
+const STUDENTS = ["bluetiger47", "redfox12", "greenowl30", "pinkbear08"];
+function Grid() {
+  const cells = [[14, 14, 9, 0], [14, 7, 0, 0], [14, 14, 14, 3], [0, 0, 0, 0]];
+  const attempts = [[1, 2, 2, 1], [1, 1, 1, 1], [3, 2, 1, 1], [1, 1, 1, 1]];
+  return (
+    <Shell>
+      <div className="flex flex-col gap-1"><Back t="Back to lesson plan" /><h1 className="text-2xl font-bold md:text-3xl">Class progress</h1><p className="text-muted-foreground">Primary Advantage Origins 3.2</p></div>
+      <section className={CARD + " overflow-x-auto"}>
+        <h2 className="text-lg font-semibold">Grid</h2>
+        <table className="w-full text-sm"><thead><tr><th className="py-1 pr-2 text-left">Student</th>{[1, 2, 3, 4].map((n) => <th key={n} className="px-1 py-1 text-center">L{n}</th>)}</tr></thead>
+          <tbody>{STUDENTS.map((s, i) => <tr key={s}><th className="py-1 pr-2 text-left font-medium whitespace-nowrap">{s}</th>{cells[i].map((d, j) => {
+            const st = d === 14 ? "done" : d === 0 ? "not_started" : "in_progress"; const a = attempts[i][j];
+            return <td key={j} className="p-1 text-center"><a aria-label={`${s}, lesson ${j + 1}, ${d} of 14 steps, ${a} attempts`} className={"relative inline-flex min-h-11 min-w-12 items-center justify-center rounded-md px-1 text-xs font-semibold " + CELL_TONE[st as "done"]}>{d}/14{a > 1 ? <span className="absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full border-2 border-white bg-amber-500 text-[11px] font-bold text-black dark:border-slate-900" aria-hidden="true">{a}</span> : null}</a></td>;
+          })}</tr>)}</tbody></table>
+        <p className="text-muted-foreground text-xs">Green: all steps done. Blue: in progress. Grey: not started. A gold dot with a number: the student did the lesson more than once (the number is the attempts).</p>
+      </section>
+    </Shell>
+  );
+}
+
+const AT = [
+  { n: 2, reason: "Teacher taught again", date: "10 Oct", steps: 13, min: 21, xp: 96 },
+  { n: 1, reason: "Student started again", date: "8 Oct", steps: 14, min: 25, xp: 120 },
+];
+function Drill() {
+  return (
+    <Shell>
+      <div className="flex flex-col gap-1"><Back t="Back to grid" /><h1 className="text-2xl font-bold md:text-3xl">bluetiger47</h1><p className="text-muted-foreground">Primary Advantage Origins 3.2</p></div>
+      <ol className="flex flex-col gap-3">
+        <li className={CARD}>
+          <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-semibold">L2 · The Lost Map</h2><div className="flex flex-wrap items-center gap-2 text-sm"><Chip>Attempt 3 (current)</Chip><span>9 of 14 steps</span><span className="text-muted-foreground">11 min</span></div></div>
+          <p className="text-muted-foreground text-sm">Taught on 9 Oct · Taught 2 times</p>
+          <ol className="flex flex-wrap gap-1">{Array.from({ length: 14 }, (_, i) => <li key={i} className={"flex size-8 items-center justify-center rounded-md text-xs font-semibold " + CELL_TONE[i < 9 ? "done" : "not_started"]}>{i + 1}</li>)}</ol>
+          <details open><summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-bold"><History className="size-4" />Earlier attempts ({AT.length})</summary>
+            <ul className="flex flex-col gap-2 pb-1">{AT.map((a) => (
+              <li key={a.n} className="bg-muted/50 flex flex-col gap-1 rounded-xl border p-3 text-sm">
+                <div className="flex flex-wrap items-center justify-between gap-2"><b>Attempt {a.n}</b><span className="text-muted-foreground">Closed {a.date}</span></div>
+                <span>{a.reason}</span>
+                <span className="text-muted-foreground">{a.steps} of 14 steps · {a.min} min · {a.xp} XP</span>
+              </li>))}</ul>
+          </details>
+        </li>
+        <li className={CARD}><h2 className="text-lg font-semibold">L3 · Night at the Zoo</h2><p className="text-muted-foreground text-sm">Taught on 10 Oct</p><ol className="flex flex-wrap gap-1">{Array.from({ length: 14 }, (_, i) => <li key={i} className={"flex size-8 items-center justify-center rounded-md text-xs font-semibold " + CELL_TONE["not_started"]}>{i + 1}</li>)}</ol></li>
+      </ol>
+    </Shell>
+  );
+}
+
+export const states: Record<string, React.ReactNode> = {
+  "student-summary-first": <Summary />,
+  "student-summary-attempt2": <Summary attempt={2} />,
+  "student-confirm": <Summary attempt={1} phase="confirm" />,
+  "student-restarting": <Summary phase="restarting" />,
+  "student-preview": <Summary preview />,
+  "teacher-plan": <Plan />,
+  "teacher-confirm": <Plan dialog />,
+  "teacher-grid": <Grid />,
+  "teacher-drilldown": <Drill />,
+};
+export const render = (k: string) => renderToStaticMarkup(states[k]);

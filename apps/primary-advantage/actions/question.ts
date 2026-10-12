@@ -17,6 +17,7 @@ import {
   users,
 } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
+import { guardStudentAction } from "@/lib/student-view";
 import { calculateLevelAndCefrLevel } from "@/lib/utils";
 import { resolveQuestionXpAward } from "@/lib/authorization";
 import { getLaqFeedback, getSaqFeedback } from "@/server/utils/assistant";
@@ -29,6 +30,9 @@ export async function retakeQuiz(articleId: string, type: ActivityType) {
     if (!user) {
       return { error: "User not found" };
     }
+
+    const preview = guardStudentAction(user, "retake_quiz");
+    if (preview) return preview;
 
     const [userActivityRow] = await db.select({ id: userActivity.id })
       .from(userActivity)
@@ -83,6 +87,9 @@ export async function finishQuiz(
   if (!user) {
     return { error: "User not found" };
   }
+
+  const preview = guardStudentAction(user, "finish_quiz");
+  if (preview) return preview;
 
   // The award is derived server-side from the submission; callers cannot set XP.
   const xpEarned = resolveQuestionXpAward(type, data);

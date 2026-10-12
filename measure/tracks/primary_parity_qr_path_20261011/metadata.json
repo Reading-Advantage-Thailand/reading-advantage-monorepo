@@ -1,22 +1,22 @@
 {
   "track_id": "primary_parity_qr_path_20261011",
   "type": "feature",
-  "status": "new",
+  "status": "complete-pending-batch-capture",
   "created_at": "2026-10-12T00:00:00Z",
-  "updated_at": "2026-10-12T00:00:00Z",
+  "updated_at": "2026-10-12T13:40:00Z",
   "description": "Primary Parity Before the Cutover: QR code path for printed books (/b/<book>/<n>)",
   "estimated_tasks": 33,
-  "actual_tasks": null,
-  "deviation_notes": "",
+  "actual_tasks": 33,
+  "deviation_notes": "Phase A prepared only: the kit run and the captures are a batch step (orchestrator). legacyPath holds the raw legacy article id, not a map placeholder. A4 (printed URL with no locale) is a pair on /th/b/o3-2/1 plus a curl check, because the kit needs a locale in each path. The class-code sign-in is the cutover-check browser block, not a pair. Defaults used for Member Questions 1 to 4.",
   "sprint": {
     "goal": "A reader who scans a printed D1-B QR code, reading or writing, reaches the right lesson after sign-in, or sees a clear page that says what to do.",
     "stories": [
-      {"id": "S1", "title": "Return to the same lesson after sign-in", "size": "M", "priority": "Must", "status": "pending"},
-      {"id": "S2", "title": "Signed-out landing for Primary and Tutor readers", "size": "M", "priority": "Must", "status": "pending"},
-      {"id": "S3", "title": "Writing QR code target", "size": "S", "priority": "Must", "status": "pending"},
-      {"id": "S4", "title": "A clear page for every case that is not the normal one", "size": "M", "priority": "Must", "status": "pending"},
-      {"id": "S5", "title": "Prove the printed URL without a locale", "size": "S", "priority": "Must", "status": "pending"},
-      {"id": "S6", "title": "Check one /b/ URL in the go/no-go script", "size": "S", "priority": "Must", "status": "pending"}
+      {"id": "S1", "title": "Return to the same lesson after sign-in", "size": "M", "priority": "Must", "status": "complete-pending-batch-capture"},
+      {"id": "S2", "title": "Signed-out landing for Primary and Tutor readers", "size": "M", "priority": "Must", "status": "complete-pending-batch-capture"},
+      {"id": "S3", "title": "Writing QR code target", "size": "S", "priority": "Must", "status": "complete-pending-batch-capture"},
+      {"id": "S4", "title": "A clear page for every case that is not the normal one", "size": "M", "priority": "Must", "status": "complete-pending-batch-capture"},
+      {"id": "S5", "title": "Prove the printed URL without a locale", "size": "S", "priority": "Must", "status": "complete-pending-batch-capture"},
+      {"id": "S6", "title": "Check one /b/ URL in the go/no-go script", "size": "S", "priority": "Must", "status": "complete-pending-batch-capture"}
     ],
     "demo_notes": "",
     "retro_ref": ""

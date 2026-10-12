@@ -78,15 +78,29 @@ Decisions that Phase 2 must keep:
 
 ## 6. Acceptance rows
 
-| Pair id | Legacy page | New page | Role | Observable behavior | Data check | Result |
-| --- | --- | --- | --- | --- | --- | --- |
-| th-numbers | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | Each legacy number maps to a new number (section 5 for the changes) | AC-2: the `summary` row of `reference.sql` equals the page | batch capture (orchestrator) |
-| th-columns | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | Each legacy table column maps to a new column or a reason (section 5) | AC-2: the `class` rows of `reference.sql` equal the table | batch capture (orchestrator) |
-| th-search-sort | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | Search shows only matching classes; a tap on "Students" sorts, a second tap reverses | none | batch capture (orchestrator) |
-| th-csv | `/teacher/dashboard` (export) | `/teacher/dashboard` (export) | TEACHER | The file has the FR-10 header and the shown rows in the shown order; the kit records the legacy columns | row count equals the table | batch capture (orchestrator) |
-| th-class-link | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | A tap on a class name opens `/teacher/class-roster/<id>` and the page loads | none | batch capture (orchestrator) |
-| th-one-list | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | One class list; "Start class" works from the table | none | batch capture (orchestrator) |
-| th-look | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | Captures at 375 px and 1280 px, day and night | none | batch capture (orchestrator) |
+Pair file: `acceptance-pairs.json`. Steps modules: `acceptance-steps-search-sort.ts` (env `PARITY_CLASS_SEARCH`) and
+`acceptance-steps-class-link.ts` (optional env `PARITY_NEW_CLASS_ID`). The legacy class id in `th-start-class` is a raw id.
+
+| Pair id | AC | Legacy page | New page | Role | Observable behavior | Data check | Result |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| th-numbers | AC-1, AC-2 | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | Each legacy number maps to a new number (section 5 for the changes) | D1: the `summary` row of `reference.sql` equals the strip | batch capture (orchestrator) |
+| th-columns | AC-1, AC-2 | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | Each legacy table column maps to a new column or a reason (section 5) | D2: the `class` rows of `reference.sql` equal the table | batch capture (orchestrator) |
+| th-search-sort | AC-3 | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | Search shows only matching classes; two taps on "Students" sort and reverse | none | batch capture (orchestrator) |
+| th-csv | AC-4 | `/teacher/dashboard` (export) | `/teacher/dashboard` (export) | TEACHER | The button exists; the file has the FR-10 header and the shown rows in the shown order (manual download step) | D3: row count equals the table | batch capture (orchestrator) |
+| th-class-link | AC-5 | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | A tap on a class name opens `/teacher/class-roster/<id>` and the page loads | none | batch capture (orchestrator) |
+| th-start-class | AC-6 | `/teacher/class-roster/<legacy id>#class-login` | `/teacher/class-roster/{map:classrooms:<legacy id>}#class-login` | TEACHER | "Start class" opens the class page at the sign-in panel | none | batch capture (orchestrator) |
+| th-one-list | AC-6 | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | One class list; each row has "Start class" | none | batch capture (orchestrator) |
+| th-look | AC-7 | `/teacher/dashboard` | `/teacher/dashboard` | TEACHER | Captures at 375 px and 1280 px, day and night | none | batch capture (orchestrator); look check pending (owner, async) |
+
+### SQL data checks
+
+Run on a clone of the matched copy (name with `_run_`), for the teacher that the kit signs in as.
+Command: `docker exec -i reading-advantage-postgres psql -U postgres -d <clone> -At -v teacher_id=<users.id> < reference.sql`.
+
+- D1: the `summary` row gives `classes`, `students`, `active_students_30d`, `active_today`, `average_level` (one decimal), `completed_today`. They equal the strip. The "n of m (p %)" tile reads `active_students_30d` of `students`.
+- D2: each `class` row gives `students`, `active_7d`, `active_rate_7d`, `average_level`, `xp_7d`, `xp_previous_7d`, `trend`, `status`. They equal the table row of the same class.
+- D3: the number of `class` rows equals the number of data rows in the CSV file. The CSV header is the header of spec FR-10.
+- The 2026-10-12 query check (acceptance.md) ran D1 and D2 for two teachers: 0 differences.
 
 ## 7. ETL and runbook changes
 

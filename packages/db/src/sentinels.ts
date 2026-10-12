@@ -672,4 +672,14 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       { tag: "0072_primary_stories", kind: "column", target: "sentencs_and_words_for_flashcard.chapter_id" },
     ],
   },
+  "0073_primary_lesson_attempts": {
+    tag: "0073_primary_lesson_attempts",
+    kind: "all",
+    target: "primary_lesson_attempts",
+    allOf: [
+      { tag: "0073_primary_lesson_attempts", kind: "table", target: "primary_lesson_attempts" },
+      { tag: "0073_primary_lesson_attempts", kind: "column", target: "primary_class_book_lessons.run_number" },
+      { tag: "0073_primary_lesson_attempts", kind: "column", target: "primary_class_book_lessons.earlier_runs" },
+    ],
+  },
 };

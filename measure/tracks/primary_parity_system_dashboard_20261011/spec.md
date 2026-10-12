@@ -166,6 +166,16 @@ These defaults are chosen in this spec. The owner can change each one at the des
 - The count of students without a school in the strip (a SYSTEM import without a school writes
   such students, ADM-04).
 
+### Look check record (Phase 1, 2026-10-12)
+
+Look check pending (owner, async). The owner decided on 2026-10-12 that the set does not stop for owner input,
+so each default above stands until the owner changes it. The Design phase added one default:
+
+- The strip "Seats used" counts only the students of schools that have an active license with seats. A school without
+  seats shows "No license" in its row. Look check pending (owner, async).
+
+Captures: `design/captures.md`. Notes: `design/design.md`.
+
 ## Out of Scope
 
 - AI insights (SYS-02, after the cutover).

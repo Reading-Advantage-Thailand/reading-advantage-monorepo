@@ -113,7 +113,8 @@ Paths are relative to `apps/primary-advantage` unless the path starts with `pack
   stops. The player buttons are 48 px.
 - **D5 Modules.**
   - `lib/read-along/align.ts` (pure): the display split with straight and curly quotes; the word maps
-    with the legacy tiers; a resync that looks ahead up to 4 audio words; a map for the display words
+    with the legacy tiers; an anchor-based resync that bridges up to 9 words on each side (decision M-1:
+    real gaps are 1 to 7 words, so the first plan of 4 was too small); a map for the display words
     after the last audio word.
   - `lib/read-along/position.ts` (pure): the current sentence and word, with the sticky rules and the
     0.3 s rule.
@@ -187,6 +188,19 @@ Paths are relative to `apps/primary-advantage` unless the path starts with `pack
 
 **Estimate:** S
 **Priority:** Should
+
+## Decisions (defaults used, 2026-10-12)
+
+The owner decided that the set runs with no stop. These defaults stand until the owner changes them.
+The full table is in `design/decisions.md`. Each item is: look check pending (owner, async).
+
+- Speed list (D3): 0.75×, 1×, 1.25×; one tap on the sign goes to the next speed.
+- Tap sign: one hint line above the text, and the green hover on words; no mark on each word.
+- Follow scroll: the current sentence stays at about 30% of the viewport height.
+- Phase S1 build (2026-10-12): the passage component does not own the audio element. The host page owns the
+  audio and the player, and gives `position` to `components/read-along/read-along-passage.tsx`. The hook
+  `hooks/use-read-along.ts` reads the audio element. This keeps the component free of article-page details (D6).
+- Data finding: real audio gaps are 1 to 7 words (`data-profile.md`), so the resync of D5 must bridge 7 words, not 4.
 
 ## Non-Functional Requirements
 

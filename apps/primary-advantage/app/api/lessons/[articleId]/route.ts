@@ -5,6 +5,7 @@ import {
   getArticleForLesson,
   updateStandaloneLessonProgress,
 } from "@/server/models/lessonModel";
+import { guardStudentRoute } from "@/lib/student-view";
 
 /**
  * GET /api/lessons/[articleId]
@@ -53,6 +54,8 @@ export async function POST(
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    const preview = guardStudentRoute(user, "lesson_progress");
+    if (preview) return preview;
 
     const { articleId } = await params;
     const body = await req.json();

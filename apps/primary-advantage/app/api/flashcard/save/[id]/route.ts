@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { articles } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
+import { guardStudentRoute } from "@/lib/student-view";
 
 /**
  * Confirms the caller's article exists before the client saves it locally.
@@ -22,6 +23,8 @@ export async function POST(
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const preview = guardStudentRoute(user, "flashcard_save");
+  if (preview) return preview;
 
   // Authorization decision via the central policy. Flashcard study serves
   // any authenticated user; article:read is the matching low-privilege

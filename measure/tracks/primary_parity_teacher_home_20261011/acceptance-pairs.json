@@ -1,0 +1,178 @@
+{
+  "member": "primary_parity_teacher_home_20261011",
+  "pairs": [
+    {
+      "id": "th-numbers",
+      "rows": [
+        "TCH-03"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/dashboard",
+      "newPath": "/en/teacher/dashboard",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "waitFor": {
+        "new": "main"
+      },
+      "checks": [
+        {
+          "id": "th-numbers-a",
+          "behavior": "AC-1, AC-2: each legacy number (active students, average level, active today, completed today) maps to a new number of the summary strip (behavior contract section 5 for the changes). The new strip has 8 numbers; the active tile reads n of m (p %); the label says Average level."
+        },
+        {
+          "id": "th-numbers-b",
+          "behavior": "AC-2: the numbers equal the summary row of reference.sql for the matched TEACHER (acceptance.md, SQL data checks)."
+        }
+      ]
+    },
+    {
+      "id": "th-columns",
+      "rows": [
+        "TCH-03"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/dashboard",
+      "newPath": "/en/teacher/dashboard",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "th-columns-a",
+          "behavior": "AC-1, AC-2: each legacy table column maps to a new column or to its reason (section 5): the code column is gone, XP is XP in 7 days, trend works, status is an engagement status."
+        },
+        {
+          "id": "th-columns-b",
+          "behavior": "AC-2: each class row equals the class rows of reference.sql (students, active 7 days, rate, average level, XP, trend, status)."
+        }
+      ]
+    },
+    {
+      "id": "th-search-sort",
+      "rows": [
+        "TCH-03"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/dashboard",
+      "newPath": "/en/teacher/dashboard",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "steps": "./acceptance-steps-search-sort.ts",
+      "checks": [
+        {
+          "id": "th-search-sort-a",
+          "behavior": "AC-3: a search for part of a class name (PARITY_CLASS_SEARCH) shows only the matching classes in both apps."
+        },
+        {
+          "id": "th-search-sort-b",
+          "behavior": "AC-3: two taps on Students sort the rows and reverse the order. The new table shows the arrow in the head."
+        }
+      ]
+    },
+    {
+      "id": "th-csv",
+      "rows": [
+        "TCH-03"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/dashboard",
+      "newPath": "/en/teacher/dashboard",
+      "colorSchemes": [
+        "light"
+      ],
+      "checks": [
+        {
+          "id": "th-csv-a",
+          "behavior": "AC-4: the Download CSV button exists in the new table (legacy has an Export button). The kit cannot capture a download: the CSV file is a manual step in acceptance.md."
+        }
+      ]
+    },
+    {
+      "id": "th-class-link",
+      "rows": [
+        "TCH-03"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/dashboard",
+      "newPath": "/en/teacher/dashboard",
+      "colorSchemes": [
+        "light"
+      ],
+      "steps": "./acceptance-steps-class-link.ts",
+      "checks": [
+        {
+          "id": "th-class-link-a",
+          "behavior": "AC-5: a tap on a class name opens /teacher/class-roster/<id> and the class page loads (legacy has no working row link: difference on purpose)."
+        },
+        {
+          "id": "th-class-link-b",
+          "behavior": "AC-5: the URL after the tap matches /teacher/class-roster/ in the new app."
+        }
+      ]
+    },
+    {
+      "id": "th-start-class",
+      "rows": [
+        "TCH-03"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/class-roster/cmhwuko0p000ds60dha8z70ig#class-login",
+      "newPath": "/en/teacher/class-roster/{map:classrooms:cmhwuko0p000ds60dha8z70ig}#class-login",
+      "colorSchemes": [
+        "light"
+      ],
+      "waitFor": {
+        "new": "#class-login"
+      },
+      "checks": [
+        {
+          "id": "th-start-class-a",
+          "behavior": "AC-6: the Start class anchor #class-login opens the class page at the sign-in panel. Run it after th-class-link; the table link must carry #class-login (acceptance.md manual step 3)."
+        }
+      ]
+    },
+    {
+      "id": "th-one-list",
+      "rows": [
+        "TCH-03"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/dashboard",
+      "newPath": "/en/teacher/dashboard",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "th-one-list-a",
+          "behavior": "AC-6: the page has one class list (the table). There is no second My classes card list. Each row has a Start class link."
+        }
+      ]
+    },
+    {
+      "id": "th-look",
+      "rows": [
+        "TCH-03"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/teacher/dashboard",
+      "newPath": "/en/teacher/dashboard",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "th-look-a",
+          "behavior": "AC-7: captures at 375 px and 1280 px, day and night, for the owner look check."
+        }
+      ]
+    }
+  ]
+}

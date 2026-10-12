@@ -2,6 +2,7 @@
 
 import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
 import { currentUser } from "@/lib/session";
+import { guardStudentAction } from "@/lib/student-view";
 import {
   db,
   eq,
@@ -39,6 +40,9 @@ export async function updateUserActivity(
   if (!user) {
     return { error: "User not found" };
   }
+
+  const preview = guardStudentAction(user, "update_user_activity");
+  if (preview) return preview;
 
   const [userData] = await db.select({ xp: users.xp })
     .from(users)

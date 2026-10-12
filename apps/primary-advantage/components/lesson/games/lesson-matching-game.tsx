@@ -1,4 +1,5 @@
 "use client";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import {
   ActivityType,
   FlashcardType,
@@ -198,6 +199,7 @@ function MatchingGameBody({
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const { user, refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   // Helper states
   const [score, setScore] = useState(0);
@@ -323,6 +325,10 @@ function MatchingGameBody({
   // Auto-complete check
   useEffect(() => {
     const handleComplete = async () => {
+      if (isPreview) {
+        notSaved();
+        return;
+      }
       await updateUserActivity(articleId, config.activityType, 0, {
         score: config.activityScore,
       });

@@ -1,0 +1,44 @@
+[
+  {
+    "words": [
+      {
+        "end": 3.6375,
+        "word": "Class",
+        "start": 3.15
+      },
+      {
+        "end": 4.0375,
+        "word": "3",
+        "start": 3.6375
+      },
+      {
+        "end": 4.225,
+        "word": "went",
+        "start": 4.0375
+      },
+      {
+        "end": 4.325,
+        "word": "to",
+        "start": 4.225
+      },
+      {
+        "end": 4.4375,
+        "word": "a",
+        "start": 4.325
+      },
+      {
+        "end": 4.775,
+        "word": "big",
+        "start": 4.4375
+      },
+      {
+        "end": 5.6,
+        "word": "farm",
+        "start": 4.775
+      }
+    ],
+    "endTime": 5.6,
+    "sentence": "Class 3 went to a big farm.",
+    "startTime": 3.15
+  }
+]

@@ -98,3 +98,9 @@ Lessons (for the orchestrator):
 - Run the full suite of the package at the end of the phase that adds a shared module. The `licenses.test.ts` mock of `drizzle-orm` broke when `licenses/usage.ts` used `sql` at load time. Phase 2 ran only its own tests.
 - `eslint` needs the package folder (each package has its own `eslint.config.mjs`). Run it from `apps/primary-advantage` or `packages/domain`.
 - A helper has no database password. A script can send raw SQL to `psql` in the container through a small `db.execute` shim.
+
+## Review fixes (2026-10-12)
+
+- Medium fixed: a SYSTEM user with `users.school_id` set and no `?school=` got the numbers of that school.
+  AC-4 wants the selector and no numbers. The page now passes `schoolId: null` to `resolveCreationSchoolId` for SYSTEM.
+  ADMIN keeps the session school. Two tests cover both roles (`page.test.tsx`, "school choice").

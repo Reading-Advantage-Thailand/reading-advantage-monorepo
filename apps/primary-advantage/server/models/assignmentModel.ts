@@ -15,6 +15,7 @@ import {
   articleActivityLogs,
 } from '@reading-advantage/db';
 import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
+import { classroomTeachers } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { normalizeRole } from "@/lib/authorization";
 
@@ -319,6 +320,16 @@ export default async function getAssignmentById(id: string) {
       }
       if (callerRole === "STUDENT" && saRows.length === 0) {
         throw new AssignmentForbiddenError();
+      }
+      if (callerRole === "TEACHER") {
+        // A teacher reads only the assignments of a class that the teacher teaches.
+        const teacherId = (classroomRow as { teacherId?: string | null }).teacherId;
+        if (teacherId !== user.id) {
+          const [link] = await db.select({ id: classroomTeachers.id }).from(classroomTeachers)
+            .where(and(eq(classroomTeachers.classroomId, assignment.classroomId), eq(classroomTeachers.teacherId, user.id)))
+            .limit(1);
+          if (!link) throw new AssignmentForbiddenError();
+        }
       }
       if (
         callerRole !== "STUDENT" &&
