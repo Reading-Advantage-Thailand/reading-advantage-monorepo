@@ -60,7 +60,7 @@ Phase 2 notes (helper, 2026-10-12):
 - Checks: domain `tsc` 0 errors (and `dist/` rebuilt), ESLint on the changed files 0 errors.
 - Extension points for the other members: `ActivityScope` has only `school` now; `scopeStudentsSql(scope)` is the one place that selects the students of a scope. The teacher home adds the `classes` kind there; the system dashboard adds `platform` there.
 
-## Phase 3: UI
+## Phase 3: UI [checkpoint: 2a424b2af]
 
 - [x] Task: The dashboard page
     - [x] Scene `contained` option (design, Phase 1): add the prop and the class `cq-scene--staff` (wrapper `clip-path: inset(0)`) in `components/rpg/scene.tsx` and `styles/rpg.css`, with a test in `components/rpg/__tests__`; the other two dashboard tracks reuse it
