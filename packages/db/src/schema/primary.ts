@@ -16,7 +16,7 @@
  * cross-app coordination and are documented in the Phase 1 audit report.
  */
 import {
-  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique, primaryKey, uniqueIndex, index,
+  pgTable, uuid, text, timestamp, integer, boolean, real, jsonb, pgEnum, unique, primaryKey, uniqueIndex, index, check,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { users, schools } from "./users.js";
@@ -160,16 +160,20 @@ export const articleActivityLogs = pgTable("article_activity_logs", {
 /** NOTE: Views in schema tutor_compat (0061) read this table. PostgreSQL refuses ALTER COLUMN TYPE and DROP COLUMN on columns a view uses. DROP ... CASCADE silently deletes the Tutor views. Recreate the views in the same migration. */
 export const sentencsAndWordsForFlashcards = pgTable("sentencs_and_words_for_flashcard", {
   id: uuid("id").primaryKey().defaultRandom(),
+  /** Null for a story chapter row; exactly one of `articleId` and `chapterId` is set. */
   articleId: uuid("article_id")
-    .notNull()
     .references(() => articles.id, { onDelete: "cascade" }),
+  /** The `chapters.id` (as text) of a story chapter row; null for an article row. */
+  chapterId: text("chapter_id"),
   sentence: jsonb("sentence"),
   audioSentencesUrl: text("audio_sentences_url"),
   words: jsonb("words"),
   wordsUrl: text("words_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+}, (table) => [
+  check("sentencs_and_words_for_flashcard_one_owner_check", sql`(${table.articleId} IS NOT NULL) <> (${table.chapterId} IS NOT NULL)`),
+]);
 
 // ─── FSRS scheduler history ────────────────────────────────
 

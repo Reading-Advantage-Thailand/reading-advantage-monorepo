@@ -662,4 +662,14 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       { tag: "0071_primary_temporary_password", kind: "column", target: "accounts.temporary_password_issued_at" },
     ],
   },
+  "0072_primary_stories": {
+    tag: "0072_primary_stories",
+    kind: "all",
+    target: "stories.image",
+    allOf: [
+      { tag: "0072_primary_stories", kind: "column", target: "stories.image" },
+      { tag: "0072_primary_stories", kind: "column", target: "chapters.image" },
+      { tag: "0072_primary_stories", kind: "column", target: "sentencs_and_words_for_flashcard.chapter_id" },
+    ],
+  },
 };

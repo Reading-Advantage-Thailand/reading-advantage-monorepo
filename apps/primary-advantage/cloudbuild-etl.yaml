@@ -47,7 +47,7 @@ steps:
         echo "$$(t) guard: target OK, legacy refused"
         npx tsx scripts/migrate.ts > /workspace/migrate.out 2>&1 || { tail -25 /workspace/migrate.out; exit 1; }
         echo "$$(t) migrate done"
-        npx tsx scripts/migration-ledger-doctor.ts --check --required-migration 0071_primary_temporary_password 2>&1 | tail -1
+        npx tsx scripts/migration-ledger-doctor.ts --check --required-migration 0072_primary_stories 2>&1 | tail -1
         echo "$$(t) doctor done"
         npx tsx scripts/primary-legacy-import.ts --roles /workspace/etl-inputs/roles.json \
           --usernames /workspace/etl-inputs/usernames.json --teachers /workspace/etl-inputs/teachers.json \

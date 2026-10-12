@@ -8,6 +8,12 @@ import {
   MCQ_ANSWER_FIXES,
   QUESTION_ORDER_SQL,
   cardTextOf,
+  chapterAudioKey,
+  mapChapter,
+  mapStory,
+  questionOwner,
+  type LegacyChapter,
+  type LegacyStory,
   correctAnswerIndex,
   keepLatest,
   lessonStatusOf,
@@ -84,11 +90,12 @@ describe("primary legacy import transforms", () => {
   it("orders the questions of an article by insert order, not by their place on disk", async () => {
     const db = new PGlite();
     try {
-      await db.exec(`create table q (id text, article_id text, "createdAt" timestamp);
-        insert into q values ('c3', 'a', '2026-01-01'), ('c1', 'a', '2026-01-01'), ('c2', 'a', '2026-01-01'), ('c9', 'b', '2026-01-02');
+      await db.exec(`create table q (id text, article_id text, story_chapter_id text, "createdAt" timestamp);
+        insert into q (id, article_id, "createdAt") values ('c3', 'a', '2026-01-01'), ('c1', 'a', '2026-01-01'), ('c2', 'a', '2026-01-01'), ('c9', 'b', '2026-01-02');
+        insert into q (id, story_chapter_id, "createdAt") values ('s2', 'ch', '2026-01-03'), ('s1', 'ch', '2026-01-03');
         update q set article_id = article_id where id = 'c1';`);
       const { rows } = await db.query<{ id: string; ord: number }>(`select id, (${QUESTION_ORDER_SQL})::int as ord from q order by id`);
-      expect(rows).toEqual([{ id: "c1", ord: 0 }, { id: "c2", ord: 1 }, { id: "c3", ord: 2 }, { id: "c9", ord: 0 }]);
+      expect(rows).toEqual([{ id: "c1", ord: 0 }, { id: "c2", ord: 1 }, { id: "c3", ord: 2 }, { id: "c9", ord: 0 }, { id: "s1", ord: 0 }, { id: "s2", ord: 1 }]);
     } finally {
       await db.close();
     }
@@ -203,5 +210,62 @@ describe("primary legacy import transforms", () => {
     expect(md).toContain("- n1");
     expect(renderReport({ startedAt: "a", finishedAt: "b", dryRun: false, dropped: [], notes: [], tables: { "flashcard_cards.last_review": { read: 3, written: 3, skipped: {}, examples: {} } } }))
       .toContain("| flashcard_cards.last_review → flashcard_progress | 3 | 3 | 0 |");
+  });
+
+  describe("stories and chapters (track primary_parity_stories_20261011, S1)", () => {
+    const story: LegacyStory = {
+      id: "cst1", title: "The Fox", summary: "A fox.", imageDescription: "a fox", type: "fiction", genre: "Adventure", subGenre: "Quest",
+      cefrLevel: "A1", raLevel: 4, rating: 4.2, createdAt: new Date("2026-01-01"), updatedAt: new Date("2026-01-02"),
+      characters: [{ name: "Fox" }], is_published: true, translatedSummary: { th: "x" },
+    };
+    const chapter: LegacyChapter = {
+      id: "cch1", storyId: "cst1", chapterNumber: 3, title: "Ch 3", summary: "s", translatedSummary: { th: "y" }, imageDescription: "d",
+      sentences: [{ sentence: "Hi." }], translatedSentences: { th: ["สวัสดี"] }, audio_sentences_url: "audios/story/chapter/cch1.mp3",
+      createdAt: new Date("2026-01-01"), updatedAt: new Date("2026-01-02"), passage: "Hi.",
+    };
+
+    it("loads the stories: no stories entry stays in DROPPED_TABLES, and the map tables are named", () => {
+      expect(DROPPED_TABLES.some((d) => d.table.includes("stories"))).toBe(false);
+      expect(MAP_TABLES.stories).toBe("stories");
+      expect(MAP_TABLES.storyChapters).toBe("story_chapters");
+    });
+
+    it("maps a story: characters to story_bible, is_published to is_public, the legacy cuid to image", () => {
+      const row = mapStory(story, "11111111-1111-4111-8111-111111111111");
+      expect(row).toMatchObject({
+        id: "11111111-1111-4111-8111-111111111111", title: "The Fox", image: "cst1", is_public: true, ra_level: 4, cefr_level: "A1",
+        genre: "Adventure", subgenre: "Quest", image_description: "a fox",
+      });
+      expect((row.story_bible as JsonCell).value).toEqual([{ name: "Fox" }]);
+      expect((row.translated_summary as JsonCell).value).toEqual({ th: "x" });
+      expect(mapStory({ ...story, characters: null, is_published: false }, "x")).toMatchObject({ story_bible: null, is_public: false });
+    });
+
+    it("maps a chapter: translatedSentences to translated_passage, audioSentencesUrl to audio_url, the legacy cuid to image", () => {
+      const row = mapChapter(chapter, { id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc", storyId: "ssssssss-ssss-4sss-8sss-ssssssssssss", story });
+      expect(row).toMatchObject({
+        id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc", story_id: "ssssssss-ssss-4sss-8sss-ssssssssssss", chapter_number: 3, image: "cch1",
+        audio_url: "audios/story/chapter/cch1.mp3", passage: "Hi.", is_public: true, ra_level: 4, cefr_level: "A1", genre: "Adventure",
+      });
+      expect((row.translated_passage as JsonCell).value).toEqual({ th: ["สวัสดี"] });
+      expect((row.sentences as JsonCell).value).toEqual([{ sentence: "Hi." }]);
+    });
+
+    it("uses the legacy fallback audio key when the chapter has none, and flags it", () => {
+      expect(chapterAudioKey(chapter)).toEqual({ key: "audios/story/chapter/cch1.mp3", fallback: false });
+      expect(chapterAudioKey({ ...chapter, audio_sentences_url: null })).toEqual({ key: "audios/story/cst1-3.mp3", fallback: true });
+      expect(chapterAudioKey({ ...chapter, audio_sentences_url: " " })).toEqual({ key: "audios/story/cst1-3.mp3", fallback: true });
+    });
+
+    it("gives a chapter row a NULL article_id and a chapter row key; an article row keeps its article (Graph condition)", () => {
+      const lookup = (table: string, id: string | null) => (id ? `new-${table}-${id}` : null);
+      expect(questionOwner({ article_id: null, story_chapter_id: "cch1" }, lookup)).toEqual({ kind: "chapter", article_id: null, chapter_id: "new-story_chapters-cch1" });
+      expect(questionOwner({ article_id: "ca1", story_chapter_id: null }, lookup)).toEqual({ kind: "article", article_id: "new-article-ca1", chapter_id: null });
+      // A chapter id never lands in article_id, even when the row names both.
+      expect(questionOwner({ article_id: "ca1", story_chapter_id: "cch1" }, lookup)).toMatchObject({ kind: "chapter", article_id: null });
+      expect(questionOwner({ article_id: null, story_chapter_id: null }, lookup)).toEqual({ kind: "none", article_id: null, chapter_id: null });
+      const missing = (table: string) => (table === "article" ? "a" : null);
+      expect(questionOwner({ article_id: null, story_chapter_id: "gone" }, missing)).toEqual({ kind: "none", article_id: null, chapter_id: null });
+    });
   });
 });
