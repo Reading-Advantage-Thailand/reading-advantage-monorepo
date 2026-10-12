@@ -5,7 +5,7 @@ after `primary_parity_quick_fixes_20261011` (STU-02, STU-03, STU-17 change the l
 `finishQuiz`). Tell the monorepo session before any write to `primary-parity-integration`. Run one
 heavy job at a time. Every task follows the TDD order of `measure/workflow.md`.
 
-## Phase D: Design (RPG skin)
+## Phase D: Design (RPG skin) [checkpoint: 11392de37]
 
 - [x] Task: Design the student "Start again"
     - [x] Draw the lesson summary (task 14) with "Back to Read Page" and "Start again" (iron button), the confirm dialog, and the "Attempt N" text; reuse `components/rpg/chrome.tsx`
