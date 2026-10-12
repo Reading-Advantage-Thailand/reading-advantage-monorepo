@@ -158,6 +158,21 @@ describe("teacher class page", () => {
     expect(screen.getByRole("region", { name: testMessages.en.TeacherUi.classBook.title })).toHaveAttribute("data-class-book-slot", CLASS_ID);
   });
 
+  it("puts the book card before the sign-in panel and keeps the #class-login anchor", async () => {
+    renderWithMessages(<EnhancedClassRoster classroomId={CLASS_ID} classBook={<section id="class-book" data-class-book-slot={CLASS_ID} aria-label="book" />} />);
+    await flush();
+    const card = document.getElementById("class-book")!;
+    const login = document.getElementById("class-login")!;
+    expect(login).not.toBeNull();
+    expect(card.compareDocumentPosition(login) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it("puts the placeholder slot before the sign-in panel too", async () => {
+    await renderPage();
+    const slot = document.querySelector("[data-class-book-slot]")!;
+    expect(slot.compareDocumentPosition(document.getElementById("class-login")!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it("gives the row actions a tap target of at least 44 px", async () => {
     await renderPage();
     for (const name of ["Progress of Ann Smith"]) expect(screen.getByRole("link", { name })).toHaveClass("min-h-11");

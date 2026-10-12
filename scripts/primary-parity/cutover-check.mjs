@@ -226,6 +226,9 @@ try {
       const haveOption = (await option.count()) > 0;
       check(`class book: the assign form lists ${BOOK_LABEL}`, haveOption);
       if (haveOption) {
+        // With a book already assigned the form sits in a closed "Assign another book" disclosure.
+        const more = card.locator("details:not([open]) > summary");
+        if (await more.count()) await more.first().click();
         await card.locator("select[name=bookId]").selectOption({ label: BOOK_LABEL });
         await card.locator("select[name=mode]").selectOption("teacher_led");
         await card.getByRole("button", { name: "Assign", exact: true }).click();

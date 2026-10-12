@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ArrowLeft, BarChart3, Mic, Settings, Smile } from "lucide-react";
+import { ArrowLeft, BarChart3, BookMarked, Mic, Settings, Smile } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -22,7 +22,7 @@ interface ClassroomNavigationProps {
 
 /**
  * Heading of the teacher class page: a link back to the class list, the class name (h1), the
- * student count and grade, and links to the class reports and the class settings. Every link is
+ * student count and grade, and links to the class book card (`#class-book`), the class reports, and the class settings. Every link is
  * a real link (keyboard and new tab work) with a 44 px tap target.
  * @param props The class and the back link switch.
  * @returns The class page header.
@@ -50,6 +50,10 @@ export default function ClassroomNavigation({ classroom, showBackButton = true }
       }
       actions={
         <>
+          <Link href={`/teacher/class-roster/${classroom.id}#class-book`} className={action}>
+            <BookMarked aria-hidden="true" />
+            {t("nav.classBook")}
+          </Link>
           <Link href={`/teacher/reports?classroomId=${classroom.id}`} className={action}>
             <BarChart3 aria-hidden="true" />
             {t("nav.reports")}

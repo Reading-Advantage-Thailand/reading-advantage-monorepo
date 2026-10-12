@@ -26,6 +26,14 @@ export const classBookSchema = z.object({
   currentLesson: z.number().int().min(1),
   /** Lessons the teacher marked taught. */
   taughtCount: z.number().int().nonnegative(),
+  /** Title of the current lesson; null when the catalogue lacks it. Set by `listClassBooks` only. */
+  lessonTitle: z.string().nullable().optional(),
+  /** Workbook steps done in the current lesson. Set by `listClassBooks` only. */
+  stepsDoneCount: z.number().int().nonnegative().optional(),
+  /** First workbook step (1-13) of the current lesson not done, or null when all are done. Set by `listClassBooks` only. */
+  nextStep: z.number().int().nullable().optional(),
+  /** Period (1-4) of the next step, or null. Set by `listClassBooks` only. */
+  nextStepPeriod: z.number().int().nullable().optional(),
 });
 export type ClassBook = z.infer<typeof classBookSchema>;
 
