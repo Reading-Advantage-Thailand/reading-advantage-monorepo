@@ -105,12 +105,16 @@ _Story ref: spec.md#story-s2_
 ## Phase S3: Writing QR code target
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Write the tests (red)
-    - [ ] New `app/[locale]/b/[book]/[n]/writing/__tests__/page.test.tsx`: student to `/student/read/<articleId>`; teacher to the lesson page; signed out shows the landing with the `/writing` callback; not ready and no class give the S4 pages
-- [ ] Task: Implement (green)
-    - [ ] New `app/[locale]/b/[book]/[n]/writing/page.tsx`; share one function with the reading page for the lookup and the cases (no copy of the logic)
-    - [ ] An address `/b/<book>/<n>/<other>` gives the "unknown address" page of S4 (a catch segment or the existing catch-all, whichever the test shows works)
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Writing QR code target' (Protocol in workflow.md)
+- [x] Task: Write the tests (red)
+    - [x] New `app/[locale]/b/[book]/[n]/writing/__tests__/page.test.tsx`: student to `/student/read/<articleId>`; teacher to the lesson page; signed out shows the landing with the `/writing` callback; not ready and no class give the S4 pages
+    - [x] New `[...rest]/__tests__/page.test.tsx` for the unknown address; one more signed-out proxy case in `lib/__tests__/default-locale.test.ts`
+- [x] Task: Implement (green)
+    - [x] New `app/[locale]/b/[book]/[n]/writing/page.tsx`; both pages call `components/book-link/render-book-link.tsx` (`renderBookLink`), which calls `openBookLink`; no copy of the logic
+    - [x] An address `/b/<book>/<n>/<other>` gives the "unknown address" page: new catch segment `[n]/[...rest]/page.tsx` (logs `book_link.unknown_address`)
+- [x] Task: Measure - User Manual Verification 'Phase S3: Writing QR code target' (Protocol in workflow.md) - look check pending (owner, async)
+    - Captures (8 PNG, 2 states, 375 px and 1280 px, day and night): `~/Desktop/primary-parity-progress/captures/qr_path/phaseS3/`.
+    - Manual steps: on a running build open `/th/b/o3-2/5/writing` signed out: the landing says "Writing task"; sign in as a student: the writing page of the article opens.
+    - As a teacher: the lesson page opens. Open `/th/b/o3-2/5/other`: the unknown-address page shows, not a 404.
 
 ## Phase S6: Check one /b/ URL in the go/no-go script
 _Story ref: spec.md#story-s6_
