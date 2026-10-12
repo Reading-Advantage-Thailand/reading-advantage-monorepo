@@ -80,6 +80,7 @@ export function TeachersTable() {
   const [schoolFilter, setSchoolFilter] = useState("");
   const [dialogSchoolId, setDialogSchoolId] = useState("");
   const [refusal, setRefusal] = useState<{ name: string; classNames: string[] } | null>(null);
+  const [moveError, setMoveError] = useState<string | null>(null);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [statistics, setStatistics] = useState({
@@ -293,29 +294,10 @@ export function TeachersTable() {
 
   const handleEditTeacher = async () => {
     if (!selectedTeacher) return;
+    setMoveError(null);
 
     try {
-      if (schoolChanged) {
-        // The move comes first: a 409 changes nothing and shows the class names.
-        const moveResponse = await fetch(`/api/teachers/${selectedTeacher.id}/move`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            schoolId: dialogSchoolId,
-            classroomIds: formData.assignedClassroomIds,
-          }),
-        });
-        if (!moveResponse.ok) {
-          const moveError = await moveResponse.json().catch(() => ({}));
-          if (moveResponse.status === 409 && Array.isArray(moveError.classNames)) {
-            setRefusal({ name: selectedTeacher.name ?? "", classNames: moveError.classNames });
-            return;
-          }
-          throw new Error(moveError.error || t("schoolManage.moveFailed"));
-        }
-        toast.success(t("schoolManage.moved"));
-      }
-
+      // The PUT goes first (M10): when it fails, the teacher stays in the old school and no move runs.
       const requestData: UpdateTeacherRequest & {
         classroomIds?: string[];
         password?: string;
@@ -323,7 +305,7 @@ export function TeachersTable() {
         name: formData.name,
         email: formData.email,
         role: formData.role,
-        // After a move the class links are already set.
+        // After a move the class links are set by the move.
         ...(!schoolChanged && { classroomIds: formData.assignedClassroomIds }),
         ...(formData.password && { password: formData.password }),
       };
@@ -342,7 +324,30 @@ export function TeachersTable() {
         throw new Error(errorData.error || "Failed to update teacher");
       }
 
-      const result = await response.json();
+      if (schoolChanged) {
+        const moveResponse = await fetch(`/api/teachers/${selectedTeacher.id}/move`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            schoolId: dialogSchoolId,
+            classroomIds: formData.assignedClassroomIds,
+          }),
+        });
+        if (!moveResponse.ok) {
+          // The fields are saved and the teacher stays in the old school: refresh the list, keep the dialog.
+          fetchTeachers();
+          const moveError = await moveResponse.json().catch(() => ({}));
+          if (moveResponse.status === 409 && Array.isArray(moveError.classNames)) {
+            setRefusal({ name: selectedTeacher.name ?? "", classNames: moveError.classNames });
+            return;
+          }
+          const message = moveError.error || t("schoolManage.moveFailed");
+          setMoveError(message);
+          toast.error(message);
+          return;
+        }
+        toast.success(t("schoolManage.moved"));
+      }
 
       toast.success("Teacher updated successfully");
 
@@ -392,6 +397,7 @@ export function TeachersTable() {
     setShowPasswordField(false);
     setDialogSchoolId(teacher.schoolId ?? "");
     if (isSystem && teacher.schoolId) fetchClassrooms(teacher.schoolId);
+    setMoveError(null);
     setIsEditDialogOpen(true);
   };
 
@@ -401,6 +407,7 @@ export function TeachersTable() {
   };
 
   const resetForm = () => {
+    setMoveError(null);
     setFormData({
       name: "",
       email: "",
@@ -849,12 +856,18 @@ export function TeachersTable() {
                     setDialogSchoolId(id);
                     // The class list of the old school does not apply to the new one.
                     setFormData((current) => ({ ...current, assignedClassroomIds: [] }));
+                    setMoveError(null);
                     fetchClassrooms(id);
                   }}
                 />
                 {schoolChanged && (
                   <p className="text-muted-foreground text-sm" role="status">
                     {t("schoolManage.notice", { school: schoolName(dialogSchoolId) })}
+                  </p>
+                )}
+                {moveError && (
+                  <p className="text-destructive text-sm" role="alert">
+                    {moveError}
                   </p>
                 )}
               </div>

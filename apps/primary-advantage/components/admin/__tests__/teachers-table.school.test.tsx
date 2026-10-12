@@ -52,6 +52,7 @@ const stats = { totalTeachers: 1, totalStudents: 0, totalClasses: 0, averageStud
 const calls = () => fetchMock.mock.calls.map((call) => ({ url: String(call[0]), init: call[1] as RequestInit | undefined }));
 const fetchMock = vi.fn();
 let moveResponse: Response;
+let putResponse: Response;
 
 /** Lets pending fetch promises and state updates settle. */
 async function flush() {
@@ -63,6 +64,7 @@ async function flush() {
 beforeEach(() => {
   session.user = { role: "SYSTEM" };
   moveResponse = new Response(JSON.stringify({ success: true }), { status: 200 });
+  putResponse = new Response(JSON.stringify({ success: true }), { status: 200 });
   fetchMock.mockReset();
   fetchMock.mockImplementation(async (url: string, init?: RequestInit) => {
     if (url.startsWith("/api/schools")) return new Response(JSON.stringify([{ id: "school-a", name: "School A" }, { id: "school-b", name: "School B" }]), { status: 200 });
@@ -71,7 +73,7 @@ beforeEach(() => {
       return new Response(JSON.stringify(body), { status: 200 });
     }
     if (url.endsWith("/move")) return moveResponse;
-    if (init?.method === "PUT") return new Response(JSON.stringify({ success: true }), { status: 200 });
+    if (init?.method === "PUT") return putResponse;
     return new Response(JSON.stringify({ teachers: [teacher], statistics: stats }), { status: 200 });
   });
   vi.stubGlobal("fetch", fetchMock);
@@ -119,7 +121,7 @@ describe("TeachersTable school management", () => {
     expect(within(dialog).queryByLabelText(/Old class/)).not.toBeInTheDocument();
   });
 
-  it("moves through the move route with the chosen classes, then updates the other fields", async () => {
+  it("moves through the move route with the chosen classes, after it saves the other fields", async () => {
     const dialog = await openEdit();
     fireEvent.change(within(dialog).getByLabelText("School"), { target: { value: "school-b" } });
     await flush();
@@ -130,9 +132,35 @@ describe("TeachersTable school management", () => {
     expect(JSON.parse(String(move?.init?.body))).toEqual({ schoolId: "school-b", classroomIds: ["c-new"] });
     const put = calls().find((c) => c.init?.method === "PUT");
     expect(JSON.parse(String(put?.init?.body))).not.toHaveProperty("classroomIds");
+    // M10: the PUT goes first, so a failed PUT leaves the teacher in the old school.
+    const urls = calls().map((c) => (c.init?.method === "PUT" ? "PUT" : c.url.endsWith("/move") ? "MOVE" : "other"));
+    expect(urls.indexOf("PUT")).toBeGreaterThan(-1);
+    expect(urls.indexOf("PUT")).toBeLessThan(urls.indexOf("MOVE"));
   });
 
-  it("shows the class names when the server refuses with 409 and sends no update", async () => {
+  it("sends no move and keeps the dialog open when the PUT fails (M10)", async () => {
+    putResponse = new Response(JSON.stringify({ error: "Update refused" }), { status: 400 });
+    const dialog = await openEdit();
+    fireEvent.change(within(dialog).getByLabelText("School"), { target: { value: "school-b" } });
+    await flush();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Update Teacher" }));
+    await flush();
+    expect(calls().some((c) => c.url.endsWith("/move"))).toBe(false);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+
+  it("shows the move error in the dialog when the move fails after the PUT (M10)", async () => {
+    moveResponse = new Response(JSON.stringify({ error: "The school was not found", code: "SCHOOL_NOT_FOUND" }), { status: 400 });
+    const dialog = await openEdit();
+    fireEvent.change(within(dialog).getByLabelText("School"), { target: { value: "school-b" } });
+    await flush();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Update Teacher" }));
+    await flush();
+    const open = screen.getByRole("dialog");
+    expect(within(open).getByRole("alert")).toHaveTextContent("The school was not found");
+  });
+
+  it("shows the class names when the server refuses the move with 409", async () => {
     moveResponse = new Response(JSON.stringify({ code: "OWNS_CLASSES", classNames: ["P1A", "P2B"] }), { status: 409 });
     const dialog = await openEdit();
     fireEvent.change(within(dialog).getByLabelText("School"), { target: { value: "school-b" } });
@@ -142,6 +170,5 @@ describe("TeachersTable school management", () => {
     expect(screen.getByText("The teacher cannot move yet")).toBeInTheDocument();
     expect(screen.getByText("P1A")).toBeInTheDocument();
     expect(screen.getByText("P2B")).toBeInTheDocument();
-    expect(calls().some((c) => c.init?.method === "PUT")).toBe(false);
   });
 });
