@@ -50,10 +50,10 @@ Workbooks (`~/Desktop/Workbooks`, head `eeeddfd`, public repo `bodangren/advanta
 - The A4 single-lesson document is `wrapSingleLessonDocument`
   (`dashboard/lib/workbook-document-wrapper.ts:47-58`, owner rule of 2026-10-03: the lesson pages,
   then the answer key on its own last page). The page size and margin come from
-  `getPrintStyles` (`lib/document-wrapper/styles.ts:19-27`: `@page`, 20 mm margin, page number).
+  `getPrintStyles` (`dashboard/lib/document-wrapper/styles.ts:19-27`: `@page`, 20 mm margin, page number).
   The fonts are Fontsource woff2 files under SIL OFL 1.1 in `dashboard/assets/print-fonts/`
   (Merriweather, Open Sans, Sarabun, Noto Sans Thai, League Spartan), embedded by
-  `printFontFaceCss()`. The icons are Lucide (ISC licence) in `lib/document-wrapper/icons.ts`.
+  `printFontFaceCss()`. The icons are Lucide (ISC licence) in `dashboard/lib/document-wrapper/icons.ts`.
 - `dashboard/scripts/print/make-lesson-pdfs.ts` makes one A4 PDF per lesson with Playwright. The
   70 PDFs (Origins 1, 2, 3.1, 3.2, Quest 4) are in `~/Desktop/print-ready/lessons/`, outside both
   repositories. The script reads the dashboard project files for Origins 2, 3.1, 3.2, and Quest 4
@@ -210,8 +210,8 @@ Send this when Phase S2 starts (the monorepo session coordinates; the owner sees
    number. Use the project files for Origins 2, 3.1, 3.2, and Quest 4, and the packages for
    Origins 1, as the script does. Use public bucket picture URLs, not local files.
 2. Please tell the monorepo session the commit id after each change of
-   `dashboard/templates/primary_template.html`, `lib/document-wrapper/icons.ts`,
-   `lib/document-wrapper/styles.ts`, or `assets/print-fonts/`. The monorepo then runs the sync script.
+   `dashboard/templates/primary_template.html`, `dashboard/lib/document-wrapper/icons.ts`,
+   `dashboard/lib/document-wrapper/styles.ts`, or `dashboard/assets/print-fonts/`. The monorepo then runs the sync script.
 3. Please confirm that these kit paths hold no secret and no licensed file.
 4. A finding for you: the public repo tracks `dashboard/public/fonts/publisher-font-package/Chalkboard SE.zip`
    and `Comic Sans MS.zip`. These are proprietary fonts. The print kit does not copy them.

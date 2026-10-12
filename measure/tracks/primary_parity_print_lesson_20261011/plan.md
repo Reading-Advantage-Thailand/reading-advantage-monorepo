@@ -7,22 +7,25 @@ Every task follows the TDD order of `measure/workflow.md`.
 
 ## Phase D: Design (RPG skin)
 
-- [ ] Task: Send the message to the Workbooks session
+- [x] Task: Send the message to the Workbooks session (sent 2026-10-12 by the orchestrator; answer pending)
     - [ ] Send the text of spec "Message to the Workbooks session" through the monorepo session; record the answer in `measure/tracks/primary_parity_print_lesson_20261011/workbooks-coordination.md`
-- [ ] Task: Design the print entry and the print page
-    - [ ] Draw the "Print this lesson" button on the lesson page next to "Projector" and "Rehearsal"
-    - [ ] Draw the print page: the preview frame, the gold "Print" button (active after the pictures load), the iron "Back to the lesson" button, and the "print version not ready" text; reuse `components/rpg/chrome.tsx`
-- [ ] Task: Captures and the owner's look check
-    - [ ] Capture at 375 px and 1280 px, day and night, into `measure/tracks/primary_parity_print_lesson_20261011/design/`
-    - [ ] Record the owner's answer and the answers to the Member Questions in `design/look-check.md`
-- [ ] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+- [x] Task: Design the print entry and the print page
+    - [x] Draw the "Print this lesson" button on the lesson page next to "Projector" and "Rehearsal"
+    - [x] Draw the print page: the preview frame, the gold "Print" button (active after the pictures load), the iron "Back to the lesson" button, and the "print version not ready" text; reuse `components/rpg/chrome.tsx`
+- [x] Task: Captures and the owner's look check
+    - [x] Capture at (28 PNG files in `~/Desktop/primary-parity-progress/captures/print_lesson/phaseD-design/`; list in `design/captures.md`) 375 px and 1280 px, day and night, into `measure/tracks/primary_parity_print_lesson_20261011/design/`
+    - [x] Record the owner (look check pending (owner, async); defaults below)'s answer and the answers to the Member Questions in `design/look-check.md`
+- [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md) - look check pending (owner, async)
+    - Steps: open the captures in `design/captures.md`; check the `lesson-with-print-*` button beside Projector and Rehearsal;
+      check `print-ready`, `print-loading`, and `print-not-ready` at 375 px and 1280 px, day and night.
+    - Member Question defaults used: (1) print data from the Workbooks export; (2) no answer key page, no "with the answer key" choice; (3) the template, not the 70 PDFs.
 
 ## Phase S1: Copy the Workbooks primary template into a print kit
 _Story ref: spec.md#story-s1_
 
 - [ ] Task: Define the kit contract
     - [ ] `printKitSchema` (template, icons, CSS, source repo, commit, commit date) in `packages/domain/src/primary-books/print/contracts.ts`
-    - [ ] The allowlist of Workbooks paths in `packages/domain/scripts/sync-print-kit.ts` (template, `lib/document-wrapper/icons.ts`, `lib/document-wrapper/styles.ts`, `lib/document-wrapper/utils.ts`, `assets/print-fonts/*.woff2`, `assets/print-fonts/OFL-*.txt`)
+    - [ ] The allowlist of Workbooks paths in `packages/domain/scripts/sync-print-kit.ts` (template, `dashboard/lib/document-wrapper/icons.ts`, `dashboard/lib/document-wrapper/styles.ts`, `dashboard/lib/document-wrapper/utils.ts`, `dashboard/assets/print-fonts/*.woff2`, `dashboard/assets/print-fonts/OFL-*.txt`)
 - [ ] Task: Write the tests (red)
     - [ ] `packages/domain/src/primary-books/print/__tests__/kit-guard.test.ts`: no `<script>`, no external URL, only allowlisted font files; a counterexample fixture fails the guard
     - [ ] `packages/domain/src/primary-books/__tests__/sync-print-kit.test.ts`: a dirty kit path stops the script; `--check` exits 1 for a newer commit (a temporary git repository as the fixture)
