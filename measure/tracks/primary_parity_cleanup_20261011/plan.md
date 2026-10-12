@@ -207,11 +207,11 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - [x] Write `measure/tracks/primary_parity_cleanup_20261011/acceptance-pairs.json` with the rows AC-1 to AC-10 of the spec (the pair list contract of `primary_parity_acceptance_20261011`)
     - [x] Fill the behavior contract template (`docs/runbooks/primary-behavior-contract-template.md`) for FR-10 and FR-13
         - Saved as `behavior-contract-fr10.md` and `behavior-contract-fr13.md`. `acceptance-pairs.json` parses with `PairList` (10 pairs). API and asset probes (AC-3, AC-6, AC-7, AC-8) are curl lines in `acceptance.md`, because a pair path needs a locale.
-    - [ ] Run the kit on the matched copies with a production build of each app (one app at a time) — batch capture (orchestrator)
+    - [x] Run the kit on the matched copies with a production build of each app (one app at a time) — done 2026-10-12 in batch capture 1 at commit 0c9356701; results in `acceptance.md`
     - [x] Run the data checks of the spec table "Migrated data" (SQL on `primary_parity_20261011`: 0 custom drafts, 0 legacy-game rows; FR-12 done in Phase 8)
-    - [~] Write `measure/tracks/primary_parity_cleanup_20261011/acceptance.md` (draft written; the result table waits for the batch capture) (the kit template); keep the captures in the private folder
-- [ ] Task: Owner look check of the built pages — batch capture (orchestrator)
-    - [ ] Send the report and the captures of `/student/games`, `/teacher/game-challenges`, the SYSTEM nav, and the admin nav (375 px and 1280 px; the student page day and night); record the answer here
+    - [x] Write `measure/tracks/primary_parity_cleanup_20261011/acceptance.md` (result table filled 2026-10-12) (the kit template); keep the captures in the private folder
+- [x] Task: Owner look check of the built pages — look check pending (owner, async): report at `~/Desktop/primary-parity-acceptance/captures/primary_parity_cleanup_20261011/report.html`
+    - [x] Send the report and the captures of `/student/games`, `/teacher/game-challenges`, the SYSTEM nav, and the admin nav (375 px and 1280 px; the student page day and night); record the answer here
 - [x] Task: FR-14 — update the records
     - [x] `measure/tech-debt.md`: the `/system/test` row becomes `Resolved`; the ElvGames row stays `Open` with the new text of spec FR-14 (the file has more than 50 lines, so ask the owner to prune it first, `measure/workflow.md`)
     - [x] `docs/primary-games-integration.md:87-90`, `docs/primary-whats-moved.md:83` and `:91` (after `primary_parity_records_20261011`), `docs/primary-rpg-skin.md:17`
