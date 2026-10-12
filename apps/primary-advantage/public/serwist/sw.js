@@ -17,7 +17,7 @@ const worker = /** @type {ServiceWorkerGlobalScope} */ (/** @type {unknown} */ (
 /**
  * Deletes every cache without the prefix, takes control of the open windows, and reloads each
  * window once when at least one legacy cache was deleted.
- * @returns {Promise<void>} Resolves when the clean-up and the reloads end.
+ * @returns {Promise<void>} Resolves when the clean-up ends and the reloads start.
  */
 async function takeOver() {
   const names = await caches.keys();
@@ -26,7 +26,11 @@ async function takeOver() {
   await worker.clients.claim();
   if (!results.some(Boolean)) return;
   const windows = await worker.clients.matchAll({ type: "window" });
-  await Promise.all(windows.map((client) => /** @type {WindowClient} */ (client).navigate(client.url).catch(() => null)));
+  // Do not await the navigations: a navigation waits for this activation to end, so an await
+  // would block the activation until the browser stops the worker.
+  for (const client of windows) {
+    /** @type {WindowClient} */ (client).navigate(client.url).catch(() => null);
+  }
 }
 
 worker.addEventListener("install", (event) => {

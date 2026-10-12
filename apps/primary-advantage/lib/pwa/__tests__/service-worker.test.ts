@@ -96,6 +96,12 @@ describe("public/serwist/sw.js", () => {
     expect(worker.windows[1].navigate).toHaveBeenCalledTimes(1);
   });
 
+  it("does not wait for a navigation, because a navigation waits for the activation", async () => {
+    const worker = loadWorker(["pages"]);
+    worker.windows[0].navigate.mockReturnValueOnce(new Promise(() => undefined));
+    await expect(worker.fire("activate")).resolves.toBeUndefined();
+  });
+
   it("has no fetch listener, so the browser sends every request to the network", () => {
     const worker = loadWorker([]);
     expect([...worker.listeners.keys()].sort()).toEqual(["activate", "install"]);
