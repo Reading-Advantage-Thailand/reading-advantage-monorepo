@@ -44,6 +44,10 @@
       "types": "./dist/primary-home/streak.d.ts",
       "import": "./dist/primary-home/streak.js"
     },
+    "./primary-dashboards": {
+      "types": "./dist/primary-dashboards/index.d.ts",
+      "import": "./dist/primary-dashboards/index.js"
+    },
     "./primary-books": {
       "types": "./dist/primary-books/index.d.ts",
       "import": "./dist/primary-books/index.js"
