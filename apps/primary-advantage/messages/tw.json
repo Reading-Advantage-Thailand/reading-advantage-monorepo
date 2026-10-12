@@ -1865,6 +1865,9 @@
     "inputFailed": "無法取得本課的單字。請玩簡單遊戲。",
     "noGames": "本課還沒有合適的遊戲。請玩簡單遊戲。",
     "loadFailed": "遊戲沒有啟動。請改玩簡單遊戲。",
+    "sentenceTitle": "句子遊戲",
+    "sentenceInputFailed": "無法取得本課的句子。請玩下面四個活動之一。",
+    "sentenceLoadFailed": "遊戲沒有啟動。請玩下面四個活動之一。",
     "runLine": "你答對了 {correct}/{total}。",
     "runLineXp": "你答對了 {correct}/{total}。+{xp} XP",
     "pitch": {

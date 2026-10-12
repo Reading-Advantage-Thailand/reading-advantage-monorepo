@@ -1865,6 +1865,9 @@
     "inputFailed": "We could not get the words of this lesson. Play the simple game.",
     "noGames": "No game fits this lesson yet. Play the simple game.",
     "loadFailed": "The game did not start. Play the simple game instead.",
+    "sentenceTitle": "Sentence games",
+    "sentenceInputFailed": "We could not get the sentences of this lesson. Play one of the four activities below.",
+    "sentenceLoadFailed": "The game did not start. Play one of the four activities below.",
     "runLine": "You got {correct} of {total}.",
     "runLineXp": "You got {correct} of {total}. +{xp} XP",
     "pitch": {

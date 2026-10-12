@@ -1865,6 +1865,9 @@
     "inputFailed": "Không lấy được các từ của bài học này. Hãy chơi trò chơi đơn giản.",
     "noGames": "Chưa có trò chơi phù hợp với bài học này. Hãy chơi trò chơi đơn giản.",
     "loadFailed": "Trò chơi không chạy. Hãy chơi trò chơi đơn giản.",
+    "sentenceTitle": "Trò chơi câu",
+    "sentenceInputFailed": "Chúng tôi không lấy được các câu của bài học này. Hãy chơi một trong bốn hoạt động bên dưới.",
+    "sentenceLoadFailed": "Trò chơi không bắt đầu. Hãy chơi một trong bốn hoạt động bên dưới.",
     "runLine": "Bạn đúng {correct}/{total}.",
     "runLineXp": "Bạn đúng {correct}/{total}. +{xp} XP",
     "pitch": {
