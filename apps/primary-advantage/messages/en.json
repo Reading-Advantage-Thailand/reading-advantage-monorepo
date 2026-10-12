@@ -2730,6 +2730,15 @@
     }
   },
   "AdminStudents": {
+    "toasts": {
+      "addSuccess": "Student added successfully",
+      "addError": "Failed to add student",
+      "updateSuccess": "Student updated successfully",
+      "updateError": "Failed to update student",
+      "deleteSuccess": "Student deleted successfully",
+      "deleteError": "Failed to delete student",
+      "fetchError": "Failed to load students"
+    },
     "header": {
       "title": "Student Management",
       "subtitle": "Manage students and their progress"

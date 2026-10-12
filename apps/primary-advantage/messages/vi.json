@@ -2730,6 +2730,15 @@
     }
   },
   "AdminStudents": {
+    "toasts": {
+      "addSuccess": "Đã thêm học sinh thành công",
+      "addError": "Không thể thêm học sinh",
+      "updateSuccess": "Đã cập nhật học sinh thành công",
+      "updateError": "Không thể cập nhật học sinh",
+      "deleteSuccess": "Đã xóa học sinh thành công",
+      "deleteError": "Không thể xóa học sinh",
+      "fetchError": "Không thể tải danh sách học sinh"
+    },
     "header": {
       "title": "Quản lý học sinh",
       "subtitle": "Quản lý học sinh và tiến độ của họ"

@@ -2730,6 +2730,15 @@
     }
   },
   "AdminStudents": {
+    "toasts": {
+      "addSuccess": "学生添加成功",
+      "addError": "添加学生失败",
+      "updateSuccess": "学生更新成功",
+      "updateError": "更新学生失败",
+      "deleteSuccess": "学生删除成功",
+      "deleteError": "删除学生失败",
+      "fetchError": "无法加载学生列表"
+    },
     "header": {
       "title": "学生管理",
       "subtitle": "管理学生及其学习进度"
