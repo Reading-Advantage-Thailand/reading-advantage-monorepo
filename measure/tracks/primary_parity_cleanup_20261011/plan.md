@@ -149,7 +149,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - Captures: none for this phase (the build was not served; Phase 9 makes the captures of the built pages).
     - Defaults used for member questions: none asked in this phase (Q1 default stands: the package `game-cartridges` stays for Reading Advantage and Advantage Games).
 
-## Phase 7: Old game URLs (STU-09)
+## Phase 7: Old game URLs (STU-09) [checkpoint: 20e74660c]
 
 - [x] Task: FR-10 (STU-09) — redirect the five old game URLs
     - [x] Contract: in `lib/games/catalog.ts`, add `OLD_GAME_PATHS` (`vocabulary`: `dragon-rider`, `enchanted-library`, `rpg-battle`, `rune-match`; `sentences`: `potion-rush`) and `oldGameTarget(group, id)`, with JSDoc; it returns `/student/games/apk/<id>` or `undefined`
