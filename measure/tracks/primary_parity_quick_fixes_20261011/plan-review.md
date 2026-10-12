@@ -127,3 +127,11 @@ Medium and Low findings:
 - Lesson: the commit header limit leaves 38 characters for the type-scope prefix plus subject text after the
   48-character track_id suffix; the failed commit-msg check leaves no commit and no side effect.
 - Deviation: `ChangeUsernameForm` keeps its file and export name. It sends to `/api/users/me` and ignores its `userId` prop.
+
+## Phase 6: Public
+
+- Review of `17d87a57c..HEAD`: no Critical or High finding. JSDoc added for `normalizeCode`; no server code; key parity checked (5 locales).
+- M-6 (Medium). FR-12 vitest ran in the `public-pages` worktree with temporary `node_modules` symlinks to lane C (removed). The worktree has no install. A full branch test run did not happen.
+- L-5 (Low). The FR-13 red step was not run apart; the new tests need `useSearchParams`, which the old component did not call.
+- L-6 (Low). The old-link note is not an RPG `Bubble`; it copies the design markup with a `size-14` scroll icon. Its colors use `--cq-*` variables as in the design harness.
+- Commit hint: a header with the 47-character suffix gives 53 characters for the subject part; two first drafts failed commitlint.

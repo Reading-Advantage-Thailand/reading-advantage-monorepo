@@ -123,15 +123,19 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 
 ## Phase 6: Public
 
-- [ ] Task: FR-12 (PUB-04) — the footer Support link and email (on `primary/public-pages`)
-    - [ ] Tell the owner of `primary_public_pages_20261007` (the PR session) before the commit; work in `/home/daniebo/Desktop/rama-worktrees/public-pages`
-    - [ ] Red: new `components/index/__tests__/footer.test.tsx` on the branch: "Support" links to `/contact`; the email link is `CONTACT_CHANNELS.email.href` (`mailto:support@reading-advantage.com`); no Google Form URL
-    - [ ] Green: `components/index/footer.tsx` on the branch (the "Support" href only)
-    - [ ] Record the branch commit here. Integration gets no change of `components/index/footer.tsx`
-- [ ] Task: FR-13 (PUB-05) — `?classroom_code=` fills the class code step
-    - [ ] Red: in `components/__tests__/student-code-sign-in.test.tsx`, add: `?classroom_code=ab c12d` sends `ABC12D` one time and opens the name step; a wrong 6-character code shows "codeInvalid"; an 8-character code is not sent and shows the note; no query keeps today's flow
-    - [ ] Green: `components/student-login/code-sign-in.tsx:80-145` (`useSearchParams`, a ref guard, the normalize rule of `submitCode`); new key `StudentSignIn.code.oldLink` in the five locales (or the result of Q2)
-- [ ] Task: Measure - User Manual Verification 'Phase 6: Public' (Protocol in workflow.md)
+- [x] Task: FR-12 (PUB-04) — the footer Support link and email (on `primary/public-pages`)
+    - [x] Tell the owner of `primary_public_pages_20261007` (the PR session) before the commit; work in `/home/daniebo/Desktop/rama-worktrees/public-pages` (orchestrator allowed the single change; the orchestrator owns the PR session contact)
+    - [x] Red: new `components/index/__tests__/footer.test.tsx` on the branch: "Support" links to `/contact`; the email link is `CONTACT_CHANNELS.email.href` (`mailto:support@reading-advantage.com`); no Google Form URL
+    - [x] Green: `components/index/footer.tsx` on the branch (the "Support" href only)
+    - [x] Record the branch commit here. Integration gets no change of `components/index/footer.tsx`
+    - Branch commit on `primary/public-pages`: `c7228ab74` (footer.tsx Support href to `/contact`; new `footer.test.tsx`, 2 tests; the email link test passed before the fix, as the branch already used `CONTACT_CHANNELS.email`)
+- [x] Task: FR-13 (PUB-05) — `?classroom_code=` fills the class code step
+    - [x] Red: in `components/__tests__/student-code-sign-in.test.tsx`, add: `?classroom_code=ab c12d` sends `ABC12D` one time and opens the name step; a wrong 6-character code shows "codeInvalid"; an 8-character code is not sent and shows the note; no query keeps today's flow
+    - [x] Green: `components/student-login/code-sign-in.tsx:80-145` (`useSearchParams`, a ref guard, the normalize rule of `submitCode`); new key `StudentSignIn.code.oldLink` in the five locales (or the result of Q2)
+    - Commit `2c9e4327c`. Q2: default used (prefill for new 6-character codes, note `StudentSignIn.code.oldLink` for other lengths; the note clears when the student types). Icon `size-14 object-contain` (L-3). 4 new tests, file 17 pass; 16 related files 117 pass; app tsc clean.
+- [x] Task: Measure - User Manual Verification 'Phase 6: Public' (Protocol in workflow.md)
+
+    - look check pending (owner, async). Manual verification steps: (1) Open the `/en` footer; click "Support"; check that `/contact` opens. Check the email link `mailto:support@reading-advantage.com`. (2) Open `/en/auth/signin?classroom_code=<new 6-character code>`; check that the name list opens. (3) Use a wrong 6-character code; check the message "This code does not work". (4) Use an 8-character code; check the note and an empty input. (5) Type in the input; check that the note goes away. Captures: design in `/home/daniebo/Desktop/primary-parity-progress/captures/quick_fixes/phase1-design/student-fr13-*`.
 
 ## Phase 7: Acceptance, Docs & Doctor
 
