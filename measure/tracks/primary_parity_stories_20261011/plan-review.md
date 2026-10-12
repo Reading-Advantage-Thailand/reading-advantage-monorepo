@@ -38,3 +38,65 @@ Low:
 - `QUESTION_ORDER_SQL` now partitions by `coalesce(article_id, story_chapter_id)`; the existing order test got a `story_chapter_id` column.
 
 Shortcuts: none. Lessons: a nullable owner column needs a check constraint that keeps one owner (added). A shared worktree and `git commit --amend` by another helper can change the sha of a commit.
+
+## Phase S2: Stories tab in Read (phase review, 2026-10-12)
+
+Diff: `listPrimaryStories` and its Zod contracts (`packages/domain/src/stories`), the `./stories` export, `getStoryImageKey` and `getStoryImageUrl`, the tab sign, the shelf, the filters, the page, `loading.tsx`, `error.tsx`, and the `Stories` copy in five locale files.
+Checks: domain test 15 of 15; app tests in `read/` and `storage-config` 33 of 33; app `tsc` clean; eslint on the changed files has 0 errors; JSDoc on each export; no `console` in new code; key parity (same 24 keys in en, th, cn, tw, vi); Zod parse on input and output; `assertCan("story:list")`; `stories` is a global table, read through `unscoped` with a reason.
+
+Critical and High: none.
+
+Medium:
+- The th, cn, tw, and vi `Stories` keys hold English text. No approved translation exists. A translator must fill them before the cutover.
+- Each book links to `/student/read/stories/<id>`. That page comes in S3. Until S3 lands, a tap gives a 404. Do not merge S2 alone to master.
+- The genre signs show the legacy names, for example "Children's Sci-Fi". Phase 0 mock cut the prefix "Children's ". The look check can decide.
+- The student window uses `user.level` as the RA level. Staff in preview see every published story with no window text, as the spec says.
+- The page turn counts the pages from the total. The page query has no cap check: a page above the last gives the empty state.
+- The shelf planks cover only the cells of a partial last row. The look check can judge this.
+- The unit test for `listPrimaryStories` checks the condition list with a mock; no real Postgres test of the ILIKE escape.
+- Pre-existing, not from this track: `components/__tests__/component-deduplication-behavior.test.tsx` and `loading-state-flow.behavior.test.tsx` fail to load because `packages/sales-knowledge/dist/data/evidence/release-candidate.json` is missing.
+
+Low:
+- `listStories` (old query) still ignores `genre`. Nothing calls it.
+- The cover picture of a story with no bucket file shows the book icon (client `onError`).
+- The harness used gcloud read-only copies of 8 cover PNG files (scratch folder, not in the repository).
+
+Shortcuts: none. Deviations: the plan names `components/stories/story-filters.tsx` as a client component; it is a server component (plain GET form), so the filters need no script. Lessons: the mock DB has no `selectDistinct`; use `groupBy`.
+
+## Phase S7 review (helper C2)
+
+Review of `git diff bcd1ef419^..HEAD` for the S7 files: no Critical or High finding. `assertCan("story:read")` runs before the lookup. The lookup runs through the TenantDB and the map table (EXEMPT). Zod covers the input and output. The logger rule does not apply (no error path logs).
+
+Medium:
+- The redirect page sends a signed-out visitor to sign in without a return path. The article page does the same.
+- The redirect goes to `/student/read/stories/<uuid>/<n>` with no check that the chapter exists. The S4 page shows the not-found state.
+- Pre-existing, not from this track: `measure/doctor.sh` fails A13 (stale archived directory `agents_md_audit_science_advantage_20260603`).
+
+Low:
+- `resolveLegacyChapter` accepts 1 to 6 digits only.
+- The tests use mocks. The local copy `primary_parity_20261011` has 0 story rows in `primary_legacy_id_map` (made before S1). A real-id check needs the ETL run of rehearsal 3.
+
+Shortcuts: none. Deviation: `resolveLegacyChapter` does no map lookup (the legacy chapter URL carries the number). Lessons: none.
+
+## Phase S3: Story page (phase review, 2026-10-12)
+
+Diff: `getStoryForStudent` and its Zod contracts (`packages/domain/src/stories`), the story page, `loading.tsx`, `chapter-list.tsx`, `story-characters.tsx`, and 13 `Stories` keys in five locale files.
+Checks: domain test 21 of 21; story page test 10 of 10; app tests in `read/` 34 of 34; app `tsc` clean; eslint on the changed folders has 0 errors and 0 warnings; JSDoc on each export; no `console` in new code; key parity (37 keys in each of the five files); Zod parse on input and output; `assertCan("story:read")`; `stories`, `chapters`, and `user_activity` are REFERENTIAL, read through `unscoped` with a reason; the `user_activity` read uses the session user id only.
+
+Critical and High: none.
+
+Medium:
+- The th, cn, tw, and vi copy of the 13 new keys is English text. A translator must fill them before the cutover. Keys: `backToShelf`, `cefr`, `chapterCount`, `storyParts`, `chaptersSign`, `charactersSign`, `chapterNumber`, `chapterDone`, `startChapter`, `readAgain`, `noChapters`, `noCharacters`, `background`.
+- Each chapter row links to `/student/read/stories/<id>/<n>`. That page comes in S4. Until S4 lands, a tap gives a 404. Do not merge S3 without S4.
+- A chapter counts as finished when any `STORIES_*` activity row has its id as target (MC, SA, or LA). The spec does not say "all three". Check this at the look check; S5 can tighten it.
+- The 404 test for a bad id relies on the error name (`StoryNotFoundError`, `ZodError`), not `instanceof`. The reason: the page test mocks the domain module. A package copy mismatch cannot break it.
+- The chapter query does not filter on `chapters.is_public`. S1 sets it from the legacy rows; the story `is_public` gates the page.
+- The Chapters and Characters signs are links (`?tab=characters`), so the page needs no script. The look check can ask for a client tab.
+- The story bible is read only when it is an array of `{ name, description, background }`. Other shapes give no characters. The check of the 412 legacy rows is not run here.
+- The captures use the real page code with stub data and a stub session; the real database path is not in the captures.
+
+Low:
+- Staff see no window text on the story page (as on the list).
+- `summary` of a chapter shows in the language of the student with the English text as the fallback.
+
+Shortcuts: none. Deviations: the plan names `getStoryForStudent` output as story, chapters, finished chapters, and characters; the summary in the student's language is chosen in the page (the contract returns the translation record). Lessons: a page test that mocks a domain module cannot import its error classes in the mock factory (hoisting); match the error by name.

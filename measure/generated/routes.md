@@ -181,10 +181,13 @@ Source revision: `8dfc04395e97ccea928651d5017f00607823ac6e`
 - `apps/primary-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx`
 - `apps/primary-advantage/app/[locale]/(student)/student/read/[articleId]/writing/page.tsx`
 - `apps/primary-advantage/app/[locale]/(student)/student/read/page.tsx`
+- `apps/primary-advantage/app/[locale]/(student)/student/read/stories/[storyId]/[chapterNumber]/page.tsx`
+- `apps/primary-advantage/app/[locale]/(student)/student/read/stories/[storyId]/page.tsx`
 - `apps/primary-advantage/app/[locale]/(student)/student/read/stories/page.tsx`
 - `apps/primary-advantage/app/[locale]/(student)/student/reedy/page.tsx`
 - `apps/primary-advantage/app/[locale]/(student)/student/reports/page.tsx`
 - `apps/primary-advantage/app/[locale]/(student)/student/sentences/page.tsx`
+- `apps/primary-advantage/app/[locale]/(student)/student/stories/[[...path]]/page.tsx`
 - `apps/primary-advantage/app/[locale]/(student)/student/vocabulary/page.tsx`
 - `apps/primary-advantage/app/[locale]/[...not-found]/layout.tsx`
 - `apps/primary-advantage/app/[locale]/[...not-found]/page.tsx`

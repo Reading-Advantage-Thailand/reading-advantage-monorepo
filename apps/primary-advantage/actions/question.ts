@@ -1,25 +1,20 @@
 "use server";
 
-import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
 import type { EvidenceMode, QuestionAnswer } from "@reading-advantage/domain/primary-mastery";
 import { enqueuePrimaryEvidenceJob } from "@/lib/primary-evidence-queue";
 import {
   db,
   eq,
   and,
-  or,
-  isNull,
 } from '@reading-advantage/db';
 import {
   userActivity,
   articleActivityLogs,
-  xpLogs,
-  users,
 } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { guardStudentAction } from "@/lib/student-view";
-import { calculateLevelAndCefrLevel } from "@/lib/utils";
 import { resolveQuestionXpAward } from "@/lib/authorization";
+import { awardQuestionXp } from "@/server/xp/award-question-xp";
 import { getLaqFeedback, getSaqFeedback } from "@/server/utils/assistant";
 import { ActivityType } from "@/types/enum";
 
@@ -124,35 +119,19 @@ export async function finishQuiz(
 
   // One transaction: the activity row, the article log, the XP log, the GP grant, and the user XP.
   const changedRowId = await db.transaction(async (tx) => {
-    const [userData] = await tx.select({ xp: users.xp })
-      .from(users)
-      .where(eq(users.id, user.id as string))
-      .limit(1);
-
-    if (!userData) return null;
-
-    // Upsert on the unique key (user, type, article). A migrated `completed = false` row
-    // becomes complete. A row that is already complete stays as it is and returns no row.
-    const [userActivityRow] = await tx.insert(userActivity).values({
+    const saved = await awardQuestionXp(tx, {
       userId: user.id as string,
+      schoolId: user.schoolId ?? null,
       activityType: type,
       targetId: articleId,
       timer: data.timer,
       details,
-      completed: true,
-    }).onConflictDoUpdate({
-      target: [userActivity.userId, userActivity.activityType, userActivity.targetId],
-      set: { details, timer: data.timer, completed: true, updatedAt: new Date() },
-      setWhere: or(eq(userActivity.completed, false), isNull(userActivity.completed)),
-    }).returning();
+      xpEarned,
+    });
+    if (!saved) return null;
 
     // Already complete (a double click): success, with no second XP log and no XP.
-    if (!userActivityRow) return undefined;
-
-    const { newXp, raLevel, cefrLevel } = calculateLevelAndCefrLevel(
-      xpEarned,
-      userData.xp as number,
-    );
+    if (saved.status !== "saved") return undefined;
 
     const [activityLog] = await tx.select({ id: articleActivityLogs.id })
       .from(articleActivityLogs)
@@ -176,23 +155,7 @@ export async function finishQuiz(
       });
     }
 
-    await tx.insert(xpLogs).values({
-      userId: user.id as string,
-      xpEarned: xpEarned,
-      activityId: userActivityRow.id,
-      activityType: type,
-    });
-    await grantGpForXp({ tx, schoolId: user.schoolId ?? null, userId: user.id as string, sourceKey: `xp:${userActivityRow.id}`, activityType: type, xpEarned });
-
-    await tx.update(users)
-      .set({
-        xp: newXp,
-        level: raLevel,
-        cefrLevel: cefrLevel,
-      })
-      .where(eq(users.id, user.id as string));
-
-    return userActivityRow.id;
+    return saved.activityId;
   });
 
   if (changedRowId === null) {

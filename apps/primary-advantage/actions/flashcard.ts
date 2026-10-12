@@ -2,6 +2,7 @@
 
 import { currentUser } from "@/lib/session";
 import { guardStudentAction } from "@/lib/student-view";
+import { z } from "zod";
 import { createEmptyCard, Card, Rating } from "ts-fsrs";
 import {
   db,
@@ -955,6 +956,139 @@ export async function saveArticleToFlashcard(
     };
   } catch (error) {
     console.error("Error saving article to flashcard:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+/**
+ * Zod input of the chapter flashcard save: the chapter id only.
+ */
+const saveChapterToFlashcardSchema = z.object({ chapterId: z.string().uuid() });
+
+/**
+ * Saves one story chapter to flashcards after its questions are done (spec S6): 3 to 5
+ * random new words and every chapter sentence, with the chapter id as `source_id` (the
+ * WordList reuse path). The chapter source rows keep a NULL `article_id` (spec D6). Before
+ * the MCQ, SAQ, and LAQ are all done it saves nothing. A word already in the deck saves no
+ * second card. Staff in preview save nothing.
+ * @param chapterId The chapter id.
+ * @returns The words and sentences created, or a failure shape when nothing saved.
+ */
+export async function saveChapterToFlashcard(chapterId: string) {
+  try {
+    const parsed = saveChapterToFlashcardSchema.safeParse({ chapterId });
+    if (!parsed.success) {
+      return { success: false, error: "Invalid chapter id" };
+    }
+
+    const user = await currentUser();
+    if (!user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const preview = guardStudentAction(user, "save_chapter_to_flashcard");
+    if (preview) return preview;
+
+    const doneTypes = await db.select({ activityType: userActivity.activityType })
+      .from(userActivity)
+      .where(
+        and(
+          eq(userActivity.userId, user.id as string),
+          eq(userActivity.targetId, parsed.data.chapterId),
+          inArray(userActivity.activityType, [
+            ActivityType.STORIES_MC_QUESTION,
+            ActivityType.STORIES_SA_QUESTION,
+            ActivityType.STORIES_LA_QUESTION,
+          ]),
+        ),
+      );
+    const done = new Set(doneTypes.map((row) => row.activityType));
+    const complete = [
+      ActivityType.STORIES_MC_QUESTION,
+      ActivityType.STORIES_SA_QUESTION,
+      ActivityType.STORIES_LA_QUESTION,
+    ].every((type) => done.has(type));
+    if (!complete) {
+      return { success: false, error: "Chapter questions incomplete" };
+    }
+
+    const sentRows = await db.select().from(sentencsAndWordsForFlashcards)
+      .where(eq(sentencsAndWordsForFlashcards.chapterId, parsed.data.chapterId));
+
+    if (sentRows.length === 0) {
+      return { success: false, error: "Chapter words not found" };
+    }
+
+    const wordlist: WordList[] = [];
+    const wordsList = sentRows.flatMap(
+      (word) => word.words as unknown as WordListTimestamp[],
+    );
+
+    wordsList.forEach((word, index) => {
+      const wordStartTime = word?.timeSeconds as number;
+      const wordEndTime =
+        index === wordsList.length - 1
+          ? (word?.timeSeconds as number) + 10
+          : (wordsList[index + 1].timeSeconds as number);
+
+      wordlist.push({
+        vocabulary: word?.vocabulary,
+        cardDefinition: word?.definition,
+        cardStartTime: wordStartTime,
+        cardEndTime: wordEndTime,
+        cardAudioUrl: sentRows[0]?.wordsUrl as string,
+      });
+    });
+
+    const sentencesList: SentenceEntry[] = [];
+    const sentences = sentRows.flatMap(
+      (row) => row.sentence as unknown as SnapshotSentence[],
+    );
+    sentencesList.push(...snapshotSentenceEntries(sentences, sentRows[0]?.audioSentencesUrl as string));
+
+    const [vocabDeck] = await db.select().from(flashcardDecks)
+      .where(
+        and(
+          eq(flashcardDecks.userId, user.id as string),
+          eq(flashcardDecks.type, "VOCABULARY"),
+        ),
+      )
+      .limit(1);
+
+    let known: string[] = [];
+    if (vocabDeck) {
+      const rows = await db.select().from(flashcardCards)
+        .where(eq(flashcardCards.deckId, vocabDeck.id));
+      known = rows.map((row) => (row.front ?? "").toLowerCase());
+    }
+
+    const fresh = wordlist.filter((word) => !known.includes(word.vocabulary.toLowerCase()));
+    const count = Math.min(Math.floor(Math.random() * 3) + 3, fresh.length);
+    const picked = shuffle(fresh).slice(0, count);
+
+    type SaveCount = { status: number; data?: { cardsCreated: number } };
+    const none: SaveCount = { status: 200, data: { cardsCreated: 0 } };
+    const [vocabRes, sentenceRes] = await Promise.all([
+      picked.length > 0 ? saveFlashcard(parsed.data.chapterId, picked) : Promise.resolve(none),
+      sentencesList.length > 0 ? saveFlashcard(parsed.data.chapterId, [], sentencesList) : Promise.resolve(none),
+    ]);
+    const wordsCreated = vocabRes?.status === 200 ? (vocabRes.data?.cardsCreated ?? 0) : 0;
+    const sentencesCreated = sentenceRes?.status === 200 ? (sentenceRes.data?.cardsCreated ?? 0) : 0;
+
+    return {
+      success: true,
+      message: `Successfully saved ${wordsCreated} words and ${sentencesCreated} sentences to flashcards`,
+      data: {
+        wordsCreated,
+        sentencesCreated,
+        alreadyExists: wordsCreated === 0 && sentencesCreated === 0,
+      },
+    };
+  } catch (error) {
+    console.error("Error saving chapter to flashcard:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",

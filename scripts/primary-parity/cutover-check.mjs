@@ -7,6 +7,10 @@
 // steps 1 to 3 and "Mark taught" on lesson 1, then makes lesson 1 current again. Use a fresh clone for each run.
 // The QR path block (track primary_parity_qr_path_20261011, spec S6, checks named "qr ...") runs after the class
 // book block; QR_CHECK=off skips it. It needs the book assigned to the class (CLASS_BOOK_CHECK on) and the open class code.
+// The stories block (track primary_parity_stories_20261011, checks named "stories ...") runs after the QR path
+// block; STORIES_CHECK=off skips it. It opens the old story URLs as a student: the list redirect, the Stories
+// tab, a story page, a chapter page, the old story and chapter redirects through the picture key, and an
+// unknown story id. It needs the 0072 story rows on the target.
 // The staff preview block (track primary_parity_staff_student_view_20261011, checks named "staff ...") runs for the
 // teacher, the admin, and the system user after their sign-in; STAFF_VIEW_CHECK=off skips it. It reads student pages
 // only (GET). The teacher run also opens the first managed class book and its first lesson when the home lists one.
@@ -17,6 +21,7 @@ import { chromium } from "playwright";
 import { BOOK_KEY, BOOK_LABEL, bookCardFirst, classBookIdFromHref, judgeGuideContent, judgeLessonPage, judgeManualPage, judgeProgressAndTaught, judgeProjector, judgeProjectorUse, judgeStudentLanding, judgeStudentUnlock } from "./class-book-checks.mjs";
 import { STAFF_PREVIEW_PAGES, judgePreviewPage } from "./staff-preview-checks.mjs";
 import { QR_PATHS, judgeCasePage, judgeLanding, judgeSignedInLesson, judgeWritingArticle } from "./qr-path-checks.mjs";
+import { cuidFromImageSrc, judgeChapterPage, judgeOldChapterRedirect, judgeOldListRedirect, judgeOldStoryRedirect, judgeStoriesTab, judgeStoryPage, judgeUnknownCuid } from "./stories-checks.mjs";
 
 const [csvPath, teacherUser, adminUser, systemUser, classroomId] = process.argv.slice(2);
 const BASE = process.env.BASE ?? "http://localhost:3000";
@@ -503,6 +508,46 @@ try {
       check("qr: case page block error", false, String(err).slice(0, 300));
     } finally {
       await gctx.close().catch(() => {});
+    }
+  }
+  // Stories (track primary_parity_stories_20261011, rehearsal 3): old URLs redirect, the tab shows, a chapter opens.
+  if (process.env.STORIES_CHECK !== "off") {
+    const sp = s1.page;
+    try {
+      await gotoRetry(sp, `${BASE}/en/student/stories`, { waitUntil: "networkidle", timeout: 120000 });
+      await sp.screenshot({ path: `${SHOTS}/student1-stories-tab.png` });
+      for (const c of judgeOldListRedirect(new URL(sp.url()).pathname)) check(c.name, c.ok, c.note);
+      for (const c of judgeStoriesTab({
+        text: await sp.locator("main").innerText().catch(() => ""),
+        storyLinks: await sp.locator('a[href*="/student/read/stories/"]').count(),
+      })) check(c.name, c.ok, c.note);
+      await sp.locator('a[href*="/student/read/stories/"]').first().click();
+      await sp.waitForURL((u) => /\/student\/read\/stories\/[^/]+\/?$/.test(u.pathname), { timeout: 60000 }).catch(() => {});
+      await sp.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
+      const storyBase = new URL(sp.url()).pathname.replace(/\/$/, "");
+      await sp.screenshot({ path: `${SHOTS}/student1-story-page.png`, fullPage: true });
+      for (const c of judgeStoryPage({
+        text: await sp.locator("main").innerText().catch(() => ""),
+        chapterLinks: await sp.locator(`a[href^="${storyBase}/"]`).count(),
+      })) check(c.name, c.ok, c.note);
+      const imgSrc = await sp.locator('img[src*="images/story/"]').first().getAttribute("src").catch(() => null);
+      const cuid = cuidFromImageSrc(imgSrc);
+      check("stories: the story page shows a picture with the legacy key", !!cuid);
+      if (cuid) {
+        await gotoRetry(sp, `${BASE}/en/student/stories/${cuid}`, { waitUntil: "networkidle", timeout: 120000 });
+        for (const c of judgeOldStoryRedirect({ landed: new URL(sp.url()).pathname, storyPath: storyBase })) check(c.name, c.ok, c.note);
+        await gotoRetry(sp, `${BASE}/en/student/stories/${cuid}/1`, { waitUntil: "networkidle", timeout: 120000 });
+        await sp.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
+        const chapterPath = new URL(sp.url()).pathname;
+        for (const c of judgeOldChapterRedirect({ landed: chapterPath, chapterPath: `${storyBase}/1` })) check(c.name, c.ok, c.note);
+        const chapterText = await sp.locator("main").innerText().catch(() => "");
+        await sp.screenshot({ path: `${SHOTS}/student1-story-chapter.png`, fullPage: true });
+        for (const c of judgeChapterPage({ pathname: chapterPath, text: chapterText, passageChars: chapterText.length })) check(c.name, c.ok, c.note);
+      }
+      const unknownResp = await gotoRetry(sp, `${BASE}/en/student/stories/zz-unknown-cuid`, { waitUntil: "networkidle", timeout: 120000 });
+      for (const c of judgeUnknownCuid({ status: unknownResp?.status() ?? 0, text: await sp.locator("body").innerText().catch(() => "") })) check(c.name, c.ok, c.note);
+    } catch (err) {
+      check("stories: block error", false, String(err).slice(0, 300));
     }
   }
   await s1.ctx.close();

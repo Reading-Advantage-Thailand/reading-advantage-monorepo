@@ -82,3 +82,21 @@ export function getStoryImageKey(story: StoryPictureSource): string {
 export function getStoryImageUrl(story: StoryPictureSource): string {
   return getStorageUrl(`images/story/${getStoryImageKey(story)}.png`);
 }
+
+/**
+ * Returns the key that names a chapter picture in the bucket (`images/story/<key>.png`).
+ * @param chapter The chapter with its id and its stored picture key.
+ * @returns The picture key: the stored key when it is a bare id, else the chapter id.
+ */
+export function getChapterImageKey(chapter: StoryPictureSource): string {
+  return getStoryImageKey(chapter);
+}
+
+/**
+ * Constructs the URL of a chapter picture.
+ * @param chapter The chapter (its id and its stored picture key).
+ * @returns Full URL to the chapter picture.
+ */
+export function getChapterImageUrl(chapter: StoryPictureSource): string {
+  return getStorageUrl(`images/story/${getChapterImageKey(chapter)}.png`);
+}

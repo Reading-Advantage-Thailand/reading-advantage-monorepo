@@ -42,11 +42,11 @@ export function StoryShelf({ stories }: { stories: StoryCard[] }) {
                 </span>
               ) : null}
             </span>
-            <span className="line-clamp-2 text-sm leading-tight font-bold [text-shadow:0_2px_0_rgba(0,0,0,.6)]">
+            <span className="line-clamp-2 min-h-9 text-sm leading-tight font-bold [text-shadow:0_2px_0_rgba(0,0,0,.6)]">
               {story.title}
             </span>
             {story.genre ? (
-              <span className="text-[11px] opacity-90 [text-shadow:0_1px_0_rgba(0,0,0,.6)]">{story.genre}</span>
+              <span className="min-h-4 text-[11px] opacity-90 [text-shadow:0_1px_0_rgba(0,0,0,.6)]">{story.genre}</span>
             ) : null}
           </Link>
           <Plank />
