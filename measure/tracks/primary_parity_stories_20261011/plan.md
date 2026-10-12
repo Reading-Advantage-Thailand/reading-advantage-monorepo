@@ -134,7 +134,7 @@ _Story ref: spec.md#story-s6_
 - [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
 - [ ] Task: Measure - User Manual Verification 'Phase S6: Chapter flashcards' (Protocol in workflow.md)
 
-## Phase S7: Old story URLs open the new pages [checkpoint: PENDING]
+## Phase S7: Old story URLs open the new pages [checkpoint: 9c2206f0c]
 _Story ref: spec.md#story-s7_
 
 - [x] Task: Contract for the legacy story id
