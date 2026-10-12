@@ -91,3 +91,21 @@ The page logs a failure once with `class_books.slot_failed` (no `console.error`)
 - Low: the "Class books" slot title key `slotTitle` differs from the placeholder key `title`; the S2 browser block uses `[data-class-book-slot]`, which both keep.
 - Lesson: `pnpm run build` in a package can start `pnpm install` inside the lock and block all lanes. Use `node_modules/.bin/tsc` from the package folder.
 - Skipped: `build-graph update` (graph.db read only, orchestrator rule).
+
+
+## Phase S6: Check every Teacher Manual claim
+
+Review of `git diff 9af86b116..HEAD`: one browser block, pure judge helpers and their node test, acceptance files
+(pairs, steps module, behavior contract, SQL), the claim list, and track docs. No app code, no schema, no locale file.
+No Critical or High finding. The block and the pairs did not run in a browser (batch step of the orchestrator).
+
+- Medium: the new browser block has selectors from page source only (`ul[aria-label="Workbook steps done in class"]`,
+  `ol[aria-label="Lessons"]`, the text `Lesson N of M`, the buttons "Next", "Show answer", "Mark taught", "Make current"). The first batch run can need a selector fix.
+- Medium: the block writes to the class (steps, taught, pointer). It restores the pointer but not the taught date of lesson 1. A rerun skips "Mark taught" (the check passes with a note). Use a fresh clone for each run.
+- Medium: no manual text changed, so the Thai text of `manual.*` is unchanged. The browser run can still fail a claim; then the Thai fix is "owner check pending".
+- Low (howTo2): the student gets the "Read" link only when workbook step 3 is open (`student/books/[classBookId]/page.tsx:51-54`, `student/home/page.tsx:252`). Marking step 1 or 2 alone shows no link. The text "the app opens the matching student step" holds for the lesson flow from step 3. A later change can say "mark step 3 to open the reading".
+- Low (howTo5): "Mark taught" is on the lesson plan and the progress grid is on its own page; the text names both actions but not the page of each.
+- Low: A1, A2, A3, A5 have no legacy page; the legacy path is the nearest page (the class page, the dashboard, `/teacher/manual`), so legacy captures show a missing feature or a 404 on purpose.
+- Low: the pairs use the class `cmhwuko0p000ds60dha8z70ig` of the matched teacher. The S2/S6 check must run on the same class (class argument) before the captures, else A1 to A3 show no book.
+- Low: the SQL file ran on the stored copy (syntax check; the book tables are empty there). It has not run on a copy with the catalogue.
+- Skipped: `build-graph update` (graph.db read only, orchestrator rule). `measure/generate.sh` output not committed (rule).

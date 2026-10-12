@@ -190,14 +190,28 @@ _Story ref: spec.md#story-s5_
 ## Phase S6: Check every Teacher Manual claim
 _Story ref: spec.md#story-s6_
 
-- [ ] Task: Define the claim list
-    - [ ] List `TeacherUi.classBook.manual.howTo1` to `howTo5` and "The 13 steps" with the page, the account, and the expected result (spec S6)
+- [x] Task: Define the claim list
+    - [x] List `TeacherUi.classBook.manual.howTo1` to `howTo5` and "The 13 steps" with the page, the account, and the expected result (spec S6) - `manual-check.md`
 - [ ] Task: Run the claims on the scratch copy
-    - [ ] Follow each claim with the demo teacher and one demo student (2 or 3 students at most); capture each result
-    - [ ] Save the result list in `measure/tracks/primary_parity_class_books_20261011/manual-check.md`
-- [ ] Task: Correct the manual text where a claim fails
-    - [ ] Write a failing test first in `app/[locale]/teacher/manual/__tests__/page.test.tsx` when the change touches the page
-    - [ ] Change the keys in the five locale files; the owner checks the English and the Thai text
+    - [x] Code check of each claim with `file:line` evidence (`manual-check.md`): no claim fails in the code
+    - [x] Browser block "Teacher Manual claims (spec S6)" in `scripts/primary-parity/cutover-check.mjs`; pure judges and a node test (12 tests pass); steps in `browser-check/README.md`
+    - [ ] Follow each claim with the demo teacher and one demo student (2 or 3 students at most); capture each result - batch run (orchestrator)
+    - [ ] Save the result list in `measure/tracks/primary_parity_class_books_20261011/manual-check.md` (table "Browser run") - batch run (orchestrator)
+- [x] Task: Correct the manual text where a claim fails
+    - [x] No claim fails in the code, so no text change, no page test change, and no locale change (two Low findings in `plan-review.md`); the browser run can still find a failure
+    - [ ] If the browser run fails a claim: failing test first in `app/[locale]/teacher/manual/__tests__/page.test.tsx`, then the five locale files; the owner checks the English and the Thai text - owner check pending
 - [ ] Task: Final side-by-side check
-    - [ ] Run checks A1 to A5 of spec "Acceptance Criteria" with the acceptance kit; send the captures to the owner for the last look check
-- [ ] Task: Measure - User Manual Verification 'Phase S6: Check every Teacher Manual claim' (Protocol in workflow.md)
+    - [x] `acceptance-pairs.json` for A1 to A5 (parses with `PairList`), `acceptance-steps-class-book.ts`, `behavior-contract.md`, `class-book-data-checks.sql`
+    - [ ] Run checks A1 to A5 of spec "Acceptance Criteria" with the acceptance kit; send the captures to the owner for the last look check - batch capture (orchestrator)
+- [x] Task: Measure - User Manual Verification 'Phase S6: Check every Teacher Manual claim' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps:
+        1. Read `manual-check.md` (claim list and code check).
+        2. After the batch run, open the captures listed in `browser-check/README.md` and check each of the five how-to steps against the screen.
+        3. On a running app as the demo teacher, follow the five how-to steps of `/teacher/manual` in order. Check the English and the Thai text.
+
+### Phase S6 notes
+
+- Member Questions: none in this phase (defaults of earlier phases unchanged).
+- Method (orchestrator decision): the code check ran now; the browser run is a batch step. The browser block did not run.
+- The block writes to the class (marks steps, marks lesson 1 taught, then makes lesson 1 current again). Use one run on each fresh clone.
+- Acceptance pairs: legacy has no page for A1, A2, A3, A5 (new features); the legacy path is the nearest page and the difference is on purpose. A2 uses a steps module to open lesson 1 from the card.
