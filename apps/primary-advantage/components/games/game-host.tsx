@@ -53,6 +53,8 @@ export interface GameHostProps {
   readonly save?: boolean;
   /** The lesson article of a lesson game: the saved completion carries it in its metadata. */
   readonly articleId?: string;
+  /** Show the answer hint in the game (the teacher's projector run); default off. */
+  readonly helper?: boolean;
   readonly className?: string;
   /** Receives the saved completion numbers. */
   readonly onCompleted?: (summary: CompletionSummary) => void;
@@ -77,7 +79,7 @@ type LoadError = "game" | "load" | "unauthenticated";
  * @param props The game, the identity, the content source, and the callbacks.
  * @returns The game surface with its load, lock, and save states.
  */
-export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar = null, setting, save = true, articleId, className, onCompleted, onResult, onLoadError, onExit }: GameHostProps) {
+export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar = null, setting, save = true, articleId, helper = false, className, onCompleted, onResult, onLoadError, onExit }: GameHostProps) {
   const t = useTranslations("ApkHost");
   const tStory = useTranslations("StoryGames");
   const router = useRouter();
@@ -238,7 +240,7 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
             replay={!launch}
             icon={game.icon}
             assetBase="/"
-            helper={false}
+            helper={helper}
             avatar={avatar}
             setting={setting}
             catalogs={[hostStrings]}

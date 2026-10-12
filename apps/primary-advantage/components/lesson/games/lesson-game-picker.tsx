@@ -23,6 +23,8 @@ export interface LessonGamePickerProps {
   readonly results: readonly LessonGameResult[];
   /** True when the lesson itself is locked: every game shows locked. */
   readonly locked?: boolean;
+  /** True hides the last result and the New tag (the teacher's projector has no student result). */
+  readonly hideResults?: boolean;
   /** Called with the game id when the student chooses Play. */
   readonly onPlay: (gameId: string) => void;
   /** Extra content under the games, such as the Simple game choice. */
@@ -36,7 +38,7 @@ export interface LessonGamePickerProps {
  * @param props The games, the lesson input, the last results, and the choice callback.
  * @returns The picker panel.
  */
-export function LessonGamePicker({ title, gameIds, input, results, locked = false, onPlay, children }: LessonGamePickerProps) {
+export function LessonGamePicker({ title, gameIds, input, results, locked = false, hideResults = false, onPlay, children }: LessonGamePickerProps) {
   const t = useTranslations("LessonGames");
   const games = gameIds.flatMap((id) => {
     const game = gameFor(id);
@@ -57,11 +59,11 @@ export function LessonGamePicker({ title, gameIds, input, results, locked = fals
         {games.map((game) => {
           const missing = input ? missingFor(game.manifest, input) : null;
           const lack = locked || !missing || missing.vocabulary > 0 || missing.sentences > 0;
-          const result = results.find((r) => r.gameId === game.id);
+          const result = hideResults ? undefined : results.find((r) => r.gameId === game.id);
           const reason = locked ? t("lockedLesson") : missing && missing.sentences > 0 ? t("needSentences", { count: game.manifest.needs.sentences }) : t("needWords", { count: game.manifest.needs.vocabulary });
           return (
             <div key={game.id} data-testid={`lesson-game-${game.id}`} data-locked={lack ? "true" : "false"} className={`lg-obj${lack ? " lg-obj--locked" : ""}`}>
-              {!result && !lack ? <span className="lg-newtag">{t("newTag")}</span> : null}
+              {!result && !lack && !hideResults ? <span className="lg-newtag">{t("newTag")}</span> : null}
               <div className="lg-stage">
                 <Sprite src={LESSON_GAME_SPRITES[game.id] ?? ART.lockedChest} size={104} label={game.manifest.title} className="cq-shadowed" />
               </div>
@@ -78,7 +80,7 @@ export function LessonGamePicker({ title, gameIds, input, results, locked = fals
                   <Meter value={result.correctAnswers} max={Math.max(1, result.totalAttempts)} tone="green" label={t("last", { correct: result.correctAnswers, total: result.totalAttempts })} thin />
                   <span style={{ color: "var(--cq-gold-dark)" }}>{t("lastXp", { xp: result.xpEarned })}</span>
                 </div>
-              ) : (
+              ) : hideResults ? null : (
                 <div className="lg-res"><span style={{ color: "var(--cq-ink-soft)" }}>{t("notPlayed")}</span></div>
               )}
               <RpgButton tone="gold" disabled={lack} aria-disabled={lack} onClick={() => onPlay(game.id)}>
