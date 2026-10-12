@@ -71,3 +71,29 @@ same word (19825 sentences). The one miss is an audio token with no letters ("..
 
 - `vi.useFakeTimers()` also fakes `requestAnimationFrame` and `clearTimeout`. Name the functions in `toFake` when a test stubs rAF.
 - `renderHook` with `{ current: audio }` inside the callback makes a new ref object at each render. Hooks with an effect on the ref then re-run each render. Create the ref outside the callback.
+
+# Plan review: Phase S2 (tap a word or a sentence)
+
+Phase review of `9ce977a55..HEAD`. No Critical and no High finding. M-6 and L-5 are fixed.
+
+## Medium
+
+- M-7: The tap on the band calls `onWordTap(sentenceIndex, -1)`. The host uses -1 for "play from the sentence".
+  The stories track reuses the component and must do the same in its host.
+
+## Low
+
+- L-11: `seekTimeForWord` takes the audio word index, not the screen word index and `maps` (as the plan said). The component already maps the index.
+- L-12: A sentence with a translate menu keeps `role="button"` inside the context menu trigger. A right click opens the menu; a tap plays. Check this on a real touch device (long press).
+- L-13: A tap on a word in a sentence that is not read-along active (`active` false) still calls `onWordTap`. The host ignores it when the player is closed.
+- L-14: `measure/doctor.sh` reports A13 (stale archived directory `agents_md_audit_science_advantage_20260603`). This is not from this phase.
+
+## Shortcuts and deviations
+
+- No separate `onSentenceTap` prop: one callback with index -1.
+- The captures use the S1 esbuild harness (`read_along-s2/` in the scratchpad), not the real page.
+
+## Lessons (for the orchestrator to move)
+
+- A keyboard handler on a sentence that holds clickable words must check `e.target === e.currentTarget`, else a key on a child fires the sentence action.
+- A word click must call `stopPropagation`, else the sentence handler plays a second time.

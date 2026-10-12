@@ -45,18 +45,19 @@ _Story ref: spec.md#story-s1_
 - [x] Task: Measure - User Manual Verification 'Phase S1: The highlight follows the voice' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual verification steps: (1) open the PNG files in `~/Desktop/primary-parity-progress/captures/read_along/phaseS1/` at 375 px and 1280 px, day and night; (2) check that the blue word is the word in the caption name (I'll, Where, the after a dropped audio word); (3) on a real article page, play the audio and watch that the lit word follows the voice, including after a contraction or a curly quote; (4) pause: the mark stays on the last word.
 
-## Phase S2: Tap a word or a sentence to play from there
+## Phase S2: Tap a word or a sentence to play from there [checkpoint: CKSHA]
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Contract for the seek
-    - [ ] `lib/read-along/position.ts`: `seekTimeForWord(sentence, displayIndex, maps)` and `seekTimeForSentence(sentence)` (start minus `SEEK_EPSILON` of `lib/audio-highlight.ts`)
-- [ ] Task: Tests for the seek
-    - [ ] `lib/read-along/__tests__/position.test.ts`: the seek time through `displayToAudio`; a sentence with `words: []` seeks to the sentence start
-    - [ ] `components/read-along/__tests__/read-along-passage.test.tsx`: a word tap in read-along mode seeks and plays; a tap on the band outside a word plays the sentence; outside read-along mode the word menu opens; each sentence is one tab stop and Enter plays it
-- [ ] Task: Implement the seek
-    - [ ] `components/read-along/read-along-passage.tsx`: word and sentence targets; `role` and `tabIndex` on the sentence, not on each word
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Tap a word or a sentence to play from there' (Protocol in workflow.md)
+- [x] Task: Contract for the seek
+    - [x] `lib/read-along/position.ts`: `seekTimeForWord(sentence, audioWordIndex)` _(takes the audio word index that the host already has; no `maps` needed)_ and `seekTimeForSentence(sentence)` (start minus `SEEK_EPSILON` of `lib/audio-highlight.ts`)
+- [x] Task: Tests for the seek
+    - [x] `lib/read-along/__tests__/position.test.ts`: the seek time through `displayToAudio`; a sentence with `words: []` seeks to the sentence start
+    - [x] `components/read-along/__tests__/read-along-passage.test.tsx`: a word tap in read-along mode seeks and plays; a tap on the band outside a word plays the sentence; outside read-along mode the sentence has no tab stop and no button role _(the page has no word menu: the old menu does not exist in the component)_; each sentence is one tab stop and Enter plays it
+- [x] Task: Implement the seek
+    - [x] `components/read-along/read-along-passage.tsx`: word and sentence targets; `role` and `tabIndex` on the sentence, not on each word
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S2: Tap a word or a sentence to play from there' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps: (1) open the PNG files in `~/Desktop/primary-parity-progress/captures/read_along/phaseS2/` (tap and focus, 375 px and 1280 px, day and night); (2) check that the tapped word is blue and the focus ring on the sentence is visible; (3) on a real article page, turn the audio on and tap a word: the voice starts at that word; (4) tap the band outside a word: the voice starts at the sentence; (5) press Tab: one stop for each sentence; press Enter: the sentence plays.
 
 ## Phase S3: One clear player
 _Story ref: spec.md#story-s3_
