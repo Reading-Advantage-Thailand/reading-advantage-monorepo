@@ -80,7 +80,7 @@ The teacher shell keeps the sidebar: Home, My Classes, My Students (All Students
 | `/admin/teachers`, `/admin/teachers/add` | same routes | Teachers / ครู (All Teachers, Add Teacher) | Sidebar: Teachers | same |
 | `/admin/students`, `/admin/students/add`, `/admin/students/classrooms` | same routes | Students and Classes / นักเรียนและชั้นเรียน | Sidebar: Students and Classes | same |
 | `/admin/import-data` | `/admin/import-data` | Import Data / นำเข้าข้อมูล | Sidebar: Import Data | same |
-| `/admin/article-creation` | `/admin/article-creation` | Article Creation / การสร้างบทความ | Sidebar: Article Creation | same |
+| `/admin/article-creation` | `/admin/article-creation` | Article Creation / การสร้างบทความ | Sidebar: Article Creation | same, removed (`primary_parity_cleanup_20261011`; the route gives 404) |
 | (none) | `/admin` | the admin landing page with the quick actions | after sign-in | new |
 | (none) | `/admin/reedy` | Reedy this month / รีดี้เดือนนี้ | the quick actions → Reedy | new |
 
@@ -88,7 +88,7 @@ The teacher shell keeps the sidebar: Home, My Classes, My Students (All Students
 
 | Legacy page | New route | Label (English / Thai) | Mark |
 |---|---|---|---|
-| `/system/dashboard`, `/system/schools`, `/system/licenses`, `/system/licenses/create-licenses`, `/system/test` | same routes | System Dashboard / กระบวนการของระบบ, Schools Dashboard, Licenses Dashboard, Testing | same |
+| `/system/dashboard`, `/system/schools`, `/system/licenses`, `/system/licenses/create-licenses`, `/system/test` (removed by `primary_parity_cleanup_20261011`; 404) | same routes | System Dashboard / กระบวนการของระบบ, Schools Dashboard, Licenses Dashboard, Testing | same |
 | `/system/ai-config` | (none) | AI Provider Config / การตั้งค่า AI Provider | removed. AI goes through the internal adapter; the provider comes from the environment, not from a page. |
 | `/system/contact-messages` | (none) | Contact Messages / ข้อความติดต่อ | removed. |
 

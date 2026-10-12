@@ -14,8 +14,12 @@ players see for the world is Chibi Quest.
 ## 2. Rules
 
 1. **Assets come from `advantage-forge` only.** Scenes, heroes, enemies, NPCs, props, item views,
-   sprite strips, and fonts (Fredoka, Mitr). No ElvGames asset anywhere in the app. The licensed
-   APK standard library is legacy; see the audit track `apk_elvgames_audit_20261006`.
+   sprite strips, and fonts (Fredoka, Mitr). No ElvGames asset anywhere in the app. This rule is true
+   since `primary_parity_cleanup_20261011`: Primary ships no ElvGames file. The licensed APK standard
+   library stays in the repository for other apps; see the audit track `apk_elvgames_audit_20261006`.
+   The shared class challenge panels of the play kit read the variables `--apk-arcade-panel-image`,
+   `--apk-arcade-button-primary-image`, and `--apk-arcade-button-secondary-image`. Primary sets them to
+   `none` (in `.cq-world` and on `/teacher/game-challenges`), so the panels show the skin and no frame image.
 2. **Chrome is owned SVG/CSS.** Panels, signs, banners, meters, hearts, buttons, the toolbar, and
    the 2D effects live in one stylesheet (`phase0/kit/chrome/kit.css`, class prefix `cq-`).
    Anything pictorial is a Forge render. Nobody draws a new frame per page.
