@@ -34,22 +34,6 @@ vi.mock("@/server/controllers/schoolController", () => ({
   getSchoolLeaderboardController: vi.fn(),
 }));
 
-vi.mock("@/components/admin/admin-stats-cards", () => ({
-  AdminStatsCards: () => null,
-}));
-vi.mock("@/components/admin/admin-recent-activity", () => ({
-  AdminRecentActivity: () => null,
-}));
-vi.mock("@/components/admin/admin-quick-actions", () => ({
-  AdminQuickActions: () => null,
-}));
-vi.mock("@/components/admin/admin-overview-charts", () => ({
-  AdminOverviewCharts: () => null,
-}));
-vi.mock("@/components/admin/admin-dashboard-header", () => ({
-  AdminDashboardHeader: () => null,
-}));
-
 import AdminPage from "../../app/[locale]/admin/page";
 import AppLayout from "../shared/app-layout";
 import Home from "../../app/[locale]/(index)/page";

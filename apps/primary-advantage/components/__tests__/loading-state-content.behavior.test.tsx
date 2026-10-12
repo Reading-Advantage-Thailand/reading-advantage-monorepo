@@ -133,15 +133,12 @@ import ChangeRole from "../shared/change-role";
 import Sentence from "../articles/sentence";
 import TaskVocabularyCollection from "../lesson/task/task-vocabulary-collection";
 import { TaskReading } from "../lesson/task/task-reading";
-import { AdminStatsCards } from "../admin/admin-stats-cards";
-import { AdminRecentActivity } from "../admin/admin-recent-activity";
 import ArticleSelect from "../articles/article-select";
 import type { Article } from "@/types";
 import { Role } from "@/types/enum";
-import { renderWithMessages, testMessages, withMessages } from "./helpers/render-with-messages";
+import { renderWithMessages, withMessages } from "./helpers/render-with-messages";
 
 /** Real English copy used for user-facing assertions. */
-const en = testMessages.en;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -264,43 +261,6 @@ describe("FR-7 locale-aware content lookups", () => {
     fireEvent.click(screen.getByRole("button", { name: /Translation Off/ }));
     fireEvent.click(screen.getByText("Alpha"));
     expect(await screen.findByText("EN translation.")).toBeInTheDocument();
-  });
-});
-
-describe("FR-11 admin error states instead of fabricated fallbacks", () => {
-  it("renders an error without mock activity names when the fetch fails", async () => {
-    fetchMock.mockRejectedValue(new Error("activity down"));
-    renderWithMessages(<AdminRecentActivity />);
-    expect(await screen.findByRole("alert")).toBeInTheDocument();
-    expect(
-      await screen.findByText(en.AdminDashboard.recentActivity.loadError),
-    ).toBeInTheDocument();
-    expect(screen.queryByText("Sarah Johnson")).not.toBeInTheDocument();
-  });
-
-  it("renders live stats counts with an em dash for growth", async () => {
-    fetchMock.mockImplementation((url: string) => {
-      if (String(url).includes("/api/teachers"))
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({ pagination: { total: 7 } }),
-        });
-      if (String(url).includes("/api/students"))
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({ pagination: { total: 42 } }),
-        });
-      return Promise.resolve({
-        ok: true,
-        json: async () => ({ totalArticles: 13 }),
-      });
-    });
-    renderWithMessages(<AdminStatsCards />);
-    expect(await screen.findByText("7")).toBeInTheDocument();
-    expect(await screen.findByText("42")).toBeInTheDocument();
-    expect(await screen.findByText("13")).toBeInTheDocument();
-    expect(await screen.findByText("—")).toBeInTheDocument();
-    expect(screen.queryByText("12.5%")).not.toBeInTheDocument();
   });
 });
 

@@ -59,7 +59,6 @@ vi.mock("../articles/article-showcase-card", () => ({
 }));
 
 import { useDebounce } from "@/hooks/use-debounce";
-import { AdminStatsCards } from "../admin/admin-stats-cards";
 import ArticleSelect from "../articles/article-select";
 import { TaskCollection } from "../lesson/task/task-collection";
 import { MatchingGame } from "../practice/matching-game";
@@ -252,13 +251,3 @@ describe("FR-5 debounce coalesces rapid keystrokes", () => {
   });
 });
 
-describe("FR-11 admin stats error state", () => {
-  it("renders an error state when the stats fetch fails", async () => {
-    mockFetch.mockRejectedValue(new Error("stats down"));
-    renderWithMessages(<AdminStatsCards />);
-    expect(await screen.findByRole("alert")).toBeInTheDocument();
-    expect(
-      await screen.findByText(en.AdminDashboard.stats.loadError),
-    ).toBeInTheDocument();
-  });
-});

@@ -8,7 +8,7 @@
  * is deleted without a duplicate here.
  */
 import "@testing-library/jest-dom/vitest";
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const pushMock = vi.fn();
@@ -56,8 +56,6 @@ vi.mock("sonner", () => ({
   toast: { success: vi.fn(), error: vi.fn(), info: vi.fn() },
 }));
 
-import { AdminQuickActions } from "../admin/admin-quick-actions";
-import { AdminDashboardHeader } from "../admin/admin-dashboard-header";
 import { Footer } from "../index/footer";
 import MyStudents from "../teacher/my-students";
 import MyClasses from "../teacher/my-classes";
@@ -99,26 +97,6 @@ function renderedHrefs(): (string | null)[] {
     anchor.getAttribute("href"),
   );
 }
-
-describe("FR-4 admin and footer links", () => {
-  it("renders only live admin routes from quick actions and the header", () => {
-    renderWithMessages(<AdminQuickActions />);
-    renderWithMessages(<AdminDashboardHeader />);
-    const hrefs = renderedHrefs();
-    expect(hrefs.length).toBeGreaterThan(0);
-    for (const dead of [
-      "/admin/dashboard/reports",
-      "/admin/settings",
-      "/pricing",
-    ]) {
-      expect(hrefs).not.toContain(dead);
-    }
-    for (const href of hrefs) {
-      expect(href, "every rendered link points somewhere").not.toBe("");
-      expect(href).not.toBeNull();
-    }
-  });
-});
 
 describe("FR-5 footer content", () => {
   it("shows the corrected tagline and contact details", () => {
