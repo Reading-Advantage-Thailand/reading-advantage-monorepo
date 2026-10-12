@@ -44,6 +44,17 @@ describe("TeacherChallengePanel", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("reads the host frame variables with the standard pack as the fallback (FR-6)", async () => {
+    fetchMock.mockResolvedValueOnce(response({ classes: [{ id: classId, name: "Class A" }], hasMore: false }));
+    render(<TeacherChallengePanel ownerKey="school-1:teacher-1" basePath="/games" games={{}} />);
+    const panel = await screen.findByRole("region", { name: "Create class challenge" });
+    expect(panel.style.borderImageSource).toBe('var(--apk-arcade-panel-image, url("/games/assets/apk/standard-pack-qc/apk-ui-panel-square.png"))');
+    expect(panel.style.background).toBe("var(--apk-arcade-panel-surface, #0f172a)");
+    expect(panel.style.color).toBe("var(--apk-arcade-panel-text, #f8fafc)");
+    const button = screen.getAllByRole("button").find((item) => item.style.borderImageSource.includes("--apk-arcade-button-"));
+    expect(button?.style.borderImageSource).toMatch(/^var\(--apk-arcade-button-(primary|secondary)-image, url\("\/games\/assets\/apk\/standard-pack-qc\/apk-ui-button-(primary|secondary)\.png"\)\)$/);
+  });
+
   it("creates a fixed Thai-to-English reading challenge", async () => {
     fetchMock
       .mockResolvedValueOnce(response({ classes: [{ id: classId, name: "Class A" }], hasMore: false }))

@@ -1,11 +1,6 @@
 "use server";
 
 import {
-  generateAllArticle,
-  generateAllArticleNew,
-} from "@/server/controllers/articleController";
-import {
-  deleteArticleByIdModel,
   getArticleActivity,
 } from "@/server/models/articleModel";
 import {
@@ -21,53 +16,6 @@ import {
 } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { ActivityType } from "@/types/enum";
-import { canRunContentTooling } from "@/lib/authorization";
-
-/**
- * Rejects callers without bulk content-tooling rights.
- * @returns An error result, or null when the caller may proceed.
- */
-async function requireToolingAccess(): Promise<{ success: false; error: string } | null> {
-  const user = await currentUser();
-  if (!user) return { success: false, error: "Unauthorized" };
-  if (!canRunContentTooling(user)) return { success: false, error: "Forbidden" };
-  return null;
-}
-
-/**
- * Generates articles across genres with the bulk generator.
- * @param amountPerGenre The bounded article count per genre.
- * @returns The generation result.
- */
-export async function generateArticle(amountPerGenre: number) {
-  const denied = await requireToolingAccess();
-  if (denied) return denied;
-  const result = await generateAllArticle(amountPerGenre);
-  return result;
-}
-
-/**
- * Generates articles with the new bulk generator.
- * @param amountPerGenre The bounded article count per genre.
- * @returns The generation result.
- */
-export async function generateArticleNew(amountPerGenre: number) {
-  const denied = await requireToolingAccess();
-  if (denied) return denied;
-  const result = await generateAllArticleNew(amountPerGenre);
-  return result;
-}
-
-/**
- * Deletes one article by its identifier.
- * @param articleId The article identifier.
- * @returns The deletion result.
- */
-export async function getDeleteArticleById(articleId: string) {
-  const denied = await requireToolingAccess();
-  if (denied) return denied;
-  return await deleteArticleByIdModel(articleId);
-}
 
 /**
  * Tracks one article access for the signed-in user.

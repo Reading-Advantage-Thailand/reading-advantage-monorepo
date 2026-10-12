@@ -9,6 +9,8 @@ export interface GenerateObjectInput<T> {
   schema: z.ZodSchema<T>;
   /** Prompt describing the desired output. */
   prompt: string;
+  /** System instruction sent with the prompt. */
+  system?: string;
   /** Override the default model configured on the client. */
   model?: string;
   /** Sampling temperature (0–2). */
@@ -243,7 +245,7 @@ export interface AIClientWithProvenance extends AIClient {
 /**
  * Supported AI provider identifiers.
  */
-export type AIProvider = "openai" | "google" | "openrouter" | "mock";
+export type AIProvider = "openai" | "google" | "vertex" | "openrouter" | "mock";
 
 /**
  * Configuration for creating an AIClient instance.
@@ -257,4 +259,12 @@ export interface AIConfig {
   model?: string;
   /** OpenAI organization ID (optional, OpenAI only). */
   organization?: string;
+  /** Google Cloud project id (Vertex only). */
+  project?: string;
+  /** Vertex AI location, for example "global" (Vertex only). */
+  location?: string;
+  /** Service account client email (Vertex only). Read from VERTEX_CLIENT_EMAIL if not supplied. */
+  clientEmail?: string;
+  /** Service account private key (Vertex only). Read from VERTEX_PRIVATE_KEY if not supplied. */
+  privateKey?: string;
 }

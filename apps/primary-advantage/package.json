@@ -56,7 +56,6 @@
     "@reading-advantage/backend": "workspace:*",
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/domain": "workspace:*",
-    "@reading-advantage/game-cartridges": "workspace:*",
     "@reading-advantage/game-cartridges-3d": "workspace:*",
     "@reading-advantage/game-contracts": "workspace:*",
     "@reading-advantage/storage": "workspace:*",

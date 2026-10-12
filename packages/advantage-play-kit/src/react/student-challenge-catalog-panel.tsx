@@ -54,7 +54,8 @@ function withBasePath(basePath: string, path: string): string {
 /** Creates a retro button style with a host-prefixed image. */
 function buttonStyle(emphasis: "primary" | "secondary", basePath: string): CSSProperties {
   const asset = emphasis === "primary" ? RETRO_ARCADE_UI_ASSETS.primaryButton : RETRO_ARCADE_UI_ASSETS.secondaryButton;
-  return { ...getRetroArcadeButtonStyle(emphasis), borderImageSource: `url("${withBasePath(basePath, asset)}")` };
+  const variable = emphasis === "primary" ? "--apk-arcade-button-primary-image" : "--apk-arcade-button-secondary-image";
+  return { ...getRetroArcadeButtonStyle(emphasis), borderImageSource: `var(${variable}, url("${withBasePath(basePath, asset)}"))` };
 }
 
 /**
@@ -177,11 +178,11 @@ export function StudentChallengeCatalogPanel({
   const now = Date.now();
 
   return (
-    <section aria-label="Class challenges" style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}")`, padding: 12, background: "#0f172a", color: "#f8fafc", maxWidth: "100%" }}>
+    <section aria-label="Class challenges" style={{ ...RETRO_ARCADE_PANEL_STYLE, borderImageSource: `var(--apk-arcade-panel-image, url("${withBasePath(basePath, RETRO_ARCADE_UI_ASSETS.squarePanel)}"))`, padding: 12, background: "var(--apk-arcade-panel-surface, #0f172a)", color: "var(--apk-arcade-panel-text, #f8fafc)", maxWidth: "100%" }}>
       <h2 style={{ margin: 0 }}>Class challenges</h2>
       {visibleClassStatus?.message ? <div role="alert"><p>{visibleClassStatus.message}</p><button style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadClasses(0)}>Try again</button></div> : null}
       {visibleClassStatus?.loading && visibleClasses.length === 0 ? <p role="status">Loading classes…</p> : null}
-      {visibleClasses.length > 0 ? <label>Class <select style={{ minHeight: 44, maxWidth: "100%" }} value={selectedClassId} onChange={(event) => setSelectedClassId(event.target.value)}>{visibleClasses.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label> : null}
+      {visibleClasses.length > 0 ? <label>Class <select className="apk-challenge-select" style={{ minHeight: 44, maxWidth: "100%" }} value={selectedClassId} onChange={(event) => setSelectedClassId(event.target.value)}>{visibleClasses.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label> : null}
       {classesHasMore && classesScope === scope ? <button disabled={visibleClassStatus?.loading} style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadClasses(visibleClasses.length)}>More classes</button> : null}
       {!visibleClassStatus?.loading && !visibleClassStatus?.message && visibleClasses.length === 0 ? <p>No classes are available.</p> : null}
       {visibleChallengeStatus?.message ? <div role="alert"><p>{visibleChallengeStatus.message}</p><button style={buttonStyle("secondary", basePath)} type="button" onClick={() => selectedClassId && void loadChallenges(selectedClassId, 0)}>Try again</button></div> : null}
@@ -193,7 +194,7 @@ export function StudentChallengeCatalogPanel({
         const supported = Boolean(installed && installed.version === challenge.gameVersion && challenge.difficulty === "medium" && challenge.modality.modality === "reading");
         const status = !active ? (now < Date.parse(challenge.startsAt) ? "Upcoming" : "Expired") : supported ? "Active" : "Unavailable";
         const href = withBasePath(basePath, `/${locale}/student/games/apk/${challenge.gameId}?challengeId=${challenge.id}`);
-        return <li key={challenge.id} style={{ borderTop: "1px solid #475569", paddingBlock: 10, overflowWrap: "anywhere" }}><strong>{challenge.title}</strong><div>{installed?.title ?? "Game unavailable"}</div><div>Class progress: {challenge.contributionCount}/{challenge.target}</div><div>{status}</div><time dateTime={challenge.startsAt}>{new Date(challenge.startsAt).toLocaleDateString()}</time> – <time dateTime={challenge.expiresAt}>{new Date(challenge.expiresAt).toLocaleDateString()}</time>{active && supported ? <div><a style={{ ...buttonStyle("primary", basePath), display: "inline-flex", padding: "0.5rem 1rem", textDecoration: "none", fontWeight: 700, alignItems: "center" }} href={href}>Play challenge</a></div> : null}</li>;
+        return <li key={challenge.id} style={{ borderTop: "1px solid var(--apk-arcade-panel-divider, #475569)", paddingBlock: 10, overflowWrap: "anywhere" }}><strong>{challenge.title}</strong><div>{installed?.title ?? "Game unavailable"}</div><div>Class progress: {challenge.contributionCount}/{challenge.target}</div><div className="apk-challenge-status" data-status={status}>{status}</div><time dateTime={challenge.startsAt}>{new Date(challenge.startsAt).toLocaleDateString()}</time> – <time dateTime={challenge.expiresAt}>{new Date(challenge.expiresAt).toLocaleDateString()}</time>{active && supported ? <div><a style={{ ...buttonStyle("primary", basePath), display: "inline-flex", padding: "0.5rem 1rem", textDecoration: "none", fontWeight: 700, alignItems: "center" }} href={href}>Play challenge</a></div> : null}</li>;
       })}</ul>
       {challengeHasMore && challengesScope === selectedChallengeScope && selectedClassId ? <button disabled={visibleChallengeStatus?.loading} style={buttonStyle("secondary", basePath)} type="button" onClick={() => void loadChallenges(selectedClassId, visibleChallenges.length)}>More challenges</button> : null}
     </section>

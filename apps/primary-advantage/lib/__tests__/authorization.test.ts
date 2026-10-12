@@ -1,6 +1,5 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { z } from "zod";
 import {
   USER_MANAGEMENT_ROLES,
   normalizeRole,
@@ -13,7 +12,6 @@ import {
   resolveXpAward,
   isPlainBasename,
   patchUserBodySchema,
-  amountPerGenreSchema,
   cleanupFileNameSchema,
 } from "../authorization";
 import { ActivityType, UserXpEarned } from "@/types/enum";
@@ -107,14 +105,6 @@ describe("authorization contracts", () => {
     expect(
       patchUserBodySchema.safeParse({ email: "not-an-email" }).success,
     ).toBe(false);
-  });
-
-  it("bounds amountPerGenre with Zod", () => {
-    expect(amountPerGenreSchema.safeParse(3).success).toBe(true);
-    expect(amountPerGenreSchema.safeParse(0).success).toBe(false);
-    expect(amountPerGenreSchema.safeParse(1000).success).toBe(false);
-    expect(amountPerGenreSchema.safeParse("many").success).toBe(false);
-    expect(z.number().safeParse(1000).success).toBe(true);
   });
 });
 

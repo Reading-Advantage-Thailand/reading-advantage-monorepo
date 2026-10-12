@@ -1,0 +1,139 @@
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { BookMarkedIcon, ArrowLeft, BarChart3, Mic, Settings, Smile, TriangleAlert, SchoolIcon, ChevronRight } from "lucide-react";
+import { Panel, Plaque, RpgLink, RpgButton, Meter } from "@/components/rpg/chrome";
+import { ART } from "@/lib/rpg/places";
+
+const FIELD = "min-h-12 w-full rounded-[10px] border-[3px] px-3 text-base";
+const fieldStyle: React.CSSProperties = { background: "var(--cq-parchment-2)", borderColor: "var(--cq-parchment-edge)", color: "var(--cq-ink)", fontFamily: "var(--cq-font)" };
+const navBtn = "inline-flex min-h-11 items-center gap-2 rounded-md border bg-background px-4 text-sm font-medium shadow-xs";
+
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bg-background text-foreground flex min-h-screen flex-col">
+      <header className="bg-background border-b"><div className="container mx-auto flex h-16 items-center px-4 font-bold">Primary Advantage <span className="text-muted-foreground ml-2 text-sm font-normal">teacher</span></div></header>
+      <div className="container mx-auto flex flex-1 gap-8 px-4 pt-6">
+        <aside className="hidden w-[230px] shrink-0 lg:block"><div className="bg-muted h-64 rounded-2xl" /></aside>
+        <main className="flex min-w-0 flex-1 flex-col gap-6 pb-24">{children}</main>
+      </div>
+    </div>
+  );
+}
+
+function Heading({ withBookLink = true }: { withBookLink?: boolean }) {
+  return (
+    <header className="flex flex-col gap-3">
+      <a className="text-muted-foreground inline-flex min-h-11 w-fit items-center gap-2 text-sm font-medium"><ArrowLeft className="size-4" />Back to classes</a>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex min-w-0 flex-col gap-1"><h1 className="text-2xl font-bold md:text-3xl">Class 3/2</h1><p className="text-muted-foreground">24 students · Grade 3</p></div>
+        <div className="flex flex-wrap items-center gap-2">
+          {withBookLink ? <a href="#class-book" className={navBtn + " border-primary"}><BookMarkedIcon className="size-4" />Class book</a> : null}
+          <a className={navBtn}><BarChart3 className="size-4" />Reports</a>
+          <a className={navBtn}><Mic className="size-4" />Reedy</a>
+          <a className={navBtn}><Smile className="size-4" />Avatars</a>
+          <a className={navBtn}><Settings className="size-4" />Settings</a>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+const Login = () => (
+  <section className="bg-card flex flex-col gap-3 rounded-2xl border p-4 shadow-sm sm:p-5">
+    <h2 className="text-lg font-semibold">Class sign-in</h2>
+    <div className="bg-muted/50 h-20 rounded-xl" />
+    <p className="text-muted-foreground text-sm">Roster and sign-in panel continue here (unchanged).</p>
+  </section>
+);
+
+function CardTitle() {
+  return (
+    <h2 className="flex items-center gap-2 text-xl font-bold"><BookMarkedIcon className="size-6" aria-hidden="true" />Class book</h2>
+  );
+}
+
+function AssignForm({ ghost }: { ghost?: boolean }) {
+  return (
+    <form className="grid gap-3 sm:grid-cols-2" aria-label="Assign a book">
+      <h3 className="text-base font-bold sm:col-span-2">{ghost ? "Assign another book" : "Assign a book"}</h3>
+      <label className="flex flex-col gap-1 text-sm font-bold sm:col-span-2">Book<select className={FIELD} style={fieldStyle} defaultValue=""><option value="" disabled>Choose a book</option></select></label>
+      <label className="flex flex-col gap-1 text-sm font-bold">Mode<select className={FIELD} style={fieldStyle}><option>Teacher-led (workbook first)</option></select></label>
+      <label className="flex flex-col gap-1 text-sm font-bold">Start date<input type="date" className={FIELD} style={fieldStyle} /></label>
+      <div className="sm:col-span-2"><RpgButton tone={ghost ? "iron" : "gold"} type="button" className="w-full sm:w-auto">Assign</RpgButton></div>
+    </form>
+  );
+}
+
+function BookRow({ done = 0 }: { done?: number }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0"><p className="cq-muted text-sm font-bold uppercase tracking-wide">Now in class</p><p className="text-2xl font-bold break-words">Primary Advantage Origins 3.2</p></div>
+        <div className="grid w-full grid-cols-2 gap-2 sm:w-64"><Plaque icon={ART.noticeBoard} label="Lesson 1 of 14">1/14</Plaque><Plaque icon={ART.banner} label="Lessons taught">0</Plaque></div>
+      </div>
+      <p className="text-lg font-bold break-words">Lesson 1: A Day at the Sea Park</p>
+      <Meter value={done} max={13} label="Workbook steps done" tone="green" thin />
+      <p className="text-base"><span className="cq-muted font-bold">Next step</span> · Step {done + 1}: Vocabulary · <span className="font-bold">Period 1</span></p>
+      <div className="flex flex-wrap gap-3">
+        <RpgLink href="#lesson" tone="gold" className="w-full sm:w-auto">Open lesson</RpgLink>
+        <RpgLink href="#plan" tone="wood" className="w-full sm:w-auto">Lesson plan</RpgLink>
+      </div>
+    </div>
+  );
+}
+
+export function BookAssigned() {
+  return (<Panel id="class-book" className="scroll-mt-20" aria-labelledby="cb"><CardTitle /><BookRow /><details><summary className="min-h-12 cursor-pointer py-3 text-base font-bold">Assign another book</summary><AssignForm ghost /></details></Panel>);
+}
+export function BookNone() {
+  return (<Panel id="class-book" aria-labelledby="cb"><CardTitle /><p className="text-base">No book is assigned to this class yet. Choose a book below to start.</p><AssignForm /></Panel>);
+}
+export function BookEmptyCatalogue() {
+  return (<Panel id="class-book" aria-labelledby="cb"><CardTitle /><div role="status" className="flex flex-col gap-2 rounded-[10px] border-2 border-dashed p-3" style={{ borderColor: "var(--cq-parchment-edge)" }}><p className="text-base font-bold">The book list is not ready yet.</p><p className="text-base">Tell your school admin, who asks Reading Advantage to load the books.</p></div></Panel>);
+}
+export function BookError() {
+  return (<Panel id="class-book" aria-labelledby="cb"><CardTitle /><div role="alert" className="flex items-start gap-3"><TriangleAlert className="mt-1 size-6 shrink-0" style={{ color: "var(--cq-red)" }} /><div className="flex flex-col gap-1"><p className="text-base font-bold">We could not load the class books.</p><p className="text-base">Check the internet connection and try again.</p></div></div><div><RpgLink href="#retry" tone="iron" className="w-full sm:w-auto">Try again</RpgLink></div></Panel>);
+}
+
+export function ClassPage({ card, withLink = true }: { card: React.ReactNode; withLink?: boolean }) {
+  return (<Shell><Heading withBookLink={withLink} />{card}<Login /></Shell>);
+}
+
+function SlotRow({ cls, book, n = 1, lesson, step, empty }: { n?: number; cls: string; book?: string; lesson?: string; step?: string; empty?: boolean }) {
+  return (
+    <li>
+      <a href="#x" className="flex min-h-[72px] items-center justify-between gap-3 rounded-[10px] border-2 p-3" style={{ borderColor: "var(--cq-parchment-edge)", background: "rgba(255,255,255,0.35)", color: "inherit", textDecoration: "none" }}>
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <span className="cq-muted text-sm font-bold">{cls}</span>
+          {empty ? <span className="text-base font-bold">Assign a book</span> : (<><span className="text-base font-bold break-words">{book} · Lesson {n} of 14</span><span className="text-sm break-words">{lesson}</span><span className="text-sm"><span className="cq-muted">Next</span> · {step}</span></>)}
+        </div>
+        <ChevronRight className="size-6 shrink-0" aria-hidden="true" />
+      </a>
+    </li>
+  );
+}
+const SlotTitle = () => (<h2 className="flex items-center gap-2 text-xl font-bold"><BookMarkedIcon className="size-6" aria-hidden="true" />Class books</h2>);
+export function SlotRows() {
+  return (<Panel data-class-book-slot="all" className="lg:col-span-2"><SlotTitle /><ul className="flex flex-col gap-2"><SlotRow cls="Class 3/2" book="Origins 3.2" lesson="Lesson 1: A Day at the Sea Park" step="Step 1: Vocabulary · Period 1" /><SlotRow cls="Class 4/1" book="Quest 4" n={5} lesson="Lesson 5: The Lost Map" step="Step 6: Reading · Period 2" /><SlotRow cls="Class 2/3" empty /></ul></Panel>);
+}
+export function SlotEmpty() {
+  return (<Panel data-class-book-slot="all" className="lg:col-span-2"><SlotTitle /><p className="text-base">No class has a book yet. Open a class to assign one.</p><div><RpgLink href="#c" tone="gold" className="w-full sm:w-auto">Go to my classes</RpgLink></div></Panel>);
+}
+export function SlotError() {
+  return (<Panel data-class-book-slot="all" className="lg:col-span-2"><SlotTitle /><div role="alert" className="flex items-start gap-3"><TriangleAlert className="mt-1 size-6 shrink-0" style={{ color: "var(--cq-red)" }} /><p className="text-base">We could not load the class books. Reload the page to try again.</p></div></Panel>);
+}
+function Neighbour({ h }: { h: string }) { return <div className="bg-card rounded-2xl border p-4 shadow-sm" style={{ minHeight: h }}><h2 className="text-lg font-semibold">Other dashboard card</h2></div>; }
+export function Dashboard({ slot }: { slot: React.ReactNode }) {
+  return (<Shell><h1 className="text-2xl font-bold md:text-3xl">Dashboard</h1><div className="grid gap-4 lg:grid-cols-2"><Neighbour h="120px" /><Neighbour h="120px" />{slot}<Neighbour h="120px" /><Neighbour h="120px" /></div></Shell>);
+}
+
+export const states: Record<string, React.ReactNode> = {
+  "class-assigned": <ClassPage card={<BookAssigned />} />,
+  "class-none": <ClassPage card={<BookNone />} />,
+  "class-empty-catalogue": <ClassPage card={<BookEmptyCatalogue />} />,
+  "class-load-error": <ClassPage card={<BookError />} />,
+  "dash-rows": <Dashboard slot={<SlotRows />} />,
+  "dash-empty": <Dashboard slot={<SlotEmpty />} />,
+  "dash-error": <Dashboard slot={<SlotError />} />,
+};
+export const render = (k: string) => renderToStaticMarkup(states[k]);

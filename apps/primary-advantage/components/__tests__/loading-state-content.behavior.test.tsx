@@ -25,7 +25,7 @@
  *   state on the same article id.
  */
 import "@testing-library/jest-dom/vitest";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import viMessages from "../../messages/vi.json";
@@ -107,21 +107,6 @@ vi.mock("@reading-advantage/advantage-play-kit/react", () => ({
   },
 }));
 
-vi.mock("@reading-advantage/game-cartridges", () => ({
-  cartridgeLoaders: {
-    "test-game": async () => ({
-      manifest: {
-        id: "test-game",
-        inputMode: "vocabulary",
-        requiredAssetBindings: [],
-      },
-      standardExperience: {},
-    }),
-  },
-  CARTRIDGE_CHALLENGE_CAPABILITIES: {},
-  createCatalogStandardEdition: () => ({}),
-}));
-
 vi.mock("../articles/article-showcase-card", async () => {
   const React = await import("react");
   return {
@@ -144,7 +129,6 @@ vi.mock("../articles/article-showcase-card", async () => {
   };
 });
 
-import { StudentCartridgeHost } from "../apk/StudentCartridgeHost";
 import ChangeRole from "../shared/change-role";
 import Sentence from "../articles/sentence";
 import TaskVocabularyCollection from "../lesson/task/task-vocabulary-collection";
@@ -170,53 +154,6 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
-});
-
-/**
- * Props shared by the cartridge host renders below.
- */
-function hostProps(mode?: "demo" | "briefing") {
-  return {
-    cartridgeId: "test-game",
-    title: "Test Game",
-    description: "desc",
-    inputMode: "vocabulary" as const,
-    locale: "en",
-    ...(mode ? { mode } : {}),
-  };
-}
-
-describe("FR-3 student cartridge launch phase", () => {
-  it("renders the loading phase without reading window.location.search", async () => {
-    searchParamsMock.mockImplementation(() => {
-      throw new Error("search params must not be read during render");
-    });
-    renderWithMessages(<StudentCartridgeHost {...hostProps()} />);
-    expect(screen.getByText("Loading student content...")).toBeInTheDocument();
-    expect(
-      await screen.findByRole("button", { name: "Retry" }),
-    ).toBeInTheDocument();
-    expect(searchParamsMock).not.toHaveBeenCalled();
-  });
-
-  it("derives demo and briefing phases from the mode prop", async () => {
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        content: [{ term: "cat", translation: "แมว" }],
-      }),
-    });
-    const { unmount } = renderWithMessages(
-      <StudentCartridgeHost {...hostProps("demo")} />,
-    );
-    await waitFor(() => expect(launchPhaseProbe.phase).toBe("demo"));
-    unmount();
-    cleanup();
-
-    launchPhaseProbe.phase = "";
-    renderWithMessages(<StudentCartridgeHost {...hostProps()} />);
-    await waitFor(() => expect(launchPhaseProbe.phase).toBe("briefing"));
-  });
 });
 
 describe("FR-8 change-role static colour classes", () => {

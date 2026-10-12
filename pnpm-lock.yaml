@@ -1054,9 +1054,6 @@ importers:
       '@reading-advantage/domain':
         specifier: workspace:*
         version: link:../../packages/domain
-      '@reading-advantage/game-cartridges':
-        specifier: workspace:*
-        version: link:../../packages/game-cartridges
       '@reading-advantage/game-cartridges-3d':
         specifier: workspace:*
         version: link:../../packages/game-cartridges-3d

@@ -608,9 +608,6 @@ describe("canonical rename paths", () => {
     expect(() =>
       require.resolve("../practice/cloze-test-page.tsx"),
     ).not.toThrow();
-    expect(() =>
-      require.resolve("../../server/utils/generators/article-generator.ts"),
-    ).not.toThrow();
     expect(() => require.resolve("../../actions/signinAction.ts")).not.toThrow();
     expect(() => require.resolve("../pratice")).toThrow();
     expect(() => require.resolve("../../server/utils/genaretors")).toThrow();

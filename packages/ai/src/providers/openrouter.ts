@@ -80,6 +80,7 @@ export class OpenRouterProvider implements AIClientWithProvenance {
         model: this.client(stripOpenRouterPrefix(input.model ?? this.defaultModel)),
         schema: input.schema,
         prompt: input.prompt,
+        ...(input.system ? { system: input.system } : {}),
         ...(input.temperature !== undefined
           ? { temperature: input.temperature }
           : {}),
@@ -114,6 +115,7 @@ export class OpenRouterProvider implements AIClientWithProvenance {
         model: this.client(stripOpenRouterPrefix(requestedModel)),
         schema: input.schema,
         prompt: input.prompt,
+        ...(input.system ? { system: input.system } : {}),
         ...(input.temperature !== undefined
           ? { temperature: input.temperature }
           : {}),

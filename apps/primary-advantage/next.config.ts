@@ -15,7 +15,6 @@ const nextConfig: NextConfig = {
   transpilePackages: [
     "@reading-advantage/advantage-play-kit",
     "@reading-advantage/advantage-play-kit-3d",
-    "@reading-advantage/game-cartridges",
     "@reading-advantage/game-cartridges-3d",
     "@reading-advantage/game-contracts",
   ],
