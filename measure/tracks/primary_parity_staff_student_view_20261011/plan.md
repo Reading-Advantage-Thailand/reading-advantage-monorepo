@@ -102,7 +102,7 @@ _Story ref: spec.md#story-s3_
 - [x] Task: Measure - User Manual Verification 'Phase S3: Pages that need a student record show a preview state' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual steps: (1) Sign in as a teacher in a build. Open `/student/home`: the hero banner art, "No streak yet", XP 0, four notices, and the school leaderboard show; no error page. (2) Open avatar: pick a hero and colors; "Save my avatar" is off with "Preview: not saved". (3) Open the shop: pieces show with prices; select one: the try-on works, Buy is off with the note. (4) Open history, reports, sentences, vocabulary: each shows one notice. (5) Open Class Quest battle and Reedy: the not-in-a-class and students-only notices. (6) Open a game and Word adventures: the game loads the sample words and posts no completion (check `xp_logs` stays equal). (7) Sign in as a SYSTEM user with no school: home shows no leaderboard. (8) Sign in as a student: all pages work as before.
 
-## Phase S4: Class books and lessons in preview [checkpoint: PENDING]
+## Phase S4: Class books and lessons in preview [checkpoint: 0603db8ab]
 _Story ref: spec.md#story-s4_
 
 - [x] Task: Contract for the preview class book
