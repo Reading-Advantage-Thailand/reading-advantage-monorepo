@@ -84,9 +84,23 @@ const steps = [
   step("s1", 2, 2, "in_progress", old, 75),
 ];
 
+const attempt = (studentId: string, lessonNumber: number, attemptNumber: number, extra: Record<string, unknown> = {}) => ({
+  studentId,
+  lessonNumber,
+  attemptNumber,
+  closedAt: new Date("2026-10-03T08:00:00Z"),
+  closeReason: "teacher_teach_again",
+  timeSpent: 300,
+  xpEarned: 40,
+  score: null,
+  steps: [{ status: "done" }, { status: "done" }, { status: "in_progress" }],
+  ...extra,
+});
+const attempts = [attempt("s1", 1, 1), attempt("s1", 1, 2, { closeReason: "student_restart", xpEarned: 10 })];
+
 describe("getClassBookProgress", () => {
   it("builds one cell per student and lesson with the status, the flags, and the fidelity signal", async () => {
-    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps]);
+    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps, attempts]);
     const result = await getClassBookProgress({ db: mock as unknown as DB, user: teacher, now: NOW, classBookId: CLASS_BOOK });
     expect(result.classBook).toMatchObject({ id: CLASS_BOOK, taughtCount: 1 });
     expect(result.lessons).toEqual([
@@ -101,6 +115,25 @@ describe("getClassBookProgress", () => {
     expect(cell("s2", 2)).toMatchObject({ status: "not_started", late: false });
   });
 
+  it("counts the earlier attempts of each cell and writes them to the CSV", async () => {
+    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps, attempts]);
+    const result = await getClassBookProgress({ db: mock as unknown as DB, user: teacher, now: NOW, classBookId: CLASS_BOOK });
+    const cell = (studentId: string, lessonNumber: number) => result.cells.find((row) => row.studentId === studentId && row.lessonNumber === lessonNumber)!;
+    expect(cell("s1", 1).attempts).toBe(2);
+    expect(cell("s1", 2).attempts).toBe(0);
+    expect(cell("s2", 1).attempts).toBe(0);
+    const lines = toProgressCsv(result).trimEnd().split("\n");
+    expect(lines[0].split(",").at(-1)).toBe("attempts");
+    expect(lines[1].split(",").at(-1)).toBe("2");
+    expect(lines[2].split(",").at(-1)).toBe("0");
+  });
+
+  it("reads the attempts of this class book in the school of the teacher", async () => {
+    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps, []]);
+    await getClassBookProgress({ db: mock as unknown as DB, user: teacher, now: NOW, classBookId: CLASS_BOOK });
+    expect(mock.select).toHaveBeenCalledTimes(7);
+  });
+
   it("rejects a student", async () => {
     const mock = dbWith([[classBookRow], [classRow]]);
     await expect(getClassBookProgress({ db: mock as unknown as DB, user: student, classBookId: CLASS_BOOK })).rejects.toMatchObject({ code: "FORBIDDEN" });
@@ -109,7 +142,7 @@ describe("getClassBookProgress", () => {
 
 describe("getStudentLessonSteps", () => {
   it("returns the 14 steps of every lesson for one student", async () => {
-    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps]);
+    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps, attempts]);
     const result = await getStudentLessonSteps({ db: mock as unknown as DB, user: teacher, classBookId: CLASS_BOOK, studentId: "s1" });
     expect(result.student).toEqual(students[0]);
     expect(result.lessons).toHaveLength(2);
@@ -119,20 +152,32 @@ describe("getStudentLessonSteps", () => {
     expect(result.lessons[1].steps[2]).toEqual({ appStep: 3, status: "not_started", startedAt: null, doneAt: null, seconds: 0 });
   });
 
+  it("lists the earlier attempts of one student in each lesson, oldest first, with the next attempt number", async () => {
+    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps, [attempts[1], attempts[0], attempt("s2", 1, 1)]]);
+    const result = await getStudentLessonSteps({ db: mock as unknown as DB, user: teacher, classBookId: CLASS_BOOK, studentId: "s1" });
+    expect(result.lessons[0].attemptNumber).toBe(3);
+    expect(result.lessons[0].earlierAttempts).toEqual([
+      { attemptNumber: 1, closedAt: attempts[0].closedAt, closeReason: "teacher_teach_again", doneSteps: 2, seconds: 300, xpEarned: 40, score: null },
+      { attemptNumber: 2, closedAt: attempts[1].closedAt, closeReason: "student_restart", doneSteps: 2, seconds: 300, xpEarned: 10, score: null },
+    ]);
+    expect(result.lessons[1].attemptNumber).toBe(1);
+    expect(result.lessons[1].earlierAttempts).toEqual([]);
+  });
+
   it("rejects a student who is not in the class", async () => {
-    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps]);
+    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps, attempts]);
     await expect(getStudentLessonSteps({ db: mock as unknown as DB, user: teacher, classBookId: CLASS_BOOK, studentId: "s9" })).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 });
 
 describe("toProgressCsv", () => {
   it("writes a header and one quoted row per cell", async () => {
-    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps]);
+    const mock = dbWith([[classBookRow], [classRow], students, lessons, states, steps, attempts]);
     const csv = toProgressCsv(await getClassBookProgress({ db: mock as unknown as DB, user: teacher, now: NOW, classBookId: CLASS_BOOK }));
     const lines = csv.trimEnd().split("\n");
-    expect(lines[0]).toBe("student,username,lesson,title,status,done_steps,seconds,first_started_at,last_at,late,stuck,opened_before_taught");
+    expect(lines[0]).toBe("student,username,lesson,title,status,done_steps,seconds,first_started_at,last_at,late,stuck,opened_before_taught,attempts");
     expect(lines).toHaveLength(5);
-    expect(lines[1]).toBe(`Ann,p3a1,1,Story 1,done,14,600,${early.toISOString()},${early.toISOString()},false,false,true`);
-    expect(lines[3]).toBe('"Bo, Jr.",p3a2,1,Story 1,not_started,0,0,,,true,false,false');
+    expect(lines[1]).toBe(`Ann,p3a1,1,Story 1,done,14,600,${early.toISOString()},${early.toISOString()},false,false,true,2`);
+    expect(lines[3]).toBe('"Bo, Jr.",p3a2,1,Story 1,not_started,0,0,,,true,false,false,0');
   });
 });
