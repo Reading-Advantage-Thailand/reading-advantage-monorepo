@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
+import { setUserRole } from "@/server/utils/role-sql";
 import { eq } from 'drizzle-orm';
 import { users, userRoles, roles } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB, type TenantDB } from '@reading-advantage/domain';
@@ -135,24 +136,8 @@ export async function PATCH(
 
       // Handle role update if specified
       if (role !== undefined) {
-        // Find the new role by name
-        const [roleRecord] = await tx.select().from(roles)
-          .where(eq(roles.name, role))
-          .limit(1);
-
-        if (!roleRecord) {
-          throw new Error(`Role '${role}' not found`);
-        }
-
-        // Remove existing roles for this user
-        await rawTx.delete(userRoles)
-          .where(eq(userRoles.userId, userId));
-
-        // Assign the new role
-        await rawTx.insert(userRoles).values({
-          userId: userId,
-          roleId: roleRecord.id,
-        });
+        // users.role is the truth; the user_roles row changes only when the roles row exists.
+        await setUserRole(rawTx, userId, role);
       }
 
       // Return updated user with roles (stitched via follow-up queries)

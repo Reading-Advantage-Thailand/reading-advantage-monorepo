@@ -1,5 +1,7 @@
-import { db, eq, sql, users, roles, userRoles } from "@reading-advantage/db";
+import { eq, sql } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
+import type { db } from "@reading-advantage/db";
+import { users, roles, userRoles } from "@reading-advantage/db/schema";
 
 /** A database handle or a transaction handle. */
 export type RoleExecutor = Pick<typeof db, "select" | "insert" | "update" | "delete">;
