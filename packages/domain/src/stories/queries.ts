@@ -1,7 +1,7 @@
 import { and, asc, count, eq, gte, ilike, inArray, like, lte, or, type SQL } from "drizzle-orm";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
-import { chapters, stories, userActivity } from "@reading-advantage/db/schema";
+import { chapters, sentencsAndWordsForFlashcards, stories, userActivity } from "@reading-advantage/db/schema";
 import {
   STORIES_PAGE_SIZE,
   listPrimaryStoriesInputSchema,
@@ -13,8 +13,12 @@ import {
   storyCharacterSchema,
   type GetStoryForStudentInput,
   type GetStoryForStudentOutput,
+  getChapterForStudentInputSchema,
+  getChapterForStudentOutputSchema,
+  type GetChapterForStudentInput,
+  type GetChapterForStudentOutput,
 } from "./contracts.js";
-import { StoryNotFoundError } from "./errors.js";
+import { ChapterNotFoundError, StoryNotFoundError } from "./errors.js";
 
 /**
  * Retrieves a single story by ID. Throws if the story does not exist.
@@ -239,5 +243,89 @@ export async function getStoryForStudent({
     chapters: chapterRows,
     finishedChapterIds: [...new Set(done.map((d) => d.targetId).filter((t): t is string => Boolean(t)))],
     characters,
+  });
+}
+
+/**
+ * Loads one chapter for the chapter page: the chapter text with its sentence timings and
+ * translations, the audio key, the picture key, the word list (the chapter row of
+ * `sentencs_and_words_for_flashcard`), and the previous and next chapter numbers. A student sees
+ * a chapter only when its story is published and in the level window (`user.level` +/- 1);
+ * staff see every published story.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context (its level sets the student window)
+ * @param tenant - Tenant (school) scope
+ * @param input - The `storyId` (a UUID) and the `chapterNumber` (from 1)
+ * @returns The story, the chapter, the word list, and the neighbour chapter numbers
+ * @throws StoryNotFoundError when no published story in the window has this id
+ * @throws ChapterNotFoundError when the story has no chapter with this number
+ * @throws When the input is invalid or the user lacks `story:read`
+ */
+export async function getChapterForStudent({
+  db,
+  user,
+  tenant,
+  input,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+  input: GetChapterForStudentInput;
+}): Promise<GetChapterForStudentOutput> {
+  assertCan(user, "story:read", tenant);
+  const { storyId, chapterNumber } = getChapterForStudentInputSchema.parse(input);
+
+  const rules: SQL[] = [eq(stories.id, storyId), eq(stories.isPublic, true)];
+  if (!STAFF_ROLES.has(user.role)) {
+    rules.push(gte(stories.raLevel, Math.max(user.level - 1, 1)), lte(stories.raLevel, user.level + 1));
+  }
+
+  const rawDb = db.unscoped("stories and chapters are a global content catalog with no schoolId");
+  const [story] = await rawDb
+    .select({ id: stories.id, title: stories.title })
+    .from(stories)
+    .where(and(...rules))
+    .limit(1);
+  if (!story) throw new StoryNotFoundError(storyId);
+
+  const [chapter] = await rawDb
+    .select({
+      id: chapters.id,
+      chapterNumber: chapters.chapterNumber,
+      title: chapters.title,
+      passage: chapters.passage,
+      sentences: chapters.sentences,
+      translatedPassage: chapters.translatedPassage,
+      audioUrl: chapters.audioUrl,
+      image: chapters.image,
+    })
+    .from(chapters)
+    .where(and(eq(chapters.storyId, storyId), eq(chapters.chapterNumber, chapterNumber)))
+    .limit(1);
+  if (!chapter) throw new ChapterNotFoundError(storyId, chapterNumber);
+
+  const [numbers, [wordRow]] = await Promise.all([
+    rawDb
+      .select({ chapterNumber: chapters.chapterNumber })
+      .from(chapters)
+      .where(eq(chapters.storyId, storyId))
+      .orderBy(asc(chapters.chapterNumber)),
+    rawDb
+      .select({ words: sentencsAndWordsForFlashcards.words, wordsUrl: sentencsAndWordsForFlashcards.wordsUrl })
+      .from(sentencsAndWordsForFlashcards)
+      .where(eq(sentencsAndWordsForFlashcards.chapterId, chapter.id))
+      .limit(1),
+  ]);
+  const before = numbers.map((n) => n.chapterNumber).filter((n) => n < chapterNumber);
+  const after = numbers.map((n) => n.chapterNumber).filter((n) => n > chapterNumber);
+
+  const { audioUrl, image, ...rest } = chapter;
+  return getChapterForStudentOutputSchema.parse({
+    story,
+    chapter: { ...rest, passage: rest.passage ?? "", audioKey: audioUrl?.trim() || null, imageKey: image?.trim() || chapter.id },
+    words: { words: Array.isArray(wordRow?.words) ? wordRow.words : [], wordsUrl: wordRow?.wordsUrl ?? "" },
+    previousChapterNumber: before.length ? Math.max(...before) : null,
+    nextChapterNumber: after.length ? Math.min(...after) : null,
   });
 }

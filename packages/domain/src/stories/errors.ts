@@ -11,3 +11,10 @@ export class StoryNotFoundError extends StoryError {
     this.name = "StoryNotFoundError";
   }
 }
+
+export class ChapterNotFoundError extends StoryError {
+  constructor(storyId: string, chapterNumber: number) {
+    super(`Chapter not found: ${storyId}/${chapterNumber}`);
+    this.name = "ChapterNotFoundError";
+  }
+}

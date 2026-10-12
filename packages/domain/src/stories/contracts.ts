@@ -84,3 +84,50 @@ export const getStoryForStudentOutputSchema = z.object({
 });
 
 export type GetStoryForStudentOutput = z.infer<typeof getStoryForStudentOutputSchema>;
+
+/** Input of `getChapterForStudent`: the story id (a UUID) and the chapter number (from 1). */
+export const getChapterForStudentInputSchema = z.object({
+  storyId: z.string().uuid(),
+  chapterNumber: z.number().int().min(1).max(10_000),
+});
+
+export type GetChapterForStudentInput = z.input<typeof getChapterForStudentInputSchema>;
+
+/** Sentence translations by language code (`th`, `cn`, `tw`, `vi`); bad data reads as no translation. */
+const translatedPassageSchema = z.record(z.string(), z.array(z.string()).catch([])).nullable().catch(null);
+
+/** One word of the chapter word list: the word, its meanings by language, and its audio time. */
+export const chapterWordSchema = z.object({
+  vocabulary: z.string(),
+  definition: z.record(z.string(), z.string()),
+  timeSeconds: z.number().optional(),
+});
+
+export type ChapterWord = z.infer<typeof chapterWordSchema>;
+
+/**
+ * Output of `getChapterForStudent`: the story, the chapter with its sentence timings, the
+ * translations, the audio key and the picture key, the word list, and the neighbour numbers.
+ * `sentences` is raw timing data; the read-along parser in the app validates it.
+ */
+export const getChapterForStudentOutputSchema = z.object({
+  story: z.object({ id: z.string(), title: z.string() }),
+  chapter: z.object({
+    id: z.string(),
+    chapterNumber: z.number().int(),
+    title: z.string(),
+    passage: z.string(),
+    sentences: z.unknown(),
+    translatedPassage: translatedPassageSchema,
+    audioKey: z.string().nullable(),
+    imageKey: z.string(),
+  }),
+  words: z.object({
+    words: z.array(chapterWordSchema).catch([]),
+    wordsUrl: z.string(),
+  }),
+  previousChapterNumber: z.number().int().nullable(),
+  nextChapterNumber: z.number().int().nullable(),
+});
+
+export type GetChapterForStudentOutput = z.infer<typeof getChapterForStudentOutputSchema>;
