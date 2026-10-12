@@ -19,6 +19,7 @@ import {
 } from '@reading-advantage/db';
 import { studentLogin } from "@reading-advantage/domain";
 import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, resolveCreationSchoolId, schoolScopeConditions } from "@/server/utils/auth";
+import { roleSql, setUserRole } from "@/server/utils/role-sql";
 import { canSetPasswordFor } from "@/lib/authorization";
 import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
 import { hashNewPassword, generateRandomPasswordHash, upsertCredentialAccount, revokeSessionsInTx } from "@/server/utils/credentials";
@@ -44,13 +45,11 @@ interface StudentQueryParams {
 const studentRole = "student";
 
 /**
- * Builds the condition that selects student accounts.
- * The session role `users.role` is authoritative, and migrated accounts have no `user_roles` row.
- * A legacy `user_roles` row with the role name "student" also counts.
+ * Builds the condition that selects student accounts (see `roleSql`).
  * @returns A SQL condition to spread into a where clause.
  */
 function isStudentUser() {
-  return sql`(upper(${users.role}) = 'STUDENT' OR exists (select 1 from ${userRoles} inner join ${roles} on ${roles.id} = ${userRoles.roleId} where ${userRoles.userId} = ${users.id} and ${roles.name} = ${studentRole}))`;
+  return roleSql(studentRole);
 }
 
 /**
