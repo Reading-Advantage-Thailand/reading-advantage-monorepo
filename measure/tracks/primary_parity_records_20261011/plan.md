@@ -87,7 +87,7 @@ corrections with evidence, and the "tests" are the checks of the records.
     - Note: "Tell the peer sessions" is the job of the orchestrator (a helper has no peer channel). The report names both messages.
     - Note: the Phase 4 check 5 counts one hit; the status of `Remaining checks` items reads "Did not run".
 
-## Phase 4: Generate Docs & Doctor
+## Phase 4: Generate Docs & Doctor [checkpoint: c6949b7c3]
 
 - [x] Task: Run the checks
     - [x] Run each test of "Lessons-learned checks", one package at a time: every lessons-learned assertion passes (limit and tags). Rows 1, 2, 3, 5, 7, 8 still fail on `tech-debt.md` or `graph.db` only (not in this track).
