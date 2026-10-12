@@ -7,11 +7,15 @@
 // steps 1 to 3 and "Mark taught" on lesson 1, then makes lesson 1 current again. Use a fresh clone for each run.
 // The QR path block (track primary_parity_qr_path_20261011, spec S6, checks named "qr ...") runs after the class
 // book block; QR_CHECK=off skips it. It needs the book assigned to the class (CLASS_BOOK_CHECK on) and the open class code.
+// The staff preview block (track primary_parity_staff_student_view_20261011, checks named "staff ...") runs for the
+// teacher, the admin, and the system user after their sign-in; STAFF_VIEW_CHECK=off skips it. It reads student pages
+// only (GET). The teacher run also opens the first managed class book and its first lesson when the home lists one.
 // Usage: [NEW_PASSWORDS_OUT=<private csv>] node scripts/primary-parity/cutover-check.mjs <handout.csv> <teacher username> <admin username> <system username or -> <classroomId | class name | first>
 import { readFileSync, mkdirSync, appendFileSync, chmodSync, existsSync } from "node:fs";
 import { randomBytes } from "node:crypto";
 import { chromium } from "playwright";
 import { BOOK_KEY, BOOK_LABEL, bookCardFirst, classBookIdFromHref, judgeGuideContent, judgeLessonPage, judgeManualPage, judgeProgressAndTaught, judgeProjector, judgeProjectorUse, judgeStudentLanding, judgeStudentUnlock } from "./class-book-checks.mjs";
+import { STAFF_PREVIEW_PAGES, judgePreviewPage } from "./staff-preview-checks.mjs";
 import { QR_PATHS, judgeCasePage, judgeLanding, judgeSignedInLesson, judgeWritingArticle } from "./qr-path-checks.mjs";
 
 const [csvPath, teacherUser, adminUser, systemUser, classroomId] = process.argv.slice(2);
@@ -61,6 +65,54 @@ async function gotoRetry(page, url, opts = {}) {
 
 const results = [];
 const check = (name, ok, note = "") => { results.push({ name, ok, note }); console.log(`${ok ? "PASS" : "FAIL"}  ${name}${note ? `  (${note})` : ""}`); };
+
+
+/**
+ * Staff preview block: a staff member opens each student page and sees the Preview banner, no error page, and the
+ * preview notice where the page has one. Read only. With `withBook` it follows the first class book and lesson link.
+ */
+async function staffPreviewBlock(label, page, withBook) {
+  if (process.env.STAFF_VIEW_CHECK === "off") return;
+  const open = async (name, path, needsNotice) => {
+    const resp = await gotoRetry(page, `${BASE}/en${path}`, { waitUntil: "networkidle", timeout: 120000 });
+    await page.locator("[data-preview-banner]").first().waitFor({ timeout: 15000 }).catch(() => {});
+    const facts = {
+      status: resp?.status() ?? 0,
+      pathname: new URL(page.url()).pathname,
+      hasBanner: (await page.locator("[data-preview-banner]").count()) > 0,
+      hasNotice: (await page.locator("[data-preview-notice]").count()) > 0,
+      text: await page.locator("body").innerText().catch(() => ""),
+    };
+    for (const c of judgePreviewPage(`staff ${label} ${name}`, facts, needsNotice)) check(c.name, c.ok, c.note);
+    return facts;
+  };
+  try {
+    for (const { path, notice } of STAFF_PREVIEW_PAGES) await open(path.replace("/student/", "").replace(/\//g, " "), path, notice);
+    // The Read page opens one article (first link) in preview.
+    await gotoRetry(page, `${BASE}/en/student/read`, { waitUntil: "networkidle", timeout: 120000 });
+    const article = await page.locator('a[href*="/student/read/"]').first().getAttribute("href").catch(() => null);
+    if (article) await open("read article", article.replace(/^\/[a-z]{2}\//, "/"), false);
+    else check(`staff ${label} read article: the Read list has an article link`, false, "no link");
+    // "Exit preview" goes to the role home, never to /unauthorized.
+    await gotoRetry(page, `${BASE}/en/student/home`, { waitUntil: "networkidle", timeout: 120000 });
+    const exitHref = await page.locator("[data-preview-banner] a").first().getAttribute("href").catch(() => null);
+    check(`staff ${label}: Exit preview link goes to the role home`, !!exitHref && !/unauthorized|\/student/.test(exitHref), exitHref ?? "none");
+    await page.screenshot({ path: `${SHOTS}/staff-${label}-home.png` });
+    if (withBook) {
+      const bookHref = await page.locator('a[href*="/student/books/"]').first().getAttribute("href").catch(() => null);
+      if (!bookHref) {
+        check(`staff ${label} class book: home lists a managed class book`, false, "no link; assign the book first");
+      } else {
+        const f = await open("class book", bookHref.replace(/^\/[a-z]{2}\//, "/"), false);
+        const lessonHref = await page.locator('a[href*="/student/lesson/"]').first().getAttribute("href").catch(() => null);
+        check(`staff ${label} class book: a lesson link shows`, !!lessonHref && f.status < 500, lessonHref ? "link found" : "none");
+        if (lessonHref) await open("lesson", lessonHref.replace(/^\/[a-z]{2}\//, "/"), false);
+      }
+    }
+  } catch (err) {
+    check(`staff ${label}: block error`, false, String(err).slice(0, 300));
+  }
+}
 
 const browser = await chromium.launch({ executablePath: "/opt/google/chrome/chrome", headless: true, args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"] });
 
@@ -493,14 +545,18 @@ try {
   check("student signs in at home with the sheet username and password (no class open)", loginStatus === 200 && home, `status ${loginStatus}, at ${new URL(hp.url()).pathname}`);
   await hp.screenshot({ path: `${SHOTS}/student-home-password.png` });
   await hctx.close();
+  // Staff preview (track primary_parity_staff_student_view_20261011): the teacher opens the student pages.
+  await staffPreviewBlock("teacher", tp, true);
   await teacher.ctx.close();
 
   // Admin and system user.
   const admin = await forcedChange("admin", adminUser);
+  await staffPreviewBlock("admin", admin.page, false);
   await admin.ctx.close();
   // "-" skips the system user (production: the owner checks the own account on a phone).
   if (systemUser !== "-") {
     const system = await forcedChange("system", systemUser);
+    await staffPreviewBlock("system", system.page, false);
     await system.ctx.close();
   }
 } catch (err) {
