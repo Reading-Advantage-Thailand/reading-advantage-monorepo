@@ -364,71 +364,92 @@
     }
   },
   "AdminDashboard": {
-    "title": "แดชบอร์ดผู้ดูแลระบบ",
-    "subtitle": "จัดการระบบของคุณ",
-    "actions": {
-      "importData": "นำเข้าข้อมูล",
-      "addTeacher": "เพิ่มครู"
-    },
-    "stats": {
-      "teachers": "ครู",
-      "teachersDesc": "ครูที่ใช้งาน",
-      "students": "นักเรียน",
-      "studentsDesc": "นักเรียนที่ใช้งาน",
-      "articles": "บทความ",
-      "articlesDesc": "บทความที่ใช้งาน",
-      "growth": "การเติบโต",
-      "growthDesc": "การเติบโตของนักเรียน",
-      "loadError": "โหลดสถิติไม่สำเร็จ"
-    },
-    "quickActions": {
-      "title": "การดำเนินการที่รวดเร็ว",
-      "addTeacher": "เพิ่มครู",
-      "addTeacherDesc": "เพิ่มครูใหม่",
-      "addStudent": "เพิ่มนักเรียน",
-      "addStudentDesc": "เพิ่มนักเรียนใหม่",
-      "importData": "นำเข้าข้อมูล",
-      "importDataDesc": "นำเข้าข้อมูลใหม่",
-      "viewReports": "ดูรายงาน",
-      "viewReportsDesc": "ดูรายงานของคุณ",
-      "reedyCosts": "ค่าใช้จ่ายรีดี้",
-      "reedyCostsDesc": "นาที ค่าใช้จ่าย และความล้มเหลวตามโรงเรียนและเดือน",
-      "manageClassrooms": "จัดการห้องเรียน",
-      "manageClassroomsDesc": "จัดการห้องเรียน"
-    },
-    "recentActivity": {
-      "title": "กิจกรรมล่าสุด",
-      "empty": "ไม่มีกิจกรรมล่าสุด",
-      "viewAll": "ดูกิจกรรมทั้งหมด",
-      "loadError": "โหลดกิจกรรมล่าสุดไม่สำเร็จ"
-    },
-    "systemStatus": {
-      "title": "สถานะระบบ",
-      "serverHealth": "สถานะเซิร์ฟเวอร์",
-      "database": "ฐานข้อมูล",
-      "aiServices": "บริการ AI",
-      "healthy": "ดี",
-      "connected": "เชื่อมต่อ",
-      "operational": "กำลังทำงาน"
+    "title": "แดชบอร์ดโรงเรียน",
+    "period": "{start} ถึง {end}",
+    "rangeLabel": "ช่วงเวลา",
+    "days": "{count} วัน",
+    "chooseSchool": "เลือกโรงเรียน",
+    "chooseSchoolHint": "เลือกโรงเรียนเพื่อดูตัวเลข",
+    "keyNumbers": {
+      "heading": "ตัวเลขสำคัญ",
+      "activeStudents": "นักเรียนที่ใช้งาน",
+      "activeTeachers": "ครูที่ใช้งาน",
+      "classes": "ห้องเรียนที่มีกิจกรรม",
+      "articles": "บทความที่เปิดอ่าน",
+      "xp": "XP ที่ได้รับ",
+      "newStudents": "นักเรียนใหม่",
+      "activeStudentsSub": "จากนักเรียนทั้งหมด {total} คน ({percent}%)",
+      "activeTeachersSub": "จากครูทั้งหมด {total} คนที่เข้าสู่ระบบ",
+      "classesSub": "จากห้องเรียนทั้งหมด {total} ห้อง",
+      "articlesSub": "โดยนักเรียน",
+      "xpSub": "โดยนักเรียน",
+      "newStudentsSub": "เพิ่มในช่วงเวลานี้",
+      "empty": "โรงเรียนนี้ยังไม่มีนักเรียน ตัวเลขจะแสดงหลังจากเพิ่มนักเรียนคนแรก"
     },
     "alerts": {
-      "title": "การแจ้งเตือน",
-      "lowStorage": {
-        "title": "พื้นที่จัดเก็บต่ำ",
-        "description": "คุณควรอัปเดตการจัดเก็บของคุณ"
+      "heading": "การแจ้งเตือน",
+      "none": "ไม่มีการแจ้งเตือน ผ่านการตรวจสอบทั้งหมด",
+      "noneEmpty": "การแจ้งเตือนจะเริ่มเมื่อนักเรียนเข้าสู่ระบบ",
+      "severity": {
+        "critical": "วิกฤต",
+        "high": "สูง",
+        "medium": "ปานกลาง"
       },
-      "newRegistrations": {
-        "title": "การลงทะเบียนใหม่",
-        "description": "มีการลงทะเบียนใหม่ {count} คน"
+      "lowActivity": "นักเรียนใช้งานเพียง {percent}% ใน 30 วันที่ผ่านมา",
+      "lowActivityHint": "นักเรียน {active} จาก {total} คนมีกิจกรรมใน 30 วันที่ผ่านมา",
+      "licenseEndsSoon": "ใบอนุญาตจะสิ้นสุดใน {days, plural, =0 {น้อยกว่า 1 วัน} other {# วัน}}",
+      "licenseEndsSoonHint": "ต่ออายุใบอนุญาตก่อนสิ้นสุด",
+      "licenseEnded": "ใบอนุญาตของโรงเรียนนี้สิ้นสุดแล้ว",
+      "licenseEndedHint": "ไม่มีใบอนุญาตที่ใช้งานอยู่ ติดต่อ Reading Advantage เพื่อต่ออายุ",
+      "seatsNearlyFull": "ที่นั่งใกล้เต็ม: ใช้ {seatsUsed} จาก {seats} ({percent}%)",
+      "seatsNearlyFullHint": "นักเรียนใช้ที่นั่งของใบอนุญาต ขอที่นั่งเพิ่มก่อนเต็ม"
+    },
+    "adoption": {
+      "heading": "การใช้งาน",
+      "byCefr": "ระดับ CEFR",
+      "byGrade": "ระดับชั้น",
+      "level": "ระดับ",
+      "grade": "ระดับชั้น",
+      "noGrade": "ไม่มีระดับชั้น",
+      "students": "นักเรียน",
+      "active": "ใช้งาน",
+      "share": "สัดส่วนที่ใช้งาน",
+      "averageXp": "XP เฉลี่ย",
+      "note": "ใช้งาน หมายถึงมีกิจกรรมหนึ่งครั้งใน {days} วันที่ผ่านมา XP เฉลี่ยนับนักเรียนทุกคนของแถว",
+      "empty": "โรงเรียนนี้ยังไม่มีนักเรียน"
+    },
+    "teachers": {
+      "heading": "ครู",
+      "teacher": "ครู",
+      "classes": "ห้องเรียน",
+      "activeOfStudents": "ใช้งาน / นักเรียน",
+      "engagement": "ความสม่ำเสมอ",
+      "noStudents": "ไม่มีนักเรียน",
+      "classCount": "{count, plural, =0 {ไม่มีห้องเรียน} other {# ห้องเรียน}}",
+      "empty": "โรงเรียนนี้ยังไม่มีครู",
+      "unnamed": "ครูที่ไม่มีชื่อ"
+    },
+    "activity": {
+      "heading": "กิจกรรมรายวัน",
+      "empty": "กิจกรรมจะแสดงหลังจากนักเรียนเริ่มใช้งาน",
+      "events": "เหตุการณ์กิจกรรม",
+      "peak": "วันที่คึกคักที่สุด (นักเรียน)",
+      "average": "ค่าเฉลี่ยรายวัน (นักเรียน)",
+      "aria": "{count} วัน จำนวนนักเรียนที่ใช้งานในแต่ละวัน",
+      "cell": "{day}: นักเรียนที่ใช้งาน {count} คน",
+      "weekdays": {
+        "mon": "จ.",
+        "tue": "อ.",
+        "wed": "พ.",
+        "thu": "พฤ.",
+        "fri": "ศ.",
+        "sat": "ส.",
+        "sun": "อา."
       }
     },
-    "charts": {
-      "title": "กราฟสถิติ",
-      "userGrowth": "การเติบโตของผู้ใช้งาน",
-      "topArticles": "บทความที่มีการอ่านมากที่สุด",
-      "activityByLevel": "กิจกรรมตามระดับ CEFR",
-      "performance": "ประสิทธิภาพ"
-    }
+    "loadError": "โหลดแดชบอร์ดโรงเรียนไม่สำเร็จ",
+    "loadErrorHint": "ลองอีกครั้ง หากยังเกิดปัญหา แจ้ง Reading Advantage",
+    "back": "ไปที่หน้าครู"
   },
   "Components": {
     "translationLanguage": "ภาษาที่แปล",

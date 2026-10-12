@@ -77,8 +77,7 @@ describe("ADM-11: Admin Article Creation", () => {
       expect(m.Sidebar.articlecreation).toBeUndefined();
       expect(m.AdminArticleCreationPage).toBeUndefined();
       expect(m.Components.AdminArticleCreation).toBeUndefined();
-      expect(m.AdminDashboard.quickActions.createArticle).toBeUndefined();
-      expect(m.AdminDashboard.quickActions.createArticleDesc).toBeUndefined();
+      expect(m.AdminDashboard.quickActions).toBeUndefined();
     }
   });
 });

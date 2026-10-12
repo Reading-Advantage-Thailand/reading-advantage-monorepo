@@ -364,71 +364,92 @@
     }
   },
   "AdminDashboard": {
-    "title": "管理员仪表板",
-    "subtitle": "管理您的学校教育平台",
-    "actions": {
-      "importData": "导入数据",
-      "addTeacher": "添加教师"
-    },
-    "stats": {
-      "teachers": "教师",
-      "teachersDesc": "您的学校中的活跃教师",
-      "students": "学生",
-      "studentsDesc": "注册学生",
-      "articles": "文章",
-      "articlesDesc": "可用的阅读材料",
-      "growth": "每月增长",
-      "growthDesc": "学生入学增长",
-      "loadError": "加载统计数据失败"
-    },
-    "quickActions": {
-      "title": "快速操作",
-      "addTeacher": "添加教师",
-      "addTeacherDesc": "注册新的教师账户",
-      "addStudent": "添加学生",
-      "addStudentDesc": "创建新的学生资料",
-      "importData": "导入数据",
-      "importDataDesc": "批量导入用户和内容",
-      "viewReports": "查看报告",
-      "viewReportsDesc": "访问分析和洞察",
-      "reedyCosts": "Reedy 费用",
-      "reedyCostsDesc": "按学校和月份的分钟、费用与故障",
-      "manageClassrooms": "管理班级",
-      "manageClassroomsDesc": "组织班级和作业"
-    },
-    "recentActivity": {
-      "title": "最近活动",
-      "empty": "没有最近的活动要显示",
-      "viewAll": "查看所有活动",
-      "loadError": "加载最近活动失败"
-    },
-    "systemStatus": {
-      "title": "系统状态",
-      "serverHealth": "服务器健康",
-      "database": "数据库",
-      "aiServices": "AI 服务",
-      "healthy": "健康",
-      "connected": "连接",
-      "operational": "运行中"
+    "title": "学校仪表板",
+    "period": "{start} 至 {end}",
+    "rangeLabel": "时间范围",
+    "days": "{count} 天",
+    "chooseSchool": "选择学校",
+    "chooseSchoolHint": "选择学校以查看其数据。",
+    "keyNumbers": {
+      "heading": "关键数据",
+      "activeStudents": "活跃学生",
+      "activeTeachers": "活跃教师",
+      "classes": "有活动的班级",
+      "articles": "打开的文章",
+      "xp": "获得的 XP",
+      "newStudents": "新增学生",
+      "activeStudentsSub": "共 {total} 名学生（{percent}%）",
+      "activeTeachersSub": "共 {total} 名教师已登录",
+      "classesSub": "共 {total} 个班级",
+      "articlesSub": "由学生完成",
+      "xpSub": "由学生获得",
+      "newStudentsSub": "在此时间范围内新增",
+      "empty": "这所学校还没有学生。添加第一名学生后会显示数据。"
     },
     "alerts": {
-      "title": "系统警报",
-      "lowStorage": {
-        "title": "存储空间低",
-        "description": "考虑升级您的存储计划"
+      "heading": "提醒",
+      "none": "没有提醒。所有检查均通过。",
+      "noneEmpty": "学生登录后才会出现提醒。",
+      "severity": {
+        "critical": "严重",
+        "high": "高",
+        "medium": "中"
       },
-      "newRegistrations": {
-        "title": "新教师注册",
-        "description": "5 教师等待批准"
+      "lowActivity": "最近 30 天只有 {percent}% 的学生活跃",
+      "lowActivityHint": "最近 30 天，{total} 名学生中有 {active} 名有活动。",
+      "licenseEndsSoon": "许可证将在 {days, plural, =0 {不到一天} other {# 天}}后到期",
+      "licenseEndsSoonHint": "请在到期前续订许可证。",
+      "licenseEnded": "这所学校的许可证已到期",
+      "licenseEndedHint": "没有有效的许可证。请联系 Reading Advantage 续订。",
+      "seatsNearlyFull": "名额快满了：已用 {seatsUsed}/{seats}（{percent}%）",
+      "seatsNearlyFullHint": "学生占用许可证的名额。名额用完前请申请增加。"
+    },
+    "adoption": {
+      "heading": "使用情况",
+      "byCefr": "CEFR 等级",
+      "byGrade": "班级年级",
+      "level": "等级",
+      "grade": "年级",
+      "noGrade": "无年级",
+      "students": "学生",
+      "active": "活跃",
+      "share": "活跃占比",
+      "averageXp": "平均 XP",
+      "note": "活跃指最近 {days} 天内至少有一次活动。平均 XP 按该行所有学生计算。",
+      "empty": "这所学校还没有学生。"
+    },
+    "teachers": {
+      "heading": "教师",
+      "teacher": "教师",
+      "classes": "班级",
+      "activeOfStudents": "活跃 / 学生",
+      "engagement": "参与度",
+      "noStudents": "没有学生",
+      "classCount": "{count, plural, =0 {没有班级} other {# 个班级}}",
+      "empty": "这所学校还没有教师。",
+      "unnamed": "未命名的教师"
+    },
+    "activity": {
+      "heading": "每日活动",
+      "empty": "学生开始使用后会显示活动。",
+      "events": "活动事件",
+      "peak": "最活跃的一天（学生）",
+      "average": "日均（学生）",
+      "aria": "{count} 天，每天的活跃学生数",
+      "cell": "{day}：{count} 名活跃学生",
+      "weekdays": {
+        "mon": "周一",
+        "tue": "周二",
+        "wed": "周三",
+        "thu": "周四",
+        "fri": "周五",
+        "sat": "周六",
+        "sun": "周日"
       }
     },
-    "charts": {
-      "title": "分析概览",
-      "userGrowth": "用户增长",
-      "topArticles": "最受欢迎的文章",
-      "activityByLevel": "CEFR 等级活动",
-      "performance": "性能指标"
-    }
+    "loadError": "学校仪表板加载失败",
+    "loadErrorHint": "请重试。如果问题仍在，请告知 Reading Advantage。",
+    "back": "前往教师页面"
   },
   "Components": {
     "translationLanguage": "翻译语言",

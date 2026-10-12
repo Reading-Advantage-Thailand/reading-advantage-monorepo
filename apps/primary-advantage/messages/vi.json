@@ -364,71 +364,92 @@
     }
   },
   "AdminDashboard": {
-    "title": "Bảng điều khiển quản trị",
-    "subtitle": "Quản lý nền tảng giáo dục của trường bạn",
-    "actions": {
-      "importData": "Nhập dữ liệu",
-      "addTeacher": "Thêm giáo viên"
-    },
-    "stats": {
-      "teachers": "Giáo viên",
-      "teachersDesc": "Giáo viên hoạt động trong trường bạn",
-      "students": "Học sinh",
-      "studentsDesc": "Học sinh đã đăng ký",
-      "articles": "Bài viết",
-      "articlesDesc": "Tài liệu đọc có sẵn",
-      "growth": "Tăng trưởng hàng tháng",
-      "growthDesc": "Tăng trưởng học sinh đăng ký",
-      "loadError": "Không tải được số liệu thống kê"
-    },
-    "quickActions": {
-      "title": "Hành động nhanh",
-      "addTeacher": "Thêm giáo viên",
-      "addTeacherDesc": "Đăng ký tài khoản giáo viên mới",
-      "addStudent": "Thêm học sinh",
-      "addStudentDesc": "Tạo hồ sơ học sinh mới",
-      "importData": "Nhập dữ liệu",
-      "importDataDesc": "Nhập dữ liệu người dùng và nội dung",
-      "viewReports": "Xem báo cáo",
-      "viewReportsDesc": "Truy cập phân tích và thông tin",
-      "reedyCosts": "Chi phí Reedy",
-      "reedyCostsDesc": "Phút, chi phí và lỗi theo trường và tháng",
-      "manageClassrooms": "Quản lý lớp học",
-      "manageClassroomsDesc": "Sắp xếp lớp học và bài tập"
-    },
-    "recentActivity": {
-      "title": "Hoạt động gần đây",
-      "empty": "Không có hoạt động gần đây để hiển thị",
-      "viewAll": "Xem tất cả hoạt động",
-      "loadError": "Không tải được hoạt động gần đây"
-    },
-    "systemStatus": {
-      "title": "Trạng thái hệ thống",
-      "serverHealth": "Trạng thái máy chủ",
-      "database": "Cơ sở dữ liệu",
-      "aiServices": "Dịch vụ AI",
-      "healthy": "Khỏe mạnh",
-      "connected": "Kết nối",
-      "operational": "Hoạt động"
+    "title": "Bảng điều khiển của trường",
+    "period": "{start} đến {end}",
+    "rangeLabel": "Khoảng thời gian",
+    "days": "{count} ngày",
+    "chooseSchool": "Chọn một trường",
+    "chooseSchoolHint": "Chọn một trường để xem số liệu.",
+    "keyNumbers": {
+      "heading": "Số liệu chính",
+      "activeStudents": "Học sinh hoạt động",
+      "activeTeachers": "Giáo viên hoạt động",
+      "classes": "Lớp có hoạt động",
+      "articles": "Bài đọc đã mở",
+      "xp": "XP đã nhận",
+      "newStudents": "Học sinh mới",
+      "activeStudentsSub": "trên {total} học sinh ({percent}%)",
+      "activeTeachersSub": "trên {total} giáo viên đã đăng nhập",
+      "classesSub": "trên {total} lớp",
+      "articlesSub": "do học sinh",
+      "xpSub": "do học sinh",
+      "newStudentsSub": "thêm trong khoảng này",
+      "empty": "Trường này chưa có học sinh. Số liệu xuất hiện sau khi thêm học sinh đầu tiên."
     },
     "alerts": {
-      "title": "Cảnh báo hệ thống",
-      "lowStorage": {
-        "title": "Không gian lưu trữ thấp",
-        "description": "Xem xét nâng cấp kế hoạch lưu trữ của bạn"
+      "heading": "Cảnh báo",
+      "none": "Không có cảnh báo. Mọi kiểm tra đều đạt.",
+      "noneEmpty": "Cảnh báo bắt đầu khi học sinh đăng nhập.",
+      "severity": {
+        "critical": "Nghiêm trọng",
+        "high": "Cao",
+        "medium": "Trung bình"
       },
-      "newRegistrations": {
-        "title": "Đăng ký giáo viên mới",
-        "description": "5 giáo viên đang chờ phê duyệt"
+      "lowActivity": "Chỉ {percent}% học sinh hoạt động trong 30 ngày qua",
+      "lowActivityHint": "{active} trên {total} học sinh có hoạt động trong 30 ngày qua.",
+      "licenseEndsSoon": "Giấy phép hết hạn sau {days, plural, =0 {chưa đến một ngày} other {# ngày}}",
+      "licenseEndsSoonHint": "Gia hạn giấy phép trước khi hết hạn.",
+      "licenseEnded": "Giấy phép của trường này đã hết hạn",
+      "licenseEndedHint": "Không còn giấy phép hiệu lực. Liên hệ Reading Advantage để gia hạn.",
+      "seatsNearlyFull": "Chỗ gần đầy: đã dùng {seatsUsed}/{seats} ({percent}%)",
+      "seatsNearlyFullHint": "Học sinh dùng chỗ của giấy phép. Hãy xin thêm chỗ trước khi đầy."
+    },
+    "adoption": {
+      "heading": "Mức sử dụng",
+      "byCefr": "Trình độ CEFR",
+      "byGrade": "Khối lớp",
+      "level": "Trình độ",
+      "grade": "Khối",
+      "noGrade": "Chưa có khối",
+      "students": "Học sinh",
+      "active": "Hoạt động",
+      "share": "Tỉ lệ hoạt động",
+      "averageXp": "XP trung bình",
+      "note": "Hoạt động nghĩa là có ít nhất một hoạt động trong {days} ngày qua. XP trung bình tính trên mọi học sinh của dòng.",
+      "empty": "Trường này chưa có học sinh."
+    },
+    "teachers": {
+      "heading": "Giáo viên",
+      "teacher": "Giáo viên",
+      "classes": "Lớp",
+      "activeOfStudents": "Hoạt động / học sinh",
+      "engagement": "Mức tham gia",
+      "noStudents": "Chưa có học sinh",
+      "classCount": "{count, plural, =0 {Chưa có lớp} other {# lớp}}",
+      "empty": "Trường này chưa có giáo viên.",
+      "unnamed": "Giáo viên chưa có tên"
+    },
+    "activity": {
+      "heading": "Hoạt động theo ngày",
+      "empty": "Hoạt động xuất hiện sau khi học sinh bắt đầu.",
+      "events": "Sự kiện hoạt động",
+      "peak": "Ngày đông nhất (học sinh)",
+      "average": "Trung bình mỗi ngày (học sinh)",
+      "aria": "{count} ngày, số học sinh hoạt động mỗi ngày",
+      "cell": "{day}: {count} học sinh hoạt động",
+      "weekdays": {
+        "mon": "T2",
+        "tue": "T3",
+        "wed": "T4",
+        "thu": "T5",
+        "fri": "T6",
+        "sat": "T7",
+        "sun": "CN"
       }
     },
-    "charts": {
-      "title": "Tổng quan phân tích",
-      "userGrowth": "Tăng trưởng người dùng",
-      "topArticles": "Bài viết phổ biến nhất",
-      "activityByLevel": "Hoạt động theo cấp độ CEFR",
-      "performance": "Chỉ số hiệu suất"
-    }
+    "loadError": "Không tải được bảng điều khiển của trường",
+    "loadErrorHint": "Hãy thử lại. Nếu lỗi còn, báo cho Reading Advantage.",
+    "back": "Đến trang giáo viên"
   },
   "Components": {
     "translationLanguage": "Ngôn ngữ dịch",

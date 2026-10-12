@@ -364,71 +364,92 @@
     }
   },
   "AdminDashboard": {
-    "title": "管理員儀表板",
-    "subtitle": "管理您的學校教育平台",
-    "actions": {
-      "importData": "匯入資料",
-      "addTeacher": "新增教師"
-    },
-    "stats": {
-      "teachers": "教師",
-      "teachersDesc": "您的學校中的活躍教師",
-      "students": "學生",
-      "studentsDesc": "註冊學生",
-      "articles": "文章",
-      "articlesDesc": "可用的閱讀材料",
-      "growth": "每月增長",
-      "growthDesc": "學生入學增長",
-      "loadError": "載入統計資料失敗"
-    },
-    "quickActions": {
-      "title": "快速操作",
-      "addTeacher": "新增教師",
-      "addTeacherDesc": "註冊新的教師帳戶",
-      "addStudent": "新增學生",
-      "addStudentDesc": "建立新的學生資料",
-      "importData": "匯入資料",
-      "importDataDesc": "批量導入用戶和內容",
-      "viewReports": "查看報告",
-      "viewReportsDesc": "訪問分析和洞察",
-      "reedyCosts": "Reedy 費用",
-      "reedyCostsDesc": "按學校和月份的分鐘、費用與故障",
-      "manageClassrooms": "管理教室",
-      "manageClassroomsDesc": "組織班級和作業"
-    },
-    "recentActivity": {
-      "title": "最近活動",
-      "empty": "沒有最近的活动要显示",
-      "viewAll": "查看所有活动",
-      "loadError": "載入最近活動失敗"
-    },
-    "systemStatus": {
-      "title": "系統狀態",
-      "serverHealth": "伺服器健康",
-      "database": "資料庫",
-      "aiServices": "AI 服務",
-      "healthy": "健康",
-      "connected": "連接",
-      "operational": "運行中"
+    "title": "學校儀表板",
+    "period": "{start} 至 {end}",
+    "rangeLabel": "時間範圍",
+    "days": "{count} 天",
+    "chooseSchool": "選擇學校",
+    "chooseSchoolHint": "選擇學校以查看其數據。",
+    "keyNumbers": {
+      "heading": "關鍵數據",
+      "activeStudents": "活躍學生",
+      "activeTeachers": "活躍教師",
+      "classes": "有活動的班級",
+      "articles": "開啟的文章",
+      "xp": "獲得的 XP",
+      "newStudents": "新增學生",
+      "activeStudentsSub": "共 {total} 名學生（{percent}%）",
+      "activeTeachersSub": "共 {total} 名教師已登入",
+      "classesSub": "共 {total} 個班級",
+      "articlesSub": "由學生完成",
+      "xpSub": "由學生獲得",
+      "newStudentsSub": "在此時間範圍內新增",
+      "empty": "這所學校還沒有學生。新增第一名學生後會顯示數據。"
     },
     "alerts": {
-      "title": "系統警報",
-      "lowStorage": {
-        "title": "儲存空間低",
-        "description": "考慮升級您的存儲計劃"
+      "heading": "提醒",
+      "none": "沒有提醒。所有檢查均通過。",
+      "noneEmpty": "學生登入後才會出現提醒。",
+      "severity": {
+        "critical": "嚴重",
+        "high": "高",
+        "medium": "中"
       },
-      "newRegistrations": {
-        "title": "新教師註冊",
-        "description": "5 教師等待批准"
+      "lowActivity": "最近 30 天只有 {percent}% 的學生活躍",
+      "lowActivityHint": "最近 30 天，{total} 名學生中有 {active} 名有活動。",
+      "licenseEndsSoon": "授權將在 {days, plural, =0 {不到一天} other {# 天}}後到期",
+      "licenseEndsSoonHint": "請在到期前續訂授權。",
+      "licenseEnded": "這所學校的授權已到期",
+      "licenseEndedHint": "沒有有效的授權。請聯絡 Reading Advantage 續訂。",
+      "seatsNearlyFull": "名額快滿了：已用 {seatsUsed}/{seats}（{percent}%）",
+      "seatsNearlyFullHint": "學生佔用授權的名額。名額用完前請申請增加。"
+    },
+    "adoption": {
+      "heading": "使用情況",
+      "byCefr": "CEFR 等級",
+      "byGrade": "班級年級",
+      "level": "等級",
+      "grade": "年級",
+      "noGrade": "無年級",
+      "students": "學生",
+      "active": "活躍",
+      "share": "活躍佔比",
+      "averageXp": "平均 XP",
+      "note": "活躍指最近 {days} 天內至少有一次活動。平均 XP 按該列所有學生計算。",
+      "empty": "這所學校還沒有學生。"
+    },
+    "teachers": {
+      "heading": "教師",
+      "teacher": "教師",
+      "classes": "班級",
+      "activeOfStudents": "活躍 / 學生",
+      "engagement": "參與度",
+      "noStudents": "沒有學生",
+      "classCount": "{count, plural, =0 {沒有班級} other {# 個班級}}",
+      "empty": "這所學校還沒有教師。",
+      "unnamed": "未命名的教師"
+    },
+    "activity": {
+      "heading": "每日活動",
+      "empty": "學生開始使用後會顯示活動。",
+      "events": "活動事件",
+      "peak": "最活躍的一天（學生）",
+      "average": "日均（學生）",
+      "aria": "{count} 天，每天的活躍學生數",
+      "cell": "{day}：{count} 名活躍學生",
+      "weekdays": {
+        "mon": "週一",
+        "tue": "週二",
+        "wed": "週三",
+        "thu": "週四",
+        "fri": "週五",
+        "sat": "週六",
+        "sun": "週日"
       }
     },
-    "charts": {
-      "title": "分析概览",
-      "userGrowth": "用戶增長",
-      "topArticles": "最受歡迎的文章",
-      "activityByLevel": "CEFR 等級活動",
-      "performance": "性能指標"
-    }
+    "loadError": "學校儀表板載入失敗",
+    "loadErrorHint": "請重試。如果問題仍在，請告知 Reading Advantage。",
+    "back": "前往教師頁面"
   },
   "Components": {
     "translationLanguage": "翻譯語言",
