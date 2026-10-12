@@ -1,16 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({
-  user: null as Record<string, unknown> | null,
-  resolveBookLesson: vi.fn(),
-  findTeacherClassBook: vi.fn(),
-  redirect: vi.fn(),
-}));
+const mocks = vi.hoisted(() => ({ openBookLink: vi.fn(), redirect: vi.fn() }));
 
-vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
-vi.mock("@reading-advantage/db", () => ({ db: {} }));
-vi.mock("@reading-advantage/domain/primary-books", () => ({ resolveBookLesson: mocks.resolveBookLesson, findTeacherClassBook: mocks.findTeacherClassBook }));
+vi.mock("@/lib/book-link/open-book-link", () => ({ openBookLink: mocks.openBookLink }));
 vi.mock("@/i18n/navigation", () => ({ redirect: mocks.redirect }));
+vi.mock("@/components/book-link/book-link-case", () => ({ BookLinkCase: () => null }));
 vi.mock("next/navigation", () => ({
   notFound: () => {
     throw new Error("NOT_FOUND");
@@ -18,49 +12,34 @@ vi.mock("next/navigation", () => ({
 }));
 
 import BookLessonLinkPage from "../page";
+import { BookLinkCase } from "@/components/book-link/book-link-case";
 
-const ref = { bookId: "b1", bookKey: "o3-2", bookName: "Primary Advantage Origins 3.2", number: 5, title: "Story 5", articleId: "a5", approved: true };
 const open = (book = "o3-2", n = "5") => BookLessonLinkPage({ params: Promise.resolve({ locale: "th", book, n }) });
 
-beforeEach(() => {
-  vi.clearAllMocks();
-  mocks.resolveBookLesson.mockResolvedValue(ref);
-  mocks.findTeacherClassBook.mockResolvedValue({ classBookId: "cb1", classroomId: "c1" });
-});
+beforeEach(() => vi.clearAllMocks());
 
 describe("/b/<book>/<n> (QR deep link, FR-16)", () => {
-  it("sends a student into the lesson flow of the article", async () => {
-    mocks.user = { id: "s1", role: "STUDENT", schoolId: "school-1" };
+  it("passes the address to the shared lookup for the reading code", async () => {
+    mocks.openBookLink.mockResolvedValue({ type: "redirect", href: "/student/lesson/a5?type=article" });
     await open();
-    expect(mocks.resolveBookLesson).toHaveBeenCalledWith({ db: {}, bookKey: "o3-2", number: 5 });
+    expect(mocks.openBookLink).toHaveBeenCalledWith({ locale: "th", book: "o3-2", n: "5", writing: false });
     expect(mocks.redirect).toHaveBeenCalledWith({ href: "/student/lesson/a5?type=article", locale: "th" });
   });
 
-  it("sends a student home when the lesson is not published yet", async () => {
-    mocks.user = { id: "s1", role: "STUDENT", schoolId: "school-1" };
-    mocks.resolveBookLesson.mockResolvedValueOnce({ ...ref, articleId: null, approved: false });
+  it("keeps a href object for the sign-in redirect", async () => {
+    const href = { pathname: "/auth/signin", query: { callbackUrl: "/th/b/o3-2/5" } };
+    mocks.openBookLink.mockResolvedValue({ type: "redirect", href });
     await open();
-    expect(mocks.redirect).toHaveBeenCalledWith({ href: "/student/home", locale: "th" });
+    expect(mocks.redirect).toHaveBeenCalledWith({ href, locale: "th" });
   });
 
-  it("sends a teacher to the lesson page of the first class with the book, or to the class list", async () => {
-    mocks.user = { id: "t1", role: "TEACHER", schoolId: "school-1" };
-    await open();
-    expect(mocks.redirect).toHaveBeenCalledWith({ href: "/teacher/class-roster/c1/books/cb1/lessons/5", locale: "th" });
-    mocks.findTeacherClassBook.mockResolvedValueOnce(null);
-    await open();
-    expect(mocks.redirect).toHaveBeenLastCalledWith({ href: "/teacher/my-classes", locale: "th" });
-  });
-
-  it("sends a visitor to sign in and is not found for an unknown lesson or a bad number", async () => {
-    mocks.user = null;
-    await open();
-    expect(mocks.redirect).toHaveBeenCalledWith({
-      href: { pathname: "/auth/signin", query: { callbackUrl: "/th/b/o3-2/5" } },
-      locale: "th",
-    });
-    mocks.resolveBookLesson.mockResolvedValueOnce(null);
-    await expect(open("zz", "1")).rejects.toThrow("NOT_FOUND");
-    await expect(open("o3-2", "x")).rejects.toThrow("NOT_FOUND");
+  it("renders the case page for each case and never calls notFound", async () => {
+    mocks.openBookLink.mockResolvedValue({ type: "case", name: "unknown-book", homeHref: "/" });
+    const element = (await open("zz", "1")) as { type: unknown; props: Record<string, unknown> };
+    expect(element.type).toBe(BookLinkCase);
+    expect(element.props).toMatchObject({ name: "unknown-book", homeHref: "/" });
+    expect(mocks.redirect).not.toHaveBeenCalled();
+    mocks.openBookLink.mockResolvedValue({ type: "case", name: "no-lesson", bookName: "Origins 3.2", lessonCount: 14, homeHref: "/student/home" });
+    await expect(open("o3-2", "999")).resolves.toMatchObject({ props: { name: "no-lesson", lessonCount: 14 } });
   });
 });
