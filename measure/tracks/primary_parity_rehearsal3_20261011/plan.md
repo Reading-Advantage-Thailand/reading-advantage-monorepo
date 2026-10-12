@@ -9,21 +9,21 @@ monorepo session before each write to `primary-parity-integration`.
 
 - [ ] Task: Check the start gate (spec FR-1)
     - [ ] Check the registry entry of each member of the "Depends on" line: `[x]` or archived
-    - [ ] Check that `primary/public-pages` is merged into integration (`git merge-base --is-ancestor`)
+    - [x] Check that `primary/public-pages` is merged into integration (`git merge-base --is-ancestor`) — checked 2026-10-12: `c7228ab74` is NOT an ancestor of the integration HEAD; merge pending (recorded in `rehearsal-3-changes.md` §0, f2bdea453)
     - [ ] Ask the Workbooks session for the CNT-01 report; record the copy name, the package count, and the verify result
-    - [ ] Record the gate result in `measure/tracks/primary_parity_rehearsal3_20261011/rehearsal-3-changes.md`
-- [ ] Task: Write the change list (spec FR-2)
-    - [ ] Read the spec, the plan, and `runbook-changes.md` of each member and of the public pages
-    - [ ] Write one section for each of them in `rehearsal-3-changes.md` with the fields of FR-2, or "none"
-    - [ ] Check the highest file in `packages/db/drizzle/` and the `--required-migration` values of `apps/primary-advantage/cloudbuild.yaml` and `cloudbuild-etl.yaml`: they agree
-    - [ ] Check each `DROPPED_TABLES` line of `packages/db/src/migrations-data/primary-legacy-import.ts` against the decisions (stories, `contact_messages`, the AI configuration tables); list a wrong reason for its owner
-- [ ] Task: Write the draft command sheet (spec FR-7)
-    - [ ] Copy `measure/tracks/primary_legacy_data_migration_20261004/cutover-commands-20261011.md` to `measure/tracks/primary_parity_rehearsal3_20261011/cutover-commands.md`
-    - [ ] Write the rehearsal 3 table (R1 to R9 with R1b and R4b) and the cutover table with the ten changes of FR-7
-    - [ ] Write the export SQL of FR-3 (columns, order, the quote rule) as one `psql \copy` command
-    - [ ] Run `gcloud run services describe primary-advantage-app --project=primary-advantage --region=asia-southeast1 --format="yaml(status.traffic)"` (read only) and choose the tag rule of C9
-- [ ] Task: Write the new go/no-go items
-    - [ ] List the items of FR-6 R7 and the contact export for §10 in `rehearsal-3-changes.md`
+    - [x] Record the gate result in `measure/tracks/primary_parity_rehearsal3_20261011/rehearsal-3-changes.md` — §0, gate not passed yet (f2bdea453)
+- [x] Task: Write the change list (spec FR-2, f2bdea453)
+    - [x] Read the spec, the plan, and `runbook-changes.md` of each member and of the public pages — glob returns 2 files (class_books, qr_path); pwa keeps `runbook-checks.md`; member effects read from specs, plans, and behavior contracts
+    - [x] Write one section for each of them in `rehearsal-3-changes.md` with the fields of FR-2, or "none" — §§1-3
+    - [x] Check the highest file in `packages/db/drizzle/` and the `--required-migration` values of `apps/primary-advantage/cloudbuild.yaml` and `cloudbuild-etl.yaml`: they agree — `0073_primary_lesson_attempts` in all three places (§2.1)
+    - [x] Check each `DROPPED_TABLES` line of `packages/db/src/migrations-data/primary-legacy-import.ts` against the decisions (stories, `contact_messages`, the AI configuration tables); list a wrong reason for its owner — no wrong reason found (§3 note)
+- [x] Task: Write the draft command sheet (spec FR-7, f2bdea453)
+    - [x] Copy `measure/tracks/primary_legacy_data_migration_20261004/cutover-commands-20261011.md` to `measure/tracks/primary_parity_rehearsal3_20261011/cutover-commands.md` — base unchanged, delta section marks the rehearsal 3 steps
+    - [x] Write the rehearsal 3 table (R1 to R9 with R1b and R4b) and the cutover table with the ten changes of FR-7 — delta table covers R1-R9, C2, C4b, C5, C7, C7b, C8, C9, C10, C13
+    - [x] Write the export SQL of FR-3 (columns, order, the quote rule) as one `psql \copy` command — in `cutover-commands.md`
+    - [x] Run `gcloud run services describe primary-advantage-app --project=primary-advantage --region=asia-southeast1 --format="yaml(status.traffic)"` (read only) and choose the tag rule of C9 — 2026-10-12: `rehearsal3` free; `cutover` taken by `00130-daq`, so the next cutover needs a new tag or a tag removal (owner decision)
+- [x] Task: Write the new go/no-go items — `rehearsal-3-changes.md` §5 (f2bdea453)
+    - [x] List the items of FR-6 R7 and the contact export for §10 in `rehearsal-3-changes.md`
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract — the change list, the gate, and the command sheet' (Protocol in workflow.md)
 
 ## Phase 2: Test — local runs before the rehearsal
