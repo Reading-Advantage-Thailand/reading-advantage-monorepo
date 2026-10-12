@@ -87,7 +87,7 @@ before a build; no dev server; no run with 25 students.
 - [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) - look check pending (owner, async)
     - Steps: (1) Open `~/Desktop/primary-parity-progress/captures/acceptance/smoke/report.html` and check that each pair shows legacy and new side by side at 375 and 1280 px. (2) Check SYS-01: legacy metric cards against the new heading only. (3) Check ADM-01: legacy KPI cards against three "Data unavailable" cards. (4) Check STU-05: legacy "Start Again" button against no restart button. (5) Run `node_modules/.bin/vitest run --root scripts/primary-parity` from the repository root: all tests pass.
 
-## Phase 4: Generate Docs & Doctor
+## Phase 4: Generate Docs & Doctor [checkpoint: ae214dbd1]
 
 - [x] Task: Run the checks of the kit
     - [x] Run `npx vitest run --root scripts/primary-parity` and the type check: both pass
