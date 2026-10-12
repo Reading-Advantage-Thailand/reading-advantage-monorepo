@@ -16,7 +16,7 @@ fail, write the minimum code, run it and see it pass, then refactor and add JSDo
 ESLint one time per phase, before the phase commit. One heavy job at a time on this machine.
 App paths are relative to `apps/primary-advantage`.
 
-## Phase D: Design
+## Phase D: Design [checkpoint: e97d2f32b]
 
 - [x] Task: Write the behavior contract from `docs/runbooks/primary-behavior-contract-template.md` (`primary_parity_acceptance_20261011` FR-11)
     - [x] For each story, list the legacy behavior with its `file:line` (spec, Evidence) and the new behavior
