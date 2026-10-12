@@ -36,6 +36,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { saveFlashcard } from "@/actions/flashcard";
 import { toast } from "sonner";
 import { fetchArticleActivity } from "@/actions/article";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import Image from "next/image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
 import { HIGHLIGHT_CLASSES } from "@/lib/audio-highlight";
@@ -82,11 +83,14 @@ export default function ArticleContent({ article }: Props) {
     }
   }, []);
 
+  const { isPreview, notSaved } = usePreviewSave();
+
   useEffect(() => {
-    if (article.id) {
+    // Preview mode tracks no article access.
+    if (article.id && !isPreview) {
       fetchArticleActivity(article.id).catch(console.error);
     }
-  }, [article.id]);
+  }, [article.id, isPreview]);
 
   useEffect(() => {
     return () => {
@@ -365,6 +369,10 @@ export default function ArticleContent({ article }: Props) {
   };
 
   const handleSaveToFlashcard = () => {
+    if (isPreview) {
+      notSaved();
+      return;
+    }
     if (currentSentenceIndex !== -1) {
       const sentence = article.sentences?.[currentSentenceIndex];
       if (sentence) {
