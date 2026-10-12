@@ -130,7 +130,7 @@ _Story ref: spec.md#story-s6_
 - [ ] Task: Run the QR block in the browser (batch run (orchestrator))
     - Run steps: `browser-check/README.md`. Result file: `browser-check/result.md`.
 
-## Phase A: Acceptance [checkpoint: pending]
+## Phase A: Acceptance [checkpoint: dc3f316b2]
 
 - [x] Task: Write the behavior contract
     - [x] Filled in `behavior-contract.md` (legacy: printed old QR codes `/student/read/<cuid>`; legacy has no `/b/` and no `/writing` route)
