@@ -108,20 +108,25 @@ _Story ref: spec.md#story-s3_
 ## Phase S4: Admin sees the school license (view only)
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Zod `schoolLicenseViewOutput` (licenses with name, status, start, end, seats; totals used, free, over) and `seatHoldersInput` / `seatHoldersOutput` (page of 50: name, username, classes, join date) in `packages/domain/src/licenses/contracts.ts`
-    - [ ] Reuse or build `getSchoolSeatUsage` in `packages/domain/src/licenses/usage.ts` (see the note at the top)
-- [ ] Task: Test
-    - [ ] Red: `packages/domain/src/__tests__/licenses-view.pglite.test.ts`: two schools; the view and the seat holders of school A have no row of school B; the over-limit count; an ended license gives 0 seats; a TEACHER without a `school_admins` row and a STUDENT get FORBIDDEN; a TEACHER with a `school_admins` row of the school passes (the `SCHOOL_ADMIN_ACCESS` rule, `lib/permissions.ts:65-68`)
-    - [ ] Red: `app/api/users/me/school/seat-holders/__tests__/route.test.ts`: page 1 and page 2; 403 for a STUDENT
-    - [ ] Red: `components/school/__tests__/school-detail.license.test.tsx`: the license panel and the warning; no license key and no panel without admin access; no button that changes a license
-- [ ] Task: Implement
-    - [ ] `packages/domain/src/licenses/license-view.ts` (`getSchoolLicenseView`, `listSeatHolders`), export from `licenses/index.ts`; never call `listUserLicenses` or `attachUserToLicense`
-    - [ ] `app/api/users/me/school/seat-holders/route.ts` (thin)
-    - [ ] `app/[locale]/(student)/settings/school-profile/page.tsx` and `server/models/schoolModel.ts`: the license data only for a school admin
-    - [ ] `components/school/school-detail.tsx` (license panel) and `components/school/seat-holders.tsx`; an admin nav link to `/settings/school-profile#license` in `configs/admin-page-config.ts`; strings in `messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Generate Docs & Doctor: JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Admin sees the school license (view only)' (Protocol in workflow.md)
+- [x] Task: Contract & Schema Definition
+    - [x] Zod `schoolLicenseViewOutput` (licenses with name, status, start, end, seats; totals used, free, over) and `seatHoldersInput` / `seatHoldersOutput` (page of 50: name, username, classes, join date) in `packages/domain/src/licenses/contracts.ts`
+    - [x] Reuse or build `getSchoolSeatUsage` in `packages/domain/src/licenses/usage.ts` (see the note at the top)
+- [x] Task: Test
+    - [x] Red: `packages/domain/src/__tests__/licenses-view.pglite.test.ts`: two schools; the view and the seat holders of school A have no row of school B; the over-limit count; an ended license gives 0 seats; a TEACHER without a `school_admins` row and a STUDENT get FORBIDDEN; a TEACHER with a `school_admins` row of the school passes (the `SCHOOL_ADMIN_ACCESS` rule, `lib/permissions.ts:65-68`)
+    - [x] Red: `app/api/users/me/school/seat-holders/__tests__/route.test.ts`: page 1 and page 2; 403 for a STUDENT
+    - [x] Red: `components/school/__tests__/school-detail.license.test.tsx`: the license panel and the warning; no license key and no panel without admin access; no button that changes a license
+- [x] Task: Implement
+    - [x] `packages/domain/src/licenses/license-view.ts` (`getSchoolLicenseView`, `listSeatHolders`), export from `licenses/index.ts`; never call `listUserLicenses` or `attachUserToLicense`
+    - [x] `app/api/users/me/school/seat-holders/route.ts` (thin)
+    - [x] `app/[locale]/(student)/settings/school-profile/page.tsx` and `server/models/schoolModel.ts`: the license data only for a school admin
+    - [x] `components/school/school-detail.tsx` (license panel) and `components/school/seat-holders.tsx`; an admin nav link to `/settings/school-profile#license` in `configs/admin-page-config.ts`; strings in `messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Generate Docs & Doctor: JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S4: Admin sees the school license (view only)' (Protocol in workflow.md) - look check pending (owner, async)
+    - Commits: domain `826e96f10`, route `9a9a500ea`, panel and wiring (see git log), M10 fix, model move for the seat holder route.
+    - Defaults used: students only take a seat; a school with students and no active license shows "No active license" (no over-limit warning).
+    - Deviations: license states are `active`, `ended`, `inactive` (the design mock also had "Not started"; the shared seat rule ignores the start date, so the view does too). The route reads through `getSeatHoldersForCaller` in `server/models/schoolLicenseView.ts` (the static test `api-no-direct-db` forbids a db import in a route). Contracts are in the existing `licenses/contracts.ts`.
+    - Captures: `~/Desktop/primary-parity-progress/captures/school_management/phaseS4/` (`s4-license-{ok,over,none,ended}-{day,night}-{375,1280}.png`, `s4-license-ok-holders-p2-{day,night}-{375,1280}.png`).
+    - Steps: 1. Sign in as school ADMIN of school 2c5f6031 or a5158947 and open School profile (sidebar "School license"). 2. Check the seats used, free, total, and each license with its dates. 3. Check that seat holders show 50 students for each page and that Next and Previous work. 4. Sign in as a TEACHER and as a STUDENT of the same school: no license part, no key, and `GET /api/users/me/school/seat-holders` returns 403. 5. Check that no button changes a license.
 
 ## Phase S5: A teacher role change takes effect
 _Story ref: spec.md#story-s5_
