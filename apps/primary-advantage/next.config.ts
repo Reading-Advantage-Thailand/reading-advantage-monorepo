@@ -18,6 +18,18 @@ const nextConfig: NextConfig = {
     "@reading-advantage/game-cartridges-3d",
     "@reading-advantage/game-contracts",
   ],
+  async headers() {
+    return [
+      {
+        // The new worker replaces the legacy worker at this URL (track primary_parity_pwa).
+        source: "/serwist/sw.js",
+        headers: [
+          { key: "Service-Worker-Allowed", value: "/" },
+          { key: "Cache-Control", value: "no-cache" },
+        ],
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

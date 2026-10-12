@@ -12,6 +12,7 @@ import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/components/providers/session-provider";
 import { LayoutProvider } from "@/hooks/use-layout";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import QueryProvider from "@/components/providers/query-provider";
 
 // Thai-first stack (see --font-sans in styles/globals.css): Noto Sans Thai first, then Inter
@@ -118,6 +119,7 @@ export default async function RootLayout({
               <QueryProvider>
                 <NuqsAdapter>{children}</NuqsAdapter>
                 <Toaster />
+                <ServiceWorkerRegister />
               </QueryProvider>
             </ThemeProvider>
           </NextIntlClientProvider>
