@@ -108,4 +108,28 @@ describe("moveTeacherToSchool (PGlite, two schools)", () => {
     await move(system, "owner", SCHOOL_A, [CLASS_A]);
     expect(await linksOf("owner")).toEqual([CLASS_A]);
   });
+
+  it("drops the old-school admin rows on move, and still commits with one audit event", async () => {
+    await h.db.execute(sql.raw(`insert into school_admins (school_id, user_id) values ('${SCHOOL_A}', 'mover')`));
+    const out = await move(system, "mover", SCHOOL_B, [CLASS_B]);
+    expect(out).toEqual({ teacherId: "mover", schoolId: SCHOOL_B, classroomIds: [CLASS_B] });
+    expect(await schoolOf("mover")).toBe(SCHOOL_B);
+    expect(await linksOf("mover")).toEqual([CLASS_B]);
+    expect(await rows(`select id from school_admins where user_id = 'mover'`)).toHaveLength(0);
+    const audit = await rows(`select action, target_id from audit_events`);
+    expect(audit).toHaveLength(1);
+    expect(audit[0]).toMatchObject({ action: "teacher:school:move", target_id: "mover" });
+  });
+
+  it("keeps the target-school admin row on move", async () => {
+    await h.db.execute(sql.raw(`insert into school_admins (school_id, user_id) values ('${SCHOOL_A}', 'mover'), ('${SCHOOL_B}', 'mover')`));
+    await move(system, "mover", SCHOOL_B, []);
+    expect((await rows(`select school_id from school_admins where user_id = 'mover'`)).map((r) => r.school_id)).toEqual([SCHOOL_B]);
+  });
+
+  it("touches no admin row when the school stays the same", async () => {
+    await h.db.execute(sql.raw(`insert into school_admins (school_id, user_id) values ('${SCHOOL_A}', 'owner')`));
+    await move(system, "owner", SCHOOL_A, [CLASS_A]);
+    expect((await rows(`select school_id from school_admins where user_id = 'owner'`)).map((r) => r.school_id)).toEqual([SCHOOL_A]);
+  });
 });

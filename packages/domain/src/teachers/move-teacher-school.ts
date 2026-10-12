@@ -1,7 +1,7 @@
-import { and, eq, inArray, notInArray } from "drizzle-orm";
+import { and, eq, inArray, ne, notInArray } from "drizzle-orm";
 import { z } from "zod";
 import type { DB } from "@reading-advantage/db";
-import { auditEvents, classroomTeachers, classrooms, schools, users } from "@reading-advantage/db/schema";
+import { auditEvents, classroomTeachers, classrooms, schoolAdmins, schools, users } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
 import { MoveTeacherSchoolError } from "./errors.js";
@@ -29,8 +29,10 @@ export type MoveTeacherToSchoolOutput = z.infer<typeof moveTeacherToSchoolOutput
 
 /**
  * Moves a teacher to another school in one transaction. The function sets `users.school_id`,
- * deletes the teacher's `classroom_teachers` rows, adds the rows for the chosen classes, and
- * writes an audit event. A teacher who owns classes in the old school is refused.
+ * deletes the teacher's `classroom_teachers` rows, adds the rows for the chosen classes,
+ * drops the teacher's `school_admins` rows of other schools, and writes an audit event.
+ * A teacher who owns classes in the old school is refused.
+ * Rows of the target school stay, and a same-school call touches no `school_admins` row.
  * @param params.db The database.
  * @param params.user The caller (SYSTEM only).
  * @param params.input The teacher id, the target school id, and the chosen class ids.
@@ -92,6 +94,14 @@ export async function moveTeacherToSchool({
           ? and(eq(classroomTeachers.teacherId, teacherId), notInArray(classroomTeachers.classroomId, ownedIds))
           : eq(classroomTeachers.teacherId, teacherId),
       );
+    // A moved teacher keeps no admin rank of another school: `loadTargetEffectiveRank`
+    // counts every `school_admins` row. Target-school rows stay, and a same-school
+    // call touches no row.
+    if (teacher.schoolId !== schoolId) {
+      await tx
+        .delete(schoolAdmins)
+        .where(and(eq(schoolAdmins.userId, teacherId), ne(schoolAdmins.schoolId, schoolId)));
+    }
     const toAdd = wanted.filter((id) => !ownedIds.includes(id));
     if (toAdd.length > 0) {
       await raw.insert(classroomTeachers).values(toAdd.map((classroomId) => ({ classroomId, teacherId })));
