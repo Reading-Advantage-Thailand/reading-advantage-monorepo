@@ -59,7 +59,7 @@ ESLint one time per phase, before the phase commit. One heavy job at a time on t
 - `TeacherHome` has the new fields `activeStudents30d`, `engagementRate30d`, `averageLevel`, `activeToday`, `completedToday`, and `classRows` (`teacherClassRowSchema`). `classes` stays.
 - Phase 3 imports `toTeacherClassCsv` from `@reading-advantage/domain/teacher-class-csv` and the types from `@reading-advantage/domain/primary-home` (check the existing page import path).
 
-## Phase 3: UI
+## Phase 3: UI [checkpoint: 5bd8921b4]
 
 - [x] Task: Variant block "Coordination with class books": merge integration into the branch, and keep the class book slot of `primary_parity_class_books_20261011` as that member leaves it
     - Done with merge 961d1b995 (class_books S5, already in integration). `ClassBookSlot` is unchanged; the page places it in `lg:col-span-2` after the class table.
