@@ -671,31 +671,38 @@ export const deleteClassroom = async (
   }
 };
 
+/** Student ids in one `IN (...)` list of the last-activity queries. */
+const ACTIVITY_ID_CHUNK = 5000;
+
 /**
  * Finds the newest activity time of each student: the newest `created_at` of the student's
- * `user_activity` and `xp_logs` rows. Uses one grouped query for each table.
+ * `user_activity` and `xp_logs` rows. Uses one grouped query for each table and each chunk of 5000 ids.
  * @param studentIds The ids of the students of one list.
  * @returns A map from student id to the newest time. A student with no row has no entry.
  */
-const getLastActivityByStudent = async (
+export const getLastActivityByStudent = async (
   studentIds: string[],
 ): Promise<Map<string, Date>> => {
   const latest = new Map<string, Date>();
-  if (!studentIds.length) return latest;
-  const [activityRows, xpRows] = await Promise.all([
-    db.select({ userId: userActivity.userId, last: max(userActivity.createdAt) })
-      .from(userActivity)
-      .where(inArray(userActivity.userId, studentIds))
-      .groupBy(userActivity.userId),
-    db.select({ userId: xpLogs.userId, last: max(xpLogs.createdAt) })
-      .from(xpLogs)
-      .where(inArray(xpLogs.userId, studentIds))
-      .groupBy(xpLogs.userId),
-  ]);
-  for (const row of [...activityRows, ...xpRows]) {
-    if (!row.last) continue;
-    const current = latest.get(row.userId);
-    if (!current || row.last > current) latest.set(row.userId, row.last);
+  // Each query gets at most ACTIVITY_ID_CHUNK ids, so a big system stays under the Postgres
+  // limit of 65535 bind parameters.
+  for (let start = 0; start < studentIds.length; start += ACTIVITY_ID_CHUNK) {
+    const ids = studentIds.slice(start, start + ACTIVITY_ID_CHUNK);
+    const [activityRows, xpRows] = await Promise.all([
+      db.select({ userId: userActivity.userId, last: max(userActivity.createdAt) })
+        .from(userActivity)
+        .where(inArray(userActivity.userId, ids))
+        .groupBy(userActivity.userId),
+      db.select({ userId: xpLogs.userId, last: max(xpLogs.createdAt) })
+        .from(xpLogs)
+        .where(inArray(xpLogs.userId, ids))
+        .groupBy(xpLogs.userId),
+    ]);
+    for (const row of [...activityRows, ...xpRows]) {
+      if (!row.last) continue;
+      const current = latest.get(row.userId);
+      if (!current || row.last > current) latest.set(row.userId, row.last);
+    }
   }
   return latest;
 };

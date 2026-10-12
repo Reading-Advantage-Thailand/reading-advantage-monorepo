@@ -151,3 +151,20 @@ the rows after the owner decision.
 - Lesson: a pair path cannot carry a class code (the pair schema refuses it). A steps module that reads the
   code from an environment variable keeps the code out of the repository.
 - Lesson: the scratchpad log names repeat between phases; a new gate run overwrites the old log.
+
+## Review fixes (after the closed track)
+
+Six items from the review of the track. All six are fixed.
+
+- `saveArticleCardsAfterQuiz` (`packages/domain/src/games/primary-article-cards.ts`) now selects the article log row with
+  `.for("update")` inside the transaction. The `isSentenceAndWordsSaved` guard runs under the lock, so two parallel renders
+  cannot both insert cards. Test: the fake transaction records the lock strength.
+- FR-10 tests (`packages/domain/src/__tests__/games.test.ts`) now build the `xp` value with `PgDialect.sqlToQuery`.
+  They check the SQL `$1 + $2` with the params `["xp", 7]` (the mocked column and the earned XP).
+- `finish-quiz-existing-row.test.ts` now uses real drizzle operators and a real table in the mock. It captures the
+  `onConflictDoUpdate` config and checks the built `setWhere` SQL: `("completed" = $1 or "completed" is null)`, params `[false]`.
+  No refactor was needed.
+- `my-classes.tsx`: `closeDialog` resets `openedEditId`, so the same `?edit=<id>` opens the dialog again. Test added.
+- `getLastActivityByStudent` (`classroomModel.ts`) sends at most 5000 ids in each `IN (...)` list. The function is exported
+  for the test (`classroomModel.activity-chunks.test.ts`).
+- `Quest.noHero` added to `cn`, `tw`, and `vi`.

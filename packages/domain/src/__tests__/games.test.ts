@@ -1,3 +1,5 @@
+import { PgDialect } from "drizzle-orm/pg-core";
+import type { SQL } from "drizzle-orm";
 import { beforeEach, describe, it, expect, vi } from "vitest";
 import type { DB } from "@reading-advantage/db";
 import {
@@ -411,6 +413,11 @@ describe("recordGameCompletion (Group 3C)", () => {
     expect(db.update).toHaveBeenCalledTimes(1);
     const set = (db.update.mock.results[0].value as { set: ReturnType<typeof vi.fn> }).set;
     expect(set).toHaveBeenCalledWith(expect.objectContaining({ xp: expect.anything() }));
+    // The value is the SQL expression `users.xp + xpEarned`: the mocked column is the string "xp".
+    const [{ xp }] = set.mock.calls[0] as [{ xp: SQL }];
+    const built = new PgDialect().sqlToQuery(xp);
+    expect(built.sql).toBe("$1 + $2");
+    expect(built.params).toEqual(["xp", 7]);
   });
 
   it("does not update users without the option", async () => {

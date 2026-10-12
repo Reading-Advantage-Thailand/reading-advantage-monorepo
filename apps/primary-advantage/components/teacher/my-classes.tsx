@@ -215,6 +215,7 @@ export default function MyClasses() {
 
   /** Closes the dialog and removes `edit` from the URL, so a reload does not open it again. */
   const closeDialog = () => {
+    openedEditId.current = null;
     setDialogOpen("");
     if (editId) router.replace("/teacher/my-classes");
   };

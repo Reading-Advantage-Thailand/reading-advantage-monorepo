@@ -8,7 +8,7 @@ import { act, cleanup, fireEvent, screen, within } from "@testing-library/react"
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithMessages, testMessages } from "@/components/__tests__/helpers/render-with-messages";
+import { renderWithMessages, withMessages, testMessages } from "@/components/__tests__/helpers/render-with-messages";
 
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ children, href, ...rest }: { children?: ReactNode; href: string }) => (
@@ -134,6 +134,21 @@ describe("My Classes edit link (FR-4)", () => {
     await flush();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(replaceMock).toHaveBeenCalledWith("/teacher/my-classes");
+  });
+
+  it("opens the same ?edit id again after the dialog closed and the URL was cleared", async () => {
+    searchState.query = `edit=${C1}`;
+    const view = renderWithMessages(<MyClasses />);
+    await flush();
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
+    await flush();
+    searchState.query = "";
+    view.rerender(withMessages(<MyClasses />, "en"));
+    await flush();
+    searchState.query = `edit=${C1}`;
+    view.rerender(withMessages(<MyClasses />, "en"));
+    await flush();
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
   it("does not touch the URL when no edit query is set", async () => {
