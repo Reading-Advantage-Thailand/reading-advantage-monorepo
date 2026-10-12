@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { NextRequest } from "next/server";
 
 const mocks = vi.hoisted(() => ({ getAssignmentById: vi.fn() }));
+vi.mock("@/lib/session", () => ({ currentUser: async () => ({ id: "u1", role: "TEACHER", schoolId: "s1" }) }));
 vi.mock("@/server/models/assignmentModel", async () => {
   class AssignmentForbiddenError extends Error {}
   return {
