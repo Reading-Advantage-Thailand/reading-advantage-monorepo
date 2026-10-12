@@ -76,7 +76,7 @@ _Story ref: spec.md#story-s3_
     - Defaults used: speeds 0.75x, 1x, 1.25x (spec decision); the translation text shows inside the player panel; the language select stays in the top row only.
     - Manual verification steps: (1) open the PNG files in `~/Desktop/primary-parity-progress/captures/read_along/phaseS3/` (playing at 0.75x, 1x, 1.25x, paused, first and last sentence; 375 px and 1280 px, day and night); (2) on a real article page open the audio: one player shows, and no second bar appears when you scroll; (3) tap Previous, Replay, Next: the voice starts at the sentence before, the same sentence, the sentence after; (4) tap the speed sign: 0.75x, then 1x, then 1.25x; (5) while the voice plays, the sentence stays near the upper third; scroll by hand: the follow stops until you press play again.
 
-## Phase S4: The lesson reading step uses the same read-along
+## Phase S4: The lesson reading step uses the same read-along [checkpoint: 861401f74]
 _Story ref: spec.md#story-s4_
 
 - [x] Task: Contract for the lesson reading step
