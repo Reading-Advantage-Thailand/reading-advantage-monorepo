@@ -171,3 +171,8 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
     - Red 19 of 21 failed; green 30 pass in 4 files; app tsc exit 0. The assign form body already passes the new Zod schema.
     - Deviation: a TEACHER now reads only the assignments of a class that the teacher teaches (legacy: any teacher of the school).
     - Gap: the progress POST does not check that the body articleId is the article of the assignment.
+
+## Task: API authorization fixes, cluster 2 (added 2026-10-12, orchestrator)
+
+- [ ] Task: API authorization fixes, cluster 2 (nine findings; notes per finding below)
+    - Finding 5 (licenses), DEFAULT for the owner to confirm: POST, PUT, and DELETE on `/api/licenses` and `/api/licenses/[id]` are SYSTEM only (403 for ADMIN). GET (list and by id) stays for ADMIN (own school, tenant scope) and SYSTEM. ADMIN flows that the UI uses and that stay: the school license panel at `/settings/school-profile#license` (server read through `getLicenseViewForCaller`, no API call) and `/api/users/me/school`. The create, edit, and delete forms and the license table sit under `/system/licenses` (SYSTEM pages), so they keep working. `components/update-user-license.tsx` sends PATCH to `/api/licenses/<userId>`; no PATCH handler exists, so that flow already fails with 405 (not changed here; a key activation flow needs its own owner decision).

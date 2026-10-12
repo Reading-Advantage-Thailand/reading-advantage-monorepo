@@ -5,6 +5,7 @@ import { getUnscopedDB } from "@reading-advantage/domain";
 import { licenseDbFor, licenseSchoolFields } from "@/lib/license-db";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { z } from "zod";
+import { logger } from "@/lib/observability/logger";
 import { randomBytes } from "crypto";
 import { currentUser } from "@/lib/session";
 import { generateLicenseKey } from "@/lib/utils";
@@ -43,7 +44,8 @@ export async function POST(request: NextRequest) {
       throw error;
     }
 
-    if (!user || (user.role !== "ADMIN" && user.role !== "SYSTEM")) {
+    // Only SYSTEM writes licenses; an ADMIN keeps the scoped reads.
+    if (user.role !== "SYSTEM") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -97,7 +99,7 @@ export async function POST(request: NextRequest) {
       createdAt: license.createdAt,
     });
   } catch (error) {
-    console.error("Error creating license:", error);
+    logger.error("license_creating_failed", { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -215,7 +217,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(licensesWithSchool);
   } catch (error) {
-    console.error("Error fetching licenses:", error);
+    logger.error("license_fetching_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -241,7 +243,8 @@ export async function DELETE(request: NextRequest) {
       throw error;
     }
 
-    if (!user || (user.role !== "ADMIN" && user.role !== "SYSTEM")) {
+    // Only SYSTEM writes licenses; an ADMIN keeps the scoped reads.
+    if (user.role !== "SYSTEM") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -263,7 +266,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ message: "License deleted successfully" });
   } catch (error) {
-    console.error("Error deleting license:", error);
+    logger.error("license_deleting_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
