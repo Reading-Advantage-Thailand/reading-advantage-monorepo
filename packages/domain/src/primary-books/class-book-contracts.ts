@@ -146,3 +146,18 @@ export const studentBookLessonSchema = z.object({
 /** The book view of a student (FR-4): the class book with every lesson. */
 export const studentBookSchema = studentClassBookSchema.extend({ lessons: z.array(studentBookLessonSchema) });
 export type StudentBook = z.infer<typeof studentBookSchema>;
+
+/** The preview book of a staff member: the shape of the student book, every lesson open, no progress. */
+export const previewBookSchema = studentBookSchema;
+export type PreviewBook = z.infer<typeof previewBookSchema>;
+
+/** One class book that a staff member manages, for the preview home notices. */
+export const managedClassBookSchema = z.object({
+  classBookId: z.string(),
+  classroomId: z.string(),
+  classroomName: z.string(),
+  bookName: z.string(),
+  currentLesson: z.number().int(),
+  lessonCount: z.number().int(),
+});
+export type ManagedClassBookItem = z.infer<typeof managedClassBookSchema>;
