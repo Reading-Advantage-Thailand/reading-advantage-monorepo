@@ -160,6 +160,10 @@
       "types": "./dist/primary-avatar/index.d.ts",
       "import": "./dist/primary-avatar/index.js"
     },
+    "./primary-lesson-attempts": {
+      "types": "./dist/primary-lesson-attempts/index.d.ts",
+      "import": "./dist/primary-lesson-attempts/index.js"
+    },
     "./primary-quest": {
       "types": "./dist/primary-quest/index.d.ts",
       "import": "./dist/primary-quest/index.js"
