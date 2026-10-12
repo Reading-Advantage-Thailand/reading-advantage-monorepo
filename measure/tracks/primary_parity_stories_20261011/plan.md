@@ -24,7 +24,7 @@ One heavy job at a time on this machine; the ETL runs in Cloud Build, never on t
     - Step 3: Read `design/decisions.md`. Answer yes or no to D4 and D9.
     - Step 4: Read `behavior-contract.md` section 7 (ETL and migration, NULL `article_id` rule).
 
-## Phase S1: The ETL brings the stories, chapters, and chapter questions
+## Phase S1: The ETL brings the stories, chapters, and chapter questions [checkpoint: ffa5d66e8]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Schema and migration
