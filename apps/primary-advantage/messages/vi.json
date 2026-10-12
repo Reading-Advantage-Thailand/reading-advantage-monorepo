@@ -3553,6 +3553,12 @@
     "classBook": {
       "title": "Class book",
       "hint": "The book and the lesson plan for this class will show here.",
+      "slotTitle": "Class books",
+      "slotEmpty": "No class has a book yet. Open a class to assign one.",
+      "slotError": "We could not load the class books. Reload the page to try again.",
+      "assignRow": "Assign a book",
+      "slotNext": "Next",
+      "goToClasses": "Go to my classes",
       "none": "No book is assigned to this class yet. Choose a book below to start.",
       "emptyCatalogueTitle": "The book list is not ready yet.",
       "emptyCatalogueBody": "Tell your school admin, who asks Reading Advantage to load the books.",
