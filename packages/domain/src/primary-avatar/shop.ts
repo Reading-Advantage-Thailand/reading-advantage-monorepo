@@ -146,25 +146,31 @@ export function tieOrder(userId: string, itemId: string): number {
  * all schools), ties in the student's fixed random order. Reward pieces are never listed.
  * @param ctx The database, the user, and the clock.
  * @returns The shop items.
- * @throws {AuthError} FORBIDDEN when the user has no school.
+ * @throws {AuthError} FORBIDDEN when a student has no school. Staff (Preview mode) need none.
  */
 export async function listAvatarShop(ctx: AvatarCtx): Promise<AvatarShopItem[]> {
-  const schoolId = schoolOf(ctx.user);
+  // Preview mode (staff): no row of the staff member is read, nothing is owned, and the level is 1.
+  const preview = !canWriteStudentRecord(ctx.user);
+  const schoolId = preview ? ctx.user.schoolId : schoolOf(ctx.user);
   const now = ctx.now ?? new Date();
-  const raw = createTenantDB(ctx.db, { schoolId }).unscoped(UNSCOPED_REASON);
-  const owned = await raw
-    .select({ itemId: primaryAvatarInventory.itemId, dye: primaryAvatarInventory.dye })
-    .from(primaryAvatarInventory)
-    .where(and(eq(primaryAvatarInventory.schoolId, schoolId), eq(primaryAvatarInventory.userId, ctx.user.id)));
+  const owned = preview || !schoolId
+    ? []
+    : await createTenantDB(ctx.db, { schoolId })
+        .unscoped(UNSCOPED_REASON)
+        .select({ itemId: primaryAvatarInventory.itemId, dye: primaryAvatarInventory.dye })
+        .from(primaryAvatarInventory)
+        .where(and(eq(primaryAvatarInventory.schoolId, schoolId), eq(primaryAvatarInventory.userId, ctx.user.id)));
   const since = new Date(now.getTime() - POPULARITY_DAYS * 24 * 60 * 60 * 1000);
-  const popular = await createTenantDB(ctx.db, { schoolId })
-    .unscoped(POPULARITY_REASON)
-    .select({ itemId: primaryAvatarInventory.itemId, count: sql<number>`count(*)` })
-    .from(primaryAvatarInventory)
-    .where(and(eq(primaryAvatarInventory.source, "purchase"), gte(primaryAvatarInventory.acquiredAt, since)))
-    .groupBy(primaryAvatarInventory.itemId);
+  const popular = !schoolId
+    ? []
+    : await createTenantDB(ctx.db, { schoolId })
+        .unscoped(POPULARITY_REASON)
+        .select({ itemId: primaryAvatarInventory.itemId, count: sql<number>`count(*)` })
+        .from(primaryAvatarInventory)
+        .where(and(eq(primaryAvatarInventory.source, "purchase"), gte(primaryAvatarInventory.acquiredAt, since)))
+        .groupBy(primaryAvatarInventory.itemId);
   const counts = new Map(popular.map((row) => [row.itemId, Number(row.count)]));
-  const level = Math.max(1, ctx.user.level || 1);
+  const level = preview ? 1 : Math.max(1, ctx.user.level || 1);
   const items = Object.values(AVATAR_CATALOG).filter((item) => item.source === "shop").map((item): AvatarShopItem => ({
     id: item.id,
     slot: item.slot as AvatarSlot,

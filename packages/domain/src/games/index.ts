@@ -43,6 +43,8 @@ export {
   listPrimaryArticleCards,
   listPrimaryDeckCards,
   listPrimaryPracticeInput,
+  listPrimarySamplePracticeInput,
+  SAMPLE_PRACTICE_INPUT_ID,
   primaryArticleCardsRequestSchema,
   primaryDeckCardsRequestSchema,
   primaryFlashcardViewSchema,

@@ -6,6 +6,7 @@ import {
   listPrimaryArticleCards,
   listPrimaryDeckCards,
   listPrimaryPracticeInput,
+  listPrimarySamplePracticeInput,
 } from "../games/primary-saved-items.js";
 import { createMockDb } from "./mock-db.js";
 
@@ -176,5 +177,28 @@ describe("listPrimaryArticleCards", () => {
       id: "c3", deckId: DECK, type: "SENTENCE", articleId: ARTICLE, createdAt: created, sentence: "Pip is a puppy.",
       translation: { th: "ปิปเป็นลูกสุนัข", cn: "皮普是一只小狗。" }, audioUrl: "audios/cmarticle.mp3", startTime: 0, endTime: 1.5,
     }]);
+  });
+});
+
+describe("listPrimarySamplePracticeInput (Preview mode)", () => {
+  it("builds a read-only sample word set from published article vocabulary and reads no card of a user", async () => {
+    const rawDb = createMockDb({ selectSequence: [[snapshot, { ...snapshot, articleId: OTHER, words: [{ vocabulary: "river", definition: { th: "แม่น้ำ" } }, { vocabulary: "moon", definition: { th: "ดวงจันทร์" } }] }]] });
+
+    const result = await listPrimarySamplePracticeInput({ db: rawDb as never, input: { locale: "th" } });
+
+    expect(result.id).toBe("sample");
+    expect(result.vocabulary.map((word) => word.term)).toEqual(["river", "lantern", "kite", "moon"]);
+    expect(result.vocabulary[0]).toMatchObject({ translation: "แม่น้ำ" });
+    expect(result.sentences[0]).toMatchObject({ text: "The river is wide.", translation: "แม่น้ำกว้าง" });
+    expect(rawDb.select).toHaveBeenCalledTimes(1);
+    expect(rawDb.insert).not.toHaveBeenCalled();
+    expect(rawDb.update).not.toHaveBeenCalled();
+    expect(rawDb.delete).not.toHaveBeenCalled();
+  });
+
+  it("returns an empty set when no published article has vocabulary", async () => {
+    const rawDb = createMockDb({ selectSequence: [[]] });
+    const result = await listPrimarySamplePracticeInput({ db: rawDb as never, input: {} });
+    expect(result).toMatchObject({ id: "sample", vocabulary: [], sentences: [] });
   });
 });
