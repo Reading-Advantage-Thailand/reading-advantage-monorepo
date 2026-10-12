@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { db } from "@reading-advantage/db";
-import { getStudentBook, type StudentBook } from "@reading-advantage/domain/primary-books";
+import { getPreviewBook, getStudentBook, type StudentBook } from "@reading-advantage/domain/primary-books";
 import { RpgLink, Sign } from "@/components/rpg/chrome";
 import { cn } from "@/lib/utils";
 import { Scene } from "@/components/rpg/scene";
 import { currentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
+import { isStudentWriter } from "@/lib/student-view";
 
 type Params = Promise<{ classBookId: string }>;
 
@@ -22,13 +23,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /**
  * Reads the student's book; null when the class book is not in one of the student's classes.
- * @param user The signed-in student.
+ * @param user The signed-in user; staff read the preview book of a class book they manage.
  * @param classBookId The class book.
  * @returns The book with its lessons, or null.
  */
 async function loadBook(user: NonNullable<Awaited<ReturnType<typeof currentUser>>>, classBookId: string): Promise<StudentBook | null> {
   try {
-    return await getStudentBook({ db, user, classBookId });
+    // Preview mode (staff): the book they manage, every lesson open, no progress.
+    return isStudentWriter(user) ? await getStudentBook({ db, user, classBookId }) : await getPreviewBook({ db, user, classBookId });
   } catch {
     return null;
   }

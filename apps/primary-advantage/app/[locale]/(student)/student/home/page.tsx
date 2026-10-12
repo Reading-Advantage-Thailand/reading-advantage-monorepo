@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { db } from "@reading-advantage/db";
 import { getStudentHome } from "@reading-advantage/domain/primary-home";
-import { getStudentClassBooks, type StudentClassBook } from "@reading-advantage/domain/primary-books";
+import { getStudentClassBooks, listManagedClassBooks, type ManagedClassBookItem, type StudentClassBook } from "@reading-advantage/domain/primary-books";
 import { getAvatarState } from "@reading-advantage/domain/primary-avatar";
 import type { AvatarState } from "@reading-advantage/game-contracts";
 import { getVoiceEntitlement, voiceConfigFromEnv } from "@reading-advantage/domain/primary-voice";
@@ -68,6 +68,19 @@ async function loadClassBooks(user: User): Promise<StudentClassBook[]> {
 }
 
 /**
+ * Reads the class books that a staff member manages, for the preview notices. A failure shows the empty notice.
+ * @param user The signed-in staff member.
+ * @returns The class books, or none.
+ */
+async function loadManagedBooks(user: User): Promise<ManagedClassBookItem[]> {
+  try {
+    return await listManagedClassBooks({ db, user });
+  } catch {
+    return [];
+  }
+}
+
+/**
  * The avatar of the student for the hero portrait: the profile and the worn pieces. Null when
  * the student has no avatar yet (the nudge shows) or the read fails (no portrait, no nudge).
  * @param user The signed-in student.
@@ -124,9 +137,10 @@ export default async function StudentHomePage() {
 
   // Preview mode (staff): the default hero and empty notices; no student record is read.
   const preview = !isStudentWriter(user);
-  const [home, classBooks, leaderboard, avatar, reedy, quest, t, tPreview, tBoard, tAvatar, tReedy, format] = await Promise.all([
+  const [home, classBooks, managedBooks, leaderboard, avatar, reedy, quest, t, tPreview, tBoard, tAvatar, tReedy, format] = await Promise.all([
     preview ? previewHomeModel() : getStudentHome({ db, user }),
     preview ? [] : loadClassBooks(user),
+    preview ? loadManagedBooks(user) : [],
     loadLeaderboard(user),
     preview ? ("none" as const) : loadAvatar(user),
     preview ? null : loadReedyMeter(user),
@@ -176,7 +190,10 @@ export default async function StudentHomePage() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {preview ? <PreviewNotice titleKey="emptyTitle" lineKey="emptyLesson" className="md:col-span-2" /> : null}
-        {preview ? <PreviewNotice titleKey="emptyTitle" lineKey="emptyBooks" /> : null}
+        {preview && !managedBooks.length ? <PreviewNotice titleKey="emptyTitle" lineKey="emptyBooks" /> : null}
+        {managedBooks.map((book) => (
+          <ManagedBookCard key={book.classBookId} book={book} t={t} />
+        ))}
 
         {lesson ? (
           <Panel pinned aria-labelledby="home-lesson" className="md:col-span-2">
@@ -284,6 +301,31 @@ function ClassBookCard({ book, t }: { book: StudentClassBook; t: Awaited<ReturnT
       ) : (
         <p className="cq-muted text-sm">{t("classBookNoLesson")}</p>
       )}
+      <RpgLink tone="iron" href={`/student/books/${book.classBookId}`} className="mt-auto self-start">
+        {t("seeBook")}
+      </RpgLink>
+    </Panel>
+  );
+}
+
+/**
+ * The class book card of a staff member in Preview mode: the book, its class, the lesson
+ * position, and the link to the preview book page.
+ * @param props.book The class book that the staff member manages.
+ * @param props.t The StudentHome translator.
+ * @returns The card.
+ */
+function ManagedBookCard({ book, t }: { book: ManagedClassBookItem; t: Awaited<ReturnType<typeof getTranslations<"StudentHome">>> }) {
+  const headingId = `home-book-${book.classBookId}`;
+  return (
+    <Panel pinned aria-labelledby={headingId}>
+      <h2 id={headingId} className="flex items-center gap-2 text-lg font-semibold">
+        <img src={ART.noticeBoard} alt="" className="size-7" />
+        {t("classBook")}
+      </h2>
+      <p className="font-semibold">{book.bookName}</p>
+      <p className="cq-muted text-sm">{book.classroomName}</p>
+      <p className="font-article text-xl font-bold">{t("book.progress", { current: book.currentLesson, total: book.lessonCount })}</p>
       <RpgLink tone="iron" href={`/student/books/${book.classBookId}`} className="mt-auto self-start">
         {t("seeBook")}
       </RpgLink>
