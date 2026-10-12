@@ -90,12 +90,12 @@ _Story ref: spec.md#story-s3_
 - [x] Task: Measure - User Manual Verification 'Phase S3: Play a sentence game in task 12' (Protocol in workflow.md)
     - look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/lesson_games/phaseS3/` (`task12-<375|1280>-<day|night>.png`, `task12-locked-...`). Steps: (1) open a lesson and go to task 12; (2) check the two sentence games with the last result, and the four activities below; (3) play one game and leave it; check the result shows after the return; (4) check a lesson with 2 sentences: games locked with "Needs 3 sentences", activities open; (5) check that a game that fails to start shows the notice that points to the activities. Defaults used: Member Question 2 (castle-defense, potion-rush).
 
-## Phase S4: Lead a game on the projector [checkpoint: 477b3c4ad]
+## Phase S4: Lead a game on the projector [checkpoint: 59c2e8a27]
 _Story ref: spec.md#story-s4_
 
 - [x] Task: Define the panel
     - [x] The `helper` prop of `GameHost` (passed to `StoryGameHost`); the projector panel props; keys in the five locale files
-        - Commit b13b64158. Keys `TeacherUi.classBook.lesson.projectorGames` (title, hint, loading, inputFailed) in the five files; cn, tw, vi hold the English text like the rest of that namespace; Thai by the helper: owner check pending. The picker got `hideResults` (no last result and no New tag on the projector).
+        - Commit d3c9f367e. Keys `TeacherUi.classBook.lesson.projectorGames` (title, hint, loading, inputFailed) in the five files; cn, tw, vi hold the English text like the rest of that namespace; Thai by the helper: owner check pending. The picker got `hideResults` (no last result and no New tag on the projector).
 - [x] Task: Write the tests (red)
     - [x] App: `components/teacher/__tests__/projector-game-panel.test.tsx`: the two lists with the lesson input; `save={false}` and `helper` on; no request to `/api/v1/apk/complete`
     - [x] App: `components/teacher/__tests__/guide-steps.test.tsx` and the overlay test: steps 9 and 10 link to the projector panel; step 1 keeps `/teacher/game-challenges`
@@ -106,7 +106,7 @@ _Story ref: spec.md#story-s4_
     - [x] New `components/teacher/projector-game-panel.tsx`; `components/teacher/projector-view.tsx` and `.../lessons/[number]/projector/page.tsx` render it
         - Deviation: the page renders the panel (above `ProjectorView`), not `projector-view.tsx`; this keeps the view test free of server actions. The run is a full-screen `lg-run` layer; the game exit returns to the lists. The 2D renderer is the host default (no WebGL2 falls back inside the kit; checked in the S5 browser run).
     - [x] `components/teacher/guide-steps.tsx` and `guide-overlay.tsx`: the `gamesHref` of steps 9 and 10
-        - New prop `projectorHref` and `gamesHrefOf`; the lesson page passes `<lesson>/projector#projector-games`. Commits 477b3c4ad and bce9093f1: see `plan-review.md` (commit mishap).
+        - New prop `projectorHref` and `gamesHrefOf`; the lesson page passes `<lesson>/projector#projector-games`. Commit 59c2e8a27 (reworded by the orchestrator; see `plan-review.md`).
 - [x] Task: Docs and doctor
     - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
         - build-graph update skipped: graph.db read only (orchestrator rule). `measure/generated` restored.

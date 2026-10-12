@@ -26,7 +26,7 @@ Checks: JSDoc on each new export (yes); no `console` in new code (the ETL uses t
 Critical and High: none.
 
 Medium:
-- Git history: helper C2 amended a commit in the shared worktree. The ETL commit (first `feat(db)` sha 59fea6ec1) now sits in `bce9093f1` under a lesson games header, and `d273c8dbd` carries the `feat(db)` header but holds only the inventory change. The orchestrator rewords them after the phase.
+- Git history: helper C2 amended a commit in the shared worktree. The ETL commit (first `feat(db)` sha 59fea6ec1) now sits in `bce9093f1` under a lesson games header, and `d273c8dbd` carries the `feat(db)` header but holds only the inventory change. The orchestrator rewords them after the phase. Resolved 2026-10-12 by the orchestrator: the range after d735c641c was rebuilt with the same trees and corrected messages (git commit-tree). New shas: projector panel d3c9f367e, guide steps 59c2e8a27 (header 99 characters), stories ETL 0426ed75e (C1's original message), inventory rows ac76ad031 (docs(stories)), stories S1 record 81d4db30b. The git notes were copied.
 - Migration 0072 has no drizzle snapshot (`meta/0072_snapshot.json`), as the hand-written migrations 0060 to 0069 have none. The next `drizzle-kit generate` diffs against the 0071 snapshot and can re-emit these columns. Lane A (0073) must not run `generate` without checking.
 - The 11 chapter MCQ rows whose answer is not among the options are skipped (the article rule); no owner fix exists for them. A chapter then shows 9 or 10 MCQ instead of 10. S5 must pick 5 of what exists.
 - The `chapters.words` column stays empty. The word list of a chapter comes from the chapter row of `sentencs_and_words_for_flashcard` (S4).
