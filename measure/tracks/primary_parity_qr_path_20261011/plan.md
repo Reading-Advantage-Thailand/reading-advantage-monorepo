@@ -54,23 +54,30 @@ _Story ref: spec.md#story-s1_
     - Open `/th/auth/signin?callbackUrl=//evil.example`. After sign-in the user lands on the normal home page.
     - Note: the `/b/...` lesson link for a student without a callback stays unchanged.
 
-## Phase S4: A clear page for every case that is not the normal one
+## Phase S4: A clear page for every case that is not the normal one [checkpoint: e8199ba52]
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Define the lookup contract
-    - [ ] New `packages/domain/src/primary-books/book-link.ts` and `book-link-contracts.ts`: `resolveBookLink({ db, bookKey, number })` returns a Zod-typed union `ok | unpublished | no_lesson (book name, lesson count) | unknown_book`. Keep `resolveBookLesson` as it is
-    - [ ] Export from `packages/domain/src/primary-books/index.ts`
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/__tests__/book-link.test.ts` (mock DB helper): each of the four results; a number of 0, -1, 1.5, and 999
-    - [ ] Page tests: one test for each case of spec S4, including SYSTEM with no `schoolId`, INTERN, and a database error; the logger call with its event name and no user name; no `notFound()` for a lookup case
-    - [ ] Key-parity test for the new namespace in the five locale files (reuse the parity test pattern of the app; check its file at the start of the phase)
-- [ ] Task: Implement (green)
-    - [ ] Domain functions above; `app/[locale]/b/[book]/[n]/page.tsx` uses them and renders the case components of Phase D
-    - [ ] New `components/book-link/*` (RPG skin) for the case pages; keys under a new `BookLink` namespace in `messages/{en,th,cn,tw,vi}.json` (Thai text from the owner)
-    - [ ] Log with `lib/observability/logger.ts` (`book_link.unknown_book`, `.no_lesson`, `.unpublished`, `.no_class`, `.wrong_role`, `.lookup_failed`)
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; graph update; `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S4: A clear page for every case that is not the normal one' (Protocol in workflow.md)
+- [x] Task: Define the lookup contract
+    - Note: the lookup is `resolveBookLink`; the case decision (role, class, log) is `lib/book-link/open-book-link.ts` (`openBookLink`). S3 `/writing` calls it with `writing: true`; no second copy.
+    - [x] New `packages/domain/src/primary-books/book-link.ts` and `book-link-contracts.ts`: `resolveBookLink({ db, bookKey, number })` returns a Zod-typed union `ok | unpublished | no_lesson (book name, lesson count) | unknown_book`. Keep `resolveBookLesson` as it is
+    - [x] Export from `packages/domain/src/primary-books/index.ts`
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/__tests__/book-link.test.ts` (mock DB helper): each of the four results; a number of 0, -1, 1.5, and 999
+    - [x] Page tests: one test for each case of spec S4, including SYSTEM with no `schoolId`, INTERN, and a database error; the logger call with its event name and no user name; no `notFound()` for a lookup case
+    - [x] Key-parity test for the new namespace in the five locale files (reuse the parity test pattern of the app; check its file at the start of the phase)
+- [x] Task: Implement (green)
+    - [x] Domain functions above; `app/[locale]/b/[book]/[n]/page.tsx` uses them and renders the case components of Phase D
+    - [x] New `components/book-link/*` (RPG skin) for the case pages; keys under a new `BookLink` namespace in `messages/{en,th,cn,tw,vi}.json` (Thai text from the owner)
+    - Thai text: written by the helper; owner check pending. cn, tw, and vi hold English, as in the current file practice.
+    - Member Question defaults used: Q4 "This lesson is not ready yet. Ask your teacher." (the others are not in S4).
+    - [x] Log with `lib/observability/logger.ts` (`book_link.unknown_book`, `.no_lesson`, `.unpublished`, `.no_class`, `.wrong_role`, `.lookup_failed`)
+- [x] Task: Docs and doctor
+    - [x] JSDoc; skipped: graph.db read only (orchestrator rule); `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S4: A clear page for every case that is not the normal one' (Protocol in workflow.md) - look check pending (owner, async)
+    - Captures (32 PNG, 8 states, 375 px and 1280 px, day and night): `~/Desktop/primary-parity-progress/captures/qr_path/phaseS4/`.
+    - Manual steps: on a running build open `/th/b/zz/1` and `/th/b/o3-2/999` as a student. Each shows a clear page, not a 404, and the HTTP status is not 5xx.
+    - Open a lesson with no article as a student: the page says "not ready". As a teacher with no class that has the book: the page says "no class".
+    - Check the language menu on each page and the Thai text (owner check pending).
 
 ## Phase S2: Signed-out landing for Primary and Tutor readers
 _Story ref: spec.md#story-s2_
