@@ -63,6 +63,8 @@
 .dark .cq-backdrop--dim img { filter: blur(3px) brightness(0.4) saturate(0.85); }
 .dark .cq-backdrop::after { background: radial-gradient(ellipse at 50% 30%, rgba(20, 30, 60, 0.15) 30%, rgba(0, 0, 10, 0.7) 100%); }
 .cq-content { position: relative; z-index: 1; }
+/* The staff shell has no .cq-world: clip the fixed backdrop to the scene box (main column). */
+.cq-scene--staff { clip-path: inset(0); }
 
 /* Text over the backdrop. */
 .cq-on-scene { color: #fff4dc; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.55), 0 0 12px rgba(0, 0, 0, 0.5); }
