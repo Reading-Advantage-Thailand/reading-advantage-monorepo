@@ -128,7 +128,7 @@ _Story ref: spec.md#story-s4_
     - Captures: `~/Desktop/primary-parity-progress/captures/school_management/phaseS4/` (`s4-license-{ok,over,none,ended}-{day,night}-{375,1280}.png`, `s4-license-ok-holders-p2-{day,night}-{375,1280}.png`).
     - Steps: 1. Sign in as school ADMIN of school 2c5f6031 or a5158947 and open School profile (sidebar "School license"). 2. Check the seats used, free, total, and each license with its dates. 3. Check that seat holders show 50 students for each page and that Next and Previous work. 4. Sign in as a TEACHER and as a STUDENT of the same school: no license part, no key, and `GET /api/users/me/school/seat-holders` returns 403. 5. Check that no button changes a license.
 
-## Phase S5: A teacher role change takes effect
+## Phase S5: A teacher role change takes effect [checkpoint: 39c826c36]
 _Story ref: spec.md#story-s5_
 
 - [x] Task: Contract & Schema Definition
