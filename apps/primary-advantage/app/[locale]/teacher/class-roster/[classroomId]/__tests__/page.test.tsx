@@ -12,8 +12,10 @@ const mocks = vi.hoisted(() => ({
   user: { id: "t1", username: "kru.ann", name: "Kru Ann", role: "TEACHER", schoolId: "school-1", xp: 0, level: 1, cefrLevel: null } as Record<string, unknown> | null,
   listClassBooks: vi.fn(),
   listCatalogueBooks: vi.fn(),
+  logError: vi.fn(),
 }));
 
+vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: vi.fn(), info: vi.fn() } }));
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user, getCurrentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: async () => null }));
@@ -89,13 +91,14 @@ describe("teacher class page class books (FR-1)", () => {
     expect(mocks.listClassBooks).toHaveBeenCalledWith(expect.objectContaining({ classroomId: C1, user: mocks.user }));
   });
 
-  it("says when the class has no book and when the catalogue is empty", async () => {
+  it("shows only the empty-catalogue note when the class has no book and the catalogue is empty", async () => {
     mocks.listClassBooks.mockResolvedValueOnce([]);
     mocks.listCatalogueBooks.mockResolvedValueOnce([]);
     await renderPage();
     const card = screen.getByRole("region", { name: en.title });
-    expect(within(card).getByText(en.none)).toBeInTheDocument();
-    expect(within(card).getByText(en.noCatalogue)).toBeInTheDocument();
+    expect(within(card).queryByText(en.none)).not.toBeInTheDocument();
+    expect(within(card).getByText(en.emptyCatalogueTitle)).toBeInTheDocument();
+    expect(within(card).getByText(en.emptyCatalogueBody)).toBeInTheDocument();
     expect(within(card).queryByRole("form")).not.toBeInTheDocument();
   });
 
@@ -105,9 +108,32 @@ describe("teacher class page class books (FR-1)", () => {
     expect(screen.getByText("บทที่ 3 จาก 14 · สอนแล้ว 1 บท")).toBeInTheDocument();
   });
 
-  it("falls back to the placeholder slot when the class books cannot be read", async () => {
+  it("shows the load error with a retry link and logs once when the class books cannot be read", async () => {
     mocks.listClassBooks.mockRejectedValueOnce(new Error("down"));
     await renderPage();
-    expect(screen.getByText("placeholder slot")).toBeInTheDocument();
+    const card = screen.getByRole("region", { name: en.title });
+    expect(within(card).getByRole("alert")).toHaveTextContent(en.loadErrorTitle);
+    expect(within(card).getByText(en.loadErrorBody)).toBeInTheDocument();
+    expect(within(card).getByRole("link", { name: en.retry })).toHaveAttribute("href", `/teacher/class-roster/${C1}`);
+    expect(within(card).queryByText(en.none)).not.toBeInTheDocument();
+    expect(within(card).queryByRole("form")).not.toBeInTheDocument();
+    expect(mocks.logError).toHaveBeenCalledTimes(1);
+    expect(mocks.logError).toHaveBeenCalledWith("class_books.load_failed", expect.objectContaining({ classroomId: C1, userId: "t1" }));
+    expect(screen.queryByText("placeholder slot")).not.toBeInTheDocument();
+  });
+
+  it("shows the load error when only the catalogue fails", async () => {
+    mocks.listCatalogueBooks.mockRejectedValueOnce(new Error("down"));
+    await renderPage();
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(mocks.logError).toHaveBeenCalledTimes(1);
+  });
+
+  it("says no book is assigned and points to the form when the catalogue has books", async () => {
+    mocks.listClassBooks.mockResolvedValueOnce([]);
+    await renderPage();
+    const card = screen.getByRole("region", { name: en.title });
+    expect(within(card).getByText(en.none)).toBeInTheDocument();
+    expect(within(card).getByRole("form", { name: en.assign })).toBeInTheDocument();
   });
 });
