@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { challengeCapabilityOf, challengeGames, gameFor, isSentenceGame, LEGACY_GAME_IDS, playableGames, practiceLocaleOf } from "../catalog";
+import { challengeCapabilityOf, challengeGames, gameFor, isSentenceGame, LEGACY_GAME_IDS, OLD_GAME_PATHS, oldGameTarget, playableGames, practiceLocaleOf } from "../catalog";
 
 describe("gameFor", () => {
   it("finds a 3D game by its id and by its legacy 2D id", () => {
@@ -52,5 +52,23 @@ describe("playableGames, isSentenceGame, challengeGames", () => {
       "hero-vs-zombie": { title: "Hero vs. Zombie", version: "2026-10-06.1" },
       "dragon-rider": { title: expect.any(String), version: "2026-10-06.1" },
     });
+  });
+});
+
+describe("oldGameTarget", () => {
+  it.each(Object.entries(OLD_GAME_PATHS).flatMap(([group, ids]) => ids.map((id) => [group, id])))(
+    "sends /student/games/%s/%s to the playable game with the same id",
+    (group, id) => {
+      const target = oldGameTarget(group, id);
+      expect(target).toBe(`/student/games/apk/${id}`);
+      expect(gameFor(id)?.id).toBe(id);
+    },
+  );
+
+  it("gives undefined for an unknown id, a wrong group, or an inherited key", () => {
+    expect(oldGameTarget("vocabulary", "unknown")).toBeUndefined();
+    expect(oldGameTarget("vocabulary", "potion-rush")).toBeUndefined();
+    expect(oldGameTarget("sentences", "rune-match")).toBeUndefined();
+    expect(oldGameTarget("toString", "x")).toBeUndefined();
   });
 });

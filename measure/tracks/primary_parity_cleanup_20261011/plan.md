@@ -151,12 +151,15 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 
 ## Phase 7: Old game URLs (STU-09)
 
-- [ ] Task: FR-10 (STU-09) — redirect the five old game URLs
-    - [ ] Contract: in `lib/games/catalog.ts`, add `OLD_GAME_PATHS` (`vocabulary`: `dragon-rider`, `enchanted-library`, `rpg-battle`, `rune-match`; `sentences`: `potion-rush`) and `oldGameTarget(group, id)`, with JSDoc; it returns `/student/games/apk/<id>` or `undefined`
-    - [ ] Red: in `lib/games/__tests__/catalog.test.ts`, each of the five paths gives its target; `gameFor` finds a playable game for each target; an unknown id and a wrong group give `undefined`
-    - [ ] Red: new `app/[locale]/(student)/student/games/vocabulary/[gameId]/__tests__/page.test.tsx` and `app/[locale]/(student)/student/games/sentences/[gameId]/__tests__/page.test.tsx` (pattern: `games/apk/[cartridgeId]/__tests__/page.test.tsx`): the page calls `permanentRedirect` with `{ href: "/student/games/apk/<id>", locale }`; an unknown id calls `notFound`
-    - [ ] Green: change `i18n/navigation.ts:6` to the line of branch `primary/public-pages` (`export const { Link, redirect, permanentRedirect, usePathname, useRouter, getPathname } =`); write the two pages
-- [ ] Task: Measure - User Manual Verification 'Phase 7: Old game URLs (STU-09)' (Protocol in workflow.md)
+- [x] Task: FR-10 (STU-09) — redirect the five old game URLs
+    - [x] Contract: in `lib/games/catalog.ts`, add `OLD_GAME_PATHS` (`vocabulary`: `dragon-rider`, `enchanted-library`, `rpg-battle`, `rune-match`; `sentences`: `potion-rush`) and `oldGameTarget(group, id)`, with JSDoc; it returns `/student/games/apk/<id>` or `undefined`
+    - [x] Red: in `lib/games/__tests__/catalog.test.ts`, each of the five paths gives its target; `gameFor` finds a playable game for each target; an unknown id and a wrong group give `undefined`
+    - [x] Red: new `app/[locale]/(student)/student/games/vocabulary/[gameId]/__tests__/page.test.tsx` and `app/[locale]/(student)/student/games/sentences/[gameId]/__tests__/page.test.tsx` (pattern: `games/apk/[cartridgeId]/__tests__/page.test.tsx`): the page calls `permanentRedirect` with `{ href: "/student/games/apk/<id>", locale }`; an unknown id calls `notFound`
+    - [x] Green: change `i18n/navigation.ts:6` to the line of branch `primary/public-pages` (`export const { Link, redirect, permanentRedirect, usePathname, useRouter, getPathname } =`); write the two pages
+- [x] Task: Measure - User Manual Verification 'Phase 7: Old game URLs (STU-09)' (Protocol in workflow.md)
+    - Look check pending (owner, async). Steps: sign in as a student. Open `/en/student/games/vocabulary/rune-match`, `/en/student/games/vocabulary/dragon-rider`, and `/en/student/games/sentences/potion-rush`: each opens the 3D game with the same name at `/en/student/games/apk/<id>`. Open `/en/student/games/vocabulary/unknown`: the not-found page shows. `curl -I` on an old URL with a session cookie shows HTTP 308.
+    - Captures: none (the build was not served in this phase; Phase 9 makes the captures).
+    - Defaults used for member questions: none asked in this phase.
 
 ## Phase 8: AI models in the adapter configuration (CNT-02)
 

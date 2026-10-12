@@ -14,6 +14,23 @@ export const LEGACY_GAME_IDS: Readonly<Record<string, string>> = {
   "labyrinth-goblin-king": "labyrinth",
 };
 
+/** The ids of the old game URLs `/student/games/<group>/<id>`, by group. Each id is also a 3D game id. */
+export const OLD_GAME_PATHS: Readonly<Record<"vocabulary" | "sentences", readonly string[]>> = {
+  vocabulary: ["dragon-rider", "enchanted-library", "rpg-battle", "rune-match"],
+  sentences: ["potion-rush"],
+};
+
+/**
+ * Maps an old game URL to the 3D game route with the same name.
+ * @param group The path group of the old URL, `vocabulary` or `sentences`.
+ * @param id The game id of the old URL.
+ * @returns The route without the locale, or undefined when the old list has no such game.
+ */
+export function oldGameTarget(group: string, id: string): string | undefined {
+  const ids: readonly string[] | undefined = Object.hasOwn(OLD_GAME_PATHS, group) ? OLD_GAME_PATHS[group as keyof typeof OLD_GAME_PATHS] : undefined;
+  return ids?.includes(id) ? `/student/games/apk/${id}` : undefined;
+}
+
 /**
  * Finds the playable 3D game for a game id or a legacy 2D catalog id.
  * @param id The game id from a route, a quest template, or a challenge.

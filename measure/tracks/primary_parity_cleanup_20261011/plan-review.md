@@ -60,3 +60,16 @@ Low findings:
 - L-11. The status badge uses the English status word as the `data-status` value (the panel text is English only, as before).
 
 Shortcuts: none. Lessons: (1) `outputFileTracingExcludes` works only with the webpack build trace; check the build tool before the spec fallback. (2) After `pnpm install --lockfile-only`, check the full lockfile diff, because it can move unrelated peer suffixes. (3) The root `node_modules/.bin/vitest` runs app tests in a worktree without app-level `.bin` folders (run from the app folder).
+
+## Phase 7 review (old game URLs, STU-09)
+
+Critical and High findings: none. The redirect pages read only the route params; no data access, so no `schoolId` scope is needed.
+
+Low findings:
+
+- L-12. `oldGameTarget` uses `Object.hasOwn` so that a group such as `toString` gives `undefined`. A signed-out visitor gets the sign-in page first, as the spec says.
+- L-13. The redirect keeps no query string. An old URL has no query in the legacy app, so this is enough.
+
+Deviation: the pages have the return type `Promise<void>` (not `Promise<never>`), because the `permanentRedirect` type of next-intl does not return `never`.
+
+Shortcuts: none. Lessons: none.
