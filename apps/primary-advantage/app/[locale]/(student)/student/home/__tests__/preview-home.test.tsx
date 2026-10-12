@@ -16,6 +16,7 @@ const mocks = vi.hoisted(() => ({
   getStudentHome: vi.fn(),
   awardPowerUps: vi.fn(async (): Promise<unknown[]> => []),
   getStudentClassBooks: vi.fn(async (): Promise<unknown[]> => []),
+  listManagedClassBooks: vi.fn(async (): Promise<unknown[]> => []),
   getAvatarProfile: vi.fn(async (): Promise<unknown> => null),
   getStudentQuestCard: vi.fn(async (): Promise<unknown> => null),
   getVoiceEntitlement: vi.fn(async (): Promise<unknown> => ({ remainingSeconds: 300, budgetSeconds: 480, blockedBy: null })),
@@ -26,7 +27,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user, getCurrentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getStudentHome: mocks.getStudentHome }));
-vi.mock("@reading-advantage/domain/primary-books", () => ({ getStudentClassBooks: mocks.getStudentClassBooks }));
+vi.mock("@reading-advantage/domain/primary-books", () => ({ getStudentClassBooks: mocks.getStudentClassBooks, listManagedClassBooks: mocks.listManagedClassBooks }));
 // The home reads the avatar state (profile plus the worn pieces) for the hero portrait.
 vi.mock("@reading-advantage/domain/primary-avatar", () => ({
   getAvatarProfile: mocks.getAvatarProfile,
@@ -104,6 +105,24 @@ describe("student home in Preview mode (S3)", () => {
     expect(mocks.awardPowerUps).not.toHaveBeenCalled();
     expect(mocks.getVoiceEntitlement).not.toHaveBeenCalled();
     expect(mocks.getAvatarProfile).not.toHaveBeenCalled();
+  });
+
+  it("lists the class books that the staff member manages in place of the empty books notice", async () => {
+    mocks.listManagedClassBooks.mockResolvedValueOnce([
+      { classBookId: "cb1", classroomId: "c1", classroomName: "P4B", bookName: "Origins 3.2", currentLesson: 3, lessonCount: 14 },
+    ]);
+    await renderPreviewHome();
+    expect(screen.getByText("Origins 3.2")).toBeInTheDocument();
+    expect(screen.getByText("P4B")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: en.StudentHome.seeBook })).toHaveAttribute("href", "/student/books/cb1");
+    expect(screen.queryByText(en.StudentView.emptyBooks)).not.toBeInTheDocument();
+    expect(mocks.getStudentClassBooks).not.toHaveBeenCalled();
+  });
+
+  it("keeps the empty books notice when the books read fails", async () => {
+    mocks.listManagedClassBooks.mockRejectedValueOnce(new Error("db"));
+    await renderPreviewHome();
+    expect(screen.getByText(en.StudentView.emptyBooks)).toBeInTheDocument();
   });
 
   it("shows no leaderboard for a SYSTEM user with no school, and does not fail", async () => {
