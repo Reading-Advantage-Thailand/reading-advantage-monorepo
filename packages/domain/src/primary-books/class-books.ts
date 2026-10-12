@@ -23,6 +23,7 @@ import {
   type ClassBookPacing,
   type StudentBook,
   type StudentClassBook,
+  type TeacherBookSlot,
 } from "./class-book-contracts.js";
 import { APP_STEP_COUNT, WORKBOOK_STEPS, isAppStepUnlocked } from "./step-map.js";
 
@@ -171,23 +172,89 @@ export async function listClassBooks(params: Ctx & { classroomId: string }): Pro
     .where(eq(primaryClassBooks.classroomId, params.classroomId))
     .orderBy(asc(primaryClassBooks.createdAt))) as ClassBookRow[];
   const states = await lessonStates(params, rows.map((row) => row.id));
-  const titles = rows.length
-    ? await raw
-        .select({ bookId: primaryBookLessons.bookId, number: primaryBookLessons.number, title: primaryBookLessons.title })
-        .from(primaryBookLessons)
-        .where(or(...rows.map((row) => and(eq(primaryBookLessons.bookId, row.bookId), eq(primaryBookLessons.number, row.currentLesson)))))
-    : [];
-  return rows.map((row) => {
-    const own = states.get(row.id) ?? [];
-    const done = new Set(own.find((state) => state.lessonNumber === row.currentLesson)?.stepsDone ?? []);
-    const next = WORKBOOK_STEPS.find((step) => !done.has(step.step));
-    return {
-      ...toClassBook(row, own.filter((state) => state.taughtAt).length),
-      lessonTitle: titles.find((lesson) => lesson.bookId === row.bookId && lesson.number === row.currentLesson)?.title ?? null,
-      stepsDoneCount: done.size,
-      nextStep: next?.step ?? null,
-      nextStepPeriod: next?.period ?? null,
-    };
+  const titles = await currentLessonTitles(raw, rows);
+  return rows.map((row) => ({
+    ...toClassBook(row, (states.get(row.id) ?? []).filter((state) => state.taughtAt).length),
+    ...currentLessonProgress(row, states.get(row.id) ?? [], titles),
+  }));
+}
+
+/** The raw (unscoped) database handle of the class book reads. */
+type RawDb = ReturnType<ReturnType<typeof createTenantDB>["unscoped"]>;
+
+/**
+ * Reads the titles of the current lessons of class books.
+ * @param raw The unscoped database handle.
+ * @param rows The class books.
+ * @returns The lesson titles with their book and number.
+ */
+async function currentLessonTitles(raw: RawDb, rows: ClassBookRow[]): Promise<{ bookId: string; number: number; title: string }[]> {
+  if (!rows.length) return [];
+  return raw
+    .select({ bookId: primaryBookLessons.bookId, number: primaryBookLessons.number, title: primaryBookLessons.title })
+    .from(primaryBookLessons)
+    .where(or(...rows.map((row) => and(eq(primaryBookLessons.bookId, row.bookId), eq(primaryBookLessons.number, row.currentLesson)))));
+}
+
+/**
+ * Works out the current lesson title and the next workbook step of a class book.
+ * @param row The class book.
+ * @param own The lesson state rows of the class book.
+ * @param titles The titles of the current lessons.
+ * @returns The title, the count of steps done, and the next step with its period.
+ */
+function currentLessonProgress(row: ClassBookRow, own: { lessonNumber: number; stepsDone: number[] }[], titles: { bookId: string; number: number; title: string }[]) {
+  const done = new Set(own.find((state) => state.lessonNumber === row.currentLesson)?.stepsDone ?? []);
+  const next = WORKBOOK_STEPS.find((step) => !done.has(step.step));
+  return {
+    lessonTitle: titles.find((lesson) => lesson.bookId === row.bookId && lesson.number === row.currentLesson)?.title ?? null,
+    stepsDoneCount: done.size,
+    nextStep: next?.step ?? null,
+    nextStepPeriod: next?.period ?? null,
+  };
+}
+
+/**
+ * Lists one slot row for each class book of the teacher's classes and one row for each class
+ * without a book (the teacher dashboard). The class rule is the rule of `getTeacherHome`: classes
+ * the teacher owns or co-teaches in the school, not archived, ordered by name.
+ * @param params The database and the teacher.
+ * @returns The slot rows, grouped by class.
+ * @throws {AuthError} FORBIDDEN when the user cannot list classes (for example a student).
+ */
+export async function getTeacherBookSlots(params: Ctx): Promise<TeacherBookSlot[]> {
+  const { user } = params;
+  assertCan(user, "class:list", { schoolId: user.schoolId });
+  if (!user.schoolId) return [];
+  const raw = createTenantDB(params.db, { schoolId: user.schoolId }).unscoped(UNSCOPED_REASON);
+  const coTaughtIds = (await raw.select({ classroomId: classroomTeachers.classroomId }).from(classroomTeachers).where(eq(classroomTeachers.teacherId, user.id))).map((row) => row.classroomId);
+  const classRows = await raw
+    .select({ id: classrooms.id, name: classrooms.name })
+    .from(classrooms)
+    .where(
+      and(
+        eq(classrooms.schoolId, user.schoolId),
+        eq(classrooms.archived, false),
+        coTaughtIds.length ? or(eq(classrooms.teacherId, user.id), inArray(classrooms.id, coTaughtIds)) : eq(classrooms.teacherId, user.id),
+      ),
+    )
+    .orderBy(asc(classrooms.name));
+  if (!classRows.length) return [];
+  const bookRows = (await raw
+    .select(classBookSelect)
+    .from(primaryClassBooks)
+    .innerJoin(primaryBooks, eq(primaryBooks.id, primaryClassBooks.bookId))
+    .where(inArray(primaryClassBooks.classroomId, classRows.map((row) => row.id)))
+    .orderBy(asc(primaryClassBooks.createdAt))) as ClassBookRow[];
+  const states = await lessonStates(params, bookRows.map((row) => row.id));
+  const titles = await currentLessonTitles(raw, bookRows);
+  return classRows.flatMap((cls): TeacherBookSlot[] => {
+    const own = bookRows.filter((row) => row.classroomId === cls.id);
+    if (!own.length) return [{ classroomId: cls.id, classroomName: cls.name, classBookId: null, bookName: null, currentLesson: null, lessonCount: null, lessonTitle: null, nextStep: null, nextStepPeriod: null }];
+    return own.map((row) => {
+      const progress = currentLessonProgress(row, states.get(row.id) ?? [], titles);
+      return { classroomId: cls.id, classroomName: cls.name, classBookId: row.id, bookName: row.bookName, currentLesson: row.currentLesson, lessonCount: row.lessonCount, lessonTitle: progress.lessonTitle, nextStep: progress.nextStep, nextStepPeriod: progress.nextStepPeriod };
+    });
   });
 }
 

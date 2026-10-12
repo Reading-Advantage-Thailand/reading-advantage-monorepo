@@ -37,6 +37,26 @@ export const classBookSchema = z.object({
 });
 export type ClassBook = z.infer<typeof classBookSchema>;
 
+/**
+ * One row of the book slot on the teacher dashboard: a class book, or a class with no book
+ * (`classBookId` is null and the book fields are null).
+ */
+export const teacherBookSlotSchema = z.object({
+  classroomId: z.string(),
+  classroomName: z.string(),
+  classBookId: z.string().nullable(),
+  bookName: z.string().nullable(),
+  currentLesson: z.number().int().min(1).nullable(),
+  lessonCount: z.number().int().nullable(),
+  /** Title of the current lesson; null when the catalogue lacks it. */
+  lessonTitle: z.string().nullable(),
+  /** First workbook step (1-13) of the current lesson not done, or null. */
+  nextStep: z.number().int().nullable(),
+  /** Period (1-4) of the next step, or null. */
+  nextStepPeriod: z.number().int().nullable(),
+});
+export type TeacherBookSlot = z.infer<typeof teacherBookSlotSchema>;
+
 /** Input of `setCurrentLesson`. */
 export const setCurrentLessonInput = z.object({ classBookId: z.string().uuid(), lessonNumber: z.number().int().min(1) });
 
