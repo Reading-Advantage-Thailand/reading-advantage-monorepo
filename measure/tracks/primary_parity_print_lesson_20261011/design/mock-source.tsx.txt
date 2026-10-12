@@ -1,0 +1,108 @@
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { ArrowLeftIcon, PresentationIcon, PrinterIcon, UserRoundIcon } from "lucide-react";
+import { Panel, RpgButton, RpgLink, Sign, Bubble } from "@/components/rpg/chrome";
+import { Scene } from "@/components/rpg/scene";
+import { Sprite } from "@/components/rpg/sprite";
+import { buttonVariants } from "@/components/ui/button";
+import { TEACHER_ACTION, TEACHER_BACK_LINK, TEACHER_CARD, TeacherPageHeader } from "@/components/teacher/teacher-shell";
+import { cn } from "@/lib/utils";
+
+/* Mock of "Print this lesson" (track primary_parity_print_lesson_20261011, Phase D).
+   Demo data only. English and Thai demo text; the real keys are proposed in design/design.md. */
+
+const HOST = "/rpg/kit/npc/quest-giver-idle-strip.png";
+const T = {
+  en: { title: "Lesson 5 · The Big Storm", book: "Primary Advantage Origins 3.2", back: "Back to the lesson plan", projector: "Projector", rehearsal: "Rehearsal (student view)", print: "Print this lesson",
+    notReady: "The print version of this lesson is not ready yet.", printNow: "Print", loading: "Loading the pictures…", backLesson: "Back to the lesson", ready: "Ready!", wait: "Hold on…", notYet: "Not yet!",
+    notReadyPage: "The print version is not ready", notReadyBody: "This lesson has no print version yet. Use the projector or the lesson guide.", hint: "Choose A4 paper. Turn off “Headers and footers” in the print window." },
+  th: { title: "บทที่ 5 · พายุใหญ่", book: "Primary Advantage Origins 3.2", back: "กลับไปที่แผนการสอน", projector: "โปรเจกเตอร์", rehearsal: "ซ้อม (มุมมองนักเรียน)", print: "พิมพ์บทเรียนนี้",
+    notReady: "ยังไม่มีฉบับพิมพ์ของบทเรียนนี้", printNow: "พิมพ์", loading: "กำลังโหลดรูปภาพ…", backLesson: "กลับไปที่บทเรียน", ready: "พร้อมแล้ว!", wait: "รอสักครู่…", notYet: "ยังไม่พร้อม!",
+    notReadyPage: "ยังไม่มีฉบับพิมพ์", notReadyBody: "บทเรียนนี้ยังไม่มีฉบับพิมพ์ ใช้โปรเจกเตอร์หรือคู่มือบทเรียนแทน", hint: "เลือกกระดาษ A4 และปิด “ส่วนหัวและส่วนท้าย” ในหน้าต่างพิมพ์" },
+};
+type L = keyof typeof T;
+const act = (v: "outline") => cn(buttonVariants({ variant: v }), TEACHER_ACTION);
+
+/** The teacher lesson page head with the three actions (stand-in for the real page; same components). */
+function LessonPage({ l, withPrint }: { l: L; withPrint: boolean }) {
+  const t = T[l];
+  return (
+    <div className="bg-background text-foreground min-h-screen">
+      <div className="container mx-auto flex flex-col gap-6 px-4 py-6">
+        <TeacherPageHeader title={t.title} description={t.book}
+          back={<a href="#" className={TEACHER_BACK_LINK}><ArrowLeftIcon aria-hidden="true" />{t.back}</a>}
+          actions={<>
+            <a href="#" className={act("outline")}><PresentationIcon aria-hidden="true" />{t.projector}</a>
+            <a href="#" className={act("outline")}><UserRoundIcon aria-hidden="true" />{t.rehearsal}</a>
+            {withPrint ? <a href="#" className={act("outline")}><PrinterIcon aria-hidden="true" />{t.print}</a> : null}
+          </>} />
+        {withPrint ? null : <p className="text-muted-foreground text-sm" data-print-not-ready>{t.notReady}</p>}
+        <section className={TEACHER_CARD}><h2 className="text-lg font-semibold">Guide</h2><p className="text-muted-foreground text-sm">(the guide steps follow here)</p></section>
+      </div>
+    </div>
+  );
+}
+
+/** A neutral stand-in for the Workbooks page: an A4 sheet drawn at 794 px and scaled to the frame. */
+function Sheet() {
+  const line = (w: string) => <div style={{ height: 10, width: w, background: "#d9d3c7", borderRadius: 3, marginTop: 12 }} />;
+  return (
+    <div className="cq-sheet-wrap" style={{ overflow: "hidden", background: "#2b2b2b", borderRadius: 8, padding: 12 }}>
+      <style>{`.cq-sheet{width:794px;zoom:.36}@media(min-width:640px){.cq-sheet{zoom:.92}}`}</style>
+      {[1, 2].map((p) => (
+        <div key={p} className="cq-sheet" style={{ background: "#fff", color: "#222", margin: "0 auto 16px", height: 1123, padding: "76px", fontFamily: "sans-serif", position: "relative" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, color: "#666", borderBottom: "2px solid #c9b88f", paddingBottom: 8 }}><span>Primary Advantage • Origins 3.2</span><span>Lesson 5</span></div>
+          <h3 style={{ fontSize: 34, fontWeight: 700, marginTop: 28 }}>{p === 1 ? "Step 1 · Warm-up" : "Step 2 · Vocabulary"}</h3>
+          <div style={{ height: 260, background: "#efe6d0", border: "2px dashed #b9a572", borderRadius: 12, marginTop: 24, display: "grid", placeItems: "center", color: "#8a7a4d", fontSize: 18 }}>Sample picture (placeholder)</div>
+          {line("92%")}{line("84%")}{line("88%")}{line("60%")}
+          <div style={{ position: "absolute", bottom: 40, left: 0, right: 0, textAlign: "center", fontSize: 13, color: "#888" }}>{p}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** The print page: library scene, one parchment panel, the frame, gold Print, iron Back. */
+function PrintPage({ l, state }: { l: L; state: "ready" | "loading" | "none" }) {
+  const t = T[l];
+  return (
+    <Scene place="library" className="min-h-screen px-4 py-6">
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-4">
+        <div className="flex flex-wrap items-center gap-3"><Sign>{t.title}</Sign></div>
+        <Panel className="w-full" data-print-page>
+          <div className="flex items-center gap-3">
+            <Sprite src={HOST} size={72} className="shrink-0" />
+            <Bubble>{state === "ready" ? t.ready : state === "loading" ? t.wait : t.notYet}</Bubble>
+          </div>
+          {state === "none" ? (
+            <div role="alert" className="flex flex-col gap-2"><h1 className="text-xl font-bold">{t.notReadyPage}</h1><p>{t.notReadyBody}</p></div>
+          ) : (
+            <>
+              <h1 className="sr-only">{t.title}</h1>
+              <div data-print-frame><Sheet /></div>
+              <p className="text-sm" style={{ color: "var(--cq-ink-soft, inherit)" }}>{t.hint}</p>
+            </>
+          )}
+          <div className="flex flex-wrap items-center gap-3">
+            {state === "none" ? null : state === "loading"
+              ? <RpgButton tone="gold" disabled aria-disabled="true">{t.loading}</RpgButton>
+              : <RpgButton tone="gold"><PrinterIcon aria-hidden="true" className="size-5" />{t.printNow}</RpgButton>}
+            <RpgLink tone="iron" href="#"><ArrowLeftIcon aria-hidden="true" className="size-5" />{t.backLesson}</RpgLink>
+          </div>
+        </Panel>
+      </div>
+    </Scene>
+  );
+}
+
+export const states: Record<string, React.ReactNode> = {
+  "lesson-with-print": <LessonPage l="en" withPrint />,
+  "lesson-no-print": <LessonPage l="en" withPrint={false} />,
+  "lesson-with-print-th": <LessonPage l="th" withPrint />,
+  "print-ready": <PrintPage l="en" state="ready" />,
+  "print-loading": <PrintPage l="en" state="loading" />,
+  "print-not-ready": <PrintPage l="en" state="none" />,
+  "print-ready-th": <PrintPage l="th" state="ready" />,
+};
+export async function init() {}
+export const render = (k: string) => renderToStaticMarkup(<div>{states[k]}</div>);

@@ -4,6 +4,9 @@ import { getTranslations } from "next-intl/server";
 import FlashcardDashboard from "@/components/flashcards/flashcard-dashboard";
 import { FlashcardDeckSkeleton } from "@/components/flashcards/flashcard-dashboard-skeleton";
 import { Scene } from "@/components/rpg/scene";
+import { currentUser } from "@/lib/session";
+import { isStudentWriter } from "@/lib/student-view";
+import { PreviewNotice } from "@/components/student/preview-notice";
 
 /**
  * Page title for the vocabulary page.
@@ -20,7 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
  * @returns The page.
  */
 export default async function VocabularyPage() {
-  const t = await getTranslations("Flashcards");
+  const [t, user] = await Promise.all([getTranslations("Flashcards"), currentUser()]);
+  const preview = user !== null && !isStudentWriter(user);
   // The spellbook in the wizard tower (docs/primary-rpg-skin.md §4).
   return (
     <Scene place="wizard-tower">
@@ -28,9 +32,11 @@ export default async function VocabularyPage() {
         <h1 className="text-2xl font-bold md:text-3xl">{t("vocabularyTitle")}</h1>
         <p>{t("vocabularySubtitle")}</p>
       </header>
+      {preview ? <PreviewNotice titleKey="emptyTitle" lineKey="emptyVocabulary" /> : (
       <Suspense fallback={<div aria-busy="true"><FlashcardDeckSkeleton /></div>}>
         <FlashcardDashboard type="VOCABULARY" />
       </Suspense>
+      )}
     </Scene>
   );
 }

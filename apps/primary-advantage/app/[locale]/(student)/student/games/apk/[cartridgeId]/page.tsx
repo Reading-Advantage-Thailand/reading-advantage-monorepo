@@ -7,6 +7,7 @@ import { GameHost } from "@/components/games/game-host";
 import { redirect } from "@/i18n/navigation";
 import { gameFor } from "@/lib/games/catalog";
 import { getCurrentUser } from "@/lib/session";
+import { isStudentWriter } from "@/lib/student-view";
 
 type AuthenticatedApkPageProps = {
   params: Promise<{ locale: string; cartridgeId: string }>;
@@ -58,7 +59,7 @@ export default async function PrimaryApkGamePage({
         locale={locale}
         ownerKey={ownerKey}
         challengeId={challengeIdResult.data}
-        save={modeResult.data !== "demo"}
+        save={modeResult.data !== "demo" && isStudentWriter(user)}
         avatar={avatar}
         className="flex h-full w-full flex-col"
       />

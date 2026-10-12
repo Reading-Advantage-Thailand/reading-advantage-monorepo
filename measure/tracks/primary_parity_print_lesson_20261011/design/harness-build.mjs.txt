@@ -1,0 +1,14 @@
+import { build } from "esbuild";
+import postcss from "postcss";
+import tw from "@tailwindcss/postcss";
+import fs from "node:fs";
+const R = "/home/daniebo/Desktop/rama-worktrees/parity-b", A = R + "/apps/primary-advantage", H = process.cwd();
+await build({ entryPoints: [H + "/mock.tsx"], bundle: true, platform: "node", format: "cjs", outfile: H + "/out/mock.cjs", jsx: "automatic", nodePaths: [R + "/node_modules"],
+  alias: { "@/i18n/navigation": H + "/nav-stub.tsx", "next-intl/server": H + "/next-intl-server-stub.tsx", "@": A }, logLevel: "error" });
+const { states, render, init } = (await import("node:module")).createRequire(import.meta.url)(H + "/out/mock.cjs");
+await init();
+fs.writeFileSync(H + "/in.css", `@import "${A}/styles/globals.css";\n@source "${H}/mock.tsx";\n@source "${A}/components/rpg";\n@source "${A}/components/teacher";\n@source "${A}/components/ui";\n`);
+const css = (await postcss([tw({ base: A })]).process(fs.readFileSync(H + "/in.css", "utf8"), { from: H + "/in.css" })).css;
+fs.mkdirSync(H + "/out/html", { recursive: true });
+for (const k of Object.keys(states)) fs.writeFileSync(`${H}/out/html/${k}.html`, `<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><style>${css}</style></head><body>${render(k)}</body></html>`);
+console.log(Object.keys(states).join(" "), css.length);

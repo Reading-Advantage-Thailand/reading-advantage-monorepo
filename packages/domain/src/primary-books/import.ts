@@ -20,6 +20,7 @@ import { GRAPH_RELEASE } from "../primary-mastery/objective-key.js";
 import { LEGACY_ARTICLE_TABLE } from "../primary-mastery/backfill.js";
 import { BOOKS, hasTags, legacyArticleIdOf, splitKey, toArticleRow, toFlashcardRow, toLessonPackageJson, toQuestionRows, toTagRows, type QuestionRows } from "./mapping.js";
 import type { LessonPackage } from "./package-schema.js";
+import { printLessonSchema, type PrintLesson } from "./print/contracts.js";
 
 /** Options of one package import. */
 export interface ImportLessonPackageOptions {
@@ -32,6 +33,10 @@ export interface ImportLessonPackageOptions {
   dryRun?: boolean;
   /** Makes the uuid of a new article. Tests replace it. */
   newId?: () => string;
+  /** The Workbooks print file of this lesson: its path (for messages) and its parsed JSON. */
+  printFile?: { source: string; content: unknown };
+  /** The Workbooks commit of the print export; stored with the print data. */
+  workbooksCommit?: string;
 }
 
 /**
@@ -44,7 +49,9 @@ export interface ImportLessonPackageOptions {
  * and its flashcard row, all written in one transaction; a draft one waits (catalogue only). A
  * level-bank article is skipped. The objective and vocabulary link rows (FR-4 of
  * primary_objective_tags_20261006) are written with the questions; a linked legacy article gets
- * its article-level links only, since its question rows belong to Tutor and the backfill.
+ * its article-level links only, since its question rows belong to Tutor and the backfill. A print
+ * file is validated before any write and stored as `package.printLesson`; a lesson without one
+ * stores none.
  * @param options The database, the package, the source path, and the dry-run switch.
  * @returns What the importer did with the lesson.
  */
@@ -54,8 +61,9 @@ export async function importLessonPackage(options: ImportLessonPackageOptions): 
   const newId = options.newId ?? (() => crypto.randomUUID());
   const { bookKey, number } = splitKey(pkg.meta.key);
   const approved = pkg.approval?.lesson?.status === "approved";
-  const base = { key: pkg.meta.key, title: pkg.meta.title, bookKey, number, legacyArticleId: legacyArticleIdOf(pkg), approved, tagged: false };
+  const base = { key: pkg.meta.key, title: pkg.meta.title, bookKey, number, legacyArticleId: legacyArticleIdOf(pkg), approved, tagged: false, printed: false };
   if (pkg.meta.role !== "workbook") return { ...base, action: "skipped", articleId: null, reason: `role ${pkg.meta.role}` };
+  const printLesson = options.printFile ? parsePrintFile(options.printFile, pkg.meta.key, options.workbooksCommit) : null;
   const tagged = hasTags(pkg);
   if (tagged) toTagRows(pkg, "00000000-0000-4000-8000-000000000000", null, { gse: "check", vocabulary: "check" }); // validate the short ids before any write
   if (number !== pkg.meta.number) throw new Error(`${pkg.meta.key}: meta.number ${pkg.meta.number} does not match the key`);
@@ -88,8 +96,23 @@ export async function importLessonPackage(options: ImportLessonPackageOptions): 
     action = "catalogue-only";
   }
 
-  if (!dryRun) await upsertCatalogue(db, pkg, { bookKey, number, articleId, sourceFile, book, approved });
-  return { ...base, action, articleId, tagged: tagged && (action === "new-article" || action === "linked") };
+  if (!dryRun) await upsertCatalogue(db, pkg, { bookKey, number, articleId, sourceFile, book, approved, printLesson });
+  return { ...base, action, articleId, printed: printLesson !== null, tagged: tagged && (action === "new-article" || action === "linked") };
+}
+
+/**
+ * Validates a Workbooks print file against the contract and against the package it belongs to.
+ * @param file The print file path and parsed JSON.
+ * @param key The package key the file must name.
+ * @param workbooksCommit The Workbooks commit of the export, stored with the data.
+ * @returns The validated print data.
+ * @throws With the file path when the file breaks the contract or names another lesson.
+ */
+function parsePrintFile(file: { source: string; content: unknown }, key: string, workbooksCommit?: string): PrintLesson {
+  const parsed = printLessonSchema.safeParse(workbooksCommit && file.content && typeof file.content === "object" ? { ...file.content, workbooksCommit } : file.content);
+  if (!parsed.success) throw new Error(`${file.source}: invalid print data: ${parsed.error.issues.map((issue) => `${issue.path.join(".")} ${issue.message}`).join("; ")}`);
+  if (parsed.data.packageKey !== key) throw new Error(`${file.source}: print data is for ${parsed.data.packageKey}, not ${key}`);
+  return parsed.data;
 }
 
 /**
@@ -195,7 +218,7 @@ async function insertQuestions(tx: Pick<DB, "insert">, pkg: LessonPackage, artic
 async function upsertCatalogue(
   db: DB,
   pkg: LessonPackage,
-  lesson: { bookKey: string; number: number; articleId: string | null; sourceFile: string; book: (typeof BOOKS)[string]; approved: boolean },
+  lesson: { bookKey: string; number: number; articleId: string | null; sourceFile: string; book: (typeof BOOKS)[string]; approved: boolean; printLesson: PrintLesson | null },
 ): Promise<void> {
   await db.transaction(async (tx) => {
     const [series] = await tx
@@ -217,7 +240,7 @@ async function upsertCatalogue(
       legacyArticleId: legacyArticleIdOf(pkg),
       sourceFile: lesson.sourceFile,
       approved: lesson.approved,
-      package: toLessonPackageJson(pkg),
+      package: toLessonPackageJson(pkg, lesson.printLesson),
       importedAt: new Date(),
     };
     await tx.insert(primaryBookLessons).values(values).onConflictDoUpdate({ target: primaryBookLessons.key, set: values });

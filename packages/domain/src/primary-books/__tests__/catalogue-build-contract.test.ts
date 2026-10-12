@@ -84,4 +84,10 @@ describe("Primary catalogue Cloud Build", () => {
   it("redacts database URLs from the printed lines", () => {
     expect(importStep).toContain("postgres(ql)?://");
   });
+
+  it("documents the print files of the archive layout and passes the export commit", () => {
+    const header = CLOUDBUILD.split("\nsteps:")[0];
+    expect(header).toContain("content/primary/{origins-1,origins-2,origins-3.1,origins-3.2,quest-4}/print/*.json");
+    expect(importStep).toContain("--workbooks-commit");
+  });
 });

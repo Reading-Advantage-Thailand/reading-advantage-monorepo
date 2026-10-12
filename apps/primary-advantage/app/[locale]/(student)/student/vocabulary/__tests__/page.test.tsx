@@ -15,6 +15,7 @@ vi.mock("next-intl/server", async () => {
       createTranslator({ locale: mocks.locale, messages: messages[mocks.locale as TestLocale], namespace: namespace as never }),
   };
 });
+vi.mock("@/lib/session", () => ({ currentUser: async () => ({ id: "s1", role: "STUDENT", schoolId: "school-1" }) }));
 vi.mock("@/actions/flashcard", () => ({ getAllSentenceCards: async () => ({ success: true, cards: [] }) }));
 vi.mock("@/components/flashcards/flashcard-dashboard", () => ({
   default: ({ type }: { type: string }) => <div data-testid="flashcard-dashboard" data-type={type} />,

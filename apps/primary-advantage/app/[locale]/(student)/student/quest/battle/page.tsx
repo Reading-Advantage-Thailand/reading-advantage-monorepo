@@ -11,6 +11,8 @@ import {
 } from "@reading-advantage/domain/primary-quest";
 import { gameFor } from "@/lib/games/catalog";
 import { currentUser } from "@/lib/session";
+import { isStudentWriter } from "@/lib/student-view";
+import { PreviewNotice } from "@/components/student/preview-notice";
 import { redirect } from "@/i18n/navigation";
 import { BattleClient } from "@/components/quest/battle-client";
 import { Panel, RpgLink } from "@/components/rpg/chrome";
@@ -33,8 +35,10 @@ export default async function QuestBattlePage() {
   const user = await currentUser();
   if (!user)
     return redirect({ href: "/auth/signin", locale: await getLocale() });
+  // Preview mode (staff): the not-in-a-class state; no battle state is read.
+  const preview = !isStudentWriter(user);
   const [state, t] = await Promise.all([
-    getBattleState({ db, user }).catch(() => null),
+    preview ? null : getBattleState({ db, user }).catch(() => null),
     getTranslations("Quest.battle"),
   ]);
   const template = state ? questTemplate(state.quest.templateId) : undefined;
@@ -42,8 +46,9 @@ export default async function QuestBattlePage() {
   if (!state || !template || !game || !user.schoolId) {
     return (
       <Scene place="boss-arena">
+        {preview ? <PreviewNotice titleKey="questNoClass" lineKey="emptyQuest" /> : null}
         <Panel className="items-center text-center">
-          <p className="text-lg font-bold">{t("none")}</p>
+          {preview ? null : <p className="text-lg font-bold">{t("none")}</p>}
           <RpgLink href="/student/home" tone="iron">
             {t("home")}
           </RpgLink>

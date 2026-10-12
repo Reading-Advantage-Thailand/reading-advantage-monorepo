@@ -11,6 +11,9 @@ import ManageTab from "@/components/manage-tab";
 import { getAllSentenceCards } from "@/actions/flashcard";
 import MatchingGamePage from "@/components/practice/matching-page";
 import { Scene } from "@/components/rpg/scene";
+import { currentUser } from "@/lib/session";
+import { isStudentWriter } from "@/lib/student-view";
+import { PreviewNotice } from "@/components/student/preview-notice";
 
 /** Practice tabs in display order, with their message keys in SentencesPage. */
 const TABS = [
@@ -38,8 +41,10 @@ export async function generateMetadata(): Promise<Metadata> {
  * @returns The page.
  */
 export default async function SentencesPage() {
+  const user = await currentUser();
+  const preview = user !== null && !isStudentWriter(user);
   const [flashcardsResult, t, tPage] = await Promise.all([
-    getAllSentenceCards(),
+    preview ? { cards: [] } : getAllSentenceCards(),
     getTranslations("Flashcards"),
     getTranslations("SentencesPage"),
   ]);
@@ -51,7 +56,8 @@ export default async function SentencesPage() {
         <h1 className="text-2xl font-bold md:text-3xl">{t("sentencesTitle")}</h1>
         <p>{t("sentencesSubtitle")}</p>
       </header>
-      <Tabs defaultValue="flashcard" className="gap-4">
+      {preview ? <PreviewNotice titleKey="emptyTitle" lineKey="emptySentences" /> : null}
+      {preview ? null : <Tabs defaultValue="flashcard" className="gap-4">
         <TabsList
           aria-label={t("practiceTabs")}
           className="cq-tabs h-auto w-full justify-start overflow-x-auto"
@@ -82,7 +88,7 @@ export default async function SentencesPage() {
         <TabsContent value="manage">
           <ManageTab data={flashcardsResult.cards || []} />
         </TabsContent>
-      </Tabs>
+      </Tabs>}
     </Scene>
   );
 }

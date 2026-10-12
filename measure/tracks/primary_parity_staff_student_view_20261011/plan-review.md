@@ -99,3 +99,77 @@ Shortcuts: the client games rely on the server guards for safety. Deviation: the
 page skip; the domain split made the page skip unnecessary. Lesson: a hand-written test user without a
 role breaks once a role guard exists; give every mock user a role. A `pkill -f vitest` inside a Bash
 call matches its own shell and kills it; use `ps` and `kill` with the pid.
+
+## Phase S3 review (2026-10-12)
+
+Phase start sha: `93e6ab2e4`. Review of `git diff 93e6ab2e4..HEAD` for the files of this track.
+
+Plan compliance: all tasks done. Staff read no row of their own on home, avatar, shop, history, reports,
+sentences, vocabulary, Class Quest, Reedy, and both game pages. Each page shows one `PreviewNotice`.
+Security: the mode is `isStudentWriter(user)` (session role). The practice route gives the sample set to
+TEACHER, ADMIN, and SYSTEM only (`studentViewModeFor`); INTERN and an unknown role keep the 403. The
+sample query reads global tables (published articles) and no user row, and writes nothing. `listAvatarShop`
+reads no inventory row for staff and works without a school. Student paths are unchanged (tests).
+Tests: domain 41 pass (avatar and saved items); app `lib components app messages actions` 239 files,
+1595 tests pass; `tsc --noEmit` clean; eslint on the changed files clean; key parity of `StudentView` in 5 locales.
+
+| Level | Finding | Action |
+| --- | --- | --- |
+| Medium | The avatar page shows the picker for staff; the inventory (`AvatarHome`, Wear) is not shown, because staff own nothing. | None; the shop shows the pieces. |
+| Medium | Copy keys added in S3 (`emptyTitle`, `homeHeroTitle`, `homeHeroLine`, `emptyLesson`, `emptyBooks`, `emptyReading`, `emptyQuest`, `emptyHistory`, `emptyReports`, `emptySentences`, `emptyVocabulary`, `questNoClass`, `reedyStudentsOnly`, `reedyStudentsOnlyLine`, `gameSampleWords`) use English text in `th`, `cn`, `tw`, `vi`. | Owner translation pass. |
+| Medium | The game host shows no "sample words" line inside the game; only the Word adventures page shows the notice (`gameSampleWords`). The apk game page runs full screen with `save={false}`. | Phase A look check. |
+| Low | The shop level is 1 for staff, so higher tier pieces show as locked. | Intended (what a new student sees). |
+| Low | The home still calls the leaderboard controller for staff with a school (a read of the school list, not of the staff row). | Intended (spec). |
+| Low | Another session changed `server/controllers/assignment*` files in this worktree during the phase; they are not part of this phase and were not staged. | None. |
+
+Shortcuts: none. Deviation: `previewHomeModel()` has no parameter; the sample set reuses `practiceInputSchema`.
+Lesson: pages that call `useTranslations` through a shared server component need `renderWithMessages` in
+their page tests; the red run must happen before the code, including for lib helpers (two helpers existed
+before the first red run).
+
+## Phase S4 review (2026-10-12)
+
+Phase start sha: `192f6d231`. Review of the commits `3f1e25218`, `fdb66698f`, `ff8ec62f2`.
+
+Plan compliance: all tasks done. New reads: `getPreviewBook` (built on `managedClassBook`) and
+`listManagedClassBooks`, both exported with Zod output and JSDoc. The reads write nothing (tests assert no insert and no update).
+
+Security: errors for another teacher, another school, an unknown book, and a student are the existing
+FORBIDDEN `AuthError` (the page turns each one into 404). The list reads classes of the user school only; a
+user without a school gets none, with no query. Role comes from `users.role`. No new copy key.
+
+Tests: domain 8 tests (red: 8 failed), app 4 tests in 2 files (red: 4 failed). Class book domain tests (34) still pass. App type check clean.
+
+| Level | Finding | Action |
+| --- | --- | --- |
+| Low | The preview book is in `independent` mode; the current lesson stays marked, taught marks never show. | Default of the spec D7. |
+| Low | `listManagedClassBooks` has no `assertCan`; it checks the role list in code, like `managedClass`. | Keep. |
+| Low | The lesson page still calls `getStudentClassBooks` for staff (returns none). | Not changed. |
+| Low | The home managed-book card prints the class name raw (user data, not copy). | Keep. |
+| Low | `doctor.sh` A13 fails (old archived track directory). | Not from this track. |
+
+Shortcuts: none. Deviation: the lesson link check is by reading the code (no new link test); the links are
+`/student/...` paths under the layout that S1 opens for staff. `packages/domain/src/primary-books/index.ts` got a
+hunk from helper B2; I staged only my hunk. Lesson: stage one hunk of a shared file with `git apply --cached --unidiff-zero`.
+
+## Phase A review (2026-10-12)
+
+Phase start sha: `7ef52a1ae`. Review of the commits `e3c23f0fb` and `ada61096a`, and the files of this track.
+
+Plan compliance: prepare tasks done (pairs, SQL, cutover block, `acceptance.md`, `metadata.json`). The kit run and the
+captures stay `[ ]` with "batch capture (orchestrator)". The pair list parses with `PairList` (19 pairs).
+Security: the pairs hold no password, token, or class code. The SQL is read only and prints counts and one XP number.
+The cutover block only opens pages (GET). It writes nothing and prints no page text.
+Tests: `scripts/primary-parity` 8 files, 99 tests pass (red run first for the new helper: 1 file failed).
+
+| Level | Finding | Action |
+| --- | --- | --- |
+| Medium | `acceptance-data-checks.sql` reads `primary_lesson_attempts` (migration 0073). It fails on a copy without that migration. | Batch: migrate the copy first. |
+| Medium | Pairs SSV-A17 and SSV-A18 need a teacher with an assigned class book. | Batch: run the class book check first. |
+| Low | The block expects `[data-preview-banner] a` to be the Exit link and `[data-preview-notice]` on seven pages; no live run was made. | Batch run confirms. |
+| Low | Runbook section 10 does not name the "staff ..." block yet. | Orchestrator adds one line when it merges. |
+| Low | The 15 S3 copy keys stay English in th, cn, tw, vi. | Owner translation pass. |
+
+Shortcuts: none. Deviation: the block checks for the notice on the seven pages that render `PreviewNotice`; avatar, shop,
+games, and Read have the banner only. Lesson: `vitest` runs from the worktree root with `node_modules/.bin/vitest`
+for files under `scripts/`.

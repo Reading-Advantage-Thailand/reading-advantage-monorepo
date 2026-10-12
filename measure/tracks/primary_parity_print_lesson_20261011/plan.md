@@ -5,51 +5,60 @@ after `primary_parity_class_books_20261011` (the catalogue build and the lesson 
 monorepo session before any write to `primary-parity-integration`. Run one heavy job at a time.
 Every task follows the TDD order of `measure/workflow.md`.
 
-## Phase D: Design (RPG skin)
+## Phase D: Design (RPG skin) [checkpoint: 545e337af]
 
-- [ ] Task: Send the message to the Workbooks session
+- [x] Task: Send the message to the Workbooks session (sent 2026-10-12 by the orchestrator; answer pending)
     - [ ] Send the text of spec "Message to the Workbooks session" through the monorepo session; record the answer in `measure/tracks/primary_parity_print_lesson_20261011/workbooks-coordination.md`
-- [ ] Task: Design the print entry and the print page
-    - [ ] Draw the "Print this lesson" button on the lesson page next to "Projector" and "Rehearsal"
-    - [ ] Draw the print page: the preview frame, the gold "Print" button (active after the pictures load), the iron "Back to the lesson" button, and the "print version not ready" text; reuse `components/rpg/chrome.tsx`
-- [ ] Task: Captures and the owner's look check
-    - [ ] Capture at 375 px and 1280 px, day and night, into `measure/tracks/primary_parity_print_lesson_20261011/design/`
-    - [ ] Record the owner's answer and the answers to the Member Questions in `design/look-check.md`
-- [ ] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+- [x] Task: Design the print entry and the print page
+    - [x] Draw the "Print this lesson" button on the lesson page next to "Projector" and "Rehearsal"
+    - [x] Draw the print page: the preview frame, the gold "Print" button (active after the pictures load), the iron "Back to the lesson" button, and the "print version not ready" text; reuse `components/rpg/chrome.tsx`
+- [x] Task: Captures and the owner's look check
+    - [x] Capture at (28 PNG files in `~/Desktop/primary-parity-progress/captures/print_lesson/phaseD-design/`; list in `design/captures.md`) 375 px and 1280 px, day and night, into `measure/tracks/primary_parity_print_lesson_20261011/design/`
+    - [x] Record the owner (look check pending (owner, async); defaults below)'s answer and the answers to the Member Questions in `design/look-check.md`
+- [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md) - look check pending (owner, async)
+    - Steps: open the captures in `design/captures.md`; check the `lesson-with-print-*` button beside Projector and Rehearsal;
+      check `print-ready`, `print-loading`, and `print-not-ready` at 375 px and 1280 px, day and night.
+    - Member Question defaults used: (1) print data from the Workbooks export; (2) no answer key page, no "with the answer key" choice; (3) the template, not the 70 PDFs.
 
-## Phase S1: Copy the Workbooks primary template into a print kit
+## Phase S1: Copy the Workbooks primary template into a print kit [checkpoint: aa2ec371e]
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Define the kit contract
-    - [ ] `printKitSchema` (template, icons, CSS, source repo, commit, commit date) in `packages/domain/src/primary-books/print/contracts.ts`
-    - [ ] The allowlist of Workbooks paths in `packages/domain/scripts/sync-print-kit.ts` (template, `lib/document-wrapper/icons.ts`, `lib/document-wrapper/styles.ts`, `lib/document-wrapper/utils.ts`, `assets/print-fonts/*.woff2`, `assets/print-fonts/OFL-*.txt`)
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/print/__tests__/kit-guard.test.ts`: no `<script>`, no external URL, only allowlisted font files; a counterexample fixture fails the guard
-    - [ ] `packages/domain/src/primary-books/__tests__/sync-print-kit.test.ts`: a dirty kit path stops the script; `--check` exits 1 for a newer commit (a temporary git repository as the fixture)
-- [ ] Task: Implement the sync script (green)
-    - [ ] `packages/domain/scripts/sync-print-kit.ts` (`git show <commit>:<path>`; the CSS of `getPrintStyles` for A4 with no cover; the icon map); the `pnpm` script in `packages/domain/package.json`
-    - [ ] Run it once on the Workbooks head; commit `packages/domain/src/primary-books/print/kit.generated.ts` and `apps/primary-advantage/public/print-fonts/`
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; the sync and check commands in the script header; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Copy the Workbooks primary template into a print kit' (Protocol in workflow.md)
+- [x] Task: Define the kit contract
+    - [x] `printKitSchema` (template, icons, CSS, source repo, commit, commit date) in `packages/domain/src/primary-books/print/contracts.ts`
+    - [x] The allowlist of Workbooks paths in `packages/domain/scripts/sync-print-kit.ts` (template, `dashboard/lib/document-wrapper/icons.ts`, `dashboard/lib/document-wrapper/styles.ts`, `dashboard/lib/document-wrapper/utils.ts`, `dashboard/assets/print-fonts/*.woff2`, `dashboard/assets/print-fonts/OFL-*.txt`)
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/print/__tests__/kit-guard.test.ts`: no `<script>`, no external URL, only allowlisted font files; a counterexample fixture fails the guard
+    - [x] `packages/domain/src/primary-books/__tests__/sync-print-kit.test.ts`: a dirty kit path stops the script; `--check` exits 1 for a newer commit (a temporary git repository as the fixture)
+- [x] Task: Implement the sync script (green)
+    - [x] `packages/domain/scripts/sync-print-kit.ts` (`git show <commit>:<path>`; the CSS of `getPrintStyles` for A4 with no cover; the icon map); the `pnpm` script in `packages/domain/package.json`
+    - [x] Run it once on the Workbooks head; commit `packages/domain/src/primary-books/print/kit.generated.ts` and `apps/primary-advantage/public/print-fonts/`
+- [x] Task: Docs and doctor
+    - [x] JSDoc; the sync and check commands in the script header; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S1: Copy the Workbooks primary template into a print kit' (Protocol in workflow.md)
+    - Notes: kit made at Workbooks c58fa54 (2026-10-07), not HEAD: it is the newest commit of the kit paths, and `--check` uses the same rule.
+      The kit holds the template, icons and utils sources, the A4 no-cover CSS with theme tokens (`__THEME_PRIMARY__`, `__THEME_SECONDARY__`, `__THEME_GRADIENT__`), and 25 font files (20 woff2, 5 OFL texts; README not copied).
+    - Steps: run `cd packages/domain && ../../node_modules/.bin/tsx scripts/sync-print-kit.ts --check` (exit 0); open `kit.generated.ts` and check the commit id and the ISC header in `iconsSource`.
+    - Member Question defaults used: none in this phase.
 
-## Phase S2: Store the print data of each lesson
+## Phase S2: Store the print data of each lesson [checkpoint: 89e666c8b]
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Define the print data contract
-    - [ ] `printLessonSchema` in `packages/domain/src/primary-books/print/contracts.ts`: extend `legacyWorkbookLessonSchema` (`packages/domain/src/workbooks/legacy-workbook-importer.ts`) with the fields that the template reads, plus the series name and level, the lesson number, and the Workbooks commit
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/__tests__/import.test.ts`: a package with a print file stores `package.printLesson`; one without stores none and counts "no print data"; a bad print file fails with its name
-    - [ ] `packages/domain/src/primary-books/__tests__/catalogue-build-contract.test.ts` (from `primary_parity_class_books_20261011`): the archive layout has `print/*.json`
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-books/mapping.ts` (`toLessonPackageJson` with the print data), `import.ts`, and `packages/domain/scripts/import-lesson-packages.ts` (read the sibling print file; the report line)
-    - [ ] `apps/primary-advantage/cloudbuild-catalogue.yaml` header: the archive layout with `print/*.json`
-- [ ] Task: Run the import on the scratch copy
-    - [ ] Run the catalogue build of `primary_parity_class_books_20261011` with the Workbooks export; record the counts in `measure/tracks/primary_parity_print_lesson_20261011/import-run.md`
-    - [ ] Tell `primary_parity_rehearsal3_20261011` about the new archive paths
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Store the print data of each lesson' (Protocol in workflow.md)
+- [x] Task: Define the print data contract
+    - [x] `printLessonSchema` in `packages/domain/src/primary-books/print/contracts.ts`: extend `legacyWorkbookLessonSchema` (`packages/domain/src/workbooks/legacy-workbook-importer.ts`) with the fields that the template reads, plus the series name and level, the lesson number, and the Workbooks commit
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/__tests__/import.test.ts`: a package with a print file stores `package.printLesson`; one without stores none and counts "no print data"; a bad print file fails with its name
+    - [x] `packages/domain/src/primary-books/__tests__/catalogue-build-contract.test.ts` (from `primary_parity_class_books_20261011`): the archive layout has `print/*.json`
+- [x] Task: Implement (green)
+    - [x] `packages/domain/src/primary-books/mapping.ts` (`toLessonPackageJson` with the print data), `import.ts`, and `packages/domain/scripts/import-lesson-packages.ts` (read the sibling print file; the report line)
+    - [x] `apps/primary-advantage/cloudbuild-catalogue.yaml` header: the archive layout with `print/*.json`
+- [x] Task: Run the import on the scratch copy
+    - [x] Run the import on the scratch copy `primary_print_s2` with the Workbooks export 08bb160: 70 lessons, 70 print data, run twice with the same counts; counts in `import-run.md`
+    - [x] Tell `primary_parity_rehearsal3_20261011` about the new archive paths (orchestrator step: named in the S2 report)
+- [x] Task: Docs and doctor
+    - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S2: Store the print data of each lesson' (Protocol in workflow.md)
+    - Notes: no migration and no schema change (`printLesson` is a key of the `package` jsonb). `printLessonSchema` extends `legacyWorkbookLessonSchema` (it already accepts a string or an array in `article_image_url`) with `writing_practice_url`, and it keeps unknown fields. `build-graph update` not run (brief: graph.db read-only). The archive commit goes to the import through `--workbooks-commit`; the Cloud Build import step reads it from the archive header.
+    - Manual verification: from `packages/domain` run `../../node_modules/.bin/vitest run src/primary-books`; read `import-run.md`.
 
 ## Phase S3: Render one lesson with the template
 _Story ref: spec.md#story-s3_

@@ -4,10 +4,12 @@ import { createTenantDB } from "@reading-advantage/domain";
 import {
   gamePracticeInputRequestSchema,
   listPrimaryPracticeInput,
+  listPrimarySamplePracticeInput,
 } from "@reading-advantage/domain/games";
 
 import { getCurrentUser } from "@/lib/session";
 import { logger } from "@/lib/observability/logger";
+import { studentViewModeFor } from "@/lib/student-view";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,7 +26,8 @@ function errorResponse(status: 400 | 401 | 403 | 500, code: string, message: str
 
 /**
  * Reads the practice input of the signed-in student: the saved words and sentences that the 3D
- * games use, in FSRS order. The games read this state and never change it.
+ * games use, in FSRS order. Staff in Preview mode get a read-only sample set from published
+ * article vocabulary. The games read this state and never change it.
  * @param request Request with an optional `locale` query (the translation language).
  * @returns A private practice input or a structured error response.
  */
@@ -51,6 +54,16 @@ export async function GET(request: NextRequest) {
   const user = await getCurrentUser();
   if (!user) {
     return errorResponse(401, "UNAUTHORIZED", "Authentication required");
+  }
+  if (studentViewModeFor(user.role) === "preview") {
+    // Preview mode (staff): a read-only sample word set from published articles; no row of any user.
+    try {
+      const sample = await listPrimarySamplePracticeInput({ db, input: parsedInput.data });
+      return NextResponse.json(sample, { status: 200, headers: { "Cache-Control": PRIVATE_NO_STORE } });
+    } catch {
+      logger.error("apk_practice_sample_failed");
+      return errorResponse(500, "INTERNAL_ERROR", "Unable to load practice items");
+    }
   }
   if (user.role !== "STUDENT") {
     return errorResponse(403, "FORBIDDEN", "A student account is required");

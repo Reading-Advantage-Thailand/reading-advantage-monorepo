@@ -5,6 +5,8 @@ import { getTranslations } from "next-intl/server";
 import { StoryGamesClient } from "@/components/story-games/StoryGamesClient";
 import { Scene } from "@/components/rpg/scene";
 import { getCurrentUser } from "@/lib/session";
+import { isStudentWriter } from "@/lib/student-view";
+import { PreviewNotice } from "@/components/student/preview-notice";
 
 /**
  * Page metadata for the word adventures route.
@@ -33,7 +35,8 @@ export default async function PrimaryStoryGamesPage({ params }: { params: Promis
         <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
         <p>{t("description")}</p>
       </header>
-      <StoryGamesClient avatar={avatar} ownerKey={ownerKey} />
+      {user && !isStudentWriter(user) ? <PreviewNotice titleKey="emptyTitle" lineKey="gameSampleWords" /> : null}
+      <StoryGamesClient avatar={avatar} ownerKey={ownerKey} save={!user || isStudentWriter(user)} />
     </Scene>
   );
 }

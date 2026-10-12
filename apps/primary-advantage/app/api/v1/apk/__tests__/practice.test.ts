@@ -93,7 +93,7 @@ describe("GET /api/v1/apk/practice", () => {
 
   it.each([
     ["no session", null, 401],
-    ["a teacher", { ...student, role: "TEACHER" }, 403],
+    ["an intern", { ...student, role: "INTERN" }, 403],
     ["a student without a school", { ...student, schoolId: null }, 403],
   ])("refuses %s", async (_label, user, status) => {
     mockGetCurrentUser.mockResolvedValue(user);
