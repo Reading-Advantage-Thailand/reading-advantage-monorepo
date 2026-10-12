@@ -73,3 +73,17 @@ Low findings:
 Deviation: the pages have the return type `Promise<void>` (not `Promise<never>`), because the `permanentRedirect` type of next-intl does not return `never`.
 
 Shortcuts: none. Lessons: none.
+
+## Phase 8 review (AI models in the adapter, CNT-02)
+
+Critical and High findings: none. Security: the chatbot route keeps the `currentUser` check and the Zod body schema; the feedback functions keep the article lookup by id. The model override variables pass a Zod regex check. No secret is logged: `ai_call` holds the task, provider, model, and duration only. No `console.error` in new code (the route now uses `logger.error`). Locale keys: not affected.
+
+Low findings:
+
+- L-14. `getSaqFeedback` and `getLaqFeedback` still read the article by id with no `schoolId` scope. This is old behavior (the article table is global content) and the phase did not change it.
+- L-15. The three `phase-10-closeout` tests in `packages/ai` fail on the line caps of `measure/tech-debt.md` and `measure/lessons-learned.md`. They failed before this phase. Phase 9 or the orchestrator can prune those files or relax the test.
+- L-16. `loggedAiCall` logs `ai_call` also when the call fails (the log is in `finally`). The error path has its own `logger.error` in the route only. A failed feedback call is not logged as an error here.
+- L-17. For `chatbot.stream`, the duration covers the full stream read, because the route reads the stream inside the logged call.
+- L-18. The old `utils/google.ts` used the Vertex location `us-central1`. The new code uses `global` (spec FR-11). If `global` does not serve `gemini-3-flash-preview` for this project, set `PRIMARY_AI_FEEDBACK_MODEL` or change the constant.
+
+Shortcuts: none. Lessons: (1) A Vertex provider needs only a different model factory; a subclass of the Google provider with a `client` option reuses all methods. (2) `packages/ai` `dist` must be rebuilt (`tsc` in the package) before the app type check sees new adapter types.

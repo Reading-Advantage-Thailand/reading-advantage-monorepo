@@ -163,27 +163,35 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 
 ## Phase 8: AI models in the adapter configuration (CNT-02)
 
-- [ ] Task: Read the live legacy model rows (spec FR-12)
-    - [ ] Copy the C4 dump to the session scratch folder: `gsutil cp gs://backupsqldatabase/Backup_Primary_2026-10-11.sql.gz <scratch>/`
-    - [ ] Read the rows with `zcat` and `grep` only (no database command): the `COPY` blocks of `ai_task_configs` (`qa.feedback`, `chatbot.stream`) and `ai_providers`
-    - [ ] Record the provider, the model id, and the temperature of each task here; stop and ask the owner if a provider is not Vertex or OpenAI
-    - [ ] Delete the local dump after the read (it holds personal data)
-- [ ] Task: FR-11 — the adapter gets the Vertex provider and the `system` field
-    - [ ] Contract: `packages/ai/src/types.ts` — `AIProvider` adds `"vertex"`; `GenerateObjectInput` gets `system?`; `AIConfig` gets the Vertex fields (project, location, client email, private key); JSDoc for each
-    - [ ] Red: new `packages/ai/src/providers/vertex.test.ts` (pattern: `google.test.ts`): the provider makes the Vertex factory with the project, the location `global`, and the credentials; `generateObject` passes `system`; a missing credential throws `ProviderNotConfiguredError`
-    - [ ] Red: `packages/ai/src/__tests__/phase-5-provider-selector.test.ts`: `createAIClient({ provider: "vertex", ... })` gives the Vertex client; `src/__tests__/contract-suite.ts`: `system` reaches the model call
-    - [ ] Green: new `packages/ai/src/providers/vertex.ts` (reuse the Google provider methods; only the model factory differs); `packages/ai/src/client.ts:9-14` and `:25-78`; pass `system` in `providers/{openai,google,openrouter,mock}.ts`; add `vertex` to `src/__tests__/wave2-provider-architecture-guard.test.ts:81`
-- [ ] Task: FR-12 — the Primary model configuration
-    - [ ] Contract: new `lib/ai/models.ts` — the two task settings with the live values, the Zod schema of the overrides `PRIMARY_AI_FEEDBACK_MODEL` and `PRIMARY_AI_CHATBOT_MODEL`, and the lazy clients `feedbackClient()` and `chatbotClient()` (with `createAIClient`), with JSDoc
-    - [ ] Red: new `lib/ai/__tests__/models.test.ts`: the defaults equal the live values; an override replaces its model; a value with a space throws with the variable name; the feedback client gets provider `vertex`, location `global`, and project `PROJECT_ID`; the chatbot client gets provider `openai`
-    - [ ] Green: `lib/ai/models.ts`
-- [ ] Task: FR-13 — move the feedback and the chatbot to the adapter
-    - [ ] Red: new `server/utils/__tests__/assistant-feedback.test.ts`: `getSaqFeedback` and `getLaqFeedback` call `feedbackClient().generateObject` with the system prompt, the schema, and the filled prompt, and log `ai_call` with the task, the provider, and the model
-    - [ ] Red: in `app/api/assistant/lesson-chatbot/__tests__/route.test.ts`, the route calls `chatbotClient().streamText` with `system` and the messages, returns the same JSON, logs `ai_call`, and logs errors with `logger.error`; no mock of `@/utils/openai` remains
-    - [ ] Green: `server/utils/assistant.ts:13-14`, `:76-81`, `:141-146`; `app/api/assistant/lesson-chatbot/route.ts:4-5`, `:49-103`, `:114-117`, `:138-145`; delete `utils/google.ts` and `utils/openai.ts`
-- [ ] Task: Grep check 'CNT-02'
-    - [ ] `git grep -n -E '@/utils/google|@/utils/openai|ai/internal-sdk|gemini-2\.|gpt-5|dall-e|imagen-' -- apps/primary-advantage` gives no output
-- [ ] Task: Measure - User Manual Verification 'Phase 8: AI models in the adapter configuration (CNT-02)' (Protocol in workflow.md)
+- [x] Task: Read the live legacy model rows (spec FR-12)
+    - [x] Read the C4 dump at `~/Desktop/primary-parity-acceptance/backups/Backup_Primary_2026-10-11.sql.gz` (already on the machine; no second copy: the disk is low)
+    - [x] Read the rows with `zcat` and `grep` only (no database command): the `COPY` blocks of `ai_task_configs` (`qa.feedback`, `chatbot.stream`) and `ai_providers`
+    - [x] Record the provider, the model id, and the temperature of each task here
+    - Live rows (backup of 2026-10-11): `qa.feedback` = provider `Vertex Default` (kind VERTEX), model `gemini-3-flash-preview`, temperature null. `chatbot.stream` = provider `OpenAI Default` (kind OPENAI), model `gpt-4o-mini`, temperature null. Both equal the seed values; no SYSTEM user changed them. Both providers are Vertex or OpenAI, so no provider decision was needed.
+    - Other live rows: `ai_providers` also has `OpenRouter` (OPENAI_COMPATIBLE). No task of this phase uses it.
+    - [x] Skipped: do not delete the dump. The acceptance kit uses it (orchestrator note of 2026-10-12)
+- [x] Task: FR-11 — the adapter gets the Vertex provider and the `system` field
+    - [x] Contract: `packages/ai/src/types.ts` — `AIProvider` adds `"vertex"`; `GenerateObjectInput` gets `system?`; `AIConfig` gets the Vertex fields (project, location, client email, private key); JSDoc for each
+    - [x] Red: new `packages/ai/src/providers/vertex.test.ts` (pattern: `google.test.ts`): the provider makes the Vertex factory with the project, the location `global`, and the credentials; `generateObject` passes `system`; a missing credential throws `ProviderNotConfiguredError`
+    - [x] Red: `packages/ai/src/__tests__/phase-5-provider-selector.test.ts`: `createAIClient({ provider: "vertex", ... })` gives the Vertex client; `src/__tests__/contract-suite.ts`: `system` reaches the model call
+    - [x] Green: new `packages/ai/src/providers/vertex.ts` (reuse the Google provider methods; only the model factory differs); `packages/ai/src/client.ts:9-14` and `:25-78`; pass `system` in `providers/{openai,google,openrouter,mock}.ts`; add `vertex` to `src/__tests__/wave2-provider-architecture-guard.test.ts:81`
+- [x] Task: FR-12 — the Primary model configuration
+    - [x] Contract: new `lib/ai/models.ts` — the two task settings with the live values, the Zod schema of the overrides `PRIMARY_AI_FEEDBACK_MODEL` and `PRIMARY_AI_CHATBOT_MODEL`, and the lazy clients `feedbackClient()` and `chatbotClient()` (with `createAIClient`), with JSDoc
+    - [x] Red: new `lib/ai/__tests__/models.test.ts`: the defaults equal the live values; an override replaces its model; a value with a space throws with the variable name; the feedback client gets provider `vertex`, location `global`, and project `PROJECT_ID`; the chatbot client gets provider `openai`
+    - [x] Green: `lib/ai/models.ts`
+- [x] Task: FR-13 — move the feedback and the chatbot to the adapter
+    - [x] Red: new `server/utils/__tests__/assistant-feedback.test.ts`: `getSaqFeedback` and `getLaqFeedback` call `feedbackClient().generateObject` with the system prompt, the schema, and the filled prompt, and log `ai_call` with the task, the provider, and the model
+    - [x] Red: in `app/api/assistant/lesson-chatbot/__tests__/route.test.ts`, the route calls `chatbotClient().streamText` with `system` and the messages, returns the same JSON, logs `ai_call`, and logs errors with `logger.error`; no mock of `@/utils/openai` remains
+    - [x] Green: `server/utils/assistant.ts:13-14`, `:76-81`, `:141-146`; `app/api/assistant/lesson-chatbot/route.ts:4-5`, `:49-103`, `:114-117`, `:138-145`; delete `utils/google.ts` and `utils/openai.ts`
+- [x] Task: Grep check 'CNT-02'
+    - [x] `git grep -n -E '@/utils/google|@/utils/openai|ai/internal-sdk|gemini-2\.|gpt-5|dall-e|imagen-' -- apps/primary-advantage` gives no output
+- [x] Task: Measure - User Manual Verification 'Phase 8: AI models in the adapter configuration (CNT-02)' (Protocol in workflow.md)
+    - Look check pending (owner, async). No page changed. Steps: sign in as a student and open a lesson. Answer a short-answer question and a long-answer question: the feedback appears (Vertex `gemini-3-flash-preview`). Open the lesson chatbot and send a message: a reply appears (OpenAI `gpt-4o-mini`). Check the Cloud Run log for one `ai_call` line per request with the task, the provider, the model, and `durationMs`.
+    - Captures: none (no UI change; AI calls in tests are mocked, no live AI call was made).
+    - Defaults used for member questions: none asked in this phase.
+    - Environment variables that the new code reads in production (names only): `PROJECT_ID`, `VERTEX_CLIENT_EMAIL`, `VERTEX_PRIVATE_KEY` (Vertex, `qa.feedback`); `OPENAI_API_KEY` (OpenAI, `chatbot.stream`). Optional: `PRIMARY_AI_FEEDBACK_MODEL`, `PRIMARY_AI_CHATBOT_MODEL` (model id overrides; the code works when they are unset). The Vertex location is the constant `global`.
+    - Deviation: `VertexProvider` extends `GoogleProvider` (a `client` and a `providerId` option were added to `GoogleProviderConfig`), so provenance records `vertex`.
+    - Checks: `packages/ai` vitest: 240 passed, 3 failed (`phase-10-closeout.test.ts`, line caps of `measure/tech-debt.md` and `measure/lessons-learned.md`; they fail without this change too). `packages/ai` and app `tsc --noEmit`: clean. App vitest on the 3 touched files: 15 passed. Grep check CNT-02: no output.
 
 ## Phase 9: Records, Acceptance, Docs & Doctor
 
