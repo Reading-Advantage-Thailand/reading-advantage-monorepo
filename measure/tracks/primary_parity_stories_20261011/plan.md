@@ -8,15 +8,21 @@ One heavy job at a time on this machine; the ETL runs in Cloud Build, never on t
 
 ## Phase 0: Design
 
-- [ ] Task: Design the three pages in the RPG skin
-    - [ ] Mock the Read tab sign "Articles | Stories" (`Sign` or `cq-tabs`) on `/student/read`
-    - [ ] Mock the story shelf (`library` place, books on shelves, genre signs, the page turn), the story page (cover, summary, chapters, characters), and the chapter page (desk and frame, plain text column, the player, the question panels, previous and next)
-    - [ ] Captures at 375 px and 1280 px, day and night, in `measure/tracks/primary_parity_stories_20261011/design/`
-- [ ] Task: Fill the behavior contract before the build
-    - [ ] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_stories_20261011/behavior-contract.md` and fill its seven sections (STU-04, the XP rules, the ETL changes, and the migration)
-    - [ ] Write `measure/tracks/primary_parity_stories_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7)
-- [ ] Task: Owner look check of the design and of the decisions D4 (MC XP once for each chapter) and D9 (level window on every story page); record the answers in `design/decisions.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md)
+- [x] Task: Design the three pages in the RPG skin
+    - [x] Mock the Read tab sign "Articles | Stories" (`Sign` or `cq-tabs`) on `/student/read`
+    - [x] Mock the story shelf (`library` place, books on shelves, genre signs, the page turn), the story page (cover, summary, chapters, characters), and the chapter page (desk and frame, plain text column, the player, the question panels, previous and next)
+    - [x] Captures at 375 px and 1280 px, day and night (40 files, outside the repository; paths in `design/captures.md`)
+- [x] Task: Fill the behavior contract before the build
+    - [x] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_stories_20261011/behavior-contract.md` and fill its seven sections (STU-04, the XP rules, the ETL changes, and the migration)
+    - [x] Write `measure/tracks/primary_parity_stories_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7); it parses with `PairList` (6 pairs)
+    - [x] Write `story-data-checks.sql` (SELECT only)
+- [x] Task: Owner look check of the design and of the decisions D4 (MC XP once for each chapter) and D9 (level window on every story page); record the answers in `design/decisions.md` (look check pending (owner, async))
+    - Defaults used (spec defaults; no owner question, run rule of 2026-10-12): D4 MC XP once for each chapter; D9 level window (raLevel +/- 1) on the list, the story page, and the chapter page; Member Question "no stop" answered by the spec defaults.
+- [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) (look check pending (owner, async))
+    - Step 1: Open the PNG files in `captures/stories/phase0-design/` (see `design/captures.md`).
+    - Step 2: Check the tab sign, the shelf, the story page, the chapter page, and the 4 question screens at 375 px and 1280 px, day and night.
+    - Step 3: Read `design/decisions.md`. Answer yes or no to D4 and D9.
+    - Step 4: Read `behavior-contract.md` section 7 (ETL and migration, NULL `article_id` rule).
 
 ## Phase S1: The ETL brings the stories, chapters, and chapter questions
 _Story ref: spec.md#story-s1_

@@ -261,6 +261,10 @@ or `docs/`. "Legacy" is `/home/daniebo/Desktop/primary-advantage` at `bfea121`.
 **Estimate:** S
 **Priority:** Should
 
+## Decisions recorded in Phase 0 (2026-10-12)
+
+The owner decided that the set runs with no stop. The spec defaults stand for D4 (MC XP once for each chapter), D9 (level window on every story page), and the Member Question. Each is: look check pending (owner, async). See `design/decisions.md`. Legacy counts (`primary_legacy_20261011`): 412 stories, 3,296 chapters, 8 chapters for each story (the 284 and 2,272 above are the April counts). Graph condition (D6): chapter question rows and chapter flashcard source rows keep a NULL `article_id`.
+
 ## Non-Functional Requirements
 
 - NFR-1: No new dependency. Reuse the RPG skin components, the article question components where
