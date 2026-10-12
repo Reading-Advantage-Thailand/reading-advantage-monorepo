@@ -119,13 +119,16 @@ _Story ref: spec.md#story-s3_
 ## Phase S6: Check one /b/ URL in the go/no-go script
 _Story ref: spec.md#story-s6_
 
-- [ ] Task: Add the block to `scripts/primary-parity/cutover-check.mjs`
-    - [ ] Checks of spec S6: signed-out landing, student sign-in with the class code, lesson flow, the writing code, `/b/zz/1`, `/b/o3-2/999`
-    - [ ] Use the tracked path of the script from `primary_parity_acceptance_20261011`
-- [ ] Task: Write the text for the command sheet and §10
-    - [ ] In `measure/tracks/primary_parity_qr_path_20261011/runbook-changes.md`: the new C13 agent step and owner step, and the §10 item for `docs/deployment/primary-cutover-migration-spec.md`
-    - [ ] Tell `primary_parity_rehearsal3_20261011` that the file is ready
-- [ ] Task: Measure - User Manual Verification 'Phase S6: Check one /b/ URL in the go/no-go script' (Protocol in workflow.md)
+- [x] Task: Add the block to `scripts/primary-parity/cutover-check.mjs`
+    - [x] Checks of spec S6: signed-out landing, student sign-in with the class code, lesson flow, the writing code, `/b/zz/1`, `/b/o3-2/999`
+    - [x] Use the tracked path of the script from `primary_parity_acceptance_20261011`
+- [x] Task: Write the text for the command sheet and §10
+    - [x] In `measure/tracks/primary_parity_qr_path_20261011/runbook-changes.md`: the new C13 agent step and owner step, and the §10 item for `docs/deployment/primary-cutover-migration-spec.md`
+    - [x] Tell `primary_parity_rehearsal3_20261011` that the file is ready (the orchestrator tells the track)
+- [x] Task: Measure - User Manual Verification 'Phase S6: Check one /b/ URL in the go/no-go script' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: read `browser-check/README.md`. The browser run is a batch run (orchestrator) and stays open: after it, the 12 `qr` checks must pass twice.
+- [ ] Task: Run the QR block in the browser (batch run (orchestrator))
+    - Run steps: `browser-check/README.md`. Result file: `browser-check/result.md`.
 
 ## Phase A: Acceptance
 

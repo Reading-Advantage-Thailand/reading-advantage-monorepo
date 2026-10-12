@@ -53,3 +53,15 @@ Findings:
 - Low: the catch segment `[n]/[...rest]` shows the unknown-address page for every reader, with the home link "/" (the view fixes it). It does not read the session.
 - Low: `/b/<book>` with no number is not covered by this phase (the locale catch-all handles it).
 - Low: no new message keys in this phase; the five locale files stay in parity.
+
+## Phase S6 review (helper, 2026-10-12, diff 47beedaa3..HEAD)
+
+- Plan compliance: all S6 tasks done. The browser run stays open (batch run, orchestrator).
+- Security: the block prints no password, class code, or name. It uses the open class code in memory only. The judges see paths, status codes, and page text only. No app code changed.
+- Tests: `qr-path-checks.test.mjs` (7 tests). The kit suite has 87 tests. `node --check` passes. The browser flow has no run yet.
+- Medium: the block reuses `first.code` and the open class of the sign-in section. With `CLASS_BOOK_CHECK=off` the book is not assigned and checks 4 and 5 can fail. The README says it.
+- Low: the sign-in picks the first name in the list. The demo class lists the same name five times, so any name works.
+- Low: the script now prints `STOP <name>` for each failed check at the end. This changes the output for all blocks.
+- Low: the case checks accept 4xx status. Spec S6 says "not 5xx".
+- Low: the Tutor choice is not checked. The template is an owner setting that may be empty.
+- Note: the command sheet file is in the rehearsal 3 track. This phase gave the proposed text only (`runbook-changes.md`).
