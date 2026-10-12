@@ -14,24 +14,35 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 
 ## Phase 1: Design
 
-- [ ] Task: Ask the owner the member questions
-    - [ ] Ask Q1 (FR-1, the "Student password" field) and Q2 (FR-13, old class code links) of spec "Member questions"
-    - [ ] Record the answers and the date under this task
-- [ ] Task: Design the changed student pieces in the RPG skin
-    - [ ] Reuse `components/rpg/chrome.tsx` (`Panel`, `RpgButton`, `Sign`) and the `cq-` tokens (`styles/rpg.css`); draw no new frame (`docs/primary-rpg-skin.md` rule 2)
-    - [ ] Settings at the inn (FR-8): "Display name" field with its help text, the read-only "Sign-in username" below it, the error message for a code-only session
-    - [ ] Article page (FR-9, FR-11): the text in 3 blocks with a picture each; the chip in its two states ("Saved", "Not saved")
-    - [ ] Lesson task 8 (FR-7): the saved answer view
-    - [ ] Sign-in (FR-13): the code step with a prefilled code, and the note for an old link
-    - [ ] Make a static mock or a prototype capture of each piece at 375 px and 1280 px, day and night; save to `measure/tracks/primary_parity_quick_fixes_20261011/captures/design/` (demo or QA data only)
-- [ ] Task: Design the changed staff pieces in the staff shell
-    - [ ] Admin class dialog (FR-1): name, the grade select of the create dialog, and the result of Q1 for the password field
-    - [ ] Reports tiles (FR-3): the fourth tile with the percent and "n of m students"; the four tiles on one row at 1280 px and two rows at 375 px
-    - [ ] Admin students toasts (FR-2): the success and error toasts with the title and the description
-    - [ ] Captures at 375 px and 1280 px in the same folder
-- [ ] Task: Owner look check of the design
-    - [ ] Send the captures to the owner; record the answer and the date here; change the design until the owner accepts it
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md)
+- [x] Task: Ask the owner the member questions
+    - [x] Ask Q1 (FR-1, the "Student password" field) and Q2 (FR-13, old class code links) of spec "Member questions"
+    - [x] Record the answers and the date under this task
+    - Q1: default used (owner decision 2026-10-12: no stop). Default text: remove the "Student password" field from the admin class dialog, because no sign-in path reads `classrooms.password_students`. `updateClassroomBodySchema` has no `passwordStudents`.
+    - Q2: default used (owner decision 2026-10-12: no stop). Default text: keep the prefill for new 6-character codes, and show the note `StudentSignIn.code.oldLink` for an old link.
+- [x] Task: Design the changed student pieces in the RPG skin
+    - [x] Reuse `components/rpg/chrome.tsx` (`Panel`, `RpgButton`, `Sign`) and the `cq-` tokens (`styles/rpg.css`); draw no new frame (`docs/primary-rpg-skin.md` rule 2)
+    - [x] Settings at the inn (FR-8): "Display name" field with its help text, the read-only "Sign-in username" below it, the error message for a code-only session
+    - [x] Article page (FR-9, FR-11): the text in 3 blocks with a picture each; the chip in its two states ("Saved", "Not saved")
+    - [x] Lesson task 8 (FR-7): the saved answer view
+    - [x] Sign-in (FR-13): the code step with a prefilled code, and the note for an old link
+    - [x] Make a static mock or a prototype capture of each piece at 375 px and 1280 px, day and night; the PNG files are outside the repository (run rule); the paths are in `captures.md` of this folder
+    - Design decisions for the build phases:
+        - FR-8: the form sits in one `Panel` at the inn. The label "Display name" uses the new keys `Settings.userProfile.displayName` and `displayNameDescription`. The read-only field uses `signInUsername` and a help line. The 403 message for a `code_only` session shows in a red notice inside the panel (new key `Settings.userProfile.codeOnlyError`) and as an error toast. The submit button is `RpgButton` gold, 48 px.
+        - FR-9: the article text is a `Panel` with 3 blocks. Each block has a picture and its sentences. The reading column has no extra decoration (skin rule 4).
+        - FR-11: the chip is an ink-on-parchment chip in both day and night (blue for "Saved", sand for "Not saved"), with an icon and text. The `StatusChip` dark tones do not read well on parchment at night, so the build phase uses the fixed colors of the capture. Keys stay `Article.saveToFlashcard` and `Article.notSaved`.
+        - FR-7: the completed view uses a `Sign` title, one `Panel`, green and blue left-border blocks, and a `Plaque` for the score. The build keeps the existing `LessonSAQ.*` keys.
+        - FR-13: the sign-in code step is a `Panel` in the gatehouse. The prefilled code shows in the input with the gold button in the "Checking..." state. The old-link note is a gold notice with the scroll icon above the input, and the input stays empty and active.
+- [x] Task: Design the changed staff pieces in the staff shell
+    - [x] Admin class dialog (FR-1): name, the grade select of the create dialog, and the result of Q1 for the password field
+    - [x] Reports tiles (FR-3): the fourth tile with the percent and "n of m students"; the four tiles on one row at 1280 px and two rows at 375 px
+    - [x] Admin students toasts (FR-2): the success and error toasts with the title and the description
+    - [x] Captures at 375 px and 1280 px in the same folder
+    - Design decisions: the edit dialog shows name, a grade select (grades 3 to 12, as the create dialog), and the class code read-only. The reports tiles use `grid-cols-2 lg:grid-cols-4`; the fourth tile has a detail line "n of m students". The toasts use the real `sonner` Toaster: the title is the translated message, the description is the server `error` text.
+- [x] Task: Owner look check of the design
+    - [x] Send the captures to the owner; record the answer and the date here; change the design until the owner accepts it
+    - look check pending (owner, async). The capture list is in `captures.md`.
+- [x] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) Open each PNG listed in `captures.md`. (2) Check that student pieces use the wood, gold, and parchment look in day and night. (3) Check that no text is cut off at 375 px. (4) Check that each button is 48 px high. (5) Check that the staff pieces look like the existing staff shell. (6) Write the owner answer under "Owner look check" above.
 
 ## Phase 2: Admin
 
