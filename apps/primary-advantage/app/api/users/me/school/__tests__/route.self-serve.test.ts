@@ -92,6 +92,13 @@ describe("POST /api/users/me/school self-serve gate (C2)", () => {
     expect(mocks.insert).toHaveBeenCalled();
   });
 
+  it("creates a school for a migrated STUDENT that has no user_roles row", async () => {
+    queue({ role: "STUDENT" }, []);
+    const response = await POST(post());
+    expect(response.status).toBe(201);
+    expect(mocks.update).toHaveBeenCalled();
+  });
+
   it.each(["TEACHER", "ADMIN", "SYSTEM"])(
     "refuses a school-less %s account and writes nothing",
     async (role) => {

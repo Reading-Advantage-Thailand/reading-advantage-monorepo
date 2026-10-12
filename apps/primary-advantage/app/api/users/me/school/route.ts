@@ -7,6 +7,7 @@ import { assertCan, AuthError } from "@reading-advantage/auth";
 import { getSchoolDetail } from "@/server/models/schoolModel";
 import { z } from "zod";
 import { normalizeRole } from "@/lib/authorization";
+import { setUserRole } from "@/server/utils/role-sql";
 
 const schoolSchema = z.object({
   name: z.string().min(2).max(100),
@@ -141,8 +142,9 @@ export async function POST(request: NextRequest) {
       .where(eq(userRoles.userId, authUser.id));
 
     const currentUser = existingUser;
+    // users.role is the truth. A legacy user_roles row, when present, must not name a staff role.
     const currentRoles = currentUserRoleRows.map((r) => r.roleName);
-    if (currentRoles.length === 0 || !currentRoles.every((name) => name === "user")) {
+    if (!currentRoles.every((name) => name === "user" || name === "student")) {
       return NextResponse.json(
         { error: "This account type cannot create a school" },
         { status: 403 },
@@ -151,23 +153,7 @@ export async function POST(request: NextRequest) {
 
     // The self-serve owner of a new school becomes its admin.
     const roleUpgraded = true;
-    const [existingAdminRole] = await rawDb.select().from(roles)
-      .where(eq(roles.name, "admin"))
-      .limit(1);
-
-    let adminRole = existingAdminRole;
-    if (!adminRole) {
-      const [created] = await rawDb.insert(roles).values({ name: "admin" }).returning();
-      adminRole = created;
-    }
-
-    await rawDb.delete(userRoles)
-      .where(eq(userRoles.userId, currentUser.id));
-
-    await rawDb.insert(userRoles).values({
-      userId: currentUser.id,
-      roleId: adminRole.id,
-    });
+    await setUserRole(rawDb, currentUser.id, "admin");
 
     // Create school (replaces Prisma `school.create`).
     const [school] = await rawDb.insert(schools).values({
