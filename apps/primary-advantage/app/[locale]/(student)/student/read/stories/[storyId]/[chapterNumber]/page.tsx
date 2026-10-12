@@ -13,6 +13,7 @@ import { GoToTop } from "@/components/go-to-top";
 import { Panel, rpgButton } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
 import { ChapterContent } from "@/components/stories/chapter-content";
+import { ChapterQuestions } from "@/components/stories/chapter-questions";
 import type { WordListTimestamp } from "@/types";
 
 interface PageProps {
@@ -94,7 +95,7 @@ export default async function ChapterPage({ params }: PageProps) {
         <WordList articleId={chapter.id} words={wordList} audioUrl={wordsAudio} />
       </Panel>
       <Panel>
-        <div data-testid="chapter-questions">{chapter.id}</div>
+        <ChapterQuestions chapterId={chapter.id} userLevel={user.level} />
       </Panel>
       <nav aria-label={t("chapterNav")} className="flex flex-wrap gap-2">
         {previousChapterNumber !== null ? (
