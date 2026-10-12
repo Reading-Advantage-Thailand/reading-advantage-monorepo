@@ -9,19 +9,20 @@ before a build; no dev server; no run with 25 students.
 
 ## Phase 1: Contract & Schema Definition
 
-- [ ] Task: Define the pair list contract
-    - [ ] Write the Zod schemas `PairList`, `Pair`, and `Check` in `scripts/primary-parity/pairs.ts` (spec FR-7), with the defaults for `widths` and `colorSchemes`
-    - [ ] Define the placeholder grammar `{map:<table>:<legacyId>}` and `{user:<ROLE>}` as a type and a JSDoc example
-    - [ ] Write `scripts/primary-parity/tsconfig.json` (strict, `noEmit`, module `nodenext`)
-- [ ] Task: Define the accounts file contract
-    - [ ] Write the Zod schema `AccountsFile` in `scripts/primary-parity/accounts-file.ts`: for each role, the user id, the legacy sign-in, and the new sign-in (spec FR-5)
-    - [ ] Write the JSDoc rule: the file has mode 600 and is outside every repository
-- [ ] Task: Write the behavior contract template
-    - [ ] Write `docs/runbooks/primary-behavior-contract-template.md` with the seven sections of spec FR-11
-- [ ] Task: Make a sample of the report layout
-    - [ ] Write `scripts/primary-parity/fixtures/sample-report.html` from two placeholder images (no real data)
-    - [ ] Send the sample and the template to the owner; record the answer in `measure/tracks/primary_parity_acceptance_20261011/look-check.md` (AC-7)
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+- [x] Task: Define the pair list contract
+    - [x] Write the Zod schemas `PairList`, `Pair`, and `Check` in `scripts/primary-parity/pairs.ts` (spec FR-7), with the defaults for `widths` and `colorSchemes`
+    - [x] Define the placeholder grammar `{map:<table>:<legacyId>}` and `{user:<ROLE>}` as a type and a JSDoc example
+    - [x] Write `scripts/primary-parity/tsconfig.json` (strict, `noEmit`, module `nodenext`)
+- [x] Task: Define the accounts file contract
+    - [x] Write the Zod schema `AccountsFile` in `scripts/primary-parity/accounts-file.ts`: for each role, the user id, the legacy sign-in, and the new sign-in (spec FR-5)
+    - [x] Write the JSDoc rule: the file has mode 600 and is outside every repository
+- [x] Task: Write the behavior contract template
+    - [x] Write `docs/runbooks/primary-behavior-contract-template.md` with the seven sections of spec FR-11
+- [x] Task: Make a sample of the report layout
+    - [x] Write `scripts/primary-parity/fixtures/sample-report.html` from two placeholder images (no real data)
+    - [x] Send the sample and the template to the owner; record the answer in `measure/tracks/primary_parity_acceptance_20261011/look-check.md` (AC-7) - owner answer pending (async); the file `look-check.md` holds the status
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) - look check pending (owner, async)
+    - Steps: (1) Open `~/Desktop/primary-parity-progress/captures/acceptance/phase1/sample-report.html` and check the layout. (2) Read the template `docs/runbooks/primary-behavior-contract-template.md` and check the seven sections. (3) Run `node_modules/.bin/tsc -p scripts/primary-parity/tsconfig.json` from the repository root: no error.
 
 ## Phase 2: Test
 
