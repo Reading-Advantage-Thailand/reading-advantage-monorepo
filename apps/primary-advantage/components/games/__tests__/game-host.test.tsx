@@ -55,9 +55,9 @@ vi.mock("@reading-advantage/advantage-play-kit-3d/react", () => ({
   StoryGameHost: (props: {
     input: { id: string } | unknown[]; seed?: number; replay?: boolean; cartridge: { manifest: { id: string } };
     onPhase?: (phase: string) => void; onComplete: (result: unknown, outcome: string, evidence: unknown, answerEvidence?: unknown) => void; onExit: () => void;
-    answerAudio?: () => unknown;
+    answerAudio?: () => unknown; helper?: boolean;
   }) => (
-    <div data-testid="kit" data-input={Array.isArray(props.input) ? `apk:${props.input.length}` : props.input.id} data-seed={props.seed ?? "random"} data-replay={String(props.replay)} data-game={props.cartridge.manifest.id} data-audio={String(Boolean(props.answerAudio))}>
+    <div data-testid="kit" data-input={Array.isArray(props.input) ? `apk:${props.input.length}` : props.input.id} data-seed={props.seed ?? "random"} data-replay={String(props.replay)} data-game={props.cartridge.manifest.id} data-audio={String(Boolean(props.answerAudio))} data-helper={String(props.helper)}>
       <button type="button" onClick={() => props.onPhase?.("playing")}>start</button>
       <button type="button" onClick={() => props.onComplete(props.answerAudio ? { accuracy: 0.67, xp: 10, score: 200, correctAnswers: 2, totalAttempts: 3 } : { accuracy: 0.8, xp: 40, score: 800, correctAnswers: 8, totalAttempts: 10 }, "victory", evidence(props.cartridge.manifest.id), props.answerAudio ? answerEvidence : undefined)}>finish</button>
       <button type="button" onClick={() => props.onPhase?.("results")}>results</button>
@@ -120,6 +120,14 @@ afterEach(() => {
 });
 
 describe("GameHost", () => {
+  it("keeps the answer hint off by default and turns it on with the helper prop", async () => {
+    const { unmount } = renderWithMessages(<GameHost gameId="rune-match" locale="en" input={practice(10, 8)} />, { locale: "en" });
+    expect(await screen.findByTestId("kit", {}, { timeout: 5000 })).toHaveAttribute("data-helper", "false");
+    unmount();
+    renderWithMessages(<GameHost gameId="rune-match" locale="en" input={practice(10, 8)} helper save={false} />, { locale: "en" });
+    expect(await screen.findByTestId("kit", {}, { timeout: 5000 })).toHaveAttribute("data-helper", "true");
+  });
+
   it("plays a practice run on the given saved items, with a random seed and replay, and saves it as a story game", async () => {
     const onCompleted = vi.fn();
     renderWithMessages(<GameHost gameId="rune-match" locale="en" ownerKey="s:1" input={practice(10, 8)} onCompleted={onCompleted} />, { locale: "en" });
