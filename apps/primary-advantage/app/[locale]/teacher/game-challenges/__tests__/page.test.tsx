@@ -37,6 +37,19 @@ it("puts the panel in the teacher shell with a heading, a 44 px back link, and v
     expect(frame).toHaveClass(part);
   }
 });
+it("switches off the pack frames and uses the staff tokens (FR-6)", async () => {
+  mocks.user.mockResolvedValue({ id: "teacher-1", schoolId: "school-1", role: "TEACHER" });
+  render(await Page({ params: Promise.resolve({ locale: "en" }) }));
+  const frame = screen.getByTestId("panel").parentElement as HTMLElement;
+  expect(frame).toHaveClass("[&_fieldset]:border-border");
+  for (const name of ["--apk-arcade-panel-image", "--apk-arcade-button-primary-image", "--apk-arcade-button-secondary-image"]) {
+    expect(frame.style.getPropertyValue(name)).toBe("none");
+  }
+  expect(frame.style.getPropertyValue("--apk-arcade-panel-surface")).toBe("var(--card)");
+  expect(frame.style.getPropertyValue("--apk-arcade-panel-text")).toBe("var(--card-foreground)");
+  expect(frame.style.getPropertyValue("--apk-arcade-primary-fallback")).toBe("var(--primary)");
+  expect(frame.style.getPropertyValue("--apk-arcade-panel-border-width")).toBe("2px");
+});
 it("rejects a user without a school", async () => {
   mocks.user.mockResolvedValue({ id: "teacher-1", schoolId: null, role: "TEACHER" });
   await expect(Page({ params: Promise.resolve({ locale: "en" }) })).rejects.toThrow("NEXT_NOT_FOUND");
