@@ -93,18 +93,18 @@ _Story ref: spec.md#story-s3_
 ## Phase S4: Chapter page with read-along
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Contract for the chapter page
+- [x] Task: Contract for the chapter page
     - [x] `packages/domain/src/stories/contracts.ts`: `getChapterForStudent` output (chapter, sentences, translations, audio key, picture key, the word list row, the previous and next chapter numbers) (0194b1b2d; picture key and URL in c44403a17)
-    - [ ] Confirm the read-along component contract with `primary_parity_read_along_20261011` (spec D7): `components/read-along/read-along-passage.tsx`, props `{ sentences, passage, audioUrl, translations }` — open: the component exists on this branch but its props are `{ sentences, passage, position, active, ... }` (the host owns the audio element), so the confirmation does not match. Follow-up for the orchestrator; do not build here.
-- [ ] Task: Tests for the chapter page
+    - [x] Read-along contract confirmed with `primary_parity_read_along_20261011` (spec D7 deviation, orchestrator ruling 2026-10-12): spec D7 named props `{ sentences, passage, audioUrl, translations }`, but the built `components/read-along/read-along-passage.tsx` takes host-owned audio props `{ sentences, passage, position, active, ... }` (the host owns the audio element and the player). Ruling: do NOT fork or rewrite the shared component; the chapter page reuses the exact article-page integration (a chapter host with the audio element, `useReadAlong`, `ReadAlongPassage`, and `ReadAlongPlayer`, see `components/articles/article-content.tsx`). Plan-review S4 already flagged this mismatch.
+- [x] Task: Tests for the chapter page
     - [x] `packages/domain/src/__tests__/stories.test.ts`: the level window, the chapter by story and number, the word list from the chapter row of `sentencs_and_words_for_flashcard` (0194b1b2d; 30 of 30 green)
     - [x] `lib/__tests__/storage-config.test.ts`: `getChapterImageKey`, the chapter audio URL from `audio_url` (`getAudioUrl`; c44403a17; 12 of 12 green)
-    - [ ] If this track creates the read-along component: `components/read-along/__tests__/read-along-passage.test.tsx` proves the same highlight and seek behavior as `components/articles/__tests__/article-content-highlight.behavior.test.tsx` — open (N/A so far: this track did not create the component; the read-along track owns it and its highlight tests live there)
-    - [ ] `app/[locale]/(student)/student/read/stories/[storyId]/[chapterNumber]/__tests__/chapter-page.test.tsx`: the player, the translation, the word list, previous and next — open: no `[chapterNumber]` route exists on this branch
-- [ ] Task: Implement the chapter page
+    - [x] Read-along parity (15db377ca): this track creates no read-along component (the read-along track owns it), so no new `read-along-passage.test.tsx`; instead `components/stories/__tests__/chapter-content.behavior.test.tsx` proves the same host behavior as `components/articles/__tests__/article-content-highlight.behavior.test.tsx` (one player, word light-up, word-tap seek, translation, picture; 5 of 5 green)
+    - [x] `app/[locale]/(student)/student/read/stories/[storyId]/[chapterNumber]/__tests__/chapter-page.test.tsx` (15db377ca; 6 of 6 green): the title, the chapter number, the passage, the player, the word list button, the question section, previous and next (none past the last), 404 outside the window and for a bad number
+- [x] Task: Implement the chapter page
     - [x] `packages/domain/src/stories/queries.ts`: `getChapterForStudent` (0194b1b2d)
-    - [ ] `components/read-along/read-along-passage.tsx`: use it, or move it out of `components/articles/article-content.tsx` with no behavior change (spec D7) — open: blocked on the D7 prop mismatch above
-    - [ ] `app/[locale]/(student)/student/read/stories/[storyId]/[chapterNumber]/page.tsx`, `loading.tsx`; `components/stories/chapter-content.tsx`; reuse `components/articles/word-list.tsx` — open: none of these files exists on this branch
+    - [x] `components/stories/chapter-content.tsx` (15db377ca): the chapter read-along host reusing the shared `ReadAlongPassage` with the article-page pattern; no behavior change to the shared component
+    - [x] `app/[locale]/(student)/student/read/stories/[storyId]/[chapterNumber]/page.tsx`, `loading.tsx`, `error.tsx` (15db377ca); reuses `components/articles/word-list.tsx` with the chapter id (the chapter save path is S6); the page writes nothing (no `STORIES_*` row on open, as the S3 story page)
 - [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
 - [ ] Task: Measure - User Manual Verification 'Phase S4: Chapter page with read-along' (Protocol in workflow.md)
 
@@ -114,16 +114,16 @@ _Story ref: spec.md#story-s5_
 - [x] Task: Contracts for the chapter questions
     - [x] `packages/domain/src/stories/contracts.ts`: the question output without answers; `submitChapterMcq`, `retakeChapterMcq`, `submitChapterWritten` (SA and LA) inputs and outputs (naming: `gradeChapterMcq` is the MCQ submit — a pure server grade, the caller persists the activity row and enforces once-only XP; `resolveChapterWritten` is the written submit; `retakeChapterMcq` matches)
     - [x] `types/enum.ts`: `STORIES_MC_QUESTION`, `STORIES_SA_QUESTION`, `STORIES_LA_QUESTION` (text values; no database enum change; `XP_AWARD_BY_ACTIVITY` entries mirror the article question awards)
-- [ ] Task: Tests for grading and XP
+- [x] Task: Tests for grading and XP
     - [x] `packages/domain/src/__tests__/stories-questions.test.ts`: 5 random of 10 MCQ, no answer in the output; the server grade; 2 XP for each correct answer; the XP once for each chapter after a retake (`retakeChapterMcq` `xpAvailable`); SA up to 5 and LA up to 25; one SA and one LA submit for each chapter; a non-student is refused (role guard `progress:record`; spec D8 preview guard stays with the staff track)
-    - [ ] `actions/__tests__/story-question.test.ts`: the XP, level, and GP write reuses the `finishQuiz` block; no evidence job starts — open: needs `actions/story-question.ts` (deferred with the XP-block move below)
-    - [ ] `actions/__tests__/finish-quiz-evidence.test.ts` and `actions/__tests__/user-activity-xp.test.ts`: the article `finishQuiz` behavior stays the same after the XP block moves (regression) — open: no `finishQuiz` change made; both suites pass unchanged (15 tests)
-    - [ ] `server/utils/__tests__/assistant.test.ts`: the SAQ and LAQ feedback read the chapter passage for a chapter source — open: `server/utils/assistant.ts` untouched (`getChapterWrittenQuestion` is ready for it)
-- [ ] Task: Implement the chapter questions
+    - [x] `actions/__tests__/story-question.test.ts` (4b4b998aa; 11 of 11 green): the XP, level, and GP write reuses the `finishQuiz` block (`awardQuestionXp`); first MCQ submit pays, resubmit shows the new score with 0 XP; second written submit refused; no evidence job starts (the actions never call it)
+    - [x] `actions/__tests__/finish-quiz-evidence.test.ts` and `actions/__tests__/user-activity-xp.test.ts`: the article `finishQuiz` behavior stays the same after the XP block moves (regression) — both suites pass unchanged through the shared helper (46 of 46 green with `preview-write-guard`)
+    - [x] `server/utils/__tests__/assistant-chapter.test.ts` (4b4b998aa; 4 of 4 green): the SAQ and LAQ feedback read the chapter passage for a chapter source (`readFeedbackSource`; `server/utils/assistant.ts` untouched otherwise, `getChapterWrittenQuestion` feeds it)
+- [x] Task: Implement the chapter questions
     - [x] `packages/domain/src/stories/mutations.ts`: grading and the activity record (`gradeChapterMcq`, `retakeChapterMcq` with `xpAvailable`, `resolveChapterWritten` with one-submit-per-chapter; callers write the `STORIES_*` rows and pay XP); `packages/domain/src/stories/queries.ts`: the chapter questions (`getChapterQuestions`, `getChapterWrittenQuestion`)
-    - [ ] Move the XP, level, and GP block of `actions/question.ts` `finishQuiz` into `server/xp/award-question-xp.ts`; call it from `finishQuiz` and from `actions/story-question.ts` — open: deferred, no chapter-page consumer exists yet; moving without a caller is a speculative refactor
-    - [ ] `server/utils/assistant.ts`: a passage source (article or chapter) for `getSaqFeedback` and `getLaqFeedback` — open
-    - [ ] Reuse `components/articles/questions/*` with a chapter source prop; add the LAQ length rule and the 2 feedback tries — open: no chapter page to host the UI yet (Phase S4 remainder)
+    - [x] The XP, level, and GP block of `actions/question.ts` `finishQuiz` moved into `server/xp/award-question-xp.ts` (4b4b998aa); called from `finishQuiz` (with the article log and the evidence job as before) and from `actions/story-question.ts` (no article log, no evidence job)
+    - [x] `server/utils/assistant.ts`: a passage source (article or chapter) for `getSaqFeedback` and `getLaqFeedback` (4b4b998aa; `readFeedbackSource`)
+    - [x] Question UI on the chapter page (4b4b998aa; deviation: dedicated `components/stories/chapter-quiz.tsx` + `chapter-questions.tsx` instead of reusing `components/articles/questions/*` with a chapter source prop — the article cards are bound to the article model and quiz contexts, so threading a chapter source through them is the larger change; the chapter panels call `actions/story-question.ts` directly): 5 MCQ with done/`xpAvailable` states, SAQ/LAQ boxes with the LA minimum (`level x 30`) and the 2000-char cap, 2 LAQ feedback tries, retake per the domain contract; staff preview disables writes through `usePreviewSave`
 - [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`) — done: `generate.sh` clean; `doctor.sh` fails only on pre-existing A13 (stale archived dir `agents_md_audit_science_advantage_20260603`, untouched by this track)
 - [ ] Task: Measure - User Manual Verification 'Phase S5: Chapter questions with XP' (Protocol in workflow.md)
 
