@@ -7,17 +7,22 @@ a browser is a heavy job). Every task follows the TDD order of `measure/workflow
 
 ## Phase D: Design (RPG skin)
 
-- [ ] Task: Check the cartridges and the lesson items
-    - [ ] Confirm that the legacy four (`rpg-battle`, `rune-match`, `dragon-rider`, `enchanted-library`) and `castle-defense`, `potion-rush` load with a `PracticeInput` of lesson size; confirm the Tutor name match `wizard-vs-zombie` and `hero-vs-zombie`
-    - [ ] Count the words and sentences of the 70 lessons of the five printed books on the rehearsal copy (read only); list the lessons that open no cartridge
-- [ ] Task: Design the two steps and the projector panel
-    - [ ] Draw task 10: four cartridges as objects of the arena place (`docs/primary-rpg-skin.md` §3), the last result of each, the locked state, and "Simple game"
-    - [ ] Draw task 12: the sentence cartridges first, then the four activities
-    - [ ] Draw the projector game panel (1280 px and a 1920 px projector) and the full-screen run
-- [ ] Task: Captures and the owner's look check
-    - [ ] Capture at 375 px and 1280 px, day and night, into `measure/tracks/primary_parity_lesson_games_20261011/design/`
-    - [ ] Record the owner's answer and the answers to the Member Questions in `design/look-check.md`
-- [ ] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+- [x] Task: Check the cartridges and the lesson items
+    - [x] Confirm that the legacy four (`rpg-battle`, `rune-match`, `dragon-rider`, `enchanted-library`) and `castle-defense`, `potion-rush` load with a `PracticeInput` of lesson size; confirm the Tutor name match `wizard-vs-zombie` and `hero-vs-zombie`
+        - Static check: manifests need 4 words (`rune-match` 6; the sentence games 3 sentences). A lesson gives 10 words and 4 to 8 sentences. No cartridge was loaded in a browser (Phase S5 browser run). Forge confirmed the name match and the minimums (2026-10-12): see `design/look-check.md`.
+    - [x] Count the words and sentences of the 70 lessons of the five printed books on the rehearsal copy (read only); list the lessons that open no cartridge
+        - The catalogue is empty on the copy, so the counts come from the Workbooks package files. All 70 lessons meet every minimum. No lesson opens no cartridge. Table in `design/look-check.md`.
+- [x] Task: Design the two steps and the projector panel
+    - [x] Draw task 10: four cartridges as objects of the arena place (`docs/primary-rpg-skin.md` §3), the last result of each, the locked state, and "Simple game"
+    - [x] Draw task 12: the sentence cartridges first, then the four activities
+    - [x] Draw the projector game panel (1280 px and a 1920 px projector) and the full-screen run
+- [x] Task: Captures and the owner's look check
+    - [x] Capture at 375 px and 1280 px, day and night, into `measure/tracks/primary_parity_lesson_games_20261011/design/`
+        - PNG files are outside the repository; `design/captures.md` lists the paths.
+    - [x] Record the owner's answer and the answers to the Member Questions in `design/look-check.md`
+        - Defaults used (Member Questions 1 to 3): look check pending (owner, async).
+- [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+    - look check pending (owner, async). Steps: open each PNG of `design/captures.md`; check the four points of `design/look-check.md`; send changes to the monorepo session.
 
 ## Phase S1: Make the game input from the lesson
 _Story ref: spec.md#story-s1_
