@@ -3761,6 +3761,15 @@
     "challengesHint": "Make a word challenge for a class game."
   },
   "BookLink": {
+    "bubbleRead": "Ready to read?",
+    "bubbleWrite": "Time to write!",
+    "landingQuestion": "Which app do you use?",
+    "lessonLine": "Lesson {number}: {title}",
+    "writingTask": "Writing task",
+    "choiceSchool": "My school uses Primary Advantage",
+    "choiceSchoolHint": "Sign in with your class code",
+    "choiceTutor": "I study with Tutor Advantage",
+    "choiceTutorHint": "Open the lesson in LINE",
     "bubbleOhNo": "Oh no!",
     "bubbleOops": "Oops!",
     "bubbleNotYet": "Not yet!",

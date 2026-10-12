@@ -6,7 +6,9 @@ const mocks = vi.hoisted(() => ({
   findTeacherClassBook: vi.fn(),
   info: vi.fn(),
   error: vi.fn(),
+  tutor: vi.fn(),
 }));
+vi.mock("@/lib/book-link/tutor-url", () => ({ tutorLessonUrl: mocks.tutor }));
 
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
@@ -24,14 +26,37 @@ const as = (role: string, schoolId: string | null = "school-1") => {
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.user = null;
+  mocks.tutor.mockReturnValue(null);
   mocks.resolveBookLink.mockResolvedValue({ kind: "ok", lesson });
   mocks.findTeacherClassBook.mockResolvedValue({ classBookId: "cb1", classroomId: "c1" });
 });
 
 describe("openBookLink: the normal paths", () => {
-  it("sends a signed-out reader to sign in with the callback", async () => {
-    expect(await open()).toEqual({ type: "redirect", href: { pathname: "/auth/signin", query: { callbackUrl: "/th/b/o3-2/5" } } });
-    expect(await open("5", "o3-2", true)).toEqual({ type: "redirect", href: { pathname: "/auth/signin", query: { callbackUrl: "/th/b/o3-2/5/writing" } } });
+  it("gives a signed-out reader the landing with the callback sign-in link", async () => {
+    const landing = { type: "landing", bookName: lesson.bookName, title: "Story 5", number: 5, writing: false, tutorHref: null };
+    expect(await open()).toEqual({ ...landing, signInHref: { pathname: "/auth/signin", query: { callbackUrl: "/th/b/o3-2/5" } } });
+    expect(await open("5", "o3-2", true)).toEqual({
+      ...landing,
+      writing: true,
+      signInHref: { pathname: "/auth/signin", query: { callbackUrl: "/th/b/o3-2/5/writing" } },
+    });
+  });
+
+  it("gives the landing the Tutor link only when the builder returns one", async () => {
+    mocks.tutor.mockReturnValue("https://tutor.example.com/lesson/o3-2/5");
+    expect(await open()).toMatchObject({ type: "landing", tutorHref: "https://tutor.example.com/lesson/o3-2/5" });
+    expect(mocks.tutor).toHaveBeenCalledWith({ book: "o3-2", number: 5 });
+  });
+
+  it("shows the landing for an unpublished lesson too, and never redirects a signed-out reader", async () => {
+    mocks.resolveBookLink.mockResolvedValue({ kind: "unpublished", lesson: { ...lesson, articleId: null } });
+    expect(await open()).toMatchObject({ type: "landing", title: "Story 5" });
+  });
+
+  it("skips the landing for a signed-in reader", async () => {
+    as("STUDENT");
+    expect((await open()).type).toBe("redirect");
+    expect(mocks.tutor).not.toHaveBeenCalled();
   });
 
   it("sends a student to the lesson flow, or to the article page for the writing code", async () => {

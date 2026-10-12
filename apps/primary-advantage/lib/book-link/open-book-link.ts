@@ -3,12 +3,14 @@ import { findTeacherClassBook, resolveBookLink } from "@reading-advantage/domain
 import { currentUser } from "@/lib/session";
 import { logger } from "@/lib/observability/logger";
 import { bookSignInHref } from "@/lib/book-link/signin-href";
+import { tutorLessonUrl } from "@/lib/book-link/tutor-url";
 
 /** The case pages of a `/b/` address that is not the normal one (spec S4). */
 export type BookLinkCaseName = "unknown-book" | "no-lesson" | "not-ready" | "no-class" | "teacher-only" | "wrong-account" | "unknown-address" | "retry";
 
-/** What the page does for a `/b/` address: redirect, or render a case page. */
+/** What the page does for a `/b/` address: redirect, show the landing, or render a case page. */
 export type BookLinkOutcome =
+  | { type: "landing"; bookName: string; title: string; number: number; writing: boolean; signInHref: ReturnType<typeof bookSignInHref>; tutorHref: string | null }
   | { type: "redirect"; href: string | ReturnType<typeof bookSignInHref> }
   | { type: "case"; name: BookLinkCaseName; homeHref: string; bookName?: string; lessonCount?: number; retryHref?: string };
 
@@ -28,7 +30,7 @@ const homeOf = (role?: string) => (role === "STUDENT" ? "/student/home" : role =
  * reading page and the writing page share this function (spec S3, S4). It logs one event for each
  * case page, with the case, the book key, and the number, and never the user name.
  * @param params The locale, the book key and number text from the address, and `writing` for the writing code.
- * @returns A redirect target, or the case page to render.
+ * @returns A redirect target, the signed-out landing, or the case page to render.
  */
 export async function openBookLink(params: { locale: string; book: string; n: string; writing?: boolean }): Promise<BookLinkOutcome> {
   const { locale, book, writing = false } = params;
@@ -57,7 +59,9 @@ export async function openBookLink(params: { locale: string; book: string; n: st
     return { type: "case", name: "no-lesson", bookName: result.bookName, lessonCount: result.lessonCount, homeHref };
   }
   const { lesson } = result;
-  if (!user) return { type: "redirect", href: bookSignInHref({ locale, book, number, writing }) };
+  if (!user) {
+    return { type: "landing", bookName: lesson.bookName, title: lesson.title, number, writing, signInHref: bookSignInHref({ locale, book, number, writing }), tutorHref: tutorLessonUrl({ book, number }) };
+  }
   if (user.role === "STUDENT") {
     if (result.kind === "unpublished") {
       logger.info("book_link.unpublished", where);

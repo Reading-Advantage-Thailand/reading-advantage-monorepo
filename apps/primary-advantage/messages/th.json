@@ -3761,6 +3761,15 @@
     "challengesHint": "สร้างภารกิจคำศัพท์สำหรับเกมของชั้นเรียน"
   },
   "BookLink": {
+    "bubbleRead": "พร้อมอ่านหรือยัง?",
+    "bubbleWrite": "ถึงเวลาเขียนแล้ว!",
+    "landingQuestion": "คุณใช้แอปไหน?",
+    "lessonLine": "บทเรียนที่ {number}: {title}",
+    "writingTask": "งานเขียน",
+    "choiceSchool": "โรงเรียนของฉันใช้ Primary Advantage",
+    "choiceSchoolHint": "เข้าสู่ระบบด้วยรหัสชั้นเรียน",
+    "choiceTutor": "ฉันเรียนกับ Tutor Advantage",
+    "choiceTutorHint": "เปิดบทเรียนใน LINE",
     "bubbleOhNo": "โอ๊ะโอ!",
     "bubbleOops": "โอ๊ะ!",
     "bubbleNotYet": "ยังไม่พร้อม!",

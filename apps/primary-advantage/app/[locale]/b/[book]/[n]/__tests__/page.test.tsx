@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({ openBookLink: vi.fn(), redirect: vi.fn() }));
 vi.mock("@/lib/book-link/open-book-link", () => ({ openBookLink: mocks.openBookLink }));
 vi.mock("@/i18n/navigation", () => ({ redirect: mocks.redirect }));
 vi.mock("@/components/book-link/book-link-case", () => ({ BookLinkCase: () => null }));
+vi.mock("@/components/book-link/book-landing", () => ({ BookLanding: () => null }));
 vi.mock("next/navigation", () => ({
   notFound: () => {
     throw new Error("NOT_FOUND");
@@ -13,6 +14,7 @@ vi.mock("next/navigation", () => ({
 
 import BookLessonLinkPage from "../page";
 import { BookLinkCase } from "@/components/book-link/book-link-case";
+import { BookLanding } from "@/components/book-link/book-landing";
 
 const open = (book = "o3-2", n = "5") => BookLessonLinkPage({ params: Promise.resolve({ locale: "th", book, n }) });
 
@@ -26,11 +28,16 @@ describe("/b/<book>/<n> (QR deep link, FR-16)", () => {
     expect(mocks.redirect).toHaveBeenCalledWith({ href: "/student/lesson/a5?type=article", locale: "th" });
   });
 
-  it("keeps a href object for the sign-in redirect", async () => {
-    const href = { pathname: "/auth/signin", query: { callbackUrl: "/th/b/o3-2/5" } };
-    mocks.openBookLink.mockResolvedValue({ type: "redirect", href });
-    await open();
-    expect(mocks.redirect).toHaveBeenCalledWith({ href, locale: "th" });
+  it("renders the landing for a signed-out reader and does not redirect", async () => {
+    const landing = {
+      type: "landing", bookName: "Origins 3.2", title: "Story 5", number: 5, writing: false, tutorHref: null,
+      signInHref: { pathname: "/auth/signin", query: { callbackUrl: "/th/b/o3-2/5" } },
+    };
+    mocks.openBookLink.mockResolvedValue(landing);
+    const element = (await open()) as { type: unknown; props: Record<string, unknown> };
+    expect(element.type).toBe(BookLanding);
+    expect(element.props).toMatchObject({ signInHref: landing.signInHref, tutorHref: null });
+    expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
   it("renders the case page for each case and never calls notFound", async () => {
