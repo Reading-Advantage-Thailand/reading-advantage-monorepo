@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { classifySentence, profileArticles, tokenizeWords } from "../profile";
+import { tokenizeWords } from "../align";
+import { classifySentence, profileArticles } from "../profile";
 
 const sent = (sentence: string, words: string[]) => ({
   sentence,

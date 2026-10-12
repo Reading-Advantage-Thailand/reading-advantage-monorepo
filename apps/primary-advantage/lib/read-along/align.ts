@@ -17,7 +17,7 @@ export const SentenceTimepointSchema = z.object({
   startTime: z.number(),
   endTime: z.number(),
   words: z.array(WordTimingSchema).default([]),
-  translations: z.record(z.string(), z.string().optional()).optional(),
+  translations: z.record(z.string(), z.string().optional()).optional().catch(undefined),
 });
 
 /** A sentence entry with its word timings. */
@@ -48,13 +48,19 @@ export interface WordMaps {
   displayToAudio: number[];
 }
 
+/** Screen words may be at most this many positions away from an anchor on each side. */
+const MAX_GAP = 9;
+
+const EDGE_START = /[\p{L}\p{N}]/u;
+
 /**
  * Parses the `sentences` value of an article at the boundary.
  * @param raw The jsonb value.
  * @returns The sentence entries, or an empty list when the value has another shape.
  */
 export function parseSentences(raw: unknown): ReadAlongSentence[] {
-  throw new Error("not implemented");
+  const parsed = z.array(SentenceTimepointSchema).safeParse(raw);
+  return parsed.success ? parsed.data : [];
 }
 
 /**
@@ -63,7 +69,21 @@ export function parseSentences(raw: unknown): ReadAlongSentence[] {
  * @returns The words in order and the tail; inner apostrophes and hyphens stay in the word.
  */
 export function splitDisplayWords(text: string): DisplaySentence {
-  throw new Error("not implemented");
+  const words: DisplayWord[] = [];
+  let lead = "";
+  for (const chunk of text.match(/[^\s—–]+|[\s—–]+/gu) ?? []) {
+    const chars = Array.from(chunk);
+    const first = chars.findIndex((c) => EDGE_START.test(c));
+    if (first === -1) {
+      lead += chunk;
+      continue;
+    }
+    let last = chars.length - 1;
+    while (!EDGE_START.test(chars[last])) last--;
+    words.push({ index: words.length, lead: lead + chars.slice(0, first).join(""), text: chars.slice(first, last + 1).join("") });
+    lead = chars.slice(last + 1).join("");
+  }
+  return { words, tail: lead };
 }
 
 /**
@@ -72,7 +92,43 @@ export function splitDisplayWords(text: string): DisplaySentence {
  * @returns The words in order.
  */
 export function tokenizeWords(text: string): string[] {
-  throw new Error("not implemented");
+  return splitDisplayWords(text).words.map((w) => w.text);
+}
+
+/** Lower-case text with no punctuation, for comparison. */
+const squash = (word: string) => word.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+
+/** True when two strings differ by at most one inserted, deleted, or changed letter. */
+function withinOneEdit(x: string, y: string): boolean {
+  if (Math.abs(x.length - y.length) > 1) return false;
+  let i = 0;
+  while (i < x.length && i < y.length && x[i] === y[i]) i++;
+  if (x.length === y.length) return x.slice(i + 1) === y.slice(i + 1);
+  return x.length > y.length ? x.slice(i + 1) === y.slice(i) : y.slice(i + 1) === x.slice(i);
+}
+
+/** Loose match for one pair: prefix, suffix, or one letter of difference. */
+function looseMatch(x: string, y: string): boolean {
+  const [short, long] = x.length <= y.length ? [x, y] : [y, x];
+  if (short.length >= 3 && (long.startsWith(short) || long.endsWith(short))) return true;
+  return short.length >= 4 && withinOneEdit(x, y);
+}
+
+/**
+ * Fills the -1 entries of a map with the nearest earlier value, or the nearest later value at the start.
+ * @param map The map to fill in place.
+ */
+function fillGaps(map: number[]): void {
+  let carry = -1;
+  for (let i = 0; i < map.length; i++) {
+    if (map[i] === -1) map[i] = carry;
+    else carry = map[i];
+  }
+  let next = -1;
+  for (let i = map.length - 1; i >= 0; i--) {
+    if (map[i] === -1) map[i] = next;
+    else next = map[i];
+  }
 }
 
 /**
@@ -82,5 +138,53 @@ export function tokenizeWords(text: string): string[] {
  * @returns The two maps; both stay in order.
  */
 export function buildWordMaps(displayWords: string[], audioWords: string[]): WordMaps {
-  throw new Error("not implemented");
+  const D = displayWords.map(squash);
+  const A = audioWords.map(squash);
+  const audioToDisplay = A.map(() => -1);
+  const displayToAudio = D.map(() => -1);
+
+  /** Exact match, or a join of up to 3 tokens on one side. Returns [screen words used, audio words used]. */
+  const strong = (d: number, a: number): [number, number] | null => {
+    if (!A[a] || !D[d]) return null;
+    if (D[d] === A[a]) return [1, 1];
+    for (let k = 2; k <= 3; k++) if (a + k <= A.length && A.slice(a, a + k).join("") === D[d]) return [1, k];
+    for (let k = 2; k <= 3; k++) if (d + k <= D.length && D.slice(d, d + k).join("") === A[a]) return [k, 1];
+    return null;
+  };
+
+  let d = 0;
+  let a = 0;
+  while (d < D.length && a < A.length) {
+    if (!A[a]) {
+      a++;
+      continue;
+    }
+    let step = strong(d, a);
+    if (!step && looseMatch(D[d], A[a])) step = [1, 1];
+    if (!step) {
+      // Resync: the nearest pair of positions (by total skip) that match exactly.
+      let skip: [number, number] | null = null;
+      for (let total = 1; total <= 2 * MAX_GAP && !skip; total++) {
+        for (let i = Math.max(0, total - MAX_GAP); i <= Math.min(total, MAX_GAP); i++) {
+          if (d + i < D.length && a + total - i < A.length && strong(d + i, a + total - i)) {
+            skip = [i, total - i];
+            break;
+          }
+        }
+      }
+      if (skip) {
+        d += skip[0];
+        a += skip[1];
+        continue;
+      }
+      step = [1, 1];
+    }
+    for (let x = 0; x < step[1]; x++) audioToDisplay[a + x] = d;
+    for (let y = 0; y < step[0]; y++) displayToAudio[d + y] = a;
+    d += step[0];
+    a += step[1];
+  }
+  fillGaps(audioToDisplay);
+  fillGaps(displayToAudio);
+  return { audioToDisplay, displayToAudio };
 }

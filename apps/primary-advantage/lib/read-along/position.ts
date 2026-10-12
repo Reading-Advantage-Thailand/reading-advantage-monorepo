@@ -29,5 +29,14 @@ export function findPosition(
   time: number,
   previous: ReadAlongPosition,
 ): ReadAlongPosition {
-  throw new Error("not implemented");
+  let sentenceIndex = -1;
+  for (let i = 0; i < sentences.length; i++) if (sentences[i].startTime <= time) sentenceIndex = i;
+  let wordIndex = -1;
+  if (sentenceIndex >= 0) {
+    const words = sentences[sentenceIndex].words;
+    for (let j = 0; j < words.length; j++) if (words[j].start <= time) wordIndex = j;
+    if (wordIndex === -1 && words.length > 0 && words[0].start - time <= LEAD_IN_SECONDS) wordIndex = 0;
+  }
+  if (sentenceIndex === previous.sentenceIndex && wordIndex === previous.wordIndex) return previous;
+  return sentenceIndex === -1 ? NO_POSITION : { sentenceIndex, wordIndex };
 }

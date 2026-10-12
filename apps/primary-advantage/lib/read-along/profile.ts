@@ -11,6 +11,8 @@ export interface ProfileSentence {
   words: { word: string; start: number; end: number }[];
 }
 
+import { tokenizeWords } from "./align";
+
 /** The tags that mark a sentence shape the alignment must handle. */
 export type ProfileTag =
   | "no-words"
@@ -21,20 +23,6 @@ export type ProfileTag =
   | "contraction"
   | "digit"
   | "hyphen";
-
-const EDGE = /^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu;
-
-/**
- * Splits text into display words: whitespace and dashes separate, edge punctuation goes away.
- * @param text A sentence or a passage.
- * @returns The words in order; inner apostrophes and hyphens stay.
- */
-export function tokenizeWords(text: string): string[] {
-  return text
-    .split(/[\s—–]+/u)
-    .map((token) => token.replace(EDGE, ""))
-    .filter((token) => token.length > 0);
-}
 
 const squash = (word: string) => word.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
 

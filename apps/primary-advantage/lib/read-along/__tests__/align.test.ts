@@ -147,7 +147,7 @@ describe("buildWordMaps derived fixtures (M-2)", () => {
     const words = contraction[0].words.map((w, i) => (i === 3 ? { ...w, word: "walk." } : w));
     const { maps } = mapSentence({ ...contraction[0], words });
     expect(maps.audioToDisplay).toEqual([0, 1, 2, 3]);
-    const fuzzy = buildWordMaps(["It", "says", "Don't", "run"], ["It", "said:", "\"Don't", "run."]);
+    const fuzzy = buildWordMaps(["It", "says", "Don't", "run"], ["It", "sayz:", "\"Don't", "run."]);
     expect(fuzzy.audioToDisplay).toEqual([0, 1, 2, 3]);
   });
 });
