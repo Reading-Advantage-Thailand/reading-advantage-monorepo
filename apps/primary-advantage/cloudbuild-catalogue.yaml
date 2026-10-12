@@ -1,0 +1,106 @@
+# Primary class book catalogue build (track primary_parity_class_books_20261011, story S1).
+# Loads the five printed books and the teacher guide into the new database AFTER the ETL build
+# (cloudbuild-etl.yaml) and BEFORE the deploy. The importer links each lesson to its migrated
+# article through primary_legacy_id_map, which only the ETL fills.
+#
+# Why a separate build: it runs again alone after a fix, it serves a later catalogue update, and
+# the ETL config that rehearsal 2 tested stays the same.
+#
+# Inputs
+#   Build context   : the frozen monorepo commit (a source tgz, as for the ETL build).
+#   _WORKBOOKS_ARCHIVE : gs:// path of the Workbooks archive (required). Layout of the archive:
+#       content/primary/{origins-1,origins-2,origins-3.1,origins-3.2,quest-4}/*.json
+#       dashboard/lib/teacher-manual/i18n/{en,th,index}.ts
+#       Teacher guide/step-N.md and step-N-th.md (N = 1..13)
+#     Make it from a Workbooks commit with `git -C ~/Desktop/Workbooks archive <commit> <paths>`
+#     and upload it to gs://primary-advantage_cloudbuild/source/ (see catalogue-build-commands.md).
+#   _TARGET_DATABASE_URL : Secret Manager name of the target URL (secret DIRECT_DATABASE_URL).
+#   _EXPECTED_LESSONS : the lesson count that the import must report (70 for Workbooks eeeddfd).
+#
+# Steps: fetch-archive, then import (guard, build @reading-advantage/db, import-lesson-packages
+# on the five folders, import-lesson-guides --workbooks). The build fails when a package fails,
+# when the lesson count differs, or when a guide locale does not give 13 steps. It prints only
+# the summary lines. It never prints an environment value.
+#
+# Submit it as a regional build next to the database:
+#   gcloud builds submit gs://primary-advantage_cloudbuild/source/<context>.tgz \
+#     --project=primary-advantage --region=asia-southeast1 \
+#     --config=apps/primary-advantage/cloudbuild-catalogue.yaml \
+#     --substitutions=_WORKBOOKS_ARCHIVE=gs://primary-advantage_cloudbuild/source/<archive>.tgz
+steps:
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    id: "fetch-archive"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        set -euo pipefail
+        test -n "$_WORKBOOKS_ARCHIVE" || { echo "STOP: _WORKBOOKS_ARCHIVE is empty"; exit 1; }
+        mkdir -p /workspace/workbooks
+        gcloud storage cp "$_WORKBOOKS_ARCHIVE" /workspace/workbooks.tgz
+        tar -xzf /workspace/workbooks.tgz -C /workspace/workbooks
+        for d in origins-1 origins-2 origins-3.1 origins-3.2 quest-4; do
+          n=$$(ls /workspace/workbooks/content/primary/$$d/*.json 2>/dev/null | wc -l)
+          echo "archive: $$d has $$n packages"
+          test "$$n" -gt 0 || { echo "STOP: the archive has no packages for $$d"; exit 1; }
+        done
+        test -f "/workspace/workbooks/dashboard/lib/teacher-manual/i18n/en.ts" || { echo "STOP: the archive has no manual"; exit 1; }
+        echo "archive: $$(ls '/workspace/workbooks/Teacher guide' | grep -c '^step-') step files"
+
+  - name: "node:22-slim"
+    id: "import"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        set -euo pipefail
+        t() { date -u +%T; }
+        apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null
+        curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64
+        chmod +x /usr/local/bin/cloud-sql-proxy
+        mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5
+        corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile
+        # --- imports (the local rehearsal test runs the text below this line) ---
+        WB="$${WB:-/workspace/workbooks}"
+        EXPECTED="$${EXPECTED:-$_EXPECTED_LESSONS}"
+        redact() { sed -E 's#postgres(ql)?://[^[:space:]]+#<url>#g'; }
+        (cd packages/db && npx tsx scripts/refuse-legacy-db.ts)
+        echo "$$(t) guard: target OK"
+        pnpm --filter @reading-advantage/db build >/workspace/db-build.out 2>&1 || { tail -15 /workspace/db-build.out | redact; exit 1; }
+        echo "$$(t) db build done"
+        set +e
+        pnpm --filter @reading-advantage/domain import-lesson-packages \
+          "$$WB/content/primary/origins-1" "$$WB/content/primary/origins-2" \
+          "$$WB/content/primary/origins-3.1" "$$WB/content/primary/origins-3.2" \
+          "$$WB/content/primary/quest-4" >/workspace/packages.out 2>&1
+        rc=$$?
+        set -e
+        grep -E '^(unmapped|skipped|FAILED)|lessons:' /workspace/packages.out | redact || true
+        test "$$rc" -eq 0 || { echo "STOP: a package failed (exit $$rc); the FAILED lines name it"; tail -5 /workspace/packages.out | redact; exit 1; }
+        grep -q "^$$EXPECTED lessons:" /workspace/packages.out || { echo "STOP: expected $$EXPECTED lessons"; exit 1; }
+        echo "$$(t) packages done"
+        set +e
+        pnpm --filter @reading-advantage/domain import-lesson-guides --workbooks "$$WB" >/workspace/guides.out 2>&1
+        rc=$$?
+        set -e
+        grep -E '^(en|th): |FAILED' /workspace/guides.out | redact || true
+        test "$$rc" -eq 0 || { echo "STOP: the guide import failed (exit $$rc)"; tail -5 /workspace/guides.out | redact; exit 1; }
+        for l in en th; do
+          grep -q "^$$l: 13 steps" /workspace/guides.out || { echo "STOP: the guide for $$l does not give 13 steps"; exit 1; }
+        done
+        echo "$$(t) guides done"
+    secretEnv: ["DIRECT_DATABASE_URL"]
+
+availableSecrets:
+  secretManager:
+    - versionName: "projects/$PROJECT_ID/secrets/${_TARGET_DATABASE_URL}/versions/latest"
+      env: "DIRECT_DATABASE_URL"
+
+substitutions:
+  _TARGET_DATABASE_URL: "PRIMARY_V2_DATABASE_URL"
+  _WORKBOOKS_ARCHIVE: ""
+  _EXPECTED_LESSONS: "70"
+
+timeout: "1800s"
+options:
+  logging: CLOUD_LOGGING_ONLY
