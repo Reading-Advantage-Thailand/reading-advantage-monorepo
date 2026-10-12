@@ -8,8 +8,6 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ReactNode } from "react";
-import { NextIntlClientProvider } from "next-intl";
 
 const mocks = vi.hoisted(() => ({
   push: vi.fn(),
@@ -475,22 +473,3 @@ describe("FR-5 footer, games, licence, and school strings", () => {
     expect(screen.getByText(th.SchoolForm.name)).toBeInTheDocument();
   });
 });
-
-function NextIntlPatched({
-  tree,
-  children,
-}: {
-  tree: Record<string, unknown>;
-  children: ReactNode;
-}) {
-  return (
-    <NextIntlClientProvider
-      locale="th"
-      messages={
-        tree as React.ComponentProps<typeof NextIntlClientProvider>["messages"]
-      }
-    >
-      {children}
-    </NextIntlClientProvider>
-  );
-}

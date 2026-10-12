@@ -32,3 +32,24 @@ that name ElvGames. They hold no asset. They stay in the repository and are not 
 - Target file count: 73,053 (73,052 copies plus `MANIFEST.tsv`). Target size: 573 MB on disk.
 - Free disk space after the copy: 11 GB (limit 2 GB).
 - No hash or checksum was made (spec R-4).
+
+## Build output check (Phase 6, 2026-10-12)
+
+Command: `pnpm turbo run build --filter=primary-advantage` (Turbopack, Next.js 16.2.9), run under the heavy lock.
+Result: the build passed. `apps/primary-advantage/public/assets/apk/standard-pack-qc` is gone from Primary.
+
+- `find .next/standalone/apps/primary-advantage -path '*standard-pack-qc*'` prints 0 files.
+- The spec check over the full `.next/standalone` folder prints 156, not 0. All 156 files belong to other apps:
+  77 in `apps/advantage-games/public`, 77 in `apps/reading-advantage/public`, and 2 in `apps/advantage-games`
+  (`scripts/generate-standard-pack-qc-preview.mjs`, `src/lib/apk/standard-pack-qc-preview.json`).
+- The spec fallback (`outputFileTracingExcludes`) does not work in this build. Two builds with the key (`"*"` and `"/**"`)
+  left the 156 files in place. Next.js applies this key in `collect-build-traces.js` only to the webpack trace
+  (`entryNameFilesMap`). A Turbopack build has no such map. The change was reverted; `next.config.ts` has no excludes key.
+- Cause: the Turbopack trace of 61 routes lists the public folders of other apps (for example the lesson page lists 7,363 files).
+  This is the full-trace problem of spec E-7. It needs a change outside this track.
+- Option for the owner (not done): one `RUN rm -rf` line in `apps/primary-advantage/Dockerfile` after the standalone copy,
+  for the `standard-pack-qc` folders and the two preview files of other apps. Not tested (no local image build on this machine).
+
+`du -sh .next/standalone/apps/*` (largest first): www-reading-advantage 507M, advantage-games 435M, reading-advantage 188M,
+primary-advantage 165M, science-advantage 27M, codecamp-advantage 23M, sales-advantage 1.2M, workbooks 704K,
+accounts 556K, marketing 552K, accounting 496K, activity-vinext-fixture 24K. Total: 1.4G.

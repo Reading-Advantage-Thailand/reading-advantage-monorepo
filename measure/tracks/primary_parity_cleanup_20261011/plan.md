@@ -107,38 +107,47 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - Look check pending (owner, async). Steps: log in as ADMIN; `POST /api/articles/generate` gives 404; student read pages still list and open articles.
     - Callers check: no caller outside the FR-4 list. Extra items removed (their only readers were the generators): `MCQuestionSchema`, `LAQuestionSchema`, `SAQuestionSchema`, `VocabularySchema` in `lib/zod.ts`, and the unused file `data/story-schema.ts` (it held copies of the two generator schemas and had no importer). `canRunContentTooling` stays for `app/api/upload/csv/cleanup/route.ts`. App tsc passed. Full app test run: 219 files, 1328 tests pass.
 
-## Phase 6: Old game host (M4, safe scope)
+## Phase 6: Old game host (M4, safe scope) [checkpoint: PENDING]
 
-- [ ] Task: FR-5 — send the message to the Forge session
-    - [ ] Send the message of spec FR-5: the Primary files that go (FR-7 to FR-9), the two play-kit files that change (FR-6), the one Primary build of this phase, and the two questions
-    - [ ] Record the answer and the date here; delete no file before the answer
-- [ ] Task: FR-6 — the challenge panels read the frame variables
-    - [ ] Red: in `packages/advantage-play-kit/src/react/student-challenge-catalog-panel.test.tsx` and `teacher-challenge-panel.test.tsx`, assert that the panel `borderImageSource` is `var(--apk-arcade-panel-image, url("<base path>/assets/apk/standard-pack-qc/apk-ui-panel-square.png"))` and that each button reads its button variable with the same fallback rule
-    - [ ] Green: `packages/advantage-play-kit/src/react/student-challenge-catalog-panel.tsx:54-58`, `:180`, and `teacher-challenge-panel.tsx:47-51`, `:215`; keep the base path; if the design needs it, one surface variable with `#0f172a` as the fallback
-    - [ ] Red: in `app/[locale]/teacher/game-challenges/__tests__/page.test.tsx`, the frame around the panel sets `--apk-arcade-panel-image: none`, `--apk-arcade-button-primary-image: none`, and `--apk-arcade-button-secondary-image: none`
-    - [ ] Green: `app/[locale]/teacher/game-challenges/page.tsx:15-19` with the values of the Phase 2 design; the student catalog needs no change (`.cq-world` sets the variables)
-    - [ ] Run the play-kit tests; the Reading Advantage and Advantage Games panel tests pass with no change of the expected values (spec NFR-2)
-- [ ] Task: FR-7 — remove the host-proof surface
-    - [ ] Check the callers: `git grep -n -E 'host-proof|HostProof' -- apps/primary-advantage`; each hit is on the spec FR-7 list ("go" or "stays")
-    - [ ] Red: `removed-surfaces.test.ts`, block "M4": the files of spec FR-7 do not exist; no source names `HostProofGameClient`, `isHostProofEnabled`, `HOST_PROOF_ENABLED`, `student/host-proof`, or `api/host-proof`
-    - [ ] Red: `lib/__tests__/host-proof-test-config.test.ts:27-31` expects `pnpm exec tsx scripts/seed-host-proof-session.ts && PORT=3001 npm run dev`
-    - [ ] Green: delete the files and the tests of spec FR-7; change `host-proof-test-config.ts:44-46`; remove the `"host-proof"` segment at `lib/__tests__/api-no-direct-db.test.ts:32` and change its case at `:76`
-- [ ] Task: FR-8 — remove the old student host and the package dependency
-    - [ ] Red: `removed-surfaces.test.ts`, block "M4": `components/apk/StudentCartridgeHost.tsx`, `components/apk/apk-host-layout.ts`, and `lib/apk/realm-carver-input.ts` do not exist; `package.json` and `next.config.ts` do not name `@reading-advantage/game-cartridges` (the `-3d` package stays)
-    - [ ] Green: delete the files and the tests of spec FR-8; change `components/__tests__/structural-alignment-i18n.test.tsx` (`:127`, `:169`, `:233-326`), `components/__tests__/loading-state-content.behavior.test.tsx` (`:110`, `:147`, `:189-221`), and `app/api/v1/apk/__tests__/challenge-routes.test.ts:26-29`
-    - [ ] If `components/games/__tests__/game-host.test.tsx` has no case for the translated `ApkHost.readMode`, `listenMode`, and `signInToPlayChallenge` labels, add one there
-    - [ ] Green: remove the dependency at `package.json:59` and the entry at `next.config.ts:18`; run `pnpm install --lockfile-only`; `git diff --stat pnpm-lock.yaml` shows a change in the Primary importer only
-- [ ] Task: FR-9 — remove the Primary ElvGames files and check the build output
-    - [ ] Check that `asset-copy.md` records a complete copy (Phase 1); stop if it does not
-    - [ ] Red: `removed-surfaces.test.ts`, block "M4": `public/assets/apk/standard-pack-qc` does not exist; no source names `standard-pack-qc`
-    - [ ] Green: `git rm -r apps/primary-advantage/public/assets/apk/standard-pack-qc`
-    - [ ] Tell the Forge session "build start"; run `pnpm turbo run build --filter=primary-advantage` (the one heavy job); tell "build done"
-    - [ ] `find apps/primary-advantage/.next/standalone \( -path '*standard-pack-qc*' -o -path '*advantage-play-kit/assets*' \) -type f | wc -l` prints 0; if not, add `outputFileTracingExcludes` to `next.config.ts` (spec FR-9) and build again
-    - [ ] Record `du -sh apps/primary-advantage/.next/standalone/apps/*` in `asset-copy.md` for the owner (spec E-7)
-- [ ] Task: Grep check 'M4'
-    - [ ] `git grep -n -E '@reading-advantage/game-cartridges($|[^-])|StudentCartridgeHost|HostProofGameClient|host-proof-config"|isHostProofEnabled|HOST_PROOF_ENABLED|student/host-proof|api/host-proof|standard-pack-qc|apk-host-layout|realm-carver-input' -- apps/primary-advantage <guard>` gives no output
-    - [ ] `git grep -n 'link:../../packages/game-cartridges$' -- pnpm-lock.yaml` shows the Reading Advantage and Advantage Games importers only
-- [ ] Task: Measure - User Manual Verification 'Phase 6: Old game host (M4, safe scope)' (Protocol in workflow.md)
+- [x] Task: FR-5 — send the message to the Forge session
+    - [x] Send the message of spec FR-5: the Primary files that go (FR-7 to FR-9), the two play-kit files that change (FR-6), the one Primary build of this phase, and the two questions (the orchestrator sent it)
+    - [x] Record the answer and the date here; delete no file before the answer
+        - Forge answer, 2026-10-12: "no open Forge work imports packages/game-cartridges, so the M4 cleanup does not block Forge. scripts/monorepo-sync.ts writes only packages/advantage-play-kit-3d, packages/game-cartridges-3d, and apps/primary-advantage/public/ (rpg/, packs/avatar/); it does not read game-cartridges. game-cartridges-3d and advantage-play-kit-3d have no dependency on @reading-advantage/game-cartridges. Forge has no ElvGames or host-proof references. Forge will update its doc pointers after the cleanup merges. Cartridge changes go through Forge first. Forge uses the heavy lock."
+        - The shared heavy lock (`~/Desktop/primary-parity-progress/heavy.lock`) replaces the "build start" and "build done" messages to Forge, because Forge wraps its heavy jobs with the same lock.
+- [x] Task: FR-6 — the challenge panels read the frame variables
+    - [x] Red: in `packages/advantage-play-kit/src/react/student-challenge-catalog-panel.test.tsx` and `teacher-challenge-panel.test.tsx`, assert that the panel `borderImageSource` is `var(--apk-arcade-panel-image, url("<base path>/assets/apk/standard-pack-qc/apk-ui-panel-square.png"))` and that each button reads its button variable with the same fallback rule
+    - [x] Green: `packages/advantage-play-kit/src/react/student-challenge-catalog-panel.tsx:54-58`, `:180`, and `teacher-challenge-panel.tsx:47-51`, `:215`; keep the base path; if the design needs it, one surface variable with `#0f172a` as the fallback
+    - [x] Red: in `app/[locale]/teacher/game-challenges/__tests__/page.test.tsx`, the frame around the panel sets `--apk-arcade-panel-image: none`, `--apk-arcade-button-primary-image: none`, and `--apk-arcade-button-secondary-image: none`
+    - [x] Green: `app/[locale]/teacher/game-challenges/page.tsx:15-19` with the values of the Phase 2 design; the student catalog needs no change (`.cq-world` sets the variables)
+    - [x] Run the play-kit tests; the Reading Advantage and Advantage Games panel tests pass with no change of the expected values (spec NFR-2)
+        - Play-kit suite: 79 files, 751 tests pass. The patch of Phase 2 applied unchanged. Extras (plan-review L-1, L-2, orchestrator): the class select has the class `apk-challenge-select`; the row divider reads `--apk-arcade-panel-divider` (fallback `#475569`); the status line has the class `apk-challenge-status` and `data-status`. `styles/rpg.css` styles all three with the existing wood, parchment, and gold tokens, so the status shows as a wood badge (the `cq-sign` look). No new asset.
+- [x] Task: FR-7 — remove the host-proof surface
+    - [x] Check the callers: `git grep -n -E 'host-proof|HostProof' -- apps/primary-advantage`; each hit is on the spec FR-7 list ("go" or "stays")
+    - [x] Red: `removed-surfaces.test.ts`, block "M4": the files of spec FR-7 do not exist; no source names `HostProofGameClient`, `isHostProofEnabled`, `HOST_PROOF_ENABLED`, `student/host-proof`, or `api/host-proof`
+    - [x] Red: `lib/__tests__/host-proof-test-config.test.ts:27-31` expects `pnpm exec tsx scripts/seed-host-proof-session.ts && PORT=3001 npm run dev`
+    - [x] Green: delete the files and the tests of spec FR-7; change `host-proof-test-config.ts:44-46`; remove the `"host-proof"` segment at `lib/__tests__/api-no-direct-db.test.ts:32` and change its case at `:76`
+- [x] Task: FR-8 — remove the old student host and the package dependency
+    - [x] Red: `removed-surfaces.test.ts`, block "M4": `components/apk/StudentCartridgeHost.tsx`, `components/apk/apk-host-layout.ts`, and `lib/apk/realm-carver-input.ts` do not exist; `package.json` and `next.config.ts` do not name `@reading-advantage/game-cartridges` (the `-3d` package stays)
+    - [x] Green: delete the files and the tests of spec FR-8; change `components/__tests__/structural-alignment-i18n.test.tsx` (`:127`, `:169`, `:233-326`), `components/__tests__/loading-state-content.behavior.test.tsx` (`:110`, `:147`, `:189-221`), and `app/api/v1/apk/__tests__/challenge-routes.test.ts:26-29`
+    - [x] If `components/games/__tests__/game-host.test.tsx` has no case for the translated `ApkHost.readMode`, `listenMode`, and `signInToPlayChallenge` labels, add one there
+    - [x] Green: remove the dependency at `package.json:59` and the entry at `next.config.ts:18`; run `pnpm install --lockfile-only`; `git diff --stat pnpm-lock.yaml` shows a change in the Primary importer only
+        - Deviation: `pnpm install --lockfile-only` also re-resolved peer suffixes in other importers (38 insertions, 16 deletions). It was reverted and the three lines of the Primary importer were removed by hand (3 deletions). `pnpm install --frozen-lockfile --lockfile-only` accepts the result.
+- [x] Task: FR-9 — remove the Primary ElvGames files and check the build output
+    - [x] Check that `asset-copy.md` records a complete copy (Phase 1); stop if it does not
+        - Phase 1 section: diff and cmp clean, manifest 73,052 lines, sizes equal.
+    - [x] Red: `removed-surfaces.test.ts`, block "M4": `public/assets/apk/standard-pack-qc` does not exist; no source names `standard-pack-qc`
+    - [x] Green: `git rm -r apps/primary-advantage/public/assets/apk/standard-pack-qc`
+    - [x] Run `pnpm turbo run build --filter=primary-advantage` (the one heavy job) under the heavy lock; the lock replaces the "build start" and "build done" messages to Forge
+    - [~] `find apps/primary-advantage/.next/standalone \( -path '*standard-pack-qc*' -o -path '*advantage-play-kit/assets*' \) -type f | wc -l` prints 0; if not, add `outputFileTracingExcludes` to `next.config.ts` (spec FR-9) and build again
+        - Result: 0 files in `standalone/apps/primary-advantage`; 156 files in the folders of other apps. `outputFileTracingExcludes` has no effect in a Turbopack build (tried with two route keys, two extra builds, then reverted). See `asset-copy.md`, section "Build output check". Owner decision: a Dockerfile `rm` line, or a later fix of the full trace (spec E-7).
+    - [x] Record `du -sh apps/primary-advantage/.next/standalone/apps/*` in `asset-copy.md` for the owner (spec E-7)
+- [x] Task: Grep check 'M4'
+    - [x] `git grep -n -E '@reading-advantage/game-cartridges($|[^-])|StudentCartridgeHost|HostProofGameClient|host-proof-config"|isHostProofEnabled|HOST_PROOF_ENABLED|student/host-proof|api/host-proof|standard-pack-qc|apk-host-layout|realm-carver-input' -- apps/primary-advantage <guard>` gives no output
+    - [x] `git grep -n 'link:../../packages/game-cartridges$' -- pnpm-lock.yaml` shows the Reading Advantage and Advantage Games importers only
+- [x] Task: Measure - User Manual Verification 'Phase 6: Old game host (M4, safe scope)' (Protocol in workflow.md)
+    - Look check pending (owner, async). Steps: open `/en/student/games` as a student (day and night): the challenge panel shows parchment, ink text, a gold Play button, and no pixel-art frame. Open `/en/teacher/game-challenges` as a teacher: the panel looks like a staff card. Open the network log: no request to `/assets/apk/standard-pack-qc/`. `/en/student/host-proof/games` and `POST /api/host-proof/games/completions` give 404. `/assets/apk/standard-pack-qc/apk-ui-panel-square.png` gives 404.
+    - Captures: none for this phase (the build was not served; Phase 9 makes the captures of the built pages).
+    - Defaults used for member questions: none asked in this phase (Q1 default stands: the package `game-cartridges` stays for Reading Advantage and Advantage Games).
 
 ## Phase 7: Old game URLs (STU-09)
 
