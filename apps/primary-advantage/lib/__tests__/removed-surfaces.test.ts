@@ -156,3 +156,20 @@ describe("M4: old game host (safe scope)", () => {
     expect(filesMatching(/standard-pack-qc/)).toEqual([]);
   });
 });
+
+describe("E-7: ElvGames files of other apps in the image", () => {
+  it("has a Dockerfile line that deletes them from the standalone tree", () => {
+    const dockerfile = readFileSync(path.join(appRoot, "Dockerfile"), "utf8");
+    const runner = dockerfile.slice(dockerfile.indexOf("AS runner"));
+    const line = runner.split("\n").find((l) => l.startsWith("RUN rm -rf") && l.includes("standard-pack-qc"));
+    expect(line).toBeDefined();
+    for (const rel of [
+      "apps/advantage-games/public/assets/apk/standard-pack-qc",
+      "apps/reading-advantage/public/assets/apk/standard-pack-qc",
+      "apps/advantage-games/scripts/generate-standard-pack-qc-preview.mjs",
+      "apps/advantage-games/src/lib/apk/standard-pack-qc-preview.json",
+    ]) {
+      expect(line, rel).toContain(rel);
+    }
+  });
+});

@@ -29,6 +29,9 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/primary-advantage/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/primary-advantage/.next/static ./apps/primary-advantage/.next/static
+# Owner rule: no ElvGames asset in the image. The standalone trace also copies ElvGames files of other apps
+# (spec E-7, asset-copy.md); delete them here. The guard test lib/__tests__/removed-surfaces.test.ts reads this line.
+RUN rm -rf apps/advantage-games/public/assets/apk/standard-pack-qc apps/reading-advantage/public/assets/apk/standard-pack-qc apps/advantage-games/scripts/generate-standard-pack-qc-preview.mjs apps/advantage-games/src/lib/apk/standard-pack-qc-preview.json
 # Standalone output traces only the public files the code references; the packs, the 2D sprite
 # pack, the RPG skin, and the fonts are served by URL and must be copied in full.
 COPY --from=builder --chown=nextjs:nodejs /app/apps/primary-advantage/public ./apps/primary-advantage/public
