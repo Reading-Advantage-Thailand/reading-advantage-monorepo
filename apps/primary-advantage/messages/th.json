@@ -3906,6 +3906,21 @@
     "exit": "ออกจากตัวอย่าง",
     "menuItem": "มุมมองนักเรียน",
     "notSaved": "ตัวอย่าง: ไม่บันทึก",
-    "backHome": "กลับหน้าหลัก"
+    "backHome": "กลับหน้าหลัก",
+    "emptyTitle": "Nothing to show yet",
+    "homeHeroTitle": "Hello, Student",
+    "homeHeroLine": "This is the home a student sees. Hero, XP, and coins start at zero.",
+    "emptyLesson": "A student sees today's lesson here.",
+    "emptyBooks": "A student sees the class books here.",
+    "emptyReading": "A student sees the story to continue here.",
+    "emptyQuest": "A student sees the Class Quest here.",
+    "emptyHistory": "A student sees the stories they read here.",
+    "emptyReports": "A student sees XP charts and activity here.",
+    "emptySentences": "A student sees saved sentences and practice here.",
+    "emptyVocabulary": "A student sees saved words here.",
+    "questNoClass": "Not in a class",
+    "reedyStudentsOnly": "Only students talk to Reedy",
+    "reedyStudentsOnlyLine": "Reedy uses voice minutes, so a student account starts the talk.",
+    "gameSampleWords": "This game uses sample words. Nothing is saved."
   }
 }

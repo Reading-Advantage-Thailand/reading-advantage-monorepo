@@ -21,6 +21,7 @@ vi.mock("../portrait-canvas", () => ({
 }));
 
 import { AvatarPicker } from "../avatar-picker";
+import { StudentViewProvider } from "@/components/student/student-view-provider";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -68,5 +69,25 @@ describe("AvatarPicker", () => {
   it("keeps every control at 48 px", () => {
     renderWithMessages(<AvatarPicker initial={{ classId: "knight", tints: { skin: "fair", hair: "brown", eyes: "blue", cloth: "sky" }, catalogVersion: "1.0.0", updatedAt: "2026-10-05T00:00:00.000Z" }} />, { locale: "en" });
     for (const el of [...screen.getAllByRole("radio"), ...screen.getAllByRole("button"), ...screen.getAllByRole("link")]) expect(el.className).toMatch(/min-h-12|size-12/);
+  });
+});
+
+describe("AvatarPicker in Preview mode", () => {
+  it("lets staff try the colors but turns Save off and says nothing is saved", async () => {
+    const user = userEvent.setup();
+    renderWithMessages(
+      <StudentViewProvider mode="preview">
+        <AvatarPicker initial={null} />
+      </StudentViewProvider>,
+      { locale: "en" },
+    );
+    await user.click(screen.getByRole("button", { name: /Ranger/ }));
+    await user.click(within(screen.getByRole("radiogroup", { name: "Hair" })).getByRole("radio", { name: "Teal" }));
+    expect(JSON.parse(screen.getByRole("img", { name: "Your avatar" }).getAttribute("data-tints")!).hair).toBe("teal");
+    const save = screen.getByRole("button", { name: "Save my avatar" });
+    expect(save).toBeDisabled();
+    expect(save).toHaveAccessibleDescription("Preview: not saved");
+    await user.click(save);
+    expect(mocks.setAvatarProfileAction).not.toHaveBeenCalled();
   });
 });

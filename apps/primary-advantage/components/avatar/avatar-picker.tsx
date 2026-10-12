@@ -8,6 +8,7 @@ import type { AvatarClassId, AvatarProfile, AvatarTints } from "@reading-advanta
 import { setAvatarProfileAction } from "@/actions/avatar";
 import { Link, useRouter } from "@/i18n/navigation";
 import { Panel, RpgButton, Sign, rpgButton } from "@/components/rpg/chrome";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import { cn } from "@/lib/utils";
 import { AvatarPortrait } from "./portrait-canvas";
 import { TINT_OPTIONS, swatchColor } from "./colors";
@@ -22,6 +23,7 @@ import { TINT_OPTIONS, swatchColor } from "./colors";
  */
 export function AvatarPicker({ initial, returnTo = "/student/home" }: { initial: AvatarProfile | null; returnTo?: string }) {
   const t = useTranslations("Avatar");
+  const { isPreview, noteText } = usePreviewSave();
   const router = useRouter();
   const [classId, setClassId] = useState<AvatarClassId | null>(initial?.classId ?? null);
   const [tints, setTints] = useState<AvatarTints | null>(initial?.tints ?? null);
@@ -36,7 +38,7 @@ export function AvatarPicker({ initial, returnTo = "/student/home" }: { initial:
     setStep("colors");
   };
   const save = () => {
-    if (!classId || !tints) return;
+    if (isPreview || !classId || !tints) return;
     setError(null);
     start(async () => {
       const result = await setAvatarProfileAction({ classId, tints });
@@ -116,9 +118,14 @@ export function AvatarPicker({ initial, returnTo = "/student/home" }: { initial:
             </p>
           ) : null}
           <div className="flex flex-wrap items-center gap-3">
-            <RpgButton tone="gold" onClick={save} disabled={pending} className="min-h-12 px-6">
+            <RpgButton tone="gold" onClick={save} disabled={pending || isPreview} aria-describedby={isPreview ? "avatar-preview-note" : undefined} className="min-h-12 px-6">
               {pending ? t("saving") : t("save")}
             </RpgButton>
+            {isPreview ? (
+              <span id="avatar-preview-note" className="cq-muted text-sm">
+                {noteText}
+              </span>
+            ) : null}
             <RpgButton tone="iron" onClick={() => setStep("class")} className="min-h-12">
               {t("back")}
             </RpgButton>

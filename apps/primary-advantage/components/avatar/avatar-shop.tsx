@@ -15,6 +15,7 @@ import { Bubble, Coins, Panel, RpgButton, Sign } from "@/components/rpg/chrome";
 import { ItemIcon } from "@/components/rpg/item-icon";
 import { Sprite } from "@/components/rpg/sprite";
 import { ART, NPC_ART } from "@/lib/rpg/places";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import { cn } from "@/lib/utils";
 import { AvatarPortrait } from "./portrait-canvas";
 import { dyeColor } from "./colors";
@@ -69,6 +70,7 @@ export function AvatarShop({
   loadout: AvatarLoadout;
 }) {
   const t = useTranslations("Avatar");
+  const { isPreview, noteText } = usePreviewSave();
   const [items, setItems] = useState(initial);
   const [gp, setGp] = useState(initialGp);
   const [slot, setSlot] = useState<AvatarSlot | "all">("all");
@@ -110,6 +112,7 @@ export function AvatarShop({
     setError(null);
   };
   const buy = (itemId: string, chosenDye?: string) => {
+    if (isPreview) return;
     setError(null);
     start(async () => {
       const response = await fetch("/api/v1/avatar/purchase", {
@@ -336,7 +339,8 @@ export function AvatarShop({
                 ) : canBuy ? (
                   <RpgButton
                     tone="gold"
-                    disabled={pending}
+                    disabled={pending || isPreview}
+                    aria-describedby={isPreview ? "shop-preview-note" : undefined}
                     onClick={() => buy(selected.id, dye ?? undefined)}
                   >
                     <img src={ART.coin} alt="" />
@@ -349,7 +353,12 @@ export function AvatarShop({
                 ) : (
                   <Sign small>{t("shop.owned")}</Sign>
                 )}
-                {canBuy && price > 0 ? (
+                {isPreview ? (
+                  <span id="shop-preview-note" className="cq-muted text-sm">
+                    {noteText}
+                  </span>
+                ) : null}
+                {canBuy && price > 0 && !isPreview ? (
                   <span className="cq-muted text-sm">
                     {gp >= price
                       ? t("shop.youKeep", { gp: gp - price })

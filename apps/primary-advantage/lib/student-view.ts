@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { AVATAR_PACK_VERSION, STARTER_SETS } from "@reading-advantage/avatar-kit";
+import type { AvatarProfile } from "@reading-advantage/game-contracts";
+import type { StudentHome } from "@reading-advantage/domain/primary-home";
 import { isStaffRole } from "./permissions";
 import { normalizeRole } from "./authorization";
 import { roleDefaultRedirects } from "./route-policies";
@@ -113,4 +116,23 @@ export function guardStudentRoute(user: { role?: string | null } | null | undefi
  */
 export function isPreviewResult(result: unknown): result is PreviewActionResult {
   return typeof result === "object" && result !== null && (result as { status?: unknown }).status === "preview";
+}
+
+/**
+ * The home numbers of a staff member in Preview mode: the default hero, zero XP and streak, level
+ * 1, no lesson, and no story. It holds no sample student data and reads no row.
+ * @returns The same shape that `getStudentHome` returns for a student.
+ */
+export function previewHomeModel(): StudentHome {
+  return { xp: 0, level: 1, cefrLevel: null, streakDays: 0, todayLesson: null, continueReading: null };
+}
+
+/**
+ * The default hero that the shop try-on dresses in Preview mode: the first starter set. It is
+ * not saved and not tied to any user.
+ * @returns An avatar profile of the first hero class.
+ */
+export function previewHeroProfile(): AvatarProfile {
+  const set = STARTER_SETS[0]!;
+  return { classId: set.id as AvatarProfile["classId"], tints: set.tints as AvatarProfile["tints"], catalogVersion: AVATAR_PACK_VERSION, updatedAt: new Date(0).toISOString() };
 }
