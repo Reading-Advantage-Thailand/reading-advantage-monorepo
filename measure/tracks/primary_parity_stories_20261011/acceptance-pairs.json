@@ -59,6 +59,7 @@
       "role": "STUDENT",
       "legacyPath": "/en/student/stories/cmmcadr1q00rjs6012b0ym9oa/1",
       "newPath": "/en/student/read/stories/{map:stories:cmmcadr1q00rjs6012b0ym9oa}/1",
+      "steps": "./acceptance-steps-stories.ts",
       "colorSchemes": [
         "light",
         "dark"
@@ -86,13 +87,14 @@
       "role": "STUDENT",
       "legacyPath": "/en/student/stories/cmmcadr1q00rjs6012b0ym9oa/1",
       "newPath": "/en/student/read/stories/{map:stories:cmmcadr1q00rjs6012b0ym9oa}/1",
+      "steps": "./acceptance-steps-story-mcq.ts",
       "widths": [
         375
       ],
       "checks": [
         {
           "id": "ST-A4-a",
-          "behavior": "MCQ with 4 of 5 correct. Both apps add 8 XP (AC-4). Record XP before and after."
+          "behavior": "Answer the 5 MCQ with the first option and submit. Both apps add score x 2 XP (4 of 5 correct gives 8 XP, AC-4). The steps record XP before and after on the page."
         },
         {
           "id": "ST-A4-b",
@@ -112,17 +114,18 @@
       "role": "STUDENT",
       "legacyPath": "/en/student/stories/cmmjfv7iz00v0s6015lcm2zmm/1",
       "newPath": "/en/student/read/stories/{map:stories:cmmjfv7iz00v0s6015lcm2zmm}/1",
+      "steps": "./acceptance-steps-story-written.ts",
       "widths": [
         375
       ],
       "checks": [
         {
           "id": "ST-A5-a",
-          "behavior": "SAQ: feedback shows and the submit adds the score as XP in both apps (AC-5). A second submit is refused."
+          "behavior": "Fill a valid SAQ and LAQ answer. The steps record XP before and after but do not submit (the kit has no AI key). Feedback, submit XP, and the second-submit refusal are proven by the domain tests; the batch runner confirms them with a headed pass (AC-5)."
         },
         {
           "id": "ST-A5-b",
-          "behavior": "LAQ shorter than level x 30 characters: the page asks for a longer answer. A valid answer gets 2 feedback tries at most and the submit adds the rubric total."
+          "behavior": "The LAQ box shows the level x 30 minimum and the 2000-character cap (proven by the component tests)."
         }
       ]
     },
@@ -146,6 +149,68 @@
           "id": "ST-A6-b",
           "behavior": "The chapter picture loads in the new app (a request for images/story/<legacy cuid>.png).",
           "network": "images/story/"
+        }
+      ]
+    },
+    {
+      "id": "ST-A7",
+      "rows": [
+        "STU-04"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/stories/cmmcadr1q00rjs6012b0ym9oa/2",
+      "newPath": "/en/student/read/stories/{map:stories:cmmcadr1q00rjs6012b0ym9oa}/2",
+      "widths": [
+        375
+      ],
+      "checks": [
+        {
+          "id": "ST-A7-a",
+          "behavior": "After the MCQ, SAQ, and LAQ of this chapter are all done, 3 to 5 new words and the chapter sentences save to the vocabulary and sentence decks with the chapter id as source_id. Check the decks and the flashcard tables (manual headed pass at batch time; Phase S6 builds the new save)."
+        },
+        {
+          "id": "ST-A7-b",
+          "behavior": "A word already in the deck saves no second card. With only one question type done, nothing saves."
+        }
+      ]
+    },
+    {
+      "id": "ST-A8",
+      "rows": [
+        "STU-04"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/stories/cmmcadr1q00rjs6012b0ym9oa/1",
+      "newPath": "/en/student/stories/cmmcadr1q00rjs6012b0ym9oa/1",
+      "widths": [
+        375
+      ],
+      "checks": [
+        {
+          "id": "ST-A8-a",
+          "behavior": "The old chapter URL in the new app redirects to /student/read/stories/<uuid>/1 with the same chapter title as the legacy page."
+        },
+        {
+          "id": "ST-A8-b",
+          "behavior": "Chapter 1 of 8 shows \"Next chapter\" and no \"Previous chapter\" in both apps."
+        }
+      ]
+    },
+    {
+      "id": "ST-A9",
+      "rows": [
+        "STU-04"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/stories/unknowncuid00",
+      "newPath": "/en/student/stories/unknowncuid00",
+      "widths": [
+        375
+      ],
+      "checks": [
+        {
+          "id": "ST-A9-a",
+          "behavior": "An unknown story id shows the not-found page in both apps, with no redirect loop."
         }
       ]
     }
