@@ -29,3 +29,20 @@ no schema, no locale file. No Critical or High finding.
 - Low: the contract test checks the YAML text only (like the deploy gate test). It cannot run the build.
 - Lesson: `pnpm --filter <pkg> <script> <abs paths>` passes the arguments through (pnpm 11), so the
   scripts need no wrapper. The tsx import of the Workbooks `i18n/*.ts` files works from an archive copy.
+
+## Phase S2: Check the class book in the browser
+
+Review of the phase diff: one script block, one helper file, one node test, and track docs. No app
+code, no schema, no locale file. No Critical or High finding. The script block was not run.
+
+- Medium: the block never ran in a browser. Selectors rest on the page source
+  (`[data-class-book-slot]`, `#class-login`, `#answer-key`, `section[aria-labelledby^="guide-period-"] > ol > li`,
+  `section[aria-label] button[aria-pressed]`, link name "Lesson plan"). The first batch run can need a selector fix.
+- Medium: check 1 (card above the sign-in panel) fails until S4 is in the build. This is on purpose.
+- Medium: if S3 or S4 rename the strings "Assign", "Book assigned.", or "Lesson plan", change the block in the same commit.
+- Low: the helpers file is `.mjs` (the script runs under plain node). The test is `.test.mjs`, so the
+  kit `tsc` run (`include` of `.ts` only) does not type-check it.
+- Low: the student check uses student 1 of the class code flow; the run does not test a book that is not approved.
+- Low: the check strings are English only (`/en/` URLs), as the other blocks.
+- Why no pure-helper test of the browser flow: the script has top-level `await` and starts Chromium
+  on import, so only the extracted pure judges have a test.

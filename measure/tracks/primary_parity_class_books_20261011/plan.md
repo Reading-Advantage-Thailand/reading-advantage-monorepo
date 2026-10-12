@@ -78,16 +78,20 @@ _Story ref: spec.md#story-s1_
 ## Phase S2: Check the class book in the browser
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Define the check
-    - [ ] List the checks of spec S2 with their names and the demo accounts (demo teacher, demo class, one demo student)
-- [ ] Task: Write the class book block of the go/no-go browser script
-    - [ ] Add the block to the go/no-go script (today `.qa-tmp/rehearsal1-gonogo.mjs`, untracked, in the main checkout; use the tracked path if `primary_parity_acceptance_20261011` moves the script)
-    - [ ] Check the class page order, the assign, the lesson page, the projector text, and `/en/b/o3-2/1` for the student
-    - [ ] Make a second run pass when the book is already assigned (the assign is an upsert, `assignClassBook`)
+- [x] Task: Define the check
+    - [x] List the checks of spec S2 with their names and the demo accounts (demo teacher, demo class, one demo student)
+        - The 11 checks and the accounts are in `browser-check/README.md`.
+- [x] Task: Write the class book block of the go/no-go browser script
+    - [x] Add the block to the go/no-go script: the tracked `scripts/primary-parity/cutover-check.mjs` (block runs by default; `CLASS_BOOK_CHECK=off` skips it)
+    - [x] Check the class page order, the assign, the lesson page, the projector text, and `/en/b/o3-2/1` for the student
+    - [x] Make a second run pass when the book is already assigned (the assign is an upsert, `assignClassBook`)
+    - [x] Pure helpers in `scripts/primary-parity/class-book-checks.mjs`; test `__tests__/class-book-checks.test.mjs` (7 tests pass)
 - [ ] Task: Run the check on the scratch copy
-    - [ ] Run the app against the scratch copy (build and `next start`, one heavy job), then run the script once
-    - [ ] Save the captures and the result list in `measure/tracks/primary_parity_class_books_20261011/browser-check/`
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Check the class book in the browser' (Protocol in workflow.md)
+    - [ ] batch run (orchestrator): needs the catalogue import (S1 import text) on a _run_ clone and the S3-S5 UI
+    - [ ] Run steps: `browser-check/README.md`
+    - [ ] Save the captures and the result list in `measure/tracks/primary_parity_class_books_20261011/browser-check/` (result list only; no PNG in git)
+- [x] Task: Measure - User Manual Verification 'Phase S2: Check the class book in the browser' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: run `browser-check/README.md` steps 1 to 6; read the 11 `class book:` lines (all PASS on both runs); open `teacher-class-book-card.png` and `student1-class-book-qr.png` from the shots folder.
 
 ## Phase S3: Tell the teacher what to do when the catalogue is empty
 _Story ref: spec.md#story-s3_

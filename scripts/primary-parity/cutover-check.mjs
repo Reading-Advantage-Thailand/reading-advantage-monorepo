@@ -1,9 +1,13 @@
 // Rehearsal 1 go/no-go browser check (cutover spec §10) against a local `next start` on the
 // rehearsal target. Reads the rehearsal hand-out CSV; never prints a password.
+// The class book block (spec S2) runs by default; CLASS_BOOK_CHECK=off skips it. It needs the catalogue
+// import (cloudbuild-catalogue.yaml) and assigns Origins 3.2 (teacher-led); a rerun with the book
+// already assigned passes, because the assign is an upsert.
 // Usage: [NEW_PASSWORDS_OUT=<private csv>] node scripts/primary-parity/cutover-check.mjs <handout.csv> <teacher username> <admin username> <system username or -> <classroomId | class name | first>
 import { readFileSync, mkdirSync, appendFileSync, chmodSync, existsSync } from "node:fs";
 import { randomBytes } from "node:crypto";
 import { chromium } from "playwright";
+import { BOOK_KEY, BOOK_LABEL, bookCardFirst, classBookIdFromHref, judgeLessonPage, judgeProjector, judgeStudentLanding } from "./class-book-checks.mjs";
 
 const [csvPath, teacherUser, adminUser, systemUser, classroomId] = process.argv.slice(2);
 const BASE = process.env.BASE ?? "http://localhost:3000";
@@ -203,6 +207,77 @@ try {
   const listOk = await s1.page.evaluate(() => [...document.images].filter((i) => i.src.includes("/images/") && i.naturalWidth > 0).length);
   check("Read list shows article pictures", listOk >= 3, `${listOk} loaded`);
   await s1.page.screenshot({ path: `${SHOTS}/student1-read-list.png` });
+
+  // Class book (spec S2): card above the sign-in panel, assign, lesson page, projector, student QR link.
+  if (process.env.CLASS_BOOK_CHECK !== "off") {
+    const bp = await teacher.ctx.newPage();
+    try {
+      await gotoRetry(bp, `${BASE}/en/teacher/class-roster/${classId}`, { waitUntil: "networkidle", timeout: 120000 });
+      const card = bp.locator("[data-class-book-slot]").first();
+      await card.waitFor({ timeout: 60000 }).catch(() => {});
+      const tops = await bp.evaluate(() => {
+        const top = (sel) => { const el = document.querySelector(sel); return el ? el.getBoundingClientRect().top + window.scrollY : null; };
+        return { book: top("[data-class-book-slot]"), login: top("#class-login") };
+      });
+      check("class book: the book card is above the sign-in panel", bookCardFirst(tops.book, tops.login), `card ${tops.book === null ? "missing" : "found"}, panel ${tops.login === null ? "missing" : "found"}`);
+      await bp.screenshot({ path: `${SHOTS}/teacher-class-book-card.png`, fullPage: true });
+
+      const option = card.locator("select[name=bookId] option", { hasText: BOOK_LABEL });
+      const haveOption = (await option.count()) > 0;
+      check(`class book: the assign form lists ${BOOK_LABEL}`, haveOption);
+      if (haveOption) {
+        await card.locator("select[name=bookId]").selectOption({ label: BOOK_LABEL });
+        await card.locator("select[name=mode]").selectOption("teacher_led");
+        await card.getByRole("button", { name: "Assign", exact: true }).click();
+        const assigned = await card.getByText("Book assigned.", { exact: true }).waitFor({ timeout: 60000 }).then(() => true).catch(() => false);
+        check("class book: the page shows \"Book assigned.\"", assigned);
+      }
+
+      // Reload so the card lists the book, then read the lesson plan link of the book.
+      await gotoRetry(bp, `${BASE}/en/teacher/class-roster/${classId}`, { waitUntil: "networkidle", timeout: 120000 });
+      const planHref = await bp.locator("[data-class-book-slot] li", { hasText: BOOK_LABEL }).first().getByRole("link", { name: "Lesson plan" }).getAttribute("href", { timeout: 30000 }).catch(() => null);
+      const classBookId = classBookIdFromHref(planHref);
+      check("class book: the card links to the lesson plan of the book", !!classBookId);
+      if (classBookId) {
+        const base = `${BASE}/en/teacher/class-roster/${classId}/books/${classBookId}`;
+        await gotoRetry(bp, `${base}/lessons/1`, { waitUntil: "networkidle", timeout: 120000 });
+        await bp.screenshot({ path: `${SHOTS}/teacher-class-book-lesson1.png`, fullPage: true });
+        const facts = await bp.evaluate(() => {
+          const text = document.body.innerText;
+          const heading = document.querySelector("h1")?.textContent ?? "";
+          return {
+            title: heading.replace(/\s+/g, " ").trim(),
+            stepCount: document.querySelectorAll('section[aria-labelledby^="guide-period-"] > ol > li').length,
+            hasProjectorLink: !!document.querySelector('a[href$="/lessons/1/projector"]'),
+            hasAnswerKey: !!document.getElementById("answer-key"),
+            answerKeyEmpty: text.includes("This lesson has no answer key in the catalogue yet."),
+            notLinked: text.includes("This lesson is not linked to an article yet."),
+          };
+        });
+        for (const c of judgeLessonPage(facts)) check(c.name, c.ok, c.note);
+
+        await gotoRetry(bp, `${base}/lessons/1/projector`, { waitUntil: "networkidle", timeout: 120000 });
+        await bp.screenshot({ path: `${SHOTS}/teacher-class-book-projector.png` });
+        const proj = await bp.evaluate(() => ({
+          heading: (document.querySelector("h1")?.textContent ?? "").replace(/\s+/g, " ").trim(),
+          paragraphs: [...document.querySelectorAll("section[aria-label] button[aria-pressed]")].filter((x) => x.innerText.trim().length > 20).length,
+        }));
+        for (const c of judgeProjector(proj)) check(c.name, c.ok, c.note);
+      }
+
+      // A student of the class opens the printed QR link.
+      await gotoRetry(s1.page, `${BASE}/en/b/${BOOK_KEY}/1`, { waitUntil: "domcontentloaded", timeout: 120000 });
+      await s1.page.waitForURL((u) => /\/student\//.test(u.pathname), { timeout: 60000 }).catch(() => {});
+      await s1.page.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
+      const landing = await s1.page.locator("body").innerText().catch(() => "");
+      for (const c of judgeStudentLanding(new URL(s1.page.url()).pathname, landing)) check(c.name, c.ok, c.note);
+      await s1.page.screenshot({ path: `${SHOTS}/student1-class-book-qr.png` });
+    } catch (err) {
+      check("class book: block error", false, String(err).slice(0, 300));
+    } finally {
+      await bp.close().catch(() => {});
+    }
+  }
   await s1.ctx.close();
 
   // The teacher makes a new code; student 2 signs in with it; the old code stops working.

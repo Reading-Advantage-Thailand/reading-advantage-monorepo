@@ -174,6 +174,7 @@ Owner look check: <date and answer, or "pending">
 `scripts/primary-parity/cutover-check.mjs` is the rehearsal 1 go/no-go browser check, copied with no change in behavior.
 Usage: `[NEW_PASSWORDS_OUT=<private csv>] node scripts/primary-parity/cutover-check.mjs <handout.csv> <teacher username> <admin username> <system username or -> <classroomId | class name | first>`.
 Set `BASE` (default `http://localhost:3000`) and `SHOTS`. Members add their blocks to this file; rehearsal 3 runs it.
+The class book block (11 checks named `class book: ...`) runs by default; `CLASS_BOOK_CHECK=off` skips it. It needs the catalogue import on the target and the build with the class book UI. Run steps: `measure/tracks/primary_parity_class_books_20261011/browser-check/README.md`.
 
 ## 11. Batch run (several members at once)
 
