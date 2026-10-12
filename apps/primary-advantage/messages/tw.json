@@ -4012,5 +4012,29 @@
     "menuItem": "學生檢視",
     "notSaved": "預覽：不儲存",
     "backHome": "返回首頁"
+  },
+  "Stories": {
+    "tabsLabel": "Read",
+    "tabArticles": "Articles",
+    "tabStories": "Stories",
+    "title": "Stories",
+    "subtitle": "Pick a book from the shelf. Each story has chapters.",
+    "yourLevel": "Your level: {cefr} · Stories of level {from} to {to}",
+    "search": "Search stories",
+    "searchPlaceholder": "Search by title or topic",
+    "searchButton": "Search",
+    "genres": "Genres",
+    "allGenres": "All",
+    "shelf": "Stories",
+    "level": "Level {level}",
+    "pages": "Pages",
+    "pageOf": "Page {page} of {pages}",
+    "back": "Back",
+    "next": "Turn the page",
+    "empty": "No stories match.",
+    "emptyHint": "Try another genre or clear the search.",
+    "clearFilters": "Clear the filters",
+    "loadError": "We could not load the stories.",
+    "loadErrorHint": "Check the internet connection and try again."
   }
 }
