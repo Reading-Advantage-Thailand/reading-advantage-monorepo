@@ -19,10 +19,7 @@ function footerLinkGroups(t: (key: string) => string, books: string): { title: s
       links: [
         { title: t("aboutUs"), href: "/about" },
         { title: books, href: "/books" },
-        {
-          title: t("support"),
-          href: "https://docs.google.com/forms/d/e/1FAIpQLSe_Ew100kef6j4O4IuiHm4ZeGhOj5FN6JRyJ7-0gvZV9eFgjQ/viewform?usp=sf_link",
-        },
+        { title: t("support"), href: "/contact" },
       ],
     },
     {
