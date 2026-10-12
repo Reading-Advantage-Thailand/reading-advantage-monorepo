@@ -20,7 +20,7 @@ server: no Next build and no dev server on this machine.
 - [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) - look check pending (owner, async)
     - Steps: open each PNG of `design/captures.md`; check the icon, the two colours, the notice (iOS and Chrome), the offline page, and the offline sign at 375 px and 1280 px, day and night.
 
-## Phase S1: Phones with the legacy app switch to the new app
+## Phase S1: Phones with the legacy app switch to the new app [checkpoint: 4065914bc]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Contract for the worker and its headers
