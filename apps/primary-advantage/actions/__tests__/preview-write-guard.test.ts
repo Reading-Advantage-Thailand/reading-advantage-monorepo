@@ -72,7 +72,7 @@ describe("server actions refuse staff in Preview mode", () => {
     mocks.getArticleActivity.mockClear();
   });
 
-  describe.each(["TEACHER", "ADMIN", "SYSTEM"])("as %s", (role) => {
+  describe.each(["TEACHER", "ADMIN", "SYSTEM", "INTERN"])("as %s", (role) => {
     it.each(cases)("%s returns the preview result and writes nothing", async (_name, call) => {
       mocks.currentUser.mockResolvedValue({ id: "u1", role, schoolId: "s1" });
       await expect(call()).resolves.toEqual({ status: "preview" });

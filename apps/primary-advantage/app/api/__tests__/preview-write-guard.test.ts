@@ -105,7 +105,7 @@ describe("student API write routes refuse staff in Preview mode", () => {
     mocks.reads.mockClear();
   });
 
-  describe.each(["TEACHER", "ADMIN", "SYSTEM"])("as %s", (role) => {
+  describe.each(["TEACHER", "ADMIN", "SYSTEM", "INTERN"])("as %s", (role) => {
     it.each(routes)("%s gives 403 PREVIEW_READ_ONLY and writes nothing", async (_name, call) => {
       mocks.user.current = { id: "u1", role, schoolId: "s1" };
       const response = (await call())!;
