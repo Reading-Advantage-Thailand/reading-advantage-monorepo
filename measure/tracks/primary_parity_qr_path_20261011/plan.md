@@ -9,14 +9,16 @@ Start after `primary_parity_class_books_20261011` loads the catalogue. The route
 
 ## Phase D: Design (RPG skin)
 
-- [ ] Task: Design the landing and the case pages
-    - [ ] Read `docs/primary-rpg-skin.md` and `components/rpg/{scene,chrome}.tsx`
-    - [ ] Draw the landing (book name, lesson title, two choices), the unknown book, the number out of range, the lesson not ready, no class for the book, wrong account, and retry pages
-    - [ ] Save static mocks in `measure/tracks/primary_parity_qr_path_20261011/design/` (no app code)
-- [ ] Task: Captures and the owner's look check
-    - [ ] Capture each state at 375 px and 1280 px, day and night, into `design/`
-    - [ ] Record the owner's answer in `design/look-check.md`; record the answers to Member Questions 1 to 4
-- [ ] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
+- [x] Task: Design the landing and the case pages
+    - [x] Read `docs/primary-rpg-skin.md` and `components/rpg/{scene,chrome}.tsx`
+    - [x] Draw the landing (book name, lesson title, two choices), the unknown book, the number out of range, the lesson not ready, no class for the book, wrong account, and retry pages
+    - [x] Save static mocks in `measure/tracks/primary_parity_qr_path_20261011/design/` (no app code) (`design.md`, `mock-source.tsx.txt`)
+- [x] Task: Captures and the owner's look check - look check pending (owner, async)
+    - [x] Capture each state at 375 px and 1280 px, day and night (44 PNG files outside the repository; paths in `design/captures.md`)
+    - [x] Record the owner's answer in `design/look-check.md`; record the answers to Member Questions 1 to 4
+    - Member Question defaults used (spec defaults): Q1 `TUTOR_LESSON_URL_TEMPLATE`, choice 2 only with the setting; Q2 reading code to the lesson flow, writing code to the article page; Q3 two choices always, school first, no cookie; Q4 "This lesson is not ready yet. Ask your teacher." Look check pending (owner, async).
+- [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: open the 44 PNG files of `design/captures.md`; check the landing at 375 px (two choices, 48 px or more, day and night); check each case page text; answer the three look-check questions in `design/look-check.md`.
 
 ## Phase S5: Prove the printed URL without a locale
 _Story ref: spec.md#story-s5_
