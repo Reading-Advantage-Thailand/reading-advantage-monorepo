@@ -6,7 +6,7 @@ Paths are relative to `apps/primary-advantage` unless they start with `packages/
 `packages/domain/src/__tests__/mock-db.ts`; ETL tests extend `packages/db/src/__tests__/primary-legacy-import.test.ts`.
 One heavy job at a time on this machine; the ETL runs in Cloud Build, never on this machine.
 
-## Phase 0: Design
+## Phase 0: Design [checkpoint: c320cf361]
 
 - [x] Task: Design the three pages in the RPG skin
     - [x] Mock the Read tab sign "Articles | Stories" (`Sign` or `cq-tabs`) on `/student/read`
