@@ -34,12 +34,12 @@ const SCHOOL = "5c5c5c5c-0000-4000-8000-000000000001";
 const get = (query: string) => new Request(`http://localhost/api/classrooms${query}`) as NextRequest;
 
 /** The where argument of the classroom listing (the fourth select: caller, roles, admin rows, classrooms). */
-const listingWhere = () => mocks.whereArgs[3];
+const listingWhere = () => mocks.whereArgs[2];
 
 describe("GET /api/classrooms ?schoolId filter", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.selectQueue = [[{ id: "u1" }], [], [], [{ id: "c1", name: "Class", grade: 1 }], []];
+    mocks.selectQueue = [[{ id: "u1" }], [], [{ id: "c1", name: "Class", grade: 1 }], []];
     mocks.whereArgs = [];
   });
 
@@ -55,7 +55,7 @@ describe("GET /api/classrooms ?schoolId filter", () => {
     await GET(get(""));
     expect(listingWhere()).toBeUndefined();
     mocks.whereArgs = [];
-    mocks.selectQueue = [[{ id: "u1" }], [], [], [], []];
+    mocks.selectQueue = [[{ id: "u1" }], [], [], []];
     await GET(get("?schoolId=not-a-uuid"));
     expect(listingWhere()).toBeUndefined();
   });

@@ -37,8 +37,8 @@ describe("GET /api/classrooms authorizes the users.role session (FR-5)", () => {
 
   it("serves an ADMIN session user who has no legacy role rows", async () => {
     mocks.currentUser.mockResolvedValue({ id: "u1", role: "ADMIN", schoolId: "school-a" });
-    // caller row, legacy role names, legacy school-admin rows, classrooms
-    mocks.selectQueue = [[{ id: "u1" }], [], [], [{ id: "c1", name: "Class", grade: 1 }], [], ];
+    // caller row, legacy role names, classrooms
+    mocks.selectQueue = [[{ id: "u1" }], [], [{ id: "c1", name: "Class", grade: 1 }], [], ];
     const response = await GET(new Request("http://localhost/api/classrooms") as NextRequest);
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual([
@@ -48,9 +48,9 @@ describe("GET /api/classrooms authorizes the users.role session (FR-5)", () => {
 
   it("counts students per class with one grouped query on users.role", async () => {
     mocks.currentUser.mockResolvedValue({ id: "u1", role: "ADMIN", schoolId: "school-a" });
-    // caller, role names, school-admin rows, classrooms, then ONE grouped count query
+    // caller, role names, classrooms, then ONE grouped count query
     mocks.selectQueue = [
-      [{ id: "u1" }], [], [],
+      [{ id: "u1" }], [],
       [{ id: "c1", name: "A", grade: 1 }, { id: "c2", name: "B", grade: 2 }],
       [{ classroomId: "c1", total: 3 }],
     ];
@@ -63,7 +63,7 @@ describe("GET /api/classrooms authorizes the users.role session (FR-5)", () => {
 
   it("returns nothing, with no unscoped read, for a school-less ADMIN", async () => {
     mocks.currentUser.mockResolvedValue({ id: "u1", role: "ADMIN", schoolId: null });
-    mocks.selectQueue = [[{ id: "u1" }], [], []];
+    mocks.selectQueue = [[{ id: "u1" }], []];
     const response = await GET(new Request("http://localhost/api/classrooms") as NextRequest);
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual([]);

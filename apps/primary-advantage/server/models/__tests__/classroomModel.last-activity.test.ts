@@ -91,6 +91,12 @@ describe("student list reads return lastActivity (PGlite)", () => {
     expect(byId(await getAllStudentsByAdmin("adm", SCHOOL))).toEqual(expected);
   });
 
+  it("getAllStudentsByAdmin scopes by the authorized school, not by a school_admins row", async () => {
+    await seed();
+    await h.db.execute(sql`DELETE FROM school_admins`);
+    expect(Object.keys(byId(await getAllStudentsByAdmin("adm", SCHOOL))).sort()).toEqual(["s1", "s2", "s3"]);
+  });
+
   it("getAllStudentsInSystem", async () => {
     await seed();
     expect(byId(await getAllStudentsInSystem())).toEqual(expected);

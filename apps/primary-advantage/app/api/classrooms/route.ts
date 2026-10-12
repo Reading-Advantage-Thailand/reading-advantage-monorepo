@@ -68,13 +68,6 @@ export async function GET(
 
     const roleNames = userRoleRows.map((r) => r.roleName);
 
-    // Fetch the user's school admin records.
-    const schoolAdminRows = await tenantDb
-      .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-      .select()
-      .from(userRoles)
-      .where(and(eq(userRoles.userId, user.id), eq(userRoles.userId, user.id)));
-
     // The session role (users.role) is authoritative; legacy rows are additive.
     const sessionRole = normalizeRole(user.role);
     const isAdmin =
@@ -82,7 +75,7 @@ export async function GET(
       sessionRole === "SYSTEM" ||
       roleNames.some((n) => n === "admin" || n === "system");
 
-    if (!isAdmin && schoolAdminRows.length === 0) {
+    if (!isAdmin) {
       return NextResponse.json(
         { error: "Forbidden - Admin access required" },
         { status: 403 },

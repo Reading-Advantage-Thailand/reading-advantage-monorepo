@@ -18,7 +18,6 @@ import {
   userRoles,
   roles,
   schools,
-  schoolAdmins,
   userActivity,
   xpLogs,
 } from '@reading-advantage/db';
@@ -796,7 +795,8 @@ export const getAllStudentsByTeacher = async (
 
 /**
  * Gets students for a school admin in the authorized school.
- * @param adminId The admin identifier.
+ * The caller (controller) checks the ADMIN role and the school. A `school_admins` row is not needed.
+ * @param adminId The admin identifier (kept for the call signature).
  * @param schoolId The authorized school identifier.
  * @returns The school's students.
  */
@@ -805,20 +805,6 @@ export const getAllStudentsByAdmin = async (
   schoolId: string,
 ) => {
   try {
-    const [schoolAdmin] = await db.select({ schoolId: schoolAdmins.schoolId })
-      .from(schoolAdmins)
-      .where(
-        and(
-          eq(schoolAdmins.userId, adminId),
-          eq(schoolAdmins.schoolId, schoolId),
-        ),
-      )
-      .limit(1);
-
-    if (!schoolAdmin) {
-      return [];
-    }
-
     // Get all classrooms for the school
     const adminClassrooms = await db.select({
       classroomId: classrooms.id,
@@ -835,7 +821,7 @@ export const getAllStudentsByAdmin = async (
       .from(classrooms)
       .leftJoin(classroomStudents, eq(classroomStudents.classroomId, classrooms.id))
       .leftJoin(users, eq(users.id, classroomStudents.studentId))
-      .where(eq(classrooms.schoolId, schoolAdmin.schoolId));
+      .where(eq(classrooms.schoolId, schoolId));
 
     // Extract unique students across all classrooms
     const studentMap = new Map();
