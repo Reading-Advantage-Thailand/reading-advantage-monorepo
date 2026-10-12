@@ -48,3 +48,11 @@ No Critical or High finding in the kit. Findings and shortcuts that stay:
 - Shortcut: the legacy build used `npx npm@10 ci --ignore-scripts` plus a manual `npm rebuild esbuild @prisma/engines` because of the slow network. The result is the same lockfile tree.
 - Lesson for lessons-learned: npm 11 `ci` refuses the legacy `package-lock.json` (missing optional platform packages); npm 10 accepts it. Disk was 97-99% full during the run (2.5 GB free).
 - Runbook gap: step 4 should say `npx npm@10 ci` and name the stale-lock fix; step 3 should say `--teacher --admin --student` together.
+
+## Phase 4 (checks and docs)
+
+No Critical or High finding. Fixed in 4f7066a58: the three Low findings of the smoke run, and `capture.ts` takes several `--pairs` (new `rolesNeeded` in `pairs.ts`, tests in `__tests__/batch.test.ts`).
+
+- Low: the SQL filters of `accounts.ts` for named ids have no automated test (needs a database). `pickCandidate` with named ids has a test.
+- Low: `report.ts` runs once for each member by design; it has no batch option.
+- Doctor: A13 (stale archived directory agents_md_audit_science_advantage_20260603) is not from this track.

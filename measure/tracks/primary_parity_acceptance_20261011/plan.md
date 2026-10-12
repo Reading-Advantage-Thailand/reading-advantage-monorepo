@@ -89,11 +89,13 @@ before a build; no dev server; no run with 25 students.
 
 ## Phase 4: Generate Docs & Doctor
 
-- [ ] Task: Run the checks of the kit
-    - [ ] Run `npx vitest run --root scripts/primary-parity` and the type check: both pass
-    - [ ] Check the JSDoc of each export of `scripts/primary-parity/` (`scripts/verify-jsdoc.sh` covers only the shared packages)
-    - [ ] Search the repository and the private reports for each password of the run (AC-3): no hit
-- [ ] Task: Run the Measure scripts, one at a time
-    - [ ] Run `bash measure/generate.sh` and stage the files that it changes
-    - [ ] Run `bash measure/doctor.sh`; correct each failure that names a file of this track
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+- [x] Task: Run the checks of the kit
+    - [x] Run `npx vitest run --root scripts/primary-parity` and the type check: both pass
+    - [x] Check the JSDoc of each export of `scripts/primary-parity/` (`scripts/verify-jsdoc.sh` covers only the shared packages)
+    - [x] Search the repository and the private reports for each password of the run (AC-3): no hit
+- [x] Task: Run the Measure scripts, one at a time
+    - [x] Run `bash measure/generate.sh` and stage the files that it changes
+    - [x] Run `bash measure/doctor.sh`; correct each failure that names a file of this track
+- [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+    - Look check pending (owner, async). Steps: run the kit tests and type check (runbook section 12); read runbook section 11 (Batch run); doctor shows only A13.
+    - Notes: kit tests 56 pass; type check clean; JSDoc on each export; password search (24 values) has no hit in the repository or in the private reports; doctor fails only on A13 (not this track).
