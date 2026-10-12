@@ -310,6 +310,9 @@ try {
             await s1.page.screenshot({ path: `${SHOTS}/student1-manual-howto2-lesson.png` });
           }
           for (const c of judgeStudentUnlock({ readBefore, readAfter, landedPath })) check(c.name, c.ok, c.note);
+          // Leave the data as found: unmark the steps that howTo2 marked.
+          await gotoRetry(bp, base, { waitUntil: "networkidle", timeout: 120000 });
+          for (const i of [0, 1, 2]) await setStep(i, false);
 
           // howTo3: the guide parts on the lesson page.
           await gotoRetry(bp, `${base}/lessons/1`, { waitUntil: "networkidle", timeout: 120000 });
