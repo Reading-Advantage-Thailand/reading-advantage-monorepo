@@ -16,16 +16,16 @@ a time on this machine.
 
 ## Phase 1: Design
 
-- [ ] Task: Write the behavior contract from `docs/runbooks/primary-behavior-contract-template.md` (`primary_parity_acceptance_20261011` FR-11)
-    - [ ] List each legacy widget with its `file:line` (spec, Legacy Behavior) and the new block that does its job, or the reason it is gone
-    - [ ] Write the reference SQL for each number of FR-3 to FR-9 (the kit runs it on the rehearsal copy)
-    - [ ] File: `measure/tracks/primary_parity_admin_dashboard_20261011/behavior-contract.md`
-- [ ] Task: Design the page in the RPG skin
-    - [ ] Pick the place from `lib/rpg/places.ts` (proposal: `observatory`, the reports place) and the panel order: range signs, key numbers, alerts, adoption (CEFR / grade signs), teachers table, activity by day
-    - [ ] Variant block "SYSTEM school selector": the selector at the top and the "Choose a school" empty state
-    - [ ] Mock at 375 px and 1280 px, day and night, with the demo seed numbers; files under `measure/tracks/primary_parity_admin_dashboard_20261011/design/`
-- [ ] Task: Owner's look check of the design and of the values in the spec section "Values for the Owner's Look Check"; record the answers in `spec.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md)
+- [x] Task: Write the behavior contract from `docs/runbooks/primary-behavior-contract-template.md` (`primary_parity_acceptance_20261011` FR-11)
+    - [x] List each legacy widget with its `file:line` (spec, Legacy Behavior) and the new block that does its job, or the reason it is gone
+    - [x] Write the reference SQL for each number of FR-3 to FR-9 (the kit runs it on the rehearsal copy): `reference-sql.sql`, run read only on `primary_parity_20261011`; the values are at the end of the contract
+    - [x] File: `measure/tracks/primary_parity_admin_dashboard_20261011/behavior-contract.md`
+- [x] Task: Design the page in the RPG skin
+    - [x] Pick the place from `lib/rpg/places.ts` (proposal: `observatory`, the reports place) and the panel order: range signs, key numbers, alerts, adoption (CEFR / grade signs), teachers table, activity by day. Result: `observatory`; order as proposed; Phase 3 adds a `contained` option to `Scene` for the staff shell (spec, look check answers)
+    - [x] Variant block "SYSTEM school selector": the selector at the top and the "Choose a school" empty state
+    - [x] Mock at 375 px and 1280 px, day and night, with fictional demo numbers (the demo seed has one class of 5 students, too small for a dashboard); the PNG files are outside the repository; the paths are in `captures.md` (instead of a `design/` folder)
+- [x] Task: Owner's look check of the design and of the values in the spec section "Values for the Owner's Look Check"; record the answers in `spec.md` (look check pending (owner, async); default used (owner decision 2026-10-12: no stop); recorded in `spec.md`)
+- [x] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md) (look check pending (owner, async)). Manual steps: open the captures of `captures.md`; check that each label names its metric; check the panel order; check the activity grid has one cell for each day and today has the gold outline; check the SYSTEM captures show the "School" selector and "Choose a school" with no numbers; check the empty school has no zeros in the key numbers panel
 
 ## Phase 2: Contracts and domain queries
 
@@ -52,6 +52,7 @@ a time on this machine.
 ## Phase 3: UI
 
 - [ ] Task: The dashboard page
+    - [ ] Scene `contained` option (design, Phase 1): add the prop and the class `cq-scene--staff` (wrapper `clip-path: inset(0)`) in `components/rpg/scene.tsx` and `styles/rpg.css`, with a test in `components/rpg/__tests__`; the other two dashboard tracks reuse it
     - [ ] Red: `app/[locale]/admin/dashboard/__tests__/page.test.tsx` (mock `getSchoolDashboard`; ADMIN sees the six numbers with their labels; `?range=7` passes 7; an unknown range gives 30; an empty school shows the empty states; no "Data unavailable" text; no sample number)
     - [ ] Green: `app/[locale]/admin/dashboard/page.tsx` (server page, `Scene`, `Panel`, `Sign`), `loading.tsx`, `error.tsx`; panels in `components/admin/dashboard/` (`key-numbers.tsx`, `alert-list.tsx`, `adoption-panel.tsx`, `teachers-table.tsx`, `activity-by-day.tsx`); server errors log with `lib/observability/logger.ts`
 - [ ] Task: Variant block "SYSTEM school selector" (SYS-03)
