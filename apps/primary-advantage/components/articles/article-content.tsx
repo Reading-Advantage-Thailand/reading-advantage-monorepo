@@ -1,4 +1,10 @@
 "use client";
+import {
+  bucketItems,
+  bucketSentencesIntoParagraphs,
+  splitPassageIntoSentences,
+  TARGET_PARAGRAPH_COUNT,
+} from "@/lib/paragraph-utils";
 import React, { useState, useEffect, useRef, useTransition } from "react";
 import { cn } from "@/lib/utils";
 // import { createEmptyCard, Card } from "ts-fsrs";
@@ -411,9 +417,9 @@ export default function ArticleContent({ article }: Props) {
     }
   };
 
-  const paragraphs = (article.passage ?? "")
-    .split("\n\n")
-    .filter((p) => p.trim() !== "");
+  const paragraphs = bucketSentencesIntoParagraphs(
+    splitPassageIntoSentences(article.passage ?? ""),
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -955,35 +961,11 @@ export default function ArticleContent({ article }: Props) {
           ));
         }
 
-        // Group sentences back into original paragraphs
-        const groupSentencesIntoParagraphs = () => {
-          const paragraphGroups: { paragraph: string; sentences: number[] }[] =
-            [];
-          const currentParagraphText = "";
-          const currentSentenceIndices: number[] = [];
-
-          // Reconstruct paragraph structure by checking which sentences belong to which paragraph
-          paragraphs.forEach((paragraph) => {
-            const paragraphSentences: number[] = [];
-
-            article.sentences?.forEach((sentence, sentenceIndex) => {
-              if (paragraph.includes(sentence.sentence.trim())) {
-                paragraphSentences.push(sentenceIndex);
-              }
-            });
-
-            if (paragraphSentences.length > 0) {
-              paragraphGroups.push({
-                paragraph,
-                sentences: paragraphSentences,
-              });
-            }
-          });
-
-          return paragraphGroups;
-        };
-
-        const paragraphGroups = groupSentencesIntoParagraphs();
+        // Put the sentences, in order, into at most 3 blocks (each sentence shows once).
+        const paragraphGroups = bucketItems(
+          article.sentences.map((_, sentenceIndex) => sentenceIndex),
+          TARGET_PARAGRAPH_COUNT,
+        ).map((sentences) => ({ sentences }));
 
         return paragraphGroups.map((group, groupIndex) => {
           return (
