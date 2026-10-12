@@ -23,6 +23,9 @@ vi.mock("@reading-advantage/db", () => ({
   xpLogs: { userId: "xpLogs.userId" },
 }));
 
+vi.mock("@reading-advantage/domain", () => ({ createTenantDB: vi.fn() }));
+vi.mock("@reading-advantage/domain/games", () => ({ getLessonGameResults: vi.fn() }));
+
 import { fetchArticleActivity } from "../article";
 
 const student = { id: "student-1", role: "STUDENT", schoolId: "school-a" };

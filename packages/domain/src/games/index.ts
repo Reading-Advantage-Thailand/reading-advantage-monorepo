@@ -42,6 +42,13 @@ export {
 } from "./practice-input.js";
 export type { GamePracticeInputRequest, LessonPracticeInputRequest } from "./practice-input.js";
 export {
+  getLessonGameResults,
+  lessonGameResultSchema,
+  lessonGameResultsRequestSchema,
+  lessonGameResultsSchema,
+} from "./lesson-results.js";
+export type { LessonGameResult, LessonGameResults, LessonGameResultsRequest } from "./lesson-results.js";
+export {
   listPrimaryAnswerAudioContent,
   listPrimaryArticleCards,
   listPrimaryDeckCards,

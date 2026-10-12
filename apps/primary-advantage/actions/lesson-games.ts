@@ -2,7 +2,13 @@
 
 import { db } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
-import { getLessonPracticeInput, type LessonPracticeInputRequest } from "@reading-advantage/domain/games";
+import {
+  getLessonGameResults,
+  getLessonPracticeInput,
+  type LessonGameResults,
+  type LessonGameResultsRequest,
+  type LessonPracticeInputRequest,
+} from "@reading-advantage/domain/games";
 import type { PracticeInput } from "@reading-advantage/game-contracts";
 import { currentUser } from "@/lib/session";
 import { logger } from "@/lib/observability/logger";
@@ -27,5 +33,27 @@ export async function getLessonGameInputAction(request: LessonPracticeInputReque
   } catch (error) {
     logger.error("lesson_game_input_failed", { error, userId: user.id, articleId: request?.articleId });
     return { success: false, error: "Lesson game input failed" };
+  }
+}
+
+/** The result of the lesson game results action. */
+export type LessonGameResultsResult = { success: true; results: LessonGameResults } | { success: false; error: string };
+
+/**
+ * Reads the latest saved run of each game for one lesson article, and the total game XP of the
+ * article, for the signed-in user. The domain function scopes the read to the user and the school.
+ * @param request The article of the lesson.
+ * @returns The results, or a short error; the detail goes to the log.
+ */
+export async function getLessonGameResultsAction(request: LessonGameResultsRequest): Promise<LessonGameResultsResult> {
+  const user = await currentUser();
+  if (!user) return { success: false, error: "Unauthorized" };
+  try {
+    const tenant = { schoolId: user.schoolId };
+    const results = await getLessonGameResults({ db: createTenantDB(db, tenant), user, tenant, input: request });
+    return { success: true, results };
+  } catch (error) {
+    logger.error("lesson_game_results_failed", { error, userId: user.id, articleId: request?.articleId });
+    return { success: false, error: "Lesson game results failed" };
   }
 }
