@@ -26,7 +26,7 @@ import { toast } from "sonner";
 import { fetchArticleActivity } from "@/actions/article";
 import Image from "next/image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
-import { SEEK_EPSILON } from "@/lib/audio-highlight";
+import { seekTimeForWord } from "@/lib/read-along/position";
 import { parseSentences } from "@/lib/read-along/align";
 import { ReadAlongPassage } from "@/components/read-along/read-along-passage";
 import { useReadAlong } from "@/hooks/use-read-along";
@@ -236,10 +236,10 @@ export default function ArticleContent({ article }: Props) {
 
   const handleWordTap = (sentenceIndex: number, audioWordIndex: number) => {
     const audio = audioRef.current;
-    const word = sentences[sentenceIndex]?.words[audioWordIndex];
-    if (!audio || !word) return;
-    audio.currentTime = Math.max(0, word.start - SEEK_EPSILON);
-    select({ sentenceIndex, wordIndex: audioWordIndex });
+    const sentence = sentences[sentenceIndex];
+    if (!audio || !sentence) return;
+    audio.currentTime = seekTimeForWord(sentence, audioWordIndex);
+    select({ sentenceIndex, wordIndex: sentence.words[audioWordIndex] ? audioWordIndex : -1 });
     // Play at once to give the student feedback.
     if (togglePlayer) audio.play().catch(() => undefined);
   };

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ReadAlongSentence } from "../align";
-import { findPosition, NO_POSITION } from "../position";
+import { SEEK_EPSILON } from "@/lib/audio-highlight";
+import { findPosition, NO_POSITION, seekTimeForSentence, seekTimeForWord } from "../position";
 
 const sentences: ReadAlongSentence[] = [
   {
@@ -69,5 +70,28 @@ describe("findPosition", () => {
 
   it("returns no position for an empty list", () => {
     expect(findPosition([], 3, NO_POSITION)).toBe(NO_POSITION);
+  });
+});
+
+describe("seek times", () => {
+  it("seeks to the start of the sentence, minus the epsilon", () => {
+    expect(seekTimeForSentence(sentences[0])).toBeCloseTo(1 - SEEK_EPSILON);
+  });
+
+  it("never seeks before 0", () => {
+    expect(seekTimeForSentence({ ...sentences[0], startTime: 0.01 })).toBe(0);
+  });
+
+  it("seeks to the start of the audio word, minus the epsilon", () => {
+    expect(seekTimeForWord(sentences[0], 1)).toBeCloseTo(2 - SEEK_EPSILON);
+  });
+
+  it("seeks to the sentence start when the sentence has no word timings", () => {
+    expect(seekTimeForWord(sentences[1], -1)).toBeCloseTo(5 - SEEK_EPSILON);
+    expect(seekTimeForWord(sentences[1], 0)).toBeCloseTo(5 - SEEK_EPSILON);
+  });
+
+  it("seeks to the sentence start when the word index is -1", () => {
+    expect(seekTimeForWord(sentences[0], -1)).toBeCloseTo(1 - SEEK_EPSILON);
   });
 });

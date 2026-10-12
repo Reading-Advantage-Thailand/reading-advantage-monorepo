@@ -142,4 +142,79 @@ describe("ReadAlongPassage", () => {
     fireEvent.click(screen.getByText("run"));
     expect(onWordTap).toHaveBeenCalledWith(0, -1);
   });
+
+  it("plays the sentence when the student taps the band outside a word", () => {
+    const onWordTap = vi.fn();
+    const { container } = render(
+      <ReadAlongPassage
+        sentences={audioDropped as ReadAlongSentence[]}
+        passage=""
+        position={NO_POSITION}
+        active
+        onWordTap={onWordTap}
+      />,
+    );
+    fireEvent.click(container.querySelector("[data-sentence='0']") as HTMLElement);
+    expect(onWordTap).toHaveBeenCalledTimes(1);
+    expect(onWordTap).toHaveBeenCalledWith(0, -1);
+  });
+
+  it("calls the tap handler once for a word tap (the word does not bubble to the sentence)", () => {
+    const onWordTap = vi.fn();
+    render(
+      <ReadAlongPassage
+        sentences={audioDropped as ReadAlongSentence[]}
+        passage=""
+        position={NO_POSITION}
+        active
+        onWordTap={onWordTap}
+      />,
+    );
+    fireEvent.click(screen.getByText("friend"));
+    expect(onWordTap).toHaveBeenCalledTimes(1);
+  });
+
+  it("makes each sentence one tab stop and plays it with Enter or Space", () => {
+    const onWordTap = vi.fn();
+    const { container } = render(
+      <ReadAlongPassage
+        sentences={audioDropped as ReadAlongSentence[]}
+        passage=""
+        position={NO_POSITION}
+        active
+        onWordTap={onWordTap}
+      />,
+    );
+    expect(container.querySelectorAll("[tabindex='0']")).toHaveLength(1);
+    expect(container.querySelectorAll("[role='button']")).toHaveLength(1);
+    const stop = container.querySelector("[data-sentence='0']") as HTMLElement;
+    expect(stop).toHaveAttribute("tabindex", "0");
+    fireEvent.keyDown(stop, { key: "Enter" });
+    fireEvent.keyDown(stop, { key: " " });
+    expect(onWordTap).toHaveBeenCalledTimes(2);
+    expect(onWordTap).toHaveBeenLastCalledWith(0, -1);
+  });
+
+  it("has no tab stop and no button role when the read-along is off", () => {
+    const { container } = render(
+      <ReadAlongPassage sentences={audioDropped as ReadAlongSentence[]} passage="" position={NO_POSITION} active={false} />,
+    );
+    expect(container.querySelectorAll("[tabindex]")).toHaveLength(0);
+    expect(container.querySelectorAll("[role='button']")).toHaveLength(0);
+  });
+
+  it("does not play the sentence from a key press on the sentence menu", () => {
+    const onWordTap = vi.fn();
+    const { container } = render(
+      <ReadAlongPassage
+        sentences={audioDropped as ReadAlongSentence[]}
+        passage=""
+        position={NO_POSITION}
+        active
+        onWordTap={onWordTap}
+      />,
+    );
+    fireEvent.keyDown(container.querySelector("[data-sentence='0']") as HTMLElement, { key: "a" });
+    expect(onWordTap).not.toHaveBeenCalled();
+  });
 });

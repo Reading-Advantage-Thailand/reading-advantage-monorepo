@@ -1,5 +1,5 @@
 "use client";
-import { memo, useMemo, type ReactNode, type Ref } from "react";
+import { memo, useMemo, type KeyboardEvent, type MouseEvent, type ReactNode, type Ref } from "react";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -62,6 +62,7 @@ const SentenceView = memo(function SentenceView({
   currentSentenceRef,
   onWordTap,
 }: SentenceViewProps) {
+  const interactive = active && !!onWordTap;
   return (
     <span
       ref={isCurrent ? currentSentenceRef : undefined}
@@ -69,10 +70,29 @@ const SentenceView = memo(function SentenceView({
       className={cn(
         "font-article rounded px-0.5 text-lg transition-all duration-200 md:text-xl",
         active && isCurrent && HIGHLIGHT_CLASSES.playingSentence,
+        interactive &&
+          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       )}
+      {...(interactive
+        ? {
+            role: "button",
+            tabIndex: 0,
+            onClick: () => onWordTap?.(index, -1),
+            onKeyDown: (e: KeyboardEvent<HTMLSpanElement>) => {
+              if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
+                e.preventDefault();
+                onWordTap?.(index, -1);
+              }
+            },
+          }
+        : {})}
     >
       {display.words.map((word) => {
-        const tap = () => onWordTap?.(index, maps.displayToAudio[word.index] ?? -1);
+        const tap = (e: MouseEvent) => {
+          e.stopPropagation();
+          onWordTap?.(index, maps.displayToAudio[word.index] ?? -1);
+        };
+      
         return (
           <span key={word.index}>
             {word.lead}
@@ -82,15 +102,6 @@ const SentenceView = memo(function SentenceView({
                 active && word.index === markedWord ? HIGHLIGHT_CLASSES.currentWord : HIGHLIGHT_CLASSES.hoverWord,
               )}
               onClick={tap}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  tap();
-                }
-              }}
-              role="button"
-              tabIndex={0}
-              aria-label={word.text}
             >
               {word.text}
             </span>

@@ -2,6 +2,7 @@
  * Playback position of the read-along (track primary_parity_read_along_20261011, Phase S1).
  * Pure functions: they find the sentence and the audio word for a time.
  */
+import { SEEK_EPSILON } from "@/lib/audio-highlight";
 import type { ReadAlongSentence } from "./align";
 
 /** The sentence and the audio word that the voice says; -1 means none. */
@@ -39,4 +40,24 @@ export function findPosition(
   }
   if (sentenceIndex === previous.sentenceIndex && wordIndex === previous.wordIndex) return previous;
   return sentenceIndex === -1 ? NO_POSITION : { sentenceIndex, wordIndex };
+}
+
+/**
+ * Gives the playback time that starts a sentence.
+ * @param sentence The sentence entry.
+ * @returns The start time minus `SEEK_EPSILON`, never below 0.
+ */
+export function seekTimeForSentence(sentence: ReadAlongSentence): number {
+  return Math.max(0, sentence.startTime - SEEK_EPSILON);
+}
+
+/**
+ * Gives the playback time that starts an audio word.
+ * @param sentence The sentence entry.
+ * @param audioWordIndex Index into `sentence.words`; -1 when the screen word has no audio word.
+ * @returns The word start minus `SEEK_EPSILON`; the sentence start when the sentence has no such word.
+ */
+export function seekTimeForWord(sentence: ReadAlongSentence, audioWordIndex: number): number {
+  const word = sentence.words[audioWordIndex];
+  return word ? Math.max(0, word.start - SEEK_EPSILON) : seekTimeForSentence(sentence);
 }
