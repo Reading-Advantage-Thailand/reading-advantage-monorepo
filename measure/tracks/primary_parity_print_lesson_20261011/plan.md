@@ -20,7 +20,7 @@ Every task follows the TDD order of `measure/workflow.md`.
       check `print-ready`, `print-loading`, and `print-not-ready` at 375 px and 1280 px, day and night.
     - Member Question defaults used: (1) print data from the Workbooks export; (2) no answer key page, no "with the answer key" choice; (3) the template, not the 70 PDFs.
 
-## Phase S1: Copy the Workbooks primary template into a print kit [checkpoint: PENDING]
+## Phase S1: Copy the Workbooks primary template into a print kit [checkpoint: aa2ec371e]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Define the kit contract
