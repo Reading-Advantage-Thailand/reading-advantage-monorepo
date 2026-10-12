@@ -161,7 +161,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - Captures: none (the build was not served in this phase; Phase 9 makes the captures).
     - Defaults used for member questions: none asked in this phase.
 
-## Phase 8: AI models in the adapter configuration (CNT-02)
+## Phase 8: AI models in the adapter configuration (CNT-02) [checkpoint: 55c46b1a7]
 
 - [x] Task: Read the live legacy model rows (spec FR-12)
     - [x] Read the C4 dump at `~/Desktop/primary-parity-acceptance/backups/Backup_Primary_2026-10-11.sql.gz` (already on the machine; no second copy: the disk is low)
