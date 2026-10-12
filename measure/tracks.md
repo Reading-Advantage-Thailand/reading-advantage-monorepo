@@ -1228,7 +1228,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Class books ready at the cutover**
+- [~] **Track: Primary Parity Before the Cutover: Class books ready at the cutover**
   *Link: [./tracks/primary_parity_class_books_20261011/](./tracks/primary_parity_class_books_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
 
