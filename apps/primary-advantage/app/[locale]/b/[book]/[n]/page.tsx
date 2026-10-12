@@ -3,6 +3,7 @@ import { db } from "@reading-advantage/db";
 import { findTeacherClassBook, resolveBookLesson } from "@reading-advantage/domain/primary-books";
 import { currentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
+import { bookSignInHref } from "@/lib/book-link/signin-href";
 
 /**
  * The printed QR link (FR-16): `/b/<book>/<n>` (for example `/b/o3-2/5`). A student lands in the
@@ -18,7 +19,7 @@ export default async function BookLessonLinkPage({ params }: { params: Promise<{
   const lesson = await resolveBookLesson({ db, bookKey: book, number });
   if (!lesson) notFound();
   const user = await currentUser();
-  if (!user) return redirect({ href: "/auth/signin", locale });
+  if (!user) return redirect({ href: bookSignInHref({ locale, book, number }), locale });
   if (user.role === "STUDENT") {
     return redirect({ href: lesson.articleId && lesson.approved ? `/student/lesson/${lesson.articleId}?type=article` : "/student/home", locale });
   }

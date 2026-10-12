@@ -67,6 +67,13 @@ describe("CardSignIn", () => {
     expect(window.location.pathname).toBe("/en/auth/card");
   });
 
+  it("opens the callback QR book path before the student home", async () => {
+    window.history.replaceState(null, "", `/en/auth/card?callbackUrl=%2Fth%2Fb%2Fo3-2%2F5%2Fwriting#${TOKEN}`);
+    answer(200, { user: { id: "u1", role: "STUDENT" }, authStrength: "full" });
+    renderWithMessages(<CardSignIn />);
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/b/o3-2/5/writing"));
+  });
+
   it("posts the token once under StrictMode", async () => {
     answer(200, { user: { id: "u1", role: "STUDENT" }, authStrength: "full" });
     renderWithMessages(

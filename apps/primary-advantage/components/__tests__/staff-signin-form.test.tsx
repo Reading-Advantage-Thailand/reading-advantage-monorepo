@@ -81,6 +81,13 @@ describe("staff sign-in form", () => {
     await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/system/schools"));
   });
 
+  it("returns to the QR book lesson path after sign-in", async () => {
+    searchParams = new URLSearchParams({ callbackUrl: "/th/b/o3-2/5/writing" });
+    renderWithMessages(<TeacherSignInForm />);
+    await submit();
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/b/o3-2/5/writing"));
+  });
+
   it("ignores callbacks that leave the site", async () => {
     for (const callbackUrl of ["https://evil.example", "//evil.example", "/\\evil.example", "/en\\..\\evil"]) {
       loginMock.mockClear();
@@ -126,6 +133,15 @@ describe("staff sign-in form", () => {
         newPassword: "my-own-pass-9",
       });
       await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/auth/signin"));
+    });
+
+    it("returns to the QR book lesson path after the forced password change", async () => {
+      searchParams = new URLSearchParams({ callbackUrl: "/th/b/o3-2/5" });
+      renderWithMessages(<TeacherSignInForm />);
+      await submit();
+      await screen.findByRole("heading", { name: "Set a new password" });
+      setNewPassword("my-own-pass-9");
+      await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/b/o3-2/5"));
     });
 
     it("does not send two passwords that are not the same", async () => {

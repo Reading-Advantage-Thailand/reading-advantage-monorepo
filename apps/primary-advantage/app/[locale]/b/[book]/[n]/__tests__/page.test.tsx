@@ -55,7 +55,10 @@ describe("/b/<book>/<n> (QR deep link, FR-16)", () => {
   it("sends a visitor to sign in and is not found for an unknown lesson or a bad number", async () => {
     mocks.user = null;
     await open();
-    expect(mocks.redirect).toHaveBeenCalledWith({ href: "/auth/signin", locale: "th" });
+    expect(mocks.redirect).toHaveBeenCalledWith({
+      href: { pathname: "/auth/signin", query: { callbackUrl: "/th/b/o3-2/5" } },
+      locale: "th",
+    });
     mocks.resolveBookLesson.mockResolvedValueOnce(null);
     await expect(open("zz", "1")).rejects.toThrow("NOT_FOUND");
     await expect(open("o3-2", "x")).rejects.toThrow("NOT_FOUND");
