@@ -436,7 +436,7 @@ export default function LessonProgressBar({
         );
       case 10:
         return (
-          <TaskVocabularyGame articleId={resolvedArticleId as string} />
+          <TaskVocabularyGame articleId={resolvedArticleId as string} save={!isPreview} />
         );
       case 11:
         return (
@@ -444,7 +444,7 @@ export default function LessonProgressBar({
         );
       case 12:
         return (
-          <TaskSentenceActivities articleId={resolvedArticleId as string} />
+          <TaskSentenceActivities articleId={resolvedArticleId as string} save={!isPreview} />
         );
       case 13:
         return (
