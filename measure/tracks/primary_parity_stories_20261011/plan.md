@@ -130,13 +130,13 @@ _Story ref: spec.md#story-s5_
 ## Phase S6: Chapter flashcards
 _Story ref: spec.md#story-s6_
 
-- [ ] Task: Contract for the chapter flashcard save
-    - [ ] `actions/flashcard.ts`: a chapter source for the save of `saveArticleToFlashcard` (line 865), with a Zod input
-- [ ] Task: Tests for the chapter flashcard save
-    - [ ] `actions/__tests__/flashcard-chapter.test.ts`: 3 to 5 new words and the sentences after all three question types; no duplicate card; no save before the three are done; `source_id` is the chapter id
-- [ ] Task: Implement the chapter flashcard save
-    - [ ] `actions/flashcard.ts`: the chapter save; call it after the last submit in `actions/story-question.ts`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Contract for the chapter flashcard save
+    - [x] `actions/flashcard.ts`: a chapter source for the save of `saveArticleToFlashcard` (8bf4a3d6b; `saveChapterToFlashcard` with a Zod `chapterId` input, after `saveArticleToFlashcard`), with a Zod input
+- [x] Task: Tests for the chapter flashcard save
+    - [x] `actions/__tests__/flashcard-chapter.test.ts` (60a5d2107 red, 8bf4a3d6b green; 5 of 5): 3 to 5 new words and the sentences after all three question types; no duplicate card; no save before the three are done; `source_id` is the chapter id
+- [x] Task: Implement the chapter flashcard save
+    - [x] `actions/flashcard.ts`: the chapter save (8bf4a3d6b; `saveChapterToFlashcard`: completeness check on the three `STORIES_*` rows, chapter snapshot rows with NULL `article_id` per D6, 3 to 5 random new words case-insensitive like legacy, all sentences, `source_id` = chapter id through `saveFlashcard`); call it after the last submit in `actions/story-question.ts` (first-time saves only; `story-question.test.ts` 11 of 11 green with the call assertions)
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`) — done: `generate.sh` clean; `doctor.sh` fails only on pre-existing A13 (stale archived dir `agents_md_audit_science_advantage_20260603`, untouched by this track)
 - [ ] Task: Measure - User Manual Verification 'Phase S6: Chapter flashcards' (Protocol in workflow.md)
 
 ## Phase S7: Old story URLs open the new pages [checkpoint: 9c2206f0c]
