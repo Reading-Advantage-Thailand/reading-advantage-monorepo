@@ -65,7 +65,7 @@ Done 2026-10-12 (4245a46f0 strings, ac20079a4 page and table). Red run: 3 files 
 - [x] Task: Measure - User Manual Verification 'Phase 3: UI' (Protocol in workflow.md) — look check pending (owner, async)
     - Manual verification: open each PNG of `design/captures.md` (phase 1) and of `captures-phase3.md` (phase 3); compare the built page with the mock; check the quiet chip text, 4 values and one button for each card at 375 px, the 48 px sort control, the sort arrows at 1280 px, and the night captures.
 
-## Phase 4: Acceptance
+## Phase 4: Acceptance [checkpoint: 538e750f5]
 
 Prepared 2026-10-12. The kit run, the captures, and the owner look check wait for the batch (orchestrator).
 
