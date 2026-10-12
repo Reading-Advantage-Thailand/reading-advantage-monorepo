@@ -7,6 +7,7 @@ import {
   getClassBookPacing,
   getStudentBook,
   getStudentClassBooks,
+  getTeacherBookSlots,
   listCatalogueBooks,
   listClassBooks,
   markLessonTaught,
@@ -104,6 +105,51 @@ describe("listClassBooks", () => {
   it("gives a null title when the catalogue lacks the current lesson", async () => {
     const mock = dbWith([[classRow], [classBookRow], [], []]);
     expect((await listClassBooks({ db: mock as unknown as DB, user: teacher, classroomId: CLASS }))[0].lessonTitle).toBeNull();
+  });
+});
+
+describe("getTeacherBookSlots", () => {
+  const CLASS_2 = "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee";
+  const second = { ...classBookRow, id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", bookKey: "q4", bookName: "Quest 4", currentLesson: 1 };
+
+  it("returns one row for each class book and one row for a class without a book", async () => {
+    // co-taught ids, classes, class books, lesson states, lesson titles
+    const mock = dbWith([
+      [],
+      [{ id: CLASS, name: "P3A" }, { id: CLASS_2, name: "P4B" }],
+      [classBookRow, second],
+      [{ classBookId: CLASS_BOOK, lessonNumber: 3, taughtAt: null, stepsDone: [1, 2, 3, 4] }],
+      [lesson(3)],
+    ]);
+    const slots = await getTeacherBookSlots({ db: mock as unknown as DB, user: teacher });
+    expect(slots).toHaveLength(3);
+    expect(slots[0]).toMatchObject({ classroomId: CLASS, classroomName: "P3A", classBookId: CLASS_BOOK, bookName: "Origins 3.2", currentLesson: 3, lessonCount: 14, lessonTitle: "Lesson 3", nextStep: 5, nextStepPeriod: 2 });
+    expect(slots[1]).toMatchObject({ classroomId: CLASS, bookName: "Quest 4", nextStep: 1 });
+    expect(slots[2]).toEqual({ classroomId: CLASS_2, classroomName: "P4B", classBookId: null, bookName: null, currentLesson: null, lessonCount: null, lessonTitle: null, nextStep: null, nextStepPeriod: null });
+  });
+
+  it("lists several books of one class and starts a book without state at step 1", async () => {
+    const mock = dbWith([[{ classroomId: CLASS }], [{ id: CLASS, name: "P3A" }], [classBookRow, second], [], []]);
+    const slots = await getTeacherBookSlots({ db: mock as unknown as DB, user: teacher });
+    expect(slots.map((slot) => [slot.bookName, slot.nextStep, slot.lessonTitle])).toEqual([["Origins 3.2", 1, null], ["Quest 4", 1, null]]);
+  });
+
+  it("returns no row, and reads no book, when the teacher has no class", async () => {
+    const mock = dbWith([[], []]);
+    expect(await getTeacherBookSlots({ db: mock as unknown as DB, user: teacher })).toEqual([]);
+    expect(mock.select).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns no row for a user without a school", async () => {
+    const mock = dbWith([]);
+    expect(await getTeacherBookSlots({ db: mock as unknown as DB, user: { ...teacher, schoolId: null as unknown as string } })).toEqual([]);
+    expect(mock.select).not.toHaveBeenCalled();
+  });
+
+  it("refuses a student", async () => {
+    const mock = dbWith([]);
+    await expect(getTeacherBookSlots({ db: mock as unknown as DB, user: student })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(mock.select).not.toHaveBeenCalled();
   });
 });
 

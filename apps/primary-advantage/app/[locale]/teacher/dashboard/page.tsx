@@ -3,6 +3,8 @@ import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { ClipboardCheckIcon, LifeBuoyIcon, PlayIcon, SchoolIcon, SmileIcon, UsersIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getTeacherHome, TEACHER_HOME_INACTIVE_DAYS } from "@reading-advantage/domain/primary-home";
+import { getTeacherBookSlots } from "@reading-advantage/domain/primary-books";
+import { logger } from "@/lib/observability/logger";
 import { calendarDayNumber } from "@reading-advantage/domain/calendar-day";
 import { EmptyState, StatusChip } from "@reading-advantage/ui";
 import { currentUser } from "@/lib/session";
@@ -32,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
 /**
  * Teacher dashboard (Lane C Phase 3, audit T1): the summary numbers; my classes with student
  * counts, a link to each class, and "Start class" (it opens the class page at the class sign-in
- * panel); the class book slot (Lane D+E); the open assignments with Bangkok due chips; and the
+ * panel); the class book slot (one row for each class book, with the next step); the open assignments with Bangkok due chips; and the
  * students who need help (overdue work, or no activity for 7 days). A load failure goes to the
  * route error boundary (error.tsx), which offers a retry.
  * @returns The dashboard page.
@@ -48,6 +50,10 @@ export default async function TeacherDashboardPage() {
     getFormatter(),
   ]);
   const quests = await Promise.all(home.classes.map((cls) => getTeacherQuestCard({ db, user }, cls.id).catch(() => null)));
+  const bookSlots = await getTeacherBookSlots({ db, user }).catch((error: unknown) => {
+    logger.error("class_books.slot_failed", { userId: user.id, error });
+    return null;
+  });
   const today = calendarDayNumber(new Date());
   const moreHelp = home.needsHelpCount - home.needsHelp.length;
 
@@ -106,7 +112,7 @@ export default async function TeacherDashboardPage() {
           )}
         </section>
 
-        <ClassBookSlot className="lg:col-span-2" />
+        <ClassBookSlot slots={bookSlots ?? undefined} failed={bookSlots === null} className="lg:col-span-2" />
         {home.classes.map((cls, i) => (
           <TeacherQuestCard key={cls.id} classroomId={cls.id} card={quests[i] ?? null} heading={`${t("quest")} · ${cls.name}`} />
         ))}

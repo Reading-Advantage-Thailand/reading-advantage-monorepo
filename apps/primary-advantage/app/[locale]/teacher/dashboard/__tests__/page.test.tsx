@@ -12,11 +12,15 @@ const mocks = vi.hoisted(() => ({
   user: null as Record<string, unknown> | null,
   getTeacherHome: vi.fn(),
   redirect: vi.fn(),
+  getTeacherBookSlots: vi.fn(),
+  logError: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: async () => null }));
+vi.mock("@reading-advantage/domain/primary-books", () => ({ getTeacherBookSlots: mocks.getTeacherBookSlots }));
+vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: vi.fn(), info: vi.fn() } }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getTeacherHome: mocks.getTeacherHome, TEACHER_HOME_INACTIVE_DAYS: 7 }));
 vi.mock("next-intl/server", async () => {
   const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
@@ -80,6 +84,10 @@ beforeEach(() => {
   vi.setSystemTime(NOW);
   mocks.user = { ...teacher };
   mocks.getTeacherHome.mockResolvedValue(fullHome);
+  mocks.getTeacherBookSlots.mockResolvedValue([
+    { classroomId: C1, classroomName: "P3A", classBookId: "cb1", bookName: "Origins 3.2", currentLesson: 3, lessonCount: 14, lessonTitle: "Sea Park", nextStep: 5, nextStepPeriod: 2 },
+    { classroomId: C2, classroomName: "P4B", classBookId: null, bookName: null, currentLesson: null, lessonCount: null, lessonTitle: null, nextStep: null, nextStepPeriod: null },
+  ]);
 });
 afterEach(() => {
   cleanup();
@@ -131,10 +139,20 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
     expect(within(help).getByText(/Last active Sep 20/)).toBeInTheDocument();
   });
 
-  it("leaves the class book slot for the teacher-books track", async () => {
+  it("shows the class book slot with the next lesson and an Assign a book row", async () => {
     await renderDashboard();
-    const book = screen.getByRole("region", { name: ui.classBook.title });
-    expect(within(book).getByText(ui.classBook.hint)).toBeInTheDocument();
+    const book = screen.getByRole("region", { name: ui.classBook.slotTitle });
+    expect(within(book).getByRole("link", { name: /Origins 3.2/ })).toHaveAttribute("href", `/teacher/class-roster/${C1}/books/cb1/lessons/3`);
+    expect(within(book).getByRole("link", { name: new RegExp(ui.classBook.assignRow) })).toHaveAttribute("href", `/teacher/class-roster/${C2}#class-book`);
+  });
+
+  it("shows the slot error and logs once when the slots fail to load", async () => {
+    mocks.getTeacherBookSlots.mockRejectedValue(new Error("db down"));
+    await renderDashboard();
+    const book = screen.getByRole("region", { name: ui.classBook.slotTitle });
+    expect(within(book).getByRole("alert")).toHaveTextContent(ui.classBook.slotError);
+    expect(mocks.logError).toHaveBeenCalledTimes(1);
+    expect(mocks.logError).toHaveBeenCalledWith("class_books.slot_failed", expect.objectContaining({ userId: "t1" }));
   });
 
   it("shows empty states with a next step", async () => {
