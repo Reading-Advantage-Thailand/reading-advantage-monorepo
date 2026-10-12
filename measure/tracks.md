@@ -1288,7 +1288,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Chibi Quest games in the vocabulary step and the sentence step of the lesson**
+- [~] **Track: Primary Parity Before the Cutover: Chibi Quest games in the vocabulary step and the sentence step of the lesson**
   *Link: [./tracks/primary_parity_lesson_games_20261011/](./tracks/primary_parity_lesson_games_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
 
