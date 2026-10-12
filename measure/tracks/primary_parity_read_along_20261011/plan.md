@@ -90,7 +90,7 @@ _Story ref: spec.md#story-s4_
     - Defaults used: the lesson shows the shared player at all times (no "open audio" button); speeds 0.75x, 1x, 1.25x; with translation on, a tap on a sentence shows its translation and does not play.
     - Manual verification steps: (1) open a lesson reading step; one player shows at the bottom; (2) press play: the lit word follows the voice; (3) tap a word: the voice starts there; tap the band outside a word: the voice starts at the sentence; (4) press the speed sign: 0.75x, 1x, 1.25x; (5) turn translation on and tap a sentence: the translation shows above the title.
 
-## Phase A: Acceptance
+## Phase A: Acceptance [checkpoint: 9e4a74cdd]
 
 - [ ] Task: Run the kit of `primary_parity_acceptance_20261011` (`scripts/primary-parity/capture.ts` for each app, then `report.ts`) with `acceptance-pairs.json`; use one student account and the 3 articles of the data profile; record a screen capture with audio for each article in both apps (batch capture (orchestrator))
 - [ ] Task: Captures at 375 px and 1280 px, day and night, for the owner look check (AC-5) (batch capture (orchestrator))
