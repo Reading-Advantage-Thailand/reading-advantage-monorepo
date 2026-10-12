@@ -87,3 +87,16 @@ Low findings:
 - L-18. The old `utils/google.ts` used the Vertex location `us-central1`. The new code uses `global` (spec FR-11). If `global` does not serve `gemini-3-flash-preview` for this project, set `PRIMARY_AI_FEEDBACK_MODEL` or change the constant.
 
 Shortcuts: none. Lessons: (1) A Vertex provider needs only a different model factory; a subclass of the Google provider with a `client` option reuses all methods. (2) `packages/ai` `dist` must be rebuilt (`tsc` in the package) before the app type check sees new adapter types.
+
+## Phase 9 review (first part: gates, acceptance preparation, records)
+
+Phase diff: `git diff 94c0a891f..HEAD`. Critical and High findings: none. The change adds a Dockerfile line, one guard test, records, docs, and track files. No route, query, or table access. No new export.
+
+Low findings:
+
+- L-19. The M4 grep check finds `standard-pack-qc` in the Dockerfile on purpose. Exclude that file in the check.
+- L-20. `acceptance-pairs.json` uses `/en/` as the page path of AC-7 and the admin page path for AC-3, because the pair schema needs a locale path. The API and asset probes are curl lines in `acceptance.md`.
+- L-21. The AC-9 and AC-10 pairs reuse the lesson id of the kit pair STU-05 (`{map:assignments:...}`); the kit has no AI key, so the AI answer is not captured.
+- L-22. `phase-10-closeout.test.ts` in `packages/ai` has 3 known failures (line caps, F-101/F-202 row). Prune the two measure files or relax the test.
+
+Records for the orchestrator: tech-debt rows edited as spec FR-14 (`/system/test` Resolved; ElvGames row text). Lesson: the doctor script reports only A13 after this track.

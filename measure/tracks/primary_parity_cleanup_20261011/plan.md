@@ -138,8 +138,9 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - [x] Red: `removed-surfaces.test.ts`, block "M4": `public/assets/apk/standard-pack-qc` does not exist; no source names `standard-pack-qc`
     - [x] Green: `git rm -r apps/primary-advantage/public/assets/apk/standard-pack-qc`
     - [x] Run `pnpm turbo run build --filter=primary-advantage` (the one heavy job) under the heavy lock; the lock replaces the "build start" and "build done" messages to Forge
-    - [~] `find apps/primary-advantage/.next/standalone \( -path '*standard-pack-qc*' -o -path '*advantage-play-kit/assets*' \) -type f | wc -l` prints 0; if not, add `outputFileTracingExcludes` to `next.config.ts` (spec FR-9) and build again
+    - [x] `find apps/primary-advantage/.next/standalone \( -path '*standard-pack-qc*' -o -path '*advantage-play-kit/assets*' \) -type f | wc -l` prints 0; if not, add `outputFileTracingExcludes` to `next.config.ts` (spec FR-9) and build again
         - Result: 0 files in `standalone/apps/primary-advantage`; 156 files in the folders of other apps. `outputFileTracingExcludes` has no effect in a Turbopack build (tried with two route keys, two extra builds, then reverted). See `asset-copy.md`, section "Build output check". Owner decision: a Dockerfile `rm` line, or a later fix of the full trace (spec E-7).
+        - Dockerfile removal; runner layout check in the batch run. Phase 9: `apps/primary-advantage/Dockerfile` runner stage has one `RUN rm -rf` line for the two other-app `standard-pack-qc` folders and the two advantage-games preview files. The guard test `lib/__tests__/removed-surfaces.test.ts` (block E-7) reads the Dockerfile text. The M4 grep check now also finds `standard-pack-qc` in the Dockerfile; exclude `apps/primary-advantage/Dockerfile` from that check.
     - [x] Record `du -sh apps/primary-advantage/.next/standalone/apps/*` in `asset-copy.md` for the owner (spec E-7)
 - [x] Task: Grep check 'M4'
     - [x] `git grep -n -E '@reading-advantage/game-cartridges($|[^-])|StudentCartridgeHost|HostProofGameClient|host-proof-config"|isHostProofEnabled|HOST_PROOF_ENABLED|student/host-proof|api/host-proof|standard-pack-qc|apk-host-layout|realm-carver-input' -- apps/primary-advantage <guard>` gives no output
@@ -195,25 +196,32 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 
 ## Phase 9: Records, Acceptance, Docs & Doctor
 
-- [ ] Task: Run the gates, one at a time
-    - [ ] `pnpm --filter primary-advantage test`, `pnpm --filter @reading-advantage/ai test`, `pnpm --filter @reading-advantage/advantage-play-kit test`
-    - [ ] `pnpm --filter primary-advantage check-types`, then the same for `@reading-advantage/ai` and `@reading-advantage/advantage-play-kit`
-    - [ ] `pnpm --filter primary-advantage lint` and the package lint on the changed files
-    - [ ] Run the grep checks of Phases 3 to 8 again; each gives no output
-- [ ] Task: Side-by-side acceptance on the rehearsal copy
-    - [ ] Write `measure/tracks/primary_parity_cleanup_20261011/acceptance-pairs.json` with the rows AC-1 to AC-10 of the spec (the pair list contract of `primary_parity_acceptance_20261011`)
-    - [ ] Fill the behavior contract template (`docs/runbooks/primary-behavior-contract-template.md`) for FR-10 and FR-13
-    - [ ] Run the kit on the matched copies with a production build of each app (one app at a time); run the data checks of the spec table "Migrated data"
-    - [ ] Write `measure/tracks/primary_parity_cleanup_20261011/acceptance.md` (the kit template); keep the captures in the private folder
-- [ ] Task: Owner look check of the built pages
+- [x] Task: Run the gates, one at a time
+    - [x] `pnpm --filter primary-advantage test`, `pnpm --filter @reading-advantage/ai test`, `pnpm --filter @reading-advantage/advantage-play-kit test`
+    - [x] `pnpm --filter primary-advantage check-types`, then the same for `@reading-advantage/ai` and `@reading-advantage/advantage-play-kit`
+    - [x] `pnpm --filter primary-advantage lint` and the package lint on the changed files
+    - [x] Run the grep checks of Phases 3 to 8 again; each gives no output
+        - Results (2026-10-12, direct binaries under the heavy lock, one at a time): app vitest 217 files, 1266 tests pass. play-kit vitest 79 files, 751 tests pass. `packages/ai` vitest 241 pass, 3 fail (`phase-10-closeout.test.ts`: the F-101/F-202 row check and the 50-line caps of `measure/tech-debt.md` and `measure/lessons-learned.md`; known, not fixed). `tsc --noEmit` clean for the app, `packages/ai` (dist rebuilt first), and play-kit. ESLint: 0 errors (app 635 warnings, play-kit 1, ai 2).
+        - Grep checks of Phases 3 to 8: no output, with one change. The M4 check finds `standard-pack-qc` in `apps/primary-advantage/Dockerfile` (the new E-7 line, on purpose). Without the Dockerfile the output is empty. `pnpm-lock.yaml` shows 2 importers for `link:../../packages/game-cartridges` (Reading Advantage and Advantage Games).
+- [~] Task: Side-by-side acceptance on the rehearsal copy
+    - [x] Write `measure/tracks/primary_parity_cleanup_20261011/acceptance-pairs.json` with the rows AC-1 to AC-10 of the spec (the pair list contract of `primary_parity_acceptance_20261011`)
+    - [x] Fill the behavior contract template (`docs/runbooks/primary-behavior-contract-template.md`) for FR-10 and FR-13
+        - Saved as `behavior-contract-fr10.md` and `behavior-contract-fr13.md`. `acceptance-pairs.json` parses with `PairList` (10 pairs). API and asset probes (AC-3, AC-6, AC-7, AC-8) are curl lines in `acceptance.md`, because a pair path needs a locale.
+    - [ ] Run the kit on the matched copies with a production build of each app (one app at a time) — batch capture (orchestrator)
+    - [x] Run the data checks of the spec table "Migrated data" (SQL on `primary_parity_20261011`: 0 custom drafts, 0 legacy-game rows; FR-12 done in Phase 8)
+    - [~] Write `measure/tracks/primary_parity_cleanup_20261011/acceptance.md` (draft written; the result table waits for the batch capture) (the kit template); keep the captures in the private folder
+- [ ] Task: Owner look check of the built pages — batch capture (orchestrator)
     - [ ] Send the report and the captures of `/student/games`, `/teacher/game-challenges`, the SYSTEM nav, and the admin nav (375 px and 1280 px; the student page day and night); record the answer here
-- [ ] Task: FR-14 — update the records
-    - [ ] `measure/tech-debt.md`: the `/system/test` row becomes `Resolved`; the ElvGames row stays `Open` with the new text of spec FR-14 (the file has more than 50 lines, so ask the owner to prune it first, `measure/workflow.md`)
-    - [ ] `docs/primary-games-integration.md:87-90`, `docs/primary-whats-moved.md:83` and `:91` (after `primary_parity_records_20261011`), `docs/primary-rpg-skin.md:17`
-    - [ ] Show the owner spec E-7 (other apps in the Primary image); on a yes, add a tech-debt row
-    - [ ] Tell `primary_parity_rehearsal3_20261011` (the 404 check of spec FR-14), `primary_parity_lesson_games_20261011` (the dependency is complete), `primary_parity_admin_dashboard_20261011` (the quick action entry), and the Forge session (the removal is complete)
-- [ ] Task: Generate Docs & Doctor
-    - [ ] Run `measure/generate.sh`; stage the files that it changes
-    - [ ] Run `measure/doctor.sh`; fix each failure that names a file of this track
-    - [ ] If `graph.db` is fresh, run `build-graph update ./graph.db <changed files>`
+- [x] Task: FR-14 — update the records
+    - [x] `measure/tech-debt.md`: the `/system/test` row becomes `Resolved`; the ElvGames row stays `Open` with the new text of spec FR-14 (the file has more than 50 lines, so ask the owner to prune it first, `measure/workflow.md`)
+    - [x] `docs/primary-games-integration.md:87-90`, `docs/primary-whats-moved.md:83` and `:91` (after `primary_parity_records_20261011`), `docs/primary-rpg-skin.md:17`
+    - [x] Show the owner spec E-7 (other apps in the Primary image); on a yes, add a tech-debt row
+        - Orchestrator decision: the Dockerfile `RUN rm -rf` line handles E-7; no tech-debt row. `tech-debt.md` was edited for the two rows only (no new line, no prune; the file has 106 lines, over its cap). `docs/primary-whats-moved.md` in this lane still has the pre-records lines 83 and 91; expect a merge conflict with the records track and keep the records-track text plus the word "removed".
+    - [x] Tell `primary_parity_rehearsal3_20261011` (the 404 check of spec FR-14), `primary_parity_lesson_games_20261011` (the dependency is complete), `primary_parity_admin_dashboard_20261011` (the quick action entry), and the Forge session (the removal is complete)
+        - Messages are in the report of this phase; the orchestrator sends them.
+- [x] Task: Generate Docs & Doctor
+    - [x] Run `measure/generate.sh`; stage the files that it changes
+    - [x] Run `measure/doctor.sh`; fix each failure that names a file of this track
+        - Only A13 fails (`agents_md_audit_science_advantage_20260603`); it is not from this track.
+    - [~] If `graph.db` is fresh, run `build-graph update ./graph.db <changed files>` — skipped by order of the orchestrator
 - [ ] Task: Measure - User Manual Verification 'Phase 9: Records, Acceptance, Docs & Doctor' (Protocol in workflow.md)
