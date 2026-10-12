@@ -27,26 +27,27 @@ One heavy job at a time on this machine; the ETL runs in Cloud Build, never on t
 ## Phase S1: The ETL brings the stories, chapters, and chapter questions
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Schema and migration
-    - [ ] Check the next free migration number at the start of the phase (after the highest file in `packages/db/drizzle/`; 0071 on 2026-10-11)
-    - [ ] `packages/db/src/schema/stories.ts`: nullable `image` on `stories` and `chapters`
-    - [ ] `packages/db/src/schema/primary.ts`: nullable `chapter_id` (text) on `sentencs_and_words_for_flashcard`, `article_id` nullable, a check that exactly one is set
-    - [ ] Write the migration SQL by hand (`packages/db/drizzle/<next>_primary_stories.sql`); keep the `tutor_compat` views (no type change, no column drop); update `packages/db/drizzle/meta/_journal.json`, `packages/db/src/sentinels.ts`, and `--required-migration` in `cloudbuild.yaml`
-    - [ ] Fix the TypeScript callers of the nullable `articleId` (`actions/flashcard.ts` and others that `tsc` names)
-- [ ] Task: ETL tests
-    - [ ] `packages/db/src/__tests__/primary-legacy-import.test.ts`: story and chapter mappers (fields of `measure/tracks/primary_legacy_data_migration_20261004/inventory.md:60-61`; `characters` to `story_bible`, `is_published` to `is_public`, `translatedSentences` to `translated_passage`, `audioSentencesUrl` to `audio_url`, the legacy cuid to `image`)
-    - [ ] Chapter MCQ, SAQ, LAQ, flashcard source rows, and flashcard cards get the new chapter id; the MCQ answer rule of the article questions applies
-    - [ ] `STORIES_*` activity targets map to the new chapter id; article targets stay as they are
-    - [ ] The report has no "stories deferred" skip; a second run changes no count; `journal-integrity` passes
-- [ ] Task: Implement the ETL
-    - [ ] `packages/db/src/migrations-data/primary-legacy-import.ts`: remove the stories entry of `DROPPED_TABLES` (line 79); add `MAP_TABLES` entries for stories and chapters; load stories and chapters before the questions, the flashcard rows, and `user_activities`; replace the chapter skips (lines 567, 588, 600, 612, 755); map the `STORIES_*` targets (line 703); count the chapters that use the fallback audio key
-    - [ ] Update `measure/tracks/primary_legacy_data_migration_20261004/inventory.md` rows 60-61 and the ETL notes for `primary_parity_rehearsal3_20261011`
-- [ ] Task: Reconciliation on a rehearsal target
-    - [ ] Run the ETL once in Cloud Build (`cloudbuild-etl.yaml`) into a new rehearsal target, never into a shared copy; save the report in `measure/tracks/primary_parity_stories_20261011/etl-run.md`
-    - [ ] Compare the counts with the legacy copy (stories, chapters, the chapter question rows, 3,296 flashcard source rows, 5 cards); run `packages/db/scripts/tutor-read-check.ts`
-    - [ ] Check a sample of 10 picture keys and 10 audio keys in the bucket with a read-only `gcloud storage ls`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S1: The ETL brings the stories, chapters, and chapter questions' (Protocol in workflow.md)
+- [x] Task: Schema and migration
+    - [x] Check the next free (orchestrator set 0072_primary_stories) migration number at the start of the phase (after the highest file in `packages/db/drizzle/`; 0071 on 2026-10-11)
+    - [x] `packages/db/src/schema/stories.ts`: nullable `image` on `stories` and `chapters`
+    - [x] `packages/db/src/schema/primary.ts`: nullable `chapter_id` (text) on `sentencs_and_words_for_flashcard`, `article_id` nullable, a check that exactly one is set
+    - [x] Write the migration SQL by hand (`packages/db/drizzle/<next>_primary_stories.sql`); keep the `tutor_compat` views (no type change, no column drop); update `packages/db/drizzle/meta/_journal.json`, `packages/db/src/sentinels.ts`, and `--required-migration` in `cloudbuild.yaml`
+    - [x] Fix the TypeScript callers of the nullable `articleId` (`actions/flashcard.ts` and others that `tsc` names)
+- [x] Task: ETL tests
+    - [x] `packages/db/src/__tests__/primary-legacy-import.test.ts`: story and chapter mappers (fields of `measure/tracks/primary_legacy_data_migration_20261004/inventory.md:60-61`; `characters` to `story_bible`, `is_published` to `is_public`, `translatedSentences` to `translated_passage`, `audioSentencesUrl` to `audio_url`, the legacy cuid to `image`)
+    - [x] Chapter MCQ, SAQ, LAQ, flashcard source rows, and flashcard cards get the new chapter id; the MCQ answer rule of the article questions applies
+    - [x] `STORIES_*` activity targets map to the new chapter id; article targets stay as they are
+    - [x] The report has no "stories deferred" skip; a second run changes no count; `journal-integrity` passes
+- [x] Task: Implement the ETL
+    - [x] `packages/db/src/migrations-data/primary-legacy-import.ts`: remove the stories entry of `DROPPED_TABLES` (line 79); add `MAP_TABLES` entries for stories and chapters; load stories and chapters before the questions, the flashcard rows, and `user_activities`; replace the chapter skips (lines 567, 588, 600, 612, 755); map the `STORIES_*` targets (line 703); count the chapters that use the fallback audio key
+    - [x] Update `measure/tracks/primary_legacy_data_migration_20261004/inventory.md` rows 60-61 and the ETL notes for `primary_parity_rehearsal3_20261011`
+- [~] Task: Reconciliation on a rehearsal target (orchestrator or owner step for the Cloud Build run; local run done)
+    - [~] Run the ETL once in Cloud Build (orchestrator or owner step: `etl-cloud-step.md`) (`cloudbuild-etl.yaml`) into a new rehearsal target, never into a shared copy; save the report in `measure/tracks/primary_parity_stories_20261011/etl-run.md`
+    - [x] Compare the counts (local run on `primary_etl_stories_s1`, `etl-run.md`: counts match; 11 MCQ skipped by the article rule) with the legacy copy (stories, chapters, the chapter question rows, 3,296 flashcard source rows, 5 cards); run `packages/db/scripts/tutor-read-check.ts`
+    - [x] Check a sample of 10 picture keys and 10 audio keys in the bucket with a read-only `gcloud storage ls`
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S1: The ETL brings the stories, chapters, and chapter questions' (Protocol in workflow.md)
+    - Step 1: Read `etl-run.md`. The counts match the legacy copy. Step 2: Run `etl-cloud-step.md` (orchestrator or owner).
 
 ## Phase S2: Stories tab in Read
 _Story ref: spec.md#story-s2_

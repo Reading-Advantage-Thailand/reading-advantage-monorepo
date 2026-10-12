@@ -17,3 +17,24 @@ Low:
 - The new map table names `stories` and `story_chapters` are a proposal. S1 sets them in `MAP_TABLES`; the pairs file must match.
 
 Shortcuts: none. Deviations: none. Lessons: Graph condition (NULL `article_id` for chapter rows) is in `behavior-contract.md` section 7 and in the spec, so S1 cannot miss it.
+
+## Phase S1: ETL for stories (phase review, 2026-10-12)
+
+Diff: migration 0072, schema (`stories.ts`, `primary.ts`), sentinel, ETL, tests, cloudbuild files, runbook version string, inventory rows. No app code, no locale key, no route.
+Checks: JSDoc on each new export (yes); no `console` in new code (the ETL uses the report); Zod and TenantDB do not apply (offline ETL); `tsc` of the app is clean; db tests 26 of 26 pass.
+
+Critical and High: none.
+
+Medium:
+- Git history: helper C2 amended a commit in the shared worktree. The ETL commit (first `feat(db)` sha 59fea6ec1) now sits in `bce9093f1` under a lesson games header, and `d273c8dbd` carries the `feat(db)` header but holds only the inventory change. The orchestrator rewords them after the phase.
+- Migration 0072 has no drizzle snapshot (`meta/0072_snapshot.json`), as the hand-written migrations 0060 to 0069 have none. The next `drizzle-kit generate` diffs against the 0071 snapshot and can re-emit these columns. Lane A (0073) must not run `generate` without checking.
+- The 11 chapter MCQ rows whose answer is not among the options are skipped (the article rule); no owner fix exists for them. A chapter then shows 9 or 10 MCQ instead of 10. S5 must pick 5 of what exists.
+- The `chapters.words` column stays empty. The word list of a chapter comes from the chapter row of `sentencs_and_words_for_flashcard` (S4).
+- The Cloud Build rehearsal is not run (`etl-cloud-step.md`).
+- The 5 legacy chapter flashcard cards load as 0 because their decks belong to users who do not move.
+- `measure/doctor.sh` reports `A13 stale archived directories` for `agents_md_audit_science_advantage_20260603`. This is not from this track.
+
+Low:
+- `QUESTION_ORDER_SQL` now partitions by `coalesce(article_id, story_chapter_id)`; the existing order test got a `story_chapter_id` column.
+
+Shortcuts: none. Lessons: a nullable owner column needs a check constraint that keeps one owner (added). A shared worktree and `git commit --amend` by another helper can change the sha of a commit.
