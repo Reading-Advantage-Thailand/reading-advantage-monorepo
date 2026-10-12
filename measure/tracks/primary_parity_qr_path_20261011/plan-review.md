@@ -12,3 +12,11 @@ Findings:
 - Low: the quest-giver idle strip is a Forge asset that already ships (`/rpg/kit/npc/quest-giver-idle-strip.png`). Use it through `Sprite`.
 - Note: a harness run showed the page font as the system font (next/font does not load in the harness).
 - Note: during the phase the worktree had uncommitted changes in `teacher/class-roster/[classroomId]/page.tsx` and its test. They are not from this phase. They stay out of the checkpoint.
+
+## Phase S1 review (helper, 2026-10-12)
+
+- Plan compliance: all S1 tasks done. The graph update was skipped: graph.db read only (orchestrator rule).
+- Security: the callback accepts `/b/<book>/<n>[/writing]` only. Tests refuse `//x`, `https://x`, `/b/../teacher`, `/b/o3-2/5/other`, `/b/o3-2/0`, a backslash, `%2F%2Fx`, and `/b/%2e%2e/teacher`. Staff keep `safeCallbackPath`.
+- Low: staff `safeCallbackPath` is broader than the book rule by design. The proxy checks roles on each page.
+- Low: the card sign-in page (`/auth/card`) keeps `callbackUrl` only when the card link has it. A printed card has no callback today.
+- Note for S2 and S3: use `bookSignInHref` in `lib/book-link/signin-href.ts`. It takes `writing: true` for S3.

@@ -30,23 +30,29 @@ _Story ref: spec.md#story-s5_
 - [x] Task: Measure - User Manual Verification 'Phase S5: Prove the printed URL without a locale' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual steps: on a running build, open `/b/o3-2/5` signed out. Check one redirect to `/th/b/o3-2/5`, with no sign-in page.
 
-## Phase S1: Return to the same lesson after sign-in
+## Phase S1: Return to the same lesson after sign-in [checkpoint: 39d38dbbb]
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Define the return path contract
-    - [ ] In `lib/safe-callback-path.ts` add `bookCallbackPath(value)`: after `safeCallbackPath`, accept only `/^\/b\/[a-z0-9-]+\/[1-9]\d*(\/writing)?$/`
-    - [ ] Make `studentCallbackPath` also accept a book path (F-7); keep staff on `safeCallbackPath`
-- [ ] Task: Write the tests (red)
-    - [ ] `lib/__tests__/safe-callback-path.test.ts`: accepted `/th/b/o3-2/5` and `/b/o3-2/5/writing`; refused `//x`, `https://x`, `/b/../teacher`, `/b/o3-2/5/other`, `/b/o3-2/0`, a backslash
-    - [ ] `components/__tests__/staff-signin-form.test.tsx`: sign-in and the forced password change both go to the callback book path
-    - [ ] A student test per method (`code-sign-in`, `card-sign-in`, `password-sign-in`): the callback book path wins over the student home
-    - [ ] `app/[locale]/b/[book]/[n]/__tests__/page.test.tsx`: a signed-out reader gets the callback in the sign-in link
-- [ ] Task: Implement (green)
-    - [ ] `lib/safe-callback-path.ts` and `components/student-login/use-student-home.ts`
-    - [ ] The signed-out branch of the page passes `callbackUrl=/<locale>/b/<book>/<n>[/writing]` (the form `proxy.ts:70` uses)
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc on every changed export; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Return to the same lesson after sign-in' (Protocol in workflow.md)
+- [x] Task: Define the return path contract
+    - [x] In `lib/safe-callback-path.ts` add `bookCallbackPath(value)`: after `safeCallbackPath`, accept only `/^\/b\/[a-z0-9-]+\/[1-9]\d*(\/writing)?$/`
+    - [x] Make `studentCallbackPath` also accept a book path (F-7); keep staff on `safeCallbackPath`
+    - Added `lib/book-link/signin-href.ts` (`bookSignInHref`): one builder that S2 and S3 reuse.
+- [x] Task: Write the tests (red)
+    - [x] `lib/__tests__/safe-callback-path.test.ts`: accepted `/th/b/o3-2/5` and `/b/o3-2/5/writing`; refused `//x`, `https://x`, `/b/../teacher`, `/b/o3-2/5/other`, `/b/o3-2/0`, a backslash
+    - [x] `components/__tests__/staff-signin-form.test.tsx`: sign-in and the forced password change both go to the callback book path
+    - [x] A student test per method (`code-sign-in`, `card-sign-in`, `password-sign-in`): the callback book path wins over the student home
+    - [x] `app/[locale]/b/[book]/[n]/__tests__/page.test.tsx`: a signed-out reader gets the callback in the sign-in link
+- [x] Task: Implement (green)
+    - [x] `lib/safe-callback-path.ts` and `components/student-login/use-student-home.ts`
+    - [x] The signed-out branch of the page passes `callbackUrl=/<locale>/b/<book>/<n>[/writing]` (the form `proxy.ts:70` uses)
+- [x] Task: Docs and doctor
+    - [x] Skipped: graph.db read only (orchestrator rule).
+    - [x] JSDoc on every changed export; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S1: Return to the same lesson after sign-in' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: on a running build, open `/b/o3-2/5` signed out. The page goes to sign-in with `callbackUrl=/th/b/o3-2/5`.
+    - Sign in as a teacher and as a student (code, card, password). Each lands on the lesson of the book, not on the home page.
+    - Open `/th/auth/signin?callbackUrl=//evil.example`. After sign-in the user lands on the normal home page.
+    - Note: the `/b/...` lesson link for a student without a callback stays unchanged.
 
 ## Phase S4: A clear page for every case that is not the normal one
 _Story ref: spec.md#story-s4_
