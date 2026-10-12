@@ -1246,7 +1246,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Teacher home numbers and class table with CSV (TCH-03)**
+- [~] **Track: Primary Parity Before the Cutover: Teacher home numbers and class table with CSV (TCH-03)**
   *Link: [./tracks/primary_parity_teacher_home_20261011/](./tracks/primary_parity_teacher_home_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
 
