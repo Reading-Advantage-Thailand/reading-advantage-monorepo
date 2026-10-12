@@ -61,19 +61,31 @@ ESLint one time per phase, before the phase commit. One heavy job at a time on t
 
 ## Phase 3: UI
 
-- [ ] Task: Variant block "Coordination with class books": merge integration into the branch, and keep the class book slot of `primary_parity_class_books_20261011` as that member leaves it
-- [ ] Task: The page: summary strip and class table
-    - [ ] Red: `app/[locale]/teacher/dashboard/__tests__/page.test.tsx` (extend): the eight numbers with their labels; "n of m (p %)"; the label "Average level"; no student gives "—" for the average level; one class list only
-    - [ ] Red: `components/teacher/__tests__/teacher-class-table.test.tsx`: search, sort on each column and the second tap, the class link `/teacher/class-roster/<id>`, the "Start class" link, the row card layout at a phone width
-    - [ ] Green: `app/[locale]/teacher/dashboard/page.tsx` (`Scene`, `Panel`, the strip; remove the class card list, FR-12) and `components/teacher/teacher-class-table.tsx` (client component; the page passes the parsed rows); server errors log with `lib/observability/logger.ts`
-- [ ] Task: Variant block "CSV export": the download button
-    - [ ] Red: table test: the button builds the file name with the Bangkok date and passes the shown rows in the shown order to `toTeacherClassCsv`
-    - [ ] Green: `components/teacher/teacher-class-table.tsx` (Blob download)
-- [ ] Task: Strings in en, th, cn, tw, vi
-    - [ ] Red: `components/teacher/__tests__/teacher-home-messages.test.ts`: every new `TeacherHome` key of `messages/en.json` exists in th, cn, tw, and vi
-    - [ ] Green: `messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Run `pnpm --filter primary-advantage test`, then tsc and ESLint on the changed files
-- [ ] Task: Measure - User Manual Verification 'Phase 3: UI' (Protocol in workflow.md)
+- [x] Task: Variant block "Coordination with class books": merge integration into the branch, and keep the class book slot of `primary_parity_class_books_20261011` as that member leaves it
+    - Done with merge 961d1b995 (class_books S5, already in integration). `ClassBookSlot` is unchanged; the page places it in `lg:col-span-2` after the class table.
+- [x] Task: The page: summary strip and class table
+    - [x] Red: `app/[locale]/teacher/dashboard/__tests__/page.test.tsx` (extend): the eight numbers with their labels; "n of m (p %)"; the label "Average level"; no student gives "—" for the average level; one class list only
+    - [x] Red: `components/teacher/__tests__/teacher-class-table.test.tsx`: search, sort on each column and the second tap, the class link `/teacher/class-roster/<id>`, the "Start class" link, the row card layout at a phone width
+    - [x] Green: `app/[locale]/teacher/dashboard/page.tsx` (`Scene`, `Panel`, the strip; remove the class card list, FR-12) and `components/teacher/teacher-class-table.tsx` (client component; the page passes the parsed rows); server errors log with `lib/observability/logger.ts`
+- [x] Task: Variant block "CSV export": the download button
+    - [x] Red: table test: the button builds the file name with the Bangkok date and passes the shown rows in the shown order to `toTeacherClassCsv`
+    - [x] Green: `components/teacher/teacher-class-table.tsx` (Blob download)
+- [x] Task: Strings in en, th, cn, tw, vi
+    - [x] Red: `components/teacher/__tests__/teacher-home-messages.test.ts`: every new `TeacherHome` key of `messages/en.json` exists in th, cn, tw, and vi
+    - [x] Green: `messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Run `pnpm --filter primary-advantage test`, then tsc and ESLint on the changed files
+    - Result: app suite 247 files, 1485 tests passed (449 s, under the lock); app `tsc --noEmit` 0 errors; ESLint 0 errors on the 6 changed source and test files and the dashboard folder. No failure in the other helper's files.
+- [x] Task: Measure - User Manual Verification 'Phase 3: UI' (Protocol in workflow.md) — look check pending (owner, async)
+    - Captures: `~/Desktop/primary-parity-progress/captures/teacher_home/phase3-ui/` (26 PNG files: home-day, home-night with scroll steps `-s1` to `-s3`, sorted-students-day, search-day, search-none-day, empty-day; each at `-375` and `-1280`). Harness: `<scratchpad>/teacher_home-p3/` (real page, real components, real CSS; only the data modules are stubs).
+    - Manual steps: (1) Open `/teacher/dashboard` as a TEACHER. (2) The summary shows 8 numbers; the active tile reads "n of m (p%)"; the label says "Average level". (3) Search for part of a class name: only matching classes stay; a name with no match shows one status line. (4) Tap "Students" in the table head (or use the select at 375 px): the order changes; tap again: the order reverses. (5) Tap "Download CSV": the file `teacher-classes-<Bangkok date>.csv` has the shown rows in the shown order. (6) Tap a class name: the class page opens. Tap "Start class": the class page opens at the sign-in panel. (7) Check day and night at 375 px and 1280 px. (8) Check the Thai strings (owner check pending).
+
+### Phase 3 notes
+
+- Defaults used (member questions): place `guild-hall` with `Scene contained`; block order as in `spec.md` "Design Decisions (Phase 1)"; first tap on a numeric column sorts the biggest value first (students, active, average level, XP), first tap on class, trend, and status sorts ascending. The phone sort control is a select plus a direction button.
+- Thai, cn, tw, and vi strings are written by the helper: owner check pending.
+- New files: `components/teacher/teacher-class-table.tsx` (client), `components/teacher/teacher-summary-strip.tsx`. `TeacherQuestCard` has a new `panel` prop (parchment panel and skin buttons); the class page keeps the old look.
+- The open assignments and "Who needs help" blocks are `Panel`s now; their chips and empty states still come from `@reading-advantage/ui`.
+- The keys `TeacherHome.classes.students` and `TeacherHome.classes.all` have no user now. They stay in the five files so that the key sets stay equal.
 
 ## Phase 4: Acceptance
 

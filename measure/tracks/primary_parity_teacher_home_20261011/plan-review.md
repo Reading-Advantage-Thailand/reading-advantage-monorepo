@@ -42,3 +42,25 @@ Lessons:
 
 - The recording DB stub of `primary-teacher-home.test.ts` now has an `execute` method with a handler that picks rows by the text of the rendered SQL. Use `sharedRows` for new cases.
 - `windowBoundsSql` params for the previous 7-day window end where the last 7-day window starts. A stub that matches on a params value must test the previous window first.
+
+## Phase 3: UI
+
+Phase review of `git diff 7fea9a91a..HEAD` (own files only). No Critical and no High finding. Checked: plan compliance (FR-7 to FR-12), tenant scope (the page reads only `getTeacherHome` data; the client table gets parsed rows and no id from the browser), tests (table, page, key parity), JSDoc on each export, no `console` call, key parity in the five locale files.
+
+Medium:
+
+- The class table sorts and filters in the browser. A teacher with hundreds of classes is not expected; no paging is built.
+- The page parses no data by itself. `getTeacherHome` returns parsed data (Zod in the domain). The page trusts this contract.
+
+Low:
+
+- "Cancel the quest" on the Class Quest panel still uses the plain button style (`CancelQuestButton` is outside this phase). The "Live dashboard" and "Assign a quest" buttons use the skin.
+- On a phone the direction button of the sort control wraps below the select when the label is long. It stays usable (48 px).
+- "Who needs help" and "Open assignments" keep the `StatusChip` and `EmptyState` chips of `@reading-advantage/ui` on the parchment panel. The contrast is readable in the captures; the owner look check can ask for skin chips.
+- The keys `TeacherHome.classes.students` and `TeacherHome.classes.all` have no user in the page now.
+- The captures use a stub for the data modules and the real page, components, and CSS. The staff shell is a stand-in.
+
+Lessons:
+
+- A Tailwind grid child needs `min-w-0` in a `lg:grid-cols-2` grid. The wide table panel pushed the page 6 px past 375 px until the panel got `min-w-0`.
+- jsdom does not apply Tailwind, so the table and the card list both exist in a test. Use `getByRole(..., { hidden: true })` and `within(table)` or `within(list)`.
