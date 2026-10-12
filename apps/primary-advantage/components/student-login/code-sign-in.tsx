@@ -228,7 +228,6 @@ export function CodeSignIn() {
           </div>
           {oldLink && (
             <div role="note" className="flex items-start gap-3 rounded-lg border-2 border-[var(--cq-gold-dark)] bg-[#fbe7b0] p-3 text-[var(--cq-ink)]">
-              {/* eslint-disable-next-line @next/next/no-img-element -- small Forge art, no optimization needed */}
               <img src={ART.scroll} alt="" className="size-14 shrink-0 object-contain" />
               <p className="text-base font-semibold">{t("code.oldLink")}</p>
             </div>
