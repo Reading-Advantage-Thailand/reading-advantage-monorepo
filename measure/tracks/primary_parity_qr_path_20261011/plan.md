@@ -130,14 +130,21 @@ _Story ref: spec.md#story-s6_
 - [ ] Task: Run the QR block in the browser (batch run (orchestrator))
     - Run steps: `browser-check/README.md`. Result file: `browser-check/result.md`.
 
-## Phase A: Acceptance
+## Phase A: Acceptance [checkpoint: pending]
 
-- [ ] Task: Write the behavior contract
-    - [ ] Fill `docs/runbooks/primary-behavior-contract-template.md` for this track (legacy: printed old QR codes; target: this spec) in `measure/tracks/primary_parity_qr_path_20261011/behavior-contract.md`
-- [ ] Task: Write `acceptance-pairs.json` (kit FR-7)
-    - [ ] Pairs A1 to A5 of the spec table, with roles `PUBLIC`, `STUDENT`, `TEACHER`; `steps` modules for the sign-in; `legacyPath` is the old `/student/read/{map:article:<id>}` path
-- [ ] Task: Run the kit of `primary_parity_acceptance_20261011`
+- [x] Task: Write the behavior contract
+    - [x] Filled in `behavior-contract.md` (legacy: printed old QR codes `/student/read/<cuid>`; legacy has no `/b/` and no `/writing` route)
+- [x] Task: Write `acceptance-pairs.json` (kit FR-7)
+    - [x] 9 pairs, QR-A1 to QR-A5b, roles PUBLIC, STUDENT, TEACHER; steps module `acceptance-steps-qr-path.ts` (school choice to sign-in page)
+    - Correction to the plan text: `legacyPath` holds the raw legacy article id `cmtyina5w000ps601n6htj9g3` (no `{map:...}`), because the kit would give the legacy app the new id. `newPath` uses the book key, so it needs no placeholder either.
+    - Deviation: the kit requires a locale in every path, so A4 (unprefixed `/b/o3-2/1`) is a pair on `/th/b/o3-2/1` plus a curl check in `acceptance.md`. The full sign-in is the browser check, not a pair.
+    - Data checks: `qr-path-data-checks.sql` (read only).
+- [ ] Task: Run the kit of `primary_parity_acceptance_20261011` - batch capture (orchestrator)
     - [ ] `scripts/primary-parity/capture.ts` for each app, then `report.ts`; sign in a demo student and a demo teacher; use the catalogue loaded by `primary_parity_class_books_20261011`
-- [ ] Task: Captures at 375 px and 1280 px, day and night, for the owner look check
-- [ ] Task: Write `measure/tracks/primary_parity_qr_path_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
-- [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
+- [ ] Task: Captures at 375 px and 1280 px, day and night, for the owner look check - batch capture (orchestrator)
+- [x] Task: Write `measure/tracks/primary_parity_qr_path_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
+    - [x] Result cells hold "batch 2"; the owner look check is "pending (owner, async)"
+- [x] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: after the batch capture, open `$P/captures/primary_parity_qr_path_20261011/report.html`. Fill the Result cells of `acceptance.md`.
+    - Check the landing (QR-A1, QR-A2) and the case pages (QR-A5a, QR-A5b) at 375 px and 1280 px, day and night.
+    - Run the two curl commands of `acceptance.md` for the unprefixed URL.
