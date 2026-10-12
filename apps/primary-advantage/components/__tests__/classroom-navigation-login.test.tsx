@@ -28,4 +28,9 @@ describe("ClassroomNavigation", () => {
     expect(screen.queryByText(/Password/i)).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /password/i })).not.toBeInTheDocument();
   });
+
+  it("links the class book entry to the #class-book anchor of the class page", () => {
+    renderWithMessages(<ClassroomNavigation classroom={{ id: "c1", name: "P3A", studentCount: 2 }} />);
+    expect(screen.getByRole("link", { name: "Class book" })).toHaveAttribute("href", "/teacher/class-roster/c1#class-book");
+  });
 });

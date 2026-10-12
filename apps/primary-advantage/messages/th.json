@@ -2207,6 +2207,7 @@
     "ClassroomNavigation": {
       "nav": {
         "classRoster": "ทะเบียนชั้นเรียน",
+        "classBook": "หนังสือประจำชั้น",
         "reports": "รายงาน",
         "reedy": "รีดี้",
         "avatars": "อวตาร",
@@ -3533,6 +3534,12 @@
       "pointer": "บทที่ {current} จาก {total}",
       "taughtCount": "{count, plural, =0 {ยังไม่ได้สอนบทใด} other {สอนแล้ว # บท}}",
       "pacing": "แผนการสอน",
+      "nowInClass": "กำลังเรียนในชั้น",
+      "openLesson": "เปิดบทเรียน",
+      "lessonTitle": "บทที่ {number}: {title}",
+      "taughtLabel": "บทที่สอนแล้ว",
+      "stepsMeter": "ขั้นตอนในหนังสือแบบฝึกหัดที่ทำแล้ว",
+      "assignAnother": "มอบหนังสือเล่มอื่น",
       "backToClass": "กลับไปที่ชั้นเรียน",
       "nextStep": "ขั้นต่อไป",
       "nextStepValue": "ขั้นที่ {step}: {title}",

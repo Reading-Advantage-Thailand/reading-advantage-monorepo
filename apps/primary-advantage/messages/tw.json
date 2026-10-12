@@ -2282,6 +2282,7 @@
     "ClassroomNavigation": {
       "nav": {
         "classRoster": "班級名冊",
+        "classBook": "班級用書",
         "reports": "報告",
         "reedy": "Reedy",
         "avatars": "頭像",
@@ -3532,6 +3533,12 @@
       "pointer": "Lesson {current} of {total}",
       "taughtCount": "{count, plural, =0 {No lessons taught yet} one {# lesson taught} other {# lessons taught}}",
       "pacing": "Lesson plan",
+      "nowInClass": "Now in class",
+      "openLesson": "Open lesson",
+      "lessonTitle": "Lesson {number}: {title}",
+      "taughtLabel": "Lessons taught",
+      "stepsMeter": "Workbook steps done",
+      "assignAnother": "Assign another book",
       "backToClass": "Back to class",
       "nextStep": "Next step",
       "nextStepValue": "Step {step}: {title}",
