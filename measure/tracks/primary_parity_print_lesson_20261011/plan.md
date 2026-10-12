@@ -85,22 +85,22 @@ _Story ref: spec.md#story-s3_
 ## Phase S4: Print this lesson from the class book
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Define the read and the strings
-    - [ ] `getPrintLesson` (class book id, lesson number) in `packages/domain/src/primary-books/print/print-lesson.ts` with `managedClassBook`; extend `TeacherLesson` in `lesson-support-contracts.ts` with `hasPrint`
-    - [ ] Keys `TeacherUi.classBook.lesson.print`, `printNow`, `printNotReady`, `printLoading` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Write the tests (red)
-    - [ ] Domain: `getPrintLesson` refuses a student, a teacher of another class, and another school; returns null with no print data
-    - [ ] App: `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/__tests__/page.test.tsx`: the button with print data, the text without it
-    - [ ] App: new `.../lessons/[number]/print/__tests__/page.test.tsx` and `components/teacher/__tests__/print-lesson-frame.test.tsx`: the sandboxed `srcDoc` frame, "Print" disabled until load, the `workbook:print` message
-    - [ ] A key-parity test for the new keys
-- [ ] Task: Implement (green)
-    - [ ] New `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/print/page.tsx` (thin; logs a failure with `lib/observability/logger.ts`)
-    - [ ] New `apps/primary-advantage/components/teacher/print-lesson-frame.tsx`
-    - [ ] The button on `.../lessons/[number]/page.tsx`
-- [ ] Task: Print check
-    - [ ] On the scratch copy, print Origins 3.2 lesson 5 to PDF in Chrome; put it next to the Workbooks PDF (spec check A3); save both in `measure/tracks/primary_parity_print_lesson_20261011/print-check/`
-- [ ] Task: Final side-by-side check
-    - [ ] Run checks A1 to A4 of the spec with the acceptance kit; send the captures and the two PDFs to the owner
-- [ ] Task: Docs and doctor
+- [x] Task: Define the read and the strings (71d177078, 14dc0129d)
+    - [x] `getPrintLesson` (class book id, lesson number) in `packages/domain/src/primary-books/print/print-lesson.ts` with `managedClassBook`; extend `TeacherLesson` in `lesson-support-contracts.ts` with `hasPrint`
+    - [x] Keys `TeacherUi.classBook.lesson.print`, `printNow`, `printNotReady`, `printLoading` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Write the tests (red) (71d177078, 71eb6936c, 14dc0129d)
+    - [x] Domain: `getPrintLesson` refuses a student, a teacher of another class, and another school; returns null with no print data
+    - [x] App: `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/__tests__/page.test.tsx`: the button with print data, the text without it
+    - [x] App: new `.../lessons/[number]/print/__tests__/page.test.tsx` and `components/teacher/__tests__/print-lesson-frame.test.tsx`: the sandboxed `srcDoc` frame, "Print" disabled until load, the `workbook:print` message
+    - [x] A key-parity test for the new keys
+- [x] Task: Implement (green) (b02413196)
+    - [x] New `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/print/page.tsx` (thin; logs a failure with `lib/observability/logger.ts`)
+    - [x] New `apps/primary-advantage/components/teacher/print-lesson-frame.tsx`
+    - [x] The button on `.../lessons/[number]/page.tsx`
+- [x] Task: Print check (see `print-check/README.md`)
+    - [x] On the scratch copy, print Origins 3.2 lesson 5 to PDF in Chrome; put it next to the Workbooks PDF (spec check A3); save both in `measure/tracks/primary_parity_print_lesson_20261011/print-check/`
+- [x] Task: Final side-by-side check (cdc4d8dcf; captures batched by the orchestrator)
+    - [x] Run checks A1 to A4 of the spec with the acceptance kit; send the captures and the two PDFs to the owner
+- [ ] Task: Docs and doctor (generate.sh run 2026-10-12; doctor.sh fails only on pre-existing A13 `agents_md_audit_science_advantage_20260603`)
     - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
 - [ ] Task: Measure - User Manual Verification 'Phase S4: Print this lesson from the class book' (Protocol in workflow.md)
