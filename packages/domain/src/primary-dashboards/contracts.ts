@@ -37,15 +37,21 @@ export const classesScopeSchema = z.object({
   classIds: z.array(z.string().uuid()),
 });
 
+/** The scope of all STUDENT users who have a school (the system dashboard). */
+export const platformScopeSchema = z.object({ kind: z.literal("platform") });
+
 /**
- * The set of students that a count covers. `school` covers all STUDENT users of one school and
- * `classes` covers the students of some classes of one school. The system dashboard adds a
- * `platform` kind later.
+ * The set of students that a count covers. `school` covers all STUDENT users of one school,
+ * `classes` covers the students of some classes of one school, and `platform` covers all
+ * STUDENT users who have a school.
  */
-export const activityScopeSchema = z.discriminatedUnion("kind", [schoolScopeSchema, classesScopeSchema]);
+export const activityScopeSchema = z.discriminatedUnion("kind", [schoolScopeSchema, classesScopeSchema, platformScopeSchema]);
 
 /** The set of students that a count covers. */
 export type ActivityScope = z.infer<typeof activityScopeSchema>;
+
+/** A scope that belongs to one school: it has a `schoolId`. */
+export type SchoolBoundScope = Exclude<ActivityScope, { kind: "platform" }>;
 
 /** The scope of the students of some classes. */
 export type ClassesScope = z.infer<typeof classesScopeSchema>;

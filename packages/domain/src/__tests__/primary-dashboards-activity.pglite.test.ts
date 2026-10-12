@@ -10,10 +10,13 @@ import {
   countActivityEvents,
   countArticlesOpened,
   countNewStudents,
+  countStudentsWithoutSchool,
+  countTeachersBySchool,
   getAverageLevel,
   getClassStudentStats,
   getLastActivityAt,
   getLastActivityByStudent,
+  getPlatformSchoolActivity,
   sumXpEarned,
   sumXpEarnedByClass,
 } from "../primary-dashboards/activity.js";
@@ -149,6 +152,70 @@ describe("shared activity counts (PGlite, two schools)", () => {
 
     it("refuses a count by class for a school scope", async () => {
       await expect(countActiveStudentsByClass({ db, scope: scopeA, window: w7 })).rejects.toThrow(/kind classes/);
+    });
+  });
+
+  describe("platform scope (system dashboard)", () => {
+    const SCHOOL_C = "10000000-0000-4000-8000-00000000000c";
+    const platform = { kind: "platform" as const };
+
+    beforeAll(async () => {
+      // School C has no students. A student without a school has an ARTICLE_READ row and an XP row in the window.
+      for (const statement of [
+        "set session_replication_role = replica",
+        `insert into schools (id, name) values ('${SCHOOL_C}', 'School C')`,
+        `insert into users (id, username, display_username, name, role, school_id, created_at) values ('sx', 'sx', 'sx', 'Name sx', 'STUDENT', null, '2026-01-01T00:00:00')`,
+        `insert into user_activity (user_id, activity_type, created_at, target_id) values ('sx', 'ARTICLE_READ', '2026-10-12T02:00:00', 'ax')`,
+        `insert into xp_logs (user_id, xp_earned, activity_id, activity_type, created_at) values ('sx', 5, 'xx', 'article', '2026-10-12T02:00:00')`,
+        "set session_replication_role = origin",
+      ]) await h.db.execute(sql.raw(statement));
+    });
+
+    it("gives one result for each school, with the counts of that school only", async () => {
+      // The test database also holds a default school without students; it has zeros.
+      const all = await getPlatformSchoolActivity({ db, window: w7 });
+      const rows = all.filter((r) => [SCHOOL_A, SCHOOL_B, SCHOOL_C].includes(r.schoolId));
+      expect(all.filter((r) => !rows.includes(r)).every((r) => r.students === 0 && r.lastActivityAt === null)).toBe(true);
+      expect(rows.map((r) => r.schoolId)).toEqual([SCHOOL_A, SCHOOL_B, SCHOOL_C]);
+      const [a, b, c] = rows;
+      expect(a).toMatchObject({ name: "School A", students: 5, activeStudents: 3, articlesOpened: 1 });
+      expect(a?.lastActivityAt?.toISOString()).toBe("2026-10-12T17:00:00.000Z");
+      expect(b).toMatchObject({ name: "School B", students: 1, activeStudents: 1, articlesOpened: 1 });
+      expect(b?.lastActivityAt?.toISOString()).toBe("2026-10-12T02:00:00.000Z");
+      expect(c).toMatchObject({ name: "School C", students: 0, activeStudents: 0, articlesOpened: 0, lastActivityAt: null });
+    });
+
+    it("gives each school the same counts as the school scope (no second copy of a rule)", async () => {
+      const rows = await getPlatformSchoolActivity({ db, window: w30 });
+      for (const [id, scope] of [[SCHOOL_A, scopeA], [SCHOOL_B, scopeB]] as const) {
+        const row = rows.find((r) => r.schoolId === id);
+        const school = await countActiveStudents({ db, scope, window: w30 });
+        expect(row?.activeStudents).toBe(school.active);
+        expect(row?.students).toBe(school.total);
+        expect(row?.articlesOpened).toBe(await countArticlesOpened({ db, scope, window: w30 }));
+        expect(row?.lastActivityAt?.getTime()).toBe((await getLastActivityAt({ db, scope }))?.getTime());
+      }
+    });
+
+    it("counts students without a school apart and never in a school row", async () => {
+      expect(await countStudentsWithoutSchool({ db })).toBe(1);
+      const rows = await getPlatformSchoolActivity({ db, window: w7 });
+      expect(rows.reduce((sum, r) => sum + r.students, 0)).toBe(6);
+      expect(rows.reduce((sum, r) => sum + r.articlesOpened, 0)).toBe(2);
+    });
+
+    it("counts the teachers of each school by users.role", async () => {
+      const teachers = await countTeachersBySchool({ db });
+      expect(teachers.get(SCHOOL_A)).toBe(3);
+      expect(teachers.get(SCHOOL_B)).toBe(1);
+      expect(teachers.has(SCHOOL_C)).toBe(false);
+    });
+
+    it("covers all students with a school in the platform scope", async () => {
+      const total = await countActiveStudents({ db, scope: platform, window: w7 });
+      expect(total).toEqual({ active: 4, total: 6, percent: 67 });
+      expect(await countArticlesOpened({ db, scope: platform, window: w7 })).toBe(2);
+      expect((await getLastActivityAt({ db, scope: platform }))?.toISOString()).toBe("2026-10-12T17:00:00.000Z");
     });
   });
 });

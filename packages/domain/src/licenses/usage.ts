@@ -86,3 +86,38 @@ export async function getSchoolLicenseTiming(params: { db: DB; schoolId: string;
     ended: Boolean(rows[0]?.ended),
   });
 }
+
+/**
+ * Reads the seat usage of every school in one query: seats = the sum of `max_users` of the
+ * licenses with the status `active` and an end date from today on (or none); seats used = the
+ * STUDENT users of the school. A school with no valid license, or with 0 seats, has seats null
+ * ("no license"). The caller checks the permission.
+ * @param params.db The database.
+ * @param params.now The current instant. Tests replace it.
+ * @returns A map from school id to the seats (or null) and the seats used. Every school has an entry.
+ */
+export async function getSeatUsageBySchool(params: {
+  db: DB;
+  now?: Date;
+}): Promise<Map<string, { seats: number | null; seatsUsed: number }>> {
+  const today = calendarDayKey(params.now ?? new Date());
+  const raw = createTenantDB(params.db, { schoolId: null }).unscoped(
+    "licenses are FLAT but the system dashboard reads all schools; students are counted by users.school_id",
+  );
+  const rows = rowsOf<{ school_id: string; seats: unknown; used: unknown }>(
+    await raw.execute(sql`
+      select s.id as school_id, lic.seats, coalesce(stu.n, 0)::int as used
+      from schools s
+      left join (
+        select l.school_id, sum(l.max_users) as seats from licenses l
+        where l.status = 'active' and (${LICENSE_END_DAY} is null or ${LICENSE_END_DAY} >= ${today}::date)
+        group by l.school_id) lic on lic.school_id = s.id
+      left join (select u.school_id, count(*) as n from users u where u.role = 'STUDENT' group by u.school_id) stu on stu.school_id = s.id`),
+  );
+  return new Map(
+    rows.map((row) => {
+      const seats = Number(row.seats ?? 0);
+      return [row.school_id, { seats: seats > 0 ? seats : null, seatsUsed: Number(row.used ?? 0) }];
+    }),
+  );
+}

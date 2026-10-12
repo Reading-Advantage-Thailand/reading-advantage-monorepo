@@ -17,7 +17,7 @@ import {
   windowBoundsSql,
   xpEarnedByStudentSql,
 } from "./activity.js";
-import type { ActivityScope, DashboardWindow } from "./contracts.js";
+import type { ActivityScope, DashboardWindow, SchoolBoundScope } from "./contracts.js";
 import { dashboardWindow } from "./window.js";
 import {
   schoolDashboardInputSchema,
@@ -45,7 +45,7 @@ const LOW_ACTIVITY_DAYS = 30;
 
 interface Params {
   db: DB;
-  scope: ActivityScope;
+  scope: SchoolBoundScope;
   window: DashboardWindow;
 }
 
