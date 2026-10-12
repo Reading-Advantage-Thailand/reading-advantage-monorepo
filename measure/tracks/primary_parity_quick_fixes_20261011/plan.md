@@ -121,7 +121,7 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: Measure - User Manual Verification 'Phase 5: Student — reading, saved words, profile, and XP' (Protocol in workflow.md)
     - look check pending (owner, async). Manual verification steps: (1) As a STUDENT with a full sign-in open `/en/settings/user-profile`; check the labels "Display name" and "Sign-in username". (2) Change the display name; check the success toast and the new name in the header; check that the sign-in username is the same. (3) Sign in with a class code (code-only session), repeat; check the red notice and the error toast. (4) Open an article page with at least 7 sentences; check 3 blocks with one picture each and every sentence once. (5) Open the same article as a student who did not finish the quizzes; check the chip "Flashcard: Not Saved" even when a classmate saved it. (6) Finish the MCQ, SAQ, and LAQ, reload; check the chip "Flashcard: Saved" and 3 to 5 new words and all sentences in the decks. (7) Play one game; check that the home XP and the header gem rise by the earned XP.
 
-## Phase 6: Public
+## Phase 6: Public [checkpoint: 8312d44d2]
 
 - [x] Task: FR-12 (PUB-04) — the footer Support link and email (on `primary/public-pages`)
     - [x] Tell the owner of `primary_public_pages_20261007` (the PR session) before the commit; work in `/home/daniebo/Desktop/rama-worktrees/public-pages` (orchestrator allowed the single change; the orchestrator owns the PR session contact)
