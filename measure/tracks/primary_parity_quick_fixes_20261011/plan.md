@@ -91,7 +91,7 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: Measure - User Manual Verification 'Phase 4: Student — lessons and quizzes' (Protocol in workflow.md)
     - look check pending (owner, async). Manual verification steps: (1) As a student open an assignment lesson with progress 93; check that task 13 opens with a Next button. (2) Open a new assignment (progress 0); check that task 1 opens with the start button. (3) Open a lesson with progress 100; check that the summary shows and the timer stays still. (4) Finish a quiz twice in a row (double click); check that XP rises one time. (5) Answer task 8, go to task 9, go back; check that the saved question, answer, suggested answer, feedback, and score show.
 
-## Phase 5: Student — reading, saved words, profile, and XP [checkpoint: PENDING]
+## Phase 5: Student — reading, saved words, profile, and XP [checkpoint: ac426c945]
 
 - [x] Task: FR-8 (STU-06) — the student changes the display name
     - [x] Contract: `updateOwnDisplayNameBodySchema` in `lib/zod.ts` (`name` trimmed, 2 to 40 characters), with JSDoc
