@@ -24,19 +24,21 @@ a browser is a heavy job). Every task follows the TDD order of `measure/workflow
 - [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md)
     - look check pending (owner, async). Steps: open each PNG of `design/captures.md`; check the four points of `design/look-check.md`; send changes to the monorepo session.
 
-## Phase S1: Make the game input from the lesson
+## Phase S1: Make the game input from the lesson [checkpoint: 628585040]
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Define the contract
-    - [ ] `lessonPracticeInputRequestSchema` (article id, locale; for a teacher also the class book id and lesson number) and `LESSON_PRACTICE_INPUT_PREFIX` in `packages/domain/src/games/practice-input.ts`
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/games/__tests__/practice-input.test.ts` with `packages/domain/src/__tests__/mock-db.ts`: the input from the article snapshot (`sentencs_and_words_for_flashcard`); the limits; the locale; the id `lesson:<articleId>`; a student of another school and a teacher without the class book get FORBIDDEN
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/games/practice-input.ts`: `getLessonPracticeInput`, sharing the parse rules of `buildPracticeInput`; export it in the games index
-    - [ ] A thin server action `apps/primary-advantage/actions/lesson-games.ts` (`getLessonGameInputAction`) for the student and the teacher; a failure logs with `lib/observability/logger.ts`
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Make the game input from the lesson' (Protocol in workflow.md)
+- [x] Task: Define the contract
+    - [x] `lessonPracticeInputRequestSchema` (article id, locale; for a teacher also the class book id and lesson number) and `LESSON_PRACTICE_INPUT_PREFIX` in `packages/domain/src/games/practice-input.ts`
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/games/__tests__/practice-input.test.ts` with `packages/domain/src/__tests__/mock-db.ts`: the input from the article snapshot (`sentencs_and_words_for_flashcard`); the limits; the locale; the id `lesson:<articleId>`; a student of another school and a teacher without the class book get FORBIDDEN
+- [x] Task: Implement (green)
+    - Commit 628585040. Items have ids `w<n>` and `s<n>`; the input id is `lesson:<articleId>`. The caller computes `missingFor`.
+    - [x] `packages/domain/src/games/practice-input.ts`: `getLessonPracticeInput`, sharing the parse rules of `buildPracticeInput`; export it in the games index
+    - [x] A thin server action `apps/primary-advantage/actions/lesson-games.ts` (`getLessonGameInputAction`) for the student and the teacher; a failure logs with `lib/observability/logger.ts`
+- [x] Task: Docs and doctor
+    - [x] JSDoc; skipped: graph.db read only (orchestrator rule); run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S1: Make the game input from the lesson' (Protocol in workflow.md)
+    - look check pending (owner, async). No UI in this phase. Steps: run `vitest run src/games/__tests__/practice-input.test.ts` in `packages/domain` (10 pass); in the lesson page of S2 the input shows from `getLessonGameInputAction`.
 
 ## Phase S2: Play a vocabulary game in task 10
 _Story ref: spec.md#story-s2_

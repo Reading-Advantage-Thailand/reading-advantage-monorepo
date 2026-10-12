@@ -15,3 +15,13 @@ Deviations: the class book catalogue is empty on the rehearsal copy, so the less
 Lessons: a `$VAR` in a heredoc without a value gives a wrong path with no error (the first capture run had no images). Check the first capture before the full run.
 
 Shortcuts: none. No cartridge was loaded in a browser; the check is static (manifest minimums).
+
+## Phase S1 review (helper, 2026-10-12)
+
+No Critical or High finding. Checked: `assertCan`, school check, class book check, Zod at the boundary, JSDoc, logger rule, no new UI text (no locale keys in this phase).
+
+- Medium: a student gets the input of any article of the school. Articles are global and the lesson page opens every article to every student, so the rule matches the page. A class book membership check would lock out library lessons.
+- Medium: `getLessonPracticeInput` reads the snapshot sentence list only. A lesson with a short list gives fewer than 8 sentences; the caller gates with `missingFor`.
+- Low: a teacher with `ADMIN` or `SYSTEM` role passes `managedClassBook` for any class of the school, as the projector page does.
+- Lesson (for the shared file): in Vitest 4.1.8 a `vi.fn` that throws or rejects fails the test even when the code under test catches the error. Mock with a plain wrapper function and a variable for the failure.
+- Shortcut: `buildPracticeInput` got a fifth parameter `inputId` (default "saved") to share the parse rules.
