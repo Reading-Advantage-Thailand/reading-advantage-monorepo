@@ -80,16 +80,16 @@ _Story ref: spec.md#story-s4_
 
 Build this phase only if the owner chose it in Phase 0.
 
-- [ ] Task: Contract for the offline fallback
-    - [ ] `lib/pwa/constants.ts`: the offline cache name and the file list (`/offline.html` and its files, under 200 KB)
-- [ ] Task: Tests for the offline fallback
-    - [ ] `lib/pwa/__tests__/service-worker.test.ts`: install caches only the offline files; a navigation goes to the network; a network error gives `/offline.html`; a non-navigation request has no handler; activate keeps the offline cache
-    - [ ] `tests/pwa/takeover.spec.ts`: offline navigation shows the offline page, never a legacy page
-    - [ ] `components/pwa/__tests__/offline-sign.test.tsx`: the sign shows on `offline` and goes on `online`
-- [ ] Task: Implement the offline fallback
-    - [ ] `public/offline.html` (static, in the skin colours, en and th text); the navigation handler in `public/serwist/sw.js`
-    - [ ] `components/pwa/offline-sign.tsx`; mount it in `components/shared/app-layout.tsx`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Contract for the offline fallback
+    - [x] `lib/pwa/constants.ts`: the offline cache name and the file list (`/offline.html` and its files, under 200 KB)
+- [x] Task: Tests for the offline fallback
+    - [x] `lib/pwa/__tests__/service-worker.test.ts`: install caches only the offline files; a navigation goes to the network; a network error gives `/offline.html`; a non-navigation request has no handler; activate keeps the offline cache
+    - [x] `tests/pwa/takeover.spec.ts`: offline navigation shows the offline page, never a legacy page
+    - [x] `components/pwa/__tests__/offline-sign.test.tsx`: the sign shows on `offline` and goes on `online`
+- [x] Task: Implement the offline fallback
+    - [x] `public/offline.html` (static, in the skin colours, en and th text); the navigation handler in `public/serwist/sw.js`
+    - [x] `components/pwa/offline-sign.tsx`; mount it in `components/shared/app-layout.tsx`
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
 - [ ] Task: Measure - User Manual Verification 'Phase S4: Offline page and offline sign' (Protocol in workflow.md)
 
 ## Phase A: Acceptance
