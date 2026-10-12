@@ -1897,11 +1897,24 @@
         "more": "+{count} câu được lưu thêm"
       },
       "actions": {
-        "backToRead": "Quay lại trang đọc"
+        "backToRead": "Quay lại trang đọc",
+        "startAgain": "Học lại",
+        "restarting": "Đang khởi động lại..."
       },
       "toast": {
         "failed": "Không thể tải tổng kết bài học"
-      }
+      },
+      "restart": {
+        "title": "Start this lesson again?",
+        "body1": "Your work on this lesson goes into your history.",
+        "body2": "You keep your XP. You can earn XP again.",
+        "cancel": "Cancel",
+        "error": "We could not start the lesson again. Try again."
+      },
+      "attempt": "Attempt {number}",
+      "attemptXp": "XP in attempt {number}",
+      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
+      "previewNote": "Preview: nothing is saved."
     }
   },
   "LessonGames": {

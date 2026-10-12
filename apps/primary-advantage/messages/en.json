@@ -1897,11 +1897,24 @@
         "more": "+{count} more {count, plural, one {sentence} other {sentences}} saved"
       },
       "actions": {
-        "backToRead": "Back to Read Page"
+        "backToRead": "Back to Read Page",
+        "startAgain": "Start Again",
+        "restarting": "Restarting..."
       },
       "toast": {
         "failed": "Failed to load lesson summary"
-      }
+      },
+      "restart": {
+        "title": "Start this lesson again?",
+        "body1": "Your work on this lesson goes into your history.",
+        "body2": "You keep your XP. You can earn XP again.",
+        "cancel": "Cancel",
+        "error": "We could not start the lesson again. Try again."
+      },
+      "attempt": "Attempt {number}",
+      "attemptXp": "XP in attempt {number}",
+      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
+      "previewNote": "Preview: nothing is saved."
     }
   },
   "LessonGames": {
