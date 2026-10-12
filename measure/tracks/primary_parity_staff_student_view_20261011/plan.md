@@ -20,7 +20,7 @@ Do not run a 25-student check on this machine (shared decision of 2026-10-05).
 - [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) — look check pending (owner, async)
     - Manual steps: (1) Open the 48 PNG files in `~/Desktop/primary-parity-progress/captures/staff_student_view/phase0-design/`. (2) Check `banner-375-*` and `banner-1280-*`: the blue banner differs from the brown PREVIEW plank. (3) Check each state at both widths in day and night. (4) Read `design/decisions.md` and answer P0-1 (SYSTEM school rule). Answers come back to `design/decisions.md`, `spec.md`, and `plan.md`.
 
-## Phase S1: Staff open the student pages [checkpoint: CHECKPOINT_SHA]
+## Phase S1: Staff open the student pages [checkpoint: 846295101]
 _Story ref: spec.md#story-s1_
 
 **MERGE GATE: do not merge the branch of this phase into integration before Phase S2 is done.**
