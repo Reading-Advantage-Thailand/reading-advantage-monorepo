@@ -63,16 +63,16 @@ _Story ref: spec.md#story-s2_
 ## Phase S3: Install prompt on the student home
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Contract for the install notice
-    - [ ] `hooks/use-install-prompt.ts`: the state (`ios-steps`, `install-button`, `hidden`), the standalone check, the iOS check, the dismissal key; JSDoc
-- [ ] Task: Tests for the install notice
-    - [ ] `hooks/__tests__/use-install-prompt.test.tsx`: iOS Safari gives `ios-steps`; a `beforeinstallprompt` event gives `install-button`; standalone mode or a stored dismissal gives `hidden`
-    - [ ] `components/pwa/__tests__/install-notice.test.tsx`: the Install button calls `prompt()`; Dismiss stores the key; the notice is not in the reading and lesson pages
-- [ ] Task: Implement the install notice
-    - [ ] `hooks/use-install-prompt.ts`, `components/pwa/install-notice.tsx` (RPG `Panel` and buttons)
-    - [ ] `app/[locale]/(student)/student/home/page.tsx`: the pinned notice
-    - [ ] Copy keys in `messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Contract for the install notice
+    - [x] `hooks/use-install-prompt.ts`: the state (`ios-steps`, `install-button`, `hidden`), the standalone check, the iOS check, the dismissal key; JSDoc
+- [x] Task: Tests for the install notice
+    - [x] `hooks/__tests__/use-install-prompt.test.tsx`: iOS Safari gives `ios-steps`; a `beforeinstallprompt` event gives `install-button`; standalone mode or a stored dismissal gives `hidden`
+    - [x] `components/pwa/__tests__/install-notice.test.tsx`: the Install button calls `prompt()`; Dismiss stores the key; the notice is not in the reading and lesson pages
+- [x] Task: Implement the install notice
+    - [x] `hooks/use-install-prompt.ts`, `components/pwa/install-notice.tsx` (RPG `Panel` and buttons)
+    - [x] `app/[locale]/(student)/student/home/page.tsx`: the pinned notice
+    - [x] Copy keys in `messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
 - [ ] Task: Measure - User Manual Verification 'Phase S3: Install prompt on the student home' (Protocol in workflow.md)
 
 ## Phase S4: Offline page and offline sign
