@@ -40,17 +40,11 @@ export const createUser = async (data: {
 
     const hashedPassword = await hashNewPassword(data.password);
 
-    // Find the User role
+    // The default "user" role row is optional: users.role is the truth.
     const [userRole] = await db.select({ id: roles.id })
       .from(roles)
       .where(eq(roles.name, "user"))
       .limit(1);
-
-    if (!userRole) {
-      return {
-        error: "Default user role not found",
-      };
-    }
 
     // Create user with transaction to ensure role assignment
     const newUser = await db.transaction(async (tx) => {
@@ -68,10 +62,12 @@ export const createUser = async (data: {
       await upsertCredentialAccount(tx, user.id, hashedPassword);
 
       // Assign the User role to the new user
-      await tx.insert(userRoles).values({
-        userId: user.id,
-        roleId: userRole.id,
-      });
+      if (userRole) {
+        await tx.insert(userRoles).values({
+          userId: user.id,
+          roleId: userRole.id,
+        });
+      }
 
       return user;
     });
@@ -150,15 +146,15 @@ export const getUserByEmail = async (email: string) => {
     const userWithRoles = { ...user, roles: rolesForUser };
 
     if (userWithRoles.roles.length === 0) {
-      return await db.transaction(async (tx) => {
-        const [role] = await tx.select({ id: roles.id })
-          .from(roles)
-          .where(eq(roles.name, "user"))
-          .limit(1);
+      const [defaultRole] = await db.select({ id: roles.id })
+        .from(roles)
+        .where(eq(roles.name, "user"))
+        .limit(1);
+      // No "user" roles row (migrated database): users.role is the truth, so return as is.
+      if (!defaultRole) return userWithRoles;
 
-        if (!role) {
-          throw new Error("Default user role not found");
-        }
+      return await db.transaction(async (tx) => {
+        const role = defaultRole;
 
         await tx.insert(userRoles).values({
           userId: user.id,
