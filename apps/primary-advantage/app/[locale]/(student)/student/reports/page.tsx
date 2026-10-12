@@ -4,6 +4,8 @@ import { TriangleAlertIcon } from "lucide-react";
 import { ErrorState } from "@reading-advantage/ui";
 import { fetchUserActivity } from "@/server/controllers/userController";
 import { currentUser } from "@/lib/session";
+import { isStudentWriter } from "@/lib/student-view";
+import { PreviewNotice } from "@/components/student/preview-notice";
 import AuthErrorPage from "@/app/[locale]/auth/error/page";
 import { ReportPanels } from "@/components/dashboard/report-panels";
 import { RetryButton } from "@/components/shared/retry-button";
@@ -31,13 +33,23 @@ export default async function ReportsPage() {
     return <AuthErrorPage />;
   }
 
-  const [t, data] = await Promise.all([getTranslations("Reports"), fetchUserActivity(user.id)]);
+  const preview = !isStudentWriter(user);
+  const [t, data] = await Promise.all([getTranslations("Reports"), preview ? null : fetchUserActivity(user.id)]);
 
   const header = (
     <header className="cq-on-scene flex flex-col gap-1">
       <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
     </header>
   );
+
+  if (preview) {
+    return (
+      <Scene place="observatory">
+        {header}
+        <PreviewNotice titleKey="emptyTitle" lineKey="emptyReports" />
+      </Scene>
+    );
+  }
 
   if (!data?.activity || !data?.xpLogs) {
     return (

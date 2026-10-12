@@ -1,4 +1,5 @@
-import { isStudentWriter } from "@/lib/student-view";
+import { isStudentWriter, previewHomeModel } from "@/lib/student-view";
+import { PreviewNotice } from "@/components/student/preview-notice";
 import type { Metadata } from "next";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { db } from "@reading-advantage/db";
@@ -121,14 +122,17 @@ export default async function StudentHomePage() {
   const user = await currentUser();
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
 
-  const [home, classBooks, leaderboard, avatar, reedy, quest, t, tBoard, tAvatar, tReedy, format] = await Promise.all([
-    getStudentHome({ db, user }),
-    loadClassBooks(user),
+  // Preview mode (staff): the default hero and empty notices; no student record is read.
+  const preview = !isStudentWriter(user);
+  const [home, classBooks, leaderboard, avatar, reedy, quest, t, tPreview, tBoard, tAvatar, tReedy, format] = await Promise.all([
+    preview ? previewHomeModel() : getStudentHome({ db, user }),
+    preview ? [] : loadClassBooks(user),
     loadLeaderboard(user),
-    loadAvatar(user),
-    loadReedyMeter(user),
-    loadQuestCard(user),
+    preview ? ("none" as const) : loadAvatar(user),
+    preview ? null : loadReedyMeter(user),
+    preview ? null : loadQuestCard(user),
     getTranslations("StudentHome"),
+    getTranslations("StudentView"),
     getTranslations("Leaderboard"),
     getTranslations("Avatar"),
     getTranslations("Reedy"),
@@ -143,8 +147,8 @@ export default async function StudentHomePage() {
   return (
     <Scene place="guild-hall">
       <header className="flex flex-col gap-1">
-        <h1 className="cq-on-scene text-2xl font-bold md:text-3xl">{t("greeting", { name: user.name ?? user.username })}</h1>
-        <p className="cq-on-scene text-sm opacity-90">{t("subtitle")}</p>
+        <h1 className="cq-on-scene text-2xl font-bold md:text-3xl">{preview ? tPreview("homeHeroTitle") : t("greeting", { name: user.name ?? user.username })}</h1>
+        <p className="cq-on-scene text-sm opacity-90">{preview ? tPreview("homeHeroLine") : t("subtitle")}</p>
       </header>
 
       <div className="grid grid-cols-[112px_1fr] items-end gap-3">
@@ -168,9 +172,12 @@ export default async function StudentHomePage() {
 
       {avatar === "none" ? <AvatarNudge t={tAvatar} /> : null}
 
-      <StudentQuestCard card={quest} />
+      {preview ? <PreviewNotice titleKey="emptyTitle" lineKey="emptyQuest" /> : <StudentQuestCard card={quest} />}
 
       <div className="grid gap-4 md:grid-cols-2">
+        {preview ? <PreviewNotice titleKey="emptyTitle" lineKey="emptyLesson" className="md:col-span-2" /> : null}
+        {preview ? <PreviewNotice titleKey="emptyTitle" lineKey="emptyBooks" /> : null}
+
         {lesson ? (
           <Panel pinned aria-labelledby="home-lesson" className="md:col-span-2">
             <h2 id="home-lesson" className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide">
@@ -192,6 +199,9 @@ export default async function StudentHomePage() {
           <ClassBookCard key={book.classBookId} book={book} t={t} />
         ))}
 
+        {preview ? (
+          <PreviewNotice titleKey="emptyTitle" lineKey="emptyReading" />
+        ) : (
         <Panel pinned aria-labelledby="home-reading">
           <h2 id="home-reading" className="flex items-center gap-2 text-lg font-semibold">
             <img src={ART.scroll} alt="" className="size-7" />
@@ -215,6 +225,7 @@ export default async function StudentHomePage() {
             </>
           )}
         </Panel>
+        )}
 
         <Panel aria-labelledby="home-games" className="grid grid-cols-[64px_1fr] items-center gap-3">
           <img src={ART.chest} alt="" className="cq-shadowed w-16" />

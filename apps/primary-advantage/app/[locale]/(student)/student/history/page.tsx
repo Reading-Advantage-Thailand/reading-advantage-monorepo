@@ -4,6 +4,9 @@ import { HistoryList } from "@/components/student/history-list";
 import { Sign } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
 import { ART } from "@/lib/rpg/places";
+import { currentUser } from "@/lib/session";
+import { isStudentWriter } from "@/lib/student-view";
+import { PreviewNotice } from "@/components/student/preview-notice";
 
 /**
  * Page title for the reading history.
@@ -20,7 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
  * @returns The history page.
  */
 export default async function HistoryPage() {
-  const t = await getTranslations("StudentHistory");
+  const [t, user] = await Promise.all([getTranslations("StudentHistory"), currentUser()]);
+  const preview = user !== null && !isStudentWriter(user);
   // The adventurer's journal at the inn (docs/primary-rpg-skin.md §4).
   return (
     <Scene place="inn" className="gap-8">
@@ -28,6 +32,8 @@ export default async function HistoryPage() {
         <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
         <p>{t("subtitle")}</p>
       </header>
+      {preview ? <PreviewNotice titleKey="emptyTitle" lineKey="emptyHistory" /> : null}
+      {preview ? null : (
       <section aria-labelledby="history-read-again" className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
           <Sign className="w-fit">
@@ -40,6 +46,8 @@ export default async function HistoryPage() {
         </div>
         <HistoryList variant="reminder" />
       </section>
+      )}
+      {preview ? null : (
       <section aria-labelledby="history-records" className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
           <Sign className="w-fit">
@@ -52,6 +60,7 @@ export default async function HistoryPage() {
         </div>
         <HistoryList variant="history" />
       </section>
+      )}
     </Scene>
   );
 }

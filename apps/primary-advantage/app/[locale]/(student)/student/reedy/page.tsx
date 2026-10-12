@@ -8,6 +8,8 @@ import { redirect } from "@/i18n/navigation";
 import { ReedyMeter } from "@/components/reedy/reedy-meter";
 import { ReedySession } from "@/components/reedy/reedy-session";
 import { Sign } from "@/components/rpg/chrome";
+import { isStudentWriter } from "@/lib/student-view";
+import { PreviewNotice } from "@/components/student/preview-notice";
 import { Scene } from "@/components/rpg/scene";
 
 /** The Reedy limits of this process. */
@@ -33,6 +35,21 @@ export default async function ReedyPage({ searchParams }: { searchParams: Promis
   const locale = await getLocale();
   if (!session) return redirect({ href: "/auth/signin", locale });
   const user = session.user;
+  if (!isStudentWriter(user)) {
+    // Preview mode (staff): Reedy costs voice minutes, so only a student talks to Reedy.
+    const tReedy = await getTranslations("Reedy");
+    return (
+      <Scene place="clearing">
+        <header className="cq-on-scene flex flex-col gap-1">
+          <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
+            {tReedy("title")}
+            <Sign small className="text-xs uppercase">{tReedy("preview")}</Sign>
+          </h1>
+        </header>
+        <PreviewNotice titleKey="reedyStudentsOnly" lineKey="reedyStudentsOnlyLine" />
+      </Scene>
+    );
+  }
   const [{ articleId }, profile, t] = await Promise.all([searchParams, getAvatarProfile({ db, user }).catch(() => null), getTranslations("Reedy")]);
   if (!profile) return redirect({ href: "/student/avatar?from=reedy", locale });
   let entitlement: VoiceEntitlement | null = null;
