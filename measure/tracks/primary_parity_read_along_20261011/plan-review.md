@@ -29,3 +29,45 @@ Phase review of `d4c6d51a1..fd2696367`. No Critical and no High finding.
 - `audio_url` and `sentences` carry audio words with the screen punctuation ("phone."). Any alignment
   must strip edge punctuation on both sides before it compares.
 - A tsx script outside the app folder cannot import `postgres`. Run it from the app folder.
+
+# Plan review: Phase S1 (the highlight follows the voice)
+
+Phase review of `b878bccf2..HEAD`. No Critical and no High finding.
+
+## Decision (M-1, recorded in spec.md D5)
+
+The resync is anchor-based. When the next pair does not match, the code looks for the nearest pair of
+positions, by total skip, that match exactly (or join up to 3 tokens). It looks up to 9 positions on each
+side. Tests cover gaps of 1, 4, and 7 words (dropped and extra audio words) at the start, the middle,
+and the end. On the production copy `primary_etl_20261007`, 119018 of 119019 audio words map to the
+same word (19825 sentences). The one miss is an audio token with no letters ("...").
+
+## Medium
+
+- M-4: `parseSentences` returns an empty list when one entry has a wrong shape. The page then shows the
+  plain passage and no read-along. All 622 production articles parse. A future bad row hides the
+  read-along without an error report. Phase S3 may add a logged warning.
+- M-5: The prefix and one-letter rules can pair a dropped audio word with a similar next word
+  (for example "seven" and "seventeen"). The data check shows no such case. Keep the check in the Phase A data run.
+- M-6: Tap on a word of a sentence with `words: []` does nothing in the host. Phase S2 changes it to play from the sentence start.
+
+## Low
+
+- L-5: Each word is still `role="button"` with `tabIndex=0`. Phase S2 moves the tab stop to the sentence.
+- L-6: The follow scroll is still the old `scrollIntoView` (block center). Phase S3 moves it to 30%.
+- L-7: The two old players stay in `article-content.tsx` until Phase S3. The previous and next buttons still do nothing there.
+- L-8: `task-reading.tsx` keeps its own timer. Phase S4 changes it.
+- L-9: The passage adds one space after each sentence. The old page had no space between two sentences in one block.
+- L-10: `hooks/use-read-along.ts` ignores `timeupdate`. A browser that sends no `play` event for a muted autoplay would not move the mark. The page has no autoplay.
+
+## Shortcuts and deviations
+
+- The passage props are `{ sentences, passage, position, active, ... }`, not `{ sentences, passage, audioUrl, translations }`.
+  The host owns the audio element (see spec.md Decisions). The translate menu uses a callback and a label.
+- The hint line (design decision 5) and the "Close the audio" copy (decision 9) are not in this phase. They need copy keys (Phase S3).
+- The hook test file `use-read-along.test.tsx` was first written against an inert stub for the red run.
+
+## Lessons (for the orchestrator to move)
+
+- `vi.useFakeTimers()` also fakes `requestAnimationFrame` and `clearTimeout`. Name the functions in `toFake` when a test stubs rAF.
+- `renderHook` with `{ current: audio }` inside the callback makes a new ref object at each render. Hooks with an effect on the ref then re-run each render. Create the ref outside the callback.

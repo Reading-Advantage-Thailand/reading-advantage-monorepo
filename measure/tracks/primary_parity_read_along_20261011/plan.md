@@ -23,26 +23,27 @@ tests add `// @vitest-environment jsdom`; the render helper is
 - [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) — look check pending (owner, async)
     - Manual verification steps: (1) open the PNG files in `design/captures.md` at 375 px and 1280 px, day and night; (2) check that the lit word, the band, and the hint line read well; (3) check that the player buttons are large enough; (4) tell the orchestrator the answer on the speed list and the hint line.
 
-## Phase S1: The highlight follows the voice
+## Phase S1: The highlight follows the voice [checkpoint: PENDING]
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Contracts for the alignment and the position
-    - [ ] `lib/read-along/align.ts`: the types `DisplayWord`, `WordMaps` (`audioToDisplay`, `displayToAudio`) and the signatures of `splitDisplayWords` and `buildWordMaps`; a Zod schema for `SentenceTimepoint` that accepts the real shapes (`words` can be empty); JSDoc
-    - [ ] `lib/read-along/position.ts`: the type `ReadAlongPosition` and the signature of `findPosition(sentences, time, previous)`
-- [ ] Task: Tests for the alignment and the position
-    - [ ] `lib/read-along/__tests__/align.test.ts`: each fixture; the legacy tiers (exact, up to 3 joined tokens, prefix, suffix, Levenshtein 1); curly quotes and contractions; the resync after a dropped and an extra audio word; the display words after the last audio word; the maps stay in order
-    - [ ] `lib/read-along/__tests__/position.test.ts`: inside a word, in a gap (sticky word), between sentences (sticky sentence), the 0.3 s closest rule, a sentence change resets the word, the time before the first word
-- [ ] Task: Implement the alignment and the position
-    - [ ] `lib/read-along/align.ts`, `lib/read-along/position.ts`
-- [ ] Task: Tests for the loop
-    - [ ] `hooks/__tests__/use-read-along.test.tsx`: one rAF callback for each frame while playing; none while paused; the loop stops on pause, seek, sentence change, close, and unmount (FR-1, FR-12); `isPlaying` from `onPlay` and `onPause` (FR-9)
-- [ ] Task: Implement the loop and connect the article page
-    - [ ] `hooks/use-read-along.ts`
-    - [ ] `components/read-along/read-along-passage.tsx` (create it, or change it if `primary_parity_stories_20261011` created it, spec D6); render the paragraphs with `lib/paragraph-utils.ts`
-    - [ ] `components/articles/article-content.tsx`: use the component; remove `handleTimeUpdate`, the 100 ms chain, and the dead code at lines 702-943
-    - [ ] Update `components/articles/__tests__/article-content-highlight.behavior.test.tsx`: the intent of each September case stays (no timer after unmount; the language select), with the rAF loop instead of the chain
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S1: The highlight follows the voice' (Protocol in workflow.md)
+- [x] Task: Contracts for the alignment and the position
+    - [x] `lib/read-along/align.ts`: the types `DisplayWord`, `WordMaps` (`audioToDisplay`, `displayToAudio`) and the signatures of `splitDisplayWords` and `buildWordMaps`; a Zod schema for `SentenceTimepoint` that accepts the real shapes (`words` can be empty); JSDoc
+    - [x] `lib/read-along/position.ts`: the type `ReadAlongPosition` and the signature of `findPosition(sentences, time, previous)`
+- [x] Task: Tests for the alignment and the position
+    - [x] `lib/read-along/__tests__/align.test.ts`: each fixture; the legacy tiers (exact, up to 3 joined tokens, prefix, suffix, Levenshtein 1); curly quotes and contractions; the resync after a dropped and an extra audio word; the display words after the last audio word; the maps stay in order
+    - [x] `lib/read-along/__tests__/position.test.ts`: inside a word, in a gap (sticky word), between sentences (sticky sentence), the 0.3 s closest rule, a sentence change resets the word, the time before the first word
+- [x] Task: Implement the alignment and the position
+    - [x] `lib/read-along/align.ts`, `lib/read-along/position.ts`
+- [x] Task: Tests for the loop
+    - [x] `hooks/__tests__/use-read-along.test.tsx`: one rAF callback for each frame while playing; none while paused; the loop stops on pause, seek, sentence change, close, and unmount (FR-1, FR-12); `isPlaying` from `onPlay` and `onPause` (FR-9)
+- [x] Task: Implement the loop and connect the article page
+    - [x] `hooks/use-read-along.ts`
+    - [x] `components/read-along/read-along-passage.tsx` (create it, or change it if `primary_parity_stories_20261011` created it, spec D6); render the paragraphs with `lib/paragraph-utils.ts` _(props differ from the spec: the host owns the audio; see spec.md Decisions)_
+    - [x] `components/articles/article-content.tsx`: use the component; remove `handleTimeUpdate`, the 100 ms chain, and the dead code at lines 702-943
+    - [x] Update `components/articles/__tests__/article-content-highlight.behavior.test.tsx`: the intent of each September case stays (no timer after unmount; the language select), with the rAF loop instead of the chain
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S1: The highlight follows the voice' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps: (1) open the PNG files in `~/Desktop/primary-parity-progress/captures/read_along/phaseS1/` at 375 px and 1280 px, day and night; (2) check that the blue word is the word in the caption name (I'll, Where, the after a dropped audio word); (3) on a real article page, play the audio and watch that the lit word follows the voice, including after a contraction or a curly quote; (4) pause: the mark stays on the last word.
 
 ## Phase S2: Tap a word or a sentence to play from there
 _Story ref: spec.md#story-s2_
