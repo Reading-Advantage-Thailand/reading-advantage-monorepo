@@ -83,23 +83,24 @@ must add its lesson game completion route under one of these folders, or add its
 - [x] Task: Measure - User Manual Verification 'Phase S2: Nothing saves in Preview mode' - look check pending (owner, async)
     - Manual steps: (1) Sign in as a teacher in a build and open `/student/read/<article>`; finish the MCQ: the score shows with "Preview: not saved". (2) Count the rows of `user_activity`, `xp_logs`, `article_activity_logs` and the `users.xp` value of the teacher before and after: they stay equal. (3) Open the lesson rehearsal page, move two steps: `lesson_progress` and `xp_logs` stay equal. (4) Sign in as a student and finish a quiz: XP rises as before. (5) With a teacher cookie, POST to `/api/v1/avatar/purchase`: 403 with `PREVIEW_READ_ONLY`.
 
-## Phase S3: Pages that need a student record show a preview state
+## Phase S3: Pages that need a student record show a preview state [checkpoint: 9e0e3f2f3]
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Contract for the preview page models
-    - [ ] `lib/student-view.ts`: `previewHomeModel(user)` and the empty-state props, typed from the existing page props (no sample student data)
-    - [ ] Practice route contract: a Zod output for the sample word set (same shape as `parsePracticeInput`)
-- [ ] Task: Tests for the preview pages
-    - [ ] `app/[locale]/(student)/student/home/__tests__/preview-home.test.tsx`: staff render the default hero, zero XP and coins, the school leaderboard, and empty notices; `getStudentHome` is not called
-    - [ ] Tests for avatar, shop, history, reports, sentences, vocabulary, quest battle, and Reedy in preview: no error page, no row of the staff member, write buttons off
-    - [ ] `app/api/v1/apk/__tests__/practice-preview.test.ts`: staff get the sample word set from published article vocabulary; students keep their saved words
-- [ ] Task: Implement the preview pages
-    - [ ] `student/home/page.tsx`, `student/avatar/page.tsx`, `student/avatar/shop/page.tsx`, `student/history/page.tsx` and `components/student/history-list.tsx`, `student/reports/page.tsx`, `student/sentences/page.tsx`, `student/vocabulary/page.tsx`, `student/quest/battle/page.tsx`, `student/reedy/page.tsx`
-    - [ ] `app/api/v1/apk/practice/route.ts`: the sample word set for staff (read only)
-    - [ ] `student/games/apk/[cartridgeId]/page.tsx` and `student/games/story/page.tsx`: `save={false}` in preview
-    - [ ] Copy keys in `messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Pages that need a student record show a preview state' (Protocol in workflow.md)
+- [x] Task: Contract for the preview page models
+    - [x] `lib/student-view.ts`: `previewHomeModel()` (no parameter: it needs no user; deviation) and `previewHeroProfile()`, typed from the existing page props (no sample student data)
+    - [x] Practice route contract: the sample word set uses the existing `practiceInputSchema` output of `buildPracticeInput`, with id `sample` (`listPrimarySamplePracticeInput` in the domain)
+- [x] Task: Tests for the preview pages
+    - [x] `app/[locale]/(student)/student/home/__tests__/preview-home.test.tsx`: staff render the default hero, zero XP and coins, the school leaderboard, and empty notices; `getStudentHome` is not called
+    - [x] Tests for avatar, shop, history, reports, sentences, vocabulary, quest battle, and Reedy in preview: no error page, no row of the staff member, write buttons off
+    - [x] `app/api/v1/apk/__tests__/practice-preview.test.ts`: staff get the sample word set from published article vocabulary; students keep their saved words
+- [x] Task: Implement the preview pages
+    - [x] `student/home/page.tsx`, `student/avatar/page.tsx`, `student/avatar/shop/page.tsx`, `student/history/page.tsx` and `components/student/history-list.tsx`, `student/reports/page.tsx`, `student/sentences/page.tsx`, `student/vocabulary/page.tsx`, `student/quest/battle/page.tsx`, `student/reedy/page.tsx`
+    - [x] `app/api/v1/apk/practice/route.ts`: the sample word set for staff (read only)
+    - [x] `student/games/apk/[cartridgeId]/page.tsx` and `student/games/story/page.tsx`: `save={false}` in preview
+    - [x] Copy keys in `messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S3: Pages that need a student record show a preview state' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: (1) Sign in as a teacher in a build. Open `/student/home`: the hero banner art, "No streak yet", XP 0, four notices, and the school leaderboard show; no error page. (2) Open avatar: pick a hero and colors; "Save my avatar" is off with "Preview: not saved". (3) Open the shop: pieces show with prices; select one: the try-on works, Buy is off with the note. (4) Open history, reports, sentences, vocabulary: each shows one notice. (5) Open Class Quest battle and Reedy: the not-in-a-class and students-only notices. (6) Open a game and Word adventures: the game loads the sample words and posts no completion (check `xp_logs` stays equal). (7) Sign in as a SYSTEM user with no school: home shows no leaderboard. (8) Sign in as a student: all pages work as before.
 
 ## Phase S4: Class books and lessons in preview
 _Story ref: spec.md#story-s4_

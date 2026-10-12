@@ -99,3 +99,30 @@ Shortcuts: the client games rely on the server guards for safety. Deviation: the
 page skip; the domain split made the page skip unnecessary. Lesson: a hand-written test user without a
 role breaks once a role guard exists; give every mock user a role. A `pkill -f vitest` inside a Bash
 call matches its own shell and kills it; use `ps` and `kill` with the pid.
+
+## Phase S3 review (2026-10-12)
+
+Phase start sha: `93e6ab2e4`. Review of `git diff 93e6ab2e4..HEAD` for the files of this track.
+
+Plan compliance: all tasks done. Staff read no row of their own on home, avatar, shop, history, reports,
+sentences, vocabulary, Class Quest, Reedy, and both game pages. Each page shows one `PreviewNotice`.
+Security: the mode is `isStudentWriter(user)` (session role). The practice route gives the sample set to
+TEACHER, ADMIN, and SYSTEM only (`studentViewModeFor`); INTERN and an unknown role keep the 403. The
+sample query reads global tables (published articles) and no user row, and writes nothing. `listAvatarShop`
+reads no inventory row for staff and works without a school. Student paths are unchanged (tests).
+Tests: domain 41 pass (avatar and saved items); app `lib components app messages actions` 239 files,
+1595 tests pass; `tsc --noEmit` clean; eslint on the changed files clean; key parity of `StudentView` in 5 locales.
+
+| Level | Finding | Action |
+| --- | --- | --- |
+| Medium | The avatar page shows the picker for staff; the inventory (`AvatarHome`, Wear) is not shown, because staff own nothing. | None; the shop shows the pieces. |
+| Medium | Copy keys added in S3 (`emptyTitle`, `homeHeroTitle`, `homeHeroLine`, `emptyLesson`, `emptyBooks`, `emptyReading`, `emptyQuest`, `emptyHistory`, `emptyReports`, `emptySentences`, `emptyVocabulary`, `questNoClass`, `reedyStudentsOnly`, `reedyStudentsOnlyLine`, `gameSampleWords`) use English text in `th`, `cn`, `tw`, `vi`. | Owner translation pass. |
+| Medium | The game host shows no "sample words" line inside the game; only the Word adventures page shows the notice (`gameSampleWords`). The apk game page runs full screen with `save={false}`. | Phase A look check. |
+| Low | The shop level is 1 for staff, so higher tier pieces show as locked. | Intended (what a new student sees). |
+| Low | The home still calls the leaderboard controller for staff with a school (a read of the school list, not of the staff row). | Intended (spec). |
+| Low | Another session changed `server/controllers/assignment*` files in this worktree during the phase; they are not part of this phase and were not staged. | None. |
+
+Shortcuts: none. Deviation: `previewHomeModel()` has no parameter; the sample set reuses `practiceInputSchema`.
+Lesson: pages that call `useTranslations` through a shared server component need `renderWithMessages` in
+their page tests; the red run must happen before the code, including for lib helpers (two helpers existed
+before the first red run).
