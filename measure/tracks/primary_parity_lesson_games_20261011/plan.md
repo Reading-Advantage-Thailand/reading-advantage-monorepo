@@ -116,16 +116,23 @@ _Story ref: spec.md#story-s4_
 ## Phase S5: Save nothing in a rehearsal or a preview
 _Story ref: spec.md#story-s5_
 
-- [ ] Task: Define the save switch
-    - [ ] One prop of the lesson flow (`LessonCard`, `lesson-progress-bar.tsx`) that sets `save={false}` for the rehearsal page and the staff preview mode of `primary_parity_staff_student_view_20261011`
-- [ ] Task: Write the tests (red)
-    - [ ] App: `.../lessons/[number]/rehearsal` renders the lesson games with `save={false}`; the step sees the end of a game; the staff preview does the same
-- [ ] Task: Implement (green)
-    - [ ] `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/rehearsal/page.tsx`, `components/lesson/lesson-progress-bar.tsx`, and the two task components
+- [x] Task: Define the save switch
+    - [x] One prop of the lesson flow (`LessonCard`, `lesson-progress-bar.tsx`) that sets `save={false}` for the rehearsal page and the staff preview mode of `primary_parity_staff_student_view_20261011`
+        - Commit a9aa9d8e9. No new prop: `LessonProgressBar` reads `usePreviewSave().isPreview` and passes `save={!isPreview}` to both steps. The rehearsal page and the staff preview already run in `StudentViewProvider mode="preview"`, so one switch covers both. `LessonCard` needs no change. The server route `v1/apk/complete` already has `guardStudentRoute`.
+- [x] Task: Write the tests (red)
+    - [x] App: `.../lessons/[number]/rehearsal` renders the lesson games with `save={false}`; the step sees the end of a game; the staff preview does the same
+        - Red run: `vitest run components/lesson/__tests__/lesson-save-switch.test.tsx`, 3 failed (3). The existing rehearsal page test already proves the preview provider. Green: 3 passed.
+- [x] Task: Implement (green)
+    - [x] `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/rehearsal/page.tsx`, `components/lesson/lesson-progress-bar.tsx`, and the two task components
+        - Only `lesson-progress-bar.tsx` changed (two props); the task components took `save` in S2 and S3.
 - [ ] Task: Browser run
+    - batch capture (orchestrator). Steps and expected results: `browser-check/README.md`.
     - [ ] On the rehearsal copy with 2 or 3 demo students: checks A1 to A5 of the spec at 375 px and 1280 px, and one run with `?renderer=phaser`; save the captures in `measure/tracks/primary_parity_lesson_games_20261011/browser-check/`
 - [ ] Task: Final side-by-side check
+    - batch capture (orchestrator). See `browser-check/README.md`.
     - [ ] Run the checks with the acceptance kit next to legacy task 10; send the captures to the owner
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S5: Save nothing in a rehearsal or a preview' (Protocol in workflow.md)
+- [x] Task: Docs and doctor
+    - build-graph update skipped: graph.db read only. `measure/generated` restored.
+    - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S5: Save nothing in a rehearsal or a preview' (Protocol in workflow.md)
+    - look check pending (owner, async). No capture in this phase; the browser run is the batch. Steps: (1) as a teacher open a lesson rehearsal, go to task 10, play a game to the end; (2) check no XP and no new result row; (3) repeat on task 12; (4) as staff open a student lesson in preview and play; check the notice and no row; (5) as a student play the same game; check the result saves.

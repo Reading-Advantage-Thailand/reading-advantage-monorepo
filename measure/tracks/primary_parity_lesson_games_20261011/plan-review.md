@@ -84,3 +84,13 @@ Process incident (Critical for history, no code effect): `git commit --amend` on
 Lessons: in a shared worktree, never run `git commit --amend` after a pause: check `git log -1` first, and fix a long header before the commit, not after. Count the header with `printf | commitlint` before `git commit` and stop on a failure.
 
 Shortcuts: the page renders the panel, not `projector-view.tsx` (keeps its test free of server actions).
+
+## Phase S5 review (2026-10-12)
+
+Diff `e4f81a13b..HEAD` for my files: `lesson-progress-bar.tsx` (2 props), `lesson-save-switch.test.tsx`. No Critical or High finding.
+- Medium: the browser run (A1 to A5, `?renderer=phaser`) and the side-by-side check are not run. Steps are in `browser-check/README.md` (batch capture, orchestrator). The 2D fallback for a projector without WebGL2 stays unproven until then.
+- Low: the preview test steps through 12 tasks with real timers; it takes about 17 s. A fake-timer version would be faster.
+- Low: the data checks in the README name table names to adjust; the orchestrator must confirm the real names.
+- Low: the track has no `acceptance-pairs.json`; the README names the pairs in text.
+- Shortcut: no `LessonCard` prop. The preview provider is the switch.
+- Lesson: one context switch (`usePreviewSave`) is enough; a new prop on `LessonCard` would duplicate it.
