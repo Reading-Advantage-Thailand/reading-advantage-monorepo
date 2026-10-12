@@ -23,26 +23,27 @@ server: no Next build and no dev server on this machine.
 ## Phase S1: Phones with the legacy app switch to the new app
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Contract for the worker and its headers
-    - [ ] `lib/pwa/constants.ts`: `SERVICE_WORKER_URL = "/serwist/sw.js"`, `SERVICE_WORKER_SCOPE = "/"`, the cache prefix `primary-v2-`; JSDoc
-    - [ ] Save a read-only copy of the live legacy worker (`https://primary.reading-advantage.com/serwist/sw.js`) and its precache URL list in `tests/pwa/fixtures/legacy-sw.js`; record the date and the response headers in `tests/pwa/fixtures/README.md`
-- [ ] Task: Unit tests for the worker
-    - [ ] `lib/pwa/__tests__/service-worker.test.ts`: load `public/serwist/sw.js` in a `vm` context with fake `self`, `caches`, and `clients`; install calls `skipWaiting`; activate deletes every cache without the prefix, claims the clients, and reloads each window once only when it deleted a legacy cache; no `fetch` listener; no `importScripts`; the file parses as a module
-    - [ ] `lib/pwa/__tests__/next-config-headers.test.ts`: `headers()` of `next.config.ts` gives `Service-Worker-Allowed: /` and `Cache-Control: no-cache` for `/serwist/sw.js`
-    - [ ] `lib/__tests__/proxy-matcher.test.ts`: the matcher of `proxy.ts` skips `/serwist/sw.js`, `/manifest.webmanifest`, `/icons/<file>.png`, and `/offline.html`; a counterexample path without a dot still matches
-    - [ ] `components/pwa/__tests__/service-worker-register.test.tsx`: the component registers the URL with scope `/` and type `module` once; it does nothing when `navigator.serviceWorker` is missing
-- [ ] Task: Implement the worker, the headers, and the registration
-    - [ ] `public/serwist/sw.js` (plain script, `// @ts-check`, JSDoc)
-    - [ ] `next.config.ts`: `headers()` for `/serwist/sw.js`
-    - [ ] `components/pwa/service-worker-register.tsx`; mount it in `app/[locale]/layout.tsx`
-- [ ] Task: Takeover test in a real browser
-    - [ ] `tests/pwa/fixture-server.mjs`: serves a test page, the legacy worker copy at `/serwist/sw.js` (with `Service-Worker-Allowed: /`), and 200 for each legacy precache URL; a switch serves `public/serwist/sw.js` at the same URL
-    - [ ] `tests/pwa/takeover.spec.ts`: register the legacy worker (scope `/`, type `module`); check the legacy caches; switch; load the page; check that the new worker controls the page, that no legacy cache stays, that the window reloaded once, and that a second load does not reload
-    - [ ] `playwright.config.ts`: a `pwa-takeover` project (Chromium) with the fixture server as its `webServer`
-- [ ] Task: Runbook check for rehearsal 3
-    - [ ] Write the post-switch phone check (AC-4) and the `curl -I` check (AC-2) in `measure/tracks/primary_parity_pwa_20261011/runbook-checks.md` for `primary_parity_rehearsal3_20261011`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Phones with the legacy app switch to the new app' (Protocol in workflow.md)
+- [x] Task: Contract for the worker and its headers
+    - [x] `lib/pwa/constants.ts`: `SERVICE_WORKER_URL = "/serwist/sw.js"`, `SERVICE_WORKER_SCOPE = "/"`, the cache prefix `primary-v2-`; JSDoc
+    - [x] Save a read-only copy of the live legacy worker (`https://primary.reading-advantage.com/serwist/sw.js`) and its precache URL list in `tests/pwa/fixtures/legacy-sw.js`; record the date and the response headers in `tests/pwa/fixtures/README.md`
+- [x] Task: Unit tests for the worker
+    - [x] `lib/pwa/__tests__/service-worker.test.ts`: load `public/serwist/sw.js` in a `vm` context with fake `self`, `caches`, and `clients`; install calls `skipWaiting`; activate deletes every cache without the prefix, claims the clients, and reloads each window once only when it deleted a legacy cache; no `fetch` listener; no `importScripts`; the file parses as a module
+    - [x] `lib/pwa/__tests__/next-config-headers.test.ts`: `headers()` of `next.config.ts` gives `Service-Worker-Allowed: /` and `Cache-Control: no-cache` for `/serwist/sw.js`
+    - [x] `lib/__tests__/proxy-matcher.test.ts`: the matcher of `proxy.ts` skips `/serwist/sw.js`, `/manifest.webmanifest`, `/icons/<file>.png`, and `/offline.html`; a counterexample path without a dot still matches
+    - [x] `components/pwa/__tests__/service-worker-register.test.tsx`: the component registers the URL with scope `/` and type `module` once; it does nothing when `navigator.serviceWorker` is missing
+- [x] Task: Implement the worker, the headers, and the registration
+    - [x] `public/serwist/sw.js` (plain script, `// @ts-check`, JSDoc)
+    - [x] `next.config.ts`: `headers()` for `/serwist/sw.js`
+    - [x] `components/pwa/service-worker-register.tsx`; mount it in `app/[locale]/layout.tsx`
+- [x] Task: Takeover test in a real browser
+    - [x] `tests/pwa/fixture-server.mjs`: serves a test page, the legacy worker copy at `/serwist/sw.js` (with `Service-Worker-Allowed: /`), and 200 for each legacy precache URL; a switch serves `public/serwist/sw.js` at the same URL
+    - [x] `tests/pwa/takeover.spec.ts`: register the legacy worker (scope `/`, type `module`); check the legacy caches; switch; load the page; check that the new worker controls the page, that no legacy cache stays, that the window reloaded once, and that a second load does not reload
+    - [x] `playwright.config.ts`: a `pwa-takeover` project (Chromium) with the fixture server as its `webServer`. Deviation: the project runs only with `PWA_TAKEOVER=1`, because the top-level `webServer` of the file starts the Next app. Command: `PWA_TAKEOVER=1 ../../node_modules/.bin/playwright test --config playwright.config.ts` (Chrome by `channel: "chrome"`).
+- [x] Task: Runbook check for rehearsal 3
+    - [x] Write the post-switch phone check (AC-4) and the `curl -I` check (AC-2) in `measure/tracks/primary_parity_pwa_20261011/runbook-checks.md` for `primary_parity_rehearsal3_20261011`
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Phones with the legacy app switch to the new app' (Protocol in workflow.md) - look check pending (owner, async)
+    - Steps: run the takeover command above (1 test passes); read `runbook-checks.md`; on a phone with the legacy app after the cutover, do AC-4.
 
 ## Phase S2: Add Primary Advantage to the home screen
 _Story ref: spec.md#story-s2_
