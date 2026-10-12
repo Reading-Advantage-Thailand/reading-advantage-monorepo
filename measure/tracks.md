@@ -1252,7 +1252,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: QR code path for printed books (/b/<book>/<n>)**
+- [~] **Track: Primary Parity Before the Cutover: QR code path for printed books (/b/<book>/<n>)**
   *Link: [./tracks/primary_parity_qr_path_20261011/](./tracks/primary_parity_qr_path_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
 
