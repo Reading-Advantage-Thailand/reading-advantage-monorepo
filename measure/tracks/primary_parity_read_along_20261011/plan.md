@@ -92,8 +92,10 @@ _Story ref: spec.md#story-s4_
 
 ## Phase A: Acceptance
 
-- [ ] Task: Run the kit of `primary_parity_acceptance_20261011` (`scripts/primary-parity/capture.ts` for each app, then `report.ts`) with `acceptance-pairs.json`; use one student account and the 3 articles of the data profile; record a screen capture with audio for each article in both apps
-- [ ] Task: Captures at 375 px and 1280 px, day and night, for the owner look check (AC-5)
-- [ ] Task: Tell the Tutor session that `lib/read-along/align.ts` replaces the alignment that `buildPrimaryWordMap` copies
-- [ ] Task: Write `measure/tracks/primary_parity_read_along_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
-- [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
+- [ ] Task: Run the kit of `primary_parity_acceptance_20261011` (`scripts/primary-parity/capture.ts` for each app, then `report.ts`) with `acceptance-pairs.json`; use one student account and the 3 articles of the data profile; record a screen capture with audio for each article in both apps (batch capture (orchestrator))
+- [ ] Task: Captures at 375 px and 1280 px, day and night, for the owner look check (AC-5) (batch capture (orchestrator))
+- [~] Task: Tell the Tutor session that `lib/read-along/align.ts` replaces the alignment that `buildPrimaryWordMap` copies (orchestrator or owner step: deliver the note `tutor-note.md`)
+- [x] Task: Write `measure/tracks/primary_parity_read_along_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check _(result rows empty: filled after the batch)_
+- [x] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps: (1) after the batch, open `report.html` and fill the Result column of `acceptance.md`; (2) play each of the 3 articles in the new app and check that the lit word is the spoken word; (3) open the lesson reading step at 375 px and check that the player bar does not cover the footer (M-11); (4) look at the player at 375 px and 1280 px, day and night.
+    - Pair list notes: RA-A4 now uses the clean article lesson (`?type=article`) because the assignment id may have no reading step (M-3); RA-A5 checks the bar position at 375 px (M-11).
