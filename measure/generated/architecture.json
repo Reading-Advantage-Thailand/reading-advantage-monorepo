@@ -1,7 +1,7 @@
 {
   "schemaVersion": "measure.architecture.v1",
-  "generatedAt": "2026-10-12T22:24:27+08:00",
-  "sourceRevision": "8dfc04395e97ccea928651d5017f00607823ac6e",
+  "generatedAt": "2026-10-13T05:53:27+08:00",
+  "sourceRevision": "1f77e0087a019a032c29fe42a661064008d209ff",
   "projectType": "typescript-monorepo",
   "workspaceRoots": {
     "apps": [
@@ -58,5 +58,5 @@
       "worker"
     ]
   },
-  "routeCount": 735
+  "routeCount": 738
 }
