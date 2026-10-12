@@ -14,7 +14,7 @@ One heavy job at a time on this machine; the ETL runs in Cloud Build, never on t
     - [x] Captures at 375 px and 1280 px, day and night (40 files, outside the repository; paths in `design/captures.md`)
 - [x] Task: Fill the behavior contract before the build
     - [x] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_stories_20261011/behavior-contract.md` and fill its seven sections (STU-04, the XP rules, the ETL changes, and the migration)
-    - [x] Write `measure/tracks/primary_parity_stories_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7); it parses with `PairList` (6 pairs)
+    - [x] Write `measure/tracks/primary_parity_stories_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7); it parses with `PairList` (9 pairs: ST-A1..ST-A9, one STUDENT account; XP-record steps on ST-A3..ST-A5)
     - [x] Write `story-data-checks.sql` (SELECT only)
 - [x] Task: Owner look check of the design and of the decisions D4 (MC XP once for each chapter) and D9 (level window on every story page); record the answers in `design/decisions.md` (look check pending (owner, async))
     - Defaults used (spec defaults; no owner question, run rule of 2026-10-12): D4 MC XP once for each chapter; D9 level window (raLevel +/- 1) on the list, the story page, and the chapter page; Member Question "no stop" answered by the spec defaults.
@@ -161,6 +161,8 @@ _Story ref: spec.md#story-s7_
 
 - [ ] Task: Run the kit of `primary_parity_acceptance_20261011` (`scripts/primary-parity/capture.ts` for each app, then `report.ts`) with `acceptance-pairs.json`; use one student account in both apps; record the XP before and after for AC-4 and AC-5
 - [ ] Task: Captures at 375 px and 1280 px, day and night, for the owner look check (AC-7)
-- [ ] Task: Add the block of this track to `scripts/primary-parity/cutover-check.mjs` (kit FR-13) for rehearsal 3
-- [ ] Task: Write `measure/tracks/primary_parity_stories_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
+- [x] Task: Add the block of this track to `scripts/primary-parity/cutover-check.mjs` (kit FR-13) for rehearsal 3
+    - [x] `scripts/primary-parity/stories-checks.mjs` (pure judges) + `__tests__/stories-checks.test.mjs` (7 tests); the block opens the old list URL (redirect), the Stories tab, the first story, the old story and chapter URLs through the picture key, a chapter, and an unknown cuid; `STORIES_CHECK=off` skips it (kit suite 100 green) (4e933d56f)
+- [x] Task: Write `measure/tracks/primary_parity_stories_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
+    - [x] AC rows marked proven-by-tests vs pending-batch; AC-6 proven locally (`etl-run.md`), Cloud Build rerun pending; AC-7 pending captures and owner (pairs and steps: 75c2795bf)
 - [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
