@@ -15,11 +15,13 @@ vi.mock("@/lib/primary-evidence-queue", () => ({ enqueuePrimaryEvidenceJob: mock
 vi.mock("@reading-advantage/db", () => ({
   db: { select: mocks.select, insert: mocks.insert, update: mocks.update, transaction: mocks.transaction },
   users: { id: "users.id", xp: "users.xp" },
-  userActivity: { id: "userActivity.id" },
+  userActivity: { id: "userActivity.id", userId: "ua.userId", activityType: "ua.type", targetId: "ua.target", completed: "ua.completed" },
   articleActivityLogs: { id: "articleActivityLogs.id", articleId: "articleActivityLogs.articleId", userId: "articleActivityLogs.userId" },
   xpLogs: { id: "xpLogs.id" },
   eq: vi.fn(() => ({})),
   and: vi.fn(() => ({})),
+  or: vi.fn(() => ({})),
+  isNull: vi.fn(() => ({})),
 }));
 vi.mock("@reading-advantage/domain/primary-avatar", () => ({ grantGpForXp: vi.fn().mockResolvedValue(0) }));
 vi.mock("@/server/utils/assistant", () => ({ getLaqFeedback: vi.fn(), getSaqFeedback: vi.fn() }));
@@ -33,7 +35,7 @@ const Q1 = "11111111-1111-4111-8111-111111111111";
 
 function chain<T>(value: T) {
   const stub: Record<string, (...args: unknown[]) => unknown> = {};
-  for (const method of ["from", "where", "limit", "values", "set", "returning"]) stub[method] = () => stub;
+  for (const method of ["from", "where", "limit", "values", "set", "returning", "onConflictDoUpdate"]) stub[method] = () => stub;
   (stub as Record<string, unknown>).then = (resolve: (value: T) => unknown) => Promise.resolve(value).then(resolve);
   return stub;
 }
@@ -54,7 +56,7 @@ describe("finishQuiz evidence keys (track primary_mastery_evidence_20261006, FR-
       },
     }));
     mocks.update.mockReturnValue(chain(undefined));
-    mocks.transaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => fn({ insert: () => ({ values: () => chain(undefined) }), update: () => ({ set: () => chain(undefined) }) }));
+    mocks.transaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => fn({ select: mocks.select, insert: mocks.insert, update: mocks.update }));
     mocks.enqueue.mockResolvedValue(true);
   });
 

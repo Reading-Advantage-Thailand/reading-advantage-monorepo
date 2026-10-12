@@ -7,6 +7,8 @@ import {
   db,
   eq,
   and,
+  or,
+  isNull,
 } from '@reading-advantage/db';
 import {
   userActivity,
@@ -82,34 +84,6 @@ export async function finishQuiz(
     return { error: "User not found" };
   }
 
-  const [userData] = await db.select({ xp: users.xp })
-    .from(users)
-    .where(eq(users.id, user.id as string))
-    .limit(1);
-
-  if (!userData) {
-    return { error: "User not found" };
-  }
-
-  // Create user activity first
-  const [userActivityRow] = await db.insert(userActivity).values({
-    userId: user.id as string,
-    activityType: type,
-    targetId: articleId,
-    timer: data.timer,
-    details: {
-      question: data.question,
-      suggestedAnswer: data.suggestedAnswer,
-      feedback: data.feedback as string,
-      yourAnswer: data.yourAnswer,
-      score: data.score,
-      responses: data.responses,
-      // The evidence keys ride beside the legacy ones; the evidence job reads them.
-      ...(data.questions ? { questions: data.questions, mode: data.mode ?? "independent", hintUsed: data.hintUsed, audioPlayed: data.audioPlayed } : {}),
-    },
-    completed: true,
-  }).returning();
-
   // The award is derived server-side from the submission; callers cannot set XP.
   const xpEarned = resolveQuestionXpAward(type, data);
 
@@ -130,35 +104,71 @@ export async function finishQuiz(
       isCompleted = {};
   }
 
-  const { newXp, raLevel, cefrLevel } = calculateLevelAndCefrLevel(
-    xpEarned,
-    userData.xp as number,
-  );
+  const details = {
+    question: data.question,
+    suggestedAnswer: data.suggestedAnswer,
+    feedback: data.feedback as string,
+    yourAnswer: data.yourAnswer,
+    score: data.score,
+    responses: data.responses,
+    // The evidence keys ride beside the legacy ones; the evidence job reads them.
+    ...(data.questions ? { questions: data.questions, mode: data.mode ?? "independent", hintUsed: data.hintUsed, audioPlayed: data.audioPlayed } : {}),
+  };
 
-  const [activityLog] = await db.select({ id: articleActivityLogs.id })
-    .from(articleActivityLogs)
-    .where(
-      and(
-        eq(articleActivityLogs.articleId, articleId as string),
-        eq(articleActivityLogs.userId, user.id as string),
-      ),
-    )
-    .limit(1);
+  // One transaction: the activity row, the article log, the XP log, the GP grant, and the user XP.
+  const changedRowId = await db.transaction(async (tx) => {
+    const [userData] = await tx.select({ xp: users.xp })
+      .from(users)
+      .where(eq(users.id, user.id as string))
+      .limit(1);
 
-  if (activityLog) {
-    await db.update(articleActivityLogs)
-      .set({ ...isCompleted })
-      .where(eq(articleActivityLogs.id, activityLog.id));
-  } else {
-    await db.insert(articleActivityLogs).values({
-      articleId: articleId as string,
+    if (!userData) return null;
+
+    // Upsert on the unique key (user, type, article). A migrated `completed = false` row
+    // becomes complete. A row that is already complete stays as it is and returns no row.
+    const [userActivityRow] = await tx.insert(userActivity).values({
       userId: user.id as string,
-      ...isCompleted,
-    });
-  }
+      activityType: type,
+      targetId: articleId,
+      timer: data.timer,
+      details,
+      completed: true,
+    }).onConflictDoUpdate({
+      target: [userActivity.userId, userActivity.activityType, userActivity.targetId],
+      set: { details, timer: data.timer, completed: true, updatedAt: new Date() },
+      setWhere: or(eq(userActivity.completed, false), isNull(userActivity.completed)),
+    }).returning();
 
-  // Run the two writes in a Drizzle transaction (replaces Prisma $transaction([...]).
-  await db.transaction(async (tx) => {
+    // Already complete (a double click): success, with no second XP log and no XP.
+    if (!userActivityRow) return undefined;
+
+    const { newXp, raLevel, cefrLevel } = calculateLevelAndCefrLevel(
+      xpEarned,
+      userData.xp as number,
+    );
+
+    const [activityLog] = await tx.select({ id: articleActivityLogs.id })
+      .from(articleActivityLogs)
+      .where(
+        and(
+          eq(articleActivityLogs.articleId, articleId as string),
+          eq(articleActivityLogs.userId, user.id as string),
+        ),
+      )
+      .limit(1);
+
+    if (activityLog) {
+      await tx.update(articleActivityLogs)
+        .set({ ...isCompleted })
+        .where(eq(articleActivityLogs.id, activityLog.id));
+    } else {
+      await tx.insert(articleActivityLogs).values({
+        articleId: articleId as string,
+        userId: user.id as string,
+        ...isCompleted,
+      });
+    }
+
     await tx.insert(xpLogs).values({
       userId: user.id as string,
       xpEarned: xpEarned,
@@ -174,10 +184,19 @@ export async function finishQuiz(
         cefrLevel: cefrLevel,
       })
       .where(eq(users.id, user.id as string));
+
+    return userActivityRow.id;
   });
 
+  if (changedRowId === null) {
+    return { error: "User not found" };
+  }
+
   // Off the request path: the worker resolves the objectives and commits the evidence.
-  await enqueuePrimaryEvidenceJob({ sourceTable: "user_activity", rowId: userActivityRow.id }, user.schoolId);
+  // Only a changed row needs it.
+  if (changedRowId) {
+    await enqueuePrimaryEvidenceJob({ sourceTable: "user_activity", rowId: changedRowId }, user.schoolId);
+  }
 
   return { success: true };
 }
