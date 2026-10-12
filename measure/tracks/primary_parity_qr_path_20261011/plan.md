@@ -20,7 +20,7 @@ Start after `primary_parity_class_books_20261011` loads the catalogue. The route
 - [x] Task: Measure - User Manual Verification 'Phase D: Design (RPG skin)' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual steps: open the 44 PNG files of `design/captures.md`; check the landing at 375 px (two choices, 48 px or more, day and night); check each case page text; answer the three look-check questions in `design/look-check.md`.
 
-## Phase S5: Prove the printed URL without a locale
+## Phase S5: Prove the printed URL without a locale [checkpoint: a20826199]
 _Story ref: spec.md#story-s5_
 
 - [x] Task: Write the proxy tests (red, or green if the proxy already does the job)
