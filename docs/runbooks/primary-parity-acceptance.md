@@ -83,7 +83,8 @@ npx tsx scripts/primary-parity/accounts.ts            # writes accounts.json (mo
 
 `accounts.ts` prints the exact second command. It picks one SYSTEM user, one ADMIN and one TEACHER of one
 school, and one STUDENT of a class of that teacher. Use `--system`, `--admin`, `--teacher`, and `--student`
-to name the user ids. Use `--force` to replace an existing `accounts.json`.
+to name the user ids. Give `--teacher`, `--admin`, and `--student` together; `--student` alone is ignored.
+Use a new `--out` name for `issue-temporary-passwords.ts` when `handout.csv` exists, then rename it. Use `--force` to replace an existing `accounts.json`.
 The first new-app capture does the forced password change of each staff user and keeps the new password in `accounts.json`.
 The student of the new app signs in with the row of the class sheet that the matched teacher makes.
 
@@ -102,8 +103,10 @@ Write `$P/legacy-app/.env.local` (mode 600) with these names only: `DATABASE_URL
 
 ```bash
 cd $P/legacy-app
+# npm 11 refuses the legacy lock file; use npm 10: npx --yes npm@10 ci --prefer-offline --no-audit --no-fund
+# On a slow network: ci --ignore-scripts, then npm rebuild esbuild @prisma/engines.
 flock ~/Desktop/primary-parity-progress/heavy.lock nice bash -c 'npm ci && npx prisma generate && NODE_OPTIONS=--max-old-space-size=4096 npx next build'
-PORT=3100 npx next start      # keep this shell; stop it after the legacy captures
+PORT=3100 npx next start      # keep this shell; stop it after the legacy captures (kill the PID on the port: ss -ltnp)
 ```
 
 If the build fails from memory, pull the legacy production image (`primary-advantage-app-00125-9wd`) and run it
