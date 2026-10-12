@@ -120,3 +120,22 @@ Low:
 - L8. At 375 px the header text "License" over the light top of the backdrop has low contrast in day mode (see `s4-license-*-day-375.png`).
 - L9. `userModel.activity.behavior.test.ts` failed one time in a full run under load and passed alone (flaky under load, not related).
 - L10. No test covers `GET /api/users/me/school` with `licenseView` (the route test mocks are heavy); the helper and the model have tests.
+
+
+## Role source fixes (lane C)
+
+Rule: `users.role` is the truth. `user_roles` is optional. The migrated copy has 0 rows in `roles` and `user_roles`.
+
+- `teacherModel.ts` reads: `getTeachers` (list and count), `getTeacherById`, the `updateTeacher` and `deleteTeacher` lookups, and `getTeacherStatistics` used an inner join on `user_roles` and `roles`. For a migrated user the Teachers page was empty and edit and delete gave "Teacher not found". All six now use `roleSql(["teacher","admin"])` (the filter `role` uses `roleSql(role)`). The same two roles as before. A user with two role rows no longer repeats in the list.
+- `updateTeacher`: Zod body in the controller (`role` is `teacher` or `admin`; unknown fields are dropped; the `schoolId` check runs on the raw body first). The model calls `setUserRole` and `revokeSessionsInTx` in the transaction, only when the role really changes. The audit event `user:role_changed` (metadata `from`, `to`) follows the commit.
+- `updateExistingTeacherToSchool`: no more "Invalid role specified" when `roles` is empty. It uses `setUserRole` and ends the sessions when the role changes.
+- `schoolModel.ts`: `getStudentRoleId` is removed. `getSchoolStudentIds(schoolId)` uses `roleSql("student")` and `users.school_id`. The monthly ranking and the rank of a student outside the top five work on a migrated database.
+- `DELETE /api/users/me/school`: the owner check reads `users.role` of the loaded user row (no `user_roles` select). An ADMIN owner goes back to `STUDENT` with `setUserRole`, and `school_id` is set to null.
+
+Medium and Low findings (not fixed):
+- The audit event uses `recordAuditEvent`, which writes with the global `db`, so it is not inside the transaction. A failure only writes a log line (best-effort, same as the password and delete events).
+- Before this change the owner downgrade wrote the legacy `user` roles row. The new code writes `STUDENT` (the enum has no USER value). A legacy `user` roles row is not recreated.
+- `getTeachers` returns `role: role ?? "teacher"` for each row, also for an admin. This is the old behavior; not changed.
+- The PATCH response `roles` on a migrated database stays empty (open from the quick fixes track).
+- The pglite test schema keeps `users.role` as text. The SQL of `roleSql` was checked with a SELECT on `primary_parity_20261011`: 16 users with TEACHER or ADMIN, 8 TEACHER (7 with a school, 1 without a school), 643 students with a school.
+- `tsc --noEmit` of the app shows errors in `components/teacher/*` and `lib/book-link` from a stale domain `dist` (no error in the changed files).

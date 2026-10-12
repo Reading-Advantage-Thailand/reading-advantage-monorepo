@@ -131,14 +131,16 @@ _Story ref: spec.md#story-s4_
 ## Phase S5: A teacher role change takes effect
 _Story ref: spec.md#story-s5_
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Zod for the teacher update body in `server/controllers/teacherController.ts` (today it is a cast, `:269-270`): `role` is `teacher` or `admin`; the map to `users.role` (`TEACHER`, `ADMIN`)
-- [ ] Task: Test
-    - [ ] Red: `server/models/__tests__/teacherModel.role-change.test.ts`: the change writes `users.role` and `user_roles` in one transaction, ends the user's sessions, and records an audit event with the old and new role; a user of another school or of a higher rank is refused and nothing changes
-- [ ] Task: Implement
-    - [ ] `server/models/teacherModel.ts` (`updateTeacher`): set `users.role` in the same transaction, call `revokeSessionsInTx`, call `recordAuditEvent`. The fix stays in this function because it holds the rank rule and the transaction
-- [ ] Task: Generate Docs & Doctor: JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S5: A teacher role change takes effect' (Protocol in workflow.md)
+- [x] Task: Contract & Schema Definition
+    - [x] Zod for the teacher update body in `server/controllers/teacherController.ts` (today it is a cast, `:269-270`): `role` is `teacher` or `admin`; the map to `users.role` (`TEACHER`, `ADMIN`)
+- [x] Task: Test
+    - [x] Red: `server/models/__tests__/teacherModel.role-change.test.ts`: the change writes `users.role` and `user_roles` in one transaction, ends the user's sessions, and records an audit event with the old and new role; a user of another school or of a higher rank is refused and nothing changes
+- [x] Task: Implement
+    - [x] `server/models/teacherModel.ts` (`updateTeacher`): set `users.role` in the same transaction, call `revokeSessionsInTx`, call `recordAuditEvent`. The fix stays in this function because it holds the rank rule and the transaction
+- [x] Task: Generate Docs & Doctor: JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S5: A teacher role change takes effect' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: sign in as a school ADMIN of the migrated copy. Open Admin, Teachers: the TEACHER users of the school show, with count and statistics. Change one teacher to admin: the list shows the new role and that teacher must sign in again. Delete a test teacher: it works. Open the monthly leaderboard: students show.
+    - Extended scope (orchestrator): teacher reads with `roleSql`, `updateExistingTeacherToSchool` with `setUserRole`, school leaderboard students with `roleSql("student")`, `DELETE /api/users/me/school` owner downgrade from `users.role`. Details: `plan-review.md`, section "Role source fixes (lane C)".
 
 ## Phase A: Acceptance
 
