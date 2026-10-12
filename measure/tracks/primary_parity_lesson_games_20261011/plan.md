@@ -90,7 +90,7 @@ _Story ref: spec.md#story-s3_
 - [x] Task: Measure - User Manual Verification 'Phase S3: Play a sentence game in task 12' (Protocol in workflow.md)
     - look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/lesson_games/phaseS3/` (`task12-<375|1280>-<day|night>.png`, `task12-locked-...`). Steps: (1) open a lesson and go to task 12; (2) check the two sentence games with the last result, and the four activities below; (3) play one game and leave it; check the result shows after the return; (4) check a lesson with 2 sentences: games locked with "Needs 3 sentences", activities open; (5) check that a game that fails to start shows the notice that points to the activities. Defaults used: Member Question 2 (castle-defense, potion-rush).
 
-## Phase S4: Lead a game on the projector [checkpoint: CHECKPOINT]
+## Phase S4: Lead a game on the projector [checkpoint: 477b3c4ad]
 _Story ref: spec.md#story-s4_
 
 - [x] Task: Define the panel
