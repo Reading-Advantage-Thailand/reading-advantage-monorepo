@@ -168,3 +168,23 @@ Six items from the review of the track. All six are fixed.
 - `getLastActivityByStudent` (`classroomModel.ts`) sends at most 5000 ids in each `IN (...)` list. The function is exported
   for the test (`classroomModel.activity-chunks.test.ts`).
 - `Quest.noHero` added to `cn`, `tw`, and `vi`.
+
+## Role source fixes
+
+Rule: `users.role` is the truth. `user_roles` is optional and additive. The migrated database has 0 rows in `roles` and `user_roles`.
+
+- `server/utils/role-sql.ts` (bf7da1bb8): `roleSql(names)` and `setUserRole(tx, userId, role)`. The old `isStudentUser` called `upper()` on the enum column `users.role`; this fails on the real database. `roleSql` casts to text.
+- `createStudent` (3ebe01590): no "Student role not found" stop.
+- Classroom list (d5595c30e): one grouped student count with `roleSql("student")`.
+- `getAllStudentsInSystem` (77512397a): `roleSql("student")`.
+- Create school (b987ca663): the gate reads `users.role`; the upgrade uses `setUserRole`.
+- Add admin (1d269146a): a migrated TEACHER becomes ADMIN. A migrated STUDENT without a legacy "user" row is not upgraded (shortcut: a real student must not become admin by a search).
+- Remove admin (8af2d05e7): the downgrade reads `users.role` and writes TEACHER with `setUserRole`.
+- User search (0588686ad): the role badge comes from `users.role` when there are no `user_roles` rows.
+- `PATCH users/[id]` (db0e4c3b6): the role write now changes `users.role`. Before, it changed only `user_roles`.
+- `createUser` and `getUserByEmail` (9134926de): the "user" role row is optional.
+- Dead code (abd91a68b): `checkTeacherPermissions`, `checkStudentPermissions`, `getUserRoles` removed with the test lines that used them.
+- Dev header (6c1d73d4b): `withAuth` falls back to `users.role`.
+
+Not fixed (lane C, school_management S5): `teacherModel.ts` and `schoolModel.ts` (leaderboard `getStudentRoleId`).
+Also open: `DELETE /api/users/me/school` (route.ts, "owner's current roles") still reads `user_roles`; and the PATCH response `roles` stays empty on a migrated database.
