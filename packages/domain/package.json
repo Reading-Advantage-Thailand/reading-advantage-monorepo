@@ -180,6 +180,7 @@
     "import-lesson-packages": "tsx scripts/import-lesson-packages.ts",
     "import-lesson-guides": "tsx scripts/import-lesson-guides.ts",
     "backfill-primary-tags": "tsx scripts/backfill-primary-tags.ts",
+    "sync-print-kit": "tsx scripts/sync-print-kit.ts",
     "test": "vitest run",
     "check-types": "tsc --noEmit"
   },
