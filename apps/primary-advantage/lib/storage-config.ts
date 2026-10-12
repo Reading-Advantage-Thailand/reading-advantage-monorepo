@@ -59,3 +59,26 @@ export function getArticleImageUrl(
 export function getAudioUrl(audioUrl: string): string {
   return getStorageUrl(audioUrl);
 }
+
+/** The fields of a story or chapter that name its picture in the bucket. */
+export type StoryPictureSource = { id: string; image?: string | null };
+
+/**
+ * Returns the key that names a story picture in the bucket (`images/story/<key>.png`).
+ * Migrated stories carry the legacy cuid in `image`; new stories use their own id.
+ * @param story The story with its id and its stored picture key.
+ * @returns The picture key: the stored key when it is a bare id, else the story id.
+ */
+export function getStoryImageKey(story: StoryPictureSource): string {
+  const key = story.image?.trim();
+  return key && /^[\w-]+$/.test(key) ? key : story.id;
+}
+
+/**
+ * Constructs the URL of a story cover.
+ * @param story The story (its id and its stored picture key).
+ * @returns Full URL to the cover picture.
+ */
+export function getStoryImageUrl(story: StoryPictureSource): string {
+  return getStorageUrl(`images/story/${getStoryImageKey(story)}.png`);
+}

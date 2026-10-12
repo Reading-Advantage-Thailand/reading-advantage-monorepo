@@ -188,3 +188,13 @@ Rule: `users.role` is the truth. `user_roles` is optional and additive. The migr
 
 Not fixed (lane C, school_management S5): `teacherModel.ts` and `schoolModel.ts` (leaderboard `getStudentRoleId`).
 Also open: `DELETE /api/users/me/school` (route.ts, "owner's current roles") still reads `user_roles`; and the PATCH response `roles` stays empty on a migrated database.
+
+## Cluster 2 API authorization (2026-10-12, helper C2)
+
+- Medium: license writes are SYSTEM only by default decision; the owner must confirm (see `plan.md`).
+- Medium: the `PATCH /api/licenses/<userId>` call of `components/update-user-license.tsx` has no handler (405). A key activation flow does not exist.
+- Low: `console.error` stays in `teacherController.ts`, `studentController.ts`, and `schoolController.ts` outside the changed lines.
+- Low: the register route now lets SYSTEM register students (before: 403).
+- Low: the deck game `score` max 1000 and `timer` max 24 h in ms are limits chosen without data; the XP clamp by deck size stays the real cap.
+- Lesson: an audit claim ("inner join on user_roles") was already fixed by an earlier track; check the code before a fix.
+- No new locale key was needed.

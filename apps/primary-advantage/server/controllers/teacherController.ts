@@ -22,6 +22,17 @@ import {
   UpdateTeacherInput,
 } from "@/types/index";
 
+/** The fields a teacher create accepts, as the admin forms send them. */
+const createTeacherBodySchema = z.object({
+  name: z.string().min(1).max(200),
+  email: z.string().min(1).max(320),
+  role: z.enum(["teacher", "admin"]),
+  password: z.string().max(128).optional(),
+  classroomIds: z.array(z.string().min(1).max(100)).max(200).optional(),
+  force: z.boolean().optional(),
+  schoolId: z.string().uuid().optional(),
+});
+
 // GET Controller - Fetch teachers
 export const getTeachersController = async (
   request: NextRequest,
@@ -127,9 +138,12 @@ export const createTeacherController = async (
       );
     }
 
-    const body = await request.json();
-    const { name, email, role, password, classroomIds, force, schoolId } =
-      body as CreateTeacherInput & { force?: boolean };
+    const parsedBody = createTeacherBodySchema.safeParse(await request.json().catch(() => null));
+    if (!parsedBody.success) {
+      return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    }
+    const { name, email, role, password, classroomIds, force, schoolId }: CreateTeacherInput & { force?: boolean } =
+      parsedBody.data;
 
     if (password !== undefined && !passwordSchema.safeParse(password).success) {
       return NextResponse.json({ error: "Invalid password" }, { status: 400 });

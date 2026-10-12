@@ -10,6 +10,7 @@ import { ActivityType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
 import { shuffle } from "@/lib/shuffle";
 import { guardStudentRoute } from "@/lib/student-view";
+import { parseDeckGameSubmit } from "@/server/utils/flashcard-game-submit";
 
 // Helper function to tokenize a sentence into words
 function tokenizeSentence(sentence: string) {
@@ -371,11 +372,15 @@ export async function POST(
   }
 
   const { deckId } = await params;
-  const { score, timer } = await request.json();
 
   const tenantDb = getTenantDB({ schoolId: user.schoolId });
   // userActivity and xpLogs are REFERENTIAL; users is FLAT (tenant-scoped).
   const flashDb = getUnscopedDB("userActivity and xpLogs have no schoolId; scoped via caller userId and deck targetId");
+
+  // The body must be valid and the deck must belong to the caller.
+  const submitted = await parseDeckGameSubmit(request, flashDb, deckId, user.id as string);
+  if (submitted instanceof NextResponse) return submitted;
+  const { score, timer } = submitted;
 
   // The score counts correct items; clamp it to the deck size server-side
   // so callers cannot mint XP beyond what the deck contains.

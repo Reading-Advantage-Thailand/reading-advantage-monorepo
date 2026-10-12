@@ -121,13 +121,11 @@ describe("POST /api/licenses", () => {
     expect(mocks.inserted[0]?.schoolName).toBe("");
   });
 
-  it("ignores a client schoolId from an ADMIN and lets the tenant scope set it", async () => {
+  it("refuses an ADMIN: only SYSTEM creates licenses", async () => {
     mocks.currentUser.mockResolvedValue({ id: "adm", role: "ADMIN", schoolId: SCHOOL_A });
     const response = await POST(createRequest(licenseBody));
-    expect(response.status).toBe(200);
-    expect(mocks.getUnscopedDB).not.toHaveBeenCalled();
-    expect(mocks.inserted[0]).not.toHaveProperty("schoolId");
-    expect(mocks.inserted[0]?.schoolName).toBe("QA School D");
+    expect(response.status).toBe(403);
+    expect(mocks.inserted).toHaveLength(0);
   });
 });
 
@@ -141,11 +139,11 @@ describe("PUT /api/licenses/[id]", () => {
     mocks.getUnscopedDB.mockReset().mockImplementation(fakeDb);
   });
 
-  it("does not let an ADMIN move its license to another school", async () => {
+  it("refuses an ADMIN: only SYSTEM edits licenses", async () => {
     mocks.currentUser.mockResolvedValue({ id: "adm", role: "ADMIN", schoolId: SCHOOL_A });
     const response = await PUT(createRequest(licenseBody), { params } as never);
-    expect(response.status).toBe(200);
-    expect(mocks.updated[0]).not.toHaveProperty("schoolId");
+    expect(response.status).toBe(403);
+    expect(mocks.updated).toHaveLength(0);
   });
 
   it("refuses a SYSTEM move to a school that does not exist", async () => {

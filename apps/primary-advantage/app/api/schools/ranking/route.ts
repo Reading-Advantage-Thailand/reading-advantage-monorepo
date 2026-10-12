@@ -4,15 +4,27 @@ import {
   getSchoolLeaderboardController,
 } from "@/server/controllers/schoolController";
 import { currentUser } from "@/lib/session";
-import { eq } from 'drizzle-orm';
-import { users } from '@reading-advantage/db/schema';
-import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
+import { timingSafeEqual } from "crypto";
+import { logger } from "@/lib/observability/logger";
 import { assertCan, AuthError } from '@reading-advantage/auth';
+
+/**
+ * Compares the access key header with `ACCESS_KEY` in constant time.
+ * @param provided The value of the `x-access-key` header.
+ * @returns True only when `ACCESS_KEY` is set and equal to the header.
+ */
+function hasValidAccessKey(provided: string | null): boolean {
+  const expected = process.env.ACCESS_KEY;
+  if (!expected || !provided) return false;
+  const a = Buffer.from(provided);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
 
 export async function POST(request: NextRequest) {
   try {
     const accessKey = request.headers.get("x-access-key");
-    if (accessKey !== process.env.ACCESS_KEY) {
+    if (!hasValidAccessKey(accessKey)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -26,7 +38,7 @@ export async function POST(request: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error updating school ranking:", error);
+    logger.error("school_ranking_update_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -53,31 +65,15 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
-    // Get schoolId from query params or user's school
-    const { searchParams } = new URL(request.url);
-    let schoolId = searchParams.get("schoolId");
+    // Only SYSTEM may name a school; everyone else reads the leaderboard of the own school.
+    const queryId = new URL(request.url).searchParams.get("schoolId");
+    const schoolId = user.role === "SYSTEM" && queryId ? queryId : user.schoolId;
 
     if (!schoolId) {
-      // If no schoolId provided, use user's school
-      const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
-      // SYSTEM has no schoolId; TenantDB fails closed on FLAT tables, so the
-      // self-record lookup runs through unscoped for SYSTEM callers.
-      const usersDb = user.schoolId
-        ? tenantDb
-        : getUnscopedDB("SYSTEM has no schoolId; self-record lookup by id");
-      const [userData] = await usersDb.select({ schoolId: users.schoolId })
-        .from(users)
-        .where(eq(users.id, user.id))
-        .limit(1);
-
-      if (!userData?.schoolId) {
-        return NextResponse.json(
-          { error: "User is not associated with any school" },
-          { status: 404 },
-        );
-      }
-
-      schoolId = userData.schoolId;
+      return NextResponse.json(
+        { error: "User is not associated with any school" },
+        { status: 404 },
+      );
     }
 
     // Pass userId if it's a student requesting their own leaderboard
@@ -91,7 +87,7 @@ export async function GET(request: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error fetching school ranking:", error);
+    logger.error("school_ranking_fetch_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

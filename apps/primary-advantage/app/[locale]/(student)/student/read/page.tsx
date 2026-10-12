@@ -9,6 +9,7 @@ import { currentUser } from "@/lib/session";
 import { StatusChip } from "@reading-advantage/ui";
 import { rpgButton } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
+import { ReadTabs } from "@/components/stories/read-tabs";
 
 interface PageProps {
   searchParams: Promise<{
@@ -101,6 +102,8 @@ export default async function ReadPage({ searchParams }: PageProps) {
           </StatusChip>
         ) : null}
       </header>
+
+      <ReadTabs active="articles" />
 
       <nav aria-label={t("ReadList.filters")} className="cq-panel flex flex-col gap-3">
         {chosen.length ? (

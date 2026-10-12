@@ -6,6 +6,7 @@ import { getUnscopedDB } from "@reading-advantage/domain";
 import { licenseDbFor, licenseSchoolFields } from "@/lib/license-db";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { z } from "zod";
+import { logger } from "@/lib/observability/logger";
 import { subscriptionType } from '@reading-advantage/db/schema';
 
 // Derive SubscriptionType as a string-literal union from the Drizzle pgEnum.
@@ -75,7 +76,7 @@ export async function GET(
 
     return NextResponse.json({ ...license, School: schoolRow });
   } catch (error) {
-    console.error("Error fetching license:", error);
+    logger.error("license_fetching_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -105,7 +106,8 @@ export async function PUT(
       throw error;
     }
 
-    if (user.role !== "ADMIN" && user.role !== "SYSTEM") {
+    // Only SYSTEM writes licenses; an ADMIN keeps the scoped reads.
+    if (user.role !== "SYSTEM") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -182,7 +184,7 @@ export async function PUT(
       updatedAt: updatedLicense.updatedAt,
     });
   } catch (error) {
-    console.error("Error updating license:", error);
+    logger.error("license_updating_failed", { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -227,7 +229,8 @@ export async function DELETE(
       throw error;
     }
 
-    if (user.role !== "ADMIN" && user.role !== "SYSTEM") {
+    // Only SYSTEM writes licenses; an ADMIN keeps the scoped reads.
+    if (user.role !== "SYSTEM") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -251,7 +254,7 @@ export async function DELETE(
       message: "License deleted successfully",
     });
   } catch (error) {
-    console.error("Error deleting license:", error);
+    logger.error("license_deleting_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
