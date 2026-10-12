@@ -53,26 +53,39 @@ Notes (Phase S1, helper, 2026-10-12):
 - Default used: Q1 legacy XP rule (no XP change at close); Q2/Q3 apply to S2/S3.
 - User Manual Verification: none visible in the UI in this phase. Steps: run `vitest run src/primary-lesson-attempts` in `packages/domain` (10 pass); look at the 23 history rows in a migrated copy.
 
-## Phase S2: The student starts a lesson again
+## Phase S2: The student starts a lesson again [checkpoint: CHKSHA]
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Define the restart contract
-    - [ ] `restartLessonInput` (article id, optional assignment id) and `restartLessonOutput` (the new attempt number) in `packages/domain/src/primary-lesson-attempts/contracts.ts`
-    - [ ] Keys `Lesson.Summary.actions.startAgain`, `restarting`, the dialog texts, and `attempt` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json` (the legacy texts for `startAgain` and `restarting`)
-- [ ] Task: Write the tests (red)
-    - [ ] Domain: `restartLesson` closes the attempt with `student_restart`; an assignment lesson sets the student assignment back to in progress and keeps the completion in the history; a teacher or another student gets FORBIDDEN
-    - [ ] App: `components/lesson/task/__tests__/task-lesson-summary.test.tsx` shows "Start again" and calls the action after the confirm; `components/lesson/__tests__/lesson-progress-bar.test.tsx` opens task 1 after the restart
-    - [ ] App: the preview mode of staff saves nothing (with the flag of `primary_parity_staff_student_view_20261011`)
-    - [ ] A key-parity test for the new keys in the five locale files
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-lesson-attempts/attempts.ts`: `restartLesson`
-    - [ ] New `apps/primary-advantage/actions/lesson-attempts.ts`: `restartLessonAction` (thin; logs a failure with `lib/observability/logger.ts`)
-    - [ ] `apps/primary-advantage/components/lesson/task/task-lesson-summary.tsx` and `components/lesson/lesson-progress-bar.tsx`: the button, the dialog, the move to task 1
-- [ ] Task: Check the XP rule on a second pass
-    - [ ] Test that a task of attempt 2 writes its `user_activity` row and one new XP log (legacy rule; or the owner's answer to Member Question 1)
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S2: The student starts a lesson again' (Protocol in workflow.md)
+- [x] Task: Define the restart contract
+    - [x] `restartLessonInput` (article id, optional assignment id) and `restartLessonOutput` (the new attempt number) in `packages/domain/src/primary-lesson-attempts/contracts.ts`
+    - [x] Keys `Lesson.Summary.actions.startAgain`, `restarting`, the dialog texts, and `attempt` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json` (the legacy texts for `startAgain` and `restarting`)
+- [x] Task: Write the tests (red)
+    - [x] Domain: `restartLesson` closes the attempt with `student_restart`; an assignment lesson sets the student assignment back to in progress and keeps the completion in the history; a teacher or another student gets FORBIDDEN
+    - [x] App: `components/lesson/task/__tests__/task-lesson-summary.test.tsx` shows "Start again" and calls the action after the confirm; `components/lesson/__tests__/lesson-progress-bar.test.tsx` opens task 1 after the restart
+    - [x] App: the preview mode of staff saves nothing (with the flag of `primary_parity_staff_student_view_20261011`)
+    - [x] A key-parity test for the new keys in the five locale files
+- [x] Task: Implement (green)
+    - [x] `packages/domain/src/primary-lesson-attempts/attempts.ts`: `restartLesson`
+    - [x] New `apps/primary-advantage/actions/lesson-attempts.ts`: `restartLessonAction` (thin; logs a failure with `lib/observability/logger.ts`)
+    - [x] `apps/primary-advantage/components/lesson/task/task-lesson-summary.tsx` and `components/lesson/lesson-progress-bar.tsx`: the button, the dialog, the move to task 1
+- [x] Task: Check the XP rule on a second pass
+    - [x] Test that a task of attempt 2 writes its `user_activity` row and one new XP log (legacy rule; or the owner's answer to Member Question 1)
+- [x] Task: Docs and doctor
+    - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S2: The student starts a lesson again' (Protocol in workflow.md)
+
+Notes (Phase S2, helper A1, 2026-10-12):
+- Commits: 55a72a4ae `restartLesson`; cc4aea3b5 locale keys + parity test; 3e7b4e932 `restartLessonAction`; 7c6e8e63a summary + progress bar; b5e0077cc XP lock test.
+- `restartLesson` wraps `closeLessonAttempt` (reason `student_restart`); the check is `assertStudentRecordWriter` (STUDENT only). Output `attemptNumber` is the NEW current attempt (closed number + 1), null when nothing closed.
+- The action returns `{status:"preview"}` for staff through `guardStudentAction("restart_lesson")`; the summary also skips the call in preview and shows the "Preview: not saved" toast plus the `previewNote` line.
+- `TaskLessonSummary` got props `assignmentId`, `attemptNumber`, `onRestarted`. `LessonProgressBar` keeps the attempt number of the session (1, then the restart output), resets the timer, unpauses, and opens task 1. After a page reload the banner does not show: S4 must read the attempt number in `getLessonSummaryData`.
+- Q1 default used: legacy XP rule (the second-pass test in `user-activity-xp.test.ts`). Q3 default used: "Start again" shows in a teacher-led class; the class-marked steps (`steps_done`) are not touched.
+- Key parity: the keys were added before the parity test, so that test was not red. The XP lock test passed at once (it locks existing behavior).
+- Texts: legacy for `startAgain` and `restarting` in 5 locales; the other new keys are English in all 5 locales.
+- Look check pending (owner, async). Captures (24 PNG, 375/1280, day/night; states summary-first, summary-attempt2, confirm, restarting, error, preview): `~/Desktop/primary-parity-progress/captures/lesson_repeat/phaseS2/`. Real component, real chrome and rpg.css, in headless Chrome.
+- Manual verification: sign in as a student, finish a lesson, press "Start Again" on task 14, check the dialog (Cancel first), confirm, check the lesson opens at task 1 and the summary of the next finish shows "Attempt 2". As staff in the student view, check that the button saves nothing.
+- `build-graph update` skipped (graph.db is read only for helpers). `measure/generate.sh` and `doctor.sh` are left to the orchestrator.
+
 
 ## Phase S3: The teacher teaches a lesson again
 _Story ref: spec.md#story-s3_

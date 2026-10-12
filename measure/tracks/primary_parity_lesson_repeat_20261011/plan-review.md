@@ -21,3 +21,13 @@ S1 must:
 - Low: `closeAttemptInTx` makes 6 to 7 selects per student. For 30 students this is about 200 queries in one transaction; check the time on the rehearsal clone in S3/S4.
 - Lesson: `drizzle-kit generate` numbers from the journal (next idx 72). Rename the SQL, the snapshot, and the journal entry by hand when another lane takes the number.
 - Lesson: a domain test that imports a new db table needs a rebuilt `packages/db/dist` (direct tsc, under the lock).
+
+## Phase S2
+- Low: the keys `restart.*`, `attempt`, `attemptXp`, `historyNote`, `previewNote` are English in `th`, `cn`, `tw`, `vi` (no approved text). Only `startAgain` and `restarting` use the legacy text.
+- Low: the "Attempt N" banner shows only for attempts made in the same page session. S4 must return the attempt number from `getLessonSummaryData`.
+- Low: the legacy label is "Start Again" (capital A); the design said "Start again". The legacy text won.
+- Low: the dialog has no focus trap and no Escape key; Cancel has autofocus. A shared dialog primitive would fix this.
+- Low: `closed:false` (no work) still opens task 1 without an error; this is intended.
+- Shortcut: the look-check captures use a browser bundle with stubbed actions, not the running app.
+- Medium (pre-existing): `component-deduplication-behavior` and `loading-state-flow.behavior` tests fail to load: `packages/sales-knowledge/dist/.../release-candidate.json` is missing in this worktree.
+- Lesson: a client file that imports `@/lib/student-view` pulls server code into an esbuild browser bundle; alias it to a stub in the harness.
