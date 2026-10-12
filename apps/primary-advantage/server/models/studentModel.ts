@@ -266,16 +266,6 @@ export const createStudent = async (params: {
     params;
 
   try {
-    // Get the Student role ID
-    const [roleRecord] = await db.select({ id: roles.id })
-      .from(roles)
-      .where(eq(roles.name, studentRole))
-      .limit(1);
-
-    if (!roleRecord) {
-      return { success: false, error: "Student role not found" };
-    }
-
     // Determine school assignment: only a SYSTEM caller may choose it.
     const target = await resolveCreationSchoolId(userWithRoles, params.schoolId);
     if ("error" in target) {
@@ -329,10 +319,7 @@ export const createStudent = async (params: {
 
       await upsertCredentialAccount(tx, created.id, hashedPassword);
 
-      await tx.insert(userRoles).values({
-        userId: created.id,
-        roleId: roleRecord.id,
-      });
+      await setUserRole(tx, created.id, studentRole);
 
       if (classroomId) {
         await tx.insert(classroomStudents).values({
