@@ -1,0 +1,221 @@
+{
+  "member": "primary_parity_staff_student_view_20261011",
+  "pairs": [
+    {
+      "id": "SSV-A1",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/student/read",
+      "newPath": "/en/student/home",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "waitFor": {
+        "new": "[data-preview-banner]"
+      },
+      "checks": [
+        {
+          "id": "SSV-A1-a",
+          "behavior": "Legacy: the account menu item \"Student Dashboard\" opens /student/read. New: the item \"Student view\" opens /student/home, and a blue Preview banner shows with \"Exit preview\" (difference on purpose). No redirect to /unauthorized."
+        },
+        {
+          "id": "SSV-A1-b",
+          "behavior": "New: \"Exit preview\" goes to the teacher home."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A2",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/student/read/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/student/read/{map:article:cmtyina5w000ps601n6htj9g3}",
+      "waitFor": {
+        "new": "[data-preview-banner]"
+      },
+      "checks": [
+        {
+          "id": "SSV-A2-a",
+          "behavior": "Legacy: the teacher finishes the MCQ and the teacher XP rises. New: the score shows with \"Preview: not saved\". Data check (AC-2): user_activity, xp_logs, and users.xp of the teacher have the same counts before and after (acceptance-data-checks.sql)."
+        },
+        {
+          "id": "SSV-A2-b",
+          "behavior": "New: the article page shows no saved-cards state and the banner shows."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A3",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "ADMIN",
+      "legacyPath": "/en/student/read",
+      "newPath": "/en/student/home",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "waitFor": {
+        "new": "[data-preview-banner]"
+      },
+      "checks": [
+        {
+          "id": "SSV-A3-a",
+          "behavior": "New: the page renders with the banner and does not go to /unauthorized. Legacy: the page renders (no banner). Captures at 375 px and 1280 px (AC-3)."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A4",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "SYSTEM",
+      "legacyPath": "/en/student/read",
+      "newPath": "/en/student/home",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "waitFor": {
+        "new": "[data-preview-banner]"
+      },
+      "checks": [
+        {
+          "id": "SSV-A4-a",
+          "behavior": "New: the page renders with the banner. A SYSTEM user with no school sees the empty school panels (SYSTEM school rule D8, look check pending (owner, async)). A SYSTEM user with a school sees that school."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A5",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/student/history",
+      "newPath": "/en/student/history",
+      "waitFor": {
+        "new": "[data-preview-banner]"
+      },
+      "checks": [
+        {
+          "id": "SSV-A5-a",
+          "behavior": "New: the empty state with preview copy and no row of the staff member. Legacy shows the rows of the teacher account."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A6",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/student/reports",
+      "newPath": "/en/student/reports",
+      "waitFor": {
+        "new": "[data-preview-banner]"
+      },
+      "checks": [
+        {
+          "id": "SSV-A6-a",
+          "behavior": "New: the empty state with preview copy, no error page. Legacy shows the report of the teacher account."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A7",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/student/sentences",
+      "newPath": "/en/student/sentences",
+      "waitFor": {
+        "new": "[data-preview-banner]"
+      },
+      "checks": [
+        {
+          "id": "SSV-A7-a",
+          "behavior": "New: the empty state with preview copy and no row of the staff member."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A8",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/student/vocabulary",
+      "newPath": "/en/student/vocabulary",
+      "waitFor": {
+        "new": "[data-preview-banner]"
+      },
+      "checks": [
+        {
+          "id": "SSV-A8-a",
+          "behavior": "New: the empty state with preview copy and no row of the staff member."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A9",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/student/games",
+      "newPath": "/en/student/games",
+      "waitFor": {
+        "new": "[data-preview-banner]"
+      },
+      "checks": [
+        {
+          "id": "SSV-A9-a",
+          "behavior": "New: the games page renders for staff. A game opens in demo mode with the sample word set, and its end screen shows \"Preview: not saved\" and saves nothing."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A10",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read",
+      "newPath": "/en/student/home",
+      "colorSchemes": [
+        "light",
+        "dark"
+      ],
+      "checks": [
+        {
+          "id": "SSV-A10-a",
+          "behavior": "New: the student home works as before with NO Preview banner (AC-4). A quiz saves XP as before."
+        }
+      ]
+    },
+    {
+      "id": "SSV-A11",
+      "rows": [
+        "STU-01"
+      ],
+      "role": "TEACHER",
+      "legacyPath": "/en/settings/user-profile",
+      "newPath": "/en/settings/user-profile",
+      "checks": [
+        {
+          "id": "SSV-A11-a",
+          "behavior": "New: the \"Back to reading\" link of a staff member goes to the role home (teacher home), never to /unauthorized."
+        }
+      ]
+    }
+  ]
+}

@@ -139,6 +139,18 @@ describe("openBookLink: the case pages", () => {
     expect(await open("5", "o3-2", true)).toMatchObject({ type: "case", name: "retry", retryHref: "/b/o3-2/5/writing" });
   });
 
+  it("encodes the book and number in the retry address and cuts the logged book to 64 characters", async () => {
+    as("STUDENT");
+    mocks.resolveBookLink.mockRejectedValue(new Error("db down"));
+    expect(await open("5?x", "a/b?c#d")).toMatchObject({ retryHref: "/b/a%2Fb%3Fc%23d/5%3Fx" });
+    const long = "x".repeat(100);
+    await open("5", long);
+    expect(mocks.error).toHaveBeenLastCalledWith("book_link.lookup_failed", expect.objectContaining({ book: "x".repeat(64) }));
+    mocks.resolveBookLink.mockResolvedValue({ kind: "unknown_book" });
+    await open("5", long);
+    expect(mocks.info).toHaveBeenLastCalledWith("book_link.unknown_book", { book: "x".repeat(64), number: 5 });
+  });
+
   it("never puts the user name in a log line", async () => {
     as("INTERN");
     await open();

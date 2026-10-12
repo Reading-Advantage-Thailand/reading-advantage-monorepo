@@ -69,7 +69,7 @@ describe("printed book URL without a locale (QR path)", () => {
   });
 
   it("does not send a signed-out reader to sign-in", async () => {
-    for (const path of ["/b/o3-2/5", "/b/o3-2/5/writing", "/th/b/o3-2/5", "/en/b/q4/1/writing"]) {
+    for (const path of ["/b/o3-2/5", "/b/o3-2/5/writing", "/th/b/o3-2/5", "/en/b/q4/1/writing", "/th/b/o3-2/5/other"]) {
       expect((await redirectOf(path)) ?? "").not.toContain("/auth/signin");
     }
   });

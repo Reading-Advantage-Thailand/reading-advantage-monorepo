@@ -1,7 +1,4 @@
-import { redirect } from "@/i18n/navigation";
-import { BookLanding } from "@/components/book-link/book-landing";
-import { BookLinkCase } from "@/components/book-link/book-link-case";
-import { openBookLink } from "@/lib/book-link/open-book-link";
+import { renderBookLink } from "@/components/book-link/render-book-link";
 
 /**
  * The printed QR link (FR-16): `/b/<book>/<n>` (for example `/b/o3-2/5`). The shared lookup
@@ -13,8 +10,5 @@ import { openBookLink } from "@/lib/book-link/open-book-link";
  */
 export default async function BookLessonLinkPage({ params }: { params: Promise<{ locale: string; book: string; n: string }> }) {
   const { locale, book, n } = await params;
-  const outcome = await openBookLink({ locale, book, n, writing: false });
-  if (outcome.type === "redirect") return redirect({ href: outcome.href, locale });
-  if (outcome.type === "landing") return <BookLanding {...outcome} />;
-  return <BookLinkCase {...outcome} />;
+  return renderBookLink({ locale, book, n, writing: false });
 }

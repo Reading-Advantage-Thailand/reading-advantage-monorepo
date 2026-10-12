@@ -36,12 +36,12 @@ export async function openBookLink(params: { locale: string; book: string; n: st
   const { locale, book, writing = false } = params;
   // Only plain digits count; "1e1", "0x5", "1.5", "-1" become NaN and give the no-lesson page.
   const number = /^[1-9]\d*$/.test(params.n) ? Number(params.n) : Number.NaN;
-  const where = { book, number };
+  const where = { book: book.slice(0, 64), number };
   const user = await currentUser();
   const homeHref = homeOf(user?.role);
   const failed = (error: unknown): BookLinkOutcome => {
     logger.error("book_link.lookup_failed", { ...where, error });
-    return { type: "case", name: "retry", homeHref, retryHref: `/b/${book}/${params.n}${writing ? "/writing" : ""}` };
+    return { type: "case", name: "retry", homeHref, retryHref: `/b/${encodeURIComponent(book)}/${encodeURIComponent(params.n)}${writing ? "/writing" : ""}` };
   };
 
   let result;

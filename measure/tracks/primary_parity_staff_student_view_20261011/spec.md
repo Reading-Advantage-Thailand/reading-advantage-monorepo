@@ -58,10 +58,10 @@ the test list of Story S2.
 
 | Kind | Write path | Check today |
 | --- | --- | --- |
-| Server action | `actions/question.ts:61` `finishQuiz` (user_activity, article_activity_logs, xp_logs, GP, users.xp, evidence job) | session only |
-| Server action | `actions/question.ts:23` `retakeQuiz` (deletes a user_activity row) | session only |
+| Server action | `actions/question.ts:63` `finishQuiz` (user_activity, article_activity_logs, xp_logs, GP, users.xp, evidence job) | session only |
+| Server action | `actions/question.ts:25` `retakeQuiz` (deletes a user_activity row) | session only |
 | Server action | `actions/user.ts:28` `updateUserActivity` (lesson game rounds: activity, XP, GP) | session only |
-| Server action | `actions/article.ts:77` `fetchArticleActivity` (inserts ARTICLE_READ on mount, `server/models/articleModel.ts:627`) | session only |
+| Server action | `actions/article.ts:25` `fetchArticleActivity` (inserts ARTICLE_READ on mount, `server/models/articleModel.ts:312`) | session only |
 | Server action | `actions/flashcard.ts:206` `saveFlashcard`, `:865` `saveArticleToFlashcard`, `:715` `reviewCard`, `:652` `deleteFlashcardCard` | session only (reviewCard also checks the deck owner) |
 | Server action | `actions/avatar.ts:15` `setAvatarProfileAction` (`packages/domain/src/primary-avatar/avatar.ts:67`) | session and school, no role check |
 | API route | `app/api/lessons/[articleId]/route.ts:47` POST (lesson_progress, `recordLessonStep`) | session only |
@@ -76,8 +76,11 @@ the test list of Story S2.
 | API route | `app/api/flashcard/decks/[deckId]/sentences-for-matching`, `sentences-for-ordering`, `sentences-for-cloze`, `words-for-ordering` (activity, XP, GP) | `article:read` (all four roles) |
 | API route | `app/api/flashcard/cards/[cardId]/review/route.ts:23` | `article:read` |
 | API route | `app/api/articles/questions/[articleId]/route.ts:29` POST (`userModel.ts:93`) | none |
-| Page load | `student/home/page.tsx:105` `awardPowerUps`; `getAvatarState` (`ensureStarterSet`) on home, avatar, shop, games, story games, battle | — |
-| Page load | `student/read/[articleId]/page.tsx:126-128` `saveArticleToFlashcard` | — |
+| API route | `app/api/flashcard/save/[id]/route.ts:14` POST (added in Phase 0) | `article:read` |
+| API route | `app/api/users/activitylog/[id]/route.ts:14` POST (`handleUpdateUserActivity`, added in Phase 0) | session and owner id |
+| Page load | `student/home/page.tsx:105` `awardPowerUps`; `getAvatarState` (`ensureStarterSet`) at `home/page.tsx:76`, `avatar/page.tsx:43`, `avatar/shop/page.tsx:34`, `quest/battle/page.tsx:54`, `games/apk/[cartridgeId]/page.tsx:52`, `games/story/page.tsx:29` | — |
+| Page load | `student/read/[articleId]/page.tsx:122-125` `saveArticleCardsAfterQuiz` (already limited to STUDENT; keep, add a test) | role check |
+| Page load | `packages/domain/src/primary-avatar/shop.ts:119` `getAvatarState` calls `ensureStarterSet` (a write on a read) | — |
 
 The teacher lesson rehearsal page
 (`app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/rehearsal/page.tsx:46`)
@@ -145,7 +148,7 @@ selector for SYSTEM exists today (`primary_parity_admin_dashboard_20261011` adds
   the empty preview state for the school panels (leaderboard, class books, Class Quest). When
   `primary_parity_admin_dashboard_20261011` ships its SYSTEM school selector, preview does not use it
   in this track.
-- **D9 AI feedback.** The SAQ and LAQ feedback call (`actions/question.ts:185` `getFeedback`) writes
+- **D9 AI feedback.** The SAQ and LAQ feedback call (`actions/question.ts:204` `getFeedback`) writes
   nothing, so preview allows it. Reedy stays student-only (it has a voice cost).
 
 ## Stories
@@ -252,3 +255,13 @@ Run each check with the kit of `primary_parity_acceptance_20261011` on its match
   - The settings license form sends PATCH to `/api/licenses/[id]`, which has no PATCH handler.
 - The unused `STUDENT_ACCESS` helper in `lib/permissions.ts:46-48` and `canAccessRoute`
   (`lib/permissions.ts:248`) stay; a later cleanup removes them.
+
+## Phase 0 decisions (2026-10-12)
+
+The owner decided that the set does not stop for owner input. Phase 0 used these defaults. Each
+is recorded in `design/decisions.md`. Look check pending (owner, async).
+
+- D8 SYSTEM school rule: the default of D8 above.
+- D4 banner: a blue hanging `Banner` "Student preview" with "Exit preview" (design `design/design.md`).
+- The verified write-path inventory with `file:line` is in `behavior-contract.md` section 3. It adds two routes
+  (`flashcard/save/[id]`, `users/activitylog/[id]`) and corrects stale lines of the table above.

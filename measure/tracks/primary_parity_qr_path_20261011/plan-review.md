@@ -47,3 +47,42 @@ Findings:
 - Low: the capture harness reports `small-buttons=1`. It is the 36 px language menu icon (as in S4). Both choices are 48 px or more.
 - Owner step: set `TUTOR_LESSON_URL_TEMPLATE` at the cutover (see `plan.md`, Phase S2).
 - S3 note: `/writing` calls `openBookLink({ ..., writing: true })` and renders `BookLanding` for the `landing` outcome, as the reading page does (`app/[locale]/b/[book]/[n]/page.tsx`).
+
+## Phase S3 review (helper, 2026-10-12)
+- No Critical or High finding. No new input path: the lookup, role check, and class check stay in `openBookLink`.
+- Low: the catch segment `[n]/[...rest]` shows the unknown-address page for every reader, with the home link "/" (the view fixes it). It does not read the session.
+- Low: `/b/<book>` with no number is not covered by this phase (the locale catch-all handles it).
+- Low: no new message keys in this phase; the five locale files stay in parity.
+
+## Phase S6 review (helper, 2026-10-12, diff 47beedaa3..HEAD)
+
+- Plan compliance: all S6 tasks done. The browser run stays open (batch run, orchestrator).
+- Security: the block prints no password, class code, or name. It uses the open class code in memory only. The judges see paths, status codes, and page text only. No app code changed.
+- Tests: `qr-path-checks.test.mjs` (7 tests). The kit suite has 87 tests. `node --check` passes. The browser flow has no run yet.
+- Medium: the block reuses `first.code` and the open class of the sign-in section. With `CLASS_BOOK_CHECK=off` the book is not assigned and checks 4 and 5 can fail. The README says it.
+- Low: the sign-in picks the first name in the list. The demo class lists the same name five times, so any name works.
+- Low: the script now prints `STOP <name>` for each failed check at the end. This changes the output for all blocks.
+- Low: the case checks accept 4xx status. Spec S6 says "not 5xx".
+- Low: the Tutor choice is not checked. The template is an owner setting that may be empty.
+- Note: the command sheet file is in the rehearsal 3 track. This phase gave the proposed text only (`runbook-changes.md`).
+
+## Phase A review (helper, 2026-10-12, diff 4bcb09d81..HEAD)
+
+- Plan compliance: behavior contract, pair list (9 pairs), steps module, data checks, and `acceptance.md` are written. The kit run and the captures stay `[ ]` (batch capture, orchestrator).
+- Tests: kit suite `vitest run --root scripts/primary-parity` gives 7 files, 87 tests, all pass. `PairList` parses the pair list (9 pairs). No app code changed in this phase.
+- Security: no name, password, or class code in any file. The pair list holds only the legacy article id of a printed code.
+- Deviation: the plan said `legacyPath` is `/student/read/{map:article:<id>}`. The kit gives the legacy app the new id, so `legacyPath` holds the raw id. The new path needs no placeholder.
+- Deviation: the kit schema needs a locale at the start of each path. The unprefixed printed URL (A4) is a curl check in `acceptance.md`.
+- Medium: the sign-in from the landing is not a pair (the capture signs in by role before the page). The browser check block "QR path" covers it. Pair QR-A1b shows only the move to the sign-in page.
+- Medium: pair QR-A3 needs Origins 3.2 assigned to the demo class. Run the class book browser check first.
+- Low: the legacy app has no `/writing` route, so no legacy pair for the writing code shows a page. QR-A2 shows the legacy not-found page.
+- Low: the migration id-map column is `table_name` (SQL check 3). Check 3 expects a row for the printed article.
+- Lesson for the shared files: a pair list for a signed-out then signed-in flow needs two pairs (PUBLIC and role). The kit signs in before the page opens.
+
+## Review fixes (helper, 2026-10-12)
+
+- High, fixed (bf74dfaf6): `safeCallbackPath` now runs the `//`, backslash, and control-character checks on the raw value, the percent-decoded value, and both after the locale strip. It refuses a value that still starts with a locale after the strip (`/th/en//evil.com`) and a value that does not decode. Tests: the seven listed values plus four more. The staff form falls back to the normal home for `/th//evil.com` and `/th/%2F%2Fevil.com`.
+- Callers of `safeCallbackPath`: `teacher-signin-form.tsx` (direct), `bookCallbackPath`, and `studentCallbackPath` (both in `safe-callback-path.ts`). The only outside caller of those is `components/student-login/use-student-home.ts` (via `studentCallbackPath`). All are now safe.
+- Low, fixed (3fd281f80): the logged `book` (open-book-link and the unknown-address page) and `n` (page) are cut to 64 characters.
+- Low, fixed (3fd281f80): `retryHref` uses `encodeURIComponent` for the book and the number.
+- Medium, checked, no change: the target pages `/student/lesson/<articleId>?type=article` and `/student/read/<articleId>` need a signed-in user only. They load the article by id and do not check the class books. The legacy app at bfea121 did the same: `getArticleById` used `findUnique({ where: { id } })` with no class check, and the lesson page had no check. Open access is legacy behavior; no change.

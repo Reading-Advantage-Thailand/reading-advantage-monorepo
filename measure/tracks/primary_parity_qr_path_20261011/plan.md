@@ -102,35 +102,49 @@ _Story ref: spec.md#story-s2_
     - The real Tutor URL template is not known in this run. Until the owner sets it, the landing shows one choice.
     - Exact env line for the Primary service: `TUTOR_LESSON_URL_TEMPLATE=https://<tutor host and path with {book} and {n}>` (for example `https://liff.line.me/<id>/b/{book}/{n}`). The template must start with `https://`. Only `{book}` and `{n}` are filled.
 
-## Phase S3: Writing QR code target
+## Phase S3: Writing QR code target [checkpoint: 95acef17e]
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Write the tests (red)
-    - [ ] New `app/[locale]/b/[book]/[n]/writing/__tests__/page.test.tsx`: student to `/student/read/<articleId>`; teacher to the lesson page; signed out shows the landing with the `/writing` callback; not ready and no class give the S4 pages
-- [ ] Task: Implement (green)
-    - [ ] New `app/[locale]/b/[book]/[n]/writing/page.tsx`; share one function with the reading page for the lookup and the cases (no copy of the logic)
-    - [ ] An address `/b/<book>/<n>/<other>` gives the "unknown address" page of S4 (a catch segment or the existing catch-all, whichever the test shows works)
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Writing QR code target' (Protocol in workflow.md)
+- [x] Task: Write the tests (red)
+    - [x] New `app/[locale]/b/[book]/[n]/writing/__tests__/page.test.tsx`: student to `/student/read/<articleId>`; teacher to the lesson page; signed out shows the landing with the `/writing` callback; not ready and no class give the S4 pages
+    - [x] New `[...rest]/__tests__/page.test.tsx` for the unknown address; one more signed-out proxy case in `lib/__tests__/default-locale.test.ts`
+- [x] Task: Implement (green)
+    - [x] New `app/[locale]/b/[book]/[n]/writing/page.tsx`; both pages call `components/book-link/render-book-link.tsx` (`renderBookLink`), which calls `openBookLink`; no copy of the logic
+    - [x] An address `/b/<book>/<n>/<other>` gives the "unknown address" page: new catch segment `[n]/[...rest]/page.tsx` (logs `book_link.unknown_address`)
+- [x] Task: Measure - User Manual Verification 'Phase S3: Writing QR code target' (Protocol in workflow.md) - look check pending (owner, async)
+    - Captures (8 PNG, 2 states, 375 px and 1280 px, day and night): `~/Desktop/primary-parity-progress/captures/qr_path/phaseS3/`.
+    - Manual steps: on a running build open `/th/b/o3-2/5/writing` signed out: the landing says "Writing task"; sign in as a student: the writing page of the article opens.
+    - As a teacher: the lesson page opens. Open `/th/b/o3-2/5/other`: the unknown-address page shows, not a 404.
 
-## Phase S6: Check one /b/ URL in the go/no-go script
+## Phase S6: Check one /b/ URL in the go/no-go script [checkpoint: 2675f7927]
 _Story ref: spec.md#story-s6_
 
-- [ ] Task: Add the block to `scripts/primary-parity/cutover-check.mjs`
-    - [ ] Checks of spec S6: signed-out landing, student sign-in with the class code, lesson flow, the writing code, `/b/zz/1`, `/b/o3-2/999`
-    - [ ] Use the tracked path of the script from `primary_parity_acceptance_20261011`
-- [ ] Task: Write the text for the command sheet and §10
-    - [ ] In `measure/tracks/primary_parity_qr_path_20261011/runbook-changes.md`: the new C13 agent step and owner step, and the §10 item for `docs/deployment/primary-cutover-migration-spec.md`
-    - [ ] Tell `primary_parity_rehearsal3_20261011` that the file is ready
-- [ ] Task: Measure - User Manual Verification 'Phase S6: Check one /b/ URL in the go/no-go script' (Protocol in workflow.md)
+- [x] Task: Add the block to `scripts/primary-parity/cutover-check.mjs`
+    - [x] Checks of spec S6: signed-out landing, student sign-in with the class code, lesson flow, the writing code, `/b/zz/1`, `/b/o3-2/999`
+    - [x] Use the tracked path of the script from `primary_parity_acceptance_20261011`
+- [x] Task: Write the text for the command sheet and §10
+    - [x] In `measure/tracks/primary_parity_qr_path_20261011/runbook-changes.md`: the new C13 agent step and owner step, and the §10 item for `docs/deployment/primary-cutover-migration-spec.md`
+    - [x] Tell `primary_parity_rehearsal3_20261011` that the file is ready (the orchestrator tells the track)
+- [x] Task: Measure - User Manual Verification 'Phase S6: Check one /b/ URL in the go/no-go script' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: read `browser-check/README.md`. The browser run is a batch run (orchestrator) and stays open: after it, the 12 `qr` checks must pass twice.
+- [ ] Task: Run the QR block in the browser (batch run (orchestrator))
+    - Run steps: `browser-check/README.md`. Result file: `browser-check/result.md`.
 
-## Phase A: Acceptance
+## Phase A: Acceptance [checkpoint: dc3f316b2]
 
-- [ ] Task: Write the behavior contract
-    - [ ] Fill `docs/runbooks/primary-behavior-contract-template.md` for this track (legacy: printed old QR codes; target: this spec) in `measure/tracks/primary_parity_qr_path_20261011/behavior-contract.md`
-- [ ] Task: Write `acceptance-pairs.json` (kit FR-7)
-    - [ ] Pairs A1 to A5 of the spec table, with roles `PUBLIC`, `STUDENT`, `TEACHER`; `steps` modules for the sign-in; `legacyPath` is the old `/student/read/{map:article:<id>}` path
-- [ ] Task: Run the kit of `primary_parity_acceptance_20261011`
+- [x] Task: Write the behavior contract
+    - [x] Filled in `behavior-contract.md` (legacy: printed old QR codes `/student/read/<cuid>`; legacy has no `/b/` and no `/writing` route)
+- [x] Task: Write `acceptance-pairs.json` (kit FR-7)
+    - [x] 9 pairs, QR-A1 to QR-A5b, roles PUBLIC, STUDENT, TEACHER; steps module `acceptance-steps-qr-path.ts` (school choice to sign-in page)
+    - Correction to the plan text: `legacyPath` holds the raw legacy article id `cmtyina5w000ps601n6htj9g3` (no `{map:...}`), because the kit would give the legacy app the new id. `newPath` uses the book key, so it needs no placeholder either.
+    - Deviation: the kit requires a locale in every path, so A4 (unprefixed `/b/o3-2/1`) is a pair on `/th/b/o3-2/1` plus a curl check in `acceptance.md`. The full sign-in is the browser check, not a pair.
+    - Data checks: `qr-path-data-checks.sql` (read only).
+- [ ] Task: Run the kit of `primary_parity_acceptance_20261011` - batch capture (orchestrator)
     - [ ] `scripts/primary-parity/capture.ts` for each app, then `report.ts`; sign in a demo student and a demo teacher; use the catalogue loaded by `primary_parity_class_books_20261011`
-- [ ] Task: Captures at 375 px and 1280 px, day and night, for the owner look check
-- [ ] Task: Write `measure/tracks/primary_parity_qr_path_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
-- [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
+- [ ] Task: Captures at 375 px and 1280 px, day and night, for the owner look check - batch capture (orchestrator)
+- [x] Task: Write `measure/tracks/primary_parity_qr_path_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
+    - [x] Result cells hold "batch 2"; the owner look check is "pending (owner, async)"
+- [x] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: after the batch capture, open `$P/captures/primary_parity_qr_path_20261011/report.html`. Fill the Result cells of `acceptance.md`.
+    - Check the landing (QR-A1, QR-A2) and the case pages (QR-A5a, QR-A5b) at 375 px and 1280 px, day and night.
+    - Run the two curl commands of `acceptance.md` for the unprefixed URL.

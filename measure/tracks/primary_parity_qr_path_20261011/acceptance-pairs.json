@@ -1,0 +1,131 @@
+{
+  "member": "primary_parity_qr_path_20261011",
+  "pairs": [
+    {
+      "id": "QR-A1",
+      "rows": ["QR-01"],
+      "role": "PUBLIC",
+      "legacyPath": "/en/student/read/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/b/o3-2/1",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-landing]" },
+      "checks": [
+        {
+          "id": "QR-A1-a",
+          "behavior": "New: a signed-out reader sees the landing in the RPG skin with the book name \"Origins 3.2\", the lesson title, and the school choice. A choice for Tutor Advantage shows only when the setting TUTOR_LESSON_URL_TEMPLATE exists. Each choice is 48 px high or more at 375 px. Legacy sends a signed-out reader to the sign-in page, with no book name (difference on purpose)."
+        }
+      ]
+    },
+    {
+      "id": "QR-A1b",
+      "rows": ["QR-01"],
+      "role": "PUBLIC",
+      "legacyPath": "/en/student/read/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/b/o3-2/1",
+      "steps": "./acceptance-steps-qr-path.ts",
+      "checks": [
+        {
+          "id": "QR-A1b-a",
+          "behavior": "New: the school choice goes to the sign-in page and the address keeps callbackUrl=/en/b/o3-2/1. Legacy: the sign-in page has callbackUrl=/student/read/<id> (no locale)."
+        }
+      ]
+    },
+    {
+      "id": "QR-A1c",
+      "rows": ["QR-01"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/b/o3-2/1",
+      "checks": [
+        {
+          "id": "QR-A1c-a",
+          "behavior": "A signed-in student scans the reading code. Legacy: the reading page of the article. New: the student lands in /student/lesson/<article> (the lesson flow), not on a 404 (difference on purpose, Member Question 2 default). The full sign-in from the landing (class code, card, password) is the browser check, cutover-check.mjs block \"QR path\"."
+        }
+      ]
+    },
+    {
+      "id": "QR-A2",
+      "rows": ["QR-02"],
+      "role": "PUBLIC",
+      "legacyPath": "/en/student/read/cmtyina5w000ps601n6htj9g3/writing",
+      "newPath": "/en/b/o3-2/1/writing",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-landing]" },
+      "checks": [
+        {
+          "id": "QR-A2-a",
+          "behavior": "New: a signed-out reader sees the landing with the book name and the line \"Writing task\". Legacy has no /writing route at bfea121, so the old printed writing code shows the generic not-found page (difference on purpose)."
+        }
+      ]
+    },
+    {
+      "id": "QR-A2b",
+      "rows": ["QR-02"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/b/o3-2/1/writing",
+      "checks": [
+        {
+          "id": "QR-A2b-a",
+          "behavior": "A signed-in student scans the writing code. Legacy: the article page (the old writing code does not exist, so this is the article page of the reading code). New: the student lands on /student/read/<article>, the page with the writing question."
+        }
+      ]
+    },
+    {
+      "id": "QR-A3",
+      "rows": ["QR-03"],
+      "role": "TEACHER",
+      "legacyPath": "/en/student/read/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/en/b/o3-2/1",
+      "checks": [
+        {
+          "id": "QR-A3-a",
+          "behavior": "A signed-in teacher scans the reading code. Legacy: the article page with the assign button. New: the lesson page of the first class that has Origins 3.2 (/teacher/class-roster/<class>/lessons/1). Run the class book browser check first so that the book is assigned. A teacher with no class for the book sees the \"no class uses the book\" page with a link to the class list. The staff sign-in with the callback is in the browser check."
+        }
+      ]
+    },
+    {
+      "id": "QR-A4",
+      "rows": ["QR-04"],
+      "role": "PUBLIC",
+      "legacyPath": "/th/student/read/cmtyina5w000ps601n6htj9g3",
+      "newPath": "/th/b/o3-2/1",
+      "checks": [
+        {
+          "id": "QR-A4-a",
+          "behavior": "New: the locale path /th/b/o3-2/1 loads the landing with no further redirect. The pair list needs a locale in every path, so the printed form with no locale (/b/o3-2/1) is a curl check in acceptance.md: one 307 to /th/b/o3-2/1 that keeps the path and the query."
+        }
+      ]
+    },
+    {
+      "id": "QR-A5a",
+      "rows": ["QR-05"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/zzzznotanid",
+      "newPath": "/en/b/zz/1",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-case]" },
+      "checks": [
+        {
+          "id": "QR-A5a-a",
+          "behavior": "New: an unknown book key shows the \"book not known\" page with a link to the student home; status is not 5xx. Legacy has no /b route; an unknown article id is the reference for an error page (difference on purpose)."
+        }
+      ]
+    },
+    {
+      "id": "QR-A5b",
+      "rows": ["QR-05"],
+      "role": "STUDENT",
+      "legacyPath": "/en/student/read/zzzznotanid",
+      "newPath": "/en/b/o3-2/999",
+      "colorSchemes": ["light", "dark"],
+      "waitFor": { "new": "[data-case]" },
+      "checks": [
+        {
+          "id": "QR-A5b-a",
+          "behavior": "New: lesson 999 of Origins 3.2 shows the \"no such lesson\" page with the book name and the range \"Lessons 1 to 14\"; status is not 5xx."
+        }
+      ]
+    }
+  ]
+}
