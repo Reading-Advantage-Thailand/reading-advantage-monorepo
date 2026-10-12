@@ -2616,7 +2616,8 @@
         "students": "Students",
         "classes": "Classes",
         "joined": "Joined",
-        "actions": "Actions"
+        "actions": "Actions",
+        "school": "School"
       },
       "loading": "Loading teachers...",
       "empty": {
@@ -2631,6 +2632,18 @@
         "createError": "Failed to create teacher",
         "updateError": "Failed to update teacher",
         "deleteError": "Failed to delete teacher"
+      },
+      "schoolManage": {
+        "school": "School",
+        "noSchool": "No school",
+        "filterLabel": "Filter by school",
+        "filterAll": "All schools",
+        "notice": "Saving moves the teacher to {school}. Choose the classes of that school below.",
+        "moved": "Teacher moved to the new school",
+        "refusedTitle": "The teacher cannot move yet",
+        "refusedDescription": "{name} owns these classes. Give each class to another owner, then try again.",
+        "refusedClose": "Close",
+        "moveFailed": "The move failed"
       }
     }
   },

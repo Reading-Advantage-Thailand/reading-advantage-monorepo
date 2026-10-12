@@ -10,7 +10,11 @@ import {
   deleteTeacher,
   getTeacherStatistics,
 } from "@/server/models/teacherModel";
-import { validateUser, checkAdminPermissions } from "@/server/utils/auth";
+import { validateUser, checkAdminPermissions, effectiveCallerRole } from "@/server/utils/auth";
+import { db } from "@reading-advantage/db";
+import { AuthError } from "@reading-advantage/auth";
+import { MoveTeacherSchoolError, moveTeacherToSchool } from "@reading-advantage/domain/teachers";
+import { logger } from "@/lib/observability/logger";
 import {
   TeacherData,
   TeachersResponse,
@@ -273,6 +277,10 @@ export const updateTeacherController = async (
 
     const body = await request.json();
     const updateData = body as UpdateTeacherInput;
+    // Only SYSTEM changes a school, and only through POST /api/teachers/[id]/move.
+    if ((body as { schoolId?: unknown })?.schoolId !== undefined && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
+      return NextResponse.json({ error: "Forbidden - only SYSTEM can change the school" }, { status: 403 });
+    }
     if (updateData.password !== undefined && !passwordSchema.safeParse(updateData.password).success) {
       return NextResponse.json({ error: "Invalid password" }, { status: 400 });
     }
@@ -350,5 +358,51 @@ export const deleteTeacherController = async (
       { error: "Internal server error" },
       { status: 500 },
     );
+  }
+};
+
+const moveTeacherBodySchema = z.object({
+  schoolId: z.string().uuid(),
+  classroomIds: z.array(z.string().uuid()).max(200).default([]),
+});
+
+/**
+ * Moves a teacher to another school (SYSTEM only). Calls the domain function `moveTeacherToSchool`.
+ * @param request The request with the JSON body `{ schoolId, classroomIds }`.
+ * @param context The route context with the teacher id.
+ * @returns 200 with the move result, 400 or 409 (with `classNames`) for a refusal, 403 for a non-SYSTEM caller.
+ */
+export const moveTeacherController = async (
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+): Promise<NextResponse> => {
+  try {
+    const { id } = await params;
+    const user = await currentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (user.role !== "SYSTEM") {
+      return NextResponse.json({ error: "Forbidden - SYSTEM access required" }, { status: 403 });
+    }
+    const parsed = moveTeacherBodySchema.safeParse(await request.json().catch(() => ({})));
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    }
+    const result = await moveTeacherToSchool({ db, user, input: { teacherId: id, ...parsed.data } });
+    return NextResponse.json({ success: true, ...result }, { status: 200 });
+  } catch (error) {
+    if (error instanceof MoveTeacherSchoolError) {
+      logger.warn("teacher_move_refused", { code: error.code });
+      return NextResponse.json(
+        { error: error.message, code: error.code, classNames: error.classNames },
+        { status: error.status },
+      );
+    }
+    if (error instanceof AuthError) {
+      return NextResponse.json({ error: "Forbidden - SYSTEM access required" }, { status: 403 });
+    }
+    logger.error("teacher_move_failed", { error });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 };

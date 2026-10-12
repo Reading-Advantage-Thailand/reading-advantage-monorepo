@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
+import { z } from "zod";
 import { eq, and, asc } from 'drizzle-orm';
 import { users, classrooms, classroomStudents, userRoles, roles } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
@@ -14,6 +15,7 @@ interface ClassroomData {
 }
 
 // GET /api/classrooms - Fetch classrooms for admin
+// ?schoolId=<uuid> narrows the list to one school. Only SYSTEM gets it; other roles ignore it.
 export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<ClassroomData[] | { error: string }>> {
@@ -97,7 +99,13 @@ export async function GET(
     const classroomsDb = user.schoolId
       ? tenantDb
       : getUnscopedDB("SYSTEM has no schoolId; lists all classrooms");
+    const rawSchoolId = new URL(request.url).searchParams.get("schoolId");
+    const schoolFilter =
+      sessionRole === "SYSTEM" && rawSchoolId && z.string().uuid().safeParse(rawSchoolId).success
+        ? eq(classrooms.schoolId, rawSchoolId)
+        : undefined;
     const classroomRows = await classroomsDb.select().from(classrooms)
+      .where(schoolFilter)
       .orderBy(asc(classrooms.name));
 
     // For each classroom, fetch students + their roles for the count.

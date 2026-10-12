@@ -39,7 +39,7 @@ describe("GET /api/classrooms authorizes the users.role session (FR-5)", () => {
     mocks.currentUser.mockResolvedValue({ id: "u1", role: "ADMIN", schoolId: "school-a" });
     // caller row, legacy role names, legacy school-admin rows, classrooms
     mocks.selectQueue = [[{ id: "u1" }], [], [], [{ id: "c1", name: "Class", grade: 1 }], [], ];
-    const response = await GET({} as NextRequest);
+    const response = await GET(new Request("http://localhost/api/classrooms") as NextRequest);
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual([
       { id: "c1", name: "Class", grade: "1", studentCount: 0 },
@@ -49,7 +49,7 @@ describe("GET /api/classrooms authorizes the users.role session (FR-5)", () => {
   it("returns nothing, with no unscoped read, for a school-less ADMIN", async () => {
     mocks.currentUser.mockResolvedValue({ id: "u1", role: "ADMIN", schoolId: null });
     mocks.selectQueue = [[{ id: "u1" }], [], []];
-    const response = await GET({} as NextRequest);
+    const response = await GET(new Request("http://localhost/api/classrooms") as NextRequest);
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual([]);
     // Only the caller self-lookup may be unscoped; never the classroom listing.

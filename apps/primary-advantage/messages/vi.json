@@ -2616,7 +2616,8 @@
         "students": "Học sinh",
         "classes": "Lớp",
         "joined": "Tham gia",
-        "actions": "Thao tác"
+        "actions": "Thao tác",
+        "school": "Trường"
       },
       "loading": "Đang tải danh sách giáo viên...",
       "empty": {
@@ -2631,6 +2632,18 @@
         "createError": "Không thể tạo giáo viên",
         "updateError": "Không thể cập nhật giáo viên",
         "deleteError": "Không thể xóa giáo viên"
+      },
+      "schoolManage": {
+        "school": "Trường",
+        "noSchool": "Không có trường",
+        "filterLabel": "Lọc theo trường",
+        "filterAll": "Tất cả trường",
+        "notice": "Khi lưu, giáo viên sẽ chuyển sang {school}. Chọn các lớp của trường đó bên dưới.",
+        "moved": "Đã chuyển giáo viên sang trường mới",
+        "refusedTitle": "Chưa thể chuyển giáo viên",
+        "refusedDescription": "{name} là chủ của các lớp này. Giao từng lớp cho chủ khác rồi thử lại.",
+        "refusedClose": "Đóng",
+        "moveFailed": "Chuyển không thành công"
       }
     }
   },
