@@ -191,6 +191,30 @@ describe("TeacherClassTable", () => {
       expect(lines.slice(1)).toEqual(["Class 5B,5,24,10,42,6.2,900,1000,down,someQuiet", "Class 5A,5,12,11,92,3.1,1500,1000,up,onTrack"]);
     });
 
+    it("starts the file with the UTF-8 byte order mark so Excel shows Thai and Chinese names", async () => {
+      renderTable();
+      fireEvent.click(screen.getByRole("button", { name: en.table.csvLabel }));
+      const bytes = await act(
+        async () =>
+          new Promise<Uint8Array>((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer));
+            reader.readAsArrayBuffer(blobs[0]);
+          }),
+      );
+      expect(Array.from(bytes.slice(0, 3))).toEqual([0xef, 0xbb, 0xbf]);
+    });
+
+    it("revokes the object URL one second after the click, not at once (Safari)", () => {
+      vi.useRealTimers();
+      vi.useFakeTimers({ toFake: ["Date", "setTimeout"] });
+      renderTable();
+      fireEvent.click(screen.getByRole("button", { name: en.table.csvLabel }));
+      expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(1000);
+      expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:csv");
+    });
+
     it("has no CSV button when the teacher has no class", () => {
       renderWithMessages(<TeacherClassTable rows={[]} />);
       expect(screen.queryByRole("button", { name: en.table.csvLabel })).not.toBeInTheDocument();

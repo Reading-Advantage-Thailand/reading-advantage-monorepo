@@ -93,3 +93,6 @@ Lessons (for the orchestrator):
 - Medium fixed (domain): `quoteCsvCell` now adds a leading single quote to text that starts with `=`, `+`, `-`, `@`,
   a tab, or a carriage return (CSV formula injection). Numbers and numeric text such as `-3` stay as they are.
   A cell with a carriage return gets CSV quotes. Tests: `packages/domain/src/__tests__/teacher-class-csv.test.ts`.
+- Medium fixed (app): the CSV download now starts with the UTF-8 byte order mark (Excel shows Thai and Chinese names).
+  `URL.revokeObjectURL` runs in a `setTimeout` of 1 s after `click()`, so Safari does not cancel the download.
+  Tests: `components/teacher/__tests__/teacher-class-table.test.tsx`.
