@@ -52,3 +52,28 @@ Low:
 Shortcut: queries are raw `sql` through `db.execute`, not the Drizzle builder, to match `reference-sql.sql`. A column rename breaks them at run time; the PGlite tests (real migrations) catch that.
 
 Lesson: `tenant-coverage.test.ts` looks for the text `createTenantDB` or `unscoped` in each file with DB access. A shared helper in another file does not satisfy it for the calling file.
+
+## Phase 3: UI (phase start d5222b7ac)
+
+I reviewed the phase diff. No Critical or High finding. The page calls `resolveCreationSchoolId` (no copy), a forbidden or failed load is logged with the logger and goes to the error boundary, each panel parses data that passed the output schema, and the five locale files have the same keys (a test checks it, with the ICU placeholders).
+
+Medium:
+
+- `docs/primary-whats-moved.md:80` still describes the old page ("Data unavailable" cards, sample charts). The orchestrator regenerates or edits it at the closeout.
+- The page test mocks `getSchoolDashboard` and the school picker. The real wiring (client `SchoolSelect` fetching `/api/schools`) has no browser test in this phase; Phase 4 covers it in the side-by-side check.
+- Numbers use `toLocaleString("en-US")`, so Thai, Chinese, and Vietnamese users see western digits with a comma. This matches the other staff pages today.
+
+Low:
+
+- An ADMIN without a school id sees "Choose a school" and no selector.
+- `loading.tsx` has no `Scene`; the skeleton shows on plain background.
+- The `th`, `cn`, `tw`, and `vi` strings are first drafts by the helper. A native check is open.
+- The teacher table keeps the name on one line (`whitespace-nowrap`); a very long name widens the table on a 375 px screen.
+
+Shortcut: the "has a page" cases in `admin-page-config.test.ts` read the file system, as the teacher nav test does.
+
+Lessons:
+
+- `vi.mock("@reading-advantage/db")` without `importActual` fails when the page imports the domain barrel (the barrel needs table exports). Use `importActual` and override only `db`.
+- A harness that bundles the real async page function (with stubs for the session and domain call) tests the real page markup for the captures; it is better than a copy of the markup.
+

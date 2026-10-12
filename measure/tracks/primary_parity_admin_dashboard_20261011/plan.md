@@ -62,23 +62,35 @@ Phase 2 notes (helper, 2026-10-12):
 
 ## Phase 3: UI
 
-- [ ] Task: The dashboard page
-    - [ ] Scene `contained` option (design, Phase 1): add the prop and the class `cq-scene--staff` (wrapper `clip-path: inset(0)`) in `components/rpg/scene.tsx` and `styles/rpg.css`, with a test in `components/rpg/__tests__`; the other two dashboard tracks reuse it
-    - [ ] Red: `app/[locale]/admin/dashboard/__tests__/page.test.tsx` (mock `getSchoolDashboard`; ADMIN sees the six numbers with their labels; `?range=7` passes 7; an unknown range gives 30; an empty school shows the empty states; no "Data unavailable" text; no sample number)
-    - [ ] Green: `app/[locale]/admin/dashboard/page.tsx` (server page, `Scene`, `Panel`, `Sign`), `loading.tsx`, `error.tsx`; panels in `components/admin/dashboard/` (`key-numbers.tsx`, `alert-list.tsx`, `adoption-panel.tsx`, `teachers-table.tsx`, `activity-by-day.tsx`); server errors log with `lib/observability/logger.ts`
-- [ ] Task: Variant block "SYSTEM school selector" (SYS-03)
-    - [ ] Red: page test: SYSTEM without `school` sees the selector and "Choose a school", and `getSchoolDashboard` is not called; SYSTEM with `school=<id>` gets that school; ADMIN with `school=<other id>` gets the session school; a range change keeps `school`
-    - [ ] Green: the page calls `resolveCreationSchoolId` (`server/utils/auth.ts:223`) with the session user (empty `roles` and `SchoolAdmins`, because the session role wins, `server/utils/auth.ts:105-107`); `components/admin/dashboard/school-picker.tsx` wraps `components/admin/school-select.tsx` and sets the URL value
-- [ ] Task: Strings in en, th, cn, tw, vi
-    - [ ] Red: `components/admin/dashboard/__tests__/messages.test.ts`: every `AdminDashboard` key of `messages/en.json` exists in th, cn, tw, and vi (file reading as in `configs/__tests__/sidebar-messages.test.ts`)
-    - [ ] Green: `messages/{en,th,cn,tw,vi}.json`; remove the keys of the deleted components
-- [ ] Task: Variant block "Removals" (FR-16 to FR-18)
-    - [ ] Red: `configs/__tests__/admin-page-config.test.ts` (pattern: `teacher-page-config.test.ts`): the dashboard entry has no `items`, and no entry links to `/admin/dashboard/students` or `/admin/dashboard/teachers`
-    - [ ] Green: delete `components/dashboard/class-activity-chart.tsx`, `components/admin/admin-stats-cards.tsx`, `admin-recent-activity.tsx`, `admin-overview-charts.tsx`, `admin-quick-actions.tsx`, `admin-dashboard-header.tsx`, `app/api/admin/recent-activity/route.ts`, `app/[locale]/admin/dashboard/students/page.tsx`, `app/[locale]/admin/dashboard/teachers/page.tsx`; edit `app/[locale]/admin/page.tsx` (keep the redirect only) and `configs/admin-page-config.ts`
-    - [ ] Tests: delete `components/admin/__tests__/admin-stats-cards-fields.test.tsx`, `app/api/admin/__tests__/recent-activity-route.test.ts`, and `components/admin/__tests__/dashboard-real-data.test.tsx` (the new page test covers its rule); remove only the cases of the deleted components from `components/__tests__/loading-state-behavior.test.tsx`, `loading-state-content.behavior.test.tsx`, `broken-ux-behavior.test.tsx`, and `broken-ux-server-behavior.test.tsx`
-    - [ ] Check that no file imports a deleted path (`grep -rn` for each name)
-- [ ] Task: Run `pnpm --filter primary-advantage test`, then tsc and ESLint on the changed files
-- [ ] Task: Measure - User Manual Verification 'Phase 3: UI' (Protocol in workflow.md)
+- [x] Task: The dashboard page
+    - [x] Scene `contained` option (design, Phase 1): add the prop and the class `cq-scene--staff` (wrapper `clip-path: inset(0)`) in `components/rpg/scene.tsx` and `styles/rpg.css`, with a test in `components/rpg/__tests__`; the other two dashboard tracks reuse it
+    - [x] Red: `app/[locale]/admin/dashboard/__tests__/page.test.tsx` (mock `getSchoolDashboard`; ADMIN sees the six numbers with their labels; `?range=7` passes 7; an unknown range gives 30; an empty school shows the empty states; no "Data unavailable" text; no sample number)
+    - [x] Green: `app/[locale]/admin/dashboard/page.tsx` (server page, `Scene`, `Panel`, `Sign`), `loading.tsx`, `error.tsx`; panels in `components/admin/dashboard/` (`key-numbers.tsx`, `alert-list.tsx`, `adoption-panel.tsx`, `teachers-table.tsx`, `activity-by-day.tsx`); server errors log with `lib/observability/logger.ts`
+- [x] Task: Variant block "SYSTEM school selector" (SYS-03)
+    - [x] Red: page test: SYSTEM without `school` sees the selector and "Choose a school", and `getSchoolDashboard` is not called; SYSTEM with `school=<id>` gets that school; ADMIN with `school=<other id>` gets the session school; a range change keeps `school`
+    - [x] Green: the page calls `resolveCreationSchoolId` (`server/utils/auth.ts:223`) with the session user (empty `roles` and `SchoolAdmins`, because the session role wins, `server/utils/auth.ts:105-107`); `components/admin/dashboard/school-picker.tsx` wraps `components/admin/school-select.tsx` and sets the URL value
+- [x] Task: Strings in en, th, cn, tw, vi
+    - [x] Red: `components/admin/dashboard/__tests__/messages.test.ts`: every `AdminDashboard` key of `messages/en.json` exists in th, cn, tw, and vi (file reading as in `configs/__tests__/sidebar-messages.test.ts`)
+    - [x] Green: `messages/{en,th,cn,tw,vi}.json`; remove the keys of the deleted components
+- [x] Task: Variant block "Removals" (FR-16 to FR-18)
+    - [x] Red: `configs/__tests__/admin-page-config.test.ts` (pattern: `teacher-page-config.test.ts`): the dashboard entry has no `items`, and no entry links to `/admin/dashboard/students` or `/admin/dashboard/teachers`
+    - [x] Green: delete `components/dashboard/class-activity-chart.tsx`, `components/admin/admin-stats-cards.tsx`, `admin-recent-activity.tsx`, `admin-overview-charts.tsx`, `admin-quick-actions.tsx`, `admin-dashboard-header.tsx`, `app/api/admin/recent-activity/route.ts`, `app/[locale]/admin/dashboard/students/page.tsx`, `app/[locale]/admin/dashboard/teachers/page.tsx`; edit `app/[locale]/admin/page.tsx` (keep the redirect only) and `configs/admin-page-config.ts`
+    - [x] Tests: delete `components/admin/__tests__/admin-stats-cards-fields.test.tsx`, `app/api/admin/__tests__/recent-activity-route.test.ts`, and `components/admin/__tests__/dashboard-real-data.test.tsx` (the new page test covers its rule); remove only the cases of the deleted components from `components/__tests__/loading-state-behavior.test.tsx`, `loading-state-content.behavior.test.tsx`, `broken-ux-behavior.test.tsx`, and `broken-ux-server-behavior.test.tsx`
+    - [x] Check that no file imports a deleted path (`grep -rn` for each name)
+- [x] Task: Run `pnpm --filter primary-advantage test`, then tsc and ESLint on the changed files
+- [x] Task: Measure - User Manual Verification 'Phase 3: UI' (Protocol in workflow.md) (look check pending (owner, async))
+
+Phase 3 notes (helper, 2026-10-12):
+
+- Defaults used (no member question open in this phase): the Phase 1 defaults stay (no seat alert when seats = 0; the `by` URL value is `cefr` or `grade`, an unknown value gives `cefr`). ADMIN without a school id sees the "Choose a school" state with no selector (it cannot pick a school).
+- Deviation: the page test mocks `getSchoolDashboard` and uses the real `resolveCreationSchoolId` with a fake `db.select` chain (the real rule, no copy). `SchoolPicker` is stubbed in the page test and has its own test.
+- Deviation: the new strings replace the whole `AdminDashboard` namespace (the old keys served only the deleted components). `lib/__tests__/removed-surfaces.test.ts` now checks that `AdminDashboard.quickActions` is gone.
+- Deviation: the "has a page" cases of the nav test run for each admin nav href (pattern of the teacher test). All pass.
+- Files: `app/[locale]/admin/dashboard/{page,loading,error}.tsx`; `components/admin/dashboard/{href,range-signs,key-numbers,alert-list,adoption-panel,teachers-table,activity-by-day,school-picker}.tsx`; `Scene` prop `contained` (class `cq-scene--staff`, rule in `styles/rpg.css`). The teacher home and system dashboard tracks pass `contained` to `Scene` and reuse `dashboardHref`-style URLs on their own.
+- Checks: app `tsc --noEmit` 0 errors; ESLint on the changed folders 0 errors and 0 new warnings; full app suite 229 of 230 files passed; the one failure (`components/__tests__/class-book-pacing-controls.test.tsx`, a `waitFor` timeout under load) passes when run alone and is not in the files of this phase.
+- Captures: `~/Desktop/primary-parity-progress/captures/admin_dashboard/phase3-ui/` (the file list is in `captures.md`). The harness renders the real page function with stubs for the session, the database, and the domain call.
+- Manual verification (owner look check, async): open the captures. Check the key numbers panel (six labels, the meter on Active students); check the alert badges show a word and a mark (not colour only); check the CEFR / grade signs; check the teachers table at 375 px (the class count moves under the name); check the activity grid (one cell for each day, today with the gold outline, Monday first); check `system-choose-*` (selector, "Choose a school", no numbers); check `admin-empty-day-*` (no zeros in key numbers).
+
 
 ## Phase 4: Acceptance
 
