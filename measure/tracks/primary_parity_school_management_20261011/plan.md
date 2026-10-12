@@ -31,7 +31,7 @@ App paths are relative to `apps/primary-advantage`.
 - [x] Task: Owner's look check of the design and of the member questions in the spec section "Out of Scope"; record the answers in `spec.md` — look check pending (owner, async). Defaults used (owner decision 2026-10-12: no stop), recorded in `spec.md`: students only take a seat; the move of an owner is refused (409); the class owner stays on the class.
 - [x] Task: Measure - User Manual Verification 'Phase D: Design' (Protocol in workflow.md) — look check pending (owner, async). Steps: `design/captures.md`, section "Manual verification".
 
-## Phase S1: Admin assigns teachers to a class [checkpoint: CHECKPOINT_SHA]
+## Phase S1: Admin assigns teachers to a class [checkpoint: 57925a1d3]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Contract & Schema Definition
