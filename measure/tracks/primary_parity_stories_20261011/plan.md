@@ -49,22 +49,27 @@ _Story ref: spec.md#story-s1_
 - [x] Task: Measure - User Manual Verification 'Phase S1: The ETL brings the stories, chapters, and chapter questions' (Protocol in workflow.md)
     - Step 1: Read `etl-run.md`. The counts match the legacy copy. Step 2: Run `etl-cloud-step.md` (orchestrator or owner).
 
-## Phase S2: Stories tab in Read
+## Phase S2: Stories tab in Read [checkpoint: CKPT]
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Contracts for the story list
-    - [ ] `packages/domain/src/stories/contracts.ts`: Zod input (level window, genre, search, page) and output (story cards) for `listPrimaryStories`; export from `packages/domain/src/stories/index.ts`
-- [ ] Task: Tests for the story list
-    - [ ] `packages/domain/src/__tests__/stories.test.ts`: the level window (raLevel ±1), published only, genre, search, paging; staff see every published story
-    - [ ] `lib/__tests__/storage-config.test.ts`: `getStoryImageKey` uses `image ?? id`
-    - [ ] `app/[locale]/(student)/student/read/__tests__/read-tabs.test.tsx`: the tab sign, Articles selected by default, the toolbar keeps four tabs
-- [ ] Task: Implement the story list
-    - [ ] `packages/domain/src/stories/queries.ts`: `listPrimaryStories` (and use the `genre` input, which `listStories` ignores today); rebuild the domain `dist/`
-    - [ ] `lib/storage-config.ts`: `getStoryImageKey`, `getStoryImageUrl`
-    - [ ] `app/[locale]/(student)/student/read/page.tsx`: the tab sign; `app/[locale]/(student)/student/read/stories/page.tsx`, `loading.tsx`, `error.tsx`
-    - [ ] `components/stories/story-shelf.tsx`, `components/stories/story-filters.tsx`; copy keys in `messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Stories tab in Read' (Protocol in workflow.md)
+- [x] Task: Contracts for the story list
+    - [x] `packages/domain/src/stories/contracts.ts`: Zod input (level window, genre, search, page) and output (story cards) for `listPrimaryStories`; export from `packages/domain/src/stories/index.ts`
+- [x] Task: Tests for the story list
+    - [x] `packages/domain/src/__tests__/stories.test.ts`: the level window (raLevel ±1), published only, genre, search, paging; staff see every published story
+    - [x] `lib/__tests__/storage-config.test.ts`: `getStoryImageKey` uses `image ?? id`
+    - [x] `app/[locale]/(student)/student/read/__tests__/read-tabs.test.tsx`: the tab sign, Articles selected by default, the toolbar keeps four tabs
+- [x] Task: Implement the story list
+    - [x] `packages/domain/src/stories/queries.ts`: `listPrimaryStories` (and use the `genre` input, which `listStories` ignores today); rebuild the domain `dist/`
+    - [x] `lib/storage-config.ts`: `getStoryImageKey`, `getStoryImageUrl`
+    - [x] `app/[locale]/(student)/student/read/page.tsx`: the tab sign; `app/[locale]/(student)/student/read/stories/page.tsx`, `loading.tsx`, `error.tsx`
+    - [x] `components/stories/story-shelf.tsx`, `components/stories/story-filters.tsx`; copy keys in `messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S2: Stories tab in Read' (Protocol in workflow.md) (look check pending (owner, async))
+    - Captures: `~/Desktop/primary-parity-progress/captures/stories/phaseS2/` (`tabs`, `shelf`, `shelf-genre`, `shelf-empty`, `shelf-page2`; day and night; 375 and 1280; 20 files). Real covers from the bucket, real components, demo cards.
+    - Step 1: Open the PNG files. Check the tab sign, the shelf, the covers (3:4), the genre row, and the page turn.
+    - Step 2: Check that no text overflows at 375 px and that each control is 48 px tall.
+    - Step 3: Open `/student/read` and `/student/read/stories` as a level 5 student; the list shows levels 4 to 6.
+    - Defaults used: D9 level window (raLevel +/- 1) on the list; staff see every published story, with no window text.
 
 ## Phase S3: Story page
 _Story ref: spec.md#story-s3_

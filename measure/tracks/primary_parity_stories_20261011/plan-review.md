@@ -38,3 +38,27 @@ Low:
 - `QUESTION_ORDER_SQL` now partitions by `coalesce(article_id, story_chapter_id)`; the existing order test got a `story_chapter_id` column.
 
 Shortcuts: none. Lessons: a nullable owner column needs a check constraint that keeps one owner (added). A shared worktree and `git commit --amend` by another helper can change the sha of a commit.
+
+## Phase S2: Stories tab in Read (phase review, 2026-10-12)
+
+Diff: `listPrimaryStories` and its Zod contracts (`packages/domain/src/stories`), the `./stories` export, `getStoryImageKey` and `getStoryImageUrl`, the tab sign, the shelf, the filters, the page, `loading.tsx`, `error.tsx`, and the `Stories` copy in five locale files.
+Checks: domain test 15 of 15; app tests in `read/` and `storage-config` 33 of 33; app `tsc` clean; eslint on the changed files has 0 errors; JSDoc on each export; no `console` in new code; key parity (same 24 keys in en, th, cn, tw, vi); Zod parse on input and output; `assertCan("story:list")`; `stories` is a global table, read through `unscoped` with a reason.
+
+Critical and High: none.
+
+Medium:
+- The th, cn, tw, and vi `Stories` keys hold English text. No approved translation exists. A translator must fill them before the cutover.
+- Each book links to `/student/read/stories/<id>`. That page comes in S3. Until S3 lands, a tap gives a 404. Do not merge S2 alone to master.
+- The genre signs show the legacy names, for example "Children's Sci-Fi". Phase 0 mock cut the prefix "Children's ". The look check can decide.
+- The student window uses `user.level` as the RA level. Staff in preview see every published story with no window text, as the spec says.
+- The page turn counts the pages from the total. The page query has no cap check: a page above the last gives the empty state.
+- The shelf planks cover only the cells of a partial last row. The look check can judge this.
+- The unit test for `listPrimaryStories` checks the condition list with a mock; no real Postgres test of the ILIKE escape.
+- Pre-existing, not from this track: `components/__tests__/component-deduplication-behavior.test.tsx` and `loading-state-flow.behavior.test.tsx` fail to load because `packages/sales-knowledge/dist/data/evidence/release-candidate.json` is missing.
+
+Low:
+- `listStories` (old query) still ignores `genre`. Nothing calls it.
+- The cover picture of a story with no bucket file shows the book icon (client `onError`).
+- The harness used gcloud read-only copies of 8 cover PNG files (scratch folder, not in the repository).
+
+Shortcuts: none. Deviations: the plan names `components/stories/story-filters.tsx` as a client component; it is a server component (plain GET form), so the filters need no script. Lessons: the mock DB has no `selectDistinct`; use `groupBy`.
