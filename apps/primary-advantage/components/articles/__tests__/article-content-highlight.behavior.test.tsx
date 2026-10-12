@@ -6,7 +6,7 @@
  * must clear that timer and pause the audio element.
  */
 import "@testing-library/jest-dom/vitest";
-import { fireEvent, screen } from "@testing-library/react";
+import { act, fireEvent, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const fetchArticleActivityMock = vi.fn();
@@ -93,31 +93,55 @@ function setPlaybackTime(audio: HTMLAudioElement, seconds: number): void {
   });
 }
 
-describe("ArticleContent highlight timer cleanup", () => {
-  it("clears the armed highlight timer on unmount", () => {
-    const { container, unmount } = renderWithMessages(
-      <ArticleContent article={article} />,
-    );
+describe("ArticleContent highlight loop cleanup", () => {
+  let frames: Map<number, FrameRequestCallback>;
+  let nextId: number;
+
+  beforeEach(() => {
+    frames = new Map();
+    nextId = 1;
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      frames.set(nextId, cb);
+      return nextId++;
+    });
+    vi.stubGlobal("cancelAnimationFrame", (id: number) => frames.delete(id));
+  });
+
+  it("follows the voice with one frame at a time and leaves no frame or timer after unmount", () => {
+    const { container, unmount } = renderWithMessages(<ArticleContent article={article} />);
     const audio = container.querySelector("audio") as HTMLAudioElement;
     expect(audio).not.toBeNull();
 
-    vi.useFakeTimers();
+    fireEvent.click(screen.getByRole("button", { name: "Listen and read along" }));
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"] });
     const baseline = vi.getTimerCount();
 
-    // First word: establishes the current word index without arming a timer.
-    setPlaybackTime(audio, 0.05);
-    fireEvent.timeUpdate(audio);
-    expect(vi.getTimerCount()).toBe(baseline);
+    // No frame before the audio plays.
+    expect(frames.size).toBe(0);
+    act(() => void audio.dispatchEvent(new Event("play")));
+    expect(frames.size).toBe(1);
 
-    // Skipping to the third word arms the 100 ms intermediate-word timer.
+    // A jump of two words lights the third word at once (no 100 ms chain of timers).
     setPlaybackTime(audio, 2.05);
-    fireEvent.timeUpdate(audio);
-    expect(vi.getTimerCount()).toBe(baseline + 1);
+    const [id, run] = [...frames.entries()][0];
+    frames.delete(id);
+    act(() => run(0));
+    expect(frames.size).toBe(1);
+    expect(container.querySelector(".bg-blue-500")?.textContent).toBe("gamma");
 
     unmount();
 
-    // The unmount cleanup disarms the highlight timer: nothing fires after.
+    expect(frames.size).toBe(0);
     expect(vi.getTimerCount()).toBe(baseline);
+  });
+
+  it("stops the loop on pause", () => {
+    const { container } = renderWithMessages(<ArticleContent article={article} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    act(() => void audio.dispatchEvent(new Event("play")));
+    expect(frames.size).toBe(1);
+    act(() => void audio.dispatchEvent(new Event("pause")));
+    expect(frames.size).toBe(0);
   });
 });
 
