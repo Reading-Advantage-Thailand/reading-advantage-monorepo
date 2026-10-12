@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { passwordSchema } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
 import {
@@ -47,6 +48,9 @@ export const getTeachersController = async (
     const limit = parseInt(searchParams.get("limit") || "50");
     const search = searchParams.get("search") || "";
     const role = searchParams.get("role") || "";
+    // The school filter is for SYSTEM only (the model ignores it for other callers).
+    const schoolIdParam = searchParams.get("schoolId");
+    const schoolId = schoolIdParam && z.string().uuid().safeParse(schoolIdParam).success ? schoolIdParam : undefined;
 
     // Get teachers data using model
     const { teachers, totalCount } = await getTeachers({
@@ -55,6 +59,7 @@ export const getTeachersController = async (
       search,
       role,
       userWithRoles,
+      schoolId,
     });
 
     // Get statistics

@@ -53,6 +53,7 @@ import {
 import { cn } from "@/lib/utils";
 import { generateRandomClassCode } from "@/lib/utils";
 import { fetchJsonList } from "@/lib/fetch-json";
+import { ClassroomTeacherPicker } from "@/components/admin/classroom-teacher-picker";
 
 interface Classroom {
   id: string;
@@ -64,6 +65,7 @@ interface Classroom {
   createdAt: string;
   updatedAt: string;
   schoolId?: string;
+  ownerId?: string;
   school?: {
     id: string;
     name: string;
@@ -110,6 +112,8 @@ export function ClassroomsTable() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  const [teacherIds, setTeacherIds] = useState<string[]>([]);
 
   // Form states
   const [formData, setFormData] = useState({
@@ -198,12 +202,15 @@ export function ClassroomsTable() {
         body: JSON.stringify({
           classroomName: formData.name,
           grade: formData.grade || undefined,
+          teacherIds,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to update classroom");
+        const failure = new Error(errorData.error || "Failed to update classroom") as Error & { code?: string };
+        failure.code = errorData.code;
+        throw failure;
       }
 
       setIsEditDialogOpen(false);
@@ -220,7 +227,8 @@ export function ClassroomsTable() {
       });
     } catch (error) {
       console.error("Error updating classroom:", error);
-      toast.error(t("toast.updateFailed"));
+      const refused = ["CROSS_SCHOOL_TEACHER", "NOT_A_TEACHER"].includes((error as { code?: string }).code ?? "");
+      toast.error(t(refused ? "toast.teachersRefused" : "toast.updateFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -262,6 +270,7 @@ export function ClassroomsTable() {
       classCode: classroom.classCode || "",
       passwordStudents: classroom.passwordStudents || "",
     });
+    setTeacherIds(classroom.teachers?.map((row) => row.user.id) ?? []);
     setIsEditDialogOpen(true);
   };
 
@@ -544,6 +553,17 @@ export function ClassroomsTable() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            <div>
+              <Label>{t("teachers")}</Label>
+              {selectedClassroom && (
+                <ClassroomTeacherPicker
+                  schoolId={selectedClassroom.schoolId}
+                  ownerId={selectedClassroom.ownerId}
+                  selectedIds={teacherIds}
+                  onChange={setTeacherIds}
+                />
+              )}
             </div>
             <div>
               <Label htmlFor="edit-classCode">{t("classCode")}</Label>

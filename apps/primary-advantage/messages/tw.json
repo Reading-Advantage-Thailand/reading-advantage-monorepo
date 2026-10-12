@@ -208,7 +208,16 @@
         "updateFailed": "更新教室失敗",
         "updateSuccess": "更新教室成功",
         "deleteSuccess": "教室刪除成功",
-        "deleteFailed": "刪除教室失敗"
+        "deleteFailed": "刪除教室失敗",
+        "teachersRefused": "教師未變更。有教師屬於其他學校。"
+      },
+      "picker": {
+        "hint": "勾選教這個班級的教師。",
+        "owner": "班主任",
+        "loading": "正在載入教師...",
+        "loadFailed": "教師清單載入失敗。",
+        "empty": "這所學校沒有教師。",
+        "selected": "{count, plural, other {已選擇 # 位教師}}。班主任會留在班級中。"
       }
     },
     "Students": {

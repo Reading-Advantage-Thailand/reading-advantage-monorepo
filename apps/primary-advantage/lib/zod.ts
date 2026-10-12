@@ -188,6 +188,8 @@ export const updateClassroomBodySchema = z.object({
     .string()
     .regex(/^(?:[1-9]|1[0-2])$/, "Grade must be from 1 to 12")
     .optional(),
+  /** The full list of teacher ids of the class (admin and SYSTEM only). The class owner stays. */
+  teacherIds: z.array(z.string().min(1)).max(200).optional(),
 });
 
 /** Parsed body of the classroom PATCH request. */

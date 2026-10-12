@@ -208,7 +208,16 @@
         "updateFailed": "Failed to update classroom",
         "updateSuccess": "Classroom updated successfully",
         "deleteSuccess": "Classroom deleted successfully",
-        "deleteFailed": "Failed to delete classroom"
+        "deleteFailed": "Failed to delete classroom",
+        "teachersRefused": "The teachers did not change. A teacher belongs to another school."
+      },
+      "picker": {
+        "hint": "Check the teachers who teach this class.",
+        "owner": "Class owner",
+        "loading": "Loading teachers...",
+        "loadFailed": "The teacher list did not load.",
+        "empty": "This school has no teachers.",
+        "selected": "{count, plural, one {# teacher selected} other {# teachers selected}}. The class owner stays on the class."
       }
     },
     "Students": {
