@@ -65,6 +65,7 @@ const lesson = {
   summary: "May meets her class.",
   thaiSummary: "เมย์พบเพื่อนร่วมชั้น",
   stepsDone: [1, 2],
+  hasPrint: true,
 };
 
 /**
@@ -99,6 +100,17 @@ describe("teacher lesson page (FR-8, FR-9, FR-12, FR-13)", () => {
     expect(screen.getByRole("link", { name: en.lesson.rehearsal })).toHaveAttribute("href", `${HERE}/rehearsal`);
     expect(mocks.getLessonGuide).toHaveBeenCalledWith({ db: {}, locale: "en" });
     expect(mocks.getTeacherLesson).toHaveBeenCalledWith(expect.objectContaining({ classBookId: CB, number: 2 }));
+  });
+
+  it("links the print page with print data and shows the not-ready line without it", async () => {
+    await renderPage();
+    expect(screen.getByRole("link", { name: en.lesson.print })).toHaveAttribute("href", `${HERE}/print`);
+    expect(screen.queryByText(en.lesson.printNotReady)).not.toBeInTheDocument();
+    cleanup();
+    mocks.getTeacherLesson.mockResolvedValue({ ...lesson, hasPrint: false });
+    await renderPage();
+    expect(screen.queryByRole("link", { name: en.lesson.print })).not.toBeInTheDocument();
+    expect(screen.getByText(en.lesson.printNotReady)).toBeInTheDocument();
   });
 
   it("lists the guide by period, marks the steps done, and links the games on the practice steps", async () => {
