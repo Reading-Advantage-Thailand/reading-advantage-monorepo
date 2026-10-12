@@ -60,41 +60,47 @@ _Story ref: spec.md#story-s2_
     - Notes: no migration and no schema change (`printLesson` is a key of the `package` jsonb). `printLessonSchema` extends `legacyWorkbookLessonSchema` (it already accepts a string or an array in `article_image_url`) with `writing_practice_url`, and it keeps unknown fields. `build-graph update` not run (brief: graph.db read-only). The archive commit goes to the import through `--workbooks-commit`; the Cloud Build import step reads it from the archive header.
     - Manual verification: from `packages/domain` run `../../node_modules/.bin/vitest run src/primary-books`; read `import-run.md`.
 
-## Phase S3: Render one lesson with the template
+## Phase S3: Render one lesson with the template [checkpoint: 23252310b]
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Define the render contract
-    - [ ] `renderPrintLessonInput` (the print data, the locale) and the output (one HTML document) in `packages/domain/src/primary-books/print/contracts.ts`
-- [ ] Task: Make the golden fixture
-    - [ ] Add a `--fixture <book>/<n>` mode to `sync-print-kit.ts` that renders one lesson with Workbooks' `renderMultipleLessons` at the kit commit; save it in `packages/domain/src/primary-books/print/__fixtures__/`
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/print/__tests__/render.test.ts`: the 13 step titles in order; the header names the product once; the QR codes; the Thai page; escaping; the `vocab_fill` blank span only; `@page` A4 with 20 mm; font faces at `/print-fonts/`; the body equals the golden fixture
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-books/print/render.ts`: Handlebars with the `icon` and `concat` helpers, the port of the `prepareLessonData` behavior (QR with `qrcode`), and the A4 wrapper with `PRINT_BRIDGE_SHIM`
-    - [ ] Add `handlebars` 4.7.9 and `qrcode` (lockfile versions) to `packages/domain/package.json`; export the module path
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Render one lesson with the template' (Protocol in workflow.md)
+- [x] Task: Define the render contract
+    - [x] `renderPrintLessonInputSchema` (the print data, the locale) and the output schema (one HTML document) in `packages/domain/src/primary-books/print/contracts.ts` (1ec34eb6d)
+- [x] Task: Make the golden fixture
+    - [x] `--fixture <book>/<n> --commit <id>` mode of `sync-print-kit.ts` (f544d9745). Deviation: it copies the Workbooks golden (`print/golden/lesson-NN-no-key.html`, made at 08bb160 by `renderMultipleLessons` + `wrapSingleLessonDocument`) and the print data. It does not render. It saves only the `<body>` of the golden (204 KB, not 838 KB with the font data URLs). Files: `__fixtures__/origins-3.2-5@08bb160.json` and `origins-3.2-5-no-key-body@08bb160.html`.
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/print/__tests__/render.test.ts` (10 tests). Red run: 1 file failed, 0 tests ran (`render.js` missing).
+- [x] Task: Implement (green)
+    - [x] `packages/domain/src/primary-books/print/render.ts` (1ec34eb6d): isolated Handlebars with `icon` and `concat`, the port of `prepareLessonData`, QR with `qrcode`, series colors, 17 font faces at `/print-fonts/`, the A4 wrapper with `PRINT_BRIDGE_SHIM` in the head
+    - [x] Add `handlebars` and `qrcode` to `packages/domain/package.json`: 4b22b031f (orchestrator). The export `./primary-books/print` points to `render.js` (1ec34eb6d).
+- [x] Task: Docs and doctor
+    - [x] JSDoc on each export; `build-graph update` not run (brief: graph.db read-only); `measure/generate.sh` and `measure/doctor.sh` run as a check
+- [x] Task: Measure - User Manual Verification 'Phase S3: Render one lesson with the template' (Protocol in workflow.md)
+    - Steps: from `packages/domain` run `../../node_modules/.bin/vitest run src/primary-books/print`; all 14 tests pass.
+    - Comparison with the golden: the body equals the golden after these normalizations: (1) all whitespace becomes one space; (2) each QR data URL becomes its pixel width (410); (3) the `<head>` is not compared (the golden `<script src=unpkg.com/pagedjs>` and the 17 data-URL font faces differ by design; a separate test checks the 17 `/print-fonts/` faces and the absence of unpkg).
+    - QR deviation: `qrcode` picks mask 2 and Workbooks' `qrcode-generator` picks mask 3 for the same URL. Both codes have version 4 (33 modules) and the same text. The data differs, so the test does not compare the QR bytes.
+    - Escaping: Handlebars escapes every field (it writes `=` as `&#x3D;`). `vocab_fill` sentences: `& < >` are escaped and the exact blank span stays; quotes stay as in the golden.
+    - The QR targets are the `article_url` and the `writing_practice_url` (or `<article_url>/writing`) of the print data, as in Workbooks (`https://primary.reading-advantage.com/b/o3-2/5`).
+    - The `locale` input only sets `<html lang>`: the template is English.
 
 ## Phase S4: Print this lesson from the class book
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Define the read and the strings
-    - [ ] `getPrintLesson` (class book id, lesson number) in `packages/domain/src/primary-books/print/print-lesson.ts` with `managedClassBook`; extend `TeacherLesson` in `lesson-support-contracts.ts` with `hasPrint`
-    - [ ] Keys `TeacherUi.classBook.lesson.print`, `printNow`, `printNotReady`, `printLoading` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Write the tests (red)
-    - [ ] Domain: `getPrintLesson` refuses a student, a teacher of another class, and another school; returns null with no print data
-    - [ ] App: `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/__tests__/page.test.tsx`: the button with print data, the text without it
-    - [ ] App: new `.../lessons/[number]/print/__tests__/page.test.tsx` and `components/teacher/__tests__/print-lesson-frame.test.tsx`: the sandboxed `srcDoc` frame, "Print" disabled until load, the `workbook:print` message
-    - [ ] A key-parity test for the new keys
-- [ ] Task: Implement (green)
-    - [ ] New `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/print/page.tsx` (thin; logs a failure with `lib/observability/logger.ts`)
-    - [ ] New `apps/primary-advantage/components/teacher/print-lesson-frame.tsx`
-    - [ ] The button on `.../lessons/[number]/page.tsx`
-- [ ] Task: Print check
-    - [ ] On the scratch copy, print Origins 3.2 lesson 5 to PDF in Chrome; put it next to the Workbooks PDF (spec check A3); save both in `measure/tracks/primary_parity_print_lesson_20261011/print-check/`
-- [ ] Task: Final side-by-side check
-    - [ ] Run checks A1 to A4 of the spec with the acceptance kit; send the captures and the two PDFs to the owner
-- [ ] Task: Docs and doctor
+- [x] Task: Define the read and the strings (71d177078, 14dc0129d)
+    - [x] `getPrintLesson` (class book id, lesson number) in `packages/domain/src/primary-books/print/print-lesson.ts` with `managedClassBook`; extend `TeacherLesson` in `lesson-support-contracts.ts` with `hasPrint`
+    - [x] Keys `TeacherUi.classBook.lesson.print`, `printNow`, `printNotReady`, `printLoading` in `apps/primary-advantage/messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Write the tests (red) (71d177078, 71eb6936c, 14dc0129d)
+    - [x] Domain: `getPrintLesson` refuses a student, a teacher of another class, and another school; returns null with no print data
+    - [x] App: `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/__tests__/page.test.tsx`: the button with print data, the text without it
+    - [x] App: new `.../lessons/[number]/print/__tests__/page.test.tsx` and `components/teacher/__tests__/print-lesson-frame.test.tsx`: the sandboxed `srcDoc` frame, "Print" disabled until load, the `workbook:print` message
+    - [x] A key-parity test for the new keys
+- [x] Task: Implement (green) (b02413196)
+    - [x] New `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/lessons/[number]/print/page.tsx` (thin; logs a failure with `lib/observability/logger.ts`)
+    - [x] New `apps/primary-advantage/components/teacher/print-lesson-frame.tsx`
+    - [x] The button on `.../lessons/[number]/page.tsx`
+- [x] Task: Print check (see `print-check/README.md`)
+    - [x] On the scratch copy, print Origins 3.2 lesson 5 to PDF in Chrome; put it next to the Workbooks PDF (spec check A3); save both in `measure/tracks/primary_parity_print_lesson_20261011/print-check/`
+- [x] Task: Final side-by-side check (cdc4d8dcf; captures batched by the orchestrator)
+    - [x] Run checks A1 to A4 of the spec with the acceptance kit; send the captures and the two PDFs to the owner
+- [ ] Task: Docs and doctor (generate.sh run 2026-10-12; doctor.sh fails only on pre-existing A13 `agents_md_audit_science_advantage_20260603`)
     - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
 - [ ] Task: Measure - User Manual Verification 'Phase S4: Print this lesson from the class book' (Protocol in workflow.md)

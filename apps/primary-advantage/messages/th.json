@@ -3866,7 +3866,18 @@
         "showAll": "แสดงทุกย่อหน้า",
         "previous": "ก่อนหน้า",
         "next": "ถัดไป",
-        "paragraph": "ย่อหน้าที่ {number} จาก {total}"
+        "paragraph": "ย่อหน้าที่ {number} จาก {total}",
+        "print": "พิมพ์บทเรียนนี้",
+        "printNow": "พิมพ์",
+        "printLoading": "กำลังโหลดรูปภาพ...",
+        "printNotReady": "ยังไม่มีฉบับพิมพ์ของบทเรียนนี้",
+        "printHint": "เลือกกระดาษ A4 และปิด \"ส่วนหัวและส่วนท้าย\" ในหน้าต่างพิมพ์",
+        "printFrameTitle": "ตัวอย่างก่อนพิมพ์ของบทเรียน",
+        "printBubbleWait": "รอสักครู่...",
+        "printBubbleReady": "พร้อมแล้ว!",
+        "printBubbleNotYet": "ยังไม่พร้อม!",
+        "printNotReadyTitle": "ยังไม่มีฉบับพิมพ์",
+        "printNotReadyBody": "บทเรียนนี้ยังไม่มีฉบับพิมพ์ ใช้โปรเจกเตอร์หรือคู่มือบทเรียนแทน"
       },
       "guide": {
         "title": "คู่มือครู",
@@ -4086,5 +4097,14 @@
     "clearFilters": "Clear the filters",
     "loadError": "We could not load the stories.",
     "loadErrorHint": "Check the internet connection and try again."
+  },
+  "PwaInstall": {
+    "title": "เพิ่มแอปไปที่หน้าจอหลัก",
+    "iosShare": "แตะปุ่มแชร์ใน Safari",
+    "iosAdd": "แตะเพิ่มไปที่หน้าจอหลัก",
+    "iosConfirm": "แตะเพิ่ม",
+    "install": "ติดตั้ง",
+    "dismiss": "ไว้ก่อน",
+    "offlineSign": "คุณกำลังออฟไลน์อยู่ แอปนี้ต้องใช้อินเทอร์เน็ต"
   }
 }

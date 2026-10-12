@@ -15,3 +15,4 @@ export { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "./ques
 export * from "./book-link-contracts.js";
 export { resolveBookLink } from "./book-link.js";
 export { printLessonSchema, type PrintLesson } from "./print/contracts.js";
+export { getPrintLesson } from "./print/print-lesson.js";

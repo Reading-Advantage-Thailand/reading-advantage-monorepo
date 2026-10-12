@@ -17,6 +17,7 @@ import { redirect } from "@/i18n/navigation";
 import { ART } from "@/lib/rpg/places";
 import { Scene } from "@/components/rpg/scene";
 import { Panel, Plaque, RpgLink } from "@/components/rpg/chrome";
+import { InstallNotice } from "@/components/pwa/install-notice";
 import { AvatarPortrait } from "@/components/avatar/portrait-canvas";
 import Leaderboard from "@/components/leaderboard";
 import { ReedyMeterSlot } from "@/components/student/reedy-meter-slot";
@@ -164,6 +165,8 @@ export default async function StudentHomePage() {
         <h1 className="cq-on-scene text-2xl font-bold md:text-3xl">{preview ? tPreview("homeHeroTitle") : t("greeting", { name: user.name ?? user.username })}</h1>
         <p className="cq-on-scene text-sm opacity-90">{preview ? tPreview("homeHeroLine") : t("subtitle")}</p>
       </header>
+
+      <InstallNotice />
 
       <div className="grid grid-cols-[112px_1fr] items-end gap-3">
         {profile ? (

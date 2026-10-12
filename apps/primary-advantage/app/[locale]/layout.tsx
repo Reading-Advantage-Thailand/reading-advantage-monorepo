@@ -12,6 +12,7 @@ import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/components/providers/session-provider";
 import { LayoutProvider } from "@/hooks/use-layout";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import QueryProvider from "@/components/providers/query-provider";
 
 // Thai-first stack (see --font-sans in styles/globals.css): Noto Sans Thai first, then Inter
@@ -75,14 +76,23 @@ export const metadata: Metadata = {
   // },
   icons: {
     icon: "/primary-advantage.png",
+    apple: "/icons/primary-advantage-180.png",
   },
-  // manifest: `${siteConfig.url}/site.webmanifest`,
-  // manifest: `http://localhost:3000/site.webmanifest`,
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "Primary Advantage",
+    statusBarStyle: "default",
+  },
 };
 
 /** Lets the page draw under the notch and home bar, so the safe-area insets get values. */
 export const viewport: Viewport = {
   viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#5c391a" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1420" },
+  ],
 };
 
 export default async function RootLayout({
@@ -118,6 +128,7 @@ export default async function RootLayout({
               <QueryProvider>
                 <NuqsAdapter>{children}</NuqsAdapter>
                 <Toaster />
+                <ServiceWorkerRegister />
               </QueryProvider>
             </ThemeProvider>
           </NextIntlClientProvider>

@@ -11,6 +11,7 @@ import { areaForRole, type NavArea } from "@/lib/nav-area";
 import { getLocale } from "next-intl/server";
 import { Signpost, Toolbar } from "@/components/rpg/toolbar";
 import { StudentHud } from "@/components/rpg/hud";
+import { OfflineSign } from "@/components/pwa/offline-sign";
 
 interface AppLayoutProps {
   children?: React.ReactNode;
@@ -70,6 +71,7 @@ export default async function AppLayout({
               </div>
             </div>
           </header>
+          <OfflineSign />
           <div className="container flex flex-1 gap-8 pt-5">
             <div className="relative z-10 hidden lg:block lg:w-[230px] lg:shrink-0">
               <div className="sticky top-22">
@@ -106,6 +108,7 @@ export default async function AppLayout({
           </div>
         </div>
       </header>
+      <OfflineSign />
       <div className="container flex flex-1 gap-8 pt-6">
         <div className="hidden lg:block lg:w-[230px] lg:shrink-0">
           <div className="sticky top-22">

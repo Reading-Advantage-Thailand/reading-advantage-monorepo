@@ -9,6 +9,7 @@ import { assertPrintKitSafe } from "./kit-guard.js";
 /** Kit file and font folder, relative to the monorepo root. */
 const KIT_FILE = "packages/domain/src/primary-books/print/kit.generated.ts";
 const FONT_DIR = "apps/primary-advantage/public/print-fonts";
+const FIXTURE_DIR = "packages/domain/src/primary-books/print/__fixtures__";
 
 const git = (repo: string, args: string[]): string =>
   execFileSync("git", ["-C", repo, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], maxBuffer: 64 * 1024 * 1024 });
@@ -116,8 +117,42 @@ export function checkKit(workbooks: string, repoRoot: string): { kit: string; la
 }
 
 /**
+ * Copies the golden fixture of one lesson from a Workbooks commit: the print data and the HTML body that
+ * Workbooks' own `renderMultipleLessons` made without the answer key page. Workbooks made the HTML
+ * at the export commit, so this copy needs no Workbooks render at the kit commit.
+ * @param workbooks Path of the Workbooks repository.
+ * @param repoRoot Monorepo root.
+ * @param spec Book and lesson number, for example `origins-3.2/5`.
+ * @param commit Workbooks commit that holds the export and the golden file.
+ * @returns The two written file paths.
+ * @throws When the commit has no print data or no golden file for the lesson.
+ */
+export function copyFixture(workbooks: string, repoRoot: string, spec: string, commit: string): string[] {
+  const [book, n] = spec.split("/");
+  const number = Number(n);
+  if (!/^[a-z0-9.-]+$/.test(book ?? "") || !Number.isInteger(number) || number < 1) throw new Error(`--fixture needs <book>/<n>, got "${spec}"`);
+  const dir = `content/primary/${book}/print`;
+  const files = git(workbooks, ["ls-tree", "--name-only", commit, `${dir}/`]).split("\n").filter((f) => f.endsWith(".json"));
+  const json = files.find((f) => (JSON.parse(git(workbooks, ["show", `${commit}:${f}`])) as { lessonNumber?: number }).lessonNumber === number);
+  if (!json) throw new Error(`no print data for ${spec} at ${commit}`);
+  const golden = `${dir}/golden/lesson-${String(number).padStart(2, "0")}-no-key.html`;
+  const out = join(repoRoot, FIXTURE_DIR);
+  mkdirSync(out, { recursive: true });
+  const short = commit.slice(0, 7);
+  const written = [`${book}-${number}@${short}.json`, `${book}-${number}-no-key-body@${short}.html`].map((name) => join(out, name));
+  writeFileSync(written[0], git(workbooks, ["show", `${commit}:${json}`]));
+  const html = git(workbooks, ["show", `${commit}:${golden}`]);
+  const start = html.indexOf("<body>");
+  const end = html.lastIndexOf("</body>");
+  if (start < 0 || end < start) throw new Error(`golden file ${golden} has no body`);
+  writeFileSync(written[1], html.slice(start + "<body>".length, end));
+  return written;
+}
+
+/**
  * Runs the sync script.
  * Usage: `tsx scripts/sync-print-kit.ts [--workbooks <dir>] [--repo-root <dir>] [--commit <id>] [--check]`
+ * Fixture: `tsx scripts/sync-print-kit.ts --fixture <book>/<n> --commit <export commit>`
  * @param argv Command line arguments without the node and script names.
  * @returns Exit code: 0 done, 1 the check found a newer kit commit, 2 config error or a dirty kit path.
  */
@@ -130,6 +165,12 @@ export async function runSyncPrintKit(argv: string[]): Promise<number> {
       const r = checkKit(workbooks, repoRoot);
       console.log(r.ok ? `print kit is current (${r.kit})` : `print kit is stale: kit ${r.kit || "none"}, newest ${r.latest}`);
       return r.ok ? 0 : 1;
+    }
+    if (argv.includes("--fixture")) {
+      const commit = flag("--commit");
+      if (!commit) throw new Error("--fixture needs --commit <Workbooks export commit>");
+      for (const file of copyFixture(workbooks, repoRoot, flag("--fixture") ?? "", commit)) console.log(`fixture written: ${file}`);
+      return 0;
     }
     const dirty = git(repoRoot, ["status", "--porcelain", "--", KIT_FILE, FONT_DIR]).trim();
     if (dirty) {
