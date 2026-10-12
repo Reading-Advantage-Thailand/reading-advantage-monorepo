@@ -79,14 +79,16 @@ _Story ref: spec.md#story-s3_
 ## Phase S4: The lesson reading step uses the same read-along
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Contract for the lesson reading step
-    - [ ] `components/lesson/task/task-reading.tsx`: the props that it passes to `read-along-passage.tsx` (the article sentences, passage, audio, translations)
-- [ ] Task: Tests for the lesson reading step
-    - [ ] Update `components/lesson/task/__tests__/task-reading-highlight.behavior.test.tsx`: the same highlight and seek as the article page; the intent of each existing case stays
-- [ ] Task: Implement the lesson reading step
-    - [ ] `components/lesson/task/task-reading.tsx`: use the component; remove its own timer (line 101) and word click (178); its paragraphs already use `lib/paragraph-utils.ts` (`primary_parity_quick_fixes_20261011` FR-9)
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S4: The lesson reading step uses the same read-along' (Protocol in workflow.md)
+- [x] Task: Contract for the lesson reading step
+    - [x] `components/lesson/task/task-reading.tsx`: the host passes the built props to `read-along-passage.tsx`: `sentences` (from `parseSentences`), `passage`, `position`, `active`, `currentSentenceRef`, `renderBlockMedia`, and `onWordTap`. The host owns the audio element, the speed, `handleWordTap`, and `handlePlaySentence`. The translation text shows in a box above the title. _(The plan text `{ sentences, passage, audioUrl, translations }` was wrong: the host owns the audio.)_
+- [x] Task: Tests for the lesson reading step
+    - [x] Update `components/lesson/task/__tests__/task-reading-highlight.behavior.test.tsx`: the rAF loop (one frame, none after pause or unmount, no timer), the word tap seeks and plays, the band tap plays the sentence, one shared player, the play button. The intent of the cleanup case stays. `task-reading-speed.test.tsx` uses the speed sign (3 speeds); its three intents stay.
+- [x] Task: Implement the lesson reading step
+    - [x] `components/lesson/task/task-reading.tsx`: uses `useReadAlong`, `useFollowScroll`, `ReadAlongPassage`, `ReadAlongPlayer`; the own timer, the own word click, and the old controls card are removed. The unmount cleanup keeps the audio element in a variable (React clears the ref first).
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S4: The lesson reading step uses the same read-along' (Protocol in workflow.md) - look check pending (owner, async)
+    - Defaults used: the lesson shows the shared player at all times (no "open audio" button); speeds 0.75x, 1x, 1.25x; with translation on, a tap on a sentence shows its translation and does not play.
+    - Manual verification steps: (1) open a lesson reading step; one player shows at the bottom; (2) press play: the lit word follows the voice; (3) tap a word: the voice starts there; tap the band outside a word: the voice starts at the sentence; (4) press the speed sign: 0.75x, 1x, 1.25x; (5) turn translation on and tap a sentence: the translation shows above the title.
 
 ## Phase A: Acceptance
 

@@ -130,3 +130,27 @@ Phase review of `c95ef1174..HEAD`. No Critical and no High finding. L-6 and L-7 
 ## Lessons (for the orchestrator to move)
 
 - A follow scroll must not listen to `scroll` events: its own smooth scroll fires them. Listen to `wheel`, `touchmove`, and keys.
+
+# Plan review: Phase S4 (the lesson reading step)
+
+Phase review of `bb16da1a7..HEAD` (files of this phase only). No Critical and no High finding. L-8 is fixed.
+
+## Medium
+
+- M-11: The lesson shows the player at all times, with no "open audio" button. The fixed bar on a phone may sit
+  near the lesson footer. Check this in the Phase A captures.
+- M-12: Keys `Lesson.Reading.controls.*` and `translation.button` are unused now. They stay in the five locale files (no copy change in this phase).
+
+## Low
+
+- L-20: No new captures for S4 (the plan did not ask for them). The Phase A captures cover the lesson page.
+- L-21: With translation on, the translation box is a plain block above the title, not near the sentence (the old absolute overlay is gone).
+
+## Shortcuts and deviations
+
+- The passage props are the built props, not `{ sentences, passage, audioUrl, translations }`. The plan text is corrected.
+- No new copy keys. No new exports without JSDoc.
+
+## Lessons (for the orchestrator to move)
+
+- An unmount cleanup that reads `ref.current` finds null: React clears refs first. Keep the element in a variable in the effect.
