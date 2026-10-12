@@ -132,6 +132,8 @@ describe("TaskReading tap and player (same read-along as the article page)", () 
   it("seeks to the tapped word and plays", () => {
     const { container } = renderWithMessages(<TaskReading article={article} enableTranslation={false} />);
     const audio = container.querySelector("audio") as HTMLAudioElement;
+    // The reader waits for metadata before it seeks; model a loaded element.
+    Object.defineProperty(audio, "readyState", { value: 4, configurable: true });
     fireEvent.click(screen.getByText("beta"));
     expect(audio.currentTime).toBeCloseTo(0.95, 5);
     expect(window.HTMLMediaElement.prototype.play).toHaveBeenCalled();
@@ -140,6 +142,8 @@ describe("TaskReading tap and player (same read-along as the article page)", () 
   it("plays the sentence when the student taps the band outside a word", () => {
     const { container } = renderWithMessages(<TaskReading article={article} enableTranslation={false} />);
     const audio = container.querySelector("audio") as HTMLAudioElement;
+    // The reader waits for metadata before it seeks; model a loaded element.
+    Object.defineProperty(audio, "readyState", { value: 4, configurable: true });
     audio.currentTime = 2;
     const band = container.querySelector("[data-sentence='0']") as HTMLElement;
     fireEvent.click(band);
@@ -180,5 +184,18 @@ describe("TaskReading paragraph blocks (FR-9)", () => {
     expect(blocks).toHaveLength(3);
     const all = Array.from(blocks).map((b) => b.textContent).join("").replace(/\s+/g, "");
     expect(all).toBe(texts.join("").replace(/\s+/g, ""));
+  });
+});
+
+describe("TaskReading review fixes (2026-10-12)", () => {
+  it("waits for the metadata before it seeks when no metadata is loaded", () => {
+    const { container } = renderWithMessages(<TaskReading article={article} enableTranslation={false} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    Object.defineProperty(audio, "readyState", { value: 0, configurable: true });
+    fireEvent.click(screen.getByText("beta"));
+    expect(audio.currentTime).toBe(0);
+    Object.defineProperty(audio, "readyState", { value: 1, configurable: true });
+    act(() => void audio.dispatchEvent(new Event("loadedmetadata")));
+    expect(audio.currentTime).toBeCloseTo(0.95, 5);
   });
 });

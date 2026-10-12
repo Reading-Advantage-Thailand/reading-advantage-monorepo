@@ -20,6 +20,7 @@ import { usePreviewSave } from "@/components/student/student-view-provider";
 import Image from "next/image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
 import { seekTimeForWord } from "@/lib/read-along/position";
+import { seekOrWait } from "@/lib/read-along/seek";
 import { parseSentences } from "@/lib/read-along/align";
 import { ReadAlongPassage } from "@/components/read-along/read-along-passage";
 import { ReadAlongPlayer } from "@/components/read-along/read-along-player";
@@ -72,9 +73,9 @@ export default function ArticleContent({ article }: Props) {
   }, [article.id, isPreview]);
 
   useEffect(() => {
-    return () => {
-      audioRef.current?.pause();
-    };
+    // Keep the element: React clears the ref before this cleanup runs.
+    const audio = audioRef.current;
+    return () => audio?.pause();
   }, []);
 
   const handlePlayPause = async () => {
@@ -98,6 +99,8 @@ export default function ArticleContent({ article }: Props) {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
+        // A fresh open must start at normal speed (review fix 2026-10-12).
+        audioRef.current.playbackRate = 1;
       }
     } else {
       setTogglePlayer(true);
@@ -153,14 +156,17 @@ export default function ArticleContent({ article }: Props) {
   }, [currentSentenceIndex, selectedLanguage]);
 
   const handleWordTap = (sentenceIndex: number, audioWordIndex: number) => {
+    // A word tap only works while the player is open (review fix 2026-10-12).
+    if (!togglePlayer) return;
     const audio = audioRef.current;
     const sentence = sentences[sentenceIndex];
     if (!audio || !sentence) return;
     resumeFollow();
-    audio.currentTime = seekTimeForWord(sentence, audioWordIndex);
+    // Wait for the first metadata when the element has none (review fix 2026-10-12).
+    seekOrWait(audio, seekTimeForWord(sentence, audioWordIndex));
     select({ sentenceIndex, wordIndex: sentence.words[audioWordIndex] ? audioWordIndex : -1 });
     // Play at once to give the student feedback.
-    if (togglePlayer) audio.play().catch(() => undefined);
+    audio.play().catch(() => undefined);
   };
 
   /** Plays from the start of a sentence entry; the player buttons use it. */

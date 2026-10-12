@@ -194,6 +194,8 @@ describe("ArticleContent one player (Phase S3)", () => {
   it("Next sentence seeks to the next entry and plays; Previous goes back", () => {
     const { container } = renderWithMessages(<ArticleContent article={twoSentences} />);
     const audio = container.querySelector("audio") as HTMLAudioElement;
+    // The reader waits for metadata before it seeks; model a loaded element.
+    Object.defineProperty(audio, "readyState", { value: 4, configurable: true });
     const play = vi.spyOn(window.HTMLMediaElement.prototype, "play");
     fireEvent.click(screen.getByRole("button", { name: "Listen and read along" }));
     fireEvent.click(screen.getByRole("button", { name: "Replay this sentence" }));
@@ -220,5 +222,47 @@ describe("ArticleContent one player (Phase S3)", () => {
     expect(screen.queryByText(/Tap a word to hear it/)).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Listen and read along" }));
     expect(screen.getByText(/Tap a word to hear it from there/)).toBeInTheDocument();
+  });
+});
+
+describe("ArticleContent review fixes (2026-10-12)", () => {
+  it("pauses the audio element on unmount (the ref is cleared before the cleanup)", () => {
+    const { container, unmount } = renderWithMessages(<ArticleContent article={article} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    const pause = vi.spyOn(audio, "pause");
+    unmount();
+    expect(pause).toHaveBeenCalled();
+  });
+
+  it("resets the playback rate to 1 when the player closes", () => {
+    const { container } = renderWithMessages(<ArticleContent article={article} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    fireEvent.click(screen.getByRole("button", { name: "Listen and read along" }));
+    fireEvent.click(screen.getByRole("button", { name: "Speed 1 times. Change speed" }));
+    expect(audio.playbackRate).toBe(1.25);
+    fireEvent.click(screen.getByRole("button", { name: "Close the audio" }));
+    expect(audio.playbackRate).toBe(1);
+  });
+
+  it("waits for the metadata before it seeks when no metadata is loaded", () => {
+    const { container } = renderWithMessages(<ArticleContent article={article} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    Object.defineProperty(audio, "readyState", { value: 0, configurable: true });
+    fireEvent.click(screen.getByRole("button", { name: "Listen and read along" }));
+    fireEvent.click(screen.getByText("beta"));
+    expect(audio.currentTime).toBe(0);
+    Object.defineProperty(audio, "readyState", { value: 1, configurable: true });
+    act(() => void audio.dispatchEvent(new Event("loadedmetadata")));
+    expect(audio.currentTime).toBeCloseTo(0.95, 5);
+  });
+
+  it("ignores a word tap while the player is closed", () => {
+    const { container } = renderWithMessages(<ArticleContent article={article} />);
+    const audio = container.querySelector("audio") as HTMLAudioElement;
+    const play = vi.spyOn(window.HTMLMediaElement.prototype, "play");
+    fireEvent.click(screen.getByText("beta"));
+    expect(audio.currentTime).toBe(0);
+    expect(play).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: /translate/i })).toBeDisabled();
   });
 });

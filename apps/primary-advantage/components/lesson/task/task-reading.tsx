@@ -6,6 +6,7 @@ import Image from "next/image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
 import { parseSentences } from "@/lib/read-along/align";
 import { seekTimeForWord } from "@/lib/read-along/position";
+import { seekOrWait } from "@/lib/read-along/seek";
 import { ReadAlongPassage } from "@/components/read-along/read-along-passage";
 import { ReadAlongPlayer } from "@/components/read-along/read-along-player";
 import { useFollowScroll } from "@/hooks/use-follow-scroll";
@@ -77,7 +78,8 @@ export function TaskReading({
     const sentence = sentences[sentenceIndex];
     if (!audio || !sentence) return;
     resumeFollow();
-    audio.currentTime = seekTimeForWord(sentence, audioWordIndex);
+    // Wait for the first metadata when the element has none (review fix 2026-10-12).
+    seekOrWait(audio, seekTimeForWord(sentence, audioWordIndex));
     select({ sentenceIndex, wordIndex: sentence.words[audioWordIndex] ? audioWordIndex : -1 });
     audio.play().catch(() => undefined);
   };
