@@ -126,3 +126,28 @@ Shortcuts: none. Deviation: `previewHomeModel()` has no parameter; the sample se
 Lesson: pages that call `useTranslations` through a shared server component need `renderWithMessages` in
 their page tests; the red run must happen before the code, including for lib helpers (two helpers existed
 before the first red run).
+
+## Phase S4 review (2026-10-12)
+
+Phase start sha: `192f6d231`. Review of the commits `3f1e25218`, `fdb66698f`, `ff8ec62f2`.
+
+Plan compliance: all tasks done. New reads: `getPreviewBook` (built on `managedClassBook`) and
+`listManagedClassBooks`, both exported with Zod output and JSDoc. The reads write nothing (tests assert no insert and no update).
+
+Security: errors for another teacher, another school, an unknown book, and a student are the existing
+FORBIDDEN `AuthError` (the page turns each one into 404). The list reads classes of the user school only; a
+user without a school gets none, with no query. Role comes from `users.role`. No new copy key.
+
+Tests: domain 8 tests (red: 8 failed), app 4 tests in 2 files (red: 4 failed). Class book domain tests (34) still pass. App type check clean.
+
+| Level | Finding | Action |
+| --- | --- | --- |
+| Low | The preview book is in `independent` mode; the current lesson stays marked, taught marks never show. | Default of the spec D7. |
+| Low | `listManagedClassBooks` has no `assertCan`; it checks the role list in code, like `managedClass`. | Keep. |
+| Low | The lesson page still calls `getStudentClassBooks` for staff (returns none). | Not changed. |
+| Low | The home managed-book card prints the class name raw (user data, not copy). | Keep. |
+| Low | `doctor.sh` A13 fails (old archived track directory). | Not from this track. |
+
+Shortcuts: none. Deviation: the lesson link check is by reading the code (no new link test); the links are
+`/student/...` paths under the layout that S1 opens for staff. `packages/domain/src/primary-books/index.ts` got a
+hunk from helper B2; I staged only my hunk. Lesson: stage one hunk of a shared file with `git apply --cached --unidiff-zero`.

@@ -102,22 +102,26 @@ _Story ref: spec.md#story-s3_
 - [x] Task: Measure - User Manual Verification 'Phase S3: Pages that need a student record show a preview state' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual steps: (1) Sign in as a teacher in a build. Open `/student/home`: the hero banner art, "No streak yet", XP 0, four notices, and the school leaderboard show; no error page. (2) Open avatar: pick a hero and colors; "Save my avatar" is off with "Preview: not saved". (3) Open the shop: pieces show with prices; select one: the try-on works, Buy is off with the note. (4) Open history, reports, sentences, vocabulary: each shows one notice. (5) Open Class Quest battle and Reedy: the not-in-a-class and students-only notices. (6) Open a game and Word adventures: the game loads the sample words and posts no completion (check `xp_logs` stays equal). (7) Sign in as a SYSTEM user with no school: home shows no leaderboard. (8) Sign in as a student: all pages work as before.
 
-## Phase S4: Class books and lessons in preview
+## Phase S4: Class books and lessons in preview [checkpoint: PENDING]
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Contract for the preview class book
-    - [ ] `packages/domain/src/primary-books/class-books.ts`: a read `getPreviewBook({ db, user, classBookId })` built on `managedClassBook` (line 91), with a Zod output (book, lessons, all open, no progress); JSDoc
-    - [ ] A read that lists the class books that the staff member manages, for the home notices
-- [ ] Task: Tests for the preview class book
-    - [ ] `packages/domain/src/__tests__/primary-preview-book.test.ts`: a teacher who manages the book reads it; another teacher, another school, and a student get the existing errors (mock DB)
-    - [ ] `app/[locale]/(student)/student/books/[classBookId]/__tests__/preview-book.test.tsx`: staff see every lesson open and no progress; an unknown book gives 404
-- [ ] Task: Implement the preview class book
-    - [ ] `student/books/[classBookId]/page.tsx`: use `getPreviewBook` in preview
-    - [ ] `student/home/page.tsx`: the managed class books in the preview notices
-    - [ ] Check the lesson links to student pages (`components/lesson/lesson-card.tsx:65`, `task-lesson-summary.tsx:117`, `lesson-progress-bar.tsx:450`) open in preview
-    - [ ] Coordinate with `primary_parity_class_books_20261011` (TCH-01, TCH-02), which also changes the class book pages; merge its changes first if it is complete
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Class books and lessons in preview' (Protocol in workflow.md)
+- [x] Task: Contract for the preview class book
+    - [x] `packages/domain/src/primary-books/class-books.ts`: a read `getPreviewBook({ db, user, classBookId })` built on `managedClassBook` (line 91), with a Zod output (book, lessons, all open, no progress); JSDoc
+    - [x] A read that lists the class books that the staff member manages, for the home notices
+- [x] Task: Tests for the preview class book
+    - [x] `packages/domain/src/__tests__/primary-preview-book.test.ts`: a teacher who manages the book reads it; another teacher, another school, and a student get the existing errors (mock DB)
+    - [x] `app/[locale]/(student)/student/books/[classBookId]/__tests__/preview-book.test.tsx`: staff see every lesson open and no progress; an unknown book gives 404
+- [x] Task: Implement the preview class book
+    - [x] `student/books/[classBookId]/page.tsx`: use `getPreviewBook` in preview
+    - [x] `student/home/page.tsx`: the managed class books in the preview notices
+    - [x] Check the lesson links to student pages (`components/lesson/lesson-card.tsx:65`, `task-lesson-summary.tsx:117`, `lesson-progress-bar.tsx:450`) open in preview
+    - [x] Coordinate with `primary_parity_class_books_20261011` (TCH-01, TCH-02), which also changes the class book pages; merge its changes first if it is complete
+        - Note: that track is complete and merged; no conflict. Link check: the three links go to `/student/read` and `/student/reedy`, which are under the student layout that opens for staff (S1). No edit in `task-lesson-summary.tsx` or `lesson-progress-bar.tsx`. The class book lesson links use `/student/lesson/<id>?type=article` and open in preview.
+        - Note: the lesson page calls `getStudentClassBooks` for staff; it returns none (a staff id is in no class roster), so no lock applies. Not changed.
+        - Default used: the preview book is in `independent` mode (every published lesson open); an unpublished lesson shows "not yet".
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S4: Class books and lessons in preview' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual steps: sign in as a teacher who has a class book; open Student view; check that home lists the book under the notices; open it; check that every published lesson has a Read link and no "taught" mark; open a lesson; open a book id of another school and check 404.
 
 ## Phase A: Acceptance
 
