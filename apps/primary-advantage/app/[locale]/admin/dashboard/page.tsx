@@ -53,8 +53,9 @@ export default async function AdminDashboardPage({ searchParams }: { searchParam
   const range = dashboardRangeSchema.parse(single(query.range));
   const by = single(query.by) === "grade" ? "grade" : "cefr";
   const isSystem = user.role === "SYSTEM";
+  // SYSTEM names the school with ?school= only, so its own school never fills in (AC-4).
   // The session role wins in resolveCreationSchoolId, so the legacy role rows stay empty.
-  const resolved = await resolveCreationSchoolId({ schoolId: user.schoolId, role: user.role, roles: [], SchoolAdmins: [] }, single(query.school));
+  const resolved = await resolveCreationSchoolId({ schoolId: isSystem ? null : user.schoolId, role: user.role, roles: [], SchoolAdmins: [] }, single(query.school));
   const schoolId = "schoolId" in resolved ? resolved.schoolId : null;
 
   let data = null;
