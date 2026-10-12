@@ -110,6 +110,8 @@ describe("teacher lesson page (FR-8, FR-9, FR-12, FR-13)", () => {
     expect(within(guideRegion).getByText("# Step 1 script")).toBeInTheDocument();
     // step 1 (bell-ringer) and step 9 (practice) link the games
     expect(within(guideRegion).getAllByRole("link", { name: en.guide.games })).toHaveLength(2);
+    // step 1 keeps the game challenges; step 9 opens the projector games of the lesson
+    expect(within(guideRegion).getAllByRole("link", { name: en.guide.games }).map((a) => a.getAttribute("href"))).toEqual(["/teacher/game-challenges", `${HERE}/projector#projector-games`]);
   });
 
   it("shows the answer key with the correct option, the model answers, and the activities", async () => {

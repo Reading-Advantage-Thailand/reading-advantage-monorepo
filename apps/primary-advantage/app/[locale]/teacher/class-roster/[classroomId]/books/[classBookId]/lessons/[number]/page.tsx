@@ -71,6 +71,7 @@ export default async function TeacherLessonPage({ params }: { params: Params }) 
   if (!lesson) notFound();
   const base = `/teacher/class-roster/${classroomId}/books/${classBookId}`;
   const here = `${base}/lessons/${number}`;
+  const projectorGames = lesson.lesson.articleId ? `${here}/projector#projector-games` : undefined;
   const { bank, activities } = lesson;
   const hasKey = bank.mcq.length > 0 || bank.saq.length > 0 || bank.laq.length > 0 || activities !== null;
 
@@ -102,13 +103,13 @@ export default async function TeacherLessonPage({ params }: { params: Params }) 
       />
       {lesson.lesson.articleId ? null : <p className="text-muted-foreground text-sm">{t("lesson.noArticle")}</p>}
 
-      <GuideOverlay classBookId={classBookId} lessonNumber={number} steps={guide.flatMap((group) => group.steps)} stepsDone={lesson.stepsDone} />
+      <GuideOverlay classBookId={classBookId} lessonNumber={number} steps={guide.flatMap((group) => group.steps)} stepsDone={lesson.stepsDone} projectorHref={projectorGames} />
 
       <section aria-labelledby="lesson-guide" className={TEACHER_CARD}>
         <h2 id="lesson-guide" className="text-lg font-semibold">
           {t("guide.title")}
         </h2>
-        <GuideSteps guide={guide} stepsDone={lesson.stepsDone} t={t} />
+        <GuideSteps guide={guide} stepsDone={lesson.stepsDone} projectorHref={projectorGames} t={t} />
       </section>
 
       <section aria-labelledby="answer-key" className={TEACHER_CARD}>
