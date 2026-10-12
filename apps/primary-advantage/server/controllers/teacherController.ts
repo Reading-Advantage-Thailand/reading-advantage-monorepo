@@ -246,6 +246,16 @@ export const getTeacherByIdController = async (
   }
 };
 
+/** The fields a teacher update accepts; `role` is one of the two teacher roles. */
+const updateTeacherBodySchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  role: z.enum(["teacher", "admin"]).optional(),
+  cefrLevel: z.string().optional(),
+  password: z.string().optional(),
+  classroomIds: z.array(z.string().min(1)).optional(),
+});
+
 // PUT Controller - Update teacher
 export const updateTeacherController = async (
   request: NextRequest,
@@ -276,11 +286,15 @@ export const updateTeacherController = async (
     }
 
     const body = await request.json();
-    const updateData = body as UpdateTeacherInput;
     // Only SYSTEM changes a school, and only through POST /api/teachers/[id]/move.
     if ((body as { schoolId?: unknown })?.schoolId !== undefined && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
       return NextResponse.json({ error: "Forbidden - only SYSTEM can change the school" }, { status: 403 });
     }
+    const parsedBody = updateTeacherBodySchema.safeParse(body);
+    if (!parsedBody.success) {
+      return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    }
+    const updateData: UpdateTeacherInput = parsedBody.data;
     if (updateData.password !== undefined && !passwordSchema.safeParse(updateData.password).success) {
       return NextResponse.json({ error: "Invalid password" }, { status: 400 });
     }
