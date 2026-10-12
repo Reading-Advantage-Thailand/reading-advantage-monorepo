@@ -1,4 +1,5 @@
 import { STAFF_ROLES } from "@/lib/permissions";
+import { roleSql } from "@/server/utils/role-sql";
 import {
   db,
   eq,
@@ -888,11 +889,9 @@ export const getAllStudentsInSystem = async () => {
       classroomName: classrooms.name,
     })
       .from(users)
-      .innerJoin(userRoles, eq(userRoles.userId, users.id))
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .leftJoin(classroomStudents, eq(classroomStudents.studentId, users.id))
       .leftJoin(classrooms, eq(classrooms.id, classroomStudents.classroomId))
-      .where(eq(roles.name, "student"))
+      .where(roleSql("student"))
       .orderBy(desc(users.createdAt));
 
     // For each (student, classroom) row, fetch the classroom's teachers.
