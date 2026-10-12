@@ -92,7 +92,7 @@ Phase 3 notes (helper, 2026-10-12):
 - Manual verification (owner look check, async): open the captures. Check the key numbers panel (six labels, the meter on Active students); check the alert badges show a word and a mark (not colour only); check the CEFR / grade signs; check the teachers table at 375 px (the class count moves under the name); check the activity grid (one cell for each day, today with the gold outline, Monday first); check `system-choose-*` (selector, "Choose a school", no numbers); check `admin-empty-day-*` (no zeros in key numbers).
 
 
-## Phase 4: Acceptance
+## Phase 4: Acceptance [checkpoint: 7ed2ea79c]
 
 - [x] Task: Run the queries one time against a clone of the rehearsal copy (`create database x template <rehearsal copy>`, never the shared copy; lessons-learned 2026-10-06); compare each number with the reference SQL of the behavior contract; measure the page time for the largest school (target 2 s) (domain queries done; the page time on a build: batch capture (orchestrator))
 - [ ] Task: Side-by-side check with the kit of `primary_parity_acceptance_20261011`: AC-1 to AC-7, as a school ADMIN and as SYSTEM, legacy `bfea121` and the new build on copies with the same school data
