@@ -87,7 +87,7 @@ ESLint one time per phase, before the phase commit. One heavy job at a time on t
 - The open assignments and "Who needs help" blocks are `Panel`s now; their chips and empty states still come from `@reading-advantage/ui`.
 - The keys `TeacherHome.classes.students` and `TeacherHome.classes.all` have no user now. They stay in the five files so that the key sets stay equal.
 
-## Phase 4: Acceptance
+## Phase 4: Acceptance [checkpoint: 8afe09db2]
 
 - [x] Task: Run the queries one time against a clone of the rehearsal copy (never the shared copy); compare each number with the reference SQL of the behavior contract (3 teachers, 0 differences; `getTeacherHome` 483 ms cold, 40 to 63 ms warm; `acceptance.md`)
 - [ ] Task: Side-by-side check with the kit of `primary_parity_acceptance_20261011`: AC-1 to AC-6, as a TEACHER, legacy `bfea121` and the new build on copies with the same school data
