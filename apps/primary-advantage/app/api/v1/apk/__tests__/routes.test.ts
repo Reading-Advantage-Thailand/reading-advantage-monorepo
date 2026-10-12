@@ -186,6 +186,7 @@ describe("Primary APK routes", () => {
       user: student,
       tenant: { schoolId: "school-1" },
       input: completionInput,
+      options: { addToUserXp: true },
     });
   });
 
