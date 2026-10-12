@@ -4051,5 +4051,13 @@
     "reedyStudentsOnly": "Only students talk to Reedy",
     "reedyStudentsOnlyLine": "Reedy uses voice minutes, so a student account starts the talk.",
     "gameSampleWords": "This game uses sample words. Nothing is saved."
+  },
+  "PwaInstall": {
+    "title": "Add Primary Advantage to your home screen",
+    "iosShare": "Tap the Share button in Safari.",
+    "iosAdd": "Tap Add to Home Screen.",
+    "iosConfirm": "Tap Add.",
+    "install": "Install",
+    "dismiss": "Not now"
   }
 }

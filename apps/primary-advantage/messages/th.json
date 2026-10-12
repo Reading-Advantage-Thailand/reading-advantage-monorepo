@@ -4051,5 +4051,13 @@
     "reedyStudentsOnly": "Only students talk to Reedy",
     "reedyStudentsOnlyLine": "Reedy uses voice minutes, so a student account starts the talk.",
     "gameSampleWords": "This game uses sample words. Nothing is saved."
+  },
+  "PwaInstall": {
+    "title": "เพิ่มแอปไปที่หน้าจอหลัก",
+    "iosShare": "แตะปุ่มแชร์ใน Safari",
+    "iosAdd": "แตะเพิ่มไปที่หน้าจอหลัก",
+    "iosConfirm": "แตะเพิ่ม",
+    "install": "ติดตั้ง",
+    "dismiss": "ไว้ก่อน"
   }
 }
