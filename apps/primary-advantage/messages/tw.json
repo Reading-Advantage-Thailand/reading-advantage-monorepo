@@ -3519,7 +3519,17 @@
       "classes": "Classes",
       "students": "Students",
       "openAssignments": "Open assignments",
-      "needsHelp": "Need help"
+      "needsHelp": "Need help",
+      "activeStudents": "活躍學生（30 天）",
+      "activeStudentsOf": "{active} / {total}（{percent}%）",
+      "noStudentsYet": "還沒有學生",
+      "averageLevel": "平均等級",
+      "averageLevelHint": "Primary 等級 1 至 15",
+      "activeToday": "今日活躍",
+      "activeTodayOf": "共 {count} 位學生",
+      "completedToday": "今日完成",
+      "completedTodayHint": "已完成的作業",
+      "needsHelpHint": "見下方名單"
     },
     "classes": {
       "heading": "My classes",
@@ -3548,7 +3558,41 @@
       "more": "{count, plural, one {# more student} other {# more students}}"
     },
     "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again."
+    "loadErrorHint": "Check your connection and try again.",
+    "table": {
+      "search": "依班級名稱搜尋",
+      "searchLabel": "搜尋班級",
+      "sortBy": "排序方式",
+      "sortAsc": "升序",
+      "sortDesc": "降序",
+      "sortDirection": "變更排序順序",
+      "csv": "下載 CSV",
+      "csvLabel": "將顯示的班級下載為 CSV 檔案",
+      "noMatch": "沒有班級符合「{query}」。",
+      "legend": "活躍指 7 天內至少有一次活動。XP 趨勢與前 7 天比較（上升或下降超過 5%）。",
+      "activeOf": "{active} / {students}（{percent}%）",
+      "actions": "操作",
+      "columns": {
+        "name": "班級",
+        "students": "學生",
+        "active": "活躍（7 天）",
+        "level": "平均等級",
+        "xp": "XP（7 天）",
+        "trend": "趨勢",
+        "status": "狀態"
+      },
+      "trend": {
+        "up": "上升",
+        "flat": "持平",
+        "down": "下降"
+      },
+      "status": {
+        "onTrack": "達標",
+        "someQuiet": "部分安靜",
+        "needsAttention": "需要關注",
+        "noStudents": "沒有學生"
+      }
+    }
   },
   "TeacherUi": {
     "startClass": "Start class",

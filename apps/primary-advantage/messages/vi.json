@@ -3519,7 +3519,17 @@
       "classes": "Classes",
       "students": "Students",
       "openAssignments": "Open assignments",
-      "needsHelp": "Need help"
+      "needsHelp": "Need help",
+      "activeStudents": "Học sinh hoạt động (30 ngày)",
+      "activeStudentsOf": "{active} trên {total} ({percent}%)",
+      "noStudentsYet": "Chưa có học sinh",
+      "averageLevel": "Cấp độ trung bình",
+      "averageLevelHint": "Cấp độ Primary từ 1 đến 15",
+      "activeToday": "Hoạt động hôm nay",
+      "activeTodayOf": "trên {count} học sinh",
+      "completedToday": "Hoàn thành hôm nay",
+      "completedTodayHint": "bài tập đã xong",
+      "needsHelpHint": "Xem danh sách bên dưới"
     },
     "classes": {
       "heading": "My classes",
@@ -3548,7 +3558,41 @@
       "more": "{count, plural, one {# more student} other {# more students}}"
     },
     "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again."
+    "loadErrorHint": "Check your connection and try again.",
+    "table": {
+      "search": "Tìm theo tên lớp",
+      "searchLabel": "Tìm lớp",
+      "sortBy": "Sắp xếp theo",
+      "sortAsc": "Tăng dần",
+      "sortDesc": "Giảm dần",
+      "sortDirection": "Đổi thứ tự sắp xếp",
+      "csv": "Tải CSV",
+      "csvLabel": "Tải các lớp đang hiển thị thành tệp CSV",
+      "noMatch": "Không có lớp nào khớp với “{query}”.",
+      "legend": "Hoạt động nghĩa là có ít nhất một hoạt động trong 7 ngày qua. Xu hướng XP so với 7 ngày trước (tăng hoặc giảm hơn 5%).",
+      "activeOf": "{active} trên {students} ({percent}%)",
+      "actions": "Thao tác",
+      "columns": {
+        "name": "Lớp",
+        "students": "Học sinh",
+        "active": "Hoạt động (7 ngày)",
+        "level": "Cấp độ trung bình",
+        "xp": "XP (7 ngày)",
+        "trend": "Xu hướng",
+        "status": "Trạng thái"
+      },
+      "trend": {
+        "up": "Tăng",
+        "flat": "Đi ngang",
+        "down": "Giảm"
+      },
+      "status": {
+        "onTrack": "Đạt mục tiêu",
+        "someQuiet": "Hơi vắng",
+        "needsAttention": "Cần chú ý",
+        "noStudents": "Không có học sinh"
+      }
+    }
   },
   "TeacherUi": {
     "startClass": "Start class",

@@ -3519,7 +3519,17 @@
       "classes": "Classes",
       "students": "Students",
       "openAssignments": "Open assignments",
-      "needsHelp": "Need help"
+      "needsHelp": "Need help",
+      "activeStudents": "Active students (30 days)",
+      "activeStudentsOf": "{active} of {total} ({percent}%)",
+      "noStudentsYet": "No students yet",
+      "averageLevel": "Average level",
+      "averageLevelHint": "Primary level 1 to 15",
+      "activeToday": "Active today",
+      "activeTodayOf": "{count, plural, one {of # student} other {of # students}}",
+      "completedToday": "Completed today",
+      "completedTodayHint": "assignments done",
+      "needsHelpHint": "See the list below"
     },
     "classes": {
       "heading": "My classes",
@@ -3548,7 +3558,41 @@
       "more": "{count, plural, one {# more student} other {# more students}}"
     },
     "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again."
+    "loadErrorHint": "Check your connection and try again.",
+    "table": {
+      "search": "Search by class name",
+      "searchLabel": "Search classes",
+      "sortBy": "Sort by",
+      "sortAsc": "Ascending",
+      "sortDesc": "Descending",
+      "sortDirection": "Change the sort order",
+      "csv": "Download CSV",
+      "csvLabel": "Download the shown classes as a CSV file",
+      "noMatch": "No class matches “{query}”.",
+      "legend": "Active means one activity in the last 7 days. XP trend compares with the 7 days before (up or down by more than 5%).",
+      "activeOf": "{active} of {students} ({percent}%)",
+      "actions": "Actions",
+      "columns": {
+        "name": "Class",
+        "students": "Students",
+        "active": "Active (7 days)",
+        "level": "Average level",
+        "xp": "XP (7 days)",
+        "trend": "Trend",
+        "status": "Status"
+      },
+      "trend": {
+        "up": "Up",
+        "flat": "Flat",
+        "down": "Down"
+      },
+      "status": {
+        "onTrack": "On track",
+        "someQuiet": "Some quiet",
+        "needsAttention": "Needs attention",
+        "noStudents": "No students"
+      }
+    }
   },
   "TeacherUi": {
     "startClass": "Start class",

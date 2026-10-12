@@ -3519,7 +3519,17 @@
       "classes": "Classes",
       "students": "Students",
       "openAssignments": "Open assignments",
-      "needsHelp": "Need help"
+      "needsHelp": "Need help",
+      "activeStudents": "活跃学生（30 天）",
+      "activeStudentsOf": "{active} / {total}（{percent}%）",
+      "noStudentsYet": "还没有学生",
+      "averageLevel": "平均等级",
+      "averageLevelHint": "Primary 等级 1 至 15",
+      "activeToday": "今日活跃",
+      "activeTodayOf": "共 {count} 名学生",
+      "completedToday": "今日完成",
+      "completedTodayHint": "已完成的作业",
+      "needsHelpHint": "见下方名单"
     },
     "classes": {
       "heading": "My classes",
@@ -3548,7 +3558,41 @@
       "more": "{count, plural, one {# more student} other {# more students}}"
     },
     "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again."
+    "loadErrorHint": "Check your connection and try again.",
+    "table": {
+      "search": "按班级名称搜索",
+      "searchLabel": "搜索班级",
+      "sortBy": "排序方式",
+      "sortAsc": "升序",
+      "sortDesc": "降序",
+      "sortDirection": "更改排序顺序",
+      "csv": "下载 CSV",
+      "csvLabel": "将显示的班级下载为 CSV 文件",
+      "noMatch": "没有班级匹配“{query}”。",
+      "legend": "活跃指 7 天内至少有一次活动。XP 趋势与前 7 天比较（上升或下降超过 5%）。",
+      "activeOf": "{active} / {students}（{percent}%）",
+      "actions": "操作",
+      "columns": {
+        "name": "班级",
+        "students": "学生",
+        "active": "活跃（7 天）",
+        "level": "平均等级",
+        "xp": "XP（7 天）",
+        "trend": "趋势",
+        "status": "状态"
+      },
+      "trend": {
+        "up": "上升",
+        "flat": "持平",
+        "down": "下降"
+      },
+      "status": {
+        "onTrack": "达标",
+        "someQuiet": "部分安静",
+        "needsAttention": "需要关注",
+        "noStudents": "没有学生"
+      }
+    }
   },
   "TeacherUi": {
     "startClass": "Start class",

@@ -3519,7 +3519,17 @@
       "classes": "ชั้นเรียน",
       "students": "นักเรียน",
       "openAssignments": "งานที่ยังเปิดอยู่",
-      "needsHelp": "ต้องการความช่วยเหลือ"
+      "needsHelp": "ต้องการความช่วยเหลือ",
+      "activeStudents": "นักเรียนที่ใช้งาน (30 วัน)",
+      "activeStudentsOf": "{active} จาก {total} คน ({percent}%)",
+      "noStudentsYet": "ยังไม่มีนักเรียน",
+      "averageLevel": "ระดับเฉลี่ย",
+      "averageLevelHint": "ระดับ Primary 1 ถึง 15",
+      "activeToday": "ใช้งานวันนี้",
+      "activeTodayOf": "จากนักเรียน {count} คน",
+      "completedToday": "ทำเสร็จวันนี้",
+      "completedTodayHint": "งานที่ทำเสร็จ",
+      "needsHelpHint": "ดูรายชื่อด้านล่าง"
     },
     "classes": {
       "heading": "ชั้นเรียนของฉัน",
@@ -3548,7 +3558,41 @@
       "more": "{count, plural, other {อีก # คน}}"
     },
     "loadError": "โหลดหน้าหลักไม่สำเร็จ",
-    "loadErrorHint": "ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง"
+    "loadErrorHint": "ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+    "table": {
+      "search": "ค้นหาตามชื่อชั้นเรียน",
+      "searchLabel": "ค้นหาชั้นเรียน",
+      "sortBy": "เรียงตาม",
+      "sortAsc": "จากน้อยไปมาก",
+      "sortDesc": "จากมากไปน้อย",
+      "sortDirection": "เปลี่ยนลำดับการเรียง",
+      "csv": "ดาวน์โหลด CSV",
+      "csvLabel": "ดาวน์โหลดชั้นเรียนที่แสดงเป็นไฟล์ CSV",
+      "noMatch": "ไม่มีชั้นเรียนที่ตรงกับ “{query}”",
+      "legend": "ใช้งาน หมายถึงมีกิจกรรมอย่างน้อยหนึ่งครั้งใน 7 วันที่ผ่านมา แนวโน้ม XP เทียบกับ 7 วันก่อนหน้า (เพิ่มขึ้นหรือลดลงเกิน 5%)",
+      "activeOf": "{active} จาก {students} คน ({percent}%)",
+      "actions": "การดำเนินการ",
+      "columns": {
+        "name": "ชั้นเรียน",
+        "students": "นักเรียน",
+        "active": "ใช้งาน (7 วัน)",
+        "level": "ระดับเฉลี่ย",
+        "xp": "XP (7 วัน)",
+        "trend": "แนวโน้ม",
+        "status": "สถานะ"
+      },
+      "trend": {
+        "up": "เพิ่มขึ้น",
+        "flat": "คงที่",
+        "down": "ลดลง"
+      },
+      "status": {
+        "onTrack": "ตามเป้า",
+        "someQuiet": "เงียบบางส่วน",
+        "needsAttention": "ต้องดูแล",
+        "noStudents": "ไม่มีนักเรียน"
+      }
+    }
   },
   "TeacherUi": {
     "startClass": "เริ่มชั้นเรียน",
