@@ -196,6 +196,23 @@ These defaults are chosen in this spec. The owner can change each one at the des
 - The table replaces the class cards (FR-8).
 - The 70 % / 40 % and 5 % limits (legacy values).
 
+Defaults used in Phase 1 (each one: look check pending (owner, async)): XP of the last 7 days with a working trend; engagement status; table replaces the class cards; limits 70 % / 40 % / 5 %; place `guild-hall`; block order as in "Design Decisions (Phase 1)".
+
+## Design Decisions (Phase 1)
+
+Mocks: `design/captures.md`. The owner look check is pending (owner, async, decision 2026-10-12).
+The defaults below stand until the owner changes one.
+
+- Place: `guild-hall` with `Scene contained` (the page sits in the staff shell, as the admin dashboard does). Look check pending (owner, async).
+- Block order: header, summary `Panel` (8 numbers), class table `Panel lg:col-span-2`, `ClassBookSlot` `lg:col-span-2` (as class_books S5 leaves it, no change), one Class Quest `Panel` for each class, open assignments `Panel`, who needs help `Panel`. The last two share one row at 1024 px and more. Look check pending (owner, async).
+- Summary strip: one `Panel` with a 2-column grid at 375 px and a 4-column grid at 768 px and more. Row 1: classes, students, active students (30 days) with a `Meter` and "n of m (p%)", average level. Row 2: active today, completed today, open assignments, need help (red number when above 0). With no student: average level shows "—" and the active tile shows "No students yet".
+- Class table: search box, "Download CSV" `RpgButton small`, and a sort select (below 768 px). At 768 px and more it is a table with 7 sort buttons in `th` with `aria-sort`, and the "Start class" `RpgLink small tone="gold"` in the last column. Below 768 px each class is a card with a status chip, a 2-column list of values, and a full-width "Start class". The class name is the link to the class page.
+- Trend and status show a symbol and a word, never colour alone. Trend: up, flat, down. Status: On track, Some quiet, Needs attention, No students.
+- Sort select and sort button labels: Class, Students, Active (7 days), Average level, XP (7 days), Trend, Status. Sort order for trend: down, flat, up. For status: needs attention, some quiet, on track, no students.
+- Active column at 1280 px reads "21 of 24 (88%)". Long class names wrap in the first column (`max-w-[13rem]`); all other cells do not wrap.
+- A search with no match shows one `role="status"` line. No class shows the "My classes" empty state with "Go to My Classes".
+- Phone height: each class card is about 280 px, so six classes need about 1700 px. Accepted for the first release.
+
 ## Out of Scope
 
 - AI insights on the teacher home (SYS-02, after the cutover).
