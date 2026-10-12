@@ -111,20 +111,20 @@ _Story ref: spec.md#story-s4_
 ## Phase S5: Chapter questions with XP
 _Story ref: spec.md#story-s5_
 
-- [ ] Task: Contracts for the chapter questions
-    - [ ] `packages/domain/src/stories/contracts.ts`: the question output without answers; `submitChapterMcq`, `retakeChapterMcq`, `submitChapterWritten` (SA and LA) inputs and outputs
-    - [ ] `types/enum.ts`: `STORIES_MC_QUESTION`, `STORIES_SA_QUESTION`, `STORIES_LA_QUESTION` (text values; no database enum change)
+- [x] Task: Contracts for the chapter questions
+    - [x] `packages/domain/src/stories/contracts.ts`: the question output without answers; `submitChapterMcq`, `retakeChapterMcq`, `submitChapterWritten` (SA and LA) inputs and outputs (naming: `gradeChapterMcq` is the MCQ submit — a pure server grade, the caller persists the activity row and enforces once-only XP; `resolveChapterWritten` is the written submit; `retakeChapterMcq` matches)
+    - [x] `types/enum.ts`: `STORIES_MC_QUESTION`, `STORIES_SA_QUESTION`, `STORIES_LA_QUESTION` (text values; no database enum change; `XP_AWARD_BY_ACTIVITY` entries mirror the article question awards)
 - [ ] Task: Tests for grading and XP
-    - [ ] `packages/domain/src/__tests__/stories-questions.test.ts`: 5 random of 10 MCQ, no answer in the output; the server grade; 2 XP for each correct answer; the XP once for each chapter after a retake; SA up to 5 and LA up to 25; one SA and one LA submit for each chapter; a non-student is refused (or the preview refusal, spec D8)
-    - [ ] `actions/__tests__/story-question.test.ts`: the XP, level, and GP write reuses the `finishQuiz` block; no evidence job starts
-    - [ ] `actions/__tests__/finish-quiz-evidence.test.ts` and `actions/__tests__/user-activity-xp.test.ts`: the article `finishQuiz` behavior stays the same after the XP block moves (regression)
-    - [ ] `server/utils/__tests__/assistant.test.ts`: the SAQ and LAQ feedback read the chapter passage for a chapter source
+    - [x] `packages/domain/src/__tests__/stories-questions.test.ts`: 5 random of 10 MCQ, no answer in the output; the server grade; 2 XP for each correct answer; the XP once for each chapter after a retake (`retakeChapterMcq` `xpAvailable`); SA up to 5 and LA up to 25; one SA and one LA submit for each chapter; a non-student is refused (role guard `progress:record`; spec D8 preview guard stays with the staff track)
+    - [ ] `actions/__tests__/story-question.test.ts`: the XP, level, and GP write reuses the `finishQuiz` block; no evidence job starts — open: needs `actions/story-question.ts` (deferred with the XP-block move below)
+    - [ ] `actions/__tests__/finish-quiz-evidence.test.ts` and `actions/__tests__/user-activity-xp.test.ts`: the article `finishQuiz` behavior stays the same after the XP block moves (regression) — open: no `finishQuiz` change made; both suites pass unchanged (15 tests)
+    - [ ] `server/utils/__tests__/assistant.test.ts`: the SAQ and LAQ feedback read the chapter passage for a chapter source — open: `server/utils/assistant.ts` untouched (`getChapterWrittenQuestion` is ready for it)
 - [ ] Task: Implement the chapter questions
-    - [ ] `packages/domain/src/stories/mutations.ts`: grading and the activity record; `packages/domain/src/stories/queries.ts`: the chapter questions
-    - [ ] Move the XP, level, and GP block of `actions/question.ts` `finishQuiz` into `server/xp/award-question-xp.ts`; call it from `finishQuiz` and from `actions/story-question.ts`
-    - [ ] `server/utils/assistant.ts`: a passage source (article or chapter) for `getSaqFeedback` and `getLaqFeedback`
-    - [ ] Reuse `components/articles/questions/*` with a chapter source prop; add the LAQ length rule and the 2 feedback tries
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+    - [x] `packages/domain/src/stories/mutations.ts`: grading and the activity record (`gradeChapterMcq`, `retakeChapterMcq` with `xpAvailable`, `resolveChapterWritten` with one-submit-per-chapter; callers write the `STORIES_*` rows and pay XP); `packages/domain/src/stories/queries.ts`: the chapter questions (`getChapterQuestions`, `getChapterWrittenQuestion`)
+    - [ ] Move the XP, level, and GP block of `actions/question.ts` `finishQuiz` into `server/xp/award-question-xp.ts`; call it from `finishQuiz` and from `actions/story-question.ts` — open: deferred, no chapter-page consumer exists yet; moving without a caller is a speculative refactor
+    - [ ] `server/utils/assistant.ts`: a passage source (article or chapter) for `getSaqFeedback` and `getLaqFeedback` — open
+    - [ ] Reuse `components/articles/questions/*` with a chapter source prop; add the LAQ length rule and the 2 feedback tries — open: no chapter page to host the UI yet (Phase S4 remainder)
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`) — done: `generate.sh` clean; `doctor.sh` fails only on pre-existing A13 (stale archived dir `agents_md_audit_science_advantage_20260603`, untouched by this track)
 - [ ] Task: Measure - User Manual Verification 'Phase S5: Chapter questions with XP' (Protocol in workflow.md)
 
 ## Phase S6: Chapter flashcards

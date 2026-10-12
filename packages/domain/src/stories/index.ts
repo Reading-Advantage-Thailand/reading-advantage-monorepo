@@ -1,6 +1,6 @@
 export { stories, storyRecords } from "@reading-advantage/db/schema";
-export { getStory, listStories, listPrimaryStories, getStoryForStudent, getChapterForStudent } from "./queries.js";
-export { recordStoryRead } from "./mutations.js";
+export { getStory, listStories, listPrimaryStories, getStoryForStudent, getChapterForStudent, getChapterQuestions, getChapterWrittenQuestion } from "./queries.js";
+export { recordStoryRead, gradeChapterMcq, retakeChapterMcq, resolveChapterWritten } from "./mutations.js";
 export { STORY_PERMISSIONS } from "./permissions.js";
 export { StoryError, StoryNotFoundError, ChapterNotFoundError } from "./errors.js";
 export {
@@ -15,6 +15,28 @@ export {
   getChapterForStudentInputSchema,
   getChapterForStudentOutputSchema,
   chapterWordSchema,
+  STORY_MCQ_PER_QUIZ,
+  STORY_XP_PER_CORRECT_MC,
+  STORY_SA_MAX_XP,
+  STORY_LA_MAX_XP,
+  STORY_LA_MAX_CHARS,
+  STORY_LA_CHARS_PER_LEVEL,
+  STORY_LA_FEEDBACK_TRIES,
+  STORY_ACTIVITY_TYPES,
+  storyQuestionKindSchema,
+  storyLaMinChars,
+  getChapterQuestionsInputSchema,
+  getChapterQuestionsOutputSchema,
+  chapterMcqSchema,
+  chapterWrittenQuestionSchema,
+  gradeChapterMcqInputSchema,
+  gradeChapterMcqOutputSchema,
+  retakeChapterMcqInputSchema,
+  retakeChapterMcqOutputSchema,
+  resolveChapterWrittenInputSchema,
+  resolveChapterWrittenOutputSchema,
+  getChapterWrittenQuestionInputSchema,
+  getChapterWrittenQuestionOutputSchema,
   type GetChapterForStudentInput,
   type GetChapterForStudentOutput,
   type ChapterWord,
@@ -22,6 +44,17 @@ export {
   type GetStoryForStudentOutput,
   type StoryChapterItem,
   type StoryCharacter,
+  type StoryQuestionKind,
+  type GetChapterQuestionsInput,
+  type GetChapterQuestionsOutput,
+  type GradeChapterMcqInput,
+  type GradeChapterMcqOutput,
+  type RetakeChapterMcqInput,
+  type RetakeChapterMcqOutput,
+  type ResolveChapterWrittenInput,
+  type ResolveChapterWrittenOutput,
+  type GetChapterWrittenQuestionInput,
+  type GetChapterWrittenQuestionOutput,
   type ListPrimaryStoriesInput,
   type ListPrimaryStoriesOutput,
   type StoryCard,

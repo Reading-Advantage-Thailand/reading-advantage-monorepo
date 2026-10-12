@@ -4048,6 +4048,9 @@
     "readAgain": "Read again",
     "noChapters": "This story has no chapters yet.",
     "noCharacters": "This story has no characters yet.",
-    "background": "Background:"
+    "background": "Background:",
+    "chapterNav": "Chapter navigation",
+    "chapterNext": "Next chapter",
+    "chapterToStory": "Back to the story"
   }
 }

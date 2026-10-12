@@ -131,3 +131,145 @@ export const getChapterForStudentOutputSchema = z.object({
 });
 
 export type GetChapterForStudentOutput = z.infer<typeof getChapterForStudentOutputSchema>;
+
+/** MCQ shown in one quiz of a chapter (5 random of the bank). */
+export const STORY_MCQ_PER_QUIZ = 5;
+/** XP for each correct MCQ answer (legacy `UserXpEarned.MCQuestion`). */
+export const STORY_XP_PER_CORRECT_MC = 2;
+/** Highest SAQ award (the grader scores 1 to 5). */
+export const STORY_SA_MAX_XP = 5;
+/** Highest LAQ award (five rubric scores of 1 to 5). */
+export const STORY_LA_MAX_XP = 25;
+/** Highest LAQ answer length in characters. */
+export const STORY_LA_MAX_CHARS = 2000;
+/** LAQ answer minimum, in characters for each student level. */
+export const STORY_LA_CHARS_PER_LEVEL = 30;
+/** Feedback requests allowed for one LAQ answer. */
+export const STORY_LA_FEEDBACK_TRIES = 2;
+
+/** The activity types of chapter answers. They are text values in `user_activity`; no enum change. */
+export const STORY_ACTIVITY_TYPES = {
+  mc: "STORIES_MC_QUESTION",
+  sa: "STORIES_SA_QUESTION",
+  la: "STORIES_LA_QUESTION",
+} as const;
+
+/** The three chapter question kinds. */
+export const storyQuestionKindSchema = z.enum(["mc", "sa", "la"]);
+export type StoryQuestionKind = z.infer<typeof storyQuestionKindSchema>;
+
+/**
+ * Smallest LAQ answer for a student level.
+ * @param level The student reading level.
+ * @returns The minimum number of characters.
+ */
+export function storyLaMinChars(level: number): number {
+  return Math.max(1, Math.floor(level)) * STORY_LA_CHARS_PER_LEVEL;
+}
+
+/** Input of `getChapterQuestions`: the chapter id (a UUID). */
+export const getChapterQuestionsInputSchema = z.object({ chapterId: z.string().uuid() });
+export type GetChapterQuestionsInput = z.input<typeof getChapterQuestionsInputSchema>;
+
+/** One MCQ for the client. It has no answer, no index of the answer, and no evidence text. */
+export const chapterMcqSchema = z.object({
+  id: z.string(),
+  question: z.string(),
+  options: z.array(z.string()),
+});
+
+/** One written question (SAQ or LAQ) for the client. It has no sample answer. */
+export const chapterWrittenQuestionSchema = z.object({ id: z.string(), question: z.string() });
+
+/**
+ * Output of `getChapterQuestions`: up to 5 random MCQ, one SAQ, one LAQ, and what the user finished.
+ * `mcScore` is the last MCQ score of the user (null before the first submit).
+ */
+export const getChapterQuestionsOutputSchema = z.object({
+  chapterId: z.string(),
+  mcq: z.array(chapterMcqSchema),
+  saq: chapterWrittenQuestionSchema.nullable(),
+  laq: chapterWrittenQuestionSchema.nullable(),
+  done: z.object({ mc: z.boolean(), sa: z.boolean(), la: z.boolean() }),
+  mcScore: z.number().int().min(0).nullable(),
+});
+export type GetChapterQuestionsOutput = z.infer<typeof getChapterQuestionsOutputSchema>;
+
+/** Input of `gradeChapterMcq`: the chapter and the answer text for each question shown. */
+export const gradeChapterMcqInputSchema = z.object({
+  chapterId: z.string().uuid(),
+  answers: z
+    .array(z.object({ questionId: z.string().uuid(), answer: z.string().max(1000) }))
+    .min(1)
+    .max(STORY_MCQ_PER_QUIZ),
+});
+export type GradeChapterMcqInput = z.input<typeof gradeChapterMcqInputSchema>;
+
+/**
+ * Output of `gradeChapterMcq`: the server grade. `xpEarned` is the award if this is the first
+ * submit of the chapter; the caller pays it only when the activity row is new.
+ */
+export const gradeChapterMcqOutputSchema = z.object({
+  score: z.number().int().min(0),
+  total: z.number().int().min(1),
+  xpEarned: z.number().int().min(0),
+  results: z.array(
+    z.object({
+      questionId: z.string(),
+      question: z.string(),
+      answer: z.string(),
+      correct: z.boolean(),
+      correctAnswer: z.string(),
+      textualEvidence: z.string().nullable(),
+    }),
+  ),
+});
+export type GradeChapterMcqOutput = z.infer<typeof gradeChapterMcqOutputSchema>;
+
+/** Input of `retakeChapterMcq`: the chapter id (a UUID). */
+export const retakeChapterMcqInputSchema = z.object({ chapterId: z.string().uuid() });
+export type RetakeChapterMcqInput = z.input<typeof retakeChapterMcqInputSchema>;
+
+/**
+ * Output of `retakeChapterMcq`: 5 fresh random MCQ without answers, and whether the chapter
+ * still pays MC XP (`false` after the first submit: a retake gives a new score but no second XP).
+ */
+export const retakeChapterMcqOutputSchema = z.object({
+  chapterId: z.string(),
+  mcq: z.array(chapterMcqSchema),
+  xpAvailable: z.boolean(),
+});
+export type RetakeChapterMcqOutput = z.infer<typeof retakeChapterMcqOutputSchema>;
+
+/** Input of `resolveChapterWritten`: one SA or LA submit with the score and feedback of the AI. */
+export const resolveChapterWrittenInputSchema = z.object({
+  chapterId: z.string().uuid(),
+  kind: z.enum(["sa", "la"]),
+  questionId: z.string().uuid(),
+  answer: z.string().trim().min(1).max(STORY_LA_MAX_CHARS),
+  score: z.number(),
+});
+export type ResolveChapterWrittenInput = z.input<typeof resolveChapterWrittenInputSchema>;
+
+/** Output of `resolveChapterWritten`: the question text and the XP award (score clamped to the cap). */
+export const resolveChapterWrittenOutputSchema = z.object({
+  question: z.string(),
+  suggestedAnswer: z.string().nullable(),
+  xpEarned: z.number().int().min(0),
+});
+export type ResolveChapterWrittenOutput = z.infer<typeof resolveChapterWrittenOutputSchema>;
+
+/** Input of `getChapterWrittenQuestion`: the question the feedback is about. */
+export const getChapterWrittenQuestionInputSchema = z.object({
+  chapterId: z.string().uuid(),
+  kind: z.enum(["sa", "la"]),
+  questionId: z.string().uuid(),
+});
+export type GetChapterWrittenQuestionInput = z.input<typeof getChapterWrittenQuestionInputSchema>;
+
+/** Output of `getChapterWrittenQuestion`: the question text and the sample answer (server use only). */
+export const getChapterWrittenQuestionOutputSchema = z.object({
+  question: z.string(),
+  suggestedAnswer: z.string().nullable(),
+});
+export type GetChapterWrittenQuestionOutput = z.infer<typeof getChapterWrittenQuestionOutputSchema>;

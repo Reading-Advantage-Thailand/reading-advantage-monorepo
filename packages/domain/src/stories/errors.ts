@@ -13,8 +13,8 @@ export class StoryNotFoundError extends StoryError {
 }
 
 export class ChapterNotFoundError extends StoryError {
-  constructor(storyId: string, chapterNumber: number) {
-    super(`Chapter not found: ${storyId}/${chapterNumber}`);
+  constructor(storyId: string, chapterNumber?: number) {
+    super(chapterNumber === undefined ? `Chapter not found: ${storyId}` : `Chapter not found: ${storyId}/${chapterNumber}`);
     this.name = "ChapterNotFoundError";
   }
 }
