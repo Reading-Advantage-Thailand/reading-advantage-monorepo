@@ -39,6 +39,8 @@ import {
 import React, { useState, useRef } from "react";
 import { parse } from "csv/sync";
 import { useTranslations } from "next-intl";
+import { useSession } from "@reading-advantage/auth-client";
+import { SchoolSelect } from "@/components/admin/school-select";
 
 export default function ImportDataPage() {
   const t = useTranslations("ImportData");
@@ -50,6 +52,9 @@ export default function ImportDataPage() {
   const [uploadResult, setUploadResult] = useState<any>(null);
   const [uploadError, setUploadError] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user } = useSession();
+  const isSystem = user?.role === "SYSTEM";
+  const [schoolId, setSchoolId] = useState("");
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -112,6 +117,8 @@ export default function ImportDataPage() {
       // Create FormData to send file
       const formData = new FormData();
       formData.append("file", selectedFile);
+      // Only SYSTEM names the target school; the server ignores the field for other roles.
+      if (isSystem) formData.append("schoolId", schoolId);
 
       // Simulate progress while uploading
       const progressInterval = setInterval(() => {
@@ -261,6 +268,12 @@ export default function ImportDataPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              <SchoolSelect value={schoolId} onChange={setSchoolId} />
+              {isSystem && !schoolId && (
+                <p className="text-muted-foreground text-sm">
+                  {t("upload.chooseSchool")}
+                </p>
+              )}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="file-upload">{t("upload.selectFile")}</Label>
@@ -327,6 +340,12 @@ export default function ImportDataPage() {
                   <AlertTitle>{t("upload.successTitle")}</AlertTitle>
                   <AlertDescription>
                     <div className="mt-2 space-y-1">
+                      {uploadResult.schoolInfo?.name && (
+                        <p>
+                          <strong>{t("upload.success.school")}:</strong>{" "}
+                          {uploadResult.schoolInfo.name}
+                        </p>
+                      )}
                       <p>
                         <strong>{t("upload.success.file")}:</strong>{" "}
                         {uploadResult.originalName}
@@ -380,7 +399,7 @@ export default function ImportDataPage() {
               <div className="flex gap-2">
                 <Button
                   onClick={handleUpload}
-                  disabled={!selectedFile || isUploading}
+                  disabled={!selectedFile || isUploading || (isSystem && !schoolId)}
                   className="flex-1"
                 >
                   {isUploading ? (

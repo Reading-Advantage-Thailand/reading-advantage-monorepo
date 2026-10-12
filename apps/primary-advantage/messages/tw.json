@@ -260,6 +260,7 @@
       "maxSize": "最大大小：5MB",
       "browse": "瀏覽",
       "supportedFormat": "支援格式：僅 CSV 檔，最大 5MB",
+      "chooseSchool": "匯入前請先選擇學校。",
       "fileSelected": {
         "title": "已選擇檔案",
         "name": "名稱",
@@ -269,6 +270,7 @@
       "failedTitle": "上傳失敗",
       "successTitle": "上傳成功",
       "success": {
+        "school": "學校",
         "file": "檔案",
         "size": "大小",
         "savedAs": "另存為",

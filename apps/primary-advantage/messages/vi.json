@@ -260,6 +260,7 @@
       "maxSize": "Kích thước tối đa: 5MB",
       "browse": "Duyệt",
       "supportedFormat": "Định dạng hỗ trợ: chỉ tệp CSV, kích thước tối đa 5MB",
+      "chooseSchool": "Hãy chọn trường trước khi nhập dữ liệu.",
       "fileSelected": {
         "title": "Đã chọn tệp",
         "name": "Tên",
@@ -269,6 +270,7 @@
       "failedTitle": "Tải lên thất bại",
       "successTitle": "Tải lên thành công",
       "success": {
+        "school": "Trường",
         "file": "Tệp",
         "size": "Kích thước",
         "savedAs": "Lưu dưới tên",

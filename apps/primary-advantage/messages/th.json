@@ -260,6 +260,7 @@
       "maxSize": "ขนาดสูงสุด: 5MB",
       "browse": "เลือกไฟล์",
       "supportedFormat": "รูปแบบที่รองรับ: ไฟล์ CSV เท่านั้น ขนาดสูงสุด 5MB",
+      "chooseSchool": "เลือกโรงเรียนก่อนนำเข้าข้อมูล",
       "fileSelected": {
         "title": "เลือกไฟล์แล้ว",
         "name": "ชื่อ",
@@ -269,6 +270,7 @@
       "failedTitle": "อัปโหลดล้มเหลว",
       "successTitle": "อัปโหลดสำเร็จ",
       "success": {
+        "school": "โรงเรียน",
         "file": "ไฟล์",
         "size": "ขนาด",
         "savedAs": "บันทึกเป็น",

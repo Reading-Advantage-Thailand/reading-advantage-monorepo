@@ -260,6 +260,7 @@
       "maxSize": "Max size: 5MB",
       "browse": "Browse",
       "supportedFormat": "Supported format: CSV files only, maximum size 5MB",
+      "chooseSchool": "Choose a school before you import.",
       "fileSelected": {
         "title": "File Selected",
         "name": "Name",
@@ -269,6 +270,7 @@
       "failedTitle": "Upload Failed",
       "successTitle": "Upload Successful",
       "success": {
+        "school": "School",
         "file": "File",
         "size": "Size",
         "savedAs": "Saved as",
