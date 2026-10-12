@@ -1,14 +1,20 @@
-import { and, asc, count, eq, gte, ilike, lte, or, type SQL } from "drizzle-orm";
+import { and, asc, count, eq, gte, ilike, inArray, like, lte, or, type SQL } from "drizzle-orm";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
-import { stories } from "@reading-advantage/db/schema";
+import { chapters, stories, userActivity } from "@reading-advantage/db/schema";
 import {
   STORIES_PAGE_SIZE,
   listPrimaryStoriesInputSchema,
   listPrimaryStoriesOutputSchema,
   type ListPrimaryStoriesInput,
   type ListPrimaryStoriesOutput,
+  getStoryForStudentInputSchema,
+  getStoryForStudentOutputSchema,
+  storyCharacterSchema,
+  type GetStoryForStudentInput,
+  type GetStoryForStudentOutput,
 } from "./contracts.js";
+import { StoryNotFoundError } from "./errors.js";
 
 /**
  * Retrieves a single story by ID. Throws if the story does not exist.
@@ -143,5 +149,95 @@ export async function listPrimaryStories({
     page,
     pageSize: STORIES_PAGE_SIZE,
     genres: genreRows.map((g) => g.genre).filter((g): g is string => Boolean(g)),
+  });
+}
+
+/**
+ * Loads one published story for the story page: the story, its chapters in order, the chapters
+ * that the user finished (`STORIES_*` activity rows with the chapter id as target), and the
+ * characters of the story bible. A student sees only the level window (`user.level` +/- 1);
+ * staff see every published story.
+ *
+ * @param db - Database client
+ * @param user - Authenticated user context (its level sets the student window)
+ * @param tenant - Tenant (school) scope
+ * @param input - The `storyId` (a UUID)
+ * @returns The story, the chapters, the finished chapter ids, and the characters
+ * @throws StoryNotFoundError when no published story in the window has this id
+ * @throws When the input is invalid or the user lacks `story:read`
+ */
+export async function getStoryForStudent({
+  db,
+  user,
+  tenant,
+  input,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+  input: GetStoryForStudentInput;
+}): Promise<GetStoryForStudentOutput> {
+  assertCan(user, "story:read", tenant);
+  const { storyId } = getStoryForStudentInputSchema.parse(input);
+
+  const rules: SQL[] = [eq(stories.id, storyId), eq(stories.isPublic, true)];
+  if (!STAFF_ROLES.has(user.role)) {
+    rules.push(gte(stories.raLevel, Math.max(user.level - 1, 1)), lte(stories.raLevel, user.level + 1));
+  }
+
+  const rawDb = db.unscoped("stories and chapters are a global content catalog with no schoolId");
+  const [story] = await rawDb
+    .select({
+      id: stories.id,
+      title: stories.title,
+      summary: stories.summary,
+      translatedSummary: stories.translatedSummary,
+      genre: stories.genre,
+      raLevel: stories.raLevel,
+      cefrLevel: stories.cefrLevel,
+      image: stories.image,
+      storyBible: stories.storyBible,
+    })
+    .from(stories)
+    .where(and(...rules))
+    .limit(1);
+  if (!story) throw new StoryNotFoundError(storyId);
+
+  const chapterRows = await rawDb
+    .select({
+      id: chapters.id,
+      chapterNumber: chapters.chapterNumber,
+      title: chapters.title,
+      summary: chapters.summary,
+      translatedSummary: chapters.translatedSummary,
+    })
+    .from(chapters)
+    .where(eq(chapters.storyId, storyId))
+    .orderBy(asc(chapters.chapterNumber));
+
+  const done = chapterRows.length
+    ? await rawDb
+        .select({ targetId: userActivity.targetId })
+        .from(userActivity)
+        .where(
+          and(
+            eq(userActivity.userId, user.id),
+            like(userActivity.activityType, "STORIES_%"),
+            inArray(userActivity.targetId, chapterRows.map((c) => c.id)),
+          ),
+        )
+    : [];
+
+  const { image, storyBible, ...card } = story;
+  const characters = (Array.isArray(storyBible) ? storyBible : []).flatMap((c) => {
+    const parsed = storyCharacterSchema.safeParse(c);
+    return parsed.success ? [parsed.data] : [];
+  });
+
+  return getStoryForStudentOutputSchema.parse({
+    story: { ...card, imageKey: image?.trim() || card.id },
+    chapters: chapterRows,
+    finishedChapterIds: [...new Set(done.map((d) => d.targetId).filter((t): t is string => Boolean(t)))],
+    characters,
   });
 }

@@ -34,3 +34,53 @@ export const listPrimaryStoriesOutputSchema = z.object({
 });
 
 export type ListPrimaryStoriesOutput = z.infer<typeof listPrimaryStoriesOutputSchema>;
+
+/** Input of `getStoryForStudent`: the story id (a UUID). */
+export const getStoryForStudentInputSchema = z.object({ storyId: z.string().uuid() });
+
+export type GetStoryForStudentInput = z.input<typeof getStoryForStudentInputSchema>;
+
+/** Summary text by language code (`th`, `cn`, `tw`, `vi`); bad data reads as no translation. */
+const translatedTextSchema = z.record(z.string(), z.string()).nullable().catch(null);
+
+/** One chapter row of the story page. */
+export const storyChapterItemSchema = z.object({
+  id: z.string(),
+  chapterNumber: z.number().int(),
+  title: z.string(),
+  summary: z.string().nullable(),
+  translatedSummary: translatedTextSchema,
+});
+
+export type StoryChapterItem = z.infer<typeof storyChapterItemSchema>;
+
+/** One character of the story bible. */
+export const storyCharacterSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().nullish().transform((v) => v ?? null),
+  background: z.string().nullish().transform((v) => v ?? null),
+});
+
+export type StoryCharacter = z.infer<typeof storyCharacterSchema>;
+
+/**
+ * Output of `getStoryForStudent`: the story, its chapters in order, the ids of the chapters that
+ * the user finished (`STORIES_*` activity rows), and the characters of the story bible.
+ */
+export const getStoryForStudentOutputSchema = z.object({
+  story: z.object({
+    id: z.string(),
+    title: z.string(),
+    summary: z.string().nullable(),
+    translatedSummary: translatedTextSchema,
+    genre: z.string().nullable(),
+    raLevel: z.number().int().nullable(),
+    cefrLevel: z.string().nullable(),
+    imageKey: z.string(),
+  }),
+  chapters: z.array(storyChapterItemSchema),
+  finishedChapterIds: z.array(z.string()),
+  characters: z.array(storyCharacterSchema),
+});
+
+export type GetStoryForStudentOutput = z.infer<typeof getStoryForStudentOutputSchema>;

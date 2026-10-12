@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import type { DB } from "@reading-advantage/db";
-import { getStory, listStories, listPrimaryStories, recordStoryRead } from "../stories/index.js";
+import { getStory, listStories, listPrimaryStories, getStoryForStudent, recordStoryRead } from "../stories/index.js";
 import { createTenantDB } from "../db-contract.js";
 import { createMockDb } from "./mock-db.js";
 
@@ -9,6 +9,8 @@ vi.mock("@reading-advantage/db/schema", () => ({
     id: "id", isPublic: "isPublic", raLevel: "raLevel", genre: "genre", title: "title",
     subgenre: "subgenre", image: "image", cefrLevel: "cefrLevel",
   },
+  chapters: { id: "ch.id", storyId: "ch.storyId", chapterNumber: "chapterNumber" },
+  userActivity: { userId: "ua.userId", activityType: "activityType", targetId: "targetId" },
   storyRecords: { userId: "userId", storyId: "storyId", status: "status" },
   users: { id: "id" },
 }));
@@ -20,6 +22,8 @@ vi.mock("drizzle-orm", () => ({
   gte: vi.fn((col, val) => ({ col, val, type: "gte" })),
   lte: vi.fn((col, val) => ({ col, val, type: "lte" })),
   ilike: vi.fn((col, val) => ({ col, val, type: "ilike" })),
+  like: vi.fn((col, val) => ({ col, val, type: "like" })),
+  inArray: vi.fn((col, val) => ({ col, val, type: "inArray" })),
   asc: vi.fn((col) => ({ col, type: "asc" })),
   count: vi.fn(() => ({ type: "count" })),
 }));
@@ -226,5 +230,74 @@ describe("listPrimaryStories", () => {
     await expect(call(listDb(), mockAdmin, { page: 0 })).rejects.toThrow();
     const intern = { id: "i1", role: "INTERN" as const, schoolId: "school-1" };
     await expect(call(listDb(), intern)).rejects.toThrow();
+  });
+});
+
+describe("getStoryForStudent", () => {
+  const STORY = "11111111-1111-4111-8111-111111111111";
+  const story = {
+    id: STORY, title: "The Lantern Fox", summary: "A fox.", translatedSummary: { th: "จิ้งจอก" },
+    genre: "Fantasy", raLevel: 5, cefrLevel: "A2", image: "cl123",
+    storyBible: [{ name: "Fox", description: "Quick", background: "Forest" }, { description: "no name" }],
+  };
+  const chapterRows = [
+    { id: "c1", chapterNumber: 1, title: "One", summary: "s1", translatedSummary: { th: "หนึ่ง" } },
+    { id: "c2", chapterNumber: 2, title: "Two", summary: null, translatedSummary: "bad" },
+  ];
+  const teacher = { id: "t1", role: "TEACHER" as const, schoolId: "school-1" };
+
+  /** Mock DB: story row, chapter rows, activity rows (in select order). */
+  function storyDb(rows: unknown[] = [story], chapters: unknown[] = chapterRows, done: unknown[] = [{ targetId: "c1" }]) {
+    return createMockDb({ selectSequence: [rows, chapters, done] });
+  }
+  const call = (db: ReturnType<typeof createMockDb>, user: any, storyId = STORY) =>
+    getStoryForStudent({ db: wrapDb(db), user, tenant: mockTenant, input: { storyId } });
+  const leaves = (db: ReturnType<typeof createMockDb>, n: number) => {
+    const where = db.select.mock.results[n].value.from.mock.results[0].value.where.mock.calls[0][0] as { conds?: unknown[] };
+    const flat = (c: any): any[] => (c.conds ? c.conds.flatMap(flat) : [c]);
+    return flat(where);
+  };
+
+  it("returns the story, the ordered chapters, the finished chapters, and valid characters", async () => {
+    const result = await call(storyDb(), { ...mockStudent, level: 5 });
+    expect(result.story).toMatchObject({ id: STORY, title: "The Lantern Fox", imageKey: "cl123", translatedSummary: { th: "จิ้งจอก" } });
+    expect(result.chapters.map((c) => c.chapterNumber)).toEqual([1, 2]);
+    expect(result.chapters[1]!.translatedSummary).toBeNull();
+    expect(result.finishedChapterIds).toEqual(["c1"]);
+    expect(result.characters).toEqual([{ name: "Fox", description: "Quick", background: "Forest" }]);
+  });
+
+  it("limits a student to a published story in the level window", async () => {
+    const db = storyDb();
+    await call(db, { ...mockStudent, level: 5 });
+    const l = leaves(db, 0);
+    expect(l).toContainEqual({ col: "isPublic", val: true, type: "eq" });
+    expect(l).toContainEqual({ col: "raLevel", val: 4, type: "gte" });
+    expect(l).toContainEqual({ col: "raLevel", val: 6, type: "lte" });
+  });
+
+  it("shows staff a published story with no window", async () => {
+    const db = storyDb();
+    await call(db, teacher);
+    const l = leaves(db, 0);
+    expect(l).toContainEqual({ col: "isPublic", val: true, type: "eq" });
+    expect(l.some((c) => c.type === "gte" || c.type === "lte")).toBe(false);
+  });
+
+  it("throws StoryNotFoundError when no story matches (outside the window or not published)", async () => {
+    await expect(call(storyDb([]), { ...mockStudent, level: 9 })).rejects.toThrow(/Story not found/);
+  });
+
+  it("reads finished chapters from the user's STORIES_ activity rows by chapter id", async () => {
+    const db = storyDb();
+    await call(db, { ...mockStudent, level: 5 });
+    const l = leaves(db, 2);
+    expect(l).toContainEqual({ col: "ua.userId", val: "s1", type: "eq" });
+    expect(l).toContainEqual({ col: "activityType", val: "STORIES_%", type: "like" });
+    expect(l).toContainEqual({ col: "targetId", val: ["c1", "c2"], type: "inArray" });
+  });
+
+  it("rejects an input that is not a UUID", async () => {
+    await expect(call(storyDb(), { ...mockStudent, level: 5 }, "nope")).rejects.toThrow();
   });
 });
