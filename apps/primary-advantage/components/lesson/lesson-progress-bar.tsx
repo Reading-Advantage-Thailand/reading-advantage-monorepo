@@ -32,6 +32,7 @@ import {
 
 import { Article, AssignmentStudent, Classroom } from "@/types";
 import { saveArticleToFlashcard } from "@/actions/flashcard";
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import {
   getLessonProgressForTask,
   getLessonTaskFromProgress,
@@ -103,6 +104,8 @@ export default function LessonProgressBar({
   const t = useTranslations("Lesson");
   const tReedy = useTranslations("Reedy");
   const tError = useTranslations("Error");
+  // Preview mode (staff) reads no progress row and writes nothing; the steps move on screen only.
+  const { isPreview } = usePreviewSave();
   const article = (
     source === "assignment" ? assignment?.article : articleProp
   ) as Article | null;
@@ -192,7 +195,10 @@ export default function LessonProgressBar({
     };
 
     // Only fetch on initial load - don't refetch after transitions
-    if (!initialLoadComplete) {
+    if (!initialLoadComplete && isPreview) {
+      setCurrentTask(1);
+      setInitialLoadComplete(true);
+    } else if (!initialLoadComplete) {
       timeoutId = setTimeout(() => {
         fetchCurrentPhase();
       }, 100); // Quick initial load
@@ -202,7 +208,7 @@ export default function LessonProgressBar({
       isMounted = false;
       clearTimeout(timeoutId);
     };
-  }, [initialLoadComplete, progressBase, setTimer, setPaused, source]);
+  }, [initialLoadComplete, progressBase, setTimer, setPaused, source, isPreview]);
 
   const startLesson = async () => {
     try {
@@ -221,15 +227,17 @@ export default function LessonProgressBar({
 
       setPhaseLoading(true);
 
-      const response = await fetch(`${progressBase}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          articleId: resolvedArticleId,
-          progress: getLessonProgressForTask(2),
-          timeSpent: 0,
-        }),
-      });
+      const response = isPreview
+        ? ({ ok: true } as Response)
+        : await fetch(`${progressBase}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              articleId: resolvedArticleId,
+              progress: getLessonProgressForTask(2),
+              timeSpent: 0,
+            }),
+          });
 
       // Only update local state if API call succeeds
       if (response.ok) {
@@ -301,7 +309,7 @@ export default function LessonProgressBar({
 
       setPhaseLoading(true);
 
-      if (newTask === 7) {
+      if (newTask === 7 && !isPreview) {
         await saveArticleToFlashcard(resolvedArticleId as string);
       }
 
@@ -309,15 +317,17 @@ export default function LessonProgressBar({
         setPaused(true);
       }
 
-      const response = await fetch(`${progressBase}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          articleId: resolvedArticleId,
-          progress: getLessonProgressForTask(newTask),
-          timeSpent: timer,
-        }),
-      });
+      const response = isPreview
+        ? ({ ok: true } as Response)
+        : await fetch(`${progressBase}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              articleId: resolvedArticleId,
+              progress: getLessonProgressForTask(newTask),
+              timeSpent: timer,
+            }),
+          });
 
       if (response.ok) {
         setCurrentTask(newTask);

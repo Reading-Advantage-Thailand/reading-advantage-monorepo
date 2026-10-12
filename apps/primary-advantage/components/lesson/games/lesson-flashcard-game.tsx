@@ -1,5 +1,6 @@
 "use client";
 
+import { usePreviewSave } from "@/components/student/student-view-provider";
 import { useState, useEffect, useTransition, useContext } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -293,6 +294,7 @@ function LessonFlashcardView({
   );
   const { timer, setPaused } = useContext(QuizContext);
   const { refresh } = useAuth();
+  const { isPreview, notSaved } = usePreviewSave();
 
   // Computed values
   const currentCard = words[currentCardIndex];
@@ -349,6 +351,10 @@ function LessonFlashcardView({
       setPaused(true);
       startTransition(async () => {
         try {
+          if (isPreview) {
+            notSaved();
+            return;
+          }
           const reviewPromises = Object.entries({
             ...cardRating,
             [currentCard.id]: rating,
