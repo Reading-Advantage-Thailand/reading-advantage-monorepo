@@ -4035,6 +4035,19 @@
     "emptyHint": "Try another genre or clear the search.",
     "clearFilters": "Clear the filters",
     "loadError": "We could not load the stories.",
-    "loadErrorHint": "Check the internet connection and try again."
+    "loadErrorHint": "Check the internet connection and try again.",
+    "backToShelf": "Back to the shelf",
+    "cefr": "CEFR {level}",
+    "chapterCount": "{count, plural, one {# chapter} other {# chapters}}",
+    "storyParts": "Story sections",
+    "chaptersSign": "Chapters",
+    "charactersSign": "Characters",
+    "chapterNumber": "Chapter {n}",
+    "chapterDone": "Done",
+    "startChapter": "Start chapter {n}",
+    "readAgain": "Read again",
+    "noChapters": "This story has no chapters yet.",
+    "noCharacters": "This story has no characters yet.",
+    "background": "Background:"
   }
 }
