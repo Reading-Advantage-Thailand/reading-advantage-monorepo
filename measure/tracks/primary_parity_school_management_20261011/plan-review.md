@@ -64,3 +64,29 @@ Low:
 
 Shortcut/tech-debt: the row of 2026-09-14 is set to Resolved in `measure/tech-debt.md` as the prompt allowed. Rule 4 of `session-school-policy.md` is updated.
 
+
+## Phase S3 review
+
+Tests: domain `move-teacher-school.pglite` 7 pass, `set-classroom-teachers.pglite` 12 pass, `teachers` and `primary-teacher-home` 18 pass; auth permissions 18 pass; app `teacherController.move`, `teacherController.school-filter`, `/api/classrooms` route tests, and `teachers-table.school` 19 pass; app tsc clean; ESLint 0 errors on changed files (5 old warnings).
+
+Review result: no Critical or High finding. The domain function asserts `teacher:school:move` (SYSTEM only) before any read, runs in one transaction, locks the teacher row, scopes the class check with the tenant handle of the target school, and writes the audit event in the same transaction (ids and counts only). The move route checks SYSTEM before the body. The PUT route refuses `schoolId` from non-SYSTEM callers with 403 and writes nothing. New log lines use the logger.
+
+Deviations:
+
+- D1. The plan says `app/api/classrooms/route.ts` and `classroomController.ts`. The real route is `app/api/classrooms/route.ts` (the admin teachers table calls it). It has no controller, so `?schoolId=` is in the route. The route test is `app/api/classrooms/__tests__/route.school-filter.test.ts`. The separate `app/api/classroom` route (S1 picker) is unchanged.
+- D2. The audit event writes with the transaction handle (`auditEvents` insert) and not with `recordAuditEvent`, because that helper uses the global handle and the event must commit with the move.
+- D3. Red-first skipped (tests written after the code).
+- D4. The 409 step is a refusal dialog with the class names and a Close button. There is no override (spec default).
+
+Medium:
+
+- M10. After a move, the table sends a second PUT for name, email, and role. When that PUT fails, the move stays committed and a toast shows the error.
+- M11. A user with the `admin` role name cannot move (domain code NOT_A_TEACHER, 400). The edit dialog hides the school select for these rows.
+- M12. The add-teacher dialog for SYSTEM still lists the classes of all schools (not in S3).
+- M13. The Thai text of `AdminTeachers.Table.schoolManage.*` is by the helper: owner check pending.
+- M14. The move does not change `school_admins` or legacy `user_roles` rows.
+
+Low:
+
+- L9. The harness fakes the API data; the captures show the real components and CSS only.
+- L10. The test replaces the Radix selects with native selects.

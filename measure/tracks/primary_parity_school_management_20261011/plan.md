@@ -84,21 +84,26 @@ _Story ref: spec.md#story-s2_
 ## Phase S3: SYSTEM manages the school of a teacher
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Zod `moveTeacherToSchoolInput` (`teacherId`, `schoolId`, `classroomIds`) and output in `packages/domain/src/teachers/move-teacher-school.ts`; errors `CROSS_SCHOOL_CLASSROOM` (400) and `OWNS_CLASSES` (409, with the class names) in `teachers/errors.ts`
-    - [ ] Register `teacher:school:move` (SYSTEM) in `packages/domain/src/teachers/permissions.ts`
-- [ ] Task: Test
-    - [ ] Red: `packages/domain/src/__tests__/move-teacher-school.pglite.test.ts`: the move in one transaction (school, old links deleted, new links added, audit event); a class of another school gives 400 and no change; an owned class gives 409 and no change; ADMIN gets FORBIDDEN; an unknown school or a non-TEACHER user gives an error
-    - [ ] Red: `server/controllers/__tests__/teacherController.move.test.ts`: `POST /api/teachers/[id]/move` for SYSTEM; a teacher update with `schoolId` from an ADMIN gives 403
-    - [ ] Red: `server/controllers/__tests__/classroomController.school-filter.test.ts`: `GET /api/classrooms?schoolId=` filters for SYSTEM and is ignored for ADMIN
-    - [ ] Red: `components/admin/__tests__/teachers-table.school.test.tsx`: the school column and filter for SYSTEM only; a school change clears and reloads the class list; the confirm step shows the class names of a 409
-- [ ] Task: Implement
-    - [ ] `packages/domain/src/teachers/move-teacher-school.ts`, export from `teachers/index.ts`
-    - [ ] `app/api/teachers/[id]/move/route.ts` (thin, calls the domain function); `server/controllers/teacherController.ts` refuses `schoolId` in the update for non-SYSTEM callers
-    - [ ] `app/api/classrooms/route.ts` and `server/controllers/classroomController.ts`: `?schoolId` for SYSTEM only
-    - [ ] `components/admin/teachers-table.tsx`: school column, school filter, school select and confirm in the edit dialog; strings in `messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Generate Docs & Doctor: JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S3: SYSTEM manages the school of a teacher' (Protocol in workflow.md)
+- [x] Task: Contract & Schema Definition
+    - [x] Zod `moveTeacherToSchoolInput` (`teacherId`, `schoolId`, `classroomIds`) and output in `packages/domain/src/teachers/move-teacher-school.ts`; errors `CROSS_SCHOOL_CLASSROOM` (400) and `OWNS_CLASSES` (409, with the class names) in `teachers/errors.ts`
+    - [x] Register `teacher:school:move` (SYSTEM) in `packages/domain/src/teachers/permissions.ts`
+- [x] Task: Test
+    - [x] Red: `packages/domain/src/__tests__/move-teacher-school.pglite.test.ts`: the move in one transaction (school, old links deleted, new links added, audit event); a class of another school gives 400 and no change; an owned class gives 409 and no change; ADMIN gets FORBIDDEN; an unknown school or a non-TEACHER user gives an error
+    - [x] Red: `server/controllers/__tests__/teacherController.move.test.ts`: `POST /api/teachers/[id]/move` for SYSTEM; a teacher update with `schoolId` from an ADMIN gives 403
+    - [x] Red: `app/api/classrooms/__tests__/route.school-filter.test.ts` (the real route is `app/api/classrooms/route.ts`, no controller): `GET /api/classrooms?schoolId=` filters for SYSTEM and is ignored for ADMIN
+    - [x] Red: `components/admin/__tests__/teachers-table.school.test.tsx`: the school column and filter for SYSTEM only; a school change clears and reloads the class list; the confirm step shows the class names of a 409
+- [x] Task: Implement
+    - [x] `packages/domain/src/teachers/move-teacher-school.ts`, export from `teachers/index.ts`
+    - [x] `app/api/teachers/[id]/move/route.ts` (thin, calls the domain function); `server/controllers/teacherController.ts` refuses `schoolId` in the update for non-SYSTEM callers
+    - [x] `app/api/classrooms/route.ts`: `?schoolId` for SYSTEM only (no controller exists for this route)
+    - [x] `components/admin/teachers-table.tsx`: school column, school filter, school select and confirm in the edit dialog; strings in `messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Generate Docs & Doctor: JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S3: SYSTEM manages the school of a teacher' (Protocol in workflow.md) - look check pending (owner, async)
+    - Defaults used: the move of a teacher who owns classes is refused with 409 and the class names; the class owner stays on the class.
+    - Deviations: see `plan-review.md` (D1 to D4). The audit event uses the transaction handle.
+    - Thai strings (`AdminTeachers.Table.schoolManage.*`) are by the helper: owner check pending.
+    - Captures: `~/Desktop/primary-parity-progress/captures/school_management/phaseS3/` (`s3-{table-system,filter-system,edit-system,refused-system,table-admin}-{day,night}-{375,1280}.png`).
+    - Steps: 1. Sign in as SYSTEM and open Teachers. 2. Check the School column and the school filter; pick a school and check the list. 3. Edit a teacher without classes, choose another school, check a class of that school, press Update: the teacher shows in the new school with that class only. 4. Edit a class owner and choose another school: a dialog lists the class names and nothing changes. 5. Sign in as ADMIN: no School column, no filter, no school select.
 
 ## Phase S4: Admin sees the school license (view only)
 _Story ref: spec.md#story-s4_
