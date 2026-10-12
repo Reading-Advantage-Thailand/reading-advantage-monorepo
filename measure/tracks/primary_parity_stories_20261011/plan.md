@@ -134,19 +134,23 @@ _Story ref: spec.md#story-s6_
 - [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
 - [ ] Task: Measure - User Manual Verification 'Phase S6: Chapter flashcards' (Protocol in workflow.md)
 
-## Phase S7: Old story URLs open the new pages
+## Phase S7: Old story URLs open the new pages [checkpoint: PENDING]
 _Story ref: spec.md#story-s7_
 
-- [ ] Task: Contract for the legacy story id
-    - [ ] `packages/domain/src/stories/legacy-id.ts`: `resolveLegacyStoryId` and `resolveLegacyChapter` with Zod input and output, through `primary_legacy_id_map` (the pattern of `packages/domain/src/articles/legacy-id.ts`)
-- [ ] Task: Tests for the redirects
-    - [ ] `packages/domain/src/__tests__/stories-legacy-id.test.ts`: a known cuid, an unknown cuid, a UUID (mock DB)
-    - [ ] `app/[locale]/(student)/student/stories/__tests__/legacy-redirect.test.ts`: the list, the story, and the chapter redirects; 404 for an unknown cuid
-- [ ] Task: Implement the redirects
-    - [ ] `app/[locale]/(student)/student/stories/[[...path]]/page.tsx`: redirect to `/student/read/stories/...`
-    - [ ] `docs/primary-whats-moved.md:24`: stories moved to Read, Stories tab
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S7: Old story URLs open the new pages' (Protocol in workflow.md)
+- [x] Task: Contract for the legacy story id
+    - Legacy URL forms (legacy `bfea121`, `app/[locale]/(student)/student/stories/`): list `/student/stories`; story `/student/stories/<cuid>`; chapter `/student/stories/<cuid>/<chapterNum>` (a number, not an id). New: `/student/read/stories`, `/student/read/stories/<uuid>`, `/student/read/stories/<uuid>/<n>`.
+    - Deviation: `resolveLegacyChapter` has no map lookup. The legacy chapter URL carries the chapter number, so it only checks a positive whole number. A chapter id never appears in a legacy URL.
+    - The local copy `primary_parity_20261011` has 0 story rows in `primary_legacy_id_map` (made before S1). The tests use mocks.
+    - [x] `packages/domain/src/stories/legacy-id.ts`: `resolveLegacyStoryId` and `resolveLegacyChapter` (190c9693f) with Zod input and output, through `primary_legacy_id_map` (the pattern of `packages/domain/src/articles/legacy-id.ts`)
+- [x] Task: Tests for the redirects
+    - [x] `packages/domain/src/__tests__/stories-legacy-id.test.ts`: a known cuid, an unknown cuid, a UUID (mock DB)
+    - [x] `app/[locale]/(student)/student/stories/__tests__/legacy-redirect.test.ts`: the list, the story, and the chapter redirects; 404 for an unknown cuid
+- [x] Task: Implement the redirects
+    - [x] `app/[locale]/(student)/student/stories/[[...path]]/page.tsx`: redirect to `/student/read/stories/...`
+    - [x] `docs/primary-whats-moved.md:24`: stories moved to Read, Stories tab
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S7: Old story URLs open the new pages' (Protocol in workflow.md)
+    - Look check pending (owner, async). Step 1: sign in as a student, open `/student/stories`; the Stories tab of Read opens. Step 2: open `/student/stories/<old story cuid>`; the new story page opens. Step 3: open `.../<cuid>/2`; chapter 2 opens. Step 4: open an unknown cuid; 404 shows. Needs the 0072 story rows (after the ETL on rehearsal 3).
 
 ## Phase A: Acceptance
 

@@ -62,3 +62,18 @@ Low:
 - The harness used gcloud read-only copies of 8 cover PNG files (scratch folder, not in the repository).
 
 Shortcuts: none. Deviations: the plan names `components/stories/story-filters.tsx` as a client component; it is a server component (plain GET form), so the filters need no script. Lessons: the mock DB has no `selectDistinct`; use `groupBy`.
+
+## Phase S7 review (helper C2)
+
+Review of `git diff bcd1ef419^..HEAD` for the S7 files: no Critical or High finding. `assertCan("story:read")` runs before the lookup. The lookup runs through the TenantDB and the map table (EXEMPT). Zod covers the input and output. The logger rule does not apply (no error path logs).
+
+Medium:
+- The redirect page sends a signed-out visitor to sign in without a return path. The article page does the same.
+- The redirect goes to `/student/read/stories/<uuid>/<n>` with no check that the chapter exists. The S4 page shows the not-found state.
+- Pre-existing, not from this track: `measure/doctor.sh` fails A13 (stale archived directory `agents_md_audit_science_advantage_20260603`).
+
+Low:
+- `resolveLegacyChapter` accepts 1 to 6 digits only.
+- The tests use mocks. The local copy `primary_parity_20261011` has 0 story rows in `primary_legacy_id_map` (made before S1). A real-id check needs the ETL run of rehearsal 3.
+
+Shortcuts: none. Deviation: `resolveLegacyChapter` does no map lookup (the legacy chapter URL carries the number). Lessons: none.
