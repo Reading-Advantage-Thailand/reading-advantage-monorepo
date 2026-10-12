@@ -7,7 +7,7 @@ The kit is in `scripts/primary-parity/` (outside the Primary build inputs). Test
 line have 100 characters or less. Machine rules: one heavy job at a time; tell the peer sessions
 before a build; no dev server; no run with 25 students.
 
-## Phase 1: Contract & Schema Definition
+## Phase 1: Contract & Schema Definition [checkpoint: e92f32b88]
 
 - [x] Task: Define the pair list contract
     - [x] Write the Zod schemas `PairList`, `Pair`, and `Check` in `scripts/primary-parity/pairs.ts` (spec FR-7), with the defaults for `widths` and `colorSchemes`
