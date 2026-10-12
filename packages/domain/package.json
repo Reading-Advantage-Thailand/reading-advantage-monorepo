@@ -24,6 +24,10 @@
       "types": "./dist/calendar-day.d.ts",
       "import": "./dist/calendar-day.js"
     },
+    "./teacher-class-csv": {
+      "types": "./dist/primary-home/teacher-class-csv.d.ts",
+      "import": "./dist/primary-home/teacher-class-csv.js"
+    },
     "./classes": {
       "types": "./dist/classes/index.d.ts",
       "import": "./dist/classes/index.js"
