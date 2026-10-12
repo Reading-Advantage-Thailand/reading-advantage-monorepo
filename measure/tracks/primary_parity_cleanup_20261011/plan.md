@@ -88,7 +88,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - Look check pending (owner, async). Steps: log in as ADMIN; the nav shows Dashboard, Teachers, Students and Classes, Import Data and no Article Creation; `/en/admin/article-creation` gives the not-found page; `POST /api/articles/generate/custom-generate` gives 404.
     - Callers check: no caller outside the FR-3 list. App tsc passed. Vitest: removed-surfaces (7), app-nav, broken-ux-behavior, and article-actions authorization pass.
 
-## Phase 5: Remove the content generation code
+## Phase 5: Remove the content generation code [checkpoint: 8490f9279]
 
 - [x] Task: FR-4 — remove the bulk route and the generation actions
     - [x] Check the callers of `generateAllArticle`, `generateAllArticleNew`, `generateArticle`, `generateArticleNew`, and `amountPerGenreSchema` with `git grep -n -w`
