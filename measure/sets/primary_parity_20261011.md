@@ -35,8 +35,8 @@
 
 | Order | Track | Type | Scope | Depends on | Status |
 | --- | --- | --- | --- | --- | --- |
-| 1 | [primary_parity_records_20261011](../tracks/primary_parity_records_20261011/) | chore | Correct the wrong "same" marks and the cutover record, move M4 out of the games removal track, add the behavior-evidence rule | — | in_progress |
-| 1 | [primary_parity_acceptance_20261011](../tracks/primary_parity_acceptance_20261011/) | chore | Side-by-side kit: legacy and new on rehearsal copies, matching accounts, a capture script, the behavior contract template | — | new |
+| 1 | [primary_parity_records_20261011](../tracks/primary_parity_records_20261011/) | chore | Correct the wrong "same" marks and the cutover record, move M4 out of the games removal track, add the behavior-evidence rule | — | completed |
+| 1 | [primary_parity_acceptance_20261011](../tracks/primary_parity_acceptance_20261011/) | chore | Side-by-side kit: legacy and new on rehearsal copies, matching accounts, a capture script, the behavior contract template | — | in_progress |
 | 2 | [primary_parity_quick_fixes_20261011](../tracks/primary_parity_quick_fixes_20261011/) | bug | ADM-02, ADM-06, TCH-05, TCH-08, STU-02, STU-03, STU-06, STU-07, STU-08, STU-16, STU-17, PUB-04, PUB-05 | primary_parity_acceptance_20261011 | new |
 | 2 | [primary_parity_cleanup_20261011](../tracks/primary_parity_cleanup_20261011/) | chore | Remove the Testing page, `deleteAllArticles`, Admin Article Creation; M4 with the asset copy first; old game URL redirects (STU-09); AI model names into the adapter configuration (CNT-02) | primary_parity_acceptance_20261011 | in_progress |
 | 3 | [primary_parity_class_books_20261011](../tracks/primary_parity_class_books_20261011/) | feature | TCH-01, TCH-02: catalogue and guide imports in the ETL and the runbook, the book card at the top, the dashboard book slot | primary_parity_acceptance_20261011 | new |

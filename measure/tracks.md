@@ -1204,13 +1204,13 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: correct the parity records of the stopped 2026-10-11 cutover**
+- [x] **Track: Primary Parity Before the Cutover: correct the parity records of the stopped 2026-10-11 cutover**
   *Link: [./tracks/primary_parity_records_20261011/](./tracks/primary_parity_records_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: side-by-side acceptance kit (matched copies, matching accounts, capture script, report, behavior contract template)**
+- [~] **Track: Primary Parity Before the Cutover: side-by-side acceptance kit (matched copies, matching accounts, capture script, report, behavior contract template)**
   *Link: [./tracks/primary_parity_acceptance_20261011/](./tracks/primary_parity_acceptance_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
 
