@@ -16,6 +16,8 @@ interface PickerTeacher {
  * The class owner row is checked, disabled, and labeled "Class owner".
  * @param props.schoolId The school of the class (the server uses it for SYSTEM only).
  * @param props.ownerId The user id of the class owner.
+ * @param props.ownerName The name of the class owner, shown when the owner is not a teacher row.
+ * @param props.ownerEmail The email of the class owner, shown when the owner is not a teacher row.
  * @param props.selectedIds The user ids of the teachers that are checked.
  * @param props.onChange Called with the new list of checked ids (the owner always in it).
  * @returns The picker panel.
@@ -23,11 +25,15 @@ interface PickerTeacher {
 export function ClassroomTeacherPicker({
   schoolId,
   ownerId,
+  ownerName,
+  ownerEmail,
   selectedIds,
   onChange,
 }: {
   schoolId?: string;
   ownerId?: string;
+  ownerName?: string;
+  ownerEmail?: string;
   selectedIds: string[];
   onChange: (ids: string[]) => void;
 }) {
@@ -59,14 +65,20 @@ export function ClassroomTeacherPicker({
     onChange(ownerId && !next.includes(ownerId) ? [ownerId, ...next] : next);
   };
 
+  // The fetch lists teachers only, so an ADMIN owner is missing: prepend a locked owner row.
+  const rows =
+    ownerId && !teachers.some((teacher) => teacher.id === ownerId)
+      ? [{ id: ownerId, name: ownerName ?? t("owner"), email: ownerEmail ?? "" }, ...teachers]
+      : teachers;
+
   return (
     <Panel className="gap-1 p-3" data-testid="classroom-teacher-picker">
       <p className="text-sm">{t("hint")}</p>
       {state === "loading" && <p role="status">{t("loading")}</p>}
       {state === "failed" && <p role="alert">{t("loadFailed")}</p>}
-      {state === "ready" && teachers.length === 0 && <p>{t("empty")}</p>}
+      {state === "ready" && rows.length === 0 && <p>{t("empty")}</p>}
       <ul className="max-h-64 overflow-y-auto">
-        {teachers.map((teacher) => {
+        {rows.map((teacher) => {
           const isOwner = teacher.id === ownerId;
           return (
             <li key={teacher.id} className="border-b border-current/20 last:border-b-0">

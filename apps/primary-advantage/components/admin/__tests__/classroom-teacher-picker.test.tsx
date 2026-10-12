@@ -28,12 +28,14 @@ async function flush() {
 }
 
 /** Holds the selection so that a click changes the check boxes. */
-function Harness({ initial }: { initial: string[] }) {
+function Harness({ initial, ownerId = "t-alder", ownerName, ownerEmail }: { initial: string[]; ownerId?: string; ownerName?: string; ownerEmail?: string }) {
   const [ids, setIds] = useState(initial);
   return (
     <ClassroomTeacherPicker
       schoolId={SCHOOL}
-      ownerId="t-alder"
+      ownerId={ownerId}
+      ownerName={ownerName}
+      ownerEmail={ownerEmail}
       selectedIds={ids}
       onChange={(next) => {
         onChange(next);
@@ -95,5 +97,30 @@ describe("classroom teacher picker", () => {
     await flush();
 
     expect(screen.getByRole("alert")).toHaveTextContent("The teacher list did not load.");
+  });
+
+  it("prepends a locked owner row when the owner is not a teacher (ADMIN owner)", async () => {
+    renderWithMessages(
+      <Harness initial={["t-birch"]} ownerId="o-admin" ownerName="Ms. Owner" ownerEmail="owner@demo.example" />,
+    );
+    await flush();
+
+    expect(screen.getAllByRole("checkbox")).toHaveLength(4);
+    const owner = screen.getByLabelText(/Ms\. Owner/) as HTMLInputElement;
+    expect(owner).toBeChecked();
+    expect(owner).toBeDisabled();
+    expect(screen.getByText("Ms. Owner")).toBeInTheDocument();
+    expect(screen.getByText("owner@demo.example")).toBeInTheDocument();
+    expect(screen.getByText("Class owner")).toBeInTheDocument();
+  });
+
+  it("keeps the missing owner in the list when another teacher is toggled", async () => {
+    renderWithMessages(
+      <Harness initial={["o-admin"]} ownerId="o-admin" ownerName="Ms. Owner" ownerEmail="owner@demo.example" />,
+    );
+    await flush();
+
+    fireEvent.click(screen.getByLabelText(/Ms\. Cedar/));
+    expect(onChange).toHaveBeenLastCalledWith(["o-admin", "t-cedar"]);
   });
 });

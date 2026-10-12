@@ -560,6 +560,12 @@ export function ClassroomsTable() {
                 <ClassroomTeacherPicker
                   schoolId={selectedClassroom.schoolId}
                   ownerId={selectedClassroom.ownerId}
+                  ownerName={
+                    selectedClassroom.teachers?.find((row) => row.user.id === selectedClassroom.ownerId)?.user.name
+                  }
+                  ownerEmail={
+                    selectedClassroom.teachers?.find((row) => row.user.id === selectedClassroom.ownerId)?.user.email
+                  }
                   selectedIds={teacherIds}
                   onChange={setTeacherIds}
                 />
