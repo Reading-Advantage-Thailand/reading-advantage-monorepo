@@ -78,3 +78,11 @@ Findings:
 - Low: the legacy app has no `/writing` route, so no legacy pair for the writing code shows a page. QR-A2 shows the legacy not-found page.
 - Low: the migration id-map column is `table_name` (SQL check 3). Check 3 expects a row for the printed article.
 - Lesson for the shared files: a pair list for a signed-out then signed-in flow needs two pairs (PUBLIC and role). The kit signs in before the page opens.
+
+## Review fixes (helper, 2026-10-12)
+
+- High, fixed (bf74dfaf6): `safeCallbackPath` now runs the `//`, backslash, and control-character checks on the raw value, the percent-decoded value, and both after the locale strip. It refuses a value that still starts with a locale after the strip (`/th/en//evil.com`) and a value that does not decode. Tests: the seven listed values plus four more. The staff form falls back to the normal home for `/th//evil.com` and `/th/%2F%2Fevil.com`.
+- Callers of `safeCallbackPath`: `teacher-signin-form.tsx` (direct), `bookCallbackPath`, and `studentCallbackPath` (both in `safe-callback-path.ts`). The only outside caller of those is `components/student-login/use-student-home.ts` (via `studentCallbackPath`). All are now safe.
+- Low, fixed (3fd281f80): the logged `book` (open-book-link and the unknown-address page) and `n` (page) are cut to 64 characters.
+- Low, fixed (3fd281f80): `retryHref` uses `encodeURIComponent` for the book and the number.
+- Medium, checked, no change: the target pages `/student/lesson/<articleId>?type=article` and `/student/read/<articleId>` need a signed-in user only. They load the article by id and do not check the class books. The legacy app at bfea121 did the same: `getArticleById` used `findUnique({ where: { id } })` with no class check, and the lesson page had no check. Open access is legacy behavior; no change.
