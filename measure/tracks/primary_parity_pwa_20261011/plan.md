@@ -6,7 +6,7 @@ a test outside `lib/` must be in a `__tests__` folder; never put a test under `p
 Next serves that folder). The takeover test is a Playwright project with its own small fixture
 server: no Next build and no dev server on this machine.
 
-## Phase 0: Design
+## Phase 0: Design [checkpoint: 96506ee69]
 
 - [x] Task: Design the icons, the colours, and the install notice
     - [x] Ask the Forge session for icon renders. Asked 2026-10-12 by the orchestrator; answered 2026-10-12: use the brand app icon from advantage-pr (`assets/logos/png/app-icon/primary-advantage-{180,192,512}.png`, owner approval 2026-10-08). Forge asked the owner about an RPG-art icon; the brand icon is the default.
