@@ -8,16 +8,15 @@
       "legacyPath": "/en/student/read",
       "newPath": "/en/student/home",
       "colorSchemes": ["light", "dark"],
-      "waitFor": { "new": "[data-install-notice]" },
+      "steps": "./acceptance-steps-pwa.ts",
       "checks": [
         {
           "id": "PWA-A1-a",
-          "behavior": "Legacy: an Install App button shows in the page header. New: a pinned notice in the guild hall shows the install steps (iOS) or an Install button (Chrome), with 48 px targets. Capture shows the notice only when the browser state allows it (difference on purpose)."
+          "behavior": "Student home with the install affordance (the steps fire a synthetic beforeinstallprompt, because a capture browser never fires the real event). Legacy: an Install App button in the page header. New: a pinned notice in the guild hall with an Install button. Difference on purpose: placement and copy."
         },
         {
           "id": "PWA-A1-b",
-          "behavior": "New: no install notice shows in a reading page or a lesson.",
-          "network": "serwist/sw\\.js"
+          "behavior": "New: the pinned notice uses the RPG skin (Panel, gold Install button, iron Dismiss) with 48 px targets. No install notice shows in a reading page or a lesson (unit tests: components/pwa/__tests__/install-notice.test.tsx)."
         }
       ]
     }
