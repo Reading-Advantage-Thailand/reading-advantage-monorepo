@@ -1258,7 +1258,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: System dashboard with platform totals and a schools table (SYS-01)**
+- [~] **Track: Primary Parity Before the Cutover: System dashboard with platform totals and a schools table (SYS-01)**
   *Link: [./tracks/primary_parity_system_dashboard_20261011/](./tracks/primary_parity_system_dashboard_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 5*
 
@@ -1276,7 +1276,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Read-along that follows the voice**
+- [~] **Track: Primary Parity Before the Cutover: Read-along that follows the voice**
   *Link: [./tracks/primary_parity_read_along_20261011/](./tracks/primary_parity_read_along_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
 
