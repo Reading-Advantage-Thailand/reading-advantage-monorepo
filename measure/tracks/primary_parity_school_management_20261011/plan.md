@@ -105,7 +105,7 @@ _Story ref: spec.md#story-s3_
     - Captures: `~/Desktop/primary-parity-progress/captures/school_management/phaseS3/` (`s3-{table-system,filter-system,edit-system,refused-system,table-admin}-{day,night}-{375,1280}.png`).
     - Steps: 1. Sign in as SYSTEM and open Teachers. 2. Check the School column and the school filter; pick a school and check the list. 3. Edit a teacher without classes, choose another school, check a class of that school, press Update: the teacher shows in the new school with that class only. 4. Edit a class owner and choose another school: a dialog lists the class names and nothing changes. 5. Sign in as ADMIN: no School column, no filter, no school select.
 
-## Phase S4: Admin sees the school license (view only)
+## Phase S4: Admin sees the school license (view only) [checkpoint: c9d4c148a]
 _Story ref: spec.md#story-s4_
 
 - [x] Task: Contract & Schema Definition
