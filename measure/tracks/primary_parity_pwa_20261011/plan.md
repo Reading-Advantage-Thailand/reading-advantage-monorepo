@@ -48,16 +48,16 @@ _Story ref: spec.md#story-s1_
 ## Phase S2: Add Primary Advantage to the home screen
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Contract for the manifest
-    - [ ] `app/manifest.ts`: the `MetadataRoute.Manifest` fields of spec D5 (`id: "/"`, `start_url: "/"`, `scope: "/"`, `display: "standalone"`, the colours of the design decision, the icons)
-    - [ ] Check the current Chrome install criteria in the Chrome documentation; if they need a `fetch` handler, record it in `design/decisions.md` and add a network-only handler to Story S4 scope
-- [ ] Task: Tests for the manifest and the icons
-    - [ ] `app/__tests__/manifest.test.ts`: the fields; each icon file exists in `public/icons/` with the size in its PNG header; no icon path is under `assets/apk/standard-pack-qc/`
-    - [ ] `app/[locale]/__tests__/layout-metadata.test.ts`: `manifest`, `appleWebApp`, the apple icon, and the viewport `themeColor`
-- [ ] Task: Implement the manifest and the icons
-    - [ ] `app/manifest.ts`; the Forge icons in `public/icons/`
-    - [ ] `app/[locale]/layout.tsx`: replace the commented lines 79-80 with `manifest: "/manifest.webmanifest"`; add `appleWebApp`, the apple icon, and `themeColor`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Contract for the manifest
+    - [x] `app/manifest.ts`: the `MetadataRoute.Manifest` fields of spec D5 (`id: "/"`, `start_url: "/"`, `scope: "/"`, `display: "standalone"`, the colours of the design decision, the icons)
+    - [x] Check the current Chrome install criteria in the Chrome documentation; if they need a `fetch` handler, record it in `design/decisions.md` and add a network-only handler to Story S4 scope
+- [x] Task: Tests for the manifest and the icons
+    - [x] `app/__tests__/manifest.test.ts`: the fields; each icon file exists in `public/icons/` with the size in its PNG header; no icon path is under `assets/apk/standard-pack-qc/`
+    - [x] `app/[locale]/__tests__/layout-metadata.test.ts`: `manifest`, `appleWebApp`, the apple icon, and the viewport `themeColor`
+- [x] Task: Implement the manifest and the icons
+    - [x] `app/manifest.ts`; the Forge icons in `public/icons/`
+    - [x] `app/[locale]/layout.tsx`: replace the commented lines 79-80 with `manifest: "/manifest.webmanifest"`; add `appleWebApp`, the apple icon, and `themeColor`
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
 - [ ] Task: Measure - User Manual Verification 'Phase S2: Add Primary Advantage to the home screen' (Protocol in workflow.md)
 
 ## Phase S3: Install prompt on the student home

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "measure.architecture.v1",
-  "generatedAt": "2026-10-12T17:24:34+08:00",
-  "sourceRevision": "c3eaae3e6bf5fe620e1093664d01cf4d83dceefd",
+  "generatedAt": "2026-10-12T21:03:37+08:00",
+  "sourceRevision": "6efcc89c7057e62e316c2383e5c16be32cf208b9",
   "projectType": "typescript-monorepo",
   "workspaceRoots": {
     "apps": [
