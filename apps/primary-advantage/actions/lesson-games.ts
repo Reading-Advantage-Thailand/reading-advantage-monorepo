@@ -51,6 +51,8 @@ export type LessonGameResultsResult = { success: true; results: LessonGameResult
 /**
  * Reads the latest saved run of each game for one lesson article, and the total game XP of the
  * article, for the signed-in user. The domain function scopes the read to the user and the school.
+ * Staff in a rehearsal or a preview read no row: they get the empty set, for symmetry with the
+ * input action, so the games render with no history and nothing is saved.
  * @param request The article of the lesson.
  * @returns The results, or a short error; the detail goes to the log.
  */
@@ -58,6 +60,9 @@ export async function getLessonGameResultsAction(request: LessonGameResultsReque
   const user = await currentUser();
   if (!user) return { success: false, error: "Unauthorized" };
   try {
+    if (studentViewModeFor(user.role) === "preview") {
+      return { success: true, results: { latest: [], totalXp: 0 } };
+    }
     const tenant = { schoolId: user.schoolId };
     const results = await getLessonGameResults({ db: createTenantDB(db, tenant), user, tenant, input: request });
     return { success: true, results };
