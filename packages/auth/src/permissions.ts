@@ -137,6 +137,7 @@ export const PERMISSIONS = {
 
   // Teachers (science)
   "teachers:read:own": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "teacher:school:move": [ROLES.SYSTEM],
 
   // Curriculum (science)
   "curriculum:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],

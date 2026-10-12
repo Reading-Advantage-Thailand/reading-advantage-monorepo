@@ -5,6 +5,7 @@ import { users, schools, schoolAdmins, userRoles, roles, licenses } from '@readi
 import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { getSchoolDetail } from "@/server/models/schoolModel";
+import { getLicenseViewForCaller } from "@/server/models/schoolLicenseView";
 import { z } from "zod";
 import { normalizeRole } from "@/lib/authorization";
 import { setUserRole } from "@/server/utils/role-sql";
@@ -55,9 +56,11 @@ export async function GET() {
       return NextResponse.json({ school: null });
     }
 
-    const school = await getSchoolDetail(user.schoolId);
+    // The license view and the license key go to a school admin only.
+    const licenseView = await getLicenseViewForCaller(currentUser);
+    const school = await getSchoolDetail(user.schoolId, { withLicense: licenseView !== null });
 
-    return NextResponse.json({ school });
+    return NextResponse.json({ school, licenseView });
   } catch (error) {
     console.error("Error fetching user school:", error);
     return NextResponse.json(

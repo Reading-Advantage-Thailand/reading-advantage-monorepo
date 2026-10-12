@@ -81,7 +81,8 @@
       "overviewReports": "概览报告",
       "performanceAnalytics": "性能分析",
       "progressTracking": "进度跟踪"
-    }
+    },
+    "schoollicense": "学校许可证"
   },
   "Leaderboard": {
     "title": "排行榜",
@@ -1496,6 +1497,43 @@
         "title": "没有学校关联",
         "description": "您还没有与您的账户关联的学校。创建一个以开始并获得管理学校功能的管理员访问权限。",
         "createSchool": "创建学校"
+      },
+      "licensePanel": {
+        "title": "许可证",
+        "viewOnly": "仅供查看。如需更改许可证，请联系 Reading Advantage。",
+        "overChip": "已超额",
+        "overTitle": "学生人数超出限额 {count} 人。",
+        "overBody": "学校有 {used} 名学生和 {seats} 个席位。学生仍可使用。请在下学期前申请更多席位。",
+        "noneChip": "没有有效许可证",
+        "noneTitle": "学校目前没有席位。",
+        "noneBody": "有 {used} 名学生使用本应用。请申请许可证。",
+        "seatsTitle": "席位",
+        "seatsUsed": "已用席位",
+        "seatsFree": "空闲席位",
+        "seatsTotal": "席位总数",
+        "seatsNote": "席位按今天有效的许可证计算。已用席位按学校的学生人数计算。教师和管理员不占用席位。",
+        "licensesTitle": "许可证",
+        "noLicense": "这所学校没有许可证。",
+        "seatsCount": "{count} 个席位",
+        "dateRange": "{start} 至 {end}",
+        "noEnd": "无结束日期",
+        "state": {
+          "active": "有效",
+          "ended": "已结束",
+          "inactive": "未启用"
+        },
+        "holdersTitle": "席位使用者",
+        "holdersRange": "第 {from} 至 {to} 名学生，共 {total} 名",
+        "holdersEmpty": "学校没有学生。",
+        "holdersError": "席位使用者加载失败。",
+        "colName": "姓名",
+        "colUsername": "用户名",
+        "colClasses": "班级",
+        "colJoined": "加入日期",
+        "noClass": "无班级",
+        "previous": "上一页",
+        "next": "下一页",
+        "pageOf": "第 {page} 页，共 {pages} 页"
       }
     }
   },
@@ -2616,7 +2654,8 @@
         "students": "学生",
         "classes": "班级",
         "joined": "加入日期",
-        "actions": "操作"
+        "actions": "操作",
+        "school": "学校"
       },
       "loading": "正在加载教师...",
       "empty": {
@@ -2631,6 +2670,18 @@
         "createError": "创建教师失败",
         "updateError": "更新教师失败",
         "deleteError": "删除教师失败"
+      },
+      "schoolManage": {
+        "school": "学校",
+        "noSchool": "无学校",
+        "filterLabel": "按学校筛选",
+        "filterAll": "所有学校",
+        "notice": "保存后，教师将转到 {school}。请在下方选择该学校的班级。",
+        "moved": "教师已转到新学校",
+        "refusedTitle": "暂时无法转校",
+        "refusedDescription": "{name} 是以下班级的所有者。请先把每个班级交给其他所有者，然后重试。",
+        "refusedClose": "关闭",
+        "moveFailed": "转校失败"
       }
     }
   },
