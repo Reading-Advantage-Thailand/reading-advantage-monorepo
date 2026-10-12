@@ -456,56 +456,19 @@ export async function DELETE() {
       );
     }
 
-    // Get owner's current roles before deleting school.
-    const ownerRoleRows = await tenantDb
-      .unscoped("userRoles is REFERENTIAL and roles is EXEMPT; stitched by userId")
-      .select({
-      roleId: userRoles.roleId,
-      roleName: roles.name,
-    })
-      .from(userRoles)
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
-      .where(eq(userRoles.userId, currentUser.id));
-
     // Delete the school (replaces Prisma `school.delete`).
     await tenantDb
       .unscoped("schools is EXEMPT; deleted by id")
       .delete(schools)
       .where(eq(schools.id, userSchool.id));
 
-    // Downgrade owner's role from Admin to User if they have Admin role
-    const hasAdminRole = ownerRoleRows.some(
-      (r) => r.roleName === "admin",
-    );
-
-    if (hasAdminRole) {
-      // Find or create User role
-      const [existingUserRole] = await tenantDb
-        .unscoped("roles is EXEMPT; looked up by name")
-        .select().from(roles)
-        .where(eq(roles.name, "user"))
-        .limit(1);
-
-      let userRole = existingUserRole;
-      if (!userRole) {
-        const [created] = await tenantDb
-          .unscoped("roles is EXEMPT; created by name")
-          .insert(roles).values({ name: "user" }).returning();
-        userRole = created;
-      }
-
-      // Remove all existing roles and set User role
-      await tenantDb
-        .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-        .delete(userRoles)
-        .where(eq(userRoles.userId, currentUser.id));
-
-      await tenantDb
-        .unscoped("userRoles is REFERENTIAL; scoped via users.schoolId")
-        .insert(userRoles).values({
-        userId: currentUser.id,
-        roleId: userRole.id,
-      });
+    // Downgrade the owner from ADMIN to the self-serve STUDENT role. users.role is the truth.
+    if (String(user.role).toUpperCase() === "ADMIN") {
+      await setUserRole(
+        tenantDb.unscoped("roles is EXEMPT and userRoles is REFERENTIAL; role change by user id"),
+        currentUser.id,
+        "student",
+      );
 
       // Remove school association
       await tenantDb.update(users)
