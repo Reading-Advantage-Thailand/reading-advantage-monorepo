@@ -73,6 +73,12 @@ One row per delegated role. Verdict values: keep, promote, demote, ban.
 | 2026-10-12 | read-only review: staff_student_view, artifact + 4 explicit verifications | muse-spark-1.3-contributor#xhigh | 419 tests pass read-only, evidence-backed findings, correct severity discipline | keep (reviewer role confirmed) |
 | 2026-10-12 | pwa S4 offline page + sign + worker handler, 3 commits | muse-spark-1.3-contributor#high | new suites green, browser spec (takeover + offline) 2/2, tsc clean re-run by orchestrator | keep |
 | 2026-10-12 | pwa Phase A prep (pairs, steps, acceptance.md), 2 commits | muse-spark-1.3-contributor#high | pairs parse verified, draft defects fixed and reported, plan ticks honest | keep |
+| 2026-10-12 | ssv review fixes: 7 no-write tests, results branch, INTERN matrices, 5 commits | muse-spark-1.3-contributor#high | red-first for fixes, guard suites 154/154 re-run by orchestrator, tsc clean | keep |
+| 2026-10-12 | stories S6 chapter flashcards, 3 commits | muse-spark-1.3-contributor#high | red-first, 16/16 re-run by orchestrator, tsc clean, D6 NULL article_id kept | keep |
+| 2026-10-12 | read-only review: school_management, artifact finalized | muse-spark-1.3-contributor#xhigh | 130 tests pass read-only, prior-review M-items re-verified honestly (2 still present, not over-claimed) | keep (reviewer role confirmed) |
+| 2026-10-12 | stories Phase A prep (pairs, steps, cutover block), 4 commits | muse-spark-1.3-contributor#high | kit suite 100/100 re-run by orchestrator, pairs parse, honest AC status | keep |
+| 2026-10-12 | merge lane B into integration (5 messages conflicts union-resolved) | muse-spark-1.3-contributor#high | gates green (domain 2085, app 247, tsc clean), models file preserved, no-push | keep |
+| 2026-10-12 | rehearsal3 Phase 1 docs (change list, gate, command sheet), 2 commits | muse-spark-1.3-contributor#high | every cited item verified by reading the repo files, live read-only cloud check, honest could-not-verify list | keep |
 
 ## Adaptation rules
 
