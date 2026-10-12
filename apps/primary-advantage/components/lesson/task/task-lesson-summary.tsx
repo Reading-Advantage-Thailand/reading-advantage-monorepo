@@ -15,14 +15,19 @@ import {
   CheckCircle,
   Zap,
   Trophy,
+  RotateCcw,
+  Eye,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Article, WordListTimestamp } from "@/types";
 import { getLessonSummaryData } from "@/actions/article";
 import { useAuth } from "@reading-advantage/auth-client";
+import { restartLessonAction } from "@/actions/lesson-attempts";
+import { isPreviewResult } from "@/lib/student-view";
+import { usePreviewSave } from "@/components/student/student-view-provider";
+import { Banner, Panel, RpgButton } from "@/components/rpg/chrome";
 
 interface WordList {
   vocabulary: string;
@@ -39,13 +44,32 @@ interface QuizScores {
   saqScore: number;
 }
 
+/**
+ * The lesson summary (task 14): the score cards, "Back to Read Page", and "Start again".
+ * @param article The lesson article.
+ * @param timerSpent The seconds that the student spent in the lesson.
+ * @param assignmentId The assignment of the lesson, when it runs from one.
+ * @param attemptNumber The number of the current attempt; the banner shows from 2.
+ * @param onRestarted Called after a restart with the new attempt number (null when nothing closed).
+ * @returns The summary.
+ */
 export default function TaskLessonSummary({
   article,
   timerSpent,
+  assignmentId = null,
+  attemptNumber = 1,
+  onRestarted,
 }: {
   article: Article;
   timerSpent: number;
+  assignmentId?: string | null;
+  attemptNumber?: number;
+  onRestarted?: (attemptNumber: number | null) => void;
 }) {
+  const [confirming, setConfirming] = useState(false);
+  const [restarting, setRestarting] = useState(false);
+  const [restartFailed, setRestartFailed] = useState(false);
+  const { isPreview, notSaved } = usePreviewSave();
   const [loading, setLoading] = useState(true);
   const [totalXp, setTotalXp] = useState(0);
   const [quizScores, setQuizScores] = useState<QuizScores>({
@@ -115,6 +139,35 @@ export default function TaskLessonSummary({
 
   const backToReadPage = () => {
     router.push("/student/read");
+  };
+
+  const askRestart = () => {
+    setRestartFailed(false);
+    if (isPreview) return notSaved();
+    setConfirming(true);
+  };
+
+  const confirmRestart = async () => {
+    setRestarting(true);
+    setRestartFailed(false);
+    try {
+      const result = await restartLessonAction({ articleId: article.id, assignmentId });
+      if (isPreviewResult(result)) {
+        setConfirming(false);
+        notSaved();
+      } else if (result.success) {
+        setConfirming(false);
+        onRestarted?.(result.attemptNumber);
+      } else {
+        setConfirming(false);
+        setRestartFailed(true);
+      }
+    } catch {
+      setConfirming(false);
+      setRestartFailed(true);
+    } finally {
+      setRestarting(false);
+    }
   };
 
   const getPerformanceColor = (score: number) => {
@@ -201,6 +254,12 @@ export default function TaskLessonSummary({
             {t("title")}
           </h1>
 
+          {attemptNumber >= 2 ? (
+            <div className="mb-8">
+              <Banner>{t("attempt", { number: attemptNumber })}</Banner>
+            </div>
+          ) : null}
+
           <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-600 dark:text-gray-300">
             {t("completed")}
           </p>
@@ -209,9 +268,12 @@ export default function TaskLessonSummary({
           <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-yellow-200 bg-gradient-to-r from-yellow-100 to-orange-100 px-6 py-3 dark:border-yellow-800 dark:from-yellow-900 dark:to-orange-900">
             <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
             <span className="text-lg font-bold text-yellow-700 dark:text-yellow-300">
-              {t("xpEarned", { xp: totalXp })}
+              {attemptNumber >= 2 ? `${t("attemptXp", { number: attemptNumber })}: ${totalXp}` : t("xpEarned", { xp: totalXp })}
             </span>
           </div>
+          {attemptNumber >= 2 ? (
+            <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">{t("historyNote")}</p>
+          ) : null}
         </div>
       </div>
 
@@ -457,16 +519,46 @@ export default function TaskLessonSummary({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col items-center justify-center gap-4 pt-6 sm:flex-row">
-        <Button
-          onClick={backToReadPage}
-          size="lg"
-          className="w-full transform rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 px-8 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:from-emerald-700 hover:to-green-700 hover:shadow-xl sm:w-auto"
-        >
-          <BookOpen className="mr-2 h-5 w-5" />
+      {isPreview ? (
+        <p role="status" className="flex min-h-12 items-center justify-center gap-2 text-base font-bold">
+          <Eye className="size-5" aria-hidden="true" />
+          {t("previewNote")}
+        </p>
+      ) : null}
+      <div className="flex flex-col items-center justify-center gap-3 pt-2 sm:flex-row">
+        <RpgButton tone="gold" className="w-full sm:w-auto" onClick={backToReadPage} disabled={restarting}>
+          <BookOpen className="size-5" aria-hidden="true" />
           {t("actions.backToRead")}
-        </Button>
+        </RpgButton>
+        <RpgButton tone="iron" className="w-full sm:w-auto" onClick={askRestart} disabled={restarting} aria-haspopup="dialog">
+          <RotateCcw className="size-5" aria-hidden="true" />
+          {restarting ? t("actions.restarting") : t("actions.startAgain")}
+        </RpgButton>
       </div>
+      {restartFailed ? (
+        <p role="alert" className="text-center text-base font-bold">
+          {t("restart.error")}
+        </p>
+      ) : null}
+      {confirming ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(10,8,20,0.6)" }}>
+          <Panel role="alertdialog" aria-modal="true" aria-labelledby="restart-title" className="w-full max-w-md">
+            <h2 id="restart-title" className="text-2xl font-bold">
+              {t("restart.title")}
+            </h2>
+            <p className="text-base">{t("restart.body1")}</p>
+            <p className="text-base">{t("restart.body2")}</p>
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <RpgButton tone="iron" className="w-full sm:w-auto" onClick={() => setConfirming(false)} disabled={restarting} autoFocus>
+                {t("restart.cancel")}
+              </RpgButton>
+              <RpgButton tone="gold" className="w-full sm:w-auto" onClick={confirmRestart} disabled={restarting}>
+                {restarting ? t("actions.restarting") : t("actions.startAgain")}
+              </RpgButton>
+            </div>
+          </Panel>
+        </div>
+      ) : null}
     </div>
   );
 }

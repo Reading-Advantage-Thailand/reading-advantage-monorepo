@@ -120,6 +120,8 @@ export default function LessonProgressBar({
   const [saveError, setSaveError] = useState<"start" | number | null>(null);
   // The step the student tried to open while the class had not reached it yet.
   const [lockedStep, setLockedStep] = useState<number | null>(null);
+  // The attempt number of this session: 1 until the student starts the lesson again from the summary.
+  const [attemptNumber, setAttemptNumber] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [nextPhaseContent, setNextPhaseContent] = useState<number | null>(null);
@@ -454,6 +456,9 @@ export default function LessonProgressBar({
             <TaskLessonSummary
               article={article as Article}
               timerSpent={timer}
+              assignmentId={source === "assignment" ? (assignment?.id ?? null) : null}
+              attemptNumber={attemptNumber}
+              onRestarted={onRestarted}
             />
             {/* Reedy entry at the end of the flow (reedy FR-4). */}
             <Link
@@ -516,6 +521,16 @@ export default function LessonProgressBar({
       default:
         return "";
     }
+  };
+
+  /** Opens task 1 with a fresh timer after the student started the lesson again. */
+  const onRestarted = (newAttempt: number | null) => {
+    if (newAttempt !== null) setAttemptNumber(newAttempt);
+    setSaveError(null);
+    setLockedStep(null);
+    setTimer(0);
+    setPaused(false);
+    setCurrentTask(1);
   };
 
   const skipTask = async (Task: number) => {
