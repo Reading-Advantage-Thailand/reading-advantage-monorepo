@@ -96,3 +96,27 @@ describe("getSchoolDetail license key", () => {
     expect((await getSchoolDetail(SCHOOL, { withLicense: true }))?.license?.key).toBe("SECRET-KEY");
   });
 });
+
+describe("getSchoolDetail staff emails", () => {
+  const queue = () => {
+    mocks.selectQueue = [
+      [{ id: SCHOOL, name: "S", createdAt: new Date(), updatedAt: new Date(), ownerId: "o1" }],
+      [{ userId: "a1", userName: "Admin", userEmail: "admin@x.test" }],
+      [],
+      [{ id: "o1", name: "Owner", email: "owner@x.test" }],
+    ];
+  };
+
+  it("keeps the emails by default", async () => {
+    queue();
+    const detail = await getSchoolDetail(SCHOOL);
+    expect(detail?.admins?.[0]?.user.email).toBe("admin@x.test");
+  });
+
+  it("blanks the admin and owner emails when asked", async () => {
+    queue();
+    const detail = await getSchoolDetail(SCHOOL, { hideStaffEmails: true });
+    expect(detail?.admins?.[0]?.user).toMatchObject({ name: "Admin", email: "" });
+    expect(detail?.owner?.email).toBe("");
+  });
+});

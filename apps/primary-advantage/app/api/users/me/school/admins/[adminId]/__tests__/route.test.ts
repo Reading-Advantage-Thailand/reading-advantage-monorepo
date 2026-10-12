@@ -60,4 +60,26 @@ describe("DELETE /api/users/me/school/admins/[adminId] on a migrated database", 
     expect(response.status).toBe(200);
     expect(mocks.setSpy).toHaveBeenCalledWith({ role: "TEACHER" });
   });
+
+  it("lets a migrated ADMIN without a school_admins row remove an admin of an ownerless school", async () => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "adm", role: "ADMIN", schoolId: "s1" });
+    mocks.selectQueue = [
+      [{ id: "adm", schoolId: "s1", role: "ADMIN" }],
+      [{ id: "s1", ownerId: null }],
+      [{ admin: { id: "a1", schoolId: "s1", userId: "t1" }, adminUser: { id: "t1", role: "ADMIN" } }],
+      [], [], [], [],
+    ];
+    const response = await DELETE({} as NextRequest, { params: Promise.resolve({ adminId: "a1" }) });
+    expect(response.status).toBe(200);
+  });
+
+  it("refuses a TEACHER who is not the owner", async () => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "tch", role: "ADMIN", schoolId: "s1" });
+    mocks.selectQueue = [
+      [{ id: "tch", schoolId: "s1", role: "TEACHER" }],
+      [{ id: "s1", ownerId: "owner" }],
+    ];
+    const response = await DELETE({} as NextRequest, { params: Promise.resolve({ adminId: "a1" }) });
+    expect(response.status).toBe(403);
+  });
 });

@@ -94,11 +94,12 @@ export interface SchoolProfile {
  * Loads a school with its admins, owner, license, and member counts.
  * @param schoolId The school identifier.
  * @param options.withLicense True for a school admin: the license (with its key) is read. Default false.
+ * @param options.hideStaffEmails True for a STUDENT caller: the admin and owner emails are blank. Default false.
  * @returns The school detail, or null when the school does not exist.
  */
 export async function getSchoolDetail(
   schoolId: string,
-  options: { withLicense?: boolean } = {},
+  options: { withLicense?: boolean; hideStaffEmails?: boolean } = {},
 ): Promise<SchoolProfile | null> {
   const [school] = await db
     .select()
@@ -125,7 +126,7 @@ export async function getSchoolDetail(
     user: {
       id: a.userId,
       name: a.userName ?? "",
-      email: a.userEmail ?? "",
+      email: options.hideStaffEmails ? "" : (a.userEmail ?? ""),
     },
   }));
 
@@ -176,7 +177,7 @@ export async function getSchoolDetail(
       ? {
           id: owner.id,
           name: owner.name ?? "",
-          email: owner.email ?? "",
+          email: options.hideStaffEmails ? "" : (owner.email ?? ""),
         }
       : undefined,
     license: license

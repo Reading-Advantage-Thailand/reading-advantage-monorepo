@@ -7,6 +7,8 @@ import { assertCan, AuthError } from '@reading-advantage/auth';
 import { z } from "zod";
 import { normalizeRole } from "@/lib/authorization";
 import { setUserRole } from "@/server/utils/role-sql";
+import { canManageSchool } from "@/server/utils/school-access";
+import { logger } from "@/lib/observability/logger";
 
 const addAdminSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
@@ -67,10 +69,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if current user is the school owner
-    if (userSchool.ownerId !== currentUser.id) {
+    // The owner, an ADMIN of the school, or SYSTEM may manage the admins
+    if (!canManageSchool(currentUser, userSchool)) {
       return NextResponse.json(
-        { error: "Only the school owner can add admins" },
+        { error: "Only the school owner or a school admin can add admins" },
         { status: 403 },
       );
     }
@@ -85,6 +87,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Target user not found" },
         { status: 404 },
+      );
+    }
+
+    // Only a TEACHER or ADMIN of the school may become a school admin.
+    const targetRole = normalizeRole(targetUser.role);
+    if (targetRole !== "TEACHER" && targetRole !== "ADMIN") {
+      return NextResponse.json(
+        { error: "Only a teacher or admin of the school can become a school admin" },
+        { status: 400 },
       );
     }
 
@@ -156,7 +167,7 @@ export async function POST(request: NextRequest) {
       roleUpgraded,
     });
   } catch (error) {
-    console.error("Error adding school admin:", error);
+    logger.error("school_admin_add_failed", { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

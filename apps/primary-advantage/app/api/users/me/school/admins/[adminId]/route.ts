@@ -6,6 +6,8 @@ import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { normalizeRole } from "@/lib/authorization";
 import { setUserRole } from "@/server/utils/role-sql";
+import { canManageSchool } from "@/server/utils/school-access";
+import { logger } from "@/lib/observability/logger";
 
 // DELETE /api/users/me/school/admins/[adminId] - Remove a school admin
 export async function DELETE(
@@ -65,10 +67,10 @@ export async function DELETE(
       );
     }
 
-    // Check if current user is the school owner
-    if (userSchool.ownerId !== currentUser.id) {
+    // The owner, an ADMIN of the school, or SYSTEM may manage the admins
+    if (!canManageSchool(currentUser, userSchool)) {
       return NextResponse.json(
-        { error: "Only the school owner can remove admins" },
+        { error: "Only the school owner or a school admin can remove admins" },
         { status: 403 },
       );
     }
@@ -168,7 +170,7 @@ export async function DELETE(
       removedUserId: adminRecord.admin.userId,
     });
   } catch (error) {
-    console.error("Error removing school admin:", error);
+    logger.error("school_admin_remove_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

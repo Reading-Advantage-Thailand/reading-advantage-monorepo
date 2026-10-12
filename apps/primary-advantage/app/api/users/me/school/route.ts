@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
 import { eq, and, desc, inArray } from 'drizzle-orm';
-import { users, schools, schoolAdmins, userRoles, roles, licenses } from '@reading-advantage/db/schema';
+import { users, schools, schoolAdmins, licenses } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from "@reading-advantage/domain";
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { getSchoolDetail } from "@/server/models/schoolModel";
@@ -9,6 +9,8 @@ import { getLicenseViewForCaller } from "@/server/models/schoolLicenseView";
 import { z } from "zod";
 import { normalizeRole } from "@/lib/authorization";
 import { setUserRole } from "@/server/utils/role-sql";
+import { canManageSchool } from "@/server/utils/school-access";
+import { logger } from "@/lib/observability/logger";
 
 const schoolSchema = z.object({
   name: z.string().min(2).max(100),
@@ -58,11 +60,14 @@ export async function GET() {
 
     // The license view and the license key go to a school admin only.
     const licenseView = await getLicenseViewForCaller(currentUser);
-    const school = await getSchoolDetail(user.schoolId, { withLicense: licenseView !== null });
+    const school = await getSchoolDetail(user.schoolId, {
+      withLicense: licenseView !== null,
+      hideStaffEmails: normalizeRole(user.role) === "STUDENT",
+    });
 
     return NextResponse.json({ school, licenseView });
   } catch (error) {
-    console.error("Error fetching user school:", error);
+    logger.error("school_fetch_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -114,10 +119,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Only the self-serve account type may create a school: a school-less
-    // STUDENT whose only legacy role is "user" (the sign-up default). Staff
-    // accounts never gain admin rights through this route.
-    if (normalizeRole(existingUser.role) !== "STUDENT") {
+    // Only a TEACHER or ADMIN without a school, or SYSTEM, may create a school.
+    // users.role is the truth. A STUDENT never gains admin rights through this route.
+    const callerRole = normalizeRole(existingUser.role);
+    if (callerRole !== "TEACHER" && callerRole !== "ADMIN" && callerRole !== "SYSTEM") {
       return NextResponse.json(
         { error: "This account type cannot create a school" },
         { status: 403 },
@@ -136,27 +141,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const currentUserRoleRows = await rawDb.select({
-      roleId: userRoles.roleId,
-      roleName: roles.name,
-    })
-      .from(userRoles)
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
-      .where(eq(userRoles.userId, authUser.id));
-
     const currentUser = existingUser;
-    // users.role is the truth. A legacy user_roles row, when present, must not name a staff role.
-    const currentRoles = currentUserRoleRows.map((r) => r.roleName);
-    if (!currentRoles.every((name) => name === "user" || name === "student")) {
-      return NextResponse.json(
-        { error: "This account type cannot create a school" },
-        { status: 403 },
-      );
-    }
 
-    // The self-serve owner of a new school becomes its admin.
-    const roleUpgraded = true;
-    await setUserRole(rawDb, currentUser.id, "admin");
+    // The owner of a new school becomes its admin. SYSTEM and ADMIN keep their role.
+    const roleUpgraded = callerRole === "TEACHER";
+    if (roleUpgraded) await setUserRole(rawDb, currentUser.id, "admin");
 
     // Create school (replaces Prisma `school.create`).
     const [school] = await rawDb.insert(schools).values({
@@ -227,7 +216,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(schoolWithOwner, { status: 201 });
   } catch (error) {
-    console.error("Error creating school:", error);
+    logger.error("school_create_failed", { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -296,6 +285,14 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json(
         { error: "User has no school associated" },
         { status: 400 },
+      );
+    }
+
+    // Only an admin of the school (or its owner, or SYSTEM) may change the school.
+    if (!canManageSchool(user, userSchool)) {
+      return NextResponse.json(
+        { error: "Only a school admin can update the school" },
+        { status: 403 },
       );
     }
 
@@ -380,7 +377,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(schoolWithOwner);
   } catch (error) {
-    console.error("Error updating school:", error);
+    logger.error("school_update_failed", { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -478,7 +475,7 @@ export async function DELETE() {
 
     return NextResponse.json({ message: "School deleted successfully" });
   } catch (error) {
-    console.error("Error deleting school:", error);
+    logger.error("school_delete_failed", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

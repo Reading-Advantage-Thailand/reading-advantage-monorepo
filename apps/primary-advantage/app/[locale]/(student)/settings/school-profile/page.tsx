@@ -3,6 +3,7 @@ import AuthErrorPage from "@/app/[locale]/auth/error/page";
 import SchoolProfileSettings from "@/components/school/school-profile-settings";
 import { getCurrentUser } from "@/lib/session";
 import { getSchoolDetail } from "@/server/models/schoolModel";
+import { normalizeRole } from "@/lib/authorization";
 import { getLicenseViewForCaller } from "@/server/models/schoolLicenseView";
 
 /**
@@ -19,7 +20,10 @@ async function SchoolProfileData() {
   // The license view and the license key go to a school admin only.
   const licenseView = await getLicenseViewForCaller(user);
   const initialSchool = user.schoolId
-    ? await getSchoolDetail(user.schoolId, { withLicense: licenseView !== null })
+    ? await getSchoolDetail(user.schoolId, {
+        withLicense: licenseView !== null,
+        hideStaffEmails: normalizeRole(user.role) === "STUDENT",
+      })
     : null;
 
   return (

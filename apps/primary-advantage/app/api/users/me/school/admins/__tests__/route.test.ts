@@ -69,4 +69,33 @@ describe("POST /api/users/me/school/admins on a migrated database", () => {
     expect(mocks.setSpy).toHaveBeenCalledWith({ role: "ADMIN" });
     await expect(response.json()).resolves.toMatchObject({ roleUpgraded: true });
   });
+
+  it("refuses a STUDENT as school admin and writes nothing", async () => {
+    mocks.selectQueue = [
+      [{ id: "owner", schoolId: "s1" }],
+      [{ id: "s1", ownerId: "owner" }],
+      [{ id: "t1", schoolId: "s1", role: "STUDENT" }],
+      [],
+      [],
+    ];
+    const response = await POST(post());
+    expect(response.status).toBe(400);
+    expect(mocks.insertSpy).not.toHaveBeenCalled();
+    expect(mocks.setSpy).not.toHaveBeenCalled();
+  });
+
+  it("lets a migrated ADMIN without a school_admins row manage a school that has no owner", async () => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "adm", role: "ADMIN", schoolId: "s1" });
+    mocks.selectQueue = [
+      [{ id: "adm", schoolId: "s1", role: "ADMIN" }],
+      [{ id: "s1", ownerId: null }],
+      [{ id: "t1", schoolId: "s1", role: "TEACHER" }],
+      [],
+      [],
+      [],
+    ];
+    const response = await POST(post());
+    expect(response.status).toBe(200);
+    expect(mocks.insertSpy).toHaveBeenCalledWith({ schoolId: "s1", userId: "t1" });
+  });
 });
