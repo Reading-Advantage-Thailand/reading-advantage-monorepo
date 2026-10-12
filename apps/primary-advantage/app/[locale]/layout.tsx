@@ -76,14 +76,23 @@ export const metadata: Metadata = {
   // },
   icons: {
     icon: "/primary-advantage.png",
+    apple: "/icons/primary-advantage-180.png",
   },
-  // manifest: `${siteConfig.url}/site.webmanifest`,
-  // manifest: `http://localhost:3000/site.webmanifest`,
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "Primary Advantage",
+    statusBarStyle: "default",
+  },
 };
 
 /** Lets the page draw under the notch and home bar, so the safe-area insets get values. */
 export const viewport: Viewport = {
   viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#5c391a" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1420" },
+  ],
 };
 
 export default async function RootLayout({

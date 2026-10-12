@@ -12,7 +12,7 @@ row later. A change comes back to this file, `spec.md`, and `plan.md`.
 | P0-4 | Short name | `name` and `short_name` both "Primary Advantage" (the legacy value). |
 | P0-5 | Install notice | A pinned parchment `Panel` in the guild hall, above the hero. It shows the 192 icon, one title, the iOS steps (Share, Add to Home Screen, Add) or a gold Install button, and a "Not now" button. All targets are 48 px. It uses `Panel`, `RpgButton` from `components/rpg/chrome.tsx`. |
 | P0-6 | Offline page and sign (Story S4) | The choice to build Story S4: yes (spec default; the priority is Could). `/offline.html` is static, in the skin colours, with en and th text. The offline sign is a gold strip of 48 px with one line under the header. |
-| P0-7 | Chrome install criteria | Open for Story S2: check the current Chrome documentation. If a `fetch` handler is needed, add a network-only handler to the Story S4 scope. |
+| P0-7 | Chrome install criteria | Checked 2026-10-12 in `web.dev/articles/install-criteria` (updated 2024-09-19): install needs HTTPS, the manifest fields (`name`/`short_name`, 192 and 512 icons, `start_url`, `display`, no `prefer_related_applications`), and the engagement heuristics. No service worker `fetch` handler is needed: Chrome removed that requirement in 108 (mobile) and 112 (desktop) (`developer.chrome.com/blog/update-install-criteria`). The S1 worker stays without a `fetch` handler; the S4 navigation handler only serves the offline fallback, not installability. |
 
 Copy keys (English; five locale files in Story S3). Namespace `PwaInstall`: `title` ("Add Primary
 Advantage to your home screen"), `iosShare` ("Tap the Share button in Safari."), `iosAdd`
