@@ -7,7 +7,7 @@ Every task follows the TDD order of `measure/workflow.md` (red, green, refactor,
 One commit for each task. The subject ends with `(track_id: primary_parity_qr_path_20261011)`, has a lower-case start, and the header is 100 characters or less.
 Start after `primary_parity_class_books_20261011` loads the catalogue. The route reads the catalogue.
 
-## Phase D: Design (RPG skin)
+## Phase D: Design (RPG skin) [checkpoint: bceb181e5]
 
 - [x] Task: Design the landing and the case pages
     - [x] Read `docs/primary-rpg-skin.md` and `components/rpg/{scene,chrome}.tsx`
