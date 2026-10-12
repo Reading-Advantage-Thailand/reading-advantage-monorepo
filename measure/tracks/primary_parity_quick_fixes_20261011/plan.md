@@ -91,31 +91,35 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: Measure - User Manual Verification 'Phase 4: Student — lessons and quizzes' (Protocol in workflow.md)
     - look check pending (owner, async). Manual verification steps: (1) As a student open an assignment lesson with progress 93; check that task 13 opens with a Next button. (2) Open a new assignment (progress 0); check that task 1 opens with the start button. (3) Open a lesson with progress 100; check that the summary shows and the timer stays still. (4) Finish a quiz twice in a row (double click); check that XP rises one time. (5) Answer task 8, go to task 9, go back; check that the saved question, answer, suggested answer, feedback, and score show.
 
-## Phase 5: Student — reading, saved words, profile, and XP
+## Phase 5: Student — reading, saved words, profile, and XP [checkpoint: PENDING]
 
-- [ ] Task: FR-8 (STU-06) — the student changes the display name
-    - [ ] Contract: `updateOwnDisplayNameBodySchema` in `lib/zod.ts` (`name` trimmed, 2 to 40 characters), with JSDoc
-    - [ ] Red: new `app/api/users/me/__tests__/route.test.ts`: a full student session changes its own `name` through `updateUser`; a `code_only` session gets 403; no session gets 401; a body with `id`, `username`, or `role` changes nothing else (the schema strips it); a name of 1 or 41 characters gives 400
-    - [ ] Red: new `components/__tests__/change-display-name-form.test.tsx`: the form sends PATCH `/api/users/me`; a failure shows the error toast; the labels are "Display name" and "Sign-in username"
-    - [ ] Green: new `app/api/users/me/route.ts` (PATCH; `getTenantDB`; `logger.error` on a failure); `components/change-username-form.tsx`; `app/[locale]/(student)/settings/user-profile/page.tsx:51-58`; new keys `Settings.userProfile.displayName`, `displayNameDescription`, `signInUsername` in the five locales
-- [ ] Task: FR-9 (STU-07) — the article text shows every sentence
-    - [ ] Red: new `lib/__tests__/paragraph-utils.test.ts`, ported from legacy `lib/paragraph-utils.test.ts` (bucket sizes 7 → 3, 2, 2; 8 → 3, 3, 2; 10 → 4, 3, 3; 0, 1, and 2 items; order and identity kept; the passage split)
-    - [ ] Red: new `components/articles/__tests__/article-content-paragraphs.test.tsx` and one case in `components/lesson/task/__tests__/task-reading-highlight.behavior.test.tsx`: a sentence that no passage paragraph contains shows; a short sentence that two paragraphs contain shows one time; the blocks are 3
-    - [ ] Green: new `lib/paragraph-utils.ts`; `components/articles/article-content.tsx:414-416` and `:945-986`; `components/lesson/task/task-reading.tsx:53` and `:393-420`
-    - [ ] Tell the read-along session (`primary_parity_read_along_20261011`) the commit, because it changes the same file
-- [ ] Task: FR-10 (STU-08) — game XP goes into the student's XP
-    - [ ] Red: in `packages/domain/src/__tests__/games.test.ts`, add: with `addToUserXp: true` a new completion adds `xpEarned` to `users.xp` in the same transaction; a duplicate adds nothing; without the option `users` gets no update; the client schema still refuses an `xp` field
-    - [ ] Red: in the Primary complete route test (`app/api/v1/apk/__tests__/`), assert that the route passes `addToUserXp: true`
-    - [ ] Green: `packages/domain/src/games/mutations.ts:66-200` (the `options` parameter, the SQL increment of `users.xp` after the saved completion); `app/api/v1/apk/complete/route.ts:60-65`
-    - [ ] Check that `apps/reading-advantage/app/api/v1/apk/routes.test.ts` and the Advantage Games completion tests stay green
-- [ ] Task: FR-11 (STU-16) — the chip shows the student's own state; the legacy save rule
-    - [ ] Contract: in new `packages/domain/src/games/primary-article-cards.ts`, Zod schemas `saveArticleCardsInputSchema` (`articleId` uuid), `saveArticleCardsOutputSchema` (`wordsCreated`, `sentencesCreated`, `alreadySaved`), and `articleCardStateOutputSchema` (`saved`); export them from `packages/domain/src/games/index.ts`
-    - [ ] Red: new `packages/domain/src/__tests__/primary-article-cards.test.ts` (mock DB): no save before all three quizzes; 3 to 5 words with a fixed random function; words already in the vocabulary deck (any case, any article) are left out; all sentences; nothing when both kinds exist; the log is marked saved; a TEACHER gets an auth error; each query filters `user_id`
-    - [ ] Red: new `components/articles/__tests__/article-card-saved-chip.test.tsx`: the chip shows "Not saved" when another user saved the article and this user did not; "Saved" for this user's log or cards
-    - [ ] Red: a test for `getArticleById(articleId, userId)` in `server/models/__tests__/articleModel.questions.test.ts` or a new file: only the logs of `userId`; no log without a user
-    - [ ] Green: `packages/domain/src/games/primary-article-cards.ts`; `server/models/articleModel.ts:436-460`; `server/controllers/articleController.ts:112-120` (no user, no log); `app/[locale]/(student)/student/read/[articleId]/page.tsx:114-135`; `components/articles/article-card.tsx:18-60`
-    - [ ] Check that `actions/__tests__/flashcard-dashboard-data.test.ts` and the lesson task 7 path still pass
-- [ ] Task: Measure - User Manual Verification 'Phase 5: Student — reading, saved words, profile, and XP' (Protocol in workflow.md)
+- [x] Task: FR-8 (STU-06) — the student changes the display name
+    - [x] Contract: `updateOwnDisplayNameBodySchema` in `lib/zod.ts` (`name` trimmed, 2 to 40 characters), with JSDoc
+    - [x] Red: new `app/api/users/me/__tests__/route.test.ts`: a full student session changes its own `name` through `updateUser`; a `code_only` session gets 403; no session gets 401; a body with `id`, `username`, or `role` changes nothing else (the schema strips it); a name of 1 or 41 characters gives 400
+    - [x] Red: new `components/__tests__/change-display-name-form.test.tsx`: the form sends PATCH `/api/users/me`; a failure shows the error toast; the labels are "Display name" and "Sign-in username"
+    - [x] Green: new `app/api/users/me/route.ts` (PATCH; `getTenantDB`; `logger.error` on a failure); `components/change-username-form.tsx`; `app/[locale]/(student)/settings/user-profile/page.tsx:51-58`; new keys `Settings.userProfile.displayName`, `displayNameDescription`, `signInUsername` in the five locales
+    - Commit db67372ad. No member question. The route `PATCH /api/users/me` calls `users.updateUser` of the domain; a user without a school uses `getUnscopedDB`. The form file keeps its name `change-username-form.tsx`.
+- [x] Task: FR-9 (STU-07) — the article text shows every sentence
+    - [x] Red: new `lib/__tests__/paragraph-utils.test.ts`, ported from legacy `lib/paragraph-utils.test.ts` (bucket sizes 7 → 3, 2, 2; 8 → 3, 3, 2; 10 → 4, 3, 3; 0, 1, and 2 items; order and identity kept; the passage split)
+    - [x] Red: new `components/articles/__tests__/article-content-paragraphs.test.tsx` and one case in `components/lesson/task/__tests__/task-reading-highlight.behavior.test.tsx`: a sentence that no passage paragraph contains shows; a short sentence that two paragraphs contain shows one time; the blocks are 3
+    - [x] Green: new `lib/paragraph-utils.ts`; `components/articles/article-content.tsx:414-416` and `:945-986`; `components/lesson/task/task-reading.tsx:53` and `:393-420`
+    - [x] Tell the read-along session (`primary_parity_read_along_20261011`) the commit, because it changes the same file
+    - Commit 8036a121c. The no-sentences fallback shows the passage in 3 blocks of sentences (no pictures). The read-along session edits the same two files and needs this commit sha.
+- [x] Task: FR-10 (STU-08) — game XP goes into the student's XP
+    - [x] Red: in `packages/domain/src/__tests__/games.test.ts`, add: with `addToUserXp: true` a new completion adds `xpEarned` to `users.xp` in the same transaction; a duplicate adds nothing; without the option `users` gets no update; the client schema still refuses an `xp` field
+    - [x] Red: in the Primary complete route test (`app/api/v1/apk/__tests__/`), assert that the route passes `addToUserXp: true`
+    - [x] Green: `packages/domain/src/games/mutations.ts:66-200` (the `options` parameter, the SQL increment of `users.xp` after the saved completion); `app/api/v1/apk/complete/route.ts:60-65`
+    - [x] Check that `apps/reading-advantage/app/api/v1/apk/routes.test.ts` and the Advantage Games completion tests stay green
+    - Commit dbd4fbadd. `apps/reading-advantage` route tests did not run here (alias error `@/lib/apk/...`, not caused by this change; the option is off by default).
+- [x] Task: FR-11 (STU-16) — the chip shows the student's own state; the legacy save rule
+    - [x] Contract: in new `packages/domain/src/games/primary-article-cards.ts`, Zod schemas `saveArticleCardsInputSchema` (`articleId` uuid), `saveArticleCardsOutputSchema` (`wordsCreated`, `sentencesCreated`, `alreadySaved`), and `articleCardStateOutputSchema` (`saved`); export them from `packages/domain/src/games/index.ts`
+    - [x] Red: new `packages/domain/src/__tests__/primary-article-cards.test.ts` (mock DB): no save before all three quizzes; 3 to 5 words with a fixed random function; words already in the vocabulary deck (any case, any article) are left out; all sentences; nothing when both kinds exist; the log is marked saved; a TEACHER gets an auth error; each query filters `user_id`
+    - [x] Red: new `components/articles/__tests__/article-card-saved-chip.test.tsx`: the chip shows "Not saved" when another user saved the article and this user did not; "Saved" for this user's log or cards
+    - [x] Red: a test for `getArticleById(articleId, userId)` in `server/models/__tests__/articleModel.questions.test.ts` or a new file: only the logs of `userId`; no log without a user
+    - [x] Green: `packages/domain/src/games/primary-article-cards.ts`; `server/models/articleModel.ts:436-460`; `server/controllers/articleController.ts:112-120` (no user, no log); `app/[locale]/(student)/student/read/[articleId]/page.tsx:114-135`; `components/articles/article-card.tsx:18-60`
+    - [x] Check that `actions/__tests__/flashcard-dashboard-data.test.ts` and the lesson task 7 path still pass
+- [x] Task: Measure - User Manual Verification 'Phase 5: Student — reading, saved words, profile, and XP' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) As a STUDENT with a full sign-in open `/en/settings/user-profile`; check the labels "Display name" and "Sign-in username". (2) Change the display name; check the success toast and the new name in the header; check that the sign-in username is the same. (3) Sign in with a class code (code-only session), repeat; check the red notice and the error toast. (4) Open an article page with at least 7 sentences; check 3 blocks with one picture each and every sentence once. (5) Open the same article as a student who did not finish the quizzes; check the chip "Flashcard: Not Saved" even when a classmate saved it. (6) Finish the MCQ, SAQ, and LAQ, reload; check the chip "Flashcard: Saved" and 3 to 5 new words and all sentences in the decks. (7) Play one game; check that the home XP and the header gem rise by the earned XP.
 
 ## Phase 6: Public
 

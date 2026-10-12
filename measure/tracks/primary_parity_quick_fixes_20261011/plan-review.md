@@ -89,3 +89,41 @@ Medium and Low findings:
 - L-16 (Low). The FR-7 test mocks `@/contexts/question-context`, because the task wraps itself in its own provider.
 - L-17 (Low). The completed view of task 8 still has the unused `MessageSquare` import path in the loading branch only; the form and loading views keep the old card style.
 - Deviation: `startLesson` now saves `getLessonProgressForTask(2)` = 14 instead of 7. The reader accepts both values.
+
+## Phase 5: Student — reading, saved words, profile, and XP
+
+Phase review of `git diff c955dd335..HEAD` (commits db67372ad, 8036a121c, dbd4fbadd, 59f743de3).
+Plan compliance: FR-8, FR-9, FR-10, and FR-11 done as planned. Critical and High findings: none.
+Checks: the new route uses the session user only and checks `authStrength`; Zod strips `id`, `username`, and `role`;
+`saveArticleCardsAfterQuiz` and `getArticleCardState` filter each query by `user_id` (tested) and refuse a non-STUDENT;
+`recordGameCompletion` adds XP only on a new completion, with a SQL increment; new Primary server code logs with `logger`;
+JSDoc on each new export; the 7 new `Settings.userProfile` keys exist in the five locales.
+Tests: `route.test.ts` 6, `change-display-name-form.test.tsx` 3, `paragraph-utils.test.ts` + article and task-reading
+paragraph cases (58 pass with `components/articles` and `components/lesson/task`), domain `games.test.ts` 46,
+`primary-article-cards.test.ts` 11, `articleModel.logs-of-user.test.ts` 2 (PGlite), `article-card-saved-chip.test.tsx` 3,
+article page test 8, `app/api/v1/apk` 26. Also green: `actions` + `app/api/users` + student pages (142). App and domain
+`tsc --noEmit`: app exit 0; domain shows only the old `@reading-advantage/integrations-github` errors in `src/codecamp`.
+
+Medium and Low findings:
+
+- M-6 (Medium). The red step was not run as a separate step for any FR of this phase (test and fix in one commit).
+- M-7 (Medium). `apps/reading-advantage` apk route tests and the Advantage Games completion tests did not run: Vitest in
+  `apps/reading-advantage` fails on the `@/lib/apk/...` alias before any test starts (not caused by this change). The new
+  option is off by default, so their calls are unchanged.
+- M-8 (Medium). `GET /api/articles/[articleId]` has no session check (E-8, Out of Scope). It now returns the logs of the
+  session user, or none without a session.
+- L-18 (Low). The no-sentences fallback of `article-content.tsx` and `task-reading.tsx` shows the passage in 3 text blocks,
+  with no pictures.
+- L-19 (Low). The staff view of the read page always shows the chip "Not Saved" (it saves nothing and reads no state).
+- L-20 (Low). `getArticleCardState` and `saveArticleCardsAfterQuiz` each run on every read-page load for a student. The save
+  returns after one query when the quizzes are not done or the log is marked.
+- L-21 (Low). `saveFlashcard` (lesson task 7, all words) and the new function dedupe differently: the new one checks
+  "any card of this article in the deck", the lesson one checks each word. A lesson save after the new save adds the rest.
+- L-22 (Low). The route test mocks `@reading-advantage/domain`; the real `updateUser` is covered by `users.test.ts`.
+- Shortcut: the sentence spacing of article blocks was not changed (the sentence spans have no space between them when
+  `sentence` has no trailing space; the legacy page is the same).
+- Lesson: a PGlite test can add its own table with `CREATE TABLE IF NOT EXISTS` in `beforeAll` when the shared helper
+  lacks it (`sentencs_and_words_for_flashcard`); `TRUNCATE ... CASCADE` of `articles` clears it.
+- Lesson: the commit header limit leaves 38 characters for the type-scope prefix plus subject text after the
+  48-character track_id suffix; the failed commit-msg check leaves no commit and no side effect.
+- Deviation: `ChangeUsernameForm` keeps its file and export name. It sends to `/api/users/me` and ignores its `userId` prop.
