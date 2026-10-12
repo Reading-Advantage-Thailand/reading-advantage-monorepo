@@ -98,3 +98,19 @@ describe("article picture URLs", () => {
     expect(getArticleImageUrl({ id: "new-id" }, 1)).toMatch(/\/images\/new-id_1\.png$/);
   });
 });
+
+describe("story picture keys", () => {
+  it("getStoryImageKey uses the stored key (the legacy cuid) before the row id", async () => {
+    const { getStoryImageKey } = await importStorageConfig();
+    expect(getStoryImageKey({ id: "uuid-1", image: "cl9legacy" })).toBe("cl9legacy");
+    expect(getStoryImageKey({ id: "uuid-1", image: null })).toBe("uuid-1");
+    expect(getStoryImageKey({ id: "uuid-1", image: "https://x.test/a.png" })).toBe("uuid-1");
+  });
+
+  it("getStoryImageUrl builds images/story/<key>.png in the bucket", async () => {
+    const { getStoryImageUrl, getStorageUrl } = await importStorageConfig();
+    expect(getStoryImageUrl({ id: "uuid-1", image: "cl9legacy" })).toBe(
+      getStorageUrl("images/story/cl9legacy.png"),
+    );
+  });
+});
