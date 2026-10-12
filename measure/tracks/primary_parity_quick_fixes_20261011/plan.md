@@ -137,7 +137,7 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 
     - look check pending (owner, async). Manual verification steps: (1) Open the `/en` footer; click "Support"; check that `/contact` opens. Check the email link `mailto:support@reading-advantage.com`. (2) Open `/en/auth/signin?classroom_code=<new 6-character code>`; check that the name list opens. (3) Use a wrong 6-character code; check the message "This code does not work". (4) Use an 8-character code; check the note and an empty input. (5) Type in the input; check that the note goes away. Captures: design in `/home/daniebo/Desktop/primary-parity-progress/captures/quick_fixes/phase1-design/student-fr13-*`.
 
-## Phase 7: Acceptance, Docs & Doctor
+## Phase 7: Acceptance, Docs & Doctor [checkpoint: 581535c5d]
 
 - [x] Task: Run the gates, one at a time
     - [x] `pnpm --filter primary-advantage test`, `pnpm --filter @reading-advantage/domain test`
