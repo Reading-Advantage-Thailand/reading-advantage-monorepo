@@ -53,7 +53,7 @@ Notes (Phase S1, helper, 2026-10-12):
 - Default used: Q1 legacy XP rule (no XP change at close); Q2/Q3 apply to S2/S3.
 - User Manual Verification: none visible in the UI in this phase. Steps: run `vitest run src/primary-lesson-attempts` in `packages/domain` (10 pass); look at the 23 history rows in a migrated copy.
 
-## Phase S2: The student starts a lesson again [checkpoint: CHKSHA]
+## Phase S2: The student starts a lesson again [checkpoint: af0f1efff]
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Define the restart contract
