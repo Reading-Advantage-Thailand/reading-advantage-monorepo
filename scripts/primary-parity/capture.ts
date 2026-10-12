@@ -15,7 +15,7 @@ import { chromium, type BrowserContext, type Page } from "playwright";
 import postgres from "postgres";
 import { AccountsFile, requireRoles, type AccountsFileData } from "./accounts-file.js";
 import { assertLocalBaseUrl, assertOutsideRepository, checkDatabaseUrl } from "./guards.js";
-import { PairList, resolvePlaceholders, rolesNeeded, type PairData } from "./pairs.js";
+import { PairList, isExpiredRedirect, matchRequests, requestPath, resolvePlaceholders, rolesNeeded, type PairData } from "./pairs.js";
 import {
   gotoRetry,
   readClassSheetPassword,
@@ -97,28 +97,33 @@ async function main(): Promise<void> {
   const newContext = () => browser.newContext({ serviceWorkers: "block", viewport: { width: 1280, height: 900 } });
   const contexts = new Map<string, BrowserContext>();
 
+  /** Signs a role in to the app under capture, in the given context. */
+  async function signIn(role: Exclude<PairData["role"], "PUBLIC">, ctx: BrowserContext): Promise<void> {
+    const entry = entries[role]!;
+    if (app === "legacy") {
+      await (role === "STUDENT" ? signInLegacyStudent : signInLegacyStaff)(ctx, base!, entry);
+    } else if (role === "STUDENT") {
+      if (!entries.TEACHER || !entry.new.classroomId) throw new Error("new STUDENT sign-in needs the TEACHER entry and a classroomId");
+      const teacherCtx = await contextFor("TEACHER");
+      const password = await readClassSheetPassword(teacherCtx, base!, entry.new.classroomId, entry.new.username);
+      await signInNewStudent(ctx, base!, entry.new.username, password);
+    } else {
+      const handout = values.handout;
+      const fresh = await signInNewStaff(ctx, base!, entry, handout ? () => temporaryPasswordOf(handout, entry.new.username) : undefined);
+      if (fresh) {
+        entry.new.password = fresh;
+        writePrivate(accountsFile!, JSON.stringify(accounts, null, 2));
+      }
+    }
+  }
+
   /** Returns the signed-in context of a role, or a plain context for PUBLIC. */
   async function contextFor(role: PairData["role"]): Promise<BrowserContext> {
     const cached = contexts.get(role);
     if (cached) return cached;
     const ctx = await newContext();
     if (role !== "PUBLIC") {
-      const entry = entries[role]!;
-      if (app === "legacy") {
-        await (role === "STUDENT" ? signInLegacyStudent : signInLegacyStaff)(ctx, base!, entry);
-      } else if (role === "STUDENT") {
-        if (!entries.TEACHER || !entry.new.classroomId) throw new Error("new STUDENT sign-in needs the TEACHER entry and a classroomId");
-        const teacherCtx = await contextFor("TEACHER");
-        const password = await readClassSheetPassword(teacherCtx, base!, entry.new.classroomId, entry.new.username);
-        await signInNewStudent(ctx, base!, entry.new.username, password);
-      } else {
-        const handout = values.handout;
-        const fresh = await signInNewStaff(ctx, base!, entry, handout ? () => temporaryPasswordOf(handout, entry.new.username) : undefined);
-        if (fresh) {
-          entry.new.password = fresh;
-          writePrivate(accountsFile!, JSON.stringify(accounts, null, 2));
-        }
-      }
+      await signIn(role, ctx);
       writePrivate(join(stateDir, `${app}-${role}.json`), JSON.stringify(await ctx.storageState()));
     }
     contexts.set(role, ctx);
@@ -128,7 +133,7 @@ async function main(): Promise<void> {
   try {
    for (const { file: pairsFile, list } of lists) {
     const folder = join(out, list.member);
-    const result: Record<string, { status: number; finalUrl: string; consoleErrors: number; shots: Record<string, { png: string; txt: string }> }> = {};
+    const result: Record<string, { status: number; finalUrl: string; consoleErrors: number; network: Record<string, string[]>; shots: Record<string, { png: string; txt: string }> }> = {};
     // The TEACHER context must exist before a new STUDENT sign-in; the loop order does not matter.
     for (const pair of list.pairs) {
       const path = resolvePlaceholders(app === "legacy" ? pair.legacyPath : pair.newPath, { map: idMap, users });
@@ -136,12 +141,20 @@ async function main(): Promise<void> {
       const page = await ctx.newPage();
       let consoleErrors = 0;
       page.on("console", (m) => m.type() === "error" && consoleErrors++);
-      const record = { status: 0, finalUrl: "", consoleErrors: 0, shots: {} as Record<string, { png: string; txt: string }> };
+      const seen: string[] = [];
+      page.on("request", (r) => seen.push(requestPath(r.url())));
+      const record = { status: 0, finalUrl: "", consoleErrors: 0, network: {} as Record<string, string[]>, shots: {} as Record<string, { png: string; txt: string }> };
       for (const width of pair.widths) {
         for (const scheme of pair.colorSchemes) {
           await page.setViewportSize({ width, height: 900 });
           await page.emulateMedia({ colorScheme: scheme });
-          const response = await gotoRetry(page, `${base}${path}`);
+          let response = await gotoRetry(page, `${base}${path}`);
+          if (app === "legacy" && pair.role !== "PUBLIC" && isExpiredRedirect(page.url())) {
+            // The legacy proxy saw an expired session: sign in again once and open the page again.
+            await ctx.clearCookies();
+            await signIn(pair.role, ctx);
+            response = await gotoRetry(page, `${base}${path}`);
+          }
           const selector = pair.waitFor?.[app];
           if (selector) await page.waitForSelector(selector, { timeout: 30000 }).catch(() => {});
           if (pair.steps) {
@@ -162,6 +175,7 @@ async function main(): Promise<void> {
         }
       }
       record.consoleErrors = consoleErrors;
+      for (const c of pair.checks) if (c.network) record.network[c.id] = matchRequests(seen, c.network).slice(0, 50);
       result[pair.id] = record;
       await page.close();
       console.log(`captured ${pair.id} (${app}): status ${record.status}`);

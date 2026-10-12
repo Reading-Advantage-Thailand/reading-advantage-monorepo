@@ -22,6 +22,8 @@ export interface AppCapture {
   status: number;
   finalUrl: string;
   consoleErrors: number;
+  /** Request paths that matched a check `network` pattern, by check id. */
+  network?: Record<string, string[]>;
   shots: Record<string, Shot>;
 }
 
@@ -69,6 +71,15 @@ function diffFor(pair: PairData, cap: { legacy?: AppCapture; new?: AppCapture })
     .map((k) => k.key)
     .find((k) => cap.legacy?.shots[k]?.text !== undefined && cap.new?.shots[k]?.text !== undefined);
   return key ? diffLines(cap.legacy!.shots[key].text!, cap.new!.shots[key].text!) : undefined;
+}
+
+/** Describes the matching network requests of a check in both apps (paths only, no query). */
+function networkNote(id: string, cap: { legacy?: AppCapture; new?: AppCapture }): string {
+  const part = (label: string, c?: AppCapture) => {
+    const hits = c?.network?.[id];
+    return `${label}: ${hits ? (hits.length ? `${hits.length} request(s): ${hits.join(", ")}` : "no matching request") : NOT_CAPTURED}`;
+  };
+  return `Network. ${part("legacy", cap.legacy)}; ${part("new", cap.new)}`;
 }
 
 const appLine = (label: string, path: string, c?: AppCapture): string =>
@@ -124,8 +135,9 @@ export function renderReport(input: ReportInput): { markdown: string; html: stri
     md.push("", "### Checklist", "", "| Check | Behavior | Result | Note |", "| --- | --- | --- | --- |");
     html.push('<h3>Checklist</h3><table><tr><th>Check</th><th>Observable behavior</th><th>Result</th><th>Note</th></tr>');
     for (const c of pair.checks) {
-      md.push(`| ${cell(c.id)} | ${cell(c.behavior)} |  |  |`);
-      html.push(`<tr><td>${esc(c.id)}</td><td>${esc(c.behavior)}</td><td></td><td></td></tr>`);
+      const note = c.network ? networkNote(c.id, cap) : "";
+      md.push(`| ${cell(c.id)} | ${cell(c.behavior)} |  | ${cell(note)} |`);
+      html.push(`<tr><td>${esc(c.id)}</td><td>${esc(c.behavior)}</td><td></td><td>${esc(note)}</td></tr>`);
     }
     html.push("</table>");
   }
@@ -138,7 +150,7 @@ const CSS =
 
 /** The shape of `capture-<app>.json` that `capture.ts` writes. */
 interface CaptureFile {
-  pairs: Record<string, { status: number; finalUrl: string; consoleErrors: number; shots: Record<string, { png: string; txt: string }> }>;
+  pairs: Record<string, { status: number; finalUrl: string; consoleErrors: number; network?: Record<string, string[]>; shots: Record<string, { png: string; txt: string }> }>;
 }
 
 function loadApp(folder: string, app: "legacy" | "new"): Record<string, AppCapture> {

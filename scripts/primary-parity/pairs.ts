@@ -38,6 +38,18 @@ export const Check = z
   .object({
     id: z.string().min(1),
     behavior: z.string().min(1),
+    /** Optional regular expression (source text). The capture lists the request paths that match it. */
+    network: z
+      .string()
+      .refine((p) => {
+        try {
+          new RegExp(p);
+          return true;
+        } catch {
+          return false;
+        }
+      }, "network must be a valid regular expression")
+      .optional(),
   })
   .strict();
 
@@ -126,4 +138,42 @@ export function rolesNeeded(lists: PairListData[], app: "legacy" | "new"): Exclu
   if (app === "new" && roles.has("STUDENT")) roles.add("TEACHER");
   roles.delete("PUBLIC");
   return [...roles] as Exclude<PairData["role"], "PUBLIC">[];
+}
+
+/**
+ * Reduces a request URL to its path, so that no query string (a possible token) is stored.
+ * @param url An absolute request URL.
+ * @returns The path, or the input when it is not a URL.
+ */
+export function requestPath(url: string): string {
+  try {
+    return new URL(url).pathname;
+  } catch {
+    return url;
+  }
+}
+
+/**
+ * Selects the request paths that match a check pattern.
+ * @param paths Request paths seen during a page capture.
+ * @param pattern The `network` regular expression of a check.
+ * @returns The distinct matching paths in first-seen order.
+ */
+export function matchRequests(paths: string[], pattern: string): string[] {
+  const re = new RegExp(pattern);
+  return [...new Set(paths.filter((p) => re.test(p)))];
+}
+
+/**
+ * Tells whether the legacy proxy sent the page to sign-in because it saw an expired session.
+ * @param url The final URL of a page capture.
+ * @returns True when the URL is the sign-in page with `session=expired`.
+ */
+export function isExpiredRedirect(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return u.pathname.endsWith("/auth/signin") && u.searchParams.get("session") === "expired";
+  } catch {
+    return false;
+  }
 }
