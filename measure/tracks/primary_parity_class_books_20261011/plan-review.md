@@ -91,3 +91,46 @@ The page logs a failure once with `class_books.slot_failed` (no `console.error`)
 - Low: the "Class books" slot title key `slotTitle` differs from the placeholder key `title`; the S2 browser block uses `[data-class-book-slot]`, which both keep.
 - Lesson: `pnpm run build` in a package can start `pnpm install` inside the lock and block all lanes. Use `node_modules/.bin/tsc` from the package folder.
 - Skipped: `build-graph update` (graph.db read only, orchestrator rule).
+
+
+## Phase S6: Check every Teacher Manual claim
+
+Review of `git diff 9af86b116..HEAD`: one browser block, pure judge helpers and their node test, acceptance files
+(pairs, steps module, behavior contract, SQL), the claim list, and track docs. No app code, no schema, no locale file.
+No Critical or High finding. The block and the pairs did not run in a browser (batch step of the orchestrator).
+
+- Medium: the new browser block has selectors from page source only (`ul[aria-label="Workbook steps done in class"]`,
+  `ol[aria-label="Lessons"]`, the text `Lesson N of M`, the buttons "Next", "Show answer", "Mark taught", "Make current"). The first batch run can need a selector fix.
+- Medium: the block writes to the class (steps, taught, pointer). It restores the pointer but not the taught date of lesson 1. A rerun skips "Mark taught" (the check passes with a note). Use a fresh clone for each run.
+- Medium: no manual text changed, so the Thai text of `manual.*` is unchanged. The browser run can still fail a claim; then the Thai fix is "owner check pending".
+- Low (howTo2): the student gets the "Read" link only when workbook step 3 is open (`student/books/[classBookId]/page.tsx:51-54`, `student/home/page.tsx:252`). Marking step 1 or 2 alone shows no link. The text "the app opens the matching student step" holds for the lesson flow from step 3. A later change can say "mark step 3 to open the reading".
+- Low (howTo5): "Mark taught" is on the lesson plan and the progress grid is on its own page; the text names both actions but not the page of each.
+- Low: A1, A2, A3, A5 have no legacy page; the legacy path is the nearest page (the class page, the dashboard, `/teacher/manual`), so legacy captures show a missing feature or a 404 on purpose.
+- Low: the pairs use the class `cmhwuko0p000ds60dha8z70ig` of the matched teacher. The S2/S6 check must run on the same class (class argument) before the captures, else A1 to A3 show no book.
+- Low: the SQL file ran on the stored copy (syntax check; the book tables are empty there). It has not run on a copy with the catalogue.
+- Skipped: `build-graph update` (graph.db read only, orchestrator rule). `measure/generate.sh` output not committed (rule).
+
+## Review fixes
+
+A read-only review found six items. All six are fixed.
+
+1. Medium: `getTeacherBookSlots` had only mock-db tests. A new PGlite test
+   (`teacher-book-slots.pglite.test.ts`) uses two schools. It proves that a teacher sees only the
+   own and co-taught classes of the own school, and not archived classes.
+2. Medium: the guide check of `cloudbuild-catalogue.yaml` now requires "13 steps, 13 with a script"
+   for en and th. The contract test checks the text.
+3. Medium: `pnpm install` now runs in a new `install` step with no secret. The `import` step keeps
+   the secret and runs the legacy guard first. The `fetch-archive` step prints the archive commit id
+   (the git commit id in the tar header; no checksum). The contract test checks the step order and
+   that the install step has no secret.
+4. Low: `cutover-check.mjs` unmarks steps 1 to 3 of lesson 1 after the howTo2 checks.
+5. Low: `import-lesson-packages.ts` resolves the package paths before it connects. A wrong path
+   prints "Config error" and exits with 2. The script has no test file, so no test was added.
+6. Low: the class page logs a FORBIDDEN read at warn level. The error state stays on the card. The
+   page test covers it.
+
+Not fixed by decision: the proxy binary checksum (hash policy), the 44 px header link class, the
+unused output schema parse.
+
+Added fix: pairs CB-A1 and CB-A2 of `acceptance-pairs.json` now use the raw legacy class id in
+`legacyPath`. The `{map:...}` placeholder stays only in `newPath`, because the kit replaces it with the new id.

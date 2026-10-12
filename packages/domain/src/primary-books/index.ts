@@ -11,3 +11,5 @@ export { recordLessonProgress, getClassBookProgress, getStudentLessonSteps, toPr
 export * from "./lesson-support-contracts.js";
 export { guideLocaleOf, getLessonGuide, getTeacherLesson, resolveBookLesson, findTeacherClassBook } from "./lesson-support.js";
 export { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "./question-set.js";
+export * from "./book-link-contracts.js";
+export { resolveBookLink } from "./book-link.js";

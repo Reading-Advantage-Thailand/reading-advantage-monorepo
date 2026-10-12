@@ -13,9 +13,10 @@ const mocks = vi.hoisted(() => ({
   listClassBooks: vi.fn(),
   listCatalogueBooks: vi.fn(),
   logError: vi.fn(),
+  logWarn: vi.fn(),
 }));
 
-vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: vi.fn(), info: vi.fn() } }));
+vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: mocks.logWarn, info: vi.fn() } }));
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user, getCurrentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: async () => null }));
@@ -128,6 +129,14 @@ describe("teacher class page class books (FR-1)", () => {
     expect(mocks.logError).toHaveBeenCalledTimes(1);
     expect(mocks.logError).toHaveBeenCalledWith("class_books.load_failed", expect.objectContaining({ classroomId: C1, userId: "t1" }));
     expect(screen.queryByText("placeholder slot")).not.toBeInTheDocument();
+  });
+
+  it("logs a FORBIDDEN read at warn level and still shows the error state", async () => {
+    mocks.listClassBooks.mockRejectedValueOnce(Object.assign(new Error("no access"), { code: "FORBIDDEN" }));
+    await renderPage();
+    expect(within(screen.getByRole("region", { name: en.title })).getByRole("alert")).toHaveTextContent(en.loadErrorTitle);
+    expect(mocks.logWarn).toHaveBeenCalledWith("class_books.load_failed", expect.objectContaining({ classroomId: C1 }));
+    expect(mocks.logError).not.toHaveBeenCalled();
   });
 
   it("shows the load error when only the catalogue fails", async () => {

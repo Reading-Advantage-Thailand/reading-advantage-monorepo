@@ -3,11 +3,13 @@
 // The class book block (spec S2) runs by default; CLASS_BOOK_CHECK=off skips it. It needs the catalogue
 // import (cloudbuild-catalogue.yaml) and assigns Origins 3.2 (teacher-led); a rerun with the book
 // already assigned passes, because the assign is an upsert.
+// The Teacher Manual block (spec S6, checks named "manual ...") runs after it; MANUAL_CHECK=off skips it. It marks
+// steps 1 to 3 and "Mark taught" on lesson 1, then makes lesson 1 current again. Use a fresh clone for each run.
 // Usage: [NEW_PASSWORDS_OUT=<private csv>] node scripts/primary-parity/cutover-check.mjs <handout.csv> <teacher username> <admin username> <system username or -> <classroomId | class name | first>
 import { readFileSync, mkdirSync, appendFileSync, chmodSync, existsSync } from "node:fs";
 import { randomBytes } from "node:crypto";
 import { chromium } from "playwright";
-import { BOOK_KEY, BOOK_LABEL, bookCardFirst, classBookIdFromHref, judgeLessonPage, judgeProjector, judgeStudentLanding } from "./class-book-checks.mjs";
+import { BOOK_KEY, BOOK_LABEL, bookCardFirst, classBookIdFromHref, judgeGuideContent, judgeLessonPage, judgeManualPage, judgeProgressAndTaught, judgeProjector, judgeProjectorUse, judgeStudentLanding, judgeStudentUnlock } from "./class-book-checks.mjs";
 
 const [csvPath, teacherUser, adminUser, systemUser, classroomId] = process.argv.slice(2);
 const BASE = process.env.BASE ?? "http://localhost:3000";
@@ -266,6 +268,101 @@ try {
           paragraphs: [...document.querySelectorAll("section[aria-label] button[aria-pressed]")].filter((x) => x.innerText.trim().length > 20).length,
         }));
         for (const c of judgeProjector(proj)) check(c.name, c.ok, c.note);
+
+        // Teacher Manual claims (spec S6): howTo2 to howTo5 and the manual page.
+        if (process.env.MANUAL_CHECK !== "off") {
+          const settle = () => bp.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
+          await gotoRetry(bp, `${BASE}/en/teacher/manual`, { waitUntil: "networkidle", timeout: 120000 });
+          const manualFacts = await bp.evaluate(() => ({
+            howToItems: document.querySelectorAll('section[aria-labelledby="manual-howto"] ol > li').length,
+            stepItems: document.querySelectorAll('section[aria-labelledby="manual-steps"] section[aria-labelledby^="guide-period-"] > ol > li').length,
+            notImported: document.body.innerText.includes("The teacher guide is not imported yet."),
+          }));
+          for (const c of judgeManualPage(manualFacts)) check(c.name, c.ok, c.note);
+          await bp.screenshot({ path: `${SHOTS}/teacher-manual.png`, fullPage: true });
+
+          // howTo2: the teacher marks steps 1 to 3 on the lesson plan; the student gets the read link.
+          const stepButtons = bp.locator('ul[aria-label="Workbook steps done in class"] button[aria-pressed]');
+          const setStep = async (index, want) => {
+            const button = stepButtons.nth(index);
+            if ((await button.getAttribute("aria-pressed")) === String(want)) return;
+            await button.click();
+            await bp.waitForFunction(([i, v]) => document.querySelectorAll('ul[aria-label="Workbook steps done in class"] button[aria-pressed]')[i]?.getAttribute("aria-pressed") === String(v), [index, want], { timeout: 30000 }).catch(() => {});
+          };
+          const studentReadLink = async () => {
+            await gotoRetry(s1.page, `${BASE}/en/student/books/${classBookId}`, { waitUntil: "networkidle", timeout: 120000 });
+            return s1.page.locator('ol[aria-label="Lessons"] > li').first().getByRole("link", { name: "Read" });
+          };
+          await gotoRetry(bp, base, { waitUntil: "networkidle", timeout: 120000 });
+          for (const i of [0, 1, 2]) await setStep(i, false);
+          const readBefore = (await (await studentReadLink()).count()) > 0;
+          await gotoRetry(bp, base, { waitUntil: "networkidle", timeout: 120000 });
+          for (const i of [0, 1, 2]) await setStep(i, true);
+          await bp.screenshot({ path: `${SHOTS}/teacher-manual-howto2-plan.png`, fullPage: true });
+          const link = await studentReadLink();
+          const readAfter = (await link.count()) > 0;
+          let landedPath = "";
+          if (readAfter) {
+            await link.first().click();
+            await s1.page.waitForURL((u) => /\/student\/lesson\//.test(u.pathname), { timeout: 60000 }).catch(() => {});
+            await s1.page.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
+            landedPath = new URL(s1.page.url()).pathname;
+            await s1.page.screenshot({ path: `${SHOTS}/student1-manual-howto2-lesson.png` });
+          }
+          for (const c of judgeStudentUnlock({ readBefore, readAfter, landedPath })) check(c.name, c.ok, c.note);
+          // Leave the data as found: unmark the steps that howTo2 marked.
+          await gotoRetry(bp, base, { waitUntil: "networkidle", timeout: 120000 });
+          for (const i of [0, 1, 2]) await setStep(i, false);
+
+          // howTo3: the guide parts on the lesson page.
+          await gotoRetry(bp, `${base}/lessons/1`, { waitUntil: "networkidle", timeout: 120000 });
+          const guideFacts = await bp.evaluate(() => {
+            const heads = [...document.querySelectorAll("h5")].map((x) => x.textContent.trim());
+            return {
+              teacherActions: heads.filter((x) => x === "Teacher actions").length,
+              teacherLanguage: heads.filter((x) => x === "Teacher language").length,
+              scripts: [...document.querySelectorAll("details > summary")].filter((x) => x.textContent.trim() === "Full script").length,
+            };
+          });
+          for (const c of judgeGuideContent(guideFacts)) check(c.name, c.ok, c.note);
+
+          // howTo4: the projector focuses a paragraph and reveals an answer.
+          await gotoRetry(bp, `${base}/lessons/1/projector`, { waitUntil: "networkidle", timeout: 120000 });
+          await bp.getByRole("button", { name: "Next", exact: true }).click().catch(() => {});
+          const focusStatus = await bp.locator('[role="status"]').first().innerText().catch(() => "");
+          const reveal = bp.getByRole("button", { name: "Show answer" });
+          const revealButtons = await reveal.count();
+          let pressedAfter = false;
+          if (revealButtons) {
+            await reveal.first().click();
+            pressedAfter = (await bp.getByRole("button", { name: "Hide answer" }).count()) > 0;
+          }
+          await bp.screenshot({ path: `${SHOTS}/teacher-manual-howto4-projector.png` });
+          for (const c of judgeProjectorUse({ focusStatus, revealButtons, pressedAfter })) check(c.name, c.ok, c.note);
+
+          // howTo5: the progress grid shows the student; "Mark taught" moves the pointer; then lesson 1 is current again.
+          await gotoRetry(bp, `${base}/progress`, { waitUntil: "networkidle", timeout: 120000 });
+          const studentRows = await bp.locator("section[aria-labelledby=progress-grid] tbody tr").count();
+          await bp.screenshot({ path: `${SHOTS}/teacher-manual-howto5-progress.png`, fullPage: true });
+          await gotoRetry(bp, base, { waitUntil: "networkidle", timeout: 120000 });
+          const pointerText = () => bp.getByText(/^Lesson \d+ of \d+/).first().innerText().catch(() => "");
+          const before = await pointerText();
+          const lessonOne = bp.locator("section[aria-labelledby=pacing-lessons] ol > li").first();
+          const taughtButton = lessonOne.getByRole("button", { name: "Mark taught", exact: true });
+          const skipped = (await taughtButton.count()) === 0;
+          let after = before;
+          if (!skipped) {
+            await taughtButton.click();
+            await bp.waitForFunction(() => !/^Lesson 1 of/m.test(document.body.innerText), null, { timeout: 30000 }).catch(() => {});
+            await settle();
+            after = await pointerText();
+            await bp.screenshot({ path: `${SHOTS}/teacher-manual-howto5-taught.png`, fullPage: true });
+            const makeCurrent = lessonOne.getByRole("button", { name: "Make current", exact: true });
+            if (await makeCurrent.count()) await makeCurrent.click();
+            await settle();
+          }
+          for (const c of judgeProgressAndTaught({ studentRows, before, after, skipped })) check(c.name, c.ok, c.note);
+        }
       }
 
       // A student of the class opens the printed QR link.

@@ -15,13 +15,27 @@ export function safeCallbackPath(value: string | null): string | null {
   return value.replace(LOCALE_PREFIX, "") || "/";
 }
 
+const BOOK_PATH = /^\/b\/[a-z0-9-]+\/[1-9]\d*(\/writing)?$/;
+
 /**
- * Keeps a callback for a student: a local path under `/student`, for example the article of a
- * printed QR code that the student opened before the sign-in.
+ * Keeps a callback only when it is the address of a printed QR book lesson: `/b/<book>/<n>`
+ * or `/b/<book>/<n>/writing`, with or without a locale prefix.
  * @param value The raw callbackUrl query value.
- * @returns The local student path without a locale prefix, or null for any other value.
+ * @returns The book path without a locale prefix, or null for any other value.
+ */
+export function bookCallbackPath(value: string | null): string | null {
+  const path = safeCallbackPath(value);
+  return path && BOOK_PATH.test(path) ? path : null;
+}
+
+/**
+ * Keeps a callback for a student: a local path under `/student`, or the address of a printed QR
+ * book lesson that the student opened before the sign-in.
+ * @param value The raw callbackUrl query value.
+ * @returns The local student or book path without a locale prefix, or null for any other value.
  */
 export function studentCallbackPath(value: string | null): string | null {
   const path = safeCallbackPath(value);
-  return path === "/student" || path?.startsWith("/student/") ? path : null;
+  if (path === "/student" || path?.startsWith("/student/")) return path;
+  return bookCallbackPath(value);
 }

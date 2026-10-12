@@ -53,6 +53,13 @@ async function main(): Promise<number> {
     console.error("Usage: import-lesson-packages <book folder or package file>... [--dry-run]");
     return 2;
   }
+  let files: string[];
+  try {
+    files = targets.flatMap(packageFiles);
+  } catch (error) {
+    console.error(`Config error: ${error instanceof Error ? error.message : String(error)}`);
+    return 2;
+  }
   let connection: ReturnType<typeof createPrivilegedDb>;
   try {
     connection = createPrivilegedDb();
@@ -63,7 +70,7 @@ async function main(): Promise<number> {
   const results: ImportLessonResult[] = [];
   let failed = 0;
   try {
-    for (const file of targets.flatMap(packageFiles)) {
+    for (const file of files) {
       const sourceFile = sourceOf(file);
       try {
         const pkg = parseLessonPackage(JSON.parse(readFileSync(file, "utf8")));

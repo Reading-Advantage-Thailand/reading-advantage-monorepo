@@ -108,6 +108,19 @@ describe("CodeSignIn", () => {
     expect(bodyOf(call)).toEqual({ code: "ABCDEF", studentId: "h-ann", pictures: [3, 0, 11] });
   });
 
+  it("opens the callback QR book path before the student home", async () => {
+    window.history.replaceState(null, "", "/en/auth/signin?callbackUrl=%2Fth%2Fb%2Fo3-2%2F5");
+    await openNameList();
+    fireEvent.click(screen.getByRole("button", { name: "Ann" }));
+    await screen.findByRole("heading", { name: "Hi, Ann!" });
+    fetchMock.mockReturnValueOnce(respond(200, signedIn));
+    fireEvent.click(screen.getByRole("button", { name: "yellow star" }));
+    fireEvent.click(screen.getByRole("button", { name: "red circle" }));
+    fireEvent.click(screen.getByRole("button", { name: "teal flower" }));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/b/o3-2/5"));
+    window.history.replaceState(null, "", "/");
+  });
+
   it("clears the taps and announces wrong pictures", async () => {
     await openNameList();
     fireEvent.click(screen.getByRole("button", { name: "Ann" }));

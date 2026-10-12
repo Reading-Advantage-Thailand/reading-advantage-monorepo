@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bookCardFirst, classBookIdFromHref, judgeLessonPage, judgeProjector, judgeStudentLanding } from "../class-book-checks.mjs";
+import { bookCardFirst, classBookIdFromHref, judgeGuideContent, judgeLessonPage, judgeManualPage, judgeProgressAndTaught, judgeProjector, judgeProjectorUse, judgeStudentLanding, judgeStudentUnlock, pointerOf } from "../class-book-checks.mjs";
 
 const good = { title: "Lesson 1 · The Fox", stepCount: 13, hasProjectorLink: true, hasAnswerKey: true, answerKeyEmpty: false, notLinked: false };
 
@@ -40,5 +40,33 @@ describe("class book checks", () => {
     expect(judgeStudentLanding("/en/student/lesson/abc?type=article".split("?")[0], "Read")[0].ok).toBe(true);
     expect(judgeStudentLanding("/en/b/o3-2/1", "This page could not be found")[0].ok).toBe(false);
     expect(judgeStudentLanding("/en/student/home", "Home")[0].ok).toBe(false);
+  });
+});
+
+describe("teacher manual checks (S6)", () => {
+  it("passes a good manual page and fails the empty guide", () => {
+    expect(judgeManualPage({ howToItems: 5, stepItems: 13, notImported: false }).every((c) => c.ok)).toBe(true);
+    expect(judgeManualPage({ howToItems: 5, stepItems: 0, notImported: true })[1].ok).toBe(false);
+    expect(judgeManualPage({ howToItems: 4, stepItems: 13, notImported: false })[0].ok).toBe(false);
+  });
+  it("judges the student unlock", () => {
+    expect(judgeStudentUnlock({ readBefore: false, readAfter: true, landedPath: "/en/student/lesson/abc" }).every((c) => c.ok)).toBe(true);
+    expect(judgeStudentUnlock({ readBefore: true, readAfter: true, landedPath: "/en/student/lesson/abc" })[0].ok).toBe(false);
+    expect(judgeStudentUnlock({ readBefore: false, readAfter: false, landedPath: "" })[1].ok).toBe(false);
+  });
+  it("needs the guide parts", () => {
+    expect(judgeGuideContent({ teacherActions: 13, teacherLanguage: 13, scripts: 13 }).every((c) => c.ok)).toBe(true);
+    expect(judgeGuideContent({ teacherActions: 13, teacherLanguage: 13, scripts: 0 }).filter((c) => !c.ok)).toHaveLength(1);
+  });
+  it("judges the projector use", () => {
+    expect(judgeProjectorUse({ focusStatus: "Paragraph 1 of 6", revealButtons: 5, pressedAfter: true }).every((c) => c.ok)).toBe(true);
+    expect(judgeProjectorUse({ focusStatus: "Tap a paragraph", revealButtons: 0, pressedAfter: false }).every((c) => !c.ok)).toBe(true);
+  });
+  it("reads the pointer and judges the move", () => {
+    expect(pointerOf("Lesson 3 of 14 · 1 lesson taught")).toBe(3);
+    expect(pointerOf("")).toBe(0);
+    expect(judgeProgressAndTaught({ studentRows: 2, before: "Lesson 1 of 14", after: "Lesson 2 of 14" }).every((c) => c.ok)).toBe(true);
+    expect(judgeProgressAndTaught({ studentRows: 0, before: "Lesson 1 of 14", after: "Lesson 1 of 14" }).every((c) => !c.ok)).toBe(true);
+    expect(judgeProgressAndTaught({ studentRows: 2, before: "Lesson 2 of 14", after: "Lesson 2 of 14", skipped: true })[1].ok).toBe(true);
   });
 });

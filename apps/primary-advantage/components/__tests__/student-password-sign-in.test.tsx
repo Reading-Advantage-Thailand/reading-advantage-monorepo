@@ -57,6 +57,15 @@ describe("PasswordSignIn", () => {
     expect(JSON.parse(fetchMock.mock.calls[0]![1].body)).toEqual({ username: "p3a12", password: "abcd2345" });
   });
 
+  it("opens the callback QR book path before the student home", async () => {
+    window.history.replaceState(null, "", "/en/auth/signin?callbackUrl=%2Fth%2Fb%2Fo3-2%2F5");
+    fetchMock.mockReturnValue(respond(200, { success: true, user: { id: "u1", role: "STUDENT" } }));
+    renderWithMessages(<PasswordSignIn />);
+    submit();
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/b/o3-2/5"));
+    window.history.replaceState(null, "", "/");
+  });
+
   it("sends a staff user to the sign-in page, where the proxy picks the home page", async () => {
     fetchMock.mockReturnValue(respond(200, { success: true, user: { id: "t1", role: "TEACHER" } }));
     renderWithMessages(<PasswordSignIn />);

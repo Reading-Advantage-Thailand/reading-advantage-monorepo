@@ -17,7 +17,7 @@
 #   _TARGET_DATABASE_URL : Secret Manager name of the target URL (secret DIRECT_DATABASE_URL).
 #   _EXPECTED_LESSONS : the lesson count that the import must report (70 for Workbooks eeeddfd).
 #
-# Steps: fetch-archive, then import (guard, build @reading-advantage/db, import-lesson-packages
+# Steps: fetch-archive, install (no secret: the archive code does not run here), then import (guard, build @reading-advantage/db, import-lesson-packages
 # on the five folders, import-lesson-guides --workbooks). The build fails when a package fails,
 # when the lesson count differs, or when a guide locale does not give 13 steps. It prints only
 # the summary lines. It never prints an environment value.
@@ -46,6 +46,19 @@ steps:
         done
         test -f "/workspace/workbooks/dashboard/lib/teacher-manual/i18n/en.ts" || { echo "STOP: the archive has no manual"; exit 1; }
         echo "archive: $$(ls '/workspace/workbooks/Teacher guide' | grep -c '^step-') step files"
+        # git archive stores the commit id in the tar header; print it so the log names the pinned commit.
+        echo "archive commit: $$(gzip -dc /workspace/workbooks.tgz | head -c 4096 | grep -a -o 'comment=[0-9a-f]\{40\}' | head -1 | cut -d= -f2)"
+
+  - name: "node:22-slim"
+    id: "install"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        set -euo pipefail
+        export COREPACK_HOME=/workspace/.corepack
+        corepack enable && corepack prepare pnpm@11.8.0 --activate
+        pnpm install --frozen-lockfile --store-dir /workspace/.pnpm-store
 
   - name: "node:22-slim"
     id: "import"
@@ -59,7 +72,8 @@ steps:
         curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64
         chmod +x /usr/local/bin/cloud-sql-proxy
         mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5
-        corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile
+        export COREPACK_HOME=/workspace/.corepack
+        corepack enable
         # --- imports (the local rehearsal test runs the text below this line) ---
         WB="$${WB:-/workspace/workbooks}"
         EXPECTED="$${EXPECTED:-$_EXPECTED_LESSONS}"
@@ -86,7 +100,7 @@ steps:
         grep -E '^(en|th): |FAILED' /workspace/guides.out | redact || true
         test "$$rc" -eq 0 || { echo "STOP: the guide import failed (exit $$rc)"; tail -5 /workspace/guides.out | redact; exit 1; }
         for l in en th; do
-          grep -q "^$$l: 13 steps" /workspace/guides.out || { echo "STOP: the guide for $$l does not give 13 steps"; exit 1; }
+          grep -q "^$$l: 13 steps, 13 with a script" /workspace/guides.out || { echo "STOP: the guide for $$l does not give 13 steps with 13 scripts"; exit 1; }
         done
         echo "$$(t) guides done"
     secretEnv: ["DIRECT_DATABASE_URL"]

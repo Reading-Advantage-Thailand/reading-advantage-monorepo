@@ -10,7 +10,7 @@ const mocks = vi.hoisted(() => ({ user: null as Record<string, unknown> | null }
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
 
 import { routing } from "@/i18n/routing";
-import middleware from "../../proxy";
+import middleware, { config } from "../../proxy";
 
 /**
  * Runs the proxy for a path.
@@ -45,5 +45,32 @@ describe("default locale (owner decision 2026-10-05)", () => {
   it("sends a signed-in teacher from sign-in to the teacher dashboard in the same locale", async () => {
     mocks.user = { id: "t1", role: "TEACHER", schoolId: "school-1" };
     expect(await redirectOf("/th/auth/signin")).toBe("/th/teacher/dashboard");
+  });
+});
+
+describe("printed book URL without a locale (QR path)", () => {
+  it("redirects once to a locale path and keeps the path and the query", async () => {
+    expect(await redirectOf("/b/o3-2/5")).toBe("/th/b/o3-2/5");
+    expect(await redirectOf("/b/o3-2/5/writing")).toBe("/th/b/o3-2/5/writing");
+    expect(await redirectOf("/b/o3-2/5?utm=qr")).toBe("/th/b/o3-2/5?utm=qr");
+  });
+
+  it("gives no redirect for a locale path", async () => {
+    expect(await redirectOf("/th/b/o3-2/5")).toBeNull();
+    expect(await redirectOf("/en/b/o3-2/5/writing")).toBeNull();
+  });
+
+  it("matches the five book keys in the proxy matcher", () => {
+    const matcher = new RegExp(`^${config.matcher[0]}$`);
+    for (const key of ["o1", "o2", "o3-1", "o3-2", "q4"]) {
+      expect(matcher.test(`/b/${key}/5`)).toBe(true);
+      expect(matcher.test(`/b/${key}/5/writing`)).toBe(true);
+    }
+  });
+
+  it("does not send a signed-out reader to sign-in", async () => {
+    for (const path of ["/b/o3-2/5", "/b/o3-2/5/writing", "/th/b/o3-2/5", "/en/b/q4/1/writing"]) {
+      expect((await redirectOf(path)) ?? "").not.toContain("/auth/signin");
+    }
   });
 });

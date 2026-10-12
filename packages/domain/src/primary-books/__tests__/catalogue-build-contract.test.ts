@@ -38,8 +38,13 @@ describe("Primary catalogue Cloud Build", () => {
   const blocks = stepBlocks();
   const importStep = blocks.get("import") ?? "";
 
-  it("fetches the archive, then imports", () => {
-    expect([...blocks.keys()]).toEqual(["fetch-archive", "import"]);
+  it("fetches the archive, installs without the secret, then imports", () => {
+    expect([...blocks.keys()]).toEqual(["fetch-archive", "install", "import"]);
+    expect(blocks.get("install")).toContain("pnpm install --frozen-lockfile");
+    expect(blocks.get("install")).not.toContain("secretEnv");
+    expect(blocks.get("install")).not.toContain("DIRECT_DATABASE_URL");
+    expect(importStep).not.toContain("pnpm install");
+    expect(blocks.get("fetch-archive")).toContain("archive commit:");
     expect(blocks.get("fetch-archive")).toContain("gcloud storage cp");
     expect(blocks.get("fetch-archive")).toContain("_WORKBOOKS_ARCHIVE");
   });
@@ -72,7 +77,7 @@ describe("Primary catalogue Cloud Build", () => {
     expect(importStep).toContain("set -euo pipefail");
     expect(importStep).toContain("a package failed");
     expect(importStep).toContain("expected $$EXPECTED lessons");
-    expect(importStep).toContain("does not give 13 steps");
+    expect(importStep).toContain("^$$l: 13 steps, 13 with a script");
     expect(importStep).toContain("FAILED");
   });
 

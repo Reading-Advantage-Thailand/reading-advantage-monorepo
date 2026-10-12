@@ -67,3 +67,87 @@ export function judgeStudentLanding(pathname, bodyText) {
   const notFound = /could not be found|not found|404/i.test(bodyText ?? "");
   return [{ name: `class book: student opens /b/${BOOK_KEY}/1 in the lesson flow`, ok: inLesson && !notFound, note: pathname ?? "" }];
 }
+
+// Story S6: the Teacher Manual claims (howTo1 to howTo5 and "The 13 steps"). Check names start with "manual".
+
+/**
+ * Judges the facts of `/teacher/manual` (claim "The 13 steps", howTo list).
+ * @param f.howToItems The number of how-to list items.
+ * @param f.stepItems The number of guide steps in the "The 13 steps" section.
+ * @param f.notImported True when the page says that the guide is not imported.
+ * @returns The checks.
+ */
+export function judgeManualPage(f) {
+  return [
+    { name: "manual: the how-to list has 5 steps", ok: f.howToItems === 5, note: `${f.howToItems} items` },
+    { name: "manual: The 13 steps shows the imported guide", ok: !f.notImported && f.stepItems === 13, note: `${f.stepItems} steps${f.notImported ? ", not imported" : ""}` },
+  ];
+}
+
+/**
+ * Judges howTo2: the student sees no read link before the teacher marks steps, and a read link after.
+ * @param f.readBefore True when the student book page had a read link for lesson 1 before the marks.
+ * @param f.readAfter True when the link shows after the teacher marked steps 1 to 3.
+ * @param f.landedPath The path after the student opened the link.
+ * @returns The checks.
+ */
+export function judgeStudentUnlock(f) {
+  return [
+    { name: "manual howTo2: the student step stays closed before the teacher marks it", ok: f.readBefore === false, note: "" },
+    { name: "manual howTo2: the student step opens after the teacher marks it", ok: f.readAfter === true && /\/student\/lesson\/[^/]+/.test(f.landedPath ?? ""), note: f.landedPath ?? "" },
+  ];
+}
+
+/**
+ * Judges howTo3: the lesson guide lists the teacher actions, the teacher language, and the full script.
+ * @param f.teacherActions The number of "Teacher actions" headings.
+ * @param f.teacherLanguage The number of "Teacher language" headings.
+ * @param f.scripts The number of "Full script" disclosures.
+ * @returns The checks.
+ */
+export function judgeGuideContent(f) {
+  return [
+    { name: "manual howTo3: the guide shows the teacher actions", ok: f.teacherActions > 0, note: `${f.teacherActions}` },
+    { name: "manual howTo3: the guide shows the teacher language", ok: f.teacherLanguage > 0, note: `${f.teacherLanguage}` },
+    { name: "manual howTo3: the guide shows the full script", ok: f.scripts > 0, note: `${f.scripts}` },
+  ];
+}
+
+/**
+ * Judges howTo4: the projector focuses a paragraph and reveals an answer.
+ * @param f.focusStatus The status text after the next-paragraph click.
+ * @param f.revealButtons The number of answer buttons.
+ * @param f.pressedAfter True when the first answer button shows pressed after the click.
+ * @returns The checks.
+ */
+export function judgeProjectorUse(f) {
+  return [
+    { name: "manual howTo4: the projector focuses one paragraph", ok: /^Paragraph 1 of \d+/.test(f.focusStatus ?? ""), note: f.focusStatus ?? "" },
+    { name: "manual howTo4: the projector reveals an answer", ok: f.revealButtons > 0 && !!f.pressedAfter, note: `${f.revealButtons} questions` },
+  ];
+}
+
+/**
+ * Reads the lesson number of a "Lesson N of M" text.
+ * @param text The pointer text.
+ * @returns The number, or 0 when the text does not match.
+ */
+export function pointerOf(text) {
+  return Number(/Lesson (\d+) of \d+/.exec(text ?? "")?.[1] ?? 0);
+}
+
+/**
+ * Judges howTo5: the grid shows the student and "Mark taught" moves the pointer.
+ * @param f.studentRows The number of student rows in the progress grid.
+ * @param f.before The pointer text before "Mark taught".
+ * @param f.after The pointer text after it.
+ * @param f.skipped True when lesson 1 was already taught (a rerun), so the click did not run.
+ * @returns The checks.
+ */
+export function judgeProgressAndTaught(f) {
+  const moved = pointerOf(f.after) === pointerOf(f.before) + 1 && pointerOf(f.before) > 0;
+  return [
+    { name: "manual howTo5: the progress grid shows the student", ok: f.studentRows > 0, note: `${f.studentRows} rows` },
+    { name: "manual howTo5: Mark taught moves the pointer", ok: f.skipped ? true : moved, note: f.skipped ? "skipped, lesson 1 already taught" : `${f.before} -> ${f.after}` },
+  ];
+}
