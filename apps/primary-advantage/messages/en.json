@@ -3899,5 +3899,13 @@
     "toClasses": "Go to my classes",
     "toStart": "Go to the start page",
     "retry": "Try again"
+  },
+  "StudentView": {
+    "bannerTitle": "Student preview",
+    "bannerNote": "You see what a student sees. Nothing here is saved.",
+    "exit": "Exit preview",
+    "menuItem": "Student view",
+    "notSaved": "Preview: not saved",
+    "backHome": "Back to home"
   }
 }

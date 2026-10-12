@@ -14,7 +14,7 @@ export const POLICY_ROLES = Object.values(ROLES);
 export const protectedRoutes: Record<string, readonly string[]> = {
   "/admin": [ROLES.ADMIN, ROLES.SYSTEM],
   "/teacher": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
-  "/student": [ROLES.STUDENT],
+  "/student": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "/system": [ROLES.SYSTEM],
   "/settings": [...POLICY_ROLES],
   "/intern": [ROLES.INTERN],

@@ -3899,5 +3899,13 @@
     "toClasses": "Go to my classes",
     "toStart": "Go to the start page",
     "retry": "Try again"
+  },
+  "StudentView": {
+    "bannerTitle": "Xem trước của học sinh",
+    "bannerNote": "Bạn thấy những gì học sinh thấy. Không có gì ở đây được lưu.",
+    "exit": "Thoát xem trước",
+    "menuItem": "Giao diện học sinh",
+    "notSaved": "Xem trước: không lưu",
+    "backHome": "Về trang chủ"
   }
 }

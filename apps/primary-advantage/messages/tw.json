@@ -3899,5 +3899,13 @@
     "toClasses": "Go to my classes",
     "toStart": "Go to the start page",
     "retry": "Try again"
+  },
+  "StudentView": {
+    "bannerTitle": "學生預覽",
+    "bannerNote": "你看到的是學生看到的內容。這裡不會儲存任何內容。",
+    "exit": "退出預覽",
+    "menuItem": "學生檢視",
+    "notSaved": "預覽：不儲存",
+    "backHome": "返回首頁"
   }
 }
