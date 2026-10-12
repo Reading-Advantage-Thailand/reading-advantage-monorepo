@@ -43,20 +43,22 @@ _Story ref: spec.md#story-s1_
 ## Phase S2: Store the print data of each lesson
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Define the print data contract
-    - [ ] `printLessonSchema` in `packages/domain/src/primary-books/print/contracts.ts`: extend `legacyWorkbookLessonSchema` (`packages/domain/src/workbooks/legacy-workbook-importer.ts`) with the fields that the template reads, plus the series name and level, the lesson number, and the Workbooks commit
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/__tests__/import.test.ts`: a package with a print file stores `package.printLesson`; one without stores none and counts "no print data"; a bad print file fails with its name
-    - [ ] `packages/domain/src/primary-books/__tests__/catalogue-build-contract.test.ts` (from `primary_parity_class_books_20261011`): the archive layout has `print/*.json`
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-books/mapping.ts` (`toLessonPackageJson` with the print data), `import.ts`, and `packages/domain/scripts/import-lesson-packages.ts` (read the sibling print file; the report line)
-    - [ ] `apps/primary-advantage/cloudbuild-catalogue.yaml` header: the archive layout with `print/*.json`
-- [ ] Task: Run the import on the scratch copy
-    - [ ] Run the catalogue build of `primary_parity_class_books_20261011` with the Workbooks export; record the counts in `measure/tracks/primary_parity_print_lesson_20261011/import-run.md`
-    - [ ] Tell `primary_parity_rehearsal3_20261011` about the new archive paths
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Store the print data of each lesson' (Protocol in workflow.md)
+- [x] Task: Define the print data contract
+    - [x] `printLessonSchema` in `packages/domain/src/primary-books/print/contracts.ts`: extend `legacyWorkbookLessonSchema` (`packages/domain/src/workbooks/legacy-workbook-importer.ts`) with the fields that the template reads, plus the series name and level, the lesson number, and the Workbooks commit
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/__tests__/import.test.ts`: a package with a print file stores `package.printLesson`; one without stores none and counts "no print data"; a bad print file fails with its name
+    - [x] `packages/domain/src/primary-books/__tests__/catalogue-build-contract.test.ts` (from `primary_parity_class_books_20261011`): the archive layout has `print/*.json`
+- [x] Task: Implement (green)
+    - [x] `packages/domain/src/primary-books/mapping.ts` (`toLessonPackageJson` with the print data), `import.ts`, and `packages/domain/scripts/import-lesson-packages.ts` (read the sibling print file; the report line)
+    - [x] `apps/primary-advantage/cloudbuild-catalogue.yaml` header: the archive layout with `print/*.json`
+- [x] Task: Run the import on the scratch copy
+    - [x] Run the import on the scratch copy `primary_print_s2` with the Workbooks export 08bb160: 70 lessons, 70 print data, run twice with the same counts; counts in `import-run.md`
+    - [x] Tell `primary_parity_rehearsal3_20261011` about the new archive paths (orchestrator step: named in the S2 report)
+- [x] Task: Docs and doctor
+    - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S2: Store the print data of each lesson' (Protocol in workflow.md)
+    - Notes: no migration and no schema change (`printLesson` is a key of the `package` jsonb). `printLessonSchema` extends `legacyWorkbookLessonSchema` (it already accepts a string or an array in `article_image_url`) with `writing_practice_url`, and it keeps unknown fields. `build-graph update` not run (brief: graph.db read-only). The archive commit goes to the import through `--workbooks-commit`; the Cloud Build import step reads it from the archive header.
+    - Manual verification: from `packages/domain` run `../../node_modules/.bin/vitest run src/primary-books`; read `import-run.md`.
 
 ## Phase S3: Render one lesson with the template
 _Story ref: spec.md#story-s3_
