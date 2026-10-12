@@ -5,9 +5,9 @@
  * from `users.schoolId` (question steps, flashcard reviews) or the row (game completions).
  */
 import type { DB } from "@reading-advantage/db";
-import { cardReviews, flashcardCards, flashcardDecks, gameCompletions, multipleChoiceQuestions, shortAnswerQuestions, userActivity, users } from "@reading-advantage/db/schema";
+import { cardReviews, flashcardCards, flashcardDecks, gameCompletions, multipleChoiceQuestions, primaryLessonAttempts, shortAnswerQuestions, userActivity, users } from "@reading-advantage/db/schema";
 import { storyGameEvidenceSchema } from "@reading-advantage/game-contracts";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { createTenantDB } from "../db-contract.js";
 import { questionStepDetailsSchema, type PrimaryEvidenceEvent, type PrimaryEvidenceJobPayload, type QuestionAnswer } from "./evidence-contracts.js";
@@ -98,6 +98,26 @@ export async function legacyQuizAnswers(params: { db: DB; articleId: string; act
 
 const UNSCOPED_REASON = "evidence source rows are read by id before the tenant is known; userActivity, cardReviews, flashcardCards, and flashcardDecks have no schoolId and are scoped through users.schoolId; the loaded schoolId is checked against the job tenant before any write";
 
+const movedActivitySchema = z.object({ id: z.string(), userId: z.string(), activityType: z.string(), targetId: z.string().nullish(), createdAt: z.union([z.string(), z.date()]), details: z.unknown() });
+
+/**
+ * Finds a `user_activity` row that a closed lesson attempt moved into `primary_lesson_attempts.activities`.
+ * @param db The unscoped database.
+ * @param rowId The id of the original `user_activity` row.
+ * @returns The row in the live row shape, with the school of the attempt, or `undefined` when no attempt holds the id.
+ */
+async function loadMovedActivity(db: ReturnType<ReturnType<typeof createTenantDB>["unscoped"]>, rowId: string) {
+  const [attempt] = await db
+    .select({ schoolId: primaryLessonAttempts.schoolId, activities: primaryLessonAttempts.activities })
+    .from(primaryLessonAttempts)
+    .where(sql`${primaryLessonAttempts.activities} @> jsonb_build_array(jsonb_build_object('id', ${rowId}::text))`)
+    .limit(1);
+  const element = Array.isArray(attempt?.activities) ? attempt.activities.find((item) => (item as { id?: unknown } | null)?.id === rowId) : undefined;
+  const parsed = movedActivitySchema.safeParse(element);
+  if (!attempt || !parsed.success) return undefined;
+  return { ...parsed.data, targetId: parsed.data.targetId ?? null, schoolId: attempt.schoolId as string | null };
+}
+
 /**
  * Loads one source row and turns it into an event.
  * @param params The database and the job payload (source table and row id).
@@ -107,12 +127,13 @@ export async function loadPrimaryEvidenceEvent(params: { db: DB; payload: Primar
   const db = createTenantDB(params.db, { schoolId: null }).unscoped(UNSCOPED_REASON);
   const { rowId } = params.payload;
   if (params.payload.sourceTable === "user_activity") {
-    const [row] = await db
+    const [live] = await db
       .select({ id: userActivity.id, userId: userActivity.userId, schoolId: users.schoolId, activityType: userActivity.activityType, targetId: userActivity.targetId, createdAt: userActivity.createdAt, details: userActivity.details })
       .from(userActivity)
       .innerJoin(users, eq(users.id, userActivity.userId))
       .where(eq(userActivity.id, rowId))
       .limit(1);
+    const row = live ?? (await loadMovedActivity(db, rowId));
     const articleId = asUuid(row?.targetId);
     if (!row?.schoolId || !articleId || !(row.activityType in QUIZ_ACTIVITY_TYPES)) return null;
     const rawDetails = quizDetails(row.details);
