@@ -188,6 +188,16 @@ Paths are relative to `apps/primary-advantage` unless the path starts with `pack
 **Estimate:** S
 **Priority:** Should
 
+## Decisions (defaults used, 2026-10-12)
+
+The owner decided that the set runs with no stop. These defaults stand until the owner changes them.
+The full table is in `design/decisions.md`. Each item is: look check pending (owner, async).
+
+- Speed list (D3): 0.75×, 1×, 1.25×; one tap on the sign goes to the next speed.
+- Tap sign: one hint line above the text, and the green hover on words; no mark on each word.
+- Follow scroll: the current sentence stays at about 30% of the viewport height.
+- Data finding: real audio gaps are 1 to 7 words (`data-profile.md`), so the resync of D5 must bridge 7 words, not 4.
+
 ## Non-Functional Requirements
 
 - NFR-1: No new dependency. Reuse `lib/audio-highlight.ts`, `lib/paragraph-utils.ts` (from
