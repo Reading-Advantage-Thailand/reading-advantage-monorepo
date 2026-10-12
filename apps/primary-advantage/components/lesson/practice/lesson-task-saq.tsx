@@ -1,9 +1,9 @@
 "use client";
 
-import { Article, SAQuestion, SAQFeedback } from "@/types";
+import { Article, QuestionResponse, SAQuestion } from "@/types";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Loader2, MessageSquare, CheckCircle } from "lucide-react";
+import { Clock, Loader2, MessageSquare } from "lucide-react";
 import React, { useContext, useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/form";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@reading-advantage/auth-client";
+import { Panel, Plaque, Sign } from "@/components/rpg/chrome";
+import { ART } from "@/lib/rpg/places";
 
 interface LessonSAQProps {
   article: Article;
@@ -38,12 +40,48 @@ function LessonSAQContent({ article }: { article: Article }) {
   const [questions, setQuestions] = useState<SAQuestion | null>(null);
   const { user, refresh } = useAuth();
   useEffect(() => {
-    if (article.shortAnswerQuestions) {
+    let isMounted = true;
+
+    const initializeQuestion = async () => {
+      // A saved answer comes back first, so a student who returns to this task sees it again.
+      try {
+        const params = new URLSearchParams({
+          articleId: article.id,
+          questionType: ActivityType.SA_QUESTION,
+        });
+        const response = await fetch(
+          `/api/articles/questions/${article.id}?${params.toString()}`,
+          { cache: "no-store" },
+        );
+        if (response.ok) {
+          const questionResponse = (await response.json()) as QuestionResponse;
+          if (
+            questionResponse.questionStatus === QuestionState.COMPLETED &&
+            questionResponse.result?.completed
+          ) {
+            if (!isMounted) return;
+            setFeedback({ ...questionResponse.result.details });
+            setState(QuestionState.COMPLETED);
+            setPaused(true);
+            return;
+          }
+        }
+      } catch {
+        // A failed read shows the empty form, as legacy does.
+      }
+
+      if (!isMounted || !article.shortAnswerQuestions?.length) return;
       // The server already picked the student question (the first one, in bank order).
       setQuestions({ ...article.shortAnswerQuestions[0] });
       setState(QuestionState.INCOMPLETE);
-    }
-  }, [article]);
+    };
+
+    void initializeQuestion();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [article, setPaused]);
 
   const formSchema = z.object({
     answer: z
@@ -131,69 +169,36 @@ function LessonSAQContent({ article }: { article: Article }) {
   if (state === QuestionState.COMPLETED) {
     return (
       <div className="mx-auto w-full max-w-4xl space-y-6">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="rounded-lg bg-green-100 p-2 dark:bg-green-900">
-            <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
-          </div>
-          <div>
-            <p className="font-medium text-green-600 dark:text-green-400">
-              {t("completed.title")}
-            </p>
-          </div>
-        </div>
-
-        <Card className="border-0 bg-gradient-to-br from-green-50 to-emerald-50 shadow-lg dark:from-green-950 dark:to-emerald-950">
-          <CardContent className="space-y-6 p-8">
-            {feedback && (
-              <>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.question")}
-                  </h3>
-                  <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                    {feedback?.question}
-                  </p>
+        <Sign>{t("completed.title")}</Sign>
+        <Panel>
+          {feedback && (
+            <>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">{t("labels.question")}</h3>
+                <p className="leading-relaxed">{feedback?.question}</p>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">{t("labels.yourAnswer")}</h3>
+                <div className="rounded-lg border-l-4 border-green-600 bg-white/60 p-4">
+                  <p className="font-medium">{feedback?.yourAnswer}</p>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.yourAnswer")}
-                  </h3>
-                  <div className="rounded-lg border-l-4 border-green-500 bg-white p-4 dark:bg-gray-800">
-                    <p className="font-medium text-green-700 dark:text-green-300">
-                      {feedback?.yourAnswer}
-                    </p>
-                  </div>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">{t("labels.suggestedAnswer")}</h3>
+                <div className="rounded-lg border-l-4 border-blue-600 bg-white/60 p-4">
+                  <p>{feedback?.suggestedAnswer}</p>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.suggestedAnswer")}
-                  </h3>
-                  <div className="rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4 dark:bg-blue-900">
-                    <p className="text-blue-700 dark:text-blue-300">
-                      {feedback?.suggestedAnswer}
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.feedback")}
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {feedback?.feedback}
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t("labels.score")}
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {feedback?.score}
-                  </p>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">{t("labels.feedback")}</h3>
+                <p>{feedback?.feedback}</p>
+              </div>
+              <Plaque icon={ART.gem} label={t("labels.score")}>
+                {feedback?.score}
+              </Plaque>
+            </>
+          )}
+        </Panel>
       </div>
     );
   }
