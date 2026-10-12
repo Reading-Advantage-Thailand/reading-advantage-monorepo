@@ -62,7 +62,7 @@ describe("renderPrintLesson", () => {
   it("escapes text and keeps only the vocab_fill blank span", () => {
     const evil = structuredClone(printLesson);
     evil.lesson.lesson_title = "A <img src=x onerror=alert(1)> & B";
-    evil.lesson.vocabulary[0]!.definition = "<script>alert(1)</script>";
+    evil.lesson.vocabulary![0]!.definition = "<script>alert(1)</script>";
     const out = renderPrintLesson({ printLesson: evil });
     expect(out).not.toContain("<img src=x");
     expect(out).not.toContain("<script>alert(1)");
