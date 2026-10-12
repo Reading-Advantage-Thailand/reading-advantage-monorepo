@@ -81,7 +81,8 @@
       "overviewReports": "Báo cáo tổng quan",
       "performanceAnalytics": "Phân tích hiệu suất",
       "progressTracking": "Theo dõi tiến độ"
-    }
+    },
+    "schoollicense": "Giấy phép trường"
   },
   "Leaderboard": {
     "title": "Bảng xếp hạng",
@@ -1496,6 +1497,43 @@
         "title": "Không có trường học được liên kết",
         "description": "Bạn chưa có trường học được liên kết với tài khoản của bạn. Tạo một để bắt đầu và nhận quyền quản trị viên để quản lý các tính năng của trường học.",
         "createSchool": "Tạo trường học"
+      },
+      "licensePanel": {
+        "title": "Giấy phép",
+        "viewOnly": "Chỉ để xem. Để đổi giấy phép, hãy liên hệ Reading Advantage.",
+        "overChip": "Vượt giới hạn",
+        "overTitle": "Vượt giới hạn {count} học sinh.",
+        "overBody": "Trường có {used} học sinh và {seats} chỗ. Học sinh vẫn được truy cập. Hãy xin thêm chỗ trước học kỳ sau.",
+        "noneChip": "Không có giấy phép hiệu lực",
+        "noneTitle": "Hiện trường không có chỗ nào.",
+        "noneBody": "{used} học sinh dùng ứng dụng. Hãy xin giấy phép.",
+        "seatsTitle": "Chỗ",
+        "seatsUsed": "Chỗ đã dùng",
+        "seatsFree": "Chỗ còn trống",
+        "seatsTotal": "Tổng số chỗ",
+        "seatsNote": "Chỗ được tính theo các giấy phép còn hiệu lực hôm nay. Chỗ đã dùng được tính theo học sinh của trường. Giáo viên và quản trị viên không dùng chỗ.",
+        "licensesTitle": "Giấy phép",
+        "noLicense": "Trường này chưa có giấy phép.",
+        "seatsCount": "{count} chỗ",
+        "dateRange": "{start} đến {end}",
+        "noEnd": "không có ngày kết thúc",
+        "state": {
+          "active": "Hiệu lực",
+          "ended": "Đã hết hạn",
+          "inactive": "Không hoạt động"
+        },
+        "holdersTitle": "Người dùng chỗ",
+        "holdersRange": "Học sinh {from} đến {to} trên {total}",
+        "holdersEmpty": "Trường chưa có học sinh.",
+        "holdersError": "Không tải được danh sách người dùng chỗ.",
+        "colName": "Tên",
+        "colUsername": "Tên đăng nhập",
+        "colClasses": "Lớp",
+        "colJoined": "Ngày tham gia",
+        "noClass": "Chưa có lớp",
+        "previous": "Trước",
+        "next": "Sau",
+        "pageOf": "Trang {page} trên {pages}"
       }
     }
   },

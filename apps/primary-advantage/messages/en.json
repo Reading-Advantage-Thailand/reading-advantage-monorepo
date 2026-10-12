@@ -81,7 +81,8 @@
       "overviewReports": "Overview Reports",
       "performanceAnalytics": "Performance Analytics",
       "progressTracking": "Progress Tracking"
-    }
+    },
+    "schoollicense": "School license"
   },
   "Leaderboard": {
     "title": "Leaderboard",
@@ -1496,6 +1497,43 @@
         "title": "No School Associated",
         "description": "You don't have a school associated with your account yet. Create one to get started and gain Admin access to manage school features.",
         "createSchool": "Create School"
+      },
+      "licensePanel": {
+        "title": "License",
+        "viewOnly": "View only. To change a license, contact Reading Advantage.",
+        "overChip": "Over limit",
+        "overTitle": "{count, plural, one {# student} other {# students}} over the limit.",
+        "overBody": "The school has {used} students and {seats} seats. Students keep access. Ask for more seats before the next term.",
+        "noneChip": "No active license",
+        "noneTitle": "The school has no seats now.",
+        "noneBody": "{used} students use the app. Ask for a license.",
+        "seatsTitle": "Seats",
+        "seatsUsed": "Seats used",
+        "seatsFree": "Seats free",
+        "seatsTotal": "Seats in total",
+        "seatsNote": "Seats count the licenses that are active today. Seats used count the students of the school. Teachers and admins use no seat.",
+        "licensesTitle": "Licenses",
+        "noLicense": "This school has no license.",
+        "seatsCount": "{count} seats",
+        "dateRange": "{start} to {end}",
+        "noEnd": "no end date",
+        "state": {
+          "active": "Active",
+          "ended": "Ended",
+          "inactive": "Inactive"
+        },
+        "holdersTitle": "Seat holders",
+        "holdersRange": "Students {from} to {to} of {total}",
+        "holdersEmpty": "The school has no students.",
+        "holdersError": "The seat holders did not load.",
+        "colName": "Name",
+        "colUsername": "Username",
+        "colClasses": "Classes",
+        "colJoined": "Joined",
+        "noClass": "No class",
+        "previous": "Previous",
+        "next": "Next",
+        "pageOf": "Page {page} of {pages}"
       }
     }
   },

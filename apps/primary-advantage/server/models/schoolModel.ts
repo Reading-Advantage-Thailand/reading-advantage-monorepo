@@ -94,10 +94,12 @@ export interface SchoolProfile {
 /**
  * Loads a school with its admins, owner, license, and member counts.
  * @param schoolId The school identifier.
+ * @param options.withLicense True for a school admin: the license (with its key) is read. Default false.
  * @returns The school detail, or null when the school does not exist.
  */
 export async function getSchoolDetail(
   schoolId: string,
+  options: { withLicense?: boolean } = {},
 ): Promise<SchoolProfile | null> {
   const [school] = await db
     .select()
@@ -128,7 +130,7 @@ export async function getSchoolDetail(
     },
   }));
 
-  const schoolLicenses = await db
+  const schoolLicenses = !options.withLicense ? [] : await db
     .select({
       id: licenses.id,
       key: licenses.key,
