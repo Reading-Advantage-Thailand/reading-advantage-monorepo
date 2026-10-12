@@ -27,8 +27,8 @@ Behavior on this repository is the truth. Adapt when the evidence says so.
 |---|---|---|
 | Orchestrator | kimi-code-plan-cn/kimi-for-coding | owner only |
 | Lane implementation, regular phases | opencode-go/muse-spark-1.3-contributor#high | workhorse |
-| Hard fixes, High defects | opencode-go/qwen3.8-flash#max | escalation: opencode-go/space-bunny#high |
-| Track reviews, read-only | opencode-go/muse-spark-1.3-contributor#max | security lens: opencode-go/deepseek-v4.1-flash#max |
+| Hard fixes, High defects | opencode-go/qwen3.8-flash#xhigh | escalation: opencode-go/space-bunny#xhigh |
+| Track reviews, read-only | opencode-go/muse-spark-1.3-contributor#xhigh | security lens: opencode-go/deepseek-v4.1-flash#xhigh |
 | Adversarial testing | minimax-cn-coding-plan/MiniMax-M3.1-Flash-Preview | free, unlimited |
 | UX browser review | opencode-go/muse-spark-1.3-contributor#high | escalation: coding-plan/glm-latest#high |
 | Overflow lane | opencode-go/longcat-2.5-preview-free | optional |
@@ -64,11 +64,19 @@ One row per delegated role. Verdict values: keep, promote, demote, ban.
 | Date | Task | Model | Gates and evidence | Verdict |
 |---|---|---|---|---|
 | 2026-10-12 | lane A, B, C recovery dispatch | MiniMax-M3 | cancelled by owner before any gate | ban (owner) |
+| 2026-10-12 | lesson_repeat S4 finish, plan truth, 2 commits | muse-spark-1.3-contributor#high | domain 2066 pass, tsc clean, plan ticks with SHA evidence, headers compliant | keep |
+| 2026-10-12 | stories S4 reconciliation + S5 domain, 2 commits | muse-spark-1.3-contributor#high | domain 2056 pass re-run by orchestrator, honest partial ticks, no over-claim | keep |
+| 2026-10-12 | print_lesson S4 recovery (found pre-committed code, fixed tsc, print check) | muse-spark-1.3-contributor#high | app tsc clean, print-check PDFs on disk, plan ticks with SHA evidence | keep |
+| 2026-10-12 | pwa S2 manifest, icons, layout tags, 3 commits | muse-spark-1.3-contributor#high | new tests 9/9, app tsc clean re-run by orchestrator, docs+doctor run | keep |
+| 2026-10-12 | two High fixes: read-along teardown + teacher game input, 2 commits | opencode-go/qwen3.8-flash#xhigh | red-first confirmed, key suites 32/32 re-run by orchestrator, tsc clean, honest residual edges | keep (on watch: skills-arm caution) |
+| 2026-10-12 | pwa S3 install notice, 3 commits | muse-spark-1.3-contributor#high | new tests 11/11 re-run by orchestrator, tsc clean, docs+doctor run | keep |
+| 2026-10-12 | read-only review: staff_student_view, artifact + 4 explicit verifications | muse-spark-1.3-contributor#xhigh | 419 tests pass read-only, evidence-backed findings, correct severity discipline | keep (reviewer role confirmed) |
+| 2026-10-12 | pwa S4 offline page + sign + worker handler, 3 commits | muse-spark-1.3-contributor#high | new suites green, browser spec (takeover + offline) 2/2, tsc clean re-run by orchestrator | keep |
 
 ## Adaptation rules
 
-- Two consecutive failed role gates on the same model: move it down one tier (high to medium, max to high) and log it.
+- Two consecutive failed role gates on the same model: move it down one tier (xhigh to high, high to medium) and log it.
 - Repeated commit-contract breaks (message, track_id, scope): adherence watch; one more break and the model drops to overflow.
-- A clean hard fix or a review with zero findings bounce: promote one tier and log it.
+- A clean hard fix or a review with zero findings bounce: promote one tier and log it. Ceiling is xhigh for reasoning effort: the owner rule (2026-10-12) bans the max variant everywhere.
 - Escalation path for a stuck track: workhorse, then space-bunny, then coding-plan/glm-latest#high.
 - Every change lands in the observation log with a reason. The owner can veto any change.
