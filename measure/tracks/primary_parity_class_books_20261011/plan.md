@@ -155,22 +155,37 @@ _Story ref: spec.md#story-s4_
 - Member Questions: none in this phase.
 
 
-## Phase S5: Show the assigned book and the next lesson on the dashboard
+## Phase S5: Show the assigned book and the next lesson on the dashboard [checkpoint: PENDING]
 _Story ref: spec.md#story-s5_
 
-- [ ] Task: Define the slot contract
-    - [ ] Add `teacherBookSlotSchema` (class id and name, class book id or null, book name, current lesson, lesson count, lesson title, next step and period) to `packages/domain/src/primary-books/class-book-contracts.ts`
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/__tests__/class-books.test.ts` with `packages/domain/src/__tests__/mock-db.ts`: `getTeacherBookSlots` lists the owned and co-taught classes of the school only, a class without a book, the next step; a STUDENT gets FORBIDDEN
-    - [ ] `components/teacher/__tests__/class-book-slot.test.tsx`: one row per class book, the "Assign a book" row, the empty slot, and the row link to the lesson page
-    - [ ] Update `components/__tests__/axe-screens.test.tsx` for the new slot props
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-books/class-books.ts`: `getTeacherBookSlots`, with the class rule of `getTeacherHome` (`packages/domain/src/primary-home/teacher-home.ts`); export it in `index.ts`
-    - [ ] `components/teacher/class-book-slot.tsx`: render the slots with the Phase D design
-    - [ ] `app/[locale]/teacher/dashboard/page.tsx`: read the slots and pass them; a failure logs with the logger and shows the slot error text
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S5: Show the assigned book and the next lesson on the dashboard' (Protocol in workflow.md)
+- [x] Task: Define the slot contract
+    - [x] Add `teacherBookSlotSchema` (class id and name, class book id or null, book name, current lesson, lesson count, lesson title, next step and period) to `packages/domain/src/primary-books/class-book-contracts.ts`
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/__tests__/class-books.test.ts` with `packages/domain/src/__tests__/mock-db.ts`: `getTeacherBookSlots` lists the owned and co-taught classes of the school only, a class without a book, the next step; a STUDENT gets FORBIDDEN
+    - [x] `components/teacher/__tests__/class-book-slot.test.tsx`: one row per class book, the "Assign a book" row, the empty slot, and the row link to the lesson page
+    - [x] Update `components/__tests__/axe-screens.test.tsx` for the new slot props
+- [x] Task: Implement (green)
+    - [x] `packages/domain/src/primary-books/class-books.ts`: `getTeacherBookSlots`, with the class rule of `getTeacherHome` (`packages/domain/src/primary-home/teacher-home.ts`); export it in `index.ts`
+    - [x] `components/teacher/class-book-slot.tsx`: render the slots with the Phase D design
+    - [x] `app/[locale]/teacher/dashboard/page.tsx`: read the slots and pass them; a failure logs with the logger and shows the slot error text
+- [x] Task: Docs and doctor
+    - [x] JSDoc; skipped: graph.db read only (orchestrator rule); run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S5: Show the assigned book and the next lesson on the dashboard' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps:
+        1. Open the 20 PNG files in `~/Desktop/primary-parity-progress/captures/class_books/phaseS5/` (list: `design/captures-s5.md`).
+        2. Check the five states (one book, two books plus a class with no book, no book, empty, error) at 375 px and 1280 px, day and night.
+        3. Check that each row is 72 px or more, that the whole row is a link, and that the slot is about 400 px high at 1280 px with three rows.
+        4. On a running app, open the dashboard as the demo teacher: a row opens the lesson page; "Assign a book" opens the class page at the card.
+
+### Phase S5 notes
+
+- Member Questions: none in this phase.
+- `ClassBookSlot` takes `slots`, `failed`, `classroomId`, `className`. With neither `slots` nor `failed` it shows the old placeholder (the class page uses it without a session user). The teacher home track can move the component into any grid cell; it needs only `slots` and `failed`.
+- `getTeacherBookSlots` reads five selects (co-taught ids, classes, class books, lesson states, lesson titles) for all classes. It does not call `listClassBooks` for each class. It shares `currentLessonProgress` with `listClassBooks`.
+- Row order: classes by name, books of a class oldest first. A class with a book has no "Assign a book" row (the class page has the assign disclosure).
+- The slot list shows every class, with no cap (design decision of Phase D).
+- Stale `dist`: built with `tsc` under the lock, because `pnpm run build` started a hanging `pnpm install`.
+
 
 ## Phase S6: Check every Teacher Manual claim
 _Story ref: spec.md#story-s6_

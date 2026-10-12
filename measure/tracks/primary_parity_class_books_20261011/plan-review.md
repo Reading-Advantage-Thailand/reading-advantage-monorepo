@@ -75,3 +75,19 @@ Both new reads use the same `unscoped` reason as before. No new Zod boundary. No
 - Low: eslint on the three changed components passed. A full app eslint did not run.
 - Skipped: `build-graph update` (graph.db read only, orchestrator rule).
 
+
+## Phase S5: Show the assigned book and the next lesson on the dashboard
+
+Review of `git diff 0c9356701..HEAD`: domain read and schema, slot component, dashboard page, five locale files, tests.
+No Critical or High finding. `getTeacherBookSlots` calls `assertCan(class:list)` (STUDENT gets FORBIDDEN; tested) and
+reads only classes of `user.schoolId` that the teacher owns or co-teaches. The book, state, and title reads use only those class ids.
+The page logs a failure once with `class_books.slot_failed` (no `console.error`). The five locale files have the same six new keys.
+
+- Medium: Thai text for the six new keys is by the helper (owner check, async). cn, tw, and vi keep English (file practice).
+- Medium: the "Assign a book" row of a class with no book links to the class page. A school admin who is not a teacher of the class sees no row (same rule as `getTeacherHome`).
+- Low: `ClassBookSlot` still has a placeholder mode for the class page without a session user. The teacher home track can delete it with that code path.
+- Low: step titles in the slot are English in all locales (as in the card).
+- Low: a dashboard page test checks the slot; no browser run of the real page (batch run of S2 covers it).
+- Low: the "Class books" slot title key `slotTitle` differs from the placeholder key `title`; the S2 browser block uses `[data-class-book-slot]`, which both keep.
+- Lesson: `pnpm run build` in a package can start `pnpm install` inside the lock and block all lanes. Use `node_modules/.bin/tsc` from the package folder.
+- Skipped: `build-graph update` (graph.db read only, orchestrator rule).
