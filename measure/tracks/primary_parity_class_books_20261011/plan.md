@@ -35,7 +35,7 @@ Every task follows the TDD order of `measure/workflow.md` (red, green, refactor,
 - Design decision: only the first book block of the card has a gold button (one gold action per screen).
 
 
-## Phase S1: Load the catalogue and the guide after the ETL
+## Phase S1: Load the catalogue and the guide after the ETL [checkpoint: 9ca2c99d4]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Define the catalogue build contract
