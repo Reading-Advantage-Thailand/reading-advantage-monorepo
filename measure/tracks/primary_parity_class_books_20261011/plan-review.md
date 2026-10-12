@@ -131,3 +131,6 @@ A read-only review found six items. All six are fixed.
 
 Not fixed by decision: the proxy binary checksum (hash policy), the 44 px header link class, the
 unused output schema parse.
+
+Added fix: pairs CB-A1 and CB-A2 of `acceptance-pairs.json` now use the raw legacy class id in
+`legacyPath`. The `{map:...}` placeholder stays only in `newPath`, because the kit replaces it with the new id.
