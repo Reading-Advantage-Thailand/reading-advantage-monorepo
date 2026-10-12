@@ -36,6 +36,8 @@ export const MAP_TABLES = {
   classroomTeachers: "classroom_teachers",
   schoolAdmins: "school_admins",
   article: "article",
+  stories: "stories",
+  storyChapters: "story_chapters",
   mcq: "multiple_choice_questions",
   saq: "short_answer_questions",
   laq: "long_answer_questions",
@@ -76,7 +78,6 @@ export const DROPPED_TABLES: ReadonlyArray<{ table: string; reason: string }> = 
   { table: "leaderboards", reason: "snapshot data; the app recomputes it" },
   { table: "game_rankings", reason: "legacy table in the target; the play kit keeps its own ledger" },
   { table: "ai_insights", reason: "JSON title and description have no text target (inventory R6); deferred" },
-  { table: "stories, story_chapters", reason: "deferred: the new app has no stories page (docs/primary-whats-moved.md); chapter questions and flashcard rows go with them" },
   { table: "cloze_test_games", reason: "0 rows in the 2026-10-07 copy; the target keeps no game state" },
   { table: "learning_goals, goal_milestones, goal_progress_logs, assignment_notifications", reason: "0 rows in April; loaded by a later run if production has rows" },
 ];
@@ -204,10 +205,10 @@ export function parseUtcTimestamp(text: string): Date {
 }
 
 /**
- * The 0-based order of a legacy question inside its article. The legacy tables have no order column, and
+ * The 0-based order of a legacy question inside its article or story chapter. The legacy tables have no order column, and
  * all the questions of an article share one `createdAt`, so the cuid id (it grows in insert order) breaks the tie.
  */
-export const QUESTION_ORDER_SQL = 'row_number() over (partition by article_id order by "createdAt", id) - 1';
+export const QUESTION_ORDER_SQL = 'row_number() over (partition by coalesce(article_id, story_chapter_id) order by "createdAt", id) - 1';
 
 /** postgres.js `types` for the legacy connection: `timestamp` (oid 1114) values are read as UTC. */
 export const LEGACY_UTC_TIMESTAMP = {
@@ -240,6 +241,33 @@ export function keepLatest<T extends Row>(rows: ReadonlyArray<T>, keyOf: (row: T
     if (time(row) > time(current)) { dropped.push(current); best.set(key, row); } else dropped.push(row);
   }
   return { kept: [...best.values()], dropped };
+}
+
+/**
+ * Splits the legacy `user_lesson_progress` duplicates of one student and article. The current row
+ * is the latest row that links a migrated assignment, else the latest row. Every other row is a
+ * closed attempt, numbered from 1 in the order of `updatedAt` (then `id`).
+ * @param rows Candidate rows with `user_id`, `_articleId`, `_assignmentId` (the new assignment id or null), `id`, and `updatedAt`.
+ * @returns The current rows and the closed attempts with their attempt number.
+ */
+export function splitLessonProgress<T extends Row>(rows: ReadonlyArray<T>): { current: T[]; history: { row: T; attemptNumber: number }[] } {
+  const groups = new Map<string, T[]>();
+  for (const row of rows) {
+    const key = `${String(row.user_id)}:${String(row._articleId)}`;
+    groups.set(key, [...(groups.get(key) ?? []), row]);
+  }
+  const time = (row: T) => (row.updatedAt ? new Date(row.updatedAt as Date).getTime() : 0);
+  const byTime = (a: T, b: T) => time(a) - time(b) || String(a.id).localeCompare(String(b.id));
+  const current: T[] = [];
+  const history: { row: T; attemptNumber: number }[] = [];
+  for (const group of groups.values()) {
+    const sorted = [...group].sort(byTime);
+    const linked = sorted.filter((row) => row._assignmentId);
+    const keep = (linked.length ? linked : sorted).at(-1)!;
+    current.push(keep);
+    sorted.filter((row) => row !== keep).forEach((row, index) => history.push({ row, attemptNumber: index + 1 }));
+  }
+  return { current, history };
 }
 
 /** The legacy article row shape the ETL reads. */
@@ -286,6 +314,81 @@ export function mapArticle(a: LegacyArticle, newId: string, authorExists: boolea
     created_at: a.created_at,
     updated_at: a.updated_at,
   };
+}
+
+/** The legacy story row shape the ETL reads. */
+export interface LegacyStory {
+  id: string; title: string; summary: string | null; imageDescription: string | null; type: string | null; genre: string | null;
+  subGenre: string | null; cefrLevel: string | null; raLevel: number | null; rating: number | null; createdAt: Date; updatedAt: Date;
+  characters: unknown; is_published: boolean | null; translatedSummary: unknown;
+}
+
+/** The legacy story chapter row shape the ETL reads. */
+export interface LegacyChapter {
+  id: string; storyId: string; chapterNumber: number; title: string; summary: string | null; translatedSummary: unknown;
+  imageDescription: string | null; sentences: unknown; translatedSentences: unknown; audio_sentences_url: string | null;
+  createdAt: Date; updatedAt: Date; passage: string | null;
+}
+
+/**
+ * Maps a legacy story to the target row. The legacy cuid becomes the picture key (as for articles, D10).
+ * @param s The legacy stories row.
+ * @param newId The new story uuid.
+ * @returns The row for the upsert.
+ */
+export function mapStory(s: LegacyStory, newId: string): Row {
+  return {
+    id: newId, title: s.title, summary: s.summary, type: s.type, genre: s.genre, subgenre: s.subGenre, ra_level: s.raLevel, cefr_level: s.cefrLevel,
+    rating: s.rating, image_description: s.imageDescription, image: s.id, story_bible: jsonb(s.characters), is_public: s.is_published ?? false,
+    translated_summary: jsonb(s.translatedSummary), created_at: s.createdAt, updated_at: s.updatedAt,
+  };
+}
+
+/**
+ * The audio key of a chapter: the legacy `audio_sentences_url` as it is, or the key the legacy client
+ * falls back to (`audios/story/<story id>-<chapter number>.mp3`) when the column is empty.
+ * @param c The legacy chapter row.
+ * @returns The key, and whether the fallback was used.
+ */
+export function chapterAudioKey(c: Pick<LegacyChapter, "audio_sentences_url" | "storyId" | "chapterNumber">): { key: string; fallback: boolean } {
+  const own = c.audio_sentences_url?.trim();
+  return own ? { key: c.audio_sentences_url as string, fallback: false } : { key: `audios/story/${c.storyId}-${c.chapterNumber}.mp3`, fallback: true };
+}
+
+/**
+ * Maps a legacy story chapter to the target `chapters` row. The story gives the level, genre, and publish flag.
+ * @param c The legacy story_chapters row.
+ * @param target The new chapter uuid, the new story uuid, and the legacy story row.
+ * @returns The row for the upsert.
+ */
+export function mapChapter(c: LegacyChapter, target: { id: string; storyId: string; story: LegacyStory }): Row {
+  const { story } = target;
+  return {
+    id: target.id, story_id: target.storyId, chapter_number: c.chapterNumber, title: c.title, summary: c.summary,
+    translated_summary: jsonb(c.translatedSummary), image_description: c.imageDescription, image: c.id, audio_url: chapterAudioKey(c).key,
+    sentences: jsonb(c.sentences), translated_passage: jsonb(c.translatedSentences), passage: c.passage, is_public: story.is_published ?? false,
+    ra_level: story.raLevel, cefr_level: story.cefrLevel, genre: story.genre, sub_genre: story.subGenre, type: story.type,
+    created_at: c.createdAt, updated_at: c.updatedAt,
+  };
+}
+
+/**
+ * Finds the owner of a legacy question or flashcard source row. A chapter row keeps a NULL `article_id`
+ * (Graph condition): a chapter id or story id never goes into `article_id`.
+ * @param row The legacy `article_id` and `story_chapter_id`.
+ * @param lookup Returns the new id of a legacy id in a map table, or null.
+ * @returns The kind of owner and the two target ids; kind "none" when the owner did not migrate.
+ */
+export function questionOwner(
+  row: Partial<Record<"article_id" | "story_chapter_id", unknown>>,
+  lookup: (table: string, legacyId: string | null) => string | null,
+): { kind: "article" | "chapter" | "none"; article_id: string | null; chapter_id: string | null } {
+  if (row.story_chapter_id) {
+    const chapterId = lookup(MAP_TABLES.storyChapters, String(row.story_chapter_id));
+    return chapterId ? { kind: "chapter", article_id: null, chapter_id: chapterId } : { kind: "none", article_id: null, chapter_id: null };
+  }
+  const articleId = row.article_id ? lookup(MAP_TABLES.article, String(row.article_id)) : null;
+  return articleId ? { kind: "article", article_id: articleId, chapter_id: null } : { kind: "none", article_id: null, chapter_id: null };
 }
 
 /**
@@ -391,6 +494,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
 
   // The users that exist after group 1; later groups need them for foreign keys.
   const users = new Set<string>();
+  // The new school id of each migrated user (legacy user id → school uuid), for the lesson attempt history.
+  const userSchools = new Map<string, string>();
 
   // A normal run commits one transaction per group. A dry run holds one outer transaction, runs
   // each group in a savepoint so that later groups see the earlier rows, and rolls back at the end.
@@ -430,6 +535,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       if (!student && seenUsernames.has(username)) { counter.skip("users", "duplicate lower(email) (D6)", id); continue; }
       if (!student) seenUsernames.add(username);
       users.add(id);
+      const userSchool = ids.get(MAP_TABLES.schools, u.school_id as string | null);
+      if (userSchool) userSchools.set(id, userSchool);
       userRows.push(targetUserRow(u, role, { username, displayUsername }, ids.get(MAP_TABLES.schools, u.school_id as string | null)));
     }
     const studentRows = userRows.filter((row) => row.role === "STUDENT");
@@ -558,15 +665,33 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     }
     counter.table("article").written += await upsert(tx, "articles", rows);
 
+    // Stories and chapters load before the questions, the flashcard rows, and the activity targets.
+    const stories = await legacy<LegacyStory[]>`select id, title, summary, "imageDescription", type, genre, "subGenre", "cefrLevel", "raLevel", rating, "createdAt", "updatedAt", characters, is_published, "translatedSummary" from stories`;
+    counter.table("stories").read = stories.length;
+    const storyById = new Map(stories.map((s) => [s.id, s] as const));
+    counter.table("stories").written += await upsert(tx, "stories", stories.map((s) => mapStory(s, ids.ensure(MAP_TABLES.stories, s.id))));
+    const legacyChapters = await legacy<LegacyChapter[]>`select id, "storyId", "chapterNumber", title, summary, "translatedSummary", "imageDescription", sentences, "translatedSentences", audio_sentences_url, "createdAt", "updatedAt", passage from story_chapters`;
+    counter.table("story_chapters").read = legacyChapters.length;
+    const chapterTargets: Row[] = [];
+    let fallbackAudio = 0;
+    for (const c of legacyChapters) {
+      const story = storyById.get(c.storyId);
+      if (!story) { counter.skip("story_chapters", "story not found", c.id); continue; }
+      if (chapterAudioKey(c).fallback) fallbackAudio += 1;
+      chapterTargets.push(mapChapter(c, { id: ids.ensure(MAP_TABLES.storyChapters, c.id), storyId: ids.ensure(MAP_TABLES.stories, c.storyId), story }));
+    }
+    counter.table("story_chapters").written += await upsert(tx, "chapters", chapterTargets);
+    notes.push(`${fallbackAudio} chapters had no audio key; they got the legacy fallback key audios/story/<story id>-<chapter number>.mp3.`);
+    notes.push(`${stories.length} legacy stories and ${legacyChapters.length} chapters carry their legacy id in image.`);
+
     // Question order: the legacy physical row order per article (FR-3 ordering rule; Tutor reads by position).
     const mcqs = await legacy<Row[]>`select id, question, options, answer, "textualEvidence", article_id, "createdAt", "updatedAt", story_chapter_id, ${legacy.unsafe(QUESTION_ORDER_SQL)} as ord from multiple_choice_questions`;
     counter.table("multiple_choice_questions").read = mcqs.length;
     const mcqRows: Row[] = [];
     for (const q of mcqs) {
       const id = String(q.id);
-      if (q.story_chapter_id) { counter.skip("multiple_choice_questions", "story chapter question (stories deferred)", id); continue; }
-      const articleId = ids.get(MAP_TABLES.article, q.article_id as string | null);
-      if (!articleId) { counter.skip("multiple_choice_questions", "no article", id); continue; }
+      const owner = questionOwner(q, (table, legacyId) => ids.get(table, legacyId));
+      if (owner.kind === "none") { counter.skip("multiple_choice_questions", q.story_chapter_id ? "no chapter" : "no article", id); continue; }
       const options = (q.options as string[]) ?? [];
       const fixed = MCQ_ANSWER_FIXES[id];
       const answer = fixed ?? (q.answer as string | null);
@@ -574,8 +699,8 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       if (correct < 0) { counter.skip("multiple_choice_questions", "answer not among the options (spec §6 MCQ rule)", id); continue; }
       if (fixed) counter.skip("multiple_choice_questions", "answer text set to its option (owner decision 2026-10-07)", id);
       mcqRows.push({
-        id: ids.ensure(MAP_TABLES.mcq, id), article_id: articleId, question: q.question, options: jsonb(options), correct_answer: correct,
-        order: Number(q.ord), answer, textual_evidence: q.textualEvidence, chapter_id: null, created_at: q.createdAt, updated_at: q.updatedAt,
+        id: ids.ensure(MAP_TABLES.mcq, id), article_id: owner.article_id, question: q.question, options: jsonb(options), correct_answer: correct,
+        order: Number(q.ord), answer, textual_evidence: q.textualEvidence, chapter_id: owner.chapter_id, created_at: q.createdAt, updated_at: q.updatedAt,
       });
     }
     counter.table("multiple_choice_questions").written += await upsert(tx, "multiple_choice_questions", mcqRows);
@@ -585,10 +710,9 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     const saqRows: Row[] = [];
     for (const q of saqs) {
       const id = String(q.id);
-      if (q.story_chapter_id) { counter.skip("short_answer_questions", "story chapter question (stories deferred)", id); continue; }
-      const articleId = ids.get(MAP_TABLES.article, q.article_id as string | null);
-      if (!articleId) { counter.skip("short_answer_questions", "no article", id); continue; }
-      saqRows.push({ id: ids.ensure(MAP_TABLES.saq, id), article_id: articleId, question: q.question, sample_answer: q.answer, order: Number(q.ord), answer: q.answer, chapter_id: null, created_at: q.createdAt, updated_at: q.updatedAt });
+      const owner = questionOwner(q, (table, legacyId) => ids.get(table, legacyId));
+      if (owner.kind === "none") { counter.skip("short_answer_questions", q.story_chapter_id ? "no chapter" : "no article", id); continue; }
+      saqRows.push({ id: ids.ensure(MAP_TABLES.saq, id), article_id: owner.article_id, question: q.question, sample_answer: q.answer, order: Number(q.ord), answer: q.answer, chapter_id: owner.chapter_id, created_at: q.createdAt, updated_at: q.updatedAt });
     }
     counter.table("short_answer_questions").written += await upsert(tx, "short_answer_questions", saqRows);
 
@@ -597,10 +721,9 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     const laqRows: Row[] = [];
     for (const q of laqs) {
       const id = String(q.id);
-      if (q.story_chapter_id) { counter.skip("long_answer_questions", "story chapter question (stories deferred)", id); continue; }
-      const articleId = ids.get(MAP_TABLES.article, q.article_id as string | null);
-      if (!articleId) { counter.skip("long_answer_questions", "no article", id); continue; }
-      laqRows.push({ id: ids.ensure(MAP_TABLES.laq, id), article_id: articleId, question: q.question, chapter_id: null, created_at: q.createdAt, updated_at: q.updatedAt });
+      const owner = questionOwner(q, (table, legacyId) => ids.get(table, legacyId));
+      if (owner.kind === "none") { counter.skip("long_answer_questions", q.story_chapter_id ? "no chapter" : "no article", id); continue; }
+      laqRows.push({ id: ids.ensure(MAP_TABLES.laq, id), article_id: owner.article_id, question: q.question, chapter_id: owner.chapter_id, created_at: q.createdAt, updated_at: q.updatedAt });
     }
     counter.table("long_answer_questions").written += await upsert(tx, "long_answer_questions", laqRows);
 
@@ -609,11 +732,10 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     const cardRows: Row[] = [];
     for (const c of cards) {
       const id = String(c.id);
-      if (c.story_chapter_id) { counter.skip("sentencs_and_words_for_flashcard", "story chapter row (stories deferred)", id); continue; }
-      const articleId = ids.get(MAP_TABLES.article, c.article_id as string | null);
-      if (!articleId) { counter.skip("sentencs_and_words_for_flashcard", "no article", id); continue; }
+      const owner = questionOwner(c, (table, legacyId) => ids.get(table, legacyId));
+      if (owner.kind === "none") { counter.skip("sentencs_and_words_for_flashcard", c.story_chapter_id ? "no chapter" : "no article", id); continue; }
       cardRows.push({
-        id: ids.ensure(MAP_TABLES.flashcard, id), article_id: articleId, sentence: jsonb(c.sentence), audio_sentences_url: c.audio_sentences_url,
+        id: ids.ensure(MAP_TABLES.flashcard, id), article_id: owner.article_id, chapter_id: owner.chapter_id, sentence: jsonb(c.sentence), audio_sentences_url: c.audio_sentences_url,
         words: jsonb(c.words), words_url: c.words_url, created_at: c.createdAt, updated_at: c.updatedAt,
       });
     }
@@ -682,16 +804,29 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
       const articleId = ids.get(MAP_TABLES.article, p.article_id as string);
       if (!articleId) { counter.skip("user_lesson_progress", "article not migrated", id); continue; }
       if (!users.has(String(p.user_id))) { counter.skip("user_lesson_progress", "user not migrated", id); continue; }
-      progressCandidates.push({ ...p, _articleId: articleId });
+      progressCandidates.push({ ...p, _articleId: articleId, _assignmentId: ids.get(MAP_TABLES.assignments, p.assignment_id as string | null) });
     }
-    const { kept, dropped } = keepLatest(progressCandidates, (p) => `${String(p.user_id)}:${String(p._articleId)}`, (p) => p.updatedAt as Date);
-    for (const d of dropped) counter.skip("user_lesson_progress", "duplicate (user, article); the latest row kept", String(d.id));
-    const progressRows = kept.map((p) => ({
+    // The duplicates of (user, article) become closed attempts; the row that links the assignment stays current.
+    const { current, history } = splitLessonProgress(progressCandidates);
+    const progressRows = current.map((p) => ({
       id: ids.ensure(MAP_TABLES.userLessonProgress, String(p.id)), user_id: p.user_id, lesson_id: p._articleId, status: lessonStatusOf(p.isCompleted as boolean | null, p.progress as number | null),
-      progress: p.progress ?? 0, completed_at: p.isCompleted ? p.updatedAt : null, article_id: p._articleId, assignment_id: ids.get(MAP_TABLES.assignments, p.assignment_id as string | null),
+      progress: p.progress ?? 0, completed_at: p.isCompleted ? p.updatedAt : null, article_id: p._articleId, assignment_id: p._assignmentId,
       time_spent: p.timeSpent ?? 0, is_completed: p.isCompleted ?? false, created_at: p.createdAt, updated_at: p.updatedAt,
     }));
     counter.table("user_lesson_progress").written += await upsert(tx, "lesson_progress", progressRows);
+    const attemptRows: Row[] = [];
+    for (const { row: p, attemptNumber } of history) {
+      const schoolId = userSchools.get(String(p.user_id));
+      if (!schoolId) { counter.skip("user_lesson_progress", "duplicate (user, article) not kept as an attempt: the user has no school", String(p.id)); continue; }
+      attemptRows.push({
+        id: ids.ensure(MAP_TABLES.userLessonProgress, String(p.id)), school_id: schoolId, student_id: p.user_id, article_id: p._articleId, assignment_id: p._assignmentId,
+        attempt_number: attemptNumber, started_at: p.createdAt, closed_at: p.updatedAt, closed_by_user_id: null, close_reason: "legacy_import",
+        progress: p.progress ?? 0, time_spent: p.timeSpent ?? 0, completed: p.isCompleted ?? false, completed_at: p.isCompleted ? p.updatedAt : null, score: p.score ?? null, xp_earned: 0,
+        activities: new JsonCell([]), steps: new JsonCell([]),
+      });
+    }
+    counter.table("user_lesson_progress").written += await upsert(tx, "primary_lesson_attempts", attemptRows);
+    notes.push(`primary_lesson_attempts holds ${attemptRows.length} duplicate legacy lesson progress rows as closed attempts (reason legacy_import).`);
     notes.push("lesson_progress.lesson_id holds the new article uuid as text (inventory R10 decision).");
 
     const activities = await legacy<Row[]>`select id, user_id, "activityType"::text as activity_type, "targetId", timer, details, completed, "createdAt", "updatedAt" from user_activities`;
@@ -700,7 +835,7 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     for (const a of activities) {
       if (!users.has(String(a.user_id))) { counter.skip("user_activities", "user not migrated", String(a.id)); continue; }
       const target = a.targetId as string | null;
-      activityCandidates.push({ ...a, _target: (target && ids.get(MAP_TABLES.article, target)) || target });
+      activityCandidates.push({ ...a, _target: (target && (ids.get(MAP_TABLES.article, target) ?? ids.get(MAP_TABLES.storyChapters, target))) || target });
     }
     const acts = keepLatest(activityCandidates, (a) => `${String(a.user_id)}:${String(a.activity_type)}:${String(a._target ?? `null:${String(a.id)}`)}`, (a) => a.updatedAt as Date);
     for (const d of acts.dropped) counter.skip("user_activities", "duplicate (user, type, target); the latest row kept (null targets are distinct)", String(d.id));
@@ -752,15 +887,15 @@ export async function runPrimaryLegacyImport(options: ImportOptions): Promise<Im
     const progressRows: Row[] = [];
     for (const c of cards) {
       const id = String(c.id);
-      if (c.story_chapter_id) { counter.skip("flashcard_cards", "story chapter card (stories deferred)", id); continue; }
       const userId = deckUser.get(String(c.deck_id));
       if (!userId) { counter.skip("flashcard_cards", "deck not migrated", id); continue; }
-      const articleId = ids.get(MAP_TABLES.article, c.article_id as string | null);
-      if (!articleId) { counter.skip("flashcard_cards", "article not migrated", id); continue; }
+      const owner = questionOwner(c, (table, legacyId) => ids.get(table, legacyId));
+      if (owner.kind === "none") { counter.skip("flashcard_cards", c.story_chapter_id ? "chapter not migrated" : "article not migrated", id); continue; }
+      const sourceId = owner.article_id ?? owner.chapter_id;
       const text = cardTextOf(c);
       if (!text) { counter.skip("flashcard_cards", "no word or sentence text", id); continue; }
       const cardId = ids.ensure(MAP_TABLES.flashcardCards, id);
-      cardRows.push({ id: cardId, deck_id: ids.get(MAP_TABLES.flashcardDecks, String(c.deck_id)), front: text, back: text, source_id: articleId, order: 0, created_at: c.createdAt });
+      cardRows.push({ id: cardId, deck_id: ids.get(MAP_TABLES.flashcardDecks, String(c.deck_id)), front: text, back: text, source_id: sourceId, order: 0, created_at: c.createdAt });
       if (!c.last_review) continue;
       // One progress row per reviewed card, with the card's uuid as its id, so a rerun updates it.
       const { correct, incorrect } = reviewCountsOf(ratingsByCard.get(id) ?? []);

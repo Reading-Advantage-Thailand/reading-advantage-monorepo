@@ -8,7 +8,7 @@ import { markStepDoneAction } from "@/actions/class-books";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { GAME_STEPS } from "./guide-steps";
+import { GAME_STEPS, gamesHrefOf } from "./guide-steps";
 import { TEACHER_ACTION, TEACHER_CARD } from "./teacher-shell";
 import { useClassBookAction } from "./class-book-pacing-controls";
 
@@ -20,9 +20,10 @@ import { useClassBookAction } from "./class-book-pacing-controls";
  * @param props.steps The 13 guide steps in the guide language.
  * @param props.stepsDone Workbook steps the class has done.
  * @param props.gamesHref Where the games link opens.
+ * @param props.projectorHref Where the games link of steps 9 and 10 opens (the projector games).
  * @returns The overlay panel, or nothing without steps.
  */
-export function GuideOverlay({ classBookId, lessonNumber, steps, stepsDone, gamesHref = "/teacher/game-challenges" }: { classBookId: string; lessonNumber: number; steps: LessonGuideStep[]; stepsDone: number[]; gamesHref?: string }) {
+export function GuideOverlay({ classBookId, lessonNumber, steps, stepsDone, gamesHref = "/teacher/game-challenges", projectorHref }: { classBookId: string; lessonNumber: number; steps: LessonGuideStep[]; stepsDone: number[]; gamesHref?: string; projectorHref?: string }) {
   const t = useTranslations("TeacherUi.classBook");
   const { pending, run } = useClassBookAction();
   const firstOpen = steps.findIndex((step) => !stepsDone.includes(step.step));
@@ -79,7 +80,7 @@ export function GuideOverlay({ classBookId, lessonNumber, steps, stepsDone, game
           {done ? t("guide.undo") : t("guide.markDone")}
         </Button>
         {GAME_STEPS.includes(step.step) ? (
-          <Link href={gamesHref} className="text-primary min-h-11 inline-flex items-center text-sm font-medium underline-offset-4 hover:underline">
+          <Link href={gamesHrefOf(step.step, gamesHref, projectorHref)} className="text-primary min-h-11 inline-flex items-center text-sm font-medium underline-offset-4 hover:underline">
             {t("guide.games")}
           </Link>
         ) : null}

@@ -463,6 +463,62 @@
     "loadErrorHint": "ลองอีกครั้ง หากยังเกิดปัญหา แจ้ง Reading Advantage",
     "back": "ไปที่หน้าครู"
   },
+  "SystemDashboard": {
+    "title": "แดชบอร์ดระบบ",
+    "week": "สัปดาห์นี้: {start} ถึง {end}",
+    "totals": {
+      "heading": "ยอดรวมของแพลตฟอร์ม",
+      "schools": "โรงเรียน",
+      "students": "นักเรียน",
+      "teachers": "ครู",
+      "active": "นักเรียนที่ใช้งานสัปดาห์นี้",
+      "activeSub": "{active} จาก {total} คน ({percent}%)",
+      "articles": "บทความที่เปิดสัปดาห์นี้",
+      "seatsUsed": "ที่นั่งที่ใช้",
+      "seatsOf": "จาก {seats} ที่นั่ง",
+      "noLicense": "ไม่มีลิขสิทธิ์การใช้งาน",
+      "withoutSchool": "{count, plural, other {# คนไม่มีโรงเรียน และไม่อยู่ในตาราง}} กำหนดโรงเรียนได้ที่หน้าผู้ใช้"
+    },
+    "table": {
+      "heading": "โรงเรียน",
+      "search": "ค้นหาตามชื่อโรงเรียน",
+      "searchLabel": "ค้นหาโรงเรียน",
+      "sortBy": "เรียงตาม",
+      "sortDefault": "เงียบก่อน",
+      "sortAsc": "จากน้อยไปมาก",
+      "sortDesc": "จากมากไปน้อย",
+      "sortDirection": "เปลี่ยนลำดับการเรียง",
+      "noMatch": "ไม่มีโรงเรียนที่ตรงกับ “{query}”",
+      "empty": "ยังไม่มีโรงเรียน",
+      "emptyHint": "เพิ่มโรงเรียนแรกได้ที่หน้าโรงเรียน",
+      "goToSchools": "ไปที่หน้าโรงเรียน",
+      "columns": {
+        "name": "โรงเรียน",
+        "active": "นักเรียนที่ใช้งาน",
+        "articles": "บทความที่เปิด",
+        "seats": "ที่นั่ง",
+        "last": "กิจกรรมล่าสุด",
+        "status": "สถานะ"
+      },
+      "activeOf": "{active} จาก {students} คน ({percent}%)",
+      "seatsOf": "{used} จาก {total}",
+      "noLicense": "ไม่มีลิขสิทธิ์การใช้งาน",
+      "none": "ไม่มี",
+      "open": "เปิด",
+      "openFor": "เปิดแดชบอร์ดของ {name}",
+      "openCard": "เปิดแดชบอร์ด",
+      "actions": "การดำเนินการ",
+      "footnote": "สัปดาห์นี้ หมายถึง 7 วันที่ผ่านมา รวมวันนี้ เงียบ หมายถึงโรงเรียนที่มีนักเรียนแต่ไม่มีกิจกรรมในสัปดาห์นี้ ที่นั่งนับเฉพาะนักเรียน"
+    },
+    "status": {
+      "quiet": "เงียบ",
+      "active": "ใช้งาน",
+      "noStudents": "ไม่มีนักเรียน"
+    },
+    "loadError": "โหลดแดชบอร์ดระบบไม่สำเร็จ",
+    "loadErrorHint": "ลองอีกครั้ง หากยังไม่หาย โปรดแจ้งทีมสนับสนุน",
+    "back": "ไปที่หน้าโรงเรียน"
+  },
   "Components": {
     "translationLanguage": "ภาษาที่แปล",
     "submitButton": "ส่ง",
@@ -482,6 +538,12 @@
     "seekBack": "ถอยกลับ",
     "seekForward": "ไปข้างหน้า",
     "playbackSpeed": "ความเร็วในการเล่น",
+    "previousSentence": "ประโยคก่อนหน้า",
+    "replaySentence": "เล่นประโยคนี้อีกครั้ง",
+    "nextSentence": "ประโยคถัดไป",
+    "changeSpeed": "ความเร็ว {speed} เท่า เปลี่ยนความเร็ว",
+    "closeAudio": "ปิดเสียง",
+    "readAlongHint": "แตะคำเพื่อฟังตั้งแต่คำนั้น แตะบรรทัดเพื่อฟังทั้งประโยค",
     "openActionsMenu": "เปิดเมนูการดำเนินการ",
     "showNotifications": "แสดงการแจ้งเตือน",
     "toggleDetails": "สลับรายละเอียด",
@@ -1835,11 +1897,61 @@
         "more": "+{count} ประโยคที่บันทึกเพิ่ม"
       },
       "actions": {
-        "backToRead": "กลับไปหน้าอ่าน"
+        "backToRead": "กลับไปหน้าอ่าน",
+        "startAgain": "เริ่มเรียนใหม่",
+        "restarting": "กำลังเริ่มใหม่..."
       },
       "toast": {
         "failed": "ไม่สามารถโหลดสรุปบทเรียนได้"
-      }
+      },
+      "restart": {
+        "title": "Start this lesson again?",
+        "body1": "Your work on this lesson goes into your history.",
+        "body2": "You keep your XP. You can earn XP again.",
+        "cancel": "Cancel",
+        "error": "We could not start the lesson again. Try again."
+      },
+      "attempt": "Attempt {number}",
+      "attemptXp": "XP in attempt {number}",
+      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
+      "previewNote": "Preview: nothing is saved."
+    }
+  },
+  "LessonGames": {
+    "title": "เกมคำศัพท์",
+    "subtitle": "เล่นกับคำศัพท์ของบทเรียนนี้",
+    "choose": "เลือกเกม",
+    "wordsReady": "{count, plural, other {พร้อม # คำ}}",
+    "sentencesReady": "{count, plural, other {พร้อม # ประโยค}}",
+    "play": "เล่น",
+    "playAgain": "เล่นอีกครั้ง",
+    "locked": "ล็อกอยู่",
+    "newTag": "ใหม่",
+    "notPlayed": "ใหม่: ยังไม่เคยเล่น",
+    "last": "ครั้งล่าสุด: ถูก {correct}/{total}",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, other {ต้องมี # คำ}}",
+    "needSentences": "{count, plural, other {ต้องมี # ประโยค}}",
+    "lockedLesson": "ยังล็อกอยู่",
+    "simpleHint": "โทรศัพท์ช้าหรือเกมไม่เริ่มใช่ไหม",
+    "simpleGame": "เกมแบบง่าย",
+    "backToGames": "กลับไปที่เกม",
+    "loading": "กำลังเตรียมคำศัพท์ของบทเรียนนี้…",
+    "inputFailed": "เตรียมคำศัพท์ของบทเรียนนี้ไม่ได้ เล่นเกมแบบง่ายแทน",
+    "noGames": "ยังไม่มีเกมที่เหมาะกับบทเรียนนี้ เล่นเกมแบบง่ายแทน",
+    "loadFailed": "เกมไม่เริ่มทำงาน เล่นเกมแบบง่ายแทน",
+    "sentenceTitle": "เกมประโยค",
+    "sentenceInputFailed": "เราไม่พบประโยคของบทเรียนนี้ เล่นหนึ่งในสี่กิจกรรมด้านล่างแทน",
+    "sentenceLoadFailed": "เกมไม่เริ่มทำงาน เล่นหนึ่งในสี่กิจกรรมด้านล่างแทน",
+    "runLine": "คุณตอบถูก {correct} จาก {total}",
+    "runLineXp": "คุณตอบถูก {correct} จาก {total} +{xp} XP",
+    "pitch": {
+      "rpg-battle": "เลือกความหมายที่ถูกต้องเพื่อโจมตีราชาก็อบลิน",
+      "rune-match": "จับคู่คำศัพท์แต่ละคำกับอักษรรูน",
+      "dragon-rider": "บินผ่านประตูด้วยคำศัพท์ที่ถูกต้อง",
+      "enchanted-library": "จับหนังสือเล่มที่ถูก และหลบเล่มที่ผิด",
+      "castle-defense": "เรียงคำให้ถูกลำดับเพื่อป้องกันกำแพง",
+      "potion-rush": "สร้างประโยคให้เสร็จก่อนยาจะเดือด"
     }
   },
   "LessonLanguageQuestion": {
@@ -3709,6 +3821,12 @@
       "actionError": "บันทึกการเปลี่ยนแปลงไม่สำเร็จ ลองอีกครั้ง",
       "lesson": {
         "projector": "โปรเจกเตอร์",
+        "projectorGames": {
+          "title": "เกมสำหรับทั้งชั้น",
+          "hint": "เลือกเกมเพื่อแสดงบนโปรเจกเตอร์ คำใบ้คำตอบเปิดอยู่ และไม่บันทึกอะไร",
+          "loading": "กำลังเตรียมคำศัพท์และประโยคของบทเรียนนี้…",
+          "inputFailed": "เตรียมคำศัพท์ของบทเรียนนี้ไม่ได้ ลองใหม่ภายหลัง"
+        },
         "rehearsal": "ซ้อมสอน (มุมมองนักเรียน)",
         "answerKey": "เฉลย",
         "teachersOnly": "สำหรับครูเท่านั้น นักเรียนจะไม่เห็นส่วนนี้",

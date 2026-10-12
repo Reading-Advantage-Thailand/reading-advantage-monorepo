@@ -76,12 +76,15 @@ after any exit (commit `68e85a061`).
 
 | Pair id | Legacy page | New page | Role | Observable behavior | Data check | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| AC-1 | `/admin/students/classrooms` | same | ADMIN | Assign two teachers, remove one; same teachers after reload; kept teacher sees the class | `classroom_teachers` rows of the class | batch capture (orchestrator) |
-| AC-2 | `/admin/import-data` | same | SYSTEM | Import 3 files into one school; every new row has that school | reference-sql L5 = 0 | batch capture (orchestrator) |
-| AC-3 | `/admin/teachers` | same | SYSTEM | Filter by school; move a teacher without owned classes; owner move refused with names | `users.school_id`, `classroom_teachers` of the teacher | batch capture (orchestrator) |
-| AC-4 | `/settings/school-profile` (users / max users) | same, license part | ADMIN | Seats used equal reference SQL L2; difference to legacy recorded | reference-sql L2, L4 | batch capture (orchestrator) |
-| AC-5 | `/settings/school-profile` | same | TEACHER, STUDENT | No license key, no seat holders | route returns 403 | batch capture (orchestrator) |
-| AC-6 | `/admin/teachers` | same | ADMIN | Change a teacher to admin; new sign-in opens `/admin/dashboard` | `users.role` = `ADMIN` | batch capture (orchestrator) |
+| AC-1-admin | `/admin/students/classrooms` | same | ADMIN | Assign two teachers, remove one; same teachers after reload; the owner row is checked and disabled | reference-sql A1, A2; domain run: after remove the pairs are the owner and one teacher; refusals change nothing | batch capture (orchestrator) |
+| AC-2-system | `/admin/import-data` | same | SYSTEM | School selector; upload off until a school is chosen; FormData has `schoolId` | reference-sql A6 (classes 0, users at baseline 1); `resolveImportSchool` checked on the clone | batch capture (orchestrator) |
+| AC-2-admin | `/admin/import-data` | same | ADMIN | No selector; upload on | A6 | batch capture (orchestrator) |
+| AC-3-system | `/admin/teachers` | same | SYSTEM | School column and filter; move of a teacher without classes; owner move refused with names | A3, A7; domain run: move done, owner refused (OWNS_CLASSES), class of another school refused | batch capture (orchestrator) |
+| AC-3-admin | `/admin/teachers` | same | ADMIN | No School column, no filter, no school select | A7 | batch capture (orchestrator) |
+| AC-4-admin | `/settings/school-profile` (users / max users) | same, license part | ADMIN of school 2c5f6031 | Seats used equal reference SQL L2 (5 used, 100 seats, 95 free); difference to legacy is L4 | L2, L3, L4; domain run equal to L2 for schools 2c5f6031 and a5158947 | batch capture (orchestrator) |
+| AC-5-teacher | `/settings/school-profile` | same | TEACHER | No license key, no license part, no seat holders | route returns 403 | batch capture (orchestrator) |
+| AC-5-student | `/settings/school-profile` | same | STUDENT | No license key, no license part, no seat holders | route returns 403 | batch capture (orchestrator) |
+| AC-6-admin | `/admin/teachers` | same | ADMIN | Teachers of the school show; a change to admin shows in the list; the user signs in again | A4, A5; domain run: role ADMIN, sessions 0, one audit event | batch capture (orchestrator) |
 
 Reference SQL: `reference-sql.sql` in this folder (L1 licenses, L2 seats, L3 seat holders page, L4 legacy count, L5 rows without a school).
 Run on `primary_parity_20261011`, read only. The query ran with no error on 2026-10-12.

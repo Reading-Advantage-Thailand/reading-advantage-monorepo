@@ -55,9 +55,9 @@ vi.mock("@reading-advantage/advantage-play-kit-3d/react", () => ({
   StoryGameHost: (props: {
     input: { id: string } | unknown[]; seed?: number; replay?: boolean; cartridge: { manifest: { id: string } };
     onPhase?: (phase: string) => void; onComplete: (result: unknown, outcome: string, evidence: unknown, answerEvidence?: unknown) => void; onExit: () => void;
-    answerAudio?: () => unknown;
+    answerAudio?: () => unknown; helper?: boolean;
   }) => (
-    <div data-testid="kit" data-input={Array.isArray(props.input) ? `apk:${props.input.length}` : props.input.id} data-seed={props.seed ?? "random"} data-replay={String(props.replay)} data-game={props.cartridge.manifest.id} data-audio={String(Boolean(props.answerAudio))}>
+    <div data-testid="kit" data-input={Array.isArray(props.input) ? `apk:${props.input.length}` : props.input.id} data-seed={props.seed ?? "random"} data-replay={String(props.replay)} data-game={props.cartridge.manifest.id} data-audio={String(Boolean(props.answerAudio))} data-helper={String(props.helper)}>
       <button type="button" onClick={() => props.onPhase?.("playing")}>start</button>
       <button type="button" onClick={() => props.onComplete(props.answerAudio ? { accuracy: 0.67, xp: 10, score: 200, correctAnswers: 2, totalAttempts: 3 } : { accuracy: 0.8, xp: 40, score: 800, correctAnswers: 8, totalAttempts: 10 }, "victory", evidence(props.cartridge.manifest.id), props.answerAudio ? answerEvidence : undefined)}>finish</button>
       <button type="button" onClick={() => props.onPhase?.("results")}>results</button>
@@ -120,6 +120,14 @@ afterEach(() => {
 });
 
 describe("GameHost", () => {
+  it("keeps the answer hint off by default and turns it on with the helper prop", async () => {
+    const { unmount } = renderWithMessages(<GameHost gameId="rune-match" locale="en" input={practice(10, 8)} />, { locale: "en" });
+    expect(await screen.findByTestId("kit", {}, { timeout: 5000 })).toHaveAttribute("data-helper", "false");
+    unmount();
+    renderWithMessages(<GameHost gameId="rune-match" locale="en" input={practice(10, 8)} helper save={false} />, { locale: "en" });
+    expect(await screen.findByTestId("kit", {}, { timeout: 5000 })).toHaveAttribute("data-helper", "true");
+  });
+
   it("plays a practice run on the given saved items, with a random seed and replay, and saves it as a story game", async () => {
     const onCompleted = vi.fn();
     renderWithMessages(<GameHost gameId="rune-match" locale="en" ownerKey="s:1" input={practice(10, 8)} onCompleted={onCompleted} />, { locale: "en" });
@@ -135,7 +143,38 @@ describe("GameHost", () => {
     await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Result saved"));
     expect(postedBody()).toMatchObject({ gameType: "rune-match-story", correctAnswers: 8, totalAttempts: 10, victory: true });
     expect(mocks.rpg.refreshAfterSavedCompletion).toHaveBeenCalledTimes(1);
-    expect(onCompleted).toHaveBeenCalledWith({ correctAnswers: 8, totalAttempts: 10, victory: true });
+    expect(onCompleted).toHaveBeenCalledWith({ correctAnswers: 8, totalAttempts: 10, victory: true, xpEarned: 40 });
+  });
+
+  it("puts the article id of a lesson run in the saved completion", async () => {
+    renderWithMessages(<GameHost gameId="rune-match" locale="en" input={practice(10, 8)} articleId="11111111-1111-4111-8111-111111111111" />, { locale: "en" });
+    await screen.findByTestId("kit", {}, { timeout: 5000 });
+    fireEvent.click(screen.getByText("finish"));
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Result saved"));
+    expect(postedBody()).toMatchObject({ gameType: "rune-match-story", metadata: { articleId: "11111111-1111-4111-8111-111111111111" } });
+  });
+
+  it("gives the result to the page also when nothing saves, and posts nothing", async () => {
+    const onResult = vi.fn();
+    renderWithMessages(<GameHost gameId="rune-match" locale="en" input={practice(10, 8)} save={false} onResult={onResult} />, { locale: "en" });
+    await screen.findByTestId("kit", {}, { timeout: 5000 });
+    fireEvent.click(screen.getByText("finish"));
+    expect(onResult).toHaveBeenCalledWith({ correctAnswers: 8, totalAttempts: 10, victory: true });
+    expect(fetchMock).not.toHaveBeenCalledWith("/api/v1/apk/complete", expect.anything());
+  });
+
+  it("calls the fallback callback when the game cannot load", async () => {
+    const onLoadError = vi.fn();
+    renderWithMessages(<GameHost gameId="not-a-game" locale="en" input={practice(10, 8)} onLoadError={onLoadError} />, { locale: "en" });
+    await waitFor(() => expect(onLoadError).toHaveBeenCalledTimes(1));
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+  });
+
+  it("calls the fallback callback when the saved items fail to load", async () => {
+    fetchMock.mockImplementationOnce(async () => new Response("{}", { status: 500 }));
+    const onLoadError = vi.fn();
+    renderWithMessages(<GameHost gameId="rune-match" locale="en" onLoadError={onLoadError} />, { locale: "en" });
+    await waitFor(() => expect(onLoadError).toHaveBeenCalledTimes(1), { timeout: 5000 });
   });
 
   it("plays English answer audio on the prepared words with a controller per run, and saves the answer evidence", async () => {
@@ -185,7 +224,7 @@ describe("GameHost", () => {
     expect(kit).toHaveAttribute("data-replay", "false");
     expect(kit).toHaveAttribute("data-game", "hero-vs-zombie");
     fireEvent.click(screen.getByText("finish"));
-    await waitFor(() => expect(onCompleted).toHaveBeenCalledWith({ challengeRunId: "22222222-2222-4222-8222-222222222222", correctAnswers: 8, totalAttempts: 10, victory: true }));
+    await waitFor(() => expect(onCompleted).toHaveBeenCalledWith({ challengeRunId: "22222222-2222-4222-8222-222222222222", correctAnswers: 8, totalAttempts: 10, victory: true, xpEarned: 40 }));
     expect(postedBody()).toMatchObject({ gameType: "wizard-vs-zombie", challengeRunId: "22222222-2222-4222-8222-222222222222", metadata: { contentSource: "class-challenge" } });
   });
 

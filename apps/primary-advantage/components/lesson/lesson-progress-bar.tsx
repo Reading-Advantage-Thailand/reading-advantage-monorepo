@@ -23,7 +23,7 @@ import {
   TaskMultipleChoice,
   TaskShortAnswer,
   TaskVocabularyFlashcards,
-  TaskVocabularyMatching,
+  TaskVocabularyGame,
   TaskSentenceFlashcards,
   TaskSentenceActivities,
   TaskLanguageQuestions,
@@ -434,7 +434,7 @@ export default function LessonProgressBar({
         );
       case 10:
         return (
-          <TaskVocabularyMatching articleId={resolvedArticleId as string} />
+          <TaskVocabularyGame articleId={resolvedArticleId as string} />
         );
       case 11:
         return (

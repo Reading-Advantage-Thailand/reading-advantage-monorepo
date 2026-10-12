@@ -15,6 +15,8 @@ export interface RunContext {
   now: number;
   victory: boolean;
   idempotencyKey: string;
+  /** The lesson article of a practice run: it rides in `metadata.articleId` (lesson results, mastery evidence). */
+  articleId?: string;
 }
 
 /** The completion the host posts: the catalog input, plus the run id of a class challenge. */

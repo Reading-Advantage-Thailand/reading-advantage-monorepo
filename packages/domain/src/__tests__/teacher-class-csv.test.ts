@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toCsvText } from "../csv.js";
+import { quoteCsvCell, toCsvText } from "../csv.js";
 import { toTeacherClassCsv } from "../primary-home/teacher-class-csv.js";
 import type { TeacherClassRow } from "../primary-home/teacher-contracts.js";
 
@@ -47,5 +47,27 @@ describe("toTeacherClassCsv", () => {
 describe("toCsvText", () => {
   it("writes null as an empty cell and a boolean as text", () => {
     expect(toCsvText(["a", "b", "c"], [[null, true, 3]])).toBe("a,b,c\n,true,3\n");
+  });
+});
+
+describe("quoteCsvCell formula injection", () => {
+  it("adds a leading single quote to text that starts with = + - @ tab or carriage return", () => {
+    expect(quoteCsvCell("=SUM(A1)")).toBe("'=SUM(A1)");
+    expect(quoteCsvCell("+1+1")).toBe("'+1+1");
+    expect(quoteCsvCell("-cmd")).toBe("'-cmd");
+    expect(quoteCsvCell("@user")).toBe("'@user");
+    expect(quoteCsvCell("\tx")).toBe("'\tx");
+    expect(quoteCsvCell("\rx")).toBe("\"'\rx\"");
+  });
+
+  it("keeps numbers, numeric text, and normal text as they are", () => {
+    expect(quoteCsvCell(-3)).toBe("-3");
+    expect(quoteCsvCell("-3.5")).toBe("-3.5");
+    expect(quoteCsvCell("P3A")).toBe("P3A");
+    expect(quoteCsvCell("a=b")).toBe("a=b");
+  });
+
+  it("still quotes a cell with a comma after the single quote", () => {
+    expect(quoteCsvCell("=1,2")).toBe("\"'=1,2\"");
   });
 });

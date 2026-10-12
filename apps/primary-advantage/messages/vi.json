@@ -463,6 +463,62 @@
     "loadErrorHint": "Hãy thử lại. Nếu lỗi còn, báo cho Reading Advantage.",
     "back": "Đến trang giáo viên"
   },
+  "SystemDashboard": {
+    "title": "Bảng điều khiển hệ thống",
+    "week": "Tuần này: {start} đến {end}",
+    "totals": {
+      "heading": "Tổng số của nền tảng",
+      "schools": "Trường",
+      "students": "Học sinh",
+      "teachers": "Giáo viên",
+      "active": "Học sinh hoạt động tuần này",
+      "activeSub": "{active} trên {total} ({percent}%)",
+      "articles": "Bài đọc đã mở tuần này",
+      "seatsUsed": "Chỗ đã dùng",
+      "seatsOf": "trên {seats} chỗ",
+      "noLicense": "Không có giấy phép",
+      "withoutSchool": "{count, plural, other {# học sinh chưa có trường và không nằm trong bảng.}} Hãy gán trường ở trang Người dùng."
+    },
+    "table": {
+      "heading": "Trường",
+      "search": "Tìm theo tên trường",
+      "searchLabel": "Tìm trường",
+      "sortBy": "Sắp xếp theo",
+      "sortDefault": "Trường im lặng trước",
+      "sortAsc": "Thấp đến cao",
+      "sortDesc": "Cao đến thấp",
+      "sortDirection": "Đổi thứ tự sắp xếp",
+      "noMatch": "Không có trường nào khớp với “{query}”.",
+      "empty": "Chưa có trường nào",
+      "emptyHint": "Hãy thêm trường đầu tiên ở trang Trường.",
+      "goToSchools": "Đến trang Trường",
+      "columns": {
+        "name": "Trường",
+        "active": "Học sinh hoạt động",
+        "articles": "Bài đọc đã mở",
+        "seats": "Chỗ",
+        "last": "Hoạt động gần nhất",
+        "status": "Trạng thái"
+      },
+      "activeOf": "{active} trên {students} ({percent}%)",
+      "seatsOf": "{used} trên {total}",
+      "noLicense": "Không có giấy phép",
+      "none": "Không có",
+      "open": "Mở",
+      "openFor": "Mở bảng điều khiển của {name}",
+      "openCard": "Mở bảng điều khiển",
+      "actions": "Thao tác",
+      "footnote": "Tuần này là 7 ngày gần nhất, tính cả hôm nay. Im lặng là trường có học sinh nhưng không có hoạt động tuần này. Chỗ chỉ tính học sinh."
+    },
+    "status": {
+      "quiet": "Im lặng",
+      "active": "Hoạt động",
+      "noStudents": "Chưa có học sinh"
+    },
+    "loadError": "Không tải được bảng điều khiển hệ thống",
+    "loadErrorHint": "Hãy thử lại. Nếu lỗi vẫn còn, hãy báo cho nhóm hỗ trợ.",
+    "back": "Đến trang Trường"
+  },
   "Components": {
     "translationLanguage": "Ngôn ngữ dịch",
     "submitButton": "Gửi",
@@ -482,6 +538,12 @@
     "seekBack": "Lùi lại",
     "seekForward": "Tiến tới",
     "playbackSpeed": "Tốc độ phát",
+    "previousSentence": "Câu trước",
+    "replaySentence": "Phát lại câu này",
+    "nextSentence": "Câu tiếp theo",
+    "changeSpeed": "Tốc độ {speed} lần. Đổi tốc độ",
+    "closeAudio": "Đóng âm thanh",
+    "readAlongHint": "Chạm vào một từ để nghe từ đó. Chạm vào một dòng để nghe cả câu.",
     "openActionsMenu": "Mở menu hành động",
     "showNotifications": "Hiển thị thông báo",
     "toggleDetails": "Bật/tắt chi tiết",
@@ -1835,11 +1897,61 @@
         "more": "+{count} câu được lưu thêm"
       },
       "actions": {
-        "backToRead": "Quay lại trang đọc"
+        "backToRead": "Quay lại trang đọc",
+        "startAgain": "Học lại",
+        "restarting": "Đang khởi động lại..."
       },
       "toast": {
         "failed": "Không thể tải tổng kết bài học"
-      }
+      },
+      "restart": {
+        "title": "Start this lesson again?",
+        "body1": "Your work on this lesson goes into your history.",
+        "body2": "You keep your XP. You can earn XP again.",
+        "cancel": "Cancel",
+        "error": "We could not start the lesson again. Try again."
+      },
+      "attempt": "Attempt {number}",
+      "attemptXp": "XP in attempt {number}",
+      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
+      "previewNote": "Preview: nothing is saved."
+    }
+  },
+  "LessonGames": {
+    "title": "Trò chơi từ vựng",
+    "subtitle": "Chơi với các từ của bài học này.",
+    "choose": "Chọn một trò chơi",
+    "wordsReady": "{count, plural, other {Sẵn sàng # từ}}",
+    "sentencesReady": "{count, plural, other {Sẵn sàng # câu}}",
+    "play": "Chơi",
+    "playAgain": "Chơi lại",
+    "locked": "Đã khóa",
+    "newTag": "Mới",
+    "notPlayed": "Mới: chưa chơi",
+    "last": "Lần trước: đúng {correct}/{total}",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, other {Cần # từ}}",
+    "needSentences": "{count, plural, other {Cần # câu}}",
+    "lockedLesson": "Tạm khóa",
+    "simpleHint": "Điện thoại chậm hoặc trò chơi không chạy?",
+    "simpleGame": "Trò chơi đơn giản",
+    "backToGames": "Quay lại các trò chơi",
+    "loading": "Đang chuẩn bị các từ của bài học này…",
+    "inputFailed": "Không lấy được các từ của bài học này. Hãy chơi trò chơi đơn giản.",
+    "noGames": "Chưa có trò chơi phù hợp với bài học này. Hãy chơi trò chơi đơn giản.",
+    "loadFailed": "Trò chơi không chạy. Hãy chơi trò chơi đơn giản.",
+    "sentenceTitle": "Trò chơi câu",
+    "sentenceInputFailed": "Chúng tôi không lấy được các câu của bài học này. Hãy chơi một trong bốn hoạt động bên dưới.",
+    "sentenceLoadFailed": "Trò chơi không bắt đầu. Hãy chơi một trong bốn hoạt động bên dưới.",
+    "runLine": "Bạn đúng {correct}/{total}.",
+    "runLineXp": "Bạn đúng {correct}/{total}. +{xp} XP",
+    "pitch": {
+      "rpg-battle": "Chọn nghĩa đúng để đánh vua yêu tinh.",
+      "rune-match": "Ghép mỗi từ với chữ rune của nó.",
+      "dragon-rider": "Bay qua cổng bằng từ đúng.",
+      "enchanted-library": "Bắt cuốn sách đúng, tránh cuốn sai.",
+      "castle-defense": "Xếp các từ đúng thứ tự để giữ tường thành.",
+      "potion-rush": "Ghép câu trước khi thuốc sôi."
     }
   },
   "LessonLanguageQuestion": {
@@ -3709,6 +3821,12 @@
       "actionError": "The change was not saved. Try again.",
       "lesson": {
         "projector": "Projector",
+        "projectorGames": {
+          "title": "Games for the class",
+          "hint": "Choose a game to show on the projector. The answer hint is on and nothing saves.",
+          "loading": "Getting the words and sentences of this lesson…",
+          "inputFailed": "We could not get the words of this lesson. Try again later."
+        },
         "rehearsal": "Rehearsal (student view)",
         "answerKey": "Answer key",
         "teachersOnly": "Teachers only. Students never see this section.",

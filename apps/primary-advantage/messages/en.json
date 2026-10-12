@@ -463,6 +463,62 @@
     "loadErrorHint": "Try again. If the problem stays, tell Reading Advantage.",
     "back": "Go to teachers"
   },
+  "SystemDashboard": {
+    "title": "System dashboard",
+    "week": "This week: {start} to {end}",
+    "totals": {
+      "heading": "Platform totals",
+      "schools": "Schools",
+      "students": "Students",
+      "teachers": "Teachers",
+      "active": "Active students this week",
+      "activeSub": "{active} of {total} ({percent}%)",
+      "articles": "Articles opened this week",
+      "seatsUsed": "Seats used",
+      "seatsOf": "of {seats} seats",
+      "noLicense": "No license",
+      "withoutSchool": "{count, plural, one {# student has no school. This student is not in the table.} other {# students have no school. They are not in the table.}} Assign a school on the Users page."
+    },
+    "table": {
+      "heading": "Schools",
+      "search": "Search by school name",
+      "searchLabel": "Search schools",
+      "sortBy": "Sort by",
+      "sortDefault": "Quiet first",
+      "sortAsc": "Low to high",
+      "sortDesc": "High to low",
+      "sortDirection": "Change the sort order",
+      "noMatch": "No school matches “{query}”.",
+      "empty": "No schools yet",
+      "emptyHint": "Add the first school on the Schools page.",
+      "goToSchools": "Go to Schools",
+      "columns": {
+        "name": "School",
+        "active": "Active students",
+        "articles": "Articles opened",
+        "seats": "Seats",
+        "last": "Last activity",
+        "status": "Status"
+      },
+      "activeOf": "{active} of {students} ({percent}%)",
+      "seatsOf": "{used} of {total}",
+      "noLicense": "No license",
+      "none": "None",
+      "open": "Open",
+      "openFor": "Open the dashboard of {name}",
+      "openCard": "Open dashboard",
+      "actions": "Actions",
+      "footnote": "This week means the last 7 days, today included. Quiet means a school with students and no activity this week. Seats count students only."
+    },
+    "status": {
+      "quiet": "Quiet",
+      "active": "Active",
+      "noStudents": "No students"
+    },
+    "loadError": "The system dashboard did not load",
+    "loadErrorHint": "Try again. If the problem stays, tell the support team.",
+    "back": "Go to Schools"
+  },
   "Components": {
     "translationLanguage": "Translation language",
     "submitButton": "Submit",
@@ -482,6 +538,12 @@
     "seekBack": "Seek back",
     "seekForward": "Seek forward",
     "playbackSpeed": "Playback speed",
+    "previousSentence": "Previous sentence",
+    "replaySentence": "Replay this sentence",
+    "nextSentence": "Next sentence",
+    "changeSpeed": "Speed {speed} times. Change speed",
+    "closeAudio": "Close the audio",
+    "readAlongHint": "Tap a word to hear it from there. Tap a line to hear the whole sentence.",
     "openActionsMenu": "Open actions menu",
     "showNotifications": "Show notifications",
     "toggleDetails": "Toggle details",
@@ -1835,11 +1897,61 @@
         "more": "+{count} more {count, plural, one {sentence} other {sentences}} saved"
       },
       "actions": {
-        "backToRead": "Back to Read Page"
+        "backToRead": "Back to Read Page",
+        "startAgain": "Start Again",
+        "restarting": "Restarting..."
       },
       "toast": {
         "failed": "Failed to load lesson summary"
-      }
+      },
+      "restart": {
+        "title": "Start this lesson again?",
+        "body1": "Your work on this lesson goes into your history.",
+        "body2": "You keep your XP. You can earn XP again.",
+        "cancel": "Cancel",
+        "error": "We could not start the lesson again. Try again."
+      },
+      "attempt": "Attempt {number}",
+      "attemptXp": "XP in attempt {number}",
+      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
+      "previewNote": "Preview: nothing is saved."
+    }
+  },
+  "LessonGames": {
+    "title": "Vocabulary games",
+    "subtitle": "Play with the words of this lesson.",
+    "choose": "Choose a game",
+    "wordsReady": "{count, plural, one {# word ready} other {# words ready}}",
+    "sentencesReady": "{count, plural, one {# sentence ready} other {# sentences ready}}",
+    "play": "Play",
+    "playAgain": "Play again",
+    "locked": "Locked",
+    "newTag": "New",
+    "notPlayed": "New: not played yet",
+    "last": "Last: {correct}/{total} correct",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, one {Needs # word} other {Needs # words}}",
+    "needSentences": "{count, plural, one {Needs # sentence} other {Needs # sentences}}",
+    "lockedLesson": "Locked for now",
+    "simpleHint": "Slow phone or a game does not start?",
+    "simpleGame": "Simple game",
+    "backToGames": "Back to the games",
+    "loading": "Getting the words of this lesson…",
+    "inputFailed": "We could not get the words of this lesson. Play the simple game.",
+    "noGames": "No game fits this lesson yet. Play the simple game.",
+    "loadFailed": "The game did not start. Play the simple game instead.",
+    "sentenceTitle": "Sentence games",
+    "sentenceInputFailed": "We could not get the sentences of this lesson. Play one of the four activities below.",
+    "sentenceLoadFailed": "The game did not start. Play one of the four activities below.",
+    "runLine": "You got {correct} of {total}.",
+    "runLineXp": "You got {correct} of {total}. +{xp} XP",
+    "pitch": {
+      "rpg-battle": "Pick the right meaning to hit the goblin king.",
+      "rune-match": "Match each word with its rune.",
+      "dragon-rider": "Fly through the gate with the right word.",
+      "enchanted-library": "Catch the right book, dodge the wrong one.",
+      "castle-defense": "Put the words in order to hold the wall.",
+      "potion-rush": "Build the sentence before the potion boils."
     }
   },
   "LessonLanguageQuestion": {
@@ -3709,6 +3821,12 @@
       "actionError": "The change was not saved. Try again.",
       "lesson": {
         "projector": "Projector",
+        "projectorGames": {
+          "title": "Games for the class",
+          "hint": "Choose a game to show on the projector. The answer hint is on and nothing saves.",
+          "loading": "Getting the words and sentences of this lesson…",
+          "inputFailed": "We could not get the words of this lesson. Try again later."
+        },
         "rehearsal": "Rehearsal (student view)",
         "answerKey": "Answer key",
         "teachersOnly": "Teachers only. Students never see this section.",

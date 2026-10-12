@@ -1270,7 +1270,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Stories in Read**
+- [~] **Track: Primary Parity Before the Cutover: Stories in Read**
   *Link: [./tracks/primary_parity_stories_20261011/](./tracks/primary_parity_stories_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 6*
 
@@ -1282,7 +1282,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Teach a lesson again and start a lesson again**
+- [~] **Track: Primary Parity Before the Cutover: Teach a lesson again and start a lesson again**
   *Link: [./tracks/primary_parity_lesson_repeat_20261011/](./tracks/primary_parity_lesson_repeat_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 7*
 
@@ -1294,7 +1294,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Print one lesson with the Workbooks primary template**
+- [~] **Track: Primary Parity Before the Cutover: Print one lesson with the Workbooks primary template**
   *Link: [./tracks/primary_parity_print_lesson_20261011/](./tracks/primary_parity_print_lesson_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 8*
 

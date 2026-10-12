@@ -1,6 +1,7 @@
 import type { DB } from "@reading-advantage/db";
 import { assertCan, type UserContext } from "@reading-advantage/auth";
 import { calendarDayKey } from "../calendar-day.js";
+import { createTenantDB } from "../db-contract.js";
 import { getSeatUsageBySchool } from "../licenses/usage.js";
 import { countStudentsWithoutSchool, countTeachersBySchool, getPlatformSchoolActivity } from "./activity.js";
 import { platformOverviewSchema, type PlatformOverview, type PlatformSchoolRow, type PlatformSchoolStatus } from "./platform-contracts.js";
@@ -25,7 +26,10 @@ const STATUS_ORDER: Record<PlatformSchoolStatus, number> = { quiet: 0, active: 1
  */
 export async function getPlatformOverview(params: { db: DB; user: UserContext; now?: Date }): Promise<PlatformOverview> {
   assertCan(params.user, "system:dashboard:read");
-  const { db } = params;
+  // SYSTEM reads every school. Each count below groups by users.school_id.
+  const db = createTenantDB(params.db, { schoolId: null }).unscoped(
+    "system dashboard: SYSTEM only (system:dashboard:read); reads all schools; every count groups by users.school_id",
+  );
   const window = dashboardWindow(PLATFORM_WINDOW_DAYS, params.now ?? new Date());
   const [activity, teachers, studentsWithoutSchool, seatUsage] = await Promise.all([
     getPlatformSchoolActivity({ db, window }),

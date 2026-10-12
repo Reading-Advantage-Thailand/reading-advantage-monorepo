@@ -84,15 +84,16 @@ Design (Phase 1, captures in `design/captures.md`, notes in `design/design.md`):
 
 ## 6. Acceptance rows
 
-Pair ids go into `acceptance-pairs.json` in Phase 4.
+The pair ids are in `acceptance-pairs.json` (6 pairs). The steps module `acceptance-steps-open-school.ts` reads the
+school id from the environment variable `PARITY_SCHOOL_ID`.
 
 | Pair id | Legacy page | New page | Role | Observable behavior | Data check | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| AC-1-system | `/system/dashboard` | `/system/dashboard` | SYSTEM | Each legacy number maps to a new total or column, or to its reason (section 5) | none | batch capture (orchestrator) |
+| AC-1-system | `/system/dashboard` | `/system/dashboard` | SYSTEM | Each legacy number maps to a new total or column, or to its reason (section 5); no tab, range control, Export, Refresh, or placeholder text | none | batch capture (orchestrator) |
 | AC-2-totals | n/a | `/system/dashboard` | SYSTEM | Each total equals Q-A (and Q-C for the note) | Q-A, Q-C | batch capture (orchestrator) |
 | AC-2-rows | n/a | `/system/dashboard` | SYSTEM | Each school row equals Q-B | Q-B | batch capture (orchestrator) |
-| AC-3-quiet | n/a | `/system/dashboard` | SYSTEM | Schools with students and no event in 7 days show "Quiet" and sit first | Q-B `status` | batch capture (orchestrator) |
-| AC-4-open | n/a | `/system/dashboard` -> `/admin/dashboard?school=<id>` | SYSTEM | A tap on a row opens the admin dashboard of the same school with the same numbers | Q-B students | batch capture (orchestrator) |
+| AC-3-quiet | n/a | `/system/dashboard` | SYSTEM | Schools with students and no event in 7 days show "Quiet" and sit first; a school without students shows "No students" | Q-B `status` | batch capture (orchestrator) |
+| AC-4-open | n/a | `/system/dashboard` then `/admin/dashboard?school=<id>` | SYSTEM | A tap on a row opens the admin dashboard of the same school with the same student total | Q-B students | batch capture (orchestrator) |
 | AC-5-admin | `/system/dashboard` | `/system/dashboard` | ADMIN | The proxy sends the user to the unauthorized page | none | batch capture (orchestrator) |
 
 ## 7. ETL and runbook changes

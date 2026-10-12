@@ -20,6 +20,8 @@ vi.mock("@reading-advantage/auth", async (importOriginal) => {
   };
 });
 
+// practice-input imports the class book module, which needs the class book tables; the tests do not use it.
+vi.mock("../primary-books/class-books.js", () => ({ managedClassBook: vi.fn() }));
 vi.mock("@reading-advantage/db/schema", () => ({
   // The GP ledger row that grantGpForXp writes beside the XP log (primary_avatar_shop FR-1).
   primaryGpLedger: {

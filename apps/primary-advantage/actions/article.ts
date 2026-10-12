@@ -14,7 +14,10 @@ import {
   userActivity,
   xpLogs,
 } from '@reading-advantage/db';
+import { createTenantDB } from "@reading-advantage/domain";
+import { getLessonGameResults } from "@reading-advantage/domain/games";
 import { currentUser } from "@/lib/session";
+import { logger } from "@/lib/observability/logger";
 import { guardStudentAction } from "@/lib/student-view";
 import { ActivityType } from "@/types/enum";
 
@@ -110,12 +113,21 @@ export async function getLessonSummaryData(articleId: string) {
         ),
       );
 
-    const totalXp = xpLogsRows.reduce((sum, log) => sum + log.xpEarned, 0);
+    // A lesson game run saves in `game_completions`, not in `user_activity`: add its XP here.
+    let gameXp = 0;
+    try {
+      const tenant = { schoolId: user.schoolId };
+      gameXp = (await getLessonGameResults({ db: createTenantDB(db, tenant), user, tenant, input: { articleId } })).totalXp;
+    } catch (error) {
+      logger.error("lesson_summary_game_xp_failed", { error, userId: user.id, articleId });
+    }
+    const totalXp = xpLogsRows.reduce((sum, log) => sum + log.xpEarned, 0) + gameXp;
 
     return {
       success: true,
       data: {
         totalXp,
+        gameXp,
         quizScores: {
           mcqScore,
           saqScore,

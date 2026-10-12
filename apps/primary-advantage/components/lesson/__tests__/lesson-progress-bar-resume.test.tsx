@@ -22,6 +22,7 @@ vi.mock("../task", () => {
     TaskShortAnswer: stub("sa"),
     TaskVocabularyFlashcards: stub("vocab-cards"),
     TaskVocabularyMatching: stub("vocab-matching"),
+    TaskVocabularyGame: stub("vocab-game"),
     TaskSentenceFlashcards: stub("sentence-cards"),
     TaskSentenceActivities: stub("sentence-activities"),
     TaskLanguageQuestions: stub("language"),
@@ -70,6 +71,12 @@ describe("lesson resume", () => {
     expect(await screen.findByText("language")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: en.actions.nextTask })).toBeInTheDocument();
     expect(setPaused).not.toHaveBeenCalledWith(true);
+  });
+
+  it("opens the vocabulary game step at task 10, not the matching game", async () => {
+    renderWith(71);
+    expect(await screen.findByText("vocab-game")).toBeInTheDocument();
+    expect(screen.queryByText("vocab-matching")).toBeNull();
   });
 
   it("opens task 1 with the start button for progress 0 on an assignment", async () => {

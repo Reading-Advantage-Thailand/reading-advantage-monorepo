@@ -463,6 +463,62 @@
     "loadErrorHint": "請重試。如果問題仍在，請告知 Reading Advantage。",
     "back": "前往教師頁面"
   },
+  "SystemDashboard": {
+    "title": "系統儀表板",
+    "week": "本週：{start} 至 {end}",
+    "totals": {
+      "heading": "平台總數",
+      "schools": "學校",
+      "students": "學生",
+      "teachers": "教師",
+      "active": "本週活躍學生",
+      "activeSub": "{total} 名中的 {active} 名（{percent}%）",
+      "articles": "本週開啟的文章",
+      "seatsUsed": "已用席位",
+      "seatsOf": "共 {seats} 個席位",
+      "noLicense": "無授權",
+      "withoutSchool": "{count, plural, other {# 名學生沒有學校，不在表格中。}}請在「使用者」頁面指定學校。"
+    },
+    "table": {
+      "heading": "學校",
+      "search": "依學校名稱搜尋",
+      "searchLabel": "搜尋學校",
+      "sortBy": "排序方式",
+      "sortDefault": "不活躍優先",
+      "sortAsc": "由低到高",
+      "sortDesc": "由高到低",
+      "sortDirection": "變更排序順序",
+      "noMatch": "沒有學校符合「{query}」。",
+      "empty": "尚無學校",
+      "emptyHint": "請在「學校」頁面新增第一所學校。",
+      "goToSchools": "前往學校頁面",
+      "columns": {
+        "name": "學校",
+        "active": "活躍學生",
+        "articles": "開啟的文章",
+        "seats": "席位",
+        "last": "最近活動",
+        "status": "狀態"
+      },
+      "activeOf": "{students} 名中的 {active} 名（{percent}%）",
+      "seatsOf": "{total} 個中已用 {used} 個",
+      "noLicense": "無授權",
+      "none": "無",
+      "open": "開啟",
+      "openFor": "開啟{name}的儀表板",
+      "openCard": "開啟儀表板",
+      "actions": "操作",
+      "footnote": "本週指最近 7 天，包括今天。不活躍指有學生但本週沒有活動的學校。席位只計算學生。"
+    },
+    "status": {
+      "quiet": "不活躍",
+      "active": "活躍",
+      "noStudents": "沒有學生"
+    },
+    "loadError": "系統儀表板載入失敗",
+    "loadErrorHint": "請重試。如果問題持續，請聯絡支援團隊。",
+    "back": "前往學校頁面"
+  },
   "Components": {
     "translationLanguage": "翻譯語言",
     "submitButton": "送出",
@@ -482,6 +538,12 @@
     "seekBack": "後退",
     "seekForward": "前進",
     "playbackSpeed": "播放速度",
+    "previousSentence": "上一句",
+    "replaySentence": "重播這一句",
+    "nextSentence": "下一句",
+    "changeSpeed": "速度 {speed} 倍，點按更改速度",
+    "closeAudio": "關閉音訊",
+    "readAlongHint": "點按一個單字，從該字開始聽。點按一行，聽整句。",
     "openActionsMenu": "開啟操作選單",
     "showNotifications": "顯示通知",
     "toggleDetails": "切換詳情",
@@ -1712,11 +1774,24 @@
         "more": "+{count} 句已保存"
       },
       "actions": {
-        "backToRead": "返回閱讀頁面"
+        "backToRead": "返回閱讀頁面",
+        "startAgain": "重新開始",
+        "restarting": "正在重新開始..."
       },
       "toast": {
         "failed": "無法載入課程總結"
-      }
+      },
+      "restart": {
+        "title": "Start this lesson again?",
+        "body1": "Your work on this lesson goes into your history.",
+        "body2": "You keep your XP. You can earn XP again.",
+        "cancel": "Cancel",
+        "error": "We could not start the lesson again. Try again."
+      },
+      "attempt": "Attempt {number}",
+      "attemptXp": "XP in attempt {number}",
+      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
+      "previewNote": "Preview: nothing is saved."
     },
     "VocabularyFlashcards": {
       "loading": {
@@ -1840,6 +1915,43 @@
       "understandMainIdeas": "理解重點：",
       "learnVocabulary": "學習詞彙：",
       "improveComprehension": "提升閱讀理解："
+    }
+  },
+  "LessonGames": {
+    "title": "詞彙遊戲",
+    "subtitle": "用本課的單字來玩。",
+    "choose": "選擇一個遊戲",
+    "wordsReady": "{count, plural, other {已備好 # 個單字}}",
+    "sentencesReady": "{count, plural, other {已備好 # 個句子}}",
+    "play": "開始",
+    "playAgain": "再玩一次",
+    "locked": "已鎖定",
+    "newTag": "新",
+    "notPlayed": "新：還沒玩過",
+    "last": "上次：答對 {correct}/{total}",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, other {需要 # 個單字}}",
+    "needSentences": "{count, plural, other {需要 # 個句子}}",
+    "lockedLesson": "暫時鎖定",
+    "simpleHint": "手機太慢，或是遊戲打不開？",
+    "simpleGame": "簡單遊戲",
+    "backToGames": "返回遊戲",
+    "loading": "正在準備本課的單字…",
+    "inputFailed": "無法取得本課的單字。請玩簡單遊戲。",
+    "noGames": "本課還沒有合適的遊戲。請玩簡單遊戲。",
+    "loadFailed": "遊戲沒有啟動。請改玩簡單遊戲。",
+    "sentenceTitle": "句子遊戲",
+    "sentenceInputFailed": "無法取得本課的句子。請玩下面四個活動之一。",
+    "sentenceLoadFailed": "遊戲沒有啟動。請玩下面四個活動之一。",
+    "runLine": "你答對了 {correct}/{total}。",
+    "runLineXp": "你答對了 {correct}/{total}。+{xp} XP",
+    "pitch": {
+      "rpg-battle": "選出正確的詞義，打敗哥布林王。",
+      "rune-match": "把每個單字和它的符文配成一對。",
+      "dragon-rider": "用正確的單字飛過大門。",
+      "enchanted-library": "接住正確的書，躲開錯誤的書。",
+      "castle-defense": "把單字排成正確的順序，守住城牆。",
+      "potion-rush": "在藥水煮沸之前拼好句子。"
     }
   },
   "LessonLanguageQuestion": {
@@ -3709,6 +3821,12 @@
       "actionError": "The change was not saved. Try again.",
       "lesson": {
         "projector": "Projector",
+        "projectorGames": {
+          "title": "Games for the class",
+          "hint": "Choose a game to show on the projector. The answer hint is on and nothing saves.",
+          "loading": "Getting the words and sentences of this lesson…",
+          "inputFailed": "We could not get the words of this lesson. Try again later."
+        },
         "rehearsal": "Rehearsal (student view)",
         "answerKey": "Answer key",
         "teachersOnly": "Teachers only. Students never see this section.",

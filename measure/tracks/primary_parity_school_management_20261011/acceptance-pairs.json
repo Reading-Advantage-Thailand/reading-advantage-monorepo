@@ -1,0 +1,154 @@
+{
+  "member": "primary_parity_school_management_20261011",
+  "pairs": [
+    {
+      "id": "AC-1-admin",
+      "rows": ["ADM-03"],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/students/classrooms",
+      "newPath": "/en/admin/students/classrooms",
+      "colorSchemes": ["light", "dark"],
+      "checks": [
+        {
+          "id": "AC-1-admin-a",
+          "behavior": "The class edit dialog lists the teachers of the class school as check boxes. The new dialog marks the class owner as checked, disabled, and labeled Class owner (behavior contract section 5)."
+        },
+        {
+          "id": "AC-1-admin-b",
+          "behavior": "Check one teacher and save: the request carries teacherIds. The teacher stays after a reload. Uncheck the teacher and save: the teacher leaves.",
+          "network": "/api/classrooms?/[^/]+$"
+        }
+      ]
+    },
+    {
+      "id": "AC-2-system",
+      "rows": ["ADM-04"],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/import-data",
+      "newPath": "/en/admin/import-data",
+      "colorSchemes": ["light", "dark"],
+      "checks": [
+        {
+          "id": "AC-2-system-a",
+          "behavior": "The page shows a school selector, and the upload stays disabled until a school is chosen. This holds in legacy and in the new app."
+        },
+        {
+          "id": "AC-2-system-b",
+          "behavior": "After a school is chosen, the upload form data carries schoolId, and the result names the target school.",
+          "network": "/api/upload/(csv|classes)"
+        }
+      ]
+    },
+    {
+      "id": "AC-2-admin",
+      "rows": ["ADM-04"],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/import-data",
+      "newPath": "/en/admin/import-data",
+      "checks": [
+        {
+          "id": "AC-2-admin-a",
+          "behavior": "The page shows no school selector, and the upload is enabled."
+        }
+      ]
+    },
+    {
+      "id": "AC-3-system",
+      "rows": ["SYS-05"],
+      "role": "SYSTEM",
+      "legacyPath": "/en/admin/teachers",
+      "newPath": "/en/admin/teachers",
+      "colorSchemes": ["light", "dark"],
+      "checks": [
+        {
+          "id": "AC-3-system-a",
+          "behavior": "The table has a School column and a school filter. A school choice narrows the list.",
+          "network": "/api/teachers\\?"
+        },
+        {
+          "id": "AC-3-system-b",
+          "behavior": "The edit dialog has a school select with a confirm step. A teacher without classes moves to the chosen school with the chosen classes only.",
+          "network": "/api/teachers/[^/]+/move"
+        },
+        {
+          "id": "AC-3-system-c",
+          "behavior": "A teacher who owns classes is refused with the class names, and nothing changes (behavior contract section 5, owner move)."
+        }
+      ]
+    },
+    {
+      "id": "AC-3-admin",
+      "rows": ["SYS-05"],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/teachers",
+      "newPath": "/en/admin/teachers",
+      "checks": [
+        {
+          "id": "AC-3-admin-a",
+          "behavior": "The table has no School column, no school filter, and no school select in the edit dialog."
+        }
+      ]
+    },
+    {
+      "id": "AC-4-admin",
+      "rows": ["License view"],
+      "role": "ADMIN",
+      "legacyPath": "/en/settings/school-profile",
+      "newPath": "/en/settings/school-profile",
+      "colorSchemes": ["light", "dark"],
+      "checks": [
+        {
+          "id": "AC-4-admin-a",
+          "behavior": "Use an ADMIN of school 2c5f6031. The license part shows seats used, free, and total, and each license with its dates. The numbers equal reference-sql L2 (5 used, 100 seats). Legacy shows users / max users: the difference is the reference-sql L4 count."
+        },
+        {
+          "id": "AC-4-admin-b",
+          "behavior": "The seat holder list shows the students with name, username, classes, and join date, 50 for each page. The page has no button that changes a license.",
+          "network": "/api/users/me/school/seat-holders"
+        }
+      ]
+    },
+    {
+      "id": "AC-5-teacher",
+      "rows": ["License view"],
+      "role": "TEACHER",
+      "legacyPath": "/en/settings/school-profile",
+      "newPath": "/en/settings/school-profile",
+      "checks": [
+        {
+          "id": "AC-5-teacher-a",
+          "behavior": "The page shows no license key, no license part, and no seat holders. Legacy shows the license card to every user with a school (behavior contract section 5).",
+          "network": "/api/users/me/school"
+        }
+      ]
+    },
+    {
+      "id": "AC-5-student",
+      "rows": ["License view"],
+      "role": "STUDENT",
+      "legacyPath": "/en/settings/school-profile",
+      "newPath": "/en/settings/school-profile",
+      "checks": [
+        {
+          "id": "AC-5-student-a",
+          "behavior": "The page shows no license key, no license part, and no seat holders. The seat holder route returns 403.",
+          "network": "/api/users/me/school"
+        }
+      ]
+    },
+    {
+      "id": "AC-6-admin",
+      "rows": ["S5"],
+      "role": "ADMIN",
+      "legacyPath": "/en/admin/teachers",
+      "newPath": "/en/admin/teachers",
+      "checks": [
+        {
+          "id": "AC-6-admin-a",
+          "behavior": "The list shows the teachers of the school with the count and the statistics. A role change to admin shows in the list, and the changed user must sign in again.",
+          "network": "/api/teachers"
+        }
+      ]
+    }
+  ]
+}

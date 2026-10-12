@@ -239,6 +239,19 @@ describe("school choice (SYS-03, FR-10)", () => {
     expect(screen.queryByRole("region", { name: t.keyNumbers.heading })).not.toBeInTheDocument();
   });
 
+  it("SYSTEM with a session school but no ?school= sees the selector and no numbers (AC-4)", async () => {
+    mocks.user = { ...system, schoolId: SCHOOL };
+    await renderPage();
+    expect(screen.getByTestId("school-picker")).toHaveAttribute("data-value", "");
+    expect(screen.getByRole("heading", { name: t.chooseSchool })).toBeInTheDocument();
+    expect(mocks.getSchoolDashboard).not.toHaveBeenCalled();
+  });
+
+  it("ADMIN with a session school gets that school and the query runs", async () => {
+    await renderPage();
+    expect(mocks.getSchoolDashboard).toHaveBeenCalledWith(expect.objectContaining({ input: { schoolId: SCHOOL, range: 30 } }));
+  });
+
   it("SYSTEM with an unknown or invalid school id sees Choose a school", async () => {
     mocks.user = { ...system };
     mocks.schools = [];

@@ -6,6 +6,7 @@ export { default as TaskMultipleChoice } from "./task-multiple-choice";
 export { default as TaskShortAnswer } from "./task-short-answer";
 export { default as TaskVocabularyFlashcards } from "./task-vocabulary-flashcards";
 export { default as TaskVocabularyMatching } from "./task-vocabulary-matching";
+export { default as TaskVocabularyGame } from "./task-vocabulary-game";
 export { default as TaskSentenceFlashcards } from "./task-sentence-flashcards";
 export { default as TaskSentenceActivities } from "./task-sentence-activities";
 export { default as TaskLanguageQuestions } from "./task-language-questions";

@@ -128,25 +128,30 @@ _Story ref: spec.md#story-s4_
     - Captures: `~/Desktop/primary-parity-progress/captures/school_management/phaseS4/` (`s4-license-{ok,over,none,ended}-{day,night}-{375,1280}.png`, `s4-license-ok-holders-p2-{day,night}-{375,1280}.png`).
     - Steps: 1. Sign in as school ADMIN of school 2c5f6031 or a5158947 and open School profile (sidebar "School license"). 2. Check the seats used, free, total, and each license with its dates. 3. Check that seat holders show 50 students for each page and that Next and Previous work. 4. Sign in as a TEACHER and as a STUDENT of the same school: no license part, no key, and `GET /api/users/me/school/seat-holders` returns 403. 5. Check that no button changes a license.
 
-## Phase S5: A teacher role change takes effect
+## Phase S5: A teacher role change takes effect [checkpoint: 39c826c36]
 _Story ref: spec.md#story-s5_
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Zod for the teacher update body in `server/controllers/teacherController.ts` (today it is a cast, `:269-270`): `role` is `teacher` or `admin`; the map to `users.role` (`TEACHER`, `ADMIN`)
-- [ ] Task: Test
-    - [ ] Red: `server/models/__tests__/teacherModel.role-change.test.ts`: the change writes `users.role` and `user_roles` in one transaction, ends the user's sessions, and records an audit event with the old and new role; a user of another school or of a higher rank is refused and nothing changes
-- [ ] Task: Implement
-    - [ ] `server/models/teacherModel.ts` (`updateTeacher`): set `users.role` in the same transaction, call `revokeSessionsInTx`, call `recordAuditEvent`. The fix stays in this function because it holds the rank rule and the transaction
-- [ ] Task: Generate Docs & Doctor: JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S5: A teacher role change takes effect' (Protocol in workflow.md)
+- [x] Task: Contract & Schema Definition
+    - [x] Zod for the teacher update body in `server/controllers/teacherController.ts` (today it is a cast, `:269-270`): `role` is `teacher` or `admin`; the map to `users.role` (`TEACHER`, `ADMIN`)
+- [x] Task: Test
+    - [x] Red: `server/models/__tests__/teacherModel.role-change.test.ts`: the change writes `users.role` and `user_roles` in one transaction, ends the user's sessions, and records an audit event with the old and new role; a user of another school or of a higher rank is refused and nothing changes
+- [x] Task: Implement
+    - [x] `server/models/teacherModel.ts` (`updateTeacher`): set `users.role` in the same transaction, call `revokeSessionsInTx`, call `recordAuditEvent`. The fix stays in this function because it holds the rank rule and the transaction
+- [x] Task: Generate Docs & Doctor: JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S5: A teacher role change takes effect' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual steps: sign in as a school ADMIN of the migrated copy. Open Admin, Teachers: the TEACHER users of the school show, with count and statistics. Change one teacher to admin: the list shows the new role and that teacher must sign in again. Delete a test teacher: it works. Open the monthly leaderboard: students show.
+    - Extended scope (orchestrator): teacher reads with `roleSql`, `updateExistingTeacherToSchool` with `setUserRole`, school leaderboard students with `roleSql("student")`, `DELETE /api/users/me/school` owner downgrade from `users.role`. Details: `plan-review.md`, section "Role source fixes (lane C)".
 
-## Phase A: Acceptance
+## Phase A: Acceptance [checkpoint: 4749dce97]
 
-- [ ] Task: Run S1 to S5 one time against a clone of the rehearsal copy (never the shared copy); check that no new row has `school_id` null
+- [x] Task: Run S1 to S5 one time against a clone of the rehearsal copy (never the shared copy); check that no new row has `school_id` null
+    - Done on the clone `primary_parity_run_school_pa` (dropped). Result in `acceptance.md`. The S2 import routes were not called (route level, browser batch); `resolveImportSchool` was checked.
 - [ ] Task: Side-by-side check with the kit of `primary_parity_acceptance_20261011`: AC-1 to AC-6, as a school ADMIN, a TEACHER, a STUDENT, and SYSTEM, legacy `bfea121` and the new build on copies with the same school data
-    - [ ] Write `measure/tracks/primary_parity_school_management_20261011/acceptance-pairs.json` (kit FR-7): one pair for each check, with the legacy path, the new path, the role, and the observable behavior
-    - [ ] Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts`; the captures and the report stay in the private folder (kit FR-10)
-    - [ ] Write `measure/tracks/primary_parity_school_management_20261011/acceptance.md` from the runbook template, with the result of each check
-- [ ] Task: Captures of the changed parts at 375 px and 1280 px, day and night, with the demo seed or QA data only (`design/` folder; captures with real names stay in the private folder), and the owner's look check (AC-7)
-- [ ] Task: Final gates: `pnpm --filter @reading-advantage/domain test`, `pnpm --filter primary-advantage test`, tsc and ESLint (AC-8); record the commands and results in `acceptance.md`
-- [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
+    - [x] Write `measure/tracks/primary_parity_school_management_20261011/acceptance-pairs.json` (kit FR-7): 9 pairs, parses with `PairList`
+    - [ ] Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts` - batch capture (orchestrator)
+    - [x] Write `measure/tracks/primary_parity_school_management_20261011/acceptance.md` from the runbook template, with the result of each check (page results wait for the batch)
+- [ ] Task: Captures of the changed parts at 375 px and 1280 px, day and night, and the owner's look check (AC-7) - batch capture (orchestrator); look check pending (owner, async)
+- [x] Task: Final gates: domain vitest, app vitest, tsc and ESLint (AC-8); commands and results in `acceptance.md`
+    - Fixed in this phase: `app-nav.test.tsx` (new nav item). Open and not from this track: 2 domain suites (lesson games mock), 2 app suites (stale `sales-knowledge` dist).
+- [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md) - batch capture (orchestrator); look check pending (owner, async)
+    - Steps: 1. Run the capture kit with `acceptance-pairs.json` on the capture clone. 2. Open the report and read each check. 3. Run the A-queries of `reference-sql.sql` after the browser steps. 4. Do the look check of the changed parts.

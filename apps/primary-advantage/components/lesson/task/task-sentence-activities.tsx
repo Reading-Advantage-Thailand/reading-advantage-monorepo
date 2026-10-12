@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Book,
   ListOrdered,
@@ -14,7 +14,14 @@ import SentenceClozeGame from "../games/lesson-sentence-cloze-test";
 import OrderWordGame from "../games/lesson-sentence-order-word";
 import LessonMatchingGame from "../games/lesson-matching-game";
 import { FlashcardType } from "@/types/enum";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { PracticeInput } from "@reading-advantage/game-contracts";
+import type { LessonGameResult } from "@reading-advantage/domain/games";
+import { getLessonGameInputAction, getLessonGameResultsAction } from "@/actions/lesson-games";
+import { GameHost } from "@/components/games/game-host";
+import { LessonGamePicker } from "@/components/lesson/games/lesson-game-picker";
+import { practiceLocaleOf } from "@/lib/games/catalog";
+import { LESSON_SENTENCE_GAMES } from "@/lib/games/lesson-games";
 
 interface AssignmentActivity {
   isSentenceMatchingCompleted: boolean;
@@ -23,12 +30,29 @@ interface AssignmentActivity {
   isSentenceClozeTestCompleted: boolean;
 }
 
+/**
+ * Task 12 of the lesson: the sentence step. It shows the Chibi Quest sentence games first, with
+ * the last result of each (a game with fewer than 3 sentences shows locked), and below them the
+ * four sentence activities. The activities stay open when a game is locked or fails to load.
+ * @param props.articleId The lesson article.
+ * @param props.save False runs the games as a demo that saves nothing (rehearsal and preview).
+ * @returns The step.
+ */
 export default function TaskSentenceActivities({
   articleId,
+  save = true,
 }: {
   articleId: string;
+  save?: boolean;
 }) {
   const t = useTranslations("Lesson.SentenceActivities");
+  const tg = useTranslations("LessonGames");
+  const locale = useLocale();
+  const [input, setInput] = useState<PracticeInput | null>(null);
+  const [results, setResults] = useState<LessonGameResult[]>([]);
+  const [gamesLoading, setGamesLoading] = useState(true);
+  const [playing, setPlaying] = useState<string | null>(null);
+  const [gameNotice, setGameNotice] = useState<"sentenceInputFailed" | "sentenceLoadFailed" | null>(null);
   const [completedActivities, setCompletedActivities] =
     useState<AssignmentActivity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,6 +81,77 @@ export default function TaskSentenceActivities({
     };
     fetchCompletedActivities();
   }, [articleId, reloadToken]);
+
+  const refreshResults = useCallback(async () => {
+    const res = await getLessonGameResultsAction({ articleId });
+    if (res.success) setResults(res.results.latest);
+  }, [articleId]);
+
+  // The sentences of the lesson and the last result of each game.
+  useEffect(() => {
+    let live = true;
+    Promise.all([
+      getLessonGameInputAction({ articleId, locale: practiceLocaleOf(locale) as "th" }),
+      getLessonGameResultsAction({ articleId }),
+    ])
+      .then(([lesson, saved]) => {
+        if (!live) return;
+        if (saved.success) setResults(saved.results.latest);
+        if (lesson.success) setInput(lesson.input);
+        else setGameNotice("sentenceInputFailed");
+      })
+      .catch(() => live && setGameNotice("sentenceInputFailed"))
+      .finally(() => live && setGamesLoading(false));
+    return () => {
+      live = false;
+    };
+  }, [articleId, locale]);
+
+  if (playing && input) {
+    return (
+      <div className="cq-world lg-run" data-testid="lesson-game-run">
+        <GameHost
+          gameId={playing}
+          locale={locale}
+          input={input}
+          articleId={articleId}
+          save={save}
+          className="flex h-full w-full flex-col"
+          onLoadError={() => {
+            setGameNotice("sentenceLoadFailed");
+            setPlaying(null);
+          }}
+          onExit={() => {
+            setPlaying(null);
+            void refreshResults();
+          }}
+        />
+      </div>
+    );
+  }
+
+  // The sentence games above the activities, in every state of the step.
+  const cartridges = (
+    <div className="mx-auto max-w-4xl space-y-3">
+      {gameNotice ? (
+        <p role="status" data-testid="lesson-game-notice" className="text-sm text-gray-700 dark:text-gray-300">
+          {tg(gameNotice)}
+        </p>
+      ) : null}
+      {!gamesLoading && input ? (
+        <LessonGamePicker
+          title={tg("sentenceTitle")}
+          gameIds={LESSON_SENTENCE_GAMES}
+          input={input}
+          results={results}
+          onPlay={(id) => {
+            setGameNotice(null);
+            setPlaying(id);
+          }}
+        />
+      ) : null}
+    </div>
+  );
 
   // // Order Sentences Activity
   if (selectedActivity === "order-sentences") {
@@ -158,6 +253,8 @@ export default function TaskSentenceActivities({
 
   if (isLoading) {
     return (
+      <>
+        {cartridges}
       <div className="mx-auto max-w-4xl space-y-6">
         <div className="space-y-4 rounded-2xl border border-orange-200 bg-gradient-to-br from-orange-300 via-amber-300 to-yellow-300 p-8 text-center dark:border-orange-800 dark:from-orange-950 dark:via-amber-950 dark:to-yellow-950">
           <div className="mb-4 inline-flex items-center justify-center rounded-full bg-orange-100 p-3 dark:bg-orange-900">
@@ -171,11 +268,14 @@ export default function TaskSentenceActivities({
           </p>
         </div>
       </div>
+      </>
     );
   }
 
   if (loadError) {
     return (
+      <>
+        {cartridges}
       <div className="mx-auto max-w-4xl space-y-6">
         <div
           role="alert"
@@ -197,10 +297,13 @@ export default function TaskSentenceActivities({
           </Button>
         </div>
       </div>
+      </>
     );
   }
 
   return (
+    <div className="space-y-6">
+    {cartridges}
     <div className="mx-auto max-w-4xl space-y-6">
       {/* Header Section */}
       <div className="space-y-4 rounded-2xl border border-orange-200 bg-gradient-to-br from-orange-300 via-amber-300 to-yellow-300 p-8 text-center dark:border-orange-800 dark:from-orange-950 dark:via-amber-950 dark:to-yellow-950">
@@ -405,6 +508,7 @@ export default function TaskSentenceActivities({
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

@@ -2,14 +2,16 @@
 export type CsvCell = string | number | boolean | null;
 
 /**
- * Quotes one CSV cell. A cell with a comma, a quote, or a new line gets quotes, and each quote
- * inside doubles.
+ * Quotes one CSV cell. Text that starts with `=`, `+`, `-`, `@`, a tab, or a carriage return gets
+ * a leading single quote, so a spreadsheet does not run it as a formula (a number or numeric text
+ * stays as it is). A cell with a comma, a quote, or a new line gets quotes, and each quote inside doubles.
  * @param value The cell value.
  * @returns The cell text for a CSV file.
  */
 export function quoteCsvCell(value: CsvCell): string {
-  const text = value === null ? "" : String(value);
-  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  let text = value === null ? "" : String(value);
+  if (typeof value === "string" && /^[=+\-@\t\r]/.test(text) && !/^-?\d+(\.\d+)?$/.test(text)) text = `'${text}`;
+  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 
 /**
