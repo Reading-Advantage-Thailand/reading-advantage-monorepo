@@ -3068,7 +3068,8 @@
       "label": "Class code",
       "help": "Type the code your teacher shows you.",
       "next": "Next",
-      "checking": "Checking…"
+      "checking": "Checking…",
+      "oldLink": "This link has an old class code. Type the code that your teacher shows."
     },
     "names": {
       "title": "Who are you?",

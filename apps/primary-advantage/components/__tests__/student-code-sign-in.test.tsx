@@ -9,6 +9,8 @@ import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const replaceMock = vi.fn();
+let linkCode: string | null = null;
+vi.mock("next/navigation", () => ({ useSearchParams: () => ({ get: (key: string) => (key === "classroom_code" ? linkCode : null) }) }));
 const refreshMock = vi.fn();
 
 vi.mock("@reading-advantage/auth-client", () => ({ useAuth: () => ({ refresh: refreshMock }) }));
@@ -32,6 +34,7 @@ const signedIn = { user: { id: "u1", role: "STUDENT" }, authStrength: "full" };
 const bodyOf = (call: unknown[]) => JSON.parse((call[1] as RequestInit).body as string);
 
 beforeEach(() => {
+  linkCode = null;
   fetchMock.mockReset();
   replaceMock.mockReset();
   refreshMock.mockReset().mockResolvedValue(undefined);
@@ -168,5 +171,38 @@ describe("CodeSignIn", () => {
     renderWithMessages(<CodeSignIn />, { locale: "th" });
     expect(screen.getByLabelText("รหัสห้องเรียน")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "ต่อไป" })).toBeInTheDocument();
+  });
+
+  describe("class code link (?classroom_code=)", () => {
+    it("sends a new 6-character code one time and opens the name step", async () => {
+      linkCode = "ab c12d";
+      fetchMock.mockReturnValueOnce(respond(200, nameList(true)));
+      renderWithMessages(<CodeSignIn />);
+      await screen.findByRole("heading", { name: "Who are you?" });
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(bodyOf(fetchMock.mock.calls[0]!)).toEqual({ code: "ABC12D" });
+    });
+
+    it("shows the invalid code message for a wrong 6-character code", async () => {
+      linkCode = "ZZZZZZ";
+      fetchMock.mockReturnValueOnce(respond(401, { message: "Invalid code.", code: "invalid_code" }));
+      renderWithMessages(<CodeSignIn />);
+      expect(await screen.findByRole("alert")).toHaveTextContent("This code does not work. Check the code or ask your teacher.");
+      expect(screen.getByLabelText("Class code")).toHaveValue("ZZZZZZ");
+    });
+
+    it("does not send an old 8-character code and shows the note", () => {
+      linkCode = "ABCD1234";
+      renderWithMessages(<CodeSignIn />);
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(screen.getByRole("note")).toHaveTextContent("This link has an old class code. Type the code that your teacher shows.");
+      expect(screen.getByLabelText("Class code")).toHaveValue("");
+    });
+
+    it("keeps today's flow with no query", () => {
+      renderWithMessages(<CodeSignIn />);
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(screen.queryByRole("note")).toBeNull();
+    });
   });
 });

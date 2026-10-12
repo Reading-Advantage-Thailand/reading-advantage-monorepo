@@ -3068,7 +3068,8 @@
       "label": "Class code",
       "help": "Type the code your teacher shows you.",
       "next": "Next",
-      "checking": "Checking…"
+      "checking": "Checking…",
+      "oldLink": "这个链接里的班级代码是旧的。请输入老师显示的代码。"
     },
     "names": {
       "title": "Who are you?",

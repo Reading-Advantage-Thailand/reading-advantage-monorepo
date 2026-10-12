@@ -3068,7 +3068,8 @@
       "label": "Class code",
       "help": "Type the code your teacher shows you.",
       "next": "Next",
-      "checking": "Checking…"
+      "checking": "Checking…",
+      "oldLink": "Liên kết này có mã lớp cũ. Hãy nhập mã mà giáo viên cho em xem."
     },
     "names": {
       "title": "Who are you?",
