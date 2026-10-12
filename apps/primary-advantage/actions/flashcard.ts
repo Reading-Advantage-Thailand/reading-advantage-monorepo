@@ -339,9 +339,13 @@ export async function saveFlashcard(
   }
 }
 
-export async function getUserFlashcardDecks(userId?: string) {
+/**
+ * Lists the flashcard decks of the signed-in user. It takes no user id: the session decides.
+ * @returns A status 200 result with the decks, or status 401 with no session.
+ */
+export async function getUserFlashcardDecks() {
   try {
-    const user = userId ? { id: userId } : await currentUser();
+    const user = await currentUser();
 
     if (!user) {
       return {
@@ -939,7 +943,10 @@ export async function saveArticleToFlashcard(
     if (ArticleActivityLogId) {
       await db.update(articleActivityLogs)
         .set({ isSentenceAndWordsSaved: true })
-        .where(eq(articleActivityLogs.id, ArticleActivityLogId));
+        .where(and(
+          eq(articleActivityLogs.id, ArticleActivityLogId),
+          eq(articleActivityLogs.userId, user.id as string),
+        ));
     }
 
     return {
