@@ -59,23 +59,27 @@ _Story ref: spec.md#story-s1_
 ## Phase S2: SYSTEM imports into a chosen school
 _Story ref: spec.md#story-s2_
 
-- [ ] Task: Contract & Schema Definition
-    - [ ] Zod for the form field `schoolId` (UUID, optional) in `server/utils/import-school.ts`
-    - [ ] `resolveImportSchool(authUser, formSchoolId)`: SYSTEM needs a school id and calls `resolveCreationSchoolId`; other roles get the session school; the result is the school id or an error with status 400
-- [ ] Task: Test
-    - [ ] Red: `app/api/upload/csv/__tests__/session-school.test.ts` and `app/api/upload/classes/__tests__/session-school.test.ts` (extend): SYSTEM with school X stamps X on users and classes; the class lookup by name sees only school X; SYSTEM without `schoolId`, with a bad UUID, or with an unknown school gets 400 and no write; an ADMIN form value for another school is ignored; a non-SYSTEM session without a school gets 400 "School association required" when the stored row has a school (the guard reads the session)
-    - [ ] Red: `temp-file-cleanup.test.ts` of both routes (extend): the new 400 paths delete the temp file
-    - [ ] Red: an audit event for a SYSTEM import (actor, target school, counts)
-    - [ ] Red: `app/[locale]/admin/import-data/__tests__/page.test.tsx` (extend): SYSTEM sees the school selector, the upload is disabled until a choice, the FormData has `schoolId`; ADMIN sees no selector
-- [ ] Task: Implement
-    - [ ] `server/utils/import-school.ts`
-    - [ ] `app/api/upload/csv/route.ts` and `app/api/upload/classes/route.ts`: read `schoolId` before the tenant handle; build the tenant from the resolved school; writes use the tenant handle (no global handle for FLAT writes); the guard reads the session; `recordAuditEvent` for SYSTEM; new log lines use `lib/observability/logger.ts`; the result names the target school
-    - [ ] `app/[locale]/admin/import-data/page.tsx`: `components/admin/school-select.tsx`, the disabled upload, `schoolId` in the FormData of both upload calls; strings in `messages/{en,th,cn,tw,vi}.json`
-- [ ] Task: Generate Docs & Doctor
-    - [ ] Update rule 4 of `measure/tracks/primary_test_hygiene_upload_fixes_20260914/session-school-policy.md`: a SYSTEM import stamps the verified target school
-    - [ ] Move the tech-debt row of 2026-09-14 in `measure/tech-debt.md` to "Resolved" (guard: this phase; temp file: commit `68e85a061`)
-    - [ ] JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S2: SYSTEM imports into a chosen school' (Protocol in workflow.md)
+- [x] Task: Contract & Schema Definition
+    - [x] Zod for the form field `schoolId` (UUID, optional) in `server/utils/import-school.ts`
+    - [x] `resolveImportSchool(authUser, formSchoolId)`: SYSTEM needs a school id and calls `resolveCreationSchoolId`; other roles get the session school; the result is the school id or an error with status 400
+- [x] Task: Test
+    - [x] Red: `app/api/upload/csv/__tests__/session-school.test.ts` and `app/api/upload/classes/__tests__/session-school.test.ts` (extend): SYSTEM with school X stamps X on users and classes; the class lookup by name sees only school X; SYSTEM without `schoolId`, with a bad UUID, or with an unknown school gets 400 and no write; an ADMIN form value for another school is ignored; a non-SYSTEM session without a school gets 400 "School association required" when the stored row has a school (the guard reads the session)
+    - [x] Red: `temp-file-cleanup.test.ts` of both routes (extend): the new 400 paths delete the temp file
+    - [x] Red: an audit event for a SYSTEM import (actor, target school, counts)
+    - [x] Red: `app/[locale]/admin/import-data/__tests__/page.test.tsx` (extend): SYSTEM sees the school selector, the upload is disabled until a choice, the FormData has `schoolId`; ADMIN sees no selector
+- [x] Task: Implement
+    - [x] `server/utils/import-school.ts`
+    - [x] `app/api/upload/csv/route.ts` and `app/api/upload/classes/route.ts`: read `schoolId` before the tenant handle; build the tenant from the resolved school; writes use the tenant handle (no global handle for FLAT writes); the guard reads the session; `recordAuditEvent` for SYSTEM; new log lines use `lib/observability/logger.ts`; the result names the target school
+    - [x] `app/[locale]/admin/import-data/page.tsx`: `components/admin/school-select.tsx`, the disabled upload, `schoolId` in the FormData of both upload calls; strings in `messages/{en,th,cn,tw,vi}.json`
+- [x] Task: Generate Docs & Doctor
+    - [x] Update rule 4 of `measure/tracks/primary_test_hygiene_upload_fixes_20260914/session-school-policy.md`: a SYSTEM import stamps the verified target school
+    - [x] Move the tech-debt row of 2026-09-14 in `measure/tech-debt.md` to "Resolved" (guard: this phase; temp file: commit `68e85a061`)
+    - [x] JSDoc; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S2: SYSTEM imports into a chosen school' (Protocol in workflow.md)
+    - Commits: fix `db7f3ded6` (central key); app commit in the S2 checkpoint series. Defaults: none needed (no member question).
+    - Deviation: `resolveImportSchool` checks the UUID itself (Zod), then calls `resolveCreationSchoolId` for the school lookup. The new 400 paths run before the temp file is written, so no file exists to delete; the tests assert no write and no unlink.
+    - Look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/school_management/phaseS2/` (`s2-import-{system-disabled,system-enabled,admin}-{day,night}-{375,1280}.png`).
+    - Steps: 1. Sign in as SYSTEM and open Import Data. 2. Check that the school selector shows and Import stays disabled after you pick a CSV. 3. Choose a school: Import enables. 4. Import students.csv and check that the result names the school and the new users have that school. 5. Sign in as ADMIN: no selector, rows go to the admin school.
 
 ## Phase S3: SYSTEM manages the school of a teacher
 _Story ref: spec.md#story-s3_

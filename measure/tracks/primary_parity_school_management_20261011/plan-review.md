@@ -44,3 +44,23 @@ Low:
 - L6. A13 (stale archived directory `agents_md_audit_science_advantage_20260603`) is an old doctor failure.
 
 Notes for S3: `ownerId` is now in the `GET /api/classroom` list rows. The `teachers-table` school filter can reuse the `?schoolId=` of `/api/teachers`. Keep the Phase D notes M2 and M3 for S4.
+
+## Phase S2 review
+
+Tests: app 20 files, 107 tests pass (upload routes, import page, components/admin, server/utils); auth permissions 17 pass; domain set-classroom-teachers 12 pass; app tsc clean; ESLint 0 errors on changed files.
+
+Review result: no Critical or High finding. Every write in both routes uses the tenant handle of the resolved school. The session school feeds the guard. The audit event is best-effort (a failed write is logged).
+
+Medium:
+
+- M7. The Thai text of `ImportData.upload.chooseSchool` and `upload.success.school` is by the helper: owner check pending. Keys exist in the five locale files.
+- M8. Both routes still use `console.error` in the old catch blocks (existing code, not changed). Move them to the logger in a later track.
+- M9. The classes route audit counts come from the `stats` object (numeric fields only).
+
+Low:
+
+- L7. The page test replaces the Radix select with a native select. The captures cover the real select.
+- L8. The harness stubs `csv/sync` (preview only).
+
+Shortcut/tech-debt: the row of 2026-09-14 is set to Resolved in `measure/tech-debt.md` as the prompt allowed. Rule 4 of `session-school-policy.md` is updated.
+
