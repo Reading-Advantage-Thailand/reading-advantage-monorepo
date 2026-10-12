@@ -122,6 +122,73 @@ describe("classroom controller authorization", () => {
     expect(mocks.generateClassCode).toHaveBeenCalledWith("class-1", teacher);
   });
 
+  describe("updateClassroomController body contract", () => {
+    const admin = { ...teacher, id: "admin-1", role: "ADMIN" };
+    const context = { params: Promise.resolve({ id: "class-1" }) };
+
+    it("saves the name and the grade of the admin dialog", async () => {
+      mocks.currentUser.mockResolvedValue(admin);
+      mocks.updateClassroom.mockResolvedValue({ id: "class-1" });
+
+      const response = await updateClassroomController(
+        request({ classroomName: "  Class B  ", grade: "5" }),
+        context,
+      );
+
+      expect(response.status).toBe(200);
+      expect(mocks.updateClassroom).toHaveBeenCalledWith(
+        "class-1",
+        { name: "Class B", grade: "5" },
+        admin,
+      );
+    });
+
+    it("keeps the teacher page body working", async () => {
+      mocks.currentUser.mockResolvedValue(teacher);
+      mocks.updateClassroom.mockResolvedValue({ id: "class-1" });
+
+      const response = await updateClassroomController(
+        request({ classroomName: "P3A", grade: "3" }),
+        context,
+      );
+
+      expect(response.status).toBe(200);
+      expect(mocks.updateClassroom).toHaveBeenCalledWith(
+        "class-1",
+        { name: "P3A", grade: "3" },
+        teacher,
+      );
+    });
+
+    it("refuses an empty name with the field error", async () => {
+      mocks.currentUser.mockResolvedValue(admin);
+
+      const response = await updateClassroomController(
+        request({ classroomName: "   ", grade: "5" }),
+        context,
+      );
+
+      expect(response.status).toBe(400);
+      const json = await response.json();
+      expect(json.error).toBe("Classroom name is required");
+      expect(json.fieldErrors.classroomName).toBeDefined();
+      expect(mocks.updateClassroom).not.toHaveBeenCalled();
+    });
+
+    it("refuses grade 13", async () => {
+      mocks.currentUser.mockResolvedValue(admin);
+
+      const response = await updateClassroomController(
+        request({ classroomName: "Class B", grade: "13" }),
+        context,
+      );
+
+      expect(response.status).toBe(400);
+      expect((await response.json()).fieldErrors.grade).toBeDefined();
+      expect(mocks.updateClassroom).not.toHaveBeenCalled();
+    });
+  });
+
   it("permits the admin student list path", async () => {
     const admin = { ...teacher, id: "admin-1", role: "ADMIN" };
     mocks.currentUser.mockResolvedValue(admin);

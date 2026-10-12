@@ -86,6 +86,18 @@ interface Classroom {
   }>;
 }
 
+/**
+ * Lists the grades of the grade select: 3 to 12, plus the current grade when it is outside that range.
+ * @param current The grade value that the class has now.
+ * @returns The grade numbers in ascending order.
+ */
+function gradeOptions(current: string): number[] {
+  const grades = Array.from({ length: 10 }, (_, i) => i + 3);
+  const n = Number(current);
+  if (Number.isInteger(n) && n >= 1 && n <= 12 && !grades.includes(n)) grades.unshift(n);
+  return grades.sort((x, y) => x - y);
+}
+
 export function ClassroomsTable() {
   const t = useTranslations("Admin.Classrooms");
   const tc = useTranslations("TeacherCreateClass");
@@ -183,7 +195,10 @@ export function ClassroomsTable() {
       const response = await fetch(`/api/classroom/${selectedClassroom.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          classroomName: formData.name,
+          grade: formData.grade || undefined,
+        }),
       });
 
       if (!response.ok) {
@@ -512,26 +527,31 @@ export function ClassroomsTable() {
             </div>
             <div>
               <Label htmlFor="edit-grade">{t("grade")}</Label>
-              <Input
-                id="edit-grade"
+              <Select
                 value={formData.grade}
-                onChange={(e) =>
-                  setFormData({ ...formData, grade: e.target.value })
+                onValueChange={(value) =>
+                  setFormData({ ...formData, grade: value })
                 }
-                placeholder={t("gradePlaceholder")}
-              />
+              >
+                <SelectTrigger id="edit-grade" className="w-full">
+                  <SelectValue placeholder={t("selectGrade")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {gradeOptions(formData.grade).map((grade) => (
+                    <SelectItem key={grade} value={String(grade)}>
+                      {tc("fields.gradeItem", { grade })}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
-              <Label htmlFor="edit-passwordStudents">
-                {t("studentPassword")}
-              </Label>
+              <Label htmlFor="edit-classCode">{t("classCode")}</Label>
               <Input
-                id="edit-passwordStudents"
-                value={formData.passwordStudents}
-                onChange={(e) =>
-                  setFormData({ ...formData, passwordStudents: e.target.value })
-                }
-                placeholder={t("studentPasswordPlaceholder")}
+                id="edit-classCode"
+                value={formData.classCode}
+                disabled
+                readOnly
               />
             </div>
           </div>

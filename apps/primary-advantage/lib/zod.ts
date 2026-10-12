@@ -456,3 +456,22 @@ export const articleResponseSchema = z.object({
     ),
   }),
 });
+
+/**
+ * Body of the classroom PATCH request (admin and teacher edit dialogs).
+ * `grade` is optional and is an integer from 1 to 12 sent as a string.
+ */
+export const updateClassroomBodySchema = z.object({
+  classroomName: z
+    .string({ required_error: "Classroom name is required" })
+    .trim()
+    .min(1, "Classroom name is required")
+    .max(100, "Classroom name must be at most 100 characters"),
+  grade: z
+    .string()
+    .regex(/^(?:[1-9]|1[0-2])$/, "Grade must be from 1 to 12")
+    .optional(),
+});
+
+/** Parsed body of the classroom PATCH request. */
+export type UpdateClassroomBody = z.infer<typeof updateClassroomBodySchema>;
