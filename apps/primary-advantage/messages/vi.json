@@ -3009,6 +3009,7 @@
     "xp": "{xp} XP"
   },
   "Quest": {
+    "noHero": "Chưa có anh hùng",
     "title": "Nhiệm vụ lớp",
     "subtitle": "Cả lớp cùng chiến đấu với một trùm.",
     "boss": "Trùm: {name}",

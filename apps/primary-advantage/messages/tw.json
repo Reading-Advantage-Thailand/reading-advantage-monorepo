@@ -3009,6 +3009,7 @@
     "xp": "{xp} XP"
   },
   "Quest": {
+    "noHero": "還沒有英雄",
     "title": "班級任務",
     "subtitle": "全班一起對抗一個頭目。",
     "boss": "頭目：{name}",
