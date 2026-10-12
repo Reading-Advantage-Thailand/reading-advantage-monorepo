@@ -26,19 +26,21 @@ before a build; no dev server; no run with 25 students.
 
 ## Phase 2: Test
 
-- [ ] Task: Write the tests of the pair list (red)
-    - [ ] `scripts/primary-parity/__tests__/pairs.test.ts`: a valid file parses; a missing `checks` fails; the defaults apply; each placeholder resolves through a fake map; an unknown placeholder fails
-    - [ ] Add a fixture with a password-like field and assert that the schema refuses it
-- [ ] Task: Write the tests of the guards (red)
-    - [ ] `scripts/primary-parity/__tests__/guards.test.ts`: a refusal for each case of spec FR-6 (remote host, `primary_advantage`, legacy URL with no marker, new URL with a marker, remote base URL, output inside a repository), and a pass for the good case
-    - [ ] Use a fake read-only query function for `findLegacyDatabaseMarkers`
-- [ ] Task: Write the tests of the legacy credential (red)
-    - [ ] `scripts/primary-parity/__tests__/legacy-credential.test.ts`: the hash has the format `<32 hex>:<128 hex>`; a check with the algorithm of legacy `lib/password.ts:8-45` (scrypt N 16384, r 16, p 1, 64 bytes, NFKC) accepts the password and refuses another
-- [ ] Task: Write the tests of the report (red)
-    - [ ] `scripts/primary-parity/__tests__/report.test.ts`: the text lines only in legacy and only in new; the markdown table of the checklist; relative image paths in the HTML; "not captured" for a missing file; no field of the accounts file in the output
-- [ ] Task: Run the tests and record the red state
-    - [ ] Run `npx vitest run --root scripts/primary-parity` and record that each new test fails
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+- [x] Task: Write the tests of the pair list (red)
+    - [x] `scripts/primary-parity/__tests__/pairs.test.ts`: a valid file parses; a missing `checks` fails; the defaults apply; each placeholder resolves through a fake map; an unknown placeholder fails
+    - [x] Add a fixture with a password-like field and assert that the schema refuses it
+- [x] Task: Write the tests of the guards (red)
+    - [x] `scripts/primary-parity/__tests__/guards.test.ts`: a refusal for each case of spec FR-6 (remote host, `primary_advantage`, legacy URL with no marker, new URL with a marker, remote base URL, output inside a repository), and a pass for the good case
+    - [x] Use a fake read-only query function for `findLegacyDatabaseMarkers`
+- [x] Task: Write the tests of the legacy credential (red)
+    - [x] `scripts/primary-parity/__tests__/legacy-credential.test.ts`: the hash has the format `<32 hex>:<128 hex>`; a check with the algorithm of legacy `lib/password.ts:8-45` (scrypt N 16384, r 16, p 1, 64 bytes, NFKC) accepts the password and refuses another
+- [x] Task: Write the tests of the report (red)
+    - [x] `scripts/primary-parity/__tests__/report.test.ts`: the text lines only in legacy and only in new; the markdown table of the checklist; relative image paths in the HTML; "not captured" for a missing file; no field of the accounts file in the output
+- [x] Task: Run the tests and record the red state
+    - [x] Run `npx vitest run --root scripts/primary-parity` and record that each new test fails
+        - Red state: 4 files; pairs 17 tests. 3 files (guards, legacy-credential, report) fail at import (module missing). `pairs.test.ts`: 9 of 17 fail (resolvePlaceholders and the password query check); 8 schema tests pass on the Phase 1 schema (the strict schema already refuses unknown fields).
+- [x] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+    - Steps: run `node_modules/.bin/vitest run --root scripts/primary-parity` from the repository root; expect failures for the missing modules and for `resolvePlaceholders`.
 
 ## Phase 3: Implement
 
