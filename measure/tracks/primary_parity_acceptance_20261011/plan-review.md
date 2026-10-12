@@ -20,3 +20,17 @@ API that the tests fix for Phase 3 (names and shapes):
 - `legacy-credential.ts`: `hashLegacyPassword(password)` and `verifyLegacyPassword({hash, password})`. The salt text is the hex string used as the scrypt salt string.
 - `report.ts`: `diffLines(legacy, new)` returns `{onlyLegacy, onlyNew}`. `renderReport({list, captures})` returns `{markdown, html}`. Shot keys are `<width>-<scheme>`; `png` is relative.
 - Low: the "no accounts field in output" test passes an extra `accounts` input and checks that its values are absent. It proves that the renderer ignores that input, not more.
+
+## Phase 3, first part (implementation, review of 52bab3db8..HEAD)
+
+No Critical or High finding. Findings and shortcuts that stay:
+
+- Medium: the capture script and the sign-in helpers have no automated test. The selectors (legacy "Classroom Code", "Next", "Login"; new "Teacher" tab, "Make class sheet") come from the sources. The smoke run is the first test.
+- Medium: the new STUDENT sign-in needs `classroomId` in `accounts.json`. `accounts.ts` reads it from `primary_legacy_id_map` with `table_name` `classrooms` or `classroom`. If the ETL uses another name, the smoke run finds it.
+- Low: spec F-3 names the legacy column `code_expires_at`. The real column is `"codeExpiresAt"` (Prisma migration). `accounts.ts` uses the real name. Fix the spec text if the owner wants.
+- Low: the guards do not import `isInsideDirectory` (spec F-11). The test needs a `.git` walk, so the guard has its own check.
+- Low: `accounts.ts` marks `import.meta` as not usable. The kit is CommonJS (no `"type": "module"`), so the CLI entry uses `require.main === module`.
+- Low: `report.ts` takes the copy names from `--legacy-db` and `--new-db`. It never reads `accounts.json`.
+- Low: JSDoc exists on each export of the kit. `capture.ts` and `accounts.ts` main functions are private.
+- Shortcut: `cutover-check.mjs` is outside the tsconfig and has no test (as FR-13 says: no change in behavior).
+- Default used: Member question 1 (no AI keys in the kit runs). Member question 2 (a later helper decides on the image pull if the legacy build fails from memory).

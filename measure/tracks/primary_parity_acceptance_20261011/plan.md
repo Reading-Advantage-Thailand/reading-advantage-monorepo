@@ -44,21 +44,26 @@ before a build; no dev server; no run with 25 students.
 
 ## Phase 3: Implement
 
-- [ ] Task: Implement the pair list and the guards (green)
-    - [ ] Implement `scripts/primary-parity/pairs.ts` and `scripts/primary-parity/guards.ts`; import `findLegacyDatabaseMarkers` and `isInsideDirectory` (spec F-11)
-- [ ] Task: Implement the accounts script (green)
-    - [ ] Implement `scripts/primary-parity/legacy-credential.ts` with `node:crypto` scrypt
-    - [ ] Implement `scripts/primary-parity/accounts.ts`: pick or take the users, write the legacy password accounts and the class code, read the new usernames, print the `issue-temporary-passwords.ts` command, write `accounts.json` with mode 600
-- [ ] Task: Implement the capture script
-    - [ ] Implement the sign-in for each app and role in `scripts/primary-parity/sign-in.ts`: legacy staff tab with email and password; legacy class code and name; new staff login with the forced change (pattern of `.qa-tmp/rehearsal1-gonogo.mjs:62-104`); new student with the class sheet row of the matched username
-    - [ ] Implement `scripts/primary-parity/capture.ts` (spec FR-8) with `serviceWorkers: "block"` in each browser context
-- [ ] Task: Implement the report script (green)
-    - [ ] Implement `scripts/primary-parity/report.ts` (spec FR-9); run the report tests
-- [ ] Task: Copy the go/no-go script into the repository (spec FR-13)
-    - [ ] Copy `.qa-tmp/rehearsal1-gonogo.mjs` of the main checkout to `scripts/primary-parity/cutover-check.mjs` with no change in behavior; change only the usage line
-    - [ ] Tell the class books, stories, and staff student view sessions the new path
-- [ ] Task: Write the runbook
-    - [ ] Write `docs/runbooks/primary-parity-acceptance.md` (spec FR-12) with the commands of FR-1 to FR-10 and the summary template of FR-10
+- [x] Task: Implement the pair list and the guards (green) [37e125ba4]
+    - [x] Implement `scripts/primary-parity/pairs.ts` and `scripts/primary-parity/guards.ts`; import `findLegacyDatabaseMarkers` and `isInsideDirectory` (spec F-11)
+    - Note: `isInsideDirectory` is not imported. The guard walks up to a `.git` folder, as the test needs.
+- [x] Task: Implement the accounts script (green) [6a2e3f4eb]
+    - [x] Implement `scripts/primary-parity/legacy-credential.ts` with `node:crypto` scrypt
+    - [x] Implement `scripts/primary-parity/accounts.ts`: pick or take the users, write the legacy password accounts and the class code, read the new usernames, print the `issue-temporary-passwords.ts` command, write `accounts.json` with mode 600
+    - Note: `AccountsFile` got an optional `classroomId` (new student class) and `requireRoles` (checks each needed role; the capture script calls it). The legacy column is `"codeExpiresAt"`, not `code_expires_at` (spec F-3 is wrong).
+- [x] Task: Implement the capture script [aec4758ed]
+    - [x] Implement the sign-in for each app and role in `scripts/primary-parity/sign-in.ts`: legacy staff tab with email and password; legacy class code and name; new staff login with the forced change (pattern of `.qa-tmp/rehearsal1-gonogo.mjs:62-104`); new student with the class sheet row of the matched username
+    - [x] Implement `scripts/primary-parity/capture.ts` (spec FR-8) with `serviceWorkers: "block"` in each browser context
+    - Note: written, type checked, and the guard path run. A browser run needs the heavy lock; the smoke run tests it. New student: the capture reads the class sheet row of the matched teacher (needs `classroomId` in `accounts.json`).
+- [x] Task: Implement the report script (green) [832135ac3]
+    - [x] Implement `scripts/primary-parity/report.ts` (spec FR-9); run the report tests
+    - Note: 50 of 50 tests pass in `scripts/primary-parity`.
+- [x] Task: Copy the go/no-go script into the repository (spec FR-13) [b3fa2c572]
+    - [x] Copy `.qa-tmp/rehearsal1-gonogo.mjs` of the main checkout to `scripts/primary-parity/cutover-check.mjs` with no change in behavior; change only the usage line
+    - [x] Tell the class books, stories, and staff student view sessions the new path
+    - New path for the peer sessions (class books, stories, staff student view): `scripts/primary-parity/cutover-check.mjs`. The orchestrator tells them.
+- [x] Task: Write the runbook [67c69b2e5]
+    - [x] Write `docs/runbooks/primary-parity-acceptance.md` (spec FR-12) with the commands of FR-1 to FR-10 and the summary template of FR-10
 - [ ] Task: Make the matched copies (heavy job, alone)
     - [ ] Download the C4 backup to `~/Desktop/primary-parity-acceptance/backups/`; restore it as `primary_legacy_20261011`; record the time
     - [ ] Create `primary_parity_20261011`; run the guard, the migrations, the doctor, the ETL with the three inputs, and `student-sample-check`; record the counts and the time
