@@ -46,6 +46,14 @@ describe("permissions", () => {
       expect(hasPermission("STUDENT", "class:teachers:assign")).toBe(false);
     });
 
+    it("only SYSTEM can move a teacher to another school", () => {
+      expect(Object.keys(PERMISSIONS)).toContain("teacher:school:move");
+      expect(hasPermission("SYSTEM", "teacher:school:move")).toBe(true);
+      expect(hasPermission("ADMIN", "teacher:school:move")).toBe(false);
+      expect(hasPermission("TEACHER", "teacher:school:move")).toBe(false);
+      expect(hasPermission("STUDENT", "teacher:school:move")).toBe(false);
+    });
+
     it("only STUDENT can join classes", () => {
       expect(hasPermission("STUDENT", "class:join")).toBe(true);
       expect(hasPermission("TEACHER", "class:join")).toBe(false);
