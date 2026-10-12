@@ -50,8 +50,8 @@ None.
 ### Medium
 
 - M-3. `measure/lessons-learned.md` lost 10 lines: 7 old entries (SSO helpers, narrow imports, enum
-  values in a transaction, Drizzle mock thenables, codecamp review notes, Prisma to Drizzle gotchas,
-  domain dist and argon2 notes) and 3 blank lines. The 7 entries that the tests need stay as they were.
+  values in a transaction, codecamp_advantage notes, codecamp review notes, domain dist and argon2
+  notes); the orchestrator restored the enum entry as one line on 2026-10-12 and 3 blank lines. The 7 entries that the tests need stay as they were.
   The orchestrator can restore an entry from git history (`169928b98`) if it wants one back.
 - M-4. The mark "same, to be removed" (admin article creation, system test) says "removed" with the
   words "by owner follow-up of 2026-10-11", so record check 1 passes.

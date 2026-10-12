@@ -22,7 +22,7 @@ The owner authorized the reset, merge, push, deployment, and traffic switch afte
 - Student names and class memberships.
 - Staff credentials and printed article links.
 - Deployment without traffic and browser checks.
-- Owner system login on a phone.
+- Owner system login on a phone. Passed on 2026-10-11.
 - Traffic switch and public checks. Did not run (C11 to C14 did not run).
 - Five physical QR scans, including the writing QR. Did not run.
 - Final production record and school instructions. Did not run.
@@ -48,7 +48,7 @@ The owner authorized the reset, merge, push, deployment, and traffic switch afte
 - Complete comparison: all 643 student names, all 643 memberships, and all 31 class names match.
 - C9: revision `primary-advantage-app-00130-daq` deployed with no traffic at tag `cutover`.
 - The revision uses the rehearsal image and target secret version 1.
-- The owner phone check is pending.
+- The owner phone check passed on 2026-10-11.
 
 - All 21 saved staff passwords verified against the target credential hashes before the browser checks.
 - C10: the cutover browser check passed 21 of 21 checks.
