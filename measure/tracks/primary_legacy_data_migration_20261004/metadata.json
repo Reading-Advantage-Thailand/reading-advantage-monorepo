@@ -3,8 +3,8 @@
   "type": "feature",
   "status": "planned",
   "created_at": "2026-10-04T00:00:00Z",
-  "updated_at": "2026-10-04T00:00:00Z",
+  "updated_at": "2026-10-12T00:00:00Z",
   "description": "Move the legacy Primary data into the shared schema for the cutover: ID map, ETL, Tutor compatibility views, old article links, and teacher credentials with a forced password change.",
   "estimated_tasks": 14,
-  "deviation_notes": "Created 2026-10-04 by owner decision. Owns migration spec tasks A5, A6, A7, A8, A9 (docs/deployment/primary-cutover-migration-spec.md v1.2). A1 dropped; A2 done in Lane A (b3bf3ef0e); A3 is Lane B; A4 is Lane A (QA FR-1)."
+  "deviation_notes": "Created 2026-10-04 by owner decision. Owns migration spec tasks A5, A6, A7, A8, A9 (docs/deployment/primary-cutover-migration-spec.md v1.2). A1 dropped; A2 done in Lane A (b3bf3ef0e); A3 is Lane B; A4 is Lane A (QA FR-1). 2026-10-12: the cutover run stopped after C10 (2026-10-11); the build lacks legacy behavior; the set primary_parity_20261011 replaces the run."
 }

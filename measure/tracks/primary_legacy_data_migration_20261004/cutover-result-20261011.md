@@ -1,6 +1,6 @@
 # Primary production cutover — 2026-10-11
 
-Status: in progress.
+Status: stopped after C10 (2026-10-11).
 
 The owner authorized the reset, merge, push, deployment, and traffic switch after the required checks.
 
@@ -22,10 +22,10 @@ The owner authorized the reset, merge, push, deployment, and traffic switch afte
 - Student names and class memberships.
 - Staff credentials and printed article links.
 - Deployment without traffic and browser checks.
-- Owner system login on a phone.
-- Traffic switch and public checks.
-- Five physical QR scans, including the writing QR.
-- Final production record and school instructions.
+- Owner system login on a phone. Passed on 2026-10-11.
+- Traffic switch and public checks. Did not run (C11 to C14 did not run).
+- Five physical QR scans, including the writing QR. Did not run.
+- Final production record and school instructions. Did not run.
 
 ## Execution
 
@@ -48,7 +48,7 @@ The owner authorized the reset, merge, push, deployment, and traffic switch afte
 - Complete comparison: all 643 student names, all 643 memberships, and all 31 class names match.
 - C9: revision `primary-advantage-app-00130-daq` deployed with no traffic at tag `cutover`.
 - The revision uses the rehearsal image and target secret version 1.
-- The owner phone check is pending.
+- The owner phone check passed on 2026-10-11.
 
 - All 21 saved staff passwords verified against the target credential hashes before the browser checks.
 - C10: the cutover browser check passed 21 of 21 checks.
@@ -60,5 +60,24 @@ The owner authorized the reset, merge, push, deployment, and traffic switch afte
 - The owner system login is in a separate private file, `owner-system-login.txt`.
 - School sign-in instructions are saved outside the repository.
 - The revision has no error log entries in the checked interval.
-- C11 awaits the required owner phone check, not another traffic authorization.
+- C11 did not run. See the result section at the end.
 - The www deployment completed successfully: GitHub run `38138912943`.
+
+## Result: stopped after C10
+
+1. The owner signed in to the system account on a computer and on a phone. The check passed.
+2. The owner then found gaps. The system dashboard shows only a heading and a placeholder text
+   (`apps/primary-advantage/app/[locale]/system/dashboard/page.tsx:7`). Staff cannot open the student
+   pages. A teacher cannot assign the class book.
+3. The cutover stopped after C10. C11 to C14 did not run. The legacy revision
+   `primary-advantage-app-00125-9wd` keeps 100% of the traffic (read-only check on 2026-10-12).
+4. The cause: the import `a56281cd4` matches legacy `1e1cc34` (471 of 480 files). The 122 later legacy
+   commits are not in the monorepo. The earlier map compared route names, not page content.
+5. The state that stays: `primary_v2` holds the ETL of the C4 backup and the 21 temporary passwords.
+   Revision `primary-advantage-app-00130-daq` keeps the tag `cutover` with no traffic. `master` holds
+   the merge `0a29d574e`, and the www deploy of run `38138912943` is live. The legacy build trigger
+   stays off and the five scheduler jobs stay paused.
+6. The triage and the next steps: the owner triage files are in `~/Desktop/primary-parity-triage/`.
+   See the set overview `measure/sets/primary_parity_20261011.md`, the decisions in
+   `measure/tracks/primary_parity_records_20261011/triage-decisions.md`, and rehearsal 3
+   (`primary_parity_rehearsal3_20261011`).
