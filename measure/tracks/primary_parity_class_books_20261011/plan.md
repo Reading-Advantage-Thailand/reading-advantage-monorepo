@@ -75,7 +75,7 @@ _Story ref: spec.md#story-s1_
 - Default used: the plan asks for a `--dry-run` pass first; the real run on a clone replaced it.
 - Member Questions: none in this phase.
 
-## Phase S2: Check the class book in the browser
+## Phase S2: Check the class book in the browser [checkpoint: a13a06cf2]
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Define the check
