@@ -573,7 +573,7 @@ function MatchingGameBody({
               <div className="flex items-center justify-center gap-4">
                 <div className="space-y-2">
                   <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                    20
+                    {config.activityScore}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     {labels.xpEarned}
@@ -581,7 +581,7 @@ function MatchingGameBody({
                 </div>
                 <div className="space-y-2">
                   <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                    5/5
+                    {userMatches.filter((match) => match.isCorrect).length}/{vocabularyPairs.length}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     {labels.completedLabel}

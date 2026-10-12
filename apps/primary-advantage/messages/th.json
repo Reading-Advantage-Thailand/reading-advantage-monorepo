@@ -1842,6 +1842,40 @@
       }
     }
   },
+  "LessonGames": {
+    "title": "เกมคำศัพท์",
+    "subtitle": "เล่นกับคำศัพท์ของบทเรียนนี้",
+    "choose": "เลือกเกม",
+    "wordsReady": "{count, plural, other {พร้อม # คำ}}",
+    "sentencesReady": "{count, plural, other {พร้อม # ประโยค}}",
+    "play": "เล่น",
+    "playAgain": "เล่นอีกครั้ง",
+    "locked": "ล็อกอยู่",
+    "newTag": "ใหม่",
+    "notPlayed": "ใหม่: ยังไม่เคยเล่น",
+    "last": "ครั้งล่าสุด: ถูก {correct}/{total}",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, other {ต้องมี # คำ}}",
+    "needSentences": "{count, plural, other {ต้องมี # ประโยค}}",
+    "lockedLesson": "ยังล็อกอยู่",
+    "simpleHint": "โทรศัพท์ช้าหรือเกมไม่เริ่มใช่ไหม",
+    "simpleGame": "เกมแบบง่าย",
+    "backToGames": "กลับไปที่เกม",
+    "loading": "กำลังเตรียมคำศัพท์ของบทเรียนนี้…",
+    "inputFailed": "เตรียมคำศัพท์ของบทเรียนนี้ไม่ได้ เล่นเกมแบบง่ายแทน",
+    "noGames": "ยังไม่มีเกมที่เหมาะกับบทเรียนนี้ เล่นเกมแบบง่ายแทน",
+    "loadFailed": "เกมไม่เริ่มทำงาน เล่นเกมแบบง่ายแทน",
+    "runLine": "คุณตอบถูก {correct} จาก {total}",
+    "runLineXp": "คุณตอบถูก {correct} จาก {total} +{xp} XP",
+    "pitch": {
+      "rpg-battle": "เลือกความหมายที่ถูกต้องเพื่อโจมตีราชาก็อบลิน",
+      "rune-match": "จับคู่คำศัพท์แต่ละคำกับอักษรรูน",
+      "dragon-rider": "บินผ่านประตูด้วยคำศัพท์ที่ถูกต้อง",
+      "enchanted-library": "จับหนังสือเล่มที่ถูก และหลบเล่มที่ผิด",
+      "castle-defense": "เรียงคำให้ถูกลำดับเพื่อป้องกันกำแพง",
+      "potion-rush": "สร้างประโยคให้เสร็จก่อนยาจะเดือด"
+    }
+  },
   "LessonLanguageQuestion": {
     "title": "ผู้ช่วยการอ่านด้วย AI",
     "loading": {

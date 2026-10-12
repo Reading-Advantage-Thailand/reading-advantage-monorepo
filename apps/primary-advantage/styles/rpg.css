@@ -270,3 +270,23 @@
 /* Speech bubble for an NPC line. */
 .cq-bubble { position: relative; display: inline-block; padding: 10px 14px; background: #fffaf0; border: 3px solid var(--cq-ink); border-radius: 14px; font-weight: 500; font-size: 15px; color: var(--cq-ink); }
 .cq-bubble::after { content: ""; position: absolute; left: 22px; bottom: -12px; border: 8px solid transparent; border-top-color: var(--cq-ink); border-bottom: 0; }
+
+/* Lesson games (lesson tasks 10 and 12): each cartridge is an object of the arena place. */
+.lg-games { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+@media (min-width: 900px) { .lg-games { grid-template-columns: repeat(4, 1fr); } .lg-games--two { grid-template-columns: repeat(2, 1fr); max-width: 640px; } }
+.lg-games--two { grid-template-columns: 1fr 1fr; }
+.lg-obj { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 8px 10px; text-align: center; border-radius: 12px; border: 3px solid var(--cq-wood-dark); background: linear-gradient(180deg, rgba(243, 228, 195, 0.97), rgba(233, 212, 168, 0.97)); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3); color: var(--cq-ink); }
+.lg-obj .lg-stage { width: 100%; height: 108px; display: grid; place-items: center; border-radius: 8px; background: radial-gradient(ellipse at 50% 80%, rgba(255, 236, 170, 0.65), rgba(255, 236, 170, 0) 70%), rgba(60, 40, 20, 0.12); }
+.lg-obj b { font-size: 17px; line-height: 1.1; }
+.lg-obj small { font-size: 13px; color: var(--cq-ink-soft); line-height: 1.2; min-height: 32px; }
+.lg-obj .lg-res { display: flex; flex-direction: column; gap: 3px; width: 100%; font-size: 13px; font-weight: 700; }
+.lg-obj .lg-res .cq-meter { height: 14px; border-width: 2px; }
+.lg-obj .lg-res .cq-meter::before, .lg-obj .lg-res .cq-meter::after { display: none; }
+.lg-obj .cq-btn { width: 100%; padding-inline: 6px; font-size: 15px; }
+.lg-obj--locked { filter: saturate(0.35); }
+.lg-obj--locked .lg-stage > * { opacity: 0.75; }
+.lg-lockchip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; background: var(--cq-iron); color: #fff4dc; font-size: 12px; font-weight: 700; }
+.lg-chain { position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background: repeating-linear-gradient(135deg, rgba(74, 79, 87, 0) 0 14px, rgba(74, 79, 87, 0.5) 14px 18px); }
+.lg-newtag { position: absolute; top: -10px; right: -6px; padding: 2px 8px; border-radius: 6px; background: var(--cq-gold); color: var(--cq-ink); font-size: 12px; font-weight: 800; border: 2px solid var(--cq-gold-dark); transform: rotate(4deg); }
+.lg-chip { padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.45); border: 2px solid var(--cq-parchment-edge); font-weight: 700; font-size: 14px; }
+.lg-run { position: fixed; inset: 0; z-index: 50; background: #05070c; display: flex; flex-direction: column; }

@@ -1842,6 +1842,40 @@
       "improveComprehension": "提高阅读理解："
     }
   },
+  "LessonGames": {
+    "title": "词汇游戏",
+    "subtitle": "用本课的单词来玩。",
+    "choose": "选择一个游戏",
+    "wordsReady": "{count, plural, other {已备好 # 个单词}}",
+    "sentencesReady": "{count, plural, other {已备好 # 个句子}}",
+    "play": "开始",
+    "playAgain": "再玩一次",
+    "locked": "已锁定",
+    "newTag": "新",
+    "notPlayed": "新：还没玩过",
+    "last": "上次：答对 {correct}/{total}",
+    "lastXp": "+{xp} XP",
+    "needWords": "{count, plural, other {需要 # 个单词}}",
+    "needSentences": "{count, plural, other {需要 # 个句子}}",
+    "lockedLesson": "暂时锁定",
+    "simpleHint": "手机太慢，或者游戏打不开？",
+    "simpleGame": "简单游戏",
+    "backToGames": "返回游戏",
+    "loading": "正在准备本课的单词…",
+    "inputFailed": "无法取得本课的单词。请玩简单游戏。",
+    "noGames": "本课还没有合适的游戏。请玩简单游戏。",
+    "loadFailed": "游戏没有启动。请改玩简单游戏。",
+    "runLine": "你答对了 {correct}/{total}。",
+    "runLineXp": "你答对了 {correct}/{total}。+{xp} XP",
+    "pitch": {
+      "rpg-battle": "选出正确的词义，打败哥布林王。",
+      "rune-match": "把每个单词和它的符文配成一对。",
+      "dragon-rider": "用正确的单词飞过大门。",
+      "enchanted-library": "接住正确的书，躲开错误的书。",
+      "castle-defense": "把单词排成正确的顺序，守住城墙。",
+      "potion-rush": "在药水煮沸之前拼好句子。"
+    }
+  },
   "LessonLanguageQuestion": {
     "title": "AI 阅读助手",
     "loading": {
