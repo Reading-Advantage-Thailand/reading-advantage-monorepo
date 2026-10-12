@@ -89,12 +89,23 @@ ESLint one time per phase, before the phase commit. One heavy job at a time on t
 
 ## Phase 4: Acceptance
 
-- [ ] Task: Run the queries one time against a clone of the rehearsal copy (never the shared copy); compare each number with the reference SQL of the behavior contract
+- [x] Task: Run the queries one time against a clone of the rehearsal copy (never the shared copy); compare each number with the reference SQL of the behavior contract (3 teachers, 0 differences; `getTeacherHome` 483 ms cold, 40 to 63 ms warm; `acceptance.md`)
 - [ ] Task: Side-by-side check with the kit of `primary_parity_acceptance_20261011`: AC-1 to AC-6, as a TEACHER, legacy `bfea121` and the new build on copies with the same school data
-    - [ ] Write `measure/tracks/primary_parity_teacher_home_20261011/acceptance-pairs.json` (kit FR-7): one pair for each check, with the legacy path, the new path, the role, and the observable behavior
-    - [ ] Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts`; the captures and the report stay in the private folder (kit FR-10)
-    - [ ] Write `measure/tracks/primary_parity_teacher_home_20261011/acceptance.md` from the runbook template, with the result of each check
-- [ ] Task: Captures at 375 px and 1280 px, day and night, with the demo seed only (`design/` folder; captures with real names stay in the private folder), and the owner's look check (AC-7)
-- [ ] Task: Run `measure/generate.sh`, then `measure/doctor.sh`; fix each failure in a file of this track
-- [ ] Task: Final gates: `pnpm --filter @reading-advantage/domain test`, `pnpm --filter primary-advantage test`, tsc and ESLint (AC-8); record the commands and results in `acceptance.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Acceptance' (Protocol in workflow.md)
+    - [x] Write `measure/tracks/primary_parity_teacher_home_20261011/acceptance-pairs.json` (kit FR-7): one pair for each check, with the legacy path, the new path, the role, and the observable behavior (8 pairs; it parses with `PairList`)
+    - [ ] (batch capture (orchestrator)) Run `scripts/primary-parity/capture.ts` for legacy and new, then `scripts/primary-parity/report.ts`; the captures and the report stay in the private folder (kit FR-10)
+    - [x] Write `measure/tracks/primary_parity_teacher_home_20261011/acceptance.md` from the runbook template, with the result of each check (the CSV file check is a manual step: the kit cannot capture a download)
+- [ ] Task: (batch capture (orchestrator); look check pending (owner, async)) Captures at 375 px and 1280 px, day and night, with the demo seed only (`design/` folder; captures with real names stay in the private folder), and the owner's look check (AC-7)
+- [x] Task: Run `measure/generate.sh`, then `measure/doctor.sh`; fix each failure in a file of this track
+- [x] Task: Final gates: `pnpm --filter @reading-advantage/domain test`, `pnpm --filter primary-advantage test`, tsc and ESLint (AC-8); record the commands and results in `acceptance.md`
+- [x] Task: Measure - User Manual Verification 'Phase 4: Acceptance' (Protocol in workflow.md) (look check pending (owner, async))
+
+Phase 4 notes (helper, 2026-10-12):
+
+- Defaults used: none (no member question open).
+- Domain check: `getTeacherHome` equals `reference.sql` for 3 teachers (summary and every class row). The clone got 38 `xp_logs` rows so that the 7-day windows, trend, and status are non-zero. The clone is dropped. A `postgres-js` connection to the clone worked (local password), so no `db.execute` shim was needed.
+- Time: no finding above 1 s. The Phase 2 Medium finding (merge the windows) stays Low.
+- CSV: the kit has no download capture. The check is a manual step in `acceptance.md`.
+- Pair `th-start-class` holds a raw legacy class id of the teacher with 6 classes (the same id as the class books pairs). The kit TEACHER must own that class.
+- Final gates: the domain suite had one load timeout (`mastery-persistence-public-api.test.ts`, passes alone). The app suite has one failure outside this track (`app-nav.test.tsx`, `schoollicense` item from the school management track, bd796b6d8). The orchestrator must fix it at the merge.
+- `measure/doctor.sh` cannot run as a script (no execute bit, and it calls `pnpm`). The helper ran its four `tests/orchestrator_*.sh` checks by hand: `catalog` (A13, old) and `supervisor_invariants` (missing file, old) fail; `marker_vocabulary` fails on many old plans and on the `[ ]` batch tasks above (by the brief); `review_execution_truthfulness` passes. `architecture:check` was not run (it needs `pnpm`).
+- Batch capture: set `PARITY_CLASS_SEARCH`. Manual verification after the batch: open the report of the 8 pairs; check the numbers against `acceptance.md`; do the CSV manual step.

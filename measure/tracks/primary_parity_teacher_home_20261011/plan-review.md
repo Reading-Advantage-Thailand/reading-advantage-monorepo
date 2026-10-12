@@ -64,3 +64,26 @@ Lessons:
 
 - A Tailwind grid child needs `min-w-0` in a `lg:grid-cols-2` grid. The wide table panel pushed the page 6 px past 375 px until the panel got `min-w-0`.
 - jsdom does not apply Tailwind, so the table and the card list both exist in a test. Use `getByRole(..., { hidden: true })` and `within(table)` or `within(list)`.
+
+## Phase 4: Acceptance (phase start sha 3056209a1)
+
+Phase review of `git diff 3056209a1..HEAD`: files in the track folder only (pairs, two steps modules, `acceptance.md`, behavior contract, plan notes). No code of the app or the domain changed. No Critical and no High finding.
+Checked: the pair file parses with `PairList`; no password, token, class code, or name in the files (the Thai class names of the clone are not written down); `{map:}` only in `newPath`; the steps modules read ids and text from the environment.
+
+Medium:
+
+- The domain suite has a load-sensitive test: `mastery-persistence-public-api.test.ts` runs a full `tsc` build in `beforeAll` with a 120 s timeout. It failed in the full run and passed alone (39 s). Raise the timeout or build `dist` outside the test.
+- The app test `components/nav/__tests__/app-nav.test.tsx` fails on the `schoollicense` nav item (school management track, bd796b6d8). The orchestrator must fix it when it merges the lanes.
+
+Low:
+
+- The query check ran on a clone with 38 added `xp_logs` rows; the matched copy has almost no 7-day activity. Window and trend rules are also covered by the PGlite tests.
+- `getTeacherHome` stays at 9 raw queries and 3 selects. It took 483 ms cold and 40 to 63 ms warm for the teacher with 6 classes and 160 students. Merging the windows is not needed now.
+- `th-start-class` uses one raw legacy class id. If the kit TEACHER does not own it, the pair shows the not-found page; change the id.
+- `measure/doctor.sh` has no execute bit and calls `pnpm`; it cannot run in the helper rules. The helper ran its `tests/orchestrator_*.sh` parts by hand.
+
+Lessons (for the orchestrator):
+
+- A local `postgres-js` connection to the clone (`postgres:postgres@localhost:5432`) runs `getTeacherHome` with real drizzle selects. This is simpler than a `db.execute` shim over `psql`.
+- To make 7-day windows non-zero on a clone, insert `xp_logs` rows with `now() - interval`.
+
