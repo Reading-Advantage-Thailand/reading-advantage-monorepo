@@ -3761,7 +3761,8 @@
     "challengesHint": "Make a word challenge for a class game."
   },
   "BookLink": {
-    "bubbleOops": "Oh no!",
+    "bubbleOhNo": "Oh no!",
+    "bubbleOops": "Oops!",
     "bubbleNotYet": "Not yet!",
     "unknownBookTitle": "We do not know this book",
     "unknownBookBody": "The book in this link is not in Primary Advantage. Check the code on your page.",

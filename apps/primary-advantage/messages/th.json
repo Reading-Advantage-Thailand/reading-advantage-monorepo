@@ -3761,7 +3761,8 @@
     "challengesHint": "สร้างภารกิจคำศัพท์สำหรับเกมของชั้นเรียน"
   },
   "BookLink": {
-    "bubbleOops": "โอ๊ะโอ!",
+    "bubbleOhNo": "โอ๊ะโอ!",
+    "bubbleOops": "โอ๊ะ!",
     "bubbleNotYet": "ยังไม่พร้อม!",
     "unknownBookTitle": "เราไม่รู้จักหนังสือเล่มนี้",
     "unknownBookBody": "หนังสือในลิงก์นี้ไม่อยู่ใน Primary Advantage ตรวจรหัสในหน้าหนังสือของคุณอีกครั้ง",

@@ -7,7 +7,7 @@ import tw from "../../../messages/tw.json";
 import vi from "../../../messages/vi.json";
 
 const CASE_KEYS = [
-  "bubbleOops", "bubbleNotYet", "toHome", "toClasses", "toStart", "retry",
+  "bubbleOhNo", "bubbleOops", "bubbleNotYet", "toHome", "toClasses", "toStart", "retry",
   "unknownBookTitle", "unknownBookBody", "noLessonTitle", "noLessonBody", "notReadyTitle", "notReadyBody",
   "noClassTitle", "noClassBody", "teacherOnlyTitle", "teacherOnlyBody", "wrongAccountTitle", "wrongAccountBody",
   "unknownAddressTitle", "unknownAddressBody", "retryTitle", "retryBody",

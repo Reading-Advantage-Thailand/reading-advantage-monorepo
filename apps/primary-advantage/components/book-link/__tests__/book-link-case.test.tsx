@@ -39,3 +39,11 @@ describe("BookLinkCaseView", () => {
     expect(html({ t, name: "unknown-address", homeHref: "/student/home" })).toContain('href="/"');
   });
 });
+
+describe("BookLinkCaseView bubble", () => {
+  it("uses the retry bubble word for retry and the default word elsewhere", () => {
+    expect(html({ t, name: "retry", homeHref: "/", retryHref: "/b/o3-2/5" })).toContain("Oops!");
+    expect(html({ t, name: "unknown-book", homeHref: "/" })).toContain("Oh no!");
+    expect(html({ t, name: "not-ready", homeHref: "/" })).toContain("Not yet!");
+  });
+});

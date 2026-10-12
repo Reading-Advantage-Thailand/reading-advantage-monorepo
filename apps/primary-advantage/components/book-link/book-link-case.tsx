@@ -35,7 +35,9 @@ export function BookLinkFrame({ bubble, children }: { bubble: string; children: 
     <Scene place="library" className="min-h-screen px-4 py-6">
       <div className="flex items-center justify-between gap-2">
         <span className="cq-on-scene text-lg font-bold">{siteConfig.name}</span>
-        <LocaleSwitcher />
+        <div className="cq-on-scene">
+          <LocaleSwitcher />
+        </div>
       </div>
       <div className="flex flex-1 items-center justify-center">
         <Panel className="w-full max-w-md" data-book-link>
@@ -59,7 +61,7 @@ export function BookLinkCaseView({ t, name, homeHref, bookName = "", lessonCount
   const spec: { key: string; bubble?: string; button?: string; tone?: "gold" | "iron" } = CASES[name];
   const href = name === "retry" ? retryHref : name === "unknown-address" ? "/" : homeHref;
   return (
-    <BookLinkFrame bubble={t(spec.bubble ?? "bubbleOops")}>
+    <BookLinkFrame bubble={t(spec.bubble ?? "bubbleOhNo")}>
       <div className="flex flex-col gap-3" data-case={name}>
         <h1 className="text-xl font-bold" role="alert">{t(`${spec.key}Title`)}</h1>
         <p className="text-base">{t(`${spec.key}Body`, { book: bookName, count: lessonCount })}</p>
