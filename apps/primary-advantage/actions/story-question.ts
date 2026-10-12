@@ -13,6 +13,7 @@ import {
 import { currentUser } from "@/lib/session";
 import { guardStudentAction } from "@/lib/student-view";
 import { awardQuestionXp } from "@/server/xp/award-question-xp";
+import { saveChapterToFlashcard } from "./flashcard";
 import { getLaqFeedback, getSaqFeedback } from "@/server/utils/assistant";
 import { ActivityType } from "@/types/enum";
 
@@ -72,6 +73,8 @@ export async function submitChapterMcq(chapterId: string, answers: { questionId:
     }),
   );
   if (!saved) return { error: "submit_failed" };
+
+  if (saved.status === "saved") await saveChapterToFlashcard(chapterId);
 
   return { success: true, score: grade.score, total: grade.total, xpEarned: saved.status === "saved" ? grade.xpEarned : 0, results: grade.results };
 }
@@ -231,6 +234,8 @@ export async function submitChapterWritten(
     }),
   );
   if (!saved) return { error: "submit_failed" };
+
+  if (saved.status === "saved") await saveChapterToFlashcard(parsed.data.chapterId);
 
   return { success: true, xpEarned: resolved.xpEarned, question: resolved.question };
 }

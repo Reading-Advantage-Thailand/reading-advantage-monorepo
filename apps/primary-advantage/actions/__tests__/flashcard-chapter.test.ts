@@ -63,8 +63,8 @@ const SNAPSHOT = [{
 const cardInserts: Array<{ table: unknown; data: Record<string, unknown> }> = [];
 let activityRows: unknown[] = DONE;
 let snapshotRows: unknown[] = SNAPSHOT;
-let vocabCards: Array<{ front: string }> = [];
-let sentenceCards: Array<{ front: string }> = [];
+let vocabCards: Array<{ front: string; sourceId: string }> = [];
+let sentenceCards: Array<{ front: string; back: string; sourceId: string }> = [];
 
 /** Routes each select to its table: activity, chapter snapshot, decks by kind, cards by deck. */
 function route(state: { table?: unknown; filter?: unknown }): unknown {
@@ -124,7 +124,7 @@ describe("saveChapterToFlashcard", () => {
   });
 
   it("saves no second card for a word already in the deck", async () => {
-    vocabCards = [{ front: "apple" }, { front: "BRAVE" }];
+    vocabCards = [{ front: "apple", sourceId: CHAPTER }, { front: "BRAVE", sourceId: CHAPTER }];
     const res = (await saveChapterToFlashcard(CHAPTER)) as SaveResult;
     expect(res.success).toBe(true);
     const fronts = cardInserts.map((row) => String(row.data.front).toLowerCase());
@@ -133,8 +133,8 @@ describe("saveChapterToFlashcard", () => {
   });
 
   it("writes nothing new on a rerun when every word and sentence is saved", async () => {
-    vocabCards = SNAPSHOT[0].words.map((w) => ({ front: w.vocabulary }));
-    sentenceCards = SNAPSHOT[0].sentence.map((s) => ({ front: s.sentence }));
+    vocabCards = SNAPSHOT[0].words.map((w) => ({ front: w.vocabulary, sourceId: CHAPTER }));
+    sentenceCards = SNAPSHOT[0].sentence.map((s) => ({ front: s.sentence, back: s.sentence, sourceId: CHAPTER }));
     const res = (await saveChapterToFlashcard(CHAPTER)) as SaveResult;
     expect(res).toMatchObject({ success: true, data: { wordsCreated: 0, sentencesCreated: 0, alreadyExists: true } });
     expect(cardInserts.length).toBe(0);

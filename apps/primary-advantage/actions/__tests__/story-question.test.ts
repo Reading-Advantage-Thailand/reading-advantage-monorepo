@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   writtenQuestion: vi.fn(),
   saqFeedback: vi.fn(),
   laqFeedback: vi.fn(),
+  saveChapter: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ currentUser: mocks.currentUser, getCurrentUser: mocks.currentUser }));
@@ -29,6 +30,7 @@ vi.mock("@/server/utils/assistant", () => ({
   getSaqFeedback: mocks.saqFeedback,
   getLaqFeedback: mocks.laqFeedback,
 }));
+vi.mock("../flashcard", () => ({ saveChapterToFlashcard: mocks.saveChapter }));
 
 import {
   getChapterWrittenFeedback,
@@ -53,6 +55,7 @@ beforeEach(() => {
   mocks.currentUser.mockResolvedValue({ ...student });
   mocks.transaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => fn({}));
   mocks.award.mockResolvedValue({ status: "saved", activityId: "a1" });
+  mocks.saveChapter.mockResolvedValue({ success: true, data: { wordsCreated: 3, sentencesCreated: 2, alreadyExists: false } });
 });
 
 describe("submitChapterMcq", () => {
@@ -71,6 +74,7 @@ describe("submitChapterMcq", () => {
         xpEarned: 8,
       }),
     );
+    expect(mocks.saveChapter).toHaveBeenCalledWith(CHAPTER);
   });
 
   it("shows the new score with no second XP on a resubmit after a retake", async () => {
@@ -79,6 +83,7 @@ describe("submitChapterMcq", () => {
     const res = await submitChapterMcq(CHAPTER, answers);
     expect(res).toMatchObject({ success: true, score: 5, xpEarned: 0 });
     expect(mocks.award).toHaveBeenCalledWith({}, expect.objectContaining({ refreshDetails: expect.objectContaining({ score: 5 }) }));
+    expect(mocks.saveChapter).not.toHaveBeenCalled();
   });
 
   it("refuses a bad chapter id before grading", async () => {
@@ -140,6 +145,7 @@ describe("submitChapterWritten", () => {
       {},
       expect.objectContaining({ activityType: "STORIES_SA_QUESTION", targetId: CHAPTER, xpEarned: 4 }),
     );
+    expect(mocks.saveChapter).toHaveBeenCalledWith(CHAPTER);
   });
 
   it("refuses a second submit for the chapter", async () => {
