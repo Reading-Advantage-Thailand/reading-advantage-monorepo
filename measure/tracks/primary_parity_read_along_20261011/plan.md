@@ -45,7 +45,7 @@ _Story ref: spec.md#story-s1_
 - [x] Task: Measure - User Manual Verification 'Phase S1: The highlight follows the voice' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual verification steps: (1) open the PNG files in `~/Desktop/primary-parity-progress/captures/read_along/phaseS1/` at 375 px and 1280 px, day and night; (2) check that the blue word is the word in the caption name (I'll, Where, the after a dropped audio word); (3) on a real article page, play the audio and watch that the lit word follows the voice, including after a contraction or a curly quote; (4) pause: the mark stays on the last word.
 
-## Phase S2: Tap a word or a sentence to play from there [checkpoint: CKSHA]
+## Phase S2: Tap a word or a sentence to play from there [checkpoint: 8e2865cd0]
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Contract for the seek
