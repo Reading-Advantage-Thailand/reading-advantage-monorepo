@@ -65,3 +65,22 @@ Extra task (orchestrator request): domain tests `games-host-proof` and `phase-3-
 Lessons: a schema mock in a domain test breaks when a function gains an import of a module that reads more tables. Mock the new module, not the tables, when the test does not use it.
 
 Shortcuts: none.
+
+## Phase S4 review (helper C2, 2026-10-12)
+
+No Critical or High finding. Checked: no new server code (the panel calls the S1 action; the domain function checks the school and the class book); the page already gives not found to a teacher who does not manage the class book; `save={false}` means no request to `/api/v1/apk/complete` (test with the real `GameHost`); JSDoc on each export; no `console.error` added; key parity in the five locale files (parity tests pass); tsc and eslint show no error.
+
+Medium and Low findings:
+- Medium: the 2D renderer fallback for a projector without WebGL2 is the kit default; no browser run proved it in this phase. Phase S5 runs it with `?renderer=phaser`.
+- Medium: the panel shows two pickers with the same panel style; on a 1920 px screen the two sentence cards leave an empty half row. A later look check can centre them.
+- Low: cn, tw, and vi hold English text for `projectorGames` (the namespace `TeacherUi.classBook` is English in those files). Thai: owner check pending.
+- Low: the panel calls `practiceLocaleOf(locale) as "th"` (same shortcut as S2 and S3).
+- Low: the games stay on the projector page below the heading and above the article; a teacher scrolls past them to the paragraphs. The guide link uses the anchor `#projector-games`.
+- Low: `useStudentRpg` runs in `GameHost` with no `ownerKey`, so the teacher run shows no reward panels (wanted).
+- Low: the captures use the S2 harness (real component, real CSS, demo data); no cartridge ran in a browser.
+
+Process incident (Critical for history, no code effect): `git commit --amend` on a header fix ran after helper C1 had committed in the same worktree. It rewrote C1's commit `59fea6ec1` (feat(db): etl loads stories and chapters) as `bce9093f1` with my header "feat(teacher): link guide steps 9, 10 to projector". The tree is C1's. C1's later commit is `d273c8dbd` on top. `git reset` was denied, so I did not repair it. The orchestrator must reword `bce9093f1` at the merge (message: C1's original header, see `git show 59fea6ec1 -s`). Also, `477b3c4ad` has a 102-character header (limit 100); reword it too. The hook is off, so the merge check can flag both.
+
+Lessons: in a shared worktree, never run `git commit --amend` after a pause: check `git log -1` first, and fix a long header before the commit, not after. Count the header with `printf | commitlint` before `git commit` and stop on a failure.
+
+Shortcuts: the page renders the panel, not `projector-view.tsx` (keeps its test free of server actions).

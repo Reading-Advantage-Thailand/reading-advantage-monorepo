@@ -90,21 +90,28 @@ _Story ref: spec.md#story-s3_
 - [x] Task: Measure - User Manual Verification 'Phase S3: Play a sentence game in task 12' (Protocol in workflow.md)
     - look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/lesson_games/phaseS3/` (`task12-<375|1280>-<day|night>.png`, `task12-locked-...`). Steps: (1) open a lesson and go to task 12; (2) check the two sentence games with the last result, and the four activities below; (3) play one game and leave it; check the result shows after the return; (4) check a lesson with 2 sentences: games locked with "Needs 3 sentences", activities open; (5) check that a game that fails to start shows the notice that points to the activities. Defaults used: Member Question 2 (castle-defense, potion-rush).
 
-## Phase S4: Lead a game on the projector
+## Phase S4: Lead a game on the projector [checkpoint: CHECKPOINT]
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Define the panel
-    - [ ] The `helper` prop of `GameHost` (passed to `StoryGameHost`); the projector panel props; keys in the five locale files
-- [ ] Task: Write the tests (red)
-    - [ ] App: `components/teacher/__tests__/projector-game-panel.test.tsx`: the two lists with the lesson input; `save={false}` and `helper` on; no request to `/api/v1/apk/complete`
-    - [ ] App: `components/teacher/__tests__/guide-steps.test.tsx` and the overlay test: steps 9 and 10 link to the projector panel; step 1 keeps `/teacher/game-challenges`
-    - [ ] App: the projector page refuses a teacher who does not manage the class book (existing test extended)
-- [ ] Task: Implement (green)
-    - [ ] New `components/teacher/projector-game-panel.tsx`; `components/teacher/projector-view.tsx` and `.../lessons/[number]/projector/page.tsx` render it
-    - [ ] `components/teacher/guide-steps.tsx` and `guide-overlay.tsx`: the `gamesHref` of steps 9 and 10
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Lead a game on the projector' (Protocol in workflow.md)
+- [x] Task: Define the panel
+    - [x] The `helper` prop of `GameHost` (passed to `StoryGameHost`); the projector panel props; keys in the five locale files
+        - Commit b13b64158. Keys `TeacherUi.classBook.lesson.projectorGames` (title, hint, loading, inputFailed) in the five files; cn, tw, vi hold the English text like the rest of that namespace; Thai by the helper: owner check pending. The picker got `hideResults` (no last result and no New tag on the projector).
+- [x] Task: Write the tests (red)
+    - [x] App: `components/teacher/__tests__/projector-game-panel.test.tsx`: the two lists with the lesson input; `save={false}` and `helper` on; no request to `/api/v1/apk/complete`
+    - [x] App: `components/teacher/__tests__/guide-steps.test.tsx` and the overlay test: steps 9 and 10 link to the projector panel; step 1 keeps `/teacher/game-challenges`
+        - Red run: 4 tests failed and 1 suite failed (panel module absent) over 4 files; guide-steps 2 failed.
+    - [x] App: the projector page refuses a teacher who does not manage the class book (existing test extended)
+        - No projector page test existed: new `projector/../__tests__/projector-page.test.tsx` (panel with the class book and lesson; no panel without an article; a refused teacher gets not found). The server check is `getLessonPracticeInput` (S1 tests: FORBIDDEN without the class book).
+- [x] Task: Implement (green)
+    - [x] New `components/teacher/projector-game-panel.tsx`; `components/teacher/projector-view.tsx` and `.../lessons/[number]/projector/page.tsx` render it
+        - Deviation: the page renders the panel (above `ProjectorView`), not `projector-view.tsx`; this keeps the view test free of server actions. The run is a full-screen `lg-run` layer; the game exit returns to the lists. The 2D renderer is the host default (no WebGL2 falls back inside the kit; checked in the S5 browser run).
+    - [x] `components/teacher/guide-steps.tsx` and `guide-overlay.tsx`: the `gamesHref` of steps 9 and 10
+        - New prop `projectorHref` and `gamesHrefOf`; the lesson page passes `<lesson>/projector#projector-games`. Commits 477b3c4ad and bce9093f1: see `plan-review.md` (commit mishap).
+- [x] Task: Docs and doctor
+    - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+        - build-graph update skipped: graph.db read only (orchestrator rule). `measure/generated` restored.
+- [x] Task: Measure - User Manual Verification 'Phase S4: Lead a game on the projector' (Protocol in workflow.md)
+    - look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/lesson_games/phaseS4/` (`panel-<375|1280|1920>-<day|night>.png`). Steps: (1) open the projector page of a class book lesson as the teacher of the class; (2) check the two lists: four vocabulary games and two sentence games, with no result text; (3) press Play: the game runs full screen with the answer hint on; (4) finish a run and leave it; check no XP and no new row in the student results; (5) open the lesson page, go to guide step 9 or 10 and press "Open the games": the projector page opens at the games; step 1 still opens the game challenges; (6) open the page as a teacher of another class: not found. Defaults used: Member Question 3 (a demo on the projector that saves nothing, no class challenge button).
 
 ## Phase S5: Save nothing in a rehearsal or a preview
 _Story ref: spec.md#story-s5_
