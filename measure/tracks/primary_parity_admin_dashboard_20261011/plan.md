@@ -27,7 +27,7 @@ a time on this machine.
 - [x] Task: Owner's look check of the design and of the values in the spec section "Values for the Owner's Look Check"; record the answers in `spec.md` (look check pending (owner, async); default used (owner decision 2026-10-12: no stop); recorded in `spec.md`)
 - [x] Task: Measure - User Manual Verification 'Phase 1: Design' (Protocol in workflow.md) (look check pending (owner, async)). Manual steps: open the captures of `captures.md`; check that each label names its metric; check the panel order; check the activity grid has one cell for each day and today has the gold outline; check the SYSTEM captures show the "School" selector and "Choose a school" with no numbers; check the empty school has no zeros in the key numbers panel
 
-## Phase 2: Contracts and domain queries
+## Phase 2: Contracts and domain queries [checkpoint: 3826c97cd]
 
 - [x] Task: Variant block "Shared module builder": contracts of the shared module
     - [x] Red: `packages/domain/src/__tests__/primary-dashboards-contracts.test.ts` (range parse: 7, 30, 90, unknown gives 30; the Bangkok window of N days with today included; the scope schema)
