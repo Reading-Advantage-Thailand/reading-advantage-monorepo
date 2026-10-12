@@ -6,6 +6,7 @@ import { createTenantDB } from "../db-contract.js";
 import { managedClassBook, toClassBook, type Ctx } from "./class-books.js";
 import { lessonActivitiesSchema, lessonBankSchema, glossaryWordSchema, type BookLessonRef, type LessonGuidePeriod, type LessonGuideStep, type TeacherLesson } from "./lesson-support-contracts.js";
 import { STUDENT_MCQ_COUNT, STUDENT_SAQ_COUNT, studentQuestionSet } from "./question-set.js";
+import { printLessonOf } from "./print/print-lesson.js";
 import { PERIODS } from "./step-map.js";
 import { z } from "zod";
 
@@ -110,6 +111,7 @@ export async function getTeacherLesson(params: Ctx & { classBookId: string; numb
     activities: pkg.activities ? lessonActivitiesSchema.catch({}).parse(pkg.activities) : null,
     summary: typeof pkg.summary === "string" ? pkg.summary : null,
     thaiSummary: typeof pkg.thaiSummary === "string" ? pkg.thaiSummary : null,
+    hasPrint: printLessonOf(pkg) !== null,
     stepsDone: ((state?.stepsDone as number[] | undefined) ?? []).slice().sort((a, b) => a - b),
   };
 }

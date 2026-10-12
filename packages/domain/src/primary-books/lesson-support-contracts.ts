@@ -54,6 +54,8 @@ export const teacherLessonSchema = z.object({
   thaiSummary: z.string().nullable(),
   /** Workbook steps the class has done in this lesson. */
   stepsDone: z.array(z.number().int()),
+  /** True when the lesson has valid print data (S4). */
+  hasPrint: z.boolean(),
 });
 export type TeacherLesson = z.infer<typeof teacherLessonSchema>;
 
