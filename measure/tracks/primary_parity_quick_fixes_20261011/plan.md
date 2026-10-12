@@ -12,7 +12,7 @@ The phases follow the areas of the spec (admin, teacher, student, public), as th
 task keeps the Contract-First order inside it: the contract (when the FR has one), then the failing
 test (red), then the fix (green). The last phase holds the docs and doctor steps.
 
-## Phase 1: Design
+## Phase 1: Design [checkpoint: 94d2f47c6]
 
 - [x] Task: Ask the owner the member questions
     - [x] Ask Q1 (FR-1, the "Student password" field) and Q2 (FR-13, old class code links) of spec "Member questions"
