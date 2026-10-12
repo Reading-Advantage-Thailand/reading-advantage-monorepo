@@ -47,7 +47,7 @@ Until S3, some pages (home, avatar, Class Quest, class books) can show an error 
 - [x] Task: Measure - User Manual Verification 'Phase S1: Staff open the student pages' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual steps: (1) Open the PNG files in `~/Desktop/primary-parity-progress/captures/staff_student_view/phaseS1/` (16 files, list in `design/captures-s1.md`). (2) Check the blue banner on home and read at 375 px and 1280 px, day and night: it shows over the scene and the Exit button is 48 px high. (3) Check that the account menu shows "Student view" first under Navigation. (4) In a build, sign in as a teacher: the menu item opens `/student/home` with the banner, and Exit preview goes to `/teacher/dashboard`. (5) Open `/settings/user-profile` as a teacher: the back link goes to the role home. (6) INTERN opens `/student/home` and gets `/unauthorized`. Do not save anything as staff before S2.
 
-## Phase S2: Nothing saves in Preview mode
+## Phase S2: Nothing saves in Preview mode [checkpoint: 16ae42559]
 _Story ref: spec.md#story-s2_
 
 Guard names (S2): `assertStudentWriter` (throws `PreviewWriteError`), `guardStudentAction` (returns
