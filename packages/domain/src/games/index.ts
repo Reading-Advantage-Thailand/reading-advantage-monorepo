@@ -47,6 +47,19 @@ export {
   primaryDeckCardsRequestSchema,
   primaryFlashcardViewSchema,
 } from "./primary-saved-items.js";
+export {
+  articleCardStateInputSchema,
+  articleCardStateOutputSchema,
+  getArticleCardState,
+  saveArticleCardsAfterQuiz,
+  saveArticleCardsInputSchema,
+  saveArticleCardsOutputSchema,
+} from "./primary-article-cards.js";
+export type {
+  ArticleCardState,
+  SaveArticleCardsInput,
+  SaveArticleCardsOutput,
+} from "./primary-article-cards.js";
 export type { PrimaryFlashcardView, PrimarySavedWord, PrimaryWordAudio } from "./primary-saved-items.js";
 export {
   GameSpeechPreparationError,
