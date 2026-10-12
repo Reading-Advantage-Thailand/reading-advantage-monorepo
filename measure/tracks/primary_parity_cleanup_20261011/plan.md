@@ -107,7 +107,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
     - Look check pending (owner, async). Steps: log in as ADMIN; `POST /api/articles/generate` gives 404; student read pages still list and open articles.
     - Callers check: no caller outside the FR-4 list. Extra items removed (their only readers were the generators): `MCQuestionSchema`, `LAQuestionSchema`, `SAQuestionSchema`, `VocabularySchema` in `lib/zod.ts`, and the unused file `data/story-schema.ts` (it held copies of the two generator schemas and had no importer). `canRunContentTooling` stays for `app/api/upload/csv/cleanup/route.ts`. App tsc passed. Full app test run: 219 files, 1328 tests pass.
 
-## Phase 6: Old game host (M4, safe scope) [checkpoint: PENDING]
+## Phase 6: Old game host (M4, safe scope) [checkpoint: 222516a67]
 
 - [x] Task: FR-5 — send the message to the Forge session
     - [x] Send the message of spec FR-5: the Primary files that go (FR-7 to FR-9), the two play-kit files that change (FR-6), the one Primary build of this phase, and the two questions (the orchestrator sent it)
