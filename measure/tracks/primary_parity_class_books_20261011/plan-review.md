@@ -109,3 +109,25 @@ No Critical or High finding. The block and the pairs did not run in a browser (b
 - Low: the pairs use the class `cmhwuko0p000ds60dha8z70ig` of the matched teacher. The S2/S6 check must run on the same class (class argument) before the captures, else A1 to A3 show no book.
 - Low: the SQL file ran on the stored copy (syntax check; the book tables are empty there). It has not run on a copy with the catalogue.
 - Skipped: `build-graph update` (graph.db read only, orchestrator rule). `measure/generate.sh` output not committed (rule).
+
+## Review fixes
+
+A read-only review found six items. All six are fixed.
+
+1. Medium: `getTeacherBookSlots` had only mock-db tests. A new PGlite test
+   (`teacher-book-slots.pglite.test.ts`) uses two schools. It proves that a teacher sees only the
+   own and co-taught classes of the own school, and not archived classes.
+2. Medium: the guide check of `cloudbuild-catalogue.yaml` now requires "13 steps, 13 with a script"
+   for en and th. The contract test checks the text.
+3. Medium: `pnpm install` now runs in a new `install` step with no secret. The `import` step keeps
+   the secret and runs the legacy guard first. The `fetch-archive` step prints the archive commit id
+   (the git commit id in the tar header; no checksum). The contract test checks the step order and
+   that the install step has no secret.
+4. Low: `cutover-check.mjs` unmarks steps 1 to 3 of lesson 1 after the howTo2 checks.
+5. Low: `import-lesson-packages.ts` resolves the package paths before it connects. A wrong path
+   prints "Config error" and exits with 2. The script has no test file, so no test was added.
+6. Low: the class page logs a FORBIDDEN read at warn level. The error state stays on the card. The
+   page test covers it.
+
+Not fixed by decision: the proxy binary checksum (hash policy), the 44 px header link class, the
+unused output schema parse.
