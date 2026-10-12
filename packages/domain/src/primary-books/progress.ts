@@ -4,10 +4,12 @@ import {
   primaryBookLessons,
   primaryClassBookLessons,
   primaryClassBooks,
+  primaryLessonAttempts,
   primaryStudentLessonSteps,
   users,
 } from "@reading-advantage/db/schema";
 import { assertCan, AuthError } from "@reading-advantage/auth";
+import { closeReasonSchema } from "../primary-lesson-attempts/contracts.js";
 import { createTenantDB } from "../db-contract.js";
 import { toCsvText } from "../csv.js";
 import { managedClassBook, toClassBook, type Ctx } from "./class-books.js";
@@ -15,6 +17,7 @@ import {
   recordLessonProgressInput,
   STUCK_DAYS,
   type ClassBookProgress,
+  type EarlierAttempt,
   type ProgressCell,
   type RecordLessonProgressInput,
   type StepStatus,
@@ -23,6 +26,19 @@ import {
 import { APP_STEP_COUNT } from "./step-map.js";
 
 const UNSCOPED_REASON = "student lesson steps hang off primary_class_books (REFERENTIAL); the class book is checked first";
+
+/** One closed attempt of the class book, as the grid and the drill-down read it. */
+interface AttemptRow {
+  studentId: string;
+  lessonNumber: number | null;
+  attemptNumber: number;
+  closedAt: Date;
+  closeReason: string;
+  timeSpent: number;
+  xpEarned: number;
+  score: number | null;
+  steps: unknown;
+}
 
 interface StepRow {
   lessonNumber: number;
@@ -97,9 +113,10 @@ export async function recordLessonProgress(params: Ctx & { input: RecordLessonPr
  * @param lesson The lesson with its taught time.
  * @param rows The step rows of this student and lesson.
  * @param now The current time, for the stuck flag.
+ * @param attempts The number of earlier closed attempts of this student on this lesson.
  * @returns The cell.
  */
-function toCell(studentId: string, lesson: { number: number; taughtAt: Date | null }, rows: StepRow[], now: Date): ProgressCell {
+function toCell(studentId: string, lesson: { number: number; taughtAt: Date | null }, rows: StepRow[], now: Date, attempts = 0): ProgressCell {
   const doneSteps = rows.filter((row) => row.status === "done").length;
   const inProgress = rows.filter((row) => row.status === "in_progress").map((row) => row.appStep);
   const finished = doneSteps >= APP_STEP_COUNT || rows.some((row) => row.appStep === APP_STEP_COUNT && row.status === "done");
@@ -121,6 +138,7 @@ function toCell(studentId: string, lesson: { number: number; taughtAt: Date | nu
     late: lesson.taughtAt !== null && status !== "done",
     stuck: status === "in_progress" && lastAt !== null && now.getTime() - lastAt.getTime() > STUCK_DAYS * 86_400_000,
     openedBeforeTaught: firstStartedAt !== null && (lesson.taughtAt === null || firstStartedAt < lesson.taughtAt),
+    attempts,
   };
 }
 
@@ -132,7 +150,7 @@ function toCell(studentId: string, lesson: { number: number; taughtAt: Date | nu
 async function loadProgressParts(params: Ctx & { classBookId: string }) {
   const book = await managedClassBook(params, params.classBookId);
   const raw = createTenantDB(params.db, { schoolId: params.user.schoolId }).unscoped(UNSCOPED_REASON);
-  const [students, lessons, states, steps] = await Promise.all([
+  const [students, lessons, states, steps, attempts] = await Promise.all([
     raw
       .select({ id: users.id, name: users.name, username: users.username })
       .from(classroomStudents)
@@ -161,6 +179,21 @@ async function loadProgressParts(params: Ctx & { classBookId: string }) {
       })
       .from(primaryStudentLessonSteps)
       .where(eq(primaryStudentLessonSteps.classBookId, params.classBookId)),
+    createTenantDB(params.db, { schoolId: params.user.schoolId })
+      .select({
+        studentId: primaryLessonAttempts.studentId,
+        lessonNumber: primaryLessonAttempts.lessonNumber,
+        attemptNumber: primaryLessonAttempts.attemptNumber,
+        closedAt: primaryLessonAttempts.closedAt,
+        closeReason: primaryLessonAttempts.closeReason,
+        timeSpent: primaryLessonAttempts.timeSpent,
+        xpEarned: primaryLessonAttempts.xpEarned,
+        score: primaryLessonAttempts.score,
+        steps: primaryLessonAttempts.steps,
+      })
+      .from(primaryLessonAttempts)
+      .where(eq(primaryLessonAttempts.classBookId, params.classBookId))
+      .orderBy(asc(primaryLessonAttempts.attemptNumber)),
   ]);
   const taughtBy = new Map(states.map((state) => [state.lessonNumber, state.taughtAt]));
   const taught = states.filter((state) => state.taughtAt).length;
@@ -169,6 +202,26 @@ async function loadProgressParts(params: Ctx & { classBookId: string }) {
     students,
     lessons: lessons.map((lesson) => ({ number: lesson.number, title: lesson.title, taughtAt: taughtBy.get(lesson.number) ?? null })),
     steps: steps as (StepRow & { studentId: string })[],
+    attempts: attempts as AttemptRow[],
+  };
+}
+
+/**
+ * Turns a history row into an earlier attempt of the drill-down. A bad close reason reads as the student restart.
+ * @param row The history row of the class book.
+ * @returns The earlier attempt, with the steps done counted from the moved step copies.
+ */
+function toEarlierAttempt(row: AttemptRow): EarlierAttempt {
+  const reason = closeReasonSchema.safeParse(row.closeReason);
+  const steps = Array.isArray(row.steps) ? row.steps : [];
+  return {
+    attemptNumber: row.attemptNumber,
+    closedAt: row.closedAt,
+    closeReason: reason.success ? reason.data : "student_restart",
+    doneSteps: steps.filter((step) => (step as { status?: unknown } | null)?.status === "done").length,
+    seconds: row.timeSpent,
+    xpEarned: row.xpEarned,
+    score: row.score,
   };
 }
 
@@ -182,7 +235,7 @@ async function loadProgressParts(params: Ctx & { classBookId: string }) {
 export async function getClassBookProgress(params: Ctx & { classBookId: string }): Promise<ClassBookProgress> {
   assertCan(params.user, "class:read", { schoolId: params.user.schoolId });
   const now = params.now ?? new Date();
-  const { classBook, students, lessons, steps } = await loadProgressParts(params);
+  const { classBook, students, lessons, steps, attempts } = await loadProgressParts(params);
   const cells = students.flatMap((student) =>
     lessons.map((lesson) =>
       toCell(
@@ -190,6 +243,7 @@ export async function getClassBookProgress(params: Ctx & { classBookId: string }
         lesson,
         steps.filter((row) => row.studentId === student.id && row.lessonNumber === lesson.number),
         now,
+        attempts.filter((row) => row.studentId === student.id && row.lessonNumber === lesson.number).length,
       ),
     ),
   );
@@ -204,14 +258,18 @@ export async function getClassBookProgress(params: Ctx & { classBookId: string }
  */
 export async function getStudentLessonSteps(params: Ctx & { classBookId: string; studentId: string }): Promise<StudentLessonSteps> {
   assertCan(params.user, "class:read", { schoolId: params.user.schoolId });
-  const { classBook, students, lessons, steps } = await loadProgressParts(params);
+  const { classBook, students, lessons, steps, attempts } = await loadProgressParts(params);
   const student = students.find((row) => row.id === params.studentId);
   if (!student) throw new AuthError("The student is not in this class", "FORBIDDEN");
   return {
     classBook,
     student,
-    lessons: lessons.map((lesson) => ({
+    lessons: lessons.map((lesson) => {
+      const earlierAttempts = attempts.filter((row) => row.studentId === student.id && row.lessonNumber === lesson.number).map(toEarlierAttempt).sort((a, b) => a.attemptNumber - b.attemptNumber);
+      return {
       ...lesson,
+      attemptNumber: Math.max(0, ...earlierAttempts.map((row) => row.attemptNumber)) + 1,
+      earlierAttempts,
       steps: Array.from({ length: APP_STEP_COUNT }, (_, index) => {
         const appStep = index + 1;
         const row = steps.find((step) => step.studentId === student.id && step.lessonNumber === lesson.number && step.appStep === appStep);
@@ -223,7 +281,8 @@ export async function getStudentLessonSteps(params: Ctx & { classBookId: string;
           seconds: row?.seconds ?? 0,
         };
       }),
-    })),
+      };
+    }),
   };
 }
 
@@ -233,7 +292,7 @@ export async function getStudentLessonSteps(params: Ctx & { classBookId: string;
  * @returns The CSV text with a header row.
  */
 export function toProgressCsv(progress: ClassBookProgress): string {
-  const header = ["student", "username", "lesson", "title", "status", "done_steps", "seconds", "first_started_at", "last_at", "late", "stuck", "opened_before_taught"];
+  const header = ["student", "username", "lesson", "title", "status", "done_steps", "seconds", "first_started_at", "last_at", "late", "stuck", "opened_before_taught", "attempts"];
   const studentBy = new Map(progress.students.map((student) => [student.id, student]));
   const lessonBy = new Map(progress.lessons.map((lesson) => [lesson.number, lesson]));
   const rows = progress.cells.map((cell) => {
@@ -252,6 +311,7 @@ export function toProgressCsv(progress: ClassBookProgress): string {
       cell.late,
       cell.stuck,
       cell.openedBeforeTaught,
+      cell.attempts,
     ];
   });
   return toCsvText(header, rows);

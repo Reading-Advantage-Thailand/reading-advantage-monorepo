@@ -1,2 +1,2 @@
 export * from "./contracts.js";
-export { closeLessonAttempt, closeAttemptInTx, restartLesson, type CloseAttemptParams } from "./attempts.js";
+export { closeLessonAttempt, closeAttemptInTx, restartLesson, listLessonAttempts, type CloseAttemptParams } from "./attempts.js";

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { closeReasonSchema } from "../primary-lesson-attempts/contracts.js";
 import { classBookSchema } from "./class-book-contracts.js";
 
 /** The status of one app step of one student. */
@@ -43,6 +44,8 @@ export const progressCellSchema = z.object({
   stuck: z.boolean(),
   /** FR-7 fidelity signal: the student opened the lesson in the app before the class taught it. */
   openedBeforeTaught: z.boolean(),
+  /** The number of earlier closed attempts of this student on this lesson (0 for none). */
+  attempts: z.number().int(),
 });
 export type ProgressCell = z.infer<typeof progressCellSchema>;
 
@@ -64,10 +67,23 @@ export const studentStepSchema = z.object({
   seconds: z.number().int(),
 });
 
+/** One earlier (closed) attempt in the student drill-down. */
+export const earlierAttemptSchema = z.object({
+  attemptNumber: z.number().int(),
+  closedAt: z.date(),
+  closeReason: closeReasonSchema,
+  /** App steps done in the attempt. */
+  doneSteps: z.number().int(),
+  seconds: z.number().int(),
+  xpEarned: z.number().int(),
+  score: z.number().int().nullable(),
+});
+export type EarlierAttempt = z.infer<typeof earlierAttemptSchema>;
+
 /** The drill-down of one student in one class book (FR-6 click-through). */
 export const studentLessonStepsSchema = z.object({
   classBook: classBookSchema,
   student: progressStudentSchema,
-  lessons: z.array(progressLessonSchema.extend({ steps: z.array(studentStepSchema) })),
+  lessons: z.array(progressLessonSchema.extend({ steps: z.array(studentStepSchema), attemptNumber: z.number().int(), earlierAttempts: z.array(earlierAttemptSchema) })),
 });
 export type StudentLessonSteps = z.infer<typeof studentLessonStepsSchema>;

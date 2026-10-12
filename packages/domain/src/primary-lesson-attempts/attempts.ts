@@ -1,4 +1,4 @@
-import { and, eq, inArray, max } from "drizzle-orm";
+import { and, asc, eq, inArray, max } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import {
   articleActivityLogs,
@@ -20,6 +20,8 @@ import {
   LESSON_ACTIVITY_TYPES,
   type CloseLessonAttemptInput,
   type CloseLessonAttemptOutput,
+  type LessonAttempt,
+  lessonAttemptSchema,
   restartLessonInput,
   type RestartLessonInput,
   type RestartLessonOutput,
@@ -182,4 +184,45 @@ export async function restartLesson(params: { db: DB; user: UserContext; now?: D
     input: { studentId: params.user.id, articleId: input.articleId, assignmentId: input.assignmentId, reason: "student_restart" },
   });
   return { closed: out.closed, attemptNumber: out.attemptNumber === null ? null : out.attemptNumber + 1 };
+}
+
+/**
+ * Lists the closed attempts of one student, oldest first. A student reads own attempts. Staff read
+ * the attempts of students of the same school.
+ * @param params The database, the user, the student, and the optional article and class book filters.
+ * @returns The closed attempts.
+ * @throws {AuthError} FORBIDDEN when a student reads another student, or the user has no school.
+ */
+export async function listLessonAttempts(params: { db: DB; user: UserContext; studentId: string; articleId?: string; classBookId?: string }): Promise<LessonAttempt[]> {
+  const schoolId = params.user.schoolId;
+  if (!schoolId) throw new AuthError("The user has no school", "FORBIDDEN");
+  if (params.user.role === "STUDENT") {
+    assertCan(params.user, "progress:read:own", { schoolId });
+    if (params.studentId !== params.user.id) throw new AuthError("A student reads only own attempts", "FORBIDDEN");
+  } else {
+    assertCan(params.user, "progress:read:all", { schoolId });
+  }
+  const rows = await createTenantDB(params.db, { schoolId })
+    .select({
+      id: primaryLessonAttempts.id,
+      studentId: primaryLessonAttempts.studentId,
+      articleId: primaryLessonAttempts.articleId,
+      assignmentId: primaryLessonAttempts.assignmentId,
+      classBookId: primaryLessonAttempts.classBookId,
+      lessonNumber: primaryLessonAttempts.lessonNumber,
+      attemptNumber: primaryLessonAttempts.attemptNumber,
+      startedAt: primaryLessonAttempts.startedAt,
+      closedAt: primaryLessonAttempts.closedAt,
+      closeReason: primaryLessonAttempts.closeReason,
+      progress: primaryLessonAttempts.progress,
+      timeSpent: primaryLessonAttempts.timeSpent,
+      completed: primaryLessonAttempts.completed,
+      completedAt: primaryLessonAttempts.completedAt,
+      score: primaryLessonAttempts.score,
+      xpEarned: primaryLessonAttempts.xpEarned,
+    })
+    .from(primaryLessonAttempts)
+    .where(and(eq(primaryLessonAttempts.studentId, params.studentId), ...(params.articleId ? [eq(primaryLessonAttempts.articleId, params.articleId)] : []), ...(params.classBookId ? [eq(primaryLessonAttempts.classBookId, params.classBookId)] : [])))
+    .orderBy(asc(primaryLessonAttempts.closedAt), asc(primaryLessonAttempts.attemptNumber));
+  return rows.map((row) => lessonAttemptSchema.parse(row));
 }
