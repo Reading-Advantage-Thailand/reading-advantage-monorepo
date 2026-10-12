@@ -155,4 +155,20 @@ describe("renderReport", () => {
       expect(html).not.toContain(secret);
     }
   });
+
+  it("uses a longer markdown fence when the text holds a fence", () => {
+    const input = full();
+    input.captures["SYS-01"].legacy = capture("legacy", "a\n```\nb");
+    const { markdown } = api.renderReport(input);
+    expect(markdown).toContain("````\na\n```\nb\n````");
+  });
+
+  it("treats a missing text file as not captured", () => {
+    const input = full();
+    const shots = input.captures["SYS-01"].legacy!.shots;
+    for (const k of Object.keys(shots)) shots[k] = { png: shots[k].png, text: undefined } as never;
+    const { markdown } = api.renderReport(input);
+    expect(markdown).not.toContain("Only in legacy");
+    expect(markdown).toContain("not captured");
+  });
 });

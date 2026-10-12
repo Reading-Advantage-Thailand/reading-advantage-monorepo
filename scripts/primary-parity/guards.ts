@@ -27,7 +27,19 @@ export class GuardError extends Error {
 }
 
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
-const SHARED_DATABASE = "primary_advantage";
+/** The matched copies of the acceptance run. The kit may read them; it never writes to them. */
+const MATCHED_COPIES = new Set(["primary_legacy_20261011", "primary_parity_20261011"]);
+/** Database names that the kit never accepts. */
+const PROTECTED_DATABASES = new Set([
+  "primary_advantage",
+  "primary_legacy_20261007",
+  "primary_legacy_20261008",
+  "primary_legacy_20261006",
+  "primary_etl_20261007",
+  "primary_rehearsal1_20261008",
+  "primary_rehearsal2_20261010",
+  "primary_etl_prod",
+]);
 
 /** Input of `assertGuards`. */
 export interface GuardInput {
@@ -37,6 +49,8 @@ export interface GuardInput {
   newQuery: ReadOnlyQuery;
   baseUrls: string[];
   outputFiles: string[];
+  /** The URLs that the tool writes to. A written database name must hold `_run_`. */
+  writeTargets?: ("legacy" | "new")[];
 }
 
 /**
@@ -70,13 +84,23 @@ export function assertOutsideRepository(files: string[]): void {
   }
 }
 
-function checkDatabaseUrl(raw: string): void {
+/**
+ * Refuses a database URL that is remote, a unix socket, a protected copy, or (for a write) not a `_run_` copy.
+ * @param raw The database URL.
+ * @param mode `read` keeps the matched copies readable; `write` needs a name with `_run_`.
+ * @throws GuardError `remote-host` or `shared-database`.
+ */
+export function checkDatabaseUrl(raw: string, mode: "read" | "write" = "read"): void {
   const url = new URL(raw);
-  if (!LOCAL_HOSTS.has(url.hostname.replace(/^\[|\]$/g, ""))) {
-    throw new GuardError("remote-host", `database host is not local: ${url.hostname}`);
+  if (!LOCAL_HOSTS.has(url.hostname.replace(/^\[|\]$/g, "")) || url.searchParams.has("host")) {
+    throw new GuardError("remote-host", `database host is not local: ${url.searchParams.has("host") ? "host search param" : url.hostname}`);
   }
-  if (decodeURIComponent(url.pathname.slice(1)) === SHARED_DATABASE) {
-    throw new GuardError("shared-database", `the shared database ${SHARED_DATABASE} is not allowed`);
+  const name = decodeURIComponent(url.pathname.slice(1));
+  if (PROTECTED_DATABASES.has(name) || (mode === "write" && MATCHED_COPIES.has(name))) {
+    throw new GuardError("shared-database", `the protected database ${name} is not allowed`);
+  }
+  if (mode === "write" && !name.includes("_run_")) {
+    throw new GuardError("shared-database", `a written database name must hold _run_, got ${name}`);
   }
 }
 
@@ -86,8 +110,8 @@ function checkDatabaseUrl(raw: string): void {
  * @throws GuardError with a code for the first failed guard.
  */
 export async function assertGuards(input: GuardInput): Promise<void> {
-  checkDatabaseUrl(input.legacyUrl);
-  checkDatabaseUrl(input.newUrl);
+  checkDatabaseUrl(input.legacyUrl, input.writeTargets?.includes("legacy") ? "write" : "read");
+  checkDatabaseUrl(input.newUrl, input.writeTargets?.includes("new") ? "write" : "read");
   if ((await findLegacyDatabaseMarkers(input.legacyQuery)).length === 0) {
     throw new GuardError("legacy-marker-missing", "the legacy database URL has no legacy marker table");
   }

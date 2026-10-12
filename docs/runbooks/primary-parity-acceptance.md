@@ -30,7 +30,9 @@ of one school database. Run the commands from the repository root unless a line 
 | `captures/<member>/` | PNG, text, `capture-*.json`, `report.html`, `report.md` |
 | `timing.md` | Time and `free -m` of each heavy step |
 
-Create it once: `mkdir -p ~/Desktop/primary-parity-acceptance/{backups,state,captures} && chmod 700 ~/Desktop/primary-parity-acceptance`.
+Create it once: `mkdir -p ~/Desktop/primary-parity-acceptance/{backups,state,captures} && chmod 700 ~/Desktop/primary-parity-acceptance ~/Desktop/primary-parity-acceptance/state ~/Desktop/primary-parity-acceptance/captures`.
+
+The kit refuses a protected database name (the shared `primary_advantage`, the older copies, ETL and rehearsal databases). It reads the matched copies `primary_legacy_20261011` and `primary_parity_20261011`. It writes only to a database whose name holds `_run_`, so run `accounts.ts` against the clones of section 2.
 
 ## 1. Matched copies (FR-1)
 
@@ -83,7 +85,9 @@ npx tsx scripts/primary-parity/accounts.ts            # writes accounts.json (mo
 
 `accounts.ts` prints the exact second command. It picks one SYSTEM user, one ADMIN and one TEACHER of one
 school, and one STUDENT of a class of that teacher. Use `--system`, `--admin`, `--teacher`, and `--student`
-to name the user ids. Use `--force` to replace an existing `accounts.json`.
+to name the user ids. Each option works alone: the script then finds the other users that fit. The console hint shows the role and the user id of the SYSTEM user, not a name or an email.
+`issue-temporary-passwords.ts` refuses to overwrite an existing `--out` file. Delete or rename the old handout first, because the old passwords are stale after a new run.
+Use `--force` to replace an existing `accounts.json`.
 The first new-app capture does the forced password change of each staff user and keeps the new password in `accounts.json`.
 The student of the new app signs in with the row of the class sheet that the matched teacher makes.
 
@@ -101,9 +105,12 @@ Write `$P/legacy-app/.env.local` (mode 600) with these names only: `DATABASE_URL
 `CONTACT_EMAIL_ENABLED=false`, `NODE_ENV=production`. Do not copy the legacy `.env.local`.
 
 ```bash
+chmod 600 $P/legacy-app/.env.local
+ss -ltn | grep -E ':(3100|3005)\b' && echo "PORT BUSY: stop that server first"   # both ports must be free
 cd $P/legacy-app
-flock ~/Desktop/primary-parity-progress/heavy.lock nice bash -c 'npm ci && npx prisma generate && NODE_OPTIONS=--max-old-space-size=4096 npx next build'
-PORT=3100 npx next start      # keep this shell; stop it after the legacy captures
+# npm 11 refuses the legacy lock file; use npm 10. Scripts stay off; rebuild only esbuild and the Prisma engines.
+flock ~/Desktop/primary-parity-progress/heavy.lock nice bash -c 'npx --yes npm@10 ci --ignore-scripts --prefer-offline --no-audit --no-fund && npm rebuild esbuild @prisma/engines && npx prisma generate && NODE_OPTIONS=--max-old-space-size=4096 npx next build'
+PORT=3100 npx next start      # keep this shell; stop it after the legacy captures (kill the PID on the port: ss -ltnp)
 ```
 
 If the build fails from memory, pull the legacy production image (`primary-advantage-app-00125-9wd`) and run it
@@ -169,9 +176,23 @@ Owner look check: <date and answer, or "pending">
 
 `scripts/primary-parity/cutover-check.mjs` is the rehearsal 1 go/no-go browser check, copied with no change in behavior.
 Usage: `[NEW_PASSWORDS_OUT=<private csv>] node scripts/primary-parity/cutover-check.mjs <handout.csv> <teacher username> <admin username> <system username or -> <classroomId | class name | first>`.
-Set `BASE` (default `http://localhost:3000`) and `SHOTS`. Members add their blocks to this file; rehearsal 3 runs it.
+Set `BASE` (default `http://localhost:3000`) and `SHOTS`. Its stdout can print up to 300 characters of page text, and that text can hold real names. Keep this stdout out of reports and commits. Members add their blocks to this file; rehearsal 3 runs it.
 
-## 11. Checks of the kit
+## 11. Batch run (several members at once)
+
+The orchestrator runs the captures of several members on one build. Let `PAIRS` be the list of `--pairs measure/tracks/<member>/acceptance-pairs.json` options, one for each member.
+
+1. Clone the matched copies once (section 2).
+2. Run `accounts.ts` once. It makes one user of each role for all members. Delete or rename the old `handout.csv` first, because `issue-temporary-passwords.ts` refuses to overwrite it and the old passwords are stale. Then issue the temporary passwords (section 3).
+3. Capture legacy once for the union of the pair lists. The legacy app in `$P/legacy-app` is built; do not rebuild it.
+   `npx tsx scripts/primary-parity/capture.ts --app legacy --base http://localhost:3100 $PAIRS --accounts $P/accounts.json --out $P/captures`
+4. Stop the legacy server. Build the new app once at the integration HEAD (section 6). Check that port 3005 is free (`ss -ltn | grep :3005`). Start it and capture the new side with the same `$PAIRS` and `--handout $P/handout.csv`. Stop the server.
+5. Run `report.ts` once for each member (section 7). The output goes to `$P/captures/<member>/`.
+6. Drop the two clones (`dropdb`) and delete `apps/primary-advantage/.next`. Keep `legacy-app` and the two matched copies.
+
+`capture.ts` takes several `--pairs` options. It signs in once for each role, and it writes the files of each member in the folder of that member.
+
+## 12. Checks of the kit
 
 ```bash
 node_modules/.bin/vitest run --root scripts/primary-parity

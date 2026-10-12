@@ -1210,7 +1210,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [~] **Track: Primary Parity Before the Cutover: side-by-side acceptance kit (matched copies, matching accounts, capture script, report, behavior contract template)**
+- [x] **Track: Primary Parity Before the Cutover: side-by-side acceptance kit (matched copies, matching accounts, capture script, report, behavior contract template)**
   *Link: [./tracks/primary_parity_acceptance_20261011/](./tracks/primary_parity_acceptance_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 1*
 
@@ -1228,7 +1228,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Class books ready at the cutover**
+- [~] **Track: Primary Parity Before the Cutover: Class books ready at the cutover**
   *Link: [./tracks/primary_parity_class_books_20261011/](./tracks/primary_parity_class_books_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 3*
 
@@ -1240,7 +1240,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: School admin dashboard with real data (ADM-01, SYS-03, ADM-13)**
+- [~] **Track: Primary Parity Before the Cutover: School admin dashboard with real data (ADM-01, SYS-03, ADM-13)**
   *Link: [./tracks/primary_parity_admin_dashboard_20261011/](./tracks/primary_parity_admin_dashboard_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 4*
 

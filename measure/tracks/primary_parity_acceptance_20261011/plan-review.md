@@ -34,3 +34,34 @@ No Critical or High finding. Findings and shortcuts that stay:
 - Low: JSDoc exists on each export of the kit. `capture.ts` and `accounts.ts` main functions are private.
 - Shortcut: `cutover-check.mjs` is outside the tsconfig and has no test (as FR-13 says: no change in behavior).
 - Default used: Member question 1 (no AI keys in the kit runs). Member question 2 (a later helper decides on the image pull if the legacy build fails from memory).
+
+## Phase 3, second part (smoke run)
+
+No Critical or High finding in the kit. Findings and shortcuts that stay:
+
+- Medium (ETL, for rehearsal 3): `lesson_progress` keeps the latest of duplicate rows per (user, article). When the latest row has no `assignment_id`, the finished assignment lesson loses its state in the new app (it opens at step 1). 28 of 263 new rows have an `assignment_id` (legacy 40 of 289). Owner or the lesson-repeat member must decide. See `acceptance.md`.
+- Medium: the kit needs the lesson summary reached by a resume. A pair for a lesson in progress needs a `steps` module.
+- Low: `accounts.ts` ignores `--student` unless `--teacher` and `--admin` are also given. Document in the runbook or accept the three together.
+- Low: `accounts.ts` refuses to overwrite `handout.csv`: `issue-temporary-passwords.ts` still issued new passwords, so the older file was stale. Use a new `--out` name and rename it.
+- Low: `legacy-cap` and `new-cap` shell wrappers used `npx next start`, which leaves a child `next-server`. Stop the server by the PID on the port (`ss -ltnp`), not by the parent PID.
+- Low: `accounts.ts` prints a real staff email in the console hint (the SYSTEM username). It is not in a file of the repository.
+- Shortcut: the legacy build used `npx npm@10 ci --ignore-scripts` plus a manual `npm rebuild esbuild @prisma/engines` because of the slow network. The result is the same lockfile tree.
+- Lesson for lessons-learned: npm 11 `ci` refuses the legacy `package-lock.json` (missing optional platform packages); npm 10 accepts it. Disk was 97-99% full during the run (2.5 GB free).
+- Runbook gap: step 4 should say `npx npm@10 ci` and name the stale-lock fix; step 3 should say `--teacher --admin --student` together.
+
+## Phase 4 (checks and docs)
+
+No Critical or High finding. Fixed in 4f7066a58: the three Low findings of the smoke run, and `capture.ts` takes several `--pairs` (new `rolesNeeded` in `pairs.ts`, tests in `__tests__/batch.test.ts`).
+
+- Low: the SQL filters of `accounts.ts` for named ids have no automated test (needs a database). `pickCandidate` with named ids has a test.
+- Low: `report.ts` runs once for each member by design; it has no batch option.
+- Doctor: A13 (stale archived directory agents_md_audit_science_advantage_20260603) is not from this track.
+
+## Review fixes 2026-10-12
+
+- `guards.ts`: `checkDatabaseUrl` is exported. It refuses the protected list (shared database, older copies, ETL, rehearsal) and a URL with a `host` search param. In write mode it also refuses the matched copies and any name without `_run_`. `assertGuards` takes `writeTargets`; `accounts.ts` sets `["legacy"]`, because it writes passwords into the legacy clone.
+- `capture.ts`: `loadIdMap` calls `checkDatabaseUrl` (read). The state dir and the handout path join the `assertOutsideRepository` check.
+- `report.ts`: output paths pass `assertOutsideRepository`. A missing `.txt` is "not captured". The markdown fence grows when the text holds backticks.
+- Runbook: npm 10 install line inside the flock command, `chmod 600` of `.env.local`, `chmod 700` of state and captures, port 3100 and 3005 checks, handout rename note in section 11, and a note that `cutover-check.mjs` stdout can hold names (the script stays unchanged, FR-13).
+- Tests: 68 pass in the kit (`vitest run --root scripts/primary-parity`); the kit type check passes.
+- Open Low: no automated test for the `loadIdMap` guard call (the file imports Playwright).

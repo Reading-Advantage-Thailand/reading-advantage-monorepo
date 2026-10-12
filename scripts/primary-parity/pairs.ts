@@ -114,3 +114,16 @@ export function resolvePlaceholders(path: string, context: PlaceholderContext): 
     throw new Error(`unknown placeholder kind: ${kind}`);
   });
 }
+
+/**
+ * Lists the roles that one capture run must sign in for, over several pair lists.
+ * @param lists The pair lists of the members in the run.
+ * @param app The app under capture; a new-app STUDENT sign-in also needs the TEACHER.
+ * @returns The roles without `PUBLIC`, without duplicates.
+ */
+export function rolesNeeded(lists: PairListData[], app: "legacy" | "new"): Exclude<PairData["role"], "PUBLIC">[] {
+  const roles = new Set(lists.flatMap((l) => l.pairs.map((p) => p.role)));
+  if (app === "new" && roles.has("STUDENT")) roles.add("TEACHER");
+  roles.delete("PUBLIC");
+  return [...roles] as Exclude<PairData["role"], "PUBLIC">[];
+}

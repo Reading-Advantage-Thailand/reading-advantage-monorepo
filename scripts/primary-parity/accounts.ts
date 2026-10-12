@@ -47,14 +47,22 @@ export function makeClassCode(): string {
 }
 
 /**
- * Picks the first candidate whose four users exist in the new clone with the same role.
+ * Picks the first candidate whose users exist in the new clone with the same role.
  * @param candidates Sets of users from the legacy clone.
  * @param roles Role of each user id in the new clone.
+ * @param want User ids that the operator named; each one that is set must match the candidate.
  * @returns The first set that exists in both clones, or undefined.
  */
-export function pickCandidate(candidates: Candidate[], roles: Map<string, string>): Candidate | undefined {
+export function pickCandidate(
+  candidates: Candidate[],
+  roles: Map<string, string>,
+  want: Partial<Pick<Candidate, "teacher" | "admin" | "student">> = {},
+): Candidate | undefined {
   return candidates.find(
     (c) =>
+      (!want.teacher || c.teacher === want.teacher) &&
+      (!want.admin || c.admin === want.admin) &&
+      (!want.student || c.student === want.student) &&
       roles.get(c.teacher) === "TEACHER" && roles.get(c.admin) === "ADMIN" && roles.get(c.student) === "STUDENT",
   );
 }
@@ -92,6 +100,7 @@ async function main(): Promise<void> {
       newQuery: queryOf(next),
       baseUrls: [],
       outputFiles: [out, handout],
+      writeTargets: ["legacy"],
     });
 
     const systemRows = values.system
@@ -100,28 +109,27 @@ async function main(): Promise<void> {
     const system = systemRows[0];
     if (!system) throw new Error("no SYSTEM user in the new clone");
 
-    let candidate: Candidate | undefined;
-    if (values.teacher && values.admin && values.student) {
-      const cls = await legacy`
-        select cs."classroomId" as classroom from classroom_students cs
-        join classroom_teachers ct on ct."classroomId" = cs."classroomId"
-        where cs."studentId" = ${values.student} and ct."userId" = ${values.teacher} limit 1`;
-      if (!cls[0]) throw new Error("the student is not in a class of the teacher (legacy clone)");
-      candidate = { teacher: values.teacher, admin: values.admin, student: values.student, classroom: cls[0].classroom as string };
-    } else {
-      const rows = await legacy`
-        select t.id as teacher, a.id as admin, s.id as student, c.id as classroom
-        from classroom_teachers ct
-        join users t on t.id = ct."userId" and lower(t.role) = 'teacher'
-        join classrooms c on c.id = ct."classroomId"
-        join classroom_students cs on cs."classroomId" = c.id
-        join users s on s.id = cs."studentId" and lower(s.role) = 'student'
-        join users a on a.school_id = t.school_id and lower(a.role) = 'admin'
-        order by t.id, s.id limit 300`;
-      const ids = [...new Set(rows.flatMap((r) => [r.teacher, r.admin, r.student] as string[]))];
-      const roleRows = ids.length ? await next`select id, role from users where id in ${next(ids)}` : [];
-      candidate = pickCandidate(rows as unknown as Candidate[], new Map(roleRows.map((r) => [r.id as string, r.role as string])));
-    }
+    const none = legacy``;
+    const rows = await legacy`
+      select t.id as teacher, a.id as admin, s.id as student, c.id as classroom
+      from classroom_teachers ct
+      join users t on t.id = ct."userId" and lower(t.role) = 'teacher'
+      join classrooms c on c.id = ct."classroomId"
+      join classroom_students cs on cs."classroomId" = c.id
+      join users s on s.id = cs."studentId" and lower(s.role) = 'student'
+      join users a on a.school_id = t.school_id and lower(a.role) = 'admin'
+      where true
+        ${values.teacher ? legacy`and t.id = ${values.teacher}` : none}
+        ${values.admin ? legacy`and a.id = ${values.admin}` : none}
+        ${values.student ? legacy`and s.id = ${values.student}` : none}
+      order by t.id, s.id limit 300`;
+    const userIds = [...new Set(rows.flatMap((r) => [r.teacher, r.admin, r.student] as string[]))];
+    const roleRows = userIds.length ? await next`select id, role from users where id in ${next(userIds)}` : [];
+    const candidate = pickCandidate(
+      rows as unknown as Candidate[],
+      new Map(roleRows.map((r) => [r.id as string, r.role as string])),
+      { teacher: values.teacher, admin: values.admin, student: values.student },
+    );
     if (!candidate) throw new Error("no teacher, admin, and student set exists in both clones");
 
     const ids = { SYSTEM: system.id as string, ADMIN: candidate.admin, TEACHER: candidate.teacher, STUDENT: candidate.student };
@@ -172,8 +180,9 @@ async function main(): Promise<void> {
 
     console.log(`Wrote ${out} (mode 600) for roles: ${Object.keys(accounts).join(", ")}.`);
     console.log("Next, give the new staff users temporary passwords (run from apps/primary-advantage):");
+    console.log(`  SYSTEM user id: ${accounts.SYSTEM?.userId}`);
     console.log(
-      `  DATABASE_URL="$NEW_DATABASE_URL" npx tsx scripts/issue-temporary-passwords.ts --apply --system ${accounts.SYSTEM?.new.username} --out ${handout}`,
+      `  DATABASE_URL="$NEW_DATABASE_URL" npx tsx scripts/issue-temporary-passwords.ts --apply --system <SYSTEM username> --out ${handout}`,
     );
     console.log("Then run capture.ts with --handout so that the forced password change runs once.");
   } finally {

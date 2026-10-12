@@ -280,6 +280,22 @@ These defaults are chosen in this spec. The owner can change each one at the des
   (`components/school/school-detail.tsx:428` in legacy). This is a member question; see Out of Scope.
 - Activity by day shows distinct active students per day (legacy showed event counts).
 
+### Look check answers (Phase 1)
+
+Default used (owner decision 2026-10-12: no stop). Each value above stays as written: the range options and the
+default of 30; the activity event rule and the "active teacher" rule; "Articles opened"; the alert thresholds;
+seats used = students only; activity by day = distinct active students. The design look check is async; the
+captures are in `captures.md`.
+
+Decisions that the design added (Phase 1, see `behavior-contract.md` section 4 and 5):
+
+- Place `observatory`. The staff shell has no `cq-world`, so Phase 3 adds a `contained` option to `Scene`
+  (a wrapper with `clip-path: inset(0)` clips the fixed backdrop to the main column).
+- Activity by day is a Monday-first calendar grid with the count in each cell (not a bar chart).
+- The URL also has `by=cefr|grade` for the adoption signs; an unknown value gives `cefr`.
+- When the school has no active license (seats = 0), the page shows no seat alert (the percentage has no meaning).
+- "Average XP" in adoption = XP earned in the range / all students of the row.
+
 ## Out of Scope
 
 - AI insights on the dashboard (SYS-02, after the cutover).
