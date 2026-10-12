@@ -79,4 +79,19 @@ describe("sync-print-kit", () => {
     writeFileSync(join(app, "apps/primary-advantage/public/print-fonts/OFL-open-sans.txt"), "edited");
     expect(await run()).toBe(2);
   });
+
+  it("--fixture copies the print data and the golden body from a Workbooks commit", async () => {
+    put("content/primary/b1/print/p05.json", JSON.stringify({ lessonNumber: 5 }));
+    put("content/primary/b1/print/p06.json", JSON.stringify({ lessonNumber: 6 }));
+    put("content/primary/b1/print/golden/lesson-05-no-key.html", "<html><head>HEAD</head>\n<body>\nBODY5\n</body></html>");
+    git(wb, "add", "-A");
+    git(wb, "commit", "-qm", "export");
+    const commit = git(wb, "rev-parse", "--short", "HEAD");
+    expect(await run("--fixture", "b1/5", "--commit", commit)).toBe(0);
+    const dir = join(app, "packages/domain/src/primary-books/print/__fixtures__");
+    expect(readFileSync(join(dir, `b1-5@${commit}.json`), "utf8")).toContain('"lessonNumber":5');
+    expect(readFileSync(join(dir, `b1-5-no-key-body@${commit}.html`), "utf8").trim()).toBe("BODY5");
+    expect(await run("--fixture", "b1/9", "--commit", commit)).toBe(2);
+    expect(await run("--fixture", "b1/5")).toBe(2);
+  });
 });
