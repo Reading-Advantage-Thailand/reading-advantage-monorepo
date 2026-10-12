@@ -3856,7 +3856,18 @@
         "showAll": "Show all paragraphs",
         "previous": "Previous",
         "next": "Next",
-        "paragraph": "Paragraph {number} of {total}"
+        "paragraph": "Paragraph {number} of {total}",
+        "print": "Print this lesson",
+        "printNow": "Print",
+        "printLoading": "Loading the pictures...",
+        "printNotReady": "The print version of this lesson is not ready yet.",
+        "printHint": "Choose A4 paper. Turn off \"Headers and footers\" in the print window.",
+        "printFrameTitle": "Print preview of the lesson",
+        "printBubbleWait": "Hold on...",
+        "printBubbleReady": "Ready!",
+        "printBubbleNotYet": "Not yet!",
+        "printNotReadyTitle": "The print version is not ready",
+        "printNotReadyBody": "This lesson has no print version yet. Use the projector or the lesson guide."
       },
       "guide": {
         "title": "Teacher guide",
