@@ -53,32 +53,39 @@ corrections with evidence, and the "tests" are the checks of the records.
 
 ## Phase 3: Implement — edit the records
 
-- [ ] Task: Correct `docs/primary-whats-moved.md` (spec FR-1, FR-2)
-    - [ ] Change line 6 and the mark definitions of line 8; add the marks "reduced" and "missing" and the rule of FR-5
-    - [ ] Correct each row of `corrections.md`; split the system row of line 91 into three rows
-    - [ ] Add the staff note of STU-01 to "How a student gets around"
-- [ ] Task: Correct the cutover record (spec FR-3)
-    - [ ] Tell the monorepo session that this task replaces its uncommitted section
-    - [ ] Replace the section "Owner login and existing limitation" in `measure/tracks/primary_legacy_data_migration_20261004/cutover-result-20261011.md` with "Result: stopped after C10" and the six facts
-    - [ ] Change the status line, and mark the items of "Remaining checks" that did not run
-- [ ] Task: Update the migration track status (spec FR-4)
-    - [ ] Change `measure/tracks/primary_legacy_data_migration_20261004/plan.md:39` to `[b]` with the reason and the set link
-    - [ ] Add the status line at the top of `cutover-commands-20261011.md`
-    - [ ] Update `updated_at` and `deviation_notes` in the track `metadata.json`
-- [ ] Task: Move M4 to the cleanup member (spec FR-7)
-    - [ ] Change M4 in `measure/tracks/legacy_games_removal_20261006/spec.md`
-    - [ ] Change Phase 3 of `measure/tracks/legacy_games_removal_20261006/plan.md` to M3 only, with one line for the new owner of M4
-    - [ ] Change `docs/primary-games-integration.md:88-90`
-    - [ ] Change the M4 note of the games removal entry in `measure/tracks.md`
-- [ ] Task: Add the behavior-evidence rule (spec FR-5, FR-6)
-    - [ ] Add rule 10 and one dated status line to `measure/primary-tutor-parity-program.md`
-    - [ ] Condense `measure/lessons-learned.md` to 49 lines or less; keep every entry of "Lessons-learned checks"
-    - [ ] Add the entry `- (2026-10-11, primary_parity_records_20261011) ...` under "Planning Improvements"
-    - [ ] Count the lines with `wc -l`: 50 or less
-- [ ] Task: Tell the peer sessions
-    - [ ] Tell the PR session that the marks of `docs/primary-whats-moved.md` changed (the manual and video writers use it)
-    - [ ] Tell the monorepo session the commits of this phase
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement — edit the records' (Protocol in workflow.md)
+- [x] Task: Correct `docs/primary-whats-moved.md` (spec FR-1, FR-2)
+    - [x] Change line 6 and the mark definitions of line 8; add the marks "reduced" and "missing" and the rule of FR-5
+    - [x] Correct each row of `corrections.md`; split the system row of line 91 into three rows
+    - [x] Add the staff note of STU-01 to "How a student gets around"
+- [x] Task: Correct the cutover record (spec FR-3)
+    - [x] Tell the monorepo session that this task replaces its uncommitted section
+    - [x] Replace the section "Owner login and existing limitation" in `measure/tracks/primary_legacy_data_migration_20261004/cutover-result-20261011.md` with "Result: stopped after C10" and the six facts
+    - [x] Change the status line, and mark the items of "Remaining checks" that did not run
+- [x] Task: Update the migration track status (spec FR-4)
+    - [x] Change `measure/tracks/primary_legacy_data_migration_20261004/plan.md:39` to `[b]` with the reason and the set link
+    - [x] Add the status line at the top of `cutover-commands-20261011.md`
+    - [x] Update `updated_at` and `deviation_notes` in the track `metadata.json`
+- [x] Task: Move M4 to the cleanup member (spec FR-7)
+    - [x] Change M4 in `measure/tracks/legacy_games_removal_20261006/spec.md`
+    - [x] Change Phase 3 of `measure/tracks/legacy_games_removal_20261006/plan.md` to M3 only, with one line for the new owner of M4
+    - [x] Change `docs/primary-games-integration.md:88-90`
+    - [x] Change the M4 note of the games removal entry in `measure/tracks.md`
+- [x] Task: Add the behavior-evidence rule (spec FR-5, FR-6)
+    - [x] Add rule 10 and one dated status line to `measure/primary-tutor-parity-program.md`
+    - [x] Condense `measure/lessons-learned.md` to 49 lines or less; keep every entry of "Lessons-learned checks"
+    - [x] Add the entry `- (2026-10-11, primary_parity_records_20261011) ...` under "Planning Improvements"
+    - [x] Count the lines with `wc -l`: 50 or less
+- [x] Task: Tell the peer sessions
+    - [x] Tell the PR session that the marks of `docs/primary-whats-moved.md` changed (the manual and video writers use it)
+    - [x] Tell the monorepo session the commits of this phase
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement — edit the records' (Protocol in workflow.md) (look check pending (owner, async))
+    - Manual verification steps (no capture; documentation only):
+        1. Open `docs/primary-whats-moved.md`. Check that the marks "reduced" and "missing" exist and that each "removed" row names an owner decision with a date.
+        2. Open `cutover-result-20261011.md`. Check the status line and the section "Result: stopped after C10" with six facts.
+        3. Run `wc -l measure/lessons-learned.md`. Check that the result is 50 or less.
+    - Defaults used: none (the spec has no Member Question).
+    - Note: "Tell the peer sessions" is the job of the orchestrator (a helper has no peer channel). The report names both messages.
+    - Note: the Phase 4 check 5 counts one hit; the status of `Remaining checks` items reads "Did not run".
 
 ## Phase 4: Generate Docs & Doctor
 
