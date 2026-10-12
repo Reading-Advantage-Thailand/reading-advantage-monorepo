@@ -6,7 +6,7 @@ tests add `// @vitest-environment jsdom`; the render helper is
 `components/__tests__/helpers/render-with-messages.tsx`). Start after
 `primary_parity_quick_fixes_20261011` has merged `lib/paragraph-utils.ts` (STU-07).
 
-## Phase 0: Design
+## Phase 0: Design [checkpoint: fd2696367]
 
 - [x] Task: Collect the real data shapes
     - [x] Write `scripts/profile-read-along.ts` (read only): count the articles with `sentences`, the sentences with `words: []`, and the sentences where the display words and the audio words differ in number; include the Workbooks-injected articles _(the data has no marker for them; the profile covers all 622 articles)_
