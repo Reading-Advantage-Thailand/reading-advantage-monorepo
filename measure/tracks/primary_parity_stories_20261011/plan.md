@@ -74,16 +74,21 @@ _Story ref: spec.md#story-s2_
 ## Phase S3: Story page
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Contract for the story page
-    - [ ] `packages/domain/src/stories/contracts.ts`: `getStoryForStudent` output (story, chapters, the finished chapters of the student, characters)
-- [ ] Task: Tests for the story page
-    - [ ] `packages/domain/src/__tests__/stories.test.ts`: the level window, published only, the finished chapters from `user_activity` (`STORIES_*` types)
-    - [ ] `app/[locale]/(student)/student/read/stories/[storyId]/__tests__/story-page.test.tsx`: the summary in the student's language, the chapter list, the Characters sign, 404 outside the window
-- [ ] Task: Implement the story page
-    - [ ] `packages/domain/src/stories/queries.ts`: `getStoryForStudent`
-    - [ ] `app/[locale]/(student)/student/read/stories/[storyId]/page.tsx`, `loading.tsx`; `components/stories/chapter-list.tsx`, `components/stories/story-characters.tsx`
-- [ ] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Story page' (Protocol in workflow.md)
+- [x] Task: Contract for the story page
+    - [x] `packages/domain/src/stories/contracts.ts`: `getStoryForStudent` output (story, chapters, the finished chapters of the student, characters)
+- [x] Task: Tests for the story page
+    - [x] `packages/domain/src/__tests__/stories.test.ts`: the level window, published only, the finished chapters from `user_activity` (`STORIES_*` types)
+    - [x] `app/[locale]/(student)/student/read/stories/[storyId]/__tests__/story-page.test.tsx`: the summary in the student's language, the chapter list, the Characters sign, 404 outside the window
+- [x] Task: Implement the story page
+    - [x] `packages/domain/src/stories/queries.ts`: `getStoryForStudent`
+    - [x] `app/[locale]/(student)/student/read/stories/[storyId]/page.tsx`, `loading.tsx`; `components/stories/chapter-list.tsx`, `components/stories/story-characters.tsx`
+- [x] Task: Generate docs and run doctor (`measure/generate.sh`, then `measure/doctor.sh`)
+- [x] Task: Measure - User Manual Verification 'Phase S3: Story page' (Protocol in workflow.md) (look check pending (owner, async))
+    - Captures: `~/Desktop/primary-parity-progress/captures/stories/phaseS3/` (`story`, `characters`; day and night; 375 and 1280; 8 files). Real page code, real cover, demo data.
+    - Step 1: Open the PNG files. Check the cover (3:4), the badges, the summary, the gold start button, and the two signs.
+    - Step 2: Check that no text overflows at 375 px and that each link and sign is 48 px tall (chapter rows 56 px).
+    - Step 3: Open a story as a level 5 student. A story of level 8 or an unpublished story shows 404. Chapters that you finished show Done.
+    - Defaults used: D9 level window on the story page; staff see every published story; the summary falls back to English when no translation exists.
 
 ## Phase S4: Chapter page with read-along
 _Story ref: spec.md#story-s4_
