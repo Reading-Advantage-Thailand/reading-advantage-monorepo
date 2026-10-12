@@ -15,7 +15,7 @@ TDD order for each code task (`measure/workflow.md`): write the failing test, ru
 fail, write the minimum code, run it and see it pass, then refactor and add JSDoc. Run tsc and
 ESLint one time per phase, before the phase commit. One heavy job at a time on this machine.
 
-## Phase 1: Design
+## Phase 1: Design [checkpoint: 8aa5dce9f]
 
 - [x] Task: Write the behavior contract from `docs/runbooks/primary-behavior-contract-template.md` (`primary_parity_acceptance_20261011` FR-11)
     - [x] List each legacy number and table column with its `file:line` (spec, Legacy Behavior) and the new number or column, or the reason it changed
