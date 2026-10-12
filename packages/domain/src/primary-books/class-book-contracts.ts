@@ -76,6 +76,37 @@ export const markStepDoneInput = z.object({
   done: z.boolean().default(true),
 });
 
+/** One closed run of a lesson: what the class did before "Teach again". */
+export const earlierRunSchema = z.object({
+  runNumber: z.number().int().min(1),
+  taughtAt: z.coerce.date().nullable(),
+  stepsDone: z.array(z.number().int()),
+  closedAt: z.coerce.date(),
+  closedByUserId: z.string(),
+});
+export type EarlierRun = z.infer<typeof earlierRunSchema>;
+
+/**
+ * Parses the stored earlier runs of a lesson. A bad item is dropped.
+ * @param value The jsonb value of `earlier_runs`.
+ * @returns The earlier runs, oldest first.
+ */
+export function parseEarlierRuns(value: unknown): EarlierRun[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    const parsed = earlierRunSchema.safeParse(item);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
+
+/** Input of `teachLessonAgain`. */
+export const teachLessonAgainInput = z.object({ classBookId: z.string().uuid(), lessonNumber: z.number().int().min(1) });
+export type TeachLessonAgainInput = z.input<typeof teachLessonAgainInput>;
+
+/** Output of `teachLessonAgain`: the new run number and the count of closed student attempts. */
+export const teachLessonAgainOutput = z.object({ runNumber: z.number().int().min(1), closedAttempts: z.number().int().nonnegative() });
+export type TeachLessonAgainOutput = z.infer<typeof teachLessonAgainOutput>;
+
 /** One lesson row of the pacing view. */
 export const pacingLessonSchema = z.object({
   number: z.number().int(),
@@ -85,6 +116,10 @@ export const pacingLessonSchema = z.object({
   approved: z.boolean(),
   taughtAt: z.date().nullable(),
   stepsDone: z.array(z.number().int()),
+  /** 1 for the first time the class is taught the lesson; "Teach again" adds 1. */
+  runNumber: z.number().int().min(1),
+  /** The closed runs, oldest first. */
+  earlierRuns: z.array(earlierRunSchema),
   /** True for the lesson the pointer is on. */
   current: z.boolean(),
 });

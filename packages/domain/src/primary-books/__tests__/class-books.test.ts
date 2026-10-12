@@ -240,7 +240,32 @@ describe("getClassBookPacing", () => {
   });
 });
 
+describe("getClassBookPacing runs", () => {
+  it("returns the run number and the earlier runs of a lesson, and 1 and none by default", async () => {
+    const run = { runNumber: 1, taughtAt: "2026-10-06T08:00:00.000Z", stepsDone: [1, 2, 3], closedAt: "2026-10-12T08:00:00.000Z", closedByUserId: "t1" };
+    const mock = dbWith([
+      [classBookRow],
+      [classRow],
+      [lesson(1), lesson(2)],
+      [{ lessonNumber: 1, taughtAt: null, stepsDone: [], runNumber: 2, earlierRuns: [run] }],
+    ]);
+    const result = await getClassBookPacing({ db: mock as unknown as DB, user: teacher, classBookId: CLASS_BOOK });
+    expect(result.lessons[0]).toMatchObject({ number: 1, runNumber: 2, earlierRuns: [{ runNumber: 1, stepsDone: [1, 2, 3], closedByUserId: "t1" }] });
+    expect(result.lessons[0].earlierRuns[0].taughtAt).toEqual(new Date("2026-10-06T08:00:00.000Z"));
+    expect(result.lessons[1]).toMatchObject({ number: 2, runNumber: 1, earlierRuns: [] });
+  });
+});
+
 describe("getStudentClassBooks", () => {
+  it("unlocks only the steps marked again after Teach again", async () => {
+    const mock = dbWith([[{ classroomId: CLASS }], [classBookRow], [lesson(3)], [{ classBookId: CLASS_BOOK, lessonNumber: 3, stepsDone: [] }]]);
+    const result = await getStudentClassBooks({ db: mock as unknown as DB, user: student });
+    expect(result[0].lesson?.unlockedAppSteps).toEqual([]);
+    const again = dbWith([[{ classroomId: CLASS }], [classBookRow], [lesson(3)], [{ classBookId: CLASS_BOOK, lessonNumber: 3, stepsDone: [1, 2, 3] }]]);
+    const more = await getStudentClassBooks({ db: again as unknown as DB, user: student });
+    expect(more[0].lesson?.unlockedAppSteps).toEqual([1, 2, 3]);
+  });
+
   it("returns the current lesson of each class book with the unlocked app steps", async () => {
     // memberships, class books, current lessons, state rows
     const mock = dbWith([[{ classroomId: CLASS }], [classBookRow], [lesson(3)], [{ classBookId: CLASS_BOOK, lessonNumber: 3, stepsDone: [1, 2, 3, 4, 5, 6, 7, 8, 9] }]]);

@@ -6,6 +6,7 @@ export { importLessonPackage, type ImportLessonPackageOptions } from "./import.j
 export { toGuideRows, stepTitleFromPlanLine, scriptBody, type GuideRow, type ManualLocale, type TeachingNotes } from "./guides.js";
 export * from "./class-book-contracts.js";
 export { assignClassBook, listClassBooks, getTeacherBookSlots, setCurrentLesson, markLessonTaught, markStepDone, getClassBookPacing, getStudentClassBooks, listCatalogueBooks, getStudentBook, managedClass } from "./class-books.js";
+export { teachLessonAgain } from "./class-book-runs.js";
 export * from "./progress-contracts.js";
 export { recordLessonProgress, getClassBookProgress, getStudentLessonSteps, toProgressCsv } from "./progress.js";
 export * from "./lesson-support-contracts.js";

@@ -15,6 +15,7 @@ import { createTenantDB } from "../db-contract.js";
 import {
   assignClassBookInput,
   markLessonTaughtInput,
+  parseEarlierRuns,
   markStepDoneInput,
   setCurrentLessonInput,
   type AssignClassBookInput,
@@ -341,7 +342,7 @@ export async function getClassBookPacing(params: Ctx & { classBookId: string }):
       .where(eq(primaryBookLessons.bookId, book.bookId))
       .orderBy(asc(primaryBookLessons.number)),
     raw
-      .select({ lessonNumber: primaryClassBookLessons.lessonNumber, taughtAt: primaryClassBookLessons.taughtAt, stepsDone: primaryClassBookLessons.stepsDone })
+      .select({ lessonNumber: primaryClassBookLessons.lessonNumber, taughtAt: primaryClassBookLessons.taughtAt, stepsDone: primaryClassBookLessons.stepsDone, runNumber: primaryClassBookLessons.runNumber, earlierRuns: primaryClassBookLessons.earlierRuns })
       .from(primaryClassBookLessons)
       .where(eq(primaryClassBookLessons.classBookId, params.classBookId)),
   ]);
@@ -356,6 +357,8 @@ export async function getClassBookPacing(params: Ctx & { classBookId: string }):
       approved: lesson.approved,
       taughtAt: state?.taughtAt ?? null,
       stepsDone: ((state?.stepsDone as number[] | undefined) ?? []).slice().sort((a, b) => a - b),
+      runNumber: state?.runNumber ?? 1,
+      earlierRuns: parseEarlierRuns(state?.earlierRuns),
       current: lesson.number === book.currentLesson,
     };
   });
