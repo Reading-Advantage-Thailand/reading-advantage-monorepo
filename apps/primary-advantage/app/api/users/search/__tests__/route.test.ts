@@ -68,6 +68,7 @@ function searchRequest(query: string) {
 describe("GET /api/users/search school scope", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.select.mockReset();
     whereCalls.length = 0;
   });
 
@@ -120,5 +121,18 @@ describe("GET /api/users/search school scope", () => {
       ),
       `Expected a TenantDB-injected school scope on users, got: ${JSON.stringify(injectedWhere)}`,
     ).toBe(true);
+  });
+
+  it("returns the users.role as the role badge when there are no user_roles rows", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId: "school-a" });
+    mocks.select
+      .mockReturnValueOnce(chain([{ id: "u2", name: "Anna", email: "a@x.test", role: "TEACHER" }]))
+      .mockReturnValueOnce(chain([]));
+
+    const response = await GET(searchRequest("anna"));
+
+    const body = (await response.json()) as { id: string; role?: string; roles: { role: { name: string } }[] }[];
+    expect(body[0]!.roles).toEqual([{ role: { name: "teacher" } }]);
+    expect(body[0]!.role).toBeUndefined();
   });
 });
