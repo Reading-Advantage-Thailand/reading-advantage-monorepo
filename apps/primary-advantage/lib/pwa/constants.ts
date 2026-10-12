@@ -12,3 +12,15 @@ export const SERVICE_WORKER_TYPE = "module" as const;
  * prefix. `public/serwist/sw.js` is a plain script and repeats this value.
  */
 export const CACHE_PREFIX = "primary-v2-";
+
+/**
+ * Name of the cache that holds the offline fallback page. It starts with the prefix, so the
+ * worker keeps it when it deletes the legacy caches. `public/serwist/sw.js` repeats this value.
+ */
+export const OFFLINE_CACHE_NAME = `${CACHE_PREFIX}offline`;
+
+/**
+ * Files cached at install for the offline fallback. `public/offline.html` is static with inline
+ * styles, so the worker cache stays under 200 KB. `public/serwist/sw.js` repeats this list.
+ */
+export const OFFLINE_FILES = ["/offline.html"] as const;
