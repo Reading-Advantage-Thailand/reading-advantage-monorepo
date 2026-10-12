@@ -15,6 +15,10 @@ import {
 } from "@/server/models/classroomModel";
 import { currentUser } from "@/lib/session";
 import { updateClassroomBodySchema } from "@/lib/zod";
+import { db } from "@reading-advantage/db";
+import { AuthError } from "@reading-advantage/auth";
+import { SetClassroomTeachersError, setClassroomTeachers } from "@reading-advantage/domain/classes";
+import { logger } from "@/lib/observability/logger";
 
 import { STAFF_ROLES } from "@/lib/permissions";
 
@@ -133,8 +137,11 @@ export async function createClassroomController(
   }
 }
 
+/** Thrown inside the update transaction when the class is not found, so the transaction rolls back. */
+class ClassroomNotUpdatedError extends Error {}
+
 /**
- * Updates one accessible classroom.
+ * Updates one accessible classroom. A `teacherIds` list (ADMIN and SYSTEM only) also sets the class teachers.
  * @param req The incoming request.
  * @param context The route parameters.
  * @returns An HTTP response with the updated classroom.
@@ -168,10 +175,24 @@ export async function updateClassroomController(
       );
     }
 
-    const classroom = await updateClassroom(id, {
-      name: parsed.data.classroomName,
-      grade: parsed.data.grade,
-    }, user);
+    const changes = { name: parsed.data.classroomName, grade: parsed.data.grade };
+    const { teacherIds } = parsed.data;
+    let classroom;
+    if (teacherIds === undefined) {
+      classroom = await updateClassroom(id, changes, user);
+    } else {
+      // The teacher change and the class update commit together or not at all.
+      classroom = await db.transaction(async (tx) => {
+        await setClassroomTeachers({
+          db: tx as unknown as typeof db,
+          user,
+          input: { classroomId: id, teacherIds },
+        });
+        const updated = await updateClassroom(id, changes, user, tx);
+        if (!updated) throw new ClassroomNotUpdatedError();
+        return updated;
+      });
+    }
 
     if (!classroom) {
       return NextResponse.json(
@@ -182,7 +203,17 @@ export async function updateClassroomController(
 
     return NextResponse.json({ classroom }, { status: 200 });
   } catch (error) {
-    console.error("Error updating classroom:", error);
+    if (error instanceof ClassroomNotUpdatedError) {
+      return NextResponse.json({ error: "Classroom not found" }, { status: 404 });
+    }
+    if (error instanceof SetClassroomTeachersError) {
+      logger.warn("classroom_teachers_refused", { code: error.code });
+      return NextResponse.json({ error: error.message, code: error.code }, { status: error.status });
+    }
+    if (error instanceof AuthError) {
+      return NextResponse.json({ error: "Access denied. Insufficient permissions." }, { status: 403 });
+    }
+    logger.error("classroom_update_failed", { error });
     return NextResponse.json(
       { error: "Failed to update classroom" },
       { status: 500 },

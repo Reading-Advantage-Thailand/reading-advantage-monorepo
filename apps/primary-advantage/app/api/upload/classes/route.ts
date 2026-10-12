@@ -11,6 +11,7 @@ import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
 import { generateRandomClassCode } from "@/lib/utils";
+import { recordSystemImportAudit, resolveImportSchool } from "@/server/utils/import-school";
 
 // Zod validation schemas
 const classroomCsvRowSchema = z.object({
@@ -179,17 +180,30 @@ export async function POST(request: NextRequest) {
       throw error;
     }
 
-    const tenant = { schoolId: authUser.schoolId ?? null };
-    const tenantDb = getTenantDB(tenant);
-    // roles and schools are EXEMPT; classroomStudents, classroomTeachers,
-    // and userRoles are REFERENTIAL (owner-FK scoped below). The tenant is
-    // unknown until the session user row loads, so that single-row PK
-    // lookup also uses this handle.
-    const globalDb = getUnscopedDB("upload classes import: roles and schools are EXEMPT; membership and user-role tables are REFERENTIAL; session user lookup runs before the tenant is known");
-    // users and classrooms are FLAT. School staff use the tenant-scoped
-    // handle; SYSTEM actors carry no school, so their global writes use the
-    // escape hatch with the reason above.
-    const staffDb: DB = tenant.schoolId ? tenantDb : globalDb;
+    // The target school comes from the verified session; SYSTEM names it in the form.
+    const fileTimer = createTimer("FILE_PROCESSING");
+    const formData = await request.formData();
+    const target = await resolveImportSchool(authUser, formData.get("schoolId"));
+    if ("error" in target) {
+      return NextResponse.json(
+        {
+          error: target.error,
+          details: [
+            target.error === "School association required"
+              ? "Users must be associated with a school to upload classes CSV files"
+              : target.error,
+          ],
+        },
+        { status: 400 },
+      );
+    }
+    const targetSchoolId = target.schoolId;
+    const tenantDb = getTenantDB({ schoolId: targetSchoolId });
+    // roles and schools are EXEMPT; classroomStudents, classroomTeachers, and userRoles are
+    // REFERENTIAL (owner-FK scoped below). The session user lookup is a single-row PK read.
+    const globalDb = getUnscopedDB("upload classes import: roles and schools are EXEMPT; membership and user-role tables are REFERENTIAL; session user lookup is a PK read");
+    // users and classrooms are FLAT: every write and lookup uses the tenant handle of the target school.
+    const staffDb: DB = tenantDb;
 
     // Get current user (replaces Prisma `user.findUnique({ include: School, roles })`).
     const [currentUser] = await globalDb.select().from(users)
@@ -201,31 +215,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Stitch school include via FK.
-    let userSchool: { id: string; name: string } | null = null;
-    if (currentUser.schoolId) {
-      const [s] = await globalDb.select({ id: schools.id, name: schools.name })
-        .from(schools)
-        .where(eq(schools.id, currentUser.schoolId))
-        .limit(1);
-      userSchool = s;
-    }
-
-    if (authUser.role !== "SYSTEM" && !currentUser.schoolId) {
-      return NextResponse.json(
-        {
-          error: "School association required",
-          details: [
-            "Users must be associated with a school to upload classes CSV files",
-          ],
-        },
-        { status: 400 },
-      );
-    }
+    const [userSchool] = await globalDb.select({ id: schools.id, name: schools.name })
+      .from(schools)
+      .where(eq(schools.id, targetSchoolId))
+      .limit(1);
     authTimer.end("Authentication and permission checks completed");
 
-    const fileTimer = createTimer("FILE_PROCESSING");
-    const formData = await request.formData();
     const file = formData.get("file") as File;
     fileTimer.log("Form data extracted");
 
@@ -573,7 +568,7 @@ export async function POST(request: NextRequest) {
           password: null,
           // FR-2.1: the session school is the sole stamp source. The stored
           // user row can lag the session after a school change.
-          schoolId: authUser.schoolId ?? null,
+          schoolId: targetSchoolId,
           classroomNames:
             validatedRow.role !== "admin"
               ? parseClassroomNames(validatedRow.classroom_name)
@@ -688,7 +683,7 @@ export async function POST(request: NextRequest) {
           name: validatedRow.classroom_name.trim(),
           classCode: generateRandomClassCode(),
           // FR-2.1: the session school is the sole stamp source.
-          schoolId: authUser.schoolId ?? null,
+          schoolId: targetSchoolId,
           teacherId: currentUser.id,
           createdBy: currentUser.id,
         };
@@ -1032,6 +1027,13 @@ export async function POST(request: NextRequest) {
 
     const totalTime = apiTimer.end("Upload classes API request completed");
 
+    await recordSystemImportAudit(authUser, targetSchoolId, {
+      fileName: filename,
+      counts: Object.fromEntries(
+        Object.entries(stats).filter(([, value]) => typeof value === "number"),
+      ) as Record<string, number>,
+    });
+
     return NextResponse.json({
       success: true,
       message: message,
@@ -1045,18 +1047,14 @@ export async function POST(request: NextRequest) {
         totalExecutionTime: totalTime,
         processedAt: new Date().toISOString(),
       },
-      schoolInfo: userSchool
-        ? {
-            id: userSchool.id,
-            name: userSchool.name,
-            note:
-              filename === "students.csv" || filename === "teachers.csv"
-                ? "All imported users have been assigned to this school"
-                : "All imported classes have been assigned to this school",
-          }
-        : {
-            note: "system user - data imported without school assignment",
-          },
+      schoolInfo: {
+        id: userSchool?.id ?? targetSchoolId,
+        name: userSchool?.name,
+        note:
+          filename === "students.csv" || filename === "teachers.csv"
+            ? "All imported users have been assigned to this school"
+            : "All imported classes have been assigned to this school",
+      },
       classrooms: createdClassrooms,
       note: note,
     }, { headers: { "Cache-Control": "no-store" } });

@@ -34,6 +34,8 @@ interface TeacherQueryParams {
   search: string;
   role: string;
   userWithRoles: UserWithRoles;
+  /** Narrows the list to one school. Only a SYSTEM caller gets this filter; other callers ignore it. */
+  schoolId?: string;
 }
 
 // Get teachers with pagination and filtering
@@ -43,7 +45,7 @@ export const getTeachers = async (
   teachers: TeacherData[];
   totalCount: number;
 }> => {
-  const { page, limit, search, role, userWithRoles } = params;
+  const { page, limit, search, role, userWithRoles, schoolId } = params;
 
   try {
     // Calculate offset for pagination
@@ -55,6 +57,9 @@ export const getTeachers = async (
     const whereConditions: any[] = [
       ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
+    if (schoolId && effectiveCallerRole(userWithRoles) === "SYSTEM") {
+      whereConditions.push(eq(users.schoolId, schoolId));
+    }
 
     // Add search filter if provided
     if (search) {

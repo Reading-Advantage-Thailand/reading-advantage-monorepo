@@ -208,7 +208,16 @@
         "updateFailed": "更新教室失败",
         "updateSuccess": "更新教室成功",
         "deleteSuccess": "删除教室成功",
-        "deleteFailed": "删除教室失败"
+        "deleteFailed": "删除教室失败",
+        "teachersRefused": "教师未更改。有教师属于其他学校。"
+      },
+      "picker": {
+        "hint": "勾选教这个班级的教师。",
+        "owner": "班主任",
+        "loading": "正在加载教师...",
+        "loadFailed": "教师列表加载失败。",
+        "empty": "这所学校没有教师。",
+        "selected": "{count, plural, other {已选择 # 位教师}}。班主任会留在班级中。"
       }
     },
     "Students": {
@@ -251,6 +260,7 @@
       "maxSize": "最大大小：5MB",
       "browse": "浏览",
       "supportedFormat": "支持格式：仅 CSV 文件，最大 5MB",
+      "chooseSchool": "导入前请先选择学校。",
       "fileSelected": {
         "title": "已选择文件",
         "name": "名称",
@@ -260,6 +270,7 @@
       "failedTitle": "上传失败",
       "successTitle": "上传成功",
       "success": {
+        "school": "学校",
         "file": "文件",
         "size": "大小",
         "savedAs": "保存为",

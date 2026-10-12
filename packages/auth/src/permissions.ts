@@ -51,6 +51,7 @@ export const PERMISSIONS = {
   "class:archive": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "class:join": [ROLES.STUDENT],
   "class:roster": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "class:teachers:assign": [ROLES.ADMIN, ROLES.SYSTEM],
 
   // Students
   "student:list": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],

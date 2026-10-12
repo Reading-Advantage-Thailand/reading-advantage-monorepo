@@ -459,6 +459,7 @@ export const getAllClassrooms = async (actor: ClassroomActor) => {
       createdAt: classrooms.createdAt,
       updatedAt: classrooms.updatedAt,
       schoolId: classrooms.schoolId,
+      ownerId: classrooms.teacherId,
       schoolName: schools.name,
     })
       .from(classrooms)
@@ -495,6 +496,7 @@ export const getAllClassrooms = async (actor: ClassroomActor) => {
           createdAt: classroom.createdAt,
           updatedAt: classroom.updatedAt,
           schoolId: classroom.schoolId,
+          ownerId: classroom.ownerId,
           school: {
             id: classroom.schoolId,
             name: classroom.schoolName,
@@ -525,6 +527,7 @@ export const getAllClassrooms = async (actor: ClassroomActor) => {
  * @param id The classroom identifier.
  * @param data The classroom changes.
  * @param actor The authenticated actor.
+ * @param executor The database or a transaction handle (default: the database).
  * @returns The updated classroom, or null when access is denied.
  */
 export const updateClassroom = async (
@@ -535,12 +538,13 @@ export const updateClassroom = async (
     description?: string;
   },
   actor: ClassroomActor,
+  executor: Pick<typeof db, "select" | "update"> = db,
 ) => {
   try {
     const accessibleClassroom = await getAccessibleClassroom(id, actor);
     if (!accessibleClassroom) return null;
 
-    const [updatedClassroom] = await db.update(classrooms)
+    const [updatedClassroom] = await executor.update(classrooms)
       .set({
         name: data.name,
         grade: data.grade ? parseInt(data.grade) : undefined,
@@ -561,7 +565,7 @@ export const updateClassroom = async (
     }
 
     // Stitch teachers + students for the include shape.
-    const teacherRows = await db.select({
+    const teacherRows = await executor.select({
       id: classroomTeachers.id,
       userId: users.id,
       name: users.name,
@@ -571,7 +575,7 @@ export const updateClassroom = async (
       .innerJoin(users, eq(users.id, classroomTeachers.teacherId))
       .where(eq(classroomTeachers.classroomId, id));
 
-    const studentRows = await db.select({
+    const studentRows = await executor.select({
       id: classroomStudents.id,
       studentId: users.id,
       name: users.name,

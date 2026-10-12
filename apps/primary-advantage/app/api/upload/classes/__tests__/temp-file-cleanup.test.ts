@@ -62,14 +62,14 @@ function selectResult(rows: unknown[]) {
   return chain;
 }
 
-function uploadRequest(name: string): NextRequest {
+function uploadRequest(name: string, fields: Record<string, string> = {}): NextRequest {
   const file = {
     name,
     size: 100,
     type: "text/csv",
     arrayBuffer: vi.fn().mockResolvedValue(new TextEncoder().encode("csv").buffer),
   };
-  return { formData: vi.fn().mockResolvedValue({ get: () => file }) } as unknown as NextRequest;
+  return { formData: vi.fn().mockResolvedValue({ get: (key: string) => (key === "file" ? file : (fields[key] ?? null)) }) } as unknown as NextRequest;
 }
 
 describe("classes upload temp file cleanup", () => {
@@ -102,6 +102,27 @@ describe("classes upload temp file cleanup", () => {
       throw new Error("parse boom");
     });
     const response = await POST(uploadRequest("classes.csv"));
+    expect(response.status).toBe(400);
+    expectTempFileDeleted();
+  });
+
+  it("writes no temp file when a SYSTEM upload has no school (400)", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "sys-1", role: "SYSTEM", schoolId: null });
+    const response = await POST(uploadRequest("classes.csv"));
+    expect(response.status).toBe(400);
+    expect(mocks.writeFile).not.toHaveBeenCalled();
+    expect(mocks.unlink).not.toHaveBeenCalled();
+  });
+
+  it("deletes the temp file when a SYSTEM upload to a chosen school fails validation (400)", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "sys-1", role: "SYSTEM", schoolId: null });
+    mocks.select.mockReset();
+    mocks.select
+      .mockReturnValueOnce(selectResult([{ id: SESSION_SCHOOL }]))
+      .mockReturnValueOnce(selectResult([{ id: "sys-1", schoolId: null }]))
+      .mockReturnValueOnce(selectResult([{ id: SESSION_SCHOOL, name: "School X" }]));
+    mocks.parse.mockReturnValue([]);
+    const response = await POST(uploadRequest("classes.csv", { schoolId: SESSION_SCHOOL }));
     expect(response.status).toBe(400);
     expectTempFileDeleted();
   });

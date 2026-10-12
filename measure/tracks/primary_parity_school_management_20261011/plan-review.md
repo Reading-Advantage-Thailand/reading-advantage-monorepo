@@ -18,3 +18,49 @@ Low:
 - L3. Reference SQL L3 joins `classrooms` on `school_id`; a student in a class of another school would show no class name. This is the wanted behavior.
 
 Shortcuts and lessons for the orchestrator: none for the shared files. The harness of the admin dashboard design is reusable: copy, change `ROOT`, and write new `page.tsx` and `render.tsx`.
+
+## Phase S1: Admin assigns teachers to a class (review of `git diff 3d88cb41c..HEAD`)
+
+Scope: `setClassroomTeachers` (domain), the PATCH `teacherIds` path, `GET /api/teachers?schoolId=`, the teacher picker, 5 locale files.
+Plan compliance: done. Critical: none. High: none.
+Checks: the tenant rule is in the domain function (ADMIN of another school gets FORBIDDEN, tested); Zod on the PATCH body and the domain input; `assertCan`; no `console.error` in new server code (logger used); locale key parity (6 keys + 1 toast key in each of 5 files).
+Tests: domain 12 pass; app changed files 14 files, 86 tests pass; tsc clean; ESLint 0 errors on changed files.
+
+Deviations:
+
+- D1. Red-first skipped for the domain test, the controller tests, and the picker test. The earlier helper wrote the domain code first. The other tests came after the code.
+- D2. `assertCan(user, "class:teachers:assign" as Permission)` uses a cast. The key lives in the module registry (`classes/permissions.ts`), not in the central `PERMISSIONS` type. Other modules list keys in both places.
+
+Medium:
+
+- M4. The picker lists `role=teacher` users only. A class owner with the ADMIN role does not show in the list. The owner stays on the class and its id is sent, but no owner row shows.
+- M5. The picker asks for 500 teachers at most. A school with more teachers needs a search box.
+- M6. The Thai text is by the helper: owner check pending.
+
+Low:
+
+- L4. The captures show no toast (the harness has no Toaster). The error capture shows the dialog kept open after a 400.
+- L5. `PATCH` with `teacherIds` from a TEACHER session gives 403 after the class access check. No row changes.
+- L6. A13 (stale archived directory `agents_md_audit_science_advantage_20260603`) is an old doctor failure.
+
+Notes for S3: `ownerId` is now in the `GET /api/classroom` list rows. The `teachers-table` school filter can reuse the `?schoolId=` of `/api/teachers`. Keep the Phase D notes M2 and M3 for S4.
+
+## Phase S2 review
+
+Tests: app 20 files, 107 tests pass (upload routes, import page, components/admin, server/utils); auth permissions 17 pass; domain set-classroom-teachers 12 pass; app tsc clean; ESLint 0 errors on changed files.
+
+Review result: no Critical or High finding. Every write in both routes uses the tenant handle of the resolved school. The session school feeds the guard. The audit event is best-effort (a failed write is logged).
+
+Medium:
+
+- M7. The Thai text of `ImportData.upload.chooseSchool` and `upload.success.school` is by the helper: owner check pending. Keys exist in the five locale files.
+- M8. Both routes still use `console.error` in the old catch blocks (existing code, not changed). Move them to the logger in a later track.
+- M9. The classes route audit counts come from the `stats` object (numeric fields only).
+
+Low:
+
+- L7. The page test replaces the Radix select with a native select. The captures cover the real select.
+- L8. The harness stubs `csv/sync` (preview only).
+
+Shortcut/tech-debt: the row of 2026-09-14 is set to Resolved in `measure/tech-debt.md` as the prompt allowed. Rule 4 of `session-school-policy.md` is updated.
+

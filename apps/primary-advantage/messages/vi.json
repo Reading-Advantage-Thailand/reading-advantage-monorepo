@@ -208,7 +208,16 @@
         "updateFailed": "Cập nhật lớp học thất bại",
         "updateSuccess": "Cập nhật lớp học thành công",
         "deleteSuccess": "Xóa lớp học thành công",
-        "deleteFailed": "Xóa lớp học thất bại"
+        "deleteFailed": "Xóa lớp học thất bại",
+        "teachersRefused": "Giáo viên không thay đổi. Có giáo viên thuộc trường khác."
+      },
+      "picker": {
+        "hint": "Chọn các giáo viên dạy lớp này.",
+        "owner": "Chủ nhiệm lớp",
+        "loading": "Đang tải giáo viên...",
+        "loadFailed": "Không tải được danh sách giáo viên.",
+        "empty": "Trường này chưa có giáo viên.",
+        "selected": "{count, plural, other {Đã chọn # giáo viên}}. Chủ nhiệm lớp vẫn ở trong lớp."
       }
     },
     "Students": {
@@ -251,6 +260,7 @@
       "maxSize": "Kích thước tối đa: 5MB",
       "browse": "Duyệt",
       "supportedFormat": "Định dạng hỗ trợ: chỉ tệp CSV, kích thước tối đa 5MB",
+      "chooseSchool": "Hãy chọn trường trước khi nhập dữ liệu.",
       "fileSelected": {
         "title": "Đã chọn tệp",
         "name": "Tên",
@@ -260,6 +270,7 @@
       "failedTitle": "Tải lên thất bại",
       "successTitle": "Tải lên thành công",
       "success": {
+        "school": "Trường",
         "file": "Tệp",
         "size": "Kích thước",
         "savedAs": "Lưu dưới tên",
