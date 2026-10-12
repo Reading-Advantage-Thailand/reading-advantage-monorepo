@@ -47,3 +47,10 @@ Send this when Phase S2 starts (the monorepo session coordinates; the owner sees
   S3 must compare without that page, or decide otherwise.
 - `import-lesson-packages.ts` reads only top-level `*.json` files of each folder, so `print/` is not
   read. The class-books archive needs no remake. Phase S2 must read the sibling `print/` folder.
+
+## Update (2026-10-12, orchestrator)
+
+- Correction: `dashboard/assets/print-fonts/` holds 20 woff2 files, 5 `OFL-*.txt` files, and a README (not 21 woff2).
+- Export and golden in Workbooks commit 08bb160 (HEAD fa5a4a8 adds only measure/ files); 70 print files;
+  golden `content/primary/origins-3.2/print/golden/lesson-05.html` (with key) and `lesson-05-no-key.html`.
+  Details for S2/S3 are in the orchestrator notes.

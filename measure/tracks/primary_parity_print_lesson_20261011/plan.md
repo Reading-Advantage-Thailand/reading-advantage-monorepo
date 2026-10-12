@@ -20,21 +20,25 @@ Every task follows the TDD order of `measure/workflow.md`.
       check `print-ready`, `print-loading`, and `print-not-ready` at 375 px and 1280 px, day and night.
     - Member Question defaults used: (1) print data from the Workbooks export; (2) no answer key page, no "with the answer key" choice; (3) the template, not the 70 PDFs.
 
-## Phase S1: Copy the Workbooks primary template into a print kit
+## Phase S1: Copy the Workbooks primary template into a print kit [checkpoint: PENDING]
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Define the kit contract
-    - [ ] `printKitSchema` (template, icons, CSS, source repo, commit, commit date) in `packages/domain/src/primary-books/print/contracts.ts`
-    - [ ] The allowlist of Workbooks paths in `packages/domain/scripts/sync-print-kit.ts` (template, `dashboard/lib/document-wrapper/icons.ts`, `dashboard/lib/document-wrapper/styles.ts`, `dashboard/lib/document-wrapper/utils.ts`, `dashboard/assets/print-fonts/*.woff2`, `dashboard/assets/print-fonts/OFL-*.txt`)
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/print/__tests__/kit-guard.test.ts`: no `<script>`, no external URL, only allowlisted font files; a counterexample fixture fails the guard
-    - [ ] `packages/domain/src/primary-books/__tests__/sync-print-kit.test.ts`: a dirty kit path stops the script; `--check` exits 1 for a newer commit (a temporary git repository as the fixture)
-- [ ] Task: Implement the sync script (green)
-    - [ ] `packages/domain/scripts/sync-print-kit.ts` (`git show <commit>:<path>`; the CSS of `getPrintStyles` for A4 with no cover; the icon map); the `pnpm` script in `packages/domain/package.json`
-    - [ ] Run it once on the Workbooks head; commit `packages/domain/src/primary-books/print/kit.generated.ts` and `apps/primary-advantage/public/print-fonts/`
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; the sync and check commands in the script header; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Copy the Workbooks primary template into a print kit' (Protocol in workflow.md)
+- [x] Task: Define the kit contract
+    - [x] `printKitSchema` (template, icons, CSS, source repo, commit, commit date) in `packages/domain/src/primary-books/print/contracts.ts`
+    - [x] The allowlist of Workbooks paths in `packages/domain/scripts/sync-print-kit.ts` (template, `dashboard/lib/document-wrapper/icons.ts`, `dashboard/lib/document-wrapper/styles.ts`, `dashboard/lib/document-wrapper/utils.ts`, `dashboard/assets/print-fonts/*.woff2`, `dashboard/assets/print-fonts/OFL-*.txt`)
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/print/__tests__/kit-guard.test.ts`: no `<script>`, no external URL, only allowlisted font files; a counterexample fixture fails the guard
+    - [x] `packages/domain/src/primary-books/__tests__/sync-print-kit.test.ts`: a dirty kit path stops the script; `--check` exits 1 for a newer commit (a temporary git repository as the fixture)
+- [x] Task: Implement the sync script (green)
+    - [x] `packages/domain/scripts/sync-print-kit.ts` (`git show <commit>:<path>`; the CSS of `getPrintStyles` for A4 with no cover; the icon map); the `pnpm` script in `packages/domain/package.json`
+    - [x] Run it once on the Workbooks head; commit `packages/domain/src/primary-books/print/kit.generated.ts` and `apps/primary-advantage/public/print-fonts/`
+- [x] Task: Docs and doctor
+    - [x] JSDoc; the sync and check commands in the script header; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S1: Copy the Workbooks primary template into a print kit' (Protocol in workflow.md)
+    - Notes: kit made at Workbooks c58fa54 (2026-10-07), not HEAD: it is the newest commit of the kit paths, and `--check` uses the same rule.
+      The kit holds the template, icons and utils sources, the A4 no-cover CSS with theme tokens (`__THEME_PRIMARY__`, `__THEME_SECONDARY__`, `__THEME_GRADIENT__`), and 25 font files (20 woff2, 5 OFL texts; README not copied).
+    - Steps: run `cd packages/domain && ../../node_modules/.bin/tsx scripts/sync-print-kit.ts --check` (exit 0); open `kit.generated.ts` and check the commit id and the ISC header in `iconsSource`.
+    - Member Question defaults used: none in this phase.
 
 ## Phase S2: Store the print data of each lesson
 _Story ref: spec.md#story-s2_
