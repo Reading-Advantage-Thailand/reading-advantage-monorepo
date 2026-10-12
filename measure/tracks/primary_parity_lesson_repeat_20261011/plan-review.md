@@ -31,3 +31,15 @@ S1 must:
 - Shortcut: the look-check captures use a browser bundle with stubbed actions, not the running app.
 - Medium (pre-existing): `component-deduplication-behavior` and `loading-state-flow.behavior` tests fail to load: `packages/sales-knowledge/dist/.../release-candidate.json` is missing in this worktree.
 - Lesson: a client file that imports `@/lib/student-view` pulls server code into an esbuild browser bundle; alias it to a stub in the harness.
+
+## Phase S3
+- Low: the dialog text has no student count (design key `teachAgainStudents` is not built). The domain pacing read has no count of students with work. S4 can add it with the attempt counts.
+- Low: the keys of S3 are English in `th`, `cn`, `tw`, `vi` (no approved text).
+- Low: the dialog has no focus trap and no Escape key (same as S2); Cancel has autofocus.
+- Low: "Taught N times" counts runs with a taught time and shows from 2. "Taught 1 time" (spec check A4) is not shown; the plain "Taught <date>" line shows instead.
+- Low: `earlier_runs` stores dates as ISO strings (JSON copy in `teachLessonAgain`); `parseEarlierRuns` drops a bad item.
+- Low: a lesson without an article link does not close student attempts (only the run moves).
+- Low: the 30-student close is 587 ms on a local copy. The close makes about 7 selects for each student. A batch read would cut this if a class grows.
+- Shortcut: the look-check captures use a copy of the row markup of the page with the real `LessonActions`, not the running app.
+- Lesson: vitest 4 reports a mock that rejects a promise (`mockRejectedValue`) as a failed test even when the code catches it. Throw synchronously in the mock for a caught audit error.
+- Lesson: a `vi.fn()` insert mock returns the same object each call, so read every `values` call from `mock.insert.mock.results[0].value.values.mock.calls`.

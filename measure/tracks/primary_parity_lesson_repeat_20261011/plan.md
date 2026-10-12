@@ -87,23 +87,37 @@ Notes (Phase S2, helper A1, 2026-10-12):
 - `build-graph update` skipped (graph.db is read only for helpers). `measure/generate.sh` and `doctor.sh` are left to the orchestrator.
 
 
-## Phase S3: The teacher teaches a lesson again
+## Phase S3: The teacher teaches a lesson again [checkpoint: CHECKPOINT_SHA]
 _Story ref: spec.md#story-s3_
 
-- [ ] Task: Define the contract
-    - [ ] `teachLessonAgainInput` (class book id, lesson number) and its output (run number, closed attempt count) in `packages/domain/src/primary-books/class-book-contracts.ts`; extend `pacingLessonSchema` with `runNumber` and `earlierRuns`
-    - [ ] Keys for "Teach again", the dialog, and "Taught N times" in the five locale files
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/__tests__/class-books.test.ts`: the run moves into `earlier_runs`; `taught_at` and `steps_done` are empty; the lesson is current; each student with work gets a closed attempt; a student with no work gets none; 30 mock students in one transaction; FORBIDDEN for a teacher of another class and for another school; one audit event with counts only
-    - [ ] `packages/domain/src/primary-books/__tests__/class-books.test.ts`: after "Teach again", `getStudentClassBooks` unlocks only the steps marked again
-    - [ ] `components/teacher/__tests__/class-book-pacing-controls.test.tsx`: the button shows for a taught lesson, the dialog, the call of the action
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-books/class-books.ts`: `teachLessonAgain` (uses `managedClassBook` and the transaction variant of `closeLessonAttempt`; audit with `recordAuditEvent` of `@reading-advantage/auth`); export in `index.ts`
-    - [ ] `apps/primary-advantage/actions/class-books.ts`: `teachLessonAgainAction` (thin)
-    - [ ] `apps/primary-advantage/components/teacher/class-book-pacing-controls.tsx` and the pacing page `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/page.tsx`
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S3: The teacher teaches a lesson again' (Protocol in workflow.md)
+- [x] Task: Define the contract
+    - [x] `teachLessonAgainInput` (class book id, lesson number) and its output (run number, closed attempt count) in `packages/domain/src/primary-books/class-book-contracts.ts`; extend `pacingLessonSchema` with `runNumber` and `earlierRuns`
+    - [x] Keys for "Teach again", the dialog, and "Taught N times" in the five locale files
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/__tests__/class-books.test.ts`: the run moves into `earlier_runs`; `taught_at` and `steps_done` are empty; the lesson is current; each student with work gets a closed attempt; a student with no work gets none; 30 mock students in one transaction; FORBIDDEN for a teacher of another class and for another school; one audit event with counts only
+    - [x] `packages/domain/src/primary-books/__tests__/class-books.test.ts`: after "Teach again", `getStudentClassBooks` unlocks only the steps marked again
+    - [x] `components/teacher/__tests__/class-book-pacing-controls.test.tsx`: the button shows for a taught lesson, the dialog, the call of the action
+- [x] Task: Implement (green)
+    - [x] `packages/domain/src/primary-books/class-books.ts`: `teachLessonAgain` (uses `managedClassBook` and the transaction variant of `closeLessonAttempt`; audit with `recordAuditEvent` of `@reading-advantage/auth`); export in `index.ts`
+    - [x] `apps/primary-advantage/actions/class-books.ts`: `teachLessonAgainAction` (thin)
+    - [x] `apps/primary-advantage/components/teacher/class-book-pacing-controls.tsx` and the pacing page `app/[locale]/teacher/class-roster/[classroomId]/books/[classBookId]/page.tsx`
+- [x] Task: Docs and doctor
+    - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S3: The teacher teaches a lesson again' (Protocol in workflow.md)
+
+Notes (Phase S3, helper A1, 2026-10-12):
+- Commits: 1eaccc10c `teachLessonAgain` (domain, contracts, tests); ceda9dcaf action, pacing controls, page, locale keys, tests.
+- `teachLessonAgain` is in the new file `packages/domain/src/primary-books/class-book-runs.ts` (exported from the index) to keep the merge with `getPreviewBook` small. `parseEarlierRuns` and the contracts are in `class-book-contracts.ts`. The domain tests are in the new file `__tests__/class-book-runs.test.ts` (not `class-books.test.ts`); the pacing and unlock tests are in `class-books.test.ts`.
+- Rules: the lesson needs a taught time, a step done, or earlier runs for a new archived run. An empty current run is not archived and the run number stays (a double click adds no empty run). The lesson becomes current. Students of the class with no article link are not closed.
+- Audit: `class_book:teach_again` with `lessonNumber`, `runNumber`, `studentCount`, `closedAttempts`. A failed audit write is logged and does not undo the teach. The domain package uses `console.error` for it, like `student-login/audit.ts`.
+- Locale keys are in `TeacherUi.classBook` (where the lesson plan keys are), not in `Lesson.Summary`: `teachAgain`, `teachAgainTitle`, `teachAgainBody1`, `teachAgainBody2`, `teachAgainCancel`, `taughtTimes`, `runChip`, `earlierRuns`, `earlierRun`, `earlierRunNoDate`. English text in all 5 locales.
+- Defaults used: Q1 a close changes no XP; Q2 "Teach again" closes the attempts of all students with work on the lesson.
+- Real run (local scratch `primary_repeat_s3`, copy of `primary_parity_20261011` plus migration 0073 and seeded rows, dropped): 30 students with 3 activity rows, progress, and 4 steps each; `teachLessonAgain` took 587 ms in one transaction (about 20 ms per student); 30 attempts, run 2, `earlier_runs` has 1 item, current lesson set, 0 activity rows left, 1 audit event.
+- Phase checks: domain `vitest run src/primary-books src/primary-lesson-attempts` 13 files, 134 tests pass; app `components/teacher` plus the page test 17 files, 111 tests pass; domain tsc build and app `tsc --noEmit` pass.
+- Look check pending (owner, async). Captures (12 PNG, 375/1280, day/night; states lesson-plan-closed, lesson-plan-earlier-runs, dialog): `~/Desktop/primary-parity-progress/captures/lesson_repeat/phaseS3/`. Real `LessonActions`, real chrome and rpg.css; the row markup is a copy of the page (stub actions).
+- Manual verification: sign in as a teacher, open a class lesson plan, mark lesson 1 taught, press "Teach again", press Cancel (nothing changes), press "Teach again" and confirm; check "Run 2", "Taught 1 time" is hidden until the lesson is taught again, and "Earlier runs (1)". Sign in as a student of the class in teacher-led mode and check that the lesson steps are locked and the student's earlier work shows as attempt 1 in the history (S4).
+- `build-graph update` skipped (graph.db is read only). `measure/generate.sh` and `doctor.sh` are left to the orchestrator.
+
 
 ## Phase S4: The reports show the latest and the earlier attempts
 _Story ref: spec.md#story-s4_
