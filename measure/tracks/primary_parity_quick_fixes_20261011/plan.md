@@ -62,7 +62,7 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: Measure - User Manual Verification 'Phase 2: Admin' (Protocol in workflow.md)
     - look check pending (owner, async). Manual verification steps: (1) As ADMIN open `/en/admin/students/classrooms`, choose Edit on a class. (2) Check that the dialog shows name, a grade select, and a read-only class code, and no student password. (3) Change the name and the grade, press Update, and check that the list shows the new values with a success toast. (4) Clear the name and check that the update fails with an error toast. (5) Open `/en/admin/students`; add, edit, and delete a test student; check one toast for each. (6) Make a failing call (for example a name that the server refuses) and check that the error toast shows the server text.
 
-## Phase 3: Teacher
+## Phase 3: Teacher [checkpoint: 949863f0d]
 
 - [x] Task: FR-3 (TCH-05) — the "Active this week" tile
     - [x] Red: new `server/models/__tests__/classroomModel.last-activity.test.ts`: the three student-list reads return `lastActivity` as the newest `created_at` of `user_activity` and `xp_logs`, `null` for a student with no row, and one grouped query for the list
@@ -73,7 +73,8 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
     - [x] Red: in `components/teacher/__tests__/my-classes.test.tsx`, add: with `?edit=<id of a listed class>` the edit dialog opens with its name and grade; with an unknown id no dialog opens; a close removes `edit` from the URL
     - [x] Green: `components/teacher/my-classes.tsx:92-120` reads `useSearchParams` after the list loads and opens the dialog; `router.replace` on close
     - A ref guard opens the dialog once for each `edit` id. The save button also removes `edit` from the URL.
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Teacher' (Protocol in workflow.md)
+- [x] Task: Measure - User Manual Verification 'Phase 3: Teacher' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual verification steps: (1) As TEACHER open `/en/teacher/reports`. (2) Check four tiles: total, average XP, common level, and active this week. (3) Check the fourth tile shows a percent and "n of m students". (4) Pick a class and type a name in the search; check that the fourth tile changes. (5) Open a class page, press Settings. (6) Check that `/teacher/my-classes` opens the edit dialog with the name and grade of that class. (7) Close the dialog; check that `edit` leaves the URL. (8) Open `/teacher/my-classes?edit=nope`; check that no dialog opens.
 
 ## Phase 4: Student — lessons and quizzes
 
