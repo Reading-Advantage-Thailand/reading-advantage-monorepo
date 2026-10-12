@@ -114,3 +114,21 @@ describe("story picture keys", () => {
     );
   });
 });
+
+describe("chapter picture and audio", () => {
+  it("getChapterImageKey uses the stored key before the chapter id", async () => {
+    const { getChapterImageKey } = await importStorageConfig();
+    expect(getChapterImageKey({ id: "ch-1", image: "cl9chapter" })).toBe("cl9chapter");
+    expect(getChapterImageKey({ id: "ch-1", image: null })).toBe("ch-1");
+  });
+
+  it("getChapterImageUrl builds images/story/<key>.png in the bucket", async () => {
+    const { getChapterImageUrl, getStorageUrl } = await importStorageConfig();
+    expect(getChapterImageUrl({ id: "ch-1", image: "cl9chapter" })).toBe(getStorageUrl("images/story/cl9chapter.png"));
+  });
+
+  it("getAudioUrl builds the chapter audio URL from the key with no leading slash", async () => {
+    const { getAudioUrl, getStorageUrl } = await importStorageConfig();
+    expect(getAudioUrl("audio/cl9chapter.mp3")).toBe(getStorageUrl("audio/cl9chapter.mp3"));
+  });
+});
