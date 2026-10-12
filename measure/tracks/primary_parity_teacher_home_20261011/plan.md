@@ -34,7 +34,7 @@ ESLint one time per phase, before the phase commit. One heavy job at a time on t
 - Harness: `<scratchpad>/teacher_home-p1/` (`page.tsx` has the table and strip markup that Phase 3 ports). It imports the real `ClassBookSlot` through a `next-intl` stub that reads `messages/en.json`.
 - The class book slot is not changed by this track (class_books S5 owns it).
 
-## Phase 2: Contracts and domain queries [checkpoint: pending]
+## Phase 2: Contracts and domain queries [checkpoint: c453b9c49]
 
 - [x] Task: Contracts
     - [x] Red: `packages/domain/src/__tests__/primary-teacher-home.test.ts` (extend): the output parses with the new fields of FR-1 and FR-2; the trend rule (FR-3) and the status rule (FR-4) at their limits (69 % / 70 %, 39 % / 40 %, +5 % / +5.1 %, previous 0)
