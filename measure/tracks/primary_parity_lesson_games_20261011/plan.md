@@ -5,7 +5,7 @@ after `primary_parity_cleanup_20261011` (M4 removes `packages/game-cartridges`).
 session before any write to `primary-parity-integration`. Run one heavy job at a time (a 3D game in
 a browser is a heavy job). Every task follows the TDD order of `measure/workflow.md`.
 
-## Phase D: Design (RPG skin)
+## Phase D: Design (RPG skin) [checkpoint: 9f38189cf]
 
 - [x] Task: Check the cartridges and the lesson items
     - [x] Confirm that the legacy four (`rpg-battle`, `rune-match`, `dragon-rider`, `enchanted-library`) and `castle-defense`, `potion-rush` load with a `PracticeInput` of lesson size; confirm the Tutor name match `wizard-vs-zombie` and `hero-vs-zombie`
