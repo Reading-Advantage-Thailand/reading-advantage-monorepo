@@ -123,23 +123,37 @@ _Story ref: spec.md#story-s3_
 - With an empty catalogue and no book, the card shows only the empty-catalogue box (the "choose a book below" text would mislead).
 - The class page keeps the placeholder slot only when there is no session user.
 
-## Phase S4: Put the book card at the top of the class page
+## Phase S4: Put the book card at the top of the class page [checkpoint: 51a6043b6]
 _Story ref: spec.md#story-s4_
 
-- [ ] Task: Define the card data
-    - [ ] Extend `classBookSchema` in `packages/domain/src/primary-books/class-book-contracts.ts` with the current lesson title and the next step (number, title, period), or add a separate read; choose the smaller change
-- [ ] Task: Write the tests (red)
-    - [ ] `packages/domain/src/primary-books/__tests__/class-books.test.ts`: `listClassBooks` returns the lesson title and the next step; another school's class gives FORBIDDEN
-    - [ ] `components/teacher/__tests__/enhanced-class-roster.test.tsx` (or the existing roster test): the book card renders before `ClassLoginPanel`; the anchor `#class-book` exists; `#class-login` stays
-    - [ ] `components/teacher/__tests__/classroom-navigation.test.tsx`: the class book link points to `#class-book`
-- [ ] Task: Implement (green)
-    - [ ] `packages/domain/src/primary-books/class-books.ts`: the new fields
-    - [ ] `components/teacher/enhanced-class-roster.tsx`: move `classBook` above `ClassLoginPanel`
-    - [ ] `components/teacher/class-books-card.tsx`: the Phase D design with `components/rpg/*`
-    - [ ] `components/teacher/classroom-navigation.tsx`: the class book link; the label in the five locale files
-- [ ] Task: Docs and doctor
-    - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Put the book card at the top of the class page' (Protocol in workflow.md)
+- [x] Task: Define the card data
+    - [x] Extend `classBookSchema` in `packages/domain/src/primary-books/class-book-contracts.ts` with the current lesson title and the next step (number, title, period), or add a separate read; choose the smaller change
+        - Done: optional fields `lessonTitle`, `stepsDoneCount`, `nextStep`, `nextStepPeriod` on `classBookSchema`, set by `listClassBooks` (3156c1eee).
+- [x] Task: Write the tests (red)
+    - [x] `packages/domain/src/primary-books/__tests__/class-books.test.ts`: `listClassBooks` returns the lesson title and the next step; another school's class gives FORBIDDEN
+    - [x] `components/teacher/__tests__/enhanced-class-roster.test.tsx` (or the existing roster test): the book card renders before `ClassLoginPanel`; the anchor `#class-book` exists; `#class-login` stays
+    - [x] `components/teacher/__tests__/classroom-navigation.test.tsx`: the class book link points to `#class-book`
+- [x] Task: Implement (green)
+    - [x] `packages/domain/src/primary-books/class-books.ts`: the new fields
+    - [x] `components/teacher/enhanced-class-roster.tsx`: move `classBook` above `ClassLoginPanel`
+    - [x] `components/teacher/class-books-card.tsx`: the Phase D design with `components/rpg/*`
+    - [x] `components/teacher/classroom-navigation.tsx`: the class book link; the label in the five locale files
+- [x] Task: Docs and doctor
+    - [x] JSDoc; skipped: graph.db read only (orchestrator rule); run `measure/generate.sh` and `measure/doctor.sh`
+- [x] Task: Measure - User Manual Verification 'Phase S4: Put the book card at the top of the class page' (Protocol in workflow.md) - look check pending (owner, async)
+    - Manual verification steps:
+        1. Open the 8 PNG files in `~/Desktop/primary-parity-progress/captures/class_books/phaseS4/` (`s4-assigned-*`, `s4-no-book-*`).
+        2. Check that the book card is the first card after the heading, above the sign-in panel, at 375 px and 1280 px, day and night.
+        3. Check the card: book name, two plaques, lesson title, meter, next step with period, gold "Open lesson", wood "Lesson plan".
+        4. On a running app, click "Class book" in the class heading: the page moves to the card. Click "Start class" on the dashboard: the page moves to `#class-login`.
+
+### Phase S4 notes
+
+- Deviation: the plan names `enhanced-class-roster.test` and `classroom-navigation.test`. The tests went into `class-page.test.tsx` and `classroom-navigation-login.test.tsx`, which exist.
+- The card keeps the three S3 states. The assign form sits in a closed "Assign another book" disclosure when a book exists.
+- `cutover-check.mjs`: the S2 block opens that disclosure before it selects the book (second run). Strings "Assign", "Book assigned.", "Lesson plan", `[data-class-book-slot]`, `#class-login`, `#answer-key` stay. Check 1 uses the card top and `#class-login` top: the card is now higher.
+- Member Questions: none in this phase.
+
 
 ## Phase S5: Show the assigned book and the next lesson on the dashboard
 _Story ref: spec.md#story-s5_

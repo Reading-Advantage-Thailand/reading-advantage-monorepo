@@ -61,3 +61,17 @@ No Critical or High finding. The `loadClassBooks` failure logs once through `lib
 - Low: `measure/doctor.sh` reports A13 (stale archived directory `agents_md_audit_science_advantage_20260603`). It is not from this phase.
 - Strings kept for the S2 browser block: "Assign", "Book assigned.", "Lesson plan", `[data-class-book-slot]`. No change to the block.
 
+## Phase S4: Put the book card at the top of the class page
+
+Review of `git diff 3f8e641ec..HEAD`: domain read, card, roster order, navigation link, five locale files, tests.
+No Critical or High finding. `listClassBooks` keeps `assertCan` and `managedClass` (FORBIDDEN for another school; tested).
+Both new reads use the same `unscoped` reason as before. No new Zod boundary. No `console.error`.
+
+- Medium: step titles show in English in all locales (the `WORKBOOK_STEPS` titles; the pacing page does the same today).
+- Medium: Thai text for the new keys is by the helper. cn, tw, and vi keep English for the card keys (file practice). The nav key `classBook` is translated in all five files.
+- Low: `listClassBooks` adds one select (lesson titles). The new fields are optional on `ClassBook`, so `toClassBook` callers do not set them.
+- Low: the capture harness shows the real card in a mock page shell, not the full class page.
+- Low: with several books, only the first block has the gold "Open lesson" button.
+- Low: eslint on the three changed components passed. A full app eslint did not run.
+- Skipped: `build-graph update` (graph.db read only, orchestrator rule).
+
