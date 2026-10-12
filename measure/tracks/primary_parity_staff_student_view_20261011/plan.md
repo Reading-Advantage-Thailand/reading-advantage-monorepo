@@ -8,16 +8,17 @@ Do not run a 25-student check on this machine (shared decision of 2026-10-05).
 
 ## Phase 0: Design
 
-- [ ] Task: Design the Preview banner and the preview states in the RPG skin
-    - [ ] Mock the banner (`Banner` from `components/rpg/chrome.tsx`) with "Exit preview", in day and night, at 375 px and 1280 px
-    - [ ] Mock the preview states of home, avatar picker, shop, history, reports, sentences, vocabulary, Class Quest, Reedy, and a game end screen
-    - [ ] Write the copy keys (en first) and the "Preview: not saved" note; check that the banner does not look like the Reedy "Preview" label
-    - [ ] Save the mocks and captures in `measure/tracks/primary_parity_staff_student_view_20261011/design/`
-- [ ] Task: Fill the behavior contract before the build
-    - [ ] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_staff_student_view_20261011/behavior-contract.md` and fill its seven sections (STU-01, the write-path inventory, and the AC-7 change of the security track)
-    - [ ] Write `measure/tracks/primary_parity_staff_student_view_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7)
-- [ ] Task: Owner look check of the design and of the SYSTEM school rule (spec D8); record the answers in `design/decisions.md`
-- [ ] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md)
+- [x] Task: Design the Preview banner and the preview states in the RPG skin
+    - [x] Mock the banner (`Banner` from `components/rpg/chrome.tsx`) with "Exit preview", in day and night, at 375 px and 1280 px
+    - [x] Mock the preview states of home, avatar picker, shop, history, reports, sentences, vocabulary, Class Quest, Reedy, and a game end screen
+    - [x] Write the copy keys (en first) and the "Preview: not saved" note; check that the banner does not look like the Reedy "Preview" label
+    - [x] Save the mocks and captures in `measure/tracks/primary_parity_staff_student_view_20261011/design/` (mock source and `captures.md` there; the 48 PNG files are outside the repository, paths in `design/captures.md`)
+- [x] Task: Fill the behavior contract before the build
+    - [x] Copy `docs/runbooks/primary-behavior-contract-template.md` (kit FR-11) to `measure/tracks/primary_parity_staff_student_view_20261011/behavior-contract.md` and fill its seven sections (STU-01, the write-path inventory, and the AC-7 change of the security track)
+    - [x] Write `measure/tracks/primary_parity_staff_student_view_20261011/acceptance-pairs.json` with the pairs of the spec acceptance criteria (kit FR-7)
+- [x] Task: Owner look check of the design and of the SYSTEM school rule (spec D8); record the answers in `design/decisions.md` — look check pending (owner, async). Default used: the D8 rule of the spec (decisions P0-1 to P0-8).
+- [x] Task: Measure - User Manual Verification 'Phase 0: Design' (Protocol in workflow.md) — look check pending (owner, async)
+    - Manual steps: (1) Open the 48 PNG files in `~/Desktop/primary-parity-progress/captures/staff_student_view/phase0-design/`. (2) Check `banner-375-*` and `banner-1280-*`: the blue banner differs from the brown PREVIEW plank. (3) Check each state at both widths in day and night. (4) Read `design/decisions.md` and answer P0-1 (SYSTEM school rule). Answers come back to `design/decisions.md`, `spec.md`, and `plan.md`.
 
 ## Phase S1: Staff open the student pages
 _Story ref: spec.md#story-s1_
