@@ -105,3 +105,12 @@ export function guardStudentRoute(user: { role?: string | null } | null | undefi
     throw error;
   }
 }
+
+/**
+ * Tells whether a server action answered with the preview refusal.
+ * @param result Any action result.
+ * @returns True for `{ status: "preview" }`.
+ */
+export function isPreviewResult(result: unknown): result is PreviewActionResult {
+  return typeof result === "object" && result !== null && (result as { status?: unknown }).status === "preview";
+}
