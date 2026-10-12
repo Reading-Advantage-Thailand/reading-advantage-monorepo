@@ -34,22 +34,30 @@ ESLint one time per phase, before the phase commit. One heavy job at a time on t
 - Harness: `<scratchpad>/teacher_home-p1/` (`page.tsx` has the table and strip markup that Phase 3 ports). It imports the real `ClassBookSlot` through a `next-intl` stub that reads `messages/en.json`.
 - The class book slot is not changed by this track (class_books S5 owns it).
 
-## Phase 2: Contracts and domain queries
+## Phase 2: Contracts and domain queries [checkpoint: pending]
 
-- [ ] Task: Contracts
-    - [ ] Red: `packages/domain/src/__tests__/primary-teacher-home.test.ts` (extend): the output parses with the new fields of FR-1 and FR-2; the trend rule (FR-3) and the status rule (FR-4) at their limits (69 % / 70 %, 39 % / 40 %, +5 % / +5.1 %, previous 0)
-    - [ ] Green: `packages/domain/src/primary-home/teacher-contracts.ts` (new fields, `teacherClassRowSchema`, `classTrendSchema`, `classStatusSchema`) and the pure rules in `packages/domain/src/primary-home/teacher-class-rules.ts`
-- [ ] Task: Variant block "Class scope": shared counts for a class scope
-    - [ ] Red: `packages/domain/src/__tests__/primary-dashboards-activity.pglite.test.ts` (extend): the scope `{ kind: "classes", schoolId, classIds }`; counts grouped by class; a student in two classes counts in each class and one time in the totals; school B and other teachers' classes ignored
-    - [ ] Green: `packages/domain/src/primary-dashboards/activity.ts` and `contracts.ts` (scope type)
-- [ ] Task: `getTeacherHome` numbers and class rows
-    - [ ] Red: `primary-teacher-home.test.ts` (recording DB: each new where clause has the class ids; `now` at 23:30 Bangkok counts "today" on the Bangkok day) and `primary-teacher-home.pglite.test.ts` (FR-1, FR-2, `completedToday` uses `completed_at`, not `updated_at`; "who needs help" sees a lesson step as activity, FR-5)
-    - [ ] Green: `packages/domain/src/primary-home/teacher-home.ts` calls the shared counts; the last activity of "who needs help" comes from the shared rule
-- [ ] Task: Variant block "CSV export": the CSV text
-    - [ ] Red: `packages/domain/src/__tests__/teacher-class-csv.test.ts` (header of FR-10; a comma, a quote, and a new line in a class name; the order of the rows is kept) and the current `toProgressCsv` tests stay green
-    - [ ] Green: `packages/domain/src/csv.ts` (the quote rule moved from `primary-books/progress.ts:235-238`), `packages/domain/src/primary-home/teacher-class-csv.ts` (`toTeacherClassCsv`, no DB import), a pure subpath export in `packages/domain/package.json` (pattern: `./calendar-day`)
-- [ ] Task: Run `pnpm --filter @reading-advantage/domain test`, then tsc and ESLint for `packages/domain`; rebuild the domain `dist/`
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Contracts and domain queries' (Protocol in workflow.md)
+- [x] Task: Contracts
+    - [x] Red: `packages/domain/src/__tests__/primary-teacher-home.test.ts` (extend): the output parses with the new fields of FR-1 and FR-2; the trend rule (FR-3) and the status rule (FR-4) at their limits (69 % / 70 %, 39 % / 40 %, +5 % / +5.1 %, previous 0)
+    - [x] Green: `packages/domain/src/primary-home/teacher-contracts.ts` (new fields, `teacherClassRowSchema`, `classTrendSchema`, `classStatusSchema`) and the pure rules in `packages/domain/src/primary-home/teacher-class-rules.ts`
+- [x] Task: Variant block "Class scope": shared counts for a class scope
+    - [x] Red: `packages/domain/src/__tests__/primary-dashboards-activity.pglite.test.ts` (extend): the scope `{ kind: "classes", schoolId, classIds }`; counts grouped by class; a student in two classes counts in each class and one time in the totals; school B and other teachers' classes ignored
+    - [x] Green: `packages/domain/src/primary-dashboards/activity.ts` and `contracts.ts` (scope type)
+- [x] Task: `getTeacherHome` numbers and class rows
+    - [x] Red: `primary-teacher-home.test.ts` (recording DB: each new where clause has the class ids; `now` at 23:30 Bangkok counts "today" on the Bangkok day) and `primary-teacher-home.pglite.test.ts` (FR-1, FR-2, `completedToday` uses `completed_at`, not `updated_at`; "who needs help" sees a lesson step as activity, FR-5)
+    - [x] Green: `packages/domain/src/primary-home/teacher-home.ts` calls the shared counts; the last activity of "who needs help" comes from the shared rule
+- [x] Task: Variant block "CSV export": the CSV text
+    - [x] Red: `packages/domain/src/__tests__/teacher-class-csv.test.ts` (header of FR-10; a comma, a quote, and a new line in a class name; the order of the rows is kept) and the current `toProgressCsv` tests stay green
+    - [x] Green: `packages/domain/src/csv.ts` (the quote rule moved from `primary-books/progress.ts:235-238`), `packages/domain/src/primary-home/teacher-class-csv.ts` (`toTeacherClassCsv`, no DB import), a pure subpath export in `packages/domain/package.json` (pattern: `./calendar-day`)
+- [x] Task: Run `pnpm --filter @reading-advantage/domain test`, then tsc and ESLint for `packages/domain`; rebuild the domain `dist/`
+- [x] Task: Measure - User Manual Verification 'Phase 2: Contracts and domain queries' (Protocol in workflow.md)
+    - Result: domain suite 161 files passed, 4 skipped (1879 tests passed, 17 skipped); tsc and ESLint 0 errors; domain `dist` rebuilt; app tsc 0 errors.
+    - Manual steps: (1) Read `teacher-class-rules.ts`: trend and status limits. (2) Run `vitest run src/__tests__/primary-teacher-home.pglite.test.ts` in `packages/domain`: the numbers and rows of two teachers. (3) Open `reference.sql` and compare its rules with `teacher-home.ts`.
+
+### Phase 2 notes
+
+- Added `classes` to the scope union in `primary-dashboards/contracts.ts` (`classesScopeSchema`). New counts in `activity.ts`: `getClassStudentStats`, `getAverageLevel`, `countActiveStudentsByClass`, `sumXpEarnedByClass`, `getLastActivityByStudent`. The `platform` kind can join the union later.
+- `TeacherHome` has the new fields `activeStudents30d`, `engagementRate30d`, `averageLevel`, `activeToday`, `completedToday`, and `classRows` (`teacherClassRowSchema`). `classes` stays.
+- Phase 3 imports `toTeacherClassCsv` from `@reading-advantage/domain/teacher-class-csv` and the types from `@reading-advantage/domain/primary-home` (check the existing page import path).
 
 ## Phase 3: UI
 
