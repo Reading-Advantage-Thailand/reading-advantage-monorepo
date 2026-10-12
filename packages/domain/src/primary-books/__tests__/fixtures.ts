@@ -61,3 +61,27 @@ export function samplePackage(overrides: Partial<LessonPackage["meta"]> = {}, ex
     ...extra,
   } as LessonPackage;
 }
+
+/**
+ * A small Workbooks print export in the shape of `origins-3.2/print/p01.json`.
+ * @param overrides Top-level fields to replace.
+ * @returns The raw (unparsed) print file content.
+ */
+export function samplePrintFile(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    seriesName: "Origins 3.2",
+    seriesLevel: "A0+",
+    lessonNumber: 1,
+    packageKey: "o3-2/1",
+    lesson: {
+      lesson_number: "1",
+      lesson_title: "Hello! I Am May",
+      article_paragraphs: [{ number: 1, text: "May is new." }],
+      vocabulary: [{ word: "new", definition: "Not here before.", thai_definition: "ใหม่" }],
+      article_images: [{ url: "https://storage.googleapis.com/primary-app-storage/images/cmx_1.png", caption: "May waves.", position: "hero" }],
+      article_image_url: ["https://storage.googleapis.com/primary-app-storage/images/cmx_1.png"],
+      writing_practice_url: "https://primary.reading-advantage.com/b/o3-2/1/write",
+    },
+    ...overrides,
+  };
+}

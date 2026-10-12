@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { DB } from "@reading-advantage/db";
 import { createMockDb } from "../../__tests__/mock-db.js";
 import { importLessonPackage } from "../import.js";
-import { samplePackage } from "./fixtures.js";
+import { samplePackage, samplePrintFile } from "./fixtures.js";
 
 const NEW = "22222222-2222-4222-8222-222222222222";
 const MAPPED = "33333333-3333-4333-8333-333333333333";
@@ -111,5 +111,39 @@ describe("importLessonPackage", () => {
     await expect(importLessonPackage({ db: mock as unknown as DB, pkg: samplePackage({ number: 2 }), sourceFile: "x.json" })).rejects.toThrow(/does not match/);
     await expect(importLessonPackage({ db: mock as unknown as DB, pkg: samplePackage({ key: "zz/1" }), sourceFile: "x.json" })).rejects.toThrow(/unknown book/);
     expect(vi.isMockFunction(mock.insert)).toBe(true);
+  });
+
+  describe("print data", () => {
+    /** The package JSON of the last insert (the lesson row). */
+    const storedPackage = (mock: ReturnType<typeof dbWith>) => {
+      const last = mock.insert.mock.results.at(-1)?.value as { values: { mock: { calls: [{ package: Record<string, unknown> }][] } } };
+      return last.values.mock.calls[0][0].package;
+    };
+
+    it("stores package.printLesson when a print file comes with the package", async () => {
+      const mock = dbWith([[]]);
+      const result = await importLessonPackage({ db: mock as unknown as DB, pkg: samplePackage(), sourceFile: "origins-3.2/p01.json", newId: () => NEW, printFile: { source: "origins-3.2/print/p01.json", content: samplePrintFile() } });
+      expect(result.printed).toBe(true);
+      expect(storedPackage(mock).printLesson).toMatchObject({ packageKey: "o3-2/1", lessonNumber: 1 });
+    });
+
+    it("stores no printLesson and reports it when the package has no print file", async () => {
+      const mock = dbWith([[]]);
+      const result = await importLessonPackage({ db: mock as unknown as DB, pkg: samplePackage(), sourceFile: "x.json", newId: () => NEW });
+      expect(result.printed).toBe(false);
+      expect(storedPackage(mock)).not.toHaveProperty("printLesson");
+    });
+
+    it("fails with the file name when the print file breaks the contract, and writes nothing", async () => {
+      const mock = dbWith([[]]);
+      await expect(importLessonPackage({ db: mock as unknown as DB, pkg: samplePackage(), sourceFile: "x.json", newId: () => NEW, printFile: { source: "origins-3.2/print/p01.json", content: samplePrintFile({ lesson: {} }) } })).rejects.toThrow(/origins-3\.2\/print\/p01\.json/);
+      expect(mock.insert).not.toHaveBeenCalled();
+    });
+
+    it("fails when the print file names another lesson than the package", async () => {
+      const mock = dbWith([[]]);
+      await expect(importLessonPackage({ db: mock as unknown as DB, pkg: samplePackage(), sourceFile: "x.json", newId: () => NEW, printFile: { source: "p02.json", content: samplePrintFile({ packageKey: "o3-2/2", lessonNumber: 2 }) } })).rejects.toThrow(/p02\.json.*o3-2\/1/);
+      expect(mock.insert).not.toHaveBeenCalled();
+    });
   });
 });

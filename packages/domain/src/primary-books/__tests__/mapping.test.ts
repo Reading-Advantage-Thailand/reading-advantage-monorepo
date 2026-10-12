@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { BOOKS, estimateWordTimes, legacyArticleIdOf, splitKey, toArticleRow, toFlashcardRow, toLessonPackageJson, toQuestionRows, toTagRows } from "../mapping.js";
 import { parseLessonPackage } from "../package-schema.js";
 import { isAppStepUnlocked, WORKBOOK_STEPS, workbookStepOf } from "../step-map.js";
-import { samplePackage } from "./fixtures.js";
+import { printLessonSchema } from "../print/contracts.js";
+import { samplePackage, samplePrintFile } from "./fixtures.js";
 
 const ID = "11111111-1111-4111-8111-111111111111";
 
@@ -75,6 +76,12 @@ describe("lesson package mapping", () => {
     const json = toLessonPackageJson(samplePackage());
     expect(Object.keys(json).sort()).toEqual(["activities", "bank", "glossary", "images", "print", "summary", "tags", "thaiSummary"]);
     expect(json.images).toEqual([{ position: "hero", caption: "May is new in the class." }]);
+  });
+
+  it("adds printLesson to the stored package only when print data is given", () => {
+    const print = printLessonSchema.parse(samplePrintFile());
+    expect(toLessonPackageJson(samplePackage(), print).printLesson).toEqual(print);
+    expect(toLessonPackageJson(samplePackage(), null)).not.toHaveProperty("printLesson");
   });
 });
 
