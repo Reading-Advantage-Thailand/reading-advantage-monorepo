@@ -55,3 +55,32 @@ Shortcuts, deviations, lessons (for the orchestrator to move into the shared fil
 - Lesson: the `tenant-coverage` test checks the text of each domain file; a file that only calls other helpers still needs `createTenantDB(...).unscoped("<reason>")`.
 - Lesson: the PGlite test database holds a default school (`c0deca00-...`) with no students; tests that list all schools must filter.
 - Lesson: a node script with the root `postgres` and `drizzle-orm` plus the domain `dist` runs a domain function on a clone in 0.3 s.
+
+## Phase 3: UI (2026-10-12)
+
+Scope: `git diff 05789395f..HEAD` (app page, two components, tests, five message files, and track notes).
+Plan compliance: all tasks done. The page is a server page with no API route (FR-7). It calls `getPlatformOverview` (SYSTEM only in the domain; the proxy refuses other roles). A failure logs `system_dashboard_failed` with `logger.error` and rethrows. The placeholder text is gone (FR-13); no message key existed for it.
+Security: no new query or route. The row link uses `encodeURIComponent` on the school id. The page parses nothing from the URL.
+Tests: 38 tests in 3 files. Key parity and ICU placeholders are tested for the five locales. JSDoc on each export.
+Behavior check of the captures: no horizontal overflow; the status is a mark and a word; the sort control is 48 px (class `min-h-12`, tested).
+
+Critical and High findings: none.
+
+Medium:
+
+- M1. English dates print as "Oct 6" (next-intl `en`), not "6 Oct" as in the Phase 1 mock. This is a locale format, not a defect. The owner can ask for a day-first format.
+- M2. The "Active students" column sorts on the percent, not on the count. The cell shows both. A sort on the count is a one-line change if the owner prefers it.
+- M3. The Thai text is mine. Owner check pending.
+
+Low:
+
+- L1. The direction button on a phone is disabled while the default order is on (the default has no direction). It looks faded in the captures.
+- L2. The strip note uses an ICU plural in `en`; the other locales have one form (`other`).
+- L3. The week in the page header uses `Asia/Bangkok` days printed in UTC, as the admin dashboard does. A formatter time zone of `Asia/Bangkok` would give the same day for the key.
+- L4. The seats cell for "no students" shows "0 of 30". It is true (seats used are students), but a school with no students and a license can look odd.
+
+Shortcuts, deviations, lessons (for the orchestrator to move into the shared files):
+
+- Lesson: an async server component cannot render inside `renderWithMessages`; a component that only needs next-intl can use the hooks and stay a server component, and the test then renders it.
+- Lesson: the capture harness can bundle the real server page for a browser if `next-intl/server`, the session, the db, and the domain call are aliased to small stubs.
+- Lesson: `flock` waits can take more than 10 minutes when three lanes run browser jobs; start the job in the background with `timeout`, and wait with `tail --pid`.

@@ -49,17 +49,21 @@ ESLint one time per phase, before the phase commit. One heavy job at a time on t
 - [x] Task: Measure - User Manual Verification 'Phase 2: Contracts and domain queries' (Protocol in workflow.md)
     - Manual verification: run `packages/domain` vitest on `primary-platform-overview*.test.ts`; run `reference-sql.sql` on a clone and compare the totals and rows. Look check pending (owner, async).
 
-## Phase 3: UI
+## Phase 3: UI [checkpoint: 701852338]
 
-- [ ] Task: The page: totals strip and schools table
-    - [ ] Red: `app/[locale]/system/dashboard/__tests__/page.test.tsx`: the six totals with their labels; the "without a school" count only when more than 0; no "System Dashboard Description" text
-    - [ ] Red: `components/system/__tests__/schools-table.test.tsx`: the default order (quiet first, then name), search, sort on each column and the second tap, the row link `/admin/dashboard?school=<id>`, "No license" and "None" cells, the row card layout at a phone width
-    - [ ] Green: `app/[locale]/system/dashboard/page.tsx` (server page, `Scene`, `Panel`), `loading.tsx`, `error.tsx`, and `components/system/schools-table.tsx` (client component); server errors log with `lib/observability/logger.ts`
-- [ ] Task: Strings in en, th, cn, tw, vi
-    - [ ] Red: `components/system/__tests__/system-dashboard-messages.test.ts`: every `SystemDashboard` key of `messages/en.json` exists in th, cn, tw, and vi
-    - [ ] Green: `messages/{en,th,cn,tw,vi}.json`; remove the placeholder description key (FR-13)
-- [ ] Task: Run `pnpm --filter primary-advantage test`, then tsc and ESLint on the changed files
-- [ ] Task: Measure - User Manual Verification 'Phase 3: UI' (Protocol in workflow.md)
+Done 2026-10-12 (4245a46f0 strings, ac20079a4 page and table). Red run: 3 files failed, 1 test failed (modules and keys missing); green: 3 files, 38 tests. The page is a server page; `PlatformTotalsPanel` and `SchoolsTable` use the next-intl hooks. Captures: `design/captures-phase3.md`.
+
+- [x] Task: The page: totals strip and schools table
+    - [x] Red: `app/[locale]/system/dashboard/__tests__/page.test.tsx`: the six totals with their labels; the "without a school" count only when more than 0; no "System Dashboard Description" text
+    - [x] Red: `components/system/__tests__/schools-table.test.tsx`: the default order (quiet first, then name), search, sort on each column and the second tap, the row link `/admin/dashboard?school=<id>`, "No license" and "None" cells, the row card layout at a phone width
+    - [x] Green: `app/[locale]/system/dashboard/page.tsx` (server page, `Scene`, `Panel`), `loading.tsx`, `error.tsx`, and `components/system/schools-table.tsx` (client component); server errors log with `lib/observability/logger.ts`
+- [x] Task: Strings in en, th, cn, tw, vi
+    - [x] Red: `components/system/__tests__/system-dashboard-messages.test.ts`: every `SystemDashboard` key of `messages/en.json` exists in th, cn, tw, and vi
+    - [x] Green: `messages/{en,th,cn,tw,vi}.json`; remove the placeholder description key (FR-13)
+- [x] Task: Run `pnpm --filter primary-advantage test`, then tsc and ESLint on the changed files
+    - Done 2026-10-12: app vitest 266 of 267 files passed (1693 tests passed, 2 skipped); the one failed file `server/models/__tests__/userModel.activity.behavior.test.ts` timed out in `beforeAll` (PGlite start, 10 s, under load) and passed alone (2 tests); app tsc 0 errors; ESLint 0 errors on the changed files.
+- [x] Task: Measure - User Manual Verification 'Phase 3: UI' (Protocol in workflow.md) — look check pending (owner, async)
+    - Manual verification: open each PNG of `design/captures.md` (phase 1) and of `captures-phase3.md` (phase 3); compare the built page with the mock; check the quiet chip text, 4 values and one button for each card at 375 px, the 48 px sort control, the sort arrows at 1280 px, and the night captures.
 
 ## Phase 4: Acceptance
 
