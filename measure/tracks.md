@@ -1300,7 +1300,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
-- [ ] **Track: Primary Parity Before the Cutover: Installable app and a worker that replaces the legacy worker**
+- [~] **Track: Primary Parity Before the Cutover: Installable app and a worker that replaces the legacy worker**
   *Link: [./tracks/primary_parity_pwa_20261011/](./tracks/primary_parity_pwa_20261011/)*
   *Set: Primary Parity Before the Cutover (`primary_parity_20261011`), order 8*
 
