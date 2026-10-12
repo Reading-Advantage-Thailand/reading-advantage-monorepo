@@ -4,6 +4,9 @@ The steps of cutover spec §8 and §9 (`docs/deployment/primary-cutover-migratio
 commands. "Agent" steps need no database password. "Owner" steps read a password from Secret
 Manager, or are outward actions that need the owner's go.
 
+Superseded: this sheet ran on 2026-10-11 and stopped after C10. The command sheet of
+`primary_parity_rehearsal3_20261011` replaces it. See [primary_parity_20261011](../../sets/primary_parity_20261011.md).
+
 Status: rehearsal 2 is complete and passed (2026-10-09 06:05 Bangkok, `rehearsal-2-20261010.md`).
 The cutover runs on Sunday 2026-10-11. Review fixes of 2026-10-10 (outside review of integration
 `7d2d51fd9`): C7 secret-version gate, C10 `BASE`, trigger off in C2, C13 QR scans, rollback data loss.
