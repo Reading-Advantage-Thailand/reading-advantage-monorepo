@@ -135,3 +135,19 @@ Medium and Low findings:
 - L-5 (Low). The FR-13 red step was not run apart; the new tests need `useSearchParams`, which the old component did not call.
 - L-6 (Low). The old-link note is not an RPG `Bubble`; it copies the design markup with a `size-14` scroll icon. Its colors use `--cq-*` variables as in the design harness.
 - Commit hint: a header with the 47-character suffix gives 53 characters for the subject part; two first drafts failed commitlint.
+
+## Phase 7: Acceptance, Docs & Doctor
+
+Found items for the owner. The phase did not edit `measure/tech-debt.md` (phase brief). The orchestrator moves
+the rows after the owner decision.
+
+- Finding F-1 (Security, Medium). E-8: `GET /api/articles/[articleId]` has no session check
+  (`app/api/articles/[articleId]/route.ts`; `/api/*` is outside the proxy matcher, `proxy.ts:96-97`).
+  FR-11 now returns only the logs of the session user, or no logs without a session. The article content
+  is still open to a caller with no session. It needs its own fix: a session check, then a `schoolId` scope.
+- Finding F-2 (Rule, owner decision). `calculateLevelAndCefrLevel` (`lib/utils.ts:51-60`) picks the level from the
+  XP of one award, not from the total XP. Both apps do this. A student can stay at a low level with a high total.
+  The rule needs an owner decision before a fix.
+- Lesson: a pair path cannot carry a class code (the pair schema refuses it). A steps module that reads the
+  code from an environment variable keeps the code out of the repository.
+- Lesson: the scratchpad log names repeat between phases; a new gate run overwrites the old log.

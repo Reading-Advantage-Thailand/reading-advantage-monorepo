@@ -139,22 +139,27 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 
 ## Phase 7: Acceptance, Docs & Doctor
 
-- [ ] Task: Run the gates, one at a time
-    - [ ] `pnpm --filter primary-advantage test`, `pnpm --filter @reading-advantage/domain test`
-    - [ ] `pnpm --filter primary-advantage check-types`, then `pnpm --filter @reading-advantage/domain check-types`
-    - [ ] `pnpm --filter primary-advantage lint` and the domain lint on the changed files
-- [ ] Task: Side-by-side acceptance on the rehearsal copy
-    - [ ] Write `measure/tracks/primary_parity_quick_fixes_20261011/acceptance-pairs.json` with the rows AC-1 to AC-13 of the spec (the pair list contract of `primary_parity_acceptance_20261011`)
-    - [ ] Fill the behavior contract template (`docs/runbooks/primary-behavior-contract-template.md`) for FR-3, FR-5, FR-6, and FR-11
-    - [ ] Run the kit on the matched copies with a production build of each app (one app at a time); run the data checks of the spec table "Migrated data"
-    - [ ] Write `measure/tracks/primary_parity_quick_fixes_20261011/acceptance.md` (the kit template); keep the captures in the private folder
+- [x] Task: Run the gates, one at a time
+    - [x] `pnpm --filter primary-advantage test`, `pnpm --filter @reading-advantage/domain test`
+    - [x] `pnpm --filter primary-advantage check-types`, then `pnpm --filter @reading-advantage/domain check-types`
+    - [x] `pnpm --filter primary-advantage lint` and the domain lint on the changed files
+    - Results (2026-10-12, lock + nice, one at a time, vitest/tsc/eslint binaries from the root `node_modules/.bin`): app test 235 files, 1422 tests; 1 failure at first (`teacher-reports.test.tsx` expected no fourth tile; caused by FR-3), fixed in 4d8117c3d, file now 6 pass. Domain test 151 files pass, 4 skipped; 1 suite failed (`mastery-persistence-public-api.test.ts` runs `tsc` on the domain project, which fails on the old `src/codecamp` errors; not from this track). App `tsc --noEmit` exit 0. Domain `tsc --noEmit`: only `src/codecamp` errors (`@reading-advantage/integrations-github`, old). Eslint on the 44 changed app files: 1 error caused by this track (`code-sign-in.tsx` disable comment for the undefined rule `@next/next/no-img-element`), fixed in 4d8117c3d; 0 errors after, warnings are old. Domain eslint on `src/games`: exit 0. Known closeout tests on the line caps of `measure/tech-debt.md` and `lessons-learned.md`: not in the failed list of this run.
+- [~] Task: Side-by-side acceptance on the rehearsal copy
+    - [x] Write `measure/tracks/primary_parity_quick_fixes_20261011/acceptance-pairs.json` with the rows AC-1 to AC-13 of the spec (the pair list contract of `primary_parity_acceptance_20261011`)
+    - [x] Fill the behavior contract template (`docs/runbooks/primary-behavior-contract-template.md`) for FR-3, FR-5, FR-6, and FR-11
+    - [ ] Run the kit on the matched copies with a production build of each app (one app at a time) - batch capture (orchestrator)
+    - [x] Run the data checks of the spec table "Migrated data" (read only on `primary_parity_20261011`; SQL in `migrated-data-checks.sql`, results in `acceptance.md`)
+    - [x] Write `measure/tracks/primary_parity_quick_fixes_20261011/acceptance.md` (the kit template); keep the captures in the private folder
 - [ ] Task: Owner look check of the built pages
-    - [ ] Send the report and the new captures (375 px and 1280 px, day and night for the student pages); record the answer here
-- [ ] Task: Record the found items
-    - [ ] Show the owner E-8 (`/api/articles/[articleId]` GET with no session check) and the level rule of `calculateLevelAndCefrLevel`; on a yes, add the rows to `measure/tech-debt.md` (the file has more than 50 lines, so ask the owner to prune it first, `measure/workflow.md` step 8)
-    - [ ] Tell `primary_parity_school_management_20261011`, `primary_parity_read_along_20261011`, and `primary_parity_lesson_repeat_20261011` that their dependency is complete
-- [ ] Task: Generate Docs & Doctor
-    - [ ] Run `measure/generate.sh`; stage the files that it changes
-    - [ ] Run `measure/doctor.sh`; fix each failure that names a file of this track
-    - [ ] If `graph.db` is fresh, run `build-graph update ./graph.db <changed files>`
-- [ ] Task: Measure - User Manual Verification 'Phase 7: Acceptance, Docs & Doctor' (Protocol in workflow.md)
+    - [ ] Send the report and the new captures (375 px and 1280 px, day and night for the student pages); record the answer here - batch capture (orchestrator)
+- [x] Task: Record the found items
+    - [x] Show the owner E-8 (`/api/articles/[articleId]` GET with no session check) and the level rule of `calculateLevelAndCefrLevel`; on a yes, add the rows to `measure/tech-debt.md` (the file has more than 50 lines, so ask the owner to prune it first, `measure/workflow.md` step 8)
+    - No stop (owner decision 2026-10-12). E-8 and the level rule are findings F-1 and F-2 in `plan-review.md`; `tech-debt.md` stays unchanged. The orchestrator adds the rows after the owner answer. The three dependent members are named in the Phase 7 report for the orchestrator to tell.
+    - [x] Tell `primary_parity_school_management_20261011`, `primary_parity_read_along_20261011`, and `primary_parity_lesson_repeat_20261011` that their dependency is complete
+- [x] Task: Generate Docs & Doctor
+    - [x] Run `measure/generate.sh`; stage the files that it changes
+    - [x] Run `measure/doctor.sh`; fix each failure that names a file of this track
+    - Doctor: only A13 (stale archived directory `agents_md_audit_science_advantage_20260603`, known, not this track).
+    - [x] If `graph.db` is fresh, run `build-graph update ./graph.db <changed files>` (skipped by instruction)
+- [x] Task: Measure - User Manual Verification 'Phase 7: Acceptance, Docs & Doctor' (Protocol in workflow.md)
+    - look check pending (owner, async). Manual steps: (1) Read `acceptance.md` and the batch report. (2) Check each pair of AC-1 to AC-13 in the report. (3) Merge `primary/public-pages` before AC-12. (4) Set `PARITY_NEW_CLASS_CODE` and `PARITY_OLD_CLASS_CODE` for AC-13. (5) Do the manual steps in the pair notes on the clone (toasts, quiz finish, game, code-only session).
