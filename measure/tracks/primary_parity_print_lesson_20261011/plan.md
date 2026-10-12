@@ -60,7 +60,7 @@ _Story ref: spec.md#story-s2_
     - Notes: no migration and no schema change (`printLesson` is a key of the `package` jsonb). `printLessonSchema` extends `legacyWorkbookLessonSchema` (it already accepts a string or an array in `article_image_url`) with `writing_practice_url`, and it keeps unknown fields. `build-graph update` not run (brief: graph.db read-only). The archive commit goes to the import through `--workbooks-commit`; the Cloud Build import step reads it from the archive header.
     - Manual verification: from `packages/domain` run `../../node_modules/.bin/vitest run src/primary-books`; read `import-run.md`.
 
-## Phase S3: Render one lesson with the template
+## Phase S3: Render one lesson with the template [checkpoint: 23252310b]
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Define the render contract
