@@ -155,7 +155,7 @@ _Story ref: spec.md#story-s4_
 - Member Questions: none in this phase.
 
 
-## Phase S5: Show the assigned book and the next lesson on the dashboard [checkpoint: PENDING]
+## Phase S5: Show the assigned book and the next lesson on the dashboard [checkpoint: 236d24875]
 _Story ref: spec.md#story-s5_
 
 - [x] Task: Define the slot contract
