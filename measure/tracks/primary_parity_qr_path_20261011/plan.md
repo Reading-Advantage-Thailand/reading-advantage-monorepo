@@ -116,7 +116,7 @@ _Story ref: spec.md#story-s3_
     - Manual steps: on a running build open `/th/b/o3-2/5/writing` signed out: the landing says "Writing task"; sign in as a student: the writing page of the article opens.
     - As a teacher: the lesson page opens. Open `/th/b/o3-2/5/other`: the unknown-address page shows, not a 404.
 
-## Phase S6: Check one /b/ URL in the go/no-go script
+## Phase S6: Check one /b/ URL in the go/no-go script [checkpoint: 2675f7927]
 _Story ref: spec.md#story-s6_
 
 - [x] Task: Add the block to `scripts/primary-parity/cutover-check.mjs`
