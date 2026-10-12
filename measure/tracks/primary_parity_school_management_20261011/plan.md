@@ -81,7 +81,7 @@ _Story ref: spec.md#story-s2_
     - Look check pending (owner, async). Captures: `~/Desktop/primary-parity-progress/captures/school_management/phaseS2/` (`s2-import-{system-disabled,system-enabled,admin}-{day,night}-{375,1280}.png`).
     - Steps: 1. Sign in as SYSTEM and open Import Data. 2. Check that the school selector shows and Import stays disabled after you pick a CSV. 3. Choose a school: Import enables. 4. Import students.csv and check that the result names the school and the new users have that school. 5. Sign in as ADMIN: no selector, rows go to the admin school.
 
-## Phase S3: SYSTEM manages the school of a teacher
+## Phase S3: SYSTEM manages the school of a teacher [checkpoint: 639efd0f9]
 _Story ref: spec.md#story-s3_
 
 - [x] Task: Contract & Schema Definition
