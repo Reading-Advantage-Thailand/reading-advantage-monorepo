@@ -1,4 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import type { SQL } from "drizzle-orm";
+import { PgDialect } from "drizzle-orm/pg-core";
+import type { DB } from "@reading-advantage/db";
+import type { UserContext } from "@reading-advantage/auth";
+import { getPlatformOverview } from "../primary-dashboards/platform.js";
 import { dashboardWindow } from "../primary-dashboards/window.js";
 import { platformOverviewSchema } from "../primary-dashboards/platform-contracts.js";
 import { platformSchoolStatus } from "../primary-dashboards/platform-rules.js";
@@ -61,5 +66,54 @@ describe("platformSchoolStatus (the quiet rule, 7 Bangkok days)", () => {
   it("is no_students for a school with no students, even with an old event", () => {
     expect(platformSchoolStatus({ students: 0, lastActivityAt: null, window })).toBe("no_students");
     expect(platformSchoolStatus({ students: 0, lastActivityAt: new Date(NOW.getTime() - 30 * DAY_MS), window })).toBe("no_students");
+  });
+});
+
+describe("getPlatformOverview (recording DB, permission)", () => {
+  const user = (role: UserContext["role"]): UserContext => ({
+    id: `${role}-user`, username: role, name: role, role, schoolId: role === "SYSTEM" ? null : SCHOOL, xp: 0, level: 1, cefrLevel: "A1-",
+  });
+  const ids = (n: number) => Array.from({ length: n }, (_, i) => `10000000-0000-4000-8000-${String(i + 1).padStart(12, "0")}`);
+
+  /** An `execute` stub: it renders each query and answers by the table that the query reads. */
+  function recordingDb(schoolCount: number) {
+    const queries: string[] = [];
+    const dialect = new PgDialect();
+    const execute = vi.fn(async (query: SQL) => {
+      const text = dialect.sqlToQuery(query).sql;
+      queries.push(text);
+      if (text.includes("with stu as")) {
+        return ids(schoolCount).map((id, i) => ({ id, name: `School ${i}`, students: 2, active: 1, articles: 3, last: "2026-10-12T02:00:00.000Z" }));
+      }
+      if (text.includes("from licenses l")) return ids(schoolCount).map((school_id) => ({ school_id, seats: 10, used: 2 }));
+      if (text.includes("'TEACHER'")) return ids(schoolCount).map((school_id) => ({ school_id, n: 1 }));
+      return [{ n: 0 }];
+    });
+    return { db: { execute } as unknown as DB, queries, execute };
+  }
+
+  it("runs the same number of queries for 1 school and for 25 schools, grouped by school_id", async () => {
+    const one = recordingDb(1);
+    const many = recordingDb(25);
+    const a = await getPlatformOverview({ db: one.db, user: user("SYSTEM"), now: NOW });
+    const b = await getPlatformOverview({ db: many.db, user: user("SYSTEM"), now: NOW });
+    expect(a.schools).toHaveLength(1);
+    expect(b.schools).toHaveLength(25);
+    expect(one.execute).toHaveBeenCalledTimes(many.execute.mock.calls.length);
+    expect(many.queries.length).toBeLessThanOrEqual(6);
+    for (const text of many.queries.filter((q) => !q.includes("school_id is null"))) expect(text).toMatch(/group by/i);
+    expect(b.totals).toMatchObject({ schools: 25, students: 50, teachers: 25, activeStudents: 25, articlesOpened: 75, seatsUsed: 50, seats: 250 });
+    expect(platformOverviewSchema.parse(b)).toEqual(b);
+  });
+
+  it.each(["ADMIN", "TEACHER", "STUDENT"] as const)("gives %s FORBIDDEN and runs no query", async (role) => {
+    const { db, execute } = recordingDb(1);
+    await expect(getPlatformOverview({ db, user: user(role), now: NOW })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(execute).not.toHaveBeenCalled();
+  });
+
+  it("lets SYSTEM pass", async () => {
+    const { db } = recordingDb(1);
+    await expect(getPlatformOverview({ db, user: user("SYSTEM"), now: NOW })).resolves.toBeDefined();
   });
 });
