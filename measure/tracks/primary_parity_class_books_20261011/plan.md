@@ -187,7 +187,7 @@ _Story ref: spec.md#story-s5_
 - Stale `dist`: built with `tsc` under the lock, because `pnpm run build` started a hanging `pnpm install`.
 
 
-## Phase S6: Check every Teacher Manual claim
+## Phase S6: Check every Teacher Manual claim [checkpoint: a8ce10d27]
 _Story ref: spec.md#story-s6_
 
 - [x] Task: Define the claim list
