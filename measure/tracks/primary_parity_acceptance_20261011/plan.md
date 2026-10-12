@@ -42,7 +42,7 @@ before a build; no dev server; no run with 25 students.
 - [x] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
     - Steps: run `node_modules/.bin/vitest run --root scripts/primary-parity` from the repository root; expect failures for the missing modules and for `resolvePlaceholders`.
 
-## Phase 3: Implement
+## Phase 3: Implement [checkpoint: 76a78e65c]
 
 - [x] Task: Implement the pair list and the guards (green) [37e125ba4]
     - [x] Implement `scripts/primary-parity/pairs.ts` and `scripts/primary-parity/guards.ts`; import `findLegacyDatabaseMarkers` and `isInsideDirectory` (spec F-11)
