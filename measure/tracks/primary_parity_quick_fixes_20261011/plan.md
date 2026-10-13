@@ -192,3 +192,9 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
     - 9 teachers and students (e46507fdf): Zod on teacher create, student create, student update (unknown fields such as `role` are dropped). Teacher PUT already had Zod. The audit claim "teacher by id uses an inner join on `user_roles`" is NOT true: `getTeacherById`, `updateTeacher`, and delete use `roleSql` (`users.role`), fixed earlier in `5cf2dcb91`. No change needed.
     - Type check: `apps/primary-advantage` `tsc --noEmit` exit 0 under the lock.
     - Gaps: `components/update-user-license.tsx` sends PATCH to `/api/licenses/<userId>` and no PATCH handler exists (405; key activation needs an owner decision). Other `console.error` calls in the touched controllers stay (not changed lines).
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: H-1 class edit accepts a number grade (PATCH schema, teacher dialog sends a string); the create route has no Zod schema and its model already parses the grade with `parseInt`, so no change there ea4dcebde
+- [x] Task: L-13 teacher edit dialog lists grades 1 to 12 ea4dcebde
+- [x] Task: Low: the edit dialog does not open again after a save while the URL still has `edit` ea4dcebde
