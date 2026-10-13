@@ -31,7 +31,8 @@ const row = (gameType: string, correct: number, total: number, xp: number, at: s
 });
 
 /** A TenantDB whose select returns the rows (newest first, as the query orders them). */
-const dbOf = (rows: unknown[]) => createMockDb({ selectResults: rows }) as unknown as TenantDB;
+const dbOf = (rows: unknown[], closedAt: Date | null = null) =>
+  createMockDb({ selectSequence: [[{ closedAt }], rows] }) as unknown as TenantDB;
 
 describe("lessonGameResultsRequestSchema", () => {
   it("needs an article id and nothing else", () => {
@@ -55,6 +56,20 @@ describe("getLessonGameResults", () => {
     ]);
     expect(result.totalXp).toBe(22);
     expect(lessonGameResultsSchema.safeParse(result).success).toBe(true);
+  });
+
+  it("counts only the runs after the latest closed attempt of the article (M-16)", async () => {
+    const db = dbOf(
+      [
+        row("rune-match-story", 7, 10, 8, "2026-10-12T10:00:00Z"),
+        row("rpg-battle-story", 8, 10, 9, "2026-10-11T09:00:00Z"),
+        row("rune-match-story", 4, 10, 5, "2026-10-11T10:00:00Z"),
+      ],
+      new Date("2026-10-12T00:00:00Z"),
+    );
+    const result = await getLessonGameResults({ db, user: student, tenant, input: { articleId: ARTICLE } });
+    expect(result.totalXp).toBe(8);
+    expect(result.latest.map((entry) => entry.gameId)).toEqual(["rune-match"]);
   });
 
   it("returns nothing for an article that has no run", async () => {

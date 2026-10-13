@@ -1,6 +1,6 @@
-import { and, desc, eq, like, sql } from "drizzle-orm";
+import { and, desc, eq, like, max, sql } from "drizzle-orm";
 import { assertCan, AuthError, type Tenant, type UserContext } from "@reading-advantage/auth";
-import { gameCompletions } from "@reading-advantage/db/schema";
+import { gameCompletions, primaryLessonAttempts } from "@reading-advantage/db/schema";
 import { z } from "zod";
 
 import type { TenantDB } from "../db-contract.js";
@@ -37,7 +37,9 @@ export type LessonGameResults = z.infer<typeof lessonGameResultsSchema>;
 /**
  * Reads the saved runs of the caller for one article: the latest run of each game, newest first,
  * and the total server XP of all runs. A run belongs to the article when its completion metadata
- * holds `articleId` (the lesson host sets it). The read is scoped to the user and the school.
+ * holds `articleId` (the lesson host sets it). Only runs after the latest closed attempt of the
+ * student on the article count, so a repeated lesson starts with no result. The read is scoped to
+ * the user and the school.
  * @param args Authenticated tenant context and the article request.
  * @returns The latest run of each game and the total XP; both are empty for an article with no run.
  * @throws {AuthError} FORBIDDEN for a user of another school or a user with no school.
@@ -59,6 +61,11 @@ export async function getLessonGameResults({
   if (!user.schoolId || user.schoolId !== tenant.schoolId) {
     throw new AuthError("The lesson is not in your school", "FORBIDDEN");
   }
+  const [closed] = await db
+    .select({ closedAt: max(primaryLessonAttempts.closedAt) })
+    .from(primaryLessonAttempts)
+    .where(and(eq(primaryLessonAttempts.studentId, user.id), eq(primaryLessonAttempts.articleId, request.articleId)));
+  const cutoff = closed?.closedAt ? new Date(closed.closedAt).getTime() : null;
   const rows = await db
     .select({
       gameType: gameCompletions.gameType,
@@ -81,6 +88,7 @@ export async function getLessonGameResults({
   let totalXp = 0;
   for (const row of rows) {
     if (!row.gameType.endsWith(STORY_SUFFIX)) continue;
+    if (cutoff !== null && new Date(row.createdAt).getTime() <= cutoff) continue;
     totalXp += row.xpEarned;
     const gameId = row.gameType.slice(0, -STORY_SUFFIX.length);
     if (latest.has(gameId)) continue;
