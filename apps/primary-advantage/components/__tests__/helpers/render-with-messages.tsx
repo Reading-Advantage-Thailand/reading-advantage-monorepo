@@ -11,11 +11,17 @@ import type { ComponentProps, ReactElement } from "react";
 
 import enMessages from "../../../messages/en.json";
 import thMessages from "../../../messages/th.json";
+import cnMessages from "../../../messages/cn.json";
+import twMessages from "../../../messages/tw.json";
+import viMessages from "../../../messages/vi.json";
 
 /** Real message trees loaded from the app's translation files. */
 export const testMessages = {
   en: enMessages,
   th: thMessages,
+  cn: cnMessages,
+  tw: twMessages,
+  vi: viMessages,
 } as const;
 
 /** Locales the shared helper can provide to a render. */

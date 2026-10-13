@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { Panel } from "@/components/rpg/chrome";
 import { cn } from "@/lib/utils";
 import type { SchoolDashboard } from "@reading-advantage/domain/primary-dashboards";
@@ -24,6 +25,7 @@ function mondayOffset(day: string): number {
  */
 export function ActivityByDay({ activity, endDay, schoolEmpty }: { activity: SchoolDashboard["activityByDay"]; endDay: string; schoolEmpty: boolean }) {
   const t = useTranslations("AdminDashboard.activity");
+  const format = useIntlFormatter();
   const days = activity.days;
   const max = Math.max(1, ...days.map((d) => d.activeStudents));
   const lead = days.length ? mondayOffset(days[0].day) : 0;
@@ -74,7 +76,7 @@ export function ActivityByDay({ activity, endDay, schoolEmpty }: { activity: Sch
           <dl className="grid grid-cols-3 gap-3 self-start lg:grid-cols-1">
             <div>
               <dt className="text-[13px] font-semibold text-[var(--cq-ink-soft)]">{t("events")}</dt>
-              <dd className="text-2xl font-bold tabular-nums">{activity.totalEvents.toLocaleString("en-US")}</dd>
+              <dd className="text-2xl font-bold tabular-nums">{format.number(activity.totalEvents)}</dd>
             </div>
             <div>
               <dt className="text-[13px] font-semibold text-[var(--cq-ink-soft)]">{t("peak")}</dt>

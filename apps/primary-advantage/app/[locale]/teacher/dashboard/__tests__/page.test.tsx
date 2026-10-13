@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithMessages, testMessages, type TestLocale } from "@/components/__tests__/helpers/render-with-messages";
 
 const mocks = vi.hoisted(() => ({
-  locale: "en" as "en" | "th",
+  locale: "en" as "en" | "th" | "cn",
   user: null as Record<string, unknown> | null,
   getTeacherHome: vi.fn(),
   redirect: vi.fn(),
@@ -30,7 +30,7 @@ vi.mock("next-intl/server", async () => {
     getLocale: async () => mocks.locale,
     getTranslations: async (namespace?: string) =>
       createTranslator({ locale: mocks.locale, messages: messages[mocks.locale as TestLocale], namespace: namespace as never }),
-    getFormatter: async () => createFormatter({ locale: mocks.locale, timeZone: "Asia/Bangkok" }),
+    getFormatter: async (opts?: { locale?: string }) => createFormatter({ locale: opts?.locale ?? mocks.locale, timeZone: "Asia/Bangkok" }),
   };
 });
 vi.mock("@/i18n/navigation", () => ({
@@ -123,6 +123,11 @@ describe("teacher dashboard (Lane C Phase 3)", () => {
     await renderDashboard();
     expect(mocks.logWarn).toHaveBeenCalledWith("teacher_home.quest_failed", { userId: "t1", classroomId: C1, error: failure });
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+  });
+
+  it("writes the last active date in the Chinese format for cn", async () => {
+    await renderDashboard("cn");
+    expect(screen.getByText(/9月20日/)).toBeInTheDocument();
   });
 
   it("shows eight numbers with their labels in the summary", async () => {

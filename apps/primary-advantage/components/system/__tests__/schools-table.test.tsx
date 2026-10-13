@@ -97,6 +97,12 @@ describe("SchoolsTable", () => {
     expect(rows[2]).toHaveTextContent("Oct 12");
   });
 
+  it("writes the last activity day with the Chinese format for cn", () => {
+    renderWithMessages(<SchoolsTable rows={ROWS} />, { locale: "cn" });
+    const rows = within(screen.getByRole("table", { hidden: true })).getAllByRole("row", { hidden: true });
+    expect(rows[1]).toHaveTextContent("9月18日");
+  });
+
   it("shows the status as a word with a mark", () => {
     renderTable();
     const table = screen.getByRole("table", { hidden: true });

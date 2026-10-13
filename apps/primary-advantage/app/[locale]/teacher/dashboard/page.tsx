@@ -7,6 +7,7 @@ import { getTeacherBookSlots } from "@reading-advantage/domain/primary-books";
 import { logger } from "@/lib/observability/logger";
 import { calendarDayNumber } from "@reading-advantage/domain/calendar-day";
 import { EmptyState, StatusChip } from "@reading-advantage/ui";
+import { intlLocale } from "@/lib/intl-locale";
 import { currentUser } from "@/lib/session";
 import { Link, redirect } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -52,7 +53,7 @@ export default async function TeacherDashboardPage() {
       throw error;
     }),
     getTranslations("TeacherHome"),
-    getFormatter(),
+    getLocale().then((locale) => getFormatter({ locale: intlLocale(locale) })),
   ]);
   const quests = await Promise.all(
     home.classes.map((cls) =>

@@ -1,12 +1,13 @@
 "use client";
 
 import { useId, useMemo, useState, type ReactNode } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { SearchIcon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { PlatformSchoolRow, PlatformSchoolStatus } from "@reading-advantage/domain/primary-dashboards";
 import { Panel, RpgLink } from "@/components/rpg/chrome";
 import { cn } from "@/lib/utils";
+import { useIntlFormatter } from "@/lib/intl-locale";
 
 /** The sortable columns, in the order of the table. */
 const SORT_KEYS = ["name", "active", "articles", "seats", "last", "status"] as const;
@@ -91,7 +92,7 @@ function schoolHref(row: PlatformSchoolRow): string {
  */
 export function SchoolsTable({ rows }: { rows: readonly PlatformSchoolRow[] }) {
   const t = useTranslations("SystemDashboard");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const headingId = useId();
   const selectId = useId();
   const [query, setQuery] = useState("");

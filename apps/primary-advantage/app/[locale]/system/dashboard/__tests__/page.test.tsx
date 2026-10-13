@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithMessages, testMessages, type TestLocale } from "@/components/__tests__/helpers/render-with-messages";
 
 const mocks = vi.hoisted(() => ({
-  locale: "en" as "en" | "th",
+  locale: "en" as "en" | "th" | "cn" | "tw" | "vi",
   user: null as Record<string, unknown> | null,
   getPlatformOverview: vi.fn(),
   redirect: vi.fn(),
@@ -26,7 +26,7 @@ vi.mock("next-intl/server", async () => {
     getLocale: async () => mocks.locale,
     getTranslations: async (namespace?: string) =>
       createTranslator({ locale: mocks.locale, messages: messages[mocks.locale as TestLocale], namespace: namespace as never }),
-    getFormatter: async () => createFormatter({ locale: mocks.locale, timeZone: "Asia/Bangkok" }),
+    getFormatter: async (opts?: { locale?: string }) => createFormatter({ locale: opts?.locale ?? mocks.locale, timeZone: "Asia/Bangkok" }),
   };
 });
 vi.mock("@/i18n/navigation", () => ({
@@ -81,6 +81,14 @@ describe("system dashboard page", () => {
     await renderPage();
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(t.title);
     expect(screen.getByText("This week: Oct 6 to Oct 12")).toBeInTheDocument();
+  });
+
+  it("writes the week with a Chinese date for cn and tw", async () => {
+    await renderPage("cn");
+    expect(screen.getByRole("heading", { level: 1 }).parentElement).toHaveTextContent("10月6日");
+    cleanup();
+    await renderPage("tw");
+    expect(screen.getByRole("heading", { level: 1 }).parentElement).toHaveTextContent("10月6日");
   });
 
   it("shows the six totals with labels that name the metric", async () => {
