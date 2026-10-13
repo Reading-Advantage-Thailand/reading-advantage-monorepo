@@ -24,6 +24,7 @@ export const LEAD_IN_SECONDS = 0.3;
  * @param time The playback time in seconds.
  * @param previous The last position; the function returns it when nothing changed.
  * @returns The position; the last word and sentence stay in a gap.
+ * A start within `SEEK_EPSILON` after the time counts as reached: a seek lands that far before it.
  */
 export function findPosition(
   sentences: ReadAlongSentence[],
@@ -31,11 +32,11 @@ export function findPosition(
   previous: ReadAlongPosition,
 ): ReadAlongPosition {
   let sentenceIndex = -1;
-  for (let i = 0; i < sentences.length; i++) if (sentences[i].startTime <= time) sentenceIndex = i;
+  for (let i = 0; i < sentences.length; i++) if (sentences[i].startTime <= time + SEEK_EPSILON) sentenceIndex = i;
   let wordIndex = -1;
   if (sentenceIndex >= 0) {
     const words = sentences[sentenceIndex].words;
-    for (let j = 0; j < words.length; j++) if (words[j].start <= time) wordIndex = j;
+    for (let j = 0; j < words.length; j++) if (words[j].start <= time + SEEK_EPSILON) wordIndex = j;
     if (wordIndex === -1 && words.length > 0 && words[0].start - time <= LEAD_IN_SECONDS) wordIndex = 0;
   }
   if (sentenceIndex === previous.sentenceIndex && wordIndex === previous.wordIndex) return previous;

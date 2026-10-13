@@ -57,6 +57,10 @@ export function useReadAlong({
       const next = findPosition(sentencesRef.current, audio.currentTime, positionRef.current);
       if (next !== positionRef.current) select(next);
     };
+    // A cold element reports time 0; wait for the metadata before a paused sync.
+    const syncIfLoaded = () => {
+      if (audio.readyState >= 1) sync();
+    };
     const stop = () => {
       if (frameRef.current !== null) {
         cancelAnimationFrame(frameRef.current);
@@ -75,7 +79,7 @@ export function useReadAlong({
     const onPause = () => {
       stop();
       setIsPlaying(false);
-      sync();
+      syncIfLoaded();
     };
     const onEnded = () => {
       stop();
@@ -86,13 +90,13 @@ export function useReadAlong({
     audio.addEventListener("play", onPlay);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("ended", onEnded);
-    audio.addEventListener("seeked", sync);
+    audio.addEventListener("seeked", syncIfLoaded);
     return () => {
       stop();
       audio.removeEventListener("play", onPlay);
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("ended", onEnded);
-      audio.removeEventListener("seeked", sync);
+      audio.removeEventListener("seeked", syncIfLoaded);
     };
   }, [audioRef, select]);
 
