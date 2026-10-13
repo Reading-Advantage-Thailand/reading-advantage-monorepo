@@ -12,6 +12,10 @@
       "types": "./dist/stories/index.d.ts",
       "import": "./dist/stories/index.js"
     },
+    "./stories/contracts": {
+      "types": "./dist/stories/contracts.d.ts",
+      "import": "./dist/stories/contracts.js"
+    },
     "./articles": {
       "types": "./dist/articles/index.d.ts",
       "import": "./dist/articles/index.js"

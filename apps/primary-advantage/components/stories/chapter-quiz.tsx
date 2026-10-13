@@ -6,7 +6,7 @@ import type {
   GetChapterQuestionsOutput,
   GradeChapterMcqOutput,
 } from "@reading-advantage/domain/stories";
-import { STORY_LA_FEEDBACK_TRIES } from "@reading-advantage/domain/stories";
+import { STORY_LA_FEEDBACK_TRIES } from "@reading-advantage/domain/stories/contracts";
 import {
   getChapterWrittenFeedback,
   retakeChapterMcq,
