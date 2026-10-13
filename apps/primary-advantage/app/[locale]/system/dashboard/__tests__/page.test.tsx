@@ -5,10 +5,10 @@ import type { ReactNode } from "react";
 import { createFormatter, createTranslator } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithMessages, testMessages, type TestLocale } from "@/components/__tests__/helpers/render-with-messages";
+import { renderWithMessages, testMessages, type AnyTestLocale } from "@/components/__tests__/helpers/render-with-messages";
 
 const mocks = vi.hoisted(() => ({
-  locale: "en" as "en" | "th" | "cn" | "tw" | "vi",
+  locale: "en" as AnyTestLocale,
   user: null as Record<string, unknown> | null,
   getPlatformOverview: vi.fn(),
   redirect: vi.fn(),
@@ -21,11 +21,11 @@ vi.mock("@reading-advantage/domain/primary-dashboards", async (importActual) => 
   getPlatformOverview: mocks.getPlatformOverview,
 }));
 vi.mock("next-intl/server", async () => {
-  const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
+  const { allMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
   return {
     getLocale: async () => mocks.locale,
     getTranslations: async (namespace?: string) =>
-      createTranslator({ locale: mocks.locale, messages: messages[mocks.locale as TestLocale], namespace: namespace as never }),
+      createTranslator({ locale: mocks.locale, messages: messages[mocks.locale], namespace: namespace as never }),
     getFormatter: async (opts?: { locale?: string }) => createFormatter({ locale: opts?.locale ?? mocks.locale, timeZone: "Asia/Bangkok" }),
   };
 });
@@ -62,7 +62,7 @@ function overview(over: Record<string, unknown> = {}) {
 }
 
 /** Renders the page through the real message tree. */
-async function renderPage(locale: TestLocale = "en") {
+async function renderPage(locale: AnyTestLocale = "en") {
   mocks.locale = locale;
   renderWithMessages((await SystemDashboardPage()) as React.ReactElement, { locale });
 }

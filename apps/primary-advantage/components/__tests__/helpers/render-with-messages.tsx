@@ -19,13 +19,16 @@ import viMessages from "../../../messages/vi.json";
 export const testMessages = {
   en: enMessages,
   th: thMessages,
-  cn: cnMessages,
-  tw: twMessages,
-  vi: viMessages,
 } as const;
 
-/** Locales the shared helper can provide to a render. */
+/** The message trees of all five app locales. */
+export const allMessages = { ...testMessages, cn: cnMessages, tw: twMessages, vi: viMessages } as const;
+
+/** Locales of the two main message trees (`testMessages`). */
 export type TestLocale = keyof typeof testMessages;
+
+/** Every app locale that the shared helper can provide to a render. */
+export type AnyTestLocale = keyof typeof allMessages;
 
 type ProviderMessages = ComponentProps<
   typeof NextIntlClientProvider
@@ -39,13 +42,13 @@ type ProviderMessages = ComponentProps<
  */
 export function withMessages(
   ui: ReactElement,
-  locale: TestLocale = "en",
+  locale: AnyTestLocale = "en",
 ): ReactElement {
   return (
     <NextIntlClientProvider
       locale={locale}
       timeZone={SCHOOL_TIME_ZONE}
-      messages={testMessages[locale] as ProviderMessages}
+      messages={allMessages[locale] as ProviderMessages}
     >
       {ui}
     </NextIntlClientProvider>
@@ -60,7 +63,7 @@ export function withMessages(
  */
 export function renderWithMessages(
   ui: ReactElement,
-  options: RenderOptions & { locale?: TestLocale } = {},
+  options: RenderOptions & { locale?: AnyTestLocale } = {},
 ): RenderResult {
   const { locale = "en", ...renderOptions } = options;
   return render(withMessages(ui, locale), renderOptions);

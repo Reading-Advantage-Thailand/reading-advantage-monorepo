@@ -5,10 +5,10 @@ import type { ReactNode } from "react";
 import { createFormatter, createTranslator } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithMessages, testMessages, type TestLocale } from "@/components/__tests__/helpers/render-with-messages";
+import { renderWithMessages, testMessages, type AnyTestLocale } from "@/components/__tests__/helpers/render-with-messages";
 
 const mocks = vi.hoisted(() => ({
-  locale: "en" as "en" | "th" | "cn",
+  locale: "en" as AnyTestLocale,
   user: null as Record<string, unknown> | null,
   getTeacherHome: vi.fn(),
   redirect: vi.fn(),
@@ -25,11 +25,11 @@ vi.mock("@reading-advantage/domain/primary-books", () => ({ getTeacherBookSlots:
 vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: mocks.logWarn, info: vi.fn() } }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getTeacherHome: mocks.getTeacherHome, TEACHER_HOME_INACTIVE_DAYS: 7 }));
 vi.mock("next-intl/server", async () => {
-  const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
+  const { allMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
   return {
     getLocale: async () => mocks.locale,
     getTranslations: async (namespace?: string) =>
-      createTranslator({ locale: mocks.locale, messages: messages[mocks.locale as TestLocale], namespace: namespace as never }),
+      createTranslator({ locale: mocks.locale, messages: messages[mocks.locale], namespace: namespace as never }),
     getFormatter: async (opts?: { locale?: string }) => createFormatter({ locale: opts?.locale ?? mocks.locale, timeZone: "Asia/Bangkok" }),
   };
 });
@@ -84,7 +84,7 @@ const fullHome = {
  * Renders the dashboard through the real message tree.
  * @param locale The UI locale.
  */
-async function renderDashboard(locale: TestLocale = "en") {
+async function renderDashboard(locale: AnyTestLocale = "en") {
   mocks.locale = locale;
   renderWithMessages((await TeacherDashboardPage()) as React.ReactElement, { locale });
 }
