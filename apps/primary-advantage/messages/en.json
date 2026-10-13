@@ -3696,12 +3696,10 @@
     },
     "classes": {
       "heading": "My classes",
-      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
       "grade": "Grade {grade}",
       "empty": "No classes yet",
       "emptyHint": "Create a class on My Classes, then add your students.",
-      "goToClasses": "Go to My Classes",
-      "all": "All classes"
+      "goToClasses": "Go to My Classes"
     },
     "assignments": {
       "heading": "Open assignments",
@@ -3730,7 +3728,7 @@
       "sortDesc": "Descending",
       "sortDirection": "Change the sort order",
       "csv": "Download CSV",
-      "csvLabel": "Download the shown classes as a CSV file",
+      "csvLabel": "Download CSV of the shown classes",
       "noMatch": "No class matches “{query}”.",
       "legend": "Active means one activity in the last 7 days. XP trend compares with the 7 days before (up or down by more than 5%).",
       "activeOf": "{active} of {students} ({percent}%)",

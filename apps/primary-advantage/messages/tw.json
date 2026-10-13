@@ -3674,15 +3674,15 @@
   },
   "TeacherHome": {
     "quest": "班級任務",
-    "title": "Home",
-    "greeting": "Hello, {name}",
-    "subtitle": "Your classes and students at a glance.",
-    "summary": "Summary",
+    "title": "首頁",
+    "greeting": "你好，{name}",
+    "subtitle": "一眼掌握你的班級和學生。",
+    "summary": "概覽",
     "stats": {
-      "classes": "Classes",
-      "students": "Students",
-      "openAssignments": "Open assignments",
-      "needsHelp": "Need help",
+      "classes": "班級",
+      "students": "學生",
+      "openAssignments": "未完成的作業",
+      "needsHelp": "需要幫助",
       "activeStudents": "活躍學生（30 天）",
       "activeStudentsOf": "{active} / {total}（{percent}%）",
       "noStudentsYet": "還沒有學生",
@@ -3695,33 +3695,31 @@
       "needsHelpHint": "見下方名單"
     },
     "classes": {
-      "heading": "My classes",
-      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
-      "grade": "Grade {grade}",
-      "empty": "No classes yet",
-      "emptyHint": "Create a class on My Classes, then add your students.",
-      "goToClasses": "Go to My Classes",
-      "all": "All classes"
+      "heading": "我的班級",
+      "grade": "年級 {grade}",
+      "empty": "還沒有班級",
+      "emptyHint": "請先在「我的班級」中建立班級，然後新增學生。",
+      "goToClasses": "前往我的班級"
     },
     "assignments": {
-      "heading": "Open assignments",
-      "progress": "{completed} of {assigned} done",
-      "empty": "No open assignments",
-      "emptyHint": "Every student has finished the assigned work.",
-      "all": "All assignments"
+      "heading": "未完成的作業",
+      "progress": "已完成 {completed}/{assigned}",
+      "empty": "沒有未完成的作業",
+      "emptyHint": "每位學生都已完成指派的作業。",
+      "all": "全部作業"
     },
     "help": {
-      "heading": "Who needs help",
-      "hint": "Students with overdue work or no activity for {days} days.",
-      "late": "{count} overdue",
-      "neverActive": "No activity yet",
-      "inactive": "Last active {date}",
-      "empty": "Everyone is on track",
-      "emptyHint": "No student has overdue work or a long break.",
-      "more": "{count, plural, one {# more student} other {# more students}}"
+      "heading": "誰需要幫助",
+      "hint": "作業逾期或 {days} 天沒有活動的學生。",
+      "late": "逾期 {count} 項",
+      "neverActive": "還沒有活動",
+      "inactive": "上次活動 {date}",
+      "empty": "大家都在軌道上",
+      "emptyHint": "沒有學生作業逾期或長時間沒有學習。",
+      "more": "還有 {count} 位學生"
     },
-    "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again.",
+    "loadError": "無法載入你的首頁。",
+    "loadErrorHint": "請檢查網路連線後再試一次。",
     "table": {
       "search": "依班級名稱搜尋",
       "searchLabel": "搜尋班級",
@@ -3730,7 +3728,7 @@
       "sortDesc": "降序",
       "sortDirection": "變更排序順序",
       "csv": "下載 CSV",
-      "csvLabel": "將顯示的班級下載為 CSV 檔案",
+      "csvLabel": "下載 CSV：顯示的班級",
       "noMatch": "沒有班級符合「{query}」。",
       "legend": "活躍指 7 天內至少有一次活動。XP 趨勢與前 7 天比較（上升或下降超過 5%）。",
       "activeOf": "{active} / {students}（{percent}%）",
@@ -3758,8 +3756,8 @@
     }
   },
   "TeacherUi": {
-    "startClass": "Start class",
-    "startClassFor": "Start class {name}",
+    "startClass": "開始上課",
+    "startClassFor": "開始上課 {name}",
     "due": {
       "none": "No due date",
       "overdue": "Overdue",

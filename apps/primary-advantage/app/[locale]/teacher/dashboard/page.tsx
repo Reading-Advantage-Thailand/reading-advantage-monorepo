@@ -47,11 +47,21 @@ export default async function TeacherDashboardPage() {
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
 
   const [home, t, format] = await Promise.all([
-    getTeacherHome({ db, user }),
+    getTeacherHome({ db, user }).catch((error: unknown) => {
+      logger.error("teacher_home.load_failed", { userId: user.id, error });
+      throw error;
+    }),
     getTranslations("TeacherHome"),
     getFormatter(),
   ]);
-  const quests = await Promise.all(home.classes.map((cls) => getTeacherQuestCard({ db, user }, cls.id).catch(() => null)));
+  const quests = await Promise.all(
+    home.classes.map((cls) =>
+      getTeacherQuestCard({ db, user }, cls.id).catch((error: unknown) => {
+        logger.warn("teacher_home.quest_failed", { userId: user.id, classroomId: cls.id, error });
+        return null;
+      }),
+    ),
+  );
   const bookSlots = await getTeacherBookSlots({ db, user }).catch((error: unknown) => {
     logger.error("class_books.slot_failed", { userId: user.id, error });
     return null;

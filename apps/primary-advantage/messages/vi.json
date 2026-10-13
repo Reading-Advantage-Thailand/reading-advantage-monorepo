@@ -3674,15 +3674,15 @@
   },
   "TeacherHome": {
     "quest": "Nhiệm vụ lớp",
-    "title": "Home",
-    "greeting": "Hello, {name}",
-    "subtitle": "Your classes and students at a glance.",
-    "summary": "Summary",
+    "title": "Trang chủ",
+    "greeting": "Xin chào, {name}",
+    "subtitle": "Xem nhanh lớp và học sinh của bạn.",
+    "summary": "Tóm tắt",
     "stats": {
-      "classes": "Classes",
-      "students": "Students",
-      "openAssignments": "Open assignments",
-      "needsHelp": "Need help",
+      "classes": "Lớp",
+      "students": "Học sinh",
+      "openAssignments": "Bài tập đang mở",
+      "needsHelp": "Cần hỗ trợ",
       "activeStudents": "Học sinh hoạt động (30 ngày)",
       "activeStudentsOf": "{active} trên {total} ({percent}%)",
       "noStudentsYet": "Chưa có học sinh",
@@ -3695,33 +3695,31 @@
       "needsHelpHint": "Xem danh sách bên dưới"
     },
     "classes": {
-      "heading": "My classes",
-      "students": "{count, plural, =0 {No students} one {# student} other {# students}}",
-      "grade": "Grade {grade}",
-      "empty": "No classes yet",
-      "emptyHint": "Create a class on My Classes, then add your students.",
-      "goToClasses": "Go to My Classes",
-      "all": "All classes"
+      "heading": "Lớp của tôi",
+      "grade": "Khối {grade}",
+      "empty": "Chưa có lớp nào",
+      "emptyHint": "Hãy tạo lớp trong mục Lớp của tôi, rồi thêm học sinh.",
+      "goToClasses": "Đến mục Lớp của tôi"
     },
     "assignments": {
-      "heading": "Open assignments",
-      "progress": "{completed} of {assigned} done",
-      "empty": "No open assignments",
-      "emptyHint": "Every student has finished the assigned work.",
-      "all": "All assignments"
+      "heading": "Bài tập đang mở",
+      "progress": "Đã xong {completed}/{assigned}",
+      "empty": "Không có bài tập đang mở",
+      "emptyHint": "Mọi học sinh đã hoàn thành bài được giao.",
+      "all": "Tất cả bài tập"
     },
     "help": {
-      "heading": "Who needs help",
-      "hint": "Students with overdue work or no activity for {days} days.",
-      "late": "{count} overdue",
-      "neverActive": "No activity yet",
-      "inactive": "Last active {date}",
-      "empty": "Everyone is on track",
-      "emptyHint": "No student has overdue work or a long break.",
-      "more": "{count, plural, one {# more student} other {# more students}}"
+      "heading": "Ai cần hỗ trợ",
+      "hint": "Học sinh có bài quá hạn hoặc không hoạt động trong {days} ngày.",
+      "late": "Quá hạn {count} bài",
+      "neverActive": "Chưa có hoạt động",
+      "inactive": "Hoạt động gần nhất {date}",
+      "empty": "Mọi người đều đúng tiến độ",
+      "emptyHint": "Không có học sinh nào quá hạn bài hoặc nghỉ học lâu.",
+      "more": "Còn {count} học sinh nữa"
     },
-    "loadError": "We could not load your home page.",
-    "loadErrorHint": "Check your connection and try again.",
+    "loadError": "Không thể tải trang chủ của bạn.",
+    "loadErrorHint": "Hãy kiểm tra kết nối rồi thử lại.",
     "table": {
       "search": "Tìm theo tên lớp",
       "searchLabel": "Tìm lớp",
@@ -3730,7 +3728,7 @@
       "sortDesc": "Giảm dần",
       "sortDirection": "Đổi thứ tự sắp xếp",
       "csv": "Tải CSV",
-      "csvLabel": "Tải các lớp đang hiển thị thành tệp CSV",
+      "csvLabel": "Tải CSV các lớp đang hiển thị",
       "noMatch": "Không có lớp nào khớp với “{query}”.",
       "legend": "Hoạt động nghĩa là có ít nhất một hoạt động trong 7 ngày qua. Xu hướng XP so với 7 ngày trước (tăng hoặc giảm hơn 5%).",
       "activeOf": "{active} trên {students} ({percent}%)",
@@ -3758,8 +3756,8 @@
     }
   },
   "TeacherUi": {
-    "startClass": "Start class",
-    "startClassFor": "Start class {name}",
+    "startClass": "Bắt đầu lớp",
+    "startClassFor": "Bắt đầu lớp {name}",
     "due": {
       "none": "No due date",
       "overdue": "Overdue",

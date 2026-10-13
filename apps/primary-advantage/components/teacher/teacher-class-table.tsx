@@ -124,6 +124,7 @@ export function TeacherClassTable({ rows, className }: { rows: readonly TeacherC
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
+  const sortDirText = sort.dir === "asc" ? t("table.sortAsc") : t("table.sortDesc");
   const num = (value: number) => format.number(value);
   const level = (value: number | null) => (value === null ? "—" : format.number(value, { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
   const activeText = (row: TeacherClassRow) => (row.students ? t("table.activeOf", { active: row.active7d, students: row.students, percent: row.activeRate7d }) : "—");
@@ -195,8 +196,8 @@ export function TeacherClassTable({ rows, className }: { rows: readonly TeacherC
                   </option>
                 ))}
               </select>
-              <RpgButton small tone="wood" aria-label={t("table.sortDirection")} onClick={() => chooseColumn(sort.key)}>
-                {sort.dir === "asc" ? t("table.sortAsc") : t("table.sortDesc")}
+              <RpgButton small tone="wood" aria-label={`${sortDirText}: ${t("table.sortDirection")}`} onClick={() => chooseColumn(sort.key)}>
+                {sortDirText}
               </RpgButton>
             </div>
           </div>
