@@ -74,6 +74,19 @@ describe("chapter feedback source", () => {
     expect(input.prompt).toContain("Tell the tale.");
   });
 
+  it("readFeedbackSource falls back to A1 when the chapter has no CEFR level", async () => {
+    mocks.chapterRows = [{ passage: "A fox finds a lantern.", cefrLevel: null }];
+    await expect(readFeedbackSource({ chapterId: CHAPTER })).resolves.toEqual({
+      passage: "A fox finds a lantern.",
+      cefrLevel: "A1",
+    });
+  });
+
+  it("throws for a chapter with no passage", async () => {
+    mocks.chapterRows = [{ passage: "", cefrLevel: "A2" }];
+    await expect(readFeedbackSource({ chapterId: CHAPTER })).rejects.toThrow("Chapter feedback fields are incomplete");
+  });
+
   it("throws for a missing chapter", async () => {
     mocks.chapterRows = [];
     await expect(readFeedbackSource({ chapterId: CHAPTER })).rejects.toThrow("Chapter not found");

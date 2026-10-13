@@ -37,10 +37,11 @@ export async function readFeedbackSource(source: FeedbackSource): Promise<{ pass
     if (!chapter) {
       throw new Error("Chapter not found");
     }
-    if (!chapter.cefrLevel || !chapter.passage) {
+    if (!chapter.passage) {
       throw new Error("Chapter feedback fields are incomplete");
     }
-    return { passage: chapter.passage, cefrLevel: chapter.cefrLevel };
+    // A story chapter may have no level; the legacy app fell back to A1.
+    return { passage: chapter.passage, cefrLevel: chapter.cefrLevel ?? "A1" };
   }
 
   if (!source.articleId) {
