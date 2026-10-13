@@ -99,3 +99,11 @@ _Story ref: spec.md#story-s4_
 - [x] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md) - look check pending (owner, async)
     - Manual verification steps: (1) after the batch, open `report.html` and fill the Result column of `acceptance.md`; (2) play each of the 3 articles in the new app and check that the lit word is the spoken word; (3) open the lesson reading step at 375 px and check that the player bar does not cover the footer (M-11); (4) look at the player at 375 px and 1280 px, day and night.
     - Pair list notes: RA-A4 now uses the clean article lesson (`?type=article`) because the assignment id may have no reading step (M-3); RA-A5 checks the bar position at 375 px (M-11).
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: M-13 follow scroll restarts on play; keys on a button ignored; scroll bar press and text selection stop the follow 884ff0021
+- [x] Task: Low use-read-along skips the pause and seeked sync while readyState < 1; position picks the tapped word within SEEK_EPSILON 22247add3
+- [x] Task: Low align: short-word substitution pairs 1:1 when skip counts are equal; M-4 parseSentences drops only the bad entry ab69939fb
+- [x] Task: M-10 Replay and Next start at entry 0 when no sentence is current; lesson reading hint line; translation by toTranslationLanguage 48c9099b3
+- [x] Task: Default (record only): the article sentence translation stays disabled until the audio opens (legacy).
