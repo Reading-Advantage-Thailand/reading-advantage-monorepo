@@ -2,7 +2,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { NextRequest } from "next/server";
 
-const mocks = vi.hoisted(() => ({ fetchArticleById: vi.fn() }));
+const mocks = vi.hoisted(() => ({ fetchArticleById: vi.fn(), currentUser: vi.fn() }));
+
+vi.mock("@/lib/session", () => ({ currentUser: mocks.currentUser }));
 
 vi.mock("@/server/controllers/articleController", () => ({ fetchArticleById: mocks.fetchArticleById }));
 vi.mock("@/lib/observability/logger", () => ({ logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn() } }));
@@ -10,7 +12,7 @@ vi.mock("@/server/models/articleModel", () => ({
   ArticleNotFoundError: class ArticleNotFoundError extends Error {},
 }));
 
-import { GET } from "../[articleId]/route";
+import { GET, POST, PUT, PATCH, DELETE } from "../[articleId]/route";
 import { ArticleNotFoundError } from "@/server/models/articleModel";
 
 const UUID = "3f8c1c3e-5b8e-4b53-9d0a-0c8f7a9f1a11";
@@ -28,7 +30,27 @@ function call(id: string, query = "") {
 }
 
 describe("GET /api/articles/[articleId]", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.currentUser.mockResolvedValue({ id: "u1", role: "STUDENT", schoolId: "s1" });
+  });
+
+  it("gives 401 JSON without a session and does not load an article", async () => {
+    mocks.currentUser.mockResolvedValue(null);
+    const res = await call(UUID);
+    expect(res.status).toBe(401);
+    expect(await res.json()).toEqual({ error: "Unauthorized" });
+    expect(mocks.fetchArticleById).not.toHaveBeenCalled();
+  });
+
+  it.each([["POST", POST], ["PUT", PUT], ["PATCH", PATCH], ["DELETE", DELETE]])(
+    "gives 404 JSON for %s, so the removed /api/articles/generate path is not a 405",
+    async (_m, handler) => {
+      const res = await handler();
+      expect(res.status).toBe(404);
+      expect(await res.json()).toEqual({ error: "Article not found" });
+    },
+  );
 
   it("gives 404 JSON for a malformed id and does not load an article", async () => {
     const res = await call("generate");
