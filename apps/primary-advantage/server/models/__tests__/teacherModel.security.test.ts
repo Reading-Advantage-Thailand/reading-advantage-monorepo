@@ -315,17 +315,23 @@ describe("role changes use the current target rank (M-1)", () => {
     role: "ADMIN", roles: [], SchoolAdmins: [],
   };
 
-  it("demote, then write: a co-admin cannot be demoted and then reset", async () => {
+  it("a co-admin keeps its password and its account while it is an admin (M-11)", async () => {
     await seedUser("co-admin", "TEACHER", SCHOOL_A);
     await giveRole("co-admin", "admin");
-    const demote = await updateTeacher("co-admin", { role: "teacher" }, sessionAdmin);
-    expect(demote.success).toBe(false);
     const write = await updateTeacher("co-admin", { password: "Takeover-pass-1" }, sessionAdmin);
     expect(write.success).toBe(false);
     expect((await snapshot("co-admin")).account_password).toBe("orig");
     const rows = await harness.db.execute(sql`SELECT r.name FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = 'co-admin'`);
     expect(rows.rows).toEqual([{ name: "admin" }]);
     expect((await deleteTeacher("co-admin", sessionAdmin)).success).toBe(false);
+  });
+
+  it("a demotion of a co-admin clears the legacy admin row, then the target is a plain teacher (M-11)", async () => {
+    await seedUser("co-admin", "TEACHER", SCHOOL_A);
+    await giveRole("co-admin", "admin");
+    expect((await updateTeacher("co-admin", { role: "teacher" }, sessionAdmin)).success).toBe(true);
+    const rows = await harness.db.execute(sql`SELECT r.name FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = 'co-admin' AND r.name = 'admin'`);
+    expect(rows.rows).toEqual([]);
   });
 
   it("still lets an admin change the role of a plain teacher", async () => {

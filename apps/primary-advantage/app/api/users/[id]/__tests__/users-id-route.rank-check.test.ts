@@ -193,7 +193,9 @@ describe("PATCH /api/users/[id] role rank check", () => {
 
     expect(response.status).toBe(200);
     expect(set).toHaveBeenCalledWith({ role: "TEACHER" });
-    expect(mocks.delete).not.toHaveBeenCalled();
+    // the old user_roles rows and the school_admins rows go; no row is inserted
+    expect(mocks.delete).toHaveBeenCalledTimes(2);
+    expect(mocks.insert).not.toHaveBeenCalled();
   });
 
   it("refuses to demote a co-admin whose legacy admin row hides its rank (M-1)", async () => {

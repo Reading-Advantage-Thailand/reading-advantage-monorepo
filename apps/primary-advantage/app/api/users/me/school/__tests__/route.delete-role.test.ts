@@ -81,7 +81,8 @@ describe("DELETE /api/users/me/school owner role", () => {
     expect(response.status).toBe(200);
     // one update for users.role, one for users.schoolId; the school row is deleted
     expect(mocks.update).toHaveBeenCalled();
-    expect(mocks.delete).toHaveBeenCalledTimes(1);
+    // the school row, the old user_roles rows, and the school_admins rows
+    expect(mocks.delete).toHaveBeenCalledTimes(3);
     expect(mocks.insert).not.toHaveBeenCalled();
   });
 
@@ -89,7 +90,7 @@ describe("DELETE /api/users/me/school owner role", () => {
     queue("ADMIN", [{ id: "r-student" }]);
     const response = await DELETE();
     expect(response.status).toBe(200);
-    expect(mocks.delete).toHaveBeenCalledTimes(2);
+    expect(mocks.delete).toHaveBeenCalledTimes(3);
     expect(mocks.insert).toHaveBeenCalled();
   });
 

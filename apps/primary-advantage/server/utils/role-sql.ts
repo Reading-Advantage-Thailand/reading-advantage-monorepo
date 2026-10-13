@@ -1,7 +1,7 @@
 import { eq, sql } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import type { db } from "@reading-advantage/db";
-import { users, roles, userRoles } from "@reading-advantage/db/schema";
+import { users, roles, userRoles, schoolAdmins } from "@reading-advantage/db/schema";
 
 /** A database handle or a transaction handle. */
 export type RoleExecutor = Pick<typeof db, "select" | "insert" | "update" | "delete">;
@@ -22,16 +22,22 @@ export function roleSql(roleNames: string | string[]): SQL {
 
 /**
  * Sets the role of one user.
- * It always writes `users.role`. It replaces the `user_roles` row only when the `roles` row exists.
+ * It always writes `users.role` and clears the old `user_roles` rows, because `users.role` is the truth.
+ * It inserts a new `user_roles` row only when the `roles` row exists.
+ * A role below ADMIN also deletes the `school_admins` rows, so the user loses the admin API rights.
  * It never fails when the `roles` table is empty.
  * @param tx A database or transaction handle.
  * @param userId The user to change.
  * @param role The new role name, in any letter case.
  */
 export async function setUserRole(tx: RoleExecutor, userId: string, role: string): Promise<void> {
-  await tx.update(users).set({ role: role.toUpperCase() as typeof users.$inferInsert.role }).where(eq(users.id, userId));
+  const upper = role.toUpperCase();
+  await tx.update(users).set({ role: upper as typeof users.$inferInsert.role }).where(eq(users.id, userId));
+  await tx.delete(userRoles).where(eq(userRoles.userId, userId));
+  if (upper !== "ADMIN" && upper !== "SYSTEM") {
+    await tx.delete(schoolAdmins).where(eq(schoolAdmins.userId, userId));
+  }
   const [row] = await tx.select({ id: roles.id }).from(roles).where(eq(roles.name, role.toLowerCase())).limit(1);
   if (!row) return;
-  await tx.delete(userRoles).where(eq(userRoles.userId, userId));
   await tx.insert(userRoles).values({ userId, roleId: row.id });
 }
