@@ -1783,16 +1783,16 @@
         "failed": "無法載入課程總結"
       },
       "restart": {
-        "title": "Start this lesson again?",
-        "body1": "Your work on this lesson goes into your history.",
-        "body2": "You keep your XP. You can earn XP again.",
-        "cancel": "Cancel",
-        "error": "We could not start the lesson again. Try again."
+        "title": "要重新開始這堂課嗎？",
+        "body1": "你在這堂課的作業會儲存到你的歷史記錄中。",
+        "body2": "你會保留你的 XP，還可以再次獲得 XP。",
+        "cancel": "取消",
+        "error": "我們無法重新開始這堂課。請重試。"
       },
-      "attempt": "Attempt {number}",
-      "attemptXp": "XP in attempt {number}",
-      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
-      "previewNote": "Preview: nothing is saved."
+      "attempt": "第 {number} 次",
+      "attemptXp": "第 {number} 次獲得的 XP",
+      "historyNote": "你之前的嘗試已儲存在歷史記錄中。你的 XP 保持不變。",
+      "previewNote": "預覽：不會儲存任何內容。"
     },
     "VocabularyFlashcards": {
       "loading": {
@@ -3820,16 +3820,16 @@
       "steps": "Workbook steps done in class",
       "stepLabel": "Step {step}: {title}",
       "actionError": "The change was not saved. Try again.",
-      "teachAgain": "Teach again",
-      "teachAgainTitle": "Teach lesson {number} again?",
-      "teachAgainBody1": "The class starts lesson {number} again. The lesson becomes the current lesson.",
-      "teachAgainBody2": "The work of each student goes into the history. The XP stays.",
-      "teachAgainCancel": "Cancel",
-      "taughtTimes": "{count, plural, one {Taught # time} other {Taught # times}}",
-      "runChip": "Run {number}",
-      "earlierRuns": "Earlier runs ({count})",
-      "earlierRun": "Run {number} · taught {date} · {done} of {total} steps done",
-      "earlierRunNoDate": "Run {number} · not marked taught · {done} of {total} steps done",
+      "teachAgain": "再教一次",
+      "teachAgainTitle": "要再教一次第 {number} 課嗎？",
+      "teachAgainBody1": "全班將重新開始第 {number} 課。這堂課會成為目前課程。",
+      "teachAgainBody2": "每位學生的作業會儲存到歷史記錄中。XP 保持不變。",
+      "teachAgainCancel": "取消",
+      "taughtTimes": "{count, plural, one {已教 # 次} other {已教 # 次}}",
+      "runChip": "第 {number} 輪",
+      "earlierRuns": "之前的輪次 ({count})",
+      "earlierRun": "第 {number} 輪 · 教學日期 {date} · 已完成 {done}/{total} 個步驟",
+      "earlierRunNoDate": "第 {number} 輪 · 未標記為已教 · 已完成 {done}/{total} 個步驟",
       "lesson": {
         "projector": "Projector",
         "projectorGames": {
@@ -3942,18 +3942,18 @@
         "stepLabel": "Step {step}: {status}",
         "backToGrid": "Back to class progress",
         "studentTitle": "{name}",
-        "attemptCurrent": "Attempt {number} (current)",
-        "earlierAttempts": "Earlier attempts ({count})",
-        "attemptNumber": "Attempt {number}",
-        "closedOn": "Closed {date}",
+        "attemptCurrent": "第 {number} 次（目前）",
+        "earlierAttempts": "之前的嘗試 ({count})",
+        "attemptNumber": "第 {number} 次",
+        "closedOn": "結束於 {date}",
         "reason": {
-          "student_restart": "Student started again",
-          "teacher_teach_again": "Teacher taught again",
-          "legacy_import": "Moved from the old system"
+          "student_restart": "學生重新開始",
+          "teacher_teach_again": "老師再教了一次",
+          "legacy_import": "從舊系統遷移"
         },
-        "attemptSummary": "{done} of 14 steps · {minutes} min · {xp} XP",
-        "attemptsLabel": "attempt {number}",
-        "attemptsLegend": "Gold dot: the student is on a later attempt. The number is the attempt."
+        "attemptSummary": "14 個步驟中完成 {done} 個 · {minutes} 分鐘 · {xp} XP",
+        "attemptsLabel": "第 {number} 次",
+        "attemptsLegend": "金色圓點：學生正在進行較新的嘗試。數字是第幾次。"
       }
     }
   },

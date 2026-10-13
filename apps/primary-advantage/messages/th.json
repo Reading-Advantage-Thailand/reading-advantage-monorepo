@@ -1906,16 +1906,16 @@
         "failed": "ไม่สามารถโหลดสรุปบทเรียนได้"
       },
       "restart": {
-        "title": "Start this lesson again?",
-        "body1": "Your work on this lesson goes into your history.",
-        "body2": "You keep your XP. You can earn XP again.",
-        "cancel": "Cancel",
-        "error": "We could not start the lesson again. Try again."
+        "title": "เริ่มบทเรียนนี้ใหม่หรือไม่?",
+        "body1": "ผลงานในบทเรียนนี้จะถูกเก็บไว้ในประวัติของคุณ",
+        "body2": "คุณยังคงมี XP อยู่ และสามารถได้รับ XP อีกครั้ง",
+        "cancel": "ยกเลิก",
+        "error": "เราเริ่มบทเรียนใหม่ไม่ได้ กรุณาลองอีกครั้ง"
       },
-      "attempt": "Attempt {number}",
-      "attemptXp": "XP in attempt {number}",
-      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
-      "previewNote": "Preview: nothing is saved."
+      "attempt": "ครั้งที่ {number}",
+      "attemptXp": "XP ในครั้งที่ {number}",
+      "historyNote": "ครั้งก่อนหน้าของคุณถูกเก็บไว้ในประวัติ XP ของคุณยังอยู่",
+      "previewNote": "ตัวอย่าง: ไม่มีการบันทึกใดๆ"
     }
   },
   "LessonGames": {
@@ -3820,16 +3820,16 @@
       "steps": "ขั้นในแบบฝึกหัดที่ทำในชั้นเรียนแล้ว",
       "stepLabel": "ขั้นที่ {step}: {title}",
       "actionError": "บันทึกการเปลี่ยนแปลงไม่สำเร็จ ลองอีกครั้ง",
-      "teachAgain": "Teach again",
-      "teachAgainTitle": "Teach lesson {number} again?",
-      "teachAgainBody1": "The class starts lesson {number} again. The lesson becomes the current lesson.",
-      "teachAgainBody2": "The work of each student goes into the history. The XP stays.",
-      "teachAgainCancel": "Cancel",
-      "taughtTimes": "{count, plural, one {Taught # time} other {Taught # times}}",
-      "runChip": "Run {number}",
-      "earlierRuns": "Earlier runs ({count})",
-      "earlierRun": "Run {number} · taught {date} · {done} of {total} steps done",
-      "earlierRunNoDate": "Run {number} · not marked taught · {done} of {total} steps done",
+      "teachAgain": "สอนอีกครั้ง",
+      "teachAgainTitle": "สอนบทเรียนที่ {number} อีกครั้งหรือไม่?",
+      "teachAgainBody1": "ชั้นเรียนจะเริ่มบทเรียนที่ {number} อีกครั้ง บทเรียนนี้จะเป็นบทเรียนปัจจุบัน",
+      "teachAgainBody2": "ผลงานของนักเรียนแต่ละคนจะถูกเก็บไว้ในประวัติ XP ยังอยู่",
+      "teachAgainCancel": "ยกเลิก",
+      "taughtTimes": "{count, plural, one {สอนแล้ว # ครั้ง} other {สอนแล้ว # ครั้ง}}",
+      "runChip": "รอบที่ {number}",
+      "earlierRuns": "รอบก่อนหน้า ({count})",
+      "earlierRun": "รอบที่ {number} · สอนเมื่อ {date} · เสร็จ {done} จาก {total} ขั้นตอน",
+      "earlierRunNoDate": "รอบที่ {number} · ยังไม่ได้ทำเครื่องหมายว่าสอนแล้ว · เสร็จ {done} จาก {total} ขั้นตอน",
       "lesson": {
         "projector": "โปรเจกเตอร์",
         "projectorGames": {
@@ -3942,18 +3942,18 @@
         "stepLabel": "ขั้นที่ {step}: {status}",
         "backToGrid": "กลับไปที่ความก้าวหน้าของชั้นเรียน",
         "studentTitle": "{name}",
-        "attemptCurrent": "Attempt {number} (current)",
-        "earlierAttempts": "Earlier attempts ({count})",
-        "attemptNumber": "Attempt {number}",
-        "closedOn": "Closed {date}",
+        "attemptCurrent": "ครั้งที่ {number} (ปัจจุบัน)",
+        "earlierAttempts": "ครั้งก่อนหน้า ({count})",
+        "attemptNumber": "ครั้งที่ {number}",
+        "closedOn": "ปิดเมื่อ {date}",
         "reason": {
-          "student_restart": "Student started again",
-          "teacher_teach_again": "Teacher taught again",
-          "legacy_import": "Moved from the old system"
+          "student_restart": "นักเรียนเริ่มใหม่",
+          "teacher_teach_again": "ครูสอนอีกครั้ง",
+          "legacy_import": "ย้ายมาจากระบบเดิม"
         },
-        "attemptSummary": "{done} of 14 steps · {minutes} min · {xp} XP",
-        "attemptsLabel": "attempt {number}",
-        "attemptsLegend": "Gold dot: the student is on a later attempt. The number is the attempt."
+        "attemptSummary": "{done} จาก 14 ขั้นตอน · {minutes} นาที · {xp} XP",
+        "attemptsLabel": "ครั้งที่ {number}",
+        "attemptsLegend": "จุดสีทอง: นักเรียนอยู่ในครั้งที่ใหม่กว่า ตัวเลขคือครั้งที่"
       }
     }
   },

@@ -1906,16 +1906,16 @@
         "failed": "Không thể tải tổng kết bài học"
       },
       "restart": {
-        "title": "Start this lesson again?",
-        "body1": "Your work on this lesson goes into your history.",
-        "body2": "You keep your XP. You can earn XP again.",
-        "cancel": "Cancel",
-        "error": "We could not start the lesson again. Try again."
+        "title": "Bắt đầu lại bài học này?",
+        "body1": "Bài làm của bạn trong bài học này được lưu vào lịch sử.",
+        "body2": "Bạn giữ lại XP của mình. Bạn có thể kiếm XP lần nữa.",
+        "cancel": "Hủy",
+        "error": "Chúng tôi không thể bắt đầu lại bài học. Hãy thử lại."
       },
-      "attempt": "Attempt {number}",
-      "attemptXp": "XP in attempt {number}",
-      "historyNote": "Your earlier attempt is saved in your history. Your XP stays.",
-      "previewNote": "Preview: nothing is saved."
+      "attempt": "Lần {number}",
+      "attemptXp": "XP trong lần {number}",
+      "historyNote": "Lần làm trước của bạn được lưu trong lịch sử. XP của bạn vẫn còn.",
+      "previewNote": "Xem trước: không có gì được lưu."
     }
   },
   "LessonGames": {
@@ -3820,16 +3820,16 @@
       "steps": "Workbook steps done in class",
       "stepLabel": "Step {step}: {title}",
       "actionError": "The change was not saved. Try again.",
-      "teachAgain": "Teach again",
-      "teachAgainTitle": "Teach lesson {number} again?",
-      "teachAgainBody1": "The class starts lesson {number} again. The lesson becomes the current lesson.",
-      "teachAgainBody2": "The work of each student goes into the history. The XP stays.",
-      "teachAgainCancel": "Cancel",
-      "taughtTimes": "{count, plural, one {Taught # time} other {Taught # times}}",
-      "runChip": "Run {number}",
-      "earlierRuns": "Earlier runs ({count})",
-      "earlierRun": "Run {number} · taught {date} · {done} of {total} steps done",
-      "earlierRunNoDate": "Run {number} · not marked taught · {done} of {total} steps done",
+      "teachAgain": "Dạy lại",
+      "teachAgainTitle": "Dạy lại bài học {number}?",
+      "teachAgainBody1": "Cả lớp bắt đầu lại bài học {number}. Bài học này trở thành bài học hiện tại.",
+      "teachAgainBody2": "Bài làm của từng học sinh được lưu vào lịch sử. XP vẫn còn.",
+      "teachAgainCancel": "Hủy",
+      "taughtTimes": "{count, plural, one {Đã dạy # lần} other {Đã dạy # lần}}",
+      "runChip": "Lượt {number}",
+      "earlierRuns": "Các lượt trước ({count})",
+      "earlierRun": "Lượt {number} · dạy ngày {date} · xong {done}/{total} bước",
+      "earlierRunNoDate": "Lượt {number} · chưa đánh dấu đã dạy · xong {done}/{total} bước",
       "lesson": {
         "projector": "Projector",
         "projectorGames": {
@@ -3942,18 +3942,18 @@
         "stepLabel": "Step {step}: {status}",
         "backToGrid": "Back to class progress",
         "studentTitle": "{name}",
-        "attemptCurrent": "Attempt {number} (current)",
-        "earlierAttempts": "Earlier attempts ({count})",
-        "attemptNumber": "Attempt {number}",
-        "closedOn": "Closed {date}",
+        "attemptCurrent": "Lần {number} (hiện tại)",
+        "earlierAttempts": "Các lần trước ({count})",
+        "attemptNumber": "Lần {number}",
+        "closedOn": "Đóng ngày {date}",
         "reason": {
-          "student_restart": "Student started again",
-          "teacher_teach_again": "Teacher taught again",
-          "legacy_import": "Moved from the old system"
+          "student_restart": "Học sinh bắt đầu lại",
+          "teacher_teach_again": "Giáo viên dạy lại",
+          "legacy_import": "Chuyển từ hệ thống cũ"
         },
-        "attemptSummary": "{done} of 14 steps · {minutes} min · {xp} XP",
-        "attemptsLabel": "attempt {number}",
-        "attemptsLegend": "Gold dot: the student is on a later attempt. The number is the attempt."
+        "attemptSummary": "{done}/14 bước · {minutes} phút · {xp} XP",
+        "attemptsLabel": "lần {number}",
+        "attemptsLegend": "Chấm vàng: học sinh đang ở lần làm sau. Con số là số lần."
       }
     }
   },
