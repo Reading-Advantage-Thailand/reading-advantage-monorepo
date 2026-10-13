@@ -1,6 +1,6 @@
 {
   "id": "325d0531-4de2-4575-a958-e39d5a2672f5",
-  "prevId": "2d39c425-f067-4b2a-bb01-f89fd1922f37",
+  "prevId": "564ca6cb-9b44-4fb4-865c-7ad4a73fbcee",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -6014,6 +6014,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "audio_word_url": {
           "name": "audio_word_url",
           "type": "text",
@@ -6380,6 +6386,12 @@
         },
         "image_description": {
           "name": "image_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image": {
+          "name": "image",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -11180,7 +11192,13 @@
           "name": "article_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "chapter_id": {
+          "name": "chapter_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "sentence": {
           "name": "sentence",
@@ -11240,7 +11258,12 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "sentencs_and_words_for_flashcard_one_owner_check": {
+          "name": "sentencs_and_words_for_flashcard_one_owner_check",
+          "value": "(\"sentencs_and_words_for_flashcard\".\"article_id\" IS NOT NULL) <> (\"sentencs_and_words_for_flashcard\".\"chapter_id\" IS NOT NULL)"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.user_roles": {
