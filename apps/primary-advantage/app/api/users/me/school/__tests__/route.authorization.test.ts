@@ -7,9 +7,13 @@ const mocks = vi.hoisted(() => ({
   getSchoolDetail: vi.fn(),
   selectQueue: [] as unknown[][],
   update: vi.fn(),
+  adminRows: [] as unknown[],
 }));
 
 vi.mock("@/lib/session", () => ({ getCurrentUser: mocks.getCurrentUser }));
+vi.mock("@/server/utils/school-admin-rows", () => ({
+  loadOwnSchoolAdminRows: async () => mocks.adminRows,
+}));
 vi.mock("@/server/models/schoolModel", () => ({ getSchoolDetail: mocks.getSchoolDetail }));
 vi.mock("@/server/models/schoolLicenseView", () => ({ getLicenseViewForCaller: vi.fn().mockResolvedValue(null) }));
 
@@ -66,7 +70,19 @@ function queuePatch(role: string, ownerId: string | null = null) {
 }
 
 describe("PATCH /api/users/me/school needs a school admin", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.adminRows = [];
+  });
+
+  it("serves a TEACHER who has a school_admins row for the school (Low)", async () => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "u1", role: "TEACHER", schoolId: "s1" });
+    mocks.adminRows = [{ id: "sa1", schoolId: "s1" }];
+    queuePatch("TEACHER", "someone-else");
+    const response = await PATCH(patch());
+    expect(response.status).toBe(200);
+    expect(mocks.update).toHaveBeenCalled();
+  });
 
   it.each(["STUDENT", "TEACHER"])("refuses a %s and writes nothing", async (role) => {
     mocks.getCurrentUser.mockResolvedValue({ id: "u1", role, schoolId: "s1" });

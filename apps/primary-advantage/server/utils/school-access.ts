@@ -5,11 +5,13 @@ export interface SchoolActor {
   id: string;
   role: string | null | undefined;
   schoolId: string | null | undefined;
+  /** True when the account holds a `school_admins` row for its own school. */
+  hasSchoolAdminRow?: boolean;
 }
 
 /**
  * Decides if an account may manage one school (rename it, manage its admins).
- * The owner, an ADMIN of the same school (by `users.role` and `users.school_id`), and SYSTEM may.
+ * The owner, an ADMIN or a holder of a `school_admins` row of the same school (by `users.role` and `users.school_id`), and SYSTEM may.
  * Migrated data has ADMIN users without a `school_admins` row and schools without an owner,
  * so the owner rule alone locks them out.
  * @param actor The account, read from the `users` row.
@@ -23,5 +25,6 @@ export function canManageSchool(
   const role = normalizeRole(actor.role);
   if (role === "SYSTEM") return true;
   if (school.ownerId && school.ownerId === actor.id) return true;
-  return role === "ADMIN" && !!actor.schoolId && actor.schoolId === school.id;
+  const sameSchool = !!actor.schoolId && actor.schoolId === school.id;
+  return (role === "ADMIN" || !!actor.hasSchoolAdminRow) && sameSchool;
 }

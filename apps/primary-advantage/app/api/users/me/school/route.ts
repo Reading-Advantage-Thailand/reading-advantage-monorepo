@@ -10,6 +10,7 @@ import { z } from "zod";
 import { normalizeRole } from "@/lib/authorization";
 import { setUserRole } from "@/server/utils/role-sql";
 import { canManageSchool } from "@/server/utils/school-access";
+import { loadOwnSchoolAdminRows } from "@/server/utils/school-admin-rows";
 import { logger } from "@/lib/observability/logger";
 
 const schoolSchema = z.object({
@@ -289,7 +290,14 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Only an admin of the school (or its owner, or SYSTEM) may change the school.
-    if (!canManageSchool(user, userSchool)) {
+    // A TEACHER with a school_admins row for this school counts as a school admin.
+    const canManage =
+      canManageSchool(user, userSchool) ||
+      canManageSchool(
+        { ...user, hasSchoolAdminRow: (await loadOwnSchoolAdminRows(user.id, userSchool.id)).length > 0 },
+        userSchool,
+      );
+    if (!canManage) {
       return NextResponse.json(
         { error: "Only a school admin can update the school" },
         { status: 403 },

@@ -18,6 +18,12 @@ describe("canManageSchool", () => {
     expect(canManageSchool({ id: "t", role: "TEACHER", schoolId: "s1" }, school)).toBe(false);
     expect(canManageSchool({ id: "x", role: "STUDENT", schoolId: "s1" }, school)).toBe(false);
   });
+  it("allows a TEACHER with a school_admins row for the school (Low)", () => {
+    expect(canManageSchool({ id: "t", role: "TEACHER", schoolId: "s1", hasSchoolAdminRow: true }, school)).toBe(true);
+  });
+  it("refuses a TEACHER with a school_admins row of another school (Low)", () => {
+    expect(canManageSchool({ id: "t", role: "TEACHER", schoolId: "s2", hasSchoolAdminRow: true }, school)).toBe(false);
+  });
   it("allows SYSTEM", () => {
     expect(canManageSchool({ id: "sys", role: "SYSTEM", schoolId: null }, school)).toBe(true);
   });
