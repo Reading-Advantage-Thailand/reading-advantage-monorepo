@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/observability/logger";
 import { writeFile, mkdir } from "fs/promises";
 import { existsSync, unlink } from "fs";
 import path from "path";
@@ -315,7 +316,7 @@ export async function POST(request: NextRequest) {
       }
       parseTimer.end("CSV validation completed");
     } catch (parseError) {
-      console.error("CSV parsing failed", parseError);
+      logger.error("classes_upload_csv_parse_failed", { error: parseError });
       return NextResponse.json(
         {
           error: "CSV parsing failed",
@@ -1060,7 +1061,7 @@ export async function POST(request: NextRequest) {
     }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const errorTime = apiTimer.end("Upload classes API request failed");
-    console.error(`❌ Classes upload error after ${errorTime}ms:`, error);
+    logger.error("classes_upload_failed", { durationMs: errorTime, error });
     return NextResponse.json(
       {
         error: "Failed to upload classes file",
@@ -1075,7 +1076,7 @@ export async function POST(request: NextRequest) {
     if (tempFilePath) {
       unlink(tempFilePath, (err) => {
         if (err) {
-          console.error("Error deleting temp file:", err);
+          logger.error("classes_upload_temp_file_delete_failed", { error: err });
         }
       });
     }

@@ -225,3 +225,7 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
         - Only A13 fails (`agents_md_audit_science_advantage_20260603`); it is not from this track.
     - [~] If `graph.db` is fresh, run `build-graph update ./graph.db <changed files>` — skipped by order of the orchestrator
 - [ ] Task: Measure - User Manual Verification 'Phase 9: Records, Acceptance, Docs & Doctor' (Protocol in workflow.md)
+
+## Phase: Review Fixes 2026-10-13
+- [x] Task: L-16 a failed AI call writes `ai_call_failed` (in `loggedAiCall`, used by `assistant.ts`) 3faa192de
+- [x] Task: AC-3 removed article path gives 404: the `[articleId]` route answers 404 for POST, PUT, PATCH, DELETE 394a5f4d1

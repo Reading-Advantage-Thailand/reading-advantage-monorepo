@@ -18,6 +18,8 @@ interface PickerTeacher {
  * @param props.ownerId The user id of the class owner.
  * @param props.ownerName The name of the class owner, shown when the owner is not a teacher row.
  * @param props.ownerEmail The email of the class owner, shown when the owner is not a teacher row.
+ * @param props.currentTeachers The teachers that the class has now. A current teacher that the school list lacks
+ *   (an ADMIN co-teacher, or a teacher of another school) shows as a checked row that can be removed.
  * @param props.selectedIds The user ids of the teachers that are checked.
  * @param props.onChange Called with the new list of checked ids (the owner always in it).
  * @returns The picker panel.
@@ -27,6 +29,7 @@ export function ClassroomTeacherPicker({
   ownerId,
   ownerName,
   ownerEmail,
+  currentTeachers = [],
   selectedIds,
   onChange,
 }: {
@@ -34,6 +37,7 @@ export function ClassroomTeacherPicker({
   ownerId?: string;
   ownerName?: string;
   ownerEmail?: string;
+  currentTeachers?: PickerTeacher[];
   selectedIds: string[];
   onChange: (ids: string[]) => void;
 }) {
@@ -66,10 +70,13 @@ export function ClassroomTeacherPicker({
   };
 
   // The fetch lists teachers only, so an ADMIN owner is missing: prepend a locked owner row.
-  const rows =
-    ownerId && !teachers.some((teacher) => teacher.id === ownerId)
-      ? [{ id: ownerId, name: ownerName ?? t("owner"), email: ownerEmail ?? "" }, ...teachers]
-      : teachers;
+  const listed = new Set(teachers.map((teacher) => teacher.id));
+  const extras = currentTeachers.filter((teacher) => !listed.has(teacher.id) && teacher.id !== ownerId);
+  const rows = [
+    ...(ownerId && !listed.has(ownerId) ? [{ id: ownerId, name: ownerName ?? t("owner"), email: ownerEmail ?? "" }] : []),
+    ...extras,
+    ...teachers,
+  ];
 
   return (
     <Panel className="gap-1 p-3" data-testid="classroom-teacher-picker">

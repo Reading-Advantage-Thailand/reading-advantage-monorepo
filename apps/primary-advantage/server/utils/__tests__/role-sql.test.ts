@@ -69,12 +69,39 @@ describe("setUserRole", () => {
     expect(await roleRows("u1")).toEqual(["admin"]);
   });
 
-  it("keeps the old row when the target roles row is missing", async () => {
+  it("clears the old row when the target roles row is missing (M-7)", async () => {
     await h.db.execute(sql`INSERT INTO roles (name) VALUES ('teacher')`);
     await seed("u1", "TEACHER");
     await h.db.execute(sql`INSERT INTO user_roles (user_id, role_id) SELECT 'u1', id FROM roles WHERE name = 'teacher'`);
     await setUserRole(h.db as never, "u1", "admin");
     expect(await sessionRole("u1")).toBe("ADMIN");
-    expect(await roleRows("u1")).toEqual(["teacher"]);
+    expect(await roleRows("u1")).toEqual([]);
+  });
+
+  it("clears an old admin row when a demotion finds no teacher roles row (M-7)", async () => {
+    await h.db.execute(sql`INSERT INTO roles (name) VALUES ('admin')`);
+    await seed("u1", "ADMIN");
+    await h.db.execute(sql`INSERT INTO user_roles (user_id, role_id) SELECT 'u1', id FROM roles WHERE name = 'admin'`);
+    await setUserRole(h.db as never, "u1", "teacher");
+    expect(await sessionRole("u1")).toBe("TEACHER");
+    expect(await roleRows("u1")).toEqual([]);
+  });
+
+  it("deletes the school_admins rows when the new role is below ADMIN (M-7)", async () => {
+    await h.db.execute(sql`INSERT INTO schools (id, name) VALUES ('00000000-0000-0000-0000-0000000000a1', 'A')`);
+    await seed("u1", "ADMIN");
+    await h.db.execute(sql`INSERT INTO school_admins (school_id, user_id) VALUES ('00000000-0000-0000-0000-0000000000a1', 'u1')`);
+    await setUserRole(h.db as never, "u1", "teacher");
+    const r = await h.db.execute(sql`SELECT 1 FROM school_admins WHERE user_id = 'u1'`);
+    expect(r.rows.length).toBe(0);
+  });
+
+  it("keeps the school_admins rows when the new role is ADMIN (M-7)", async () => {
+    await h.db.execute(sql`INSERT INTO schools (id, name) VALUES ('00000000-0000-0000-0000-0000000000a1', 'A')`);
+    await seed("u1", "TEACHER");
+    await h.db.execute(sql`INSERT INTO school_admins (school_id, user_id) VALUES ('00000000-0000-0000-0000-0000000000a1', 'u1')`);
+    await setUserRole(h.db as never, "u1", "admin");
+    const r = await h.db.execute(sql`SELECT 1 FROM school_admins WHERE user_id = 'u1'`);
+    expect(r.rows.length).toBe(1);
   });
 });

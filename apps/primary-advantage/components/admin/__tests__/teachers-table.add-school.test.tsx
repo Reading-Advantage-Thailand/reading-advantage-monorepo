@@ -102,6 +102,16 @@ describe("TeachersTable add-teacher school choice", () => {
     expect(within(dialog).queryByLabelText(/Old class/)).not.toBeInTheDocument();
   });
 
+  it("disables Add until SYSTEM picks a school, and lists no unfiltered classes", async () => {
+    const dialog = await openAdd();
+    fillRequired(dialog);
+    expect(within(dialog).getByRole("button", { name: "Add Teacher" })).toBeDisabled();
+    expect(within(dialog).queryByLabelText(/Old class/)).not.toBeInTheDocument();
+    fireEvent.change(within(dialog).getByLabelText("School"), { target: { value: "school-b" } });
+    await flush();
+    expect(within(dialog).getByRole("button", { name: "Add Teacher" })).toBeEnabled();
+  });
+
   it("sends the picked school id in the create body", async () => {
     const dialog = await openAdd();
     fillRequired(dialog);

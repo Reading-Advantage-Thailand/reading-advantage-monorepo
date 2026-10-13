@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import type { PracticeInput } from "@reading-advantage/game-contracts";
+import type { LaunchAvatar, PracticeInput } from "@reading-advantage/game-contracts";
 import { missingFor } from "@reading-advantage/advantage-play-kit-3d/contracts";
 import type { LessonGameResult } from "@reading-advantage/domain/games";
 
@@ -34,6 +34,7 @@ export default function TaskVocabularyGame({ articleId, save = true }: { article
   const locale = useLocale();
   const [input, setInput] = useState<PracticeInput | null>(null);
   const [results, setResults] = useState<LessonGameResult[]>([]);
+  const [identity, setIdentity] = useState<{ ownerKey?: string; avatar?: LaunchAvatar | null }>({});
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<View>("pick");
   const [notice, setNotice] = useState<Notice>(null);
@@ -52,8 +53,10 @@ export default function TaskVocabularyGame({ articleId, save = true }: { article
       .then(([lesson, saved]) => {
         if (!live) return;
         if (saved.success) setResults(saved.results.latest);
-        if (lesson.success) setInput(lesson.input);
-        else {
+        if (lesson.success) {
+          setInput(lesson.input);
+          setIdentity({ ownerKey: lesson.ownerKey, avatar: lesson.avatar });
+        } else {
           setNotice("inputFailed");
           setView("simple");
         }
@@ -105,6 +108,8 @@ export default function TaskVocabularyGame({ articleId, save = true }: { article
           input={input}
           articleId={articleId}
           save={save}
+          ownerKey={identity.ownerKey}
+          avatar={identity.avatar}
           className="flex h-full w-full flex-col"
           onResult={onResult}
           onCompleted={onCompleted}

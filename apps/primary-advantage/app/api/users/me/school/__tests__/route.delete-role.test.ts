@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   insert: vi.fn(),
   update: vi.fn(),
   delete: vi.fn(),
+  setSpy: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ getCurrentUser: mocks.getCurrentUser }));
@@ -34,7 +35,10 @@ function writeChain(spy: (...args: unknown[]) => void) {
       spy(v);
       return stub;
     };
-    stub.set = () => stub;
+    stub.set = (v: unknown) => {
+      mocks.setSpy(v);
+      return stub;
+    };
     stub.where = () => stub;
     stub.returning = () => Promise.resolve([{ id: "new-school", name: "S", ownerId: "u1" }]);
     stub.then = (resolve: (v: unknown) => unknown) => Promise.resolve([]).then(resolve);
@@ -81,7 +85,8 @@ describe("DELETE /api/users/me/school owner role", () => {
     expect(response.status).toBe(200);
     // one update for users.role, one for users.schoolId; the school row is deleted
     expect(mocks.update).toHaveBeenCalled();
-    expect(mocks.delete).toHaveBeenCalledTimes(1);
+    // the school row, the old user_roles rows, and the school_admins rows
+    expect(mocks.delete).toHaveBeenCalledTimes(3);
     expect(mocks.insert).not.toHaveBeenCalled();
   });
 
@@ -89,7 +94,7 @@ describe("DELETE /api/users/me/school owner role", () => {
     queue("ADMIN", [{ id: "r-student" }]);
     const response = await DELETE();
     expect(response.status).toBe(200);
-    expect(mocks.delete).toHaveBeenCalledTimes(2);
+    expect(mocks.delete).toHaveBeenCalledTimes(3);
     expect(mocks.insert).toHaveBeenCalled();
   });
 
@@ -99,5 +104,32 @@ describe("DELETE /api/users/me/school owner role", () => {
     const response = await DELETE();
     expect(response.status).toBe(200);
     expect(mocks.update).not.toHaveBeenCalled();
+  });
+
+  it("sets the owner role to TEACHER, not STUDENT (Low)", async () => {
+    queue("ADMIN");
+    await DELETE();
+    expect(mocks.setSpy).toHaveBeenCalledWith({ role: "TEACHER" });
+  });
+
+  it("lets an ADMIN of the school delete a school that has no owner (Low)", async () => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "adm", role: "ADMIN", schoolId: "school-1" });
+    mocks.selectQueue = [
+      [{ id: "adm", name: "U", email: "u@x.test", schoolId: "school-1", role: "ADMIN" }],
+      [{ id: "school-1", name: "S", ownerId: null }],
+      [],
+    ];
+    const response = await DELETE();
+    expect(response.status).toBe(200);
+  });
+
+  it("refuses an ADMIN who is not the owner of an owned school (Low)", async () => {
+    mocks.getCurrentUser.mockResolvedValue({ id: "adm", role: "ADMIN", schoolId: "school-1" });
+    mocks.selectQueue = [
+      [{ id: "adm", name: "U", email: "u@x.test", schoolId: "school-1", role: "ADMIN" }],
+      [{ id: "school-1", name: "S", ownerId: "someone-else" }],
+    ];
+    const response = await DELETE();
+    expect(response.status).toBe(403);
   });
 });

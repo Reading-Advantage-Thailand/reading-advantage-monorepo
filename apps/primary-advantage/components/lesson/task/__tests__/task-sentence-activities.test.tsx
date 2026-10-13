@@ -16,8 +16,14 @@ vi.mock("@/actions/lesson-games", () => ({
   getLessonGameResultsAction: mocks.results,
 }));
 vi.mock("@/components/games/game-host", () => ({
-  GameHost: (props: { gameId: string; articleId?: string; save?: boolean; onLoadError?: () => void; onExit?: () => void }) => (
-    <div data-testid="host" data-game={props.gameId} data-article={props.articleId} data-save={String(props.save)}>
+  GameHost: (props: {
+    gameId: string; articleId?: string; save?: boolean; ownerKey?: string; avatar?: unknown;
+    onResult?: (r: { correctAnswers: number; totalAttempts: number; victory: boolean }) => void;
+    onCompleted?: (s: { correctAnswers: number; totalAttempts: number; victory: boolean; xpEarned?: number }) => void;
+    onLoadError?: () => void; onExit?: () => void;
+  }) => (
+    <div data-testid="host" data-game={props.gameId} data-article={props.articleId} data-save={String(props.save)} data-owner={props.ownerKey} data-avatar={JSON.stringify(props.avatar ?? null)}>
+      <button type="button" onClick={() => { props.onResult?.({ correctAnswers: 4, totalAttempts: 5, victory: true }); props.onCompleted?.({ correctAnswers: 4, totalAttempts: 5, victory: true, xpEarned: 6 }); }}>finish</button>
       <button type="button" onClick={props.onLoadError}>fail</button>
       <button type="button" onClick={props.onExit}>exit</button>
     </div>
@@ -107,6 +113,37 @@ describe("TaskSentenceActivities cartridges", () => {
     renderWithMessages(<TaskSentenceActivities articleId={ARTICLE} />, { locale: "en" });
     expect(await screen.findByTestId("lesson-game-notice", {}, { timeout: 5000 })).toHaveTextContent("We could not get the sentences of this lesson. Play one of the four activities below.");
     expect(screen.queryByTestId("lesson-game-castle-defense")).toBeNull();
+  });
+
+  it("shows the last run line with the XP after a game, as task 10 does (lesson games low)", async () => {
+    await open();
+    fireEvent.click(screen.getByTestId("lesson-game-castle-defense").querySelector("button")!);
+    fireEvent.click(screen.getByText("finish"));
+    fireEvent.click(screen.getByText("exit"));
+    expect(await screen.findByTestId("lesson-game-last-run")).toHaveTextContent("You got 4 of 5. +6 XP");
+  });
+
+  it("passes the owner key and the avatar of the student to the host", async () => {
+    mocks.input.mockResolvedValue({ ...lesson(8), ownerKey: "school-1:s1", avatar: { hero: "knight" } });
+    await open();
+    fireEvent.click(screen.getByTestId("lesson-game-castle-defense").querySelector("button")!);
+    expect(screen.getByTestId("host")).toHaveAttribute("data-owner", "school-1:s1");
+    expect(screen.getByTestId("host")).toHaveAttribute("data-avatar", JSON.stringify({ hero: "knight" }));
+  });
+
+  it("holds the place of the games while they load, so the activities do not move", async () => {
+    mocks.input.mockReturnValue(new Promise(() => undefined));
+    renderWithMessages(<TaskSentenceActivities articleId={ARTICLE} />, { locale: "en" });
+    expect(screen.getByTestId("lesson-games-placeholder")).toBeInTheDocument();
+    await screen.findByRole("heading", { name: /Order Sentences/i });
+    expect(screen.getByTestId("lesson-games-placeholder")).toBeInTheDocument();
+  });
+
+  it("still shows the last result on a card that is locked now", async () => {
+    mocks.input.mockResolvedValue(lesson(2));
+    await open();
+    expect(screen.getByTestId("lesson-game-castle-defense")).toHaveAttribute("data-locked", "true");
+    expect(screen.getByTestId("lesson-game-result-castle-defense")).toHaveTextContent("Last: 4/5 correct");
   });
 
   it("passes save false in a demo", async () => {

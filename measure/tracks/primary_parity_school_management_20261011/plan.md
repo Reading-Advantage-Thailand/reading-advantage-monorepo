@@ -155,3 +155,15 @@ _Story ref: spec.md#story-s5_
     - Fixed in this phase: `app-nav.test.tsx` (new nav item). Open and not from this track: 2 domain suites (lesson games mock), 2 app suites (stale `sales-knowledge` dist).
 - [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md) - batch capture (orchestrator); look check pending (owner, async)
     - Steps: 1. Run the capture kit with `acceptance-pairs.json` on the capture clone. 2. Open the report and read each check. 3. Run the A-queries of `reference-sql.sql` after the browser steps. 4. Do the look check of the changed parts.
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: H-2 admin class dialog reads the flat teacher rows 4d7595a68
+- [x] Task: M-9 send teacherIds only after a change, picker shows current co-teachers, domain checks only new ids 4d7595a68 567520953
+- [x] Task: M-10 SYSTEM with a school id lists the classes of the validated schoolId aa45ddf41
+- [x] Task: L-6 create dialog omits an empty passwordStudents 4d7595a68
+- [x] Task: Low: SYSTEM cannot add a teacher with no school (dialog and model) c5281808f
+- [x] Task: Low: teacher statistics follow the SYSTEM school filter 5a0412b89 (model hunk is in c5281808f)
+- [x] Task: M-7 `setUserRole` clears the `user_roles` rows and, below ADMIN, the `school_admins` rows; `updateTeacher` also acts when only a legacy admin row lifted the rank 43a2ae29d
+- [x] Task: M-11 an ADMIN changes the role of another ADMIN of the same school (never self, never SYSTEM; password rules unchanged; default of the fix brief) 43a2ae29d
+- [x] Task: Low (S4 M12): a TEACHER with a school_admins row sees the license link and renames the school dc0503bf6

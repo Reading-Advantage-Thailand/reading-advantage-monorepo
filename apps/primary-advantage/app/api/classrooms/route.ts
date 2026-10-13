@@ -45,9 +45,10 @@ export async function GET(
     const tenantDb = getTenantDB({ schoolId: user.schoolId ?? null });
     // SYSTEM has no schoolId; TenantDB fails closed on FLAT tables, so the
     // self-record lookup runs through unscoped for SYSTEM callers.
-    const usersDb = user.schoolId
+    const isSystem = normalizeRole(user.role) === "SYSTEM";
+    const usersDb = user.schoolId && !isSystem
       ? tenantDb
-      : getUnscopedDB("SYSTEM has no schoolId; self-record lookup by id");
+      : getUnscopedDB("SYSTEM is not tied to one school; self-record lookup by id");
     const [userWithRoles] = await usersDb.select().from(users)
       .where(eq(users.id, user.id))
       .limit(1);
@@ -90,9 +91,10 @@ export async function GET(
       // Fail closed: school-less staff see no classrooms.
       return NextResponse.json([]);
     }
-    const classroomsDb = user.schoolId
+    // SYSTEM can have a users.school_id too, but it lists the school of `?schoolId`, not its own.
+    const classroomsDb = user.schoolId && sessionRole !== "SYSTEM"
       ? tenantDb
-      : getUnscopedDB("SYSTEM has no schoolId; lists all classrooms");
+      : getUnscopedDB("SYSTEM is not tied to one school; lists all classrooms or the validated schoolId");
     const rawSchoolId = new URL(request.url).searchParams.get("schoolId");
     const schoolFilter =
       sessionRole === "SYSTEM" && rawSchoolId && z.string().uuid().safeParse(rawSchoolId).success

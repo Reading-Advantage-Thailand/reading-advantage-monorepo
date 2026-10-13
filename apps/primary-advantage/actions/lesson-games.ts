@@ -5,25 +5,29 @@ import { createTenantDB } from "@reading-advantage/domain";
 import {
   getLessonGameResults,
   getLessonPracticeInput,
-  listPrimarySamplePracticeInput,
+  getLessonPreviewPracticeInput,
   type LessonGameResults,
   type LessonGameResultsRequest,
   type LessonPracticeInputRequest,
 } from "@reading-advantage/domain/games";
-import type { PracticeInput } from "@reading-advantage/game-contracts";
+import { getAvatarState, toLaunchAvatar } from "@reading-advantage/domain/primary-avatar";
+import type { LaunchAvatar, PracticeInput } from "@reading-advantage/game-contracts";
 import { currentUser } from "@/lib/session";
 import { studentViewModeFor } from "@/lib/student-view";
 import { logger } from "@/lib/observability/logger";
 
 /** The result of the lesson game input action. */
-export type LessonGameInputResult = { success: true; input: PracticeInput } | { success: false; error: string };
+export type LessonGameInputResult =
+  | { success: true; input: PracticeInput; ownerKey?: string; avatar?: LaunchAvatar | null }
+  | { success: false; error: string };
 
 /**
  * Makes the game input (the words and sentences) of one lesson for the signed-in student, or for a
  * teacher who names the class book and the lesson number. The caller gates each game with
  * `missingFor(manifest, input)`. The domain function checks the school and the class book. Staff in
- * a rehearsal or a preview name no book: they get the read-only sample set, so the games run in the
- * demo mode and no row of any user is read or saved.
+ * a rehearsal or a preview name no book: they get the lesson words from the article snapshot, read-only,
+ * so the games run in the demo mode and no row of any user is read or saved.
+ * A student also gets the owner key and the avatar for the reward panels of the game host.
  * @param request The article, the locale, and for a teacher the class book and the lesson number.
  * @returns The input, or a short error; the detail goes to the log.
  */
@@ -31,14 +35,16 @@ export async function getLessonGameInputAction(request: LessonPracticeInputReque
   const user = await currentUser();
   if (!user) return { success: false, error: "Unauthorized" };
   try {
-    if (studentViewModeFor(user.role) === "preview" && !request.classBookId) {
-      // Preview (staff): the same read-only sample the practice route gives (defect fix 2026-10-12).
-      const sample = await listPrimarySamplePracticeInput({ db, input: { locale: request.locale } });
-      return { success: true, input: sample };
-    }
     const tenant = { schoolId: user.schoolId };
+    if (studentViewModeFor(user.role) === "preview" && !request.classBookId) {
+      // Preview (staff): the lesson words from the article snapshot, read-only (M-14).
+      const input = await getLessonPreviewPracticeInput({ db: createTenantDB(db, tenant), user, tenant, input: request });
+      return { success: true, input };
+    }
     const input = await getLessonPracticeInput({ db: createTenantDB(db, tenant), user, tenant, input: request });
-    return { success: true, input };
+    if (user.role !== "STUDENT" || !user.schoolId) return { success: true, input };
+    const avatar = await getAvatarState({ db, user }).then(toLaunchAvatar).catch(() => null);
+    return { success: true, input, ownerKey: `${user.schoolId}:${user.id}`, avatar };
   } catch (error) {
     logger.error("lesson_game_input_failed", { error, userId: user.id, articleId: request?.articleId });
     return { success: false, error: "Lesson game input failed" };

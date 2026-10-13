@@ -709,6 +709,7 @@
     "description": "查看學生進度和教室分析",
     "activityprogress": "活動進度",
     "recentactivity": "最近活動",
+    "attemptTag": "第 {number} 次",
     "activityheatmap": "活動熱圖",
     "xpoverall": "XP 總體",
     "readingstatschart": "閱讀統計圖",
@@ -3649,6 +3650,7 @@
     "searching": "Searching...",
     "score": "Score {score}",
     "readOn": "Read {date}",
+    "attemptTag": "第 {number} 次",
     "status": {
       "READ": "Read",
       "UNRATED": "Not rated yet",

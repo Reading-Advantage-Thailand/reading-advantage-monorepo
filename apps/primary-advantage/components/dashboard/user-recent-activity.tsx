@@ -50,11 +50,16 @@ export default function UserRecentActivity({ data }: UserActiviryChartProps) {
         </div>
         <div className="text-muted-foreground text-xs">{formatDate(activity.createdAt)}</div>
       </div>
-      {activity.completed ? (
-        <StatusChip tone="success">{t("completed")}</StatusChip>
-      ) : (
-        <StatusChip tone="warning">{t("inProgress")}</StatusChip>
-      )}
+      <div className="flex items-center gap-2">
+        {activity.attemptNumber !== undefined && (activity.moved || activity.attemptNumber > 1) ? (
+          <StatusChip tone="info">{t("attemptTag", { number: activity.attemptNumber })}</StatusChip>
+        ) : null}
+        {activity.completed ? (
+          <StatusChip tone="success">{t("completed")}</StatusChip>
+        ) : (
+          <StatusChip tone="warning">{t("inProgress")}</StatusChip>
+        )}
+      </div>
     </div>
   );
 

@@ -126,13 +126,46 @@ describe.each([
     expect(authMocks.recordAuditEvent).not.toHaveBeenCalled();
   });
 
-  it("refuses a user of a higher rank and changes nothing", async () => {
+  it("refuses a SYSTEM user and changes nothing", async () => {
+    await seedUser("sys", "SYSTEM", SCHOOL_A);
+    const result = await updateTeacher("sys", { role: "teacher" }, adminA);
+    expect(result.success).toBe(false);
+    expect((await state("sys")).role).toBe("SYSTEM");
+  });
+
+  it("lets an ADMIN change the role of another ADMIN of the same school (M-11)", async () => {
     await seedUser("a2", "ADMIN", SCHOOL_A);
     await seedSession("a2");
     const result = await updateTeacher("a2", { role: "teacher" }, adminA);
+    expect(result.success).toBe(true);
+    expect(await state("a2")).toMatchObject({ role: "TEACHER", sessions: 0 });
+  });
+
+  it("refuses an ADMIN who changes the own role (M-11)", async () => {
+    const result = await updateTeacher("caller", { role: "teacher" }, adminA);
     expect(result.success).toBe(false);
-    expect(await state("a2")).toMatchObject({ role: "ADMIN", sessions: 1 });
-    expect(authMocks.recordAuditEvent).not.toHaveBeenCalled();
+    expect((await state("caller")).role).toBe("ADMIN");
+  });
+
+  it("still refuses a password change for another ADMIN (M-11)", async () => {
+    await seedUser("a2", "ADMIN", SCHOOL_A);
+    const result = await updateTeacher("a2", { password: "newpassword1" }, adminA);
+    expect(result.success).toBe(false);
+  });
+
+  it("deletes the school_admins row and the admin user_roles row on a demotion (M-7)", async () => {
+    await harness.db.execute(sql`INSERT INTO roles (name) SELECT 'admin' WHERE NOT EXISTS (SELECT 1 FROM roles WHERE name = 'admin')`);
+    await seedUser("a3", "ADMIN", SCHOOL_A);
+    await harness.db.execute(sql`INSERT INTO school_admins (school_id, user_id) VALUES (${SCHOOL_A}, 'a3')`);
+    await harness.db.execute(sql`INSERT INTO user_roles (user_id, role_id) SELECT 'a3', id FROM roles WHERE name = 'admin'`);
+    const result = await updateTeacher("a3", { role: "teacher" }, adminA);
+    expect(result.success).toBe(true);
+    const row = await state("a3");
+    expect(row.role).toBe("TEACHER");
+    const adminRows = await harness.db.execute(sql`SELECT 1 FROM user_roles ur JOIN roles r ON r.id = ur.role_id WHERE ur.user_id = 'a3' AND r.name = 'admin'`);
+    expect(adminRows.rows.length).toBe(0);
+    const sa = await harness.db.execute(sql`SELECT 1 FROM school_admins WHERE user_id = 'a3'`);
+    expect(sa.rows.length).toBe(0);
   });
 
   it("does not end sessions or audit when the role stays the same", async () => {

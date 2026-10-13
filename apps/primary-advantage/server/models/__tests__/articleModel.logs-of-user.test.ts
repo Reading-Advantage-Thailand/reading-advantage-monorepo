@@ -41,7 +41,8 @@ describe("getArticleById logs (PGlite)", () => {
     // The shared harness has no snapshot table; articles TRUNCATE ... CASCADE clears it.
     await h.db.execute(sql`CREATE TABLE IF NOT EXISTS sentencs_and_words_for_flashcard (
       id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-      article_id uuid NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+      article_id uuid REFERENCES articles(id) ON DELETE CASCADE,
+      chapter_id text,
       sentence jsonb, audio_sentences_url text, words jsonb, words_url text,
       created_at timestamp NOT NULL DEFAULT now(), updated_at timestamp NOT NULL DEFAULT now())`);
   }, 60_000);

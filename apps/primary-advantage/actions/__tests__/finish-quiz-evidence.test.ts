@@ -22,6 +22,7 @@ vi.mock("@reading-advantage/db", () => ({
   and: vi.fn(() => ({})),
   or: vi.fn(() => ({})),
   isNull: vi.fn(() => ({})),
+  sql: vi.fn(() => ({})),
 }));
 vi.mock("@reading-advantage/domain/primary-avatar", () => ({ grantGpForXp: vi.fn().mockResolvedValue(0) }));
 vi.mock("@/server/utils/assistant", () => ({ getLaqFeedback: vi.fn(), getSaqFeedback: vi.fn() }));
@@ -55,7 +56,7 @@ describe("finishQuiz evidence keys (track primary_mastery_evidence_20261006, FR-
         return chain([{ id: ROW }]);
       },
     }));
-    mocks.update.mockReturnValue(chain(undefined));
+    mocks.update.mockReturnValue(chain([{ xp: 10 }]));
     mocks.transaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => fn({ select: mocks.select, insert: mocks.insert, update: mocks.update }));
     mocks.enqueue.mockResolvedValue(true);
   });

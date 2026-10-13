@@ -19,7 +19,7 @@ import { createTenantDB } from "@reading-advantage/domain";
 import { getLessonGameResults } from "@reading-advantage/domain/games";
 import { currentUser } from "@/lib/session";
 import { logger } from "@/lib/observability/logger";
-import { guardStudentAction } from "@/lib/student-view";
+import { guardStudentAction, studentViewModeFor } from "@/lib/student-view";
 import { ActivityType } from "@/types/enum";
 
 /**
@@ -49,12 +49,21 @@ export async function fetchArticleActivity(articleId: string) {
   }
 }
 
+/**
+ * Reads the summary of one lesson for the signed-in student: the XP, the quiz scores, and the attempt
+ * number. Staff in a preview get the empty model and no row of their own is read.
+ * @param articleId The lesson article.
+ * @returns The summary data, or a short error.
+ */
 export async function getLessonSummaryData(articleId: string) {
   try {
     const user = await currentUser();
 
     if (!user) {
       return { error: "User not found" };
+    }
+    if (studentViewModeFor(user.role) === "preview") {
+      return { success: true, data: { totalXp: 0, gameXp: 0, attemptNumber: 1, quizScores: { mcqScore: 0, saqScore: 0 } } };
     }
 
     // Fetch user activities for this article (replace Prisma `include: { xpLogs: true }`

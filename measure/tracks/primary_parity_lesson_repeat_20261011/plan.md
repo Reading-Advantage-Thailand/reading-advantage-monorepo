@@ -146,3 +146,13 @@ Notes (Phase S4, helper A1, 2026-10-12):
 - Commits: 3234e458f + ffed804e2 domain report contracts and counts; 255d3b798 + d8f1c519e app history rows, summary attempt, progress markers; 149fb0d8d + 1f9f2f989 evidence loader reads moved rows.
 - Open: side-by-side A1-A5 run on the rehearsal clone plus captures (kit committed: `acceptance-pairs.json`, `acceptance-steps-lesson-repeat.ts`, `behavior-contract.md`, `lesson-repeat-data-checks.sql`; run is orchestrator work, never the shared copies); docs `generate.sh`/`doctor.sh` and `build-graph update` (orchestrator); manual verification.
 - Phase checks: domain `vitest run` 178 files, 2066 tests pass; app `tsc --noEmit` clean.
+
+## Phase: Review Fixes 2026-10-13
+- [x] Task: M-16 attempt 2 summary counts only game runs after the last close 10d26b7a5
+- [x] Task: M-17 Teach again skips roster students of another school or with no school; counts returned, app logs them c97b4988a
+- [x] Task: Low: lock the student row at the start of closeAttemptInTx (`FOR UPDATE`) c97b4988a
+- [x] Task: Low: Teach again and the close also match `lesson_progress.article_id` c97b4988a (no SQL-level test: the mock database cannot read a where clause)
+- [x] Task: Low: no `console.error` in `class-book-runs.ts`; the output has `auditFailed` and the app logs it c97b4988a
+- [x] Task: Low: "Taught 1 time" shows on a lesson taught once and then taught again c97b4988a
+- [x] Task: Low: "Attempt N" tag on report rows and on /student/history cards c1b0e072a, e03b6fbc3
+- [x] Task: Low: `real-run.md` written from the S1 notes (this commit)

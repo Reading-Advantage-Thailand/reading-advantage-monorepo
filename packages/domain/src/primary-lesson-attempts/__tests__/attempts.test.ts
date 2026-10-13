@@ -34,6 +34,13 @@ describe("closeLessonAttempt", () => {
     expect((inserted(mock).steps as { id: string }[]).map((a) => a.id)).toEqual(["st1"]);
   });
 
+  it("locks the student row before it reads the lesson rows", async () => {
+    const mock = dbWith([[{ schoolId: SCHOOL }], activities, xp, progress, steps, []]);
+    await closeLessonAttempt({ db: mock as unknown as DB, user: student, now: NOW, input: { studentId: "s1", articleId: ARTICLE, reason: "student_restart" } });
+    expect(mock.forLock).toHaveBeenCalledTimes(1);
+    expect(mock.forLock).toHaveBeenCalledWith("update");
+  });
+
   it("numbers the next attempt after the closed ones", async () => {
     const mock = dbWith([[{ schoolId: SCHOOL }], activities, xp, progress, steps, [{ max: 2 }]]);
     const out = await closeLessonAttempt({ db: mock as unknown as DB, user: student, now: NOW, input: { studentId: "s1", articleId: ARTICLE, reason: "student_restart" } });

@@ -173,5 +173,5 @@ _Story ref: spec.md#story-s7_
 - [x] Task: Low flashcard.ts console.error -> logger; story-question returns 0 XP unless saved a6e865ea1
 - [x] Task: Low stories list trims q 96bc15cf2
 - [x] Task: Low SAQ and LAQ random; Done needs MC+SA+LA (spec S3); chapters.is_public filter; level-up keeps a started story open 6c7b60658
-- [~] Task: Low feedback throws when the story has no cefrLevel: the throw is in `server/utils/assistant.ts` (`readFeedbackSource`), which lane A owns. story-question cannot pass a level. Request: use `chapter.cefrLevel ?? "A1"` there. (orchestrator step)
+- [x] Task: Low feedback throws when the story has no cefrLevel: `chapter.cefrLevel ?? "A1"` in `readFeedbackSource` (lane A, A3) 221c8b543
 - [x] Task: Low LAQ limit of 2 tries on the server: parity default. No existing limiter fits without a schema change; the limit stays client-only.

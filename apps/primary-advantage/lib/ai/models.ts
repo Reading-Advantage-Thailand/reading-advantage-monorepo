@@ -113,6 +113,9 @@ export async function loggedAiCall<T>(task: PrimaryAiTask, run: () => Promise<T>
   const startedAt = Date.now();
   try {
     return await run();
+  } catch (error) {
+    logger.error("ai_call_failed", { task, provider: setting.provider, error });
+    throw error;
   } finally {
     logger.info("ai_call", {
       task,

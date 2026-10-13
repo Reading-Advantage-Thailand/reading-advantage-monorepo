@@ -79,6 +79,21 @@ export function canSetPasswordFor(actorRole: unknown, targetRole: unknown): bool
 }
 
 /**
+ * Checks whether an actor may change the role of another account.
+ * It follows the password matrix, and an ADMIN may also change another ADMIN of the same school.
+ * The caller must check the school and the new role (ADMIN or lower) itself.
+ * @param actorRole The effective role of the caller.
+ * @param targetRole The effective role of the account whose role changes.
+ * @param isSelf True when the caller and the target are the same account.
+ * @returns True when the role change is allowed.
+ */
+export function canChangeRoleFor(actorRole: unknown, targetRole: unknown, isSelf: boolean): boolean {
+  if (isSelf) return false;
+  if (normalizeRole(actorRole) === "ADMIN" && normalizeRole(targetRole) === "ADMIN") return true;
+  return canSetPasswordFor(actorRole, targetRole);
+}
+
+/**
  * Checks whether a session user manages other users.
  * @param user The session user, or null for anonymous callers.
  * @returns True when the caller holds ADMIN or SYSTEM.

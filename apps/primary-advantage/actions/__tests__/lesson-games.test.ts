@@ -5,14 +5,16 @@ const mocks = vi.hoisted(() => ({
   currentUser: vi.fn(),
   getLessonPracticeInput: vi.fn(),
   getLessonGameResults: vi.fn(),
-  listSample: vi.fn(),
+  getPreviewInput: vi.fn(),
+  getAvatarState: vi.fn(),
   logError: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ currentUser: mocks.currentUser }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain", () => ({ createTenantDB: (_db: unknown, tenant: unknown) => ({ tenant }) }));
-vi.mock("@reading-advantage/domain/games", () => ({ getLessonPracticeInput: mocks.getLessonPracticeInput, getLessonGameResults: mocks.getLessonGameResults, listPrimarySamplePracticeInput: mocks.listSample }));
+vi.mock("@reading-advantage/domain/games", () => ({ getLessonPracticeInput: mocks.getLessonPracticeInput, getLessonGameResults: mocks.getLessonGameResults, getLessonPreviewPracticeInput: mocks.getPreviewInput }));
+vi.mock("@reading-advantage/domain/primary-avatar", () => ({ getAvatarState: mocks.getAvatarState, toLaunchAvatar: (state: unknown) => ({ launch: state }) }));
 vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError } }));
 
 import { getLessonGameInputAction, getLessonGameResultsAction } from "../lesson-games";
@@ -24,7 +26,10 @@ const input = { schemaVersion: 1, id: `lesson:${ARTICLE}`, level: "A1", vocabula
 const sample = { schemaVersion: 1, id: "sample", level: "A1", vocabulary: [{ id: "sample-word-1", term: "river", translation: "แม่น้ำ" }], sentences: [] };
 
 describe("getLessonGameInputAction", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.getAvatarState.mockResolvedValue({});
+  });
 
   it("refuses a request without a session", async () => {
     mocks.currentUser.mockResolvedValue(null);
@@ -36,10 +41,29 @@ describe("getLessonGameInputAction", () => {
     mocks.currentUser.mockResolvedValue(student);
     mocks.getLessonPracticeInput.mockResolvedValue(input);
     const result = await getLessonGameInputAction({ articleId: ARTICLE, locale: "th" });
-    expect(result).toEqual({ success: true, input });
+    expect(result).toMatchObject({ success: true, input });
     expect(mocks.getLessonPracticeInput).toHaveBeenCalledWith(
       expect.objectContaining({ user: student, tenant: { schoolId: "school-1" }, input: { articleId: ARTICLE, locale: "th" } }),
     );
+  });
+
+  it("gives a student the owner key and the avatar for the reward panels (lesson games low)", async () => {
+    mocks.currentUser.mockResolvedValue(student);
+    mocks.getLessonPracticeInput.mockResolvedValue(input);
+    mocks.getAvatarState.mockResolvedValue({ hero: "knight" });
+    const result = await getLessonGameInputAction({ articleId: ARTICLE });
+    expect(result).toEqual({ success: true, input, ownerKey: "school-1:s1", avatar: { launch: { hero: "knight" } } });
+  });
+
+  it("gives the student no avatar when the read fails, and staff no owner key", async () => {
+    mocks.currentUser.mockResolvedValue(student);
+    mocks.getLessonPracticeInput.mockResolvedValue(input);
+    mocks.getAvatarState.mockRejectedValue(new Error("down"));
+    expect(await getLessonGameInputAction({ articleId: ARTICLE })).toEqual({ success: true, input, ownerKey: "school-1:s1", avatar: null });
+    mocks.currentUser.mockResolvedValue({ id: "t1", role: "TEACHER", schoolId: "school-1" });
+    mocks.getPreviewInput.mockResolvedValue(input);
+    const staff = await getLessonGameInputAction({ articleId: ARTICLE });
+    expect(staff).toEqual({ success: true, input });
   });
 
   it("logs a failure and returns a message without detail", async () => {
@@ -50,14 +74,15 @@ describe("getLessonGameInputAction", () => {
     expect(mocks.logError).toHaveBeenCalledWith("lesson_game_input_failed", expect.objectContaining({ articleId: ARTICLE, userId: "s1" }));
   });
 
-  it.each(["TEACHER", "ADMIN"])("gives %s in a rehearsal or a preview the read-only sample set when no class book is named", async (role) => {
-    mocks.currentUser.mockResolvedValue({ id: "t1", role, schoolId: "school-1" });
-    // The production guard: the domain refuses a non-student who does not name the class book.
-    mocks.getLessonPracticeInput.mockRejectedValue(new Error("A teacher needs the class book of the lesson"));
-    mocks.listSample.mockResolvedValue(sample);
+  it.each(["TEACHER", "ADMIN"])("gives %s in a rehearsal or a preview the lesson input of the article when no class book is named (M-14)", async (role) => {
+    const staff = { id: "t1", role, schoolId: "school-1" };
+    mocks.currentUser.mockResolvedValue(staff);
+    mocks.getPreviewInput.mockResolvedValue(input);
     const result = await getLessonGameInputAction({ articleId: ARTICLE, locale: "th" });
-    expect(result).toEqual({ success: true, input: sample });
-    expect(mocks.listSample).toHaveBeenCalledWith({ db: {}, input: { locale: "th" } });
+    expect(result).toEqual({ success: true, input });
+    expect(mocks.getPreviewInput).toHaveBeenCalledWith(
+      expect.objectContaining({ user: staff, tenant: { schoolId: "school-1" }, input: { articleId: ARTICLE, locale: "th" } }),
+    );
     expect(mocks.getLessonPracticeInput).not.toHaveBeenCalled();
   });
 
@@ -69,7 +94,7 @@ describe("getLessonGameInputAction", () => {
     expect(mocks.getLessonPracticeInput).toHaveBeenCalledWith(
       expect.objectContaining({ input: { articleId: ARTICLE, locale: "th", classBookId: BOOK, lessonNumber: 3 } }),
     );
-    expect(mocks.listSample).not.toHaveBeenCalled();
+    expect(mocks.getPreviewInput).not.toHaveBeenCalled();
   });
 });
 

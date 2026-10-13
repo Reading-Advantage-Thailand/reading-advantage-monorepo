@@ -1,11 +1,11 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ createAIClient: vi.fn(() => ({})), info: vi.fn() }));
+const mocks = vi.hoisted(() => ({ createAIClient: vi.fn(() => ({})), info: vi.fn(), error: vi.fn() }));
 
 vi.mock("@reading-advantage/ai", () => ({ createAIClient: mocks.createAIClient }));
 vi.mock("@/lib/observability/logger", () => ({
-  logger: { info: mocks.info, warn: vi.fn(), error: vi.fn() },
+  logger: { info: mocks.info, warn: vi.fn(), error: mocks.error },
 }));
 
 import {
@@ -91,5 +91,15 @@ describe("Primary AI models", () => {
       }),
     ).rejects.toThrow("boom");
     expect(mocks.info).toHaveBeenCalledWith("ai_call", expect.objectContaining({ task: "chatbot.stream" }));
+    // L-16: a failed call also writes one error line with the task and the error.
+    expect(mocks.error).toHaveBeenCalledWith(
+      "ai_call_failed",
+      expect.objectContaining({ task: "chatbot.stream", error: expect.any(Error) }),
+    );
+  });
+
+  it("loggedAiCall writes no error line when the call succeeds", async () => {
+    await loggedAiCall("qa.feedback", async () => 1);
+    expect(mocks.error).not.toHaveBeenCalled();
   });
 });

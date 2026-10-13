@@ -34,7 +34,7 @@ export interface LessonGamePickerProps {
 /**
  * Offers lesson games as objects of the arena place: the name, the pitch, the last result of this
  * lesson, and a Play button. A game whose manifest needs more items than the lesson has shows
- * locked with the reason. The games come from the 3D registry through `gameFor`.
+ * locked with the reason, and keeps the last result of a game that is locked now. The games come from the 3D registry through `gameFor`.
  * @param props The games, the lesson input, the last results, and the choice callback.
  * @returns The picker panel.
  */
@@ -74,13 +74,14 @@ export function LessonGamePicker({ title, gameIds, input, results, locked = fals
                   <img src={ART.lockedChest} alt="" width={16} height={16} />
                   {reason}
                 </span>
-              ) : result ? (
+              ) : null}
+              {result ? (
                 <div className="lg-res" data-testid={`lesson-game-result-${game.id}`}>
                   <span>{t("last", { correct: result.correctAnswers, total: result.totalAttempts })}</span>
                   <Meter value={result.correctAnswers} max={Math.max(1, result.totalAttempts)} tone="green" label={t("last", { correct: result.correctAnswers, total: result.totalAttempts })} thin />
                   <span style={{ color: "var(--cq-gold-dark)" }}>{t("lastXp", { xp: result.xpEarned })}</span>
                 </div>
-              ) : hideResults ? null : (
+              ) : lack || hideResults ? null : (
                 <div className="lg-res"><span style={{ color: "var(--cq-ink-soft)" }}>{t("notPlayed")}</span></div>
               )}
               <RpgButton tone="gold" disabled={lack} aria-disabled={lack} onClick={() => onPlay(game.id)}>

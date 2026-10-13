@@ -12,6 +12,9 @@ vi.mock("@/lib/session", () => ({
   getCurrentUser: async () => mocks.user,
   currentUser: async () => mocks.user,
 }));
+vi.mock("@/server/utils/school-admin-rows", () => ({
+  withSchoolAdminRows: async (user: object) => ({ ...user, SchoolAdmins: [] }),
+}));
 vi.mock("next-intl/server", () => ({ getLocale: async () => "en" }));
 const leaderboard = vi.hoisted(() => ({ get: vi.fn() }));
 vi.mock("@/server/controllers/schoolController", () => ({ getSchoolLeaderboardController: leaderboard.get }));

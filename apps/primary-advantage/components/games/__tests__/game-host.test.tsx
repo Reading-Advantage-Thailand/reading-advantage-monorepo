@@ -206,6 +206,17 @@ describe("GameHost", () => {
     expect(screen.queryByRole("button", { name: "Listen to English" })).toBeNull();
   });
 
+  it("offers no answer audio in a lesson run or a demo run, where it would swap the lesson words (M-15)", async () => {
+    const article = "11111111-1111-4111-8111-111111111111";
+    const { unmount } = renderWithMessages(<GameHost gameId="wizard-vs-zombie" locale="en" ownerKey="s:1" input={practice(10, 8)} articleId={article} />, { locale: "en" });
+    await screen.findByTestId("kit", {}, { timeout: 5000 });
+    expect(screen.queryByRole("button", { name: "Listen to English" })).toBeNull();
+    unmount();
+    renderWithMessages(<GameHost gameId="wizard-vs-zombie" locale="en" ownerKey="s:1" input={practice(10, 8)} save={false} />, { locale: "en" });
+    await screen.findByTestId("kit", {}, { timeout: 5000 });
+    expect(screen.queryByRole("button", { name: "Listen to English" })).toBeNull();
+  });
+
   it("fetches the saved items when the page has none, and locks a game that needs more", async () => {
     fetchMock.mockImplementationOnce(async () => new Response(JSON.stringify(practice(10, 1)), { status: 200 }));
     renderWithMessages(<GameHost gameId="potion-rush" locale="en" />, { locale: "en" });

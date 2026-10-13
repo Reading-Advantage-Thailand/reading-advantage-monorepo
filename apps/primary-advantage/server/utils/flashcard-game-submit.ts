@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { and, eq } from "drizzle-orm";
-import { flashcardDecks } from "@reading-advantage/db/schema";
+import { flashcardDecks, userActivity, xpLogs } from "@reading-advantage/db/schema";
+import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
 
 /** The body that the flashcard deck games post at the end of a game. */
 export const flashcardGameBodySchema = z.object({
@@ -41,4 +42,51 @@ export async function parseDeckGameSubmit(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   return parsed.data;
+}
+
+/** The inputs of one finished deck game. */
+export type DeckGameResult = {
+  userId: string;
+  schoolId: string | null;
+  activityType: string;
+  deckId: string;
+  timer: number;
+  xpEarned: number;
+};
+
+/**
+ * Saves one finished deck game: the activity row, the XP log, and the GP grant. The activity row is
+ * unique per user, type, and deck, so a repeat play refreshes it. As in the legacy app (bfea121),
+ * each play pays its XP, so each play writes its own XP log and GP source key.
+ * @param db A database handle that can write `user_activity`, `xp_logs`, and the GP ledger.
+ * @param result The user, the game type, the deck, the timer, and the server-side XP award.
+ * @returns Nothing; the caller adds the XP to the user.
+ */
+export async function recordDeckGame(db: any, result: DeckGameResult): Promise<void> {
+  const details = { timer: result.timer, xp: result.xpEarned };
+  const [activity] = await db.insert(userActivity).values({
+    userId: result.userId,
+    activityType: result.activityType,
+    targetId: result.deckId,
+    timer: result.timer,
+    details,
+    completed: true,
+  }).onConflictDoUpdate({
+    target: [userActivity.userId, userActivity.activityType, userActivity.targetId],
+    set: { timer: result.timer, details, completed: true, updatedAt: new Date() },
+  }).returning();
+  const [log] = await db.insert(xpLogs).values({
+    userId: result.userId,
+    xpEarned: result.xpEarned,
+    activityId: activity.id,
+    activityType: result.activityType,
+  }).returning({ id: xpLogs.id });
+  await grantGpForXp({
+    tx: db,
+    schoolId: result.schoolId,
+    userId: result.userId,
+    sourceKey: `xp:${activity.id}:${log.id}`,
+    activityType: result.activityType,
+    xpEarned: result.xpEarned,
+  });
 }

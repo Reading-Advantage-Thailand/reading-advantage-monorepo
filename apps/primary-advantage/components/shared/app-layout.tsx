@@ -6,6 +6,7 @@ import { SoundProvider } from "@/hooks/use-sound";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 import { SkipLink } from "@/components/shared/skip-link";
 import { getCurrentUser } from "@/lib/session";
+import { withSchoolAdminRows } from "@/server/utils/school-admin-rows";
 import { redirect } from "@/i18n/navigation";
 import { areaForRole, type NavArea } from "@/lib/nav-area";
 import { getLocale } from "next-intl/server";
@@ -37,13 +38,16 @@ export default async function AppLayout({
   area,
   settings = false,
 }: AppLayoutProps) {
-  const user = await getCurrentUser();
+  const sessionUser = await getCurrentUser();
   const locale = await getLocale();
 
   // Redirect to sign in page if user is not logged in
-  if (!user) {
+  if (!sessionUser) {
     return redirect({ href: "/auth/signin", locale });
   }
+
+  // A TEACHER with a school_admins row sees the school links too (the session has no row list).
+  const user = await withSchoolAdminRows(sessionUser);
 
   const navArea = area ?? areaForRole(user.role);
 

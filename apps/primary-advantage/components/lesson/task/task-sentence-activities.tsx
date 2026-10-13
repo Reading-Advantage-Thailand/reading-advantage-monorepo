@@ -15,10 +15,10 @@ import OrderWordGame from "../games/lesson-sentence-order-word";
 import LessonMatchingGame from "../games/lesson-matching-game";
 import { FlashcardType } from "@/types/enum";
 import { useLocale, useTranslations } from "next-intl";
-import type { PracticeInput } from "@reading-advantage/game-contracts";
+import type { LaunchAvatar, PracticeInput } from "@reading-advantage/game-contracts";
 import type { LessonGameResult } from "@reading-advantage/domain/games";
 import { getLessonGameInputAction, getLessonGameResultsAction } from "@/actions/lesson-games";
-import { GameHost } from "@/components/games/game-host";
+import { GameHost, type CompletionSummary, type RunResult } from "@/components/games/game-host";
 import { LessonGamePicker } from "@/components/lesson/games/lesson-game-picker";
 import { practiceLocaleOf } from "@/lib/games/catalog";
 import { LESSON_SENTENCE_GAMES } from "@/lib/games/lesson-games";
@@ -50,6 +50,8 @@ export default function TaskSentenceActivities({
   const locale = useLocale();
   const [input, setInput] = useState<PracticeInput | null>(null);
   const [results, setResults] = useState<LessonGameResult[]>([]);
+  const [identity, setIdentity] = useState<{ ownerKey?: string; avatar?: LaunchAvatar | null }>({});
+  const [lastRun, setLastRun] = useState<{ correct: number; total: number; xp?: number } | null>(null);
   const [gamesLoading, setGamesLoading] = useState(true);
   const [playing, setPlaying] = useState<string | null>(null);
   const [gameNotice, setGameNotice] = useState<"sentenceInputFailed" | "sentenceLoadFailed" | null>(null);
@@ -97,8 +99,10 @@ export default function TaskSentenceActivities({
       .then(([lesson, saved]) => {
         if (!live) return;
         if (saved.success) setResults(saved.results.latest);
-        if (lesson.success) setInput(lesson.input);
-        else setGameNotice("sentenceInputFailed");
+        if (lesson.success) {
+          setInput(lesson.input);
+          setIdentity({ ownerKey: lesson.ownerKey, avatar: lesson.avatar });
+        } else setGameNotice("sentenceInputFailed");
       })
       .catch(() => live && setGameNotice("sentenceInputFailed"))
       .finally(() => live && setGamesLoading(false));
@@ -116,7 +120,11 @@ export default function TaskSentenceActivities({
           input={input}
           articleId={articleId}
           save={save}
+          ownerKey={identity.ownerKey}
+          avatar={identity.avatar}
           className="flex h-full w-full flex-col"
+          onResult={(r: RunResult) => setLastRun({ correct: r.correctAnswers, total: r.totalAttempts })}
+          onCompleted={(c: CompletionSummary) => setLastRun((prev) => (prev ? { ...prev, xp: c.xpEarned } : prev))}
           onLoadError={() => {
             setGameNotice("sentenceLoadFailed");
             setPlaying(null);
@@ -138,6 +146,12 @@ export default function TaskSentenceActivities({
           {tg(gameNotice)}
         </p>
       ) : null}
+      {lastRun ? (
+        <p role="status" data-testid="lesson-game-last-run" className="text-base font-semibold">
+          {lastRun.xp === undefined ? tg("runLine", { correct: lastRun.correct, total: lastRun.total }) : tg("runLineXp", { correct: lastRun.correct, total: lastRun.total, xp: lastRun.xp })}
+        </p>
+      ) : null}
+      {gamesLoading ? <div data-testid="lesson-games-placeholder" aria-hidden="true" className="min-h-72" /> : null}
       {!gamesLoading && input ? (
         <LessonGamePicker
           title={tg("sentenceTitle")}

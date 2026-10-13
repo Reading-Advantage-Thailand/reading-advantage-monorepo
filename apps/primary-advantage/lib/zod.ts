@@ -176,7 +176,9 @@ export const articleResponseSchema = z.object({
 
 /**
  * Body of the classroom PATCH request (admin and teacher edit dialogs).
- * `grade` is optional and is an integer from 1 to 12 sent as a string.
+ * `grade` is optional and is an integer from 1 to 12, sent as a number or as a string.
+ * The list returns the integer column, so a dialog can send it back as a number. The parsed value
+ * is always the string form that the model stores with `parseInt`.
  */
 export const updateClassroomBodySchema = z.object({
   classroomName: z
@@ -185,8 +187,11 @@ export const updateClassroomBodySchema = z.object({
     .min(1, "Classroom name is required")
     .max(100, "Classroom name must be at most 100 characters"),
   grade: z
-    .string()
-    .regex(/^(?:[1-9]|1[0-2])$/, "Grade must be from 1 to 12")
+    .union([
+      z.number().int().min(1, "Grade must be from 1 to 12").max(12, "Grade must be from 1 to 12"),
+      z.string().regex(/^(?:[1-9]|1[0-2])$/, "Grade must be from 1 to 12"),
+    ])
+    .transform(String)
     .optional(),
   /** The full list of teacher ids of the class (admin and SYSTEM only). The class owner stays. */
   teacherIds: z.array(z.string().min(1)).max(200).optional(),

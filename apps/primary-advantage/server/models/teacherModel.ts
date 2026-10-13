@@ -17,7 +17,7 @@ import {
 } from '@reading-advantage/db';
 import { ROLE_HIERARCHY, ROLES, type Role } from "@reading-advantage/auth/roles";
 import { effectiveCallerRole, callerEffectiveRank, loadTargetEffectiveRank, resolveCreationSchoolId, schoolScopeConditions } from "@/server/utils/auth";
-import { canSetPasswordFor } from "@/lib/authorization";
+import { canSetPasswordFor, canChangeRoleFor, normalizeRole } from "@/lib/authorization";
 import { afterPasswordWrite, auditUserDeleted } from "@/server/utils/passwordEvents";
 import { roleSql, setUserRole } from "@/server/utils/role-sql";
 import { recordAuditEvent } from "@reading-advantage/auth";
@@ -380,8 +380,8 @@ export const createTeacher = async (params: {
     }
     const schoolId = target.schoolId;
 
-    // Fail closed: only SYSTEM may create accounts without a school.
-    if (!schoolId && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
+    // Fail closed: every new teacher needs a school. SYSTEM must name one.
+    if (!schoolId) {
       return { success: false, error: "A school is required to create a teacher" };
     }
 
@@ -728,12 +728,16 @@ export const updateTeacher = async (
     }
 
     // A password or role write needs a strictly lower-ranked CURRENT target (shared reset matrix).
+    let targetRank = "";
     if (updateData.password || updateData.role) {
-      const targetRank = await loadTargetEffectiveRank(id, existingTeacher.sessionRole);
-      if (!canSetPasswordFor(callerEffectiveRank(userWithRoles), targetRank)) {
+      targetRank = await loadTargetEffectiveRank(id, existingTeacher.sessionRole);
+      const callerRank = callerEffectiveRank(userWithRoles);
+      const passwordOk = !updateData.password || canSetPasswordFor(callerRank, targetRank);
+      const roleOk = !updateData.role || canChangeRoleFor(callerRank, targetRank, id === userWithRoles.id);
+      if (!passwordOk || !roleOk) {
         return {
           success: false,
-          error: updateData.password
+          error: !passwordOk
             ? "Cannot change the password of this account"
             : "Cannot change the role of this account",
         };
@@ -786,7 +790,8 @@ export const updateTeacher = async (
 
     const oldRole = String(existingTeacher.sessionRole ?? "").toUpperCase();
     const newRole = updateData.role?.toUpperCase();
-    const roleChanged = newRole !== undefined && newRole !== oldRole;
+    // A legacy admin row or a school_admins row can lift the effective rank above users.role.
+    const roleChanged = newRole !== undefined && (newRole !== oldRole || normalizeRole(targetRank) !== newRole);
 
     // Update the teacher and handle classroom assignments in a transaction
     await db.transaction(async (tx) => {
@@ -894,12 +899,15 @@ export const deleteTeacher = async (
 };
 
 // Get teacher statistics
-export const getTeacherStatistics = async (userWithRoles: UserWithRoles) => {
+export const getTeacherStatistics = async (userWithRoles: UserWithRoles, schoolId?: string) => {
   try {
     const whereConditions: any[] = [
       roleSql(ASSIGNABLE_TEACHER_ROLES),
       ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
+    if (schoolId && effectiveCallerRole(userWithRoles) === "SYSTEM") {
+      whereConditions.push(eq(users.schoolId, schoolId));
+    }
 
     // Get all teachers + their classroom/student counts in one query.
     const allTeachers = await db.select({

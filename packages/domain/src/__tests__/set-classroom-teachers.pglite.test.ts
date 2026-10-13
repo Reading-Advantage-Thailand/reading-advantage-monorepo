@@ -86,6 +86,15 @@ describe("setClassroomTeachers (PGlite, two schools)", () => {
     expect(await teachersOf(CLASS_A)).toEqual(["owner", "t1"]);
   });
 
+  it("keeps an existing ADMIN or other-school co-teacher and refuses only new ids that break the rule (M-9)", async () => {
+    await h.db.execute(sql.raw(`insert into classroom_teachers (classroom_id, teacher_id) values ('${CLASS_A}', 'adm2'), ('${CLASS_A}', 'tb')`));
+    await run(admin, CLASS_A, ["adm2", "tb", "t1"]);
+    expect(await teachersOf(CLASS_A)).toEqual(["adm2", "owner", "t1", "tb"]);
+    await expect(run(admin, CLASS_A, ["adm2", "tb", "stud"])).rejects.toMatchObject({ code: "NOT_A_TEACHER" });
+    await run(admin, CLASS_A, ["t1"]);
+    expect(await teachersOf(CLASS_A)).toEqual(["owner", "t1"]);
+  });
+
   it("refuses a teacher of another school and changes nothing", async () => {
     await expect(run(admin, CLASS_A, ["t1", "tb"])).rejects.toMatchObject({ code: "CROSS_SCHOOL_TEACHER", status: 400 });
     expect(await teachersOf(CLASS_A)).toEqual(["owner"]);

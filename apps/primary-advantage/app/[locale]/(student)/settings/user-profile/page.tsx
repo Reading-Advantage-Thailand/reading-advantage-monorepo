@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChangeUsernameForm } from "@/components/change-username-form";
-import { UpdateUserLicenseForm } from "@/components/update-user-license";
 import { BadgeCheck } from "lucide-react";
 import { Panel, RpgLink } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
@@ -64,10 +63,7 @@ export default async function UserProfileSettingsPage({
             data={user.username}
             resetPassword
           />
-          <UpdateUserLicenseForm
-            username={user.name || ""}
-            userId={user.id}
-          />
+          {/* The license key form waits for STU-19 (license redeem, after the cutover). */}
         </div>
         {process.env.NODE_ENV === "development" && (
           <ChangeRole

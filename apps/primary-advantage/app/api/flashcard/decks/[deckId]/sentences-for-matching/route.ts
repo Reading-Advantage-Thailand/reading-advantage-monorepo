@@ -1,8 +1,7 @@
-import { grantGpForXp } from "@reading-advantage/domain/primary-avatar";
 import { NextRequest, NextResponse } from "next/server";
 import { eq, and, desc, isNotNull, sql } from 'drizzle-orm';
 import type { DB } from '@reading-advantage/domain';
-import { flashcardDecks, flashcardCards, cardReviews, articles, userActivity, xpLogs, users } from '@reading-advantage/db/schema';
+import { flashcardDecks, flashcardCards, cardReviews, articles, users } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { currentUser } from "@/lib/session";
@@ -11,7 +10,7 @@ import { ActivityType } from "@/types/enum";
 import { getAudioUrl } from "@/lib/storage-config";
 import { shuffle } from "@/lib/shuffle";
 import { guardStudentRoute } from "@/lib/student-view";
-import { parseDeckGameSubmit } from "@/server/utils/flashcard-game-submit";
+import { parseDeckGameSubmit, recordDeckGame } from "@/server/utils/flashcard-game-submit";
 
 /**
  * Returns shuffled sentence-matching games from the caller's deck.
@@ -212,27 +211,15 @@ export async function POST(
     .where(eq(flashcardCards.deckId, deckId));
   const xpEarned = resolveFlashcardGameXpAward(score, cardRows.length);
 
-  // Record user activity (replaces Prisma `userActivity.create`).
-  const [userActivityRow] = await flashDb.insert(userActivity).values({
+  // One activity row per user, game, and deck; each play pays its XP (legacy behavior).
+  await recordDeckGame(flashDb, {
     userId: user.id as string,
+    schoolId: user.schoolId ?? null,
     activityType: ActivityType.SENTENCE_MATCHING,
-    targetId: deckId,
-    timer: timer,
-    details: {
-      timer: timer,
-      xp: xpEarned,
-    },
-    completed: true,
-  } as any).returning();
-
-  // Create XP log entry (replaces Prisma `xPLogs.create`).
-  await flashDb.insert(xpLogs).values({
-    userId: user.id as string,
-    xpEarned: xpEarned,
-    activityId: userActivityRow.id,
-    activityType: ActivityType.SENTENCE_MATCHING,
+    deckId,
+    timer,
+    xpEarned,
   });
-  await grantGpForXp({ tx: flashDb, schoolId: user.schoolId ?? null, userId: user.id as string, sourceKey: `xp:${userActivityRow.id}`, activityType: ActivityType.SENTENCE_MATCHING, xpEarned });
 
   // Increment user XP (replaces Prisma `user.update({ data: { xp: { increment } } })`).
   // users is FLAT; TenantDB scopes the increment to the caller's school.

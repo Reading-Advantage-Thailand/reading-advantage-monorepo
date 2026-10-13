@@ -192,3 +192,22 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
     - 9 teachers and students (e46507fdf): Zod on teacher create, student create, student update (unknown fields such as `role` are dropped). Teacher PUT already had Zod. The audit claim "teacher by id uses an inner join on `user_roles`" is NOT true: `getTeacherById`, `updateTeacher`, and delete use `roleSql` (`users.role`), fixed earlier in `5cf2dcb91`. No change needed.
     - Type check: `apps/primary-advantage` `tsc --noEmit` exit 0 under the lock.
     - Gaps: `components/update-user-license.tsx` sends PATCH to `/api/licenses/<userId>` and no PATCH handler exists (405; key activation needs an owner decision). Other `console.error` calls in the touched controllers stay (not changed lines).
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: H-1 class edit accepts a number grade (PATCH schema, teacher dialog sends a string); the create route has no Zod schema and its model already parses the grade with `parseInt`, so no change there ea4dcebde
+- [x] Task: L-13 teacher edit dialog lists grades 1 to 12 ea4dcebde
+- [x] Task: Low: the edit dialog does not open again after a save while the URL still has `edit` ea4dcebde
+- [x] Task: M-6 only the school owner or SYSTEM removes the owner from the admins bec40ee84
+- [x] Task: Low: PATCH /api/users/[id] refuses ADMIN or SYSTEM for a STUDENT target, and returns `[users.role]` as roles 901a79102
+- [x] Task: Low: school DELETE sets the owner to TEACHER, and an ADMIN of a school with no owner may delete it 12ecd72c6
+- [x] Task: Low: a TEACHER with a school_admins row renames the school (`canManageSchool` takes `hasSchoolAdminRow`); the menu loads the row for a TEACHER dc0503bf6
+- [x] Task: License key form removed from the user profile page until STU-19 (default; redeem not ported); the dead component is deleted c1d853021
+- [x] Task: M-21 a second deck game result gives 200: one activity row per user, game, and deck (upsert); each play pays its XP as in legacy bfea121; the 4 deck game routes use `recordDeckGame` aa1bcfa8a
+- [x] Task: XP race: `awardQuestionXp` adds the XP in SQL, no absolute write ad96d4124
+- [x] Task: Assignment POST: ids are checked as uuid text (400), the 500 message is generic 79355d27d (route fixtures 05c7e2f35)
+- [x] Task: Progress POST: 400 when the body article is not the assignment article; 400 for an assignment id that is not a uuid 79355d27d
+- [x] Task: F-1 GET /api/articles/[articleId] needs a session (default; no client caller found by grep) 394a5f4d1 (guard fix 29ad079d8)
+- [x] Task: Logger: `console.error` replaced in `app/api/upload/csv` and `app/api/upload/classes` 3faa192de
+- [x] Task: From A2 `articleModel.logs-of-user` failed alone too: the test DDL lacked `chapter_id` (test defect) f2702ced3
+- [x] Task: M-7 old: the RA jest config (jest, not vitest) lacked the `avatar-kit` mapper; `app/api/v1/apk` 21 tests green 88fedb924

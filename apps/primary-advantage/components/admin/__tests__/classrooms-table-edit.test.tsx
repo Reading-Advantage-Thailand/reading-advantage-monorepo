@@ -94,7 +94,7 @@ describe("admin class edit dialog", () => {
 
     const patch = fetchMock.mock.calls.find(([, init]) => init?.method === "PATCH");
     expect(patch?.[0]).toBe(`/api/classroom/${C1}`);
-    expect(JSON.parse(patch?.[1].body as string)).toEqual({ classroomName: "P3B", grade: "5", teacherIds: [] });
+    expect(JSON.parse(patch?.[1].body as string)).toEqual({ classroomName: "P3B", grade: "5" });
   });
 
   it("shows the class code read-only and no student password field", async () => {
@@ -103,5 +103,81 @@ describe("admin class edit dialog", () => {
     expect(screen.getByLabelText("Class Code")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("Class Code")).toHaveValue("ABC123");
     expect(screen.queryByLabelText("Student Password")).not.toBeInTheDocument();
+  });
+});
+
+/**
+ * H-1, H-2, M-9: the list returns an integer grade and flat teacher rows `{id, name, email}`.
+ * The dialog opens, sends the grade as a string, and sends `teacherIds` only after a change.
+ */
+describe("admin class edit dialog with API-shaped rows", () => {
+  const OWNER = "t-owner";
+  const ADMIN_CO = "a-co";
+  const apiClassroom = {
+    ...classroom,
+    grade: 4,
+    schoolId: "s1",
+    ownerId: OWNER,
+    teachers: [
+      { id: OWNER, name: "Ms. Owner", email: "owner@demo.example" },
+      { id: ADMIN_CO, name: "Admin Co", email: "admin-co@demo.example" },
+    ],
+  };
+
+  beforeEach(() => {
+    fetchMock.mockImplementation(async (url: string, init?: RequestInit) => {
+      if (init?.method === "PATCH") return new Response(JSON.stringify({ classroom }), { status: 200 });
+      if (String(url).startsWith("/api/teachers")) {
+        return new Response(JSON.stringify({ teachers: [{ id: OWNER, name: "Ms. Owner", email: "owner@demo.example" }] }), { status: 200 });
+      }
+      return new Response(JSON.stringify({ classrooms: [apiClassroom] }), { status: 200 });
+    });
+  });
+
+  const patchBody = () => {
+    const patch = fetchMock.mock.calls.find(([, init]) => init?.method === "PATCH");
+    return JSON.parse(patch?.[1].body as string);
+  };
+
+  it("opens the dialog and sends a string grade with no teacherIds when no teacher changed", async () => {
+    await openEditDialog();
+
+    expect((screen.getByRole("combobox") as HTMLSelectElement).value).toBe("4");
+    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "P3B" } });
+    fireEvent.click(screen.getByRole("button", { name: "Update" }));
+    await flush();
+
+    expect(patchBody()).toEqual({ classroomName: "P3B", grade: "4" });
+  });
+
+  it("lists a co-teacher who is not a TEACHER of the school as a checked row that can be removed", async () => {
+    await openEditDialog();
+
+    const row = screen.getByText("Admin Co").closest("label") as HTMLElement;
+    const box = row.querySelector("input") as HTMLInputElement;
+    expect(box.checked).toBe(true);
+    fireEvent.click(box);
+    fireEvent.click(screen.getByRole("button", { name: "Update" }));
+    await flush();
+
+    expect(patchBody().teacherIds).toEqual([OWNER]);
+  });
+});
+
+describe("admin class create dialog (L-6)", () => {
+  it("does not send an empty passwordStudents", async () => {
+    renderWithMessages(<ClassroomsTable />);
+    await flush();
+    fireEvent.click(screen.getAllByRole("button", { name: "Create Classroom" })[0]);
+    await flush();
+    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "P4A" } });
+    fireEvent.change(screen.getByRole("combobox"), { target: { value: "4" } });
+    fireEvent.click(screen.getByRole("button", { name: "Create" }));
+    await flush();
+
+    const post = fetchMock.mock.calls.find(([, init]) => init?.method === "POST");
+    const body = JSON.parse(post?.[1].body as string);
+    expect(body).not.toHaveProperty("passwordStudents");
+    expect(body).toMatchObject({ name: "P4A", grade: "4" });
   });
 });

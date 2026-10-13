@@ -709,6 +709,7 @@
     "description": "ดูความก้าวหน้าของนักเรียนและการวิเคราะห์ห้องเรียน",
     "activityprogress": "ความก้าวหน้ากิจกรรม",
     "recentactivity": "กิจกรรมล่าสุด",
+    "attemptTag": "ครั้งที่ {number}",
     "activityheatmap": "ความก้าวหน้ากิจกรรมที่ร้อน",
     "xpoverall": "ค่าประสบการณ์รวม",
     "readingstatschart": "กราฟความก้าวหน้าการอ่าน",
@@ -3649,6 +3650,7 @@
     "searching": "กำลังค้นหา...",
     "score": "คะแนน {score}",
     "readOn": "อ่านเมื่อ {date}",
+    "attemptTag": "ครั้งที่ {number}",
     "status": {
       "READ": "อ่านแล้ว",
       "UNRATED": "ยังไม่ได้ให้ดาว",

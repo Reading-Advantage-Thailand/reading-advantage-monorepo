@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { currentUser } from "@/lib/session";
+import { studentViewModeFor } from "@/lib/student-view";
 import AuthErrorPage from "@/app/[locale]/auth/error/page";
 import StudentAssignmentList, { type AssignmentStudent } from "@/components/student/assignment-list";
 import { AssignmentListSkeleton } from "@/components/student/assignment-list-skeleton";
@@ -42,11 +43,15 @@ async function AssignmentsData() {
     return <AuthErrorPage />;
   }
 
-  const { assignments, pagination } = await getStudentAssignments({
-    studentId: user.id,
-    page: 1,
-    limit: 10,
-  });
+  // Staff in a preview have no assignment rows of their own: the empty list.
+  const { assignments, pagination } =
+    studentViewModeFor(user.role) === "preview"
+      ? { assignments: [], pagination: { currentPage: 1, totalPages: 0, totalCount: 0, hasNextPage: false, hasPrevPage: false, limit: 10 } }
+      : await getStudentAssignments({
+          studentId: user.id,
+          page: 1,
+          limit: 10,
+        });
 
   const initialAssignments: AssignmentStudent[] = assignments
     .filter(

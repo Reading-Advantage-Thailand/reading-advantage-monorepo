@@ -4,6 +4,7 @@ import {
   and,
   or,
   isNull,
+  sql,
 } from '@reading-advantage/db';
 import {
   userActivity,
@@ -56,7 +57,7 @@ export async function awardQuestionXp(
   tx: QuestionXpTx,
   input: AwardQuestionXpInput,
 ): Promise<{ status: "saved"; activityId: string } | { status: "already-complete" } | null> {
-  const [userData] = await tx.select({ xp: users.xp })
+  const [userData] = await tx.select({ id: users.id })
     .from(users)
     .where(eq(users.id, input.userId))
     .limit(1);
@@ -92,10 +93,6 @@ export async function awardQuestionXp(
     return { status: "already-complete" };
   }
 
-  const { newXp, raLevel, cefrLevel } = calculateLevelAndCefrLevel(
-    input.xpEarned,
-    userData.xp as number,
-  );
 
   await tx.insert(xpLogs).values({
     userId: input.userId,
@@ -105,12 +102,15 @@ export async function awardQuestionXp(
   });
   await grantGpForXp({ tx, schoolId: input.schoolId, userId: input.userId, sourceKey: `xp:${userActivityRow.id}`, activityType: input.activityType, xpEarned: input.xpEarned });
 
+  // The XP total is added in SQL so a parallel award is not lost. The update locks the row, so
+  // the level that follows the returned total is the level of this transaction's total.
+  const [updated] = await tx.update(users)
+    .set({ xp: sql`${users.xp} + ${input.xpEarned}` })
+    .where(eq(users.id, input.userId))
+    .returning({ xp: users.xp });
+  const { raLevel, cefrLevel } = calculateLevelAndCefrLevel(0, Number(updated?.xp ?? input.xpEarned));
   await tx.update(users)
-    .set({
-      xp: newXp,
-      level: raLevel,
-      cefrLevel: cefrLevel,
-    })
+    .set({ level: raLevel, cefrLevel })
     .where(eq(users.id, input.userId));
 
   return { status: "saved", activityId: userActivityRow.id };
