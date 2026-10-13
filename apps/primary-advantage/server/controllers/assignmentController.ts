@@ -32,7 +32,7 @@ import {
   canReadStudentRecords,
   isAssignmentManager,
 } from "../utils/assignment-access";
-import { CreateAssignmentBodySchema, LessonProgressBodySchema } from "./assignment-schemas";
+import { CreateAssignmentBodySchema, LessonProgressBodySchema, uuidText } from "./assignment-schemas";
 
 const unauthorized = () => NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 const forbidden = () => NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -309,7 +309,7 @@ export async function postAssignment(req: NextRequest) {
   } catch (error) {
     logger.error("assignment_create_failed", { error });
     return NextResponse.json(
-      { message: error instanceof Error && error.message ? error.message : "Internal server error" },
+      { message: "Internal server error" },
       { status: 500 },
     );
   }
@@ -391,6 +391,9 @@ export async function postUserLessonProgress(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const { id: assignmentId } = await params;
+    if (!uuidText.safeParse(assignmentId).success) {
+      return NextResponse.json({ error: "Invalid assignment id" }, { status: 400 });
+    }
     const parsed = LessonProgressBodySchema.safeParse(await request.json().catch(() => null));
     if (!parsed.success) {
       return NextResponse.json({ error: "Invalid body", issues: parsed.error.issues }, { status: 400 });
@@ -398,11 +401,16 @@ export async function postUserLessonProgress(
     const { articleId, progress, timeSpent } = parsed.data;
 
     const [assigned] = await db
-      .select({ id: studentAssignments.id })
+      .select({ id: studentAssignments.id, articleId: assignments.articleId })
       .from(studentAssignments)
+      .innerJoin(assignments, eq(assignments.id, studentAssignments.assignmentId))
       .where(and(eq(studentAssignments.assignmentId, assignmentId), eq(studentAssignments.studentId, user.id)))
       .limit(1);
     if (!assigned) return forbidden();
+    // The progress must be for the article of this assignment.
+    if (assigned.articleId !== articleId) {
+      return NextResponse.json({ error: "Article is not part of this assignment" }, { status: 400 });
+    }
 
     await updateUserLessonProgress(
       user.id,
