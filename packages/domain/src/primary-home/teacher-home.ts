@@ -23,6 +23,7 @@ import {
   TEACHER_HOME_ASSIGNMENT_LIMIT,
   TEACHER_HOME_HELP_LIMIT,
   TEACHER_HOME_INACTIVE_DAYS,
+  teacherHomeOutput,
   type TeacherHome,
 } from "./teacher-contracts.js";
 
@@ -41,7 +42,7 @@ const DAY_MS = 86_400_000;
  * @param params.db Database client.
  * @param params.user The signed-in teacher (or school admin).
  * @param params.now Current time. Tests replace it.
- * @returns The dashboard data. A user without a school gets empty lists.
+ * @returns The dashboard data, checked with `teacherHomeOutput`. A user without a school gets empty lists.
  * @throws {AuthError} FORBIDDEN when the user cannot list classes (for example a student).
  */
 export async function getTeacherHome(params: { db: DB; user: UserContext; now?: Date }): Promise<TeacherHome> {
@@ -199,7 +200,7 @@ export async function getTeacherHome(params: { db: DB; user: UserContext; now?: 
     };
   });
 
-  return {
+  return teacherHomeOutput.parse({
     classes: classRows.map((row) => ({ id: row.id, name: row.name, grade: row.grade, studentCount: studentCounts.get(row.id) ?? 0 })),
     studentCount: firstClass.size,
     openAssignments: open.slice(0, TEACHER_HOME_ASSIGNMENT_LIMIT).map(({ row, assigned, completed }) => ({
@@ -220,5 +221,5 @@ export async function getTeacherHome(params: { db: DB; user: UserContext; now?: 
     activeToday: activeToday.active,
     completedToday: toInt(rowsOf<{ n: unknown }>(completedRows)[0]?.n),
     classRows: classTable,
-  };
+  });
 }
