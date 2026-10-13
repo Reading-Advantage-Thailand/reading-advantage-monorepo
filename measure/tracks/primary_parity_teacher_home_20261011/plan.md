@@ -109,3 +109,13 @@ Phase 4 notes (helper, 2026-10-12):
 - Final gates: the domain suite had one load timeout (`mastery-persistence-public-api.test.ts`, passes alone). The app suite has one failure outside this track (`app-nav.test.tsx`, `schoollicense` item from the school management track, bd796b6d8). The orchestrator must fix it at the merge.
 - `measure/doctor.sh` cannot run as a script (no execute bit, and it calls `pnpm`). The helper ran its four `tests/orchestrator_*.sh` checks by hand: `catalog` (A13, old) and `supervisor_invariants` (missing file, old) fail; `marker_vocabulary` fails on many old plans and on the `[ ]` batch tasks above (by the brief); `review_execution_truthfulness` passes. `architecture:check` was not run (it needs `pnpm`).
 - Batch capture: set `PARITY_CLASS_SEARCH`. Manual verification after the batch: open the report of the 8 pairs; check the numbers against `acceptance.md`; do the CSV manual step.
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: M-18 parse the home output with `teacherHomeOutput` bcddd3c03
+- [x] Task: Low: log `teacher_home.load_failed` and rethrow; `logger.warn` in the quest catch 952139b41
+- [x] Task: Low: each aria-label starts with the visible text (CSV button, sort direction button) 952139b41
+- [x] Task: Low: translate the old `TeacherHome` keys and `TeacherUi.startClass*` in cn, tw, vi 952139b41
+- [x] Task: Low: remove the unused keys `TeacherHome.classes.students` and `classes.all` 952139b41
+- [x] Task: Low: "Cancel the quest" uses the RPG button 952139b41
+- [x] Task: Low: "Last active" date follows the locale (cn and tw map to zh-CN and zh-TW) fc0925c1e
