@@ -3833,10 +3833,10 @@
       "lesson": {
         "projector": "Projector",
         "projectorGames": {
-          "title": "Games for the class",
-          "hint": "Choose a game to show on the projector. The answer hint is on and nothing saves.",
-          "loading": "Getting the words and sentences of this lesson…",
-          "inputFailed": "We could not get the words of this lesson. Try again later."
+          "title": "全班遊戲",
+          "hint": "選擇一個遊戲投到投影機上。答案提示已開啟，不會儲存任何內容。",
+          "loading": "正在取得這堂課的單字和句子…",
+          "inputFailed": "我們無法取得這堂課的單字。請稍後再試。"
         },
         "rehearsal": "Rehearsal (student view)",
         "answerKey": "Answer key",

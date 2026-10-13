@@ -3833,10 +3833,10 @@
       "lesson": {
         "projector": "Projector",
         "projectorGames": {
-          "title": "Games for the class",
-          "hint": "Choose a game to show on the projector. The answer hint is on and nothing saves.",
-          "loading": "Getting the words and sentences of this lesson…",
-          "inputFailed": "We could not get the words of this lesson. Try again later."
+          "title": "Trò chơi cho cả lớp",
+          "hint": "Chọn một trò chơi để chiếu lên máy chiếu. Gợi ý đáp án đang bật và không có gì được lưu.",
+          "loading": "Đang lấy các từ và câu của bài học này…",
+          "inputFailed": "Chúng tôi không thể lấy các từ của bài học này. Hãy thử lại sau."
         },
         "rehearsal": "Rehearsal (student view)",
         "answerKey": "Answer key",
