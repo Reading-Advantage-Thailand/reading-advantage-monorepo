@@ -65,8 +65,17 @@ describe("teacher manual checks (S6)", () => {
   it("reads the pointer and judges the move", () => {
     expect(pointerOf("Lesson 3 of 14 · 1 lesson taught")).toBe(3);
     expect(pointerOf("")).toBe(0);
-    expect(judgeProgressAndTaught({ studentRows: 2, before: "Lesson 1 of 14", after: "Lesson 2 of 14" }).every((c) => c.ok)).toBe(true);
-    expect(judgeProgressAndTaught({ studentRows: 0, before: "Lesson 1 of 14", after: "Lesson 1 of 14" }).every((c) => !c.ok)).toBe(true);
-    expect(judgeProgressAndTaught({ studentRows: 2, before: "Lesson 2 of 14", after: "Lesson 2 of 14", skipped: true })[1].ok).toBe(true);
+    const reset = { resetPointer: "Lesson 1 of 14", markTaughtBack: true };
+    expect(judgeProgressAndTaught({ studentRows: 2, before: "Lesson 1 of 14", after: "Lesson 2 of 14", ...reset }).every((c) => c.ok)).toBe(true);
+    expect(judgeProgressAndTaught({ studentRows: 0, before: "Lesson 1 of 14", after: "Lesson 1 of 14", ...reset })[0].ok).toBe(false);
+    expect(judgeProgressAndTaught({ studentRows: 2, before: "Lesson 2 of 14", after: "Lesson 2 of 14", skipped: true, ...reset })[1].ok).toBe(true);
+  });
+  it("ends the howTo5 block with lesson 1 not taught, so a second run starts clean", () => {
+    const base = { studentRows: 2, before: "Lesson 1 of 14", after: "Lesson 2 of 14" };
+    const checks = judgeProgressAndTaught({ ...base, resetPointer: "Lesson 2 of 14", markTaughtBack: false });
+    expect(checks).toHaveLength(3);
+    expect(checks[2].ok).toBe(false);
+    expect(judgeProgressAndTaught({ ...base, resetPointer: "Lesson 1 of 14", markTaughtBack: false })[2].ok).toBe(false);
+    expect(judgeProgressAndTaught({ ...base, resetPointer: "Lesson 1 of 14", markTaughtBack: true })[2].ok).toBe(true);
   });
 });
