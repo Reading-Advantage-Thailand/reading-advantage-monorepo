@@ -1,7 +1,8 @@
 "use client";
 
 import { useId, useMemo, useState, type ReactNode } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { DownloadIcon, SearchIcon } from "lucide-react";
 import type { ClassStatus, ClassTrend, TeacherClassRow } from "@reading-advantage/domain/primary-home";
 import { calendarDayKey } from "@reading-advantage/domain/calendar-day";
@@ -92,7 +93,7 @@ function sortRows(rows: readonly TeacherClassRow[], key: SortKey, dir: SortDir):
 export function TeacherClassTable({ rows, className }: { rows: readonly TeacherClassRow[]; className?: string }) {
   const t = useTranslations("TeacherHome");
   const tUi = useTranslations("TeacherUi");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const headingId = useId();
   const selectId = useId();
   const [query, setQuery] = useState("");
@@ -124,6 +125,7 @@ export function TeacherClassTable({ rows, className }: { rows: readonly TeacherC
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
+  const sortDirText = sort.dir === "asc" ? t("table.sortAsc") : t("table.sortDesc");
   const num = (value: number) => format.number(value);
   const level = (value: number | null) => (value === null ? "—" : format.number(value, { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
   const activeText = (row: TeacherClassRow) => (row.students ? t("table.activeOf", { active: row.active7d, students: row.students, percent: row.activeRate7d }) : "—");
@@ -195,8 +197,8 @@ export function TeacherClassTable({ rows, className }: { rows: readonly TeacherC
                   </option>
                 ))}
               </select>
-              <RpgButton small tone="wood" aria-label={t("table.sortDirection")} onClick={() => chooseColumn(sort.key)}>
-                {sort.dir === "asc" ? t("table.sortAsc") : t("table.sortDesc")}
+              <RpgButton small tone="wood" aria-label={`${sortDirText}: ${t("table.sortDirection")}`} onClick={() => chooseColumn(sort.key)}>
+                {sortDirText}
               </RpgButton>
             </div>
           </div>

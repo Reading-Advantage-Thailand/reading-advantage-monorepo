@@ -100,6 +100,14 @@ const roster = [
 ];
 
 describe("getTeacherHome", () => {
+  it("checks the result with the output schema", async () => {
+    const { db } = recordingDb(
+      sequence({ classes: [{ id: C1, name: "P3A", grade: "3" }] }),
+      sharedRows(),
+    );
+    await expect(getTeacherHome({ db, user: teacher, now: NOW })).rejects.toThrow();
+  });
+
   it("returns the classes with student counts, open assignments, and students who need help", async () => {
     const { db } = recordingDb(
       sequence({

@@ -11,8 +11,8 @@ import { dashboardWindow } from "./window.js";
 /** The days of "this week": the last 7 Bangkok calendar days, today included. */
 const PLATFORM_WINDOW_DAYS = 7;
 
-/** The order of the statuses in the table: quiet schools first. */
-const STATUS_ORDER: Record<PlatformSchoolStatus, number> = { quiet: 0, active: 1, no_students: 2 };
+/** The order of the statuses in the table (FR-9): quiet schools first, then every other school by name. */
+const STATUS_ORDER: Record<PlatformSchoolStatus, number> = { quiet: 0, active: 1, no_students: 1 };
 
 /**
  * Reads the system dashboard: the platform totals and one row for each school. Only SYSTEM may
@@ -21,7 +21,7 @@ const STATUS_ORDER: Record<PlatformSchoolStatus, number> = { quiet: 0, active: 1
  * @param params.db The database.
  * @param params.user The caller. The role must be SYSTEM.
  * @param params.now The current instant. Tests replace it.
- * @returns The totals and the school rows: quiet first, then active, then no students; each group by name.
+ * @returns The totals and the school rows: quiet first, then every other school; each group by name.
  * @throws {AuthError} FORBIDDEN when the caller is not SYSTEM.
  */
 export async function getPlatformOverview(params: { db: DB; user: UserContext; now?: Date }): Promise<PlatformOverview> {
@@ -54,7 +54,7 @@ export async function getPlatformOverview(params: { db: DB; user: UserContext; n
       status: platformSchoolStatus({ students: row.students, lastActivityAt: row.lastActivityAt, window }),
     };
   });
-  // The query orders by name; this sort is stable, so each group keeps the name order.
+  // The query orders by name; this sort is stable, so quiet schools come first and each group keeps the name order.
   schools.sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]);
 
   const sum = (pick: (row: PlatformSchoolRow) => number) => schools.reduce((total, row) => total + pick(row), 0);

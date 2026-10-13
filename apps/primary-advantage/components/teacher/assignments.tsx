@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { ColumnDef } from "@tanstack/react-table";
 import { SchoolIcon, Search, TriangleAlertIcon } from "lucide-react";
 import { EmptyState, ErrorState, ShimmerSkeleton } from "@reading-advantage/ui";
@@ -70,7 +71,7 @@ export default function Assignments() {
   const t = useTranslations("Teacher.Assignments");
   const ta = useTranslations("TeacherAssignments");
   const te = useTranslations("Error");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const [selectedClassroom, setSelectedClassroom] = useState<string>("");
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [isLoading, setIsLoading] = useState(true);

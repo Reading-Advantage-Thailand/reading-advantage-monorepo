@@ -57,6 +57,16 @@ function shownNames(): string[] {
 afterEach(() => cleanup());
 
 describe("TeacherClassTable", () => {
+  it.each(["en", "th", "cn", "tw", "vi"] as const)("%s: each aria-label starts with the visible text of its control", (locale) => {
+    renderWithMessages(<TeacherClassTable rows={ROWS} />, { locale });
+    const controls = [...screen.getAllByRole("button", { hidden: true }), ...screen.getAllByRole("link", { hidden: true })].filter((el) => el.hasAttribute("aria-label"));
+    expect(controls.length).toBeGreaterThan(2);
+    for (const el of controls) {
+      const visible = el.textContent!.trim();
+      if (visible) expect(el.getAttribute("aria-label")!.startsWith(visible), `${visible} / ${el.getAttribute("aria-label")}`).toBe(true);
+    }
+  });
+
   it("shows the classes sorted by name, ascending, with aria-sort on the name column", () => {
     renderTable();
     expect(shownNames()).toEqual(["Class 5A", "Class 5B", "Grade 6, \"Fox\""]);
@@ -107,7 +117,7 @@ describe("TeacherClassTable", () => {
     renderTable();
     fireEvent.change(screen.getByLabelText(en.table.sortBy), { target: { value: "xp" } });
     expect(shownNames()).toEqual(["Class 5A", "Class 5B", "Grade 6, \"Fox\""]);
-    fireEvent.click(screen.getByRole("button", { name: en.table.sortDirection }));
+    fireEvent.click(screen.getByRole("button", { name: new RegExp(en.table.sortDirection) }));
     expect(shownNames()).toEqual(["Grade 6, \"Fox\"", "Class 5B", "Class 5A"]);
   });
 

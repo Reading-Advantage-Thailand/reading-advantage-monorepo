@@ -32,7 +32,7 @@ export function TeachersTable({ teachers }: { teachers: TeacherRow[] }) {
               const name = row.name ?? t("unnamed");
               return (
                 <tr key={row.teacherId} className="border-t border-[rgba(107,84,56,0.35)]">
-                  <th scope="row" className="py-2 pr-2 font-bold whitespace-nowrap">
+                  <th scope="row" className="max-w-[11rem] py-2 pr-2 font-bold break-words sm:max-w-none">
                     {name}
                     <span className="block text-[13px] font-normal text-[var(--cq-ink-soft)] sm:hidden">{t("classCount", { count: row.classes })}</span>
                   </th>

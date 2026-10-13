@@ -80,3 +80,13 @@ Prepared 2026-10-12. The kit run, the captures, and the owner look check wait fo
 - [x] Task: Final gates (AC-7): domain 1938 tests passed; app 1695 tests passed (5 load timeouts passed alone); tsc 0; ESLint 0. See `acceptance.md`.
 - [x] Task: Measure - User Manual Verification 'Phase 4: Acceptance' (Protocol in workflow.md) — look check pending (owner, async)
     - Manual verification: read the report of the batch run; open `/system/dashboard` as SYSTEM and compare 3 rows with `reference-sql.sql`; tap a row and check the admin page; open the page as ADMIN and check the unauthorized page.
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: Low: FR-9 order, quiet first and then every other school by name only 001d16cff
+- [x] Task: Low: the date "Oct 6" follows the locale (cn and tw map to zh-CN and zh-TW) fc0925c1e
+- [x] Task: Low: the active column sorts on the count of active students (FR-9 "active students this week") 412a56854
+- [x] Task: Low: a school with no students shows a dash in the seats cell, not "0 of 30" 412a56854
+- [x] Task: Low: last activity reads one max for each user in each table; PGlite test equals the old query for two schools 001d16cff
+- [x] Task: Default (record only): the strip seat total counts schools with an active license (no change)
+- Note: no index on `(user_id, created_at)` was added (a migration). The query shape can use one. Recommend a migration if the production time is bad.

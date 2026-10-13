@@ -5,30 +5,32 @@ import type { ReactNode } from "react";
 import { createFormatter, createTranslator } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithMessages, testMessages, type TestLocale } from "@/components/__tests__/helpers/render-with-messages";
+import { renderWithMessages, testMessages, type AnyTestLocale } from "@/components/__tests__/helpers/render-with-messages";
 
 const mocks = vi.hoisted(() => ({
-  locale: "en" as "en" | "th",
+  locale: "en" as AnyTestLocale,
   user: null as Record<string, unknown> | null,
   getTeacherHome: vi.fn(),
   redirect: vi.fn(),
   getTeacherBookSlots: vi.fn(),
   logError: vi.fn(),
+  logWarn: vi.fn(),
+  getTeacherQuestCard: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
-vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: async () => null }));
+vi.mock("@reading-advantage/domain/primary-quest", () => ({ getTeacherQuestCard: mocks.getTeacherQuestCard }));
 vi.mock("@reading-advantage/domain/primary-books", () => ({ getTeacherBookSlots: mocks.getTeacherBookSlots }));
-vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: vi.fn(), info: vi.fn() } }));
+vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: mocks.logWarn, info: vi.fn() } }));
 vi.mock("@reading-advantage/domain/primary-home", () => ({ getTeacherHome: mocks.getTeacherHome, TEACHER_HOME_INACTIVE_DAYS: 7 }));
 vi.mock("next-intl/server", async () => {
-  const { testMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
+  const { allMessages: messages } = await import("@/components/__tests__/helpers/render-with-messages");
   return {
     getLocale: async () => mocks.locale,
     getTranslations: async (namespace?: string) =>
-      createTranslator({ locale: mocks.locale, messages: messages[mocks.locale as TestLocale], namespace: namespace as never }),
-    getFormatter: async () => createFormatter({ locale: mocks.locale, timeZone: "Asia/Bangkok" }),
+      createTranslator({ locale: mocks.locale, messages: messages[mocks.locale], namespace: namespace as never }),
+    getFormatter: async (opts?: { locale?: string }) => createFormatter({ locale: opts?.locale ?? mocks.locale, timeZone: "Asia/Bangkok" }),
   };
 });
 vi.mock("@/i18n/navigation", () => ({
@@ -82,7 +84,7 @@ const fullHome = {
  * Renders the dashboard through the real message tree.
  * @param locale The UI locale.
  */
-async function renderDashboard(locale: TestLocale = "en") {
+async function renderDashboard(locale: AnyTestLocale = "en") {
   mocks.locale = locale;
   renderWithMessages((await TeacherDashboardPage()) as React.ReactElement, { locale });
 }
@@ -93,6 +95,7 @@ beforeEach(() => {
   vi.setSystemTime(NOW);
   mocks.user = { ...teacher };
   mocks.getTeacherHome.mockResolvedValue(fullHome);
+  mocks.getTeacherQuestCard.mockResolvedValue(null);
   mocks.getTeacherBookSlots.mockResolvedValue([
     { classroomId: C1, classroomName: "P3A", classBookId: "cb1", bookName: "Origins 3.2", currentLesson: 3, lessonCount: 14, lessonTitle: "Sea Park", nextStep: 5, nextStepPeriod: 2 },
     { classroomId: C2, classroomName: "P4B", classBookId: null, bookName: null, currentLesson: null, lessonCount: null, lessonTitle: null, nextStep: null, nextStepPeriod: null },
@@ -106,6 +109,26 @@ afterEach(() => {
 describe("teacher dashboard (Lane C Phase 3)", () => {
   const en = testMessages.en.TeacherHome;
   const ui = testMessages.en.TeacherUi;
+
+  it("logs a load failure and rethrows it for the error boundary", async () => {
+    const failure = new Error("db down");
+    mocks.getTeacherHome.mockRejectedValue(failure);
+    await expect(TeacherDashboardPage()).rejects.toBe(failure);
+    expect(mocks.logError).toHaveBeenCalledWith("teacher_home.load_failed", { userId: "t1", error: failure });
+  });
+
+  it("logs a warning when a quest card fails and still shows the page", async () => {
+    const failure = new Error("quest down");
+    mocks.getTeacherQuestCard.mockRejectedValue(failure);
+    await renderDashboard();
+    expect(mocks.logWarn).toHaveBeenCalledWith("teacher_home.quest_failed", { userId: "t1", classroomId: C1, error: failure });
+    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+  });
+
+  it("writes the last active date in the Chinese format for cn", async () => {
+    await renderDashboard("cn");
+    expect(screen.getByText(/9月20日/)).toBeInTheDocument();
+  });
 
   it("shows eight numbers with their labels in the summary", async () => {
     await renderDashboard();

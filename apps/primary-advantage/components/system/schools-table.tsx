@@ -1,12 +1,13 @@
 "use client";
 
 import { useId, useMemo, useState, type ReactNode } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { SearchIcon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { PlatformSchoolRow, PlatformSchoolStatus } from "@reading-advantage/domain/primary-dashboards";
 import { Panel, RpgLink } from "@/components/rpg/chrome";
 import { cn } from "@/lib/utils";
+import { useIntlFormatter } from "@/lib/intl-locale";
 
 /** The sortable columns, in the order of the table. */
 const SORT_KEYS = ["name", "active", "articles", "seats", "last", "status"] as const;
@@ -43,7 +44,7 @@ function sortValue(row: PlatformSchoolRow, key: SortKey): string | number {
     case "name":
       return row.name;
     case "active":
-      return row.activePercent ?? -1;
+      return row.activeStudents;
     case "articles":
       return row.articlesOpened;
     case "seats":
@@ -91,7 +92,7 @@ function schoolHref(row: PlatformSchoolRow): string {
  */
 export function SchoolsTable({ rows }: { rows: readonly PlatformSchoolRow[] }) {
   const t = useTranslations("SystemDashboard");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const headingId = useId();
   const selectId = useId();
   const [query, setQuery] = useState("");
@@ -111,7 +112,8 @@ export function SchoolsTable({ rows }: { rows: readonly PlatformSchoolRow[] }) {
 
   const num = (value: number) => format.number(value);
   const activeText = (row: PlatformSchoolRow) => (row.students ? t("table.activeOf", { active: row.activeStudents, students: row.students, percent: row.activePercent ?? 0 }) : "—");
-  const seatsText = (row: PlatformSchoolRow) => (row.seats === null ? t("table.noLicense") : t("table.seatsOf", { used: num(row.seatsUsed), total: num(row.seats) }));
+  const seatsText = (row: PlatformSchoolRow) =>
+    row.seats === null ? t("table.noLicense") : row.students === 0 ? "—" : t("table.seatsOf", { used: num(row.seatsUsed), total: num(row.seats) });
   // The day key is already a Bangkok calendar day, so it prints in UTC without a shift.
   const lastText = (row: PlatformSchoolRow) =>
     row.lastActivityDay ? format.dateTime(new Date(`${row.lastActivityDay}T00:00:00Z`), { day: "numeric", month: "short", timeZone: "UTC" }) : t("table.none");
@@ -172,7 +174,7 @@ export function SchoolsTable({ rows }: { rows: readonly PlatformSchoolRow[] }) {
               </select>
               <button
                 type="button"
-                aria-label={t("table.sortDirection")}
+                aria-label={`${sort?.dir === "desc" ? t("table.sortDesc") : t("table.sortAsc")}: ${t("table.sortDirection")}`}
                 disabled={!sort}
                 onClick={() => sort && chooseColumn(sort.key)}
                 className={cn(FIELD, "justify-center font-semibold disabled:opacity-50")}

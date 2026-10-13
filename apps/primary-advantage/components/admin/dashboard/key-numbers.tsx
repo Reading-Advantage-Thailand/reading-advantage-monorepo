@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { Meter, Panel } from "@/components/rpg/chrome";
 import type { SchoolDashboard } from "@reading-advantage/domain/primary-dashboards";
 
@@ -25,6 +26,7 @@ function Tile({ label, value, sub, meter }: { label: string; value: string; sub:
  */
 export function KeyNumbers({ kpis }: { kpis: SchoolDashboard["kpis"] }) {
   const t = useTranslations("AdminDashboard.keyNumbers");
+  const format = useIntlFormatter();
   const empty = kpis.activeStudents.total === 0;
   return (
     <Panel aria-labelledby="admin-dash-key">
@@ -37,14 +39,14 @@ export function KeyNumbers({ kpis }: { kpis: SchoolDashboard["kpis"] }) {
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
           <Tile
             label={t("activeStudents")}
-            value={kpis.activeStudents.active.toLocaleString("en-US")}
+            value={format.number(kpis.activeStudents.active)}
             meter={[kpis.activeStudents.active, kpis.activeStudents.total]}
             sub={t("activeStudentsSub", { total: kpis.activeStudents.total, percent: kpis.activeStudents.percent ?? 0 })}
           />
           <Tile label={t("activeTeachers")} value={String(kpis.activeTeachers.active)} sub={t("activeTeachersSub", { total: kpis.activeTeachers.total })} />
           <Tile label={t("classes")} value={String(kpis.classesWithActivity.active)} sub={t("classesSub", { total: kpis.classesWithActivity.total })} />
-          <Tile label={t("articles")} value={kpis.articlesOpened.toLocaleString("en-US")} sub={t("articlesSub")} />
-          <Tile label={t("xp")} value={kpis.xpEarned.toLocaleString("en-US")} sub={t("xpSub")} />
+          <Tile label={t("articles")} value={format.number(kpis.articlesOpened)} sub={t("articlesSub")} />
+          <Tile label={t("xp")} value={format.number(kpis.xpEarned)} sub={t("xpSub")} />
           <Tile label={t("newStudents")} value={String(kpis.newStudents)} sub={t("newStudentsSub")} />
         </div>
       )}

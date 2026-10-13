@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { intlLocale } from "@/lib/intl-locale";
 import {
   Table,
   TableHeader,
@@ -47,7 +48,7 @@ export default function Leaderboard({
         <p className="text-center text-2xl font-bold">{t("title")}</p>
         <p className="text-muted-foreground text-center">{schoolName}</p>
         <p className="text-muted-foreground text-center text-sm">
-          {new Date().toLocaleString(locale, {
+          {new Date().toLocaleString(intlLocale(locale), {
             month: "long",
             year: "numeric",
           })}

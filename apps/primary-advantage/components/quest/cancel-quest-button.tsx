@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { Button } from "@/components/ui/button";
+import { RpgButton } from "@/components/rpg/chrome";
 
 /**
  * Cancels an open quest through `DELETE /api/v1/quest/:questId` and refreshes the page.
@@ -25,9 +25,9 @@ export function CancelQuestButton({ questId }: { questId: string }) {
   };
   return (
     <div className="flex flex-col gap-1">
-      <Button type="button" variant="outline" disabled={pending} onClick={cancel} className="min-h-11 rounded-xl">
+      <RpgButton small tone="wood" disabled={pending} onClick={cancel}>
         {t("cancel")}
-      </Button>
+      </RpgButton>
       {error ? (
         <p role="alert" className="text-destructive text-sm">
           {error}

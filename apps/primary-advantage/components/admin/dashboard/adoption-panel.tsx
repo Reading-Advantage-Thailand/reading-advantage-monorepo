@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { Meter, Panel, Sign } from "@/components/rpg/chrome";
 import { Link } from "@/i18n/navigation";
 import { dashboardHref, type AdoptionView } from "./href";
@@ -23,6 +24,7 @@ export function AdoptionPanel(props: {
   schoolEmpty: boolean;
 }) {
   const t = useTranslations("AdminDashboard.adoption");
+  const format = useIntlFormatter();
   const rows = (props.by === "cefr" ? props.cefr : props.grade).filter((row) => row.students > 0);
   const tab = (view: AdoptionView, label: string) => (
     <Link
@@ -76,7 +78,7 @@ export function AdoptionPanel(props: {
                         <span className="w-10 text-right font-bold tabular-nums">{row.percent}%</span>
                       </div>
                     </td>
-                    <td className="hidden pl-2 text-right tabular-nums sm:table-cell">{row.averageXp.toLocaleString("en-US")}</td>
+                    <td className="hidden pl-2 text-right tabular-nums sm:table-cell">{format.number(row.averageXp)}</td>
                   </tr>
                 );
               })}

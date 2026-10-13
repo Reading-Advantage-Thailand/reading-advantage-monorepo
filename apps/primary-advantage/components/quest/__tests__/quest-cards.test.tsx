@@ -64,6 +64,10 @@ describe("TeacherQuestCard", () => {
     expect(screen.getByText(/7 with power-ups/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Cancel the quest" })).toBeInTheDocument();
   });
+  it("styles the cancel button with the RPG skin", () => {
+    renderWithMessages(<TeacherQuestCard classroomId="c1" card={{ quest, title, boss, daysLeft: 4, committed: 70, rosterSize: 25, studentsWithPowerUps: 7 }} />, { locale: "en" });
+    expect(screen.getByRole("button", { name: "Cancel the quest" })).toHaveClass("cq-btn");
+  });
   it("offers the assign link without a quest and hides cancel once the battle runs", () => {
     renderWithMessages(<TeacherQuestCard classroomId="c1" card={null} />, { locale: "en" });
     expect(screen.getByRole("link", { name: "Assign a quest" })).toHaveAttribute("href", "/teacher/quest?classroomId=c1");

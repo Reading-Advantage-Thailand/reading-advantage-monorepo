@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { intlLocale } from "@/lib/intl-locale";
 import { ArrowLeftIcon, BarChart3Icon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getClassBookPacing, type ClassBookPacing } from "@reading-advantage/domain/primary-books";
@@ -57,7 +58,7 @@ export default async function ClassBookPacingPage({ params }: { params: Params }
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
   const pacing = await loadPacing(user, classBookId);
   if (!pacing) notFound();
-  const [t, format] = await Promise.all([getTranslations("TeacherUi.classBook"), getFormatter()]);
+  const [t, format] = await Promise.all([getTranslations("TeacherUi.classBook"), getLocale().then((l) => getFormatter({ locale: intlLocale(l) }))]);
   const { classBook, lessons } = pacing;
   const current = lessons.find((lesson) => lesson.current);
   const next = pacing.nextStep ? WORKBOOK_STEPS.find((step) => step.step === pacing.nextStep) : null;

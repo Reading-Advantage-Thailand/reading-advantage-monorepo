@@ -1,4 +1,5 @@
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import type { TeacherHome } from "@reading-advantage/domain/primary-home";
 import { Meter, Panel } from "@/components/rpg/chrome";
 import { cn } from "@/lib/utils";
@@ -34,7 +35,7 @@ function Tile({ label, value, hint, meter, alert }: { label: string; value: stri
  */
 export function TeacherSummaryStrip({ home }: { home: TeacherHome }) {
   const t = useTranslations("TeacherHome");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const none = home.studentCount === 0;
   return (
     <Panel aria-label={t("summary")}>

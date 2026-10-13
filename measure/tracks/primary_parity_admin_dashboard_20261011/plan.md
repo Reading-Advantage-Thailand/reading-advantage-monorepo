@@ -114,3 +114,11 @@ Phase 4 notes (helper, 2026-10-12):
 - `measure/doctor.sh`: `orchestrator_catalog` (A13, old), `orchestrator_supervisor_invariants` (file missing, old), `orchestrator_marker_vocabulary` (many old tracks, and the `[ ]` capture tasks above, by the brief) and `architecture:check` (stale manifest, old) fail. None is caused by this track.
 - Batch capture: set `PARITY_SCHOOL_ID` and `PARITY_OTHER_SCHOOL_ID`; add one teacher sign-in event and one active license to the clone of school B first.
 - Manual verification: after the batch, open the report of the 18 pairs. Check the numbers against `acceptance.md`; check `/api/admin/recent-activity` returns 404; check the nav of SYSTEM and ADMIN; check the range change keeps `school=<id>`.
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: Low: numbers use `format.number` of the page locale, not en-US fc0925c1e
+- [x] Task: Low: C1 and C2 count in the B2 row (default of the fix brief) a9dd00938
+- [x] Task: Low: `loading.tsx` has the observatory Scene 35fea8944
+- [x] Task: Low: a long teacher name wraps (no whitespace-nowrap), the table keeps 375 px 35fea8944
+- Note: `lib/intl-locale.ts` maps the app codes cn and tw to zh-CN and zh-TW. The app had no mapping.

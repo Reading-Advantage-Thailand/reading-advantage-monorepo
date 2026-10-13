@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { BookOpenIcon, CalendarIcon, ClipboardListIcon, RotateCcwIcon, SearchIcon } from "lucide-react";
 import { EmptyState, ErrorState, StatusChip, cardHoverClassName } from "@reading-advantage/ui";
 import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
@@ -308,7 +309,7 @@ export default function StudentAssignmentList({
  */
 function AssignmentCard({ row }: { row: AssignmentStudent }) {
   const t = useTranslations("StudentAssignments");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const { assignment } = row;
   const done = row.status === "COMPLETED";
   const dueStatus = getDueDateStatus(assignment.dueDate);

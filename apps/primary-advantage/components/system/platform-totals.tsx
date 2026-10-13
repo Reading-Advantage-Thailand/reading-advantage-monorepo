@@ -1,4 +1,5 @@
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import type { PlatformTotals } from "@reading-advantage/domain/primary-dashboards";
 import { Meter, Panel } from "@/components/rpg/chrome";
 
@@ -26,7 +27,7 @@ function Tile({ label, value, sub, meter }: { label: string; value: string; sub?
  */
 export function PlatformTotalsPanel({ totals }: { totals: PlatformTotals }) {
   const t = useTranslations("SystemDashboard.totals");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const num = (value: number) => format.number(value);
   const hasStudents = totals.students > 0;
   const percent = hasStudents ? Math.round((100 * totals.activeStudents) / totals.students) : 0;

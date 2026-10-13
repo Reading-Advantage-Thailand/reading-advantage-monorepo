@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { intlLocale } from "@/lib/intl-locale";
 import { ArrowLeftIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getStudentLessonSteps, type StudentLessonSteps } from "@reading-advantage/domain/primary-books";
@@ -50,7 +51,7 @@ export default async function StudentProgressPage({ params }: { params: Params }
   if (!user) return redirect({ href: "/auth/signin", locale: await getLocale() });
   const data = await loadSteps(user, classBookId, studentId);
   if (!data) notFound();
-  const [t, format] = await Promise.all([getTranslations("TeacherUi.classBook.progress"), getFormatter()]);
+  const [t, format] = await Promise.all([getTranslations("TeacherUi.classBook.progress"), getLocale().then((l) => getFormatter({ locale: intlLocale(l) }))]);
   const name = data.student.name ?? data.student.username;
 
   return (

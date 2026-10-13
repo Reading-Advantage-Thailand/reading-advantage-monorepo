@@ -19,6 +19,8 @@ describe("cefrMainLevel", () => {
     ["A2-", "A2"], ["A2", "A2"], ["A2+", "A2"],
     ["B1-", "B1"], ["B1", "B1"], ["B1+", "B1"],
     ["B2-", "B2"], ["B2", "B2"], ["B2+", "B2"],
+    // The scale has no row above B2 (owner default 2026-10-13): C1 and C2 count in B2.
+    ["C1", "B2"], ["C1+", "B2"], ["c2", "B2"],
   ];
   it.each(levels)("counts %s in %s", (level, main) => expect(cefrMainLevel(level)).toBe(main));
   it("counts a missing or unreadable level as A0", () => {

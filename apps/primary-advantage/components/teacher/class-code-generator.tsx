@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useTranslations, useFormatter } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -40,7 +41,7 @@ export default function ClassCodeGenerator({
   buttonVariant = "default",
 }: ClassCodeGeneratorProps) {
   const t = useTranslations("Teacher.ClassCodeGenerator");
-  const formatter = useFormatter();
+  const formatter = useIntlFormatter();
   const [open, setOpen] = useState(false);
   const [classCode, setClassCode] = useState(currentClassCode || "");
   const [expiresAt, setExpiresAt] = useState(codeExpiresAt || "");
