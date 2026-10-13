@@ -79,6 +79,8 @@ One row per delegated role. Verdict values: keep, promote, demote, ban.
 | 2026-10-12 | stories Phase A prep (pairs, steps, cutover block), 4 commits | muse-spark-1.3-contributor#high | kit suite 100/100 re-run by orchestrator, pairs parse, honest AC status | keep |
 | 2026-10-12 | merge lane B into integration (5 messages conflicts union-resolved) | muse-spark-1.3-contributor#high | gates green (domain 2085, app 247, tsc clean), models file preserved, no-push | keep |
 | 2026-10-12 | rehearsal3 Phase 1 docs (change list, gate, command sheet), 2 commits | muse-spark-1.3-contributor#high | every cited item verified by reading the repo files, live read-only cloud check, honest could-not-verify list | keep |
+| 2026-10-12 | school_management review fixes F1-F4, 4 commits | muse-spark-1.3-contributor#high | F3 red-first, app 186 pass with 2 pre-existing failures correctly triaged, domain 21/21, tsc clean | keep |
+| 2026-10-12 | merge lane C into integration (8 conflicts union-resolved) | muse-spark-1.3-contributor#high | gates green (domain 2132, app 562, kit 106, tsc clean), nothing dropped, stale dist handled | keep |
 
 ## Adaptation rules
 
