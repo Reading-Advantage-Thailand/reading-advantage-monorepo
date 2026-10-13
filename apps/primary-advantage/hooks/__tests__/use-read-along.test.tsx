@@ -47,6 +47,8 @@ beforeEach(() => {
   vi.stubGlobal("cancelAnimationFrame", cancelSpy);
   audio = document.createElement("audio");
   setTime(0);
+  // A loaded element; the cold-element test sets 0.
+  Object.defineProperty(audio, "readyState", { value: 4, configurable: true });
 });
 
 afterEach(() => {
@@ -98,6 +100,14 @@ describe("useReadAlong", () => {
     act(() => void audio.dispatchEvent(new Event("seeked")));
     expect(result.current.position).toEqual({ sentenceIndex: 1, wordIndex: 0 });
     expect(frames.size).toBe(0);
+  });
+
+  it("does not sync on a seek or pause while the element has no metadata", () => {
+    const { result } = setup();
+    Object.defineProperty(audio, "readyState", { value: 0, configurable: true });
+    act(() => void audio.dispatchEvent(new Event("seeked")));
+    act(() => void audio.dispatchEvent(new Event("pause")));
+    expect(result.current.position).toEqual({ sentenceIndex: -1, wordIndex: -1 });
   });
 
   it("clears the position and the loop when the audio ends", () => {

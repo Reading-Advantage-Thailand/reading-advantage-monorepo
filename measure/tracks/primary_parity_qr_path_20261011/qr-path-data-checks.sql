@@ -12,6 +12,12 @@ SELECT l.number, l.title, l.approved, l.article_id IS NOT NULL AS linked, l.lega
 FROM primary_book_lessons l JOIN primary_books b ON b.id = l.book_id
 WHERE b.key = 'o3-2' AND l.number = 1;   -- expect approved, linked, cmtyina5w000ps601n6htj9g3
 
+-- A1/A2: the printed addresses of the other two books also reach a published lesson (o3-1 lesson 12, q4 lesson 1).
+SELECT b.key, l.number, l.approved, l.article_id IS NOT NULL AS linked
+FROM primary_book_lessons l JOIN primary_books b ON b.id = l.book_id
+WHERE (b.key = 'o3-1' AND l.number = 12) OR (b.key = 'q4' AND l.number = 1)
+ORDER BY b.key;   -- expect 2 rows, each approved and linked
+
 -- A1/A2: the linked article is the migrated legacy article of the printed link (map table row exists).
 SELECT count(*) AS map_rows
 FROM primary_legacy_id_map m

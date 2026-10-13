@@ -19,7 +19,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/session", () => ({ currentUser: async () => mocks.user }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain/primary-books", () => ({ getPrintLesson: mocks.getPrintLesson }));
-vi.mock("@reading-advantage/domain/primary-books/print", () => ({ renderPrintLesson: mocks.renderPrintLesson }));
+vi.mock("@reading-advantage/domain/primary-books/print", () => ({ renderPrintLesson: mocks.renderPrintLesson, PRINT_KIT_COMMIT: "08bb160b8cfb4b95252546e6fd0e9ccc31fe3817" }));
 vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError } }));
 vi.mock("../../page", () => ({ loadTeacherLesson: mocks.loadTeacherLesson }));
 vi.mock("next/navigation", () => ({ notFound: () => { throw new Error("NOT_FOUND"); } }));
@@ -64,6 +64,23 @@ describe("print lesson page", () => {
     expect(screen.getByRole("button", { name: en.printLoading })).toBeDisabled();
     expect(screen.getByRole("link", { name: en.backToLesson })).toHaveAttribute("href", BACK);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("The Big Storm");
+  });
+
+  it("shows the kit commit and the data commit in a small footer", async () => {
+    mocks.getPrintLesson.mockResolvedValue({ title: "The Big Storm", printLesson: { packageKey: "o3-2/5", workbooksCommit: "1234567890abcdef1234567890abcdef12345678" } });
+    await renderPage();
+    expect(document.querySelector("[data-print-provenance]")).toHaveTextContent("Kit 08bb160 · Data 1234567");
+  });
+
+  it("shows a dash when the data has no commit", async () => {
+    await renderPage();
+    expect(document.querySelector("[data-print-provenance]")).toHaveTextContent("Kit 08bb160 · Data -");
+  });
+
+  it("shows no footer without print data", async () => {
+    mocks.loadTeacherLesson.mockResolvedValue({ ...lesson, hasPrint: false });
+    await renderPage();
+    expect(document.querySelector("[data-print-provenance]")).toBeNull();
   });
 
   it("shows the not-ready text and no Print button without print data", async () => {

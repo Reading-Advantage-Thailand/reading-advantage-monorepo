@@ -2,6 +2,7 @@
 import "@testing-library/jest-dom/vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
+import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/i18n/navigation", () => ({
@@ -53,5 +54,12 @@ describe("PrintLessonFrame", () => {
     render(<PrintLessonFrame html={html} labels={labels} backHref="/back" />);
     expect(screen.getByText(labels.hint)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: labels.back })).toHaveAttribute("href", "/back");
+  });
+
+  it("leaves srcDoc out of the server HTML, so the load event comes after hydration", () => {
+    const markup = renderToString(<PrintLessonFrame html={html} labels={labels} backHref="/back" />);
+    expect(markup).not.toContain("srcDoc");
+    expect(markup).not.toContain("srcdoc");
+    expect(markup).toContain("<iframe");
   });
 });

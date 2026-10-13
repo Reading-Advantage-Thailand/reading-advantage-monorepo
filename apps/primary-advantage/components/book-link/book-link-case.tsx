@@ -36,7 +36,7 @@ export function BookLinkFrame({ bubble, children }: { bubble: string; children: 
       <div className="flex items-center justify-between gap-2">
         <span className="cq-on-scene text-lg font-bold">{siteConfig.name}</span>
         <div className="cq-on-scene">
-          <LocaleSwitcher />
+          <LocaleSwitcher triggerClassName="size-12" />
         </div>
       </div>
       <div className="flex flex-1 items-center justify-center">

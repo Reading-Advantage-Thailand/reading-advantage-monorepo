@@ -26,6 +26,13 @@ Workbooks checkout — the same steps as Workbooks `make-lesson-pdfs.ts`
 (`renderPagedPdf`: Paged.js preview, print media, `preferCSSPageSize`,
 backgrounds). Paged.js laid out 14 pages.
 
+## Where the PDF files are
+
+The two PDF files (21 MB) are not in the repository. They are in
+`/home/daniebo/Desktop/primary-parity-progress/captures/print_lesson/print-check/`:
+`origins-3.2-lesson-05-print.pdf` and `workbooks-origins-3.2-lesson-05-reference.pdf`.
+`origins-3.2-lesson-05-render.html` stays here.
+
 ## Result
 
 | File | Pages | Size | Fonts |
@@ -44,3 +51,26 @@ answer key, which the app omits by design (owner default, Member Question 2).
 Known differences (not defects): the check PDF is larger (PNG pictures, the
 reference uses JPEG) and uses fallback fonts because the check renders from
 `file://`; in the app the kit fonts load from `/print-fonts/`.
+
+## Browser check of the app print (M-20, batch, orchestrator)
+
+The check above used Paged.js. The app prints without Paged.js: the Chrome print engine lays out
+the pages from the CSS `@page` rules. The render is not changed. Run this check on the build of
+the rehearsal tag or on a local build with the scratch copy that holds Origins 3.2 lesson 5:
+
+1. Sign in as a teacher of a class that has the book Origins 3.2. Open the page
+   `/teacher/class-roster/<classroomId>/books/<classBookId>/lessons/5/print`.
+2. Wait until the Print button is active (the label is not "Loading").
+3. Open DevTools > Network. Check that the files `/print-fonts/*.woff2` answer 200 with
+   `access-control-allow-origin: *` (H-5). The preview must show Merriweather, Open Sans, Sarabun.
+4. Click Print. In the Chrome dialog set: A4, margins Default, Background graphics on, Save as PDF.
+5. Count the pages of the PDF (`pdfinfo <file> | grep Pages`).
+6. Compare with the 15-page reference (14 pages of workbook plus 1 answer key page, which the app
+   omits by design). The expected count is 14. Compare the page breaks with
+   `pdftotext -layout` of both PDFs: each of the 13 steps must start on the same page as in the
+   reference, or on the next page.
+7. Decision rule. Count 14 and the same step order: pass, no change. Count 13 to 16 with the same
+   text: record the number, pass, and tell the owner. Count outside 13 to 16, a step that splits in
+   the middle of a question, or missing text: fail. Then open a fix task: add Paged.js
+   (the local polyfill of Workbooks) to the print frame, or use fixed `break-before` rules in the
+   kit CSS. Do not change the render before the owner sees the two PDFs.

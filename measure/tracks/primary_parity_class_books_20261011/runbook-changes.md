@@ -8,10 +8,10 @@ Source: track `primary_parity_class_books_20261011`, phase S1. The new build con
 Insert between step 5 (ETL) and step 6 (deploy):
 
 > 5b. Load the class book catalogue and the teacher guide into the new database, after the ETL and
-> before the deploy. Make the Workbooks archive of the pinned Workbooks commit (the five book folders,
+> before the deploy. Make the Workbooks archive with `git archive` of the pinned Workbooks commit `08bb160b8cfb4b95252546e6fd0e9ccc31fe3817` (steps in `catalogue-build-commands.md`) (the five book folders,
 > the manual `i18n` folder, and the `Teacher guide/step-*.md` files), upload it to
 > `gs://primary-advantage_cloudbuild/source/`, then run `gcloud builds submit <context> --region=asia-southeast1 --config=apps/primary-advantage/cloudbuild-catalogue.yaml --substitutions=_WORKBOOKS_ARCHIVE=<archive path>`.
-> The log must show `70 lessons`, `0 failed`, `en: 13 steps`, and `th: 13 steps`. Read each `unmapped`
+> The log must show `70 lessons`, `Print data: 70 stored`, `0 failed`, `en: 13 steps`, and `th: 13 steps`. Read each `unmapped`
 > line and give it to the owner. Run it after the ETL, because the importer links each lesson to its
 > migrated article through `primary_legacy_id_map`. Run it again after a fix: the import is idempotent.
 
@@ -19,7 +19,7 @@ Insert between step 5 (ETL) and step 6 (deploy):
 
 | # | Who | Step | Command |
 |---|---|---|---|
-| C7b | Agent | Catalogue build after the ETL: use secret version 1 as in C7 (the config reads `latest`, as the ETL config does; gate on the same version) | Archive: `catalogue-build-commands.md` steps 1 to 3. Run: `gcloud builds submit gs://primary-advantage_cloudbuild/source/<context>.tgz --project=primary-advantage --region=asia-southeast1 --config=apps/primary-advantage/cloudbuild-catalogue.yaml --substitutions=_WORKBOOKS_ARCHIVE=gs://primary-advantage_cloudbuild/source/workbooks-eeeddfd.tgz`. Pass: `70 lessons`, `0 failed`, `en: 13 steps`, `th: 13 steps` |
+| C7b | Agent | Catalogue build after the ETL: use secret version 1 as in C7 (the catalogue config pins `_TARGET_SECRET_VERSION=1`; the ETL config reads `latest`, so gate on the same version) | Archive: `catalogue-build-commands.md` steps 1 to 3. Run: `gcloud builds submit gs://primary-advantage_cloudbuild/source/<context>.tgz --project=primary-advantage --region=asia-southeast1 --config=apps/primary-advantage/cloudbuild-catalogue.yaml --substitutions=_WORKBOOKS_ARCHIVE=gs://primary-advantage_cloudbuild/source/workbooks-08bb160.tgz`. Pass: `archive commit: 08bb160b8cfb4b95252546e6fd0e9ccc31fe3817`, `70 lessons`, `0 failed`, `Print data: 70 stored`, `en: 13 steps`, `th: 13 steps` |
 
 C7b can run in parallel with C8 (the owner's temporary passwords). It must end before C9 and C10.
 

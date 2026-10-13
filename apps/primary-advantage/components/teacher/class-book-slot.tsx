@@ -12,7 +12,9 @@ import { Panel, RpgLink } from "@/components/rpg/chrome";
  * The class book slot: one parchment panel that is self-contained, so a page can place it in any
  * grid cell (the teacher dashboard puts it in `lg:col-span-2`, about 400 px high for three rows).
  * With `slots` it shows one row link for each class book (book, lesson N of M, lesson title, next
- * step with its period) and an "Assign a book" row for a class with no book. With `failed` it
+ * step with its period) and an "Assign a book" row for a class with no book. When no class has a
+ * book it shows the empty text (or the no-class text when the teacher has no class) and a link to the
+ * classes. With `failed` it
  * shows the load error. With neither (`slots` undefined) it shows the short placeholder that the
  * class page uses when it has no session user.
  * @param props.slots The slot rows from `getTeacherBookSlots`; undefined for the placeholder.
@@ -38,7 +40,7 @@ export function ClassBookSlot({ slots, failed, classroomId, className }: { slots
         </div>
       ) : placeholder ? (
         <p className="text-base">{t("hint")}</p>
-      ) : slots && slots.length ? (
+      ) : slots && slots.some((slot) => slot.classBookId) ? (
         <ul className="flex flex-col gap-2">
           {slots.map((slot) => (
             <SlotRow key={slot.classBookId ?? slot.classroomId} slot={slot} />
@@ -46,7 +48,7 @@ export function ClassBookSlot({ slots, failed, classroomId, className }: { slots
         </ul>
       ) : (
         <>
-          <p className="text-base">{t("slotEmpty")}</p>
+          <p className="text-base">{slots?.length ? t("slotEmpty") : t("slotNoClass")}</p>
           <div>
             <RpgLink href="/teacher/my-classes" tone="gold" className="w-full sm:w-auto">
               {t("goToClasses")}

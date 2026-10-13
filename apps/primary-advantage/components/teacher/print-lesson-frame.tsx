@@ -33,6 +33,10 @@ export interface PrintLessonFrameLabels {
 export function PrintLessonFrame({ html, labels, backHref }: { html: string; labels: PrintLessonFrameLabels; backHref: string }) {
   const [ready, setReady] = useState(false);
   const [scale, setScale] = useState(1);
+  // The frame gets its document after mount, so its load event comes after hydration and
+  // React always sees it. A frame that loads before hydration kept Print disabled.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const frameRef = useRef<HTMLIFrameElement>(null);
   const matRef = useRef<HTMLDivElement>(null);
 
@@ -56,9 +60,9 @@ export function PrintLessonFrame({ html, labels, backHref }: { html: string; lab
         <iframe
           ref={frameRef}
           title={labels.frameTitle}
-          srcDoc={html}
+          srcDoc={mounted ? html : undefined}
           sandbox="allow-scripts allow-modals"
-          onLoad={() => setReady(true)}
+          onLoad={() => mounted && setReady(true)}
           className="block border-0 bg-white"
           style={{ width: PAGE_WIDTH, height: `${FRAME_VH / scale}vh`, marginInline: scale === 1 ? "auto" : 0, transform: `scale(${scale})`, transformOrigin: "top left" }}
         />

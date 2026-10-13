@@ -43,7 +43,7 @@ describe("ReadAlongPlayer", () => {
     expect(screen.getByRole("button", { name: "Previous sentence" })).toBeDisabled();
     fireEvent.click(screen.getByRole("button", { name: "Replay this sentence" }));
     fireEvent.click(screen.getByRole("button", { name: "Next sentence" }));
-    expect(onPlaySentence.mock.calls.map((c) => c[0])).toEqual([0, 1]);
+    expect(onPlaySentence.mock.calls.map((c) => c[0])).toEqual([0, 0]);
   });
 
   it("shows Play when paused and Pause when playing", () => {

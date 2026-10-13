@@ -160,6 +160,9 @@ hbs.registerHelper("icon", (name: string, options: Handlebars.HelperOptions) =>
 hbs.registerHelper("concat", (...args: unknown[]) => args.slice(0, -1).join(""));
 const compiled = hbs.compile(PRINT_KIT.template);
 
+/** The Workbooks commit of the print kit. The print page shows it as a small footer. */
+export const PRINT_KIT_COMMIT: string = PRINT_KIT.commit;
+
 /**
  * Renders one lesson with the Workbooks primary template as an A4 HTML document with no cover and
  * no answer key page. The document loads fonts from `/print-fonts/` and carries the print bridge.

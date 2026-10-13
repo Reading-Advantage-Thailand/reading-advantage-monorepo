@@ -74,6 +74,20 @@ describe("CardSignIn", () => {
     await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/en/b/o3-2/5/writing"));
   });
 
+  it("keeps the lesson callback on the link to the code sign-in after a failed card", async () => {
+    window.history.replaceState(null, "", `/en/auth/card?callbackUrl=%2Fth%2Fb%2Fo3-2%2F5#${TOKEN}`);
+    answer(401, { code: "invalid_credentials" });
+    renderWithMessages(<CardSignIn />);
+    expect(await screen.findByRole("link", { name: "Sign in with the class code" })).toHaveAttribute("href", "/auth/signin?callbackUrl=%2Fb%2Fo3-2%2F5");
+  });
+
+  it("drops a callback that is not a student path from the link", async () => {
+    window.history.replaceState(null, "", `/en/auth/card?callbackUrl=%2F%2Fevil.com#${TOKEN}`);
+    answer(401, { code: "invalid_credentials" });
+    renderWithMessages(<CardSignIn />);
+    expect(await screen.findByRole("link", { name: "Sign in with the class code" })).toHaveAttribute("href", "/auth/signin");
+  });
+
   it("posts the token once under StrictMode", async () => {
     answer(200, { user: { id: "u1", role: "STUDENT" }, authStrength: "full" });
     renderWithMessages(

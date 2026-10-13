@@ -33,4 +33,11 @@ describe("LocaleSwitcher", () => {
     await user.click(await screen.findByText("label-th"));
     expect(replace).toHaveBeenCalledWith("/student/games", { locale: "th" });
   });
+
+  it("sizes the trigger with triggerClassName (48 px on the QR pages)", () => {
+    render(<LocaleSwitcher triggerClassName="size-12" />);
+    const button = screen.getByRole("button", { name: "label-" });
+    expect(button).toHaveClass("size-12");
+    expect(button).not.toHaveClass("size-9");
+  });
 });

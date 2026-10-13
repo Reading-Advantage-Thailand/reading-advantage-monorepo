@@ -237,5 +237,5 @@ export async function submitChapterWritten(
 
   if (saved.status === "saved") await saveChapterToFlashcard(parsed.data.chapterId);
 
-  return { success: true, xpEarned: resolved.xpEarned, question: resolved.question };
+  return { success: true, xpEarned: saved.status === "saved" ? resolved.xpEarned : 0, question: resolved.question };
 }

@@ -417,11 +417,18 @@ try {
             await settle();
             after = await pointerText();
             await bp.screenshot({ path: `${SHOTS}/teacher-manual-howto5-taught.png`, fullPage: true });
-            const makeCurrent = lessonOne.getByRole("button", { name: "Make current", exact: true });
-            if (await makeCurrent.count()) await makeCurrent.click();
+          }
+          // Reset: "Teach again" on lesson 1 clears the taught mark and makes it current, so a second run starts clean.
+          const teachAgain = lessonOne.getByRole("button", { name: "Teach again", exact: true });
+          if (await teachAgain.count()) {
+            await teachAgain.click();
+            await bp.getByRole("alertdialog").getByRole("button", { name: "Teach again", exact: true }).click();
+            await bp.waitForFunction(() => /^Lesson 1 of/m.test(document.body.innerText), null, { timeout: 30000 }).catch(() => {});
             await settle();
           }
-          for (const c of judgeProgressAndTaught({ studentRows, before, after, skipped })) check(c.name, c.ok, c.note);
+          const resetPointer = await pointerText();
+          const markTaughtBack = (await lessonOne.getByRole("button", { name: "Mark taught", exact: true }).count()) > 0;
+          for (const c of judgeProgressAndTaught({ studentRows, before, after, skipped, resetPointer, markTaughtBack })) check(c.name, c.ok, c.note);
         }
       }
 

@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
           { key: "Cache-Control", value: "no-cache" },
         ],
       },
+      {
+        // The print frame is sandboxed with an opaque origin, so its font requests are cross-origin
+        // (track primary_parity_print_lesson).
+        source: "/print-fonts/:path*",
+        headers: [{ key: "Access-Control-Allow-Origin", value: "*" }],
+      },
     ];
   },
   images: {

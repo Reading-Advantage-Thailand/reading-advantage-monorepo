@@ -142,6 +142,8 @@ export function pointerOf(text) {
  * @param f.before The pointer text before "Mark taught".
  * @param f.after The pointer text after it.
  * @param f.skipped True when lesson 1 was already taught (a rerun), so the click did not run.
+ * @param f.resetPointer The pointer text after "Teach again" on lesson 1 (the reset that ends the block).
+ * @param f.markTaughtBack True when lesson 1 shows "Mark taught" again after the reset.
  * @returns The checks.
  */
 export function judgeProgressAndTaught(f) {
@@ -149,5 +151,10 @@ export function judgeProgressAndTaught(f) {
   return [
     { name: "manual howTo5: the progress grid shows the student", ok: f.studentRows > 0, note: `${f.studentRows} rows` },
     { name: "manual howTo5: Mark taught moves the pointer", ok: f.skipped ? true : moved, note: f.skipped ? "skipped, lesson 1 already taught" : `${f.before} -> ${f.after}` },
+    {
+      name: "manual howTo5: Teach again resets lesson 1 (a second run starts clean)",
+      ok: pointerOf(f.resetPointer) === 1 && f.markTaughtBack === true,
+      note: `${f.resetPointer ?? ""}; Mark taught back: ${f.markTaughtBack}`,
+    },
   ];
 }

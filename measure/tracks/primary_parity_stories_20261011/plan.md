@@ -168,4 +168,10 @@ _Story ref: spec.md#story-s7_
 - [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
 
 ## Phase: Review Fixes 2026-10-13
-- [x] Task: B1-cefr chapter feedback falls back to A1 221c8b543
+
+- [x] Task: M-12 chapter host has the 4 read-along fixes (ported, no shared hook) 72863cd04
+- [x] Task: Low flashcard.ts console.error -> logger; story-question returns 0 XP unless saved a6e865ea1
+- [x] Task: Low stories list trims q 96bc15cf2
+- [x] Task: Low SAQ and LAQ random; Done needs MC+SA+LA (spec S3); chapters.is_public filter; level-up keeps a started story open 6c7b60658
+- [x] Task: Low feedback throws when the story has no cefrLevel: `chapter.cefrLevel ?? "A1"` in `readFeedbackSource` (lane A, A3) 221c8b543
+- [x] Task: Low LAQ limit of 2 tries on the server: parity default. No existing limiter fits without a schema change; the limit stays client-only.

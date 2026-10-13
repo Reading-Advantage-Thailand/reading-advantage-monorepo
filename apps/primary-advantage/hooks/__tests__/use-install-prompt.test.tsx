@@ -8,6 +8,9 @@ const IOS_UA =
 const CHROME_UA =
   "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36";
 
+const IPAD_DESKTOP_UA =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+
 const defaultUA = window.navigator.userAgent;
 
 /** Swaps the user agent string for one test. */
@@ -96,5 +99,58 @@ describe("useInstallPrompt", () => {
     });
     expect(prompt).toHaveBeenCalledTimes(1);
     expect(result.current.state).toBe("hidden");
+  });
+
+  it("gives ios-steps on an iPad that reports a Macintosh user agent", () => {
+    setUserAgent(IPAD_DESKTOP_UA);
+    Object.defineProperty(window.navigator, "maxTouchPoints", { value: 5, configurable: true });
+    const { result } = renderHook(() => useInstallPrompt());
+    expect(result.current.state).toBe("ios-steps");
+    Object.defineProperty(window.navigator, "maxTouchPoints", { value: 0, configurable: true });
+  });
+
+  it("gives hidden on a Macintosh without touch", () => {
+    setUserAgent(IPAD_DESKTOP_UA);
+    Object.defineProperty(window.navigator, "maxTouchPoints", { value: 0, configurable: true });
+    const { result } = renderHook(() => useInstallPrompt());
+    expect(result.current.state).toBe("hidden");
+  });
+
+  it("clears the event after a cancel, so the next click does not call prompt again", async () => {
+    setUserAgent(CHROME_UA);
+    const prompt = vi.fn(async () => undefined);
+    const { result } = renderHook(() => useInstallPrompt());
+    act(() => {
+      const event = new Event("beforeinstallprompt") as Event & { prompt?: () => Promise<void>; userChoice?: Promise<{ outcome: string }> };
+      event.prompt = prompt;
+      event.userChoice = Promise.resolve({ outcome: "dismissed" });
+      window.dispatchEvent(event);
+    });
+    await act(async () => {
+      await result.current.promptInstall();
+    });
+    expect(result.current.state).toBe("hidden");
+    await act(async () => {
+      await result.current.promptInstall();
+    });
+    expect(prompt).toHaveBeenCalledTimes(1);
+  });
+
+  it("works when localStorage throws", () => {
+    setUserAgent(IOS_UA);
+    const getItem = vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
+      throw new Error("blocked");
+    });
+    const setItem = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("blocked");
+    });
+    const { result } = renderHook(() => useInstallPrompt());
+    expect(result.current.state).toBe("ios-steps");
+    act(() => {
+      result.current.dismiss();
+    });
+    expect(result.current.state).toBe("hidden");
+    getItem.mockRestore();
+    setItem.mockRestore();
   });
 });

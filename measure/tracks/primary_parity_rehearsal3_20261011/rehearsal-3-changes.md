@@ -56,7 +56,7 @@ member with "none".
   `primary-v2-` and no `serwist-precache`.
 - AC-4 phone check after the switch: a phone with the installed legacy app shows
   the new app, reloads at most once, runs `/serwist/sw.js`, keeps no legacy
-  cache, and does not reload on the second open.
+  cache (only `primary-v2-offline-v1`), and does not reload on the second open.
 
 ## 2. New items for rehearsal 3
 
@@ -81,8 +81,9 @@ member with "none".
 - The archive must hold `content/primary/<book>/*.json` and
   `content/primary/<book>/print/*.json` for the 5 books
   (`origins-1`, `origins-2`, `origins-3.1`, `origins-3.2`, `quest-4`), the manual
-  `i18n` folder, and `Teacher guide/step-*.md`. The Workbooks commit must be
-  `08bb160` or later. The print-lesson import run used `08bb160b8cf...` (source:
+  `i18n` folder, and `Teacher guide/step-*.md`. Make it with
+  `git archive` (see `catalogue-build-commands.md` §1), not plain `tar`. Pin the Workbooks commit
+  `08bb160b8cfb4b95252546e6fd0e9ccc31fe3817`. The print-lesson import run used the same commit (source:
   `primary_parity_print_lesson_20261011/import-run.md`). The build passes the
   archive commit to the import with `--workbooks-commit`.
 

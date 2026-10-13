@@ -17,7 +17,7 @@ Track criteria (`spec.md`):
 
 | AC | Check | Status | Evidence |
 | --- | --- | --- | --- |
-| AC-1 | Takeover test passes with a copy of the real legacy worker | proven today | `apps/primary-advantage/tests/pwa/takeover.spec.ts` (`pwa-takeover` project, Phase S1). |
+| AC-1 | Takeover test passes with a copy of the real legacy worker | proven at S1; run again after S4 (batch) | `apps/primary-advantage/tests/pwa/takeover.spec.ts` (`pwa-takeover` project, Phase S1). |
 | AC-2 | `curl -I` on the rehearsal tag URL: `/serwist/sw.js` gives 200, a JavaScript MIME type, `Service-Worker-Allowed: /`, `Cache-Control: no-cache`; `/manifest.webmanifest` gives the manifest | pending rehearsal 3 | Commands in `runbook-checks.md`. |
 | AC-3 | iPhone (Safari) and Android phone (Chrome): add to home screen, standalone mode, Forge icon | owner | Real phones; not runnable on this machine. |
 | AC-4 | After the traffic switch: a phone with the installed legacy app opens the new app after at most one reload; remote debugging shows the new worker and no legacy cache | pending handoff | Hand to `primary_parity_rehearsal3_20261011` for the cutover command sheet; check text in `runbook-checks.md`. |

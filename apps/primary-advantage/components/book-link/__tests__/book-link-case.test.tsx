@@ -6,7 +6,7 @@ import en from "../../../messages/en.json";
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ href, children, ...rest }: { href: string; children: ReactNode }) => <a href={href} {...rest}>{children}</a>,
 }));
-vi.mock("@/components/switchers/locale-switcher", () => ({ LocaleSwitcher: () => <span data-locale-switcher /> }));
+vi.mock("@/components/switchers/locale-switcher", () => ({ LocaleSwitcher: ({ triggerClassName }: { triggerClassName?: string }) => <span data-locale-switcher data-trigger={triggerClassName} /> }));
 vi.mock("@/components/rpg/scene", () => ({ Scene: ({ children }: { children: ReactNode }) => <div>{children}</div> }));
 vi.mock("@/components/rpg/sprite", () => ({ Sprite: () => <span data-sprite /> }));
 
@@ -24,6 +24,7 @@ describe("BookLinkCaseView", () => {
       expect(out).toContain(`data-case="${name}"`);
       expect(out).toContain('role="alert"');
       expect(out).toContain("data-locale-switcher");
+      expect(out).toContain('data-trigger="size-12"');
       expect(out.match(/<a /g)).toHaveLength(1);
       expect(out).not.toContain("undefined");
     }

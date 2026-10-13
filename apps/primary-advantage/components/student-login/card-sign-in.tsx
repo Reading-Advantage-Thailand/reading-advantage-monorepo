@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { ClassLoginApiError, postStudentLogin } from "@/components/teacher/class-login/api";
 import { StudentErrorMessage, waitMinutes, type StudentError } from "./errors";
+import { studentCallbackPath } from "@/lib/safe-callback-path";
 import { useEnterAfterSignIn } from "./use-student-home";
 
 /** Maps a failed QR sign-in to the message for the student. */
@@ -27,6 +28,8 @@ export function CardSignIn() {
   const t = useTranslations("StudentSignIn.card");
   const enter = useEnterAfterSignIn();
   const [error, setError] = useState<StudentError | null>(null);
+  // The lesson callback of the printed QR address; the link to the code sign-in keeps it.
+  const [callback, setCallback] = useState<string | null>(null);
   const started = useRef(false);
 
   useEffect(() => {
@@ -34,6 +37,7 @@ export function CardSignIn() {
     if (started.current) return;
     started.current = true;
     const token = window.location.hash.slice(1);
+    setCallback(studentCallbackPath(new URLSearchParams(window.location.search).get("callbackUrl")));
     window.history.replaceState(null, "", window.location.pathname + window.location.search);
     if (!token) {
       setError({ key: "cardMissing" });
@@ -51,7 +55,7 @@ export function CardSignIn() {
         <>
           <StudentErrorMessage error={error} />
           <Button asChild size="lg" className="min-h-12 text-lg motion-reduce:transition-none">
-            <Link href="/auth/signin">{t("useCode")}</Link>
+            <Link href={callback ? `/auth/signin?callbackUrl=${encodeURIComponent(callback)}` : "/auth/signin"}>{t("useCode")}</Link>
           </Button>
         </>
       ) : (

@@ -25,6 +25,7 @@ import {
   type ManagedClassBookItem,
   type PreviewBook,
   previewBookSchema,
+  teacherBookSlotSchema,
   managedClassBookSchema,
   type StudentBook,
   type StudentClassBook,
@@ -253,7 +254,7 @@ export async function getTeacherBookSlots(params: Ctx): Promise<TeacherBookSlot[
     .orderBy(asc(primaryClassBooks.createdAt))) as ClassBookRow[];
   const states = await lessonStates(params, bookRows.map((row) => row.id));
   const titles = await currentLessonTitles(raw, bookRows);
-  return classRows.flatMap((cls): TeacherBookSlot[] => {
+  const slots = classRows.flatMap((cls): TeacherBookSlot[] => {
     const own = bookRows.filter((row) => row.classroomId === cls.id);
     if (!own.length) return [{ classroomId: cls.id, classroomName: cls.name, classBookId: null, bookName: null, currentLesson: null, lessonCount: null, lessonTitle: null, nextStep: null, nextStepPeriod: null }];
     return own.map((row) => {
@@ -261,6 +262,7 @@ export async function getTeacherBookSlots(params: Ctx): Promise<TeacherBookSlot[
       return { classroomId: cls.id, classroomName: cls.name, classBookId: row.id, bookName: row.bookName, currentLesson: row.currentLesson, lessonCount: row.lessonCount, lessonTitle: progress.lessonTitle, nextStep: progress.nextStep, nextStepPeriod: progress.nextStepPeriod };
     });
   });
+  return teacherBookSlotSchema.array().parse(slots);
 }
 
 /**

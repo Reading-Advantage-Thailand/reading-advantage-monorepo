@@ -81,3 +81,7 @@ monorepo session before each write to `primary-parity-integration`.
     - [ ] Run `bash measure/generate.sh` and stage the files that it changes
     - [ ] Run `bash measure/doctor.sh`; correct each failure that names a file of this track
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: M-3 C13 worker check corrected in `cutover-commands.md` 2d2a132c1

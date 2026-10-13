@@ -1,5 +1,6 @@
 import { and, asc, count, eq, gte, ilike, inArray, like, lte, or, type SQL } from "drizzle-orm";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
+import type { DB } from "@reading-advantage/db";
 import type { TenantDB } from "../db-contract.js";
 import { chapters, longAnswerQuestions, multipleChoiceQuestions, sentencsAndWordsForFlashcards, shortAnswerQuestions, stories, userActivity } from "@reading-advantage/db/schema";
 import {
@@ -200,21 +201,27 @@ export async function getStoryForStudent({
   }
 
   const rawDb = db.unscoped("stories and chapters are a global content catalog with no schoolId");
-  const [story] = await rawDb
-    .select({
-      id: stories.id,
-      title: stories.title,
-      summary: stories.summary,
-      translatedSummary: stories.translatedSummary,
-      genre: stories.genre,
-      raLevel: stories.raLevel,
-      cefrLevel: stories.cefrLevel,
-      image: stories.image,
-      storyBible: stories.storyBible,
-    })
-    .from(stories)
-    .where(and(...rules))
-    .limit(1);
+  const loadStory = (where: SQL[]) =>
+    rawDb
+      .select({
+        id: stories.id,
+        title: stories.title,
+        summary: stories.summary,
+        translatedSummary: stories.translatedSummary,
+        genre: stories.genre,
+        raLevel: stories.raLevel,
+        cefrLevel: stories.cefrLevel,
+        image: stories.image,
+        storyBible: stories.storyBible,
+      })
+      .from(stories)
+      .where(and(...where))
+      .limit(1);
+  let [story] = await loadStory(rules);
+  // A level-up must not lock a story that the student started.
+  if (!story && !STAFF_ROLES.has(user.role) && (await hasStartedStory(rawDb, user.id, storyId))) {
+    [story] = await loadStory([eq(stories.id, storyId), eq(stories.isPublic, true)]);
+  }
   if (!story) throw new StoryNotFoundError(storyId);
 
   const chapterRows = await rawDb
@@ -226,12 +233,12 @@ export async function getStoryForStudent({
       translatedSummary: chapters.translatedSummary,
     })
     .from(chapters)
-    .where(eq(chapters.storyId, storyId))
+    .where(and(eq(chapters.storyId, storyId), eq(chapters.isPublic, true)))
     .orderBy(asc(chapters.chapterNumber));
 
   const done = chapterRows.length
     ? await rawDb
-        .select({ targetId: userActivity.targetId })
+        .select({ targetId: userActivity.targetId, activityType: userActivity.activityType })
         .from(userActivity)
         .where(
           and(
@@ -251,7 +258,7 @@ export async function getStoryForStudent({
   return getStoryForStudentOutputSchema.parse({
     story: { ...card, imageKey: image?.trim() || card.id },
     chapters: chapterRows,
-    finishedChapterIds: [...new Set(done.map((d) => d.targetId).filter((t): t is string => Boolean(t)))],
+    finishedChapterIds: finishedChapters(done),
     characters,
   });
 }
@@ -292,11 +299,13 @@ export async function getChapterForStudent({
   }
 
   const rawDb = db.unscoped("stories and chapters are a global content catalog with no schoolId");
-  const [story] = await rawDb
-    .select({ id: stories.id, title: stories.title })
-    .from(stories)
-    .where(and(...rules))
-    .limit(1);
+  const loadStory = (where: SQL[]) =>
+    rawDb.select({ id: stories.id, title: stories.title }).from(stories).where(and(...where)).limit(1);
+  let [story] = await loadStory(rules);
+  // A level-up must not lock a story that the student started.
+  if (!story && !STAFF_ROLES.has(user.role) && (await hasStartedStory(rawDb, user.id, storyId))) {
+    [story] = await loadStory([eq(stories.id, storyId), eq(stories.isPublic, true)]);
+  }
   if (!story) throw new StoryNotFoundError(storyId);
 
   const [chapter] = await rawDb
@@ -311,7 +320,7 @@ export async function getChapterForStudent({
       image: chapters.image,
     })
     .from(chapters)
-    .where(and(eq(chapters.storyId, storyId), eq(chapters.chapterNumber, chapterNumber)))
+    .where(and(eq(chapters.storyId, storyId), eq(chapters.chapterNumber, chapterNumber), eq(chapters.isPublic, true)))
     .limit(1);
   if (!chapter) throw new ChapterNotFoundError(storyId, chapterNumber);
 
@@ -319,7 +328,7 @@ export async function getChapterForStudent({
     rawDb
       .select({ chapterNumber: chapters.chapterNumber })
       .from(chapters)
-      .where(eq(chapters.storyId, storyId))
+      .where(and(eq(chapters.storyId, storyId), eq(chapters.isPublic, true)))
       .orderBy(asc(chapters.chapterNumber)),
     rawDb
       .select({ words: sentencsAndWordsForFlashcards.words, wordsUrl: sentencsAndWordsForFlashcards.wordsUrl })
@@ -338,6 +347,57 @@ export async function getChapterForStudent({
     previousChapterNumber: before.length ? Math.max(...before) : null,
     nextChapterNumber: after.length ? Math.min(...after) : null,
   });
+}
+
+/**
+ * Checks that a user started a story: any `STORIES_*` activity row targets one of its chapters.
+ * A level-up must not lock a story that the student started (parity default).
+ *
+ * @param rawDb - The unscoped database client
+ * @param userId - The user id
+ * @param storyId - The story id
+ * @returns True when the user has an activity row for a chapter of the story
+ */
+async function hasStartedStory(rawDb: DB, userId: string, storyId: string): Promise<boolean> {
+  const chapterRows = await rawDb.select({ id: chapters.id }).from(chapters).where(eq(chapters.storyId, storyId));
+  if (!chapterRows.length) return false;
+  const rows = await rawDb
+    .select({ targetId: userActivity.targetId })
+    .from(userActivity)
+    .where(
+      and(
+        eq(userActivity.userId, userId),
+        like(userActivity.activityType, "STORIES_%"),
+        inArray(userActivity.targetId, chapterRows.map((c) => c.id)),
+      ),
+    )
+    .limit(1);
+  return rows.length > 0;
+}
+
+/**
+ * Lists the chapter ids that have all three question kinds done (MC, SA, and LA).
+ *
+ * @param rows - The `STORIES_*` activity rows of the user (target and type)
+ * @returns The ids of the finished chapters
+ */
+function finishedChapters(rows: { targetId: string | null; activityType: string }[]): string[] {
+  const kinds = new Map<string, Set<string>>();
+  for (const r of rows) {
+    if (r.targetId) kinds.set(r.targetId, (kinds.get(r.targetId) ?? new Set()).add(r.activityType));
+  }
+  const needed = Object.values(STORY_ACTIVITY_TYPES);
+  return [...kinds].filter(([, k]) => needed.every((t) => k.has(t))).map(([id]) => id);
+}
+
+/**
+ * Picks one row at random, or null for an empty list.
+ *
+ * @param rows - The rows to pick from
+ * @returns One random row, or null
+ */
+function pickRandom<T>(rows: T[]): T | null {
+  return rows.length ? rows[Math.floor(Math.random() * rows.length)]! : null;
 }
 
 /**
@@ -364,12 +424,19 @@ function storyWindowRules(user: UserContext): SQL[] {
  */
 export async function requireVisibleChapter(db: TenantDB, user: UserContext, chapterId: string): Promise<string> {
   const rawDb = db.unscoped("stories and chapters are a global content catalog with no schoolId");
-  const [row] = await rawDb
-    .select({ id: chapters.id })
-    .from(chapters)
-    .innerJoin(stories, eq(chapters.storyId, stories.id))
-    .where(and(eq(chapters.id, chapterId), eq(stories.isPublic, true), ...storyWindowRules(user)))
-    .limit(1);
+  const load = (window: SQL[]) =>
+    rawDb
+      .select({ id: chapters.id, storyId: chapters.storyId })
+      .from(chapters)
+      .innerJoin(stories, eq(chapters.storyId, stories.id))
+      .where(and(eq(chapters.id, chapterId), eq(chapters.isPublic, true), eq(stories.isPublic, true), ...window))
+      .limit(1);
+  let [row] = await load(storyWindowRules(user));
+  // A level-up must not lock a story that the student started.
+  if (!row && !STAFF_ROLES.has(user.role)) {
+    const [open] = await load([]);
+    if (open && (await hasStartedStory(rawDb, user.id, open.storyId))) row = open;
+  }
   if (!row) throw new ChapterNotFoundError(chapterId);
   return row.id;
 }
@@ -416,7 +483,7 @@ export async function getChapterQuestions({
   await requireVisibleChapter(db, user, chapterId);
 
   const rawDb = db.unscoped("stories and chapters are a global content catalog with no schoolId");
-  const [mcBank, [saq], [laq], activity] = await Promise.all([
+  const [mcBank, saqRows, laqRows, activity] = await Promise.all([
     rawDb
       .select({ id: multipleChoiceQuestions.id, question: multipleChoiceQuestions.question, options: multipleChoiceQuestions.options })
       .from(multipleChoiceQuestions)
@@ -426,13 +493,11 @@ export async function getChapterQuestions({
       .select({ id: shortAnswerQuestions.id, question: shortAnswerQuestions.question })
       .from(shortAnswerQuestions)
       .where(eq(shortAnswerQuestions.chapterId, chapterId))
-      .orderBy(asc(shortAnswerQuestions.order))
-      .limit(1),
+      .orderBy(asc(shortAnswerQuestions.order)),
     rawDb
       .select({ id: longAnswerQuestions.id, question: longAnswerQuestions.question })
       .from(longAnswerQuestions)
-      .where(eq(longAnswerQuestions.chapterId, chapterId))
-      .limit(1),
+      .where(eq(longAnswerQuestions.chapterId, chapterId)),
     rawDb
       .select({ activityType: userActivity.activityType, details: userActivity.details })
       .from(userActivity)
@@ -453,8 +518,8 @@ export async function getChapterQuestions({
   return getChapterQuestionsOutputSchema.parse({
     chapterId,
     mcq: pickChapterMcq(mcBank),
-    saq: saq ?? null,
-    laq: laq ?? null,
+    saq: pickRandom(saqRows),
+    laq: pickRandom(laqRows),
     done: {
       mc: byType.has(STORY_ACTIVITY_TYPES.mc),
       sa: byType.has(STORY_ACTIVITY_TYPES.sa),

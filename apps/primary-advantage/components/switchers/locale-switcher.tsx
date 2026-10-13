@@ -9,14 +9,16 @@ import { Button } from "../ui/button";
 import { Globe } from "lucide-react";
 import { useLocale, useTranslations, Locale } from "next-intl";
 import { routing } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 import { useTransition } from "react";
 import { useRouter, usePathname } from "@/i18n/navigation";
 
 /**
  * Renders the language menu with a localized accessible name.
+ * @param props.triggerClassName Extra classes for the icon button, for example `size-12` for a 48 px target.
  * @returns The locale switcher.
  */
-export function LocaleSwitcher() {
+export function LocaleSwitcher({ triggerClassName }: { triggerClassName?: string } = {}) {
   const locale = useLocale();
   const t = useTranslations("LocaleSwitcher");
   const router = useRouter();
@@ -38,7 +40,7 @@ export function LocaleSwitcher() {
     <div id="onborda-language">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="cursor-pointer" variant="ghost" size="icon">
+          <Button className={cn("cursor-pointer", triggerClassName)} variant="ghost" size="icon">
             <Globe aria-hidden="true" />
             <span className="sr-only">{t("label")}</span>
           </Button>

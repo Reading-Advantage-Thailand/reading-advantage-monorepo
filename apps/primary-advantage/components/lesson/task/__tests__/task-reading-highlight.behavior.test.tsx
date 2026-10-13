@@ -199,3 +199,18 @@ describe("TaskReading review fixes (2026-10-12)", () => {
     expect(audio.currentTime).toBeCloseTo(0.95, 5);
   });
 });
+
+describe("TaskReading hint and translation language (2026-10-13)", () => {
+  it("shows the read-along hint line", () => {
+    renderWithMessages(<TaskReading article={article} enableTranslation={false} />);
+    expect(screen.getByText(/Tap a word to hear it from there/)).toBeInTheDocument();
+  });
+
+  it("shows the Thai translation for the English locale", () => {
+    const withThai: Article = { ...article, translatedPassage: { th: ["อัลฟา เบตา แกมมา"] } as Article["translatedPassage"] };
+    renderWithMessages(<TaskReading article={withThai} enableTranslation />);
+    fireEvent.click(screen.getByRole("button", { name: /Translation Off/ }));
+    fireEvent.click(screen.getByText("beta"));
+    expect(screen.getByText("อัลฟา เบตา แกมมา")).toBeInTheDocument();
+  });
+});

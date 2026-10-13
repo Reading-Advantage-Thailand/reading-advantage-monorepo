@@ -134,6 +134,11 @@ describe("getTeacherBookSlots", () => {
     expect(slots.map((slot) => [slot.bookName, slot.nextStep, slot.lessonTitle])).toEqual([["Origins 3.2", 1, null], ["Quest 4", 1, null]]);
   });
 
+  it("parses the rows with teacherBookSlotSchema and rejects a bad pointer", async () => {
+    const mock = dbWith([[], [{ id: CLASS, name: "P3A" }], [{ ...classBookRow, currentLesson: 0 }], [], []]);
+    await expect(getTeacherBookSlots({ db: mock as unknown as DB, user: teacher })).rejects.toThrow();
+  });
+
   it("returns no row, and reads no book, when the teacher has no class", async () => {
     const mock = dbWith([[], []]);
     expect(await getTeacherBookSlots({ db: mock as unknown as DB, user: teacher })).toEqual([]);

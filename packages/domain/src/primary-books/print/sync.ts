@@ -177,6 +177,11 @@ export async function runSyncPrintKit(argv: string[]): Promise<number> {
       console.error(`kit path has local changes; commit or restore it first:\n${dirty}`);
       return 2;
     }
+    const wbDirty = git(workbooks, ["status", "--porcelain", "--", ...KIT_PATHSPEC]).trim();
+    if (wbDirty) {
+      console.error(`Workbooks kit path has local changes; commit or restore it first:\n${wbDirty}`);
+      return 2;
+    }
     const built = buildKit(workbooks, flag("--commit") ?? latestKitCommit(workbooks));
     writeKit(repoRoot, built);
     console.log(`print kit written at ${built.kit.commit} (${built.kit.commitDate}); ${built.fonts.size} font files`);

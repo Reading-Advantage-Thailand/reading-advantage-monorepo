@@ -17,6 +17,7 @@ import { useFollowScroll } from "@/hooks/use-follow-scroll";
 import { useReadAlong } from "@/hooks/use-read-along";
 import { parseSentences } from "@/lib/read-along/align";
 import { seekTimeForWord } from "@/lib/read-along/position";
+import { seekOrWait } from "@/lib/read-along/seek";
 import { getAudioUrl } from "@/lib/storage-config";
 import { toTranslationLanguage } from "@/lib/translation-language";
 import { cn } from "@/lib/utils";
@@ -85,9 +86,9 @@ export function ChapterContent({
   });
 
   useEffect(() => {
-    return () => {
-      audioRef.current?.pause();
-    };
+    // Keep the element: React clears the ref before this cleanup runs.
+    const audio = audioRef.current;
+    return () => audio?.pause();
   }, []);
 
   const handlePlayPause = async () => {
@@ -112,6 +113,7 @@ export function ChapterContent({
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
+        audioRef.current.playbackRate = 1;
       }
     } else {
       setTogglePlayer(true);
@@ -159,13 +161,16 @@ export function ChapterContent({
   }, [currentSentenceIndex, selectedLanguage]);
 
   const handleWordTap = (sentenceIndex: number, audioWordIndex: number) => {
+    // A word tap only works while the player is open.
+    if (!togglePlayer) return;
     const audio = audioRef.current;
     const sentence = sentences[sentenceIndex];
     if (!audio || !sentence) return;
     resumeFollow();
-    audio.currentTime = seekTimeForWord(sentence, audioWordIndex);
+    // Wait for the first metadata when the element has none.
+    seekOrWait(audio, seekTimeForWord(sentence, audioWordIndex));
     select({ sentenceIndex, wordIndex: sentence.words[audioWordIndex] ? audioWordIndex : -1 });
-    if (togglePlayer) audio.play().catch(() => undefined);
+    audio.play().catch(() => undefined);
   };
 
   /** Plays from the start of a sentence entry; the player buttons use it. */

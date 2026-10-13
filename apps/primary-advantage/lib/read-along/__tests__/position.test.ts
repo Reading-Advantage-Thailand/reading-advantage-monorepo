@@ -24,6 +24,17 @@ const sentences: ReadAlongSentence[] = [
 ];
 
 describe("findPosition", () => {
+  it("picks the tapped word, not the previous one, at its seek time", () => {
+    expect(findPosition(sentences, seekTimeForWord(sentences[0], 1), NO_POSITION)).toEqual({
+      sentenceIndex: 0,
+      wordIndex: 1,
+    });
+    expect(findPosition(sentences, seekTimeForSentence(sentences[1]), NO_POSITION)).toEqual({
+      sentenceIndex: 1,
+      wordIndex: -1,
+    });
+  });
+
   it("finds the word that holds the time", () => {
     expect(findPosition(sentences, 2.5, NO_POSITION)).toEqual({ sentenceIndex: 0, wordIndex: 1 });
   });

@@ -1,9 +1,8 @@
 import { readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
-import { parse } from "acorn";
 import { describe, expect, it, vi } from "vitest";
-import { CACHE_PREFIX, OFFLINE_CACHE_NAME, OFFLINE_FILES } from "../constants";
+import { CACHE_PREFIX, CACHE_VERSION, OFFLINE_CACHE_NAME, OFFLINE_FILES } from "../constants";
 
 const WORKER_PATH = path.resolve(__dirname, "../../../public/serwist/sw.js");
 const source = readFileSync(WORKER_PATH, "utf8");
@@ -127,10 +126,16 @@ describe("public/serwist/sw.js", () => {
       "pages-rsc",
       "apis",
       "others",
-      `${CACHE_PREFIX}offline`,
+      OFFLINE_CACHE_NAME,
     ]);
     await worker.fire("activate");
-    expect([...worker.names]).toEqual([`${CACHE_PREFIX}offline`]);
+    expect([...worker.names]).toEqual([OFFLINE_CACHE_NAME]);
+  });
+
+  it("deletes an older offline cache of the same prefix and keeps the current one", async () => {
+    const worker = loadWorker([`${CACHE_PREFIX}offline`, `${CACHE_PREFIX}offline-v0`, OFFLINE_CACHE_NAME]);
+    await worker.fire("activate");
+    expect([...worker.names]).toEqual([OFFLINE_CACHE_NAME]);
   });
 
   it("claims the clients and reloads each window once after it deleted a legacy cache", async () => {
@@ -144,7 +149,7 @@ describe("public/serwist/sw.js", () => {
   });
 
   it("claims the clients and does not reload when no legacy cache exists", async () => {
-    const worker = loadWorker([`${CACHE_PREFIX}offline`]);
+    const worker = loadWorker([OFFLINE_CACHE_NAME]);
     await worker.fire("activate");
     expect(worker.claim).toHaveBeenCalledTimes(1);
     for (const win of worker.windows) expect(win.navigate).not.toHaveBeenCalled();
@@ -175,14 +180,14 @@ describe("public/serwist/sw.js", () => {
     expect([...worker.listeners.keys()].sort()).toEqual(["activate", "fetch", "install"]);
   });
 
-  it("does not use importScripts and parses as a module", () => {
+  it("does not use importScripts and parses as a script", () => {
     expect(source).not.toMatch(/importScripts/);
-    expect(() => parse(source, { ecmaVersion: "latest", sourceType: "module" })).not.toThrow();
+    expect(() => new vm.Script(source)).not.toThrow();
   });
 
   it("uses the same prefix, offline cache, and files as the constants file", () => {
     expect(source).toContain(`"${CACHE_PREFIX}"`);
-    expect(source).toContain(`"${OFFLINE_CACHE_NAME}"`);
+    expect(source).toContain(`"${CACHE_VERSION}"`);
     for (const file of OFFLINE_FILES) expect(source).toContain(`"${file}"`);
   });
 });
