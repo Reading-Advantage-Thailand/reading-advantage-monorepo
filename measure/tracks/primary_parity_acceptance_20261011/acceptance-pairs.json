@@ -3,7 +3,7 @@
   "pairs": [
     {
       "id": "SYS-01",
-      "rows": ["91"],
+      "rows": ["SYS-01"],
       "role": "SYSTEM",
       "legacyPath": "/en/system/dashboard",
       "newPath": "/en/system/dashboard",
@@ -13,7 +13,7 @@
     },
     {
       "id": "ADM-01",
-      "rows": ["78"],
+      "rows": ["ADM-01"],
       "role": "ADMIN",
       "legacyPath": "/en/admin/dashboard",
       "newPath": "/en/admin/dashboard",
@@ -23,7 +23,7 @@
     },
     {
       "id": "STU-05",
-      "rows": ["23"],
+      "rows": ["STU-05"],
       "role": "STUDENT",
       "legacyPath": "/en/student/lesson/cmirl4sc5000ts60d7zuiqpjb",
       "newPath": "/en/student/lesson/{map:assignments:cmirl4sc5000ts60d7zuiqpjb}",

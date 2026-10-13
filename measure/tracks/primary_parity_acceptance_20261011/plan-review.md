@@ -86,6 +86,7 @@ No Critical or High finding. Fixed in 4f7066a58: the three Low findings of the s
 - Network log (cleanup AC-4-2 and AC-5-2): done. A check can carry `network` (regular expression). The capture
   stores the matching request paths (no query string) in `capture-<app>.json`, and the report prints them in
   the Note cell. Tests: `__tests__/batch.test.ts` and `__tests__/report.test.ts` (81 pass).
-- Pair data errors found in batch 1: the quick_fixes AC-4 `legacyPath` used `{map:...}` (a new id for the legacy
-  app). Check other pair lists for the same fault: `legacyPath` must hold the raw legacy id.
+- Pair data errors found in batch 1: the quick_fixes AC-4 `legacyPath` used `{map:...}`. Correction
+  (review 2026-10-13): `capture.ts` gives the legacy app the raw legacy id for a `{map:}` placeholder, not the
+  new id. The raw id in `legacyPath` is the clear form; use it.
 - Runbook section 11 has a new first step: rebuild the package `dist` folders before the app build.

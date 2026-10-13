@@ -71,7 +71,7 @@ Findings:
 - Plan compliance: behavior contract, pair list (9 pairs), steps module, data checks, and `acceptance.md` are written. The kit run and the captures stay `[ ]` (batch capture, orchestrator).
 - Tests: kit suite `vitest run --root scripts/primary-parity` gives 7 files, 87 tests, all pass. `PairList` parses the pair list (9 pairs). No app code changed in this phase.
 - Security: no name, password, or class code in any file. The pair list holds only the legacy article id of a printed code.
-- Deviation: the plan said `legacyPath` is `/student/read/{map:article:<id>}`. The kit gives the legacy app the new id, so `legacyPath` holds the raw id. The new path needs no placeholder.
+- Deviation: the plan said `legacyPath` is `/student/read/{map:article:<id>}`. The kit gives the legacy app the raw legacy id for a `{map:}` placeholder (correction 2026-10-13), so `legacyPath` holds the raw id. The new path needs no placeholder.
 - Deviation: the kit schema needs a locale at the start of each path. The unprefixed printed URL (A4) is a curl check in `acceptance.md`.
 - Medium: the sign-in from the landing is not a pair (the capture signs in by role before the page). The browser check block "QR path" covers it. Pair QR-A1b shows only the move to the sign-in page.
 - Medium: pair QR-A3 needs Origins 3.2 assigned to the demo class. Run the class book browser check first.
