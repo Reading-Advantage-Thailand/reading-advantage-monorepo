@@ -1,7 +1,7 @@
 "use server";
 
 import { currentUser } from "@/lib/session";
-import { guardStudentAction } from "@/lib/student-view";
+import { guardStudentAction, studentViewModeFor } from "@/lib/student-view";
 import { z } from "zod";
 import { createEmptyCard, Card, Rating } from "ts-fsrs";
 import {
@@ -1131,6 +1131,8 @@ export async function getLessonFlashcards(
     if (!user) {
       throw new Error("Unauthorized");
     }
+    // Staff in a preview have no cards of their own to read: the empty model.
+    if (studentViewModeFor(user.role) === "preview") return { success: true, cards: [] };
 
     // The student's cards of this type from this article, with their content from the article.
     const tenant = { schoolId: user.schoolId };

@@ -26,6 +26,7 @@ import getAssignmentById, {
   getAssignmentActivityById,
 } from "../models/assignmentModel";
 import { currentUser } from "@/lib/session";
+import { studentViewModeFor } from "@/lib/student-view";
 import { logger } from "@/lib/observability/logger";
 import {
   canManageClassroom,
@@ -473,6 +474,8 @@ export async function fetchAssignmentActivityById(
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    // Staff in a preview have no activity row of their own: the empty model.
+    if (studentViewModeFor(user.role) === "preview") return NextResponse.json({ assignmentActivity: null }, { status: 200 });
     const { id } = await params;
     const assignmentActivity = await getAssignmentActivityById(id, user.id);
     return NextResponse.json({ assignmentActivity }, { status: 200 });
