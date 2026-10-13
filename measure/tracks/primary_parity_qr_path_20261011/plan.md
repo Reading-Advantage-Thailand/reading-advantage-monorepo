@@ -148,3 +148,13 @@ _Story ref: spec.md#story-s6_
     - Manual steps: after the batch capture, open `$P/captures/primary_parity_qr_path_20261011/report.html`. Fill the Result cells of `acceptance.md`.
     - Check the landing (QR-A1, QR-A2) and the case pages (QR-A5a, QR-A5b) at 375 px and 1280 px, day and night.
     - Run the two curl commands of `acceptance.md` for the unprefixed URL.
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: M-8 `proxy.ts` passes the callback through `safeCallbackPath` (in `lib/safe-callback-path.ts`) and redirects only to the local result; tests with `//thteacher.evil.com`, `//enstudent.x`, `https://evil.com` 41576ef20
+- [x] Task: QR Low ADMIN and SYSTEM home link uses `roleDefaultRedirects` be1fc8596
+- [x] Task: QR Low the card sign-in failure link keeps the lesson callback (student paths only) be1fc8596
+- [x] Task: QR Low book key check `^[a-z0-9-]{1,16}$` in `resolveBookLink`, else `unknown_book`, no query be1fc8596
+- [x] Task: QR Low language menu button on the QR pages is `size-12` (new `triggerClassName` prop of `LocaleSwitcher`) be1fc8596
+- [x] Task: QR Low data checks cover `o3-1` lesson 12 and `q4` lesson 1 be1fc8596
+- Default used (record only): a student may open any approved lesson by QR, also of a book that the class does not have (legacy behavior). No code change.

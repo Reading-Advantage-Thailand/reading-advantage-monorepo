@@ -215,3 +215,12 @@ _Story ref: spec.md#story-s6_
 - Method (orchestrator decision): the code check ran now; the browser run is a batch step. The browser block did not run.
 - The block writes to the class (marks steps, marks lesson 1 taught, then makes lesson 1 current again). Use one run on each fresh clone.
 - Acceptance pairs: legacy has no page for A1, A2, A3, A5 (new features); the legacy path is the nearest page and the difference is on purpose. A2 uses a steps module to open lesson 1 from the card.
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: H-3 the catalogue build now builds `@reading-advantage/auth` after `@reading-advantage/db`; the contract test walks the imports of both scripts and asserts both builds 8476d5b5b
+- [x] Task: Catalogue Low (print data) the build stops when the log lacks "Print data: 70 stored" 8476d5b5b
+- [x] Task: M-4 archive made with `git archive` at Workbooks `08bb160b8cfb4b95252546e6fd0e9ccc31fe3817` (path globs, 566 KB, 70 print files); pinned in `catalogue-build-commands.md`, `runbook-changes.md`, `rehearsal-3-changes.md` §2.2, and C7b of `cutover-commands.md` 8476d5b5b
+- [x] Task: S1 secret version `latest` is now `_TARGET_SECRET_VERSION` (default 1, the version that C7b checks) 8476d5b5b
+- [x] Task: M-5 the howTo5 block ends with "Teach again" on lesson 1; the kit judge checks the reset 5c5bbc825
+- [x] Task: Class books Lows: empty slot text when no class has a book; new `slotNoClass` text in 5 locales; `getTeacherBookSlots` parses `teacherBookSlotSchema`; the back to class link is `min-h-12` a76ce11d2
