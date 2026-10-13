@@ -166,3 +166,6 @@ _Story ref: spec.md#story-s7_
 - [x] Task: Write `measure/tracks/primary_parity_stories_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check
     - [x] AC rows marked proven-by-tests vs pending-batch; AC-6 proven locally (`etl-run.md`), Cloud Build rerun pending; AC-7 pending captures and owner (pairs and steps: 75c2795bf)
 - [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
+
+## Phase: Review Fixes 2026-10-13
+- [x] Task: B1-cefr chapter feedback falls back to A1 221c8b543

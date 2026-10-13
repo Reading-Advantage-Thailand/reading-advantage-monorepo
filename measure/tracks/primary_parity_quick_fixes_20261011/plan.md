@@ -203,3 +203,11 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: Low: school DELETE sets the owner to TEACHER, and an ADMIN of a school with no owner may delete it 12ecd72c6
 - [x] Task: Low: a TEACHER with a school_admins row renames the school (`canManageSchool` takes `hasSchoolAdminRow`); the menu loads the row for a TEACHER dc0503bf6
 - [x] Task: License key form removed from the user profile page until STU-19 (default; redeem not ported); the dead component is deleted c1d853021
+- [x] Task: M-21 a second deck game result gives 200: one activity row per user, game, and deck (upsert); each play pays its XP as in legacy bfea121; the 4 deck game routes use `recordDeckGame` aa1bcfa8a
+- [x] Task: XP race: `awardQuestionXp` adds the XP in SQL, no absolute write ad96d4124
+- [x] Task: Assignment POST: ids are checked as uuid text (400), the 500 message is generic 79355d27d (route fixtures 05c7e2f35)
+- [x] Task: Progress POST: 400 when the body article is not the assignment article; 400 for an assignment id that is not a uuid 79355d27d
+- [x] Task: F-1 GET /api/articles/[articleId] needs a session (default; no client caller found by grep) 394a5f4d1 (guard fix 29ad079d8)
+- [x] Task: Logger: `console.error` replaced in `app/api/upload/csv` and `app/api/upload/classes` 3faa192de
+- [x] Task: From A2 `articleModel.logs-of-user` failed alone too: the test DDL lacked `chapter_id` (test defect) f2702ced3
+- [x] Task: M-7 old: the RA jest config (jest, not vitest) lacked the `avatar-kit` mapper; `app/api/v1/apk` 21 tests green 88fedb924
