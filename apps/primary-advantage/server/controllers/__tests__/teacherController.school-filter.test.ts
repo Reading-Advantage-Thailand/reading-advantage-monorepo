@@ -39,6 +39,11 @@ describe("getTeachersController schoolId filter", () => {
     expect(mocks.getTeachers.mock.calls[0][0].schoolId).toBe(SCHOOL);
   });
 
+  it("passes the schoolId to the statistics too", async () => {
+    await getTeachersController(get(`schoolId=${SCHOOL}`));
+    expect(mocks.getTeacherStatistics.mock.calls[0][1]).toBe(SCHOOL);
+  });
+
   it("drops a schoolId that is not a UUID", async () => {
     await getTeachersController(get("schoolId=not-a-uuid"));
     expect(mocks.getTeachers.mock.calls[0][0].schoolId).toBeUndefined();

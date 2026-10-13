@@ -23,7 +23,7 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   return { ...actual, db: dbProxy };
 });
 
-import { getTeachers } from "../teacherModel";
+import { getTeachers, getTeacherStatistics } from "../teacherModel";
 import type { UserWithRoles } from "@/server/utils/auth";
 
 const SCHOOL_A = "00000000-0000-0000-0000-0000000000a1";
@@ -74,5 +74,19 @@ describe("getTeachers schoolId filter (S1)", () => {
   it("ignores the filter for an ADMIN and keeps the own school", async () => {
     const { teachers } = await getTeachers({ ...params, userWithRoles: caller("ADMIN", SCHOOL_A), schoolId: SCHOOL_B });
     expect(teachers.map((t) => t.id)).toEqual(["ta"]);
+  });
+});
+
+describe("getTeacherStatistics schoolId filter (L-statistics)", () => {
+  it("counts one school for SYSTEM with the filter", async () => {
+    expect((await getTeacherStatistics(caller("SYSTEM", null), SCHOOL_B)).totalTeachers).toBe(1);
+  });
+
+  it("counts every school for SYSTEM without the filter", async () => {
+    expect((await getTeacherStatistics(caller("SYSTEM", null))).totalTeachers).toBe(2);
+  });
+
+  it("ignores the filter for an ADMIN", async () => {
+    expect((await getTeacherStatistics(caller("ADMIN", SCHOOL_A), SCHOOL_B)).totalTeachers).toBe(1);
   });
 });

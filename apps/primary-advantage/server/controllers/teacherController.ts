@@ -78,7 +78,7 @@ export const getTeachersController = async (
     });
 
     // Get statistics
-    const statistics = await getTeacherStatistics(userWithRoles);
+    const statistics = await getTeacherStatistics(userWithRoles, schoolId);
 
     // Calculate pagination
     const totalPages = Math.ceil(totalCount / limit);
