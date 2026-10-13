@@ -18,9 +18,10 @@
 #     Make it from a Workbooks commit with `git -C ~/Desktop/Workbooks archive <commit> <paths>`
 #     and upload it to gs://primary-advantage_cloudbuild/source/ (see catalogue-build-commands.md).
 #   _TARGET_DATABASE_URL : Secret Manager name of the target URL (secret DIRECT_DATABASE_URL).
-#   _EXPECTED_LESSONS : the lesson count that the import must report (70 for Workbooks eeeddfd).
+#   _TARGET_SECRET_VERSION : the pinned secret version (default 1, the version that cutover step C7b checks).
+#   _EXPECTED_LESSONS : the lesson count that the import must report (70 for Workbooks 08bb160).
 #
-# Steps: fetch-archive, install (no secret: the archive code does not run here), then import (guard, build @reading-advantage/db, import-lesson-packages
+# Steps: fetch-archive, install (no secret: the archive code does not run here), then import (guard, build @reading-advantage/db and @reading-advantage/auth, import-lesson-packages
 # on the five folders, import-lesson-guides --workbooks). The build fails when a package fails,
 # when the lesson count differs, or when a guide locale does not give 13 steps. It prints only
 # the summary lines. It never prints an environment value.
@@ -86,6 +87,9 @@ steps:
         echo "$$(t) guard: target OK"
         pnpm --filter @reading-advantage/db build >/workspace/db-build.out 2>&1 || { tail -15 /workspace/db-build.out | redact; exit 1; }
         echo "$$(t) db build done"
+        # The importer loads @reading-advantage/auth (class-books.ts); its exports point to dist/, which git ignores.
+        pnpm --filter @reading-advantage/auth build >/workspace/auth-build.out 2>&1 || { tail -15 /workspace/auth-build.out | redact; exit 1; }
+        echo "$$(t) auth build done"
         set +e
         pnpm --filter @reading-advantage/domain import-lesson-packages \
           "$$WB/content/primary/origins-1" "$$WB/content/primary/origins-2" \
@@ -96,6 +100,7 @@ steps:
         grep -E '^(unmapped|skipped|FAILED)|lessons:' /workspace/packages.out | redact || true
         test "$$rc" -eq 0 || { echo "STOP: a package failed (exit $$rc); the FAILED lines name it"; tail -5 /workspace/packages.out | redact; exit 1; }
         grep -q "^$$EXPECTED lessons:" /workspace/packages.out || { echo "STOP: expected $$EXPECTED lessons"; exit 1; }
+        grep -q "Print data: $$EXPECTED stored" /workspace/packages.out || { echo "STOP: expected $$EXPECTED lessons with print data (the archive has no print files, or an old commit)"; exit 1; }
         echo "$$(t) packages done"
         set +e
         pnpm --filter @reading-advantage/domain import-lesson-guides --workbooks "$$WB" >/workspace/guides.out 2>&1
@@ -111,11 +116,12 @@ steps:
 
 availableSecrets:
   secretManager:
-    - versionName: "projects/$PROJECT_ID/secrets/${_TARGET_DATABASE_URL}/versions/latest"
+    - versionName: "projects/$PROJECT_ID/secrets/${_TARGET_DATABASE_URL}/versions/${_TARGET_SECRET_VERSION}"
       env: "DIRECT_DATABASE_URL"
 
 substitutions:
   _TARGET_DATABASE_URL: "PRIMARY_V2_DATABASE_URL"
+  _TARGET_SECRET_VERSION: "1"
   _WORKBOOKS_ARCHIVE: ""
   _EXPECTED_LESSONS: "70"
 

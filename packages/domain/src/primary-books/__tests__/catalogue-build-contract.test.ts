@@ -4,7 +4,7 @@
  * (primary_parity_class_books_20261011, S1).
  */
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { BOOKS } from "../mapping.js";
@@ -58,6 +58,47 @@ describe("Primary catalogue Cloud Build", () => {
     ].map((text) => importStep.indexOf(text));
     expect(order.every((index) => index >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
+  });
+
+  it("builds every workspace package that the two import scripts load, db first", () => {
+    // Walk the relative imports of both scripts and collect the `@reading-advantage/*` packages.
+    const seen = new Set<string>();
+    const packages = new Set<string>();
+    const walk = (file: string): void => {
+      if (seen.has(file)) return;
+      seen.add(file);
+      const source = readFileSync(file, "utf8");
+      for (const m of source.matchAll(/(?:from|import)\s*\(?\s*["']([^"']+)["']/g)) {
+        const spec = m[1];
+        if (spec.startsWith("@reading-advantage/")) packages.add(spec.split("/").slice(0, 2).join("/"));
+        else if (spec.startsWith(".")) {
+          const base = resolve(dirname(file), spec.replace(/\.js$/, ""));
+          const next = [`${base}.ts`, join(base, "index.ts")].find((c) => existsSync(c));
+          if (next) walk(next);
+        }
+      }
+    };
+    walk(join(PACKAGE_ROOT, "scripts/import-lesson-packages.ts"));
+    walk(join(PACKAGE_ROOT, "scripts/import-lesson-guides.ts"));
+    packages.delete("@reading-advantage/domain");
+    expect([...packages].sort()).toEqual(["@reading-advantage/auth", "@reading-advantage/db"]);
+    const positions = ["@reading-advantage/db", "@reading-advantage/auth"].map((name) =>
+      importStep.indexOf(`pnpm --filter ${name} build`),
+    );
+    expect(positions.every((index) => index >= 0)).toBe(true);
+    expect(positions[0]).toBeLessThan(positions[1]);
+    expect(positions[1]).toBeLessThan(importStep.indexOf("import-lesson-packages"));
+  });
+
+  it("pins the secret version instead of latest", () => {
+    expect(CLOUDBUILD).toContain("versions/${_TARGET_SECRET_VERSION}");
+    expect(CLOUDBUILD).not.toContain("versions/latest");
+    expect(CLOUDBUILD).toMatch(/_TARGET_SECRET_VERSION: "1"/);
+  });
+
+  it("stops when the print data line does not show every lesson stored", () => {
+    expect(importStep).toContain('grep -q "Print data: $$EXPECTED stored"');
+    expect(importStep).toContain("STOP: expected $$EXPECTED lessons with print data");
   });
 
   it("names a folder for each key of BOOKS and no other folder", () => {
