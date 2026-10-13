@@ -46,6 +46,7 @@ describe("getUserActivity with closed attempts", () => {
     expect(result?.xpLogs).toEqual(xp);
     expect(result?.activity.map((row) => [row.id, (row as { attemptNumber?: number }).attemptNumber])).toEqual([["new-1", 2], ["old-1", 1]]);
     expect(result?.activity[1].createdAt).toEqual(T1);
+    expect(result?.activity.map((row) => (row as { moved?: boolean }).moved === true)).toEqual([false, true]);
   });
 
   it("numbers a live row 1 when the student has no closed attempt", async () => {
@@ -59,12 +60,12 @@ describe("getUserArticleRecords with closed attempts", () => {
   it("keeps an article in the history when all its rows moved, and shows the latest score", async () => {
     mocks.results.push([], [{ articleId: "article-1", attemptNumber: 1, activities: [moved] }], [{ id: "article-1", title: "The Moon", rating: 0 }]);
     const result = await getUserArticleRecords("s1");
-    expect(result.data).toEqual([{ id: "article-1", title: "The Moon", scores: "75%", updated_at: T1.toISOString(), rated: 0, status: "COMPLETED_MCQ" }]);
+    expect(result.data).toEqual([{ id: "article-1", title: "The Moon", scores: "75%", updated_at: T1.toISOString(), rated: 0, status: "COMPLETED_MCQ", attemptNumber: 1 }]);
   });
 
   it("shows the score of the latest attempt when the article has a live row and a moved row", async () => {
     mocks.results.push([live], [{ articleId: "article-1", attemptNumber: 1, activities: [moved] }], [{ id: "article-1", title: "The Moon", rating: 0 }]);
     const result = await getUserArticleRecords("s1");
-    expect(result.data[0]).toMatchObject({ scores: "100%", updated_at: T2.toISOString() });
+    expect(result.data[0]).toMatchObject({ scores: "100%", updated_at: T2.toISOString(), attemptNumber: 2 });
   });
 });

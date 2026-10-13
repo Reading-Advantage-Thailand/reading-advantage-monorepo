@@ -330,6 +330,10 @@ export interface UserActivityLog {
   details: any;
   completed: boolean;
   createdAt: Date;
+  /** The lesson attempt of the row (1 for the first); set by the report read. */
+  attemptNumber?: number;
+  /** True for a row that a closed lesson attempt moved into the history. */
+  moved?: boolean;
 }
 
 export interface UserXpLog {

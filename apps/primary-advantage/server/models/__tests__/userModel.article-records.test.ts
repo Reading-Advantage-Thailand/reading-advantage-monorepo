@@ -54,7 +54,7 @@ describe("getUserArticleRecords search", () => {
     const result = await getUserArticleRecords("student-1", 1, 10, "moon");
 
     expect(result.data).toEqual([
-      { id: "article-1", title: "The Moon", scores: "N/A", updated_at: readAt.toISOString(), rated: 0, status: "UNRATED" },
+      { id: "article-1", title: "The Moon", scores: "N/A", updated_at: readAt.toISOString(), rated: 0, status: "UNRATED", attemptNumber: 1 },
     ]);
     const [activityWhere, , articleWhere] = mocks.wheres.map((condition) => dialect.sqlToQuery(condition as SQL));
     expect(activityWhere.sql).not.toContain("details");

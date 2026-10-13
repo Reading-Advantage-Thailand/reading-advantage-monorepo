@@ -709,6 +709,7 @@
     "description": "View student progress and classroom analytics",
     "activityprogress": "Activity Progress",
     "recentactivity": "Recent Activity",
+    "attemptTag": "Attempt {number}",
     "activityheatmap": "Activity Heatmap",
     "xpoverall": "XP Overall",
     "readingstatschart": "Reading Stats Chart",
@@ -3649,6 +3650,7 @@
     "searching": "Searching...",
     "score": "Score {score}",
     "readOn": "Read {date}",
+    "attemptTag": "Attempt {number}",
     "status": {
       "READ": "Read",
       "UNRATED": "Not rated yet",

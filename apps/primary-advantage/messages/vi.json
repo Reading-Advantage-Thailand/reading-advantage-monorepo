@@ -709,6 +709,7 @@
     "description": "Xem tiến độ học sinh và phân tích lớp học",
     "activityprogress": "Tiến độ hoạt động",
     "recentactivity": "Hoạt động gần đây",
+    "attemptTag": "Lần {number}",
     "activityheatmap": "Bản đồ hoạt động",
     "xpoverall": "XP Tổng",
     "readingstatschart": "Biểu đồ thống kê đọc",
@@ -3649,6 +3650,7 @@
     "searching": "Searching...",
     "score": "Score {score}",
     "readOn": "Read {date}",
+    "attemptTag": "Lần {number}",
     "status": {
       "READ": "Read",
       "UNRATED": "Not rated yet",

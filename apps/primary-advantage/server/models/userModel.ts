@@ -224,7 +224,7 @@ const getMovedActivity = async (userId: string) => {
     const items = Array.isArray(attempt.activities) ? (attempt.activities as Record<string, unknown>[]) : [];
     return items.map((item) => {
       const createdAt = toDate(item.createdAt, new Date(0));
-      return { ...item, createdAt, updatedAt: toDate(item.updatedAt, createdAt), attemptNumber: attempt.attemptNumber } as typeof userActivity.$inferSelect & { attemptNumber: number };
+      return { ...item, createdAt, updatedAt: toDate(item.updatedAt, createdAt), attemptNumber: attempt.attemptNumber, moved: true } as typeof userActivity.$inferSelect & { attemptNumber: number; moved: true };
     });
   });
   return { moved, closed };
@@ -298,7 +298,11 @@ export const getUserArticleRecords = async (
 
     // Closed attempts keep their rows in the history: an article with only moved rows stays listed.
     const recordTypes: string[] = [ActivityType.ARTICLE_READ, ActivityType.MC_QUESTION, ActivityType.SA_QUESTION, ActivityType.LA_QUESTION, ActivityType.ARTICLE_RATING];
-    const { moved } = await getMovedActivity(userId);
+    const { moved, closed } = await getMovedActivity(userId);
+    // Each row has its attempt number: a live row follows the closed attempts of its article.
+    const attemptOf = new Map<string, number>();
+    for (const row of articleActivities) attemptOf.set(row.id, (closed.get(row.targetId ?? "") ?? 0) + 1);
+    for (const row of moved) attemptOf.set(row.id, row.attemptNumber);
     articleActivities.push(...moved.filter((row) => recordTypes.includes(row.activityType)));
     articleActivities.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
 
@@ -419,6 +423,7 @@ export const getUserArticleRecords = async (
           updated_at: data.lastUpdated.toISOString(),
           rated: article.rating || 0,
           status: status,
+          attemptNumber: Math.max(1, ...activities.map((a: any) => attemptOf.get(a.id) ?? 1)),
         };
       })
       .filter(Boolean)
@@ -633,6 +638,7 @@ export const getUserReminderReread = async (userId: string) => {
           updated_at: data.lastUpdated.toISOString(),
           rated: article.rating || 0,
           status: status,
+          attemptNumber: Math.max(1, ...activities.map((a: any) => attemptOf.get(a.id) ?? 1)),
         };
       })
       .filter(Boolean)
