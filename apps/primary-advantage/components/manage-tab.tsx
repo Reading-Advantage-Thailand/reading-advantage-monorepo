@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { deleteFlashcardCard } from "@/actions/flashcard";
 import { useFormatDate } from "@/lib/utils";
 import type { InferSelectModel } from "drizzle-orm";
-import { flashcardCards } from "@reading-advantage/db";
+import type { flashcardCards } from "@reading-advantage/db";
 
 type Sentence = InferSelectModel<typeof flashcardCards>;
 

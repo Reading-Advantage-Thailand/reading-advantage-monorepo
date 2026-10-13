@@ -37,7 +37,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import type { InferSelectModel } from "drizzle-orm";
-import { licenses } from "@reading-advantage/db";
+import type { licenses } from "@reading-advantage/db";
 import type { LicenseWithSchool } from "@/types";
 
 /**

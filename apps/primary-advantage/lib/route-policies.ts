@@ -1,4 +1,4 @@
-import { ROLES } from "@reading-advantage/auth";
+import { ROLES } from "@reading-advantage/auth/roles";
 import { STUDENT_HOME } from "./student-home";
 import { TEACHER_HOME } from "./teacher-home";
 

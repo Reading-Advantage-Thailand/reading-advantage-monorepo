@@ -28,7 +28,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import type { InferSelectModel } from "drizzle-orm";
-import { licenses } from "@reading-advantage/db";
+import type { licenses } from "@reading-advantage/db";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import {

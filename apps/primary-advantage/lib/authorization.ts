@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ActivityType, UserXpEarned } from "@/types/enum";
-import { ROLES, passwordSchema } from "@reading-advantage/auth";
-import { ROLE_HIERARCHY, type Role } from "@reading-advantage/auth/roles";
+import { ROLES, ROLE_HIERARCHY, type Role } from "@reading-advantage/auth/roles";
+import { passwordSchema } from "@reading-advantage/auth/password-schema";
 import { STAFF_ROLES } from "./permissions";
 
 /** Session roles allowed to manage other users. */
