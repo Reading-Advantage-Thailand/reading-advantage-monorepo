@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { BookOpen, PlayIcon, TriangleAlertIcon, Users } from "lucide-react";
 import { EmptyState, ErrorState, ShimmerSkeleton, cardHoverClassName } from "@reading-advantage/ui";
 import { Link } from "@/i18n/navigation";
@@ -32,7 +33,7 @@ export default function ClassroomSelector() {
   const tc = useTranslations("TeacherClass");
   const tUi = useTranslations("TeacherUi");
   const te = useTranslations("Error");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
 

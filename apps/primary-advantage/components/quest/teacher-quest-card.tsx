@@ -1,4 +1,5 @@
-import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { SwordsIcon } from "lucide-react";
 import type { TeacherQuestCard as TeacherQuestCardData } from "@reading-advantage/game-contracts";
 import { Link } from "@/i18n/navigation";
@@ -24,7 +25,7 @@ import { questText } from "./quest-copy";
 export function TeacherQuestCard({ classroomId, card, heading, className, panel }: { classroomId: string; card: TeacherQuestCardData | null; heading?: string; className?: string; panel?: boolean }) {
   const t = useTranslations("Quest");
   const locale = useLocale();
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const headingId = `quest-${classroomId}`;
   const Frame = panel ? Panel : "section";
   const actionClass = panel ? cn(rpgButton("wood", true), "min-h-12") : cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "rounded-xl");

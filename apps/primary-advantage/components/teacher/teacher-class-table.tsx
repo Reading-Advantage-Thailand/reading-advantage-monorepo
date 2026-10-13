@@ -1,7 +1,8 @@
 "use client";
 
 import { useId, useMemo, useState, type ReactNode } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { DownloadIcon, SearchIcon } from "lucide-react";
 import type { ClassStatus, ClassTrend, TeacherClassRow } from "@reading-advantage/domain/primary-home";
 import { calendarDayKey } from "@reading-advantage/domain/calendar-day";
@@ -92,7 +93,7 @@ function sortRows(rows: readonly TeacherClassRow[], key: SortKey, dir: SortDir):
 export function TeacherClassTable({ rows, className }: { rows: readonly TeacherClassRow[]; className?: string }) {
   const t = useTranslations("TeacherHome");
   const tUi = useTranslations("TeacherUi");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const headingId = useId();
   const selectId = useId();
   const [query, setQuery] = useState("");

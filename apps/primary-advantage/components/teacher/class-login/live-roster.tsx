@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,7 +69,7 @@ export function LiveRoster({
   toolbar,
 }: LiveRosterProps) {
   const t = useTranslations("ClassLogin");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ClassLoginErrorKey | null>(null);
   const [newPictures, setNewPictures] = useState<{ name: string; pictures: number[] }[]>([]);

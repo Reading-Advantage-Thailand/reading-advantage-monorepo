@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, Calendar, Check, Edit3, Trash2, TriangleAlertIcon, Users, X } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { intlLocale } from "@/lib/intl-locale";
 import { EmptyState, ErrorState, ShimmerSkeleton, StatusChip } from "@reading-advantage/ui";
 import { getDueDateStatus } from "@reading-advantage/domain/assignments/due-date";
 import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
@@ -148,7 +149,7 @@ export default function AssignmentDashboard() {
 
   const formatDate = (value: string): string =>
     // The school time zone: the server (UTC) and the browser write the same day.
-    new Date(value).toLocaleDateString(locale, {
+    new Date(value).toLocaleDateString(intlLocale(locale), {
       timeZone: SCHOOL_TIME_ZONE,
       year: "numeric",
       month: "long",
