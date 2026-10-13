@@ -69,9 +69,21 @@ member with "none".
   `apps/primary-advantage/cloudbuild-etl.yaml:50` both pin
   `--required-migration 0073_primary_lesson_attempts`. Grep confirms both on
   2026-10-12. The three values agree.
-- Lesson repeat changes no ETL code (source: `primary_parity_lesson_repeat_20261011`
-  `behavior-contract.md` §7). After the browser check on the rehearsal copy, run
-  `lesson-repeat-data-checks.sql`.
+- Lesson repeat changes the ETL (correction of 2026-10-13: commit `e54be7f78`).
+  `splitLessonProgress` in `packages/db/src/migrations-data/primary-legacy-import.ts`
+  keeps the latest row of each (user, article) as the current `lesson_progress`
+  row and imports each older duplicate as a closed attempt in
+  `primary_lesson_attempts` (close reason `legacy_import`). After the browser
+  check on the rehearsal copy, run `lesson-repeat-data-checks.sql`.
+- Lesson-attempts ETL row. Expected counts on the 2026-10-11 backup (source:
+  lesson repeat `plan.md`, local run on `primary_etl_repeat_s1`): legacy
+  `user_lesson_progress` 289 rows, 266 (user, article) pairs, 23 pairs with
+  duplicates; after the import `lesson_progress` 263 rows, 40 current rows with
+  `assignment_id`, `primary_lesson_attempts` 23 rows (all `legacy_import`,
+  numbered from 1). Expected skips: 3 rows with the reason "user not migrated".
+  A skip with the reason "duplicate (user, article) not kept as an attempt: the
+  user has no school" is new; the expected count is 0. A different count on
+  the rehearsal copy needs a look before the run counts as passed.
 
 ### 2.2 Catalogue import runbook step
 
@@ -93,8 +105,12 @@ member with "none".
   `VERTEX_CLIENT_EMAIL`, `VERTEX_PRIVATE_KEY` (secrets). Source: cleanup Phase 8
   (`primary_parity_cleanup_20261011/plan.md:193`,
   `behavior-contract-fr13.md:56`); `cloudbuild.yaml:74-77,83` already sets them.
-- Vertex location is now `global` (legacy used `us-central1`). If `global` does
-  not serve the model for this project, set `PRIMARY_AI_FEEDBACK_MODEL`.
+- Vertex location is now `global` (legacy used `us-central1`). The location is a
+  constant in `apps/primary-advantage/lib/ai/models.ts:35`. The variable
+  `PRIMARY_AI_FEEDBACK_MODEL` changes only the model name; it cannot change the
+  location. If `global` does not serve the model for this project, a code change
+  is needed. The variable `PRIMARY_AI_CHATBOT_MODEL` sets the OpenAI chatbot
+  model (default `gpt-4o-mini`); leave it unset unless the owner decides.
 - Before the cutover, run one live SAQ feedback call check, then check one
   `ai_call` log line for each feature in the Cloud Run log after the deploy.
 
@@ -121,6 +137,13 @@ member with "none".
   (source: stories `behavior-contract.md` §7). Already satisfied: the S1 local
   reconciliation counts 0 chapter MCQ rows with a non-NULL `article_id`
   (source: stories `etl-run.md`).
+- Expected story load counts on the 2026-10-11 backup (source: stories
+  `etl-run.md`; the second run gives the same table): stories 412 (all with
+  `image`), chapters 3,296, chapter MCQ 32,949 (11 skipped: answer not among the
+  options), chapter SAQ 16,480, chapter LAQ 16,480, chapter flashcard source
+  rows 3,296, chapter flashcard cards 0 (2 decks of users who do not move),
+  `STORIES_*` activity rows 11 (3 are duplicates or users who do not move).
+  Check: no "stories deferred" skip in the report.
 
 ### 2.7 Print data placement
 
@@ -128,6 +151,44 @@ member with "none".
   `packages/domain/src/primary-books/mapping.ts` `toLessonPackageJson`,
   `print/print-lesson.ts` `printLessonOf`). No migration (source: print lesson
   `spec.md:186`, `plan.md:60`).
+
+### 2.8 Dockerfile and image-layer check
+
+- `apps/primary-advantage/Dockerfile` now deletes the ElvGames files of the other
+  apps in the builder stage, under `/app/apps/primary-advantage/.next/standalone/`,
+  before the runner stage copies the tree (review H-4, 2026-10-13). The runner
+  stage has no `rm` line. The old layout kept the bytes in a runner layer.
+- R6 image-layer check (agent step, after the push, before the deploy). Run it in
+  Cloud Build or on any Docker host that can pull the image. Replace `<image>`
+  with the pushed image and its digest:
+
+```bash
+docker pull <image>
+docker save <image> -o image.tar
+mkdir layers && tar -xf image.tar -C layers
+# Each layer is a tar file. A hit in any layer is a failure.
+for f in $(find layers -type f); do tar -tf "$f" 2>/dev/null | grep standard-pack-qc && echo "STOP hit in $f"; done
+echo "layer check done"
+```
+
+  Pass: no `STOP` line. The machine cannot build the image locally (7 GB box), so
+  this check runs only in Cloud Build.
+- R7 URL check on the tag URL: `curl -s -o /dev/null -w '%{http_code}\n'
+  "$BASE/assets/apk/standard-pack-qc/manifest.json"` gives `404`.
+
+### 2.9 Browser-check blocks of `cutover-check.mjs`
+
+Each block runs by default. An env switch with the value `off` skips it. All
+blocks need the hand-out CSV, the teacher, admin, and system usernames, and the
+class argument of the usage line.
+
+| Block (check name prefix) | Env switch | Preconditions |
+|---|---|---|
+| class book ("class book ...") | `CLASS_BOOK_CHECK=off` | Catalogue import done (C7b, 70 lessons). The teacher owns the class. It assigns Origins 3.2 teacher-led (an upsert; a rerun passes). |
+| Teacher Manual ("manual ...") | `MANUAL_CHECK=off` | Runs inside the class book block, so it needs the same preconditions. It marks steps 1 to 3 and "Mark taught" on lesson 1: use a fresh clone for each run. |
+| QR path ("qr ...") | `QR_CHECK=off` | The book is assigned to the class (class book block on). The open class code of the class exists. |
+| stories ("stories ...") | `STORIES_CHECK=off` | The story rows of migration 0072 are loaded (stories ETL). A student session exists. |
+| staff view ("staff ...") | `STAFF_VIEW_CHECK=off` | Teacher, admin, and system user sign in. It reads student pages only (GET). The teacher run follows the first managed class book when the home lists one. |
 
 ## 3. Members with no runbook change
 
@@ -141,7 +202,7 @@ steps; the owner confirms the table at the Phase 1 review.
 | `primary_parity_records_20261011` | none | — |
 | `primary_parity_acceptance_20261011` | none new; owns `scripts/primary-parity/cutover-check.mjs` used by R7/C10 | — |
 | `primary_parity_quick_fixes_20261011` | none | — |
-| `primary_parity_cleanup_20261011` | none | §2.3 |
+| `primary_parity_cleanup_20261011` | none | §2.3, §2.8 |
 | `primary_parity_class_books_20261011` | collected | §1.1, §2.2 |
 | `primary_parity_staff_student_view_20261011` | none | — |
 | `primary_parity_admin_dashboard_20261011` | none | — |
@@ -150,7 +211,7 @@ steps; the owner confirms the table at the Phase 1 review.
 | `primary_parity_school_management_20261011` | none | — |
 | `primary_parity_stories_20261011` | none | §2.1, §2.6 |
 | `primary_parity_read_along_20261011` | none | — |
-| `primary_parity_lesson_repeat_20261011` | none | §2.1 |
+| `primary_parity_lesson_repeat_20261011` | ETL change (no `runbook-changes.md`) | §2.1 |
 | `primary_parity_lesson_games_20261011` | none | — |
 | `primary_parity_print_lesson_20261011` | none | §2.2, §2.7 |
 | `primary_parity_pwa_20261011` | collected (`runbook-checks.md`) | §1.3, §2.5 |
@@ -187,5 +248,7 @@ are still pending.
   `select count(*) from contact_messages` on the same copy, and no cell starts
   with `=`, `+`, `-`, or `@`. The rehearsal file is deleted after the count.
 - QR block and owner phone scans (section 1.2); PWA AC-2 and AC-4 (section 1.3).
+- Image-layer check and the `standard-pack-qc` 404 check (section 2.8).
+- Lesson-attempts ETL counts (section 2.1) and story load counts (section 2.6).
 - Image liveness: the rehearsal 3 image still exists before C9 (images older
   than 30 days expire; only the 5 newest stay).

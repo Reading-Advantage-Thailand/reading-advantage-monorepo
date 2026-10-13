@@ -15,6 +15,7 @@ writes it into the tables.
 | R4 | Same ETL command at `--required-migration 0073_primary_lesson_attempts`. Stories, chapters, and chapter questions load; chapter rows keep a NULL `article_id`. Tutor read check must still give `MATCH`; student sample 5 of 5. New R4b: the catalogue and guide imports (C7b command, `_EXPECTED_LESSONS=70`). |
 | R5 | Same with the label `rehearsal3`: `bash ~/Desktop/primary-cutover-inputs/after-etl.sh rehearsal3`. Move old hand-out files away first (they block a rerun). |
 | R6 | Same with `--tag=rehearsal3` (the tag is free on 2026-10-12). Record the image digest. |
+| R6b (new) | After the R6 image push, run the image-layer check of `rehearsal-3-changes.md` §2.8 (no `standard-pack-qc` file in any layer), and the 404 check on the tag URL. C9 uses only an image digest that passed R6b. |
 | R7 | Same script (`scripts/primary-parity/cutover-check.mjs`) at the `rehearsal3` tag URL, plus the new blocks of `rehearsal-3-changes.md` §5: class book assign and lesson, story chapter, staff view mode, lesson resume, old game URL redirect, PWA manifest and worker 200, five public files, and the "qr" block. |
 | R8 | Same export pattern with a rehearsal 3 name. Graph runs its tags and evidence backfills on the local copy: expect tags 250/250 articles, 5000 questions, rows 5123/5466/3426; evidence about 1541 jobs and 1615 committed (sources: `primary_objective_tags_20261006/plan.md`, rehearsal 2 record). Workbooks runs the CNT-01 injector write on the same copy: `inject-lessons.ts <pkg> --target new --db-env <VAR> --no-backup --no-upload --no-tutor` then `verify-lessons.ts --target new`. |
 | C2 | Check only: the trigger already prints `True`, the five jobs show `PAUSED`. |
@@ -27,7 +28,8 @@ writes it into the tables.
 | C13 | Agent: the R7 checks on the domain, plus the PWA AC-2 `curl -I` on the tag URL: `curl -sI "$BASE/serwist/sw.js"` gives 200, a JavaScript MIME type, `Service-Worker-Allowed: /`, `Cache-Control: no-cache`. Owner: the printed QR scans, plus a phone with the installed legacy app (PWA AC-4, new worker replaces the old one: the worker has a navigation `fetch` handler, and Cache storage lists only `primary-v2-offline-v1`; steps 5-6 of `primary_parity_pwa_20261011/runbook-checks.md`). |
 
 Contact export (one `psql \copy`; runs on a local restore of the backup, writes
-outside every repository with mode 600):
+outside every repository with mode 600). Run `umask 077` in the shell first, so
+that `\copy` creates the file with mode 600:
 
 ```sql
 \copy (SELECT id, created_at, status, inquiry, CASE WHEN left(name,1) IN ('=','+','-','@',chr(9),chr(10),chr(13)) THEN ''''||name ELSE name END AS name, CASE WHEN left(institution,1) IN ('=','+','-','@',chr(9),chr(10),chr(13)) THEN ''''||institution ELSE institution END AS institution, CASE WHEN left(email,1) IN ('=','+','-','@',chr(9),chr(10),chr(13)) THEN ''''||email ELSE email END AS email, CASE WHEN left(message,1) IN ('=','+','-','@',chr(9),chr(10),chr(13)) THEN ''''||message ELSE message END AS message FROM contact_messages ORDER BY created_at) TO '~/Desktop/primary-cutover-inputs/contact-messages-<yyyymmdd>.csv' CSV HEADER
