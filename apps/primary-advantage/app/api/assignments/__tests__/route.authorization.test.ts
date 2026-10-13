@@ -54,9 +54,12 @@ import { GET as GET_BY_ID, POST as POST_BY_ID } from "../[id]/route";
 import { GET as GET_STUDENT } from "../../students/[id]/assignments/route";
 
 const SCHOOL_A = "school-a";
+const CLASS_ID = "11111111-1111-4111-8111-111111111111";
+const ARTICLE_ID = "22222222-2222-4222-8222-222222222222";
+const ASSIGN_ID = "33333333-3333-4333-8333-333333333333";
 const body = {
-  classroomId: "class-1",
-  articleId: "article-1",
+  classroomId: CLASS_ID,
+  articleId: ARTICLE_ID,
   students: ["stu-1"],
   name: "Read it",
   description: "",
@@ -178,15 +181,15 @@ describe("assignments routes authorization", () => {
   it("[id] POST: 403 for a student who is not assigned", async () => {
     mocks.currentUser.mockResolvedValue({ id: "stu-9", role: "STUDENT", schoolId: SCHOOL_A });
     mocks.queue = [[]];
-    const res = await POST_BY_ID(post({ articleId: "article-1", progress: 50, timeSpent: 3 }), ctx("as1"));
+    const res = await POST_BY_ID(post({ articleId: ARTICLE_ID, progress: 50, timeSpent: 3 }), ctx(ASSIGN_ID));
     expect(res.status).toBe(403);
     expect(mocks.updates).toBe(0);
   });
 
   it("[id] POST: 200 for the assigned student", async () => {
     mocks.currentUser.mockResolvedValue({ id: "stu-1", role: "STUDENT", schoolId: SCHOOL_A });
-    mocks.queue = [[{ id: "sa1" }], [{ id: "lp1" }]];
-    const res = await POST_BY_ID(post({ articleId: "article-1", progress: 50, timeSpent: 3 }), ctx("as1"));
+    mocks.queue = [[{ id: "sa1", articleId: ARTICLE_ID }], [{ id: "lp1" }]];
+    const res = await POST_BY_ID(post({ articleId: ARTICLE_ID, progress: 50, timeSpent: 3 }), ctx(ASSIGN_ID));
     expect(res.status).toBe(200);
   });
 
