@@ -72,6 +72,12 @@ afterEach(cleanup);
 describe("class book lesson plan (FR-3)", () => {
   const en = testMessages.en.TeacherUi.classBook;
 
+  it("makes the back to class link 48 px high (NFR)", async () => {
+    await renderPage();
+    expect(screen.getByRole("link", { name: en.backToClass })).toHaveClass("min-h-12");
+    expect(screen.getByRole("link", { name: en.backToClass })).not.toHaveClass("min-h-11");
+  });
+
   it("shows the pointer, the next step with its period, and the 13 step toggles of the current lesson", async () => {
     await renderPage();
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Primary Advantage Origins 3.2");

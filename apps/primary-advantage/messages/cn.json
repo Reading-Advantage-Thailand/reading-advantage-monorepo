@@ -3773,6 +3773,7 @@
       "hint": "The book and the lesson plan for this class will show here.",
       "slotTitle": "Class books",
       "slotEmpty": "No class has a book yet. Open a class to assign one.",
+      "slotNoClass": "你还没有班级。请先创建班级，再为班级选择书本。",
       "slotError": "We could not load the class books. Reload the page to try again.",
       "assignRow": "Assign a book",
       "slotNext": "Next",

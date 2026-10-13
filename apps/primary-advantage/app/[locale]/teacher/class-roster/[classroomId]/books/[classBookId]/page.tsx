@@ -68,7 +68,7 @@ export default async function ClassBookPacingPage({ params }: { params: Params }
         title={classBook.bookName}
         description={`${t("pointer", { current: classBook.currentLesson, total: classBook.lessonCount })} · ${t("taughtCount", { count: classBook.taughtCount })}`}
         back={
-          <Link href={`/teacher/class-roster/${classroomId}`} className={TEACHER_BACK_LINK}>
+          <Link href={`/teacher/class-roster/${classroomId}`} className={cn(TEACHER_BACK_LINK, "min-h-12")}>
             <ArrowLeftIcon aria-hidden="true" />
             {t("backToClass")}
           </Link>

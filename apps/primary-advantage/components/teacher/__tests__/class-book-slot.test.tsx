@@ -62,9 +62,22 @@ describe("ClassBookSlot", () => {
   });
 
   it("shows the empty slot with a link to the classes", () => {
-    renderWithMessages(<ClassBookSlot slots={[]} />);
+    renderWithMessages(<ClassBookSlot slots={[noBook]} />);
     expect(screen.getByText(en.slotEmpty)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: en.goToClasses })).toHaveAttribute("href", "/teacher/my-classes");
+  });
+
+  it("shows the empty text and the classes link when no class has a book", () => {
+    renderWithMessages(<ClassBookSlot slots={[noBook, { ...noBook, classroomId: "c3", classroomName: "P5C" }]} />);
+    expect(screen.getByText(en.slotEmpty)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: en.goToClasses })).toHaveAttribute("href", "/teacher/my-classes");
+    expect(screen.queryByText(en.assignRow)).not.toBeInTheDocument();
+  });
+
+  it("says that a teacher with no class has no class", () => {
+    renderWithMessages(<ClassBookSlot slots={[]} />);
+    expect(screen.getByText(en.slotNoClass)).toBeInTheDocument();
+    expect(screen.queryByText(en.slotEmpty)).not.toBeInTheDocument();
   });
 
   it("shows the load error as an alert", () => {
@@ -80,7 +93,7 @@ describe("ClassBookSlot", () => {
   });
 
   it("shows the Thai labels", () => {
-    renderWithMessages(<ClassBookSlot slots={[noBook]} />, { locale: "th" });
+    renderWithMessages(<ClassBookSlot slots={[book(), noBook]} />, { locale: "th" });
     expect(screen.getByText(testMessages.th.TeacherUi.classBook.assignRow)).toBeInTheDocument();
   });
 });
