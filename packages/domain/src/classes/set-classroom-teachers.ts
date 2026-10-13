@@ -53,6 +53,7 @@ export type SetClassroomTeachersOutput = z.infer<typeof setClassroomTeachersOutp
  * Sets the teachers of a class in one transaction. The function adds the missing
  * `classroom_teachers` rows and deletes the rows of the teachers that left the list. The class
  * owner (`classrooms.teacher_id`) always stays on the class. A pair never gets a second row.
+ * Only a NEW teacher id must be a TEACHER of the class school; a teacher who is on the class stays.
  * @param params.db The database.
  * @param params.user The caller (ADMIN of the class school, or SYSTEM).
  * @param params.input The class id and the teacher ids.
@@ -91,13 +92,20 @@ export async function setClassroomTeachers({
     );
     const owner = classroom.ownerId;
     const others = wanted.filter((id) => id !== owner);
-    if (others.length > 0) {
+    const existing = await raw
+      .select({ id: classroomTeachers.id, teacherId: classroomTeachers.teacherId })
+      .from(classroomTeachers)
+      .where(eq(classroomTeachers.classroomId, classroomId));
+    // An id that is on the class already stays: only a NEW id must be a TEACHER of the class school.
+    const onClass = new Set(existing.map((row) => row.teacherId));
+    const added = others.filter((id) => !onClass.has(id));
+    if (added.length > 0) {
       const found = await raw
         .select({ id: users.id, role: users.role, schoolId: users.schoolId })
         .from(users)
-        .where(inArray(users.id, others));
+        .where(inArray(users.id, added));
       const byId = new Map(found.map((row) => [row.id, row]));
-      for (const id of others) {
+      for (const id of added) {
         const row = byId.get(id);
         if (!row || !classroom.schoolId || row.schoolId !== classroom.schoolId) {
           throw new SetClassroomTeachersError("CROSS_SCHOOL_TEACHER", "A teacher is not in the school of the classroom");
@@ -107,10 +115,6 @@ export async function setClassroomTeachers({
     }
 
     const keep = new Set([...others, owner]);
-    const existing = await raw
-      .select({ id: classroomTeachers.id, teacherId: classroomTeachers.teacherId })
-      .from(classroomTeachers)
-      .where(eq(classroomTeachers.classroomId, classroomId));
     const seen = new Set<string>();
     const dropRowIds: string[] = [];
     for (const row of existing) {
