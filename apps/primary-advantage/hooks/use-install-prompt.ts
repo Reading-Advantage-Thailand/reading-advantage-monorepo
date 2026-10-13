@@ -17,6 +17,19 @@ export interface BeforeInstallPromptEvent extends Event {
 }
 
 /**
+ * Reads one local storage key. A blocked storage gives null.
+ * @param key The storage key.
+ * @returns The stored value, or null.
+ */
+function readStored(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Checks standalone mode: the app already runs from the home screen.
  * @returns True in standalone display mode or with the iOS standalone flag.
  */
@@ -30,12 +43,15 @@ export function isStandaloneDisplay(): boolean {
 
 /**
  * Checks iOS Safari: it never fires `beforeinstallprompt`, so the notice shows manual steps.
- * @returns True on an iPhone, iPad, or iPod outside standalone mode.
+ * @returns True on an iPhone, iPad (also an iPad with a Macintosh user agent), or iPod outside standalone mode.
  */
 export function isIosInstall(): boolean {
   if (typeof window === "undefined") return false;
   const navigatorWithFlag = window.navigator as Navigator & { standalone?: boolean };
-  return /iphone|ipad|ipod/i.test(window.navigator.userAgent) && navigatorWithFlag.standalone !== true;
+  const { userAgent, maxTouchPoints } = window.navigator;
+  // iPadOS Safari reports a Macintosh user agent; the touch screen tells it from a Mac.
+  const isIosDevice = /iphone|ipad|ipod/i.test(userAgent) || (/macintosh/i.test(userAgent) && maxTouchPoints > 1);
+  return isIosDevice && navigatorWithFlag.standalone !== true;
 }
 
 /**
@@ -53,7 +69,7 @@ export function useInstallPrompt(): {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    if (isStandaloneDisplay() || localStorage.getItem(INSTALL_DISMISS_KEY) === "1") return;
+    if (isStandaloneDisplay() || readStored(INSTALL_DISMISS_KEY) === "1") return;
     if (isIosInstall()) {
       setState("ios-steps");
       return;
@@ -69,20 +85,24 @@ export function useInstallPrompt(): {
 
   const promptInstall = useCallback(async () => {
     if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
+    // The browser accepts one prompt() call for each event, so the event goes away in every case.
+    // A new `beforeinstallprompt` event shows the button again.
+    setDeferredPrompt(null);
+    setState("hidden");
     try {
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === "accepted") {
-        setDeferredPrompt(null);
-        setState("hidden");
-      }
+      await deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
     } catch {
       return;
     }
   }, [deferredPrompt]);
 
   const dismiss = useCallback(() => {
-    localStorage.setItem(INSTALL_DISMISS_KEY, "1");
+    try {
+      localStorage.setItem(INSTALL_DISMISS_KEY, "1");
+    } catch {
+      // A blocked storage only means that the notice can show again.
+    }
     setDeferredPrompt(null);
     setState("hidden");
   }, []);

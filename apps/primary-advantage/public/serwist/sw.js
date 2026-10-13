@@ -7,15 +7,18 @@
  * It replaces the legacy Serwist worker at the same URL. On install it caches the offline
  * fallback page. Navigations go to the network first and fall back to the cached offline page
  * when the network fails; every other request has no handler, so the browser sends it to the
- * network. On activation it deletes each cache that it does not own and reloads each open
- * window once, only when it deleted a legacy cache. Keep the values in step with
+ * network. On activation it deletes each cache except the current offline cache and reloads each open
+ * window once, only when it deleted a legacy cache (a cache without the prefix). Keep the values in step with
  * `OFFLINE_CACHE_NAME` and `OFFLINE_FILES` in `lib/pwa/constants.ts`.
  */
 
 const CACHE_PREFIX = "primary-v2-";
 
-/** Name of the cache that holds the offline fallback page. It keeps the prefix. */
-const OFFLINE_CACHE_NAME = "primary-v2-offline";
+/** Version of the offline cache. Change it with each edit of the offline files. */
+const CACHE_VERSION = "1";
+
+/** Name of the cache that holds the offline fallback page. */
+const OFFLINE_CACHE_NAME = CACHE_PREFIX + "offline-v" + CACHE_VERSION;
 
 /** Files cached at install for the offline fallback. The total stays under 200 KB. */
 const OFFLINE_FILES = ["/offline.html"];
@@ -33,16 +36,17 @@ async function cacheOffline() {
 }
 
 /**
- * Deletes every cache without the prefix, takes control of the open windows, and reloads each
+ * Deletes every cache except the current offline cache, takes control of the open windows, and reloads each
  * window once when at least one legacy cache was deleted.
  * @returns {Promise<void>} Resolves when the clean-up ends and the reloads start.
  */
 async function takeOver() {
   const names = await caches.keys();
-  const legacy = names.filter((name) => !name.startsWith(CACHE_PREFIX));
-  const results = await Promise.all(legacy.map((name) => caches.delete(name)));
+  const stale = names.filter((name) => name !== OFFLINE_CACHE_NAME);
+  const results = await Promise.all(stale.map((name) => caches.delete(name)));
   await worker.clients.claim();
-  if (!results.some(Boolean)) return;
+  const deletedLegacy = stale.some((name, i) => results[i] && !name.startsWith(CACHE_PREFIX));
+  if (!deletedLegacy) return;
   const windows = await worker.clients.matchAll({ type: "window" });
   // Do not await the navigations: a navigation waits for this activation to end, so an await
   // would block the activation until the browser stops the worker.
