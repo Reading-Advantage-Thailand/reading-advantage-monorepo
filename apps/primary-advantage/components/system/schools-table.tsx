@@ -44,7 +44,7 @@ function sortValue(row: PlatformSchoolRow, key: SortKey): string | number {
     case "name":
       return row.name;
     case "active":
-      return row.activePercent ?? -1;
+      return row.activeStudents;
     case "articles":
       return row.articlesOpened;
     case "seats":
@@ -112,7 +112,8 @@ export function SchoolsTable({ rows }: { rows: readonly PlatformSchoolRow[] }) {
 
   const num = (value: number) => format.number(value);
   const activeText = (row: PlatformSchoolRow) => (row.students ? t("table.activeOf", { active: row.activeStudents, students: row.students, percent: row.activePercent ?? 0 }) : "—");
-  const seatsText = (row: PlatformSchoolRow) => (row.seats === null ? t("table.noLicense") : t("table.seatsOf", { used: num(row.seatsUsed), total: num(row.seats) }));
+  const seatsText = (row: PlatformSchoolRow) =>
+    row.seats === null ? t("table.noLicense") : row.students === 0 ? "—" : t("table.seatsOf", { used: num(row.seatsUsed), total: num(row.seats) });
   // The day key is already a Bangkok calendar day, so it prints in UTC without a shift.
   const lastText = (row: PlatformSchoolRow) =>
     row.lastActivityDay ? format.dateTime(new Date(`${row.lastActivityDay}T00:00:00Z`), { day: "numeric", month: "short", timeZone: "UTC" }) : t("table.none");

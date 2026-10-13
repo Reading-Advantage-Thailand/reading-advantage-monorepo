@@ -133,6 +133,26 @@ describe("SchoolsTable", () => {
     expect(shownNames()).toEqual(expected);
   });
 
+  it("sorts the active column on the count of active students (FR-9), not on the percent", () => {
+    renderTable([
+      row({ id: "1", name: "Small", students: 10, activeStudents: 5, activePercent: 50 }),
+      row({ id: "2", name: "Big", students: 500, activeStudents: 100, activePercent: 20 }),
+    ]);
+    fireEvent.click(within(header(en.table.columns.active)).getByRole("button", { hidden: true }));
+    expect(shownNames()).toEqual(["Big", "Small"]);
+  });
+
+  it("shows a dash in the seats cell for a school with no students, and No license when it has none", () => {
+    renderTable([
+      row({ id: "1", name: "Empty", students: 0, activeStudents: 0, activePercent: null, seatsUsed: 0, seats: 30, status: "no_students" }),
+      row({ id: "2", name: "Unlicensed", students: 0, activeStudents: 0, activePercent: null, seatsUsed: 0, seats: null, status: "no_students" }),
+    ]);
+    const rows = within(screen.getByRole("table", { hidden: true })).getAllByRole("row", { hidden: true });
+    expect(rows[1]).not.toHaveTextContent("0 of 30");
+    expect(within(rows[1]).getAllByText("—", { exact: false }).length).toBeGreaterThanOrEqual(2);
+    expect(rows[2]).toHaveTextContent(en.table.noLicense);
+  });
+
   it("sorts names with localeCompare", () => {
     renderTable([row({ id: "1", name: "école B" }), row({ id: "2", name: "Zebra" }), row({ id: "3", name: "Apple" })]);
     fireEvent.click(within(header(en.table.columns.name)).getByRole("button", { hidden: true }));
