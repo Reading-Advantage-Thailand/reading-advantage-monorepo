@@ -75,6 +75,9 @@ Monorepo (integration `ca8869cea`):
   paragraphs, no Thai paragraphs, and no image files. A linked article gives `articles.passage`.
 - `handlebars@4.7.9` is in the lockfile (`apps/reading-advantage`). `qrcode` is a dependency of the
   Primary app (`apps/primary-advantage/package.json:87`).
+  Deviation (2026-10-13): the render step in `packages/domain` uses `qrcode` and not the Workbooks
+  `qrcode-generator`, because the app already declares `qrcode` and the template needs only the module
+  matrix to draw an SVG. The two libraries pick another mask for the same URL; the code text is the same.
 - `packages/domain/src/workbooks/print-bridge.ts` (`PRINT_BRIDGE_SHIM`) prints a sandboxed `srcDoc`
   iframe on the message `workbook:print`. `legacyWorkbookLessonSchema`
   (`packages/domain/src/workbooks/legacy-workbook-importer.ts:16`) mirrors the Workbooks
