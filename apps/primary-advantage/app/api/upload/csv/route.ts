@@ -606,7 +606,7 @@ export async function POST(request: NextRequest) {
       studentLoginsFailedNames,
     }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
-    console.error("File upload error:", error);
+    logger.error("csv_upload_failed", { error });
     return NextResponse.json(
       { error: "Failed to upload file" },
       { status: 500 },
@@ -615,7 +615,7 @@ export async function POST(request: NextRequest) {
     if (tempFilePath) {
       unlink(tempFilePath, (err) => {
         if (err) {
-          console.error("Error deleting temp file:", err);
+          logger.error("csv_upload_temp_file_delete_failed", { error: err });
         }
       });
     }
