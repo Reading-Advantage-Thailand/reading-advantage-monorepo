@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 
 vi.mock("next/font/local", () => ({ default: () => ({ variable: "--font-test", className: "font-test" }) }));
 vi.mock("next/font/google", () => {
@@ -11,10 +11,21 @@ vi.mock("@/components/providers/query-provider", () => ({ default: () => null })
 vi.mock("@/components/ui/sonner", () => ({ Toaster: () => null }));
 vi.mock("nuqs/adapters/next/app", () => ({ NuqsAdapter: () => null }));
 vi.mock("@/hooks/use-layout", () => ({ LayoutProvider: () => null }));
+vi.mock("next-intl/server", () => ({ getTranslations: async () => (key: string) => key }));
 
-import { metadata, viewport } from "../layout";
+import type { Metadata } from "next";
+import { generateMetadata, viewport } from "../layout";
 
 describe("root layout PWA metadata", () => {
+  let metadata: Metadata;
+  beforeAll(async () => {
+    metadata = await generateMetadata({ params: Promise.resolve({ locale: "en" }) });
+  });
+
+  it("keeps the translated tagline (public pages PP-9)", () => {
+    expect(metadata.description).toBe("tagline");
+  });
+
   it("links the web app manifest", () => {
     expect(metadata.manifest).toBe("/manifest.webmanifest");
   });

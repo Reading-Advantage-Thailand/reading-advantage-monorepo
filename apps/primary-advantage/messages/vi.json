@@ -22,7 +22,7 @@
     "home": "Trang chủ",
     "about": "Về chúng tôi",
     "contact": "Liên hệ",
-    "authors": "tác giả",
+    "books": "Sách của chúng tôi",
     "login": "Đăng nhập",
     "menu": "Mục lục",
     "usernav": {
@@ -1348,115 +1348,6 @@
     "vocabularyCard": "Thẻ từ vựng",
     "description": "Ôn tập từ vựng và mở rộng kỹ năng ngôn ngữ với phương pháp lặp lại ngắt quãng",
     "translationLanguageDescription": "Định nghĩa sẽ được hiển thị bằng ngôn ngữ này"
-  },
-  "HomePage": {
-    "hero": {
-      "title": "Giúp học sinh trở thành độc giả tuyệt vời với niềm vui được hỗ trợ bởi AI!",
-      "subtitle": "Cuộc phiêu lưu đọc sách được thiết kế cho độ tuổi 8-12 (Lớp 3-6).",
-      "getStarted": "Bắt đầu ngay!"
-    },
-    "features": {
-      "title": "Tính năng thú vị",
-      "description": "Khám phá cách Primary Advantage làm cho việc đọc trở nên thú vị và giúp bạn học!",
-      "funStory": {
-        "title": "Cuộc phiêu lưu câu chuyện thú vị",
-        "description": "Khám phá những câu chuyện và bài viết thú vị dành cho trẻ em cùng tuổi bạn, luôn có điều mới để đọc!"
-      },
-      "understand": {
-        "title": "Hiểu câu chuyện",
-        "description": "Trả lời các câu hỏi thú vị về những gì bạn đọc để giúp bạn nhớ và hiểu rõ hơn."
-      },
-      "readingLevels": {
-        "title": "Cấp độ đọc phù hợp",
-        "description": "Đọc những câu chuyện phù hợp với cách bạn đọc, làm cho nó dễ dàng và thú vị."
-      },
-      "learnWords": {
-        "title": "Học từ mới",
-        "description": "Tìm các từ mới và thú vị trong câu chuyện và học ý nghĩa của chúng bằng các công cụ thú vị."
-      },
-      "listenAlong": {
-        "title": "Nghe cùng",
-        "description": "Nghe câu chuyện được đọc to cho bạn, tuyệt vời để nghe và theo dõi."
-      },
-      "seeProgress": {
-        "title": "Xem bạn đang phát triển như thế nào",
-        "description": "Kiểm tra tiến độ đọc của bạn và xem tất cả những điều thú vị mà bạn đang học!"
-      },
-      "makeYours": {
-        "title": "Làm cho nó của bạn",
-        "description": "Chọn những câu chuyện bạn thích và đặt mục tiêu đọc, tạo cuộc phiêu lưu đọc của riêng bạn."
-      },
-      "helpTeachers": {
-        "title": "Giúp đỡ cho giáo viên",
-        "description": "Công cụ cho giáo viên để xem lớp học đang làm như thế nào và giúp mọi người học."
-      }
-    },
-    "benefits": {
-      "title": "Tại sao các trường học yêu thích Primary Advantage",
-      "description": "Xem cách Primary Advantage có thể giúp giáo viên và học sinh trong các trường học!",
-      "superReader": {
-        "title": "Trở thành độc giả siêu đẳng",
-        "description": "Đọc nhiều câu chuyện thú vị và chơi trò chơi để nâng cao kỹ năng đọc của bạn!"
-      },
-      "ownPath": {
-        "title": "Con đường đọc của riêng bạn",
-        "description": "Đọc những câu chuyện phù hợp với cấp độ đọc và sở thích của bạn, được tạo ra cho bạn."
-      },
-      "storiesLove": {
-        "title": "Câu chuyện bạn sẽ yêu thích",
-        "description": "Thưởng thức các loại câu chuyện khác nhau với hình ảnh và âm thanh làm cho việc đọc trở nên thú vị."
-      },
-      "watchGrow": {
-        "title": "Xem sức mạnh đọc của bạn phát triển",
-        "description": "Xem tiến độ của bạn và cách bạn đang trở thành một độc giả tốt hơn mỗi ngày."
-      },
-      "learnWords": {
-        "title": "Học nhiều từ mới",
-        "description": "Khám phá các từ thú vị trong câu chuyện và nhớ chúng với các hoạt động thú vị."
-      },
-      "easyUse": {
-        "title": "Dễ sử dụng ở mọi nơi",
-        "description": "Đọc và học ở trường hoặc ở nhà, bất cứ khi nào bạn muốn!"
-      },
-      "greatSchools": {
-        "title": "Tuyệt vời cho các trường học",
-        "description": "Một cách thông minh để các trường học giúp tất cả học sinh trở thành độc giả tuyệt vời."
-      },
-      "moreTime": {
-        "title": "Nhiều thời gian hơn cho việc dạy thú vị",
-        "description": "Công cụ của chúng tôi giúp giáo viên tìm các câu chuyện tuyệt vời và xem tiến độ của học sinh một cách dễ dàng."
-      }
-    },
-    "contact": {
-      "title": "Hãy liên lạc",
-      "description": "Có câu hỏi hoặc cần thêm thông tin? Liên hệ với chúng tôi hôm nay để tìm hiểu thêm về nền tảng của chúng tôi.",
-      "formTitle": "Liên hệ với chúng tôi",
-      "formDescription": "Liên lạc với chúng tôi để tìm hiểu thêm về nền tảng của chúng tôi",
-      "name": "Tên",
-      "namePlaceholder": "Nguyễn Văn A",
-      "institution": "Tổ chức",
-      "institutionPlaceholder": "Trường Đại học Ví dụ",
-      "email": "Email",
-      "emailPlaceholder": "m@example.com",
-      "inquiry": "Yêu cầu",
-      "inquiryPlaceholder": "Chọn một tùy chọn",
-      "inquiryOptions": {
-        "sales": "Bán hàng",
-        "support": "Hỗ trợ",
-        "partnerships": "Hợp tác"
-      },
-      "message": "Tin nhắn",
-      "messagePlaceholder": "Nhập tin nhắn của bạn ở đây.",
-      "sendMessage": "Gửi tin nhắn"
-    },
-    "cta": {
-      "title": "Sẵn sàng cho một cuộc phiêu lưu chính?",
-      "description": "Bắt đầu dùng thử miễn phí và xem việc đọc thú vị như thế nào với Primary Advantage! Hoàn hảo cho học sinh từ 8-12 tuổi."
-    }
-  },
-  "AboutPage": {
-    "title": "Về chúng tôi",
-    "description": "Tìm hiểu thêm về Primary Advantage và sứ mệnh của chúng tôi"
   },
   "AuthPage": {
     "signin": {
@@ -2943,7 +2834,6 @@
     "link": "Word adventures"
   },
   "Footer": {
-    "tagline": "Mang lại trải nghiệm học tiếng Anh tốt nhất.",
     "about": "Giới thiệu",
     "aboutUs": "Về chúng tôi",
     "features": "Tính năng",

@@ -22,7 +22,7 @@
     "home": "Home",
     "about": "About",
     "contact": "Contact",
-    "authors": "Authors",
+    "books": "Our books",
     "login": "Login",
     "menu": "Menu",
     "usernav": {
@@ -1348,115 +1348,6 @@
     "vocabularyCard": "Vocabulary Card",
     "description": "Review vocabulary words and expand your language skills with spaced repetition",
     "translationLanguageDescription": "Definitions will be shown in this language"
-  },
-  "HomePage": {
-    "hero": {
-      "title": "Help Young Students Become Amazing Readers with AI-Powered Fun!",
-      "subtitle": "Reading adventures tailored for ages 8-12 (Grades 3-6).",
-      "getStarted": "Get Started Now!"
-    },
-    "features": {
-      "title": "Cool Features",
-      "description": "Discover how Primary Advantage makes reading fun and helps you learn!",
-      "funStory": {
-        "title": "Fun Story Adventures",
-        "description": "Discover exciting stories and articles just for kids your age, always something new to read!"
-      },
-      "understand": {
-        "title": "Understand the Story",
-        "description": "Answer fun questions about what you read to help you remember and understand better."
-      },
-      "readingLevels": {
-        "title": "Just Right Reading Levels",
-        "description": "Read stories that are perfect for how you read, making it easy and enjoyable."
-      },
-      "learnWords": {
-        "title": "Learn New Words",
-        "description": "Find new and interesting words in the stories and learn what they mean with fun tools."
-      },
-      "listenAlong": {
-        "title": "Listen Along",
-        "description": "Hear the stories read aloud to you, great for listening and following along."
-      },
-      "seeProgress": {
-        "title": "See How You're Growing",
-        "description": "Check out your reading progress and see all the cool things you're learning!"
-      },
-      "makeYours": {
-        "title": "Make It Yours",
-        "description": "Pick stories you like and set goals for reading, creating your own reading adventure."
-      },
-      "helpTeachers": {
-        "title": "Help for Teachers",
-        "description": "Tools for teachers to see how the class is doing and help everyone learn."
-      }
-    },
-    "benefits": {
-      "title": "Why Schools Love Primary Advantage",
-      "description": "See how Primary Advantage can help teachers and students in schools!",
-      "superReader": {
-        "title": "Become a Super Reader",
-        "description": "Read lots of exciting stories and play games to boost your reading skills!"
-      },
-      "ownPath": {
-        "title": "Your Own Reading Path",
-        "description": "Read stories that match your reading level and interests, made just for you."
-      },
-      "storiesLove": {
-        "title": "Stories You'll Love",
-        "description": "Enjoy different kinds of stories with pictures and sounds that make reading fun."
-      },
-      "watchGrow": {
-        "title": "Watch Your Reading Power Grow",
-        "description": "See your progress and how you're becoming a better reader every day."
-      },
-      "learnWords": {
-        "title": "Learn Lots of New Words",
-        "description": "Discover fun words in stories and remember them with cool activities."
-      },
-      "easyUse": {
-        "title": "Easy to Use Anywhere",
-        "description": "Read and learn at school or at home, whenever you want!"
-      },
-      "greatSchools": {
-        "title": "Great for Schools",
-        "description": "A smart way for schools to help all students become great readers."
-      },
-      "moreTime": {
-        "title": "More Time for Teaching Fun",
-        "description": "Our tools help teachers find great stories and see student progress easily."
-      }
-    },
-    "contact": {
-      "title": "Let's Get in Touch",
-      "description": "Have a question or need more information? Contact us today to learn more about our platform.",
-      "formTitle": "Contact Us",
-      "formDescription": "Get in touch with us to learn more about our platform",
-      "name": "Name",
-      "namePlaceholder": "John Doe",
-      "institution": "Institution",
-      "institutionPlaceholder": "University of Example",
-      "email": "Email",
-      "emailPlaceholder": "m@example.com",
-      "inquiry": "Inquiry",
-      "inquiryPlaceholder": "Select an option",
-      "inquiryOptions": {
-        "sales": "Sales",
-        "support": "Support",
-        "partnerships": "Partnerships"
-      },
-      "message": "Message",
-      "messagePlaceholder": "Type your message here.",
-      "sendMessage": "Send Message"
-    },
-    "cta": {
-      "title": "Ready for a Primary Adventure?",
-      "description": "Start your free trial and see how fun reading can be with Primary Advantage! It's perfect for students aged 8-12."
-    }
-  },
-  "AboutPage": {
-    "title": "About Us",
-    "description": "Learn more about Primary Advantage and our mission"
   },
   "AuthPage": {
     "signin": {
@@ -2943,7 +2834,6 @@
     "link": "Word adventures"
   },
   "Footer": {
-    "tagline": "Providing the best English learning experience.",
     "about": "About",
     "aboutUs": "About Us",
     "features": "Features",
@@ -4148,5 +4038,156 @@
     "install": "Install",
     "dismiss": "Not now",
     "offlineSign": "You are offline. The app needs the internet."
+  },
+  "PublicSite": {
+    "tagline": "Printed English workbooks and a reading app for grades 3–6",
+    "trialCta": "Contact us for a free trial",
+    "signIn": "Sign in"
+  },
+  "PublicHome": {
+    "meta": {
+      "title": "Primary Advantage | English workbooks and a reading app for grades 3–6",
+      "description": "Primary Advantage pairs printed English workbooks with a reading app for grades 3–6. CEFR-aligned levels, a game world around the reading, and tools for Thai teachers."
+    },
+    "hero": {
+      "title": "Primary Advantage",
+      "tagline": "Read the book in class. Continue the adventure in the app.",
+      "forSchools": "For schools",
+      "phoneAlt": "The Primary Advantage home page on a phone: the student's hero in the guild hall, with the day streak, XP, and level signs and the Class Quest banner"
+    },
+    "book": {
+      "title": "The book and the app",
+      "body": "Each Primary Advantage workbook has 14 lessons. The app has the same lessons, with audio, pictures, and practice. Students read the printed book in class and continue in the app.",
+      "mockupAlt": "The cover of the Primary Advantage Origins 3.2 workbook",
+      "classBookAlt": "The class book on a phone: Primary Advantage Origins 2, with lesson 1 marked \"Now in class\"",
+      "classBookCaption": "In the app: the class book for Primary Advantage Origins 2"
+    },
+    "inside": {
+      "title": "Inside the app",
+      "intro": "Every page of the app is a place in Chibi Quest, a picture-book game world. The story page stays plain, so the reading comes first.",
+      "hero": {
+        "title": "Choose a hero",
+        "body": "Each student chooses a hero, then picks its skin, hair, eye, and clothes colors.",
+        "alt": "The hero shrine: the hero classes stand on stones, each with a name sign"
+      },
+      "shop": {
+        "title": "Earn GP, choose gear",
+        "body": "Students earn Guild Points (GP) when they read and practice. They spend GP on gear for their hero in the shop. GP cannot be bought with money.",
+        "alt": "The avatar shop on a phone: gear with GP prices, and the bracers marked \"Owned\" after the student buys them"
+      },
+      "quest": {
+        "title": "Class Quest: one boss, the whole class",
+        "body": "During the week, students meet reading goals to earn power-ups. Then the whole class fights one boss together on the classroom projector. There is no leaderboard and no ranking.",
+        "alt": "Class Quest on a phone: the Goblin King, the class damage meter, and the student's hero with five hearts"
+      },
+      "reedy": {
+        "title": "Reedy Preview: speaking practice",
+        "body": "After a lesson, students talk about the story with Reedy, a speaking coach, in English and Thai. Reedy is new, so it can make mistakes. Each student has a monthly time limit.",
+        "alt": "Reedy Preview on a phone: the student's Wizard hero at the campfire, the minutes meter, and the Preview label"
+      },
+      "wordAdventures": {
+        "title": "Word adventures",
+        "body": "Games that use the words and sentences each student saved from their reading. A 2D mode runs on older phones.",
+        "alt": "Word adventures on desktop: game cards for Rune Match, Labyrinth of the Goblin King, Potion Rush, and Dragon Flight"
+      }
+    },
+    "teachers": {
+      "title": "For teachers",
+      "body": "Designed for Thai teachers. Each lesson has a step-by-step plan in the Teacher manual, so you always know what to do next.",
+      "points": [
+        "Open each lesson for the class when you teach it from the workbook.",
+        "Show the lesson and the Class Quest battle on the classroom projector.",
+        "See each student's progress, lesson by lesson, and who needs help."
+      ],
+      "alt": "The class progress page on desktop: each student's lessons, with a mark on the students who need help"
+    },
+    "levels": {
+      "title": "Levels",
+      "body": "Primary Advantage is CEFR-aligned, with 15 levels from Pre-A1 (A0) to B2. Each CEFR band has three levels, so students move up in small steps."
+    },
+    "families": {
+      "title": "For families",
+      "body": "Children can also learn with the same books outside school. In Tutor Advantage, a local tutor teaches the class, and one class package uses one workbook.",
+      "link": "Find out about Tutor Advantage"
+    },
+    "contact": {
+      "title": "Talk to us",
+      "body": "Schools: ask us for a free trial or a demo. Families: ask us about Tutor Advantage classes.",
+      "line": "LINE Official Account",
+      "lineQrAlt": "QR code for the Reading Advantage LINE Official Account",
+      "facebook": "Facebook",
+      "phone": "Phone",
+      "email": "Email"
+    }
+  },
+  "PublicAbout": {
+    "meta": {
+      "title": "About us | Primary Advantage",
+      "description": "Reading Advantage (Thailand) is a curriculum publisher in Khon Kaen. We make Primary Advantage: printed English workbooks and a reading app for grades 3–6."
+    },
+    "title": "About us",
+    "who": {
+      "title": "Who we are",
+      "body": "Reading Advantage (Thailand) is a curriculum publisher in Khon Kaen. Phikul Phookathin and Daniel Bo started the company in January 2024. We make printed English workbooks and matching apps for Thai schools and families."
+    },
+    "product": {
+      "title": "What Primary Advantage is",
+      "body": "Primary Advantage is English reading for grades 3–6 (ages 8–11). Each workbook has 14 lessons with stories and informational texts, new words, questions, and writing, and the app has the same lessons. Every article, question, and word is being tagged to Mastery Advantage, our map of English skills. The method is extensive reading. Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)."
+    },
+    "schools": {
+      "title": "For schools: Blended Learning",
+      "body": "Schools use Primary Advantage through Blended Learning: printed workbooks and the app, with teacher training and step-by-step lesson plans. The lesson plans assume the teacher is a fluent Thai speaker, not a native English teacher."
+    },
+    "families": {
+      "title": "For families: Tutor Advantage",
+      "body": "Families can learn with the same books through Tutor Advantage. A local tutor teaches the class, and one class package uses one workbook.",
+      "link": "Find out about Tutor Advantage"
+    }
+  },
+  "PublicContact": {
+    "meta": {
+      "title": "Contact us | Primary Advantage",
+      "description": "Contact Reading Advantage about Primary Advantage: a free trial or a demo for your school, or Tutor Advantage classes for your child."
+    },
+    "title": "Contact us",
+    "intro": "Schools can ask for a free trial or a demo. Families can ask about Tutor Advantage classes. Send us a message on LINE or Facebook, call us, or send an email.",
+    "line": "LINE Official Account",
+    "lineQrAlt": "QR code for the Reading Advantage LINE Official Account",
+    "facebook": "Facebook",
+    "phone": "Phone",
+    "email": "Email"
+  },
+  "PublicBooks": {
+    "meta": {
+      "title": "Our books | Primary Advantage",
+      "description": "The Primary Advantage workbook series: Origins, Quest, and Adventure. Written and edited by the Reading Advantage team in Khon Kaen."
+    },
+    "title": "Our books",
+    "intro": "Primary Advantage is a series of printed English workbooks for grades 3–6. Each book has 14 lessons, and the app has the same lessons. The series follows the CEFR levels.",
+    "series": {
+      "origins": {
+        "title": "Primary Advantage Origins",
+        "body": "Pre-A1 (A0). First stories and short informational texts about school, family, friends, and the world around them. Primary Advantage Origins 2 and Primary Advantage Origins 3.1 are in print. Primary Advantage Origins 3.2 is next."
+      },
+      "quest": {
+        "title": "Primary Advantage Quest",
+        "body": "A1. Longer stories and texts, with new words in each lesson, for students who can read simple English. Primary Advantage Quest 4 is the first Quest book in preparation."
+      },
+      "adventure": {
+        "title": "Primary Advantage Adventure",
+        "body": "A2. Stories and informational texts for students who read with more confidence. The Adventure books are planned."
+      }
+    },
+    "team": {
+      "title": "Who makes the books",
+      "body": "The Reading Advantage team in Khon Kaen writes and edits every book. The founders lead the team: Phikul Phookathin (President; M.Ed., Educational Leadership) and Daniel Bo (Product Manager). Together they have 40 years of teaching experience."
+    },
+    "mockupAlt": "The cover of the Primary Advantage Origins 3.2 workbook",
+    "covers": {
+      "origins2": "The cover of the Primary Advantage Origins 2 workbook",
+      "origins31": "The cover of the Primary Advantage Origins 3.1 workbook",
+      "origins32": "The cover of the Primary Advantage Origins 3.2 workbook",
+      "quest4": "The cover of the Primary Advantage Quest 4 workbook"
+    }
   }
 }

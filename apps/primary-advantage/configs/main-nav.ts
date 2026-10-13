@@ -20,8 +20,8 @@ export const sharedMainNav: MainNavItem[] = [
     icon: "MailIcon",
   },
   {
-    title: "authors",
-    href: "/authors",
-    icon: "UsersIcon",
+    title: "books",
+    href: "/books",
+    icon: "BookIcon",
   },
 ];

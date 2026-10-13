@@ -2,7 +2,6 @@ import { SiteConfig } from "@/types";
 
 export const siteConfig: SiteConfig = {
   name: "Primary Advantage",
-  description: "Extensive reading app incorporating AI.",
   url: "https://primary.reading-advantage.com",
   ogImage: "",
   link: {
@@ -26,9 +25,9 @@ export const siteConfig: SiteConfig = {
       icon: "InfoIcon",
     },
     {
-      href: "/authors",
-      label: "authors",
-      icon: "UsersIcon",
+      href: "/books",
+      label: "books",
+      icon: "BookIcon",
     },
   ],
 };

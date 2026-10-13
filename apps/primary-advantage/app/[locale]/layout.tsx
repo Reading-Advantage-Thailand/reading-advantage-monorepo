@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { NextIntlClientProvider, hasLocale, Locale } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
@@ -53,38 +54,42 @@ const fontVariables = [fontThai, fontLatin, fontArticle, fontLogo, fontFredoka, 
   .map((font) => font.variable)
   .join(" ");
 
-export const metadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: "%s | " + siteConfig.name,
-  },
-  description: siteConfig.description,
-  keywords: [
-    "primary advantage",
-    "primary",
-    "advantage",
-    "primary advantage app",
-    "primary advantage web",
-  ],
-  // openGraph: {
-  //   type: "website",
-  //   locale: "en_US",
-  //   url: siteConfig.url,
-  //   title: siteConfig.name,
-  //   description: siteConfig.description,
-  //   siteName: siteConfig.name,
-  // },
-  icons: {
-    icon: "/primary-advantage.png",
-    apple: "/icons/primary-advantage-180.png",
-  },
-  manifest: "/manifest.webmanifest",
-  appleWebApp: {
-    capable: true,
-    title: "Primary Advantage",
-    statusBarStyle: "default",
-  },
-};
+/**
+ * The site metadata: the name as the title template and the translated site tagline (spec PP-9).
+ * @param props.params The route parameters with the locale.
+ * @returns The metadata.
+ */
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({
+    locale: hasLocale(routing.locales, locale) ? locale : routing.defaultLocale,
+    namespace: "PublicSite",
+  });
+  return {
+    title: {
+      default: siteConfig.name,
+      template: "%s | " + siteConfig.name,
+    },
+    description: t("tagline"),
+    keywords: [
+      "primary advantage",
+      "primary",
+      "advantage",
+      "primary advantage app",
+      "primary advantage web",
+    ],
+    icons: {
+      icon: "/primary-advantage.png",
+      apple: "/icons/primary-advantage-180.png",
+    },
+    manifest: "/manifest.webmanifest",
+    appleWebApp: {
+      capable: true,
+      title: "Primary Advantage",
+      statusBarStyle: "default",
+    },
+  };
+}
 
 /** Lets the page draw under the notch and home bar, so the safe-area insets get values. */
 export const viewport: Viewport = {
