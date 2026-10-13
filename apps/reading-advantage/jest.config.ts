@@ -31,6 +31,7 @@ const config: Config = {
     "^@reading-advantage/knowledge-space-core$": "<rootDir>/../../packages/knowledge-space-core/src/index.ts",
     "^@reading-advantage/practice-core/contract$": "<rootDir>/../../packages/practice-core/src/practice/contract.ts",
     "^@reading-advantage/practice-core/(.*)$": "<rootDir>/../../packages/practice-core/src/practice/$1.ts",
+    "^@reading-advantage/avatar-kit$": "<rootDir>/../../packages/avatar-kit/src/index.ts",
     "^@reading-advantage/srs-engine$": "<rootDir>/../../packages/srs-engine/src/index.ts",
     "^@reading-advantage/sales-knowledge$": "<rootDir>/../../packages/sales-knowledge/src/index.ts",
     "^@reading-advantage/ui$": "<rootDir>/../../packages/ui/src/index.ts",
