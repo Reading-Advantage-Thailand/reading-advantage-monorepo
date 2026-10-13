@@ -102,3 +102,8 @@ Build this phase only if the owner chose it in Phase 0.
 - [ ] Task: Hand the AC-4 check to `primary_parity_rehearsal3_20261011` for the cutover command sheet
 - [x] Task `e816799e6`: Write `measure/tracks/primary_parity_pwa_20261011/acceptance.md` from the runbook template (kit FR-10), with the owner look check - look check pending (owner, async); AC-1 proven, AC-2/AC-3/AC-4 pending
 - [ ] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: M-3 `runbook-checks.md` steps 5-6 and AC-1 text in `acceptance.md` 2d2a132c1
+- [x] Task: Low: iPad count, install event cleared after `prompt()`, `localStorage` guard, cache version constant, no `acorn` import cfdeee79e

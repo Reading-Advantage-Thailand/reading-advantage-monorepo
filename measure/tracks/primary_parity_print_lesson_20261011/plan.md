@@ -104,3 +104,12 @@ _Story ref: spec.md#story-s4_
 - [ ] Task: Docs and doctor (generate.sh run 2026-10-12; doctor.sh fails only on pre-existing A13 `agents_md_audit_science_advantage_20260603`)
     - [ ] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
 - [ ] Task: Measure - User Manual Verification 'Phase S4: Print this lesson from the class book' (Protocol in workflow.md)
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: H-5 CORS header for `/print-fonts/:path*` de13cd6f1
+- [x] Task: M-19 srcDoc set after mount, so Print never stays disabled de13cd6f1
+- [x] Task: M-20 browser check written in `print-check/README.md` (batch, orchestrator); render not changed 350f7f28b
+- [x] Task: Low: Workbooks kit paths in the dirty check af9b61977
+- [x] Task: Low: footer with the kit commit and the data commit; template field test; vocab_fill test 1be1425ab
+- [x] Task: Low: qrcode reason in `spec.md`; PDFs moved out; two plan tasks reopened 350f7f28b
