@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { setUserRole } from "@/server/utils/role-sql";
 import { eq } from 'drizzle-orm';
-import { users, userRoles, roles } from '@reading-advantage/db/schema';
+import { users } from '@reading-advantage/db/schema';
 import { getTenantDB, getUnscopedDB, type TenantDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from "@reading-advantage/auth";
 import { currentUser } from "@/lib/session";
@@ -81,6 +81,17 @@ export async function PATCH(
       }
     }
 
+    // A STUDENT account never becomes an admin through this route.
+    if (role !== undefined && normalizeRole(existingTarget.role) === "STUDENT") {
+      const newRole = normalizeRole(role);
+      if (newRole === "ADMIN" || newRole === "SYSTEM") {
+        return NextResponse.json(
+          { error: "Cannot assign this role to a student" },
+          { status: 403 },
+        );
+      }
+    }
+
     // Password and role writes: only strictly lower-ranked targets (shared reset matrix),
     // judged on the target's CURRENT effective rank (legacy rows included), never on the requested one.
     if (password !== undefined || role !== undefined) {
@@ -145,15 +156,8 @@ export async function PATCH(
         .where(eq(users.id, userId))
         .limit(1);
 
-      const userRoleRows = await rawTx.select({
-        roleId: userRoles.roleId,
-        roleName: roles.name,
-      })
-        .from(userRoles)
-        .innerJoin(roles, eq(roles.id, userRoles.roleId))
-        .where(eq(userRoles.userId, userId));
-
-      return updated ? { ...updated, roles: userRoleRows } : null;
+      // users.role is the truth; migrated data has no user_roles rows.
+      return updated ?? null;
     });
 
     if (newPasswordHash) {
@@ -175,7 +179,7 @@ export async function PATCH(
           xp: updatedUser?.xp,
           level: updatedUser?.level,
           cefrLevel: updatedUser?.cefrLevel,
-          roles: updatedUser?.roles.map((ur: any) => ur.roleName),
+          roles: updatedUser?.role ? [updatedUser.role] : [],
         },
       },
       { status: 200 },
