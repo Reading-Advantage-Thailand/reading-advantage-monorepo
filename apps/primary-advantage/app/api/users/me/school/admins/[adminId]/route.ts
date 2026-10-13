@@ -101,6 +101,19 @@ export async function DELETE(
       );
     }
 
+    // Only the owner or SYSTEM may remove the owner from the admins.
+    if (
+      userSchool.ownerId &&
+      adminRecord.admin.userId === userSchool.ownerId &&
+      currentUser.id !== userSchool.ownerId &&
+      normalizeRole(currentUser.role) !== "SYSTEM"
+    ) {
+      return NextResponse.json(
+        { error: "Only the school owner can remove the owner as admin" },
+        { status: 403 },
+      );
+    }
+
     // Prevent owner from removing themselves
     if (adminRecord.admin.userId === currentUser.id) {
       return NextResponse.json(
