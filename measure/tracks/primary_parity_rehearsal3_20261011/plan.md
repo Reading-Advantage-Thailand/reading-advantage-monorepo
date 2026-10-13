@@ -85,3 +85,4 @@ monorepo session before each write to `primary-parity-integration`.
 ## Phase: Review Fixes 2026-10-13
 
 - [x] Task: M-3 C13 worker check corrected in `cutover-commands.md` 2d2a132c1
+- [x] Task: M-2 change list: lesson-attempts ETL row, Dockerfile step, image-layer check, 404 check, browser-check block table, story counts, AI note; `umask 077` before the contact export 7be5052b3

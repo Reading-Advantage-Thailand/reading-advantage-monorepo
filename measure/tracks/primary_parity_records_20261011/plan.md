@@ -168,3 +168,6 @@ Notes on the checks:
 - AC-3 also needs the six facts of FR-3 in the cutover record. Phase 4 checks them by reading the
   section, not by a search.
 
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: M-22 `docs/primary-whats-moved.md` swept to HEAD: system dashboard, manifest, old game URL (308), staff preview, lesson, stories, teacher and admin rows; ADM-13 marked reduced; commit line added 918bd5c5b

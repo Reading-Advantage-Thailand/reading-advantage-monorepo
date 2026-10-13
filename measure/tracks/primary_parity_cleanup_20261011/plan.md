@@ -229,3 +229,5 @@ The grep checks exclude this file: `':!apps/primary-advantage/lib/__tests__/remo
 ## Phase: Review Fixes 2026-10-13
 - [x] Task: L-16 a failed AI call writes `ai_call_failed` (in `loggedAiCall`, used by `assistant.ts`) 3faa192de
 - [x] Task: AC-3 removed article path gives 404: the `[articleId]` route answers 404 for POST, PUT, PATCH, DELETE 394a5f4d1
+- [x] Task: H-4 ElvGames files are deleted in the builder stage; the runner has no `rm`; the guard test checks both; image-layer check written for rehearsal 3 6dffb7293
+- [x] Task: Tech debt pruned to 50 lines, F-101/F-202 row added, stale story row removed; the closeout test passes b7df20013

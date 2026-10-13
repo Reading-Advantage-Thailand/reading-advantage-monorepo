@@ -175,3 +175,5 @@ _Story ref: spec.md#story-s7_
 - [x] Task: Low SAQ and LAQ random; Done needs MC+SA+LA (spec S3); chapters.is_public filter; level-up keeps a started story open 6c7b60658
 - [x] Task: Low feedback throws when the story has no cefrLevel: `chapter.cefrLevel ?? "A1"` in `readFeedbackSource` (lane A, A3) 221c8b543
 - [x] Task: Low LAQ limit of 2 tries on the server: parity default. No existing limiter fits without a schema change; the limit stays client-only.
+- [x] Task: M-1 snapshot 0072 written, 0073 chained after it and holds the 0072 changes; a test checks the journal and the prevId chain; drizzle-kit generate says nothing changed 9d8a5686e
+- [x] Task: L2 the three STORIES_*_QUESTION activity labels exist in the five locale files fc6d4c723

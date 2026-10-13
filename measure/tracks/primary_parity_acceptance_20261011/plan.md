@@ -99,3 +99,8 @@ before a build; no dev server; no run with 25 students.
 - [x] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
     - Look check pending (owner, async). Steps: run the kit tests and type check (runbook section 12); read runbook section 11 (Batch run); doctor shows only A13.
     - Notes: kit tests 56 pass; type check clean; JSDoc on each export; password search (24 values) has no hit in the repository or in the private reports; doctor fails only on A13 (not this track).
+
+## Phase: Review Fixes 2026-10-13
+
+- [x] Task: M-23 `requires` on a pair, final-path flag, `waitForMissed`; report and PNG files get mode 600; kit tests 118 pass 5dcdea74b
+- [x] Task: Kit lows: pair rows use triage ids; the `{map:}` lesson corrected in two plan-review files 41b6ac258
