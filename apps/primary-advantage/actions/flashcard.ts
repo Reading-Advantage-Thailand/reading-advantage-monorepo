@@ -2,6 +2,7 @@
 
 import { currentUser } from "@/lib/session";
 import { guardStudentAction } from "@/lib/student-view";
+import { logger } from "@/lib/observability/logger";
 import { z } from "zod";
 import { createEmptyCard, Card, Rating } from "ts-fsrs";
 import {
@@ -1088,7 +1089,7 @@ export async function saveChapterToFlashcard(chapterId: string) {
       },
     };
   } catch (error) {
-    console.error("Error saving chapter to flashcard:", error);
+    logger.error("chapter_flashcard_save_failed", { error, chapterId });
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",

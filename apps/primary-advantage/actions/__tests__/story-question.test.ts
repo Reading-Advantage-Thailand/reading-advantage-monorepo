@@ -148,6 +148,14 @@ describe("submitChapterWritten", () => {
     expect(mocks.saveChapter).toHaveBeenCalledWith(CHAPTER);
   });
 
+  it("returns 0 XP when the shared block did not save", async () => {
+    mocks.resolveWritten.mockResolvedValue({ question: "Why?", suggestedAnswer: "Because.", xpEarned: 4 });
+    mocks.award.mockResolvedValue({ status: "already-complete" });
+    const res = await submitChapterWritten(CHAPTER, "sa", Q1, "Because.", 4);
+    expect(res).toMatchObject({ success: true, xpEarned: 0 });
+    expect(mocks.saveChapter).not.toHaveBeenCalled();
+  });
+
   it("refuses a second submit for the chapter", async () => {
     mocks.resolveWritten.mockRejectedValue(new Error("Chapter SA already submitted"));
     expect(await submitChapterWritten(CHAPTER, "sa", Q1, "Because.", 4)).toEqual({ error: "already_submitted" });

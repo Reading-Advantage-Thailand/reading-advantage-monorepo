@@ -6,8 +6,10 @@ const mocks = vi.hoisted(() => ({
   currentUser: vi.fn(),
   select: vi.fn(),
   insert: vi.fn(),
+  logError: vi.fn(),
 }));
 
+vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError, warn: vi.fn(), info: vi.fn() } }));
 vi.mock("@/lib/session", () => ({ currentUser: mocks.currentUser, getCurrentUser: mocks.currentUser }));
 vi.mock("@reading-advantage/db", () => ({
   db: { select: mocks.select, insert: mocks.insert },
@@ -121,6 +123,18 @@ describe("saveChapterToFlashcard", () => {
       expect(row.table).toBe(flashcardCards);
       expect(row.data.sourceId).toBe(CHAPTER);
     }
+  });
+
+  it("logs a failed save through the logger, not the console", async () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    mocks.select.mockImplementation(() => {
+      throw new Error("db down");
+    });
+    const res = (await saveChapterToFlashcard(CHAPTER)) as SaveResult;
+    expect(res.success).toBe(false);
+    expect(mocks.logError).toHaveBeenCalledWith("chapter_flashcard_save_failed", expect.objectContaining({ chapterId: CHAPTER }));
+    expect(consoleError).not.toHaveBeenCalled();
+    consoleError.mockRestore();
   });
 
   it("saves no second card for a word already in the deck", async () => {
