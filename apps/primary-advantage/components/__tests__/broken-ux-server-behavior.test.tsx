@@ -34,6 +34,11 @@ vi.mock("@/server/controllers/schoolController", () => ({
   getSchoolLeaderboardController: vi.fn(),
 }));
 
+// The layout loads school_admins rows for a TEACHER; this test has no database.
+vi.mock("@/server/utils/school-admin-rows", () => ({
+  withSchoolAdminRows: async (user: object) => ({ ...user, SchoolAdmins: [] }),
+}));
+
 import AdminPage from "../../app/[locale]/admin/page";
 import AppLayout from "../shared/app-layout";
 import Home from "../../app/[locale]/(index)/page";
