@@ -94,11 +94,13 @@ export default async function AppLayout({
     );
   }
 
+  // The staff shell: the wooden header and the signpost menu of the student shell, on a parchment
+  // ground (owner look check 2026-10-14, option B).
   return (
     <SoundProvider userId={user.id}>
-    <div className="flex min-h-screen flex-col">
+    <div className="cq-staff flex min-h-screen flex-col">
       <SkipLink />
-      <header className="bg-background/95 sticky top-0 z-40 border-b backdrop-blur">
+      <header className="cq-header sticky top-0 z-40">
         <div className="container flex h-16 items-center justify-between gap-2">
           <div className="flex items-center gap-1">
             <MobileMenu area={navArea} user={user} settings={settings} />

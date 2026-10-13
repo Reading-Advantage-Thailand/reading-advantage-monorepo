@@ -44,7 +44,7 @@ function menuItems(area: NavArea | null, settings?: boolean): SidebarNavItem[] {
  */
 export function AppSidebar({ area, user, settings }: AppNavProps) {
   const t = useTranslations("AppShell");
-  return <SidebarNav items={menuItems(area, settings)} user={user} label={t("mainNavigation")} />;
+  return <SidebarNav items={menuItems(area, settings)} user={user} label={t("mainNavigation")} skin="plank" />;
 }
 
 /**

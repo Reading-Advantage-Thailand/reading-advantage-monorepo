@@ -41,6 +41,9 @@ players see for the world is Chibi Quest.
    floating damage number, coins flying on a purchase. No motion for decoration alone.
 7. **Dark mode is night.** The same scene with the lanterns lit; the chrome does not change.
 8. **The owner sees captures before a page is called done**, at 375 px and 1280 px.
+9. **Staff pages share the frame.** The TEACHER, ADMIN, and SYSTEM shell has the wooden header and
+   the signpost menu of the student shell on a parchment ground (`.cq-staff`; night in the dark theme),
+   so the staff scenes and the plain staff tables sit in one frame (owner choice 2026-10-14, option B).
 
 ## 3. The places
 

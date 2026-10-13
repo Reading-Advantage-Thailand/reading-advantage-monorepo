@@ -25,6 +25,8 @@ interface SidebarNavProps {
   user?: UserForPermissions | null | undefined;
   /** Accessible name of the nav landmark. */
   label?: string;
+  /** "plank": the wooden signpost of the Chibi Quest skin (styles/rpg.css), for the staff sidebar. */
+  skin?: "plank";
 }
 
 type AnyNavItem = SidebarNavItem | NavLink;
@@ -41,10 +43,10 @@ function iconFor(name?: string): LucideIcon | null {
 /**
  * Renders the role menu as a vertical list with collapsible groups. Items without
  * permission are hidden or shown locked. The one active link gets aria-current="page".
- * @param props The menu items, the user for permission checks, and the landmark label.
+ * @param props The menu items, the user for permission checks, the landmark label, and the skin.
  * @returns The menu, or null when there are no items.
  */
-export function SidebarNav({ items, user, label }: SidebarNavProps) {
+export function SidebarNav({ items, user, label, skin }: SidebarNavProps) {
   const path = usePathname();
   const t = useTranslations("Sidebar");
   const tSubItem = useTranslations("Sidebar.subItem");
@@ -80,16 +82,19 @@ export function SidebarNav({ items, user, label }: SidebarNavProps) {
   });
   const activeId = activeKey(candidates, path);
 
+  // A plank gets its look from .cq-signpost (a component-layer rule), so it takes no color utilities.
   const linkClass = (active: boolean, locked: boolean, disabled?: boolean) =>
     cn(
-      "group hover:bg-accent hover:text-accent-foreground flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
-      active ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-muted-foreground",
+      skin
+        ? "flex items-center"
+        : "group hover:bg-accent hover:text-accent-foreground flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+      !skin && (active ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-muted-foreground"),
       (disabled || locked) && "cursor-not-allowed opacity-80",
     );
 
   return (
     <TooltipProvider>
-      <nav aria-label={label} className="flex flex-col gap-1">
+      <nav aria-label={label} className={skin ? "cq-signpost flex flex-col" : "flex flex-col gap-1"}>
         {visibleItems.map((item, index) => {
           const Icon = iconFor(item.icon);
           const sectionKey = `${item.title}-${index}`;
@@ -113,6 +118,7 @@ export function SidebarNav({ items, user, label }: SidebarNavProps) {
                           "w-full justify-between",
                         )}
                         disabled={item.disabled || isLocked}
+                        data-active={childActive || undefined}
                       >
                         <span className="flex items-center">
                           {isLocked ? (
@@ -139,7 +145,7 @@ export function SidebarNav({ items, user, label }: SidebarNavProps) {
                     </TooltipContent>
                   )}
                 </Tooltip>
-                <CollapsibleContent className="border-border/40 ml-4 space-y-1 border-l py-1 pl-3">
+                <CollapsibleContent className={skin ? "ml-5" : "border-border/40 ml-4 space-y-1 border-l py-1 pl-3"}>
                   {childItems.map((subItem, subIndex) => {
                     const SubIcon = iconFor(subItem.icon);
                     const isSubItemLocked = isItemLocked(subItem);
