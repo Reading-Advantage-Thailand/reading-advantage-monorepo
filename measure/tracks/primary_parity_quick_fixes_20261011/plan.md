@@ -198,3 +198,8 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: H-1 class edit accepts a number grade (PATCH schema, teacher dialog sends a string); the create route has no Zod schema and its model already parses the grade with `parseInt`, so no change there ea4dcebde
 - [x] Task: L-13 teacher edit dialog lists grades 1 to 12 ea4dcebde
 - [x] Task: Low: the edit dialog does not open again after a save while the URL still has `edit` ea4dcebde
+- [x] Task: M-6 only the school owner or SYSTEM removes the owner from the admins bec40ee84
+- [x] Task: Low: PATCH /api/users/[id] refuses ADMIN or SYSTEM for a STUDENT target, and returns `[users.role]` as roles 901a79102
+- [x] Task: Low: school DELETE sets the owner to TEACHER, and an ADMIN of a school with no owner may delete it 12ecd72c6
+- [x] Task: Low: a TEACHER with a school_admins row renames the school (`canManageSchool` takes `hasSchoolAdminRow`); the menu loads the row for a TEACHER dc0503bf6
+- [x] Task: License key form removed from the user profile page until STU-19 (default; redeem not ported); the dead component is deleted c1d853021

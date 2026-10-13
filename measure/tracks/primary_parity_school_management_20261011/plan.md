@@ -164,3 +164,6 @@ _Story ref: spec.md#story-s5_
 - [x] Task: L-6 create dialog omits an empty passwordStudents 4d7595a68
 - [x] Task: Low: SYSTEM cannot add a teacher with no school (dialog and model) c5281808f
 - [x] Task: Low: teacher statistics follow the SYSTEM school filter 5a0412b89 (model hunk is in c5281808f)
+- [x] Task: M-7 `setUserRole` clears the `user_roles` rows and, below ADMIN, the `school_admins` rows; `updateTeacher` also acts when only a legacy admin row lifted the rank 43a2ae29d
+- [x] Task: M-11 an ADMIN changes the role of another ADMIN of the same school (never self, never SYSTEM; password rules unchanged; default of the fix brief) 43a2ae29d
+- [x] Task: Low (S4 M12): a TEACHER with a school_admins row sees the license link and renames the school dc0503bf6
