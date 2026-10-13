@@ -14,4 +14,12 @@ describe("next.config headers()", () => {
     expect(map["Service-Worker-Allowed"]).toBe("/");
     expect(map["Cache-Control"]).toBe("no-cache");
   });
+
+  it("lets the sandboxed print frame load the kit fonts with a CORS header", async () => {
+    const rules = await (nextConfig as { headers?: () => Promise<{ source: string; headers: { key: string; value: string }[] }[]> }).headers?.();
+    const rule = rules?.find((r) => r.source === "/print-fonts/:path*");
+    expect(rule).toBeDefined();
+    const map = Object.fromEntries((rule?.headers ?? []).map((h) => [h.key, h.value]));
+    expect(map["Access-Control-Allow-Origin"]).toBe("*");
+  });
 });
