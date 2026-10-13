@@ -12,6 +12,7 @@ import { ReadAlongPlayer } from "@/components/read-along/read-along-player";
 import { useFollowScroll } from "@/hooks/use-follow-scroll";
 import { useReadAlong } from "@/hooks/use-read-along";
 import { useLocale, useTranslations } from "next-intl";
+import { toTranslationLanguage } from "@/lib/translation-language";
 
 /**
  * Shared first/deep reading task with optional translation overlay.
@@ -121,6 +122,13 @@ export function TaskReading({
         </div>
       )}
 
+      <p
+        role="note"
+        className="rounded-lg border-2 border-dashed border-amber-500 bg-amber-50 px-3 py-2 text-center text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100"
+      >
+        {tComponents("readAlongHint")}
+      </p>
+
       {/* Reading Content */}
       <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-zinc-200 shadow-lg dark:border-gray-700 dark:bg-gray-900">
         <div className="max-w-none p-4 sm:p-8 lg:p-12">
@@ -139,7 +147,7 @@ export function TaskReading({
                 </button>
               </div>
               <div className="leading-relaxed text-wrap">
-                {(article.translatedPassage as Record<string, string[]> | null)?.[locale]?.[selectedSentence]}
+                {(article.translatedPassage as Record<string, string[]> | null)?.[toTranslationLanguage(locale)]?.[selectedSentence]}
               </div>
             </div>
           )}

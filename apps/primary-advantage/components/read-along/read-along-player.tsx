@@ -103,8 +103,8 @@ export function ReadAlongPlayer({
         <button
           type="button"
           aria-label={t("nextSentence")}
-          disabled={current >= sentenceCount - 1}
-          onClick={() => onPlaySentence(current + 1)}
+          disabled={current >= sentenceCount - 1 && sentenceIndex >= 0}
+          onClick={() => onPlaySentence(sentenceIndex < 0 ? 0 : current + 1)}
           className={cn(rpgButton("wood"), SMALL)}
         >
           <SkipForward className="size-5" />
