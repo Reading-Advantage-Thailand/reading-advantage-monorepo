@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { BookOpenIcon, HistoryIcon, RotateCcwIcon, SearchIcon } from "lucide-react";
 import { EmptyState, ErrorState, ShimmerSkeleton, StatusChip, cardHoverClassName } from "@reading-advantage/ui";
 import { Link } from "@/i18n/navigation";
@@ -213,7 +214,7 @@ export function HistoryList({ variant }: { variant: HistoryListVariant }) {
  */
 function RecordCard({ record, reminder }: { record: HistoryRecord; reminder: boolean }) {
   const t = useTranslations("StudentHistory");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const statusKey = `status.${record.status}`;
   const status = t.has(statusKey) ? t(statusKey) : null;
   const tone = record.status.startsWith("COMPLETED") ? "success" : record.status === "READ" ? "info" : "neutral";
