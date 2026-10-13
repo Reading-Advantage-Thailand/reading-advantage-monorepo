@@ -638,7 +638,6 @@ export const getUserReminderReread = async (userId: string) => {
           updated_at: data.lastUpdated.toISOString(),
           rated: article.rating || 0,
           status: status,
-          attemptNumber: Math.max(1, ...activities.map((a: any) => attemptOf.get(a.id) ?? 1)),
         };
       })
       .filter(Boolean)
