@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, max } from "drizzle-orm";
+import { and, asc, eq, inArray, max, or } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
 import {
   articleActivityLogs,
@@ -42,7 +42,8 @@ export interface CloseAttemptParams {
 /**
  * Closes the current attempt of one student on one article inside an open transaction. It copies
  * the lesson rows into the history, deletes them, clears the flags, and resets the progress. XP
- * logs and `users.xp` stay. The caller must authorize the user and run this inside a transaction.
+ * logs and `users.xp` stay. The student row is locked first, so two closes at the same time run
+ * one after the other. The caller must authorize the user and run this inside a transaction.
  * @param tx The open transaction.
  * @param params The school, the acting user, and the input.
  * @returns Whether an attempt closed, and its number.
@@ -51,7 +52,7 @@ export interface CloseAttemptParams {
 export async function closeAttemptInTx(tx: DB, params: CloseAttemptParams): Promise<CloseLessonAttemptOutput> {
   const input = closeLessonAttemptInput.parse(params.input);
   const now = params.now ?? new Date();
-  const [owner] = await tx.select({ schoolId: users.schoolId }).from(users).where(eq(users.id, input.studentId)).limit(1);
+  const [owner] = await tx.select({ schoolId: users.schoolId }).from(users).where(eq(users.id, input.studentId)).limit(1).for("update");
   if (!owner || owner.schoolId !== params.schoolId) throw new AuthError("The student is not in your school", "FORBIDDEN");
 
   const activities = await tx
@@ -64,7 +65,7 @@ export async function closeAttemptInTx(tx: DB, params: CloseAttemptParams): Prom
   const progressRows = await tx
     .select({ id: lessonProgress.id, progress: lessonProgress.progress, timeSpent: lessonProgress.timeSpent, isCompleted: lessonProgress.isCompleted, completedAt: lessonProgress.completedAt, createdAt: lessonProgress.createdAt })
     .from(lessonProgress)
-    .where(and(eq(lessonProgress.userId, input.studentId), inArray(lessonProgress.lessonId, lessonIds)));
+    .where(and(eq(lessonProgress.userId, input.studentId), or(inArray(lessonProgress.lessonId, lessonIds), eq(lessonProgress.articleId, input.articleId))));
   const stepFilter = [
     eq(primaryStudentLessonSteps.studentId, input.studentId),
     eq(primaryBookLessons.articleId, input.articleId),
@@ -141,7 +142,7 @@ export async function closeAttemptInTx(tx: DB, params: CloseAttemptParams): Prom
   await tx
     .update(lessonProgress)
     .set({ progress: 0, status: "not_started", isCompleted: false, completedAt: null, timeSpent: 0, updatedAt: now })
-    .where(and(eq(lessonProgress.userId, input.studentId), inArray(lessonProgress.lessonId, lessonIds)));
+    .where(and(eq(lessonProgress.userId, input.studentId), or(inArray(lessonProgress.lessonId, lessonIds), eq(lessonProgress.articleId, input.articleId))));
   if (assignmentRow) {
     await tx
       .update(studentAssignments)

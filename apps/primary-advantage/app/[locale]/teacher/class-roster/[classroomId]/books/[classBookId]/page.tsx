@@ -117,7 +117,7 @@ export default async function ClassBookPacingPage({ params }: { params: Params }
                   </span>
                   <span className="text-muted-foreground text-sm">
                     {lesson.taughtAt ? t("taughtOn", { date: format.dateTime(lesson.taughtAt, { day: "numeric", month: "short" }) }) : t("notTaught")}
-                    {taughtTimes(lesson) >= 2 ? ` · ${t("taughtTimes", { count: taughtTimes(lesson) })}` : ""}
+                    {lesson.earlierRuns.length > 0 && taughtTimes(lesson) >= 1 ? ` · ${t("taughtTimes", { count: taughtTimes(lesson) })}` : ""}
                     {lesson.approved ? "" : ` · ${t("draft")}`}
                   </span>
                   {lesson.earlierRuns.length ? (

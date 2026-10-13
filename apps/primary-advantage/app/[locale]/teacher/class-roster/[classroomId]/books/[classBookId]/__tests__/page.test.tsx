@@ -120,6 +120,15 @@ describe("class book lesson plan (FR-3)", () => {
     expect(within(rows[1]).queryByText("Run 2")).not.toBeInTheDocument();
   });
 
+  it("shows Taught 1 time on a lesson that was taught once and then taught again (A4)", async () => {
+    const earlier = { runNumber: 1, taughtAt: new Date("2026-10-06T03:00:00Z"), stepsDone: [1, 2, 3], closedAt: new Date("2026-10-12T03:00:00Z"), closedByUserId: "t1" };
+    mocks.getClassBookPacing.mockResolvedValueOnce({ ...pacing, lessons: [lesson(1, { runNumber: 2, earlierRuns: [earlier] }), lesson(2), lesson(3, { current: true })] });
+    await renderPage();
+    const rows = within(screen.getByRole("region", { name: en.lessons })).getAllByRole("listitem");
+    expect(within(rows[0]).getByText(/Taught 1 time/)).toBeInTheDocument();
+    expect(within(rows[1]).queryByText(/Taught 1 time/)).not.toBeInTheDocument();
+  });
+
   it("says all steps are done when there is no next step", async () => {
     mocks.getClassBookPacing.mockResolvedValueOnce({ ...pacing, nextStep: null, plannedPeriod: null });
     await renderPage();

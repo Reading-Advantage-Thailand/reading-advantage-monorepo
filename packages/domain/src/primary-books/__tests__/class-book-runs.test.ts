@@ -40,11 +40,12 @@ const noWork = () => [[{ schoolId: SCHOOL }], [], [{ id: "lp1", progress: 0, tim
  * @param closes The selects of each student close.
  * @param state The lesson state row.
  */
+const studentSchools: Record<string, string | null> = {};
 const sequence = (students: string[], closes: unknown[][][], state: unknown = taughtState) => [
   [classBookRow],
   [classRow],
   [{ articleId: ARTICLE }],
-  students.map((studentId) => ({ studentId })),
+  students.map((studentId) => ({ studentId, schoolId: studentId in studentSchools ? studentSchools[studentId] : SCHOOL })),
   [state],
   ...closes.flat(),
 ];
@@ -56,6 +57,7 @@ const stateSet = (mock: ReturnType<typeof createMockDb>) =>
 
 beforeEach(() => {
   recordAuditEvent.mockReset();
+  for (const key of Object.keys(studentSchools)) delete studentSchools[key];
   vi.spyOn(console, "error").mockImplementation(() => undefined);
 });
 
@@ -63,7 +65,7 @@ describe("teachLessonAgain", () => {
   it("moves the run into earlier runs, clears the state, and makes the lesson current", async () => {
     const mock = createMockDb({ selectSequence: sequence([], []) });
     const out = await run(mock);
-    expect(out).toEqual({ runNumber: 2, closedAttempts: 0 });
+    expect(out).toEqual({ runNumber: 2, closedAttempts: 0, skippedStudents: 0, auditFailed: false });
     expect(stateSet(mock)).toMatchObject({
       taughtAt: null,
       stepsDone: [],
@@ -90,7 +92,7 @@ describe("teachLessonAgain", () => {
   it("closes the attempt of each student with work, and none for a student with no work", async () => {
     const mock = createMockDb({ selectSequence: sequence(["s1", "s2"], [withWork("s1"), noWork()]) });
     const out = await run(mock);
-    expect(out).toEqual({ runNumber: 2, closedAttempts: 1 });
+    expect(out).toMatchObject({ runNumber: 2, closedAttempts: 1 });
     const attempts = mock.insert.mock.results[0].value.values.mock.calls.slice(1).map((c: unknown[]) => c[0] as Record<string, unknown>);
     expect(attempts).toHaveLength(1);
     expect(attempts[0]).toMatchObject({ studentId: "s1", articleId: ARTICLE, classBookId: CLASS_BOOK, lessonNumber: 3, closeReason: "teacher_teach_again", closedByUserId: "t1", schoolId: SCHOOL, attemptNumber: 1 });
@@ -100,7 +102,7 @@ describe("teachLessonAgain", () => {
     const ids = Array.from({ length: 30 }, (_, i) => `s${i}`);
     const mock = createMockDb({ selectSequence: sequence(ids, ids.map(withWork)) });
     const out = await run(mock);
-    expect(out).toEqual({ runNumber: 2, closedAttempts: 30 });
+    expect(out).toMatchObject({ runNumber: 2, closedAttempts: 30 });
     expect(mock.transaction).toHaveBeenCalledTimes(1);
     expect(mock.insert).toHaveBeenCalledTimes(31);
   });
@@ -115,12 +117,13 @@ describe("teachLessonAgain", () => {
     expect(JSON.stringify(payload)).not.toContain("s1");
   });
 
-  it("still succeeds when the audit write fails", async () => {
+  it("still succeeds when the audit write fails, and reports it to the caller", async () => {
     recordAuditEvent.mockImplementation(() => {
       throw new Error("down");
     });
     const mock = createMockDb({ selectSequence: sequence([], []) });
-    await expect(run(mock)).resolves.toMatchObject({ runNumber: 2 });
+    await expect(run(mock)).resolves.toMatchObject({ runNumber: 2, auditFailed: true });
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   it("gives FORBIDDEN for a teacher of another class and writes nothing", async () => {
@@ -142,6 +145,16 @@ describe("teachLessonAgain", () => {
     const mock = createMockDb({ selectSequence: [[classBookRow], [classRow]] });
     await expect(run(mock, student)).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(mock.insert).not.toHaveBeenCalled();
+  });
+
+  it("skips a roster student of another school or with no school and closes the rest (M-17)", async () => {
+    studentSchools.s2 = "school-2";
+    studentSchools.s3 = null;
+    const mock = createMockDb({ selectSequence: sequence(["s1", "s2", "s3"], [withWork("s1")]) });
+    const out = await run(mock);
+    expect(out).toEqual({ runNumber: 2, closedAttempts: 1, skippedStudents: 2, auditFailed: false });
+    expect(mock.insert).toHaveBeenCalledTimes(2);
+    expect(recordAuditEvent.mock.calls[0][1].metadata).toMatchObject({ studentCount: 3, closedAttempts: 1, skippedStudents: 2 });
   });
 
   it("throws and writes no audit event when a student close fails", async () => {

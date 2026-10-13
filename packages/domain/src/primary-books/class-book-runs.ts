@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import type { DB } from "@reading-advantage/db";
-import { classroomStudents, primaryBookLessons, primaryClassBookLessons, primaryClassBooks } from "@reading-advantage/db/schema";
+import { classroomStudents, primaryBookLessons, primaryClassBookLessons, primaryClassBooks, users } from "@reading-advantage/db/schema";
 import { assertCan, recordAuditEvent } from "@reading-advantage/auth";
 import { createTenantDB } from "../db-contract.js";
 import { closeAttemptInTx } from "../primary-lesson-attempts/attempts.js";
@@ -13,9 +13,10 @@ const UNSCOPED_REASON = "teach again moves the lesson state and the attempts of 
  * Teaches a lesson again for the class (FR-3 "Teach again"). The current run goes into
  * `earlier_runs`, the taught time and the steps done are cleared, the lesson becomes current, and
  * each student of the class with work on the lesson gets a closed attempt with the reason
- * `teacher_teach_again`. XP stays. One audit event holds counts only.
+ * `teacher_teach_again`. A roster student of another school, or with no school, is skipped and
+ * counted. XP stays. One audit event holds counts only; an audit failure shows in `auditFailed`.
  * @param params The database, the teacher, the class book, and the lesson number.
- * @returns The new run number and the count of closed student attempts.
+ * @returns The new run number, the closed and the skipped student counts, and the audit failure flag.
  * @throws {AuthError} FORBIDDEN when the user may not manage the class.
  * @throws When the lesson number is past the book or the book has no such lesson.
  */
@@ -32,7 +33,13 @@ export async function teachLessonAgain(params: Ctx & { input: TeachLessonAgainIn
     .where(and(eq(primaryBookLessons.bookId, book.bookId), eq(primaryBookLessons.number, input.lessonNumber)))
     .limit(1);
   if (!lesson) throw new Error(`The book has no lesson ${input.lessonNumber}`);
-  const students = await raw.select({ studentId: classroomStudents.studentId }).from(classroomStudents).where(eq(classroomStudents.classroomId, book.classroomId));
+  const roster = await raw
+    .select({ studentId: classroomStudents.studentId, schoolId: users.schoolId })
+    .from(classroomStudents)
+    .innerJoin(users, eq(users.id, classroomStudents.studentId))
+    .where(eq(classroomStudents.classroomId, book.classroomId));
+  const students = roster.filter((row) => row.schoolId === book.schoolId);
+  const skippedStudents = roster.length - students.length;
 
   const result = await raw.transaction(async (tx) => {
     const [state] = await tx
@@ -67,13 +74,14 @@ export async function teachLessonAgain(params: Ctx & { input: TeachLessonAgainIn
     return { runNumber, closedAttempts };
   });
 
+  let auditFailed = false;
   try {
     await recordAuditEvent(
       { actorUserId: params.user.id, actorRole: params.user.role, ipAddress: null, userAgent: null },
-      { action: "class_book:teach_again", targetType: "class_book", targetId: input.classBookId, metadata: { lessonNumber: input.lessonNumber, runNumber: result.runNumber, studentCount: students.length, closedAttempts: result.closedAttempts } },
+      { action: "class_book:teach_again", targetType: "class_book", targetId: input.classBookId, metadata: { lessonNumber: input.lessonNumber, runNumber: result.runNumber, studentCount: roster.length, closedAttempts: result.closedAttempts, skippedStudents } },
     );
-  } catch (error) {
-    console.error("Audit event class_book:teach_again failed:", error instanceof Error ? error.message : "Unknown");
+  } catch {
+    auditFailed = true;
   }
-  return result;
+  return { ...result, skippedStudents, auditFailed };
 }

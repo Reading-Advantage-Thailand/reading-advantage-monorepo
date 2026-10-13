@@ -103,8 +103,16 @@ export function parseEarlierRuns(value: unknown): EarlierRun[] {
 export const teachLessonAgainInput = z.object({ classBookId: z.string().uuid(), lessonNumber: z.number().int().min(1) });
 export type TeachLessonAgainInput = z.input<typeof teachLessonAgainInput>;
 
-/** Output of `teachLessonAgain`: the new run number and the count of closed student attempts. */
-export const teachLessonAgainOutput = z.object({ runNumber: z.number().int().min(1), closedAttempts: z.number().int().nonnegative() });
+/**
+ * Output of `teachLessonAgain`: the new run number, the count of closed student attempts, the count of
+ * roster students skipped (another school or no school), and whether the audit write failed.
+ */
+export const teachLessonAgainOutput = z.object({
+  runNumber: z.number().int().min(1),
+  closedAttempts: z.number().int().nonnegative(),
+  skippedStudents: z.number().int().nonnegative(),
+  auditFailed: z.boolean(),
+});
 export type TeachLessonAgainOutput = z.infer<typeof teachLessonAgainOutput>;
 
 /** One lesson row of the pacing view. */
