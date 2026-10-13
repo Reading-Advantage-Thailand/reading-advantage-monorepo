@@ -174,7 +174,7 @@ export function SchoolsTable({ rows }: { rows: readonly PlatformSchoolRow[] }) {
               </select>
               <button
                 type="button"
-                aria-label={t("table.sortDirection")}
+                aria-label={`${sort?.dir === "desc" ? t("table.sortDesc") : t("table.sortAsc")}: ${t("table.sortDirection")}`}
                 disabled={!sort}
                 onClick={() => sort && chooseColumn(sort.key)}
                 className={cn(FIELD, "justify-center font-semibold disabled:opacity-50")}

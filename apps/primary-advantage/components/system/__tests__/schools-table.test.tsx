@@ -178,7 +178,8 @@ describe("SchoolsTable", () => {
     expect(select).toHaveClass("min-h-12");
     fireEvent.change(select, { target: { value: "articles" } });
     expect(shownNames()).toEqual(["Bluebell School", "Cedar Court", "Hilltop School", "Orchard Pilot"]);
-    const direction = screen.getByRole("button", { name: en.table.sortDirection });
+    const direction = screen.getByRole("button", { name: `${en.table.sortDesc}: ${en.table.sortDirection}` });
+    expect(direction.getAttribute("aria-label")?.startsWith(direction.textContent ?? "")).toBe(true);
     expect(direction).toHaveClass("min-h-12");
     fireEvent.click(direction);
     expect(shownNames()).toEqual(["Hilltop School", "Orchard Pilot", "Cedar Court", "Bluebell School"]);
