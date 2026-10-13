@@ -1499,9 +1499,7 @@
       "resendVerification": "Resend verification email",
       "unknown": "unknown",
       "update": "Update",
-      "activate": "Activate",
-      "license": "License",
-      "licenseDescription": "Enter the new license for the user"
+      "activate": "Activate"
     },
     "schoolProfile": {
       "title": "School Profile",

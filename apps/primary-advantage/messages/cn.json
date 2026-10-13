@@ -1499,9 +1499,7 @@
       "resendVerification": "重新发送验证邮件",
       "unknown": "未知",
       "update": "更新",
-      "activate": "激活",
-      "license": "许可证",
-      "licenseDescription": "输入新的许可证用户"
+      "activate": "激活"
     },
     "schoolProfile": {
       "title": "学校资料",

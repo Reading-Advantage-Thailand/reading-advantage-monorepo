@@ -1499,9 +1499,7 @@
       "resendVerification": "Gửi lại email xác minh",
       "unknown": "không rõ",
       "update": "Cập nhật",
-      "activate": "Kích hoạt",
-      "license": "Giấy phép",
-      "licenseDescription": "Nhập giấy phép mới cho người dùng"
+      "activate": "Kích hoạt"
     },
     "schoolProfile": {
       "title": "Hồ sơ trường học",

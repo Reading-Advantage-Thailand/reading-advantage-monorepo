@@ -1499,9 +1499,7 @@
       "resendVerification": "ส่งอีเมลยืนยันอีกครั้ง",
       "unknown": "ไม่ทราบ",
       "update": "อัพเดท",
-      "activate": "เปิดใช้งาน",
-      "license": "ใบอนุญาต",
-      "licenseDescription": "กรอกใบอนุญาตใหม่สำหรับผู้ใช้"
+      "activate": "เปิดใช้งาน"
     },
     "schoolProfile": {
       "title": "โปรไฟล์โรงเรียน",
