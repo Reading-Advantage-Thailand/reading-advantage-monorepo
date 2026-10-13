@@ -80,6 +80,12 @@ describe("sync-print-kit", () => {
     expect(await run()).toBe(2);
   });
 
+  it("stops when a kit path of the Workbooks checkout is dirty", async () => {
+    put("dashboard/templates/primary_template.html", "<div>uncommitted</div>");
+    expect(await run()).toBe(2);
+    expect(existsSync(join(app, "packages/domain/src/primary-books/print/kit.generated.ts"))).toBe(false);
+  });
+
   it("--fixture copies the print data and the golden body from a Workbooks commit", async () => {
     put("content/primary/b1/print/p05.json", JSON.stringify({ lessonNumber: 5 }));
     put("content/primary/b1/print/p06.json", JSON.stringify({ lessonNumber: 6 }));
