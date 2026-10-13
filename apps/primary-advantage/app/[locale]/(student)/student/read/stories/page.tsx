@@ -28,7 +28,9 @@ const STAFF = new Set(["TEACHER", "ADMIN", "SYSTEM"]);
  * @returns The page.
  */
 export default async function StoriesPage({ searchParams }: PageProps) {
-  const { genre, q, page: pageParam } = await searchParams;
+  const { genre, q: rawQ, page: pageParam } = await searchParams;
+  // A search of spaces would fail the contract (min 1 after trim).
+  const q = rawQ?.trim();
   const user = await currentUser();
   if (!user) notFound();
   const t = await getTranslations("Stories");

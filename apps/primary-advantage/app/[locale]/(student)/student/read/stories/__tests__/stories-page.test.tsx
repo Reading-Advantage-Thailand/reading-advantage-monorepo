@@ -72,6 +72,11 @@ describe("stories page", () => {
     );
   });
 
+  it("sends no search for a search of spaces", async () => {
+    await renderPage({ q: "   " });
+    expect(mocks.list).toHaveBeenCalledWith(expect.objectContaining({ input: { page: 1 } }));
+  });
+
   it("shows genre signs as 48 px links and a selected genre", async () => {
     await renderPage({ genre: "Sports" });
     const nav = screen.getByRole("navigation", { name: en.Stories.genres });
