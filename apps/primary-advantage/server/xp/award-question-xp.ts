@@ -4,6 +4,7 @@ import {
   and,
   or,
   isNull,
+  sql,
 } from '@reading-advantage/db';
 import {
   userActivity,
@@ -56,7 +57,7 @@ export async function awardQuestionXp(
   tx: QuestionXpTx,
   input: AwardQuestionXpInput,
 ): Promise<{ status: "saved"; activityId: string } | { status: "already-complete" } | null> {
-  const [userData] = await tx.select({ xp: users.xp })
+  const [userData] = await tx.select({ id: users.id })
     .from(users)
     .where(eq(users.id, input.userId))
     .limit(1);
@@ -92,10 +93,8 @@ export async function awardQuestionXp(
     return { status: "already-complete" };
   }
 
-  const { newXp, raLevel, cefrLevel } = calculateLevelAndCefrLevel(
-    input.xpEarned,
-    userData.xp as number,
-  );
+  // The level comes from this award; the XP total is added in SQL so a parallel award is not lost.
+  const { raLevel, cefrLevel } = calculateLevelAndCefrLevel(input.xpEarned, 0);
 
   await tx.insert(xpLogs).values({
     userId: input.userId,
@@ -107,7 +106,7 @@ export async function awardQuestionXp(
 
   await tx.update(users)
     .set({
-      xp: newXp,
+      xp: sql`${users.xp} + ${input.xpEarned}`,
       level: raLevel,
       cefrLevel: cefrLevel,
     })
