@@ -44,7 +44,7 @@ describe("GET /api/articles/[articleId]", () => {
   });
 
   it.each([["POST", POST], ["PUT", PUT], ["PATCH", PATCH], ["DELETE", DELETE]])(
-    "gives 404 JSON for %s, so the removed /api/articles/generate path is not a 405",
+    "gives 404 JSON for %s, so a removed path under the article route is not a 405",
     async (_m, handler) => {
       const res = await handler();
       expect(res.status).toBe(404);
