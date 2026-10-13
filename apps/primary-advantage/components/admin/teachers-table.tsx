@@ -36,7 +36,6 @@ import {
   Plus,
   Pencil,
   Trash2,
-  Mail,
   User,
   Calendar,
   GraduationCap,
@@ -731,13 +730,12 @@ export function TeachersTable() {
             <TableHeader>
               <TableRow>
                 <TableHead>{t("tableHeaders.teacher")}</TableHead>
-                <TableHead>{t("tableHeaders.email")}</TableHead>
                 <TableHead>{t("tableHeaders.role")}</TableHead>
                 {isSystem && <TableHead>{t("tableHeaders.school")}</TableHead>}
                 <TableHead>{t("tableHeaders.assignedClassrooms")}</TableHead>
                 <TableHead>{t("tableHeaders.students")}</TableHead>
                 <TableHead>{t("tableHeaders.classes")}</TableHead>
-                <TableHead>{t("tableHeaders.joined")}</TableHead>
+                <TableHead className="hidden 2xl:table-cell">{t("tableHeaders.joined")}</TableHead>
                 <TableHead className="text-right">
                   {t("tableHeaders.actions")}
                 </TableHead>
@@ -746,7 +744,7 @@ export function TeachersTable() {
             <TableBody>
               {filteredTeachers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="py-8 text-center">
+                  <TableCell colSpan={isSystem ? 8 : 7} className="py-8 text-center">
                     <div className="flex flex-col items-center gap-2">
                       {isLoading ? (
                         <>
@@ -782,15 +780,11 @@ export function TeachersTable() {
                             {getInitials(teacher.name)}
                           </AvatarFallback>
                         </Avatar>
+                        {/* The email sits under the name, so the table fits beside the menu. */}
                         <div>
                           <p className="font-medium">{teacher.name || "N/A"}</p>
+                          <p className="text-muted-foreground text-xs">{teacher.email || "N/A"}</p>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Mail className="text-muted-foreground h-4 w-4" />
-                        {teacher.email || "N/A"}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -799,9 +793,9 @@ export function TeachersTable() {
                       </Badge>
                     </TableCell>
                     {isSystem && (
-                      <TableCell>{schoolName(teacher.schoolId)}</TableCell>
+                      <TableCell className="whitespace-normal">{schoolName(teacher.schoolId)}</TableCell>
                     )}
-                    <TableCell>
+                    <TableCell className="whitespace-normal">
                       <div className="flex flex-wrap gap-1">
                         {teacher.assignedClassrooms &&
                         teacher.assignedClassrooms.length > 0 ? (
@@ -824,7 +818,7 @@ export function TeachersTable() {
                     </TableCell>
                     <TableCell>{teacher.totalStudents}</TableCell>
                     <TableCell>{teacher.totalClasses}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden 2xl:table-cell">
                       {teacher.createdAt.toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">

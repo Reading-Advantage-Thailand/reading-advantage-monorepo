@@ -111,6 +111,14 @@ describe("TeachersTable school management", () => {
     expect(calls().some((c) => c.url.startsWith("/api/schools"))).toBe(false);
   });
 
+  it("shows the email under the name, with no email column (the table fits beside the menu)", async () => {
+    renderWithMessages(<TeachersTable />);
+    await flush();
+    expect(screen.queryByRole("columnheader", { name: "Email" })).not.toBeInTheDocument();
+    const cell = screen.getByText("anna@example.com").closest("td")!;
+    expect(cell).toHaveTextContent("Anna");
+  });
+
   it("clears the class choice and reloads the classes of the new school", async () => {
     const dialog = await openEdit();
     expect(within(dialog).getByLabelText(/Old class/)).toBeChecked();
