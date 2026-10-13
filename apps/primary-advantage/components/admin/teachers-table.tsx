@@ -434,10 +434,12 @@ export function TeachersTable() {
     setShowPasswordField(false);
   };
 
-  /** Opens the add dialog with a fresh form and the unfiltered class list. */
+  /** Opens the add dialog with a fresh form. SYSTEM gets no class list until it picks a school. */
   const openAddDialog = () => {
     resetForm();
-    fetchClassrooms();
+    // SYSTEM lists classes only after it picks a school.
+    if (isSystem) setClassrooms([]);
+    else fetchClassrooms();
     setIsAddDialogOpen(true);
   };
 
@@ -716,7 +718,7 @@ export function TeachersTable() {
                 </Button>
                 <Button
                   onClick={() => handleAddTeacher(false)}
-                  disabled={!formData.name || !formData.email}
+                  disabled={!formData.name || !formData.email || (isSystem && !addSchoolId)}
                 >
                   {t("actions.add")}
                 </Button>

@@ -380,8 +380,8 @@ export const createTeacher = async (params: {
     }
     const schoolId = target.schoolId;
 
-    // Fail closed: only SYSTEM may create accounts without a school.
-    if (!schoolId && effectiveCallerRole(userWithRoles) !== "SYSTEM") {
+    // Fail closed: every new teacher needs a school. SYSTEM must name one.
+    if (!schoolId) {
       return { success: false, error: "A school is required to create a teacher" };
     }
 
@@ -894,12 +894,15 @@ export const deleteTeacher = async (
 };
 
 // Get teacher statistics
-export const getTeacherStatistics = async (userWithRoles: UserWithRoles) => {
+export const getTeacherStatistics = async (userWithRoles: UserWithRoles, schoolId?: string) => {
   try {
     const whereConditions: any[] = [
       roleSql(ASSIGNABLE_TEACHER_ROLES),
       ...schoolScopeConditions(users.schoolId, userWithRoles),
     ];
+    if (schoolId && effectiveCallerRole(userWithRoles) === "SYSTEM") {
+      whereConditions.push(eq(users.schoolId, schoolId));
+    }
 
     // Get all teachers + their classroom/student counts in one query.
     const allTeachers = await db.select({

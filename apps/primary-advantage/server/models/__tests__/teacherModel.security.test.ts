@@ -553,6 +553,15 @@ describe("createTeacher target school and admin rank (cutover)", () => {
     expect((await accountState("t-b@x.test"))?.school_id).toBe(SCHOOL_B);
   });
 
+  it("refuses a SYSTEM caller who names no school", async () => {
+    const result = await createTeacher({
+      name: "t", email: "t-none@x.test", role: "teacher", password: "Valid-pass-123",
+      userWithRoles: systemCaller,
+    });
+    expect(result.success).toBe(false);
+    expect(await accountState("t-none@x.test")).toBeUndefined();
+  });
+
   it("refuses a SYSTEM caller who names a school that does not exist", async () => {
     const result = await createTeacher({
       name: "t", email: "t-x@x.test", role: "teacher", password: "Valid-pass-123",
