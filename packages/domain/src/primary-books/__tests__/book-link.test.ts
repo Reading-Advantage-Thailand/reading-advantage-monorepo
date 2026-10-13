@@ -35,6 +35,17 @@ describe("resolveBookLink", () => {
     expect(mock.select).toHaveBeenCalledTimes(1);
   });
 
+  it.each(["O3-2", "o3_2", "o3-2'; drop table x;--", "a".repeat(17), "", "../o3-2"])("returns unknown_book for the key %j without a query", async (key) => {
+    const mock = createMockDb({ selectSequence: [[ref], [book]] });
+    expect(await run(mock as unknown as DB, 5, key)).toEqual({ kind: "unknown_book" });
+    expect(mock.select).not.toHaveBeenCalled();
+  });
+
+  it("accepts a key of 16 characters with digits and hyphens", async () => {
+    expect(await run(dbWith([[ref]]), 5, "o3-1-abcdefghijk0")).toMatchObject({ kind: "unknown_book" });
+    expect(await run(dbWith([[ref]]), 5, "o3-1-abcdefghij0")).toMatchObject({ kind: "ok" });
+  });
+
   it("treats a bad number of an unknown book as unknown_book", async () => {
     expect(await run(dbWith([[]]), 0, "zz")).toEqual({ kind: "unknown_book" });
   });

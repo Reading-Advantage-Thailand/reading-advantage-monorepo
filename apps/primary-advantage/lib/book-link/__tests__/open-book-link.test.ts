@@ -112,11 +112,11 @@ describe("openBookLink: the case pages", () => {
 
   it("tells SYSTEM (no schoolId) and ADMIN with no school class that the link is for a class teacher", async () => {
     as("SYSTEM", null);
-    expect(await open()).toEqual({ type: "case", name: "teacher-only", homeHref: "/" });
+    expect(await open()).toEqual({ type: "case", name: "teacher-only", homeHref: "/system/dashboard" });
     expect(mocks.findTeacherClassBook).not.toHaveBeenCalled();
     as("ADMIN");
     mocks.findTeacherClassBook.mockResolvedValue(null);
-    expect(await open()).toEqual({ type: "case", name: "teacher-only", homeHref: "/" });
+    expect(await open()).toEqual({ type: "case", name: "teacher-only", homeHref: "/admin/dashboard" });
     expect(mocks.info).toHaveBeenCalledWith("book_link.wrong_role", { book: "o3-2", number: 5, role: "ADMIN", reason: "teacher_only" });
   });
 

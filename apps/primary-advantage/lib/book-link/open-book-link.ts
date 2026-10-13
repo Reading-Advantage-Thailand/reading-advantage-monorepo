@@ -4,6 +4,7 @@ import { currentUser } from "@/lib/session";
 import { logger } from "@/lib/observability/logger";
 import { bookSignInHref } from "@/lib/book-link/signin-href";
 import { tutorLessonUrl } from "@/lib/book-link/tutor-url";
+import { roleDefaultRedirects } from "@/lib/route-policies";
 
 /** The case pages of a `/b/` address that is not the normal one (spec S4). */
 export type BookLinkCaseName = "unknown-book" | "no-lesson" | "not-ready" | "no-class" | "teacher-only" | "wrong-account" | "unknown-address" | "retry";
@@ -18,12 +19,12 @@ export type BookLinkOutcome =
 const STAFF_ROLES = ["TEACHER", "ADMIN", "SYSTEM"];
 
 /**
- * The role home that a case page links to: the student home, the teacher class list, or the start
- * page for any other reader.
+ * The role home that a case page links to: the student home, the teacher class list, the
+ * default landing of ADMIN and SYSTEM, or the start page for a signed-out reader.
  * @param role The role of the signed-in user, or undefined when signed out.
  * @returns A locale-less path.
  */
-const homeOf = (role?: string) => (role === "STUDENT" ? "/student/home" : role === "TEACHER" ? "/teacher/my-classes" : "/");
+const homeOf = (role?: string) => (role === "STUDENT" ? "/student/home" : role === "TEACHER" ? "/teacher/my-classes" : (role === "ADMIN" || role === "SYSTEM" ? roleDefaultRedirects[role.toLowerCase()] : "/"));
 
 /**
  * Decides what a printed QR address `/b/<book>/<n>[/writing]` does for the current reader. The
