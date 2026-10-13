@@ -5,6 +5,7 @@ import { routing } from "./i18n/routing";
 import { currentUser } from "./lib/session";
 import { normalizeRole } from "./lib/authorization";
 import { protectedRoutes, roleDefaultRedirects } from "./lib/route-policies";
+import { safeCallbackPath } from "./lib/safe-callback-path";
 
 // Create the intl middleware
 const intlMiddleware = createIntlMiddleware(routing);
@@ -23,19 +24,20 @@ export default async function middleware(request: NextRequest) {
 
     if (token) {
       const userRole = normalizeRole(token.role).toLowerCase();
-      const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
+      // The callback is a local path without a locale, or null (M-8: no open redirect).
+      const callbackPath = safeCallbackPath(request.nextUrl.searchParams.get("callbackUrl"));
 
-      if (callbackUrl) {
-        // Check if user has access to the callback URL
-        const callbackPathWithoutLocale =
-          callbackUrl.replace(`/${locale}`, "") || "/";
+      if (callbackPath) {
+        // Check if user has access to the callback path
         const requiredRoles = Object.entries(protectedRoutes).find(([route]) =>
-          callbackPathWithoutLocale.startsWith(route),
+          callbackPath.startsWith(route),
         )?.[1];
 
         if (requiredRoles && requiredRoles.includes(normalizeRole(token.role))) {
-          // If user has access to callback URL, redirect there
-          return NextResponse.redirect(new URL(callbackUrl, request.url));
+          // If user has access to the callback path, redirect there on this host
+          return NextResponse.redirect(
+            new URL(`/${locale}${callbackPath === "/" ? "" : callbackPath}`, request.url),
+          );
         }
       }
 
