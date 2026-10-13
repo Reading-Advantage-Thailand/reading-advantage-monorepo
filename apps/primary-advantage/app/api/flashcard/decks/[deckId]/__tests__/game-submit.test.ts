@@ -7,6 +7,8 @@ const mocks = vi.hoisted(() => ({
   queue: [] as unknown[][],
   inserts: 0,
   updates: 0,
+  activityKeys: new Set<string>(),
+  xpLogInserts: 0,
 }));
 
 vi.mock("@/lib/session", () => ({ currentUser: mocks.currentUser, getCurrentUser: mocks.currentUser }));
@@ -23,9 +25,26 @@ function chain() {
 const fakeDb = () => ({
   select: () => chain(),
   insert: () => ({
-    values: () => {
+    values: (v: Record<string, unknown>) => {
       mocks.inserts += 1;
-      const w: Record<string, unknown> = { returning: async () => [{ id: "act1" }] };
+      const isActivity = "targetId" in v;
+      if (!isActivity) mocks.xpLogInserts += 1;
+      let upsert = false;
+      const run = async () => {
+        if (!isActivity) return [{ id: "xp" + mocks.xpLogInserts }];
+        const key = `${v.userId}|${v.activityType}|${v.targetId}`;
+        // Emulates the unique key user_activity_type_target_unique.
+        if (mocks.activityKeys.has(key) && !upsert) throw new Error("duplicate key value violates user_activity_type_target_unique");
+        mocks.activityKeys.add(key);
+        return [{ id: "act1" }];
+      };
+      const w: Record<string, unknown> = {
+        returning: run,
+        onConflictDoUpdate: () => {
+          upsert = true;
+          return w;
+        },
+      };
       w.then = (resolve: (v: unknown) => unknown) => Promise.resolve([]).then(resolve);
       return w;
     },
@@ -60,6 +79,8 @@ describe.each([
     mocks.queue.length = 0;
     mocks.inserts = 0;
     mocks.updates = 0;
+    mocks.activityKeys.clear();
+    mocks.xpLogInserts = 0;
     mocks.currentUser.mockResolvedValue({ id: "u1", role: "STUDENT", schoolId: "s1" });
   });
 
@@ -88,6 +109,15 @@ describe.each([
     const res = await POST(req({ score: 2, timer: 10 }), ctx);
     expect(res.status).toBe(200);
     expect(mocks.inserts).toBeGreaterThan(0);
+  });
+
+  it("pays XP again on a second result of the same deck game and returns 200", async () => {
+    mocks.queue.push([{ id: "d1" }], [{ id: "c1" }, { id: "c2" }], [{ id: "d1" }], [{ id: "c1" }, { id: "c2" }]);
+    expect((await POST(req({ score: 2, timer: 10 }), ctx)).status).toBe(200);
+    expect((await POST(req({ score: 2, timer: 12 }), ctx)).status).toBe(200);
+    // Legacy bfea121 paid XP on each play: two XP logs and two user XP increments.
+    expect(mocks.xpLogInserts).toBe(2);
+    expect(mocks.updates).toBe(2);
   });
 
   it("keeps the staff preview guard first", async () => {
