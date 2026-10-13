@@ -4140,12 +4140,12 @@
     "triesLeft": "{n, plural, one {Còn # lần thử} other {Còn # lần thử}}"
   },
   "PwaInstall": {
-    "title": "Add Primary Advantage to your home screen",
-    "iosShare": "Tap the Share button in Safari.",
-    "iosAdd": "Tap Add to Home Screen.",
-    "iosConfirm": "Tap Add.",
-    "install": "Install",
-    "dismiss": "Not now",
-    "offlineSign": "You are offline. The app needs the internet."
+    "title": "Thêm Primary Advantage vào màn hình chính",
+    "iosShare": "Nhấn nút Chia sẻ trong Safari.",
+    "iosAdd": "Nhấn Thêm vào Màn hình chính.",
+    "iosConfirm": "Nhấn Thêm.",
+    "install": "Cài đặt",
+    "dismiss": "Để sau",
+    "offlineSign": "Bạn đang ngoại tuyến. Ứng dụng cần internet."
   }
 }
