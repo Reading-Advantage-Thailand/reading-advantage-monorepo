@@ -1,7 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import type { licenses } from "@reading-advantage/domain";
 import { Scene } from "@/components/rpg/scene";
 import { Meter, Panel } from "@/components/rpg/chrome";
@@ -32,7 +33,7 @@ function Chip({ tone, children }: { tone: Tone; children: ReactNode }) {
  */
 export function LicensePanel({ view }: { view: LicenseView }) {
   const t = useTranslations("Settings.schoolProfile.licensePanel");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const day = (value: string) => format.dateTime(new Date(`${value}T12:00:00Z`), { dateStyle: "medium", timeZone: "UTC" });
   const stateTone: Record<string, Tone> = { active: "green", ended: "red", inactive: "gold" };
   const totals: Array<[string, number]> = [

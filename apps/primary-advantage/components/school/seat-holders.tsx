@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useIntlFormatter } from "@/lib/intl-locale";
 import { Panel, RpgButton } from "@/components/rpg/chrome";
 
 /** One student on a page of the seat holder list. */
@@ -30,7 +31,7 @@ const LINE = "border-[rgba(107,84,56,0.35)]";
  */
 export function SeatHolders() {
   const t = useTranslations("Settings.schoolProfile.licensePanel");
-  const format = useFormatter();
+  const format = useIntlFormatter();
   const [page, setPage] = useState(1);
   const [data, setData] = useState<SeatHoldersPage | null>(null);
   const [failed, setFailed] = useState(false);
