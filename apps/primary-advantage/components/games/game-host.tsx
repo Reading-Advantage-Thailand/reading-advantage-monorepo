@@ -97,7 +97,9 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
   const launch = challengeId ? challengeRun.launch : null;
   const rpg = useStudentRpg({ endpoint: "/api/v1/apk/rpg", ownerKey: ownerKey ?? "", enabled: Boolean(ownerKey) });
   const exit = onExit ?? (() => router.push("/student/games"));
-  const offersAudio = Boolean(game && !challengeId && offersAnswerAudio(game));
+  // The audio mode swaps the input for the saved words and saves a plain game type with no article:
+  // a lesson run (`articleId`) and a demo run (`save` false) must keep the lesson words and save nothing else.
+  const offersAudio = Boolean(game && !challengeId && !articleId && save && offersAnswerAudio(game));
   const audioMode = offersAudio && mode === "answer-audio";
 
   useEffect(() => {
