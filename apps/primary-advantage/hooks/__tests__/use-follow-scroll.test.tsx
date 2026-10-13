@@ -66,6 +66,60 @@ describe("useFollowScroll", () => {
     expect(scrollTo).toHaveBeenCalledTimes(1);
   });
 
+  it("starts again at the next play after a scroll by hand while paused", () => {
+    const ref = target(900);
+    const { rerender } = renderHook(
+      (p: { enabled: boolean; sentenceIndex: number }) => useFollowScroll({ targetRef: ref, ...p }),
+      { initialProps: { enabled: false, sentenceIndex: 1 } },
+    );
+    act(() => void window.dispatchEvent(new Event("wheel")));
+    rerender({ enabled: true, sentenceIndex: 1 });
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores a key press on a button", () => {
+    const ref = target(900);
+    const { rerender } = renderHook(
+      (p: { sentenceIndex: number }) => useFollowScroll({ targetRef: ref, enabled: true, ...p }),
+      { initialProps: { sentenceIndex: 1 } },
+    );
+    scrollTo.mockClear();
+    const button = document.createElement("button");
+    document.body.appendChild(button);
+    act(() => void button.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true })));
+    rerender({ sentenceIndex: 2 });
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    button.remove();
+  });
+
+  it("stops when the scroll bar is pressed", () => {
+    Object.defineProperty(window, "innerWidth", { value: 1015, configurable: true });
+    Object.defineProperty(document.documentElement, "clientWidth", { value: 1000, configurable: true });
+    const ref = target(900);
+    const { rerender } = renderHook(
+      (p: { sentenceIndex: number }) => useFollowScroll({ targetRef: ref, enabled: true, ...p }),
+      { initialProps: { sentenceIndex: 1 } },
+    );
+    scrollTo.mockClear();
+    act(() => void window.dispatchEvent(new MouseEvent("pointerdown", { clientX: 1008 })));
+    rerender({ sentenceIndex: 2 });
+    expect(scrollTo).not.toHaveBeenCalled();
+    act(() => void window.dispatchEvent(new MouseEvent("pointerdown", { clientX: 200 })));
+  });
+
+  it("stops when the student selects text", () => {
+    const ref = target(900);
+    const { rerender } = renderHook(
+      (p: { sentenceIndex: number }) => useFollowScroll({ targetRef: ref, enabled: true, ...p }),
+      { initialProps: { sentenceIndex: 1 } },
+    );
+    scrollTo.mockClear();
+    vi.spyOn(window, "getSelection").mockReturnValue({ isCollapsed: false } as Selection);
+    act(() => void document.dispatchEvent(new Event("selectionchange")));
+    rerender({ sentenceIndex: 2 });
+    expect(scrollTo).not.toHaveBeenCalled();
+  });
+
   it("removes its listeners on unmount", () => {
     const remove = vi.spyOn(window, "removeEventListener");
     const { unmount } = renderHook(() => useFollowScroll({ targetRef: target(900), enabled: true, sentenceIndex: 1 }));

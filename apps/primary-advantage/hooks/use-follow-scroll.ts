@@ -35,21 +35,35 @@ export function useFollowScroll({
       stoppedRef.current = true;
     };
     const onKey = (e: KeyboardEvent) => {
-      if (SCROLL_KEYS.has(e.key)) stop();
+      // A key on a button (for example Space on Play) does not scroll the page.
+      if (SCROLL_KEYS.has(e.key) && !(e.target as Element | null)?.closest?.("button")) stop();
+    };
+    // A press on the scroll bar is a scroll by hand.
+    const onPointer = (e: MouseEvent) => {
+      const { clientWidth } = document.documentElement;
+      if (window.innerWidth > clientWidth && e.clientX >= clientWidth) stop();
+    };
+    // A text selection drag is a scroll by hand.
+    const onSelection = () => {
+      if (window.getSelection()?.isCollapsed === false) stop();
     };
     window.addEventListener("wheel", stop, { passive: true });
     window.addEventListener("touchmove", stop, { passive: true });
     window.addEventListener("keydown", onKey);
+    window.addEventListener("pointerdown", onPointer);
+    document.addEventListener("selectionchange", onSelection);
     return () => {
       window.removeEventListener("wheel", stop);
       window.removeEventListener("touchmove", stop);
       window.removeEventListener("keydown", onKey);
+      window.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("selectionchange", onSelection);
     };
   }, []);
 
-  // A new play starts the follow again.
+  // A new play starts the follow again, even after a scroll by hand while paused.
   useEffect(() => {
-    if (!enabled) stoppedRef.current = false;
+    if (enabled) stoppedRef.current = false;
   }, [enabled]);
 
   useEffect(() => {
