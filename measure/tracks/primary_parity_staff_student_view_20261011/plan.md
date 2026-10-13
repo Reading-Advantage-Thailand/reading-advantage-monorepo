@@ -135,3 +135,7 @@ _Story ref: spec.md#story-s4_
     - Written with empty result rows for the batch and the owner look check.
 - [x] Task: Measure - User Manual Verification 'Phase A: Acceptance' (Protocol in workflow.md)
     - look check pending (owner, async). Manual steps: (1) Read `acceptance.md`. (2) After the batch, fill the Result column from `$P/captures/<member>/report.html`. (3) Compare the SQL rows before and after for each staff user: they must be equal. (4) Run `cutover-check.mjs` on rehearsal 3 and read the "staff ..." lines. (5) Open the captures at 375 px and 1280 px, light and dark.
+
+## Phase: Review Fixes 2026-10-13
+- [x] Task: Low: staff preview reads the empty model on the assignments page, the lesson summary, the lesson flashcards of the 2D games, and the assignment activity route 4ddb09b99
+- [x] Task: Low: the staff sample-set read of the lesson input is gone (see lesson_games M-14) 12630f8a8

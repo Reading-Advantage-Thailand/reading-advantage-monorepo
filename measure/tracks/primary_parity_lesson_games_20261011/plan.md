@@ -136,3 +136,12 @@ _Story ref: spec.md#story-s5_
     - [x] JSDoc; `build-graph update ./graph.db <changed files>`; run `measure/generate.sh` and `measure/doctor.sh`
 - [x] Task: Measure - User Manual Verification 'Phase S5: Save nothing in a rehearsal or a preview' (Protocol in workflow.md)
     - look check pending (owner, async). No capture in this phase; the browser run is the batch. Steps: (1) as a teacher open a lesson rehearsal, go to task 10, play a game to the end; (2) check no XP and no new result row; (3) repeat on task 12; (4) as staff open a student lesson in preview and play; check the notice and no row; (5) as a student play the same game; check the result saves.
+
+## Phase: Review Fixes 2026-10-13
+- [x] Task: M-14 staff in a rehearsal or a preview get the lesson words from the article snapshot (new `getLessonPreviewPracticeInput`) 12630f8a8
+- [x] Task: M-15 no "Listen to English" mode in a lesson run (`articleId`) or a demo run (`save` false) 153dd1d32
+  - Default used: the brief said to hide the mode also when GameHost gets an `input`. The Story games page passes the saved words as `input`, and the mode is valid there. The rule uses `articleId` and `save` instead.
+- [x] Task: Low: task 12 has the run line (`onResult`, `onCompleted`) as task 10 has 68cfcc996
+- [x] Task: Low: a locked card keeps its last result 68cfcc996
+- [x] Task: Low: task 12 shows a placeholder while the games load 68cfcc996
+- [x] Task: Low: lesson runs get `ownerKey` and the avatar from the input action 68cfcc996
