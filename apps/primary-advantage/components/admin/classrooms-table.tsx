@@ -58,7 +58,8 @@ import { ClassroomTeacherPicker } from "@/components/admin/classroom-teacher-pic
 interface Classroom {
   id: string;
   name: string;
-  grade?: string;
+  /** The API returns the integer column; older rows can hold a string. */
+  grade?: string | number;
   classCode?: string;
   passwordStudents?: string;
   codeExpiresAt?: string;
@@ -78,13 +79,11 @@ interface Classroom {
       email: string;
     };
   }>;
+  /** Flat teacher rows as `getAllClassrooms` returns them. */
   teachers?: Array<{
     id: string;
-    user: {
-      id: string;
-      name: string;
-      email: string;
-    };
+    name: string;
+    email: string;
   }>;
 }
 
@@ -114,6 +113,9 @@ export function ClassroomsTable() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const [teacherIds, setTeacherIds] = useState<string[]>([]);
+  const [initialTeacherIds, setInitialTeacherIds] = useState<string[]>([]);
+  const teacherIdsChanged =
+    teacherIds.length !== initialTeacherIds.length || teacherIds.some((id) => !initialTeacherIds.includes(id));
 
   // Form states
   const [formData, setFormData] = useState({
@@ -153,7 +155,7 @@ export function ClassroomsTable() {
     ? classrooms.filter(
         (classroom) =>
           classroom.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          classroom.grade?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          String(classroom.grade ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
           classroom.classCode?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     : [];
@@ -164,7 +166,7 @@ export function ClassroomsTable() {
       const response = await fetch("/api/classroom", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ name: formData.name, grade: formData.grade, classCode: formData.classCode }),
       });
 
       if (!response.ok) {
@@ -202,7 +204,8 @@ export function ClassroomsTable() {
         body: JSON.stringify({
           classroomName: formData.name,
           grade: formData.grade || undefined,
-          teacherIds,
+          // Send the teachers only after a change: an unchanged list can hold ids that the school rule refuses.
+          ...(teacherIdsChanged ? { teacherIds } : {}),
         }),
       });
 
@@ -266,11 +269,13 @@ export function ClassroomsTable() {
     setSelectedClassroom(classroom);
     setFormData({
       name: classroom.name,
-      grade: classroom.grade || "",
+      grade: classroom.grade ? String(classroom.grade) : "",
       classCode: classroom.classCode || "",
       passwordStudents: classroom.passwordStudents || "",
     });
-    setTeacherIds(classroom.teachers?.map((row) => row.user.id) ?? []);
+    const ids = classroom.teachers?.map((row) => row.id) ?? [];
+    setTeacherIds(ids);
+    setInitialTeacherIds(ids);
     setIsEditDialogOpen(true);
   };
 
@@ -560,12 +565,9 @@ export function ClassroomsTable() {
                 <ClassroomTeacherPicker
                   schoolId={selectedClassroom.schoolId}
                   ownerId={selectedClassroom.ownerId}
-                  ownerName={
-                    selectedClassroom.teachers?.find((row) => row.user.id === selectedClassroom.ownerId)?.user.name
-                  }
-                  ownerEmail={
-                    selectedClassroom.teachers?.find((row) => row.user.id === selectedClassroom.ownerId)?.user.email
-                  }
+                  ownerName={selectedClassroom.teachers?.find((row) => row.id === selectedClassroom.ownerId)?.name}
+                  ownerEmail={selectedClassroom.teachers?.find((row) => row.id === selectedClassroom.ownerId)?.email}
+                  currentTeachers={selectedClassroom.teachers}
                   selectedIds={teacherIds}
                   onChange={setTeacherIds}
                 />
