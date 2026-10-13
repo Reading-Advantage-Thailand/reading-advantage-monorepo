@@ -446,7 +446,9 @@ export async function DELETE() {
     }
 
     // Check if user is the owner of the school
-    if (userSchool.ownerId !== currentUser.id) {
+    // A school without an owner (migrated data) may be deleted by an ADMIN of that school.
+    const ownerlessAdmin = !userSchool.ownerId && normalizeRole(user.role) === "ADMIN";
+    if (userSchool.ownerId !== currentUser.id && !ownerlessAdmin) {
       return NextResponse.json(
         { error: "Only the school owner can delete the school" },
         { status: 403 },
@@ -459,12 +461,12 @@ export async function DELETE() {
       .delete(schools)
       .where(eq(schools.id, userSchool.id));
 
-    // Downgrade the owner from ADMIN to the self-serve STUDENT role. users.role is the truth.
+    // Downgrade the owner from ADMIN to TEACHER. users.role is the truth.
     if (String(user.role).toUpperCase() === "ADMIN") {
       await setUserRole(
         tenantDb.unscoped("roles is EXEMPT and userRoles is REFERENTIAL; role change by user id"),
         currentUser.id,
-        "student",
+        "teacher",
       );
 
       // Remove school association
