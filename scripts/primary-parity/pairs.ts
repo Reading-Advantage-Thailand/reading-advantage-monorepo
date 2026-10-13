@@ -64,6 +64,11 @@ export const Pair = z
     widths: z.array(z.number().int().positive()).min(1).default([375, 1280]),
     colorSchemes: z.array(z.enum(["light", "dark"])).min(1).default(["light"]),
     waitFor: z.object({ legacy: z.string().optional(), new: z.string().optional() }).strict().optional(),
+    /**
+     * The matched user (`users.id`) and the classroom (new classroom id) that the pair needs.
+     * The capture refuses to run the pair when the accounts file holds another user or class.
+     */
+    requires: z.object({ userId: z.string().min(1).optional(), classroomId: z.string().min(1).optional() }).strict().optional(),
     /** Path of a module (relative to the pairs file) that exports `legacy(page)` and `new(page)`. */
     steps: z.string().optional(),
     checks: z.array(Check).min(1),
@@ -176,4 +181,40 @@ export function isExpiredRedirect(url: string): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * Compares the `requires` of a pair with the accounts file entry of its role.
+ * @param pair The pair (id, role, and optional requires).
+ * @param entries The accounts file entries by role.
+ * @returns A refusal message that names the pair, or undefined when the accounts match or the pair has no `requires`.
+ */
+export function checkRequires(
+  pair: { id: string; role: string; requires?: { userId?: string; classroomId?: string } },
+  entries: Record<string, { userId: string; new: { classroomId?: string } } | undefined>,
+): string | undefined {
+  const need = pair.requires;
+  if (!need) return undefined;
+  const entry = entries[pair.role];
+  if (need.userId && entry?.userId !== need.userId) {
+    return `pair ${pair.id} (role ${pair.role}) needs user ${need.userId}, but the accounts file has another user`;
+  }
+  if (need.classroomId && entry?.new.classroomId !== need.classroomId) {
+    return `pair ${pair.id} (role ${pair.role}) needs class ${need.classroomId}, but the accounts file has another class`;
+  }
+  return undefined;
+}
+
+/**
+ * Tells whether the final URL of a capture has another path than the request.
+ * A placeholder in the requested path matches one path segment. The query and the host are ignored.
+ * @param requested The pair path, with or without placeholders.
+ * @param finalUrl The final URL after redirects.
+ * @returns True when the paths differ.
+ */
+export function pathMismatch(requested: string, finalUrl: string): boolean {
+  const want = requested.split("?")[0].replace(/\/+$/, "");
+  const got = requestPath(finalUrl).replace(/\/+$/, "");
+  const re = new RegExp("^" + want.split(/\{[^{}]*\}/).map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("[^/]+") + "$");
+  return !re.test(got);
 }

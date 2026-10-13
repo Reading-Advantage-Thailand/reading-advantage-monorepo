@@ -98,3 +98,52 @@ describe("resolvePlaceholders", () => {
     expect(() => resolve("/en/x/{user:WIZARD}", context)).toThrow(/WIZARD/);
   });
 });
+
+describe("pair requires (M-23)", () => {
+  const api = pairs as unknown as {
+    checkRequires: (
+      pair: { id: string; role: string; requires?: { userId?: string; classroomId?: string } },
+      entries: Record<string, { userId: string; new: { classroomId?: string } }>,
+    ) => string | undefined;
+  };
+  const entries = { TEACHER: { userId: "u-1", new: { classroomId: "c-1" } }, STUDENT: { userId: "u-2", new: { classroomId: "c-1" } } };
+
+  it("parses an optional requires with a userId and a classroomId", () => {
+    const withRequires = { ...pair, role: "TEACHER", requires: { userId: "u-1", classroomId: "c-1" } };
+    expect(PairList.safeParse({ ...valid, pairs: [withRequires] }).success).toBe(true);
+  });
+
+  it("refuses an unknown field in requires", () => {
+    expect(PairList.safeParse({ ...valid, pairs: [{ ...pair, requires: { password: "x" } }] }).success).toBe(false);
+  });
+
+  it("returns nothing when the pair has no requires or the accounts match", () => {
+    expect(api.checkRequires({ id: "P", role: "TEACHER" }, entries)).toBeUndefined();
+    expect(api.checkRequires({ id: "P", role: "TEACHER", requires: { userId: "u-1", classroomId: "c-1" } }, entries)).toBeUndefined();
+  });
+
+  it("names the pair when the user does not match", () => {
+    expect(api.checkRequires({ id: "P-7", role: "TEACHER", requires: { userId: "u-9" } }, entries)).toMatch(/P-7.*TEACHER.*u-9/);
+  });
+
+  it("names the pair when the class does not match", () => {
+    expect(api.checkRequires({ id: "P-8", role: "STUDENT", requires: { classroomId: "c-5" } }, entries)).toMatch(/P-8.*c-5/);
+  });
+});
+
+describe("final path check (M-23)", () => {
+  const api = pairs as unknown as { pathMismatch: (requested: string, finalUrl: string) => boolean };
+
+  it("accepts the same path and ignores the query and the host", () => {
+    expect(api.pathMismatch("/en/teacher/home", "http://localhost:3005/en/teacher/home?x=1")).toBe(false);
+  });
+
+  it("flags a redirect to another path", () => {
+    expect(api.pathMismatch("/en/teacher/home", "http://localhost:3005/en/auth/signin")).toBe(true);
+  });
+
+  it("matches a placeholder against one path segment", () => {
+    expect(api.pathMismatch("/en/student/read/{map:article:abc}", "http://localhost:3005/en/student/read/zz9")).toBe(false);
+    expect(api.pathMismatch("/en/student/read/{map:article:abc}", "http://localhost:3005/en/auth/signin")).toBe(true);
+  });
+});

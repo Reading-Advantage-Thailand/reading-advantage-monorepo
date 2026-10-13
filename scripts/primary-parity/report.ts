@@ -5,11 +5,11 @@
  * Reads `<out>/<member>/capture-legacy.json` and `capture-new.json`; writes `report.html` and `report.md`
  * in `<out>/<member>/`. The report holds only the pair list and the captures, never the accounts file.
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { assertOutsideRepository } from "./guards.js";
-import { PairList, type PairData, type PairListData } from "./pairs.js";
+import { PairList, pathMismatch, type PairData, type PairListData } from "./pairs.js";
 
 /** One screenshot and its visible text. `png` is relative to the member folder. */
 export interface Shot {
@@ -22,6 +22,8 @@ export interface AppCapture {
   status: number;
   finalUrl: string;
   consoleErrors: number;
+  /** True when the `waitFor` selector did not appear in time. */
+  waitForMissed?: boolean;
   /** Request paths that matched a check `network` pattern, by check id. */
   network?: Record<string, string[]>;
   shots: Record<string, Shot>;
@@ -82,8 +84,11 @@ function networkNote(id: string, cap: { legacy?: AppCapture; new?: AppCapture })
   return `Network. ${part("legacy", cap.legacy)}; ${part("new", cap.new)}`;
 }
 
-const appLine = (label: string, path: string, c?: AppCapture): string =>
-  c ? `${label} path: ${path} (status ${c.status}, final URL ${c.finalUrl}, console errors ${c.consoleErrors})` : `${label} path: ${path} (${NOT_CAPTURED})`;
+const appLine = (label: string, path: string, c?: AppCapture): string => {
+  if (!c) return `${label} path: ${path} (${NOT_CAPTURED})`;
+  const flags = [pathMismatch(path, c.finalUrl) ? "FINAL PATH DIFFERS from the request" : "", c.waitForMissed ? "WAITFOR SELECTOR NOT FOUND" : ""].filter(Boolean);
+  return `${label} path: ${path} (status ${c.status}, final URL ${c.finalUrl}, console errors ${c.consoleErrors})${flags.length ? ` [${flags.join("; ")}]` : ""}`;
+};
 
 /**
  * Renders the report as markdown and as a self-contained HTML page.
@@ -150,7 +155,7 @@ const CSS =
 
 /** The shape of `capture-<app>.json` that `capture.ts` writes. */
 interface CaptureFile {
-  pairs: Record<string, { status: number; finalUrl: string; consoleErrors: number; network?: Record<string, string[]>; shots: Record<string, { png: string; txt: string }> }>;
+  pairs: Record<string, { status: number; finalUrl: string; consoleErrors: number; waitForMissed?: boolean; network?: Record<string, string[]>; shots: Record<string, { png: string; txt: string }> }>;
 }
 
 function loadApp(folder: string, app: "legacy" | "new"): Record<string, AppCapture> {
@@ -180,8 +185,10 @@ function main(): void {
   const next = loadApp(folder, "new");
   const captures = Object.fromEntries(list.pairs.map((p) => [p.id, { legacy: legacy[p.id], new: next[p.id] }]));
   const { markdown, html } = renderReport({ list, captures, meta: { newCommit: values.commit, legacyDatabase: values["legacy-db"], newDatabase: values["new-db"] } });
-  writeFileSync(join(folder, "report.md"), markdown);
-  writeFileSync(join(folder, "report.html"), html);
+  for (const [name, text] of [["report.md", markdown], ["report.html", html]] as const) {
+    writeFileSync(join(folder, name), text, { mode: 0o600 });
+    chmodSync(join(folder, name), 0o600);
+  }
   console.log(`Wrote ${join(folder, "report.html")} and report.md`);
 }
 

@@ -184,3 +184,23 @@ describe("network note", () => {
     expect(markdown).toContain("new: no matching request");
   });
 });
+
+describe("final path and wait flags (M-23)", () => {
+  it("flags a final URL whose path differs from the request", () => {
+    const input = full();
+    input.captures["SYS-01"].new!.finalUrl = "http://localhost:3005/en/auth/signin";
+    expect(api.renderReport(input).markdown).toMatch(/final path differs/i);
+  });
+
+  it("does not flag a final URL with the requested path", () => {
+    expect(api.renderReport(full()).markdown).not.toMatch(/final path differs/i);
+  });
+
+  it("shows a missed waitFor selector", () => {
+    const input = full();
+    (input.captures["SYS-01"].legacy as unknown as { waitForMissed: boolean }).waitForMissed = true;
+    const { markdown, html } = api.renderReport(input);
+    expect(markdown).toMatch(/waitFor selector not found/i);
+    expect(html).toMatch(/waitFor selector not found/i);
+  });
+});

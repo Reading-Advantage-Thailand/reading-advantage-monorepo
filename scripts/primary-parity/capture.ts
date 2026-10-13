@@ -15,7 +15,7 @@ import { chromium, type BrowserContext, type Page } from "playwright";
 import postgres from "postgres";
 import { AccountsFile, requireRoles, type AccountsFileData } from "./accounts-file.js";
 import { assertLocalBaseUrl, assertOutsideRepository, checkDatabaseUrl } from "./guards.js";
-import { PairList, isExpiredRedirect, matchRequests, requestPath, resolvePlaceholders, rolesNeeded, type PairData } from "./pairs.js";
+import { PairList, checkRequires, isExpiredRedirect, matchRequests, requestPath, resolvePlaceholders, rolesNeeded, type PairData } from "./pairs.js";
 import {
   gotoRetry,
   readClassSheetPassword,
@@ -86,6 +86,13 @@ async function main(): Promise<void> {
   const accounts: AccountsFileData = AccountsFile.parse(JSON.parse(readFileSync(accountsFile, "utf8")));
   const entries = requireRoles(accounts, rolesNeeded(lists.map((l) => l.list), app));
 
+  for (const { list } of lists) {
+    for (const pair of list.pairs) {
+      const refusal = checkRequires(pair, entries);
+      if (refusal) throw new Error(refusal);
+    }
+  }
+
   const idMap = app === "new" ? await loadIdMap(lists.flatMap((l) => l.list.pairs.map((p) => p.newPath)), process.env.NEW_DATABASE_URL) : (_t: string, id: string) => id;
   const users = Object.fromEntries(Object.entries(entries).map(([role, e]) => [role, e!.userId]));
 
@@ -133,7 +140,7 @@ async function main(): Promise<void> {
   try {
    for (const { file: pairsFile, list } of lists) {
     const folder = join(out, list.member);
-    const result: Record<string, { status: number; finalUrl: string; consoleErrors: number; network: Record<string, string[]>; shots: Record<string, { png: string; txt: string }> }> = {};
+    const result: Record<string, { status: number; finalUrl: string; consoleErrors: number; waitForMissed?: boolean; network: Record<string, string[]>; shots: Record<string, { png: string; txt: string }> }> = {};
     // The TEACHER context must exist before a new STUDENT sign-in; the loop order does not matter.
     for (const pair of list.pairs) {
       const path = resolvePlaceholders(app === "legacy" ? pair.legacyPath : pair.newPath, { map: idMap, users });
@@ -143,7 +150,7 @@ async function main(): Promise<void> {
       page.on("console", (m) => m.type() === "error" && consoleErrors++);
       const seen: string[] = [];
       page.on("request", (r) => seen.push(requestPath(r.url())));
-      const record = { status: 0, finalUrl: "", consoleErrors: 0, network: {} as Record<string, string[]>, shots: {} as Record<string, { png: string; txt: string }> };
+      const record = { status: 0, finalUrl: "", consoleErrors: 0, waitForMissed: false, network: {} as Record<string, string[]>, shots: {} as Record<string, { png: string; txt: string }> };
       for (const width of pair.widths) {
         for (const scheme of pair.colorSchemes) {
           await page.setViewportSize({ width, height: 900 });
@@ -156,7 +163,7 @@ async function main(): Promise<void> {
             response = await gotoRetry(page, `${base}${path}`);
           }
           const selector = pair.waitFor?.[app];
-          if (selector) await page.waitForSelector(selector, { timeout: 30000 }).catch(() => {});
+          if (selector) await page.waitForSelector(selector, { timeout: 30000 }).catch(() => { record.waitForMissed = true; });
           if (pair.steps) {
             const mod = (await import(pathToFileURL(resolve(dirname(pairsFile), pair.steps)).href)) as StepsModule;
             await mod[app]?.(page);
@@ -165,6 +172,7 @@ async function main(): Promise<void> {
           const txt = png.replace(/\.png$/, ".txt");
           mkdirSync(join(folder, pair.id), { recursive: true, mode: 0o700 });
           await page.screenshot({ path: join(folder, png), fullPage: true });
+          chmodSync(join(folder, png), 0o600);
           const scope = (await page.locator("main").count()) ? page.locator("main").first() : page.locator("body");
           writePrivate(join(folder, txt), await scope.innerText().catch(() => ""));
           record.shots[`${width}-${scheme}`] = { png, txt };
