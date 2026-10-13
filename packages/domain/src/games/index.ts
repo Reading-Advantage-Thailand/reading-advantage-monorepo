@@ -36,6 +36,7 @@ export {
   SAVED_PRACTICE_INPUT_ID,
   gamePracticeInputRequestSchema,
   getLessonPracticeInput,
+  getLessonPreviewPracticeInput,
   lessonPracticeInputRequestSchema,
   listGamePracticeInput,
   practiceLevelOf,

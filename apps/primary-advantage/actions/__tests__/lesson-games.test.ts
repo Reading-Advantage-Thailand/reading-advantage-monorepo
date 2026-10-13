@@ -5,14 +5,14 @@ const mocks = vi.hoisted(() => ({
   currentUser: vi.fn(),
   getLessonPracticeInput: vi.fn(),
   getLessonGameResults: vi.fn(),
-  listSample: vi.fn(),
+  getPreviewInput: vi.fn(),
   logError: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ currentUser: mocks.currentUser }));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain", () => ({ createTenantDB: (_db: unknown, tenant: unknown) => ({ tenant }) }));
-vi.mock("@reading-advantage/domain/games", () => ({ getLessonPracticeInput: mocks.getLessonPracticeInput, getLessonGameResults: mocks.getLessonGameResults, listPrimarySamplePracticeInput: mocks.listSample }));
+vi.mock("@reading-advantage/domain/games", () => ({ getLessonPracticeInput: mocks.getLessonPracticeInput, getLessonGameResults: mocks.getLessonGameResults, getLessonPreviewPracticeInput: mocks.getPreviewInput }));
 vi.mock("@/lib/observability/logger", () => ({ logger: { error: mocks.logError } }));
 
 import { getLessonGameInputAction, getLessonGameResultsAction } from "../lesson-games";
@@ -50,14 +50,15 @@ describe("getLessonGameInputAction", () => {
     expect(mocks.logError).toHaveBeenCalledWith("lesson_game_input_failed", expect.objectContaining({ articleId: ARTICLE, userId: "s1" }));
   });
 
-  it.each(["TEACHER", "ADMIN"])("gives %s in a rehearsal or a preview the read-only sample set when no class book is named", async (role) => {
-    mocks.currentUser.mockResolvedValue({ id: "t1", role, schoolId: "school-1" });
-    // The production guard: the domain refuses a non-student who does not name the class book.
-    mocks.getLessonPracticeInput.mockRejectedValue(new Error("A teacher needs the class book of the lesson"));
-    mocks.listSample.mockResolvedValue(sample);
+  it.each(["TEACHER", "ADMIN"])("gives %s in a rehearsal or a preview the lesson input of the article when no class book is named (M-14)", async (role) => {
+    const staff = { id: "t1", role, schoolId: "school-1" };
+    mocks.currentUser.mockResolvedValue(staff);
+    mocks.getPreviewInput.mockResolvedValue(input);
     const result = await getLessonGameInputAction({ articleId: ARTICLE, locale: "th" });
-    expect(result).toEqual({ success: true, input: sample });
-    expect(mocks.listSample).toHaveBeenCalledWith({ db: {}, input: { locale: "th" } });
+    expect(result).toEqual({ success: true, input });
+    expect(mocks.getPreviewInput).toHaveBeenCalledWith(
+      expect.objectContaining({ user: staff, tenant: { schoolId: "school-1" }, input: { articleId: ARTICLE, locale: "th" } }),
+    );
     expect(mocks.getLessonPracticeInput).not.toHaveBeenCalled();
   });
 
@@ -69,7 +70,7 @@ describe("getLessonGameInputAction", () => {
     expect(mocks.getLessonPracticeInput).toHaveBeenCalledWith(
       expect.objectContaining({ input: { articleId: ARTICLE, locale: "th", classBookId: BOOK, lessonNumber: 3 } }),
     );
-    expect(mocks.listSample).not.toHaveBeenCalled();
+    expect(mocks.getPreviewInput).not.toHaveBeenCalled();
   });
 });
 

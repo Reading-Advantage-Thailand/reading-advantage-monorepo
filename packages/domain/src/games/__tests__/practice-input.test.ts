@@ -6,6 +6,7 @@ import type { TenantDB } from "../../db-contract.js";
 import {
   LESSON_PRACTICE_INPUT_PREFIX,
   getLessonPracticeInput,
+  getLessonPreviewPracticeInput,
   lessonPracticeInputRequestSchema,
 } from "../practice-input.js";
 import { createMockDb } from "../../__tests__/mock-db.js";
@@ -143,5 +144,25 @@ describe("getLessonPracticeInput", () => {
     await expect(
       getLessonPracticeInput({ db, user: teacher, tenant, input: { articleId: ARTICLE, classBookId: CLASS_BOOK, lessonNumber: 3 } }),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+});
+
+describe("getLessonPreviewPracticeInput (M-14)", () => {
+  beforeEach(() => mocks.managedClassBook.mockReset());
+
+  it("gives staff the lesson words from the article snapshot with no class book proof", async () => {
+    const { db, rawDb } = dbOf([snapshot]);
+    const result = await getLessonPreviewPracticeInput({ db, user: teacher, tenant, input: { articleId: ARTICLE, locale: "th" } });
+    expect(result.id).toBe(`lesson:${ARTICLE}`);
+    expect(result.vocabulary[0]).toMatchObject({ term: "word0", translation: "คำ0" });
+    expect(rawDb.select).toHaveBeenCalledTimes(1);
+    expect(mocks.managedClassBook).not.toHaveBeenCalled();
+  });
+
+  it("refuses a student, a user of another school, and a user with no school", async () => {
+    const { db } = dbOf([snapshot]);
+    await expect(getLessonPreviewPracticeInput({ db, user: student, tenant, input: { articleId: ARTICLE } })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(getLessonPreviewPracticeInput({ db, user: teacher, tenant: { schoolId: "school-2" }, input: { articleId: ARTICLE } })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(getLessonPreviewPracticeInput({ db, user: { ...teacher, schoolId: null }, tenant: { schoolId: null }, input: { articleId: ARTICLE } })).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 });

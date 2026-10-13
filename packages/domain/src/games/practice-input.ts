@@ -251,6 +251,21 @@ export async function getLessonPracticeInput({
     if (lessons[0]?.articleId !== request.articleId) throw new AuthError("The lesson does not hold this article", "FORBIDDEN");
   }
 
+  return lessonInputFromSnapshot(rawDb, request, practiceLevelOf(user.cefrLevel));
+}
+
+/**
+ * Reads the article snapshot of words and sentences and builds the lesson practice input.
+ * @param rawDb The unscoped database; the snapshot is global content.
+ * @param request The validated lesson request.
+ * @param level The game level label of the input.
+ * @returns A validated practice input with the id `lesson:<articleId>`.
+ */
+async function lessonInputFromSnapshot(
+  rawDb: ReturnType<TenantDB["unscoped"]>,
+  request: z.infer<typeof lessonPracticeInputRequestSchema>,
+  level: CefrLevel,
+): Promise<PracticeInput> {
   const snapshots = await rawDb
     .select({ words: sentencsAndWordsForFlashcards.words, sentence: sentencsAndWordsForFlashcards.sentence })
     .from(sentencsAndWordsForFlashcards)
@@ -270,7 +285,37 @@ export async function getLessonPracticeInput({
     wordRows,
     sentenceRows,
     request.locale,
-    practiceLevelOf(user.cefrLevel),
+    level,
     `${LESSON_PRACTICE_INPUT_PREFIX}${request.articleId}`,
   );
+}
+
+/**
+ * Builds the lesson practice input for a staff member in a preview or a rehearsal: the article
+ * snapshot only, read-only, with no class book proof. It reads no row of any user and the games
+ * save nothing. A student uses `getLessonPracticeInput`.
+ * @param args Authenticated tenant context and the lesson request.
+ * @returns A validated practice input with the id `lesson:<articleId>`; it is empty when the article has no snapshot.
+ * @throws {AuthError} FORBIDDEN for a student, a user of another school, or a user with no school.
+ * @throws When authorization or input validation fails.
+ */
+export async function getLessonPreviewPracticeInput({
+  db,
+  user,
+  tenant,
+  input,
+}: {
+  db: TenantDB;
+  user: UserContext;
+  tenant: Tenant;
+  input: LessonPracticeInputRequest;
+}): Promise<PracticeInput> {
+  assertCan(user, "games:read:own", tenant);
+  const request = lessonPracticeInputRequestSchema.parse(input);
+  if (user.role === "STUDENT") throw new AuthError("A student reads the lesson input with the lesson request", "FORBIDDEN");
+  if (user.role !== "SYSTEM" && (!user.schoolId || user.schoolId !== tenant.schoolId)) {
+    throw new AuthError("The lesson is not in your school", "FORBIDDEN");
+  }
+  const rawDb = db.unscoped("the article snapshot is global content; the preview reads no row of any user");
+  return lessonInputFromSnapshot(rawDb, request, practiceLevelOf(user.cefrLevel));
 }
