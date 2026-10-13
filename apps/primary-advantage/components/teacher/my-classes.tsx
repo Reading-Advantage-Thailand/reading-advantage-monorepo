@@ -70,7 +70,8 @@ type Classes = {
   // Legacy fields for backwards compatibility
   classroomName?: string;
   noOfStudents?: number;
-  grade?: string;
+  /** The API returns the integer column. */
+  grade?: string | number;
   coTeacher?: {
     coTeacherId: string;
     name: string;
@@ -140,7 +141,7 @@ export default function MyClasses() {
         },
         body: JSON.stringify({
           classroomName,
-          grade,
+          grade: String(grade),
         }),
       });
 
@@ -209,13 +210,17 @@ export default function MyClasses() {
     openedEditId.current = editId;
     setDialogOpen("edit");
     setNameChange(target.name);
-    setGrade(target.grade || "");
+    setGrade(target.grade ? String(target.grade) : "");
     setClassroomId(target.id);
   }, [loadState, classrooms, editId]);
 
+  // Forget the opened id only after the URL has no `edit`: a list refresh after a save must not open the dialog again.
+  useEffect(() => {
+    if (!editId) openedEditId.current = null;
+  }, [editId]);
+
   /** Closes the dialog and removes `edit` from the URL, so a reload does not open it again. */
   const closeDialog = () => {
-    openedEditId.current = null;
     setDialogOpen("");
     if (editId) router.replace("/teacher/my-classes");
   };
@@ -299,7 +304,7 @@ export default function MyClasses() {
                   onSelect={() => {
                     setDialogOpen("edit");
                     setNameChange(payment.name);
-                    setGrade(payment.grade || "");
+                    setGrade(payment.grade ? String(payment.grade) : "");
                     setClassroomId(payment.id);
                   }}
                 >
@@ -434,7 +439,7 @@ export default function MyClasses() {
                   <SelectValue placeholder={t("edit.gradePlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {Array.from({ length: 10 }, (_, i) => i + 3).map(
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map(
                     (grade, index) => (
                       <SelectItem key={index} value={String(grade)}>
                         {t("edit.gradeItem", { grade })}

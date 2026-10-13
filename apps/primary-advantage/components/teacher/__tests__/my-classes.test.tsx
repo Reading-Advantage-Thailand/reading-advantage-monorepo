@@ -151,6 +151,39 @@ describe("My Classes edit link (FR-4)", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
+  it("sends the grade as a string when the list returned the integer column (H-1)", async () => {
+    classes[0].grade = 4 as unknown as string;
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: en.TeacherMyClasses.edit.submit }));
+    await flush();
+    classes[0].grade = "3";
+    const patch = fetchMock.mock.calls.find(([, init]) => init?.method === "PATCH");
+    expect(JSON.parse(patch?.[1].body as string)).toEqual({ classroomName: "P3A", grade: "4" });
+  });
+
+  it("does not open the dialog again after a save while the URL still names the class", async () => {
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: en.TeacherMyClasses.edit.submit }));
+    await flush();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("lists the grades 1 to 12 in the edit dialog (L-13)", async () => {
+    searchState.query = `edit=${C1}`;
+    renderWithMessages(<MyClasses />);
+    await flush();
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+    const dialog = screen.getByRole("dialog");
+    fireEvent.keyDown(within(dialog).getByRole("combobox"), { key: "ArrowDown" });
+    await flush();
+    expect(screen.getAllByRole("option")).toHaveLength(12);
+  });
+
   it("does not touch the URL when no edit query is set", async () => {
     renderWithMessages(<MyClasses />);
     await flush();
