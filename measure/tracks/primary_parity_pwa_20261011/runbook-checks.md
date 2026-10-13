@@ -37,9 +37,11 @@ The phone has the legacy worker and its caches. Do this after the switch:
 4. Open `chrome://inspect/#service-workers` on a computer with the phone connected (Chrome remote
    debugging). Open the DevTools Application tab of the page.
 5. Pass when Application > Service workers shows `/serwist/sw.js` as `activated and is running`,
-   and the script is the new worker (it has no `fetch` handler; the Sources tab shows `primary-v2-`).
-6. Pass when Application > Cache storage has no cache. The names `serwist-precache-v2-*`, `pages`,
-   `pages-rsc`, `apis`, and `others` must not be in the list.
+   and the script is the new worker (it has a `fetch` handler for navigations only; the Sources tab shows
+   `primary-v2-` and the version constant).
+6. Pass when Application > Cache storage lists only `primary-v2-offline-v1` (the offline page cache that
+   the worker creates at install). The names `serwist-precache-v2-*`, `pages`, `pages-rsc`, `apis`,
+   `others`, and any older `primary-v2-offline*` name must not be in the list.
 7. Close the app and open it again. Pass when no second reload happens.
 
 Fail action: if a legacy cache stays, unregister the worker in DevTools, reload, and report the

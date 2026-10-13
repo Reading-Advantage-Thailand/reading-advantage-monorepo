@@ -56,7 +56,7 @@ member with "none".
   `primary-v2-` and no `serwist-precache`.
 - AC-4 phone check after the switch: a phone with the installed legacy app shows
   the new app, reloads at most once, runs `/serwist/sw.js`, keeps no legacy
-  cache, and does not reload on the second open.
+  cache (only `primary-v2-offline-v1`), and does not reload on the second open.
 
 ## 2. New items for rehearsal 3
 

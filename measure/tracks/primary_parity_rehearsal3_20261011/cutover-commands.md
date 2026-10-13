@@ -24,7 +24,7 @@ writes it into the tables.
 | C8 | New label (for example `cutover2`), or move the old files away first. |
 | C9 | Tag rule from the read-only check of 2026-10-12: tags `rehearsal1`, `rehearsal2`, and `cutover` are taken (`cutover` sits on `00130-daq`), traffic is 100% on legacy `00125-9wd`. Use a new tag name, or remove the old tag first (owner decision, member question 3). Set `TUTOR_LESSON_URL_TEMPLATE` before the deploy when Tutor has the `/b/` route. Check that the rehearsal 3 image still exists first. |
 | C10 | New `NEW_PASSWORDS_OUT` file, the new tag URL as `BASE`, and the new R7 checks. |
-| C13 | Agent: the R7 checks on the domain, plus the PWA AC-2 `curl -I` on the tag URL: `curl -sI "$BASE/serwist/sw.js"` gives 200, a JavaScript MIME type, `Service-Worker-Allowed: /`, `Cache-Control: no-cache`. Owner: the printed QR scans, plus a phone with the installed legacy app (PWA AC-4, new worker replaces the old one). |
+| C13 | Agent: the R7 checks on the domain, plus the PWA AC-2 `curl -I` on the tag URL: `curl -sI "$BASE/serwist/sw.js"` gives 200, a JavaScript MIME type, `Service-Worker-Allowed: /`, `Cache-Control: no-cache`. Owner: the printed QR scans, plus a phone with the installed legacy app (PWA AC-4, new worker replaces the old one: the worker has a navigation `fetch` handler, and Cache storage lists only `primary-v2-offline-v1`; steps 5-6 of `primary_parity_pwa_20261011/runbook-checks.md`). |
 
 Contact export (one `psql \copy`; runs on a local restore of the backup, writes
 outside every repository with mode 600):
