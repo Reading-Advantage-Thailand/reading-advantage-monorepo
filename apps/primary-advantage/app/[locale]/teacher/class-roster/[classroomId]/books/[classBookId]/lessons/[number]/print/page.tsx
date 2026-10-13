@@ -4,7 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { ArrowLeftIcon } from "lucide-react";
 import { db } from "@reading-advantage/db";
 import { getPrintLesson } from "@reading-advantage/domain/primary-books";
-import { renderPrintLesson } from "@reading-advantage/domain/primary-books/print";
+import { PRINT_KIT_COMMIT, renderPrintLesson } from "@reading-advantage/domain/primary-books/print";
 import { currentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import { logger } from "@/lib/observability/logger";
@@ -45,10 +45,12 @@ export default async function PrintLessonPage({ params }: { params: Params }) {
   const title = lesson.lesson.title;
 
   let html: string | null = null;
+  let dataCommit: string | undefined;
   if (lesson.hasPrint) {
     try {
       const print = await getPrintLesson({ db, user, classBookId, number });
       html = print ? renderPrintLesson({ printLesson: print.printLesson, locale: locale as never }) : null;
+      dataCommit = print?.printLesson.workbooksCommit;
     } catch (error) {
       logger.error("print_lesson_failed", { classBookId, number, userId: user.id, error });
       notFound();
@@ -86,6 +88,11 @@ export default async function PrintLessonPage({ params }: { params: Params }) {
             </div>
           </Panel>
         )}
+        {html ? (
+          <p data-print-provenance className="text-center text-xs opacity-70">
+            Kit {PRINT_KIT_COMMIT.slice(0, 7)} · Data {dataCommit?.slice(0, 7) ?? "-"}
+          </p>
+        ) : null}
       </div>
     </Scene>
   );
