@@ -9,7 +9,7 @@ vi.mock("@reading-advantage/db/schema", () => ({
     id: "id", isPublic: "isPublic", raLevel: "raLevel", genre: "genre", title: "title",
     subgenre: "subgenre", image: "image", cefrLevel: "cefrLevel",
   },
-  chapters: { id: "ch.id", storyId: "ch.storyId", chapterNumber: "chapterNumber" },
+  chapters: { id: "ch.id", storyId: "ch.storyId", chapterNumber: "chapterNumber", isPublic: "ch.isPublic" },
   sentencsAndWordsForFlashcards: { chapterId: "sw.chapterId", words: "sw.words", wordsUrl: "sw.wordsUrl" },
   userActivity: { userId: "ua.userId", activityType: "activityType", targetId: "targetId" },
   storyRecords: { userId: "userId", storyId: "storyId", status: "status" },
@@ -234,6 +234,8 @@ describe("listPrimaryStories", () => {
   });
 });
 
+const ALL_THREE = ["MC", "SA", "LA"].map((k) => ({ targetId: "c1", activityType: `STORIES_${k}_QUESTION` }));
+
 describe("getStoryForStudent", () => {
   const STORY = "11111111-1111-4111-8111-111111111111";
   const story = {
@@ -248,7 +250,7 @@ describe("getStoryForStudent", () => {
   const teacher = { id: "t1", role: "TEACHER" as const, schoolId: "school-1" };
 
   /** Mock DB: story row, chapter rows, activity rows (in select order). */
-  function storyDb(rows: unknown[] = [story], chapters: unknown[] = chapterRows, done: unknown[] = [{ targetId: "c1" }]) {
+  function storyDb(rows: unknown[] = [story], chapters: unknown[] = chapterRows, done: unknown[] = ALL_THREE) {
     return createMockDb({ selectSequence: [rows, chapters, done] });
   }
   const call = (db: ReturnType<typeof createMockDb>, user: any, storyId = STORY) =>
@@ -287,6 +289,29 @@ describe("getStoryForStudent", () => {
 
   it("throws StoryNotFoundError when no story matches (outside the window or not published)", async () => {
     await expect(call(storyDb([]), { ...mockStudent, level: 9 })).rejects.toThrow(/Story not found/);
+  });
+
+  it("counts a chapter as finished only when MC, SA, and LA are all done", async () => {
+    const one = [{ targetId: "c1", activityType: "STORIES_MC_QUESTION" }, { targetId: "c2", activityType: "STORIES_SA_QUESTION" }];
+    const result = await call(storyDb(undefined, undefined, one), { ...mockStudent, level: 5 });
+    expect(result.finishedChapterIds).toEqual([]);
+  });
+
+  it("shows only public chapters", async () => {
+    const db = storyDb();
+    await call(db, { ...mockStudent, level: 5 });
+    expect(leaves(db, 1)).toContainEqual({ col: "ch.isPublic", val: true, type: "eq" });
+  });
+
+  it("keeps a story open after a level-up when the student started it", async () => {
+    const db = createMockDb({ selectSequence: [[], [{ id: "c1" }], [{ targetId: "c1" }], [story], chapterRows, ALL_THREE] });
+    const result = await call(db, { ...mockStudent, level: 9 });
+    expect(result.story.id).toBe(STORY);
+  });
+
+  it("still hides an out-of-window story that the student never started", async () => {
+    const db = createMockDb({ selectSequence: [[], [{ id: "c1" }], []] });
+    await expect(call(db, { ...mockStudent, level: 9 })).rejects.toThrow(/Story not found/);
   });
 
   it("reads finished chapters from the user's STORIES_ activity rows by chapter id", async () => {
@@ -373,7 +398,20 @@ describe("getChapterForStudent", () => {
   });
 
   it("throws StoryNotFoundError outside the window or for an unknown story", async () => {
-    await expect(call(chapterDb([]), { ...mockStudent, level: 9 })).rejects.toThrow(/Story not found/);
+    await expect(call(createMockDb({ selectSequence: [[]] }), { ...mockStudent, level: 9 })).rejects.toThrow(/Story not found/);
+  });
+
+  it("shows only public chapters", async () => {
+    const db = chapterDb();
+    await call(db, { ...mockStudent, level: 5 });
+    expect(leaves(db, 1)).toContainEqual({ col: "ch.isPublic", val: true, type: "eq" });
+    expect(leaves(db, 2)).toContainEqual({ col: "ch.isPublic", val: true, type: "eq" });
+  });
+
+  it("keeps a started story open after a level-up", async () => {
+    const db = createMockDb({ selectSequence: [[], [{ id: "c1" }], [{ targetId: "c1" }], [story], [chapter], numbers, [wordRow]] });
+    const result = await call(db, { ...mockStudent, level: 9 });
+    expect(result.chapter.id).toBe("c2");
   });
 
   it("throws ChapterNotFoundError for an unknown chapter number", async () => {

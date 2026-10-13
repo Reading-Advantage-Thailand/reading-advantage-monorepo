@@ -12,7 +12,7 @@ import { createMockDb } from "./mock-db.js";
 
 vi.mock("@reading-advantage/db/schema", () => ({
   stories: { id: "s.id", isPublic: "s.isPublic", raLevel: "s.raLevel" },
-  chapters: { id: "ch.id", storyId: "ch.storyId" },
+  chapters: { id: "ch.id", storyId: "ch.storyId", isPublic: "ch.isPublic" },
   userActivity: { userId: "ua.userId", activityType: "ua.type", targetId: "ua.target", completed: "ua.completed", details: "ua.details" },
   multipleChoiceQuestions: { id: "mc.id", chapterId: "mc.chapterId", order: "mc.order" },
   shortAnswerQuestions: { id: "sa.id", chapterId: "sa.chapterId", order: "sa.order" },
@@ -25,6 +25,7 @@ vi.mock("drizzle-orm", () => ({
   gte: vi.fn((col, val) => ({ col, val, type: "gte" })),
   lte: vi.fn((col, val) => ({ col, val, type: "lte" })),
   inArray: vi.fn((col, val) => ({ col, val, type: "inArray" })),
+  like: vi.fn((col, val) => ({ col, val, type: "like" })),
   asc: vi.fn((col) => ({ col, type: "asc" })),
 }));
 
@@ -68,6 +69,38 @@ describe("getChapterQuestions", () => {
     expect(out.saq).toEqual({ id: id(50), question: "SA?" });
     expect(out.laq).toEqual({ id: id(60), question: "LA?" });
     expect(out.done).toEqual({ mc: false, sa: false, la: false });
+  });
+
+  it("picks the SAQ and the LAQ at random from all that exist", async () => {
+    const spy = vi.spyOn(Math, "random").mockReturnValue(0.99);
+    const db = createMockDb({
+      selectSequence: [
+        [{ id: CH }],
+        bank(10),
+        [{ id: id(50), question: "SA1?" }, { id: id(51), question: "SA2?" }],
+        [{ id: id(60), question: "LA1?" }, { id: id(61), question: "LA2?" }],
+        [],
+      ],
+    });
+    const out = await getChapterQuestions({ db: wrap(db), user: student, tenant, input: { chapterId: CH } });
+    spy.mockRestore();
+    expect(out.saq).toEqual({ id: id(51), question: "SA2?" });
+    expect(out.laq).toEqual({ id: id(61), question: "LA2?" });
+  });
+
+  it("keeps a started chapter visible after a level-up", async () => {
+    const db = createMockDb({
+      selectSequence: [[], [{ id: CH, storyId: "st1" }], [{ id: CH }], [{ targetId: CH }], bank(10), [], [], []],
+    });
+    const out = await getChapterQuestions({ db: wrap(db), user: student, tenant, input: { chapterId: CH } });
+    expect(out.chapterId).toBe(CH);
+  });
+
+  it("filters out chapters that are not public", async () => {
+    const db = createMockDb({ selectSequence: [[{ id: CH }], bank(10), [], [], []] });
+    await getChapterQuestions({ db: wrap(db), user: student, tenant, input: { chapterId: CH } });
+    const where = db.select.mock.results[0].value.from.mock.results[0].value.innerJoin.mock.results[0].value.where.mock.calls[0][0] as { conds: { col: string }[] };
+    expect(where.conds).toContainEqual({ col: "ch.isPublic", val: true, type: "eq" });
   });
 
   it("picks 5 of the 9 that exist for a chapter with 9 MCQ", async () => {
