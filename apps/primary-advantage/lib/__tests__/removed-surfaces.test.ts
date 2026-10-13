@@ -157,10 +157,12 @@ describe("M4: old game host (safe scope)", () => {
 });
 
 describe("E-7: ElvGames files of other apps in the image", () => {
-  it("has a Dockerfile line that deletes them from the standalone tree", () => {
+  it("deletes them in the builder stage, before the runner copy", () => {
     const dockerfile = readFileSync(path.join(appRoot, "Dockerfile"), "utf8");
+    const builder = dockerfile.slice(dockerfile.indexOf("AS builder"), dockerfile.indexOf("AS runner"));
     const runner = dockerfile.slice(dockerfile.indexOf("AS runner"));
-    const line = runner.split("\n").find((l) => l.startsWith("RUN rm -rf") && l.includes("standard-pack-qc"));
+    const standalone = "/app/apps/primary-advantage/.next/standalone/";
+    const line = builder.split("\n").find((l) => l.startsWith("RUN rm -rf") && l.includes("standard-pack-qc"));
     expect(line).toBeDefined();
     for (const rel of [
       "apps/advantage-games/public/assets/apk/standard-pack-qc",
@@ -168,7 +170,9 @@ describe("E-7: ElvGames files of other apps in the image", () => {
       "apps/advantage-games/scripts/generate-standard-pack-qc-preview.mjs",
       "apps/advantage-games/src/lib/apk/standard-pack-qc-preview.json",
     ]) {
-      expect(line, rel).toContain(rel);
+      expect(line, rel).toContain(standalone + rel);
     }
+    // The runner layers must not hold the files: no runner line deletes or copies them.
+    expect(runner.split("\n").filter((l) => /^\s*(RUN|COPY)/.test(l) && l.includes("standard-pack-qc"))).toEqual([]);
   });
 });
