@@ -34,7 +34,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ articleId: 
 }
 
 /**
- * Answers 404 for every method except GET. A removed path such as `/api/articles/generate`
+ * Answers 404 for every method except GET. A removed path under the article route
  * matches this dynamic route, and it must give 404, not 405.
  * @returns A 404 JSON response.
  */
