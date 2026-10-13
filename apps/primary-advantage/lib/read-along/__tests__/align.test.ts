@@ -89,6 +89,12 @@ describe("parseSentences", () => {
     expect(parsed[0].words).toEqual([]);
   });
 
+  it("drops only the bad entry", () => {
+    const parsed = parseSentences([{ sentence: "Hi.", startTime: 0, endTime: 1 }, { nope: 1 }, ...contraction]);
+    expect(parsed).toHaveLength(2);
+    expect(parsed[0].sentence).toBe("Hi.");
+  });
+
   it("returns an empty list for another shape", () => {
     expect(parseSentences(null)).toEqual([]);
     expect(parseSentences("x")).toEqual([]);
@@ -149,6 +155,14 @@ describe("buildWordMaps derived fixtures (M-2)", () => {
     expect(maps.audioToDisplay).toEqual([0, 1, 2, 3]);
     const fuzzy = buildWordMaps(["It", "says", "Don't", "run"], ["It", "sayz:", "\"Don't", "run."]);
     expect(fuzzy.audioToDisplay).toEqual([0, 1, 2, 3]);
+  });
+});
+
+describe("buildWordMaps short-word substitution", () => {
+  it("pairs the substituted words 1:1 when the skip counts are equal", () => {
+    const maps = buildWordMaps(["I", "see", "it", "now"], ["I", "see", "at", "now"]);
+    expect(maps.audioToDisplay).toEqual([0, 1, 2, 3]);
+    expect(maps.displayToAudio).toEqual([0, 1, 2, 3]);
   });
 });
 

@@ -56,11 +56,15 @@ const EDGE_START = /[\p{L}\p{N}]/u;
 /**
  * Parses the `sentences` value of an article at the boundary.
  * @param raw The jsonb value.
- * @returns The sentence entries, or an empty list when the value has another shape.
+ * @returns The valid sentence entries, or an empty list when the value is not a list.
  */
 export function parseSentences(raw: unknown): ReadAlongSentence[] {
-  const parsed = z.array(SentenceTimepointSchema).safeParse(raw);
-  return parsed.success ? parsed.data : [];
+  if (!Array.isArray(raw)) return [];
+  // Drop only the bad entry; the rest of the timings stay usable.
+  return raw.flatMap((entry) => {
+    const parsed = SentenceTimepointSchema.safeParse(entry);
+    return parsed.success ? [parsed.data] : [];
+  });
 }
 
 /**
@@ -173,6 +177,13 @@ export function buildWordMaps(displayWords: string[], audioWords: string[]): Wor
         }
       }
       if (skip) {
+        // Equal skips are a substitution: pair the skipped words 1:1.
+        if (skip[0] === skip[1]) {
+          for (let x = 0; x < skip[0]; x++) {
+            audioToDisplay[a + x] = d + x;
+            displayToAudio[d + x] = a + x;
+          }
+        }
         d += skip[0];
         a += skip[1];
         continue;
