@@ -17,13 +17,16 @@ const SEVERITY_ORDER = { critical: 0, high: 1, medium: 2 } as const;
 
 /**
  * Finds the main CEFR level of a level. A sub-level counts in its main level (`A1-`, `A1`, and
- * `A1+` count in A1). A missing or unreadable level counts as A0.
+ * `A1+` count in A1). A level above B2 (C1, C2) counts in B2, because the scale has no row above
+ * B2. A missing or unreadable level counts as A0.
  * @param level The stored level, for example "A1+".
  * @returns The main level, for example "A1".
  */
 export function cefrMainLevel(level: string | null | undefined): string {
   const match = /^([ABC][0-9])/i.exec((level ?? "").trim());
-  return match ? match[1].toUpperCase() : "A0";
+  if (!match) return "A0";
+  const main = match[1].toUpperCase();
+  return main.startsWith("C") ? "B2" : main;
 }
 
 /**
