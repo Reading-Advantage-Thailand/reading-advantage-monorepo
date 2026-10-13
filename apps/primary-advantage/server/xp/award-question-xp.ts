@@ -93,8 +93,6 @@ export async function awardQuestionXp(
     return { status: "already-complete" };
   }
 
-  // The level comes from this award; the XP total is added in SQL so a parallel award is not lost.
-  const { raLevel, cefrLevel } = calculateLevelAndCefrLevel(input.xpEarned, 0);
 
   await tx.insert(xpLogs).values({
     userId: input.userId,
@@ -104,12 +102,15 @@ export async function awardQuestionXp(
   });
   await grantGpForXp({ tx, schoolId: input.schoolId, userId: input.userId, sourceKey: `xp:${userActivityRow.id}`, activityType: input.activityType, xpEarned: input.xpEarned });
 
+  // The XP total is added in SQL so a parallel award is not lost. The update locks the row, so
+  // the level that follows the returned total is the level of this transaction's total.
+  const [updated] = await tx.update(users)
+    .set({ xp: sql`${users.xp} + ${input.xpEarned}` })
+    .where(eq(users.id, input.userId))
+    .returning({ xp: users.xp });
+  const { raLevel, cefrLevel } = calculateLevelAndCefrLevel(0, Number(updated?.xp ?? input.xpEarned));
   await tx.update(users)
-    .set({
-      xp: sql`${users.xp} + ${input.xpEarned}`,
-      level: raLevel,
-      cefrLevel: cefrLevel,
-    })
+    .set({ level: raLevel, cefrLevel })
     .where(eq(users.id, input.userId));
 
   return { status: "saved", activityId: userActivityRow.id };

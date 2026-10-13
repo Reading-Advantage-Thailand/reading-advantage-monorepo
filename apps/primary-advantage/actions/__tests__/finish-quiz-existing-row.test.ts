@@ -35,6 +35,7 @@ vi.mock("@reading-advantage/db", async () => {
     and: orm.and,
     or: orm.or,
     isNull: orm.isNull,
+    sql: orm.sql,
   };
 });
 vi.mock("@reading-advantage/domain/primary-avatar", () => ({ grantGpForXp: mocks.grantGp }));
@@ -75,7 +76,7 @@ function setup(upsertRows: Array<{ id: string }>) {
       return table === xpLogs || (table as { id?: string }).id === "al.id" ? chain(undefined) : chain(upsertRows);
     },
   }));
-  mocks.update.mockReturnValue(chain(undefined));
+  mocks.update.mockReturnValue(chain([{ xp: 10 }]));
   mocks.transaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) =>
     fn({ select: mocks.select, insert: mocks.insert, update: mocks.update }),
   );
