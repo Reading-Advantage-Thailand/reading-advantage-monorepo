@@ -5,6 +5,7 @@ import type { UserContext } from "@reading-advantage/auth";
 import { createTestDb, type TestDb } from "./helpers/testDb.js";
 import { NOW, SCHOOL_A, SCHOOL_B, seedDashboard, seedLicenses } from "./helpers/dashboardSeed.js";
 import { getPlatformOverview } from "../primary-dashboards/platform.js";
+import { activityEventsSql, rowsOf, scopeStudentsSql } from "../primary-dashboards/activity.js";
 import { platformOverviewSchema } from "../primary-dashboards/platform-contracts.js";
 
 const SCHOOL_Q = "10000000-0000-4000-8000-0000000000d1"; // students, all events older than 7 days
@@ -36,7 +37,7 @@ describe("getPlatformOverview (PGlite: one active, one quiet, one without studen
   });
   afterAll(async () => h?.close());
 
-  it("returns the totals and one row for each school; quiet schools come first", async () => {
+  it("returns the totals and one row for each school; quiet schools first, then the name", async () => {
     await seedLicenses(h, [{ maxUsers: 100, status: "active", expiry: null }]);
     const out = await getPlatformOverview({ db, user: system, now: NOW });
     expect(platformOverviewSchema.parse(out)).toEqual(out);
@@ -45,9 +46,10 @@ describe("getPlatformOverview (PGlite: one active, one quiet, one without studen
     const named = out.schools.filter((s) => s.name !== "Default School" && [SCHOOL_A, SCHOOL_B, SCHOOL_Q, SCHOOL_E].includes(s.id));
     expect(named.map((s) => [s.name, s.status])).toEqual([
       ["A Quiet School", "quiet"],
+      // FR-9: quiet schools first, then every other school by name only (no "no students" group).
+      ["Empty School", "no_students"],
       ["School A", "active"],
       ["School B", "active"],
-      ["Empty School", "no_students"],
     ]);
     const byId = new Map(out.schools.map((s) => [s.id, s]));
     expect(byId.get(SCHOOL_A)).toMatchObject({
@@ -64,6 +66,39 @@ describe("getPlatformOverview (PGlite: one active, one quiet, one without studen
       students: 8, teachers: 4, activeStudents: 4, articlesOpened: 2, seatsUsed: 5, seats: 100, studentsWithoutSchool: 1,
     });
     expect(out.totals.schools).toBe(out.schools.length);
+  });
+
+  it("gives the same last activity as the old query over every event, for two schools", async () => {
+    // Add events in the other two tables: a done lesson step of q2, then a later xp log of q1 (school Q).
+    const extra = [
+      "set session_replication_role = replica",
+      `insert into primary_student_lesson_steps (class_book_id, student_id, lesson_number, app_step, status, done_at) values
+        ('10000000-0000-4000-8000-0000000000f1', 'q2', 1, 1, 'done', '2026-10-06T05:00:00'),
+        ('10000000-0000-4000-8000-0000000000f1', 'q2', 1, 2, 'in_progress', '2026-10-09T05:00:00')`,
+      `insert into xp_logs (user_id, xp_earned, activity_id, activity_type, created_at) values ('q1', 5, 'xq1', 'article', '2026-10-07T05:00:00')`,
+      "set session_replication_role = origin",
+    ];
+    for (const statement of extra) await h.db.execute(sql.raw(statement));
+    // Reference: the old query. It reads every event of every student, then takes the max for each school.
+    const scope = { kind: "platform" } as const;
+    const old = rowsOf<{ id: string; last: string | null }>(
+      await h.db.execute(sql`
+        with stu as (${scopeStudentsSql(scope)}),
+        ev as (select e.sid, e.ts, stu.school_id from (${activityEventsSql(scope)}) e join stu on stu.id = e.sid)
+        select s.id, to_char(max(ev.ts), 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as last
+        from schools s left join ev on ev.school_id = s.id group by s.id order by s.id`),
+    );
+    const out = await getPlatformOverview({ db, user: system, now: NOW });
+    const now = new Map(out.schools.map((row) => [row.id, row.lastActivityAt]));
+    const oldDates = new Map(old.map((row) => [row.id, row.last ? new Date(row.last).toISOString() : null]));
+    expect(now).toEqual(oldDates);
+    // The two schools of the check: one with events in the three tables, one whose newest event is an xp log (an in progress step does not count).
+    expect(now.get(SCHOOL_A)).toBe("2026-10-12T17:00:00.000Z");
+    expect(now.get(SCHOOL_Q)).toBe("2026-10-07T05:00:00.000Z");
+    expect(now.get(SCHOOL_E)).toBeNull();
+    for (const statement of ["delete from xp_logs where activity_id = 'xq1'", "delete from primary_student_lesson_steps where class_book_id = '10000000-0000-4000-8000-0000000000f1'"]) {
+      await h.db.execute(sql.raw(statement));
+    }
   });
 
   it("counts the rows of a school in that school only", async () => {

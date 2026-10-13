@@ -429,7 +429,15 @@ export async function getPlatformSchoolActivity(params: { db: DB; window: Dashbo
       ev as (select e.sid, e.ts, stu.school_id from (${activityEventsSql(scope)}) e join stu on stu.id = e.sid),
       students_by as (select school_id, count(*) as n from stu group by school_id),
       active_by as (select school_id, count(distinct sid) as n from ev where ts >= ${bounds.utcStart} and ts < ${bounds.utcEnd} group by school_id),
-      last_by as (select school_id, max(ts) as ts from ev group by school_id),
+      -- One max for each user in each of the three tables (an index on (user_id, created_at) can answer
+      -- it), then one max for each school. This does not sort or join every event of all time.
+      last_by as (
+        select stu.school_id, max(m.ts) as ts from (
+          select ua.user_id as sid, max(ua.created_at) as ts from user_activity ua group by ua.user_id
+          union all select x.user_id, max(x.created_at) from xp_logs x group by x.user_id
+          union all select l.student_id, max(l.done_at) from primary_student_lesson_steps l
+            where l.status = 'done' and l.done_at is not null group by l.student_id
+        ) m join stu on stu.id = m.sid group by stu.school_id),
       articles_by as (
         select stu.school_id, count(*) as n from user_activity ua join stu on stu.id = ua.user_id
         where ua.activity_type = ${ARTICLE_READ} and ua.created_at >= ${bounds.utcStart} and ua.created_at < ${bounds.utcEnd}
