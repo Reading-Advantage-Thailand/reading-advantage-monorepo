@@ -3882,7 +3882,9 @@
     "goToClasses": "ไปที่ชั้นเรียนของฉัน",
     "statusFilter": "แสดงนักเรียนตามสถานะ",
     "selectStudentFor": "เลือก {name}",
-    "progressLabel": "เสร็จแล้ว {percent}%"
+    "progressLabel": "เสร็จแล้ว {percent}%",
+    "newAssignment": "สร้างงานใหม่",
+    "newAssignmentHint": "เลือกเรื่อง แล้วกดปุ่ม งานที่กำหนด ในหน้าเรื่อง"
   },
   "TeacherStudents": {
     "classLabel": "ชั้นเรียน",

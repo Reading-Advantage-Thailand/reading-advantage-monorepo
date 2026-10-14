@@ -3882,7 +3882,9 @@
     "goToClasses": "Go to My Classes",
     "statusFilter": "Show students by status",
     "selectStudentFor": "Select {name}",
-    "progressLabel": "{percent}% done"
+    "progressLabel": "{percent}% done",
+    "newAssignment": "Bài tập mới",
+    "newAssignmentHint": "Chọn một truyện, rồi bấm Bài tập trên trang truyện."
   },
   "TeacherStudents": {
     "classLabel": "Class",

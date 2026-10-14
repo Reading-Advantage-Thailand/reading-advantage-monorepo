@@ -3882,7 +3882,9 @@
     "goToClasses": "Go to My Classes",
     "statusFilter": "Show students by status",
     "selectStudentFor": "Select {name}",
-    "progressLabel": "{percent}% done"
+    "progressLabel": "{percent}% done",
+    "newAssignment": "新增作業",
+    "newAssignmentHint": "選擇一篇故事，然後在故事頁面點選「作業」。"
   },
   "TeacherStudents": {
     "classLabel": "Class",

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useIntlFormatter } from "@/lib/intl-locale";
 import { ColumnDef } from "@tanstack/react-table";
-import { SchoolIcon, Search, TriangleAlertIcon } from "lucide-react";
+import { PlusIcon, SchoolIcon, Search, TriangleAlertIcon } from "lucide-react";
 import { EmptyState, ErrorState, ShimmerSkeleton } from "@reading-advantage/ui";
 import { DataTable } from "@/components/ui/data-table";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -202,7 +202,21 @@ export default function Assignments() {
     },
   ];
 
-  const header = <TeacherPageHeader title={t("heading")} />;
+  // An assignment starts from a story (legacy flow): the story page has the Assign dialog.
+  const header = (
+    <TeacherPageHeader
+      title={t("heading")}
+      description={classrooms?.length ? ta("newAssignmentHint") : undefined}
+      actions={
+        classrooms?.length ? (
+          <Link href="/student/read" className={cn(buttonVariants({ variant: "default" }), TEACHER_ACTION, "px-5")}>
+            <PlusIcon aria-hidden="true" />
+            {ta("newAssignment")}
+          </Link>
+        ) : undefined
+      }
+    />
+  );
 
   if (classrooms !== null && classrooms.length === 0) {
     return (

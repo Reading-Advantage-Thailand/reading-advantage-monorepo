@@ -3882,7 +3882,9 @@
     "goToClasses": "Go to My Classes",
     "statusFilter": "Show students by status",
     "selectStudentFor": "Select {name}",
-    "progressLabel": "{percent}% done"
+    "progressLabel": "{percent}% done",
+    "newAssignment": "New assignment",
+    "newAssignmentHint": "Choose a story. On the story page, click Assignments."
   },
   "TeacherStudents": {
     "classLabel": "Class",
