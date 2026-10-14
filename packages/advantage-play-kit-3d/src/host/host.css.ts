@@ -206,4 +206,19 @@ export default `.apk3d-story-host {
 .apk3d-story-host .gate-icon {
   font-size: 54px;
 }
+/* Desktop briefing in two columns, so every briefing fits a 1279 x 560 window with no scroll bar
+   (manual test T7, Forge 23a0404b). Auto rows: 1fr rows would open a gap under the chips. */
+@media (min-width: 900px) {
+  .apk3d-story-host .panel.briefing { display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: 'eyebrow eyebrow' 'title title' 'subtitle subtitle' 'goal words' 'goal chips' 'steps controls' 'steps tip' 'steps actions'; grid-template-rows: repeat(8, auto); column-gap: 24px; max-width: 960px; }
+  .apk3d-story-host .panel.briefing .eyebrow { grid-area: eyebrow; }
+  .apk3d-story-host .panel.briefing h2 { grid-area: title; }
+  .apk3d-story-host .panel.briefing .subtitle { grid-area: subtitle; }
+  .apk3d-story-host .panel.briefing .goal { grid-area: goal; align-self: start; }
+  .apk3d-story-host .panel.briefing .steps { grid-area: steps; }
+  .apk3d-story-host .panel.briefing .controls { grid-area: controls; align-self: start; }
+  .apk3d-story-host .panel.briefing h3 { grid-area: words; margin-top: 12px; }
+  .apk3d-story-host .panel.briefing .chips { grid-area: chips; align-self: start; }
+  .apk3d-story-host .panel.briefing .tip { grid-area: tip; align-self: start; }
+  .apk3d-story-host .panel.briefing .actions { grid-area: actions; align-self: end; }
+}
 `;
