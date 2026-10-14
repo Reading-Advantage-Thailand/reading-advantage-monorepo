@@ -31,7 +31,7 @@ describe("Primary AI models", () => {
   it("defaults equal the live legacy rows", () => {
     expect(PRIMARY_AI_TASKS["qa.feedback"]).toMatchObject({
       provider: "vertex",
-      defaultModel: "gemini-3-flash-preview",
+      defaultModel: "gemini-3.5-flash-lite",
       location: "global",
     });
     expect(PRIMARY_AI_TASKS["chatbot.stream"]).toMatchObject({
@@ -44,7 +44,7 @@ describe("Primary AI models", () => {
     feedbackClient();
     expect(mocks.createAIClient).toHaveBeenCalledWith({
       provider: "vertex",
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.5-flash-lite",
       location: "global",
       project: "proj-test",
     });
@@ -79,7 +79,7 @@ describe("Primary AI models", () => {
     expect(mocks.info).toHaveBeenCalledWith("ai_call", {
       task: "qa.feedback",
       provider: "vertex",
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.5-flash-lite",
       durationMs: expect.any(Number),
     });
   });

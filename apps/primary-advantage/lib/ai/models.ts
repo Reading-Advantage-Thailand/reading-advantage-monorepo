@@ -22,15 +22,16 @@ export interface PrimaryAiTaskSetting {
 }
 
 /**
- * The task settings. The values are the live legacy rows of the backup of 2026-10-11:
- * `qa.feedback` is Vertex `gemini-3-flash-preview`, `chatbot.stream` is OpenAI `gpt-4o-mini`,
- * and both rows have no temperature.
+ * The task settings. The values are the live legacy rows of the backup of 2026-10-11, except the
+ * `qa.feedback` model: Vertex `gemini-3.5-flash-lite` (owner, manual test C3, 2026-10-14; the legacy
+ * `gemini-3-flash-preview` took 29 s per answer). `chatbot.stream` is OpenAI `gpt-4o-mini`, and both
+ * rows have no temperature.
  */
 export const PRIMARY_AI_TASKS: Record<PrimaryAiTask, PrimaryAiTaskSetting> = {
   "qa.feedback": {
     task: "qa.feedback",
     provider: "vertex",
-    defaultModel: "gemini-3-flash-preview",
+    defaultModel: "gemini-3.5-flash-lite",
     envVar: "PRIMARY_AI_FEEDBACK_MODEL",
     location: "global",
   },

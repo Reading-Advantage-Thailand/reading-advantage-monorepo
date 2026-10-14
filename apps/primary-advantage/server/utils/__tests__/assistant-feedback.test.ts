@@ -61,7 +61,7 @@ describe("assistant feedback through the adapter", () => {
     expect(mocks.info).toHaveBeenCalledWith("ai_call", {
       task: "qa.feedback",
       provider: "vertex",
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.5-flash-lite",
       durationMs: expect.any(Number),
     });
   });
