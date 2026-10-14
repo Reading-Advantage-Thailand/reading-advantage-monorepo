@@ -4,6 +4,8 @@ import {
   eq,
   and,
   desc,
+  gte,
+  lte,
 } from '@reading-advantage/db';
 import {
   articles,
@@ -35,10 +37,12 @@ export const getArticlesWithParams = async (params: {
   genre?: string;
   subgenre?: string;
   cefrLevel?: string;
+  /** Inclusive `ra_level` band, the reader's level ± 1. */
+  raLevelRange?: readonly [number, number];
   limit: number;
   offset: number;
 }) => {
-  const { title, type, genre, subgenre, cefrLevel, limit, offset } = params;
+  const { title, type, genre, subgenre, cefrLevel, raLevelRange, limit, offset } = params;
 
   // Build where clause incrementally.
   const whereConditions: any[] = [];
@@ -60,6 +64,7 @@ export const getArticlesWithParams = async (params: {
     whereConditions.push(sqlIlike(articles.subGenre, `%${subgenre}%`));
   }
   if (cefrLevel) whereConditions.push(eq(articles.cefrLevel, cefrLevel));
+  if (raLevelRange) whereConditions.push(gte(articles.raLevel, raLevelRange[0]), lte(articles.raLevel, raLevelRange[1]));
   // Always filter to non-draft articles.
   whereConditions.push(eq(articles.isDraft, false));
 

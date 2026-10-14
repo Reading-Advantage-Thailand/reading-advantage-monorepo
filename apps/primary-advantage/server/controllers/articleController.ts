@@ -7,6 +7,11 @@ import {
 } from "../models/articleModel";
 import { currentUser } from "@/lib/session";
 
+/**
+ * Lists the published articles for the Read page, filtered by the query and by the reader's level.
+ * @param req The query: title, type, genre, subgenre, cefrLevel, limit, and offset.
+ * @returns The page of articles and the total count.
+ */
 export const fetchArticles = async (req: URLSearchParams) => {
   const title = req.get("title") ?? undefined;
   const type = req.get("type") ?? undefined;
@@ -15,6 +20,10 @@ export const fetchArticles = async (req: URLSearchParams) => {
   const cefrLevel = req.get("cefrLevel") ?? undefined;
   const limit = parseInt(req.get("limit") || "10", 10);
   const offset = parseInt(req.get("offset") || "0", 10);
+  // The reader sees the articles at its level: the level ± 1, the Reading Advantage band.
+  // The level comes from the session, never from the query.
+  const level = (await currentUser())?.level;
+  const raLevelRange = level ? ([level - 1, level + 1] as const) : undefined;
 
   return getArticlesWithParams({
     title,
@@ -22,6 +31,7 @@ export const fetchArticles = async (req: URLSearchParams) => {
     genre,
     subgenre,
     cefrLevel,
+    raLevelRange,
     limit,
     offset,
   });
