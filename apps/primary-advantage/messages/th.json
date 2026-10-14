@@ -2798,7 +2798,12 @@
     "loadingGame": "กำลังโหลดเกม…",
     "loadingChallenge": "กำลังโหลดชาเลนจ์…",
     "challengeMismatch": "เกมนี้เล่นชาเลนจ์นี้ไม่ได้",
-    "retry": "ลองอีกครั้ง"
+    "retry": "ลองอีกครั้ง",
+    "exitGame": "ออกจากเกม",
+    "exitTitle": "ออกจากเกมไหม?",
+    "exitBody": "เกมนี้จะไม่นับคะแนน เล่นใหม่ได้ภายหลัง",
+    "exitCancel": "เล่นต่อ",
+    "exitConfirm": "ออก"
   },
   "StudentGames": {
     "rewardInInventory": "อยู่ในกระเป๋าของคุณแล้ว สวมใส่ได้ที่หน้าตัวละคร",

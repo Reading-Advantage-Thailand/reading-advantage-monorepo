@@ -2798,7 +2798,12 @@
     "loadingGame": "Loading the game…",
     "loadingChallenge": "Loading the challenge…",
     "challengeMismatch": "This game cannot run this challenge.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "exitGame": "退出游戏",
+    "exitTitle": "要离开游戏吗？",
+    "exitBody": "这局游戏不计分。你可以以后再玩。",
+    "exitCancel": "继续玩",
+    "exitConfirm": "离开"
   },
   "StudentGames": {
     "rewardInInventory": "已放入你的背包。到头像页面穿戴它。",

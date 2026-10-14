@@ -2798,7 +2798,12 @@
     "loadingGame": "Loading the game…",
     "loadingChallenge": "Loading the challenge…",
     "challengeMismatch": "This game cannot run this challenge.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "exitGame": "Exit game",
+    "exitTitle": "Leave the game?",
+    "exitBody": "This game does not count. You can play it again later.",
+    "exitCancel": "Keep playing",
+    "exitConfirm": "Leave"
   },
   "StudentGames": {
     "rewardInInventory": "It is in your inventory. Wear it from your avatar page.",

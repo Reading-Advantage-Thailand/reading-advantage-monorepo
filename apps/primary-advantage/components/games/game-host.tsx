@@ -11,6 +11,7 @@ import { useStudentChallengeRun, useStudentRpg } from "@reading-advantage/advant
 import { RpgRewardDisclosure, RpgUnlockNotice } from "@reading-advantage/advantage-play-kit/presentation";
 
 import { Link, useRouter } from "@/i18n/navigation";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { answerAudioControllerOf, fetchAnswerAudio, offersAnswerAudio } from "@/lib/games/answer-audio";
 import { gameFor, practiceLocaleOf } from "@/lib/games/catalog";
 import { rewardIconUrls } from "@/lib/rpg/places";
@@ -231,6 +232,26 @@ export function GameHost({ gameId, locale, ownerKey, challengeId, input, avatar 
       {ready && phase === "results" && ownerKey && (rpg.failureMessage || rpg.newlyUnlockedCosmetics.length > 0) ? (
         <div className="shrink-0 overflow-y-auto p-2">
           <RpgUnlockNotice cosmetics={rpg.newlyUnlockedCosmetics} assetUrls={rewardIconUrls} credit={null} pendingCosmeticId={rpg.pendingCosmeticId} failureMessage={rpg.failureMessage} onRetry={() => void rpg.retry()} onEquip={(id) => void rpg.equip(id)} inventoryNote={t("rewardInInventory")} />
+        </div>
+      ) : null}
+      {/* The games have no exit of their own (Forge): the host bar ends a game early, after a confirm. */}
+      {ready && phase === "playing" ? (
+        <div className="flex shrink-0 justify-end p-2">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button type="button" className="min-h-12 rounded-lg border border-border bg-background px-4 py-2 font-semibold text-foreground">{t("exitGame")}</button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("exitTitle")}</AlertDialogTitle>
+                <AlertDialogDescription>{t("exitBody")}</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{t("exitCancel")}</AlertDialogCancel>
+                <AlertDialogAction onClick={exit}>{t("exitConfirm")}</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       ) : null}
       {ready && game && cartridge && run ? (

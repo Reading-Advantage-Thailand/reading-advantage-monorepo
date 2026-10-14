@@ -2798,7 +2798,12 @@
     "loadingGame": "Loading the game…",
     "loadingChallenge": "Loading the challenge…",
     "challengeMismatch": "This game cannot run this challenge.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "exitGame": "Thoát trò chơi",
+    "exitTitle": "Rời trò chơi?",
+    "exitBody": "Lượt chơi này không được tính. Bạn có thể chơi lại sau.",
+    "exitCancel": "Chơi tiếp",
+    "exitConfirm": "Rời đi"
   },
   "StudentGames": {
     "rewardInInventory": "Đã có trong túi đồ của bạn. Mặc nó từ trang Nhân vật.",

@@ -261,6 +261,18 @@ describe("GameHost", () => {
     expect(mocks.push).toHaveBeenCalledWith("/student/games");
   });
 
+  it("offers an Exit game control only during play, and leaves after the confirm", async () => {
+    const onExit = vi.fn();
+    renderWithMessages(<GameHost gameId="rune-match" locale="en" input={practice(10, 8)} save={false} onExit={onExit} />, { locale: "en" });
+    await screen.findByTestId("kit");
+    expect(screen.queryByRole("button", { name: "Exit game" })).toBeNull();
+    fireEvent.click(screen.getByText("start"));
+    fireEvent.click(await screen.findByRole("button", { name: "Exit game" }));
+    expect(onExit).not.toHaveBeenCalled();
+    fireEvent.click(await screen.findByRole("button", { name: "Leave" }));
+    expect(onExit).toHaveBeenCalledTimes(1);
+  });
+
   it("shows the RPG rewards around the briefing and the unlock notice on the results for a student", async () => {
     mocks.rpg.state = { quests: [] };
     renderWithMessages(<GameHost gameId="rune-match" locale="en" ownerKey="s:1" input={practice(10, 8)} />, { locale: "en" });
