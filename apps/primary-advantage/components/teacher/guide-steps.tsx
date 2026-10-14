@@ -4,8 +4,8 @@ import type { LessonGuidePeriod, LessonGuideStep } from "@reading-advantage/doma
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-/** Workbook steps that use the games: the bell-ringer (1) and the practice steps (9, 10). FR-13. */
-export const GAME_STEPS = [1, 9, 10];
+/** Workbook steps that use the games: the practice steps (9, 10). FR-13; the owner moved the games out of step 1 (2026-10-14). */
+export const GAME_STEPS = [9, 10];
 
 /** Workbook steps whose games link opens the projector games of the lesson (the practice steps). */
 export const PROJECTOR_GAME_STEPS = [9, 10];

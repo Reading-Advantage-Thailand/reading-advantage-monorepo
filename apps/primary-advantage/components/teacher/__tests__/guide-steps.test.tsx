@@ -25,16 +25,16 @@ const PROJECTOR = "/teacher/class-roster/c/books/b/lessons/2/projector#projector
 afterEach(cleanup);
 
 describe("GuideSteps games link", () => {
-  it("links step 1 to the game challenges and steps 9 and 10 to the projector games", () => {
+  it("links steps 9 and 10 to the projector games and gives step 1 no games link", () => {
     render(<GuideSteps guide={guide} t={t} projectorHref={PROJECTOR} />);
     const links = screen.getAllByRole("link", { name: en.guide.games });
-    expect(links.map((a) => a.getAttribute("href"))).toEqual(["/teacher/game-challenges", PROJECTOR, PROJECTOR]);
+    expect(links.map((a) => a.getAttribute("href"))).toEqual([PROJECTOR, PROJECTOR]);
   });
 
   it("keeps the game challenges for every game step without a projector link", () => {
     render(<GuideSteps guide={guide} t={t} />);
     const links = screen.getAllByRole("link", { name: en.guide.games });
-    expect(links.map((a) => a.getAttribute("href"))).toEqual(["/teacher/game-challenges", "/teacher/game-challenges", "/teacher/game-challenges"]);
+    expect(links.map((a) => a.getAttribute("href"))).toEqual(["/teacher/game-challenges", "/teacher/game-challenges"]);
   });
 });
 
@@ -51,8 +51,8 @@ describe("GuideOverlay games link", () => {
     expect(screen.getByRole("link", { name: en.guide.games })).toHaveAttribute("href", PROJECTOR);
   });
 
-  it("links step 1 to the game challenges", () => {
+  it("gives step 1 no games link", () => {
     render(<NextIntlClientProvider locale="en" messages={testMessages.en}><GuideOverlay classBookId="b" lessonNumber={2} steps={[step(1, 1), step(2, 1)]} stepsDone={[]} projectorHref={PROJECTOR} /></NextIntlClientProvider>);
-    expect(screen.getByRole("link", { name: en.guide.games })).toHaveAttribute("href", "/teacher/game-challenges");
+    expect(screen.queryByRole("link", { name: en.guide.games })).toBeNull();
   });
 });
