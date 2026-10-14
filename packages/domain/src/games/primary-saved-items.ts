@@ -421,6 +421,30 @@ export async function listPrimaryArticleCards({
   return cards.map((card) => viewOf(card, type, content.get(articleId)));
 }
 
+/**
+ * Builds the cards of one article for a staff member in Preview mode (the lesson rehearsal):
+ * every word or sentence that lesson step 7 saves for a student. It reads no row of any user
+ * and writes nothing. Articles are global, so it needs no school.
+ * @param args The database and the article and card type.
+ * @returns The card views in article order, with "preview-" ids; empty when the article has no row.
+ */
+export async function listPrimaryArticlePreviewCards({
+  db,
+  input,
+}: {
+  db: DB;
+  input: z.input<typeof primaryArticleCardsRequestSchema>;
+}): Promise<PrimaryFlashcardView[]> {
+  const { articleId, type } = primaryArticleCardsRequestSchema.parse(input);
+  const content = (await articleContentOf(db, [{ id: "", front: "", sourceId: articleId }])).get(articleId);
+  const fronts = type === "VOCABULARY"
+    ? (content?.words ?? []).map((word) => word.vocabulary)
+    : (content?.listSentences ?? []).map((line) => line.sentence);
+  const createdAt = new Date(0);
+  return fronts.map((front, index) =>
+    viewOf({ id: `preview-${type.toLowerCase()}-${index + 1}`, deckId: "preview", front, sourceId: articleId, createdAt }, type, content));
+}
+
 /** The id of the sample practice input that staff get in Preview mode. */
 export const SAMPLE_PRACTICE_INPUT_ID = "sample";
 

@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
   reads: vi.fn(),
   currentUser: vi.fn(),
   listCards: vi.fn(),
+  previewCards: vi.fn(),
   getAssignmentActivityById: vi.fn(),
   getStudentAssignments: vi.fn(),
 }));
@@ -24,6 +25,7 @@ vi.mock("@reading-advantage/db", async (importOriginal) => ({
 vi.mock("@reading-advantage/domain/games", async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   listPrimaryArticleCards: mocks.listCards,
+  listPrimaryArticlePreviewCards: mocks.previewCards,
 }));
 vi.mock("@/server/models/assignmentModel", async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
@@ -52,9 +54,11 @@ describe("staff preview reads the empty model, never the own student rows of the
     expect(mocks.reads).not.toHaveBeenCalled();
   });
 
-  it("the lesson flashcards of the 2D games", async () => {
-    const result = await getLessonFlashcards(ARTICLE, FlashcardType.VOCABULARY);
-    expect(result).toEqual({ success: true, cards: [] });
+  it("the lesson flashcards: the article's cards, not the own deck (rehearsal steps 9 and 11)", async () => {
+    mocks.previewCards.mockResolvedValue([{ id: "preview-sentence-1" }]);
+    const result = await getLessonFlashcards(ARTICLE, FlashcardType.SENTENCE);
+    expect(result).toEqual({ success: true, cards: [{ id: "preview-sentence-1" }] });
+    expect(mocks.previewCards.mock.calls[0][0].input).toEqual({ articleId: ARTICLE, type: "SENTENCE" });
     expect(mocks.listCards).not.toHaveBeenCalled();
   });
 

@@ -4,6 +4,7 @@ import type { TenantDB } from "../db-contract.js";
 import {
   listPrimaryAnswerAudioContent,
   listPrimaryArticleCards,
+  listPrimaryArticlePreviewCards,
   listPrimaryDeckCards,
   listPrimaryPracticeInput,
   listPrimarySamplePracticeInput,
@@ -177,6 +178,32 @@ describe("listPrimaryArticleCards", () => {
       id: "c3", deckId: DECK, type: "SENTENCE", articleId: ARTICLE, createdAt: created, sentence: "Pip is a puppy.",
       translation: { th: "ปิปเป็นลูกสุนัข", cn: "皮普是一只小狗。" }, audioUrl: "audios/cmarticle.mp3", startTime: 0, endTime: 1.5,
     }]);
+  });
+});
+
+describe("listPrimaryArticlePreviewCards (lesson rehearsal)", () => {
+  it("gives every word of the article as a card with its meaning and audio, and reads no card of a user", async () => {
+    const rawDb = createMockDb({ selectSequence: [[snapshot], [articleText]] });
+
+    const result = await listPrimaryArticlePreviewCards({ db: rawDb as never, input: { articleId: ARTICLE, type: "VOCABULARY" } });
+
+    expect(result.map((c) => c.word)).toEqual(["river", "lantern", "kite"]);
+    expect(result[0]).toMatchObject({ id: "preview-vocabulary-1", deckId: "preview", articleId: ARTICLE, definition: { th: "แม่น้ำ", en: "a large stream" }, audioUrl: "audios/words/cmarticle.mp3", startTime: 0.5, endTime: 1.4 });
+    expect(rawDb.select).toHaveBeenCalledTimes(2);
+    expect(rawDb.insert).not.toHaveBeenCalled();
+    expect(rawDb.update).not.toHaveBeenCalled();
+  });
+
+  it("gives every sentence of the snapshot list as a card with its translation", async () => {
+    const rawDb = createMockDb({ selectSequence: [[snapshot], [articleText]] });
+    const result = await listPrimaryArticlePreviewCards({ db: rawDb as never, input: { articleId: ARTICLE, type: "SENTENCE" } });
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({ id: "preview-sentence-1", sentence: "The river is wide.", translation: { th: "แม่น้ำกว้าง" } });
+  });
+
+  it("returns no card when the article has no word row", async () => {
+    const rawDb = createMockDb({ selectSequence: [[], []] });
+    expect(await listPrimaryArticlePreviewCards({ db: rawDb as never, input: { articleId: ARTICLE, type: "VOCABULARY" } })).toEqual([]);
   });
 });
 

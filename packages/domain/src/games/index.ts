@@ -52,6 +52,7 @@ export type { LessonGameResult, LessonGameResults, LessonGameResultsRequest } fr
 export {
   listPrimaryAnswerAudioContent,
   listPrimaryArticleCards,
+  listPrimaryArticlePreviewCards,
   listPrimaryDeckCards,
   listPrimaryPracticeInput,
   listPrimarySamplePracticeInput,

@@ -40,7 +40,7 @@ import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { getAudioUrl } from "@/lib/storage-config";
 import { createTenantDB } from "@reading-advantage/domain";
-import { listPrimaryArticleCards, listPrimaryDeckCards } from "@reading-advantage/domain/games";
+import { listPrimaryArticleCards, listPrimaryArticlePreviewCards, listPrimaryDeckCards } from "@reading-advantage/domain/games";
 import { mapOrderingSentenceFields, resolveClozeSegment } from "@/lib/audio-highlight";
 import { shuffle } from "@/lib/shuffle";
 import { snapshotSentenceEntries, type SnapshotSentence } from "@/lib/flashcard-snapshot";
@@ -1132,8 +1132,12 @@ export async function getLessonFlashcards(
     if (!user) {
       throw new Error("Unauthorized");
     }
-    // Staff in a preview have no cards of their own to read: the empty model.
-    if (studentViewModeFor(user.role) === "preview") return { success: true, cards: [] };
+    const type = deckKind === FlashcardType.SENTENCE ? "SENTENCE" : "VOCABULARY";
+    // Staff in a preview (the lesson rehearsal) have no cards of their own: they get the article's
+    // cards that step 7 saves for a student. Nothing is read from or written to a user's deck.
+    if (studentViewModeFor(user.role) === "preview") {
+      return { success: true, cards: await listPrimaryArticlePreviewCards({ db, input: { articleId: sourceArticleId, type } }) };
+    }
 
     // The student's cards of this type from this article, with their content from the article.
     const tenant = { schoolId: user.schoolId };
@@ -1141,7 +1145,7 @@ export async function getLessonFlashcards(
       db: createTenantDB(db, tenant),
       user,
       tenant,
-      input: { articleId: sourceArticleId, type: deckKind === FlashcardType.SENTENCE ? "SENTENCE" : "VOCABULARY" },
+      input: { articleId: sourceArticleId, type },
     });
 
     return {
