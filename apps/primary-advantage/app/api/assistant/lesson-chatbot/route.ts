@@ -101,10 +101,14 @@ export async function POST(request: NextRequest) {
 
 
     // แปลงข้อความทั้งหมดจาก frontend เป็น messages สำหรับ OpenAI
-    const chatMessages = messages.map((msg) => ({
-      role: msg.sender === "user" ? ("user" as const) : ("assistant" as const),
-      content: msg.text,
-    }));
+    // The opening call (isInitial) has no messages yet, and the model refuses an empty list
+    // ("messages must not be empty"): one user turn asks the bot to start.
+    const chatMessages = messages.length
+      ? messages.map((msg) => ({
+          role: msg.sender === "user" ? ("user" as const) : ("assistant" as const),
+          content: msg.text,
+        }))
+      : [{ role: "user" as const, content: "Please start." }];
 
 
     const fullMessage = await loggedAiCall("chatbot.stream", async () => {

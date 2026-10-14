@@ -78,6 +78,19 @@ describe("POST /api/assistant/lesson-chatbot authorization", () => {
     });
   });
 
+  it("starts the conversation with one user turn when the opening call has no messages", async () => {
+    mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" });
+    async function* chunks() {
+      yield "What did you like?";
+    }
+    mocks.streamText.mockResolvedValue({ textStream: chunks() });
+    const response = await POST(postRequest({ ...validBody, messages: [], isInitial: true }));
+    expect(response.status).toBe(201);
+    const input = mocks.streamText.mock.calls[0][0];
+    expect(input.system).toContain("Start the conversation");
+    expect(input.messages).toEqual([{ role: "user", content: "Please start." }]);
+  });
+
   it("returns 400 and logs through the logger for a bad body", async () => {
     mocks.currentUser.mockResolvedValue({ id: "s-1", role: "STUDENT" });
     const response = await POST(postRequest({ title: 1 }));
