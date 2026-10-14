@@ -36,7 +36,7 @@ describe("Primary AI models", () => {
     });
     expect(PRIMARY_AI_TASKS["chatbot.stream"]).toMatchObject({
       provider: "openai",
-      defaultModel: "gpt-4o-mini",
+      defaultModel: "gpt-6-luna",
     });
   });
 
@@ -52,7 +52,7 @@ describe("Primary AI models", () => {
 
   it("makes the chatbot client with OpenAI", () => {
     chatbotClient();
-    expect(mocks.createAIClient).toHaveBeenCalledWith({ provider: "openai", model: "gpt-4o-mini" });
+    expect(mocks.createAIClient).toHaveBeenCalledWith({ provider: "openai", model: "gpt-6-luna" });
   });
 
   it("reuses the client for the same model", () => {

@@ -73,7 +73,7 @@ describe("POST /api/assistant/lesson-chatbot authorization", () => {
     expect(mocks.info).toHaveBeenCalledWith("ai_call", {
       task: "chatbot.stream",
       provider: "openai",
-      model: "gpt-4o-mini",
+      model: "gpt-6-luna",
       durationMs: expect.any(Number),
     });
   });
