@@ -118,9 +118,11 @@ describe("chapter read-along parity with the article page", () => {
     expect(screen.getByText("อัลฟา เบตา แกมมา")).toBeInTheDocument();
   });
 
-  it("shows the chapter picture", () => {
+  it("shows the chapter picture through the Next.js resizer (owner choice C1: the bucket files are about 6 MB)", () => {
     renderWithMessages(<ChapterContent {...props} />);
-    expect(screen.getByRole("img", { name: "Chapter picture" })).toHaveAttribute("src", props.imageUrl);
+    const src = screen.getByRole("img", { name: "Chapter picture" }).getAttribute("src") ?? "";
+    expect(src.startsWith("/_next/image?")).toBe(true);
+    expect(src).toContain(`url=${encodeURIComponent(props.imageUrl)}`);
   });
 
   it("pauses the audio element on unmount", () => {

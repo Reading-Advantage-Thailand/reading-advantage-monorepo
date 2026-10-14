@@ -169,7 +169,6 @@ export function TaskReading({
                   alt="Article Image"
                   width={640}
                   height={640}
-                  unoptimized
                 />
               )}
               onWordTap={handleWordTap}

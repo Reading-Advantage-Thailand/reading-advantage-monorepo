@@ -184,7 +184,6 @@ export function ChapterContent({
         alt={imageAlt || title}
         width={1024}
         height={1024}
-        unoptimized
       />
       <div className="flex flex-col gap-2 md:flex-row">
         <div className="w-full">
