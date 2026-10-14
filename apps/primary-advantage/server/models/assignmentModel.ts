@@ -353,7 +353,8 @@ export default async function getAssignmentById(id: string) {
       ]);
       articleWithChildren = {
         ...articleWithChildren,
-        sentencsAndWordsForFlashcard: sentRows[0] ?? null,
+        // The lesson tasks read `[0]` of this list (the Prisma include shape); a row is not a list.
+        sentencsAndWordsForFlashcard: sentRows,
         multipleChoiceQuestions: studentQuestionSet(mcRows, STUDENT_MCQ_COUNT),
         shortAnswerQuestions: studentQuestionSet(saQuestionRows, STUDENT_SAQ_COUNT),
         longAnswerQuestions: laRows,
