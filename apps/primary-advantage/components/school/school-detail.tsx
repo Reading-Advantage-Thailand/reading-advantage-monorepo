@@ -135,7 +135,7 @@ export function SchoolDetail({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to remove admin");
+        throw new Error(errorData.error || errorData.message || "Failed to remove admin");
       }
 
       toast.success(`${adminName} removed as admin successfully!`);

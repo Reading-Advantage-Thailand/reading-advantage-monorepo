@@ -92,6 +92,7 @@ export interface SchoolProfile {
 
 /**
  * Loads a school with its admins, owner, license, and member counts.
+ * The admins are the `school_admins` rows and the ADMIN accounts of the school; each entry id is the user id.
  * @param schoolId The school identifier.
  * @param options.withLicense True for a school admin: the license (with its key) is read. Default false.
  * @param options.hideStaffEmails True for a STUDENT caller: the admin and owner emails are blank. Default false.
@@ -121,7 +122,18 @@ export async function getSchoolDetail(
     .innerJoin(users, eq(users.id, schoolAdmins.userId))
     .where(eq(schoolAdmins.schoolId, school.id));
 
-  const admins = adminRows.map((a) => ({
+  // Migrated schools hold their admins as users.role ADMIN with no school_admins row.
+  // canManageSchool accepts both, so the list and the count show both.
+  const roleAdminRows = await db
+    .select({ userId: users.id, userName: users.name, userEmail: users.email })
+    .from(users)
+    .where(and(eq(users.schoolId, school.id), eq(users.role, "ADMIN")));
+  const rowAdminIds = new Set(adminRows.map((a) => a.userId));
+
+  const admins = [
+    ...adminRows,
+    ...roleAdminRows.filter((a) => !rowAdminIds.has(a.userId)),
+  ].map((a) => ({
     id: a.userId,
     user: {
       id: a.userId,

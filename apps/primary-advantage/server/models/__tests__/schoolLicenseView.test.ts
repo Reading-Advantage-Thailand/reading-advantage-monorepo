@@ -81,6 +81,7 @@ describe("getSchoolDetail license key", () => {
     mocks.selectQueue = [
       [{ id: SCHOOL, name: "S", createdAt: new Date(), updatedAt: new Date(), ownerId: null }],
       [],
+      [], // ADMIN accounts of the school
       [{ id: "l1", key: "SECRET-KEY", name: "L", description: null, maxUsers: 5, startDate: null, expiryDate: null, status: "active" }],
       [],
     ];
@@ -102,6 +103,7 @@ describe("getSchoolDetail staff emails", () => {
     mocks.selectQueue = [
       [{ id: SCHOOL, name: "S", createdAt: new Date(), updatedAt: new Date(), ownerId: "o1" }],
       [{ userId: "a1", userName: "Admin", userEmail: "admin@x.test" }],
+      [], // ADMIN accounts of the school
       [],
       [{ id: "o1", name: "Owner", email: "owner@x.test" }],
     ];
