@@ -16,14 +16,17 @@ import type { licenses } from "@reading-advantage/domain";
  * refreshes from the API only after user actions (edit, create, delete).
  * @param initialSchool The school fetched on the server page, or null.
  * @param initialLicenseView The license view for a school admin, or null.
+ * @param canManageAdmins True when the caller may add and remove the school admins.
  * @returns The school profile settings UI.
  */
 export default function SchoolProfileSettings({
   initialSchool,
   initialLicenseView = null,
+  canManageAdmins = false,
 }: {
   initialSchool: SchoolProfile | null;
   initialLicenseView?: licenses.SchoolLicenseViewOutput | null;
+  canManageAdmins?: boolean;
 }) {
   const t = useTranslations("Settings.schoolProfile");
   const [school, setSchool] = useState<SchoolProfile | null>(initialSchool);
@@ -103,6 +106,7 @@ export default function SchoolProfileSettings({
                 onDelete={handleDelete}
                 onRefresh={fetchSchool}
                 licenseView={licenseView}
+                canManageAdmins={canManageAdmins}
               />
             )}
           </>

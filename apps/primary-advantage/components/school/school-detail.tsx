@@ -78,6 +78,8 @@ interface SchoolDetailProps {
   onRefresh: () => void;
   /** The license view for a school admin. Null or absent: no license part and no key. */
   licenseView?: licenseDomain.SchoolLicenseViewOutput | null;
+  /** True when the caller may add and remove admins (`canManageSchool`: owner, school ADMIN, SYSTEM). */
+  canManageAdmins?: boolean;
 }
 
 export function SchoolDetail({
@@ -86,6 +88,7 @@ export function SchoolDetail({
   onDelete,
   onRefresh,
   licenseView,
+  canManageAdmins = false,
 }: SchoolDetailProps) {
   const currentUser = useCurrentUser();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -466,7 +469,7 @@ export function SchoolDetail({
               </CardTitle>
               <CardDescription>{t("schoolAdminDescription")}</CardDescription>
             </div>
-            {isOwner && (
+            {canManageAdmins && (
               <AddAdminDialog schoolId={school.id} onAdminAdded={onRefresh} />
             )}
           </CardHeader>
@@ -490,10 +493,10 @@ export function SchoolDetail({
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">Admin</Badge>
-                    {isOwner && admin.user.id === currentUser?.id && (
+                    {admin.user.id === school.ownerId && (
                       <Badge>Owner</Badge>
                     )}
-                    {isOwner && admin.user.id !== currentUser?.id && (
+                    {canManageAdmins && admin.user.id !== currentUser?.id && (
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button

@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/session";
 import { getSchoolDetail } from "@/server/models/schoolModel";
 import { normalizeRole } from "@/lib/authorization";
 import { getLicenseViewForCaller } from "@/server/models/schoolLicenseView";
+import { canManageSchool } from "@/server/utils/school-access";
 
 /**
  * Fetches the current user's school on the server and renders the settings.
@@ -26,10 +27,20 @@ async function SchoolProfileData() {
       })
     : null;
 
+  // The admin buttons follow the server rule of the admins routes. The admins list holds the
+  // school_admins row holders, so it tells whether the caller has a row.
+  const canManageAdmins = initialSchool
+    ? canManageSchool(
+        { ...user, hasSchoolAdminRow: initialSchool.admins.some((a) => a.user.id === user.id) },
+        { id: initialSchool.id, ownerId: initialSchool.ownerId },
+      )
+    : false;
+
   return (
     <SchoolProfileSettings
       initialSchool={initialSchool}
       initialLicenseView={licenseView}
+      canManageAdmins={canManageAdmins}
     />
   );
 }
