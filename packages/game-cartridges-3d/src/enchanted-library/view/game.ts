@@ -14,8 +14,8 @@ import {
   HERO_START,
   createEnchantedLibrary,
   evidenceOf,
+  hintBookOf,
   scoreOf,
-  targetBookOf,
   type LibraryCommand,
   type LibraryEvent,
   type LibraryState,
@@ -157,7 +157,8 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
         e.stopPropagation();
         loop.dispatch({ type: 'goto', bookId: spawn.id });
       });
-      const at = new THREE.Vector3(spawn.x, BOOK_TOP + 0.35, spawn.z);
+      // The tag stands on its own book, so it does not cover the books behind it (owner test, 2026-10-14).
+      const at = new THREE.Vector3(spawn.x, BOOK_TOP + 0.08, spawn.z);
       hud.anchor(tag, () => stage.screenOfPoint(at), { pin: true });
       books.set(spawn.id, { view, tag, x: spawn.x, z: spawn.z, appear: 0, gone: false, phase: slot * 1.7 });
     });
@@ -180,12 +181,12 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     courageEl.textContent = '❤'.repeat(s.courage) + '♡'.repeat(Math.max(0, s.maxCourage - s.courage));
     shieldBtn.textContent = `${t('shield')} ${'●'.repeat(s.hero.charges)}`;
     shieldBtn.disabled = s.hero.charges === 0 || s.hero.shieldMs > 0;
-    const right = targetBookOf(s);
+    const hint = hintBookOf(s);
     for (const b of s.books) {
       const view = books.get(b.id);
       if (!view) continue;
       view.tag.classList.toggle('spent', b.spent);
-      view.tag.classList.toggle('next', s.helper && right?.id === b.id);
+      view.tag.classList.toggle('next', hint?.id === b.id);
     }
   }
 
@@ -273,6 +274,9 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     audio.music('calm');
     audio.play('victory');
     hero.play('victory');
+    // The prompt card and the last tags would cover the banner.
+    prompt.hidden = true;
+    clearBooks();
     await hud.banner.show(t('done.title'), t('done.text'), 2.2);
     const evidence = evidenceOf(sim.state, story, ctx.seed, Math.round(performance.now() - startedAt));
     ctx.complete(toGameResults(evidence, scoreOf(sim.state)), 'victory', evidence);
@@ -299,15 +303,15 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
       spirits.delete(id);
     }
     for (const z of s.spirits) spirits.get(z.id)?.update(dt, z.x, z.z, 0.15 + Math.sin(time * 2 + z.x) * 0.08);
-    const right = targetBookOf(s);
+    const hint = hintBookOf(s);
     for (const b of s.books) {
       const v = books.get(b.id);
       if (!v) continue;
       v.appear = v.gone || b.spent ? Math.max(0, v.appear - dt * 3) : Math.min(1, v.appear + dt * 3);
       v.view.group.scale.setScalar(Math.max(0.01, v.appear));
       v.view.group.position.y = Math.sin(time * 1.6 + v.phase) * 0.06;
-      v.view.halo.material.color.setHex(s.helper && right?.id === b.id ? 0xffd84a : 0xc9b8ff);
-      v.view.halo.material.opacity = s.helper && right?.id === b.id ? 0.4 + 0.15 * Math.sin(time * 6) : 0.22;
+      v.view.halo.material.color.setHex(hint?.id === b.id ? 0xffd84a : 0xc9b8ff);
+      v.view.halo.material.opacity = hint?.id === b.id ? 0.4 + 0.15 * Math.sin(time * 6) : 0.22;
     }
     shieldBall.visible = s.hero.shieldMs > 0;
     if (shieldBall.visible) {
