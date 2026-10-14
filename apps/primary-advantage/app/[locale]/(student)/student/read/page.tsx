@@ -6,6 +6,7 @@ import { cleanGenre, cn, sanitizeTranslationKey } from "@/lib/utils";
 import { GoToTop } from "@/components/go-to-top";
 import { getTranslations } from "next-intl/server";
 import { currentUser } from "@/lib/session";
+import { normalizeRole } from "@/lib/authorization";
 import { StatusChip } from "@reading-advantage/ui";
 import { rpgButton } from "@/components/rpg/chrome";
 import { Scene } from "@/components/rpg/scene";
@@ -96,7 +97,8 @@ export default async function ReadPage({ searchParams }: PageProps) {
       <header className="cq-on-scene flex flex-col gap-2">
         <h1 className="text-2xl font-bold md:text-3xl">{t("ReadList.title")}</h1>
         <p>{t("ReadList.subtitle")}</p>
-        {user?.cefrLevel ? (
+        {/* Only a student's list keeps its level band (fetchArticles), so only a student sees its level. */}
+        {user?.cefrLevel && normalizeRole(user.role) === "STUDENT" ? (
           <StatusChip tone="success" className="text-sm">
             {t("ReadList.yourLevel", { level: user.cefrLevel })}
           </StatusChip>

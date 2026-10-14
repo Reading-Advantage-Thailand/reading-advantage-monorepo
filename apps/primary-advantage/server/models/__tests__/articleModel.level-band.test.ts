@@ -3,7 +3,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vites
 import { sql } from "drizzle-orm";
 import { createTestDb, type TestDb } from "./helpers/testDb";
 
-const session = vi.hoisted(() => ({ user: null as { level: number | null } | null }));
+const session = vi.hoisted(() => ({ user: null as { level: number | null; role: string } | null }));
 vi.mock("@/lib/session", () => ({ currentUser: async () => session.user }));
 
 vi.mock("@reading-advantage/db", async (importOriginal) => {
@@ -53,22 +53,27 @@ describe("Read list level band", () => {
   });
 
   it("shows an A0- reader (level 1) only the levels 1 and 2", async () => {
-    session.user = { level: 1 };
+    session.user = { level: 1, role: "STUDENT" };
     expect(await levels()).toEqual([1, 2]);
   });
 
   it("shows a level 4 reader the levels 3 to 5", async () => {
-    session.user = { level: 4 };
+    session.user = { level: 4, role: "STUDENT" };
     expect(await levels()).toEqual([3, 4, 5]);
   });
 
   it("keeps the band when the query asks for another level", async () => {
-    session.user = { level: 1 };
+    session.user = { level: 1, role: "STUDENT" };
     expect(await levels({ cefrLevel: "A0" })).toEqual([1, 2]);
   });
 
+  it("shows every level to a TEACHER, who picks the story to assign", async () => {
+    session.user = { level: 1, role: "TEACHER" };
+    expect(await levels()).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+
   it("shows every level to a reader with no level", async () => {
-    session.user = { level: null };
+    session.user = { level: null, role: "STUDENT" };
     expect(await levels()).toEqual([1, 2, 3, 4, 5, 6]);
   });
 });

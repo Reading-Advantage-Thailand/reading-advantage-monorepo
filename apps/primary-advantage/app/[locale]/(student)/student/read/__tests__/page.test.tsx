@@ -70,6 +70,13 @@ describe("read list page", () => {
     expect(screen.getByTestId("article-select")).toHaveTextContent("7");
   });
 
+  it("shows no level to staff, whose list has every level", async () => {
+    mocks.user = { id: "t1", role: "TEACHER", level: 1, cefrLevel: "A0-" };
+    await renderPage();
+    expect(screen.queryByText(/Your level/)).not.toBeInTheDocument();
+    mocks.user = { id: "s1", role: "STUDENT", level: 3, cefrLevel: "A1-" };
+  });
+
   it("marks the chosen type and offers its genres and a reset", async () => {
     await renderPage({ type: "fiction" });
     const filters = screen.getByRole("navigation", { name: en.ReadList.filters });
