@@ -136,3 +136,20 @@ Each row: the draft statement, where it is, and the nearest line in the pinned a
 | 130 | school-sale / School Sale Quiz / quiz | Objection 8: we do not offer a secondary program to schools now, and we give no date for one. | `09-sales-enablement/distributor-rep-onboarding/objection-handling-guide.md:133` | "Today we offer Primary Advantage for primary grades. We do not offer a secondary program to schools now. Families of secondary students can join a Tutor Advantage class with the Reading Advantage books." | check |
 | 131 | school-sale / School Sale Quiz / quiz | Say that you cannot offer a discount, offer the pilot (one grade level for one semester), and ask Daniel about multi-year terms. | `09-sales-enablement/distributor-rep-onboarding/objection-handling-guide.md:121` | "Our prices are App-Only about 1,000 baht and Blended Learning about 1,500 baht per student per year. I cannot offer a discount. What I can offer is a pilot: one grade level for one semester, so that you see the program  |  |
 | 132 | school-sale / School Sale Quiz / quiz | Name Boonyathat, or show its data, only with the school's written consent (Q-SE-03). | `09-sales-enablement/demo-scripts.md:27` | - Name Boonyathat, or show its data, only with the school's written consent (Q-SE-03). |  |
+
+## Review result (PR, 2026-10-15)
+
+PR reviewed this packet (draft lines 2177–2677, with the 2 changes of `19ea64ba1`) against the pin `e6f7cc2`. Result: 1 hard finding and 5 fixes, all in `048090037`; 3 source fixes on the PR side.
+
+| Row or line | Finding | Fix in `048090037` |
+|---|---|---|
+| 29 (hard) | "Pre-A1 (A0) to B2 in 15 levels" names B2; scope §7 item 4 fails it | "CEFR-aligned: the active program covers Pre-A1 to A2." The content test now fails any positive B1–C2 line |
+| 53 | The Mastery line dropped the middle sentence of demo-scripts.md:215 | Full source text |
+| 34 | The Blended Learning one-pager (v1.2) is stale for 2027 | "Leave behind the school sale deck (PDF)." |
+| Objection 2 | "I hear this from almost every school I visit" is false for a new seller | Sentence deleted |
+| Objection 3 | The honest first part of objection-handling-guide.md:55 was missing | Word for word |
+| 13, school rules | What is live depends on the cutover (demo-scripts.md:26) | Two facts that expire added (cutover; Reedy Preview in Primary Advantage), also in `SALES_CURRICULUM_EXPIRING_FACTS` |
+
+Sourced (no finding): rows 21–23, 96, 97, 109 (method summaries of demo-scripts.md and role-play-scenarios.md); 37 → demo-scripts.md:104–108; 49 → :197; 56 → :239; 83 → roi-calculator.md:126; 85 → roi-calculator.md:250; the Big 4 definitions → distributor-launch-kit.md:58–61; "Class 4/2" → demo-scripts.md:300 (labeled as an example); "Our prices are built for Thai private-school budgets" → role-play-scenarios.md:128; the boilerplate → demo-scripts.md:344. Personas OK.
+
+PR-side source fixes (new pin hash to follow): objection-handling-guide.md:35 and :39; demo-scripts.md:85, :180, :273 (leave-behind = the school sale deck); one-pagers/blended-learning-one-pager.md.
