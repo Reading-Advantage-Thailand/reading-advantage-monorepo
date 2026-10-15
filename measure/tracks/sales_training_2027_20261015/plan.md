@@ -17,20 +17,20 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
     - [x] Implement: apply it on both evaluator paths in `packages/domain/src/sales/roleplay-evaluator.ts`
     - [x] Commit with the package `tsc` result (domain `tsc --noEmit` clean)
 - [x] Task: Contract for audio media calls through chat completions `dbe5efecc`
-    - [ ] Define the audio format map (done with the implementation task) in the OpenRouter adapter: `audio/webm` → `webm`, `audio/ogg` → `ogg`, `audio/wav` → `wav`, `audio/mpeg` and `audio/mp3` → `mp3`; any other type throws `AIClientError` (`UNSUPPORTED`)
+    - [x] Define the audio format map (in `57c500e`) in the OpenRouter adapter: `audio/webm` → `webm`, `audio/ogg` → `ogg`, `audio/wav` → `wav`, `audio/mpeg` and `audio/mp3` → `mp3`; any other type throws `AIClientError` (`UNSUPPORTED`)
     - [x] Define the env contract: `SALES_AUDIO_EVAL_MODEL` (default `qwen/qwen3.8-omni-flash`) and `SALES_AUDIO_EVAL_FALLBACK_MODEL` (default `google/gemini-2.5-flash-lite`); remove `SALES_AUDIO_EVAL_FALLBACK_STT_MODEL` and `SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL`
     - [x] Update `apps/sales-advantage/.env.example` and the `--set-secrets` lists in `apps/sales-advantage/cloudbuild.yaml`
-- [ ] Task: Red tests for the media request
-    - [ ] `packages/ai`: `generateObjectFromMedia` posts to `/chat/completions` with `input_audio {data, format: "webm"}` and a `json_schema` response format made by `zodSchema()`, parses the reply, validates it with the zod schema, and maps HTTP and parse errors to `AIClientError`
-    - [ ] `packages/ai`: a WebM file never reaches the Responses request format
-    - [ ] `packages/domain`: the fallback is a second media call with the fallback model; `transcribeAudio` is not called; both model errors are in the `EVALUATION_FAILED` cause
-    - [ ] Update `phase-multimodal-openrouter.test.ts` and `sales-roleplay-evaluator.test.ts` expectations that assert the old path
-    - [ ] Run the tests and confirm that they fail for the expected reason
-- [ ] Task: Implement the media request and the two-model evaluator
-    - [ ] `packages/ai/src/providers/openrouter.ts`: media calls use chat completions with `input_audio` (adapter-internal request code; no new dependency)
-    - [ ] `packages/domain/src/sales/roleplay-evaluator.ts`: main model, then the backup model, both single-pass audio; remove the speech-to-text path and the Nemotron and Parakeet defaults; JSDoc
-    - [ ] `apps/sales-advantage/app/api/roleplay-attempts/route.ts`: `maxDuration` 180
-    - [ ] Tests green; package `tsc` and eslint for `packages/ai`, `packages/domain`, `apps/sales-advantage`
+- [x] Task: Red tests for the media request `57c500e`
+    - [x] `packages/ai`: `generateObjectFromMedia` posts to `/chat/completions` with `input_audio {data, format: "webm"}` and a `json_schema` response format made by `zodSchema()`, parses the reply, validates it with the zod schema, and maps HTTP and parse errors to `AIClientError`
+    - [x] `packages/ai`: a WebM file never reaches the Responses request format
+    - [x] `packages/domain`: the fallback is a second media call with the fallback model; `transcribeAudio` is not called; both model errors are in the `EVALUATION_FAILED` cause
+    - [x] Update `phase-multimodal-openrouter.test.ts` and `sales-roleplay-evaluator.test.ts` expectations that assert the old path
+    - [x] Run the tests and confirm that they fail for the expected reason
+- [x] Task: Implement the media request and the two-model evaluator `57c500e`
+    - [x] `packages/ai/src/providers/openrouter.ts`: media calls use chat completions with `input_audio` (adapter-internal request code; no new dependency)
+    - [x] `packages/domain/src/sales/roleplay-evaluator.ts`: main model, then the backup model, both single-pass audio; remove the speech-to-text path and the Nemotron and Parakeet defaults; JSDoc
+    - [x] `apps/sales-advantage/app/api/roleplay-attempts/route.ts`: `maxDuration` 180
+    - [x] Tests green; package `tsc` and eslint for `packages/ai`, `packages/domain`, `apps/sales-advantage`
 - [ ] Task: Live model check before deploy
     - [ ] Run the scratchpad Thai test clips (WebM) through the new adapter code with the production models; record scores, time, and cost in `measure/tracks/sales_training_2027_20261015/scoring-check.md`
 - [ ] Task: Deploy a no-traffic candidate
