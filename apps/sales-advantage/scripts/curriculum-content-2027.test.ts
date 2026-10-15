@@ -334,7 +334,7 @@ describe("S5 — the Tutor family sale", () => {
     expect(entry!.scenario.objective).toContain("\n\nEnglish: ");
   });
 
-  it("practises the next-book conversation with no date", () => {
+  it("practices the next-book conversation with no date", () => {
     const [entry] = roleplay("family-sale", "Roleplay R4: Which Book Next?");
     expect(entry!.criteria[0]!.criterion).toContain("Primary Advantage Origins 3.2");
     expect(entry!.criteria[1]!.criterion).toMatch(/no print or sale date/i);
@@ -385,7 +385,7 @@ describe("S6 — tutor recruitment", () => {
     ]) {
       const claims = criteria.find((criterion) => criterion.sourceRef === CLAIMS_SOURCE_REF)!;
       expect(claims.criterion).toContain("a promise of income");
-      expect(claims.criterion).toContain("a baht figure that is not labelled as a formula example");
+      expect(claims.criterion).toContain("a baht figure that is not labeled as a formula example");
     }
   });
 });

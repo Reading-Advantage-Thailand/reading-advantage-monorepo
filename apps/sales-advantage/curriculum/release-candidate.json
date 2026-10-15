@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "curriculumId": "reading-advantage-sales-curriculum-v1",
-  "graphSha256": "f922e71dbba77694e52a557511aa9d041418308d5acaa9bd6244a9048abb3722",
+  "graphSha256": "27d98b742f964d3576e3732b3bd867771bc154381e2185b119945edf3b780c0d",
   "source": {
     "repository": "advantage-pr",
     "commit": "e6f7cc22e447bcaab73c1248af54cc8b590c9c3a",

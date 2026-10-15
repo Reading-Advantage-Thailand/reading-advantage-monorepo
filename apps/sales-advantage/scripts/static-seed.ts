@@ -85,7 +85,7 @@ const CHANNEL_CLAIMS = {
   family: "an earnings figure or commission talk in a family sale",
   school: "a discount, a free period, or a response time",
   recruitment:
-    "a promise of income; a baht figure that is not labelled as a formula example; \"get rich\" framing or pressure to recruit",
+    "a promise of income; a baht figure that is not labeled as a formula example; \"get rich\" framing or pressure to recruit",
 } as const;
 
 /**
@@ -271,7 +271,7 @@ export const staticSalesCurriculumModules = [
     slug: "foundations-discovery",
     title: "Sales Foundations: Discovery & Listening",
     description:
-      "Learn buyer-centred discovery for both sales channels: SPIN questions, active listening, and open questions. The same skills work with a parent on LINE and with a school director.",
+      "Learn buyer-centered discovery for both sales channels: SPIN questions, active listening, and open questions. The same skills work with a parent on LINE and with a school director.",
     phase: "Core",
     order: 1,
     lessons: [
@@ -631,7 +631,7 @@ Give the buyer a view that they did not have.
 >
 > ✅ "Many private schools tell me the same thing: when a foreign teacher leaves, the program stops until a new teacher comes. The question is not only how to find a teacher. It is how to keep the lessons going when a teacher leaves."
 
-The teach must be true and sourced. This one comes from the school demo script. Never invent data to teach.
+The teach must be true and sourced. This one comes from the school demo script. A seller who has not heard this from schools yet uses the market line from the demo script: "Thai private schools outside the major cities find it hard to recruit and keep qualified foreign English teachers." Never invent data to teach.
 
 ### 2. Tailor
 Fit the teach to this buyer, in the buyer's words.
@@ -655,7 +655,7 @@ The reframe shows the buyer that the problem they see is part of a bigger proble
 
 > Parent: "I just want my child to get better grades in English."
 >
-> Reframe: "We do not promise grades. The class starts with a placement trial, so your child begins with a printed book at their own level and reads one lesson at a time with a local tutor."
+> Reframe: "We do not promise grades. The class starts with a placement trial. The trial finds the printed book that your child starts with, and your child reads one lesson at a time with a local tutor."
 
 > Director: "We need better English scores."
 >
@@ -792,7 +792,7 @@ When you know the real objection, feel-felt-found shows that you understand:
 
 > "I understand how you **feel**. Other parents have **felt** the same way. What they **found** was [a true fact that you can show]."
 
-Complete the "found" part only with something true that you saw yourself, or with an approved fact. Never invent a school, a person, or a result. Never name a school, or show its data, without its written consent. Use this pattern at most once in a conversation.
+Say "Other parents have felt the same way" only when it is true for you. Complete the "found" part only with something true that you saw yourself, or with an approved fact. Never invent a school, a person, or a result. Never name a school, or show its data, without its written consent. Use this pattern at most once in a conversation.
 
 ## The isolation question
 
@@ -847,7 +847,7 @@ A good answer confirms the real budget limit, offers a smaller start at the appr
       {
         title: "Objection Roleplay: \"We Tried Something Like This and It Failed\"",
         type: "roleplay" as const,
-        content: `**Method:** Acknowledge the earlier bad experience. Ask what failed, and isolate the real objection before you answer. Use a Sandler reverse instead of a defence of the product.
+        content: `**Method:** Acknowledge the earlier bad experience. Ask what failed, and isolate the real objection before you answer. Use a Sandler reverse instead of a defense of the product.
 
 **Parent facts you may use:** a local tutor teaches a small group from a printed book; the app helps with flashcards, games, and speaking practice with Reedy after each completed lesson; the parent can see progress in the child's app.
 
@@ -956,7 +956,7 @@ A good answer confirms the real budget limit, offers a smaller start at the appr
 | **Blended Learning** | Schools | Workbooks + app + teacher training + Big 4 fidelity observations |
 | **Tutor Advantage** | Families | One class package per workbook, taught by a local tutor in a small group |
 
-The direct-to-family channel is the 2027 focus. The 2027 target is 10 active tutors and 300 Tutor Advantage students by May 2027 (break-even).
+The direct-to-family channel is the 2027 focus.
 
 ## What is live (as of October 2026)
 
@@ -1000,7 +1000,7 @@ A placement above book level 4 does not exist in the training. A tutor never off
 
 ## Facts that expire
 
-The print status, the "on sale" dates, and the open decisions change. Before each sales week, check the facts that expire in the sales training scope document (§8). These lessons mark them: the books on sale from about 2026-11-08, the Reading Advantage books that are not printed, the trial tool, the pilot terms, and the coming programs.`,
+The print status, the "on sale" dates, and the open decisions change. These lessons mark them: the books on sale from about 2026-11-08, the Reading Advantage books that are not printed, the trial tool, the pilot terms, and the coming programs. Before each sales week, ask Daniel or Phikul which of these facts changed.`,
         order: 1,
       },
       {
@@ -1042,7 +1042,7 @@ Every roleplay in this course has a claims criterion with passingScore 90. One v
 8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage.
 9. "Leading", "best", "#1", or a percentage with no source.
 
-In tutor recruitment, item 7 changes: commission talk is allowed, but a promise of income fails, and every baht figure must be a labelled example from the commission formula.
+In tutor recruitment, item 7 changes: commission talk is allowed, but a promise of income fails, and every baht figure must be a labeled example from the commission formula. In a school sale, item 7 is: a discount, a free period, or a promised response time.
 
 ## When the buyer asks for a stronger promise
 
@@ -1075,7 +1075,7 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
             ),
             objective: thaiFirst(
               "แก้ความเข้าใจผิดอย่างสุภาพ: ครูติวเตอร์เป็นคนสอน ไม่ใช่ติวเตอร์ AI อธิบายว่าน้องฝึกพูดกับ Reedy ได้หลังเรียนจบแต่ละบท ส่วน Read Along with Reedy ยังไม่เปิดให้ใช้ แล้วถามคำถามเพื่อรู้ความต้องการหนึ่งข้อ",
-              "Correct the wrong idea politely: a tutor teaches; it is not an AI tutor. Explain that the child can practise speaking with Reedy after each completed lesson, and that Read Along with Reedy is not available. Then ask one discovery question.",
+              "Correct the wrong idea politely: a tutor teaches; it is not an AI tutor. Explain that the child can practice speaking with Reedy after each completed lesson, and that Read Along with Reedy is not available. Then ask one discovery question.",
             ),
             prospectContext:
               "The mother is excited about AI. If the trainee agrees that it is an AI tutor, or promises Read Along with Reedy, the claims criterion fails.",
@@ -1516,7 +1516,7 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
               "Say nothing negative about the tutor school. Explain the difference: a leveled printed book, and reading, vocabulary, and speaking in a small group. Name Reading Advantage Origins 2 with its full name. Then leave the choice to the mother.",
             ),
             prospectContext:
-              "The mother is happy with the tutor school and worries about her son's time. A weak trainee criticises the tutor school or promises better grades.",
+              "The mother is happy with the tutor school and worries about her son's time. A weak trainee criticizes the tutor school or promises better grades.",
             rubric: [
               {
                 criterion: "Respect: says nothing negative about the tutor school",
@@ -1806,7 +1806,7 @@ What you do not do: write lesson plans, design the curriculum, or mark every dig
 
 ## How a new tutor starts
 
-1. Contact us on LINE or by phone.
+1. Contact us on LINE (https://line.me/ti/p/Pf7_EF98Pv) or by phone (+66 099-005-8038).
 2. Attend a 30-minute information session (online or in person).
 3. Complete the onboarding with Phikul and Daniel.
 4. Verify the account in the tutor app (ID card, bank book, address).
@@ -1926,7 +1926,7 @@ Thai first, English below.
 
 ## The claims criterion in recruitment roleplays
 
-Commission talk is allowed in recruitment. A baht figure is allowed only as arithmetic from the formula, labelled as an example. A promise of income, "get rich" framing, or pressure to recruit fails the attempt.`,
+Commission talk is allowed in recruitment. A baht figure is allowed only as arithmetic from the formula, labeled as an example. A promise of income, "get rich" framing, or pressure to recruit fails the attempt.`,
         order: 3,
       },
       {
@@ -2142,7 +2142,7 @@ Commission talk is allowed in recruitment. A baht figure is allowed only as arit
             correctAnswer:
               "It depends on the class packages paid in the month. For example, 30,000 baht GV at 55.6% is about 16,700 baht before tax. That is an example from the formula, not a promise.",
             explanation:
-              "Every baht figure is arithmetic from the formula, labelled as an example. A promise of income fails the claims criterion.",
+              "Every baht figure is arithmetic from the formula, labeled as an example. A promise of income fails the claims criterion.",
           },
           {
             question:
@@ -2197,7 +2197,7 @@ Commission talk is allowed in recruitment. A baht figure is allowed only as arit
 - The pilot is **one grade level for one semester**. Whether the pilot is paid or free is not decided (Q-SV-05).
 - **Managed Service:** one line only. "Not sold today. It launches in 2027 only if 1–2 more schools sign." Never pre-sell it.
 - **Science, Math, and Zhongwen Advantage:** "coming programs" with no date (Q-PR-24).
-- Show only features that are live in the Primary Advantage production app on the day of the demo. Check the facts that expire (sales training scope document §8) before each demo.
+- Show only features that are live in the Primary Advantage production app on the day of the demo. Before each demo, ask Daniel or Phikul which facts changed.
 - Name Boonyathat, or show its data, only with the school's written consent (Q-SE-03).
 - Promise no response time and no result.
 
@@ -2236,7 +2236,7 @@ Never inflate this number. Never call us "leading" or "number one".`,
 
 **Objective:** qualify the school and get a 45-minute demo with the academic team. **Audience:** the school director or the head of academic affairs, at first contact.
 
-**Open with the problem they know:** "Many private schools tell me the same thing: it is hard to find and keep qualified foreign English teachers. When a teacher leaves, the program stops until a new teacher comes. Parents ask why their children's English does not improve."
+**Open with the problem they know:** "Many private schools tell me the same thing: it is hard to find and keep qualified foreign English teachers. When a teacher leaves, the program stops until a new teacher comes. Parents ask why their children's English does not improve." A seller who has not heard this from schools yet says: "Thai private schools outside the major cities find it hard to recruit and keep qualified foreign English teachers."
 
 **Introduce the solution:** "We are a curriculum publisher in Khon Kaen. Primary Advantage is a series of printed English workbooks with a matching app. Each workbook has 14 lessons with a fixed lesson plan. Your own Thai teachers teach the lessons. We train them and observe classes every quarter. We call this Blended Learning: physical workbooks plus the digital app."
 
