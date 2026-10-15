@@ -1,54 +1,90 @@
 {
   "schemaVersion": 1,
   "curriculumId": "reading-advantage-sales-curriculum-v1",
-  "graphSha256": "ccba5498f453f1e2982307ca29d9d56c8bf17aeb26e1d586de232b44416b8717",
+  "graphSha256": "f922e71dbba77694e52a557511aa9d041418308d5acaa9bd6244a9048abb3722",
   "source": {
     "repository": "advantage-pr",
-    "commit": "8dd78171f1d57dd775fad2295d60e86fb267dad8",
+    "commit": "e6f7cc22e447bcaab73c1248af54cc8b590c9c3a",
     "documents": [
       {
-        "path": "02-brand/messaging-house.md",
-        "sha256": "73938bd4a65eb561a1daee651e60b3fd6b80a06e50f799a0b70835f328025200"
+        "path": "09-sales-enablement/sales-training-scope-2027.md",
+        "sha256": "c41c2c8907681614ca50feafa40d6bc66ab57a85d892e9472a8caad009e9599b"
       },
       {
-        "path": "06-research-and-evidence/outcome-claims-policy.md",
-        "sha256": "9be845b53f34d601892ec3f45cb3dca4fb5ecb4e3d88df44cc7193d1012f25a2"
+        "path": "09-sales-enablement/tutor-family-sales-playbook.md",
+        "sha256": "8eb501b05d5abf45f834b5b667ffed02d0bd95f6929896a02ffcc858f97baa02"
       },
       {
-        "path": "09-sales-enablement/README.md",
-        "sha256": "ea6dc7b55fa4e754566b07cd19d526aa9de7c80033d33844c1a2a29c0852d5c0"
+        "path": "09-sales-enablement/line-trial-facilitator-script.md",
+        "sha256": "2dce5aaf34cf3d1134527729c98714d338083dbc3e31c475d09ce155a06c872f"
       },
       {
-        "path": "09-sales-enablement/advantage-suite-at-a-glance.md",
-        "sha256": "1db1eba0c88cea063a2129e67a90dd2c8c71f91a794006840cdd0da907425548"
+        "path": "09-sales-enablement/facilitator-recruitment-kit.md",
+        "sha256": "803256dd8891302d2cd4e8c4b6f8507b63ba5671072c0d146ca37a07defb2941"
       },
       {
         "path": "09-sales-enablement/demo-scripts.md",
-        "sha256": "abaade8020082bd8227ccb49fbc73e415481600f48b514b73d9d8cdbc64b5676"
+        "sha256": "5e7f9e61f77b44a9f20c49a07fd72f29c19e30850e32ed44c4f3c730f9fbdb5a"
       },
       {
-        "path": "09-sales-enablement/roi-calculator.md",
-        "sha256": "5f4c0b844f77edfcebdc7b5e43d460bb18cfd9a4848f2d4ee5da023360d96105"
+        "path": "09-sales-enablement/demo-scripts-checklist.md",
+        "sha256": "70b17b0279368dc788453f75069583082ca3537269b81fc3ff6952948e1f1ceb"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/README.md",
-        "sha256": "58b3dfbb918d5860d1bd48b68100f7b34280c9646a1bee11f21332bf0f810e42"
+        "sha256": "46703a830575218466f92743c6d263073a43347f41e5168b41e01e96df3927d6"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/faq.md",
-        "sha256": "4feb27da6eacb9d6b0683168f741d35b3c1b9a0188b927ac4103de1a83dab9b2"
+        "sha256": "3388378e99761ca27ee0de6221c8e083e1d86312f26be2125620199122b8f5f4"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/objection-handling-guide.md",
-        "sha256": "7088a6afcae699b59ca8ccda9bc55d362e99620c4ab78ee2bd25b1f9c82a78d5"
+        "sha256": "47fd55d04c9ed5ad57ad6c0eec984c54cdb07c823eb5c3dd710fb02a778a5b93"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",
-        "sha256": "45ac153986c87afa9d9f0a5ebabd0971b404d9fce5950be94f76e799d5c5cda6"
+        "sha256": "f02b697fb1b71ddbf8640147914067354c3b131752d9cf6c921d0155574a5fde"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md",
-        "sha256": "c0979f847d3a9f58e3e3f92ee7b96145ea34d7b4d71623ddfb5eed5eb5625f6a"
+        "sha256": "5616b7f2e81a1449bf3f3af0d6d9c56fe7a2e8bedafe174f99a74a35e42191ff"
+      },
+      {
+        "path": "09-sales-enablement/distributor-rep-onboarding/weekly-touchpoint-tracker.md",
+        "sha256": "c50d889bc8d679e013730886364959021a41096d27ce0aabfcb0c89d2244eb40"
+      },
+      {
+        "path": "09-sales-enablement/distributor-launch-kit.md",
+        "sha256": "1c77ee2d82c864d754e37ab2396f658f2da13fffa6b71a0bc1b52976ec7e11da"
+      },
+      {
+        "path": "09-sales-enablement/roi-calculator.md",
+        "sha256": "041a6b56d970487cf591203a24bf1dc7ba7056c606dc5c71467485a568259804"
+      },
+      {
+        "path": "09-sales-enablement/battle-cards/vs-tutor.md",
+        "sha256": "5a4e283ac6999f779800672abe7746c9fa9d4872a21b2c88f23a2b79fcffef12"
+      },
+      {
+        "path": "09-sales-enablement/advantage-suite-at-a-glance.md",
+        "sha256": "e2531604c6c9715359ab9fb8623d62546f90b63ff918630d8cb1fef160a9aebb"
+      },
+      {
+        "path": "04-services/pricing.md",
+        "sha256": "afaba7913b1f3473de17bddb4f8e36ba2e982366f34ef2bb9693cea1b9c19698"
+      },
+      {
+        "path": "02-brand/messaging-house.md",
+        "sha256": "e046e6989bcc91755cc65e93a2b5aac8f6d3f9269ac099d2de2ce55806c9991d"
+      },
+      {
+        "path": "06-research-and-evidence/outcome-claims-policy.md",
+        "sha256": "eb8ce47405086f989b5618376e7dbe5fdeb22f5a3605ea05721e7df0e270083f"
+      },
+      {
+        "path": "15-business-applications/sales-advantage.md",
+        "sha256": "78178cb06f84f37d1a81f70b44d3bf3c48cd813d6a8539017c65e6cf3c768975"
       }
     ]
   },
@@ -64,16 +100,17 @@
       "foundations-discovery",
       "framing-value",
       "objections",
-      "ra-product-applied",
-      "ra-objections-demo",
-      "pricing-closing"
+      "product-knowledge-2027",
+      "family-sale",
+      "tutor-recruitment",
+      "school-sale"
     ]
   },
   "generation": {
     "method": "hand-authored-reviewed-candidate",
     "provider": null,
     "requestedModel": null,
-    "promptVersion": "sales-curriculum-v3",
+    "promptVersion": "sales-curriculum-2027-v1",
     "artifactRef": "apps/sales-advantage/scripts/static-seed.ts"
   },
   "automatedReview": {
@@ -84,16 +121,16 @@
     "roleplayCanonicalExcerptsVerified": true
   },
   "approval": {
-    "status": "approved",
-    "reviewer": "Project owner",
-    "reviewedAt": "2026-07-18T23:11:09Z",
-    "evidenceRef": "measure/tracks/sales_advantage_golive_20260701/curriculum-approval.json",
-    "evidenceSha256": "8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404",
+    "status": "awaiting_human_review",
+    "reviewer": null,
+    "reviewedAt": null,
+    "evidenceRef": null,
+    "evidenceSha256": null,
     "checks": {
-      "pedagogy": true,
-      "sourceTraceability": true,
-      "honestClaims": true,
-      "roleplayRubrics": true
+      "pedagogy": false,
+      "sourceTraceability": false,
+      "honestClaims": false,
+      "roleplayRubrics": false
     }
   }
 }
