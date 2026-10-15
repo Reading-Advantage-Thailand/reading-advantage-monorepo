@@ -1,6 +1,7 @@
 # Training video list for PR
 
-**Status:** Draft for Daniel and PR, 2026-10-16. Nothing on this list is ordered until Daniel
+**Status:** Draft v2 for Daniel and PR, 2026-10-16 (PR corrections: the N7 gate, the N5 fact,
+the voices). Nothing on this list is ordered until Daniel
 approves it.
 **Lessons:** `apps/sales-advantage/scripts/static-seed.ts` at `048090037` (7 modules, 44 lessons,
 19 roleplay scenarios).
@@ -50,7 +51,7 @@ Each video is in Thai and English (Thai first for the Family branch), 1–3 minu
 
 | ID | Title | Lessons | Format | Priority | Gate |
 |---|---|---|---|---|---|
-| N7 | The placement trial with the printed books | M5.2 | Explainer: setup (2 minutes), the 10-minute reading, the result (program and book level), with the `placement-to-book-map` infographic. No app screen (rule 8) | **Must** | — |
+| N7 | The placement trial with the printed books | M5.2 | Explainer: setup (2 minutes), the 10-minute reading, the result (program and book level), with the `placement-to-book-map` infographic. No app screen (rule 8) | **Must** | Q-SE-12 (1): Daniel confirms the interim printed-book method |
 | N8 | The parent conversation and the close | M5.3, R1 | Model conversation in Thai: discovery, the class in two sentences, then the three close steps after the trial (result 30 s, book 1 min, bridge to the class package 1 min) | **Must** | — |
 | N9 | Parent objections and the next book | M5.3, M5.4, R2, R3, R4, R5 | Model conversation, 4 short parts: "too expensive" (no discount), "already at a tutor school" (respect), "which book next?" (no date), "can you guarantee?" (no promise) | Should | — |
 | N10 | A week as a Tutor Advantage tutor | M6.1 | App tour: tutor-mobile 02, 19 (crop rows 0–1470), 22 (crop rows 0–1450), 09 (the S6 rows of `screenshot-lesson-list.md`); what is ready and what is not; how a new tutor starts | Should | Dev-build screens: a fact that expires |
@@ -68,15 +69,20 @@ Each video is in Thai and English (Thai first for the Family branch), 1–3 minu
 
 ## 3. Summary
 
-- **Must (5 videos):** N5, N7, N8, N11, and N12 (after the cutover); also the V1 YouTube link.
+- **Must (5 videos):** N5, N7 (after Q-SE-12), N8, N11, and N12 (after the cutover); also the V1
+  YouTube link.
 - **Should (9):** N1, N2, N4, N6, N9, N10, N13, N14, N15.
 - **Could (2):** N3, N16.
-- 16 new videos in all. Without the 3 gated videos (N1, N12, N13): 13 videos, 26 files (TH and EN).
+- 16 new videos in all. Without the 4 gated videos (N1, N7, N12, N13): 12 videos, 24 files (TH
+  and EN).
 
 ## 4. Questions for Daniel
 
 1. Which of the new videos do you approve (all, Must only, or a list)?
 2. YouTube visibility: the six uploads are public. N8–N11 teach internal sales and recruitment
-   answers. Public, or unlisted?
-3. Model conversations need a second voice for the buyer. Which Thai voice for a parent or a
-   director (PR picks from mmx)?
+   answers. Public, or unlisted? Fact for N5: it shows the "do not say" lines on screen, with
+   "Pearson", "GSE", and "YLE". AGENTS.md: these names never appear in external material, and a
+   public video is external material.
+
+Voices (PR voice standard, not a question): Thai seller `Thai_Optimistic_girl`, Thai buyer
+`Thai_female_1_sample1`; PR picks the English buyer voice from mmx.
