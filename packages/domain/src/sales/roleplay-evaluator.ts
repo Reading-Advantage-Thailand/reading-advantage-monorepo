@@ -19,13 +19,17 @@ export interface AIClientLike {
     media: { buffer: Buffer; mimeType: string };
     model?: string;
     temperature?: number;
+    reasoningEffort?: "low" | "medium" | "high";
   }) => Promise<T>;
 }
 
 /** Default main audio model: hears Thai and English and gave the best judgment in the 2026-10-15 test. */
 const DEFAULT_PRIMARY_MODEL = "qwen/qwen3.8-omni-flash";
-/** Default backup audio model: fast and cheap; used when the main model fails. */
-const DEFAULT_FALLBACK_MODEL = "google/gemini-2.5-flash-lite";
+/**
+ * Default backup audio model, used when the main model fails. It was correct on 16 of 16 calls in
+ * the 2026-10-15 model comparison; gemini-2.5-flash-lite invented transcripts there.
+ */
+const DEFAULT_FALLBACK_MODEL = "google/gemini-3.8-flash";
 /** Per-criterion pass mark when the rubric has no criteria (matches the quiz threshold). */
 const DEFAULT_PASSING_SCORE = 70;
 
@@ -159,8 +163,9 @@ export function buildEvaluationPrompt(
  * `generateObjectFromMedia` call.
  *
  * **Backup model:** when the main call fails, the same audio and prompt go to
- * `SALES_AUDIO_EVAL_FALLBACK_MODEL` (default `google/gemini-2.5-flash-lite`).
- * Both models hear Thai and English speech.
+ * `SALES_AUDIO_EVAL_FALLBACK_MODEL` (default `google/gemini-3.8-flash`) with
+ * low reasoning effort, which keeps one score under $0.01 and gave the same
+ * scores in the 2026-10-15 test. Both models hear Thai and English speech.
  *
  * If both models fail, a `SalesError` with code `EVALUATION_FAILED` is thrown.
  * On either model, the overall score and pass flag come from
@@ -186,20 +191,21 @@ export function aiClientToEvaluateRoleplay(
       process.env.SALES_AUDIO_EVAL_FALLBACK_MODEL ?? DEFAULT_FALLBACK_MODEL;
     const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
     /** Asks one model to evaluate the recording. */
-    const evaluateWith = (model: string) =>
+    const evaluateWith = (model: string, reasoningEffort?: "low") =>
       aiClient.generateObjectFromMedia({
         schema,
         prompt,
         media: audio,
         model,
         temperature: 0.2,
+        ...(reasoningEffort ? { reasoningEffort } : {}),
       });
     let result: RoleplayEvaluationResult;
     try {
       result = await evaluateWith(primaryModel);
     } catch (primaryError) {
       try {
-        result = await evaluateWith(fallbackModel);
+        result = await evaluateWith(fallbackModel, "low");
       } catch (fallbackError) {
         // FR-5: log both failures and attach them via `cause`. Log only the
         // message: a parse error can quote model output with trainee speech.

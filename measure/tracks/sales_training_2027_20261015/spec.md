@@ -47,6 +47,7 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
 - The model's own totals passed weak attempts (MiMo: 80 for criteria 0, 75, 45, 60). The code must calculate the total.
 - Qwen and Gemini 2.5 Flash Lite accept `input_audio` with the format `webm`. MiMo does not hear WebM.
 - **Owner decision (2026-10-15):** Qwen 3.8 Omni Flash is the main scorer, and Gemini 2.5 Flash Lite is the backup.
+- **Owner decision (2026-10-15, after the S5 live check):** the backup changes to Gemini 3.8 Flash with low reasoning effort. Gemini 2.5 Flash Lite invented transcripts (`scoring-check.md`).
 
 ### The curriculum is out of date
 
@@ -89,7 +90,7 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
 
 **Acceptance Criteria:**
 - Given a WebM recording from the browser, When the trainee submits it, Then the OpenRouter adapter sends it as `input_audio` with the format `webm` through the chat completions request format, and a model scores it.
-- Given the main model (`qwen/qwen3.8-omni-flash`) fails, When the evaluator runs, Then it sends the same audio to the backup model (`google/gemini-2.5-flash-lite`), and no speech-to-text step runs.
+- Given the main model (`qwen/qwen3.8-omni-flash`) fails, When the evaluator runs, Then it sends the same audio to the backup model (`google/gemini-3.8-flash`, reasoning effort `low`), and no speech-to-text step runs.
 - Given a model evaluation, When the app saves it, Then the overall score is the weighted mean of the rubric criteria, and the attempt passes only when each criterion meets its `passingScore`. A criterion that the model did not score counts as 0.
 - Given a deployed no-traffic candidate, When the owner records one Thai and one English roleplay in a real browser, Then each recording gets a score, feedback, and a transcript excerpt in its language.
 - Given both models fail, When the evaluator runs, Then the route returns the existing `EVALUATION_FAILED` error, and the logs name both model errors.

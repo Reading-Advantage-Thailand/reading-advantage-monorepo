@@ -190,6 +190,7 @@ export class OpenRouterProvider implements AIClientWithProvenance {
       text: input.prompt,
       model: input.model ?? DEFAULT_MEDIA_MODEL,
       temperature: input.temperature,
+      reasoningEffort: input.reasoningEffort,
       responseFormat: {
         type: "json_schema",
         json_schema: {
@@ -232,6 +233,7 @@ export class OpenRouterProvider implements AIClientWithProvenance {
       text: string;
       model: string;
       temperature?: number;
+      reasoningEffort?: GenerateObjectFromMediaInput<unknown>["reasoningEffort"];
       responseFormat?: Record<string, unknown>;
     }
   ): Promise<string> {
@@ -265,6 +267,7 @@ export class OpenRouterProvider implements AIClientWithProvenance {
             },
           ],
           ...(input.temperature !== undefined ? { temperature: input.temperature } : {}),
+          ...(input.reasoningEffort ? { reasoning: { effort: input.reasoningEffort } } : {}),
           ...(input.responseFormat ? { response_format: input.responseFormat } : {}),
         }),
         signal: AbortSignal.timeout(MEDIA_TIMEOUT_MS),

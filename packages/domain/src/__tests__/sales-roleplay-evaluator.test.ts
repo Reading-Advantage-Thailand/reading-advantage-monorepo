@@ -120,6 +120,7 @@ describe("aiClientToEvaluateRoleplay", () => {
     const call = (client.generateObjectFromMedia as ReturnType<typeof vi.fn>).mock.calls[0][0];
     expect(call.media).toEqual(audio);
     expect(call.prompt).toContain("Director Somchai");
+    expect(call.reasoningEffort).toBeUndefined();
   });
 
   it("sends the same audio to the backup model when the primary call fails", async () => {
@@ -132,10 +133,12 @@ describe("aiClientToEvaluateRoleplay", () => {
     const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
     const result = await evaluate(audio, scenario, rubric, excerpts);
     expect(result.overallScore).toBe(85);
-    expect(calledModels(client)).toEqual(["qwen/qwen3.8-omni-flash", "google/gemini-2.5-flash-lite"]);
+    expect(calledModels(client)).toEqual(["qwen/qwen3.8-omni-flash", "google/gemini-3.8-flash"]);
     const backupCall = (client.generateObjectFromMedia as ReturnType<typeof vi.fn>).mock.calls[1][0];
     expect(backupCall.media).toEqual(audio);
     expect(backupCall.prompt).toContain("Director Somchai");
+    // Low reasoning keeps a backup score under $0.01 (2026-10-15 model comparison).
+    expect(backupCall.reasoningEffort).toBe("low");
   });
 
   it("throws SalesError when both primary and fallback fail", async () => {

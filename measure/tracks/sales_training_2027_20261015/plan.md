@@ -40,9 +40,11 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
 - [x] Task: Grounded scorer after the S5 live check (`scoring-check.md`, 2026-10-15)
     - [x] Red tests: reference text fenced, transcript first, quotes before scores, conditional and claims rules, schema key order
     - [x] Implement in `packages/domain/src/sales/roleplay-evaluator.ts` and `schema.ts`; domain `tsc` and eslint clean; live: main model 8 of 8 correct
-- [b] Task: Backup path for the scorer — deferred:owner-model-decision (the backup model invented transcripts in 6 of 13 answers; the main model is often rate-limited upstream; model comparison in `scoring-check.md`: recommended backup `google/gemini-3.8-flash` with `reasoning.effort: "low"`, 16 of 16 correct)
+- [x] Task: Backup path for the scorer (the backup model invented transcripts in 6 of 13 answers; the main model is often rate-limited upstream; model comparison in `scoring-check.md`)
+    - [x] Owner decision 2026-10-15: main `qwen/qwen3.8-omni-flash`, backup `google/gemini-3.8-flash` with low reasoning effort (16 of 16 correct, $0.0050–0.0064 for each score)
+    - [x] Red tests, then `reasoningEffort` on the media call (`packages/ai`: OpenRouter `reasoning.effort`) and the new backup default in the evaluator; ai and domain `tsc` and eslint clean
 - [b] Task: Deploy a no-traffic candidate — deferred:after-primary-cutover (owner 2026-10-15: the candidate carries 61 Sales commits since the 2026-07-19 deploy and 30 migrations on the Sales DB, which shares the Cloud SQL instance with Primary; run after the cutover, last date 2026-10-20)
-    - [ ] Add a `qwen/qwen3.8-omni-flash` version to `SALES_AUDIO_EVAL_MODEL` and create `SALES_AUDIO_EVAL_FALLBACK_MODEL` (`google/gemini-2.5-flash-lite`) with the runtime service account's access (owner OK given 2026-10-15 for after the cutover)
+    - [ ] Add a `qwen/qwen3.8-omni-flash` version to `SALES_AUDIO_EVAL_MODEL` and create `SALES_AUDIO_EVAL_FALLBACK_MODEL` (`google/gemini-3.8-flash`) with the runtime service account's access (owner OK given 2026-10-15 for after the cutover)
     - [ ] Run the full Sales release pipeline (`cloudbuild.yaml`: curriculum backup, migrations, curriculum verify, `candidate` tag, no traffic); promotion only with `scripts/promote-sales-candidate.sh` after the acceptance note says `status: pass`
     - [ ] Update `measure/deployment-status.md`
 - [x] Task: Generate docs and doctor

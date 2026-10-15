@@ -71,6 +71,21 @@ describe("OpenRouterProvider.generateObjectFromMedia", () => {
       },
     ]);
     expect(body.temperature).toBe(0.2);
+    expect(body.reasoning).toBeUndefined();
+  });
+
+  it("sends the reasoning effort when the call sets one", async () => {
+    fetchMock.mockResolvedValueOnce(chatReply(JSON.stringify(validObject)));
+    const provider = new OpenRouterProvider({ apiKey: "test-key" });
+
+    await provider.generateObjectFromMedia({
+      schema: rubricSchema,
+      prompt: "score",
+      media: { buffer: audioBuffer, mimeType: "audio/webm" },
+      reasoningEffort: "low",
+    });
+
+    expect(lastRequest().body.reasoning).toEqual({ effort: "low" });
   });
 
   it("asks for JSON that matches the zod schema", async () => {
