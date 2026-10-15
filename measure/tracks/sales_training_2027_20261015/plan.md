@@ -33,6 +33,10 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
     - [x] Tests green; package `tsc` and eslint for `packages/ai`, `packages/domain`, `apps/sales-advantage`
 - [x] Task: Live model check before deploy
     - [x] Run the scratchpad Thai test clips (WebM) through the new adapter code with the production models; record scores, time, and cost in `measure/tracks/sales_training_2027_20261015/scoring-check.md`
+- [x] Task: Fix the S1 phase review findings (see `plan-review.md`) `f8e2723`
+    - [x] Red tests: criteria fallback without reuse, duplicate rubric names, prompt copy rule, scoring error outside the model fallback, logs without error objects, `audio/mp4` → `m4a`, private API key, recorder blob type from the browser recorder
+    - [x] Implement the fixes; live check: Safari-style MP4/AAC accepted as `m4a` and `mp4` by both models (2026-10-15)
+    - [x] Tests, `tsc`, and eslint for `packages/ai`, `packages/domain`, `apps/sales-advantage`
 - [b] Task: Deploy a no-traffic candidate — deferred:owner-ok-for-secret-manager-and-deploy
     - [ ] Add the new model secret versions in Secret Manager (owner OK first)
     - [ ] Build and deploy with the existing Sales release path (`scripts/promote-sales-candidate.sh`), no traffic
