@@ -1,0 +1,28 @@
+{
+  "track_id": "sales_training_2027_20261015",
+  "type": "feature",
+  "status": "in-progress",
+  "created_at": "2026-10-15T06:00:00Z",
+  "updated_at": "2026-10-15T06:00:00Z",
+  "description": "Sales Advantage 2027 training: repair roleplay scoring (Thai and English) and rebuild the curriculum for the 2027 products and sales strategies, agreed with the PR session.",
+  "estimated_tasks": 55,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "Sales Advantage scores roleplay recordings in Thai and English, and it teaches the 2027 products and the sales strategy for each product to tutors, the founders, distributor reps, and a staff sales hire.",
+    "stories": [
+      { "id": "S1", "title": "Roleplay scoring works in Thai and English", "size": "M", "priority": "Must", "status": "in-progress" },
+      { "id": "S2", "title": "The curriculum uses the new PR source set", "size": "S", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "General selling modules are correct", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Product knowledge matches strategy v1.8", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S5", "title": "Tutor family sale (Thai first, with English)", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S6", "title": "Tutor recruitment", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S7", "title": "School sale with Primary Advantage and Blended Learning", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S8", "title": "Role paths in one course", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S9", "title": "Mastery bindings follow the new course", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S10", "title": "Release the new curriculum", "size": "M", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}
