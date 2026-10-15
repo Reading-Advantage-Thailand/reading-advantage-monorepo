@@ -164,7 +164,8 @@ _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[loca
 - [b] Task: Implement — resolver, `LessonContent` components, the lesson query, the seed check; JSDoc — deferred:start-gate-freeze-end
 - [b] Task: Media references — deferred:pr-media-files
     - [ ] Upload the PR files to the Sales bucket at release, with the owner's OK; put the keys and the Thai and English alt text in the lessons
-    - [ ] Place the Tutor Advantage screenshot set (PR has it, 2026-10-15) where PR's list says
+    - [ ] Draft the screenshot → lesson list from PR's starting list and the 9 screenshot rules (spec.md S11), with each crop marked; PR checks it
+    - [ ] Upload the checked (and cropped) screenshots under `training-media/v1/th/`; put their keys and Thai and English alt text in the lessons
 - [b] Task: Generate docs and doctor — deferred:start-gate-freeze-end
 - [b] Task: Measure - User Manual Verification 'Phase S11: Lessons show supporting media' (Protocol in workflow.md) — deferred:start-gate-freeze-end
     - [ ] On an iPhone and on a desktop: one video plays inline, one infographic shows, one PDF opens

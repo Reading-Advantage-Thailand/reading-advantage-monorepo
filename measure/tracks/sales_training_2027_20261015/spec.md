@@ -235,6 +235,8 @@ check of sample Markdown gave these results:
 - PDF: `[text](url)` shows a link today, and the browser opens the PDF.
 - MP4: not possible today. `![alt](file.mp4)` gives a broken image, and `skipHtml` removes raw `<video>` HTML.
 - The app has no `public/` folder. Roleplay and quiz lessons do not render lesson Markdown.
+- The parent info deck needs no public home now: the tutor downloads the PDF and sends the file in LINE (PR, 2026-10-15; PR asks Daniel about a www page later).
+- PR makes each file to these rules: MP4 (H.264 and AAC, 720p or 1080p, about 25 MB or less); infographic PNG (1200–1600 px wide, 2 MB or less); decks as PDF, plus `.pptx` for the trainer deck and the school sale deck; lower-case ASCII names with hyphens; one file for each language; with each file, its language, Thai and English alt text, and its lesson.
 
 **Acceptance Criteria:**
 - Given a media file, When it is published for the course, Then it is in the Sales storage bucket under `training-media/v<n>/<th|en>/<file>`, not in the repo (the monorepo is public, and videos are large).
@@ -243,6 +245,29 @@ check of sample Markdown gave these results:
 - Given a `.png` file in image syntax, When the lesson renders, Then it shows the image with its alt text. Given a `.pdf` link, When the trainee clicks it, Then the PDF opens in a new tab.
 - Given a `media:` key, When `seed:production-curriculum` runs, Then the seed stops if the object does not exist in the bucket.
 - Given a changed media file, When it replaces an approved file, Then it gets a new version folder, so an approved lesson never shows changed content (no hashes).
+- Given a Tutor Advantage screenshot, When a lesson uses it, Then it obeys the screenshot rules below, and PR has checked the screenshot → lesson list.
+
+**Tutor Advantage screenshot set (PR, 2026-10-15):** advantage-pr
+`assets/screenshots/tutor-advantage/dev-2026-10-15/` (commit `9d3a3df`; the folder README has the
+use rules). 195 PNG: student-mobile 59, tutor-desktop 45, tutor-mobile 45, admin-desktop 23,
+admin-mobile 23. Phone captures are 780 px wide and desktop captures are 1440 px wide; many are
+full-page. A dev build, captured 2026-10-15 with seed data only, Thai UI, English lesson content.
+It is a fact that expires (PR scope doc §8). Rules:
+
+1. Never use admin screens (internal only).
+2. Screens with ฿2,500 (the code default; the approved price is "from 3,000 ฿"): crop the price or skip the screen (student-mobile 05–09 and 11; check the tutor class screens).
+3. student-mobile/01-landing: never show the stats strip ("32 เล่ม", "448 บท", "1,150+ ชั่วโมงเรียน") or the hero line ("15 ขั้นตอน … A1-C1").
+4. Do not zoom on the A0–B1 class filter, or on "Reading Advantage Level 1" or "Reading Advantage 2" without the series name.
+5. Never use student-mobile/31-live-p08-ai-feedback (the AI check failed), 58-study ("กำลังพัฒนา"), or a not-found or unauthorized screen.
+6. tutor-desktop/11-earnings and tutor-mobile/11-earnings (42.50% at ฿5,000 GV, 3% withholding tax; they match the payout code): recruitment lessons only.
+7. A dev screen does not prove that a feature is live. Reedy voice practice (student-mobile/17) is live; Read Along with Reedy is not.
+8. No placement trial screen exists: the LINE placement trial is not in the Tutor Advantage code (PR script v1.4; PR raises an open question for Daniel). A lesson shows no app screen for the trial.
+9. The school sale (S7) uses no Tutor screens. It uses the Primary Advantage set `assets/screenshots/primary-advantage/rpg-skin-2026-10-06/` (Phases 2–5 accepted for public use), only for features that ship with the cutover.
+
+PR's starting list (I draft the full list after the text source set; PR checks it):
+- S4: student-mobile 04-dashboard, 18-lesson-lobby, 22-live-p02-flashcards, 24-live-p03-read-article, 17-voice-practice; tutor-desktop 16-lesson-hub, 22-live-p01-launch.
+- S5: student-mobile 02-login, 03-consent-gate, 10-payment-age-check, 12-schedule, 17-voice-practice, 51-progress.
+- S6: tutor-desktop 11-earnings, 12-network, 02-dashboard, 09-schedule-week.
 
 **Estimate:** M
 **Priority:** Should
