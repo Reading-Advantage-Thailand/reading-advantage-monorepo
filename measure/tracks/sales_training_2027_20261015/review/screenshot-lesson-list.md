@@ -48,7 +48,7 @@ Step 3 ("the parent pays in the app") has text only. The placement lesson has no
 | Lesson | Section | Screen | Crop | Alt text |
 |---|---|---|---|---|
 | What a Tutor Does, and What Is Ready | What a Tutor Advantage tutor does | `tutor-mobile/02-dashboard.png` | — | The tutor app dashboard |
-| What a Tutor Does, and What Is Ready | What a Tutor Advantage tutor does (Teach) | `tutor-mobile/19-lesson-rehearsal.png` | the same content as the desktop crop (desktop rows 0–850); PR gives the mobile rows | The tutor rehearses a lesson in the tutor app before the class |
+| What a Tutor Does, and What Is Ready | What a Tutor Advantage tutor does (Teach) | `tutor-mobile/19-lesson-rehearsal.png` | rows 0–1470 (above the toolbar; the same content as the desktop crop, rows 0–850) | The tutor rehearses a lesson in the tutor app before the class |
 | What a Tutor Does, and What Is Ready | What a Tutor Advantage tutor does (Teach) | `tutor-mobile/22-live-p01-launch.png` | rows 0–1450 (above the DEV toolbar) | The tutor starts a live lesson: phase 1 of 18 |
 | What a Tutor Does, and What Is Ready | A week as a tutor (example) | `tutor-mobile/09-schedule-week.png` | — | The tutor's week in the tutor app |
 | The Commission Scale | How the rate works | `tutor-mobile/11-earnings.png` | — | The earnings screen: the rate, the group volume for the month, and the 3% withholding tax |
@@ -70,5 +70,5 @@ No Tutor Advantage screens (rule 9). The school lessons can use the Primary Adva
 
 ## Revision history
 
-- **v2** — 2026-10-15 — PR's check: crop `17-voice-practice`; `04-dashboard` replaces `51-progress`; `19-lesson-rehearsal` replaces `16-lesson-hub`; crop `22-live-p01-launch` above the DEV toolbar; S6 uses the tutor-mobile copies; class screens `03`–`06` not used.
+- **v2** — 2026-10-15 — PR's check (mobile crop for `19-lesson-rehearsal`: rows 0–1470, PR): crop `17-voice-practice`; `04-dashboard` replaces `51-progress`; `19-lesson-rehearsal` replaces `16-lesson-hub`; crop `22-live-p01-launch` above the DEV toolbar; S6 uses the tutor-mobile copies; class screens `03`–`06` not used.
 - **v1** — 2026-10-15 — Draft (`421f152fa`).

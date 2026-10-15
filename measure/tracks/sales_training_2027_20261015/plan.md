@@ -37,6 +37,10 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
     - [x] Red tests: criteria fallback without reuse, duplicate rubric names, prompt copy rule, scoring error outside the model fallback, logs without error objects, `audio/mp4` → `m4a`, private API key, recorder blob type from the browser recorder
     - [x] Implement the fixes; live check: Safari-style MP4/AAC accepted as `m4a` and `mp4` by both models (2026-10-15)
     - [x] Tests, `tsc`, and eslint for `packages/ai`, `packages/domain`, `apps/sales-advantage`
+- [x] Task: Grounded scorer after the S5 live check (`scoring-check.md`, 2026-10-15)
+    - [x] Red tests: reference text fenced, transcript first, quotes before scores, conditional and claims rules, schema key order
+    - [x] Implement in `packages/domain/src/sales/roleplay-evaluator.ts` and `schema.ts`; domain `tsc` and eslint clean; live: main model 8 of 8 correct
+- [b] Task: Backup path for the scorer — deferred:owner-model-decision (the backup model invented transcripts in 6 of 13 answers; the main model is often rate-limited upstream; model comparison in `scoring-check.md`)
 - [b] Task: Deploy a no-traffic candidate — deferred:after-primary-cutover (owner 2026-10-15: the candidate carries 61 Sales commits since the 2026-07-19 deploy and 30 migrations on the Sales DB, which shares the Cloud SQL instance with Primary; run after the cutover, last date 2026-10-20)
     - [ ] Add a `qwen/qwen3.8-omni-flash` version to `SALES_AUDIO_EVAL_MODEL` and create `SALES_AUDIO_EVAL_FALLBACK_MODEL` (`google/gemini-2.5-flash-lite`) with the runtime service account's access (owner OK given 2026-10-15 for after the cutover)
     - [ ] Run the full Sales release pipeline (`cloudbuild.yaml`: curriculum backup, migrations, curriculum verify, `candidate` tag, no traffic); promotion only with `scripts/promote-sales-candidate.sh` after the acceptance note says `status: pass`
@@ -63,7 +67,7 @@ _Known red gates until S9/S10 (approval pins, not changed on purpose): `scripts/
 - [x] Task: Generate docs and doctor
     - [x] doctor: only the A13 failure that exists on master; generate: not run, because S2–S7 change no route, package, or export; the marker guard passes for this plan
 - [b] Task: Measure - User Manual Verification 'Phase S2: The curriculum uses the new PR source set' (Protocol in workflow.md) — deferred:owner-review-with-s10-approval
-    - [ ] Daniel sees the candidate source commit `e6f7cc22e` and the 20 documents in the approval file at S10
+    - [ ] Daniel sees the candidate source commit (now `c211d1c`, `c3d48dd17`) and the 20 documents in the approval file at S10
 
 ## Phase S3: General selling modules are correct
 _Story ref: spec.md#story-s3-general-selling-modules-are-correct_
@@ -77,8 +81,9 @@ _Story ref: spec.md#story-s3-general-selling-modules-are-correct_
     - [x] Rubric rows: 3–5 criteria, weights sum to 1; each core roleplay has a Thai-first parent scenario and a school scenario
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S3: General selling modules are correct' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
-    - [ ] PR claims review of group 1 (S3 + S4); Daniel checks the Thai lines
+- [b] Task: Measure - User Manual Verification 'Phase S3: General selling modules are correct' (Protocol in workflow.md) — deferred:owner-thai-check
+    - [x] PR claims review of group 1 (S3 + S4): no hard violation; 6 fixes in `19ea64ba1`
+    - [ ] Daniel checks the Thai lines (`review/thai-lines-for-daniel.md`)
 
 ## Phase S4: Product knowledge matches strategy v1.8
 _Story ref: spec.md#story-s4-product-knowledge-matches-strategy-v18_
@@ -91,8 +96,9 @@ _Story ref: spec.md#story-s4-product-knowledge-matches-strategy-v18_
     - [x] "One Catalogue, Two Channels", "Honest Claims: The Rules for Every Conversation" (the 9 claims conditions), a two-scenario roleplay, and a quiz
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S4: Product knowledge matches strategy v1.8' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
-    - [ ] PR claims review of group 1 (S3 + S4); Daniel checks the Thai lines
+- [b] Task: Measure - User Manual Verification 'Phase S4: Product knowledge matches strategy v1.8' (Protocol in workflow.md) — deferred:owner-thai-check
+    - [x] PR claims review of group 1 (S3 + S4): no hard violation; 6 fixes in `19ea64ba1`
+    - [ ] Daniel checks the Thai lines (`review/thai-lines-for-daniel.md`)
 
 ## Phase S5: Tutor family sale (Thai first, with English)
 _Story ref: spec.md#story-s5-tutor-family-sale-thai-first-with-english_
@@ -103,11 +109,13 @@ _Story ref: spec.md#story-s5-tutor-family-sale-thai-first-with-english_
 - [x] Task: Test — red tests for the map, the books on sale, the Reedy wording, and no B1+ close `84b151b7f`
 - [x] Task: Implement — Family module lessons, roleplays (first sale, price objection, "already at a tutor school", next book), quiz, and rubrics from the PR playbook and success criteria (claims criterion passingScore 90) `84b151b7f`
     - [x] 4 theory lessons, roleplays R1–R5 with the playbook weights, quiz; interim placement method marked "Until the tool exists" (Q-SE-12)
-- [b] Task: Live check — score one Thai and one English recording for each new Tutor roleplay with the S1 scorer; record results in `scoring-check.md` — deferred:after-pr-claims-review (the roleplay text can change in the review)
+- [x] Task: Live check — score one Thai and one English recording for each new Tutor roleplay with the S1 scorer; record results in `scoring-check.md`
+    - [x] 16 synthetic answers (R1–R5, RR1–RR3, Thai and English) and 2 weak answers; found the scorer defect and the unsafe backup model (see S1 tasks below the S1 fix)
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S5: Tutor family sale (Thai first, with English)' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
-    - [ ] PR claims review of group 2 (S5 + S6); Daniel checks the Thai lines
+- [b] Task: Measure - User Manual Verification 'Phase S5: Tutor family sale (Thai first, with English)' (Protocol in workflow.md) — deferred:owner-thai-check
+    - [x] PR claims review of group 2 (S5 + S6): no violation; contacts added in `19ea64ba1`
+    - [ ] Daniel checks the Thai lines (`review/thai-lines-for-daniel.md`)
 
 ## Phase S6: Tutor recruitment
 _Story ref: spec.md#story-s6-tutor-recruitment_
@@ -120,8 +128,9 @@ _Q-SV-16 check done by PR on 2026-10-15 (continuous rate, base 0.5; see spec.md,
     - [x] 3 theory lessons, roleplays RR1–RR3 with the kit weights, quiz; the recruitment claims criterion fails a promise of income and an unlabelled baht figure
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S6: Tutor recruitment' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
-    - [ ] PR claims review of group 2 (S5 + S6); Daniel checks the Thai lines
+- [b] Task: Measure - User Manual Verification 'Phase S6: Tutor recruitment' (Protocol in workflow.md) — deferred:owner-thai-check
+    - [x] PR claims review of group 2 (S5 + S6): no violation; contacts added in `19ea64ba1`
+    - [ ] Daniel checks the Thai lines (`review/thai-lines-for-daniel.md`)
 
 ## Phase S7: School sale with Primary Advantage and Blended Learning
 _Story ref: spec.md#story-s7-school-sale-with-primary-advantage-and-blended-learning_
@@ -132,8 +141,9 @@ _Story ref: spec.md#story-s7-school-sale-with-primary-advantage-and-blended-lear
     - [x] 5 theory lessons (rules, demos, 8 objections, total cost of English, end-of-semester review), 3 scenario roleplays with the scenario checklists, quiz
 - [x] Task: Generate docs and doctor
     - [x] Same run as S2
-- [b] Task: Measure - User Manual Verification 'Phase S7: School sale with Primary Advantage and Blended Learning' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
-    - [ ] PR claims review of group 3 (S7)
+- [b] Task: Measure - User Manual Verification 'Phase S7: School sale with Primary Advantage and Blended Learning' (Protocol in workflow.md) — deferred:owner-thai-check
+    - [x] PR claims review of group 3 (S7): 1 hard finding (B2) and 5 fixes in `048090037`; PR source fixes pinned at `c211d1c` (`c3d48dd17`)
+    - [ ] Daniel accepts the school lessons (no Thai text in S7)
 
 ## Phase S8: Role paths in one course
 _Story ref: spec.md#story-s8-role-paths-in-one-course_

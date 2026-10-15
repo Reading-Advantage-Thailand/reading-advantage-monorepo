@@ -80,6 +80,36 @@ describe("buildEvaluationPrompt language", () => {
   });
 });
 
+describe("buildEvaluationPrompt transcript source", () => {
+  // S5 live check 2026-10-15: with model answers in the lesson excerpts, the model copied
+  // prompt lines into the "transcript" and passed a recording that broke the claims rule.
+  it("marks the scenario, rubric, and excerpts as reference text, not the recording", () => {
+    const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
+    const reference = prompt.slice(prompt.indexOf("<reference>"), prompt.indexOf("</reference>"));
+    expect(reference).toContain("It is not part of the recording.");
+    expect(reference).toContain("Director Somchai");
+    expect(reference).toContain("Cold Call Rubric");
+    expect(reference).toContain("Never claim guaranteed outcomes");
+  });
+
+  it("takes the transcript from the recording first, then scores only from it", () => {
+    const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
+    expect(prompt).toContain(
+      "Take the transcript excerpt only from the words spoken in the recording. Do not copy or translate any text from this prompt.",
+    );
+    expect(prompt).toContain("quote the words from your transcript that meet or break the criterion");
+    expect(prompt).toContain("If the transcript has no words that meet a criterion, the score is 20 or less.");
+    expect(prompt).toContain("When a criterion applies only if something happens, and it did not happen in the recording, the score is 100.");
+    expect(prompt).toContain("A claims criterion scores 0 when the transcript contains any one of the claims that it lists.");
+  });
+
+  it("asks the model for the transcript before the scores", () => {
+    expect(Object.keys(roleplayEvaluationResultSchema.shape)[0]).toBe("transcriptExcerpt");
+    const criterion = roleplayEvaluationResultSchema.shape.criteria.element;
+    expect(Object.keys(criterion.shape)).toEqual(["criterion", "feedback", "score"]);
+  });
+});
+
 describe("aiClientToEvaluateRoleplay", () => {
   it("calls generateObjectFromMedia with the primary model and returns the result", async () => {
     const client = makeClient();

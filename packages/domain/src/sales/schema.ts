@@ -191,20 +191,22 @@ export const roleplayAudioInputSchema = z.object({
 export type RoleplayAudioInput = z.infer<typeof roleplayAudioInputSchema>;
 
 export const roleplayEvaluationResultSchema = z.object({
-  overallScore: z.number().min(0).max(100),
-  passed: z.boolean(),
+  // Key order is the order in which the model writes the fields: the transcript
+  // first, then each criterion's evidence before its score (S5 live check).
+  transcriptExcerpt: z.string(),
   criteria: z.array(
     z.object({
       criterion: z.string(),
-      score: z.number().min(0).max(100),
       feedback: z.string(),
+      score: z.number().min(0).max(100),
     }),
   ),
   summary: z.string(),
   strengths: z.array(z.string()),
   weaknesses: z.array(z.string()),
   suggestedNextAction: z.string(),
-  transcriptExcerpt: z.string(),
+  overallScore: z.number().min(0).max(100),
+  passed: z.boolean(),
 });
 
 export const roleplayAttemptOutputSchema = z.object({

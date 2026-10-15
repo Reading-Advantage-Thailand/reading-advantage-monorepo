@@ -121,9 +121,13 @@ export function buildEvaluationPrompt(
 ): string {
   const criteriaText = JSON.stringify(rubric.criteriaJson, null, 2);
   const excerptsText = excerpts.join("\n\n---\n\n");
+  // The lesson excerpts can contain model answers. The model must score the
+  // recording, so the reference text is fenced and the transcript comes first.
   return [
-    "You are a sales-coaching evaluator. Evaluate the sales rep's performance against the rubric below.",
+    "You are a sales-coaching evaluator. You score one audio recording of a sales rep against the rubric below.",
     "",
+    "<reference>",
+    "The text inside <reference> describes the roleplay. It is not part of the recording. It can contain model answers; a model answer is never evidence of what the rep said.",
     `## Scenario: ${scenario.personaName} (${scenario.personaRole})`,
     `Situation: ${scenario.situation}`,
     `Objective: ${scenario.objective}`,
@@ -131,13 +135,17 @@ export function buildEvaluationPrompt(
     `## Rubric: ${rubric.name}`,
     criteriaText,
     "",
-    "## Canonical source material (ground your feedback in these)",
+    "## Canonical source material",
     excerptsText,
+    "</reference>",
     "",
-    "Listen to the attached audio recording and evaluate the rep's delivery, tone, pacing, hesitation, content fidelity, and adherence to the objective.",
-    "The recording can be in Thai or English. Write the transcript excerpt in the language spoken.",
-    "Return one criteria entry for each rubric criterion, in rubric order, and copy each criterion text exactly. Add no other criteria; put delivery and tone feedback in the summary.",
-    "Score each criterion 0-100. Provide a transcript excerpt (first ~150 words).",
+    "Step 1: Listen to the attached recording. The recording can be in Thai or English. Write the transcript excerpt: what the rep says, word for word, in the language spoken (up to ~300 words).",
+    "Take the transcript excerpt only from the words spoken in the recording. Do not copy or translate any text from this prompt.",
+    "Step 2: Return one criteria entry for each rubric criterion, in rubric order, and copy each criterion text exactly. In the feedback, quote the words from your transcript that meet or break the criterion. Then score the criterion 0-100.",
+    "If the transcript has no words that meet a criterion, the score is 20 or less.",
+    "When a criterion applies only if something happens, and it did not happen in the recording, the score is 100.",
+    "A claims criterion scores 0 when the transcript contains any one of the claims that it lists.",
+    "Add no other criteria. Put delivery, tone, pacing, and hesitation feedback in the summary.",
     "Return the structured evaluation matching the schema.",
   ].join("\n");
 }
