@@ -294,6 +294,8 @@ It is a fact that expires (PR scope doc §8). Rules:
 
 **Infographics (PR, 2026-10-15):** advantage-pr `c93ab4d`, `assets/sales-training/2027/infographics/`, 8 PNG (1440 px wide, 1435–1859 px high, 0.2–0.3 MB): `placement-to-book-map-{th,en}` (S4, S5), `commission-scale-{th,en}` (S6), `family-sale-steps-{th,en}` (S5), `school-tiers-and-pilot-{th,en}` (S7). Captions and target lessons: `assets/sales-training/2027/README.md`. Do not upload an item before Daniel accepts its Thai.
 
+**Decks (PR, 2026-10-15):** advantage-pr `1c80cb5`, `assets/sales-training/2027/decks/`, 16:9, Kanit and Sarabun embedded in the PDFs: `school-sale-deck-{th,en}` (PDF + PPTX, 13 slides, S7; a leave-behind PDF for schools), `tutor-recruitment-deck-{th,en}` (PDF, 14 slides, S6; never to parents), `parent-info-deck-{th,en}` (PDF, 7 slides, S5; the tutor sends it in LINE), `trainer-deck-{th,en}` (PDF + PPTX, 18 slides; internal only, for all lessons). Facts that expire and the rebuild source: `assets/sales-training/2027/README.md` v0.2 and `assets/sales-training/2027/source/decks/`. Do not upload a deck before Daniel accepts its Thai.
+
 PR's starting list (I draft the full list after the text source set; PR checks it):
 - S4: student-mobile 04-dashboard, 18-lesson-lobby, 22-live-p02-flashcards, 24-live-p03-read-article, 17-voice-practice; tutor-desktop 16-lesson-hub, 22-live-p01-launch.
 - S5: student-mobile 02-login, 03-consent-gate, 10-payment-age-check, 12-schedule, 17-voice-practice, 51-progress.

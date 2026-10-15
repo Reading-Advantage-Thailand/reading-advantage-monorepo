@@ -51,71 +51,89 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
 
 ## Phase S2: The curriculum uses the new PR source set
 _Story ref: spec.md#story-s2-the-curriculum-uses-the-new-pr-source-set_
-_Start gate: the PR source-set commit exists (done: advantage-pr `e6f7cc22e`, 2026-10-15; see spec.md S2) and the feature freeze has ended._
+_Start gate: the PR source-set commit exists (done: advantage-pr `e6f7cc22e`, 2026-10-15; see spec.md S2). Owner decision 2026-10-15 ("draft now, ship later"): S2–S7 are drafted on the branch only during the freeze; merge, deploy, and database work wait for the freeze end._
+_Known red gates until S9/S10 (approval pins, not changed on purpose): `scripts/sales-curriculum-production.test.ts` (cardinalities and pinned digest), `scripts/sales-curriculum-reconciliation.test.ts` (approved digest `ccba54…`), `scripts/production-readiness.test.ts` (approved candidate), and 8 tests in `packages/sales-knowledge` (approved coordinates)._
 
-- [b] Task: Contract — the new document list — deferred:start-gate-pr-source-set-and-freeze-end
-    - [ ] List the pinned documents from the PR scope doc (`09-sales-enablement/sales-training-scope-2027.md`) in the candidate generator input
-- [b] Task: Test — candidate generation — deferred:start-gate-pr-source-set-and-freeze-end
-    - [ ] Update `scripts/curriculum-release.test.ts` and the candidate contract tests for the new commit and document list (red first)
-- [b] Task: Implement — regenerate `release-candidate.json` — deferred:start-gate-pr-source-set-and-freeze-end
-    - [ ] Run `curriculum:release-candidate` against the PR commit; keep the existing source-hash fields only (hashing policy: no new or wider hashes)
-- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S2: The curriculum uses the new PR source set' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+- [x] Task: Contract — the new document list `84b151b7f`
+    - [x] List the 20 pinned documents from the PR scope doc (`09-sales-enablement/sales-training-scope-2027.md`) in `CURRICULUM_SOURCE_PATHS`; 22 canonical rubric source refs
+- [x] Task: Test — candidate generation `84b151b7f`
+    - [x] Update `scripts/curriculum-release.test.ts` for the new document list, the product-status and tier-claim rules, and the product lesson "One Catalogue, Two Channels" (red first)
+- [x] Task: Implement — regenerate `release-candidate.json` `1ec13d473`
+    - [x] Run `curriculum:release-candidate` against the PR commit `e6f7cc22e` (sparse clone of the pin); graph `f922e71d…`, status `awaiting_human_review`; only the existing source-hash fields changed (hashing policy)
+- [x] Task: Generate docs and doctor
+    - [x] doctor: only the A13 failure that exists on master; generate: not run, because S2–S7 change no route, package, or export; the marker guard passes for this plan
+- [b] Task: Measure - User Manual Verification 'Phase S2: The curriculum uses the new PR source set' (Protocol in workflow.md) — deferred:owner-review-with-s10-approval
+    - [ ] Daniel sees the candidate source commit `e6f7cc22e` and the 20 documents in the approval file at S10
 
 ## Phase S3: General selling modules are correct
 _Story ref: spec.md#story-s3-general-selling-modules-are-correct_
 
-- [b] Task: Contract — content rules — deferred:start-gate-pr-source-set-and-freeze-end
-    - [ ] Add a seed content test: forbidden phrases ("Director Pim", "PSP school", "80% of reps", "48 hours"), pilot shape wording, no free period, no discount
-- [b] Task: Test — red run of the content test against the current seed — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Implement — edit modules 1–3 in `apps/sales-advantage/scripts/static-seed.ts` — deferred:start-gate-pr-source-set-and-freeze-end
-    - [ ] Remove the unsourced lines; set the pilot shape to one grade level, one semester; check each statistic against a source
-    - [ ] Rubric rows: 3–5 criteria, weights sum to 1
-- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S3: General selling modules are correct' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+- [x] Task: Contract — content rules `84b151b7f`
+    - [x] Content test `apps/sales-advantage/scripts/curriculum-content-2027.test.ts`: forbidden phrases, pilot shape wording, no free period, no discount, rubric rules (3–5 criteria, weights sum to 1, one claims criterion at passingScore 90)
+- [x] Task: Test — red run of the content test against the current seed `84b151b7f`
+    - [x] Red: 31 of 34 tests failed against the old seed; green: 34 of 34 with the new seed
+- [x] Task: Implement — edit modules 1–3 in `apps/sales-advantage/scripts/static-seed.ts` `84b151b7f`
+    - [x] Remove the unsourced lines; set the pilot shape to one grade level, one semester; check each statistic against a source
+    - [x] Rubric rows: 3–5 criteria, weights sum to 1; each core roleplay has a Thai-first parent scenario and a school scenario
+- [x] Task: Generate docs and doctor
+    - [x] Same run as S2
+- [b] Task: Measure - User Manual Verification 'Phase S3: General selling modules are correct' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
+    - [ ] PR claims review of group 1 (S3 + S4); Daniel checks the Thai lines
 
 ## Phase S4: Product knowledge matches strategy v1.8
 _Story ref: spec.md#story-s4-product-knowledge-matches-strategy-v18_
 
-- [b] Task: Contract — product facts table in the content test (states, prices, Managed Service line, book-name prefix, CEFR-only) — deferred:start-gate-pr-source-set-and-freeze-end
-    - [ ] Add the placement-to-book map and the print status of each book
-    - [ ] Name each "fact that expires" from the PR scope doc in the content test, so S10 can find and check it
-- [b] Task: Test — red run against the current "9-Product Suite" lesson — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Implement — replace the product module lessons and quiz from the PR sources — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S4: Product knowledge matches strategy v1.8' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+- [x] Task: Contract — product facts table in the content test (states, prices, Managed Service line, book-name prefix, CEFR-only) `84b151b7f`
+    - [x] Add the placement-to-book map and the print status of each book
+    - [x] Name each "fact that expires" from the PR scope doc: `SALES_CURRICULUM_EXPIRING_FACTS` (5 facts, each with its §8 check), and every ISO-dated line must contain one of them
+- [x] Task: Test — red run against the current "9-Product Suite" lesson `84b151b7f`
+- [x] Task: Implement — replace the product module lessons and quiz from the PR sources `84b151b7f`
+    - [x] "One Catalogue, Two Channels", "Honest Claims: The Rules for Every Conversation" (the 9 claims conditions), a two-scenario roleplay, and a quiz
+- [x] Task: Generate docs and doctor
+    - [x] Same run as S2
+- [b] Task: Measure - User Manual Verification 'Phase S4: Product knowledge matches strategy v1.8' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
+    - [ ] PR claims review of group 1 (S3 + S4); Daniel checks the Thai lines
 
 ## Phase S5: Tutor family sale (Thai first, with English)
 _Story ref: spec.md#story-s5-tutor-family-sale-thai-first-with-english_
 
-- [b] Task: Contract — placement-to-book map and roleplay content shape — deferred:start-gate-pr-source-set-and-freeze-end
-    - [ ] Placement map (program + book level 1–4 → nearest printed book) as seed data with a test
-    - [ ] Bilingual scenario text: Thai first, English below, in the existing fields (no schema change)
-- [b] Task: Test — red tests for the map, the books on sale, the Reedy wording, and no B1+ close — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Implement — Family module lessons, roleplays (first sale, price objection, "already at a tutor school", next book), quiz, and rubrics from the PR playbook and success criteria (claims criterion passingScore 90) — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Live check — score one Thai and one English recording for each new Tutor roleplay with the S1 scorer; record results in `scoring-check.md` — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S5: Tutor family sale (Thai first, with English)' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+- [x] Task: Contract — placement-to-book map and roleplay content shape `84b151b7f`
+    - [x] Placement map (program + book level 1–4 → nearest printed book) as lesson tables in the product and placement lessons, checked by the content test (no new seed table, no schema change)
+    - [x] Bilingual scenario text: Thai first, then a blank line and "English: ", in the existing fields (no schema change); the recorder keeps the line break (`whitespace-pre-line`)
+- [x] Task: Test — red tests for the map, the books on sale, the Reedy wording, and no B1+ close `84b151b7f`
+- [x] Task: Implement — Family module lessons, roleplays (first sale, price objection, "already at a tutor school", next book), quiz, and rubrics from the PR playbook and success criteria (claims criterion passingScore 90) `84b151b7f`
+    - [x] 4 theory lessons, roleplays R1–R5 with the playbook weights, quiz; interim placement method marked "Until the tool exists" (Q-SE-12)
+- [b] Task: Live check — score one Thai and one English recording for each new Tutor roleplay with the S1 scorer; record results in `scoring-check.md` — deferred:after-pr-claims-review (the roleplay text can change in the review)
+- [x] Task: Generate docs and doctor
+    - [x] Same run as S2
+- [b] Task: Measure - User Manual Verification 'Phase S5: Tutor family sale (Thai first, with English)' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
+    - [ ] PR claims review of group 2 (S5 + S6); Daniel checks the Thai lines
 
 ## Phase S6: Tutor recruitment
 _Story ref: spec.md#story-s6-tutor-recruitment_
 _Q-SV-16 check done by PR on 2026-10-15 (continuous rate, base 0.5; see spec.md, owner decision 4)._
 
-- [b] Task: Contract — commission facts from the PR recruitment kit v1.2 in the content test — deferred:start-gate-pr-source-set-and-freeze-end
-    - [ ] The rate rule, the differential payout, "no own students → no payout", "unverified → no payout", the checked example (30,000 ฿ GV = 55.6% = about 16,700 ฿)
-- [b] Task: Test — red tests for the commission scale, the checked example, and no old step table (40/50/55/60/65%) — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Implement — recruitment lesson, roleplay, and rubric (an invented earnings figure fails) — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S6: Tutor recruitment' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+- [x] Task: Contract — commission facts from the PR recruitment kit v1.2 in the content test `84b151b7f`
+    - [x] The rate rule, the differential payout, "no own students → no payout", "unverified → no payout", the checked example (30,000 ฿ GV = 55.6% = about 16,700 ฿)
+- [x] Task: Test — red tests for the commission scale, the checked example, and no old step table `84b151b7f`
+- [x] Task: Implement — recruitment lesson, roleplay, and rubric (an invented earnings figure fails) `84b151b7f`
+    - [x] 3 theory lessons, roleplays RR1–RR3 with the kit weights, quiz; the recruitment claims criterion fails a promise of income and an unlabelled baht figure
+- [x] Task: Generate docs and doctor
+    - [x] Same run as S2
+- [b] Task: Measure - User Manual Verification 'Phase S6: Tutor recruitment' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
+    - [ ] PR claims review of group 2 (S5 + S6); Daniel checks the Thai lines
 
 ## Phase S7: School sale with Primary Advantage and Blended Learning
 _Story ref: spec.md#story-s7-school-sale-with-primary-advantage-and-blended-learning_
 
-- [b] Task: Contract — school facts in the content test (Primary Advantage + Blended Learning, prices, demo flows, no unshipped features, Boonyathat consent rule) — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Test — red run against the current Reading Advantage modules — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Implement — School module lessons, roleplays, quizzes, and rubrics from the PR demo scripts and rep onboarding — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Measure - User Manual Verification 'Phase S7: School sale with Primary Advantage and Blended Learning' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+- [x] Task: Contract — school facts in the content test (Primary Advantage + Blended Learning, prices, demo flows, no unshipped features, Boonyathat consent rule) `84b151b7f`
+- [x] Task: Test — red run against the current Reading Advantage modules `84b151b7f`
+- [x] Task: Implement — School module lessons, roleplays, quizzes, and rubrics from the PR demo scripts and rep onboarding `84b151b7f`
+    - [x] 5 theory lessons (rules, demos, 8 objections, total cost of English, end-of-semester review), 3 scenario roleplays with the scenario checklists, quiz
+- [x] Task: Generate docs and doctor
+    - [x] Same run as S2
+- [b] Task: Measure - User Manual Verification 'Phase S7: School sale with Primary Advantage and Blended Learning' (Protocol in workflow.md) — deferred:pr-claims-review-and-owner-thai-check
+    - [ ] PR claims review of group 3 (S7)
 
 ## Phase S8: Role paths in one course
 _Story ref: spec.md#story-s8-role-paths-in-one-course_
