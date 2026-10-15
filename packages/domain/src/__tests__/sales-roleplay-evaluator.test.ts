@@ -116,11 +116,12 @@ describe("aiClientToEvaluateRoleplay", () => {
     const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
     const result = await evaluate(audio, scenario, rubric, excerpts);
     expect(result.overallScore).toBe(85);
-    expect(calledModels(client)).toEqual(["qwen/qwen3.8-omni-flash"]);
+    expect(calledModels(client)).toEqual(["google/gemini-3.8-flash"]);
     const call = (client.generateObjectFromMedia as ReturnType<typeof vi.fn>).mock.calls[0][0];
     expect(call.media).toEqual(audio);
     expect(call.prompt).toContain("Director Somchai");
-    expect(call.reasoningEffort).toBeUndefined();
+    // Low reasoning keeps a score under $0.01 (2026-10-15 model comparison).
+    expect(call.reasoningEffort).toBe("low");
   });
 
   it("sends the same audio to the backup model when the primary call fails", async () => {
@@ -133,11 +134,10 @@ describe("aiClientToEvaluateRoleplay", () => {
     const evaluate = aiClientToEvaluateRoleplay(client, roleplayEvaluationResultSchema);
     const result = await evaluate(audio, scenario, rubric, excerpts);
     expect(result.overallScore).toBe(85);
-    expect(calledModels(client)).toEqual(["qwen/qwen3.8-omni-flash", "google/gemini-3.8-flash"]);
+    expect(calledModels(client)).toEqual(["google/gemini-3.8-flash", "qwen/qwen3.8-omni-flash"]);
     const backupCall = (client.generateObjectFromMedia as ReturnType<typeof vi.fn>).mock.calls[1][0];
     expect(backupCall.media).toEqual(audio);
     expect(backupCall.prompt).toContain("Director Somchai");
-    // Low reasoning keeps a backup score under $0.01 (2026-10-15 model comparison).
     expect(backupCall.reasoningEffort).toBe("low");
   });
 

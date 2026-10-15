@@ -43,8 +43,9 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
 - [x] Task: Backup path for the scorer (the backup model invented transcripts in 6 of 13 answers; the main model is often rate-limited upstream; model comparison in `scoring-check.md`)
     - [x] Owner decision 2026-10-15: main `qwen/qwen3.8-omni-flash`, backup `google/gemini-3.8-flash` with low reasoning effort (16 of 16 correct, $0.0050–0.0064 for each score)
     - [x] Red tests, then `reasoningEffort` on the media call (`packages/ai`: OpenRouter `reasoning.effort`) and the new backup default in the evaluator; ai and domain `tsc` and eslint clean
+    - [x] PR review: Thai house voice and 7 claim clips; Gemini 16 of 16, Qwen timed out on most Thai clips; owner decision 2026-10-16: main `google/gemini-3.8-flash`, backup `qwen/qwen3.8-omni-flash`, low reasoning on both calls; the adapter names a body-read time-out
 - [b] Task: Deploy a no-traffic candidate — deferred:after-primary-cutover (owner 2026-10-15: the candidate carries 61 Sales commits since the 2026-07-19 deploy and 30 migrations on the Sales DB, which shares the Cloud SQL instance with Primary; run after the cutover, last date 2026-10-20)
-    - [ ] Add a `qwen/qwen3.8-omni-flash` version to `SALES_AUDIO_EVAL_MODEL` and create `SALES_AUDIO_EVAL_FALLBACK_MODEL` (`google/gemini-3.8-flash`) with the runtime service account's access (owner OK given 2026-10-15 for after the cutover)
+    - [ ] Add a `google/gemini-3.8-flash` version to `SALES_AUDIO_EVAL_MODEL` and create `SALES_AUDIO_EVAL_FALLBACK_MODEL` (`qwen/qwen3.8-omni-flash`) with the runtime service account's access (owner OK given 2026-10-15 for after the cutover)
     - [ ] Run the full Sales release pipeline (`cloudbuild.yaml`: curriculum backup, migrations, curriculum verify, `candidate` tag, no traffic); promotion only with `scripts/promote-sales-candidate.sh` after the acceptance note says `status: pass`
     - [ ] Update `measure/deployment-status.md`
 - [x] Task: Generate docs and doctor

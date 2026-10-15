@@ -39,7 +39,10 @@ const DEFAULT_MEDIA_MODEL = "qwen/qwen3.8-omni-flash";
  */
 const DEFAULT_ASR_MODEL = "google/gemini-2.5-flash-lite";
 
-/** Time limit for one audio request; the slowest tested scoring call took 79 s. */
+/**
+ * Time limit for one audio request. A main and a backup request fit in the 300 s route limit.
+ * Qwen 3.8 Omni Flash often needs more on Thai speech (2026-10-15).
+ */
 const MEDIA_TIMEOUT_MS = 120_000;
 
 /** OpenRouter `input_audio` format for each accepted audio MIME type. */

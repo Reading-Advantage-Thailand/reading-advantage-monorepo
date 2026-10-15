@@ -23,13 +23,16 @@ export interface AIClientLike {
   }) => Promise<T>;
 }
 
-/** Default main audio model: hears Thai and English and gave the best judgment in the 2026-10-15 test. */
-const DEFAULT_PRIMARY_MODEL = "qwen/qwen3.8-omni-flash";
 /**
- * Default backup audio model, used when the main model fails. It was correct on 16 of 16 calls in
- * the 2026-10-15 model comparison; gemini-2.5-flash-lite invented transcripts there.
+ * Default main audio model. In the 2026-10-15 checks it was correct on every call, also on the Thai
+ * voice and claims clips, in 9–18 s.
  */
-const DEFAULT_FALLBACK_MODEL = "google/gemini-3.8-flash";
+const DEFAULT_PRIMARY_MODEL = "google/gemini-3.8-flash";
+/**
+ * Default backup audio model, used when the main model fails. Correct on the English-voice clips,
+ * but on Thai-voice clips it often needs more than the 120 s request limit (2026-10-15).
+ */
+const DEFAULT_FALLBACK_MODEL = "qwen/qwen3.8-omni-flash";
 /** Per-criterion pass mark when the rubric has no criteria (matches the quiz threshold). */
 const DEFAULT_PASSING_SCORE = 70;
 
@@ -158,14 +161,16 @@ export function buildEvaluationPrompt(
  * Adapts an `AIClient` into the `EvaluateRoleplayFn` callback shape, with a
  * two-model fallback.
  *
- * **Main model:** `SALES_AUDIO_EVAL_MODEL` (default `qwen/qwen3.8-omni-flash`)
+ * **Main model:** `SALES_AUDIO_EVAL_MODEL` (default `google/gemini-3.8-flash`)
  * hears the recording and scores it against the rubric in one
  * `generateObjectFromMedia` call.
  *
  * **Backup model:** when the main call fails, the same audio and prompt go to
- * `SALES_AUDIO_EVAL_FALLBACK_MODEL` (default `google/gemini-3.8-flash`) with
- * low reasoning effort, which keeps one score under $0.01 and gave the same
- * scores in the 2026-10-15 test. Both models hear Thai and English speech.
+ * `SALES_AUDIO_EVAL_FALLBACK_MODEL` (default `qwen/qwen3.8-omni-flash`).
+ * Both models hear Thai and English speech.
+ *
+ * Both calls ask for low reasoning effort: it keeps a Gemini score under $0.01
+ * and gave the same scores in the 2026-10-15 test; Qwen ignores it.
  *
  * If both models fail, a `SalesError` with code `EVALUATION_FAILED` is thrown.
  * On either model, the overall score and pass flag come from
@@ -191,21 +196,21 @@ export function aiClientToEvaluateRoleplay(
       process.env.SALES_AUDIO_EVAL_FALLBACK_MODEL ?? DEFAULT_FALLBACK_MODEL;
     const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
     /** Asks one model to evaluate the recording. */
-    const evaluateWith = (model: string, reasoningEffort?: "low") =>
+    const evaluateWith = (model: string) =>
       aiClient.generateObjectFromMedia({
         schema,
         prompt,
         media: audio,
         model,
         temperature: 0.2,
-        ...(reasoningEffort ? { reasoningEffort } : {}),
+        reasoningEffort: "low",
       });
     let result: RoleplayEvaluationResult;
     try {
       result = await evaluateWith(primaryModel);
     } catch (primaryError) {
       try {
-        result = await evaluateWith(fallbackModel, "low");
+        result = await evaluateWith(fallbackModel);
       } catch (fallbackError) {
         // FR-5: log both failures and attach them via `cause`. Log only the
         // message: a parse error can quote model output with trainee speech.

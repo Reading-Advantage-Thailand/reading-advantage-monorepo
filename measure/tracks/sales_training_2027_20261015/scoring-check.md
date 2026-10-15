@@ -205,3 +205,6 @@ faster: the R1 text is 46 s (57 s with the English voice).
   because OpenRouter sends the headers at once. The adapter now names the time-out.
 - **Effect on the decided order:** with Qwen as the main model, most Thai attempts wait 120 s for
   the time-out, and then the backup scores them in 10–20 s.
+
+**Owner decision (2026-10-16):** main `google/gemini-3.8-flash`, backup `qwen/qwen3.8-omni-flash`;
+both calls ask for low reasoning effort (Qwen ignores it).
