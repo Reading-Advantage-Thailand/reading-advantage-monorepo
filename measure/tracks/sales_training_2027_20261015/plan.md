@@ -37,9 +37,9 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
     - [x] Red tests: criteria fallback without reuse, duplicate rubric names, prompt copy rule, scoring error outside the model fallback, logs without error objects, `audio/mp4` → `m4a`, private API key, recorder blob type from the browser recorder
     - [x] Implement the fixes; live check: Safari-style MP4/AAC accepted as `m4a` and `mp4` by both models (2026-10-15)
     - [x] Tests, `tsc`, and eslint for `packages/ai`, `packages/domain`, `apps/sales-advantage`
-- [b] Task: Deploy a no-traffic candidate — deferred:owner-ok-for-secret-manager-and-deploy
-    - [ ] Add the new model secret versions in Secret Manager (owner OK first)
-    - [ ] Build and deploy with the existing Sales release path (`scripts/promote-sales-candidate.sh`), no traffic
+- [b] Task: Deploy a no-traffic candidate — deferred:after-primary-cutover (owner 2026-10-15: the candidate carries 61 Sales commits since the 2026-07-19 deploy and 30 migrations on the Sales DB, which shares the Cloud SQL instance with Primary; run after the cutover, last date 2026-10-20)
+    - [ ] Add a `qwen/qwen3.8-omni-flash` version to `SALES_AUDIO_EVAL_MODEL` and create `SALES_AUDIO_EVAL_FALLBACK_MODEL` (`google/gemini-2.5-flash-lite`) with the runtime service account's access (owner OK given 2026-10-15 for after the cutover)
+    - [ ] Run the full Sales release pipeline (`cloudbuild.yaml`: curriculum backup, migrations, curriculum verify, `candidate` tag, no traffic); promotion only with `scripts/promote-sales-candidate.sh` after the acceptance note says `status: pass`
     - [ ] Update `measure/deployment-status.md`
 - [x] Task: Generate docs and doctor
     - [x] Run `measure/generate.sh` and `measure/doctor.sh` — generate: no route or package change from this track (diff only the revision line and one master Primary route), so nothing committed; doctor: 4 failures that exist on master (A13 stale `agents_md_audit_science_advantage_20260603`; missing `measure/automation-supervisor.py`; `[ ]` markers in 55 other plans; architecture manifest of 2026-09-08 with 598 later source commits — not refreshed, hashing policy); this plan passes the marker guard

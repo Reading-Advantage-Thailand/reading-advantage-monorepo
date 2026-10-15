@@ -4,7 +4,7 @@
 > **Type:** feature (Story S1 is a bug fix)
 > **Created:** 2026-10-15
 > **Owner:** Daniel Bo
-> **Agreed with:** the PR session (advantage-pr), 2026-10-15
+> **Agreed with:** the PR session (advantage-pr), 2026-10-15 — products, priorities, and owner decisions agreed; the story list, branches, and work split were sent to PR on 2026-10-15 (reply pending)
 > **Worktree:** `~/Desktop/rama-worktrees/sales-training`, branch `sales/training-2027` from `origin/master` `0a29d574e`
 
 ## Overview
