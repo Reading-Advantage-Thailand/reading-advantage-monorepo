@@ -200,3 +200,25 @@ Each row: the draft statement, where it is, and the nearest line in the pinned a
 | 194 | tutor-recruitment / Tutor Recruitment Quiz / quiz | Every baht figure is arithmetic from the formula, labelled as an example. | — | — | general-sales |
 | 195 | tutor-recruitment / Tutor Recruitment Quiz / quiz | Tutor A's GV is 30,000 baht at 55.6% = 16,682 baht, minus Tutor B's payout of 8,820 baht: 7,862 baht. | `09-sales-enablement/facilitator-recruitment-kit.md:64` | \| Tutor A \| 30,000 baht (12,000 + 18,000) \| 55.6% \| 16,682 − 8,820 = **7,862 baht** \| | check |
 | 196 | tutor-recruitment / Tutor Recruitment Quiz / quiz | The app also shows the 3% withholding tax. | `09-sales-enablement/sales-training-scope-2027.md:75` | - The tutor app shows the payout before a 3% withholding tax. |  |
+
+## Review result (PR, 2026-10-15)
+
+PR reviewed this packet (draft `84b151b7f`) against the pin `e6f7cc2`. Result: no claim violation and no text fix. PR checked the commission arithmetic (including 200,000 GV at 67.6% = 135,202 baht) and the differential example (8,820 / 7,862 / 5,520).
+
+| Row | Packet correction |
+|---|---|
+| 176, 194 | Not general-sales; source facilitator-recruitment-kit.md:124 (also :15) |
+| 180 | Source is facilitator-recruitment-kit.md:68–73, not :212 |
+| 23 | line-trial-facilitator-script.md:199–203 |
+| 68 | line-trial-facilitator-script.md:129–134 |
+| 100, 102 | tutor-family-sales-playbook.md:22 and :121 |
+| 104 | tutor-family-sales-playbook.md:146 |
+| 105 | sales-training-scope-2027.md:52–55 |
+| 113, 114 | tutor-family-sales-playbook.md:74–79 and :169 |
+| 126 | sales-training-scope-2027.md:55 |
+| 132 | line-trial-facilitator-script.md:195 |
+| 186 | facilitator-recruitment-kit.md:124 |
+| 192 | facilitator-recruitment-kit.md:37–38 |
+| 195 | facilitator-recruitment-kit.md:64 |
+
+Optional, done in `19ea64ba1`: S6 "How a new tutor starts" step 1 has the official LINE and phone contacts (kit :191). Kept on purpose: "Avoid the ฿2,500 that some app screens show" (playbook :65) and "Primary Advantage Quest 5: not printed" (playbook :79).

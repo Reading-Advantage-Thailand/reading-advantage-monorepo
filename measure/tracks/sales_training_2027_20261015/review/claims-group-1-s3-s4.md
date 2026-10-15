@@ -146,3 +146,22 @@ Each row: the draft statement, where it is, and the nearest line in the pinned a
 | 140 | product-knowledge-2027 / Product Knowledge Quiz / quiz | Tutor Advantage is a tutor-led class network, not an AI tutor. | `09-sales-enablement/tutor-family-sales-playbook.md:27` | Tutor Advantage is a tutor-led class network. It is not an AI tutor. |  |
 | 141 | product-knowledge-2027 / Product Knowledge Quiz / quiz | The full book name and its CEFR level. | `09-sales-enablement/line-trial-facilitator-script.md:27` | - The parent hears the book name and its CEFR level. Never say GSE, Pearson, or YLE. |  |
 | 142 | product-knowledge-2027 / Product Knowledge Quiz / quiz | Parents hear the full book name and its CEFR level only. | `09-sales-enablement/sales-training-scope-2027.md:48` | **Placement (Daniel, 2026-10-15).** A placement gives a program and a book level from 1 to 4. Children use Primary Advantage books. Secondary students use Reading Advantage books. Parents hear CEFR names only. If the boo |  |
+
+## Review result (PR, 2026-10-15)
+
+PR reviewed this packet (rows as above, draft `84b151b7f`) against the pin `e6f7cc2`. Result: no hard violation of scope §7; 6 fixes and 1 optional item. Fix commit: `19ea64ba1`.
+
+| Row or line | Finding | Fix in `19ea64ba1` |
+|---|---|---|
+| 1, 2, 20, 22 | General-sales numbers with a named book and year; not product claims | Kept. Rule: add no percentage from these books |
+| 58 | The break-even target is internal company finance (pricing.md:46) | Sentence deleted; "The direct-to-family channel is the 2027 focus." kept |
+| 107–112 | §7 quote | Confirmed word for word (scope.md:93–101) |
+| 113 | Not general-sales; source facilitator-recruitment-kit.md:124 (also :15, :200) | Flag only; packet filter fixed |
+| Claims lesson | The school rubric scores "a discount, a free period, or a response time", but the lesson did not state it | Added: "In a school sale, item 7 is: a discount, a free period, or a promised response time." |
+| Feel-felt-found | "Other parents have felt the same way" is a claim about other customers | Added: say it only when it is true for you |
+| Challenger teach | "Many private schools tell me…" is false for a new seller | Added the market line (demo-scripts.md:197) |
+| 25 | "begins with a printed book at their own level" is not always true | Replaced: "The trial finds the printed book that your child starts with" (line-trial-facilitator-script.md:15) |
+| 93–95 | Trainees cannot read advantage-pr | "Before each sales week, ask Daniel or Phikul which of these facts changed." |
+| Optional | British and American spelling mixed | American spelling throughout |
+
+Personas: OK. Thai (claims only): no claim problem; Daniel checks the language.
