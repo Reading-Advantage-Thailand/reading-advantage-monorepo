@@ -199,7 +199,8 @@ _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[loca
 - [b] Task: Implement — resolver, `LessonContent` components, the lesson query, the seed check; JSDoc — deferred:start-gate-freeze-end
 - [b] Task: Media references — deferred:pr-media-files
     - [ ] Upload the PR infographics and decks to the Sales bucket at release, with the owner's OK; put the keys and the Thai and English alt text in the lessons
-    - [ ] Put the YouTube links of the S5, S6, and S7 videos (TH and EN) in the lessons; the S4 video waits for its link from PR
+    - [x] Put the YouTube links of the S5, S6, and S7 videos (TH and EN) in the lessons (M5.1, M6.2, M7.1: one "Video —" line after the TL;DR)
+    - [ ] The S4 video and the new videos of the video list: each link goes in its lesson when PR sends it
     - [ ] Draft the screenshot → lesson list from PR's starting list and the 9 screenshot rules (spec.md S11), with each crop marked; PR checks it
     - [ ] Upload the checked (and cropped) screenshots under `training-media/v1/th/`; put their keys and Thai and English alt text in the lessons
 - [b] Task: Generate docs and doctor — deferred:start-gate-freeze-end

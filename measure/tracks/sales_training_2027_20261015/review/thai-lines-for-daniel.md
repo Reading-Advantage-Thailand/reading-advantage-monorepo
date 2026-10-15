@@ -1,5 +1,7 @@
 # Thai lines for Daniel's check
 
+**Daniel, 2026-10-16:** "The Thai I've seen all looks great." The formal Thai sign-off stays with the S10 approval (`curriculum-approval.json`).
+
 Commit `84b151b7f`. **Updated 2026-10-16 (tone pass, Daniel's feedback):** Part A rows 9 and 13 and Part B rows 42 and 46 are shorter (no "do not promise" or "not a promise" part; the RR1 lesson uses the same line as row 42); Part B rows 49 and 50 are removed; M6.3 is now "Answering a Future Tutor's Questions". The test-scores answer says "คลาสกลุ่มเล็กกับครูในพื้นที่" (a small class with a local teacher) in place of "ครูติวเตอร์ที่สอนตามแผนทุกบท" (PR source line-trial-facilitator-script.md v1.5, advantage-pr `7ed5a4b`): Part A row 26, which is also "The line" of R5. Part A: Thai text that Claude wrote for the curriculum (not in the advantage-pr pin e6f7cc22e). Part B: Thai text copied from the PR sources (PR marked these "ready for Daniel's check" in the sources).
 
 ## Part A — new Thai text (Claude, 2026-10-15)

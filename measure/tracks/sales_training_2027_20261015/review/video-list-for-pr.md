@@ -82,7 +82,7 @@ Each video is in Thai and English (Thai first for the Family branch), 1–3 minu
 ## 4. Questions for Daniel
 
 1. Which of the new videos do you approve (all, Must only, or a list)?
-2. YouTube visibility: the six uploads are public. N8–N11 teach internal sales and recruitment
+2. ~~YouTube visibility~~ Decided (Daniel, 2026-10-16): "I have made all the videos unlisted." Before: the six uploads were public. N8–N11 teach internal sales and recruitment
    answers. Public, or unlisted? Fact for N5 (a trainer video): if it also names the words that a
    trainer listens for, it includes "Pearson", "GSE", and "YLE". AGENTS.md: these names never
    appear in external material, and a public video is external material.

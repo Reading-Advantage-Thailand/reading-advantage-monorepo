@@ -1197,6 +1197,8 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
 
 **TL;DR:** A tutor sells one Tutor Advantage class package to a family: one printed book, about 25 hours, from 3,000 baht. The sale has five steps, from the first contact to the next book.
 
+**Video — Selling Tutor Advantage to a Family:** [Thai](https://www.youtube.com/watch?v=-hFxfRmQ3wM) · [English](https://www.youtube.com/watch?v=lvc979ref6M)
+
 ## What the parent buys
 
 - **One class package = one printed workbook**, about 25 hours, in a small group with a local tutor. 14 lessons in each book.
@@ -1824,6 +1826,8 @@ What you do not do: write lesson plans, design the curriculum, or mark every dig
 
 **TL;DR:** Talk openly and directly about the commission scale with a person who may become a tutor. The scale comes from the Tutor Advantage payout code, with the production base rate 0.5. Every baht figure is arithmetic from that formula.
 
+**Video — Tutor Advantage Commission Scale:** [Thai](https://www.youtube.com/watch?v=-d2WBnLCVOk) · [English](https://www.youtube.com/watch?v=54fsgdoxzs8)
+
 Commission talk is for tutor recruits only. Never talk about commission with a parent.
 
 ## How the rate works
@@ -2181,6 +2185,8 @@ In the recruitment roleplays, commission talk is allowed: say each baht figure a
         content: `# The 2027 School Sale: Rules for Every Conversation
 
 **TL;DR:** Sell Primary Advantage with Blended Learning (or App-Only) to primary schools. The pilot is one grade level for one semester. Quote the two standard prices, and propose the pilot.
+
+**Video — Primary Advantage Selling to a School:** [Thai](https://www.youtube.com/watch?v=PH5D9niLoUg) · [English](https://www.youtube.com/watch?v=o5HDBZBge-w)
 
 ## The rules (Daniel, 2026 decisions)
 

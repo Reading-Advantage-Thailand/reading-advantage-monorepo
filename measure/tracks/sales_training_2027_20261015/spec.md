@@ -312,6 +312,7 @@ It is a fact that expires (PR scope doc §8). Rules:
   - S7 school sale: th https://www.youtube.com/watch?v=PH5D9niLoUg, en https://www.youtube.com/watch?v=o5HDBZBge-w
   - Playlist: https://www.youtube.com/playlist?list=PLVb-AbiIbmlA
   - S4 `one-catalogue-two-channels`: no link (not uploaded). The S4 video slot stays empty until PR sends the link.
+  - **Visibility (Daniel, 2026-10-16):** "I have made all the videos unlisted." A lesson link still plays an unlisted video.
   - Decks and infographics keep the bucket rule, and each item waits for Daniel's acceptance and his Thai check.
 
 PR's starting list (I draft the full list after the text source set; PR checks it):
