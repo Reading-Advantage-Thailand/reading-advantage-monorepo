@@ -33,15 +33,15 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
     - [x] Tests green; package `tsc` and eslint for `packages/ai`, `packages/domain`, `apps/sales-advantage`
 - [x] Task: Live model check before deploy
     - [x] Run the scratchpad Thai test clips (WebM) through the new adapter code with the production models; record scores, time, and cost in `measure/tracks/sales_training_2027_20261015/scoring-check.md`
-- [ ] Task: Deploy a no-traffic candidate
+- [b] Task: Deploy a no-traffic candidate — deferred:owner-ok-for-secret-manager-and-deploy
     - [ ] Add the new model secret versions in Secret Manager (owner OK first)
     - [ ] Build and deploy with the existing Sales release path (`scripts/promote-sales-candidate.sh`), no traffic
     - [ ] Update `measure/deployment-status.md`
-- [ ] Task: Generate docs and doctor
-    - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
-    - [ ] Add a dated note to `measure/tech-stack.md`: OpenRouter audio goes through chat completions with `input_audio`
-    - [ ] Add a lessons-learned entry: the `@ai-sdk/openai` default (Responses) rejects audio; test media calls against the live provider once
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Roleplay scoring works in Thai and English' (Protocol in workflow.md)
+- [x] Task: Generate docs and doctor
+    - [x] Run `measure/generate.sh` and `measure/doctor.sh` — generate: no route or package change from this track (diff only the revision line and one master Primary route), so nothing committed; doctor: 4 failures that exist on master (A13 stale `agents_md_audit_science_advantage_20260603`; missing `measure/automation-supervisor.py`; `[ ]` markers in 55 other plans; architecture manifest of 2026-09-08 with 598 later source commits — not refreshed, hashing policy); this plan passes the marker guard
+    - [x] Add a dated note to `measure/tech-stack.md`: OpenRouter audio goes through chat completions with `input_audio`
+    - [b] Add a lessons-learned entry: the `@ai-sdk/openai` default (Responses) rejects audio, and SDK-level mocks hid it; test media calls against the live provider once — deferred:lessons-learned-over-50-line-cap (57 lines on master; add at track closeout after a prune)
+- [b] Task: Measure - User Manual Verification 'Phase S1: Roleplay scoring works in Thai and English' (Protocol in workflow.md) — deferred:owner-browser-recording
     - [ ] The owner records one Thai and one English roleplay in a real browser on the candidate; each gets a score, feedback, and a transcript excerpt in its language
     - [ ] Promote the candidate to 100% only after the owner says yes
 
@@ -49,92 +49,92 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
 _Story ref: spec.md#story-s2-the-curriculum-uses-the-new-pr-source-set_
 _Start gate: the PR source-set commit exists and the feature freeze has ended._
 
-- [ ] Task: Contract — the new document list
+- [b] Task: Contract — the new document list — deferred:start-gate-pr-source-set-and-freeze-end
     - [ ] List the pinned documents from the PR scope doc (`09-sales-enablement/sales-training-scope-2027.md`) in the candidate generator input
-- [ ] Task: Test — candidate generation
+- [b] Task: Test — candidate generation — deferred:start-gate-pr-source-set-and-freeze-end
     - [ ] Update `scripts/curriculum-release.test.ts` and the candidate contract tests for the new commit and document list (red first)
-- [ ] Task: Implement — regenerate `release-candidate.json`
+- [b] Task: Implement — regenerate `release-candidate.json` — deferred:start-gate-pr-source-set-and-freeze-end
     - [ ] Run `curriculum:release-candidate` against the PR commit; keep the existing source-hash fields only (hashing policy: no new or wider hashes)
-- [ ] Task: Generate docs and doctor
-- [ ] Task: Measure - User Manual Verification 'Phase S2: The curriculum uses the new PR source set' (Protocol in workflow.md)
+- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S2: The curriculum uses the new PR source set' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
 
 ## Phase S3: General selling modules are correct
 _Story ref: spec.md#story-s3-general-selling-modules-are-correct_
 
-- [ ] Task: Contract — content rules
+- [b] Task: Contract — content rules — deferred:start-gate-pr-source-set-and-freeze-end
     - [ ] Add a seed content test: forbidden phrases ("Director Pim", "PSP school", "80% of reps", "48 hours"), pilot shape wording, no free period, no discount
-- [ ] Task: Test — red run of the content test against the current seed
-- [ ] Task: Implement — edit modules 1–3 in `apps/sales-advantage/scripts/static-seed.ts`
+- [b] Task: Test — red run of the content test against the current seed — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Implement — edit modules 1–3 in `apps/sales-advantage/scripts/static-seed.ts` — deferred:start-gate-pr-source-set-and-freeze-end
     - [ ] Remove the unsourced lines; set the pilot shape to one grade level, one semester; check each statistic against a source
     - [ ] Rubric rows: 3–5 criteria, weights sum to 1
-- [ ] Task: Generate docs and doctor
-- [ ] Task: Measure - User Manual Verification 'Phase S3: General selling modules are correct' (Protocol in workflow.md)
+- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S3: General selling modules are correct' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
 
 ## Phase S4: Product knowledge matches strategy v1.8
 _Story ref: spec.md#story-s4-product-knowledge-matches-strategy-v18_
 
-- [ ] Task: Contract — product facts table in the content test (states, prices, Managed Service line, book-name prefix, CEFR-only)
-- [ ] Task: Test — red run against the current "9-Product Suite" lesson
-- [ ] Task: Implement — replace the product module lessons and quiz from the PR sources
-- [ ] Task: Generate docs and doctor
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Product knowledge matches strategy v1.8' (Protocol in workflow.md)
+- [b] Task: Contract — product facts table in the content test (states, prices, Managed Service line, book-name prefix, CEFR-only) — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Test — red run against the current "9-Product Suite" lesson — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Implement — replace the product module lessons and quiz from the PR sources — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S4: Product knowledge matches strategy v1.8' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
 
 ## Phase S5: Tutor family sale (Thai first, with English)
 _Story ref: spec.md#story-s5-tutor-family-sale-thai-first-with-english_
 
-- [ ] Task: Contract — placement-to-book map and roleplay content shape
+- [b] Task: Contract — placement-to-book map and roleplay content shape — deferred:start-gate-pr-source-set-and-freeze-end
     - [ ] Placement map (program + book level 1–4 → nearest printed book) as seed data with a test
     - [ ] Bilingual scenario text: Thai first, English below, in the existing fields (no schema change)
-- [ ] Task: Test — red tests for the map, the books on sale, the Reedy wording, and no B1+ close
-- [ ] Task: Implement — Family module lessons, roleplays (first sale, price objection, "already at a tutor school", next book), quiz, and rubrics from the PR playbook and success criteria (claims criterion passingScore 90)
-- [ ] Task: Live check — score one Thai and one English recording for each new Tutor roleplay with the S1 scorer; record results in `scoring-check.md`
-- [ ] Task: Generate docs and doctor
-- [ ] Task: Measure - User Manual Verification 'Phase S5: Tutor family sale (Thai first, with English)' (Protocol in workflow.md)
+- [b] Task: Test — red tests for the map, the books on sale, the Reedy wording, and no B1+ close — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Implement — Family module lessons, roleplays (first sale, price objection, "already at a tutor school", next book), quiz, and rubrics from the PR playbook and success criteria (claims criterion passingScore 90) — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Live check — score one Thai and one English recording for each new Tutor roleplay with the S1 scorer; record results in `scoring-check.md` — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S5: Tutor family sale (Thai first, with English)' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
 
 ## Phase S6: Tutor recruitment
 _Story ref: spec.md#story-s6-tutor-recruitment_
 _Gate for the earnings example: PR's Q-SV-16 check._
 
-- [ ] Task: Contract — commission facts from the PR recruitment kit v1.2 in the content test
-- [ ] Task: Test — red tests for the commission scale and for "no earnings example without the Q-SV-16 check"
-- [ ] Task: Implement — recruitment lesson, roleplay, and rubric (an invented earnings figure fails)
-- [ ] Task: Generate docs and doctor
-- [ ] Task: Measure - User Manual Verification 'Phase S6: Tutor recruitment' (Protocol in workflow.md)
+- [b] Task: Contract — commission facts from the PR recruitment kit v1.2 in the content test — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Test — red tests for the commission scale and for "no earnings example without the Q-SV-16 check" — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Implement — recruitment lesson, roleplay, and rubric (an invented earnings figure fails) — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S6: Tutor recruitment' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
 
 ## Phase S7: School sale with Primary Advantage and Blended Learning
 _Story ref: spec.md#story-s7-school-sale-with-primary-advantage-and-blended-learning_
 
-- [ ] Task: Contract — school facts in the content test (Primary Advantage + Blended Learning, prices, demo flows, no unshipped features, Boonyathat consent rule)
-- [ ] Task: Test — red run against the current Reading Advantage modules
-- [ ] Task: Implement — School module lessons, roleplays, quizzes, and rubrics from the PR demo scripts and rep onboarding
-- [ ] Task: Generate docs and doctor
-- [ ] Task: Measure - User Manual Verification 'Phase S7: School sale with Primary Advantage and Blended Learning' (Protocol in workflow.md)
+- [b] Task: Contract — school facts in the content test (Primary Advantage + Blended Learning, prices, demo flows, no unshipped features, Boonyathat consent rule) — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Test — red run against the current Reading Advantage modules — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Implement — School module lessons, roleplays, quizzes, and rubrics from the PR demo scripts and rep onboarding — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S7: School sale with Primary Advantage and Blended Learning' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
 
 ## Phase S8: Role paths in one course
 _Story ref: spec.md#story-s8-role-paths-in-one-course_
 _Blast radius (grep): `deriveSalesLearningAccess` (callers: `packages/domain/src/sales/learning-path.ts`; test: `packages/domain/src/__tests__/sales-progression.test.ts`)._
 
-- [ ] Task: Contract — an optional module prerequisite (core vs branch) in the seed data and the progression input
-- [ ] Task: Test — red tests: both branches unlock after the core; a linear course without branch data does not change
-- [ ] Task: Implement — `packages/domain/src/sales/progression.ts`, the seed, and the dashboard labels (EN/TH messages)
-- [ ] Task: Generate docs and doctor
-- [ ] Task: Measure - User Manual Verification 'Phase S8: Role paths in one course' (Protocol in workflow.md)
+- [b] Task: Contract — an optional module prerequisite (core vs branch) in the seed data and the progression input — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Test — red tests: both branches unlock after the core; a linear course without branch data does not change — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Implement — `packages/domain/src/sales/progression.ts`, the seed, and the dashboard labels (EN/TH messages) — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S8: Role paths in one course' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
 
 ## Phase S9: Mastery bindings follow the new course
 _Story ref: spec.md#story-s9-mastery-bindings-follow-the-new-course_
 
-- [ ] Task: Contract — confirm with `sales_mastery_consumer_20260810` which binding fields change (module slug, lesson order, rubric refs)
-- [ ] Task: Test — red run of the sales-knowledge tests against the new seed
-- [ ] Task: Implement — regenerate the binding release with `packages/sales-knowledge/src/generator.ts`; change only the files the existing contract requires
-- [ ] Task: Generate docs and doctor
-- [ ] Task: Measure - User Manual Verification 'Phase S9: Mastery bindings follow the new course' (Protocol in workflow.md)
+- [b] Task: Contract — confirm with `sales_mastery_consumer_20260810` which binding fields change (module slug, lesson order, rubric refs) — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Test — red run of the sales-knowledge tests against the new seed — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Implement — regenerate the binding release with `packages/sales-knowledge/src/generator.ts`; change only the files the existing contract requires — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S9: Mastery bindings follow the new course' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
 
 ## Phase S10: Release the new curriculum
 _Story ref: spec.md#story-s10-release-the-new-curriculum_
 
-- [ ] Task: PR claims review of the drafted lessons; fix each finding
-- [ ] Task: Daniel checks all Thai text
-- [ ] Task: Daniel completes `curriculum-approval.json` and puts its SHA-256 in Secret Manager (existing process)
-- [ ] Task: Run `seed:production-curriculum` and `verify:production-curriculum`; deploy through the existing Sales release path
-- [ ] Task: Update `measure/deployment-status.md`, `measure/tracks.md`, and close the predecessor rows that this track replaces
-- [ ] Task: Measure - User Manual Verification 'Phase S10: Release the new curriculum' (Protocol in workflow.md)
+- [b] Task: PR claims review of the drafted lessons; fix each finding — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Daniel checks all Thai text — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Daniel completes `curriculum-approval.json` and puts its SHA-256 in Secret Manager (existing process) — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Run `seed:production-curriculum` and `verify:production-curriculum`; deploy through the existing Sales release path — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Update `measure/deployment-status.md`, `measure/tracks.md`, and close the predecessor rows that this track replaces — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S10: Release the new curriculum' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
