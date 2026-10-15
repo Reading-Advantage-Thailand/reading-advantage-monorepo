@@ -274,9 +274,8 @@ describe("S4 — product knowledge matches strategy v1.8", () => {
   it("uses CEFR names only and no level above A2 in a positive line", () => {
     const text = teachingText();
     expect(positiveMentions(text, /\b(?:GSE|Pearson|YLE)\b/)).toEqual([]);
-    expect(
-      positiveMentions(text, /\b(?:B1|B2|C1|C2)\b/).filter((statement) => !/stops at A2/.test(statement)),
-    ).toEqual([]);
+    // PR group 3 review: even the full Primary Advantage range (to B2) fails scope §7 item 4.
+    expect(positiveMentions(text, /\b(?:B1|B2|C1|C2)\b/)).toEqual([]);
   });
 
   it("registers every dated fact as a fact that expires", () => {

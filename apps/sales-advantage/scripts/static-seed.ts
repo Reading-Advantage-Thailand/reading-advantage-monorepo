@@ -75,6 +75,16 @@ export const SALES_CURRICULUM_EXPIRING_FACTS = Object.freeze([
     text: "Reading Advantage Origins 3.1 and 3.2: not printed",
     checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
   },
+  {
+    fact: "Primary Advantage cutover (what is live in a school demo)",
+    text: "Primary Advantage cutover: target weekend of Oct 17/18, last date Oct 20",
+    checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
+  },
+  {
+    fact: "Reedy Preview in Primary Advantage",
+    text: "Reedy Preview in Primary Advantage: only after the cutover passes",
+    checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
+  },
 ]);
 
 const CLAIMS_SOURCE_REF =
@@ -2197,7 +2207,9 @@ Commission talk is allowed in recruitment. A baht figure is allowed only as arit
 - The pilot is **one grade level for one semester**. Whether the pilot is paid or free is not decided (Q-SV-05).
 - **Managed Service:** one line only. "Not sold today. It launches in 2027 only if 1–2 more schools sign." Never pre-sell it.
 - **Science, Math, and Zhongwen Advantage:** "coming programs" with no date (Q-PR-24).
-- Show only features that are live in the Primary Advantage production app on the day of the demo. Before each demo, ask Daniel or Phikul which facts changed.
+- Show only features that are live in the Primary Advantage production app on the day of the demo. Before each demo, ask Daniel or Phikul which facts changed. Two facts decide what is live:
+  - Primary Advantage cutover: target weekend of Oct 17/18, last date Oct 20. Until it passes, the legacy build is production.
+  - Reedy Preview in Primary Advantage: only after the cutover passes. Do not show Reedy in a Primary demo before then.
 - Name Boonyathat, or show its data, only with the school's written consent (Q-SE-03).
 - Promise no response time and no result.
 
@@ -2242,7 +2254,7 @@ Never inflate this number. Never call us "leading" or "number one".`,
 
 **Key facts:**
 
-- CEFR-aligned: Primary Advantage covers Pre-A1 (A0) to B2 in 15 levels, and the active program stops at A2.
+- CEFR-aligned: the active program covers Pre-A1 to A2.
 - Printed workbooks of 14 lessons, each with a digital twin in the app.
 - Scripted lessons: no lesson planning for your teachers.
 - Quarterly fidelity observations and per-school reporting.
@@ -2254,7 +2266,7 @@ Never inflate this number. Never call us "leading" or "number one".`,
 - "Budget is locked this year." → "I understand. What does your English program cost now: textbooks, digital tools, a foreign teacher's salary? Many schools plan the purchase in the February to April procurement window."
 - "We tried apps before, and teachers did not use them." → "We do not give you only software. The workbook comes first: every lesson starts on paper with a fixed lesson plan. We train your teachers, and we observe classes every quarter with a standard form. One person on our team is your school's implementation contact."
 
-**Next step:** "Can we have 45 minutes next week with your academic team? I will show the app and bring printed workbooks." Leave behind the Blended Learning one-pager.
+**Next step:** "Can we have 45 minutes next week with your academic team? I will show the app and bring printed workbooks." Leave behind the school sale deck (PDF).
 
 ## 45-minute standard demo
 
@@ -2280,7 +2292,7 @@ Never inflate this number. Never call us "leading" or "number one".`,
 
 1. **The problem (10 minutes):** foreign-teacher turnover, and materials from different publishers that do not match. Directors cannot see how English performs across grades.
 2. **The catalogue and the channels (15 minutes):** Primary Advantage for schools; the same books reach families through Tutor Advantage; the coming programs have no date.
-3. **Mastery Advantage, the engine (20 minutes):** Knowledge Space Theory and FSRS. It is in production for CodeCamp Advantage. Today, Primary Advantage uses FSRS flashcard scheduling; the knowledge-graph layer is not yet in the Primary Advantage app. Adaptive features are targeted for May 2027.
+3. **Mastery Advantage, the engine (20 minutes):** Knowledge Space Theory and FSRS. It is in production for CodeCamp Advantage. It enters Primary Advantage through tagged content: shadow mode in semester 2 of 2026, adaptive features targeted for May 2027. Today, Primary Advantage uses FSRS flashcard scheduling; the knowledge-graph layer is not yet in the Primary Advantage app.
 4. **Per-school data and reporting (15 minutes):** reading volume, comprehension accuracy, vocabulary progress, and Big 4 fidelity scores. Agree the method for baseline and end-of-semester checks with the school before the semester.
 5. **A phased plan (10 minutes):** semester 1 is the pilot (one grade level, Blended Learning); the next school year adds grades with printed books; later, further levels up to A2 as their books are printed.
 6. **The company boilerplate (5 minutes):** read it word for word.
@@ -2305,11 +2317,11 @@ Never inflate this number. Never call us "leading" or "number one".`,
 
 ## Objection 2: "We bought software before, and nobody used it."
 
-"I hear this from almost every school I visit. We do not sell only a login. One person on our team is your school's implementation contact. Every quarter, we observe classes with a standard form and send you a fidelity report: how many workbook lessons the classes complete, how much the students read, and how closely the lessons follow the Big 4 classroom-fidelity protocol. When a class stops using the program, the app data and the observations show it."
+"We do not sell only a login. One person on our team is your school's implementation contact. Every quarter, we observe classes with a standard form and send you a fidelity report: how many workbook lessons the classes complete, how much the students read, and how closely the lessons follow the Big 4 classroom-fidelity protocol. When a class stops using the program, the app data and the observations show it."
 
 ## Objection 3: "It is too expensive compared to textbooks."
 
-"Let us look at the total cost of English, not only the line item. A textbook does not include a lesson plan for every step, audio for every article, practice in an app, teacher training, or quarterly observation reports. At about 1,500 THB per student per year, Blended Learning includes the printed workbooks, the app, scripted lessons, 2-day teacher training, and quarterly fidelity observations. Let us add up your current English costs together, and compare."
+"Let us look at the total cost of English, not only the line item. A textbook costs less at the start. But a textbook does not include a lesson plan for every step, audio for every article, practice in an app, teacher training, or quarterly observation reports. At about 1,500 THB per student per year, Blended Learning includes the printed workbooks, the app, scripted lessons, 2-day teacher training, and quarterly fidelity observations. Let us add up your current English costs together, and compare."
 
 ## Objection 4: "We want to see results before we commit."
 
