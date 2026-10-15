@@ -33,7 +33,9 @@ const DEFAULT_PASSING_SCORE = 70;
  * Replaces the model's overall score and pass flag with values computed from
  * the rubric: the weighted mean of the criterion scores, and a pass only when
  * every criterion meets its passing score. A rubric criterion the model did
- * not score counts as 0. With no rubric criteria, the model's criteria get
+ * not score counts as 0; each model entry serves one rubric criterion (name
+ * match first, then the unused entries in order when the counts are equal).
+ * With no rubric criteria, the model's criteria get
  * equal weights and the default pass mark.
  * @param result The model's evaluation.
  * @param rubricCriteria The rubric criteria with weights and passing scores.
@@ -44,17 +46,29 @@ export function scoreRoleplayEvaluation(
   rubricCriteria: RubricOutput["criteriaJson"],
 ): RoleplayEvaluationResult {
   const normalize = (text: string) => text.trim().toLowerCase();
+  // Name matches first; each model entry serves one rubric criterion only.
+  const used = new Set<number>();
+  const matchedIndexes = rubricCriteria.map((rubricCriterion) => {
+    const index = result.criteria.findIndex(
+      (c, i) =>
+        !used.has(i) &&
+        normalize(c.criterion) === normalize(rubricCriterion.criterion),
+    );
+    if (index >= 0) used.add(index);
+    return index;
+  });
+  // With equal counts, unmatched criteria take the unused entries in order.
+  const leftovers =
+    result.criteria.length === rubricCriteria.length
+      ? result.criteria.map((_, i) => i).filter((i) => !used.has(i))
+      : [];
   const criteria =
     rubricCriteria.length > 0
-      ? rubricCriteria.map((rubricCriterion, index) => {
+      ? rubricCriteria.map((rubricCriterion, k) => {
+          const index =
+            matchedIndexes[k]! >= 0 ? matchedIndexes[k]! : leftovers.shift();
           const scored =
-            result.criteria.find(
-              (c) =>
-                normalize(c.criterion) === normalize(rubricCriterion.criterion),
-            ) ??
-            (result.criteria.length === rubricCriteria.length
-              ? result.criteria[index]
-              : undefined);
+            index === undefined ? undefined : result.criteria[index];
           return {
             ...rubricCriterion,
             score: scored?.score ?? 0,
@@ -122,6 +136,7 @@ export function buildEvaluationPrompt(
     "",
     "Listen to the attached audio recording and evaluate the rep's delivery, tone, pacing, hesitation, content fidelity, and adherence to the objective.",
     "The recording can be in Thai or English. Write the transcript excerpt in the language spoken.",
+    "Return one criteria entry for each rubric criterion, in rubric order, and copy each criterion text exactly. Add no other criteria; put delivery and tone feedback in the summary.",
     "Score each criterion 0-100. Provide a transcript excerpt (first ~150 words).",
     "Return the structured evaluation matching the schema.",
   ].join("\n");
@@ -162,35 +177,35 @@ export function aiClientToEvaluateRoleplay(
     const fallbackModel =
       process.env.SALES_AUDIO_EVAL_FALLBACK_MODEL ?? DEFAULT_FALLBACK_MODEL;
     const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
-    /** Scores the recording with one model. */
-    const evaluateWith = async (model: string) =>
-      scoreRoleplayEvaluation(
-        await aiClient.generateObjectFromMedia({
-          schema,
-          prompt,
-          media: audio,
-          model,
-          temperature: 0.2,
-        }),
-        rubric.criteriaJson,
-      );
+    /** Asks one model to evaluate the recording. */
+    const evaluateWith = (model: string) =>
+      aiClient.generateObjectFromMedia({
+        schema,
+        prompt,
+        media: audio,
+        model,
+        temperature: 0.2,
+      });
+    let result: RoleplayEvaluationResult;
     try {
-      return await evaluateWith(primaryModel);
+      result = await evaluateWith(primaryModel);
     } catch (primaryError) {
       try {
-        return await evaluateWith(fallbackModel);
+        result = await evaluateWith(fallbackModel);
       } catch (fallbackError) {
-        // FR-5: log both underlying errors and attach them via `cause` so
-        // two-model failures are debuggable.
+        // FR-5: log both failures and attach them via `cause`. Log only the
+        // message: a parse error can quote model output with trainee speech.
+        const message = (error: unknown) =>
+          error instanceof Error ? error.message : String(error);
         console.error(
           "[roleplay-evaluator] Primary model failed:",
           primaryModel,
-          primaryError,
+          message(primaryError),
         );
         console.error(
           "[roleplay-evaluator] Fallback model failed:",
           fallbackModel,
-          fallbackError,
+          message(fallbackError),
         );
         throw new SalesError(
           `Roleplay evaluation failed on both primary (${primaryModel}) and fallback (${fallbackModel}) models`,
@@ -199,5 +214,7 @@ export function aiClientToEvaluateRoleplay(
         );
       }
     }
+    // Outside the model fallback: a scoring error is not a model failure.
+    return scoreRoleplayEvaluation(result, rubric.criteriaJson);
   };
 }

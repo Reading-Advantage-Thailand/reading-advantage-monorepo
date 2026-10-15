@@ -94,7 +94,10 @@ export function RoleplayRecorder({
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
       mr.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        // The browser's real base type (Chrome: webm; Safari: mp4); the route
+        // allows only base types, so drop parameters such as ";codecs=opus".
+        const type = mr.mimeType?.split(";")[0]?.trim() || "audio/webm";
+        const blob = new Blob(chunksRef.current, { type });
         setAudioBlob(blob);
         revokeAudioUrl();
         const nextAudioUrl = URL.createObjectURL(blob);
@@ -131,7 +134,11 @@ export function RoleplayRecorder({
     try {
       const fd = new FormData();
       fd.append("scenarioId", scenario.id);
-      fd.append("audio", audioBlob, "attempt.webm");
+      fd.append(
+        "audio",
+        audioBlob,
+        `attempt.${audioBlob.type.split("/")[1] || "webm"}`,
+      );
       fd.append("durationMs", String(duration * 1000));
       fd.append("consentGiven", "true");
       const res = await fetch("/api/roleplay-attempts", {

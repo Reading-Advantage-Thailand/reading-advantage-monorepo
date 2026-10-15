@@ -100,6 +100,7 @@ describe("OpenRouterProvider.generateObjectFromMedia", () => {
     ["audio/wav", "wav"],
     ["audio/mpeg", "mp3"],
     ["audio/mp3", "mp3"],
+    ["audio/mp4", "m4a"],
   ])("sends %s as format %s", async (mimeType, format) => {
     fetchMock.mockResolvedValueOnce(chatReply(JSON.stringify(validObject)));
     const provider = new OpenRouterProvider({ apiKey: "test-key" });
@@ -205,6 +206,14 @@ describe("OpenRouterProvider.generateObjectFromMedia", () => {
         media: { buffer: audioBuffer, mimeType: "audio/webm" },
       }),
     ).rejects.toMatchObject({ code: "PROVIDER_ERROR", message: expect.stringMatching(/timeout/) });
+  });
+});
+
+describe("OpenRouterProvider API key", () => {
+  it("keeps the API key out of the object's properties and JSON", () => {
+    const provider = new OpenRouterProvider({ apiKey: "secret-test-key" });
+    expect(Object.keys(provider)).not.toContain("apiKey");
+    expect(JSON.stringify(provider)).not.toContain("secret-test-key");
   });
 });
 

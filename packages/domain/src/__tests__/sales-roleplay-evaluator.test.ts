@@ -75,6 +75,8 @@ describe("buildEvaluationPrompt language", () => {
     const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
     expect(prompt).toContain("Thai or English");
     expect(prompt).toContain("language spoken");
+    expect(prompt).toContain("one criteria entry for each rubric criterion");
+    expect(prompt).toContain("copy each criterion text exactly");
   });
 });
 

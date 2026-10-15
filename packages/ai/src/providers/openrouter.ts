@@ -49,6 +49,8 @@ const AUDIO_FORMATS: Record<string, string> = {
   "audio/wav": "wav",
   "audio/mpeg": "mp3",
   "audio/mp3": "mp3",
+  // Safari records AAC in MP4; both default models accept it as m4a (2026-10-15).
+  "audio/mp4": "m4a",
 };
 
 /**
@@ -86,10 +88,11 @@ export function stripOpenRouterPrefix(modelId: string): string {
 export class OpenRouterProvider implements AIClientWithProvenance {
   private readonly client: ReturnType<typeof createOpenAI>;
   private readonly defaultModel: string;
-  private readonly apiKey: string;
+  // ES private field: the key never appears in the object's keys or JSON.
+  readonly #apiKey: string;
 
   constructor(config: OpenRouterProviderConfig) {
-    this.apiKey = config.apiKey;
+    this.#apiKey = config.apiKey;
     this.client = createOpenAI({
       apiKey: config.apiKey,
       baseURL: OPENROUTER_BASE_URL,
@@ -244,7 +247,7 @@ export class OpenRouterProvider implements AIClientWithProvenance {
       response = await fetch(`${OPENROUTER_BASE_URL}/chat/completions`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.#apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
