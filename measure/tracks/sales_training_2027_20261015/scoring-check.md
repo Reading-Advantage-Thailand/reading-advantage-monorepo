@@ -208,3 +208,51 @@ faster: the R1 text is 46 s (57 s with the English voice).
 
 **Owner decision (2026-10-16):** main `google/gemini-3.8-flash`, backup `qwen/qwen3.8-omni-flash`;
 both calls ask for low reasoning effort (Qwen ignores it).
+
+## 2026-10-16 — transcript check and 4 more clips (second PR review)
+
+PR asked for 3 more checks: (1) do the Gemini transcripts agree with the recordings; (2) one clip
+for claims item 1 (an outcome promise without "รับประกัน" and without a percentage) and one for
+item 2 (false urgency only); (3) the claims criterion on a school roleplay where the approved
+Managed Service line is correct (`static-seed.ts`, Director Anong).
+
+New clips: `r3-th-c-outcome` ("เรียนกับเราแล้ว น้องจะพูดภาษาอังกฤษได้คล่องภายในสามเดือนค่ะ"),
+`r1-th-c-urgency` ("ราคานี้ใช้ได้ถึงวันศุกร์นี้เท่านั้นนะคะ"), `pk2-en` (the approved line "Managed
+Service is not sold today. It launches in 2027 only if 1 to 2 more schools sign."), and
+`pk2-en-c-presell` (that line changed to "Yes, we can run the English classes for you with our own
+teachers from May."). Thai clips: `Thai_Optimistic_girl`; English clips: `English_Graceful_Lady`.
+
+**Transcript check:** the run saved each full transcript and the prompt. Precision = the part of the
+transcript that matches the clip text (or the prompt text), after spaces and punctuation are
+removed. A transcript agrees when its clip precision is 0.90 or more and higher than its prompt
+precision. For a claim clip, "added line" is the part of the added claim that the transcript has.
+
+| Clip | Score | Claims | Precision clip / prompt | Added line | Agrees |
+|---|---|---|---|---|---|
+| `r3-th-c-outcome` | 80 fail | 0 | 1.00 / 0.35 | 1.00 | yes |
+| `r1-th-c-urgency` | 80 fail | 0 | 0.99 / 0.36 | 1.00 | yes |
+| `pk2-en` | 100 pass | 100 | 0.99 / 0.65 | — | yes |
+| `pk2-en-c-presell` | 53 fail | 0 | 1.00 / 0.58 | 1.00 | yes |
+| `r5-th-weak` | 10 fail | 0 | 1.00 / 0.14 | — | yes |
+| `r3-th-c-name` | 68 fail | 0 | 0.99 / 0.41 | the full name is absent | yes |
+| `r4-th-c-level` | 80 fail | 0 | 1.00 / 0.23 | 1.00 | yes |
+| `r1-th-c-reedy` | 80 fail | 0 | 0.98 / 0.34 | 0.92 | yes |
+| `r5-th-c-pearson` | 69 fail | 0 | 1.00 / 0.39 | 1.00 | yes |
+| `r2-th-c-earnings` | 80 fail | 0 | 1.00 / 0.28 | 0.85 | yes |
+| `r1-th-c-best` | 80 fail | 0 | 0.99 / 0.35 | 0.92 | yes |
+| `r4-th-c-science` | 80 fail | 0 | 1.00 / 0.25 | 1.00 | yes |
+| `r1-th` | 100 pass | 100 | 0.99 / 0.38 | — | yes |
+| `r2-th` | 100 pass | 100 | 1.00 / 0.31 | — | yes |
+| `r3-th` | 100 pass | 100 | 1.00 / 0.40 | — | yes |
+| `r4-th` | 100 pass | 100 | 0.96 / 0.24 | — | yes |
+| `r5-th` | 100 pass | 100 | 1.00 / 0.41 | — | yes |
+| `rr1-th` | 100 pass | 100 | 1.00 / 0.37 | — | yes |
+| `rr2-th` | 100 pass | 100 | 0.99 / 0.37 | — | yes |
+| `rr3-th` | 100 pass | 100 | 0.98 / 0.36 | — | yes |
+
+- `google/gemini-3.8-flash` with low reasoning: 20 of 20 correct, 20 of 20 transcripts agree;
+  9–15 s and $0.0049–0.0062 for each score.
+- All 9 claims items now have a single-claim clip, and the claims criterion was 0 on each.
+- The approved Managed Service line passed (claims 100); the pre-sell failed (claims 0).
+- Below 1.00, "added line" shows only spelling changes in the transcript: "Reedy" → "รี้ดดี้",
+  "40 เปอร์เซ็นต์" → "40%", "อันดับหนึ่ง" → "อันดับ 1". The claims criterion was 0 on these clips.
