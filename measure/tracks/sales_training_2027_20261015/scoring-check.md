@@ -256,3 +256,18 @@ precision. For a claim clip, "added line" is the part of the added claim that th
 - The approved Managed Service line passed (claims 100); the pre-sell failed (claims 0).
 - Below 1.00, "added line" shows only spelling changes in the transcript: "Reedy" → "รี้ดดี้",
   "40 เปอร์เซ็นต์" → "40%", "อันดับหนึ่ง" → "อันดับ 1". The claims criterion was 0 on these clips.
+
+## 2026-10-16 — R5 criterion "What we give" (tone pass)
+
+The R5 skill criterion now names "a small class with a local teacher" (PR source
+`tutor-family-sales-playbook.md` 1.1). The claims criteria and the prompt did not change. New
+clip `r5-th-v2`: the R5 strong answer with "คลาสกลุ่มเล็กกับครูในพื้นที่". Rows from the changed
+seed (`buildStaticSalesCurriculumRows`), `google/gemini-3.8-flash` with low reasoning:
+
+| Clip | Score | Criteria | Result |
+|---|---|---|---|
+| `r5-th-v2` (new wording) | 100 | 100, 100, 100, 100 | pass |
+| `r5-th` (old wording) | 94 | 100, 80, 100, 100 | pass |
+| `r5-th-weak` | 10 | 0, 0, 100, 0 | fail |
+| `r5-th-c-pearson` | 63 | 100, 75, 100, 0 | fail (claims 0) |
+

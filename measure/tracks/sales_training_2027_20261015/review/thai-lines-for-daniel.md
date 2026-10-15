@@ -1,6 +1,6 @@
 # Thai lines for Daniel's check
 
-Commit `84b151b7f`. **Updated 2026-10-16 (tone pass, Daniel's feedback):** Part A rows 9 and 13 and Part B rows 42 and 46 are shorter (no "do not promise" or "not a promise" part; the RR1 lesson uses the same line as row 42); Part B rows 49 and 50 are removed; M6.3 is now "Answering a Future Tutor's Questions". Part A: Thai text that Claude wrote for the curriculum (not in the advantage-pr pin e6f7cc22e). Part B: Thai text copied from the PR sources (PR marked these "ready for Daniel's check" in the sources).
+Commit `84b151b7f`. **Updated 2026-10-16 (tone pass, Daniel's feedback):** Part A rows 9 and 13 and Part B rows 42 and 46 are shorter (no "do not promise" or "not a promise" part; the RR1 lesson uses the same line as row 42); Part B rows 49 and 50 are removed; M6.3 is now "Answering a Future Tutor's Questions". The test-scores answer says "คลาสกลุ่มเล็กกับครูในพื้นที่" (a small class with a local teacher) in place of "ครูติวเตอร์ที่สอนตามแผนทุกบท" (PR source line-trial-facilitator-script.md v1.5, advantage-pr `7ed5a4b`): Part A row 26, which is also "The line" of R5. Part A: Thai text that Claude wrote for the curriculum (not in the advantage-pr pin e6f7cc22e). Part B: Thai text copied from the PR sources (PR marked these "ready for Daniel's check" in the sources).
 
 ## Part A — new Thai text (Claude, 2026-10-15)
 
@@ -77,7 +77,7 @@ Commit `84b151b7f`. **Updated 2026-10-16 (tone pass, Daniel's feedback):** Part 
 | 23 | family-sale / The Parent Conversation, the Close, and Objections | เรียนภาษาอังกฤษที่โรงเรียนก็พอแล้ว |
 | 24 | family-sale / The Parent Conversation, the Close, and Objections | เข้าใจค่ะ ที่โรงเรียนน้องได้เรียนไวยากรณ์และคำศัพท์ คลาสของเราเพิ่มการอ่านเรื่องที่เหมาะกับระดับของน้องอย่างสม่ำเสมอ งานวิจัยแสดงให้เห็นว่าการอ่านเชิงกว้างมีประสิทธิภาพเหนือกว่าการสอนแบบไวยากรณ์ดั้งเดิม (Aka, 2019) ค่ะ |
 | 25 | family-sale / The Parent Conversation, the Close, and Objections | เรียนแล้วลูกจะสอบได้คะแนนดีขึ้นไหม |
-| 26 | family-sale / The Parent Conversation, the Close, and Objections | เราไม่สัญญาเรื่องคะแนนค่ะ สิ่งที่เราให้ได้คือหนังสือที่เหมาะกับระดับของน้อง ครูติวเตอร์ที่สอนตามแผนทุกบท และความคืบหน้าที่ดูได้ในแอปของน้องค่ะ |
+| 26 | family-sale / The Parent Conversation, the Close, and Objections | เราไม่สัญญาเรื่องคะแนนค่ะ สิ่งที่เราให้ได้คือหนังสือที่เหมาะกับระดับของน้อง คลาสกลุ่มเล็กกับครูในพื้นที่ และความคืบหน้าที่ดูได้ในแอปของน้องค่ะ |
 | 27 | family-sale / The Parent Conversation, the Close, and Objections | เป็นติวเตอร์ AI หรือเปล่า |
 | 28 | family-sale / The Parent Conversation, the Close, and Objections | ไม่ใช่ค่ะ ครูติวเตอร์เป็นคนสอนในคลาส แอปช่วยเรื่องบัตรคำศัพท์ เกม และการฝึกพูดกับ Reedy หลังเรียนจบแต่ละบทค่ะ |
 | 29 | family-sale / The Parent Conversation, the Close, and Objections | หนังสือที่เหมาะกับระดับของน้อง |

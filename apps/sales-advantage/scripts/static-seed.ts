@@ -741,12 +741,12 @@ The buyer learned something, and the conversation moved away from price.`,
               "A parent asks, 'Will my child surely pass the English test?' Which answer is approved?",
             options: [
               "Yes, if your child comes to every class.",
-              "We do not promise test scores. What we give is a book at your child's level, a tutor who follows the lesson plan in every lesson, and progress that you can see in your child's app.",
+              "We do not promise test scores. What we give is a book at your child's level, a small class with a local teacher, and progress that you can see in your child's app.",
               "Most of our students improve by 20%.",
               "Our method is the best in Thailand.",
             ],
             correctAnswer:
-              "We do not promise test scores. What we give is a book at your child's level, a tutor who follows the lesson plan in every lesson, and progress that you can see in your child's app.",
+              "We do not promise test scores. What we give is a book at your child's level, a small class with a local teacher, and progress that you can see in your child's app.",
             explanation:
               "This is the approved answer from the LINE trial script. A guarantee, a percentage with no source, or \"the best\" fails the claims criterion.",
           },
@@ -1348,7 +1348,7 @@ Never give a print date to a parent.
 | "ไม่มีเวลา" (No time.) | "ตารางเรียนของกลุ่มจัดกับครูติวเตอร์ในพื้นที่ สัปดาห์ละ [X] ครั้ง ครั้งละ [X] นาทีค่ะ" | "The group schedule is set with the local tutor: [X] times a week, [X] minutes each time." |
 | "ขอดูก่อน" (Let me think about it.) | "ได้ค่ะ ไม่ต้องรีบตัดสินใจ ถ้าสนใจ แอด LINE ของเราไว้ได้เลยค่ะ เดี๋ยวส่งข้อมูลให้คุณพ่อคุณแม่ดูค่ะ" | "Of course. There is no hurry. If you are interested, add us on LINE, and I will send you the information." |
 | "เรียนภาษาอังกฤษที่โรงเรียนก็พอแล้ว" (English at school is enough.) | "เข้าใจค่ะ ที่โรงเรียนน้องได้เรียนไวยากรณ์และคำศัพท์ คลาสของเราเพิ่มการอ่านเรื่องที่เหมาะกับระดับของน้องอย่างสม่ำเสมอ งานวิจัยแสดงให้เห็นว่าการอ่านเชิงกว้างมีประสิทธิภาพเหนือกว่าการสอนแบบไวยากรณ์ดั้งเดิม (Aka, 2019) ค่ะ" | "I understand. At school, your child learns grammar and vocabulary. Our class adds regular reading at your child's level. Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)." |
-| "เรียนแล้วลูกจะสอบได้คะแนนดีขึ้นไหม" (Will my child get better test scores?) | "เราไม่สัญญาเรื่องคะแนนค่ะ สิ่งที่เราให้ได้คือหนังสือที่เหมาะกับระดับของน้อง ครูติวเตอร์ที่สอนตามแผนทุกบท และความคืบหน้าที่ดูได้ในแอปของน้องค่ะ" | "We do not promise test scores. What we give is a book at your child's level, a tutor who follows the lesson plan in every lesson, and progress that you can see in your child's app." |
+| "เรียนแล้วลูกจะสอบได้คะแนนดีขึ้นไหม" (Will my child get better test scores?) | "เราไม่สัญญาเรื่องคะแนนค่ะ สิ่งที่เราให้ได้คือหนังสือที่เหมาะกับระดับของน้อง คลาสกลุ่มเล็กกับครูในพื้นที่ และความคืบหน้าที่ดูได้ในแอปของน้องค่ะ" | "We do not promise test scores. What we give is a book at your child's level, a small class with a local teacher, and progress that you can see in your child's app." |
 | "เป็นติวเตอร์ AI หรือเปล่า" (Is this an AI tutor?) | "ไม่ใช่ค่ะ ครูติวเตอร์เป็นคนสอนในคลาส แอปช่วยเรื่องบัตรคำศัพท์ เกม และการฝึกพูดกับ Reedy หลังเรียนจบแต่ละบทค่ะ" | "No. A tutor teaches the class. The app helps with flashcards, games, and speaking practice with Reedy after each completed lesson." |
 
 ## Words to use and words to avoid
@@ -1624,9 +1624,9 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
         type: "roleplay" as const,
         content: `**Method:** Say clearly that there is no guarantee. Explain what the class does give. Keep the conversation open.
 
-**The line:** "เราไม่สัญญาเรื่องคะแนนค่ะ สิ่งที่เราให้ได้คือหนังสือที่เหมาะกับระดับของน้อง ครูติวเตอร์ที่สอนตามแผนทุกบท และความคืบหน้าที่ดูได้ในแอปของน้องค่ะ" (We do not promise test scores. What we give is a book at your child's level, a tutor who follows the lesson plan in every lesson, and progress that you can see in your child's app.)
+**The line:** "เราไม่สัญญาเรื่องคะแนนค่ะ สิ่งที่เราให้ได้คือหนังสือที่เหมาะกับระดับของน้อง คลาสกลุ่มเล็กกับครูในพื้นที่ และความคืบหน้าที่ดูได้ในแอปของน้องค่ะ" (We do not promise test scores. What we give is a book at your child's level, a small class with a local teacher, and progress that you can see in your child's app.)
 
-**What we give:** a book at the child's level, a tutor who follows the lesson plan, progress in the app, and Reedy voice practice after completed lessons.
+**What we give:** a book at the child's level, a small class with a local teacher, progress in the app, and Reedy voice practice after completed lessons.
 
 **Evidence:** if research comes up, use only an approved Aka (2019) form, word for word: "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)."
 
@@ -1655,7 +1655,7 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
               },
               {
                 criterion:
-                  "What we give: a book at the child's level, a tutor who follows the lesson plan, progress in the app, Reedy voice practice after completed lessons",
+                  "What we give: a book at the child's level, a small class with a local teacher, progress in the app, Reedy voice practice after completed lessons",
                 weight: 0.3,
                 passingScore: 60,
                 sourceRef: "09-sales-enablement/tutor-family-sales-playbook.md#r5-can-you-guarantee-my-child-will-pass",
@@ -1763,7 +1763,7 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
         type: "theory" as const,
         content: `# What a Tutor Does, and What Is Ready
 
-**TL;DR:** A tutor is a local person who teaches a small group of students from a printed workbook. The tutor does not need a teaching degree: the tutor follows the lesson plan in the tutor app. Tell a recruit what is ready today and what is not.
+**TL;DR:** A tutor teaches a small group of students in their own community, from a printed workbook. The tutor app has a lesson plan for every lesson, and each new tutor gets training before the first class. Tell a recruit what is ready today and what is not.
 
 ## What a Tutor Advantage tutor does
 
