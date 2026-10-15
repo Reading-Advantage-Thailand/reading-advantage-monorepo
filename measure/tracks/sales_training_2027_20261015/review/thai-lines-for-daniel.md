@@ -1,6 +1,6 @@
 # Thai lines for Daniel's check
 
-Commit `84b151b7f`. Part A: Thai text that Claude wrote for the curriculum (not in the advantage-pr pin e6f7cc22e). Part B: Thai text copied from the PR sources (PR marked these "ready for Daniel's check" in the sources).
+Commit `84b151b7f`. **Updated 2026-10-16 (tone pass, Daniel's feedback):** Part A rows 9 and 13 and Part B rows 42 and 46 are shorter (no "do not promise" or "not a promise" part; the RR1 lesson uses the same line as row 42); Part B rows 49 and 50 are removed; M6.3 is now "Answering a Future Tutor's Questions". Part A: Thai text that Claude wrote for the curriculum (not in the advantage-pr pin e6f7cc22e). Part B: Thai text copied from the PR sources (PR marked these "ready for Daniel's check" in the sources).
 
 ## Part A — new Thai text (Claude, 2026-10-15)
 
@@ -14,11 +14,11 @@ Commit `84b151b7f`. Part A: Thai text that Claude wrote for the curriculum (not 
 | 6 | foundations-discovery / Discovery Roleplay: The First Conversation / objective | ใช้คำถาม SPIN: ถามเรื่องชั้นเรียน ที่ที่น้องเรียนภาษาอังกฤษตอนนี้ สิ่งที่คุณพ่ออยากได้ และวันเวลาที่ว่าง ฟังและทวนคำพูดของคุณพ่อ อย่าเพิ่งเล่าเรื่องคลาสก่อนรู้ความต้องการ แล้วขอนัดทดลองอ่านโดยระบุวันและเวลา |
 | 7 | framing-value / Value-Framing Roleplay: "I Cannot See What I Pay For" / persona | คุณแม่ของน้องใบเตย (Bai Toey's mother) |
 | 8 | framing-value / Value-Framing Roleplay: "I Cannot See What I Pay For" / situation | คุณแม่ของน้องใบเตยส่งลูกไปเรียนพิเศษภาษาอังกฤษมาหนึ่งปีแล้ว ตอนนี้กำลังคิดว่าจะให้ลูกเรียนต่อที่ไหนดี คุณแม่พูดว่า: "จ่ายค่าเรียนพิเศษมาทั้งปี แต่ไม่รู้เลยว่าลูกเก่งขึ้นหรือเปล่า ไม่เห็นว่าเรียนอะไรไปบ้างค่ะ |
-| 9 | framing-value / Value-Framing Roleplay: "I Cannot See What I Pay For" / objective | เปลี่ยนมุมมองจาก "ไม่เห็นผล" เป็น "อยากเห็นความคืบหน้า" อธิบายสิ่งที่คุณแม่จะเห็นได้จริง: หนังสือที่เหมาะกับระดับของน้อง และความคืบหน้าที่ดูได้ในแอปของน้อง ห้ามสัญญาเรื่องคะแนนหรือผลลัพธ์ แล้วชวนทดลองอ่านโดยระบุวันและเวลา |
+| 9 | framing-value / Value-Framing Roleplay: "I Cannot See What I Pay For" / objective | เปลี่ยนมุมมองจาก "ไม่เห็นผล" เป็น "อยากเห็นความคืบหน้า" อธิบายสิ่งที่คุณแม่จะเห็นได้จริง: หนังสือที่เหมาะกับระดับของน้อง และความคืบหน้าที่ดูได้ในแอปของน้อง แล้วชวนทดลองอ่านโดยระบุวันและเวลา |
 | 10 | objections / Negotiating Without Discounting | ถูกลงได้ไหมคะ |
 | 11 | objections / Objection Roleplay: "We Tried Something Like This and It Failed" / persona | คุณแม่ของน้องภูมิ (Phum's mother) |
 | 12 | objections / Objection Roleplay: "We Tried Something Like This and It Failed" / situation | คุณแม่ของน้องภูมิเคยสมัครแอปเรียนภาษาอังกฤษให้ลูก แต่น้องใช้ได้สองสัปดาห์ก็เลิก คุณแม่พูดว่า: "เคยสมัครแอปเรียนภาษาอังกฤษให้ลูกแล้วค่ะ เล่นได้สองอาทิตย์ก็ไม่เปิดอีกเลย เสียเงินเปล่า คลาสนี้จะต่างกันยังไงคะ |
-| 13 | objections / Objection Roleplay: "We Tried Something Like This and It Failed" / objective | รับฟังและยอมรับความรู้สึกของคุณแม่ก่อน ถามว่าตอนนั้นอะไรทำให้น้องเลิกใช้ แล้วหาความกังวลจริง อธิบายว่าคลาสนี้มีครูติวเตอร์สอนกลุ่มเล็กจากหนังสือฉบับพิมพ์ และแอปเป็นตัวช่วย ห้ามสัญญาผลลัพธ์ แล้วเสนอขั้นต่อไปหนึ่งอย่าง |
+| 13 | objections / Objection Roleplay: "We Tried Something Like This and It Failed" / objective | รับฟังและยอมรับความรู้สึกของคุณแม่ก่อน ถามว่าตอนนั้นอะไรทำให้น้องเลิกใช้ แล้วหาความกังวลจริง อธิบายว่าคลาสนี้มีครูติวเตอร์สอนกลุ่มเล็กจากหนังสือฉบับพิมพ์ และแอปเป็นตัวช่วย แล้วเสนอขั้นต่อไปหนึ่งอย่าง |
 | 14 | product-knowledge-2027 / Roleplay: "What Exactly Do You Sell?" / persona | คุณแม่ของน้องแพรวา (Praewa's mother) |
 | 15 | product-knowledge-2027 / Roleplay: "What Exactly Do You Sell?" / situation | คุณแม่ของน้องแพรวาเห็นโพสต์เรื่องคลาสใน Facebook และเข้าใจว่าเป็นแอปที่มี AI สอน คุณแม่พูดว่า: "คลาสนี้เป็นติวเตอร์ AI ใช่ไหมคะ ลูกจะได้อ่านหนังสือตาม Reedy ได้เลยหรือเปล่าคะ |
 | 16 | product-knowledge-2027 / Roleplay: "What Exactly Do You Sell?" / objective | แก้ความเข้าใจผิดอย่างสุภาพ: ครูติวเตอร์เป็นคนสอน ไม่ใช่ติวเตอร์ AI อธิบายว่าน้องฝึกพูดกับ Reedy ได้หลังเรียนจบแต่ละบท ส่วน Read Along with Reedy ยังไม่เปิดให้ใช้ แล้วถามคำถามเพื่อรู้ความต้องการหนึ่งข้อ |
@@ -93,16 +93,16 @@ Commit `84b151b7f`. Part A: Thai text that Claude wrote for the curriculum (not 
 | 39 | family-sale / Roleplay R1: First Conversation with a Parent | ตอนนี้น้องเรียนภาษาอังกฤษที่ไหนบ้างคะ |
 | 40 | family-sale / Roleplay R1: First Conversation with a Parent | คุณพ่อคุณแม่อยากให้น้องเก่งเรื่องไหนมากที่สุดคะ |
 | 41 | family-sale / Roleplay R5: "Can You Guarantee My Child Will Pass?" | แน่นอน |
-| 42 | tutor-recruitment / The Commission Scale | นี่เป็นตัวอย่างจากสูตร ไม่ใช่การสัญญาว่าจะได้ค่ะ |
-| 43 | tutor-recruitment / Recruitment Objections and Compliance | เป็นแชร์ลูกโซ่หรือเปล่า |
-| 44 | tutor-recruitment / Recruitment Objections and Compliance | ไม่ใช่ค่ะ ค่าคอมมิชชันมาจากแพ็กเกจคลาสที่ครอบครัวจ่ายเงินจริงเท่านั้น ติวเตอร์ที่ไม่มีนักเรียนของตัวเองในเดือนนั้นจะไม่ได้รับเงินในเดือนนั้น ถึงจะมีติวเตอร์ในทีมก็ตาม ถ้าไม่มีใครสอน ก็ไม่มีใครได้เงิน และคุณดูสูตรกับเรทของตัวเองได้ในแอปค่ะ |
-| 45 | tutor-recruitment / Recruitment Objections and Compliance | จะได้เดือนละเท่าไร |
-| 46 | tutor-recruitment / Recruitment Objections and Compliance | ขึ้นอยู่กับจำนวนแพ็กเกจคลาสที่มีการจ่ายเงินในเดือนนั้นค่ะ ขอให้ดูสูตรและตัวอย่างนะคะ เช่น ถ้าในหนึ่งเดือนมี 10 แพ็กเกจ แพ็กเกจละ 3,000 บาท ยอดรวม 30,000 บาท เรท 55.6% จะได้ประมาณ 16,700 บาทก่อนหักภาษี นี่เป็นตัวอย่างจากสูตร ไม่ใช่การสัญญาว่าจะได้ค่ะ |
-| 47 | tutor-recruitment / Recruitment Objections and Compliance | ไม่มีห้องเรียน |
-| 48 | tutor-recruitment / Recruitment Objections and Compliance | ไม่ต้องมีค่ะ ติวเตอร์สอนที่บ้าน ห้องประชุมในชุมชน หรือที่เงียบ ๆ ที่อื่นก็ได้ ขอแค่มีโทรศัพท์หรือแท็บเล็ตที่ต่ออินเทอร์เน็ตค่ะ |
-| 49 | tutor-recruitment / Recruitment Objections and Compliance | ไม่ได้จบครู |
-| 50 | tutor-recruitment / Recruitment Objections and Compliance | ไม่เป็นไรค่ะ คุณสอนตามแผนการสอนในแอปติวเตอร์ทีละขั้น และได้รับการอบรมก่อนสอนคลาสแรกค่ะ |
-| 51 | tutor-recruitment / Recruitment Objections and Compliance | หลักสูตรได้มาตรฐานไหม |
-| 52 | tutor-recruitment / Recruitment Objections and Compliance | หนังสือของเราสอดคล้องกับกรอบ CEFR และหนังสือทุกเล่มระบุระดับ CEFR ไว้ค่ะ |
+| 42 | tutor-recruitment / The Commission Scale | นี่เป็นตัวอย่างจากสูตรค่ะ |
+| 43 | tutor-recruitment / Answering a Future Tutor's Questions | เป็นแชร์ลูกโซ่หรือเปล่า |
+| 44 | tutor-recruitment / Answering a Future Tutor's Questions | ไม่ใช่ค่ะ ค่าคอมมิชชันมาจากแพ็กเกจคลาสที่ครอบครัวจ่ายเงินจริงเท่านั้น ติวเตอร์ที่ไม่มีนักเรียนของตัวเองในเดือนนั้นจะไม่ได้รับเงินในเดือนนั้น ถึงจะมีติวเตอร์ในทีมก็ตาม ถ้าไม่มีใครสอน ก็ไม่มีใครได้เงิน และคุณดูสูตรกับเรทของตัวเองได้ในแอปค่ะ |
+| 45 | tutor-recruitment / Answering a Future Tutor's Questions | จะได้เดือนละเท่าไร |
+| 46 | tutor-recruitment / Answering a Future Tutor's Questions | ขึ้นอยู่กับจำนวนแพ็กเกจคลาสที่มีการจ่ายเงินในเดือนนั้นค่ะ ขอให้ดูสูตรและตัวอย่างนะคะ เช่น ถ้าในหนึ่งเดือนมี 10 แพ็กเกจ แพ็กเกจละ 3,000 บาท ยอดรวม 30,000 บาท เรท 55.6% จะได้ประมาณ 16,700 บาทก่อนหักภาษี นี่เป็นตัวอย่างจากสูตรค่ะ |
+| 47 | tutor-recruitment / Answering a Future Tutor's Questions | ไม่มีห้องเรียน |
+| 48 | tutor-recruitment / Answering a Future Tutor's Questions | ไม่ต้องมีค่ะ ติวเตอร์สอนที่บ้าน ห้องประชุมในชุมชน หรือที่เงียบ ๆ ที่อื่นก็ได้ ขอแค่มีโทรศัพท์หรือแท็บเล็ตที่ต่ออินเทอร์เน็ตค่ะ |
+| 49 | tutor-recruitment / Answering a Future Tutor's Questions | Removed 2026-10-16 (Daniel: the tutor teaches the class) |
+| 50 | tutor-recruitment / Answering a Future Tutor's Questions | Removed 2026-10-16 (Daniel: the tutor teaches the class) |
+| 51 | tutor-recruitment / Answering a Future Tutor's Questions | หลักสูตรได้มาตรฐานไหม |
+| 52 | tutor-recruitment / Answering a Future Tutor's Questions | หนังสือของเราสอดคล้องกับกรอบ CEFR และหนังสือทุกเล่มระบุระดับ CEFR ไว้ค่ะ |
 | 53 | tutor-recruitment / Roleplay RR2: "Isn't This a Pyramid Scheme?" | ไม่ใช่ค่ะ ค่าคอมมิชชันมาจากแพ็กเกจคลาสที่ครอบครัวจ่ายเงินจริงเท่านั้น ติวเตอร์ที่ไม่มีนักเรียนของตัวเองในเดือนนั้นจะไม่ได้รับเงินในเดือนนั้น |
 

@@ -192,7 +192,7 @@ describe("rubric rules (every roleplay)", () => {
   });
 
   it("lists the 9 claims conditions of the scope document in the claims lesson", () => {
-    const content = lesson("product-knowledge-2027", "Honest Claims: The Rules for Every Conversation").content;
+    const content = lesson("product-knowledge-2027", "The Words We Use").content;
     for (const condition of CLAIMS_CONDITIONS) {
       expect(content).toContain(condition);
     }
@@ -352,7 +352,7 @@ describe("S6 — tutor recruitment", () => {
       "**No students of your own, no payout.**",
       "**Verified tutors only.** An unverified tutor gets no payout.",
       "**3% withholding tax.**",
-      "Every baht figure is arithmetic from that formula. It is not a promise of income.",
+      "Every baht figure is arithmetic from that formula.",
     ]) {
       expect(content).toContain(fact);
     }

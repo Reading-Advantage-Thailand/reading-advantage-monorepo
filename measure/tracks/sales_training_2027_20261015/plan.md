@@ -69,8 +69,11 @@ _Known red gates until S9/S10 (approval pins, not changed on purpose): `scripts/
     - [x] Run `curriculum:release-candidate` against the PR commit `e6f7cc22e` (sparse clone of the pin); graph `f922e71d…`, status `awaiting_human_review`; only the existing source-hash fields changed (hashing policy)
 - [x] Task: Generate docs and doctor
     - [x] doctor: only the A13 failure that exists on master; generate: not run, because S2–S7 change no route, package, or export; the marker guard passes for this plan
+- [x] Task: Tone pass (Daniel 2026-10-16: the claims rule is a gate, not a theme)
+    - [x] `review/tone-pass-proposal.md` (45 rows); PR claims check passed with 3 changes (G3–G8 and G13 removed with no replacement, T4, M2), 1 addition (remove "I am not a teacher"), and no word test
+    - [x] Apply to `static-seed.ts`; update the 2 tests of changed strings; Thai check list updated; candidate at advantage-pr `919d1c1`, graph `87d3e04c…`, only existing fields changed
 - [b] Task: Measure - User Manual Verification 'Phase S2: The curriculum uses the new PR source set' (Protocol in workflow.md) — deferred:owner-review-with-s10-approval
-    - [ ] Daniel sees the candidate source commit (now `c211d1c`, `c3d48dd17`) and the 20 documents in the approval file at S10
+    - [ ] Daniel sees the candidate source commit (now `919d1c1`, tone pass) and the 20 documents in the approval file at S10
 
 ## Phase S3: General selling modules are correct
 _Story ref: spec.md#story-s3-general-selling-modules-are-correct_

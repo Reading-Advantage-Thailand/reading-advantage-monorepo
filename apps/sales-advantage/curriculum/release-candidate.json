@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "curriculumId": "reading-advantage-sales-curriculum-v1",
-  "graphSha256": "8c535bc2315640df658e7145042468a653bc869e938e37903c3dba55555bb43f",
+  "graphSha256": "87d3e04cc40bcf93dd2354abd88ecd77964b9fe8cee43580d5b02416d95aed8c",
   "source": {
     "repository": "advantage-pr",
-    "commit": "c211d1cab9bce0457c1c7ecb2ae6d7445583a305",
+    "commit": "919d1c11f4c5a4619a486db88d5778e421ed6a3c",
     "documents": [
       {
         "path": "09-sales-enablement/sales-training-scope-2027.md",
@@ -20,7 +20,7 @@
       },
       {
         "path": "09-sales-enablement/facilitator-recruitment-kit.md",
-        "sha256": "803256dd8891302d2cd4e8c4b6f8507b63ba5671072c0d146ca37a07defb2941"
+        "sha256": "3b81d47e863ffa943e3b3242ffba098e37a3c005d8806ce4bacf41e061a6c9bf"
       },
       {
         "path": "09-sales-enablement/demo-scripts.md",

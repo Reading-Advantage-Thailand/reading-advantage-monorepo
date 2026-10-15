@@ -1,6 +1,6 @@
 # Training video list for PR
 
-**Status:** Draft v3 for Daniel and PR, 2026-10-16 (Daniel's feedback: the claims rule is a gate,
+**Status:** Draft v4 for Daniel and PR, 2026-10-16 (Daniel's feedback: the claims rule is a gate,
 not a theme). Nothing on this list is ordered until Daniel
 approves it.
 **Lessons:** `apps/sales-advantage/scripts/static-seed.ts` at `048090037` (7 modules, 44 lessons,
@@ -58,7 +58,7 @@ Each video is in Thai and English (Thai first for the Family branch), 1–3 minu
 | N8 | The parent conversation and the close | M5.3, R1 | Model conversation in Thai: discovery, the class in two sentences, then the three close steps after the trial (result 30 s, book 1 min, bridge to the class package 1 min) | **Must** | — |
 | N9 | Parent questions and the next book | M5.3, M5.4, R2, R3, R4 | Model conversation, 4 short parts: "It is too expensive" (what the package gives: about 25 hours, about 120 baht for each hour, the printed book, the app; then a calm question about the start); "My child already goes to a tutor school" (how the class adds to it); "Which book next?" (the next book, and a LINE message when it is ready); "How will I see my child's progress?" (the book level, the lessons completed, the tutor's notes, and Reedy practice on completed lessons) | Should | — |
 | N10 | A week as a Tutor Advantage tutor | M6.1 | App tour: tutor-mobile 02, 19 (crop rows 0–1470), 22 (crop rows 0–1450), 09 (the S6 rows of `screenshot-lesson-list.md`); what is ready and what is not; how a new tutor starts | Should | Dev-build screens: a fact that expires |
-| N11 | Answering a future tutor's questions | M6.1, M6.3, RR1, RR2, RR3 | Model conversation with confident answers: what the work is; how the pay is calculated (the formula and one example, labeled one time); "Is this a pyramid scheme?" answered with the facts (the pay comes from teaching, and a month with no students of your own gives no payout); "I am not a teacher" (the training and the printed book guide each lesson) | **Must** | — |
+| N11 | Answering a future tutor's questions | M6.1, M6.3, RR1, RR2, RR3 | Model conversation with confident answers: what the work is; how the pay is calculated (the formula and one example, labeled one time); "Is this a pyramid scheme?" answered with the facts (the pay comes from teaching, and a month with no students of your own gives no payout); "I have no classroom" (home, a community room, or another quiet place) | **Must** | — |
 
 ### School branch: M7 (school sellers)
 
@@ -92,6 +92,8 @@ Voices (PR voice standard, not a question): Thai seller `Thai_Optimistic_girl`, 
 
 ## Revision history
 
+- **v4** — 2026-10-16 — Daniel: the tutor teaches the class, so N11 has no "I am not a teacher" part
+  (PR kit v1.3, advantage-pr `919d1c1`).
 - **v3** — 2026-10-16 — Daniel's feedback: the claims rule is a gate, not a theme. N3 removed; N5
   "The words we use" (trainer video, approved lines); N9 "How will I see my child's progress?" in
   place of the guarantee part; N11 "Answering a future tutor's questions".

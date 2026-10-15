@@ -445,7 +445,7 @@ A trial close is a closed question in the middle of the conversation. It tests i
 
 **School version:** Ask how long the English program has run, what happens when a foreign teacher leaves, and how the school measures whether the program works (role-play scenario 1).
 
-**Claims guardrail:** Make no promise of an outcome and no false urgency. Discovery has no price talk and no product claims.
+**Focus:** questions first. Talk about the product only after the buyer has told you what they need.
 
 **Success standard:** Agree a specific next step with a day and a time: a placement trial for the parent, or a longer meeting for the director.`,
         order: 4,
@@ -564,13 +564,13 @@ A trial close is a closed question in the middle of the conversation. It tests i
 | **Benefit** | The child reads with a local tutor in a small group, one lesson at a time | Thai teachers teach with confidence; native fluency is not necessary | The child, or the teacher |
 | **Value the buyer can see** | Progress that the parent can see in the child's app | Quarterly fidelity reports and per-school reporting | The parent, or the director |
 
-The last layer must stay honest and measurable. It does not allow a promise of a score.
+The outcome layer names what the buyer can see and check: the book level, the lessons completed, and the progress in the app.
 
 ## Evidence-safe translation
 
 > ❌ "Your child will improve one level this term."
 >
-> ✅ "We do not promise test scores. What we give is a book at your child's level, a tutor who follows the lesson plan in every lesson, and progress that you can see in your child's app."
+> ✅ "What your child gets is a book at their level, a small class with a local teacher, and progress that you can see in your child's app."
 
 > ❌ "Every student will gain a grade level."
 >
@@ -580,7 +580,7 @@ Use the approved statements word for word. If a buyer asks for a result that the
 
 ## Practice
 
-For each feature, write the feature, the benefit, and the evidence that the buyer can check. Mark each assumption. Never turn a planned feature into a promise.`,
+For each feature, write the feature, the benefit, and the evidence that the buyer can check. Mark each assumption. Describe only features that are live today.`,
         order: 1,
       },
       {
@@ -665,11 +665,11 @@ The reframe shows the buyer that the problem they see is part of a bigger proble
 
 > Parent: "I just want my child to get better grades in English."
 >
-> Reframe: "We do not promise grades. The class starts with a placement trial. The trial finds the printed book that your child starts with, and your child reads one lesson at a time with a local tutor."
+> Reframe: "The class starts with a placement trial. The trial finds the printed book that your child starts with, and your child reads one lesson at a time with a local tutor."
 
 > Director: "We need better English scores."
 >
-> Reframe: "We do not promise a score. A school can give every class the same lesson plan, the same workbook, and the same quality check, also when a teacher leaves. Rather than promise a specific number, we commit to transparent per-school reporting."
+> Reframe: "A school can give every class the same lesson plan, the same workbook, and the same quality check, also when a teacher leaves. Rather than promise a specific number, we commit to transparent per-school reporting."
 
 The buyer learned something, and the conversation moved away from price.`,
         order: 3,
@@ -683,7 +683,7 @@ The buyer learned something, and the conversation moved away from price.`,
 
 **School facts you may use:** a fixed lesson plan for every lesson; 2-day teacher training; quarterly fidelity observations; per-school reporting of benchmark deltas, reading volume, and fidelity scores.
 
-**Claims guardrail:** Do not promise a score, a percentage, or a result. If evidence comes up, use only an approved Aka (2019) form.
+**Evidence:** if research comes up, use the approved Aka (2019) form, word for word.
 
 **Success standard:** The buyer agrees to a small next step: a placement trial for the parent, or a pilot of one grade level for one semester for the director.`,
         order: 4,
@@ -696,8 +696,8 @@ The buyer learned something, and the conversation moved away from price.`,
               "Bai Toey's mother has paid for an extra English class for one year. Now she is thinking about where her daughter should study next. She says: \"I paid for extra classes all year, but I do not know if my child got better. I cannot see what she learned.\"",
             ),
             objective: thaiFirst(
-              "เปลี่ยนมุมมองจาก \"ไม่เห็นผล\" เป็น \"อยากเห็นความคืบหน้า\" อธิบายสิ่งที่คุณแม่จะเห็นได้จริง: หนังสือที่เหมาะกับระดับของน้อง และความคืบหน้าที่ดูได้ในแอปของน้อง ห้ามสัญญาเรื่องคะแนนหรือผลลัพธ์ แล้วชวนทดลองอ่านโดยระบุวันและเวลา",
-              "Reframe \"I cannot see results\" as \"I want to see progress\". Explain what the mother can really see: a book at her child's level and progress that she can see in her child's app. Do not promise scores or results. Then invite her to a placement trial with a day and a time.",
+              "เปลี่ยนมุมมองจาก \"ไม่เห็นผล\" เป็น \"อยากเห็นความคืบหน้า\" อธิบายสิ่งที่คุณแม่จะเห็นได้จริง: หนังสือที่เหมาะกับระดับของน้อง และความคืบหน้าที่ดูได้ในแอปของน้อง แล้วชวนทดลองอ่านโดยระบุวันและเวลา",
+              "Reframe \"I cannot see results\" as \"I want to see progress\". Explain what the mother can really see: a book at her child's level and progress that she can see in her child's app. Then invite her to a placement trial with a day and a time.",
             ),
             prospectContext:
               "The mother is polite but tired of paying without information. She asks whether her child will surely improve. A strong trainee does not promise; a weak trainee says that the child will improve.",
@@ -709,7 +709,7 @@ The buyer learned something, and the conversation moved away from price.`,
             situation:
               "On a follow-up call, Wisanu says: 'Parents complain that they pay for English but do not see their children improve. They cannot tell what we do differently from the school down the road.'",
             objective:
-              "Reframe the problem: the school needs progress that parents and the board can see, not only more English content. Explain the fixed lesson plan, the quarterly fidelity observations, and per-school reporting. Do not promise a score or a percentage. Do not offer a discount. Move toward a pilot of one grade level for one semester.",
+              "Reframe the problem: the school needs progress that parents and the board can see, not only more English content. Explain the fixed lesson plan, the quarterly fidelity observations, and per-school reporting. Move toward a pilot of one grade level for one semester.",
             prospectContext:
               "Wisanu is the decision-maker and the budget owner. He measures success in families who stay, but he has no verified number for families who left.",
             rubric: valueRubric("school"),
@@ -863,8 +863,6 @@ A good answer confirms the real budget limit, offers a smaller start at the appr
 
 **School facts you may use:** the workbook comes first, with a fixed lesson plan; 2-day teacher training; quarterly observations with a standard form; one person on our team is the school's implementation contact.
 
-**Adoption guardrail:** Do not say that software alone solves the problem. Promise no result and no response time.
-
 **Success standard:** Confirm the real risk and agree one next step that tests it.`,
         order: 3,
         scenarios: [
@@ -876,8 +874,8 @@ A good answer confirms the real budget limit, offers a smaller start at the appr
               "Phum's mother once paid for an English learning app. Her son used it for two weeks and then stopped. She says: \"I paid for an English app before. He used it for two weeks and never opened it again. It was a waste of money. How is this class different?\"",
             ),
             objective: thaiFirst(
-              "รับฟังและยอมรับความรู้สึกของคุณแม่ก่อน ถามว่าตอนนั้นอะไรทำให้น้องเลิกใช้ แล้วหาความกังวลจริง อธิบายว่าคลาสนี้มีครูติวเตอร์สอนกลุ่มเล็กจากหนังสือฉบับพิมพ์ และแอปเป็นตัวช่วย ห้ามสัญญาผลลัพธ์ แล้วเสนอขั้นต่อไปหนึ่งอย่าง",
-              "First acknowledge the mother's feeling. Ask what made her son stop, and find the real concern. Explain that in this class a tutor teaches a small group from a printed book, and the app helps. Do not promise a result. Then offer one next step.",
+              "รับฟังและยอมรับความรู้สึกของคุณแม่ก่อน ถามว่าตอนนั้นอะไรทำให้น้องเลิกใช้ แล้วหาความกังวลจริง อธิบายว่าคลาสนี้มีครูติวเตอร์สอนกลุ่มเล็กจากหนังสือฉบับพิมพ์ และแอปเป็นตัวช่วย แล้วเสนอขั้นต่อไปหนึ่งอย่าง",
+              "First acknowledge the mother's feeling. Ask what made her son stop, and find the real concern. Explain that in this class a tutor teaches a small group from a printed book, and the app helps. Then offer one next step.",
             ),
             prospectContext:
               "The mother is open but does not want to waste money again. Her real concern is that her son loses interest without a person to guide him.",
@@ -1014,9 +1012,9 @@ The print status, the "on sale" dates, and the open decisions change. These less
         order: 1,
       },
       {
-        title: "Honest Claims: The Rules for Every Conversation",
+        title: "The Words We Use",
         type: "theory" as const,
-        content: `# Honest Claims: The Rules for Every Conversation
+        content: `# The Words We Use
 
 **TL;DR:** Every claim about learning outcomes must trace to a published research citation or to our own transparent per-school reporting. If a claim does not trace to one of these two, do not make it.
 
@@ -1038,7 +1036,14 @@ Say "CEFR-aligned", and name CEFR levels only: Pre-A1, A1, A2. Never say GSE, Pe
 
 Always say the full book name with the product name: "Primary Advantage Origins 2", "Reading Advantage Origins 2". Never say "Origins 2" alone.
 
-## The claims criterion in every roleplay
+## The class, the app, and the prices
+
+- "A local tutor teaches a small group from a printed book."
+- "Reedy voice practice after each completed lesson."
+- Family: "from 3,000 baht for a class package".
+- School: "App-Only ~1,000 ฿ and Blended Learning ~1,500 ฿ for each student each year".
+
+## What fails a roleplay
 
 Every roleplay in this course has a claims criterion with passingScore 90. One violation fails the attempt. These are the 9 violations:
 
@@ -1054,7 +1059,7 @@ Every roleplay in this course has a claims criterion with passingScore 90. One v
 
 In tutor recruitment, item 7 changes: commission talk is allowed, but a promise of income fails, and every baht figure must be a labeled example from the commission formula. In a school sale, item 7 is: a discount, a free period, or a promised response time.
 
-## When the buyer asks for a stronger promise
+## When the buyer asks for a guarantee
 
 1. Say that it is the right question.
 2. Give the Aka (2019) short form.
@@ -1070,8 +1075,6 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
 **Parent facts:** Tutor Advantage is a tutor-led class network. It is not an AI tutor. A local tutor teaches a small group from a printed book. Reedy voice practice is live in Tutor Advantage for students with an active class package, on lessons they completed. Read Along with Reedy is in development and not available.
 
 **School facts:** For schools, we sell Primary Advantage with Blended Learning (or App-Only). We do not offer a secondary program to schools now; families of secondary students can join a Tutor Advantage class with the Reading Advantage books. Managed Service: "Not sold today. It launches in 2027 only if 1–2 more schools sign." Science, Math, and Zhongwen Advantage are coming programs with no date.
-
-**Claims guardrail:** Promise nothing that is not live and printed today. Give no date for a planned line.
 
 **Success standard:** The buyer has a correct picture of what is live, and agrees one next step.`,
         order: 3,
@@ -1352,7 +1355,7 @@ Never give a print date to a parent.
 
 | Use | Avoid | Why |
 |---|---|---|
-| "หนังสือที่เหมาะกับระดับของน้อง" (a book at your child's level) | Avoid "รับประกันผล" (guaranteed results) and "เก่งขึ้นแน่นอน" (will surely improve) | No promise of an outcome |
+| "หนังสือที่เหมาะกับระดับของน้อง" (a book at your child's level) | Avoid "รับประกันผล" (guaranteed results) and "เก่งขึ้นแน่นอน" (will surely improve) | It describes what the class gives |
 | The full book name: "Primary Advantage Origins 2" | Avoid "Origins 2" alone | Naming rule |
 | CEFR: Pre-A1, A1, A2 | Avoid GSE, Pearson, YLE, and B1–C2 | CEFR only; the active scope stops at A2 |
 | "ครูติวเตอร์เป็นคนสอน" (a tutor teaches) | Avoid "ติวเตอร์ AI" (AI tutor) and "Read Along with Reedy" | Not an AI tutor; Read Along is not available |
@@ -1391,8 +1394,6 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
 **Discovery questions:** "น้องเรียนอยู่ชั้นไหนคะ" (Which grade is your child in?); "ตอนนี้น้องเรียนภาษาอังกฤษที่ไหนบ้างคะ" (Where does your child learn English now?); "คุณพ่อคุณแม่อยากให้น้องเก่งเรื่องไหนมากที่สุดคะ" (What do you most want for your child?); "น้องชอบอ่านหนังสือหรือฟังนิทานไหมคะ" (Does your child like books or stories?); "วันและเวลาไหนที่น้องว่างเรียนคะ" (Which days and times is your child free?).
 
 **The class in two sentences:** a small group; a local tutor; a printed workbook at the child's level; a matching app in LINE; a 10-minute reading trial first.
-
-**Claims guardrail:** no promise of an outcome, no false urgency, no AI-tutor claim, and no book name without its product name.
 
 **Success standard:** the parent agrees to a placement trial on a named day and time.`,
         order: 5,
@@ -1448,8 +1449,6 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
 **The facts:** "เข้าใจค่ะ ราคาเริ่มต้น 3,000 บาทต่อหนึ่งแพ็กเกจ ประมาณ 25 ชั่วโมง เฉลี่ยประมาณ 120 บาทต่อชั่วโมง และรวมหนังสือฉบับพิมพ์กับแอปแล้วค่ะ" (I understand. The price starts at 3,000 baht for one package of about 25 hours. That is about 120 baht per hour, and it includes the printed book and the app.)
 
 **No discount:** offer no discount and no free class. Do not compare with a named competitor or with a market rate that has no source.
-
-**Claims guardrail:** no promise, no false urgency, and no price other than the approved price.
 
 **Success standard:** the parent can repeat what the package includes, and agrees to a start date or to receive the parent info deck.`,
         order: 6,
@@ -1508,8 +1507,6 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
 **The line:** "ดีค่ะ คลาสของเราเรียนตามหนังสือที่จัดลำดับบทเรียนไว้แล้ว เน้นการอ่าน คำศัพท์ และการพูดในกลุ่มเล็ก น้องเรียนควบคู่กับที่เรียนอยู่ได้ค่ะ" (Good. Our class follows a book with a fixed order of lessons. It focuses on reading, vocabulary, and speaking in a small group. Your child can do it together with their current classes.)
 
 **The book:** a secondary student starts with Reading Advantage Origins 2 (A1), the printed Reading Advantage book.
-
-**Claims guardrail:** no promise of grades, nothing negative about the tutor school, and no false urgency.
 
 **Success standard:** the parent agrees to a trial or to receive information, with no pressure.`,
         order: 7,
@@ -1572,8 +1569,6 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
 
 **The fact:** after Primary Advantage Origins 3.1, the next book is Primary Advantage Origins 3.2. In this roleplay, it is not on sale yet. Never give a parent a print date.
 
-**Claims guardrail:** no promise of an outcome, and no book that is not printed offered as available.
-
 **Success standard:** the parent knows the name of the next book, expects a LINE message, and wants to keep the child's place.`,
         order: 8,
         scenarios: [
@@ -1634,8 +1629,6 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
 **What we give:** a book at the child's level, a tutor who follows the lesson plan, progress in the app, and Reedy voice practice after completed lessons.
 
 **Evidence:** if research comes up, use only an approved Aka (2019) form, word for word: "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019)."
-
-**Claims guardrail:** no guarantee in any form ("รับประกัน", "แน่นอน"), no percentage, and no false urgency.
 
 **Success standard:** the father hears an honest answer and still wants to talk about a start.`,
         order: 9,
@@ -1713,7 +1706,7 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
             correctAnswer:
               "A local tutor teaches a small group from a printed workbook at your child's level, with a matching app in LINE.",
             explanation:
-              "Tutor Advantage is a tutor-led class network. It is not an AI tutor. Read Along with Reedy is not available, and we promise no level.",
+              "Tutor Advantage is a tutor-led class network. It is not an AI tutor. Read Along with Reedy is not available.",
           },
           {
             question: "When does the tutor talk with the parent about the next book?",
@@ -1761,7 +1754,7 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
     slug: "tutor-recruitment",
     title: "Tutor Recruitment: Bring In New Tutors",
     description:
-      "Explain the tutor role, the commission scale, and the rules that protect teaching to a person who may become a tutor. Talk openly about money, and promise no income.",
+      "Explain the tutor role, the commission scale, and the rules that protect teaching to a person who may become a tutor. Talk openly about money, and show how the pay is calculated.",
     phase: "Family branch",
     order: 6,
     lessons: [
@@ -1829,7 +1822,7 @@ What you do not do: write lesson plans, design the curriculum, or mark every dig
         type: "theory" as const,
         content: `# The Commission Scale
 
-**TL;DR:** Talk openly and directly about the commission scale with a person who may become a tutor. The scale comes from the Tutor Advantage payout code, with the production base rate 0.5. Every baht figure is arithmetic from that formula. It is not a promise of income.
+**TL;DR:** Talk openly and directly about the commission scale with a person who may become a tutor. The scale comes from the Tutor Advantage payout code, with the production base rate 0.5. Every baht figure is arithmetic from that formula.
 
 Commission talk is for tutor recruits only. Never talk about commission with a parent.
 
@@ -1876,19 +1869,19 @@ Without Tutor B, Tutor A's 12,000 baht would give 46.0% = 5,520 baht. Both tutor
 
 ## How to say a figure
 
-Say each baht figure as an example from the formula, and say that it is not a promise:
+Say each baht figure as an example from the formula:
 
-> "นี่เป็นตัวอย่างจากสูตร ไม่ใช่การสัญญาว่าจะได้ค่ะ"
+> "นี่เป็นตัวอย่างจากสูตรค่ะ"
 >
-> "That is an example from the formula, not a promise."`,
+> "That is an example from the formula."`,
         order: 2,
       },
       {
-        title: "Recruitment Objections and Compliance",
+        title: "Answering a Future Tutor's Questions",
         type: "theory" as const,
-        content: `# Recruitment Objections and Compliance
+        content: `# Answering a Future Tutor's Questions
 
-**TL;DR:** People who may become tutors ask about money, pyramid schemes, classrooms, and qualifications. Answer directly, show the formula, and promise no income.
+**TL;DR:** People who may become tutors ask about money, pyramid schemes, classrooms, and the course standard. Answer directly, and show the formula with one example.
 
 ## Objections from people who may become tutors
 
@@ -1902,9 +1895,9 @@ Thai first, English below.
 
 ### "How much will I earn?" / "จะได้เดือนละเท่าไร"
 
-> "ขึ้นอยู่กับจำนวนแพ็กเกจคลาสที่มีการจ่ายเงินในเดือนนั้นค่ะ ขอให้ดูสูตรและตัวอย่างนะคะ เช่น ถ้าในหนึ่งเดือนมี 10 แพ็กเกจ แพ็กเกจละ 3,000 บาท ยอดรวม 30,000 บาท เรท 55.6% จะได้ประมาณ 16,700 บาทก่อนหักภาษี นี่เป็นตัวอย่างจากสูตร ไม่ใช่การสัญญาว่าจะได้ค่ะ"
+> "ขึ้นอยู่กับจำนวนแพ็กเกจคลาสที่มีการจ่ายเงินในเดือนนั้นค่ะ ขอให้ดูสูตรและตัวอย่างนะคะ เช่น ถ้าในหนึ่งเดือนมี 10 แพ็กเกจ แพ็กเกจละ 3,000 บาท ยอดรวม 30,000 บาท เรท 55.6% จะได้ประมาณ 16,700 บาทก่อนหักภาษี นี่เป็นตัวอย่างจากสูตรค่ะ"
 >
-> "It depends on how many class packages are paid in the month. I can show you the formula and some examples. For example, 10 class packages at 3,000 baht in one month is 30,000 baht, at 55.6%, which is about 16,700 baht before tax. That is an example from the formula, not a promise."
+> "It depends on how many class packages are paid in the month. I can show you the formula and some examples. For example, 10 class packages at 3,000 baht in one month is 30,000 baht, at 55.6%, which is about 16,700 baht before tax. That is an example from the formula."
 
 ### "I have no classroom" / "ไม่มีห้องเรียน"
 
@@ -1912,31 +1905,21 @@ Thai first, English below.
 >
 > "You do not need one. Tutors teach at home, in a community room, or at another quiet place. You need a phone or tablet with internet."
 
-### "I am not a teacher" / "ไม่ได้จบครู"
-
-> "ไม่เป็นไรค่ะ คุณสอนตามแผนการสอนในแอปติวเตอร์ทีละขั้น และได้รับการอบรมก่อนสอนคลาสแรกค่ะ"
->
-> "That is OK. You follow the lesson plan in the tutor app, step by step, and you get training before your first class."
-
 ### "Is the course a recognized standard?" / "หลักสูตรได้มาตรฐานไหม"
 
 > "หนังสือของเราสอดคล้องกับกรอบ CEFR และหนังสือทุกเล่มระบุระดับ CEFR ไว้ค่ะ"
 >
 > "Our books are CEFR-aligned. Each book names its CEFR level."
 
-## Compliance notes
+## Good practice
 
-- ❌ **Do NOT** promise income. Every baht figure is a formula example.
-- ❌ **Do NOT** talk about commission, network, or recruitment with parents.
-- ❌ **Do NOT** use "guaranteed results" or any percentage gain in parent material.
-- ❌ **Do NOT** name a framework other than the CEFR. Say "CEFR-aligned" and name CEFR levels only.
-- ❌ **Do NOT** call Tutor Advantage an AI tutor or promise Read Along with Reedy.
-- ✅ **DO** use the approved Aka (2019) forms for research claims.
-- ✅ **DO** collect parental consent for all named students, photos, and videos.
+- Say each baht figure as an example from the formula.
+- Talk about commission only with future tutors, not with parents.
+- Say "CEFR-aligned" and name the CEFR level of the book.
+- Use the approved Aka (2019) form for research.
+- Collect parental consent for all named students, photos, and videos.
 
-## The claims criterion in recruitment roleplays
-
-Commission talk is allowed in recruitment. A baht figure is allowed only as arithmetic from the formula, labeled as an example. A promise of income, "get rich" framing, or pressure to recruit fails the attempt.`,
+In the recruitment roleplays, commission talk is allowed: say each baht figure as an example from the formula (see "The Words We Use", M4.2).`,
         order: 3,
       },
       {
@@ -1948,7 +1931,7 @@ Commission talk is allowed in recruitment. A baht figure is allowed only as arit
 
 **The rules:** own students needed; verified tutors only; 3% withholding tax; monthly settlement.
 
-**Claims guardrail:** "นี่เป็นตัวอย่างจากสูตร ไม่ใช่การสัญญาว่าจะได้ค่ะ" (That is an example from the formula, not a promise.) No false urgency.
+**The line:** "นี่เป็นตัวอย่างจากสูตรค่ะ" (That is an example from the formula.)
 
 **Success standard:** the recruit can explain how the rate works and asks for the information session.`,
         order: 4,
@@ -2004,7 +1987,7 @@ Commission talk is allowed in recruitment. A baht figure is allowed only as arit
 
 **The line:** "ไม่ใช่ค่ะ ค่าคอมมิชชันมาจากแพ็กเกจคลาสที่ครอบครัวจ่ายเงินจริงเท่านั้น ติวเตอร์ที่ไม่มีนักเรียนของตัวเองในเดือนนั้นจะไม่ได้รับเงินในเดือนนั้น" (No. Commission comes only from class packages that families pay for. A tutor with no students of their own in a month gets no payout that month.)
 
-**Claims guardrail:** no income promise, no "get rich" framing, and no pressure to recruit.
+**The facts:** the pay comes from teaching. A month with no students of your own gives no payout.
 
 **Success standard:** the recruit understands that nobody earns if nobody teaches, and wants to see the formula.`,
         order: 5,
@@ -2059,7 +2042,7 @@ Commission talk is allowed in recruitment. A baht figure is allowed only as arit
 
 **The worked example:** Tutor A has 4 students of her own (12,000 baht). Tutor B has 6 students (18,000 baht). Tutor A's GV is 30,000 baht at 55.6%: 16,682 − 8,820 = 7,862 baht. Without Tutor B, Tutor A's 12,000 baht would give 46.0% = 5,520 baht. This is an example from the formula, not a promise.
 
-**Claims guardrail:** no income promise, and no figure that is not from the formula.
+**Label the example one time:** "That is an example from the formula."
 
 **Success standard:** the tutor understands the differential and knows that teaching comes first.`,
         order: 6,
@@ -2145,14 +2128,14 @@ Commission talk is allowed in recruitment. A baht figure is allowed only as arit
               "A recruit asks, 'How much will I earn?' Which answer is correct?",
             options: [
               "You will earn at least 16,700 baht a month.",
-              "It depends on the class packages paid in the month. For example, 30,000 baht GV at 55.6% is about 16,700 baht before tax. That is an example from the formula, not a promise.",
+              "It depends on the class packages paid in the month. For example, 30,000 baht GV at 55.6% is about 16,700 baht before tax. That is an example from the formula.",
               "Most tutors earn 30,000 baht a month.",
               "Bring in five friends and you will earn more than a teacher.",
             ],
             correctAnswer:
-              "It depends on the class packages paid in the month. For example, 30,000 baht GV at 55.6% is about 16,700 baht before tax. That is an example from the formula, not a promise.",
+              "It depends on the class packages paid in the month. For example, 30,000 baht GV at 55.6% is about 16,700 baht before tax. That is an example from the formula.",
             explanation:
-              "Every baht figure is arithmetic from the formula, labeled as an example. A promise of income fails the claims criterion.",
+              "Every baht figure is arithmetic from the formula, labeled as an example.",
           },
           {
             question:
@@ -2197,7 +2180,7 @@ Commission talk is allowed in recruitment. A baht figure is allowed only as arit
         type: "theory" as const,
         content: `# The 2027 School Sale: Rules for Every Conversation
 
-**TL;DR:** Sell Primary Advantage with Blended Learning (or App-Only) to primary schools. The pilot is one grade level for one semester. Quote the two standard prices only, and promise no result.
+**TL;DR:** Sell Primary Advantage with Blended Learning (or App-Only) to primary schools. The pilot is one grade level for one semester. Quote the two standard prices, and propose the pilot.
 
 ## The rules (Daniel, 2026 decisions)
 
@@ -2211,7 +2194,6 @@ Commission talk is allowed in recruitment. A baht figure is allowed only as arit
   - Primary Advantage cutover: target weekend of Oct 17/18, last date Oct 20. Until it passes, the legacy build is production.
   - Reedy Preview in Primary Advantage: only after the cutover passes. Do not show Reedy in a Primary demo before then.
 - Name Boonyathat, or show its data, only with the school's written consent (Q-SE-03).
-- Promise no response time and no result.
 
 ## Who buys, and when
 
@@ -2309,7 +2291,7 @@ Never inflate this number. Never call us "leading" or "number one".`,
         type: "theory" as const,
         content: `# The 8 School Objections
 
-**TL;DR:** Accept the objection as legitimate. Answer from a canonical source. Never make a specific outcome promise.
+**TL;DR:** Accept the objection as legitimate. Answer from a canonical source. Then commit to transparent per-school reporting.
 
 ## Objection 1: "Our Thai teachers aren't good enough at English to teach this."
 
@@ -2346,8 +2328,6 @@ Do not comment on MOE policy or predict a policy change.
 ## Objection 7: "Can you give us a discount, or a free trial?"
 
 "Our prices are App-Only about 1,000 THB per student per year and Blended Learning about 1,500 THB per student per year. I cannot offer a discount. What I can offer is a pilot: one grade level for one semester, so that you see the program in your school before a full commitment. I will ask Daniel about the pilot terms for your school."
-
-Do not promise a free pilot, a free trial, or a discount for an early signature.
 
 ## Objection 8: "Do you have something for our secondary section?"
 
@@ -2440,8 +2420,6 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
 **Discovery questions:** "How long has your current English program been running?" "What happens when a foreign teacher leaves mid-year?" "How do you currently measure whether the English program is working?"
 
 **Solution teaser:** "printed English workbooks with a matching app, a fixed lesson plan for every lesson, teacher training, and quarterly observations. Your own Thai teachers teach the lessons, and the program stays when a teacher leaves."
-
-**Claims guardrail:** Blended Learning is "physical workbooks + digital app", never "AI + human teacher". No banned terms, no result promise, no discount, no free period, and no response time.
 
 **Success standard:** a scheduled demo with a named date and time.`,
         order: 6,
@@ -2538,7 +2516,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
               },
               {
                 criterion:
-                  "Proposes the pilot (one grade level, one semester) and promises no free period and no discount",
+                  "Proposes the pilot (one grade level, one semester) at the standard prices",
                 weight: 0.15,
                 passingScore: 60,
                 sourceRef: "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-2-the-30-minute-demo",
@@ -2563,7 +2541,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
 
 **The discount request:** "I cannot offer a discount. Our prices are built for Thai private-school budgets. What I can offer is a pilot: one grade level for one semester, so you see the system work before a full-school commitment. If you want to talk about multi-year terms, I will ask Daniel."
 
-**Next steps:** the grade level for the pilot, the semester, and a signed pilot agreement. Then the implementation contact plans the teacher training. Promise no response time.
+**Next steps:** the grade level for the pilot, the semester, and a signed pilot agreement. Then the implementation contact plans the teacher training.
 
 **Success standard:** the director agrees the pilot grade and semester, with the standard price.`,
         order: 8,
@@ -2600,7 +2578,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
               },
               {
                 criterion:
-                  "Moves to concrete next steps (the implementation contact, the training plan) and promises no response time",
+                  "Moves to concrete next steps (the implementation contact, the training plan)",
                 weight: 0.15,
                 passingScore: 60,
                 sourceRef: "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-3-the-price-conversation-close",
@@ -2630,7 +2608,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
             ],
             correctAnswer: "One grade level for one semester.",
             explanation:
-              "The pilot is one grade level for one semester. Whether the pilot is paid or free is not decided (Q-SV-05), so the seller promises no free period and no discount.",
+              "The pilot is one grade level for one semester. Whether the pilot is paid or free is not decided (Q-SV-05), so the seller quotes the standard prices and asks Daniel about the pilot terms.",
           },
           {
             question: "Which are the Big 4 of the classroom-fidelity protocol?",
