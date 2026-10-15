@@ -292,6 +292,8 @@ It is a fact that expires (PR scope doc §8). Rules:
 8. No placement trial screen exists: the LINE placement trial is not in the Tutor Advantage code (PR script v1.4; PR raises an open question for Daniel). A lesson shows no app screen for the trial.
 9. The school sale (S7) uses no Tutor screens. It uses the Primary Advantage set `assets/screenshots/primary-advantage/rpg-skin-2026-10-06/` (Phases 2–5 accepted for public use), only for features that ship with the cutover.
 
+**Infographics (PR, 2026-10-15):** advantage-pr `c93ab4d`, `assets/sales-training/2027/infographics/`, 8 PNG (1440 px wide, 1435–1859 px high, 0.2–0.3 MB): `placement-to-book-map-{th,en}` (S4, S5), `commission-scale-{th,en}` (S6), `family-sale-steps-{th,en}` (S5), `school-tiers-and-pilot-{th,en}` (S7). Captions and target lessons: `assets/sales-training/2027/README.md`. Do not upload an item before Daniel accepts its Thai.
+
 PR's starting list (I draft the full list after the text source set; PR checks it):
 - S4: student-mobile 04-dashboard, 18-lesson-lobby, 22-live-p02-flashcards, 24-live-p03-read-article, 17-voice-practice; tutor-desktop 16-lesson-hub, 22-live-p01-launch.
 - S5: student-mobile 02-login, 03-consent-gate, 10-payment-age-check, 12-schedule, 17-voice-practice, 51-progress.
@@ -314,6 +316,7 @@ PR's starting list (I draft the full list after the text source set; PR checks i
 
 - **S1** starts now. It is a bug fix, so it is allowed under the feature freeze.
 - **S2–S10** start when (a) the PR source-set commit exists and (b) the feature freeze ends after the Primary deployment.
+- **Owner decision (2026-10-15): draft now, ship later.** The S2–S7 lesson, roleplay, rubric, and content-test work starts now, only on the `sales/training-2027` branch: no merge, no deploy, no database work, and no heavy job in the cutover window. The S8 and S11 code changes, the S9 regeneration, and the S10 release wait for the end of the freeze.
 - **S11** app code starts when the feature freeze ends. The media references go into the seed when PR delivers the files. If the files are late, S10 releases without them, and a later seed adds them.
 
 ## Dependencies
