@@ -31,8 +31,8 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
     - [x] `packages/domain/src/sales/roleplay-evaluator.ts`: main model, then the backup model, both single-pass audio; remove the speech-to-text path and the Nemotron and Parakeet defaults; JSDoc
     - [x] `apps/sales-advantage/app/api/roleplay-attempts/route.ts`: `maxDuration` 180
     - [x] Tests green; package `tsc` and eslint for `packages/ai`, `packages/domain`, `apps/sales-advantage`
-- [ ] Task: Live model check before deploy
-    - [ ] Run the scratchpad Thai test clips (WebM) through the new adapter code with the production models; record scores, time, and cost in `measure/tracks/sales_training_2027_20261015/scoring-check.md`
+- [x] Task: Live model check before deploy
+    - [x] Run the scratchpad Thai test clips (WebM) through the new adapter code with the production models; record scores, time, and cost in `measure/tracks/sales_training_2027_20261015/scoring-check.md`
 - [ ] Task: Deploy a no-traffic candidate
     - [ ] Add the new model secret versions in Secret Manager (owner OK first)
     - [ ] Build and deploy with the existing Sales release path (`scripts/promote-sales-candidate.sh`), no traffic
