@@ -162,3 +162,46 @@ reply that did not match the schema and 3 "fetch failed".
 backup `google/gemini-2.5-flash-lite` with `google/gemini-3.8-flash` and `reasoning.effort: "low"`.
 This needs one adapter change: the media call sends an optional reasoning setting. Do not use
 `jev-router`, `inkling-small`, or `gpt-audio-mini`.
+
+**Owner decision (2026-10-15):** main `qwen/qwen3.8-omni-flash`, backup `google/gemini-3.8-flash`
+with low reasoning effort (`033ce6e3a`).
+
+## 2026-10-15 — Thai voice and claims clips (PR review of the S5 check)
+
+PR found 2 gaps: the weak clips tested only 3 of the 9 claims items, and the Thai clips used an
+English voice (`English_Graceful_Lady` with the Thai language boost). New clips: the Thai house
+voice `Thai_Optimistic_girl` (speech-2.8-hd, language boost Thai) for the 9 Thai clips, and 7
+claim clips.
+Each claim clip is a strong Thai answer with one claim added, so only the claims criterion must fail
+it. The item numbers are those of the rubric claims text.
+
+| Clip | Claims item | Added line |
+|---|---|---|
+| `r3-th-c-name` | 6, a book name without the product name | "Origins 2" in place of "Reading Advantage Origins 2" |
+| `r4-th-c-level` | 4, a book that is not printed, a level above A2 | "Primary Advantage Quest 5 ... ระดับ B1" |
+| `r1-th-c-reedy` | 3, Read Along with Reedy or an AI tutor | an AI tutor Reedy who reads with the child every day |
+| `r5-th-c-pearson` | 5, Pearson, GSE, or YLE | each book is leveled to the Pearson GSE standard |
+| `r2-th-c-earnings` | 7, an earnings figure in a family sale | the tutor's 40% commission, about 1,200 baht for each package |
+| `r1-th-c-best` | 9, "leading", "best", "#1" | "the number one English course in Thailand" |
+| `r4-th-c-science` | 8, a date for Science, Math, or Zhongwen | "Science Advantage opens next January" |
+
+The Managed Service part of item 8 is a school-sale item and has no Tutor clip. The Thai voice is
+faster: the R1 text is 46 s (57 s with the English voice).
+
+### Results (production prompt and schema; `CLIP_DIR=clips-thv`)
+
+| Model | Claim clips (claims score 0, fail) | Weak clip (fail) | Normal clips (pass) | Errors | Time | Cost for each score |
+|---|---|---|---|---|---|---|
+| `google/gemini-3.8-flash`, low reasoning (the adapter option) | 7 of 7 | 1 of 1 | 8 of 8 | 0 of 16 | 9–18 s | $0.0048–0.0064 |
+| `qwen/qwen3.8-omni-flash`, run 1 | 1 of 1 | 1 of 1 | 2 of 2 | 12 of 16 | 36–114 s | $0.0013–0.0051 |
+| `qwen/qwen3.8-omni-flash`, run 2 with low reasoning | 2 of 3 | — | 2 of 2 | 11 of 16 | 51–116 s | $0.0022–0.0055 |
+
+- **Qwen errors:** 17 time-outs at the 120 s adapter limit, 4 replies that did not match the schema,
+  and 2 network errors. Qwen used 1,200–10,200 reasoning tokens for each call, also with
+  `reasoning.effort: "low"` (it ignores the setting).
+- **Qwen wrong score:** run 2 passed `r5-th-c-pearson` with 100 (the claims criterion missed
+  "Pearson GSE").
+- **Adapter error text:** a time-out while the adapter read the reply body showed as "HTTP 200",
+  because OpenRouter sends the headers at once. The adapter now names the time-out.
+- **Effect on the decided order:** with Qwen as the main model, most Thai attempts wait 120 s for
+  the time-out, and then the backup scores them in 10–20 s.

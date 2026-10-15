@@ -299,6 +299,12 @@ It is a fact that expires (PR scope doc §8). Rules:
 
 **Decks (PR, 2026-10-15):** advantage-pr `1c80cb5`, `assets/sales-training/2027/decks/`, 16:9, Kanit and Sarabun embedded in the PDFs: `school-sale-deck-{th,en}` (PDF + PPTX, 13 slides, S7; a leave-behind PDF for schools), `tutor-recruitment-deck-{th,en}` (PDF, 14 slides, S6; never to parents), `parent-info-deck-{th,en}` (PDF, 7 slides, S5; the tutor sends it in LINE), `trainer-deck-{th,en}` (PDF + PPTX, 18 slides; internal only, for all lessons). Facts that expire and the rebuild source: `assets/sales-training/2027/README.md` v0.2 and `assets/sales-training/2027/source/decks/`. Do not upload a deck before Daniel accepts its Thai.
 
+**Media list complete (PR, 2026-10-15):** advantage-pr `1b5ceb5`, `assets/sales-training/2027/`, README v0.4 (captions, sizes, and facts that expire for each file). 12 items in TH and EN. Each item waits for Daniel's acceptance and his Thai check before the upload.
+- Changed in `1b5ceb5`: `school-sale-deck` slide 6 shows only Pre-A1, A1, and A2 with the S7 line "CEFR-aligned: the active program covers Pre-A1 to A2" (before: "Pre-A1 (A0) to B2 in 15 levels"). If an S7 lesson shows an image of slide 6, take the image again. Slide 13: no one-pager in the leave-behind.
+- Videos, `videos/` (MP4 1920×1080, H.264 and AAC, 5.6–9.2 MB, internal training): `family-sale-flow-{th,en}` (1:48, 2:04; S5), `commission-scale-{th,en}` (2:22, 3:01; S6), `school-sale-overview-{th,en}` (2:47, 3:19; S7), `one-catalogue-two-channels-{th,en}` (1:56, 2:33; S4). The first 6 are also public on YouTube (Daniel's playlist `PLVb-AbiIbmlA`, the same files); `one-catalogue-two-channels` is not on YouTube yet.
+- Video facts that expire: "from 3,000 baht" (family); school prices and procurement February–April 2027 (school); base rate 0.5 (commission); "until May 2027 the focus is Tutor Advantage" (catalogue). The videos give no print date and no hours for each class package (Q-SE-14).
+- Open for Daniel: the video source in a lesson — the bucket file (`training-media/v<n>/<lang>/`, the S11 rule) or the YouTube link.
+
 PR's starting list (I draft the full list after the text source set; PR checks it):
 - S4: student-mobile 04-dashboard, 18-lesson-lobby, 22-live-p02-flashcards, 24-live-p03-read-article, 17-voice-practice; tutor-desktop 16-lesson-hub, 22-live-p01-launch.
 - S5: student-mobile 02-login, 03-consent-gate, 10-payment-age-check, 12-schedule, 17-voice-practice, 51-progress.
@@ -349,8 +355,8 @@ The claims criterion has passingScore 90. It fails the attempt on any one of the
 5. GSE, Pearson, or YLE words.
 6. A book name without the product name.
 7. An earnings figure in a family sale (commission talk belongs to recruitment only).
-8. A Managed Service sale.
-9. A date for Science, Math, or Zhongwen Advantage.
+8. A Managed Service sale, or a date for Science, Math, or Zhongwen Advantage.
+9. "Leading", "best", "#1", or a percentage with no source.
 
 ## Out of Scope
 
