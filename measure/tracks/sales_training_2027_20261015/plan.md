@@ -16,10 +16,10 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
     - [x] Test: 6 cases in `packages/domain/src/sales/__tests__/permissions-and-evaluator.test.ts` (observed 80/pass case → 42/fail, per-criterion gate, all pass, name match and missing criterion, empty rubric, primary and fallback paths)
     - [x] Implement: apply it on both evaluator paths in `packages/domain/src/sales/roleplay-evaluator.ts`
     - [x] Commit with the package `tsc` result (domain `tsc --noEmit` clean)
-- [ ] Task: Contract for audio media calls through chat completions
-    - [ ] Define the audio format map in the OpenRouter adapter: `audio/webm` → `webm`, `audio/ogg` → `ogg`, `audio/wav` → `wav`, `audio/mpeg` and `audio/mp3` → `mp3`; any other type throws `AIClientError` (`UNSUPPORTED`)
-    - [ ] Define the env contract: `SALES_AUDIO_EVAL_MODEL` (default `qwen/qwen3.8-omni-flash`) and `SALES_AUDIO_EVAL_FALLBACK_MODEL` (default `google/gemini-2.5-flash-lite`); remove `SALES_AUDIO_EVAL_FALLBACK_STT_MODEL` and `SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL`
-    - [ ] Update `apps/sales-advantage/.env.example` and the `--set-secrets` lists in `apps/sales-advantage/cloudbuild.yaml`
+- [x] Task: Contract for audio media calls through chat completions `dbe5efecc`
+    - [ ] Define the audio format map (done with the implementation task) in the OpenRouter adapter: `audio/webm` → `webm`, `audio/ogg` → `ogg`, `audio/wav` → `wav`, `audio/mpeg` and `audio/mp3` → `mp3`; any other type throws `AIClientError` (`UNSUPPORTED`)
+    - [x] Define the env contract: `SALES_AUDIO_EVAL_MODEL` (default `qwen/qwen3.8-omni-flash`) and `SALES_AUDIO_EVAL_FALLBACK_MODEL` (default `google/gemini-2.5-flash-lite`); remove `SALES_AUDIO_EVAL_FALLBACK_STT_MODEL` and `SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL`
+    - [x] Update `apps/sales-advantage/.env.example` and the `--set-secrets` lists in `apps/sales-advantage/cloudbuild.yaml`
 - [ ] Task: Red tests for the media request
     - [ ] `packages/ai`: `generateObjectFromMedia` posts to `/chat/completions` with `input_audio {data, format: "webm"}` and a `json_schema` response format made by `zodSchema()`, parses the reply, validates it with the zod schema, and maps HTTP and parse errors to `AIClientError`
     - [ ] `packages/ai`: a WebM file never reaches the Responses request format
