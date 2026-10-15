@@ -4,7 +4,7 @@
 > **Type:** feature (Story S1 is a bug fix)
 > **Created:** 2026-10-15
 > **Owner:** Daniel Bo
-> **Agreed with:** the PR session (advantage-pr), 2026-10-15 — products, priorities, and owner decisions agreed; the story list, branches, and work split were sent to PR on 2026-10-15 (reply pending)
+> **Agreed with:** the PR session (advantage-pr), 2026-10-15 — products, priorities, owner decisions, the story list, the branches, and the work split; PR added the "facts that expire" check (S4, S10), the founders as Family-branch testers (S5, S8), and Story S11 (supporting media)
 > **Worktree:** `~/Desktop/rama-worktrees/sales-training`, branch `sales/training-2027` from `origin/master` `0a29d574e`
 
 ## Overview
@@ -68,9 +68,17 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
 2. **School pilot shape:** one grade level, one semester. Paid or free stays open (Q-SV-05). Teach no free period and no discount.
 3. **School prices:** App-Only ~1,000 ฿ and Blended Learning ~1,500 ฿ for each student each year. Founding Schools (~900 ฿) is removed. Managed Service is not sold.
 4. **Tutor recruitment:** talk openly about the commission scale (unilevel, progressive rates from 40% to about 71.4%, differential commission on the tutors you bring in). An earnings example must match the payout rules; PR checks it under Q-SV-16 first.
+   - **Q-SV-16 result (PR, 2026-10-15),** from the tutor-advantage payout code (`commissionService.ts`, `settlementService.ts`); Daniel confirmed the production base rate 0.5:
+     - Rate below 20,000 ฿ group volume (GV): 40% + GV / 200,000.
+     - Rate from 20,000 ฿ GV: 0.5 × (1 − 0.3^(1 + log₅(GV / 20,000))) / 0.7. The rate is 50% at 20,000 ฿ GV, and its limit is about 71.4%.
+     - The differential payout is the rate on your group volume minus what your recruits get.
+     - A tutor with recruits but no own students gets no payout. An unverified tutor gets no payout.
+     - The step table in the old recruitment kit (40/50/55/60/65%) is wrong.
+     - Checked example: 10 own students at 3,000 ฿ in one month = 30,000 ฿ GV = 55.6% = about 16,700 ฿ (the old kit said 12,000 ฿).
 5. **Placement:** book levels 1–4 only. The result is a program and a book level. Children: Primary Advantage Origins 1, Origins 2, Origins 3.1/3.2, Quest 4 (Pre-A1 to A1). Secondary students: Reading Advantage Origins 1, Origins 2, Origins 3.1/3.2, Quest 4 (A1 to A2). Parent-facing words use CEFR names only. If the book is not printed, offer the nearest printed book below the level. No closing lines for B1 and above.
-6. **Tutor accounts:** a new CONTRACTOR company role, not EMPLOYEE. This is separate monorepo work after the Primary cutover (out of scope here).
-7. **Thai roleplays:** each Tutor roleplay has Thai text and an English version.
+6. **Tutor accounts:** a new CONTRACTOR company role, not EMPLOYEE. This is separate monorepo work after the Primary cutover (out of scope here). Until it ships, tutors cannot sign in, and Daniel and Phikul test the Family branch.
+7. **Thai roleplays:** each Tutor roleplay has Thai text first and English text second. The English text is a second option for the trainee, not a backup.
+8. **Supporting media (Daniel, 2026-10-15):** 4 videos (Thai voice-over, about 1–2 minutes), 4 infographics (Thai first, with an English version), and 4 decks (Thai and English). PR makes them in advantage-pr after the text source set (Story S11).
 
 ## Stories
 
@@ -124,6 +132,8 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
 - Given the tier lesson, When it states prices, Then it gives App-Only ~1,000 ฿, Blended Learning ~1,500 ฿, Tutor Advantage from 3,000 ฿ for each class package, and Managed Service as "not sold today; it launches in 2027 only if 1–2 more schools sign".
 - Given the claims lesson, When it gives outcome language, Then it uses only the approved forms of the outcome-claims policy, CEFR names only, and no GSE, Pearson, or YLE names.
 - Given a book name, When a lesson uses it, Then it carries the product name ("Primary Advantage Origins 2", never "Origins 2").
+- Given the product lesson, When it describes the books, Then it shows the placement-to-book map (program and book level 1–4) and the print status of each book.
+- Given a fact that expires (the PR scope doc lists them: the Primary cutover, target 2026-10-17/18, last date 2026-10-20; Primary Advantage Origins 3.2 and Quest 4 on sale in Tutor Advantage at about 2026-11-08; Reedy Preview in Primary Advantage only after the cutover passes), When a lesson states it, Then the content test names it, so that S10 can check it again.
 
 **Estimate:** M
 **Priority:** Must
@@ -151,7 +161,8 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
 
 **Acceptance Criteria:**
 - Given the recruitment lesson, When it explains pay, Then it states the unilevel scale, the progressive rates from 40% to about 71.4%, and the differential commission, as the PR source states them.
-- Given an earnings example, When it is in a lesson, Then it is the example that PR checked against the payout rules under Q-SV-16; without that check, the lesson has no earnings example.
+- Given an earnings example, When it is in a lesson, Then it is the example that PR checked under Q-SV-16 (10 own students at 3,000 ฿ in one month = 30,000 ฿ GV = 55.6% = about 16,700 ฿), or another example that PR checks the same way.
+- Given the commission lesson, When it explains the rules, Then it states that a tutor with recruits but no own students gets no payout, and that an unverified tutor gets no payout. It never uses the old step table (40/50/55/60/65%).
 - Given the recruitment roleplay, When it is scored, Then the rubric fails an invented earnings figure.
 
 **Estimate:** M
@@ -180,6 +191,7 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
 - Given the core modules (S3, S4) are complete, When the trainee opens the course, Then both the Family branch (S5, S6) and the School branch (S7) are unlocked.
 - Given a branch module, When its prerequisite is checked, Then the prerequisite is the core, not the previous branch.
 - Given the existing linear courses, When no branch data exists, Then the current line-by-line unlocking does not change.
+- Given the CONTRACTOR role has not shipped, When the Family branch is tested, Then Daniel and Phikul test it with their own accounts.
 
 **Estimate:** M
 **Priority:** Should
@@ -205,9 +217,35 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
 - Given the drafted lessons, When PR has done its claims review and Daniel has checked all Thai, Then Daniel signs `curriculum-approval.json` and puts its SHA-256 in Secret Manager, as the existing release process requires.
 - Given the approval, When `seed:production-curriculum` runs, Then it seeds the new course, and `verify:production-curriculum` passes.
 - Given the deployed release, When the owner does the manual check, Then the owner confirms the branches, one Thai roleplay, one English roleplay, and one quiz.
+- Given the "facts that expire" list in the PR scope doc, When the seed goes to production, Then each fact is checked against advantage-pr on that day, and each changed fact is corrected first.
+- Given the Family branch is released, When it is announced to tutors, Then one tutor account with the CONTRACTOR role can sign in and open the Family branch. Before that, only the founders, distributor reps, and staff use the release.
 
 **Estimate:** M
 **Priority:** Must
+
+### Story S11: Lessons show supporting media
+**As a** trainee
+**I want** a theory lesson to show the training videos, infographics, and decks
+**So that** I learn the sale from the same material that I show to parents, tutors, and schools
+
+**Facts (checked 2026-10-15):** theory lessons render Markdown with `react-markdown` 10,
+`remark-gfm`, and `skipHtml` (`apps/sales-advantage/components/lesson-content.tsx`). A rendering
+check of sample Markdown gave these results:
+- PNG: `![alt](url)` shows an image today.
+- PDF: `[text](url)` shows a link today, and the browser opens the PDF.
+- MP4: not possible today. `![alt](file.mp4)` gives a broken image, and `skipHtml` removes raw `<video>` HTML.
+- The app has no `public/` folder. Roleplay and quiz lessons do not render lesson Markdown.
+
+**Acceptance Criteria:**
+- Given a media file, When it is published for the course, Then it is in the Sales storage bucket under `training-media/v<n>/<th|en>/<file>`, not in the repo (the monorepo is public, and videos are large).
+- Given lesson Markdown with a `media:` key (`![alt](media:training-media/v1/th/family-sale.mp4)`), When a signed-in trainee opens the lesson, Then the server changes the key to a signed URL through the storage adapter (`getSignedUrl`, 1 hour).
+- Given an `.mp4` file in image syntax, When the lesson renders, Then it shows a video player with controls that plays inline on an iPhone.
+- Given a `.png` file in image syntax, When the lesson renders, Then it shows the image with its alt text. Given a `.pdf` link, When the trainee clicks it, Then the PDF opens in a new tab.
+- Given a `media:` key, When `seed:production-curriculum` runs, Then the seed stops if the object does not exist in the bucket.
+- Given a changed media file, When it replaces an approved file, Then it gets a new version folder, so an approved lesson never shows changed content (no hashes).
+
+**Estimate:** M
+**Priority:** Should
 
 ## Non-Functional Requirements
 
@@ -223,16 +261,40 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
 
 - **S1** starts now. It is a bug fix, so it is allowed under the feature freeze.
 - **S2–S10** start when (a) the PR source-set commit exists and (b) the feature freeze ends after the Primary deployment.
+- **S11** app code starts when the feature freeze ends. The media references go into the seed when PR delivers the files. If the files are late, S10 releases without them, and a later seed adds them.
+
+## Dependencies
+
+- **CONTRACTOR company role** (tutor accounts): separate monorepo work, owned by the Monorepo session (agreed 2026-10-15). It starts after the Primary cutover (last date 2026-10-20). It must ship before the Family branch is announced to tutors (S10). This track does not close until one tutor signs in with that role, or until Daniel moves that check to the CONTRACTOR track.
 
 ## Work Split
 
-- **PR session:** the source set; Thai and English text and success criteria for each Tutor roleplay; the Q-SV-16 check; a claims review of the drafted lessons.
-- **This track (monorepo):** lesson drafts in the seed from the PR sources; rubric rows from the PR success criteria (3–5 criteria, weights sum to 1, passingScore 90 for the claims criterion); app and scorer changes; tests; release.
+- **PR session:**
+  - The source set, one commit for each phase (scope and pricing, Tutor family sale, Tutor recruitment, school sale, close). PR sends the hash of the last text commit.
+  - For each Tutor roleplay: the Thai text first and the English text second; the scenario; 3–5 success criteria with suggested weights; the claims criterion with passingScore 90.
+  - The Q-SV-16 check (done 2026-10-15) and a claims review of the drafted lessons before Daniel approves.
+  - The S11 media files (videos, infographics, decks), after the text source set.
+- **This track (monorepo):** lesson drafts in the seed from the PR sources; rubric rows from the PR success criteria (3–5 criteria, weights sum to 1); app and scorer changes; tests; release.
 - **Daniel:** checks all Thai; signs the approval record; does the manual checks.
+
+### Claims criterion (each Tutor and school roleplay)
+
+The claims criterion has passingScore 90. It fails the attempt on any one of these:
+
+1. A guarantee or an outcome promise.
+2. False urgency.
+3. A promise of Read Along with Reedy.
+4. A book that is not printed, or any level above book level 4.
+5. GSE, Pearson, or YLE words.
+6. A book name without the product name.
+7. An earnings figure in a family sale (commission talk belongs to recruitment only).
+8. A Managed Service sale.
+9. A date for Science, Math, or Zhongwen Advantage.
 
 ## Out of Scope
 
-- The CONTRACTOR company role and tutor account creation (separate monorepo work after the cutover; tutors cannot sign in until it ships).
+- The CONTRACTOR company role and tutor account creation (see Dependencies; tutors cannot sign in until it ships).
+- Making the media files (PR does this in advantage-pr). Media in roleplay and quiz lessons.
 - Locale columns for lesson content (bilingual text goes in the same field, Thai first).
 - The Sales chat empty-bubble defect (`measure/tech-debt.md`, 2026-09-22).
 - Mastery runtime wiring and evidence projection (owned by `sales_mastery_consumer_20260810`).

@@ -3,11 +3,11 @@
   "type": "feature",
   "status": "in-progress",
   "created_at": "2026-10-15T06:00:00Z",
-  "updated_at": "2026-10-15T06:00:00Z",
+  "updated_at": "2026-10-15T12:00:00Z",
   "description": "Sales Advantage 2027 training: repair roleplay scoring (Thai and English) and rebuild the curriculum for the 2027 products and sales strategies, agreed with the PR session.",
-  "estimated_tasks": 55,
+  "estimated_tasks": 63,
   "actual_tasks": null,
-  "deviation_notes": "",
+  "deviation_notes": "2026-10-15: PR agreed the stories and added S11 (supporting media), the facts-that-expire check, and the CONTRACTOR tutor-access gate.",
   "sprint": {
     "goal": "Sales Advantage scores roleplay recordings in Thai and English, and it teaches the 2027 products and the sales strategy for each product to tutors, the founders, distributor reps, and a staff sales hire.",
     "stories": [
@@ -20,7 +20,8 @@
       { "id": "S7", "title": "School sale with Primary Advantage and Blended Learning", "size": "L", "priority": "Must", "status": "pending" },
       { "id": "S8", "title": "Role paths in one course", "size": "M", "priority": "Should", "status": "pending" },
       { "id": "S9", "title": "Mastery bindings follow the new course", "size": "M", "priority": "Must", "status": "pending" },
-      { "id": "S10", "title": "Release the new curriculum", "size": "M", "priority": "Must", "status": "pending" }
+      { "id": "S10", "title": "Release the new curriculum", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S11", "title": "Lessons show supporting media", "size": "M", "priority": "Should", "status": "pending" }
     ],
     "demo_notes": null,
     "retro_ref": null

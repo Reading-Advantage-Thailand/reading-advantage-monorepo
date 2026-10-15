@@ -19,7 +19,7 @@ This file tracks all major tracks for the project.
 
 - [~] **Track: Sales Advantage 2027 training — roleplay scoring repair and curriculum rebuild** — *created 2026-10-15*
   *Link: [./tracks/sales_training_2027_20261015/](./tracks/sales_training_2027_20261015/)*
-  *Status: S1 (scoring bug fix) in progress on worktree `rama-worktrees/sales-training`, branch `sales/training-2027`; S2–S10 start after the PR source-set commit and the end of the feature freeze | Priority: HIGH | Requested by the owner; scope agreed with PR*
+  *Status: S1 (scoring bug fix) code done, deploy after the Primary cutover, on worktree `rama-worktrees/sales-training`, branch `sales/training-2027`; S2–S11 start after the PR source-set commit and the end of the feature freeze; tutor access needs the CONTRACTOR role (Monorepo, after the cutover) | Priority: HIGH | Requested by the owner; scope agreed with PR*
   *Note: roleplay scoring fails in production for every recording (Responses format rejects audio); models: qwen/qwen3.8-omni-flash, backup google/gemini-2.5-flash-lite.*
 
 - [ ] **Track: Real Advantage logos on the www site** — *created 2026-10-08*

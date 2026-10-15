@@ -78,6 +78,8 @@ _Story ref: spec.md#story-s3-general-selling-modules-are-correct_
 _Story ref: spec.md#story-s4-product-knowledge-matches-strategy-v18_
 
 - [b] Task: Contract — product facts table in the content test (states, prices, Managed Service line, book-name prefix, CEFR-only) — deferred:start-gate-pr-source-set-and-freeze-end
+    - [ ] Add the placement-to-book map and the print status of each book
+    - [ ] Name each "fact that expires" from the PR scope doc in the content test, so S10 can find and check it
 - [b] Task: Test — red run against the current "9-Product Suite" lesson — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Implement — replace the product module lessons and quiz from the PR sources — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
@@ -97,10 +99,11 @@ _Story ref: spec.md#story-s5-tutor-family-sale-thai-first-with-english_
 
 ## Phase S6: Tutor recruitment
 _Story ref: spec.md#story-s6-tutor-recruitment_
-_Gate for the earnings example: PR's Q-SV-16 check._
+_Q-SV-16 check done by PR on 2026-10-15 (continuous rate, base 0.5; see spec.md, owner decision 4)._
 
 - [b] Task: Contract — commission facts from the PR recruitment kit v1.2 in the content test — deferred:start-gate-pr-source-set-and-freeze-end
-- [b] Task: Test — red tests for the commission scale and for "no earnings example without the Q-SV-16 check" — deferred:start-gate-pr-source-set-and-freeze-end
+    - [ ] The rate rule, the differential payout, "no own students → no payout", "unverified → no payout", the checked example (30,000 ฿ GV = 55.6% = about 16,700 ฿)
+- [b] Task: Test — red tests for the commission scale, the checked example, and no old step table (40/50/55/60/65%) — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Implement — recruitment lesson, roleplay, and rubric (an invented earnings figure fails) — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Measure - User Manual Verification 'Phase S6: Tutor recruitment' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
@@ -123,6 +126,7 @@ _Blast radius (grep): `deriveSalesLearningAccess` (callers: `packages/domain/src
 - [b] Task: Implement — `packages/domain/src/sales/progression.ts`, the seed, and the dashboard labels (EN/TH messages) — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Generate docs and doctor — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Measure - User Manual Verification 'Phase S8: Role paths in one course' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+    - [ ] Until the CONTRACTOR role ships, Daniel and Phikul test the Family branch with their own accounts
 
 ## Phase S9: Mastery bindings follow the new course
 _Story ref: spec.md#story-s9-mastery-bindings-follow-the-new-course_
@@ -139,6 +143,28 @@ _Story ref: spec.md#story-s10-release-the-new-curriculum_
 - [b] Task: PR claims review of the drafted lessons; fix each finding — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Daniel checks all Thai text — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Daniel completes `curriculum-approval.json` and puts its SHA-256 in Secret Manager (existing process) — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: On the seed day, check each "fact that expires" (PR scope doc) against advantage-pr; correct each changed fact before the seed — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Run `seed:production-curriculum` and `verify:production-curriculum`; deploy through the existing Sales release path — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Update `measure/deployment-status.md`, `measure/tracks.md`, and close the predecessor rows that this track replaces — deferred:start-gate-pr-source-set-and-freeze-end
 - [b] Task: Measure - User Manual Verification 'Phase S10: Release the new curriculum' (Protocol in workflow.md) — deferred:start-gate-pr-source-set-and-freeze-end
+- [b] Task: Tutor access gate — one tutor account with the CONTRACTOR role signs in and opens the Family branch before the branch is announced to tutors — deferred:contractor-role-track-monorepo-after-cutover
+
+## Phase S11: Lessons show supporting media
+_Story ref: spec.md#story-s11-lessons-show-supporting-media_
+_Start gate: the feature freeze has ended (app code); PR delivers the files after the text source set (media references)._
+_Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[locale]/lesson/[id]/page.tsx`); the `sales.lesson` query in `packages/api/src/routers/sales.ts`._
+
+- [b] Task: Contract — media keys and file rules — deferred:start-gate-freeze-end
+    - [ ] `media:` key form `training-media/v<n>/<th|en>/<file>`; allowed types `.mp4` (H.264 and AAC), `.png`, `.pdf`
+    - [ ] A domain function changes each `media:` key in lesson Markdown to a URL through an injected signer; the app passes `storage.getSignedUrl` (1 hour), so `packages/domain` gets no storage dependency
+- [b] Task: Test — red tests — deferred:start-gate-freeze-end
+    - [ ] Domain: keys become signed URLs; other URLs do not change; a bad key or type throws
+    - [ ] `LessonContent`: `.mp4` in image syntax → `<video controls playsinline preload="metadata">`; `.png` → `<img>` with alt text; `.pdf` link → new tab; raw HTML stays dropped
+    - [ ] Seed gate: a missing object (`storage.exists`) stops `seed:production-curriculum`
+- [b] Task: Implement — resolver, `LessonContent` components, the lesson query, the seed check; JSDoc — deferred:start-gate-freeze-end
+- [b] Task: Media references — deferred:pr-media-files
+    - [ ] Upload the PR files to the Sales bucket at release, with the owner's OK; put the keys and the Thai and English alt text in the lessons
+    - [ ] Place the Tutor Advantage screenshot set (PR has it, 2026-10-15) where PR's list says
+- [b] Task: Generate docs and doctor — deferred:start-gate-freeze-end
+- [b] Task: Measure - User Manual Verification 'Phase S11: Lessons show supporting media' (Protocol in workflow.md) — deferred:start-gate-freeze-end
+    - [ ] On an iPhone and on a desktop: one video plays inline, one infographic shows, one PDF opens
