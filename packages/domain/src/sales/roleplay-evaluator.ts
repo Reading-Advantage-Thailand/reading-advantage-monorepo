@@ -40,6 +40,66 @@ const DEFAULT_PRIMARY_MODEL =
 const DEFAULT_FALLBACK_STT_MODEL = "nvidia/parakeet-tdt-0.6b-v3";
 /** Default fallback text-evaluation model (OpenRouter, free). */
 const DEFAULT_FALLBACK_EVAL_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free";
+/** Per-criterion pass mark when the rubric has no criteria (matches the quiz threshold). */
+const DEFAULT_PASSING_SCORE = 70;
+
+/**
+ * Replaces the model's overall score and pass flag with values computed from
+ * the rubric: the weighted mean of the criterion scores, and a pass only when
+ * every criterion meets its passing score. A rubric criterion the model did
+ * not score counts as 0. With no rubric criteria, the model's criteria get
+ * equal weights and the default pass mark.
+ * @param result The model's evaluation.
+ * @param rubricCriteria The rubric criteria with weights and passing scores.
+ * @returns The evaluation with rubric-ordered criteria and computed overall score and pass flag.
+ */
+export function scoreRoleplayEvaluation(
+  result: RoleplayEvaluationResult,
+  rubricCriteria: RubricOutput["criteriaJson"],
+): RoleplayEvaluationResult {
+  const normalize = (text: string) => text.trim().toLowerCase();
+  const criteria =
+    rubricCriteria.length > 0
+      ? rubricCriteria.map((rubricCriterion, index) => {
+          const scored =
+            result.criteria.find(
+              (c) =>
+                normalize(c.criterion) === normalize(rubricCriterion.criterion),
+            ) ??
+            (result.criteria.length === rubricCriteria.length
+              ? result.criteria[index]
+              : undefined);
+          return {
+            ...rubricCriterion,
+            score: scored?.score ?? 0,
+            feedback: scored?.feedback ?? "Not evaluated.",
+          };
+        })
+      : result.criteria.map((c) => ({
+          ...c,
+          weight: 1,
+          passingScore: DEFAULT_PASSING_SCORE,
+        }));
+  const totalWeight = criteria.reduce((sum, c) => sum + c.weight, 0);
+  const overallScore =
+    totalWeight > 0
+      ? Math.round(
+          criteria.reduce((sum, c) => sum + c.score * c.weight, 0) /
+            totalWeight,
+        )
+      : 0;
+  return {
+    ...result,
+    overallScore,
+    passed:
+      criteria.length > 0 && criteria.every((c) => c.score >= c.passingScore),
+    criteria: criteria.map(({ criterion, score, feedback }) => ({
+      criterion,
+      score,
+      feedback,
+    })),
+  };
+}
 
 /**
  * Builds the evaluation prompt for a roleplay attempt from the scenario, rubric,
@@ -115,6 +175,8 @@ export function buildEvaluationPrompt(
  * `generateObject`. This loses paralinguistic cues but is more reliable.
  *
  * If both paths fail, a `SalesError` with code `EVALUATION_FAILED` is thrown.
+ * On either path, the overall score and pass flag come from
+ * `scoreRoleplayEvaluation`, not from the model.
  *
  * @param aiClient - The shared AIClient (OpenRouterProvider in production)
  * @param schema - The Zod schema for the evaluation result
@@ -140,13 +202,14 @@ export function aiClientToEvaluateRoleplay(
       DEFAULT_FALLBACK_EVAL_MODEL;
     const primaryPrompt = buildEvaluationPrompt(scenario, rubric, excerpts);
     try {
-      return await aiClient.generateObjectFromMedia({
+      const result = await aiClient.generateObjectFromMedia({
         schema,
         prompt: primaryPrompt,
         media: audio,
         model: primaryModel,
         temperature: 0.2,
       });
+      return scoreRoleplayEvaluation(result, rubric.criteriaJson);
     } catch (primaryError) {
       // Fallback: STT → text-eval
       try {
@@ -167,10 +230,14 @@ export function aiClientToEvaluateRoleplay(
           temperature: 0.2,
         });
         // Ensure transcriptExcerpt is populated even if the eval model omits it
-        if (!result.transcriptExcerpt) {
-          return { ...result, transcriptExcerpt: transcript.slice(0, 600) };
-        }
-        return result;
+        return scoreRoleplayEvaluation(
+          {
+            ...result,
+            transcriptExcerpt:
+              result.transcriptExcerpt || transcript.slice(0, 600),
+          },
+          rubric.criteriaJson,
+        );
       } catch (fallbackError) {
         // FR-5: log both underlying errors and attach them via `cause` so two-tier
         // LLM failures are debuggable. The previous code discarded both
