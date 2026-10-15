@@ -279,18 +279,24 @@ export class OpenRouterProvider implements AIClientWithProvenance {
         error
       );
     }
-    const body = (await response.json().catch(() => null)) as {
+    // OpenRouter sends the headers at once and the body when the model ends, so a slow
+    // model can time out here, while the body is read.
+    let readError: unknown;
+    const body = (await response.json().catch((error: unknown) => {
+      readError = error;
+      return null;
+    })) as {
       error?: { message?: string };
       choices?: Array<{ message?: { content?: unknown } }>;
     } | null;
     const content = body?.choices?.[0]?.message?.content;
     if (!response.ok || body?.error || typeof content !== "string" || !content) {
+      const reason =
+        body?.error?.message ?? (readError instanceof Error ? readError.message : undefined);
       throw new AIClientError(
-        `OpenRouter ${operation} failed: HTTP ${response.status}${
-          body?.error?.message ? ` ${body.error.message}` : ""
-        }`,
+        `OpenRouter ${operation} failed: HTTP ${response.status}${reason ? ` ${reason}` : ""}`,
         "PROVIDER_ERROR",
-        body
+        body ?? readError
       );
     }
     return content;

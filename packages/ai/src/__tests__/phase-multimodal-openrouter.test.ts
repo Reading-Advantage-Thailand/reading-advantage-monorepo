@@ -210,6 +210,28 @@ describe("OpenRouterProvider.generateObjectFromMedia", () => {
     await expect(provider.generateObjectFromMedia(input)).rejects.toMatchObject({ code: "PROVIDER_ERROR" });
   });
 
+  it("names the time-out when the reply body stops before it is complete", async () => {
+    // OpenRouter sends the 200 headers at once and the body only when the model ends, so a
+    // slow model times out while the adapter reads the body (seen 2026-10-15).
+    const slowReply = new Response("{}", { status: 200 });
+    vi.spyOn(slowReply, "json").mockRejectedValue(
+      new DOMException("The operation was aborted due to timeout", "TimeoutError"),
+    );
+    fetchMock.mockResolvedValueOnce(slowReply);
+    const provider = new OpenRouterProvider({ apiKey: "test-key" });
+
+    await expect(
+      provider.generateObjectFromMedia({
+        schema: rubricSchema,
+        prompt: "p",
+        media: { buffer: audioBuffer, mimeType: "audio/webm" },
+      }),
+    ).rejects.toMatchObject({
+      code: "PROVIDER_ERROR",
+      message: expect.stringContaining("The operation was aborted due to timeout"),
+    });
+  });
+
   it("throws PROVIDER_ERROR when the request itself fails", async () => {
     fetchMock.mockRejectedValueOnce(new Error("The operation was aborted due to timeout"));
     const provider = new OpenRouterProvider({ apiKey: "test-key" });
