@@ -271,9 +271,9 @@ check of sample Markdown gave these results:
 - PR makes each file to these rules: MP4 (H.264 and AAC, 720p or 1080p, about 25 MB or less); infographic PNG (1200–1600 px wide, 2 MB or less); decks as PDF, plus `.pptx` for the trainer deck and the school sale deck; lower-case ASCII names with hyphens; one file for each language; with each file, its language, Thai and English alt text, and its lesson.
 
 **Acceptance Criteria:**
-- Given a media file, When it is published for the course, Then it is in the Sales storage bucket under `training-media/v<n>/<th|en>/<file>`, not in the repo (the monorepo is public, and videos are large).
-- Given lesson Markdown with a `media:` key (`![alt](media:training-media/v1/th/family-sale.mp4)`), When a signed-in trainee opens the lesson, Then the server changes the key to a signed URL through the storage adapter (`getSignedUrl`, 1 hour).
-- Given an `.mp4` file in image syntax, When the lesson renders, Then it shows a video player with controls that plays inline on an iPhone.
+- Given an infographic or a deck, When it is published for the course, Then it is in the Sales storage bucket under `training-media/v<n>/<th|en>/<file>`, not in the repo (the monorepo is public).
+- Given lesson Markdown with a `media:` key (`![alt](media:training-media/v1/th/family-sale-steps-th.png)`), When a signed-in trainee opens the lesson, Then the server changes the key to a signed URL through the storage adapter (`getSignedUrl`, 1 hour).
+- Given a training video, When a lesson shows it, Then the lesson has a Markdown link to its YouTube page that opens in a new tab (Daniel, 2026-10-16); no MP4 file and no video player.
 - Given a `.png` file in image syntax, When the lesson renders, Then it shows the image with its alt text. Given a `.pdf` link, When the trainee clicks it, Then the PDF opens in a new tab.
 - Given a `media:` key, When `seed:production-curriculum` runs, Then the seed stops if the object does not exist in the bucket.
 - Given a changed media file, When it replaces an approved file, Then it gets a new version folder, so an approved lesson never shows changed content (no hashes).
@@ -304,7 +304,13 @@ It is a fact that expires (PR scope doc §8). Rules:
 - Changed in `1b5ceb5`: `school-sale-deck` slide 6 shows only Pre-A1, A1, and A2 with the S7 line "CEFR-aligned: the active program covers Pre-A1 to A2" (before: "Pre-A1 (A0) to B2 in 15 levels"). If an S7 lesson shows an image of slide 6, take the image again. Slide 13: no one-pager in the leave-behind.
 - Videos, `videos/` (MP4 1920×1080, H.264 and AAC, 5.6–9.2 MB, internal training): `family-sale-flow-{th,en}` (1:48, 2:04; S5), `commission-scale-{th,en}` (2:22, 3:01; S6), `school-sale-overview-{th,en}` (2:47, 3:19; S7), `one-catalogue-two-channels-{th,en}` (1:56, 2:33; S4). The first 6 are also public on YouTube (Daniel's playlist `PLVb-AbiIbmlA`, the same files); `one-catalogue-two-channels` is not on YouTube yet.
 - Video facts that expire: "from 3,000 baht" (family); school prices and procurement February–April 2027 (school); base rate 0.5 (commission); "until May 2027 the focus is Tutor Advantage" (catalogue). The videos give no print date and no hours for each class package (Q-SE-14).
-- Open for Daniel: the video source in a lesson — the bucket file (`training-media/v<n>/<lang>/`, the S11 rule) or the YouTube link.
+- **Decision (Daniel, 2026-10-16, through PR):** the lessons use the YouTube links for the videos: "use the YouTube links in the lessons, That's why I uploaded them." Links (advantage-pr `08fdc5f`, README v0.5):
+  - S5 family sale: th https://www.youtube.com/watch?v=-hFxfRmQ3wM, en https://www.youtube.com/watch?v=lvc979ref6M
+  - S6 tutor recruitment: th https://www.youtube.com/watch?v=-d2WBnLCVOk, en https://www.youtube.com/watch?v=54fsgdoxzs8
+  - S7 school sale: th https://www.youtube.com/watch?v=PH5D9niLoUg, en https://www.youtube.com/watch?v=o5HDBZBge-w
+  - Playlist: https://www.youtube.com/playlist?list=PLVb-AbiIbmlA
+  - S4 `one-catalogue-two-channels`: no link (not uploaded). The S4 video slot stays empty until PR sends the link.
+  - Decks and infographics keep the bucket rule, and each item waits for Daniel's acceptance and his Thai check.
 
 PR's starting list (I draft the full list after the text source set; PR checks it):
 - S4: student-mobile 04-dashboard, 18-lesson-lobby, 22-live-p02-flashcards, 24-live-p03-read-article, 17-voice-practice; tutor-desktop 16-lesson-hub, 22-live-p01-launch.

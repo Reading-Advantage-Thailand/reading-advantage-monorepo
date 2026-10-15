@@ -186,17 +186,18 @@ _Start gate: the feature freeze has ended (app code); PR delivers the files afte
 _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[locale]/lesson/[id]/page.tsx`); the `sales.lesson` query in `packages/api/src/routers/sales.ts`._
 
 - [b] Task: Contract — media keys and file rules — deferred:start-gate-freeze-end
-    - [ ] `media:` key form `training-media/v<n>/<th|en>/<file>`; allowed types `.mp4` (H.264 and AAC), `.png`, `.pdf`
+    - [ ] `media:` key form `training-media/v<n>/<th|en>/<file>`; allowed types `.png`, `.pdf` (videos are YouTube links, Daniel 2026-10-16)
     - [ ] A domain function changes each `media:` key in lesson Markdown to a URL through an injected signer; the app passes `storage.getSignedUrl` (1 hour), so `packages/domain` gets no storage dependency
 - [b] Task: Test — red tests — deferred:start-gate-freeze-end
     - [ ] Domain: keys become signed URLs; other URLs do not change; a bad key or type throws
-    - [ ] `LessonContent`: `.mp4` in image syntax → `<video controls playsinline preload="metadata">`; `.png` → `<img>` with alt text; `.pdf` link → new tab; raw HTML stays dropped
+    - [ ] `LessonContent`: `.png` → `<img>` with alt text; a `.pdf` link and a YouTube link → new tab; raw HTML stays dropped
     - [ ] Seed gate: a missing object (`storage.exists`) stops `seed:production-curriculum`
 - [b] Task: Implement — resolver, `LessonContent` components, the lesson query, the seed check; JSDoc — deferred:start-gate-freeze-end
 - [b] Task: Media references — deferred:pr-media-files
-    - [ ] Upload the PR files to the Sales bucket at release, with the owner's OK; put the keys and the Thai and English alt text in the lessons
+    - [ ] Upload the PR infographics and decks to the Sales bucket at release, with the owner's OK; put the keys and the Thai and English alt text in the lessons
+    - [ ] Put the YouTube links of the S5, S6, and S7 videos (TH and EN) in the lessons; the S4 video waits for its link from PR
     - [ ] Draft the screenshot → lesson list from PR's starting list and the 9 screenshot rules (spec.md S11), with each crop marked; PR checks it
     - [ ] Upload the checked (and cropped) screenshots under `training-media/v1/th/`; put their keys and Thai and English alt text in the lessons
 - [b] Task: Generate docs and doctor — deferred:start-gate-freeze-end
 - [b] Task: Measure - User Manual Verification 'Phase S11: Lessons show supporting media' (Protocol in workflow.md) — deferred:start-gate-freeze-end
-    - [ ] On an iPhone and on a desktop: one video plays inline, one infographic shows, one PDF opens
+    - [ ] On an iPhone and on a desktop: one YouTube video link opens, one infographic shows, one PDF opens
