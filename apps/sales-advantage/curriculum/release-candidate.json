@@ -4,7 +4,7 @@
   "graphSha256": "8c535bc2315640df658e7145042468a653bc869e938e37903c3dba55555bb43f",
   "source": {
     "repository": "advantage-pr",
-    "commit": "e6f7cc22e447bcaab73c1248af54cc8b590c9c3a",
+    "commit": "c211d1cab9bce0457c1c7ecb2ae6d7445583a305",
     "documents": [
       {
         "path": "09-sales-enablement/sales-training-scope-2027.md",
@@ -24,11 +24,11 @@
       },
       {
         "path": "09-sales-enablement/demo-scripts.md",
-        "sha256": "5e7f9e61f77b44a9f20c49a07fd72f29c19e30850e32ed44c4f3c730f9fbdb5a"
+        "sha256": "3c6f984aa8d3ae17765e8aa9ee7b07222a3f6644cb4601ff17893401236efd00"
       },
       {
         "path": "09-sales-enablement/demo-scripts-checklist.md",
-        "sha256": "70b17b0279368dc788453f75069583082ca3537269b81fc3ff6952948e1f1ceb"
+        "sha256": "400fac7cbad02d318173a9b739c4c6fc9635eaef256dd8bf1dce4e2c9d93f252"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/README.md",
@@ -36,11 +36,11 @@
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/faq.md",
-        "sha256": "3388378e99761ca27ee0de6221c8e083e1d86312f26be2125620199122b8f5f4"
+        "sha256": "99095062dfe2d7bf1239161c581c4a07f09de59daa7cb9c23d4e1892c6a466d0"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/objection-handling-guide.md",
-        "sha256": "47fd55d04c9ed5ad57ad6c0eec984c54cdb07c823eb5c3dd710fb02a778a5b93"
+        "sha256": "7d87aa7b7c7a613690205151334c2be9d547cf0ec86d7ca43e49c12e582567b2"
       },
       {
         "path": "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",

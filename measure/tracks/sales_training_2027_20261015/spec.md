@@ -128,6 +128,8 @@ with the version on its line 3:
 | `06-research-and-evidence/outcome-claims-policy.md` | 1.1 |
 | `15-business-applications/sales-advantage.md` | 0.2 |
 
+**Pin update (PR, 2026-10-15):** advantage-pr `c211d1cab9bce0457c1c7ecb2ae6d7445583a305` (source fixes from the claims review, `11a8072`, and the screen and parent deck fixes). Changed pinned documents: `demo-scripts.md` and `demo-scripts-checklist.md` 2.1 (leave-behind: the school sale deck), `distributor-rep-onboarding/faq.md` 1.3 (Q9, Q10), `distributor-rep-onboarding/objection-handling-guide.md` 1.3 (Objection 2). The other 16 documents did not change. The release candidate names `c211d1c` (commit after `048090037`).
+
 **PR notes for the seed (2026-10-15):**
 1. The 3 school-sale roleplays (`role-play-scenarios.md`, English) have checklist criteria. The seed turns each into 3–5 weighted criteria plus the claims criterion; PR checks them in the claims review.
 2. The lessons must not settle these open items: Q-SV-05 (pilot paid or free), Q-PR-24 (no date for Science, Math, Zhongwen Advantage), Q-SE-12 (no placement trial tool), Q-SE-13 (the Tutor app shows ฿2,500 and the landing statistics; never show them).
