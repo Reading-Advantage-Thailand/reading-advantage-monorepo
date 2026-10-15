@@ -13,12 +13,6 @@ import { SalesError } from "./errors.js";
  * `@reading-advantage/ai` imports (Provider-Neutrality Rule from AGENTS.md).
  */
 export interface AIClientLike {
-  generateObject: <T>(input: {
-    schema: z.ZodSchema<T>;
-    prompt: string;
-    model?: string;
-    temperature?: number;
-  }) => Promise<T>;
   generateObjectFromMedia: <T>(input: {
     schema: z.ZodSchema<T>;
     prompt: string;
@@ -26,20 +20,12 @@ export interface AIClientLike {
     model?: string;
     temperature?: number;
   }) => Promise<T>;
-  transcribeAudio: (input: {
-    media: { buffer: Buffer; mimeType: string };
-    model?: string;
-    language?: string;
-  }) => Promise<{ text: string }>;
 }
 
-/** Default primary single-pass multimodal model (OpenRouter, free). */
-const DEFAULT_PRIMARY_MODEL =
-  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
-/** Default fallback ASR/STT model (OpenRouter, $0.0015/min). */
-const DEFAULT_FALLBACK_STT_MODEL = "nvidia/parakeet-tdt-0.6b-v3";
-/** Default fallback text-evaluation model (OpenRouter, free). */
-const DEFAULT_FALLBACK_EVAL_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free";
+/** Default main audio model: hears Thai and English and gave the best judgment in the 2026-10-15 test. */
+const DEFAULT_PRIMARY_MODEL = "qwen/qwen3.8-omni-flash";
+/** Default backup audio model: fast and cheap; used when the main model fails. */
+const DEFAULT_FALLBACK_MODEL = "google/gemini-2.5-flash-lite";
 /** Per-criterion pass mark when the rubric has no criteria (matches the quiz threshold). */
 const DEFAULT_PASSING_SCORE = 70;
 
@@ -103,12 +89,10 @@ export function scoreRoleplayEvaluation(
 
 /**
  * Builds the evaluation prompt for a roleplay attempt from the scenario, rubric,
- * and canonical source excerpts. Used for both the single-pass multimodal call
- * and the fallback text-only call.
+ * and canonical source excerpts. Both audio models get the same prompt.
  * @param scenario - The roleplay scenario (persona, situation, objective)
  * @param rubric - The rubric (criteria + weights)
  * @param excerpts - Canonical sales-enablement source excerpts
- * @param transcript - Optional transcript (used by the fallback text-only path)
  * @returns The prompt string
  */
 export function buildEvaluationPrompt(
@@ -120,11 +104,10 @@ export function buildEvaluationPrompt(
   },
   rubric: { name: string; criteriaJson: unknown },
   excerpts: string[],
-  transcript?: string,
 ): string {
   const criteriaText = JSON.stringify(rubric.criteriaJson, null, 2);
   const excerptsText = excerpts.join("\n\n---\n\n");
-  const lines = [
+  return [
     "You are a sales-coaching evaluator. Evaluate the sales rep's performance against the rubric below.",
     "",
     `## Scenario: ${scenario.personaName} (${scenario.personaRole})`,
@@ -137,45 +120,27 @@ export function buildEvaluationPrompt(
     "## Canonical source material (ground your feedback in these)",
     excerptsText,
     "",
-  ];
-  if (transcript) {
-    lines.push(
-      "## Transcript of the rep's recording",
-      transcript,
-      "",
-      "Evaluate the rep's content, structure, question quality, and adherence to the objective. (Note: only text is available; you cannot judge tone/pacing/hesitation directly.)",
-    );
-  } else {
-    lines.push(
-      "Listen to the attached audio recording and evaluate the rep's delivery, tone, pacing, hesitation, content fidelity, and adherence to the objective.",
-    );
-  }
-  lines.push(
+    "Listen to the attached audio recording and evaluate the rep's delivery, tone, pacing, hesitation, content fidelity, and adherence to the objective.",
+    "The recording can be in Thai or English. Write the transcript excerpt in the language spoken.",
     "Score each criterion 0-100. Provide a transcript excerpt (first ~150 words).",
     "Return the structured evaluation matching the schema.",
-  );
-  return lines.join("\n");
+  ].join("\n");
 }
 
 /**
  * Adapts an `AIClient` into the `EvaluateRoleplayFn` callback shape, with a
- * two-tier fallback pipeline.
+ * two-model fallback.
  *
- * **Primary path (single-pass multimodal):** Uses `SALES_AUDIO_EVAL_MODEL`
- * (default `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`) via
- * `generateObjectFromMedia`. The model perceives the audio directly and reasons
- * against the rubric in one call, preserving paralinguistic cues
- * (tone/pacing/hesitation).
+ * **Main model:** `SALES_AUDIO_EVAL_MODEL` (default `qwen/qwen3.8-omni-flash`)
+ * hears the recording and scores it against the rubric in one
+ * `generateObjectFromMedia` call.
  *
- * **Fallback path (two-pass STT → text eval):** On primary failure, the audio
- * is transcribed via `SALES_AUDIO_EVAL_FALLBACK_STT_MODEL` (default
- * `nvidia/parakeet-tdt-0.6b-v3`, an ASR model), and the resulting transcript
- * is evaluated by `SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL` (default
- * `nvidia/nemotron-3-nano-30b-a3b:free`, a text reasoning model) via
- * `generateObject`. This loses paralinguistic cues but is more reliable.
+ * **Backup model:** when the main call fails, the same audio and prompt go to
+ * `SALES_AUDIO_EVAL_FALLBACK_MODEL` (default `google/gemini-2.5-flash-lite`).
+ * Both models hear Thai and English speech.
  *
- * If both paths fail, a `SalesError` with code `EVALUATION_FAILED` is thrown.
- * On either path, the overall score and pass flag come from
+ * If both models fail, a `SalesError` with code `EVALUATION_FAILED` is thrown.
+ * On either model, the overall score and pass flag come from
  * `scoreRoleplayEvaluation`, not from the model.
  *
  * @param aiClient - The shared AIClient (OpenRouterProvider in production)
@@ -194,67 +159,41 @@ export function aiClientToEvaluateRoleplay(
   ): Promise<RoleplayEvaluationResult> => {
     const primaryModel =
       process.env.SALES_AUDIO_EVAL_MODEL ?? DEFAULT_PRIMARY_MODEL;
-    const sttModel =
-      process.env.SALES_AUDIO_EVAL_FALLBACK_STT_MODEL ??
-      DEFAULT_FALLBACK_STT_MODEL;
-    const evalModel =
-      process.env.SALES_AUDIO_EVAL_FALLBACK_EVAL_MODEL ??
-      DEFAULT_FALLBACK_EVAL_MODEL;
-    const primaryPrompt = buildEvaluationPrompt(scenario, rubric, excerpts);
-    try {
-      const result = await aiClient.generateObjectFromMedia({
-        schema,
-        prompt: primaryPrompt,
-        media: audio,
-        model: primaryModel,
-        temperature: 0.2,
-      });
-      return scoreRoleplayEvaluation(result, rubric.criteriaJson);
-    } catch (primaryError) {
-      // Fallback: STT → text-eval
-      try {
-        const { text: transcript } = await aiClient.transcribeAudio({
-          media: audio,
-          model: sttModel,
-        });
-        const fallbackPrompt = buildEvaluationPrompt(
-          scenario,
-          rubric,
-          excerpts,
-          transcript,
-        );
-        const result = await aiClient.generateObject({
+    const fallbackModel =
+      process.env.SALES_AUDIO_EVAL_FALLBACK_MODEL ?? DEFAULT_FALLBACK_MODEL;
+    const prompt = buildEvaluationPrompt(scenario, rubric, excerpts);
+    /** Scores the recording with one model. */
+    const evaluateWith = async (model: string) =>
+      scoreRoleplayEvaluation(
+        await aiClient.generateObjectFromMedia({
           schema,
-          prompt: fallbackPrompt,
-          model: evalModel,
+          prompt,
+          media: audio,
+          model,
           temperature: 0.2,
-        });
-        // Ensure transcriptExcerpt is populated even if the eval model omits it
-        return scoreRoleplayEvaluation(
-          {
-            ...result,
-            transcriptExcerpt:
-              result.transcriptExcerpt || transcript.slice(0, 600),
-          },
-          rubric.criteriaJson,
-        );
+        }),
+        rubric.criteriaJson,
+      );
+    try {
+      return await evaluateWith(primaryModel);
+    } catch (primaryError) {
+      try {
+        return await evaluateWith(fallbackModel);
       } catch (fallbackError) {
-        // FR-5: log both underlying errors and attach them via `cause` so two-tier
-        // LLM failures are debuggable. The previous code discarded both
-        // `primaryError` and `fallbackError`, making `EVALUATION_FAILED`
-        // indistinguishable from any other failure.
+        // FR-5: log both underlying errors and attach them via `cause` so
+        // two-model failures are debuggable.
         console.error(
           "[roleplay-evaluator] Primary model failed:",
           primaryModel,
           primaryError,
         );
         console.error(
-          "[roleplay-evaluator] Fallback STT→eval pipeline failed:",
-          `STT=${sttModel}, eval=${evalModel}`,
+          "[roleplay-evaluator] Fallback model failed:",
+          fallbackModel,
           fallbackError,
         );
         throw new SalesError(
-          `Roleplay evaluation failed on both primary (${primaryModel}) and fallback (STT ${sttModel} → eval ${evalModel}) paths`,
+          `Roleplay evaluation failed on both primary (${primaryModel}) and fallback (${fallbackModel}) models`,
           "EVALUATION_FAILED",
           { cause: { primaryError, fallbackError } },
         );

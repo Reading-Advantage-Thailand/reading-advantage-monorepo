@@ -22,7 +22,8 @@ import {
 } from "@/lib/company-oidc";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Main audio model up to ~80 s (tested 2026-10-15) plus the backup model.
+export const maxDuration = 180;
 
 /**
  * Server-defined retention window for a roleplay audio upload. Matches

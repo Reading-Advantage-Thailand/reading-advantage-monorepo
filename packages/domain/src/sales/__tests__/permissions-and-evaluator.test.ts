@@ -53,12 +53,13 @@ describe("permissions.ts — FR-6 single source of truth", () => {
 describe("roleplay-evaluator.ts — FR-5 error cause propagation", () => {
   it("EVALUATION_FAILED carries the primary and fallback error causes when both paths reject", async () => {
     const primaryError = new Error("primary model 504 gateway timeout");
-    const fallbackError = new Error("fallback STT 401 unauthorized");
+    const fallbackError = new Error("fallback model 401 unauthorized");
 
     const aiClient = {
-      generateObjectFromMedia: vi.fn().mockRejectedValue(primaryError),
-      transcribeAudio: vi.fn().mockRejectedValue(fallbackError),
-      generateObject: vi.fn(),
+      generateObjectFromMedia: vi
+        .fn()
+        .mockRejectedValueOnce(primaryError)
+        .mockRejectedValueOnce(fallbackError),
     };
 
     const evaluate = aiClientToEvaluateRoleplay(aiClient);
@@ -205,21 +206,16 @@ describe("roleplay-evaluator.ts — overall score and pass computed from the rub
     const claimed = modelResult(rubricCriteria.map((c) => ({ criterion: c.criterion, score: 50 })));
     const primary = aiClientToEvaluateRoleplay({
       generateObjectFromMedia: vi.fn().mockResolvedValue(claimed),
-      transcribeAudio: vi.fn(),
-      generateObject: vi.fn(),
     });
     const fallback = aiClientToEvaluateRoleplay({
-      generateObjectFromMedia: vi.fn().mockRejectedValue(new Error("primary down")),
-      transcribeAudio: vi.fn().mockResolvedValue({ text: "transcript text" }),
-      generateObject: vi.fn().mockResolvedValue({ ...claimed, transcriptExcerpt: "" }),
+      generateObjectFromMedia: vi
+        .fn()
+        .mockRejectedValueOnce(new Error("primary down"))
+        .mockResolvedValueOnce(claimed),
     });
     const audio = { buffer: Buffer.from("a"), mimeType: "audio/webm" };
 
     await expect(primary(audio, scenario, rubric, [])).resolves.toMatchObject({ overallScore: 50, passed: false });
-    await expect(fallback(audio, scenario, rubric, [])).resolves.toMatchObject({
-      overallScore: 50,
-      passed: false,
-      transcriptExcerpt: "transcript text",
-    });
+    await expect(fallback(audio, scenario, rubric, [])).resolves.toMatchObject({ overallScore: 50, passed: false });
   });
 });
