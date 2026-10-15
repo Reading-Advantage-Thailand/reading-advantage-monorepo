@@ -47,7 +47,7 @@ const curriculumReleaseManifestSchema = z.object({
       z.literal("evaluate"),
       z.literal("reflect"),
     ]),
-    moduleOrder: z.array(z.string().min(1)).length(6),
+    moduleOrder: z.array(z.string().min(1)).min(1),
   }),
   generation: z.object({
     method: z.enum([
@@ -129,19 +129,28 @@ type CurriculumSource = z.infer<typeof curriculumSourceSchema>;
 
 const execFileAsync = promisify(execFile);
 
-/** Canonical source documents included in every Sales curriculum review. */
+/** Canonical source documents included in every Sales curriculum review (advantage-pr source set, 2026-10-15). */
 export const CURRICULUM_SOURCE_PATHS = Object.freeze([
-  "02-brand/messaging-house.md",
-  "06-research-and-evidence/outcome-claims-policy.md",
-  "09-sales-enablement/README.md",
-  "09-sales-enablement/advantage-suite-at-a-glance.md",
+  "09-sales-enablement/sales-training-scope-2027.md",
+  "09-sales-enablement/tutor-family-sales-playbook.md",
+  "09-sales-enablement/line-trial-facilitator-script.md",
+  "09-sales-enablement/facilitator-recruitment-kit.md",
   "09-sales-enablement/demo-scripts.md",
-  "09-sales-enablement/roi-calculator.md",
+  "09-sales-enablement/demo-scripts-checklist.md",
   "09-sales-enablement/distributor-rep-onboarding/README.md",
   "09-sales-enablement/distributor-rep-onboarding/faq.md",
   "09-sales-enablement/distributor-rep-onboarding/objection-handling-guide.md",
   "09-sales-enablement/distributor-rep-onboarding/rep-certification-checklist.md",
   "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md",
+  "09-sales-enablement/distributor-rep-onboarding/weekly-touchpoint-tracker.md",
+  "09-sales-enablement/distributor-launch-kit.md",
+  "09-sales-enablement/roi-calculator.md",
+  "09-sales-enablement/battle-cards/vs-tutor.md",
+  "09-sales-enablement/advantage-suite-at-a-glance.md",
+  "04-services/pricing.md",
+  "02-brand/messaging-house.md",
+  "06-research-and-evidence/outcome-claims-policy.md",
+  "15-business-applications/sales-advantage.md",
 ]);
 
 /** Named general-sales references permitted in curriculum scoring rubrics. */
@@ -163,9 +172,28 @@ export const CURATED_GENERAL_SALES_SOURCE_REFS = Object.freeze([
 
 /** Canonical corpus sections permitted in curriculum scoring rubrics. */
 export const CANONICAL_RUBRIC_SOURCE_REFS = Object.freeze([
-  "09-sales-enablement/roi-calculator.md#methodology",
-  "09-sales-enablement/distributor-rep-onboarding/faq.md#q11-what-if-a-school-asks-for-a-discount-or-a-special-price",
+  "09-sales-enablement/sales-training-scope-2027.md#4-facts-to-train-approved-wording",
+  "09-sales-enablement/sales-training-scope-2027.md#7-the-claims-criterion-for-roleplays",
+  "09-sales-enablement/tutor-family-sales-playbook.md#3-the-parent-conversation-discovery",
+  "09-sales-enablement/tutor-family-sales-playbook.md#r1-first-conversation-with-a-parent",
+  "09-sales-enablement/tutor-family-sales-playbook.md#r2-it-is-too-expensive",
+  "09-sales-enablement/tutor-family-sales-playbook.md#r3-my-child-already-goes-to-a-tutor-school",
+  "09-sales-enablement/tutor-family-sales-playbook.md#r4-which-book-next",
+  "09-sales-enablement/tutor-family-sales-playbook.md#r5-can-you-guarantee-my-child-will-pass",
+  "09-sales-enablement/line-trial-facilitator-script.md#step-3-bridge-to-the-class-package-1-minute",
+  "09-sales-enablement/line-trial-facilitator-script.md#step-4-handle-objections",
+  "09-sales-enablement/facilitator-recruitment-kit.md#rr1-how-does-the-money-work",
+  "09-sales-enablement/facilitator-recruitment-kit.md#rr2-isnt-this-a-pyramid-scheme",
+  "09-sales-enablement/facilitator-recruitment-kit.md#rr3-how-much-can-i-make-if-i-bring-in-friends",
+  "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-1-the-15-minute-discovery-call",
+  "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-2-the-30-minute-demo",
   "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-3-the-price-conversation-close",
+  "09-sales-enablement/distributor-rep-onboarding/objection-handling-guide.md#objection-8-do-you-have-something-for-our-secondary-section",
+  "09-sales-enablement/distributor-rep-onboarding/faq.md#q3-what-do-we-sell-and-which-products-are-live-right-now",
+  "09-sales-enablement/distributor-rep-onboarding/faq.md#q4-when-does-managed-service-start-and-what-can-i-say-about-it-now",
+  "09-sales-enablement/distributor-rep-onboarding/faq.md#q11-what-if-a-school-asks-for-a-discount-or-a-special-price",
+  "06-research-and-evidence/outcome-claims-policy.md#how-to-handle-outcome-questions-in-sales-press-conversations",
+  "09-sales-enablement/roi-calculator.md#methodology",
 ]);
 
 const allowedRubricSourceRefs = new Set([
@@ -189,39 +217,31 @@ const forbiddenCurriculumClaims = [
   "Writing Advantage",
   "Test Advantage",
   "# The 5 Canonical Objections",
+  // Removed by the 2027 scope (advantage-pr sales-training-scope-2027.md §6).
+  "9-Product Suite",
+  "Director Pim",
+  "PSP school",
+  "80% of reps",
+  "within 48 hours",
+  "within 24 hours",
+  "30-day",
+  "Founding School",
+  "free trial for up to 50 students",
+  "not currently integrated",
 ];
 
-const canonicalSuiteLaunchClaims = Object.freeze([
-  "1. **Reading Advantage** — live",
-  "2. **Primary Advantage** — live",
-  "3. **Storytime Advantage** — coming early 2027",
-  "4. **Math Advantage** — coming late 2026",
-  "5. **Science Advantage** — slipped while Tutor is prioritized",
-  "6. **STEM Advantage** — coming mid 2027",
-  "7. **Zhongwen Advantage** — coming late 2026",
-  "8. **Tutor Advantage** — beta 2026",
-  "9. **CodeCamp Advantage** — coming 2026",
-]);
-
-const canonicalProductStatuses = Object.freeze([
-  { product: "Reading Advantage", status: "live" },
-  { product: "Primary Advantage", status: "live" },
-  { product: "Storytime Advantage", status: "coming early 2027" },
-  { product: "Math Advantage", status: "coming late 2026" },
-  {
-    product: "Science Advantage",
-    status: "slipped while Tutor is prioritized",
-  },
-  { product: "STEM Advantage", status: "coming mid 2027" },
-  { product: "Zhongwen Advantage", status: "coming late 2026" },
-  { product: "Tutor Advantage", status: "beta 2026" },
-  { product: "CodeCamp Advantage", status: "coming 2026" },
+/** Product-list lines from the 2027 sources (faq.md Q3) that the product lesson must state. */
+const canonicalProductListClaims = Object.freeze([
+  "- **Live:** Primary Advantage (one active school), Tutor Advantage, and CodeCamp Advantage (adult bootcamp).",
+  "- **Reading Advantage:** no school uses it; work on the app is deferred. Its books sell through Tutor Advantage.",
+  "- **Coming programs, no date:** Science, Math, and Zhongwen Advantage (Q-PR-24).",
+  "- **Planned, no date:** Storytime and STEM Advantage.",
 ]);
 
 const canonicalTierClaims = Object.freeze([
   "| **App-Only** | Digital platform access | ~1,000 THB/student/year |",
   "| **Blended Learning** | App + physical workbooks + 2-day teacher training + quarterly fidelity reports | ~1,500 THB/student/year |",
-  "| **Managed Service / The Teaching Advantage** | Future tier with certified facilitators | Planned for May 2027 at the earliest; do not pre-sell availability, staffing, or price |",
+  "| **Managed Service** | Not sold today. It launches in 2027 only if 1–2 more schools sign. Never pre-sell it. | No price |",
 ]);
 
 const allowedAdvantageNames = new Set([
@@ -475,22 +495,44 @@ function curriculumClaimStatements(allContent: string): string[] {
     .filter(Boolean);
 }
 
+/** The 2027 condition for Managed Service and The Teaching Advantage, after normalization. */
+const managedServiceCondition = /only if 1 2 more schools sign/;
+
 /**
- * Detects any product lifecycle statement that differs from the canonical state.
+ * Detects a product lifecycle statement that conflicts with the 2027 strategy.
+ * Planned lines (Science, Math, Zhongwen, Storytime, STEM) have no date and are
+ * not live; Tutor Advantage is not beta; CodeCamp Advantage is not coming; no
+ * product gets a launch year except under the Managed Service condition.
  * @param statements Normalized curriculum claim statements.
- * @returns Whether a product has a conflicting launch or availability statement.
+ * @returns Whether a statement gives a product a conflicting state or date.
  */
 function hasConflictingProductStatus(statements: readonly string[]): boolean {
-  const lifecyclePattern =
-    /\b(?:available|beta|coming|launch(?:es|ed|ing)?|live|planned|release(?:s|d)?|slipped|unavailable)\b/;
-  return canonicalProductStatuses.some(({ product, status }) => {
-    const normalizedProduct = normalizeCurriculumClaim(product);
-    const canonicalClaim = normalizeCurriculumClaim(`${product} ${status}`);
-    return statements.some((statement) =>
-      statement.includes(normalizedProduct) &&
-      lifecyclePattern.test(statement) &&
-      statement.replace(/^\d+\s+/, "") !== canonicalClaim
-    );
+  const negated = /\b(?:no|not|never|without|don't|do not)\b/;
+  const year = /\b20\d\d\b/;
+  return statements.some((statement) => {
+    const plannedLine =
+      /\b(?:science|math|zhongwen|storytime|stem)\b(?:[\s,]+(?:and|or)?\s*(?:science|math|zhongwen|storytime|stem)\b)*\s+advantage\b/
+        .test(statement);
+    if (
+      plannedLine &&
+      (year.test(statement) || (
+        !negated.test(statement) &&
+        /\b(?:available|live|launch(?:es|ed|ing)?|release(?:s|d)?|beta|on sale|coming (?:soon|early|late|mid|in|next))\b/
+          .test(statement)
+      ))
+    ) {
+      return true;
+    }
+    if (statement.includes("tutor advantage") && /\bbeta\b/.test(statement)) {
+      return true;
+    }
+    if (statement.includes("codecamp advantage") && /\bcoming\b/.test(statement)) {
+      return true;
+    }
+    return /\badvantage\b/.test(statement) &&
+      /\b(?:launch(?:es|ed|ing)?|release(?:s|d)?)\b/.test(statement) &&
+      year.test(statement) &&
+      !managedServiceCondition.test(statement);
   });
 }
 
@@ -539,11 +581,11 @@ function hasConflictingTierClaim(statements: readonly string[]): boolean {
 
     if (
       statement.includes("managed service") &&
+      !managedServiceCondition.test(statement) &&
       (
         /\b(?:available|launch(?:es|ed|ing)?|live|release(?:s|d)?)\b/
           .test(statement) ||
-        /\b(?:planned|future)\b[^\n]*\b20(?!27)\d{2}\b/
-          .test(statement)
+        /\b20\d{2}\b/.test(statement)
       )
     ) {
       return true;
@@ -602,7 +644,7 @@ export function buildCurriculumAutomatedReview(
     (left, right) => left.order - right.order,
   );
   if (
-    orderedModules.length !== 6 ||
+    orderedModules.length === 0 ||
     orderedModules.some((module, index) => module.order !== index + 1)
   ) {
     throw new Error("SALES_CURRICULUM_PROGRESSION_INVALID");
@@ -680,13 +722,13 @@ export function buildCurriculumAutomatedReview(
     unexpectedAdvantageName ||
     conflictingProductStatus ||
     conflictingTierClaim ||
-    !canonicalSuiteLaunchClaims.every((claim) => allContent.includes(claim)) ||
+    !canonicalProductListClaims.every((claim) => allContent.includes(claim)) ||
     !canonicalTierClaims.every((claim) => allContent.includes(claim)) ||
     !allContent.includes(
       "Research shows extensive reading outperforms traditional grammar instruction (Aka, 2019).",
     ) ||
-    !allContent.includes("# The 6 Canonical Objections") ||
-    !allContent.includes("## Objection 6:")
+    !allContent.includes("# The 8 School Objections") ||
+    !allContent.includes("## Objection 8:")
   ) {
     const reason = conflictingProductStatus
       ? "product-status"
@@ -794,7 +836,7 @@ export async function buildCurriculumReleaseCandidate(
       method: "hand-authored-reviewed-candidate",
       provider: null,
       requestedModel: null,
-      promptVersion: "sales-curriculum-v3",
+      promptVersion: "sales-curriculum-2027-v1",
       artifactRef: "apps/sales-advantage/scripts/static-seed.ts",
     },
     automatedReview: buildCurriculumAutomatedReview(rows),

@@ -181,12 +181,12 @@ export function RoleplayRecorder({
             ({scenario.personaRole})
           </span>
         </CardTitle>
-        <CardDescription>{scenario.situation}</CardDescription>
+        <CardDescription className="whitespace-pre-line">{scenario.situation}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="rounded-lg bg-muted/50 p-4 text-sm">
           <p className="font-medium">Your objective:</p>
-          <p className="mt-1 text-muted-foreground">{scenario.objective}</p>
+          <p className="mt-1 whitespace-pre-line text-muted-foreground">{scenario.objective}</p>
         </div>
 
         {state === "idle" && (

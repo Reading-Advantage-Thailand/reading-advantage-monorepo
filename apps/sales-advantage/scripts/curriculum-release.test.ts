@@ -27,6 +27,7 @@ import {
   assertCurriculumReleaseReady,
   buildCurriculumAutomatedReview,
   buildCurriculumReleaseCandidate,
+  CANONICAL_RUBRIC_SOURCE_REFS,
   CURRICULUM_SOURCE_PATHS,
   type CurriculumReleaseManifest,
 } from "./curriculum-release";
@@ -41,32 +42,10 @@ let candidate: CurriculumReleaseManifest;
 
 /** Returns minimal Markdown with the canonical rubric sections required by the gate. */
 function sourceContent(path: string): string {
-  if (path.endsWith("roi-calculator.md")) {
-    return `# ROI Calculator
-
-## Methodology
-
-Canonical pricing method.
-`;
-  }
-  if (path.endsWith("faq.md")) {
-    return `# FAQ
-
-### Q11: What if a school asks for a discount or a special price?
-
-Reduce scope.
-`;
-  }
-  if (path.endsWith("role-play-scenarios.md")) {
-    return `# Role-Play Scenarios
-
-## Scenario 3: The Price-Conversation Close
-
-Close honestly.
-`;
-  }
-  return `# Canonical ${path}
-`;
+  const headings = CANONICAL_RUBRIC_SOURCE_REFS
+    .filter((sourceRef) => sourceRef.startsWith(`${path}#`))
+    .map((sourceRef) => `## ${sourceRef.split("#")[1]}\n\nCanonical section.\n`);
+  return [`# Canonical ${path}\n`, ...headings].join("\n");
 }
 
 /** Writes a complete Git-backed source fixture and returns its commit. */
@@ -215,18 +194,68 @@ describe("Sales curriculum release contract", () => {
     );
   });
 
-  it("rejects an altered launch state in the canonical suite", () => {
+  it("rejects an altered launch state in the canonical product list", () => {
     const rows = structuredClone(buildStaticSalesCurriculumRows());
     const productLesson = rows.lessons.find((lesson) =>
-      lesson.title === "The 9-Product Suite and 3 Service Tiers"
+      lesson.title === "One Catalogue, Two Channels"
     )!;
     productLesson.content = productLesson.content.replace(
-      "3. **Storytime Advantage** — coming early 2027",
-      "3. **Storytime Advantage** — live",
+      "- **Planned, no date:** Storytime and STEM Advantage.",
+      "- **Live:** Storytime Advantage.",
     );
 
     expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
       "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it.each([
+    "Math Advantage launches in 2027.",
+    "Science Advantage is coming in 2027.",
+    "Zhongwen Advantage is available now.",
+    "STEM Advantage goes live next term.",
+  ])("rejects a launch claim for a planned line: %s", (claim) => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.lessons[0]!.content += ` ${claim}`;
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status",
+    );
+  });
+
+  it.each([
+    "Tutor Advantage is in beta.",
+    "CodeCamp Advantage is coming soon.",
+  ])("rejects an outdated status for a live product: %s", (claim) => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.lessons[0]!.content += ` ${claim}`;
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID product-status",
+    );
+  });
+
+  it.each([
+    "Director Pim at PSP school expanded to all of Grade 4.",
+    "80% of reps lose the deal when they need to ask.",
+    "Our implementation lead will reach out within 48 hours.",
+    "The Founding Schools tier costs about 900 THB.",
+    "Start with a 30-day scoped pilot.",
+  ])("rejects a line that the 2027 scope removed: %s", (claim) => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.lessons[0]!.content += ` ${claim}`;
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID",
+    );
+  });
+
+  it("rejects a Managed Service launch claim without the 2027 condition", () => {
+    const rows = structuredClone(buildStaticSalesCurriculumRows());
+    rows.lessons[0]!.content += " Managed Service launches in May 2027.";
+
+    expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
+      "SALES_CURRICULUM_CANONICAL_CLAIMS_INVALID tier-claim",
     );
   });
 
@@ -343,7 +372,7 @@ describe("Sales curriculum release contract", () => {
   it("rejects an altered canonical price band", () => {
     const rows = structuredClone(buildStaticSalesCurriculumRows());
     const productLesson = rows.lessons.find((lesson) =>
-      lesson.title === "The 9-Product Suite and 3 Service Tiers"
+      lesson.title === "One Catalogue, Two Channels"
     )!;
     productLesson.content = productLesson.content.replace(
       "| **App-Only** | Digital platform access | ~1,000 THB/student/year |",
@@ -375,14 +404,14 @@ describe("Sales curriculum release contract", () => {
     );
   });
 
-  it("rejects a noncanonical product substituted into the nine-product suite", () => {
+  it("rejects a noncanonical product substituted into the product list", () => {
     const rows = structuredClone(buildStaticSalesCurriculumRows());
     const productLesson = rows.lessons.find((lesson) =>
-      lesson.title === "The 9-Product Suite and 3 Service Tiers"
+      lesson.title === "One Catalogue, Two Channels"
     )!;
     productLesson.content = productLesson.content.replace(
-      "Storytime Advantage",
-      "Speaking Advantage",
+      "Storytime and STEM Advantage",
+      "Storytime and Speaking Advantage",
     );
 
     expect(() => buildCurriculumAutomatedReview(rows)).toThrow(
