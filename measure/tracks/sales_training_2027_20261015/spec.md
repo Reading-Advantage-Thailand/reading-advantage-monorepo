@@ -105,6 +105,34 @@ Scores use the rule of Story S1 (weighted mean, a pass needs each criterion at i
 **Acceptance Criteria:**
 - Given the PR source-set commit, When the candidate is generated, Then `release-candidate.json` names that commit and the new document list, and candidate generation passes.
 - Given the PR source set, When it is pinned, Then it includes `09-sales-enablement/sales-training-scope-2027.md`, the Tutor family-sales playbook, the LINE trial script v1.4, the recruitment kit v1.2, and the updated demo scripts and rep onboarding.
+- Given Daniel changes Thai text in a source document (HUMAN GATE, Q-SE-08), When PR sends a new hash, Then the candidate pins the new hash.
+
+**Source pin (PR, 2026-10-15):** advantage-pr `master` commit
+`e6f7cc22e447bcaab73c1248af54cc8b590c9c3a`. I checked that each document exists at that commit,
+with the version on its line 3:
+
+| Document | Version |
+|---|---|
+| `09-sales-enablement/sales-training-scope-2027.md` | 1.0 |
+| `09-sales-enablement/tutor-family-sales-playbook.md` (roleplays R1–R5) | 1.0 |
+| `09-sales-enablement/line-trial-facilitator-script.md` | 1.4 |
+| `09-sales-enablement/facilitator-recruitment-kit.md` (roleplays RR1–RR3) | 1.2 |
+| `09-sales-enablement/demo-scripts.md`, `demo-scripts-checklist.md` | 2.0 |
+| `09-sales-enablement/distributor-rep-onboarding/` README 1.3, faq 1.2, objection-handling-guide 1.2, rep-certification-checklist 1.2, role-play-scenarios 1.2, weekly-touchpoint-tracker 1.1 | — |
+| `09-sales-enablement/distributor-launch-kit.md` (Thai 1.3) | 2.0 |
+| `09-sales-enablement/roi-calculator.md` | 1.6 |
+| `09-sales-enablement/battle-cards/vs-tutor.md` | 1.2 |
+| `09-sales-enablement/advantage-suite-at-a-glance.md` | 1.2 |
+| `04-services/pricing.md` | 1.7 |
+| `02-brand/messaging-house.md` | 1.2 |
+| `06-research-and-evidence/outcome-claims-policy.md` | 1.1 |
+| `15-business-applications/sales-advantage.md` | 0.2 |
+
+**PR notes for the seed (2026-10-15):**
+1. The 3 school-sale roleplays (`role-play-scenarios.md`, English) have checklist criteria. The seed turns each into 3–5 weighted criteria plus the claims criterion; PR checks them in the claims review.
+2. The lessons must not settle these open items: Q-SV-05 (pilot paid or free), Q-PR-24 (no date for Science, Math, Zhongwen Advantage), Q-SE-12 (no placement trial tool), Q-SE-13 (the Tutor app shows ฿2,500 and the landing statistics; never show them).
+3. The interim placement method (the nearest printed book, without a trial tool) waits for Daniel's confirmation (Q-SE-12). Lessons teach it as "until the tool exists".
+4. Recruitment: a baht figure is allowed only as a labelled formula example; a promise of income fails.
 
 **Estimate:** S
 **Priority:** Must

@@ -51,7 +51,7 @@ _Blast radius (grep; the graph has no call edges for these): `aiClientToEvaluate
 
 ## Phase S2: The curriculum uses the new PR source set
 _Story ref: spec.md#story-s2-the-curriculum-uses-the-new-pr-source-set_
-_Start gate: the PR source-set commit exists and the feature freeze has ended._
+_Start gate: the PR source-set commit exists (done: advantage-pr `e6f7cc22e`, 2026-10-15; see spec.md S2) and the feature freeze has ended._
 
 - [b] Task: Contract — the new document list — deferred:start-gate-pr-source-set-and-freeze-end
     - [ ] List the pinned documents from the PR scope doc (`09-sales-enablement/sales-training-scope-2027.md`) in the candidate generator input
