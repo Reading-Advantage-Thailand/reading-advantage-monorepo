@@ -314,6 +314,14 @@ It is a fact that expires (PR scope doc §8). Rules:
   - S4 `one-catalogue-two-channels`: no link (not uploaded). The S4 video slot stays empty until PR sends the link.
   - **Visibility (Daniel, 2026-10-16):** "I have made all the videos unlisted." A lesson link still plays an unlisted video.
   - Decks and infographics keep the bucket rule, and each item waits for Daniel's acceptance and his Thai check.
+- **New videos (PR, 2026-10-16):** N8 `parent-conversation-close` (`163a412`), N11
+  `future-tutor-questions` (`0a64331`), N5 `the-words-we-use` (`2dd9e42`), thumbnails for all 7 videos
+  (`6f99841`, `2dd9e42`). A model answer in a video must pass its own roleplay. The script checks, the
+  scorer checks, and the fixes are in `review/video-checks.md`. Each video gets a lesson link when PR
+  sends its YouTube link.
+- **Hours for each class package (Q-SE-14, open):** the PR videos give no hours, so N9 has no price part
+  (R2) until Daniel decides Q-SE-14 (22 or about 25 hours). The lessons and the R2 "Value facts"
+  criterion use "about 25 hours" and "about 120 baht per hour"; change them if Q-SE-14 gives 22.
 
 PR's starting list (I draft the full list after the text source set; PR checks it):
 - S4: student-mobile 04-dashboard, 18-lesson-lobby, 22-live-p02-flashcards, 24-live-p03-read-article, 17-voice-practice; tutor-desktop 16-lesson-hub, 22-live-p01-launch.

@@ -271,3 +271,10 @@ seed (`buildStaticSalesCurriculumRows`), `google/gemini-3.8-flash` with low reas
 | `r5-th-weak` | 10 | 0, 0, 100, 0 | fail |
 | `r5-th-c-pearson` | 63 | 100, 75, 100, 0 | fail (claims 0) |
 
+
+## 2026-10-16 — model answers in the new PR videos (N8, N11)
+
+16 scores with `google/gemini-3.8-flash` (low reasoning), $0.0041–0.0057 each. As made, 6 of 8
+clips fail their roleplay (R1 discovery, RR1 rules, RR2 transparency, RR3 worked example). With the
+fix lines, all 8 pass (96–100). The claims criterion is 100 on all 16 clips. Clips, fix lines, and
+findings: `review/video-checks.md`.
