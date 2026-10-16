@@ -300,3 +300,11 @@ PR questions: (1) the tag "Non-fiction · CEFR A2" on tutor screens 19 and 22 st
 inside the active scope, and the voice does not read it. (2) The decks and the infographics change
 "ทดลองจัดระดับ" to "ทดลองอ่าน" (not uploaded yet). The YouTube video `family-sale-flow` (V2) says
 "ทดลองจัดระดับ"; it stays unless Daniel says otherwise.
+
+**Built (PR, 2026-10-16):** N7 and N9 at advantage-pr `17519be` (my fixes in); N6 and N10 at `9732ada`
+(N6 "In phase two of eighteen", frame "Phase 2 of 18"). The Thai trial term is "ทดลองอ่าน" in every
+file except `family-sale-flow` (V2, on YouTube): Thai N8 and N11, the Thai recruitment and trainer
+decks, and the Thai family sale steps infographic were made again. Only the trial term changed in N8
+and N11 (it is now the lessons' own word), so I did not score them again. Media README v0.17 lists all
+files. Not uploaded yet: N4, N5, N6, N7, N8, N9, N10, N11, N14, N15, and V1 (catalogue). PR sends all
+links in one message after Daniel uploads them.
