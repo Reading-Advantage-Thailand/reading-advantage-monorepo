@@ -200,7 +200,7 @@ _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[loca
 - [b] Task: Media references — deferred:pr-media-files
     - [ ] Upload the PR infographics and decks to the Sales bucket at release, with the owner's OK; put the keys and the Thai and English alt text in the lessons
     - [x] Put the YouTube links of the S5, S6, and S7 videos (TH and EN) in the lessons (M5.1, M6.2, M7.1: one "Video —" line after the TL;DR)
-    - [ ] The S4 video and the new videos of the video list: each link goes in its lesson when PR sends it
+    - [ ] The S4 video and the new videos of the video list: each link goes in its lesson when PR sends it — 11 Thai links and the one-catalogue-two-channels English link are in (advantage-pr 1a1374a, candidate graph 7e7dc5b6); 10 English links come after Daniel uploads them on 2026-10-18
     - [x] Check N5, N8, N9, N11, and the thumbnails: script against the lessons, each model answer scored on its roleplay (`review/video-checks.md`)
     - [x] Check N4, N14, N15 the same way before PR builds them (N4 95–100, N14 claims 100, N15 100)
     - [x] N2: Daniel (2026-10-16): "Skip N2, N8 covers it." PR does not make N2

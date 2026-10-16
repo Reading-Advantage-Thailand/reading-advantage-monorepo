@@ -769,6 +769,8 @@ The buyer learned something, and the conversation moved away from price.`,
 
 **TL;DR:** When a buyer says "It is too expensive", the price is often not the whole story. Your job is to find the real objection: usually risk, fit, authority, or timing.
 
+**Video — Dealing with Objection Patterns:** [Thai](https://www.youtube.com/watch?v=jw-Xv38f-wQ)
+
 ## Four real objections
 
 What buyers say:
@@ -957,6 +959,10 @@ A good answer confirms the real budget limit, offers a smaller start at the appr
 
 **TL;DR:** We are a curriculum publisher. The product is a printed workbook (14 lessons) and its digital twin. The same books sell through two channels: **Blended Learning** for schools and **Tutor Advantage** for families, direct. Sell only what is live and printed today.
 
+**Video — One Catalog, Two Channels:** [Thai](https://www.youtube.com/watch?v=Lgfc5eDKrWc) · [English](https://www.youtube.com/watch?v=bKjGjG_BaEM)
+
+**Video — Tutor Advantage App for a Family:** [Thai](https://www.youtube.com/watch?v=2riydxagEfA)
+
 ## The two channels
 
 | Channel | Who buys | What they buy |
@@ -1017,6 +1023,8 @@ The print status, the "on sale" dates, and the open decisions change. These less
         content: `# The Words We Use
 
 **TL;DR:** Every claim about learning outcomes must trace to a published research citation or to our own transparent per-school reporting. If a claim does not trace to one of these two, do not make it.
+
+**Video — The Words We Use:** [Thai](https://www.youtube.com/watch?v=zEhXoMTJuVU)
 
 ## Approved research forms (Aka, 2019)
 
@@ -1199,6 +1207,8 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
 
 **Video — Selling Tutor Advantage to a Family:** [Thai](https://www.youtube.com/watch?v=-hFxfRmQ3wM) · [English](https://www.youtube.com/watch?v=lvc979ref6M)
 
+**Video — Tutor Advantage App for a Family:** [Thai](https://www.youtube.com/watch?v=2riydxagEfA)
+
 ## What the parent buys
 
 - **One class package = one printed workbook**, about 22–23 hours, in a small group with a local tutor. 14 lessons in each book.
@@ -1241,6 +1251,8 @@ Never talk about tutor commission with a parent. Before you use any photo or vid
         content: `# Placement: Program, Book Level, and the Printed Book
 
 **TL;DR:** A new student starts at **book level 1 or 2**, unless the child has significant English: today that is **Primary Advantage Origins 2** or **Reading Advantage Origins 2**. The placement trial gives a **program** and a **printed book** to start with.
+
+**Video — Tutor Advantage Placement Trial and the First Book:** [Thai](https://www.youtube.com/watch?v=SHXZxEzK_h4)
 
 ## The placement result
 
@@ -1287,6 +1299,10 @@ Use the printed books. The LINE placement trial tool is not in the Tutor Advanta
         content: `# The Parent Conversation, the Close, and Objections
 
 **TL;DR:** Ask, then listen. Do not sell before the placement trial. After the trial, give the result, explain the book, bridge to the class package, and ask when the child can start.
+
+**Video — Tutor Advantage Closing a Sale with a Parent:** [Thai](https://www.youtube.com/watch?v=ENTuA-qC-3c)
+
+**Video — Tutor Advantage Parent Questions and Next Book:** [Thai](https://www.youtube.com/watch?v=YqcoA46xSmM)
 
 ## The parent conversation (discovery)
 
@@ -1372,6 +1388,8 @@ Never give a print date to a parent.
         content: `# The Next Book
 
 **TL;DR:** At about lesson 12 of a book, talk with the parent about the next book. Say the full book name. Never give a print date.
+
+**Video — Tutor Advantage Parent Questions and Next Book:** [Thai](https://www.youtube.com/watch?v=YqcoA46xSmM)
 
 | The child finishes | The next printed book | If the next book is not printed |
 |---|---|---|
@@ -1767,6 +1785,10 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
 
 **TL;DR:** A tutor teaches a small group of students in their own community, from a printed workbook. The tutor app has a lesson plan for every lesson, and each new tutor gets training before the first class. Tell a recruit what is ready today and what is not.
 
+**Video — Tutor Advantage A Week as a Tutor:** [Thai](https://www.youtube.com/watch?v=CP0naqsdk0k)
+
+**Video — Tutor Advantage Answering New Tutor Questions:** [Thai](https://www.youtube.com/watch?v=ulQdRIBjF-o)
+
 ## What a Tutor Advantage tutor does
 
 One class package is one printed book, about 22–23 hours, 14 lessons.
@@ -1886,6 +1908,8 @@ Say each baht figure as an example from the formula:
         content: `# Answering a Future Tutor's Questions
 
 **TL;DR:** People who may become tutors ask about money, pyramid schemes, classrooms, and the course standard. Answer directly, and show the formula with one example.
+
+**Video — Tutor Advantage Answering New Tutor Questions:** [Thai](https://www.youtube.com/watch?v=ulQdRIBjF-o)
 
 ## Objections from people who may become tutors
 
@@ -2299,6 +2323,8 @@ Never inflate this number. Never call us "leading" or "number one".`,
 
 **TL;DR:** Accept the objection as legitimate. Answer from a canonical source. Then commit to transparent per-school reporting.
 
+**Video — Primary Advantage Countering School Objections:** [Thai](https://www.youtube.com/watch?v=Rrjb6LxqrqU)
+
 ## Objection 1: "Our Thai teachers aren't good enough at English to teach this."
 
 "That is exactly the problem we designed for. The Blended Learning model pairs our app with physical, scripted workbooks. Your teacher doesn't need to be a native speaker. Every Primary Advantage lesson has the same 13 printed steps, from Before You Read to Lesson Reflection. The teacher opens the workbook and follows the steps. Thai teachers run the scripted lessons after two days of training."
@@ -2348,6 +2374,8 @@ Do not sell the Reading Advantage app to schools. Do not give a date for a secon
         content: `# The Total-Cost-of-English Frame
 
 **TL;DR:** When a director pushes back on price, compare the per-student price with the school's own total cost of English. Use the school's numbers, keep each input visible, and invent nothing.
+
+**Video — Primary Advantage The Total Cost of English:** [Thai](https://www.youtube.com/watch?v=udnyAKW2Y2c)
 
 ## Start with the standard prices
 
