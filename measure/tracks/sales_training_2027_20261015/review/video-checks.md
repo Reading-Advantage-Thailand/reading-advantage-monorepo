@@ -95,6 +95,25 @@ changed seed:
 | N9 TH (beats 12, 14) | R4 | 100 pass | all 100 |
 | N9 EN (beats 12, 14) | R4 | 100 pass | all 100 |
 
+## N15 `total-cost-of-english` (advantage-pr `c597282`, script before the build)
+
+Model conversation for M7.4 and "Roleplay: The Price-Conversation Close". Seller beats 4, 6, 8, 9,
+13, 15, 17, 19 (Khun Ploy); the director (Director Wanida) gives her own numbers in beat 5.
+
+| Clip | Roleplay | Score | Criteria |
+|---|---|---|---|
+| N15 TH | Price-Conversation Close | 100 pass | all 100 |
+| N15 EN | Price-Conversation Close | 100 pass | all 100 |
+
+No finding: 150,000 + 450,000 = 600,000 (the director's numbers); 350 × ~1,500 = ~525,000, labeled a
+rough figure; no saving stated; the Blended Learning contents of the S7 tier table; the discount
+answer of the roleplay text; no response time (school claims item 7); next steps = grade, semester,
+pilot agreement "when Daniel confirms the pilot terms" (Q-SV-05), implementation contact, training.
+My change: the roleplay success standard "with the standard price" becomes "with no price
+concession", because Q-SV-05 (a paid or a free pilot) is open. In the next seed update.
+
+N9 at `c597282`: the beat 9 Reedy screen is now a text card. The voice did not change.
+
 ## N5 `the-words-we-use` (advantage-pr `2dd9e42`)
 
 Script: `scripts.md` section `the-words-we-use`, data `WORDS` in `make.py`. Lesson: M4.2 "The Words We
