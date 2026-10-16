@@ -57,7 +57,7 @@ export const SALES_CURRICULUM_EXPIRING_FACTS = Object.freeze([
   },
   {
     fact: "LINE placement trial tool (Q-SE-12)",
-    text: "Until the tool exists",
+    text: "The LINE placement trial tool is not in the Tutor Advantage code yet",
     checkIn: "advantage-pr 09-sales-enablement/sales-training-scope-2027.md §8",
   },
   {
@@ -592,7 +592,7 @@ For each feature, write the feature, the benefit, and the evidence that the buye
 
 ## Anchor to real facts
 
-**With a parent:** one class package is one printed book, about 25 hours, from 3,000 baht. That is about 120 baht per hour, and it includes the printed book and the app. Give the per-hour figure only together with these facts.
+**With a parent:** one class package is one printed book, about 22–23 hours, from 3,000 baht. That is about 135 baht per hour, and it includes the printed book and the app. Give the per-hour figure only together with these facts.
 
 **With a school:** start with the school's own student count and its current English costs. The approved prices are about 1,000 THB/student/year for App-Only and about 1,500 THB/student/year for Blended Learning.
 
@@ -833,7 +833,7 @@ You did not pitch anything. You turned the objection into a diagnosis.`,
 ## The approved prices
 
 - **Schools:** App-Only about 1,000 THB/student/year; Blended Learning about 1,500 THB/student/year.
-- **Families:** one class package from 3,000 baht: one printed book, about 25 hours, about 120 baht per hour, with the printed book and the app.
+- **Families:** one class package from 3,000 baht: one printed book, about 22–23 hours, about 135 baht per hour, with the printed book and the app.
 
 Discount policy is Daniel's decision, and it is not set (Q-SV-05). So the seller offers no discount and no free period.
 
@@ -845,7 +845,7 @@ Discount policy is Daniel's decision, and it is not set (Q-SV-05). So the seller
 
 > Parent: "ถูกลงได้ไหมคะ" (Can you make it cheaper?)
 >
-> Tutor: "เข้าใจค่ะ ราคาเริ่มต้น 3,000 บาทต่อหนึ่งแพ็กเกจ ประมาณ 25 ชั่วโมง เฉลี่ยประมาณ 120 บาทต่อชั่วโมง และรวมหนังสือฉบับพิมพ์กับแอปแล้วค่ะ" (I understand. The price starts at 3,000 baht for one package of about 25 hours. That is about 120 baht per hour, and it includes the printed book and the app.)
+> Tutor: "เข้าใจค่ะ ราคาเริ่มต้น 3,000 บาทต่อหนึ่งแพ็กเกจ ประมาณ 22–23 ชั่วโมง เฉลี่ยประมาณ 135 บาทต่อชั่วโมง และรวมหนังสือฉบับพิมพ์กับแอปแล้วค่ะ" (I understand. The price starts at 3,000 baht for one package of about 22–23 hours. That is about 135 baht per hour, and it includes the printed book and the app.)
 
 Keep the student count, the price, and the term visible. Send each request for a special price or special terms to Daniel or Phikul.
 
@@ -981,7 +981,7 @@ Do not give a launch date for any planned line.
 
 ## Tutor Advantage: what the family buys
 
-Tutor Advantage is a tutor-led class network with a unilevel commission for tutors. It is not an AI tutor app. One class package = one printed workbook, about 25 hours, from 3,000 baht. The price adapts to the market. Reedy voice practice is live in Tutor Advantage for students with an active class package, on lessons they completed. Read Along with Reedy is in development and not available.
+Tutor Advantage is a tutor-led class network with a unilevel commission for tutors. It is not an AI tutor app. One class package = one printed workbook, about 22–23 hours, from 3,000 baht. The price adapts to the market. Reedy voice practice is live in Tutor Advantage for students with an active class package, on lessons they completed. Read Along with Reedy is in development and not available.
 
 ## The school tiers
 
@@ -995,7 +995,7 @@ Blended Learning means physical workbooks + the digital app. Never say "AI + hum
 
 ## The books and the placement-to-book map
 
-Children use Primary Advantage books. Secondary students use Reading Advantage books. A placement gives a program and a book level from 1 to 4. Parents hear CEFR names only. If the book for the level is not printed, the tutor offers the nearest printed book below the level. If no printed book is below the level, the tutor offers the lowest printed book in that program.
+Children use Primary Advantage books. Secondary students use Reading Advantage books. A placement gives a program and a book level from 1 to 4. A new student starts at book level 1 or 2, unless the child has significant English. Parents hear CEFR names only. If the book for the level is not printed, the tutor offers the nearest printed book below the level. If no printed book is below the level, the tutor offers the lowest printed book in that program.
 
 | Book level | Primary Advantage (children) | CEFR | Reading Advantage (secondary students) | CEFR |
 |---|---|---|---|---|
@@ -1195,13 +1195,13 @@ In tutor recruitment, item 7 changes: commission talk is allowed, but a promise 
         type: "theory" as const,
         content: `# What the Parent Buys and the Five-Step Family Sale
 
-**TL;DR:** A tutor sells one Tutor Advantage class package to a family: one printed book, about 25 hours, from 3,000 baht. The sale has five steps, from the first contact to the next book.
+**TL;DR:** A tutor sells one Tutor Advantage class package to a family: one printed book, about 22–23 hours, from 3,000 baht. The sale has five steps, from the first contact to the next book.
 
 **Video — Selling Tutor Advantage to a Family:** [Thai](https://www.youtube.com/watch?v=-hFxfRmQ3wM) · [English](https://www.youtube.com/watch?v=lvc979ref6M)
 
 ## What the parent buys
 
-- **One class package = one printed workbook**, about 25 hours, in a small group with a local tutor. 14 lessons in each book.
+- **One class package = one printed workbook**, about 22–23 hours, in a small group with a local tutor. 14 lessons in each book.
 - **Price:** from 3,000 baht per class package. The price adapts to the market.
 - **The app:** the LINE student app that matches the book: the lesson, flashcards, vocabulary games, progress, and class chat.
 - **Reedy:** Reedy voice practice is live in Tutor Advantage for students with an active class package, on lessons they completed. Read Along with Reedy is in development and not available.
@@ -1215,7 +1215,7 @@ Tutor Advantage is a tutor-led class network. It is not an AI tutor.
 |---|---|---|
 | **1. First contact** | Meets the parent through their own network, LINE, or Facebook. Asks to talk for 10 minutes. | A conversation on LINE or in person |
 | **2. The parent conversation** | Asks questions and listens. Explains the class in two sentences. | The parent agrees to a placement trial |
-| **3. The placement trial** | Runs the trial. | A program and a book level from 1 to 4, then a printed book |
+| **3. The placement trial** | Runs the trial. | A program and a start book. A new student starts at book level 1 or 2 (Primary Advantage Origins 2 or Reading Advantage Origins 2), unless the child has significant English |
 | **4. The close** | Names the book, explains it, gives the price, and asks when the child can start. Answers objections. | The parent enrolls and pays in the LINE student app |
 | **5. Start and the next book** | Teaches the 14 lessons. At about lesson 12, talks with the parent about the next book. | A second class package |
 
@@ -1240,12 +1240,14 @@ Never talk about tutor commission with a parent. Before you use any photo or vid
         type: "theory" as const,
         content: `# Placement: Program, Book Level, and the Printed Book
 
-**TL;DR:** The placement trial gives a **program** and a **book level from 1 to 4**. Then the tutor offers a printed book. There is no level above 4.
+**TL;DR:** A new student starts at **book level 1 or 2**, unless the child has significant English: today that is **Primary Advantage Origins 2** or **Reading Advantage Origins 2**. The placement trial gives a **program** and a **printed book** to start with.
 
 ## The placement result
 
 - A child in primary school uses **Primary Advantage** books.
 - A secondary student uses **Reading Advantage** books.
+- **A new student starts at book level 1 or 2, unless the child has significant English.** Book level 1 is not printed in either program. So the start book is **Primary Advantage Origins 2** or **Reading Advantage Origins 2**.
+- A child with significant English can start at a higher printed book, up to book level 4. There is no level above 4.
 - The parent hears the book name and its CEFR level. Never say GSE, Pearson, or YLE.
 - If the book for the level is not printed, offer the **nearest printed book below** the level. If no printed book is below the level, offer the **lowest printed book** in the program.
 
@@ -1258,16 +1260,14 @@ Never talk about tutor commission with a parent. Before you use any photo or vid
 
 Check the print status before each trial. It changes when a new book is printed.
 
-## The trial tool
+## How to run the trial
 
-The LINE placement trial tool is not in the Tutor Advantage code yet, and no result screen exists (Q-SE-12). When it is built, it must report a program and a book level from 1 to 4.
-
-**Until the tool exists, use the printed books** (interim method; Daniel to confirm, Q-SE-12):
+Use the printed books. The LINE placement trial tool is not in the Tutor Advantage code yet, and no result screen exists (Q-SE-12). When it is built, it must report a program and a book level from 1 to 4.
 
 1. Ask the parent which school grade the child is in. Primary school: Primary Advantage books. Secondary school: Reading Advantage books.
-2. Open lesson 1 of the lowest printed book in that program.
+2. Open lesson 1 of the start book: Primary Advantage Origins 2 or Reading Advantage Origins 2.
 3. The child reads the article aloud and answers the first comprehension questions.
-4. If the child reads with few stops and answers most questions, try lesson 1 of the next printed book.
+4. If the child reads with few stops and answers most questions, try lesson 1 of the next printed book in the program. Today that is Primary Advantage Origins 3.1. Reading Advantage has no higher printed book yet.
 5. The result is the highest printed book that the child reads comfortably.
 
 ## Before and during the trial
@@ -1336,16 +1336,16 @@ Never give a print date to a parent.
 
 **Step 3: Bridge to the class package (1 minute).**
 
-> "หนึ่งแพ็กเกจคลาสคือหนังสือหนึ่งเล่ม ประมาณ 25 ชั่วโมง ราคาเริ่มต้น 3,000 บาท ในแพ็กเกจน้องจะได้: ครูติวเตอร์ในพื้นที่สอนเป็นกลุ่มเล็ก หนังสือแบบฝึกหัดฉบับพิมพ์ พร้อมแอปใน LINE ที่คู่กับหนังสือ บัตรคำศัพท์และเกมคำศัพท์ในแอป และฝึกพูดภาษาอังกฤษกับ Reedy หลังเรียนจบแต่ละบท คุณพ่อคุณแม่อยากให้น้องเริ่มเรียนเมื่อไหร่คะ"
+> "หนึ่งแพ็กเกจคลาสคือหนังสือหนึ่งเล่ม ประมาณ 22–23 ชั่วโมง ราคาเริ่มต้น 3,000 บาท ในแพ็กเกจน้องจะได้: ครูติวเตอร์ในพื้นที่สอนเป็นกลุ่มเล็ก หนังสือแบบฝึกหัดฉบับพิมพ์ พร้อมแอปใน LINE ที่คู่กับหนังสือ บัตรคำศัพท์และเกมคำศัพท์ในแอป และฝึกพูดภาษาอังกฤษกับ Reedy หลังเรียนจบแต่ละบท คุณพ่อคุณแม่อยากให้น้องเริ่มเรียนเมื่อไหร่คะ"
 >
-> "One class package is one book, about 25 hours, from 3,000 baht. In the package, your child gets: a local tutor who teaches a small group; the printed workbook, with its matching app in LINE; flashcards and vocabulary games in the app; and English speaking practice with Reedy after each completed lesson. When would you like your child to start?"
+> "One class package is one book, about 22–23 hours, from 3,000 baht. In the package, your child gets: a local tutor who teaches a small group; the printed workbook, with its matching app in LINE; flashcards and vocabulary games in the app; and English speaking practice with Reedy after each completed lesson. When would you like your child to start?"
 
 ## Objections
 
 | The parent says | The tutor answers (Thai) | English |
 |---|---|---|
 | "โรงเรียนของลูกมีครูต่างชาติอยู่แล้ว" (My child's school already has a foreign teacher.) | "เข้าใจค่ะ ครูต่างชาติช่วยให้นักเรียนได้ฟังสำเนียงและฝึกพูด แต่ในห้องเรียนใหญ่ ครูต้องแบ่งเวลาให้นักเรียนหลายคน คลาสของเราเป็นกลุ่มเล็ก ครูติวเตอร์ในพื้นที่ดูแลน้องได้ใกล้ชิดขึ้น และน้องเรียนจากหนังสือที่เหมาะกับระดับของน้องค่ะ" | "I understand. A foreign teacher helps students hear real accents and practice speaking. But in a large class, the teacher shares their time with many students. Our classes are small groups, so a local tutor can give your child closer attention, with a book at your child's level." |
-| "มันแพงไป" (It is too expensive.) | "เข้าใจค่ะ ราคาเริ่มต้น 3,000 บาทต่อหนึ่งแพ็กเกจ ประมาณ 25 ชั่วโมง เฉลี่ยประมาณ 120 บาทต่อชั่วโมง และรวมหนังสือฉบับพิมพ์กับแอปแล้วค่ะ" | "I understand. The price starts at 3,000 baht for one package of about 25 hours. That is about 120 baht per hour, and it includes the printed book and the app." |
+| "มันแพงไป" (It is too expensive.) | "เข้าใจค่ะ ราคาเริ่มต้น 3,000 บาทต่อหนึ่งแพ็กเกจ ประมาณ 22–23 ชั่วโมง เฉลี่ยประมาณ 135 บาทต่อชั่วโมง และรวมหนังสือฉบับพิมพ์กับแอปแล้วค่ะ" | "I understand. The price starts at 3,000 baht for one package of about 22–23 hours. That is about 135 baht per hour, and it includes the printed book and the app." |
 | "ลูกเรียนพิเศษอยู่แล้ว" (My child already goes to a tutor or a tutor school.) | "ดีค่ะ คลาสของเราเรียนตามหนังสือที่จัดลำดับบทเรียนไว้แล้ว เน้นการอ่าน คำศัพท์ และการพูดในกลุ่มเล็ก น้องเรียนควบคู่กับที่เรียนอยู่ได้ค่ะ" | "Good. Our class follows a book with a fixed order of lessons. It focuses on reading, vocabulary, and speaking in a small group. Your child can do it together with their current classes." |
 | "ไม่มีเวลา" (No time.) | "ตารางเรียนของกลุ่มจัดกับครูติวเตอร์ในพื้นที่ สัปดาห์ละ [X] ครั้ง ครั้งละ [X] นาทีค่ะ" | "The group schedule is set with the local tutor: [X] times a week, [X] minutes each time." |
 | "ขอดูก่อน" (Let me think about it.) | "ได้ค่ะ ไม่ต้องรีบตัดสินใจ ถ้าสนใจ แอด LINE ของเราไว้ได้เลยค่ะ เดี๋ยวส่งข้อมูลให้คุณพ่อคุณแม่ดูค่ะ" | "Of course. There is no hurry. If you are interested, add us on LINE, and I will send you the information." |
@@ -1448,7 +1448,7 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
         type: "roleplay" as const,
         content: `**Method:** Accept the concern before you give facts. Then explain what the package includes and give the per-hour figure. Ask a calm question about the start, or offer to send the parent info deck.
 
-**The facts:** "เข้าใจค่ะ ราคาเริ่มต้น 3,000 บาทต่อหนึ่งแพ็กเกจ ประมาณ 25 ชั่วโมง เฉลี่ยประมาณ 120 บาทต่อชั่วโมง และรวมหนังสือฉบับพิมพ์กับแอปแล้วค่ะ" (I understand. The price starts at 3,000 baht for one package of about 25 hours. That is about 120 baht per hour, and it includes the printed book and the app.)
+**The facts:** "เข้าใจค่ะ ราคาเริ่มต้น 3,000 บาทต่อหนึ่งแพ็กเกจ ประมาณ 22–23 ชั่วโมง เฉลี่ยประมาณ 135 บาทต่อชั่วโมง และรวมหนังสือฉบับพิมพ์กับแอปแล้วค่ะ" (I understand. The price starts at 3,000 baht for one package of about 22–23 hours. That is about 135 baht per hour, and it includes the printed book and the app.)
 
 **No discount:** offer no discount and no free class. Do not compare with a named competitor or with a market rate that has no source.
 
@@ -1463,8 +1463,8 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
               "After the trial, you offer Primary Advantage Origins 2. The father says that the price is high. He says: \"3,000 baht? That is a bit expensive. Other places are cheaper.\"",
             ),
             objective: thaiFirst(
-              "ยอมรับความกังวลของคุณพ่อก่อน อธิบายว่าในแพ็กเกจมีอะไรบ้าง บอกตัวเลขประมาณ 120 บาทต่อชั่วโมง แล้วถามเรื่องวันเริ่มเรียนโดยไม่ลดราคา",
-              "Acknowledge the father's concern first. Explain what the package includes, give the figure of about 120 baht per hour, and ask about a start date without a discount.",
+              "ยอมรับความกังวลของคุณพ่อก่อน อธิบายว่าในแพ็กเกจมีอะไรบ้าง บอกตัวเลขประมาณ 135 บาทต่อชั่วโมง แล้วถามเรื่องวันเริ่มเรียนโดยไม่ลดราคา",
+              "Acknowledge the father's concern first. Explain what the package includes, give the figure of about 135 baht per hour, and ask about a start date without a discount.",
             ),
             prospectContext:
               "The father likes the trial result but is careful with money. He mentions cheaper places but names none. If the trainee offers a discount or a free class, the 'No discount' criterion fails.",
@@ -1477,7 +1477,7 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
               },
               {
                 criterion:
-                  "Value facts: states about 25 hours, about 120 baht per hour, the printed book, and the app",
+                  "Value facts: states about 22–23 hours, about 135 baht per hour (any figure from 130 to 136 baht passes), the printed book, and the app",
                 weight: 0.3,
                 passingScore: 60,
                 sourceRef: "09-sales-enablement/tutor-family-sales-playbook.md#r2-it-is-too-expensive",
@@ -1769,7 +1769,7 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
 
 ## What a Tutor Advantage tutor does
 
-One class package is one printed book, about 25 hours, 14 lessons.
+One class package is one printed book, about 22–23 hours, 14 lessons.
 
 - **Teach:** run each lesson in the tutor app: 18 phases built on the 13 printed workbook steps, with flashcards, two games, pair conversation, and a wrap-up.
 - **Sell:** find families, run the placement trial, and enroll students (the Family Sale module).
@@ -1790,7 +1790,7 @@ What you do not do: write lesson plans, design the curriculum, or mark every dig
 
 | Ready today | Not ready |
 |---|---|
-| The tutor app (lesson hub, prepare, rehearsal, the live lesson, schedule, chat, earnings, network) | The LINE placement trial tool (use the interim printed-book method, Q-SE-12) |
+| The tutor app (lesson hub, prepare, rehearsal, the live lesson, schedule, chat, earnings, network) | The LINE placement trial tool (use the printed-book method, Q-SE-12) |
 | The LINE student app, online payment (PromptPay or card) | Read Along with Reedy (in development, not available) |
 | Reedy voice practice for students with an active class package, on lessons they completed | Automatic progress reports for parents |
 | Printed books on sale: Primary Advantage Origins 2, Primary Advantage Origins 3.1, Reading Advantage Origins 2 | More books, and book lines for the coming programs (no dates) |
@@ -2522,7 +2522,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
               },
               {
                 criterion:
-                  "Proposes the pilot (one grade level, one semester) at the standard prices",
+                  "Proposes the pilot (one grade level, one semester) with no free period and no discount",
                 weight: 0.15,
                 passingScore: 60,
                 sourceRef: "09-sales-enablement/distributor-rep-onboarding/role-play-scenarios.md#scenario-2-the-30-minute-demo",
@@ -2549,7 +2549,7 @@ Say weaknesses honestly. An example: "Class 4/2 started slowly. The teacher was 
 
 **Next steps:** the grade level for the pilot, the semester, and a signed pilot agreement. Then the implementation contact plans the teacher training.
 
-**Success standard:** the director agrees the pilot grade and semester, with the standard price.`,
+**Success standard:** the director agrees the pilot grade and semester, with no price concession.`,
         order: 8,
         scenarios: [
           {

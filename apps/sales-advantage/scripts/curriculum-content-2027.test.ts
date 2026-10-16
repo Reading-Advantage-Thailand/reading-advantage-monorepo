@@ -247,7 +247,7 @@ describe("S4 — product knowledge matches strategy v1.8", () => {
       "| **App-Only** | Digital platform access | ~1,000 THB/student/year |",
       "| **Blended Learning** | App + physical workbooks + 2-day teacher training + quarterly fidelity reports | ~1,500 THB/student/year |",
       "| **Managed Service** | Not sold today. It launches in 2027 only if 1–2 more schools sign. Never pre-sell it. | No price |",
-      "One class package = one printed workbook, about 25 hours, from 3,000 baht. The price adapts to the market.",
+      "One class package = one printed workbook, about 22–23 hours, from 3,000 baht. The price adapts to the market.",
     ]) {
       expect(productLesson()).toContain(line);
     }
@@ -306,11 +306,22 @@ describe("S5 — the Tutor family sale", () => {
     }
   });
 
-  it("teaches the interim placement method as valid only until the tool exists", () => {
+  it("teaches Daniel's start rule and the printed-book trial (Q-SE-12, 2026-10-16)", () => {
     const content = lesson("family-sale", "Placement: Program, Book Level, and the Printed Book").content;
-    expect(content).toContain("Until the tool exists, use the printed books");
+    expect(content).toContain("**A new student starts at book level 1 or 2, unless the child has significant English.**");
+    expect(content).toContain("2. Open lesson 1 of the start book: Primary Advantage Origins 2 or Reading Advantage Origins 2.");
+    expect(content).not.toMatch(/interim|Daniel to confirm/);
     expect(content).toContain("If no printed book is below the level, offer the **lowest printed book** in the program.");
     expect(content).toContain("The result is the highest printed book that the child reads comfortably.");
+  });
+
+  it("gives the class hours and the per-hour figure of Q-SE-14 (Daniel, 2026-10-16)", () => {
+    const text = allText();
+    expect(text).not.toMatch(/about 25 hours|25 ชั่วโมง|120 baht|120 บาท/);
+    const [entry] = roleplay("family-sale", "Roleplay R2: \"It Is Too Expensive\"");
+    expect(entry!.criteria.map((criterion) => criterion.criterion)).toContain(
+      "Value facts: states about 22–23 hours, about 135 baht per hour (any figure from 130 to 136 baht passes), the printed book, and the app",
+    );
   });
 
   it("keeps commission talk out of the family sale", () => {
@@ -429,6 +440,16 @@ describe("S7 — the school sale", () => {
     for (const statement of mentions) {
       expect(statement).toMatch(/consent/);
     }
+  });
+
+  it("leaves the pilot terms open (Q-SV-05): no free period, no discount, no price concession", () => {
+    const [demo] = roleplay("school-sale", "Roleplay: The 30-Minute Demo");
+    expect(demo!.criteria.map((criterion) => criterion.criterion)).toContain(
+      "Proposes the pilot (one grade level, one semester) with no free period and no discount",
+    );
+    expect(lesson("school-sale", "Roleplay: The Price-Conversation Close").content).toContain(
+      "**Success standard:** the director agrees the pilot grade and semester, with no price concession.",
+    );
   });
 
   it.each([

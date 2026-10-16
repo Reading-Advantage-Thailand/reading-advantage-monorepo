@@ -1,26 +1,26 @@
 {
   "schemaVersion": 1,
   "curriculumId": "reading-advantage-sales-curriculum-v1",
-  "graphSha256": "f9f43c847ffc181c1bb537a909526af2ae3c3e3adf8b0d4ccab7b3aeaa2a2c74",
+  "graphSha256": "aee140a1682ea9b1314a020ab25f15e36271735c806e792e9f7567033da506aa",
   "source": {
     "repository": "advantage-pr",
-    "commit": "b3b9cae75282a64654b94274ce8eaf09a9124bee",
+    "commit": "a3c4df082a82a7eeaec497ed6aa8ca4cc433b2d9",
     "documents": [
       {
         "path": "09-sales-enablement/sales-training-scope-2027.md",
-        "sha256": "c41c2c8907681614ca50feafa40d6bc66ab57a85d892e9472a8caad009e9599b"
+        "sha256": "7f2059df0acd9f981836bbc50d0b99514a2341edd42b440486a1e199a818710e"
       },
       {
         "path": "09-sales-enablement/tutor-family-sales-playbook.md",
-        "sha256": "fbfc112a7ee56d87abf9c3d82385652628254e0e5ddf14813c9938a4e50aa1cb"
+        "sha256": "fe47e15638c47d8bfd7f8c32a635361c5a4600172f85815499558a378af16285"
       },
       {
         "path": "09-sales-enablement/line-trial-facilitator-script.md",
-        "sha256": "c279eafada561b5f81ba37c3243391035b599b7494d684985af51d715ed53cf4"
+        "sha256": "76fc1ca0f8724da1d15a080665cc8631c25367b8e11ebddbb9ab3ea4fe715ab5"
       },
       {
         "path": "09-sales-enablement/facilitator-recruitment-kit.md",
-        "sha256": "3b81d47e863ffa943e3b3242ffba098e37a3c005d8806ce4bacf41e061a6c9bf"
+        "sha256": "c456e4954a2b5bf5746badc3ec76fb458caedcf78660809608fe40b9069886a7"
       },
       {
         "path": "09-sales-enablement/demo-scripts.md",
@@ -72,7 +72,7 @@
       },
       {
         "path": "04-services/pricing.md",
-        "sha256": "afaba7913b1f3473de17bddb4f8e36ba2e982366f34ef2bb9693cea1b9c19698"
+        "sha256": "397e1e87a0a674f3c7092f62a05957cf69fc3bea74fcdc8806efe1ccd3772704"
       },
       {
         "path": "02-brand/messaging-house.md",
