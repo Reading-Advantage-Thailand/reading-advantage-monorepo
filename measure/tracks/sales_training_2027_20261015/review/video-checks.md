@@ -8,6 +8,8 @@ roleplay (PR, 2026-10-16).
 (Thai `Thai_Optimistic_girl`, English `English_Graceful_Lady`), scored by `google/gemini-3.8-flash`
 with low reasoning, with the production prompt and the rubric rows of the current seed.
 
+**Thai check (Daniel, 2026-10-16):** N4, N5, N9, N14, and N15: "Videos checked and cleared."
+
 ## N8 `parent-conversation-close` (advantage-pr `163a412`) and N11 `future-tutor-questions` (`0a64331`)
 
 Script source: `assets/sales-training/2027/source/videos/scripts.md` 1.1 at `0a64331`. Lessons:
@@ -192,7 +194,10 @@ framework other than CEFR" in place of the three names: accepted (PR: the video 
 
 ## N6 and N10: screens and crops (from `screenshot-lesson-list.md` v2)
 
-**Status (PR, 2026-10-16):** N6 and N10 wait for Q-SE-13. Most of these screens show the development class names ("Reading Advantage Level 1 - A1", "คลาส Reading Advantage 1 / 2"), and a crop leaves little of the screen. PR makes both videos from a new screenshot set when the strings are fixed, or when Daniel says to go ahead with crops.
+**Decision (Daniel, 2026-10-16):** "You should tell PB [PR] to blur them, maybe." PR blurs the
+development class names; N6 and N10 can start. The "Do not use" lists below stay.
+
+**Status before the decision (PR, 2026-10-16):** N6 and N10 wait for Q-SE-13. Most of these screens show the development class names ("Reading Advantage Level 1 - A1", "คลาส Reading Advantage 1 / 2"), and a crop leaves little of the screen. PR makes both videos from a new screenshot set when the strings are fixed, or when Daniel says to go ahead with crops.
 
 Base: advantage-pr `assets/screenshots/tutor-advantage/dev-2026-10-15/`. A crop keeps the source
 pixel rows named (row 0 = top). Captions name what the screen shows, in the positive.

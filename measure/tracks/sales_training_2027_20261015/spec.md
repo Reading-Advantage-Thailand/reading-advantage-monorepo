@@ -323,9 +323,23 @@ It is a fact that expires (PR scope doc §8). Rules:
   Reading Advantage Origins 2; the next book, Reading Advantage Origins 3.1, is not printed (Q-WB-11).
   The old case (Primary Advantage Origins 3.1 → 3.2) stops being true at about 2026-11-08. When Reading
   Advantage Origins 3.1 is printed, R4, the playbook, and the N9 video change together.
-- **Hours for each class package (Q-SE-14, open):** the PR videos give no hours, so N9 has no price part
-  (R2) until Daniel decides Q-SE-14 (22 or about 25 hours). The lessons and the R2 "Value facts"
-  criterion use "about 25 hours" and "about 120 baht per hour"; change them if Q-SE-14 gives 22.
+- **Hours for each class package (Q-SE-14, decided by Daniel 2026-10-16):** "There is actually no
+  prescribed time for a lesson, but lessons and prices are designed around 1.5 hours per lesson, with
+  some additional time for first-day setup and a final testing / celebration period. About 22-23 hours
+  total." The lessons, the R2 "Value facts" criterion, and the PR sources change from "about 25 hours"
+  and "about 120 baht per hour" to "about 22–23 hours" and the per-hour figure that PR approves
+  (3,000 ÷ 22.5 ≈ 133 baht). N9 can have its price part.
+- **Placement (Q-SE-12 part 1, decided by Daniel 2026-10-16):** "Tutors should start with level 1 or 2
+  for new students unless they have significant English." Book level 1 is not printed in either
+  program, so a new student starts with Primary Advantage Origins 2 or Reading Advantage Origins 2.
+  The trial checks a higher book only for a child with significant English. M5.2 and the LINE trial
+  script change together (PR first); N7 can start.
+- **App screens (Q-SE-13, Daniel 2026-10-16):** "You should tell PB [PR] to blur them, maybe." PR
+  blurs the development class names on the N6 and N10 screens. The other Q-SE-13 strings (฿2,500, the
+  landing statistics, 20 lessons, the coupon field) keep the crop-or-skip rule.
+- **Thai check (Daniel, 2026-10-16):** N4, N5, N9, N14, and N15: "Videos checked and cleared."
+- **N2 (Daniel, 2026-10-16):** "Leave out what? This is not clear." The question goes to Daniel again
+  with an explanation; until then, PR does not make N2.
 
 PR's starting list (I draft the full list after the text source set; PR checks it):
 - S4: student-mobile 04-dashboard, 18-lesson-lobby, 22-live-p02-flashcards, 24-live-p03-read-article, 17-voice-practice; tutor-desktop 16-lesson-hub, 22-live-p01-launch.
