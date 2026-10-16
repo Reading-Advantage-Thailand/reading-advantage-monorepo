@@ -14,6 +14,10 @@ with low reasoning, with the production prompt and the rubric rows of the curren
 Thai N6 at advantage-pr `b378195` (beat 7: "ช่วงที่ 2 จาก 18", "ในช่วงที่สองจากสิบแปดช่วง"). This
 closes the N6 finding 1 Thai part. N10 and the recruitment deck already use "ช่วง".
 
+**Videos approved (Daniel, 2026-10-17):** "keep family-sale-flow-th.mp4 as it is. I checked all videos
+already and they are approved. We fixed all my issues." The Thai trial term "ทดลองจัดระดับ" stays in
+`family-sale-flow-th.mp4` only. Daniel reviews the app after the Primary cutover deploy.
+
 ## N8 `parent-conversation-close` (advantage-pr `163a412`) and N11 `future-tutor-questions` (`0a64331`)
 
 Script source: `assets/sales-training/2027/source/videos/scripts.md` 1.1 at `0a64331`. Lessons:
