@@ -253,3 +253,22 @@ No finding: the acknowledgement (beat 9), the hours and the per-hour figure (bea
 competitor in answer to "Other places are cheaper", the start question with the LINE offer (beat 11),
 and the start book (Reading Advantage Origins 2 for a Grade 7 student, Daniel's rule of 2026-10-16).
 For Daniel's Thai check: beats 7–12 and the summary line (beat 22).
+
+## N7 `placement-trial` (script in the PR working tree, not committed; 2026-10-16)
+
+Explainer, one voice, no app screen; source `line-trial-facilitator-script.md` v1.6 (`a3c4df0`).
+Lesson: M5.2 at `e2f2aa36b`. No roleplay scores the trial itself, so this is a script check only. The
+result line (beat 10) is the same as the M5.3 close line, with Primary Advantage Origins 2 and Pre-A1.
+
+| # | Beat | Finding | Fix |
+|---|---|---|---|
+| 1 | 1, 2, title, on-screen | The Thai name of the trial is "ทดลองจัดระดับ". The lessons use "ทดลองอ่าน" (6 times, 0 times "ทดลองจัดระดับ"), and so do the setup line in beat 4, N8, and N9. Two words for one thing; "จัดระดับ" can also sound like a test to a parent. | "ทดลองอ่าน" in every beat and frame (for example the title "ทดลองอ่าน: หาหนังสือเล่มแรก"). For Daniel's Thai check. |
+| 2 | 9 (map frame) | Primary Advantage Origins 3.2 and Quest 4 show "Not printed yet". The sources say "on sale from about 2026-11-08" (scope §4, M5.2); they do not say that the books are not printed. | "Not on sale yet" / "ยังไม่วางขาย" for those two cells. The rule "offer the nearest printed book below" does not change. |
+
+No finding: the program by school grade (beat 2) and the covers with Pre-A1 and A1; Daniel's start
+rule (beat 3); setup 2 minutes and the setup line in full (beat 4); steps 2–5 (beats 5–8) the same
+as M5.2; the notes on confidence, reading speed, and engagement (beat 6); up to book level 4 and the
+nearest printed book below (beat 9); "the parent hears the book, not a score" (beat 10); the link to
+N8 (beat 11). The "lowest printed book" fallback is not in the video: accepted, because beat 3 covers
+its only case (book level 1). Fact that expires: "Reading Advantage has no higher printed book yet"
+(beat 7) changes when Reading Advantage Origins 3.1 is printed (Q-WB-11), with R4 and N9.
