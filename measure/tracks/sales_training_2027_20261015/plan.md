@@ -201,6 +201,9 @@ _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[loca
     - [ ] Upload the PR infographics and decks to the Sales bucket at release, with the owner's OK; put the keys and the Thai and English alt text in the lessons
     - [x] Put the YouTube links of the S5, S6, and S7 videos (TH and EN) in the lessons (M5.1, M6.2, M7.1: one "Video —" line after the TL;DR)
     - [ ] The S4 video and the new videos of the video list: each link goes in its lesson when PR sends it
+    - [x] Check N5, N8, N9, N11, and the thumbnails: script against the lessons, each model answer scored on its roleplay (`review/video-checks.md`)
+    - [ ] Check N2, N4, N14, N15 the same way before PR builds them; N6 and N10 wait for Q-SE-13
+    - [ ] R4 moves to the Reading Advantage Origins 2 → 3.1 case when PR's playbook does (the Origins 3.2 case ends about 2026-11-08)
     - [ ] Draft the screenshot → lesson list from PR's starting list and the 9 screenshot rules (spec.md S11), with each crop marked; PR checks it
     - [ ] Upload the checked (and cropped) screenshots under `training-media/v1/th/`; put their keys and Thai and English alt text in the lessons
 - [b] Task: Generate docs and doctor — deferred:start-gate-freeze-end
