@@ -339,6 +339,10 @@ It is a fact that expires (PR scope doc §8). Rules:
   landing statistics, 20 lessons, the coupon field) keep the crop-or-skip rule.
 - **Thai check (Daniel, 2026-10-16):** N4, N5, N9, N14, and N15: "Videos checked and cleared."
 - **N2 (Daniel, 2026-10-16):** "Skip N2, N8 covers it." PR does not make N2.
+- **Thai word for the 18 phases (Daniel, 2026-10-16):** "Use ช่วง for the 18 phases". "ขั้นตอน"
+  stays the word for the 13 printed steps. PR re-made the Thai N6 (advantage-pr `b378195`, "ช่วงที่ 2
+  จาก 18"). The seed has no Thai word for the phases today; a new Thai line uses "ช่วง". The app
+  string "ขั้นที่ 2/18" is for the developer, not for training.
 
 PR's starting list (I draft the full list after the text source set; PR checks it):
 - S4: student-mobile 04-dashboard, 18-lesson-lobby, 22-live-p02-flashcards, 24-live-p03-read-article, 17-voice-practice; tutor-desktop 16-lesson-hub, 22-live-p01-launch.

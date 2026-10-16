@@ -10,6 +10,10 @@ with low reasoning, with the production prompt and the rubric rows of the curren
 
 **Thai check (Daniel, 2026-10-16):** N4, N5, N9, N14, and N15: "Videos checked and cleared."
 
+**Thai word for the 18 phases (Daniel, 2026-10-16):** "Use ช่วง for the 18 phases". PR re-made the
+Thai N6 at advantage-pr `b378195` (beat 7: "ช่วงที่ 2 จาก 18", "ในช่วงที่สองจากสิบแปดช่วง"). This
+closes the N6 finding 1 Thai part. N10 and the recruitment deck already use "ช่วง".
+
 ## N8 `parent-conversation-close` (advantage-pr `163a412`) and N11 `future-tutor-questions` (`0a64331`)
 
 Script source: `assets/sales-training/2027/source/videos/scripts.md` 1.1 at `0a64331`. Lessons:
