@@ -114,6 +114,35 @@ concession", because Q-SV-05 (a paid or a free pilot) is open. In the next seed 
 
 N9 at `c597282`: the beat 9 Reedy screen is now a text card. The voice did not change.
 
+## N14 `school-objections` (advantage-pr `5e551bd`, script before the build)
+
+Explainer for M7.3: the director says each objection (beat 2n), Khun Ploy answers (beat 2n+1). No
+roleplay tests one objection alone. Claims check: the 8 answers together (beats 3–17) on "Roleplay:
+The 30-Minute Demo".
+
+| Clip | Big 4 | Aka + size | Objections | Pilot | Claims |
+|---|---|---|---|---|---|
+| N14 TH | 25 | 45 | 90 | 95 | 100 |
+| N14 EN | 20 | 50 | 95 | 100 | 100 |
+
+The low criteria are demo steps that the video does not have (naming the Big 4, the company size).
+The answers pass the claims criterion and the objection criterion.
+
+| # | Beat | Finding | Fix |
+|---|---|---|---|
+| 1 | 3 | The Thai answer has "และแอปมีเสียงอ่านบทความ"; the English answer does not. | EN: "… and the teacher follows them, and the app reads each article aloud. …" (M7.3 objection 3: "audio for every article"). |
+| 2 | 5 | EN "and we fix it with you" is stronger than the Thai "วางแผนแก้ไขร่วมกับโรงเรียน" (plan the fix with the school), and stronger than M7.3 ("the app data and the observations show it"). | EN: "… the data shows it, and we plan the fix with you." |
+| 3 | 9 | PR's question: the start and end reading checks. M4.2 and M7.3 include them ("benchmark deltas"); M7.5 adds "if the school agreed them at the start". Also, a start and end check is not "every quarter". | EN: "For your school, we report how much each student reads and the Big 4 scores every quarter, and the reading checks at the start and the end that we agree with you." TH: "สำหรับโรงเรียน เรารายงานทุกไตรมาสว่านักเรียนแต่ละคนอ่านมากแค่ไหน และคะแนน Big 4 รวมถึงผลการวัดการอ่านตอนเริ่มและตอนจบที่ตกลงกับโรงเรียนไว้ค่ะ" |
+| 4 | 11 | "You can pilot one grade next to your foreign-teacher program" has no length; M7.3: "one grade level for one semester as a pilot". | EN: "You can pilot one grade for one semester, next to your foreign-teacher program." TH: "โรงเรียนนำร่องหนึ่งระดับชั้น หนึ่งภาคเรียน ควบคู่กับโปรแกรมครูต่างชาติได้ค่ะ" |
+
+No finding: objection 3 (the total cost, the Blended Learning contents), objection 4 (the Aka short
+form only), objection 6 (no MOE comment), objection 7 (both prices, no discount, the pilot, "I'll
+ask Daniel about the pilot terms"), objection 8 (no date; the first sentence says what schools get).
+
+**My seed changes (Q-SV-05 open: a paid or a free pilot):** the 30-minute demo criterion "Proposes
+the pilot (one grade level, one semester) at the standard prices" says "with no free period and no
+discount", the same as its success standard. In the next seed update, with the price-close change.
+
 ## N5 `the-words-we-use` (advantage-pr `2dd9e42`)
 
 Script: `scripts.md` section `the-words-we-use`, data `WORDS` in `make.py`. Lesson: M4.2 "The Words We
