@@ -143,6 +143,33 @@ ask Daniel about the pilot terms"), objection 8 (no date; the first sentence say
 the pilot (one grade level, one semester) at the standard prices" says "with no free period and no
 discount", the same as its success standard. In the next seed update, with the price-close change.
 
+## N4 `objection-pattern` (advantage-pr `9c1743c`, script before the build)
+
+Model conversation for M3.1–M3.3, on `Objection Roleplay: "We Tried Something Like This and It Failed"`.
+Part 1 (Phum's mother, scenario 1): seller beats 4, 5, 7, 9. Part 2 (Director Pranom, scenario 2):
+seller beats 13, 14, 16, 18. No price part (Q-SE-14), no feel-felt-found.
+
+| Clip | Scenario | Score | Criteria |
+|---|---|---|---|
+| N4 TH part 1 | 1 (parent) | 99 pass | 100, 100, 95, 100, 100 |
+| N4 EN part 1 | 1 (parent) | 99 pass | 100, 100, 95, 100, 100 |
+| N4 TH part 2 | 2 (director) | 95 pass | 95, 95, 90, 95, 100 |
+| N4 EN part 2 | 2 (director) | 100 pass | all 100 |
+| N4 TH part 2, beat 18 in the M7.2 wording | 2 | 95 pass | 95, 95, 90, 95, 100 |
+| N4 EN part 2, beat 18 in the M7.2 wording | 2 | 99 pass | 100, 100, 95, 100, 100 |
+
+PR's two questions: (a) "so they do no lesson planning" is the M7.2 key fact ("Scripted lessons: no
+lesson planning for your teachers"): no change. (b) A teacher try-out lesson is not in M7.2. The
+approved next step is "45 minutes next week with your academic team … bring printed workbooks", and
+the 45-minute demo shows the 13 printed steps of a lesson. Recommended beat 18 end, as scored: EN "Can
+we have 45 minutes next week with you and your English teachers? I'll bring the printed workbooks and
+go through one lesson with them, step by step." TH "สัปดาห์หน้า ขอเวลาสี่สิบห้านาทีกับท่านผู้อำนวยการและครูภาษาอังกฤษได้ไหมคะ ดิฉันจะนำหนังสือฉบับพิมพ์มา แล้วดูบทเรียนหนึ่งบทกับครูทีละขั้นตอนค่ะ"
+
+No other finding: the opening lines are the seed situations word for word; beat 9 uses only the
+allowed parent facts; beat 18 uses the director's own words ("one more thing to do").
+
+N14 and N15 built at advantage-pr `dde4472` (N15 = the scored script; N14 with the 4 fixes).
+
 ## N5 `the-words-we-use` (advantage-pr `2dd9e42`)
 
 Script: `scripts.md` section `the-words-we-use`, data `WORDS` in `make.py`. Lesson: M4.2 "The Words We

@@ -202,7 +202,8 @@ _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[loca
     - [x] Put the YouTube links of the S5, S6, and S7 videos (TH and EN) in the lessons (M5.1, M6.2, M7.1: one "Video —" line after the TL;DR)
     - [ ] The S4 video and the new videos of the video list: each link goes in its lesson when PR sends it
     - [x] Check N5, N8, N9, N11, and the thumbnails: script against the lessons, each model answer scored on its roleplay (`review/video-checks.md`)
-    - [ ] Check N2 and N4 the same way before PR builds them (N15 100/100, N14 claims 100); N6 and N10 wait for Q-SE-13
+    - [x] Check N4, N14, N15 the same way before PR builds them (N4 95–100, N14 claims 100, N15 100)
+    - [ ] N2 if Daniel keeps it (PR and I suggest leaving it out: it repeats N8); N6 and N10 wait for Q-SE-13
     - [ ] Next seed update (Q-SV-05 open): the price-close success standard says "with no price concession"; the
       30-minute demo pilot criterion says "with no free period and no discount" in place of "at the standard prices"
     - [x] R4 moves to the Reading Advantage Origins 2 → 3.1 case with PR's playbook v1.2 (`b3b9cae`; the Origins 3.2 case ends about 2026-11-08)
