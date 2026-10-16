@@ -169,6 +169,7 @@ No other finding: the opening lines are the seed situations word for word; beat 
 allowed parent facts; beat 18 uses the director's own words ("one more thing to do").
 
 N14 and N15 built at advantage-pr `dde4472` (N15 = the scored script; N14 with the 4 fixes).
+N4 built at advantage-pr `7b8265b` (TH 3:18, EN 3:53) with the beat 18 wording above, word for word.
 
 ## N5 `the-words-we-use` (advantage-pr `2dd9e42`)
 
