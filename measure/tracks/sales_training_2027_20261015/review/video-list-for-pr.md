@@ -45,7 +45,7 @@ Each video is in Thai and English (Thai first for the Family branch), 1–3 minu
 
 | ID | Title | Lessons | Format | Priority | Gate |
 |---|---|---|---|---|---|
-| N2 | Discovery, not a pitch | M1.1–M1.3, M1.4 roleplay | Model conversation: the same parent chat two times, first as a pitch, then with SPIN questions, a mirror, a label, and silence | Should | — |
+| ~~N2~~ | ~~Discovery, not a pitch~~ (Daniel, 2026-10-16: "Skip N2, N8 covers it.") | M1.1–M1.3, M1.4 roleplay | Model conversation: the same parent chat two times, first as a pitch, then with SPIN questions, a mirror, a label, and silence | Should | — |
 | N4 | The objection pattern | M3.1, M3.2, M3.3 roleplay | Model conversation: "We tried something like this and it failed" with the isolation question, the reverse, and the three questions; then "change the start, not the price" | Should | — |
 | N5 | The words we use (trainer video) | Trainer material; M4.2 | Explainer for trainers: each approved line, for example "Primary Advantage Origins 2" (the full book name), "CEFR-aligned: the active program covers Pre-A1 to A2", the approved Aka (2019) form, "a local tutor teaches a small group from a printed book", "Reedy voice practice after each completed lesson", "from 3,000 baht", the commission formula with one labeled example; and what a trainer listens for in a roleplay | **Must** | — |
 | N6 | The Tutor Advantage app for a family | M4.1, M5.1 | App tour: student-mobile 02, 03, 04, 18, 22, 24, 17 (crop rows 0–1211), 12 (the S4 and S5 rows of `screenshot-lesson-list.md`) | Should | Dev-build screens: a fact that expires. It shows only live features (Reedy voice practice on completed lessons) |

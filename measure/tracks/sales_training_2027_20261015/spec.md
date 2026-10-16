@@ -338,8 +338,7 @@ It is a fact that expires (PR scope doc §8). Rules:
   blurs the development class names on the N6 and N10 screens. The other Q-SE-13 strings (฿2,500, the
   landing statistics, 20 lessons, the coupon field) keep the crop-or-skip rule.
 - **Thai check (Daniel, 2026-10-16):** N4, N5, N9, N14, and N15: "Videos checked and cleared."
-- **N2 (Daniel, 2026-10-16):** "Leave out what? This is not clear." The question goes to Daniel again
-  with an explanation; until then, PR does not make N2.
+- **N2 (Daniel, 2026-10-16):** "Skip N2, N8 covers it." PR does not make N2.
 
 PR's starting list (I draft the full list after the text source set; PR checks it):
 - S4: student-mobile 04-dashboard, 18-lesson-lobby, 22-live-p02-flashcards, 24-live-p03-read-article, 17-voice-practice; tutor-desktop 16-lesson-hub, 22-live-p01-launch.

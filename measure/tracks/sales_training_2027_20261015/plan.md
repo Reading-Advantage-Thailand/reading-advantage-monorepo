@@ -203,7 +203,7 @@ _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[loca
     - [ ] The S4 video and the new videos of the video list: each link goes in its lesson when PR sends it
     - [x] Check N5, N8, N9, N11, and the thumbnails: script against the lessons, each model answer scored on its roleplay (`review/video-checks.md`)
     - [x] Check N4, N14, N15 the same way before PR builds them (N4 95–100, N14 claims 100, N15 100)
-    - [ ] N2 if Daniel keeps it (PR and I suggest leaving it out: it repeats N8); Daniel asked what N2 is (2026-10-16)
+    - [x] N2: Daniel (2026-10-16): "Skip N2, N8 covers it." PR does not make N2
     - [ ] Check the scripts of N6 and N10 (blurred class names, Q-SE-13), N7 (Q-SE-12 method), and the N9 price part
     - [ ] Seed update for Q-SE-14 (about 22–23 hours, per-hour figure) and Q-SE-12 (start at book level 1 or 2)
       after PR changes its sources; one candidate rebuild with the new pin
