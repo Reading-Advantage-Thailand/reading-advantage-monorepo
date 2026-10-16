@@ -206,7 +206,7 @@ _Blast radius (grep): `LessonContent` (1 caller: `apps/sales-advantage/app/[loca
     - [x] N2: Daniel (2026-10-16): "Skip N2, N8 covers it." PR does not make N2
     - [x] N9 price part (R2): 100/100, one wording fix (Reedy after each completed lesson)
     - [x] N7 script check (M5.2): 2 findings (one Thai term for the trial; "not on sale yet" in the map)
-    - [ ] Check the scripts of N6 and N10 (blurred class names, Q-SE-13)
+    - [x] N6 and N10 script checks (blurred names, Q-SE-13): one finding (N6 "phase two of eighteen")
     - [x] Seed update for Q-SE-14 (about 22–23 hours, about 135 baht per hour) and Q-SE-12 (start at book level 1
       or 2) at advantage-pr `a3c4df0`; candidate graph aee140a1 (`e2f2aa36b`)
     - [x] Next seed update (Q-SV-05 open): the price-close success standard says "with no price concession"; the

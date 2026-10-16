@@ -272,3 +272,31 @@ nearest printed book below (beat 9); "the parent hears the book, not a score" (b
 N8 (beat 11). The "lowest printed book" fallback is not in the video: accepted, because beat 3 covers
 its only case (book level 1). Fact that expires: "Reading Advantage has no higher printed book yet"
 (beat 7) changes when Reading Advantage Origins 3.1 is printed (Q-WB-11), with R4 and N9.
+
+## N6 `app-for-a-family` and N10 `a-week-as-a-tutor` (scripts in the PR working tree; 2026-10-16)
+
+App tours, one voice. Screens from `source/decks/prep.py` (`TOUR`): the development class names and
+the test user names are blurred (Q-SE-13, Daniel 2026-10-16); crops as in the list above; footer
+"Screens: development build, test data". Lessons: M4.1, M5.1, M6.1 at `e2f2aa36b`. No model answer
+to a roleplay, so this is a script check only. I compared each beat with the screen it names
+(`student-mobile/02`, `04`, `24`).
+
+| # | Video, beat | Finding | Fix |
+|---|---|---|---|
+| 1 | N6, 7 | English "In step two of eighteen". The lessons (M6.1) and N10 say "18 phases built on the 13 printed workbook steps": "step" names a printed step. | "In phase two of eighteen". Thai: the app screen says "ขั้นที่ 3/18" for a phase, and N10 says "สิบแปดช่วง … สิบสามขั้นตอน". For Daniel's Thai check: one Thai word for the 18 phases. |
+
+No finding, N6: sign-in with LINE and the under-18 consent line (the same as the login screen); the
+policy and terms (03); the home screen (04); the schedule; the lobby; "the tutor leads every lesson,
+and the lesson follows the printed book" (7); "tap a sentence" (8; the screen says
+"แตะประโยคที่อยากให้คุณครูช่วยออกเสียง"); the Reedy line in the approved form (9). No Read Along line:
+accepted, because N6 shows only live features.
+
+No finding, N10: beats 2, 4, 5, 6, 7, and 8 are the same as M6.1 (what a tutor does, the example week,
+prepare and rehearse, 18 phases on 13 printed steps, ready and not ready, the 6 start steps with
+Phikul and Daniel); the Thai uses "ทดลองอ่าน". Beat 3: the screen shows ฿2,125 and 42.5% (test data, the
+same 5,000 baht GV example as the commission lesson; the voice does not read them; rule 7).
+
+PR questions: (1) the tag "Non-fiction · CEFR A2" on tutor screens 19 and 22 stays unblurred: A2 is
+inside the active scope, and the voice does not read it. (2) The decks and the infographics change
+"ทดลองจัดระดับ" to "ทดลองอ่าน" (not uploaded yet). The YouTube video `family-sale-flow` (V2) says
+"ทดลองจัดระดับ"; it stays unless Daniel says otherwise.
