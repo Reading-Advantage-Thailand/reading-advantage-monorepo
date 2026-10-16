@@ -278,3 +278,7 @@ seed (`buildStaticSalesCurriculumRows`), `google/gemini-3.8-flash` with low reas
 clips fail their roleplay (R1 discovery, RR1 rules, RR2 transparency, RR3 worked example). With the
 fix lines, all 8 pass (96–100). The claims criterion is 100 on all 16 clips. Clips, fix lines, and
 findings: `review/video-checks.md`.
+
+Re-score after PR's fixes (advantage-pr `36572ca`): N8 and N11 pass on all 8 clips (96–100). N9
+fails R3 (66, 70) and R4 (20, 40) because its situations differ from the roleplays; the tested fix
+lines pass (99–100, R4 on a test copy with the Reading Advantage Origins 2 → 3.1 case).

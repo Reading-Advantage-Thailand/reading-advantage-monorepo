@@ -48,6 +48,40 @@ after each completed lesson, the trial with a day and a time, no hours; N11 the 
 §1), what the company provides (M6.1), the rate scale, the pyramid answer, the steps to start
 (M6.1 "How a new tutor starts"), no "I am not a teacher".
 
+### Re-score after the fixes (advantage-pr `36572ca`, 2026-10-16)
+
+New beat numbers: N8 R1 = beats 4, 6, 8, 10, 11; N11 RR1 = 9, 11; RR2 = 14; RR3 = 16 and 18 (Fern's
+"Can you give me an example?" between them).
+
+| Clip | Roleplay | Score | Criteria |
+|---|---|---|---|
+| N8 TH | R1 | 100 pass | 100, 100, 100, 100 |
+| N8 EN | R1 | 96 pass | 100, 85, 100, 100 |
+| N11 TH / EN | RR1 | 100 / 100 pass | all 100 |
+| N11 TH / EN | RR2 | 100 / 100 pass | all 100 |
+| N11 TH / EN | RR3 | 100 / 100 pass | all 100 |
+
+PR did not apply two rows, and both reasons are correct: row 2 (pair conversation is one of the 18
+lesson phases; M6.1 already says so: "flashcards, two games, pair conversation, and a wrap-up"),
+row 3 ("For this class, it is 3,000 baht": the tutor's own price, no hours).
+
+## N9 `parent-questions-next-book` (advantage-pr `36572ca`)
+
+R3 = beats 4 and 5; R4 = beats 12 and 14; beat 9 (progress) has no rubric.
+
+| Clip | Roleplay | As made | Criteria | With the fix | Criteria with the fix |
+|---|---|---|---|---|---|
+| N9 TH | R3 | 70 **fail** | 100, 80, 0, 55, 100 | 99 pass | 100, 95, 100, 100, 100 |
+| N9 EN | R3 | 66 **fail** | 100, 70, 0, 50, 100 | 100 pass | all 100 |
+| N9 TH | R4 | 20 **fail** | 0, 100, 0, 0, **0** | 100 pass (R4 test case) | all 100 |
+| N9 EN | R4 | 40 **fail** | 0, 100, 0, 0, 100 | 100 pass (R4 test case) | all 100 |
+
+| # | Beat | Finding | Fix |
+|---|---|---|---|
+| 1 | 3–5 | R3 is a secondary student: "Right book: names Reading Advantage Origins 2". N9 part one is Mew (Grade 3), so Right book is 0. Beat 5 asks for a class time; R3 "Choice" asks for a trial or information, with no pressure (50–55). | Tested: the child is a Grade 7 student. TH: "ดีเลยค่ะ คลาสของครูต่างออกไปนิดหนึ่ง เราเรียนตามหนังสือที่จัดลำดับบทไว้แล้ว เน้นการอ่าน คำศัพท์ และการพูดในกลุ่มเล็ก น้อง ม.1 เริ่มที่หนังสือ Reading Advantage Origins 2 ค่ะ น้องเรียนควบคู่กับคลาสวันอาทิตย์ได้ ถ้าคุณแม่สนใจ ครูขอทดลองอ่านกับน้องสักสิบนาทีนะคะ หรือจะให้ครูส่งข้อมูลทาง LINE ไปก่อนก็ได้ค่ะ คุณแม่สะดวกแบบไหนคะ" EN: "That's good. My class is a little different. We follow a book with a fixed order of lessons, and we focus on reading, vocabulary, and speaking in a small group. A Grade 7 student starts with Reading Advantage Origins 2. He can do it together with his Sunday class. If you like, I can do a ten-minute reading trial with him, or I can send you the information on LINE first. Which do you prefer?" |
+| 2 | 12–14 | R4 is the case where the next book is not printed: name it, no date, a LINE message when it is ready, praise, keep the place. N9 part three is the printed case (Origins 2 → Origins 3.1, the M5.4 model line): correct for its own story, but in the R4 situation, "I can start a new group right after this one" offers a book that is not on sale (Thai claims 0). | See row 3. |
+| 3 | R4 itself | The R4 case (Primary Advantage Origins 3.1 → 3.2, "not on sale yet") stops being true at about 2026-11-08. After that date, the Primary Advantage path has no next book that is not printed and that a seller may name (claims item 4: no level above book level 4). | Tested with a test copy of the rows (`rows-v4-r4.json`): R4 becomes Reading Advantage Origins 2 → Reading Advantage Origins 3.1, not printed (Q-WB-11; M5.4 table). TH: "คุณแม่คะ น้องต้นเรียนเล่มนี้ใกล้จบแล้วค่ะ น้องทำเกมคำศัพท์ได้ดีมากเลย เล่มต่อไปคือ Reading Advantage Origins 3.1 ต่อจากบทที่น้องเรียนมา ตอนนี้เล่มนี้ยังไม่พร้อมค่ะ พอหนังสือพร้อม ครูจะส่งข้อความทาง LINE บอกคุณแม่นะคะ ครูขอจองที่ในกลุ่มต่อไปให้น้องต้นไว้เลยไหมคะ" EN: "Ton is near the end of this book, and he did very well in the vocabulary games. The next book is Reading Advantage Origins 3.1. It continues from the lessons he has done. It is not ready yet. When it is ready, I'll send you a LINE message. Shall I keep his place in the next group?" The seed and the PR playbook (`#r4-which-book-next`) change together. The line is a fact that expires when Reading Advantage Origins 3.1 is printed. |
+
 ## N5 `the-words-we-use` (advantage-pr `2dd9e42`)
 
 Script: `scripts.md` section `the-words-we-use`, data `WORDS` in `make.py`. Lesson: M4.2 "The Words We
@@ -68,6 +102,8 @@ and App-Only (beat 5), the prices (beat 6), the Thai Aka (2019) short form (the 
 framework other than CEFR" in place of the three names: accepted (PR: the video goes on YouTube).
 
 ## N6 and N10: screens and crops (from `screenshot-lesson-list.md` v2)
+
+**Status (PR, 2026-10-16):** N6 and N10 wait for Q-SE-13. Most of these screens show the development class names ("Reading Advantage Level 1 - A1", "คลาส Reading Advantage 1 / 2"), and a crop leaves little of the screen. PR makes both videos from a new screenshot set when the strings are fixed, or when Daniel says to go ahead with crops.
 
 Base: advantage-pr `assets/screenshots/tutor-advantage/dev-2026-10-15/`. A crop keeps the source
 pixel rows named (row 0 = top). Captions name what the screen shows, in the positive.
