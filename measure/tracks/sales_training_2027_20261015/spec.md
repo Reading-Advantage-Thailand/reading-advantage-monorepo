@@ -319,6 +319,10 @@ It is a fact that expires (PR scope doc §8). Rules:
   (`6f99841`, `2dd9e42`). A model answer in a video must pass its own roleplay. The script checks, the
   scorer checks, and the fixes are in `review/video-checks.md`. Each video gets a lesson link when PR
   sends its YouTube link.
+- **R4 case (PR playbook v1.2, advantage-pr `b3b9cae`, 2026-10-16):** a Grade 7 student at lesson 12 of
+  Reading Advantage Origins 2; the next book, Reading Advantage Origins 3.1, is not printed (Q-WB-11).
+  The old case (Primary Advantage Origins 3.1 → 3.2) stops being true at about 2026-11-08. When Reading
+  Advantage Origins 3.1 is printed, R4, the playbook, and the N9 video change together.
 - **Hours for each class package (Q-SE-14, open):** the PR videos give no hours, so N9 has no price part
   (R2) until Daniel decides Q-SE-14 (22 or about 25 hours). The lessons and the R2 "Value facts"
   criterion use "about 25 hours" and "about 120 baht per hour"; change them if Q-SE-14 gives 22.

@@ -1569,17 +1569,17 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
 
 **The line:** "น้องเรียนเล่มนี้ใกล้จบแล้วค่ะ เล่มต่อไปคือ [ชื่อหนังสือเต็ม] ต่อจากบทที่น้องเรียนมา ถ้าคุณพ่อคุณแม่อยากให้น้องเรียนต่อ เราเปิดกลุ่มใหม่ได้เลยค่ะ" (Your child is near the end of this book. The next book is [full book name]. It continues from the lessons your child has done. If you want your child to continue, we can start a new group.)
 
-**The fact:** after Primary Advantage Origins 3.1, the next book is Primary Advantage Origins 3.2. In this roleplay, it is not on sale yet. Never give a parent a print date.
+**The fact:** after Reading Advantage Origins 2, the next book is Reading Advantage Origins 3.1. It is not printed yet (Q-WB-11). Never give a parent a print date.
 
 **Success standard:** the parent knows the name of the next book, expects a LINE message, and wants to keep the child's place.`,
         order: 8,
         scenarios: [
           {
-            personaName: "คุณแม่ของน้องน้ำใส (Nam Sai's mother)",
-            personaRole: "Parent of a child at lesson 12 of Primary Advantage Origins 3.1",
+            personaName: "คุณแม่ของน้องต้น (Ton's mother)",
+            personaRole: "Parent of a Grade 7 (ม.1) student at lesson 12 of Reading Advantage Origins 2",
             situation: thaiFirst(
-              "น้องน้ำใสเรียนถึงบทที่ 12 ของ Primary Advantage Origins 3.1 แล้ว คุณคุยกับคุณแม่ทาง LINE ก่อนที่ Primary Advantage Origins 3.2 จะเริ่มขาย คุณแม่พูดว่า: \"ลูกใกล้เรียนจบเล่มนี้แล้ว เรียนต่อเล่มไหนดีคะ แล้วเล่มต่อไปมีเมื่อไหร่คะ\"",
-              "Nam Sai is at lesson 12 of Primary Advantage Origins 3.1. You talk with her mother on LINE before Primary Advantage Origins 3.2 is on sale. She says: \"My child is nearly finished with this book. Which book comes next, and when is it available?\"",
+              "น้องต้นอยู่ ม.1 และเรียนถึงบทที่ 12 ของ Reading Advantage Origins 2 แล้ว เล่มต่อไปคือ Reading Advantage Origins 3.1 ซึ่งยังไม่พิมพ์ คุณคุยกับคุณแม่ทาง LINE คุณแม่พูดว่า: \"ลูกใกล้เรียนจบเล่มนี้แล้ว เรียนต่อเล่มไหนดีคะ แล้วเล่มต่อไปมีเมื่อไหร่คะ\"",
+              "Ton, a Grade 7 student, is at lesson 12 of Reading Advantage Origins 2. The next book, Reading Advantage Origins 3.1, is not printed yet. You talk with his mother on LINE. She says: \"My child is nearly finished with this book. Which book comes next, and when is it available?\"",
             ),
             objective: thaiFirst(
               "บอกชื่อเล่มต่อไปแบบเต็ม ไม่บอกวันพิมพ์หรือวันวางขาย สัญญาว่าจะส่งข้อความ LINE เมื่อหนังสือพร้อม ชมสิ่งที่น้องทำได้ดีในเล่มนี้ แล้วชวนคุณแม่จองที่ในกลุ่มต่อไป",
@@ -1589,7 +1589,7 @@ Never give a parent a print date. A secondary student who finishes Reading Advan
               "The mother wants a date. A weak trainee gives a date or says that the book is available now. The child did well in the vocabulary games.",
             rubric: [
               {
-                criterion: "Correct next book: names Primary Advantage Origins 3.2",
+                criterion: "Correct next book: names Reading Advantage Origins 3.1",
                 weight: 0.3,
                 passingScore: 60,
                 sourceRef: "09-sales-enablement/tutor-family-sales-playbook.md#r4-which-book-next",
@@ -2044,7 +2044,7 @@ In the recruitment roleplays, commission talk is allowed: say each baht figure a
         type: "roleplay" as const,
         content: `**Method:** Explain the differential: your rate on the whole group volume, minus what your recruits receive. Use a worked example from the formula and label it as an example. Say that the friends must teach their own students, and that she must keep her own students.
 
-**The worked example:** Tutor A has 4 students of her own (12,000 baht). Tutor B has 6 students (18,000 baht). Tutor A's GV is 30,000 baht at 55.6%: 16,682 − 8,820 = 7,862 baht. Without Tutor B, Tutor A's 12,000 baht would give 46.0% = 5,520 baht. This is an example from the formula, not a promise.
+**The worked example:** Tutor A has 4 students of her own (12,000 baht). Tutor B has 6 students (18,000 baht). Tutor A's GV is 30,000 baht at 55.6%: 16,682 − 8,820 = 7,862 baht. Without Tutor B, Tutor A's 12,000 baht would give 46.0% = 5,520 baht.
 
 **Label the example one time:** "That is an example from the formula."
 

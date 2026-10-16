@@ -82,6 +82,19 @@ R3 = beats 4 and 5; R4 = beats 12 and 14; beat 9 (progress) has no rubric.
 | 2 | 12–14 | R4 is the case where the next book is not printed: name it, no date, a LINE message when it is ready, praise, keep the place. N9 part three is the printed case (Origins 2 → Origins 3.1, the M5.4 model line): correct for its own story, but in the R4 situation, "I can start a new group right after this one" offers a book that is not on sale (Thai claims 0). | See row 3. |
 | 3 | R4 itself | The R4 case (Primary Advantage Origins 3.1 → 3.2, "not on sale yet") stops being true at about 2026-11-08. After that date, the Primary Advantage path has no next book that is not printed and that a seller may name (claims item 4: no level above book level 4). | Tested with a test copy of the rows (`rows-v4-r4.json`): R4 becomes Reading Advantage Origins 2 → Reading Advantage Origins 3.1, not printed (Q-WB-11; M5.4 table). TH: "คุณแม่คะ น้องต้นเรียนเล่มนี้ใกล้จบแล้วค่ะ น้องทำเกมคำศัพท์ได้ดีมากเลย เล่มต่อไปคือ Reading Advantage Origins 3.1 ต่อจากบทที่น้องเรียนมา ตอนนี้เล่มนี้ยังไม่พร้อมค่ะ พอหนังสือพร้อม ครูจะส่งข้อความทาง LINE บอกคุณแม่นะคะ ครูขอจองที่ในกลุ่มต่อไปให้น้องต้นไว้เลยไหมคะ" EN: "Ton is near the end of this book, and he did very well in the vocabulary games. The next book is Reading Advantage Origins 3.1. It continues from the lessons he has done. It is not ready yet. When it is ready, I'll send you a LINE message. Shall I keep his place in the next group?" The seed and the PR playbook (`#r4-which-book-next`) change together. The line is a fact that expires when Reading Advantage Origins 3.1 is printed. |
 
+### N9 after the fix (advantage-pr `b3b9cae`, PR playbook v1.2)
+
+The story is Ton (Grade 7) and his mother. R4 in the seed and in the playbook now uses Reading
+Advantage Origins 2 → Reading Advantage Origins 3.1 (not printed, Q-WB-11). Scored on the rows of the
+changed seed:
+
+| Clip | Roleplay | Score | Criteria |
+|---|---|---|---|
+| N9 TH (beats 4, 5) | R3 | 99 pass | 100, 95, 100, 100, 100 |
+| N9 EN (beats 4, 5) | R3 | 96 pass | 100, 85, 100, 100, 100 |
+| N9 TH (beats 12, 14) | R4 | 100 pass | all 100 |
+| N9 EN (beats 12, 14) | R4 | 100 pass | all 100 |
+
 ## N5 `the-words-we-use` (advantage-pr `2dd9e42`)
 
 Script: `scripts.md` section `the-words-we-use`, data `WORDS` in `make.py`. Lesson: M4.2 "The Words We

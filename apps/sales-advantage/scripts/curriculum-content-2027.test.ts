@@ -333,10 +333,12 @@ describe("S5 — the Tutor family sale", () => {
     expect(entry!.scenario.objective).toContain("\n\nEnglish: ");
   });
 
-  it("practices the next-book conversation with no date", () => {
+  it("practices the next-book conversation with no date, on a book that is not printed", () => {
     const [entry] = roleplay("family-sale", "Roleplay R4: Which Book Next?");
-    expect(entry!.criteria[0]!.criterion).toContain("Primary Advantage Origins 3.2");
+    expect(entry!.criteria[0]!.criterion).toContain("Reading Advantage Origins 3.1");
     expect(entry!.criteria[1]!.criterion).toMatch(/no print or sale date/i);
+    expect(entry!.scenario.situation).toContain("lesson 12 of Reading Advantage Origins 2");
+    expect(entry!.scenario.situation).not.toContain("Primary Advantage Origins 3.2");
   });
 });
 
