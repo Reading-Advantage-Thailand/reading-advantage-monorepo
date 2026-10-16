@@ -231,3 +231,25 @@ live feature (Reedy voice practice); it does not need a "not available" line.
 Optional for the pay part: `11-earnings.png` (42.50% at ฿5,000 GV, 3% withholding tax; the same
 example as the commission lesson) and `12-network.png` (development build, test data). Do not use:
 `16-lesson-hub` ("สอนแล้ว 5 จาก 20 บท", "19 ขั้นตอน (4 คาบ)"), the class screens `03`–`06`.
+
+## N9 part 2: the price (R2), script not committed (PR message, 2026-10-16)
+
+Seller beats 9, 10, 11 of `parent-questions-next-book`. Ton's mother, after the trial, hears an
+offer of Reading Advantage Origins 2 (R2 has a father and Primary Advantage Origins 2; R2 has no
+book criterion, so one family for the whole video is accepted). Rows: seed at `e2f2aa36b`
+(about 22–23 hours, about 135 baht per hour, 130–136 passes).
+
+| Clip | Roleplay | As written | Criteria | With the fix | Criteria with the fix |
+|---|---|---|---|---|---|
+| N9 price TH | R2 | 100 pass | 100, 100, 100, 100, 100 | 100 pass | 100, 100, 100, 100, 100 |
+| N9 price EN | R2 | 100 pass | 100, 100, 100, 100, 100 | 100 pass | 100, 100, 100, 100, 100 |
+
+| # | Beat | Finding | Fix |
+|---|---|---|---|
+| 1 | 10 | "speaking practice with Reedy" / "ฝึกพูดกับ Reedy" has no "after each completed lesson". The approved line (lessons M5.3, N5) gives Reedy practice after each completed lesson. | "… and speaking practice with Reedy after each completed lesson." / "… และฝึกพูดกับ Reedy หลังเรียนจบแต่ละบทค่ะ" |
+
+No finding: the acknowledgement (beat 9), the hours and the per-hour figure (beat 10; Thai
+"ชั่วโมงละ 135 บาท" is the spoken form of the lesson's "135 บาทต่อชั่วโมง"), no discount and no
+competitor in answer to "Other places are cheaper", the start question with the LINE offer (beat 11),
+and the start book (Reading Advantage Origins 2 for a Grade 7 student, Daniel's rule of 2026-10-16).
+For Daniel's Thai check: beats 7–12 and the summary line (beat 22).
