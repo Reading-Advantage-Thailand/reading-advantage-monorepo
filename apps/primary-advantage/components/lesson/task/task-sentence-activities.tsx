@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import {
   Book,
   ListOrdered,
@@ -112,7 +113,8 @@ export default function TaskSentenceActivities({
   }, [articleId, locale]);
 
   if (playing && input) {
-    return (
+    // A portal on the body, as in task 10: the transform of the lesson task wrapper would hold the fixed run.
+    return createPortal(
       <div className="cq-world lg-run" data-testid="lesson-game-run">
         <GameHost
           gameId={playing}
@@ -134,7 +136,8 @@ export default function TaskSentenceActivities({
             void refreshResults();
           }}
         />
-      </div>
+      </div>,
+      document.body,
     );
   }
 

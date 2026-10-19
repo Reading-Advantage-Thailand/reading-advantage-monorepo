@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
 import type { LaunchAvatar, PracticeInput } from "@reading-advantage/game-contracts";
 import { missingFor } from "@reading-advantage/advantage-play-kit-3d/contracts";
@@ -100,7 +101,9 @@ export default function TaskVocabularyGame({ articleId, save = true }: { article
   }, []);
 
   if (view === "play" && playing && input) {
-    return (
+    // A portal on the body: the task wrapper of the lesson page has a transform (its fade), and a
+    // transform is the frame of a fixed child, so `.lg-run` would stay inside the lesson card.
+    return createPortal(
       <div className="cq-world lg-run" data-testid="lesson-game-run">
         <GameHost
           gameId={playing}
@@ -116,7 +119,8 @@ export default function TaskVocabularyGame({ articleId, save = true }: { article
           onLoadError={loadFailed}
           onExit={leaveGame}
         />
-      </div>
+      </div>,
+      document.body,
     );
   }
 

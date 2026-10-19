@@ -103,6 +103,8 @@ describe("TaskVocabularyGame", () => {
     expect(host).toHaveAttribute("data-article", ARTICLE);
     expect(host).toHaveAttribute("data-input", `lesson:${ARTICLE}`);
     expect(host).toHaveAttribute("data-save", "true");
+    // On the body: the transform of the lesson task wrapper must not hold the full-screen run (manual test E3).
+    expect(screen.getByTestId("lesson-game-run").parentElement).toBe(document.body);
   });
 
   it("shows the real count and the real XP of the run after the game, and reads the results again", async () => {

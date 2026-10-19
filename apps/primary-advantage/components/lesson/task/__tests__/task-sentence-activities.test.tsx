@@ -95,6 +95,7 @@ describe("TaskSentenceActivities cartridges", () => {
     expect(host).toHaveAttribute("data-game", "potion-rush");
     expect(host).toHaveAttribute("data-article", ARTICLE);
     expect(host).toHaveAttribute("data-save", "true");
+    expect(screen.getByTestId("lesson-game-run").parentElement).toBe(document.body);
     fireEvent.click(screen.getByText("exit"));
     expect(await screen.findByTestId("lesson-game-castle-defense")).toBeInTheDocument();
     await waitFor(() => expect(mocks.results).toHaveBeenCalledTimes(2));

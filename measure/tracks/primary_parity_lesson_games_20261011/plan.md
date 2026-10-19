@@ -145,3 +145,6 @@ _Story ref: spec.md#story-s5_
 - [x] Task: Low: a locked card keeps its last result 68cfcc996
 - [x] Task: Low: task 12 shows a placeholder while the games load 68cfcc996
 - [x] Task: Low: lesson runs get `ownerKey` and the avatar from the input action 68cfcc996
+
+## Phase: Manual Test Fixes 2026-10-19
+- [x] Task: E3 the task 10 and task 12 runs fill the window: a portal on the body. The task wrapper of `lesson-progress-bar.tsx` has `translate-y-0 scale-100` (its fade), a transform is the frame of a fixed child, so `.lg-run` stayed inside the lesson card and "Exit game" covered "Next Task".
