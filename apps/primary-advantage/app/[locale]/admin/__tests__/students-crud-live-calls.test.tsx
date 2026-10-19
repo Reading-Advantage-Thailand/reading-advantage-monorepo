@@ -203,6 +203,11 @@ describe("admin students CRUD live server calls", () => {
         "delete student must issue DELETE /api/students/:id",
       ).toBeGreaterThan(0);
     });
+    // The list and its totals reload after the delete (manual test A6).
+    await waitFor(() => {
+      const reads = fetchSpy.mock.calls.filter(([url, init]) => typeof url === "string" && url.startsWith("/api/students?") && !(init as RequestInit | undefined)?.method);
+      expect(reads.length).toBeGreaterThan(1);
+    });
   }, 30_000);
 });
 

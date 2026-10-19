@@ -371,7 +371,8 @@ export default function StudentsPage() {
         return;
       }
 
-      setStudents((prev) => prev.filter((student) => student.id !== id));
+      // Reload the list, so the totals and the page count follow the delete (manual test A6).
+      await fetchStudents();
       toast.success(t("toasts.deleteSuccess"));
     } catch (error) {
       console.error("Error deleting student:", error);
