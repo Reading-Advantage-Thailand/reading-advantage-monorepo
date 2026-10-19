@@ -7,7 +7,7 @@ import {
   useCallback,
   useContext,
 } from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { RpgButton, rpgButton } from "@/components/rpg/chrome";
 import { ArrowLeft, MicIcon } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { ErrorState, ShimmerSkeleton } from "@reading-advantage/ui";
@@ -464,7 +464,7 @@ export default function LessonProgressBar({
             <Link
               href={`/student/reedy?articleId=${resolvedArticleId}`}
               data-testid="reedy-entry"
-              className={cn(buttonVariants({ variant: "outline" }), "mt-4 min-h-12 w-full rounded-xl text-base")}
+              className={cn(rpgButton("wood"), "mt-4 min-h-12 w-full")}
             >
               <MicIcon aria-hidden="true" className="size-5" />
               {tReedy("lessonEntry")}
@@ -563,7 +563,7 @@ export default function LessonProgressBar({
       {/* Main Content Area */}
       <div className="min-w-0 xl:col-span-3">
         {phaseLoading && !fadeOut ? (
-          <div aria-busy="true" className="bg-card flex flex-col gap-4 rounded-2xl border p-6 shadow-sm">
+          <div aria-busy="true" className="cq-panel flex flex-col gap-4 p-6">
             <ShimmerSkeleton className="h-8 w-1/2" />
             <ShimmerSkeleton className="h-4 w-full" />
             <ShimmerSkeleton className="h-4 w-3/4" />
@@ -582,19 +582,19 @@ export default function LessonProgressBar({
             </div>
 
             {lockedStep !== null ? (
-              <p role="status" className="bg-muted text-muted-foreground rounded-xl border px-4 py-3 text-sm">
+              <p role="status" className="cq-panel px-4 py-3 text-sm font-semibold">
                 {t("lockedStep", { step: lockedStep })}
               </p>
             ) : null}
             {saveError !== null ? (
               <ErrorState
-                className="bg-card border"
+                className="cq-panel"
                 title={t("saveError")}
                 description={t("saveErrorHint")}
                 action={
-                  <Button type="button" className="min-h-12 px-6" onClick={retrySave}>
+                  <RpgButton tone="gold" className="px-6" onClick={retrySave}>
                     {tError("retry")}
-                  </Button>
+                  </RpgButton>
                 }
               />
             ) : null}
@@ -602,10 +602,10 @@ export default function LessonProgressBar({
             {/* Navigation Buttons */}
             <div className={cn("transition-opacity duration-300", fadeOut ? "pointer-events-none opacity-50" : "opacity-100")}>
               {currentTask === 1 && (
-                <div className="bg-card rounded-2xl border p-4 shadow-sm">
-                  <Button
-                    size="lg"
-                    className="min-h-12 w-full rounded-xl text-base font-semibold"
+                <div className="cq-panel p-4">
+                  <RpgButton
+                    tone="gold"
+                    className="w-full"
                     onClick={startLesson}
                     disabled={busy}
                   >
@@ -620,31 +620,27 @@ export default function LessonProgressBar({
                         <ArrowLeft className="size-5 rotate-180" aria-hidden="true" />
                       </>
                     )}
-                  </Button>
+                  </RpgButton>
                 </div>
               )}
 
               {currentTask < 14 && currentTask > 1 && (
-                <div className="bg-card flex gap-3 rounded-2xl border p-4 shadow-sm">
+                <div className="cq-panel flex flex-row gap-3 p-4">
                   {/* Back Button - Only show if phase > 2 */}
                   {currentTask > 2 && (
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="min-h-12 flex-1 rounded-xl text-base font-semibold"
+                    <RpgButton
+                      className="flex-1"
                       onClick={previousTask}
                       disabled={busy}
                     >
                       <ArrowLeft className="size-5" aria-hidden="true" />
                       {t("actions.previousTask")}
-                    </Button>
+                    </RpgButton>
                   )}
 
                   {/* Next Button */}
-                  <Button
-                    size="lg"
+                  <RpgButton
                     className={cn(
-                      "min-h-12 rounded-xl text-base font-semibold",
                       currentTask > 2 ? "flex-1" : "w-full",
                       shakeButton && "animate-shake",
                     )}
@@ -662,7 +658,7 @@ export default function LessonProgressBar({
                         <ArrowLeft className="size-5 rotate-180" aria-hidden="true" />
                       </>
                     )}
-                  </Button>
+                  </RpgButton>
                 </div>
               )}
             </div>

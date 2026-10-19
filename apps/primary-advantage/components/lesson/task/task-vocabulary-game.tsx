@@ -145,7 +145,7 @@ export default function TaskVocabularyGame({ articleId, save = true }: { article
           {anyOpen ? (
             <div><RpgButton tone="iron" onClick={() => { setNotice(null); setView("pick"); }}>{t("backToGames")}</RpgButton></div>
           ) : null}
-          <div className="overflow-hidden rounded-2xl border bg-card p-4 shadow-lg" data-testid="lesson-simple-game">
+          <div data-testid="lesson-simple-game">
             <LessonMatchingGame articleId={articleId} cardKind={FlashcardType.VOCABULARY} />
           </div>
         </div>

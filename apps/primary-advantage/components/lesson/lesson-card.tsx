@@ -2,10 +2,11 @@ import React from "react";
 import LessonProgressBar, {
   LessonAssignmentProps,
 } from "./lesson-progress-bar";
-import { BookOpenIcon, BookXIcon } from "lucide-react";
+import { BookXIcon } from "lucide-react";
 import { EmptyState } from "@reading-advantage/ui";
 import { Link } from "@/i18n/navigation";
-import { buttonVariants } from "@/components/ui/button";
+import { rpgButton } from "@/components/rpg/chrome";
+import { ART } from "@/lib/rpg/places";
 import { cn } from "@/lib/utils";
 import getAssignmentById from "@/server/models/assignmentModel";
 import { getArticleForLesson } from "@/server/models/lessonModel";
@@ -56,13 +57,13 @@ export default async function LessonCard({
     const tRead = await getTranslations("ReadList");
     return (
       <EmptyState
-        className="bg-card border"
+        className="cq-panel"
         titleAs="h1"
         icon={<BookXIcon />}
         title={t("notFound")}
         description={t("notFoundHint")}
         action={
-          <Link href="/student/read" className={cn(buttonVariants({ variant: "default" }), "min-h-12 rounded-xl px-6")}>
+          <Link href="/student/read" className={cn(rpgButton("gold"), "min-h-12 px-6")}>
             {tRead("backToStories")}
           </Link>
         }
@@ -72,17 +73,15 @@ export default async function LessonCard({
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <header className="bg-brand-50 flex flex-col gap-2 rounded-2xl border p-5 md:p-6">
+      <header className="cq-panel cq-pin flex flex-col gap-2 p-5 md:p-6">
         <div className="flex items-center gap-3">
-          <span aria-hidden="true" className="bg-primary text-primary-foreground rounded-full p-2.5">
-            <BookOpenIcon className="size-5" />
-          </span>
+          <img src={ART.scroll} alt="" aria-hidden="true" className="cq-shadowed size-12 shrink-0" />
           <div className="min-w-0">
-            <p className="text-primary text-sm font-semibold">{t("header.title")}</p>
+            <p className="lf-text-gold text-sm font-bold tracking-wide uppercase">{t("header.title")}</p>
             <h1 className="text-xl leading-tight font-bold md:text-2xl">{title}</h1>
           </div>
         </div>
-        <p className="text-muted-foreground text-sm">{t("header.cta")}</p>
+        <p className="cq-muted text-sm">{t("header.cta")}</p>
       </header>
 
       <QuizContextProvider>

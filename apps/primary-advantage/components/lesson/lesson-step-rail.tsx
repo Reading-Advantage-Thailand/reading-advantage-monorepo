@@ -39,16 +39,16 @@ export function LessonStepRail({ steps, current, timer }: LessonStepRailProps) {
   const stepName = t("rail.stepName", { step: current, total, name: steps[current - 1] ?? "" });
 
   return (
-    <section aria-labelledby={titleId} className="bg-card rounded-2xl border p-4 shadow-sm xl:sticky xl:top-22">
+    <section aria-labelledby={titleId} className="cq-panel xl:sticky xl:top-22">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 id={titleId} className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+          <h2 id={titleId} className="cq-muted text-xs font-semibold tracking-wide uppercase">
             {t("progress.title")}
           </h2>
           <p className="font-semibold">{stepName}</p>
         </div>
         {timer ? (
-          <div className="bg-muted flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1">
+          <div className="lg-chip flex shrink-0 items-center gap-1.5">
             <Timer className="size-4" aria-hidden="true" />
             {timer}
           </div>
@@ -62,16 +62,10 @@ export function LessonStepRail({ steps, current, timer }: LessonStepRailProps) {
         aria-valuemax={total}
         aria-valuenow={current}
         aria-valuetext={stepName}
-        className="mt-3 flex gap-1"
+        className="lf-steps mt-3"
       >
         {steps.map((step, index) => (
-          <span
-            key={step}
-            className={cn(
-              "h-2 flex-1 rounded-full",
-              index + 1 < current ? "bg-primary" : index + 1 === current ? "bg-brand-400" : "bg-muted",
-            )}
-          />
+          <span key={step} data-state={index + 1 < current ? "done" : index + 1 === current ? "current" : "todo"} />
         ))}
       </div>
 
@@ -80,7 +74,7 @@ export function LessonStepRail({ steps, current, timer }: LessonStepRailProps) {
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => setOpen(!open)}
-        className="text-primary mt-2 flex min-h-12 w-full items-center justify-between rounded-lg text-sm font-medium xl:hidden"
+        className="mt-2 flex min-h-12 w-full items-center justify-between rounded-lg text-sm font-bold text-[var(--cq-wood-dark)] underline-offset-4 hover:underline xl:hidden"
       >
         {open ? t("rail.hideSteps") : t("rail.showSteps")}
         <ChevronDownIcon className={cn("size-4", open && "rotate-180")} aria-hidden="true" />
@@ -97,12 +91,12 @@ export function LessonStepRail({ steps, current, timer }: LessonStepRailProps) {
                 aria-hidden="true"
                 className={cn(
                   "flex size-5 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-bold",
-                  done ? "bg-primary text-primary-foreground" : active ? "bg-brand-400 text-brand-900" : "bg-muted text-muted-foreground",
+                  done ? "lf-good border-2" : active ? "lf-medal border-2" : "cq-muted border-2 border-[var(--cq-parchment-edge)] bg-[var(--cq-parchment-2)]",
                 )}
               >
                 {done ? <CheckIcon className="size-3" /> : number}
               </span>
-              <span className={cn(active ? "font-semibold" : done ? "text-muted-foreground" : "text-foreground")}>
+              <span className={cn(active ? "font-bold" : done ? "cq-muted" : undefined)}>
                 {number}. {step}
               </span>
               {done ? <span className="sr-only">{t("rail.done")}</span> : null}

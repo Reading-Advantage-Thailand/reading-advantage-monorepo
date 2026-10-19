@@ -318,3 +318,22 @@ html:not(.dark) .cq-staff { --muted-foreground: var(--cq-ink-soft); --border: rg
 .lg-run { position: fixed; inset: 0; z-index: 50; background: #05070c; display: flex; flex-direction: column; }
 /* The page under a full-screen run does not scroll and shows no scroll bar (manual test E3). */
 html:has(.lg-run) { overflow: hidden; }
+
+/* The lesson flow (lesson tasks 1 to 14, owner look check 2026-10-19): the parts inside a parchment panel.
+   Right and wrong keep green and red in deep skin tones, always with a word or an icon too. */
+.lf-well { background: rgba(255, 255, 255, 0.4); border: 2px solid var(--cq-parchment-edge); border-radius: 10px; color: var(--cq-ink); }
+.lf-well--gold { background: rgba(232, 181, 52, 0.28); border-color: var(--cq-gold-dark); box-shadow: 0 0 0 2px rgba(232, 181, 52, 0.45); }
+.lf-good { background: #dfeccd; border-color: #2f6b35; color: #1f4a23; }
+.lf-bad { background: #f3d6cc; border-color: #8f2424; color: #6b1717; }
+.lf-text-good { color: #2f6b35; }
+.lf-text-bad { color: #8f2424; }
+.lf-text-gold { color: #7a5410; }
+/* A medallion: the round gold frame of an icon. */
+.lf-medal { display: inline-grid; place-items: center; border-radius: 999px; background: radial-gradient(circle at 35% 30%, #ffe08a, var(--cq-gold) 55%, var(--cq-gold-dark)); border: 3px solid var(--cq-wood-dark); color: var(--cq-ink); box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3); }
+/* A list bullet: a small gold stud. */
+.lf-stud { flex-shrink: 0; width: 10px; height: 10px; border-radius: 999px; background: radial-gradient(circle at 35% 35%, #ffe08a, var(--cq-gold-dark)); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35); }
+/* The step bar: a dark wood groove, the done steps green, the current step gold. */
+.lf-steps { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: #2a1d12; border: 2px solid var(--cq-wood-dark); box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.6); }
+.lf-steps > span { flex: 1; height: 8px; border-radius: 999px; background: rgba(255, 244, 220, 0.18); }
+.lf-steps > [data-state="done"] { background: linear-gradient(180deg, #8ee07e, var(--cq-green) 55%, #2d7a36); }
+.lf-steps > [data-state="current"] { background: linear-gradient(180deg, #ffe08a, var(--cq-gold) 55%, var(--cq-gold-dark)); box-shadow: 0 0 6px rgba(255, 214, 90, 0.8); }

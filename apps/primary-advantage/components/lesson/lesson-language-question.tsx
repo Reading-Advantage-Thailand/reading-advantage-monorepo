@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { RpgButton } from "@/components/rpg/chrome";
 import { Input } from "@/components/ui/input";
 import { Skeleton, Avatar, AvatarFallback, AvatarImage } from "@reading-advantage/ui";
 import { Bot, MessageSquare, Send, Loader2, X } from "lucide-react";
@@ -131,10 +131,10 @@ export default function LessonLanguageQuestion({
     <>
       <div className="relative">
         {loadingPage ? (
-          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-gray-200 backdrop-blur-sm dark:bg-gray-900/90">
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-[var(--cq-parchment)]">
             <div className="flex flex-col items-center space-y-3">
-              <Loader2 className="h-10 w-10 animate-spin text-indigo-600 dark:text-indigo-400" />
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <Loader2 className="h-10 w-10 animate-spin text-[var(--cq-wood-dark)]" />
+              <p className="cq-muted text-sm font-medium">
                 {t("loading.conversation")}
               </p>
             </div>
@@ -142,19 +142,19 @@ export default function LessonLanguageQuestion({
         ) : (
           <div className="space-y-4">
             {/* Chat Header */}
-            <div className="flex items-center justify-between rounded-xl border border-indigo-200/50 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 p-4 dark:border-indigo-700/50 dark:from-indigo-500/20 dark:to-purple-500/20">
+            <div className="lf-well flex items-center justify-between p-4">
               <div className="flex items-center space-x-3">
                 <div className="relative">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600">
-                    <Bot className="h-6 w-6 text-white" />
+                  <div className="lf-medal h-10 w-10">
+                    <Bot className="h-6 w-6" />
                   </div>
-                  <div className="absolute -right-1 -bottom-1 h-4 w-4 rounded-full border-2 border-white bg-green-500 dark:border-gray-800"></div>
+                  <div className="absolute -right-1 -bottom-1 h-4 w-4 rounded-full border-2 border-[var(--cq-parchment)] bg-[#2f6b35]"></div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">
+                  <h3 className="font-semibold">
                     {t("title")}
                   </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="cq-muted text-sm">
                     {user?.name
                       ? t("header.readyWithName", {
                           name: (user?.name || "").split(" ")[0],
@@ -163,25 +163,25 @@ export default function LessonLanguageQuestion({
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
-                <div className="h-2 w-2 animate-pulse rounded-full bg-green-500"></div>
+              <div className="lf-text-good flex items-center space-x-2 text-xs font-semibold">
+                <div className="h-2 w-2 animate-pulse rounded-full bg-[#2f6b35]"></div>
                 <span>{t("status.online")}</span>
               </div>
             </div>
 
             {/* Chat Messages Area */}
-            <div className="from-gray-gray-300 overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-b to-white dark:border-gray-700 dark:from-gray-800/50 dark:to-gray-900">
-              <div className="scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent h-80 space-y-4 overflow-y-auto p-3 sm:h-96 sm:p-4">
+            <div className="lf-well overflow-hidden">
+              <div className="scrollbar-thin scrollbar-track-transparent h-80 space-y-4 overflow-y-auto p-3 sm:h-96 sm:p-4">
                 {messages.length === 0 && !loading && (
                   <div className="flex h-full flex-col items-center justify-center space-y-4 text-center opacity-60">
-                    <MessageSquare className="h-12 w-12 text-gray-400" />
+                    <MessageSquare className="cq-muted h-12 w-12" />
                     <div>
-                      <p className="font-medium text-gray-500 dark:text-gray-400">
+                      <p className="cq-muted font-medium">
                         {user?.name
                           ? t("empty.helloName", { name: user?.name })
                           : t("empty.start")}
                       </p>
-                      <p className="text-sm text-gray-400 dark:text-gray-500">
+                      <p className="cq-muted text-sm">
                         {t("empty.ask")}
                       </p>
                     </div>
@@ -199,8 +199,8 @@ export default function LessonLanguageQuestion({
                     )}
                   >
                     {message.sender === "bot" && (
-                      <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 sm:h-8 sm:w-8">
-                        <Bot className="h-3 w-3 text-white sm:h-4 sm:w-4" />
+                      <div className="lf-medal h-6 w-6 flex-shrink-0 border-2 sm:h-8 sm:w-8">
+                        <Bot className="h-3 w-3 sm:h-4 sm:w-4" />
                       </div>
                     )}
 
@@ -208,8 +208,8 @@ export default function LessonLanguageQuestion({
                       className={cn(
                         "rounded-2xl px-3 py-2 shadow-sm transition-all duration-200 hover:shadow-md sm:px-4 sm:py-3",
                         message.sender === "user"
-                          ? "rounded-br-md bg-gradient-to-br from-indigo-500 to-purple-600 text-white"
-                          : "rounded-bl-md border border-gray-200 bg-gray-200 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100",
+                          ? "rounded-br-md border-2 border-[var(--cq-wood-dark)] bg-[var(--cq-wood)] text-[#fff4dc]"
+                          : "rounded-bl-md border-2 border-[var(--cq-parchment-edge)] bg-[#fffaf0] text-[var(--cq-ink)]",
                       )}
                     >
                       <p className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -224,7 +224,7 @@ export default function LessonLanguageQuestion({
                           alt={user?.name || "User"}
                           referrerPolicy="no-referrer"
                         />
-                        <AvatarFallback className="bg-gradient-to-br from-gray-400 to-gray-600 text-xs font-semibold text-white sm:text-sm">
+                        <AvatarFallback className="border-2 border-[var(--cq-wood-dark)] bg-[var(--cq-wood)] text-xs font-semibold text-[#fff4dc] sm:text-sm">
                           {(user?.name || "U").charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
@@ -234,26 +234,26 @@ export default function LessonLanguageQuestion({
 
                 {loading && (
                   <div className="animate-fade-in-up flex gap-2 sm:gap-3">
-                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 sm:h-8 sm:w-8">
-                      <Bot className="h-3 w-3 text-white sm:h-4 sm:w-4" />
+                    <div className="lf-medal h-6 w-6 flex-shrink-0 border-2 sm:h-8 sm:w-8">
+                      <Bot className="h-3 w-3 sm:h-4 sm:w-4" />
                     </div>
-                    <div className="rounded-2xl rounded-bl-md border border-gray-200 bg-gray-200 px-3 py-2 shadow-sm sm:px-4 sm:py-3 dark:border-gray-600 dark:bg-gray-800">
+                    <div className="rounded-2xl rounded-bl-md border-2 border-[var(--cq-parchment-edge)] bg-[#fffaf0] px-3 py-2 shadow-sm sm:px-4 sm:py-3">
                       <div className="flex items-center space-x-2">
                         <div className="flex space-x-1">
                           <div
-                            className="h-2 w-2 animate-bounce rounded-full bg-indigo-500"
+                            className="h-2 w-2 animate-bounce rounded-full bg-[var(--cq-wood)]"
                             style={{ animationDelay: "0ms" }}
                           ></div>
                           <div
-                            className="h-2 w-2 animate-bounce rounded-full bg-indigo-500"
+                            className="h-2 w-2 animate-bounce rounded-full bg-[var(--cq-wood)]"
                             style={{ animationDelay: "150ms" }}
                           ></div>
                           <div
-                            className="h-2 w-2 animate-bounce rounded-full bg-indigo-500"
+                            className="h-2 w-2 animate-bounce rounded-full bg-[var(--cq-wood)]"
                             style={{ animationDelay: "300ms" }}
                           ></div>
                         </div>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="cq-muted text-xs">
                           {t("thinking")}
                         </span>
                       </div>
@@ -264,7 +264,7 @@ export default function LessonLanguageQuestion({
               </div>
 
               {/* Input Area */}
-              <div className="border-t border-gray-200 bg-gray-200 p-3 sm:p-4 dark:border-gray-600 dark:bg-gray-800">
+              <div className="border-t-2 border-[var(--cq-parchment-edge)] bg-[rgba(107,84,56,0.08)] p-3 sm:p-4">
                 <form
                   onSubmit={(event) => {
                     event.preventDefault();
@@ -288,7 +288,7 @@ export default function LessonLanguageQuestion({
                           setUserInput(e.target.value);
                         }
                       }}
-                      className="resize-none rounded-xl border-2 border-gray-200 bg-slate-300 px-4 py-3 pr-16 transition-all duration-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:border-gray-600 dark:bg-gray-700 dark:focus:border-indigo-400 dark:focus:ring-indigo-800"
+                      className="min-h-12 resize-none rounded-xl border-2 border-[var(--cq-parchment-edge)] bg-[#fffaf0] px-4 py-3 pr-16 text-[var(--cq-ink)] transition-all duration-200 placeholder:text-[var(--cq-ink-soft)] focus:border-[var(--cq-gold-dark)] focus:ring-2 focus:ring-[rgba(232,181,52,0.45)] dark:bg-[#fffaf0]"
                       autoComplete="off"
                       disabled={loading}
                       maxLength={500}
@@ -297,8 +297,8 @@ export default function LessonLanguageQuestion({
                       className={cn(
                         "absolute top-1/2 right-3 -translate-y-1/2 transform text-xs transition-colors duration-200",
                         userInput.length > 450
-                          ? "text-orange-500 dark:text-orange-400"
-                          : "text-gray-400 dark:text-gray-500",
+                          ? "lf-text-bad font-semibold"
+                          : "cq-muted",
                       )}
                     >
                       {userInput.length}/500
@@ -307,35 +307,36 @@ export default function LessonLanguageQuestion({
 
                   <div className="flex space-x-1 sm:space-x-2">
                     {loading ? (
-                      <Button
+                      <RpgButton
                         disabled
-                        className="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-white shadow-lg transition-all duration-200 hover:from-indigo-600 hover:to-purple-700"
+                        tone="gold"
+                        className="px-4"
                         aria-label={t("loading.conversation")}
                       >
                         <Loader2 className="h-5 w-5 animate-spin" />
-                      </Button>
+                      </RpgButton>
                     ) : (
-                      <Button
+                      <RpgButton
                         type="submit"
+                        tone="gold"
                         disabled={inputLength === 0 || loading}
-                        className="rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 text-white shadow-lg transition-all duration-200 hover:from-indigo-600 hover:to-purple-700 hover:shadow-xl disabled:from-gray-400 disabled:to-gray-500 disabled:shadow-none"
+                        className="px-4"
                       >
                         <Send className="h-5 w-5" />
                         <span className="sr-only">{t("buttons.send")}</span>
-                      </Button>
+                      </RpgButton>
                     )}
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="rounded-xl border-2 border-gray-300 px-3 py-3 transition-all duration-200 hover:border-gray-400 sm:px-4 dark:border-gray-600 dark:hover:border-gray-500"
+                    <RpgButton
+                      tone="iron"
+                      className="px-3 sm:px-4"
                       aria-label={t("buttons.skip")}
                     >
                       <span className="hidden sm:inline">
                         {t("buttons.skip")}
                       </span>
                       <X className="h-4 w-4 sm:hidden" />
-                    </Button>
+                    </RpgButton>
                   </div>
                 </form>
 
@@ -349,7 +350,7 @@ export default function LessonLanguageQuestion({
                     <button
                       key={index}
                       onClick={() => setUserInput(tip + "?")}
-                      className="rounded-full bg-indigo-50 px-2 py-1 text-xs text-indigo-700 transition-colors duration-200 hover:bg-indigo-100 sm:px-3 dark:bg-indigo-900/30 dark:text-indigo-300 dark:hover:bg-indigo-900/50"
+                      className="lg-chip min-h-9 px-3 py-1 text-xs transition-colors duration-200 hover:border-[var(--cq-wood)] hover:bg-[rgba(232,181,52,0.28)]"
                       disabled={loading}
                     >
                       {tip}

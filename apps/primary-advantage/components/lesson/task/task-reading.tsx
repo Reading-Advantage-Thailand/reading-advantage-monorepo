@@ -1,7 +1,8 @@
 import { Article } from "@/types";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Book, Languages } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { rpgButton } from "@/components/rpg/chrome";
+import { cn } from "@/lib/utils";
 import { BucketImage } from "@/components/ui/bucket-image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
 import { parseSentences } from "@/lib/read-along/align";
@@ -13,6 +14,7 @@ import { useFollowScroll } from "@/hooks/use-follow-scroll";
 import { useReadAlong } from "@/hooks/use-read-along";
 import { useLocale, useTranslations } from "next-intl";
 import { toTranslationLanguage } from "@/lib/translation-language";
+import { TaskHeader } from "./task-header";
 
 /**
  * Shared first/deep reading task with optional translation overlay.
@@ -89,57 +91,45 @@ export function TaskReading({
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      {/* Header Section */}
-      <div className="space-y-4 rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-300 via-teal-300 to-cyan-300 p-8 text-center dark:border-emerald-800 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950">
-        <div className="mb-4 inline-flex items-center justify-center rounded-full bg-emerald-100 p-3 dark:bg-emerald-900">
-          <Book className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
-        </div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          {enableTranslation ? t("deepTitle") : t("firstTitle")}
-        </h1>
-        <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
-          {t("subtitle")}
-        </p>
-      </div>
+      <TaskHeader icon={<Book />} title={enableTranslation ? t("deepTitle") : t("firstTitle")} subtitle={t("subtitle")} />
 
       <audio ref={audioRef} src={getAudioUrl(article.audioUrl || "")} />
 
       {/* Translation toggle */}
       {enableTranslation && (
         <div className="flex justify-center">
-          <Button
-            variant={showTranslation ? "default" : "outline"}
-            size="sm"
+          <button
+            type="button"
             onClick={() => {
               setShowTranslation((on) => !on);
               setSelectedSentence(null);
             }}
-            className={showTranslation ? "bg-blue-500 hover:bg-blue-600" : ""}
+            className={rpgButton(showTranslation ? "gold" : "wood")}
           >
-            <Languages className="mr-1 h-4 w-4" />
+            <Languages className="size-5" aria-hidden="true" />
             {showTranslation ? t("translation.on") : t("translation.off")}
-          </Button>
+          </button>
         </div>
       )}
 
       <p
         role="note"
-        className="rounded-lg border-2 border-dashed border-amber-500 bg-amber-50 px-3 py-2 text-center text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100"
+        className="cq-panel px-3 py-2 text-center text-sm"
       >
         {tComponents("readAlongHint")}
       </p>
 
       {/* Reading Content */}
-      <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-zinc-200 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+      <div className="cq-panel relative overflow-hidden p-0">
         <div className="max-w-none p-4 sm:p-8 lg:p-12">
           {enableTranslation && showTranslation && selectedSentence !== null && (
-            <div className="mb-6 rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-sm text-white dark:border-gray-300 dark:bg-gray-200 dark:text-gray-800">
+            <div className="cq-panel cq-panel--dark mb-6 px-4 py-3 text-sm">
               <div className="mb-2 flex items-center justify-between">
-                <div className="font-medium text-yellow-300 dark:text-blue-600">
+                <div className="font-medium text-[var(--cq-gold)]">
                   {t("translation.title")}
                 </div>
                 <button
-                  className="ml-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white transition-colors hover:bg-red-600"
+                  className={cn(rpgButton("iron", true), "ml-2 min-h-10 min-w-10 px-0 text-lg")}
                   onClick={() => setSelectedSentence(null)}
                   aria-label={tComponents("closeButton")}
                 >
@@ -151,11 +141,12 @@ export function TaskReading({
               </div>
             </div>
           )}
-          <h2 className="mb-6 text-center font-serif text-2xl leading-tight font-bold tracking-normal text-gray-900 sm:mb-8 sm:text-3xl sm:tracking-wide lg:mb-12 lg:text-4xl dark:text-white">
+          <h2 className="mb-6 text-center font-serif text-2xl leading-tight font-bold tracking-normal sm:mb-8 sm:text-3xl sm:tracking-wide lg:mb-12 lg:text-4xl">
             {article.title}
           </h2>
 
-          <div className="text-gray-800 dark:text-gray-200">
+          {/* The panel stays parchment at night, so the night sentence band and word hover of the read-along take their day tones. */}
+          <div className="dark:[--color-amber-800:var(--color-amber-200)] dark:[--color-emerald-800:var(--color-emerald-200)]">
             <ReadAlongPassage
               sentences={sentences}
               passage={article.passage ?? ""}
@@ -190,29 +181,29 @@ export function TaskReading({
       />
 
       {/* Reading Tips */}
-      <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-300 to-indigo-300 p-6 dark:border-blue-800 dark:from-blue-950 dark:to-indigo-950">
-        <h3 className="mb-3 font-semibold text-blue-800 dark:text-blue-200">
+      <div className="cq-panel p-6">
+        <h3 className="mb-3 font-semibold">
           {t("tips.firstTitle")}
         </h3>
-        <ul className="space-y-2 text-sm text-blue-700 dark:text-blue-300">
+        <ul className="space-y-2 text-sm">
           <li className="flex items-center">
-            <span className="mr-3 h-2 w-2 rounded-full bg-blue-500"></span>
+            <span className="lf-stud mr-3"></span>
             {t("tips.readEntire")}
           </li>
           <li className="flex items-center">
-            <span className="mr-3 h-2 w-2 rounded-full bg-blue-500"></span>
+            <span className="lf-stud mr-3"></span>
             {t("tips.clickStart")}
           </li>
           <li className="flex items-center">
-            <span className="mr-3 h-2 w-2 rounded-full bg-blue-500"></span>
+            <span className="lf-stud mr-3"></span>
             {t("tips.sentenceJump")}
           </li>
           <li className="flex items-center">
-            <span className="mr-3 h-2 w-2 rounded-full bg-blue-500"></span>
+            <span className="lf-stud mr-3"></span>
             {t("tips.useHighlight")}
           </li>
           <li className="flex items-center">
-            <span className="mr-3 h-2 w-2 rounded-full bg-blue-500"></span>
+            <span className="lf-stud mr-3"></span>
             {t("tips.listenComplete")}
           </li>
         </ul>
