@@ -105,6 +105,9 @@ describe("admin students CRUD live server calls", () => {
         postCalls.length,
         "add student must issue POST /api/students",
       ).toBeGreaterThan(0);
+      // The list reloads after the add, so the totals follow it (manual test A6).
+      const reads = fetchSpy.mock.calls.filter(([url, init]) => typeof url === "string" && url.startsWith("/api/students?") && !(init as RequestInit | undefined)?.method);
+      expect(reads.length).toBeGreaterThan(1);
     });
   }, 30_000);
 

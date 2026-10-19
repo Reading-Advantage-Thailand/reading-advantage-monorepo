@@ -264,10 +264,7 @@ export default function StudentsPage() {
   // Handle add student
   const handleAddStudent = async () => {
     try {
-      // Persist the new student via the backend API. We reconcile the
-      // server response into local state instead of mutating locally and
-      // re-fetching, so the admin UI reflects the authoritative row id
-      // and any server-side defaults (timestamps, ids, etc.).
+      // Persist the new student via the backend API.
       const response = await fetch("/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -284,12 +281,8 @@ export default function StudentsPage() {
         return;
       }
 
-      const payload = (await response.json()) as { student?: Student };
-      if (payload.student) {
-        setStudents((prev) => [...prev, payload.student as Student]);
-      } else {
-        await fetchStudents();
-      }
+      // Reload the list, so the totals and the page count follow the add (manual test A6).
+      await fetchStudents();
 
       setIsAddDialogOpen(false);
       resetForm();
