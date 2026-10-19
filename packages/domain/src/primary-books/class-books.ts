@@ -105,22 +105,31 @@ export async function managedClassBook(ctx: Ctx, classBookId: string): Promise<C
 }
 
 /**
- * Reads the lesson state rows (taught time and steps done) of class books.
+ * Tells if a lesson was taught in the open run or in an earlier run, so the taught count of a class
+ * book keeps a lesson after Teach again (manual test T5).
+ * @param state The lesson state row.
+ * @returns True when the lesson has a taught time now or in an earlier run.
+ */
+const wasTaught = (state: { taughtAt: Date | null; earlierRuns?: unknown }): boolean =>
+  Boolean(state.taughtAt) || parseEarlierRuns(state.earlierRuns).some((run) => run.taughtAt);
+
+/**
+ * Reads the lesson state rows (taught time, steps done, and earlier runs) of class books.
  * @param ctx The database and the user.
  * @param classBookIds The class books.
  * @returns The state rows by class book id.
  */
-async function lessonStates(ctx: Ctx, classBookIds: string[]): Promise<Map<string, { lessonNumber: number; taughtAt: Date | null; stepsDone: number[] }[]>> {
-  const byBook = new Map<string, { lessonNumber: number; taughtAt: Date | null; stepsDone: number[] }[]>();
+async function lessonStates(ctx: Ctx, classBookIds: string[]): Promise<Map<string, { lessonNumber: number; taughtAt: Date | null; stepsDone: number[]; earlierRuns: unknown }[]>> {
+  const byBook = new Map<string, { lessonNumber: number; taughtAt: Date | null; stepsDone: number[]; earlierRuns: unknown }[]>();
   if (!classBookIds.length) return byBook;
   const raw = createTenantDB(ctx.db, { schoolId: ctx.user.schoolId }).unscoped(UNSCOPED_REASON);
   const rows = await raw
-    .select({ classBookId: primaryClassBookLessons.classBookId, lessonNumber: primaryClassBookLessons.lessonNumber, taughtAt: primaryClassBookLessons.taughtAt, stepsDone: primaryClassBookLessons.stepsDone })
+    .select({ classBookId: primaryClassBookLessons.classBookId, lessonNumber: primaryClassBookLessons.lessonNumber, taughtAt: primaryClassBookLessons.taughtAt, stepsDone: primaryClassBookLessons.stepsDone, earlierRuns: primaryClassBookLessons.earlierRuns })
     .from(primaryClassBookLessons)
     .where(inArray(primaryClassBookLessons.classBookId, classBookIds));
   for (const row of rows) {
     const list = byBook.get(row.classBookId) ?? [];
-    list.push({ lessonNumber: row.lessonNumber, taughtAt: row.taughtAt, stepsDone: (row.stepsDone as number[] | null) ?? [] });
+    list.push({ lessonNumber: row.lessonNumber, taughtAt: row.taughtAt, stepsDone: (row.stepsDone as number[] | null) ?? [], earlierRuns: row.earlierRuns });
     byBook.set(row.classBookId, list);
   }
   return byBook;
@@ -180,7 +189,7 @@ export async function listClassBooks(params: Ctx & { classroomId: string }): Pro
   const states = await lessonStates(params, rows.map((row) => row.id));
   const titles = await currentLessonTitles(raw, rows);
   return rows.map((row) => ({
-    ...toClassBook(row, (states.get(row.id) ?? []).filter((state) => state.taughtAt).length),
+    ...toClassBook(row, (states.get(row.id) ?? []).filter(wasTaught).length),
     ...currentLessonProgress(row, states.get(row.id) ?? [], titles),
   }));
 }
@@ -371,7 +380,7 @@ export async function getClassBookPacing(params: Ctx & { classBookId: string }):
   const currentState = stateBy.get(book.currentLesson);
   const done = new Set((currentState?.stepsDone as number[] | undefined) ?? []);
   const next = WORKBOOK_STEPS.find((step) => !done.has(step.step));
-  const taught = states.filter((state) => state.taughtAt).length;
+  const taught = states.filter(wasTaught).length;
   return { classBook: toClassBook(book, taught), lessons: rows, nextStep: next?.step ?? null, plannedPeriod: next?.period ?? null };
 }
 

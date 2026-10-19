@@ -82,6 +82,13 @@ describe("listClassBooks", () => {
     expect(result.map((book) => [book.bookKey, book.taughtCount])).toEqual([["o3-2", 2], ["q4", 0]]);
   });
 
+  it("counts a lesson taught in an earlier run after Teach again", async () => {
+    const run = { runNumber: 1, taughtAt: "2026-10-06T08:00:00.000Z", stepsDone: [], closedAt: "2026-10-12T08:00:00.000Z", closedByUserId: "t1" };
+    const mock = dbWith([[classRow], [classBookRow], [{ classBookId: CLASS_BOOK, lessonNumber: 1, taughtAt: null, stepsDone: [], earlierRuns: [run] }], []]);
+    const [book] = await listClassBooks({ db: mock as unknown as DB, user: teacher, classroomId: CLASS });
+    expect(book.taughtCount).toBe(1);
+  });
+
   it("returns the current lesson title and the next workbook step with its period", async () => {
     // current lesson 3 has steps 1-4 done: the next step is 5 in period 2
     const mock = dbWith([[classRow], [classBookRow], [{ classBookId: CLASS_BOOK, lessonNumber: 3, taughtAt: null, stepsDone: [1, 2, 3, 4] }], [lesson(3)]]);
@@ -258,6 +265,8 @@ describe("getClassBookPacing runs", () => {
     expect(result.lessons[0]).toMatchObject({ number: 1, runNumber: 2, earlierRuns: [{ runNumber: 1, stepsDone: [1, 2, 3], closedByUserId: "t1" }] });
     expect(result.lessons[0].earlierRuns[0].taughtAt).toEqual(new Date("2026-10-06T08:00:00.000Z"));
     expect(result.lessons[1]).toMatchObject({ number: 2, runNumber: 1, earlierRuns: [] });
+    // Teach again clears the taught time of the open run; the lesson still counts as taught (T5).
+    expect(result.classBook.taughtCount).toBe(1);
   });
 });
 
