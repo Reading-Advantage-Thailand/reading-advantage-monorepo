@@ -54,6 +54,13 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
+  // A signed-in user on the bare locale root goes to the role home: the installed app starts at "/" (manual test M1).
+  if (pathWithoutLocale === "/" && (routing.locales as readonly string[]).includes(locale)) {
+    const user = await currentUser();
+    const home = user ? roleDefaultRedirects[normalizeRole(user.role).toLowerCase()] : undefined;
+    if (home) return NextResponse.redirect(new URL(`/${locale}${home}`, request.url));
+  }
+
   //handle i18n routing
   const response = intlMiddleware(request);
 
