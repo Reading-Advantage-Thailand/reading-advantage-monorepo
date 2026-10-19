@@ -171,3 +171,4 @@ _Story ref: spec.md#story-s5_
 
 ## Phase: Manual Test Fixes 2026-10-19
 - [x] Task: A6 the admin students page reloads the list, the totals, and the page count after a delete a4e29fa48
+- [x] Task: A6 re-check: the add also reloads the list, so the totals follow it (they stayed until a reload) 3de3d832a

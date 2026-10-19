@@ -65,4 +65,4 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
 
 ## Phase: Lesson Flow Restyle 2026-10-19
 - [x] Task: owner look check (manual test U7, U11): the 14 lesson steps take the parchment panel, wood and gold buttons, the wooden sign step header, and the wood step bar (`lf-*` in `rpg.css`) d5e911951
-- [ ] Task: before/after captures (desktop and phone, day and night) on the review page; the owner approves before close (before set taken 2026-10-19; after set needs the rebuild)
+- [x] Task: before/after captures (desktop and phone, day and night) on the review page; the owner approves before close; owner passed V1-V14 with the after pictures 2026-10-20 (follow-ups in tech-debt.md)

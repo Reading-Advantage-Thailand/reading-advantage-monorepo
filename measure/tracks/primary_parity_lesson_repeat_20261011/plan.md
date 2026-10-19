@@ -159,4 +159,4 @@ Notes (Phase S4, helper A1, 2026-10-12):
 
 ## Phase: Manual Test Fixes 2026-10-19
 - [x] Task: T5 the class book header counts a lesson taught in an earlier run (`wasTaught` in `class-books.ts`); after Teach again it said "No lessons taught yet" while lesson 1 said "Taught 1 time" 5c90c13d3
-- [ ] Task: U8 re-check after the rebuild: finish the quiz in two attempts, then the attempt tags on History and Reports (run 2 never finished a quiz, so no row existed)
+- [x] Task: U8 re-check after the rebuild: finish the quiz in two attempts, then the attempt tags on History and Reports (run 2 never finished a quiz, so no row existed); re-check 2026-10-20 pass: Reports shows "Attempt 4" and "Attempt 5", History the latest attempt per story
