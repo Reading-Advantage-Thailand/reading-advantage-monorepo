@@ -3952,7 +3952,7 @@
   },
   "StudentView": {
     "bannerTitle": "Xem trước của học sinh",
-    "bannerNote": "Bạn thấy những gì học sinh thấy. Không có gì ở đây được lưu.",
+    "bannerNote": "Bạn thấy những gì học sinh thấy. Câu trả lời của học sinh ở đây không được lưu.",
     "exit": "Thoát xem trước",
     "menuItem": "Giao diện học sinh",
     "notSaved": "Xem trước: không lưu",

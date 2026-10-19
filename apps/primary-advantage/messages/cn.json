@@ -3952,7 +3952,7 @@
   },
   "StudentView": {
     "bannerTitle": "学生预览",
-    "bannerNote": "你看到的是学生看到的内容。这里不会保存任何内容。",
+    "bannerNote": "你看到的是学生看到的内容。这里的学生答案不会保存。",
     "exit": "退出预览",
     "menuItem": "学生视图",
     "notSaved": "预览：不保存",

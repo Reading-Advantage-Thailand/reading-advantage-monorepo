@@ -3952,7 +3952,7 @@
   },
   "StudentView": {
     "bannerTitle": "Student preview",
-    "bannerNote": "You see what a student sees. Nothing here is saved.",
+    "bannerNote": "You see what a student sees. Student answers here are not saved.",
     "exit": "Exit preview",
     "menuItem": "Student view",
     "notSaved": "Preview: not saved",
