@@ -3,6 +3,10 @@
 import { Link, useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
+/**
+ * The not-found page of every locale route: the 404 title, a back button, and a link home.
+ * @returns The page.
+ */
 export default function NotFound() {
   const t = useTranslations("NotFound");
   const router = useRouter();
