@@ -316,3 +316,5 @@ html:not(.dark) .cq-staff { --muted-foreground: var(--cq-ink-soft); --border: rg
 .lg-newtag { position: absolute; top: -10px; right: -6px; padding: 2px 8px; border-radius: 6px; background: var(--cq-gold); color: var(--cq-ink); font-size: 12px; font-weight: 800; border: 2px solid var(--cq-gold-dark); transform: rotate(4deg); }
 .lg-chip { padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.45); border: 2px solid var(--cq-parchment-edge); font-weight: 700; font-size: 14px; }
 .lg-run { position: fixed; inset: 0; z-index: 50; background: #05070c; display: flex; flex-direction: column; }
+/* The page under a full-screen run does not scroll and shows no scroll bar (manual test E3). */
+html:has(.lg-run) { overflow: hidden; }

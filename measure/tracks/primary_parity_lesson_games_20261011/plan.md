@@ -148,3 +148,4 @@ _Story ref: spec.md#story-s5_
 
 ## Phase: Manual Test Fixes 2026-10-19
 - [x] Task: E3 the task 10 and task 12 runs fill the window: a portal on the body. The task wrapper of `lesson-progress-bar.tsx` has `translate-y-0 scale-100` (its fade), a transform is the frame of a fixed child, so `.lg-run` stayed inside the lesson card and "Exit game" covered "Next Task".
+- [x] Task: E3 the page under a full-screen run does not scroll and shows no scroll bar (`html:has(.lg-run)` in `styles/rpg.css`).
