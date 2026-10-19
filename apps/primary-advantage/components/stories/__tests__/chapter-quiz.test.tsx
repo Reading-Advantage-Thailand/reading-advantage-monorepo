@@ -110,6 +110,8 @@ describe("chapter written questions", () => {
     expect(within(panel).getByRole("button", { name: "Submit answer" })).toBeDisabled();
     fireEvent.click(within(panel).getByRole("button", { name: "Get feedback" }));
     expect(await within(panel).findByText("Good.")).toBeInTheDocument();
+    // The AI gets a language name, not a code (run 2 U5): an English page asks for Thai feedback.
+    expect(mocks.feedback).toHaveBeenCalledWith(CHAPTER, "sa", initial.saq.id, "Because.", "Thai");
     expect(within(panel).getByText(/Score: 4/)).toBeInTheDocument();
     fireEvent.click(within(panel).getByRole("button", { name: "Submit answer" }));
     expect(mocks.submitWritten).toHaveBeenCalledWith(CHAPTER, "sa", initial.saq.id, "Because.", 4);

@@ -15,7 +15,7 @@ import {
 } from "@/actions/story-question";
 import { usePreviewSave } from "@/components/student/student-view-provider";
 import { toTranslationLanguage } from "@/lib/translation-language";
-import { cn } from "@/lib/utils";
+import { cn, convertLocaleFull } from "@/lib/utils";
 
 type Quiz = GetChapterQuestionsOutput;
 type Mcq = Quiz["mcq"][number];
@@ -40,6 +40,9 @@ const IRON_BUTTON =
 export function ChapterQuiz({ chapterId, userLevel, initial }: { chapterId: string; userLevel: number; initial: Quiz }) {
   const t = useTranslations("Stories");
   const locale = useLocale();
+  // The AI reads "STUDENT'S L1" as a language name: a bare code such as "th" gave feedback in
+  // another language (manual test run 2, U5).
+  const feedbackLanguage = convertLocaleFull(toTranslationLanguage(locale));
   const { isPreview, notSaved } = usePreviewSave();
   const [mcq, setMcq] = useState<Mcq[]>(initial.mcq);
   const [picked, setPicked] = useState<Record<string, string>>({});
@@ -207,7 +210,7 @@ export function ChapterQuiz({ chapterId, userLevel, initial }: { chapterId: stri
           minChars={1}
           maxChars={2000}
           maxTries={null}
-          preferredLanguage={toTranslationLanguage(locale)}
+          preferredLanguage={feedbackLanguage}
         />
       ) : null}
       {initial.laq ? (
@@ -219,7 +222,7 @@ export function ChapterQuiz({ chapterId, userLevel, initial }: { chapterId: stri
           minChars={laMin}
           maxChars={2000}
           maxTries={STORY_LA_FEEDBACK_TRIES}
-          preferredLanguage={toTranslationLanguage(locale)}
+          preferredLanguage={feedbackLanguage}
         />
       ) : null}
     </div>
