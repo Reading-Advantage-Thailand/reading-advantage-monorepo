@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
+import { BucketImage } from "@/components/ui/bucket-image";
 import { useLocale, useTranslations } from "next-intl";
 import { Languages } from "lucide-react";
 import { ReadAlongPassage } from "@/components/read-along/read-along-passage";
@@ -178,7 +178,7 @@ export function ChapterContent({
 
   return (
     <div className="flex flex-col gap-4">
-      <Image
+      <BucketImage
         className="mx-auto rounded-lg shadow-xl"
         src={imageUrl}
         alt={imageAlt || title}

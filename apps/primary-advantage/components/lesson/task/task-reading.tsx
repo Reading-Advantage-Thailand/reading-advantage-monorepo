@@ -2,7 +2,7 @@ import { Article } from "@/types";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Book, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { BucketImage } from "@/components/ui/bucket-image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
 import { parseSentences } from "@/lib/read-along/align";
 import { seekTimeForWord } from "@/lib/read-along/position";
@@ -163,7 +163,7 @@ export function TaskReading({
               active
               currentSentenceRef={currentSentenceRef}
               renderBlockMedia={(blockIndex) => (
-                <Image
+                <BucketImage
                   className="rounded-lg shadow-xl"
                   src={getArticleImageUrl(article, blockIndex + 1) || `/nopic.png`}
                   alt="Article Image"

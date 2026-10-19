@@ -17,7 +17,7 @@ import { saveFlashcard } from "@/actions/flashcard";
 import { toast } from "sonner";
 import { fetchArticleActivity } from "@/actions/article";
 import { usePreviewSave } from "@/components/student/student-view-provider";
-import Image from "next/image";
+import { BucketImage } from "@/components/ui/bucket-image";
 import { getArticleImageUrl, getAudioUrl } from "@/lib/storage-config";
 import { seekTimeForWord } from "@/lib/read-along/position";
 import { seekOrWait } from "@/lib/read-along/seek";
@@ -314,7 +314,7 @@ export default function ArticleContent({ article }: Props) {
         active={togglePlayer}
         currentSentenceRef={currentSentenceRef}
         renderBlockMedia={(blockIndex) => (
-          <Image
+          <BucketImage
             className="rounded-lg shadow-xl"
             src={getArticleImageUrl(article, blockIndex + 1) || `/nopic.png`}
             alt="Article Image"
