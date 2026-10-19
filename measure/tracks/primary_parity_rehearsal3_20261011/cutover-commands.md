@@ -5,6 +5,27 @@ Base copy of `measure/tracks/primary_legacy_data_migration_20261004/cutover-comm
 every step that changes for rehearsal 3. The frozen commit is still open; Phase 3
 writes it into the tables.
 
+## Cutover 2026-10-20, 18:00 Bangkok (owner date, 2026-10-20): final values
+
+Valid only when rehearsal 3 passes (`rehearsal-3-20261020.md`). The base and delta tables below give
+the full commands; this table gives the values of today.
+
+| Item | Value |
+|---|---|
+| Frozen build inputs | integration `95b9498df` (M1 fix); context `gs://primary-advantage_cloudbuild/source/primary-ctx-95b9498df.tgz` |
+| Workbooks archive (C7b) | `gs://primary-advantage_cloudbuild/source/workbooks-08bb160.tgz` (commit `08bb160b8cfb4b95252546e6fd0e9ccc31fe3817`, 70 lessons) |
+| C9 image | `asia-southeast1-docker.pkg.dev/primary-advantage/primary-advantage-repo/primary-advantage-app@sha256:1a0ac974571ac3b640ae9f2e7469ad7bb1a63dbdb0f17390d0922af2bb279240` (R6, build `d9e1ecec`, revision `00131-suh`) |
+| C9 tag | `cutover2` (the tag `cutover` stays on `00130-daq`; a new name needs no tag removal) |
+| C4 backup | `gs://backupsqldatabase/Backup_Primary_20261020.sql.gz` |
+| C4b contact export | local restore of the C4 backup, then the `\copy` below into `~/Desktop/primary-cutover-inputs/contact-messages-20261020.csv` (`umask 077`) |
+| C5 | Owner merges `primary-parity-integration` into `master` (`git merge-tree` check 2026-10-20: no conflict; master `0a29d574e`) and pushes both branches; agent checks the www deploy run |
+| C8 label | `cutover2`: `bash ~/Desktop/primary-cutover-inputs/after-etl.sh cutover2` |
+| C9 command | `gcloud run services update primary-advantage-app --project=primary-advantage --region=asia-southeast1 --image=<C9 image> --update-secrets=DATABASE_URL=PRIMARY_V2_DATABASE_URL:1 --no-traffic --tag=cutover2` |
+| C10 | `BASE=https://cutover2---primary-advantage-app-kxpqzttnmq-as.a.run.app NEW_PASSWORDS_OUT=~/Desktop/primary-cutover-inputs/check-passwords-cutover2.csv node scripts/primary-parity/cutover-check.mjs ~/Desktop/primary-cutover-inputs/handout-cutover2-primary_v2.csv demo-teacher@primary-advantage.com demo-admin@primary-advantage.com - first`; the owner signs in with the own system account on a phone |
+| C11 | Owner go, then `gcloud run services update-traffic primary-advantage-app --project=primary-advantage --region=asia-southeast1 --to-tags=cutover2=100` |
+| C13 | Agent: the R7 URL checks and the PWA `curl -I` on `https://primary.reading-advantage.com`; owner: five printed QR scans (one writing QR, one `/b/` code) and a phone with the installed legacy app |
+| Rollback | as below (`--to-revisions=primary-advantage-app-00125-9wd=100`), owner only |
+
 ## Rehearsal 3 delta (marks on the base tables)
 
 | # | Change for rehearsal 3 |
