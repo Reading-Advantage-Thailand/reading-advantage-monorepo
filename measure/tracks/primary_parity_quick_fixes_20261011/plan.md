@@ -211,3 +211,6 @@ test (red), then the fix (green). The last phase holds the docs and doctor steps
 - [x] Task: Logger: `console.error` replaced in `app/api/upload/csv` and `app/api/upload/classes` 3faa192de
 - [x] Task: From A2 `articleModel.logs-of-user` failed alone too: the test DDL lacked `chapter_id` (test defect) f2702ced3
 - [x] Task: M-7 old: the RA jest config (jest, not vitest) lacked the `avatar-kit` mapper; `app/api/v1/apk` 21 tests green 88fedb924
+
+## Phase: Manual Test Fixes 2026-10-19
+- [x] Task: P5 unknown paths answer HTTP 404: the catch-all calls `notFound()`, the page text moves to `app/[locale]/not-found.tsx` 5f7326b73

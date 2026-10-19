@@ -139,3 +139,6 @@ _Story ref: spec.md#story-s4_
 ## Phase: Review Fixes 2026-10-13
 - [x] Task: Low: staff preview reads the empty model on the assignments page, the lesson summary, the lesson flashcards of the 2D games, and the assignment activity route 4ddb09b99
 - [x] Task: Low: the staff sample-set read of the lesson input is gone (see lesson_games M-14) 12630f8a8
+
+## Phase: Manual Test Fixes 2026-10-19
+- [x] Task: T10 the preview banner says "Student answers here are not saved" (the teacher's Assign action saves) 9763daea8

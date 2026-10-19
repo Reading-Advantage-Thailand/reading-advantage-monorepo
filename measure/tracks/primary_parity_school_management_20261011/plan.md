@@ -168,3 +168,6 @@ _Story ref: spec.md#story-s5_
 - [x] Task: M-11 an ADMIN changes the role of another ADMIN of the same school (never self, never SYSTEM; password rules unchanged; default of the fix brief) 43a2ae29d
 - [x] Task: Low (S4 M12): a TEACHER with a school_admins row sees the license link and renames the school dc0503bf6
 - [x] Task: L1 `broken-ux-server-behavior.test.tsx` failed because the layout reads `school_admins` (dc0503bf6) and the test did not mock it; no `flexl-1` typo; the test now mocks `withSchoolAdminRows` d993bc0c0
+
+## Phase: Manual Test Fixes 2026-10-19
+- [x] Task: A6 the admin students page reloads the list, the totals, and the page count after a delete a4e29fa48

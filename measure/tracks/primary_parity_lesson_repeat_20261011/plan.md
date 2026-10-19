@@ -156,3 +156,7 @@ Notes (Phase S4, helper A1, 2026-10-12):
 - [x] Task: Low: "Taught 1 time" shows on a lesson taught once and then taught again c97b4988a
 - [x] Task: Low: "Attempt N" tag on report rows and on /student/history cards c1b0e072a, e03b6fbc3
 - [x] Task: Low: `real-run.md` written from the S1 notes (this commit)
+
+## Phase: Manual Test Fixes 2026-10-19
+- [x] Task: T5 the class book header counts a lesson taught in an earlier run (`wasTaught` in `class-books.ts`); after Teach again it said "No lessons taught yet" while lesson 1 said "Taught 1 time" 5c90c13d3
+- [ ] Task: U8 re-check after the rebuild: finish the quiz in two attempts, then the attempt tags on History and Reports (run 2 never finished a quiz, so no row existed)

@@ -62,3 +62,7 @@ Spec: `spec.md`. Review page: `review.html`. Owner approved the plan on 2026-10-
   - [x] Phase 5 recapture not needed: none of the five shots shows the story game player (home, shrine, armory, battle page, projector), and the fix changes only that player
 - [x] Skin gap (not a regression): the "Wizard rewards" bar of `RpgRewardDisclosure` had fixed navy colours (`#081225`) with no skin variable; it now reads the panel's reward variables (8d0636696); test
 - [x] Gap: the "You" card of the phone battle page was an empty box for a student with no hero (every migrated student at the cutover); it shows the Forge silhouette, as the projector does (6cb983898); test
+
+## Phase: Lesson Flow Restyle 2026-10-19
+- [x] Task: owner look check (manual test U7, U11): the 14 lesson steps take the parchment panel, wood and gold buttons, the wooden sign step header, and the wood step bar (`lf-*` in `rpg.css`) d5e911951
+- [ ] Task: before/after captures (desktop and phone, day and night) on the review page; the owner approves before close (before set taken 2026-10-19; after set needs the rebuild)
