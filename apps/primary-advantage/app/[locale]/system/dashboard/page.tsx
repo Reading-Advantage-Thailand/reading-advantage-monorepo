@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { db } from "@reading-advantage/db";
 import { getPlatformOverview } from "@reading-advantage/domain/primary-dashboards";
-import { intlLocale } from "@/lib/intl-locale";
+import { intlFormatter } from "@/lib/intl-locale";
 import { currentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import { logger } from "@/lib/observability/logger";
@@ -37,7 +37,7 @@ export default async function SystemDashboardPage() {
     throw error;
   }
 
-  const [t, format] = await Promise.all([getTranslations("SystemDashboard"), getFormatter({ locale: intlLocale(await getLocale()) })]);
+  const [t, format] = await Promise.all([getTranslations("SystemDashboard"), getLocale().then(intlFormatter)]);
   // The days are Bangkok calendar days, so they print in UTC without a shift.
   const day = (value: string) => format.dateTime(new Date(`${value}T00:00:00Z`), { day: "numeric", month: "short", timeZone: "UTC" });
 

@@ -23,3 +23,13 @@ export function useIntlFormatter() {
   const locale = useLocale();
   return useMemo(() => createFormatter({ locale: intlLocale(locale), timeZone: SCHOOL_TIME_ZONE }), [locale]);
 }
+
+/**
+ * Gives a formatter for the page locale in a server component. `getFormatter({ locale })` must not
+ * get the BCP 47 tag: the request config knows only the app codes and falls back to Thai for `zh-CN`.
+ * @param locale The app locale code of the page.
+ * @returns The formatter (`number`, `dateTime`, and so on) with the school time zone.
+ */
+export function intlFormatter(locale: string) {
+  return createFormatter({ locale: intlLocale(locale), timeZone: SCHOOL_TIME_ZONE });
+}

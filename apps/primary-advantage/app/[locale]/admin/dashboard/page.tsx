@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { getFormatter, getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { db } from "@reading-advantage/db";
 import { dashboardRangeSchema, getSchoolDashboard } from "@reading-advantage/domain/primary-dashboards";
-import { intlLocale } from "@/lib/intl-locale";
+import { intlFormatter } from "@/lib/intl-locale";
 import { currentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import { logger } from "@/lib/observability/logger";
@@ -69,7 +69,7 @@ export default async function AdminDashboardPage({ searchParams }: { searchParam
     }
   }
 
-  const [t, format] = await Promise.all([getTranslations("AdminDashboard"), getFormatter({ locale: intlLocale(await getLocale()) })]);
+  const [t, format] = await Promise.all([getTranslations("AdminDashboard"), getLocale().then(intlFormatter)]);
   const day = (value: string) => format.dateTime(new Date(`${value}T00:00:00Z`), { day: "numeric", month: "short", timeZone: "UTC" });
   const schoolEmpty = !!data && data.kpis.activeStudents.total === 0;
   const schoolParam = isSystem ? schoolId : null;

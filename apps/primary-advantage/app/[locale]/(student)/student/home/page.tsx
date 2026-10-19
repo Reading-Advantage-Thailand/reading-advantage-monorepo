@@ -1,8 +1,8 @@
 import { isStudentWriter, previewHomeModel } from "@/lib/student-view";
 import { PreviewNotice } from "@/components/student/preview-notice";
 import type { Metadata } from "next";
-import { getFormatter, getLocale, getTranslations } from "next-intl/server";
-import { intlLocale } from "@/lib/intl-locale";
+import { getLocale, getTranslations } from "next-intl/server";
+import { intlFormatter } from "@/lib/intl-locale";
 import { db } from "@reading-advantage/db";
 import { getStudentHome } from "@reading-advantage/domain/primary-home";
 import { getStudentClassBooks, listManagedClassBooks, type ManagedClassBookItem, type StudentClassBook } from "@reading-advantage/domain/primary-books";
@@ -152,7 +152,7 @@ export default async function StudentHomePage() {
     getTranslations("Leaderboard"),
     getTranslations("Avatar"),
     getTranslations("Reedy"),
-    getLocale().then((l) => getFormatter({ locale: intlLocale(l) })),
+    getLocale().then(intlFormatter),
   ]);
   const lesson = home.todayLesson;
   const reading = home.continueReading;
