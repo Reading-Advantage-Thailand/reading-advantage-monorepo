@@ -257,10 +257,13 @@ describe("FR-7 locale-aware content lookups", () => {
     unmount();
     cleanup();
 
+    // An English page has no translation language of its own: it shows the Thai translation, as the
+    // article page does (toTranslationLanguage, 48c9099b3).
     renderWithMessages(<TaskReading article={article} enableTranslation />);
     fireEvent.click(screen.getByRole("button", { name: /Translation Off/ }));
     fireEvent.click(screen.getByText("Alpha"));
-    expect(await screen.findByText("EN translation.")).toBeInTheDocument();
+    expect(await screen.findByText("คำแปลภาษาไทย.")).toBeInTheDocument();
+    expect(screen.queryByText("EN translation.")).toBeNull();
   });
 });
 
