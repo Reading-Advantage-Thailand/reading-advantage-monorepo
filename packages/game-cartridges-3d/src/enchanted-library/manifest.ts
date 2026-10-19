@@ -10,20 +10,26 @@ import { APK3D_CAPABILITIES, CARTRIDGE_3D_RUNTIME_API_VERSION, validateCartridge
 /** The heroes a student may play and the clips the 2D view plays (files of `primary-chibi-2d`). */
 export const HEROES_2D = ['knight', 'wizard', 'cleric'] as const;
 export const HERO_CLIPS_2D = ['idle', 'run', 'hit', 'victory'] as const;
-/** The spirits of the hall: skeletons drawn see-through. */
-export const SPIRIT_CLIPS_2D: Readonly<Record<string, readonly string[]>> = {
-  skeleton: ['idle', 'walk', 'hit'],
-};
+/** The spirits of the hall: the ghost, drawn a little see-through. */
+export const SPIRIT_MODEL = 'ghost';
+/** The spirits take the ghost's color presets in turn, so the hall shows several ghosts. */
+export const SPIRIT_LOOKS = ['default', 'wisp', 'phantom', 'shade'] as const;
+export const SPIRIT_CLIPS_2D = ['idle', 'walk', 'hit'] as const;
+
+/** The 2D model id of a spirit look: `ghost`, or `ghost@<preset>` (its sheets are `ghost@<preset>.<clip>`). */
+export function spiritModel2D(look: string): string {
+  return look === 'default' ? SPIRIT_MODEL : `${SPIRIT_MODEL}@${look}`;
+}
 
 /** Every 2D file the game uses (`requiredAssetBindings`: binding key = file id). The hall and the books are drawn, not baked. */
 export const FILES_2D: readonly string[] = [
   ...HEROES_2D.flatMap((h) => HERO_CLIPS_2D.map((c) => `${h}.${c}`)),
-  ...Object.entries(SPIRIT_CLIPS_2D).flatMap(([kind, clips]) => clips.map((c) => `${kind}.${c}`)),
+  ...SPIRIT_LOOKS.flatMap((look) => SPIRIT_CLIPS_2D.map((c) => `${spiritModel2D(look)}.${c}`)),
 ];
 
 /** The models the 3D view loads, by Forge asset name: the keys of `RuntimeEdition3D.bindings` (docs/apk3d-cartridge.md section 7). */
 export const MODELS_3D: readonly string[] = [
-  'candle-cluster', 'chandelier', 'cleric', 'knight', 'lantern', 'plaster-wall', 'plaster-wall-window', 'shelf', 'skeleton', 'wizard', 'wood-floor',
+  'candle-cluster', 'chandelier', 'cleric', 'ghost', 'knight', 'lantern', 'plaster-wall', 'plaster-wall-window', 'shelf', 'wizard', 'wood-floor',
 ];
 
 export const manifest = validateCartridge3DManifest({

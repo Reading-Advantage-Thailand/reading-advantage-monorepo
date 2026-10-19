@@ -1,7 +1,7 @@
 {
  "id": "mounts",
- "version": "1.0.1",
- "root": "packs/mounts/1.0.1",
+ "version": "1.0.2",
+ "root": "packs/mounts/1.0.2",
  "files": {
   "griffin": {
    "id": "griffin",
@@ -26,7 +26,7 @@
    "provenance": {
     "source": "advantage-forge/assets/griffin.ts",
     "license": "AGPL-3.0-or-later",
-    "forgeCommit": "0a919a0",
+    "forgeCommit": "221be591",
     "tool": "scripts/apk3d-models.ts"
    }
   }

@@ -15,7 +15,7 @@ import { createI18n } from '@reading-advantage/advantage-play-kit-3d/i18n';
 import { createFixedStepLoop, createManualClock } from '@reading-advantage/advantage-play-kit-3d/sim';
 import { Actor2D, Arena2D, banner, button, COLORS, depthOf, fitGameSize, Joystick2D, popup, recolorTag, registerSheetAnimations, StatusBar2D, tag, WordPanel2D } from '@reading-advantage/advantage-play-kit-3d/view2d';
 import { HERO_START, createEnchantedLibrary, evidenceOf, hintBookOf, scoreOf, type LibraryCommand, type LibraryEvent, type LibraryState } from '../core/index.js';
-import { FILES_2D, HERO_CLIPS_2D, HEROES_2D, SPIRIT_CLIPS_2D } from '../manifest.js';
+import { FILES_2D, HERO_CLIPS_2D, HEROES_2D, SPIRIT_CLIPS_2D, SPIRIT_LOOKS, SPIRIT_MODEL, spiritModel2D } from '../manifest.js';
 import { nextCommand } from '../qc/bot.js';
 import strings from '../strings.en.js';
 import { GROUND_FILE, makeGround, PROJECTION } from './ground.js';
@@ -160,13 +160,16 @@ export function createGameConfig(ctx: Game2DContext): Readonly<Record<string, un
       drawHud();
     }
 
+    let spiritCount = 0;
     function addSpirit(id: string, x: number, z: number): void {
-      if (!edition.bindings['skeleton.idle']) return;
-      const actor = new Actor2D(scene, edition, 'skeleton', PROJECTION, { dirs: 4, clips: clips('skeleton', SPIRIT_CLIPS_2D.skeleton!), walk: 'walk', stiffness: 10 }, arena.world);
+      // The spirits take the ghost's looks in turn; a look without sheets falls back to the default ghost.
+      const look = spiritModel2D(SPIRIT_LOOKS[spiritCount++ % SPIRIT_LOOKS.length]!);
+      const model = edition.bindings[`${look}.idle`] ? look : SPIRIT_MODEL;
+      if (!edition.bindings[`${model}.idle`]) return;
+      const actor = new Actor2D(scene, edition, model, PROJECTION, { dirs: 4, clips: clips(model, SPIRIT_CLIPS_2D), walk: 'walk', stiffness: 10 }, arena.world);
       actor.placeAt(x, z);
       actor.face(1, 1);
-      actor.tint(0xbfe3ff);
-      actor.sprite.setAlpha(0.62);
+      actor.sprite.setAlpha(0.8);
       spirits.set(id, actor);
     }
 

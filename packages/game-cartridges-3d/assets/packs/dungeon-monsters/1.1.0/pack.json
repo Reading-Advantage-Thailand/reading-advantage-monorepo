@@ -1,7 +1,7 @@
 {
  "id": "dungeon-monsters",
- "version": "1.0.1",
- "root": "packs/dungeon-monsters/1.0.1",
+ "version": "1.1.0",
+ "root": "packs/dungeon-monsters/1.1.0",
  "files": {
   "dragon-fire": {
    "id": "dragon-fire",
@@ -27,6 +27,35 @@
     "source": "advantage-forge/assets/dragon-fire.ts",
     "license": "AGPL-3.0-or-later",
     "forgeCommit": "2b26e74",
+    "tool": "scripts/apk3d-models.ts"
+   }
+  },
+  "ghost": {
+   "id": "ghost",
+   "path": "ghost.glb",
+   "kind": "model",
+   "format": "glb",
+   "byteSize": 239824,
+   "triangles": 7998,
+   "textureSize": 512,
+   "skinned": true,
+   "clips": [
+    "attack",
+    "death",
+    "hit",
+    "idle",
+    "taunt",
+    "walk"
+   ],
+   "presets": [
+    "phantom",
+    "shade",
+    "wisp"
+   ],
+   "provenance": {
+    "source": "advantage-forge/assets/ghost.ts",
+    "license": "AGPL-3.0-or-later",
+    "forgeCommit": "ee339acb",
     "tool": "scripts/apk3d-models.ts"
    }
   },
@@ -107,5 +136,5 @@
    }
   }
  },
- "byteSize": 1847056
+ "byteSize": 2086880
 }
