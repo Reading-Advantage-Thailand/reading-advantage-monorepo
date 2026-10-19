@@ -1,7 +1,7 @@
 {
   "LocaleSwitcher": {
     "label": "Change language",
-    "locale": "{locale, select, th {🇹🇭 ไทย} en {🇺🇸 English} tw {🇹🇼 中文} cn {🇨🇳 台灣} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
+    "locale": "{locale, select, th {🇹🇭 ไทย} en {🇺🇸 English} tw {🇹🇼 繁體中文} cn {🇨🇳 简体中文} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
   },
   "common": {
     "tryAgain": "Try Again"
