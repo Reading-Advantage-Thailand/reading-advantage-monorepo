@@ -257,11 +257,12 @@ try {
   const writingPath = new URL(s1.page.url()).pathname;
   check("printed writing QR opens the migrated article", /\/student\/read\/[0-9a-f-]{36}/.test(writingPath), writingPath);
   await s1.page.screenshot({ path: `${SHOTS}/student1-writing-qr.png` });
-  // A10 / D10: the migrated article shows its picture (the bucket key is the legacy id).
-  const pic = s1.page.locator('img[src*="images/cmgqx8v6602p3t79btatvfjuw_"]').first();
+  // A10 / D10: the migrated article shows its picture (the bucket key is the legacy id). The resizer URL
+  // encodes the slash (`images%2F<key>_1.png`), so the match is on the key only.
+  const pic = s1.page.locator('img[src*="cmgqx8v6602p3t79btatvfjuw_"]').first();
   await pic.waitFor({ state: "attached", timeout: 30000 }).catch(() => {});
-  await s1.page.waitForFunction(() => [...document.images].some((i) => i.src.includes("images/cmgqx8v6602p3t79btatvfjuw_") && i.complete && i.naturalWidth > 0), null, { timeout: 30000 }).catch(() => {});
-  const picOk = await s1.page.evaluate(() => [...document.images].filter((i) => i.src.includes("images/cmgqx8v6602p3t79btatvfjuw_") && i.naturalWidth > 0).length);
+  await s1.page.waitForFunction(() => [...document.images].some((i) => i.src.includes("cmgqx8v6602p3t79btatvfjuw_") && i.complete && i.naturalWidth > 0), null, { timeout: 30000 }).catch(() => {});
+  const picOk = await s1.page.evaluate(() => [...document.images].filter((i) => i.src.includes("cmgqx8v6602p3t79btatvfjuw_") && i.naturalWidth > 0).length);
   check("migrated article shows its picture (legacy key)", picOk > 0, `${picOk} loaded`);
   await s1.page.screenshot({ path: `${SHOTS}/student1-article-picture.png`, fullPage: true });
   await gotoRetry(s1.page, `${BASE}/en/student/read`, { waitUntil: "domcontentloaded", timeout: 120000 });
@@ -472,7 +473,9 @@ try {
         await qp.getByLabel("Class code").fill(first.code);
         await qp.getByRole("button", { name: "Next" }).click();
         const named = await qp.locator("li button span.truncate").first().waitFor({ timeout: 30000 }).then(() => true).catch(() => false);
-        if (named) await qp.locator("li button").first().click();
+        // The second name: student sessions are single-device, so the first name would end the session of
+        // student 1, which the stories block below uses.
+        if (named) await qp.locator("li button").nth(1).click();
         await qp.waitForURL((u) => u.pathname.includes("/student"), { timeout: 60000 }).catch(() => {});
         await qp.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
         const bodyText = await qp.locator("body").innerText().catch(() => "");
@@ -532,6 +535,8 @@ try {
       await sp.waitForURL((u) => /\/student\/read\/stories\/[^/]+\/?$/.test(u.pathname), { timeout: 60000 }).catch(() => {});
       await sp.waitForLoadState("networkidle", { timeout: 30000 }).catch(() => {});
       const storyBase = new URL(sp.url()).pathname.replace(/\/$/, "");
+      // The page loads its chapters in the browser after networkidle (5 to 8 s on the rehearsal 3 tag).
+      await sp.locator(`a[href^="${storyBase}/"]`).first().waitFor({ timeout: 60000 }).catch(() => {});
       await sp.screenshot({ path: `${SHOTS}/student1-story-page.png`, fullPage: true });
       for (const c of judgeStoryPage({
         text: await sp.locator("main").innerText().catch(() => ""),
