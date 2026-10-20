@@ -75,7 +75,7 @@ export function ClassLoginPanel({
             <PicturePasswordSetting classroomId={classroomId} enabled={roster.picturePasswordEnabled} onChange={refresh} />
             {/* S5 request B (2026-10-20): read the manual before the class sheet resets every password. */}
             <p className="text-muted-foreground text-sm" data-class-login-note="">
-              {t("links.note", { classSheet: t("links.classSheet") })}{" "}
+              {t("links.note", { classSheet: t("links.classSheet"), qrCards: t("links.qrCards") })}{" "}
               <Link href="/teacher/manual#class-sheet" className="text-foreground font-medium underline underline-offset-4">
                 {t("links.noteLink")}
               </Link>

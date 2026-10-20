@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
@@ -8,6 +8,8 @@ import { CLASS_SHEET_CASE, MANUAL_LABELS, MANUAL_SECTIONS, type ManualBlock, typ
 import { MANUAL_FIGURES, type ManualFigure, type ManualFigureId } from "@/lib/teacher-manual-figures";
 import { cn } from "@/lib/utils";
 
+/** The LINE support contact of the print guide. */
+const LINE_SUPPORT = "https://line.me/ti/p/Pf7_EF98Pv";
 const NOTE = "rounded-md border bg-muted/40 p-3 text-sm";
 const WARN = "rounded-md border border-amber-500/60 bg-amber-500/10 p-3 text-sm";
 
@@ -21,7 +23,8 @@ function UiLabel({ children }: { children?: ReactNode }) {
 }
 
 /**
- * A manual picture with its numbered marks (a black box with a white outline, as in print).
+ * A manual picture with its numbered marks, in the print style: a black stroke with a white outline
+ * outside the control, and the number in a circle outside the top-right corner.
  * @param props.id The picture.
  * @param props.caption What the picture shows; also its alternative text.
  * @param props.testData The note that the picture holds test data.
@@ -30,19 +33,20 @@ function UiLabel({ children }: { children?: ReactNode }) {
 function ManualPicture({ id, caption, testData }: { id: ManualFigureId; caption: string; testData: string }) {
   const figure: ManualFigure = MANUAL_FIGURES[id];
   return (
-    <figure className="mt-2 max-w-2xl space-y-1" data-figure={id}>
-      <div className="relative overflow-hidden rounded-md border">
-        <Image src={figure.src} width={figure.width} height={figure.height} alt={caption} unoptimized className="h-auto w-full" />
+    <figure className="mt-4 max-w-2xl space-y-1 pr-4" data-figure={id}>
+      {/* No clipping here: a mark's number circle sits outside the top-right corner of its box. */}
+      <div className="relative">
+        <Image src={figure.src} width={figure.width} height={figure.height} alt={caption} unoptimized className="h-auto w-full rounded-md border" />
         {figure.marks.map((mark, index) => (
           <span
             key={index}
             aria-hidden="true"
             data-mark={mark.n ?? ""}
-            className="absolute rounded-sm border-[3px] border-black shadow-[0_0_0_2px_white]"
+            className="absolute rounded-sm shadow-[0_0_0_3px_black,0_0_0_5px_white]"
             style={{ left: `${mark.x}%`, top: `${mark.y}%`, width: `${mark.w}%`, height: `${mark.h}%` }}
           >
             {mark.n && (
-              <span className="absolute -top-3 -left-3 grid size-6 place-items-center rounded-sm bg-black text-xs font-bold text-white shadow-[0_0_0_2px_white]">
+              <span className="absolute -top-4 -right-4 grid size-6 place-items-center rounded-full bg-black text-xs font-bold text-white shadow-[0_0_0_2px_white]">
                 {mark.n}
               </span>
             )}
@@ -67,7 +71,10 @@ function ManualPicture({ id, caption, testData }: { id: ManualFigureId; caption:
 export async function renderManualGuide(classPath: string | null): Promise<ReactNode> {
   const [root, t, tb] = await Promise.all([getTranslations(), getTranslations("TeacherManual"), getTranslations("TeacherUi.classBook")]);
   const labels = Object.fromEntries(
-    Object.entries(MANUAL_LABELS).map(([name, label]) => [name, root(label.key as never, ("values" in label ? label.values : undefined) as never)]),
+    Object.entries(MANUAL_LABELS).map(([name, label]) => {
+      const text = root(label.key as never, ("values" in label ? label.values : undefined) as never);
+      return [name, "blank" in label ? text.replace(label.blank, "…") : text];
+    }),
   );
   const rich = (key: string) => t.rich(key as never, { ...labels, ui: (chunks: ReactNode) => <UiLabel>{chunks}</UiLabel> } as never);
   const picture = (id: ManualFigureId) => <ManualPicture id={id} caption={t(`figures.${id}` as never)} testData={t("testData")} />;
@@ -84,7 +91,9 @@ export async function renderManualGuide(classPath: string | null): Promise<React
               {item.steps.map((step) => (
                 <li key={step.key} className="pl-1">
                   {rich(`${section}.${step.key}`)}
-                  {step.figure && picture(step.figure)}
+                  {[step.figure ?? []].flat().map((id) => (
+                    <Fragment key={id}>{picture(id)}</Fragment>
+                  ))}
                 </li>
               ))}
             </ol>
@@ -101,7 +110,7 @@ export async function renderManualGuide(classPath: string | null): Promise<React
         return (
           <div key={index} className={item.tone === "warn" ? WARN : NOTE}>
             <h3 className="font-semibold">{t(`${section}.${item.title}` as never)}</h3>
-            <ul className="mt-1 list-disc space-y-1 pl-5">
+            <ul className={cn("mt-1 space-y-1", !item.plain && "list-disc pl-5")}>
               {item.keys.map((key) => (
                 <li key={key}>{rich(`${section}.${key}`)}</li>
               ))}
@@ -145,7 +154,15 @@ export async function renderManualGuide(classPath: string | null): Promise<React
             </a>
           </li>
         </ol>
-        <p className="text-muted-foreground text-sm">{t("help")}</p>
+        <p className="text-muted-foreground text-sm">
+          {t.rich("help", {
+            line: (chunks: ReactNode) => (
+              <a href={LINE_SUPPORT} target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4">
+                {chunks}
+              </a>
+            ),
+          })}
+        </p>
       </nav>
       {MANUAL_SECTIONS.map((section) => (
         <section key={section.id} id={section.id} aria-labelledby={`${section.id}-title`} className={cn(TEACHER_CARD, "scroll-mt-24 gap-4")}>

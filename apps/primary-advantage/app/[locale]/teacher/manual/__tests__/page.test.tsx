@@ -77,7 +77,7 @@ describe("teacher manual (FR-15, S5 request 2026-10-20)", () => {
   it("lists the six sections in the table of contents, each with an anchor that exists", async () => {
     await renderPage();
     const toc = screen.getByRole("navigation", { name: testMessages.en.TeacherManual.tocTitle });
-    const hrefs = within(toc).getAllByRole("link").map((link) => link.getAttribute("href"));
+    const hrefs = within(toc).getAllByRole("link").map((link) => link.getAttribute("href")).filter((href) => href?.startsWith("#"));
     expect(hrefs).toEqual(["#signin", "#class", "#start-class", "#assign-book", "#lesson", "#after-lesson", "#homework", "#class-sheet", "#steps"]);
     for (const href of hrefs) expect(document.getElementById(href!.slice(1))).not.toBeNull();
     expect(screen.getByRole("region", { name: new RegExp(`^6\\s*${testMessages.en.TeacherManual.classSheet.title}$`) })).toHaveAttribute("id", "class-sheet");
@@ -123,7 +123,7 @@ describe("teacher manual (FR-15, S5 request 2026-10-20)", () => {
   it("shows each picture with its alternative text, its file, and numbered marks inside the picture", async () => {
     await renderPage("th");
     const used = MANUAL_SECTIONS.flatMap((section) =>
-      section.blocks.flatMap((block) => ("steps" in block ? block.steps.map((step) => step.figure) : "figure" in block ? [block.figure] : [])),
+      section.blocks.flatMap((block) => ("steps" in block ? block.steps.flatMap((step) => [step.figure ?? []].flat()) : "figure" in block ? [block.figure] : [])),
     ).filter(Boolean);
     expect(new Set(used)).toEqual(new Set(Object.keys(MANUAL_FIGURES)));
     for (const [id, figure] of Object.entries(MANUAL_FIGURES)) {
@@ -137,6 +137,21 @@ describe("teacher manual (FR-15, S5 request 2026-10-20)", () => {
     }
     // Section 3 step 1: the mark 1 is on the picture of step 1.
     expect(document.querySelector('[data-figure="classCard"] [data-mark="1"]')).not.toBeNull();
+  });
+
+  it("uses the label of each screen for print buttons and the plural card label (PR review B5, B6)", async () => {
+    await renderPage("en");
+    const sheet = document.getElementById("class-sheet")!;
+    expect(sheet).toHaveTextContent("Make cards for … students without a card");
+    expect(sheet.textContent).not.toMatch(/NaN|\b7\b/);
+  });
+
+  it("links the LINE support contact and shows the teacher menu box (PR review B8, B9)", async () => {
+    await renderPage("th");
+    expect(screen.getByRole("link", { name: "LINE ReadingAdvantage" })).toHaveAttribute("href", "https://line.me/ti/p/Pf7_EF98Pv");
+    const menu = document.getElementById("class")!;
+    expect(menu).toHaveTextContent("เมนูของครู");
+    expect(menu).toHaveTextContent(`${testMessages.th.Sidebar.home} ${testMessages.th.Sidebar.myClasses} ${testMessages.th.Sidebar.myStudents}`);
   });
 
   it("asks for the Thai guide in Thai and says when the guide is missing", async () => {

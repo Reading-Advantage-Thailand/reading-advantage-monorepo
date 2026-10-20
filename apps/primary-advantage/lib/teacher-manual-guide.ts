@@ -4,6 +4,7 @@ import type { ManualFigureId } from "./teacher-manual-figures";
  * The live labels that the manual text names, by placeholder (`<ui>{startClass}</ui>`): the message
  * key of the label on the screen, and the values of a label with placeholders. The manual builds
  * each name from the live key, so the manual stays right when a label changes (S5 request A.1).
+ * `blank` is the number in `values` that the manual shows as "…" (a label with an ICU plural).
  */
 export const MANUAL_LABELS = {
   teacherTab: { key: "AuthPage.signin.teacher" },
@@ -18,6 +19,8 @@ export const MANUAL_LABELS = {
   saveAndSignIn: { key: "AuthPage.temporary.save" },
   home: { key: "Sidebar.home" },
   myClasses: { key: "Sidebar.myClasses" },
+  myStudents: { key: "Sidebar.myStudents" },
+  reports: { key: "Sidebar.reports" },
   assignments: { key: "Sidebar.assignments" },
   manual: { key: "Sidebar.manual" },
   startClassLink: { key: "TeacherUi.startClass" },
@@ -36,12 +39,15 @@ export const MANUAL_LABELS = {
   studentNewPassword: { key: "ClassLogin.roster.newPassword" },
   passwordConfirmTitle: { key: "ClassLogin.password.title", values: { name: "…" } },
   passwordConfirm: { key: "ClassLogin.password.confirm" },
+  passwordPrint: { key: "ClassLogin.password.print" },
   classSheet: { key: "ClassLogin.links.classSheet" },
   qrCards: { key: "ClassLogin.links.qrCards" },
   makeSheet: { key: "ClassLogin.sheet.make" },
   sheetConfirmTitle: { key: "ClassLogin.sheet.confirmTitle" },
   sheetConfirm: { key: "ClassLogin.sheet.confirm" },
   print: { key: "ClassLogin.sheet.print" },
+  issueCards: { key: "ClassLogin.qrPage.issue", values: { count: 7 }, blank: "7" },
+  printCards: { key: "ClassLogin.qrPage.print" },
   noBook: { key: "TeacherUi.classBook.none" },
   book: { key: "TeacherUi.classBook.book" },
   mode: { key: "TeacherUi.classBook.mode" },
@@ -55,6 +61,14 @@ export const MANUAL_LABELS = {
   nextStep: { key: "TeacherUi.classBook.nextStep" },
   openLesson: { key: "TeacherUi.classBook.openLesson" },
   lessonPlan: { key: "TeacherUi.classBook.pacing" },
+  live: { key: "TeacherUi.classBook.guide.live" },
+  tip: { key: "TeacherUi.classBook.guide.tip" },
+  guideTitle: { key: "TeacherUi.classBook.guide.title" },
+  teacherActions: { key: "TeacherUi.classBook.guide.teacherActions" },
+  teacherLanguage: { key: "TeacherUi.classBook.guide.teacherLanguage" },
+  studentActions: { key: "TeacherUi.classBook.guide.studentActions" },
+  watchFor: { key: "TeacherUi.classBook.guide.watchFor" },
+  script: { key: "TeacherUi.classBook.guide.script" },
   markDone: { key: "TeacherUi.classBook.guide.markDone" },
   undo: { key: "TeacherUi.classBook.guide.undo" },
   next: { key: "TeacherUi.classBook.lesson.next" },
@@ -80,16 +94,16 @@ export const MANUAL_LABELS = {
   saved: { key: "Assignment.saved" },
   todayLesson: { key: "StudentHome.todayLesson" },
   myWork: { key: "StudentAssignments.title" },
-} as const satisfies Record<string, { key: string; values?: Record<string, string> }>;
+} as const satisfies Record<string, { key: string; values?: Record<string, string | number>; blank?: string }>;
 
 /** Where a section's link button goes: a fixed page, or a part of the teacher's class page. */
 export type ManualLink = { page: string } | { classAnchor: string };
 
 /** One part of a manual section, in page order. Keys are under `TeacherManual.<section>`. */
 export type ManualBlock =
-  | { kind: "steps"; title?: string; intro?: string; start: number; steps: { key: string; figure?: ManualFigureId }[] }
+  | { kind: "steps"; title?: string; intro?: string; start: number; steps: { key: string; figure?: ManualFigureId | ManualFigureId[] }[] }
   | { kind: "note"; key: string; tone?: "warn"; figure?: ManualFigureId }
-  | { kind: "list"; title: string; keys: string[]; tone?: "warn"; figure?: ManualFigureId }
+  | { kind: "list"; title: string; keys: string[]; tone?: "warn"; plain?: boolean; figure?: ManualFigureId }
   | { kind: "classSheetCase" };
 
 /** One numbered section of the manual, with its anchor for links from other pages. */
@@ -132,7 +146,7 @@ export const MANUAL_SECTIONS: ManualSection[] = [
     link: { page: "/teacher/my-classes" },
     blocks: [
       { kind: "steps", start: 1, steps: [{ key: "step1", figure: "menu" }, { key: "step2", figure: "myClasses" }] },
-      { kind: "note", key: "phone" },
+      { kind: "list", title: "menuTitle", keys: ["menu", "phone"], plain: true },
       { kind: "note", key: "shortcut" },
     ],
   },
@@ -201,7 +215,7 @@ export const MANUAL_SECTIONS: ManualSection[] = [
       {
         kind: "steps",
         start: 1,
-        steps: [{ key: "step1", figure: "assignments" }, { key: "step2" }, { key: "step3", figure: "articleAssign" }, { key: "step4", figure: "assignForm" }, { key: "step5" }],
+        steps: [{ key: "step1", figure: "assignments" }, { key: "step2" }, { key: "step3", figure: "articleAssign" }, { key: "step4", figure: ["assignForm", "assignDue"] }, { key: "step5" }],
       },
       { kind: "note", key: "studentsSee" },
       { kind: "note", key: "atHome", tone: "warn" },
