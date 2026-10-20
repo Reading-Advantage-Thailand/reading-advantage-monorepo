@@ -73,6 +73,11 @@ export default {
       note: 'An example class. In the app, the whole class shares one boss, and every student can help. There is no ranking.',
       home: 'Read another story',
     },
+    loadError: {
+      title: 'The game could not start',
+      body: 'A game file did not load. Check the internet connection, then try again.',
+      retry: 'Try again',
+    },
     gate: {
       title: 'This device is not supported for this game',
       body: 'Try this game on a newer phone, a tablet, or a computer. You can still read the story here.',

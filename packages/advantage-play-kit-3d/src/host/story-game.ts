@@ -49,7 +49,7 @@ import { sheetBindings } from '../view2d/sheets.js';
 import { renderBriefing } from './briefing.js';
 import hostCss from './host.css.js';
 import themeCss from '../hud/theme.css.js';
-import { renderGate } from './gate-screen.js';
+import { renderGate, renderLoadError } from './gate-screen.js';
 import { renderResults } from './results.js';
 
 /** The one 2D sprite pack every game's 2D edition binds from. */
@@ -241,8 +241,10 @@ export function startStoryGame(options: StoryGameOptions): StoryGameSession {
       options.onPhase?.('playing');
     } catch (err) {
       report({ level: 'error', code: 'apk3d/start-failed', message: String(err) });
-      renderGate(screen, undefined, t);
+      // The device check passed above, so this is a load or start fault, not the device.
+      renderLoadError(screen, t);
       screen.querySelector('[data-back]')?.addEventListener('click', () => options.onExit());
+      screen.querySelector('[data-retry]')?.addEventListener('click', () => void stopGame().then(start));
       show();
     } finally {
       starting = false;

@@ -20,3 +20,20 @@ export function renderGate(el: HTMLElement, reason: string | undefined, t: Trans
       <div class="actions"><button class="btn gold" data-back>${esc(t('host.back'))}</button></div>
     </div>`;
 }
+
+/**
+ * The message for a game that failed to start on a device that can run it (a pack file that did not
+ * load, a lost connection): a way to try again and a way back. Before it, any start error showed the
+ * device message (tech debt 2026-10-20).
+ * @param el The screen element.
+ * @param t The host catalog.
+ */
+export function renderLoadError(el: HTMLElement, t: Translate): void {
+  el.innerHTML = `
+    <div class="panel gate">
+      <div class="gate-icon" aria-hidden="true">⚠️</div>
+      <h2>${esc(t('host.loadError.title'))}</h2>
+      <p>${esc(t('host.loadError.body'))}</p>
+      <div class="actions"><button class="btn soft" data-back>${esc(t('host.back'))}</button><button class="btn gold" data-retry>${esc(t('host.loadError.retry'))}</button></div>
+    </div>`;
+}
