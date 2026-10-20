@@ -48,6 +48,8 @@ export default {
     results: {
       title: 'Well done!',
       xp: '+{xp} XP',
+      xpSaving: 'Saving your XP…',
+      xpNotSaved: 'XP not saved.',
       xpNote: 'Stars show how many you knew on the first try: {pct}%.',
       storyWords: 'Your answers',
       practice: 'Practice these again',
