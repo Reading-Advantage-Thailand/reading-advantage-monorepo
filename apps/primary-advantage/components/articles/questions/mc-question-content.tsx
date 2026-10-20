@@ -664,11 +664,14 @@ function LessonMCQContentView({ article }: { article: Article }) {
                     variant="outline"
                     className={cn(
                       "h-auto w-full justify-start border-2 p-4 text-left transition-all duration-200",
-                      "lf-well",
-                      !activeQuestion && "hover:border-[var(--cq-gold-dark)]",
-                      shouldShowAsCorrect && "lf-good",
-                      shouldShowAsIncorrect && "lf-bad",
-                      shouldHighlightCorrect && "lf-good",
+                      // Utilities, not the lf-* classes: rpg.css sits in the components layer, so the
+                      // outline button's own bg and border utilities would win over them.
+                      "border-[var(--cq-parchment-edge)] bg-white/40 text-[var(--cq-ink)] hover:bg-white/60 hover:text-[var(--cq-ink)] dark:border-[var(--cq-parchment-edge)] dark:bg-white/40 dark:hover:bg-white/60",
+                      !activeQuestion && "hover:border-[var(--cq-gold-dark)] dark:hover:border-[var(--cq-gold-dark)]",
+                      (shouldShowAsCorrect || shouldHighlightCorrect) &&
+                        "border-[#2f6b35] bg-[#dfeccd] text-[#1f4a23] hover:bg-[#dfeccd] hover:text-[#1f4a23] dark:border-[#2f6b35] dark:bg-[#dfeccd] dark:hover:bg-[#dfeccd]",
+                      shouldShowAsIncorrect &&
+                        "border-[#8f2424] bg-[#f3d6cc] text-[#6b1717] hover:bg-[#f3d6cc] hover:text-[#6b1717] dark:border-[#8f2424] dark:bg-[#f3d6cc] dark:hover:bg-[#f3d6cc]",
                     )}
                     onClick={() => {
                       if (!activeQuestion) {
@@ -681,8 +684,8 @@ function LessonMCQContentView({ article }: { article: Article }) {
                         <div
                           className={cn(
                             "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-[var(--cq-wood-dark)] text-sm font-bold transition-colors",
-                            (shouldShowAsCorrect || shouldHighlightCorrect) && "lf-good",
-                            shouldShowAsIncorrect && "lf-bad",
+                            (shouldShowAsCorrect || shouldHighlightCorrect) && "border-[#2f6b35] bg-[#dfeccd] text-[#1f4a23]",
+                            shouldShowAsIncorrect && "border-[#8f2424] bg-[#f3d6cc] text-[#6b1717]",
                           )}
                         >
                           {String.fromCharCode(65 + i)}
