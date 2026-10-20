@@ -1722,12 +1722,12 @@
       "phase1Description": "In this lesson, you will read an article about: {title}",
       "cefrLevel": "CEFR Level : {level}",
       "raLevel": "RA Level : {level}",
-      "estimatedReadTime": "Estimated Read Time : {time}",
+      "estimatedReadTime": "Estimated reading time: {time} min",
       "articleSummary": "Article Summary",
       "learningObjectives": "Learning Objectives",
-      "understandMainIdeas": "Understand Main Ideas :",
-      "learnVocabulary": "Learn Vocabulary :",
-      "improveComprehension": "Improve Comprehension :"
+      "understandMainIdeas": "Understand Main Ideas",
+      "learnVocabulary": "Learn Vocabulary",
+      "improveComprehension": "Improve Comprehension"
     },
     "PreviewVocabulary": {
       "title": "Preview Vocabulary",

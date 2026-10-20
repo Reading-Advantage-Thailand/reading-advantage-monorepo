@@ -1830,12 +1830,12 @@
       "phase1Description": "在本课中，您将阅读一篇关于「{title}」的文章",
       "cefrLevel": "CEFR 等级：{level}",
       "raLevel": "RA 等级：{level}",
-      "estimatedReadTime": "预计阅读时间：{time}",
+      "estimatedReadTime": "预计阅读时间：{time} 分钟",
       "articleSummary": "文章摘要",
       "learningObjectives": "学习目标",
-      "understandMainIdeas": "理解主要思想：",
-      "learnVocabulary": "学习词汇：",
-      "improveComprehension": "提高阅读理解："
+      "understandMainIdeas": "理解主要思想",
+      "learnVocabulary": "学习词汇",
+      "improveComprehension": "提高阅读理解"
     }
   },
   "LessonGames": {

@@ -1722,12 +1722,12 @@
       "phase1Description": "ในบทเรียนนี้ คุณจะอ่านบทความเกี่ยวกับ: {title}",
       "cefrLevel": "ระดับ CEFR : {level}",
       "raLevel": "ระดับ RA : {level}",
-      "estimatedReadTime": "เวลาอ่านโดยประมาณ : {time}",
+      "estimatedReadTime": "เวลาอ่านโดยประมาณ: {time} นาที",
       "articleSummary": "สรุปบทความ",
       "learningObjectives": "วัตถุประสงค์การเรียนรู้",
-      "understandMainIdeas": "ทำความเข้าใจแนวคิดหลัก :",
-      "learnVocabulary": "เรียนรู้คำศัพท์ :",
-      "improveComprehension": "พัฒนาความเข้าใจในการอ่าน :"
+      "understandMainIdeas": "ทำความเข้าใจแนวคิดหลัก",
+      "learnVocabulary": "เรียนรู้คำศัพท์",
+      "improveComprehension": "พัฒนาความเข้าใจในการอ่าน"
     },
     "PreviewVocabulary": {
       "title": "ดูตัวอย่างคำศัพท์",

@@ -1722,12 +1722,12 @@
       "phase1Description": "Trong bài học này, bạn sẽ đọc một bài viết về: {title}",
       "cefrLevel": "Cấp độ CEFR: {level}",
       "raLevel": "Cấp độ RA: {level}",
-      "estimatedReadTime": "Thời gian đọc ước tính: {time}",
+      "estimatedReadTime": "Thời gian đọc ước tính: {time} phút",
       "articleSummary": "Tóm tắt bài viết",
       "learningObjectives": "Mục tiêu học tập",
-      "understandMainIdeas": "Hiểu ý chính:",
-      "learnVocabulary": "Học từ vựng:",
-      "improveComprehension": "Cải thiện khả năng đọc hiểu:"
+      "understandMainIdeas": "Hiểu ý chính",
+      "learnVocabulary": "Học từ vựng",
+      "improveComprehension": "Cải thiện khả năng đọc hiểu"
     },
     "PreviewVocabulary": {
       "title": "Xem trước từ vựng",

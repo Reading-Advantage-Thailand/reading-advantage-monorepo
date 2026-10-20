@@ -1830,12 +1830,12 @@
       "phase1Description": "在本課程中，你將閱讀一篇關於「{title}」的文章",
       "cefrLevel": "CEFR 等級：{level}",
       "raLevel": "RA 等級：{level}",
-      "estimatedReadTime": "預估閱讀時間：{time}",
+      "estimatedReadTime": "預估閱讀時間：{time} 分鐘",
       "articleSummary": "文章摘要",
       "learningObjectives": "學習目標",
-      "understandMainIdeas": "理解重點：",
-      "learnVocabulary": "學習詞彙：",
-      "improveComprehension": "提升閱讀理解："
+      "understandMainIdeas": "理解重點",
+      "learnVocabulary": "學習詞彙",
+      "improveComprehension": "提升閱讀理解"
     }
   },
   "LessonGames": {
