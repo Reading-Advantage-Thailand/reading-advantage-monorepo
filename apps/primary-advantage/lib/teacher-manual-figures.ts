@@ -38,7 +38,7 @@ export const MANUAL_FIGURES = {
   lessonPlan: { src: "/manual/lessonPlan.webp", width: 1455, height: 510, marks: [{ n: 1, x: 78.56, y: 16.41, w: 20.21, h: 12.94 }] },
   progressGrid: { src: "/manual/progressGrid.webp", width: 1455, height: 750, marks: [] },
   markTaught: { src: "/manual/markTaught.webp", width: 1455, height: 600, marks: [{ n: 2, x: 65.26, y: 26.25, w: 17.53, h: 11.0 }] },
-  assignments: { src: "/manual/assignments.webp", width: 1920, height: 630, marks: [{ n: 1, x: 3.88, y: 66.48, w: 16.62, h: 11.36 }, { n: 1, x: 87.97, y: 15.67, w: 9.53, h: 10.48 }, { n: 5, x: 23.67, y: 66.64, w: 11.8, h: 10.48 }] },
+  assignments: { src: "/manual/assignments.webp", width: 1920, height: 630, marks: [{ n: 1, x: 3.88, y: 66.48, w: 16.62, h: 11.36 }, { n: 1, x: 87.97, y: 15.67, w: 9.53, h: 10.48 }, { n: 5, x: 23.67, y: 66.64, w: 14.14, h: 10.48 }] },
   articleAssign: { src: "/manual/articleAssign.webp", width: 1470, height: 690, marks: [{ n: 3, x: 62.59, y: 30.43, w: 12.45, h: 7.83 }] },
   assignForm: { src: "/manual/assignForm.webp", width: 780, height: 843, marks: [{ n: 4, x: 5.58, y: 24.02, w: 88.85, h: 6.41 }, { n: 4, x: 5.58, y: 37.19, w: 88.85, h: 6.41 }, { n: 4, x: 5.58, y: 50.36, w: 88.85, h: 11.39 }, { n: 4, x: 8.85, y: 71.53, w: 82.31, h: 24.91 }] },
   assignDue: { src: "/manual/assignDue.webp", width: 780, height: 780, marks: [{ n: 4, x: 8.08, y: 10.62, w: 83.85, h: 72.02 }, { n: 4, x: 85.19, y: 88.21, w: 9.23, h: 6.92 }] },

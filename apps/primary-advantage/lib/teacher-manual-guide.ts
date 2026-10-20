@@ -118,10 +118,11 @@ export interface ManualSection {
 }
 
 /**
- * Which class sheet text section 6 shows (cutover step C14, Daniel decides on 2026-10-21): "A" when
- * the team handed out the class sheets, "B" when no class has a sheet yet, "both" until then.
+ * Which class sheet text section 6 shows (cutover step C14): "A" when the team handed out the class
+ * sheets, "B" when no class has a sheet yet, "both" for a draft. "B" is the default that PR recorded on
+ * 2026-10-21 (the cutover records say the hand-out is still open); Daniel can change it.
  */
-export const CLASS_SHEET_CASE: "A" | "B" | "both" = "both";
+export const CLASS_SHEET_CASE: "A" | "B" | "both" = "B";
 
 /** The six sections of the teacher manual (S5 request A.3, PR draft v0.1 of 2026-10-20). */
 export const MANUAL_SECTIONS: ManualSection[] = [

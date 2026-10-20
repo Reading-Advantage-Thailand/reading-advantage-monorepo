@@ -146,6 +146,14 @@ describe("teacher manual (FR-15, S5 request 2026-10-20)", () => {
     expect(sheet.textContent).not.toMatch(/NaN|\b7\b/);
   });
 
+  it("shows only the class sheet text B (C14 default of 2026-10-21)", async () => {
+    await renderPage("en");
+    const sheet = document.getElementById("class-sheet")!;
+    expect(sheet.querySelector("[data-class-sheet-case]")).toHaveAttribute("data-class-sheet-case", "B");
+    expect(sheet).toHaveTextContent("Make the class sheet once, before the first lesson");
+    expect(sheet).not.toHaveTextContent("The team already gave your class its class sheet");
+  });
+
   it("links the LINE support contact and shows the teacher menu box (PR review B8, B9)", async () => {
     await renderPage("th");
     expect(screen.getByRole("link", { name: "LINE ReadingAdvantage" })).toHaveAttribute("href", "https://line.me/ti/p/Pf7_EF98Pv");
