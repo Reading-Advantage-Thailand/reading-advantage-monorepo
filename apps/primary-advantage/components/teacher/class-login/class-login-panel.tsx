@@ -73,6 +73,13 @@ export function ClassLoginPanel({
           <>
             <ClassSessionControl classroomId={classroomId} openSession={roster.openSession} fetchedAt={fetchedAt} onChange={refresh} />
             <PicturePasswordSetting classroomId={classroomId} enabled={roster.picturePasswordEnabled} onChange={refresh} />
+            {/* S5 request B (2026-10-20): read the manual before the class sheet resets every password. */}
+            <p className="text-muted-foreground text-sm" data-class-login-note="">
+              {t("links.note", { classSheet: t("links.classSheet") })}{" "}
+              <Link href="/teacher/manual#class-sheet" className="text-foreground font-medium underline underline-offset-4">
+                {t("links.noteLink")}
+              </Link>
+            </p>
             <div className="flex flex-wrap gap-2">
               <Link href={`/teacher/class-roster/${classroomId}/class-sheet`} className={linkClass}>
                 <FileTextIcon aria-hidden="true" />

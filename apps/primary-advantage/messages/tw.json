@@ -2959,7 +2959,9 @@
     "backToClass": "返回班級",
     "links": {
       "classSheet": "班級名單",
-      "qrCards": "QR 卡"
+      "qrCards": "QR 卡",
+      "note": "Before you press: “{classSheet}” sets new passwords for every student and signs everyone out. A QR card shows only once.",
+      "noteLink": "Read the teacher manual, section 6."
     },
     "sheet": {
       "title": "班級名單",
@@ -3837,12 +3839,6 @@
       "manual": {
         "title": "教師手冊",
         "intro": "教師主導的課程在 Primary Advantage 中如何進行，一步一步說明。",
-        "howTo": "第一堂課：操作方式",
-        "howTo1": "在班級頁面把課本指派給你的班級。",
-        "howTo2": "開啟課程計畫，並在班級完成每個練習本步驟時標示該步驟。應用程式會開啟對應的學生步驟。",
-        "howTo3": "開啟課程指南，查看教師動作、教師用語和完整腳本。",
-        "howTo4": "使用投影模式進行全班閱讀和揭曉答案。",
-        "howTo5": "課後查看班級進度表，並將這堂課標示為已教過。",
         "stepsTitle": "13 個步驟"
       },
       "progress": {
@@ -4236,5 +4232,131 @@
       "origins32": "The cover of the Primary Advantage Origins 3.2 workbook",
       "quest4": "The cover of the Primary Advantage Quest 4 workbook"
     }
+  },
+  "TeacherManual": {
+    "tocTitle": "In this manual",
+    "openPage": "Open this page",
+    "help": "Help: LINE ReadingAdvantage · support@reading-advantage.com · 099-005-8038",
+    "signin": {
+      "title": "Sign in",
+      "lead": "Teachers sign in with an e-mail address and a password. The Google button is gone.",
+      "step1": "Open primary.reading-advantage.com.",
+      "step2": "Press the <ui>{teacherTab}</ui> tab. The sign-in page always opens on the <ui>{studentTab}</ui> tab.",
+      "step3": "In the <ui>{username}</ui> field, type your e-mail address. In the <ui>{password}</ui> field, type your password. Then press <ui>{signIn}</ui>.",
+      "oldSystem": "Teachers from the old system: the screen says “{staffHelp}”",
+      "firstTitle": "First sign-in",
+      "step4": "Use the temporary password from the school. The app shows the page <ui>{setNewPassword}</ui>.",
+      "step5": "Type a new password in <ui>{newPassword}</ui>. Type it again in <ui>{confirmPassword}</ui>. Then press <ui>{saveAndSignIn}</ui>.",
+      "rule": "The new password has 8 characters or more and is not the temporary password. After this, the temporary password stops working.",
+      "forgot": "Forgot the password: ask the school's administrator for a new temporary password."
+    },
+    "class": {
+      "title": "Find your class",
+      "lead": "After sign-in, the app opens the teacher's <ui>{home}</ui>.",
+      "step1": "In the menu at the left, press <ui>{myClasses}</ui>.",
+      "step2": "Press the class name in the table. The app opens the class page.",
+      "phone": "On a phone: press the menu button ☰ at the top of the screen to open the full menu, with <ui>{manual}</ui>.",
+      "shortcut": "Shortcut: in the class table on the home page, the <ui>{startClassLink}</ui> link opens the class page, but it does not start the class. On the class page, press <ui>{startClass}</ui> again (section 3)."
+    },
+    "startClass": {
+      "title": "Open the class for student sign-in",
+      "lead": "Students sign in with a 6-character code and 3 pictures only while the teacher's class is open.",
+      "step1": "On the class page, in the <ui>{classCard}</ui> card, press <ui>{startClass}</ui>.",
+      "step2": "Write the 6-character code under <ui>{classCode}</ui> on the board. The code shows only once. The student screen calls this code <ui>{studentCode}</ui>.",
+      "step3": "The students sign in with the “Student sign-in” sheet. The teacher sees the count at <ui>{signedInCount}</ui>.",
+      "step4": "At the end of the period, press <ui>{endClass}</ui>. The class also closes by itself after 3 hours.",
+      "newCode": "To see a code again, press <ui>{newCode}</ui>. The app shows a new code, and the old code stops working.",
+      "pictureSetting": "You can turn off <ui>{pictureSetting}</ui>. Then students sign in with the code and the name only. Some features, such as Reedy, need a full sign-in.",
+      "helpTitle": "One student cannot sign in",
+      "help1": "5 wrong taps: the app locks that student for 5 minutes. Wait, then try again.",
+      "help2": "Forgot the pictures: in the <ui>{students}</ui> list, press <ui>{resetPictures}</ui> on that student's row, and show the new pictures to the student at once, because they show only once. This button asks no question, and it signs that student out.",
+      "help3": "No pictures yet: press <ui>{setPictures}</ui> on that student's row."
+    },
+    "assignBook": {
+      "title": "Assign the book to the class (once)",
+      "lead": "Do this once for each class, before the first lesson.",
+      "step1": "On the class page, go down to the book part. A new class shows the text “{noBook}”.",
+      "step2": "At <ui>{book}</ui>, choose the book of the class.",
+      "step3": "At <ui>{mode}</ui>, choose <ui>{teacherLed}</ui>.",
+      "step4": "At <ui>{startDate}</ui>, choose the day of the first lesson. Then press <ui>{assignBook}</ui>. The app shows “{bookAssigned}”.",
+      "modeNote": "<ui>{teacherLed}</ui>: a student opens an app step only after the teacher marks that workbook step (4.2). <ui>{independent}</ui>: the student opens every step.",
+      "emptyNote": "No book in the list: the screen shows “{emptyCatalogue}”. Contact us (top of this page)."
+    },
+    "lesson": {
+      "title": "Teach the lesson",
+      "lead": "The teacher teaches from the workbook and presses in the app one step at a time. The app opens the same step for the students.",
+      "step1": "On the class page, in the <ui>{nowInClass}</ui> card, press <ui>{openLesson}</ui>. The card shows the current lesson and the <ui>{nextStep}</ui>.",
+      "step2": "The lesson page shows the first step that the class has not done, one step at a time: teacher actions, teacher language, student actions, watch for, and the full script.",
+      "step3": "When the class finishes the step in the workbook, press <ui>{markDone}</ui>. The app opens the same step for the students and shows the next step. A wrong press: press <ui>{undo}</ui>.",
+      "step4": "Whole-class reading: press <ui>{projector}</ui>. Click a paragraph to focus it. Press <ui>{showAnswer}</ui> to reveal the answers.",
+      "markAll": "Mark every step. A student opens an app step only after the teacher presses <ui>{markDone}</ui>. Until then, the student sees “{lockedText}”.",
+      "steps13": "The workbook has 13 steps. The student app has 14 steps. The app matches the steps."
+    },
+    "afterLesson": {
+      "title": "After the lesson",
+      "step1": "On the class page, press <ui>{lessonPlan}</ui>, then <ui>{classProgress}</ui>. The table shows the app steps that each student did, of 14.",
+      "step2": "Go back to <ui>{lessonPlan}</ui> and press <ui>{markTaught}</ui> on that lesson.",
+      "colors": "Colors in the table: {legend}",
+      "buttonsTitle": "Useful buttons on the lesson page",
+      "rehearsal": "<ui>{rehearsal}</ui>: see the lesson as a student sees it. Nothing saves.",
+      "print": "<ui>{printLesson}</ui>: in the print window, choose A4 and turn off “Headers and footers”.",
+      "teachAgain": "<ui>{teachAgain}</ui> (in the <ui>{lessonPlan}</ui>): starts the lesson again. Each student's work stays in the history, and the XP stays."
+    },
+    "homework": {
+      "title": "Give homework",
+      "lead": "Homework is one reading story. The teacher chooses a story and gives it to the whole class or to some students.",
+      "step1": "In the menu, press <ui>{assignments}</ui>, then <ui>{newAssignment}</ui>. The app opens the story list.",
+      "step2": "Choose a story and open it.",
+      "step3": "On the story page, press the <ui>{assignButton}</ui> button.",
+      "step4": "In the <ui>{createAssignment}</ui> window: choose the <ui>{classroom}</ui>, type the <ui>{assignmentName}</ui> and the <ui>{assignmentDescription}</ui>, choose the <ui>{studentsField}</ui> or <ui>{selectAll}</ui>, choose the <ui>{dueDate}</ui>, then press <ui>{submit}</ui>. The app shows “{saved}”.",
+      "step5": "See the results: in the menu <ui>{assignments}</ui>, choose the class, then press the assignment name to see the progress of each student.",
+      "studentsSee": "Where students see the homework: on the student home, in the <ui>{todayLesson}</ui> card (the assignment with the nearest due date), and in the menu <ui>{assignments}</ui>, on the page <ui>{myWork}</ui>.",
+      "atHome": "Homework at home needs the username and password. The code, the pictures, and the QR card work only while the teacher's class is open. At home, students sign in with the username and password from the <ui>{classSheet}</ui> (section 6)."
+    },
+    "classSheet": {
+      "title": "Class sheet and QR cards: read before you press",
+      "lead": "Both buttons are on the class page, in the <ui>{classCard}</ui> card: <ui>{classSheet}</ui> and <ui>{qrCards}</ui>.",
+      "versionATitle": "If the team gave your class its sheet",
+      "versionA": "The team already gave your class its class sheet. Use that sheet and keep one copy. Press <ui>{makeSheet}</ui> only when the whole sheet is lost.",
+      "versionBTitle": "If your class has no sheet yet",
+      "versionB": "Make the class sheet once, before the first lesson, outside class time. Then print it with the steps below.",
+      "sheetIntro": "The class sheet shows each student's username and password, for sign-in away from the classroom, for example homework at home.",
+      "warning": "When you press <ui>{makeSheet}</ui>: the app sets a new password for every student in this class. Every student is signed out. The old sheet stops working. The new passwords show only once. Make the sheet outside class time, and print it at once.",
+      "oneStudent": "One student forgot the password: use the <ui>{studentNewPassword}</ui> button on that student's row (below).",
+      "step1": "Press <ui>{classSheet}</ui>, then <ui>{makeSheet}</ui>.",
+      "step2": "In the window <ui>{sheetConfirmTitle}</ui>, press <ui>{sheetConfirm}</ui>.",
+      "step3": "Press <ui>{print}</ui> at once, before you leave the page. Cut the sheet and give each student only the part with the student's name.",
+      "forgotTitle": "A student forgets the password",
+      "forgot": "In the <ui>{students}</ui> list, press <ui>{studentNewPassword}</ui> on that student's row. In the window <ui>{passwordConfirmTitle}</ui>, press <ui>{passwordConfirm}</ui>. The app sets a new password for that student only, and signs that student out. The other students keep their passwords. The new password shows only once: the student writes it down at once, or you press <ui>{print}</ui>.",
+      "qrTitle": "QR cards: read before you press",
+      "qrLead": "One QR card signs one student in with one scan. It works only while the teacher's class is open.",
+      "step4": "Press <ui>{qrCards}</ui>, then <ui>Make cards for … students without a card</ui>. The app makes cards only for students without a card.",
+      "step5": "Press <ui>{print}</ui> at once: a card shows only once.",
+      "lostCard": "Lost card: in the <ui>{students}</ui> list, press <ui>{newCard}</ui> on that student's row and confirm. The old card stops at once, and that student is signed out."
+    },
+    "figures": {
+      "signin": "The sign-in page, Teacher tab",
+      "newPassword": "The Set a new password page",
+      "menu": "The teacher menu",
+      "myClasses": "My classes",
+      "classCard": "The class sign-in card before the class starts",
+      "classStarted": "After Start class: the class code (a test code, hidden)",
+      "roster": "The student list: the picture password buttons",
+      "assignBook": "The book form",
+      "classBook": "The class book card on the class page",
+      "lessonGuide": "The lesson page: the live guide and the Projector button",
+      "projector": "The projector view",
+      "lessonPlan": "The lesson plan: the Class progress button",
+      "progressGrid": "The class progress table",
+      "markTaught": "The lesson plan: the Mark taught button",
+      "assignments": "The Assignments page",
+      "articleAssign": "The story page: the Assignments button",
+      "assignForm": "The Create assignment window",
+      "classSheet": "The class sheet page",
+      "classSheetConfirm": "The class sheet confirmation",
+      "qrCards": "The QR cards page",
+      "newCardConfirm": "The new card confirmation"
+    },
+    "testData": "Picture from the app, test data"
   }
 }
