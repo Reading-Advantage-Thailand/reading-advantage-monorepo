@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { createFormatter, useLocale } from "next-intl";
+import { enUS, th, vi, zhCN, zhTW, type Locale } from "date-fns/locale";
 import { SCHOOL_TIME_ZONE } from "@reading-advantage/domain/calendar-day";
 
 /** App locale codes that are not BCP 47 tags. Intl falls back to English for them. */
@@ -12,6 +13,18 @@ const INTL_TAGS: Record<string, string> = { cn: "zh-CN", tw: "zh-TW" };
  */
 export function intlLocale(locale: string): string {
   return INTL_TAGS[locale] ?? locale;
+}
+
+/** date-fns locales of the app locale codes, for date pickers. */
+const DATE_FNS_LOCALES: Record<string, Locale> = { en: enUS, th, vi, cn: zhCN, tw: zhTW };
+
+/**
+ * Maps an app locale code to the date-fns locale of a date picker (month and weekday names).
+ * @param locale The app locale code.
+ * @returns The date-fns locale; English for an unknown code.
+ */
+export function dateFnsLocale(locale: string): Locale {
+  return DATE_FNS_LOCALES[locale] ?? enUS;
 }
 
 /**
