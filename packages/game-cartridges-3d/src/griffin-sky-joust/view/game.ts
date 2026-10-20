@@ -19,10 +19,15 @@ import griffin_sky_joustCss from './griffin-sky-joust.css.js';
 import { installCss } from '@reading-advantage/advantage-play-kit-3d/hud';
 installCss('griffin-sky-joust', griffin_sky_joustCss);
 
-/** Model scales (the models are normalized; QC tunes these against the arena radii). */
-const GRIFFIN_SCALE = 0.5;
-const RIDER_SCALE = 0.8;
-const HERO_SCALE = 0.34;
+/**
+ * Model scales (the models are normalized). The griffin's body fills about its hit circle (radius
+ * 24 px = 0.6 m) and its wings and tail reach past it; a bat fills about its circle (28 px = 0.7 m).
+ * Until 2026-10-20 both were drawn at about half this size, smaller than their circles (owner: the
+ * griffin was very small).
+ */
+const GRIFFIN_SCALE = 1.0;
+const RIDER_SCALE = 1.2;
+const HERO_SCALE = 0.68;
 /** Where the hero stands on the griffin's back, in meters: [along the facing, up]. */
 const SEAT: readonly [number, number] = [GRIFFIN_SEAT.forward * GRIFFIN_SCALE, GRIFFIN_SEAT.up * GRIFFIN_SCALE];
 const FOV = 45;
@@ -121,7 +126,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     tag.className = 'rider-tag';
     tag.textContent = r.text;
     const view: RiderView = { actor, tag, x, y };
-    hud.anchor(tag, () => stage.screenOfPoint(new THREE.Vector3(view.x, view.y + 1.0, 0)), { keepX: true, spread: true });
+    hud.anchor(tag, () => stage.screenOfPoint(new THREE.Vector3(view.x, view.y + 0.95, 0)), { keepX: true, spread: true });
     riders.set(r.id, view);
   }
 
@@ -188,7 +193,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
         void burst(stage, new THREE.Vector3(worldX(ev.x), worldY(ev.y), 0.3), 0xffe27a, 14, 1.0);
         audio.play('strike');
         void hero.play('victory', 0.5, 1.6);
-        hud.popup(griffinPoint(1.4), t('struck'), 'good');
+        hud.popup(griffinPoint(2.1), t('struck'), 'good');
         break;
       }
       case 'bumped':
@@ -197,14 +202,14 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
         void griffin.play('hit', 0.5, 1.4);
         void griffin.flash(0xff4a3a, 0.4);
         stage.shake(0.06, 0.25);
-        hud.popup(griffinPoint(1.4), ev.courage === 0 ? t('resting') : ev.strike ? t('wrong') : t('bump'), 'miss');
+        hud.popup(griffinPoint(2.1), ev.courage === 0 ? t('resting') : ev.strike ? t('wrong') : t('bump'), 'miss');
         break;
       case 'rested':
-        hud.popup(griffinPoint(1.4), t('rested'), 'good');
+        hud.popup(griffinPoint(2.1), t('rested'), 'good');
         break;
       case 'sentenceDone':
         audio.play('cast');
-        void burst(stage, griffin.root.position.clone().add(new THREE.Vector3(0, 0.6, 0.4)), 0xc9a7ff, 24, 1.8);
+        void burst(stage, griffin.root.position.clone().add(new THREE.Vector3(0, 0.9, 0.4)), 0xc9a7ff, 24, 1.8);
         void hud.banner.show(t('done.title'), t('done.text'), 1.1);
         break;
       case 'joustComplete':
@@ -223,7 +228,7 @@ export async function createGame(ctx: Game3DContext): Promise<Game3DInstance> {
     audio.play('victory');
     void hero.play('victory');
     void griffin.play('roar');
-    void burst(stage, griffin.root.position.clone().add(new THREE.Vector3(0, 0.8, 0.4)), 0xffe27a, 30, 2.2);
+    void burst(stage, griffin.root.position.clone().add(new THREE.Vector3(0, 1.2, 0.4)), 0xffe27a, 30, 2.2);
     await hud.banner.show(t('finish.title'), t('finish.text'), 2.2);
     const evidence = evidenceOf(sim.state, story, ctx.seed, Math.round(performance.now() - startedAt));
     ctx.complete(toGameResults(evidence, scoreOf(sim.state)), 'victory', evidence);

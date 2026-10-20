@@ -5,12 +5,16 @@
 import type { GameResults, GameTerminalOutcome } from './apk.js';
 import type { StoryGameEvidence, StoryGameEvidenceItem } from './evidence.js';
 
-// ---------------------------------------------------------------- XP (the apps' rule)
+// ---------------------------------------------------------------- XP (not the awarded XP)
 
 /**
- * Exact copy of the apps' XP rule. Speed never changes it; `score` is unused by design.
- * Source: ../reading-advantage-monorepo/apps/reading-advantage/lib/games/xp.ts (fe6aedc2b);
- * the same function is advantage-games/src/lib/xp.ts.
+ * The old app XP rule; it is NOT the XP that the student gets. The server rule `calculateGameXP`
+ * (monorepo packages/domain/src/games/xp.ts) decides the awarded XP. On 2026-10-20 the app end
+ * card showed this number, and it differed from the server; with the monorepo host fix (after the
+ * Primary cutover) the card shows the `xpEarned` that the server returns. No game shows this
+ * number; only the standalone Forge demo shows it, because the demo has no server. It fills the
+ * APK `GameResults.xp` field.
+ * Old source: apps/reading-advantage/lib/games/xp.ts (fe6aedc2b), advantage-games/src/lib/xp.ts.
  */
 // prettier-ignore
 export function calculateXP(
@@ -53,7 +57,8 @@ export function countResponses(items: readonly StoryGameEvidenceItem[]): {
 
 /**
  * The APK five-field result for a run. `score` is the game's own points (integer, shown in the
- * HUD during play; speed may add to it); `xp` is the apps' rule and never depends on `score`.
+ * HUD during play; speed may add to it); `xp` is the old app rule (see `calculateXP`), not the
+ * awarded XP, and no app screen shows it.
  */
 export function toGameResults(evidence: Pick<StoryGameEvidence, 'items'>, score: number): GameResults {
   const { correctAnswers, totalAttempts } = countResponses(evidence.items);

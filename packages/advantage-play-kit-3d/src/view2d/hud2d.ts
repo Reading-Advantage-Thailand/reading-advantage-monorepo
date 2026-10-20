@@ -23,6 +23,9 @@ export function text(scene: Phaser.Scene, x: number, y: number, value: string, s
  * where it wants it; after the scene's update, the spread shifts it up or down (eased). `base` is
  * the y the game gave, `set` the y the spread wrote last.
  */
+/** The drop shadow of a tag reaches this far below its box, in tag pixels. */
+const TAG_SHADOW = 4;
+
 const spreading = new WeakMap<Phaser.Scene, Map<Phaser.GameObjects.Container, { base: number; set: number; shift: number }>>();
 
 function spreadTags(scene: Phaser.Scene): void {
@@ -47,8 +50,9 @@ function spreadTags(scene: Phaser.Scene): void {
   const view = scene.cameras.main.worldView;
   const boxes = live.map(({ c, s }) => {
     const w = c.width * c.scaleX;
-    const h = c.height * c.scaleY;
-    return { x: c.x, y: s.base + h / 2, w, h, minY: view.y + h + 4, maxY: view.bottom - 4 };
+    // The box includes the drop shadow, so two stacked tags never touch (Griffin Sky-Joust, 2026-10-20).
+    const h = (c.height + TAG_SHADOW) * c.scaleY;
+    return { x: c.x, y: s.base + (c.height / 2 + TAG_SHADOW) * c.scaleY, w, h, minY: view.y + h + 4, maxY: view.bottom - 4 };
   });
   const ys = live.length > 1 ? spreadBoxes(boxes) : boxes.map((b) => b.y);
   live.forEach(({ c, s }, i) => {
@@ -67,7 +71,7 @@ export function tag(scene: Phaser.Scene, value: string, size = 20, fill = COLORS
   const w = Math.max(44, label.width + 24);
   const h = Math.max(38, label.height + 12);
   const box = scene.add.graphics();
-  box.fillStyle(0x000000, 0.35).fillRoundedRect(-w / 2, -h / 2 + 4, w, h, 12);
+  box.fillStyle(0x000000, 0.35).fillRoundedRect(-w / 2, -h / 2 + TAG_SHADOW, w, h, 12);
   box.fillStyle(fill, 1).fillRoundedRect(-w / 2, -h / 2, w, h, 12);
   box.lineStyle(3, border, 1).strokeRoundedRect(-w / 2, -h / 2, w, h, 12);
   const c = scene.add.container(0, 0, [box, label]);
@@ -96,7 +100,7 @@ export function recolorTag(t: Phaser.GameObjects.Container, fill: number, border
   const w = t.width;
   const h = t.height;
   box.clear();
-  box.fillStyle(0x000000, 0.35).fillRoundedRect(-w / 2, -h / 2 + 4, w, h, 12);
+  box.fillStyle(0x000000, 0.35).fillRoundedRect(-w / 2, -h / 2 + TAG_SHADOW, w, h, 12);
   box.fillStyle(fill, 1).fillRoundedRect(-w / 2, -h / 2, w, h, 12);
   box.lineStyle(3, border, 1).strokeRoundedRect(-w / 2, -h / 2, w, h, 12);
 }
