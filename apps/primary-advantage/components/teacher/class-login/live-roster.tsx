@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useIntlFormatter } from "@/lib/intl-locale";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import {
   Dialog,
   DialogContent,
@@ -49,8 +50,9 @@ export interface LiveRosterProps {
 
 /**
  * Live sign-in roster for the teacher (FR-4): who is signed in and when each student was last
- * seen, who is locked and for how long, one-tap picture-password reset (FR-3), and card rotate
- * (FR-5). A new picture password or a new card shows once, because the server keeps only hashes.
+ * seen, who is locked and for how long, one-tap picture-password reset (FR-3), card rotate
+ * (FR-5), and a new password for one student (PR review 2026-10-20). A new picture password, a
+ * new card, or a new password shows once, because the server keeps only hashes.
  * The class page adds its management parts to each row, a search filter, and a toolbar, so the
  * class has one student list.
  * @param props The class, the roster data, the refresh callback, and the class page slots.
@@ -75,6 +77,8 @@ export function LiveRoster({
   const [newPictures, setNewPictures] = useState<{ name: string; pictures: number[] }[]>([]);
   const [rotateTarget, setRotateTarget] = useState<RosterStudent | null>(null);
   const [newCard, setNewCard] = useState<{ name: string; url: string } | null>(null);
+  const [passwordTarget, setPasswordTarget] = useState<RosterStudent | null>(null);
+  const [newPassword, setNewPassword] = useState<{ name: string; username: string; password: string; signInUrl: string } | null>(null);
 
   const lockedUntil = new Map(locked.map((lock) => [lock.userId, new Date(lock.lockedUntil).getTime()]));
   const nameOf = (userId: string, fallback: string | null) =>
@@ -109,6 +113,10 @@ export function LiveRoster({
   const rotateCard = (student: RosterStudent) =>
     send<{ token: string }>("card-token/rotate", { classroomId, studentUserId: student.userId }, (result) =>
       setNewCard({ name: student.name, url: cardSignInUrl(window.location.origin, result.token) }),
+    );
+  const resetPassword = (student: RosterStudent) =>
+    send<{ name: string; username: string; password: string }>("student-password/reset", { classroomId, studentUserId: student.userId }, (result) =>
+      setNewPassword({ name: result.name, username: result.username, password: result.password, signInUrl: `${window.location.origin}/auth/signin` }),
     );
 
   return (
@@ -193,6 +201,15 @@ export function LiveRoster({
                         >
                           {t("roster.newCard")}
                         </Button>
+                        <Button
+                          variant="outline"
+                          className="min-h-12"
+                          disabled={busy}
+                          aria-label={t("roster.newPasswordFor", { name: student.name })}
+                          onClick={() => setPasswordTarget(student)}
+                        >
+                          {t("roster.newPassword")}
+                        </Button>
                         {extras?.actions}
                       </div>
                     </td>
@@ -234,6 +251,54 @@ export function LiveRoster({
           setRotateTarget(null);
         }}
       />
+
+      <AlertDialog open={passwordTarget !== null} onOpenChange={(open) => !open && setPasswordTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("password.title", { name: passwordTarget?.name ?? "" })}</AlertDialogTitle>
+            <AlertDialogDescription>{t("password.description", { name: passwordTarget?.name ?? "" })}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("password.cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (passwordTarget) void resetPassword(passwordTarget);
+                setPasswordTarget(null);
+              }}
+            >
+              {t("password.confirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <Dialog open={newPassword !== null} onOpenChange={(open) => !open && setNewPassword(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("password.resultTitle")}</DialogTitle>
+            <DialogDescription>{t("password.resultHelp")}</DialogDescription>
+          </DialogHeader>
+          <PrintStyles />
+          {newPassword && (
+            <div data-print-area className="space-y-2 rounded-md border p-4">
+              <p className="text-lg font-semibold">{newPassword.name}</p>
+              <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+                <dt>{t("sheet.username")}</dt>
+                <dd className="font-mono">{newPassword.username}</dd>
+                <dt>{t("sheet.password")}</dt>
+                <dd className="font-mono">{newPassword.password}</dd>
+              </dl>
+              <p className="text-sm">
+                {t("sheet.signInAt")} <span className="font-mono break-all">{newPassword.signInUrl}</span>
+              </p>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNewPassword(null)}>{t("password.close")}</Button>
+            <Button onClick={() => window.print()}>{t("password.print")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={newCard !== null} onOpenChange={(open) => !open && setNewCard(null)}>
         <DialogContent>

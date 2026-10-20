@@ -11,6 +11,7 @@ export type StudentLoginAuditAction =
   | "student_login:card_rotate"
   | "student_login:card_issue"
   | "student_login:class_password_reset"
+  | "student_login:student_password_reset"
   | "auth:login"
   | "auth:login_failed";
 

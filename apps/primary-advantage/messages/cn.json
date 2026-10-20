@@ -3010,6 +3010,8 @@
       "setPictureFor": "为 {name} 设置图片密码",
       "newCard": "新卡片",
       "newCardFor": "为 {name} 生成新卡片",
+      "newPassword": "新密码",
+      "newPasswordFor": "为 {name} 设置新密码",
       "assignMissing": "为 {count, plural, other {# 位学生}}分配图片密码",
       "empty": "这个班级还没有学生。"
     },
@@ -3024,6 +3026,16 @@
       "description": "旧卡片现在就会失效，{name} 也会退出登录。",
       "confirm": "生成新卡片",
       "cancel": "取消"
+    },
+    "password": {
+      "title": "要为 {name} 设置新密码吗？",
+      "description": "{name} 的旧密码现在就会失效，{name} 也会退出登录。",
+      "confirm": "设置新密码",
+      "cancel": "取消",
+      "resultTitle": "新密码",
+      "resultHelp": "请让学生现在就记下来。这些信息不会再显示。",
+      "print": "打印",
+      "close": "关闭"
     },
     "cards": {
       "title": "新的 QR 卡片",

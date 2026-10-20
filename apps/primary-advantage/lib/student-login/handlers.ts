@@ -72,3 +72,8 @@ export const readRoster = teacherHandler(sl.classLoginRosterInput, async ({ user
 export const resetPasswords = teacherHandler(sl.resetClassPasswordsInput, async ({ user, meta, input }) =>
   sl.resetClassPasswordsOutput.parse(await sl.resetClassPasswords({ db, store, user, meta, input })),
 );
+
+/** POST: teacher sets a new password for one student of the class. Returns the plain password once. */
+export const resetStudentPassword = teacherHandler(sl.resetStudentPasswordInput, async ({ user, meta, input }) =>
+  sl.resetStudentPasswordOutput.parse(await sl.resetStudentPassword({ db, store, user, meta, input })),
+);

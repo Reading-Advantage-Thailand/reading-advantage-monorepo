@@ -3010,6 +3010,8 @@
       "setPictureFor": "Set picture password for {name}",
       "newCard": "New card",
       "newCardFor": "New card for {name}",
+      "newPassword": "New password",
+      "newPasswordFor": "Set a new password for {name}",
       "assignMissing": "Give picture passwords to {count, plural, one {# student} other {# students}}",
       "empty": "No students in this class yet."
     },
@@ -3024,6 +3026,16 @@
       "description": "The old card stops working now, and {name} is signed out.",
       "confirm": "Make new card",
       "cancel": "Cancel"
+    },
+    "password": {
+      "title": "Set a new password for {name}?",
+      "description": "The old password of {name} stops working at once, and {name} is signed out.",
+      "confirm": "Set new password",
+      "cancel": "Cancel",
+      "resultTitle": "New password",
+      "resultHelp": "Have the student write it down now. It will not show again.",
+      "print": "Print",
+      "close": "Close"
     },
     "cards": {
       "title": "New QR card",

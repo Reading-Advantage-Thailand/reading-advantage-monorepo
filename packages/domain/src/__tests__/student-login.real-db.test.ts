@@ -1,6 +1,6 @@
 /**
  * Real-Postgres checks for student login (run 2a). Runs only when `PG_TEST_URL` points at a
- * scratch database that has migrations 0000-0064 applied (0064 adds the session policy columns), for example:
+ * scratch database that has all migrations applied (`pnpm --filter @reading-advantage/db migrate`), for example:
  * `PG_TEST_URL=postgres://postgres:postgres@localhost:5432/lane_b_scratch pnpm exec vitest run <this file>`.
  */
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
@@ -292,6 +292,33 @@ describe.skipIf(!url)("student login against Postgres", () => {
     await expect(sl.resetClassPasswords({ db, store, user: asUser(fixtures[2]!), meta, input: { classroomId: ids.class1 } })).rejects.toMatchObject({ code: "not_found" });
 
     await sl.endClassSession({ db, user: t1(), actor: meta, input: { classroomId: ids.class1 } });
+    await db.delete(schema.accounts).where(inArray(schema.accounts.userId, [`${tag}-s1`, `${tag}-s2`]));
+  });
+  it("one-student password reset: only that student changes (PR review 2026-10-20)", async () => {
+    const auth = await import("@reading-advantage/auth");
+    const sheet = await sl.resetClassPasswords({ db, store, user: t1(), meta, input: { classroomId: ids.class1 } });
+    const boOld = sheet.students.find((s) => s.userId === `${tag}-s2`)!.password;
+    await db.delete(schema.sessions).where(inArray(schema.sessions.userId, [`${tag}-s1`, `${tag}-s2`]));
+    await sl.startStudentSession({ db, userId: `${tag}-s1`, meta, authStrength: "full", method: "qr" });
+    await sl.startStudentSession({ db, userId: `${tag}-s2`, meta, authStrength: "full", method: "qr" });
+
+    const slip = await sl.resetStudentPassword({ db, store, user: t1(), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s1` } });
+    expect(slip).toMatchObject({ userId: `${tag}-s1`, name: "Ann Smith" });
+    const accountOf = async (id: string) => (await db.select().from(schema.accounts).where(eq(schema.accounts.userId, id)))[0]!.password!;
+    expect(await auth.verifyPassword(slip.password, await accountOf(`${tag}-s1`))).toBe(true);
+    expect(await db.select().from(schema.sessions).where(eq(schema.sessions.userId, `${tag}-s1`))).toHaveLength(0);
+    // Bo keeps the password and the session.
+    expect(await auth.verifyPassword(boOld, await accountOf(`${tag}-s2`))).toBe(true);
+    expect(await db.select().from(schema.sessions).where(eq(schema.sessions.userId, `${tag}-s2`))).toHaveLength(1);
+    const audit = await db.select().from(schema.auditEvents).where(eq(schema.auditEvents.actorUserId, `${tag}-t1`));
+    expect(audit.filter((a) => a.action === "student_login:student_password_reset").map((a) => a.targetId)).toEqual([`${tag}-s1`]);
+    expect(JSON.stringify(audit)).not.toContain(slip.password);
+
+    // A teacher of another class, and a student of another class.
+    await expect(sl.resetStudentPassword({ db, store, user: asUser(fixtures[1]!), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s1` } })).rejects.toMatchObject({ code: "forbidden" });
+    await expect(sl.resetStudentPassword({ db, store, user: t1(), meta, input: { classroomId: ids.class1, studentUserId: `${tag}-s3` } })).rejects.toMatchObject({ code: "not_found" });
+    expect(await auth.verifyPassword(slip.password, await accountOf(`${tag}-s1`))).toBe(true);
+
     await db.delete(schema.accounts).where(inArray(schema.accounts.userId, [`${tag}-s1`, `${tag}-s2`]));
   });
 });

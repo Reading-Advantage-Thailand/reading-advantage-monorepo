@@ -3010,6 +3010,8 @@
       "setPictureFor": "Đặt mật khẩu hình ảnh cho {name}",
       "newCard": "Thẻ mới",
       "newCardFor": "Thẻ mới cho {name}",
+      "newPassword": "Mật khẩu mới",
+      "newPasswordFor": "Đặt mật khẩu mới cho {name}",
       "assignMissing": "Cấp mật khẩu hình ảnh cho {count, plural, other {# học sinh}}",
       "empty": "Lớp này chưa có học sinh."
     },
@@ -3024,6 +3026,16 @@
       "description": "Thẻ cũ sẽ không dùng được ngay bây giờ, và {name} bị đăng xuất.",
       "confirm": "Tạo thẻ mới",
       "cancel": "Hủy"
+    },
+    "password": {
+      "title": "Đặt mật khẩu mới cho {name}?",
+      "description": "Mật khẩu cũ của {name} sẽ không dùng được ngay bây giờ, và {name} bị đăng xuất.",
+      "confirm": "Đặt mật khẩu mới",
+      "cancel": "Hủy",
+      "resultTitle": "Mật khẩu mới",
+      "resultHelp": "Hãy để học sinh ghi lại ngay bây giờ. Thông tin này sẽ không hiện lại.",
+      "print": "In",
+      "close": "Đóng"
     },
     "cards": {
       "title": "Thẻ QR mới",
