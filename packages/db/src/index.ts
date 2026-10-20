@@ -2,6 +2,7 @@ export { db } from "./client.js";
 export type { DB } from "./client.js";
 export * from "./schema/index.js";
 export { createPrivilegedDb } from "./privileged.js";
+export { buildPostgresOptions, normalizePostgresConnectionString } from "./connection-options.js";
 export { generateStudentUsername, isStudentUsername } from "./student-usernames.js";
 export * from "./standard-pack-successor-commitment-store.js";
 export * from "./standard-pack-successor-admission-persistence-store.js";
