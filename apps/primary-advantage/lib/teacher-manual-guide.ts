@@ -57,6 +57,7 @@ export const MANUAL_LABELS = {
   lessonPlan: { key: "TeacherUi.classBook.pacing" },
   markDone: { key: "TeacherUi.classBook.guide.markDone" },
   undo: { key: "TeacherUi.classBook.guide.undo" },
+  next: { key: "TeacherUi.classBook.lesson.next" },
   projector: { key: "TeacherUi.classBook.lesson.projector" },
   showAnswer: { key: "TeacherUi.classBook.lesson.showAnswer" },
   lockedText: { key: "StudentHome.classBookLocked" },

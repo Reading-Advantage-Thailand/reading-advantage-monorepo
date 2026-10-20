@@ -4287,7 +4287,7 @@
       "lead": "The teacher teaches from the workbook and presses in the app one step at a time. The app opens the same step for the students.",
       "step1": "On the class page, in the <ui>{nowInClass}</ui> card, press <ui>{openLesson}</ui>. The card shows the current lesson and the <ui>{nextStep}</ui>.",
       "step2": "The lesson page shows the first step that the class has not done, one step at a time: teacher actions, teacher language, student actions, watch for, and the full script.",
-      "step3": "When the class finishes the step in the workbook, press <ui>{markDone}</ui>. The app opens the same step for the students and shows the next step. A wrong press: press <ui>{undo}</ui>.",
+      "step3": "When the class finishes the step in the workbook, press <ui>{markDone}</ui>. The app opens the same step for the students, and the button changes to <ui>{undo}</ui>. Press <ui>{next}</ui> to go to the next step. A wrong press: press <ui>{undo}</ui>.",
       "step4": "Whole-class reading: press <ui>{projector}</ui>. Click a paragraph to focus it. Press <ui>{showAnswer}</ui> to reveal the answers.",
       "markAll": "Mark every step. A student opens an app step only after the teacher presses <ui>{markDone}</ui>. Until then, the student sees “{lockedText}”.",
       "steps13": "The workbook has 13 steps. The student app has 14 steps. The app matches the steps."
