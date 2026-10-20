@@ -1,8 +1,10 @@
 /**
  * One-time backfill of the mastery evidence queue (track primary_mastery_evidence_20261006, FR-5d).
  * Enqueues one `primary.mastery.evidence` job for every existing quiz row, flashcard review, and
- * story game run. The job key is `<jobName>:<sourceTable>:<rowId>`, so a rerun skips the rows that
- * already have a job, and the worker's own idempotency key keeps the mastery rows unique.
+ * story game run. Quiz rows include the rows that a lesson repeat moved into
+ * `primary_lesson_attempts.activities`; the loader reads them there. The job key is
+ * `<jobName>:<sourceTable>:<rowId>`, so a rerun skips the rows that already have a job, and the
+ * worker's own idempotency key keeps the mastery rows unique.
  *
  * The script writes only to `durable_jobs`; the worker writes the evidence. It refuses production
  * unless BACKFILL_ALLOW_PRODUCTION=1, and it prints the counts without writing unless `--apply` is set.
@@ -17,19 +19,12 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import { createDurableJobQueuePort } from "@reading-advantage/backend/jobs/adapters/postgres";
 import { db } from "@reading-advantage/db";
 import { client } from "@reading-advantage/db/client";
-import { cardReviews, durableJobs, flashcardCards, flashcardDecks, gameCompletions, userActivity, users } from "@reading-advantage/db/schema";
+import { cardReviews, durableJobs, flashcardCards, flashcardDecks, gameCompletions, primaryLessonAttempts, userActivity, users } from "@reading-advantage/db/schema";
 import { enqueuePrimaryEvidence, PRIMARY_EVIDENCE_JOB_NAME, primaryEvidenceJobKey, type PrimaryEvidenceJobPayload } from "@reading-advantage/domain/primary-mastery";
+import { movedQuizSourceRows, QUIZ_ACTIVITY_TYPES, type EvidenceSourceRow } from "../lib/primary-evidence-backfill";
 import { createPrimaryEvidenceSql } from "../lib/primary-evidence-sql";
 
 const queueSql = createPrimaryEvidenceSql();
-
-const QUIZ_ACTIVITY_TYPES = ["MC_QUESTION", "SA_QUESTION", "LA_QUESTION"];
-
-interface SourceRow {
-  payload: PrimaryEvidenceJobPayload;
-  schoolId: string;
-  occurredAt: Date;
-}
 
 /**
  * Reads the command line: `--apply` writes, `--school <id>` limits the run to one school.
@@ -46,14 +41,18 @@ function parseArgs(argv: string[]): { apply: boolean; schoolId: string | null } 
  * @param schoolId Limits the list to one school when set.
  * @returns The rows to enqueue, oldest first across all sources.
  */
-async function listSourceRows(schoolId: string | null): Promise<SourceRow[]> {
-  const schoolFilter = (column: typeof users.schoolId | typeof gameCompletions.schoolId) => (schoolId ? eq(column, schoolId) : undefined);
+async function listSourceRows(schoolId: string | null): Promise<EvidenceSourceRow[]> {
+  const schoolFilter = (column: typeof users.schoolId | typeof gameCompletions.schoolId | typeof primaryLessonAttempts.schoolId) => (schoolId ? eq(column, schoolId) : undefined);
   const quizzes = await db
     .select({ rowId: userActivity.id, schoolId: users.schoolId, occurredAt: userActivity.createdAt })
     .from(userActivity)
     .innerJoin(users, eq(users.id, userActivity.userId))
-    .where(and(inArray(userActivity.activityType, QUIZ_ACTIVITY_TYPES), schoolFilter(users.schoolId)))
+    .where(and(inArray(userActivity.activityType, [...QUIZ_ACTIVITY_TYPES]), schoolFilter(users.schoolId)))
     .orderBy(userActivity.createdAt);
+  const attempts = await db
+    .select({ schoolId: primaryLessonAttempts.schoolId, activities: primaryLessonAttempts.activities })
+    .from(primaryLessonAttempts)
+    .where(and(sql`jsonb_typeof(${primaryLessonAttempts.activities}) = 'array'`, schoolFilter(primaryLessonAttempts.schoolId)));
   const reviews = await db
     .select({ rowId: cardReviews.id, schoolId: users.schoolId, occurredAt: cardReviews.reviewedAt })
     .from(cardReviews)
@@ -67,11 +66,12 @@ async function listSourceRows(schoolId: string | null): Promise<SourceRow[]> {
     .from(gameCompletions)
     .where(and(sql`${gameCompletions.metadata} -> 'learningEvidence' ->> 'kind' = 'story-game'`, schoolFilter(gameCompletions.schoolId)))
     .orderBy(gameCompletions.createdAt);
-  const rows: SourceRow[] = [];
+  const rows: EvidenceSourceRow[] = [];
   const push = (sourceTable: PrimaryEvidenceJobPayload["sourceTable"], list: Array<{ rowId: string; schoolId: string | null; occurredAt: Date }>) => {
     for (const row of list) if (row.schoolId) rows.push({ payload: { sourceTable, rowId: row.rowId }, schoolId: row.schoolId, occurredAt: row.occurredAt });
   };
   push("user_activity", quizzes);
+  rows.push(...movedQuizSourceRows(attempts, new Set(quizzes.map((row) => row.rowId))));
   push("card_reviews", reviews);
   push("game_completions", runs);
   return rows.sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
